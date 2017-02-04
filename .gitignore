@@ -1,2 +1,5 @@
 deepin-recorder
 Makefile
+moc_*.o
+moc_*.cpp
+*.o
