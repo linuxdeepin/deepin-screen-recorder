@@ -145,7 +145,7 @@ QList<xcb_window_t> ScreenWindowsInfo::getWindows()
     // We need add root window in list.
     windows.append(rootWindow);
     
-    // qSort(windows.begin(), windows.end(), sortWindowArea);
+    // Sort window by window's area.
     std::sort(windows.begin(), windows.end(), [&](const xcb_window_t &w1, const xcb_window_t &w2) -> bool {
             xcb_get_geometry_reply_t *g1 = getWindowGeometry(w1);
             xcb_get_geometry_reply_t *g2 = getWindowGeometry(w2);
