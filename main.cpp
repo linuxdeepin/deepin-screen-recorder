@@ -19,7 +19,7 @@ class MainWindow : public QWidget
     void mouseMoveEvent(QMouseEvent *e);
     
   private:
-    QList<xcb_get_geometry_reply_t*> windowGeometries;
+    QList<WindowRect> windowRects;
     int record_x;
     int record_y;
     int record_width;
@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     QList<xcb_window_t> windows = windowsInfo.getWindows();
     
     for (int i = 0; i < windows.length(); i++) {
-        windowGeometries.append(windowsInfo.getWindowGeometry(windows[i]));
+        windowRects.append(windowsInfo.getWindowRect(windows[i]));
     }
 }
 
@@ -48,7 +48,8 @@ void MainWindow::paintEvent(QPaintEvent *)
 {
     if (record_width > 0 && record_height > 0) {
         QPainter painter(this);
-        QRect rect = QRect(record_x, record_y, record_width, record_height);
+        // Width and height increase 1 to draw right side and bottom side in screen's visible area.
+        QRect rect = QRect(record_x, record_y, record_width - 1, record_height - 1);
         
         QPen penHText(QColor("#2CA7F8"));
         painter.setPen(penHText);        
@@ -57,11 +58,11 @@ void MainWindow::paintEvent(QPaintEvent *)
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event){
-    for (int i = 0; i < windowGeometries.length(); i++) {
-        int wx = windowGeometries[i]->x;
-        int wy = windowGeometries[i]->y;
-        int ww = windowGeometries[i]->width;
-        int wh = windowGeometries[i]->height;
+    for (int i = 0; i < windowRects.length(); i++) {
+        int wx = windowRects[i].x;
+        int wy = windowRects[i].y;
+        int ww = windowRects[i].width;
+        int wh = windowRects[i].height;
         int ex = event->x();
         int ey = event->y();
         if (ex > wx && ex < wx + ww && ey > wy && ey < wy + wh) {

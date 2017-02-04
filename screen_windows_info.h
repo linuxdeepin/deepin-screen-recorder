@@ -2,6 +2,13 @@
 #include <xcb/xcb.h>
 #include <xcb/xcb_aux.h>
 
+struct WindowRect {
+    int x;
+    int y;
+    int width;
+    int height;
+};
+
 class ScreenWindowsInfo : public QObject 
 {
     Q_OBJECT
@@ -19,6 +26,8 @@ class ScreenWindowsInfo : public QObject
     int getWindowWorkspace(xcb_window_t window);
     QList<xcb_window_t> getWindows();
     xcb_get_geometry_reply_t* getWindowGeometry(xcb_window_t window);
+    QList<int> getWindowFrameExtents(xcb_window_t window);
+    WindowRect getWindowRect(xcb_window_t window);
     
   protected:
     xcb_connection_t* conn;

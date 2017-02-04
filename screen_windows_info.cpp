@@ -67,6 +67,35 @@ QStringList ScreenWindowsInfo::getWindowTypes(xcb_window_t window)
     return types;
 }
 
+QList<int> ScreenWindowsInfo::getWindowFrameExtents(xcb_window_t window)
+{
+    QList<int> extents;
+    
+    if (window != rootWindow) {
+        xcb_get_property_reply_t *reply = getProperty(window, "_GTK_FRAME_EXTENTS", XCB_ATOM_CARDINAL);
+        
+        if (reply) {
+            // Because XCB haven't function to check property is exist,
+            // we will got wrong value if property '_GTK_FRAME_EXTENTS' is not exist in window xprop attributes.
+            // So we check reply->format, if it equal 16 or 32, '_GTK_FRAME_EXTENTS' property is exist.
+            if (reply->format == 32 || reply->format == 16) {
+                int32_t *value = (int32_t *)xcb_get_property_value(reply);
+                for (int i = 0; i < 4; ++i) {
+                    extents.append(value[i]);
+                }
+            } else {
+                for (int j = 0; j < 4; ++j) {
+                    extents.append(0);
+                }
+            }
+        }
+    
+        free(reply);
+    }
+
+    return extents;
+}
+
 QString ScreenWindowsInfo::getWindowName(xcb_window_t window)
 {
     if (window == rootWindow) {
@@ -160,3 +189,27 @@ xcb_get_geometry_reply_t* ScreenWindowsInfo::getWindowGeometry(xcb_window_t wind
 {
     return xcb_get_geometry_reply(conn, xcb_get_geometry(conn, window), 0);
 }        
+
+WindowRect ScreenWindowsInfo::getWindowRect(xcb_window_t window) 
+{
+    WindowRect rect;
+    
+    xcb_get_geometry_reply_t *geometry = getWindowGeometry(window);
+    QList<int> extents = getWindowFrameExtents(window);
+    
+    rect.x = geometry->x;
+    rect.y = geometry->y;
+    rect.width = geometry->width;
+    rect.height = geometry->height;
+    
+    
+    if (extents.length() == 4) {
+        // _GTK_FRAME_EXTENTS: left, right, top, bottom
+        rect.x += extents[0];  
+        rect.y += extents[2];   
+        rect.width -= extents[0] + extents[1];
+        rect.height -= extents[2] + extents[3];
+    }
+    
+    return rect;
+}
