@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QWidget>
+#include <QMouseEvent>
 #include <QIcon>
 #include <QObject>
 #include <QPainter>
@@ -15,18 +16,65 @@ class MainWindow : public QWidget
     
   protected:
     void paintEvent(QPaintEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
+    
+  private:
+    QList<xcb_get_geometry_reply_t*> windowGeometries;
+    int record_x;
+    int record_y;
+    int record_width;
+    int record_height;
 };
     
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent) 
 {
+    // Init attributes.
+    setMouseTracking(true);
+    record_x = 0;
+    record_y = 0;
+    record_width = 0;
+    record_height = 0;
+    
+    // Get all windows geometry.
+    ScreenWindowsInfo windowsInfo;
+    QList<xcb_window_t> windows = windowsInfo.getWindows();
+    
+    for (int i = 0; i < windows.length(); i++) {
+        windowGeometries.append(windowsInfo.getWindowGeometry(windows[i]));
+    }
 }
 
 void MainWindow::paintEvent(QPaintEvent *) 
 {
-    QPainter painter(this);
-    painter.setPen(Qt::blue);
-    painter.setFont(QFont("Arial", 30));
-    painter.drawText(rect(), Qt::AlignCenter, "Qt");
+    if (record_width > 0 && record_height > 0) {
+        QPainter painter(this);
+        QRect rect = QRect(record_x, record_y, record_width, record_height);
+        
+        QPen penHText(QColor("#2CA7F8"));
+        painter.setPen(penHText);        
+        painter.drawRect(rect);
+    }
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event){
+    for (int i = 0; i < windowGeometries.length(); i++) {
+        int wx = windowGeometries[i]->x;
+        int wy = windowGeometries[i]->y;
+        int ww = windowGeometries[i]->width;
+        int wh = windowGeometries[i]->height;
+        int ex = event->x();
+        int ey = event->y();
+        if (ex > wx && ex < wx + ww && ey > wy && ey < wy + wh) {
+            record_x = wx;
+            record_y = wy;
+            record_width = ww;
+            record_height = wh;
+            
+            repaint();
+            
+            break;
+        }
+    }
 }
 
 int main(int argc, char *argv[]) 
@@ -42,13 +90,6 @@ int main(int argc, char *argv[])
     window.setAttribute(Qt::WA_TranslucentBackground, true);
     window.showFullScreen();
     window.show();
-    
-    ScreenWindowsInfo windowsInfo;
-    QList<xcb_window_t> windows = windowsInfo.getWindows();
-    
-    for (int i = 0; i < windows.length(); i++) {
-        qDebug() << windowsInfo.getWindowWorkspace(windows[i]) << windowsInfo.getWindowName(windows[i]);
-    }
     
     return app.exec();
 }
