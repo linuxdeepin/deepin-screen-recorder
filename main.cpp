@@ -51,8 +51,9 @@ void MainWindow::paintEvent(QPaintEvent *)
         // Width and height increase 1 to draw right side and bottom side in screen's visible area.
         QRect rect = QRect(record_x, record_y, record_width - 1, record_height - 1);
         
-        QPen penHText(QColor("#2CA7F8"));
-        painter.setPen(penHText);        
+        QPen pen(QColor("#2CA7F8"));
+        pen.setWidth(2);
+        painter.setPen(pen);        
         painter.drawRect(rect);
     }
 }
