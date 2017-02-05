@@ -1,3 +1,6 @@
+#ifndef LINE_H
+#define LINE_H
+
 #include <QObject>
 #include <xcb/xcb.h>
 #include <xcb/xcb_aux.h>
@@ -35,3 +38,4 @@ class ScreenWindowsInfo : public QObject
     xcb_screen_t* screen;
 };
     
+#endif
