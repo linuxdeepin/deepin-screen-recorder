@@ -17,6 +17,9 @@ class MainWindow : public QWidget
     static const int MIN_SIZE = 48;
     static const int DRAG_POINT_RADIUS = 5;
     
+    static const int PANEL_WIDTH = 100;
+    static const int PANEL_HEIGHT = 32;
+    
     static const int ACTION_MOVE = 0;
     static const int ACTION_RESIZE_TOP_LEFT = 1;
     static const int ACTION_RESIZE_TOP_RIGHT = 2;
@@ -112,6 +115,7 @@ void MainWindow::paintEvent(QPaintEvent *)
         painter.setBrush(QBrush("#000000"));
         painter.setOpacity(0.8);
         
+        painter.setClipping(true);
         painter.setClipRegion(QRegion(backgroundRect).subtracted(QRegion(frameRect)));
         painter.drawRect(backgroundRect);
         
@@ -137,6 +141,19 @@ void MainWindow::paintEvent(QPaintEvent *)
             painter.drawEllipse(record_x - DRAG_POINT_RADIUS + record_width, record_y - DRAG_POINT_RADIUS + record_height / 2, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
             painter.drawEllipse(record_x - DRAG_POINT_RADIUS + record_width / 2, record_y - DRAG_POINT_RADIUS, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
             painter.drawEllipse(record_x - DRAG_POINT_RADIUS + record_width / 2, record_y - DRAG_POINT_RADIUS + record_height, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
+        }
+        
+        // Draw record panel.
+        if (firstPressButton) {
+            if (firstReleaseButton) {
+                painter.setClipping(false);
+                painter.setBrush(QBrush("#2CA7F8"));
+                if (rootWindowRect.height - record_y - record_height > PANEL_HEIGHT) {
+                    painter.drawRect(QRect(record_x + record_width / 2 - PANEL_WIDTH / 2, record_y + record_height, PANEL_WIDTH, PANEL_HEIGHT));
+                } else {
+                    painter.drawRect(QRect(record_x + record_width / 2 - PANEL_WIDTH / 2, record_y + record_height - PANEL_HEIGHT, PANEL_WIDTH, PANEL_HEIGHT));
+                }
+            }
         }
     }
 }
