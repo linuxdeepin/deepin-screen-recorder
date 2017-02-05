@@ -28,6 +28,7 @@ class ScreenWindowsInfo : public QObject
     xcb_get_geometry_reply_t* getWindowGeometry(xcb_window_t window);
     QList<int> getWindowFrameExtents(xcb_window_t window);
     WindowRect getWindowRect(xcb_window_t window);
+    WindowRect getRootWindowRect();
     
   protected:
     xcb_connection_t* conn;

@@ -186,6 +186,18 @@ xcb_get_geometry_reply_t* ScreenWindowsInfo::getWindowGeometry(xcb_window_t wind
     return xcb_get_geometry_reply(conn, xcb_get_geometry(conn, window), 0);
 }        
 
+WindowRect ScreenWindowsInfo::getRootWindowRect() {
+    WindowRect rect;
+    xcb_get_geometry_reply_t *geometry = xcb_get_geometry_reply(conn, xcb_get_geometry(conn, rootWindow), 0);
+    
+    rect.x = 0;
+    rect.y = 0;
+    rect.width = geometry->width;
+    rect.height = geometry->height;
+    
+    return rect;
+}
+
 WindowRect ScreenWindowsInfo::getWindowRect(xcb_window_t window) 
 {
     WindowRect rect;

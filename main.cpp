@@ -2,6 +2,7 @@
 #include <QWidget>
 #include <QMouseEvent>
 #include <QEvent>
+#include <QRegion>
 #include <QIcon>
 #include <QObject>
 #include <QPainter>
@@ -22,6 +23,7 @@ class MainWindow : public QWidget
     
   private:
     QList<WindowRect> windowRects;
+    WindowRect rootWindowRect;
     
     bool firstPressButton;
     bool firstReleaseButton;
@@ -54,9 +56,11 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     record_width = 0;
     record_height = 0;
     
+    
     // Get all windows geometry.
     ScreenWindowsInfo windowsInfo;
     QList<xcb_window_t> windows = windowsInfo.getWindows();
+    rootWindowRect = windowsInfo.getRootWindowRect();
     
     for (int i = 0; i < windows.length(); i++) {
         windowRects.append(windowsInfo.getWindowRect(windows[i]));
@@ -67,13 +71,23 @@ void MainWindow::paintEvent(QPaintEvent *)
 {
     if (record_width > 0 && record_height > 0) {
         QPainter painter(this);
-        // Width and height increase 1 to draw right side and bottom side in screen's visible area.
-        QRect rect = QRect(record_x, record_y, record_width - 1, record_height - 1);
         
-        QPen pen(QColor("#2CA7F8"));
-        pen.setWidth(2);
-        painter.setPen(pen);        
-        painter.drawRect(rect);
+        QRect backgroundRect = QRect(rootWindowRect.x, rootWindowRect.y, rootWindowRect.width, rootWindowRect.height);
+        QRect frameRect = QRect(record_x, record_y, record_width - 1, record_height - 1);
+        
+        // Draw background.
+        painter.setBrush(QBrush("#000000"));
+        painter.setOpacity(0.8);
+        
+        painter.setClipRegion(QRegion(backgroundRect).subtracted(QRegion(frameRect)));
+        painter.drawRect(backgroundRect);
+        
+        // Draw frame.
+        QPen framePen(QColor("#2CA7F8"));
+        framePen.setWidth(2);
+        painter.setBrush(QBrush());  // clear brush
+        painter.setPen(framePen);        
+        painter.drawRect(frameRect);
     }
 }
 
