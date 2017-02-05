@@ -151,7 +151,7 @@ int ScreenWindowsInfo::getWindowWorkspace(xcb_window_t window)
 QList<xcb_window_t> ScreenWindowsInfo::getWindows()
 {
     QList<xcb_window_t> windows;
-    xcb_get_property_reply_t *listReply = getProperty(rootWindow, "_NET_CLIENT_LIST", XCB_ATOM_WINDOW);
+    xcb_get_property_reply_t *listReply = getProperty(rootWindow, "_NET_CLIENT_LIST_STACKING", XCB_ATOM_WINDOW);
     
     if (listReply) {
         xcb_window_t *windowList = static_cast<xcb_window_t*>(xcb_get_property_value(listReply));
@@ -171,16 +171,12 @@ QList<xcb_window_t> ScreenWindowsInfo::getWindows()
         }
     }
     
-    // We need add root window in list.
-    windows.append(rootWindow);
+    // We need add root window in first index of list.
+    windows.prepend(rootWindow);
     
-    // Sort window by window's area.
-    std::sort(windows.begin(), windows.end(), [&](const xcb_window_t &w1, const xcb_window_t &w2) -> bool {
-            xcb_get_geometry_reply_t *g1 = getWindowGeometry(w1);
-            xcb_get_geometry_reply_t *g2 = getWindowGeometry(w2);
-    
-            return g1->width * g1->height < g2->width * g2->height;
-        });
+    // We need re-sort windows list from up to bottom, 
+    // to make compare cursor with window area from up to bottom.
+    std::reverse(windows.begin(), windows.end());
     
     return windows;
 }
