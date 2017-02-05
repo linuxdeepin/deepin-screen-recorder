@@ -190,6 +190,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         isReleaseButton = true;
         
         qDebug() << "release";
+        
+        repaint();
     } else if (event->type() == QEvent::MouseMove) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         if (firstPressButton) {
