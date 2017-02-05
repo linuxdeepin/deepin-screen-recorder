@@ -15,6 +15,7 @@ class MainWindow : public QWidget
 {
     static const int CURSOR_BOUND = 5;
     static const int MIN_SIZE = 48;
+    static const int DRAG_POINT_RADIUS = 5;
     
     static const int ACTION_MOVE = 0;
     static const int ACTION_RESIZE_TOP_LEFT = 1;
@@ -58,6 +59,8 @@ class MainWindow : public QWidget
     bool isPressButton;
     bool isReleaseButton;
     
+    bool drawDragPoint;
+    
     int record_x;
     int record_y;
     int record_width;
@@ -83,6 +86,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     record_width = 0;
     record_height = 0;
     
+    drawDragPoint = false;
     
     // Get all windows geometry.
     ScreenWindowsInfo windowsInfo;
@@ -117,6 +121,23 @@ void MainWindow::paintEvent(QPaintEvent *)
         painter.setBrush(QBrush());  // clear brush
         painter.setPen(framePen);        
         painter.drawRect(frameRect);
+        
+        // Draw drag pint.
+        if (drawDragPoint) {
+            painter.setClipRegion(QRegion(backgroundRect));
+            painter.setRenderHint(QPainter::Antialiasing);
+            painter.setOpacity(1);
+            framePen.setWidth(1);
+            painter.setBrush(QBrush("#666666"));
+            painter.drawEllipse(record_x - DRAG_POINT_RADIUS, record_y - DRAG_POINT_RADIUS, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
+            painter.drawEllipse(record_x - DRAG_POINT_RADIUS + record_width, record_y - DRAG_POINT_RADIUS, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
+            painter.drawEllipse(record_x - DRAG_POINT_RADIUS, record_y - DRAG_POINT_RADIUS + record_height, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
+            painter.drawEllipse(record_x - DRAG_POINT_RADIUS + record_width, record_y - DRAG_POINT_RADIUS + record_height, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
+            painter.drawEllipse(record_x - DRAG_POINT_RADIUS, record_y - DRAG_POINT_RADIUS + record_height / 2, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
+            painter.drawEllipse(record_x - DRAG_POINT_RADIUS + record_width, record_y - DRAG_POINT_RADIUS + record_height / 2, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
+            painter.drawEllipse(record_x - DRAG_POINT_RADIUS + record_width / 2, record_y - DRAG_POINT_RADIUS, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
+            painter.drawEllipse(record_x - DRAG_POINT_RADIUS + record_width / 2, record_y - DRAG_POINT_RADIUS + record_height, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
+        }
     }
 }
 
@@ -196,6 +217,12 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
             
             updateCursor(event);
+            
+            bool drawPoint = getAction(event) != ACTION_MOVE;
+            if (drawPoint != drawDragPoint) {
+                drawDragPoint = drawPoint;
+                repaint();
+            }
         } else {
             for (int i = 0; i < windowRects.length(); i++) {
                 int wx = windowRects[i].x;
