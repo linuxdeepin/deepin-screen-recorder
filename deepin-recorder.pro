@@ -11,8 +11,8 @@ CONFIG += c++11
 PKGCONFIG += xcb xcb-util
 
 # Input
-HEADERS += screen_windows_info.h main_window.h 
-SOURCES += main.cpp screen_windows_info.cpp main_window.cpp
+HEADERS += screen_windows_info.h main_window.h shell_process.h
+SOURCES += main.cpp screen_windows_info.cpp main_window.cpp shell_process.cpp
 
 QT += widgets
 QT += gui

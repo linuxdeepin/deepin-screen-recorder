@@ -2,6 +2,7 @@
 #include <QTimer>
 #include <QMouseEvent>
 #include <QEvent>
+#include <QProcess>
 #include <QRegion>
 #include <QIcon>
 #include <QObject>
@@ -11,6 +12,7 @@
 #include <xcb/xcb.h>
 #include <xcb/xcb_aux.h>
 #include "screen_windows_info.h"
+#include "shell_process.h"
 
 class MainWindow : public QWidget 
 {
@@ -88,4 +90,6 @@ class MainWindow : public QWidget
     
     QTimer* recordTimer;
     int recordCounter;
+
+    ShellProcess recordProcess;
 };

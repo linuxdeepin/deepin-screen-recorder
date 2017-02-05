@@ -10,6 +10,7 @@
 #include <xcb/xcb.h>
 #include <xcb/xcb_aux.h>
 #include <QWidget>
+#include <QThread>
 #include "main_window.h"
 #include <X11/extensions/shape.h>
 #include <QtX11Extras/QX11Info>
@@ -184,6 +185,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     } else if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
                         recordTimer->stop();
                         
+                        recordProcess.stopRecord();
                         QApplication::quit();
                     }
                 }
@@ -192,8 +194,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         
         isPressButton = true;
         isReleaseButton = false;
-        
-        qDebug() << "press";
     } else if (event->type() == QEvent::MouseButtonRelease) {
         if (!firstReleaseButton) {
             firstReleaseButton = true;
@@ -203,8 +203,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         
         isPressButton = false;
         isReleaseButton = true;
-        
-        qDebug() << "release";
         
         repaint();
     } else if (event->type() == QEvent::MouseMove) {
@@ -245,8 +243,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     resizeRight(mouseEvent);
                 }
                 
-                qDebug() << "**********";
-                
                 repaint();
             }
             
@@ -277,16 +273,12 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
             }
         }
-        
-        qDebug() << "move";
     }
     
     return false;
 }
 
 void MainWindow::showWaitSecond() {
-    qDebug() << showWaitCounter;
-    
     repaint();
     
     if (showWaitCounter <= 0) {
@@ -301,6 +293,9 @@ void MainWindow::showWaitSecond() {
         recordTimer->start(1000);
         
         dropMouseEvent();
+
+        recordProcess.setRecordInfo(record_x, record_y, record_width, record_height);
+        recordProcess.start();
     }
     showWaitCounter--;
 }
@@ -329,8 +324,6 @@ void MainWindow::dropMouseEvent()
     reponseArea->height = PANEL_HEIGHT;
 
     XShapeCombineRectangles(QX11Info::display(), winId(), ShapeInput, 0, 0, reponseArea ,1 ,ShapeSet, YXBanded);
-    
-    qDebug() << "************************";
 }
 
 void MainWindow::resizeTop(QMouseEvent *mouseEvent) 
