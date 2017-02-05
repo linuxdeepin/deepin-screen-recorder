@@ -11,6 +11,8 @@
 #include <xcb/xcb_aux.h>
 #include <QWidget>
 #include "main_window.h"
+#include <X11/extensions/shape.h>
+#include <QtX11Extras/QX11Info>
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent) 
 {
@@ -297,6 +299,8 @@ void MainWindow::showWaitSecond() {
         recordTimer = new QTimer(this);
         connect(recordTimer, SIGNAL(timeout()), this, SLOT(showRecordSecond()));
         recordTimer->start(1000);
+        
+        dropMouseEvent();
     }
     showWaitCounter--;
 }
@@ -305,6 +309,28 @@ void MainWindow::showRecordSecond() {
     recordCounter++;
     
     repaint();
+}
+
+void MainWindow::dropMouseEvent() 
+{
+    int buttonX, buttonY;
+    if (rootWindowRect.height - record_y - record_height > PANEL_HEIGHT) {
+        buttonX = record_x + record_width / 2 - PANEL_WIDTH / 2;
+        buttonY = record_y + record_height;
+    } else {
+        buttonX = record_x + record_width / 2 - PANEL_WIDTH / 2;
+        buttonY = record_y + record_height - PANEL_HEIGHT;
+    }
+                
+    XRectangle* reponseArea = new XRectangle;
+    reponseArea->x = buttonX;
+    reponseArea->y = buttonY;
+    reponseArea->width = PANEL_WIDTH;
+    reponseArea->height = PANEL_HEIGHT;
+
+    XShapeCombineRectangles(QX11Info::display(), winId(), ShapeInput, 0, 0, reponseArea ,1 ,ShapeSet, YXBanded);
+    
+    qDebug() << "************************";
 }
 
 void MainWindow::resizeTop(QMouseEvent *mouseEvent) 

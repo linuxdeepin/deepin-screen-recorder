@@ -16,3 +16,5 @@ SOURCES += main.cpp screen_windows_info.cpp main_window.cpp
 
 QT += widgets
 QT += gui
+QT += x11extras
+LIBS += -lX11 -lXext

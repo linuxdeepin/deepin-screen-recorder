@@ -54,7 +54,8 @@ class MainWindow : public QWidget
     void resizeBottom(QMouseEvent *event);
     void resizeLeft(QMouseEvent *event);
     void resizeRight(QMouseEvent *event);
-    
+    void dropMouseEvent();
+        
   private:
     QList<WindowRect> windowRects;
     WindowRect rootWindowRect;
