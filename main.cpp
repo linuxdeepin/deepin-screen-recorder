@@ -27,10 +27,14 @@ class MainWindow : public QWidget
     
     bool firstPressButton;
     bool firstReleaseButton;
-    bool isPressButton;
-    bool isReleaseButton;
     int dragStartX;
     int dragStartY;
+    
+    int dragRecordX;
+    int dragRecordY;
+    
+    bool isPressButton;
+    bool isReleaseButton;
     
     int record_x;
     int record_y;
@@ -46,10 +50,11 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     
     firstPressButton = false;
     firstReleaseButton = false;
-    isPressButton = false;
-    isReleaseButton = false;
     dragStartX = 0;
     dragStartY = 0;
+    
+    isPressButton = false;
+    isReleaseButton = false;
     
     record_x = 0;
     record_y = 0;
@@ -91,21 +96,27 @@ void MainWindow::paintEvent(QPaintEvent *)
     }
 }
 
-bool MainWindow::eventFilter(QObject *object, QEvent *event)
+bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         dragStartX = mouseEvent->x();
         dragStartY = mouseEvent->y();
-        
-        firstPressButton = true;
+        if (!firstPressButton) {
+            firstPressButton = true;
+        } else {
+            dragRecordX = record_x;
+            dragRecordY = record_y;
+        }
         
         isPressButton = true;
         isReleaseButton = false;
         
         qDebug() << "press";
     } else if (event->type() == QEvent::MouseButtonRelease) {
-        firstReleaseButton = true;
+        if (!firstReleaseButton) {
+            firstReleaseButton = true;
+        }
         
         isPressButton = false;
         isReleaseButton = true;
@@ -123,6 +134,13 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
         
                     repaint();
                 }
+            } else if (isPressButton) {
+                record_x = std::max(std::min(dragRecordX + mouseEvent->x() - dragStartX, rootWindowRect.width - record_width), 1);
+                record_y = std::max(std::min(dragRecordY + mouseEvent->y() - dragStartY, rootWindowRect.height - record_height), 1);
+                
+                qDebug() << "**********";
+                
+                repaint();
             }
         } else {
             for (int i = 0; i < windowRects.length(); i++) {
