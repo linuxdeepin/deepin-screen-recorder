@@ -293,6 +293,8 @@ void MainWindow::showWaitSecond() {
         recordTimer->start(1000);
         
         dropMouseEvent();
+        
+        QApplication::setOverrideCursor(Qt::ArrowCursor);    
 
         recordProcess.setRecordInfo(record_x, record_y, record_width, record_height);
         recordProcess.start();
