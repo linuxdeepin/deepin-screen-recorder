@@ -10,6 +10,8 @@ public:
     RecordProcess(QObject *parent = 0);
     void setRecordInfo(int recordX, int recordY, int record_width, int recordHeight);
     void stopRecord();
+    void recordGIF();
+    void recordVideo();
 
 protected:
     void run();

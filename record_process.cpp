@@ -20,6 +20,12 @@ void RecordProcess::setRecordInfo(int rx, int ry, int rw, int rh)
 
 void RecordProcess::run()
 {
+    // recordGIF();
+    recordVideo();
+}
+
+void RecordProcess::recordGIF() 
+{
     process = new QProcess();
     connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
 
@@ -45,7 +51,44 @@ void RecordProcess::run()
     }
 }
 
+void RecordProcess::recordVideo()
+{
+    process = new QProcess();
+    connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
+
+    QString path = "%1/Desktop/%2";
+    QString savepath = path.arg(QDir::homePath()).arg("deepin-record.mp4");
+
+    QFile file(savepath);
+    file.remove();
+
+    // FFmpeg need pass arugment split two part: -option value,
+    // otherwise, it will report 'Unrecognized option' error.
+    QStringList arguments;
+    arguments << QString("-video_size");
+    arguments << QString("%1x%2").arg(recordWidth).arg(recordHeight);
+    arguments << QString("-framerate");
+    arguments << QString("25");
+    arguments << QString("-f");
+    arguments << QString("x11grab");
+    arguments << QString("-i");
+    arguments << QString(":0.0+%1,%2").arg(recordX).arg(recordY);
+    arguments << savepath;
+    
+    process->start("ffmpeg", arguments);
+
+    process->waitForFinished(-1);
+    if (process->exitCode() !=0) {
+        qDebug() << "Error";
+        foreach (auto line, (process->readAllStandardError().split('\n'))) {
+            qDebug() << line;
+        }
+    } else{
+        qDebug() << "OK" << process->readAllStandardOutput() << process->readAllStandardError();
+    }
+}    
+
 void RecordProcess::stopRecord()
 {
-    process->kill();
+    process->terminate();
 }
