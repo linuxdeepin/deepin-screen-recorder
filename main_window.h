@@ -55,6 +55,8 @@ protected:
     void resizeRight(QMouseEvent *event);
     void resizeTop(QMouseEvent *event);
     void updateCursor(QEvent *event);
+    void setDragCursor();
+    void resetCursor();
     void updateMouseEventArea();
         
 private:

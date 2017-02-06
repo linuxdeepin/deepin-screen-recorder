@@ -50,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
         windowRects.append(windowManager.getWindowRect(windows[i]));
     }
     
-    QApplication::setOverrideCursor(Qt::CrossCursor);    
+    setDragCursor();
 }
 
 void MainWindow::paintEvent(QPaintEvent *) 
@@ -181,7 +181,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));
                         showCountdownTimer->start(500);
                         
-                        QApplication::setOverrideCursor(Qt::ArrowCursor);    
+                        resetCursor();
                         
                         repaint();
                     } else if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
@@ -298,11 +298,12 @@ void MainWindow::showCountdown() {
         
         updateMouseEventArea();
         
-        QApplication::setOverrideCursor(Qt::ArrowCursor);    
+        resetCursor();
 
         recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight);
         recordProcess.start();
     }
+    
     countdownCounter--;
 }
 
@@ -464,3 +465,10 @@ void MainWindow::updateCursor(QEvent *event) {
     }
 }
 
+void MainWindow::setDragCursor() {
+    QApplication::setOverrideCursor(Qt::CrossCursor);    
+}
+
+void MainWindow::resetCursor() {
+    QApplication::setOverrideCursor(Qt::ArrowCursor);    
+}
