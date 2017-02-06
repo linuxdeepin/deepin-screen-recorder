@@ -30,6 +30,7 @@ void RecordProcess::run()
     file.remove();
 
     QStringList arguments;
+    arguments << QString("--duration=%1").arg(864000);
     arguments << QString("--x=%1").arg(recordX) << QString("--y=%1").arg(recordY);
     arguments << QString("--width=%1").arg(recordWidth) << QString("--height=%1").arg(recordHeight);
     arguments << savepath;
