@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     recordCounter = 0;
     
     // Get all windows geometry.
-    WindowsManager windowManager;
+    WindowManager windowManager;
     QList<xcb_window_t> windows = windowManager.getWindows();
     rootWindowRect = windowManager.getRootWindowRect();
     
@@ -282,7 +282,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     return false;
 }
 
-void MainWindow::showCountdown() {
+void MainWindow::showCountdown()
+{
     repaint();
     
     if (countdownCounter <= 0) {
@@ -307,7 +308,8 @@ void MainWindow::showCountdown() {
     countdownCounter--;
 }
 
-void MainWindow::showRecordSecond() {
+void MainWindow::showRecordSecond()
+{
     recordCounter++;
     
     repaint();
@@ -409,7 +411,8 @@ int MainWindow::getAction(QEvent *event) {
     }
 }
 
-void MainWindow::updateCursor(QEvent *event) {
+void MainWindow::updateCursor(QEvent *event)
+{
     if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         int cursorX = mouseEvent->x();
@@ -465,10 +468,13 @@ void MainWindow::updateCursor(QEvent *event) {
     }
 }
 
-void MainWindow::setDragCursor() {
+void MainWindow::setDragCursor()
+{
     QApplication::setOverrideCursor(Qt::CrossCursor);    
 }
 
-void MainWindow::resetCursor() {
+void MainWindow::resetCursor()
+{
     QApplication::setOverrideCursor(Qt::ArrowCursor);    
 }
+

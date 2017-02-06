@@ -12,12 +12,12 @@ struct WindowRect {
     int height;
 };
 
-class WindowsManager : public QObject 
+class WindowManager : public QObject 
 {
     Q_OBJECT
     
 public:
-    WindowsManager(QObject *parent = 0);
+    WindowManager(QObject *parent = 0);
     
     QList<int> getWindowFrameExtents(xcb_window_t window);
     QList<xcb_window_t> getWindows();

@@ -44,6 +44,7 @@ void RecordProcess::run()
     }
 }
 
-void RecordProcess::stopRecord() {
+void RecordProcess::stopRecord() 
+{
     process->kill();
 }
