@@ -94,21 +94,26 @@ void RecordProcess::recordVideo()
 
 void RecordProcess::stopRecord()
 {
+    // Exit record process.
+    process->terminate();
+
+    // Popup notify.
     QDBusInterface notification("org.freedesktop.Notifications",
                                 "/org/freedesktop/Notifications",
                                 "org.freedesktop.Notifications",
                                 QDBusConnection::sessionBus());
-    
-    QList<QVariant> arg;
-    arg << (QCoreApplication::applicationName()) //appname
-        << ((unsigned int) 0)                    //id
-        << QString("logo.png")                   //icon
-        << "Record successful"                   //summary
-        << QString("Save at: %1").arg(savePath)  //body
-        << QStringList()                         //actions
-        << QVariantMap()                         //hints
-        << (int) 5000;                           //timeout
-    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
 
-    process->terminate();
+    QStringList actions;
+    actions << "id_open" << "view";
+
+    QList<QVariant> arg;
+    arg << (QCoreApplication::applicationName()) // appname
+        << ((unsigned int) 0)                    // id
+        << QString("logo.png")                   // icon
+        << "Record successful"                   // summary
+        << QString("Save at: %1").arg(savePath)  // body
+        << actions                               // actions
+        << QVariantMap()                         // hints
+        << (int) -1;                             // timeout
+    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
 }
