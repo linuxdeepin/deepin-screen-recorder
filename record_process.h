@@ -29,4 +29,6 @@ private:
     int recordWidth;
     int recordHeight;
     int recordType;
+    
+    QString savePath;
 };

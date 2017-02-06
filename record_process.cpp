@@ -1,6 +1,7 @@
 #include <QThread>
 #include <QDebug>
 #include <QProcess>
+#include <QtDBus>
 #include <QDir>
 #include <QStandardPaths>
 #include <QObject>
@@ -18,45 +19,50 @@ void RecordProcess::setRecordInfo(int rx, int ry, int rw, int rh)
     recordHeight = rh;
 }
 
-void RecordProcess::setRecordType(int type) 
+void RecordProcess::setRecordType(int type)
 {
     recordType = type;
 }
 
 void RecordProcess::run()
 {
+    // Start record.
     if (recordType == RECORD_TYPE_GIF) {
         recordGIF();
     } else if (recordType == RECORD_TYPE_VIDEO) {
         recordVideo();
     }
+
+    // Got output or error.
+    process->waitForFinished(-1);
+    if (process->exitCode() !=0) {
+        qDebug() << "Error";
+        foreach (auto line, (process->readAllStandardError().split('\n'))) {
+            qDebug() << line;
+        }
+    } else{
+        qDebug() << "OK" << process->readAllStandardOutput() << process->readAllStandardError();
+    }
 }
 
-void RecordProcess::recordGIF() 
+void RecordProcess::recordGIF()
 {
     process = new QProcess();
     connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
 
     QString path = "%1/Desktop/%2";
-    QString savepath = path.arg(QDir::homePath()).arg("deepin-record.gif");
+    savePath = path.arg(QDir::homePath()).arg("deepin-record.gif");
 
-    QFile file(savepath);
+    QFile file(savePath);
     file.remove();
 
     QStringList arguments;
     arguments << QString("--duration=%1").arg(864000);
     arguments << QString("--x=%1").arg(recordX) << QString("--y=%1").arg(recordY);
     arguments << QString("--width=%1").arg(recordWidth) << QString("--height=%1").arg(recordHeight);
-    arguments << savepath;
+    arguments << savePath;
 
     process->start("byzanz-record", arguments);
-
-    process->waitForFinished(-1);
-    if (process->exitCode() !=0) {
-        qDebug() << "error" << process->readAllStandardError();
-    } else{
-        qDebug() << "ok" << process->readAllStandardOutput() << process->readAllStandardError();
-    }
 }
 
 void RecordProcess::recordVideo()
@@ -65,9 +71,9 @@ void RecordProcess::recordVideo()
     connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
 
     QString path = "%1/Desktop/%2";
-    QString savepath = path.arg(QDir::homePath()).arg("deepin-record.mp4");
+    savePath = path.arg(QDir::homePath()).arg("deepin-record.mp4");
 
-    QFile file(savepath);
+    QFile file(savePath);
     file.remove();
 
     // FFmpeg need pass arugment split two part: -option value,
@@ -81,22 +87,28 @@ void RecordProcess::recordVideo()
     arguments << QString("x11grab");
     arguments << QString("-i");
     arguments << QString(":0.0+%1,%2").arg(recordX).arg(recordY);
-    arguments << savepath;
-    
-    process->start("ffmpeg", arguments);
+    arguments << savePath;
 
-    process->waitForFinished(-1);
-    if (process->exitCode() !=0) {
-        qDebug() << "Error";
-        foreach (auto line, (process->readAllStandardError().split('\n'))) {
-            qDebug() << line;
-        }
-    } else{
-        qDebug() << "OK" << process->readAllStandardOutput() << process->readAllStandardError();
-    }
-}    
+    process->start("ffmpeg", arguments);
+}
 
 void RecordProcess::stopRecord()
 {
+    QDBusInterface notification("org.freedesktop.Notifications",
+                                "/org/freedesktop/Notifications",
+                                "org.freedesktop.Notifications",
+                                QDBusConnection::sessionBus());
+    
+    QList<QVariant> arg;
+    arg << (QCoreApplication::applicationName()) //appname
+        << ((unsigned int) 0)                    //id
+        << QString("logo.png")                   //icon
+        << "Record successful"                   //summary
+        << QString("Save at: %1").arg(savePath)  //body
+        << QStringList()                         //actions
+        << QVariantMap()                         //hints
+        << (int) 5000;                           //timeout
+    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+
     process->terminate();
 }

@@ -7,7 +7,7 @@ TARGET = deepin-recorder
 INCLUDEPATH += .
 
 CONFIG += link_pkgconfig
-CONFIG += c++11
+CONFIG += c++11 qdbus
 PKGCONFIG += xcb xcb-util
 
 # Input
