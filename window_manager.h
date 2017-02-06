@@ -12,13 +12,13 @@ struct WindowRect {
     int height;
 };
 
-class WindowManager : public QObject 
+class WindowManager : public QObject
 {
     Q_OBJECT
-    
+
 public:
     WindowManager(QObject *parent = 0);
-    
+
     QList<int> getWindowFrameExtents(xcb_window_t window);
     QList<xcb_window_t> getWindows();
     QString getAtomName(xcb_atom_t atom);
@@ -31,12 +31,12 @@ public:
     xcb_atom_t getAtom(QString name);
     xcb_get_geometry_reply_t* getWindowGeometry(xcb_window_t window);
     xcb_get_property_reply_t* getProperty(xcb_window_t window, QString propertyName, xcb_atom_t type);
-    
+
     xcb_window_t rootWindow;
-    
+
 protected:
     xcb_connection_t* conn;
     xcb_screen_t* screen;
 };
-    
+
 #endif

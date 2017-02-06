@@ -14,21 +14,21 @@
 #include "window_manager.h"
 #include "record_process.h"
 
-class MainWindow : public QWidget 
+class MainWindow : public QWidget
 {
     Q_OBJECT
-    
+
     static const int CURSOR_BOUND = 5;
     static const int RECORD_MIN_SIZE = 48;
     static const int DRAG_POINT_RADIUS = 5;
-    
+
     static const int PANEL_WIDTH = 120;
     static const int PANEL_HEIGHT = 32;
-    
+
     static const int RECORD_BUTTON_NORMAL = 0;
     static const int RECORD_BUTTON_WAIT = 1;
     static const int RECORD_BUTTON_RECORDING = 2;
-    
+
     static const int ACTION_MOVE = 0;
     static const int ACTION_RESIZE_TOP_LEFT = 1;
     static const int ACTION_RESIZE_TOP_RIGHT = 2;
@@ -38,14 +38,14 @@ class MainWindow : public QWidget
     static const int ACTION_RESIZE_BOTTOM = 6;
     static const int ACTION_RESIZE_LEFT = 7;
     static const int ACTION_RESIZE_RIGHT = 8;
-    
+
 public:
     MainWindow(QWidget *parent = 0);
-    
+
 public slots:
     void showCountdown();
     void showRecordSecond();
-    
+
 protected:
     bool eventFilter(QObject *object, QEvent *event);
     int getAction(QEvent *event);
@@ -58,23 +58,23 @@ protected:
     void setDragCursor();
     void resetCursor();
     void updateMouseEventArea();
-        
+
 private:
     QList<WindowRect> windowRects;
-    
+
     QTimer* recordTimer;
     QTimer* showCountdownTimer;
-    
+
     RecordProcess recordProcess;
     WindowRect rootWindowRect;
-    
+
     bool drawDragPoint;
-    
+
     bool firstPressButton;
     bool firstReleaseButton;
     bool isPressButton;
     bool isReleaseButton;
-    
+
     int dragAction;
     int dragRecordHeight;
     int dragRecordWidth;
@@ -82,13 +82,13 @@ private:
     int dragRecordY;
     int dragStartX;
     int dragStartY;
-    
+
     int recordButtonStatus;
     int recordCounter;
     int recordHeight;
     int recordWidth;
     int recordX;
     int recordY;
-    
+
     int countdownCounter;
 };

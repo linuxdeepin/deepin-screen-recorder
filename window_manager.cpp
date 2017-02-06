@@ -4,7 +4,7 @@
 #include <xcb/xcb_aux.h>
 #include "window_manager.h"
 
-WindowManager::WindowManager(QObject *parent) : QObject(parent) 
+WindowManager::WindowManager(QObject *parent) : QObject(parent)
 {
     int screenNum;
     conn = xcb_connect(0, &screenNum);
@@ -22,7 +22,7 @@ xcb_atom_t WindowManager::getAtom(QString name)
         result = reply->atom;
         free(reply);
     }
-    
+
     return result;
 }
 
@@ -43,12 +43,12 @@ QString WindowManager::getAtomName(xcb_atom_t atom)
     {
         result = QString::fromLatin1(xcb_get_atom_name_name(reply), xcb_get_atom_name_name_length(reply));
         free(reply);
-    }    
-    
+    }
+
     return result;
 }
 
-QStringList WindowManager::getWindowTypes(xcb_window_t window) 
+QStringList WindowManager::getWindowTypes(xcb_window_t window)
 {
     QStringList types;
     xcb_get_property_reply_t *reply = getProperty(window, "_NET_WM_WINDOW_TYPE", XCB_ATOM_ATOM);
@@ -56,24 +56,24 @@ QStringList WindowManager::getWindowTypes(xcb_window_t window)
     if(reply) {
         xcb_atom_t *typesA = static_cast<xcb_atom_t*>(xcb_get_property_value(reply));
         int typeNum = reply->length;
-        
+
         for(int i = 0; i < typeNum; i++) {
             types.append(getAtomName(typesA[i]));
         }
-        
+
         free(reply);
     }
-    
+
     return types;
 }
 
 QList<int> WindowManager::getWindowFrameExtents(xcb_window_t window)
 {
     QList<int> extents;
-    
+
     if (window != rootWindow) {
         xcb_get_property_reply_t *reply = getProperty(window, "_GTK_FRAME_EXTENTS", XCB_ATOM_CARDINAL);
-        
+
         if (reply) {
             // Because XCB haven't function to check property is exist,
             // we will got wrong value if property '_GTK_FRAME_EXTENTS' is not exist in window xprop attributes.
@@ -89,7 +89,7 @@ QList<int> WindowManager::getWindowFrameExtents(xcb_window_t window)
                 }
             }
         }
-    
+
         free(reply);
     }
 
@@ -117,7 +117,7 @@ QString WindowManager::getWindowName(xcb_window_t window)
 
 int WindowManager::getCurrentWorkspace(xcb_window_t window)
 {
-    
+
     xcb_get_property_reply_t *reply = getProperty(window, "_NET_CURRENT_DESKTOP", XCB_ATOM_CARDINAL);
     int desktop = 0;
 
@@ -126,7 +126,7 @@ int WindowManager::getCurrentWorkspace(xcb_window_t window)
     }
 
     free(reply);
-    
+
     return desktop;
 }
 
@@ -143,7 +143,7 @@ int WindowManager::getWindowWorkspace(xcb_window_t window)
         }
 
         free(reply);
-    
+
         return desktop;
     }
 }
@@ -152,14 +152,14 @@ QList<xcb_window_t> WindowManager::getWindows()
 {
     QList<xcb_window_t> windows;
     xcb_get_property_reply_t *listReply = getProperty(rootWindow, "_NET_CLIENT_LIST_STACKING", XCB_ATOM_WINDOW);
-    
+
     if (listReply) {
         xcb_window_t *windowList = static_cast<xcb_window_t*>(xcb_get_property_value(listReply));
         int windowListLength = listReply->length;
-        
+
         for (int i = 0; i < windowListLength; i++) {
             xcb_window_t window = windowList[i];
-            
+
             foreach(QString type, getWindowTypes(window)) {
                 if (type == "_NET_WM_WINDOW_TYPE_NORMAL") {
                     if (getWindowWorkspace(window) == getCurrentWorkspace(rootWindow)) {
@@ -170,54 +170,54 @@ QList<xcb_window_t> WindowManager::getWindows()
             }
         }
     }
-    
+
     // We need add root window in first index of list.
     windows.prepend(rootWindow);
-    
-    // We need re-sort windows list from up to bottom, 
+
+    // We need re-sort windows list from up to bottom,
     // to make compare cursor with window area from up to bottom.
     std::reverse(windows.begin(), windows.end());
-    
+
     return windows;
 }
 
-xcb_get_geometry_reply_t* WindowManager::getWindowGeometry(xcb_window_t window) 
+xcb_get_geometry_reply_t* WindowManager::getWindowGeometry(xcb_window_t window)
 {
     return xcb_get_geometry_reply(conn, xcb_get_geometry(conn, window), 0);
-}        
+}
 
 WindowRect WindowManager::getRootWindowRect() {
     WindowRect rect;
     xcb_get_geometry_reply_t *geometry = xcb_get_geometry_reply(conn, xcb_get_geometry(conn, rootWindow), 0);
-    
+
     rect.x = 0;
     rect.y = 0;
     rect.width = geometry->width;
     rect.height = geometry->height;
-    
+
     return rect;
 }
 
-WindowRect WindowManager::getWindowRect(xcb_window_t window) 
+WindowRect WindowManager::getWindowRect(xcb_window_t window)
 {
     WindowRect rect;
-    
+
     xcb_get_geometry_reply_t *geometry = getWindowGeometry(window);
     QList<int> extents = getWindowFrameExtents(window);
-    
+
     rect.x = geometry->x;
     rect.y = geometry->y;
     rect.width = geometry->width;
     rect.height = geometry->height;
-    
-    
+
+
     if (extents.length() == 4) {
         // _GTK_FRAME_EXTENTS: left, right, top, bottom
-        rect.x += extents[0];  
-        rect.y += extents[2];   
+        rect.x += extents[0];
+        rect.y += extents[2];
         rect.width -= extents[0] + extents[1];
         rect.height -= extents[2] + extents[3];
     }
-    
+
     return rect;
 }

@@ -11,13 +11,13 @@
 #include <xcb/xcb_aux.h>
 #include "window_manager.h"
 #include "main_window.h"
-    
-int main(int argc, char *argv[]) 
+
+int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    
+
     MainWindow window;
-    
+
     window.setWindowTitle("Deepin recorder");
     window.setWindowIcon(QIcon("logo.png"));
     window.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
@@ -25,6 +25,6 @@ int main(int argc, char *argv[])
     window.setAttribute(Qt::WA_TranslucentBackground, true);
     window.showFullScreen();
     window.show();
-    
+
     return app.exec();
 }
