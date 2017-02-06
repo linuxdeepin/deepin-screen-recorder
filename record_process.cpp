@@ -18,10 +18,18 @@ void RecordProcess::setRecordInfo(int rx, int ry, int rw, int rh)
     recordHeight = rh;
 }
 
+void RecordProcess::setRecordType(int type) 
+{
+    recordType = type;
+}
+
 void RecordProcess::run()
 {
-    // recordGIF();
-    recordVideo();
+    if (recordType == RECORD_TYPE_GIF) {
+        recordGIF();
+    } else if (recordType == RECORD_TYPE_VIDEO) {
+        recordVideo();
+    }
 }
 
 void RecordProcess::recordGIF() 

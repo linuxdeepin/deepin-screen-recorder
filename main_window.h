@@ -74,6 +74,8 @@ private:
     bool firstReleaseButton;
     bool isPressButton;
     bool isReleaseButton;
+    
+    bool isKeyPress;
 
     int dragAction;
     int dragRecordHeight;

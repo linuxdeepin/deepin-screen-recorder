@@ -2,6 +2,7 @@
 #include <QTimer>
 #include <QMouseEvent>
 #include <QEvent>
+#include <QKeyEvent>
 #include <QRegion>
 #include <QIcon>
 #include <QObject>
@@ -28,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     isPressButton = false;
     isReleaseButton = false;
+
+    isKeyPress = false;
 
     recordX = 0;
     recordY = 0;
@@ -144,6 +147,14 @@ void MainWindow::paintEvent(QPaintEvent *)
 
 bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
+#undef KeyPress
+#undef KeyRelease
+    if (event->type() == QEvent::KeyPress) {
+        isKeyPress = true;
+    } else if (event->type() == QEvent::KeyRelease) {
+        isKeyPress = false;
+    }
+
     if (event->type() == QEvent::MouseButtonPress) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         dragStartX = mouseEvent->x();
@@ -180,6 +191,13 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         showCountdownTimer = new QTimer(this);
                         connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));
                         showCountdownTimer->start(500);
+
+                        recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight);
+                        if (isKeyPress) {
+                            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
+                        } else {
+                            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
+                        }
 
                         resetCursor();
 
@@ -301,7 +319,6 @@ void MainWindow::showCountdown()
 
         resetCursor();
 
-        recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight);
         recordProcess.start();
     }
 

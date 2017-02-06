@@ -5,10 +5,15 @@
 class RecordProcess : public QThread
 {
     Q_OBJECT
-
+    
+    
 public:
+    static const int RECORD_TYPE_VIDEO = 0;
+    static const int RECORD_TYPE_GIF = 1;
+    
     RecordProcess(QObject *parent = 0);
     void setRecordInfo(int recordX, int recordY, int record_width, int recordHeight);
+    void setRecordType(int recordType);
     void stopRecord();
     void recordGIF();
     void recordVideo();
@@ -23,4 +28,5 @@ private:
     int recordY;
     int recordWidth;
     int recordHeight;
+    int recordType;
 };
