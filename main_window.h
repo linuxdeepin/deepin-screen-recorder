@@ -11,15 +11,15 @@
 #include <QDebug>
 #include <xcb/xcb.h>
 #include <xcb/xcb_aux.h>
-#include "screen_windows_info.h"
-#include "shell_process.h"
+#include "window_manager.h"
+#include "record_process.h"
 
 class MainWindow : public QWidget 
 {
     Q_OBJECT
     
     static const int CURSOR_BOUND = 5;
-    static const int MIN_SIZE = 48;
+    static const int RECORD_MIN_SIZE = 48;
     static const int DRAG_POINT_RADIUS = 5;
     
     static const int PANEL_WIDTH = 120;
@@ -39,57 +39,54 @@ class MainWindow : public QWidget
     static const int ACTION_RESIZE_LEFT = 7;
     static const int ACTION_RESIZE_RIGHT = 8;
     
-  public:
+public:
     MainWindow(QWidget *parent = 0);
     
-  public slots:
-    void showWaitSecond();
+public slots:
+    void showCountdown();
     void showRecordSecond();
     
-  protected:
-    void paintEvent(QPaintEvent *event);
+protected:
     bool eventFilter(QObject *object, QEvent *event);
-    void updateCursor(QEvent *event);
     int getAction(QEvent *event);
-    
-    void resizeTop(QMouseEvent *event);
+    void paintEvent(QPaintEvent *event);
     void resizeBottom(QMouseEvent *event);
     void resizeLeft(QMouseEvent *event);
     void resizeRight(QMouseEvent *event);
-    void dropMouseEvent();
+    void resizeTop(QMouseEvent *event);
+    void updateCursor(QEvent *event);
+    void updateMouseEventArea();
         
-  private:
+private:
     QList<WindowRect> windowRects;
+    
+    QTimer* recordTimer;
+    QTimer* showCountdownTimer;
+    
+    RecordProcess recordProcess;
     WindowRect rootWindowRect;
-    
-    bool firstPressButton;
-    bool firstReleaseButton;
-    int dragStartX;
-    int dragStartY;
-    
-    int dragAction;
-    int dragRecordX;
-    int dragRecordY;
-    int dragRecordWidth;
-    int dragRecordHeight;
-    
-    int recordButtonStatus;
-    
-    bool isPressButton;
-    bool isReleaseButton;
     
     bool drawDragPoint;
     
-    int record_x;
-    int record_y;
-    int record_width;
-    int record_height;
+    bool firstPressButton;
+    bool firstReleaseButton;
+    bool isPressButton;
+    bool isReleaseButton;
     
-    QTimer* showWaitTimer;
-    int showWaitCounter;
+    int dragAction;
+    int dragRecordHeight;
+    int dragRecordWidth;
+    int dragRecordX;
+    int dragRecordY;
+    int dragStartX;
+    int dragStartY;
     
-    QTimer* recordTimer;
+    int recordButtonStatus;
     int recordCounter;
-
-    ShellProcess recordProcess;
+    int recordHeight;
+    int recordWidth;
+    int recordX;
+    int recordY;
+    
+    int countdownCounter;
 };

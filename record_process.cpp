@@ -4,21 +4,21 @@
 #include <QDir>
 #include <QStandardPaths>
 #include <QObject>
-#include "shell_process.h"
+#include "record_process.h"
 
-ShellProcess::ShellProcess(QObject *parent) : QThread(parent)  
+RecordProcess::RecordProcess(QObject *parent) : QThread(parent)  
 {  
 }  
 
-void ShellProcess::setRecordInfo(int rx, int ry, int rw, int rh) 
+void RecordProcess::setRecordInfo(int rx, int ry, int rw, int rh) 
 {
-    record_x = rx;
-    record_y = ry;
-    record_width = rw;
-    record_height = rh;
+    recordX = rx;
+    recordY = ry;
+    recordWidth = rw;
+    recordHeight = rh;
 }        
 
-void ShellProcess::run()
+void RecordProcess::run()
 {
     process = new QProcess();
     connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
@@ -30,8 +30,8 @@ void ShellProcess::run()
     file.remove();
     
     QStringList arguments;
-    arguments << QString("--x=%1").arg(record_x) << QString("--y=%1").arg(record_y);
-    arguments << QString("--width=%1").arg(record_width) << QString("--height=%1").arg(record_height);
+    arguments << QString("--x=%1").arg(recordX) << QString("--y=%1").arg(recordY);
+    arguments << QString("--width=%1").arg(recordWidth) << QString("--height=%1").arg(recordHeight);
     arguments << savepath;
     
     process->start("byzanz-record", arguments);
@@ -44,6 +44,6 @@ void ShellProcess::run()
     }
 }
 
-void ShellProcess::stopRecord() {
+void RecordProcess::stopRecord() {
     process->kill();
 }

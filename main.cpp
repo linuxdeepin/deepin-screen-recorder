@@ -9,7 +9,7 @@
 #include <QDebug>
 #include <xcb/xcb.h>
 #include <xcb/xcb_aux.h>
-#include "screen_windows_info.h"
+#include "window_manager.h"
 #include "main_window.h"
     
 int main(int argc, char *argv[]) 

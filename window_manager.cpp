@@ -2,9 +2,9 @@
 #include <QDebug>
 #include <xcb/xcb.h>
 #include <xcb/xcb_aux.h>
-#include "screen_windows_info.h"
+#include "window_manager.h"
 
-ScreenWindowsInfo::ScreenWindowsInfo(QObject *parent) : QObject(parent) 
+WindowsManager::WindowsManager(QObject *parent) : QObject(parent) 
 {
     int screenNum;
     conn = xcb_connect(0, &screenNum);
@@ -12,7 +12,7 @@ ScreenWindowsInfo::ScreenWindowsInfo(QObject *parent) : QObject(parent)
     rootWindow = screen->root;
 }
 
-xcb_atom_t ScreenWindowsInfo::getAtom(QString name)
+xcb_atom_t WindowsManager::getAtom(QString name)
 {
     QByteArray rawName = name.toLatin1();
     xcb_atom_t result = XCB_ATOM_NONE;
@@ -26,13 +26,13 @@ xcb_atom_t ScreenWindowsInfo::getAtom(QString name)
     return result;
 }
 
-xcb_get_property_reply_t* ScreenWindowsInfo::getProperty(xcb_window_t window, QString propertyName, xcb_atom_t type)
+xcb_get_property_reply_t* WindowsManager::getProperty(xcb_window_t window, QString propertyName, xcb_atom_t type)
 {
     xcb_get_property_cookie_t cookie = xcb_get_property(conn, 0, window, getAtom(propertyName), type, 0, UINT32_MAX);
     return xcb_get_property_reply(conn, cookie, NULL);
 }
 
-QString ScreenWindowsInfo::getAtomName(xcb_atom_t atom)
+QString WindowsManager::getAtomName(xcb_atom_t atom)
 {
     QString result;
 
@@ -48,7 +48,7 @@ QString ScreenWindowsInfo::getAtomName(xcb_atom_t atom)
     return result;
 }
 
-QStringList ScreenWindowsInfo::getWindowTypes(xcb_window_t window) 
+QStringList WindowsManager::getWindowTypes(xcb_window_t window) 
 {
     QStringList types;
     xcb_get_property_reply_t *reply = getProperty(window, "_NET_WM_WINDOW_TYPE", XCB_ATOM_ATOM);
@@ -67,7 +67,7 @@ QStringList ScreenWindowsInfo::getWindowTypes(xcb_window_t window)
     return types;
 }
 
-QList<int> ScreenWindowsInfo::getWindowFrameExtents(xcb_window_t window)
+QList<int> WindowsManager::getWindowFrameExtents(xcb_window_t window)
 {
     QList<int> extents;
     
@@ -96,7 +96,7 @@ QList<int> ScreenWindowsInfo::getWindowFrameExtents(xcb_window_t window)
     return extents;
 }
 
-QString ScreenWindowsInfo::getWindowName(xcb_window_t window)
+QString WindowsManager::getWindowName(xcb_window_t window)
 {
     if (window == rootWindow) {
         return "Desktop";
@@ -115,7 +115,7 @@ QString ScreenWindowsInfo::getWindowName(xcb_window_t window)
     }
 }
 
-int ScreenWindowsInfo::getCurrentWorkspace(xcb_window_t window)
+int WindowsManager::getCurrentWorkspace(xcb_window_t window)
 {
     
     xcb_get_property_reply_t *reply = getProperty(window, "_NET_CURRENT_DESKTOP", XCB_ATOM_CARDINAL);
@@ -130,7 +130,7 @@ int ScreenWindowsInfo::getCurrentWorkspace(xcb_window_t window)
     return desktop;
 }
 
-int ScreenWindowsInfo::getWindowWorkspace(xcb_window_t window)
+int WindowsManager::getWindowWorkspace(xcb_window_t window)
 {
     if (window == rootWindow) {
         return getCurrentWorkspace(rootWindow);
@@ -148,7 +148,7 @@ int ScreenWindowsInfo::getWindowWorkspace(xcb_window_t window)
     }
 }
 
-QList<xcb_window_t> ScreenWindowsInfo::getWindows()
+QList<xcb_window_t> WindowsManager::getWindows()
 {
     QList<xcb_window_t> windows;
     xcb_get_property_reply_t *listReply = getProperty(rootWindow, "_NET_CLIENT_LIST_STACKING", XCB_ATOM_WINDOW);
@@ -181,12 +181,12 @@ QList<xcb_window_t> ScreenWindowsInfo::getWindows()
     return windows;
 }
 
-xcb_get_geometry_reply_t* ScreenWindowsInfo::getWindowGeometry(xcb_window_t window) 
+xcb_get_geometry_reply_t* WindowsManager::getWindowGeometry(xcb_window_t window) 
 {
     return xcb_get_geometry_reply(conn, xcb_get_geometry(conn, window), 0);
 }        
 
-WindowRect ScreenWindowsInfo::getRootWindowRect() {
+WindowRect WindowsManager::getRootWindowRect() {
     WindowRect rect;
     xcb_get_geometry_reply_t *geometry = xcb_get_geometry_reply(conn, xcb_get_geometry(conn, rootWindow), 0);
     
@@ -198,7 +198,7 @@ WindowRect ScreenWindowsInfo::getRootWindowRect() {
     return rect;
 }
 
-WindowRect ScreenWindowsInfo::getWindowRect(xcb_window_t window) 
+WindowRect WindowsManager::getWindowRect(xcb_window_t window) 
 {
     WindowRect rect;
     
