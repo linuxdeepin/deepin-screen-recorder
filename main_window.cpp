@@ -181,6 +181,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));
                         showCountdownTimer->start(500);
                         
+                        QApplication::setOverrideCursor(Qt::ArrowCursor);    
+                        
                         repaint();
                     } else if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
                         recordTimer->stop();
@@ -218,32 +220,34 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     repaint();
                 }
             } else if (isPressButton) {
-                if (dragAction == ACTION_MOVE) {
-                    recordX = std::max(std::min(dragRecordX + mouseEvent->x() - dragStartX, rootWindowRect.width - recordWidth), 1);
-                    recordY = std::max(std::min(dragRecordY + mouseEvent->y() - dragStartY, rootWindowRect.height - recordHeight), 1);
-                } else if (dragAction == ACTION_RESIZE_TOP_LEFT) {
-                    resizeTop(mouseEvent);
-                    resizeLeft(mouseEvent);
-                } else if (dragAction == ACTION_RESIZE_TOP_RIGHT) {
-                    resizeTop(mouseEvent);
-                    resizeRight(mouseEvent);
-                } else if (dragAction == ACTION_RESIZE_BOTTOM_LEFT) {
-                    resizeBottom(mouseEvent);
-                    resizeLeft(mouseEvent);
-                } else if (dragAction == ACTION_RESIZE_BOTTOM_RIGHT) {
-                    resizeBottom(mouseEvent);
-                    resizeRight(mouseEvent);
-                } else if (dragAction == ACTION_RESIZE_TOP) {
-                    resizeTop(mouseEvent);
-                } else if (dragAction == ACTION_RESIZE_BOTTOM) {
-                    resizeBottom(mouseEvent);
-                } else if (dragAction == ACTION_RESIZE_LEFT) {
-                    resizeLeft(mouseEvent);
-                } else if (dragAction == ACTION_RESIZE_RIGHT) {
-                    resizeRight(mouseEvent);
-                }
+                if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+                    if (dragAction == ACTION_MOVE) {
+                        recordX = std::max(std::min(dragRecordX + mouseEvent->x() - dragStartX, rootWindowRect.width - recordWidth), 1);
+                        recordY = std::max(std::min(dragRecordY + mouseEvent->y() - dragStartY, rootWindowRect.height - recordHeight), 1);
+                    } else if (dragAction == ACTION_RESIZE_TOP_LEFT) {
+                        resizeTop(mouseEvent);
+                        resizeLeft(mouseEvent);
+                    } else if (dragAction == ACTION_RESIZE_TOP_RIGHT) {
+                        resizeTop(mouseEvent);
+                        resizeRight(mouseEvent);
+                    } else if (dragAction == ACTION_RESIZE_BOTTOM_LEFT) {
+                        resizeBottom(mouseEvent);
+                        resizeLeft(mouseEvent);
+                    } else if (dragAction == ACTION_RESIZE_BOTTOM_RIGHT) {
+                        resizeBottom(mouseEvent);
+                        resizeRight(mouseEvent);
+                    } else if (dragAction == ACTION_RESIZE_TOP) {
+                        resizeTop(mouseEvent);
+                    } else if (dragAction == ACTION_RESIZE_BOTTOM) {
+                        resizeBottom(mouseEvent);
+                    } else if (dragAction == ACTION_RESIZE_LEFT) {
+                        resizeLeft(mouseEvent);
+                    } else if (dragAction == ACTION_RESIZE_RIGHT) {
+                        resizeRight(mouseEvent);
+                    }
                 
-                repaint();
+                    repaint();
+                }
             }
             
             updateCursor(event);
@@ -405,55 +409,57 @@ int MainWindow::getAction(QEvent *event) {
 }
 
 void MainWindow::updateCursor(QEvent *event) {
-    QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-    int cursorX = mouseEvent->x();
-    int cursorY = mouseEvent->y();
+    if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        int cursorX = mouseEvent->x();
+        int cursorY = mouseEvent->y();
     
-    if (cursorX > recordX - CURSOR_BOUND
-        && cursorX < recordX + CURSOR_BOUND
-        && cursorY > recordY - CURSOR_BOUND
-        && cursorY < recordY + CURSOR_BOUND) {
-        // Top-Left corner.
-        QApplication::setOverrideCursor(Qt::SizeFDiagCursor);
-    } else if (cursorX > recordX + recordWidth - CURSOR_BOUND
-               && cursorX < recordX + recordWidth + CURSOR_BOUND
-               && cursorY > recordY + recordHeight - CURSOR_BOUND
-               && cursorY < recordY + recordHeight + CURSOR_BOUND) {
-        // Bottom-Right corner.
-        QApplication::setOverrideCursor(Qt::SizeFDiagCursor);
-    } else if (cursorX > recordX + recordWidth - CURSOR_BOUND
-               && cursorX < recordX + recordWidth + CURSOR_BOUND
-               && cursorY > recordY - CURSOR_BOUND
-               && cursorY < recordY + CURSOR_BOUND) {
-        // Top-Right corner.
-        QApplication::setOverrideCursor(Qt::SizeBDiagCursor);
-    } else if (cursorX > recordX - CURSOR_BOUND
-               && cursorX < recordX + CURSOR_BOUND
-               && cursorY > recordY + recordHeight - CURSOR_BOUND
-               && cursorY < recordY + recordHeight + CURSOR_BOUND) {
-        // Bottom-Left corner.
-        QApplication::setOverrideCursor(Qt::SizeBDiagCursor);
-    } else if (cursorX > recordX - CURSOR_BOUND
-               && cursorX < recordX + CURSOR_BOUND) {
-        // Left.
-        QApplication::setOverrideCursor(Qt::SizeHorCursor);
-    } else if (cursorX > recordX + recordWidth - CURSOR_BOUND
-               && cursorX < recordX + recordWidth + CURSOR_BOUND) {
-        // Right.
-        QApplication::setOverrideCursor(Qt::SizeHorCursor);
-    } else if (cursorY > recordY - CURSOR_BOUND
-               && cursorY < recordY + CURSOR_BOUND) {
-        // Top.
-        QApplication::setOverrideCursor(Qt::SizeVerCursor);
-    } else if (cursorY > recordY + recordHeight - CURSOR_BOUND
-               && cursorY < recordY + recordHeight + CURSOR_BOUND) {
-        // Bottom.
-        QApplication::setOverrideCursor(Qt::SizeVerCursor);
-    } else {
-        if (isPressButton) {
-            QApplication::setOverrideCursor(Qt::ClosedHandCursor);    
+        if (cursorX > recordX - CURSOR_BOUND
+            && cursorX < recordX + CURSOR_BOUND
+            && cursorY > recordY - CURSOR_BOUND
+            && cursorY < recordY + CURSOR_BOUND) {
+            // Top-Left corner.
+            QApplication::setOverrideCursor(Qt::SizeFDiagCursor);
+        } else if (cursorX > recordX + recordWidth - CURSOR_BOUND
+                   && cursorX < recordX + recordWidth + CURSOR_BOUND
+                   && cursorY > recordY + recordHeight - CURSOR_BOUND
+                   && cursorY < recordY + recordHeight + CURSOR_BOUND) {
+            // Bottom-Right corner.
+            QApplication::setOverrideCursor(Qt::SizeFDiagCursor);
+        } else if (cursorX > recordX + recordWidth - CURSOR_BOUND
+                   && cursorX < recordX + recordWidth + CURSOR_BOUND
+                   && cursorY > recordY - CURSOR_BOUND
+                   && cursorY < recordY + CURSOR_BOUND) {
+            // Top-Right corner.
+            QApplication::setOverrideCursor(Qt::SizeBDiagCursor);
+        } else if (cursorX > recordX - CURSOR_BOUND
+                   && cursorX < recordX + CURSOR_BOUND
+                   && cursorY > recordY + recordHeight - CURSOR_BOUND
+                   && cursorY < recordY + recordHeight + CURSOR_BOUND) {
+            // Bottom-Left corner.
+            QApplication::setOverrideCursor(Qt::SizeBDiagCursor);
+        } else if (cursorX > recordX - CURSOR_BOUND
+                   && cursorX < recordX + CURSOR_BOUND) {
+            // Left.
+            QApplication::setOverrideCursor(Qt::SizeHorCursor);
+        } else if (cursorX > recordX + recordWidth - CURSOR_BOUND
+                   && cursorX < recordX + recordWidth + CURSOR_BOUND) {
+            // Right.
+            QApplication::setOverrideCursor(Qt::SizeHorCursor);
+        } else if (cursorY > recordY - CURSOR_BOUND
+                   && cursorY < recordY + CURSOR_BOUND) {
+            // Top.
+            QApplication::setOverrideCursor(Qt::SizeVerCursor);
+        } else if (cursorY > recordY + recordHeight - CURSOR_BOUND
+                   && cursorY < recordY + recordHeight + CURSOR_BOUND) {
+            // Bottom.
+            QApplication::setOverrideCursor(Qt::SizeVerCursor);
         } else {
-            QApplication::setOverrideCursor(Qt::OpenHandCursor);    
+            if (isPressButton) {
+                QApplication::setOverrideCursor(Qt::ClosedHandCursor);    
+            } else {
+                QApplication::setOverrideCursor(Qt::OpenHandCursor);    
+            }
         }
     }
 }
