@@ -20,7 +20,7 @@ class MainWindow : public QWidget
 
     static const int CURSOR_BOUND = 5;
     static const int RECORD_MIN_SIZE = 48;
-    static const int DRAG_POINT_RADIUS = 5;
+    static const int DRAG_POINT_RADIUS = 8;
 
     static const int PANEL_WIDTH = 120;
     static const int PANEL_HEIGHT = 32;
@@ -93,4 +93,7 @@ private:
     int recordY;
 
     int countdownCounter;
+    
+    QImage resizeHandleBig;
+    QImage resizeHandleSmall;
 };

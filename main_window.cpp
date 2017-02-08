@@ -43,6 +43,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     countdownCounter = 0;
     recordCounter = 0;
+    
+    resizeHandleBig = QImage("image/resize_handle_big.png");
+    resizeHandleSmall = QImage("image/resize_handle_small.png");
 
     // Get all windows geometry.
     WindowManager windowManager;
@@ -82,18 +85,24 @@ void MainWindow::paintEvent(QPaintEvent *)
         // Draw drag pint.
         if (drawDragPoint) {
             painter.setClipRegion(QRegion(backgroundRect));
-            painter.setRenderHint(QPainter::Antialiasing);
-            painter.setOpacity(1);
-            framePen.setWidth(1);
-            painter.setBrush(QBrush("#666666"));
-            painter.drawEllipse(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
-            painter.drawEllipse(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
-            painter.drawEllipse(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
-            painter.drawEllipse(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
-            painter.drawEllipse(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight / 2, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
-            painter.drawEllipse(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight / 2, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
-            painter.drawEllipse(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
-            painter.drawEllipse(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS + recordHeight, DRAG_POINT_RADIUS * 2, DRAG_POINT_RADIUS * 2);
+            
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS), resizeHandleBig);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS), resizeHandleBig);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBig);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBig);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight / 2), resizeHandleBig);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight / 2), resizeHandleBig);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS), resizeHandleBig);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBig);
+
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS), resizeHandleSmall);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS), resizeHandleSmall);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleSmall);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleSmall);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight / 2), resizeHandleSmall);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight / 2), resizeHandleSmall);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS), resizeHandleSmall);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleSmall);
         }
 
         // Draw record panel.
