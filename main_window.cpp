@@ -44,23 +44,23 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     countdownCounter = 0;
 
-    resizeHandleBigImg = QImage("image/resize_handle_big.png");
-    resizeHandleSmallImg = QImage("image/resize_handle_small.png");
-    countdown1Img = QImage("image/countdown_1.png");
-    countdown2Img = QImage("image/countdown_2.png");
-    countdown3Img = QImage("image/countdown_3.png");
-    recordIconNormalImg = QImage("image/record_icon_normal.png");
-    recordIconHoverImg = QImage("image/record_icon_hover.png");
-    recordIconPressImg = QImage("image/record_icon_press.png");
-    recordStopImg = QImage("image/record_stop.png");
+    resizeHandleBigImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/resize_handle_big.png"));
+    resizeHandleSmallImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/resize_handle_small.png"));
+    countdown1Img = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/countdown_1.png"));
+    countdown2Img = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/countdown_2.png"));
+    countdown3Img = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/countdown_3.png"));
+    recordIconNormalImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/record_icon_normal.png"));
+    recordIconHoverImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/record_icon_hover.png"));
+    recordIconPressImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/record_icon_press.png"));
+    recordStopImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/record_stop.png"));
 
-    recordGifNormalImg = QImage("image/gif_normal.png");
-    recordGifPressImg = QImage("image/gif_press.png");
-    recordGifCheckedImg = QImage("image/gif_checked.png");
+    recordGifNormalImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/gif_normal.png"));
+    recordGifPressImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/gif_press.png"));
+    recordGifCheckedImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/gif_checked.png"));
 
-    recordMp4NormalImg = QImage("image/mp4_normal.png");
-    recordMp4PressImg = QImage("image/mp4_press.png");
-    recordMp4CheckedImg = QImage("image/mp4_checked.png");
+    recordMp4NormalImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/mp4_normal.png"));
+    recordMp4PressImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/mp4_press.png"));
+    recordMp4CheckedImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/mp4_checked.png"));
 
     // Get all windows geometry.
     WindowManager windowManager;
