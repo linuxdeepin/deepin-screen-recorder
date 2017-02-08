@@ -44,15 +44,15 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     countdownCounter = 0;
 
-    resizeHandleBig = QImage("image/resize_handle_big.png");
-    resizeHandleSmall = QImage("image/resize_handle_small.png");
-    countdown1 = QImage("image/countdown_1.png");
-    countdown2 = QImage("image/countdown_2.png");
-    countdown3 = QImage("image/countdown_3.png");
-    recordIconNormal = QImage("image/record_icon_normal.png");
-    recordIconHover = QImage("image/record_icon_hover.png");
-    recordIconPress = QImage("image/record_icon_press.png");
-    recordStop = QImage("image/record_stop.png");
+    resizeHandleBigImg = QImage("image/resize_handle_big.png");
+    resizeHandleSmallImg = QImage("image/resize_handle_small.png");
+    countdown1Img = QImage("image/countdown_1.png");
+    countdown2Img = QImage("image/countdown_2.png");
+    countdown3Img = QImage("image/countdown_3.png");
+    recordIconNormalImg = QImage("image/record_icon_normal.png");
+    recordIconHoverImg = QImage("image/record_icon_hover.png");
+    recordIconPressImg = QImage("image/record_icon_press.png");
+    recordStopImg = QImage("image/record_stop.png");
 
     // Get all windows geometry.
     WindowManager windowManager;
@@ -113,23 +113,23 @@ void MainWindow::paintEvent(QPaintEvent *)
         // Draw drag pint.
         if (drawDragPoint) {
 
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS), resizeHandleBig);
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS), resizeHandleBig);
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBig);
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBig);
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight / 2), resizeHandleBig);
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight / 2), resizeHandleBig);
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS), resizeHandleBig);
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBig);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS), resizeHandleBigImg);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS), resizeHandleBigImg);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBigImg);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBigImg);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight / 2), resizeHandleBigImg);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight / 2), resizeHandleBigImg);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS), resizeHandleBigImg);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBigImg);
 
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS), resizeHandleSmall);
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS), resizeHandleSmall);
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleSmall);
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleSmall);
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight / 2), resizeHandleSmall);
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight / 2), resizeHandleSmall);
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS), resizeHandleSmall);
-            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleSmall);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS), resizeHandleSmallImg);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS), resizeHandleSmallImg);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleSmallImg);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleSmallImg);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight / 2), resizeHandleSmallImg);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight / 2), resizeHandleSmallImg);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS), resizeHandleSmallImg);
+            painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleSmallImg);
         }
 
         // Draw record panel.
@@ -148,14 +148,14 @@ void MainWindow::paintEvent(QPaintEvent *)
                     painter.fillPath(path, Qt::white);
 
                     if (recordButtonState == BUTTON_STATE_NORMAL) {
-                        painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormal.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconNormal);
+                        painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconNormalImg);
                     } else if (recordButtonState == BUTTON_STATE_HOVER) {
-                        painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormal.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconHover);
+                        painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconHoverImg);
                     } else if (recordButtonState == BUTTON_STATE_PRESS) {
-                        painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormal.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconPress);
+                        painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconPressImg);
                     }
 
-                    QRectF recordStringRect(recordButtonX, recordButtonY + recordIconNormal.height(), RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT - recordIconNormal.height());
+                    QRectF recordStringRect(recordButtonX, recordButtonY + recordIconNormalImg.height(), RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT - recordIconNormalImg.height());
                     QString recordString = "开始录制";
                     QFont font = painter.font() ;
                     font.setPointSize(11);
@@ -180,7 +180,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                         buttonX = recordX + recordWidth / 2 - PANEL_WIDTH / 2;
                         buttonY = recordY + recordHeight - PANEL_HEIGHT;
                     }
-                    painter.drawImage(QRect(buttonX, buttonY, PANEL_WIDTH, PANEL_HEIGHT), recordStop);
+                    painter.drawImage(QRect(buttonX, buttonY, PANEL_WIDTH, PANEL_HEIGHT), recordStopImg);
                 }
 
                 painter.setClipping(false);
@@ -198,15 +198,15 @@ void MainWindow::paintEvent(QPaintEvent *)
                     path.addRoundedRect(countdownRect, 8, 8);
                     painter.fillPath(path, Qt::white);
 
-                    int countdownX = recordX + (recordWidth - countdown1.width()) / 2;
+                    int countdownX = recordX + (recordWidth - countdown1Img.width()) / 2;
                     int countdownY = recordY + (recordHeight - COUNTDOWN_TOOLTIP_HEIGHT) / 2 + COUNTDOWN_NUMBER_OFFSET_Y;
 
                     if (countdownCounter == 1) {
-                        painter.drawImage(QPoint(countdownX, countdownY), countdown1);
+                        painter.drawImage(QPoint(countdownX, countdownY), countdown1Img);
                     } else if (countdownCounter == 2) {
-                        painter.drawImage(QPoint(countdownX, countdownY), countdown2);
+                        painter.drawImage(QPoint(countdownX, countdownY), countdown2Img);
                     } else if (countdownCounter == 3) {
-                        painter.drawImage(QPoint(countdownX, countdownY), countdown3);
+                        painter.drawImage(QPoint(countdownX, countdownY), countdown3Img);
                     }
 
                     QRectF countdownStringRect(recordX + (recordWidth - COUNTDOWN_TOOLTIP_WIDTH) / 2,

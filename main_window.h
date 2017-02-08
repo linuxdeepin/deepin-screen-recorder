@@ -113,15 +113,15 @@ private:
 
     int countdownCounter;
     
-    QImage resizeHandleBig;
-    QImage resizeHandleSmall;
+    QImage resizeHandleBigImg;
+    QImage resizeHandleSmallImg;
     
-    QImage countdown1;
-    QImage countdown2;
-    QImage countdown3;
+    QImage countdown1Img;
+    QImage countdown2Img;
+    QImage countdown3Img;
     
-    QImage recordIconNormal;
-    QImage recordIconHover;
-    QImage recordIconPress;
-    QImage recordStop;
+    QImage recordIconNormalImg;
+    QImage recordIconHoverImg;
+    QImage recordIconPressImg;
+    QImage recordStopImg;
 };
