@@ -172,14 +172,14 @@ void MainWindow::paintEvent(QPaintEvent *)
                     painter.fillPath(recordOptionsPath, Qt::white);
                 } else if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
                     int buttonX, buttonY;
-                    if (rootWindowRect.height - recordY - recordHeight > PANEL_HEIGHT) {
-                        buttonX = recordX + recordWidth / 2 - PANEL_WIDTH / 2;
+                    if (rootWindowRect.height - recordY - recordHeight > RECORD_STOP_BUTTON_HEIGHT) {
+                        buttonX = recordX + recordWidth / 2 - RECORD_STOP_BUTTON_WIDTH / 2;
                         buttonY = recordY + recordHeight;
                     } else {
-                        buttonX = recordX + recordWidth / 2 - PANEL_WIDTH / 2;
-                        buttonY = recordY + recordHeight - PANEL_HEIGHT;
+                        buttonX = recordX + recordWidth / 2 - RECORD_STOP_BUTTON_WIDTH / 2;
+                        buttonY = recordY + recordHeight - RECORD_STOP_BUTTON_HEIGHT;
                     }
-                    painter.drawImage(QRect(buttonX, buttonY, PANEL_WIDTH, PANEL_HEIGHT), recordStopImg);
+                    painter.drawImage(QRect(buttonX, buttonY, RECORD_STOP_BUTTON_WIDTH, RECORD_STOP_BUTTON_HEIGHT), recordStopImg);
                 }
 
                 painter.setClipping(false);
@@ -246,15 +246,15 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                 int buttonX, buttonY;
 
-                if (rootWindowRect.height - recordY - recordHeight > PANEL_HEIGHT) {
-                    buttonX = recordX + recordWidth / 2 - PANEL_WIDTH / 2;
+                if (rootWindowRect.height - recordY - recordHeight > RECORD_STOP_BUTTON_HEIGHT) {
+                    buttonX = recordX + recordWidth / 2 - RECORD_STOP_BUTTON_WIDTH / 2;
                     buttonY = recordY + recordHeight;
                 } else {
-                    buttonX = recordX + recordWidth / 2 - PANEL_WIDTH / 2;
-                    buttonY = recordY + recordHeight - PANEL_HEIGHT;
+                    buttonX = recordX + recordWidth / 2 - RECORD_STOP_BUTTON_WIDTH / 2;
+                    buttonY = recordY + recordHeight - RECORD_STOP_BUTTON_HEIGHT;
                 }
 
-                if (pressX > buttonX && pressX < buttonX + PANEL_WIDTH && pressY > buttonY && pressY < buttonY + PANEL_HEIGHT) {
+                if (pressX > buttonX && pressX < buttonX + RECORD_STOP_BUTTON_WIDTH && pressY > buttonY && pressY < buttonY + RECORD_STOP_BUTTON_HEIGHT) {
                     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
                         recordProcess.stopRecord();
                         QApplication::quit();
@@ -413,19 +413,19 @@ void MainWindow::showCountdown()
 void MainWindow::updateMouseEventArea()
 {
     int buttonX, buttonY;
-    if (rootWindowRect.height - recordY - recordHeight > PANEL_HEIGHT) {
-        buttonX = recordX + recordWidth / 2 - PANEL_WIDTH / 2;
+    if (rootWindowRect.height - recordY - recordHeight > RECORD_STOP_BUTTON_HEIGHT) {
+        buttonX = recordX + recordWidth / 2 - RECORD_STOP_BUTTON_WIDTH / 2;
         buttonY = recordY + recordHeight;
     } else {
-        buttonX = recordX + recordWidth / 2 - PANEL_WIDTH / 2;
-        buttonY = recordY + recordHeight - PANEL_HEIGHT;
+        buttonX = recordX + recordWidth / 2 - RECORD_STOP_BUTTON_WIDTH / 2;
+        buttonY = recordY + recordHeight - RECORD_STOP_BUTTON_HEIGHT;
     }
 
     XRectangle* reponseArea = new XRectangle;
     reponseArea->x = buttonX;
     reponseArea->y = buttonY;
-    reponseArea->width = PANEL_WIDTH;
-    reponseArea->height = PANEL_HEIGHT;
+    reponseArea->width = RECORD_STOP_BUTTON_WIDTH;
+    reponseArea->height = RECORD_STOP_BUTTON_HEIGHT;
 
     XShapeCombineRectangles(QX11Info::display(), winId(), ShapeInput, 0, 0, reponseArea ,1 ,ShapeSet, YXBanded);
 }

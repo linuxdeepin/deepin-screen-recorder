@@ -22,8 +22,8 @@ class MainWindow : public QWidget
     static const int RECORD_MIN_SIZE = 48;
     static const int DRAG_POINT_RADIUS = 8;
 
-    static const int PANEL_WIDTH = 52;
-    static const int PANEL_HEIGHT = 48;
+    static const int RECORD_STOP_BUTTON_WIDTH = 52;
+    static const int RECORD_STOP_BUTTON_HEIGHT = 48;
 
     static const int RECORD_BUTTON_NORMAL = 0;
     static const int RECORD_BUTTON_WAIT = 1;
