@@ -273,6 +273,17 @@ void MainWindow::paintEvent(QPaintEvent *)
 
 bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
+#undef KeyPress
+#undef KeyRelease
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        if (keyEvent->key() == Qt::Key_Escape) {
+            if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
+                QApplication::quit();
+            }
+        }
+    }
+
     int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
     int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
 
