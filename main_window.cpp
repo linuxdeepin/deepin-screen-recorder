@@ -44,9 +44,12 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     countdownCounter = 0;
     recordCounter = 0;
-    
+
     resizeHandleBig = QImage("image/resize_handle_big.png");
     resizeHandleSmall = QImage("image/resize_handle_small.png");
+    countdown1 = QImage("image/countdown_1.png");
+    countdown2 = QImage("image/countdown_2.png");
+    countdown3 = QImage("image/countdown_3.png");
 
     // Get all windows geometry.
     WindowManager windowManager;
@@ -63,24 +66,24 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 void MainWindow::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
-    
+
     if (!firstMove) {
-        QRectF tooltipRect((rootWindowRect.width - TOOLTIP_WIDTH) / 2, (rootWindowRect.height - TOOLTIP_HEIGHT) / 2, TOOLTIP_WIDTH, TOOLTIP_HEIGHT);
-        
+        QRectF tooltipRect((rootWindowRect.width - INIT_TOOLTIP_WIDTH) / 2, (rootWindowRect.height - INIT_TOOLTIP_HEIGHT) / 2, INIT_TOOLTIP_WIDTH, INIT_TOOLTIP_HEIGHT);
+
         painter.setRenderHint(QPainter::Antialiasing);
         painter.setOpacity(0.8);
         QPainterPath path;
         path.addRoundedRect(tooltipRect, 8, 8);
         painter.fillPath(path, Qt::white);
-        
-        QString tooltipString = "点击录制窗口或全屏\n拖动鼠标选择录制区域";
+
+        QString tooltipString = "点击录制窗口或者全屏\n拖动鼠标选择录制区域";
         QFont font = painter.font() ;
         font.setPointSize(11);
         painter.setFont(font);
         painter.setPen(QPen(QColor("#000000")));
         painter.drawText(tooltipRect, Qt::AlignCenter, tooltipString);
     }
-    
+
     if (recordWidth > 0 && recordHeight > 0) {
 
         QRect backgroundRect = QRect(rootWindowRect.x, rootWindowRect.y, rootWindowRect.width, rootWindowRect.height);
@@ -104,7 +107,7 @@ void MainWindow::paintEvent(QPaintEvent *)
         // Draw drag pint.
         if (drawDragPoint) {
             painter.setClipRegion(QRegion(backgroundRect));
-            
+
             painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS), resizeHandleBig);
             painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS), resizeHandleBig);
             painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBig);
@@ -162,11 +165,39 @@ void MainWindow::paintEvent(QPaintEvent *)
 
                 // Draw record wait second.
                 if (countdownCounter > 0) {
-                    QFont secondFont = painter.font() ;
-                    secondFont.setPointSize(30);
-                    painter.setFont(secondFont);
-                    painter.setPen(QPen(QColor("#ff0000")));
-                    painter.drawText(QPoint(recordX + recordWidth / 2, recordY + recordHeight / 2), QString::number(countdownCounter));
+                    QRectF countdownRect(recordX + (recordWidth - COUNTDOWN_TOOLTIP_WIDTH) / 2,
+                                         recordY + (recordHeight - COUNTDOWN_TOOLTIP_HEIGHT) / 2,
+                                         COUNTDOWN_TOOLTIP_WIDTH,
+                                         COUNTDOWN_TOOLTIP_HEIGHT);
+
+                    painter.setRenderHint(QPainter::Antialiasing);
+                    painter.setOpacity(0.8);
+                    QPainterPath path;
+                    path.addRoundedRect(countdownRect, 8, 8);
+                    painter.fillPath(path, Qt::white);
+
+                    int countdownX = recordX + (recordWidth - countdown1.width()) / 2;
+                    int countdownY = recordY + (recordHeight - COUNTDOWN_TOOLTIP_HEIGHT) / 2 + COUNTDOWN_NUMBER_OFFSET_Y;
+
+                    if (countdownCounter == 1) {
+                        painter.drawImage(QPoint(countdownX, countdownY), countdown1);
+                    } else if (countdownCounter == 2) {
+                        painter.drawImage(QPoint(countdownX, countdownY), countdown2);
+                    } else if (countdownCounter == 3) {
+                        painter.drawImage(QPoint(countdownX, countdownY), countdown3);
+                    }
+                    
+                    QRectF countdownStringRect(recordX + (recordWidth - COUNTDOWN_TOOLTIP_WIDTH) / 2,
+                                               recordY + (recordHeight - COUNTDOWN_TOOLTIP_HEIGHT) / 2 + COUNTDOWN_STRING_OFFSET_Y,
+                                               COUNTDOWN_TOOLTIP_WIDTH,
+                                               COUNTDOWN_TOOLTIP_HEIGHT - COUNTDOWN_STRING_OFFSET_Y);
+
+                    QString countdownString = "点击任务栏图标或按下\nCtrl+Shift+R停止录制";
+                    QFont font = painter.font() ;
+                    font.setPointSize(11);
+                    painter.setFont(font);
+                    painter.setPen(QPen(QColor("#000000")));
+                    painter.drawText(countdownStringRect, Qt::AlignCenter, countdownString);
                 }
             }
         }
@@ -257,7 +288,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         if (!firstMove) {
             firstMove = true;
         }
-        
+
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         if (firstPressButton) {
             if (!firstReleaseButton) {
