@@ -52,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     recordIconNormal = QImage("image/record_icon_normal.png");
     recordIconHover = QImage("image/record_icon_hover.png");
     recordIconPress = QImage("image/record_icon_press.png");
+    recordStop = QImage("image/record_stop.png");
 
     // Get all windows geometry.
     WindowManager windowManager;
@@ -161,7 +162,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                     painter.setFont(font);
                     painter.setPen(QPen(QColor("#e34342")));
                     painter.drawText(recordStringRect, Qt::AlignCenter, recordString);
-                    
+
                     int recordOptionsX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
                     int recordOptionsY = recordY + (recordHeight + RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT + RECORD_OPTIONS_AREA_PADDING) / 2;
                     QRectF recordOptionsRect(recordOptionsX, recordOptionsY, RECORD_BUTTON_AREA_WIDTH, RECORD_OPTIONS_AREA_HEIGHT);
@@ -171,26 +172,18 @@ void MainWindow::paintEvent(QPaintEvent *)
                     recordOptionsPath.addRoundedRect(recordOptionsRect, 8, 8);
                     painter.fillPath(recordOptionsPath, Qt::white);
                 } else if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
-                    painter.setBrush(QBrush("#FF2100"));
-                    buttonString = "停止";
+                    int buttonX, buttonY;
+                    if (rootWindowRect.height - recordY - recordHeight > PANEL_HEIGHT) {
+                        buttonX = recordX + recordWidth / 2 - PANEL_WIDTH / 2;
+                        buttonY = recordY + recordHeight;
+                    } else {
+                        buttonX = recordX + recordWidth / 2 - PANEL_WIDTH / 2;
+                        buttonY = recordY + recordHeight - PANEL_HEIGHT;
+                    }
+                    painter.drawImage(QRect(buttonX, buttonY, PANEL_WIDTH, PANEL_HEIGHT), recordStop);
                 }
 
                 painter.setClipping(false);
-                int buttonX, buttonY;
-                if (rootWindowRect.height - recordY - recordHeight > PANEL_HEIGHT) {
-                    buttonX = recordX + recordWidth / 2 - PANEL_WIDTH / 2;
-                    buttonY = recordY + recordHeight;
-                } else {
-                    buttonX = recordX + recordWidth / 2 - PANEL_WIDTH / 2;
-                    buttonY = recordY + recordHeight - PANEL_HEIGHT;
-                }
-                painter.drawRect(QRect(buttonX, buttonY, PANEL_WIDTH, PANEL_HEIGHT));
-
-                QFont font = painter.font() ;
-                font.setPointSize(14);
-                painter.setFont(font);
-                painter.setPen(QPen(QColor("#000000")));
-                painter.drawText(QPoint(buttonX + 40, buttonY + 24), buttonString);
 
                 // Draw record wait second.
                 if (countdownCounter > 0) {
