@@ -42,9 +42,9 @@ class MainWindow : public QWidget
     static const int INIT_TOOLTIP_WIDTH = 184;
     static const int INIT_TOOLTIP_HEIGHT = 68;
     
-    static const int COUNTDOWN_TOOLTIP_WIDTH = 184;
-    static const int COUNTDOWN_TOOLTIP_HEIGHT = 168;
-    static const int COUNTDOWN_NUMBER_OFFSET_Y = 54;
+    static const int COUNTDOWN_TOOLTIP_WIDTH = 140;
+    static const int COUNTDOWN_TOOLTIP_HEIGHT = 140;
+    static const int COUNTDOWN_NUMBER_OFFSET_Y = 40;
     
     static const int RECORD_BUTTON_AREA_WIDTH = 124;
     static const int RECORD_BUTTON_AREA_HEIGHT = 86;
