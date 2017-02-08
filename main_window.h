@@ -38,6 +38,7 @@ class MainWindow : public QWidget
     static const int ACTION_RESIZE_BOTTOM = 6;
     static const int ACTION_RESIZE_LEFT = 7;
     static const int ACTION_RESIZE_RIGHT = 8;
+    static const int ACTION_STAY = 9;
     
     static const int INIT_TOOLTIP_WIDTH = 184;
     static const int INIT_TOOLTIP_HEIGHT = 68;
