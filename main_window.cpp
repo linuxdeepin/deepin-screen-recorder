@@ -598,6 +598,11 @@ void MainWindow::updateCursor(QEvent *event)
         int cursorX = mouseEvent->x();
         int cursorY = mouseEvent->y();
 
+        int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
+        int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
+        int recordButtonWidth = RECORD_BUTTON_AREA_WIDTH;
+        int recordButtonHeight = RECORD_BUTTON_AREA_HEIGHT + RECORD_OPTIONS_AREA_HEIGHT + RECORD_OPTIONS_AREA_PADDING;
+
         if (cursorX > recordX - CURSOR_BOUND
             && cursorX < recordX + CURSOR_BOUND
             && cursorY > recordY - CURSOR_BOUND
@@ -638,13 +643,19 @@ void MainWindow::updateCursor(QEvent *event)
                    && cursorY < recordY + recordHeight + CURSOR_BOUND) {
             // Bottom.
             QApplication::setOverrideCursor(Qt::SizeVerCursor);
+        } else if (cursorX > recordButtonX
+                   && cursorX < recordButtonX + recordButtonWidth
+                   && cursorY > recordButtonY
+                   && cursorY < recordButtonY + recordButtonHeight) {
+            // Record button.
+            QApplication::setOverrideCursor(Qt::ArrowCursor);
         } else {
-            if (isPressButton) {
-                QApplication::setOverrideCursor(Qt::ClosedHandCursor);
-            } else {
-                QApplication::setOverrideCursor(Qt::OpenHandCursor);
+                if (isPressButton) {
+                    QApplication::setOverrideCursor(Qt::ClosedHandCursor);
+                } else {
+                    QApplication::setOverrideCursor(Qt::OpenHandCursor);
+                }
             }
-        }
     }
 }
 
