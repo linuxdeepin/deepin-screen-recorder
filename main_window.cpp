@@ -186,7 +186,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                     } else if (countdownCounter == 3) {
                         painter.drawImage(QPoint(countdownX, countdownY), countdown3);
                     }
-                    
+
                     QRectF countdownStringRect(recordX + (recordWidth - COUNTDOWN_TOOLTIP_WIDTH) / 2,
                                                recordY + (recordHeight - COUNTDOWN_TOOLTIP_HEIGHT) / 2 + COUNTDOWN_STRING_OFFSET_Y,
                                                COUNTDOWN_TOOLTIP_WIDTH,

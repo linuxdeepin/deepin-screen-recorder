@@ -7,14 +7,16 @@ TARGET = deepin-recorder
 INCLUDEPATH += .
 
 CONFIG += link_pkgconfig
-CONFIG += c++11 qdbus
+CONFIG += c++11 
 PKGCONFIG += xcb xcb-util
 
 # Input
-HEADERS += window_manager.h main_window.h record_process.h
-SOURCES += main.cpp window_manager.cpp main_window.cpp record_process.cpp
+HEADERS += window_manager.h main_window.h record_process.h single_application.h
+SOURCES += main.cpp window_manager.cpp main_window.cpp record_process.cpp single_application.cpp
 
 QT += widgets
 QT += gui
+QT += network
 QT += x11extras
+QT += dbus
 LIBS += -lX11 -lXext
