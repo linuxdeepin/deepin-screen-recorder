@@ -46,13 +46,23 @@ class MainWindow : public QWidget
     static const int COUNTDOWN_TOOLTIP_HEIGHT = 168;
     static const int COUNTDOWN_NUMBER_OFFSET_Y = 30;
     static const int COUNTDOWN_STRING_OFFSET_Y = 90;
+    
+    static const int RECORD_BUTTON_AREA_WIDTH = 124;
+    static const int RECORD_BUTTON_AREA_HEIGHT = 86;
+    static const int RECORD_BUTTON_OFFSET_Y = 12;
+    
+    static const int RECORD_OPTIONS_AREA_HEIGHT = 36;
+    static const int RECORD_OPTIONS_AREA_PADDING = 12;
+    
+    static const int BUTTON_STATE_NORMAL = 0;
+    static const int BUTTON_STATE_HOVER = 1;
+    static const int BUTTON_STATE_PRESS = 2;
 
 public:
     MainWindow(QWidget *parent = 0);
 
 public slots:
     void showCountdown();
-    void showRecordSecond();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -70,7 +80,6 @@ protected:
 private:
     QList<WindowRect> windowRects;
 
-    QTimer* recordTimer;
     QTimer* showCountdownTimer;
 
     RecordProcess recordProcess;
@@ -95,11 +104,12 @@ private:
     int dragStartY;
 
     int recordButtonStatus;
-    int recordCounter;
     int recordHeight;
     int recordWidth;
     int recordX;
     int recordY;
+    
+    int recordButtonState;
 
     int countdownCounter;
     
@@ -109,4 +119,8 @@ private:
     QImage countdown1;
     QImage countdown2;
     QImage countdown3;
+    
+    QImage recordIconNormal;
+    QImage recordIconHover;
+    QImage recordIconPress;
 };

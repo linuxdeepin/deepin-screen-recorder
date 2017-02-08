@@ -43,13 +43,15 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     recordButtonStatus = RECORD_BUTTON_NORMAL;
 
     countdownCounter = 0;
-    recordCounter = 0;
 
     resizeHandleBig = QImage("image/resize_handle_big.png");
     resizeHandleSmall = QImage("image/resize_handle_small.png");
     countdown1 = QImage("image/countdown_1.png");
     countdown2 = QImage("image/countdown_2.png");
     countdown3 = QImage("image/countdown_3.png");
+    recordIconNormal = QImage("image/record_icon_normal.png");
+    recordIconHover = QImage("image/record_icon_hover.png");
+    recordIconPress = QImage("image/record_icon_press.png");
 
     // Get all windows geometry.
     WindowManager windowManager;
@@ -104,9 +106,11 @@ void MainWindow::paintEvent(QPaintEvent *)
         painter.setPen(framePen);
         painter.drawRect(frameRect);
 
+        // Reset clip.
+        painter.setClipRegion(QRegion(backgroundRect));
+
         // Draw drag pint.
         if (drawDragPoint) {
-            painter.setClipRegion(QRegion(backgroundRect));
 
             painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS), resizeHandleBig);
             painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS), resizeHandleBig);
@@ -132,11 +136,40 @@ void MainWindow::paintEvent(QPaintEvent *)
             if (firstReleaseButton) {
                 QString buttonString;
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-                    painter.setBrush(QBrush("#2CA7F8"));
-                    buttonString = "录制";
-                } else if (recordButtonStatus == RECORD_BUTTON_WAIT) {
-                    painter.setBrush(QBrush("#FF8D00"));
-                    buttonString = "准备中";
+                    int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
+                    int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
+                    QRectF recordButtonRect(recordButtonX, recordButtonY, RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT);
+
+                    painter.setRenderHint(QPainter::Antialiasing);
+                    painter.setOpacity(0.8);
+                    QPainterPath path;
+                    path.addRoundedRect(recordButtonRect, 8, 8);
+                    painter.fillPath(path, Qt::white);
+
+                    if (recordButtonState == BUTTON_STATE_NORMAL) {
+                        painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormal.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconNormal);
+                    } else if (recordButtonState == BUTTON_STATE_HOVER) {
+                        painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormal.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconHover);
+                    } else if (recordButtonState == BUTTON_STATE_PRESS) {
+                        painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormal.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconPress);
+                    }
+
+                    QRectF recordStringRect(recordButtonX, recordButtonY + recordIconNormal.height(), RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT - recordIconNormal.height());
+                    QString recordString = "开始录制";
+                    QFont font = painter.font() ;
+                    font.setPointSize(11);
+                    painter.setFont(font);
+                    painter.setPen(QPen(QColor("#e34342")));
+                    painter.drawText(recordStringRect, Qt::AlignCenter, recordString);
+                    
+                    int recordOptionsX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
+                    int recordOptionsY = recordY + (recordHeight + RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT + RECORD_OPTIONS_AREA_PADDING) / 2;
+                    QRectF recordOptionsRect(recordOptionsX, recordOptionsY, RECORD_BUTTON_AREA_WIDTH, RECORD_OPTIONS_AREA_HEIGHT);
+                    painter.setRenderHint(QPainter::Antialiasing);
+                    painter.setOpacity(0.8);
+                    QPainterPath recordOptionsPath;
+                    recordOptionsPath.addRoundedRect(recordOptionsRect, 8, 8);
+                    painter.fillPath(recordOptionsPath, Qt::white);
                 } else if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
                     painter.setBrush(QBrush("#FF2100"));
                     buttonString = "停止";
@@ -158,10 +191,6 @@ void MainWindow::paintEvent(QPaintEvent *)
                 painter.setFont(font);
                 painter.setPen(QPen(QColor("#000000")));
                 painter.drawText(QPoint(buttonX + 40, buttonY + 24), buttonString);
-
-                if (recordCounter > 0) {
-                    painter.drawText(QPoint(buttonX + 10, buttonY + 24), QString::number(recordCounter));
-                }
 
                 // Draw record wait second.
                 if (countdownCounter > 0) {
@@ -214,6 +243,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         isKeyPress = false;
     }
 
+    int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
+    int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
+
     if (event->type() == QEvent::MouseButtonPress) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         dragStartX = mouseEvent->x();
@@ -243,6 +275,15 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
 
                 if (pressX > buttonX && pressX < buttonX + PANEL_WIDTH && pressY > buttonY && pressY < buttonY + PANEL_HEIGHT) {
+                    if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
+                        recordProcess.stopRecord();
+                        QApplication::quit();
+                    }
+                }
+
+                if (pressX > recordButtonX && pressX < recordButtonX + RECORD_BUTTON_AREA_WIDTH && pressY > recordButtonY && pressY < recordButtonY + RECORD_BUTTON_AREA_HEIGHT) {
+                    recordButtonState = BUTTON_STATE_PRESS;
+
                     if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
                         recordButtonStatus = RECORD_BUTTON_WAIT;
 
@@ -261,11 +302,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         resetCursor();
 
                         repaint();
-                    } else if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
-                        recordTimer->stop();
-
-                        recordProcess.stopRecord();
-                        QApplication::quit();
                     }
                 }
             }
@@ -283,6 +319,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         isPressButton = false;
         isReleaseButton = true;
 
+        recordButtonState = BUTTON_STATE_NORMAL;
+
         repaint();
     } else if (event->type() == QEvent::MouseMove) {
         if (!firstMove) {
@@ -290,6 +328,15 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         }
 
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        int pressX = mouseEvent->x();
+        int pressY = mouseEvent->y();
+
+        if (pressX > recordButtonX && pressX < recordButtonX + RECORD_BUTTON_AREA_WIDTH && pressY > recordButtonY && pressY < recordButtonY + RECORD_BUTTON_AREA_HEIGHT) {
+            recordButtonState = BUTTON_STATE_HOVER;
+
+            repaint();
+        }
+
         if (firstPressButton) {
             if (!firstReleaseButton) {
                 if (isPressButton && !isReleaseButton) {
@@ -373,11 +420,6 @@ void MainWindow::showCountdown()
         recordButtonStatus = RECORD_BUTTON_RECORDING;
         repaint();
 
-        recordCounter = 0;
-        recordTimer = new QTimer(this);
-        connect(recordTimer, SIGNAL(timeout()), this, SLOT(showRecordSecond()));
-        recordTimer->start(1000);
-
         updateMouseEventArea();
 
         resetCursor();
@@ -386,13 +428,6 @@ void MainWindow::showCountdown()
     }
 
     countdownCounter--;
-}
-
-void MainWindow::showRecordSecond()
-{
-    recordCounter++;
-
-    repaint();
 }
 
 void MainWindow::updateMouseEventArea()
