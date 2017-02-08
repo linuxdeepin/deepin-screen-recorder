@@ -12,7 +12,7 @@ public:
     static const int RECORD_TYPE_GIF = 1;
     
     RecordProcess(QObject *parent = 0);
-    void setRecordInfo(int recordX, int recordY, int record_width, int recordHeight);
+    void setRecordInfo(int recordX, int recordY, int record_width, int recordHeight, QString areaName);
     void setRecordType(int recordType);
     void stopRecord();
     void recordGIF();
@@ -31,4 +31,5 @@ private:
     int recordType;
     
     QString savePath;
+    QString saveAreaName;
 };

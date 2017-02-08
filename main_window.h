@@ -84,6 +84,7 @@ protected:
 
 private:
     QList<WindowRect> windowRects;
+    QList<QString> windowNames;
 
     QTimer* showCountdownTimer;
 
@@ -92,6 +93,7 @@ private:
 
     bool drawDragPoint;
 
+    bool firstDrag;
     bool firstMove;
     bool firstPressButton;
     bool firstReleaseButton;
@@ -139,4 +141,6 @@ private:
     QImage recordMp4NormalImg;
     QImage recordMp4PressImg;
     QImage recordMp4CheckedImg;
+    
+    QString selectAreaName;
 };

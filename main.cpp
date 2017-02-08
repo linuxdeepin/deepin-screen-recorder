@@ -16,11 +16,11 @@
 int main(int argc, char *argv[])
 {
     SingleApplication app(argc, argv);
-    
+
     if (!app.isRunning()) {
 
         MainWindow window;
-        
+
         window.setWindowTitle("Deepin recorder");
         window.setWindowIcon(QIcon("image/deepin-recorder.svg"));
         window.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
@@ -31,6 +31,6 @@ int main(int argc, char *argv[])
 
         return app.exec();
     }
-    
+
     return 0;
 }

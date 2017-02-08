@@ -1,5 +1,6 @@
 #include <QThread>
 #include <QDebug>
+#include <QDate>
 #include <QProcess>
 #include <QtDBus>
 #include <QDir>
@@ -11,12 +12,13 @@ RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 {
 }
 
-void RecordProcess::setRecordInfo(int rx, int ry, int rw, int rh)
+void RecordProcess::setRecordInfo(int rx, int ry, int rw, int rh, QString name)
 {
     recordX = rx;
     recordY = ry;
     recordWidth = rw;
     recordHeight = rh;
+    saveAreaName = name;
 }
 
 void RecordProcess::setRecordType(int type)
@@ -50,9 +52,10 @@ void RecordProcess::recordGIF()
     process = new QProcess();
     connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
 
-    QString path = "%1/Desktop/%2";
-    savePath = path.arg(QDir::homePath()).arg("deepin-record.gif");
-
+    QDateTime date = QDateTime::currentDateTime();
+    QString path = "%1/Desktop/%2_%3_%4.gif";
+    savePath = path.arg(QDir::homePath()).arg("deepin-record").arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss"));
+    
     QFile file(savePath);
     file.remove();
 
@@ -70,8 +73,9 @@ void RecordProcess::recordVideo()
     process = new QProcess();
     connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
 
-    QString path = "%1/Desktop/%2";
-    savePath = path.arg(QDir::homePath()).arg("deepin-record.mp4");
+    QDateTime date = QDateTime::currentDateTime();
+    QString path = "%1/Desktop/%2_%3_%4.mp4";
+    savePath = path.arg(QDir::homePath()).arg("deepin-record").arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss"));
 
     QFile file(savePath);
     file.remove();

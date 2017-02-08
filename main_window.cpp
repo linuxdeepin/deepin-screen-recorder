@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     setMouseTracking(true);   // make MouseMove can response
     installEventFilter(this);  // add event filter
 
+    firstDrag = false;
     firstMove = false;
     firstPressButton = false;
     firstReleaseButton = false;
@@ -43,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     recordButtonStatus = RECORD_BUTTON_NORMAL;
 
     countdownCounter = 0;
+
+    selectAreaName = "";
 
     resizeHandleBigImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/resize_handle_big.png"));
     resizeHandleSmallImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/resize_handle_small.png"));
@@ -69,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     for (int i = 0; i < windows.length(); i++) {
         windowRects.append(windowManager.getWindowRect(windows[i]));
+        windowNames.append(windowManager.getWindowName(windows[i]));
     }
 
     setDragCursor();
@@ -337,7 +341,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));
                         showCountdownTimer->start(500);
 
-                        recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight);
+                        recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight, selectAreaName);
                         if (saveAsGif) {
                             recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
                         } else {
@@ -379,6 +383,25 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             firstReleaseButton = true;
 
             updateCursor(event);
+
+            // Record select area name with window name if just click (no drag).
+            if (!firstDrag) {
+                QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+                for (int i = 0; i < windowRects.length(); i++) {
+                    int wx = windowRects[i].x;
+                    int wy = windowRects[i].y;
+                    int ww = windowRects[i].width;
+                    int wh = windowRects[i].height;
+                    int ex = mouseEvent->x();
+                    int ey = mouseEvent->y();
+                    if (ex > wx && ex < wx + ww && ey > wy && ey < wy + wh) {
+                        selectAreaName = windowNames[i];
+
+                        break;
+                    }
+                }
+
+            }
         }
 
         isPressButton = false;
@@ -390,6 +413,14 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     } else if (event->type() == QEvent::MouseMove) {
         if (!firstMove) {
             firstMove = true;
+        }
+
+        if (isPressButton && firstPressButton) {
+            if (!firstDrag) {
+                firstDrag = true;
+
+                selectAreaName = "自由选区";
+            }
         }
 
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
@@ -414,6 +445,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
             } else if (isPressButton) {
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+                    if (dragAction != ACTION_STAY) {
+                        selectAreaName = "自由选区";
+                    }
+
                     if (dragAction == ACTION_MOVE) {
                         recordX = std::max(std::min(dragRecordX + mouseEvent->x() - dragStartX, rootWindowRect.width - recordWidth), 1);
                         recordY = std::max(std::min(dragRecordY + mouseEvent->y() - dragStartY, rootWindowRect.height - recordHeight), 1);
