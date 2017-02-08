@@ -111,8 +111,7 @@ void MainWindow::paintEvent(QPaintEvent *)
         painter.setClipRegion(QRegion(backgroundRect));
 
         // Draw drag pint.
-        if (drawDragPoint) {
-
+        if (recordButtonStatus == RECORD_BUTTON_NORMAL && drawDragPoint) {
             painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS), resizeHandleBigImg);
             painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS), resizeHandleBigImg);
             painter.drawImage(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBigImg);
