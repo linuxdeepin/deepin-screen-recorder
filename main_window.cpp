@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     setMouseTracking(true);   // make MouseMove can response
     installEventFilter(this);  // add event filter
 
+    firstMove = false;
     firstPressButton = false;
     firstReleaseButton = false;
     dragStartX = 0;
@@ -61,8 +62,26 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
 void MainWindow::paintEvent(QPaintEvent *)
 {
+    QPainter painter(this);
+    
+    if (!firstMove) {
+        QRectF tooltipRect((rootWindowRect.width - TOOLTIP_WIDTH) / 2, (rootWindowRect.height - TOOLTIP_HEIGHT) / 2, TOOLTIP_WIDTH, TOOLTIP_HEIGHT);
+        
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setOpacity(0.8);
+        QPainterPath path;
+        path.addRoundedRect(tooltipRect, 8, 8);
+        painter.fillPath(path, Qt::white);
+        
+        QString tooltipString = "点击录制窗口或全屏\n拖动鼠标选择录制区域";
+        QFont font = painter.font() ;
+        font.setPointSize(11);
+        painter.setFont(font);
+        painter.setPen(QPen(QColor("#000000")));
+        painter.drawText(tooltipRect, Qt::AlignCenter, tooltipString);
+    }
+    
     if (recordWidth > 0 && recordHeight > 0) {
-        QPainter painter(this);
 
         QRect backgroundRect = QRect(rootWindowRect.x, rootWindowRect.y, rootWindowRect.width, rootWindowRect.height);
         QRect frameRect = QRect(recordX, recordY, recordWidth - 1, recordHeight - 1);
@@ -235,6 +254,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
         repaint();
     } else if (event->type() == QEvent::MouseMove) {
+        if (!firstMove) {
+            firstMove = true;
+        }
+        
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         if (firstPressButton) {
             if (!firstReleaseButton) {

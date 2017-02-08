@@ -38,6 +38,9 @@ class MainWindow : public QWidget
     static const int ACTION_RESIZE_BOTTOM = 6;
     static const int ACTION_RESIZE_LEFT = 7;
     static const int ACTION_RESIZE_RIGHT = 8;
+    
+    static const int TOOLTIP_WIDTH = 184;
+    static const int TOOLTIP_HEIGHT = 68;
 
 public:
     MainWindow(QWidget *parent = 0);
@@ -70,6 +73,7 @@ private:
 
     bool drawDragPoint;
 
+    bool firstMove;
     bool firstPressButton;
     bool firstReleaseButton;
     bool isPressButton;
