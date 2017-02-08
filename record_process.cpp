@@ -105,15 +105,15 @@ void RecordProcess::stopRecord()
 
     QStringList actions;
     actions << "id_open" << "view";
-
+    
     QList<QVariant> arg;
-    arg << (QCoreApplication::applicationName()) // appname
-        << ((unsigned int) 0)                    // id
-        << QString("logo.png")                   // icon
-        << "Record successful"                   // summary
-        << QString("Save at: %1").arg(savePath)  // body
-        << actions                               // actions
-        << QVariantMap()                         // hints
-        << (int) -1;                             // timeout
+    arg << (QCoreApplication::applicationName())                                    // appname
+        << ((unsigned int) 0)                                                       // id
+        << QString("%1/image/deepin-recorder.svg").arg(qApp->applicationDirPath())  // icon
+        << "Record successful"                                                      // summary
+        << QString("Save at: %1").arg(savePath)                                     // body
+        << actions                                                                  // actions
+        << QVariantMap()                                                            // hints
+        << (int) -1;                                                                // timeout
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
 }
