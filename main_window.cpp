@@ -31,12 +31,12 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     isPressButton = false;
     isReleaseButton = false;
 
-    isKeyPress = false;
-
     recordX = 0;
     recordY = 0;
     recordWidth = 0;
     recordHeight = 0;
+
+    saveAsGif = true;
 
     drawDragPoint = false;
 
@@ -53,6 +53,14 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     recordIconHoverImg = QImage("image/record_icon_hover.png");
     recordIconPressImg = QImage("image/record_icon_press.png");
     recordStopImg = QImage("image/record_stop.png");
+
+    recordGifNormalImg = QImage("image/gif_normal.png");
+    recordGifPressImg = QImage("image/gif_press.png");
+    recordGifCheckedImg = QImage("image/gif_checked.png");
+
+    recordMp4NormalImg = QImage("image/mp4_normal.png");
+    recordMp4PressImg = QImage("image/mp4_press.png");
+    recordMp4CheckedImg = QImage("image/mp4_checked.png");
 
     // Get all windows geometry.
     WindowManager windowManager;
@@ -170,6 +178,56 @@ void MainWindow::paintEvent(QPaintEvent *)
                     QPainterPath recordOptionsPath;
                     recordOptionsPath.addRoundedRect(recordOptionsRect, 8, 8);
                     painter.fillPath(recordOptionsPath, Qt::white);
+
+                    int recordOptionGifX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + BUTTON_OPTION_ICON_OFFSET_X;
+                    int recordOptionMp4X = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + RECORD_BUTTON_AREA_WIDTH / 2;
+                    int recordOptionY = recordOptionsY + (RECORD_OPTIONS_AREA_HEIGHT - BUTTON_OPTION_HEIGHT) / 2 ;
+                    if (recordOptionGifState == BUTTON_STATE_PRESS) {
+                        painter.drawImage(QPoint(recordOptionGifX, recordOptionY), recordGifPressImg);
+                    } else if (saveAsGif) {
+                        painter.drawImage(QPoint(recordOptionGifX, recordOptionY), recordGifCheckedImg);
+                    } else {
+                        painter.drawImage(QPoint(recordOptionGifX, recordOptionY), recordGifNormalImg);
+                    }
+                    QString optionGifString = "GIF";
+                    QFont optionGifFont = painter.font() ;
+                    optionGifFont.setPointSize(9);
+                    painter.setFont(optionGifFont);
+                    if (saveAsGif) {
+                        painter.setPen(QPen(QColor("#2ca7f8")));
+                    } else {
+                        painter.setPen(QPen(QColor("#000000")));
+                    }
+                    painter.drawText(QRectF(recordOptionGifX + recordGifNormalImg.width(),
+                                            recordOptionsY,
+                                            RECORD_BUTTON_AREA_WIDTH / 2 - BUTTON_OPTION_ICON_OFFSET_X - recordGifNormalImg.width(),
+                                            RECORD_OPTIONS_AREA_HEIGHT),
+                                     Qt::AlignVCenter,
+                                     optionGifString);
+
+                    if (recordOptionMp4State == BUTTON_STATE_PRESS) {
+                        painter.drawImage(QPoint(recordOptionMp4X, recordOptionY), recordMp4PressImg);
+                    } else if (!saveAsGif) {
+                        painter.drawImage(QPoint(recordOptionMp4X, recordOptionY), recordMp4CheckedImg);
+                    } else {
+                        painter.drawImage(QPoint(recordOptionMp4X, recordOptionY), recordMp4NormalImg);
+                    }
+                    QString optionMp4String = "MP4";
+                    QFont optionMp4Font = painter.font() ;
+                    optionMp4Font.setPointSize(9);
+                    painter.setFont(optionMp4Font);
+                    if (saveAsGif) {
+                        painter.setPen(QPen(QColor("#000000")));
+                    } else {
+                        painter.setPen(QPen(QColor("#2ca7f8")));
+                    }
+                    painter.drawText(QRectF(recordOptionMp4X + recordMp4NormalImg.width(),
+                                            recordOptionsY,
+                                            RECORD_BUTTON_AREA_WIDTH / 2 - BUTTON_OPTION_ICON_OFFSET_X - recordMp4NormalImg.width(),
+                                            RECORD_OPTIONS_AREA_HEIGHT),
+                                     Qt::AlignVCenter,
+                                     optionMp4String);
+
                 } else if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
                     int buttonX, buttonY;
                     if (rootWindowRect.height - recordY - recordHeight > RECORD_STOP_BUTTON_HEIGHT) {
@@ -215,16 +273,12 @@ void MainWindow::paintEvent(QPaintEvent *)
 
 bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
-#undef KeyPress
-#undef KeyRelease
-    if (event->type() == QEvent::KeyPress) {
-        isKeyPress = true;
-    } else if (event->type() == QEvent::KeyRelease) {
-        isKeyPress = false;
-    }
-
     int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
     int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
+
+    int recordOptionGifX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
+    int recordOptionMp4X = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + RECORD_BUTTON_AREA_WIDTH / 2;
+    int recordOptionY = recordY + (recordHeight + RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT + RECORD_OPTIONS_AREA_PADDING) / 2;
 
     if (event->type() == QEvent::MouseButtonPress) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
@@ -273,13 +327,33 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         showCountdownTimer->start(500);
 
                         recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight);
-                        if (isKeyPress) {
-                            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
-                        } else {
+                        if (saveAsGif) {
                             recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
+                        } else {
+                            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
                         }
 
                         resetCursor();
+
+                        repaint();
+                    }
+                } else if (pressX > recordOptionGifX && pressX < recordOptionGifX + RECORD_BUTTON_AREA_WIDTH / 2
+                           && pressY > recordOptionY && pressY < recordOptionY + RECORD_OPTIONS_AREA_HEIGHT) {
+                    if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+                        recordOptionGifState = BUTTON_STATE_PRESS;
+                        recordOptionMp4State = BUTTON_STATE_NORMAL;
+
+                        saveAsGif = true;
+
+                        repaint();
+                    }
+                } else if (pressX > recordOptionMp4X && pressX < recordOptionMp4X + RECORD_BUTTON_AREA_WIDTH / 2
+                           && pressY > recordOptionY && pressY < recordOptionY + RECORD_OPTIONS_AREA_HEIGHT) {
+                    if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+                        recordOptionMp4State = BUTTON_STATE_PRESS;
+                        recordOptionGifState = BUTTON_STATE_NORMAL;
+
+                        saveAsGif = false;
 
                         repaint();
                     }

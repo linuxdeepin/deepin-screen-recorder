@@ -56,6 +56,11 @@ class MainWindow : public QWidget
     static const int BUTTON_STATE_NORMAL = 0;
     static const int BUTTON_STATE_HOVER = 1;
     static const int BUTTON_STATE_PRESS = 2;
+    static const int BUTTON_STATE_CHECKED = 3;
+    
+    static const int BUTTON_OPTION_HEIGHT = 24;
+    static const int BUTTON_OPTION_ICON_OFFSET_X = 14;
+    static const int BUTTON_OPTION_STRING_OFFSET_X = 5;
 
 public:
     MainWindow(QWidget *parent = 0);
@@ -92,8 +97,6 @@ private:
     bool isPressButton;
     bool isReleaseButton;
     
-    bool isKeyPress;
-
     int dragAction;
     int dragRecordHeight;
     int dragRecordWidth;
@@ -109,7 +112,11 @@ private:
     int recordY;
     
     int recordButtonState;
-
+    int recordOptionGifState;
+    int recordOptionMp4State;
+    
+    bool saveAsGif;
+    
     int countdownCounter;
     
     QImage resizeHandleBigImg;
@@ -123,4 +130,12 @@ private:
     QImage recordIconHoverImg;
     QImage recordIconPressImg;
     QImage recordStopImg;
+    
+    QImage recordGifNormalImg;
+    QImage recordGifPressImg;
+    QImage recordGifCheckedImg;
+    
+    QImage recordMp4NormalImg;
+    QImage recordMp4PressImg;
+    QImage recordMp4CheckedImg;
 };
