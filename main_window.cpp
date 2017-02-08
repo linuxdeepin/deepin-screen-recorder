@@ -73,7 +73,7 @@ void MainWindow::paintEvent(QPaintEvent *)
         painter.drawRect(backgroundRect);
 
         // Draw frame.
-        QPen framePen(QColor("#2CA7F8"));
+        QPen framePen(QColor("#01bdff"));
         framePen.setWidth(2);
         painter.setBrush(QBrush());  // clear brush
         painter.setPen(framePen);
