@@ -208,18 +208,6 @@ void MainWindow::paintEvent(QPaintEvent *)
                     } else if (countdownCounter == 3) {
                         painter.drawImage(QPoint(countdownX, countdownY), countdown3Img);
                     }
-
-                    QRectF countdownStringRect(recordX + (recordWidth - COUNTDOWN_TOOLTIP_WIDTH) / 2,
-                                               recordY + (recordHeight - COUNTDOWN_TOOLTIP_HEIGHT) / 2 + COUNTDOWN_STRING_OFFSET_Y,
-                                               COUNTDOWN_TOOLTIP_WIDTH,
-                                               COUNTDOWN_TOOLTIP_HEIGHT - COUNTDOWN_STRING_OFFSET_Y);
-
-                    QString countdownString = "点击任务栏图标或按下\nCtrl+Shift+R停止录制";
-                    QFont font = painter.font() ;
-                    font.setPointSize(11);
-                    painter.setFont(font);
-                    painter.setPen(QPen(QColor("#000000")));
-                    painter.drawText(countdownStringRect, Qt::AlignCenter, countdownString);
                 }
             }
         }
