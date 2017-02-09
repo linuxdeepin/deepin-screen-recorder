@@ -271,7 +271,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                                        recordY + (recordHeight - COUNTDOWN_TOOLTIP_HEIGHT) / 2 + COUNTDOWN_STRING_OFFSET_Y,
                                        COUNTDOWN_TOOLTIP_WIDTH,
                                        COUNTDOWN_TOOLTIP_HEIGHT - COUNTDOWN_STRING_OFFSET_Y);
-                    QString tooltipString = "点击托盘图标停止录制\n或按下深度录屏的快捷键\n(默认是Ctrl+Alt+S)停止录制";
+                    QString tooltipString = "停止录制请点击托盘图标\n或着\n按下深度录屏快捷键";
                     QFont font = painter.font() ;
                     font.setPointSize(11);
                     painter.setFont(font);
@@ -330,7 +330,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         countdownCounter = 3;
                         showCountdownTimer = new QTimer(this);
                         connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));
-                        showCountdownTimer->start(500);
+                        showCountdownTimer->start(1000);
 
                         recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight, selectAreaName);
                         if (saveAsGif) {
@@ -505,6 +505,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
 void MainWindow::showCountdown()
 {
+    countdownCounter--;
     repaint();
 
     if (countdownCounter <= 0) {
@@ -525,8 +526,6 @@ void MainWindow::showCountdown()
         connect(flashTryIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
         flashTryIconTimer->start(500);
     }
-
-    countdownCounter--;
 }
 
 void MainWindow::flashTrayIcon()
