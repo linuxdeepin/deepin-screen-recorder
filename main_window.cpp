@@ -725,6 +725,8 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)
 
 void MainWindow::stopRecord()
 {
-    recordProcess.stopRecord();
-    QApplication::quit();
+    if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
+        recordProcess.stopRecord();
+        QApplication::quit();
+    }
 }
