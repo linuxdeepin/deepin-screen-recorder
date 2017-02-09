@@ -78,7 +78,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     }
 
     trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setIcon(QIcon("image/trayicon1.svg"));
+    trayIcon->setIcon(QIcon((QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/trayicon1.svg"))));
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
     setDragCursor();
@@ -520,13 +520,13 @@ void MainWindow::showCountdown()
 void MainWindow::flashTrayIcon()
 {
     if (flashCounter % 2 == 0) {
-        trayIcon->setIcon(QIcon("image/trayicon2.svg"));
+        trayIcon->setIcon(QIcon((QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/trayicon2.svg"))));
     } else {
-        trayIcon->setIcon(QIcon("image/trayicon1.svg"));
+        trayIcon->setIcon(QIcon((QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/trayicon1.svg"))));
     }
-    
+
     flashCounter++;
-    
+
     if (flashCounter > 10) {
         flashCounter = 1;
     }

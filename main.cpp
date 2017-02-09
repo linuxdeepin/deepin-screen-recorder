@@ -25,7 +25,6 @@ int main(int argc, char *argv[])
         MainWindow window;
 
         window.setWindowTitle("Deepin recorder");
-        window.setWindowIcon(QIcon("image/deepin-recorder.svg"));
         window.setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
         window.setAttribute(Qt::WA_NoSystemBackground, true);
         window.setAttribute(Qt::WA_TranslucentBackground, true);
