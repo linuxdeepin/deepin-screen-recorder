@@ -271,7 +271,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                                        recordY + (recordHeight - COUNTDOWN_TOOLTIP_HEIGHT) / 2 + COUNTDOWN_STRING_OFFSET_Y,
                                        COUNTDOWN_TOOLTIP_WIDTH,
                                        COUNTDOWN_TOOLTIP_HEIGHT - COUNTDOWN_STRING_OFFSET_Y);
-                    QString tooltipString = "点击托盘图标停止录制\n或按Ctrl+Alt+S停止录制";
+                    QString tooltipString = "点击托盘图标停止录制\n或按下深度录屏的快捷键\n(默认是Ctrl+Alt+S)停止录制";
                     QFont font = painter.font() ;
                     font.setPointSize(11);
                     painter.setFont(font);
