@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     recordHeight = 0;
 
     Settings settings;
-    
+
     saveAsGif = settings.option("save_as_gif").toBool();
 
     drawDragPoint = false;
@@ -46,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     recordButtonStatus = RECORD_BUTTON_NORMAL;
 
     countdownCounter = 0;
+    flashCounter = 0;
 
     selectAreaName = "";
 
@@ -57,7 +58,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     recordIconNormalImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/record_icon_normal.png"));
     recordIconHoverImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/record_icon_hover.png"));
     recordIconPressImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/record_icon_press.png"));
-    recordStopImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/record_stop.png"));
 
     recordGifNormalImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/gif_normal.png"));
     recordGifPressImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/gif_press.png"));
@@ -76,6 +76,10 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
         windowRects.append(windowManager.getWindowRect(windows[i]));
         windowNames.append(windowManager.getWindowName(windows[i]));
     }
+
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setIcon(QIcon("image/trayicon1.svg"));
+    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
     setDragCursor();
 }
@@ -234,16 +238,6 @@ void MainWindow::paintEvent(QPaintEvent *)
                                      Qt::AlignVCenter,
                                      optionMp4String);
 
-                } else if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
-                    int buttonX, buttonY;
-                    if (rootWindowRect.height - recordY - recordHeight > RECORD_STOP_BUTTON_HEIGHT) {
-                        buttonX = recordX + recordWidth / 2 - RECORD_STOP_BUTTON_WIDTH / 2;
-                        buttonY = recordY + recordHeight;
-                    } else {
-                        buttonX = recordX + recordWidth / 2 - RECORD_STOP_BUTTON_WIDTH / 2;
-                        buttonY = recordY + recordHeight - RECORD_STOP_BUTTON_HEIGHT;
-                    }
-                    painter.drawImage(QRect(buttonX, buttonY, RECORD_STOP_BUTTON_WIDTH, RECORD_STOP_BUTTON_HEIGHT), recordStopImg);
                 }
 
                 painter.setClipping(false);
@@ -314,23 +308,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             if (firstReleaseButton) {
                 int pressX = mouseEvent->x();
                 int pressY = mouseEvent->y();
-
-                int buttonX, buttonY;
-
-                if (rootWindowRect.height - recordY - recordHeight > RECORD_STOP_BUTTON_HEIGHT) {
-                    buttonX = recordX + recordWidth / 2 - RECORD_STOP_BUTTON_WIDTH / 2;
-                    buttonY = recordY + recordHeight;
-                } else {
-                    buttonX = recordX + recordWidth / 2 - RECORD_STOP_BUTTON_WIDTH / 2;
-                    buttonY = recordY + recordHeight - RECORD_STOP_BUTTON_HEIGHT;
-                }
-
-                if (pressX > buttonX && pressX < buttonX + RECORD_STOP_BUTTON_WIDTH && pressY > buttonY && pressY < buttonY + RECORD_STOP_BUTTON_HEIGHT) {
-                    if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
-                        recordProcess.stopRecord();
-                        QApplication::quit();
-                    }
-                }
 
                 if (pressX > recordButtonX && pressX < recordButtonX + RECORD_BUTTON_AREA_WIDTH && pressY > recordButtonY && pressY < recordButtonY + RECORD_BUTTON_AREA_HEIGHT) {
                     recordButtonState = BUTTON_STATE_PRESS;
@@ -529,27 +506,39 @@ void MainWindow::showCountdown()
         resetCursor();
 
         recordProcess.start();
+
+        trayIcon->show();
+
+        flashTryIconTimer = new QTimer(this);
+        connect(flashTryIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
+        flashTryIconTimer->start(500);
     }
 
     countdownCounter--;
 }
 
+void MainWindow::flashTrayIcon()
+{
+    if (flashCounter % 2 == 0) {
+        trayIcon->setIcon(QIcon("image/trayicon2.svg"));
+    } else {
+        trayIcon->setIcon(QIcon("image/trayicon1.svg"));
+    }
+    
+    flashCounter++;
+    
+    if (flashCounter > 10) {
+        flashCounter = 1;
+    }
+}
+
 void MainWindow::updateMouseEventArea()
 {
-    int buttonX, buttonY;
-    if (rootWindowRect.height - recordY - recordHeight > RECORD_STOP_BUTTON_HEIGHT) {
-        buttonX = recordX + recordWidth / 2 - RECORD_STOP_BUTTON_WIDTH / 2;
-        buttonY = recordY + recordHeight;
-    } else {
-        buttonX = recordX + recordWidth / 2 - RECORD_STOP_BUTTON_WIDTH / 2;
-        buttonY = recordY + recordHeight - RECORD_STOP_BUTTON_HEIGHT;
-    }
-
     XRectangle* reponseArea = new XRectangle;
-    reponseArea->x = buttonX;
-    reponseArea->y = buttonY;
-    reponseArea->width = RECORD_STOP_BUTTON_WIDTH;
-    reponseArea->height = RECORD_STOP_BUTTON_HEIGHT;
+    reponseArea->x = 0;
+    reponseArea->y = 0;
+    reponseArea->width = 0;
+    reponseArea->height = 0;
 
     XShapeCombineRectangles(QX11Info::display(), winId(), ShapeInput, 0, 0, reponseArea ,1 ,ShapeSet, YXBanded);
 }
@@ -716,4 +705,10 @@ void MainWindow::setDragCursor()
 void MainWindow::resetCursor()
 {
     QApplication::setOverrideCursor(Qt::ArrowCursor);
+}
+
+void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)
+{
+    recordProcess.stopRecord();
+    QApplication::quit();
 }

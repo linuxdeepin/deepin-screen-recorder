@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QPainter>
 #include <QWidget>
+#include <QSystemTrayIcon>
 #include <QDebug>
 #include <xcb/xcb.h>
 #include <xcb/xcb_aux.h>
@@ -22,9 +23,6 @@ class MainWindow : public QWidget
     static const int CURSOR_BOUND = 5;
     static const int RECORD_MIN_SIZE = 48;
     static const int DRAG_POINT_RADIUS = 8;
-
-    static const int RECORD_STOP_BUTTON_WIDTH = 52;
-    static const int RECORD_STOP_BUTTON_HEIGHT = 48;
 
     static const int RECORD_BUTTON_NORMAL = 0;
     static const int RECORD_BUTTON_WAIT = 1;
@@ -69,6 +67,8 @@ public:
 
 public slots:
     void showCountdown();
+    void flashTrayIcon();
+    void iconActivated(QSystemTrayIcon::ActivationReason reason);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -88,6 +88,7 @@ private:
     QList<QString> windowNames;
 
     QTimer* showCountdownTimer;
+    QTimer* flashTryIconTimer;
 
     RecordProcess recordProcess;
     WindowRect rootWindowRect;
@@ -122,6 +123,7 @@ private:
     bool saveAsGif;
     
     int countdownCounter;
+    int flashCounter;
     
     QImage resizeHandleBigImg;
     QImage resizeHandleSmallImg;
@@ -133,7 +135,6 @@ private:
     QImage recordIconNormalImg;
     QImage recordIconHoverImg;
     QImage recordIconPressImg;
-    QImage recordStopImg;
     
     QImage recordGifNormalImg;
     QImage recordGifPressImg;
@@ -146,4 +147,6 @@ private:
     QString selectAreaName;
     
     Settings settings;
+    
+    QSystemTrayIcon* trayIcon;
 };
