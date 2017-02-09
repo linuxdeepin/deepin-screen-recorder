@@ -108,7 +108,10 @@ void RecordProcess::stopRecord()
                                 QDBusConnection::sessionBus());
 
     QStringList actions;
-    actions << "id_open" << "view";
+    actions << "_open" << "Open";
+    
+    QVariantMap hints;
+    hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(savePath);
     
     QList<QVariant> arg;
     arg << (QCoreApplication::applicationName())                                    // appname
@@ -117,7 +120,7 @@ void RecordProcess::stopRecord()
         << "Record successful"                                                      // summary
         << QString("Save at: %1").arg(savePath)                                     // body
         << actions                                                                  // actions
-        << QVariantMap()                                                            // hints
+        << hints                                                                    // hints
         << (int) -1;                                                                // timeout
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
 }
