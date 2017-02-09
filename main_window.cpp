@@ -79,6 +79,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon((QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/trayicon1.svg"))));
+    trayIcon->setToolTip("停止录制");
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
     setDragCursor();
