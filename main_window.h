@@ -13,6 +13,7 @@
 #include <xcb/xcb_aux.h>
 #include "window_manager.h"
 #include "record_process.h"
+#include "settings.h"
 
 class MainWindow : public QWidget
 {
@@ -143,4 +144,6 @@ private:
     QImage recordMp4CheckedImg;
     
     QString selectAreaName;
+    
+    Settings settings;
 };

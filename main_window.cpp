@@ -37,7 +37,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     recordWidth = 0;
     recordHeight = 0;
 
-    saveAsGif = true;
+    Settings settings;
+    
+    saveAsGif = settings.option("save_as_gif").toBool();
 
     drawDragPoint = false;
 
@@ -359,6 +361,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         recordOptionMp4State = BUTTON_STATE_NORMAL;
 
                         saveAsGif = true;
+                        settings.setOption("save_as_gif", saveAsGif);
 
                         repaint();
                     }
@@ -369,6 +372,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         recordOptionGifState = BUTTON_STATE_NORMAL;
 
                         saveAsGif = false;
+                        settings.setOption("save_as_gif", saveAsGif);
 
                         repaint();
                     }

@@ -18,7 +18,10 @@ int main(int argc, char *argv[])
     SingleApplication app(argc, argv);
 
     if (!app.isRunning()) {
-
+        app.setOrganizationName("deepin");
+        app.setApplicationName("deepin-recorder");
+        app.setApplicationVersion("1.0");
+    
         MainWindow window;
 
         window.setWindowTitle("Deepin recorder");
