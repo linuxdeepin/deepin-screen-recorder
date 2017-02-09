@@ -70,6 +70,7 @@ public slots:
     void showCountdown();
     void flashTrayIcon();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
+    void stopRecord();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
