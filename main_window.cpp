@@ -102,6 +102,8 @@ void MainWindow::paintEvent(QPaintEvent *)
         painter.setFont(font);
         painter.setPen(QPen(QColor("#000000")));
         painter.drawText(tooltipRect, Qt::AlignCenter, tooltipString);
+    } else {
+        clearTooltip();
     }
 
     if (recordWidth > 0 && recordHeight > 0) {
