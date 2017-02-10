@@ -81,7 +81,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     trayIcon->setIcon(QIcon((QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/trayicon1.svg"))));
     trayIcon->setToolTip("停止录制");
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-    
+
     setDragCursor();
 }
 
@@ -111,7 +111,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 
         // Draw background.
         painter.setBrush(QBrush("#000000"));
-        painter.setOpacity(0.8);
+        painter.setOpacity(0.2);
 
         painter.setClipping(true);
         painter.setClipRegion(QRegion(backgroundRect).subtracted(QRegion(frameRect)));
@@ -156,16 +156,16 @@ void MainWindow::paintEvent(QPaintEvent *)
                     int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
                     int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
                     QRectF recordButtonRect(recordButtonX, recordButtonY, RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT);
-                    
+
                     int recordOptionsX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
                     int recordOptionsY = recordY + (recordHeight + RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT + RECORD_OPTIONS_AREA_PADDING) / 2;
                     QRectF recordOptionsRect(recordOptionsX, recordOptionsY, RECORD_BUTTON_AREA_WIDTH, RECORD_OPTIONS_AREA_HEIGHT);
-                    
+
                     QList<QRectF> rects;
                     rects.append(recordButtonRect);
                     rects.append(recordOptionsRect);
                     renderTooltipRect(painter, rects);
-                    
+
                     if (recordButtonState == BUTTON_STATE_NORMAL) {
                         painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconNormalImg);
                     } else if (recordButtonState == BUTTON_STATE_HOVER) {
@@ -181,7 +181,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                     painter.setFont(font);
                     painter.setPen(QPen(QColor("#e34342")));
                     painter.drawText(recordStringRect, Qt::AlignCenter, recordString);
-                    
+
                     int recordOptionGifX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + BUTTON_OPTION_ICON_OFFSET_X;
                     int recordOptionMp4X = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + RECORD_BUTTON_AREA_WIDTH / 2;
                     int recordOptionY = recordOptionsY + (RECORD_OPTIONS_AREA_HEIGHT - BUTTON_OPTION_HEIGHT) / 2 ;
@@ -245,7 +245,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                     QList<QRectF> rects;
                     rects.append(countdownRect);
                     renderTooltipRect(painter, rects);
-                    
+
                     int countdownX = recordX + (recordWidth - countdown1Img.width()) / 2;
                     int countdownY = recordY + (recordHeight - COUNTDOWN_TOOLTIP_HEIGHT) / 2 + COUNTDOWN_NUMBER_OFFSET_Y;
 
@@ -500,6 +500,8 @@ void MainWindow::showCountdown()
 
     if (countdownCounter <= 0) {
         showCountdownTimer->stop();
+        
+        clearTooltip();
 
         recordButtonStatus = RECORD_BUTTON_RECORDING;
         repaint();
@@ -720,11 +722,30 @@ void MainWindow::stopRecord()
     }
 }
 
-void MainWindow::renderTooltipRect(QPainter &, QList<QRectF> &rects)
+void MainWindow::clearTooltip() 
+{
+    QVector<uint32_t> data;
+    data << 0 << 0 << 0 << 0 << 0 << 0;
+    windowManager->setWindowBlur(this->winId(), data);
+}
+
+void MainWindow::renderTooltipRect(QPainter &painter, QList<QRectF> &rects)
 {
     QVector<uint32_t> data;
     foreach (auto rect, rects) {
         data << rect.x() << rect.y() << rect.width() << rect.height() << 8 << 8;
     }
     windowManager->setWindowBlur(this->winId(), data);
+
+    foreach (auto rect, rects) {
+        painter.setOpacity(0.04);
+        QPen pen(QColor("#000000"));
+        pen.setWidth(1);
+        painter.setPen(pen);
+        QPainterPath path;
+        path.addRoundedRect(rect, 8, 8);
+        painter.drawPath(path);
+    }
+    
+    painter.setOpacity(1.0);
 }

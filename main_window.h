@@ -85,6 +85,7 @@ protected:
     void resetCursor();
     void updateMouseEventArea();
     void renderTooltipRect(QPainter &painter, QList<QRectF> &rects);
+    void clearTooltip();
 
 private:
     QList<WindowRect> windowRects;
