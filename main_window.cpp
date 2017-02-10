@@ -89,7 +89,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
 
-    if (!firstMove) {
+    if (!firstPressButton) {
         QRectF tooltipRect((rootWindowRect.width - INIT_TOOLTIP_WIDTH) / 2, (rootWindowRect.height - INIT_TOOLTIP_HEIGHT) / 2, INIT_TOOLTIP_WIDTH, INIT_TOOLTIP_HEIGHT);
 
         QList<QRectF> rects;
@@ -152,7 +152,7 @@ void MainWindow::paintEvent(QPaintEvent *)
         if (firstPressButton) {
             if (firstReleaseButton) {
                 QString buttonString;
-                if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+                if (recordButtonStatus == RECORD_BUTTON_NORMAL && isReleaseButton) {
                     int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
                     int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
                     QRectF recordButtonRect(recordButtonX, recordButtonY, RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT);
