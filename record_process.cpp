@@ -1,4 +1,5 @@
 #include <QThread>
+#include <QApplication>
 #include <QDebug>
 #include <QDate>
 #include <QProcess>
@@ -102,6 +103,9 @@ void RecordProcess::stopRecord()
 {
     // Exit record process.
     process->terminate();
+    
+    // Wait thread.
+    wait();
 
     // Popup notify.
     QDBusInterface notification("org.freedesktop.Notifications",
@@ -128,4 +132,6 @@ void RecordProcess::stopRecord()
         << hints                                                                    // hints
         << (int) -1;                                                                // timeout
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+    
+    QApplication::quit();
 }

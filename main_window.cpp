@@ -727,6 +727,5 @@ void MainWindow::stopRecord()
 {
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
         recordProcess.stopRecord();
-        QApplication::quit();
     }
 }
