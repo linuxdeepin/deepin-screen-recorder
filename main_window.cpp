@@ -152,87 +152,90 @@ void MainWindow::paintEvent(QPaintEvent *)
         if (firstPressButton) {
             if (firstReleaseButton) {
                 QString buttonString;
-                if (recordButtonStatus == RECORD_BUTTON_NORMAL && isReleaseButton) {
-                    int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
-                    int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
-                    QRectF recordButtonRect(recordButtonX, recordButtonY, RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT);
+                if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+                    if (isReleaseButton) {
+                        int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
+                        int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
+                        QRectF recordButtonRect(recordButtonX, recordButtonY, RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT);
 
-                    int recordOptionsX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
-                    int recordOptionsY = recordY + (recordHeight + RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT + RECORD_OPTIONS_AREA_PADDING) / 2;
-                    QRectF recordOptionsRect(recordOptionsX, recordOptionsY, RECORD_BUTTON_AREA_WIDTH, RECORD_OPTIONS_AREA_HEIGHT);
+                        int recordOptionsX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
+                        int recordOptionsY = recordY + (recordHeight + RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT + RECORD_OPTIONS_AREA_PADDING) / 2;
+                        QRectF recordOptionsRect(recordOptionsX, recordOptionsY, RECORD_BUTTON_AREA_WIDTH, RECORD_OPTIONS_AREA_HEIGHT);
 
-                    QList<QRectF> rects;
-                    rects.append(recordButtonRect);
-                    rects.append(recordOptionsRect);
+                        QList<QRectF> rects;
+                        rects.append(recordButtonRect);
+                        rects.append(recordOptionsRect);
 
-                    if (recordButtonState == BUTTON_STATE_NORMAL) {
-                        renderTooltipRect(painter, rects, 0.6);
-                        painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconNormalImg);
-                    } else if (recordButtonState == BUTTON_STATE_HOVER) {
-                        renderTooltipRect(painter, rects, 0.7);
-                        painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconHoverImg);
-                    } else if (recordButtonState == BUTTON_STATE_PRESS) {
-                        renderTooltipRect(painter, rects, 0.2);
-                        painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconPressImg);
-                    }
+                        if (recordButtonState == BUTTON_STATE_NORMAL) {
+                            renderTooltipRect(painter, rects, 0.6);
+                            painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconNormalImg);
+                        } else if (recordButtonState == BUTTON_STATE_HOVER) {
+                            renderTooltipRect(painter, rects, 0.7);
+                            painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconHoverImg);
+                        } else if (recordButtonState == BUTTON_STATE_PRESS) {
+                            renderTooltipRect(painter, rects, 0.2);
+                            painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconPressImg);
+                        }
 
-                    QRectF recordStringRect(recordButtonX, recordButtonY + recordIconNormalImg.height(), RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT - recordIconNormalImg.height());
-                    QString recordString = "开始录制";
-                    QFont font = painter.font() ;
-                    font.setPointSize(11);
-                    painter.setFont(font);
-                    painter.setPen(QPen(QColor("#e34342")));
-                    painter.drawText(recordStringRect, Qt::AlignCenter, recordString);
+                        QRectF recordStringRect(recordButtonX, recordButtonY + recordIconNormalImg.height(), RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT - recordIconNormalImg.height());
+                        QString recordString = "开始录制";
+                        QFont font = painter.font() ;
+                        font.setPointSize(11);
+                        painter.setFont(font);
+                        painter.setPen(QPen(QColor("#e34342")));
+                        painter.drawText(recordStringRect, Qt::AlignCenter, recordString);
 
-                    int recordOptionGifX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + BUTTON_OPTION_ICON_OFFSET_X;
-                    int recordOptionMp4X = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + RECORD_BUTTON_AREA_WIDTH / 2;
-                    int recordOptionY = recordOptionsY + (RECORD_OPTIONS_AREA_HEIGHT - BUTTON_OPTION_HEIGHT) / 2 ;
-                    if (recordOptionGifState == BUTTON_STATE_PRESS) {
-                        painter.drawImage(QPoint(recordOptionGifX, recordOptionY), recordGifPressImg);
-                    } else if (saveAsGif) {
-                        painter.drawImage(QPoint(recordOptionGifX, recordOptionY), recordGifCheckedImg);
+                        int recordOptionGifX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + BUTTON_OPTION_ICON_OFFSET_X;
+                        int recordOptionMp4X = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + RECORD_BUTTON_AREA_WIDTH / 2;
+                        int recordOptionY = recordOptionsY + (RECORD_OPTIONS_AREA_HEIGHT - BUTTON_OPTION_HEIGHT) / 2 ;
+                        if (recordOptionGifState == BUTTON_STATE_PRESS) {
+                            painter.drawImage(QPoint(recordOptionGifX, recordOptionY), recordGifPressImg);
+                        } else if (saveAsGif) {
+                            painter.drawImage(QPoint(recordOptionGifX, recordOptionY), recordGifCheckedImg);
+                        } else {
+                            painter.drawImage(QPoint(recordOptionGifX, recordOptionY), recordGifNormalImg);
+                        }
+                        QString optionGifString = "GIF";
+                        QFont optionGifFont = painter.font() ;
+                        optionGifFont.setPointSize(9);
+                        painter.setFont(optionGifFont);
+                        if (saveAsGif) {
+                            painter.setPen(QPen(QColor("#2ca7f8")));
+                        } else {
+                            painter.setPen(QPen(QColor("#000000")));
+                        }
+                        painter.drawText(QRectF(recordOptionGifX + recordGifNormalImg.width(),
+                                                recordOptionsY,
+                                                RECORD_BUTTON_AREA_WIDTH / 2 - BUTTON_OPTION_ICON_OFFSET_X - recordGifNormalImg.width(),
+                                                RECORD_OPTIONS_AREA_HEIGHT),
+                                         Qt::AlignVCenter,
+                                         optionGifString);
+
+                        if (recordOptionMp4State == BUTTON_STATE_PRESS) {
+                            painter.drawImage(QPoint(recordOptionMp4X, recordOptionY), recordMp4PressImg);
+                        } else if (!saveAsGif) {
+                            painter.drawImage(QPoint(recordOptionMp4X, recordOptionY), recordMp4CheckedImg);
+                        } else {
+                            painter.drawImage(QPoint(recordOptionMp4X, recordOptionY), recordMp4NormalImg);
+                        }
+                        QString optionMp4String = "MP4";
+                        QFont optionMp4Font = painter.font() ;
+                        optionMp4Font.setPointSize(9);
+                        painter.setFont(optionMp4Font);
+                        if (saveAsGif) {
+                            painter.setPen(QPen(QColor("#000000")));
+                        } else {
+                            painter.setPen(QPen(QColor("#2ca7f8")));
+                        }
+                        painter.drawText(QRectF(recordOptionMp4X + recordMp4NormalImg.width(),
+                                                recordOptionsY,
+                                                RECORD_BUTTON_AREA_WIDTH / 2 - BUTTON_OPTION_ICON_OFFSET_X - recordMp4NormalImg.width(),
+                                                RECORD_OPTIONS_AREA_HEIGHT),
+                                         Qt::AlignVCenter,
+                                         optionMp4String);
                     } else {
-                        painter.drawImage(QPoint(recordOptionGifX, recordOptionY), recordGifNormalImg);
+                        clearTooltip();
                     }
-                    QString optionGifString = "GIF";
-                    QFont optionGifFont = painter.font() ;
-                    optionGifFont.setPointSize(9);
-                    painter.setFont(optionGifFont);
-                    if (saveAsGif) {
-                        painter.setPen(QPen(QColor("#2ca7f8")));
-                    } else {
-                        painter.setPen(QPen(QColor("#000000")));
-                    }
-                    painter.drawText(QRectF(recordOptionGifX + recordGifNormalImg.width(),
-                                            recordOptionsY,
-                                            RECORD_BUTTON_AREA_WIDTH / 2 - BUTTON_OPTION_ICON_OFFSET_X - recordGifNormalImg.width(),
-                                            RECORD_OPTIONS_AREA_HEIGHT),
-                                     Qt::AlignVCenter,
-                                     optionGifString);
-
-                    if (recordOptionMp4State == BUTTON_STATE_PRESS) {
-                        painter.drawImage(QPoint(recordOptionMp4X, recordOptionY), recordMp4PressImg);
-                    } else if (!saveAsGif) {
-                        painter.drawImage(QPoint(recordOptionMp4X, recordOptionY), recordMp4CheckedImg);
-                    } else {
-                        painter.drawImage(QPoint(recordOptionMp4X, recordOptionY), recordMp4NormalImg);
-                    }
-                    QString optionMp4String = "MP4";
-                    QFont optionMp4Font = painter.font() ;
-                    optionMp4Font.setPointSize(9);
-                    painter.setFont(optionMp4Font);
-                    if (saveAsGif) {
-                        painter.setPen(QPen(QColor("#000000")));
-                    } else {
-                        painter.setPen(QPen(QColor("#2ca7f8")));
-                    }
-                    painter.drawText(QRectF(recordOptionMp4X + recordMp4NormalImg.width(),
-                                            recordOptionsY,
-                                            RECORD_BUTTON_AREA_WIDTH / 2 - BUTTON_OPTION_ICON_OFFSET_X - recordMp4NormalImg.width(),
-                                            RECORD_OPTIONS_AREA_HEIGHT),
-                                     Qt::AlignVCenter,
-                                     optionMp4String);
-
                 }
 
                 painter.setClipping(false);
