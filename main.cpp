@@ -28,7 +28,6 @@ int main(int argc, char *argv[])
         
         window.setWindowTitle("Deepin recorder");
         window.setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-        window.setAttribute(Qt::WA_NoSystemBackground, true);
         window.setAttribute(Qt::WA_TranslucentBackground, true);
         window.showFullScreen();
         window.show();

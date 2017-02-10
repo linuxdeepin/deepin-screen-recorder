@@ -68,20 +68,20 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     recordMp4CheckedImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/mp4_checked.png"));
 
     // Get all windows geometry.
-    WindowManager windowManager;
-    QList<xcb_window_t> windows = windowManager.getWindows();
-    rootWindowRect = windowManager.getRootWindowRect();
+    windowManager = new WindowManager();
+    QList<xcb_window_t> windows = windowManager->getWindows();
+    rootWindowRect = windowManager->getRootWindowRect();
 
     for (int i = 0; i < windows.length(); i++) {
-        windowRects.append(windowManager.getWindowRect(windows[i]));
-        windowNames.append(windowManager.getWindowName(windows[i]));
+        windowRects.append(windowManager->getWindowRect(windows[i]));
+        windowNames.append(windowManager->getWindowName(windows[i]));
     }
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon((QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/trayicon1.svg"))));
     trayIcon->setToolTip("停止录制");
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-
+    
     setDragCursor();
 }
 
@@ -92,7 +92,9 @@ void MainWindow::paintEvent(QPaintEvent *)
     if (!firstMove) {
         QRectF tooltipRect((rootWindowRect.width - INIT_TOOLTIP_WIDTH) / 2, (rootWindowRect.height - INIT_TOOLTIP_HEIGHT) / 2, INIT_TOOLTIP_WIDTH, INIT_TOOLTIP_HEIGHT);
 
-        renderTooltipRect(painter, tooltipRect);
+        QList<QRectF> rects;
+        rects.append(tooltipRect);
+        renderTooltipRect(painter, rects);
 
         QString tooltipString = "点击录制窗口或者全屏\n拖动鼠标选择录制区域";
         QFont font = painter.font() ;
@@ -154,8 +156,15 @@ void MainWindow::paintEvent(QPaintEvent *)
                     int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
                     int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
                     QRectF recordButtonRect(recordButtonX, recordButtonY, RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT);
-
-                    renderTooltipRect(painter, recordButtonRect);
+                    
+                    int recordOptionsX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
+                    int recordOptionsY = recordY + (recordHeight + RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT + RECORD_OPTIONS_AREA_PADDING) / 2;
+                    QRectF recordOptionsRect(recordOptionsX, recordOptionsY, RECORD_BUTTON_AREA_WIDTH, RECORD_OPTIONS_AREA_HEIGHT);
+                    
+                    QList<QRectF> rects;
+                    rects.append(recordButtonRect);
+                    rects.append(recordOptionsRect);
+                    renderTooltipRect(painter, rects);
                     
                     if (recordButtonState == BUTTON_STATE_NORMAL) {
                         painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconNormalImg);
@@ -172,12 +181,6 @@ void MainWindow::paintEvent(QPaintEvent *)
                     painter.setFont(font);
                     painter.setPen(QPen(QColor("#e34342")));
                     painter.drawText(recordStringRect, Qt::AlignCenter, recordString);
-
-                    int recordOptionsX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
-                    int recordOptionsY = recordY + (recordHeight + RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT + RECORD_OPTIONS_AREA_PADDING) / 2;
-                    QRectF recordOptionsRect(recordOptionsX, recordOptionsY, RECORD_BUTTON_AREA_WIDTH, RECORD_OPTIONS_AREA_HEIGHT);
-                    
-                    renderTooltipRect(painter, recordOptionsRect);
                     
                     int recordOptionGifX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + BUTTON_OPTION_ICON_OFFSET_X;
                     int recordOptionMp4X = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + RECORD_BUTTON_AREA_WIDTH / 2;
@@ -239,7 +242,9 @@ void MainWindow::paintEvent(QPaintEvent *)
                                          COUNTDOWN_TOOLTIP_WIDTH,
                                          COUNTDOWN_TOOLTIP_HEIGHT);
 
-                    renderTooltipRect(painter, countdownRect);
+                    QList<QRectF> rects;
+                    rects.append(countdownRect);
+                    renderTooltipRect(painter, rects);
                     
                     int countdownX = recordX + (recordWidth - countdown1Img.width()) / 2;
                     int countdownY = recordY + (recordHeight - COUNTDOWN_TOOLTIP_HEIGHT) / 2 + COUNTDOWN_NUMBER_OFFSET_Y;
@@ -715,11 +720,11 @@ void MainWindow::stopRecord()
     }
 }
 
-void MainWindow::renderTooltipRect(QPainter &painter, QRectF &rect)
+void MainWindow::renderTooltipRect(QPainter &, QList<QRectF> &rects)
 {
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setOpacity(0.8);
-    QPainterPath path;
-    path.addRoundedRect(rect, 8, 8);
-    painter.fillPath(path, Qt::white);
+    QVector<uint32_t> data;
+    foreach (auto rect, rects) {
+        data << rect.x() << rect.y() << rect.width() << rect.height() << 8 << 8;
+    }
+    windowManager->setWindowBlur(this->winId(), data);
 }

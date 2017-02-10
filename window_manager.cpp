@@ -1,5 +1,6 @@
 #include <QObject>
 #include <QDebug>
+#include <QtX11Extras/QX11Info>
 #include <xcb/xcb.h>
 #include <xcb/xcb_aux.h>
 #include "window_manager.h"
@@ -105,7 +106,7 @@ QString WindowManager::getWindowClass(xcb_window_t window)
 
         if(reply) {
             QList<QByteArray> rawClasses = QByteArray(static_cast<char*>(xcb_get_property_value(reply)), xcb_get_property_value_length(reply)).split('\0');
-            
+
             free(reply);
 
             return QString::fromLatin1(rawClasses[0]);
@@ -240,3 +241,25 @@ WindowRect WindowManager::getWindowRect(xcb_window_t window)
 
     return rect;
 }
+
+template <typename... ArgTypes, typename... ArgTypes2>
+static inline unsigned int XcbCallVoid(xcb_void_cookie_t (*func)(xcb_connection_t *, ArgTypes...), ArgTypes2... args...)
+{
+    return func(QX11Info::connection(), args...).sequence;
+}
+
+void WindowManager::setWindowBlur(int wid, QVector<uint32_t> &data)
+{
+    auto atom = getAtom("_NET_WM_DEEPIN_BLUR_REGION_ROUNDED");
+    XcbCallVoid(
+        xcb_change_property,
+        XCB_PROP_MODE_REPLACE,
+        wid,
+        atom,
+        XCB_ATOM_CARDINAL,
+        32,
+        data.size(),
+        data.constData());
+    xcb_flush(conn);
+}
+

@@ -84,7 +84,7 @@ protected:
     void setDragCursor();
     void resetCursor();
     void updateMouseEventArea();
-    void renderTooltipRect(QPainter &painter, QRectF &rect);
+    void renderTooltipRect(QPainter &painter, QList<QRectF> &rects);
 
 private:
     QList<WindowRect> windowRects;
@@ -152,4 +152,6 @@ private:
     Settings settings;
     
     QSystemTrayIcon* trayIcon;
+    
+    WindowManager* windowManager;
 };
