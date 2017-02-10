@@ -715,7 +715,7 @@ void MainWindow::setDragCursor()
 
 void MainWindow::resetCursor()
 {
-    QApplication::setOverrideCursor(Qt::ArrowCursor);
+    QApplication::overrideCursor();
 }
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)
