@@ -10,6 +10,8 @@
 
 RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 {
+    saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
+    saveDir = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
 }
 
 void RecordProcess::setRecordInfo(int rx, int ry, int rw, int rh, QString name)
@@ -53,8 +55,8 @@ void RecordProcess::recordGIF()
     connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
 
     QDateTime date = QDateTime::currentDateTime();
-    QString path = "%1/Desktop/%2_%3_%4.gif";
-    savePath = path.arg(QDir::homePath()).arg("deepin-record").arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss"));
+    saveBaseName = QString("%1_%2_%3.gif").arg("deepin-record").arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss"));
+    savePath = QString("%1/%2").arg(saveTempDir).arg(saveBaseName);
     
     QFile file(savePath);
     file.remove();
@@ -74,9 +76,9 @@ void RecordProcess::recordVideo()
     connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
 
     QDateTime date = QDateTime::currentDateTime();
-    QString path = "%1/Desktop/%2_%3_%4.mp4";
-    savePath = path.arg(QDir::homePath()).arg("deepin-record").arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss"));
-
+    saveBaseName = QString("%1_%2_%3.mp4").arg("deepin-record").arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss"));
+    savePath = QString("%1/%2").arg(saveTempDir).arg(saveBaseName);
+    
     QFile file(savePath);
     file.remove();
 
@@ -110,15 +112,18 @@ void RecordProcess::stopRecord()
     QStringList actions;
     actions << "_open" << "Open";
     
+    QString newSavePath = QString("%1/%2").arg(saveDir).arg(saveBaseName);
+    QFile::rename(savePath, newSavePath);
+    
     QVariantMap hints;
-    hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(savePath);
+    hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
     
     QList<QVariant> arg;
     arg << (QCoreApplication::applicationName())                                    // appname
         << ((unsigned int) 0)                                                       // id
         << QString("%1/image/deepin-recorder.svg").arg(qApp->applicationDirPath())  // icon
         << "Record successful"                                                      // summary
-        << QString("Save at: %1").arg(savePath)                                     // body
+        << QString("Save at: %1").arg(newSavePath)                                  // body
         << actions                                                                  // actions
         << hints                                                                    // hints
         << (int) -1;                                                                // timeout

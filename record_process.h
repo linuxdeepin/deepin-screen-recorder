@@ -31,5 +31,8 @@ private:
     int recordType;
     
     QString savePath;
+    QString saveBaseName;
+    QString saveTempDir;
+    QString saveDir;
     QString saveAreaName;
 };
