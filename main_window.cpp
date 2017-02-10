@@ -92,11 +92,7 @@ void MainWindow::paintEvent(QPaintEvent *)
     if (!firstMove) {
         QRectF tooltipRect((rootWindowRect.width - INIT_TOOLTIP_WIDTH) / 2, (rootWindowRect.height - INIT_TOOLTIP_HEIGHT) / 2, INIT_TOOLTIP_WIDTH, INIT_TOOLTIP_HEIGHT);
 
-        painter.setRenderHint(QPainter::Antialiasing);
-        painter.setOpacity(0.8);
-        QPainterPath path;
-        path.addRoundedRect(tooltipRect, 8, 8);
-        painter.fillPath(path, Qt::white);
+        renderTooltipRect(painter, tooltipRect);
 
         QString tooltipString = "点击录制窗口或者全屏\n拖动鼠标选择录制区域";
         QFont font = painter.font() ;
@@ -159,12 +155,8 @@ void MainWindow::paintEvent(QPaintEvent *)
                     int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
                     QRectF recordButtonRect(recordButtonX, recordButtonY, RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT);
 
-                    painter.setRenderHint(QPainter::Antialiasing);
-                    painter.setOpacity(0.8);
-                    QPainterPath path;
-                    path.addRoundedRect(recordButtonRect, 8, 8);
-                    painter.fillPath(path, Qt::white);
-
+                    renderTooltipRect(painter, recordButtonRect);
+                    
                     if (recordButtonState == BUTTON_STATE_NORMAL) {
                         painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconNormalImg);
                     } else if (recordButtonState == BUTTON_STATE_HOVER) {
@@ -184,12 +176,9 @@ void MainWindow::paintEvent(QPaintEvent *)
                     int recordOptionsX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
                     int recordOptionsY = recordY + (recordHeight + RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT + RECORD_OPTIONS_AREA_PADDING) / 2;
                     QRectF recordOptionsRect(recordOptionsX, recordOptionsY, RECORD_BUTTON_AREA_WIDTH, RECORD_OPTIONS_AREA_HEIGHT);
-                    painter.setRenderHint(QPainter::Antialiasing);
-                    painter.setOpacity(0.8);
-                    QPainterPath recordOptionsPath;
-                    recordOptionsPath.addRoundedRect(recordOptionsRect, 8, 8);
-                    painter.fillPath(recordOptionsPath, Qt::white);
-
+                    
+                    renderTooltipRect(painter, recordOptionsRect);
+                    
                     int recordOptionGifX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + BUTTON_OPTION_ICON_OFFSET_X;
                     int recordOptionMp4X = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + RECORD_BUTTON_AREA_WIDTH / 2;
                     int recordOptionY = recordOptionsY + (RECORD_OPTIONS_AREA_HEIGHT - BUTTON_OPTION_HEIGHT) / 2 ;
@@ -250,12 +239,8 @@ void MainWindow::paintEvent(QPaintEvent *)
                                          COUNTDOWN_TOOLTIP_WIDTH,
                                          COUNTDOWN_TOOLTIP_HEIGHT);
 
-                    painter.setRenderHint(QPainter::Antialiasing);
-                    painter.setOpacity(0.8);
-                    QPainterPath path;
-                    path.addRoundedRect(countdownRect, 8, 8);
-                    painter.fillPath(path, Qt::white);
-
+                    renderTooltipRect(painter, countdownRect);
+                    
                     int countdownX = recordX + (recordWidth - countdown1Img.width()) / 2;
                     int countdownY = recordY + (recordHeight - COUNTDOWN_TOOLTIP_HEIGHT) / 2 + COUNTDOWN_NUMBER_OFFSET_Y;
 
@@ -728,4 +713,13 @@ void MainWindow::stopRecord()
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
         recordProcess.stopRecord();
     }
+}
+
+void MainWindow::renderTooltipRect(QPainter &painter, QRectF &rect)
+{
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setOpacity(0.8);
+    QPainterPath path;
+    path.addRoundedRect(rect, 8, 8);
+    painter.fillPath(path, Qt::white);
 }

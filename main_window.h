@@ -84,6 +84,7 @@ protected:
     void setDragCursor();
     void resetCursor();
     void updateMouseEventArea();
+    void renderTooltipRect(QPainter &painter, QRectF &rect);
 
 private:
     QList<WindowRect> windowRects;
