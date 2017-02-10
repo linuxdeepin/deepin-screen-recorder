@@ -94,7 +94,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 
         QList<QRectF> rects;
         rects.append(tooltipRect);
-        renderTooltipRect(painter, rects);
+        renderTooltipRect(painter, rects, 0.6);
 
         QString tooltipString = "点击录制窗口或者全屏\n拖动鼠标选择录制区域";
         QFont font = painter.font() ;
@@ -164,13 +164,15 @@ void MainWindow::paintEvent(QPaintEvent *)
                     QList<QRectF> rects;
                     rects.append(recordButtonRect);
                     rects.append(recordOptionsRect);
-                    renderTooltipRect(painter, rects);
 
                     if (recordButtonState == BUTTON_STATE_NORMAL) {
+                        renderTooltipRect(painter, rects, 0.6);
                         painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconNormalImg);
                     } else if (recordButtonState == BUTTON_STATE_HOVER) {
+                        renderTooltipRect(painter, rects, 0.7);
                         painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconHoverImg);
                     } else if (recordButtonState == BUTTON_STATE_PRESS) {
+                        renderTooltipRect(painter, rects, 0.2);
                         painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconPressImg);
                     }
 
@@ -244,7 +246,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 
                     QList<QRectF> rects;
                     rects.append(countdownRect);
-                    renderTooltipRect(painter, rects);
+                    renderTooltipRect(painter, rects, 0.6);
 
                     int countdownX = recordX + (recordWidth - countdown1Img.width()) / 2;
                     int countdownY = recordY + (recordHeight - COUNTDOWN_TOOLTIP_HEIGHT) / 2 + COUNTDOWN_NUMBER_OFFSET_Y;
@@ -463,7 +465,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
             updateCursor(event);
 
-            bool drawPoint = getAction(event) != ACTION_MOVE;
+            int action = getAction(event);
+            bool drawPoint = action != ACTION_MOVE && action != ACTION_STAY;
             if (drawPoint != drawDragPoint) {
                 drawDragPoint = drawPoint;
                 repaint();
@@ -729,23 +732,26 @@ void MainWindow::clearTooltip()
     windowManager->setWindowBlur(this->winId(), data);
 }
 
-void MainWindow::renderTooltipRect(QPainter &painter, QList<QRectF> &rects)
+void MainWindow::renderTooltipRect(QPainter &painter, QList<QRectF> &rects, qreal opacity)
 {
+    foreach (auto rect, rects) {
+        painter.setOpacity(opacity);
+        QPainterPath path;
+        path.addRoundedRect(rect, 8, 8);
+        painter.fillPath(path, Qt::white);
+        
+        painter.setOpacity(0.04);
+        QPen pen(QColor("#000000"));
+        pen.setWidth(1);
+        painter.setPen(pen);
+        painter.drawPath(path);
+    }
+    
     QVector<uint32_t> data;
     foreach (auto rect, rects) {
         data << rect.x() << rect.y() << rect.width() << rect.height() << 8 << 8;
     }
     windowManager->setWindowBlur(this->winId(), data);
 
-    foreach (auto rect, rects) {
-        painter.setOpacity(0.04);
-        QPen pen(QColor("#000000"));
-        pen.setWidth(1);
-        painter.setPen(pen);
-        QPainterPath path;
-        path.addRoundedRect(rect, 8, 8);
-        painter.drawPath(path);
-    }
-    
     painter.setOpacity(1.0);
 }
