@@ -109,7 +109,7 @@ void MainWindow::paintEvent(QPaintEvent *)
     if (recordWidth > 0 && recordHeight > 0) {
 
         QRect backgroundRect = QRect(rootWindowRect.x, rootWindowRect.y, rootWindowRect.width, rootWindowRect.height);
-        QRect frameRect = QRect(recordX, recordY, recordWidth - 1, recordHeight - 1);
+        QRect frameRect = QRect(recordX, recordY, recordWidth, recordHeight);
 
         // Draw background.
         painter.setBrush(QBrush("#000000"));
