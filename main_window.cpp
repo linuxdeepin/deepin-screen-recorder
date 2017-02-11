@@ -475,8 +475,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         isPressButton = false;
         isReleaseButton = true;
 
-        recordButtonState = BUTTON_STATE_NORMAL;
-
         repaint();
     } else if (event->type() == QEvent::MouseMove) {
         if (!firstMove) {
@@ -498,6 +496,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         if (pressX > recordButtonX && pressX < recordButtonX + RECORD_BUTTON_AREA_WIDTH && pressY > recordButtonY && pressY < recordButtonY + RECORD_BUTTON_AREA_HEIGHT) {
             recordButtonState = BUTTON_STATE_HOVER;
 
+            repaint();
+        } else {
+            recordButtonState = BUTTON_STATE_NORMAL;
+            
             repaint();
         }
 
