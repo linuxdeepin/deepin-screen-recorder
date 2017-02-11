@@ -125,6 +125,7 @@ private:
     int recordOptionMp4State;
     
     bool saveAsGif;
+    bool moveResizeByKey;
     
     int countdownCounter;
     int flashCounter;

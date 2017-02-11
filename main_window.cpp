@@ -31,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     isPressButton = false;
     isReleaseButton = false;
+    
+    moveResizeByKey = false;
 
     recordX = 0;
     recordY = 0;
@@ -155,7 +157,7 @@ void MainWindow::paintEvent(QPaintEvent *)
             if (firstReleaseButton) {
                 QString buttonString;
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-                    if (isReleaseButton) {
+                    if (isReleaseButton && !moveResizeByKey) {
                         int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
                         int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
                         QRectF recordButtonRect(recordButtonX, recordButtonY, RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT);
@@ -286,13 +288,83 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 #undef KeyRelease
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        
         if (keyEvent->key() == Qt::Key_Escape) {
             if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
                 QApplication::quit();
             }
         }
+        
+        if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+            if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
+                if (keyEvent->key() == Qt::Key_Left) {
+                    recordX = std::max(0, recordX - 1);
+                    recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
+                    
+                    moveResizeByKey = true;
+                    
+                    repaint();
+                } else if (keyEvent->key() == Qt::Key_Right) {
+                    recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
+                    
+                    moveResizeByKey = true;
+                    
+                    repaint();
+                } else if (keyEvent->key() == Qt::Key_Up) {
+                    recordY = std::max(0, recordY - 1);
+                    recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
+                    
+                    moveResizeByKey = true;
+                    
+                    repaint();
+                } else if (keyEvent->key() == Qt::Key_Down) {
+                    recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
+                    
+                    moveResizeByKey = true;
+                    
+                    repaint();
+                }
+            } else {
+                if (keyEvent->key() == Qt::Key_Left) {
+                    recordX = std::max(0, recordX - 1);
+                    
+                    moveResizeByKey = true;
+                    
+                    repaint();
+                } else if (keyEvent->key() == Qt::Key_Right) {
+                    recordX = std::min(rootWindowRect.width - recordWidth, recordX + 1);
+                    
+                    moveResizeByKey = true;
+                    
+                    repaint();
+                } else if (keyEvent->key() == Qt::Key_Up) {
+                    recordY = std::max(0, recordY - 1);
+                    
+                    moveResizeByKey = true;
+                    
+                    repaint();
+                } else if (keyEvent->key() == Qt::Key_Down) {
+                    recordY = std::min(rootWindowRect.height - recordHeight, recordY + 1);
+                    
+                    moveResizeByKey = true;
+                    
+                    repaint();
+                }
+            }
+        }
+    } else if (event->type() == QEvent::KeyRelease) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        
+        // NOTE: must be use 'isAutoRepeat' to filter KeyRelease event send by Qt.
+        if (!keyEvent->isAutoRepeat()) {
+            if (keyEvent->key() == Qt::Key_Left || keyEvent->key() == Qt::Key_Right || keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_Down) {
+                moveResizeByKey = false;
+                repaint();
+            }
+        }
+        
     }
-
+    
     int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
     int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
 
