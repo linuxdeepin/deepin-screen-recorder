@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     isPressButton = false;
     isReleaseButton = false;
-    
+
     moveResizeByKey = false;
 
     recordX = 0;
@@ -92,16 +92,19 @@ void MainWindow::paintEvent(QPaintEvent *)
     QPainter painter(this);
 
     if (!firstPressButton) {
-        QRectF tooltipRect((rootWindowRect.width - INIT_TOOLTIP_WIDTH) / 2, (rootWindowRect.height - INIT_TOOLTIP_HEIGHT) / 2, INIT_TOOLTIP_WIDTH, INIT_TOOLTIP_HEIGHT);
+        QString tooltipString = "点击录制窗口或者全屏\n拖动鼠标选择录制区域";
+        QSize size = setPainterText(painter, tooltipString, 11);
+        int rectWidth = size.width() + INIT_TOOLTIP_PADDING_X * 2;
+        int rectHeight = size.height() + INIT_TOOLTIP_PADDING_Y * 2;
+        QRectF tooltipRect((rootWindowRect.width - rectWidth) / 2,
+                           (rootWindowRect.height - rectHeight) / 2,
+                           rectWidth,
+                           rectHeight);
 
         QList<QRectF> rects;
         rects.append(tooltipRect);
         renderTooltipRect(painter, rects, 0.6);
 
-        QString tooltipString = "点击录制窗口或者全屏\n拖动鼠标选择录制区域";
-        QFont font = painter.font() ;
-        font.setPointSize(11);
-        painter.setFont(font);
         painter.setPen(QPen(QColor("#000000")));
         painter.drawText(tooltipRect, Qt::AlignCenter, tooltipString);
     } else {
@@ -246,17 +249,24 @@ void MainWindow::paintEvent(QPaintEvent *)
 
                 // Draw record wait second.
                 if (countdownCounter > 0) {
-                    QRectF countdownRect(recordX + (recordWidth - COUNTDOWN_TOOLTIP_WIDTH) / 2,
-                                         recordY + (recordHeight - COUNTDOWN_TOOLTIP_HEIGHT) / 2,
-                                         COUNTDOWN_TOOLTIP_WIDTH,
-                                         COUNTDOWN_TOOLTIP_HEIGHT);
+                    QString tooltipString = "停止录制请点击托盘图标\n或着\n按下深度录屏快捷键";
+                    QSize size = setPainterText(painter, tooltipString, 11);
+                    int tooltipWidth = size.width() + COUNTDOWN_TOOLTIP_PADDING_X * 2;
+                    int tooltipHeight = size.height() + COUNTDOWN_TOOLTIP_PADDING_Y * 2;
+                    int rectWidth = tooltipWidth;
+                    int rectHeight = tooltipHeight + countdown1Img.height() + COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y;
+                    
+                    QRectF countdownRect(recordX + (recordWidth - rectWidth) / 2,
+                                         recordY + (recordHeight - rectHeight) / 2,
+                                         rectWidth,
+                                         rectHeight);
 
                     QList<QRectF> rects;
                     rects.append(countdownRect);
                     renderTooltipRect(painter, rects, 0.6);
 
                     int countdownX = recordX + (recordWidth - countdown1Img.width()) / 2;
-                    int countdownY = recordY + (recordHeight - COUNTDOWN_TOOLTIP_HEIGHT) / 2 + COUNTDOWN_NUMBER_OFFSET_Y;
+                    int countdownY = recordY + (recordHeight - rectHeight) / 2 + COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y;
 
                     if (countdownCounter == 1) {
                         painter.drawImage(QPoint(countdownX, countdownY), countdown1Img);
@@ -266,14 +276,10 @@ void MainWindow::paintEvent(QPaintEvent *)
                         painter.drawImage(QPoint(countdownX, countdownY), countdown3Img);
                     }
 
-                    QRectF tooltipRect(recordX + (recordWidth - COUNTDOWN_TOOLTIP_WIDTH) / 2,
-                                       recordY + (recordHeight - COUNTDOWN_TOOLTIP_HEIGHT) / 2 + COUNTDOWN_STRING_OFFSET_Y,
-                                       COUNTDOWN_TOOLTIP_WIDTH,
-                                       COUNTDOWN_TOOLTIP_HEIGHT - COUNTDOWN_STRING_OFFSET_Y);
-                    QString tooltipString = "停止录制请点击托盘图标\n或着\n按下深度录屏快捷键";
-                    QFont font = painter.font() ;
-                    font.setPointSize(11);
-                    painter.setFont(font);
+                    QRectF tooltipRect(recordX + (recordWidth - rectWidth) / 2,
+                                       recordY + (recordHeight - rectHeight) / 2 + countdown1Img.height() + COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y,
+                                       rectWidth,
+                                       tooltipHeight);
                     painter.setPen(QPen(QColor("#000000")));
                     painter.drawText(tooltipRect, Qt::AlignCenter, tooltipString);
                 }
@@ -288,73 +294,73 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 #undef KeyRelease
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-        
+
         if (keyEvent->key() == Qt::Key_Escape) {
             if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
                 QApplication::quit();
             }
         }
-        
+
         if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
             if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
                 if (keyEvent->key() == Qt::Key_Left) {
                     recordX = std::max(0, recordX - 1);
                     recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
-                    
+
                     moveResizeByKey = true;
-                    
+
                     repaint();
                 } else if (keyEvent->key() == Qt::Key_Right) {
                     recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
-                    
+
                     moveResizeByKey = true;
-                    
+
                     repaint();
                 } else if (keyEvent->key() == Qt::Key_Up) {
                     recordY = std::max(0, recordY - 1);
                     recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
-                    
+
                     moveResizeByKey = true;
-                    
+
                     repaint();
                 } else if (keyEvent->key() == Qt::Key_Down) {
                     recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
-                    
+
                     moveResizeByKey = true;
-                    
+
                     repaint();
                 }
             } else {
                 if (keyEvent->key() == Qt::Key_Left) {
                     recordX = std::max(0, recordX - 1);
-                    
+
                     moveResizeByKey = true;
-                    
+
                     repaint();
                 } else if (keyEvent->key() == Qt::Key_Right) {
                     recordX = std::min(rootWindowRect.width - recordWidth, recordX + 1);
-                    
+
                     moveResizeByKey = true;
-                    
+
                     repaint();
                 } else if (keyEvent->key() == Qt::Key_Up) {
                     recordY = std::max(0, recordY - 1);
-                    
+
                     moveResizeByKey = true;
-                    
+
                     repaint();
                 } else if (keyEvent->key() == Qt::Key_Down) {
                     recordY = std::min(rootWindowRect.height - recordHeight, recordY + 1);
-                    
+
                     moveResizeByKey = true;
-                    
+
                     repaint();
                 }
             }
         }
     } else if (event->type() == QEvent::KeyRelease) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-        
+
         // NOTE: must be use 'isAutoRepeat' to filter KeyRelease event send by Qt.
         if (!keyEvent->isAutoRepeat()) {
             if (keyEvent->key() == Qt::Key_Left || keyEvent->key() == Qt::Key_Right || keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_Down) {
@@ -362,9 +368,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 repaint();
             }
         }
-        
+
     }
-    
+
     int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
     int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
 
@@ -580,7 +586,7 @@ void MainWindow::showCountdown()
 
     if (countdownCounter <= 0) {
         showCountdownTimer->stop();
-        
+
         clearTooltip();
 
         recordButtonStatus = RECORD_BUTTON_RECORDING;
@@ -802,7 +808,7 @@ void MainWindow::stopRecord()
     }
 }
 
-void MainWindow::clearTooltip() 
+void MainWindow::clearTooltip()
 {
     QVector<uint32_t> data;
     data << 0 << 0 << 0 << 0 << 0 << 0;
@@ -816,14 +822,14 @@ void MainWindow::renderTooltipRect(QPainter &painter, QList<QRectF> &rects, qrea
         QPainterPath path;
         path.addRoundedRect(rect, 8, 8);
         painter.fillPath(path, Qt::white);
-        
+
         painter.setOpacity(0.04);
         QPen pen(QColor("#000000"));
         pen.setWidth(1);
         painter.setPen(pen);
         painter.drawPath(path);
     }
-    
+
     QVector<uint32_t> data;
     foreach (auto rect, rects) {
         data << rect.x() << rect.y() << rect.width() << rect.height() << 8 << 8;
@@ -831,4 +837,26 @@ void MainWindow::renderTooltipRect(QPainter &painter, QList<QRectF> &rects, qrea
     windowManager->setWindowBlur(this->winId(), data);
 
     painter.setOpacity(1.0);
+}
+
+QSize MainWindow::setPainterText(QPainter &painter, QString string, int size)
+{
+    QFont font = painter.font() ;
+    font.setPointSize(size);
+    painter.setFont(font);
+    QFontMetrics fm = painter.fontMetrics();
+
+    int width = 0;
+    int height = 0;
+    foreach (auto line, string.split("\n")) {
+        int lineWidth = fm.width(line);
+        int lineHeight = fm.height();
+
+        if (lineWidth > width) {
+            width = lineWidth;
+        }
+        height += lineHeight;
+    }
+
+    return QSize(width, height);
 }
