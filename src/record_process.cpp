@@ -118,10 +118,11 @@ void RecordProcess::stopRecord()
     QVariantMap hints;
     hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
     
+    
     QList<QVariant> arg;
     arg << (QCoreApplication::applicationName())                                    // appname
         << ((unsigned int) 0)                                                       // id
-        << Utils::getImagePath("deepin-record.svg")                                 // icon
+        << Utils::getImagePath("deepin-recorder.svg")                               // icon
         << "Record successful"                                                      // summary
         << QString("Save at: %1").arg(newSavePath)                                  // body
         << actions                                                                  // actions

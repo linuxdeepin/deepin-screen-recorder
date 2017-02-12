@@ -230,7 +230,6 @@ WindowRect WindowManager::getWindowRect(xcb_window_t window)
     rect.width = geometry->width;
     rect.height = geometry->height;
 
-
     if (extents.length() == 4) {
         // _GTK_FRAME_EXTENTS: left, right, top, bottom
         rect.x += extents[0];
