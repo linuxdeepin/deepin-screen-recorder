@@ -17,6 +17,7 @@ public:
     void stopRecord();
     void recordGIF();
     void recordVideo();
+    void initProcess();
 
 protected:
     void run();

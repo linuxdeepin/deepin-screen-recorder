@@ -33,11 +33,7 @@ void RecordProcess::setRecordType(int type)
 void RecordProcess::run()
 {
     // Start record.
-    if (recordType == RECORD_TYPE_GIF) {
-        recordGIF();
-    } else if (recordType == RECORD_TYPE_VIDEO) {
-        recordVideo();
-    }
+    recordType == RECORD_TYPE_GIF ? recordGIF() : recordVideo();
 
     // Got output or error.
     process->waitForFinished(-1);
@@ -53,16 +49,8 @@ void RecordProcess::run()
 
 void RecordProcess::recordGIF()
 {
-    process = new QProcess();
-    connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
-
-    QDateTime date = QDateTime::currentDateTime();
-    saveBaseName = QString("%1_%2_%3.gif").arg("deepin-record").arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss"));
-    savePath = QString("%1/%2").arg(saveTempDir).arg(saveBaseName);
+    initProcess();
     
-    QFile file(savePath);
-    file.remove();
-
     QStringList arguments;
     arguments << QString("--duration=%1").arg(864000);
     arguments << QString("--x=%1").arg(recordX) << QString("--y=%1").arg(recordY);
@@ -74,16 +62,8 @@ void RecordProcess::recordGIF()
 
 void RecordProcess::recordVideo()
 {
-    process = new QProcess();
-    connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
-
-    QDateTime date = QDateTime::currentDateTime();
-    saveBaseName = QString("%1_%2_%3.mp4").arg("deepin-record").arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss"));
-    savePath = QString("%1/%2").arg(saveTempDir).arg(saveBaseName);
+    initProcess();
     
-    QFile file(savePath);
-    file.remove();
-
     // FFmpeg need pass arugment split two part: -option value,
     // otherwise, it will report 'Unrecognized option' error.
     QStringList arguments;
@@ -98,6 +78,21 @@ void RecordProcess::recordVideo()
     arguments << savePath;
 
     process->start("ffmpeg", arguments);
+}
+
+void RecordProcess::initProcess() {
+    // Create process and handle finish singal.
+    process = new QProcess();
+    connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
+
+    // Build temp save path.
+    QDateTime date = QDateTime::currentDateTime();
+    saveBaseName = QString("%1_%2_%3.%4").arg("deepin-record").arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(recordType == RECORD_TYPE_GIF ? "gif" : "mp4");
+    savePath = QDir(saveTempDir).filePath(saveBaseName);
+    
+    // Remove same cache file first.
+    QFile file(savePath);
+    file.remove();
 }
 
 void RecordProcess::stopRecord()
@@ -117,7 +112,7 @@ void RecordProcess::stopRecord()
     QStringList actions;
     actions << "_open" << "Open";
     
-    QString newSavePath = QString("%1/%2").arg(saveDir).arg(saveBaseName);
+    QString newSavePath = QDir(saveDir).filePath(saveBaseName);
     QFile::rename(savePath, newSavePath);
     
     QVariantMap hints;

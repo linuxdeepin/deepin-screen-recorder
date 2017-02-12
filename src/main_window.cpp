@@ -205,6 +205,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                         } else {
                             painter.drawImage(QPoint(recordOptionGifX, recordOptionY), recordGifNormalImg);
                         }
+                        
                         QString optionGifString = "GIF";
                         setFontSize(painter, 9);
                         if (saveAsGif) {
@@ -226,6 +227,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                         } else {
                             painter.drawImage(QPoint(recordOptionMp4X, recordOptionY), recordMp4NormalImg);
                         }
+                        
                         QString optionMp4String = "MP4";
                         setFontSize(painter, 9);
                         if (saveAsGif) {
