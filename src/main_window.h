@@ -55,10 +55,8 @@ class MainWindow : public QWidget
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow() {
-        delete showCountdownTimer;
-        delete flashTrayIconTimer;
-        delete trayIcon;
-        delete windowManager;
+        // All process will quit if MainWindow destroy.
+        // So we don't need delete object by hand.
     }
 
 public slots:
