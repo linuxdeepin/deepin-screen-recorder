@@ -162,16 +162,16 @@ void MainWindow::paintEvent(QPaintEvent *)
         painter.setClipRegion(QRegion(backgroundRect).subtracted(QRegion(frameRect)));
         painter.drawRect(backgroundRect);
 
+        // Reset clip.
+        painter.setClipRegion(QRegion(backgroundRect));
+
         // Draw frame.
         QPen framePen(QColor("#01bdff"));
-        framePen.setWidth(2);
+        framePen.setWidth(1);
         painter.setOpacity(1);
         painter.setBrush(QBrush());  // clear brush
         painter.setPen(framePen);
-        painter.drawRect(frameRect);
-
-        // Reset clip.
-        painter.setClipRegion(QRegion(backgroundRect));
+        painter.drawRect(QRect(frameRect.x(), frameRect.y(), frameRect.width() - 1, frameRect.height() - 1));
 
         // Draw drag pint.
         if (recordButtonStatus == RECORD_BUTTON_NORMAL && drawDragPoint) {
