@@ -1,4 +1,4 @@
-# Deepin Terminal
+# Deepin Screen Recorder
 
 This is default screen recorder application for Deepin.
 
