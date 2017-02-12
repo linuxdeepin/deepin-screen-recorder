@@ -165,6 +165,7 @@ void MainWindow::paintEvent(QPaintEvent *)
         // Draw frame.
         QPen framePen(QColor("#01bdff"));
         framePen.setWidth(2);
+        painter.setOpacity(1);
         painter.setBrush(QBrush());  // clear brush
         painter.setPen(framePen);
         painter.drawRect(frameRect);
@@ -228,6 +229,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                                                 RECORD_BUTTON_AREA_HEIGHT - recordIconNormalImg.height());
                         QString recordString = "开始录制";
                         setFontSize(painter, 11);
+                        painter.setOpacity(1);
                         painter.setPen(QPen(QColor("#e34342")));
                         painter.drawText(recordStringRect, Qt::AlignCenter, recordString);
 
@@ -249,6 +251,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                         } else {
                             painter.setPen(QPen(QColor("#000000")));
                         }
+                        painter.setOpacity(1);
                         painter.drawText(QRectF(recordOptionGifX + recordGifNormalImg.width(),
                                                 recordOptionsY,
                                                 RECORD_BUTTON_AREA_WIDTH / 2 - BUTTON_OPTION_ICON_OFFSET_X - recordGifNormalImg.width(),
@@ -271,6 +274,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                         } else {
                             painter.setPen(QPen(QColor("#2ca7f8")));
                         }
+                        painter.setOpacity(1);
                         painter.drawText(QRectF(recordOptionMp4X + recordMp4NormalImg.width(),
                                                 recordOptionsY,
                                                 RECORD_BUTTON_AREA_WIDTH / 2 - BUTTON_OPTION_ICON_OFFSET_X - recordMp4NormalImg.width(),
