@@ -11,7 +11,7 @@ public:
     };
     QString configPath();
     
-    QVariant option(const QString &key);
+    QVariant getOption(const QString &key);
     void setOption(const QString &key, const QVariant &value);
     
 private:

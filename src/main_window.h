@@ -78,7 +78,7 @@ protected:
     void updateCursor(QEvent *event);
     void setDragCursor();
     void resetCursor();
-    void updateMouseEventArea();
+    void passInputEvent();
     void renderTooltipRect(QPainter &painter, QList<QRectF> &rects, qreal opacity);
     void clearTooltip();
     void setFontSize(QPainter &painter, int textSize);

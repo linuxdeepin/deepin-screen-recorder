@@ -16,7 +16,7 @@ QString Settings::configPath()
     return QDir(QDir(userConfigPath).filePath(qApp->organizationName())).filePath(qApp->applicationName());
 }
 
-QVariant Settings::option(const QString &key)
+QVariant Settings::getOption(const QString &key)
 {
     settings->beginGroup(groupName);
     QVariant result;

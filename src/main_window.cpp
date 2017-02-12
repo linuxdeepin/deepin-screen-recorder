@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     Settings settings;
 
-    saveAsGif = settings.option("save_as_gif").toBool();
+    saveAsGif = settings.getOption("save_as_gif").toBool();
 
     drawDragPoint = false;
 
@@ -591,7 +591,7 @@ void MainWindow::showCountdown()
         recordButtonStatus = RECORD_BUTTON_RECORDING;
         repaint();
 
-        updateMouseEventArea();
+        passInputEvent();
 
         resetCursor();
 
@@ -620,7 +620,7 @@ void MainWindow::flashTrayIcon()
     }
 }
 
-void MainWindow::updateMouseEventArea()
+void MainWindow::passInputEvent()
 {
     XRectangle* reponseArea = new XRectangle;
     reponseArea->x = 0;
