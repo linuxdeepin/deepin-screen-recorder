@@ -21,6 +21,7 @@ xcb_atom_t WindowManager::getAtom(QString name)
     xcb_intern_atom_reply_t *reply = xcb_intern_atom_reply(conn, cookie, NULL);
     if(reply) {
         result = reply->atom;
+
         free(reply);
     }
 
@@ -40,8 +41,7 @@ QString WindowManager::getAtomName(xcb_atom_t atom)
     xcb_get_atom_name_cookie_t cookie = xcb_get_atom_name(conn, atom);
     xcb_get_atom_name_reply_t *reply = xcb_get_atom_name_reply(conn, cookie, NULL);
 
-    if (reply)
-    {
+    if (reply) {
         result = QString::fromLatin1(xcb_get_atom_name_name(reply), xcb_get_atom_name_name_length(reply));
         free(reply);
     }
@@ -137,15 +137,14 @@ QString WindowManager::getWindowName(xcb_window_t window)
 
 int WindowManager::getCurrentWorkspace(xcb_window_t window)
 {
-
     xcb_get_property_reply_t *reply = getProperty(window, "_NET_CURRENT_DESKTOP", XCB_ATOM_CARDINAL);
     int desktop = 0;
 
     if (reply) {
         desktop = *((int *) xcb_get_property_value(reply));
-    }
 
-    free(reply);
+        free(reply);
+    }
 
     return desktop;
 }
@@ -160,9 +159,9 @@ int WindowManager::getWindowWorkspace(xcb_window_t window)
 
         if (reply) {
             desktop = *((int *) xcb_get_property_value(reply));
-        }
 
-        free(reply);
+            free(reply);
+        }
 
         return desktop;
     }
@@ -189,6 +188,8 @@ QList<xcb_window_t> WindowManager::getWindows()
                 }
             }
         }
+
+        free(listReply);
     }
 
     // We need add root window in first index of list.
@@ -215,6 +216,8 @@ WindowRect WindowManager::getRootWindowRect() {
     rect.width = geometry->width;
     rect.height = geometry->height;
 
+    free(geometry);
+
     return rect;
 }
 
@@ -238,6 +241,8 @@ WindowRect WindowManager::getWindowRect(xcb_window_t window)
         rect.height -= extents[2] + extents[3];
     }
 
+    free(geometry);
+
     return rect;
 }
 
@@ -249,7 +254,7 @@ static inline unsigned int XcbCallVoid(xcb_void_cookie_t (*func)(xcb_connection_
 
 void WindowManager::setWindowBlur(int wid, QVector<uint32_t> &data)
 {
-    auto atom = getAtom("_NET_WM_DEEPIN_BLUR_REGION_ROUNDED");
+    xcb_atom_t atom = getAtom("_NET_WM_DEEPIN_BLUR_REGION_ROUNDED");
     XcbCallVoid(
         xcb_change_property,
         XCB_PROP_MODE_REPLACE,
@@ -261,4 +266,3 @@ void WindowManager::setWindowBlur(int wid, QVector<uint32_t> &data)
         data.constData());
     xcb_flush(conn);
 }
-

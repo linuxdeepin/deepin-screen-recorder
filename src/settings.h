@@ -7,6 +7,9 @@ class Settings : public QObject
     
 public:
     Settings(QObject *parent = 0);
+    ~Settings() {
+        delete settings;
+    };
     QString configPath();
     
     QVariant option(const QString &key);

@@ -11,6 +11,9 @@ class SingleApplication : public QApplication {
 
 public:
     SingleApplication(int &argc, char **argv);
+    ~SingleApplication() {
+        delete localServer;
+    };
 
     bool isRunning();
     QWidget *w;

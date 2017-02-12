@@ -20,3 +20,5 @@ QT += network
 QT += x11extras
 QT += dbus
 LIBS += -lX11 -lXext
+
+QMAKE_CXXFLAGS += -g

@@ -64,6 +64,12 @@ class MainWindow : public QWidget
 
 public:
     MainWindow(QWidget *parent = 0);
+    ~MainWindow() {
+        delete showCountdownTimer;
+        delete flashTryIconTimer;
+        delete trayIcon;
+        delete windowManager;
+    }
 
 public slots:
     void showCountdown();

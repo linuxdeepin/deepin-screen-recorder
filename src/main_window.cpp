@@ -634,6 +634,8 @@ void MainWindow::updateMouseEventArea()
     reponseArea->height = 0;
 
     XShapeCombineRectangles(QX11Info::display(), winId(), ShapeInput, 0, 0, reponseArea ,1 ,ShapeSet, YXBanded);
+    
+    free(reponseArea);
 }
 
 void MainWindow::resizeTop(QMouseEvent *mouseEvent)
