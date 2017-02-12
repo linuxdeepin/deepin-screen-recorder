@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 void MainWindow::initAttributes()
 {
     // Init attributes.
-    setWindowTitle("Deepin recorder");
+    setWindowTitle("Deepin screen recorder");
     setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
     setMouseTracking(true);   // make MouseMove can response

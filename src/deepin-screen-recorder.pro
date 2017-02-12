@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = deepin-recorder
+TARGET = deepin-screen-recorder
 INCLUDEPATH += .
 
 CONFIG += link_pkgconfig

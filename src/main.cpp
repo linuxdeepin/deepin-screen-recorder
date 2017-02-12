@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 
     if (!app.isRunning()) {
         app.setOrganizationName("deepin");
-        app.setApplicationName("deepin-recorder");
+        app.setApplicationName("deepin-screen-recorder");
         app.setApplicationVersion("1.0");
 
         MainWindow window;

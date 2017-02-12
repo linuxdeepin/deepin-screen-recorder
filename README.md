@@ -11,14 +11,14 @@ In debian, use below command to install running dependencies:
 
 ## Installation
 
-`mkdir build; cd build; qmake ..; make; ./deepin-recorder`
+`mkdir build; cd build; qmake ..; make; ./deepin-screen-recorder`
 
 ## Usage
 
 
 ## Config file
 Configure file save at:
-~/.config/deepin/deepin-recorder/config.ini
+~/.config/deepin/deepin-screen-recorder/config.ini
 
 ## Getting help
 
