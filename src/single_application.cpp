@@ -76,7 +76,7 @@ void SingleApplication::newLocalServer()
     localServer = new QLocalServer(this);
     connect(localServer, SIGNAL(newConnection()), this, SLOT(newLocalConnection()));
     if(!localServer->listen(serverName)) {
-        // If monitor failed (such as program crahs), remove it.
+        // If monitor failed (such as program crashs), remove it.
         if(localServer->serverError() == QAbstractSocket::AddressInUseError) {
             QLocalServer::removeServer(serverName);
             localServer->listen(serverName);
