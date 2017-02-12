@@ -1,18 +1,19 @@
 #include <QApplication>
 #include <QStandardPaths>
 #include <QObject>
+#include <QDir>
 #include "settings.h"
 
 Settings::Settings(QObject *parent) : QObject(parent) 
 {
-    settings = new QSettings(configPath() + "/config.ini", QSettings::IniFormat);
+    settings = new QSettings(QDir(configPath()).filePath("config.conf"), QSettings::IniFormat);
     groupName = "fileformat";
 }
 
 QString Settings::configPath() 
 {
     auto userConfigPath = QStandardPaths::standardLocations(QStandardPaths::ConfigLocation).first();
-    return userConfigPath + "/" + qApp->organizationName() + "/" + qApp->applicationName();
+    return QDir(QDir(userConfigPath).filePath(qApp->organizationName())).filePath(qApp->applicationName());
 }
 
 QVariant Settings::option(const QString &key) 
