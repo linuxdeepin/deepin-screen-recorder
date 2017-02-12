@@ -178,4 +178,7 @@ private:
     QSystemTrayIcon* trayIcon;
     
     WindowManager* windowManager;
+    
+    // Just use for debug.
+    // int repaintCounter;
 };

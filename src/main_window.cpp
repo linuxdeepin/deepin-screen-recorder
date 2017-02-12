@@ -25,6 +25,7 @@
 #include <QTimer>
 #include <QKeyEvent>
 #include <QObject>
+#include <QDebug>
 #include <QPainter>
 #include <QWidget>
 #include "main_window.h"
@@ -74,6 +75,9 @@ void MainWindow::initAttributes()
     flashTrayIconCounter = 0;
 
     selectAreaName = "";
+    
+    // Just use for debug.
+    // repaintCounter = 0;
 }
 
 void MainWindow::initResource()
@@ -118,6 +122,10 @@ void MainWindow::initResource()
 
 void MainWindow::paintEvent(QPaintEvent *)
 {
+    // Just use for debug.
+    // repaintCounter++;
+    // qDebug() << repaintCounter;
+    
     QPainter painter(this);
 
     if (!isFirstPressButton) {
@@ -320,6 +328,8 @@ void MainWindow::paintEvent(QPaintEvent *)
 
 bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
+    bool needRepaint = false;
+    
 #undef KeyPress
 #undef KeyRelease
     if (event->type() == QEvent::KeyPress) {
@@ -339,26 +349,26 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                     moveResizeByKey = true;
 
-                    repaint();
+                    needRepaint = true;
                 } else if (keyEvent->key() == Qt::Key_Right) {
                     recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
 
                     moveResizeByKey = true;
 
-                    repaint();
+                    needRepaint = true;
                 } else if (keyEvent->key() == Qt::Key_Up) {
                     recordY = std::max(0, recordY - 1);
                     recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
 
                     moveResizeByKey = true;
 
-                    repaint();
+                    needRepaint = true;
                 } else if (keyEvent->key() == Qt::Key_Down) {
                     recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
 
                     moveResizeByKey = true;
 
-                    repaint();
+                    needRepaint = true;
                 }
             } else {
                 if (keyEvent->key() == Qt::Key_Left) {
@@ -366,25 +376,25 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                     moveResizeByKey = true;
 
-                    repaint();
+                    needRepaint = true;
                 } else if (keyEvent->key() == Qt::Key_Right) {
                     recordX = std::min(rootWindowRect.width - recordWidth, recordX + 1);
 
                     moveResizeByKey = true;
 
-                    repaint();
+                    needRepaint = true;
                 } else if (keyEvent->key() == Qt::Key_Up) {
                     recordY = std::max(0, recordY - 1);
 
                     moveResizeByKey = true;
 
-                    repaint();
+                    needRepaint = true;
                 } else if (keyEvent->key() == Qt::Key_Down) {
                     recordY = std::min(rootWindowRect.height - recordHeight, recordY + 1);
 
                     moveResizeByKey = true;
 
-                    repaint();
+                    needRepaint = true;
                 }
             }
         }
@@ -395,7 +405,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         if (!keyEvent->isAutoRepeat()) {
             if (keyEvent->key() == Qt::Key_Left || keyEvent->key() == Qt::Key_Right || keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_Down) {
                 moveResizeByKey = false;
-                repaint();
+                needRepaint = true;
             }
         }
 
@@ -446,7 +456,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                         resetCursor();
 
-                        repaint();
+                        needRepaint = true;
                     }
                 } else if (pressX > recordOptionGifX && pressX < recordOptionGifX + RECORD_BUTTON_AREA_WIDTH / 2
                            && pressY > recordOptionY && pressY < recordOptionY + RECORD_OPTIONS_AREA_HEIGHT) {
@@ -457,7 +467,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         saveAsGif = true;
                         settings.setOption("save_as_gif", saveAsGif);
 
-                        repaint();
+                        needRepaint = true;
                     }
                 } else if (pressX > recordOptionMp4X && pressX < recordOptionMp4X + RECORD_BUTTON_AREA_WIDTH / 2
                            && pressY > recordOptionY && pressY < recordOptionY + RECORD_OPTIONS_AREA_HEIGHT) {
@@ -468,7 +478,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         saveAsGif = false;
                         settings.setOption("save_as_gif", saveAsGif);
 
-                        repaint();
+                        needRepaint = true;
                     }
                 }
             }
@@ -505,7 +515,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         isPressButton = false;
         isReleaseButton = true;
 
-        repaint();
+        needRepaint = true;
     } else if (event->type() == QEvent::MouseMove) {
         if (!isFirstMove) {
             isFirstMove = true;
@@ -526,11 +536,11 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         if (pressX > recordButtonX && pressX < recordButtonX + RECORD_BUTTON_AREA_WIDTH && pressY > recordButtonY && pressY < recordButtonY + RECORD_BUTTON_AREA_HEIGHT) {
             recordButtonState = BUTTON_STATE_HOVER;
 
-            repaint();
+            needRepaint = true;
         } else {
             recordButtonState = BUTTON_STATE_NORMAL;
 
-            repaint();
+            needRepaint = true;
         }
 
         if (isFirstPressButton) {
@@ -541,7 +551,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     recordWidth = std::abs(dragStartX - mouseEvent->x());
                     recordHeight = std::abs(dragStartY - mouseEvent->y());
 
-                    repaint();
+                    needRepaint = true;
                 }
             } else if (isPressButton) {
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
@@ -574,7 +584,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         resizeRight(mouseEvent);
                     }
 
-                    repaint();
+                    needRepaint = true;
                 }
             }
 
@@ -584,7 +594,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             bool drawPoint = action != ACTION_MOVE && action != ACTION_STAY;
             if (drawPoint != drawDragPoint) {
                 drawDragPoint = drawPoint;
-                repaint();
+                needRepaint = true;
             }
         } else {
             for (int i = 0; i < windowRects.length(); i++) {
@@ -600,12 +610,18 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     recordWidth = ww;
                     recordHeight = wh;
 
-                    repaint();
+                    needRepaint = true;
 
                     break;
                 }
             }
         }
+    }
+    
+    // Use flag instead call `repaint` directly,
+    // to avoid repaint many times in one event function.
+    if (needRepaint) {
+        repaint();
     }
 
     return false;
@@ -614,7 +630,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 void MainWindow::showCountdown()
 {
     showCountdownCounter--;
-    repaint();
 
     if (showCountdownCounter <= 0) {
         showCountdownTimer->stop();
@@ -622,7 +637,6 @@ void MainWindow::showCountdown()
         clearTooltip();
 
         recordButtonStatus = RECORD_BUTTON_RECORDING;
-        repaint();
 
         passInputEvent();
 
@@ -636,6 +650,8 @@ void MainWindow::showCountdown()
         connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
         flashTrayIconTimer->start(500);
     }
+
+    repaint();
 }
 
 void MainWindow::flashTrayIcon()
