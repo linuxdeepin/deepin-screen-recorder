@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     flashCounter = 0;
 
     selectAreaName = "";
-    
+
     resizeHandleBigImg = QImage(Utils::getImagePath("resize_handle_big.png"));
     resizeHandleSmallImg = QImage(Utils::getImagePath("resize_handle_small.png"));
     countdown1Img = QImage(Utils::getImagePath("countdown_1.png"));
@@ -94,7 +94,8 @@ void MainWindow::paintEvent(QPaintEvent *)
 
     if (!firstPressButton) {
         QString tooltipString = "点击录制窗口或者全屏\n拖动鼠标选择录制区域";
-        QSize size = setPainterText(painter, tooltipString, 11);
+        setFontSize(painter, 11);
+        QSize size = getRenderSize(painter, tooltipString);
         int rectWidth = size.width() + INIT_TOOLTIP_PADDING_X * 2;
         int rectHeight = size.height() + INIT_TOOLTIP_PADDING_Y * 2;
         QRectF tooltipRect((rootWindowRect.width - rectWidth) / 2,
@@ -185,11 +186,12 @@ void MainWindow::paintEvent(QPaintEvent *)
                             painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconPressImg);
                         }
 
-                        QRectF recordStringRect(recordButtonX, recordButtonY + recordIconNormalImg.height(), RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT - recordIconNormalImg.height());
+                        QRectF recordStringRect(recordButtonX,
+                                                recordButtonY + recordIconNormalImg.height(),
+                                                RECORD_BUTTON_AREA_WIDTH,
+                                                RECORD_BUTTON_AREA_HEIGHT - recordIconNormalImg.height());
                         QString recordString = "开始录制";
-                        QFont font = painter.font() ;
-                        font.setPointSize(11);
-                        painter.setFont(font);
+                        setFontSize(painter, 11);
                         painter.setPen(QPen(QColor("#e34342")));
                         painter.drawText(recordStringRect, Qt::AlignCenter, recordString);
 
@@ -204,9 +206,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                             painter.drawImage(QPoint(recordOptionGifX, recordOptionY), recordGifNormalImg);
                         }
                         QString optionGifString = "GIF";
-                        QFont optionGifFont = painter.font() ;
-                        optionGifFont.setPointSize(9);
-                        painter.setFont(optionGifFont);
+                        setFontSize(painter, 9);
                         if (saveAsGif) {
                             painter.setPen(QPen(QColor("#2ca7f8")));
                         } else {
@@ -227,9 +227,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                             painter.drawImage(QPoint(recordOptionMp4X, recordOptionY), recordMp4NormalImg);
                         }
                         QString optionMp4String = "MP4";
-                        QFont optionMp4Font = painter.font() ;
-                        optionMp4Font.setPointSize(9);
-                        painter.setFont(optionMp4Font);
+                        setFontSize(painter, 9);
                         if (saveAsGif) {
                             painter.setPen(QPen(QColor("#000000")));
                         } else {
@@ -251,12 +249,13 @@ void MainWindow::paintEvent(QPaintEvent *)
                 // Draw record wait second.
                 if (countdownCounter > 0) {
                     QString tooltipString = "停止录制请点击托盘图标\n或着\n按下深度录屏快捷键";
-                    QSize size = setPainterText(painter, tooltipString, 11);
+                    setFontSize(painter, 11);
+                    QSize size = getRenderSize(painter, tooltipString);
                     int tooltipWidth = size.width() + COUNTDOWN_TOOLTIP_PADDING_X * 2;
                     int tooltipHeight = size.height() + COUNTDOWN_TOOLTIP_PADDING_Y * 2;
                     int rectWidth = tooltipWidth;
                     int rectHeight = tooltipHeight + countdown1Img.height() + COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y;
-                    
+
                     QRectF countdownRect(recordX + (recordWidth - rectWidth) / 2,
                                          recordY + (recordHeight - rectHeight) / 2,
                                          rectWidth,
@@ -500,7 +499,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             repaint();
         } else {
             recordButtonState = BUTTON_STATE_NORMAL;
-            
+
             repaint();
         }
 
@@ -842,11 +841,15 @@ void MainWindow::renderTooltipRect(QPainter &painter, QList<QRectF> &rects, qrea
     painter.setOpacity(1.0);
 }
 
-QSize MainWindow::setPainterText(QPainter &painter, QString string, int size)
+void MainWindow::setFontSize(QPainter &painter, int textSize)
 {
     QFont font = painter.font() ;
-    font.setPointSize(size);
+    font.setPointSize(textSize);
     painter.setFont(font);
+}
+
+QSize MainWindow::getRenderSize(QPainter &painter, QString string)
+{
     QFontMetrics fm = painter.fontMetrics();
 
     int width = 0;

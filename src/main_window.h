@@ -85,7 +85,8 @@ protected:
     void updateMouseEventArea();
     void renderTooltipRect(QPainter &painter, QList<QRectF> &rects, qreal opacity);
     void clearTooltip();
-    QSize setPainterText(QPainter &painter, QString string, int size);
+    void setFontSize(QPainter &painter, int textSize);
+    QSize getRenderSize(QPainter &painter, QString string);
 
 private:
     QList<WindowRect> windowRects;
