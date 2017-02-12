@@ -14,7 +14,6 @@ public:
     };
 
     bool isRunning();
-    QWidget *w;
 
 private slots:
     void newLocalConnection();

@@ -6,7 +6,6 @@
 
 SingleApplication::SingleApplication(int &argc, char **argv)
     : QApplication(argc, argv)
-    , w(NULL)
     , appIsRunning(false)
     , localServer(NULL) {
 
