@@ -1,0 +1,17 @@
+[Desktop Entry]
+Categories=GNOME;GTK;Utility;System;
+Comment=Record screen
+Exec=deepin-screen-recorder
+Icon=deepin-screen-recorder
+Name=Deepin Terminal
+StartupNotify=true
+TryExec=deepin-screen-recorder
+Type=Application
+
+# Translations
+Name[zh_CN]=深度录屏
+Comment[zh_CN]=屏幕录制工具
+Name[zh_HK]=深度錄屏
+Comment[zh_HK]=屏幕錄製工具
+Name[zh_TW]=深度錄屏
+Comment[zh_TW]=屏幕錄製工具
