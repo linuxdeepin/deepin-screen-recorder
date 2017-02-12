@@ -76,6 +76,18 @@ void MainWindow::initAttributes()
 
     selectAreaName = "";
     
+    // Get all windows geometry.
+    // Below code must execute before `window.showFullscreen,
+    // otherwise deepin-screen-recorder window will add in window lists.
+    windowManager = new WindowManager();
+    QList<xcb_window_t> windows = windowManager->getWindows();
+    rootWindowRect = windowManager->getRootWindowRect();
+
+    for (int i = 0; i < windows.length(); i++) {
+        windowRects.append(windowManager->getWindowRect(windows[i]));
+        windowNames.append(windowManager->getWindowName(windows[i]));
+    }
+
     // Just use for debug.
     // repaintCounter = 0;
 }
@@ -101,16 +113,6 @@ void MainWindow::initResource()
     recordMp4NormalImg = QImage(Utils::getImagePath("mp4_normal.png"));
     recordMp4PressImg = QImage(Utils::getImagePath("mp4_press.png"));
     recordMp4CheckedImg = QImage(Utils::getImagePath("mp4_checked.png"));
-
-    // Get all windows geometry.
-    windowManager = new WindowManager();
-    QList<xcb_window_t> windows = windowManager->getWindows();
-    rootWindowRect = windowManager->getRootWindowRect();
-
-    for (int i = 0; i < windows.length(); i++) {
-        windowRects.append(windowManager->getWindowRect(windows[i]));
-        windowNames.append(windowManager->getWindowName(windows[i]));
-    }
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon((Utils::getImagePath("trayicon1.svg"))));
@@ -511,7 +513,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     int ey = mouseEvent->y();
                     if (ex > wx && ex < wx + ww && ey > wy && ey < wy + wh) {
                         selectAreaName = windowNames[i];
-
+                        
                         break;
                     }
                 }

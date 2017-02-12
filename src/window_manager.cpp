@@ -221,6 +221,11 @@ QList<xcb_window_t> WindowManager::getWindows()
     // We need re-sort windows list from up to bottom,
     // to make compare cursor with window area from up to bottom.
     std::reverse(windows.begin(), windows.end());
+    
+    // Just use for debug.
+    // foreach (auto window, windows) {
+    //     qDebug() << getWindowName(window);
+    // }
 
     return windows;
 }
