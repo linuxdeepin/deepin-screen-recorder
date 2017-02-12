@@ -198,7 +198,7 @@ void MainWindow::paintEvent(QPaintEvent *)
             if (isFirstReleaseButton) {
                 QString buttonString;
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-                    if (isReleaseButton && !moveResizeByKey) {
+                    if (isReleaseButton && !moveResizeByKey || recordOptionGifState == BUTTON_STATE_PRESS || recordOptionMp4State == BUTTON_STATE_PRESS) {
                         int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
                         int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
                         QRectF recordButtonRect(recordButtonX, recordButtonY, RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT);
@@ -467,7 +467,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         saveAsGif = true;
                         settings.setOption("save_as_gif", saveAsGif);
 
-                        needRepaint = true;
+                        repaint();
                     }
                 } else if (pressX > recordOptionMp4X && pressX < recordOptionMp4X + RECORD_BUTTON_AREA_WIDTH / 2
                            && pressY > recordOptionY && pressY < recordOptionY + RECORD_OPTIONS_AREA_HEIGHT) {
@@ -478,7 +478,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         saveAsGif = false;
                         settings.setOption("save_as_gif", saveAsGif);
 
-                        needRepaint = true;
+                        repaint();
                     }
                 }
             }
@@ -489,6 +489,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     } else if (event->type() == QEvent::MouseButtonRelease) {
         if (!isFirstReleaseButton) {
             isFirstReleaseButton = true;
+            
+            recordOptionGifState = BUTTON_STATE_NORMAL;
+            recordOptionMp4State = BUTTON_STATE_NORMAL;
 
             updateCursor(event);
 
@@ -528,7 +531,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 selectAreaName = "自由选区";
             }
         }
-
+        
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         int pressX = mouseEvent->x();
         int pressY = mouseEvent->y();
