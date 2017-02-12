@@ -85,7 +85,7 @@ void MainWindow::initAttributes()
 
     for (int i = 0; i < windows.length(); i++) {
         windowRects.append(windowManager->getWindowRect(windows[i]));
-        windowNames.append(windowManager->getWindowName(windows[i]));
+        windowNames.append(windowManager->getWindowClass(windows[i]));
     }
 
     // Just use for debug.
