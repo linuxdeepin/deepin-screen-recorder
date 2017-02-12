@@ -873,7 +873,7 @@ void MainWindow::renderTooltipRect(QPainter &painter, QList<QRectF> &rects, qrea
     foreach (auto rect, rects) {
         painter.setOpacity(opacity);
         QPainterPath path;
-        path.addRoundedRect(rect, 8, 8);
+        path.addRoundedRect(rect, RECTANGLE_RAIUDS, RECTANGLE_RAIUDS);
         painter.fillPath(path, Qt::white);
 
         painter.setOpacity(0.04);
@@ -885,7 +885,7 @@ void MainWindow::renderTooltipRect(QPainter &painter, QList<QRectF> &rects, qrea
 
     QVector<uint32_t> data;
     foreach (auto rect, rects) {
-        data << rect.x() << rect.y() << rect.width() << rect.height() << 8 << 8;
+        data << rect.x() << rect.y() << rect.width() << rect.height() << RECTANGLE_RAIUDS << RECTANGLE_RAIUDS;
     }
     windowManager->setWindowBlur(this->winId(), data);
 

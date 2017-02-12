@@ -36,6 +36,8 @@ class MainWindow : public QWidget
     static const int CURSOR_BOUND = 5;
     static const int RECORD_MIN_SIZE = 200;
     static const int DRAG_POINT_RADIUS = 8;
+    
+    static const int RECTANGLE_RAIUDS = 8;
 
     static const int RECORD_BUTTON_NORMAL = 0;
     static const int RECORD_BUTTON_WAIT = 1;
