@@ -63,7 +63,7 @@ class MainWindow : public QWidget
     
     static const int RECORD_BUTTON_AREA_WIDTH = 124;
     static const int RECORD_BUTTON_AREA_HEIGHT = 86;
-    static const int RECORD_BUTTON_OFFSET_Y = 12;
+    static const int RECORD_BUTTON_OFFSET_Y = 16;
     
     static const int RECORD_OPTIONS_AREA_HEIGHT = 36;
     static const int RECORD_OPTIONS_AREA_PADDING = 12;

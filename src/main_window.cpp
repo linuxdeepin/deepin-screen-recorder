@@ -229,7 +229,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                         }
 
                         QRectF recordStringRect(recordButtonX,
-                                                recordButtonY + recordIconNormalImg.height(),
+                                                recordButtonY + recordIconNormalImg.height() - 2,
                                                 RECORD_BUTTON_AREA_WIDTH,
                                                 RECORD_BUTTON_AREA_HEIGHT - recordIconNormalImg.height());
                         QString recordString = "开始录制";
@@ -883,10 +883,10 @@ void MainWindow::renderTooltipRect(QPainter &painter, QList<QRectF> &rects, qrea
         painter.setOpacity(opacity);
         QPainterPath path;
         path.addRoundedRect(rect, RECTANGLE_RAIUDS, RECTANGLE_RAIUDS);
-        painter.fillPath(path, Qt::white);
+        painter.fillPath(path, QColor("#F5F5F5"));
 
-        painter.setOpacity(0.04);
         QPen pen(QColor("#000000"));
+        painter.setOpacity(0.04);
         pen.setWidth(1);
         painter.setPen(pen);
         painter.drawPath(path);
