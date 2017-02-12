@@ -15,10 +15,10 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     setMouseTracking(true);   // make MouseMove can response
     installEventFilter(this);  // add event filter
 
-    firstDrag = false;
-    firstMove = false;
-    firstPressButton = false;
-    firstReleaseButton = false;
+    isFirstDrag = false;
+    isFirstMove = false;
+    isFirstPressButton = false;
+    isFirstReleaseButton = false;
     dragStartX = 0;
     dragStartY = 0;
 
@@ -39,12 +39,12 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     drawDragPoint = false;
 
     recordButtonStatus = RECORD_BUTTON_NORMAL;
-
+    
     recordOptionGifState = BUTTON_STATE_NORMAL;
     recordOptionMp4State = BUTTON_STATE_NORMAL;
 
-    countdownCounter = 0;
-    flashCounter = 0;
+    showCountdownCounter = 0;
+    flashTrayIconCounter = 0;
 
     selectAreaName = "";
 
@@ -87,7 +87,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
 
-    if (!firstPressButton) {
+    if (!isFirstPressButton) {
         QString tooltipString = "点击录制窗口或者全屏\n拖动鼠标选择录制区域";
         setFontSize(painter, 11);
         QSize size = getRenderSize(painter, tooltipString);
@@ -153,8 +153,8 @@ void MainWindow::paintEvent(QPaintEvent *)
         }
 
         // Draw record panel.
-        if (firstPressButton) {
-            if (firstReleaseButton) {
+        if (isFirstPressButton) {
+            if (isFirstReleaseButton) {
                 QString buttonString;
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
                     if (isReleaseButton && !moveResizeByKey) {
@@ -244,7 +244,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                 painter.setClipping(false);
 
                 // Draw record wait second.
-                if (countdownCounter > 0) {
+                if (showCountdownCounter > 0) {
                     QString tooltipString = "停止录制请点击托盘图标\n或着\n按下深度录屏快捷键";
                     setFontSize(painter, 11);
                     QSize size = getRenderSize(painter, tooltipString);
@@ -265,11 +265,11 @@ void MainWindow::paintEvent(QPaintEvent *)
                     int countdownX = recordX + (recordWidth - countdown1Img.width()) / 2;
                     int countdownY = recordY + (recordHeight - rectHeight) / 2 + COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y;
 
-                    if (countdownCounter == 1) {
+                    if (showCountdownCounter == 1) {
                         painter.drawImage(QPoint(countdownX, countdownY), countdown1Img);
-                    } else if (countdownCounter == 2) {
+                    } else if (showCountdownCounter == 2) {
                         painter.drawImage(QPoint(countdownX, countdownY), countdown2Img);
-                    } else if (countdownCounter == 3) {
+                    } else if (showCountdownCounter == 3) {
                         painter.drawImage(QPoint(countdownX, countdownY), countdown3Img);
                     }
 
@@ -379,8 +379,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         dragStartX = mouseEvent->x();
         dragStartY = mouseEvent->y();
-        if (!firstPressButton) {
-            firstPressButton = true;
+        if (!isFirstPressButton) {
+            isFirstPressButton = true;
         } else {
             dragAction = getAction(event);
 
@@ -389,7 +389,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             dragRecordWidth = recordWidth;
             dragRecordHeight = recordHeight;
 
-            if (firstReleaseButton) {
+            if (isFirstReleaseButton) {
                 int pressX = mouseEvent->x();
                 int pressY = mouseEvent->y();
 
@@ -399,7 +399,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
                         recordButtonStatus = RECORD_BUTTON_WAIT;
 
-                        countdownCounter = 3;
+                        showCountdownCounter = 3;
                         showCountdownTimer = new QTimer(this);
                         connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));
                         showCountdownTimer->start(1000);
@@ -444,13 +444,13 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         isPressButton = true;
         isReleaseButton = false;
     } else if (event->type() == QEvent::MouseButtonRelease) {
-        if (!firstReleaseButton) {
-            firstReleaseButton = true;
+        if (!isFirstReleaseButton) {
+            isFirstReleaseButton = true;
 
             updateCursor(event);
 
             // Record select area name with window name if just click (no drag).
-            if (!firstDrag) {
+            if (!isFirstDrag) {
                 QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
                 for (int i = 0; i < windowRects.length(); i++) {
                     int wx = windowRects[i].x;
@@ -474,13 +474,13 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
         repaint();
     } else if (event->type() == QEvent::MouseMove) {
-        if (!firstMove) {
-            firstMove = true;
+        if (!isFirstMove) {
+            isFirstMove = true;
         }
 
-        if (isPressButton && firstPressButton) {
-            if (!firstDrag) {
-                firstDrag = true;
+        if (isPressButton && isFirstPressButton) {
+            if (!isFirstDrag) {
+                isFirstDrag = true;
 
                 selectAreaName = "自由选区";
             }
@@ -500,8 +500,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             repaint();
         }
 
-        if (firstPressButton) {
-            if (!firstReleaseButton) {
+        if (isFirstPressButton) {
+            if (!isFirstReleaseButton) {
                 if (isPressButton && !isReleaseButton) {
                     recordX = std::min(dragStartX, mouseEvent->x());
                     recordY = std::min(dragStartY, mouseEvent->y());
@@ -580,10 +580,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
 void MainWindow::showCountdown()
 {
-    countdownCounter--;
+    showCountdownCounter--;
     repaint();
 
-    if (countdownCounter <= 0) {
+    if (showCountdownCounter <= 0) {
         showCountdownTimer->stop();
 
         clearTooltip();
@@ -599,24 +599,24 @@ void MainWindow::showCountdown()
 
         trayIcon->show();
 
-        flashTryIconTimer = new QTimer(this);
-        connect(flashTryIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
-        flashTryIconTimer->start(500);
+        flashTrayIconTimer = new QTimer(this);
+        connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
+        flashTrayIconTimer->start(500);
     }
 }
 
 void MainWindow::flashTrayIcon()
 {
-    if (flashCounter % 2 == 0) {
+    if (flashTrayIconCounter % 2 == 0) {
         trayIcon->setIcon(QIcon((Utils::getImagePath("trayicon2.svg"))));
     } else {
         trayIcon->setIcon(QIcon((Utils::getImagePath("trayicon1.svg"))));
     }
 
-    flashCounter++;
+    flashTrayIconCounter++;
 
-    if (flashCounter > 10) {
-        flashCounter = 1;
+    if (flashTrayIconCounter > 10) {
+        flashTrayIconCounter = 1;
     }
 }
 

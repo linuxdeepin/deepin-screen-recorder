@@ -12,8 +12,7 @@ Settings::Settings(QObject *parent) : QObject(parent)
 
 QString Settings::configPath()
 {
-    auto userConfigPath = QStandardPaths::standardLocations(QStandardPaths::ConfigLocation).first();
-    return QDir(QDir(userConfigPath).filePath(qApp->organizationName())).filePath(qApp->applicationName());
+    return QDir(QDir(QStandardPaths::standardLocations(QStandardPaths::ConfigLocation).first()).filePath(qApp->organizationName())).filePath(qApp->applicationName());
 }
 
 QVariant Settings::getOption(const QString &key)

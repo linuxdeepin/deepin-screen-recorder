@@ -11,7 +11,7 @@ class MainWindow : public QWidget
     Q_OBJECT
 
     static const int CURSOR_BOUND = 5;
-    static const int RECORD_MIN_SIZE = 48;
+    static const int RECORD_MIN_SIZE = 200;
     static const int DRAG_POINT_RADIUS = 8;
 
     static const int RECORD_BUTTON_NORMAL = 0;
@@ -56,7 +56,7 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow() {
         delete showCountdownTimer;
-        delete flashTryIconTimer;
+        delete flashTrayIconTimer;
         delete trayIcon;
         delete windowManager;
     }
@@ -89,17 +89,17 @@ private:
     QList<QString> windowNames;
 
     QTimer* showCountdownTimer;
-    QTimer* flashTryIconTimer;
+    QTimer* flashTrayIconTimer;
 
     RecordProcess recordProcess;
     WindowRect rootWindowRect;
 
     bool drawDragPoint;
 
-    bool firstDrag;
-    bool firstMove;
-    bool firstPressButton;
-    bool firstReleaseButton;
+    bool isFirstDrag;
+    bool isFirstMove;
+    bool isFirstPressButton;
+    bool isFirstReleaseButton;
     bool isPressButton;
     bool isReleaseButton;
     
@@ -124,8 +124,8 @@ private:
     bool saveAsGif;
     bool moveResizeByKey;
     
-    int countdownCounter;
-    int flashCounter;
+    int showCountdownCounter;
+    int flashTrayIconCounter;
     
     QImage resizeHandleBigImg;
     QImage resizeHandleSmallImg;
