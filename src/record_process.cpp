@@ -8,6 +8,7 @@
 #include <QStandardPaths>
 #include <QObject>
 #include "record_process.h"
+#include "utils.h"
 
 RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 {
@@ -125,7 +126,7 @@ void RecordProcess::stopRecord()
     QList<QVariant> arg;
     arg << (QCoreApplication::applicationName())                                    // appname
         << ((unsigned int) 0)                                                       // id
-        << QString("%1/image/deepin-recorder.svg").arg(qApp->applicationDirPath())  // icon
+        << Utils::getImagePath("deepin-record.svg")                                 // icon
         << "Record successful"                                                      // summary
         << QString("Save at: %1").arg(newSavePath)                                  // body
         << actions                                                                  // actions

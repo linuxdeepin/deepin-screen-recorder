@@ -15,6 +15,7 @@
 #include "main_window.h"
 #include <X11/extensions/shape.h>
 #include <QtX11Extras/QX11Info>
+#include "utils.h"
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
@@ -51,23 +52,23 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     flashCounter = 0;
 
     selectAreaName = "";
+    
+    resizeHandleBigImg = QImage(Utils::getImagePath("resize_handle_big.png"));
+    resizeHandleSmallImg = QImage(Utils::getImagePath("resize_handle_small.png"));
+    countdown1Img = QImage(Utils::getImagePath("countdown_1.png"));
+    countdown2Img = QImage(Utils::getImagePath("countdown_2.png"));
+    countdown3Img = QImage(Utils::getImagePath("countdown_3.png"));
+    recordIconNormalImg = QImage(Utils::getImagePath("record_icon_normal.png"));
+    recordIconHoverImg = QImage(Utils::getImagePath("record_icon_hover.png"));
+    recordIconPressImg = QImage(Utils::getImagePath("record_icon_press.png"));
 
-    resizeHandleBigImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/resize_handle_big.png"));
-    resizeHandleSmallImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/resize_handle_small.png"));
-    countdown1Img = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/countdown_1.png"));
-    countdown2Img = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/countdown_2.png"));
-    countdown3Img = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/countdown_3.png"));
-    recordIconNormalImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/record_icon_normal.png"));
-    recordIconHoverImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/record_icon_hover.png"));
-    recordIconPressImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/record_icon_press.png"));
+    recordGifNormalImg = QImage(Utils::getImagePath("gif_normal.png"));
+    recordGifPressImg = QImage(Utils::getImagePath("gif_press.png"));
+    recordGifCheckedImg = QImage(Utils::getImagePath("gif_checked.png"));
 
-    recordGifNormalImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/gif_normal.png"));
-    recordGifPressImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/gif_press.png"));
-    recordGifCheckedImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/gif_checked.png"));
-
-    recordMp4NormalImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/mp4_normal.png"));
-    recordMp4PressImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/mp4_press.png"));
-    recordMp4CheckedImg = QImage(QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/mp4_checked.png"));
+    recordMp4NormalImg = QImage(Utils::getImagePath("mp4_normal.png"));
+    recordMp4PressImg = QImage(Utils::getImagePath("mp4_press.png"));
+    recordMp4CheckedImg = QImage(Utils::getImagePath("mp4_checked.png"));
 
     // Get all windows geometry.
     windowManager = new WindowManager();
@@ -80,7 +81,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     }
 
     trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setIcon(QIcon((QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/trayicon1.svg"))));
+    trayIcon->setIcon(QIcon((Utils::getImagePath("trayicon1.svg"))));
     trayIcon->setToolTip("停止录制");
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
@@ -611,9 +612,9 @@ void MainWindow::showCountdown()
 void MainWindow::flashTrayIcon()
 {
     if (flashCounter % 2 == 0) {
-        trayIcon->setIcon(QIcon((QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/trayicon2.svg"))));
+        trayIcon->setIcon(QIcon((Utils::getImagePath("trayicon2.svg"))));
     } else {
-        trayIcon->setIcon(QIcon((QString("%1/%2").arg(qApp->applicationDirPath()).arg("image/trayicon1.svg"))));
+        trayIcon->setIcon(QIcon((Utils::getImagePath("trayicon1.svg"))));
     }
 
     flashCounter++;
