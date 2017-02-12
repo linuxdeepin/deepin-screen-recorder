@@ -15,6 +15,19 @@ In debian, use below command to install running dependencies:
 
 ## Usage
 
+1. Select area need to record
+2. Then click "record" button to record
+3. Click tray icon to stop record, and save file on desktop
+
+Below is keymap list for deepin-screen-recorder:
+
+| Function					      | Shortcut                                         |
+|---------------------------------|--------------------------------------------------|
+| Cancel                          | **ESC**                                          |
+| Adjust position of select area  | **Up**, **Down**, **Left**, **Right**            |
+| Adjust size of select area      | **Ctrl** + **Up**, **Down**, **Left**, **Right** |
+| Stop record                     | Same keystroke that start deepin-screen-recorder |
+
 
 ## Config file
 Configure file save at:
