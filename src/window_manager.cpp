@@ -9,7 +9,7 @@ WindowManager::WindowManager(QObject *parent) : QObject(parent)
 {
     int screenNum;
     conn = xcb_connect(0, &screenNum);
-    screen = xcb_aux_get_screen(conn, screenNum);
+    xcb_screen_t* screen = xcb_aux_get_screen(conn, screenNum);
     rootWindow = screen->root;
 }
 

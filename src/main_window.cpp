@@ -48,6 +48,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     recordButtonStatus = RECORD_BUTTON_NORMAL;
 
+    recordOptionGifState = BUTTON_STATE_NORMAL;
+    recordOptionMp4State = BUTTON_STATE_NORMAL;
+
     countdownCounter = 0;
     flashCounter = 0;
 
@@ -205,7 +208,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                         } else {
                             painter.drawImage(QPoint(recordOptionGifX, recordOptionY), recordGifNormalImg);
                         }
-                        
+
                         QString optionGifString = "GIF";
                         setFontSize(painter, 9);
                         if (saveAsGif) {
@@ -227,7 +230,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                         } else {
                             painter.drawImage(QPoint(recordOptionMp4X, recordOptionY), recordMp4NormalImg);
                         }
-                        
+
                         QString optionMp4String = "MP4";
                         setFontSize(painter, 9);
                         if (saveAsGif) {
@@ -634,8 +637,8 @@ void MainWindow::updateMouseEventArea()
     reponseArea->height = 0;
 
     XShapeCombineRectangles(QX11Info::display(), winId(), ShapeInput, 0, 0, reponseArea ,1 ,ShapeSet, YXBanded);
-    
-    free(reponseArea);
+
+    delete reponseArea;
 }
 
 void MainWindow::resizeTop(QMouseEvent *mouseEvent)

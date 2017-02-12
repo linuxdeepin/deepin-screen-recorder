@@ -41,7 +41,6 @@ public:
 
 private:
     xcb_connection_t* conn;
-    xcb_screen_t* screen;
 };
 
 #endif
