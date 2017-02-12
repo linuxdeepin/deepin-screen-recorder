@@ -1,12 +1,9 @@
-#include <QThread>
 #include <QApplication>
 #include <QDebug>
 #include <QDate>
-#include <QProcess>
 #include <QtDBus>
 #include <QDir>
 #include <QStandardPaths>
-#include <QObject>
 #include "record_process.h"
 #include "utils.h"
 

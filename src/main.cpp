@@ -1,15 +1,4 @@
-#include <QApplication>
-#include <QTimer>
-#include <QMouseEvent>
-#include <QEvent>
-#include <QRegion>
-#include <QIcon>
-#include <QObject>
-#include <QPainter>
-#include <QDebug>
-#include <xcb/xcb.h>
-#include <xcb/xcb_aux.h>
-#include "window_manager.h"
+#include <QWidget>
 #include "main_window.h"
 #include "single_application.h"
 

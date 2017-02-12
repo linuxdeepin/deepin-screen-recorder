@@ -1,6 +1,5 @@
 #include <QThread>
 #include <QProcess>
-#include <QObject>
 
 class RecordProcess : public QThread
 {

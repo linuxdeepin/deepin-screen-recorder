@@ -1,17 +1,7 @@
-#include <QApplication>
-#include <QTimer>
-#include <QMouseEvent>
-#include <QEvent>
-#include <QProcess>
-#include <QRegion>
-#include <QIcon>
 #include <QObject>
 #include <QPainter>
 #include <QWidget>
 #include <QSystemTrayIcon>
-#include <QDebug>
-#include <xcb/xcb.h>
-#include <xcb/xcb_aux.h>
 #include "window_manager.h"
 #include "record_process.h"
 #include "settings.h"

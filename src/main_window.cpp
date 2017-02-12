@@ -1,17 +1,9 @@
 #include <QApplication>
 #include <QTimer>
-#include <QMouseEvent>
-#include <QEvent>
 #include <QKeyEvent>
-#include <QRegion>
-#include <QIcon>
 #include <QObject>
 #include <QPainter>
-#include <QDebug>
-#include <xcb/xcb.h>
-#include <xcb/xcb_aux.h>
 #include <QWidget>
-#include <QThread>
 #include "main_window.h"
 #include <X11/extensions/shape.h>
 #include <QtX11Extras/QX11Info>

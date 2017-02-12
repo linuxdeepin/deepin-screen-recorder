@@ -1,6 +1,5 @@
 #include <QApplication>
 #include <QStandardPaths>
-#include <QObject>
 #include <QDir>
 #include "settings.h"
 

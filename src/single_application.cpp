@@ -1,6 +1,5 @@
 #include <QtNetwork/QLocalSocket>
 #include <QFileInfo>
-#include <QDebug>
 #include "single_application.h"
 
 #define TIME_OUT                (500)    // 500ms

@@ -1,4 +1,3 @@
-#include <QObject>
 #include <QSettings>
 
 class Settings : public QObject 

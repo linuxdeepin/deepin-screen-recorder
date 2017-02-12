@@ -1,10 +1,8 @@
 #ifndef SINGLEAPPLICATION_H
 #define SINGLEAPPLICATION_H
 
-#include <QObject>
 #include <QApplication>
 #include <QtNetwork/QLocalServer>
-#include <QWidget>
 
 class SingleApplication : public QApplication {
     Q_OBJECT
