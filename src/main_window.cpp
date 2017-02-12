@@ -129,6 +129,7 @@ void MainWindow::paintEvent(QPaintEvent *)
     // qDebug() << repaintCounter;
     
     QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
 
     if (!isFirstPressButton) {
         QString tooltipString = "点击录制窗口或者全屏\n拖动鼠标选择录制区域";
@@ -168,12 +169,14 @@ void MainWindow::paintEvent(QPaintEvent *)
         painter.setClipRegion(QRegion(backgroundRect));
 
         // Draw frame.
+        painter.setRenderHint(QPainter::Antialiasing, false);
         QPen framePen(QColor("#01bdff"));
         framePen.setWidth(1);
         painter.setOpacity(1);
         painter.setBrush(QBrush());  // clear brush
         painter.setPen(framePen);
         painter.drawRect(QRect(frameRect.x(), frameRect.y(), frameRect.width() - 1, frameRect.height() - 1));
+        painter.setRenderHint(QPainter::Antialiasing, true);
 
         // Draw drag pint.
         if (recordButtonStatus == RECORD_BUTTON_NORMAL && drawDragPoint) {
