@@ -231,11 +231,11 @@ void MainWindow::paintEvent(QPaintEvent *)
                         } else if (recordButtonState == BUTTON_STATE_PRESS) {
                             opacities << 0.2;
                         }
-                        
+
                         opacities << 0.6;
 
                         renderTooltipRect(painter, rects, opacities);
-                        
+
                         if (recordButtonState == BUTTON_STATE_NORMAL) {
                             painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconNormalImg);
                         } else if (recordButtonState == BUTTON_STATE_HOVER) {
@@ -243,7 +243,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                         } else if (recordButtonState == BUTTON_STATE_PRESS) {
                             painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconPressImg);
                         }
-                        
+
                         QRectF recordStringRect(recordButtonX,
                                                 recordButtonY + recordIconNormalImg.height() - 2,
                                                 RECORD_BUTTON_AREA_WIDTH,
@@ -527,7 +527,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
 
             }
-            
+
             needRepaint = true;
         } else {
             int releaseX = mouseEvent->x();
@@ -578,26 +578,26 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         }
 
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-        int pressX = mouseEvent->x();
-        int pressY = mouseEvent->y();
+        int moveX = mouseEvent->x();
+        int moveY = mouseEvent->y();
 
-        if (pressX > recordButtonX && pressX < recordButtonX + RECORD_BUTTON_AREA_WIDTH && pressY > recordButtonY && pressY < recordButtonY + RECORD_BUTTON_AREA_HEIGHT) {
+        if (moveX > recordButtonX && moveX < recordButtonX + RECORD_BUTTON_AREA_WIDTH && moveY > recordButtonY && moveY < recordButtonY + RECORD_BUTTON_AREA_HEIGHT) {
             if (!isPressButton) {
                 recordButtonState = BUTTON_STATE_HOVER;
             }
 
             needRepaint = true;
-        } else if ((pressX > recordOptionGifX && pressX < recordOptionGifX + RECORD_BUTTON_AREA_WIDTH / 2
-                    && pressY > recordOptionY && pressY < recordOptionY + RECORD_OPTIONS_AREA_HEIGHT)
-                   || (pressX > recordOptionMp4X && pressX < recordOptionMp4X + RECORD_BUTTON_AREA_WIDTH / 2
-                           && pressY > recordOptionY && pressY < recordOptionY + RECORD_OPTIONS_AREA_HEIGHT)) {
+        } else if ((moveX > recordOptionGifX && moveX < recordOptionGifX + RECORD_BUTTON_AREA_WIDTH / 2
+                    && moveY > recordOptionY && moveY < recordOptionY + RECORD_OPTIONS_AREA_HEIGHT)
+                   || (moveX > recordOptionMp4X && moveX < recordOptionMp4X + RECORD_BUTTON_AREA_WIDTH / 2
+                       && moveY > recordOptionY && moveY < recordOptionY + RECORD_OPTIONS_AREA_HEIGHT)) {
             if (!isPressButton) {
                 recordOptionState = BUTTON_STATE_HOVER;
             }
 
             needRepaint = true;
         } else {
-            
+
             if (!isPressButton) {
                 recordButtonState = BUTTON_STATE_NORMAL;
                 recordOptionState = BUTTON_STATE_NORMAL;
