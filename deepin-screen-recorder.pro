@@ -22,3 +22,16 @@ QT += dbus
 LIBS += -lX11 -lXext
 
 QMAKE_CXXFLAGS += -g
+
+isEmpty(BINDIR):BINDIR=/usr/bin
+isEmpty(ICONDIR):ICONDIR=/usr/share/icons/hicolor/scalable/apps
+isEmpty(APPDIR):APPDIR=/usr/share/applications
+
+target.path = $$INSTROOT$$BINDIR
+icon.path = $$INSTROOT$$ICONDIR
+desktop.path = $$INSTROOT$$APPDIR
+
+icon.files = image/deepin-screen-recorder.svg
+desktop.files = deepin-screen-recorder.desktop
+
+INSTALLS += target icon desktop
