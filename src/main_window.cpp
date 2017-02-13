@@ -145,7 +145,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 
         QList<QRectF> rects;
         QList<qreal> opacities;
-        opacities << 0.6;
+        opacities << 0.4;
         rects.append(tooltipRect);
         renderTooltipRect(painter, rects, opacities);
 
@@ -226,24 +226,23 @@ void MainWindow::paintEvent(QPaintEvent *)
 
                         if (recordButtonState == BUTTON_STATE_NORMAL) {
                             opacities << 0.6;
-                            painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconNormalImg);
                         } else if (recordButtonState == BUTTON_STATE_HOVER) {
                             opacities << 0.7;
-                            painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconHoverImg);
                         } else if (recordButtonState == BUTTON_STATE_PRESS) {
                             opacities << 0.2;
-                            painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconPressImg);
                         }
                         
-                        if (recordOptionState == BUTTON_STATE_NORMAL) {
-                            opacities << 0.6;
-                        } else if (recordOptionState == BUTTON_STATE_HOVER) {
-                            opacities << 0.7;
-                        } else if (recordOptionState == BUTTON_STATE_PRESS) {
-                            opacities << 0.2;
-                        }
+                        opacities << 0.6;
 
                         renderTooltipRect(painter, rects, opacities);
+                        
+                        if (recordButtonState == BUTTON_STATE_NORMAL) {
+                            painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconNormalImg);
+                        } else if (recordButtonState == BUTTON_STATE_HOVER) {
+                            painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconHoverImg);
+                        } else if (recordButtonState == BUTTON_STATE_PRESS) {
+                            painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconPressImg);
+                        }
                         
                         QRectF recordStringRect(recordButtonX,
                                                 recordButtonY + recordIconNormalImg.height() - 2,
@@ -327,7 +326,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 
                     QList<QRectF> rects;
                     QList<qreal> opacities;
-                    opacities << 0.6;
+                    opacities << 0.4;
                     rects.append(countdownRect);
                     renderTooltipRect(painter, rects, opacities);
 
