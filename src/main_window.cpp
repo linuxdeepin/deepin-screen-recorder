@@ -98,25 +98,25 @@ void MainWindow::initResource()
     Settings settings;
     saveAsGif = settings.getOption("save_as_gif").toBool();
 
-    resizeHandleBigImg = QImage(Utils::getImagePath("resize_handle_big.png"));
-    resizeHandleSmallImg = QImage(Utils::getImagePath("resize_handle_small.png"));
-    countdown1Img = QImage(Utils::getImagePath("countdown_1.png"));
-    countdown2Img = QImage(Utils::getImagePath("countdown_2.png"));
-    countdown3Img = QImage(Utils::getImagePath("countdown_3.png"));
-    recordIconNormalImg = QImage(Utils::getImagePath("record_icon_normal.png"));
-    recordIconHoverImg = QImage(Utils::getImagePath("record_icon_hover.png"));
-    recordIconPressImg = QImage(Utils::getImagePath("record_icon_press.png"));
+    resizeHandleBigImg = QImage(Utils::getQrcPath("resize_handle_big.png"));
+    resizeHandleSmallImg = QImage(Utils::getQrcPath("resize_handle_small.png"));
+    countdown1Img = QImage(Utils::getQrcPath("countdown_1.png"));
+    countdown2Img = QImage(Utils::getQrcPath("countdown_2.png"));
+    countdown3Img = QImage(Utils::getQrcPath("countdown_3.png"));
+    recordIconNormalImg = QImage(Utils::getQrcPath("record_icon_normal.png"));
+    recordIconHoverImg = QImage(Utils::getQrcPath("record_icon_hover.png"));
+    recordIconPressImg = QImage(Utils::getQrcPath("record_icon_press.png"));
 
-    recordGifNormalImg = QImage(Utils::getImagePath("gif_normal.png"));
-    recordGifPressImg = QImage(Utils::getImagePath("gif_press.png"));
-    recordGifCheckedImg = QImage(Utils::getImagePath("gif_checked.png"));
+    recordGifNormalImg = QImage(Utils::getQrcPath("gif_normal.png"));
+    recordGifPressImg = QImage(Utils::getQrcPath("gif_press.png"));
+    recordGifCheckedImg = QImage(Utils::getQrcPath("gif_checked.png"));
 
-    recordMp4NormalImg = QImage(Utils::getImagePath("mp4_normal.png"));
-    recordMp4PressImg = QImage(Utils::getImagePath("mp4_press.png"));
-    recordMp4CheckedImg = QImage(Utils::getImagePath("mp4_checked.png"));
+    recordMp4NormalImg = QImage(Utils::getQrcPath("mp4_normal.png"));
+    recordMp4PressImg = QImage(Utils::getQrcPath("mp4_press.png"));
+    recordMp4CheckedImg = QImage(Utils::getQrcPath("mp4_checked.png"));
 
     trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setIcon(QIcon((Utils::getImagePath("trayicon1.svg"))));
+    trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
     trayIcon->setToolTip("停止录制");
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
@@ -728,9 +728,9 @@ void MainWindow::showCountdown()
 void MainWindow::flashTrayIcon()
 {
     if (flashTrayIconCounter % 2 == 0) {
-        trayIcon->setIcon(QIcon((Utils::getImagePath("trayicon2.svg"))));
+        trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon2.svg"))));
     } else {
-        trayIcon->setIcon(QIcon((Utils::getImagePath("trayicon1.svg"))));
+        trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
     }
 
     flashTrayIconCounter++;

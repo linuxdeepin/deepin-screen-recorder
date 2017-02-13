@@ -33,3 +33,8 @@ QString Utils::getImagePath(QString imageName)
     
     return QDir(dir.filePath("image")).filePath(imageName);
 }
+
+QString Utils::getQrcPath(QString imageName)
+{
+    return QString(":/image/%1").arg(imageName);
+}

@@ -9,6 +9,7 @@ INCLUDEPATH += .
 CONFIG += link_pkgconfig
 CONFIG += c++11 
 PKGCONFIG += xcb xcb-util
+RESOURCES = deepin-screen-recorder.qrc
 
 # Input
 HEADERS += src/window_manager.h src/main_window.h src/record_process.h src/single_application.h src/settings.h src/utils.h

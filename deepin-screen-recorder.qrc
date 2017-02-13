@@ -1,0 +1,21 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>image/countdown_1.png</file>
+    <file>image/countdown_2.png</file>
+    <file>image/countdown_3.png</file>
+	<file>image/deepin-screen-recorder.svg</file>
+    <file>image/gif_checked.png</file>
+    <file>image/gif_normal.png</file>
+    <file>image/gif_press.png</file>
+    <file>image/mp4_checked.png</file>
+    <file>image/mp4_normal.png</file>
+    <file>image/mp4_press.png</file>
+    <file>image/record_icon_hover.png</file>
+    <file>image/record_icon_normal.png</file>
+    <file>image/record_icon_press.png</file>
+    <file>image/resize_handle_big.png</file>
+    <file>image/resize_handle_small.png</file>
+    <file>image/trayicon1.svg</file>
+    <file>image/trayicon2.svg</file>
+</qresource>
+</RCC>

@@ -28,4 +28,5 @@ class Utils : public QObject
 {
 public:
     static QString getImagePath(QString imageName);
+    static QString getQrcPath(QString imageName);
 };
