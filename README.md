@@ -53,4 +53,4 @@ We encourage you to report issues and contribute changes
 
 ## License
 
-Deepin Terminal is licensed under [GPLv3](LICENSE).
+Deepin Screen Recorder is licensed under [GPLv3](LICENSE).
