@@ -75,7 +75,7 @@ void MainWindow::initAttributes()
     flashTrayIconCounter = 0;
 
     selectAreaName = "";
-    
+
     // Get all windows geometry.
     // Below code must execute before `window.showFullscreen,
     // otherwise deepin-screen-recorder window will add in window lists.
@@ -127,7 +127,7 @@ void MainWindow::paintEvent(QPaintEvent *)
     // Just use for debug.
     // repaintCounter++;
     // qDebug() << repaintCounter;
-    
+
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
@@ -204,7 +204,10 @@ void MainWindow::paintEvent(QPaintEvent *)
             if (isFirstReleaseButton) {
                 QString buttonString;
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-                    if (isReleaseButton && !moveResizeByKey || recordOptionGifState == BUTTON_STATE_PRESS || recordOptionMp4State == BUTTON_STATE_PRESS) {
+                    if ((isReleaseButton && !moveResizeByKey)
+                        || recordOptionGifState == BUTTON_STATE_PRESS
+                        || recordOptionMp4State == BUTTON_STATE_PRESS
+                        || recordButtonState == BUTTON_STATE_PRESS) {
                         int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
                         int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
                         QRectF recordButtonRect(recordButtonX, recordButtonY, RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT);
@@ -338,7 +341,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
     bool needRepaint = false;
-    
+
 #undef KeyPress
 #undef KeyRelease
     if (event->type() == QEvent::KeyPress) {
@@ -448,25 +451,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (pressX > recordButtonX && pressX < recordButtonX + RECORD_BUTTON_AREA_WIDTH && pressY > recordButtonY && pressY < recordButtonY + RECORD_BUTTON_AREA_HEIGHT) {
                     recordButtonState = BUTTON_STATE_PRESS;
 
-                    if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-                        recordButtonStatus = RECORD_BUTTON_WAIT;
-
-                        showCountdownCounter = 3;
-                        showCountdownTimer = new QTimer(this);
-                        connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));
-                        showCountdownTimer->start(1000);
-
-                        recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight, selectAreaName);
-                        if (saveAsGif) {
-                            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
-                        } else {
-                            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
-                        }
-
-                        resetCursor();
-
-                        needRepaint = true;
-                    }
+                    repaint();
                 } else if (pressX > recordOptionGifX && pressX < recordOptionGifX + RECORD_BUTTON_AREA_WIDTH / 2
                            && pressY > recordOptionY && pressY < recordOptionY + RECORD_OPTIONS_AREA_HEIGHT) {
                     if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
@@ -496,9 +481,11 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         isPressButton = true;
         isReleaseButton = false;
     } else if (event->type() == QEvent::MouseButtonRelease) {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+
         if (!isFirstReleaseButton) {
             isFirstReleaseButton = true;
-            
+
             recordOptionGifState = BUTTON_STATE_NORMAL;
             recordOptionMp4State = BUTTON_STATE_NORMAL;
 
@@ -516,12 +503,40 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     int ey = mouseEvent->y();
                     if (ex > wx && ex < wx + ww && ey > wy && ey < wy + wh) {
                         selectAreaName = windowNames[i];
-                        
+
                         break;
                     }
                 }
 
             }
+        } else {
+            int releaseX = mouseEvent->x();
+            int releaseY = mouseEvent->y();
+
+            if (releaseX > recordButtonX && releaseX < recordButtonX + RECORD_BUTTON_AREA_WIDTH && releaseY > recordButtonY && releaseY < recordButtonY + RECORD_BUTTON_AREA_HEIGHT) {
+                if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+                    recordButtonStatus = RECORD_BUTTON_WAIT;
+
+                    showCountdownCounter = 3;
+                    showCountdownTimer = new QTimer(this);
+                    connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));
+                    showCountdownTimer->start(1000);
+
+                    recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight, selectAreaName);
+                    if (saveAsGif) {
+                        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
+                    } else {
+                        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
+                    }
+
+                    resetCursor();
+
+                    needRepaint = true;
+                }
+            }
+
+            recordButtonState = BUTTON_STATE_NORMAL;
+            needRepaint = true;
         }
 
         isPressButton = false;
@@ -540,17 +555,25 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 selectAreaName = "自由选区";
             }
         }
-        
+
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         int pressX = mouseEvent->x();
         int pressY = mouseEvent->y();
 
         if (pressX > recordButtonX && pressX < recordButtonX + RECORD_BUTTON_AREA_WIDTH && pressY > recordButtonY && pressY < recordButtonY + RECORD_BUTTON_AREA_HEIGHT) {
-            recordButtonState = BUTTON_STATE_HOVER;
+            if (isPressButton) {
+                recordButtonState = BUTTON_STATE_PRESS;
+            } else {
+                recordButtonState = BUTTON_STATE_HOVER;
+            }
 
             needRepaint = true;
         } else {
-            recordButtonState = BUTTON_STATE_NORMAL;
+            if (isPressButton) {
+                recordButtonState = BUTTON_STATE_PRESS;
+            } else {
+                recordButtonState = BUTTON_STATE_NORMAL;
+            }
 
             needRepaint = true;
         }
@@ -629,7 +652,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
         }
     }
-    
+
     // Use flag instead call `repaint` directly,
     // to avoid repaint many times in one event function.
     if (needRepaint) {
