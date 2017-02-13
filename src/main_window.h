@@ -106,7 +106,7 @@ protected:
     void setDragCursor();
     void resetCursor();
     void passInputEvent();
-    void renderTooltipRect(QPainter &painter, QList<QRectF> &rects, qreal opacity);
+    void renderTooltipRect(QPainter &painter, QList<QRectF> &rects, QList<qreal> opacities);
     void clearTooltip();
     void setFontSize(QPainter &painter, int textSize);
     QSize getRenderSize(QPainter &painter, QString string);
@@ -145,6 +145,7 @@ private:
     int recordY;
     
     int recordButtonState;
+    int recordOptionState;
     int recordOptionGifState;
     int recordOptionMp4State;
     
