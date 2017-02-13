@@ -267,8 +267,10 @@ void MainWindow::paintEvent(QPaintEvent *)
 
                         QString optionGifString = "GIF";
                         setFontSize(painter, 9);
-                        if (saveAsGif) {
-                            painter.setPen(QPen(QColor("#2ca7f8")));
+                        if (recordOptionGifState == BUTTON_STATE_PRESS) {
+                            painter.setPen(QPen(QColor("#004BCA")));
+                        } else if (saveAsGif) {
+                            painter.setPen(QPen(QColor("#217DFF")));
                         } else {
                             painter.setPen(QPen(QColor("#000000")));
                         }
@@ -290,10 +292,12 @@ void MainWindow::paintEvent(QPaintEvent *)
 
                         QString optionMp4String = "MP4";
                         setFontSize(painter, 9);
-                        if (saveAsGif) {
+                        if (recordOptionMp4State == BUTTON_STATE_PRESS) {
+                            painter.setPen(QPen(QColor("#004BCA")));
+                        } else if (saveAsGif) {
                             painter.setPen(QPen(QColor("#000000")));
                         } else {
-                            painter.setPen(QPen(QColor("#2ca7f8")));
+                            painter.setPen(QPen(QColor("#217DFF")));
                         }
                         painter.setOpacity(1);
                         painter.drawText(QRectF(recordOptionMp4X + recordMp4NormalImg.width(),
