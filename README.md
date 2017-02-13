@@ -11,11 +11,11 @@ In debian, use below command to install running dependencies:
 
 ## Installation
 
-mkdir build
-cd build
-qmake ..
-make
-./deepin-screen-recorder
+* mkdir build
+* cd build
+* qmake ..
+* make
+* ./deepin-screen-recorder
 
 ## Usage
 
