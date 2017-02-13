@@ -711,7 +711,7 @@ void MainWindow::showCountdown()
 
         flashTrayIconTimer = new QTimer(this);
         connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
-        flashTrayIconTimer->start(500);
+        flashTrayIconTimer->start(800);
     }
 
     repaint();
