@@ -555,6 +555,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
             }
 
+            recordOptionGifState = BUTTON_STATE_NORMAL;
+            recordOptionMp4State = BUTTON_STATE_NORMAL;
             recordButtonState = BUTTON_STATE_NORMAL;
             recordOptionState = BUTTON_STATE_NORMAL;
             needRepaint = true;
