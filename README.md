@@ -8,6 +8,7 @@ In debian, use below command to install compile dependencies:
 
 
 In debian, use below command to install running dependencies:
+libc6 (>= 2.14), libgcc1 (>= 1:3.0), libgl1-mesa-glx | libgl1, libqt5core5a (>= 5.6.0~beta), libqt5dbus5 (>= 5.0.2), libqt5gui5 (>= 5.2.0), libqt5network5 (>= 5.0.2), libqt5widgets5 (>= 5.0.2), libqt5x11extras5 (>= 5.6.0), libstdc++6 (>= 4.1.1), libx11-6, libxcb-util0 (>= 0.3.8), libxcb1, libxext6
 
 ## Installation
 
