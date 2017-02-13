@@ -11,8 +11,8 @@ CONFIG += c++11
 PKGCONFIG += xcb xcb-util
 
 # Input
-HEADERS += window_manager.h main_window.h record_process.h single_application.h settings.h utils.h
-SOURCES += main.cpp window_manager.cpp main_window.cpp record_process.cpp single_application.cpp settings.cpp utils.cpp
+HEADERS += src/window_manager.h src/main_window.h src/record_process.h src/single_application.h src/settings.h src/utils.h
+SOURCES += src/main.cpp src/window_manager.cpp src/main_window.cpp src/record_process.cpp src/single_application.cpp src/settings.cpp src/utils.cpp
 
 QT += widgets
 QT += gui
