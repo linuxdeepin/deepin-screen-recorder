@@ -51,6 +51,7 @@ public:
     QString getWindowName(xcb_window_t window);
     QString getWindowClass(xcb_window_t window);
     QStringList getWindowTypes(xcb_window_t window);
+    QStringList getWindowStates(xcb_window_t window);
     WindowRect getRootWindowRect();
     WindowRect getWindowRect(xcb_window_t window);
     int getCurrentWorkspace(xcb_window_t window);

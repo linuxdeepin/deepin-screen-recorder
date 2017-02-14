@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 #include <QObject>
 #include <QDebug>
@@ -76,6 +76,25 @@ QStringList WindowManager::getWindowTypes(xcb_window_t window)
 {
     QStringList types;
     xcb_get_property_reply_t *reply = getProperty(window, "_NET_WM_WINDOW_TYPE", XCB_ATOM_ATOM);
+
+    if(reply) {
+        xcb_atom_t *typesA = static_cast<xcb_atom_t*>(xcb_get_property_value(reply));
+        int typeNum = reply->length;
+
+        for(int i = 0; i < typeNum; i++) {
+            types.append(getAtomName(typesA[i]));
+        }
+
+        free(reply);
+    }
+
+    return types;
+}
+
+QStringList WindowManager::getWindowStates(xcb_window_t window)
+{
+    QStringList types;
+    xcb_get_property_reply_t *reply = getProperty(window, "_NET_WM_STATE", XCB_ATOM_ATOM);
 
     if(reply) {
         xcb_atom_t *typesA = static_cast<xcb_atom_t*>(xcb_get_property_value(reply));
@@ -203,11 +222,18 @@ QList<xcb_window_t> WindowManager::getWindows()
             xcb_window_t window = windowList[i];
 
             foreach(QString type, getWindowTypes(window)) {
-                if (type == "_NET_WM_WINDOW_TYPE_NORMAL") {
-                    if (getWindowWorkspace(window) == getCurrentWorkspace(rootWindow)) {
-                        windows.append(window);
+                if (type == "_NET_WM_WINDOW_TYPE_NORMAL"
+                    || type == "_NET_WM_WINDOW_TYPE_DESKTOP"
+                    || type == "_NET_WM_WINDOW_TYPE_DOCK") {
+                    foreach(QString state, getWindowStates(window)) {
+                        if (state != "_NET_WM_STATE_HIDDEN") {
+                            if (getWindowWorkspace(window) == getCurrentWorkspace(rootWindow)) {
+                                windows.append(window);
+                                break;
+                            }
+                        }
                     }
-                    break;
+					break;
                 }
             }
         }
@@ -215,13 +241,10 @@ QList<xcb_window_t> WindowManager::getWindows()
         free(listReply);
     }
 
-    // We need add root window in first index of list.
-    windows.prepend(rootWindow);
-
     // We need re-sort windows list from up to bottom,
     // to make compare cursor with window area from up to bottom.
     std::reverse(windows.begin(), windows.end());
-    
+
     // Just use for debug.
     // foreach (auto window, windows) {
     //     qDebug() << getWindowName(window);
@@ -275,10 +298,10 @@ WindowRect WindowManager::getWindowRect(xcb_window_t window)
 }
 
 template <typename... ArgTypes, typename... ArgTypes2>
-static inline unsigned int XcbCallVoid(xcb_void_cookie_t (*func)(xcb_connection_t *, ArgTypes...), ArgTypes2... args...)
-{
-    return func(QX11Info::connection(), args...).sequence;
-}
+    static inline unsigned int XcbCallVoid(xcb_void_cookie_t (*func)(xcb_connection_t *, ArgTypes...), ArgTypes2... args...)
+    {
+        return func(QX11Info::connection(), args...).sequence;
+    }
 
 void WindowManager::setWindowBlur(int wid, QVector<uint32_t> &data)
 {
