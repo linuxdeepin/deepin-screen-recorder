@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 #include <QApplication>
 #include <QDebug>
@@ -70,7 +70,7 @@ void RecordProcess::run()
 void RecordProcess::recordGIF()
 {
     initProcess();
-    
+
     QStringList arguments;
     arguments << QString("--duration=%1").arg(864000);
     arguments << QString("--x=%1").arg(recordX) << QString("--y=%1").arg(recordY);
@@ -83,7 +83,7 @@ void RecordProcess::recordGIF()
 void RecordProcess::recordVideo()
 {
     initProcess();
-    
+
     // FFmpeg need pass arugment split two part: -option value,
     // otherwise, it will report 'Unrecognized option' error.
     QStringList arguments;
@@ -109,7 +109,7 @@ void RecordProcess::initProcess() {
     QDateTime date = QDateTime::currentDateTime();
     saveBaseName = QString("%1_%2_%3.%4").arg("deepin-record").arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(recordType == RECORD_TYPE_GIF ? "gif" : "mp4");
     savePath = QDir(saveTempDir).filePath(saveBaseName);
-    
+
     // Remove same cache file first.
     QFile file(savePath);
     file.remove();
@@ -119,7 +119,7 @@ void RecordProcess::stopRecord()
 {
     // Exit record process.
     process->terminate();
-    
+
     // Wait thread.
     wait();
 
@@ -130,25 +130,25 @@ void RecordProcess::stopRecord()
                                 QDBusConnection::sessionBus());
 
     QStringList actions;
-    actions << "_open" << "Open";
-    
+    actions << "_open" << tr("Open");
+
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
     QFile::rename(savePath, newSavePath);
-    
+
     QVariantMap hints;
     hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
-    
-    
+
+
     QList<QVariant> arg;
-    arg << (QCoreApplication::applicationName())                                    // appname
-        << ((unsigned int) 0)                                                       // id
-        << Utils::getImagePath("deepin-screen-recorder.svg")                        // icon
-        << "Record successful"                                                      // summary
-        << QString("Save at: %1").arg(newSavePath)                                  // body
-        << actions                                                                  // actions
-        << hints                                                                    // hints
-        << (int) -1;                                                                // timeout
+    arg << (QCoreApplication::applicationName()) // appname
+        << ((unsigned int) 0)					 // id
+        << Utils::getImagePath("deepin-screen-recorder.svg") // icon
+        << tr("Recording finished")	// summary
+        << QString("%1 %2").arg(tr("Save in")).arg(newSavePath) // body
+        << actions				// actions
+        << hints				// hints
+        << (int) -1;			// timeout
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
-    
+
     QApplication::quit();
 }

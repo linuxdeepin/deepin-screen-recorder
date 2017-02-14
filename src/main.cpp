@@ -22,8 +22,10 @@
  */
 
 #include <QWidget>
+#include <QTranslator>
 #include "main_window.h"
 #include "single_application.h"
+#include "utils.h"
 
 // #include <QTime>
 
@@ -36,9 +38,13 @@ int main(int argc, char *argv[])
     SingleApplication app(argc, argv);
 
     if (!app.isRunning()) {
-        app.setOrganizationName("deepin");
+		app.setOrganizationName("deepin");
         app.setApplicationName("deepin-screen-recorder");
         app.setApplicationVersion("1.0");
+		
+		QTranslator tsor;           
+		tsor.load(Utils::getQmPath("zh_hans.qm"));    
+		app.installTranslator(&tsor); 		
 
         MainWindow window;
 

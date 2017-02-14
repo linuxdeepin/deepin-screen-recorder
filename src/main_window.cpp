@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 void MainWindow::initAttributes()
 {
     // Init attributes.
-    setWindowTitle("Deepin screen recorder");
+    setWindowTitle(tr("Deepin screen recorder"));
     setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
     setMouseTracking(true);   // make MouseMove can response
@@ -117,7 +117,6 @@ void MainWindow::initResource()
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
-    trayIcon->setToolTip("停止录制");
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
     setDragCursor();
@@ -133,7 +132,7 @@ void MainWindow::paintEvent(QPaintEvent *)
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     if (!isFirstPressButton) {
-        QString tooltipString = "点击录制窗口或者全屏\n拖动鼠标选择录制区域";
+        QString tooltipString = tr("Click or drag to select the recording area\n");
         setFontSize(painter, 11);
         QSize size = getRenderSize(painter, tooltipString);
         int rectWidth = size.width() + INIT_TOOLTIP_PADDING_X * 2;
@@ -250,7 +249,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                                                 recordButtonY + recordIconNormalImg.height() - 2,
                                                 RECORD_BUTTON_AREA_WIDTH,
                                                 RECORD_BUTTON_AREA_HEIGHT - recordIconNormalImg.height());
-                        QString recordString = "开始录制";
+                        QString recordString = tr("Start recording");
                         setFontSize(painter, 11);
                         painter.setOpacity(1);
                         painter.setPen(QPen(QColor("#e34342")));
@@ -317,7 +316,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 
                 // Draw record wait second.
                 if (showCountdownCounter > 0) {
-                    QString tooltipString = "停止录制请点击托盘图标\n或着\n按下深度录屏快捷键";
+                    QString tooltipString = tr("Click the tray icon to stop recording\nor press the deepin screen recorder shortcut again to stop recording");
                     setFontSize(painter, 11);
                     QSize size = getRenderSize(painter, tooltipString);
                     int tooltipWidth = size.width() + COUNTDOWN_TOOLTIP_PADDING_X * 2;
@@ -581,7 +580,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             if (!isFirstDrag) {
                 isFirstDrag = true;
 
-                selectAreaName = "自由选区";
+                selectAreaName = tr("Select area");
             }
         }
 
@@ -627,7 +626,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             } else if (isPressButton) {
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
                     if (dragAction != ACTION_STAY) {
-                        selectAreaName = "自由选区";
+                        selectAreaName = tr("Select area");
                     }
 
                     if (dragAction == ACTION_MOVE) {

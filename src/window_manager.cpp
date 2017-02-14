@@ -123,7 +123,7 @@ QList<int> WindowManager::getWindowFrameExtents(xcb_window_t window)
 QString WindowManager::getWindowClass(xcb_window_t window)
 {
     if (window == rootWindow) {
-        return "desktop";
+        return tr("Desktop");
     } else {
         xcb_get_property_reply_t *reply = getProperty(window, "WM_CLASS", getAtom("STRING"));
 
@@ -142,7 +142,7 @@ QString WindowManager::getWindowClass(xcb_window_t window)
 QString WindowManager::getWindowName(xcb_window_t window)
 {
     if (window == rootWindow) {
-        return "Desktop";
+        return tr("Desktop");
     } else {
         xcb_get_property_reply_t *reply = getProperty(window, "_NET_WM_NAME", getAtom("UTF8_STRING"));
 
