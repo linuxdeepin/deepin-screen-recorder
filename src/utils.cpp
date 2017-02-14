@@ -39,10 +39,3 @@ QString Utils::getQrcPath(QString imageName)
     return QString(":/image/%1").arg(imageName);
 }
 
-QString Utils::getQmPath(QString qmFile)
-{
-    QDir dir(qApp->applicationDirPath());
-    dir.cdUp();
-    
-    return QDir(dir.filePath("translations")).filePath(qmFile);
-}

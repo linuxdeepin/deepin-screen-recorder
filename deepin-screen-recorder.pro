@@ -15,6 +15,7 @@ RESOURCES = deepin-screen-recorder.qrc
 HEADERS += src/window_manager.h src/main_window.h src/record_process.h src/single_application.h src/settings.h src/utils.h
 SOURCES += src/main.cpp src/window_manager.cpp src/main_window.cpp src/record_process.cpp src/single_application.cpp src/settings.cpp src/utils.cpp
 
+QT += core
 QT += widgets
 QT += gui
 QT += network

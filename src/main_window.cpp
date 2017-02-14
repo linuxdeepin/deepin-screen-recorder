@@ -132,7 +132,7 @@ void MainWindow::paintEvent(QPaintEvent *)
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     if (!isFirstPressButton) {
-        QString tooltipString = tr("Click or drag to select the recording area\n");
+        QString tooltipString = tr("Click or drag to select the recording area");
         setFontSize(painter, 11);
         QSize size = getRenderSize(painter, tooltipString);
         int rectWidth = size.width() + INIT_TOOLTIP_PADDING_X * 2;
@@ -316,7 +316,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 
                 // Draw record wait second.
                 if (showCountdownCounter > 0) {
-                    QString tooltipString = tr("Click the tray icon to stop recording\nor press the deepin screen recorder shortcut again to stop recording");
+                    QString tooltipString = tr("Click the tray icon to stop recording\nor press the deepin screen recorder shortcut again");
                     setFontSize(painter, 11);
                     QSize size = getRenderSize(painter, tooltipString);
                     int tooltipWidth = size.width() + COUNTDOWN_TOOLTIP_PADDING_X * 2;

@@ -37,6 +37,7 @@ public:
     };
 
     bool isRunning();
+	void loadTranslations();
 
 private slots:
     void newLocalConnection();

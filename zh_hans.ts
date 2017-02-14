@@ -10,8 +10,7 @@
     </message>
     <message>
         <location filename="src/main_window.cpp" line="135"/>
-        <source>Click or drag to select the recording area
-</source>
+        <source>Click or drag to select the recording area</source>
         <translation>点击或拖拽来选择录制区域</translation>
     </message>
     <message>
@@ -22,15 +21,15 @@
     <message>
         <location filename="src/main_window.cpp" line="319"/>
         <source>Click the tray icon to stop recording
-or press the deepin screen recorder shortcut again to stop recording</source>
-        <translation>点击托盘图标以停止录制
-或再次按下深度录屏快捷键以停止录制</translation>
+or press the deepin screen recorder shortcut again</source>
+<translation>点击托盘图标以停止录制
+或再次按下深度录屏快捷键</translation>
     </message>
     <message>
         <location filename="src/main_window.cpp" line="583"/>
         <location filename="src/main_window.cpp" line="629"/>
         <source>Select area</source>
-	<translation>选择区域</translation>
+        <translation>选择区域</translation>
     </message>
 </context>
 <context>
@@ -43,12 +42,12 @@ or press the deepin screen recorder shortcut again to stop recording</source>
     <message>
         <location filename="src/record_process.cpp" line="146"/>
         <source>Recording finished</source>
-	<translation>录制完毕</translation>
+        <translation>录制完毕</translation>
     </message>
     <message>
         <location filename="src/record_process.cpp" line="147"/>
         <source>Save in</source>
-	<translation>保存在</translation>
+        <translation>保存在</translation>
     </message>
 </context>
 <context>
@@ -57,7 +56,7 @@ or press the deepin screen recorder shortcut again to stop recording</source>
         <location filename="src/window_manager.cpp" line="126"/>
         <location filename="src/window_manager.cpp" line="145"/>
         <source>Desktop</source>
-	<translation>桌面</translation>
+        <translation>桌面</translation>
     </message>
 </context>
 </TS>

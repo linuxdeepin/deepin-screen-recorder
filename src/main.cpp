@@ -22,7 +22,6 @@
  */
 
 #include <QWidget>
-#include <QTranslator>
 #include "main_window.h"
 #include "single_application.h"
 #include "utils.h"
@@ -42,9 +41,7 @@ int main(int argc, char *argv[])
         app.setApplicationName("deepin-screen-recorder");
         app.setApplicationVersion("1.0");
 		
-		QTranslator tsor;           
-		tsor.load(Utils::getQmPath("zh_hans.qm"));    
-		app.installTranslator(&tsor); 		
+		app.loadTranslations();
 
         MainWindow window;
 

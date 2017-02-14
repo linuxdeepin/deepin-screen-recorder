@@ -23,6 +23,10 @@
 
 #include <QtNetwork/QLocalSocket>
 #include <QFileInfo>
+#include <QDir>
+#include <QDirIterator>
+#include <QApplication>
+#include <QTranslator>
 #include "single_application.h"
 
 #define TIME_OUT                (500)    // 500ms
@@ -82,4 +86,20 @@ void SingleApplication::newLocalServer()
             localServer->listen(serverName);
         }
     }
+}
+
+void SingleApplication::loadTranslations()
+{
+	QDir dir(qApp->applicationDirPath());
+	dir.cdUp();
+	
+	QString translationPath = QDir(dir.filePath("translations")).filePath(QString("deepin-screen-recorder_%1.qm").arg(QLocale::system().name()));
+	
+	if (QFile::exists(translationPath)) {
+		auto translator = new QTranslator(this);
+		translator->load(translationPath);
+		installTranslator(translator);
+	} else {
+		qWarning() << "Can not find qm file: " << translationPath;
+	}
 }
