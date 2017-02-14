@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 #include <QtNetwork/QLocalSocket>
 #include <QFileInfo>
@@ -92,9 +92,9 @@ void SingleApplication::loadTranslations()
 {
 	QDir dir(qApp->applicationDirPath());
 	dir.cdUp();
-	
-	QString translationPath = QDir(dir.filePath("translations")).filePath(QString("deepin-screen-recorder_%1.qm").arg(QLocale::system().name()));
-	
+
+	QString translationPath = QDir(DSR_LANG_PATH).filePath(QString("deepin-screen-recorder_%1.qm").arg(QLocale::system().name()));
+
 	if (QFile::exists(translationPath)) {
 		auto translator = new QTranslator(this);
 		translator->load(translationPath);
