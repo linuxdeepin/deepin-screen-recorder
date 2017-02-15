@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 #include <QString>
 #include <QDir>
@@ -30,8 +30,8 @@ QString Utils::getImagePath(QString imageName)
 {
     QDir dir(qApp->applicationDirPath());
     dir.cdUp();
-    
-    return QDir(dir.filePath("image")).filePath(imageName);
+
+    return QDir(DSR_ICON_PATH).filePath(imageName);
 }
 
 QString Utils::getQrcPath(QString imageName)
