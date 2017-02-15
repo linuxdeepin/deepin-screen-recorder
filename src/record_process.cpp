@@ -130,7 +130,7 @@ void RecordProcess::stopRecord()
                                 QDBusConnection::sessionBus());
 
     QStringList actions;
-    actions << "_open" << tr("Open");
+    actions << "_open" << tr("View");
 
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
     QFile::rename(savePath, newSavePath);
