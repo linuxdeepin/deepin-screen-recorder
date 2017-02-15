@@ -40,6 +40,10 @@ or press the deepin screen recorder shortcut again</source>
         <source>View</source>
         <translation>查看</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation>深度录屏</translation>
+    </message>
 </context>
 <context>
     <name>WindowManager</name>

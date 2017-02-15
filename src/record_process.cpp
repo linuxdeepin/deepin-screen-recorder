@@ -107,7 +107,7 @@ void RecordProcess::initProcess() {
 
     // Build temp save path.
     QDateTime date = QDateTime::currentDateTime();
-    saveBaseName = QString("%1_%2_%3.%4").arg("deepin-record").arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(recordType == RECORD_TYPE_GIF ? "gif" : "mp4");
+    saveBaseName = QString("%1_%2_%3.%4").arg(tr("deepin-screen-recorder")).arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(recordType == RECORD_TYPE_GIF ? "gif" : "mp4");
     savePath = QDir(saveTempDir).filePath(saveBaseName);
 
     // Remove same cache file first.
