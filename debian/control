@@ -10,6 +10,5 @@ Homepage: https://github.com/manateelazycat/deepin-screen-recorder
 
 Package: deepin-screen-recorder
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, deepin-notifications (> 2.3.8-1)
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Depends: ${shlibs:Depends}, ${misc:Depends}, deepin-notifications (> 2.3.8-1), byzanz, ffmpeg
+Description: Simple recorder tools for deepin.
