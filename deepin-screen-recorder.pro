@@ -23,8 +23,7 @@ QT += x11extras
 QT += dbus
 LIBS += -lX11 -lXext
 
-QMAKE_CXXFLAGS += -g
-
+# QMAKE_CXXFLAGS += -g
 
 isEmpty(BINDIR):BINDIR=/usr/bin
 isEmpty(ICONDIR):ICONDIR=/usr/share/icons/hicolor/scalable/apps
