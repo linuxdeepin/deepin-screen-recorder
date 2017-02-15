@@ -1,0 +1,15 @@
+Source: deepin-screen-recorder
+Section: utils
+Priority: optional
+Maintainer: Deepin Packages Builder <packages@deepin.com>
+Build-Depends: debhelper (>= 9), pkg-config, dpkg-dev, qt5-qmake, qt5-default, libxcb-util0-dev, libqt5x11extras5-dev
+Standards-Version: 3.9.8
+Homepage: https://github.com/manateelazycat/deepin-screen-recorder
+#Vcs-Git: https://anonscm.debian.org/collab-maint/deepin-screen-recorder.git
+#Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/deepin-screen-recorder.git
+
+Package: deepin-screen-recorder
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>
