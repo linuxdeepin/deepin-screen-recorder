@@ -135,8 +135,6 @@ private:
     
     int recordButtonState;
     
-    bool moveResizeByKey;
-    
     int showCountdownCounter;
     int flashTrayIconCounter;
     

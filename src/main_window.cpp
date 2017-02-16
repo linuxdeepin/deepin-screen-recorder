@@ -90,8 +90,6 @@ void MainWindow::initAttributes()
     isPressButton = false;
     isReleaseButton = false;
 
-    moveResizeByKey = false;
-
     recordX = 0;
     recordY = 0;
     recordWidth = 0;
@@ -177,8 +175,6 @@ void MainWindow::paintEvent(QPaintEvent *)
 
         painter.setPen(QPen(QColor("#000000")));
         painter.drawText(tooltipRect, Qt::AlignCenter, tooltipString);
-    } else {
-        Utils::clearBlur(windowManager, this->winId());
     }
 
     if (recordWidth > 0 && recordHeight > 0) {
@@ -233,6 +229,14 @@ void MainWindow::paintEvent(QPaintEvent *)
         // Draw record panel.
         if (isFirstPressButton) {
             if (isFirstReleaseButton) {
+                if (recordButtonStatus == RECORD_BUTTON_NORMAL && recordButton->isVisible()) {
+                    QList<QRectF> rects;
+                    QRectF recordButtonRect(recordButton->geometry());
+                    QRectF recordOptionPanelRect(recordOptionPanel->geometry());
+                    rects << recordButtonRect << recordOptionPanelRect;
+                    Utils::blurRects(windowManager, this->winId(), rects);
+                }
+
                 painter.setClipping(false);
 
                 // Draw record wait second.
@@ -296,26 +300,18 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     recordX = std::max(0, recordX - 1);
                     recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
 
-                    moveResizeByKey = true;
-
                     needRepaint = true;
                 } else if (keyEvent->key() == Qt::Key_Right) {
                     recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
-
-                    moveResizeByKey = true;
 
                     needRepaint = true;
                 } else if (keyEvent->key() == Qt::Key_Up) {
                     recordY = std::max(0, recordY - 1);
                     recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
 
-                    moveResizeByKey = true;
-
                     needRepaint = true;
                 } else if (keyEvent->key() == Qt::Key_Down) {
                     recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
-
-                    moveResizeByKey = true;
 
                     needRepaint = true;
                 }
@@ -323,25 +319,17 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (keyEvent->key() == Qt::Key_Left) {
                     recordX = std::max(0, recordX - 1);
 
-                    moveResizeByKey = true;
-
                     needRepaint = true;
                 } else if (keyEvent->key() == Qt::Key_Right) {
                     recordX = std::min(rootWindowRect.width - recordWidth, recordX + 1);
-
-                    moveResizeByKey = true;
 
                     needRepaint = true;
                 } else if (keyEvent->key() == Qt::Key_Up) {
                     recordY = std::max(0, recordY - 1);
 
-                    moveResizeByKey = true;
-
                     needRepaint = true;
                 } else if (keyEvent->key() == Qt::Key_Down) {
                     recordY = std::min(rootWindowRect.height - recordHeight, recordY + 1);
-
-                    moveResizeByKey = true;
 
                     needRepaint = true;
                 }
@@ -357,7 +345,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         // NOTE: must be use 'isAutoRepeat' to filter KeyRelease event send by Qt.
         if (!keyEvent->isAutoRepeat()) {
             if (keyEvent->key() == Qt::Key_Left || keyEvent->key() == Qt::Key_Right || keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_Down) {
-                moveResizeByKey = false;
                 needRepaint = true;
             }
 
@@ -743,7 +730,7 @@ void MainWindow::renderTooltipRect(QPainter &painter, QRectF &rect, qreal opacit
     painter.setPen(pen);
     painter.drawPath(path);
 
-    Utils::blurWidget(windowManager, this->winId(), rect);
+    Utils::blurRect(windowManager, this->winId(), rect);
 
     painter.setOpacity(1.0);
 }
@@ -815,13 +802,6 @@ void MainWindow::showRecordButton()
             rootWindowRect.width - recordX - recordWidth,
             rootWindowRect.height - recordY - recordHeight);
     }
-
-
-    // QRectF recordButtonRect(recordButton->rect().x(), recordButton->rect().y(), recordButton->rect().width(), recordButton->rect().height());
-    // QRectF recordOptionPanelRect(recordOptionPanel->rect().x(), recordOptionPanel->rect().y(), recordOptionPanel->rect().width(), recordOptionPanel->rect().height());
-    // Utils::blurWidget(windowManager, recordButton->winId(), recordButtonRect);
-    // Utils::blurWidget(windowManager, recordOptionPanel->winId(), recordOptionPanelRect);
-
 }
 
 void MainWindow::hideRecordButton()

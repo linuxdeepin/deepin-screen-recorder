@@ -24,6 +24,7 @@
 #include <QString>
 #include <QDir>
 #include <QApplication>
+#include <QDebug>
 #include <QFontMetrics>
 #include <QPainter>
 #include "utils.h"
@@ -72,10 +73,19 @@ void Utils::setFontSize(QPainter &painter, int textSize)
     painter.setFont(font);
 }
 
-void Utils::blurWidget(WindowManager *windowManager, int widgetId, QRectF &rect)
+void Utils::blurRect(WindowManager *windowManager, int widgetId, QRectF &rect)
 {
     QVector<uint32_t> data;
     data << rect.x() << rect.y() << rect.width() << rect.height() << RECTANGLE_RAIUDS << RECTANGLE_RAIUDS;
+    windowManager->setWindowBlur(widgetId, data);
+}    
+
+void Utils::blurRects(WindowManager *windowManager, int widgetId, QList<QRectF> rects)
+{
+    QVector<uint32_t> data;
+    foreach (auto rect, rects) {
+        data << rect.x() << rect.y() << rect.width() << rect.height() << RECTANGLE_RAIUDS << RECTANGLE_RAIUDS;
+    }
     windowManager->setWindowBlur(widgetId, data);
 }    
 

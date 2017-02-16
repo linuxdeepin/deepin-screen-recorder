@@ -34,6 +34,7 @@ public:
     static QString getQrcPath(QString imageName);
     static QSize getRenderSize(int fontSize, QString string);
     static void setFontSize(QPainter &painter, int textSize);
-    static void blurWidget(WindowManager *windowManager, int widgetId, QRectF &rect);
+    static void blurRect(WindowManager *windowManager, int widgetId, QRectF &rect);
+    static void blurRects(WindowManager *windowManager, int widgetId, QList<QRectF> rects);
     static void clearBlur(WindowManager *windowManager, int widgetId);
 };
