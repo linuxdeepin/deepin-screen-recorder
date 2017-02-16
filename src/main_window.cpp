@@ -63,21 +63,8 @@ const int MainWindow::COUNTDOWN_TOOLTIP_PADDING_X = 20;
 const int MainWindow::COUNTDOWN_TOOLTIP_PADDING_Y = 20;
 const int MainWindow::COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y = 30;
 
-const int MainWindow::RECORD_BUTTON_AREA_WIDTH = 124;
-const int MainWindow::RECORD_BUTTON_AREA_HEIGHT = 86;
-const int MainWindow::RECORD_BUTTON_OFFSET_Y = 16;
-
-const int MainWindow::RECORD_OPTIONS_AREA_HEIGHT = 36;
-const int MainWindow::RECORD_OPTIONS_AREA_PADDING = 12;
-
-const int MainWindow::BUTTON_STATE_NORMAL = 0;
-const int MainWindow::BUTTON_STATE_HOVER = 1;
-const int MainWindow::BUTTON_STATE_PRESS = 2;
-const int MainWindow::BUTTON_STATE_CHECKED = 3;
-
-const int MainWindow::BUTTON_OPTION_HEIGHT = 24;
-const int MainWindow::BUTTON_OPTION_ICON_OFFSET_X = 14;
-const int MainWindow::BUTTON_OPTION_STRING_OFFSET_X = 5;
+const int MainWindow::RECORD_AREA_PADDING = 12;
+const int MainWindow::RECORD_AREA_OFFSET = 16;
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
@@ -137,13 +124,13 @@ void MainWindow::initAttributes()
     connect(recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
 
     recordOptionPanel = new RecordOptionPanel();
-    
+
     layout->addStretch();
     layout->addWidget(recordButton, 0, Qt::AlignCenter);
-    layout->addSpacing(RECORD_OPTIONS_AREA_PADDING);
+    layout->addSpacing(RECORD_AREA_PADDING);
     layout->addWidget(recordOptionPanel, 0, Qt::AlignCenter);
     layout->addStretch();
-    
+
     recordButton->hide();
     recordOptionPanel->hide();
 
@@ -359,7 +346,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     needRepaint = true;
                 }
             }
-            
+
             if (recordButtonStatus == RECORD_BUTTON_NORMAL && needRepaint) {
                 hideRecordButton();
             }
@@ -373,7 +360,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 moveResizeByKey = false;
                 needRepaint = true;
             }
-            
+
             if (recordButtonStatus == RECORD_BUTTON_NORMAL && needRepaint) {
                 showRecordButton();
             }
@@ -790,18 +777,55 @@ void MainWindow::showRecordButton()
 {
     recordButton->show();
     recordOptionPanel->show();
-    
+
+    int recordAreaHeight = recordButton->height() + RECORD_AREA_PADDING + recordOptionPanel->height();
+    int recordAreaWidth = recordButton->width();
+    if (recordHeight < recordAreaHeight) {
+        if (recordY + recordAreaHeight > rootWindowRect.height) {
+            layout->setContentsMargins(
+                recordX,
+                recordY - recordAreaHeight - RECORD_AREA_OFFSET,
+                rootWindowRect.width - recordX - recordWidth,
+                rootWindowRect.height - recordY + RECORD_AREA_OFFSET);
+        } else {
+            layout->setContentsMargins(
+                recordX,
+                recordY + recordHeight + RECORD_AREA_OFFSET,
+                rootWindowRect.width - recordX - recordWidth,
+                rootWindowRect.height - (recordY + recordHeight + recordAreaHeight) + RECORD_AREA_OFFSET);
+        }
+    } else if (recordWidth < recordAreaWidth) {
+        if (recordX + recordAreaWidth > rootWindowRect.width) {
+            layout->setContentsMargins(
+                recordX - recordAreaWidth - RECORD_AREA_OFFSET,
+                recordY,
+                rootWindowRect.width - recordX + RECORD_AREA_OFFSET,
+                rootWindowRect.height - recordY - recordHeight);
+        } else {
+            layout->setContentsMargins(
+                recordX + recordWidth + RECORD_AREA_OFFSET,
+                recordY,
+                rootWindowRect.width - (recordX + recordWidth + recordAreaWidth + RECORD_AREA_OFFSET),
+                rootWindowRect.height - recordY - recordHeight);
+        }
+    } else {
+        layout->setContentsMargins(
+            recordX,
+            recordY,
+            rootWindowRect.width - recordX - recordWidth,
+            rootWindowRect.height - recordY - recordHeight);
+    }
+
+
     // QRectF recordButtonRect(recordButton->rect().x(), recordButton->rect().y(), recordButton->rect().width(), recordButton->rect().height());
     // QRectF recordOptionPanelRect(recordOptionPanel->rect().x(), recordOptionPanel->rect().y(), recordOptionPanel->rect().width(), recordOptionPanel->rect().height());
     // Utils::blurWidget(windowManager, recordButton->winId(), recordButtonRect);
     // Utils::blurWidget(windowManager, recordOptionPanel->winId(), recordOptionPanelRect);
+
 }
 
 void MainWindow::hideRecordButton()
 {
-    layout->removeWidget(recordButton);
-    layout->removeWidget(recordOptionPanel);
-
     recordButton->hide();
     recordOptionPanel->hide();
 

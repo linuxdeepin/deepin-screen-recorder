@@ -62,22 +62,9 @@ class MainWindow : public QWidget
     static const int COUNTDOWN_TOOLTIP_PADDING_Y;
     static const int COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y;
     
-    static const int RECORD_BUTTON_AREA_WIDTH;
-    static const int RECORD_BUTTON_AREA_HEIGHT;
-    static const int RECORD_BUTTON_OFFSET_Y;
+    static const int RECORD_AREA_PADDING;
+    static const int RECORD_AREA_OFFSET;
     
-    static const int RECORD_OPTIONS_AREA_HEIGHT;
-    static const int RECORD_OPTIONS_AREA_PADDING;
-    
-    static const int BUTTON_STATE_NORMAL;
-    static const int BUTTON_STATE_HOVER;
-    static const int BUTTON_STATE_PRESS;
-    static const int BUTTON_STATE_CHECKED;
-    
-    static const int BUTTON_OPTION_HEIGHT;
-    static const int BUTTON_OPTION_ICON_OFFSET_X;
-    static const int BUTTON_OPTION_STRING_OFFSET_X;
-
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow() {
