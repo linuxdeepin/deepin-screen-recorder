@@ -25,9 +25,11 @@
 #include <QPainter>
 #include <QWidget>
 #include <QSystemTrayIcon>
+#include <QVBoxLayout>
 #include "window_manager.h"
 #include "record_process.h"
-#include "settings.h"
+#include "record_button.h"
+#include "record_option_panel.h"
 
 class MainWindow : public QWidget
 {
@@ -93,6 +95,7 @@ public slots:
     void flashTrayIcon();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void stopRecord();
+    void startCountdown();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -106,10 +109,10 @@ protected:
     void setDragCursor();
     void resetCursor();
     void passInputEvent();
-    void renderTooltipRect(QPainter &painter, QList<QRectF> &rects, QList<qreal> opacities);
-    void clearTooltip();
+    void renderTooltipRect(QPainter &painter, QRectF &rect, qreal opacity);
     void setFontSize(QPainter &painter, int textSize);
-    QSize getRenderSize(QPainter &painter, QString string);
+    void showRecordButton();
+    void hideRecordButton();
 
 private:
     QList<WindowRect> windowRects;
@@ -145,11 +148,7 @@ private:
     int recordY;
     
     int recordButtonState;
-    int recordOptionState;
-    int recordOptionGifState;
-    int recordOptionMp4State;
     
-    bool saveAsGif;
     bool moveResizeByKey;
     
     int showCountdownCounter;
@@ -162,25 +161,17 @@ private:
     QImage countdown2Img;
     QImage countdown3Img;
     
-    QImage recordIconNormalImg;
-    QImage recordIconHoverImg;
-    QImage recordIconPressImg;
-    
-    QImage recordGifNormalImg;
-    QImage recordGifPressImg;
-    QImage recordGifCheckedImg;
-    
-    QImage recordMp4NormalImg;
-    QImage recordMp4PressImg;
-    QImage recordMp4CheckedImg;
-    
     QString selectAreaName;
     
-    Settings settings;
+    // Settings settings;
     
     QSystemTrayIcon* trayIcon;
     
     WindowManager* windowManager;
+    
+    QVBoxLayout* layout;
+    RecordButton* recordButton;
+    RecordOptionPanel* recordOptionPanel;
     
     // Just use for debug.
     // int repaintCounter;

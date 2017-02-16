@@ -23,10 +23,17 @@
 
 #include <QObject>
 #include <QString>
+#include "window_manager.h"
 
 class Utils : public QObject
 {
 public:
+    static const int RECTANGLE_RAIUDS = 8;
+    
     static QString getImagePath(QString imageName);
     static QString getQrcPath(QString imageName);
+    static QSize getRenderSize(int fontSize, QString string);
+    static void setFontSize(QPainter &painter, int textSize);
+    static void blurWidget(WindowManager *windowManager, int widgetId, QRectF &rect);
+    static void clearBlur(WindowManager *windowManager, int widgetId);
 };

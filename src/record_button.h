@@ -21,37 +21,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 
-#ifndef SINGLEAPPLICATION_H
-#define SINGLEAPPLICATION_H
+#ifndef RECORDBUTTON_H
+#define RECORDBUTTON_H
 
-#include <QApplication>
-#include <QtNetwork/QLocalServer>
+#include <QPushButton>
 
-class SingleApplication : public QApplication {
+class RecordButton : public QPushButton
+{
     Q_OBJECT
-
-public:
-    SingleApplication(int &argc, char **argv);
-    ~SingleApplication() {
-        delete localServer;
-    };
-
-    bool isRunning();
-	void loadTranslations();
-
-private slots:
-    void newLocalConnection();
     
-signals:
-    void secondInstanceStart();
-
+    static const int RECTANGLE_RAIUDS = 8;
+    static const int WIDTH = 128;
+    static const int HEIGHT = 86;
+    static const int PADDING = 20;
+    static const int TEXT_PADDING = 0;
+    
+public:
+    RecordButton(QPushButton *parent = 0);
+    void setText(QString string);
+    
+protected:
+    void paintEvent(QPaintEvent *event);
+    bool eventFilter(QObject *, QEvent *event);
+    
 private:
-    void initLocalConnection();
-    void newLocalServer();
-
-    bool appIsRunning;
-    QLocalServer *localServer;
-    QString serverName;
+    QImage normalImg;
+    QImage hoverImg;
+    QImage pressImg;
+    
+    bool isFocus;
+    bool isPress;
+    
+    QString text;
+    QSize textSize;
 };
 
-#endif // SINGLEAPPLICATION_H
+#endif // RECORDBUTTON_H

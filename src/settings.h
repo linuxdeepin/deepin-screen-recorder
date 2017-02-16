@@ -21,6 +21,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 
+#ifndef SETTINGS_H
+#define SETTINGS_H
+
 #include <QSettings>
 
 class Settings : public QObject 
@@ -42,3 +45,4 @@ private:
     QString groupName;
 };
 
+#endif // SETTINGS_H

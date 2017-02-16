@@ -21,34 +21,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QWidget>
-#include <DApplication>
-#include "main_window.h"
-#include "utils.h"
+#ifndef RECORDOPTIONALPANEL_H
+#define RECORDOPTIONALPANEL_H
 
-DWIDGET_USE_NAMESPACE
+#include <QPushButton>
+#include "settings.h"
 
-int main(int argc, char *argv[])
+class RecordOptionPanel : public QPushButton
 {
-    DApplication app(argc, argv);
+    Q_OBJECT
+    
+    static const int RECTANGLE_RAIUDS = 8;
+    static const int WIDTH = 124;
+    static const int HEIGHT = 36;
+    static const int ICON_OFFSET_X = 14;
+    
+public:
+    RecordOptionPanel(QPushButton *parent = 0);
+    bool isSaveAsGif();
+    
+protected:
+    void paintEvent(QPaintEvent *event);
+    bool eventFilter(QObject *, QEvent *event);
+    
+private:
+    bool saveAsGif;
+    bool isPressGif;
+    bool isPressMp4;
+    
+    QImage gifNormalImg;
+    QImage gifPressImg;
+    QImage gifCheckedImg;
+    
+    QImage mp4NormalImg;
+    QImage mp4PressImg;
+    QImage mp4CheckedImg;
+    
+    Settings* settings;
+};
 
-    if (app.setSingleInstance("deepin-screen-recorder")) {
-        app.setOrganizationName("deepin");
-        app.setApplicationName("deepin-screen-recorder");
-        app.setApplicationVersion("1.0");
-
-        app.loadTranslator();
-
-        MainWindow window;
-
-        QObject::connect(&app, &DApplication::newInstanceStarted, &window, &MainWindow::stopRecord);
-
-        window.showFullScreen();
-
-        window.initResource();
-
-        return app.exec();
-    }
-
-    return 0;
-}
+#endif // RECORDOPTIONPANEL_H

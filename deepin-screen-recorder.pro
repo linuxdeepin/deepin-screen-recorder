@@ -8,12 +8,12 @@ INCLUDEPATH += .
 
 CONFIG += link_pkgconfig
 CONFIG += c++11 
-PKGCONFIG += xcb xcb-util
+PKGCONFIG += xcb xcb-util dtkwidget dtkbase
 RESOURCES = deepin-screen-recorder.qrc
 
 # Input
-HEADERS += src/window_manager.h src/main_window.h src/record_process.h src/single_application.h src/settings.h src/utils.h
-SOURCES += src/main.cpp src/window_manager.cpp src/main_window.cpp src/record_process.cpp src/single_application.cpp src/settings.cpp src/utils.cpp
+HEADERS += src/window_manager.h src/main_window.h src/record_process.h src/settings.h src/utils.h src/record_button.h src/record_option_panel.h
+SOURCES += src/main.cpp src/window_manager.cpp src/main_window.cpp src/record_process.cpp src/settings.cpp src/utils.cpp src/record_button.cpp src/record_option_panel.cpp
 
 QT += core
 QT += widgets

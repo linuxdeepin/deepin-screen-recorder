@@ -31,7 +31,10 @@
 #include "main_window.h"
 #include <X11/extensions/shape.h>
 #include <QtX11Extras/QX11Info>
+#include <QVBoxLayout>
 #include "utils.h"
+#include "record_button.h"
+#include "record_option_panel.h"
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
@@ -68,10 +71,6 @@ void MainWindow::initAttributes()
 
     recordButtonStatus = RECORD_BUTTON_NORMAL;
 
-    recordOptionState = BUTTON_STATE_NORMAL;
-    recordOptionGifState = BUTTON_STATE_NORMAL;
-    recordOptionMp4State = BUTTON_STATE_NORMAL;
-
     showCountdownCounter = 0;
     flashTrayIconCounter = 0;
 
@@ -89,31 +88,24 @@ void MainWindow::initAttributes()
         windowNames.append(windowManager->getWindowClass(windows[i]));
     }
 
+    layout = new QVBoxLayout(this);
+    recordButton = new RecordButton();
+    recordButton->setText(tr("Start recording"));
+    connect(recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
+
+    recordOptionPanel = new RecordOptionPanel();
+    
     // Just use for debug.
     // repaintCounter = 0;
 }
 
 void MainWindow::initResource()
 {
-    Settings settings;
-    saveAsGif = settings.getOption("save_as_gif").toBool();
-
     resizeHandleBigImg = QImage(Utils::getQrcPath("resize_handle_big.png"));
     resizeHandleSmallImg = QImage(Utils::getQrcPath("resize_handle_small.png"));
     countdown1Img = QImage(Utils::getQrcPath("countdown_1.png"));
     countdown2Img = QImage(Utils::getQrcPath("countdown_2.png"));
     countdown3Img = QImage(Utils::getQrcPath("countdown_3.png"));
-    recordIconNormalImg = QImage(Utils::getQrcPath("record_icon_normal.png"));
-    recordIconHoverImg = QImage(Utils::getQrcPath("record_icon_hover.png"));
-    recordIconPressImg = QImage(Utils::getQrcPath("record_icon_press.png"));
-
-    recordGifNormalImg = QImage(Utils::getQrcPath("gif_normal.png"));
-    recordGifPressImg = QImage(Utils::getQrcPath("gif_press.png"));
-    recordGifCheckedImg = QImage(Utils::getQrcPath("gif_checked.png"));
-
-    recordMp4NormalImg = QImage(Utils::getQrcPath("mp4_normal.png"));
-    recordMp4PressImg = QImage(Utils::getQrcPath("mp4_press.png"));
-    recordMp4CheckedImg = QImage(Utils::getQrcPath("mp4_checked.png"));
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
@@ -133,8 +125,8 @@ void MainWindow::paintEvent(QPaintEvent *)
 
     if (!isFirstPressButton) {
         QString tooltipString = tr("Click or drag to select the area to record");
-        setFontSize(painter, 11);
-        QSize size = getRenderSize(painter, tooltipString);
+        Utils::setFontSize(painter, 11);
+        QSize size = Utils::getRenderSize(11, tooltipString);
         int rectWidth = size.width() + INIT_TOOLTIP_PADDING_X * 2;
         int rectHeight = size.height() + INIT_TOOLTIP_PADDING_Y * 2;
         QRectF tooltipRect((rootWindowRect.width - rectWidth) / 2,
@@ -142,16 +134,12 @@ void MainWindow::paintEvent(QPaintEvent *)
                            rectWidth,
                            rectHeight);
 
-        QList<QRectF> rects;
-        QList<qreal> opacities;
-        opacities << 0.4;
-        rects.append(tooltipRect);
-        renderTooltipRect(painter, rects, opacities);
+        renderTooltipRect(painter, tooltipRect, 0.4);
 
         painter.setPen(QPen(QColor("#000000")));
         painter.drawText(tooltipRect, Qt::AlignCenter, tooltipString);
     } else {
-        clearTooltip();
+        Utils::clearBlur(windowManager, this->winId());
     }
 
     if (recordWidth > 0 && recordHeight > 0) {
@@ -206,109 +194,12 @@ void MainWindow::paintEvent(QPaintEvent *)
         // Draw record panel.
         if (isFirstPressButton) {
             if (isFirstReleaseButton) {
-                QString buttonString;
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-                    if ((isReleaseButton && !moveResizeByKey)
-                        || recordOptionGifState == BUTTON_STATE_PRESS
-                        || recordOptionMp4State == BUTTON_STATE_PRESS
-                        || recordButtonState == BUTTON_STATE_PRESS) {
-                        int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
-                        int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
-                        QRectF recordButtonRect(recordButtonX, recordButtonY, RECORD_BUTTON_AREA_WIDTH, RECORD_BUTTON_AREA_HEIGHT);
-
-                        int recordOptionsX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
-                        int recordOptionsY = recordY + (recordHeight + RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT + RECORD_OPTIONS_AREA_PADDING) / 2;
-                        QRectF recordOptionsRect(recordOptionsX, recordOptionsY, RECORD_BUTTON_AREA_WIDTH, RECORD_OPTIONS_AREA_HEIGHT);
-
-                        QList<QRectF> rects;
-                        QList<qreal> opacities;
-                        rects.append(recordButtonRect);
-                        rects.append(recordOptionsRect);
-
-                        if (recordButtonState == BUTTON_STATE_NORMAL) {
-                            opacities << 0.6;
-                        } else if (recordButtonState == BUTTON_STATE_HOVER) {
-                            opacities << 0.7;
-                        } else if (recordButtonState == BUTTON_STATE_PRESS) {
-                            opacities << 0.2;
-                        }
-
-                        opacities << 0.6;
-
-                        renderTooltipRect(painter, rects, opacities);
-
-                        if (recordButtonState == BUTTON_STATE_NORMAL) {
-                            painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconNormalImg);
-                        } else if (recordButtonState == BUTTON_STATE_HOVER) {
-                            painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconHoverImg);
-                        } else if (recordButtonState == BUTTON_STATE_PRESS) {
-                            painter.drawImage(QPoint(recordX + (recordWidth - recordIconNormalImg.width()) / 2, recordButtonY + RECORD_BUTTON_OFFSET_Y), recordIconPressImg);
-                        }
-
-                        QRectF recordStringRect(recordButtonX,
-                                                recordButtonY + recordIconNormalImg.height() - 2,
-                                                RECORD_BUTTON_AREA_WIDTH,
-                                                RECORD_BUTTON_AREA_HEIGHT - recordIconNormalImg.height());
-                        QString recordString = tr("Start recording");
-                        setFontSize(painter, 11);
-                        painter.setOpacity(1);
-                        painter.setPen(QPen(QColor("#e34342")));
-                        painter.drawText(recordStringRect, Qt::AlignCenter, recordString);
-
-                        int recordOptionGifX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + BUTTON_OPTION_ICON_OFFSET_X;
-                        int recordOptionMp4X = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + RECORD_BUTTON_AREA_WIDTH / 2;
-                        int recordOptionY = recordOptionsY + (RECORD_OPTIONS_AREA_HEIGHT - BUTTON_OPTION_HEIGHT) / 2 ;
-                        if (recordOptionGifState == BUTTON_STATE_PRESS) {
-                            painter.drawImage(QPoint(recordOptionGifX, recordOptionY), recordGifPressImg);
-                        } else if (saveAsGif) {
-                            painter.drawImage(QPoint(recordOptionGifX, recordOptionY), recordGifCheckedImg);
-                        } else {
-                            painter.drawImage(QPoint(recordOptionGifX, recordOptionY), recordGifNormalImg);
-                        }
-
-                        QString optionGifString = "GIF";
-                        setFontSize(painter, 9);
-                        if (recordOptionGifState == BUTTON_STATE_PRESS) {
-                            painter.setPen(QPen(QColor("#004BCA")));
-                        } else if (saveAsGif) {
-                            painter.setPen(QPen(QColor("#217DFF")));
-                        } else {
-                            painter.setPen(QPen(QColor("#000000")));
-                        }
-                        painter.setOpacity(1);
-                        painter.drawText(QRectF(recordOptionGifX + recordGifNormalImg.width(),
-                                                recordOptionsY,
-                                                RECORD_BUTTON_AREA_WIDTH / 2 - BUTTON_OPTION_ICON_OFFSET_X - recordGifNormalImg.width(),
-                                                RECORD_OPTIONS_AREA_HEIGHT),
-                                         Qt::AlignVCenter,
-                                         optionGifString);
-
-                        if (recordOptionMp4State == BUTTON_STATE_PRESS) {
-                            painter.drawImage(QPoint(recordOptionMp4X, recordOptionY), recordMp4PressImg);
-                        } else if (!saveAsGif) {
-                            painter.drawImage(QPoint(recordOptionMp4X, recordOptionY), recordMp4CheckedImg);
-                        } else {
-                            painter.drawImage(QPoint(recordOptionMp4X, recordOptionY), recordMp4NormalImg);
-                        }
-
-                        QString optionMp4String = "MP4";
-                        setFontSize(painter, 9);
-                        if (recordOptionMp4State == BUTTON_STATE_PRESS) {
-                            painter.setPen(QPen(QColor("#004BCA")));
-                        } else if (saveAsGif) {
-                            painter.setPen(QPen(QColor("#000000")));
-                        } else {
-                            painter.setPen(QPen(QColor("#217DFF")));
-                        }
-                        painter.setOpacity(1);
-                        painter.drawText(QRectF(recordOptionMp4X + recordMp4NormalImg.width(),
-                                                recordOptionsY,
-                                                RECORD_BUTTON_AREA_WIDTH / 2 - BUTTON_OPTION_ICON_OFFSET_X - recordMp4NormalImg.width(),
-                                                RECORD_OPTIONS_AREA_HEIGHT),
-                                         Qt::AlignVCenter,
-                                         optionMp4String);
+                    if (isReleaseButton && !moveResizeByKey) {
+                        showRecordButton();
                     } else {
-                        clearTooltip();
+                        hideRecordButton();
+                        Utils::clearBlur(windowManager, this->winId());
                     }
                 }
 
@@ -317,8 +208,8 @@ void MainWindow::paintEvent(QPaintEvent *)
                 // Draw record wait second.
                 if (showCountdownCounter > 0) {
                     QString tooltipString = tr("Click tray icon \nor press the shortcut again to stop recording");
-                    setFontSize(painter, 11);
-                    QSize size = getRenderSize(painter, tooltipString);
+                    Utils::setFontSize(painter, 11);
+                    QSize size = Utils::getRenderSize(11, tooltipString);
                     int tooltipWidth = size.width() + COUNTDOWN_TOOLTIP_PADDING_X * 2;
                     int tooltipHeight = size.height() + COUNTDOWN_TOOLTIP_PADDING_Y * 2;
                     int rectWidth = tooltipWidth;
@@ -329,11 +220,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                                          rectWidth,
                                          rectHeight);
 
-                    QList<QRectF> rects;
-                    QList<qreal> opacities;
-                    opacities << 0.4;
-                    rects.append(countdownRect);
-                    renderTooltipRect(painter, rects, opacities);
+                    renderTooltipRect(painter, countdownRect, 0.4);
 
                     int countdownX = recordX + (recordWidth - countdown1Img.width()) / 2;
                     int countdownY = recordY + (recordHeight - rectHeight) / 2 + COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y;
@@ -443,13 +330,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
     }
 
-    int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
-    int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
-
-    int recordOptionGifX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
-    int recordOptionMp4X = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2 + RECORD_BUTTON_AREA_WIDTH / 2;
-    int recordOptionY = recordY + (recordHeight + RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT + RECORD_OPTIONS_AREA_PADDING) / 2;
-
     if (event->type() == QEvent::MouseButtonPress) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         dragStartX = mouseEvent->x();
@@ -463,54 +343,13 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             dragRecordY = recordY;
             dragRecordWidth = recordWidth;
             dragRecordHeight = recordHeight;
-
-            if (isFirstReleaseButton) {
-                int pressX = mouseEvent->x();
-                int pressY = mouseEvent->y();
-
-                if (pressX > recordButtonX && pressX < recordButtonX + RECORD_BUTTON_AREA_WIDTH && pressY > recordButtonY && pressY < recordButtonY + RECORD_BUTTON_AREA_HEIGHT) {
-                    recordButtonState = BUTTON_STATE_PRESS;
-
-                    repaint();
-                } else if (pressX > recordOptionGifX && pressX < recordOptionGifX + RECORD_BUTTON_AREA_WIDTH / 2
-                           && pressY > recordOptionY && pressY < recordOptionY + RECORD_OPTIONS_AREA_HEIGHT) {
-                    if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-                        recordOptionGifState = BUTTON_STATE_PRESS;
-                        recordOptionMp4State = BUTTON_STATE_NORMAL;
-                        recordOptionState = BUTTON_STATE_PRESS;
-
-                        saveAsGif = true;
-                        settings.setOption("save_as_gif", saveAsGif);
-
-                        repaint();
-                    }
-                } else if (pressX > recordOptionMp4X && pressX < recordOptionMp4X + RECORD_BUTTON_AREA_WIDTH / 2
-                           && pressY > recordOptionY && pressY < recordOptionY + RECORD_OPTIONS_AREA_HEIGHT) {
-                    if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-                        recordOptionMp4State = BUTTON_STATE_PRESS;
-                        recordOptionGifState = BUTTON_STATE_NORMAL;
-                        recordOptionState = BUTTON_STATE_PRESS;
-
-                        saveAsGif = false;
-                        settings.setOption("save_as_gif", saveAsGif);
-
-                        repaint();
-                    }
-                }
-            }
         }
 
         isPressButton = true;
         isReleaseButton = false;
     } else if (event->type() == QEvent::MouseButtonRelease) {
-        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-
         if (!isFirstReleaseButton) {
             isFirstReleaseButton = true;
-
-            recordOptionState = BUTTON_STATE_NORMAL;
-            recordOptionGifState = BUTTON_STATE_NORMAL;
-            recordOptionMp4State = BUTTON_STATE_NORMAL;
 
             updateCursor(event);
 
@@ -533,37 +372,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
             }
 
-            needRepaint = true;
-        } else {
-            int releaseX = mouseEvent->x();
-            int releaseY = mouseEvent->y();
+            showRecordButton();
 
-            if (releaseX > recordButtonX && releaseX < recordButtonX + RECORD_BUTTON_AREA_WIDTH && releaseY > recordButtonY && releaseY < recordButtonY + RECORD_BUTTON_AREA_HEIGHT) {
-                if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-                    recordButtonStatus = RECORD_BUTTON_WAIT;
-
-                    showCountdownCounter = 3;
-                    showCountdownTimer = new QTimer(this);
-                    connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));
-                    showCountdownTimer->start(1000);
-
-                    recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight, selectAreaName);
-                    if (saveAsGif) {
-                        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
-                    } else {
-                        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
-                    }
-
-                    resetCursor();
-
-                    needRepaint = true;
-                }
-            }
-
-            recordOptionGifState = BUTTON_STATE_NORMAL;
-            recordOptionMp4State = BUTTON_STATE_NORMAL;
-            recordButtonState = BUTTON_STATE_NORMAL;
-            recordOptionState = BUTTON_STATE_NORMAL;
             needRepaint = true;
         }
 
@@ -585,33 +395,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         }
 
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-        int moveX = mouseEvent->x();
-        int moveY = mouseEvent->y();
-
-        if (moveX > recordButtonX && moveX < recordButtonX + RECORD_BUTTON_AREA_WIDTH && moveY > recordButtonY && moveY < recordButtonY + RECORD_BUTTON_AREA_HEIGHT) {
-            if (!isPressButton) {
-                recordButtonState = BUTTON_STATE_HOVER;
-            }
-
-            needRepaint = true;
-        } else if ((moveX > recordOptionGifX && moveX < recordOptionGifX + RECORD_BUTTON_AREA_WIDTH / 2
-                    && moveY > recordOptionY && moveY < recordOptionY + RECORD_OPTIONS_AREA_HEIGHT)
-                   || (moveX > recordOptionMp4X && moveX < recordOptionMp4X + RECORD_BUTTON_AREA_WIDTH / 2
-                       && moveY > recordOptionY && moveY < recordOptionY + RECORD_OPTIONS_AREA_HEIGHT)) {
-            if (!isPressButton) {
-                recordOptionState = BUTTON_STATE_HOVER;
-            }
-
-            needRepaint = true;
-        } else {
-
-            if (!isPressButton) {
-                recordButtonState = BUTTON_STATE_NORMAL;
-                recordOptionState = BUTTON_STATE_NORMAL;
-            }
-
-            needRepaint = true;
-        }
 
         if (isFirstPressButton) {
             if (!isFirstReleaseButton) {
@@ -704,8 +487,8 @@ void MainWindow::showCountdown()
     if (showCountdownCounter <= 0) {
         showCountdownTimer->stop();
 
-        clearTooltip();
-
+        Utils::clearBlur(windowManager, this->winId());
+        
         recordButtonStatus = RECORD_BUTTON_RECORDING;
 
         passInputEvent();
@@ -928,60 +711,73 @@ void MainWindow::stopRecord()
     }
 }
 
-void MainWindow::clearTooltip()
+void MainWindow::renderTooltipRect(QPainter &painter, QRectF &rect, qreal opacity)
 {
-    QVector<uint32_t> data;
-    data << 0 << 0 << 0 << 0 << 0 << 0;
-    windowManager->setWindowBlur(this->winId(), data);
-}
+    painter.setOpacity(opacity);
+    QPainterPath path;
+    path.addRoundedRect(rect, RECTANGLE_RAIUDS, RECTANGLE_RAIUDS);
+    painter.fillPath(path, QColor("#F5F5F5"));
 
-void MainWindow::renderTooltipRect(QPainter &painter, QList<QRectF> &rects, QList<qreal> opacities)
-{
-    for (int i = 0; i < rects.length(); i++) {
-        QRectF rect = rects[i];
-        painter.setOpacity(opacities[i]);
-        QPainterPath path;
-        path.addRoundedRect(rect, RECTANGLE_RAIUDS, RECTANGLE_RAIUDS);
-        painter.fillPath(path, QColor("#F5F5F5"));
+    QPen pen(QColor("#000000"));
+    painter.setOpacity(0.04);
+    pen.setWidth(1);
+    painter.setPen(pen);
+    painter.drawPath(path);
 
-        QPen pen(QColor("#000000"));
-        painter.setOpacity(0.04);
-        pen.setWidth(1);
-        painter.setPen(pen);
-        painter.drawPath(path);
-    }
-
-    QVector<uint32_t> data;
-    foreach (auto rect, rects) {
-        data << rect.x() << rect.y() << rect.width() << rect.height() << RECTANGLE_RAIUDS << RECTANGLE_RAIUDS;
-    }
-    windowManager->setWindowBlur(this->winId(), data);
-
+    Utils::blurWidget(windowManager, this->winId(), rect);
+    
     painter.setOpacity(1.0);
 }
 
-void MainWindow::setFontSize(QPainter &painter, int textSize)
+void MainWindow::startCountdown()
 {
-    QFont font = painter.font() ;
-    font.setPointSize(textSize);
-    painter.setFont(font);
-}
+    recordButtonStatus = RECORD_BUTTON_WAIT;
 
-QSize MainWindow::getRenderSize(QPainter &painter, QString string)
-{
-    QFontMetrics fm = painter.fontMetrics();
+    showCountdownCounter = 3;
+    showCountdownTimer = new QTimer(this);
+    connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));
+    showCountdownTimer->start(1000);
 
-    int width = 0;
-    int height = 0;
-    foreach (auto line, string.split("\n")) {
-        int lineWidth = fm.width(line);
-        int lineHeight = fm.height();
-
-        if (lineWidth > width) {
-            width = lineWidth;
-        }
-        height += lineHeight;
+    recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight, selectAreaName);
+    if (recordOptionPanel->isSaveAsGif()) {
+        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
+    } else {
+        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
     }
 
-    return QSize(width, height);
+    resetCursor();
+    
+    hideRecordButton();
+    Utils::clearBlur(windowManager, this->winId());
+    
+    repaint();
+}
+
+void MainWindow::showRecordButton()
+{
+    layout->addStretch(); 
+    layout->addWidget(recordButton, Qt::AlignCenter);
+    layout->addSpacing(RECORD_OPTIONS_AREA_PADDING);
+    layout->addWidget(recordOptionPanel, Qt::AlignCenter);
+    layout->addStretch(); 
+    
+    recordButton->show();
+    recordOptionPanel->show();
+    
+    // QRectF recordButtonRect(recordButton->rect().x(), recordButton->rect().y(), recordButton->rect().width(), recordButton->rect().height());
+    // QRectF recordOptionPanelRect(recordOptionPanel->rect().x(), recordOptionPanel->rect().y(), recordOptionPanel->rect().width(), recordOptionPanel->rect().height());
+    // Utils::blurWidget(windowManager, recordButton->winId(), recordButtonRect);
+    // Utils::blurWidget(windowManager, recordOptionPanel->winId(), recordOptionPanelRect);
+}
+
+void MainWindow::hideRecordButton()
+{
+    layout->removeWidget(recordButton);
+    layout->removeWidget(recordOptionPanel);
+
+    recordButton->hide();
+    recordOptionPanel->hide();
+    
+    Utils::clearBlur(windowManager, recordButton->winId());
+    Utils::clearBlur(windowManager, recordOptionPanel->winId());
 }

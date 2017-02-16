@@ -24,7 +24,10 @@
 #include <QString>
 #include <QDir>
 #include <QApplication>
+#include <QFontMetrics>
+#include <QPainter>
 #include "utils.h"
+#include "window_manager.h"
 
 QString Utils::getImagePath(QString imageName)
 {
@@ -37,5 +40,47 @@ QString Utils::getImagePath(QString imageName)
 QString Utils::getQrcPath(QString imageName)
 {
     return QString(":/image/%1").arg(imageName);
+}
+
+QSize Utils::getRenderSize(int fontSize, QString string)
+{
+    QFont font;
+    font.setPointSize(fontSize);
+    QFontMetrics fm(font);
+
+    int width = 0;
+    int height = 0;
+    foreach (auto line, string.split("\n")) {
+        int lineWidth = fm.width(line);
+        int lineHeight = fm.height();
+
+        if (lineWidth > width) {
+            width = lineWidth;
+        }
+        height += lineHeight;
+    }
+
+    return QSize(width, height);
+}
+
+void Utils::setFontSize(QPainter &painter, int textSize)
+{
+    QFont font = painter.font() ;
+    font.setPointSize(textSize);
+    painter.setFont(font);
+}
+
+void Utils::blurWidget(WindowManager *windowManager, int widgetId, QRectF &rect)
+{
+    QVector<uint32_t> data;
+    data << rect.x() << rect.y() << rect.width() << rect.height() << RECTANGLE_RAIUDS << RECTANGLE_RAIUDS;
+    windowManager->setWindowBlur(widgetId, data);
+}    
+
+void Utils::clearBlur(WindowManager *windowManager, int widgetId)
+{
+    QVector<uint32_t> data;
+    data << 0 << 0 << 0 << 0 << 0 << 0;
+    windowManager->setWindowBlur(widgetId, data);
 }
 
