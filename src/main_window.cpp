@@ -533,8 +533,6 @@ void MainWindow::showCountdown()
 
         recordButtonStatus = RECORD_BUTTON_RECORDING;
 
-        passInputEvent();
-
         resetCursor();
 
         recordProcess.start();
@@ -769,6 +767,8 @@ void MainWindow::startCountdown()
     resetCursor();
 
     hideRecordButton();
+
+    passInputEvent();
 
     repaint();
 }
