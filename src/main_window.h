@@ -35,49 +35,49 @@ class MainWindow : public QWidget
 {
     Q_OBJECT
 
-    static const int CURSOR_BOUND = 5;
-    static const int RECORD_MIN_SIZE = 200;
-    static const int DRAG_POINT_RADIUS = 8;
+    static const int CURSOR_BOUND;
+    static const int RECORD_MIN_SIZE;
+    static const int DRAG_POINT_RADIUS;
     
-    static const int RECTANGLE_RAIUDS = 8;
+    static const int RECTANGLE_RAIUDS;
 
-    static const int RECORD_BUTTON_NORMAL = 0;
-    static const int RECORD_BUTTON_WAIT = 1;
-    static const int RECORD_BUTTON_RECORDING = 2;
+    static const int RECORD_BUTTON_NORMAL;
+    static const int RECORD_BUTTON_WAIT;
+    static const int RECORD_BUTTON_RECORDING;
 
-    static const int ACTION_MOVE = 0;
-    static const int ACTION_RESIZE_TOP_LEFT = 1;
-    static const int ACTION_RESIZE_TOP_RIGHT = 2;
-    static const int ACTION_RESIZE_BOTTOM_LEFT = 3;
-    static const int ACTION_RESIZE_BOTTOM_RIGHT = 4;
-    static const int ACTION_RESIZE_TOP = 5;
-    static const int ACTION_RESIZE_BOTTOM = 6;
-    static const int ACTION_RESIZE_LEFT = 7;
-    static const int ACTION_RESIZE_RIGHT = 8;
-    static const int ACTION_STAY = 9;
+    static const int ACTION_MOVE;
+    static const int ACTION_RESIZE_TOP_LEFT;
+    static const int ACTION_RESIZE_TOP_RIGHT;
+    static const int ACTION_RESIZE_BOTTOM_LEFT;
+    static const int ACTION_RESIZE_BOTTOM_RIGHT;
+    static const int ACTION_RESIZE_TOP;
+    static const int ACTION_RESIZE_BOTTOM;
+    static const int ACTION_RESIZE_LEFT;
+    static const int ACTION_RESIZE_RIGHT;
+    static const int ACTION_STAY;
     
-    static const int INIT_TOOLTIP_PADDING_X = 20;
-    static const int INIT_TOOLTIP_PADDING_Y = 20;
+    static const int INIT_TOOLTIP_PADDING_X;
+    static const int INIT_TOOLTIP_PADDING_Y;
     
-    static const int COUNTDOWN_TOOLTIP_PADDING_X = 20;
-    static const int COUNTDOWN_TOOLTIP_PADDING_Y = 20;
-    static const int COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y = 30;
+    static const int COUNTDOWN_TOOLTIP_PADDING_X;
+    static const int COUNTDOWN_TOOLTIP_PADDING_Y;
+    static const int COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y;
     
-    static const int RECORD_BUTTON_AREA_WIDTH = 124;
-    static const int RECORD_BUTTON_AREA_HEIGHT = 86;
-    static const int RECORD_BUTTON_OFFSET_Y = 16;
+    static const int RECORD_BUTTON_AREA_WIDTH;
+    static const int RECORD_BUTTON_AREA_HEIGHT;
+    static const int RECORD_BUTTON_OFFSET_Y;
     
-    static const int RECORD_OPTIONS_AREA_HEIGHT = 36;
-    static const int RECORD_OPTIONS_AREA_PADDING = 12;
+    static const int RECORD_OPTIONS_AREA_HEIGHT;
+    static const int RECORD_OPTIONS_AREA_PADDING;
     
-    static const int BUTTON_STATE_NORMAL = 0;
-    static const int BUTTON_STATE_HOVER = 1;
-    static const int BUTTON_STATE_PRESS = 2;
-    static const int BUTTON_STATE_CHECKED = 3;
+    static const int BUTTON_STATE_NORMAL;
+    static const int BUTTON_STATE_HOVER;
+    static const int BUTTON_STATE_PRESS;
+    static const int BUTTON_STATE_CHECKED;
     
-    static const int BUTTON_OPTION_HEIGHT = 24;
-    static const int BUTTON_OPTION_ICON_OFFSET_X = 14;
-    static const int BUTTON_OPTION_STRING_OFFSET_X = 5;
+    static const int BUTTON_OPTION_HEIGHT;
+    static const int BUTTON_OPTION_ICON_OFFSET_X;
+    static const int BUTTON_OPTION_STRING_OFFSET_X;
 
 public:
     MainWindow(QWidget *parent = 0);
@@ -174,5 +174,5 @@ private:
     RecordOptionPanel* recordOptionPanel;
     
     // Just use for debug.
-    // int repaintCounter;
+    int repaintCounter;
 };

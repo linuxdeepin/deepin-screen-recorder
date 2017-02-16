@@ -29,6 +29,8 @@
 #include "utils.h"
 #include "window_manager.h"
 
+const int Utils::RECTANGLE_RAIUDS = 8;
+    
 QString Utils::getImagePath(QString imageName)
 {
     QDir dir(qApp->applicationDirPath());

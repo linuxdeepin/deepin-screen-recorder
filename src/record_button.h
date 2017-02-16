@@ -30,11 +30,11 @@ class RecordButton : public QPushButton
 {
     Q_OBJECT
     
-    static const int RECTANGLE_RAIUDS = 8;
-    static const int WIDTH = 128;
-    static const int HEIGHT = 86;
-    static const int PADDING = 20;
-    static const int TEXT_PADDING = 0;
+    static const int RECTANGLE_RAIUDS;
+    static const int WIDTH;
+    static const int HEIGHT;
+    static const int PADDING;
+    static const int TEXT_PADDING;
     
 public:
     RecordButton(QPushButton *parent = 0);

@@ -27,6 +27,12 @@
 #include "record_button.h"
 #include "utils.h"
 
+const int RecordButton::RECTANGLE_RAIUDS = 8;
+const int RecordButton::WIDTH = 128;
+const int RecordButton::HEIGHT = 86;
+const int RecordButton::PADDING = 20;
+const int RecordButton::TEXT_PADDING = 0;
+    
 RecordButton::RecordButton(QPushButton *parent) : QPushButton(parent)
 {
     installEventFilter(this);  // add event filter

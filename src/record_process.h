@@ -30,8 +30,8 @@ class RecordProcess : public QThread
     
     
 public:
-    static const int RECORD_TYPE_VIDEO = 0;
-    static const int RECORD_TYPE_GIF = 1;
+    static const int RECORD_TYPE_VIDEO;
+    static const int RECORD_TYPE_GIF;
     
     RecordProcess(QObject *parent = 0);
     

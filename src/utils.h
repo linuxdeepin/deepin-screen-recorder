@@ -28,7 +28,7 @@
 class Utils : public QObject
 {
 public:
-    static const int RECTANGLE_RAIUDS = 8;
+    static const int RECTANGLE_RAIUDS;
     
     static QString getImagePath(QString imageName);
     static QString getQrcPath(QString imageName);

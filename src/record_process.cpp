@@ -30,6 +30,9 @@
 #include "record_process.h"
 #include "utils.h"
 
+const int RecordProcess::RECORD_TYPE_VIDEO = 0;
+const int RecordProcess::RECORD_TYPE_GIF = 1;
+    
 RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 {
     saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();

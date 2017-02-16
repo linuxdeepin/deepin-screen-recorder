@@ -36,6 +36,50 @@
 #include "record_button.h"
 #include "record_option_panel.h"
 
+const int MainWindow::CURSOR_BOUND = 5;
+const int MainWindow::RECORD_MIN_SIZE = 200;
+const int MainWindow::DRAG_POINT_RADIUS = 8;
+
+const int MainWindow::RECTANGLE_RAIUDS = 8;
+
+const int MainWindow::RECORD_BUTTON_NORMAL = 0;
+const int MainWindow::RECORD_BUTTON_WAIT = 1;
+const int MainWindow::RECORD_BUTTON_RECORDING = 2;
+
+const int MainWindow::ACTION_MOVE = 0;
+const int MainWindow::ACTION_RESIZE_TOP_LEFT = 1;
+const int MainWindow::ACTION_RESIZE_TOP_RIGHT = 2;
+const int MainWindow::ACTION_RESIZE_BOTTOM_LEFT = 3;
+const int MainWindow::ACTION_RESIZE_BOTTOM_RIGHT = 4;
+const int MainWindow::ACTION_RESIZE_TOP = 5;
+const int MainWindow::ACTION_RESIZE_BOTTOM = 6;
+const int MainWindow::ACTION_RESIZE_LEFT = 7;
+const int MainWindow::ACTION_RESIZE_RIGHT = 8;
+const int MainWindow::ACTION_STAY = 9;
+
+const int MainWindow::INIT_TOOLTIP_PADDING_X = 20;
+const int MainWindow::INIT_TOOLTIP_PADDING_Y = 20;
+
+const int MainWindow::COUNTDOWN_TOOLTIP_PADDING_X = 20;
+const int MainWindow::COUNTDOWN_TOOLTIP_PADDING_Y = 20;
+const int MainWindow::COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y = 30;
+
+const int MainWindow::RECORD_BUTTON_AREA_WIDTH = 124;
+const int MainWindow::RECORD_BUTTON_AREA_HEIGHT = 86;
+const int MainWindow::RECORD_BUTTON_OFFSET_Y = 16;
+
+const int MainWindow::RECORD_OPTIONS_AREA_HEIGHT = 36;
+const int MainWindow::RECORD_OPTIONS_AREA_PADDING = 12;
+
+const int MainWindow::BUTTON_STATE_NORMAL = 0;
+const int MainWindow::BUTTON_STATE_HOVER = 1;
+const int MainWindow::BUTTON_STATE_PRESS = 2;
+const int MainWindow::BUTTON_STATE_CHECKED = 3;
+
+const int MainWindow::BUTTON_OPTION_HEIGHT = 24;
+const int MainWindow::BUTTON_OPTION_ICON_OFFSET_X = 14;
+const int MainWindow::BUTTON_OPTION_STRING_OFFSET_X = 5;
+
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
     initAttributes();
@@ -96,7 +140,7 @@ void MainWindow::initAttributes()
     recordOptionPanel = new RecordOptionPanel();
 
     // Just use for debug.
-    // repaintCounter = 0;
+    repaintCounter = 0;
 }
 
 void MainWindow::initResource()
@@ -117,8 +161,8 @@ void MainWindow::initResource()
 void MainWindow::paintEvent(QPaintEvent *)
 {
     // Just use for debug.
-    // repaintCounter++;
-    // qDebug() << repaintCounter;
+    repaintCounter++;
+    qDebug() << repaintCounter;
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);

@@ -28,6 +28,11 @@
 #include "utils.h"
 #include "record_option_panel.h"
 
+const int RecordOptionPanel::RECTANGLE_RAIUDS = 8;
+const int RecordOptionPanel::WIDTH = 124;
+const int RecordOptionPanel::HEIGHT = 36;
+const int RecordOptionPanel::ICON_OFFSET_X = 14;
+    
 RecordOptionPanel::RecordOptionPanel(QPushButton *parent) : QPushButton(parent)
 {
     installEventFilter(this);
