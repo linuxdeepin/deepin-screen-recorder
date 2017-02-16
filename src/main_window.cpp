@@ -94,7 +94,7 @@ void MainWindow::initAttributes()
     connect(recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
 
     recordOptionPanel = new RecordOptionPanel();
-    
+
     // Just use for debug.
     // repaintCounter = 0;
 }
@@ -194,15 +194,6 @@ void MainWindow::paintEvent(QPaintEvent *)
         // Draw record panel.
         if (isFirstPressButton) {
             if (isFirstReleaseButton) {
-                if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-                    if (isReleaseButton && !moveResizeByKey) {
-                        showRecordButton();
-                    } else {
-                        hideRecordButton();
-                        Utils::clearBlur(windowManager, this->winId());
-                    }
-                }
-
                 painter.setClipping(false);
 
                 // Draw record wait second.
@@ -316,6 +307,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     needRepaint = true;
                 }
             }
+            
+            if (recordButtonStatus == RECORD_BUTTON_NORMAL && needRepaint) {
+                hideRecordButton();
+            }
         }
     } else if (event->type() == QEvent::KeyRelease) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
@@ -325,6 +320,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             if (keyEvent->key() == Qt::Key_Left || keyEvent->key() == Qt::Key_Right || keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_Down) {
                 moveResizeByKey = false;
                 needRepaint = true;
+            }
+            
+            if (recordButtonStatus == RECORD_BUTTON_NORMAL && needRepaint) {
+                showRecordButton();
             }
         }
 
@@ -343,6 +342,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             dragRecordY = recordY;
             dragRecordWidth = recordWidth;
             dragRecordHeight = recordHeight;
+
+            if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+                hideRecordButton();
+            }
         }
 
         isPressButton = true;
@@ -375,6 +378,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             showRecordButton();
 
             needRepaint = true;
+        } else {
+            if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+                showRecordButton();
+            }
         }
 
         isPressButton = false;
@@ -488,7 +495,7 @@ void MainWindow::showCountdown()
         showCountdownTimer->stop();
 
         Utils::clearBlur(windowManager, this->winId());
-        
+
         recordButtonStatus = RECORD_BUTTON_RECORDING;
 
         passInputEvent();
@@ -725,7 +732,7 @@ void MainWindow::renderTooltipRect(QPainter &painter, QRectF &rect, qreal opacit
     painter.drawPath(path);
 
     Utils::blurWidget(windowManager, this->winId(), rect);
-    
+
     painter.setOpacity(1.0);
 }
 
@@ -746,24 +753,23 @@ void MainWindow::startCountdown()
     }
 
     resetCursor();
-    
+
     hideRecordButton();
-    Utils::clearBlur(windowManager, this->winId());
-    
+
     repaint();
 }
 
 void MainWindow::showRecordButton()
 {
-    layout->addStretch(); 
+    layout->addStretch();
     layout->addWidget(recordButton, Qt::AlignCenter);
     layout->addSpacing(RECORD_OPTIONS_AREA_PADDING);
     layout->addWidget(recordOptionPanel, Qt::AlignCenter);
-    layout->addStretch(); 
-    
+    layout->addStretch();
+
     recordButton->show();
     recordOptionPanel->show();
-    
+
     // QRectF recordButtonRect(recordButton->rect().x(), recordButton->rect().y(), recordButton->rect().width(), recordButton->rect().height());
     // QRectF recordOptionPanelRect(recordOptionPanel->rect().x(), recordOptionPanel->rect().y(), recordOptionPanel->rect().width(), recordOptionPanel->rect().height());
     // Utils::blurWidget(windowManager, recordButton->winId(), recordButtonRect);
@@ -777,7 +783,6 @@ void MainWindow::hideRecordButton()
 
     recordButton->hide();
     recordOptionPanel->hide();
-    
-    Utils::clearBlur(windowManager, recordButton->winId());
-    Utils::clearBlur(windowManager, recordOptionPanel->winId());
+
+    Utils::clearBlur(windowManager, this->winId());
 }
