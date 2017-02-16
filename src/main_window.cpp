@@ -361,6 +361,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         dragStartY = mouseEvent->y();
         if (!isFirstPressButton) {
             isFirstPressButton = true;
+
+            Utils::clearBlur(windowManager, this->winId());
         } else {
             dragAction = getAction(event);
 
