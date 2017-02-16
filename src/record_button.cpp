@@ -23,7 +23,6 @@
 
 #include <QPainter>
 #include <QEvent>
-#include <QDebug>
 #include "record_button.h"
 #include "utils.h"
 
@@ -36,6 +35,7 @@ const int RecordButton::TEXT_PADDING = 0;
 RecordButton::RecordButton(QPushButton *parent) : QPushButton(parent)
 {
     installEventFilter(this);  // add event filter
+    setMouseTracking(true);
 
     isFocus = false;
     isPress = false;
@@ -97,7 +97,7 @@ void RecordButton::paintEvent(QPaintEvent *)
     } else if (status == "HOVER") {
         painter.drawImage(QPoint(iconX, iconY), hoverImg);
     }
-
+    
     // Draw text.
     int textX = rect().x();
     int textY = iconY + normalImg.height() + TEXT_PADDING;
@@ -115,10 +115,10 @@ bool RecordButton::eventFilter(QObject *, QEvent *event)
     } else if (event->type() == QEvent::MouseButtonRelease) {
         isPress = false;
         repaint();
-    } else if (event->type() == QEvent::FocusIn) {
+    } else if (event->type() == QEvent::Enter) {
         isFocus = true;
         repaint();
-    } else if (event->type() == QEvent::FocusOut) {
+    } else if (event->type() == QEvent::Leave) {
         isFocus = false;
         repaint();
     }
