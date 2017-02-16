@@ -231,9 +231,7 @@ void MainWindow::paintEvent(QPaintEvent *)
             if (isFirstReleaseButton) {
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL && recordButton->isVisible()) {
                     QList<QRectF> rects;
-                    QRectF recordButtonRect(recordButton->geometry());
-                    QRectF recordOptionPanelRect(recordOptionPanel->geometry());
-                    rects << recordButtonRect << recordOptionPanelRect;
+                    rects << recordButton->geometry() << recordOptionPanel->geometry();
                     Utils::blurRects(windowManager, this->winId(), rects);
                 }
 
@@ -646,7 +644,7 @@ void MainWindow::updateCursor(QEvent *event)
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         int cursorX = mouseEvent->x();
         int cursorY = mouseEvent->y();
-
+        
         if (cursorX > recordX - CURSOR_BOUND
             && cursorX < recordX + CURSOR_BOUND
             && cursorY > recordY - CURSOR_BOUND
@@ -687,6 +685,9 @@ void MainWindow::updateCursor(QEvent *event)
                    && cursorY < recordY + recordHeight + CURSOR_BOUND) {
             // Bottom.
             QApplication::setOverrideCursor(Qt::SizeVerCursor);
+        } else if (recordButton->geometry().contains(cursorX, cursorY) || recordOptionPanel->geometry().contains(cursorX, cursorY)) {
+            // Record area.
+            QApplication::setOverrideCursor(Qt::ArrowCursor);
         } else {
             if (isPressButton) {
                 QApplication::setOverrideCursor(Qt::ClosedHandCursor);

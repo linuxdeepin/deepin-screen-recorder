@@ -36,6 +36,7 @@ const int RecordOptionPanel::ICON_OFFSET_X = 14;
 RecordOptionPanel::RecordOptionPanel(QPushButton *parent) : QPushButton(parent)
 {
     installEventFilter(this);
+    setMouseTracking(true);
 
     gifNormalImg = QImage(Utils::getQrcPath("gif_normal.png"));
     gifPressImg = QImage(Utils::getQrcPath("gif_press.png"));
