@@ -51,8 +51,7 @@ RecordOptionPanel::RecordOptionPanel(QPushButton *parent) : QPushButton(parent)
     isPressGif = false;
     isPressMp4 = false;
 
-    setMaximumWidth(WIDTH);
-    setMaximumHeight(HEIGHT);
+    setFixedSize(WIDTH, HEIGHT);
 }
 
 void RecordOptionPanel::paintEvent(QPaintEvent *)

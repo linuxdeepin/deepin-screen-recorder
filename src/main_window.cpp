@@ -55,7 +55,6 @@ const int MainWindow::ACTION_RESIZE_TOP = 5;
 const int MainWindow::ACTION_RESIZE_BOTTOM = 6;
 const int MainWindow::ACTION_RESIZE_LEFT = 7;
 const int MainWindow::ACTION_RESIZE_RIGHT = 8;
-const int MainWindow::ACTION_STAY = 9;
 
 const int MainWindow::INIT_TOOLTIP_PADDING_X = 20;
 const int MainWindow::INIT_TOOLTIP_PADDING_Y = 20;
@@ -138,9 +137,18 @@ void MainWindow::initAttributes()
     connect(recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
 
     recordOptionPanel = new RecordOptionPanel();
+    
+    layout->addStretch();
+    layout->addWidget(recordButton, 0, Qt::AlignCenter);
+    layout->addSpacing(RECORD_OPTIONS_AREA_PADDING);
+    layout->addWidget(recordOptionPanel, 0, Qt::AlignCenter);
+    layout->addStretch();
+    
+    recordButton->hide();
+    recordOptionPanel->hide();
 
     // Just use for debug.
-    repaintCounter = 0;
+    // repaintCounter = 0;
 }
 
 void MainWindow::initResource()
@@ -161,8 +169,8 @@ void MainWindow::initResource()
 void MainWindow::paintEvent(QPaintEvent *)
 {
     // Just use for debug.
-    repaintCounter++;
-    qDebug() << repaintCounter;
+    // repaintCounter++;
+    // qDebug() << repaintCounter;
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
@@ -459,10 +467,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
             } else if (isPressButton) {
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-                    if (dragAction != ACTION_STAY) {
-                        selectAreaName = tr("Select area");
-                    }
-
                     if (dragAction == ACTION_MOVE) {
                         recordX = std::max(std::min(dragRecordX + mouseEvent->x() - dragStartX, rootWindowRect.width - recordWidth), 1);
                         recordY = std::max(std::min(dragRecordY + mouseEvent->y() - dragStartY, rootWindowRect.height - recordHeight), 1);
@@ -495,7 +499,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             updateCursor(event);
 
             int action = getAction(event);
-            bool drawPoint = action != ACTION_MOVE && action != ACTION_STAY;
+            bool drawPoint = action != ACTION_MOVE;
             if (drawPoint != drawDragPoint) {
                 drawDragPoint = drawPoint;
                 needRepaint = true;
@@ -617,11 +621,6 @@ int MainWindow::getAction(QEvent *event) {
     int cursorX = mouseEvent->x();
     int cursorY = mouseEvent->y();
 
-    int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
-    int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
-    int recordButtonWidth = RECORD_BUTTON_AREA_WIDTH;
-    int recordButtonHeight = RECORD_BUTTON_AREA_HEIGHT + RECORD_OPTIONS_AREA_HEIGHT + RECORD_OPTIONS_AREA_PADDING;
-
     if (cursorX > recordX - CURSOR_BOUND
         && cursorX < recordX + CURSOR_BOUND
         && cursorY > recordY - CURSOR_BOUND
@@ -662,11 +661,6 @@ int MainWindow::getAction(QEvent *event) {
                && cursorY < recordY + recordHeight + CURSOR_BOUND) {
         // Bottom.
         return ACTION_RESIZE_BOTTOM;
-    } else if (cursorX > recordButtonX
-               && cursorX < recordButtonX + recordButtonWidth
-               && cursorY > recordButtonY
-               && cursorY < recordButtonY + recordButtonHeight) {
-        return ACTION_STAY;
     } else {
         return ACTION_MOVE;
     }
@@ -678,11 +672,6 @@ void MainWindow::updateCursor(QEvent *event)
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         int cursorX = mouseEvent->x();
         int cursorY = mouseEvent->y();
-
-        int recordButtonX = recordX + (recordWidth - RECORD_BUTTON_AREA_WIDTH) / 2;
-        int recordButtonY = recordY + (recordHeight - RECORD_BUTTON_AREA_HEIGHT - RECORD_OPTIONS_AREA_HEIGHT - RECORD_OPTIONS_AREA_PADDING) / 2;
-        int recordButtonWidth = RECORD_BUTTON_AREA_WIDTH;
-        int recordButtonHeight = RECORD_BUTTON_AREA_HEIGHT + RECORD_OPTIONS_AREA_HEIGHT + RECORD_OPTIONS_AREA_PADDING;
 
         if (cursorX > recordX - CURSOR_BOUND
             && cursorX < recordX + CURSOR_BOUND
@@ -724,12 +713,6 @@ void MainWindow::updateCursor(QEvent *event)
                    && cursorY < recordY + recordHeight + CURSOR_BOUND) {
             // Bottom.
             QApplication::setOverrideCursor(Qt::SizeVerCursor);
-        } else if (cursorX > recordButtonX
-                   && cursorX < recordButtonX + recordButtonWidth
-                   && cursorY > recordButtonY
-                   && cursorY < recordButtonY + recordButtonHeight) {
-            // Record button.
-            QApplication::setOverrideCursor(Qt::ArrowCursor);
         } else {
             if (isPressButton) {
                 QApplication::setOverrideCursor(Qt::ClosedHandCursor);
@@ -805,15 +788,9 @@ void MainWindow::startCountdown()
 
 void MainWindow::showRecordButton()
 {
-    layout->addStretch();
-    layout->addWidget(recordButton, Qt::AlignCenter);
-    layout->addSpacing(RECORD_OPTIONS_AREA_PADDING);
-    layout->addWidget(recordOptionPanel, Qt::AlignCenter);
-    layout->addStretch();
-
     recordButton->show();
     recordOptionPanel->show();
-
+    
     // QRectF recordButtonRect(recordButton->rect().x(), recordButton->rect().y(), recordButton->rect().width(), recordButton->rect().height());
     // QRectF recordOptionPanelRect(recordOptionPanel->rect().x(), recordOptionPanel->rect().y(), recordOptionPanel->rect().width(), recordOptionPanel->rect().height());
     // Utils::blurWidget(windowManager, recordButton->winId(), recordButtonRect);

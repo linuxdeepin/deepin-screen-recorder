@@ -54,7 +54,6 @@ class MainWindow : public QWidget
     static const int ACTION_RESIZE_BOTTOM;
     static const int ACTION_RESIZE_LEFT;
     static const int ACTION_RESIZE_RIGHT;
-    static const int ACTION_STAY;
     
     static const int INIT_TOOLTIP_PADDING_X;
     static const int INIT_TOOLTIP_PADDING_Y;
@@ -174,5 +173,5 @@ private:
     RecordOptionPanel* recordOptionPanel;
     
     // Just use for debug.
-    int repaintCounter;
+    // int repaintCounter;
 };

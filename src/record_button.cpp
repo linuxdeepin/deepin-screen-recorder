@@ -50,8 +50,7 @@ void RecordButton::setText(QString string)
     text = string;
     textSize = Utils::getRenderSize(11, string);
     
-    setMaximumWidth(std::max(textSize.width() + PADDING * 2, WIDTH));
-    setMaximumHeight(std::max(textSize.height() + PADDING * 2, HEIGHT));
+    setFixedSize(std::max(textSize.width() + PADDING * 2, WIDTH), std::max(textSize.height() + PADDING * 2, HEIGHT));
 }
 
 void RecordButton::paintEvent(QPaintEvent *)
