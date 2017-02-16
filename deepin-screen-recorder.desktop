@@ -1,5 +1,5 @@
 [Desktop Entry]
-Categories=GNOME;GTK;Utility;System;
+Categories=AudioVideo;Recorder;
 Comment=Record screen
 Exec=deepin-screen-recorder
 Icon=deepin-screen-recorder
