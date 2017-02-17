@@ -225,15 +225,27 @@ QList<xcb_window_t> WindowManager::getWindows()
                 if (type == "_NET_WM_WINDOW_TYPE_NORMAL"
                     || type == "_NET_WM_WINDOW_TYPE_DESKTOP"
                     || type == "_NET_WM_WINDOW_TYPE_DOCK") {
-                    foreach(QString state, getWindowStates(window)) {
-                        if (state != "_NET_WM_STATE_HIDDEN") {
-                            if (getWindowWorkspace(window) == getCurrentWorkspace(rootWindow)) {
-                                windows.append(window);
-                                break;
+                    bool needAppend = false;
+
+                    QStringList states = getWindowStates(window);
+                    if (states.length() == 0) {
+                        if (getWindowWorkspace(window) == getCurrentWorkspace(rootWindow)) {
+                            needAppend = true;
+                        }
+                    } else {
+                        foreach(QString state, states) {
+                            if (state != "_NET_WM_STATE_HIDDEN") {
+                                if (getWindowWorkspace(window) == getCurrentWorkspace(rootWindow)) {
+                                    needAppend = true;
+                                }
                             }
                         }
                     }
-					break;
+
+                    if (needAppend) {
+                        windows.append(window);
+                        break;
+                    }
                 }
             }
         }
@@ -298,10 +310,10 @@ WindowRect WindowManager::getWindowRect(xcb_window_t window)
 }
 
 template <typename... ArgTypes, typename... ArgTypes2>
-    static inline unsigned int XcbCallVoid(xcb_void_cookie_t (*func)(xcb_connection_t *, ArgTypes...), ArgTypes2... args...)
-    {
-        return func(QX11Info::connection(), args...).sequence;
-    }
+static inline unsigned int XcbCallVoid(xcb_void_cookie_t (*func)(xcb_connection_t *, ArgTypes...), ArgTypes2... args...)
+{
+    return func(QX11Info::connection(), args...).sequence;
+}
 
 void WindowManager::setWindowBlur(int wid, QVector<uint32_t> &data)
 {
