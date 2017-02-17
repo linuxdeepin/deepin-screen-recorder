@@ -115,14 +115,14 @@ QList<int> WindowManager::getWindowFrameExtents(xcb_window_t window)
     QList<int> extents;
 
     if (window != rootWindow) {
-        xcb_get_property_reply_t *reply = getProperty(window, "_GTK_FRAME_EXTENTS", XCB_ATOM_CARDINAL);
+        xcb_get_property_reply_t *gtkFrameReply = getProperty(window, "_GTK_FRAME_EXTENTS", XCB_ATOM_CARDINAL);
 
-        if (reply) {
+        if (gtkFrameReply) {
             // Because XCB haven't function to check property is exist,
             // we will got wrong value if property '_GTK_FRAME_EXTENTS' is not exist in window xprop attributes.
             // So we check reply->format, if it equal 16 or 32, '_GTK_FRAME_EXTENTS' property is exist.
-            if (reply->format == 32 || reply->format == 16) {
-                int32_t *value = (int32_t *)xcb_get_property_value(reply);
+            if (gtkFrameReply->format == 32 || gtkFrameReply->format == 16) {
+                int32_t *value = (int32_t *)xcb_get_property_value(gtkFrameReply);
                 for (int i = 0; i < 4; ++i) {
                     extents.append(value[i]);
                 }
@@ -133,7 +133,7 @@ QList<int> WindowManager::getWindowFrameExtents(xcb_window_t window)
             }
         }
 
-        free(reply);
+        free(gtkFrameReply);
     }
 
     return extents;
@@ -265,11 +265,6 @@ QList<xcb_window_t> WindowManager::getWindows()
     return windows;
 }
 
-xcb_get_geometry_reply_t* WindowManager::getWindowGeometry(xcb_window_t window)
-{
-    return xcb_get_geometry_reply(conn, xcb_get_geometry(conn, window), 0);
-}
-
 WindowRect WindowManager::getRootWindowRect() {
     WindowRect rect;
     xcb_get_geometry_reply_t *geometry = xcb_get_geometry_reply(conn, xcb_get_geometry(conn, rootWindow), 0);
@@ -284,15 +279,30 @@ WindowRect WindowManager::getRootWindowRect() {
     return rect;
 }
 
+void WindowManager::translateCoords(xcb_window_t window, int32_t& x, int32_t& y)
+{
+    xcb_translate_coordinates_cookie_t c = xcb_translate_coordinates(conn, rootWindow, window, x, y);
+    xcb_translate_coordinates_reply_t* reply = xcb_translate_coordinates_reply(conn, c, NULL);
+
+    if (reply) {
+        x = reply->dst_x;
+        y = reply->dst_y;
+
+        free(reply);
+    }
+}
+
 WindowRect WindowManager::getWindowRect(xcb_window_t window)
 {
     WindowRect rect;
 
-    xcb_get_geometry_reply_t *geometry = getWindowGeometry(window);
+    xcb_get_geometry_reply_t *geometry = xcb_get_geometry_reply(conn, xcb_get_geometry(conn, window), 0);
+    xcb_translate_coordinates_reply_t *coordinate = xcb_translate_coordinates_reply(conn, xcb_translate_coordinates(conn, window, rootWindow, 0, 0), 0);
+    
     QList<int> extents = getWindowFrameExtents(window);
-
-    rect.x = geometry->x;
-    rect.y = geometry->y;
+    
+    rect.x = coordinate->dst_x;
+    rect.y = coordinate->dst_y;
     rect.width = geometry->width;
     rect.height = geometry->height;
 
@@ -305,6 +315,7 @@ WindowRect WindowManager::getWindowRect(xcb_window_t window)
     }
 
     free(geometry);
+    free(coordinate);
 
     return rect;
 }

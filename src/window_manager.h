@@ -57,9 +57,9 @@ public:
     int getCurrentWorkspace(xcb_window_t window);
     int getWindowWorkspace(xcb_window_t window);
     xcb_atom_t getAtom(QString name);
-    xcb_get_geometry_reply_t* getWindowGeometry(xcb_window_t window);
     xcb_get_property_reply_t* getProperty(xcb_window_t window, QString propertyName, xcb_atom_t type);
     void setWindowBlur(int wid, QVector<uint32_t> &data);
+    void translateCoords(xcb_window_t window, int32_t& x, int32_t& y);
 
     xcb_window_t rootWindow;
 
