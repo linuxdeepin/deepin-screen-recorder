@@ -1,8 +1,0 @@
-#!/bin/bash
-if qdbus --literal com.deepin.daemon.Keybinding /com/deepin/daemon/Keybinding com.deepin.daemon.Keybinding.CheckAvaliable "<Control><Alt>R"|grep true
-then
-    echo "shortcut usable"
-    qdbus --literal com.deepin.daemon.Keybinding /com/deepin/daemon/Keybinding com.deepin.daemon.Keybinding.Add "Deepin Screen Recorder"  "/usr/bin/deepin-screen-recorder" "<Control><Alt>R"
-else
-    echo "shortcut not usable"
-fi
