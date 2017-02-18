@@ -75,16 +75,8 @@ void RecordButton::paintEvent(QPaintEvent *)
         painter.setOpacity(0.7);
     }
 
-    QPainterPath path;
-    path.addRoundedRect(QRectF(rect()), Constant::RECTANGLE_RADIUS, Constant::RECTANGLE_RADIUS);
-    painter.fillPath(path, QColor("#F5F5F5"));
-
-    QPen pen(QColor("#000000"));
-    painter.setOpacity(0.04);
-    pen.setWidth(1);
-    painter.setPen(pen);
-    painter.drawPath(path);
-
+    Utils::drawTooltipBackground(painter, rect());
+    
     // Draw icon.
     painter.setOpacity(1);
     int iconX = rect().x() + (rect().width() - normalImg.width()) / 2;

@@ -671,17 +671,8 @@ void MainWindow::stopRecord()
 
 void MainWindow::renderTooltipRect(QPainter &painter, QRectF &rect, qreal opacity)
 {
-    painter.setOpacity(opacity);
-    QPainterPath path;
-    path.addRoundedRect(rect, Constant::RECTANGLE_RADIUS, Constant::RECTANGLE_RADIUS);
-    painter.fillPath(path, QColor("#F5F5F5"));
-
-    QPen pen(QColor("#000000"));
-    painter.setOpacity(0.04);
-    pen.setWidth(1);
-    painter.setPen(pen);
-    painter.drawPath(path);
-
+    Utils::drawTooltipBackground(painter, rect.toRect());
+    
     Utils::blurRect(windowManager, this->winId(), rect);
 
     painter.setOpacity(1.0);

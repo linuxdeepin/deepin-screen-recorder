@@ -94,3 +94,17 @@ void Utils::clearBlur(WindowManager *windowManager, int widgetId)
     data << 0 << 0 << 0 << 0 << 0 << 0;
     windowManager->setWindowBlur(widgetId, data);
 }
+
+void Utils::drawTooltipBackground(QPainter &painter, QRect rect)
+{
+    painter.setOpacity(0.4);
+    QPainterPath path;
+    path.addRoundedRect(QRectF(rect), Constant::RECTANGLE_RADIUS, Constant::RECTANGLE_RADIUS);
+    painter.fillPath(path, QColor("#F5F5F5"));
+
+    QPen pen(QColor("#000000"));
+    painter.setOpacity(0.04);
+    pen.setWidth(1);
+    painter.setPen(pen);
+    painter.drawPath(path);
+}    

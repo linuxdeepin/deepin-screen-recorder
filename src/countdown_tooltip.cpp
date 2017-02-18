@@ -47,17 +47,8 @@ void CountdownTooltip::paintEvent(QPaintEvent *)
     if (showCountdownCounter > 0) {
         QPainter painter(this);
         
-        QPainterPath path;
-        painter.setOpacity(0.4);
-        path.addRoundedRect(QRectF(rect()), Constant::RECTANGLE_RADIUS, Constant::RECTANGLE_RADIUS);
-        painter.fillPath(path, QColor("#F5F5F5"));
-
-        QPen pen(QColor("#000000"));
-        painter.setOpacity(0.04);
-        pen.setWidth(1);
-        painter.setPen(pen);
-        painter.drawPath(path);
-
+        Utils::drawTooltipBackground(painter, rect());
+        
         painter.setOpacity(1);
         int countdownX = rect().x() + (rect().width() - countdown1Img.width()) / 2;
         int countdownY = rect().y() + NUMBER_PADDING_Y;
