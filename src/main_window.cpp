@@ -152,7 +152,6 @@ void MainWindow::paintEvent(QPaintEvent *)
 
     if (!isFirstPressButton) {
         QString tooltipString = tr("Click or drag to select the area to record");
-        Utils::setFontSize(painter, Constant::RECTANGLE_FONT_SIZE);
         QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, tooltipString);
         int rectWidth = size.width() + Constant::RECTANGLE_PADDING * 2;
         int rectHeight = size.height() + Constant::RECTANGLE_PADDING * 2;
@@ -163,6 +162,8 @@ void MainWindow::paintEvent(QPaintEvent *)
 
         renderTooltipRect(painter, tooltipRect);
 
+        painter.setOpacity(1.0);
+        Utils::setFontSize(painter, Constant::RECTANGLE_FONT_SIZE);
         painter.setPen(QPen(QColor("#000000")));
         painter.drawText(tooltipRect, Qt::AlignCenter, tooltipString);
     }
@@ -674,8 +675,6 @@ void MainWindow::renderTooltipRect(QPainter &painter, QRectF &rect)
     Utils::drawTooltipBackground(painter, rect.toRect());
 
     Utils::blurRect(windowManager, this->winId(), rect);
-
-    painter.setOpacity(1.0);
 }
 
 void MainWindow::startCountdown()
