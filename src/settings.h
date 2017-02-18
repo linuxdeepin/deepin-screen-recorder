@@ -32,9 +32,7 @@ class Settings : public QObject
     
 public:
     Settings(QObject *parent = 0);
-    ~Settings() {
-        delete settings;
-    };
+    ~Settings();
     QString configPath();
     
     QVariant getOption(const QString &key);

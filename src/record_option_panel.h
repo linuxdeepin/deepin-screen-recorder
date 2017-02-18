@@ -37,6 +37,7 @@ class RecordOptionPanel : public QPushButton
     
 public:
     RecordOptionPanel(QPushButton *parent = 0);
+    ~RecordOptionPanel();
     bool isSaveAsGif();
     
 protected:

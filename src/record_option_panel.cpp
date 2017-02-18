@@ -55,6 +55,11 @@ RecordOptionPanel::RecordOptionPanel(QPushButton *parent) : QPushButton(parent)
     setFixedSize(WIDTH, HEIGHT);
 }
 
+RecordOptionPanel::~RecordOptionPanel()
+{
+    delete settings;
+}
+
 void RecordOptionPanel::paintEvent(QPaintEvent *)
 {
     // Init.

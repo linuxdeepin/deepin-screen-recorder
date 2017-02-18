@@ -41,9 +41,7 @@ class WindowManager : public QObject
 
 public:
     WindowManager(QObject *parent = 0);
-    ~WindowManager() {
-        delete conn;
-    };
+    ~WindowManager();
 
     QList<int> getWindowFrameExtents(xcb_window_t window);
     QList<xcb_window_t> getWindows();

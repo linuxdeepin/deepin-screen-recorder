@@ -33,6 +33,11 @@ Settings::Settings(QObject *parent) : QObject(parent)
     groupName = "fileformat";
 }
 
+Settings::~Settings()
+{
+    delete settings;
+}
+
 QString Settings::configPath()
 {
     return QDir(QDir(QStandardPaths::standardLocations(QStandardPaths::ConfigLocation).first()).filePath(qApp->organizationName())).filePath(qApp->applicationName());

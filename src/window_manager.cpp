@@ -36,6 +36,11 @@ WindowManager::WindowManager(QObject *parent) : QObject(parent)
     rootWindow = screen->root;
 }
 
+WindowManager::~WindowManager()
+{
+    delete conn;
+}
+
 xcb_atom_t WindowManager::getAtom(QString name)
 {
     QByteArray rawName = name.toLatin1();
@@ -300,9 +305,9 @@ WindowRect WindowManager::getWindowRect(xcb_window_t window)
 
     xcb_get_geometry_reply_t *geometry = xcb_get_geometry_reply(conn, xcb_get_geometry(conn, window), 0);
     xcb_translate_coordinates_reply_t *coordinate = xcb_translate_coordinates_reply(conn, xcb_translate_coordinates(conn, window, rootWindow, 0, 0), 0);
-    
+
     QList<int> extents = getWindowFrameExtents(window);
-    
+
     rect.x = coordinate->dst_x;
     rect.y = coordinate->dst_y;
     rect.width = geometry->width;
