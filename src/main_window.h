@@ -86,10 +86,11 @@ protected:
     void setDragCursor();
     void resetCursor();
     void passInputEvent();
-    void renderTooltipRect(QPainter &painter, QRectF &rect, qreal opacity);
+    void renderTooltipRect(QPainter &painter, QRectF &rect);
     void setFontSize(QPainter &painter, int textSize);
     void showRecordButton();
     void hideRecordButton();
+    void adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight);
 
 private:
     QList<WindowRect> windowRects;

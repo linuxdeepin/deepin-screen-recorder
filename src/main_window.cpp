@@ -161,7 +161,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                            rectWidth,
                            rectHeight);
 
-        renderTooltipRect(painter, tooltipRect, 0.4);
+        renderTooltipRect(painter, tooltipRect);
 
         painter.setPen(QPen(QColor("#000000")));
         painter.drawText(tooltipRect, Qt::AlignCenter, tooltipString);
@@ -669,10 +669,10 @@ void MainWindow::stopRecord()
     }
 }
 
-void MainWindow::renderTooltipRect(QPainter &painter, QRectF &rect, qreal opacity)
+void MainWindow::renderTooltipRect(QPainter &painter, QRectF &rect)
 {
     Utils::drawTooltipBackground(painter, rect.toRect());
-    
+
     Utils::blurRect(windowManager, this->winId(), rect);
 
     painter.setOpacity(1.0);
@@ -705,42 +705,8 @@ void MainWindow::startCountdown()
     countdownLayout->addStretch();
 
     countdownTooltip->start();
-
-    if (recordHeight < countdownTooltip->rect().height()) {
-        if (recordY + countdownTooltip->rect().height() > rootWindowRect.height) {
-            countdownLayout->setContentsMargins(
-                recordX,
-                recordY - countdownTooltip->rect().height() - Constant::RECTANGLE_PADDING,
-                rootWindowRect.width - recordX - recordWidth,
-                rootWindowRect.height - recordY + Constant::RECTANGLE_PADDING);
-        } else {
-            countdownLayout->setContentsMargins(
-                recordX,
-                recordY + recordHeight + Constant::RECTANGLE_PADDING,
-                rootWindowRect.width - recordX - recordWidth,
-                rootWindowRect.height - (recordY + recordHeight + countdownTooltip->rect().height()) + Constant::RECTANGLE_PADDING);
-        }
-    } else if (recordWidth < countdownTooltip->rect().width()) {
-        if (recordX + countdownTooltip->rect().width() > rootWindowRect.width) {
-            countdownLayout->setContentsMargins(
-                recordX - countdownTooltip->rect().width() - Constant::RECTANGLE_PADDING,
-                recordY,
-                rootWindowRect.width - recordX + Constant::RECTANGLE_PADDING,
-                rootWindowRect.height - recordY - recordHeight);
-        } else {
-            countdownLayout->setContentsMargins(
-                recordX + recordWidth + Constant::RECTANGLE_PADDING,
-                recordY,
-                rootWindowRect.width - (recordX + recordWidth + countdownTooltip->rect().width() + Constant::RECTANGLE_PADDING),
-                rootWindowRect.height - recordY - recordHeight);
-        }
-    } else {
-        countdownLayout->setContentsMargins(
-            recordX,
-            recordY,
-            rootWindowRect.width - recordX - recordWidth,
-            rootWindowRect.height - recordY - recordHeight);
-    }
+    
+    adjustLayout(countdownLayout, countdownTooltip->rect().width(), countdownTooltip->rect().height());
 
     passInputEvent();
 
@@ -752,43 +718,9 @@ void MainWindow::showRecordButton()
     recordButton->show();
     recordOptionPanel->show();
 
-    int recordAreaHeight = recordButton->height() + RECORD_OPTIONAL_PADDING + recordOptionPanel->height();
-    int recordAreaWidth = recordButton->width();
-    if (recordHeight < recordAreaHeight) {
-        if (recordY + recordAreaHeight > rootWindowRect.height) {
-            recordButtonLayout->setContentsMargins(
-                recordX,
-                recordY - recordAreaHeight - Constant::RECTANGLE_PADDING,
-                rootWindowRect.width - recordX - recordWidth,
-                rootWindowRect.height - recordY + Constant::RECTANGLE_PADDING);
-        } else {
-            recordButtonLayout->setContentsMargins(
-                recordX,
-                recordY + recordHeight + Constant::RECTANGLE_PADDING,
-                rootWindowRect.width - recordX - recordWidth,
-                rootWindowRect.height - (recordY + recordHeight + recordAreaHeight) + Constant::RECTANGLE_PADDING);
-        }
-    } else if (recordWidth < recordAreaWidth) {
-        if (recordX + recordAreaWidth > rootWindowRect.width) {
-            recordButtonLayout->setContentsMargins(
-                recordX - recordAreaWidth - Constant::RECTANGLE_PADDING,
-                recordY,
-                rootWindowRect.width - recordX + Constant::RECTANGLE_PADDING,
-                rootWindowRect.height - recordY - recordHeight);
-        } else {
-            recordButtonLayout->setContentsMargins(
-                recordX + recordWidth + Constant::RECTANGLE_PADDING,
-                recordY,
-                rootWindowRect.width - (recordX + recordWidth + recordAreaWidth + Constant::RECTANGLE_PADDING),
-                rootWindowRect.height - recordY - recordHeight);
-        }
-    } else {
-        recordButtonLayout->setContentsMargins(
-            recordX,
-            recordY,
-            rootWindowRect.width - recordX - recordWidth,
-            rootWindowRect.height - recordY - recordHeight);
-    }
+    adjustLayout(recordButtonLayout, 
+                 recordButton->width(),
+                 recordButton->height() + RECORD_OPTIONAL_PADDING + recordOptionPanel->height());
 }
 
 void MainWindow::hideRecordButton()
@@ -797,4 +729,43 @@ void MainWindow::hideRecordButton()
     recordOptionPanel->hide();
 
     Utils::clearBlur(windowManager, this->winId());
+}
+
+void MainWindow::adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight)
+{
+    if (recordHeight < layoutHeight) {
+        if (recordY + layoutHeight > rootWindowRect.height) {
+            layout->setContentsMargins(
+                recordX,
+                recordY - layoutHeight - Constant::RECTANGLE_PADDING,
+                rootWindowRect.width - recordX - recordWidth,
+                rootWindowRect.height - recordY + Constant::RECTANGLE_PADDING);
+        } else {
+            layout->setContentsMargins(
+                recordX,
+                recordY + recordHeight + Constant::RECTANGLE_PADDING,
+                rootWindowRect.width - recordX - recordWidth,
+                rootWindowRect.height - (recordY + recordHeight + layoutHeight) + Constant::RECTANGLE_PADDING);
+        }
+    } else if (recordWidth < layoutWidth) {
+        if (recordX + layoutWidth > rootWindowRect.width) {
+            layout->setContentsMargins(
+                recordX - layoutWidth - Constant::RECTANGLE_PADDING,
+                recordY,
+                rootWindowRect.width - recordX + Constant::RECTANGLE_PADDING,
+                rootWindowRect.height - recordY - recordHeight);
+        } else {
+            layout->setContentsMargins(
+                recordX + recordWidth + Constant::RECTANGLE_PADDING,
+                recordY,
+                rootWindowRect.width - (recordX + recordWidth + layoutWidth + Constant::RECTANGLE_PADDING),
+                rootWindowRect.height - recordY - recordHeight);
+        }
+    } else {
+        layout->setContentsMargins(
+            recordX,
+            recordY,
+            rootWindowRect.width - recordX - recordWidth,
+            rootWindowRect.height - recordY - recordHeight);
+    }
 }
