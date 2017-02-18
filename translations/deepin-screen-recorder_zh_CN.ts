@@ -2,6 +2,15 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
+    <name>CountdownTooltip</name>
+    <message>
+        <source>Click tray icon 
+or press the shortcut again to stop recording</source>
+        <translation>点击托盘图标以停止录制
+或再次按下深度录屏快捷键</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Deepin screen recorder</source>
@@ -18,12 +27,6 @@
     <message>
         <source>Click or drag to select the area to record</source>
         <translation>点击或拖拽来选择录制区域</translation>
-    </message>
-    <message>
-        <source>Click tray icon 
-or press the shortcut again to stop recording</source>
-        <translation>点击托盘图标以停止录制
-或再次按下深度录屏快捷键</translation>
     </message>
 </context>
 <context>
