@@ -1,4 +1,4 @@
-/* -*- Mode: Vala; indent-tabs-mode: nil; tab-width: 4 -*-
+/* -*- Mode: C++; indent-tabs-mode: nil; tab-width: 4 -*-
  * -*- coding: utf-8 -*-
  *
  * Copyright (C) 2011 ~ 2017 Deepin, Inc.
@@ -95,4 +95,3 @@ void Utils::clearBlur(WindowManager *windowManager, int widgetId)
     data << 0 << 0 << 0 << 0 << 0 << 0;
     windowManager->setWindowBlur(widgetId, data);
 }
-
