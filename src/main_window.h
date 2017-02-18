@@ -40,8 +40,6 @@ class MainWindow : public QWidget
     static const int RECORD_MIN_SIZE;
     static const int DRAG_POINT_RADIUS;
     
-    static const int RECTANGLE_RAIUDS;
-
     static const int RECORD_BUTTON_NORMAL;
     static const int RECORD_BUTTON_WAIT;
     static const int RECORD_BUTTON_RECORDING;
@@ -56,13 +54,7 @@ class MainWindow : public QWidget
     static const int ACTION_RESIZE_LEFT;
     static const int ACTION_RESIZE_RIGHT;
     
-    static const int INIT_TOOLTIP_PADDING_X;
-    static const int INIT_TOOLTIP_PADDING_Y;
-    
-    static const int RECORD_AREA_PADDING;
-    static const int RECORD_AREA_OFFSET;
-    
-    static const int COUNTDOWN_TOOLTIP_OFFSET;
+    static const int RECORD_OPTIONAL_PADDING;
     
 public:
     MainWindow(QWidget *parent = 0);

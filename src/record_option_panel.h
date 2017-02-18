@@ -31,7 +31,6 @@ class RecordOptionPanel : public QPushButton
 {
     Q_OBJECT
     
-    static const int RECTANGLE_RAIUDS;
     static const int WIDTH;
     static const int HEIGHT;
     static const int ICON_OFFSET_X;

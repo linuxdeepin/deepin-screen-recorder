@@ -27,8 +27,8 @@
 #include <QDebug>
 #include "utils.h"
 #include "record_option_panel.h"
+#include "constant.h"
 
-const int RecordOptionPanel::RECTANGLE_RAIUDS = 8;
 const int RecordOptionPanel::WIDTH = 124;
 const int RecordOptionPanel::HEIGHT = 36;
 const int RecordOptionPanel::ICON_OFFSET_X = 14;
@@ -64,7 +64,7 @@ void RecordOptionPanel::paintEvent(QPaintEvent *)
     // Draw background.
     painter.setOpacity(0.4);
     QPainterPath path;
-    path.addRoundedRect(QRectF(rect()), RECTANGLE_RAIUDS, RECTANGLE_RAIUDS);
+    path.addRoundedRect(QRectF(rect()), Constant::RECTANGLE_RADIUS, Constant::RECTANGLE_RADIUS);
     painter.fillPath(path, QColor("#F5F5F5"));
 
     QPen pen(QColor("#000000"));

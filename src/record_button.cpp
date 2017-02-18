@@ -25,11 +25,10 @@
 #include <QEvent>
 #include "record_button.h"
 #include "utils.h"
+#include "constant.h"
 
-const int RecordButton::RECTANGLE_RAIUDS = 8;
 const int RecordButton::WIDTH = 128;
 const int RecordButton::HEIGHT = 86;
-const int RecordButton::PADDING = 20;
 const int RecordButton::TEXT_PADDING = 0;
     
 RecordButton::RecordButton(QPushButton *parent) : QPushButton(parent)
@@ -48,9 +47,9 @@ RecordButton::RecordButton(QPushButton *parent) : QPushButton(parent)
 void RecordButton::setText(QString string)
 {
     text = string;
-    textSize = Utils::getRenderSize(11, string);
+    textSize = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, string);
     
-    setFixedSize(std::max(textSize.width() + PADDING * 2, WIDTH), std::max(textSize.height() + PADDING * 2, HEIGHT));
+    setFixedSize(std::max(textSize.width() + Constant::RECTANGLE_PADDING * 2, WIDTH), std::max(textSize.height() + Constant::RECTANGLE_PADDING * 2, HEIGHT));
 }
 
 void RecordButton::paintEvent(QPaintEvent *)
@@ -77,7 +76,7 @@ void RecordButton::paintEvent(QPaintEvent *)
     }
 
     QPainterPath path;
-    path.addRoundedRect(QRectF(rect()), RECTANGLE_RAIUDS, RECTANGLE_RAIUDS);
+    path.addRoundedRect(QRectF(rect()), Constant::RECTANGLE_RADIUS, Constant::RECTANGLE_RADIUS);
     painter.fillPath(path, QColor("#F5F5F5"));
 
     QPen pen(QColor("#000000"));
@@ -101,7 +100,7 @@ void RecordButton::paintEvent(QPaintEvent *)
     // Draw text.
     int textX = rect().x();
     int textY = iconY + normalImg.height() + TEXT_PADDING;
-    Utils::setFontSize(painter, 11);
+    Utils::setFontSize(painter, Constant::RECTANGLE_FONT_SIZE);
     painter.setOpacity(1);
     painter.setPen(QPen(QColor("#e34342")));
     painter.drawText(QRect(textX, textY, rect().width(), textSize.height()), Qt::AlignCenter, text);

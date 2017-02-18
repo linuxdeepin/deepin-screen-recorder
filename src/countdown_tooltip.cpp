@@ -27,11 +27,9 @@
 #include <QPainter>
 #include "countdown_tooltip.h"
 #include "utils.h"
+#include "constant.h"
 
 const int CountdownTooltip::NUMBER_PADDING_Y = 30;
-const int CountdownTooltip::PADDING_X = 20;
-const int CountdownTooltip::PADDING_Y = 20;
-const int CountdownTooltip::RECTANGLE_RAIUDS = 8;
 
 CountdownTooltip::CountdownTooltip(QWidget *parent) : QWidget(parent)
 {
@@ -51,7 +49,7 @@ void CountdownTooltip::paintEvent(QPaintEvent *)
         
         QPainterPath path;
         painter.setOpacity(0.4);
-        path.addRoundedRect(QRectF(rect()), RECTANGLE_RAIUDS, RECTANGLE_RAIUDS);
+        path.addRoundedRect(QRectF(rect()), Constant::RECTANGLE_RADIUS, Constant::RECTANGLE_RADIUS);
         painter.fillPath(path, QColor("#F5F5F5"));
 
         QPen pen(QColor("#000000"));
@@ -75,6 +73,7 @@ void CountdownTooltip::paintEvent(QPaintEvent *)
                            rect().y() + countdown1Img.height() + NUMBER_PADDING_Y,
                            rect().width(),
                            rect().height() - countdown1Img.height() - NUMBER_PADDING_Y);
+        Utils::setFontSize(painter, Constant::RECTANGLE_FONT_SIZE);
         painter.setPen(QPen(QColor("#000000")));
         painter.drawText(tooltipRect, Qt::AlignCenter, text);
     }
@@ -83,9 +82,9 @@ void CountdownTooltip::paintEvent(QPaintEvent *)
 void CountdownTooltip::start()
 {
     text = tr("Click tray icon \nor press the shortcut again to stop recording");
-    QSize size = Utils::getRenderSize(11, text);
-    int width = size.width() + PADDING_X * 2;
-    int height = size.height() + PADDING_Y * 2 + countdown1Img.height() + NUMBER_PADDING_Y;
+    QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, text);
+    int width = size.width() + Constant::RECTANGLE_PADDING * 2;
+    int height = size.height() + Constant::RECTANGLE_PADDING * 2 + countdown1Img.height() + NUMBER_PADDING_Y;
     setFixedSize(width, height);
     
     showCountdownCounter = 3;

@@ -32,9 +32,6 @@ class CountdownTooltip : public QWidget
     Q_OBJECT
     
     static const int NUMBER_PADDING_Y;
-    static const int PADDING_X;
-    static const int PADDING_Y;
-    static const int RECTANGLE_RAIUDS;
     
 public:
     CountdownTooltip(QWidget *parent = 0);

@@ -19,39 +19,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-#ifndef RECORDBUTTON_H
-#define RECORDBUTTON_H
 
-#include <QPushButton>
+#ifndef CONSTANT_H
+#define CONSTANT_H
 
-class RecordButton : public QPushButton
+class Constant 
 {
-    Q_OBJECT
-    
-    static const int WIDTH;
-    static const int HEIGHT;
-    static const int TEXT_PADDING;
-    
 public:
-    RecordButton(QPushButton *parent = 0);
-    void setText(QString string);
-    
-protected:
-    void paintEvent(QPaintEvent *event);
-    bool eventFilter(QObject *, QEvent *event);
-    
-private:
-    QImage normalImg;
-    QImage hoverImg;
-    QImage pressImg;
-    
-    bool isFocus;
-    bool isPress;
-    
-    QString text;
-    QSize textSize;
+    static const int RECTANGLE_PADDING;
+    static const int RECTANGLE_RADIUS;
+    static const int RECTANGLE_FONT_SIZE;
 };
 
-#endif // RECORDBUTTON_H
+#endif
