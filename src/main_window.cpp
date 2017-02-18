@@ -35,6 +35,7 @@
 #include "utils.h"
 #include "record_button.h"
 #include "record_option_panel.h"
+#include "countdown_tooltip.h"
 
 const int MainWindow::CURSOR_BOUND = 5;
 const int MainWindow::RECORD_MIN_SIZE = 200;
@@ -59,12 +60,10 @@ const int MainWindow::ACTION_RESIZE_RIGHT = 8;
 const int MainWindow::INIT_TOOLTIP_PADDING_X = 20;
 const int MainWindow::INIT_TOOLTIP_PADDING_Y = 20;
 
-const int MainWindow::COUNTDOWN_TOOLTIP_PADDING_X = 20;
-const int MainWindow::COUNTDOWN_TOOLTIP_PADDING_Y = 20;
-const int MainWindow::COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y = 30;
-
 const int MainWindow::RECORD_AREA_PADDING = 12;
 const int MainWindow::RECORD_AREA_OFFSET = 16;
+
+const int MainWindow::COUNTDOWN_TOOLTIP_OFFSET = 16;
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
@@ -99,7 +98,6 @@ void MainWindow::initAttributes()
 
     recordButtonStatus = RECORD_BUTTON_NORMAL;
 
-    showCountdownCounter = 0;
     flashTrayIconCounter = 0;
 
     selectAreaName = "";
@@ -116,18 +114,20 @@ void MainWindow::initAttributes()
         windowNames.append(windowManager->getWindowClass(windows[i]));
     }
 
-    layout = new QVBoxLayout(this);
+    recordButtonLayout = new QVBoxLayout();
+    setLayout(recordButtonLayout);
+
     recordButton = new RecordButton();
     recordButton->setText(tr("Start recording"));
     connect(recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
 
     recordOptionPanel = new RecordOptionPanel();
 
-    layout->addStretch();
-    layout->addWidget(recordButton, 0, Qt::AlignCenter);
-    layout->addSpacing(RECORD_AREA_PADDING);
-    layout->addWidget(recordOptionPanel, 0, Qt::AlignCenter);
-    layout->addStretch();
+    recordButtonLayout->addStretch();
+    recordButtonLayout->addWidget(recordButton, 0, Qt::AlignCenter);
+    recordButtonLayout->addSpacing(RECORD_AREA_PADDING);
+    recordButtonLayout->addWidget(recordOptionPanel, 0, Qt::AlignCenter);
+    recordButtonLayout->addStretch();
 
     recordButton->hide();
     recordOptionPanel->hide();
@@ -140,9 +140,6 @@ void MainWindow::initResource()
 {
     resizeHandleBigImg = QImage(Utils::getQrcPath("resize_handle_big.png"));
     resizeHandleSmallImg = QImage(Utils::getQrcPath("resize_handle_small.png"));
-    countdown1Img = QImage(Utils::getQrcPath("countdown_1.png"));
-    countdown2Img = QImage(Utils::getQrcPath("countdown_2.png"));
-    countdown3Img = QImage(Utils::getQrcPath("countdown_3.png"));
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
@@ -233,44 +230,10 @@ void MainWindow::paintEvent(QPaintEvent *)
                     QList<QRectF> rects;
                     rects << recordButton->geometry() << recordOptionPanel->geometry();
                     Utils::blurRects(windowManager, this->winId(), rects);
-                }
-
-                painter.setClipping(false);
-
-                // Draw record wait second.
-                if (showCountdownCounter > 0) {
-                    QString tooltipString = tr("Click tray icon \nor press the shortcut again to stop recording");
-                    Utils::setFontSize(painter, 11);
-                    QSize size = Utils::getRenderSize(11, tooltipString);
-                    int tooltipWidth = size.width() + COUNTDOWN_TOOLTIP_PADDING_X * 2;
-                    int tooltipHeight = size.height() + COUNTDOWN_TOOLTIP_PADDING_Y * 2;
-                    int rectWidth = tooltipWidth;
-                    int rectHeight = tooltipHeight + countdown1Img.height() + COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y;
-
-                    QRectF countdownRect(recordX + (recordWidth - rectWidth) / 2,
-                                         recordY + (recordHeight - rectHeight) / 2,
-                                         rectWidth,
-                                         rectHeight);
-
-                    renderTooltipRect(painter, countdownRect, 0.4);
-
-                    int countdownX = recordX + (recordWidth - countdown1Img.width()) / 2;
-                    int countdownY = recordY + (recordHeight - rectHeight) / 2 + COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y;
-
-                    if (showCountdownCounter == 1) {
-                        painter.drawImage(QPoint(countdownX, countdownY), countdown1Img);
-                    } else if (showCountdownCounter == 2) {
-                        painter.drawImage(QPoint(countdownX, countdownY), countdown2Img);
-                    } else if (showCountdownCounter == 3) {
-                        painter.drawImage(QPoint(countdownX, countdownY), countdown3Img);
-                    }
-
-                    QRectF tooltipRect(recordX + (recordWidth - rectWidth) / 2,
-                                       recordY + (recordHeight - rectHeight) / 2 + countdown1Img.height() + COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y,
-                                       rectWidth,
-                                       tooltipHeight);
-                    painter.setPen(QPen(QColor("#000000")));
-                    painter.drawText(tooltipRect, Qt::AlignCenter, tooltipString);
+                } else if (recordButtonStatus == RECORD_BUTTON_WAIT) {
+                    QList<QRectF> rects;
+                    rects << countdownTooltip->geometry();
+                    Utils::blurRects(windowManager, this->winId(), rects);
                 }
             }
         }
@@ -509,27 +472,20 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     return false;
 }
 
-void MainWindow::showCountdown()
+void MainWindow::startRecord()
 {
-    showCountdownCounter--;
+    Utils::clearBlur(windowManager, this->winId());
+    recordButtonStatus = RECORD_BUTTON_RECORDING;
 
-    if (showCountdownCounter <= 0) {
-        showCountdownTimer->stop();
+    resetCursor();
 
-        Utils::clearBlur(windowManager, this->winId());
+    recordProcess.start();
 
-        recordButtonStatus = RECORD_BUTTON_RECORDING;
+    trayIcon->show();
 
-        resetCursor();
-
-        recordProcess.start();
-
-        trayIcon->show();
-
-        flashTrayIconTimer = new QTimer(this);
-        connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
-        flashTrayIconTimer->start(800);
-    }
+    flashTrayIconTimer = new QTimer(this);
+    connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
+    flashTrayIconTimer->start(800);
 
     repaint();
 }
@@ -644,7 +600,7 @@ void MainWindow::updateCursor(QEvent *event)
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         int cursorX = mouseEvent->x();
         int cursorY = mouseEvent->y();
-        
+
         if (cursorX > recordX - CURSOR_BOUND
             && cursorX < recordX + CURSOR_BOUND
             && cursorY > recordY - CURSOR_BOUND
@@ -742,11 +698,6 @@ void MainWindow::startCountdown()
 {
     recordButtonStatus = RECORD_BUTTON_WAIT;
 
-    showCountdownCounter = 3;
-    showCountdownTimer = new QTimer(this);
-    connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));
-    showCountdownTimer->start(1000);
-
     recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight, selectAreaName);
     if (recordOptionPanel->isSaveAsGif()) {
         recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
@@ -757,6 +708,55 @@ void MainWindow::startCountdown()
     resetCursor();
 
     hideRecordButton();
+
+    delete recordButtonLayout;
+    countdownLayout = new QVBoxLayout();
+    setLayout(countdownLayout);
+
+    countdownTooltip = new CountdownTooltip();
+    connect(countdownTooltip, SIGNAL(finished()), this, SLOT(startRecord()));
+
+    countdownLayout->addStretch();
+    countdownLayout->addWidget(countdownTooltip, 0, Qt::AlignCenter);
+    countdownLayout->addStretch();
+
+    countdownTooltip->start();
+
+    if (recordHeight < countdownTooltip->rect().height()) {
+        if (recordY + countdownTooltip->rect().height() > rootWindowRect.height) {
+            countdownLayout->setContentsMargins(
+                recordX,
+                recordY - countdownTooltip->rect().height() - COUNTDOWN_TOOLTIP_OFFSET,
+                rootWindowRect.width - recordX - recordWidth,
+                rootWindowRect.height - recordY + COUNTDOWN_TOOLTIP_OFFSET);
+        } else {
+            countdownLayout->setContentsMargins(
+                recordX,
+                recordY + recordHeight + COUNTDOWN_TOOLTIP_OFFSET,
+                rootWindowRect.width - recordX - recordWidth,
+                rootWindowRect.height - (recordY + recordHeight + countdownTooltip->rect().height()) + COUNTDOWN_TOOLTIP_OFFSET);
+        }
+    } else if (recordWidth < countdownTooltip->rect().width()) {
+        if (recordX + countdownTooltip->rect().width() > rootWindowRect.width) {
+            countdownLayout->setContentsMargins(
+                recordX - countdownTooltip->rect().width() - COUNTDOWN_TOOLTIP_OFFSET,
+                recordY,
+                rootWindowRect.width - recordX + COUNTDOWN_TOOLTIP_OFFSET,
+                rootWindowRect.height - recordY - recordHeight);
+        } else {
+            countdownLayout->setContentsMargins(
+                recordX + recordWidth + COUNTDOWN_TOOLTIP_OFFSET,
+                recordY,
+                rootWindowRect.width - (recordX + recordWidth + countdownTooltip->rect().width() + COUNTDOWN_TOOLTIP_OFFSET),
+                rootWindowRect.height - recordY - recordHeight);
+        }
+    } else {
+        countdownLayout->setContentsMargins(
+            recordX,
+            recordY,
+            rootWindowRect.width - recordX - recordWidth,
+            rootWindowRect.height - recordY - recordHeight);
+    }
 
     passInputEvent();
 
@@ -772,13 +772,13 @@ void MainWindow::showRecordButton()
     int recordAreaWidth = recordButton->width();
     if (recordHeight < recordAreaHeight) {
         if (recordY + recordAreaHeight > rootWindowRect.height) {
-            layout->setContentsMargins(
+            recordButtonLayout->setContentsMargins(
                 recordX,
                 recordY - recordAreaHeight - RECORD_AREA_OFFSET,
                 rootWindowRect.width - recordX - recordWidth,
                 rootWindowRect.height - recordY + RECORD_AREA_OFFSET);
         } else {
-            layout->setContentsMargins(
+            recordButtonLayout->setContentsMargins(
                 recordX,
                 recordY + recordHeight + RECORD_AREA_OFFSET,
                 rootWindowRect.width - recordX - recordWidth,
@@ -786,20 +786,20 @@ void MainWindow::showRecordButton()
         }
     } else if (recordWidth < recordAreaWidth) {
         if (recordX + recordAreaWidth > rootWindowRect.width) {
-            layout->setContentsMargins(
+            recordButtonLayout->setContentsMargins(
                 recordX - recordAreaWidth - RECORD_AREA_OFFSET,
                 recordY,
                 rootWindowRect.width - recordX + RECORD_AREA_OFFSET,
                 rootWindowRect.height - recordY - recordHeight);
         } else {
-            layout->setContentsMargins(
+            recordButtonLayout->setContentsMargins(
                 recordX + recordWidth + RECORD_AREA_OFFSET,
                 recordY,
                 rootWindowRect.width - (recordX + recordWidth + recordAreaWidth + RECORD_AREA_OFFSET),
                 rootWindowRect.height - recordY - recordHeight);
         }
     } else {
-        layout->setContentsMargins(
+        recordButtonLayout->setContentsMargins(
             recordX,
             recordY,
             rootWindowRect.width - recordX - recordWidth,

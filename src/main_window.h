@@ -30,6 +30,7 @@
 #include "record_process.h"
 #include "record_button.h"
 #include "record_option_panel.h"
+#include "countdown_tooltip.h"
 
 class MainWindow : public QWidget
 {
@@ -58,12 +59,10 @@ class MainWindow : public QWidget
     static const int INIT_TOOLTIP_PADDING_X;
     static const int INIT_TOOLTIP_PADDING_Y;
     
-    static const int COUNTDOWN_TOOLTIP_PADDING_X;
-    static const int COUNTDOWN_TOOLTIP_PADDING_Y;
-    static const int COUNTDOWN_TOOLTIP_NUMBER_PADDING_Y;
-    
     static const int RECORD_AREA_PADDING;
     static const int RECORD_AREA_OFFSET;
+    
+    static const int COUNTDOWN_TOOLTIP_OFFSET;
     
 public:
     MainWindow(QWidget *parent = 0);
@@ -77,7 +76,7 @@ public:
     void initResource();
 
 public slots:
-    void showCountdown();
+    void startRecord();
     void flashTrayIcon();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void stopRecord();
@@ -104,7 +103,6 @@ private:
     QList<WindowRect> windowRects;
     QList<QString> windowNames;
 
-    QTimer* showCountdownTimer;
     QTimer* flashTrayIconTimer;
 
     RecordProcess recordProcess;
@@ -135,27 +133,23 @@ private:
     
     int recordButtonState;
     
-    int showCountdownCounter;
     int flashTrayIconCounter;
     
     QImage resizeHandleBigImg;
     QImage resizeHandleSmallImg;
     
-    QImage countdown1Img;
-    QImage countdown2Img;
-    QImage countdown3Img;
-    
     QString selectAreaName;
-    
-    // Settings settings;
     
     QSystemTrayIcon* trayIcon;
     
     WindowManager* windowManager;
     
-    QVBoxLayout* layout;
+    QVBoxLayout* recordButtonLayout;
+    QVBoxLayout* countdownLayout;
     RecordButton* recordButton;
     RecordOptionPanel* recordOptionPanel;
+    
+    CountdownTooltip* countdownTooltip;
     
     // Just use for debug.
     // int repaintCounter;
