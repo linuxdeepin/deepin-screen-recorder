@@ -64,9 +64,7 @@ void CountdownTooltip::paintEvent(QPaintEvent *)
                            rect().y() + countdown1Img.height() + NUMBER_PADDING_Y,
                            rect().width(),
                            rect().height() - countdown1Img.height() - NUMBER_PADDING_Y);
-        Utils::setFontSize(painter, Constant::RECTANGLE_FONT_SIZE);
-        painter.setPen(QPen(QColor("#000000")));
-        painter.drawText(tooltipRect, Qt::AlignCenter, text);
+        Utils::drawTooltipText(painter, text, "#000000", Constant::RECTANGLE_FONT_SIZE, tooltipRect);
     }
 }
 

@@ -66,8 +66,6 @@ void RecordOptionPanel::paintEvent(QPaintEvent *)
 
     // Draw icon.
     painter.setOpacity(1);
-    Utils::setFontSize(painter, 9);
-
     int gifIconX = rect().x() + ICON_OFFSET_X;
     int gifIconY = rect().y() + (rect().height() - gifCheckedImg.height()) / 2;
     int gifTextX = gifIconX + gifCheckedImg.width();
@@ -83,8 +81,7 @@ void RecordOptionPanel::paintEvent(QPaintEvent *)
         painter.drawImage(QPoint(gifIconX, gifIconY), gifNormalImg);
         gifColor = "#000000";
     }
-    painter.setPen(QPen(QColor(gifColor)));
-    painter.drawText(QRectF(gifTextX, rect().y(), gifTextWidth, rect().height()), Qt::AlignVCenter, "GIF");
+    Utils::drawTooltipText(painter, "GIF", gifColor, 9, QRectF(gifTextX, rect().y(), gifTextWidth, rect().height()));
 
     int mp4IconX = rect().x() + rect().width() / 2;
     int mp4IconY = rect().y() + (rect().height() - mp4CheckedImg.height()) / 2;
@@ -101,8 +98,7 @@ void RecordOptionPanel::paintEvent(QPaintEvent *)
         painter.drawImage(QPoint(mp4IconX, mp4IconY), mp4NormalImg);
         mp4Color = "#000000";
     }
-    painter.setPen(QPen(QColor(mp4Color)));
-    painter.drawText(QRectF(mp4TextX, rect().y(), mp4TextWidth, rect().height()), Qt::AlignVCenter, "MP4");
+    Utils::drawTooltipText(painter, "MP4", mp4Color, 9, QRectF(mp4TextX, rect().y(), mp4TextWidth, rect().height()));
 }
 
 bool RecordOptionPanel::eventFilter(QObject *, QEvent *event)

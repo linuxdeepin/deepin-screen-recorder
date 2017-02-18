@@ -36,4 +36,5 @@ public:
     static void blurRects(WindowManager *windowManager, int widgetId, QList<QRectF> rects);
     static void clearBlur(WindowManager *windowManager, int widgetId);
     static void drawTooltipBackground(QPainter &painter, QRect rect);
+    static void drawTooltipText(QPainter &painter, QString text, QString textColor, int textSize, QRectF rect);
 };

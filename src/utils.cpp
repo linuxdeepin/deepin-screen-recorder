@@ -108,3 +108,11 @@ void Utils::drawTooltipBackground(QPainter &painter, QRect rect)
     painter.setPen(pen);
     painter.drawPath(path);
 }    
+
+void Utils::drawTooltipText(QPainter &painter, QString text, QString textColor, int textSize, QRectF rect)
+{
+    Utils::setFontSize(painter, textSize);
+    painter.setOpacity(1);
+    painter.setPen(QPen(QColor(textColor)));
+    painter.drawText(rect, Qt::AlignCenter, text);
+}    

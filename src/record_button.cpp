@@ -92,10 +92,7 @@ void RecordButton::paintEvent(QPaintEvent *)
     // Draw text.
     int textX = rect().x();
     int textY = iconY + normalImg.height() + TEXT_PADDING;
-    Utils::setFontSize(painter, Constant::RECTANGLE_FONT_SIZE);
-    painter.setOpacity(1);
-    painter.setPen(QPen(QColor("#e34342")));
-    painter.drawText(QRect(textX, textY, rect().width(), textSize.height()), Qt::AlignCenter, text);
+    Utils::drawTooltipText(painter, text, "#e34342", Constant::RECTANGLE_FONT_SIZE, QRect(textX, textY, rect().width(), textSize.height()));
 }
 
 bool RecordButton::eventFilter(QObject *, QEvent *event)

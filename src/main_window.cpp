@@ -162,10 +162,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 
         renderTooltipRect(painter, tooltipRect);
 
-        painter.setOpacity(1.0);
-        Utils::setFontSize(painter, Constant::RECTANGLE_FONT_SIZE);
-        painter.setPen(QPen(QColor("#000000")));
-        painter.drawText(tooltipRect, Qt::AlignCenter, tooltipString);
+        Utils::drawTooltipText(painter, tooltipString, "#000000", Constant::RECTANGLE_FONT_SIZE, tooltipRect);
     }
 
     if (recordWidth > 0 && recordHeight > 0) {
