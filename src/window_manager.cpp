@@ -228,7 +228,6 @@ QList<xcb_window_t> WindowManager::getWindows()
 
             foreach(QString type, getWindowTypes(window)) {
                 if (type == "_NET_WM_WINDOW_TYPE_NORMAL"
-                    || type == "_NET_WM_WINDOW_TYPE_DESKTOP"
                     || type == "_NET_WM_WINDOW_TYPE_DOCK"
                     || type == "_NET_WM_WINDOW_TYPE_DIALOG"
                     ) {
@@ -263,6 +262,9 @@ QList<xcb_window_t> WindowManager::getWindows()
     // We need re-sort windows list from up to bottom,
     // to make compare cursor with window area from up to bottom.
     std::reverse(windows.begin(), windows.end());
+    
+    // Add desktop window.
+    windows.append(rootWindow);
 
     // Just use for debug.
     // foreach (auto window, windows) {
