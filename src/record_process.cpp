@@ -104,7 +104,7 @@ void RecordProcess::recordVideo()
 }
 
 void RecordProcess::initProcess() {
-    // Create process and handle finish singal.
+    // Create process and handle finish signal.
     process = new QProcess();
     connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
 
