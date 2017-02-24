@@ -65,17 +65,18 @@ void RecordButton::paintEvent(QPaintEvent *)
             status = "HOVER";
         }
     }
-
+    
     // Draw background.
+    qreal backgroundOpacity = 1.0;
     if (status == "NORMAL") {
-        painter.setOpacity(0.6);
+        backgroundOpacity = 0.6;
     } else if (status == "PRESS") {
-        painter.setOpacity(0.2);
+        backgroundOpacity = 0.2;
     } else if (status == "HOVER") {
-        painter.setOpacity(0.7);
+        backgroundOpacity = 0.7;
     }
 
-    Utils::drawTooltipBackground(painter, rect());
+    Utils::drawTooltipBackground(painter, rect(), backgroundOpacity);
     
     // Draw icon.
     painter.setOpacity(1);
