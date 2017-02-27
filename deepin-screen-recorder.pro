@@ -62,5 +62,4 @@ CONFIG(release_translations) {
 }
 
 DSR_LANG_PATH += $$DSRDIR/translations
-DEFINES += "DSR_LANG_PATH=\\\"$$DSR_LANG_PATH\\\"" \
-           "DSR_ICON_PATH=\\\"$$ICONDIR\\\""
+DEFINES += "DSR_LANG_PATH=\\\"$$DSR_LANG_PATH\\\""
