@@ -145,7 +145,7 @@ void RecordProcess::stopRecord()
     QList<QVariant> arg;
     arg << (QCoreApplication::applicationName()) // appname
         << ((unsigned int) 0)					 // id
-        << Utils::getImagePath("deepin-screen-recorder.svg") // icon
+        << QString("deepin-screen-recorder.svg") // icon
         << tr("Record finished")	// summary
         << QString("%1 %2").arg(tr("Will be saved to")).arg(newSavePath) // body
         << actions				// actions

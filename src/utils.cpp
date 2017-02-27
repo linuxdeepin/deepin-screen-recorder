@@ -31,14 +31,6 @@
 #include "window_manager.h"
 #include "constant.h"
 
-QString Utils::getImagePath(QString imageName)
-{
-    QDir dir(qApp->applicationDirPath());
-    dir.cdUp();
-
-    return QDir(DSR_ICON_PATH).filePath(imageName);
-}
-
 QString Utils::getQrcPath(QString imageName)
 {
     return QString(":/image/%1").arg(imageName);
