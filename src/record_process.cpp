@@ -29,14 +29,34 @@
 #include <QStandardPaths>
 #include "record_process.h"
 #include "utils.h"
+#include "settings.h"
 
 const int RecordProcess::RECORD_TYPE_VIDEO = 0;
 const int RecordProcess::RECORD_TYPE_GIF = 1;
-    
+
 RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 {
     saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
-    saveDir = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
+    defaultSaveDir = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
+
+    Settings *settings = new Settings();
+    QVariant saveDirectoryOption = settings->getOption("save_directory");
+    if (saveDirectoryOption.isNull()) {
+        saveDir = defaultSaveDir;
+    } else {
+        // Create directory first.
+        QString saveDirectory = saveDirectoryOption.toString();
+        QDir().mkdir(saveDirectory);
+
+        // Make save directory as user's setting if directory exists.
+        if (QDir(saveDirectory).exists()) {
+            saveDir = saveDirectory;
+        } else {
+            saveDir = defaultSaveDir;
+        }
+    }
+
+    settings->setOption("save_directory", saveDir);
 }
 
 void RecordProcess::setRecordInfo(int rx, int ry, int rw, int rh, QString name)
@@ -144,13 +164,13 @@ void RecordProcess::stopRecord()
 
     QList<QVariant> arg;
     arg << (QCoreApplication::applicationName()) // appname
-        << ((unsigned int) 0)					 // id
+        << ((unsigned int) 0)                    // id
         << QString("deepin-screen-recorder") // icon
-        << tr("Record finished")	// summary
+        << tr("Record finished")    // summary
         << QString("%1 %2").arg(tr("Will be saved to")).arg(newSavePath) // body
-        << actions				// actions
-        << hints				// hints
-        << (int) -1;			// timeout
+        << actions              // actions
+        << hints                // hints
+        << (int) -1;            // timeout
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
 
     QApplication::quit();

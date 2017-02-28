@@ -58,5 +58,6 @@ private:
     QString saveBaseName;
     QString saveTempDir;
     QString saveDir;
+    QString defaultSaveDir;
     QString saveAreaName;
 };

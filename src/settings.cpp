@@ -50,7 +50,7 @@ QVariant Settings::getOption(const QString &key)
     if (settings->contains(key)) {
         result = settings->value(key);
     } else {
-        result = true;
+        result = QVariant();
     }
     settings->endGroup();
 
