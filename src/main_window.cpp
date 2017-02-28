@@ -185,11 +185,15 @@ void MainWindow::paintEvent(QPaintEvent *)
         if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
             painter.setRenderHint(QPainter::Antialiasing, false);
             QPen framePen(QColor("#01bdff"));
-            framePen.setWidth(1);
+            framePen.setWidth(2);
             painter.setOpacity(1);
             painter.setBrush(QBrush());  // clear brush
             painter.setPen(framePen);
-            painter.drawRect(QRect(frameRect.x(), frameRect.y(), frameRect.width() - 1, frameRect.height() - 1));
+            painter.drawRect(QRect(
+                                 std::max(frameRect.x(), 1), 
+                                 std::max(frameRect.y(), 1), 
+                                 std::min(frameRect.width() - 1, rootWindowRect.width - 2), 
+                                 std::min(frameRect.height() - 1, rootWindowRect.height - 2)));
             painter.setRenderHint(QPainter::Antialiasing, true);
         }
 
