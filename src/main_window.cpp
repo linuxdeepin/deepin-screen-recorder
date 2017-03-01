@@ -683,7 +683,7 @@ void MainWindow::startCountdown()
 {
     recordButtonStatus = RECORD_BUTTON_WAIT;
 
-    recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight, selectAreaName);
+    recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight, selectAreaName, rootWindowRect.width, rootWindowRect.height);
     if (recordOptionPanel->isSaveAsGif()) {
         recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
     } else {

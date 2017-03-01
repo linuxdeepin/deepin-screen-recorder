@@ -60,12 +60,12 @@ RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
     settings->setOption("save_directory", saveDir);
 }
 
-void RecordProcess::setRecordInfo(int rx, int ry, int rw, int rh, QString name)
+void RecordProcess::setRecordInfo(int rx, int ry, int rw, int rh, QString name, int sw, int sh)
 {
     recordX = rx;
     recordY = ry;
-    recordWidth = rw;
-    recordHeight = rh;
+    recordWidth = rx + rw <= sw ? rw : sw - rx;
+    recordHeight = ry + rh <= sh ? rh : sh - ry;
     saveAreaName = name;
 }
 

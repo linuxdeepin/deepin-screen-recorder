@@ -36,7 +36,7 @@ public:
     
     RecordProcess(QObject *parent = 0);
     
-    void setRecordInfo(int recordX, int recordY, int record_width, int recordHeight, QString areaName);
+    void setRecordInfo(int recordX, int recordY, int record_width, int recordHeight, QString areaName, int screenWidth, int screenHeight);
     void setRecordType(int recordType);
     void startRecord();
     void stopRecord();
