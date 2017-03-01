@@ -228,7 +228,6 @@ QList<xcb_window_t> WindowManager::getWindows()
 
             foreach(QString type, getWindowTypes(window)) {
                 if (type == "_NET_WM_WINDOW_TYPE_NORMAL"
-                    || type == "_NET_WM_WINDOW_TYPE_DOCK"
                     || type == "_NET_WM_WINDOW_TYPE_DIALOG"
                     ) {
                     bool needAppend = false;
