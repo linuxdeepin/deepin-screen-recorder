@@ -49,8 +49,8 @@ RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
         QString saveDirectory = saveDirectoryOption.toString();
         QDir().mkdir(saveDirectory);
 
-        // Make save directory as user's setting if directory exists.
-        if (QDir(saveDirectory).exists()) {
+        // Make save directory as user's setting if directory exists and writable.
+        if (QDir(saveDirectory).exists() && QFileInfo(saveDirectory).isWritable()) {
             saveDir = saveDirectory;
         } else {
             saveDir = defaultSaveDir;
