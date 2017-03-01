@@ -146,7 +146,7 @@ void MainWindow::paintEvent(QPaintEvent *)
     // Just use for debug.
     // repaintCounter++;
     // qDebug() << repaintCounter;
-
+    
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
@@ -473,16 +473,16 @@ void MainWindow::startRecord()
     recordButtonStatus = RECORD_BUTTON_RECORDING;
 
     resetCursor();
-
-    recordProcess.startRecord();
+    
+    repaint();
 
     trayIcon->show();
 
     flashTrayIconTimer = new QTimer(this);
     connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
     flashTrayIconTimer->start(800);
-
-    repaint();
+    
+    recordProcess.startRecord();
 }
 
 void MainWindow::flashTrayIcon()
