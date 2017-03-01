@@ -474,7 +474,7 @@ void MainWindow::startRecord()
 
     resetCursor();
 
-    recordProcess.start();
+    recordProcess.startRecord();
 
     trayIcon->show();
 
@@ -667,6 +667,7 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)
 void MainWindow::stopRecord()
 {
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
+        hide();
         recordProcess.stopRecord();
     }
 }

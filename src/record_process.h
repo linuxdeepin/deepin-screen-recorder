@@ -32,11 +32,13 @@ class RecordProcess : public QThread
 public:
     static const int RECORD_TYPE_VIDEO;
     static const int RECORD_TYPE_GIF;
+    static const int RECORD_GIF_SLEEP_TIME;
     
     RecordProcess(QObject *parent = 0);
     
     void setRecordInfo(int recordX, int recordY, int record_width, int recordHeight, QString areaName);
     void setRecordType(int recordType);
+    void startRecord();
     void stopRecord();
     void recordGIF();
     void recordVideo();
@@ -60,4 +62,6 @@ private:
     QString saveDir;
     QString defaultSaveDir;
     QString saveAreaName;
+    
+    QTime *recordTime;
 };
