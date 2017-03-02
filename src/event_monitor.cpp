@@ -72,7 +72,7 @@ void EventMonitor::run()
         exit(-1);
     }
 
-    if (!XRecordEnableContext(display_datalink, context,  callback, (XPointer)0)) {
+    if (!XRecordEnableContext(display_datalink, context,  callback, (XPointer) this)) {
         fprintf(stderr, "XRecordEnableContext() failed\n");
         exit(-1);
     }
