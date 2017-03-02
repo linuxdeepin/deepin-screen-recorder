@@ -31,6 +31,7 @@
 #include "record_button.h"
 #include "record_option_panel.h"
 #include "countdown_tooltip.h"
+#include "event_monitor.h"
 
 class MainWindow : public QWidget
 {
@@ -143,6 +144,8 @@ private:
     RecordOptionPanel* recordOptionPanel;
     
     CountdownTooltip* countdownTooltip;
+    
+    EventMonitor eventMonitor;
     
     // Just use for debug.
     // int repaintCounter;

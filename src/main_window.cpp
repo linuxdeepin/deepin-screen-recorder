@@ -483,6 +483,8 @@ void MainWindow::startRecord()
     flashTrayIconTimer->start(800);
     
     recordProcess.startRecord();
+    
+    eventMonitor.start();
 }
 
 void MainWindow::flashTrayIcon()

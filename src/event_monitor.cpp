@@ -1,0 +1,98 @@
+/* -*- Mode: C++; indent-tabs-mode: nil; tab-width: 4 -*-
+ * -*- coding: utf-8 -*-
+ *
+ * Copyright (C) 2011 ~ 2017 Deepin, Inc.
+ *               2011 ~ 2017 Wang Yong
+ *
+ * Author:     Wang Yong <wangyong@deepin.com>
+ * Maintainer: Wang Yong <wangyong@deepin.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+#include "event_monitor.h"
+#include <X11/Xlibint.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/cursorfont.h>
+#include <X11/keysymdef.h>
+#include <X11/keysym.h>
+#include <X11/extensions/record.h>
+#include <X11/extensions/XTest.h>
+
+EventMonitor::EventMonitor(QObject *parent) : QThread(parent)
+{
+}
+
+void EventMonitor::run()
+{
+    Display* display = XOpenDisplay(0);
+    if (display == 0) {
+        fprintf(stderr, "unable to open display\n");
+        exit(-1);
+    }
+
+    // Receive from ALL clients, including future clients.
+    XRecordClientSpec clients = XRecordAllClients;
+    XRecordRange* range = XRecordAllocRange();
+    if (range == 0) {
+        fprintf(stderr, "unable to allocate XRecordRange\n");
+        exit(-1);
+    }
+
+    // Receive KeyPress, KeyRelease, ButtonPress, ButtonRelease and
+    // MotionNotify events.
+    memset(range, 0, sizeof(XRecordRange));
+    range->device_events.first = KeyPress;
+    range->device_events.last  = MotionNotify;
+    // And create the XRECORD context.
+    XRecordContext context = XRecordCreateContext (display, 0, &clients, 1, &range, 1);
+    if (context == 0) {
+        fprintf(stderr, "XRecordCreateContext failed\n");
+        exit(-1);
+    }
+    XFree(range);
+
+    XSync(display, True);
+
+    Display* display_datalink = XOpenDisplay(0);
+    if (display_datalink == 0) {
+        fprintf(stderr, "unable to open second display\n");
+        exit(-1);
+    }
+
+    if (!XRecordEnableContext(display_datalink, context,  callback, (XPointer)0)) {
+        fprintf(stderr, "XRecordEnableContext() failed\n");
+        exit(-1);
+    }
+}
+
+void EventMonitor::callback(XPointer ptr, XRecordInterceptData* data)
+{
+    ((EventMonitor *)ptr)->handleRecordEvent(data);
+}
+
+void EventMonitor::handleRecordEvent(XRecordInterceptData* data)
+{
+    if (data->category == XRecordFromServer) {
+        xEvent * event = (xEvent *)data->data;
+        if (event->u.u.type == ButtonPress) {
+            printf("%d %d\n", event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+            emit clicked(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+        } 
+    }
+
+    fflush(stdout);
+    XRecordFreeData(data);
+}
