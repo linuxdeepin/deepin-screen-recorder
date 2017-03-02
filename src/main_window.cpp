@@ -470,6 +470,10 @@ void MainWindow::startRecord()
     connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
     flashTrayIconTimer->start(800);
 
+    // Don't steal focus once start record, to avoid dde hot-corner no reposne cause by steal focus.
+    setAttribute(Qt::WA_ShowWithoutActivating);
+    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowSystemMenuHint);
+    
     recordProcess.startRecord();
 
     connect(&eventMonitor, SIGNAL(clicked(int, int)), this, SLOT(clickFeedback(int, int)), Qt::QueuedConnection);
