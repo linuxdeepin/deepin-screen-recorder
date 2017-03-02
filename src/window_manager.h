@@ -61,7 +61,7 @@ public:
     WindowRect adjustRectInScreenArea(WindowRect rect);
 
     xcb_window_t rootWindow;
-
+    
 private:
     xcb_connection_t* conn;
 };

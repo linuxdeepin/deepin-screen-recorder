@@ -106,16 +106,10 @@ void MainWindow::initAttributes()
     }
 
     recordButtonLayout = new QVBoxLayout();
+    setLayout(recordButtonLayout);
 
-    startTooltipLayout = new QVBoxLayout();
-    setLayout(startTooltipLayout);
     startTooltip = new StartTooltip();
-
-    startTooltipLayout->addStretch();
-    startTooltipLayout->addWidget(startTooltip, 0, Qt::AlignCenter);
-    startTooltipLayout->addStretch();
-
-    connect(startTooltip, SIGNAL(visibleChanged(bool)), this, SLOT(adjustStartTooltipBlur(bool)));
+    startTooltip->show();
 
     recordButton = new RecordButton();
     recordButton->setText(tr("Start recording"));
@@ -310,8 +304,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         if (!isFirstPressButton) {
             isFirstPressButton = true;
 
-            delete startTooltipLayout;
-            setLayout(recordButtonLayout);
             startTooltip->hide();
 
             Utils::clearBlur(windowManager, this->winId());
@@ -482,15 +474,6 @@ void MainWindow::startRecord()
 
     connect(&eventMonitor, SIGNAL(clicked(int, int)), this, SLOT(clickFeedback(int, int)), Qt::QueuedConnection);
     eventMonitor.start();
-}
-
-void MainWindow::adjustStartTooltipBlur(bool visible)
-{
-    if (visible) {
-        Utils::blurRect(windowManager, this->winId(), startTooltip->geometry());
-    } else {
-        Utils::clearBlur(windowManager, this->winId());
-    }
 }
 
 void MainWindow::clickFeedback(int x, int y)

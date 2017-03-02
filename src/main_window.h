@@ -78,7 +78,6 @@ public slots:
     void stopRecord();
     void startCountdown();
     void clickFeedback(int x, int y);
-    void adjustStartTooltipBlur(bool visible);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -141,7 +140,6 @@ private:
     
     WindowManager* windowManager;
     
-    QVBoxLayout* startTooltipLayout;
     QVBoxLayout* recordButtonLayout;
     QVBoxLayout* countdownLayout;
     RecordButton* recordButton;

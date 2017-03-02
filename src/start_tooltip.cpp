@@ -23,6 +23,9 @@
 
 #include <QWidget>
 #include <QPainter>
+#include <QDesktopWidget>
+#include <QApplication>
+#include <QStyle>
 #include <QEvent>
 #include "start_tooltip.h"
 #include "utils.h"
@@ -32,41 +35,55 @@
 
 StartTooltip::StartTooltip(QWidget *parent) : QWidget(parent)
 {
+    windowManager = new WindowManager();
+    
+    setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
+    setAttribute(Qt::WA_TranslucentBackground, true);
+
     iconImg = QImage(Utils::getQrcPath("deepin-screen-recorder.png"));
-    
+
     installEventFilter(this);
-    
+
     text = tr("Click or drag to\nselect the area to record");
     QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, text);
-    
+
     setFixedSize(size.width() + Constant::RECTANGLE_PADDING * 2,
                  size.height() + iconImg.height() + Constant::RECTANGLE_PADDING * 3);
+    
+    setGeometry(
+        QStyle::alignedRect(
+            Qt::LeftToRight,
+            Qt::AlignCenter,
+            this->size(),
+            qApp->desktop()->availableGeometry()
+            )
+        );
 }
 
 void StartTooltip::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    
+
     Utils::drawTooltipBackground(painter, rect());
-    
+
     painter.setOpacity(1);
     painter.drawImage(QPoint((rect().width() - iconImg.width()) / 2, Constant::RECTANGLE_PADDING), iconImg);
-    
-    Utils::drawTooltipText(painter, text, "#000000", Constant::RECTANGLE_FONT_SIZE, 
-                           QRectF(rect().x(), 
-                                  rect().y() + Constant::RECTANGLE_PADDING + iconImg.height(), 
-                                  rect().width(), 
+
+    Utils::drawTooltipText(painter, text, "#000000", Constant::RECTANGLE_FONT_SIZE,
+                           QRectF(rect().x(),
+                                  rect().y() + Constant::RECTANGLE_PADDING + iconImg.height(),
+                                  rect().width(),
                                   rect().height() - Constant::RECTANGLE_PADDING - iconImg.height()
                                ));
 }
 
 bool StartTooltip::eventFilter(QObject *, QEvent *event)
 {
-    if (event->type() == QEvent::Paint) {
-        emit visibleChanged(true);
+    if (event->type() == QEvent::ShowToParent) {
+        Utils::blurRect(windowManager, this->winId(), rect());
     } else if (event->type() == QEvent::HideToParent) {
-        emit visibleChanged(false);
+        Utils::clearBlur(windowManager, this->winId());
     }
     
     return false;
