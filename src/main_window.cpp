@@ -355,7 +355,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     recordX = rootWindowRect.width - recordWidth;
                 }
             
-                if (recordY + recordWidth > rootWindowRect.height) {
+                if (recordY + recordHeight > rootWindowRect.height) {
                     recordY = rootWindowRect.height - recordHeight;
                 }
             }
