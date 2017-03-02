@@ -26,6 +26,7 @@
 
 EventMonitor::EventMonitor(QObject *parent) : QThread(parent)
 {
+    isPress = false;
 }
 
 void EventMonitor::run()
@@ -80,9 +81,23 @@ void EventMonitor::handleRecordEvent(XRecordInterceptData* data)
 {
     if (data->category == XRecordFromServer) {
         xEvent * event = (xEvent *)data->data;
-        if (event->u.u.type == ButtonPress) {
-            emit clicked(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
-        } 
+        switch (event->u.u.type) {
+        case ButtonPress:
+            isPress = true;
+            emit buttonedPress(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+            break;
+        case MotionNotify:
+            if (isPress) {
+                emit buttonedDrag(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+            }
+            break;
+        case ButtonRelease:
+            isPress = false;
+            emit buttonedRelease(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+            break;
+        default:
+            break;
+        }
     }
 
     fflush(stdout);

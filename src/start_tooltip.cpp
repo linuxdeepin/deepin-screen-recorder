@@ -56,6 +56,8 @@ StartTooltip::StartTooltip(QWidget *parent) : QWidget(parent)
             qApp->desktop()->availableGeometry()
             )
         );
+    
+    Utils::passInputEvent(this->winId());
 }
 
 void StartTooltip::setWindowManager(WindowManager *wm)

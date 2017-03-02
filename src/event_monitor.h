@@ -60,10 +60,15 @@ public:
     void handleRecordEvent(XRecordInterceptData *);
     
 signals:
-    void clicked(int x, int y);
+    void buttonedPress(int x, int y);
+    void buttonedDrag(int x, int y);
+    void buttonedRelease(int x, int y);
 
 protected:
     void run();
+    
+private:
+    bool isPress;
 };
 
 #endif

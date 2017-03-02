@@ -33,6 +33,7 @@
 #include "countdown_tooltip.h"
 #include "start_tooltip.h"
 #include "event_monitor.h"
+#include "button_feedback.h"
 
 #undef Bool
 
@@ -77,8 +78,7 @@ public slots:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void stopRecord();
     void startCountdown();
-    void clickFeedback(int x, int y);
-
+    
 protected:
     bool eventFilter(QObject *object, QEvent *event);
     int getAction(QEvent *event);
@@ -147,6 +147,8 @@ private:
     
     StartTooltip* startTooltip;
     CountdownTooltip* countdownTooltip;
+    
+    ButtonFeedback* buttonFeedback;
     
     EventMonitor eventMonitor;
     

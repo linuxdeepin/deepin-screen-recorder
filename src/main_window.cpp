@@ -346,20 +346,20 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                 }
 
+            } else {
+                // Make sure record area not too small.
+                recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
+                recordHeight = recordHeight < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordHeight;
+            
+                if (recordX + recordWidth > rootWindowRect.width) {
+                    recordX = rootWindowRect.width - recordWidth;
+                }
+            
+                if (recordY + recordWidth > rootWindowRect.height) {
+                    recordY = rootWindowRect.height - recordHeight;
+                }
             }
             
-            // Make sure record area not too small.
-            recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
-            recordHeight = recordHeight < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordHeight;
-            
-            if (recordX + recordWidth > rootWindowRect.width) {
-                recordX = rootWindowRect.width - recordWidth;
-            }
-            
-            if (recordY + recordWidth > rootWindowRect.height) {
-                recordY = rootWindowRect.height - recordHeight;
-            }
-
             showRecordButton();
 
             needRepaint = true;
@@ -483,19 +483,14 @@ void MainWindow::startRecord()
     connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
     flashTrayIconTimer->start(800);
 
-    // Don't steal focus once start record, to avoid dde hot-corner no reposne cause by steal focus.
-    setAttribute(Qt::WA_ShowWithoutActivating);
-    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowSystemMenuHint);
-    
     recordProcess.startRecord();
+    
+    buttonFeedback = new ButtonFeedback();
 
-    connect(&eventMonitor, SIGNAL(clicked(int, int)), this, SLOT(clickFeedback(int, int)), Qt::QueuedConnection);
+    connect(&eventMonitor, SIGNAL(buttonedPress(int, int)), buttonFeedback, SLOT(showPressFeedback(int, int)), Qt::QueuedConnection);
+    connect(&eventMonitor, SIGNAL(buttonedDrag(int, int)), buttonFeedback, SLOT(showDragFeedback(int, int)), Qt::QueuedConnection);
+    connect(&eventMonitor, SIGNAL(buttonedRelease(int, int)), buttonFeedback, SLOT(showReleaseFeedback(int, int)), Qt::QueuedConnection);
     eventMonitor.start();
-}
-
-void MainWindow::clickFeedback(int x, int y)
-{
-    qDebug() << x << y;
 }
 
 void MainWindow::flashTrayIcon()

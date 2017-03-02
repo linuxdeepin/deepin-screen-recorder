@@ -328,7 +328,17 @@ WindowRect WindowManager::adjustRectInScreenArea(WindowRect rect)
     newRect.y = rect.y >= 0 ? rect.y : 0;
     newRect.width = rect.x >= 0 ? rect.width : rect.width + rect.x;
     newRect.height = rect.y >= 0 ? rect.height : rect.height + rect.y;
-
+    
+    WindowRect rootWindowRect = getRootWindowRect();
+    
+    if (newRect.x + newRect.width > rootWindowRect.width) {
+        newRect.width = rootWindowRect.width - newRect.x;
+    }
+    
+    if (newRect.y + newRect.height > rootWindowRect.height) {
+        newRect.height = rootWindowRect.height - newRect.y;
+    }
+    
     return newRect;
 }
 

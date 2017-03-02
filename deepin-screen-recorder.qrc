@@ -1,5 +1,15 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
+    <file>image/button_feedback_0.png</file>
+    <file>image/button_feedback_1.png</file>
+    <file>image/button_feedback_2.png</file>
+    <file>image/button_feedback_3.png</file>
+    <file>image/button_feedback_4.png</file>
+    <file>image/button_feedback_5.png</file>
+    <file>image/button_feedback_6.png</file>
+    <file>image/button_feedback_7.png</file>
+    <file>image/button_feedback_8.png</file>
+    <file>image/button_feedback_9.png</file>
     <file>image/countdown_1.png</file>
     <file>image/countdown_2.png</file>
     <file>image/countdown_3.png</file>

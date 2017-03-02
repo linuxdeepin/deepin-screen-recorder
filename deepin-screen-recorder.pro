@@ -12,8 +12,8 @@ PKGCONFIG += xcb xcb-util dtkwidget dtkbase
 RESOURCES = deepin-screen-recorder.qrc
 
 # Input
-HEADERS += src/window_manager.h src/main_window.h src/record_process.h src/settings.h src/utils.h src/record_button.h src/record_option_panel.h src/countdown_tooltip.h src/constant.h src/event_monitor.h src/start_tooltip.h
-SOURCES += src/main.cpp src/window_manager.cpp src/main_window.cpp src/record_process.cpp src/settings.cpp src/utils.cpp src/record_button.cpp src/record_option_panel.cpp src/countdown_tooltip.cpp src/constant.cpp src/event_monitor.cpp src/start_tooltip.cpp
+HEADERS += src/window_manager.h src/main_window.h src/record_process.h src/settings.h src/utils.h src/record_button.h src/record_option_panel.h src/countdown_tooltip.h src/constant.h src/event_monitor.h src/start_tooltip.h src/button_feedback.h
+SOURCES += src/main.cpp src/window_manager.cpp src/main_window.cpp src/record_process.cpp src/settings.cpp src/utils.cpp src/record_button.cpp src/record_option_panel.cpp src/countdown_tooltip.cpp src/constant.cpp src/event_monitor.cpp src/start_tooltip.cpp src/button_feedback.cpp
 
 QT += core
 QT += widgets
