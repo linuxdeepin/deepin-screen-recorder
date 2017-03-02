@@ -30,8 +30,6 @@ class StartTooltip : public QWidget
 {
     Q_OBJECT
     
-    static const int MIDDLE_PADDING;
-    
 public:
     StartTooltip(QWidget *parent = 0);
     

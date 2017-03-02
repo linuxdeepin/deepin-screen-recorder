@@ -30,19 +30,17 @@
 
 #include <QDebug>
 
-const int StartTooltip::MIDDLE_PADDING = 8;
-
 StartTooltip::StartTooltip(QWidget *parent) : QWidget(parent)
 {
     iconImg = QImage(Utils::getQrcPath("deepin-screen-recorder.png"));
     
     installEventFilter(this);
     
-    text = tr("Click or drag to select the area to record");
+    text = tr("Click or drag to\nselect the area to record");
     QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, text);
     
     setFixedSize(size.width() + Constant::RECTANGLE_PADDING * 2,
-                 size.height() + iconImg.height() + Constant::RECTANGLE_PADDING * 2 + MIDDLE_PADDING * 2);
+                 size.height() + iconImg.height() + Constant::RECTANGLE_PADDING * 3);
 }
 
 void StartTooltip::paintEvent(QPaintEvent *)
@@ -53,13 +51,13 @@ void StartTooltip::paintEvent(QPaintEvent *)
     Utils::drawTooltipBackground(painter, rect());
     
     painter.setOpacity(1);
-    painter.drawImage(QPoint((rect().width() - iconImg.width()) / 2, Constant::RECTANGLE_PADDING + MIDDLE_PADDING), iconImg);
+    painter.drawImage(QPoint((rect().width() - iconImg.width()) / 2, Constant::RECTANGLE_PADDING), iconImg);
     
     Utils::drawTooltipText(painter, text, "#000000", Constant::RECTANGLE_FONT_SIZE, 
                            QRectF(rect().x(), 
-                                  rect().y() + Constant::RECTANGLE_PADDING + MIDDLE_PADDING + iconImg.height(), 
+                                  rect().y() + Constant::RECTANGLE_PADDING + iconImg.height(), 
                                   rect().width(), 
-                                  rect().height() - Constant::RECTANGLE_PADDING - MIDDLE_PADDING - iconImg.height()
+                                  rect().height() - Constant::RECTANGLE_PADDING - iconImg.height()
                                ));
 }
 

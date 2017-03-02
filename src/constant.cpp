@@ -23,6 +23,6 @@
 
 #include "constant.h"
 
-const int Constant::RECTANGLE_PADDING = 16;
+const int Constant::RECTANGLE_PADDING = 24;
 const int Constant::RECTANGLE_RADIUS = 8;
 const int Constant::RECTANGLE_FONT_SIZE = 11;
