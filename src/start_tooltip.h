@@ -33,6 +33,7 @@ class StartTooltip : public QWidget
     
 public:
     StartTooltip(QWidget *parent = 0);
+    void setWindowManager(WindowManager *wm);
     
 protected:
     void paintEvent(QPaintEvent *event);

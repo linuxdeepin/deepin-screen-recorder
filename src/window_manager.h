@@ -21,8 +21,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 
-#ifndef LINE_H
-#define LINE_H
+#ifndef WINDOWMANAGER_H
+#define WINDOWMANAGER_H
 
 #include <QObject>
 #include <xcb/xcb.h>

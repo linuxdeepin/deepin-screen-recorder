@@ -109,6 +109,7 @@ void MainWindow::initAttributes()
     setLayout(recordButtonLayout);
 
     startTooltip = new StartTooltip();
+    startTooltip->setWindowManager(windowManager);
     startTooltip->show();
 
     recordButton = new RecordButton();

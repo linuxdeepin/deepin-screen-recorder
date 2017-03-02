@@ -35,8 +35,6 @@
 
 StartTooltip::StartTooltip(QWidget *parent) : QWidget(parent)
 {
-    windowManager = new WindowManager();
-    
     setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
@@ -58,6 +56,11 @@ StartTooltip::StartTooltip(QWidget *parent) : QWidget(parent)
             qApp->desktop()->availableGeometry()
             )
         );
+}
+
+void StartTooltip::setWindowManager(WindowManager *wm)
+{
+    windowManager = wm;
 }
 
 void StartTooltip::paintEvent(QPaintEvent *)
