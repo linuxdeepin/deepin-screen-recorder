@@ -29,8 +29,6 @@
 #include <QPainter>
 #include <QWidget>
 #include "main_window.h"
-#include <X11/extensions/shape.h>
-#include <QtX11Extras/QX11Info>
 #include <QVBoxLayout>
 #include "utils.h"
 #include "record_button.h"
@@ -108,8 +106,17 @@ void MainWindow::initAttributes()
     }
 
     recordButtonLayout = new QVBoxLayout();
-    setLayout(recordButtonLayout);
 
+    startTooltipLayout = new QVBoxLayout();
+    setLayout(startTooltipLayout);
+    startTooltip = new StartTooltip();
+
+    startTooltipLayout->addStretch();
+    startTooltipLayout->addWidget(startTooltip, 0, Qt::AlignCenter);
+    startTooltipLayout->addStretch();
+    
+    connect(startTooltip, SIGNAL(visibleChanged(bool)), this, SLOT(adjustStartTooltipBlur(bool)));
+    
     recordButton = new RecordButton();
     recordButton->setText(tr("Start recording"));
     connect(recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
@@ -124,7 +131,7 @@ void MainWindow::initAttributes()
 
     recordButton->hide();
     recordOptionPanel->hide();
-
+    
     // Just use for debug.
     // repaintCounter = 0;
 }
@@ -146,24 +153,9 @@ void MainWindow::paintEvent(QPaintEvent *)
     // Just use for debug.
     // repaintCounter++;
     // qDebug() << repaintCounter;
-    
+
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
-
-    if (!isFirstPressButton) {
-        QString tooltipString = tr("Click or drag to select the area to record");
-        QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, tooltipString);
-        int rectWidth = size.width() + Constant::RECTANGLE_PADDING * 2;
-        int rectHeight = size.height() + Constant::RECTANGLE_PADDING * 2;
-        QRectF tooltipRect((rootWindowRect.width - rectWidth) / 2,
-                           (rootWindowRect.height - rectHeight) / 2,
-                           rectWidth,
-                           rectHeight);
-
-        renderTooltipRect(painter, tooltipRect);
-
-        Utils::drawTooltipText(painter, tooltipString, "#000000", Constant::RECTANGLE_FONT_SIZE, tooltipRect);
-    }
 
     if (recordWidth > 0 && recordHeight > 0) {
 
@@ -190,9 +182,9 @@ void MainWindow::paintEvent(QPaintEvent *)
             painter.setBrush(QBrush());  // clear brush
             painter.setPen(framePen);
             painter.drawRect(QRect(
-                                 std::max(frameRect.x(), 1), 
-                                 std::max(frameRect.y(), 1), 
-                                 std::min(frameRect.width() - 1, rootWindowRect.width - 2), 
+                                 std::max(frameRect.x(), 1),
+                                 std::max(frameRect.y(), 1),
+                                 std::min(frameRect.width() - 1, rootWindowRect.width - 2),
                                  std::min(frameRect.height() - 1, rootWindowRect.height - 2)));
             painter.setRenderHint(QPainter::Antialiasing, true);
         }
@@ -317,6 +309,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         dragStartY = mouseEvent->y();
         if (!isFirstPressButton) {
             isFirstPressButton = true;
+            
+            delete startTooltipLayout;
+            setLayout(recordButtonLayout);
+            startTooltip->hide();
 
             Utils::clearBlur(windowManager, this->winId());
         } else {
@@ -473,7 +469,7 @@ void MainWindow::startRecord()
     recordButtonStatus = RECORD_BUTTON_RECORDING;
 
     resetCursor();
-    
+
     repaint();
 
     trayIcon->show();
@@ -481,11 +477,20 @@ void MainWindow::startRecord()
     flashTrayIconTimer = new QTimer(this);
     connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
     flashTrayIconTimer->start(800);
-    
+
     recordProcess.startRecord();
-    
+
     connect(&eventMonitor, SIGNAL(clicked(int, int)), this, SLOT(clickFeedback(int, int)), Qt::QueuedConnection);
     eventMonitor.start();
+}
+
+void MainWindow::adjustStartTooltipBlur(bool visible)
+{
+    if (visible) {
+        Utils::blurRect(windowManager, this->winId(), startTooltip->geometry());
+    } else {
+        Utils::clearBlur(windowManager, this->winId());
+    }
 }
 
 void MainWindow::clickFeedback(int x, int y)
@@ -506,19 +511,6 @@ void MainWindow::flashTrayIcon()
     if (flashTrayIconCounter > 10) {
         flashTrayIconCounter = 1;
     }
-}
-
-void MainWindow::passInputEvent()
-{
-    XRectangle* reponseArea = new XRectangle;
-    reponseArea->x = 0;
-    reponseArea->y = 0;
-    reponseArea->width = 0;
-    reponseArea->height = 0;
-
-    XShapeCombineRectangles(QX11Info::display(), winId(), ShapeInput, 0, 0, reponseArea ,1 ,ShapeSet, YXBanded);
-
-    delete reponseArea;
 }
 
 void MainWindow::resizeTop(QMouseEvent *mouseEvent)
@@ -680,13 +672,6 @@ void MainWindow::stopRecord()
     }
 }
 
-void MainWindow::renderTooltipRect(QPainter &painter, QRectF &rect)
-{
-    Utils::drawTooltipBackground(painter, rect.toRect());
-
-    Utils::blurRect(windowManager, this->winId(), rect);
-}
-
 void MainWindow::startCountdown()
 {
     recordButtonStatus = RECORD_BUTTON_WAIT;
@@ -714,10 +699,10 @@ void MainWindow::startCountdown()
     countdownLayout->addStretch();
 
     countdownTooltip->start();
-    
+
     adjustLayout(countdownLayout, countdownTooltip->rect().width(), countdownTooltip->rect().height());
 
-    passInputEvent();
+    Utils::passInputEvent(this->winId());
 
     repaint();
 }
@@ -727,7 +712,7 @@ void MainWindow::showRecordButton()
     recordButton->show();
     recordOptionPanel->show();
 
-    adjustLayout(recordButtonLayout, 
+    adjustLayout(recordButtonLayout,
                  recordButton->width(),
                  recordButton->height() + RECORD_OPTIONAL_PADDING + recordOptionPanel->height());
 }

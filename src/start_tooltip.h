@@ -21,20 +21,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 
-#include <QObject>
-#include <QString>
-#include "window_manager.h"
+#ifndef STARTTOOLTIP_H
+#define STARTTOOLTIP_H
 
-class Utils : public QObject
+#include <QWidget>
+
+class StartTooltip : public QWidget
 {
+    Q_OBJECT
+    
+    static const int MIDDLE_PADDING;
+    
 public:
-    static QString getQrcPath(QString imageName);
-    static QSize getRenderSize(int fontSize, QString string);
-    static void setFontSize(QPainter &painter, int textSize);
-    static void blurRect(WindowManager *windowManager, int widgetId, QRectF rect);
-    static void blurRects(WindowManager *windowManager, int widgetId, QList<QRectF> rects);
-    static void clearBlur(WindowManager *windowManager, int widgetId);
-    static void drawTooltipBackground(QPainter &painter, QRect rect, qreal opacity = 0.4);
-    static void drawTooltipText(QPainter &painter, QString text, QString textColor, int textSize, QRectF rect);
-    static void passInputEvent(int wid);
+    StartTooltip(QWidget *parent = 0);
+    
+signals:
+    void visibleChanged(bool visible);
+    
+protected:
+    void paintEvent(QPaintEvent *event);
+    bool eventFilter(QObject *, QEvent *event);
+    
+private:
+    QString text;
+    
+    QImage iconImg;
 };
+
+#endif

@@ -27,6 +27,8 @@
 #include <QDebug>
 #include <QFontMetrics>
 #include <QPainter>
+#include <QtX11Extras/QX11Info>
+#include <X11/extensions/shape.h>
 #include "utils.h"
 #include "window_manager.h"
 #include "constant.h"
@@ -64,9 +66,10 @@ void Utils::setFontSize(QPainter &painter, int textSize)
     painter.setFont(font);
 }
 
-void Utils::blurRect(WindowManager *windowManager, int widgetId, QRectF &rect)
+void Utils::blurRect(WindowManager *windowManager, int widgetId, QRectF rect)
 {
     QVector<uint32_t> data;
+    
     data << rect.x() << rect.y() << rect.width() << rect.height() << Constant::RECTANGLE_RADIUS << Constant::RECTANGLE_RADIUS;
     windowManager->setWindowBlur(widgetId, data);
 }    
@@ -108,3 +111,17 @@ void Utils::drawTooltipText(QPainter &painter, QString text, QString textColor, 
     painter.setPen(QPen(QColor(textColor)));
     painter.drawText(rect, Qt::AlignCenter, text);
 }    
+
+void Utils::passInputEvent(int wid)
+{
+    XRectangle* reponseArea = new XRectangle;
+    reponseArea->x = 0;
+    reponseArea->y = 0;
+    reponseArea->width = 0;
+    reponseArea->height = 0;
+
+    XShapeCombineRectangles(QX11Info::display(), wid, ShapeInput, 0, 0, reponseArea ,1 ,ShapeSet, YXBanded);
+
+    delete reponseArea;
+}
+

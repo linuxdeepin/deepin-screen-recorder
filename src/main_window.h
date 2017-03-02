@@ -31,7 +31,10 @@
 #include "record_button.h"
 #include "record_option_panel.h"
 #include "countdown_tooltip.h"
+#include "start_tooltip.h"
 #include "event_monitor.h"
+
+#undef Bool
 
 class MainWindow : public QWidget
 {
@@ -75,6 +78,7 @@ public slots:
     void stopRecord();
     void startCountdown();
     void clickFeedback(int x, int y);
+    void adjustStartTooltipBlur(bool visible);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -87,8 +91,6 @@ protected:
     void updateCursor(QEvent *event);
     void setDragCursor();
     void resetCursor();
-    void passInputEvent();
-    void renderTooltipRect(QPainter &painter, QRectF &rect);
     void setFontSize(QPainter &painter, int textSize);
     void showRecordButton();
     void hideRecordButton();
@@ -139,11 +141,13 @@ private:
     
     WindowManager* windowManager;
     
+    QVBoxLayout* startTooltipLayout;
     QVBoxLayout* recordButtonLayout;
     QVBoxLayout* countdownLayout;
     RecordButton* recordButton;
     RecordOptionPanel* recordOptionPanel;
     
+    StartTooltip* startTooltip;
     CountdownTooltip* countdownTooltip;
     
     EventMonitor eventMonitor;

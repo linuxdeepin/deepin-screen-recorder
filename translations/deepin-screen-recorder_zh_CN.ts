@@ -24,10 +24,6 @@ or press the shortcut again to stop recording</source>
         <source>Select area</source>
         <translation>选择区域</translation>
     </message>
-    <message>
-        <source>Click or drag to select the area to record</source>
-        <translation>点击或拖拽来选择录制区域</translation>
-    </message>
 </context>
 <context>
     <name>RecordProcess</name>
@@ -46,6 +42,13 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Will be saved to</source>
         <translation>保存在</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to select the area to record</source>
+        <translation>点击或拖拽来选择录制区域</translation>
     </message>
 </context>
 <context>

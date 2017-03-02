@@ -23,13 +23,6 @@
 
 #include "event_monitor.h"
 #include <X11/Xlibint.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/cursorfont.h>
-#include <X11/keysymdef.h>
-#include <X11/keysym.h>
-#include <X11/extensions/record.h>
-#include <X11/extensions/XTest.h>
 
 EventMonitor::EventMonitor(QObject *parent) : QThread(parent)
 {
