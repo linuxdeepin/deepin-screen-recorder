@@ -101,7 +101,7 @@ void MainWindow::initAttributes()
     rootWindowRect = windowManager->getRootWindowRect();
 
     for (int i = 0; i < windows.length(); i++) {
-        windowRects.append(windowManager->getWindowRect(windows[i]));
+        windowRects.append(windowManager->adjustRectInScreenArea(windowManager->getWindowRect(windows[i])));
         windowNames.append(windowManager->getWindowClass(windows[i]));
     }
 
@@ -340,10 +340,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             if (!isFirstDrag) {
                 QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
                 for (int i = 0; i < windowRects.length(); i++) {
-                    int wx = windowRects[i].x >= 0 ? windowRects[i].x : 0;
-                    int wy = windowRects[i].y >= 0 ? windowRects[i].y : 0;
-                    int ww = windowRects[i].x >= 0 ? windowRects[i].width : windowRects[i].width + windowRects[i].x;
-                    int wh = windowRects[i].y >= 0 ? windowRects[i].height : windowRects[i].height + windowRects[i].y;
+                    int wx = windowRects[i].x;
+                    int wy = windowRects[i].y;
+                    int ww = windowRects[i].width;
+                    int wh = windowRects[i].height;
                     int ex = mouseEvent->x();
                     int ey = mouseEvent->y();
                     if (ex > wx && ex < wx + ww && ey > wy && ey < wy + wh) {
@@ -434,10 +434,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
         } else {
             for (int i = 0; i < windowRects.length(); i++) {
-                int wx = windowRects[i].x >= 0 ? windowRects[i].x : 0;
-                int wy = windowRects[i].y >= 0 ? windowRects[i].y : 0;
-                int ww = windowRects[i].x >= 0 ? windowRects[i].width : windowRects[i].width + windowRects[i].x;
-                int wh = windowRects[i].y >= 0 ? windowRects[i].height : windowRects[i].height + windowRects[i].y;
+                int wx = windowRects[i].x;
+                int wy = windowRects[i].y;
+                int ww = windowRects[i].width;
+                int wh = windowRects[i].height;
                 int ex = mouseEvent->x();
                 int ey = mouseEvent->y();
                 if (ex > wx && ex < wx + ww && ey > wy && ey < wy + wh) {

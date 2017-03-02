@@ -328,6 +328,17 @@ WindowRect WindowManager::getWindowRect(xcb_window_t window)
     return rect;
 }
 
+WindowRect WindowManager::adjustRectInScreenArea(WindowRect rect) 
+{
+    WindowRect newRect;
+    newRect.x = rect.x >= 0 ? rect.x : 0;
+    newRect.y = rect.y >= 0 ? rect.y : 0;
+    newRect.width = rect.x >= 0 ? rect.width : rect.width + rect.x;
+    newRect.height = rect.y >= 0 ? rect.height : rect.height + rect.y;
+    
+    return newRect;
+}
+
 template <typename... ArgTypes, typename... ArgTypes2>
 static inline unsigned int XcbCallVoid(xcb_void_cookie_t (*func)(xcb_connection_t *, ArgTypes...), ArgTypes2... args...)
 {

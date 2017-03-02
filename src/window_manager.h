@@ -58,6 +58,7 @@ public:
     xcb_get_property_reply_t* getProperty(xcb_window_t window, QString propertyName, xcb_atom_t type);
     void setWindowBlur(int wid, QVector<uint32_t> &data);
     void translateCoords(xcb_window_t window, int32_t& x, int32_t& y);
+    WindowRect adjustRectInScreenArea(WindowRect rect);
 
     xcb_window_t rootWindow;
 
