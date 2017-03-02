@@ -88,7 +88,6 @@ void EventMonitor::handleRecordEvent(XRecordInterceptData* data)
     if (data->category == XRecordFromServer) {
         xEvent * event = (xEvent *)data->data;
         if (event->u.u.type == ButtonPress) {
-            printf("%d %d\n", event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             emit clicked(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
         } 
     }

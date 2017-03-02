@@ -484,7 +484,13 @@ void MainWindow::startRecord()
     
     recordProcess.startRecord();
     
+    connect(&eventMonitor, SIGNAL(clicked(int, int)), this, SLOT(clickFeedback(int, int)), Qt::QueuedConnection);
     eventMonitor.start();
+}
+
+void MainWindow::clickFeedback(int x, int y)
+{
+    qDebug() << x << y;
 }
 
 void MainWindow::flashTrayIcon()
