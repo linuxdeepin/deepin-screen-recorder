@@ -347,6 +347,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
 
             }
+            
+            // Make sure record area not too small.
+            recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
+            recordHeight = recordHeight < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordHeight;
 
             showRecordButton();
 
