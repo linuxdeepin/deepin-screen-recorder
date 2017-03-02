@@ -54,6 +54,8 @@ ButtonFeedback::ButtonFeedback(QWidget *parent) : QWidget(parent)
     
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    
+    Utils::passInputEvent(this->winId());
 }
 
 void ButtonFeedback::update()
