@@ -227,23 +227,16 @@ QList<xcb_window_t> WindowManager::getWindows()
             xcb_window_t window = windowList[i];
 
             foreach(QString type, getWindowTypes(window)) {
-                if (type == "_NET_WM_WINDOW_TYPE_NORMAL"
-                    || type == "_NET_WM_WINDOW_TYPE_DIALOG"
+                if (type == "_NET_WM_WINDOW_TYPE_NORMAL" ||
+                    type == "_NET_WM_WINDOW_TYPE_DIALOG"
                     ) {
                     bool needAppend = false;
 
                     QStringList states = getWindowStates(window);
-                    if (states.length() == 0) {
+                    if (states.length() == 0 ||
+                        (!states.contains("_NET_WM_STATE_HIDDEN"))) {
                         if (getWindowWorkspace(window) == getCurrentWorkspace(rootWindow)) {
                             needAppend = true;
-                        }
-                    } else {
-                        foreach(QString state, states) {
-                            if (state != "_NET_WM_STATE_HIDDEN") {
-                                if (getWindowWorkspace(window) == getCurrentWorkspace(rootWindow)) {
-                                    needAppend = true;
-                                }
-                            }
                         }
                     }
 
@@ -261,7 +254,7 @@ QList<xcb_window_t> WindowManager::getWindows()
     // We need re-sort windows list from up to bottom,
     // to make compare cursor with window area from up to bottom.
     std::reverse(windows.begin(), windows.end());
-    
+
     // Add desktop window.
     windows.append(rootWindow);
 
@@ -328,14 +321,14 @@ WindowRect WindowManager::getWindowRect(xcb_window_t window)
     return rect;
 }
 
-WindowRect WindowManager::adjustRectInScreenArea(WindowRect rect) 
+WindowRect WindowManager::adjustRectInScreenArea(WindowRect rect)
 {
     WindowRect newRect;
     newRect.x = rect.x >= 0 ? rect.x : 0;
     newRect.y = rect.y >= 0 ? rect.y : 0;
     newRect.width = rect.x >= 0 ? rect.width : rect.width + rect.x;
     newRect.height = rect.y >= 0 ? rect.height : rect.height + rect.y;
-    
+
     return newRect;
 }
 
