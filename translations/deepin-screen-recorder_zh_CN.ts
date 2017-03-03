@@ -40,7 +40,7 @@ or press the shortcut again to stop recording</source>
         <translation>录制完毕</translation>
     </message>
     <message>
-        <source>Will be saved to</source>
+        <source>Saved to</source>
         <translation>保存在</translation>
     </message>
 </context>
