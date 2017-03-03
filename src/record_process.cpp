@@ -45,15 +45,18 @@ RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
     if (saveDirectoryOption.isNull()) {
         saveDir = defaultSaveDir;
     } else {
-        // Create directory first.
-        QString saveDirectory = saveDirectoryOption.toString();
-        QDir().mkdir(saveDirectory);
-
         // Make save directory as user's setting if directory exists and writable.
-        if (QDir(saveDirectory).exists() && QFileInfo(saveDirectory).isWritable()) {
-            saveDir = saveDirectory;
+        QString saveDirectory = saveDirectoryOption.toString();
+        if (QDir(saveDirectory).exists()) {
+            if (QFileInfo(saveDirectory).isWritable()) {
+                saveDir = saveDirectory;
+            } else {
+                saveDir = defaultSaveDir;
+                qDebug() << QString("Directory %1 is not writable, save to %2").arg(saveDirectory).arg(defaultSaveDir);
+            }
         } else {
             saveDir = defaultSaveDir;
+            qDebug() << QString("Directory %1 not exists, save to %2").arg(saveDirectory).arg(defaultSaveDir);
         }
     }
 
