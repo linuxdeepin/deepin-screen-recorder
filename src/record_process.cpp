@@ -157,12 +157,16 @@ void RecordProcess::stopRecord()
         msleep(RECORD_GIF_SLEEP_TIME);
         qDebug() << QString("Record time too short (%1), wait 1 second make sure generate gif file correctly.").arg(elapsedTime);
     }
-    
+
     // Exit record process.
     process->terminate();
 
     // Wait thread.
     wait();
+
+    // Move file to save directory.
+    QString newSavePath = QDir(saveDir).filePath(saveBaseName);
+    QFile::rename(savePath, newSavePath);
 
     // Popup notify.
     QDBusInterface notification("org.freedesktop.Notifications",
@@ -173,22 +177,19 @@ void RecordProcess::stopRecord()
     QStringList actions;
     actions << "_open" << tr("View");
 
-    QString newSavePath = QDir(saveDir).filePath(saveBaseName);
-    QFile::rename(savePath, newSavePath);
-
     QVariantMap hints;
     hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
 
 
     QList<QVariant> arg;
-    arg << (QCoreApplication::applicationName()) // appname
-        << ((unsigned int) 0)                    // id
-        << QString("deepin-screen-recorder") // icon
-        << tr("Record finished")    // summary
+    arg << (QCoreApplication::applicationName())                 // appname
+        << ((unsigned int) 0)                                    // id
+        << QString("deepin-screen-recorder")                     // icon
+        << tr("Record finished")                                 // summary
         << QString("%1 %2").arg(tr("Saved to")).arg(newSavePath) // body
-        << actions              // actions
-        << hints                // hints
-        << (int) -1;            // timeout
+        << actions                                               // actions
+        << hints                                                 // hints
+        << (int) -1;                                             // timeout
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
 
     QApplication::quit();
