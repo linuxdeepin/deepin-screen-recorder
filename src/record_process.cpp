@@ -164,6 +164,13 @@ void RecordProcess::stopRecord()
     // Wait thread.
     wait();
 
+    // Add end char ';' to gif file, avoid browser or gif-player can't play it.
+    if (recordType == RECORD_TYPE_GIF) {
+        FILE *gifFile = fopen(savePath.toUtf8().constData(), "ab");
+        putc(0x3B, gifFile);
+        fclose(gifFile);
+    }
+
     // Move file to save directory.
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
     QFile::rename(savePath, newSavePath);
