@@ -86,6 +86,9 @@ void MainWindow::initAttributes()
     recordY = 0;
     recordWidth = 0;
     recordHeight = 0;
+    
+    dragRecordX = -1;
+    dragRecordY = -1;
 
     drawDragPoint = false;
 
@@ -431,7 +434,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     needRepaint = true;
                 }
             } else if (isPressButton) {
-                if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+                if (recordButtonStatus == RECORD_BUTTON_NORMAL && dragRecordX >= 0 && dragRecordY >= 0) {
                     if (dragAction == ACTION_MOVE) {
                         recordX = std::max(std::min(dragRecordX + mouseEvent->x() - dragStartX, rootWindowRect.width - recordWidth), 1);
                         recordY = std::max(std::min(dragRecordY + mouseEvent->y() - dragStartY, rootWindowRect.height - recordHeight), 1);
@@ -484,7 +487,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     recordHeight = wh;
 
                     needRepaint = true;
-
+                    
                     break;
                 }
             }
