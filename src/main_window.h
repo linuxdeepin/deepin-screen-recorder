@@ -78,6 +78,10 @@ public slots:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void stopRecord();
     void startCountdown();
+    void showPressFeedback(int x, int y);
+    void showDragFeedback(int x, int y);
+    void showReleaseFeedback(int x, int y);
+    void responseEsc();
     
 protected:
     bool eventFilter(QObject *object, QEvent *event);

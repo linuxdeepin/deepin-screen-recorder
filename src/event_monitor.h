@@ -63,6 +63,7 @@ signals:
     void buttonedPress(int x, int y);
     void buttonedDrag(int x, int y);
     void buttonedRelease(int x, int y);
+    void pressEsc();
 
 protected:
     void run();

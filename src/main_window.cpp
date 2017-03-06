@@ -143,6 +143,42 @@ void MainWindow::initResource()
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
     setDragCursor();
+    
+    buttonFeedback = new ButtonFeedback();
+
+    connect(&eventMonitor, SIGNAL(buttonedPress(int, int)), this, SLOT(showPressFeedback(int, int)), Qt::QueuedConnection);
+    connect(&eventMonitor, SIGNAL(buttonedDrag(int, int)), this, SLOT(showDragFeedback(int, int)), Qt::QueuedConnection);
+    connect(&eventMonitor, SIGNAL(buttonedRelease(int, int)), this, SLOT(showReleaseFeedback(int, int)), Qt::QueuedConnection);
+    connect(&eventMonitor, SIGNAL(pressEsc()), this, SLOT(responseEsc()), Qt::QueuedConnection);
+    eventMonitor.start();
+}
+
+void MainWindow::showPressFeedback(int x, int y)
+{
+    if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
+        buttonFeedback->showPressFeedback(x, y);
+    }
+}
+
+void MainWindow::showDragFeedback(int x, int y)
+{
+    if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
+        buttonFeedback->showDragFeedback(x, y);
+    }
+}
+
+void MainWindow::showReleaseFeedback(int x, int y)
+{
+    if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
+        buttonFeedback->showReleaseFeedback(x, y);
+    }
+}
+
+void MainWindow::responseEsc()
+{
+    if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
+        QApplication::quit();
+    }
 }
 
 void MainWindow::paintEvent(QPaintEvent *)
@@ -232,12 +268,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 #undef KeyRelease
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-
-        if (keyEvent->key() == Qt::Key_Escape) {
-            if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
-                QApplication::quit();
-            }
-        }
 
         if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
             if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
@@ -486,13 +516,6 @@ void MainWindow::startRecord()
     flashTrayIconTimer->start(800);
 
     recordProcess.startRecord();
-    
-    buttonFeedback = new ButtonFeedback();
-
-    connect(&eventMonitor, SIGNAL(buttonedPress(int, int)), buttonFeedback, SLOT(showPressFeedback(int, int)), Qt::QueuedConnection);
-    connect(&eventMonitor, SIGNAL(buttonedDrag(int, int)), buttonFeedback, SLOT(showDragFeedback(int, int)), Qt::QueuedConnection);
-    connect(&eventMonitor, SIGNAL(buttonedRelease(int, int)), buttonFeedback, SLOT(showReleaseFeedback(int, int)), Qt::QueuedConnection);
-    eventMonitor.start();
 }
 
 void MainWindow::flashTrayIcon()

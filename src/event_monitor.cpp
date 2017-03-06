@@ -95,6 +95,12 @@ void EventMonitor::handleRecordEvent(XRecordInterceptData* data)
             isPress = false;
             emit buttonedRelease(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             break;
+        case KeyPress:
+            // If key is equal to esc, emit pressEsc signal.
+            if (((unsigned char*) data->data)[1] == 9) {
+                emit pressEsc();
+            }
+            break;
         default:
             break;
         }
