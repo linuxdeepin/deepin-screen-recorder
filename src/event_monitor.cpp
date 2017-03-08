@@ -83,8 +83,13 @@ void EventMonitor::handleRecordEvent(XRecordInterceptData* data)
         xEvent * event = (xEvent *)data->data;
         switch (event->u.u.type) {
         case ButtonPress:
-            isPress = true;
-            emit buttonedPress(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+            if (event->u.u.detail != WheelUp &&
+                event->u.u.detail != WheelDown &&
+                event->u.u.detail != WheelLeft && 
+                event->u.u.detail != WheelRight) {
+                isPress = true;
+                emit buttonedPress(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+            }
             break;
         case MotionNotify:
             if (isPress) {
@@ -92,8 +97,13 @@ void EventMonitor::handleRecordEvent(XRecordInterceptData* data)
             }
             break;
         case ButtonRelease:
-            isPress = false;
-            emit buttonedRelease(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+            if (event->u.u.detail != WheelUp &&
+                event->u.u.detail != WheelDown &&
+                event->u.u.detail != WheelLeft && 
+                event->u.u.detail != WheelRight) {
+                isPress = false;
+                emit buttonedRelease(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+            }
             break;
         case KeyPress:
             // If key is equal to esc, emit pressEsc signal.
