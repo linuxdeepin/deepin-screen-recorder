@@ -122,6 +122,8 @@ void MainWindow::initAttributes()
     connect(recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
 
     recordOptionPanel = new RecordOptionPanel();
+    
+    recordOptionPanel->setFixedWidth(recordButton->width());
 
     recordButtonLayout->addStretch();
     recordButtonLayout->addWidget(recordButton, 0, Qt::AlignCenter);
