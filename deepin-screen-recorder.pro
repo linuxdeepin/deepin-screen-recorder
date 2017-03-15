@@ -29,16 +29,19 @@ isEmpty(BINDIR):BINDIR=/usr/bin
 isEmpty(ICONDIR):ICONDIR=/usr/share/icons/hicolor/scalable/apps
 isEmpty(APPDIR):APPDIR=/usr/share/applications
 isEmpty(DSRDIR):DSRDIR=/usr/share/deepin-screen-recorder
+isEmpty(DOCDIR):DOCDIR=/usr/share/dman/deepin-screen-recorder
 
 target.path = $$INSTROOT$$BINDIR
 icon.path = $$INSTROOT$$ICONDIR
 desktop.path = $$INSTROOT$$APPDIR
 translations.path = $$INSTROOT$$DSRDIR/translations
+manual.path = $$INSTROOT$$DOCDIR
 
 icon.files = image/deepin-screen-recorder.svg
 desktop.files = deepin-screen-recorder.desktop
+manual.files = manual/*
 
-INSTALLS += target icon desktop
+INSTALLS += target icon desktop manual
 
 isEmpty(TRANSLATIONS) {
      include(translations.pri)
