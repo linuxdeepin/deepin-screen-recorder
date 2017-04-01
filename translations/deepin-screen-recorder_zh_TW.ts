@@ -1,12 +1,12 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_CN" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_TW" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <location filename="../src/countdown_tooltip.cpp" line="73"/>
         <source>Click tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>点击托盘图标以停止录制
-或再次按下深度录屏快捷键</translation>
+        <translation>點擊系統匣圖示
+或再次按下捷徑鍵結束錄影</translation>
     </message>
 </context>
 <context>
@@ -14,17 +14,17 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/main_window.cpp" line="67"/>
         <source>Deepin screen recorder</source>
-        <translation>深度录屏</translation>
+        <translation>Deepin 螢幕錄影</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="118"/>
         <source>Start recording</source>
-        <translation>开始录制</translation>
+        <translation>開始錄影</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="387"/>
         <source>Select area</source>
-        <translation>选择区域</translation>
+        <translation>選取範圍</translation>
     </message>
 </context>
 <context>
@@ -32,22 +32,22 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/record_process.cpp" line="137"/>
         <source>deepin-screen-recorder</source>
-        <translation>深度录屏</translation>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="185"/>
         <source>View</source>
-        <translation>查看</translation>
+        <translation>檢視</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="195"/>
         <source>Record finished</source>
-        <translation>录制完毕</translation>
+        <translation>錄影結束</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="196"/>
         <source>Saved to</source>
-        <translation>保存在</translation>
+        <translation>檔案已存到</translation>
     </message>
 </context>
 <context>
@@ -56,7 +56,8 @@ or press the shortcut again to stop recording</source>
         <location filename="../src/start_tooltip.cpp" line="45"/>
         <source>Click or drag to
 select the area to record</source>
-        <translation>点击或拖拽来选择录制区域</translation>
+        <translation>點擊或拖動
+來選取錄影範圍</translation>
     </message>
 </context>
 <context>
