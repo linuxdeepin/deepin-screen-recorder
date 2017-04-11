@@ -24,7 +24,7 @@ el atajo de teclado para detener la grabación.</translation>
     <message>
         <location filename="../src/main_window.cpp" line="387"/>
         <source>Select area</source>
-        <translation>Seleccionar zona</translation>
+        <translation>Seleccionar área </translation>
     </message>
 </context>
 <context>
@@ -56,8 +56,8 @@ el atajo de teclado para detener la grabación.</translation>
         <location filename="../src/start_tooltip.cpp" line="45"/>
         <source>Click or drag to
 select the area to record</source>
-        <translation>Hacer clic or arrastar para
-seleccionar la zona que grabar.</translation>
+        <translation>Hacer clic o arrastrar
+para seleccionar el área a grabar.</translation>
     </message>
 </context>
 <context>

@@ -32,7 +32,7 @@ el atajo de teclado para detener la grabación.</translation>
     <message>
         <location filename="../src/record_process.cpp" line="137"/>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation>grabador-pantalla-deepin</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="185"/>
@@ -42,7 +42,7 @@ el atajo de teclado para detener la grabación.</translation>
     <message>
         <location filename="../src/record_process.cpp" line="195"/>
         <source>Record finished</source>
-        <translation>Terminar grabación</translation>
+        <translation>Grabación terminada</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="196"/>
