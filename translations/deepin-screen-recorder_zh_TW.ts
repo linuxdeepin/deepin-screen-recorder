@@ -6,7 +6,7 @@
         <source>Click tray icon 
 or press the shortcut again to stop recording</source>
         <translation>點擊系統匣圖示
-或再次按下捷徑鍵結束錄影</translation>
+或再次按下快速鍵結束錄影</translation>
     </message>
 </context>
 <context>
