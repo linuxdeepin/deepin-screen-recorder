@@ -5,7 +5,7 @@
         <location filename="../src/countdown_tooltip.cpp" line="73"/>
         <source>Click tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Kaydı durdurmak için
+        <translation>Kaydı durdurmak için 
 tepsi simgesine tıkla ya da kısayola tekrar bas</translation>
     </message>
 </context>
@@ -32,7 +32,7 @@ tepsi simgesine tıkla ya da kısayola tekrar bas</translation>
     <message>
         <location filename="../src/record_process.cpp" line="137"/>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-ekran-kaydedici</translation>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="185"/>
