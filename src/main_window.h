@@ -34,8 +34,11 @@
 #include "start_tooltip.h"
 #include "event_monitor.h"
 #include "button_feedback.h"
+#include <DWindowManagerHelper>
 
 #undef Bool
+
+DWIDGET_USE_NAMESPACE
 
 class MainWindow : public QWidget
 {
@@ -82,6 +85,7 @@ public slots:
     void showDragFeedback(int x, int y);
     void showReleaseFeedback(int x, int y);
     void responseEsc();
+    void compositeChanged();
     
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -155,6 +159,7 @@ private:
     ButtonFeedback* buttonFeedback;
     
     EventMonitor eventMonitor;
+    DWindowManagerHelper *m_wmHelper;
     
     // Just use for debug.
     // int repaintCounter;

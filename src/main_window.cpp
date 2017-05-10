@@ -30,6 +30,7 @@
 #include <QWidget>
 #include "main_window.h"
 #include <QVBoxLayout>
+#include <QProcess>
 #include "utils.h"
 #include "record_button.h"
 #include "record_option_panel.h"
@@ -56,9 +57,13 @@ const int MainWindow::ACTION_RESIZE_RIGHT = 8;
 
 const int MainWindow::RECORD_OPTIONAL_PADDING = 12;
 
-MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
+MainWindow::MainWindow(QWidget *parent) :
+    QWidget(parent),
+    m_wmHelper(DWindowManagerHelper::instance())
 {
     initAttributes();
+
+    connect(m_wmHelper, &DWindowManagerHelper::hasCompositeChanged, this, &MainWindow::compositeChanged);
 }
 
 void MainWindow::initAttributes()
@@ -182,6 +187,15 @@ void MainWindow::showReleaseFeedback(int x, int y)
 void MainWindow::responseEsc()
 {
     if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
+        QApplication::quit();
+    }
+}
+
+void MainWindow::compositeChanged()
+{
+    if (!m_wmHelper->hasComposite()) {
+        QProcess p;
+        p.startDetached("/usr/lib/deepin-daemon/dde-warning-dialog");
         QApplication::quit();
     }
 }
