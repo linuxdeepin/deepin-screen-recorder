@@ -103,7 +103,14 @@ void RecordOptionPanel::paintEvent(QPaintEvent *)
         painter.drawImage(QPoint(videoIconX, videoIconY), videoNormalImg);
         videoColor = "#000000";
     }
-    Utils::drawTooltipText(painter, "MP4", videoColor, 9, QRectF(videoTextX, rect().y(), videoTextWidth, rect().height()));
+
+    QString videoExtension;
+    if (settings->getOption("lossless_recording").toBool()) {
+        videoExtension = "MKV";
+    } else {
+        videoExtension = "MP4";
+    }
+    Utils::drawTooltipText(painter, videoExtension, videoColor, 9, QRectF(videoTextX, rect().y(), videoTextWidth, rect().height()));
 }
 
 bool RecordOptionPanel::eventFilter(QObject *, QEvent *event)
