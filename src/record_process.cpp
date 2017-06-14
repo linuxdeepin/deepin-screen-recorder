@@ -37,6 +37,8 @@ const int RecordProcess::RECORD_GIF_SLEEP_TIME = 1000;
 
 RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 {
+    settings = new Settings();
+
     saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
     defaultSaveDir = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
 
@@ -114,15 +116,34 @@ void RecordProcess::recordVideo()
     // FFmpeg need pass arugment split two part: -option value,
     // otherwise, it will report 'Unrecognized option' error.
     QStringList arguments;
-    arguments << QString("-video_size");
-    arguments << QString("%1x%2").arg(recordWidth).arg(recordHeight);
-    arguments << QString("-framerate");
-    arguments << QString("25");
-    arguments << QString("-f");
-    arguments << QString("x11grab");
-    arguments << QString("-i");
-    arguments << QString(":0.0+%1,%2").arg(recordX).arg(recordY);
-    arguments << savePath;
+
+    if (settings->getOption("lossless_recording").toBool()) {
+        arguments << QString("-video_size");
+        arguments << QString("%1x%2").arg(recordWidth).arg(recordHeight);
+        arguments << QString("-framerate");
+        arguments << QString("30");
+        arguments << QString("-f");
+        arguments << QString("x11grab");
+        arguments << QString("-i");
+        arguments << QString(":0.0+%1,%2").arg(recordX).arg(recordY);
+        arguments << QString("-c:v");
+        arguments << QString("libx264");
+        arguments << QString("-qp");
+        arguments << QString("0");
+        arguments << QString("-preset");
+        arguments << QString("ultrafast");
+        arguments << savePath;
+    } else {
+        arguments << QString("-video_size");
+        arguments << QString("%1x%2").arg(recordWidth).arg(recordHeight);
+        arguments << QString("-framerate");
+        arguments << QString("25");
+        arguments << QString("-f");
+        arguments << QString("x11grab");
+        arguments << QString("-i");
+        arguments << QString(":0.0+%1,%2").arg(recordX).arg(recordY);
+        arguments << savePath;
+    }
 
     process->start("ffmpeg", arguments);
 }
@@ -134,7 +155,17 @@ void RecordProcess::initProcess() {
 
     // Build temp save path.
     QDateTime date = QDateTime::currentDateTime();
-    saveBaseName = QString("%1_%2_%3.%4").arg(tr("deepin-screen-recorder")).arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(recordType == RECORD_TYPE_GIF ? "gif" : "mp4");
+    QString fileExtension;
+    if (recordType == RECORD_TYPE_GIF) {
+        fileExtension = "gif";
+    } else {
+        if (settings->getOption("lossless_recording").toBool()) {
+            fileExtension = "mkv";
+        } else {
+            fileExtension = "mp4";
+        }
+    }
+    saveBaseName = QString("%1_%2_%3.%4").arg(tr("deepin-screen-recorder")).arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
     savePath = QDir(saveTempDir).filePath(saveBaseName);
 
     // Remove same cache file first.

@@ -47,15 +47,15 @@ protected:
 private:
     bool saveAsGif;
     bool isPressGif;
-    bool isPressMp4;
+    bool isPressVideo;
     
     QImage gifNormalImg;
     QImage gifPressImg;
     QImage gifCheckedImg;
     
-    QImage mp4NormalImg;
-    QImage mp4PressImg;
-    QImage mp4CheckedImg;
+    QImage videoNormalImg;
+    QImage videoPressImg;
+    QImage videoCheckedImg;
     
     Settings* settings;
 };

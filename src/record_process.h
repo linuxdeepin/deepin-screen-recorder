@@ -21,8 +21,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 
-#include <QThread>
+#include "settings.h"
 #include <QProcess>
+#include <QThread>
 
 class RecordProcess : public QThread
 {
@@ -64,4 +65,6 @@ private:
     QString saveAreaName;
     
     QTime *recordTime;
+
+    Settings* settings;
 };

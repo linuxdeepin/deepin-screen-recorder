@@ -32,9 +32,11 @@
 #include "record_option_panel.h"
 #include "countdown_tooltip.h"
 #include "start_tooltip.h"
-#include "event_monitor.h"
 #include "button_feedback.h"
 #include <DWindowManagerHelper>
+
+// Make this include at last, otherwise QtX11 will conflict with x11 lib to make compile failed.
+#include "event_monitor.h"
 
 #undef Bool
 

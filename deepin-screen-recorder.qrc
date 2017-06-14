@@ -18,9 +18,9 @@
     <file>image/gif_checked.png</file>
     <file>image/gif_normal.png</file>
     <file>image/gif_press.png</file>
-    <file>image/mp4_checked.png</file>
-    <file>image/mp4_normal.png</file>
-    <file>image/mp4_press.png</file>
+    <file>image/video_checked.png</file>
+    <file>image/video_normal.png</file>
+    <file>image/video_press.png</file>
     <file>image/record_icon_hover.png</file>
     <file>image/record_icon_normal.png</file>
     <file>image/record_icon_press.png</file>

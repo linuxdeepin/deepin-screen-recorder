@@ -42,15 +42,15 @@ RecordOptionPanel::RecordOptionPanel(QPushButton *parent) : QPushButton(parent)
     gifPressImg = QImage(Utils::getQrcPath("gif_press.png"));
     gifCheckedImg = QImage(Utils::getQrcPath("gif_checked.png"));
 
-    mp4NormalImg = QImage(Utils::getQrcPath("mp4_normal.png"));
-    mp4PressImg = QImage(Utils::getQrcPath("mp4_press.png"));
-    mp4CheckedImg = QImage(Utils::getQrcPath("mp4_checked.png"));
+    videoNormalImg = QImage(Utils::getQrcPath("video_normal.png"));
+    videoPressImg = QImage(Utils::getQrcPath("video_press.png"));
+    videoCheckedImg = QImage(Utils::getQrcPath("video_checked.png"));
 
     settings = new Settings();
     saveAsGif = settings->getOption("save_as_gif").toBool();
 
     isPressGif = false;
-    isPressMp4 = false;
+    isPressVideo = false;
 
     setFixedSize(WIDTH, HEIGHT);
 }
@@ -88,22 +88,22 @@ void RecordOptionPanel::paintEvent(QPaintEvent *)
     }
     Utils::drawTooltipText(painter, "GIF", gifColor, 9, QRectF(gifTextX, rect().y(), gifTextWidth, rect().height()));
 
-    int mp4IconX = rect().x() + rect().width() / 2;
-    int mp4IconY = rect().y() + (rect().height() - mp4CheckedImg.height()) / 2;
-    int mp4TextX = mp4IconX + mp4CheckedImg.width();
-    int mp4TextWidth = rect().width() / 2 - ICON_OFFSET_X - gifCheckedImg.width();
-    QString mp4Color;
+    int videoIconX = rect().x() + rect().width() / 2;
+    int videoIconY = rect().y() + (rect().height() - videoCheckedImg.height()) / 2;
+    int videoTextX = videoIconX + videoCheckedImg.width();
+    int videoTextWidth = rect().width() / 2 - ICON_OFFSET_X - gifCheckedImg.width();
+    QString videoColor;
     if (!saveAsGif) {
-        painter.drawImage(QPoint(mp4IconX, mp4IconY), mp4CheckedImg);
-        mp4Color = "#217DFF";
-    } else if (isPressMp4) {
-        painter.drawImage(QPoint(mp4IconX, mp4IconY), mp4PressImg);
-        mp4Color = "#004BCA";
+        painter.drawImage(QPoint(videoIconX, videoIconY), videoCheckedImg);
+        videoColor = "#217DFF";
+    } else if (isPressVideo) {
+        painter.drawImage(QPoint(videoIconX, videoIconY), videoPressImg);
+        videoColor = "#004BCA";
     } else {
-        painter.drawImage(QPoint(mp4IconX, mp4IconY), mp4NormalImg);
-        mp4Color = "#000000";
+        painter.drawImage(QPoint(videoIconX, videoIconY), videoNormalImg);
+        videoColor = "#000000";
     }
-    Utils::drawTooltipText(painter, "MP4", mp4Color, 9, QRectF(mp4TextX, rect().y(), mp4TextWidth, rect().height()));
+    Utils::drawTooltipText(painter, "MP4", videoColor, 9, QRectF(videoTextX, rect().y(), videoTextWidth, rect().height()));
 }
 
 bool RecordOptionPanel::eventFilter(QObject *, QEvent *event)
@@ -114,9 +114,9 @@ bool RecordOptionPanel::eventFilter(QObject *, QEvent *event)
 
         if (pressX > rect().x() && pressX < rect().x() + rect().width() / 2) {
             isPressGif = true;
-            isPressMp4 = false;
+            isPressVideo = false;
         } else {
-            isPressMp4 = true;
+            isPressVideo = true;
             isPressGif = false;
         }
         
@@ -129,11 +129,11 @@ bool RecordOptionPanel::eventFilter(QObject *, QEvent *event)
             if (isPressGif) {
                 saveAsGif = true;
                 settings->setOption("save_as_gif", saveAsGif);
-            } else if (isPressMp4) {
-                isPressMp4 = false;
+            } else if (isPressVideo) {
+                isPressVideo = false;
             }
         } else {
-            if (isPressMp4) {
+            if (isPressVideo) {
                 saveAsGif = false;
                 settings->setOption("save_as_gif", saveAsGif);
             } else if (isPressGif) {
