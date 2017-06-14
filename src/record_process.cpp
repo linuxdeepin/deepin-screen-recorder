@@ -43,6 +43,11 @@ RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
     defaultSaveDir = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
 
     Settings *settings = new Settings();
+    QVariant losslessRecording = settings->getOption("lossless_recording");
+    if (losslessRecording.isNull()) {
+        settings->setOption("lossless_recording", false);
+    }
+    
     QVariant saveDirectoryOption = settings->getOption("save_directory");
     if (saveDirectoryOption.isNull()) {
         saveDir = defaultSaveDir;
