@@ -21,20 +21,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 
-#include <QObject>
-#include <QString>
 #include "window_manager.h"
+#include <QObject>
+#include <QPainter>
+#include <QString>
 
 class Utils : public QObject
 {
 public:
-    static QString getQrcPath(QString imageName);
     static QSize getRenderSize(int fontSize, QString string);
-    static void setFontSize(QPainter &painter, int textSize);
+    static QString getQrcPath(QString imageName);
     static void blurRect(WindowManager *windowManager, int widgetId, QRectF rect);
     static void blurRects(WindowManager *windowManager, int widgetId, QList<QRectF> rects);
     static void clearBlur(WindowManager *windowManager, int widgetId);
     static void drawTooltipBackground(QPainter &painter, QRect rect, qreal opacity = 0.4);
     static void drawTooltipText(QPainter &painter, QString text, QString textColor, int textSize, QRectF rect);
     static void passInputEvent(int wid);
+    static void setFontSize(QPainter &painter, int textSize);
 };

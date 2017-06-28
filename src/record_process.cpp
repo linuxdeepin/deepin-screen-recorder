@@ -21,15 +21,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "record_process.h"
+#include "settings.h"
+#include "utils.h"
 #include <QApplication>
-#include <QDebug>
 #include <QDate>
-#include <QtDBus>
+#include <QDebug>
 #include <QDir>
 #include <QStandardPaths>
-#include "record_process.h"
-#include "utils.h"
-#include "settings.h"
+#include <QtDBus>
 
 const int RecordProcess::RECORD_TYPE_VIDEO = 0;
 const int RecordProcess::RECORD_TYPE_GIF = 1;
@@ -116,8 +116,8 @@ void RecordProcess::recordVideo()
     // FFmpeg need pass arugment split two part: -option value,
     // otherwise, it will report 'Unrecognized option' error.
     QStringList arguments;
-
-    if (settings->getOption("lossless_recording").toBool()) {
+    
+    if (settings->getOption("lossless_recording").toBool() || !QSysInfo::currentCpuArchitecture().startsWith("x86")) {
         arguments << QString("-video_size");
         arguments << QString("%1x%2").arg(recordWidth).arg(recordHeight);
         arguments << QString("-framerate");
@@ -159,7 +159,7 @@ void RecordProcess::initProcess() {
     if (recordType == RECORD_TYPE_GIF) {
         fileExtension = "gif";
     } else {
-        if (settings->getOption("lossless_recording").toBool()) {
+        if (settings->getOption("lossless_recording").toBool() || !QSysInfo::currentCpuArchitecture().startsWith("x86")) {
             fileExtension = "mkv";
         } else {
             fileExtension = "mp4";
