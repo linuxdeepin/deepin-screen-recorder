@@ -14,7 +14,7 @@ ou cliquez à nouveau sur le raccourci pour stopper l&apos;enregistrement</trans
     <message>
         <location filename="../src/main_window.cpp" line="67"/>
         <source>Deepin screen recorder</source>
-        <translation>Deepin enregistreur d&apos;écran </translation>
+        <translation>Enregistreur d&apos;écran Deepin</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="118"/>

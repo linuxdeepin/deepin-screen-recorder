@@ -1,12 +1,12 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ar" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="bg" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <location filename="../src/countdown_tooltip.cpp" line="73"/>
         <source>Click tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>انقر أيقونة الصينية
-أو اضغط على الاختصار مرة أخرى لإيقاف التسجيل</translation>
+        <translation>Щракнете на системната икона
+или краткият път отново за спиране на записа</translation>
     </message>
 </context>
 <context>
@@ -14,17 +14,17 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/main_window.cpp" line="67"/>
         <source>Deepin screen recorder</source>
-        <translation>مسجل الشاشة ديبين</translation>
+        <translation>Deepin запис на екрана</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="118"/>
         <source>Start recording</source>
-        <translation>ابدأ التسجيل</translation>
+        <translation>Започни запис</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="387"/>
         <source>Select area</source>
-        <translation>اختر منطقة</translation>
+        <translation>Избор на област</translation>
     </message>
 </context>
 <context>
@@ -37,17 +37,17 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/record_process.cpp" line="185"/>
         <source>View</source>
-        <translation>معاينة</translation>
+        <translation>Изглед</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="195"/>
         <source>Record finished</source>
-        <translation>التسجيل انتهى</translation>
+        <translation>Записа приключи</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="196"/>
         <source>Saved to</source>
-        <translation>حفظ إلى</translation>
+        <translation>Запазено в</translation>
     </message>
 </context>
 <context>
@@ -56,8 +56,8 @@ or press the shortcut again to stop recording</source>
         <location filename="../src/start_tooltip.cpp" line="45"/>
         <source>Click or drag to
 select the area to record</source>
-        <translation>انقر أو اسحب ل
-اختيار المنطقة للتسجيل</translation>
+        <translation>Щракни или влачи до
+избраната област за запис</translation>
     </message>
 </context>
 <context>
@@ -66,7 +66,7 @@ select the area to record</source>
         <location filename="../src/window_manager.cpp" line="150"/>
         <location filename="../src/window_manager.cpp" line="169"/>
         <source>Desktop</source>
-        <translation>سطح المكتب</translation>
+        <translation>Десктоп</translation>
     </message>
 </context>
 </TS>
