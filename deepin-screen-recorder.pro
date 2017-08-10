@@ -8,8 +8,12 @@ INCLUDEPATH += .
 
 CONFIG += link_pkgconfig
 CONFIG += c++11 
+<<<<<<< HEAD
 PKGCONFIG += xcb xcb-util dtkwidget dtkbase
 # PKGCONFIG += xcb xcb-util dtkwidget 
+=======
+PKGCONFIG += xcb xcb-util dtkwidget
+>>>>>>> 3a6df2594dd4168744e66c28832e73d3c28a095f
 RESOURCES = deepin-screen-recorder.qrc
 
 # Input

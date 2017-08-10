@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Deepin Packages Builder <packages@deepin.com>
 Build-Depends: debhelper (>= 9), pkg-config, qt5-qmake, qt5-default, 
  libxcb-util0-dev, libqt5x11extras5-dev, qttools5-dev-tools, 
- libdtkbase-dev, libdtkwidget-dev, libxtst-dev
+ libdtkwidget-dev, libxtst-dev
 Standards-Version: 3.9.8
 Homepage: https://github.com/manateelazycat/deepin-screen-recorder
 
