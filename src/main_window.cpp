@@ -70,7 +70,7 @@ void MainWindow::initAttributes()
 {
     // Init attributes.
     setWindowTitle(tr("Deepin screen recorder"));
-    
+
     // Add Qt::WindowDoesNotAcceptFocus make window not accept focus forcely, avoid conflict with dde hot-corner.
     setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
     setAttribute(Qt::WA_TranslucentBackground, true);
@@ -91,7 +91,7 @@ void MainWindow::initAttributes()
     recordY = 0;
     recordWidth = 0;
     recordHeight = 0;
-    
+
     dragRecordX = -1;
     dragRecordY = -1;
 
@@ -127,13 +127,15 @@ void MainWindow::initAttributes()
     connect(recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
 
     recordOptionPanel = new RecordOptionPanel();
-    
+
     recordOptionPanel->setFixedWidth(recordButton->width());
 
     recordButtonLayout->addStretch();
     recordButtonLayout->addWidget(recordButton, 0, Qt::AlignCenter);
     recordButtonLayout->addSpacing(RECORD_OPTIONAL_PADDING);
-    recordButtonLayout->addWidget(recordOptionPanel, 0, Qt::AlignCenter);
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+        recordButtonLayout->addWidget(recordOptionPanel, 0, Qt::AlignCenter);
+    }
     recordButtonLayout->addStretch();
 
     recordButton->hide();
@@ -153,7 +155,7 @@ void MainWindow::initResource()
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
     setDragCursor();
-    
+
     buttonFeedback = new ButtonFeedback();
 
     connect(&eventMonitor, SIGNAL(buttonedPress(int, int)), this, SLOT(showPressFeedback(int, int)), Qt::QueuedConnection);
@@ -267,7 +269,11 @@ void MainWindow::paintEvent(QPaintEvent *)
             if (isFirstReleaseButton) {
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL && recordButton->isVisible()) {
                     QList<QRectF> rects;
-                    rects << recordButton->geometry() << recordOptionPanel->geometry();
+                    rects << recordButton->geometry();
+                    
+                    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+                        rects << recordOptionPanel->geometry();
+                    }
                     Utils::blurRects(windowManager, this->winId(), rects);
                 } else if (recordButtonStatus == RECORD_BUTTON_WAIT) {
                     QList<QRectF> rects;
@@ -401,16 +407,16 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 // Make sure record area not too small.
                 recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
                 recordHeight = recordHeight < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordHeight;
-            
+
                 if (recordX + recordWidth > rootWindowRect.width) {
                     recordX = rootWindowRect.width - recordWidth;
                 }
-            
+
                 if (recordY + recordHeight > rootWindowRect.height) {
                     recordY = rootWindowRect.height - recordHeight;
                 }
             }
-            
+
             showRecordButton();
 
             needRepaint = true;
@@ -503,7 +509,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     recordHeight = wh;
 
                     needRepaint = true;
-                    
+
                     break;
                 }
             }
@@ -716,10 +722,14 @@ void MainWindow::startCountdown()
     recordButtonStatus = RECORD_BUTTON_WAIT;
 
     recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight, selectAreaName, rootWindowRect.width, rootWindowRect.height);
-    if (recordOptionPanel->isSaveAsGif()) {
-        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+        if (recordOptionPanel->isSaveAsGif()) {
+            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
+        } else {
+            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
+        }
     } else {
-        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
+        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
     }
 
     resetCursor();
@@ -749,11 +759,17 @@ void MainWindow::startCountdown()
 void MainWindow::showRecordButton()
 {
     recordButton->show();
-    recordOptionPanel->show();
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+        recordOptionPanel->show();
 
-    adjustLayout(recordButtonLayout,
-                 recordButton->width(),
-                 recordButton->height() + RECORD_OPTIONAL_PADDING + recordOptionPanel->height());
+        adjustLayout(recordButtonLayout,
+                     recordButton->width(),
+                     recordButton->height() + RECORD_OPTIONAL_PADDING + recordOptionPanel->height());
+    } else {
+        adjustLayout(recordButtonLayout,
+                     recordButton->width(),
+                     recordButton->height() + RECORD_OPTIONAL_PADDING);
+    }
 }
 
 void MainWindow::hideRecordButton()
