@@ -25,7 +25,9 @@
 #define STARTTOOLTIP_H
 
 #include <QWidget>
-#include "window_manager.h"
+#include <dwindowmanager.h>
+
+DWM_USE_NAMESPACE
 
 class StartTooltip : public QWidget
 {
@@ -33,7 +35,7 @@ class StartTooltip : public QWidget
     
 public:
     StartTooltip(QWidget *parent = 0);
-    void setWindowManager(WindowManager *wm);
+    void setWindowManager(DWindowManager *wm);
     
 protected:
     void paintEvent(QPaintEvent *event);
@@ -43,7 +45,7 @@ private:
     QString text;
     
     QImage iconImg;
-    WindowManager* windowManager;
+    DWindowManager* windowManager;
 };
 
 #endif

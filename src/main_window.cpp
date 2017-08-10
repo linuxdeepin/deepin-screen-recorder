@@ -21,21 +21,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QApplication>
-#include <QTimer>
-#include <QKeyEvent>
-#include <QObject>
-#include <QDebug>
-#include <QPainter>
-#include <QWidget>
+#include "constant.h"
+#include "countdown_tooltip.h"
 #include "main_window.h"
-#include <QVBoxLayout>
-#include <QProcess>
-#include "utils.h"
 #include "record_button.h"
 #include "record_option_panel.h"
-#include "countdown_tooltip.h"
-#include "constant.h"
+#include "utils.h"
+#include <QApplication>
+#include <QDebug>
+#include <QKeyEvent>
+#include <QObject>
+#include <QPainter>
+#include <QProcess>
+#include <QTimer>
+#include <QVBoxLayout>
+#include <QWidget>
+#include <dscreenwindowsutil.h>
 
 const int MainWindow::CURSOR_BOUND = 5;
 const int MainWindow::RECORD_MIN_SIZE = 200;
@@ -56,6 +57,8 @@ const int MainWindow::ACTION_RESIZE_LEFT = 7;
 const int MainWindow::ACTION_RESIZE_RIGHT = 8;
 
 const int MainWindow::RECORD_OPTIONAL_PADDING = 12;
+
+DWM_USE_NAMESPACE
 
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent),
@@ -106,7 +109,11 @@ void MainWindow::initAttributes()
     // Get all windows geometry.
     // Below code must execute before `window.showFullscreen,
     // otherwise deepin-screen-recorder window will add in window lists.
-    windowManager = new WindowManager();
+    QPoint pos = this->cursor().pos();
+    DScreenWindowsUtil* screenWin = DScreenWindowsUtil::instance(pos);
+    
+    windowManager = new DWindowManager();
+    windowManager->setRootWindowRect(screenWin->backgroundRect());
     QList<xcb_window_t> windows = windowManager->getWindows();
     rootWindowRect = windowManager->getRootWindowRect();
 
@@ -215,7 +222,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 
         QRect backgroundRect = QRect(rootWindowRect.x, rootWindowRect.y, rootWindowRect.width, rootWindowRect.height);
         QRect frameRect = QRect(recordX, recordY, recordWidth, recordHeight);
-
+        
         // Draw background.
         painter.setBrush(QBrush("#000000"));
         painter.setOpacity(0.2);
@@ -270,7 +277,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL && recordButton->isVisible()) {
                     QList<QRectF> rects;
                     rects << recordButton->geometry();
-                    
+
                     if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
                         rects << recordOptionPanel->geometry();
                     }
@@ -502,6 +509,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 int wh = windowRects[i].height;
                 int ex = mouseEvent->x();
                 int ey = mouseEvent->y();
+
                 if (ex > wx && ex < wx + ww && ey > wy && ey < wy + wh) {
                     recordX = wx;
                     recordY = wy;

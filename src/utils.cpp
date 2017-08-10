@@ -30,8 +30,10 @@
 #include <QtX11Extras/QX11Info>
 #include <X11/extensions/shape.h>
 #include "utils.h"
-#include "window_manager.h"
+#include <dwindowmanager.h>
 #include "constant.h"
+
+DWM_USE_NAMESPACE
 
 QString Utils::getQrcPath(QString imageName)
 {
@@ -66,7 +68,7 @@ void Utils::setFontSize(QPainter &painter, int textSize)
     painter.setFont(font);
 }
 
-void Utils::blurRect(WindowManager *windowManager, int widgetId, QRectF rect)
+void Utils::blurRect(DWindowManager *windowManager, int widgetId, QRectF rect)
 {
     QVector<uint32_t> data;
     
@@ -74,7 +76,7 @@ void Utils::blurRect(WindowManager *windowManager, int widgetId, QRectF rect)
     windowManager->setWindowBlur(widgetId, data);
 }    
 
-void Utils::blurRects(WindowManager *windowManager, int widgetId, QList<QRectF> rects)
+void Utils::blurRects(DWindowManager *windowManager, int widgetId, QList<QRectF> rects)
 {
     QVector<uint32_t> data;
     foreach (auto rect, rects) {
@@ -83,7 +85,7 @@ void Utils::blurRects(WindowManager *windowManager, int widgetId, QList<QRectF> 
     windowManager->setWindowBlur(widgetId, data);
 }    
 
-void Utils::clearBlur(WindowManager *windowManager, int widgetId)
+void Utils::clearBlur(DWindowManager *windowManager, int widgetId)
 {
     QVector<uint32_t> data;
     data << 0 << 0 << 0 << 0 << 0 << 0;

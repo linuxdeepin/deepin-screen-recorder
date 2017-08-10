@@ -52,11 +52,4 @@ select the area to record</source>
         <translation>点击或拖拽来选择录制区域</translation>
     </message>
 </context>
-<context>
-    <name>WindowManager</name>
-    <message>
-        <source>Desktop</source>
-        <translation>桌面</translation>
-    </message>
-</context>
 </TS>

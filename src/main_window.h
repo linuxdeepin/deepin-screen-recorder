@@ -26,7 +26,7 @@
 #include <QWidget>
 #include <QSystemTrayIcon>
 #include <QVBoxLayout>
-#include "window_manager.h"
+#include <dwindowmanager.h>
 #include "record_process.h"
 #include "record_button.h"
 #include "record_option_panel.h"
@@ -41,6 +41,7 @@
 #undef Bool
 
 DWIDGET_USE_NAMESPACE
+DWM_USE_NAMESPACE
 
 class MainWindow : public QWidget
 {
@@ -148,7 +149,7 @@ private:
     
     QSystemTrayIcon* trayIcon;
     
-    WindowManager* windowManager;
+    DWindowManager* windowManager;
     
     QVBoxLayout* recordButtonLayout;
     QVBoxLayout* countdownLayout;
