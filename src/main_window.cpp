@@ -111,9 +111,12 @@ void MainWindow::initAttributes()
     // otherwise deepin-screen-recorder window will add in window lists.
     QPoint pos = this->cursor().pos();
     DScreenWindowsUtil* screenWin = DScreenWindowsUtil::instance(pos);
+    screenRect = screenWin->backgroundRect();
+    this->move(screenRect.x(), screenRect.y());
+    this->setFixedSize(screenRect.width(), screenRect.height());
     
     windowManager = new DWindowManager();
-    windowManager->setRootWindowRect(screenWin->backgroundRect());
+    windowManager->setRootWindowRect(screenRect);
     QList<xcb_window_t> windows = windowManager->getWindows();
     rootWindowRect = windowManager->getRootWindowRect();
 
@@ -217,10 +220,10 @@ void MainWindow::paintEvent(QPaintEvent *)
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
-
+    
     if (recordWidth > 0 && recordHeight > 0) {
 
-        QRect backgroundRect = QRect(rootWindowRect.x, rootWindowRect.y, rootWindowRect.width, rootWindowRect.height);
+        QRect backgroundRect = QRect(0, 0, rootWindowRect.width, rootWindowRect.height);
         QRect frameRect = QRect(recordX, recordY, recordWidth, recordHeight);
         
         // Draw background.
@@ -507,15 +510,15 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 int wy = windowRects[i].y;
                 int ww = windowRects[i].width;
                 int wh = windowRects[i].height;
-                int ex = mouseEvent->x();
-                int ey = mouseEvent->y();
+                int ex = mouseEvent->x() + screenRect.x();
+                int ey = mouseEvent->y() + screenRect.y();
 
                 if (ex > wx && ex < wx + ww && ey > wy && ey < wy + wh) {
-                    recordX = wx;
-                    recordY = wy;
+                    recordX = wx - screenRect.x();
+                    recordY = wy - screenRect.y();
                     recordWidth = ww;
                     recordHeight = wh;
-
+                    
                     needRepaint = true;
 
                     break;

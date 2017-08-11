@@ -111,6 +111,8 @@ private:
     QList<QString> windowNames;
 
     QTimer* flashTrayIconTimer;
+    
+    QRect screenRect;
 
     RecordProcess recordProcess;
     WindowRect rootWindowRect;
