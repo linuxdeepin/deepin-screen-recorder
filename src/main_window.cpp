@@ -21,21 +21,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "constant.h"
-#include "countdown_tooltip.h"
-#include "main_window.h"
-#include "record_button.h"
-#include "record_option_panel.h"
-#include "utils.h"
 #include <QApplication>
-#include <QDebug>
+#include <QTimer>
 #include <QKeyEvent>
 #include <QObject>
+#include <QDebug>
 #include <QPainter>
-#include <QProcess>
-#include <QTimer>
-#include <QVBoxLayout>
 #include <QWidget>
+#include "main_window.h"
+#include <QVBoxLayout>
+#include <QProcess>
+#include "utils.h"
+#include "record_button.h"
+#include "record_option_panel.h"
+#include "countdown_tooltip.h"
+#include "constant.h"
 #include <dscreenwindowsutil.h>
 
 const int MainWindow::CURSOR_BOUND = 5;
