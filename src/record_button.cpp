@@ -23,9 +23,13 @@
 
 #include <QPainter>
 #include <QEvent>
+#include <QApplication>
 #include "record_button.h"
 #include "utils.h"
 #include "constant.h"
+#include <DHiDPIHelper>
+
+DWIDGET_USE_NAMESPACE
 
 const int RecordButton::WIDTH = 128;
 const int RecordButton::HEIGHT = 86;
@@ -39,9 +43,9 @@ RecordButton::RecordButton(QPushButton *parent) : QPushButton(parent)
     isFocus = false;
     isPress = false;
 
-    normalImg = QImage(Utils::getQrcPath("record_icon_normal.png"));
-    hoverImg = QImage(Utils::getQrcPath("record_icon_hover.png"));
-    pressImg = QImage(Utils::getQrcPath("record_icon_press.png"));
+    normalImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("record_icon_normal.svg"));
+    hoverImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("record_icon_hover.svg"));
+    pressImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("record_icon_press.svg"));
 }
 
 void RecordButton::setText(QString string)
@@ -79,20 +83,21 @@ void RecordButton::paintEvent(QPaintEvent *)
     Utils::drawTooltipBackground(painter, rect(), backgroundOpacity);
     
     // Draw icon.
+    qreal devicePixelRatio = qApp->devicePixelRatio();
     painter.setOpacity(1);
-    int iconX = rect().x() + (rect().width() - normalImg.width()) / 2;
-    int iconY = rect().y() + (rect().height() - normalImg.height() - textSize.height() - TEXT_PADDING) / 2;
+    int iconX = rect().x() + (rect().width() - normalImg.width() / devicePixelRatio) / 2;
+    int iconY = rect().y() + (rect().height() - normalImg.height() / devicePixelRatio - textSize.height() - TEXT_PADDING) / 2;
     if (status == "NORMAL") {
-        painter.drawImage(QPoint(iconX, iconY), normalImg);
+        painter.drawPixmap(QPoint(iconX, iconY), normalImg);
     } else if (status == "PRESS") {
-        painter.drawImage(QPoint(iconX, iconY), pressImg);
+        painter.drawPixmap(QPoint(iconX, iconY), pressImg);
     } else if (status == "HOVER") {
-        painter.drawImage(QPoint(iconX, iconY), hoverImg);
+        painter.drawPixmap(QPoint(iconX, iconY), hoverImg);
     }
     
     // Draw text.
     int textX = rect().x();
-    int textY = iconY + normalImg.height() + TEXT_PADDING;
+    int textY = iconY + normalImg.height() / devicePixelRatio + TEXT_PADDING;
     Utils::drawTooltipText(painter, text, "#e34342", Constant::RECTANGLE_FONT_SIZE, QRect(textX, textY, rect().width(), textSize.height()));
 }
 

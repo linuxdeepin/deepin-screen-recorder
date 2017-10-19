@@ -43,9 +43,9 @@ protected:
     bool eventFilter(QObject *, QEvent *event);
     
 private:
-    QImage normalImg;
-    QImage hoverImg;
-    QImage pressImg;
+    QPixmap normalImg;
+    QPixmap hoverImg;
+    QPixmap pressImg;
     
     bool isFocus;
     bool isPress;

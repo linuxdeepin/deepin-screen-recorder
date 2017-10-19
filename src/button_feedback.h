@@ -46,16 +46,16 @@ public slots:
     void update();
     
 private:
-    QImage buttonFeedback0Img;
-    QImage buttonFeedback1Img;
-    QImage buttonFeedback2Img;
-    QImage buttonFeedback3Img;
-    QImage buttonFeedback4Img;
-    QImage buttonFeedback5Img;
-    QImage buttonFeedback6Img;
-    QImage buttonFeedback7Img;
-    QImage buttonFeedback8Img;
-    QImage buttonFeedback9Img;
+    QPixmap buttonFeedback0Img;
+    QPixmap buttonFeedback1Img;
+    QPixmap buttonFeedback2Img;
+    QPixmap buttonFeedback3Img;
+    QPixmap buttonFeedback4Img;
+    QPixmap buttonFeedback5Img;
+    QPixmap buttonFeedback6Img;
+    QPixmap buttonFeedback7Img;
+    QPixmap buttonFeedback8Img;
+    QPixmap buttonFeedback9Img;
     
     QTimer* timer;
     

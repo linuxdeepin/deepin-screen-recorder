@@ -47,9 +47,9 @@ protected:
     void paintEvent(QPaintEvent *event);
     
 private:
-    QImage countdown1Img;
-    QImage countdown2Img;
-    QImage countdown3Img;
+    QPixmap countdown1Img;
+    QPixmap countdown2Img;
+    QPixmap countdown3Img;
     
     int showCountdownCounter;
     

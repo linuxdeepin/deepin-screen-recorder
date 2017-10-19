@@ -49,13 +49,13 @@ private:
     bool isPressGif;
     bool isPressVideo;
     
-    QImage gifNormalImg;
-    QImage gifPressImg;
-    QImage gifCheckedImg;
+    QPixmap gifNormalImg;
+    QPixmap gifPressImg;
+    QPixmap gifCheckedImg;
     
-    QImage videoNormalImg;
-    QImage videoPressImg;
-    QImage videoCheckedImg;
+    QPixmap videoNormalImg;
+    QPixmap videoPressImg;
+    QPixmap videoCheckedImg;
     
     Settings* settings;
 };

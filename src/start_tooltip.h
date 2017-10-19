@@ -44,7 +44,7 @@ protected:
 private:
     QString text;
     
-    QImage iconImg;
+    QPixmap iconImg;
     DWindowManager* windowManager;
 };
 

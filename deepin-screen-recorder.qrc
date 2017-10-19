@@ -1,31 +1,31 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-    <file>image/button_feedback_0.png</file>
-    <file>image/button_feedback_1.png</file>
-    <file>image/button_feedback_2.png</file>
-    <file>image/button_feedback_3.png</file>
-    <file>image/button_feedback_4.png</file>
-    <file>image/button_feedback_5.png</file>
-    <file>image/button_feedback_6.png</file>
-    <file>image/button_feedback_7.png</file>
-    <file>image/button_feedback_8.png</file>
-    <file>image/button_feedback_9.png</file>
-    <file>image/countdown_1.png</file>
-    <file>image/countdown_2.png</file>
-    <file>image/countdown_3.png</file>
-	<file>image/deepin-screen-recorder.png</file>
+    <file>image/button_feedback_0.svg</file>
+    <file>image/button_feedback_1.svg</file>
+    <file>image/button_feedback_2.svg</file>
+    <file>image/button_feedback_3.svg</file>
+    <file>image/button_feedback_4.svg</file>
+    <file>image/button_feedback_5.svg</file>
+    <file>image/button_feedback_6.svg</file>
+    <file>image/button_feedback_7.svg</file>
+    <file>image/button_feedback_8.svg</file>
+    <file>image/button_feedback_9.svg</file>
+    <file>image/countdown_1.svg</file>
+    <file>image/countdown_2.svg</file>
+    <file>image/countdown_3.svg</file>
 	<file>image/deepin-screen-recorder.svg</file>
-    <file>image/gif_checked.png</file>
-    <file>image/gif_normal.png</file>
-    <file>image/gif_press.png</file>
-    <file>image/video_checked.png</file>
-    <file>image/video_normal.png</file>
-    <file>image/video_press.png</file>
-    <file>image/record_icon_hover.png</file>
-    <file>image/record_icon_normal.png</file>
-    <file>image/record_icon_press.png</file>
-    <file>image/resize_handle_big.png</file>
-    <file>image/resize_handle_small.png</file>
+	<file>image/deepin-screen-recorder.svg</file>
+    <file>image/gif_checked.svg</file>
+    <file>image/gif_normal.svg</file>
+    <file>image/gif_press.svg</file>
+    <file>image/video_checked.svg</file>
+    <file>image/video_normal.svg</file>
+    <file>image/video_press.svg</file>
+    <file>image/record_icon_hover.svg</file>
+    <file>image/record_icon_normal.svg</file>
+    <file>image/record_icon_press.svg</file>
+    <file>image/resize_handle_big.svg</file>
+    <file>image/resize_handle_small.svg</file>
     <file>image/trayicon1.svg</file>
     <file>image/trayicon2.svg</file>
 </qresource>

@@ -26,10 +26,13 @@
 #include "utils.h"
 #include <QTimer>
 #include <QApplication>
+#include <DHiDPIHelper>
 
 #include <QDebug>
 
 const int ButtonFeedback::FRAME_RATE = 40; // ms
+
+DWIDGET_USE_NAMESPACE
 
 ButtonFeedback::ButtonFeedback(QWidget *parent) : QWidget(parent)
 {
@@ -38,16 +41,16 @@ ButtonFeedback::ButtonFeedback(QWidget *parent) : QWidget(parent)
     setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
     
-    buttonFeedback0Img = QImage(Utils::getQrcPath("button_feedback_0.png"));
-    buttonFeedback1Img = QImage(Utils::getQrcPath("button_feedback_1.png"));
-    buttonFeedback2Img = QImage(Utils::getQrcPath("button_feedback_2.png"));
-    buttonFeedback3Img = QImage(Utils::getQrcPath("button_feedback_3.png"));
-    buttonFeedback4Img = QImage(Utils::getQrcPath("button_feedback_4.png"));
-    buttonFeedback5Img = QImage(Utils::getQrcPath("button_feedback_5.png"));
-    buttonFeedback6Img = QImage(Utils::getQrcPath("button_feedback_6.png"));
-    buttonFeedback7Img = QImage(Utils::getQrcPath("button_feedback_7.png"));
-    buttonFeedback8Img = QImage(Utils::getQrcPath("button_feedback_8.png"));
-    buttonFeedback9Img = QImage(Utils::getQrcPath("button_feedback_9.png"));
+    buttonFeedback0Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_0.svg"));
+    buttonFeedback1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_1.svg"));
+    buttonFeedback2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_2.svg"));
+    buttonFeedback3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_3.svg"));
+    buttonFeedback4Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_4.svg"));
+    buttonFeedback5Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_5.svg"));
+    buttonFeedback6Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_6.svg"));
+    buttonFeedback7Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_7.svg"));
+    buttonFeedback8Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_8.svg"));
+    buttonFeedback9Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_9.svg"));
     
     setFixedSize(buttonFeedback0Img.width(), buttonFeedback0Img.height());
     
@@ -84,34 +87,34 @@ void ButtonFeedback::paintEvent(QPaintEvent *)
     
     switch(frameIndex) {
     case 0:
-        painter.drawImage(QPoint(0, 0), buttonFeedback0Img);
+        painter.drawPixmap(QPoint(0, 0), buttonFeedback0Img);
         break;
     case 1:
-        painter.drawImage(QPoint(0, 0), buttonFeedback1Img);
+        painter.drawPixmap(QPoint(0, 0), buttonFeedback1Img);
         break;
     case 2:
-        painter.drawImage(QPoint(0, 0), buttonFeedback2Img);
+        painter.drawPixmap(QPoint(0, 0), buttonFeedback2Img);
         break;
     case 3:
-        painter.drawImage(QPoint(0, 0), buttonFeedback3Img);
+        painter.drawPixmap(QPoint(0, 0), buttonFeedback3Img);
         break;
     case 4:
-        painter.drawImage(QPoint(0, 0), buttonFeedback4Img);
+        painter.drawPixmap(QPoint(0, 0), buttonFeedback4Img);
         break;
     case 5:
-        painter.drawImage(QPoint(0, 0), buttonFeedback5Img);
+        painter.drawPixmap(QPoint(0, 0), buttonFeedback5Img);
         break;
     case 6:
-        painter.drawImage(QPoint(0, 0), buttonFeedback6Img);
+        painter.drawPixmap(QPoint(0, 0), buttonFeedback6Img);
         break;
     case 7:
-        painter.drawImage(QPoint(0, 0), buttonFeedback7Img);
+        painter.drawPixmap(QPoint(0, 0), buttonFeedback7Img);
         break;
     case 8:
-        painter.drawImage(QPoint(0, 0), buttonFeedback8Img);
+        painter.drawPixmap(QPoint(0, 0), buttonFeedback8Img);
         break;
     case 9:
-        painter.drawImage(QPoint(0, 0), buttonFeedback9Img);
+        painter.drawPixmap(QPoint(0, 0), buttonFeedback9Img);
         break;
     }
 }
@@ -123,7 +126,7 @@ void ButtonFeedback::showPressFeedback(int x, int y)
     show();
     repaint();
     qreal devicePixelRatio = qApp->devicePixelRatio();
-    move(x / devicePixelRatio - rect().width() / 2, y / devicePixelRatio - rect().height() / 2);
+    move(x / devicePixelRatio - rect().width() / devicePixelRatio / 2, y / devicePixelRatio - rect().height() / devicePixelRatio / 2);
     timer->start(FRAME_RATE);
 }
 
@@ -134,7 +137,7 @@ void ButtonFeedback::showDragFeedback(int x, int y)
     show();
     repaint();
     qreal devicePixelRatio = qApp->devicePixelRatio();
-    move(x / devicePixelRatio - rect().width() / 2, y / devicePixelRatio - rect().height() / 2);
+    move(x / devicePixelRatio - rect().width() / devicePixelRatio / 2, y / devicePixelRatio - rect().height() / devicePixelRatio / 2);
     
     if (timer->isActive()) {
         timer->stop();
@@ -148,6 +151,6 @@ void ButtonFeedback::showReleaseFeedback(int x, int y)
     show();
     repaint();
     qreal devicePixelRatio = qApp->devicePixelRatio();
-    move(x / devicePixelRatio - rect().width() / 2, y / devicePixelRatio - rect().height() / 2);
+    move(x / devicePixelRatio - rect().width() / devicePixelRatio / 2, y / devicePixelRatio - rect().height() / devicePixelRatio / 2);
     timer->start(FRAME_RATE);
 }

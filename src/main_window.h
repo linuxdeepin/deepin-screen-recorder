@@ -144,8 +144,8 @@ private:
     
     int flashTrayIconCounter;
     
-    QImage resizeHandleBigImg;
-    QImage resizeHandleSmallImg;
+    QPixmap resizeHandleBigImg;
+    QPixmap resizeHandleSmallImg;
     
     QString selectAreaName;
     

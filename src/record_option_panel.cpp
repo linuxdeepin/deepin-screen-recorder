@@ -24,27 +24,31 @@
 #include <QPainter>
 #include <QEvent>
 #include <QMouseEvent>
+#include <QApplication>
 #include <QDebug>
 #include "utils.h"
 #include "record_option_panel.h"
 #include "constant.h"
+#include <DHiDPIHelper>
 
 const int RecordOptionPanel::WIDTH = 124;
 const int RecordOptionPanel::HEIGHT = 36;
 const int RecordOptionPanel::ICON_OFFSET_X = 14;
     
+DWIDGET_USE_NAMESPACE
+
 RecordOptionPanel::RecordOptionPanel(QPushButton *parent) : QPushButton(parent)
 {
     installEventFilter(this);
     setMouseTracking(true);
 
-    gifNormalImg = QImage(Utils::getQrcPath("gif_normal.png"));
-    gifPressImg = QImage(Utils::getQrcPath("gif_press.png"));
-    gifCheckedImg = QImage(Utils::getQrcPath("gif_checked.png"));
+    gifNormalImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("gif_normal.svg"));
+    gifPressImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("gif_press.svg"));
+    gifCheckedImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("gif_checked.svg"));
 
-    videoNormalImg = QImage(Utils::getQrcPath("video_normal.png"));
-    videoPressImg = QImage(Utils::getQrcPath("video_press.png"));
-    videoCheckedImg = QImage(Utils::getQrcPath("video_checked.png"));
+    videoNormalImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("video_normal.svg"));
+    videoPressImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("video_press.svg"));
+    videoCheckedImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("video_checked.svg"));
 
     settings = new Settings();
     saveAsGif = settings->getOption("save_as_gif").toBool();
@@ -70,37 +74,38 @@ void RecordOptionPanel::paintEvent(QPaintEvent *)
     Utils::drawTooltipBackground(painter, rect());
 
     // Draw icon.
+    qreal devicePixelRatio = qApp->devicePixelRatio();
     painter.setOpacity(1);
-    int gifIconX = rect().x() + ICON_OFFSET_X;
-    int gifIconY = rect().y() + (rect().height() - gifCheckedImg.height()) / 2;
-    int gifTextX = gifIconX + gifCheckedImg.width();
-    int gifTextWidth = rect().width() / 2 - ICON_OFFSET_X - gifCheckedImg.width();
+    int gifIconX = rect().x() + ICON_OFFSET_X / devicePixelRatio;
+    int gifIconY = rect().y() + (rect().height() - gifCheckedImg.height() / devicePixelRatio) / 2;
+    int gifTextX = gifIconX + gifCheckedImg.width() / devicePixelRatio;
+    int gifTextWidth = rect().width() / 2 - ICON_OFFSET_X / devicePixelRatio - gifCheckedImg.width() / devicePixelRatio;
     QString gifColor;
     if (saveAsGif) {
-        painter.drawImage(QPoint(gifIconX, gifIconY), gifCheckedImg);
+        painter.drawPixmap(QPoint(gifIconX, gifIconY), gifCheckedImg);
         gifColor = "#217DFF";
     } else if (isPressGif) {
-        painter.drawImage(QPoint(gifIconX, gifIconY), gifPressImg);
+        painter.drawPixmap(QPoint(gifIconX, gifIconY), gifPressImg);
         gifColor = "#004BCA";
     } else {
-        painter.drawImage(QPoint(gifIconX, gifIconY), gifNormalImg);
+        painter.drawPixmap(QPoint(gifIconX, gifIconY), gifNormalImg);
         gifColor = "#000000";
     }
     Utils::drawTooltipText(painter, "GIF", gifColor, 9, QRectF(gifTextX, rect().y(), gifTextWidth, rect().height()));
 
     int videoIconX = rect().x() + rect().width() / 2;
-    int videoIconY = rect().y() + (rect().height() - videoCheckedImg.height()) / 2;
-    int videoTextX = videoIconX + videoCheckedImg.width();
-    int videoTextWidth = rect().width() / 2 - ICON_OFFSET_X - gifCheckedImg.width();
+    int videoIconY = rect().y() + (rect().height() - videoCheckedImg.height() / devicePixelRatio) / 2;
+    int videoTextX = videoIconX + videoCheckedImg.width() / devicePixelRatio;
+    int videoTextWidth = rect().width() / 2 - ICON_OFFSET_X / devicePixelRatio - gifCheckedImg.width() / devicePixelRatio;
     QString videoColor;
     if (!saveAsGif) {
-        painter.drawImage(QPoint(videoIconX, videoIconY), videoCheckedImg);
+        painter.drawPixmap(QPoint(videoIconX, videoIconY), videoCheckedImg);
         videoColor = "#217DFF";
     } else if (isPressVideo) {
-        painter.drawImage(QPoint(videoIconX, videoIconY), videoPressImg);
+        painter.drawPixmap(QPoint(videoIconX, videoIconY), videoPressImg);
         videoColor = "#004BCA";
     } else {
-        painter.drawImage(QPoint(videoIconX, videoIconY), videoNormalImg);
+        painter.drawPixmap(QPoint(videoIconX, videoIconY), videoNormalImg);
         videoColor = "#000000";
     }
     Utils::drawTooltipText(painter, "MP4", videoColor, 9, QRectF(videoTextX, rect().y(), videoTextWidth, rect().height()));

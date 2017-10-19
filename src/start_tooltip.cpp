@@ -30,15 +30,18 @@
 #include "start_tooltip.h"
 #include "utils.h"
 #include "constant.h"
+#include <DHiDPIHelper>
 
 #include <QDebug>
+
+DWIDGET_USE_NAMESPACE
 
 StartTooltip::StartTooltip(QWidget *parent) : QWidget(parent)
 {
     setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
-    iconImg = QImage(Utils::getQrcPath("deepin-screen-recorder.png"));
+    iconImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("deepin-screen-recorder.svg"));
 
     installEventFilter(this);
 
@@ -73,8 +76,9 @@ void StartTooltip::paintEvent(QPaintEvent *)
 
     Utils::drawTooltipBackground(painter, rect());
 
+    qreal devicePixelRatio = qApp->devicePixelRatio();
     painter.setOpacity(1);
-    painter.drawImage(QPoint((rect().width() - iconImg.width()) / 2, Constant::RECTANGLE_PADDING), iconImg);
+    painter.drawPixmap(QPoint((rect().width() - iconImg.width() / devicePixelRatio) / 2, Constant::RECTANGLE_PADDING * devicePixelRatio), iconImg);
 
     Utils::drawTooltipText(painter, text, "#000000", Constant::RECTANGLE_FONT_SIZE,
                            QRectF(rect().x(),

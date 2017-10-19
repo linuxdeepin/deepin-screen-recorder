@@ -23,21 +23,25 @@
 
 #include <QWidget>
 #include <QTimer>
+#include <QApplication>
 #include <QPen>
 #include <QPainter>
 #include "countdown_tooltip.h"
 #include "utils.h"
 #include "constant.h"
+#include <DHiDPIHelper>
 
 const int CountdownTooltip::NUMBER_PADDING_Y = 30;
+
+DWIDGET_USE_NAMESPACE
 
 CountdownTooltip::CountdownTooltip(QWidget *parent) : QWidget(parent)
 {
     installEventFilter(this);
 
-    countdown1Img = QImage(Utils::getQrcPath("countdown_1.png"));
-    countdown2Img = QImage(Utils::getQrcPath("countdown_2.png"));
-    countdown3Img = QImage(Utils::getQrcPath("countdown_3.png"));
+    countdown1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_1.svg"));
+    countdown2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_2.svg"));
+    countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_3.svg"));
 
     showCountdownCounter = 0;
 }
@@ -49,21 +53,22 @@ void CountdownTooltip::paintEvent(QPaintEvent *)
         
         Utils::drawTooltipBackground(painter, rect());
         
+        qreal devicePixelRatio = qApp->devicePixelRatio();
         painter.setOpacity(1);
-        int countdownX = rect().x() + (rect().width() - countdown1Img.width()) / 2;
-        int countdownY = rect().y() + NUMBER_PADDING_Y;
+        int countdownX = rect().x() + (rect().width() - countdown1Img.width() / devicePixelRatio) / 2;
+        int countdownY = rect().y() + NUMBER_PADDING_Y * devicePixelRatio;
         if (showCountdownCounter == 1) {
-            painter.drawImage(QPoint(countdownX, countdownY), countdown1Img);
+            painter.drawPixmap(QPoint(countdownX, countdownY), countdown1Img);
         } else if (showCountdownCounter == 2) {
-            painter.drawImage(QPoint(countdownX, countdownY), countdown2Img);
+            painter.drawPixmap(QPoint(countdownX, countdownY), countdown2Img);
         } else if (showCountdownCounter == 3) {
-            painter.drawImage(QPoint(countdownX, countdownY), countdown3Img);
+            painter.drawPixmap(QPoint(countdownX, countdownY), countdown3Img);
         }
 
         QRectF tooltipRect(rect().x(),
-                           rect().y() + countdown1Img.height() + NUMBER_PADDING_Y,
+                           rect().y() + countdown1Img.height() / devicePixelRatio + NUMBER_PADDING_Y,
                            rect().width(),
-                           rect().height() - countdown1Img.height() - NUMBER_PADDING_Y);
+                           rect().height() - countdown1Img.height() / devicePixelRatio - NUMBER_PADDING_Y);
         Utils::drawTooltipText(painter, text, "#000000", Constant::RECTANGLE_FONT_SIZE, tooltipRect);
     }
 }
