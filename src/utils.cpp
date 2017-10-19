@@ -72,15 +72,17 @@ void Utils::blurRect(DWindowManager *windowManager, int widgetId, QRectF rect)
 {
     QVector<uint32_t> data;
     
-    data << rect.x() << rect.y() << rect.width() << rect.height() << Constant::RECTANGLE_RADIUS << Constant::RECTANGLE_RADIUS;
+    qreal devicePixelRatio = qApp->devicePixelRatio();
+    data << rect.x() * devicePixelRatio << rect.y() * devicePixelRatio << rect.width() * devicePixelRatio << rect.height() * devicePixelRatio << Constant::RECTANGLE_RADIUS << Constant::RECTANGLE_RADIUS;
     windowManager->setWindowBlur(widgetId, data);
 }    
 
 void Utils::blurRects(DWindowManager *windowManager, int widgetId, QList<QRectF> rects)
 {
     QVector<uint32_t> data;
+    qreal devicePixelRatio = qApp->devicePixelRatio();
     foreach (auto rect, rects) {
-        data << rect.x() << rect.y() << rect.width() << rect.height() << Constant::RECTANGLE_RADIUS << Constant::RECTANGLE_RADIUS;
+        data << rect.x() * devicePixelRatio << rect.y() * devicePixelRatio << rect.width() * devicePixelRatio << rect.height() * devicePixelRatio << Constant::RECTANGLE_RADIUS << Constant::RECTANGLE_RADIUS;
     }
     windowManager->setWindowBlur(widgetId, data);
 }    

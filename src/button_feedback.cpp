@@ -25,6 +25,7 @@
 #include "button_feedback.h"
 #include "utils.h"
 #include <QTimer>
+#include <QApplication>
 
 #include <QDebug>
 
@@ -121,7 +122,8 @@ void ButtonFeedback::showPressFeedback(int x, int y)
     
     show();
     repaint();
-    move(x - rect().width() / 2, y - rect().height() / 2);
+    qreal devicePixelRatio = qApp->devicePixelRatio();
+    move(x / devicePixelRatio - rect().width() / 2, y / devicePixelRatio - rect().height() / 2);
     timer->start(FRAME_RATE);
 }
 
@@ -131,7 +133,8 @@ void ButtonFeedback::showDragFeedback(int x, int y)
     
     show();
     repaint();
-    move(x - rect().width() / 2, y - rect().height() / 2);
+    qreal devicePixelRatio = qApp->devicePixelRatio();
+    move(x / devicePixelRatio - rect().width() / 2, y / devicePixelRatio - rect().height() / 2);
     
     if (timer->isActive()) {
         timer->stop();
@@ -144,6 +147,7 @@ void ButtonFeedback::showReleaseFeedback(int x, int y)
     
     show();
     repaint();
-    move(x - rect().width() / 2, y - rect().height() / 2);
+    qreal devicePixelRatio = qApp->devicePixelRatio();
+    move(x / devicePixelRatio - rect().width() / 2, y / devicePixelRatio - rect().height() / 2);
     timer->start(FRAME_RATE);
 }

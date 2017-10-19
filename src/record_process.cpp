@@ -71,6 +71,13 @@ void RecordProcess::setRecordInfo(int rx, int ry, int rw, int rh, QString name, 
     recordY = ry;
     recordWidth = rx + rw <= sw ? rw : sw - rx;
     recordHeight = ry + rh <= sh ? rh : sh - ry;
+    
+    qreal devicePixelRatio = qApp->devicePixelRatio();
+    recordX = int(recordX * devicePixelRatio);
+    recordY = int(recordY * devicePixelRatio);
+    recordWidth = int(recordWidth * devicePixelRatio);
+    recordHeight = int(recordHeight * devicePixelRatio);
+    
     saveAreaName = name;
 }
 
@@ -135,6 +142,14 @@ void RecordProcess::recordVideo()
         arguments << QString("ultrafast");
         arguments << savePath;
     } else {
+        // Mp4 need size dvisible by 2.
+        if (recordWidth % 2 != 0) {
+            recordWidth -= 1;
+        }
+        if (recordHeight % 2 != 0) {
+            recordHeight -= 1;
+        }
+        
         arguments << QString("-video_size");
         arguments << QString("%1x%2").arg(recordWidth).arg(recordHeight);
         arguments << QString("-framerate");
