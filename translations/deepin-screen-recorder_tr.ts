@@ -6,7 +6,7 @@
         <source>Click tray icon 
 or press the shortcut again to stop recording</source>
         <translation>Kaydı durdurmak için 
-tepsi simgesine tıkla ya da kısayola tekrar bas</translation>
+tepsi simgesine tıkla ya da kısayola tekrar basınız</translation>
     </message>
 </context>
 <context>
@@ -32,12 +32,12 @@ tepsi simgesine tıkla ya da kısayola tekrar bas</translation>
     <message>
         <location filename="../src/record_process.cpp" line="137"/>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation>deepin-ekran-kaydedici</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="185"/>
         <source>View</source>
-        <translation>Gör</translation>
+        <translation>Göster</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="195"/>
@@ -57,7 +57,7 @@ tepsi simgesine tıkla ya da kısayola tekrar bas</translation>
         <source>Click or drag to
 select the area to record</source>
         <translation>Kaydedilecek alanı
-seçmek için tıkla ya da sürükle</translation>
+seçmek için tıklayınız ya da sürükleyiniz</translation>
     </message>
 </context>
 <context>

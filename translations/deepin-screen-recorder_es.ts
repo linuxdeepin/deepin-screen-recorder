@@ -5,8 +5,8 @@
         <location filename="../src/countdown_tooltip.cpp" line="73"/>
         <source>Click tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Hacer clic en el icono de la bandeja o pulsar de nuevo
-el atajo de teclado para detener la grabación.</translation>
+        <translation>Haz clic en el icono de la bandeja o presiona 
+la tecla atajo nuevamente para detener la grabación.</translation>
     </message>
 </context>
 <context>
@@ -14,7 +14,7 @@ el atajo de teclado para detener la grabación.</translation>
     <message>
         <location filename="../src/main_window.cpp" line="67"/>
         <source>Deepin screen recorder</source>
-        <translation>Grabador de pantalla Deepin</translation>
+        <translation>Videograbador Deepin</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="118"/>
@@ -56,7 +56,7 @@ el atajo de teclado para detener la grabación.</translation>
         <location filename="../src/start_tooltip.cpp" line="45"/>
         <source>Click or drag to
 select the area to record</source>
-        <translation>Hacer clic o arrastrar
+        <translation>Haz clic o arrástrala
 para seleccionar el área a grabar.</translation>
     </message>
 </context>

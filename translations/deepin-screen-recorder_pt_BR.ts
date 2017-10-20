@@ -14,7 +14,7 @@ ou pressione o atalho novamente para parar a gravação</translation>
     <message>
         <location filename="../src/main_window.cpp" line="67"/>
         <source>Deepin screen recorder</source>
-        <translation>Gravador de Tela</translation>
+        <translation>Deepin screen recorder</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="118"/>

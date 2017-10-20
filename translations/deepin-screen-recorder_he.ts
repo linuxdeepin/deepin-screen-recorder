@@ -1,12 +1,12 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="es_419" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="he" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <location filename="../src/countdown_tooltip.cpp" line="73"/>
         <source>Click tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Haz clic en el icono de la bandeja o pulsar de nuevo
-el atajo de teclado para detener la grabación.</translation>
+        <translation>יש ללחוץ על הסמל
+במגש המערכת פעם נוספת כדי לעצור את ההסרטה</translation>
     </message>
 </context>
 <context>
@@ -14,17 +14,17 @@ el atajo de teclado para detener la grabación.</translation>
     <message>
         <location filename="../src/main_window.cpp" line="67"/>
         <source>Deepin screen recorder</source>
-        <translation>Videograbadora Deepin</translation>
+        <translation>מסריט המסך של Deepin</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="118"/>
         <source>Start recording</source>
-        <translation>Empezar a grabar</translation>
+        <translation>התחלה בהסרטה</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="387"/>
         <source>Select area</source>
-        <translation>Seleccionar área</translation>
+        <translation>בחירת אזור</translation>
     </message>
 </context>
 <context>
@@ -37,17 +37,17 @@ el atajo de teclado para detener la grabación.</translation>
     <message>
         <location filename="../src/record_process.cpp" line="185"/>
         <source>View</source>
-        <translation>Ver</translation>
+        <translation>תצוגה</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="195"/>
         <source>Record finished</source>
-        <translation>Grabación terminada</translation>
+        <translation>ההסרטה הסתיימה</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="196"/>
         <source>Saved to</source>
-        <translation>Guardado en</translation>
+        <translation>נשמר אל</translation>
     </message>
 </context>
 <context>
@@ -56,8 +56,8 @@ el atajo de teclado para detener la grabación.</translation>
         <location filename="../src/start_tooltip.cpp" line="45"/>
         <source>Click or drag to
 select the area to record</source>
-        <translation>Hacer clic o arrastrar para
-seleccionar la zona que grabar.</translation>
+        <translation>יש ללחוץ או לגרור
+כדי לבחור את האזור להסרטה</translation>
     </message>
 </context>
 <context>
@@ -66,7 +66,7 @@ seleccionar la zona que grabar.</translation>
         <location filename="../src/window_manager.cpp" line="150"/>
         <location filename="../src/window_manager.cpp" line="169"/>
         <source>Desktop</source>
-        <translation>Escritorio</translation>
+        <translation>שולחן עבודה</translation>
     </message>
 </context>
 </TS>
