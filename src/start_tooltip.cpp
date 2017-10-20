@@ -48,8 +48,9 @@ StartTooltip::StartTooltip(QWidget *parent) : QWidget(parent)
     text = tr("Click or drag to\nselect the area to record");
     QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, text);
 
+    qreal devicePixelRatio = qApp->devicePixelRatio();
     setFixedSize(size.width() + Constant::RECTANGLE_PADDING * 2,
-                 size.height() + iconImg.height() + Constant::RECTANGLE_PADDING * 3);
+                 size.height() + iconImg.height() / devicePixelRatio + Constant::RECTANGLE_PADDING * 3);
     
     Utils::passInputEvent(this->winId());
 }
@@ -78,13 +79,13 @@ void StartTooltip::paintEvent(QPaintEvent *)
 
     qreal devicePixelRatio = qApp->devicePixelRatio();
     painter.setOpacity(1);
-    painter.drawPixmap(QPoint((rect().width() - iconImg.width() / devicePixelRatio) / 2, Constant::RECTANGLE_PADDING * devicePixelRatio), iconImg);
+    painter.drawPixmap(QPoint((rect().width() - iconImg.width() / devicePixelRatio) / 2, Constant::RECTANGLE_PADDING / devicePixelRatio), iconImg);
 
     Utils::drawTooltipText(painter, text, "#000000", Constant::RECTANGLE_FONT_SIZE,
                            QRectF(rect().x(),
-                                  rect().y() + Constant::RECTANGLE_PADDING + iconImg.height(),
+                                  rect().y() + Constant::RECTANGLE_PADDING / devicePixelRatio + iconImg.height() / devicePixelRatio, 
                                   rect().width(),
-                                  rect().height() - Constant::RECTANGLE_PADDING - iconImg.height()
+                                  rect().height() - Constant::RECTANGLE_PADDING / devicePixelRatio - iconImg.height() / devicePixelRatio
                                ));
 }
 
