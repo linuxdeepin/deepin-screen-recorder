@@ -7,7 +7,7 @@ TARGET = deepin-screen-recorder
 INCLUDEPATH += .
 
 CONFIG += link_pkgconfig
-CONFIG += c++11 
+CONFIG += c++11
 PKGCONFIG += xcb xcb-util dtkwidget dtkwm
 RESOURCES = deepin-screen-recorder.qrc
 
@@ -25,6 +25,10 @@ LIBS += -lX11 -lXext -lXtst -ldtkwm
 
 QMAKE_CXXFLAGS += -g
 
+isEmpty(PREFIX){
+    PREFIX = /usr
+}
+
 isEmpty(BINDIR):BINDIR=/usr/bin
 isEmpty(ICONDIR):ICONDIR=/usr/share/icons/hicolor/scalable/apps
 isEmpty(APPDIR):APPDIR=/usr/share/applications
@@ -41,11 +45,13 @@ icon.files = image/deepin-screen-recorder.svg
 desktop.files = deepin-screen-recorder.desktop
 manual.files = manual/*
 
-INSTALLS += target icon desktop manual
+dbus_service.files = $$PWD/com.deepin.ScreenRecorder.service
+dbus_service.path = $$PREFIX/share/dbus-1/services
+
+INSTALLS += target icon desktop manual dbus_service
 
 isEmpty(TRANSLATIONS) {
      include(translations.pri)
-
 }
 
 TRANSLATIONS_COMPILED = $$TRANSLATIONS
