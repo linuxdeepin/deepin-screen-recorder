@@ -22,6 +22,8 @@
  */
 
 #include <QWidget>
+#include <QDBusConnection>
+#include <QDBusInterface>
 #include <DApplication>
 #include <DWindowManagerHelper>
 #include <QProcess>
@@ -57,7 +59,20 @@ int main(int argc, char *argv[])
 
         window.initResource();
 
+        QDBusConnection dbus = QDBusConnection::sessionBus();
+        if (dbus.registerService("com.deepin.ScreenRecorder")) {
+            dbus.registerObject("/com/deepin/ScreenRecorder", &window, QDBusConnection::ExportScriptableSlots);
+        }
+
         return app.exec();
+    } else {
+        QDBusInterface notification("com.deepin.ScreenRecorder",
+                                    "/com/deepin/ScreenRecorder",
+                                    "com.deepin.ScreenRecorder",
+                                    QDBusConnection::sessionBus());
+        
+        QList<QVariant> arg;
+        notification.callWithArgumentList(QDBus::AutoDetect, "stopRecord", arg);        
     }
 
     return 0;

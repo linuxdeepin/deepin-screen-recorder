@@ -47,6 +47,8 @@ class MainWindow : public QWidget
 {
     Q_OBJECT
 
+    Q_CLASSINFO("D-Bus Interface", "com.deepin.ScreenRecorder")
+    
     static const int CURSOR_BOUND;
     static const int RECORD_MIN_SIZE;
     static const int DRAG_POINT_RADIUS;
@@ -82,7 +84,8 @@ public slots:
     void startRecord();
     void flashTrayIcon();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
-    void stopRecord();
+
+    Q_SCRIPTABLE void stopRecord();
     void startCountdown();
     void showPressFeedback(int x, int y);
     void showDragFeedback(int x, int y);
