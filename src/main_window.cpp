@@ -208,8 +208,7 @@ void MainWindow::responseEsc()
 void MainWindow::compositeChanged()
 {
     if (!m_wmHelper->hasComposite()) {
-        QProcess p;
-        p.startDetached("/usr/lib/deepin-daemon/dde-warning-dialog");
+        Utils::warnNoComposite();
         QApplication::quit();
     }
 }

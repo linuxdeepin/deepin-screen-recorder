@@ -40,4 +40,5 @@ public:
     static void drawTooltipText(QPainter &painter, QString text, QString textColor, int textSize, QRectF rect);
     static void passInputEvent(int wid);
     static void setFontSize(QPainter &painter, int textSize);
+    static void warnNoComposite();
 };

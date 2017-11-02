@@ -27,6 +27,7 @@
 #include <QDebug>
 #include <QFontMetrics>
 #include <QPainter>
+#include <QDBusInterface>
 #include <QtX11Extras/QX11Info>
 #include <X11/extensions/shape.h>
 #include "utils.h"
@@ -34,6 +35,10 @@
 #include "constant.h"
 
 DWM_USE_NAMESPACE
+
+static const QString WarningDialogService = "com.deepin.dde.WarningDialog";
+static const QString WarningDialogPath = "/com/deepin/dde/WarningDialog";
+static const QString WarningDialogInterface = "com.deepin.dde.WarningDialog";
 
 QString Utils::getQrcPath(QString imageName)
 {
@@ -66,6 +71,14 @@ void Utils::setFontSize(QPainter &painter, int textSize)
     QFont font = painter.font() ;
     font.setPointSize(textSize);
     painter.setFont(font);
+}
+
+void Utils::warnNoComposite()
+{
+    QDBusInterface iface(WarningDialogService,
+                         WarningDialogPath,
+                         WarningDialogService);
+    iface.call("RaiseWindow");
 }
 
 void Utils::blurRect(DWindowManager *windowManager, int widgetId, QRectF rect)
