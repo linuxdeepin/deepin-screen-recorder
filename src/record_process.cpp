@@ -71,7 +71,7 @@ void RecordProcess::setRecordInfo(int rx, int ry, int rw, int rh, QString name, 
     recordY = ry;
     recordWidth = rx + rw <= sw ? rw : sw - rx;
     recordHeight = ry + rh <= sh ? rh : sh - ry;
-    
+
     qreal devicePixelRatio = qApp->devicePixelRatio();
     recordX = int(recordX * devicePixelRatio);
     recordY = int(recordY * devicePixelRatio);
@@ -171,6 +171,14 @@ void RecordProcess::recordVideo()
 void RecordProcess::initProcess() {
     // Create process and handle finish signal.
     process = new QProcess();
+
+    // Disable scaling of byzanz-record (GTK3 based) here, because we pass subprocesses
+    // absolute device geometry information, byzanz-record should not scale the information
+    // one more time.
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("GDK_SCALE", "1");
+    process->setProcessEnvironment(env);
+
     connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
 
     // Build temp save path.
