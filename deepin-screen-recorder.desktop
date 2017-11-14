@@ -4,7 +4,6 @@ Comment=Record screen
 Exec=deepin-screen-recorder
 Icon=deepin-screen-recorder
 Name=Deepin Screen Recorder
-StartupNotify=true
 TryExec=deepin-screen-recorder
 Type=Application
 
