@@ -33,44 +33,47 @@ DWIDGET_USE_NAMESPACE
 
 int main(int argc, char *argv[])
 {
+    // Construct a QGuiApplication before accessing a platform function.
     DApplication::loadDXcbPlugin();
-
     DApplication app(argc, argv);
-
-    if (!DWindowManagerHelper::instance()->hasComposite()) {
-        Utils::warnNoComposite();
-        return 0;
-    }
-
-    if (app.setSingleInstance("deepin-screen-recorder")) {
-        app.setOrganizationName("deepin");
-        app.setApplicationName("deepin-screen-recorder");
-        app.setApplicationVersion("1.0");
-
-        app.loadTranslator();
-
-        MainWindow window;
-
-        QObject::connect(&app, &DApplication::newInstanceStarted, &window, &MainWindow::stopRecord);
-
-        window.showFullScreen();
-
-        window.initResource();
-
-        QDBusConnection dbus = QDBusConnection::sessionBus();
-        if (dbus.registerService("com.deepin.ScreenRecorder")) {
-            dbus.registerObject("/com/deepin/ScreenRecorder", &window, QDBusConnection::ExportScriptableSlots);
+    
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    if (dbus.registerService("com.deepin.ScreenRecorder")) {
+        // Poup up warning dialog if window manager not support composite.
+        if (!DWindowManagerHelper::instance()->hasComposite()) {
+            Utils::warnNoComposite();
+            return 0;
         }
+        // Start screen-recorder process if not other screen-recorder DBus service started.
+        else {
+            // Init application attributes.
+            app.setOrganizationName("deepin");
+            app.setApplicationName("deepin-screen-recorder");
+            app.setApplicationVersion("1.0");
 
-        return app.exec();
+            // Load translator.
+            app.loadTranslator();
+
+            // Show window.
+            MainWindow window;
+
+            window.showFullScreen();
+            window.initResource();
+
+            // Register debus service.
+            dbus.registerObject("/com/deepin/ScreenRecorder", &window, QDBusConnection::ExportScriptableSlots);
+            
+            return app.exec();
+        }
     } else {
+        // Send DBus message to stop screen-recorder if found other screen-recorder DBus service has started.
         QDBusInterface notification("com.deepin.ScreenRecorder",
                                     "/com/deepin/ScreenRecorder",
                                     "com.deepin.ScreenRecorder",
                                     QDBusConnection::sessionBus());
-        
+
         QList<QVariant> arg;
-        notification.callWithArgumentList(QDBus::AutoDetect, "stopRecord", arg);        
+        notification.callWithArgumentList(QDBus::AutoDetect, "stopRecord", arg);
     }
 
     return 0;

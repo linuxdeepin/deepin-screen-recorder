@@ -25,7 +25,6 @@
 #include <QTimer>
 #include <QKeyEvent>
 #include <QObject>
-#include <QDebug>
 #include <QPainter>
 #include <QWidget>
 #include "main_window.h"
