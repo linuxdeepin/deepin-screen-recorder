@@ -14,17 +14,17 @@ o premeu la drecera de nou per aturar la gravació</translation>
     <message>
         <location filename="../src/main_window.cpp" line="67"/>
         <source>Deepin screen recorder</source>
-        <translation>Deepin screen recorder</translation>
+        <translation>Gravador de pantalla del Deepin</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="118"/>
         <source>Start recording</source>
-        <translation>Iniciar la gravació</translation>
+        <translation>Inicia la gravació</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="387"/>
         <source>Select area</source>
-        <translation>Seleccionar l&apos;area</translation>
+        <translation>Selecciona l&apos;àrea</translation>
     </message>
 </context>
 <context>
@@ -37,12 +37,12 @@ o premeu la drecera de nou per aturar la gravació</translation>
     <message>
         <location filename="../src/record_process.cpp" line="185"/>
         <source>View</source>
-        <translation>Veure</translation>
+        <translation>Vista</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="195"/>
         <source>Record finished</source>
-        <translation>Grabació finalitzada</translation>
+        <translation>Gravació acabada</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="196"/>
@@ -56,8 +56,8 @@ o premeu la drecera de nou per aturar la gravació</translation>
         <location filename="../src/start_tooltip.cpp" line="45"/>
         <source>Click or drag to
 select the area to record</source>
-        <translation>Feu clic o arrossegament de
-seleccionar l&apos;àrea a gravar</translation>
+        <translation>Cliqueu o arrossegueu
+per seleccionar l&apos;àrea a gravar</translation>
     </message>
 </context>
 <context>
