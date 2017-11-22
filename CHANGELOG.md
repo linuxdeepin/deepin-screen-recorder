@@ -4,6 +4,9 @@ This is default screen recorder application for Deepin.
 ## [Unreleased]
 
 
+## [2.6.5.1] - 2017-11-22
+- Update translation
+
 ## [2.6.5] - 2017-11-17
 ### Bug Fixes
 - Bypass window manager
