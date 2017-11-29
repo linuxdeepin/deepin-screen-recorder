@@ -185,7 +185,11 @@ void RecordProcess::initProcess() {
     QDateTime date = QDateTime::currentDateTime();
     QString fileExtension;
     if (recordType == RECORD_TYPE_GIF) {
-        fileExtension = "gif";
+        if (settings->getOption("lossless_recording").toBool()) {
+            fileExtension = "flv";
+        } else {
+            fileExtension = "gif";
+        }
     } else {
         if (settings->getOption("lossless_recording").toBool() || !QSysInfo::currentCpuArchitecture().startsWith("x86")) {
             fileExtension = "mkv";
