@@ -1,12 +1,12 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="pt" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="am_ET" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <location filename="../src/countdown_tooltip.cpp" line="73"/>
         <source>Click tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Clique no ícone da área de notificação
-ou clique no atalho novamente para parar de gravar</translation>
+        <translation>ይጫኑ በ ትሪ ምልክት ላይ 
+ወይንም ይጫኑ በ አቋራጭ ቁልፍ እንደገና መቅረጫውን ለ ማስቆም</translation>
     </message>
 </context>
 <context>
@@ -14,17 +14,17 @@ ou clique no atalho novamente para parar de gravar</translation>
     <message>
         <location filename="../src/main_window.cpp" line="67"/>
         <source>Deepin screen recorder</source>
-        <translation>Deepin screen recorder</translation>
+        <translation>ዲፕኢን የ መመልከቻ መቅረጫ</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="118"/>
         <source>Start recording</source>
-        <translation>Iniciar gravação</translation>
+        <translation>መቅረጽ ማስጀመሪያ</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="387"/>
         <source>Select area</source>
-        <translation>Selecionar área</translation>
+        <translation>ቦታ ይምረጡ</translation>
     </message>
 </context>
 <context>
@@ -32,22 +32,22 @@ ou clique no atalho novamente para parar de gravar</translation>
     <message>
         <location filename="../src/record_process.cpp" line="137"/>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation>የ ዲፕኢን-መመልከቻ-መቅረጫ</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="185"/>
         <source>View</source>
-        <translation>Ver</translation>
+        <translation>መመልከቻ</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="195"/>
         <source>Record finished</source>
-        <translation>Gravação terminada</translation>
+        <translation>መቅረጹን ጨርሷል</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="196"/>
         <source>Saved to</source>
-        <translation>Guardado em</translation>
+        <translation>ማስቀመጫ ወደ</translation>
     </message>
 </context>
 <context>
@@ -56,8 +56,8 @@ ou clique no atalho novamente para parar de gravar</translation>
         <location filename="../src/start_tooltip.cpp" line="45"/>
         <source>Click or drag to
 select the area to record</source>
-        <translation>Clique ou arraste para
-selecionar a área a gravar</translation>
+        <translation>ይጫኑ ወይንም ይጎትቱ ወደ
+ተመረጠው ቦታ ለ መቅረጽ</translation>
     </message>
 </context>
 <context>
@@ -66,7 +66,7 @@ selecionar a área a gravar</translation>
         <location filename="../src/window_manager.cpp" line="150"/>
         <location filename="../src/window_manager.cpp" line="169"/>
         <source>Desktop</source>
-        <translation>Ambiente de Trabalho</translation>
+        <translation>ዴስክቶፕ</translation>
     </message>
 </context>
 </TS>
