@@ -6,6 +6,7 @@ Icon=deepin-screen-recorder
 Name=Deepin Screen Recorder
 TryExec=deepin-screen-recorder
 Type=Application
+X-Deepin-ManualID=deepin-screen-recorder
 
 # Translations
 Name[zh_CN]=深度录屏
