@@ -155,13 +155,17 @@ void RecordProcess::recordVideo()
         arguments << QString("ultrafast");
         arguments << savePath;
     } else {
+        // NOTE: yuv420p can make mp4 file play on mobile phone,
+        // but yuv420p will make ffmpeg got error "width/height not divisible by 2".
+        // It's welcome patch to me, to make mp4 file can play on mobile phone and fix ffmpeg error.
+        
         // Mp4 need size dvisible by 2.
-        if (recordWidth % 2 != 0) {
-            recordWidth -= 1;
-        }
-        if (recordHeight % 2 != 0) {
-            recordHeight -= 1;
-        }
+        // if (recordWidth % 2 != 0) {
+        //     recordWidth -= 1;
+        // }
+        // if (recordHeight % 2 != 0) {
+        //     recordHeight -= 1;
+        // }
         
         arguments << QString("-video_size");
         arguments << QString("%1x%2").arg(recordWidth).arg(recordHeight);
@@ -172,9 +176,14 @@ void RecordProcess::recordVideo()
         arguments << QString("-i");
         arguments << QString(":0.0+%1,%2").arg(recordX).arg(recordY);
         
+        // NOTE: yuv420p can make mp4 file play on mobile phone,
+        // but yuv420p will make ffmpeg got error "width/height not divisible by 2".
+        // It's welcome patch to me, to make mp4 file can play on mobile phone and fix ffmpeg error.
+        
         // Most mobile mplayer can't decode yuv444p (ffempg default format) video, yuv420p looks good.
-        arguments << QString("-pix_fmt"); 
-        arguments << QString("yuv420p"); 
+        // arguments << QString("-pix_fmt"); 
+        // arguments << QString("yuv420p"); 
+        
         arguments << savePath;
     }
 
