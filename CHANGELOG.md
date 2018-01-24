@@ -3,6 +3,14 @@ This is default screen recorder application for Deepin.
 
 ## [Unreleased]
 
+## [2.7] - 2018-01-25
+- Fix tooltip not above on screen-recorder window
+- Support flv format recording
+- Synchronous translations from transifex.com
+- Support deepin-manual newest version
+- Fix error that GIF's content is not complete
+- Fix GIF file break when stop recording less than 2 seconds
+- Fix zero byte mp4 problem
 
 ## [2.6.5.1] - 2017-11-22
 - Update translation
