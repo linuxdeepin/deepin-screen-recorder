@@ -12,8 +12,8 @@ PKGCONFIG += xcb xcb-util dtkwidget dtkwm
 RESOURCES = deepin-screen-recorder.qrc
 
 # Input
-HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src/record_button.h src/record_option_panel.h src/countdown_tooltip.h src/constant.h src/event_monitor.h src/start_tooltip.h src/button_feedback.h
-SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.cpp src/utils.cpp src/record_button.cpp src/record_option_panel.cpp src/countdown_tooltip.cpp src/constant.cpp src/event_monitor.cpp src/start_tooltip.cpp src/button_feedback.cpp
+HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src/record_button.h src/record_option_panel.h src/countdown_tooltip.h src/constant.h src/event_monitor.h src/start_tooltip.h src/button_feedback.h src/process_tree.h
+SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.cpp src/utils.cpp src/record_button.cpp src/record_option_panel.cpp src/countdown_tooltip.cpp src/constant.cpp src/event_monitor.cpp src/start_tooltip.cpp src/button_feedback.cpp src/process_tree.cpp
 
 QT += core
 QT += widgets
@@ -22,6 +22,7 @@ QT += network
 QT += x11extras
 QT += dbus
 LIBS += -lX11 -lXext -lXtst -ldtkwm
+LIBS += -L"libprocps" -lprocps
 
 QMAKE_CXXFLAGS += -g
 

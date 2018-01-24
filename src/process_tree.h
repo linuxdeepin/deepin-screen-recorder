@@ -21,54 +21,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 
-#include "settings.h"
-#include <QProcess>
-#include <QThread>
+#ifndef PROCESSTREE_H
+#define PROCESSTREE_H
+
+#include <QMap>
+#include <QObject>
 #include <proc/readproc.h>
 #include <proc/sysinfo.h>
 
-class RecordProcess : public QThread
+class ProcessTree : public QObject
 {
     Q_OBJECT
     
     typedef std::map<int, proc_t> StoredProcType;
     
+    struct Process
+    {
+        int parentPid;
+        QList<int> childProcesses;
+    };
+    
 public:
-    static const int RECORD_TYPE_VIDEO;
-    static const int RECORD_TYPE_GIF;
+    ProcessTree();
+    ~ProcessTree();
     
-    RecordProcess(QObject *parent = 0);
+    QList<int> getAllChildPids(int pid);
+    void getChildPids(int pid);
+    void printNode(int pid);
+    void printTree();
+    void scanProcesses(StoredProcType processes);
     
-    void setRecordInfo(int recordX, int recordY, int record_width, int recordHeight, QString areaName, int screenWidth, int screenHeight);
-    void setRecordType(int recordType);
-    void startRecord();
-    void stopRecord();
-    void recordGIF();
-    void recordVideo();
-    void initProcess();
-    int readSleepProcessPid();
-    
-protected:
-    void run();
-
 private:
-    QProcess* process;
-
-    int recordX;
-    int recordY;
-    int recordWidth;
-    int recordHeight;
-    int recordType;
-    
-    QString savePath;
-    QString saveBaseName;
-    QString saveTempDir;
-    QString saveDir;
-    QString defaultSaveDir;
-    QString saveAreaName;
-    
-    Settings* settings;
-    
-    int byzanzProcessId;
-    int sleepProcessId;
+    QList<int> childrenPids;
+    QMap<int, Process> *processMap;
+    int rootPid;
 };
+
+#endif

@@ -23,7 +23,10 @@
 
 #include "record_process.h"
 #include "settings.h"
+#include "process_tree.h"
 #include "utils.h"
+#include <signal.h>
+#include <proc/sysinfo.h>
 #include <QApplication>
 #include <QDate>
 #include <QDebug>
@@ -33,7 +36,6 @@
 
 const int RecordProcess::RECORD_TYPE_VIDEO = 0;
 const int RecordProcess::RECORD_TYPE_GIF = 1;
-const int RecordProcess::RECORD_GIF_SLEEP_TIME = 1000;
 
 RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 {
@@ -107,14 +109,25 @@ void RecordProcess::recordGIF()
 {
     initProcess();
 
+    // byzanz-record use command follow option --exec to stop recording gif.
+    // So we use command "sleep 365d" (sleep 365 days, haha) to make byzanz-record keep recording.
+    // We just need kill "sleep" process when we want stop recording gif.
+    // NOTE: don't kill byzanz-record process directly, otherwise recording content in system memory can't flush to disk.
+    QString sleepCommand = "sleep 365d";
+    
     QStringList arguments;
     arguments << QString("--cursor");
-    arguments << QString("--duration=%1").arg(864000);
     arguments << QString("--x=%1").arg(recordX) << QString("--y=%1").arg(recordY);
     arguments << QString("--width=%1").arg(recordWidth) << QString("--height=%1").arg(recordHeight);
+    arguments << QString("--exec=%1").arg(sleepCommand);
     arguments << savePath;
 
     process->start("byzanz-record", arguments);
+    
+    byzanzProcessId = process->pid();
+    
+    qDebug() << "byzanz-record pid: " << byzanzProcessId;
+    
 }
 
 void RecordProcess::recordVideo()
@@ -207,26 +220,47 @@ void RecordProcess::initProcess() {
 
 void RecordProcess::startRecord()
 {
-    recordTime = new QTime();
-    recordTime->start();
     QThread::start();
 }
 
+int RecordProcess::readSleepProcessPid()
+{
+    // Read the list of open processes information.
+    PROCTAB* proc = openproc(
+        PROC_FILLMEM |          // memory status: read information from /proc/#pid/statm
+        PROC_FILLSTAT |         // cpu status: read information from /proc/#pid/stat
+        PROC_FILLUSR            // user status: resolve user ids to names via /etc/passwd
+        );
+    static proc_t proc_info;
+    memset(&proc_info, 0, sizeof(proc_t));
+
+    StoredProcType processes;
+    while (readproc(proc, &proc_info) != NULL) {
+        processes[proc_info.tid] = proc_info;
+    }
+    closeproc(proc);
+    
+    ProcessTree *processTree = new ProcessTree();
+    processTree->scanProcesses(processes);
+
+    return processTree->getAllChildPids(byzanzProcessId)[0];
+}
+
+
 void RecordProcess::stopRecord()
 {
-    // If record time less than 1 second, wait 1 second make sure generate gif file correctly.
-    int elapsedTime = recordTime->elapsed();
-    if (elapsedTime < RECORD_GIF_SLEEP_TIME && recordType == RECORD_TYPE_GIF) {
-        msleep(RECORD_GIF_SLEEP_TIME);
-        qDebug() << QString("Record time too short (%1), wait 1 second make sure generate gif file correctly.").arg(elapsedTime);
+    if (recordType == RECORD_TYPE_GIF) {
+        int byzanzChildPid = readSleepProcessPid();
+        kill(byzanzChildPid, SIGKILL);
+        
+        qDebug() << "Kill byzanz-record's child process (sleep) pid: " << byzanzChildPid;
+    } else {
+        process->terminate();
     }
-
-    // Exit record process.
-    process->terminate();
-
+    
     // Wait thread.
     wait();
-
+    
     // Add end char ';' to gif file, avoid browser or gif-player can't play it.
     if (recordType == RECORD_TYPE_GIF) {
         FILE *gifFile = fopen(savePath.toUtf8().constData(), "ab");
@@ -245,14 +279,14 @@ void RecordProcess::stopRecord()
                                 QDBusConnection::sessionBus());
 
     QStringList actions;
-    actions << "_open" << tr("View");
+        actions << "_open" << tr("View");
 
-    QVariantMap hints;
-    hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
+        QVariantMap hints;
+        hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
 
 
-    QList<QVariant> arg;
-    arg << (QCoreApplication::applicationName())                 // appname
+        QList<QVariant> arg;
+        arg << (QCoreApplication::applicationName())                 // appname
         << ((unsigned int) 0)                                    // id
         << QString("deepin-screen-recorder")                     // icon
         << tr("Record finished")                                 // summary
