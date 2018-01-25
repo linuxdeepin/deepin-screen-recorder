@@ -36,7 +36,7 @@
 
 const int RecordProcess::RECORD_TYPE_VIDEO = 0;
 const int RecordProcess::RECORD_TYPE_GIF = 1;
-const int RecordProcess::RECORD_GIF_SLEEP_TIME = 1000;
+const int RecordProcess::RECORD_GIF_SLEEP_TIME = 2000;
 
 RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 {
@@ -269,8 +269,8 @@ void RecordProcess::stopRecord()
     if (recordType == RECORD_TYPE_GIF) {
         int elapsedTime = recordTime->elapsed();
         if (elapsedTime < RECORD_GIF_SLEEP_TIME) {
-            msleep(RECORD_GIF_SLEEP_TIME);
             qDebug() << QString("Record time too short (%1), wait 1 second make sure generate gif file correctly.").arg(elapsedTime);
+            msleep(RECORD_GIF_SLEEP_TIME);
         }
 
         int byzanzChildPid = readSleepProcessPid();
