@@ -44,7 +44,6 @@ RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
     saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
     defaultSaveDir = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
 
-    Settings *settings = new Settings();
     QVariant saveDirectoryOption = settings->getOption("save_directory");
     if (saveDirectoryOption.isNull()) {
         saveDir = defaultSaveDir;
@@ -139,10 +138,19 @@ void RecordProcess::recordVideo()
     QStringList arguments;
     
     if (settings->getOption("lossless_recording").toBool() || !QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+        int framerate = 30;
+        if (!settings->getOption("mkv_framerate").isNull()) {
+            framerate = settings->getOption("mkv_framerate").toInt();
+        } else {
+            qDebug() << "Not found mkv_framerate option in config file, mkv use framerate 30";
+        }
+        
+        qDebug() << "mkv framerate " << framerate;
+        
         arguments << QString("-video_size");
         arguments << QString("%1x%2").arg(recordWidth).arg(recordHeight);
         arguments << QString("-framerate");
-        arguments << QString("30");
+        arguments << QString("%1").arg(framerate);
         arguments << QString("-f");
         arguments << QString("x11grab");
         arguments << QString("-i");
@@ -155,10 +163,20 @@ void RecordProcess::recordVideo()
         arguments << QString("ultrafast");
         arguments << savePath;
     } else {
+        int framerate = 25;
+        
+        if (!settings->getOption("mp4_framerate").isNull()) {
+            framerate = settings->getOption("mp4_framerate").toInt();
+        } else {
+            qDebug() << "Not found mp4_framerate option in config file, mp4 use framerate 25";
+        }
+        
+        qDebug() << "mp4 framerate " << framerate;
+        
         arguments << QString("-video_size");
         arguments << QString("%1x%2").arg(recordWidth).arg(recordHeight);
         arguments << QString("-framerate");
-        arguments << QString("25");
+        arguments << QString("%1").arg(framerate);
         arguments << QString("-f");
         arguments << QString("x11grab");
         arguments << QString("-i");
