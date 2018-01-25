@@ -3,6 +3,9 @@ This is default screen recorder application for Deepin.
 
 ## [Unreleased]
 
+## [2.7.1] - 2018-01-25
+- Use -vf scale fix "division by 2" error, and now we can use yuv420p pix_fmt to make mp4 play on mobile phone
+
 ## [2.7] - 2018-01-25
 - Fix tooltip not above on screen-recorder window
 - Support flv format recording
