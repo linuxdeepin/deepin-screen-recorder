@@ -3,6 +3,9 @@ This is default screen recorder application for Deepin.
 
 ## [Unreleased]
 
+## [2.7.3] - 2018-01-25
+- Synchronous translations.
+
 ## [2.7.2] - 2018-01-25
 - Add mkv_framerate and mp4_framerate customize options
 - Don't need append char to gif end since gif exit process is correct now, otherwise gif file will break if you stop recording too fast. ;)
