@@ -36,6 +36,7 @@ class RecordProcess : public QThread
 public:
     static const int RECORD_TYPE_VIDEO;
     static const int RECORD_TYPE_GIF;
+    static const int RECORD_GIF_SLEEP_TIME;
     
     RecordProcess(QObject *parent = 0);
     
@@ -68,6 +69,8 @@ private:
     QString saveAreaName;
     
     Settings* settings;
+    
+    QTime *recordTime;
     
     int byzanzProcessId;
     int sleepProcessId;

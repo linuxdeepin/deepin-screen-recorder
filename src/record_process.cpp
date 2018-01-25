@@ -36,6 +36,7 @@
 
 const int RecordProcess::RECORD_TYPE_VIDEO = 0;
 const int RecordProcess::RECORD_TYPE_GIF = 1;
+const int RecordProcess::RECORD_GIF_SLEEP_TIME = 1000;
 
 RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 {
@@ -78,7 +79,7 @@ void RecordProcess::setRecordInfo(int rx, int ry, int rw, int rh, QString name, 
     recordY = int(recordY * devicePixelRatio);
     recordWidth = int(recordWidth * devicePixelRatio);
     recordHeight = int(recordHeight * devicePixelRatio);
-    
+
     saveAreaName = name;
 }
 
@@ -113,7 +114,7 @@ void RecordProcess::recordGIF()
     // We just need kill "sleep" process when we want stop recording gif.
     // NOTE: don't kill byzanz-record process directly, otherwise recording content in system memory can't flush to disk.
     QString sleepCommand = "sleep 365d";
-    
+
     QStringList arguments;
     arguments << QString("--cursor");
     arguments << QString("--x=%1").arg(recordX) << QString("--y=%1").arg(recordY);
@@ -122,11 +123,11 @@ void RecordProcess::recordGIF()
     arguments << savePath;
 
     process->start("byzanz-record", arguments);
-    
+
     byzanzProcessId = process->pid();
-    
+
     qDebug() << "byzanz-record pid: " << byzanzProcessId;
-    
+
 }
 
 void RecordProcess::recordVideo()
@@ -136,7 +137,7 @@ void RecordProcess::recordVideo()
     // FFmpeg need pass arugment split two part: -option value,
     // otherwise, it will report 'Unrecognized option' error.
     QStringList arguments;
-    
+
     if (settings->getOption("lossless_recording").toBool() || !QSysInfo::currentCpuArchitecture().startsWith("x86")) {
         int framerate = 30;
         if (!settings->getOption("mkv_framerate").isNull()) {
@@ -144,9 +145,9 @@ void RecordProcess::recordVideo()
         } else {
             qDebug() << "Not found mkv_framerate option in config file, mkv use framerate 30";
         }
-        
+
         qDebug() << "mkv framerate " << framerate;
-        
+
         arguments << QString("-video_size");
         arguments << QString("%1x%2").arg(recordWidth).arg(recordHeight);
         arguments << QString("-framerate");
@@ -164,15 +165,15 @@ void RecordProcess::recordVideo()
         arguments << savePath;
     } else {
         int framerate = 25;
-        
+
         if (!settings->getOption("mp4_framerate").isNull()) {
             framerate = settings->getOption("mp4_framerate").toInt();
         } else {
             qDebug() << "Not found mp4_framerate option in config file, mp4 use framerate 25";
         }
-        
+
         qDebug() << "mp4 framerate " << framerate;
-        
+
         arguments << QString("-video_size");
         arguments << QString("%1x%2").arg(recordWidth).arg(recordHeight);
         arguments << QString("-framerate");
@@ -181,14 +182,14 @@ void RecordProcess::recordVideo()
         arguments << QString("x11grab");
         arguments << QString("-i");
         arguments << QString(":0.0+%1,%2").arg(recordX).arg(recordY);
-        
+
         // Most mobile mplayer can't decode yuv444p (ffempg default format) video, yuv420p looks good.
-        arguments << QString("-pix_fmt"); 
-        arguments << QString("yuv420p"); 
-        
+        arguments << QString("-pix_fmt");
+        arguments << QString("yuv420p");
+
         arguments << QString("-vf");
         arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
-        
+
         arguments << savePath;
     }
 
@@ -234,6 +235,8 @@ void RecordProcess::initProcess() {
 
 void RecordProcess::startRecord()
 {
+    recordTime = new QTime();
+    recordTime->start();
     QThread::start();
 }
 
@@ -253,7 +256,7 @@ int RecordProcess::readSleepProcessPid()
         processes[proc_info.tid] = proc_info;
     }
     closeproc(proc);
-    
+
     ProcessTree *processTree = new ProcessTree();
     processTree->scanProcesses(processes);
 
@@ -264,17 +267,23 @@ int RecordProcess::readSleepProcessPid()
 void RecordProcess::stopRecord()
 {
     if (recordType == RECORD_TYPE_GIF) {
+        int elapsedTime = recordTime->elapsed();
+        if (elapsedTime < RECORD_GIF_SLEEP_TIME) {
+            msleep(RECORD_GIF_SLEEP_TIME);
+            qDebug() << QString("Record time too short (%1), wait 1 second make sure generate gif file correctly.").arg(elapsedTime);
+        }
+
         int byzanzChildPid = readSleepProcessPid();
         kill(byzanzChildPid, SIGKILL);
-        
+
         qDebug() << "Kill byzanz-record's child process (sleep) pid: " << byzanzChildPid;
     } else {
         process->terminate();
     }
-    
+
     // Wait thread.
     wait();
-    
+
     // Add end char ';' to gif file, avoid browser or gif-player can't play it.
     if (recordType == RECORD_TYPE_GIF) {
         FILE *gifFile = fopen(savePath.toUtf8().constData(), "ab");
@@ -293,14 +302,14 @@ void RecordProcess::stopRecord()
                                 QDBusConnection::sessionBus());
 
     QStringList actions;
-        actions << "_open" << tr("View");
+    actions << "_open" << tr("View");
 
-        QVariantMap hints;
-        hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
+    QVariantMap hints;
+    hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
 
 
-        QList<QVariant> arg;
-        arg << (QCoreApplication::applicationName())                 // appname
+    QList<QVariant> arg;
+    arg << (QCoreApplication::applicationName())                 // appname
         << ((unsigned int) 0)                                    // id
         << QString("deepin-screen-recorder")                     // icon
         << tr("Record finished")                                 // summary
