@@ -36,7 +36,6 @@
 
 const int RecordProcess::RECORD_TYPE_VIDEO = 0;
 const int RecordProcess::RECORD_TYPE_GIF = 1;
-const int RecordProcess::RECORD_GIF_SLEEP_TIME = 2000;
 
 RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 {
@@ -235,8 +234,6 @@ void RecordProcess::initProcess() {
 
 void RecordProcess::startRecord()
 {
-    recordTime = new QTime();
-    recordTime->start();
     QThread::start();
 }
 
@@ -267,12 +264,6 @@ int RecordProcess::readSleepProcessPid()
 void RecordProcess::stopRecord()
 {
     if (recordType == RECORD_TYPE_GIF) {
-        int elapsedTime = recordTime->elapsed();
-        if (elapsedTime < RECORD_GIF_SLEEP_TIME) {
-            qDebug() << QString("Record time too short (%1), wait 1 second make sure generate gif file correctly.").arg(elapsedTime);
-            msleep(RECORD_GIF_SLEEP_TIME);
-        }
-
         int byzanzChildPid = readSleepProcessPid();
         kill(byzanzChildPid, SIGKILL);
 
@@ -283,13 +274,6 @@ void RecordProcess::stopRecord()
 
     // Wait thread.
     wait();
-
-    // Add end char ';' to gif file, avoid browser or gif-player can't play it.
-    if (recordType == RECORD_TYPE_GIF) {
-        FILE *gifFile = fopen(savePath.toUtf8().constData(), "ab");
-        putc(0x3B, gifFile);
-        fclose(gifFile);
-    }
 
     // Move file to save directory.
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);

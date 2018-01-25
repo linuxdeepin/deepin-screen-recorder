@@ -70,8 +70,6 @@ private:
     
     Settings* settings;
     
-    QTime *recordTime;
-    
     int byzanzProcessId;
     int sleepProcessId;
 };
