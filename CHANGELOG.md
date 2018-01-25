@@ -3,6 +3,10 @@ This is default screen recorder application for Deepin.
 
 ## [Unreleased]
 
+## [2.7.2] - 2018-01-25
+- Add mkv_framerate and mp4_framerate customize options
+- Don't need append char to gif end since gif exit process is correct now, otherwise gif file will break if you stop recording too fast. ;)
+
 ## [2.7.1] - 2018-01-25
 - Use -vf scale fix "division by 2" error, and now we can use yuv420p pix_fmt to make mp4 play on mobile phone
 
