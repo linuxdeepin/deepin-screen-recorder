@@ -67,6 +67,7 @@ private:
     QString saveDir;
     QString defaultSaveDir;
     QString saveAreaName;
+    QString displayNumber;
     
     Settings* settings;
     
