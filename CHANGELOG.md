@@ -3,6 +3,9 @@ This is default screen recorder application for Deepin.
 
 ## [Unreleased]
 
+## [2.7.4] - 2018-05-14
+- Add displayNumber to fixed that ffmpe will crash if multi-user with x11grab display argument :0.0
+
 ## [2.7.3] - 2018-01-25
 - Synchronous translations.
 
