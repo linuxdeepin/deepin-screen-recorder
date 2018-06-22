@@ -10,6 +10,7 @@ Homepage: https://github.com/manateelazycat/deepin-screen-recorder
 
 Package: deepin-screen-recorder
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, deepin-notifications, byzanz, ffmpeg
+Depends: ${shlibs:Depends}, ${misc:Depends}, byzanz, ffmpeg
+Recommends: dde-session-ui
 Description: Simple recorder tools for deepin
  A simple recorder tools for deepin.
