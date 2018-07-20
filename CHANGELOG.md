@@ -1,3 +1,13 @@
+<a name="2.7.5"></a>
+### 2.7.5 (2018-07-20)
+
+
+#### Features
+
+*   update run depend ([e1cb3245](https://github.com/linuxdeepin/deepin-screen-recorder/commit/e1cb3245bb54ac139e1a8f661556bb0da53c68f2))
+
+
+
 # Change Log
 This is default screen recorder application for Deepin.
 
