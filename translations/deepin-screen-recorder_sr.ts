@@ -1,12 +1,12 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="tr" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="sr" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <location filename="../src/countdown_tooltip.cpp" line="73"/>
         <source>Click tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Ekran kaydını durdurmak için 
-tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
+        <translation>Кликни на икону у касети 
+или притисни поново пречицу да зауставиш снимање</translation>
     </message>
 </context>
 <context>
@@ -14,17 +14,17 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <location filename="../src/main_window.cpp" line="67"/>
         <source>Deepin screen recorder</source>
-        <translation>Deepin Ekran Kaydedici</translation>
+        <translation>Дипин снимач екрана</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="118"/>
         <source>Start recording</source>
-        <translation>Ekran kaydını başlat</translation>
+        <translation>Започни снимање</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="387"/>
         <source>Select area</source>
-        <translation>Alanı seçin</translation>
+        <translation>Одабери површину</translation>
     </message>
 </context>
 <context>
@@ -32,22 +32,22 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <location filename="../src/record_process.cpp" line="137"/>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-ekran-kaydedici</translation>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="185"/>
         <source>View</source>
-        <translation>Görüntüle</translation>
+        <translation>Пусти</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="195"/>
         <source>Record finished</source>
-        <translation>Ekran kaydı bitti</translation>
+        <translation>Снимање завршено</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="196"/>
         <source>Saved to</source>
-        <translation>Şuraya kaydedildi</translation>
+        <translation>Сачувај у</translation>
     </message>
 </context>
 <context>
@@ -56,8 +56,8 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <location filename="../src/start_tooltip.cpp" line="45"/>
         <source>Click or drag to
 select the area to record</source>
-        <translation>Kaydedilecek alanı
-seçmek için tıklayın ya da sürükleyin</translation>
+        <translation>Кликни или превуци да
+обележиш површину снимања</translation>
     </message>
 </context>
 <context>
@@ -66,7 +66,7 @@ seçmek için tıklayın ya da sürükleyin</translation>
         <location filename="../src/window_manager.cpp" line="150"/>
         <location filename="../src/window_manager.cpp" line="169"/>
         <source>Desktop</source>
-        <translation>Masaüstü</translation>
+        <translation>Радна површина</translation>
     </message>
 </context>
 </TS>

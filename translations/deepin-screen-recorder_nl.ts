@@ -5,8 +5,8 @@
         <location filename="../src/countdown_tooltip.cpp" line="73"/>
         <source>Click tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Klik systeemvakpictogram
-of gebruik de sneltoets opnieuw om het opnemen te beëindigen</translation>
+        <translation>Klik op het systeemvakpictogram
+of druk nogmaals op de sneltoets om de opname te stoppen</translation>
     </message>
 </context>
 <context>
@@ -14,17 +14,17 @@ of gebruik de sneltoets opnieuw om het opnemen te beëindigen</translation>
     <message>
         <location filename="../src/main_window.cpp" line="67"/>
         <source>Deepin screen recorder</source>
-        <translation>Deepin schermopname</translation>
+        <translation>Deepin Schermopname</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="118"/>
         <source>Start recording</source>
-        <translation>Start opname</translation>
+        <translation>Opname starten</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="387"/>
         <source>Select area</source>
-        <translation>Selecteer gebied</translation>
+        <translation>Gebied selecteren</translation>
     </message>
 </context>
 <context>
@@ -42,7 +42,7 @@ of gebruik de sneltoets opnieuw om het opnemen te beëindigen</translation>
     <message>
         <location filename="../src/record_process.cpp" line="195"/>
         <source>Record finished</source>
-        <translation>Opname beëindigd</translation>
+        <translation>Opname gestopt</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="196"/>
@@ -57,7 +57,7 @@ of gebruik de sneltoets opnieuw om het opnemen te beëindigen</translation>
         <source>Click or drag to
 select the area to record</source>
         <translation>Klik of sleep om
-het opnamegebied te selecteren</translation>
+het opnamegebied te kiezen</translation>
     </message>
 </context>
 <context>

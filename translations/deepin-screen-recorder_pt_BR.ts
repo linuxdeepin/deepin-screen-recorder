@@ -14,7 +14,7 @@ ou pressione o atalho novamente para parar a gravação</translation>
     <message>
         <location filename="../src/main_window.cpp" line="67"/>
         <source>Deepin screen recorder</source>
-        <translation>Deepin screen recorder</translation>
+        <translation>Gravador de Tela</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="118"/>
@@ -32,7 +32,7 @@ ou pressione o atalho novamente para parar a gravação</translation>
     <message>
         <location filename="../src/record_process.cpp" line="137"/>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation>gravador-de-tela</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="185"/>
