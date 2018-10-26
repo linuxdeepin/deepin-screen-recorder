@@ -156,7 +156,7 @@ void RecordProcess::recordVideo()
         arguments << QString("-f");
         arguments << QString("x11grab");
         arguments << QString("-i");
-        arguments << QString("%1.0+%2,%3").arg(displayNumber).arg(recordX).arg(recordY);
+        arguments << QString("%1+%2,%3").arg(displayNumber).arg(recordX).arg(recordY);
         arguments << QString("-c:v");
         arguments << QString("libx264");
         arguments << QString("-qp");
@@ -182,7 +182,7 @@ void RecordProcess::recordVideo()
         arguments << QString("-f");
         arguments << QString("x11grab");
         arguments << QString("-i");
-        arguments << QString("%1.0+%2,%3").arg(displayNumber).arg(recordX).arg(recordY);
+        arguments << QString("%1+%2,%3").arg(displayNumber).arg(recordX).arg(recordY);
 
         // Most mobile mplayer can't decode yuv444p (ffempg default format) video, yuv420p looks good.
         arguments << QString("-pix_fmt");
