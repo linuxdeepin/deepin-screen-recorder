@@ -1,3 +1,13 @@
+<a name="2.7.6"></a>
+### 2.7.6 (2018-11-01)
+
+
+#### Bug Fixes
+
+*   use DISPLAY directly ([670e2ee7](https://github.com/linuxdeepin/deepin-screen-recorder/commit/670e2ee77edb99365cbcb05a9d561466161cfab6))
+
+
+
 <a name="2.7.5"></a>
 ### 2.7.5 (2018-07-20)
 
