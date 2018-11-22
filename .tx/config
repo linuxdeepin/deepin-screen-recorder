@@ -8,3 +8,9 @@ file_filter = translations/deepin-screen-recorder_<lang>.ts
 source_file = translations/deepin-screen-recorder.ts
 source_lang = en
 type = QT
+
+[deepin-screen-recorder.desktop]
+file_filter = translations/desktop/desktop_<lang>.ts
+source_file = translations/desktop/desktop.ts
+source_lang = en
+type = QT
