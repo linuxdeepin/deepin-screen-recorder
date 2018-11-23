@@ -1,3 +1,13 @@
+<a name=""></a>
+##  2.7.7 (2018-11-23)
+
+
+#### Features
+
+* **desktop:**  add generic name. ([cd01fc01](https://github.com/linuxdeepin/deepin-screen-recorder/commit/cd01fc0162a97919910bfff6d02f084201c31cae))
+
+
+
 <a name="2.7.6"></a>
 ### 2.7.6 (2018-11-01)
 
