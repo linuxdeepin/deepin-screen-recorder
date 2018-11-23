@@ -17,12 +17,12 @@ or press the shortcut again to stop recording</source>
         <translation>Deepin 螢幕錄影</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="118"/>
+        <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
         <translation>開始錄影</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="387"/>
+        <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
         <translation>選取範圍</translation>
     </message>

@@ -17,12 +17,12 @@ lub naciśnij raz jeszcze na skrót, aby zakończyć nagrywanie</translation>
         <translation>Nagrywanie ekranu Deepin</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="118"/>
+        <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
         <translation>Rozpocznij nagrywanie</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="387"/>
+        <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
         <translation>Zaznacz obszar</translation>
     </message>

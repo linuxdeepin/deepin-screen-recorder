@@ -17,12 +17,12 @@ or press the shortcut again to stop recording</source>
         <translation>מסריט המסך של Deepin</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="118"/>
+        <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
         <translation>התחלה בהסרטה</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="387"/>
+        <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
         <translation>בחירת אזור</translation>
     </message>

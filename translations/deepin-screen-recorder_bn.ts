@@ -17,12 +17,12 @@ or press the shortcut again to stop recording</source>
         <translation>ডিপিন স্ক্রিন রেকর্ডার</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="118"/>
+        <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
         <translation>রেকর্ডিং শুরু করুন</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="387"/>
+        <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
         <translation>জায়গা নির্বাচন করুন</translation>
     </message>

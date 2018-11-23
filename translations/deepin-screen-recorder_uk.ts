@@ -17,12 +17,12 @@ or press the shortcut again to stop recording</source>
         <translation>Записувач Екрану Deepin</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="118"/>
+        <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
         <translation>Розпочати запис</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="387"/>
+        <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
         <translation>Виберіть область</translation>
     </message>

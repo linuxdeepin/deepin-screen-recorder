@@ -17,12 +17,12 @@ ili pritisnite ponovno prečac za prekid snimanja</translation>
         <translation>Deepin snimač zaslona</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="118"/>
+        <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
         <translation>Započni snimanje</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="387"/>
+        <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
         <translation>Odaberi područje</translation>
     </message>

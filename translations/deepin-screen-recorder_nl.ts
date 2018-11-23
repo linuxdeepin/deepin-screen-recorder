@@ -17,12 +17,12 @@ of druk nogmaals op de sneltoets om de opname te stoppen</translation>
         <translation>Deepin Schermopname</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="118"/>
+        <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
         <translation>Opname starten</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="387"/>
+        <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
         <translation>Gebied selecteren</translation>
     </message>

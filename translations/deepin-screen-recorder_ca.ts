@@ -17,12 +17,12 @@ o premeu la drecera de nou per aturar la gravació</translation>
         <translation>Gravador de pantalla del Deepin</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="118"/>
+        <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
         <translation>Inicia la gravació</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="387"/>
+        <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
         <translation>Selecciona l&apos;àrea</translation>
     </message>

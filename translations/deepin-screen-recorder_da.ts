@@ -17,12 +17,12 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <translation>Deepin skærmoptager</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="118"/>
+        <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
         <translation>Start optagelse</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="387"/>
+        <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
         <translation>Vælg område</translation>
     </message>

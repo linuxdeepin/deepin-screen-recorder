@@ -2,11 +2,23 @@
 Categories=AudioVideo;Recorder;
 Comment=Record screen
 Exec=deepin-screen-recorder
+GenericName=Screen Recorder
 Icon=deepin-screen-recorder
 Name=Deepin Screen Recorder
 TryExec=deepin-screen-recorder
 Type=Application
-GenericName=Screen Recorder
-X-Deepin-Vendor=deepin
 X-Deepin-ManualID=deepin-screen-recorder
+X-Deepin-Vendor=deepin
+
+# Translations:
+# Do not manually modify!
+Comment[it]=Registratore dello schermo
+Comment[ru]=Запись с экрана
+Comment[zh_CN]=录屏
+GenericName[it]=Screen Recorder
+GenericName[ru]=Запись с Экрана
+GenericName[zh_CN]=录屏
+Name[it]=Deepin Screen Recorder
+Name[ru]=Запись с Экрана Deepin 
+Name[zh_CN]=深度录屏
 

@@ -17,12 +17,12 @@ alebo stlačte klávesovú skratku pre zastavenie nahrávania</translation>
         <translation>Deepin nahrávanie obrazovky</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="118"/>
+        <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
         <translation>Štart nahrávania</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="387"/>
+        <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
         <translation>Vybrať oblasť</translation>
     </message>

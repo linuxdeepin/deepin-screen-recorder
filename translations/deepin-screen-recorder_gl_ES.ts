@@ -17,12 +17,12 @@ ou preme outra vez no atallo para deter a gravación</translation>
         <translation>Gravador de escritorio</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="118"/>
+        <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
         <translation>Iniciar gravación</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="387"/>
+        <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
         <translation>Seleccionar área</translation>
     </message>

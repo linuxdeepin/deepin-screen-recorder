@@ -16,12 +16,12 @@ or press the shortcut again to stop recording</source>
         <translation>Deepin screen recorder</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="118"/>
+        <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
         <translation>Yazmağa başlayın</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="387"/>
+        <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
         <translation type="unfinished"/>
     </message>

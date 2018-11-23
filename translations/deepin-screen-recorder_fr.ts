@@ -17,12 +17,12 @@ ou cliquez à nouveau sur le raccourci pour stopper l&apos;enregistrement</trans
         <translation>Enregistreur d&apos;écran Deepin</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="118"/>
+        <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
         <translation>Démarrer l&apos;enregistrement </translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="387"/>
+        <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
         <translation>Sélectionnez la zone</translation>
     </message>

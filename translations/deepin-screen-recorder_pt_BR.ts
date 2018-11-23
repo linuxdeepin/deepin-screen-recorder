@@ -17,12 +17,12 @@ ou pressione o atalho novamente para parar a gravação</translation>
         <translation>Gravador de Tela</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="118"/>
+        <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
         <translation>Começar gravação</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="387"/>
+        <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
         <translation>Selecionar área</translation>
     </message>

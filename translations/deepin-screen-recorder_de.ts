@@ -17,12 +17,12 @@ oder benutzen Sie die Tastenkombination noch einmal um die Aufnahme zu beenden.<
         <translation>Deepin Bildschirmaufzeichner</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="118"/>
+        <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
         <translation>Aufnahme starten</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="387"/>
+        <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
         <translation>Bereich auswählen</translation>
     </message>
