@@ -5,7 +5,7 @@
         <location filename="../src/countdown_tooltip.cpp" line="73"/>
         <source>Click tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>欲結束可點擊系統匣圖示
+        <translation>欲停止錄影可點擊系統匣圖示
 或再次按下快速鍵</translation>
     </message>
 </context>
@@ -47,7 +47,7 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/record_process.cpp" line="196"/>
         <source>Saved to</source>
-        <translation>錄影已儲存到</translation>
+        <translation>已儲存到</translation>
     </message>
 </context>
 <context>
@@ -56,8 +56,7 @@ or press the shortcut again to stop recording</source>
         <location filename="../src/start_tooltip.cpp" line="45"/>
         <source>Click or drag to
 select the area to record</source>
-        <translation>選擇視窗或調整選取框
-自訂錄影範圍</translation>
+        <translation>拖曳要錄影的範圍</translation>
     </message>
 </context>
 <context>

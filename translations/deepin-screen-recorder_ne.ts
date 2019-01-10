@@ -1,12 +1,11 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ast" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="ne" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <location filename="../src/countdown_tooltip.cpp" line="73"/>
         <source>Click tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Primi l&apos;iconu de la bandexa o
-l&apos;atayu pa parar la grabación</translation>
+        <translation>ट्रे आइकनमा क्लिक गर्नुहोस् र रेकर्डिङ बन्द गर्न सर्टकट फेरि थिच्नुहोस्</translation>
     </message>
 </context>
 <context>
@@ -14,17 +13,17 @@ l&apos;atayu pa parar la grabación</translation>
     <message>
         <location filename="../src/main_window.cpp" line="67"/>
         <source>Deepin screen recorder</source>
-        <translation>Deepin screen recorder</translation>
+        <translation>डिपिन स्क्रीन रेकर्डर</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="121"/>
         <source>Start recording</source>
-        <translation>Aniciar la grabación</translation>
+        <translation>रेकर्डिङ सुरू गर्नुहोस्</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="422"/>
         <source>Select area</source>
-        <translation>Esbillar l&apos;área</translation>
+        <translation>क्षेत्र चयन गर्नुहोस्</translation>
     </message>
 </context>
 <context>
@@ -32,22 +31,22 @@ l&apos;atayu pa parar la grabación</translation>
     <message>
         <location filename="../src/record_process.cpp" line="137"/>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation>डिपिन-स्क्रीन-रेकर्डर</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="185"/>
         <source>View</source>
-        <translation>Ver</translation>
+        <translation>हेर्नुहोस्</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="195"/>
         <source>Record finished</source>
-        <translation>Finó la grabación</translation>
+        <translation>रेकर्ड समाप्त भयो</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="196"/>
         <source>Saved to</source>
-        <translation>Guardóse en</translation>
+        <translation>बचत गरियो</translation>
     </message>
 </context>
 <context>
@@ -56,8 +55,7 @@ l&apos;atayu pa parar la grabación</translation>
         <location filename="../src/start_tooltip.cpp" line="45"/>
         <source>Click or drag to
 select the area to record</source>
-        <translation>Primi o arrastra
-pa esbillar l&apos;área a grabar</translation>
+        <translation>रेकर्ड गर्न क्षेत्र चयन गर्न क्लिक गर्नुहोस् वा तान्नुहोस्</translation>
     </message>
 </context>
 <context>
@@ -66,7 +64,7 @@ pa esbillar l&apos;área a grabar</translation>
         <location filename="../src/window_manager.cpp" line="150"/>
         <location filename="../src/window_manager.cpp" line="169"/>
         <source>Desktop</source>
-        <translation>Escritoriu</translation>
+        <translation>डेस्कटप</translation>
     </message>
 </context>
 </TS>
