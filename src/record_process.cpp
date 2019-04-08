@@ -43,9 +43,9 @@ RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 
     saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
     defaultSaveDir = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
-    
+
     displayNumber = QString(std::getenv("DISPLAY"));
-    
+
     QVariant saveDirectoryOption = settings->getOption("save_directory");
     if (saveDirectoryOption.isNull()) {
         saveDir = defaultSaveDir;
@@ -298,7 +298,7 @@ void RecordProcess::stopRecord()
     arg << (QCoreApplication::applicationName())                 // appname
         << ((unsigned int) 0)                                    // id
         << QString("deepin-screen-recorder")                     // icon
-        << tr("Record finished")                                 // summary
+        << tr("Recording finished")                              // summary
         << QString("%1 %2").arg(tr("Saved to")).arg(newSavePath) // body
         << actions                                               // actions
         << hints                                                 // hints

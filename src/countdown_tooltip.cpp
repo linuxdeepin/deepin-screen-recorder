@@ -50,9 +50,9 @@ void CountdownTooltip::paintEvent(QPaintEvent *)
 {
     if (showCountdownCounter > 0) {
         QPainter painter(this);
-        
+
         Utils::drawTooltipBackground(painter, rect());
-        
+
         qreal devicePixelRatio = qApp->devicePixelRatio();
         painter.setOpacity(1);
         int countdownX = rect().x() + (rect().width() - countdown1Img.width() / devicePixelRatio) / 2;
@@ -75,12 +75,12 @@ void CountdownTooltip::paintEvent(QPaintEvent *)
 
 void CountdownTooltip::start()
 {
-    text = tr("Click tray icon \nor press the shortcut again to stop recording");
+    text = tr("Click the tray icon \nor press the shortcut again to stop recording");
     QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, text);
     int width = size.width() + Constant::RECTANGLE_PADDING * 2;
     int height = size.height() + Constant::RECTANGLE_PADDING * 2 + countdown1Img.height() + NUMBER_PADDING_Y;
     setFixedSize(width, height);
-    
+
     showCountdownCounter = 3;
     showCountdownTimer = new QTimer(this);
     connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(update()));
@@ -90,10 +90,10 @@ void CountdownTooltip::start()
 void CountdownTooltip::update()
 {
     showCountdownCounter--;
-    
+
     if (showCountdownCounter <= 0) {
         showCountdownTimer->stop();
-        
+
         emit finished();
     }
 
