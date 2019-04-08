@@ -2,27 +2,26 @@
 <context>
     <name>CountdownTooltip</name>
     <message>
-        <location filename="../src/countdown_tooltip.cpp" line="73"/>
-        <source>Click tray icon 
+        <location filename="../src/countdown_tooltip.cpp" line="78"/>
+        <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Clique no ícone da bandeja
-ou pressione o atalho novamente para parar a gravação</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/main_window.cpp" line="67"/>
+        <location filename="../src/main_window.cpp" line="76"/>
         <source>Deepin screen recorder</source>
         <translation>Gravador de Tela</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="121"/>
+        <location filename="../src/main_window.cpp" line="136"/>
         <source>Start recording</source>
         <translation>Começar gravação</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="422"/>
+        <location filename="../src/main_window.cpp" line="454"/>
         <source>Select area</source>
         <translation>Selecionar área</translation>
     </message>
@@ -30,22 +29,22 @@ ou pressione o atalho novamente para parar a gravação</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <location filename="../src/record_process.cpp" line="137"/>
+        <location filename="../src/record_process.cpp" line="229"/>
         <source>deepin-screen-recorder</source>
         <translation>gravador-de-tela</translation>
     </message>
     <message>
-        <location filename="../src/record_process.cpp" line="185"/>
+        <location filename="../src/record_process.cpp" line="291"/>
         <source>View</source>
         <translation>Visualizar</translation>
     </message>
     <message>
-        <location filename="../src/record_process.cpp" line="195"/>
-        <source>Record finished</source>
-        <translation>Gravação concluída</translation>
+        <location filename="../src/record_process.cpp" line="301"/>
+        <source>Recording finished</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/record_process.cpp" line="196"/>
+        <location filename="../src/record_process.cpp" line="302"/>
         <source>Saved to</source>
         <translation>Salvo em</translation>
     </message>
@@ -53,20 +52,11 @@ ou pressione o atalho novamente para parar a gravação</translation>
 <context>
     <name>StartTooltip</name>
     <message>
-        <location filename="../src/start_tooltip.cpp" line="45"/>
+        <location filename="../src/start_tooltip.cpp" line="48"/>
         <source>Click or drag to
 select the area to record</source>
         <translation>Clique ou arraste para 
 selecionar a área da gravação</translation>
-    </message>
-</context>
-<context>
-    <name>WindowManager</name>
-    <message>
-        <location filename="../src/window_manager.cpp" line="150"/>
-        <location filename="../src/window_manager.cpp" line="169"/>
-        <source>Desktop</source>
-        <translation>Área de trabalho</translation>
     </message>
 </context>
 </TS>

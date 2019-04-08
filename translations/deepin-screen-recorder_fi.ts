@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="nl" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="fi" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -13,17 +13,17 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/main_window.cpp" line="76"/>
         <source>Deepin screen recorder</source>
-        <translation>Deepin Schermopname</translation>
+        <translation>Deepin näytön tallennin</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="136"/>
         <source>Start recording</source>
-        <translation>Opname starten</translation>
+        <translation>Aloita tallennus</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="454"/>
         <source>Select area</source>
-        <translation>Gebied selecteren</translation>
+        <translation>Valitse alue</translation>
     </message>
 </context>
 <context>
@@ -31,12 +31,12 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/record_process.cpp" line="229"/>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-schermopname</translation>
+        <translation>deepin-näytön-tallennin</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="291"/>
         <source>View</source>
-        <translation>Bekijken</translation>
+        <translation>Näytä</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="301"/>
@@ -46,7 +46,7 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/record_process.cpp" line="302"/>
         <source>Saved to</source>
-        <translation>Opgeslagen naar</translation>
+        <translation>Tallenna nimellä</translation>
     </message>
 </context>
 <context>
@@ -55,8 +55,8 @@ or press the shortcut again to stop recording</source>
         <location filename="../src/start_tooltip.cpp" line="48"/>
         <source>Click or drag to
 select the area to record</source>
-        <translation>Klik of sleep om
-het opnamegebied te kiezen</translation>
+        <translation>Napsauta tai vedä
+valitse tallennettava alue</translation>
     </message>
 </context>
 </TS>
