@@ -1,3 +1,13 @@
+<a name="2.7.8"></a>
+### 2.7.8 (2019-04-09)
+
+
+#### Others
+
+*   auto pull translation files from transifex ([1094511f](https://github.com/linuxdeepin/deepin-screen-recorder/commit/1094511f0561b2556486f78fee09116c54ba2ff8))
+
+
+
 <a name=""></a>
 ##  2.7.7 (2018-11-23)
 
