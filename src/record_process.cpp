@@ -188,6 +188,10 @@ void RecordProcess::recordVideo()
         arguments << QString("-pix_fmt");
         arguments << QString("yuv420p");
 
+        // append crf parameter here
+        arguments << QString("-crf");
+        arguments << QString("25");
+
         arguments << QString("-vf");
         arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
 
