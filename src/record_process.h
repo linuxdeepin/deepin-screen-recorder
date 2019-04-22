@@ -24,6 +24,7 @@
 #include "settings.h"
 #include <QProcess>
 #include <QThread>
+#include <QRect>
 #include <proc/readproc.h>
 #include <proc/sysinfo.h>
 
@@ -40,7 +41,7 @@ public:
     
     RecordProcess(QObject *parent = 0);
     
-    void setRecordInfo(int recordX, int recordY, int record_width, int recordHeight, QString areaName, int screenWidth, int screenHeight);
+    void setRecordInfo(const QRect &recordRect, const QString &filename);
     void setRecordType(int recordType);
     void startRecord();
     void stopRecord();
@@ -55,11 +56,9 @@ protected:
 private:
     QProcess* process;
 
-    int recordX;
-    int recordY;
-    int recordWidth;
-    int recordHeight;
     int recordType;
+
+    QRect m_recordRect;
     
     QString savePath;
     QString saveBaseName;

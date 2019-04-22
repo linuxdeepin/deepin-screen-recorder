@@ -734,7 +734,17 @@ void MainWindow::startCountdown()
 {
     recordButtonStatus = RECORD_BUTTON_WAIT;
 
-    recordProcess.setRecordInfo(recordX, recordY, recordWidth, recordHeight, selectAreaName, rootWindowRect.width, rootWindowRect.height);
+    const qreal ratio = devicePixelRatioF();
+    const QPoint topLeft = geometry().topLeft();
+
+    QRect recordRect {
+        static_cast<int>(recordX * ratio + topLeft.x()),
+        static_cast<int>(recordY * ratio + topLeft.y()),
+        static_cast<int>(recordWidth * ratio),
+        static_cast<int>(recordHeight * ratio)
+    };
+
+    recordProcess.setRecordInfo(recordRect, selectAreaName);
     if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
         if (recordOptionPanel->isSaveAsGif()) {
             recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);

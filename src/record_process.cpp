@@ -68,20 +68,10 @@ RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
     settings->setOption("save_directory", saveDir);
 }
 
-void RecordProcess::setRecordInfo(int rx, int ry, int rw, int rh, QString name, int sw, int sh)
+void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filename)
 {
-    recordX = rx;
-    recordY = ry;
-    recordWidth = rx + rw <= sw ? rw : sw - rx;
-    recordHeight = ry + rh <= sh ? rh : sh - ry;
-
-    qreal devicePixelRatio = qApp->devicePixelRatio();
-    recordX = int(recordX * devicePixelRatio);
-    recordY = int(recordY * devicePixelRatio);
-    recordWidth = int(recordWidth * devicePixelRatio);
-    recordHeight = int(recordHeight * devicePixelRatio);
-
-    saveAreaName = name;
+    m_recordRect = recordRect;
+    saveAreaName = filename;
 }
 
 void RecordProcess::setRecordType(int type)
@@ -118,8 +108,8 @@ void RecordProcess::recordGIF()
 
     QStringList arguments;
     arguments << QString("--cursor");
-    arguments << QString("--x=%1").arg(recordX) << QString("--y=%1").arg(recordY);
-    arguments << QString("--width=%1").arg(recordWidth) << QString("--height=%1").arg(recordHeight);
+    arguments << QString("--x=%1").arg(m_recordRect.x()) << QString("--y=%1").arg(m_recordRect.y());
+    arguments << QString("--width=%1").arg(m_recordRect.width()) << QString("--height=%1").arg(m_recordRect.height());
     arguments << QString("--exec=%1").arg(sleepCommand);
     arguments << savePath;
 
@@ -150,13 +140,13 @@ void RecordProcess::recordVideo()
         qDebug() << "mkv framerate " << framerate;
 
         arguments << QString("-video_size");
-        arguments << QString("%1x%2").arg(recordWidth).arg(recordHeight);
+        arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
         arguments << QString("-framerate");
         arguments << QString("%1").arg(framerate);
         arguments << QString("-f");
         arguments << QString("x11grab");
         arguments << QString("-i");
-        arguments << QString("%1+%2,%3").arg(displayNumber).arg(recordX).arg(recordY);
+        arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
         arguments << QString("-c:v");
         arguments << QString("libx264");
         arguments << QString("-qp");
@@ -176,13 +166,13 @@ void RecordProcess::recordVideo()
         qDebug() << "mp4 framerate " << framerate;
 
         arguments << QString("-video_size");
-        arguments << QString("%1x%2").arg(recordWidth).arg(recordHeight);
+        arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
         arguments << QString("-framerate");
         arguments << QString("%1").arg(framerate);
         arguments << QString("-f");
         arguments << QString("x11grab");
         arguments << QString("-i");
-        arguments << QString("%1+%2,%3").arg(displayNumber).arg(recordX).arg(recordY);
+        arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
 
         // Most mobile mplayer can't decode yuv444p (ffempg default format) video, yuv420p looks good.
         arguments << QString("-pix_fmt");
