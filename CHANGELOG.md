@@ -1,3 +1,13 @@
+<a name="2.7.9"></a>
+### 2.7.9 (2019-04-22)
+
+
+#### Bug Fixes
+
+*   multiple screens cannot be recorded after set window scale ([be5ff358](https://github.com/linuxdeepin/deepin-screen-recorder/commit/be5ff358588a0187ea46d4e28259f8ef85dbd47a))
+
+
+
 <a name="2.7.8"></a>
 ### 2.7.8 (2019-04-09)
 
