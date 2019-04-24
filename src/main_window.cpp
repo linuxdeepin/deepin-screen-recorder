@@ -27,6 +27,10 @@
 #include <QObject>
 #include <QPainter>
 #include <QWidget>
+#include <DWindowManagerHelper>
+#include <DForeignWindow>
+#include <QDebug>
+
 #include "main_window.h"
 #include <QVBoxLayout>
 #include <QProcess>
@@ -111,19 +115,28 @@ void MainWindow::initAttributes()
     // Below code must execute before `window.showFullscreen,
     // otherwise deepin-screen-recorder window will add in window lists.
     QPoint pos = this->cursor().pos();
+    const qreal ratio = devicePixelRatioF();
     DScreenWindowsUtil* screenWin = DScreenWindowsUtil::instance(pos);
     screenRect = screenWin->backgroundRect();
-    this->move(screenRect.x(), screenRect.y());
+    screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
+    this->move(static_cast<int>(screenRect.x() * ratio),
+               static_cast<int>(screenRect.y() * ratio));
     this->setFixedSize(screenRect.width(), screenRect.height());
-    
+
     windowManager = new DWindowManager();
     windowManager->setRootWindowRect(screenRect);
     QList<xcb_window_t> windows = windowManager->getWindows();
     rootWindowRect = windowManager->getRootWindowRect();
 
-    for (int i = 0; i < windows.length(); i++) {
-        windowRects.append(windowManager->adjustRectInScreenArea(windowManager->getWindowRect(windows[i])));
-        windowNames.append(windowManager->getWindowClass(windows[i]));
+    for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
+        if (wid == winId()) continue;
+
+        DForeignWindow * window = DForeignWindow::fromWinId(wid);
+        if (window) {
+            window->deleteLater();
+            windowRects << Dtk::Wm::WindowRect { window->x(), window->y(), window->width(), window->height() };
+            windowNames << window->wmClass();
+        }
     }
 
     recordButtonLayout = new QVBoxLayout();
@@ -401,20 +414,12 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             // Record select area name with window name if just click (no drag).
             if (!isFirstDrag) {
                 QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-                for (int i = 0; i < windowRects.length(); i++) {
-                    int wx = windowRects[i].x;
-                    int wy = windowRects[i].y;
-                    int ww = windowRects[i].width;
-                    int wh = windowRects[i].height;
-                    int ex = mouseEvent->x();
-                    int ey = mouseEvent->y();
-                    if (ex > wx && ex < wx + ww && ey > wy && ey < wy + wh) {
-                        selectAreaName = windowNames[i];
-
+                for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
+                    if (QRect(it->x, it->y, it->width, it->height).contains(mouseEvent->pos() + screenRect.topLeft())) {
+                        selectAreaName = windowNames[windowRects.rend() - it - 1];
                         break;
                     }
                 }
-
             } else {
                 // Make sure record area not too small.
                 recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
@@ -507,22 +512,14 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 needRepaint = true;
             }
         } else {
-            for (int i = 0; i < windowRects.length(); i++) {
-                int wx = windowRects[i].x;
-                int wy = windowRects[i].y;
-                int ww = windowRects[i].width;
-                int wh = windowRects[i].height;
-                int ex = mouseEvent->x() + screenRect.x();
-                int ey = mouseEvent->y() + screenRect.y();
-
-                if (ex > wx && ex < wx + ww && ey > wy && ey < wy + wh) {
-                    recordX = wx - screenRect.x();
-                    recordY = wy - screenRect.y();
-                    recordWidth = ww;
-                    recordHeight = wh;
-                    
+            // Select the first window where the mouse is located
+            for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
+                if (QRect(it->x, it->y, it->width, it->height).contains(mouseEvent->pos() + screenRect.topLeft())) {
+                    recordX = it->x - screenRect.x();
+                    recordY = it->y - screenRect.y();
+                    recordWidth = it->width;
+                    recordHeight = it->height;
                     needRepaint = true;
-
                     break;
                 }
             }
