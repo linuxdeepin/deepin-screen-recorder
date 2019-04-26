@@ -5,4 +5,4 @@ from-latest-tag = true
 changelog = "CHANGELOG.md"
 
 [sections]
-Others = ["chore"]
+Others = ["chore", "refactor"]
