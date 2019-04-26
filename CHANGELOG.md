@@ -1,3 +1,13 @@
+<a name="2.7.10"></a>
+### 2.7.10 (2019-04-26)
+
+
+#### Others
+
+*   Can't select window correctly ([ef7a5b91](https://github.com/linuxdeepin/deepin-screen-recorder/commit/ef7a5b91b0e7e6de2d4d249ea6310a7c32ce43a2))
+
+
+
 <a name="2.7.9"></a>
 ### 2.7.9 (2019-04-22)
 
