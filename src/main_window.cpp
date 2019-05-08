@@ -513,10 +513,12 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
         } else {
             // Select the first window where the mouse is located
+            const qreal ratio = devicePixelRatioF();
+            const QPoint mousePoint = QCursor::pos();
             for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
-                if (QRect(it->x, it->y, it->width, it->height).contains(mouseEvent->pos() + screenRect.topLeft())) {
-                    recordX = it->x - screenRect.x();
-                    recordY = it->y - screenRect.y();
+                if (QRect(it->x, it->y, it->width, it->height).contains(mousePoint)) {
+                    recordX = it->x - static_cast<int>(screenRect.x() * ratio);
+                    recordY = it->y - static_cast<int>(screenRect.y() * ratio);
                     recordWidth = it->width;
                     recordHeight = it->height;
                     needRepaint = true;

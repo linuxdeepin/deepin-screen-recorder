@@ -58,14 +58,15 @@ StartTooltip::StartTooltip(QWidget *parent) : QWidget(parent)
 void StartTooltip::setWindowManager(DWindowManager *wm)
 {
     windowManager = wm;
-    
+
+    const qreal ratio = devicePixelRatioF();
     WindowRect rootWindowRect = windowManager->getRootWindowRect();
     setGeometry(
         QStyle::alignedRect(
             Qt::LeftToRight,
             Qt::AlignCenter,
             this->size(),
-            QRect(rootWindowRect.x, rootWindowRect.y, rootWindowRect.width, rootWindowRect.height)
+            QRect(rootWindowRect.x * ratio, rootWindowRect.y * ratio, rootWindowRect.width, rootWindowRect.height)
             )
         );
 }
@@ -77,13 +78,13 @@ void StartTooltip::paintEvent(QPaintEvent *)
 
     Utils::drawTooltipBackground(painter, rect());
 
-    qreal devicePixelRatio = qApp->devicePixelRatio();
+    const qreal devicePixelRatio = devicePixelRatioF();
     painter.setOpacity(1);
     painter.drawPixmap(QPoint((rect().width() - iconImg.width() / devicePixelRatio) / 2, Constant::RECTANGLE_PADDING / devicePixelRatio), iconImg);
 
     Utils::drawTooltipText(painter, text, "#000000", Constant::RECTANGLE_FONT_SIZE,
-                           QRectF(rect().x(),
-                                  rect().y() + Constant::RECTANGLE_PADDING / devicePixelRatio + iconImg.height() / devicePixelRatio, 
+                           QRectF(rect().x() * devicePixelRatio,
+                                  rect().y() * devicePixelRatio + Constant::RECTANGLE_PADDING / devicePixelRatio + iconImg.height() / devicePixelRatio,
                                   rect().width(),
                                   rect().height() - Constant::RECTANGLE_PADDING / devicePixelRatio - iconImg.height() / devicePixelRatio
                                ));
