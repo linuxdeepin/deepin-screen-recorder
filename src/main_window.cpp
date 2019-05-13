@@ -111,6 +111,8 @@ void MainWindow::initAttributes()
 
     selectAreaName = "";
 
+    createWinId();
+
     // Get all windows geometry.
     // Below code must execute before `window.showFullscreen,
     // otherwise deepin-screen-recorder window will add in window lists.
