@@ -1,3 +1,13 @@
+<a name=""></a>
+##  2.8.0 (2019-05-24)
+
+
+#### Bug Fixes
+
+*   cannot select window on other screen ([4070c3ee](https://github.com/linuxdeepin/deepin-screen-recorder/commit/4070c3ee7623c8bf934903eac7d873f370ae0825))
+
+
+
 <a name="2.7.11"></a>
 ### 2.7.11 (2019-05-09)
 
