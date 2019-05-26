@@ -127,7 +127,6 @@ void MainWindow::initAttributes()
 
     windowManager = new DWindowManager();
     windowManager->setRootWindowRect(screenRect);
-    QList<xcb_window_t> windows = windowManager->getWindows();
     rootWindowRect = windowManager->getRootWindowRect();
 
     for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
