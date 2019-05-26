@@ -34,8 +34,8 @@ ProcessTree::ProcessTree()
 ProcessTree::~ProcessTree()
 {
     childrenPids.clear();
-    
-    for (auto v : processMap->values()) {
+
+    for (auto& v : processMap->values()) {
         v.childProcesses.clear();
     }
 
