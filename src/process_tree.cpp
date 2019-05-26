@@ -86,7 +86,7 @@ QList<int> ProcessTree::getAllChildPids(int pid)
 void ProcessTree::getChildPids(int pid)
 {
     if (processMap->contains(pid)) {
-        for (int childPid : ((*processMap)[pid].childProcesses)) {
+        for (int childPid : qAsConst((*processMap)[pid].childProcesses)) {
             childrenPids.append(childPid);
             
             getChildPids(childPid);
@@ -101,7 +101,7 @@ void ProcessTree::printNode(int pid)
     if (processMap->contains(pid)) {
         qDebug() << "### Child " << (*processMap)[pid].childProcesses;
 
-        for (int childPid : ((*processMap)[pid].childProcesses)) {
+        for (int childPid : qAsConst((*processMap)[pid].childProcesses)) {
             printNode(childPid);
         }
     }
