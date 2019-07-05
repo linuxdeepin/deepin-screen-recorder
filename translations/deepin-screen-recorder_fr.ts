@@ -5,8 +5,8 @@
         <location filename="../src/countdown_tooltip.cpp" line="78"/>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Cliquez sur l&apos;icône de la barre des tâches
-ou appuyez à nouveau sur le raccourci pour stopper l&apos;enregistrement</translation>
+        <translation>Cliquer sur l&apos;icône de la barre des tâches
+ou appuyer à nouveau sur le raccourci pour stopper l&apos;enregistrement</translation>
     </message>
 </context>
 <context>
