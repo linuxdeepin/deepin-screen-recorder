@@ -5,7 +5,8 @@
         <location filename="../src/countdown_tooltip.cpp" line="78"/>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation type="unfinished"/>
+        <translation>انقر أيقونة الصينية
+أو اضغط على الاختصار مرة أخرى لإيقاف التسجيل</translation>
     </message>
 </context>
 <context>
@@ -41,7 +42,7 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/record_process.cpp" line="301"/>
         <source>Recording finished</source>
-        <translation type="unfinished"/>
+        <translation>انتهت عملية التسجيل</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="302"/>
