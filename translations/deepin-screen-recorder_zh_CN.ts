@@ -1,8 +1,9 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_CN" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="zh_CN">
 <context>
     <name>CountdownTooltip</name>
     <message>
-        <location filename="../src/countdown_tooltip.cpp" line="78"/>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
         <translation>点击托盘图标以停止录制
@@ -10,53 +11,310 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shot</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/main_window.cpp" line="76"/>
         <source>Deepin screen recorder</source>
         <translation>深度录屏</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="136"/>
         <source>Start recording</source>
         <translation>开始录制</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="454"/>
         <source>Select area</source>
         <translation>选择区域</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shot</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MenuController</name>
+    <message>
+        <source>Rectangle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ellipse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arrow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pencil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Undo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Autosave</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save to specified folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Autosave and copy to clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>RecordProcess</name>
     <message>
-        <location filename="../src/record_process.cpp" line="229"/>
         <source>deepin-screen-recorder</source>
         <translation>深度录屏</translation>
     </message>
     <message>
-        <location filename="../src/record_process.cpp" line="291"/>
         <source>View</source>
         <translation>查看</translation>
     </message>
     <message>
-        <location filename="../src/record_process.cpp" line="301"/>
         <source>Recording finished</source>
         <translation>录制完毕</translation>
     </message>
     <message>
-        <location filename="../src/record_process.cpp" line="302"/>
         <source>Saved to</source>
         <translation>保存在</translation>
     </message>
 </context>
 <context>
+    <name>Shortcut</name>
+    <message>
+        <source>Start/Screenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Painting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Size Adjustment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quick start</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Full screenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delay screenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Undo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ellipse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arrow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pencil</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Increase height up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Increase height down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Increase width left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Increase width right</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decrease height up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decrease height down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decrease width left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decrease width right</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>StartTooltip</name>
     <message>
-        <location filename="../src/start_tooltip.cpp" line="48"/>
         <source>Click or drag to
 select the area to record</source>
         <translation>点击或拖拽来选择录制区域</translation>
+    </message>
+</context>
+<context>
+    <name>SubToolBar</name>
+    <message>
+        <source>Save to desktop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Autosave</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save to specified folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy to clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Autosave and copy to clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>High</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SubToolWidget</name>
+    <message>
+        <source>Audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Camera</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Key</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Circ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>text</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Recordings</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

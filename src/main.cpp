@@ -28,6 +28,7 @@
 #include <DWindowManagerHelper>
 #include "main_window.h"
 #include "utils.h"
+#include "widgets/toolbutton.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -53,11 +54,15 @@ int main(int argc, char *argv[])
 
             // Load translator.
             app.loadTranslator();
+            app.setStyle("chameleon");
+            //version time
+            app.setApplicationVersion(DApplication::buildVersion("0820"));
 
             // Show window.
             MainWindow window;
 
             window.showFullScreen();
+//            window.show();
             window.initResource();
 
             // Register debus service.

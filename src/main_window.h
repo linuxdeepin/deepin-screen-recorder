@@ -27,13 +27,20 @@
 #include <QSystemTrayIcon>
 #include <QVBoxLayout>
 #include <dwindowmanager.h>
+#include <QTimer>
 #include "record_process.h"
+#include "voice_record_process.h"
 #include "record_button.h"
 #include "record_option_panel.h"
 #include "countdown_tooltip.h"
 #include "start_tooltip.h"
 #include "button_feedback.h"
 #include <DWindowManagerHelper>
+#include <dscreenwindowsutil.h>
+#include "show_buttons.h"
+#include "widgets/shapeswidget.h"
+#include "widgets/toolbar.h"
+#include "widgets/keybuttonwidget.h"
 
 // Make this include at last, otherwise QtX11 will conflict with x11 lib to make compile failed.
 #include "event_monitor.h"
@@ -92,6 +99,14 @@ public slots:
     void showReleaseFeedback(int x, int y);
     void responseEsc();
     void compositeChanged();
+    void updateToolBarPos();
+    void updateRecordButtonPos();
+    void updateShotButtonPos();
+    void changeFunctionButton(QString type);
+    void showKeyBoardButtons(const QString &key);
+    void changeKeyBoardShowEvent(bool checked);
+    void showMultiKeyBoardButtons();
+    void updateMultiKeyBoardPos();
     
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -107,17 +122,21 @@ protected:
     void setFontSize(QPainter &painter, int textSize);
     void showRecordButton();
     void hideRecordButton();
+    void hideAllWidget();
     void adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight);
+    void initShapeWidget(QString type);
 
 private:
     QList<WindowRect> windowRects;
     QList<QString> windowNames;
+    ShowButtons *m_showButtons;
 
     QTimer* flashTrayIconTimer;
     
     QRect screenRect;
 
     RecordProcess recordProcess;
+//    VoiceRecordProcess voiceRecordProcess;
     WindowRect rootWindowRect;
 
     bool drawDragPoint;
@@ -168,6 +187,21 @@ private:
     
     EventMonitor eventMonitor;
     DWindowManagerHelper *m_wmHelper;
+    ShapesWidget* m_shapesWidget;
+    ToolBar* m_toolBar;
+    DScreenWindowsUtil* m_swUtil;
+    QRect m_backgroundRect;
+    //添加截屏和录屏的按钮
+    QPushButton *m_recordButton;
+    QPushButton *m_shotButton;
+    QList<KeyButtonWidget*> m_keyButtonList;
+    QList<KeyButtonWidget*> m_tempkeyButtonList;
+
+    int m_functionType;  //0: record, 1: shot
+    int m_keyBoardStatus; //0: keyBoard off, 1:keyBoard On
+    QTimer *m_keyBoardTimer;
+    bool m_multiKeyButtonsInOnSec;
+
     
     // Just use for debug.
     // int repaintCounter;

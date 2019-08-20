@@ -33,6 +33,7 @@
 #include "utils.h"
 #include <dwindowmanager.h>
 #include "constant.h"
+#include <QStandardPaths>
 
 DWM_USE_NAMESPACE
 
@@ -140,5 +141,12 @@ void Utils::passInputEvent(int wid)
     XShapeCombineRectangles(QX11Info::display(), wid, ShapeInput, 0, 0, reponseArea ,1 ,ShapeSet, YXBanded);
 
     delete reponseArea;
+}
+
+QString Utils::getRecordingSaveDirectory() {
+    QDir musicDirectory = QDir(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
+    QString subDirectory = tr("Recordings");
+    musicDirectory.mkdir(subDirectory);
+    return musicDirectory.filePath(subDirectory);
 }
 

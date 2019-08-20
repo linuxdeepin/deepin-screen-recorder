@@ -23,6 +23,13 @@
 
 #include "event_monitor.h"
 #include <X11/Xlibint.h>
+#include <X11/Xutil.h>
+#include <X11/cursorfont.h>
+#include <X11/keysymdef.h>
+#include <X11/keysym.h>
+#include <X11/extensions/XTest.h>
+#include "keydefine.h"
+#include <iostream>
 
 EventMonitor::EventMonitor(QObject *parent) : QThread(parent)
 {
@@ -80,7 +87,9 @@ void EventMonitor::callback(XPointer ptr, XRecordInterceptData* data)
 void EventMonitor::handleRecordEvent(XRecordInterceptData* data)
 {
     if (data->category == XRecordFromServer) {
+
         xEvent * event = (xEvent *)data->data;
+//        XKeyPressedEvent *t_keyEvent;
         switch (event->u.u.type) {
         case ButtonPress:
             if (event->u.u.detail != WheelUp &&
@@ -107,9 +116,15 @@ void EventMonitor::handleRecordEvent(XRecordInterceptData* data)
             break;
         case KeyPress:
             // If key is equal to esc, emit pressEsc signal.
-            if (((unsigned char*) data->data)[1] == 9) {
+            if (((unsigned char*) data->data)[1] == KEY_ESCAPE) {
                 emit pressEsc();
             }
+            else {
+                emit pressKeyButton(((unsigned char*) data->data)[1]);
+            }
+            break;
+        case KeyRelease:
+            emit releaseKeyButton(((unsigned char*) data->data)[1]);
             break;
         default:
             break;

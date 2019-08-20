@@ -30,6 +30,7 @@ DWM_USE_NAMESPACE
 
 class Utils : public QObject
 {
+    Q_OBJECT
 public:
     static QSize getRenderSize(int fontSize, QString string);
     static QString getQrcPath(QString imageName);
@@ -41,4 +42,5 @@ public:
     static void passInputEvent(int wid);
     static void setFontSize(QPainter &painter, int textSize);
     static void warnNoComposite();
+    static QString getRecordingSaveDirectory();
 };

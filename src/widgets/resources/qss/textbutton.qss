@@ -1,0 +1,33 @@
+QPushButton#TextButton {
+    background-color: transparent;
+    color: #303030;
+    outline: none;
+    border: none;
+}
+
+QPushButton#TextButton:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    outline: none;
+    color: #000000;
+    font-size: 12px;
+    font-weight: light;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+QPushButton#TextButton:checked:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    outline: none;
+    color: #2ca7f8;
+    font-size: 12px;
+    font-weight: light;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+QPushButton#TextButton:checked {
+    background-color: transparent;
+    outline: none;
+    color: #2ca7f8;
+    font-size: 12px;
+    font-weight: light;
+}

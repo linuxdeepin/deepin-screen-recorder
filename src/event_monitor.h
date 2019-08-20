@@ -28,16 +28,6 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/record.h>
 
-// Virtual button codes that are not defined by X11.
-#define Button1			1
-#define Button2			2
-#define Button3			3
-#define WheelUp			4
-#define WheelDown		5
-#define WheelLeft		6
-#define WheelRight		7
-#define XButton1		8
-#define XButton2		9
 
 class EventMonitor : public QThread
 {
@@ -53,6 +43,9 @@ signals:
     void buttonedDrag(int x, int y);
     void buttonedRelease(int x, int y);
     void pressEsc();
+    //键盘按钮事件采集信号
+    void pressKeyButton(unsigned char keyCode);
+    void releaseKeyButton(unsigned char keyCode);
 
 protected:
     void run();

@@ -109,7 +109,7 @@ void RecordProcess::recordGIF()
     QStringList arguments;
     arguments << QString("--cursor");
     arguments << QString("--x=%1").arg(m_recordRect.x()) << QString("--y=%1").arg(m_recordRect.y());
-    arguments << QString("--width=%1").arg(m_recordRect.width()) << QString("--height=%1").arg(m_recordRect.height());
+    arguments << QString("--width=%1").arg(m_recordRect.width()) << QString(    "--height=%1").arg(m_recordRect.height());
     arguments << QString("--exec=%1").arg(sleepCommand);
     arguments << savePath;
 
@@ -274,6 +274,7 @@ void RecordProcess::stopRecord()
     // Move file to save directory.
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
     QFile::rename(savePath, newSavePath);
+
 
     // Popup notify.
     QDBusInterface notification("org.freedesktop.Notifications",
