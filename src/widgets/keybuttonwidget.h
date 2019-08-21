@@ -20,13 +20,11 @@
 #define KEYBUTTONWIDGET_H
 
 #include <QObject>
-#include <QLabel>
+#include <DLabel>
 #include <QPainter>
 #include <DBlurEffectWidget>
-#include <DtkWidgets>
 #include <DFontSizeManager>
 #include <QEvent>
-#include <QLabel>
 #include <QDebug>
 #include <QFont>
 #include <QHBoxLayout>
