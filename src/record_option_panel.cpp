@@ -34,7 +34,7 @@
 const int RecordOptionPanel::WIDTH = 124;
 const int RecordOptionPanel::HEIGHT = 36;
 const int RecordOptionPanel::ICON_OFFSET_X = 14;
-    
+
 DWIDGET_USE_NAMESPACE
 
 RecordOptionPanel::RecordOptionPanel(QPushButton *parent) : QPushButton(parent)
@@ -114,7 +114,7 @@ void RecordOptionPanel::paintEvent(QPaintEvent *)
 bool RecordOptionPanel::eventFilter(QObject *, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress) {
-        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         int pressX = mouseEvent->x();
 
         if (pressX > rect().x() && pressX < rect().x() + rect().width() / 2) {
@@ -124,12 +124,12 @@ bool RecordOptionPanel::eventFilter(QObject *, QEvent *event)
             isPressVideo = true;
             isPressGif = false;
         }
-        
+
         repaint();
     } else if (event->type() == QEvent::MouseButtonRelease) {
-        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         int releaseX = mouseEvent->x();
-        
+
         if (releaseX > rect().x() && releaseX < rect().x() + rect().width() / 2) {
             if (isPressGif) {
                 saveAsGif = true;
@@ -145,7 +145,7 @@ bool RecordOptionPanel::eventFilter(QObject *, QEvent *event)
                 isPressGif = false;
             }
         }
-        
+
         repaint();
     }
 
@@ -155,4 +155,4 @@ bool RecordOptionPanel::eventFilter(QObject *, QEvent *event)
 bool RecordOptionPanel::isSaveAsGif()
 {
     return saveAsGif;
-}    
+}

@@ -1,7 +1,7 @@
-    /*
- * Copyright (C) 2017 ~ 2018 Deepin Technology Co., Ltd.
+/*
+ * Copyright (C) 2019 ~ 2020 Deepin Technology Co., Ltd.
  *
- * Maintainer: Peng Hui<penghui@deepin.com>
+ * Author:     Zheng Youge<youge.zheng@deepin.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

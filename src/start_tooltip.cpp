@@ -51,7 +51,7 @@ StartTooltip::StartTooltip(QWidget *parent) : QWidget(parent)
     qreal devicePixelRatio = qApp->devicePixelRatio();
     setFixedSize(size.width() + Constant::RECTANGLE_PADDING * 2,
                  size.height() + iconImg.height() / devicePixelRatio + Constant::RECTANGLE_PADDING * 3);
-    
+
     Utils::passInputEvent(this->winId());
 }
 
@@ -67,8 +67,8 @@ void StartTooltip::setWindowManager(DWindowManager *wm)
             Qt::AlignCenter,
             this->size(),
             QRect(rootWindowRect.x * ratio, rootWindowRect.y * ratio, rootWindowRect.width, rootWindowRect.height)
-            )
-        );
+        )
+    );
 }
 
 void StartTooltip::paintEvent(QPaintEvent *)
@@ -87,7 +87,7 @@ void StartTooltip::paintEvent(QPaintEvent *)
                                   rect().y() * devicePixelRatio + Constant::RECTANGLE_PADDING / devicePixelRatio + iconImg.height() / devicePixelRatio,
                                   rect().width(),
                                   rect().height() - Constant::RECTANGLE_PADDING / devicePixelRatio - iconImg.height() / devicePixelRatio
-                               ));
+                                 ));
 }
 
 bool StartTooltip::eventFilter(QObject *, QEvent *event)
@@ -97,6 +97,6 @@ bool StartTooltip::eventFilter(QObject *, QEvent *event)
     } else if (event->type() == QEvent::HideToParent) {
         Utils::clearBlur(windowManager, this->winId());
     }
-    
+
     return false;
 }

@@ -30,34 +30,34 @@
 class RecordOptionPanel : public QPushButton
 {
     Q_OBJECT
-    
+
     static const int WIDTH;
     static const int HEIGHT;
     static const int ICON_OFFSET_X;
-    
+
 public:
     RecordOptionPanel(QPushButton *parent = 0);
     ~RecordOptionPanel();
     bool isSaveAsGif();
-    
+
 protected:
     void paintEvent(QPaintEvent *event);
     bool eventFilter(QObject *, QEvent *event);
-    
+
 private:
     bool saveAsGif;
     bool isPressGif;
     bool isPressVideo;
-    
+
     QPixmap gifNormalImg;
     QPixmap gifPressImg;
     QPixmap gifCheckedImg;
-    
+
     QPixmap videoNormalImg;
     QPixmap videoPressImg;
     QPixmap videoCheckedImg;
-    
-    Settings* settings;
+
+    Settings *settings;
 };
 
 #endif // RECORDOPTIONPANEL_H

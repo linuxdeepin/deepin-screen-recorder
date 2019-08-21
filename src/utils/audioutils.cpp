@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2019 ~ 2020 Deepin Technology Co., Ltd.
+ *
+ * Author:     Zheng Youge<youge.zheng@deepin.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #include "audioutils.h"
 #include <QDebug>
 #include <stdlib.h>
@@ -7,7 +25,8 @@
 AudioUtils::AudioUtils(QObject *parent)
 {
 }
-void AudioUtils::initProcess() {
+void AudioUtils::initProcess()
+{
     // Create process and handle finish signal.
     process = new QProcess();
 
@@ -24,33 +43,33 @@ void AudioUtils::initProcess() {
 
 bool AudioUtils::isSystemAudioOutput()
 {
-    char buf[1024]={0};
+    char buf[1024] = {0};
     int fd[2];
     int backfd;
     pipe(fd);
-    backfd=dup(STDOUT_FILENO);//备份标准输出，用于恢复
-    dup2(fd[1],STDOUT_FILENO);  //将标准输出重定向到fd[1]
+    backfd = dup(STDOUT_FILENO); //备份标准输出，用于恢复
+    dup2(fd[1], STDOUT_FILENO); //将标准输出重定向到fd[1]
     system("pacmd list-sinks | grep -A1 \"* index\" | grep \"alsa_output.platform-snd_aloop.0.analog-stereo\" | wc -l");
-    read(fd[0],buf,1024);
-    dup2(backfd,STDOUT_FILENO);  //恢复标准输出
+    read(fd[0], buf, 1024);
+    dup2(backfd, STDOUT_FILENO); //恢复标准输出
     QString str_output = buf;
-    qDebug()<<str_output;
+    qDebug() << str_output;
     return str_output.startsWith("1");
 }
 
 bool AudioUtils::isMicrophoneOutput()
 {
-    char buf[1024]={0};
+    char buf[1024] = {0};
     int fd[2];
     int backfd;
     pipe(fd);
-    backfd=dup(STDOUT_FILENO);//备份标准输出，用于恢复
-    dup2(fd[1],STDOUT_FILENO);  //将标准输出重定向到fd[1]
+    backfd = dup(STDOUT_FILENO); //备份标准输出，用于恢复
+    dup2(fd[1], STDOUT_FILENO); //将标准输出重定向到fd[1]
     system("pacmd list-sinks | grep -A1 \"* index\" | grep \"alsa_output.pci-0000_00_1f.4.analog-stereo\" | wc -l");
-    read(fd[0],buf,1024);
-    dup2(backfd,STDOUT_FILENO);  //恢复标准输出
+    read(fd[0], buf, 1024);
+    dup2(backfd, STDOUT_FILENO); //恢复标准输出
     QString str_output = buf;
-    qDebug()<<str_output;
+    qDebug() << str_output;
     return str_output.startsWith("1");
 }
 

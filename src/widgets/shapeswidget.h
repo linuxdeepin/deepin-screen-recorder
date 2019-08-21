@@ -28,10 +28,11 @@
 #include "../widgets/textedit.h"
 #include "../menucontroller/menucontroller.h"
 
-class ShapesWidget : public QFrame {
+class ShapesWidget : public QFrame
+{
     Q_OBJECT
 public:
-    ShapesWidget(QWidget* parent = 0);
+    ShapesWidget(QWidget *parent = 0);
     ~ShapesWidget();
 
     enum ShapeBlurStatus {
@@ -98,9 +99,9 @@ public slots:
     void updateCursorShape();
 
 protected:
-    void mousePressEvent(QMouseEvent* e);
-    void mouseReleaseEvent(QMouseEvent* e);
-    void mouseMoveEvent(QMouseEvent* e);
+    void mousePressEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
     void paintEvent(QPaintEvent *);
     void enterEvent(QEvent *e);
 
@@ -139,18 +140,18 @@ private:
     Toolshape m_selectedShape;
     Toolshape m_hoveredShape;
 
-    QMap<int, TextEdit*> m_editMap;
-    void updateTextRect(TextEdit* edit, QRectF newRect);
+    QMap<int, TextEdit *> m_editMap;
+    void updateTextRect(TextEdit *edit, QRectF newRect);
     Toolshapes m_shapes;
-    MenuController* m_menuController;
+    MenuController *m_menuController;
 
     void paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bool isResize = true);
     void paintRect(QPainter &painter, FourPoints rectFPoints, int index,
                    ShapeBlurStatus  rectStatus = Normal, bool isBlur = false, bool isMosaic = false);
     void paintEllipse(QPainter &painter, FourPoints ellipseFPoints, int index,
-                  ShapeBlurStatus  ovalStatus = Normal, bool isBlur = false, bool isMosaic = false);
+                      ShapeBlurStatus  ovalStatus = Normal, bool isBlur = false, bool isMosaic = false);
     void paintArrow(QPainter &painter, QList<QPointF> lineFPoints,
-                                  int lineWidth, bool isStraight = false);
+                    int lineWidth, bool isStraight = false);
     void paintLine(QPainter &painter, QList<QPointF> lineFPoints);
     void paintText(QPainter &painter, FourPoints rectFPoints);
 };

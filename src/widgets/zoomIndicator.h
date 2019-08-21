@@ -24,10 +24,11 @@
 #include <QPainter>
 #include <QPaintEvent>
 
-class ZoomIndicator : public QLabel {
+class ZoomIndicator : public QLabel
+{
     Q_OBJECT
 public:
-    ZoomIndicator(QWidget* parent = 0);
+    ZoomIndicator(QWidget *parent = 0);
     ~ZoomIndicator();
 
     void showMagnifier(QPoint pos);

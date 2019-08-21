@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 #ifndef PROCESSTREE_H
 #define PROCESSTREE_H
@@ -32,25 +32,24 @@
 class ProcessTree : public QObject
 {
     Q_OBJECT
-    
+
     typedef std::map<int, proc_t> StoredProcType;
-    
-    struct Process
-    {
+
+    struct Process {
         int parentPid;
         QList<int> childProcesses;
     };
-    
+
 public:
     ProcessTree();
     ~ProcessTree();
-    
+
     QList<int> getAllChildPids(int pid);
     void getChildPids(int pid);
     void printNode(int pid);
     void printTree();
     void scanProcesses(StoredProcType processes);
-    
+
 private:
     QList<int> childrenPids;
     QMap<int, Process> *processMap;

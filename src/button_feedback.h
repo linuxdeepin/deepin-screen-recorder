@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 #ifndef BUTTONFEEDBACK_H
 #define BUTTONFEEDBACK_H
@@ -30,21 +30,21 @@
 class ButtonFeedback : public QWidget
 {
     Q_OBJECT
-    
+
     static const int FRAME_RATE;
-    
+
 public:
     ButtonFeedback(QWidget *parent = 0);
-                                       
+
 protected:
     void paintEvent(QPaintEvent *event);
-    
+
 public slots:
     void showPressFeedback(int x, int y);
     void showDragFeedback(int x, int y);
     void showReleaseFeedback(int x, int y);
     void update();
-    
+
 private:
     QPixmap buttonFeedback0Img;
     QPixmap buttonFeedback1Img;
@@ -56,10 +56,10 @@ private:
     QPixmap buttonFeedback7Img;
     QPixmap buttonFeedback8Img;
     QPixmap buttonFeedback9Img;
-    
-    QTimer* timer;
-    
+
+    QTimer *timer;
+
     int frameIndex;
 };
 
-#endif    
+#endif

@@ -22,10 +22,11 @@
 
 #include "toolbutton.h"
 
-class SaveButton : public QPushButton {
+class SaveButton : public QPushButton
+{
     Q_OBJECT
 public:
-    SaveButton(QWidget* parent = 0);
+    SaveButton(QWidget *parent = 0);
     ~SaveButton();
 
 signals:
@@ -33,8 +34,8 @@ signals:
     void expandSaveOption(bool expand);
 
 private:
-    ToolButton* m_saveBtn;
-    ToolButton* m_listBtn;
+    ToolButton *m_saveBtn;
+    ToolButton *m_listBtn;
 };
 
 #endif // SAVEBUTTON_H

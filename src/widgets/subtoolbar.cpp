@@ -25,8 +25,7 @@
 #include "../utils/configsettings.h"
 #include "../utils/saveutils.h"
 
-#include <dslider.h>
-
+#include <DSlider>
 #include <QLineEdit>
 #include <QButtonGroup>
 #include <QHBoxLayout>
@@ -37,11 +36,11 @@
 DWIDGET_USE_NAMESPACE
 
 namespace {
-    const int TOOLBAR_HEIGHT = 28;
-    const int TOOLBAR_WIDTH = 280;
-    const int BUTTON_SPACING = 1;
-    const int COLOR_NUM = 16;
-    const QSize SAVEBTN_SIZE = QSize(33, 26);
+const int TOOLBAR_HEIGHT = 28;
+const int TOOLBAR_WIDTH = 280;
+const int BUTTON_SPACING = 1;
+const int COLOR_NUM = 16;
+const QSize SAVEBTN_SIZE = QSize(33, 26);
 }
 
 SubToolBar::SubToolBar(QWidget *parent)
@@ -51,7 +50,8 @@ SubToolBar::SubToolBar(QWidget *parent)
     initWidget();
 }
 
-void SubToolBar::initWidget() {
+void SubToolBar::initWidget()
+{
 //    setObjectName("SubToolBar");
     setStyleSheet(getFileContent(":/resources/qss/subtoolbar.qss"));
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
@@ -66,60 +66,63 @@ void SubToolBar::initWidget() {
     setCurrentWidget(0);
 }
 
-void SubToolBar::initRectLabel() {
+void SubToolBar::initRectLabel()
+{
     m_rectLabel = new QLabel(this);
-    QButtonGroup* rectBtnGroup = new QButtonGroup();
+    QButtonGroup *rectBtnGroup = new QButtonGroup();
     rectBtnGroup->setExclusive(true);
-    QList<ToolButton*> btnList;
+    QList<ToolButton *> btnList;
     //rectangle, oval...
-    ToolButton* fineLine = new ToolButton();
+    ToolButton *fineLine = new ToolButton();
     fineLine->setObjectName("FineLine");
     rectBtnGroup->addButton(fineLine);
     btnList.append(fineLine);
-    ToolButton*  mediumLine = new ToolButton();
+    ToolButton  *mediumLine = new ToolButton();
     mediumLine->setObjectName("MediumLine");
     rectBtnGroup->addButton(mediumLine);
     btnList.append(mediumLine);
-    ToolButton* thickLine = new ToolButton();
+    ToolButton *thickLine = new ToolButton();
     thickLine->setObjectName("ThickLine");
     rectBtnGroup->addButton(thickLine);
     btnList.append(thickLine);
     //separator line...
-    QLabel* vSeparatorLine = new QLabel();
+    QLabel *vSeparatorLine = new QLabel();
     vSeparatorLine->setFixedSize(1, 16);
     vSeparatorLine->setObjectName("VerticalSeparatorLine");
     //blur, mosaic...
-    ToolButton* blurBtn = new ToolButton();
+    ToolButton *blurBtn = new ToolButton();
     blurBtn->setObjectName("BlurBtn");
-    ToolButton* mosaicBtn = new ToolButton();
+    ToolButton *mosaicBtn = new ToolButton();
     mosaicBtn->setObjectName("MosaicBtn");
-    connect(blurBtn, &ToolButton::clicked, this, [=]{
+    connect(blurBtn, &ToolButton::clicked, this, [ = ] {
         ConfigSettings::instance()->setValue("effect", "is_blur", blurBtn->isChecked());
-        if (blurBtn->isChecked()) {
+        if (blurBtn->isChecked())
+        {
             mosaicBtn->setChecked(false);
             ConfigSettings::instance()->setValue("effect", "is_mosaic", false);
         }
     });
-    connect(mosaicBtn, &ToolButton::clicked, this, [=]{
+    connect(mosaicBtn, &ToolButton::clicked, this, [ = ] {
         ConfigSettings::instance()->setValue("effect", "is_mosaic", mosaicBtn->isChecked());
-        if (mosaicBtn->isChecked()) {
+        if (mosaicBtn->isChecked())
+        {
             blurBtn->setChecked(false);
             ConfigSettings::instance()->setValue("effect", "is_blur", false);
         }
     });
     int lineWidthIndex = ConfigSettings::instance()->value("rectangle",
-                                                      "linewidth_index").toInt();
+                                                           "linewidth_index").toInt();
     btnList[lineWidthIndex]->setChecked(true);
 
-    QHBoxLayout* rectLayout = new QHBoxLayout();
+    QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setMargin(0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(1);
     for (int i = 0; i < btnList.length(); i++) {
         rectLayout->addWidget(btnList[i]);
         rectLayout->addSpacing(BUTTON_SPACING);
-        connect(btnList[i], &ToolButton::clicked, this, [=]{
-                ConfigSettings::instance()->setValue(m_currentType, "linewidth_index", i);
+        connect(btnList[i], &ToolButton::clicked, this, [ = ] {
+            ConfigSettings::instance()->setValue(m_currentType, "linewidth_index", i);
         });
     }
     rectLayout->addSpacing(16);
@@ -132,57 +135,58 @@ void SubToolBar::initRectLabel() {
     m_rectLabel->setLayout(rectLayout);
     addWidget(m_rectLabel);
 
-    connect(this, &SubToolBar::shapeChanged, this, [=]{
+    connect(this, &SubToolBar::shapeChanged, this, [ = ] {
         int lineIndex = ConfigSettings::instance()->value(m_currentType,
                                                           "linewidth_index").toInt();
         btnList[lineIndex]->setChecked(true);
     });
 }
 
-void SubToolBar::initArrowLabel() {
+void SubToolBar::initArrowLabel()
+{
     m_arrowLabel = new QLabel(this);
     //arrow
-    QButtonGroup*  arrowBtnGroup = new QButtonGroup();
+    QButtonGroup  *arrowBtnGroup = new QButtonGroup();
     arrowBtnGroup->setExclusive(true);
-    QList<ToolButton*> arrowBtnList;
-    ToolButton* arrowFineLine = new ToolButton();
+    QList<ToolButton *> arrowBtnList;
+    ToolButton *arrowFineLine = new ToolButton();
     arrowFineLine->setObjectName("ArrowFine");
     arrowBtnGroup->addButton(arrowFineLine);
     arrowBtnList.append(arrowFineLine);
-    ToolButton*  arrowMediumLine = new ToolButton();
+    ToolButton  *arrowMediumLine = new ToolButton();
     arrowMediumLine->setObjectName("ArrowMedium");
     arrowBtnGroup->addButton(arrowMediumLine);
     arrowBtnList.append(arrowMediumLine);
-    ToolButton* arrowThickLine = new ToolButton();
+    ToolButton *arrowThickLine = new ToolButton();
     arrowThickLine->setObjectName("ArrowThick");
     arrowBtnGroup->addButton(arrowThickLine);
     arrowBtnList.append(arrowThickLine);
     //line
-    QButtonGroup*  lineBtnGroup = new QButtonGroup();
+    QButtonGroup  *lineBtnGroup = new QButtonGroup();
     lineBtnGroup->setExclusive(true);
     //rectangle, oval...
-    ToolButton* fineLine = new ToolButton();
+    ToolButton *fineLine = new ToolButton();
     fineLine->setObjectName("ArrowFineLine");
     lineBtnGroup->addButton(fineLine);
     arrowBtnList.append(fineLine);
-    ToolButton*  mediumLine = new ToolButton();
+    ToolButton  *mediumLine = new ToolButton();
     mediumLine->setObjectName("ArrowMediumLine");
     lineBtnGroup->addButton(mediumLine);
     arrowBtnList.append(mediumLine);
-    ToolButton* thickLine = new ToolButton();
+    ToolButton *thickLine = new ToolButton();
     thickLine->setObjectName("ArrowThickLine");
     lineBtnGroup->addButton(thickLine);
     arrowBtnList.append(thickLine);
     //separator line...
-    QLabel* vSeparatorLine = new QLabel();
+    QLabel *vSeparatorLine = new QLabel();
     vSeparatorLine->setFixedSize(1, 16);
     vSeparatorLine->setObjectName("VerticalSeparatorLine");
-    QButtonGroup* styleBtnGroup = new QButtonGroup;
+    QButtonGroup *styleBtnGroup = new QButtonGroup;
     styleBtnGroup->setExclusive(true);
-    ToolButton*  lineBtn = new ToolButton();
+    ToolButton  *lineBtn = new ToolButton();
     lineBtn->setObjectName("LineBtn");
     styleBtnGroup->addButton(lineBtn, 0);
-    ToolButton* arrowBtn = new ToolButton();
+    ToolButton *arrowBtn = new ToolButton();
     arrowBtn->setObjectName("ArrowBtn");
     arrowBtn->setChecked(true);
     styleBtnGroup->addButton(arrowBtn, 1);
@@ -195,18 +199,20 @@ void SubToolBar::initArrowLabel() {
     int arrowWidthIndex = ConfigSettings::instance()->value("arrow", "arrow_linewidth_index").toInt();
     int sLineWidthIndex = ConfigSettings::instance()->value("arrow", "straightline_linewidth").toInt();
     arrowBtnList[arrowWidthIndex]->setChecked(true);
-    arrowBtnList[sLineWidthIndex+3]->setChecked(true);
-    QHBoxLayout* arrowLayout = new QHBoxLayout();
+    arrowBtnList[sLineWidthIndex + 3]->setChecked(true);
+    QHBoxLayout *arrowLayout = new QHBoxLayout();
     arrowLayout->setMargin(0);
     arrowLayout->setSpacing(BUTTON_SPACING);
     arrowLayout->addSpacing(1);
     for (int j = 0; j < arrowBtnList.length(); j++) {
         arrowLayout->addWidget(arrowBtnList[j]);
 //        arrowLayout->addSpacing(BUTTON_SPACING);
-        connect(arrowBtnList[j], &ToolButton::clicked, this, [=]{
-            if (j < 3) {
-                 ConfigSettings::instance()->setValue("arrow", "arrow_linewidth_index", j);
-            } else {
+        connect(arrowBtnList[j], &ToolButton::clicked, this, [ = ] {
+            if (j < 3)
+            {
+                ConfigSettings::instance()->setValue("arrow", "arrow_linewidth_index", j);
+            } else
+            {
                 ConfigSettings::instance()->setValue("arrow", "straightline_linewidth_index", j - 3);
             }
         });
@@ -224,7 +230,7 @@ void SubToolBar::initArrowLabel() {
     mediumLine->hide();
     thickLine->hide();
 
-    connect(arrowBtn, &ToolButton::toggled, this, [=](bool checked){
+    connect(arrowBtn, &ToolButton::toggled, this, [ = ](bool checked) {
         if (checked) {
             arrowFineLine->show();
             arrowMediumLine->show();
@@ -244,15 +250,17 @@ void SubToolBar::initArrowLabel() {
         ConfigSettings::instance()->setValue("arrow", "is_straight", !checked);
     });
 
-    connect(this, &SubToolBar::shapeChanged, this, [=]{
-        if (ConfigSettings::instance()->value("arrow", "is_straight").toBool()) {
+    connect(this, &SubToolBar::shapeChanged, this, [ = ] {
+        if (ConfigSettings::instance()->value("arrow", "is_straight").toBool())
+        {
             arrowFineLine->hide();
             arrowMediumLine->hide();
             arrowThickLine->hide();
             fineLine->show();
             mediumLine->show();
             thickLine->show();
-        } else {
+        } else
+        {
             arrowFineLine->show();
             arrowMediumLine->show();
             arrowThickLine->show();
@@ -264,42 +272,43 @@ void SubToolBar::initArrowLabel() {
         int  arrowLineWidth = ConfigSettings::instance()->value("arrow", "arrow_linewidth_index").toInt();
         int  sLineWidth = ConfigSettings::instance()->value("arrow", "straightline_linewidth_index").toInt();
         arrowBtnList[arrowLineWidth]->setChecked(true);
-        arrowBtnList[sLineWidth+3]->setChecked(true);
+        arrowBtnList[sLineWidth + 3]->setChecked(true);
     });
 }
 
-void SubToolBar::initLineLabel() {
-     m_lineLabel = new QLabel(this);
-     //rectangle, oval...
-    QButtonGroup* lineBtnGroup = new QButtonGroup();
+void SubToolBar::initLineLabel()
+{
+    m_lineLabel = new QLabel(this);
+    //rectangle, oval...
+    QButtonGroup *lineBtnGroup = new QButtonGroup();
     lineBtnGroup->setExclusive(true);
-    QList<ToolButton*> btnList;
+    QList<ToolButton *> btnList;
 
-    ToolButton* fineLine = new ToolButton();
+    ToolButton *fineLine = new ToolButton();
     fineLine->setObjectName("FineLine");
     lineBtnGroup->addButton(fineLine);
     btnList.append(fineLine);
-    ToolButton*  mediumLine = new ToolButton();
+    ToolButton  *mediumLine = new ToolButton();
     mediumLine->setObjectName("MediumLine");
     lineBtnGroup->addButton(mediumLine);
     btnList.append(mediumLine);
-    ToolButton* thickLine = new ToolButton();
+    ToolButton *thickLine = new ToolButton();
     thickLine->setObjectName("ThickLine");
     lineBtnGroup->addButton(thickLine);
     btnList.append(thickLine);
 
     int lineWidthIndex = ConfigSettings::instance()->value("line",
-                                                      "linewidth_index").toInt();
+                                                           "linewidth_index").toInt();
     btnList[lineWidthIndex]->setChecked(true);
 
-    QHBoxLayout* lineLayout = new QHBoxLayout();
+    QHBoxLayout *lineLayout = new QHBoxLayout();
     lineLayout->setMargin(0);
     lineLayout->setSpacing(0);
     lineLayout->addSpacing(1);
-    for(int k = 0; k < btnList.length(); k++) {
+    for (int k = 0; k < btnList.length(); k++) {
         lineLayout->addWidget(btnList[k]);
         lineLayout->addSpacing(BUTTON_SPACING);
-        connect(btnList[k], &ToolButton::clicked, this, [=]{
+        connect(btnList[k], &ToolButton::clicked, this, [ = ] {
             ConfigSettings::instance()->setValue("line", "linewidth_index", k);
         });
     }
@@ -308,35 +317,36 @@ void SubToolBar::initLineLabel() {
     m_lineLabel->setLayout(lineLayout);
     addWidget(m_lineLabel);
 
-    connect(this, &SubToolBar::shapeChanged, this, [=]{
+    connect(this, &SubToolBar::shapeChanged, this, [ = ] {
         int lineIndex = ConfigSettings::instance()->value(m_currentType,
                                                           "linewidth_index").toInt();
         btnList[lineIndex]->setChecked(true);
     });
 }
 
-void SubToolBar::initTextLabel() {
+void SubToolBar::initTextLabel()
+{
     //text...
     m_textLabel = new QLabel(this);
 //    m_textLabel->setStyleSheet(getFileContent(":/resources/qss/textbutton.qss"));
     QList<int> fontSizeList;
     fontSizeList << 9 << 10 << 12 << 14 << 18 << 24 << 36 << 48 << 64 << 72 << 96;
-    QButtonGroup* textBtnGroup = new QButtonGroup(this);
+    QButtonGroup *textBtnGroup = new QButtonGroup(this);
 
-    QList<TextButton*> textButtonList;
-    for(int i = 0; i < fontSizeList.length(); i++) {
-        TextButton* textButton = new TextButton(fontSizeList[i], m_textLabel);
+    QList<TextButton *> textButtonList;
+    for (int i = 0; i < fontSizeList.length(); i++) {
+        TextButton *textButton = new TextButton(fontSizeList[i], m_textLabel);
         textBtnGroup->addButton(textButton);
         textButtonList.append(textButton);
     }
     textBtnGroup->setExclusive(true);
-      int defaultFontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();
+    int defaultFontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();
 
-    QHBoxLayout* textLayout = new QHBoxLayout();
+    QHBoxLayout *textLayout = new QHBoxLayout();
     textLayout->setMargin(0);
     textLayout->setSpacing(0);
     textLayout->addSpacing(1);
-    for(int k = 0; k < textButtonList.length(); k++) {
+    for (int k = 0; k < textButtonList.length(); k++) {
         textLayout->addWidget(textButtonList[k]);
         textLayout->addSpacing(BUTTON_SPACING);
         if (fontSizeList[k] == defaultFontSize) {
@@ -348,25 +358,26 @@ void SubToolBar::initTextLabel() {
     addWidget(m_textLabel);
 }
 
-void SubToolBar::initColorLabel() {
+void SubToolBar::initColorLabel()
+{
     m_colorLabel = new QLabel(this);
 //    m_colorLabel->setStyleSheet(getFileContent(":/resources/qss/colorbtn.qss"));
-    QList<ColorButton*> colorBtnList;
-    QButtonGroup* colorBtnGroup = new QButtonGroup(m_colorLabel);
+    QList<ColorButton *> colorBtnList;
+    QButtonGroup *colorBtnGroup = new QButtonGroup(m_colorLabel);
     colorBtnGroup->setExclusive(true);
 
-    for(int i = 0; i < COLOR_NUM; i ++) {
-        ColorButton* colorBtn = new ColorButton(colorIndexOf(i));
-        colorBtn->setObjectName(QString("ColorBtn%1").arg(i+1));
+    for (int i = 0; i < COLOR_NUM; i ++) {
+        ColorButton *colorBtn = new ColorButton(colorIndexOf(i));
+        colorBtn->setObjectName(QString("ColorBtn%1").arg(i + 1));
         colorBtnList.append(colorBtn);
         colorBtnGroup->addButton(colorBtn);
     }
 
-    QHBoxLayout* colorLayout = new QHBoxLayout();
+    QHBoxLayout *colorLayout = new QHBoxLayout();
     colorLayout->setMargin(0);
     colorLayout->setSpacing(0);
     colorLayout->addSpacing(3);
-    for(int i = 0; i < colorBtnList.length(); i++) {
+    for (int i = 0; i < colorBtnList.length(); i++) {
         colorLayout->addWidget(colorBtnList[i]);
         colorLayout->addSpacing(1);
         connect(colorBtnList[i], &ColorButton::updatePaintColor,
@@ -377,7 +388,7 @@ void SubToolBar::initColorLabel() {
 
     addWidget(m_colorLabel);
 
-    connect(this, &SubToolBar::defaultColorIndexChanged, this, [=](int index){
+    connect(this, &SubToolBar::defaultColorIndexChanged, this, [ = ](int index) {
         colorBtnList[index]->setChecked(true);
     });
 }
@@ -389,42 +400,43 @@ void SubToolBar::updateColor(QColor color)
     emit currentColorChanged(color);
 }
 
-void SubToolBar::initSaveLabel() {
+void SubToolBar::initSaveLabel()
+{
     //save to...
-    std::map<SaveAction, ToolButton*> toolBtnMap;
-    ToolButton* saveDesktopBtn = new ToolButton();
+    std::map<SaveAction, ToolButton *> toolBtnMap;
+    ToolButton *saveDesktopBtn = new ToolButton();
     saveDesktopBtn->setFixedSize(SAVEBTN_SIZE);
     saveDesktopBtn->setObjectName("SaveToDesktop");
     saveDesktopBtn->setTips(tr("Save to desktop"));
     toolBtnMap[SaveAction::SaveToDesktop] = saveDesktopBtn;
 
-    ToolButton* savePicBtn = new ToolButton();
+    ToolButton *savePicBtn = new ToolButton();
     savePicBtn->setFixedSize(SAVEBTN_SIZE);
     savePicBtn->setObjectName("SaveToPictureDir");
     savePicBtn->setTips(tr("Autosave"));
     toolBtnMap[SaveAction::AutoSave] = savePicBtn;
 
-    ToolButton* saveSpecificDirBtn = new ToolButton();
+    ToolButton *saveSpecificDirBtn = new ToolButton();
     saveSpecificDirBtn->setFixedSize(SAVEBTN_SIZE);
     saveSpecificDirBtn->setObjectName("SaveToSpecificDir");
     saveSpecificDirBtn->setTips(tr("Save to specified folder"));
     toolBtnMap[SaveAction::SaveToSpecificDir] = saveSpecificDirBtn;
 
-    ToolButton* saveClipboardBtn = new ToolButton();
+    ToolButton *saveClipboardBtn = new ToolButton();
     saveClipboardBtn->setFixedSize(SAVEBTN_SIZE);
     saveClipboardBtn->setObjectName("SaveToClipboard");
     saveClipboardBtn->setTips(tr("Copy to clipboard"));
     toolBtnMap[SaveAction::SaveToClipboard] = saveClipboardBtn;
 
-    ToolButton* saveAutoClipboardBtn = new ToolButton();
+    ToolButton *saveAutoClipboardBtn = new ToolButton();
     saveAutoClipboardBtn->setObjectName("SaveToAutoClipboard");
     saveAutoClipboardBtn->setTips(tr("Autosave and copy to clipboard"));
     toolBtnMap[SaveAction::SaveToAutoClipboard] = saveAutoClipboardBtn;
 
-    QLabel* lowQualityText = new QLabel();
+    QLabel *lowQualityText = new QLabel();
     lowQualityText->setObjectName("LowQualityLabel");
     lowQualityText->setText(tr("Low"));
-    QSlider* saveQualitySlider = new QSlider(Qt::Horizontal);
+    QSlider *saveQualitySlider = new QSlider(Qt::Horizontal);
     saveQualitySlider->setFixedWidth(58);
     saveQualitySlider->setMinimum(50);
     saveQualitySlider->setMaximum(100);
@@ -433,14 +445,14 @@ void SubToolBar::initSaveLabel() {
     setSaveQualityIndex(saveQualitySlider->value());
 
     connect(saveQualitySlider, &QSlider::valueChanged,
-                   this, &SubToolBar::setSaveQualityIndex);
+            this, &SubToolBar::setSaveQualityIndex);
 
-    QLabel* highQualityText = new QLabel();
+    QLabel *highQualityText = new QLabel();
     highQualityText->setObjectName("HighQualityLabel");
     highQualityText->setText(tr("High"));
 
-     m_saveLabel = new QLabel(this);
-    QHBoxLayout* saveLayout = new QHBoxLayout();
+    m_saveLabel = new QLabel(this);
+    QHBoxLayout *saveLayout = new QHBoxLayout();
     saveLayout->setMargin(0);
     saveLayout->setSpacing(0);
     saveLayout->addSpacing(1);
@@ -449,15 +461,15 @@ void SubToolBar::initSaveLabel() {
 
     for (auto it = toolBtnMap.cbegin(); it != toolBtnMap.cend(); ++it) {
         SaveAction  action = it->first;
-        ToolButton* button = it->second;
+        ToolButton *button = it->second;
 
         saveLayout->addWidget(button);
 
-        connect(button, &ToolButton::clicked, this, [=] {
+        connect(button, &ToolButton::clicked, this, [ = ] {
             setSaveOption(action);
         });
 
-        connect(button, &ToolButton::onEnter, this, [=] {
+        connect(button, &ToolButton::onEnter, this, [ = ] {
             emit showSaveTip(button->getTips());
         });
 
@@ -468,8 +480,9 @@ void SubToolBar::initSaveLabel() {
         }
     }
 
-    connect(this, &SubToolBar::saveBtnPressed, this, [=](int index) -> void {
-        for (auto it = toolBtnMap.cbegin(); it != toolBtnMap.cend(); ++it) {
+    connect(this, &SubToolBar::saveBtnPressed, this, [ = ](int index) -> void {
+        for (auto it = toolBtnMap.cbegin(); it != toolBtnMap.cend(); ++it)
+        {
             if (static_cast<SaveAction>(index) == it->first) {
                 return it->second->click();
             }
@@ -486,7 +499,8 @@ void SubToolBar::initSaveLabel() {
     addWidget(m_saveLabel);
 }
 
-void SubToolBar::switchContent(QString shapeType) {
+void SubToolBar::switchContent(QString shapeType)
+{
     if (shapeType == "rectangle" || shapeType == "oval") {
         setCurrentWidget(m_rectLabel);
         m_currentType = shapeType;
@@ -494,18 +508,18 @@ void SubToolBar::switchContent(QString shapeType) {
     }   else if (shapeType == "arrow") {
         setCurrentWidget(m_arrowLabel);
         m_currentType = shapeType;
-         emit shapeChanged();
+        emit shapeChanged();
     } else if (shapeType == "line") {
         setCurrentWidget(m_lineLabel);
         m_currentType = shapeType;
-         emit shapeChanged();
+        emit shapeChanged();
     } else if (shapeType == "text") {
         setCurrentWidget(m_textLabel);
         m_currentType = shapeType;
-         emit shapeChanged();
+        emit shapeChanged();
     } else if (shapeType == "color") {
         int defaultColorIndex = ConfigSettings::instance()->value("common",
-                                                  "color_index").toInt();
+                                                                  "color_index").toInt();
         emit defaultColorIndexChanged(defaultColorIndex);
         setCurrentWidget(m_colorLabel);
     } else if (shapeType == "saveList") {
@@ -514,7 +528,8 @@ void SubToolBar::switchContent(QString shapeType) {
     qDebug() << "subToolBar shape:" << shapeType;
 }
 
-void SubToolBar::setSaveOption(SaveAction action) {
+void SubToolBar::setSaveOption(SaveAction action)
+{
     if (QGuiApplication::keyboardModifiers().testFlag(Qt::ShiftModifier)) {
         qDebug() << "Shift key holded: temporary action, will not remember the save_op.";
         ConfigSettings::instance()->setTemporarySaveAction(std::pair<bool, SaveAction>(true, action));
@@ -525,11 +540,13 @@ void SubToolBar::setSaveOption(SaveAction action) {
     emit saveAction();
 }
 
-void SubToolBar::setSaveQualityIndex(int saveQuality) {
+void SubToolBar::setSaveQualityIndex(int saveQuality)
+{
     ConfigSettings::instance()->setValue("save", "save_quality", saveQuality);
 }
 
-int SubToolBar::getSaveQualityIndex() {
+int SubToolBar::getSaveQualityIndex()
+{
     return m_saveQuality;
 }
 

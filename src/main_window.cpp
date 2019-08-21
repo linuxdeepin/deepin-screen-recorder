@@ -139,7 +139,7 @@ void MainWindow::initAttributes()
     // otherwise deepin-screen-recorder window will add in window lists.
     QPoint pos = this->cursor().pos();
     const qreal ratio = devicePixelRatioF();
-    DScreenWindowsUtil* screenWin = DScreenWindowsUtil::instance(pos);
+    DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(pos);
     screenRect = screenWin->backgroundRect();
     screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
     this->move(static_cast<int>(screenRect.x() * ratio),
@@ -154,7 +154,7 @@ void MainWindow::initAttributes()
     for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
         if (wid == winId()) continue;
 
-        DForeignWindow * window = DForeignWindow::fromWinId(wid);
+        DForeignWindow *window = DForeignWindow::fromWinId(wid);
         if (window) {
             window->deleteLater();
             windowRects << Dtk::Wm::WindowRect { window->x(), window->y(), window->width(), window->height() };
@@ -231,8 +231,8 @@ void MainWindow::initAttributes()
 void MainWindow::initResource()
 {
     m_showButtons = new ShowButtons(this);
-    connect(m_showButtons, SIGNAL(keyShowSignal(const QString&)),
-            this, SLOT(showKeyBoardButtons(const QString&)));
+    connect(m_showButtons, SIGNAL(keyShowSignal(const QString &)),
+            this, SLOT(showKeyBoardButtons(const QString &)));
     resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_big.svg"));
     resizeHandleSmallImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_small.svg"));
 
@@ -303,9 +303,9 @@ void MainWindow::updateToolBarPos()
     if (m_toolBar->width() > recordX + recordWidth) {
         toolbarPoint.setX(recordX + TOOLBAR_X_SPACING);
     }
-    if (toolbarPoint.y()>= m_backgroundRect.y() + m_backgroundRect.height()
+    if (toolbarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
             - m_toolBar->height() - 28) {
-        if (recordY > 28*2 + 10) {
+        if (recordY > 28 * 2 + 10) {
             toolbarPoint.setY(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING);
         } else {
             toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
@@ -318,14 +318,14 @@ void MainWindow::updateRecordButtonPos()
 {
     QPoint recordButtonBarPoint;
     recordButtonBarPoint = QPoint(recordX + recordWidth - m_shotButton->width(),
-                          std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
+                                  std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
 
     if (m_recordButton->width() > recordX + recordWidth) {
         recordButtonBarPoint.setX(recordX + TOOLBAR_X_SPACING);
     }
-    if (recordButtonBarPoint.y()>= m_backgroundRect.y() + m_backgroundRect.height()
+    if (recordButtonBarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
             - m_shotButton->height() - 28) {
-        if (recordY > 28*2 + 10) {
+        if (recordY > 28 * 2 + 10) {
             recordButtonBarPoint.setY(recordY - m_shotButton->height() - TOOLBAR_Y_SPACING);
         } else {
             recordButtonBarPoint.setY(recordY + TOOLBAR_Y_SPACING);
@@ -336,10 +336,8 @@ void MainWindow::updateRecordButtonPos()
 //    {
 //        m_recordButton->show();
 //    }
-    if(m_functionType == 0)
-    {
-        if (!m_recordButton->isVisible())
-        {
+    if (m_functionType == 0) {
+        if (!m_recordButton->isVisible()) {
             m_recordButton->show();
         }
     }
@@ -351,14 +349,14 @@ void MainWindow::updateShotButtonPos()
 {
     QPoint shotButtonBarPoint;
     shotButtonBarPoint = QPoint(recordX + recordWidth - m_shotButton->width(),
-                          std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
+                                std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
 
     if (m_shotButton->width() > recordX + recordWidth) {
         shotButtonBarPoint.setX(recordX + TOOLBAR_X_SPACING);
     }
-    if (shotButtonBarPoint.y()>= m_backgroundRect.y() + m_backgroundRect.height()
+    if (shotButtonBarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
             - m_shotButton->height() - 28) {
-        if (recordY > 28*2 + 10) {
+        if (recordY > 28 * 2 + 10) {
             shotButtonBarPoint.setY(recordY - m_shotButton->height() - TOOLBAR_Y_SPACING);
         } else {
             shotButtonBarPoint.setY(recordY + TOOLBAR_Y_SPACING);
@@ -369,10 +367,8 @@ void MainWindow::updateShotButtonPos()
 //    {
 //        m_shotButton->show();
 //    }
-    if(m_functionType == 1)
-    {
-        if (!m_shotButton->isVisible())
-        {
+    if (m_functionType == 1) {
+        if (!m_shotButton->isVisible()) {
             m_shotButton->show();
         }
     }
@@ -381,16 +377,14 @@ void MainWindow::updateShotButtonPos()
 
 void MainWindow::changeFunctionButton(QString type)
 {
-    if(type == "record")
-    {
+    if (type == "record") {
         m_shotButton->hide();
 //        updateRecordButtonPos();
         m_recordButton->show();
         m_functionType = 0;
     }
 
-    else if(type == "shot")
-    {
+    else if (type == "shot") {
         m_recordButton->hide();
 //        updateShotButtonPos();
         m_shotButton->show();
@@ -401,19 +395,16 @@ void MainWindow::changeFunctionButton(QString type)
 void MainWindow::showKeyBoardButtons(const QString &key)
 {
     //键盘按钮启用状态下创建按键控件
-    if(m_keyBoardStatus == 1)
-    {
+    if (m_keyBoardStatus == 1) {
         connect(m_keyBoardTimer, SIGNAL(timeout()), this, SLOT(showMultiKeyBoardButtons()));
 
 
-        if(m_keyBoardTimer->isActive())
-        {
-            qDebug()<<"timer is actived!";
+        if (m_keyBoardTimer->isActive()) {
+            qDebug() << "timer is actived!";
         }
 
-        else
-        {
-            qDebug()<<"timer start!";
+        else {
+            qDebug() << "timer start!";
             m_keyBoardTimer->start(1000);
         }
 
@@ -427,12 +418,10 @@ void MainWindow::showKeyBoardButtons(const QString &key)
 
 //        t_keyWidget->show();
 
-        if(m_multiKeyButtonsInOnSec == true)
-        {
+        if (m_multiKeyButtonsInOnSec == true) {
             m_keyButtonList.append(t_keyWidget);
 
-            if(m_keyButtonList.count() > 5)
-            {
+            if (m_keyButtonList.count() > 5) {
                 delete m_keyButtonList.first();
                 m_keyButtonList.pop_front();
             }
@@ -441,18 +430,15 @@ void MainWindow::showKeyBoardButtons(const QString &key)
             updateMultiKeyBoardPos();
         }
 
-        else
-        {
-            if(!m_keyButtonList.isEmpty())
-            {
+        else {
+            if (!m_keyButtonList.isEmpty()) {
                 qDeleteAll(m_keyButtonList);
                 m_keyButtonList.clear();
             }
 
             m_keyButtonList.append(t_keyWidget);
 
-            if(m_keyButtonList.count() > 5)
-            {
+            if (m_keyButtonList.count() > 5) {
                 delete m_keyButtonList.first();
                 m_keyButtonList.pop_front();
             }
@@ -472,20 +458,16 @@ void MainWindow::changeKeyBoardShowEvent(bool checked)
 {
     qDebug() << checked;
 
-    if(checked == false)
-    {
+    if (checked == false) {
         m_keyBoardStatus = 0;
-        if(m_keyButtonList.count() > 0)
-        {
-            for(int t_index = 0; t_index < m_keyButtonList.count(); t_index++)
-            {
+        if (m_keyButtonList.count() > 0) {
+            for (int t_index = 0; t_index < m_keyButtonList.count(); t_index++) {
                 m_keyButtonList.at(t_index)->hide();
             }
         }
     }
 
-    else if(checked == true)
-    {
+    else if (checked == true) {
         m_keyBoardStatus = 1;
     }
 }
@@ -496,7 +478,7 @@ void MainWindow::changeMicrophoneSelectEvent(bool checked)
 void MainWindow::changeSystemAudioSelectEvent(bool checked)
 {
     m_selectedSystemAudio = checked;
-    AudioUtils* audioUtils = new AudioUtils(this);
+    AudioUtils *audioUtils = new AudioUtils(this);
     checked ? audioUtils->setupSystemAudioOutput() : audioUtils->setupMicrophoneOutput();
 }
 
@@ -540,111 +522,109 @@ void MainWindow::updateMultiKeyBoardPos()
     QPoint t_keyPoint4;
     QPoint t_keyPoint5;
 
-    if(!m_keyButtonList.isEmpty())
-    {
-        switch (m_keyButtonList.count())
-        {
-            //一个按键的情况
-            case 1:
+    if (!m_keyButtonList.isEmpty()) {
+        switch (m_keyButtonList.count()) {
+        //一个按键的情况
+        case 1:
             m_keyButtonList.at(0)->hide();
-            t_keyPoint1 = QPoint(recordX + recordWidth/2 - m_keyButtonList.at(0)->width()/2,
-                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint1 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2,
+                                 std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(0)->move(t_keyPoint1.x(), t_keyPoint1.y());
             m_keyButtonList.at(0)->show();
             break;
-            //两个按键的情况
-            case 2:
+        //两个按键的情况
+        case 2:
             m_keyButtonList.at(0)->hide();
-            t_keyPoint1 = QPoint(recordX + recordWidth/2 - m_keyButtonList.at(0)->width()/2 - m_keyButtonList.at(0)->width()/1.5,
-                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint1 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() / 1.5,
+                                 std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(0)->move(t_keyPoint1.x(), t_keyPoint1.y());
             m_keyButtonList.at(0)->show();
 
             m_keyButtonList.at(1)->hide();
-            t_keyPoint2 = QPoint(recordX + recordWidth/2 - m_keyButtonList.at(1)->width()/2 + m_keyButtonList.at(1)->width()/1.5,
-                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint2 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2 + m_keyButtonList.at(1)->width() / 1.5,
+                                 std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(1)->move(t_keyPoint2.x(), t_keyPoint2.y());
             m_keyButtonList.at(1)->show();
             break;
-            //三个按键的情况
-            case 3:
+        //三个按键的情况
+        case 3:
             m_keyButtonList.at(0)->hide();
-            t_keyPoint1 = QPoint(recordX + recordWidth/2 - m_keyButtonList.at(0)->width()/2 - m_keyButtonList.at(0)->width()*1.3,
-                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint1 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() * 1.3,
+                                 std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(0)->move(t_keyPoint1.x(), t_keyPoint1.y());
             m_keyButtonList.at(0)->show();
 
             m_keyButtonList.at(1)->hide();
-            t_keyPoint2 = QPoint(recordX + recordWidth/2 - m_keyButtonList.at(1)->width()/2,
-                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint2 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2,
+                                 std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(1)->move(t_keyPoint2.x(), t_keyPoint2.y());
             m_keyButtonList.at(1)->show();
 
             m_keyButtonList.at(2)->hide();
-            t_keyPoint3 = QPoint(recordX + recordWidth/2 - m_keyButtonList.at(2)->width()/2 + m_keyButtonList.at(2)->width()*1.3,
-                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint3 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(2)->width() / 2 + m_keyButtonList.at(2)->width() * 1.3,
+                                 std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(2)->move(t_keyPoint3.x(), t_keyPoint3.y());
             m_keyButtonList.at(2)->show();
             break;
-            //四个按键的情况
-            case 4:
+        //四个按键的情况
+        case 4:
             m_keyButtonList.at(0)->hide();
-            t_keyPoint1 = QPoint(recordX + recordWidth/2 - m_keyButtonList.at(0)->width()/2 - m_keyButtonList.at(0)->width()*2,
-                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint1 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() * 2,
+                                 std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(0)->move(t_keyPoint1.x(), t_keyPoint1.y());
             m_keyButtonList.at(0)->show();
 
             m_keyButtonList.at(1)->hide();
-            t_keyPoint2 = QPoint(recordX + recordWidth/2 - m_keyButtonList.at(1)->width()/2 - m_keyButtonList.at(1)->width()/1.5,
-                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint2 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2 - m_keyButtonList.at(1)->width() / 1.5,
+                                 std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(1)->move(t_keyPoint2.x(), t_keyPoint2.y());
             m_keyButtonList.at(1)->show();
 
             m_keyButtonList.at(2)->hide();
-            t_keyPoint3 = QPoint(recordX + recordWidth/2 - m_keyButtonList.at(2)->width()/2 + m_keyButtonList.at(2)->width()/1.5,
-                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint3 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(2)->width() / 2 + m_keyButtonList.at(2)->width() / 1.5,
+                                 std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(2)->move(t_keyPoint3.x(), t_keyPoint3.y());
             m_keyButtonList.at(2)->show();
 
             m_keyButtonList.at(3)->hide();
-            t_keyPoint4 = QPoint(recordX + recordWidth/2 - m_keyButtonList.at(3)->width()/2 + m_keyButtonList.at(3)->width()*2,
-                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint4 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(3)->width() / 2 + m_keyButtonList.at(3)->width() * 2,
+                                 std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(3)->move(t_keyPoint4.x(), t_keyPoint4.y());
             m_keyButtonList.at(3)->show();
             break;
-            //五个按键的情况
-            case 5:
+        //五个按键的情况
+        case 5:
             m_keyButtonList.at(0)->hide();
-            t_keyPoint1 = QPoint(recordX + recordWidth/2 - m_keyButtonList.at(0)->width()/2 - m_keyButtonList.at(0)->width()*2.6,
-                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint1 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() * 2.6,
+                                 std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(0)->move(t_keyPoint1.x(), t_keyPoint1.y());
             m_keyButtonList.at(0)->show();
 
             m_keyButtonList.at(1)->hide();
-            t_keyPoint2 = QPoint(recordX + recordWidth/2 - m_keyButtonList.at(1)->width()/2 - m_keyButtonList.at(1)->width()*1.3,
-                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint2 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2 - m_keyButtonList.at(1)->width() * 1.3,
+                                 std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(1)->move(t_keyPoint2.x(), t_keyPoint2.y());
             m_keyButtonList.at(1)->show();
 
             m_keyButtonList.at(2)->hide();
-            t_keyPoint3 = QPoint(recordX + recordWidth/2 - m_keyButtonList.at(2)->width()/2,
-                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint3 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(2)->width() / 2,
+                                 std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(2)->move(t_keyPoint3.x(), t_keyPoint3.y());
             m_keyButtonList.at(2)->show();
 
             m_keyButtonList.at(3)->hide();
-            t_keyPoint4 = QPoint(recordX + recordWidth/2 - m_keyButtonList.at(3)->width()/2 + m_keyButtonList.at(3)->width()*1.3,
-                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint4 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(3)->width() / 2 + m_keyButtonList.at(3)->width() * 1.3,
+                                 std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(3)->move(t_keyPoint4.x(), t_keyPoint4.y());
             m_keyButtonList.at(3)->show();
 
             m_keyButtonList.at(4)->hide();
-            t_keyPoint5 = QPoint(recordX + recordWidth/2 - m_keyButtonList.at(3)->width()/2 + m_keyButtonList.at(4)->width()*2.6,
-                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint5 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(3)->width() / 2 + m_keyButtonList.at(4)->width() * 2.6,
+                                 std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(4)->move(t_keyPoint5.x(), t_keyPoint5.y());
             m_keyButtonList.at(4)->show();
             break;
-            default:
+        default:
             break;
         }
     }
@@ -659,12 +639,12 @@ void MainWindow::paintEvent(QPaintEvent *)
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    
+
     if (recordWidth > 0 && recordHeight > 0) {
 
         QRect backgroundRect = QRect(0, 0, rootWindowRect.width, rootWindowRect.height);
         QRect frameRect = QRect(recordX, recordY, recordWidth, recordHeight);
-        
+
         // Draw background.
         painter.setBrush(QBrush("#000000"));
         painter.setOpacity(0.2);
@@ -741,7 +721,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 #undef KeyPress
 #undef KeyRelease
     if (event->type() == QEvent::KeyPress) {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
         if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
             if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
@@ -789,7 +769,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
         }
     } else if (event->type() == QEvent::KeyRelease) {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
         // NOTE: must be use 'isAutoRepeat' to filter KeyRelease event send by Qt.
         if (!keyEvent->isAutoRepeat()) {
@@ -808,7 +788,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     }
 
     if (event->type() == QEvent::MouseButtonPress) {
-        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         dragStartX = mouseEvent->x();
         dragStartY = mouseEvent->y();
         if (!isFirstPressButton) {
@@ -833,10 +813,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 m_shotButton->hide();
 
                 //隐藏键盘按钮控件
-                if(m_keyButtonList.count() > 0)
-                {
-                    for(int t_index = 0; t_index < m_keyButtonList.count(); t_index++)
-                    {
+                if (m_keyButtonList.count() > 0) {
+                    for (int t_index = 0; t_index < m_keyButtonList.count(); t_index++) {
                         m_keyButtonList.at(t_index)->hide();
                     }
                 }
@@ -856,7 +834,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
             // Record select area name with window name if just click (no drag).
             if (!isFirstDrag) {
-                QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+                QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
                 for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
                     if (QRect(it->x, it->y, it->width, it->height).contains(mouseEvent->pos() + screenRect.topLeft())) {
                         selectAreaName = windowNames[windowRects.rend() - it - 1];
@@ -909,7 +887,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
         }
 
-        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
 
         if (isFirstPressButton) {
             if (!isFirstReleaseButton) {
@@ -1047,15 +1025,16 @@ void MainWindow::resizeRight(QMouseEvent *mouseEvent)
     recordWidth = std::max(std::min(dragRecordWidth + offsetX, rootWindowRect.width), RECORD_MIN_SIZE);
 }
 
-int MainWindow::getAction(QEvent *event) {
-    QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+int MainWindow::getAction(QEvent *event)
+{
+    QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
     int cursorX = mouseEvent->x();
     int cursorY = mouseEvent->y();
 
     if (cursorX > recordX - CURSOR_BOUND
-        && cursorX < recordX + CURSOR_BOUND
-        && cursorY > recordY - CURSOR_BOUND
-        && cursorY < recordY + CURSOR_BOUND) {
+            && cursorX < recordX + CURSOR_BOUND
+            && cursorY > recordY - CURSOR_BOUND
+            && cursorY < recordY + CURSOR_BOUND) {
         // Top-Left corner.
         return ACTION_RESIZE_TOP_LEFT;
     } else if (cursorX > recordX + recordWidth - CURSOR_BOUND
@@ -1100,14 +1079,14 @@ int MainWindow::getAction(QEvent *event) {
 void MainWindow::updateCursor(QEvent *event)
 {
     if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         int cursorX = mouseEvent->x();
         int cursorY = mouseEvent->y();
 
         if (cursorX > recordX - CURSOR_BOUND
-            && cursorX < recordX + CURSOR_BOUND
-            && cursorY > recordY - CURSOR_BOUND
-            && cursorY < recordY + CURSOR_BOUND) {
+                && cursorX < recordX + CURSOR_BOUND
+                && cursorY > recordY - CURSOR_BOUND
+                && cursorY < recordY + CURSOR_BOUND) {
             // Top-Left corner.
             QApplication::setOverrideCursor(Qt::SizeFDiagCursor);
         } else if (cursorX > recordX + recordWidth - CURSOR_BOUND
@@ -1263,10 +1242,8 @@ void MainWindow::hideAllWidget()
     m_shotButton->hide();
 
     //隐藏键盘按钮控件
-    if(m_keyButtonList.count() > 0)
-    {
-        for(int t_index = 0; t_index < m_keyButtonList.count(); t_index++)
-        {
+    if (m_keyButtonList.count() > 0) {
+        for (int t_index = 0; t_index < m_keyButtonList.count(); t_index++) {
             m_keyButtonList.at(t_index)->hide();
         }
     }
@@ -1350,7 +1327,8 @@ void MainWindow::initShapeWidget(QString type)
     connect(m_shapesWidget, &ShapesWidget::menuNoFocus, this, &MainWindow::activateWindow);
 }
 
-int MainWindow::getRecordInputType(bool selectedMic, bool selectedSystemAudio) {
+int MainWindow::getRecordInputType(bool selectedMic, bool selectedSystemAudio)
+{
     if (selectedMic && selectedSystemAudio) {
         return RecordProcess::RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO;
     } else if (selectedMic) {

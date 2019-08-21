@@ -85,11 +85,11 @@ void Utils::warnNoComposite()
 void Utils::blurRect(DWindowManager *windowManager, int widgetId, QRectF rect)
 {
     QVector<uint32_t> data;
-    
+
     qreal devicePixelRatio = qApp->devicePixelRatio();
     data << rect.x() * devicePixelRatio << rect.y() * devicePixelRatio << rect.width() * devicePixelRatio << rect.height() * devicePixelRatio << Constant::RECTANGLE_RADIUS << Constant::RECTANGLE_RADIUS;
     windowManager->setWindowBlur(widgetId, data);
-}    
+}
 
 void Utils::blurRects(DWindowManager *windowManager, int widgetId, QList<QRectF> rects)
 {
@@ -99,7 +99,7 @@ void Utils::blurRects(DWindowManager *windowManager, int widgetId, QList<QRectF>
         data << rect.x() * devicePixelRatio << rect.y() * devicePixelRatio << rect.width() * devicePixelRatio << rect.height() * devicePixelRatio << Constant::RECTANGLE_RADIUS << Constant::RECTANGLE_RADIUS;
     }
     windowManager->setWindowBlur(widgetId, data);
-}    
+}
 
 void Utils::clearBlur(DWindowManager *windowManager, int widgetId)
 {
@@ -120,7 +120,7 @@ void Utils::drawTooltipBackground(QPainter &painter, QRect rect, qreal opacity)
     pen.setWidth(1);
     painter.setPen(pen);
     painter.drawPath(path);
-}    
+}
 
 void Utils::drawTooltipText(QPainter &painter, QString text, QString textColor, int textSize, QRectF rect)
 {
@@ -128,22 +128,23 @@ void Utils::drawTooltipText(QPainter &painter, QString text, QString textColor, 
     painter.setOpacity(1);
     painter.setPen(QPen(QColor(textColor)));
     painter.drawText(rect, Qt::AlignCenter, text);
-}    
+}
 
 void Utils::passInputEvent(int wid)
 {
-    XRectangle* reponseArea = new XRectangle;
+    XRectangle *reponseArea = new XRectangle;
     reponseArea->x = 0;
     reponseArea->y = 0;
     reponseArea->width = 0;
     reponseArea->height = 0;
 
-    XShapeCombineRectangles(QX11Info::display(), wid, ShapeInput, 0, 0, reponseArea ,1 ,ShapeSet, YXBanded);
+    XShapeCombineRectangles(QX11Info::display(), wid, ShapeInput, 0, 0, reponseArea, 1, ShapeSet, YXBanded);
 
     delete reponseArea;
 }
 
-QString Utils::getRecordingSaveDirectory() {
+QString Utils::getRecordingSaveDirectory()
+{
     QDir musicDirectory = QDir(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
     QString subDirectory = tr("Recordings");
     musicDirectory.mkdir(subDirectory);

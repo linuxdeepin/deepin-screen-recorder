@@ -33,16 +33,16 @@
 DWIDGET_USE_NAMESPACE
 
 namespace {
-    const int TOOLBAR_HEIGHT = 47;
-    const int TOOLBAR_WIDTH = 452;
+const int TOOLBAR_HEIGHT = 47;
+const int TOOLBAR_WIDTH = 550;
 
-    const QSize TOOLBAR_WIDGET_SIZE = QSize(450, 45);
-    const int BUTTON_SPACING = 3;
-    const int BTN_RADIUS = 3;
+const QSize TOOLBAR_WIDGET_SIZE = QSize(550, 47);
+const int BUTTON_SPACING = 3;
+const int BTN_RADIUS = 3;
 }
 
 ToolBarWidget::ToolBarWidget(QWidget *parent)
-    :DBlurEffectWidget(parent),
+    : DBlurEffectWidget(parent),
       m_expanded(false)
 {
     setBlurRectXRadius(10);
@@ -68,7 +68,7 @@ ToolBarWidget::ToolBarWidget(QWidget *parent)
     m_mainTool = new MainToolWidget(this);
     m_subTool = new SubToolWidget(this);
 
-    QHBoxLayout* hLayout = new QHBoxLayout();
+    QHBoxLayout *hLayout = new QHBoxLayout();
     hLayout->setMargin(0);
     hLayout->setSpacing(2);
     hLayout->addWidget(m_mainTool, 0, Qt::AlignLeft);
@@ -100,7 +100,8 @@ ToolBarWidget::ToolBarWidget(QWidget *parent)
 //    connect(m_majToolbar, &MajToolBar::closed, this, &ToolBarWidget::closed);
 }
 
-void ToolBarWidget::paintEvent(QPaintEvent *e) {
+void ToolBarWidget::paintEvent(QPaintEvent *e)
+{
     DBlurEffectWidget::paintEvent(e);
 
     QPainter painter(this);
@@ -119,16 +120,18 @@ void ToolBarWidget::showEvent(QShowEvent *event)
     settings.endGroup();
 
     if (expand)
-        QTimer::singleShot(0, this, [=] { setExpand(expand, "saveList"); });
+        QTimer::singleShot(0, this, [ = ] { setExpand(expand, "saveList"); });
 
     DBlurEffectWidget::showEvent(event);
 }
 
-bool ToolBarWidget::isButtonChecked() {
+bool ToolBarWidget::isButtonChecked()
+{
     return m_expanded;
 }
 
-void ToolBarWidget::specifiedSavePath() {
+void ToolBarWidget::specifiedSavePath()
+{
     m_majToolbar->specificedSavePath();
 }
 
@@ -137,7 +140,8 @@ void ToolBarWidget::keyBoardCheckedSlot(bool checked)
     emit keyBoardCheckedSignal(checked);
 }
 
-void ToolBarWidget::setExpand(bool expand, QString shapeType) {
+void ToolBarWidget::setExpand(bool expand, QString shapeType)
+{
 //    m_subToolbar->switchContent(shapeType);
     m_subTool->switchContent(shapeType);
 //    emit expandChanged(expand, shapeType);
@@ -161,7 +165,7 @@ ToolBar::ToolBar(QWidget *parent)
 {
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     m_toolbarWidget = new ToolBarWidget(this);
-    QVBoxLayout* vLayout = new QVBoxLayout(this);
+    QVBoxLayout *vLayout = new QVBoxLayout(this);
     vLayout->setContentsMargins(1, 1, 1, 1);
     vLayout->addStretch();
     vLayout->addWidget(m_toolbarWidget);
@@ -206,29 +210,32 @@ ToolBar::ToolBar(QWidget *parent)
     connect(m_toolbarWidget, &ToolBarWidget::systemAudioActionCheckedSignal, this, &ToolBar::systemAudioActionCheckedToMainSlot);
 }
 
-void ToolBar::setExpand(bool expand, QString shapeType) {
+void ToolBar::setExpand(bool expand, QString shapeType)
+{
     emit buttonChecked(shapeType);
     if (expand) {
         m_expanded = true;
         setFixedSize(TOOLBAR_WIDTH,
-                              TOOLBAR_WIDGET_SIZE.height()*2+3);
+                     TOOLBAR_WIDGET_SIZE.height() * 2 + 3);
         emit heightChanged();
     }
 
     update();
 }
 
-void ToolBar::paintEvent(QPaintEvent *e) {
+void ToolBar::paintEvent(QPaintEvent *e)
+{
     QPainter painter(this);
     painter.setPen(QColor(0, 0, 0, 25));
     painter.setRenderHint(QPainter::Antialiasing);
-    QRectF rect(0, 0, this->width() -1, this->height() - 1);
+    QRectF rect(0, 0, this->width() - 1, this->height() - 1);
     painter.drawRoundedRect(rect.translated(0.5, 0.5), 3, 3, Qt::AbsoluteSize);
 
     QLabel::paintEvent(e);
 }
 
-void ToolBar::enterEvent(QEvent *e) {
+void ToolBar::enterEvent(QEvent *e)
+{
     qApp->setOverrideCursor(Qt::ArrowCursor);
     QLabel::enterEvent(e);
 }
@@ -243,7 +250,8 @@ bool ToolBar::eventFilter(QObject *obj, QEvent *event)
     return QLabel::eventFilter(obj, event);
 }
 
-void ToolBar::showAt(QPoint pos) {
+void ToolBar::showAt(QPoint pos)
+{
     if (!isVisible())
         this->show();
 
@@ -265,13 +273,16 @@ void ToolBar::keyBoardCheckedToMainSlot(bool checked)
     emit keyBoardCheckedToMain(checked);
 }
 
-void ToolBar::microphoneActionCheckedToMainSlot(bool checked){
+void ToolBar::microphoneActionCheckedToMainSlot(bool checked)
+{
     emit microphoneActionCheckedToMain(checked);
 }
-void ToolBar::systemAudioActionCheckedToMainSlot(bool checked){
+void ToolBar::systemAudioActionCheckedToMainSlot(bool checked)
+{
     emit systemAudioActionCheckedToMain(checked);
 }
-bool ToolBar::isButtonChecked() {
+bool ToolBar::isButtonChecked()
+{
     return m_expanded;
 }
 

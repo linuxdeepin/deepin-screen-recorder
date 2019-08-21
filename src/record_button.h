@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 #ifndef RECORDBUTTON_H
 #define RECORDBUTTON_H
@@ -29,27 +29,27 @@
 class RecordButton : public QPushButton
 {
     Q_OBJECT
-    
+
     static const int WIDTH;
     static const int HEIGHT;
     static const int TEXT_PADDING;
-    
+
 public:
     RecordButton(QPushButton *parent = 0);
     void setText(QString string);
-    
+
 protected:
     void paintEvent(QPaintEvent *event);
     bool eventFilter(QObject *, QEvent *event);
-    
+
 private:
     QPixmap normalImg;
     QPixmap hoverImg;
     QPixmap pressImg;
-    
+
     bool isFocus;
     bool isPress;
-    
+
     QString text;
     QSize textSize;
 };

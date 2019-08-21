@@ -56,8 +56,9 @@ ConfigSettings::ConfigSettings(QObject *parent)
     qDebug() << "Setting file:" << m_settings->fileName();
 }
 
-ConfigSettings* ConfigSettings::m_configSettings = nullptr;
-ConfigSettings* ConfigSettings::instance() {
+ConfigSettings *ConfigSettings::m_configSettings = nullptr;
+ConfigSettings *ConfigSettings::instance()
+{
     if (!m_configSettings) {
         m_configSettings = new ConfigSettings();
     }
@@ -72,7 +73,8 @@ void ConfigSettings::setTemporarySaveAction(const std::pair<bool, SaveAction> te
 }
 
 void ConfigSettings::setValue(const QString &group, const QString &key,
-                              QVariant val) {
+                              QVariant val)
+{
     m_settings->beginGroup(group);
     m_settings->setValue(key, val);
     m_settings->endGroup();
@@ -90,7 +92,8 @@ void ConfigSettings::setValue(const QString &group, const QString &key,
 }
 
 QVariant ConfigSettings::value(const QString &group, const QString &key,
-                               const QVariant &defaultValue) {
+                               const QVariant &defaultValue)
+{
     QMutexLocker locker(&m_mutex);
 
     QVariant value;
@@ -101,7 +104,8 @@ QVariant ConfigSettings::value(const QString &group, const QString &key,
     return value;
 }
 
-QStringList ConfigSettings::keys(const QString &group) {
+QStringList ConfigSettings::keys(const QString &group)
+{
     QStringList v;
     m_settings->beginGroup(group);
     v = m_settings->childKeys();
@@ -110,5 +114,6 @@ QStringList ConfigSettings::keys(const QString &group) {
     return v;
 }
 
-ConfigSettings::~ConfigSettings() {
+ConfigSettings::~ConfigSettings()
+{
 }

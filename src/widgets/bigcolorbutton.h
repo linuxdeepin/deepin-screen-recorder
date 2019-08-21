@@ -24,10 +24,11 @@
 #include <QPainter>
 #include <QPaintEvent>
 
-class BigColorButton : public QPushButton {
+class BigColorButton : public QPushButton
+{
     Q_OBJECT
 public:
-    BigColorButton(QWidget* parent = 0);
+    BigColorButton(QWidget *parent = 0);
     ~BigColorButton();
 
     void setColor(QColor color);

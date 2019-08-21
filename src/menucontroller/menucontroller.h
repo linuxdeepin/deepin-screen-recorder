@@ -22,11 +22,12 @@
 
 #include <QMenu>
 
-enum SaveAction:unsigned int;
-class MenuController : public QObject {
+enum SaveAction : unsigned int;
+class MenuController : public QObject
+{
     Q_OBJECT
 public:
-    MenuController(QObject* parent = 0);
+    MenuController(QObject *parent = 0);
     ~MenuController();
 
 signals:
@@ -39,7 +40,7 @@ public slots:
     void showMenu(QPoint pos);
 
 private:
-    QMenu* m_menu;
+    QMenu *m_menu;
     qreal m_ration;
 };
 #endif // MENUCONTROLLER_H

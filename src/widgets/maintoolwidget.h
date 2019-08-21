@@ -27,7 +27,7 @@ class MainToolWidget : public QLabel
 {
     Q_OBJECT
 public:
-    explicit MainToolWidget(QWidget* parent = nullptr);
+    explicit MainToolWidget(QWidget *parent = nullptr);
     ~MainToolWidget();
 
     void initWidget();
@@ -40,7 +40,7 @@ public slots:
 //    void switchContent(QString shapeType);
 
 private:
-    QHBoxLayout* m_baseLayout;
+    QHBoxLayout *m_baseLayout;
     bool m_isChecked;
 };
 

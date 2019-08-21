@@ -92,12 +92,12 @@ void RecordProcess::run()
 
     // Got output or error.
     process->waitForFinished(-1);
-    if (process->exitCode() !=0) {
+    if (process->exitCode() != 0) {
         qDebug() << "Error";
         foreach (auto line, (process->readAllStandardError().split('\n'))) {
             qDebug() << line;
         }
-    } else{
+    } else {
         qDebug() << "OK" << process->readAllStandardOutput() << process->readAllStandardError();
     }
 }
@@ -236,7 +236,8 @@ void RecordProcess::recordVideo()
     process->start("ffmpeg", arguments);
 }
 
-void RecordProcess::initProcess() {
+void RecordProcess::initProcess()
+{
     // Create process and handle finish signal.
     process = new QProcess();
 
@@ -281,11 +282,11 @@ void RecordProcess::startRecord()
 int RecordProcess::readSleepProcessPid()
 {
     // Read the list of open processes information.
-    PROCTAB* proc = openproc(
-        PROC_FILLMEM |          // memory status: read information from /proc/#pid/statm
-        PROC_FILLSTAT |         // cpu status: read information from /proc/#pid/stat
-        PROC_FILLUSR            // user status: resolve user ids to names via /etc/passwd
-        );
+    PROCTAB *proc = openproc(
+                        PROC_FILLMEM |          // memory status: read information from /proc/#pid/statm
+                        PROC_FILLSTAT |         // cpu status: read information from /proc/#pid/stat
+                        PROC_FILLUSR            // user status: resolve user ids to names via /etc/passwd
+                    );
     static proc_t proc_info;
     memset(&proc_info, 0, sizeof(proc_t));
 

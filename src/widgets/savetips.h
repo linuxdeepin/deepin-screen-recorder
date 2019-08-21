@@ -23,12 +23,13 @@
 #include <QLabel>
 #include <QPropertyAnimation>
 
-class SaveTips : public QLabel {
+class SaveTips : public QLabel
+{
     Q_OBJECT
     Q_PROPERTY(int tipWidth READ tipWidth WRITE setTipWidth NOTIFY tipWidthChanged)
 
 public:
-    SaveTips(QWidget* parent = 0);
+    SaveTips(QWidget *parent = 0);
     ~SaveTips();
 
 signals:
@@ -45,7 +46,7 @@ private:
     QString m_text;
     void setTipWidth(int tipsWidth);
 
-    QPropertyAnimation* m_startAni;
-    QPropertyAnimation* m_stopAni;
+    QPropertyAnimation *m_startAni;
+    QPropertyAnimation *m_stopAni;
 };
 #endif // SAVETIPS_H

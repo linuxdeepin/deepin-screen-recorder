@@ -21,10 +21,11 @@
 #define SUBTOOLWIDGET_H
 
 #include <QObject>
-#include <QLabel>
-#include <QStackedWidget>
+#include <DLabel>
+#include <DStackedWidget>
+DWIDGET_USE_NAMESPACE
 
-class SubToolWidget : public QStackedWidget
+class SubToolWidget : public DStackedWidget
 {
     Q_OBJECT
 public:

@@ -19,27 +19,28 @@
 #include "subtoolwidget.h"
 #include "toolbutton.h"
 
-#include <dslider.h>
+#include <DSlider>
 #include <QLineEdit>
 #include <QMenu>
 #include <QAction>
 #include <QButtonGroup>
 #include <QHBoxLayout>
-#include <QSlider>
 #include <QStyleFactory>
 #include <QDebug>
 
 DWIDGET_USE_NAMESPACE
 
 namespace {
-    const int TOOLBAR_HEIGHT = 43;
-    const int TOOLBAR_WIDTH = 350;
-    const int BUTTON_SPACING = 8;
-    const int SHOT_BUTTON_SPACING = 4;
-    const int COLOR_NUM = 16;
+const int TOOLBAR_HEIGHT = 43;
+const int TOOLBAR_WIDTH = 450;
+const int BUTTON_SPACING = 4;
+const int SHOT_BUTTON_SPACING = 4;
+const int COLOR_NUM = 16;
+const QSize TOOL_BUTTON_SIZE = QSize(65, 40);
+const QSize MIN_TOOL_BUTTON_SIZE = QSize(50, 40);
 }
 
-SubToolWidget::SubToolWidget(QWidget *parent) : QStackedWidget(parent)
+SubToolWidget::SubToolWidget(QWidget *parent) : DStackedWidget(parent)
 {
     initWidget();
 }
@@ -60,21 +61,21 @@ void SubToolWidget::initWidget()
 
 void SubToolWidget::initRecordLabel()
 {
-    m_recordSubTool = new QLabel(this);
-    QButtonGroup* rectBtnGroup = new QButtonGroup();
+    m_recordSubTool = new DLabel(this);
+    QButtonGroup *rectBtnGroup = new QButtonGroup();
     rectBtnGroup->setExclusive(false);
-    QList<ToolButton*> btnList;
+    QList<ToolButton *> btnList;
 
     //添加音频按钮
-    ToolButton* audioButton = new ToolButton();
+    ToolButton *audioButton = new ToolButton();
     audioButton->setObjectName("AudioButton");
     audioButton->setText(tr("Audio"));
     rectBtnGroup->addButton(audioButton);
-    audioButton->setFixedSize(50, 40);
+    audioButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(audioButton);
-    QMenu* audioMenu= new QMenu();
-    QAction* microphoneAction = new QAction(audioMenu);
-    QAction* systemAudioAction = new QAction(audioMenu);
+    QMenu *audioMenu = new QMenu();
+    QAction *microphoneAction = new QAction(audioMenu);
+    QAction *systemAudioAction = new QAction(audioMenu);
     microphoneAction->setText("microphone");
     microphoneAction->setCheckable(true);
     microphoneAction->setChecked(true);
@@ -86,46 +87,46 @@ void SubToolWidget::initRecordLabel()
     connect(microphoneAction, SIGNAL(triggered(bool)), this, SIGNAL(microphoneActionChecked(bool)));
     connect(systemAudioAction, SIGNAL(triggered(bool)), this, SIGNAL(systemAudioActionChecked(bool)));
 
-    ToolButton* keyBoardButton = new ToolButton();
+    ToolButton *keyBoardButton = new ToolButton();
     keyBoardButton->setObjectName("KeyBoardButton");
     keyBoardButton->setText(tr("Key"));
     rectBtnGroup->addButton(keyBoardButton);
-    keyBoardButton->setFixedSize(50, 40);
+    keyBoardButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(keyBoardButton);
 
     //发送键盘按键按钮状态信号
     connect(keyBoardButton, SIGNAL(clicked(bool)),
             this, SIGNAL(keyBoardButtonClicked(bool)));
 
-    ToolButton* cameraButton = new ToolButton();
+    ToolButton *cameraButton = new ToolButton();
     cameraButton->setObjectName("CameraButton");
     cameraButton->setText(tr("Camera"));
     rectBtnGroup->addButton(cameraButton);
-    cameraButton->setFixedSize(50, 40);
+    cameraButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(cameraButton);
 
-    ToolButton* mouseButton = new ToolButton();
+    ToolButton *mouseButton = new ToolButton();
     mouseButton->setObjectName("MouseButton");
     mouseButton->setText(tr("Mouse"));
     rectBtnGroup->addButton(mouseButton);
-    mouseButton->setFixedSize(50, 40);
+    mouseButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(mouseButton);
 
-    ToolButton* formatButton = new ToolButton();
+    ToolButton *formatButton = new ToolButton();
     formatButton->setObjectName("FormatButton");
     formatButton->setText(tr("Format"));
     rectBtnGroup->addButton(formatButton);
-    formatButton->setFixedSize(50, 40);
+    formatButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(formatButton);
 
-    ToolButton* fpsButton = new ToolButton();
+    ToolButton *fpsButton = new ToolButton();
     fpsButton->setObjectName("FpsButton");
     fpsButton->setText(tr("Fps"));
     rectBtnGroup->addButton(fpsButton);
-    fpsButton->setFixedSize(50, 40);
+    fpsButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(fpsButton);
 
-    QHBoxLayout* rectLayout = new QHBoxLayout();
+    QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setMargin(0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(5);
@@ -141,10 +142,9 @@ void SubToolWidget::initRecordLabel()
     addWidget(m_recordSubTool);
 
     connect(rectBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
-            [=](int status){
+    [ = ](int status) {
         QPalette pa;
-        if(keyBoardButton->isChecked())
-        {
+        if (keyBoardButton->isChecked()) {
             pa = keyBoardButton->palette();
             pa.setColor(QPalette::ButtonText, Qt::white);
             pa.setColor(QPalette::Dark, Qt::black);
@@ -152,8 +152,7 @@ void SubToolWidget::initRecordLabel()
             keyBoardButton->setPalette(pa);
         }
 
-        else
-        {
+        else {
             pa = keyBoardButton->palette();
             pa.setColor(QPalette::ButtonText, QColor("#414d68"));
             pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
@@ -161,8 +160,7 @@ void SubToolWidget::initRecordLabel()
             keyBoardButton->setPalette(pa);
         }
 
-        if(cameraButton->isChecked())
-        {
+        if (cameraButton->isChecked()) {
             pa = cameraButton->palette();
             pa.setColor(QPalette::ButtonText, Qt::white);
             pa.setColor(QPalette::Dark, Qt::black);
@@ -170,8 +168,7 @@ void SubToolWidget::initRecordLabel()
             cameraButton->setPalette(pa);
         }
 
-        else
-        {
+        else {
             pa = cameraButton->palette();
             pa.setColor(QPalette::ButtonText, QColor("#414d68"));
             pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
@@ -179,8 +176,7 @@ void SubToolWidget::initRecordLabel()
             cameraButton->setPalette(pa);
         }
 
-        if(mouseButton->isChecked())
-        {
+        if (mouseButton->isChecked()) {
             pa = mouseButton->palette();
             pa.setColor(QPalette::ButtonText, Qt::white);
             pa.setColor(QPalette::Dark, Qt::black);
@@ -188,8 +184,7 @@ void SubToolWidget::initRecordLabel()
             mouseButton->setPalette(pa);
         }
 
-        else
-        {
+        else {
             pa = mouseButton->palette();
             pa.setColor(QPalette::ButtonText, QColor("#414d68"));
             pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
@@ -201,48 +196,48 @@ void SubToolWidget::initRecordLabel()
 
 void SubToolWidget::initShotLabel()
 {
-    m_shotSubTool = new QLabel(this);
-    QButtonGroup* rectBtnGroup = new QButtonGroup();
+    m_shotSubTool = new DLabel(this);
+    QButtonGroup *rectBtnGroup = new QButtonGroup();
     rectBtnGroup->setExclusive(true);
-    QList<ToolButton*> btnList;
+    QList<ToolButton *> btnList;
 
     //添加音频按钮
-    ToolButton* rectButton = new ToolButton();
+    ToolButton *rectButton = new ToolButton();
     rectButton->setObjectName("RectButton");
     rectButton->setText(tr("Rect"));
     rectBtnGroup->addButton(rectButton);
-    rectButton->setFixedSize(50, 40);
+    rectButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(rectButton);
 
-    ToolButton* circleButton = new ToolButton();
+    ToolButton *circleButton = new ToolButton();
     circleButton->setObjectName("CircleButton");
     circleButton->setText(tr("Circ"));
     rectBtnGroup->addButton(circleButton);
-    circleButton->setFixedSize(50, 40);
+    circleButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(circleButton);
 
-    ToolButton* lineButton = new ToolButton();
+    ToolButton *lineButton = new ToolButton();
     lineButton->setObjectName("LineButton");
     lineButton->setText(tr("Line"));
     rectBtnGroup->addButton(lineButton);
-    lineButton->setFixedSize(50, 40);
+    lineButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(lineButton);
 
-    ToolButton* penButton = new ToolButton();
+    ToolButton *penButton = new ToolButton();
     penButton->setObjectName("PenButton");
     penButton->setText(tr("Pen"));
     rectBtnGroup->addButton(penButton);
-    penButton->setFixedSize(50, 40);
+    penButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(penButton);
 
-    ToolButton* textButton = new ToolButton();
+    ToolButton *textButton = new ToolButton();
     textButton->setObjectName("TextButton");
     textButton->setText(tr("text"));
     rectBtnGroup->addButton(textButton);
-    textButton->setFixedSize(50, 40);
+    textButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(textButton);
 
-    QHBoxLayout* rectLayout = new QHBoxLayout();
+    QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setMargin(0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(20);
@@ -258,10 +253,9 @@ void SubToolWidget::initShotLabel()
     addWidget(m_shotSubTool);
 
     connect(rectBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
-            [=](int status){
+    [ = ](int status) {
         QPalette pa;
-        if(rectButton->isChecked())
-        {
+        if (rectButton->isChecked()) {
             pa = rectButton->palette();
             pa.setColor(QPalette::ButtonText, Qt::white);
             pa.setColor(QPalette::Dark, Qt::black);
@@ -269,8 +263,7 @@ void SubToolWidget::initShotLabel()
             rectButton->setPalette(pa);
         }
 
-        else
-        {
+        else {
             pa = rectButton->palette();
             pa.setColor(QPalette::ButtonText, QColor("#414d68"));
             pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
@@ -278,8 +271,7 @@ void SubToolWidget::initShotLabel()
             rectButton->setPalette(pa);
         }
 
-        if(circleButton->isChecked())
-        {
+        if (circleButton->isChecked()) {
             pa = circleButton->palette();
             pa.setColor(QPalette::ButtonText, Qt::white);
             pa.setColor(QPalette::Dark, Qt::black);
@@ -287,8 +279,7 @@ void SubToolWidget::initShotLabel()
             circleButton->setPalette(pa);
         }
 
-        else
-        {
+        else {
             pa = circleButton->palette();
             pa.setColor(QPalette::ButtonText, QColor("#414d68"));
             pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
@@ -296,8 +287,7 @@ void SubToolWidget::initShotLabel()
             circleButton->setPalette(pa);
         }
 
-        if(lineButton->isChecked())
-        {
+        if (lineButton->isChecked()) {
             pa = lineButton->palette();
             pa.setColor(QPalette::ButtonText, Qt::white);
             pa.setColor(QPalette::Dark, Qt::black);
@@ -305,8 +295,7 @@ void SubToolWidget::initShotLabel()
             lineButton->setPalette(pa);
         }
 
-        else
-        {
+        else {
             pa = lineButton->palette();
             pa.setColor(QPalette::ButtonText, QColor("#414d68"));
             pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
@@ -314,8 +303,7 @@ void SubToolWidget::initShotLabel()
             lineButton->setPalette(pa);
         }
 
-        if(penButton->isChecked())
-        {
+        if (penButton->isChecked()) {
             pa = penButton->palette();
             pa.setColor(QPalette::ButtonText, Qt::white);
             pa.setColor(QPalette::Dark, Qt::black);
@@ -323,8 +311,7 @@ void SubToolWidget::initShotLabel()
             penButton->setPalette(pa);
         }
 
-        else
-        {
+        else {
             pa = penButton->palette();
             pa.setColor(QPalette::ButtonText, QColor("#414d68"));
             pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
@@ -332,8 +319,7 @@ void SubToolWidget::initShotLabel()
             penButton->setPalette(pa);
         }
 
-        if(textButton->isChecked())
-        {
+        if (textButton->isChecked()) {
             pa = textButton->palette();
             pa.setColor(QPalette::ButtonText, Qt::white);
             pa.setColor(QPalette::Dark, Qt::black);
@@ -341,8 +327,7 @@ void SubToolWidget::initShotLabel()
             textButton->setPalette(pa);
         }
 
-        else
-        {
+        else {
             pa = textButton->palette();
             pa.setColor(QPalette::ButtonText, QColor("#414d68"));
             pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
@@ -354,14 +339,12 @@ void SubToolWidget::initShotLabel()
 
 void SubToolWidget::switchContent(QString shapeType)
 {
-    if (shapeType == "record")
-    {
+    if (shapeType == "record") {
         setCurrentWidget(m_recordSubTool);
         m_currentType = shapeType;
     }
 
-    if (shapeType == "shot")
-    {
+    if (shapeType == "shot") {
         setCurrentWidget(m_shotSubTool);
         m_currentType = shapeType;
     }

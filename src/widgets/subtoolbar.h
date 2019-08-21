@@ -23,11 +23,12 @@
 #include <QStackedWidget>
 #include <QLabel>
 
-enum SaveAction:unsigned int;
-class SubToolBar : public QStackedWidget{
+enum SaveAction : unsigned int;
+class SubToolBar : public QStackedWidget
+{
     Q_OBJECT
 public:
-    SubToolBar(QWidget* parent=0);
+    SubToolBar(QWidget *parent = 0);
     ~SubToolBar();
 
     void initWidget();
@@ -59,11 +60,11 @@ private:
     int m_saveQuality;
     QString m_currentType;
 
-    QLabel* m_rectLabel;
-    QLabel* m_arrowLabel;
-    QLabel* m_lineLabel;
-    QLabel* m_textLabel;
-    QLabel* m_colorLabel;
-    QLabel* m_saveLabel;
+    QLabel *m_rectLabel;
+    QLabel *m_arrowLabel;
+    QLabel *m_lineLabel;
+    QLabel *m_textLabel;
+    QLabel *m_colorLabel;
+    QLabel *m_saveLabel;
 };
 #endif // SUBTOOLBAR_H

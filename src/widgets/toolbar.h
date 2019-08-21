@@ -34,11 +34,12 @@
 
 DWIDGET_USE_NAMESPACE
 
-enum SaveAction:unsigned int;
-class ToolBarWidget : public DBlurEffectWidget {
+enum SaveAction : unsigned int;
+class ToolBarWidget : public DBlurEffectWidget
+{
     Q_OBJECT
 public:
-    ToolBarWidget(QWidget* parent = 0);
+    ToolBarWidget(QWidget *parent = 0);
     ~ToolBarWidget();
 
 signals:
@@ -66,9 +67,9 @@ protected:
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    MajToolBar* m_majToolbar;
-    QLabel* m_hSeparatorLine;
-    SubToolBar* m_subToolbar;
+    MajToolBar *m_majToolbar;
+    QLabel *m_hSeparatorLine;
+    SubToolBar *m_subToolbar;
 
     MainToolWidget *m_mainTool;
     SubToolWidget *m_subTool;
@@ -76,10 +77,11 @@ private:
     bool  m_expanded;
 };
 
-class ToolBar : public QLabel {
+class ToolBar : public QLabel
+{
     Q_OBJECT
 public:
-    ToolBar(QWidget* parent = 0);
+    ToolBar(QWidget *parent = 0);
     ~ToolBar();
 
 signals:
@@ -110,7 +112,7 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
-    ToolBarWidget* m_toolbarWidget;
+    ToolBarWidget *m_toolbarWidget;
 
     bool m_expanded;
 };

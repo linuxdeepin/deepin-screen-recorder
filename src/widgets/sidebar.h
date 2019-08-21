@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2017 ~ 2018 Deepin Technology Co., Ltd.
+ * Copyright (C) 2019 ~ 2020 Deepin Technology Co., Ltd.
  *
- * Maintainer: Peng Hui<penghui@deepin.com>
+ * Author:     Zheng Youge<youge.zheng@deepin.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef SIDEBAR_H
+#define SIDEBAR_H
 
-#ifndef TOPTIPS_H
-#define TOPTIPS_H
+#include <DLabel>
+DWIDGET_USE_NAMESPACE
 
-#include <QLabel>
-
-class TopTips : public QLabel
+class SideBar : public DLabel
 {
     Q_OBJECT
 public:
-    TopTips(QWidget *parent = 0);
-    ~TopTips();
+    explicit SideBar(QWidget *parent = nullptr);
+    ~SideBar();
+
+signals:
 
 public slots:
-    void setContent(QString widthXHeight);
-    void updateTips(QPoint pos, QString text);
 };
-#endif // TOPTIPS_H
+
+#endif // SIDEBAR_H

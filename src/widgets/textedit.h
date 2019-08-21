@@ -25,15 +25,16 @@
 #include <QPainter>
 #include <QMouseEvent>
 
-class TextEdit : public QPlainTextEdit {
+class TextEdit : public QPlainTextEdit
+{
     Q_OBJECT
 public:
-    TextEdit(int index, QWidget* parent);
+    TextEdit(int index, QWidget *parent);
     ~TextEdit();
 
 public slots:
     void setColor(QColor c);
-     int getIndex();
+    int getIndex();
     void updateCursor();
     void setCursorVisible(bool visible);
     void keepReadOnlyStatus();
@@ -41,25 +42,25 @@ public slots:
     void updateContentSize(QString content);
 
 signals:
-     void repaintTextRect(TextEdit* edit,  QRectF newPositiRect);
-     void backToEditing();
-     void textEditSelected(int index);
+    void repaintTextRect(TextEdit *edit,  QRectF newPositiRect);
+    void backToEditing();
+    void textEditSelected(int index);
 
 protected:
-    void mousePressEvent(QMouseEvent* e);
-    void mouseMoveEvent(QMouseEvent* e);
-    void mouseReleaseEvent(QMouseEvent* e);
+    void mousePressEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
     void mouseDoubleClickEvent(QMouseEvent *e);
     void inputMethodEvent(QInputMethodEvent *e);
     void keyPressEvent(QKeyEvent *e);
 
 private:
-     int m_index;
-     QColor m_textColor;
-     QPainter* m_painter;
+    int m_index;
+    QColor m_textColor;
+    QPainter *m_painter;
 
-     QPointF m_pressPoint;
-     bool m_isPressed;
+    QPointF m_pressPoint;
+    bool m_isPressed;
 };
 
 #endif // TEXTEDIT_H

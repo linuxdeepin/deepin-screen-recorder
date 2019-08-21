@@ -28,6 +28,7 @@
 #include <QDebug>
 #include <QFont>
 #include <QHBoxLayout>
+
 DWIDGET_USE_NAMESPACE
 
 class KeyButtonWidget : public DBlurEffectWidget
@@ -45,7 +46,7 @@ public slots:
 
 private:
     //键盘内容
-    QLabel* m_word;
+    QLabel *m_word;
     QString m_keyword;
 };
 

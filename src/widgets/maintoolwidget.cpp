@@ -17,23 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "maintoolwidget.h"
-#include <dslider.h>
+#include <DSlider>
 #include "toolbutton.h"
-
 #include <QLineEdit>
 #include <QButtonGroup>
 #include <QHBoxLayout>
-#include <QSlider>
+//#include <QSlider>
 #include <QStyleFactory>
 #include <QDebug>
 
 DWIDGET_USE_NAMESPACE
 
 namespace {
-    const int TOOLBAR_HEIGHT = 43;
-    const int TOOLBAR_WIDTH = 110;
-    const int BUTTON_SPACING = 8;
-    const int COLOR_NUM = 16;
+const int TOOLBAR_HEIGHT = 43;
+const int TOOLBAR_WIDTH = 140;
+const int BUTTON_SPACING = 4;
+const int COLOR_NUM = 16;
+const QSize TOOL_BUTTON_SIZE = QSize(65, 40);
+const QSize MIN_TOOL_BUTTON_SIZE = QSize(50, 40);
 }
 
 
@@ -57,22 +58,22 @@ void MainToolWidget::initWidget()
 
 void MainToolWidget::initMainLabel()
 {
-    QList<ToolButton*> toolBtnList;
-    QButtonGroup* buttonGroup = new QButtonGroup(this);
+    QList<ToolButton *> toolBtnList;
+    QButtonGroup *buttonGroup = new QButtonGroup(this);
     buttonGroup->setExclusive(true);
     QPalette pa;
 
-    ToolButton* recordBtn = new ToolButton();
+    ToolButton *recordBtn = new ToolButton();
     recordBtn->setCheckable(true);
     recordBtn->setText(tr("Record"));
     recordBtn->setObjectName("RecordBtn");
-    recordBtn->setFixedSize(50, 40);
+    recordBtn->setFixedSize(TOOL_BUTTON_SIZE);
     toolBtnList.append(recordBtn);
 
-    ToolButton* shotBtn = new ToolButton();
+    ToolButton *shotBtn = new ToolButton();
     shotBtn->setText(tr("Shot"));
     shotBtn->setObjectName("ShotBtn");
-    shotBtn->setFixedSize(50, 40);
+    shotBtn->setFixedSize(TOOL_BUTTON_SIZE);
     toolBtnList.append(shotBtn);
 
     m_baseLayout = new QHBoxLayout();
@@ -91,53 +92,49 @@ void MainToolWidget::initMainLabel()
     qDebug() << recordBtn->palette() << recordBtn->palette().light().color().name(QColor::HexArgb);
     qDebug() << recordBtn->palette() << recordBtn->palette().buttonText().color().name(QColor::HexArgb);
 
-      connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
-              [=](int status){
+    connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
+    [ = ](int status) {
 
-          QPalette pa;
-          if(recordBtn->isChecked())
-          {
-              pa = recordBtn->palette();
-              pa.setColor(QPalette::ButtonText, Qt::white);
-              pa.setColor(QPalette::Dark, Qt::black);
-              pa.setColor(QPalette::Light, Qt::black);
-              recordBtn->setPalette(pa);
+        QPalette pa;
+        if (recordBtn->isChecked()) {
+            pa = recordBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            recordBtn->setPalette(pa);
 
-              m_isChecked = true;
-              recordBtn->update();
-              emit buttonChecked(m_isChecked, "record");
-          }
+            m_isChecked = true;
+            recordBtn->update();
+            emit buttonChecked(m_isChecked, "record");
+        }
 
-          else
-          {
-              pa = recordBtn->palette();
-              pa.setColor(QPalette::ButtonText, QColor("#414d68"));
-              pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
-              pa.setColor(QPalette::Light, QColor("#e6e6e6"));
-              recordBtn->setPalette(pa);
-          }
+        else {
+            pa = recordBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            recordBtn->setPalette(pa);
+        }
 
-          if(shotBtn->isChecked())
-          {
-              pa = shotBtn->palette();
-              pa.setColor(QPalette::ButtonText, Qt::white);
-              pa.setColor(QPalette::Dark, Qt::black);
-              pa.setColor(QPalette::Light, Qt::black);
-              shotBtn->setPalette(pa);
+        if (shotBtn->isChecked()) {
+            pa = shotBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            shotBtn->setPalette(pa);
 
-              m_isChecked = true;
-              shotBtn->update();
-              emit buttonChecked(m_isChecked, "shot");
-          }
+            m_isChecked = true;
+            shotBtn->update();
+            emit buttonChecked(m_isChecked, "shot");
+        }
 
-          else
-          {
-              pa = shotBtn->palette();
-              pa.setColor(QPalette::ButtonText, QColor("#414d68"));
-              pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
-              pa.setColor(QPalette::Light, QColor("#e6e6e6"));
-              shotBtn->setPalette(pa);
-          }
-      });
-      recordBtn->click();
+        else {
+            pa = shotBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            shotBtn->setPalette(pa);
+        }
+    });
+    recordBtn->click();
 }

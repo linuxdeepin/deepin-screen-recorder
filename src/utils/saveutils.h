@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-enum SaveAction:unsigned int {
+enum SaveAction : unsigned int {
     SaveToDesktop,
     AutoSave,
     SaveToSpecificDir,

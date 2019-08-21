@@ -29,7 +29,7 @@ class MajToolBar : public QLabel
 {
     Q_OBJECT
 public:
-    MajToolBar(QWidget* parent = 0);
+    MajToolBar(QWidget *parent = 0);
     ~MajToolBar();
 
 signals:
@@ -48,7 +48,7 @@ public slots:
     bool isButtonChecked();
 
 private:
-    QHBoxLayout* m_baseLayout;
+    QHBoxLayout *m_baseLayout;
 
     bool m_isChecked;
     bool m_listBtnChecked;

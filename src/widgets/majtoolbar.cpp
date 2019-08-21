@@ -31,12 +31,12 @@
 #include <QCursor>
 
 namespace {
-    const int TOOLBAR_HEIGHT = 28;
-    const int TOOLBAR_WIDTH = 276;
-    const int BTN_SPACING = 1;
-    const int TOOLBUTTON_WIDTH = 22;
-    const QSize SAVE_BTN = QSize(30, 26);
-    const QSize LIST_BTN = QSize(12, 26);
+const int TOOLBAR_HEIGHT = 28;
+const int TOOLBAR_WIDTH = 276;
+const int BTN_SPACING = 1;
+const int TOOLBUTTON_WIDTH = 22;
+const QSize SAVE_BTN = QSize(30, 26);
+const QSize LIST_BTN = QSize(12, 26);
 }
 
 MajToolBar::MajToolBar(QWidget *parent)
@@ -57,48 +57,48 @@ void MajToolBar::initWidgets()
     setMouseTracking(true);
     setAcceptDrops(true);
 
-    SaveTips* saveTips = new SaveTips();
-    QList<ToolButton*> toolBtnList;
-    QButtonGroup* buttonGroup = new QButtonGroup(this);
+    SaveTips *saveTips = new SaveTips();
+    QList<ToolButton *> toolBtnList;
+    QButtonGroup *buttonGroup = new QButtonGroup(this);
     buttonGroup->setExclusive(true);
-    ToolButton* rectBtn = new ToolButton();
+    ToolButton *rectBtn = new ToolButton();
     rectBtn->setObjectName("RectBtn");
     toolBtnList.append(rectBtn);
-    ToolButton* ovalBtn = new ToolButton();
+    ToolButton *ovalBtn = new ToolButton();
     ovalBtn->setObjectName("OvalBtn");
     toolBtnList.append(ovalBtn);
-    ToolButton* arrowBtn = new ToolButton();
+    ToolButton *arrowBtn = new ToolButton();
     arrowBtn->setObjectName("ArrowBtn");
     toolBtnList.append(arrowBtn);
-    ToolButton* sLineBtn = new ToolButton();
+    ToolButton *sLineBtn = new ToolButton();
     sLineBtn->setObjectName("StraightLineBtn");
     toolBtnList.append(sLineBtn);
-    ToolButton* lineBtn = new ToolButton();
+    ToolButton *lineBtn = new ToolButton();
     lineBtn->setObjectName("PenBtn");
     toolBtnList.append(lineBtn);
-    ToolButton* textBtn = new ToolButton();
+    ToolButton *textBtn = new ToolButton();
     textBtn->setObjectName("TextBtn");
     toolBtnList.append(textBtn);
 
 
-    BigColorButton* colorBtn = new BigColorButton();
+    BigColorButton *colorBtn = new BigColorButton();
     colorBtn->setObjectName("ColorBtn");
 //    ToolButton* shareBtn = new ToolButton();
 //    shareBtn->setObjectName("ShareBtn");
-    ToolButton* saveBtn = new ToolButton(this);
+    ToolButton *saveBtn = new ToolButton(this);
     saveBtn->setObjectName("SaveBtn");
     saveBtn->setFixedSize(SAVE_BTN);
-    ToolButton* listBtn = new ToolButton(this);
+    ToolButton *listBtn = new ToolButton(this);
     listBtn->setObjectName("ListBtn");
     listBtn->setFixedSize(LIST_BTN);
 
-    ToolButton* okBtn = new ToolButton(this);
+    ToolButton *okBtn = new ToolButton(this);
     okBtn->setObjectName("OkBtn");
 
-    ToolButton* closeBtn = new ToolButton();
+    ToolButton *closeBtn = new ToolButton();
     closeBtn->setObjectName("CloseBtn");
 
-    connect(this, &MajToolBar::shapePressed, this, [=](QString shape) {
+    connect(this, &MajToolBar::shapePressed, this, [ = ](QString shape) {
         if (shape == "rectangle") {
             qDebug() << "rect clicked!";
             rectBtn->click();
@@ -115,7 +115,7 @@ void MajToolBar::initWidgets()
         } else if (shape == "text") {
             textBtn->click();
         } else if (shape == "color") {
-           colorBtn->click();
+            colorBtn->click();
         } else if (shape == "close") {
             closeBtn->click();
         }
@@ -129,7 +129,7 @@ void MajToolBar::initWidgets()
     for (int k = 0; k < toolBtnList.length(); k++) {
         m_baseLayout->addWidget(toolBtnList[k]);
         if (k != 2) {
-        m_baseLayout->addSpacing(BTN_SPACING);
+            m_baseLayout->addSpacing(BTN_SPACING);
         }
         buttonGroup->addButton(toolBtnList[k]);
     }
@@ -153,21 +153,21 @@ void MajToolBar::initWidgets()
 
     okBtn->hide();
 
-    connect(saveTips, &SaveTips::tipWidthChanged, this,  [=](int value){
+    connect(saveTips, &SaveTips::tipWidthChanged, this,  [ = ](int value) {
         setFixedWidth(TOOLBAR_WIDTH + value);
         m_baseLayout->update();
         setLayout(m_baseLayout);
         this->updateGeometry();
     });
-    connect(this, &MajToolBar::showSaveTooltip, this, [=](QString tips){
+    connect(this, &MajToolBar::showSaveTooltip, this, [ = ](QString tips) {
         saveTips->setSaveText(tips);
         saveTips->startAnimation();
     });
-    connect(this, &MajToolBar::hideSaveTooltip, this, [=]{
+    connect(this, &MajToolBar::hideSaveTooltip, this, [ = ] {
         saveTips->endAnimation();
     });
 
-    connect(rectBtn, &ToolButton::clicked, this, [=](){
+    connect(rectBtn, &ToolButton::clicked, this, [ = ]() {
         if (m_currentShape != "rectangle") {
             m_currentShape = "rectangle";
             m_isChecked = true;
@@ -181,7 +181,7 @@ void MajToolBar::initWidgets()
         rectBtn->update();
         emit buttonChecked(m_isChecked, "rectangle");
     });
-    connect(ovalBtn, &ToolButton::clicked, this, [=](){
+    connect(ovalBtn, &ToolButton::clicked, this, [ = ]() {
         if (m_currentShape != "oval") {
             m_currentShape = "oval";
             m_isChecked = true;
@@ -194,7 +194,7 @@ void MajToolBar::initWidgets()
 
         emit buttonChecked(m_isChecked, "oval");
     });
-    connect(arrowBtn, &ToolButton::clicked, this, [=](){
+    connect(arrowBtn, &ToolButton::clicked, this, [ = ]() {
         if (m_currentShape != "arrow") {
             m_currentShape = "arrow";
             m_isChecked = true;
@@ -207,7 +207,7 @@ void MajToolBar::initWidgets()
 
         emit buttonChecked(m_isChecked, "arrow");
     });
-    connect(sLineBtn, &ToolButton::clicked, this, [=](){
+    connect(sLineBtn, &ToolButton::clicked, this, [ = ]() {
         if (m_currentShape != "arrow") {
             m_currentShape = "arrow";
             m_isChecked = true;
@@ -220,7 +220,7 @@ void MajToolBar::initWidgets()
 
         emit buttonChecked(m_isChecked, "arrow");
     });
-    connect(ConfigSettings::instance(), &ConfigSettings::straightLineConfigChanged, this, [=](bool isStraightLine){
+    connect(ConfigSettings::instance(), &ConfigSettings::straightLineConfigChanged, this, [ = ](bool isStraightLine) {
         if (isStraightLine) {
             arrowBtn->hide();
             sLineBtn->show();
@@ -235,7 +235,7 @@ void MajToolBar::initWidgets()
             }
         }
     });
-    connect(lineBtn, &ToolButton::clicked, this, [=](){
+    connect(lineBtn, &ToolButton::clicked, this, [ = ]() {
         if (m_currentShape != "line") {
             m_currentShape = "line";
             m_isChecked = true;
@@ -248,7 +248,7 @@ void MajToolBar::initWidgets()
 
         emit buttonChecked(m_isChecked, "line");
     });
-    connect(textBtn, &ToolButton::clicked, this, [=](){
+    connect(textBtn, &ToolButton::clicked, this, [ = ]() {
         if (m_currentShape != "text") {
             m_currentShape = "text";
             m_isChecked = true;
@@ -261,37 +261,40 @@ void MajToolBar::initWidgets()
 
         emit buttonChecked(m_isChecked, "text");
     });
-    connect(colorBtn, &BigColorButton::clicked, this, [=]{
+    connect(colorBtn, &BigColorButton::clicked, this, [ = ] {
         colorBtn->setChecked(true);
         emit buttonChecked(true, "color");
     });
 
-    connect(saveBtn,  &ToolButton::clicked, this, [=](){
+    connect(saveBtn,  &ToolButton::clicked, this, [ = ]() {
         emit saveImage();
     });
-    connect(listBtn, &ToolButton::clicked, this, [=] {
+    connect(listBtn, &ToolButton::clicked, this, [ = ] {
         bool expand = listBtn->isChecked();
-        if (!m_listBtnChecked) {
+        if (!m_listBtnChecked)
+        {
             m_listBtnChecked = true;
         }
-        if (m_listBtnChecked) {
+        if (m_listBtnChecked)
+        {
             listBtn->setChecked(true);
         }
         emit buttonChecked(expand, "saveList");
     });
 
-    connect(this, &MajToolBar::specificedSavePath, this, [=]{
+    connect(this, &MajToolBar::specificedSavePath, this, [ = ] {
         okBtn->show();
         saveBtn->hide();
         listBtn->hide();
         this->updateGeometry();
     });
-    connect(okBtn, &ToolButton::clicked, this, [=]{
+    connect(okBtn, &ToolButton::clicked, this, [ = ] {
         emit this->saveSpecificedPath();
     });
     connect(closeBtn, &ToolButton::clicked, this, &MajToolBar::closed);
 }
 
-bool MajToolBar::isButtonChecked() {
+bool MajToolBar::isButtonChecked()
+{
     return m_isChecked;
 }

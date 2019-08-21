@@ -21,7 +21,8 @@
 
 #include <QDebug>
 
-Toolshape::Toolshape() {
+Toolshape::Toolshape()
+{
     mainPoints.append(QPointF(0, 0));
     mainPoints.append(QPointF(0, 0));
     mainPoints.append(QPointF(0, 0));
@@ -29,20 +30,23 @@ Toolshape::Toolshape() {
     portion.clear();
 }
 
-Toolshape::~Toolshape() {
+Toolshape::~Toolshape()
+{
 }
 
-void Toolshape::registerMetaType() {
+void Toolshape::registerMetaType()
+{
     qRegisterMetaType<Toolshape>();
 }
 
-QDebug &operator<<(QDebug &argument, const Toolshape &obj) {
+QDebug &operator<<(QDebug &argument, const Toolshape &obj)
+{
     argument.nospace()
             << obj.type << ","
             << "[" << obj.mainPoints << "]" << ","
-            << obj.index<<","
+            << obj.index << ","
             << obj.lineWidth << ","
-            << obj.colorIndex <<","
+            << obj.colorIndex << ","
             << obj.isBlur << ","
             << obj.isMosaic << ","
             << obj.isStraight << ","
@@ -52,7 +56,8 @@ QDebug &operator<<(QDebug &argument, const Toolshape &obj) {
     return argument.space();
 }
 
-QDataStream &operator>>(QDataStream &in, Toolshape &obj) {
+QDataStream &operator>>(QDataStream &in, Toolshape &obj)
+{
     in >> obj.points;
     in >> obj.fontSize;
     in >> obj.isShiftPressed;
@@ -68,7 +73,8 @@ QDataStream &operator>>(QDataStream &in, Toolshape &obj) {
     return in;
 }
 
-Toolshape Toolshape::operator=(Toolshape obj) {
+Toolshape Toolshape::operator=(Toolshape obj)
+{
     type = obj.type;
     mainPoints = obj.mainPoints;
     index = obj.index;
@@ -84,7 +90,8 @@ Toolshape Toolshape::operator=(Toolshape obj) {
     return (*this);
 }
 
-bool Toolshape::operator==(const Toolshape &other) const {
+bool Toolshape::operator==(const Toolshape &other) const
+{
     if (this->mainPoints == other.mainPoints && this->index == other.index
             && this->colorIndex == other.colorIndex && this->fontSize == other.fontSize
             && this->isBlur == other.isBlur && this->isMosaic == other.isMosaic

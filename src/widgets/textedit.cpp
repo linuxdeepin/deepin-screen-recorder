@@ -41,7 +41,7 @@ TextEdit::TextEdit(int index, QWidget *parent)
     setContextMenuPolicy(Qt::NoContextMenu);
 
     int defaultColorIndex = ConfigSettings::instance()->value(
-                                               "text", "color_index").toInt();
+                                "text", "color_index").toInt();
     QColor defaultColor = colorIndexOf(defaultColorIndex);
     setColor(defaultColor);
     QFont textFont;
@@ -54,7 +54,7 @@ TextEdit::TextEdit(int index, QWidget *parent)
     textBlockFormat.setAlignment(Qt::AlignLeft);
     cursor.mergeBlockFormat(textBlockFormat);
 
-     QFontMetricsF m_fontMetric = QFontMetricsF(this->document()->defaultFont());
+    QFontMetricsF m_fontMetric = QFontMetricsF(this->document()->defaultFont());
     QSizeF originSize = QSizeF(m_fontMetric.boundingRect(
                                    "d").width()  + TEXT_MARGIN,  m_fontMetric.boundingRect(
                                    "d").height() + TEXT_MARGIN);
@@ -62,7 +62,7 @@ TextEdit::TextEdit(int index, QWidget *parent)
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    connect(this->document(), &QTextDocument::contentsChange, this,  [=]{
+    connect(this->document(), &QTextDocument::contentsChange, this,  [ = ] {
         updateContentSize(this->toPlainText());
     });
 }
@@ -76,7 +76,7 @@ void TextEdit::setColor(QColor c)
 {
     m_textColor = c;
     setStyleSheet(QString("TextEdit {background-color:  transparent;"
-                                            " color: %1; border: none;}").arg(m_textColor.name()));
+                          " color: %1; border: none;}").arg(m_textColor.name()));
     this->updateGeometry();
 }
 
@@ -105,7 +105,7 @@ void TextEdit::updateContentSize(QString content)
     this->setMinimumSize(docSize.width() + TEXT_MARGIN, docSize.height() + TEXT_MARGIN);
     this->resize(docSize.width() + TEXT_MARGIN, docSize.height() + TEXT_MARGIN);
     emit  repaintTextRect(this,  QRectF(this->x(), this->y(),
-                                            docSize.width() + TEXT_MARGIN, docSize.height() + TEXT_MARGIN));
+                                        docSize.width() + TEXT_MARGIN, docSize.height() + TEXT_MARGIN));
 }
 
 void TextEdit::updateCursor()
@@ -157,7 +157,7 @@ void TextEdit::mouseMoveEvent(QMouseEvent *e)
                    this->y() + movePos.y() - m_pressPoint.y());
 
         emit  repaintTextRect(this,  QRectF(qreal(this->x()), qreal(this->y()),
-                                                                        this->width(),  this->height()));
+                                            this->width(),  this->height()));
         m_pressPoint = movePos;
     }
 

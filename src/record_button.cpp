@@ -34,7 +34,7 @@ DWIDGET_USE_NAMESPACE
 const int RecordButton::WIDTH = 128;
 const int RecordButton::HEIGHT = 86;
 const int RecordButton::TEXT_PADDING = 0;
-    
+
 RecordButton::RecordButton(QPushButton *parent) : QPushButton(parent)
 {
     installEventFilter(this);  // add event filter
@@ -52,7 +52,7 @@ void RecordButton::setText(QString string)
 {
     text = string;
     textSize = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, string);
-    
+
     setFixedSize(std::max(textSize.width() + Constant::RECTANGLE_PADDING * 2, WIDTH), std::max(textSize.height() + Constant::RECTANGLE_PADDING * 2, HEIGHT));
 }
 
@@ -69,7 +69,7 @@ void RecordButton::paintEvent(QPaintEvent *)
             status = "HOVER";
         }
     }
-    
+
     // Draw background.
     qreal backgroundOpacity = 1.0;
     if (status == "NORMAL") {
@@ -81,7 +81,7 @@ void RecordButton::paintEvent(QPaintEvent *)
     }
 
     Utils::drawTooltipBackground(painter, rect(), backgroundOpacity);
-    
+
     // Draw icon.
     qreal devicePixelRatio = qApp->devicePixelRatio();
     painter.setOpacity(1);
@@ -94,7 +94,7 @@ void RecordButton::paintEvent(QPaintEvent *)
     } else if (status == "HOVER") {
         painter.drawPixmap(QPoint(iconX, iconY), hoverImg);
     }
-    
+
     // Draw text.
     int textX = rect().x();
     int textY = iconY + normalImg.height() / devicePixelRatio + TEXT_PADDING;

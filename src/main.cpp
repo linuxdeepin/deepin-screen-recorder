@@ -29,6 +29,7 @@
 #include "main_window.h"
 #include "utils.h"
 #include "widgets/toolbutton.h"
+#include <QDateTime>
 
 DWIDGET_USE_NAMESPACE
 
@@ -37,7 +38,7 @@ int main(int argc, char *argv[])
     // Construct a QGuiApplication before accessing a platform function.
     DApplication::loadDXcbPlugin();
     DApplication app(argc, argv);
-    
+
     QDBusConnection dbus = QDBusConnection::sessionBus();
     if (dbus.registerService("com.deepin.ScreenRecorder")) {
         // Poup up warning dialog if window manager not support composite.
@@ -55,19 +56,24 @@ int main(int argc, char *argv[])
             // Load translator.
             app.loadTranslator();
             app.setStyle("chameleon");
-            //version time
-            app.setApplicationVersion(DApplication::buildVersion("0820"));
+
+            static const QDate buildDate = QLocale( QLocale::English ).
+                                           toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
+            QString t_date = buildDate.toString("MMdd");
+
+            // Version Time
+            app.setApplicationVersion(DApplication::buildVersion(t_date));
 
             // Show window.
             MainWindow window;
 
             window.showFullScreen();
-//            window.show();
+            // window.show();
             window.initResource();
 
             // Register debus service.
             dbus.registerObject("/com/deepin/ScreenRecorder", &window, QDBusConnection::ExportScriptableSlots);
-            
+
             return app.exec();
         }
     } else {

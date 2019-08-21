@@ -27,34 +27,34 @@
 #include <QWidget>
 #include <QTimer>
 
-class CountdownTooltip : public QWidget 
+class CountdownTooltip : public QWidget
 {
     Q_OBJECT
-    
+
     static const int NUMBER_PADDING_Y;
-    
+
 public:
     CountdownTooltip(QWidget *parent = 0);
     void start();
-                         
+
 signals:
     void finished();
 
 public slots:
     void update();
-    
+
 protected:
     void paintEvent(QPaintEvent *event);
-    
+
 private:
     QPixmap countdown1Img;
     QPixmap countdown2Img;
     QPixmap countdown3Img;
-    
+
     int showCountdownCounter;
-    
-    QTimer* showCountdownTimer;
-    
+
+    QTimer *showCountdownTimer;
+
     QString text;
 };
 

@@ -23,7 +23,6 @@
 #include <QObject>
 #include <QMap>
 #include <QVector>
-//#include "textbutton.h"
 
 class ShowButtons : public QWidget
 {

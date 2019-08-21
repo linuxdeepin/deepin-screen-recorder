@@ -171,19 +171,16 @@ void ShowButtons::showContentButtons(unsigned char keyCode)
     QString t_keyCode = "";
     t_keyCode = getKeyCodeFromEvent(keyCode);
 
-    if(t_keyCode != "")
-    {
-       if(m_keyCodeVec.contains(t_keyCode))
-       {
-           return;
-       }
+    if (t_keyCode != "") {
+        if (m_keyCodeVec.contains(t_keyCode)) {
+            return;
+        }
 
-       else
-       {
-           m_keyCodeVec.append(t_keyCode);
-           qDebug()<<t_keyCode << " key press";
-           emit keyShowSignal(t_keyCode);
-       }
+        else {
+            m_keyCodeVec.append(t_keyCode);
+            qDebug() << t_keyCode << " key press";
+            emit keyShowSignal(t_keyCode);
+        }
     }
 }
 
@@ -192,541 +189,434 @@ void ShowButtons::releaseContentButtons(unsigned char keyCode)
     QString t_keyCode = "";
     t_keyCode = getKeyCodeFromEvent(keyCode);
 
-    if(t_keyCode != "")
-    {
-       if(m_keyCodeVec.contains(t_keyCode))
-       {
-           m_keyCodeVec.removeOne(t_keyCode);
-           return;
-       }
+    if (t_keyCode != "") {
+        if (m_keyCodeVec.contains(t_keyCode)) {
+            m_keyCodeVec.removeOne(t_keyCode);
+            return;
+        }
     }
 }
 
 QString ShowButtons::getKeyCodeFromEvent(unsigned char keyCode)
 {
     QString t_keyCode = "";
-    if (keyCode == KEY_F1)
-    {
+    if (keyCode == KEY_F1) {
         t_keyCode = "F1";
     }
 
-    else if (keyCode == KEY_F2)
-    {
+    else if (keyCode == KEY_F2) {
         t_keyCode = "F2";
     }
 
-    else if (keyCode == KEY_F3)
-    {
+    else if (keyCode == KEY_F3) {
         t_keyCode = "F3";
     }
 
-    else if (keyCode == KEY_F4)
-    {
+    else if (keyCode == KEY_F4) {
         t_keyCode = "F4";
     }
 
-    else if (keyCode == KEY_F5)
-    {
+    else if (keyCode == KEY_F5) {
         t_keyCode = "F5";
     }
 
-    else if (keyCode == KEY_F6)
-    {
+    else if (keyCode == KEY_F6) {
         t_keyCode = "F6";
     }
 
-    else if (keyCode == KEY_F7)
-    {
+    else if (keyCode == KEY_F7) {
         t_keyCode = "F7";
     }
 
-    else if (keyCode == KEY_F8)
-    {
+    else if (keyCode == KEY_F8) {
         t_keyCode = "F8";
     }
 
-    else if (keyCode == KEY_F9)
-    {
+    else if (keyCode == KEY_F9) {
         t_keyCode = "F9";
     }
 
-    else if (keyCode == KEY_F10)
-    {
+    else if (keyCode == KEY_F10) {
         t_keyCode = "F10";
     }
 
-    else if (keyCode == KEY_F11)
-    {
+    else if (keyCode == KEY_F11) {
         t_keyCode = "F11";
     }
 
-    else if (keyCode == KEY_F12)
-    {
+    else if (keyCode == KEY_F12) {
         t_keyCode = "F12";
     }
 
-    else if (keyCode == KEY_1)
-    {
+    else if (keyCode == KEY_1) {
         t_keyCode = "1";
     }
 
-    else if (keyCode == KEY_2)
-    {
+    else if (keyCode == KEY_2) {
         t_keyCode = "2";
     }
 
-    else if (keyCode == KEY_3)
-    {
+    else if (keyCode == KEY_3) {
         t_keyCode = "3";
     }
 
-    else if (keyCode == KEY_4)
-    {
+    else if (keyCode == KEY_4) {
         t_keyCode = "4";
     }
 
-    else if (keyCode == KEY_5)
-    {
+    else if (keyCode == KEY_5) {
         t_keyCode = "5";
     }
 
-    else if (keyCode == KEY_6)
-    {
+    else if (keyCode == KEY_6) {
         t_keyCode = "6";
     }
 
-    else if (keyCode == KEY_7)
-    {
+    else if (keyCode == KEY_7) {
         t_keyCode = "7";
     }
 
-    else if (keyCode == KEY_8)
-    {
+    else if (keyCode == KEY_8) {
         t_keyCode = "8";
     }
 
-    else if (keyCode == KEY_9)
-    {
+    else if (keyCode == KEY_9) {
         t_keyCode = "9";
     }
 
-    else if (keyCode == KEY_0)
-    {
+    else if (keyCode == KEY_0) {
         t_keyCode = "0";
     }
 
-    if (keyCode == KEY_MINUS)
-    {
+    if (keyCode == KEY_MINUS) {
         t_keyCode = "-";
     }
 
-    else if (keyCode == KEY_PLUS)
-    {
+    else if (keyCode == KEY_PLUS) {
         t_keyCode = "+";
     }
 
-    else if (keyCode == KEY_EQUAL)
-    {
+    else if (keyCode == KEY_EQUAL) {
         t_keyCode = "=";
     }
 
-    else if (keyCode == KEY_A)
-    {
+    else if (keyCode == KEY_A) {
         t_keyCode = "A";
     }
 
-    else if (keyCode == KEY_B)
-    {
+    else if (keyCode == KEY_B) {
         t_keyCode = "B";
     }
 
-    else if (keyCode == KEY_C)
-    {
+    else if (keyCode == KEY_C) {
         t_keyCode = "C";
     }
 
-    else if (keyCode == KEY_D)
-    {
+    else if (keyCode == KEY_D) {
         t_keyCode = "D";
     }
 
-    else if (keyCode == KEY_E)
-    {
+    else if (keyCode == KEY_E) {
         t_keyCode = "E";
     }
 
-    else if (keyCode == KEY_F)
-    {
+    else if (keyCode == KEY_F) {
         t_keyCode = "F";
     }
 
-    else if (keyCode == KEY_G)
-    {
+    else if (keyCode == KEY_G) {
         t_keyCode = "G";
     }
 
-    else if (keyCode == KEY_H)
-    {
+    else if (keyCode == KEY_H) {
         t_keyCode = "H";
     }
 
-    else if (keyCode == KEY_I)
-    {
+    else if (keyCode == KEY_I) {
         t_keyCode = "I";
     }
 
-    else if (keyCode == KEY_J)
-    {
+    else if (keyCode == KEY_J) {
         t_keyCode = "J";
     }
 
-    else if (keyCode == KEY_K)
-    {
+    else if (keyCode == KEY_K) {
         t_keyCode = "K";
     }
 
-    else if (keyCode == KEY_L)
-    {
+    else if (keyCode == KEY_L) {
         t_keyCode = "L";
     }
 
-    else if (keyCode == KEY_M)
-    {
+    else if (keyCode == KEY_M) {
         t_keyCode = "M";
     }
 
-    else if (keyCode == KEY_N)
-    {
+    else if (keyCode == KEY_N) {
         t_keyCode = "N";
     }
 
-    else if (keyCode == KEY_O)
-    {
+    else if (keyCode == KEY_O) {
         t_keyCode = "O";
     }
 
-    else if (keyCode == KEY_P)
-    {
+    else if (keyCode == KEY_P) {
         t_keyCode = "P";
     }
 
-    else if (keyCode == KEY_Q)
-    {
+    else if (keyCode == KEY_Q) {
         t_keyCode = "Q";
     }
 
-    else if (keyCode == KEY_R)
-    {
+    else if (keyCode == KEY_R) {
         t_keyCode = "R";
     }
 
-    else if (keyCode == KEY_S)
-    {
+    else if (keyCode == KEY_S) {
         t_keyCode = "S";
     }
 
-    else if (keyCode == KEY_T)
-    {
+    else if (keyCode == KEY_T) {
         t_keyCode = "T";
     }
 
-    else if (keyCode == KEY_U)
-    {
+    else if (keyCode == KEY_U) {
         t_keyCode = "U";
     }
 
-    else if (keyCode == KEY_V)
-    {
+    else if (keyCode == KEY_V) {
         t_keyCode = "V";
     }
 
-    else if (keyCode == KEY_W)
-    {
+    else if (keyCode == KEY_W) {
         t_keyCode = "W";
     }
 
-    else if (keyCode == KEY_X)
-    {
+    else if (keyCode == KEY_X) {
         t_keyCode = "X";
     }
 
-    else if (keyCode == KEY_Y)
-    {
+    else if (keyCode == KEY_Y) {
         t_keyCode = "Y";
     }
 
-    else if (keyCode == KEY_Z)
-    {
+    else if (keyCode == KEY_Z) {
         t_keyCode = "Z";
     }
 
-    else if (keyCode == KEY_BRACKET_OPEN)
-    {
+    else if (keyCode == KEY_BRACKET_OPEN) {
         t_keyCode = "[";
     }
 
-    else if (keyCode == KEY_BRACKET_CLOSE)
-    {
+    else if (keyCode == KEY_BRACKET_CLOSE) {
         t_keyCode = "]";
     }
 
-    else if (keyCode == KEY_SEMICOLON)
-    {
+    else if (keyCode == KEY_SEMICOLON) {
         t_keyCode = ";";
     }
 
-    else if (keyCode == KEY_QUOTE)
-    {
+    else if (keyCode == KEY_QUOTE) {
         t_keyCode = "\'";
     }
 
-    else if (keyCode == KEY_BACKSLASH)
-    {
+    else if (keyCode == KEY_BACKSLASH) {
         t_keyCode = "\\";
     }
 
-    else if (keyCode == KEY_VBAR)
-    {
+    else if (keyCode == KEY_VBAR) {
         t_keyCode = "|";
     }
 
-    else if (keyCode == KEY_COMMA)
-    {
+    else if (keyCode == KEY_COMMA) {
         t_keyCode = ",";
     }
 
-    else if (keyCode == KEY_PERIOD)
-    {
+    else if (keyCode == KEY_PERIOD) {
         t_keyCode = ".";
     }
 
-    else if (keyCode == KEY_SLASH)
-    {
+    else if (keyCode == KEY_SLASH) {
         t_keyCode = "/";
     }
 
-    else if (keyCode == KEY_QUESTION)
-    {
+    else if (keyCode == KEY_QUESTION) {
         t_keyCode = "?";
     }
 
-    else if (keyCode == KEY_TAB)
-    {
+    else if (keyCode == KEY_TAB) {
         t_keyCode = "TAB";
     }
 
-    else if (keyCode == KEY_CAPSLOCK)
-    {
+    else if (keyCode == KEY_CAPSLOCK) {
         t_keyCode = "CAPS";
     }
 
-    else if (keyCode == KEY_LSHIFT)
-    {
+    else if (keyCode == KEY_LSHIFT) {
         t_keyCode = "L SHIFT";
     }
 
-    else if (keyCode == KEY_LCONTROL)
-    {
+    else if (keyCode == KEY_LCONTROL) {
         t_keyCode = "L CTRL";
     }
 
-    else if (keyCode == KEY_LALT)
-    {
+    else if (keyCode == KEY_LALT) {
         t_keyCode = "L ALT";
     }
 
-    else if (keyCode == KEY_SPACE)
-    {
+    else if (keyCode == KEY_SPACE) {
         t_keyCode = "SPACE";
     }
 
-    else if (keyCode == KEY_RALT)
-    {
+    else if (keyCode == KEY_RALT) {
         t_keyCode = "R ALT";
     }
 
-    else if (keyCode == KEY_RWIN)
-    {
+    else if (keyCode == KEY_RWIN) {
         t_keyCode = "WIN";
     }
 
-    else if (keyCode == KEY_RSUPER)
-    {
+    else if (keyCode == KEY_RSUPER) {
         t_keyCode = "SUPER";
     }
 
-    else if (keyCode == KEY_APPS)
-    {
+    else if (keyCode == KEY_APPS) {
         t_keyCode = "APPS";
     }
 
-    else if (keyCode == KEY_MENU)
-    {
+    else if (keyCode == KEY_MENU) {
         t_keyCode = "MENU";
     }
 
-    else if (keyCode == KEY_RCTRL)
-    {
+    else if (keyCode == KEY_RCTRL) {
         t_keyCode = "R CTRL";
     }
 
-    else if (keyCode == KEY_RSHIFT)
-    {
+    else if (keyCode == KEY_RSHIFT) {
         t_keyCode = "R SHIFT";
     }
 
-    else if (keyCode == KEY_ENTER)
-    {
+    else if (keyCode == KEY_ENTER) {
         t_keyCode = "ENTER";
     }
 
-    else if (keyCode == KEY_BACKSPACE)
-    {
+    else if (keyCode == KEY_BACKSPACE) {
         t_keyCode = "BKSP";
     }
 
-    else if (keyCode == KEY_SCROLLLOCK)
-    {
+    else if (keyCode == KEY_SCROLLLOCK) {
         t_keyCode = "SCR";
     }
 
-    else if (keyCode == KEY_PAUSE)
-    {
+    else if (keyCode == KEY_PAUSE) {
         t_keyCode = "PAUSE";
     }
 
-    else if (keyCode == KEY_INSERT)
-    {
+    else if (keyCode == KEY_INSERT) {
         t_keyCode = "INS";
     }
 
-    else if (keyCode == KEY_HOME)
-    {
+    else if (keyCode == KEY_HOME) {
         t_keyCode = "HOME";
     }
 
-    else if (keyCode == KEY_PAGEUP)
-    {
+    else if (keyCode == KEY_PAGEUP) {
         t_keyCode = "PGUP";
     }
 
-    else if (keyCode == KEY_DELETE)
-    {
+    else if (keyCode == KEY_DELETE) {
         t_keyCode = "DELETE";
     }
 
-    else if (keyCode == KEY_END)
-    {
+    else if (keyCode == KEY_END) {
         t_keyCode = "END";
     }
 
-    else if (keyCode == KEY_PAGEDOWN)
-    {
+    else if (keyCode == KEY_PAGEDOWN) {
         t_keyCode = "PGDN";
     }
 
-    else if (keyCode == KEY_LEFT)
-    {
+    else if (keyCode == KEY_LEFT) {
         t_keyCode = "LEFT";
     }
 
-    else if (keyCode == KEY_UP)
-    {
+    else if (keyCode == KEY_UP) {
         t_keyCode = "UP";
     }
 
-    else if (keyCode == KEY_RIGHT)
-    {
+    else if (keyCode == KEY_RIGHT) {
         t_keyCode = "RIGHT";
     }
 
-    else if (keyCode == KEY_DOWN)
-    {
+    else if (keyCode == KEY_DOWN) {
         t_keyCode = "DOWN";
     }
 
-    else if (keyCode == KEY_NUMLOCK)
-    {
+    else if (keyCode == KEY_NUMLOCK) {
         t_keyCode = "NUM";
     }
 
-    else if (keyCode == KEY_DIVIDE)
-    {
+    else if (keyCode == KEY_DIVIDE) {
         t_keyCode = "NUM /";
     }
 
-    else if (keyCode == KEY_MULTIPLY)
-    {
+    else if (keyCode == KEY_MULTIPLY) {
         t_keyCode = "NUM *";
     }
 
-    else if (keyCode == KEY_NUM7)
-    {
+    else if (keyCode == KEY_NUM7) {
         t_keyCode = "NUM 7";
     }
 
-    else if (keyCode == KEY_NUM8)
-    {
+    else if (keyCode == KEY_NUM8) {
         t_keyCode = "NUM 8";
     }
 
-    else if (keyCode == KEY_NUM9)
-    {
+    else if (keyCode == KEY_NUM9) {
         t_keyCode = "NUM 9";
     }
 
-    else if (keyCode == KEY_NUMMINUS)
-    {
+    else if (keyCode == KEY_NUMMINUS) {
         t_keyCode = "NUM -";
     }
 
-    else if (keyCode == KEY_NUM4)
-    {
+    else if (keyCode == KEY_NUM4) {
         t_keyCode = "NUM 4";
     }
 
-    else if (keyCode == KEY_NUM5)
-    {
+    else if (keyCode == KEY_NUM5) {
         t_keyCode = "NUM 5";
     }
 
-    else if (keyCode == KEY_NUM6)
-    {
+    else if (keyCode == KEY_NUM6) {
         t_keyCode = "NUM 6";
     }
 
-    else if (keyCode == KEY_NUMPLUS)
-    {
+    else if (keyCode == KEY_NUMPLUS) {
         t_keyCode = "NUM +";
     }
 
-    else if (keyCode == KEY_NUM1)
-    {
+    else if (keyCode == KEY_NUM1) {
         t_keyCode = "NUM 1";
     }
 
-    else if (keyCode == KEY_NUM2)
-    {
+    else if (keyCode == KEY_NUM2) {
         t_keyCode = "NUM 2";
     }
 
-    else if (keyCode == KEY_NUM3)
-    {
+    else if (keyCode == KEY_NUM3) {
         t_keyCode = "NUM 3";
     }
 
-    else if (keyCode == KEY_NUM0)
-    {
+    else if (keyCode == KEY_NUM0) {
         t_keyCode = "NUM 0";
     }
 
-    else if (keyCode == KEY_NUMDELETE)
-    {
+    else if (keyCode == KEY_NUMDELETE) {
         t_keyCode = "NUM DEL";
     }
 
-    else if (keyCode == KEY_NUMENTER)
-    {
+    else if (keyCode == KEY_NUMENTER) {
         t_keyCode = "NUM =";
     }
 

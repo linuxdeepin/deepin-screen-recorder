@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 #include "event_monitor.h"
 #include <X11/Xlibint.h>
@@ -38,7 +38,7 @@ EventMonitor::EventMonitor(QObject *parent) : QThread(parent)
 
 void EventMonitor::run()
 {
-    Display* display = XOpenDisplay(0);
+    Display *display = XOpenDisplay(0);
     if (display == 0) {
         fprintf(stderr, "unable to open display\n");
         return;
@@ -46,7 +46,7 @@ void EventMonitor::run()
 
     // Receive from ALL clients, including future clients.
     XRecordClientSpec clients = XRecordAllClients;
-    XRecordRange* range = XRecordAllocRange();
+    XRecordRange *range = XRecordAllocRange();
     if (range == 0) {
         fprintf(stderr, "unable to allocate XRecordRange\n");
         return;
@@ -56,7 +56,7 @@ void EventMonitor::run()
     memset(range, 0, sizeof(XRecordRange));
     range->device_events.first = KeyPress;
     range->device_events.last  = MotionNotify;
-    
+
     // And create the XRECORD context.
     XRecordContext context = XRecordCreateContext (display, 0, &clients, 1, &range, 1);
     if (context == 0) {
@@ -67,7 +67,7 @@ void EventMonitor::run()
 
     XSync(display, True);
 
-    Display* display_datalink = XOpenDisplay(0);
+    Display *display_datalink = XOpenDisplay(0);
     if (display_datalink == 0) {
         fprintf(stderr, "unable to open second display\n");
         return;
@@ -79,23 +79,23 @@ void EventMonitor::run()
     }
 }
 
-void EventMonitor::callback(XPointer ptr, XRecordInterceptData* data)
+void EventMonitor::callback(XPointer ptr, XRecordInterceptData *data)
 {
     ((EventMonitor *) ptr)->handleRecordEvent(data);
 }
 
-void EventMonitor::handleRecordEvent(XRecordInterceptData* data)
+void EventMonitor::handleRecordEvent(XRecordInterceptData *data)
 {
     if (data->category == XRecordFromServer) {
 
-        xEvent * event = (xEvent *)data->data;
+        xEvent *event = (xEvent *)data->data;
 //        XKeyPressedEvent *t_keyEvent;
         switch (event->u.u.type) {
         case ButtonPress:
             if (event->u.u.detail != WheelUp &&
-                event->u.u.detail != WheelDown &&
-                event->u.u.detail != WheelLeft && 
-                event->u.u.detail != WheelRight) {
+                    event->u.u.detail != WheelDown &&
+                    event->u.u.detail != WheelLeft &&
+                    event->u.u.detail != WheelRight) {
                 isPress = true;
                 emit buttonedPress(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             }
@@ -107,24 +107,23 @@ void EventMonitor::handleRecordEvent(XRecordInterceptData* data)
             break;
         case ButtonRelease:
             if (event->u.u.detail != WheelUp &&
-                event->u.u.detail != WheelDown &&
-                event->u.u.detail != WheelLeft && 
-                event->u.u.detail != WheelRight) {
+                    event->u.u.detail != WheelDown &&
+                    event->u.u.detail != WheelLeft &&
+                    event->u.u.detail != WheelRight) {
                 isPress = false;
                 emit buttonedRelease(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             }
             break;
         case KeyPress:
             // If key is equal to esc, emit pressEsc signal.
-            if (((unsigned char*) data->data)[1] == KEY_ESCAPE) {
+            if (((unsigned char *) data->data)[1] == KEY_ESCAPE) {
                 emit pressEsc();
-            }
-            else {
-                emit pressKeyButton(((unsigned char*) data->data)[1]);
+            } else {
+                emit pressKeyButton(((unsigned char *) data->data)[1]);
             }
             break;
         case KeyRelease:
-            emit releaseKeyButton(((unsigned char*) data->data)[1]);
+            emit releaseKeyButton(((unsigned char *) data->data)[1]);
             break;
         default:
             break;

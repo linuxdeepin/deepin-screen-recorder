@@ -19,7 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
+
 
 #include <QApplication>
 #include <QStandardPaths>
@@ -57,7 +58,8 @@ QVariant Settings::getOption(const QString &key)
     return result;
 }
 
-void Settings::setOption(const QString &key, const QVariant &value) {
+void Settings::setOption(const QString &key, const QVariant &value)
+{
     settings->beginGroup(groupName);
     settings->setValue(key, value);
     settings->endGroup();

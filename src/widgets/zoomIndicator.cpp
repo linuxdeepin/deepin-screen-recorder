@@ -41,30 +41,31 @@ ZoomIndicator::ZoomIndicator(QWidget *parent)
 //    setStyleSheet(getFileContent(":/resources/qss/zoomindicator.qss"));
     setAttribute(Qt::WA_TransparentForMouseEvents);
 
-    m_centerRect = QRect((BACKGROUND_SIZE.width() - CENTER_RECT_WIDTH)/2 + 1,
-                             (BACKGROUND_SIZE.width() - CENTER_RECT_WIDTH)/2 + 1,
-                             CENTER_RECT_WIDTH, CENTER_RECT_WIDTH);
+    m_centerRect = QRect((BACKGROUND_SIZE.width() - CENTER_RECT_WIDTH) / 2 + 1,
+                         (BACKGROUND_SIZE.width() - CENTER_RECT_WIDTH) / 2 + 1,
+                         CENTER_RECT_WIDTH, CENTER_RECT_WIDTH);
 }
 
 ZoomIndicator::~ZoomIndicator() {}
 
 
-void ZoomIndicator::paintEvent(QPaintEvent *) {
+void ZoomIndicator::paintEvent(QPaintEvent *)
+{
 //    using namespace utils;
     QPoint centerPos =  this->cursor().pos();
     centerPos = QPoint(std::max(centerPos.x() - this->window()->x(), 0),
-                           std::max(centerPos.y() - this->window()->y(), 0));
+                       std::max(centerPos.y() - this->window()->y(), 0));
 
     QPainter painter(this);
     const QPixmap &fullscreenImgFile = TempFile::instance()->getFullscreenPixmap();
     qreal ration = this->devicePixelRatioF();
     QImage fullscreenImg = fullscreenImgFile.toImage();
-    fullscreenImg =  fullscreenImg.scaled(fullscreenImg.width()/ration,
-                                          fullscreenImg.height()/ration, Qt::KeepAspectRatio);
+    fullscreenImg =  fullscreenImg.scaled(fullscreenImg.width() / ration,
+                                          fullscreenImg.height() / ration, Qt::KeepAspectRatio);
     const QRgb centerRectRgb = fullscreenImg.pixel(centerPos);
     QPixmap zoomPix = QPixmap(fullscreenImgFile).scaled(
-                fullscreenImg.width(), fullscreenImg.height()).copy(
-                centerPos.x() - IMG_WIDTH/2, centerPos.y() - IMG_WIDTH/2, IMG_WIDTH, IMG_WIDTH);
+                          fullscreenImg.width(), fullscreenImg.height()).copy(
+                          centerPos.x() - IMG_WIDTH / 2, centerPos.y() - IMG_WIDTH / 2, IMG_WIDTH, IMG_WIDTH);
 
     zoomPix = zoomPix.scaled(QSize(INDICATOR_WIDTH,  INDICATOR_WIDTH),
                              Qt::KeepAspectRatio);
@@ -76,7 +77,7 @@ void ZoomIndicator::paintEvent(QPaintEvent *) {
     painter.drawPixmap(m_centerRect, QPixmap(":/resources/images/action/center_rect.png"));
     m_lastCenterPosBrush = QBrush(QColor(qRed(centerRectRgb),
                                          qGreen(centerRectRgb), qBlue(centerRectRgb)));
-    painter.fillRect(QRect(INDICATOR_WIDTH/2 + 2, INDICATOR_WIDTH/2 + 2,
+    painter.fillRect(QRect(INDICATOR_WIDTH / 2 + 2, INDICATOR_WIDTH / 2 + 2,
                            CENTER_RECT_WIDTH - 4, CENTER_RECT_WIDTH - 4), m_lastCenterPosBrush);
 
     painter.fillRect(QRect(5, INDICATOR_WIDTH - 9, INDICATOR_WIDTH, BOTTOM_RECT_HEIGHT),
@@ -91,7 +92,8 @@ void ZoomIndicator::paintEvent(QPaintEvent *) {
                      QString("%1, %2").arg(centerPos.x()).arg(centerPos.y()), posTextOption);
 }
 
-void ZoomIndicator::showMagnifier(QPoint pos) {
+void ZoomIndicator::showMagnifier(QPoint pos)
+{
     this->show();
 
     this->move(pos);

@@ -21,12 +21,12 @@
 DWIDGET_USE_NAMESPACE
 
 namespace {
-    const int _BUTTON_HEIGHT = 40;
-    const int _BUTTON_WIDTH = 60;
+const int _BUTTON_HEIGHT = 40;
+const int _BUTTON_WIDTH = 60;
 
-    const int LONG_BUTTON_HEIGHT = 40;
-    const int LONG_BUTTON_WIDTH = 80;
-    const int BTN_RADIUS = 3;
+const int LONG_BUTTON_HEIGHT = 40;
+const int LONG_BUTTON_WIDTH = 80;
+const int BTN_RADIUS = 3;
 }
 
 
@@ -47,7 +47,7 @@ KeyButtonWidget::KeyButtonWidget(QWidget *parent) : DBlurEffectWidget(parent)
 //    QFont t_wordFont;
 //    t_wordFont.setPixelSize(18);
 //    m_word->setFont(t_wordFont);
-    QHBoxLayout* hLayout = new QHBoxLayout(this);
+    QHBoxLayout *hLayout = new QHBoxLayout(this);
     hLayout->setMargin(0);
     hLayout->setSpacing(2);
     hLayout->addWidget(m_word, 0, Qt::AlignVCenter | Qt::AlignHCenter);

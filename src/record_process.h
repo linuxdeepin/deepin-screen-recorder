@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 #include "settings.h"
 #include <QProcess>
@@ -31,9 +31,9 @@
 class RecordProcess : public QThread
 {
     Q_OBJECT
-    
+
     typedef std::map<int, proc_t> StoredProcType;
-    
+
 public:
     static const int RECORD_TYPE_VIDEO;
     static const int RECORD_TYPE_GIF;
@@ -42,7 +42,7 @@ public:
     static const int RECORD_AUDIO_INPUT_SYSTEMAUDIO;
     static const int RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO;
     RecordProcess(QObject *parent = 0);
-    
+
     void setRecordInfo(const QRect &recordRect, const QString &filename);
     void setRecordType(int recordType);
     void setRecordAudioInputType(int inputType);
@@ -52,18 +52,18 @@ public:
     void recordVideo();
     void initProcess();
     int readSleepProcessPid();
-    
+
 protected:
     void run();
 
 private:
-    QProcess* process;
+    QProcess *process;
 
     int recordType;
     int recordAudioInputType;
 
     QRect m_recordRect;
-    
+
     QString savePath;
     QString saveBaseName;
     QString saveTempDir;
@@ -71,9 +71,9 @@ private:
     QString defaultSaveDir;
     QString saveAreaName;
     QString displayNumber;
-    
-    Settings* settings;
-    
+
+    Settings *settings;
+
     int byzanzProcessId;
     int sleepProcessId;
 };

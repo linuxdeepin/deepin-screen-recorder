@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 #ifndef EVENTMONITOR_H
 #define EVENTMONITOR_H
@@ -28,16 +28,15 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/record.h>
 
-
 class EventMonitor : public QThread
 {
     Q_OBJECT
 
 public:
     EventMonitor(QObject *parent = 0);
-    static void callback(XPointer trash, XRecordInterceptData* data);
+    static void callback(XPointer trash, XRecordInterceptData *data);
     void handleRecordEvent(XRecordInterceptData *);
-    
+
 signals:
     void buttonedPress(int x, int y);
     void buttonedDrag(int x, int y);
@@ -49,7 +48,7 @@ signals:
 
 protected:
     void run();
-    
+
 private:
     bool isPress;
 };

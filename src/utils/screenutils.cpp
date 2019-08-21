@@ -23,8 +23,9 @@
 #include <QDesktopWidget>
 #include <QScreen>
 
-ScreenUtils* ScreenUtils::m_screenUtils = nullptr;
-ScreenUtils* ScreenUtils::instance(QPoint pos) {
+ScreenUtils *ScreenUtils::m_screenUtils = nullptr;
+ScreenUtils *ScreenUtils::instance(QPoint pos)
+{
     if (!m_screenUtils) {
         m_screenUtils = new ScreenUtils(pos);
     }
@@ -33,8 +34,9 @@ ScreenUtils* ScreenUtils::instance(QPoint pos) {
 }
 
 ScreenUtils::ScreenUtils(QPoint pos, QObject *parent)
-    : QObject(parent) {
-    QList<QScreen*> screenList = qApp->screens();
+    : QObject(parent)
+{
+    QList<QScreen *> screenList = qApp->screens();
     m_screenNum = qApp->desktop()->screenNumber(pos);
     m_rootWindowId = qApp->desktop()->screen(m_screenNum)->winId();
     m_primaryScreen = screenList[m_screenNum];
@@ -48,18 +50,22 @@ ScreenUtils::ScreenUtils(QPoint pos, QObject *parent)
 
 ScreenUtils::~ScreenUtils() {}
 
-int ScreenUtils::getScreenNum() {
+int ScreenUtils::getScreenNum()
+{
     return m_screenNum;
 }
 
-QRect ScreenUtils::backgroundRect() {
+QRect ScreenUtils::backgroundRect()
+{
     return m_backgroundRect;
 }
 
-WId ScreenUtils::rootWindowId() {
+WId ScreenUtils::rootWindowId()
+{
     return m_rootWindowId;
 }
 
-QScreen* ScreenUtils::primaryScreen() {
+QScreen *ScreenUtils::primaryScreen()
+{
     return m_primaryScreen;
 }

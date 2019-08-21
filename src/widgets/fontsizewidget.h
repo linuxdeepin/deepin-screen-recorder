@@ -29,7 +29,7 @@ class Separator : public QLabel
 {
     Q_OBJECT
 public:
-    Separator(QWidget* parent);
+    Separator(QWidget *parent);
     ~Separator();
 };
 
@@ -37,7 +37,7 @@ class FontSizeWidget : public QLabel
 {
     Q_OBJECT
 public:
-    FontSizeWidget(QWidget* parent = 0);
+    FontSizeWidget(QWidget *parent = 0);
     ~FontSizeWidget();
 
     void initWidget();
@@ -48,9 +48,9 @@ signals:
     void fontSizeChanged(int fontSize);
 
 private:
-    QLineEdit* m_fontSizeEdit;
-    QPushButton* m_addSizeBtn;
-    QPushButton* m_reduceSizeBtn;
+    QLineEdit *m_fontSizeEdit;
+    QPushButton *m_addSizeBtn;
+    QPushButton *m_reduceSizeBtn;
     int m_fontSize;
 };
 #endif // FONTSIZEWIDGET_H

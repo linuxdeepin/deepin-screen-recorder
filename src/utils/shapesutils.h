@@ -27,18 +27,19 @@ typedef QList<QPointF> FourPoints;
 Q_DECLARE_METATYPE(FourPoints)
 
 /* shape*/
-class Toolshape {
+class Toolshape
+{
 public:
-     QString type;
-     FourPoints mainPoints;
-     int index = -1;
-     int lineWidth;
-     int colorIndex;
-     bool isBlur = false;
-     bool isMosaic = false;
-     bool isStraight = false;
-     bool isShiftPressed = false;
-     int fontSize = 1;
+    QString type;
+    FourPoints mainPoints;
+    int index = -1;
+    int lineWidth;
+    int colorIndex;
+    bool isBlur = false;
+    bool isMosaic = false;
+    bool isStraight = false;
+    bool isShiftPressed = false;
+    int fontSize = 1;
 
     QList<QPointF> points;
     QList<QList<qreal>> portion;

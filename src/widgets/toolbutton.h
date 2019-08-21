@@ -20,34 +20,40 @@
 #ifndef TOOLBUTTON_H
 #define TOOLBUTTON_H
 
-#include <QPushButton>
+#include <DPushButton>
 #include <QApplication>
 #include <QPalette>
 
-class ToolButton : public QPushButton {
+DWIDGET_USE_NAMESPACE
+
+class ToolButton : public DPushButton
+{
     Q_OBJECT
 public:
-    ToolButton(QWidget* parent = 0) {
+    ToolButton(QWidget *parent = 0)
+    {
         Q_UNUSED(parent);
         setCheckable(true);
         m_tips = "";
 //        connect(this, SIGNAL(toggled(bool)), this, SLOT(changeButtonStatus(bool)));
     }
-    ~ToolButton(){}
+    ~ToolButton() {}
 
 public slots:
-    void setTips(QString tips) {
+    void setTips(QString tips)
+    {
         m_tips = tips;
     }
 
-    QString getTips() {
+    QString getTips()
+    {
         return m_tips;
     }
 
-    void changeButtonStatus(bool checked){
+    void changeButtonStatus(bool checked)
+    {
         QPalette pa;
-        if(checked == true)
-        {
+        if (checked == true) {
             pa = this->palette();
             pa.setColor(QPalette::ButtonText, Qt::white);
             pa.setColor(QPalette::Dark, Qt::black);
@@ -55,8 +61,7 @@ public slots:
             this->setPalette(pa);
         }
 
-        else
-        {
+        else {
             pa = this->palette();
             pa.setColor(QPalette::ButtonText, pa.buttonText().color());
             pa.setColor(QPalette::Dark, pa.dark().color());
@@ -70,12 +75,14 @@ signals:
     void onExist();
 
 protected:
-    void enterEvent(QEvent* e) override {
+    void enterEvent(QEvent *e) override
+    {
         emit onEnter();
         QPushButton::enterEvent(e);
     }
 
-    void leaveEvent(QEvent* e) override {
+    void leaveEvent(QEvent *e) override
+    {
         emit onExist();
         QPushButton::leaveEvent(e);
     }

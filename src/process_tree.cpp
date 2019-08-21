@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 #include "process_tree.h"
 #include <QDebug>
@@ -34,7 +34,7 @@ ProcessTree::ProcessTree()
 ProcessTree::~ProcessTree()
 {
     childrenPids.clear();
-    
+
     for (auto v : processMap->values()) {
         v.childProcesses.clear();
     }
@@ -45,7 +45,7 @@ ProcessTree::~ProcessTree()
 
 void ProcessTree::scanProcesses(StoredProcType processes)
 {
-    for (auto &i:processes) {
+    for (auto &i : processes) {
         int ppid = (&i.second)->ppid;
         int pid = (&i.second)->tid;
 
@@ -88,7 +88,7 @@ void ProcessTree::getChildPids(int pid)
     if (processMap->contains(pid)) {
         for (int childPid : ((*processMap)[pid].childProcesses)) {
             childrenPids.append(childPid);
-            
+
             getChildPids(childPid);
         }
     }

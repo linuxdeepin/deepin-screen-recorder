@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 #include <QObject>
 #include <QPainter>
@@ -55,11 +55,11 @@ class MainWindow : public QWidget
     Q_OBJECT
 
     Q_CLASSINFO("D-Bus Interface", "com.deepin.ScreenRecorder")
-    
+
     static const int CURSOR_BOUND;
     static const int RECORD_MIN_SIZE;
     static const int DRAG_POINT_RADIUS;
-    
+
     static const int RECORD_BUTTON_NORMAL;
     static const int RECORD_BUTTON_WAIT;
     static const int RECORD_BUTTON_RECORDING;
@@ -73,16 +73,17 @@ class MainWindow : public QWidget
     static const int ACTION_RESIZE_BOTTOM;
     static const int ACTION_RESIZE_LEFT;
     static const int ACTION_RESIZE_RIGHT;
-    
+
     static const int RECORD_OPTIONAL_PADDING;
-    
+
 public:
     MainWindow(QWidget *parent = 0);
-    ~MainWindow() {
+    ~MainWindow()
+    {
         // All process will quit if MainWindow destroy.
         // So we don't need delete object by hand.
     }
-    
+
     // Split attributes and resource for speed up start.
     void initAttributes();
     void initResource();
@@ -109,7 +110,7 @@ public slots:
     void changeSystemAudioSelectEvent(bool checked);
     void showMultiKeyBoardButtons();
     void updateMultiKeyBoardPos();
-    
+
 protected:
     bool eventFilter(QObject *object, QEvent *event);
     int getAction(QEvent *event);
@@ -133,8 +134,8 @@ private:
     QList<QString> windowNames;
     ShowButtons *m_showButtons;
 
-    QTimer* flashTrayIconTimer;
-    
+    QTimer *flashTrayIconTimer;
+
     QRect screenRect;
 
     RecordProcess recordProcess;
@@ -149,7 +150,7 @@ private:
     bool isFirstReleaseButton;
     bool isPressButton;
     bool isReleaseButton;
-    
+
     int dragAction;
     int dragRecordHeight;
     int dragRecordWidth;
@@ -163,47 +164,47 @@ private:
     int recordWidth;
     int recordX;
     int recordY;
-    
+
     int recordButtonState;
-    
+
     int flashTrayIconCounter;
-    
+
     QPixmap resizeHandleBigImg;
     QPixmap resizeHandleSmallImg;
-    
+
     QString selectAreaName;
-    
-    QSystemTrayIcon* trayIcon;
-    
-    DWindowManager* windowManager;
-    
-    QVBoxLayout* recordButtonLayout;
-    QVBoxLayout* countdownLayout;
-    RecordButton* recordButton;
-    RecordOptionPanel* recordOptionPanel;
-    
-    StartTooltip* startTooltip;
-    CountdownTooltip* countdownTooltip;
-    
-    ButtonFeedback* buttonFeedback;
-    
+
+    QSystemTrayIcon *trayIcon;
+
+    DWindowManager *windowManager;
+
+    QVBoxLayout *recordButtonLayout;
+    QVBoxLayout *countdownLayout;
+    RecordButton *recordButton;
+    RecordOptionPanel *recordOptionPanel;
+
+    StartTooltip *startTooltip;
+    CountdownTooltip *countdownTooltip;
+
+    ButtonFeedback *buttonFeedback;
+
     EventMonitor eventMonitor;
     DWindowManagerHelper *m_wmHelper;
-    ShapesWidget* m_shapesWidget;
-    ToolBar* m_toolBar;
-    DScreenWindowsUtil* m_swUtil;
+    ShapesWidget *m_shapesWidget;
+    ToolBar *m_toolBar;
+    DScreenWindowsUtil *m_swUtil;
     QRect m_backgroundRect;
     //添加截屏和录屏的按钮
     QPushButton *m_recordButton;
     QPushButton *m_shotButton;
-    QList<KeyButtonWidget*> m_keyButtonList;
-    QList<KeyButtonWidget*> m_tempkeyButtonList;
+    QList<KeyButtonWidget *> m_keyButtonList;
+    QList<KeyButtonWidget *> m_tempkeyButtonList;
 
     int m_functionType;  //0: record, 1: shot
     int m_keyBoardStatus; //0: keyBoard off, 1:keyBoard On
     QTimer *m_keyBoardTimer;
     bool m_multiKeyButtonsInOnSec;
-    
+
     bool m_selectedMic;
     bool m_selectedSystemAudio;
     // Just use for debug.

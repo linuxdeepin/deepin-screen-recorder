@@ -34,7 +34,7 @@ Separator::Separator(QWidget *parent)
     setFixedSize(1, 16);
 }
 
-Separator::~Separator(){}
+Separator::~Separator() {}
 
 FontSizeWidget::FontSizeWidget(QWidget *parent)
     : QLabel(parent)
@@ -60,7 +60,7 @@ void FontSizeWidget::initWidget()
     m_reduceSizeBtn->setObjectName("ReduceSizeBtn");
     m_reduceSizeBtn->setFixedSize(BUTTON_SIZE);
 
-    QHBoxLayout* layout = new QHBoxLayout;
+    QHBoxLayout *layout = new QHBoxLayout;
     layout->setMargin(0);
     layout->setSpacing(0);
     layout->addSpacing(4);
@@ -74,10 +74,10 @@ void FontSizeWidget::initWidget()
     layout->addStretch();
     setLayout(layout);
 
-    connect(m_addSizeBtn, &QPushButton::clicked, [=]{
+    connect(m_addSizeBtn, &QPushButton::clicked, [ = ] {
         adjustFontSize(true);
     });
-    connect(m_reduceSizeBtn, &QPushButton::clicked, [=]{
+    connect(m_reduceSizeBtn, &QPushButton::clicked, [ = ] {
         adjustFontSize(false);
     });
 }
@@ -100,7 +100,7 @@ void FontSizeWidget::adjustFontSize(bool add)
     m_fontSizeEdit->setText(QString("%1").arg(m_fontSize));
     emit fontSizeChanged(m_fontSize);
 
-    connect(this, &FontSizeWidget::fontSizeChanged, this, [=](int fontSize){
+    connect(this, &FontSizeWidget::fontSizeChanged, this, [ = ](int fontSize) {
         ConfigSettings::instance()->setValue("text", "fontsize", fontSize);
     });
 }

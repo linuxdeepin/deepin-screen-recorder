@@ -22,10 +22,11 @@
 
 #include <QPushButton>
 
-class TextButton : public QPushButton {
+class TextButton : public QPushButton
+{
     Q_OBJECT
 public:
-    TextButton(int num, QWidget* parent = 0);
+    TextButton(int num, QWidget *parent = 0);
     ~TextButton();
 
 private:

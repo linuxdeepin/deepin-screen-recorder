@@ -31,58 +31,57 @@ const QSize ARROW_SIZE = QSize(24, 24);
 const QSize TEXT_SIZE = QSize(11, 23);
 const QSize COLORPEN_SIZE = QSize(25, 25);
 
-QCursor setCursorShape(QString cursorName, int colorIndex) {
+QCursor setCursorShape(QString cursorName, int colorIndex)
+{
     QCursor customShape = QCursor();
     qreal ration = qApp->devicePixelRatio();
 
     if (cursorName == "start") {
         QPixmap startPix;
-        if (ration <= 1)
-        {
+        if (ration <= 1) {
             startPix = QIcon(":/image/mouse_style/shape/start_mouse.svg").pixmap(START_SIZE);
             customShape = QCursor(startPix, 8, 8);
-        } else
-        {
+        } else {
             startPix = QIcon(":/image/mouse_style/shape/start_mouse@2x.svg").pixmap(START_SIZE);
-            customShape = QCursor(startPix, int(8*ration), int(8*ration));
+            customShape = QCursor(startPix, int(8 * ration), int(8 * ration));
         }
 
     } else if (cursorName == "rotate") {
         QPixmap rotateCursor  = QIcon(":/image/mouse_style/shape/rotate_mouse.svg").pixmap(ARROW_SIZE);
         rotateCursor.setDevicePixelRatio(ration);
 
-        customShape = QCursor(rotateCursor, int(10*ration), int(10*ration));
+        customShape = QCursor(rotateCursor, int(10 * ration), int(10 * ration));
     } else if (cursorName == "rectangle") {
         QPixmap rectCursor  = QIcon(":/image/mouse_style/shape/rect_mouse.svg").pixmap(RECT_SIZE);
         rectCursor.setDevicePixelRatio(ration);
 
-        customShape = QCursor(rectCursor, 0, int(1*ration));
+        customShape = QCursor(rectCursor, 0, int(1 * ration));
     } else if (cursorName == "oval") {
         QPixmap ovalCursor  = QIcon(":/image/mouse_style/shape/ellipse_mouse.svg").pixmap(RECT_SIZE);
         ovalCursor.setDevicePixelRatio(ration);
 
-        customShape = QCursor(ovalCursor, 0, int(1*ration));
+        customShape = QCursor(ovalCursor, 0, int(1 * ration));
     } else if (cursorName == "arrow") {
         QPixmap arrowCursor  = QIcon(":/image/mouse_style/shape/arrow_mouse.svg").pixmap(ARROW_SIZE);
         arrowCursor.setDevicePixelRatio(ration);
 
-        customShape = QCursor(arrowCursor, int(5*ration), int(5*ration));
+        customShape = QCursor(arrowCursor, int(5 * ration), int(5 * ration));
     } else if (cursorName == "text") {
         QPixmap textCursor  = QIcon(":/image/mouse_style/shape/text_mouse.svg").pixmap(TEXT_SIZE);
         textCursor.setDevicePixelRatio(ration);
 
-        customShape = QCursor(textCursor, int(5*ration), int(5*ration));
+        customShape = QCursor(textCursor, int(5 * ration), int(5 * ration));
     } else if  (cursorName == "line") {
         QPixmap colorPic = QIcon(QString(":/image/mouse_style/"
-            "color_pen/color%1.svg").arg(colorIndex)).pixmap(COLORPEN_SIZE);
+                                         "color_pen/color%1.svg").arg(colorIndex)).pixmap(COLORPEN_SIZE);
         colorPic.setDevicePixelRatio(ration);
 
-        customShape = QCursor(colorPic,  int(5*ration), int(22*ration));
+        customShape = QCursor(colorPic,  int(5 * ration), int(22 * ration));
     } else if (cursorName == "straightLine") {
         QPixmap lineCursor  = QIcon(":/image/mouse_style/shape/line_mouse.svg").pixmap(ARROW_SIZE);
         lineCursor.setDevicePixelRatio(ration);
 
-        customShape = QCursor(lineCursor, int(2*ration), int(9*ration));
+        customShape = QCursor(lineCursor, int(2 * ration), int(9 * ration));
     }
 
     return customShape;
@@ -98,8 +97,7 @@ QString getFileContent(const QString &file)
 {
     QFile f(file);
     QString fileContent = "";
-    if (f.open(QFile::ReadOnly))
-    {
+    if (f.open(QFile::ReadOnly)) {
         fileContent = QLatin1String(f.readAll());
         f.close();
     }
@@ -108,24 +106,58 @@ QString getFileContent(const QString &file)
 
 QColor colorIndexOf(int index)
 {
-    switch(index) {
-    case 0: { return QColor("#ffd903");}
-    case 1: { return QColor("#ff5e1a");}
-    case 2: { return QColor("#ff3305");}
-    case 3: { return QColor("#ff1c49");}
-    case 4: { return QColor("#fb00ff");}
-    case 5: { return QColor("#7700ed");}
-    case 6: { return QColor("#3d08ff");}
-    case 7: { return QColor("#3467ff");}
-    case 8: { return QColor("#00aaff");}
-    case 9: { return QColor("#08ff77");}
-    case 10: { return QColor("#03a60e");}
-    case 11: { return QColor("#3c7d00");}
-    case 12: { return QColor("#ffffff");}
-    case 13: { return QColor("#666666");}
-    case 14: { return QColor("#2b2b2b");}
-    case 15: { return QColor("#000000");}
-    default:  {return QColor("#ffd903");}
+    switch (index) {
+    case 0: {
+        return QColor("#ffd903");
+    }
+    case 1: {
+        return QColor("#ff5e1a");
+    }
+    case 2: {
+        return QColor("#ff3305");
+    }
+    case 3: {
+        return QColor("#ff1c49");
+    }
+    case 4: {
+        return QColor("#fb00ff");
+    }
+    case 5: {
+        return QColor("#7700ed");
+    }
+    case 6: {
+        return QColor("#3d08ff");
+    }
+    case 7: {
+        return QColor("#3467ff");
+    }
+    case 8: {
+        return QColor("#00aaff");
+    }
+    case 9: {
+        return QColor("#08ff77");
+    }
+    case 10: {
+        return QColor("#03a60e");
+    }
+    case 11: {
+        return QColor("#3c7d00");
+    }
+    case 12: {
+        return QColor("#ffffff");
+    }
+    case 13: {
+        return QColor("#666666");
+    }
+    case 14: {
+        return QColor("#2b2b2b");
+    }
+    case 15: {
+        return QColor("#000000");
+    }
+    default:  {
+        return QColor("#ffd903");
+    }
     }
 
     return QColor("#ffd903");
@@ -153,7 +185,8 @@ int colorIndex(QColor color)
     return colorList.indexOf(color);
 }
 
-bool          isValidFormat(QString suffix) {
+bool          isValidFormat(QString suffix)
+{
     QStringList validFormat;
     validFormat << "bmp" << "jpg" << "jpeg" << "png" << "pbm" << "pgm" << "xbm" << "xpm";
     if (validFormat.contains(suffix)) {
@@ -163,8 +196,9 @@ bool          isValidFormat(QString suffix) {
     }
 }
 
-bool          isCommandExist(QString command) {
-    QProcess* proc = new QProcess;
+bool          isCommandExist(QString command)
+{
+    QProcess *proc = new QProcess;
     QString cm = QString("which %1\n").arg(command);
     proc->start(cm);
     proc->waitForFinished(1000);
@@ -176,6 +210,7 @@ bool          isCommandExist(QString command) {
     }
 }
 
-void   paintSelectedPoint(QPainter &painter, QPointF pos, QPixmap pointImg) {
+void   paintSelectedPoint(QPainter &painter, QPointF pos, QPixmap pointImg)
+{
     painter.drawPixmap(pos, pointImg);
 }

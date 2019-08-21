@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 #ifndef STARTTOOLTIP_H
 #define STARTTOOLTIP_H
@@ -32,20 +32,20 @@ DWM_USE_NAMESPACE
 class StartTooltip : public QWidget
 {
     Q_OBJECT
-    
+
 public:
     StartTooltip(QWidget *parent = 0);
     void setWindowManager(DWindowManager *wm);
-    
+
 protected:
     void paintEvent(QPaintEvent *event);
     bool eventFilter(QObject *, QEvent *event);
-    
+
 private:
     QString text;
-    
+
     QPixmap iconImg;
-    DWindowManager* windowManager;
+    DWindowManager *windowManager;
 };
 
 #endif

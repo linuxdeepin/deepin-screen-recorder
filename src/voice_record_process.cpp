@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2019 ~ 2020 Deepin Technology Co., Ltd.
+ *
+ * Author:     Zheng Youge<youge.zheng@deepin.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "voice_record_process.h"
 #include <QAudioEncoderSettings>
 #include <QAudioProbe>
@@ -8,7 +27,9 @@
 #include "utils.h"
 #include <QDebug>
 
-VoiceRecordProcess::VoiceRecordProcess(QObject *parent) : QThread(parent) {
+
+VoiceRecordProcess::VoiceRecordProcess(QObject *parent) : QThread(parent)
+{
 
     audioRecorder = new QAudioRecorder(this);
     qDebug() << "support codecs:" << audioRecorder->supportedAudioCodecs();
@@ -32,9 +53,10 @@ VoiceRecordProcess::VoiceRecordProcess(QObject *parent) : QThread(parent) {
     }
 }
 
-void VoiceRecordProcess::run() {
+void VoiceRecordProcess::run()
+{
     recordPath = generateRecordingFilepath();
-    qDebug()<<"recordPath" + recordPath;
+    qDebug() << "recordPath" + recordPath;
     audioRecorder->setOutputLocation(recordPath);
     QDateTime currentTime = QDateTime::currentDateTime();
     lastUpdateTime = currentTime;

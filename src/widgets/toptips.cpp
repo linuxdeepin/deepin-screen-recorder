@@ -23,7 +23,8 @@
 #include <QDebug>
 
 TopTips::TopTips(QWidget *parent)
-    : QLabel(parent) {
+    : QLabel(parent)
+{
     setFixedSize(75, 20);
     this->setStyleSheet(" TopTips { background-color: transparent;"
                         "border-image: url(:/resources/images/action/sizetip.png)  no-repeat;"
@@ -31,12 +32,14 @@ TopTips::TopTips(QWidget *parent)
                         "font-size: 12px;}");
 }
 
-void TopTips::setContent(QString widthXHeight) {
+void TopTips::setContent(QString widthXHeight)
+{
     setText(widthXHeight);
     setAlignment(Qt::AlignCenter);
 }
 
-void TopTips::updateTips(QPoint pos, QString text) {
+void TopTips::updateTips(QPoint pos, QString text)
+{
     if (!this->isVisible())
         this->show();
 
@@ -52,6 +55,6 @@ void TopTips::updateTips(QPoint pos, QString text) {
 
     this->move(startPoint);
     setContent(text);
- }
+}
 
 TopTips::~TopTips() {}

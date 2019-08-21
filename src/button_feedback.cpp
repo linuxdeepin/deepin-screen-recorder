@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 #include <QPainter>
 #include "button_feedback.h"
@@ -40,7 +40,7 @@ ButtonFeedback::ButtonFeedback(QWidget *parent) : QWidget(parent)
     setAttribute(Qt::WA_ShowWithoutActivating);
     setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
-    
+
     buttonFeedback0Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_0.svg"));
     buttonFeedback1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_1.svg"));
     buttonFeedback2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_2.svg"));
@@ -51,30 +51,30 @@ ButtonFeedback::ButtonFeedback(QWidget *parent) : QWidget(parent)
     buttonFeedback7Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_7.svg"));
     buttonFeedback8Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_8.svg"));
     buttonFeedback9Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_9.svg"));
-    
+
     setFixedSize(buttonFeedback0Img.width(), buttonFeedback0Img.height());
-    
+
     frameIndex = 0;
-    
+
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    
+
     Utils::passInputEvent(this->winId());
 }
 
 void ButtonFeedback::update()
 {
     repaint();
-    
+
     frameIndex += 1;
-    
+
     if (frameIndex > 9) {
         frameIndex = 0;
-        
+
         if (timer->isActive()) {
             timer->stop();
         }
-        
+
         hide();
     }
 }
@@ -84,8 +84,8 @@ void ButtonFeedback::paintEvent(QPaintEvent *)
     QPainter painter(this);
 
     painter.setOpacity(1);
-    
-    switch(frameIndex) {
+
+    switch (frameIndex) {
     case 0:
         painter.drawPixmap(QPoint(0, 0), buttonFeedback0Img);
         break;
@@ -122,7 +122,7 @@ void ButtonFeedback::paintEvent(QPaintEvent *)
 void ButtonFeedback::showPressFeedback(int x, int y)
 {
     frameIndex = 0;
-    
+
     show();
     repaint();
     qreal devicePixelRatio = qApp->devicePixelRatio();
@@ -133,12 +133,12 @@ void ButtonFeedback::showPressFeedback(int x, int y)
 void ButtonFeedback::showDragFeedback(int x, int y)
 {
     frameIndex = 2;
-    
+
     show();
     repaint();
     qreal devicePixelRatio = qApp->devicePixelRatio();
     move(x / devicePixelRatio - rect().width() / devicePixelRatio / 2, y / devicePixelRatio - rect().height() / devicePixelRatio / 2);
-    
+
     if (timer->isActive()) {
         timer->stop();
     }
@@ -147,7 +147,7 @@ void ButtonFeedback::showDragFeedback(int x, int y)
 void ButtonFeedback::showReleaseFeedback(int x, int y)
 {
     frameIndex = 3;
-    
+
     show();
     repaint();
     qreal devicePixelRatio = qApp->devicePixelRatio();

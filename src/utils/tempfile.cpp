@@ -22,8 +22,9 @@
 #include <QTemporaryFile>
 #include <QDebug>
 
-TempFile* TempFile::instance() {
-    static TempFile* tempFile = new TempFile;
+TempFile *TempFile::instance()
+{
+    static TempFile *tempFile = new TempFile;
     return tempFile;
 }
 
@@ -32,7 +33,8 @@ TempFile::TempFile(QObject *parent)
 {
 }
 
-TempFile::~TempFile() {
+TempFile::~TempFile()
+{
 }
 
 void TempFile::setFullScreenPixmap(const QPixmap &pixmap)

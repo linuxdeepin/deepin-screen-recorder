@@ -37,13 +37,13 @@ BigColorButton::BigColorButton(QWidget *parent)
     setFixedSize(BTN_SIZE);
     setCheckable(true);
     int colIndex = ConfigSettings::instance()->value(
-                              "common", "color_index").toInt();
+                       "common", "color_index").toInt();
     m_color = colorIndexOf(colIndex);
 
     connect(this, &QPushButton::clicked, this,
             &BigColorButton::setCheckedStatus);
     connect(ConfigSettings::instance(), &ConfigSettings::shapeConfigChanged,
-                  this, &BigColorButton::updateConfigColor);
+            this, &BigColorButton::updateConfigColor);
 }
 
 void BigColorButton::updateConfigColor(const QString &shape, const QString &key, int index)
@@ -53,11 +53,13 @@ void BigColorButton::updateConfigColor(const QString &shape, const QString &key,
     }
 }
 
-BigColorButton::~BigColorButton() {
+BigColorButton::~BigColorButton()
+{
 
 }
 
-void BigColorButton::paintEvent(QPaintEvent *) {
+void BigColorButton::paintEvent(QPaintEvent *)
+{
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing);
     painter.setPen(Qt::transparent);
@@ -74,37 +76,40 @@ void BigColorButton::paintEvent(QPaintEvent *) {
     qreal ration = this->devicePixelRatioF();
     if (m_isChecked) {
         QPixmap checkedPic = QIcon(":/resources/images/action/colors_checked.svg"
-                                   ).pixmap(BTN_SIZE);
+                                  ).pixmap(BTN_SIZE);
         checkedPic.setDevicePixelRatio(ration);
 
         painter.drawPixmap(rect(), checkedPic);
     } else if (m_isHover && !m_isChecked) {
         QPixmap hoverPic = QIcon(":/resources/images/action/colors_hover.svg"
-                                 ).pixmap(BTN_SIZE);
+                                ).pixmap(BTN_SIZE);
         hoverPic.setDevicePixelRatio(ration);
 
         painter.drawPixmap(rect(), hoverPic);
     } else {
         QPixmap normalPic = QIcon(":/resources/images/action/colors_hover.svg"
-                                  ).pixmap(BTN_SIZE);
+                                 ).pixmap(BTN_SIZE);
         normalPic.setDevicePixelRatio(ration);
 
-         painter.drawPixmap(rect(), normalPic);
+        painter.drawPixmap(rect(), normalPic);
     }
 }
 
-void BigColorButton::setColor(QColor color) {
+void BigColorButton::setColor(QColor color)
+{
     m_color = color;
     update();
 }
 
-void BigColorButton::setColorIndex() {
+void BigColorButton::setColorIndex()
+{
     int colorNum = ConfigSettings::instance()->value("common", "color_index").toInt();
     m_color = colorIndexOf(colorNum);
     update();
 }
 
-void BigColorButton::setCheckedStatus(bool checked) {
+void BigColorButton::setCheckedStatus(bool checked)
+{
     if (checked) {
         m_isChecked = true;
         update();
@@ -112,14 +117,16 @@ void BigColorButton::setCheckedStatus(bool checked) {
 
 }
 
-void BigColorButton::enterEvent(QEvent *) {
+void BigColorButton::enterEvent(QEvent *)
+{
     if (!m_isHover) {
         m_isHover = true;
         update();
     }
 }
 
-void BigColorButton::leaveEvent(QEvent *) {
+void BigColorButton::leaveEvent(QEvent *)
+{
     if (m_isHover) {
         m_isHover = false;
         update();
