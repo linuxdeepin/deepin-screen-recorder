@@ -52,12 +52,14 @@ signals:
     void closed();
     void changeFunctionSignal(QString shapeType);
     void keyBoardCheckedSignal(bool checked);
-
+    void microphoneActionCheckedSignal(bool checked);
+    void systemAudioActionCheckedSignal(bool checked);
 public slots:
     bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
     void specifiedSavePath();
     void keyBoardCheckedSlot(bool checked);
+
 
 protected:
     void paintEvent(QPaintEvent *e);
@@ -91,7 +93,8 @@ signals:
     void closed();
     void currentFunctionToMain(QString shapeType);
     void keyBoardCheckedToMain(bool checked);
-
+    void microphoneActionCheckedToMain(bool checked);
+    void systemAudioActionCheckedToMain(bool checked);
 public slots:
     bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
@@ -99,7 +102,8 @@ public slots:
     void specificedSavePath();
     void currentFunctionMode(QString shapeType);
     void keyBoardCheckedToMainSlot(bool checked);
-
+    void microphoneActionCheckedToMainSlot(bool checked);
+    void systemAudioActionCheckedToMainSlot(bool checked);
 protected:
     void paintEvent(QPaintEvent *e);
     void enterEvent(QEvent *e);

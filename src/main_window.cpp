@@ -40,6 +40,7 @@
 #include "countdown_tooltip.h"
 #include "constant.h"
 #include <dscreenwindowsutil.h>
+#include "utils/audioutils.h"
 #include <DHiDPIHelper>
 
 const int MainWindow::CURSOR_BOUND = 5;
@@ -179,7 +180,8 @@ void MainWindow::initAttributes()
 
     connect(m_toolBar, &ToolBar::currentFunctionToMain, this, &MainWindow::changeFunctionButton);
     connect(m_toolBar, &ToolBar::keyBoardCheckedToMain, this, &MainWindow::changeKeyBoardShowEvent);
-
+    connect(m_toolBar, &ToolBar::microphoneActionCheckedToMain, this, &MainWindow::changeMicrophoneSelectEvent);
+    connect(m_toolBar, &ToolBar::systemAudioActionCheckedToMain, this, &MainWindow::changeSystemAudioSelectEvent);
     //构建截屏录屏功能触发按钮
     m_recordButton = new QPushButton(this);
     m_recordButton->setFixedSize(60, 47);
@@ -219,7 +221,8 @@ void MainWindow::initAttributes()
     recordButton->hide();
     recordOptionPanel->hide();
 
-
+    m_selectedMic = true;
+    m_selectedSystemAudio = false;
 
     // Just use for debug.
     // repaintCounter = 0;
@@ -486,6 +489,17 @@ void MainWindow::changeKeyBoardShowEvent(bool checked)
         m_keyBoardStatus = 1;
     }
 }
+void MainWindow::changeMicrophoneSelectEvent(bool checked)
+{
+    m_selectedMic = checked;
+}
+void MainWindow::changeSystemAudioSelectEvent(bool checked)
+{
+    m_selectedSystemAudio = checked;
+    AudioUtils* audioUtils = new AudioUtils(this);
+    checked ? audioUtils->setupSystemAudioOutput() : audioUtils->setupMicrophoneOutput();
+}
+
 
 void MainWindow::showMultiKeyBoardButtons()
 {
@@ -987,6 +1001,7 @@ void MainWindow::startRecord()
     connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
     flashTrayIconTimer->start(800);
 
+    recordProcess.setRecordAudioInputType(getRecordInputType(m_selectedMic, m_selectedSystemAudio));
     recordProcess.startRecord();
 //    voiceRecordProcess.startRecord();
 }
@@ -1333,4 +1348,16 @@ void MainWindow::initShapeWidget(QString type)
 //    connect(this, &MainWindow::saveActionTriggered,
 //            m_shapesWidget, &ShapesWidget::saveActionTriggered);
     connect(m_shapesWidget, &ShapesWidget::menuNoFocus, this, &MainWindow::activateWindow);
+}
+
+int MainWindow::getRecordInputType(bool selectedMic, bool selectedSystemAudio) {
+    if (selectedMic && selectedSystemAudio) {
+        return RecordProcess::RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO;
+    } else if (selectedMic) {
+        return RecordProcess::RECORD_AUDIO_INPUT_MIC;
+    } else if (selectedSystemAudio) {
+        return RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO;
+    }
+    return 0;
+
 }

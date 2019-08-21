@@ -21,6 +21,8 @@
 
 #include <dslider.h>
 #include <QLineEdit>
+#include <QMenu>
+#include <QAction>
 #include <QButtonGroup>
 #include <QHBoxLayout>
 #include <QSlider>
@@ -70,6 +72,19 @@ void SubToolWidget::initRecordLabel()
     rectBtnGroup->addButton(audioButton);
     audioButton->setFixedSize(50, 40);
     btnList.append(audioButton);
+    QMenu* audioMenu= new QMenu();
+    QAction* microphoneAction = new QAction(audioMenu);
+    QAction* systemAudioAction = new QAction(audioMenu);
+    microphoneAction->setText("microphone");
+    microphoneAction->setCheckable(true);
+    microphoneAction->setChecked(true);
+    systemAudioAction->setText("systemAudio");
+    systemAudioAction->setCheckable(true);
+    audioMenu->addAction(microphoneAction);
+    audioMenu->addAction(systemAudioAction);
+    audioButton->setMenu(audioMenu);
+    connect(microphoneAction, SIGNAL(triggered(bool)), this, SIGNAL(microphoneActionChecked(bool)));
+    connect(systemAudioAction, SIGNAL(triggered(bool)), this, SIGNAL(systemAudioActionChecked(bool)));
 
     ToolButton* keyBoardButton = new ToolButton();
     keyBoardButton->setObjectName("KeyBoardButton");

@@ -83,6 +83,8 @@ ToolBarWidget::ToolBarWidget(QWidget *parent)
 
     connect(m_mainTool, &MainToolWidget::buttonChecked, this, &ToolBarWidget::setExpand);
     connect(m_subTool, &SubToolWidget::keyBoardButtonClicked, this, &ToolBarWidget::keyBoardCheckedSlot);
+    connect(m_subTool, SIGNAL(microphoneActionChecked(bool)), this, SIGNAL(microphoneActionCheckedSignal(bool)));
+    connect(m_subTool, SIGNAL(systemAudioActionChecked(bool)), this, SIGNAL(systemAudioActionCheckedSignal(bool)));
 //    connect(m_majToolbar, &MajToolBar::saveImage, this, &ToolBarWidget::saveImage);
 //    connect(m_subToolbar, &SubToolBar::saveAction, this, &ToolBarWidget::saveImage);
 
@@ -200,6 +202,8 @@ ToolBar::ToolBar(QWidget *parent)
 
     connect(m_toolbarWidget, &ToolBarWidget::changeFunctionSignal, this, &ToolBar::currentFunctionMode);
     connect(m_toolbarWidget, &ToolBarWidget::keyBoardCheckedSignal, this, &ToolBar::keyBoardCheckedToMainSlot);
+    connect(m_toolbarWidget, &ToolBarWidget::microphoneActionCheckedSignal, this, &ToolBar::microphoneActionCheckedToMainSlot);
+    connect(m_toolbarWidget, &ToolBarWidget::systemAudioActionCheckedSignal, this, &ToolBar::systemAudioActionCheckedToMainSlot);
 }
 
 void ToolBar::setExpand(bool expand, QString shapeType) {
@@ -261,6 +265,12 @@ void ToolBar::keyBoardCheckedToMainSlot(bool checked)
     emit keyBoardCheckedToMain(checked);
 }
 
+void ToolBar::microphoneActionCheckedToMainSlot(bool checked){
+    emit microphoneActionCheckedToMain(checked);
+}
+void ToolBar::systemAudioActionCheckedToMainSlot(bool checked){
+    emit systemAudioActionCheckedToMain(checked);
+}
 bool ToolBar::isButtonChecked() {
     return m_expanded;
 }

@@ -36,6 +36,9 @@
 
 const int RecordProcess::RECORD_TYPE_VIDEO = 0;
 const int RecordProcess::RECORD_TYPE_GIF = 1;
+const int RecordProcess::RECORD_AUDIO_INPUT_MIC = 2;
+const int RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO = 3;
+const int RecordProcess::RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO = 4;
 
 RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 {
@@ -78,7 +81,10 @@ void RecordProcess::setRecordType(int type)
 {
     recordType = type;
 }
-
+void RecordProcess::setRecordAudioInputType(int inputType)
+{
+    recordAudioInputType = inputType;
+}
 void RecordProcess::run()
 {
     // Start record.
@@ -173,6 +179,45 @@ void RecordProcess::recordVideo()
         arguments << QString("x11grab");
         arguments << QString("-i");
         arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
+        if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
+            arguments << QString("-thread_queue_size");
+            arguments << QString("1024");
+            arguments << QString("-f");
+            arguments << QString("alsa");
+            arguments << QString("-ac");
+            arguments << QString("2");
+            arguments << QString("-i");
+            arguments << QString("hw:Loopback,1,0");
+
+            arguments << QString("-thread_queue_size");
+            arguments << QString("1024");
+            arguments << QString("-f");
+            arguments << QString("pulse");
+            arguments << QString("-ac");
+            arguments << QString("2");
+            arguments << QString("-i");
+            arguments << QString("default");
+            arguments << QString("-filter_complex");
+            arguments << QString("amix=inputs=2:duration=first:dropout_transition=0");
+        } else if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC) {
+            arguments << QString("-thread_queue_size");
+            arguments << QString("1024");
+            arguments << QString("-f");
+            arguments << QString("pulse");
+            arguments << QString("-ac");
+            arguments << QString("2");
+            arguments << QString("-i");
+            arguments << QString("default");
+        } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
+            arguments << QString("-thread_queue_size");
+            arguments << QString("1024");
+            arguments << QString("-f");
+            arguments << QString("alsa");
+            arguments << QString("-ac");
+            arguments << QString("2");
+            arguments << QString("-i");
+            arguments << QString("hw:Loopback,1,0");
+        }
 
         // Most mobile mplayer can't decode yuv444p (ffempg default format) video, yuv420p looks good.
         arguments << QString("-pix_fmt");

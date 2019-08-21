@@ -37,7 +37,8 @@ public:
 
 signals:
     void keyBoardButtonClicked(bool checked);
-
+    void microphoneActionChecked(bool checked);
+    void systemAudioActionChecked(bool checked);
 public slots:
     void switchContent(QString shapeType);
 

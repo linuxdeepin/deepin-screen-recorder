@@ -105,6 +105,8 @@ public slots:
     void changeFunctionButton(QString type);
     void showKeyBoardButtons(const QString &key);
     void changeKeyBoardShowEvent(bool checked);
+    void changeMicrophoneSelectEvent(bool checked);
+    void changeSystemAudioSelectEvent(bool checked);
     void showMultiKeyBoardButtons();
     void updateMultiKeyBoardPos();
     
@@ -125,7 +127,7 @@ protected:
     void hideAllWidget();
     void adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight);
     void initShapeWidget(QString type);
-
+    int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
 private:
     QList<WindowRect> windowRects;
     QList<QString> windowNames;
@@ -201,8 +203,9 @@ private:
     int m_keyBoardStatus; //0: keyBoard off, 1:keyBoard On
     QTimer *m_keyBoardTimer;
     bool m_multiKeyButtonsInOnSec;
-
     
+    bool m_selectedMic;
+    bool m_selectedSystemAudio;
     // Just use for debug.
     // int repaintCounter;
 };

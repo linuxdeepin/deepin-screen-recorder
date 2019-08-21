@@ -38,11 +38,14 @@ public:
     static const int RECORD_TYPE_VIDEO;
     static const int RECORD_TYPE_GIF;
     static const int RECORD_GIF_SLEEP_TIME;
-    
+    static const int RECORD_AUDIO_INPUT_MIC;
+    static const int RECORD_AUDIO_INPUT_SYSTEMAUDIO;
+    static const int RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO;
     RecordProcess(QObject *parent = 0);
     
     void setRecordInfo(const QRect &recordRect, const QString &filename);
     void setRecordType(int recordType);
+    void setRecordAudioInputType(int inputType);
     void startRecord();
     void stopRecord();
     void recordGIF();
@@ -57,6 +60,7 @@ private:
     QProcess* process;
 
     int recordType;
+    int recordAudioInputType;
 
     QRect m_recordRect;
     
