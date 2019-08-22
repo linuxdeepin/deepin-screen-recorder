@@ -20,18 +20,56 @@
 #define SIDEBAR_H
 
 #include <DLabel>
+#include <QPainter>
+#include <DBlurEffectWidget>
+#include <QEvent>
+#include <QDebug>
 DWIDGET_USE_NAMESPACE
+
+class SideBarWidget : public DBlurEffectWidget
+{
+    Q_OBJECT
+public:
+    SideBarWidget(QWidget *parent = nullptr);
+    ~SideBarWidget() Q_DECL_OVERRIDE;
+protected:
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+
+
+private:
+    QLabel *m_hSeparatorLine;
+
+    bool  m_expanded;
+};
 
 class SideBar : public DLabel
 {
     Q_OBJECT
 public:
     explicit SideBar(QWidget *parent = nullptr);
-    ~SideBar();
+    ~SideBar() Q_DECL_OVERRIDE;
 
 signals:
-
+    void heightChanged();
+    void buttonChecked(QString shape);
+    void updateColor(QColor color);
+    void requestSaveScreenshot();
+    void shapePressed(QString tool);
+    void closed();
 public slots:
+    bool isButtonChecked();
+    void setExpand(bool expand, QString shapeType);
+    void showAt(QPoint pos);
+
+protected:
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    void enterEvent(QEvent *e) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
+
+private:
+    SideBarWidget *m_sidebarWidget;
+    bool m_expanded;
 };
 
 #endif // SIDEBAR_H

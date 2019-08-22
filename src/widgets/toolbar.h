@@ -24,7 +24,6 @@
 #include <QPainter>
 #include <DBlurEffectWidget>
 #include <QEvent>
-#include <QLabel>
 #include <QDebug>
 
 #include "majtoolbar.h"

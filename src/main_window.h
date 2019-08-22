@@ -21,6 +21,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <DWindowManagerHelper>
+#include <dscreenwindowsutil.h>
+#include <DApplication>
+#include <QDesktopWidget>
 #include <QObject>
 #include <QPainter>
 #include <QWidget>
@@ -28,6 +32,7 @@
 #include <QVBoxLayout>
 #include <dwindowmanager.h>
 #include <QTimer>
+
 #include "record_process.h"
 #include "voice_record_process.h"
 #include "record_button.h"
@@ -35,11 +40,10 @@
 #include "countdown_tooltip.h"
 #include "start_tooltip.h"
 #include "button_feedback.h"
-#include <DWindowManagerHelper>
-#include <dscreenwindowsutil.h>
 #include "show_buttons.h"
 #include "widgets/shapeswidget.h"
 #include "widgets/toolbar.h"
+#include "widgets/sidebar.h"
 #include "widgets/keybuttonwidget.h"
 
 // Make this include at last, otherwise QtX11 will conflict with x11 lib to make compile failed.
@@ -101,6 +105,7 @@ public slots:
     void responseEsc();
     void compositeChanged();
     void updateToolBarPos();
+    void updateSideBarPos();
     void updateRecordButtonPos();
     void updateShotButtonPos();
     void changeFunctionButton(QString type);
@@ -202,11 +207,16 @@ private:
 
     int m_functionType;  //0: record, 1: shot
     int m_keyBoardStatus; //0: keyBoard off, 1:keyBoard On
+    bool m_repaintMainButton;//false: no need to repaint record button or shot button, true:...
+    bool m_repaintSideBar;   //false: no need to repaint sidebar, true:...
     QTimer *m_keyBoardTimer;
     bool m_multiKeyButtonsInOnSec;
 
     bool m_selectedMic;
     bool m_selectedSystemAudio;
+    int m_screenWidth;  //屏幕宽度
+    int m_screenHeight; //屏幕高度
+    SideBar *m_sideBar; //截图功能侧边栏功能
     // Just use for debug.
     // int repaintCounter;
 };

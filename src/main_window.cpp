@@ -21,6 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <dscreenwindowsutil.h>
 #include <QApplication>
 #include <QTimer>
 #include <QKeyEvent>
@@ -30,18 +31,18 @@
 #include <DWindowManagerHelper>
 #include <DForeignWindow>
 #include <QDebug>
-
-#include "main_window.h"
 #include <QVBoxLayout>
 #include <QProcess>
+#include <DHiDPIHelper>
+
+#include "main_window.h"
 #include "utils.h"
 #include "record_button.h"
 #include "record_option_panel.h"
 #include "countdown_tooltip.h"
 #include "constant.h"
-#include <dscreenwindowsutil.h>
 #include "utils/audioutils.h"
-#include <DHiDPIHelper>
+
 
 const int MainWindow::CURSOR_BOUND = 5;
 const int MainWindow::RECORD_MIN_SIZE = 200;
@@ -71,6 +72,8 @@ const int RECORD_MIN_SIZE = 10;
 const int SPACING = 10;
 const int TOOLBAR_X_SPACING = 70;
 const int TOOLBAR_Y_SPACING = 8;
+const int SIDEBAR_X_SPACING = 8;
+const int SIDEBAR_Y_SPACING = 1;
 const int CURSOR_WIDTH = 8;
 const int CURSOR_HEIGHT = 18;
 const int INDICATOR_WIDTH =  110;
@@ -95,9 +98,13 @@ void MainWindow::initAttributes()
     m_functionType = 0;
     m_keyBoardStatus = 0;
     m_multiKeyButtonsInOnSec = false;
+    m_repaintMainButton = false;
+    m_repaintSideBar = false;
     m_keyBoardTimer = new QTimer(this);
     m_keyButtonList.clear();
     m_tempkeyButtonList.clear();
+    m_screenWidth = DApplication::desktop()->screen()->width();
+    m_screenHeight = DApplication::desktop()->screen()->height();
 
     // Add Qt::WindowDoesNotAcceptFocus make window not accept focus forcely, avoid conflict with dde hot-corner.
 //    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint);
@@ -173,7 +180,8 @@ void MainWindow::initAttributes()
     m_toolBar = new ToolBar(this);
     m_toolBar->hide();
 
-
+    m_sideBar = new SideBar(this);
+    m_sideBar->hide();
 
     countdownTooltip = new CountdownTooltip();
     connect(countdownTooltip, SIGNAL(finished()), this, SLOT(startRecord()));
@@ -297,14 +305,18 @@ void MainWindow::compositeChanged()
 void MainWindow::updateToolBarPos()
 {
     QPoint toolbarPoint;
+    m_repaintMainButton = false;
+    m_repaintSideBar = false;
     toolbarPoint = QPoint(recordX + recordWidth - m_toolBar->width() - TOOLBAR_X_SPACING,
                           std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
 
-    if (m_toolBar->width() > recordX + recordWidth) {
-        toolbarPoint.setX(recordX + TOOLBAR_X_SPACING);
+    if (toolbarPoint.x() <= 0) {
+        m_repaintMainButton = true;
+        toolbarPoint.setX(recordX);
     }
     if (toolbarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
             - m_toolBar->height() - 28) {
+        m_repaintSideBar = true;
         if (recordY > 28 * 2 + 10) {
             toolbarPoint.setY(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING);
         } else {
@@ -314,15 +326,84 @@ void MainWindow::updateToolBarPos()
     m_toolBar->showAt(toolbarPoint);
 }
 
+void MainWindow::updateSideBarPos()
+{
+    QPoint sidebarPoint;
+    sidebarPoint = QPoint(recordX + recordWidth + SIDEBAR_X_SPACING,
+                          std::max(recordY + (recordHeight / 2 - m_sideBar->height() / 2), 0));
+
+    if (m_sideBar->height() < recordHeight) {
+        if (sidebarPoint.x() >= m_screenWidth - m_sideBar->width() - SIDEBAR_X_SPACING) {
+            sidebarPoint.setX(recordX + recordWidth - m_sideBar->width() - SIDEBAR_X_SPACING);
+        }
+    }
+
+    else if (m_sideBar->height() >= recordHeight) {
+        sidebarPoint.setY(recordY - (m_sideBar->height() - recordHeight));
+        if (sidebarPoint.x() >= m_screenWidth - m_sideBar->width() - SIDEBAR_X_SPACING) {
+            if (sidebarPoint.y() <= 0) {
+                sidebarPoint.setX(recordX + recordWidth - m_sideBar->width() - SIDEBAR_X_SPACING);
+                sidebarPoint.setY(recordY + recordHeight + m_toolBar->height() + TOOLBAR_Y_SPACING * 2);
+            }
+
+            else {
+                sidebarPoint.setX(recordX + recordWidth - m_sideBar->width() - SIDEBAR_X_SPACING);
+
+                if (m_repaintSideBar == false) {
+                    sidebarPoint.setY(recordY - m_sideBar->height() - TOOLBAR_Y_SPACING);
+                }
+
+                else {
+                    sidebarPoint.setY(recordY - m_sideBar->height() - TOOLBAR_Y_SPACING - m_toolBar->height() - TOOLBAR_Y_SPACING);
+                }
+
+            }
+        }
+
+        else {
+            if (m_repaintMainButton == false) {
+                if (sidebarPoint.y() <= 0) {
+                    sidebarPoint.setY(recordY);
+                }
+            }
+
+            if (m_repaintMainButton == true) {
+                sidebarPoint.setX(recordX + recordWidth + SIDEBAR_X_SPACING);
+                if (sidebarPoint.y() <= 0) {
+                    sidebarPoint.setX(recordX);
+                    sidebarPoint.setY(recordY + recordHeight + m_toolBar->height() + TOOLBAR_Y_SPACING * 2);
+                }
+
+                else {
+
+                    if (m_repaintSideBar == false) {
+                        sidebarPoint.setY(recordY - (m_sideBar->height() - recordHeight));
+                    }
+
+                    else {
+                        sidebarPoint.setX(recordX);
+                        sidebarPoint.setY(recordY - m_sideBar->height() - TOOLBAR_Y_SPACING - m_toolBar->height() - TOOLBAR_Y_SPACING);
+                    }
+
+                }
+            }
+        }
+
+    }
+
+    m_sideBar->showAt(sidebarPoint);
+}
+
 void MainWindow::updateRecordButtonPos()
 {
     QPoint recordButtonBarPoint;
     recordButtonBarPoint = QPoint(recordX + recordWidth - m_shotButton->width(),
                                   std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
 
-    if (m_recordButton->width() > recordX + recordWidth) {
-        recordButtonBarPoint.setX(recordX + TOOLBAR_X_SPACING);
+    if (m_repaintMainButton == true) {
+        recordButtonBarPoint.setX(recordX + m_toolBar->width() + TOOLBAR_X_SPACING - m_recordButton->width());
     }
+
     if (recordButtonBarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
             - m_shotButton->height() - 28) {
         if (recordY > 28 * 2 + 10) {
@@ -332,10 +413,6 @@ void MainWindow::updateRecordButtonPos()
         }
     }
 
-//    if (!m_recordButton->isVisible())
-//    {
-//        m_recordButton->show();
-//    }
     if (m_functionType == 0) {
         if (!m_recordButton->isVisible()) {
             m_recordButton->show();
@@ -351,9 +428,10 @@ void MainWindow::updateShotButtonPos()
     shotButtonBarPoint = QPoint(recordX + recordWidth - m_shotButton->width(),
                                 std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
 
-    if (m_shotButton->width() > recordX + recordWidth) {
-        shotButtonBarPoint.setX(recordX + TOOLBAR_X_SPACING);
+    if (m_repaintMainButton == true) {
+        shotButtonBarPoint.setX(recordX + m_toolBar->width() + TOOLBAR_X_SPACING - m_shotButton->width());
     }
+
     if (shotButtonBarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
             - m_shotButton->height() - 28) {
         if (recordY > 28 * 2 + 10) {
@@ -363,10 +441,6 @@ void MainWindow::updateShotButtonPos()
         }
     }
 
-//    if (!m_shotButton->isVisible())
-//    {
-//        m_shotButton->show();
-//    }
     if (m_functionType == 1) {
         if (!m_shotButton->isVisible()) {
             m_shotButton->show();
@@ -382,6 +456,9 @@ void MainWindow::changeFunctionButton(QString type)
 //        updateRecordButtonPos();
         m_recordButton->show();
         m_functionType = 0;
+        if (m_sideBar->isVisible()) {
+            m_sideBar->hide();
+        }
     }
 
     else if (type == "shot") {
@@ -389,6 +466,9 @@ void MainWindow::changeFunctionButton(QString type)
 //        updateShotButtonPos();
         m_shotButton->show();
         m_functionType = 1;
+        if (!m_sideBar->isVisible()) {
+            updateSideBarPos();
+        }
     }
 }
 
@@ -780,6 +860,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             if (recordButtonStatus == RECORD_BUTTON_NORMAL && needRepaint) {
                 showRecordButton();
                 updateToolBarPos();
+                if (m_functionType == 1) {
+                    updateSideBarPos();
+                }
                 updateRecordButtonPos();
                 updateShotButtonPos();
             }
@@ -808,9 +891,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
             if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
                 hideRecordButton();
-                m_toolBar->hide();
-                m_recordButton->hide();
-                m_shotButton->hide();
+                hideAllWidget();
 
                 //隐藏键盘按钮控件
                 if (m_keyButtonList.count() > 0) {
@@ -829,6 +910,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
             updateCursor(event);
             updateToolBarPos();
+            if (m_functionType == 1) {
+                updateSideBarPos();
+            }
             updateRecordButtonPos();
             updateShotButtonPos();
 
@@ -857,6 +941,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
             showRecordButton();
             updateToolBarPos();
+            if (m_functionType == 1) {
+                updateSideBarPos();
+            }
             updateRecordButtonPos();
             updateShotButtonPos();
 
@@ -865,6 +952,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
                 showRecordButton();
                 updateToolBarPos();
+                if (m_functionType == 1) {
+                    updateSideBarPos();
+                }
                 updateRecordButtonPos();
                 updateShotButtonPos();
             }
@@ -1238,6 +1328,7 @@ void MainWindow::hideRecordButton()
 void MainWindow::hideAllWidget()
 {
     m_toolBar->hide();
+    m_sideBar->hide();
     m_recordButton->hide();
     m_shotButton->hide();
 
