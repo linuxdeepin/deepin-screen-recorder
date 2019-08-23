@@ -310,6 +310,34 @@ select the area to record</source>
         <source>Text</source>
         <translation>文本</translation>
     </message>
+    <message>
+        <source>GIF</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MP4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>5 fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>10 fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>20 fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>24 fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>30 fps</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Utils</name>
