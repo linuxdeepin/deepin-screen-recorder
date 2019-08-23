@@ -43,7 +43,7 @@ KeyButtonWidget::KeyButtonWidget(QWidget *parent) : DBlurEffectWidget(parent)
     setFixedWidth(_BUTTON_WIDTH);
     setFixedHeight(_BUTTON_HEIGHT);
     m_word = new DLabel(this);
-    DFontSizeManager::instance()->bind(m_word, DFontSizeManager::T5);
+    DFontSizeManager::instance()->bind(m_word, DFontSizeManager::T6);
 //    QFont t_wordFont;
 //    t_wordFont.setPixelSize(18);
 //    m_word->setFont(t_wordFont);

@@ -40,9 +40,16 @@ const int RecordProcess::RECORD_AUDIO_INPUT_MIC = 2;
 const int RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO = 3;
 const int RecordProcess::RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO = 4;
 
+const int RecordProcess::RECORD_FRAMERATE_5 = 5;
+const int RecordProcess::RECORD_FRAMERATE_10 = 10;
+const int RecordProcess::RECORD_FRAMERATE_20 = 20;
+const int RecordProcess::RECORD_FRAMERATE_24 = 24;
+const int RecordProcess::RECORD_FRAMERATE_30 = 30;
+
 RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 {
     settings = new Settings();
+    m_framerate = RECORD_FRAMERATE_24;
 
     saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
     defaultSaveDir = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
@@ -80,6 +87,11 @@ void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filena
 void RecordProcess::setRecordType(int type)
 {
     recordType = type;
+}
+
+void RecordProcess::setFrameRate(int framerate)
+{
+    m_framerate = framerate;
 }
 void RecordProcess::setRecordAudioInputType(int inputType)
 {
@@ -136,19 +148,19 @@ void RecordProcess::recordVideo()
     QStringList arguments;
 
     if (settings->getOption("lossless_recording").toBool() || !QSysInfo::currentCpuArchitecture().startsWith("x86")) {
-        int framerate = 30;
-        if (!settings->getOption("mkv_framerate").isNull()) {
-            framerate = settings->getOption("mkv_framerate").toInt();
-        } else {
-            qDebug() << "Not found mkv_framerate option in config file, mkv use framerate 30";
-        }
+//        int framerate = 30;
+//        if (!settings->getOption("mkv_framerate").isNull()) {
+//            framerate = settings->getOption("mkv_framerate").toInt();
+//        } else {
+//            qDebug() << "Not found mkv_framerate option in config file, mkv use framerate 30";
+//        }
 
-        qDebug() << "mkv framerate " << framerate;
+        qDebug() << "mkv framerate " << m_framerate;
 
         arguments << QString("-video_size");
         arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
         arguments << QString("-framerate");
-        arguments << QString("%1").arg(framerate);
+        arguments << QString("%1").arg(m_framerate);
         arguments << QString("-f");
         arguments << QString("x11grab");
         arguments << QString("-i");
@@ -161,20 +173,20 @@ void RecordProcess::recordVideo()
         arguments << QString("ultrafast");
         arguments << savePath;
     } else {
-        int framerate = 25;
+//        int framerate = 25;
 
-        if (!settings->getOption("mp4_framerate").isNull()) {
-            framerate = settings->getOption("mp4_framerate").toInt();
-        } else {
-            qDebug() << "Not found mp4_framerate option in config file, mp4 use framerate 25";
-        }
+//        if (!settings->getOption("mp4_framerate").isNull()) {
+//            framerate = settings->getOption("mp4_framerate").toInt();
+//        } else {
+//            qDebug() << "Not found mp4_framerate option in config file, mp4 use framerate 25";
+//        }
 
-        qDebug() << "mp4 framerate " << framerate;
+        qDebug() << "mp4 framerate " << m_framerate;
 
         arguments << QString("-video_size");
         arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
         arguments << QString("-framerate");
-        arguments << QString("%1").arg(framerate);
+        arguments << QString("%1").arg(m_framerate);
         arguments << QString("-f");
         arguments << QString("x11grab");
         arguments << QString("-i");

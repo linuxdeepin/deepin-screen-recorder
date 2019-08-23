@@ -14,11 +14,11 @@ or press the shortcut again to stop recording</source>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation>录屏</translation>
     </message>
     <message>
         <source>Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>截屏</translation>
     </message>
 </context>
 <context>
@@ -37,11 +37,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">录屏</translation>
     </message>
     <message>
         <source>Shot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">截屏</translation>
     </message>
 </context>
 <context>
@@ -64,7 +64,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">文本</translation>
     </message>
     <message>
         <source>Undo</source>
@@ -178,7 +178,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">文本</translation>
     </message>
     <message>
         <source>Color</source>
@@ -260,47 +260,55 @@ select the area to record</source>
     <name>SubToolWidget</name>
     <message>
         <source>Audio</source>
-        <translation type="unfinished"></translation>
+        <translation>音频</translation>
     </message>
     <message>
-        <source>Camera</source>
-        <translation type="unfinished"></translation>
+        <source>Microphone</source>
+        <translation>麦克风</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fps</source>
-        <translation type="unfinished"></translation>
+        <source>SystemAudio</source>
+        <translation>内置音频</translation>
     </message>
     <message>
         <source>Key</source>
-        <translation type="unfinished"></translation>
+        <translation>键盘</translation>
+    </message>
+    <message>
+        <source>Camera</source>
+        <translation>摄像头</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>鼠标</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>格式</translation>
+    </message>
+    <message>
+        <source>Fps</source>
+        <translation>帧率</translation>
     </message>
     <message>
         <source>Rect</source>
-        <translation type="unfinished"></translation>
+        <translation>矩形</translation>
     </message>
     <message>
         <source>Circ</source>
-        <translation type="unfinished"></translation>
+        <translation>圆形</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation type="unfinished"></translation>
+        <translation>直线</translation>
     </message>
     <message>
         <source>Pen</source>
-        <translation type="unfinished"></translation>
+        <translation>画笔</translation>
     </message>
     <message>
-        <source>text</source>
-        <translation type="unfinished"></translation>
+        <source>Text</source>
+        <translation>文本</translation>
     </message>
 </context>
 <context>

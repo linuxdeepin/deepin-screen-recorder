@@ -83,8 +83,12 @@ ToolBarWidget::ToolBarWidget(QWidget *parent)
 
     connect(m_mainTool, &MainToolWidget::buttonChecked, this, &ToolBarWidget::setExpand);
     connect(m_subTool, &SubToolWidget::keyBoardButtonClicked, this, &ToolBarWidget::keyBoardCheckedSlot);
+    connect(m_subTool, &SubToolWidget::mouseBoardButtonClicked, this, &ToolBarWidget::mouseCheckedSignalToToolBar);
     connect(m_subTool, SIGNAL(microphoneActionChecked(bool)), this, SIGNAL(microphoneActionCheckedSignal(bool)));
     connect(m_subTool, SIGNAL(systemAudioActionChecked(bool)), this, SIGNAL(systemAudioActionCheckedSignal(bool)));
+    connect(m_subTool, SIGNAL(gifActionChecked(bool)), this, SIGNAL(gifActionCheckedSignal(bool)));
+    connect(m_subTool, SIGNAL(mp4ActionChecked(bool)), this, SIGNAL(mp4ActionCheckedSignal(bool)));
+    connect(m_subTool, SIGNAL(videoFrameRateChanged(int)), this, SIGNAL(frameRateChangedSignal(int)));
 //    connect(m_majToolbar, &MajToolBar::saveImage, this, &ToolBarWidget::saveImage);
 //    connect(m_subToolbar, &SubToolBar::saveAction, this, &ToolBarWidget::saveImage);
 
@@ -208,6 +212,10 @@ ToolBar::ToolBar(QWidget *parent)
     connect(m_toolbarWidget, &ToolBarWidget::keyBoardCheckedSignal, this, &ToolBar::keyBoardCheckedToMainSlot);
     connect(m_toolbarWidget, &ToolBarWidget::microphoneActionCheckedSignal, this, &ToolBar::microphoneActionCheckedToMainSlot);
     connect(m_toolbarWidget, &ToolBarWidget::systemAudioActionCheckedSignal, this, &ToolBar::systemAudioActionCheckedToMainSlot);
+    connect(m_toolbarWidget, &ToolBarWidget::mouseCheckedSignalToToolBar, this, &ToolBar::mouseCheckedToMain);
+    connect(m_toolbarWidget, &ToolBarWidget::gifActionCheckedSignal, this, &ToolBar::gifActionCheckedToMain);
+    connect(m_toolbarWidget, &ToolBarWidget::mp4ActionCheckedSignal, this, &ToolBar::mp4ActionCheckedToMain);
+    connect(m_toolbarWidget, &ToolBarWidget::frameRateChangedSignal, this, &ToolBar::frameRateChangedToMain);
 }
 
 void ToolBar::setExpand(bool expand, QString shapeType)

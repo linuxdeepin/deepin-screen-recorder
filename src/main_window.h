@@ -111,8 +111,12 @@ public slots:
     void changeFunctionButton(QString type);
     void showKeyBoardButtons(const QString &key);
     void changeKeyBoardShowEvent(bool checked);
+    void changeMouseShowEvent(bool checked);
     void changeMicrophoneSelectEvent(bool checked);
     void changeSystemAudioSelectEvent(bool checked);
+    void changeGifSelectEvent(bool checked);
+    void changeMp4SelectEvent(bool checked);
+    void changeFrameRateEvent(int frameRate);
     void showMultiKeyBoardButtons();
     void updateMultiKeyBoardPos();
 
@@ -207,6 +211,7 @@ private:
 
     int m_functionType;  //0: record, 1: shot
     int m_keyBoardStatus; //0: keyBoard off, 1:keyBoard On
+    int m_mouseStatus; //0: keyBoard off, 1:keyBoard On
     bool m_repaintMainButton;//false: no need to repaint record button or shot button, true:...
     bool m_repaintSideBar;   //false: no need to repaint sidebar, true:...
     QTimer *m_keyBoardTimer;
@@ -214,6 +219,9 @@ private:
 
     bool m_selectedMic;
     bool m_selectedSystemAudio;
+    bool m_gifMode;
+    bool m_mp4Mode;
+    int m_frameRate;
     int m_screenWidth;  //屏幕宽度
     int m_screenHeight; //屏幕高度
     SideBar *m_sideBar; //截图功能侧边栏功能

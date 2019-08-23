@@ -73,17 +73,20 @@ void SubToolWidget::initRecordLabel()
     rectBtnGroup->addButton(audioButton);
     audioButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(audioButton);
+
     QMenu *audioMenu = new QMenu();
     QAction *microphoneAction = new QAction(audioMenu);
     QAction *systemAudioAction = new QAction(audioMenu);
-    microphoneAction->setText("microphone");
+    microphoneAction->setText(tr("Microphone"));
     microphoneAction->setCheckable(true);
     microphoneAction->setChecked(true);
-    systemAudioAction->setText("systemAudio");
+    systemAudioAction->setText(tr("SystemAudio"));
     systemAudioAction->setCheckable(true);
     audioMenu->addAction(microphoneAction);
+    audioMenu->addSeparator();
     audioMenu->addAction(systemAudioAction);
     audioButton->setMenu(audioMenu);
+
     connect(microphoneAction, SIGNAL(triggered(bool)), this, SIGNAL(microphoneActionChecked(bool)));
     connect(systemAudioAction, SIGNAL(triggered(bool)), this, SIGNAL(systemAudioActionChecked(bool)));
 
@@ -109,8 +112,12 @@ void SubToolWidget::initRecordLabel()
     mouseButton->setObjectName("MouseButton");
     mouseButton->setText(tr("Mouse"));
     rectBtnGroup->addButton(mouseButton);
-    mouseButton->setFixedSize(TOOL_BUTTON_SIZE);
+    mouseButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(mouseButton);
+
+    //发送鼠标按键按钮状态信号
+    connect(mouseButton, SIGNAL(clicked(bool)),
+            this, SIGNAL(mouseBoardButtonClicked(bool)));
 
     ToolButton *formatButton = new ToolButton();
     formatButton->setObjectName("FormatButton");
@@ -119,12 +126,93 @@ void SubToolWidget::initRecordLabel()
     formatButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(formatButton);
 
+    QActionGroup *t_formatActionGroup = new QActionGroup(this);
+    t_formatActionGroup->setExclusive(true);
+    QMenu *formatMenu = new QMenu();
+    QAction *gifAction = new QAction(formatMenu);
+    QAction *mp4Action = new QAction(formatMenu);
+    gifAction->setText(tr("GIF"));
+    gifAction->setCheckable(true);
+    gifAction->setChecked(true);
+    mp4Action->setText(tr("MP4"));
+    mp4Action->setCheckable(true);
+    formatMenu->addAction(gifAction);
+    formatMenu->addSeparator();
+    formatMenu->addAction(mp4Action);
+    formatButton->setMenu(formatMenu);
+    t_formatActionGroup->addAction(gifAction);
+    t_formatActionGroup->addAction(mp4Action);
+
+    connect(gifAction, SIGNAL(triggered(bool)), this, SIGNAL(gifActionChecked(bool)));
+    connect(mp4Action, SIGNAL(triggered(bool)), this, SIGNAL(mp4ActionChecked(bool)));
+
     ToolButton *fpsButton = new ToolButton();
     fpsButton->setObjectName("FpsButton");
     fpsButton->setText(tr("Fps"));
     rectBtnGroup->addButton(fpsButton);
-    fpsButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
+    fpsButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(fpsButton);
+
+    //添加帧率选择下拉列表
+    QActionGroup *t_fpsActionGroup = new QActionGroup(this);
+    t_fpsActionGroup->setExclusive(true);
+    QMenu *fpsMenu = new QMenu();
+    QAction *frame5Action = new QAction(fpsMenu);
+    QAction *frame10Action = new QAction(fpsMenu);
+    QAction *frame20Action = new QAction(fpsMenu);
+    QAction *frame24Action = new QAction(fpsMenu);
+    QAction *frame30Action = new QAction(fpsMenu);
+
+    frame5Action->setText(tr("5 fps"));
+    frame5Action->setCheckable(true);
+
+    frame10Action->setText(tr("10 fps"));
+    frame10Action->setCheckable(true);
+
+    frame20Action->setText(tr("20 fps"));
+    frame20Action->setCheckable(true);
+
+    frame24Action->setText(tr("24 fps"));
+    frame24Action->setCheckable(true);
+    frame24Action->setChecked(true);
+
+    frame30Action->setText(tr("30 fps"));
+    frame30Action->setCheckable(true);
+
+    fpsMenu->addAction(frame5Action);
+    fpsMenu->addSeparator();
+    fpsMenu->addAction(frame10Action);
+    fpsMenu->addSeparator();
+    fpsMenu->addAction(frame20Action);
+    fpsMenu->addSeparator();
+    fpsMenu->addAction(frame24Action);
+    fpsMenu->addSeparator();
+    fpsMenu->addAction(frame30Action);
+
+    fpsButton->setMenu(fpsMenu);
+    t_fpsActionGroup->addAction(frame5Action);
+    t_fpsActionGroup->addAction(frame10Action);
+    t_fpsActionGroup->addAction(frame20Action);
+    t_fpsActionGroup->addAction(frame24Action);
+    t_fpsActionGroup->addAction(frame30Action);
+
+    connect(t_fpsActionGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
+    [ = ](QAction * t_act) {
+        int t_frameRateSelected = 0;
+        if (t_act == frame5Action) {
+            t_frameRateSelected = 5;
+        } else if (t_act == frame10Action) {
+            t_frameRateSelected = 10;
+        } else if (t_act == frame20Action) {
+            t_frameRateSelected = 20;
+        } else if (t_act == frame24Action) {
+            t_frameRateSelected = 24;
+        } else if (t_act == frame30Action) {
+            t_frameRateSelected = 30;
+        }
+
+        emit videoFrameRateChanged(t_frameRateSelected);
+    });
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setMargin(0);
@@ -232,7 +320,7 @@ void SubToolWidget::initShotLabel()
 
     ToolButton *textButton = new ToolButton();
     textButton->setObjectName("TextButton");
-    textButton->setText(tr("text"));
+    textButton->setText(tr("Text"));
     rectBtnGroup->addButton(textButton);
     textButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(textButton);

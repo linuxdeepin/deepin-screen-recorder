@@ -41,10 +41,18 @@ public:
     static const int RECORD_AUDIO_INPUT_MIC;
     static const int RECORD_AUDIO_INPUT_SYSTEMAUDIO;
     static const int RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO;
+
+    static const int RECORD_FRAMERATE_5;
+    static const int RECORD_FRAMERATE_10;
+    static const int RECORD_FRAMERATE_20;
+    static const int RECORD_FRAMERATE_24;
+    static const int RECORD_FRAMERATE_30;
+
     RecordProcess(QObject *parent = 0);
 
     void setRecordInfo(const QRect &recordRect, const QString &filename);
     void setRecordType(int recordType);
+    void setFrameRate(int framerate);
     void setRecordAudioInputType(int inputType);
     void startRecord();
     void stopRecord();
@@ -76,4 +84,5 @@ private:
 
     int byzanzProcessId;
     int sleepProcessId;
+    int m_framerate;
 };

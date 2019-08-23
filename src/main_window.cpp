@@ -97,10 +97,14 @@ void MainWindow::initAttributes()
     setWindowTitle(tr("Deepin screen recorder"));
     m_functionType = 0;
     m_keyBoardStatus = 0;
+    m_mouseStatus = 0;
     m_multiKeyButtonsInOnSec = false;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
+    m_gifMode = true;
+    m_mp4Mode = false;
     m_keyBoardTimer = new QTimer(this);
+    m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
     m_keyButtonList.clear();
     m_tempkeyButtonList.clear();
     m_screenWidth = DApplication::desktop()->screen()->width();
@@ -188,8 +192,12 @@ void MainWindow::initAttributes()
 
     connect(m_toolBar, &ToolBar::currentFunctionToMain, this, &MainWindow::changeFunctionButton);
     connect(m_toolBar, &ToolBar::keyBoardCheckedToMain, this, &MainWindow::changeKeyBoardShowEvent);
+    connect(m_toolBar, &ToolBar::mouseCheckedToMain, this, &MainWindow::changeMouseShowEvent);
     connect(m_toolBar, &ToolBar::microphoneActionCheckedToMain, this, &MainWindow::changeMicrophoneSelectEvent);
     connect(m_toolBar, &ToolBar::systemAudioActionCheckedToMain, this, &MainWindow::changeSystemAudioSelectEvent);
+    connect(m_toolBar, &ToolBar::gifActionCheckedToMain, this, &MainWindow::changeGifSelectEvent);
+    connect(m_toolBar, &ToolBar::mp4ActionCheckedToMain, this, &MainWindow::changeMp4SelectEvent);
+    connect(m_toolBar, &ToolBar::frameRateChangedToMain, this, &MainWindow::changeFrameRateEvent);
     //构建截屏录屏功能触发按钮
     m_recordButton = new QPushButton(this);
     m_recordButton->setFixedSize(60, 47);
@@ -268,21 +276,21 @@ void MainWindow::initResource()
 
 void MainWindow::showPressFeedback(int x, int y)
 {
-    if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
+    if (recordButtonStatus == RECORD_BUTTON_RECORDING && m_mouseStatus == 1) {
         buttonFeedback->showPressFeedback(x, y);
     }
 }
 
 void MainWindow::showDragFeedback(int x, int y)
 {
-    if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
+    if (recordButtonStatus == RECORD_BUTTON_RECORDING && m_mouseStatus == 1) {
         buttonFeedback->showDragFeedback(x, y);
     }
 }
 
 void MainWindow::showReleaseFeedback(int x, int y)
 {
-    if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
+    if (recordButtonStatus == RECORD_BUTTON_RECORDING && m_mouseStatus == 1) {
         buttonFeedback->showReleaseFeedback(x, y);
     }
 }
@@ -536,7 +544,7 @@ void MainWindow::showKeyBoardButtons(const QString &key)
 
 void MainWindow::changeKeyBoardShowEvent(bool checked)
 {
-    qDebug() << checked;
+    qDebug() << "keyboard" << checked;
 
     if (checked == false) {
         m_keyBoardStatus = 0;
@@ -551,6 +559,19 @@ void MainWindow::changeKeyBoardShowEvent(bool checked)
         m_keyBoardStatus = 1;
     }
 }
+
+void MainWindow::changeMouseShowEvent(bool checked)
+{
+    qDebug() << "mouse" << checked;
+    if (checked == false) {
+        m_mouseStatus = 0;
+    }
+
+    else {
+        m_mouseStatus = 1;
+    }
+    return;
+}
 void MainWindow::changeMicrophoneSelectEvent(bool checked)
 {
     m_selectedMic = checked;
@@ -562,6 +583,44 @@ void MainWindow::changeSystemAudioSelectEvent(bool checked)
     checked ? audioUtils->setupSystemAudioOutput() : audioUtils->setupMicrophoneOutput();
 }
 
+void MainWindow::changeGifSelectEvent(bool checked)
+{
+    m_gifMode = true;
+    m_mp4Mode = false;
+    qDebug() << "gif: " << checked;
+}
+
+void MainWindow::changeMp4SelectEvent(bool checked)
+{
+    m_gifMode = false;
+    m_mp4Mode = true;
+    qDebug() << "mp4: " << checked;
+}
+
+void MainWindow::changeFrameRateEvent(int frameRate)
+{
+    qDebug() << "frameRate: " << frameRate;
+    switch (frameRate) {
+    case 5:
+        m_frameRate = RecordProcess::RECORD_FRAMERATE_5;
+        break;
+    case 10:
+        m_frameRate = RecordProcess::RECORD_FRAMERATE_10;
+        break;
+    case 20:
+        m_frameRate = RecordProcess::RECORD_FRAMERATE_20;
+        break;
+    case 24:
+        m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
+        break;
+    case 30:
+        m_frameRate = RecordProcess::RECORD_FRAMERATE_30;
+        break;
+    default:
+        m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
+        break;
+    }
+}
 
 void MainWindow::showMultiKeyBoardButtons()
 {
@@ -1265,15 +1324,28 @@ void MainWindow::startCountdown()
     };
 
     recordProcess.setRecordInfo(recordRect, selectAreaName);
+//    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+//        if (recordOptionPanel->isSaveAsGif()) {
+//            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
+//        } else {
+//            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
+//        }
+//    } else {
+//        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
+//    }
+    recordProcess.setFrameRate(m_frameRate);
     if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
-        if (recordOptionPanel->isSaveAsGif()) {
+        if (m_gifMode == true && m_mp4Mode == false) {
+            qDebug() << "record format is gif";
             recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
-        } else {
+        } else if (m_gifMode == false && m_mp4Mode == true) {
+            qDebug() << "record format is mp4";
             recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
         }
     } else {
         recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
     }
+
 
     resetCursor();
 

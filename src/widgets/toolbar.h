@@ -54,6 +54,10 @@ signals:
     void keyBoardCheckedSignal(bool checked);
     void microphoneActionCheckedSignal(bool checked);
     void systemAudioActionCheckedSignal(bool checked);
+    void mouseCheckedSignalToToolBar(bool checked);
+    void gifActionCheckedSignal(bool checked);
+    void mp4ActionCheckedSignal(bool checked);
+    void frameRateChangedSignal(int frameRate);
 public slots:
     bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
@@ -96,6 +100,10 @@ signals:
     void keyBoardCheckedToMain(bool checked);
     void microphoneActionCheckedToMain(bool checked);
     void systemAudioActionCheckedToMain(bool checked);
+    void mouseCheckedToMain(bool checked);
+    void gifActionCheckedToMain(bool checked);
+    void mp4ActionCheckedToMain(bool checked);
+    void frameRateChangedToMain(int frameRate);
 public slots:
     bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);

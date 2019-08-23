@@ -38,8 +38,12 @@ public:
 
 signals:
     void keyBoardButtonClicked(bool checked);
+    void mouseBoardButtonClicked(bool checked);
     void microphoneActionChecked(bool checked);
     void systemAudioActionChecked(bool checked);
+    void gifActionChecked(bool checked);
+    void mp4ActionChecked(bool checked);
+    void videoFrameRateChanged(int frameRate);
 public slots:
     void switchContent(QString shapeType);
 
