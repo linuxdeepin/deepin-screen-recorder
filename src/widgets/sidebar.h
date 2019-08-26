@@ -24,6 +24,9 @@
 #include <DBlurEffectWidget>
 #include <QEvent>
 #include <QDebug>
+
+#include "colortoolwidget.h"
+#include "shottoolwidget.h"
 DWIDGET_USE_NAMESPACE
 
 class SideBarWidget : public DBlurEffectWidget
@@ -39,6 +42,8 @@ protected:
 
 private:
     QLabel *m_hSeparatorLine;
+    ColorToolWidget *m_colorTool;
+    ShotToolWidget *m_shotTool;
 
     bool  m_expanded;
 };

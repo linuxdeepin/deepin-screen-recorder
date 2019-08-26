@@ -45,7 +45,9 @@ HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src
     src/widgets/maintoolwidget.h \
     src/widgets/subtoolwidget.h \
     src/widgets/keybuttonwidget.h \
-    src/widgets/sidebar.h
+    src/widgets/sidebar.h \
+    src/widgets/shottoolwidget.h \
+    src/widgets/colortoolwidget.h
 SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.cpp src/utils.cpp src/record_button.cpp src/record_option_panel.cpp src/countdown_tooltip.cpp src/constant.cpp src/event_monitor.cpp src/start_tooltip.cpp src/button_feedback.cpp src/process_tree.cpp \
     src/camera_process.cpp \
     src/show_buttons.cpp  \
@@ -75,7 +77,9 @@ SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.
     src/widgets/maintoolwidget.cpp \
     src/widgets/subtoolwidget.cpp \
     src/widgets/keybuttonwidget.cpp \
-    src/widgets/sidebar.cpp
+    src/widgets/sidebar.cpp \
+    src/widgets/shottoolwidget.cpp \
+    src/widgets/colortoolwidget.cpp
 
 QT += core
 QT += widgets

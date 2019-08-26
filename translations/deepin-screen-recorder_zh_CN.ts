@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
+    <name>ColorToolWidget</name>
+    <message>
+        <source>Red</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>yellow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>blue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>green</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -214,6 +233,29 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Decrease width right</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
+    <message>
+        <source>1st</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2nd</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3th</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>blur</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>mosaic</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

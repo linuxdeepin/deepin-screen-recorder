@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "keybuttonwidget.h"
+#include "../utils.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -32,26 +33,31 @@ const int BTN_RADIUS = 3;
 
 KeyButtonWidget::KeyButtonWidget(QWidget *parent) : DBlurEffectWidget(parent)
 {
+    setAttribute(Qt::WA_ShowWithoutActivating);
+    setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
+
     setBlurRectXRadius(10);
     setBlurRectYRadius(10);
     setRadius(30);
     setMode(DBlurEffectWidget::GaussianBlur);
     setBlurEnabled(true);
-    setBlendMode(DBlurEffectWidget::InWindowBlend);
+//    setBlendMode(DBlurEffectWidget::InWindowBlend);
     setMaskColor(QColor(255, 255, 255, 200));
     //设置透明效果
     setFixedWidth(_BUTTON_WIDTH);
     setFixedHeight(_BUTTON_HEIGHT);
-    m_word = new DLabel(this);
+    m_word = new DLabel();
     DFontSizeManager::instance()->bind(m_word, DFontSizeManager::T6);
 //    QFont t_wordFont;
-//    t_wordFont.setPixelSize(18);
+//    t_wordFont.setPixelSize(13);
 //    m_word->setFont(t_wordFont);
     QHBoxLayout *hLayout = new QHBoxLayout(this);
     hLayout->setMargin(0);
     hLayout->setSpacing(2);
     hLayout->addWidget(m_word, 0, Qt::AlignVCenter | Qt::AlignHCenter);
     this->setLayout(hLayout);
+
+    Utils::passInputEvent(this->winId());
 }
 
 KeyButtonWidget::~KeyButtonWidget()

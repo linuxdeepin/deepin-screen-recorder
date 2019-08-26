@@ -62,13 +62,15 @@ SideBarWidget::SideBarWidget(QWidget *parent)
 
 //    m_mainTool = new MainToolWidget(this);
 //    m_subTool = new SubToolWidget(this);
+    m_colorTool = new ColorToolWidget(this);
+    m_shotTool = new ShotToolWidget(this);
 
-    QHBoxLayout *hLayout = new QHBoxLayout();
-    hLayout->setMargin(0);
-    hLayout->setSpacing(2);
-//    hLayout->addWidget(m_mainTool, 0, Qt::AlignLeft);
-//    hLayout->addWidget(m_subTool, 1, Qt::AlignLeft);
-    setLayout(hLayout);
+    QVBoxLayout *VLayout = new QVBoxLayout();
+    VLayout->setMargin(0);
+    VLayout->setSpacing(3);
+    VLayout->addWidget(m_shotTool, 0, Qt::AlignTop | Qt::AlignHCenter);
+    VLayout->addWidget(m_colorTool, 1, Qt::AlignTop | Qt::AlignHCenter);
+    setLayout(VLayout);
 }
 
 SideBarWidget::~SideBarWidget()

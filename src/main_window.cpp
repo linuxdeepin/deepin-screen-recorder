@@ -833,30 +833,29 @@ void MainWindow::paintEvent(QPaintEvent *)
         }
 
         // Draw record panel.
-        if (isFirstPressButton) {
-            if (isFirstReleaseButton) {
-                if (recordButtonStatus == RECORD_BUTTON_NORMAL && recordButton->isVisible()) {
-                    QList<QRectF> rects;
-                    rects << recordButton->geometry();
+//        if (isFirstPressButton) {
+//            if (isFirstReleaseButton) {
+//                if (recordButtonStatus == RECORD_BUTTON_NORMAL && recordButton->isVisible()) {
+//                    QList<QRectF> rects;
+//                    rects << recordButton->geometry();
 
-                    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
-                        rects << recordOptionPanel->geometry();
-                    }
-                    Utils::blurRects(windowManager, this->winId(), rects);
-                } else if (recordButtonStatus == RECORD_BUTTON_WAIT) {
-                    QList<QRectF> rects;
-                    rects << countdownTooltip->geometry();
-                    Utils::blurRects(windowManager, this->winId(), rects);
-                }
-            }
-        }
+//                    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+//                        rects << recordOptionPanel->geometry();
+//                    }
+//                    Utils::blurRects(windowManager, this->winId(), rects);
+//                } else if (recordButtonStatus == RECORD_BUTTON_WAIT) {
+//                    QList<QRectF> rects;
+//                    rects << countdownTooltip->geometry();
+//                    Utils::blurRects(windowManager, this->winId(), rects);
+//                }
+//            }
+//        }
     }
 }
 
 bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
     bool needRepaint = false;
-
 #undef KeyPress
 #undef KeyRelease
     if (event->type() == QEvent::KeyPress) {
