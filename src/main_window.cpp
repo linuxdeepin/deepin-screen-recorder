@@ -34,6 +34,7 @@
 #include <QVBoxLayout>
 #include <QProcess>
 #include <DHiDPIHelper>
+#include <QMouseEvent>
 
 #include "main_window.h"
 #include "utils.h"
@@ -930,84 +931,78 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
     if (event->type() == QEvent::MouseButtonPress) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-        dragStartX = mouseEvent->x();
-        dragStartY = mouseEvent->y();
-        if (!isFirstPressButton) {
-            isFirstPressButton = true;
+        if (mouseEvent->button() == Qt::LeftButton) {
+            dragStartX = mouseEvent->x();
+            dragStartY = mouseEvent->y();
+            if (!isFirstPressButton) {
+                isFirstPressButton = true;
 
-//            startTooltip->hide();
-//            m_toolBar->hide();
+                //            startTooltip->hide();
+                //            m_toolBar->hide();
 
-            Utils::clearBlur(windowManager, this->winId());
-        } else {
-            dragAction = getAction(event);
+                Utils::clearBlur(windowManager, this->winId());
+            } else {
+                dragAction = getAction(event);
 
-            dragRecordX = recordX;
-            dragRecordY = recordY;
-            dragRecordWidth = recordWidth;
-            dragRecordHeight = recordHeight;
+                dragRecordX = recordX;
+                dragRecordY = recordY;
+                dragRecordWidth = recordWidth;
+                dragRecordHeight = recordHeight;
 
-            if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-                hideRecordButton();
-                hideAllWidget();
+                if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+                    hideRecordButton();
+                    hideAllWidget();
 
-                //隐藏键盘按钮控件
-                if (m_keyButtonList.count() > 0) {
-                    for (int t_index = 0; t_index < m_keyButtonList.count(); t_index++) {
-                        m_keyButtonList.at(t_index)->hide();
+                    //隐藏键盘按钮控件
+                    if (m_keyButtonList.count() > 0) {
+                        for (int t_index = 0; t_index < m_keyButtonList.count(); t_index++) {
+                            m_keyButtonList.at(t_index)->hide();
+                        }
                     }
                 }
             }
+
+            isPressButton = true;
+            isReleaseButton = false;
         }
 
-        isPressButton = true;
-        isReleaseButton = false;
     } else if (event->type() == QEvent::MouseButtonRelease) {
-        if (!isFirstReleaseButton) {
-            isFirstReleaseButton = true;
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+        if (mouseEvent->button() == Qt::LeftButton) {
+            if (!isFirstReleaseButton) {
+                isFirstReleaseButton = true;
 
-            updateCursor(event);
-            updateToolBarPos();
-            if (m_functionType == 1) {
-                updateSideBarPos();
-            }
-            updateRecordButtonPos();
-            updateShotButtonPos();
+                updateCursor(event);
+                updateToolBarPos();
+                if (m_functionType == 1) {
+                    updateSideBarPos();
+                }
+                updateRecordButtonPos();
+                updateShotButtonPos();
 
-            // Record select area name with window name if just click (no drag).
-            if (!isFirstDrag) {
-                QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-                for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
-                    if (QRect(it->x, it->y, it->width, it->height).contains(mouseEvent->pos() + screenRect.topLeft())) {
-                        selectAreaName = windowNames[windowRects.rend() - it - 1];
-                        break;
+                // Record select area name with window name if just click (no drag).
+                if (!isFirstDrag) {
+                    QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+                    for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
+                        if (QRect(it->x, it->y, it->width, it->height).contains(mouseEvent->pos() + screenRect.topLeft())) {
+                            selectAreaName = windowNames[windowRects.rend() - it - 1];
+                            break;
+                        }
+                    }
+                } else {
+                    // Make sure record area not too small.
+                    recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
+                    recordHeight = recordHeight < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordHeight;
+
+                    if (recordX + recordWidth > rootWindowRect.width) {
+                        recordX = rootWindowRect.width - recordWidth;
+                    }
+
+                    if (recordY + recordHeight > rootWindowRect.height) {
+                        recordY = rootWindowRect.height - recordHeight;
                     }
                 }
-            } else {
-                // Make sure record area not too small.
-                recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
-                recordHeight = recordHeight < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordHeight;
 
-                if (recordX + recordWidth > rootWindowRect.width) {
-                    recordX = rootWindowRect.width - recordWidth;
-                }
-
-                if (recordY + recordHeight > rootWindowRect.height) {
-                    recordY = rootWindowRect.height - recordHeight;
-                }
-            }
-
-            showRecordButton();
-            updateToolBarPos();
-            if (m_functionType == 1) {
-                updateSideBarPos();
-            }
-            updateRecordButtonPos();
-            updateShotButtonPos();
-
-            needRepaint = true;
-        } else {
-            if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
                 showRecordButton();
                 updateToolBarPos();
                 if (m_functionType == 1) {
@@ -1015,14 +1010,28 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
                 updateRecordButtonPos();
                 updateShotButtonPos();
+
+                needRepaint = true;
+            } else {
+                if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+                    showRecordButton();
+                    updateToolBarPos();
+                    if (m_functionType == 1) {
+                        updateSideBarPos();
+                    }
+                    updateRecordButtonPos();
+                    updateShotButtonPos();
+                }
             }
+
+            isPressButton = false;
+            isReleaseButton = true;
+
+            needRepaint = true;
         }
 
-        isPressButton = false;
-        isReleaseButton = true;
-
-        needRepaint = true;
     } else if (event->type() == QEvent::MouseMove) {
+
         if (!isFirstMove) {
             isFirstMove = true;
         }
@@ -1231,6 +1240,13 @@ void MainWindow::updateCursor(QEvent *event)
         int cursorX = mouseEvent->x();
         int cursorY = mouseEvent->y();
 
+        QRect t_rectbuttonRect = m_recordButton->geometry();
+
+        t_rectbuttonRect.setX(t_rectbuttonRect.x() - 5);
+        t_rectbuttonRect.setY(t_rectbuttonRect.y() - 2);
+        t_rectbuttonRect.setWidth(t_rectbuttonRect.width() + 6);
+        t_rectbuttonRect.setHeight(t_rectbuttonRect.height() + 2);
+
         if (cursorX > recordX - CURSOR_BOUND
                 && cursorX < recordX + CURSOR_BOUND
                 && cursorY > recordY - CURSOR_BOUND
@@ -1271,8 +1287,12 @@ void MainWindow::updateCursor(QEvent *event)
                    && cursorY < recordY + recordHeight + CURSOR_BOUND) {
             // Bottom.
             QApplication::setOverrideCursor(Qt::SizeVerCursor);
+
         } else if (recordButton->geometry().contains(cursorX, cursorY) || recordOptionPanel->geometry().contains(cursorX, cursorY)) {
             // Record area.
+            QApplication::setOverrideCursor(Qt::ArrowCursor);
+        } else if (t_rectbuttonRect.contains(cursorX, cursorY) || m_shotButton->geometry().contains(cursorX, cursorY)) {
+            // Record button.
             QApplication::setOverrideCursor(Qt::ArrowCursor);
         } else {
             if (isPressButton) {

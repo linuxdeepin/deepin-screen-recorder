@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
 
             // Load translator.
             app.loadTranslator();
+            app.setTheme("light");
             app.setStyle("chameleon");
 
             static const QDate buildDate = QLocale( QLocale::English ).
