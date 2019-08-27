@@ -65,24 +65,29 @@ void ShotToolWidget::initRectLabel()
 
     //粗细程度１级按钮
     ToolButton *thickOneBtn = new ToolButton();
-    thickOneBtn->setCheckable(true);
-    thickOneBtn->setText(tr("1st"));
+    thickOneBtn->setToolTip(tr("fine"));
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    thickOneBtn->setIconSize(QSize(50, 50));
+    thickOneBtn->setIcon(QIcon(":/resources/images/size/fine_normal@2x.png"));
     btnList.append(thickOneBtn);
 
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
-    thickTwoBtn->setText(tr("2nd"));
+    thickTwoBtn->setToolTip(tr("medium"));
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    thickTwoBtn->setIconSize(QSize(50, 50));
+    thickTwoBtn->setIcon(QIcon(":/resources/images/size/medium_normal@2x.png"));
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
     ToolButton *thickThreeBtn = new ToolButton();
-    thickThreeBtn->setText(tr("3th"));
+    thickThreeBtn->setToolTip(tr("thick"));
     thickThreeBtn->setObjectName("thickThreeBtn");
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    thickThreeBtn->setIconSize(QSize(50, 50));
+    thickThreeBtn->setIcon(QIcon(":/resources/images/size/thick_normal@2x.png"));
     btnList.append(thickThreeBtn);
 
     QVBoxLayout *rectLayout = new QVBoxLayout();
@@ -109,16 +114,20 @@ void ShotToolWidget::initRectLabel()
 
     //模糊按钮
     ToolButton *blurButton = new ToolButton();
-    blurButton->setText(tr("blur"));
+    blurButton->setToolTip(tr("blur"));
     blurButton->setObjectName("blurButton");
     blurButton->setFixedSize(TOOL_BUTTON_SIZE);
+    blurButton->setIconSize(QSize(30, 30));
+    blurButton->setIcon(QIcon(":/resources/images/size/blur_normal@2x.png"));
     btnList.append(blurButton);
 
     //马赛克按钮
     ToolButton *mosaicBtn = new ToolButton();
-    mosaicBtn->setText(tr("mosaic"));
+    mosaicBtn->setToolTip(tr("mosaic"));
     mosaicBtn->setObjectName("mosaicBtn");
     mosaicBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    mosaicBtn->setIconSize(QSize(30, 30));
+    mosaicBtn->setIcon(QIcon(":/resources/images/size/mosaic_normal@2x.png"));
     btnList.append(mosaicBtn);
 
     for (int j = 0; j < btnList.length(); j++) {
@@ -157,24 +166,29 @@ void ShotToolWidget::initCircLabel()
 
     //粗细程度１级按钮
     ToolButton *thickOneBtn = new ToolButton();
-    thickOneBtn->setCheckable(true);
-    thickOneBtn->setText(tr("1st"));
+    thickOneBtn->setToolTip(tr("fine"));
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    thickOneBtn->setIconSize(QSize(50, 50));
+    thickOneBtn->setIcon(QIcon(":/resources/images/size/fine_normal@2x.png"));
     btnList.append(thickOneBtn);
 
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
-    thickTwoBtn->setText(tr("2nd"));
+    thickTwoBtn->setToolTip(tr("medium"));
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    thickTwoBtn->setIconSize(QSize(50, 50));
+    thickTwoBtn->setIcon(QIcon(":/resources/images/size/medium_normal@2x.png"));
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
     ToolButton *thickThreeBtn = new ToolButton();
-    thickThreeBtn->setText(tr("3th"));
+    thickThreeBtn->setToolTip(tr("thick"));
     thickThreeBtn->setObjectName("thickThreeBtn");
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    thickThreeBtn->setIconSize(QSize(50, 50));
+    thickThreeBtn->setIcon(QIcon(":/resources/images/size/thick_normal@2x.png"));
     btnList.append(thickThreeBtn);
 
     QVBoxLayout *rectLayout = new QVBoxLayout();
@@ -201,16 +215,20 @@ void ShotToolWidget::initCircLabel()
 
     //模糊按钮
     ToolButton *blurButton = new ToolButton();
-    blurButton->setText(tr("blur"));
+    blurButton->setToolTip(tr("blur"));
     blurButton->setObjectName("blurButton");
     blurButton->setFixedSize(TOOL_BUTTON_SIZE);
+    blurButton->setIconSize(QSize(30, 30));
+    blurButton->setIcon(QIcon(":/resources/images/size/blur_normal@2x.png"));
     btnList.append(blurButton);
 
     //马赛克按钮
     ToolButton *mosaicBtn = new ToolButton();
-    mosaicBtn->setText(tr("mosaic"));
+    mosaicBtn->setToolTip(tr("mosaic"));
     mosaicBtn->setObjectName("mosaicBtn");
     mosaicBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    mosaicBtn->setIconSize(QSize(30, 30));
+    mosaicBtn->setIcon(QIcon(":/resources/images/size/mosaic_normal@2x.png"));
     btnList.append(mosaicBtn);
 
     for (int j = 0; j < btnList.length(); j++) {
@@ -238,24 +256,29 @@ void ShotToolWidget::initLineLabel()
 
     //粗细程度１级按钮
     ToolButton *thickOneBtn = new ToolButton();
-    thickOneBtn->setCheckable(true);
-    thickOneBtn->setText(tr("1st"));
+    thickOneBtn->setToolTip(tr("fine"));
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    thickOneBtn->setIconSize(QSize(50, 50));
+    thickOneBtn->setIcon(QIcon(":/resources/images/size/fine_normal@2x.png"));
     btnList.append(thickOneBtn);
 
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
-    thickTwoBtn->setText(tr("2nd"));
+    thickTwoBtn->setToolTip(tr("medium"));
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    thickTwoBtn->setIconSize(QSize(50, 50));
+    thickTwoBtn->setIcon(QIcon(":/resources/images/size/medium_normal@2x.png"));
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
     ToolButton *thickThreeBtn = new ToolButton();
-    thickThreeBtn->setText(tr("3th"));
+    thickThreeBtn->setToolTip(tr("thick"));
     thickThreeBtn->setObjectName("thickThreeBtn");
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    thickThreeBtn->setIconSize(QSize(50, 50));
+    thickThreeBtn->setIcon(QIcon(":/resources/images/size/thick_normal@2x.png"));
     btnList.append(thickThreeBtn);
 
     QVBoxLayout *rectLayout = new QVBoxLayout();
@@ -282,16 +305,20 @@ void ShotToolWidget::initLineLabel()
 
     //直线按钮
     ToolButton *blurButton = new ToolButton();
-    blurButton->setText(tr("line"));
+    blurButton->setToolTip(tr("line"));
     blurButton->setObjectName("blurButton");
     blurButton->setFixedSize(TOOL_BUTTON_SIZE);
+    blurButton->setIconSize(QSize(30, 30));
+    blurButton->setIcon(QIcon(":/resources/images/action/straightline_normal@2x.png"));
     btnList.append(blurButton);
 
     //箭头按钮
     ToolButton *mosaicBtn = new ToolButton();
-    mosaicBtn->setText(tr("arrow"));
+    mosaicBtn->setToolTip(tr("arrow"));
     mosaicBtn->setObjectName("mosaicBtn");
     mosaicBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    mosaicBtn->setIconSize(QSize(30, 30));
+    mosaicBtn->setIcon(QIcon(":/resources/images/action/arrow_normal@2x.png"));
     btnList.append(mosaicBtn);
 
     for (int j = 0; j < btnList.length(); j++) {
@@ -316,24 +343,29 @@ void ShotToolWidget::initPenLabel()
 
     //粗细程度１级按钮
     ToolButton *thickOneBtn = new ToolButton();
-    thickOneBtn->setCheckable(true);
-    thickOneBtn->setText(tr("1st"));
+    thickOneBtn->setToolTip(tr("fine"));
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    thickOneBtn->setIconSize(QSize(50, 50));
+    thickOneBtn->setIcon(QIcon(":/resources/images/size/fine_normal@2x.png"));
     btnList.append(thickOneBtn);
 
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
-    thickTwoBtn->setText(tr("2nd"));
+    thickTwoBtn->setToolTip(tr("medium"));
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    thickTwoBtn->setIconSize(QSize(50, 50));
+    thickTwoBtn->setIcon(QIcon(":/resources/images/size/medium_normal@2x.png"));
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
     ToolButton *thickThreeBtn = new ToolButton();
-    thickThreeBtn->setText(tr("3th"));
+    thickThreeBtn->setToolTip(tr("thick"));
     thickThreeBtn->setObjectName("thickThreeBtn");
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    thickThreeBtn->setIconSize(QSize(50, 50));
+    thickThreeBtn->setIcon(QIcon(":/resources/images/size/thick_normal@2x.png"));
     btnList.append(thickThreeBtn);
 
     QVBoxLayout *rectLayout = new QVBoxLayout();
