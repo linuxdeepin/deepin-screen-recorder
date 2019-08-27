@@ -44,6 +44,7 @@ signals:
     void gifActionChecked(bool checked);
     void mp4ActionChecked(bool checked);
     void videoFrameRateChanged(int frameRate);
+    void changeShotToolFunc(const QString &func);
 public slots:
     void switchContent(QString shapeType);
 

@@ -349,6 +349,8 @@ void SubToolWidget::initShotLabel()
             pa.setColor(QPalette::Dark, Qt::black);
             pa.setColor(QPalette::Light, Qt::black);
             rectButton->setPalette(pa);
+
+            emit changeShotToolFunc("rect");
         }
 
         else {
@@ -365,6 +367,8 @@ void SubToolWidget::initShotLabel()
             pa.setColor(QPalette::Dark, Qt::black);
             pa.setColor(QPalette::Light, Qt::black);
             circleButton->setPalette(pa);
+
+            emit changeShotToolFunc("circ");
         }
 
         else {
@@ -381,6 +385,8 @@ void SubToolWidget::initShotLabel()
             pa.setColor(QPalette::Dark, Qt::black);
             pa.setColor(QPalette::Light, Qt::black);
             lineButton->setPalette(pa);
+
+            emit changeShotToolFunc("line");
         }
 
         else {
@@ -397,6 +403,8 @@ void SubToolWidget::initShotLabel()
             pa.setColor(QPalette::Dark, Qt::black);
             pa.setColor(QPalette::Light, Qt::black);
             penButton->setPalette(pa);
+
+            emit changeShotToolFunc("pen");
         }
 
         else {
@@ -413,6 +421,8 @@ void SubToolWidget::initShotLabel()
             pa.setColor(QPalette::Dark, Qt::black);
             pa.setColor(QPalette::Light, Qt::black);
             textButton->setPalette(pa);
+
+            emit changeShotToolFunc("text");
         }
 
         else {
@@ -423,6 +433,7 @@ void SubToolWidget::initShotLabel()
             textButton->setPalette(pa);
         }
     });
+    rectButton->click();
 }
 
 void SubToolWidget::switchContent(QString shapeType)

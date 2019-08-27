@@ -119,6 +119,7 @@ public slots:
     void changeFrameRateEvent(int frameRate);
     void showMultiKeyBoardButtons();
     void updateMultiKeyBoardPos();
+    void changeShotToolEvent(const QString &func);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);

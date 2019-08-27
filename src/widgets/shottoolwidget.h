@@ -35,7 +35,7 @@ private:
     QLabel *m_circSubTool;
     QLabel *m_lineSubTool;
     QLabel *m_penSubTool;
-    QLabel *m_SubTool;
+    QLabel *m_textSubTool;
     QString m_currentType;
 };
 

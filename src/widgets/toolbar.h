@@ -58,6 +58,7 @@ signals:
     void gifActionCheckedSignal(bool checked);
     void mp4ActionCheckedSignal(bool checked);
     void frameRateChangedSignal(int frameRate);
+    void shotToolChangedSignal(const QString &func);
 public slots:
     bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
@@ -104,6 +105,7 @@ signals:
     void gifActionCheckedToMain(bool checked);
     void mp4ActionCheckedToMain(bool checked);
     void frameRateChangedToMain(int frameRate);
+    void shotToolChangedToMain(const QString &func);
 public slots:
     bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);

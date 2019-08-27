@@ -48,43 +48,51 @@ void ColorToolWidget::initColorLabel()
 
     ToolButton *redBtn = new ToolButton();
     redBtn->setCheckable(true);
-    redBtn->setText(tr("Red"));
+//    redBtn->setText(tr("Red"));
+    redBtn->setToolTip(tr("Red"));
     redBtn->setObjectName("redBtn");
     redBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    redBtn->setIcon(QIcon(":/resources/images/color/color3_checked.png"));
     toolBtnList.append(redBtn);
 
     ToolButton *yellowBtn = new ToolButton();
-    yellowBtn->setText(tr("yellow"));
+//    yellowBtn->setText(tr("yellow"));
+    yellowBtn->setToolTip(tr("yellow"));
     yellowBtn->setObjectName("yellowBtn");
     yellowBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    yellowBtn->setIcon(QIcon(":/resources/images/color/color1_checked.png"));
     toolBtnList.append(yellowBtn);
 
     ToolButton *blueBtn = new ToolButton();
-    blueBtn->setText(tr("blue"));
+//    blueBtn->setText(tr("blue"));
+    blueBtn->setToolTip(tr("blue"));
     blueBtn->setObjectName("blueBtn");
     blueBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    blueBtn->setIcon(QIcon(":/resources/images/color/color8_checked.png"));
     toolBtnList.append(blueBtn);
 
     ToolButton *greenBtn = new ToolButton();
-    greenBtn->setText(tr("green"));
+//    greenBtn->setText(tr("green"));
+    greenBtn->setToolTip(tr("green"));
     greenBtn->setObjectName("greenBtn");
     greenBtn->setFixedSize(TOOL_BUTTON_SIZE);
+    greenBtn->setIcon(QIcon(":/resources/images/color/color10_checked.png"));
     toolBtnList.append(greenBtn);
 
     m_baseLayout = new QVBoxLayout();
     m_baseLayout->setMargin(0);
     m_baseLayout->setSpacing(0);
-    m_baseLayout->addSpacing(4);
+//    m_baseLayout->addSpacing(4);
 
-    ToolButton *t_seperator = new ToolButton();
-    pa = t_seperator->palette();
+//    ToolButton *t_seperator = new ToolButton();
+//    pa = t_seperator->palette();
 //    QColor t_color = pa.color(DPalette::Text);
-    pa.setColor(DPalette::Light, QColor("#414D68"));
-    pa.setColor(DPalette::Dark, QColor("#414D68"));
-    t_seperator->setDisabled(true);
-    t_seperator->setPalette(pa);
-    t_seperator->setFixedSize(SPLITTER_SIZE);
-    m_baseLayout->addWidget(t_seperator, 0, Qt::AlignHCenter);
+//    pa.setColor(DPalette::Light, QColor("#414D68"));
+//    pa.setColor(DPalette::Dark, QColor("#414D68"));
+//    t_seperator->setDisabled(true);
+//    t_seperator->setPalette(pa);
+//    t_seperator->setFixedSize(SPLITTER_SIZE);
+//    m_baseLayout->addWidget(t_seperator, 0, Qt::AlignHCenter);
 
     for (int k = 0; k < toolBtnList.length(); k++) {
         m_baseLayout->addWidget(toolBtnList[k]);

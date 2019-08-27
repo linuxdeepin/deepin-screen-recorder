@@ -35,11 +35,11 @@ class SideBarWidget : public DBlurEffectWidget
 public:
     SideBarWidget(QWidget *parent = nullptr);
     ~SideBarWidget() Q_DECL_OVERRIDE;
+
+    void changeShotToolWidget(const QString &func);
 protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
-
-
 private:
     QLabel *m_hSeparatorLine;
     ColorToolWidget *m_colorTool;
@@ -55,6 +55,7 @@ public:
     explicit SideBar(QWidget *parent = nullptr);
     ~SideBar() Q_DECL_OVERRIDE;
 
+    void changeShotToolFunc(const QString &func);
 signals:
     void heightChanged();
     void buttonChecked(QString shape);

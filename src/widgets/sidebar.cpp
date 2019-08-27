@@ -49,7 +49,7 @@ SideBarWidget::SideBarWidget(QWidget *parent)
     setRadius(30);
     setMode(DBlurEffectWidget::GaussianBlur);
     setBlurEnabled(true);
-    setBlendMode(DBlurEffectWidget::InWindowBlend);
+//    setBlendMode(DBlurEffectWidget::InWindowBlend);
     setMaskColor(QColor(255, 255, 255, 140));
     //设置透明效果
 
@@ -67,15 +67,20 @@ SideBarWidget::SideBarWidget(QWidget *parent)
 
     QVBoxLayout *VLayout = new QVBoxLayout();
     VLayout->setMargin(0);
-    VLayout->setSpacing(3);
+//    VLayout->setSpacing(3);
     VLayout->addWidget(m_shotTool, 0, Qt::AlignTop | Qt::AlignHCenter);
-    VLayout->addWidget(m_colorTool, 1, Qt::AlignTop | Qt::AlignHCenter);
+    VLayout->addWidget(m_colorTool, 1,  Qt::AlignTop | Qt::AlignHCenter);
     setLayout(VLayout);
 }
 
 SideBarWidget::~SideBarWidget()
 {
 
+}
+
+void SideBarWidget::changeShotToolWidget(const QString &func)
+{
+    m_shotTool->switchContent(func);
 }
 
 void SideBarWidget::paintEvent(QPaintEvent *e)
@@ -112,6 +117,11 @@ SideBar::SideBar(QWidget *parent) : DLabel(parent)
 SideBar::~SideBar()
 {
 
+}
+
+void SideBar::changeShotToolFunc(const QString &func)
+{
+    m_sidebarWidget->changeShotToolWidget(func);
 }
 
 bool SideBar::isButtonChecked()

@@ -89,6 +89,7 @@ ToolBarWidget::ToolBarWidget(QWidget *parent)
     connect(m_subTool, SIGNAL(gifActionChecked(bool)), this, SIGNAL(gifActionCheckedSignal(bool)));
     connect(m_subTool, SIGNAL(mp4ActionChecked(bool)), this, SIGNAL(mp4ActionCheckedSignal(bool)));
     connect(m_subTool, SIGNAL(videoFrameRateChanged(int)), this, SIGNAL(frameRateChangedSignal(int)));
+    connect(m_subTool, SIGNAL(changeShotToolFunc(const QString &)), this, SIGNAL(shotToolChangedSignal(const QString &)));
 //    connect(m_majToolbar, &MajToolBar::saveImage, this, &ToolBarWidget::saveImage);
 //    connect(m_subToolbar, &SubToolBar::saveAction, this, &ToolBarWidget::saveImage);
 
@@ -216,6 +217,7 @@ ToolBar::ToolBar(QWidget *parent)
     connect(m_toolbarWidget, &ToolBarWidget::gifActionCheckedSignal, this, &ToolBar::gifActionCheckedToMain);
     connect(m_toolbarWidget, &ToolBarWidget::mp4ActionCheckedSignal, this, &ToolBar::mp4ActionCheckedToMain);
     connect(m_toolbarWidget, &ToolBarWidget::frameRateChangedSignal, this, &ToolBar::frameRateChangedToMain);
+    connect(m_toolbarWidget, &ToolBarWidget::shotToolChangedSignal, this, &ToolBar::shotToolChangedToMain);
 }
 
 void ToolBar::setExpand(bool expand, QString shapeType)

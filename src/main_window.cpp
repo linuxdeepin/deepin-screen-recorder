@@ -199,6 +199,7 @@ void MainWindow::initAttributes()
     connect(m_toolBar, &ToolBar::gifActionCheckedToMain, this, &MainWindow::changeGifSelectEvent);
     connect(m_toolBar, &ToolBar::mp4ActionCheckedToMain, this, &MainWindow::changeMp4SelectEvent);
     connect(m_toolBar, &ToolBar::frameRateChangedToMain, this, &MainWindow::changeFrameRateEvent);
+    connect(m_toolBar, &ToolBar::shotToolChangedToMain, this, &MainWindow::changeShotToolEvent);
     //构建截屏录屏功能触发按钮
     m_recordButton = new QPushButton(this);
     m_recordButton->setFixedSize(60, 47);
@@ -769,6 +770,11 @@ void MainWindow::updateMultiKeyBoardPos()
         }
     }
 
+}
+
+void MainWindow::changeShotToolEvent(const QString &func)
+{
+    m_sideBar->changeShotToolFunc(func);
 }
 
 void MainWindow::paintEvent(QPaintEvent *)

@@ -258,6 +258,14 @@ or press the shortcut again to stop recording</source>
         <source>mosaic</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>arrow</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>StartTooltip</name>
