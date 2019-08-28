@@ -18,7 +18,7 @@
  */
 #include "subtoolwidget.h"
 #include "toolbutton.h"
-
+#include "../utils/audioutils.h"
 #include <DSlider>
 #include <QLineEdit>
 #include <QMenu>
@@ -27,6 +27,7 @@
 #include <QHBoxLayout>
 #include <QStyleFactory>
 #include <QDebug>
+#include <QInputDialog>
 
 DWIDGET_USE_NAMESPACE
 
@@ -57,6 +58,10 @@ void SubToolWidget::initWidget()
     initRecordLabel();
     initShotLabel();
     setCurrentWidget(m_recordSubTool);
+    if (AudioUtils().canVirtualCardOutput()) {
+    } else {
+       initVirtualCard();
+    }
 }
 
 void SubToolWidget::initRecordLabel()
@@ -77,6 +82,7 @@ void SubToolWidget::initRecordLabel()
     QMenu *audioMenu = new QMenu();
     QAction *microphoneAction = new QAction(audioMenu);
     QAction *systemAudioAction = new QAction(audioMenu);
+    m_systemAudioAction = systemAudioAction;
     microphoneAction->setText(tr("Microphone"));
     microphoneAction->setCheckable(true);
     microphoneAction->setChecked(true);
@@ -88,7 +94,7 @@ void SubToolWidget::initRecordLabel()
     audioButton->setMenu(audioMenu);
 
     connect(microphoneAction, SIGNAL(triggered(bool)), this, SIGNAL(microphoneActionChecked(bool)));
-    connect(systemAudioAction, SIGNAL(triggered(bool)), this, SIGNAL(systemAudioActionChecked(bool)));
+    connect(systemAudioAction, SIGNAL(triggered(bool)), this,SLOT(systemAudioActionCheckedSlot(bool)));
 
     ToolButton *keyBoardButton = new ToolButton();
     keyBoardButton->setObjectName("KeyBoardButton");
@@ -436,6 +442,23 @@ void SubToolWidget::initShotLabel()
     rectButton->click();
 }
 
+void SubToolWidget::initVirtualCard()
+{
+    bool isOk;
+    QString text = QInputDialog::getText(this,"Need authorization","Please enter your sudo password to be authorized",QLineEdit::PasswordEchoOnEdit,"",&isOk);
+    if (isOk) {
+
+        QProcess p(this);
+        QStringList arguments;
+        arguments << QString("-c");
+        arguments << QString("echo %1 | sudo -S modprobe snd-aloop pcm_substreams=1").arg(text);
+        qDebug()<<arguments;
+        p.start("/bin/bash",arguments);
+        p.waitForFinished();
+        p.waitForReadyRead();
+        p.close();
+    }
+}
 void SubToolWidget::switchContent(QString shapeType)
 {
     if (shapeType == "record") {
@@ -446,5 +469,14 @@ void SubToolWidget::switchContent(QString shapeType)
     if (shapeType == "shot") {
         setCurrentWidget(m_shotSubTool);
         m_currentType = shapeType;
+    }
+}
+
+void SubToolWidget::systemAudioActionCheckedSlot(bool checked)
+{
+    if (AudioUtils().canVirtualCardOutput()) {
+       emit systemAudioActionChecked(checked);
+    } else {
+       m_systemAudioAction->setChecked(false);
     }
 }

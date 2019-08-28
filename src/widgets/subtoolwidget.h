@@ -35,7 +35,7 @@ public:
     void initWidget();
     void initRecordLabel();
     void initShotLabel();
-
+    void initVirtualCard();
 signals:
     void keyBoardButtonClicked(bool checked);
     void mouseBoardButtonClicked(bool checked);
@@ -47,11 +47,12 @@ signals:
     void changeShotToolFunc(const QString &func);
 public slots:
     void switchContent(QString shapeType);
-
+    void systemAudioActionCheckedSlot(bool checked);
 private:
     QLabel *m_recordSubTool;
     QLabel *m_shotSubTool;
     QString m_currentType;
+    QAction *m_systemAudioAction;
 };
 
 #endif // SUBTOOLWIDGET_H

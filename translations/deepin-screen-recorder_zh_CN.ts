@@ -239,18 +239,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>1st</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2nd</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>3th</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>blur</source>
         <translation type="unfinished"></translation>
     </message>
@@ -264,6 +252,18 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>arrow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>fine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>medium</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>thick</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -30,6 +30,7 @@ public:
     bool isMicrophoneOutput();
     void setupMicrophoneOutput();
     void setupSystemAudioOutput();
+    bool canVirtualCardOutput();
 private:
     void initProcess();
 
