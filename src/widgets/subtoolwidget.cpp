@@ -20,14 +20,16 @@
 #include "toolbutton.h"
 #include "../utils/audioutils.h"
 #include <DSlider>
-#include <QLineEdit>
+#include <DLineEdit>
 #include <QMenu>
 #include <QAction>
 #include <QButtonGroup>
 #include <QHBoxLayout>
 #include <QStyleFactory>
 #include <QDebug>
-#include <QInputDialog>
+#include <DInputDialog>
+
+#include <unistd.h>
 
 DWIDGET_USE_NAMESPACE
 
@@ -83,15 +85,21 @@ void SubToolWidget::initRecordLabel()
     microphoneAction->setCheckable(true);
     microphoneAction->setChecked(true);
     systemAudioAction->setText(tr("SystemAudio"));
-    systemAudioAction->setCheckable(true);
-    systemAudioAction->setDisabled(!AudioUtils().canVirtualCardOutput());
+
+    if (AudioUtils().canVirtualCardOutput()) {
+        systemAudioAction->setCheckable(true);
+    } else {
+        systemAudioAction->setDisabled(true);
+    }
+
+//    systemAudioAction->setDisabled(!AudioUtils().canVirtualCardOutput());
     audioMenu->addAction(microphoneAction);
     audioMenu->addSeparator();
     audioMenu->addAction(systemAudioAction);
     audioButton->setMenu(audioMenu);
 
     connect(microphoneAction, SIGNAL(triggered(bool)), this, SIGNAL(microphoneActionChecked(bool)));
-    connect(systemAudioAction, SIGNAL(triggered(bool)), this,SLOT(systemAudioActionCheckedSlot(bool)));
+    connect(systemAudioAction, SIGNAL(triggered(bool)), this, SLOT(systemAudioActionCheckedSlot(bool)));
 
     ToolButton *keyBoardButton = new ToolButton();
     keyBoardButton->setObjectName("KeyBoardButton");
@@ -442,21 +450,24 @@ void SubToolWidget::initShotLabel()
 void SubToolWidget::initVirtualCard()
 {
     if (AudioUtils().canVirtualCardOutput()) {
-       return;
+        return;
     }
     bool isOk;
-    QString text = QInputDialog::getText(this,"Need authorization","Please enter your sudo password to be authorized",QLineEdit::PasswordEchoOnEdit,"",&isOk);
+    QString text = DInputDialog::getText(this, tr("Need authorization"), tr("Please enter your sudo password to be authorized"),
+                                         DLineEdit::Password, "", &isOk);
     if (isOk) {
 
         QProcess p(this);
         QStringList arguments;
         arguments << QString("-c");
         arguments << QString("echo %1 | sudo -S modprobe snd-aloop pcm_substreams=1").arg(text);
-        qDebug()<<arguments;
-        p.start("/bin/bash",arguments);
+        qDebug() << arguments;
+        p.start("/bin/bash", arguments);
         p.waitForFinished();
         p.waitForReadyRead();
         p.close();
+
+        sleep(1);
     }
 }
 void SubToolWidget::switchContent(QString shapeType)
@@ -475,8 +486,8 @@ void SubToolWidget::switchContent(QString shapeType)
 void SubToolWidget::systemAudioActionCheckedSlot(bool checked)
 {
     if (AudioUtils().canVirtualCardOutput()) {
-       emit systemAudioActionChecked(checked);
+        emit systemAudioActionChecked(checked);
     } else {
-       m_systemAudioAction->setChecked(false);
+        m_systemAudioAction->setChecked(false);
     }
 }
