@@ -54,14 +54,10 @@ SubToolWidget::~SubToolWidget()
 void SubToolWidget::initWidget()
 {
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
-
+    initVirtualCard();
     initRecordLabel();
     initShotLabel();
     setCurrentWidget(m_recordSubTool);
-    if (AudioUtils().canVirtualCardOutput()) {
-    } else {
-       initVirtualCard();
-    }
 }
 
 void SubToolWidget::initRecordLabel()
@@ -88,6 +84,7 @@ void SubToolWidget::initRecordLabel()
     microphoneAction->setChecked(true);
     systemAudioAction->setText(tr("SystemAudio"));
     systemAudioAction->setCheckable(true);
+    systemAudioAction->setDisabled(!AudioUtils().canVirtualCardOutput());
     audioMenu->addAction(microphoneAction);
     audioMenu->addSeparator();
     audioMenu->addAction(systemAudioAction);
@@ -444,6 +441,9 @@ void SubToolWidget::initShotLabel()
 
 void SubToolWidget::initVirtualCard()
 {
+    if (AudioUtils().canVirtualCardOutput()) {
+       return;
+    }
     bool isOk;
     QString text = QInputDialog::getText(this,"Need authorization","Please enter your sudo password to be authorized",QLineEdit::PasswordEchoOnEdit,"",&isOk);
     if (isOk) {
