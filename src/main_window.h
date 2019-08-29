@@ -42,9 +42,11 @@
 #include "button_feedback.h"
 #include "show_buttons.h"
 #include "widgets/shapeswidget.h"
+#include "widgets/toptips.h"
 #include "widgets/toolbar.h"
 #include "widgets/sidebar.h"
 #include "widgets/keybuttonwidget.h"
+#include "widgets/zoomIndicator.h"
 
 // Make this include at last, otherwise QtX11 will conflict with x11 lib to make compile failed.
 #include "event_monitor.h"
@@ -93,6 +95,7 @@ public:
     void initAttributes();
     void initResource();
     void initScreenShot();
+    void initScreenRecorder();
 
 signals:
     void releaseEvent();
@@ -126,6 +129,7 @@ public slots:
     void showMultiKeyBoardButtons();
     void updateMultiKeyBoardPos();
     void changeShotToolEvent(const QString &func);
+
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -218,6 +222,7 @@ private:
     EventMonitor eventMonitor;
     DWindowManagerHelper *m_wmHelper;
     ShapesWidget *m_shapesWidget;
+    TopTips *m_sizeTips;
     ToolBar *m_toolBar;
     DScreenWindowsUtil *m_swUtil;
     QRect m_backgroundRect;
@@ -243,6 +248,7 @@ private:
     int m_screenWidth;  //屏幕宽度
     int m_screenHeight; //屏幕高度
     SideBar *m_sideBar; //截图功能侧边栏功能
+    ZoomIndicator *m_zoomIndicator;
     // Just use for debug.
     // int repaintCounter;
 };

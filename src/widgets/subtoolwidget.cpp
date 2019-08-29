@@ -444,7 +444,7 @@ void SubToolWidget::initShotLabel()
             textButton->setPalette(pa);
         }
     });
-//    rectButton->click();
+    rectButton->click();
 }
 
 void SubToolWidget::initVirtualCard()
