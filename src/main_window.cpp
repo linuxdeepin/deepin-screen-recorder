@@ -242,6 +242,14 @@ void MainWindow::initAttributes()
     m_selectedMic = true;
     m_selectedSystemAudio = false;
 
+    m_swUtil = DScreenWindowsUtil::instance(curPos);
+    m_backgroundRect = m_swUtil->backgroundRect();
+    m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
+
+    move(m_backgroundRect.topLeft() * ratio);
+    this->setFixedSize(m_backgroundRect.size());
+    initBackground();
+
     // Just use for debug.
     // repaintCounter = 0;
 }
@@ -273,7 +281,215 @@ void MainWindow::initResource()
     eventMonitor.start();
 
 //    startTooltip->show();
-//    startTooltip->windowHandle()->raise();
+    //    startTooltip->windowHandle()->raise();
+}
+
+void MainWindow::initScreenShot()
+{
+//    setAttribute(Qt::WA_TranslucentBackground);
+//    setWindowFlags(Qt::X11BypassWindowManagerHint);
+
+//    installEventFilter(this);
+
+//    connect(this, &MainWindow::releaseEvent, this, [ = ] {
+//        qDebug() << "release event !!!";
+//        m_keyboardReleased = true;
+//        m_keyboardGrabbed =  windowHandle()->setKeyboardGrabEnabled(false);
+//        qDebug() << "keyboardGrabbed:" << m_keyboardGrabbed;
+//        removeEventFilter(this);
+//    });
+
+//    connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
+
+
+
+//    m_functionType = 0;
+    m_keyBoardStatus = 0;
+    m_mouseStatus = 0;
+    m_multiKeyButtonsInOnSec = false;
+    m_repaintMainButton = false;
+    m_repaintSideBar = false;
+    m_gifMode = true;
+    m_mp4Mode = false;
+    m_keyBoardTimer = new QTimer(this);
+    m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
+    m_keyButtonList.clear();
+    m_tempkeyButtonList.clear();
+    m_screenWidth = DApplication::desktop()->screen()->width();
+    m_screenHeight = DApplication::desktop()->screen()->height();
+
+    // Add Qt::WindowDoesNotAcceptFocus make window not accept focus forcely, avoid conflict with dde hot-corner.
+//    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint);
+    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+    setAttribute(Qt::WA_TranslucentBackground, true);
+    setMouseTracking(true);   // make MouseMove can response
+    installEventFilter(this);  // add event filter
+
+    isFirstDrag = false;
+    isFirstMove = false;
+    isFirstPressButton = false;
+    isFirstReleaseButton = false;
+    dragStartX = 0;
+    dragStartY = 0;
+
+    isPressButton = false;
+    isReleaseButton = false;
+
+    recordX = 0;
+    recordY = 0;
+    recordWidth = 0;
+    recordHeight = 0;
+
+    dragRecordX = -1;
+    dragRecordY = -1;
+
+    drawDragPoint = false;
+
+    recordButtonStatus = RECORD_BUTTON_NORMAL;
+
+    flashTrayIconCounter = 0;
+
+    selectAreaName = "";
+
+//    createWinId();
+
+    // Get all windows geometry.
+    // Below code must execute before `window.showFullscreen,
+    // otherwise deepin-screen-recorder window will add in window lists.
+    QPoint pos = this->cursor().pos();
+    const qreal ratio = devicePixelRatioF();
+    DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(pos);
+    screenRect = screenWin->backgroundRect();
+    screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
+    this->move(static_cast<int>(screenRect.x() * ratio),
+               static_cast<int>(screenRect.y() * ratio));
+    this->setFixedSize(screenRect.width(), screenRect.height());
+
+//    windowManager = new DWindowManager();
+    windowManager->setRootWindowRect(screenRect);
+    QList<xcb_window_t> windows = windowManager->getWindows();
+    rootWindowRect = windowManager->getRootWindowRect();
+
+    for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
+        if (wid == winId()) continue;
+
+        DForeignWindow *window = DForeignWindow::fromWinId(wid);
+        if (window) {
+            window->deleteLater();
+            windowRects << Dtk::Wm::WindowRect { window->x(), window->y(), window->width(), window->height() };
+            windowNames << window->wmClass();
+        }
+    }
+
+//    recordButtonLayout = new QVBoxLayout();
+    setLayout(recordButtonLayout);
+
+    //屏蔽原有的录屏提示控件 by zyg
+//    startTooltip = new StartTooltip();
+//    startTooltip->setWindowManager(windowManager);
+
+    //构建截屏工具栏按钮 by zyg
+    m_toolBar->hide();
+    m_sideBar->hide();
+
+//    countdownTooltip = new CountdownTooltip();
+    connect(countdownTooltip, SIGNAL(finished()), this, SLOT(startRecord()));
+
+    connect(m_toolBar, &ToolBar::currentFunctionToMain, this, &MainWindow::changeFunctionButton);
+    connect(m_toolBar, &ToolBar::keyBoardCheckedToMain, this, &MainWindow::changeKeyBoardShowEvent);
+    connect(m_toolBar, &ToolBar::mouseCheckedToMain, this, &MainWindow::changeMouseShowEvent);
+    connect(m_toolBar, &ToolBar::microphoneActionCheckedToMain, this, &MainWindow::changeMicrophoneSelectEvent);
+    connect(m_toolBar, &ToolBar::systemAudioActionCheckedToMain, this, &MainWindow::changeSystemAudioSelectEvent);
+    connect(m_toolBar, &ToolBar::gifActionCheckedToMain, this, &MainWindow::changeGifSelectEvent);
+    connect(m_toolBar, &ToolBar::mp4ActionCheckedToMain, this, &MainWindow::changeMp4SelectEvent);
+    connect(m_toolBar, &ToolBar::frameRateChangedToMain, this, &MainWindow::changeFrameRateEvent);
+    connect(m_toolBar, &ToolBar::shotToolChangedToMain, this, &MainWindow::changeShotToolEvent);
+    //构建截屏录屏功能触发按钮
+//    m_recordButton = new QPushButton(this);
+    m_recordButton->setFixedSize(60, 47);
+    m_recordButton->setText(tr("Record"));
+    m_recordButton->setObjectName("mainRecordBtn");
+
+//    m_shotButton = new QPushButton(this);
+    m_shotButton->setFixedSize(60, 47);
+    m_shotButton->setText(tr("Shot"));
+    m_shotButton->setObjectName("mainShotBtn");
+
+    m_recordButton->hide();
+    m_shotButton->hide();
+
+    QPoint curPos = this->cursor().pos();
+    m_swUtil = DScreenWindowsUtil::instance(curPos);
+    m_backgroundRect = m_swUtil->backgroundRect();
+    m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
+
+//    recordButton = new RecordButton();
+    recordButton->setText(tr("Start recording"));
+//    connect(recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
+    connect(m_recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
+
+    recordButtonLayout->addStretch();
+    recordButtonLayout->addWidget(recordButton, 0, Qt::AlignCenter);
+    recordButtonLayout->addSpacing(RECORD_OPTIONAL_PADDING);
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+        recordButtonLayout->addWidget(recordOptionPanel, 0, Qt::AlignCenter);
+    }
+    recordButtonLayout->addStretch();
+
+    recordButton->hide();
+    recordOptionPanel->hide();
+
+    m_selectedMic = true;
+    m_selectedSystemAudio = false;
+
+//    const qreal ratio = devicePixelRatioF();
+
+//    m_showButtons = new ShowButtons(this);
+    connect(m_showButtons, SIGNAL(keyShowSignal(const QString &)),
+            this, SLOT(showKeyBoardButtons(const QString &)));
+    resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_big.svg"));
+    resizeHandleSmallImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_small.svg"));
+
+//    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
+    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+
+    setDragCursor();
+
+//    buttonFeedback = new ButtonFeedback();
+
+    connect(&eventMonitor, SIGNAL(buttonedPress(int, int)), this, SLOT(showPressFeedback(int, int)), Qt::QueuedConnection);
+    connect(&eventMonitor, SIGNAL(buttonedDrag(int, int)), this, SLOT(showDragFeedback(int, int)), Qt::QueuedConnection);
+    connect(&eventMonitor, SIGNAL(buttonedRelease(int, int)), this, SLOT(showReleaseFeedback(int, int)), Qt::QueuedConnection);
+    connect(&eventMonitor, SIGNAL(pressEsc()), this, SLOT(responseEsc()), Qt::QueuedConnection);
+    connect(&eventMonitor, SIGNAL(pressKeyButton(unsigned char)), m_showButtons,
+            SLOT(showContentButtons(unsigned char)), Qt::QueuedConnection);
+    connect(&eventMonitor, SIGNAL(releaseKeyButton(unsigned char)), m_showButtons,
+            SLOT(releaseContentButtons(unsigned char)), Qt::QueuedConnection);
+    eventMonitor.start();
+
+    // Just use for debug.
+    // repaintCounter = 0;
+}
+
+void MainWindow::initBackground()
+{
+    m_backgroundPixmap = getPixmapofRect(m_backgroundRect);
+    m_resultPixmap = m_backgroundPixmap;
+}
+
+QPixmap MainWindow::getPixmapofRect(const QRect &rect)
+{
+    QRect r(rect.topLeft() * devicePixelRatioF(), rect.size());
+
+    QList<QScreen *> screenList = qApp->screens();
+    for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
+        if ((*it)->geometry().contains(r)) {
+            return (*it)->grabWindow(m_swUtil->rootWindowId(), rect.x(), rect.y(), rect.width(), rect.height());
+        }
+    }
+
+    return QPixmap();
 }
 
 void MainWindow::showPressFeedback(int x, int y)
@@ -469,6 +685,7 @@ void MainWindow::changeFunctionButton(QString type)
         if (m_sideBar->isVisible()) {
             m_sideBar->hide();
         }
+
     }
 
     else if (type == "shot") {
@@ -476,10 +693,13 @@ void MainWindow::changeFunctionButton(QString type)
 //        updateShotButtonPos();
         m_shotButton->show();
         m_functionType = 1;
-        if (!m_sideBar->isVisible()) {
-            updateSideBarPos();
-        }
+        initScreenShot();
+//        if (!m_sideBar->isVisible()) {
+//            updateSideBarPos();
+//        }
     }
+
+    update();
 }
 
 void MainWindow::showKeyBoardButtons(const QString &key)
@@ -774,6 +994,9 @@ void MainWindow::updateMultiKeyBoardPos()
 
 void MainWindow::changeShotToolEvent(const QString &func)
 {
+    if (!m_sideBar->isVisible()) {
+        updateSideBarPos();
+    }
     m_sideBar->changeShotToolFunc(func);
 }
 
@@ -785,6 +1008,14 @@ void MainWindow::paintEvent(QPaintEvent *)
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
+
+    if (m_functionType == 1) {
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        QRect backgroundRect = QRect(0, 0, rootWindowRect.width, rootWindowRect.height);
+        // FIXME: Under the magnifying glass, it seems to be magnified two times.
+        m_backgroundPixmap.setDevicePixelRatio(devicePixelRatioF());
+        painter.drawPixmap(backgroundRect, m_backgroundPixmap);
+    }
 
     if (recordWidth > 0 && recordHeight > 0) {
 
@@ -839,23 +1070,19 @@ void MainWindow::paintEvent(QPaintEvent *)
             painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleSmallImg);
         }
 
-        // Draw record panel.
-//        if (isFirstPressButton) {
-//            if (isFirstReleaseButton) {
-//                if (recordButtonStatus == RECORD_BUTTON_NORMAL && recordButton->isVisible()) {
-//                    QList<QRectF> rects;
-//                    rects << recordButton->geometry();
 
-//                    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
-//                        rects << recordOptionPanel->geometry();
-//                    }
-//                    Utils::blurRects(windowManager, this->winId(), rects);
-//                } else if (recordButtonStatus == RECORD_BUTTON_WAIT) {
-//                    QList<QRectF> rects;
-//                    rects << countdownTooltip->geometry();
-//                    Utils::blurRects(windowManager, this->winId(), rects);
-//                }
-//            }
+
+//        if (m_functionType == 0) {
+//            QRect backgroundRect = QRect(0, 0, rootWindowRect.width, rootWindowRect.height);
+//            QRect frameRect = QRect(recordX, recordY, recordWidth, recordHeight);
+
+//            // Draw background.
+//            painter.setBrush(QBrush("#000000"));
+//            painter.setOpacity(0.2);
+
+//            painter.setClipping(true);
+//            painter.setClipRegion(QRegion(backgroundRect).subtracted(QRegion(frameRect)));
+//            painter.drawRect(backgroundRect);
 //        }
     }
 }

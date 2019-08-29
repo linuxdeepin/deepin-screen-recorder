@@ -388,6 +388,14 @@ select the area to record</source>
         <source>30 fps</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Need authorization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please enter your sudo password to be authorized</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Utils</name>

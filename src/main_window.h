@@ -51,6 +51,7 @@
 
 #undef Bool
 
+DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 DWM_USE_NAMESPACE
 
@@ -91,6 +92,11 @@ public:
     // Split attributes and resource for speed up start.
     void initAttributes();
     void initResource();
+    void initScreenShot();
+
+signals:
+    void releaseEvent();
+    void hideScreenshotUI();
 
 public slots:
     void startRecord();
@@ -139,6 +145,8 @@ protected:
     void adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight);
     void initShapeWidget(QString type);
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
+    void initBackground();
+    QPixmap getPixmapofRect(const QRect &rect);
 private:
     QList<WindowRect> windowRects;
     QList<QString> windowNames;
@@ -178,6 +186,15 @@ private:
     int recordButtonState;
 
     int flashTrayIconCounter;
+
+
+//    QRect m_backgroundRect;
+    //for shot
+    QPixmap m_backgroundPixmap;
+    QPixmap m_resultPixmap;
+    bool m_keyboardGrabbed = false;
+    bool m_keyboardReleased = false;
+    //for shot
 
     QPixmap resizeHandleBigImg;
     QPixmap resizeHandleSmallImg;
