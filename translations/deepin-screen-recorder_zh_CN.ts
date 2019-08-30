@@ -62,6 +62,26 @@ or press the shortcut again to stop recording</source>
         <source>Shot</source>
         <translation type="unfinished">截屏</translation>
     </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation type="unfinished">查看</translation>
+    </message>
+    <message>
+        <source>Picture has been saved to clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Picture has been saved to %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DeepinScreenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

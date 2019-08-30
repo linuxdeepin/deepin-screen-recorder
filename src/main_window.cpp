@@ -229,6 +229,7 @@ void MainWindow::initAttributes()
     recordButton->setText(tr("Start recording"));
 //    connect(recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
     connect(m_recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
+    connect(m_shotButton, SIGNAL(clicked()), this, SLOT(saveScreenShot()));
 
     recordOptionPanel = new RecordOptionPanel();
 
@@ -960,6 +961,242 @@ void MainWindow::changeShotToolEvent(const QString &func)
     m_sideBar->changeShotToolFunc(func);
 }
 
+void MainWindow::saveScreenShot()
+{
+    emit releaseEvent();
+    emit saveActionTriggered();
+
+//    DDesktopServices::playSystemSoundEffect(DDesktopServices::SSE_Screenshot);
+//    if (m_hotZoneInterface->isValid())
+//        m_hotZoneInterface->asyncCall("EnableZoneDetected",  true);
+//    m_needSaveScreenshot = true;
+
+    m_toolBar->setVisible(false);
+    m_sizeTips->setVisible(false);
+
+    shotCurrentImg();
+
+    const bool r = saveAction(m_resultPixmap);
+    sendNotify(m_saveIndex, m_saveFileName, r);
+}
+
+void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const bool succeed)
+{
+    // failed notify
+    if (!succeed) {
+        const auto tips = tr("Save failed. Please save it in your home directory.");
+        m_notifyDBInterface->Notify("Deepin Screenshot", 0, "deepin-screenshot", QString(), tips, QStringList(), QVariantMap(), 0);
+
+        exit(0);
+    }
+
+    QDBusInterface remote_dde_notify_obj("com.deepin.dde.Notification", "/com/deepin/dde/Notification",
+                                         "com.deepin.dde.Notification");
+
+    const bool remote_dde_notify_obj_exist = remote_dde_notify_obj.isValid();
+
+    QStringList actions;
+    QVariantMap hints;
+
+    if (remote_dde_notify_obj_exist) {
+        actions << "_open" << tr("View");
+
+        QString fileDir  = QUrl::fromLocalFile(QFileInfo(saveFilePath).absoluteDir().absolutePath()).toString();
+        QString filePath = QUrl::fromLocalFile(saveFilePath).toString();
+        QString command;
+        if (QFile("/usr/bin/dde-file-manager").exists()) {
+            command = QString("/usr/bin/dde-file-manager,%1?selectUrl=%2").arg(fileDir).arg(filePath);
+        } else {
+            command = QString("xdg-open,%1").arg(filePath);
+        }
+
+        hints["x-deepin-action-_open"] = command;
+    }
+
+    qDebug() << "saveFilePath:" << saveFilePath;
+
+    QString summary;
+    if (saveAction == SaveAction::SaveToClipboard) {
+        summary = QString(tr("Picture has been saved to clipboard"));
+    } else {
+        summary = QString(tr("Picture has been saved to %1")).arg(saveFilePath);
+    }
+
+    if (saveAction == SaveAction::SaveToClipboard && !m_noNotify) {
+        QVariantMap emptyMap;
+        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screenshot", "",
+                                    summary,  QStringList(), emptyMap, 0);
+    }  else if ( !m_noNotify &&  !(m_saveIndex == SaveAction::SaveToSpecificDir && m_saveFileName.isEmpty())) {
+        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screenshot", "",
+                                    summary, actions, hints, 0);
+    }
+
+    QTimer::singleShot(2, [ = ] {
+        qApp->quit();
+    });
+}
+
+bool MainWindow::saveAction(const QPixmap &pix)
+{
+    emit releaseEvent();
+
+//    using namespace utils;
+    QPixmap screenShotPix = pix;
+    QDateTime currentDate;
+    QString currentTime =  currentDate.currentDateTime().
+                           toString("yyyyMMddHHmmss");
+    m_saveFileName = "";
+
+    QStandardPaths::StandardLocation saveOption = QStandardPaths::TempLocation;
+    bool copyToClipboard = false;
+
+//    std::pair<bool, SaveAction> temporarySaveAction = ConfigSettings::instance()->getTemporarySaveAction();
+//    if (temporarySaveAction.first) {
+//        m_saveIndex = temporarySaveAction.second;
+//    } else {
+//        m_saveIndex = ConfigSettings::instance()->value("save", "save_op").value<SaveAction>();
+//    }
+    //for test
+    m_saveIndex = SaveToDesktop;
+    switch (m_saveIndex) {
+    case SaveToDesktop: {
+        saveOption = QStandardPaths::DesktopLocation;
+//        ConfigSettings::instance()->setValue("common", "default_savepath", QStandardPaths::writableLocation(
+//                                                 QStandardPaths::DesktopLocation));
+        break;
+    }
+//    case AutoSave: {
+//        QString defaultSaveDir = ConfigSettings::instance()->value("common", "default_savepath").toString();
+//        if (defaultSaveDir.isEmpty()) {
+//            saveOption = QStandardPaths::DesktopLocation;
+//        } else if (defaultSaveDir == "clipboard") {
+//            copyToClipboard = true;
+//            m_saveIndex = SaveToSpecificDir;
+//        } else {
+//            if (m_selectAreaName.isEmpty()) {
+//                m_saveFileName = QString("%1/%2_%3.png").arg(defaultSaveDir).arg(tr(
+//                                                                                     "DeepinScreenshot")).arg(currentTime);
+//            } else {
+//                m_saveFileName = QString("%1/%2_%3_%4.png").arg(defaultSaveDir).arg(tr(
+//                                                                                        "DeepinScreenshot")).arg(m_selectAreaName).arg(currentTime);
+//            }
+//        }
+//        break;
+//    }
+//    case SaveToSpecificDir: {
+//        this->hide();
+//        this->releaseKeyboard();
+
+//        QString path = ConfigSettings::instance()->value("common", "default_savepath").toString();
+//        QString fileName = m_selectAreaName;
+
+//        if (path.isEmpty() || !QDir(path).exists()) {
+//            path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+//        }
+
+//        if (fileName.isEmpty()) {
+//            fileName = QString("%1_%2").arg(tr("DeepinScreenshot")).arg(currentTime);
+//        } else {
+//            fileName = QString("%1_%2_%3").arg(tr("DeepinScreenshot")).arg(m_selectAreaName).arg(currentTime);
+//        }
+
+//        QString lastFileName = QString("%1/%2.png").arg(path).arg(fileName);
+
+//        QFileDialog fileDialog;
+//        m_saveFileName =  fileDialog.getSaveFileName(this, "Save",  lastFileName,
+//                                                     tr("PNG (*.png);;JPEG (*.jpg *.jpeg);; BMP (*.bmp);; PGM (*.pgm);;"
+//                                                        "XBM (*.xbm);;XPM(*.xpm)"));
+
+//        if (m_saveFileName.isEmpty() || QFileInfo(m_saveFileName).isDir())
+//            return false;
+
+//        QString fileSuffix = QFileInfo(m_saveFileName).completeSuffix();
+//        if (fileSuffix.isEmpty()) {
+//            m_saveFileName = m_saveFileName + ".png";
+//        } else if ( !isValidFormat(fileSuffix)) {
+//            qWarning() << "The fileName has invalid suffix!" << fileSuffix << m_saveFileName;
+//            return false;
+//        }
+
+//        ConfigSettings::instance()->setValue("common", "default_savepath",
+//                                             QFileInfo(m_saveFileName).dir().absolutePath());
+//        break;
+//    }
+//    case SaveToClipboard: {
+//        copyToClipboard = true;
+//        ConfigSettings::instance()->setValue("common", "default_savepath",   "clipboard");
+//        break;
+//    }
+//    case SaveToAutoClipboard: {
+//        copyToClipboard = true;
+//        QString defaultSaveDir = ConfigSettings::instance()->value("common", "default_savepath").toString();
+//        if (defaultSaveDir.isEmpty()) {
+//            saveOption = QStandardPaths::DesktopLocation;
+//        } else if (defaultSaveDir == "clipboard") {
+//            m_saveIndex = SaveToSpecificDir;
+//        } else  {
+//            if (m_selectAreaName.isEmpty()) {
+//                m_saveFileName = QString("%1/%2_%3.png").arg(defaultSaveDir).arg(tr(
+//                                                                                     "DeepinScreenshot")).arg(currentTime);
+//            } else {
+//                m_saveFileName = QString("%1/%2_%3_%4.png").arg(defaultSaveDir).arg(tr(
+//                                                                                        "DeepinScreenshot")).arg(m_selectAreaName).arg(currentTime);
+//            }
+//        }
+//        break;
+//    }
+    default:
+        break;
+    }
+
+//    int toolBarSaveQuality = std::min(ConfigSettings::instance()->value("save",
+//                                                                        "save_quality").toInt(), 100);
+    int toolBarSaveQuality = 100;
+    if (toolBarSaveQuality != 100) {
+        qreal saveQuality = qreal(toolBarSaveQuality) * 5 / 1000 + 0.5;
+
+        int pixWidth = screenShotPix.width();
+        int pixHeight = screenShotPix.height();
+        screenShotPix = screenShotPix.scaled(pixWidth * saveQuality, pixHeight * saveQuality,
+                                             Qt::KeepAspectRatio, Qt::FastTransformation);
+        screenShotPix = screenShotPix.scaled(pixWidth,  pixHeight,
+                                             Qt::KeepAspectRatio, Qt::FastTransformation);
+    }
+
+    if (m_saveIndex == SaveToSpecificDir && m_saveFileName.isEmpty()) {
+        return false;
+    } else if (m_saveIndex == SaveToSpecificDir || !m_saveFileName.isEmpty()) {
+        if (!screenShotPix.save(m_saveFileName,  QFileInfo(m_saveFileName).suffix().toLocal8Bit()))
+            return false;
+    } else if (saveOption != QStandardPaths::TempLocation && m_saveFileName.isEmpty()) {
+        QString savePath = QStandardPaths::writableLocation(saveOption);
+        QDir saveDir(savePath);
+        if (!saveDir.exists()) {
+            bool mkdirSucc = saveDir.mkpath(".");
+            if (!mkdirSucc) {
+                qCritical() << "Save path not exist and cannot be created:" << savePath;
+                qCritical() << "Fall back to temp location!";
+                savePath = QDir::tempPath();
+            }
+        }
+//        if (m_selectAreaName.isEmpty()) {
+        m_saveFileName = QString("%1/%2_%3.png").arg(savePath, tr("DeepinScreenshot"), currentTime);
+//        } else {
+//            m_saveFileName = QString("%1/%2_%3_%4.png").arg(savePath, tr("DeepinScreenshot"), m_selectAreaName, currentTime);
+//        }
+        if (!screenShotPix.save(m_saveFileName,  "PNG"))
+            return false;
+    }
+
+//    if (copyToClipboard) {
+//        Q_ASSERT(!screenShotPix.isNull());
+//        QClipboard *cb = qApp->clipboard();
+//        cb->setPixmap(screenShotPix, QClipboard::Clipboard);
+//    }
+
+    return true;
+}
+
 void MainWindow::paintEvent(QPaintEvent *)
 {
     // Just use for debug.
@@ -1390,6 +1627,43 @@ void MainWindow::startRecord()
     recordProcess.setRecordAudioInputType(getRecordInputType(m_selectedMic, m_selectedSystemAudio));
     recordProcess.startRecord();
 //    voiceRecordProcess.startRecord();
+}
+
+void MainWindow::shotCurrentImg()
+{
+    if (recordWidth == 0 || recordHeight == 0)
+        return;
+
+//    m_needDrawSelectedPoint = false;
+//    m_drawNothing = true;
+    update();
+
+    QEventLoop eventloop1;
+    QTimer::singleShot(100, &eventloop1, SLOT(quit()));
+    eventloop1.exec();
+
+    qDebug() << "shotCurrentImg shotFullScreen";
+//    using namespace utils;
+    shotFullScreen();
+//    if (m_isShapesWidgetExist) {
+//        m_shapesWidget->hide();
+//    }
+
+    this->hide();
+    emit hideScreenshotUI();
+
+    const qreal ratio = this->devicePixelRatioF();
+    QRect target( recordX * ratio,
+                  recordY * ratio,
+                  recordWidth * ratio,
+                  recordHeight * ratio );
+
+    m_resultPixmap = m_resultPixmap.copy(target);
+}
+
+void MainWindow::shotFullScreen()
+{
+    m_resultPixmap = getPixmapofRect(m_backgroundRect);
 }
 
 void MainWindow::flashTrayIcon()

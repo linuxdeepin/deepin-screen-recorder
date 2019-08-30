@@ -47,6 +47,11 @@
 #include "widgets/sidebar.h"
 #include "widgets/keybuttonwidget.h"
 #include "widgets/zoomIndicator.h"
+#include "utils/saveutils.h"
+
+#include "dbusinterface/dbuscontrolcenter.h"
+#include "dbusinterface/dbusnotify.h"
+#include "dbusinterface/dbuszone.h"
 
 // Make this include at last, otherwise QtX11 will conflict with x11 lib to make compile failed.
 #include "event_monitor.h"
@@ -100,11 +105,14 @@ public:
 signals:
     void releaseEvent();
     void hideScreenshotUI();
+    void saveActionTriggered();
 
 public slots:
     void startRecord();
     void flashTrayIcon();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
+    void shotCurrentImg();
+    void shotFullScreen();
 
     Q_SCRIPTABLE void stopRecord();
     void startCountdown();
@@ -129,7 +137,9 @@ public slots:
     void showMultiKeyBoardButtons();
     void updateMultiKeyBoardPos();
     void changeShotToolEvent(const QString &func);
-
+    void saveScreenShot();
+    bool saveAction(const QPixmap &pix);
+    void sendNotify(SaveAction saveAction, QString saveFilePath, const bool succeed);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -163,6 +173,10 @@ private:
     RecordProcess recordProcess;
 //    VoiceRecordProcess voiceRecordProcess;
     WindowRect rootWindowRect;
+
+    SaveAction m_saveIndex;
+    //m_saveFileName is the storage path of the screenshot image.
+    QString m_saveFileName;
 
     bool drawDragPoint;
 
@@ -249,6 +263,9 @@ private:
     int m_screenHeight; //屏幕高度
     SideBar *m_sideBar; //截图功能侧边栏功能
     ZoomIndicator *m_zoomIndicator;
+
+    DBusNotify *m_notifyDBInterface;
+    bool m_noNotify = false;
     // Just use for debug.
     // int repaintCounter;
 };
