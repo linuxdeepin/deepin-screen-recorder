@@ -44,6 +44,7 @@
 #include "constant.h"
 #include "utils/audioutils.h"
 #include "utils/tempfile.h"
+#include "utils/configsettings.h"
 
 
 const int MainWindow::CURSOR_BOUND = 5;
@@ -147,6 +148,8 @@ void MainWindow::initAttributes()
 
     createWinId();
 
+    ConfigSettings::instance();
+
     // Get all windows geometry.
     // Below code must execute before `window.showFullscreen,
     // otherwise deepin-screen-recorder window will add in window lists.
@@ -206,6 +209,15 @@ void MainWindow::initAttributes()
     connect(m_toolBar, &ToolBar::mp4ActionCheckedToMain, this, &MainWindow::changeMp4SelectEvent);
     connect(m_toolBar, &ToolBar::frameRateChangedToMain, this, &MainWindow::changeFrameRateEvent);
     connect(m_toolBar, &ToolBar::shotToolChangedToMain, this, &MainWindow::changeShotToolEvent);
+
+    connect(m_toolBar, &ToolBar::shotToolChangedToMain, this,  [ = ](QString shape) {
+        if (m_isShapesWidgetExist && shape != "color") {
+            m_shapesWidget->setCurrentShape(shape);
+        } else if (shape != "color") {
+            initShapeWidget(shape);
+            m_isShapesWidgetExist = true;
+        }
+    });
     //构建截屏录屏功能触发按钮
     m_recordButton = new QPushButton(this);
     m_recordButton->setFixedSize(60, 47);
@@ -985,7 +997,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     // failed notify
     if (!succeed) {
         const auto tips = tr("Save failed. Please save it in your home directory.");
-        m_notifyDBInterface->Notify("Deepin Screenshot", 0, "deepin-screenshot", QString(), tips, QStringList(), QVariantMap(), 0);
+        m_notifyDBInterface->Notify("Deepin Screenshot", 0, "deepin-screen-recorder", QString(), tips, QStringList(), QVariantMap(), 0);
 
         exit(0);
     }
@@ -1024,10 +1036,10 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
 
     if (saveAction == SaveAction::SaveToClipboard && !m_noNotify) {
         QVariantMap emptyMap;
-        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screenshot", "",
+        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screen-recorder", "",
                                     summary,  QStringList(), emptyMap, 0);
     }  else if ( !m_noNotify &&  !(m_saveIndex == SaveAction::SaveToSpecificDir && m_saveFileName.isEmpty())) {
-        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screenshot", "",
+        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screen-recorder", "",
                                     summary, actions, hints, 0);
     }
 
