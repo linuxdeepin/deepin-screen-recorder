@@ -42,7 +42,6 @@
 #include "record_option_panel.h"
 #include "countdown_tooltip.h"
 #include "constant.h"
-#include "utils/audioutils.h"
 #include "utils/tempfile.h"
 #include "utils/configsettings.h"
 
@@ -774,8 +773,6 @@ void MainWindow::changeMicrophoneSelectEvent(bool checked)
 void MainWindow::changeSystemAudioSelectEvent(bool checked)
 {
     m_selectedSystemAudio = checked;
-    AudioUtils *audioUtils = new AudioUtils(this);
-    checked ? audioUtils->setupSystemAudioOutput() : audioUtils->setupMicrophoneOutput();
 }
 
 void MainWindow::changeGifSelectEvent(bool checked)

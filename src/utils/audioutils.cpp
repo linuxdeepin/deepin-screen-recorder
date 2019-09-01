@@ -89,8 +89,17 @@ void AudioUtils::setupSystemAudioOutput()
     arguments << QString("set-default-sink");
     arguments << QString("alsa_output.platform-snd_aloop.0.analog-stereo");
     process->start("pactl", arguments);
-
 }
+
+void AudioUtils::setupAudioSink(QString sink)
+{
+    initProcess();
+    QStringList arguments;
+    arguments << QString("set-default-sink");
+    arguments << sink;
+    process->start("pacmd", arguments);
+}
+
 bool AudioUtils::canVirtualCardOutput()
 {
     QStringList options;
@@ -103,4 +112,31 @@ bool AudioUtils::canVirtualCardOutput()
     QString str_output = process.readAllStandardOutput();
     process.close();
     return str_output.startsWith("1");
+}
+
+QString AudioUtils::currentAudioSink()
+{
+    QStringList options;
+    options << "-c";
+    options << "pacmd list-sinks | sed  -n '/\\*.*index:.*\\([0-9]\\+\\).*/{n;p}' | sed -n 's/name: <\\(.*\\)>/\\1/p' | sed -e 's/^[\\t]*//'";
+    QProcess process;
+    process.start("bash", options);
+    process.waitForFinished();
+    process.waitForReadyRead();
+    QString str_output = process.readAllStandardOutput();
+    process.close();
+    return str_output;
+}
+QString AudioUtils::currentAudioSource()
+{
+    QStringList options;
+    options << "-c";
+    options << "pacmd list-sources | sed  -n '/\\*.*index:.*\\([0-9]\\+\\).*/{n;p}' | sed -n 's/name: <\\(.*\\)>/\\1/p' | sed -e 's/^[\\t]*//'";
+    QProcess process;
+    process.start("bash", options);
+    process.waitForFinished();
+    process.waitForReadyRead();
+    QString str_output = process.readAllStandardOutput();
+    process.close();
+    return str_output;
 }
