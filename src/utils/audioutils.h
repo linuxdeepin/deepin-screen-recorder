@@ -30,7 +30,10 @@ public:
     bool isMicrophoneOutput();
     void setupMicrophoneOutput();
     void setupSystemAudioOutput();
+    void setupAudioSink(QString sink);
     bool canVirtualCardOutput();
+    QString currentAudioSink();
+    QString currentAudioSource();
 private:
     void initProcess();
 

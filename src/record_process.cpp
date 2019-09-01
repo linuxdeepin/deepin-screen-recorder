@@ -25,6 +25,7 @@
 #include "settings.h"
 #include "process_tree.h"
 #include "utils.h"
+#include "utils/audioutils.h"
 #include <signal.h>
 #include <proc/sysinfo.h>
 #include <QApplication>
@@ -192,6 +193,10 @@ void RecordProcess::recordVideo()
         arguments << QString("-i");
         arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
         if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
+            AudioUtils *audioUtils = new AudioUtils(this);
+            lastAudioSink = audioUtils->currentAudioSink();
+            audioUtils->setupSystemAudioOutput();
+
             arguments << QString("-thread_queue_size");
             arguments << QString("1024");
             arguments << QString("-f");
@@ -212,6 +217,9 @@ void RecordProcess::recordVideo()
             arguments << QString("-filter_complex");
             arguments << QString("amix=inputs=2:duration=first:dropout_transition=0");
         } else if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC) {
+            AudioUtils *audioUtils = new AudioUtils(this);
+            lastAudioSink = audioUtils->currentAudioSink();
+
             arguments << QString("-thread_queue_size");
             arguments << QString("1024");
             arguments << QString("-f");
@@ -221,6 +229,10 @@ void RecordProcess::recordVideo()
             arguments << QString("-i");
             arguments << QString("default");
         } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
+            AudioUtils *audioUtils = new AudioUtils(this);
+            lastAudioSink = audioUtils->currentAudioSink();
+            audioUtils->setupSystemAudioOutput();
+
             arguments << QString("-thread_queue_size");
             arguments << QString("1024");
             arguments << QString("-f");
@@ -324,6 +336,10 @@ void RecordProcess::stopRecord()
         qDebug() << "Kill byzanz-record's child process (sleep) pid: " << byzanzChildPid;
     } else {
         process->terminate();
+        AudioUtils *audioUtils = new AudioUtils(this);
+        if (lastAudioSink.length() > 0) {
+           audioUtils->setupAudioSink(lastAudioSink);
+        }
     }
 
     // Wait thread.

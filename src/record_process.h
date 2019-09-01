@@ -85,4 +85,6 @@ private:
     int byzanzProcessId;
     int sleepProcessId;
     int m_framerate;
+
+    QString lastAudioSink;
 };

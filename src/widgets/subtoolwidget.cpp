@@ -460,7 +460,7 @@ void SubToolWidget::initVirtualCard()
         QProcess p(this);
         QStringList arguments;
         arguments << QString("-c");
-        arguments << QString("echo %1 | sudo -S modprobe snd-aloop pcm_substreams=1").arg(text);
+        arguments << QString("echo %1 | sudo -S modprobe snd-aloop pcm_substreams=1 ; sudo sed -i '$ a snd_aloop' /etc/modules").arg(text);
         qDebug() << arguments;
         p.start("/bin/bash", arguments);
         p.waitForFinished();
