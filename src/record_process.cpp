@@ -182,7 +182,7 @@ void RecordProcess::recordVideo()
 //            qDebug() << "Not found mp4_framerate option in config file, mp4 use framerate 25";
 //        }
 
-        qDebug() << "mp4 framerate " << m_framerate;
+        qDebug() << "mp4 framerate" << m_framerate;
 
         arguments << QString("-video_size");
         arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
@@ -338,7 +338,7 @@ void RecordProcess::stopRecord()
         process->terminate();
         AudioUtils *audioUtils = new AudioUtils(this);
         if (lastAudioSink.length() > 0) {
-           audioUtils->setupAudioSink(lastAudioSink);
+            audioUtils->setupAudioSink(lastAudioSink);
         }
     }
 

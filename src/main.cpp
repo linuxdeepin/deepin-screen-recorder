@@ -55,7 +55,6 @@ int main(int argc, char *argv[])
 
             // Load translator.
             app.loadTranslator();
-            app.setTheme("light");
             app.setStyle("chameleon");
             app.setAttribute(Qt::AA_UseHighDpiPixmaps);
 

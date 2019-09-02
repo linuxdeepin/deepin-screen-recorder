@@ -992,7 +992,56 @@ void ShotToolWidget::initTextLabel()
 
     DSlider *t_textFontSize = new DSlider();
     t_textFontSize->setOrientation(Qt::Vertical);
+//    t_textFontSize->setTickPosition(QSlider::NoTicks);
     t_textFontSize->setFixedSize(TOOL_SLIDER_SIZE);
+    t_textFontSize->setMinimum(0);
+    t_textFontSize->setMaximum(11);
+    t_textFontSize->setTickInterval(1);
+    t_textFontSize->setValue(4);
+    ConfigSettings::instance()->setValue("text", "fontsize", 18);
+
+    connect(t_textFontSize, &DSlider::valueChanged, this, [ = ] {
+        int t_value = t_textFontSize->value();
+
+        switch (t_value)
+        {
+        case 0:
+            ConfigSettings::instance()->setValue("text", "fontsize", 9);
+            break;
+        case 1:
+            ConfigSettings::instance()->setValue("text", "fontsize", 10);
+            break;
+        case 2:
+            ConfigSettings::instance()->setValue("text", "fontsize", 12);
+            break;
+        case 3:
+            ConfigSettings::instance()->setValue("text", "fontsize", 14);
+            break;
+        case 4:
+            ConfigSettings::instance()->setValue("text", "fontsize", 18);
+            break;
+        case 5:
+            ConfigSettings::instance()->setValue("text", "fontsize", 24);
+            break;
+        case 6:
+            ConfigSettings::instance()->setValue("text", "fontsize", 36);
+            break;
+        case 7:
+            ConfigSettings::instance()->setValue("text", "fontsize", 48);
+            break;
+        case 8:
+            ConfigSettings::instance()->setValue("text", "fontsize", 64);
+            break;
+        case 9:
+            ConfigSettings::instance()->setValue("text", "fontsize", 72);
+            break;
+        case 10:
+            ConfigSettings::instance()->setValue("text", "fontsize", 96);
+            break;
+        default:
+            break;
+        }
+    });
 
     QVBoxLayout *rectLayout = new QVBoxLayout();
     rectLayout->setMargin(0);
