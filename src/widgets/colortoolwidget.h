@@ -22,10 +22,12 @@ signals:
     void colorChecked(QString colorType);
 
 public slots:
+    void setFunction(const QString &func);
 
 private:
     QVBoxLayout *m_baseLayout;
     bool m_isChecked;
+    QString m_function;
 };
 
 #endif // COLORTOOLWIDGET_H

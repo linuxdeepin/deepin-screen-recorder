@@ -96,6 +96,12 @@ public:
         // So we don't need delete object by hand.
     }
 
+    enum ShotMouseStatus {
+        Normal,
+        Wait,
+        Shoting,
+    };
+
     // Split attributes and resource for speed up start.
     void initAttributes();
     void initResource();
@@ -106,6 +112,8 @@ signals:
     void releaseEvent();
     void hideScreenshotUI();
     void saveActionTriggered();
+    void unDo();
+    void deleteShapes();
 
 public slots:
     void startRecord();
@@ -140,6 +148,8 @@ public slots:
     void saveScreenShot();
     bool saveAction(const QPixmap &pix);
     void sendNotify(SaveAction saveAction, QString saveFilePath, const bool succeed);
+    void reloadImage(QString effect);
+    void shotImgWidthEffect();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -195,6 +205,7 @@ private:
     int dragStartX;
     int dragStartY;
 
+    int m_shotStatus;
     int recordButtonStatus;
     int recordHeight;
     int recordWidth;
@@ -263,9 +274,15 @@ private:
     int m_screenHeight; //屏幕高度
     SideBar *m_sideBar; //截图功能侧边栏功能
     ZoomIndicator *m_zoomIndicator;
+    bool m_isShapesWidgetExist = false;
 
+    DBusZone *m_hotZoneInterface;
     DBusNotify *m_notifyDBInterface;
     bool m_noNotify = false;
+    bool m_isShiftPressed = false;
+    bool m_drawNothing = false;
+    bool m_needDrawSelectedPoint;
+    bool m_needSaveScreenshot = false;
     // Just use for debug.
     // int repaintCounter;
 };

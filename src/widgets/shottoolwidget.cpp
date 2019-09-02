@@ -1,5 +1,6 @@
 #include "shottoolwidget.h"
 #include "toolbutton.h"
+#include "../utils/configsettings.h"
 
 #include <DSlider>
 #include <QLineEdit>
@@ -40,6 +41,7 @@ ShotToolWidget::~ShotToolWidget()
 void ShotToolWidget::initWidget()
 {
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+    m_arrowFlag = false;
 
     initRectLabel();
     initCircLabel();
@@ -60,7 +62,7 @@ void ShotToolWidget::initRectLabel()
 
     //选择功能按钮组
     QButtonGroup *t_funcBtnGroup = new QButtonGroup();
-    t_funcBtnGroup->setExclusive(true);
+    t_funcBtnGroup->setExclusive(false);
     QList<ToolButton *> btnList;
 
     //粗细程度１级按钮
@@ -99,6 +101,92 @@ void ShotToolWidget::initRectLabel()
         t_thicknessBtnGroup->addButton(btnList[i]);
     }
 
+    connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
+    [ = ](int status) {
+
+        QPalette pa;
+        if (thickOneBtn->isChecked()) {
+            pa = thickOneBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            thickOneBtn->setPalette(pa);
+            thickOneBtn->setIconSize(QSize(50, 50));
+            thickOneBtn->setIcon(QIcon(":/resources/images/size/fine_checked@2x.png"));
+
+            thickOneBtn->update();
+
+            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 1);
+        }
+
+        else {
+            pa = thickOneBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            thickOneBtn->setPalette(pa);
+            thickOneBtn->setIconSize(QSize(50, 50));
+            thickOneBtn->setIcon(QIcon(":/resources/images/size/fine_normal@2x.png"));
+
+            thickOneBtn->update();
+        }
+
+        if (thickTwoBtn->isChecked()) {
+            pa = thickTwoBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            thickTwoBtn->setPalette(pa);
+            thickTwoBtn->setIconSize(QSize(50, 50));
+            thickTwoBtn->setIcon(QIcon(":/resources/images/size/medium_checked@2x.png"));
+
+            thickTwoBtn->update();
+
+            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 2);
+        }
+
+        else {
+            pa = thickTwoBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            thickTwoBtn->setPalette(pa);
+            thickTwoBtn->setIconSize(QSize(50, 50));
+            thickTwoBtn->setIcon(QIcon(":/resources/images/size/medium_normal@2x.png"));
+
+            thickTwoBtn->update();
+        }
+
+        if (thickThreeBtn->isChecked()) {
+            pa = thickThreeBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            thickThreeBtn->setPalette(pa);
+            thickThreeBtn->setIconSize(QSize(50, 50));
+            thickThreeBtn->setIcon(QIcon(":/resources/images/size/thick_checked@2x.png"));
+
+            thickThreeBtn->update();
+
+            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 3);
+        }
+
+        else {
+            pa = thickThreeBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            thickThreeBtn->setPalette(pa);
+            thickThreeBtn->setIconSize(QSize(50, 50));
+            thickThreeBtn->setIcon(QIcon(":/resources/images/size/thick_normal@2x.png"));
+
+            thickThreeBtn->update();
+        }
+    });
+    thickOneBtn->click();
+    ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 1);
+
+
     rectLayout->addSpacing(BUTTON_SPACING);
     ToolButton *t_seperator = new ToolButton();
     pa = t_seperator->palette();
@@ -109,6 +197,7 @@ void ShotToolWidget::initRectLabel()
     t_seperator->setFixedSize(SPLITTER_SIZE);
     rectLayout->addWidget(t_seperator, 0, Qt::AlignHCenter);
     rectLayout->addSpacing(BUTTON_SPACING);
+
 
     btnList.clear();
 
@@ -130,21 +219,104 @@ void ShotToolWidget::initRectLabel()
     mosaicBtn->setIcon(QIcon(":/resources/images/size/mosaic_normal@2x.png"));
     btnList.append(mosaicBtn);
 
+    connect(blurButton, &ToolButton::clicked, this, [ = ] {
+        bool t_status = blurButton->isChecked();
+
+        if (t_status == true)
+        {
+            QPalette pa;
+            pa = blurButton->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            blurButton->setPalette(pa);
+            blurButton->setIconSize(QSize(30, 30));
+            blurButton->setIcon(QIcon(":/resources/images/size/blur_checked@2x.png"));
+
+            ConfigSettings::instance()->setValue("effect", "is_blur", blurButton->isChecked());
+
+            mosaicBtn->setChecked(false);
+            pa = mosaicBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            mosaicBtn->setPalette(pa);
+            mosaicBtn->setIconSize(QSize(30, 30));
+            mosaicBtn->setIcon(QIcon(":/resources/images/size/mosaic_normal@2x.png"));
+
+            mosaicBtn->update();
+            ConfigSettings::instance()->setValue("effect", "is_mosaic", mosaicBtn->isChecked());
+
+        }
+
+        else
+        {
+            QPalette pa;
+            blurButton->setChecked(false);
+            pa = blurButton->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            blurButton->setPalette(pa);
+            blurButton->setIconSize(QSize(30, 30));
+            blurButton->setIcon(QIcon(":/resources/images/size/blur_normal@2x.png"));
+
+            blurButton->update();
+            ConfigSettings::instance()->setValue("effect", "is_blur", blurButton->isChecked());
+        }
+    });
+
+    connect(mosaicBtn, &ToolButton::clicked, this, [ = ] {
+        bool t_status = mosaicBtn->isChecked();
+
+        if (t_status == true)
+        {
+            QPalette pa;
+            pa = mosaicBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            mosaicBtn->setPalette(pa);
+            mosaicBtn->setIconSize(QSize(30, 30));
+            mosaicBtn->setIcon(QIcon(":/resources/images/size/mosaic_checked@2x.png"));
+
+            ConfigSettings::instance()->setValue("effect", "is_mosaic", mosaicBtn->isChecked());
+            m_arrowFlag = true;
+            blurButton->setChecked(false);
+            pa = blurButton->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            blurButton->setPalette(pa);
+            blurButton->setIconSize(QSize(30, 30));
+            blurButton->setIcon(QIcon(":/resources/images/size/blur_normal@2x.png"));
+
+            blurButton->update();
+            ConfigSettings::instance()->setValue("effect", "is_blur", blurButton->isChecked());
+        }
+
+        else
+        {
+            QPalette pa;
+            mosaicBtn->setChecked(false);
+            pa = mosaicBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            mosaicBtn->setPalette(pa);
+            mosaicBtn->setIconSize(QSize(30, 30));
+            mosaicBtn->setIcon(QIcon(":/resources/images/size/mosaic_normal@2x.png"));
+
+            mosaicBtn->update();
+            ConfigSettings::instance()->setValue("effect", "is_mosaic", mosaicBtn->isChecked());
+        }
+
+    });
+
+
     for (int j = 0; j < btnList.length(); j++) {
         rectLayout->addWidget(btnList[j]);
-        t_funcBtnGroup->addButton(btnList[j]);
     }
-
-//    rectLayout->addSpacing(BUTTON_SPACING);
-
-//    ToolButton *t_seperator1 = new ToolButton();
-//    pa = t_seperator1->palette();
-//    pa.setColor(DPalette::Light, QColor("#414D68"));
-//    pa.setColor(DPalette::Dark, QColor("#414D68"));
-//    t_seperator1->setDisabled(true);
-//    t_seperator1->setPalette(pa);
-//    t_seperator1->setFixedSize(SPLITTER_SIZE);
-//    rectLayout->addWidget(t_seperator1, 1, Qt::AlignHCenter);
 
     m_rectSubTool->setLayout(rectLayout);
     addWidget(m_rectSubTool);
@@ -161,7 +333,7 @@ void ShotToolWidget::initCircLabel()
 
     //选择功能按钮组
     QButtonGroup *t_funcBtnGroup = new QButtonGroup();
-    t_funcBtnGroup->setExclusive(true);
+    t_funcBtnGroup->setExclusive(false);
     QList<ToolButton *> btnList;
 
     //粗细程度１级按钮
@@ -200,6 +372,91 @@ void ShotToolWidget::initCircLabel()
         t_thicknessBtnGroup->addButton(btnList[i]);
     }
 
+    connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
+    [ = ](int status) {
+
+        QPalette pa;
+        if (thickOneBtn->isChecked()) {
+            pa = thickOneBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            thickOneBtn->setPalette(pa);
+            thickOneBtn->setIconSize(QSize(50, 50));
+            thickOneBtn->setIcon(QIcon(":/resources/images/size/fine_checked@2x.png"));
+
+            thickOneBtn->update();
+
+            ConfigSettings::instance()->setValue("oval", "linewidth_index", 1);
+        }
+
+        else {
+            pa = thickOneBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            thickOneBtn->setPalette(pa);
+            thickOneBtn->setIconSize(QSize(50, 50));
+            thickOneBtn->setIcon(QIcon(":/resources/images/size/fine_normal@2x.png"));
+
+            thickOneBtn->update();
+        }
+
+        if (thickTwoBtn->isChecked()) {
+            pa = thickTwoBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            thickTwoBtn->setPalette(pa);
+            thickTwoBtn->setIconSize(QSize(50, 50));
+            thickTwoBtn->setIcon(QIcon(":/resources/images/size/medium_checked@2x.png"));
+
+            thickTwoBtn->update();
+
+            ConfigSettings::instance()->setValue("oval", "linewidth_index", 2);
+        }
+
+        else {
+            pa = thickTwoBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            thickTwoBtn->setPalette(pa);
+            thickTwoBtn->setIconSize(QSize(50, 50));
+            thickTwoBtn->setIcon(QIcon(":/resources/images/size/medium_normal@2x.png"));
+
+            thickTwoBtn->update();
+        }
+
+        if (thickThreeBtn->isChecked()) {
+            pa = thickThreeBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            thickThreeBtn->setPalette(pa);
+            thickThreeBtn->setIconSize(QSize(50, 50));
+            thickThreeBtn->setIcon(QIcon(":/resources/images/size/thick_checked@2x.png"));
+
+            thickThreeBtn->update();
+
+            ConfigSettings::instance()->setValue("oval", "linewidth_index", 3);
+        }
+
+        else {
+            pa = thickThreeBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            thickThreeBtn->setPalette(pa);
+            thickThreeBtn->setIconSize(QSize(50, 50));
+            thickThreeBtn->setIcon(QIcon(":/resources/images/size/thick_normal@2x.png"));
+
+            thickThreeBtn->update();
+        }
+    });
+    thickOneBtn->click();
+    ConfigSettings::instance()->setValue("oval", "linewidth_index", 1);
+
     rectLayout->addSpacing(BUTTON_SPACING);
     ToolButton *t_seperator = new ToolButton();
     pa = t_seperator->palette();
@@ -231,9 +488,102 @@ void ShotToolWidget::initCircLabel()
     mosaicBtn->setIcon(QIcon(":/resources/images/size/mosaic_normal@2x.png"));
     btnList.append(mosaicBtn);
 
+    connect(blurButton, &ToolButton::clicked, this, [ = ] {
+        bool t_status = blurButton->isChecked();
+
+        if (t_status == true)
+        {
+            QPalette pa;
+            pa = blurButton->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            blurButton->setPalette(pa);
+            blurButton->setIconSize(QSize(30, 30));
+            blurButton->setIcon(QIcon(":/resources/images/size/blur_checked@2x.png"));
+
+            ConfigSettings::instance()->setValue("effect", "is_blur", blurButton->isChecked());
+
+            mosaicBtn->setChecked(false);
+            pa = mosaicBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            mosaicBtn->setPalette(pa);
+            mosaicBtn->setIconSize(QSize(30, 30));
+            mosaicBtn->setIcon(QIcon(":/resources/images/size/mosaic_normal@2x.png"));
+
+            mosaicBtn->update();
+            ConfigSettings::instance()->setValue("effect", "is_mosaic", mosaicBtn->isChecked());
+
+        }
+
+        else
+        {
+            QPalette pa;
+            blurButton->setChecked(false);
+            pa = blurButton->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            blurButton->setPalette(pa);
+            blurButton->setIconSize(QSize(30, 30));
+            blurButton->setIcon(QIcon(":/resources/images/size/blur_normal@2x.png"));
+
+            blurButton->update();
+            ConfigSettings::instance()->setValue("effect", "is_blur", blurButton->isChecked());
+        }
+    });
+
+    connect(mosaicBtn, &ToolButton::clicked, this, [ = ] {
+        bool t_status = mosaicBtn->isChecked();
+
+        if (t_status == true)
+        {
+            QPalette pa;
+            pa = mosaicBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            mosaicBtn->setPalette(pa);
+            mosaicBtn->setIconSize(QSize(30, 30));
+            mosaicBtn->setIcon(QIcon(":/resources/images/size/mosaic_checked@2x.png"));
+
+            ConfigSettings::instance()->setValue("effect", "is_mosaic", mosaicBtn->isChecked());
+            m_arrowFlag = true;
+            blurButton->setChecked(false);
+            pa = blurButton->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            blurButton->setPalette(pa);
+            blurButton->setIconSize(QSize(30, 30));
+            blurButton->setIcon(QIcon(":/resources/images/size/blur_normal@2x.png"));
+
+            blurButton->update();
+            ConfigSettings::instance()->setValue("effect", "is_blur", blurButton->isChecked());
+        }
+
+        else
+        {
+            QPalette pa;
+            mosaicBtn->setChecked(false);
+            pa = mosaicBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            mosaicBtn->setPalette(pa);
+            mosaicBtn->setIconSize(QSize(30, 30));
+            mosaicBtn->setIcon(QIcon(":/resources/images/size/mosaic_normal@2x.png"));
+
+            mosaicBtn->update();
+            ConfigSettings::instance()->setValue("effect", "is_mosaic", mosaicBtn->isChecked());
+        }
+
+    });
+
     for (int j = 0; j < btnList.length(); j++) {
         rectLayout->addWidget(btnList[j]);
-        t_funcBtnGroup->addButton(btnList[j]);
     }
 
     m_circSubTool->setLayout(rectLayout);
@@ -251,7 +601,7 @@ void ShotToolWidget::initLineLabel()
 
     //选择功能按钮组
     QButtonGroup *t_funcBtnGroup = new QButtonGroup();
-    t_funcBtnGroup->setExclusive(true);
+    t_funcBtnGroup->setExclusive(false);
     QList<ToolButton *> btnList;
 
     //粗细程度１级按钮
@@ -289,6 +639,99 @@ void ShotToolWidget::initLineLabel()
         rectLayout->addWidget(btnList[i]);
         t_thicknessBtnGroup->addButton(btnList[i]);
     }
+
+    connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
+    [ = ](int status) {
+
+        QPalette pa;
+        if (thickOneBtn->isChecked()) {
+            pa = thickOneBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            thickOneBtn->setPalette(pa);
+            thickOneBtn->setIconSize(QSize(50, 50));
+            thickOneBtn->setIcon(QIcon(":/resources/images/size/fine_checked@2x.png"));
+
+            thickOneBtn->update();
+
+
+            ConfigSettings::instance()->setValue("arrow", "arrow_linewidth_index", 1);
+            ConfigSettings::instance()->setValue("arrow", "straightline_linewidth_index", 1);
+
+
+        }
+
+        else {
+            pa = thickOneBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            thickOneBtn->setPalette(pa);
+            thickOneBtn->setIconSize(QSize(50, 50));
+            thickOneBtn->setIcon(QIcon(":/resources/images/size/fine_normal@2x.png"));
+
+            thickOneBtn->update();
+        }
+
+        if (thickTwoBtn->isChecked()) {
+            pa = thickTwoBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            thickTwoBtn->setPalette(pa);
+            thickTwoBtn->setIconSize(QSize(50, 50));
+            thickTwoBtn->setIcon(QIcon(":/resources/images/size/medium_checked@2x.png"));
+
+            thickTwoBtn->update();
+
+            ConfigSettings::instance()->setValue("arrow", "arrow_linewidth_index", 2);
+            ConfigSettings::instance()->setValue("arrow", "straightline_linewidth_index", 2);
+        }
+
+        else {
+            pa = thickTwoBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            thickTwoBtn->setPalette(pa);
+            thickTwoBtn->setIconSize(QSize(50, 50));
+            thickTwoBtn->setIcon(QIcon(":/resources/images/size/medium_normal@2x.png"));
+
+            thickTwoBtn->update();
+        }
+
+        if (thickThreeBtn->isChecked()) {
+            pa = thickThreeBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            thickThreeBtn->setPalette(pa);
+            thickThreeBtn->setIconSize(QSize(50, 50));
+            thickThreeBtn->setIcon(QIcon(":/resources/images/size/thick_checked@2x.png"));
+
+            thickThreeBtn->update();
+
+            ConfigSettings::instance()->setValue("arrow", "arrow_linewidth_index", 3);
+            ConfigSettings::instance()->setValue("arrow", "straightline_linewidth_index", 3);
+        }
+
+        else {
+            pa = thickThreeBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            thickThreeBtn->setPalette(pa);
+            thickThreeBtn->setIconSize(QSize(50, 50));
+            thickThreeBtn->setIcon(QIcon(":/resources/images/size/thick_normal@2x.png"));
+
+            thickThreeBtn->update();
+        }
+    });
+    thickOneBtn->click();
+
+    ConfigSettings::instance()->setValue("arrow", "arrow_linewidth_index", 1);
+    ConfigSettings::instance()->setValue("arrow", "straightline_linewidth_index", 1);
 
     rectLayout->addSpacing(BUTTON_SPACING);
     ToolButton *t_seperator = new ToolButton();
@@ -320,6 +763,68 @@ void ShotToolWidget::initLineLabel()
     mosaicBtn->setIconSize(QSize(30, 30));
     mosaicBtn->setIcon(QIcon(":/resources/images/action/arrow_normal@2x.png"));
     btnList.append(mosaicBtn);
+
+    connect(blurButton, &ToolButton::clicked, this, [ = ] {
+        QPalette pa;
+        pa = blurButton->palette();
+        pa.setColor(QPalette::ButtonText, Qt::white);
+        pa.setColor(QPalette::Dark, Qt::black);
+        pa.setColor(QPalette::Light, Qt::black);
+        blurButton->setPalette(pa);
+        blurButton->setIconSize(QSize(30, 30));
+        blurButton->setIcon(QIcon(":/resources/images/action/straightline_checked@2x.png"));
+
+        blurButton->update();
+
+        ConfigSettings::instance()->setValue("arrow", "is_straight", true);
+        m_arrowFlag = false;
+
+        if (blurButton->isChecked())
+        {
+            mosaicBtn->setChecked(false);
+            pa = mosaicBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            mosaicBtn->setPalette(pa);
+            mosaicBtn->setIconSize(QSize(30, 30));
+            mosaicBtn->setIcon(QIcon(":/resources/images/action/arrow_normal@2x.png"));
+
+            mosaicBtn->update();
+        }
+    });
+    connect(mosaicBtn, &ToolButton::clicked, this, [ = ] {
+        QPalette pa;
+        pa = mosaicBtn->palette();
+        pa.setColor(QPalette::ButtonText, Qt::white);
+        pa.setColor(QPalette::Dark, Qt::black);
+        pa.setColor(QPalette::Light, Qt::black);
+        mosaicBtn->setPalette(pa);
+        mosaicBtn->setIconSize(QSize(30, 30));
+        mosaicBtn->setIcon(QIcon(":/resources/images/action/arrow_checked@2x.png"));
+
+        mosaicBtn->update();
+
+        ConfigSettings::instance()->setValue("arrow", "is_straight", false);
+        m_arrowFlag = true;
+        if (mosaicBtn->isChecked())
+        {
+            blurButton->setChecked(false);
+            pa = blurButton->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            blurButton->setPalette(pa);
+            blurButton->setIconSize(QSize(30, 30));
+            blurButton->setIcon(QIcon(":/resources/images/action/straightline_normal@2x.png"));
+
+            blurButton->update();
+        }
+    });
+
+    blurButton->click();
+    m_arrowFlag = false;
+    ConfigSettings::instance()->setValue("arrow", "is_straight", true);
 
     for (int j = 0; j < btnList.length(); j++) {
         rectLayout->addWidget(btnList[j]);
@@ -377,6 +882,93 @@ void ShotToolWidget::initPenLabel()
         t_thicknessBtnGroup->addButton(btnList[i]);
     }
 
+
+    connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
+    [ = ](int status) {
+
+        QPalette pa;
+        if (thickOneBtn->isChecked()) {
+            pa = thickOneBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            thickOneBtn->setPalette(pa);
+            thickOneBtn->setIconSize(QSize(50, 50));
+            thickOneBtn->setIcon(QIcon(":/resources/images/size/fine_checked@2x.png"));
+
+            thickOneBtn->update();
+
+            ConfigSettings::instance()->setValue("line", "linewidth_index", 1);
+        }
+
+        else {
+            pa = thickOneBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            thickOneBtn->setPalette(pa);
+            thickOneBtn->setIconSize(QSize(50, 50));
+            thickOneBtn->setIcon(QIcon(":/resources/images/size/fine_normal@2x.png"));
+
+            thickOneBtn->update();
+        }
+
+        if (thickTwoBtn->isChecked()) {
+            pa = thickTwoBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            thickTwoBtn->setPalette(pa);
+            thickTwoBtn->setIconSize(QSize(50, 50));
+            thickTwoBtn->setIcon(QIcon(":/resources/images/size/medium_checked@2x.png"));
+
+            thickTwoBtn->update();
+
+            ConfigSettings::instance()->setValue("line", "linewidth_index", 2);
+        }
+
+        else {
+            pa = thickTwoBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            thickTwoBtn->setPalette(pa);
+            thickTwoBtn->setIconSize(QSize(50, 50));
+            thickTwoBtn->setIcon(QIcon(":/resources/images/size/medium_normal@2x.png"));
+
+            thickTwoBtn->update();
+        }
+
+        if (thickThreeBtn->isChecked()) {
+            pa = thickThreeBtn->palette();
+            pa.setColor(QPalette::ButtonText, Qt::white);
+            pa.setColor(QPalette::Dark, Qt::black);
+            pa.setColor(QPalette::Light, Qt::black);
+            thickThreeBtn->setPalette(pa);
+            thickThreeBtn->setIconSize(QSize(50, 50));
+            thickThreeBtn->setIcon(QIcon(":/resources/images/size/thick_checked@2x.png"));
+
+            thickThreeBtn->update();
+
+            ConfigSettings::instance()->setValue("line", "linewidth_index", 3);
+        }
+
+        else {
+            pa = thickThreeBtn->palette();
+            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
+            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
+            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            thickThreeBtn->setPalette(pa);
+            thickThreeBtn->setIconSize(QSize(50, 50));
+            thickThreeBtn->setIcon(QIcon(":/resources/images/size/thick_normal@2x.png"));
+
+            thickThreeBtn->update();
+        }
+    });
+    thickOneBtn->click();
+    ConfigSettings::instance()->setValue("line", "linewidth_index", 1);
+
+
     rectLayout->addSpacing(70);
     ToolButton *t_seperator = new ToolButton();
     pa = t_seperator->palette();
@@ -416,19 +1008,19 @@ void ShotToolWidget::initTextLabel()
 void ShotToolWidget::switchContent(QString shapeType)
 {
     if (!shapeType.isEmpty()) {
-        if (shapeType == "rect") {
+        if (shapeType == "rectangle") {
             setCurrentWidget(m_rectSubTool);
         }
 
-        if (shapeType == "circ") {
+        if (shapeType == "oval") {
             setCurrentWidget(m_circSubTool);
         }
 
-        if (shapeType == "line") {
+        if (shapeType == "arrow") {
             setCurrentWidget(m_lineSubTool);
         }
 
-        if (shapeType == "pen") {
+        if (shapeType == "line") {
             setCurrentWidget(m_penSubTool);
         }
 

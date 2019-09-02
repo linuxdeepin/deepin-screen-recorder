@@ -27,7 +27,7 @@
 ConfigSettings::ConfigSettings(QObject *parent)
     : QObject(parent)
 {
-    m_settings = new QSettings("deepin", "deepin-screenshot");
+    m_settings = new QSettings("deepin", "deepin-screen-recorder");
 
     if (m_settings->allKeys().isEmpty()) {
         setValue("common", "color_index", 3);

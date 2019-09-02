@@ -1,5 +1,6 @@
 #include "colortoolwidget.h"
 #include "toolbutton.h"
+#include "../utils/configsettings.h"
 
 #include <DSlider>
 #include <QLineEdit>
@@ -24,6 +25,7 @@ const QSize MIN_TOOL_BUTTON_SIZE = QSize(35, 30);
 ColorToolWidget::ColorToolWidget(QWidget *parent) : DLabel(parent)
 {
     initWidget();
+    m_function = "rectangle";
 }
 
 ColorToolWidget::~ColorToolWidget()
@@ -117,6 +119,13 @@ void ColorToolWidget::initColorLabel()
             m_isChecked = true;
             redBtn->update();
             emit colorChecked("red");
+
+            ConfigSettings::instance()->setValue("common", "color_index", 0);
+            ConfigSettings::instance()->setValue("rectangle", "color_index", 0);
+            ConfigSettings::instance()->setValue("oval", "color_index", 0);
+            ConfigSettings::instance()->setValue("arrow", "color_index", 0);
+            ConfigSettings::instance()->setValue("line", "color_index", 0);
+            ConfigSettings::instance()->setValue("text", "color_index", 0);
         }
 
         else {
@@ -137,6 +146,12 @@ void ColorToolWidget::initColorLabel()
             m_isChecked = true;
             yellowBtn->update();
             emit colorChecked("yellow");
+            ConfigSettings::instance()->setValue("common", "color_index", 1);
+            ConfigSettings::instance()->setValue("rectangle", "color_index", 1);
+            ConfigSettings::instance()->setValue("oval", "color_index", 1);
+            ConfigSettings::instance()->setValue("arrow", "color_index", 1);
+            ConfigSettings::instance()->setValue("line", "color_index", 1);
+            ConfigSettings::instance()->setValue("text", "color_index", 1);
         }
 
         else {
@@ -157,6 +172,13 @@ void ColorToolWidget::initColorLabel()
             m_isChecked = true;
             blueBtn->update();
             emit colorChecked("blue");
+
+            ConfigSettings::instance()->setValue("common", "color_index", 2);
+            ConfigSettings::instance()->setValue("rectangle", "color_index", 2);
+            ConfigSettings::instance()->setValue("oval", "color_index", 2);
+            ConfigSettings::instance()->setValue("arrow", "color_index", 2);
+            ConfigSettings::instance()->setValue("line", "color_index", 2);
+            ConfigSettings::instance()->setValue("text", "color_index", 2);
         }
 
         else {
@@ -177,6 +199,13 @@ void ColorToolWidget::initColorLabel()
             m_isChecked = true;
             greenBtn->update();
             emit colorChecked("green");
+
+            ConfigSettings::instance()->setValue("common", "color_index", 3);
+            ConfigSettings::instance()->setValue("rectangle", "color_index", 3);
+            ConfigSettings::instance()->setValue("oval", "color_index", 3);
+            ConfigSettings::instance()->setValue("arrow", "color_index", 3);
+            ConfigSettings::instance()->setValue("line", "color_index", 3);
+            ConfigSettings::instance()->setValue("text", "color_index", 3);
         }
 
         else {
@@ -188,4 +217,15 @@ void ColorToolWidget::initColorLabel()
         }
     });
     redBtn->click();
+    ConfigSettings::instance()->setValue("common", "color_index", 0);
+    ConfigSettings::instance()->setValue("rectangle", "color_index", 0);
+    ConfigSettings::instance()->setValue("oval", "color_index", 0);
+    ConfigSettings::instance()->setValue("arrow", "color_index", 0);
+    ConfigSettings::instance()->setValue("line", "color_index", 0);
+    ConfigSettings::instance()->setValue("text", "color_index", 0);
+}
+
+void ColorToolWidget::setFunction(const QString &func)
+{
+    m_function = func;
 }

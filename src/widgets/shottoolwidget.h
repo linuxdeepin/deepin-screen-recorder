@@ -37,6 +37,7 @@ private:
     QLabel *m_penSubTool;
     QLabel *m_textSubTool;
     QString m_currentType;
+    bool m_arrowFlag;
 };
 
 #endif // SHOTTOOLWIDGET_H

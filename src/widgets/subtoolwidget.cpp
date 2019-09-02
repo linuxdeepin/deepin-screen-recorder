@@ -361,7 +361,7 @@ void SubToolWidget::initShotLabel()
             pa.setColor(QPalette::Light, Qt::black);
             rectButton->setPalette(pa);
 
-            emit changeShotToolFunc("rect");
+            emit changeShotToolFunc("rectangle");
         }
 
         else {
@@ -379,7 +379,7 @@ void SubToolWidget::initShotLabel()
             pa.setColor(QPalette::Light, Qt::black);
             circleButton->setPalette(pa);
 
-            emit changeShotToolFunc("circ");
+            emit changeShotToolFunc("oval");
         }
 
         else {
@@ -397,7 +397,7 @@ void SubToolWidget::initShotLabel()
             pa.setColor(QPalette::Light, Qt::black);
             lineButton->setPalette(pa);
 
-            emit changeShotToolFunc("line");
+            emit changeShotToolFunc("arrow");
         }
 
         else {
@@ -415,7 +415,7 @@ void SubToolWidget::initShotLabel()
             pa.setColor(QPalette::Light, Qt::black);
             penButton->setPalette(pa);
 
-            emit changeShotToolFunc("pen");
+            emit changeShotToolFunc("line");
         }
 
         else {
@@ -444,7 +444,7 @@ void SubToolWidget::initShotLabel()
             textButton->setPalette(pa);
         }
     });
-    rectButton->click();
+//    rectButton->click();
 }
 
 void SubToolWidget::initVirtualCard()

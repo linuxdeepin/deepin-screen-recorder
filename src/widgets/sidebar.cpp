@@ -81,6 +81,7 @@ SideBarWidget::~SideBarWidget()
 void SideBarWidget::changeShotToolWidget(const QString &func)
 {
     m_shotTool->switchContent(func);
+    m_colorTool->setFunction(func);
 }
 
 void SideBarWidget::paintEvent(QPaintEvent *e)

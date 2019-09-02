@@ -35,7 +35,6 @@ public:
         Q_UNUSED(parent);
         setCheckable(true);
         m_tips = "";
-//        connect(this, SIGNAL(toggled(bool)), this, SLOT(changeButtonStatus(bool)));
     }
     ~ToolButton() {}
 
@@ -48,26 +47,6 @@ public slots:
     QString getTips()
     {
         return m_tips;
-    }
-
-    void changeButtonStatus(bool checked)
-    {
-        QPalette pa;
-        if (checked == true) {
-            pa = this->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, Qt::black);
-            pa.setColor(QPalette::Light, Qt::black);
-            this->setPalette(pa);
-        }
-
-        else {
-            pa = this->palette();
-            pa.setColor(QPalette::ButtonText, pa.buttonText().color());
-            pa.setColor(QPalette::Dark, pa.dark().color());
-            pa.setColor(QPalette::Light, pa.light().color());
-            this->setPalette(pa);
-        }
     }
 
 signals:
