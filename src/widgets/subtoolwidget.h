@@ -44,6 +44,7 @@ signals:
     void systemAudioActionChecked(bool checked);
     void gifActionChecked(bool checked);
     void mp4ActionChecked(bool checked);
+    void cameraActionChecked(bool checked);
     void videoFrameRateChanged(int frameRate);
     void changeShotToolFunc(const QString &func);
 public slots:

@@ -18,6 +18,7 @@
  */
 #include "subtoolwidget.h"
 #include "../utils/audioutils.h"
+#include "../camera_process.h"
 #include <DSlider>
 #include <DLineEdit>
 #include <QMenu>
@@ -201,6 +202,7 @@ void SubToolWidget::initRecordLabel()
     });
 
     ToolButton *cameraButton = new ToolButton();
+    cameraButton->setDisabled(CameraProcess::checkCameraAvailability());
     pa = cameraButton->palette();
     pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
     pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
@@ -219,6 +221,7 @@ void SubToolWidget::initRecordLabel()
         if (cameraButton->isChecked())
         {
             cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
+            emit cameraActionChecked(cameraButton->isChecked());
         }
 
         if (!cameraButton->isChecked())
@@ -226,7 +229,6 @@ void SubToolWidget::initRecordLabel()
             cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
         }
     });
-
     ToolButton *mouseButton = new ToolButton();
     pa = mouseButton->palette();
     pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
