@@ -54,6 +54,7 @@ signals:
     void keyBoardCheckedSignal(bool checked);
     void microphoneActionCheckedSignal(bool checked);
     void systemAudioActionCheckedSignal(bool checked);
+    void cameraActionCheckedSignal(bool checked);
     void mouseCheckedSignalToToolBar(bool checked);
     void gifActionCheckedSignal(bool checked);
     void mp4ActionCheckedSignal(bool checked);
@@ -102,6 +103,7 @@ signals:
     void keyBoardCheckedToMain(bool checked);
     void microphoneActionCheckedToMain(bool checked);
     void systemAudioActionCheckedToMain(bool checked);
+    void cameraActionCheckedToMain(bool checked);
     void mouseCheckedToMain(bool checked);
     void gifActionCheckedToMain(bool checked);
     void mp4ActionCheckedToMain(bool checked);

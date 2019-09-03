@@ -36,6 +36,7 @@ class CameraProcess : public QObject
 public:
     explicit CameraProcess(QObject *parent = nullptr);
     ~CameraProcess();
+    static bool checkCameraAvailability();
 
 signals:
 

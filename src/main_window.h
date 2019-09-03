@@ -47,6 +47,7 @@
 #include "widgets/sidebar.h"
 #include "widgets/keybuttonwidget.h"
 #include "widgets/zoomIndicator.h"
+#include "widgets/camerawidget.h"
 #include "utils/saveutils.h"
 
 #include "dbusinterface/dbuscontrolcenter.h"
@@ -142,6 +143,7 @@ public slots:
     void changeGifSelectEvent(bool checked);
     void changeMp4SelectEvent(bool checked);
     void changeFrameRateEvent(int frameRate);
+    void showCameraWidget();
     void showMultiKeyBoardButtons();
     void updateMultiKeyBoardPos();
     void changeShotToolEvent(const QString &func);
@@ -286,4 +288,6 @@ private:
     bool m_needSaveScreenshot = false;
     // Just use for debug.
     // int repaintCounter;
+
+    CameraWidget *m_cameraWidget;
 };

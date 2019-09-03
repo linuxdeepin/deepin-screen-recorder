@@ -208,6 +208,7 @@ void MainWindow::initAttributes()
     connect(m_toolBar, &ToolBar::mouseCheckedToMain, this, &MainWindow::changeMouseShowEvent);
     connect(m_toolBar, &ToolBar::microphoneActionCheckedToMain, this, &MainWindow::changeMicrophoneSelectEvent);
     connect(m_toolBar, &ToolBar::systemAudioActionCheckedToMain, this, &MainWindow::changeSystemAudioSelectEvent);
+    connect(m_toolBar, &ToolBar::cameraActionCheckedToMain, this, &MainWindow::showCameraWidget);
     connect(m_toolBar, &ToolBar::gifActionCheckedToMain, this, &MainWindow::changeGifSelectEvent);
     connect(m_toolBar, &ToolBar::mp4ActionCheckedToMain, this, &MainWindow::changeMp4SelectEvent);
     connect(m_toolBar, &ToolBar::frameRateChangedToMain, this, &MainWindow::changeFrameRateEvent);
@@ -292,6 +293,7 @@ void MainWindow::initAttributes()
 
     // Just use for debug.
     // repaintCounter = 0;
+    m_cameraWidget = new CameraWidget(this);
 }
 
 void MainWindow::initResource()
@@ -852,6 +854,15 @@ void MainWindow::changeFrameRateEvent(int frameRate)
         m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
         break;
     }
+}
+
+void MainWindow::showCameraWidget()
+{
+    qDebug()<<"showCameraWidget";
+    int x = recordX + recordWidth - 50;
+    int y = recordY + recordHeight - 50;
+    m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
+    m_cameraWidget->showAt(QPoint(x,y));
 }
 
 void MainWindow::showMultiKeyBoardButtons()
@@ -1753,7 +1764,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
 
     } else if (event->type() == QEvent::MouseMove) {
-
         if (!m_isShapesWidgetExist) {
             m_sizeTips->updateTips(QPoint(recordX, recordY),
                                    QString("%1X%2").arg(recordWidth).arg(recordHeight));
@@ -1805,7 +1815,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
 
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-
             if (isFirstPressButton) {
                 if (!isFirstReleaseButton) {
                     if (isPressButton && !isReleaseButton) {

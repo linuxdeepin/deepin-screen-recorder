@@ -72,6 +72,12 @@ void CameraProcess::displayImage(int, QImage image)
 //    ui->label->setPixmap(QPixmap::fromImage(image));
     QImage::Format format =  image.format();
     qDebug() << (int)format;
+}
 
-
+bool CameraProcess::checkCameraAvailability()
+{
+    if(QCameraInfo::availableCameras().count() > 0)
+        return true;
+    else
+        return false;
 }
