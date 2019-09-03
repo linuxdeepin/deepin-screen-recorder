@@ -155,7 +155,7 @@ void ShotToolWidget::initRectLabel()
 
             thickOneBtn->update();
 
-            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 1);
+            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 0);
         }
 
         else {
@@ -179,7 +179,7 @@ void ShotToolWidget::initRectLabel()
 
             thickTwoBtn->update();
 
-            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 2);
+            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 1);
         }
 
         else {
@@ -203,7 +203,7 @@ void ShotToolWidget::initRectLabel()
 
             thickThreeBtn->update();
 
-            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 3);
+            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 2);
         }
 
         else {
@@ -218,7 +218,7 @@ void ShotToolWidget::initRectLabel()
         }
     });
     thickOneBtn->click();
-    ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 1);
+    ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 0);
 
 
     rectLayout->addSpacing(BUTTON_SPACING);
@@ -450,7 +450,7 @@ void ShotToolWidget::initCircLabel()
 
             thickOneBtn->update();
 
-            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 1);
+            ConfigSettings::instance()->setValue("oval", "linewidth_index", 0);
         }
 
         else {
@@ -474,7 +474,7 @@ void ShotToolWidget::initCircLabel()
 
             thickTwoBtn->update();
 
-            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 2);
+            ConfigSettings::instance()->setValue("oval", "linewidth_index", 1);
         }
 
         else {
@@ -498,7 +498,7 @@ void ShotToolWidget::initCircLabel()
 
             thickThreeBtn->update();
 
-            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 3);
+            ConfigSettings::instance()->setValue("oval", "linewidth_index", 2);
         }
 
         else {
@@ -513,7 +513,7 @@ void ShotToolWidget::initCircLabel()
         }
     });
     thickOneBtn->click();
-    ConfigSettings::instance()->setValue("oval", "linewidth_index", 1);
+    ConfigSettings::instance()->setValue("oval", "linewidth_index", 0);
 
     rectLayout->addSpacing(BUTTON_SPACING);
     ToolButton *t_seperator = new ToolButton();
@@ -742,7 +742,8 @@ void ShotToolWidget::initLineLabel()
 
             thickOneBtn->update();
 
-            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 1);
+            ConfigSettings::instance()->setValue("arrow", "arrow_linewidth_index", 0);
+            ConfigSettings::instance()->setValue("arrow", "straightline_linewidth_index", 0);
         }
 
         else {
@@ -766,7 +767,8 @@ void ShotToolWidget::initLineLabel()
 
             thickTwoBtn->update();
 
-            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 2);
+            ConfigSettings::instance()->setValue("arrow", "arrow_linewidth_index", 1);
+            ConfigSettings::instance()->setValue("arrow", "straightline_linewidth_index", 1);
         }
 
         else {
@@ -790,7 +792,8 @@ void ShotToolWidget::initLineLabel()
 
             thickThreeBtn->update();
 
-            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 3);
+            ConfigSettings::instance()->setValue("arrow", "arrow_linewidth_index", 2);
+            ConfigSettings::instance()->setValue("arrow", "straightline_linewidth_index", 2);
         }
 
         else {
@@ -806,8 +809,8 @@ void ShotToolWidget::initLineLabel()
     });
     thickOneBtn->click();
 
-    ConfigSettings::instance()->setValue("arrow", "arrow_linewidth_index", 1);
-    ConfigSettings::instance()->setValue("arrow", "straightline_linewidth_index", 1);
+    ConfigSettings::instance()->setValue("arrow", "arrow_linewidth_index", 0);
+    ConfigSettings::instance()->setValue("arrow", "straightline_linewidth_index", 0);
 
     rectLayout->addSpacing(BUTTON_SPACING);
     ToolButton *t_seperator = new ToolButton();
@@ -1004,7 +1007,7 @@ void ShotToolWidget::initPenLabel()
 
             thickOneBtn->update();
 
-            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 1);
+            ConfigSettings::instance()->setValue("line", "linewidth_index", 0);
         }
 
         else {
@@ -1028,7 +1031,7 @@ void ShotToolWidget::initPenLabel()
 
             thickTwoBtn->update();
 
-            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 2);
+            ConfigSettings::instance()->setValue("line", "linewidth_index", 1);
         }
 
         else {
@@ -1052,7 +1055,7 @@ void ShotToolWidget::initPenLabel()
 
             thickThreeBtn->update();
 
-            ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 3);
+            ConfigSettings::instance()->setValue("line", "linewidth_index", 2);
         }
 
         else {
@@ -1067,7 +1070,7 @@ void ShotToolWidget::initPenLabel()
         }
     });
     thickOneBtn->click();
-    ConfigSettings::instance()->setValue("line", "linewidth_index", 1);
+    ConfigSettings::instance()->setValue("line", "linewidth_index", 0);
 
 
     rectLayout->addSpacing(70);

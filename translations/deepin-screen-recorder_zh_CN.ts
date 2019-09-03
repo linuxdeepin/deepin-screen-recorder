@@ -55,14 +55,6 @@ or press the shortcut again to stop recording</source>
         <translation>选择区域</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation type="unfinished">录屏</translation>
-    </message>
-    <message>
-        <source>Shot</source>
-        <translation type="unfinished">截屏</translation>
-    </message>
-    <message>
         <source>Save failed. Please save it in your home directory.</source>
         <translation type="unfinished"></translation>
     </message>
