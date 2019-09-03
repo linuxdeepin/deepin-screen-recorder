@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="42px" height="42px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.2 (81672) - https://sketch.com -->
+    <title>slider</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="6" y="2" width="30" height="30" rx="8"></rect>
+        <filter x="-36.7%" y="-23.3%" width="173.3%" height="173.3%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="4" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.4 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="按钮规范" transform="translate(-167.000000, -479.000000)">
+            <g id="二级工具栏" transform="translate(158.000000, 378.000000)">
+                <g id="主工具栏" transform="translate(7.000000, 10.000000)">
+                    <g id="Group" transform="translate(2.000000, 0.000000)">
+                        <g id="slider" transform="translate(0.000000, 91.000000)">
+                            <g>
+                                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

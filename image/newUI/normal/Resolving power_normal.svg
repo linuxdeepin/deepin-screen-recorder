@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.2 (81672) - https://sketch.com -->
+    <title>Resolving power_normal</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="按钮规范" transform="translate(-609.000000, -293.000000)" fill="#000000">
+            <g id="record" transform="translate(136.000000, 204.000000)">
+                <g id="主工具栏" transform="translate(158.000000, 0.000000)">
+                    <g id="Group-10" transform="translate(310.000000, 81.000000)">
+                        <g id="Group-6" transform="translate(4.000000, 7.000000)">
+                            <g id="Resolving-power_normal" transform="translate(0.010647, 0.102042)">
+                                <path d="M13.7781746,6 L7,12.7781746 L13.7781746,19.5563492 L12.7781746,20.5563492 L5,12.7781746 L12.7781746,5 L13.7781746,6 Z" id="Combined-Shape" opacity="0.5"></path>
+                                <path d="M10.7781746,6 L4,12.7781746 L10.7781746,19.5563492 L9.77817459,20.5563492 L2,12.7781746 L9.77817459,5 L10.7781746,6 Z" id="Combined-Shape" opacity="0.200000003"></path>
+                                <rect id="Rectangle-7" transform="translate(15.691218, 12.778175) rotate(-315.000000) translate(-15.691218, -12.778175) " x="10.1912181" y="7.27817459" width="11" height="11"></rect>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

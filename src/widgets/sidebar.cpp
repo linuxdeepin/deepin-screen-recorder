@@ -50,7 +50,7 @@ SideBarWidget::SideBarWidget(QWidget *parent)
     setMode(DBlurEffectWidget::GaussianBlur);
     setBlurEnabled(true);
 //    setBlendMode(DBlurEffectWidget::InWindowBlend);
-    setMaskColor(QColor(255, 255, 255, 140));
+    setMaskColor(QColor(255, 255, 255, 76.5));
     //设置透明效果
 
     setFixedSize(TOOLBAR_WIDGET_SIZE);
@@ -71,6 +71,8 @@ SideBarWidget::SideBarWidget(QWidget *parent)
     VLayout->addWidget(m_shotTool, 0, Qt::AlignTop | Qt::AlignHCenter);
     VLayout->addWidget(m_colorTool, 1,  Qt::AlignTop | Qt::AlignHCenter);
     setLayout(VLayout);
+
+    connect(m_shotTool, &ShotToolWidget::changeArrowAndLine, this, &SideBarWidget::changeArrowAndLineEvent);
 }
 
 SideBarWidget::~SideBarWidget()
@@ -113,6 +115,8 @@ SideBar::SideBar(QWidget *parent) : DLabel(parent)
     vLayout->addWidget(m_sidebarWidget);
     vLayout->addStretch();
     setLayout(vLayout);
+
+    connect(m_sidebarWidget, &SideBarWidget::changeArrowAndLineEvent, this, &SideBar::changeArrowAndLineToMain);
 }
 
 SideBar::~SideBar()

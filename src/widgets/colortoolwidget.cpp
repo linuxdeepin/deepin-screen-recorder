@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2019 ~ 2020 Deepin Technology Co., Ltd.
+ *
+ * Author:     Zheng Youge<youge.zheng@deepin.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #include "colortoolwidget.h"
 #include "toolbutton.h"
 #include "../utils/configsettings.h"
@@ -18,6 +36,7 @@ const int TOOLBAR_WIDTH = 40;
 const int BUTTON_SPACING = 4;
 const int COLOR_NUM = 16;
 const QSize TOOL_BUTTON_SIZE = QSize(38, 38);
+const QSize TOOL_ICON_SIZE = QSize(25, 25);
 const QSize SPLITTER_SIZE = QSize(30, 1);
 const QSize MIN_TOOL_BUTTON_SIZE = QSize(35, 30);
 }
@@ -51,50 +70,69 @@ void ColorToolWidget::initColorLabel()
     ToolButton *redBtn = new ToolButton();
     redBtn->setCheckable(true);
 //    redBtn->setText(tr("Red"));
+
+    pa = redBtn->palette();
+    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    redBtn->setPalette(pa);
+
     redBtn->setToolTip(tr("Red"));
     redBtn->setObjectName("redBtn");
     redBtn->setFixedSize(TOOL_BUTTON_SIZE);
-    redBtn->setIcon(QIcon(":/resources/images/color/color3_checked.png"));
+    redBtn->setIconSize(TOOL_ICON_SIZE);
+    redBtn->setIcon(QIcon(":/image/newUI/normal/red.svg"));
     toolBtnList.append(redBtn);
 
     ToolButton *yellowBtn = new ToolButton();
 //    yellowBtn->setText(tr("yellow"));
+
+    pa = yellowBtn->palette();
+    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    yellowBtn->setPalette(pa);
+
     yellowBtn->setToolTip(tr("yellow"));
     yellowBtn->setObjectName("yellowBtn");
     yellowBtn->setFixedSize(TOOL_BUTTON_SIZE);
-    yellowBtn->setIcon(QIcon(":/resources/images/color/color1_checked.png"));
+    yellowBtn->setIconSize(TOOL_ICON_SIZE);
+    yellowBtn->setIcon(QIcon(":/image/newUI/normal/yellow.svg"));
     toolBtnList.append(yellowBtn);
 
     ToolButton *blueBtn = new ToolButton();
 //    blueBtn->setText(tr("blue"));
+    pa = blueBtn->palette();
+    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    blueBtn->setPalette(pa);
+
     blueBtn->setToolTip(tr("blue"));
     blueBtn->setObjectName("blueBtn");
     blueBtn->setFixedSize(TOOL_BUTTON_SIZE);
-    blueBtn->setIcon(QIcon(":/resources/images/color/color8_checked.png"));
+    blueBtn->setIconSize(TOOL_ICON_SIZE);
+    blueBtn->setIcon(QIcon(":/image/newUI/normal/blue.svg"));
     toolBtnList.append(blueBtn);
 
     ToolButton *greenBtn = new ToolButton();
 //    greenBtn->setText(tr("green"));
+    pa = greenBtn->palette();
+    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    greenBtn->setPalette(pa);
+
     greenBtn->setToolTip(tr("green"));
     greenBtn->setObjectName("greenBtn");
     greenBtn->setFixedSize(TOOL_BUTTON_SIZE);
-    greenBtn->setIcon(QIcon(":/resources/images/color/color10_checked.png"));
+    greenBtn->setIconSize(TOOL_ICON_SIZE);
+    greenBtn->setIcon(QIcon(":/image/newUI/normal/green.svg"));
     toolBtnList.append(greenBtn);
 
     m_baseLayout = new QVBoxLayout();
     m_baseLayout->setMargin(0);
     m_baseLayout->setSpacing(0);
-//    m_baseLayout->addSpacing(4);
-
-//    ToolButton *t_seperator = new ToolButton();
-//    pa = t_seperator->palette();
-//    QColor t_color = pa.color(DPalette::Text);
-//    pa.setColor(DPalette::Light, QColor("#414D68"));
-//    pa.setColor(DPalette::Dark, QColor("#414D68"));
-//    t_seperator->setDisabled(true);
-//    t_seperator->setPalette(pa);
-//    t_seperator->setFixedSize(SPLITTER_SIZE);
-//    m_baseLayout->addWidget(t_seperator, 0, Qt::AlignHCenter);
 
     for (int k = 0; k < toolBtnList.length(); k++) {
         m_baseLayout->addWidget(toolBtnList[k]);
@@ -112,8 +150,8 @@ void ColorToolWidget::initColorLabel()
         if (redBtn->isChecked()) {
             pa = redBtn->palette();
             pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, Qt::black);
-            pa.setColor(QPalette::Light, Qt::black);
+            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
             redBtn->setPalette(pa);
 
             m_isChecked = true;
@@ -130,17 +168,17 @@ void ColorToolWidget::initColorLabel()
 
         else {
             pa = redBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
-            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
-            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
             redBtn->setPalette(pa);
         }
 
         if (yellowBtn->isChecked()) {
             pa = yellowBtn->palette();
             pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, Qt::black);
-            pa.setColor(QPalette::Light, Qt::black);
+            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
             yellowBtn->setPalette(pa);
 
             m_isChecked = true;
@@ -156,17 +194,17 @@ void ColorToolWidget::initColorLabel()
 
         else {
             pa = yellowBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
-            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
-            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
             yellowBtn->setPalette(pa);
         }
 
         if (blueBtn->isChecked()) {
             pa = blueBtn->palette();
             pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, Qt::black);
-            pa.setColor(QPalette::Light, Qt::black);
+            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
             blueBtn->setPalette(pa);
 
             m_isChecked = true;
@@ -183,17 +221,17 @@ void ColorToolWidget::initColorLabel()
 
         else {
             pa = blueBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
-            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
-            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
             blueBtn->setPalette(pa);
         }
 
         if (greenBtn->isChecked()) {
             pa = greenBtn->palette();
             pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, Qt::black);
-            pa.setColor(QPalette::Light, Qt::black);
+            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
             greenBtn->setPalette(pa);
 
             m_isChecked = true;
@@ -210,9 +248,9 @@ void ColorToolWidget::initColorLabel()
 
         else {
             pa = greenBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor("#414d68"));
-            pa.setColor(QPalette::Dark, QColor("#e3e3e3"));
-            pa.setColor(QPalette::Light, QColor("#e6e6e6"));
+            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
             greenBtn->setPalette(pa);
         }
     });

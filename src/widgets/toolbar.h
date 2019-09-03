@@ -64,6 +64,7 @@ public slots:
     void setExpand(bool expand, QString shapeType);
     void specifiedSavePath();
     void keyBoardCheckedSlot(bool checked);
+    void changeArrowAndLineFromBar(int line);
 
 
 protected:
@@ -115,6 +116,7 @@ public slots:
     void keyBoardCheckedToMainSlot(bool checked);
     void microphoneActionCheckedToMainSlot(bool checked);
     void systemAudioActionCheckedToMainSlot(bool checked);
+    void changeArrowAndLineFromMain(int line);
 protected:
     void paintEvent(QPaintEvent *e);
     void enterEvent(QEvent *e);

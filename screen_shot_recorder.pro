@@ -154,3 +154,6 @@ CONFIG(release_translations) {
 
 DSR_LANG_PATH += $$DSRDIR/translations
 DEFINES += "DSR_LANG_PATH=\\\"$$DSR_LANG_PATH\\\""
+
+DISTFILES += \
+    image/newUI/focus/close-focus.svg

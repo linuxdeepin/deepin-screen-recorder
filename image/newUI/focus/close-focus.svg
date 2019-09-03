@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="46px" height="46px" viewBox="0 0 46 46" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.2 (81672) - https://sketch.com -->
+    <title>close-focus</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="6" y="4" width="34" height="34" rx="17"></rect>
+        <filter x="-26.5%" y="-20.6%" width="152.9%" height="152.9%" filterUnits="objectBoundingBox" id="filter-2">
+            <feMorphology radius="2" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.05 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="按钮规范" transform="translate(-2733.000000, -1217.000000)">
+            <g id="截图工具栏备份-4" transform="translate(2196.000000, 1208.000000)">
+                <g id="close_round" transform="translate(537.000000, 9.000000)">
+                    <g id="close-focus">
+                        <g id="占位">
+                            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                            <rect stroke="#0081FF" stroke-width="2" fill-opacity="0" fill="#FFFFFF" fill-rule="evenodd" x="5" y="3" width="36" height="36" rx="18"></rect>
+                        </g>
+                        <rect id="占位备份-6" fill="#FFFFFF" opacity="0.100000001" x="8" y="6" width="30" height="30" rx="15"></rect>
+                        <g id="cancel-normal" transform="translate(18.000000, 16.000000)" stroke="#000000" stroke-linecap="round">
+                            <path d="M0.0909,0.09091 L10.6975017,10.6975117" id="Stroke-25"></path>
+                            <path d="M0.0909,10.909091 L10.6975017,0.302489282" id="Stroke-27"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

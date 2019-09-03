@@ -150,6 +150,7 @@ public slots:
     void sendNotify(SaveAction saveAction, QString saveFilePath, const bool succeed);
     void reloadImage(QString effect);
     void shotImgWidthEffect();
+    void changeArrowAndLineEvent(int line);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);

@@ -23,6 +23,7 @@
 #include <QObject>
 #include <DLabel>
 #include <DStackedWidget>
+#include "toolbutton.h"
 DWIDGET_USE_NAMESPACE
 
 class SubToolWidget : public DStackedWidget
@@ -48,11 +49,14 @@ signals:
 public slots:
     void switchContent(QString shapeType);
     void systemAudioActionCheckedSlot(bool checked);
+    void changeArrowAndLineFromSideBar(int line);
 private:
     QLabel *m_recordSubTool;
     QLabel *m_shotSubTool;
     QString m_currentType;
     QAction *m_systemAudioAction;
+    ToolButton *m_lineButton;
+    int m_lineflag;
 };
 
 #endif // SUBTOOLWIDGET_H

@@ -37,7 +37,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Shot</source>
-        <translation>截屏</translation>
+        <translation>截图</translation>
     </message>
 </context>
 <context>
@@ -337,8 +337,12 @@ select the area to record</source>
         <translation>输入sudo密码激活内置音频功能，取消将无法录制内置音频</translation>
     </message>
     <message>
-        <source>Audio</source>
-        <translation>音频</translation>
+        <source>GIF</source>
+        <translation>GIF格式</translation>
+    </message>
+    <message>
+        <source>MP4</source>
+        <translation>Mp4格式</translation>
     </message>
     <message>
         <source>Microphone</source>
@@ -347,54 +351,6 @@ select the area to record</source>
     <message>
         <source>SystemAudio</source>
         <translation>内置音频</translation>
-    </message>
-    <message>
-        <source>Key</source>
-        <translation>键盘</translation>
-    </message>
-    <message>
-        <source>Camera</source>
-        <translation>摄像头</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>鼠标</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>格式</translation>
-    </message>
-    <message>
-        <source>Fps</source>
-        <translation>帧率</translation>
-    </message>
-    <message>
-        <source>Rect</source>
-        <translation>矩形</translation>
-    </message>
-    <message>
-        <source>Circ</source>
-        <translation>圆形</translation>
-    </message>
-    <message>
-        <source>Line</source>
-        <translation>直线</translation>
-    </message>
-    <message>
-        <source>Pen</source>
-        <translation>画笔</translation>
-    </message>
-    <message>
-        <source>Text</source>
-        <translation>文本</translation>
-    </message>
-    <message>
-        <source>GIF</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MP4</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>5 fps</source>
@@ -414,6 +370,34 @@ select the area to record</source>
     </message>
     <message>
         <source>30 fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Webm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>24</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>5</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>10</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>20</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>30</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

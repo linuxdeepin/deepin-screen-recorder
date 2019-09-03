@@ -212,7 +212,7 @@ void MainWindow::initAttributes()
     connect(m_toolBar, &ToolBar::mp4ActionCheckedToMain, this, &MainWindow::changeMp4SelectEvent);
     connect(m_toolBar, &ToolBar::frameRateChangedToMain, this, &MainWindow::changeFrameRateEvent);
     connect(m_toolBar, &ToolBar::shotToolChangedToMain, this, &MainWindow::changeShotToolEvent);
-
+    connect(m_sideBar, &SideBar::changeArrowAndLineToMain, this, &MainWindow::changeArrowAndLineEvent);
 //    connect(m_toolBar, &ToolBar::shotToolChangedToMain, this,  [ = ](QString shape) {
 //        if (m_isShapesWidgetExist && shape != "color") {
 //            m_shapesWidget->setCurrentShape(shape);
@@ -222,14 +222,33 @@ void MainWindow::initAttributes()
 //        }
 //    });
     //构建截屏录屏功能触发按钮
+    QPalette pa;
     m_recordButton = new QPushButton(this);
+
+    pa = m_recordButton->palette();
+    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(QPalette::Dark, QColor(229, 70, 61, 204));
+    pa.setColor(QPalette::Light, QColor(229, 70, 61, 204));
+    m_recordButton->setPalette(pa);
+    m_recordButton->setIconSize(QSize(30, 30));
+    m_recordButton->setIcon(QIcon(":/image/newUI/checked/screencap-checked.svg"));
+
     m_recordButton->setFixedSize(60, 47);
-    m_recordButton->setText(tr("Record"));
+//    m_recordButton->setText(tr("Record"));
     m_recordButton->setObjectName("mainRecordBtn");
 
     m_shotButton = new QPushButton(this);
+
+    pa = m_shotButton->palette();
+    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(QPalette::Dark, QColor(0, 129, 255, 204));
+    pa.setColor(QPalette::Light, QColor(0, 129, 255, 204));
+    m_shotButton->setPalette(pa);
+    m_shotButton->setIconSize(QSize(30, 30));
+    m_shotButton->setIcon(QIcon(":/image/newUI/checked/screenshot-checked.svg"));
+
     m_shotButton->setFixedSize(60, 47);
-    m_shotButton->setText(tr("Shot"));
+//    m_shotButton->setText(tr("Shot"));
     m_shotButton->setObjectName("mainShotBtn");
 
     m_recordButton->hide();
@@ -242,7 +261,6 @@ void MainWindow::initAttributes()
 
     recordButton = new RecordButton();
     recordButton->setText(tr("Start recording"));
-//    connect(recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
     connect(m_recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
     connect(m_shotButton, SIGNAL(clicked()), this, SLOT(saveScreenShot()));
 
@@ -2350,4 +2368,10 @@ void MainWindow::shotImgWidthEffect()
     m_resultPixmap = m_backgroundPixmap.copy(rect);
     m_drawNothing = false;
     update();
+}
+
+void MainWindow::changeArrowAndLineEvent(int line)
+{
+    qDebug() << "line :" << line;
+    m_toolBar->changeArrowAndLineFromMain(line);
 }

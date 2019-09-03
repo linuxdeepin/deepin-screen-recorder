@@ -37,6 +37,8 @@ public:
     ~SideBarWidget() Q_DECL_OVERRIDE;
 
     void changeShotToolWidget(const QString &func);
+signals:
+    void changeArrowAndLineEvent(int line);
 protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
@@ -63,6 +65,7 @@ signals:
     void requestSaveScreenshot();
     void shapePressed(QString tool);
     void closed();
+    void changeArrowAndLineToMain(int line);
 public slots:
     bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);

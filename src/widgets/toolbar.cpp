@@ -34,9 +34,9 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const int TOOLBAR_HEIGHT = 47;
-const int TOOLBAR_WIDTH = 550;
+const int TOOLBAR_WIDTH = 500;
 
-const QSize TOOLBAR_WIDGET_SIZE = QSize(550, 47);
+const QSize TOOLBAR_WIDGET_SIZE = QSize(500, 47);
 const int BUTTON_SPACING = 3;
 const int BTN_RADIUS = 3;
 }
@@ -51,7 +51,7 @@ ToolBarWidget::ToolBarWidget(QWidget *parent)
     setMode(DBlurEffectWidget::GaussianBlur);
     setBlurEnabled(true);
     setBlendMode(DBlurEffectWidget::InWindowBlend);
-    setMaskColor(QColor(255, 255, 255, 140));
+    setMaskColor(QColor(255, 255, 255, 76.5));
     //设置透明效果
 //    setMaskAlpha(0);
 //    setMaskColor(DBlurEffectWidget::LightColor);
@@ -143,6 +143,11 @@ void ToolBarWidget::specifiedSavePath()
 void ToolBarWidget::keyBoardCheckedSlot(bool checked)
 {
     emit keyBoardCheckedSignal(checked);
+}
+
+void ToolBarWidget::changeArrowAndLineFromBar(int line)
+{
+    m_subTool->changeArrowAndLineFromSideBar(line);
 }
 
 void ToolBarWidget::setExpand(bool expand, QString shapeType)
@@ -290,6 +295,11 @@ void ToolBar::microphoneActionCheckedToMainSlot(bool checked)
 void ToolBar::systemAudioActionCheckedToMainSlot(bool checked)
 {
     emit systemAudioActionCheckedToMain(checked);
+}
+
+void ToolBar::changeArrowAndLineFromMain(int line)
+{
+    m_toolbarWidget->changeArrowAndLineFromBar(line);
 }
 bool ToolBar::isButtonChecked()
 {
