@@ -2,13 +2,14 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QApplication>
+#include <QPainter>
 
 CameraWidget::CameraWidget(QWidget *parent) : QWidget(parent)
 {
-   setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint | Qt::Window);
+   setWindowFlags(Qt::WindowStaysOnTopHint);
    setFocusPolicy(Qt::StrongFocus);
-       setMouseTracking(true);
-       setAcceptDrops(true);
+   setMouseTracking(true);
+   setAcceptDrops(true);
    resize(50, 50);
 }
 
@@ -30,6 +31,16 @@ void CameraWidget::enterEvent(QEvent *e)
 {
     qApp->setOverrideCursor(Qt::ArrowCursor);
     qDebug()<<"CameraWidget enterEvent";
+}
+
+void CameraWidget::paintEvent(QPaintEvent *e)
+{
+    QPainter painter(this);
+    painter.setPen(QColor(255, 255, 255, 255));
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.drawRect(rect());
+
+    QWidget::paintEvent(e);
 }
 void CameraWidget::mousePressEvent(QMouseEvent *event)
 {
