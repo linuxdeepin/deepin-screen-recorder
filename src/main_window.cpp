@@ -1650,8 +1650,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
         }
         // NOTE: must be use 'isAutoRepeat' to filter KeyRelease event send by Qt.
-
-
     }
 
     if (event->type() == QEvent::MouseButtonPress) {
