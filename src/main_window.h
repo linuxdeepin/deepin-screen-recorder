@@ -134,6 +134,7 @@ public slots:
     void updateSideBarPos();
     void updateRecordButtonPos();
     void updateShotButtonPos();
+    void updateCameraWidgetPos();
     void changeFunctionButton(QString type);
     void showKeyBoardButtons(const QString &key);
     void changeKeyBoardShowEvent(bool checked);
@@ -143,7 +144,7 @@ public slots:
     void changeGifSelectEvent(bool checked);
     void changeMp4SelectEvent(bool checked);
     void changeFrameRateEvent(int frameRate);
-    void showCameraWidget();
+    void changeCameraSelectEvent(bool checked);
     void showMultiKeyBoardButtons();
     void updateMultiKeyBoardPos();
     void changeShotToolEvent(const QString &func);
@@ -169,6 +170,7 @@ protected:
     void showRecordButton();
     void hideRecordButton();
     void hideAllWidget();
+    void hideCameraWidget();
     void adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight);
     void initShapeWidget(QString type);
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
@@ -288,6 +290,6 @@ private:
     bool m_needSaveScreenshot = false;
     // Just use for debug.
     // int repaintCounter;
-
     CameraWidget *m_cameraWidget;
+    bool m_selectedCamera = false;
 };

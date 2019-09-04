@@ -208,7 +208,7 @@ void MainWindow::initAttributes()
     connect(m_toolBar, &ToolBar::mouseCheckedToMain, this, &MainWindow::changeMouseShowEvent);
     connect(m_toolBar, &ToolBar::microphoneActionCheckedToMain, this, &MainWindow::changeMicrophoneSelectEvent);
     connect(m_toolBar, &ToolBar::systemAudioActionCheckedToMain, this, &MainWindow::changeSystemAudioSelectEvent);
-    connect(m_toolBar, &ToolBar::cameraActionCheckedToMain, this, &MainWindow::showCameraWidget);
+    connect(m_toolBar, &ToolBar::cameraActionCheckedToMain, this, &MainWindow::changeCameraSelectEvent);
     connect(m_toolBar, &ToolBar::gifActionCheckedToMain, this, &MainWindow::changeGifSelectEvent);
     connect(m_toolBar, &ToolBar::mp4ActionCheckedToMain, this, &MainWindow::changeMp4SelectEvent);
     connect(m_toolBar, &ToolBar::frameRateChangedToMain, this, &MainWindow::changeFrameRateEvent);
@@ -294,6 +294,7 @@ void MainWindow::initAttributes()
     // Just use for debug.
     // repaintCounter = 0;
     m_cameraWidget = new CameraWidget(this);
+    hideCameraWidget();
 }
 
 void MainWindow::initResource()
@@ -682,7 +683,15 @@ void MainWindow::updateShotButtonPos()
     }
     m_shotButton->move(shotButtonBarPoint.x(), shotButtonBarPoint.y());
 }
-
+void MainWindow::updateCameraWidgetPos()
+{
+    if (!m_selectedCamera)
+        return;
+      int x = recordX - m_cameraWidget->getRecordX();
+      int y = recordY - m_cameraWidget->getRecordY();
+      m_cameraWidget->showAt(QPoint(m_cameraWidget->x() + x, m_cameraWidget->y() + y));
+      m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
+}
 void MainWindow::changeFunctionButton(QString type)
 {
     if (type == "record") {
@@ -856,13 +865,21 @@ void MainWindow::changeFrameRateEvent(int frameRate)
     }
 }
 
-void MainWindow::showCameraWidget()
+void MainWindow::changeCameraSelectEvent(bool checked)
 {
-    qDebug()<<"showCameraWidget";
-    int x = recordX + recordWidth - 50;
-    int y = recordY + recordHeight - 50;
-    m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
-    m_cameraWidget->showAt(QPoint(x,y));
+    m_selectedCamera = checked;
+    if (checked) {
+        int cameraWidgetWidth = recordWidth * 1 / 4;
+        int cameraWidgetHeight = recordHeight * 1 / 4;
+        int cameraWidgetSize = std::max(std::min(std::min(cameraWidgetWidth, cameraWidgetHeight), 150), 50);
+        int x = recordX + recordWidth - cameraWidgetSize;
+        int y = recordY + recordHeight - cameraWidgetSize;
+        m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
+        m_cameraWidget->resize(cameraWidgetSize, cameraWidgetSize);
+        m_cameraWidget->showAt(QPoint(x,y));
+    } else {
+        m_cameraWidget->hide();
+    }
 }
 
 void MainWindow::showMultiKeyBoardButtons()
@@ -1673,7 +1690,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
                         hideRecordButton();
                         hideAllWidget();
-
+                        hideCameraWidget();
                         //隐藏键盘按钮控件
                         if (m_keyButtonList.count() > 0) {
                             for (int t_index = 0; t_index < m_keyButtonList.count(); t_index++) {
@@ -1708,7 +1725,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                     updateRecordButtonPos();
                     updateShotButtonPos();
-
                     // Record select area name with window name if just click (no drag).
                     if (!isFirstDrag) {
                         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
@@ -1750,6 +1766,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         }
                         updateRecordButtonPos();
                         updateShotButtonPos();
+                        updateCameraWidgetPos();
                     }
                 }
 
@@ -2238,7 +2255,10 @@ void MainWindow::hideAllWidget()
 
     Utils::clearBlur(windowManager, this->winId());
 }
-
+void MainWindow::hideCameraWidget()
+{
+    m_cameraWidget->hide();
+}
 void MainWindow::adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight)
 {
     if (recordHeight < layoutHeight) {

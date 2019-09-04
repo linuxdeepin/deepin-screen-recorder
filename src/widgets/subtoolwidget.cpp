@@ -221,13 +221,13 @@ void SubToolWidget::initRecordLabel()
         if (cameraButton->isChecked())
         {
             cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
-            emit cameraActionChecked(cameraButton->isChecked());
         }
 
         if (!cameraButton->isChecked())
         {
             cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
         }
+        emit cameraActionChecked(cameraButton->isChecked());
     });
     ToolButton *mouseButton = new ToolButton();
     pa = mouseButton->palette();

@@ -10,6 +10,8 @@ public:
     explicit CameraWidget(QWidget *parent = nullptr);
     void setRecordRect(int x, int y, int width, int height);
     void showAt(QPoint pos);
+    int getRecordX();
+    int getRecordY();
 signals:
 
 public slots:
