@@ -43,8 +43,16 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>MainWindow</name>
     <message>
+        <source>DeepinScreenshot</source>
+        <translation>深度截图</translation>
+    </message>
+    <message>
         <source>Deepin screen recorder</source>
         <translation>深度录屏</translation>
+    </message>
+    <message>
+        <source>Shotting finished</source>
+        <translation>截图完毕</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -68,10 +76,6 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Picture has been saved to %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>DeepinScreenshot</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

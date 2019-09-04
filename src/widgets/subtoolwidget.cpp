@@ -29,6 +29,7 @@
 #include <QDebug>
 #include <DInputDialog>
 #include <DFontSizeManager>
+#include "../settings.h"
 
 #include <unistd.h>
 
@@ -75,6 +76,23 @@ void SubToolWidget::initRecordLabel()
     rectBtnGroup->setExclusive(false);
     QList<ToolButton *> btnList;
     QPalette pa;
+
+    bool t_saveGif = false;
+    int t_frameRate = 0;
+
+    Settings *t_settings = new Settings();
+    QVariant t_saveGifVar = t_settings->getOption("save_as_gif");
+    QVariant t_frameRateVar = t_settings->getOption("mkv_framerate");
+
+    //保持格式的配置文件判断
+    if (t_saveGifVar.toString() == "true") {
+        t_saveGif = true;
+    } else {
+        t_saveGif = false;
+    }
+
+    //保持帧数的配置文件判断
+    t_frameRate = t_frameRateVar.toString().toInt();
 
 
     QString audio_button_style = "QPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
@@ -307,7 +325,7 @@ void SubToolWidget::initRecordLabel()
     QAction *mp4Action = new QAction(formatMenu);
     gifAction->setText(tr("GIF"));
     gifAction->setCheckable(true);
-    gifAction->setChecked(true);
+//    gifAction->setChecked(true);
     mp4Action->setText(tr("MP4"));
     mp4Action->setCheckable(true);
     formatMenu->addAction(gifAction);
@@ -317,8 +335,21 @@ void SubToolWidget::initRecordLabel()
     t_formatActionGroup->addAction(gifAction);
     t_formatActionGroup->addAction(mp4Action);
 
-    connect(gifAction, SIGNAL(triggered(bool)), this, SIGNAL(gifActionChecked(bool)));
-    connect(mp4Action, SIGNAL(triggered(bool)), this, SIGNAL(mp4ActionChecked(bool)));
+    if (t_saveGif == true) {
+        gifAction->setChecked(true);
+    } else {
+        mp4Action->setChecked(true);
+    }
+
+    connect(gifAction, &QAction::triggered, this, [ = ] (bool checked) {
+        t_settings->setOption("save_as_gif", "true");
+        emit gifActionChecked(checked);
+    });
+
+    connect(mp4Action, &QAction::triggered, this, [ = ] (bool checked) {
+        t_settings->setOption("save_as_gif", "false");
+        emit mp4ActionChecked(checked);
+    });
 
     QString fps_button_style = "QPushButton{text-align: left;}"
                                "QPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
@@ -374,7 +405,7 @@ void SubToolWidget::initRecordLabel()
 
     frame24Action->setText(tr("24 fps"));
     frame24Action->setCheckable(true);
-    frame24Action->setChecked(true);
+//    frame24Action->setChecked(true);
 
     frame30Action->setText(tr("30 fps"));
     frame30Action->setCheckable(true);
@@ -401,23 +432,50 @@ void SubToolWidget::initRecordLabel()
         int t_frameRateSelected = 0;
         if (t_act == frame5Action) {
             t_frameRateSelected = 5;
+            t_settings->setOption("mkv_framerate", "5");
             fpsButton->setText(tr("5"));
         } else if (t_act == frame10Action) {
             t_frameRateSelected = 10;
+            t_settings->setOption("mkv_framerate", "10");
             fpsButton->setText(tr("10"));
         } else if (t_act == frame20Action) {
             t_frameRateSelected = 20;
+            t_settings->setOption("mkv_framerate", "20");
             fpsButton->setText(tr("20"));
         } else if (t_act == frame24Action) {
             t_frameRateSelected = 24;
+            t_settings->setOption("mkv_framerate", "24");
             fpsButton->setText(tr("24"));
         } else if (t_act == frame30Action) {
             t_frameRateSelected = 30;
+            t_settings->setOption("mkv_framerate", "30");
             fpsButton->setText(tr("30"));
         }
 
         emit videoFrameRateChanged(t_frameRateSelected);
     });
+
+
+    switch (t_frameRate) {
+    case 5:
+        frame5Action->triggered();
+        break;
+    case 10:
+        frame10Action->triggered();
+        break;
+    case 20:
+        frame20Action->triggered();
+        break;
+    case 24:
+        frame24Action->triggered();
+        break;
+    case 30:
+        frame30Action->triggered();
+        break;
+    default:
+        frame24Action->triggered();
+        break;
+    }
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setMargin(0);

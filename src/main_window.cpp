@@ -1078,6 +1078,12 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
 
     const bool remote_dde_notify_obj_exist = remote_dde_notify_obj.isValid();
 
+    QDBusInterface notification("org.freedesktop.Notifications",
+                                "/org/freedesktop/Notifications",
+                                "org.freedesktop.Notifications",
+                                QDBusConnection::sessionBus());
+
+
     QStringList actions;
     QVariantMap hints;
 
@@ -1106,12 +1112,24 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     }
 
     if (saveAction == SaveAction::SaveToClipboard && !m_noNotify) {
+
         QVariantMap emptyMap;
         m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screen-recorder", "",
                                     summary,  QStringList(), emptyMap, 0);
     }  else if ( !m_noNotify &&  !(m_saveIndex == SaveAction::SaveToSpecificDir && m_saveFileName.isEmpty())) {
-        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screen-recorder", "",
-                                    summary, actions, hints, 0);
+
+//        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screen-recorder", "",
+//                                    summary, actions, hints, 0);
+        QList<QVariant> arg;
+        arg << (QCoreApplication::applicationName())                 // appname
+            << ((unsigned int) 0)                                    // id
+            << QString("Deepin Screenshot")                     // icon
+            << tr("Shotting finished")                              // summary
+            << QString("%1 %2").arg(tr("Saved to")).arg(saveFilePath) // body
+            << actions                                               // actions
+            << hints                                                 // hints
+            << (int) -1;
+        notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);// timeout
     }
 
     QTimer::singleShot(2, [ = ] {
@@ -1262,11 +1280,11 @@ bool MainWindow::saveAction(const QPixmap &pix)
                 savePath = QDir::tempPath();
             }
         }
-//        if (m_selectAreaName.isEmpty()) {
-        m_saveFileName = QString("%1/%2_%3.png").arg(savePath, tr("DeepinScreenshot"), currentTime);
-//        } else {
-//            m_saveFileName = QString("%1/%2_%3_%4.png").arg(savePath, tr("DeepinScreenshot"), m_selectAreaName, currentTime);
-//        }
+        if (selectAreaName.isEmpty()) {
+            m_saveFileName = QString("%1/%2_%3.png").arg(savePath, tr("DeepinScreenshot"), currentTime);
+        } else {
+            m_saveFileName = QString("%1/%2_%3_%4.png").arg(savePath, tr("DeepinScreenshot"), selectAreaName, currentTime);
+        }
         if (!screenShotPix.save(m_saveFileName,  "PNG"))
             return false;
     }
