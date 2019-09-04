@@ -62,9 +62,6 @@ SubToolWidget::~SubToolWidget()
 void SubToolWidget::initWidget()
 {
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
-
-    setMouseTracking(true);
-    setAcceptDrops(true);
     m_lineflag = 0;
     initVirtualCard();
     initRecordLabel();

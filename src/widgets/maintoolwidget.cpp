@@ -52,8 +52,8 @@ MainToolWidget::~MainToolWidget()
 void MainToolWidget::initWidget()
 {
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
-    setMouseTracking(true);
-    setAcceptDrops(true);
+//    setMouseTracking(true);
+//    setAcceptDrops(true);
     initMainLabel();
 }
 
