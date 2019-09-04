@@ -22,7 +22,7 @@
 
 #include <DSlider>
 #include <QLineEdit>
-#include <QMenu>
+#include <DMenu>
 #include <QAction>
 #include <QButtonGroup>
 #include <QVBoxLayout>
@@ -35,7 +35,7 @@
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int TOOLBAR_HEIGHT = 200;
+const int TOOLBAR_HEIGHT = 203;
 const int TOOLBAR_WIDTH = 40;
 const int BUTTON_SPACING = 3;
 const int SHOT_BUTTON_SPACING = 3;
@@ -221,7 +221,7 @@ void ShotToolWidget::initRectLabel()
     ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 0);
 
 
-    rectLayout->addSpacing(BUTTON_SPACING);
+    rectLayout->addSpacing(4);
     ToolButton *t_seperator = new ToolButton();
     pa = t_seperator->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
@@ -360,6 +360,17 @@ void ShotToolWidget::initRectLabel()
     for (int j = 0; j < btnList.length(); j++) {
         rectLayout->addWidget(btnList[j]);
     }
+
+    rectLayout->addSpacing(4);
+    ToolButton *t_seperator1 = new ToolButton();
+    pa = t_seperator1->palette();
+    pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+    pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+    t_seperator1->setDisabled(true);
+    t_seperator1->setPalette(pa);
+    t_seperator1->setFixedSize(SPLITTER_SIZE);
+    rectLayout->addWidget(t_seperator1, 0, Qt::AlignHCenter);
+//    rectLayout->addSpacing(BUTTON_SPACING);
 
     m_rectSubTool->setLayout(rectLayout);
     addWidget(m_rectSubTool);
@@ -515,7 +526,7 @@ void ShotToolWidget::initCircLabel()
     thickOneBtn->click();
     ConfigSettings::instance()->setValue("oval", "linewidth_index", 0);
 
-    rectLayout->addSpacing(BUTTON_SPACING);
+    rectLayout->addSpacing(4);
     ToolButton *t_seperator = new ToolButton();
     pa = t_seperator->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
@@ -649,9 +660,21 @@ void ShotToolWidget::initCircLabel()
 
     });
 
+
+
     for (int j = 0; j < btnList.length(); j++) {
         rectLayout->addWidget(btnList[j]);
     }
+
+    rectLayout->addSpacing(4);
+    ToolButton *t_seperator1 = new ToolButton();
+    pa = t_seperator1->palette();
+    pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+    pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+    t_seperator1->setDisabled(true);
+    t_seperator1->setPalette(pa);
+    t_seperator1->setFixedSize(SPLITTER_SIZE);
+    rectLayout->addWidget(t_seperator1, 0, Qt::AlignHCenter);
 
     m_circSubTool->setLayout(rectLayout);
     addWidget(m_circSubTool);
@@ -812,7 +835,7 @@ void ShotToolWidget::initLineLabel()
     ConfigSettings::instance()->setValue("arrow", "arrow_linewidth_index", 0);
     ConfigSettings::instance()->setValue("arrow", "straightline_linewidth_index", 0);
 
-    rectLayout->addSpacing(BUTTON_SPACING);
+    rectLayout->addSpacing(4);
     ToolButton *t_seperator = new ToolButton();
     pa = t_seperator->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
@@ -920,6 +943,16 @@ void ShotToolWidget::initLineLabel()
         rectLayout->addWidget(btnList[j]);
         t_funcBtnGroup->addButton(btnList[j]);
     }
+
+    rectLayout->addSpacing(4);
+    ToolButton *t_seperator1 = new ToolButton();
+    pa = t_seperator1->palette();
+    pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+    pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+    t_seperator1->setDisabled(true);
+    t_seperator1->setPalette(pa);
+    t_seperator1->setFixedSize(SPLITTER_SIZE);
+    rectLayout->addWidget(t_seperator1, 0, Qt::AlignHCenter);
 
     m_lineSubTool->setLayout(rectLayout);
     addWidget(m_lineSubTool);

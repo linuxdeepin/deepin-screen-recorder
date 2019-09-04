@@ -21,7 +21,7 @@
 #include "../camera_process.h"
 #include <DSlider>
 #include <DLineEdit>
-#include <QMenu>
+#include <DMenu>
 #include <QAction>
 #include <QButtonGroup>
 #include <QHBoxLayout>
@@ -36,8 +36,8 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const int TOOLBAR_HEIGHT = 43;
-const int TOOLBAR_WIDTH = 400;
-const int BUTTON_SPACING = 4;
+const int TOOLBAR_WIDTH = 375;
+const int BUTTON_SPACING = 1;
 const int SHOT_BUTTON_SPACING = 2;
 const int COLOR_NUM = 16;
 const QSize TOOL_ICON_SIZE = QSize(20, 20);
@@ -76,6 +76,11 @@ void SubToolWidget::initRecordLabel()
     QList<ToolButton *> btnList;
     QPalette pa;
 
+
+    QString audio_button_style = "QPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
+                                 "left:-6px;"
+                                 "subcontrol-origin:padding;"
+                                 "subcontrol-position:right;}";
     //添加音频按钮
     ToolButton *audioButton = new ToolButton();
 
@@ -84,6 +89,7 @@ void SubToolWidget::initRecordLabel()
     pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
     pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
     audioButton->setPalette(pa);
+    audioButton->setStyleSheet(audio_button_style);
 
     audioButton->setObjectName("AudioButton");
     audioButton->setText(tr(" "));
@@ -93,7 +99,10 @@ void SubToolWidget::initRecordLabel()
     audioButton->setFixedSize(MEDIUM_TOOL_BUTTON_SIZE);
     btnList.append(audioButton);
 
-    QMenu *audioMenu = new QMenu();
+    DMenu *audioMenu = new DMenu();
+    //for test
+    audioMenu->setStyle(QStyleFactory::create("dlight"));
+    //for test
     pa = audioMenu->palette();
     pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
     pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
@@ -260,7 +269,13 @@ void SubToolWidget::initRecordLabel()
     //发送鼠标按键按钮状态信号
     connect(mouseButton, SIGNAL(clicked(bool)),
             this, SIGNAL(mouseBoardButtonClicked(bool)));
-    QString button_style = "QPushButton{text-align: left;}";
+//    QString button_style = "QPushButton{text-align: left;}";
+
+    QString format_button_style = "QPushButton{text-align: left;}"
+                                  "QPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
+                                  "left:-4px;"
+                                  "subcontrol-origin:padding;"
+                                  "subcontrol-position:right;}";
 
     ToolButton *formatButton = new ToolButton();
     pa = formatButton->palette();
@@ -275,7 +290,7 @@ void SubToolWidget::initRecordLabel()
     formatButton->setText(tr("Webm"));
     formatButton->setIconSize(QSize(24, 24));
     formatButton->setIcon(QIcon(":/image/newUI/normal/format_normal.svg"));
-    formatButton->setStyleSheet(button_style);
+    formatButton->setStyleSheet(format_button_style);
     rectBtnGroup->addButton(formatButton);
 
     btnList.append(formatButton);
@@ -283,7 +298,11 @@ void SubToolWidget::initRecordLabel()
 
     QActionGroup *t_formatActionGroup = new QActionGroup(this);
     t_formatActionGroup->setExclusive(true);
-    QMenu *formatMenu = new QMenu();
+    DMenu *formatMenu = new DMenu();
+    DFontSizeManager::instance()->bind(formatMenu, DFontSizeManager::T8);
+    //for test
+    formatMenu->setStyle(QStyleFactory::create("dlight"));
+    //for test
     QAction *gifAction = new QAction(formatMenu);
     QAction *mp4Action = new QAction(formatMenu);
     gifAction->setText(tr("GIF"));
@@ -301,6 +320,12 @@ void SubToolWidget::initRecordLabel()
     connect(gifAction, SIGNAL(triggered(bool)), this, SIGNAL(gifActionChecked(bool)));
     connect(mp4Action, SIGNAL(triggered(bool)), this, SIGNAL(mp4ActionChecked(bool)));
 
+    QString fps_button_style = "QPushButton{text-align: left;}"
+                               "QPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
+                               "left:-4px;"
+                               "subcontrol-origin:padding;"
+                               "subcontrol-position:right;}";
+
     ToolButton *fpsButton = new ToolButton();
     DFontSizeManager::instance()->bind(fpsButton, DFontSizeManager::T9);
     pa = fpsButton->palette();
@@ -315,14 +340,17 @@ void SubToolWidget::initRecordLabel()
     fpsButton->setIcon(QIcon(":/image/newUI/normal/Resolving power_normal.svg"));
     rectBtnGroup->addButton(fpsButton);
     fpsButton->setFixedSize(TOOL_BUTTON_SIZE);
-    fpsButton->setStyleSheet(button_style);
+    fpsButton->setStyleSheet(fps_button_style);
     btnList.append(fpsButton);
 
     //添加帧率选择下拉列表
     QActionGroup *t_fpsActionGroup = new QActionGroup(this);
     t_fpsActionGroup->setExclusive(true);
-    QMenu *fpsMenu = new QMenu();
-
+    DMenu *fpsMenu = new DMenu();
+    DFontSizeManager::instance()->bind(fpsMenu, DFontSizeManager::T8);
+    //for test
+    fpsMenu->setStyle(QStyleFactory::create("dlight"));
+    //for test
     pa = fpsMenu->palette();
     pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
     pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
@@ -399,10 +427,10 @@ void SubToolWidget::initRecordLabel()
         rectLayout->addWidget(btnList[i]);
         rectLayout->addSpacing(BUTTON_SPACING);
     }
-    rectLayout->addSpacing(16);
-    rectLayout->addSpacing(16);
-    rectLayout->addSpacing(BUTTON_SPACING);
-    rectLayout->addStretch();
+    rectLayout->addSpacing(35);
+//    rectLayout->addSpacing(16);
+//    rectLayout->addSpacing(BUTTON_SPACING);
+//    rectLayout->addStretch();
     m_recordSubTool->setLayout(rectLayout);
     addWidget(m_recordSubTool);
 

@@ -25,6 +25,7 @@
 #include <DBlurEffectWidget>
 #include <QEvent>
 #include <QDebug>
+#include <DImageButton>
 
 #include "majtoolbar.h"
 #include "subtoolbar.h"
@@ -60,6 +61,7 @@ signals:
     void mp4ActionCheckedSignal(bool checked);
     void frameRateChangedSignal(int frameRate);
     void shotToolChangedSignal(const QString &func);
+    void closeButtonSignal();
 public slots:
     bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
@@ -79,6 +81,7 @@ private:
 
     MainToolWidget *m_mainTool;
     SubToolWidget *m_subTool;
+    ToolButton *m_closeButton;
 
     bool  m_expanded;
 };
@@ -109,6 +112,7 @@ signals:
     void mp4ActionCheckedToMain(bool checked);
     void frameRateChangedToMain(int frameRate);
     void shotToolChangedToMain(const QString &func);
+    void closeButtonToMain();
 public slots:
     bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);

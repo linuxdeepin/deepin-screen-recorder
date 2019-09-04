@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 
             // Load translator.
             app.loadTranslator();
-            app.setStyle("chameleon");
+//            app.setStyle("chameleon");
 //            app.setAttribute(Qt::AA_UseHighDpiPixmaps);
 
             static const QDate buildDate = QLocale( QLocale::English ).

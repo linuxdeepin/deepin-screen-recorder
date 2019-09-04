@@ -20,8 +20,8 @@
 #ifndef MENUCONTROLLER_H
 #define MENUCONTROLLER_H
 
-#include <QMenu>
-
+#include <DMenu>
+DWIDGET_USE_NAMESPACE
 enum SaveAction : unsigned int;
 class MenuController : public QObject
 {
@@ -34,13 +34,17 @@ signals:
     void shapePressed(QString currentShape);
     void unDoAction();
     void saveBtnPressed(SaveAction action);
+    void saveAction();
+    void closeAction();
     void menuNoFocus();
 
 public slots:
     void showMenu(QPoint pos);
 
+protected:
+    void enterEvent(QEvent *e);
 private:
-    QMenu *m_menu;
+    DMenu *m_menu;
     qreal m_ration;
 };
 #endif // MENUCONTROLLER_H

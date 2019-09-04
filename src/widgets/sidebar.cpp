@@ -27,14 +27,15 @@
 #include <QTimer>
 #include <QSettings>
 #include <QVBoxLayout>
+#include <QBitmap>
 
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int TOOLBAR_HEIGHT = 370;
+const int TOOLBAR_HEIGHT = 400;
 const int TOOLBAR_WIDTH = 40;
 
-const QSize TOOLBAR_WIDGET_SIZE = QSize(40, 370);
+const QSize TOOLBAR_WIDGET_SIZE = QSize(40, 400);
 const int BUTTON_SPACING = 3;
 const int BTN_RADIUS = 3;
 }
@@ -65,14 +66,30 @@ SideBarWidget::SideBarWidget(QWidget *parent)
     m_colorTool = new ColorToolWidget(this);
     m_shotTool = new ShotToolWidget(this);
 
+
+    QString button_style = "QPushButton{border-radius:30px;} "
+                           "QPushButton::hover{border-image: url(:/image/newUI/hover/close-hover.svg)}";
+
+    QPixmap pixmap(":/image/newUI/normal/close-normal.svg");
+
+    m_closeButton = new ToolButton(this);
+    m_closeButton->setIconSize(QSize(40, 40));
+    m_closeButton->setIcon(QIcon(":/image/newUI/normal/close-normal.svg"));
+    m_closeButton->resize(pixmap.size());
+    /* 设置按钮的有效区域 */
+    m_closeButton->setMask(QBitmap(pixmap.mask()));
+    m_closeButton->setStyleSheet(button_style);
+
     QVBoxLayout *VLayout = new QVBoxLayout();
     VLayout->setMargin(0);
 //    VLayout->setSpacing(3);
     VLayout->addWidget(m_shotTool, 0, Qt::AlignTop | Qt::AlignHCenter);
     VLayout->addWidget(m_colorTool, 1,  Qt::AlignTop | Qt::AlignHCenter);
+    VLayout->addWidget(m_closeButton, 2, Qt::AlignTop | Qt::AlignHCenter);
     setLayout(VLayout);
 
     connect(m_shotTool, &ShotToolWidget::changeArrowAndLine, this, &SideBarWidget::changeArrowAndLineEvent);
+    connect(m_closeButton, &ToolButton::clicked, this, &SideBarWidget::closeSideBar);
 }
 
 SideBarWidget::~SideBarWidget()
@@ -117,6 +134,7 @@ SideBar::SideBar(QWidget *parent) : DLabel(parent)
     setLayout(vLayout);
 
     connect(m_sidebarWidget, &SideBarWidget::changeArrowAndLineEvent, this, &SideBar::changeArrowAndLineToMain);
+    connect(m_sidebarWidget, &SideBarWidget::closeSideBar, this, &SideBar::closeSideBarToMain);
 }
 
 SideBar::~SideBar()

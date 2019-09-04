@@ -59,6 +59,8 @@ signals:
     void saveBtnPressed(SaveAction action);
     void requestExit();
     void menuNoFocus();
+    void saveFromMenu();
+    void closeFromMenu();
 
 public slots:
     void updateSelectedShape(const QString &group, const QString &key, int index);
@@ -97,6 +99,8 @@ public slots:
     void microAdjust(QString direction);
     void setShiftKeyPressed(bool isShift);
     void updateCursorShape();
+    void menuSaveSlot();
+    void menuCloseSlot();
 
 protected:
     void mousePressEvent(QMouseEvent *e);

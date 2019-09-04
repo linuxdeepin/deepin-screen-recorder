@@ -52,8 +52,8 @@ MainToolWidget::~MainToolWidget()
 void MainToolWidget::initWidget()
 {
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
-    setMouseTracking(true);
-    setAcceptDrops(true);
+//    setMouseTracking(true);
+//    setAcceptDrops(true);
     initMainLabel();
 }
 
@@ -64,17 +64,7 @@ void MainToolWidget::initMainLabel()
     buttonGroup->setExclusive(true);
     QPalette pa;
 
-//    QString button_style = "QPushButton{background-color:black;"
-
-//                           "color: white;   border-radius: 10px;  border: 2px groove gray;"
-
-//                           "border-style: outset;}"
-
-//                           "QPushButton:hover{background-color:white; color: black;}"
-
-//                           "QPushButton:pressed{background-color:rgb(85, 170, 255);"
-
-//                           "border-style: inset; }";
+//    QString record_button_style = "QPushButton:press{QIcon(:/image/newUI/press/screencap-press.svg)}";
 
     ToolButton *recordBtn = new ToolButton();
     DFontSizeManager::instance()->bind(recordBtn, DFontSizeManager::T8);
@@ -90,7 +80,10 @@ void MainToolWidget::initMainLabel()
     recordBtn->setIconSize(QSize(17, 17));
     recordBtn->setIcon(QIcon(":/image/newUI/normal"
                              "/screencap-normal.svg"));
+//    recordBtn->setStyleSheet(record_button_style);
     toolBtnList.append(recordBtn);
+
+//    QString shot_button_style = "QPushButton:press{QIcon(:/image/newUI/press/shot-press.svg)}";
 
     ToolButton *shotBtn = new ToolButton();
     DFontSizeManager::instance()->bind(shotBtn, DFontSizeManager::T8);
@@ -105,6 +98,7 @@ void MainToolWidget::initMainLabel()
     shotBtn->setFixedSize(TOOL_BUTTON_SIZE);
     shotBtn->setIconSize(QSize(17, 17));
     shotBtn->setIcon(QIcon(":/image/newUI/normal/screenshot-normal.svg"));
+//    shotBtn->setStyleSheet(shot_button_style);
     toolBtnList.append(shotBtn);
 
     m_baseLayout = new QHBoxLayout();

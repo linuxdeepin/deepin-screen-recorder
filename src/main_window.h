@@ -153,6 +153,7 @@ public slots:
     void reloadImage(QString effect);
     void shotImgWidthEffect();
     void changeArrowAndLineEvent(int line);
+    void exitApp();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -281,11 +282,13 @@ private:
 
     DBusZone *m_hotZoneInterface;
     DBusNotify *m_notifyDBInterface;
+    MenuController *m_menuController;
     bool m_noNotify = false;
     bool m_isShiftPressed = false;
     bool m_drawNothing = false;
     bool m_needDrawSelectedPoint;
     bool m_needSaveScreenshot = false;
+    bool m_interfaceExist = false;
     // Just use for debug.
     // int repaintCounter;
 
