@@ -10,7 +10,8 @@ CameraWidget::CameraWidget(QWidget *parent) : QWidget(parent)
    setFocusPolicy(Qt::StrongFocus);
    setMouseTracking(true);
    setAcceptDrops(true);
-   resize(50, 50);
+   setMaximumSize(150, 150);
+   setMinimumSize(50, 50);
 }
 
 void CameraWidget::setRecordRect(int x, int y, int width, int height)
@@ -26,6 +27,15 @@ void CameraWidget::showAt(QPoint pos)
    if (!isVisible())
        this->show();
    move(pos.x(),pos.y());
+}
+
+int CameraWidget::getRecordX()
+{
+    return recordX;
+}
+int CameraWidget::getRecordY()
+{
+    return recordY;
 }
 void CameraWidget::enterEvent(QEvent *e)
 {
