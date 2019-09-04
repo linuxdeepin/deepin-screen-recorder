@@ -29,14 +29,15 @@
 #include <dgraphicsgloweffect.h>
 #include <QTimer>
 #include <QSettings>
+#include <QBitmap>
 
 DWIDGET_USE_NAMESPACE
 
 namespace {
 const int TOOLBAR_HEIGHT = 47;
-const int TOOLBAR_WIDTH = 500;
+const int TOOLBAR_WIDTH = 505;
 
-const QSize TOOLBAR_WIDGET_SIZE = QSize(500, 47);
+const QSize TOOLBAR_WIDGET_SIZE = QSize(505, 47);
 const int BUTTON_SPACING = 3;
 const int BTN_RADIUS = 3;
 }
@@ -68,20 +69,30 @@ ToolBarWidget::ToolBarWidget(QWidget *parent)
     m_mainTool = new MainToolWidget(this);
     m_subTool = new SubToolWidget(this);
 
+    QString button_style = "QPushButton{border-radius:30px;} "
+                           "QPushButton::hover{border-image: url(:/image/newUI/hover/close-hover.svg)}";
+
+    QPixmap pixmap(":/image/newUI/normal/close-normal.svg");
+
+    m_closeButton = new ToolButton(this);
+    m_closeButton->setIconSize(QSize(40, 40));
+    m_closeButton->setIcon(QIcon(":/image/newUI/normal/close-normal.svg"));
+    m_closeButton->resize(pixmap.size());
+    /* 设置按钮的有效区域 */
+    m_closeButton->setMask(QBitmap(pixmap.mask()));
+    m_closeButton->setStyleSheet(button_style);
+
     QHBoxLayout *hLayout = new QHBoxLayout();
     hLayout->setMargin(0);
     hLayout->setSpacing(2);
     hLayout->addWidget(m_mainTool, 0, Qt::AlignLeft);
     hLayout->addWidget(m_subTool, 1, Qt::AlignLeft);
-//    vLayout->addWidget(m_hSeparatorLine, 0, Qt::AlignVCenter);
-//    vLayout->addWidget(m_subToolbar, 0, Qt::AlignVCenter);
+    hLayout->addSpacing(10);
+    hLayout->addWidget(m_closeButton, 2, Qt::AlignLeft);
     setLayout(hLayout);
 
-//    m_hSeparatorLine->hide();
-//    m_subToolbar->hide();
-//    m_subTool->hide();
-
     connect(m_mainTool, &MainToolWidget::buttonChecked, this, &ToolBarWidget::setExpand);
+    connect(m_closeButton, &DPushButton::clicked, this, &ToolBarWidget::closeButtonSignal);
     connect(m_subTool, &SubToolWidget::keyBoardButtonClicked, this, &ToolBarWidget::keyBoardCheckedSlot);
     connect(m_subTool, &SubToolWidget::mouseBoardButtonClicked, this, &ToolBarWidget::mouseCheckedSignalToToolBar);
     connect(m_subTool, SIGNAL(microphoneActionChecked(bool)), this, SIGNAL(microphoneActionCheckedSignal(bool)));
@@ -91,19 +102,6 @@ ToolBarWidget::ToolBarWidget(QWidget *parent)
     connect(m_subTool, SIGNAL(mp4ActionChecked(bool)), this, SIGNAL(mp4ActionCheckedSignal(bool)));
     connect(m_subTool, SIGNAL(videoFrameRateChanged(int)), this, SIGNAL(frameRateChangedSignal(int)));
     connect(m_subTool, SIGNAL(changeShotToolFunc(const QString &)), this, SIGNAL(shotToolChangedSignal(const QString &)));
-//    connect(m_majToolbar, &MajToolBar::saveImage, this, &ToolBarWidget::saveImage);
-//    connect(m_subToolbar, &SubToolBar::saveAction, this, &ToolBarWidget::saveImage);
-
-//    connect(m_subToolbar, &SubToolBar::currentColorChanged, this, &ToolBarWidget::colorChanged);
-//    connect(m_subToolbar, &SubToolBar::currentColorChanged,  m_majToolbar, &MajToolBar::mainColorChanged);
-
-//    connect(m_subToolbar, &SubToolBar::showSaveTip, m_majToolbar, &MajToolBar::showSaveTooltip);
-//    connect(m_subToolbar, &SubToolBar::hideSaveTip, m_majToolbar, &MajToolBar::hideSaveTooltip);
-
-//    connect(this, &ToolBarWidget::shapePressed, m_majToolbar, &MajToolBar::shapePressed);
-//    connect(this, &ToolBarWidget::saveBtnPressed, m_subToolbar, &SubToolBar::saveBtnPressed);
-//    connect(m_majToolbar, &MajToolBar::saveSpecificedPath, this, &ToolBarWidget::saveSpecifiedPath);
-//    connect(m_majToolbar, &MajToolBar::closed, this, &ToolBarWidget::closed);
 }
 
 void ToolBarWidget::paintEvent(QPaintEvent *e)
@@ -209,6 +207,7 @@ ToolBar::ToolBar(QWidget *parent)
 
     connect(m_toolbarWidget, &ToolBarWidget::expandChanged, this, &ToolBar::setExpand);
     connect(m_toolbarWidget, &ToolBarWidget::saveImage, this, &ToolBar::requestSaveScreenshot);
+    connect(m_toolbarWidget, &ToolBarWidget::closeButtonSignal, this, &ToolBar::closeButtonToMain);
     connect(m_toolbarWidget, &ToolBarWidget::colorChanged, this, &ToolBar::updateColor);
     connect(this, &ToolBar::shapePressed, m_toolbarWidget, &ToolBarWidget::shapePressed);
     connect(this, &ToolBar::saveBtnPressed, m_toolbarWidget, &ToolBarWidget::saveBtnPressed);

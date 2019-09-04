@@ -195,6 +195,13 @@ void MainWindow::initAttributes()
     m_sideBar = new SideBar(this);
     m_sideBar->hide();
 
+    connect(m_sideBar, &SideBar::closeSideBarToMain, this, [ = ] {
+        if (m_sideBar->isVisible())
+        {
+            m_sideBar->hide();
+        }
+    });
+
     m_sizeTips = new TopTips(this);
     m_sizeTips->hide();
     m_zoomIndicator = new ZoomIndicator(this);
@@ -213,6 +220,7 @@ void MainWindow::initAttributes()
     connect(m_toolBar, &ToolBar::mp4ActionCheckedToMain, this, &MainWindow::changeMp4SelectEvent);
     connect(m_toolBar, &ToolBar::frameRateChangedToMain, this, &MainWindow::changeFrameRateEvent);
     connect(m_toolBar, &ToolBar::shotToolChangedToMain, this, &MainWindow::changeShotToolEvent);
+    connect(m_toolBar, &ToolBar::closeButtonToMain, this, &MainWindow::exitApp);
     connect(m_sideBar, &SideBar::changeArrowAndLineToMain, this, &MainWindow::changeArrowAndLineEvent);
 //    connect(m_toolBar, &ToolBar::shotToolChangedToMain, this,  [ = ](QString shape) {
 //        if (m_isShapesWidgetExist && shape != "color") {
@@ -1703,6 +1711,15 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 isPressButton = true;
                 isReleaseButton = false;
             }
+
+            if (mouseEvent->button() == Qt::RightButton) {
+                if (!isFirstPressButton) {
+                    return false;
+                }
+                if (m_functionType == 1) {
+                    m_menuController->showMenu(QPoint(mapToGlobal(mouseEvent->pos())));
+                }
+            }
         }
 
 
@@ -2322,8 +2339,10 @@ void MainWindow::initShapeWidget(QString type)
             this, &MainWindow::reloadImage);
     connect(this, &MainWindow::deleteShapes, m_shapesWidget,
             &ShapesWidget::deleteCurrentShape);
-//    connect(m_shapesWidget, &ShapesWidget::requestScreenshot,
-//            this, &MainWindow::saveScreenshot);
+    connect(m_shapesWidget, &ShapesWidget::saveFromMenu,
+            this, &MainWindow::saveScreenShot);
+    connect(m_shapesWidget, &ShapesWidget::closeFromMenu,
+            this, &MainWindow::exitApp);
 //    connect(m_shapesWidget, &ShapesWidget::shapePressed,
 //            m_toolBar, &ToolBar::shapePressed);
 //    connect(m_shapesWidget, &ShapesWidget::saveBtnPressed,
@@ -2333,6 +2352,15 @@ void MainWindow::initShapeWidget(QString type)
     connect(this, &MainWindow::saveActionTriggered,
             m_shapesWidget, &ShapesWidget::saveActionTriggered);
     connect(m_shapesWidget, &ShapesWidget::menuNoFocus, this, &MainWindow::activateWindow);
+}
+
+void MainWindow::exitApp()
+{
+    if (m_interfaceExist && nullptr != m_hotZoneInterface) {
+        if (m_hotZoneInterface->isValid())
+            m_hotZoneInterface->asyncCall("EnableZoneDetected",  true);
+    }
+    qApp->quit();
 }
 
 int MainWindow::getRecordInputType(bool selectedMic, bool selectedSystemAudio)

@@ -55,8 +55,12 @@ ShapesWidget::ShapesWidget(QWidget *parent)
 
     connect(m_menuController, &MenuController::shapePressed,
             this, &ShapesWidget::shapePressed);
-    connect(m_menuController, &MenuController::saveBtnPressed,
-            this, &ShapesWidget::saveBtnPressed);
+//    connect(m_menuController, &MenuController::saveBtnPressed,
+//            this, &ShapesWidget::saveBtnPressed);
+    connect(m_menuController, &MenuController::saveAction,
+            this, &ShapesWidget::menuSaveSlot);
+    connect(m_menuController, &MenuController::closeAction,
+            this, &ShapesWidget::menuCloseSlot);
     connect(m_menuController, &MenuController::unDoAction,
             this, &ShapesWidget::undoDrawShapes);
     connect(m_menuController, &MenuController::menuNoFocus,
@@ -1683,4 +1687,14 @@ void ShapesWidget::updateCursorShape()
     } else {
         qApp->setOverrideCursor(setCursorShape(m_currentType));
     }
+}
+
+void ShapesWidget::menuSaveSlot()
+{
+    emit saveFromMenu();
+}
+
+void ShapesWidget::menuCloseSlot()
+{
+    emit closeFromMenu();
 }

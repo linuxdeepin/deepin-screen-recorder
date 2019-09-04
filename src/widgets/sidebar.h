@@ -27,6 +27,7 @@
 
 #include "colortoolwidget.h"
 #include "shottoolwidget.h"
+#include "toolbutton.h"
 DWIDGET_USE_NAMESPACE
 
 class SideBarWidget : public DBlurEffectWidget
@@ -39,6 +40,7 @@ public:
     void changeShotToolWidget(const QString &func);
 signals:
     void changeArrowAndLineEvent(int line);
+    void closeSideBar();
 protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
@@ -46,7 +48,7 @@ private:
     QLabel *m_hSeparatorLine;
     ColorToolWidget *m_colorTool;
     ShotToolWidget *m_shotTool;
-
+    ToolButton *m_closeButton;
     bool  m_expanded;
 };
 
@@ -66,6 +68,7 @@ signals:
     void shapePressed(QString tool);
     void closed();
     void changeArrowAndLineToMain(int line);
+    void closeSideBarToMain();
 public slots:
     bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
@@ -78,6 +81,7 @@ protected:
 
 private:
     SideBarWidget *m_sidebarWidget;
+
     bool m_expanded;
 };
 
