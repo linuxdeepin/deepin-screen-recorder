@@ -46,6 +46,9 @@ ToolBarWidget::ToolBarWidget(QWidget *parent)
     : DBlurEffectWidget(parent),
       m_expanded(false)
 {
+
+    setMouseTracking(true);
+    setAcceptDrops(true);
     setBlurRectXRadius(10);
     setBlurRectYRadius(10);
     setRadius(30);
@@ -172,6 +175,8 @@ ToolBarWidget::~ToolBarWidget() {}
 ToolBar::ToolBar(QWidget *parent)
     : QLabel(parent)
 {
+    setMouseTracking(true);
+    setAcceptDrops(true);
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     m_toolbarWidget = new ToolBarWidget(this);
     QVBoxLayout *vLayout = new QVBoxLayout(this);

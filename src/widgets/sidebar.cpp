@@ -45,6 +45,9 @@ SideBarWidget::SideBarWidget(QWidget *parent)
     : DBlurEffectWidget(parent),
       m_expanded(false)
 {
+
+    setMouseTracking(true);
+    setAcceptDrops(true);
     setBlurRectXRadius(10);
     setBlurRectYRadius(10);
     setRadius(30);
@@ -124,6 +127,8 @@ void SideBarWidget::showEvent(QShowEvent *event)
 
 SideBar::SideBar(QWidget *parent) : DLabel(parent)
 {
+    setMouseTracking(true);
+    setAcceptDrops(true);
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     m_sidebarWidget = new SideBarWidget(this);
     QVBoxLayout *vLayout = new QVBoxLayout(this);

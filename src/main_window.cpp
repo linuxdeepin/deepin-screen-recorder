@@ -695,10 +695,10 @@ void MainWindow::updateCameraWidgetPos()
 {
     if (!m_selectedCamera)
         return;
-      int x = recordX - m_cameraWidget->getRecordX();
-      int y = recordY - m_cameraWidget->getRecordY();
-      m_cameraWidget->showAt(QPoint(m_cameraWidget->x() + x, m_cameraWidget->y() + y));
-      m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
+    int x = recordX - m_cameraWidget->getRecordX();
+    int y = recordY - m_cameraWidget->getRecordY();
+    m_cameraWidget->showAt(QPoint(m_cameraWidget->x() + x, m_cameraWidget->y() + y));
+    m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
 }
 void MainWindow::changeFunctionButton(QString type)
 {
@@ -884,7 +884,7 @@ void MainWindow::changeCameraSelectEvent(bool checked)
         int y = recordY + recordHeight - cameraWidgetSize;
         m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
         m_cameraWidget->resize(cameraWidgetSize, cameraWidgetSize);
-        m_cameraWidget->showAt(QPoint(x,y));
+        m_cameraWidget->showAt(QPoint(x, y));
     } else {
         m_cameraWidget->hide();
     }
@@ -1066,6 +1066,7 @@ void MainWindow::saveScreenShot()
 
     m_toolBar->setVisible(false);
     m_sizeTips->setVisible(false);
+    m_sideBar->setVisible(false);
 
     shotCurrentImg();
 
