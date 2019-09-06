@@ -35,9 +35,9 @@ void CameraWidget::setRecordRect(int x, int y, int width, int height)
 
 void CameraWidget::showAt(QPoint pos)
 {
-   if (!isVisible())
-       this->show();
-   move(pos.x(),pos.y());
+    if (!isVisible())
+        this->show();
+    move(pos.x(), pos.y());
 }
 
 int CameraWidget::getRecordX()
@@ -59,7 +59,7 @@ void CameraWidget::initCamera()
     if (imageCapture->isCaptureDestinationSupported(QCameraImageCapture::CaptureToBuffer)) {
         imageCapture->setCaptureDestination(QCameraImageCapture::CaptureToBuffer);
         qDebug() << imageCapture->supportedBufferFormats();
-        imageCapture->setBufferFormat(QVideoFrame::PixelFormat::Format_YUV444);
+        imageCapture->setBufferFormat(QVideoFrame::PixelFormat::Format_Jpeg);
         qDebug() << imageCapture->supportedResolutions(imageCapture->encodingSettings());
         QImageEncoderSettings iamge_setting;
         iamge_setting.setResolution(640, 360);
@@ -79,12 +79,13 @@ void CameraWidget::captureImage()
 
 void CameraWidget::processCapturedImage(int request_id, const QImage &img)
 {
+    QImage t_image = img.scaled(this->width(), this->height(), Qt::KeepAspectRatioByExpanding, Qt::FastTransformation);
     m_cameraUI->setPixmap(QPixmap::fromImage(img));
 }
 void CameraWidget::enterEvent(QEvent *e)
 {
     qApp->setOverrideCursor(Qt::ArrowCursor);
-    qDebug()<<"CameraWidget enterEvent";
+    qDebug() << "CameraWidget enterEvent";
 }
 
 void CameraWidget::paintEvent(QPaintEvent *e)
