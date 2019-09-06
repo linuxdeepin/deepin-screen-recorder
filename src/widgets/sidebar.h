@@ -73,6 +73,7 @@ public slots:
     bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
     void showAt(QPoint pos);
+    void initSideBar();
 
 protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;

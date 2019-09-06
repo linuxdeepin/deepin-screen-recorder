@@ -78,6 +78,10 @@ or press the shortcut again to stop recording</source>
         <source>Picture has been saved to %1</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Saved to</source>
+        <translation type="unfinished">保存在</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

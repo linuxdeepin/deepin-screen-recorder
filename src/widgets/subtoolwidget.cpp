@@ -459,21 +459,27 @@ void SubToolWidget::initRecordLabel()
     switch (t_frameRate) {
     case 5:
         frame5Action->triggered();
+        frame5Action->setChecked(true);
         break;
     case 10:
         frame10Action->triggered();
+        frame10Action->setChecked(true);
         break;
     case 20:
         frame20Action->triggered();
+        frame20Action->setChecked(true);
         break;
     case 24:
         frame24Action->triggered();
+        frame24Action->setChecked(true);
         break;
     case 30:
         frame30Action->triggered();
+        frame30Action->setChecked(true);
         break;
     default:
         frame24Action->triggered();
+        frame24Action->setChecked(true);
         break;
     }
 

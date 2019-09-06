@@ -56,13 +56,10 @@ SideBarWidget::SideBarWidget(QWidget *parent)
 
     setFixedSize(TOOLBAR_WIDGET_SIZE);
 
-    qDebug() << "~~~~~~" << this->size();
+//    qDebug() << "~~~~~~" << this->size();
     m_hSeparatorLine = new QLabel(this);
     m_hSeparatorLine->setObjectName("HorSeparatorLine");
     m_hSeparatorLine->setFixedHeight(1);
-
-//    m_mainTool = new MainToolWidget(this);
-//    m_subTool = new SubToolWidget(this);
     m_colorTool = new ColorToolWidget(this);
     m_shotTool = new ShotToolWidget(this);
 
@@ -124,17 +121,7 @@ void SideBarWidget::showEvent(QShowEvent *event)
 
 SideBar::SideBar(QWidget *parent) : DLabel(parent)
 {
-    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
-    m_sidebarWidget = new SideBarWidget(this);
-    QVBoxLayout *vLayout = new QVBoxLayout(this);
-    vLayout->setContentsMargins(1, 1, 1, 1);
-    vLayout->addStretch();
-    vLayout->addWidget(m_sidebarWidget);
-    vLayout->addStretch();
-    setLayout(vLayout);
 
-    connect(m_sidebarWidget, &SideBarWidget::changeArrowAndLineEvent, this, &SideBar::changeArrowAndLineToMain);
-    connect(m_sidebarWidget, &SideBarWidget::closeSideBar, this, &SideBar::closeSideBarToMain);
 }
 
 SideBar::~SideBar()
@@ -171,6 +158,21 @@ void SideBar::showAt(QPoint pos)
         this->show();
 
     move(pos.x(), pos.y());
+}
+
+void SideBar::initSideBar()
+{
+    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+    m_sidebarWidget = new SideBarWidget(this);
+    QVBoxLayout *vLayout = new QVBoxLayout(this);
+    vLayout->setContentsMargins(1, 1, 1, 1);
+    vLayout->addStretch();
+    vLayout->addWidget(m_sidebarWidget);
+    vLayout->addStretch();
+    setLayout(vLayout);
+
+    connect(m_sidebarWidget, &SideBarWidget::changeArrowAndLineEvent, this, &SideBar::changeArrowAndLineToMain);
+    connect(m_sidebarWidget, &SideBarWidget::closeSideBar, this, &SideBar::closeSideBarToMain);
 }
 
 void SideBar::paintEvent(QPaintEvent *e)

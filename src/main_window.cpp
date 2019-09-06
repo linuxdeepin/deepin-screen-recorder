@@ -547,6 +547,11 @@ void MainWindow::compositeChanged()
 
 void MainWindow::updateToolBarPos()
 {
+    if (m_toolBarInit == false) {
+        m_toolBar->initToolBar();
+        m_toolBarInit = true;
+    }
+
     QPoint toolbarPoint;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
@@ -571,6 +576,11 @@ void MainWindow::updateToolBarPos()
 
 void MainWindow::updateSideBarPos()
 {
+    if (m_sideBarInit == false) {
+        m_sideBar->initSideBar();
+        m_sideBarInit = true;
+    }
+
     QPoint sidebarPoint;
     sidebarPoint = QPoint(recordX + recordWidth + SIDEBAR_X_SPACING,
                           std::max(recordY + (recordHeight / 2 - m_sideBar->height() / 2), 0));
@@ -877,13 +887,16 @@ void MainWindow::changeCameraSelectEvent(bool checked)
 {
     m_selectedCamera = checked;
     if (checked) {
-        int cameraWidgetWidth = recordWidth * 1 / 4;
-        int cameraWidgetHeight = recordHeight * 1 / 4;
-        int cameraWidgetSize = std::max(std::min(std::min(cameraWidgetWidth, cameraWidgetHeight), 150), 50);
-        int x = recordX + recordWidth - cameraWidgetSize;
-        int y = recordY + recordHeight - cameraWidgetSize;
+//        int cameraWidgetWidth = recordWidth * 1 / 4;
+//        int cameraWidgetHeight = recordHeight * 1 / 4;
+//        int cameraWidgetSize = std::max(std::min(std::min(cameraWidgetWidth, cameraWidgetHeight), 500), 50);
+//        int x = recordX + recordWidth - cameraWidgetSize;
+//        int y = recordY + recordHeight - cameraWidgetSize;
+        int x = recordX + recordWidth - 480;
+        int y = recordY + recordHeight - 270;
         m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
-        m_cameraWidget->resize(cameraWidgetSize, cameraWidgetSize);
+//        m_cameraWidget->resize(cameraWidgetSize, cameraWidgetSize);
+        m_cameraWidget->resize(480, 270);
         m_cameraWidget->showAt(QPoint(x, y));
     } else {
         m_cameraWidget->hide();

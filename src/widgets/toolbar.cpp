@@ -58,7 +58,7 @@ ToolBarWidget::ToolBarWidget(QWidget *parent)
 //    setMaskColor(DBlurEffectWidget::LightColor);
     setFixedSize(TOOLBAR_WIDGET_SIZE);
 
-    qDebug() << "~~~~~~" << this->size();
+//    qDebug() << "~~~~~~" << this->size();
     m_hSeparatorLine = new QLabel(this);
     m_hSeparatorLine->setObjectName("HorSeparatorLine");
     m_hSeparatorLine->setFixedHeight(1);
@@ -172,58 +172,7 @@ ToolBarWidget::~ToolBarWidget() {}
 ToolBar::ToolBar(QWidget *parent)
     : QLabel(parent)
 {
-    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
-    m_toolbarWidget = new ToolBarWidget(this);
-    QVBoxLayout *vLayout = new QVBoxLayout(this);
-    vLayout->setContentsMargins(1, 1, 1, 1);
-    vLayout->addStretch();
-    vLayout->addWidget(m_toolbarWidget);
-    vLayout->addStretch();
-    setLayout(vLayout);
 
-//    QPushButton *button = new QPushButton("test", this);
-
-//    QTimer::singleShot(3000, [button] {
-//        qDebug() << button->palette() << button->palette().dark().color().name(QColor::HexArgb);
-//        QPalette pa = button->palette();
-//        pa.setColor(QPalette::ButtonText, Qt::red);
-//        pa.setColor(QPalette::Light, Qt::blue);
-//        pa.setColor(QPalette::Dark, pa.dark().color());
-//        button->setPalette(pa);
-//        qDebug() << button->palette() << button->palette().dark().color().name(QColor::HexArgb);
-//        qDebug() << button->topLevelWidget();
-//        qDebug() << button->topLevelWidget()->palette().dark().color().name(QColor::HexArgb);
-//    });
-//    button->topLevelWidget()->installEventFilter(this);
-
-//    qDebug() << button->topLevelWidget()->palette().dark().color().name(QColor::HexArgb);
-
-//    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect(this);
-//    shadowEffect->setXOffset(0);
-//    shadowEffect->setYOffset(6);
-//    shadowEffect->setColor(QColor(0, 0, 0, 26));
-//    shadowEffect->setBlurRadius(20);
-//    setGraphicsEffect(shadowEffect);
-
-    connect(m_toolbarWidget, &ToolBarWidget::expandChanged, this, &ToolBar::setExpand);
-    connect(m_toolbarWidget, &ToolBarWidget::saveImage, this, &ToolBar::requestSaveScreenshot);
-    connect(m_toolbarWidget, &ToolBarWidget::closeButtonSignal, this, &ToolBar::closeButtonToMain);
-    connect(m_toolbarWidget, &ToolBarWidget::colorChanged, this, &ToolBar::updateColor);
-    connect(this, &ToolBar::shapePressed, m_toolbarWidget, &ToolBarWidget::shapePressed);
-    connect(this, &ToolBar::saveBtnPressed, m_toolbarWidget, &ToolBarWidget::saveBtnPressed);
-    connect(m_toolbarWidget, &ToolBarWidget::saveSpecifiedPath, this, &ToolBar::saveSpecifiedPath);
-    connect(m_toolbarWidget, &ToolBarWidget::closed, this, &ToolBar::closed);
-
-    connect(m_toolbarWidget, &ToolBarWidget::changeFunctionSignal, this, &ToolBar::currentFunctionMode);
-    connect(m_toolbarWidget, &ToolBarWidget::keyBoardCheckedSignal, this, &ToolBar::keyBoardCheckedToMainSlot);
-    connect(m_toolbarWidget, &ToolBarWidget::microphoneActionCheckedSignal, this, &ToolBar::microphoneActionCheckedToMainSlot);
-    connect(m_toolbarWidget, &ToolBarWidget::systemAudioActionCheckedSignal, this, &ToolBar::systemAudioActionCheckedToMainSlot);
-    connect(m_toolbarWidget, &ToolBarWidget::cameraActionCheckedSignal, this, &ToolBar::cameraActionCheckedToMain);
-    connect(m_toolbarWidget, &ToolBarWidget::mouseCheckedSignalToToolBar, this, &ToolBar::mouseCheckedToMain);
-    connect(m_toolbarWidget, &ToolBarWidget::gifActionCheckedSignal, this, &ToolBar::gifActionCheckedToMain);
-    connect(m_toolbarWidget, &ToolBarWidget::mp4ActionCheckedSignal, this, &ToolBar::mp4ActionCheckedToMain);
-    connect(m_toolbarWidget, &ToolBarWidget::frameRateChangedSignal, this, &ToolBar::frameRateChangedToMain);
-    connect(m_toolbarWidget, &ToolBarWidget::shotToolChangedSignal, this, &ToolBar::shotToolChangedToMain);
 }
 
 void ToolBar::setExpand(bool expand, QString shapeType)
@@ -301,6 +250,38 @@ void ToolBar::systemAudioActionCheckedToMainSlot(bool checked)
 void ToolBar::changeArrowAndLineFromMain(int line)
 {
     m_toolbarWidget->changeArrowAndLineFromBar(line);
+}
+
+void ToolBar::initToolBar()
+{
+    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+    m_toolbarWidget = new ToolBarWidget(this);
+    QVBoxLayout *vLayout = new QVBoxLayout(this);
+    vLayout->setContentsMargins(1, 1, 1, 1);
+    vLayout->addStretch();
+    vLayout->addWidget(m_toolbarWidget);
+    vLayout->addStretch();
+    setLayout(vLayout);
+
+    connect(m_toolbarWidget, &ToolBarWidget::expandChanged, this, &ToolBar::setExpand);
+    connect(m_toolbarWidget, &ToolBarWidget::saveImage, this, &ToolBar::requestSaveScreenshot);
+    connect(m_toolbarWidget, &ToolBarWidget::closeButtonSignal, this, &ToolBar::closeButtonToMain);
+    connect(m_toolbarWidget, &ToolBarWidget::colorChanged, this, &ToolBar::updateColor);
+    connect(this, &ToolBar::shapePressed, m_toolbarWidget, &ToolBarWidget::shapePressed);
+    connect(this, &ToolBar::saveBtnPressed, m_toolbarWidget, &ToolBarWidget::saveBtnPressed);
+    connect(m_toolbarWidget, &ToolBarWidget::saveSpecifiedPath, this, &ToolBar::saveSpecifiedPath);
+    connect(m_toolbarWidget, &ToolBarWidget::closed, this, &ToolBar::closed);
+
+    connect(m_toolbarWidget, &ToolBarWidget::changeFunctionSignal, this, &ToolBar::currentFunctionMode);
+    connect(m_toolbarWidget, &ToolBarWidget::keyBoardCheckedSignal, this, &ToolBar::keyBoardCheckedToMainSlot);
+    connect(m_toolbarWidget, &ToolBarWidget::microphoneActionCheckedSignal, this, &ToolBar::microphoneActionCheckedToMainSlot);
+    connect(m_toolbarWidget, &ToolBarWidget::systemAudioActionCheckedSignal, this, &ToolBar::systemAudioActionCheckedToMainSlot);
+    connect(m_toolbarWidget, &ToolBarWidget::cameraActionCheckedSignal, this, &ToolBar::cameraActionCheckedToMain);
+    connect(m_toolbarWidget, &ToolBarWidget::mouseCheckedSignalToToolBar, this, &ToolBar::mouseCheckedToMain);
+    connect(m_toolbarWidget, &ToolBarWidget::gifActionCheckedSignal, this, &ToolBar::gifActionCheckedToMain);
+    connect(m_toolbarWidget, &ToolBarWidget::mp4ActionCheckedSignal, this, &ToolBar::mp4ActionCheckedToMain);
+    connect(m_toolbarWidget, &ToolBarWidget::frameRateChangedSignal, this, &ToolBar::frameRateChangedToMain);
+    connect(m_toolbarWidget, &ToolBarWidget::shotToolChangedSignal, this, &ToolBar::shotToolChangedToMain);
 }
 bool ToolBar::isButtonChecked()
 {

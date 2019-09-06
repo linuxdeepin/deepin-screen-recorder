@@ -33,7 +33,7 @@
 const int DRAG_BOUND_RADIUS = 8;
 const int SPACING = 12;
 const qreal RESIZEPOINT_WIDTH = 15;
-const QSize ROTATE_ICON_SIZE = QSize(24, 24);
+const QSize ROTATE_ICON_SIZE = QSize(30, 30);
 
 ShapesWidget::ShapesWidget(QWidget *parent)
     : QFrame(parent),
@@ -1284,8 +1284,8 @@ void ShapesWidget::paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bo
         painter.drawPixmap(QPointF(pos.x() - DRAG_BOUND_RADIUS,
                                    pos.y() - DRAG_BOUND_RADIUS), img);
     } else {
-        painter.drawPixmap(QPointF(pos.x() - 12,
-                                   pos.y() - 12), img);
+        painter.drawPixmap(QPointF(pos.x() - 17,
+                                   pos.y() - 10), img);
     }
 }
 
@@ -1542,13 +1542,13 @@ void ShapesWidget::paintEvent(QPaintEvent *)
             QPointF rotatePoint = getRotatePoint(m_selectedShape.mainPoints[0],
                                                  m_selectedShape.mainPoints[1], m_selectedShape.mainPoints[2],
                                                  m_selectedShape.mainPoints[3]);
-            QPointF middlePoint((m_selectedShape.mainPoints[0].x() +
-                                 m_selectedShape.mainPoints[2].x()) / 2,
-                                (m_selectedShape.mainPoints[0].y() +
-                                 m_selectedShape.mainPoints[2].y()) / 2);
+//            QPointF middlePoint((m_selectedShape.mainPoints[0].x() +
+//                                 m_selectedShape.mainPoints[2].x()) / 2,
+//                                (m_selectedShape.mainPoints[0].y() +
+//                                 m_selectedShape.mainPoints[2].y()) / 2);
 
-            painter.setPen(QColor("#01bdff"));
-            painter.drawLine(rotatePoint, middlePoint);
+//            painter.setPen(QColor("#01bdff"));
+//            painter.drawLine(rotatePoint, middlePoint);
 
             if (m_selectedShape.type == "oval" || m_selectedShape.type == "line") {
                 pen.setJoinStyle(Qt::MiterJoin);
@@ -1559,7 +1559,8 @@ void ShapesWidget::paintEvent(QPaintEvent *)
             }
 
             QPixmap rotatePointImg;
-            rotatePointImg = QIcon(":/resources/images/size/rotate.svg").pixmap(ROTATE_ICON_SIZE);
+//            rotatePointImg = QIcon(":/resources/images/size/rotate.svg").pixmap(ROTATE_ICON_SIZE);
+            rotatePointImg = QIcon(":/image/newUI/normal/icon_rotate.svg").pixmap(ROTATE_ICON_SIZE);
             rotatePointImg.setDevicePixelRatio(this->devicePixelRatioF());
             paintImgPoint(painter, rotatePoint, rotatePointImg, false);
 

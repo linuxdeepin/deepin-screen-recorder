@@ -291,6 +291,8 @@ private:
     bool m_needDrawSelectedPoint;
     bool m_needSaveScreenshot = false;
     bool m_interfaceExist = false;
+    bool m_toolBarInit = false;
+    bool m_sideBarInit = false;
     // Just use for debug.
     // int repaintCounter;
     CameraWidget *m_cameraWidget;

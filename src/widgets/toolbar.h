@@ -123,6 +123,7 @@ public slots:
     void microphoneActionCheckedToMainSlot(bool checked);
     void systemAudioActionCheckedToMainSlot(bool checked);
     void changeArrowAndLineFromMain(int line);
+    void initToolBar();
 protected:
     void paintEvent(QPaintEvent *e);
     void enterEvent(QEvent *e);
