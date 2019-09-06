@@ -21,6 +21,8 @@ public:
     void showAt(QPoint pos);
     int getRecordX();
     int getRecordY();
+    int getRecordWidth();
+    int getRecordHeight();
     void initCamera();
 signals:
 
@@ -43,9 +45,9 @@ private:
     QPoint m_windowTopLeftPoint;
     QPoint m_windowTopRightPoint;
     QPoint m_windowBottomLeftPoint;
-    QCamera *camera;//ÉãÏñÍ·
-    QCameraViewfinder *viewfinder; //ÉãÏñÍ·È¡¾°Æ÷²¿¼ş
-    QCameraImageCapture *imageCapture; //½ØÍ¼²¿¼ş
+    QCamera *camera;//æ‘„åƒå¤´
+    QCameraViewfinder *viewfinder; //æ‘„åƒå¤´å–æ™¯å™¨éƒ¨ä»¶
+    QCameraImageCapture *imageCapture; //æˆªå›¾éƒ¨ä»¶
     QTimer *timer_image_capture;
     QLabel *m_cameraUI;
 };

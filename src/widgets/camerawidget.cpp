@@ -11,8 +11,6 @@ CameraWidget::CameraWidget(QWidget *parent) : QWidget(parent)
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
     setAcceptDrops(true);
-    setMaximumSize(640, 360);
-    setMinimumSize(50, 50);
     m_cameraUI = new QLabel(this);
 //    camera = new QCamera; //摄像头
 //    viewfinder = new QCameraViewfinder(this);
@@ -48,7 +46,14 @@ int CameraWidget::getRecordY()
 {
     return recordY;
 }
-
+int CameraWidget::getRecordWidth()
+{
+    return recordWidth;
+}
+int CameraWidget::getRecordHeight()
+{
+    return recordHeight;
+}
 void CameraWidget::initCamera()
 {
     camera = new QCamera(this);

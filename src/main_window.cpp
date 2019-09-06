@@ -66,7 +66,10 @@ const int MainWindow::ACTION_RESIZE_RIGHT = 8;
 
 const int MainWindow::RECORD_OPTIONAL_PADDING = 12;
 
-
+const int MainWindow::CAMERA_WIDGET_MAX_WIDTH = 320;
+const int MainWindow::CAMERA_WIDGET_MAX_HEIGHT = 180;
+const int MainWindow::CAMERA_WIDGET_MIN_WIDTH = 80;
+const int MainWindow::CAMERA_WIDGET_MIN_HEIGHT = 45;
 DWIDGET_USE_NAMESPACE
 
 namespace {
@@ -705,10 +708,33 @@ void MainWindow::updateCameraWidgetPos()
 {
     if (!m_selectedCamera)
         return;
-    int x = recordX - m_cameraWidget->getRecordX();
-    int y = recordY - m_cameraWidget->getRecordY();
-    m_cameraWidget->showAt(QPoint(m_cameraWidget->x() + x, m_cameraWidget->y() + y));
-    m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
+    bool isScaled = recordWidth != m_cameraWidget->getRecordWidth() || recordHeight != m_cameraWidget->getRecordHeight();
+    if (isScaled) {
+        int cameraWidgetWidth = recordWidth * 2 / 5;
+        if (cameraWidgetWidth > CAMERA_WIDGET_MAX_WIDTH)
+            cameraWidgetWidth = CAMERA_WIDGET_MAX_WIDTH;
+
+        int cameraWidgetHeight = recordHeight * 1 / 4;
+        if (cameraWidgetHeight > CAMERA_WIDGET_MAX_HEIGHT)
+            cameraWidgetHeight = CAMERA_WIDGET_MAX_HEIGHT;
+        int tempHeight = cameraWidgetWidth * 9 / 16;
+        int tempWidth = cameraWidgetHeight * 16 / 9;
+        if (tempHeight <= CAMERA_WIDGET_MAX_HEIGHT && tempHeight >= CAMERA_WIDGET_MIN_HEIGHT && tempHeight <= recordHeight) {
+            cameraWidgetHeight = tempHeight;
+        } else {
+            cameraWidgetWidth = tempWidth;
+        }
+        int x = recordX + recordWidth - cameraWidgetWidth;
+        int y = recordY + recordHeight - cameraWidgetHeight;
+        m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
+        m_cameraWidget->resize(cameraWidgetWidth, cameraWidgetHeight);
+        m_cameraWidget->showAt(QPoint(x, y));
+    } else {
+        int x = recordX - m_cameraWidget->getRecordX();
+        int y = recordY - m_cameraWidget->getRecordY();
+        m_cameraWidget->showAt(QPoint(m_cameraWidget->x() + x, m_cameraWidget->y() + y));
+        m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
+    }
 }
 void MainWindow::changeFunctionButton(QString type)
 {
@@ -887,16 +913,24 @@ void MainWindow::changeCameraSelectEvent(bool checked)
 {
     m_selectedCamera = checked;
     if (checked) {
-//        int cameraWidgetWidth = recordWidth * 1 / 4;
-//        int cameraWidgetHeight = recordHeight * 1 / 4;
-//        int cameraWidgetSize = std::max(std::min(std::min(cameraWidgetWidth, cameraWidgetHeight), 500), 50);
-//        int x = recordX + recordWidth - cameraWidgetSize;
-//        int y = recordY + recordHeight - cameraWidgetSize;
-        int x = recordX + recordWidth - 480;
-        int y = recordY + recordHeight - 270;
+        int cameraWidgetWidth = recordWidth * 2 / 5;
+        if (cameraWidgetWidth > CAMERA_WIDGET_MAX_WIDTH)
+            cameraWidgetWidth = CAMERA_WIDGET_MAX_WIDTH;
+
+        int cameraWidgetHeight = recordHeight * 1 / 4;
+        if (cameraWidgetHeight > CAMERA_WIDGET_MAX_HEIGHT)
+            cameraWidgetHeight = CAMERA_WIDGET_MAX_HEIGHT;
+        int tempHeight = cameraWidgetWidth * 9 / 16;
+        int tempWidth = cameraWidgetHeight * 16 / 9;
+        if (tempHeight <= CAMERA_WIDGET_MAX_HEIGHT && tempHeight >= CAMERA_WIDGET_MIN_HEIGHT && tempHeight <= recordHeight) {
+            cameraWidgetHeight = tempHeight;
+        } else {
+            cameraWidgetWidth = tempWidth;
+        }
+        int x = recordX + recordWidth - cameraWidgetWidth;
+        int y = recordY + recordHeight - cameraWidgetHeight;
         m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
-//        m_cameraWidget->resize(cameraWidgetSize, cameraWidgetSize);
-        m_cameraWidget->resize(480, 270);
+        m_cameraWidget->resize(cameraWidgetWidth, cameraWidgetHeight);
         m_cameraWidget->showAt(QPoint(x, y));
     } else {
         m_cameraWidget->hide();

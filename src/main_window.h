@@ -89,6 +89,11 @@ class MainWindow : public QWidget
 
     static const int RECORD_OPTIONAL_PADDING;
 
+    static const int CAMERA_WIDGET_MAX_WIDTH;
+    static const int CAMERA_WIDGET_MAX_HEIGHT;
+    static const int CAMERA_WIDGET_MIN_WIDTH;
+    static const int CAMERA_WIDGET_MIN_HEIGHT;
+
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow()

@@ -229,7 +229,7 @@ void SubToolWidget::initRecordLabel()
     });
 
     ToolButton *cameraButton = new ToolButton();
-    cameraButton->setDisabled(!CameraProcess::checkCameraAvailability());
+    cameraButton->setDisabled(CameraProcess::checkCameraAvailability());
     pa = cameraButton->palette();
     pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
     pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
