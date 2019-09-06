@@ -12,16 +12,24 @@ CameraWidget::CameraWidget(QWidget *parent) : QWidget(parent)
     setMouseTracking(true);
     setAcceptDrops(true);
     m_cameraUI = new QLabel(this);
-//    camera = new QCamera; //摄像头
-//    viewfinder = new QCameraViewfinder(this);
-//    imageCapture = new QCameraImageCapture(camera); //截图部件
 
     QHBoxLayout *t_hlayout = new QHBoxLayout(this);
     t_hlayout->addWidget(m_cameraUI);
     this->setLayout(t_hlayout);
-//    viewfinder->show();
     initCamera();
 }
+
+CameraWidget::~CameraWidget()
+{
+    camera->stop();
+    timer_image_capture->stop();
+    delete camera;
+    delete viewfinder;
+    delete imageCapture;
+    delete timer_image_capture;
+    delete m_cameraUI;
+}
+
 
 void CameraWidget::setRecordRect(int x, int y, int width, int height)
 {
@@ -58,9 +66,17 @@ void CameraWidget::initCamera()
 {
     camera = new QCamera(this);
     camera->setCaptureMode(QCamera::CaptureStillImage);
+    imageCapture = new QCameraImageCapture(camera);
+
+    timer_image_capture = new QTimer(this);
+    connect(timer_image_capture, &QTimer::timeout, this, &CameraWidget::captureImage);
+}
+
+void CameraWidget::cameraStart()
+{
+    timer_image_capture->start(50);
     camera->start();
 
-    imageCapture = new QCameraImageCapture(camera);
     if (imageCapture->isCaptureDestinationSupported(QCameraImageCapture::CaptureToBuffer)) {
         imageCapture->setCaptureDestination(QCameraImageCapture::CaptureToBuffer);
         qDebug() << imageCapture->supportedBufferFormats();
@@ -72,9 +88,15 @@ void CameraWidget::initCamera()
         connect(imageCapture, &QCameraImageCapture::imageCaptured, this, &CameraWidget::processCapturedImage);
     }
 
-    timer_image_capture = new QTimer(this);
-    connect(timer_image_capture, &QTimer::timeout, this, &CameraWidget::captureImage);
-    timer_image_capture->start(50);
+    else {
+        return;
+    }
+}
+
+void CameraWidget::cameraStop()
+{
+    timer_image_capture->stop();
+    camera->stop();
 }
 
 void CameraWidget::captureImage()
@@ -85,7 +107,7 @@ void CameraWidget::captureImage()
 void CameraWidget::processCapturedImage(int request_id, const QImage &img)
 {
     QImage t_image = img.scaled(this->width(), this->height(), Qt::KeepAspectRatioByExpanding, Qt::FastTransformation);
-    m_cameraUI->setPixmap(QPixmap::fromImage(img));
+    m_cameraUI->setPixmap(QPixmap::fromImage(t_image));
 }
 void CameraWidget::enterEvent(QEvent *e)
 {
@@ -95,10 +117,10 @@ void CameraWidget::enterEvent(QEvent *e)
 
 void CameraWidget::paintEvent(QPaintEvent *e)
 {
-    QPainter painter(this);
-    painter.setPen(QColor(255, 255, 255, 255));
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.drawRect(rect());
+//    QPainter painter(this);
+//    painter.setPen(QColor(255, 255, 255, 255));
+//    painter.setRenderHint(QPainter::Antialiasing);
+//    painter.drawRect(rect());
 
     QWidget::paintEvent(e);
 }
@@ -120,17 +142,43 @@ void CameraWidget::mousePressEvent(QMouseEvent *event)
 void CameraWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() & Qt::LeftButton) {
-        //移动中的鼠标位置相对于初始位置的相对位置.
-        QPoint relativePos = event->globalPos() - m_startPoint;
-        QRect recordRect = QRect(recordX, recordY, recordWidth, recordHeight);
-        QPoint removePos = m_windowTopLeftPoint + relativePos;
-        QPoint removeTopRightPos = m_windowTopRightPoint + relativePos;
-        QPoint removeBottomLeftPos = m_windowBottomLeftPoint + relativePos;
-        //然后移动窗体即可.
-        if (recordRect.contains(removePos) && recordRect.contains(removeTopRightPos) && recordRect.contains(removeBottomLeftPos) ) {
-            this->move(removePos);
-        }
+//        //移动中的鼠标位置相对于初始位置的相对位置.
+//        QPoint relativePos = event->globalPos() - m_startPoint;
+//        QRect recordRect = QRect(recordX, recordY, recordWidth, recordHeight);
+//        QPoint removePos = m_windowTopLeftPoint + relativePos;
+//        QPoint removeTopRightPos = m_windowTopRightPoint + relativePos;
+//        QPoint removeBottomLeftPos = m_windowBottomLeftPoint + relativePos;
+//        //然后移动窗体即可.
+//        if (recordRect.contains(removePos) &&
+//                recordRect.contains(removeTopRightPos) &&
+//                recordRect.contains(removeBottomLeftPos) ) {
+//            this->move(removePos);
+//        }
+
+//        else {
+
+//        }
+        QSize size = this->size();
+        QSize parentSize(recordWidth, recordHeight);
+        QPoint curPos = QPoint(event->globalX() - size.width() / 2,
+                               event->globalY() - size.height() / 2);
+        if (curPos.x() < recordX) //left
+            curPos.setX(recordX);
+
+        if (curPos.y() < recordY) //top
+            curPos.setY(recordY);
+
+        if ( (curPos.x() + size.width()) > (recordX + parentSize.width())) //right
+            curPos.setX(recordX + parentSize.width() - size.width());
+
+        if ( (curPos.y() + size.height()) > (recordY + parentSize.height())) //bottom
+            curPos.setY(recordY + parentSize.height() - size.height());
+
+//        QPoint resultPos = QPoint(curPos.x() - size.width() / 2,
+//                                  curPos.y() - size.height() / 2);
+        this->move(curPos);
     }
+    QWidget::mouseMoveEvent(event);
 }
 
 void CameraWidget::mouseReleaseEvent(QMouseEvent *event)

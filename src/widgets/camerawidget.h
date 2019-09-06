@@ -17,6 +17,7 @@ class CameraWidget : public QWidget
     Q_OBJECT
 public:
     explicit CameraWidget(QWidget *parent = nullptr);
+    ~CameraWidget();
     void setRecordRect(int x, int y, int width, int height);
     void showAt(QPoint pos);
     int getRecordX();
@@ -24,6 +25,8 @@ public:
     int getRecordWidth();
     int getRecordHeight();
     void initCamera();
+    void cameraStart();
+    void cameraStop();
 signals:
 
 public slots:

@@ -932,7 +932,9 @@ void MainWindow::changeCameraSelectEvent(bool checked)
         m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
         m_cameraWidget->resize(cameraWidgetWidth, cameraWidgetHeight);
         m_cameraWidget->showAt(QPoint(x, y));
+        m_cameraWidget->cameraStart();
     } else {
+        m_cameraWidget->cameraStop();
         m_cameraWidget->hide();
     }
 }
