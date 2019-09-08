@@ -39,7 +39,6 @@
         <file>resources/images/action/close_hover.png</file>
         <file>resources/images/action/close_normal.png</file>
         <file>resources/images/action/magnifier.png</file>
-        <file>resources/qss/zoomindicator.qss</file>
         <file>resources/images/action/center_rect.png</file>
         <file>resources/images/size/blur_checked.png</file>
         <file>resources/images/size/blur_hover.png</file>
@@ -58,8 +57,6 @@
         <file>resources/images/size/thick_checked.png</file>
         <file>resources/images/size/thick_hover.png</file>
         <file>resources/images/size/thick_normal.png</file>
-        <file>resources/qss/subtoolbar.qss</file>
-        <file>resources/qss/majtoolbar.qss</file>
         <file>resources/images/size/arrow_checked.png</file>
         <file>resources/images/size/arrow_hover.png</file>
         <file>resources/images/size/arrow_normal.png</file>
@@ -89,13 +86,9 @@
         <file>resources/images/size/line_thick_checked.png</file>
         <file>resources/images/size/line_thick_hover.png</file>
         <file>resources/images/size/line_thick_normal.png</file>
-        <file>resources/qss/fontsizewidget.qss</file>
         <file>resources/images/save/slider_hover.png</file>
         <file>resources/images/save/slider_pressed.png</file>
-        <file>resources/qss/toolsavebutton.qss</file>
-        <file>resources/qss/savetips.qss</file>
         <file>resources/images/action/sizetip.png</file>
-        <file>resources/qss/textbutton.qss</file>
         <file>resources/images/color/color1_checked.png</file>
         <file>resources/images/color/color1_hover.png</file>
         <file>resources/images/color/color1_normal.png</file>
@@ -144,7 +137,6 @@
         <file>resources/images/color/color16_checked.png</file>
         <file>resources/images/color/color16_hover.png</file>
         <file>resources/images/color/color16_normal.png</file>
-        <file>resources/qss/colorbtn.qss</file>
         <file>resources/images/action/save_normal.png</file>
         <file>resources/images/action/save_hover.png</file>
         <file>resources/images/action/save_checked.png</file>

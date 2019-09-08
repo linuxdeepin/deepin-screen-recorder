@@ -1897,9 +1897,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             tmpPos.setY(curPos.y() + CURSOR_HEIGHT);
                         }
 
-                        m_zoomIndicator->showMagnifier(QPoint(
-                                                           std::max(tmpPos.x() - topLeft.x(), 0),
-                                                           std::max(tmpPos.y() - topLeft.y(), 0)));
+//                        m_zoomIndicator->showMagnifier(QPoint(
+//                                                           std::max(tmpPos.x() - topLeft.x(), 0),
+//                                                           std::max(tmpPos.y() - topLeft.y(), 0)));
                     }
 
                 }
