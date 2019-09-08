@@ -24,6 +24,7 @@
 #include <DBlurEffectWidget>
 #include <QEvent>
 #include <QDebug>
+#include <DImageButton>
 
 #include "colortoolwidget.h"
 #include "shottoolwidget.h"
@@ -48,7 +49,7 @@ private:
     QLabel *m_hSeparatorLine;
     ColorToolWidget *m_colorTool;
     ShotToolWidget *m_shotTool;
-    ToolButton *m_closeButton;
+    DImageButton *m_closeButton;
     bool  m_expanded;
 };
 

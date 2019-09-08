@@ -81,7 +81,7 @@ private:
 
     MainToolWidget *m_mainTool;
     SubToolWidget *m_subTool;
-    ToolButton *m_closeButton;
+    DImageButton *m_closeButton;
 
     bool  m_expanded;
 };

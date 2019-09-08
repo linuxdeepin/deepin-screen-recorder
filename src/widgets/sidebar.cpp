@@ -69,13 +69,20 @@ SideBarWidget::SideBarWidget(QWidget *parent)
 
     QPixmap pixmap(":/image/newUI/normal/close-normal.svg");
 
-    m_closeButton = new ToolButton(this);
-    m_closeButton->setIconSize(QSize(40, 40));
-    m_closeButton->setIcon(QIcon(":/image/newUI/normal/close-normal.svg"));
-    m_closeButton->resize(pixmap.size());
-    /* 设置按钮的有效区域 */
-    m_closeButton->setMask(QBitmap(pixmap.mask()));
+//    m_closeButton = new ToolButton(this);
+//    m_closeButton->setIconSize(QSize(40, 40));
+//    m_closeButton->setIcon(QIcon(":/image/newUI/normal/close-normal.svg"));
+//    m_closeButton->resize(pixmap.size());
+//    /* 设置按钮的有效区域 */
+//    m_closeButton->setMask(QBitmap(pixmap.mask()));
 //    m_closeButton->setStyleSheet(button_style);
+
+    m_closeButton = new DImageButton(this);
+//    m_closeButton->setIconSize(QSize(40, 40));
+//    m_closeButton->setIcon(QIcon(":/image/newUI/normal/close-normal.svg"));
+//    m_closeButton->resize(pixmap.size());
+    m_closeButton->setHoverPic(":/image/newUI/hover/close-hover.svg");
+    m_closeButton->setNormalPic(":/image/newUI/normal/close-normal.svg");
 
     QVBoxLayout *VLayout = new QVBoxLayout();
     VLayout->setMargin(0);
@@ -86,7 +93,7 @@ SideBarWidget::SideBarWidget(QWidget *parent)
     setLayout(VLayout);
 
     connect(m_shotTool, &ShotToolWidget::changeArrowAndLine, this, &SideBarWidget::changeArrowAndLineEvent);
-    connect(m_closeButton, &ToolButton::clicked, this, &SideBarWidget::closeSideBar);
+    connect(m_closeButton, &DImageButton::clicked, this, &SideBarWidget::closeSideBar);
 }
 
 SideBarWidget::~SideBarWidget()
