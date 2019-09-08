@@ -26,10 +26,10 @@ TopTips::TopTips(QWidget *parent)
     : QLabel(parent)
 {
     setFixedSize(75, 20);
-    this->setStyleSheet(" TopTips { background-color: transparent;"
-                        "border-image: url(:/resources/images/action/sizetip.png)  no-repeat;"
-                        "color: white;"
-                        "font-size: 12px;}");
+//    this->setStyleSheet(" TopTips { background-color: transparent;"
+//                        "border-image: url(:/resources/images/action/sizetip.png)  no-repeat;"
+//                        "color: white;"
+//                        "font-size: 12px;}");
 }
 
 void TopTips::setContent(QString widthXHeight)

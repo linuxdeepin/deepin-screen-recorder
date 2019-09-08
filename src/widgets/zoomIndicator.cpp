@@ -38,7 +38,7 @@ ZoomIndicator::ZoomIndicator(QWidget *parent)
     : QLabel(parent)
 {
     setFixedSize(BACKGROUND_SIZE);
-    setStyleSheet(getFileContent(":/resources/qss/zoomindicator.qss"));
+//    setStyleSheet(getFileContent(":/resources/qss/zoomindicator.qss"));
     setAttribute(Qt::WA_TransparentForMouseEvents);
 
     m_centerRect = QRect((BACKGROUND_SIZE.width() - CENTER_RECT_WIDTH) / 2 + 1,

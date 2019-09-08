@@ -107,7 +107,7 @@ void SubToolWidget::initRecordLabel()
     pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
     pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
     audioButton->setPalette(pa);
-    audioButton->setStyleSheet(audio_button_style);
+//    audioButton->setStyleSheet(audio_button_style);
 
     audioButton->setObjectName("AudioButton");
     audioButton->setText(tr(" "));
@@ -308,7 +308,7 @@ void SubToolWidget::initRecordLabel()
     formatButton->setText(tr("Webm"));
     formatButton->setIconSize(QSize(24, 24));
     formatButton->setIcon(QIcon(":/image/newUI/normal/format_normal.svg"));
-    formatButton->setStyleSheet(format_button_style);
+//    formatButton->setStyleSheet(format_button_style);
     rectBtnGroup->addButton(formatButton);
 
     btnList.append(formatButton);
@@ -371,7 +371,7 @@ void SubToolWidget::initRecordLabel()
     fpsButton->setIcon(QIcon(":/image/newUI/normal/Resolving power_normal.svg"));
     rectBtnGroup->addButton(fpsButton);
     fpsButton->setFixedSize(TOOL_BUTTON_SIZE);
-    fpsButton->setStyleSheet(fps_button_style);
+//    fpsButton->setStyleSheet(fps_button_style);
     btnList.append(fpsButton);
 
     //添加帧率选择下拉列表

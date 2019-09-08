@@ -75,7 +75,7 @@ SideBarWidget::SideBarWidget(QWidget *parent)
     m_closeButton->resize(pixmap.size());
     /* 设置按钮的有效区域 */
     m_closeButton->setMask(QBitmap(pixmap.mask()));
-    m_closeButton->setStyleSheet(button_style);
+//    m_closeButton->setStyleSheet(button_style);
 
     QVBoxLayout *VLayout = new QVBoxLayout();
     VLayout->setMargin(0);

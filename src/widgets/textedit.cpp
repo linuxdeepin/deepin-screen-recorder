@@ -75,8 +75,14 @@ int TextEdit::getIndex()
 void TextEdit::setColor(QColor c)
 {
     m_textColor = c;
-    setStyleSheet(QString("TextEdit {background-color:  transparent;"
-                          " color: %1; border: none;}").arg(m_textColor.name()));
+//    setStyleSheet(QString("TextEdit {background-color:  transparent;"
+//                          " color: %1; border: none;}").arg(m_textColor.name()));
+    QPalette pa = this->palette();
+    pa.setColor(QPalette::Base, QColor(255, 255, 255, 0));
+    pa.setColor(QPalette::Dark, QColor(255, 255, 255, 0));
+    pa.setColor(QPalette::Light, QColor(255, 255, 255, 0));
+    pa.setColor(QPalette::Text, c);
+    this->setPalette(pa);
     this->updateGeometry();
 }
 
