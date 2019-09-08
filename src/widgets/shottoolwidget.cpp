@@ -32,10 +32,11 @@
 #include <QDebug>
 #include <DFrame>
 
+DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int TOOLBAR_HEIGHT = 203;
+const int TOOLBAR_HEIGHT = 200;
 const int TOOLBAR_WIDTH = 40;
 const int BUTTON_SPACING = 3;
 const int SHOT_BUTTON_SPACING = 3;

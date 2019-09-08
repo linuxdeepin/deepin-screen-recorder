@@ -37,7 +37,7 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const int TOOLBAR_HEIGHT = 43;
-const int TOOLBAR_WIDTH = 375;
+const int TOOLBAR_WIDTH = 380;
 const int BUTTON_SPACING = 1;
 const int SHOT_BUTTON_SPACING = 2;
 const int COLOR_NUM = 16;
@@ -305,9 +305,10 @@ void SubToolWidget::initRecordLabel()
     formatButton->setFixedSize(MAX_TOOL_BUTTON_SIZE);
     DFontSizeManager::instance()->bind(formatButton, DFontSizeManager::T9);
     formatButton->setObjectName("FormatButton");
-    formatButton->setText(tr("Webm"));
+    formatButton->setText(tr("fmt"));
     formatButton->setIconSize(QSize(24, 24));
     formatButton->setIcon(QIcon(":/image/newUI/normal/format_normal.svg"));
+    formatButton->setContentsMargins(0, 20, 20, 20);
 //    formatButton->setStyleSheet(format_button_style);
     rectBtnGroup->addButton(formatButton);
 
@@ -367,10 +368,10 @@ void SubToolWidget::initRecordLabel()
 
     fpsButton->setObjectName("FpsButton");
     fpsButton->setText(tr("24"));
-    fpsButton->setIconSize(QSize(24, 24));
+    fpsButton->setIconSize(QSize(20, 20));
     fpsButton->setIcon(QIcon(":/image/newUI/normal/Resolving power_normal.svg"));
     rectBtnGroup->addButton(fpsButton);
-    fpsButton->setFixedSize(TOOL_BUTTON_SIZE);
+    fpsButton->setFixedSize(QSize(75, 40));
 //    fpsButton->setStyleSheet(fps_button_style);
     btnList.append(fpsButton);
 

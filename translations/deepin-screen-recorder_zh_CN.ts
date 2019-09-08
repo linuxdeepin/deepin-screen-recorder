@@ -337,10 +337,6 @@ select the area to record</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Webm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>24</source>
         <translation type="unfinished"></translation>
     </message>
@@ -358,6 +354,10 @@ select the area to record</source>
     </message>
     <message>
         <source>30</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>fmt</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -35,9 +35,9 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const int TOOLBAR_HEIGHT = 47;
-const int TOOLBAR_WIDTH = 505;
+const int TOOLBAR_WIDTH = 510;
 
-const QSize TOOLBAR_WIDGET_SIZE = QSize(505, 47);
+const QSize TOOLBAR_WIDGET_SIZE = QSize(510, 47);
 const int BUTTON_SPACING = 3;
 const int BTN_RADIUS = 3;
 }
