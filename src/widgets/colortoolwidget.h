@@ -22,6 +22,7 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 #include <DLabel>
+#include "toolbutton.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -46,6 +47,10 @@ private:
     QVBoxLayout *m_baseLayout;
     bool m_isChecked;
     QString m_function;
+    ToolButton *m_redBtn;
+    ToolButton *m_yellowBtn;
+    ToolButton *m_blueBtn;
+    ToolButton *m_greenBtn;
 };
 
 #endif // COLORTOOLWIDGET_H

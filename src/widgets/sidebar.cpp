@@ -161,8 +161,8 @@ void SideBar::setExpand(bool expand, QString shapeType)
 
 void SideBar::showAt(QPoint pos)
 {
-//    if (!isVisible())
-    this->show();
+    if (!isVisible())
+        this->show();
 
     move(pos.x(), pos.y());
 }
@@ -180,6 +180,11 @@ void SideBar::initSideBar()
 
     connect(m_sidebarWidget, &SideBarWidget::changeArrowAndLineEvent, this, &SideBar::changeArrowAndLineToMain);
     connect(m_sidebarWidget, &SideBarWidget::closeSideBar, this, &SideBar::closeSideBarToMain);
+}
+
+void SideBar::setColorFunc(const QString &func)
+{
+    m_sidebarWidget->changeShotToolWidget(func);
 }
 
 void SideBar::paintEvent(QPaintEvent *e)

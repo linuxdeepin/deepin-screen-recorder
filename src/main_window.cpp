@@ -546,9 +546,12 @@ void MainWindow::showReleaseFeedback(int x, int y)
 
 void MainWindow::responseEsc()
 {
-    if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
-        QApplication::quit();
+    if (m_functionType == 0) {
+        if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
+            QApplication::quit();
+        }
     }
+
 }
 
 void MainWindow::compositeChanged()

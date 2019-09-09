@@ -22,8 +22,8 @@
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int _BUTTON_HEIGHT = 40;
-const int _BUTTON_WIDTH = 60;
+const int _BUTTON_HEIGHT = 35;
+const int _BUTTON_WIDTH = 45;
 
 const int LONG_BUTTON_HEIGHT = 40;
 const int LONG_BUTTON_WIDTH = 80;
@@ -36,18 +36,21 @@ KeyButtonWidget::KeyButtonWidget(QWidget *parent) : DBlurEffectWidget(parent)
     setAttribute(Qt::WA_ShowWithoutActivating);
     setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
 
-    setBlurRectXRadius(10);
-    setBlurRectYRadius(10);
+    setBlurRectXRadius(15);
+    setBlurRectYRadius(15);
     setRadius(30);
     setMode(DBlurEffectWidget::GaussianBlur);
     setBlurEnabled(true);
 //    setBlendMode(DBlurEffectWidget::InWindowBlend);
-    setMaskColor(QColor(255, 255, 255, 200));
+    setMaskColor(QColor(255, 255, 255, 140));
     //设置透明效果
     setFixedWidth(_BUTTON_WIDTH);
     setFixedHeight(_BUTTON_HEIGHT);
     m_word = new DLabel();
-    DFontSizeManager::instance()->bind(m_word, DFontSizeManager::T6);
+    DFontSizeManager::instance()->bind(m_word, DFontSizeManager::T7);
+    QPalette pa;
+    pa.setColor(QPalette::Text, Qt::black);
+    this->setPalette(pa);
 //    QFont t_wordFont;
 //    t_wordFont.setPixelSize(13);
 //    m_word->setFont(t_wordFont);
