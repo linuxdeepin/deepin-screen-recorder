@@ -198,6 +198,7 @@ void MainWindow::initAttributes()
     m_sideBar = new SideBar(this);
     m_sideBar->hide();
 
+
     connect(m_sideBar, &SideBar::closeSideBarToMain, this, [ = ] {
         if (m_sideBar->isVisible())
         {
@@ -306,6 +307,16 @@ void MainWindow::initAttributes()
     // repaintCounter = 0;
     m_cameraWidget = new CameraWidget(this);
     hideCameraWidget();
+
+    m_menuController = new MenuController(this);
+
+    connect(m_menuController, &MenuController::saveAction,
+            this, &MainWindow::saveScreenShot);
+    connect(m_menuController, &MenuController::closeAction,
+            this, &MainWindow::exitApp);
+//    connect(m_menuController, &MenuController::unDoAction,
+//            this, &ShapesWidget::undoDrawShapes);
+
 }
 
 void MainWindow::initResource()
