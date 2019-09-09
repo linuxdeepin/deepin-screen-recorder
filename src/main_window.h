@@ -286,6 +286,7 @@ private:
     SideBar *m_sideBar; //截图功能侧边栏功能
     ZoomIndicator *m_zoomIndicator;
     bool m_isShapesWidgetExist = false;
+    bool m_isSideBarInside = false;
 
     DBusZone *m_hotZoneInterface;
     DBusNotify *m_notifyDBInterface;

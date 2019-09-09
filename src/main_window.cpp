@@ -590,6 +590,7 @@ void MainWindow::updateToolBarPos()
 
 void MainWindow::updateSideBarPos()
 {
+    m_isSideBarInside = false;
     if (m_sideBarInit == false) {
         m_sideBar->initSideBar();
         m_sideBarInit = true;
@@ -601,7 +602,12 @@ void MainWindow::updateSideBarPos()
 
     if (m_sideBar->height() < recordHeight) {
         if (sidebarPoint.x() >= m_screenWidth - m_sideBar->width() - SIDEBAR_X_SPACING) {
+            //修改属性栏在截图区域内部，无法触发的bug
             sidebarPoint.setX(recordX + recordWidth - m_sideBar->width() - SIDEBAR_X_SPACING);
+            m_isSideBarInside = true;
+//            m_sideBar->hide();
+//            m_shapesWidget->updateSideBarPosition();
+//            return;
         }
     }
 
@@ -1100,6 +1106,11 @@ void MainWindow::updateMultiKeyBoardPos()
 
 void MainWindow::changeShotToolEvent(const QString &func)
 {
+
+    if (!m_sideBar->isVisible()) {
+        updateSideBarPos();
+    }
+
     if (m_isShapesWidgetExist && func != "color") {
         m_shapesWidget->setCurrentShape(func);
     } else if (func != "color") {
@@ -1107,10 +1118,6 @@ void MainWindow::changeShotToolEvent(const QString &func)
         m_isShapesWidgetExist = true;
     }
 
-
-    if (!m_sideBar->isVisible()) {
-        updateSideBarPos();
-    }
     m_sideBar->changeShotToolFunc(func);
 }
 
@@ -2271,12 +2278,27 @@ void MainWindow::startCountdown()
 //    } else {
 //        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
 //    }
-    recordProcess.setFrameRate(m_frameRate);
+
+    Settings *t_settings = new Settings();
+    QVariant t_saveGifVar = t_settings->getOption("save_as_gif");
+    QVariant t_frameRateVar = t_settings->getOption("mkv_framerate");
+    //保持帧数的配置文件判断
+    int t_frameRate = t_frameRateVar.toString().toInt();
+
+    bool t_saveGif = false;
+    //保持格式的配置文件判断
+    if (t_saveGifVar.toString() == "true") {
+        t_saveGif = true;
+    } else {
+        t_saveGif = false;
+    }
+
+    recordProcess.setFrameRate(t_frameRate);
     if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
-        if (m_gifMode == true && m_mp4Mode == false) {
+        if (t_saveGif) {
             qDebug() << "record format is gif";
             recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
-        } else if (m_gifMode == false && m_mp4Mode == true) {
+        } else if (t_saveGif == false) {
             qDebug() << "record format is mp4";
             recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
         }
@@ -2404,7 +2426,14 @@ void MainWindow::initShapeWidget(QString type)
         m_shapesWidget->setCurrentShape(type);
 
     m_shapesWidget->show();
-    m_shapesWidget->setFixedSize(recordWidth - 4, recordHeight - 4);
+    if (m_isSideBarInside == false) {
+        m_shapesWidget->setFixedSize(recordWidth - 4, recordHeight - 4);
+    }
+
+    else {
+        m_shapesWidget->setFixedSize(recordWidth - m_sideBar->width(), recordHeight - 4);
+    }
+
     m_shapesWidget->move(recordX + 2, recordY + 2);
 
     updateToolBarPos();

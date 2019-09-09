@@ -338,8 +338,10 @@ void SubToolWidget::initRecordLabel()
 
     if (t_saveGif == true) {
         gifAction->setChecked(true);
+        gifAction->trigger();
     } else {
         mp4Action->setChecked(true);
+        mp4Action->trigger();
     }
 
     connect(gifAction, &QAction::triggered, this, [ = ] (bool checked) {

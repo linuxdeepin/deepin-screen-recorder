@@ -161,8 +161,8 @@ void SideBar::setExpand(bool expand, QString shapeType)
 
 void SideBar::showAt(QPoint pos)
 {
-    if (!isVisible())
-        this->show();
+//    if (!isVisible())
+    this->show();
 
     move(pos.x(), pos.y());
 }

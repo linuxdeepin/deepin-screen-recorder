@@ -26,6 +26,7 @@
 #include "../utils/shapesutils.h"
 #include "../utils/baseutils.h"
 #include "../widgets/textedit.h"
+#include "../widgets/sidebar.h"
 #include "../menucontroller/menucontroller.h"
 
 class ShapesWidget : public QFrame
@@ -101,6 +102,7 @@ public slots:
     void updateCursorShape();
     void menuSaveSlot();
     void menuCloseSlot();
+    void updateSideBarPosition();
 
 protected:
     void mousePressEvent(QMouseEvent *e);
@@ -139,6 +141,7 @@ private:
     QString m_currentType = "rectangle";
     QColor m_penColor;
     bool m_clearAllTextBorder = false;
+    bool m_sideBarInit = false;
 
     Toolshape m_currentShape;
     Toolshape m_selectedShape;
@@ -148,6 +151,7 @@ private:
     void updateTextRect(TextEdit *edit, QRectF newRect);
     Toolshapes m_shapes;
     MenuController *m_menuController;
+    SideBar *m_sideBar;
 
     void paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bool isResize = true);
     void paintRect(QPainter &painter, FourPoints rectFPoints, int index,

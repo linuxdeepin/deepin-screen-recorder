@@ -67,6 +67,8 @@ ShapesWidget::ShapesWidget(QWidget *parent)
             this, &ShapesWidget::menuNoFocus);
     connect(ConfigSettings::instance(), &ConfigSettings::shapeConfigChanged,
             this, &ShapesWidget::updateSelectedShape);
+    m_sideBar = new SideBar(this);
+    m_sideBar->hide();
 }
 
 ShapesWidget::~ShapesWidget() {}
@@ -1698,4 +1700,22 @@ void ShapesWidget::menuSaveSlot()
 void ShapesWidget::menuCloseSlot()
 {
     emit closeFromMenu();
+}
+
+void ShapesWidget::updateSideBarPosition()
+{
+    QPoint sidebarPoint;
+    if (m_sideBarInit == false) {
+        m_sideBar->initSideBar();
+        m_sideBarInit = true;
+    }
+    qDebug() << this->pos();
+
+//    int t_posX = this->x();
+//    int t_posY = this->y();
+//    int t_width = this->width();
+//    int t_height = this->height();
+//    sidebarPoint = QPoint(t_posX + t_width - m_sideBar->width() - 3, t_posY + t_height / 2 - m_sideBar->height() / 2);
+//    qDebug() << "sidebar pos" << QPoint(mapToGlobal(sidebarPoint));
+    m_sideBar->showAt(QPoint(this->pos()));
 }
