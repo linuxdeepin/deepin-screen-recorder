@@ -72,7 +72,9 @@ QCursor setCursorShape(QString cursorName, int colorIndex)
 
         customShape = QCursor(textCursor, int(5 * ration), int(5 * ration));
     } else if  (cursorName == "line") {
-        QPixmap colorPic = QIcon(QString(":/image/mouse_style/"
+//        QPixmap colorPic = QIcon(QString(":/image/mouse_style/"
+//                                         "color_pen/color%1.svg").arg(colorIndex)).pixmap(COLORPEN_SIZE);
+        QPixmap colorPic = QIcon(QString(":/image/"
                                          "color_pen/color%1.svg").arg(colorIndex)).pixmap(COLORPEN_SIZE);
         colorPic.setDevicePixelRatio(ration);
 

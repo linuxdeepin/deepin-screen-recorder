@@ -158,6 +158,7 @@ void ColorToolWidget::initColorLabel()
             emit colorChecked("red");
 
             ConfigSettings::instance()->setValue(m_function, "color_index", 0);
+            ConfigSettings::instance()->setValue("common", "color_index", 0);
         }
 
         else {
@@ -179,6 +180,7 @@ void ColorToolWidget::initColorLabel()
             m_yellowBtn->update();
             emit colorChecked("yellow");
             ConfigSettings::instance()->setValue(m_function, "color_index", 1);
+            ConfigSettings::instance()->setValue("common", "color_index", 1);
         }
 
         else {
@@ -201,6 +203,7 @@ void ColorToolWidget::initColorLabel()
             emit colorChecked("blue");
 
             ConfigSettings::instance()->setValue(m_function, "color_index", 2);
+            ConfigSettings::instance()->setValue("common", "color_index", 2);
         }
 
         else {
@@ -223,6 +226,7 @@ void ColorToolWidget::initColorLabel()
             emit colorChecked("green");
 
             ConfigSettings::instance()->setValue(m_function, "color_index", 3);
+            ConfigSettings::instance()->setValue("common", "color_index", 3);
         }
 
         else {
