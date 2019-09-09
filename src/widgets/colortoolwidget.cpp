@@ -30,7 +30,7 @@
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int TOOLBAR_HEIGHT = 147;
+const int TOOLBAR_HEIGHT = 155;
 const int TOOLBAR_WIDTH = 40;
 const int BUTTON_SPACING = 2;
 const int COLOR_NUM = 16;
@@ -139,7 +139,7 @@ void ColorToolWidget::initColorLabel()
 
         buttonGroup->addButton(toolBtnList[k]);
     }
-
+    m_baseLayout->addSpacing(5);
     setLayout(m_baseLayout);
 
     connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),

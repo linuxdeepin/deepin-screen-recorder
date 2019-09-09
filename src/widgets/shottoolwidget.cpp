@@ -36,7 +36,7 @@ DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int TOOLBAR_HEIGHT = 200;
+const int TOOLBAR_HEIGHT = 203;
 const int TOOLBAR_WIDTH = 40;
 const int BUTTON_SPACING = 3;
 const int SHOT_BUTTON_SPACING = 3;
@@ -1130,7 +1130,6 @@ void ShotToolWidget::initTextLabel()
 
     DSlider *t_textFontSize = new DSlider();
     t_textFontSize->setOrientation(Qt::Vertical);
-//    t_textFontSize->setTickPosition(QSlider::NoTicks);
     t_textFontSize->setFixedSize(TOOL_SLIDER_SIZE);
     t_textFontSize->setMinimum(0);
     t_textFontSize->setMaximum(11);
