@@ -66,7 +66,7 @@ void SubToolWidget::initWidget()
     initVirtualCard();
     initRecordLabel();
     initShotLabel();
-    setCurrentWidget(m_recordSubTool);
+    setCurrentWidget(m_shotSubTool);
 }
 
 void SubToolWidget::initRecordLabel()

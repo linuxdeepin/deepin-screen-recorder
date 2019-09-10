@@ -170,5 +170,5 @@ void MainToolWidget::initMainLabel()
             shotBtn->setPalette(pa);
         }
     });
-    recordBtn->click();
+    shotBtn->click();
 }

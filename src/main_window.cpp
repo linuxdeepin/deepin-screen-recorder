@@ -100,7 +100,7 @@ void MainWindow::initAttributes()
 {
     // Init attributes.
     setWindowTitle(tr("Deepin screen recorder"));
-    m_functionType = 0;
+//    m_functionType = 0;
     m_keyBoardStatus = 0;
     m_mouseStatus = 0;
     m_multiKeyButtonsInOnSec = false;
@@ -316,6 +316,9 @@ void MainWindow::initAttributes()
             this, &MainWindow::exitApp);
 //    connect(m_menuController, &MenuController::unDoAction,
 //            this, &ShapesWidget::undoDrawShapes);
+
+    m_functionType = 1;
+    initScreenShot();
 
 }
 
@@ -793,17 +796,17 @@ void MainWindow::showKeyBoardButtons(const QString &key)
 {
     //键盘按钮启用状态下创建按键控件
     if (m_keyBoardStatus == 1) {
-        connect(m_keyBoardTimer, SIGNAL(timeout()), this, SLOT(showMultiKeyBoardButtons()));
+//        connect(m_keyBoardTimer, SIGNAL(timeout()), this, SLOT(showMultiKeyBoardButtons()));
 
 
-        if (m_keyBoardTimer->isActive()) {
-            qDebug() << "timer is actived!";
-        }
+//        if (m_keyBoardTimer->isActive()) {
+//            qDebug() << "timer is actived!";
+//        }
 
-        else {
-            qDebug() << "timer start!";
-            m_keyBoardTimer->start(1000);
-        }
+//        else {
+//            qDebug() << "timer start!";
+//            m_keyBoardTimer->start(1000);
+//        }
 
         KeyButtonWidget *t_keyWidget = new KeyButtonWidget(this);
         t_keyWidget->setKeyLabelWord(key);
@@ -815,36 +818,36 @@ void MainWindow::showKeyBoardButtons(const QString &key)
 
 //        t_keyWidget->show();
 
-        if (m_multiKeyButtonsInOnSec == true) {
-            m_keyButtonList.append(t_keyWidget);
+//        if (m_multiKeyButtonsInOnSec == true) {
+        m_keyButtonList.append(t_keyWidget);
 
-            if (m_keyButtonList.count() > 5) {
-                delete m_keyButtonList.first();
-                m_keyButtonList.pop_front();
-            }
-            qDebug() << "aaa key count:" << m_keyButtonList.count();
-            //更新多按钮的位置
-            updateMultiKeyBoardPos();
+        if (m_keyButtonList.count() > 5) {
+            delete m_keyButtonList.first();
+            m_keyButtonList.pop_front();
         }
+        qDebug() << "aaa key count:" << m_keyButtonList.count();
+        //更新多按钮的位置
+        updateMultiKeyBoardPos();
+//        }
 
-        else {
-            if (!m_keyButtonList.isEmpty()) {
-                qDeleteAll(m_keyButtonList);
-                m_keyButtonList.clear();
-            }
+//        else {
+//            if (!m_keyButtonList.isEmpty()) {
+//                qDeleteAll(m_keyButtonList);
+//                m_keyButtonList.clear();
+//            }
 
-            m_keyButtonList.append(t_keyWidget);
+//            m_keyButtonList.append(t_keyWidget);
 
-            if (m_keyButtonList.count() > 5) {
-                delete m_keyButtonList.first();
-                m_keyButtonList.pop_front();
-            }
-            qDebug() << "bbb key count:" << m_keyButtonList.count();
-            //更新多按钮的位置
-            updateMultiKeyBoardPos();
-            m_multiKeyButtonsInOnSec = true;
+//            if (m_keyButtonList.count() > 5) {
+//                delete m_keyButtonList.first();
+//                m_keyButtonList.pop_front();
+//            }
+//            qDebug() << "bbb key count:" << m_keyButtonList.count();
+//            //更新多按钮的位置
+//            updateMultiKeyBoardPos();
+//            m_multiKeyButtonsInOnSec = true;
 
-        }
+//        }
 //        t_keyWidget->move(t_keyPoint.x(), t_keyPoint.y());
 
         repaint();
