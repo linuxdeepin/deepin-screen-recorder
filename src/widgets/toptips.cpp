@@ -21,6 +21,10 @@
 
 #include "../utils/baseutils.h"
 #include <QDebug>
+#include <DPalette>
+#include <QImage>
+
+DGUI_USE_NAMESPACE
 
 TopTips::TopTips(DWidget *parent)
     : DLabel(parent)
@@ -30,6 +34,11 @@ TopTips::TopTips(DWidget *parent)
 //                        "border-image: url(:/resources/images/action/sizetip.png)  no-repeat;"
 //                        "color: white;"
 //                        "font-size: 12px;}");
+//    this->setPixmap(QPixmap::fromImage(QImage(":/resources/images/action/sizetip.png")));
+    DPalette pa = this->palette();
+    pa.setColor(DPalette::Foreground, Qt::white);
+    this->setPalette(pa);
+
 }
 
 void TopTips::setContent(QString widthXHeight)
