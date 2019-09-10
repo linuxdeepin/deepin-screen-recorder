@@ -22,13 +22,16 @@
 #include <QObject>
 #include <DLabel>
 #include <DStackedWidget>
+
+#include "toolbutton.h"
+
 DWIDGET_USE_NAMESPACE
 
 class ShotToolWidget : public DStackedWidget
 {
     Q_OBJECT
 public:
-    explicit ShotToolWidget(QWidget *parent = nullptr);
+    explicit ShotToolWidget(DWidget *parent = nullptr);
     ~ShotToolWidget();
 
     void initWidget();
@@ -50,11 +53,17 @@ public slots:
     void switchContent(QString shapeType);
 
 private:
-    QLabel *m_rectSubTool;
-    QLabel *m_circSubTool;
-    QLabel *m_lineSubTool;
-    QLabel *m_penSubTool;
-    QLabel *m_textSubTool;
+    DLabel *m_rectSubTool;
+    DLabel *m_circSubTool;
+    DLabel *m_lineSubTool;
+    DLabel *m_penSubTool;
+    DLabel *m_textSubTool;
+
+    ToolButton *m_blurRectButton;
+    ToolButton *m_mosaicRectButton;
+    ToolButton *m_blurCircButton;
+    ToolButton *m_mosaicCircButton;
+
     QString m_currentType;
     bool m_arrowFlag;
 };

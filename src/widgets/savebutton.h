@@ -22,11 +22,11 @@
 
 #include "toolbutton.h"
 
-class SaveButton : public QPushButton
+class SaveButton : public DPushButton
 {
     Q_OBJECT
 public:
-    SaveButton(QWidget *parent = 0);
+    SaveButton(DWidget *parent = 0);
     ~SaveButton();
 
 signals:

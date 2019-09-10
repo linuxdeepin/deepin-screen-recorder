@@ -20,13 +20,15 @@
 #ifndef TOPTIPS_H
 #define TOPTIPS_H
 
-#include <QLabel>
+#include <DLabel>
 
-class TopTips : public QLabel
+DWIDGET_USE_NAMESPACE
+
+class TopTips : public DLabel
 {
     Q_OBJECT
 public:
-    TopTips(QWidget *parent = 0);
+    TopTips(DWidget *parent = 0);
     ~TopTips();
 
 public slots:

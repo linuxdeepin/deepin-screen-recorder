@@ -31,7 +31,7 @@ const int BTN_RADIUS = 3;
 }
 
 
-KeyButtonWidget::KeyButtonWidget(QWidget *parent) : DBlurEffectWidget(parent)
+KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
 {
     setAttribute(Qt::WA_ShowWithoutActivating);
     setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
@@ -48,8 +48,8 @@ KeyButtonWidget::KeyButtonWidget(QWidget *parent) : DBlurEffectWidget(parent)
     setFixedHeight(_BUTTON_HEIGHT);
     m_word = new DLabel();
     DFontSizeManager::instance()->bind(m_word, DFontSizeManager::T7);
-    QPalette pa;
-    pa.setColor(QPalette::Text, Qt::black);
+    DPalette pa;
+    pa.setColor(DPalette::Text, Qt::black);
     this->setPalette(pa);
 //    QFont t_wordFont;
 //    t_wordFont.setPixelSize(13);

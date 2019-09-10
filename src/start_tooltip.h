@@ -24,17 +24,18 @@
 #ifndef STARTTOOLTIP_H
 #define STARTTOOLTIP_H
 
-#include <QWidget>
+#include <DWidget>
 #include <dwindowmanager.h>
 
 DWM_USE_NAMESPACE
+DWIDGET_USE_NAMESPACE
 
-class StartTooltip : public QWidget
+class StartTooltip : public DWidget
 {
     Q_OBJECT
 
 public:
-    StartTooltip(QWidget *parent = 0);
+    StartTooltip(DWidget *parent = 0);
     void setWindowManager(DWindowManager *wm);
 
 protected:

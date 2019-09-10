@@ -41,7 +41,7 @@ const int BTN_RADIUS = 3;
 }
 
 
-SideBarWidget::SideBarWidget(QWidget *parent)
+SideBarWidget::SideBarWidget(DWidget *parent)
     : DBlurEffectWidget(parent),
       m_expanded(false)
 {
@@ -57,15 +57,15 @@ SideBarWidget::SideBarWidget(QWidget *parent)
     setFixedSize(TOOLBAR_WIDGET_SIZE);
 
 //    qDebug() << "~~~~~~" << this->size();
-    m_hSeparatorLine = new QLabel(this);
+    m_hSeparatorLine = new DLabel(this);
     m_hSeparatorLine->setObjectName("HorSeparatorLine");
     m_hSeparatorLine->setFixedHeight(1);
     m_colorTool = new ColorToolWidget(this);
     m_shotTool = new ShotToolWidget(this);
 
 
-    QString button_style = "QPushButton{border-radius:30px;} "
-                           "QPushButton::hover{border-image: url(:/image/newUI/hover/close-hover.svg)}";
+    QString button_style = "DPushButton{border-radius:30px;} "
+                           "DPushButton::hover{border-image: url(:/image/newUI/hover/close-hover.svg)}";
 
     QPixmap pixmap(":/image/newUI/normal/close-normal.svg");
 
@@ -126,7 +126,7 @@ void SideBarWidget::showEvent(QShowEvent *event)
 
 
 
-SideBar::SideBar(QWidget *parent) : DLabel(parent)
+SideBar::SideBar(DWidget *parent) : DLabel(parent)
 {
 
 }
@@ -195,13 +195,13 @@ void SideBar::paintEvent(QPaintEvent *e)
     QRectF rect(0, 0, this->width() - 1, this->height() - 1);
     painter.drawRoundedRect(rect.translated(0.5, 0.5), 3, 3, Qt::AbsoluteSize);
 
-    QLabel::paintEvent(e);
+    DLabel::paintEvent(e);
 }
 
 void SideBar::enterEvent(QEvent *e)
 {
     qApp->setOverrideCursor(Qt::ArrowCursor);
-    QLabel::enterEvent(e);
+    DLabel::enterEvent(e);
 }
 
 bool SideBar::eventFilter(QObject *obj, QEvent *event)
@@ -211,5 +211,5 @@ bool SideBar::eventFilter(QObject *obj, QEvent *event)
         qDebug() << "--------------";
     }
 
-    return QLabel::eventFilter(obj, event);
+    return DLabel::eventFilter(obj, event);
 }

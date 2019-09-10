@@ -20,16 +20,19 @@
 #ifndef SAVETIPS_H
 #define SAVETIPS_H
 
-#include <QLabel>
+#include <DLabel>
 #include <QPropertyAnimation>
+#include <DWidget>
 
-class SaveTips : public QLabel
+DWIDGET_USE_NAMESPACE
+
+class SaveTips : public DLabel
 {
     Q_OBJECT
     Q_PROPERTY(int tipWidth READ tipWidth WRITE setTipWidth NOTIFY tipWidthChanged)
 
 public:
-    SaveTips(QWidget *parent = 0);
+    SaveTips(DWidget *parent = 0);
     ~SaveTips();
 
 signals:

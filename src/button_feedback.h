@@ -24,17 +24,19 @@
 #ifndef BUTTONFEEDBACK_H
 #define BUTTONFEEDBACK_H
 
-#include <QWidget>
+#include <DWidget>
 #include <QTimer>
 
-class ButtonFeedback : public QWidget
+DWIDGET_USE_NAMESPACE
+
+class ButtonFeedback : public DWidget
 {
     Q_OBJECT
 
     static const int FRAME_RATE;
 
 public:
-    ButtonFeedback(QWidget *parent = 0);
+    ButtonFeedback(DWidget *parent = 0);
 
 protected:
     void paintEvent(QPaintEvent *event);

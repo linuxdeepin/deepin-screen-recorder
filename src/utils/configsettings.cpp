@@ -30,21 +30,25 @@ ConfigSettings::ConfigSettings(QObject *parent)
     m_settings = new QSettings("deepin", "deepin-screen-recorder");
 
     if (m_settings->allKeys().isEmpty()) {
-        setValue("common", "color_index", 3);
+        setValue("common", "color_index", 0);
         setValue ("common", "default_savepath", "");
 
-        setValue("arrow", "color_index", 3);
+        setValue("arrow", "color_index", 0);
         setValue("arrow", "arrow_linewidth_index", 1);
         setValue("arrow", "straightline_linewidth_index", 1);
         setValue("arrow", "is_straight", false);
-        setValue("oval", "color_index", 3);
+        setValue("oval", "is_blur", false);
+        setValue("oval", "is_mosaic", false);
+        setValue("oval", "color_index", 0);
         setValue("oval", "linewidth_index", 1);
-        setValue("line", "color_index", 3);
+        setValue("line", "color_index", 0);
         setValue("line", "linewidth_index", 1);
-        setValue("rectangle", "color_index", 3);
+        setValue("rectangle", "is_blur", false);
+        setValue("rectangle", "is_mosaic", false);
+        setValue("rectangle", "color_index", 0);
         setValue("rectangle", "linewidth_index", 1);
-        setValue("text", "color_index", 3);
-        setValue("text", "fontsize", 12);
+        setValue("text", "color_index", 0);
+        setValue("text", "fontsize", 14);
 
         setValue("save", "save_op", SaveAction::SaveToDesktop);
         setValue("save", "save_quality", 100);

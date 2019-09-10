@@ -77,6 +77,10 @@ RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
     }
 
     settings->setOption("save_directory", saveDir);
+
+    if (settings->getOption("lossless_recording").toString() == "") {
+        settings->setOption("lossless_recording", false);
+    }
 }
 
 void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filename)

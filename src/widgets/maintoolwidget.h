@@ -19,15 +19,18 @@
 #ifndef MAINTOOLWIDGET_H
 #define MAINTOOLWIDGET_H
 
-#include <QStackedWidget>
+#include <DStackedWidget>
 #include <QHBoxLayout>
-#include <QLabel>
+#include <DLabel>
+#include <DWidget>
 
-class MainToolWidget : public QLabel
+DWIDGET_USE_NAMESPACE
+
+class MainToolWidget : public DLabel
 {
     Q_OBJECT
 public:
-    explicit MainToolWidget(QWidget *parent = nullptr);
+    explicit MainToolWidget(DWidget *parent = nullptr);
     ~MainToolWidget();
 
     void initWidget();

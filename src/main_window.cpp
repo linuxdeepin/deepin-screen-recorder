@@ -27,7 +27,7 @@
 #include <QKeyEvent>
 #include <QObject>
 #include <QPainter>
-#include <QWidget>
+#include <DWidget>
 #include <DWindowManagerHelper>
 #include <DForeignWindow>
 #include <QDebug>
@@ -87,8 +87,8 @@ const qreal RESIZEPOINT_WIDTH = 15;
 
 DWM_USE_NAMESPACE
 
-MainWindow::MainWindow(QWidget *parent) :
-    QWidget(parent),
+MainWindow::MainWindow(DWidget *parent) :
+    DWidget(parent),
     m_wmHelper(DWindowManagerHelper::instance())
 {
     initAttributes();
@@ -112,8 +112,8 @@ void MainWindow::initAttributes()
     m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
     m_keyButtonList.clear();
     m_tempkeyButtonList.clear();
-    m_screenWidth = DApplication::desktop()->screen()->width();
-    m_screenHeight = DApplication::desktop()->screen()->height();
+    m_screenWidth = QApplication::desktop()->screen()->width();
+    m_screenHeight = QApplication::desktop()->screen()->height();
 
     // Add Qt::WindowDoesNotAcceptFocus make window not accept focus forcely, avoid conflict with dde hot-corner.
 //    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint);
@@ -235,13 +235,13 @@ void MainWindow::initAttributes()
 //        }
 //    });
     //构建截屏录屏功能触发按钮
-    QPalette pa;
-    m_recordButton = new QPushButton(this);
+    DPalette pa;
+    m_recordButton = new DPushButton(this);
 
     pa = m_recordButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(229, 70, 61, 204));
-    pa.setColor(QPalette::Light, QColor(229, 70, 61, 204));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(229, 70, 61, 204));
+    pa.setColor(DPalette::Light, QColor(229, 70, 61, 204));
     m_recordButton->setPalette(pa);
     m_recordButton->setIconSize(QSize(30, 30));
     m_recordButton->setIcon(QIcon(":/image/newUI/checked/screencap-checked.svg"));
@@ -250,12 +250,12 @@ void MainWindow::initAttributes()
 //    m_recordButton->setText(tr("Record"));
     m_recordButton->setObjectName("mainRecordBtn");
 
-    m_shotButton = new QPushButton(this);
+    m_shotButton = new DPushButton(this);
 
     pa = m_shotButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(0, 129, 255, 204));
-    pa.setColor(QPalette::Light, QColor(0, 129, 255, 204));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(0, 129, 255, 204));
+    pa.setColor(DPalette::Light, QColor(0, 129, 255, 204));
     m_shotButton->setPalette(pa);
     m_shotButton->setIconSize(QSize(30, 30));
     m_shotButton->setIcon(QIcon(":/image/newUI/checked/screenshot-checked.svg"));
@@ -377,8 +377,8 @@ void MainWindow::initScreenShot()
     m_mp4Mode = false;
     m_keyBoardTimer = new QTimer(this);
     m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
-    m_screenWidth = DApplication::desktop()->screen()->width();
-    m_screenHeight = DApplication::desktop()->screen()->height();
+    m_screenWidth = QApplication::desktop()->screen()->width();
+    m_screenHeight = QApplication::desktop()->screen()->height();
 
     isFirstDrag = false;
     isFirstMove = false;
@@ -448,8 +448,8 @@ void MainWindow::initScreenRecorder()
     m_keyBoardTimer = new QTimer(this);
     m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
 
-    m_screenWidth = DApplication::desktop()->screen()->width();
-    m_screenHeight = DApplication::desktop()->screen()->height();
+    m_screenWidth = QApplication::desktop()->screen()->width();
+    m_screenHeight = QApplication::desktop()->screen()->height();
 
     isFirstDrag = false;
     isFirstMove = false;
@@ -1746,7 +1746,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             if (needRepaint) {
                 update();
             }
-            QWidget::keyReleaseEvent(keyEvent);
+            DWidget::keyReleaseEvent(keyEvent);
         }
 
         else {

@@ -34,7 +34,7 @@ const int ButtonFeedback::FRAME_RATE = 40; // ms
 
 DWIDGET_USE_NAMESPACE
 
-ButtonFeedback::ButtonFeedback(QWidget *parent) : QWidget(parent)
+ButtonFeedback::ButtonFeedback(DWidget *parent) : DWidget(parent)
 {
     installEventFilter(this);  // add event filter
     setAttribute(Qt::WA_ShowWithoutActivating);

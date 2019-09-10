@@ -21,8 +21,8 @@
 #include "../utils/baseutils.h"
 #include <QDebug>
 
-SaveTips::SaveTips(QWidget *parent)
-    : QLabel(parent)
+SaveTips::SaveTips(DWidget *parent)
+    : DLabel(parent)
 {
 //    setStyleSheet(getFileContent(":/resources/qss/savetips.qss"));
     setTipWidth(0);

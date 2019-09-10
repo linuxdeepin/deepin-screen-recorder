@@ -17,11 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "shottoolwidget.h"
-#include "toolbutton.h"
 #include "../utils/configsettings.h"
 
 #include <DSlider>
-#include <QLineEdit>
+#include <DLineEdit>
 #include <DMenu>
 #include <QAction>
 #include <QButtonGroup>
@@ -48,14 +47,22 @@ const QSize SPLITTER_SIZE = QSize(30, 1);
 const QSize MIN_TOOL_BUTTON_SIZE = QSize(35, 30);
 }
 
-ShotToolWidget::ShotToolWidget(QWidget *parent) : DStackedWidget(parent)
+ShotToolWidget::ShotToolWidget(DWidget *parent) : DStackedWidget(parent)
 {
     initWidget();
 }
 
 ShotToolWidget::~ShotToolWidget()
 {
-
+    delete m_rectSubTool;
+    delete m_circSubTool;
+    delete m_lineSubTool;
+    delete m_penSubTool;
+    delete m_textSubTool;
+    delete m_blurRectButton;
+    delete m_mosaicRectButton;
+    delete m_blurCircButton;
+    delete m_mosaicCircButton;
 }
 
 void ShotToolWidget::initWidget()
@@ -74,7 +81,7 @@ void ShotToolWidget::initWidget()
 void ShotToolWidget::initRectLabel()
 {
     m_rectSubTool = new DLabel(this);
-    QPalette pa;
+    DPalette pa;
 
     //选择粗细按钮组
     QButtonGroup *t_thicknessBtnGroup = new QButtonGroup();
@@ -89,9 +96,9 @@ void ShotToolWidget::initRectLabel()
     ToolButton *thickOneBtn = new ToolButton();
 
     pa = thickOneBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     thickOneBtn->setPalette(pa);
 
     thickOneBtn->setToolTip(tr("fine"));
@@ -105,9 +112,9 @@ void ShotToolWidget::initRectLabel()
     ToolButton *thickTwoBtn = new ToolButton();
 
     pa = thickTwoBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     thickTwoBtn->setPalette(pa);
 
     thickTwoBtn->setToolTip(tr("medium"));
@@ -121,9 +128,9 @@ void ShotToolWidget::initRectLabel()
     ToolButton *thickThreeBtn = new ToolButton();
 
     pa = thickThreeBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     thickThreeBtn->setPalette(pa);
 
     thickThreeBtn->setToolTip(tr("thick"));
@@ -145,12 +152,12 @@ void ShotToolWidget::initRectLabel()
     connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
 
-        QPalette pa;
+        DPalette pa;
         if (thickOneBtn->isChecked()) {
             pa = thickOneBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             thickOneBtn->setPalette(pa);
             thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
 
@@ -161,9 +168,9 @@ void ShotToolWidget::initRectLabel()
 
         else {
             pa = thickOneBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             thickOneBtn->setPalette(pa);
             thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
 
@@ -172,9 +179,9 @@ void ShotToolWidget::initRectLabel()
 
         if (thickTwoBtn->isChecked()) {
             pa = thickTwoBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             thickTwoBtn->setPalette(pa);
             thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
 
@@ -185,9 +192,9 @@ void ShotToolWidget::initRectLabel()
 
         else {
             pa = thickTwoBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             thickTwoBtn->setPalette(pa);
             thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
 
@@ -196,9 +203,9 @@ void ShotToolWidget::initRectLabel()
 
         if (thickThreeBtn->isChecked()) {
             pa = thickThreeBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             thickThreeBtn->setPalette(pa);
             thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
 
@@ -209,9 +216,9 @@ void ShotToolWidget::initRectLabel()
 
         else {
             pa = thickThreeBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             thickThreeBtn->setPalette(pa);
             thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
 
@@ -236,123 +243,125 @@ void ShotToolWidget::initRectLabel()
 
     btnList.clear();
 
+    ConfigSettings::instance()->setValue("rectangle", "is_blur", false);
+    ConfigSettings::instance()->setValue("rectangle", "is_mosaic", false);
+
     //模糊按钮
-    ToolButton *blurButton = new ToolButton();
+    m_blurRectButton = new ToolButton();
 
-    pa = blurButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
-    blurButton->setPalette(pa);
+    pa = m_blurRectButton->palette();
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+    m_blurRectButton->setPalette(pa);
 
-    blurButton->setToolTip(tr("blur"));
-    blurButton->setObjectName("blurButton");
-    blurButton->setFixedSize(TOOL_BUTTON_SIZE);
-    blurButton->setIconSize(TOOL_ICON_SIZE);
-    blurButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
-    btnList.append(blurButton);
+    m_blurRectButton->setToolTip(tr("blur"));
+    m_blurRectButton->setObjectName("blurButton");
+    m_blurRectButton->setFixedSize(TOOL_BUTTON_SIZE);
+    m_blurRectButton->setIconSize(TOOL_ICON_SIZE);
+    m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+    btnList.append(m_blurRectButton);
 
     //马赛克按钮
-    ToolButton *mosaicBtn = new ToolButton();
+    m_mosaicRectButton = new ToolButton();
 
-    pa = mosaicBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
-    mosaicBtn->setPalette(pa);
+    pa = m_mosaicRectButton->palette();
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+    m_mosaicRectButton->setPalette(pa);
 
-    mosaicBtn->setToolTip(tr("mosaic"));
-    mosaicBtn->setObjectName("mosaicBtn");
-    mosaicBtn->setFixedSize(TOOL_BUTTON_SIZE);
-    mosaicBtn->setIconSize(TOOL_ICON_SIZE);
-    mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
-    btnList.append(mosaicBtn);
+    m_mosaicRectButton->setToolTip(tr("mosaic"));
+    m_mosaicRectButton->setObjectName("mosaicBtn");
+    m_mosaicRectButton->setFixedSize(TOOL_BUTTON_SIZE);
+    m_mosaicRectButton->setIconSize(TOOL_ICON_SIZE);
+    m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+    btnList.append(m_mosaicRectButton);
 
-    connect(blurButton, &ToolButton::clicked, this, [ = ] {
-        bool t_status = blurButton->isChecked();
+    connect(m_blurRectButton, &ToolButton::clicked, this, [ = ] {
+        bool t_status = m_blurRectButton->isChecked();
 
         if (t_status == true)
         {
-            QPalette pa;
-            pa = blurButton->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
-            blurButton->setPalette(pa);
-            blurButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
+            DPalette pa;
+            pa = m_blurRectButton->palette();
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+            m_blurRectButton->setPalette(pa);
+            m_blurRectButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
 
-            ConfigSettings::instance()->setValue("effect", "is_blur", blurButton->isChecked());
+            ConfigSettings::instance()->setValue("rectangle", "is_blur", m_blurRectButton->isChecked());
 
-            mosaicBtn->setChecked(false);
-            pa = mosaicBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
-            mosaicBtn->setPalette(pa);
-            mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+            m_mosaicRectButton->setChecked(false);
+            pa = m_mosaicRectButton->palette();
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+            m_mosaicRectButton->setPalette(pa);
+            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
 
-            mosaicBtn->update();
-            ConfigSettings::instance()->setValue("effect", "is_mosaic", mosaicBtn->isChecked());
+            m_mosaicRectButton->update();
+            ConfigSettings::instance()->setValue("rectangle", "is_mosaic", m_mosaicRectButton->isChecked());
 
         }
 
         else
         {
-            QPalette pa;
-            blurButton->setChecked(false);
-            pa = blurButton->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
-            blurButton->setPalette(pa);
-            blurButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+            DPalette pa;
+            m_blurRectButton->setChecked(false);
+            pa = m_blurRectButton->palette();
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+            m_blurRectButton->setPalette(pa);
+            m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
 
-            blurButton->update();
-            ConfigSettings::instance()->setValue("effect", "is_blur", blurButton->isChecked());
+            m_blurRectButton->update();
+            ConfigSettings::instance()->setValue("rectangle", "is_blur", m_blurRectButton->isChecked());
         }
     });
 
-    connect(mosaicBtn, &ToolButton::clicked, this, [ = ] {
-        bool t_status = mosaicBtn->isChecked();
+    connect(m_mosaicRectButton, &ToolButton::clicked, this, [ = ] {
+        bool t_status = m_mosaicRectButton->isChecked();
 
         if (t_status == true)
         {
-            QPalette pa;
-            pa = mosaicBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
-            mosaicBtn->setPalette(pa);
-            mosaicBtn->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
+            DPalette pa;
+            pa = m_mosaicRectButton->palette();
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+            m_mosaicRectButton->setPalette(pa);
+            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
 
-            ConfigSettings::instance()->setValue("effect", "is_mosaic", mosaicBtn->isChecked());
+            ConfigSettings::instance()->setValue("rectangle", "is_mosaic", m_mosaicRectButton->isChecked());
             m_arrowFlag = true;
-            blurButton->setChecked(false);
-            pa = blurButton->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
-            blurButton->setPalette(pa);
-            blurButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+            m_blurRectButton->setChecked(false);
+            pa = m_blurRectButton->palette();
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+            m_blurRectButton->setPalette(pa);
+            m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
 
-            blurButton->update();
-            ConfigSettings::instance()->setValue("effect", "is_blur", blurButton->isChecked());
+            m_blurRectButton->update();
+            ConfigSettings::instance()->setValue("rectangle", "is_blur", m_blurRectButton->isChecked());
         }
 
         else
         {
-            QPalette pa;
-            mosaicBtn->setChecked(false);
-            pa = mosaicBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
-            mosaicBtn->setPalette(pa);
-            mosaicBtn->setIconSize(QSize(30, 30));
-            mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+            DPalette pa;
+            m_mosaicRectButton->setChecked(false);
+            pa = m_mosaicRectButton->palette();
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+            m_mosaicRectButton->setPalette(pa);
+            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
 
-            mosaicBtn->update();
-            ConfigSettings::instance()->setValue("effect", "is_mosaic", mosaicBtn->isChecked());
+            m_mosaicRectButton->update();
+            ConfigSettings::instance()->setValue("rectangle", "is_mosaic", m_mosaicRectButton->isChecked());
         }
 
     });
@@ -380,7 +389,7 @@ void ShotToolWidget::initRectLabel()
 void ShotToolWidget::initCircLabel()
 {
     m_circSubTool = new DLabel(this);
-    QPalette pa;
+    DPalette pa;
 
     //选择粗细按钮组
     QButtonGroup *t_thicknessBtnGroup = new QButtonGroup();
@@ -395,9 +404,9 @@ void ShotToolWidget::initCircLabel()
     ToolButton *thickOneBtn = new ToolButton();
 
     pa = thickOneBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     thickOneBtn->setPalette(pa);
 
     thickOneBtn->setToolTip(tr("fine"));
@@ -411,9 +420,9 @@ void ShotToolWidget::initCircLabel()
     ToolButton *thickTwoBtn = new ToolButton();
 
     pa = thickTwoBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     thickTwoBtn->setPalette(pa);
 
     thickTwoBtn->setToolTip(tr("medium"));
@@ -427,9 +436,9 @@ void ShotToolWidget::initCircLabel()
     ToolButton *thickThreeBtn = new ToolButton();
 
     pa = thickThreeBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     thickThreeBtn->setPalette(pa);
 
     thickThreeBtn->setToolTip(tr("thick"));
@@ -451,12 +460,12 @@ void ShotToolWidget::initCircLabel()
     connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
 
-        QPalette pa;
+        DPalette pa;
         if (thickOneBtn->isChecked()) {
             pa = thickOneBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             thickOneBtn->setPalette(pa);
             thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
 
@@ -467,9 +476,9 @@ void ShotToolWidget::initCircLabel()
 
         else {
             pa = thickOneBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             thickOneBtn->setPalette(pa);
             thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
 
@@ -478,9 +487,9 @@ void ShotToolWidget::initCircLabel()
 
         if (thickTwoBtn->isChecked()) {
             pa = thickTwoBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             thickTwoBtn->setPalette(pa);
             thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
 
@@ -491,9 +500,9 @@ void ShotToolWidget::initCircLabel()
 
         else {
             pa = thickTwoBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             thickTwoBtn->setPalette(pa);
             thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
 
@@ -502,9 +511,9 @@ void ShotToolWidget::initCircLabel()
 
         if (thickThreeBtn->isChecked()) {
             pa = thickThreeBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             thickThreeBtn->setPalette(pa);
             thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
 
@@ -515,9 +524,9 @@ void ShotToolWidget::initCircLabel()
 
         else {
             pa = thickThreeBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             thickThreeBtn->setPalette(pa);
             thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
 
@@ -540,123 +549,125 @@ void ShotToolWidget::initCircLabel()
 
     btnList.clear();
 
+    ConfigSettings::instance()->setValue("oval", "is_blur", false);
+    ConfigSettings::instance()->setValue("oval", "is_mosaic", false);
+
     //模糊按钮
-    ToolButton *blurButton = new ToolButton();
+    m_blurCircButton = new ToolButton();
 
-    pa = blurButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
-    blurButton->setPalette(pa);
+    pa = m_blurCircButton->palette();
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+    m_blurCircButton->setPalette(pa);
 
-    blurButton->setToolTip(tr("blur"));
-    blurButton->setObjectName("blurButton");
-    blurButton->setFixedSize(TOOL_BUTTON_SIZE);
-    blurButton->setIconSize(TOOL_ICON_SIZE);
-    blurButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
-    btnList.append(blurButton);
+    m_blurCircButton->setToolTip(tr("blur"));
+    m_blurCircButton->setObjectName("blurButton");
+    m_blurCircButton->setFixedSize(TOOL_BUTTON_SIZE);
+    m_blurCircButton->setIconSize(TOOL_ICON_SIZE);
+    m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+    btnList.append(m_blurCircButton);
 
     //马赛克按钮
-    ToolButton *mosaicBtn = new ToolButton();
+    m_mosaicCircButton = new ToolButton();
 
-    pa = mosaicBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
-    mosaicBtn->setPalette(pa);
+    pa = m_mosaicCircButton->palette();
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+    m_mosaicCircButton->setPalette(pa);
 
-    mosaicBtn->setToolTip(tr("mosaic"));
-    mosaicBtn->setObjectName("mosaicBtn");
-    mosaicBtn->setFixedSize(TOOL_BUTTON_SIZE);
-    mosaicBtn->setIconSize(TOOL_ICON_SIZE);
-    mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
-    btnList.append(mosaicBtn);
+    m_mosaicCircButton->setToolTip(tr("mosaic"));
+    m_mosaicCircButton->setObjectName("mosaicBtn");
+    m_mosaicCircButton->setFixedSize(TOOL_BUTTON_SIZE);
+    m_mosaicCircButton->setIconSize(TOOL_ICON_SIZE);
+    m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+    btnList.append(m_mosaicCircButton);
 
-    connect(blurButton, &ToolButton::clicked, this, [ = ] {
-        bool t_status = blurButton->isChecked();
+    connect(m_blurCircButton, &ToolButton::clicked, this, [ = ] {
+        bool t_status = m_blurCircButton->isChecked();
 
         if (t_status == true)
         {
-            QPalette pa;
-            pa = blurButton->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
-            blurButton->setPalette(pa);
-            blurButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
+            DPalette pa;
+            pa = m_blurCircButton->palette();
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+            m_blurCircButton->setPalette(pa);
+            m_blurCircButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
 
-            ConfigSettings::instance()->setValue("effect", "is_blur", blurButton->isChecked());
+            ConfigSettings::instance()->setValue("oval", "is_blur", m_blurCircButton->isChecked());
 
-            mosaicBtn->setChecked(false);
-            pa = mosaicBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
-            mosaicBtn->setPalette(pa);
-            mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+            m_mosaicCircButton->setChecked(false);
+            pa = m_mosaicCircButton->palette();
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+            m_mosaicCircButton->setPalette(pa);
+            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
 
-            mosaicBtn->update();
-            ConfigSettings::instance()->setValue("effect", "is_mosaic", mosaicBtn->isChecked());
+            m_mosaicCircButton->update();
+            ConfigSettings::instance()->setValue("oval", "is_mosaic", m_mosaicCircButton->isChecked());
 
         }
 
         else
         {
-            QPalette pa;
-            blurButton->setChecked(false);
-            pa = blurButton->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
-            blurButton->setPalette(pa);
-            blurButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+            DPalette pa;
+            m_blurCircButton->setChecked(false);
+            pa = m_blurCircButton->palette();
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+            m_blurCircButton->setPalette(pa);
+            m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
 
-            blurButton->update();
-            ConfigSettings::instance()->setValue("effect", "is_blur", blurButton->isChecked());
+            m_blurCircButton->update();
+            ConfigSettings::instance()->setValue("oval", "is_blur", m_blurCircButton->isChecked());
         }
     });
 
-    connect(mosaicBtn, &ToolButton::clicked, this, [ = ] {
-        bool t_status = mosaicBtn->isChecked();
+    connect(m_mosaicCircButton, &ToolButton::clicked, this, [ = ] {
+        bool t_status = m_mosaicCircButton->isChecked();
 
         if (t_status == true)
         {
-            QPalette pa;
-            pa = mosaicBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
-            mosaicBtn->setPalette(pa);
-            mosaicBtn->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
+            DPalette pa;
+            pa = m_mosaicCircButton->palette();
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+            m_mosaicCircButton->setPalette(pa);
+            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
 
-            ConfigSettings::instance()->setValue("effect", "is_mosaic", mosaicBtn->isChecked());
+            ConfigSettings::instance()->setValue("oval", "is_mosaic", m_mosaicCircButton->isChecked());
             m_arrowFlag = true;
-            blurButton->setChecked(false);
-            pa = blurButton->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
-            blurButton->setPalette(pa);
-            blurButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+            m_blurCircButton->setChecked(false);
+            pa = m_blurCircButton->palette();
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+            m_blurCircButton->setPalette(pa);
+            m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
 
-            blurButton->update();
-            ConfigSettings::instance()->setValue("effect", "is_blur", blurButton->isChecked());
+            m_blurCircButton->update();
+            ConfigSettings::instance()->setValue("oval", "is_blur", m_blurCircButton->isChecked());
         }
 
         else
         {
-            QPalette pa;
-            mosaicBtn->setChecked(false);
-            pa = mosaicBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
-            mosaicBtn->setPalette(pa);
-            mosaicBtn->setIconSize(QSize(30, 30));
-            mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+            DPalette pa;
+            m_mosaicCircButton->setChecked(false);
+            pa = m_mosaicCircButton->palette();
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+            m_mosaicCircButton->setPalette(pa);
+            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
 
-            mosaicBtn->update();
-            ConfigSettings::instance()->setValue("effect", "is_mosaic", mosaicBtn->isChecked());
+            m_mosaicCircButton->update();
+            ConfigSettings::instance()->setValue("oval", "is_mosaic", m_mosaicCircButton->isChecked());
         }
 
     });
@@ -684,7 +695,7 @@ void ShotToolWidget::initCircLabel()
 void ShotToolWidget::initLineLabel()
 {
     m_lineSubTool = new DLabel(this);
-    QPalette pa;
+    DPalette pa;
 
     //选择粗细按钮组
     QButtonGroup *t_thicknessBtnGroup = new QButtonGroup();
@@ -699,9 +710,9 @@ void ShotToolWidget::initLineLabel()
     ToolButton *thickOneBtn = new ToolButton();
 
     pa = thickOneBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     thickOneBtn->setPalette(pa);
 
     thickOneBtn->setToolTip(tr("fine"));
@@ -715,9 +726,9 @@ void ShotToolWidget::initLineLabel()
     ToolButton *thickTwoBtn = new ToolButton();
 
     pa = thickTwoBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     thickTwoBtn->setPalette(pa);
 
     thickTwoBtn->setToolTip(tr("medium"));
@@ -731,9 +742,9 @@ void ShotToolWidget::initLineLabel()
     ToolButton *thickThreeBtn = new ToolButton();
 
     pa = thickThreeBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     thickThreeBtn->setPalette(pa);
 
     thickThreeBtn->setToolTip(tr("thick"));
@@ -755,12 +766,12 @@ void ShotToolWidget::initLineLabel()
     connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
 
-        QPalette pa;
+        DPalette pa;
         if (thickOneBtn->isChecked()) {
             pa = thickOneBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             thickOneBtn->setPalette(pa);
             thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
 
@@ -772,9 +783,9 @@ void ShotToolWidget::initLineLabel()
 
         else {
             pa = thickOneBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             thickOneBtn->setPalette(pa);
             thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
 
@@ -783,9 +794,9 @@ void ShotToolWidget::initLineLabel()
 
         if (thickTwoBtn->isChecked()) {
             pa = thickTwoBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             thickTwoBtn->setPalette(pa);
             thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
 
@@ -797,9 +808,9 @@ void ShotToolWidget::initLineLabel()
 
         else {
             pa = thickTwoBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             thickTwoBtn->setPalette(pa);
             thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
 
@@ -808,9 +819,9 @@ void ShotToolWidget::initLineLabel()
 
         if (thickThreeBtn->isChecked()) {
             pa = thickThreeBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             thickThreeBtn->setPalette(pa);
             thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
 
@@ -822,9 +833,9 @@ void ShotToolWidget::initLineLabel()
 
         else {
             pa = thickThreeBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             thickThreeBtn->setPalette(pa);
             thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
 
@@ -852,9 +863,9 @@ void ShotToolWidget::initLineLabel()
     //直线按钮
     ToolButton *blurButton = new ToolButton();
     pa = blurButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     blurButton->setPalette(pa);
 
     blurButton->setToolTip(tr("line"));
@@ -868,9 +879,9 @@ void ShotToolWidget::initLineLabel()
     ToolButton *mosaicBtn = new ToolButton();
 
     pa = mosaicBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     mosaicBtn->setPalette(pa);
 
     mosaicBtn->setToolTip(tr("arrow"));
@@ -881,11 +892,11 @@ void ShotToolWidget::initLineLabel()
     btnList.append(mosaicBtn);
 
     connect(blurButton, &ToolButton::clicked, this, [ = ] {
-        QPalette pa;
+        DPalette pa;
         pa = blurButton->palette();
-        pa.setColor(QPalette::ButtonText, Qt::white);
-        pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-        pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+        pa.setColor(DPalette::ButtonText, Qt::white);
+        pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+        pa.setColor(DPalette::Light, QColor("#1C1C1C"));
         blurButton->setPalette(pa);
         blurButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
 
@@ -899,9 +910,9 @@ void ShotToolWidget::initLineLabel()
         {
             mosaicBtn->setChecked(false);
             pa = mosaicBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             mosaicBtn->setPalette(pa);
             mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
 
@@ -909,11 +920,11 @@ void ShotToolWidget::initLineLabel()
         }
     });
     connect(mosaicBtn, &ToolButton::clicked, this, [ = ] {
-        QPalette pa;
+        DPalette pa;
         pa = mosaicBtn->palette();
-        pa.setColor(QPalette::ButtonText, Qt::white);
-        pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-        pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+        pa.setColor(DPalette::ButtonText, Qt::white);
+        pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+        pa.setColor(DPalette::Light, QColor("#1C1C1C"));
         mosaicBtn->setPalette(pa);
         mosaicBtn->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
 
@@ -926,9 +937,9 @@ void ShotToolWidget::initLineLabel()
         {
             blurButton->setChecked(false);
             pa = blurButton->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             blurButton->setPalette(pa);
             blurButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
 
@@ -962,7 +973,7 @@ void ShotToolWidget::initLineLabel()
 void ShotToolWidget::initPenLabel()
 {
     m_penSubTool = new DLabel(this);
-    QPalette pa;
+    DPalette pa;
 
     //选择粗细按钮组
     QButtonGroup *t_thicknessBtnGroup = new QButtonGroup();
@@ -974,9 +985,9 @@ void ShotToolWidget::initPenLabel()
     ToolButton *thickOneBtn = new ToolButton();
 
     pa = thickOneBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     thickOneBtn->setPalette(pa);
 
     thickOneBtn->setToolTip(tr("fine"));
@@ -990,9 +1001,9 @@ void ShotToolWidget::initPenLabel()
     ToolButton *thickTwoBtn = new ToolButton();
 
     pa = thickTwoBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     thickTwoBtn->setPalette(pa);
 
     thickTwoBtn->setToolTip(tr("medium"));
@@ -1006,9 +1017,9 @@ void ShotToolWidget::initPenLabel()
     ToolButton *thickThreeBtn = new ToolButton();
 
     pa = thickThreeBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     thickThreeBtn->setPalette(pa);
 
     thickThreeBtn->setToolTip(tr("thick"));
@@ -1030,12 +1041,12 @@ void ShotToolWidget::initPenLabel()
     connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
 
-        QPalette pa;
+        DPalette pa;
         if (thickOneBtn->isChecked()) {
             pa = thickOneBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             thickOneBtn->setPalette(pa);
             thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
 
@@ -1046,9 +1057,9 @@ void ShotToolWidget::initPenLabel()
 
         else {
             pa = thickOneBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             thickOneBtn->setPalette(pa);
             thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
 
@@ -1057,9 +1068,9 @@ void ShotToolWidget::initPenLabel()
 
         if (thickTwoBtn->isChecked()) {
             pa = thickTwoBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             thickTwoBtn->setPalette(pa);
             thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
 
@@ -1070,9 +1081,9 @@ void ShotToolWidget::initPenLabel()
 
         else {
             pa = thickTwoBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             thickTwoBtn->setPalette(pa);
             thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
 
@@ -1081,9 +1092,9 @@ void ShotToolWidget::initPenLabel()
 
         if (thickThreeBtn->isChecked()) {
             pa = thickThreeBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             thickThreeBtn->setPalette(pa);
             thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
 
@@ -1094,9 +1105,9 @@ void ShotToolWidget::initPenLabel()
 
         else {
             pa = thickThreeBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             thickThreeBtn->setPalette(pa);
             thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
 
@@ -1193,6 +1204,8 @@ void ShotToolWidget::initTextLabel()
 
 void ShotToolWidget::switchContent(QString shapeType)
 {
+    QString t_blurVal;
+    QString t_mosaicVal;
     if (!shapeType.isEmpty()) {
         if (shapeType == "rectangle") {
             setCurrentWidget(m_rectSubTool);

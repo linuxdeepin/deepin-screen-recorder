@@ -28,8 +28,8 @@
 const qreal COLOR_RADIUS = 4;
 const QSize BTN_SIZE = QSize(32, 26);
 
-BigColorButton::BigColorButton(QWidget *parent)
-    : QPushButton(parent),
+BigColorButton::BigColorButton(DWidget *parent)
+    : DPushButton(parent),
       m_color(QColor(Qt::red)),
       m_isHover(false),
       m_isChecked(false)
@@ -40,7 +40,7 @@ BigColorButton::BigColorButton(QWidget *parent)
                        "common", "color_index").toInt();
     m_color = colorIndexOf(colIndex);
 
-    connect(this, &QPushButton::clicked, this,
+    connect(this, &DPushButton::clicked, this,
             &BigColorButton::setCheckedStatus);
     connect(ConfigSettings::instance(), &ConfigSettings::shapeConfigChanged,
             this, &BigColorButton::updateConfigColor);

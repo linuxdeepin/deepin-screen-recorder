@@ -37,7 +37,7 @@ const int RecordOptionPanel::ICON_OFFSET_X = 14;
 
 DWIDGET_USE_NAMESPACE
 
-RecordOptionPanel::RecordOptionPanel(QPushButton *parent) : QPushButton(parent)
+RecordOptionPanel::RecordOptionPanel(DPushButton *parent) : DPushButton(parent)
 {
     installEventFilter(this);
     setMouseTracking(true);

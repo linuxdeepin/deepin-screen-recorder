@@ -20,13 +20,17 @@
 #ifndef COLORBUTTON_H
 #define COLORBUTTON_H
 
-#include <QPushButton>
+#include <DPushButton>
 #include <QPaintEvent>
+#include <DWidget>
 
-class ColorButton : public QPushButton {
+DWIDGET_USE_NAMESPACE
+
+class ColorButton : public DPushButton
+{
     Q_OBJECT
 public:
-    ColorButton(QColor bgColor, QWidget*parent = 0);
+    ColorButton(QColor bgColor, DWidget *parent = 0);
     ~ColorButton();
 
     void setColorBtnChecked();

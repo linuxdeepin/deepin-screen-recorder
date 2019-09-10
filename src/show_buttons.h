@@ -19,12 +19,14 @@
 #ifndef SHOW_BUTTONS_H
 #define SHOW_BUTTONS_H
 
-#include <QWidget>
+#include <DWidget>
 #include <QObject>
 #include <QMap>
 #include <QVector>
 
-class ShowButtons : public QWidget
+DWIDGET_USE_NAMESPACE
+
+class ShowButtons : public DWidget
 {
     Q_OBJECT
 public:
@@ -156,7 +158,7 @@ public:
     } keyDescriptions[];
 
 
-    explicit ShowButtons(QWidget *parent = nullptr);
+    explicit ShowButtons(DWidget *parent = nullptr);
 
 private:
     void initButtons();
@@ -170,7 +172,7 @@ public slots:
     QString getKeyCodeFromEvent(unsigned char keyCode);
 
 private:
-//    QMap<QString, QPushButton*> m_textButtonMap;
+//    QMap<QString, DPushButton*> m_textButtonMap;
 //    QString m_keyCode;//保存上次的输入按钮，防止长按
     QVector<QString> m_keyCodeVec;//保存上次的输入按钮，防止长按
 };

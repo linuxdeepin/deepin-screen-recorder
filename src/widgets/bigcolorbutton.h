@@ -20,15 +20,18 @@
 #ifndef BIGCOLORBUTTON_H
 #define BIGCOLORBUTTON_H
 
-#include <QPushButton>
+#include <DPushButton>
 #include <QPainter>
 #include <QPaintEvent>
+#include <DWidget>
 
-class BigColorButton : public QPushButton
+DWIDGET_USE_NAMESPACE
+
+class BigColorButton : public DPushButton
 {
     Q_OBJECT
 public:
-    BigColorButton(QWidget *parent = 0);
+    BigColorButton(DWidget *parent = 0);
     ~BigColorButton();
 
     void setColor(QColor color);

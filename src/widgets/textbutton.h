@@ -20,13 +20,16 @@
 #ifndef TEXTBUTTON_H
 #define TEXTBUTTON_H
 
-#include <QPushButton>
+#include <DPushButton>
+#include <DWidget>
 
-class TextButton : public QPushButton
+DWIDGET_USE_NAMESPACE
+
+class TextButton : public DPushButton
 {
     Q_OBJECT
 public:
-    TextButton(int num, QWidget *parent = 0);
+    TextButton(int num, DWidget *parent = 0);
     ~TextButton();
 
 private:

@@ -35,7 +35,7 @@ class SideBarWidget : public DBlurEffectWidget
 {
     Q_OBJECT
 public:
-    SideBarWidget(QWidget *parent = nullptr);
+    SideBarWidget(DWidget *parent = nullptr);
     ~SideBarWidget() Q_DECL_OVERRIDE;
 
     void changeShotToolWidget(const QString &func);
@@ -46,7 +46,7 @@ protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 private:
-    QLabel *m_hSeparatorLine;
+    DLabel *m_hSeparatorLine;
     ColorToolWidget *m_colorTool;
     ShotToolWidget *m_shotTool;
     DImageButton *m_closeButton;
@@ -57,7 +57,7 @@ class SideBar : public DLabel
 {
     Q_OBJECT
 public:
-    explicit SideBar(QWidget *parent = nullptr);
+    explicit SideBar(DWidget *parent = nullptr);
     ~SideBar() Q_DECL_OVERRIDE;
 
     void changeShotToolFunc(const QString &func);

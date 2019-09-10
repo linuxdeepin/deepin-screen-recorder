@@ -20,7 +20,7 @@
 #ifndef SHAPESWIDGET_H
 #define SHAPESWIDGET_H
 
-#include <QFrame>
+#include <DFrame>
 #include <QMouseEvent>
 
 #include "../utils/shapesutils.h"
@@ -29,11 +29,11 @@
 #include "../widgets/sidebar.h"
 #include "../menucontroller/menucontroller.h"
 
-class ShapesWidget : public QFrame
+class ShapesWidget : public DFrame
 {
     Q_OBJECT
 public:
-    ShapesWidget(QWidget *parent = 0);
+    ShapesWidget(DWidget *parent = 0);
     ~ShapesWidget();
 
     enum ShapeBlurStatus {

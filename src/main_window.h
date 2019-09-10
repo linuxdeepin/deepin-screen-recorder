@@ -23,11 +23,11 @@
 
 #include <DWindowManagerHelper>
 #include <dscreenwindowsutil.h>
-#include <DApplication>
+#include <QApplication>
 #include <QDesktopWidget>
 #include <QObject>
 #include <QPainter>
-#include <QWidget>
+#include <DWidget>
 #include <QSystemTrayIcon>
 #include <QVBoxLayout>
 #include <dwindowmanager.h>
@@ -63,7 +63,7 @@ DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 DWM_USE_NAMESPACE
 
-class MainWindow : public QWidget
+class MainWindow : public DWidget
 {
     Q_OBJECT
 
@@ -95,7 +95,7 @@ class MainWindow : public QWidget
     static const int CAMERA_WIDGET_MIN_HEIGHT;
 
 public:
-    MainWindow(QWidget *parent = 0);
+    MainWindow(DWidget *parent = 0);
     ~MainWindow()
     {
         // All process will quit if MainWindow destroy.
@@ -263,8 +263,8 @@ private:
     DScreenWindowsUtil *m_swUtil;
     QRect m_backgroundRect;
     //添加截屏和录屏的按钮
-    QPushButton *m_recordButton;
-    QPushButton *m_shotButton;
+    DPushButton *m_recordButton;
+    DPushButton *m_shotButton;
     QList<KeyButtonWidget *> m_keyButtonList;
     QList<KeyButtonWidget *> m_tempkeyButtonList;
 

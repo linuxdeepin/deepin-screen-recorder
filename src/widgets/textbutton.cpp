@@ -21,8 +21,8 @@
 #include "../utils/baseutils.h"
 #include "../utils/configsettings.h"
 
-TextButton::TextButton(int num, QWidget *parent)
-    : QPushButton(parent)
+TextButton::TextButton(int num, DWidget *parent)
+    : DPushButton(parent)
 {
     setObjectName("TextButton");
     m_fontsize = num;

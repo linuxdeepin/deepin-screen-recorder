@@ -28,16 +28,16 @@
 const QSize BUTTON_SIZE = QSize(20, 16);
 const QSize LINE_EDIT_SIZE = QSize(43, 16);
 
-Separator::Separator(QWidget *parent)
-    : QLabel(parent)
+Separator::Separator(DWidget *parent)
+    : DLabel(parent)
 {
     setFixedSize(1, 16);
 }
 
 Separator::~Separator() {}
 
-FontSizeWidget::FontSizeWidget(QWidget *parent)
-    : QLabel(parent)
+FontSizeWidget::FontSizeWidget(DWidget *parent)
+    : DLabel(parent)
 {
     initWidget();
 }
@@ -47,16 +47,16 @@ void FontSizeWidget::initWidget()
     setObjectName("FontSizeWidget");
 //    setStyleSheet(getFileContent(":/resources/qss/fontsizewidget.qss"));
     setFixedSize(86, 18);
-    m_fontSizeEdit = new QLineEdit(this);
+    m_fontSizeEdit = new DLineEdit(this);
     m_fontSizeEdit->setObjectName("FontSizeEdit");
     m_fontSizeEdit->setFixedSize(LINE_EDIT_SIZE);
 
     m_fontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();
     m_fontSizeEdit->setText(QString("%1").arg(m_fontSize));
-    m_addSizeBtn = new QPushButton(this);
+    m_addSizeBtn = new DPushButton(this);
     m_addSizeBtn->setObjectName("AddSizeBtn");
     m_addSizeBtn->setFixedSize(BUTTON_SIZE);
-    m_reduceSizeBtn = new QPushButton(this);
+    m_reduceSizeBtn = new DPushButton(this);
     m_reduceSizeBtn->setObjectName("ReduceSizeBtn");
     m_reduceSizeBtn->setFixedSize(BUTTON_SIZE);
 
@@ -74,10 +74,10 @@ void FontSizeWidget::initWidget()
     layout->addStretch();
     setLayout(layout);
 
-    connect(m_addSizeBtn, &QPushButton::clicked, [ = ] {
+    connect(m_addSizeBtn, &DPushButton::clicked, [ = ] {
         adjustFontSize(true);
     });
-    connect(m_reduceSizeBtn, &QPushButton::clicked, [ = ] {
+    connect(m_reduceSizeBtn, &DPushButton::clicked, [ = ] {
         adjustFontSize(false);
     });
 }

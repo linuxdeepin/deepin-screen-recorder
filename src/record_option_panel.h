@@ -24,10 +24,12 @@
 #ifndef RECORDOPTIONALPANEL_H
 #define RECORDOPTIONALPANEL_H
 
-#include <QPushButton>
+#include <DPushButton>
 #include "settings.h"
 
-class RecordOptionPanel : public QPushButton
+DWIDGET_USE_NAMESPACE
+
+class RecordOptionPanel : public DPushButton
 {
     Q_OBJECT
 
@@ -36,7 +38,7 @@ class RecordOptionPanel : public QPushButton
     static const int ICON_OFFSET_X;
 
 public:
-    RecordOptionPanel(QPushButton *parent = 0);
+    RecordOptionPanel(DPushButton *parent = 0);
     ~RecordOptionPanel();
     bool isSaveAsGif();
 

@@ -49,7 +49,7 @@ const QSize MEDIUM_TOOL_BUTTON_SIZE = QSize(52, 40);
 const QSize MIN_TOOL_BUTTON_SIZE = QSize(42, 40);
 }
 
-SubToolWidget::SubToolWidget(QWidget *parent) : DStackedWidget(parent)
+SubToolWidget::SubToolWidget(DWidget *parent) : DStackedWidget(parent)
 {
     initWidget();
 }
@@ -75,7 +75,7 @@ void SubToolWidget::initRecordLabel()
     QButtonGroup *rectBtnGroup = new QButtonGroup();
     rectBtnGroup->setExclusive(false);
     QList<ToolButton *> btnList;
-    QPalette pa;
+    DPalette pa;
 
     bool t_saveGif = false;
     int t_frameRate = 0;
@@ -88,6 +88,7 @@ void SubToolWidget::initRecordLabel()
     if (t_saveGifVar.toString() == "true") {
         t_saveGif = true;
     } else {
+        t_settings->setOption("save_as_gif", false);
         t_saveGif = false;
     }
 
@@ -95,7 +96,7 @@ void SubToolWidget::initRecordLabel()
     t_frameRate = t_frameRateVar.toString().toInt();
 
 
-    QString audio_button_style = "QPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
+    QString audio_button_style = "DPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
                                  "left:-6px;"
                                  "subcontrol-origin:padding;"
                                  "subcontrol-position:right;}";
@@ -103,9 +104,9 @@ void SubToolWidget::initRecordLabel()
     ToolButton *audioButton = new ToolButton();
 
     pa = audioButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     audioButton->setPalette(pa);
 //    audioButton->setStyleSheet(audio_button_style);
 
@@ -122,9 +123,9 @@ void SubToolWidget::initRecordLabel()
     audioMenu->setStyle(QStyleFactory::create("dlight"));
     //for test
     pa = audioMenu->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     audioMenu->setPalette(pa);
 
     DFontSizeManager::instance()->bind(audioMenu, DFontSizeManager::T8);
@@ -199,9 +200,9 @@ void SubToolWidget::initRecordLabel()
 
     ToolButton *keyBoardButton = new ToolButton();
     pa = keyBoardButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     keyBoardButton->setPalette(pa);
 
     keyBoardButton->setObjectName("KeyBoardButton");
@@ -231,9 +232,9 @@ void SubToolWidget::initRecordLabel()
     ToolButton *cameraButton = new ToolButton();
     cameraButton->setDisabled(!CameraProcess::checkCameraAvailability());
     pa = cameraButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     cameraButton->setPalette(pa);
 
     cameraButton->setObjectName("CameraButton");
@@ -258,9 +259,9 @@ void SubToolWidget::initRecordLabel()
     });
     ToolButton *mouseButton = new ToolButton();
     pa = mouseButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     mouseButton->setPalette(pa);
 
     mouseButton->setObjectName("MouseButton");
@@ -287,19 +288,19 @@ void SubToolWidget::initRecordLabel()
     //发送鼠标按键按钮状态信号
     connect(mouseButton, SIGNAL(clicked(bool)),
             this, SIGNAL(mouseBoardButtonClicked(bool)));
-//    QString button_style = "QPushButton{text-align: left;}";
+//    QString button_style = "DPushButton{text-align: left;}";
 
-    QString format_button_style = "QPushButton{text-align: left;}"
-                                  "QPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
+    QString format_button_style = "DPushButton{text-align: left;}"
+                                  "DPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
                                   "left:-4px;"
                                   "subcontrol-origin:padding;"
                                   "subcontrol-position:right;}";
 
     ToolButton *formatButton = new ToolButton();
     pa = formatButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     formatButton->setPalette(pa);
 
     formatButton->setFixedSize(MAX_TOOL_BUTTON_SIZE);
@@ -345,17 +346,17 @@ void SubToolWidget::initRecordLabel()
     }
 
     connect(gifAction, &QAction::triggered, this, [ = ] (bool checked) {
-        t_settings->setOption("save_as_gif", "true");
+        t_settings->setOption("save_as_gif", true);
         emit gifActionChecked(checked);
     });
 
     connect(mp4Action, &QAction::triggered, this, [ = ] (bool checked) {
-        t_settings->setOption("save_as_gif", "false");
+        t_settings->setOption("save_as_gif", false);
         emit mp4ActionChecked(checked);
     });
 
-    QString fps_button_style = "QPushButton{text-align: left;}"
-                               "QPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
+    QString fps_button_style = "DPushButton{text-align: left;}"
+                               "DPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
                                "left:-4px;"
                                "subcontrol-origin:padding;"
                                "subcontrol-position:right;}";
@@ -363,9 +364,9 @@ void SubToolWidget::initRecordLabel()
     ToolButton *fpsButton = new ToolButton();
     DFontSizeManager::instance()->bind(fpsButton, DFontSizeManager::T9);
     pa = fpsButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     fpsButton->setPalette(pa);
 
     fpsButton->setObjectName("FpsButton");
@@ -386,9 +387,9 @@ void SubToolWidget::initRecordLabel()
     fpsMenu->setStyle(QStyleFactory::create("dlight"));
     //for test
     pa = fpsMenu->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     fpsMenu->setPalette(pa);
 
     QAction *frame5Action = new QAction(fpsMenu);
@@ -503,52 +504,52 @@ void SubToolWidget::initRecordLabel()
 
     connect(rectBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
-        QPalette pa;
+        DPalette pa;
         if (keyBoardButton->isChecked()) {
             pa = keyBoardButton->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             keyBoardButton->setPalette(pa);
         }
 
         else {
             pa = keyBoardButton->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             keyBoardButton->setPalette(pa);
         }
 
         if (cameraButton->isChecked()) {
             pa = cameraButton->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             cameraButton->setPalette(pa);
         }
 
         else {
             pa = cameraButton->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             cameraButton->setPalette(pa);
         }
 
         if (mouseButton->isChecked()) {
             pa = mouseButton->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             mouseButton->setPalette(pa);
         }
 
         else {
             pa = mouseButton->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             mouseButton->setPalette(pa);
         }
     });
@@ -560,15 +561,15 @@ void SubToolWidget::initShotLabel()
     QButtonGroup *rectBtnGroup = new QButtonGroup();
     rectBtnGroup->setExclusive(true);
     QList<ToolButton *> btnList;
-    QPalette pa;
+    DPalette pa;
 
     //添加矩形按钮
     ToolButton *rectButton = new ToolButton();
 
     pa = rectButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     rectButton->setPalette(pa);
 
     rectButton->setIconSize(QSize(30, 30));
@@ -583,9 +584,9 @@ void SubToolWidget::initShotLabel()
     ToolButton *circleButton = new ToolButton();
 
     pa = circleButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     circleButton->setPalette(pa);
 
     circleButton->setIconSize(QSize(30, 30));
@@ -593,9 +594,9 @@ void SubToolWidget::initShotLabel()
     circleButton->setObjectName("CircleButton");
 
     pa = circleButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     circleButton->setPalette(pa);
 
 
@@ -606,9 +607,9 @@ void SubToolWidget::initShotLabel()
 
     m_lineButton = new ToolButton();
     pa = m_lineButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 
     m_lineButton->setIconSize(QSize(30, 30));
     m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
@@ -622,9 +623,9 @@ void SubToolWidget::initShotLabel()
 
     ToolButton *penButton = new ToolButton();
     pa = penButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     penButton->setIconSize(QSize(30, 30));
     penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
 
@@ -638,9 +639,9 @@ void SubToolWidget::initShotLabel()
 
     ToolButton *textButton = new ToolButton();
     pa = textButton->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     textButton->setIconSize(QSize(30, 30));
     textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
 
@@ -669,12 +670,12 @@ void SubToolWidget::initShotLabel()
 
     connect(rectBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
-        QPalette pa;
+        DPalette pa;
         if (rectButton->isChecked()) {
             pa = rectButton->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             rectButton->setPalette(pa);
             rectButton->setIcon(QIcon(":/image/newUI/checked/rectangle-checked.svg"));
 
@@ -683,18 +684,18 @@ void SubToolWidget::initShotLabel()
 
         else {
             pa = rectButton->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             rectButton->setPalette(pa);
             rectButton->setIcon(QIcon(":/image/newUI/normal/rectangle-normal.svg"));
         }
 
         if (circleButton->isChecked()) {
             pa = circleButton->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             circleButton->setPalette(pa);
 
             emit changeShotToolFunc("oval");
@@ -703,18 +704,18 @@ void SubToolWidget::initShotLabel()
 
         else {
             pa = circleButton->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             circleButton->setPalette(pa);
             circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
         }
 
         if (m_lineButton->isChecked()) {
             pa = m_lineButton->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             m_lineButton->setPalette(pa);
             if (m_lineflag == 0) {
                 m_lineButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
@@ -729,9 +730,9 @@ void SubToolWidget::initShotLabel()
 
         else {
             pa = m_lineButton->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             m_lineButton->setPalette(pa);
             if (m_lineflag == 0) {
                 m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
@@ -744,9 +745,9 @@ void SubToolWidget::initShotLabel()
 
         if (penButton->isChecked()) {
             pa = penButton->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             penButton->setPalette(pa);
             penButton->setIcon(QIcon(":/image/newUI/checked/Combined Shape-checked.svg"));
 
@@ -755,18 +756,18 @@ void SubToolWidget::initShotLabel()
 
         else {
             pa = penButton->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             penButton->setPalette(pa);
             penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
         }
 
         if (textButton->isChecked()) {
             pa = textButton->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             textButton->setPalette(pa);
             textButton->setIcon(QIcon(":/image/newUI/checked/text_checked.svg"));
 
@@ -775,9 +776,9 @@ void SubToolWidget::initShotLabel()
 
         else {
             pa = textButton->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             textButton->setPalette(pa);
             textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
         }

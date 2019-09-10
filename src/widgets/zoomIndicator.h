@@ -20,15 +20,18 @@
 #ifndef ZOOMINDICATOR_H
 #define ZOOMINDICATOR_H
 
-#include <QLabel>
+#include <DLabel>
 #include <QPainter>
 #include <QPaintEvent>
+#include <DWidget>
 
-class ZoomIndicator : public QLabel
+DWIDGET_USE_NAMESPACE
+
+class ZoomIndicator : public DLabel
 {
     Q_OBJECT
 public:
-    ZoomIndicator(QWidget *parent = 0);
+    ZoomIndicator(DWidget *parent = 0);
     ~ZoomIndicator();
 
     void showMagnifier(QPoint pos);

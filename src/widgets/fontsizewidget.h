@@ -20,24 +20,26 @@
 #ifndef FONTSIZEWIDGET_H
 #define FONTSIZEWIDGET_H
 
-#include <QLabel>
-#include <QWidget>
-#include <QLineEdit>
-#include <QPushButton>
+#include <DLabel>
+#include <DWidget>
+#include <DLineEdit>
+#include <DPushButton>
 
-class Separator : public QLabel
+DWIDGET_USE_NAMESPACE
+
+class Separator : public DLabel
 {
     Q_OBJECT
 public:
-    Separator(QWidget *parent);
+    Separator(DWidget *parent);
     ~Separator();
 };
 
-class FontSizeWidget : public QLabel
+class FontSizeWidget : public DLabel
 {
     Q_OBJECT
 public:
-    FontSizeWidget(QWidget *parent = 0);
+    FontSizeWidget(DWidget *parent = 0);
     ~FontSizeWidget();
 
     void initWidget();
@@ -48,9 +50,9 @@ signals:
     void fontSizeChanged(int fontSize);
 
 private:
-    QLineEdit *m_fontSizeEdit;
-    QPushButton *m_addSizeBtn;
-    QPushButton *m_reduceSizeBtn;
+    DLineEdit *m_fontSizeEdit;
+    DPushButton *m_addSizeBtn;
+    DPushButton *m_reduceSizeBtn;
     int m_fontSize;
 };
 #endif // FONTSIZEWIDGET_H

@@ -21,7 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QWidget>
+#include <DWidget>
 #include <QTimer>
 #include <QApplication>
 #include <QPen>
@@ -35,7 +35,7 @@ const int CountdownTooltip::NUMBER_PADDING_Y = 30;
 
 DWIDGET_USE_NAMESPACE
 
-CountdownTooltip::CountdownTooltip(QWidget *parent) : QWidget(parent)
+CountdownTooltip::CountdownTooltip(DWidget *parent) : DWidget(parent)
 {
     installEventFilter(this);
 

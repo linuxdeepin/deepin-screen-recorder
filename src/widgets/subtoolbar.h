@@ -20,15 +20,18 @@
 #ifndef SUBTOOLBAR_H
 #define SUBTOOLBAR_H
 
-#include <QStackedWidget>
-#include <QLabel>
+#include <DStackedWidget>
+#include <DLabel>
+#include <DWidget>
+
+DWIDGET_USE_NAMESPACE
 
 enum SaveAction : unsigned int;
-class SubToolBar : public QStackedWidget
+class SubToolBar : public DStackedWidget
 {
     Q_OBJECT
 public:
-    SubToolBar(QWidget *parent = 0);
+    SubToolBar(DWidget *parent = 0);
     ~SubToolBar();
 
     void initWidget();
@@ -60,11 +63,11 @@ private:
     int m_saveQuality;
     QString m_currentType;
 
-    QLabel *m_rectLabel;
-    QLabel *m_arrowLabel;
-    QLabel *m_lineLabel;
-    QLabel *m_textLabel;
-    QLabel *m_colorLabel;
-    QLabel *m_saveLabel;
+    DLabel *m_rectLabel;
+    DLabel *m_arrowLabel;
+    DLabel *m_lineLabel;
+    DLabel *m_textLabel;
+    DLabel *m_colorLabel;
+    DLabel *m_saveLabel;
 };
 #endif // SUBTOOLBAR_H

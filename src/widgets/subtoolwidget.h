@@ -30,7 +30,7 @@ class SubToolWidget : public DStackedWidget
 {
     Q_OBJECT
 public:
-    explicit SubToolWidget(QWidget *parent = nullptr);
+    explicit SubToolWidget(DWidget *parent = nullptr);
     ~SubToolWidget();
 
     void initWidget();
@@ -52,8 +52,8 @@ public slots:
     void systemAudioActionCheckedSlot(bool checked);
     void changeArrowAndLineFromSideBar(int line);
 private:
-    QLabel *m_recordSubTool;
-    QLabel *m_shotSubTool;
+    DLabel *m_recordSubTool;
+    DLabel *m_shotSubTool;
     QString m_currentType;
     QAction *m_systemAudioAction;
     ToolButton *m_lineButton;

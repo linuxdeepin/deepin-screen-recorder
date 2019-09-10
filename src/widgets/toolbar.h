@@ -20,7 +20,7 @@
 #ifndef TOOLBAR_H
 #define TOOLBAR_H
 
-#include <QLabel>
+#include <DLabel>
 #include <QPainter>
 #include <DBlurEffectWidget>
 #include <QEvent>
@@ -39,7 +39,7 @@ class ToolBarWidget : public DBlurEffectWidget
 {
     Q_OBJECT
 public:
-    ToolBarWidget(QWidget *parent = 0);
+    ToolBarWidget(DWidget *parent = 0);
     ~ToolBarWidget();
 
 signals:
@@ -76,7 +76,7 @@ protected:
 
 private:
     MajToolBar *m_majToolbar;
-    QLabel *m_hSeparatorLine;
+    DLabel *m_hSeparatorLine;
     SubToolBar *m_subToolbar;
 
     MainToolWidget *m_mainTool;
@@ -86,11 +86,11 @@ private:
     bool  m_expanded;
 };
 
-class ToolBar : public QLabel
+class ToolBar : public DLabel
 {
     Q_OBJECT
 public:
-    ToolBar(QWidget *parent = 0);
+    ToolBar(DWidget *parent = 0);
     ~ToolBar();
 
 signals:

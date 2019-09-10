@@ -24,17 +24,19 @@
 #ifndef COUNTDOWNTOOLTIP_H
 #define COUNTDOWNTOOLTIP_H
 
-#include <QWidget>
+#include <DWidget>
 #include <QTimer>
 
-class CountdownTooltip : public QWidget
+DWIDGET_USE_NAMESPACE
+
+class CountdownTooltip : public DWidget
 {
     Q_OBJECT
 
     static const int NUMBER_PADDING_Y;
 
 public:
-    CountdownTooltip(QWidget *parent = 0);
+    CountdownTooltip(DWidget *parent = 0);
     void start();
 
 signals:

@@ -148,7 +148,7 @@ const ShowButtons::KeyDescription ShowButtons::keyDescriptions[] = {
     { "NUM =", BUTTON_KEY_NUMENTER}
 };
 
-ShowButtons::ShowButtons(QWidget *parent) : QWidget(parent)
+ShowButtons::ShowButtons(DWidget *parent) : DWidget(parent)
 {
     initButtons();
 }
@@ -158,7 +158,7 @@ void ShowButtons::initButtons()
 //    const int count = sizeof(keyDescriptions) / sizeof(keyDescriptions[0]);
 //    for (int i = 0; i < count; ++i) {
 //        const KeyDescription *desc = keyDescriptions + i;
-//        QPushButton *button;
+//        DPushButton *button;
 //        button = new TextButton(desc->text);
 //        m_textButtonMap.insert(desc->text, button);
 //    }

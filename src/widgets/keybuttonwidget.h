@@ -35,7 +35,7 @@ class KeyButtonWidget : public DBlurEffectWidget
 {
     Q_OBJECT
 public:
-    explicit KeyButtonWidget(QWidget *parent = nullptr);
+    explicit KeyButtonWidget(DWidget *parent = nullptr);
     ~KeyButtonWidget();
 
     //设置键盘按钮上的文字内容
@@ -46,7 +46,7 @@ public slots:
 
 private:
     //键盘内容
-    QLabel *m_word;
+    DLabel *m_word;
     QString m_keyword;
 };
 

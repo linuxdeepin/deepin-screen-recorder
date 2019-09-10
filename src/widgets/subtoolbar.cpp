@@ -26,7 +26,7 @@
 #include "../utils/saveutils.h"
 
 #include <DSlider>
-#include <QLineEdit>
+#include <DLineEdit>
 #include <QButtonGroup>
 #include <QHBoxLayout>
 #include <QSlider>
@@ -43,8 +43,8 @@ const int COLOR_NUM = 16;
 const QSize SAVEBTN_SIZE = QSize(33, 26);
 }
 
-SubToolBar::SubToolBar(QWidget *parent)
-    : QStackedWidget(parent),
+SubToolBar::SubToolBar(DWidget *parent)
+    : DStackedWidget(parent),
       m_lineWidth(1)
 {
     initWidget();
@@ -68,7 +68,7 @@ void SubToolBar::initWidget()
 
 void SubToolBar::initRectLabel()
 {
-    m_rectLabel = new QLabel(this);
+    m_rectLabel = new DLabel(this);
     QButtonGroup *rectBtnGroup = new QButtonGroup();
     rectBtnGroup->setExclusive(true);
     QList<ToolButton *> btnList;
@@ -86,7 +86,7 @@ void SubToolBar::initRectLabel()
     rectBtnGroup->addButton(thickLine);
     btnList.append(thickLine);
     //separator line...
-    QLabel *vSeparatorLine = new QLabel();
+    DLabel *vSeparatorLine = new DLabel();
     vSeparatorLine->setFixedSize(1, 16);
     vSeparatorLine->setObjectName("VerticalSeparatorLine");
     //blur, mosaic...
@@ -144,7 +144,7 @@ void SubToolBar::initRectLabel()
 
 void SubToolBar::initArrowLabel()
 {
-    m_arrowLabel = new QLabel(this);
+    m_arrowLabel = new DLabel(this);
     //arrow
     QButtonGroup  *arrowBtnGroup = new QButtonGroup();
     arrowBtnGroup->setExclusive(true);
@@ -178,7 +178,7 @@ void SubToolBar::initArrowLabel()
     lineBtnGroup->addButton(thickLine);
     arrowBtnList.append(thickLine);
     //separator line...
-    QLabel *vSeparatorLine = new QLabel();
+    DLabel *vSeparatorLine = new DLabel();
     vSeparatorLine->setFixedSize(1, 16);
     vSeparatorLine->setObjectName("VerticalSeparatorLine");
     QButtonGroup *styleBtnGroup = new QButtonGroup;
@@ -278,7 +278,7 @@ void SubToolBar::initArrowLabel()
 
 void SubToolBar::initLineLabel()
 {
-    m_lineLabel = new QLabel(this);
+    m_lineLabel = new DLabel(this);
     //rectangle, oval...
     QButtonGroup *lineBtnGroup = new QButtonGroup();
     lineBtnGroup->setExclusive(true);
@@ -327,7 +327,7 @@ void SubToolBar::initLineLabel()
 void SubToolBar::initTextLabel()
 {
     //text...
-    m_textLabel = new QLabel(this);
+    m_textLabel = new DLabel(this);
 //    m_textLabel->setStyleSheet(getFileContent(":/resources/qss/textbutton.qss"));
     QList<int> fontSizeList;
     fontSizeList << 9 << 10 << 12 << 14 << 18 << 24 << 36 << 48 << 64 << 72 << 96;
@@ -360,7 +360,7 @@ void SubToolBar::initTextLabel()
 
 void SubToolBar::initColorLabel()
 {
-    m_colorLabel = new QLabel(this);
+    m_colorLabel = new DLabel(this);
 //    m_colorLabel->setStyleSheet(getFileContent(":/resources/qss/colorbtn.qss"));
     QList<ColorButton *> colorBtnList;
     QButtonGroup *colorBtnGroup = new QButtonGroup(m_colorLabel);
@@ -433,7 +433,7 @@ void SubToolBar::initSaveLabel()
     saveAutoClipboardBtn->setTips(tr("Autosave and copy to clipboard"));
     toolBtnMap[SaveAction::SaveToAutoClipboard] = saveAutoClipboardBtn;
 
-    QLabel *lowQualityText = new QLabel();
+    DLabel *lowQualityText = new DLabel();
     lowQualityText->setObjectName("LowQualityLabel");
     lowQualityText->setText(tr("Low"));
     QSlider *saveQualitySlider = new QSlider(Qt::Horizontal);
@@ -447,11 +447,11 @@ void SubToolBar::initSaveLabel()
     connect(saveQualitySlider, &QSlider::valueChanged,
             this, &SubToolBar::setSaveQualityIndex);
 
-    QLabel *highQualityText = new QLabel();
+    DLabel *highQualityText = new DLabel();
     highQualityText->setObjectName("HighQualityLabel");
     highQualityText->setText(tr("High"));
 
-    m_saveLabel = new QLabel(this);
+    m_saveLabel = new DLabel(this);
     QHBoxLayout *saveLayout = new QHBoxLayout();
     saveLayout->setMargin(0);
     saveLayout->setSpacing(0);

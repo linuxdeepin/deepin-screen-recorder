@@ -19,7 +19,7 @@
 #include "maintoolwidget.h"
 #include <DSlider>
 #include "toolbutton.h"
-#include <QLineEdit>
+#include <DLineEdit>
 #include <QButtonGroup>
 #include <QHBoxLayout>
 //#include <QSlider>
@@ -39,7 +39,7 @@ const QSize MIN_TOOL_BUTTON_SIZE = QSize(50, 40);
 }
 
 
-MainToolWidget::MainToolWidget(QWidget *parent) : QLabel(parent)
+MainToolWidget::MainToolWidget(DWidget *parent) : DLabel(parent)
 {
     initWidget();
 }
@@ -62,16 +62,16 @@ void MainToolWidget::initMainLabel()
     QList<ToolButton *> toolBtnList;
     QButtonGroup *buttonGroup = new QButtonGroup(this);
     buttonGroup->setExclusive(true);
-    QPalette pa;
+    DPalette pa;
 
-//    QString record_button_style = "QPushButton:press{QIcon(:/image/newUI/press/screencap-press.svg)}";
+//    QString record_button_style = "DPushButton:press{QIcon(:/image/newUI/press/screencap-press.svg)}";
 
     ToolButton *recordBtn = new ToolButton();
     DFontSizeManager::instance()->bind(recordBtn, DFontSizeManager::T8);
     pa = recordBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     recordBtn->setPalette(pa);
     recordBtn->setCheckable(true);
     recordBtn->setText(tr("Record"));
@@ -83,15 +83,15 @@ void MainToolWidget::initMainLabel()
 //    recordBtn->setStyleSheet(record_button_style);
     toolBtnList.append(recordBtn);
 
-//    QString shot_button_style = "QPushButton:press{QIcon(:/image/newUI/press/shot-press.svg)}";
+//    QString shot_button_style = "DPushButton:press{QIcon(:/image/newUI/press/shot-press.svg)}";
 
     ToolButton *shotBtn = new ToolButton();
     DFontSizeManager::instance()->bind(shotBtn, DFontSizeManager::T8);
 
     pa = shotBtn->palette();
-    pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     shotBtn->setPalette(pa);
     shotBtn->setText(tr("Shot"));
     shotBtn->setObjectName("ShotBtn");
@@ -120,12 +120,12 @@ void MainToolWidget::initMainLabel()
     connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
 
-        QPalette pa;
+        DPalette pa;
         if (recordBtn->isChecked()) {
             pa = recordBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             recordBtn->setIconSize(QSize(17, 17));
             recordBtn->setIcon(QIcon(":/image/newUI/checked/screencap-checked.svg"));
             recordBtn->setPalette(pa);
@@ -137,9 +137,9 @@ void MainToolWidget::initMainLabel()
 
         else {
             pa = recordBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             recordBtn->setPalette(pa);
             recordBtn->setIconSize(QSize(17, 17));
             recordBtn->setIcon(QIcon(":/image/newUI/normal/screencap-normal.svg"));
@@ -148,9 +148,9 @@ void MainToolWidget::initMainLabel()
 
         if (shotBtn->isChecked()) {
             pa = shotBtn->palette();
-            pa.setColor(QPalette::ButtonText, Qt::white);
-            pa.setColor(QPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(QPalette::Light, QColor("#1C1C1C"));
+            pa.setColor(DPalette::ButtonText, Qt::white);
+            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             shotBtn->setIconSize(QSize(17, 17));
             shotBtn->setIcon(QIcon(":/image/newUI/checked/screenshot-checked.svg"));
             shotBtn->setPalette(pa);
@@ -162,9 +162,9 @@ void MainToolWidget::initMainLabel()
 
         else {
             pa = shotBtn->palette();
-            pa.setColor(QPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(QPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(QPalette::Light, QColor(230, 230, 230, 150));
+            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             shotBtn->setIconSize(QSize(17, 17));
             shotBtn->setIcon(QIcon(":/image/newUI/normal/screenshot-normal.svg"));
             shotBtn->setPalette(pa);

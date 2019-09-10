@@ -35,8 +35,8 @@ const int SPACING = 12;
 const qreal RESIZEPOINT_WIDTH = 15;
 const QSize ROTATE_ICON_SIZE = QSize(30, 30);
 
-ShapesWidget::ShapesWidget(QWidget *parent)
-    : QFrame(parent),
+ShapesWidget::ShapesWidget(DWidget *parent)
+    : DFrame(parent),
       m_isMoving(false),
       m_isSelected(false),
       m_isShiftPressed(false),
@@ -940,7 +940,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
             m_selectedOrder = -1;
             m_selectedShape.type = "";
             update();
-            QFrame::mousePressEvent(e);
+            DFrame::mousePressEvent(e);
             return;
         }
     }
@@ -948,7 +948,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
     if (e->button() == Qt::RightButton) {
         qDebug() << "RightButton clicked!";
         m_menuController->showMenu(QPoint(mapToGlobal(e->pos())));
-        QFrame::mousePressEvent(e);
+        DFrame::mousePressEvent(e);
         return;
     }
 
@@ -988,11 +988,25 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     m_currentShape.lineWidth = LINEWIDTH(ConfigSettings::instance()->value(
                                                              "arrow", "arrow_linewidth_index").toInt());
                 }
-            } else if (m_currentType == "rectangle" || m_currentType == "oval") {
+            } else if (m_currentType == "rectangle") {
                 m_currentShape.isBlur = ConfigSettings::instance()->value(
-                                            "effect", "is_blur").toBool();
+                                            "rectangle", "is_blur").toBool();
                 m_currentShape.isMosaic = ConfigSettings::instance()->value(
-                                              "effect", "is_mosaic").toBool();
+                                              "rectangle", "is_mosaic").toBool();
+                m_currentShape.isShiftPressed = m_isShiftPressed;
+                m_currentShape.index = m_currentIndex;
+                if (m_currentShape.isBlur && !m_blurEffectExist) {
+                    emit reloadEffectImg("blur");
+                    m_blurEffectExist = true;
+                } else if (m_currentShape.isMosaic &&  !m_mosaicEffectExist) {
+                    emit reloadEffectImg("mosaic");
+                    m_mosaicEffectExist = true;
+                }
+            } else if (m_currentType == "oval") {
+                m_currentShape.isBlur = ConfigSettings::instance()->value(
+                                            "oval", "is_blur").toBool();
+                m_currentShape.isMosaic = ConfigSettings::instance()->value(
+                                              "oval", "is_mosaic").toBool();
                 m_currentShape.isShiftPressed = m_isShiftPressed;
                 m_currentShape.index = m_currentIndex;
                 if (m_currentShape.isBlur && !m_blurEffectExist) {
@@ -1055,7 +1069,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
         update();
     }
 
-    QFrame::mousePressEvent(e);
+    DFrame::mousePressEvent(e);
 }
 
 void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)
@@ -1106,7 +1120,7 @@ void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)
     m_pos2 = QPointF(0, 0);
 
     update();
-    QFrame::mouseReleaseEvent(e);
+    DFrame::mouseReleaseEvent(e);
 }
 
 void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
@@ -1158,7 +1172,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
             // resize function
             handleResize(QPointF(e->pos()), m_clickedKey);
             update();
-            QFrame::mouseMoveEvent(e);
+            DFrame::mouseMoveEvent(e);
             return;
         }
 
@@ -1256,7 +1270,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
         }
     }
 
-    QFrame::mouseMoveEvent(e);
+    DFrame::mouseMoveEvent(e);
 }
 
 void ShapesWidget::updateTextRect(TextEdit *edit, QRectF newRect)

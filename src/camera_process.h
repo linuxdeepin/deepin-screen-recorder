@@ -20,7 +20,7 @@
 #define CAMERA_PROCESS_H
 
 #include <QObject>
-#include <QWidget>
+#include <DWidget>
 #include <QCamera>
 #include <QCameraViewfinder>
 #include <QCameraImageCapture>

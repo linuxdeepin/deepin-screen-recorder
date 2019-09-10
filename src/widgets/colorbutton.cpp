@@ -24,8 +24,8 @@
 
 const QSize BUTTON_SIZE = QSize(16, 16);
 const int  ELLIPSE_MARGIN = 1;
-ColorButton::ColorButton(QColor bgColor, QWidget *parent)
-    : QPushButton(parent)
+ColorButton::ColorButton(QColor bgColor, DWidget *parent)
+    : DPushButton(parent)
 {
     setFixedSize(BUTTON_SIZE);
     setCheckable(true);

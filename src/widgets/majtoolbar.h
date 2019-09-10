@@ -20,16 +20,19 @@
 #ifndef MAJTOOLBAR_H
 #define MAJTOOLBAR_H
 
-#include <QLabel>
-#include <QPushButton>
+#include <DLabel>
+#include <DPushButton>
 #include <QHBoxLayout>
-#include <QStackedWidget>
+#include <DStackedWidget>
+#include <DWidget>
 
-class MajToolBar : public QLabel
+DWIDGET_USE_NAMESPACE
+
+class MajToolBar : public DLabel
 {
     Q_OBJECT
 public:
-    MajToolBar(QWidget *parent = 0);
+    MajToolBar(DWidget *parent = 0);
     ~MajToolBar();
 
 signals:

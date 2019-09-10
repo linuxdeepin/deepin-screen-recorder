@@ -25,19 +25,22 @@
 #include <QPixmap>
 #include <QFontMetricsF>
 #include <QApplication>
+#include <DPalette>
 
 #include "../utils/configsettings.h"
 #include "../utils/baseutils.h"
 
+DGUI_USE_NAMESPACE
+
 const QSize CURSOR_SIZE = QSize(5, 20);
 const int TEXT_MARGIN = 10;
 
-TextEdit::TextEdit(int index, QWidget *parent)
-    : QPlainTextEdit(parent),
+TextEdit::TextEdit(int index, DWidget *parent)
+    : DPlainTextEdit(parent),
       m_textColor(Qt::red)
 {
     m_index = index;
-    setLineWrapMode(QPlainTextEdit::NoWrap);
+    setLineWrapMode(DPlainTextEdit::NoWrap);
     setContextMenuPolicy(Qt::NoContextMenu);
 
     int defaultColorIndex = ConfigSettings::instance()->value(
@@ -77,11 +80,11 @@ void TextEdit::setColor(QColor c)
     m_textColor = c;
 //    setStyleSheet(QString("TextEdit {background-color:  transparent;"
 //                          " color: %1; border: none;}").arg(m_textColor.name()));
-    QPalette pa = this->palette();
-    pa.setColor(QPalette::Base, QColor(255, 255, 255, 0));
-    pa.setColor(QPalette::Dark, QColor(255, 255, 255, 0));
-    pa.setColor(QPalette::Light, QColor(255, 255, 255, 0));
-    pa.setColor(QPalette::Text, c);
+    DPalette pa = this->palette();
+    pa.setColor(DPalette::Base, QColor(255, 255, 255, 0));
+    pa.setColor(DPalette::Dark, QColor(255, 255, 255, 0));
+    pa.setColor(DPalette::Light, QColor(255, 255, 255, 0));
+    pa.setColor(DPalette::Text, c);
     this->setPalette(pa);
     this->updateGeometry();
 }
@@ -98,7 +101,7 @@ void TextEdit::setFontSize(int fontsize)
 
 void TextEdit::inputMethodEvent(QInputMethodEvent *e)
 {
-    QPlainTextEdit::inputMethodEvent(e);
+    DPlainTextEdit::inputMethodEvent(e);
 
     QString virtualStr = this->toPlainText() + e->preeditString();
     updateContentSize(virtualStr);
@@ -136,7 +139,7 @@ void TextEdit::mousePressEvent(QMouseEvent *e)
 {
     qDebug() << "TextEdit mousePressEvent" << e->pos();
     if (!this->isReadOnly()) {
-        QPlainTextEdit::mousePressEvent(e);
+        DPlainTextEdit::mousePressEvent(e);
         return;
     }
 
@@ -149,7 +152,7 @@ void TextEdit::mousePressEvent(QMouseEvent *e)
         }
     }
 
-    QPlainTextEdit::mousePressEvent(e);
+    DPlainTextEdit::mousePressEvent(e);
 }
 
 void TextEdit::mouseMoveEvent(QMouseEvent *e)
@@ -168,7 +171,7 @@ void TextEdit::mouseMoveEvent(QMouseEvent *e)
     }
 
 
-    QPlainTextEdit::mouseMoveEvent(e);
+    DPlainTextEdit::mouseMoveEvent(e);
 }
 
 void TextEdit::mouseReleaseEvent(QMouseEvent *e)
@@ -179,7 +182,7 @@ void TextEdit::mouseReleaseEvent(QMouseEvent *e)
         return;
     }
 
-    QPlainTextEdit::mouseReleaseEvent(e);
+    DPlainTextEdit::mouseReleaseEvent(e);
 }
 
 void TextEdit::mouseDoubleClickEvent(QMouseEvent *e)
@@ -187,12 +190,12 @@ void TextEdit::mouseDoubleClickEvent(QMouseEvent *e)
     this->setReadOnly(false);
     this->setCursorVisible(true);
     emit backToEditing();
-    QPlainTextEdit::mouseDoubleClickEvent(e);
+    DPlainTextEdit::mouseDoubleClickEvent(e);
 }
 
 void TextEdit::keyPressEvent(QKeyEvent *e)
 {
-    QPlainTextEdit::keyPressEvent(e);
+    DPlainTextEdit::keyPressEvent(e);
     if (e->key() == Qt::Key_Escape && !this->isReadOnly()) {
         this->setReadOnly(true);
     }

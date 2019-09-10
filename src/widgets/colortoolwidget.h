@@ -19,7 +19,7 @@
 #ifndef COLORTOOLWIDGET_H
 #define COLORTOOLWIDGET_H
 
-#include <QStackedWidget>
+#include <DStackedWidget>
 #include <QVBoxLayout>
 #include <DLabel>
 #include "toolbutton.h"
@@ -30,7 +30,7 @@ class ColorToolWidget : public DLabel
 {
     Q_OBJECT
 public:
-    explicit ColorToolWidget(QWidget *parent = nullptr);
+    explicit ColorToolWidget(DWidget *parent = nullptr);
     ~ColorToolWidget();
 
     void initWidget();

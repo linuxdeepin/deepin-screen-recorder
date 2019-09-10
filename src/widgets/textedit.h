@@ -20,16 +20,18 @@
 #ifndef TEXTEDIT_H
 #define TEXTEDIT_H
 
-#include <QWidget>
-#include <QPlainTextEdit>
+#include <DWidget>
+#include <DPlainTextEdit>
 #include <QPainter>
 #include <QMouseEvent>
 
-class TextEdit : public QPlainTextEdit
+DWIDGET_USE_NAMESPACE
+
+class TextEdit : public DPlainTextEdit
 {
     Q_OBJECT
 public:
-    TextEdit(int index, QWidget *parent);
+    TextEdit(int index, DWidget *parent);
     ~TextEdit();
 
 public slots:

@@ -39,8 +39,8 @@ const QSize SAVE_BTN = QSize(30, 26);
 const QSize LIST_BTN = QSize(12, 26);
 }
 
-MajToolBar::MajToolBar(QWidget *parent)
-    : QLabel(parent),
+MajToolBar::MajToolBar(DWidget *parent)
+    : DLabel(parent),
       m_isChecked(false),
       m_currentShape("")
 {

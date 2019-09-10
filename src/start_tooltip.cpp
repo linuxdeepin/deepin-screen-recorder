@@ -21,7 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QWidget>
+#include <DWidget>
 #include <QPainter>
 #include <QDesktopWidget>
 #include <QApplication>
@@ -36,7 +36,7 @@
 
 DWIDGET_USE_NAMESPACE
 
-StartTooltip::StartTooltip(QWidget *parent) : QWidget(parent)
+StartTooltip::StartTooltip(DWidget *parent) : DWidget(parent)
 {
     setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground, true);

@@ -35,7 +35,7 @@ const int RecordButton::WIDTH = 128;
 const int RecordButton::HEIGHT = 86;
 const int RecordButton::TEXT_PADDING = 0;
 
-RecordButton::RecordButton(QPushButton *parent) : QPushButton(parent)
+RecordButton::RecordButton(DPushButton *parent) : DPushButton(parent)
 {
     installEventFilter(this);  // add event filter
     setMouseTracking(true);

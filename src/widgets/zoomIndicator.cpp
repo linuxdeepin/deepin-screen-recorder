@@ -34,8 +34,8 @@ const int INDICATOR_WIDTH = 49;
 const int CENTER_RECT_WIDTH = 12;
 const int BOTTOM_RECT_HEIGHT = 14;
 }
-ZoomIndicator::ZoomIndicator(QWidget *parent)
-    : QLabel(parent)
+ZoomIndicator::ZoomIndicator(DWidget *parent)
+    : DLabel(parent)
 {
     setFixedSize(BACKGROUND_SIZE);
 //    setStyleSheet(getFileContent(":/resources/qss/zoomindicator.qss"));

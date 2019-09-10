@@ -25,8 +25,8 @@ const QSize TOOL_SAVE_BTN = QSize(32, 22);
 const QSize SAVE_BTN = QSize(21, 22);
 const QSize LIST_BTN = QSize(11, 22);
 
-SaveButton::SaveButton(QWidget *parent)
-    : QPushButton(parent)
+SaveButton::SaveButton(DWidget *parent)
+    : DPushButton(parent)
 {
     setFixedSize(TOOL_SAVE_BTN);
 //    setStyleSheet(getFileContent(":/resources/qss/toolsavebutton.qss"));

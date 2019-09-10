@@ -5,13 +5,13 @@
 #include <QPainter>
 #include <QHBoxLayout>
 
-CameraWidget::CameraWidget(QWidget *parent) : QWidget(parent)
+CameraWidget::CameraWidget(DWidget *parent) : DWidget(parent)
 {
     setWindowFlags(Qt::WindowStaysOnTopHint);
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
     setAcceptDrops(true);
-    m_cameraUI = new QLabel(this);
+    m_cameraUI = new DLabel(this);
 
     QHBoxLayout *t_hlayout = new QHBoxLayout(this);
     t_hlayout->addWidget(m_cameraUI);
@@ -122,7 +122,7 @@ void CameraWidget::paintEvent(QPaintEvent *e)
 //    painter.setRenderHint(QPainter::Antialiasing);
 //    painter.drawRect(rect());
 
-    QWidget::paintEvent(e);
+    DWidget::paintEvent(e);
 }
 void CameraWidget::mousePressEvent(QMouseEvent *event)
 {
@@ -178,7 +178,7 @@ void CameraWidget::mouseMoveEvent(QMouseEvent *event)
 //                                  curPos.y() - size.height() / 2);
         this->move(curPos);
     }
-    QWidget::mouseMoveEvent(event);
+    DWidget::mouseMoveEvent(event);
 }
 
 void CameraWidget::mouseReleaseEvent(QMouseEvent *event)

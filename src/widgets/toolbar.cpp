@@ -42,7 +42,7 @@ const int BUTTON_SPACING = 3;
 const int BTN_RADIUS = 3;
 }
 
-ToolBarWidget::ToolBarWidget(QWidget *parent)
+ToolBarWidget::ToolBarWidget(DWidget *parent)
     : DBlurEffectWidget(parent),
       m_expanded(false)
 {
@@ -59,7 +59,7 @@ ToolBarWidget::ToolBarWidget(QWidget *parent)
     setFixedSize(TOOLBAR_WIDGET_SIZE);
 
 //    qDebug() << "~~~~~~" << this->size();
-    m_hSeparatorLine = new QLabel(this);
+    m_hSeparatorLine = new DLabel(this);
     m_hSeparatorLine->setObjectName("HorSeparatorLine");
     m_hSeparatorLine->setFixedHeight(1);
 
@@ -69,8 +69,8 @@ ToolBarWidget::ToolBarWidget(QWidget *parent)
     m_mainTool = new MainToolWidget(this);
     m_subTool = new SubToolWidget(this);
 
-    QString button_style = "QPushButton{border-radius:30px;} "
-                           "QPushButton::hover{border-image: url(:/image/newUI/hover/close-hover.svg)}";
+    QString button_style = "DPushButton{border-radius:30px;} "
+                           "DPushButton::hover{border-image: url(:/image/newUI/hover/close-hover.svg)}";
 
     QPixmap pixmap(":/image/newUI/normal/close-normal.svg");
 
@@ -171,8 +171,8 @@ void ToolBarWidget::setExpand(bool expand, QString shapeType)
 ToolBarWidget::~ToolBarWidget() {}
 
 
-ToolBar::ToolBar(QWidget *parent)
-    : QLabel(parent)
+ToolBar::ToolBar(DWidget *parent)
+    : DLabel(parent)
 {
 
 }
@@ -198,13 +198,13 @@ void ToolBar::paintEvent(QPaintEvent *e)
     QRectF rect(0, 0, this->width() - 1, this->height() - 1);
     painter.drawRoundedRect(rect.translated(0.5, 0.5), 3, 3, Qt::AbsoluteSize);
 
-    QLabel::paintEvent(e);
+    DLabel::paintEvent(e);
 }
 
 void ToolBar::enterEvent(QEvent *e)
 {
     qApp->setOverrideCursor(Qt::ArrowCursor);
-    QLabel::enterEvent(e);
+    DLabel::enterEvent(e);
 }
 
 bool ToolBar::eventFilter(QObject *obj, QEvent *event)
@@ -214,7 +214,7 @@ bool ToolBar::eventFilter(QObject *obj, QEvent *event)
         qDebug() << "--------------";
     }
 
-    return QLabel::eventFilter(obj, event);
+    return DLabel::eventFilter(obj, event);
 }
 
 void ToolBar::showAt(QPoint pos)

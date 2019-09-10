@@ -24,9 +24,11 @@
 #ifndef RECORDBUTTON_H
 #define RECORDBUTTON_H
 
-#include <QPushButton>
+#include <DPushButton>
 
-class RecordButton : public QPushButton
+DWIDGET_USE_NAMESPACE
+
+class RecordButton : public DPushButton
 {
     Q_OBJECT
 
@@ -35,7 +37,7 @@ class RecordButton : public QPushButton
     static const int TEXT_PADDING;
 
 public:
-    RecordButton(QPushButton *parent = 0);
+    RecordButton(DPushButton *parent = 0);
     void setText(QString string);
 
 protected:

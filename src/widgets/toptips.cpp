@@ -22,8 +22,8 @@
 #include "../utils/baseutils.h"
 #include <QDebug>
 
-TopTips::TopTips(QWidget *parent)
-    : QLabel(parent)
+TopTips::TopTips(DWidget *parent)
+    : DLabel(parent)
 {
     setFixedSize(75, 20);
 //    this->setStyleSheet(" TopTips { background-color: transparent;"

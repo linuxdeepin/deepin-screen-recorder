@@ -10,13 +10,16 @@
 #include <QDebug>
 #include <QImage>
 #include <QTimer>
-#include <QLabel>
+#include <DLabel>
+#include <DWidget>
 
-class CameraWidget : public QWidget
+DWIDGET_USE_NAMESPACE
+
+class CameraWidget : public DWidget
 {
     Q_OBJECT
 public:
-    explicit CameraWidget(QWidget *parent = nullptr);
+    explicit CameraWidget(DWidget *parent = nullptr);
     ~CameraWidget();
     void setRecordRect(int x, int y, int width, int height);
     void showAt(QPoint pos);
@@ -52,7 +55,7 @@ private:
     QCameraViewfinder *viewfinder; //摄像头取景器部件
     QCameraImageCapture *imageCapture; //截图部件
     QTimer *timer_image_capture;
-    QLabel *m_cameraUI;
+    DLabel *m_cameraUI;
 };
 
 #endif // CAMERAWIDGET_H

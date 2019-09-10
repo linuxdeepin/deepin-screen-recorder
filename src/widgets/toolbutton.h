@@ -22,7 +22,7 @@
 
 #include <DPushButton>
 #include <QApplication>
-#include <QPalette>
+#include <DPalette>
 
 DWIDGET_USE_NAMESPACE
 
@@ -30,7 +30,7 @@ class ToolButton : public DPushButton
 {
     Q_OBJECT
 public:
-    ToolButton(QWidget *parent = 0)
+    ToolButton(DWidget *parent = 0)
     {
         Q_UNUSED(parent);
         setCheckable(true);
@@ -57,13 +57,13 @@ protected:
     void enterEvent(QEvent *e) override
     {
         emit onEnter();
-        QPushButton::enterEvent(e);
+        DPushButton::enterEvent(e);
     }
 
     void leaveEvent(QEvent *e) override
     {
         emit onExist();
-        QPushButton::leaveEvent(e);
+        DPushButton::leaveEvent(e);
     }
 
 private:
