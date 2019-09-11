@@ -74,16 +74,35 @@ void CameraWidget::initCamera()
 
 void CameraWidget::cameraStart()
 {
-    timer_image_capture->start(50);
+
     camera->start();
 
     if (imageCapture->isCaptureDestinationSupported(QCameraImageCapture::CaptureToBuffer)) {
+        timer_image_capture->start(50);
         imageCapture->setCaptureDestination(QCameraImageCapture::CaptureToBuffer);
         qDebug() << imageCapture->supportedBufferFormats();
         imageCapture->setBufferFormat(QVideoFrame::PixelFormat::Format_Jpeg);
         qDebug() << imageCapture->supportedResolutions(imageCapture->encodingSettings());
+
+        QList<QSize> t_capSizeLst = imageCapture->supportedResolutions(imageCapture->encodingSettings());
+        QSize t_resolutionSize;
+
+        if (t_capSizeLst.contains(QSize(640, 480))) {
+            t_resolutionSize = QSize(640, 480);
+        }
+
+        else if (t_capSizeLst.contains(QSize(640, 360))) {
+            t_resolutionSize = QSize(640, 360);
+        }
+
+        else {
+            t_resolutionSize = t_capSizeLst.last();
+        }
+
         QImageEncoderSettings iamge_setting;
-        iamge_setting.setResolution(640, 360);
+        iamge_setting.setResolution(t_resolutionSize.width(), t_resolutionSize.height());
+
+        qDebug() << iamge_setting.resolution();
         imageCapture->setEncodingSettings(iamge_setting);
         connect(imageCapture, &QCameraImageCapture::imageCaptured, this, &CameraWidget::processCapturedImage);
     }
