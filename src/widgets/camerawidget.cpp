@@ -88,13 +88,13 @@ void CameraWidget::cameraStart()
         QList<QSize> t_capSizeLst = imageCapture->supportedResolutions(imageCapture->encodingSettings());
         QSize t_resolutionSize;
 
-        if (t_capSizeLst.contains(QSize(640, 480))) {
-            t_resolutionSize = QSize(640, 480);
+        if (t_capSizeLst.contains(QSize(640, 360))) {
+            t_resolutionSize = QSize(640, 360);
             m_wildScreen = false;
         }
 
-        else if (t_capSizeLst.contains(QSize(640, 360))) {
-            t_resolutionSize = QSize(640, 360);
+        else if (t_capSizeLst.contains(QSize(640, 480))) {
+            t_resolutionSize = QSize(640, 480);
             m_wildScreen = true;
         }
 
