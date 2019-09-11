@@ -943,8 +943,8 @@ void MainWindow::changeCameraSelectEvent(bool checked)
         int cameraWidgetHeight = recordHeight * 1 / 4;
         if (cameraWidgetHeight > CAMERA_WIDGET_MAX_HEIGHT)
             cameraWidgetHeight = CAMERA_WIDGET_MAX_HEIGHT;
-        int tempHeight = cameraWidgetWidth * 9 / 16;
-        int tempWidth = cameraWidgetHeight * 16 / 9;
+        int tempHeight = cameraWidgetWidth * 3 / 4;
+        int tempWidth = cameraWidgetHeight * 4 / 3;
         if (tempHeight <= CAMERA_WIDGET_MAX_HEIGHT && tempHeight >= CAMERA_WIDGET_MIN_HEIGHT && tempHeight <= recordHeight) {
             cameraWidgetHeight = tempHeight;
         } else {

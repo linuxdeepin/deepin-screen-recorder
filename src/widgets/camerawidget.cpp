@@ -12,6 +12,7 @@ CameraWidget::CameraWidget(DWidget *parent) : DWidget(parent)
     setMouseTracking(true);
     setAcceptDrops(true);
     m_cameraUI = new DLabel(this);
+    m_wildScreen = false;
 
     QHBoxLayout *t_hlayout = new QHBoxLayout(this);
     t_hlayout->addWidget(m_cameraUI);
@@ -89,14 +90,17 @@ void CameraWidget::cameraStart()
 
         if (t_capSizeLst.contains(QSize(640, 480))) {
             t_resolutionSize = QSize(640, 480);
+            m_wildScreen = false;
         }
 
         else if (t_capSizeLst.contains(QSize(640, 360))) {
             t_resolutionSize = QSize(640, 360);
+            m_wildScreen = true;
         }
 
         else {
             t_resolutionSize = t_capSizeLst.last();
+            m_wildScreen = false;
         }
 
         QImageEncoderSettings iamge_setting;
@@ -116,6 +120,11 @@ void CameraWidget::cameraStop()
 {
     timer_image_capture->stop();
     camera->stop();
+}
+
+bool CameraWidget::getScreenResolution()
+{
+    return m_wildScreen;
 }
 
 void CameraWidget::captureImage()
