@@ -45,7 +45,7 @@ static QString g_appPath;//全局路径
 DGuiApplicationHelper::ColorType getThemeTypeSetting()
 {
     //需要找到自己程序的配置文件路径，并读取配置，这里只是用home路径下themeType.cfg文件举例,具体配置文件根据自身项目情况
-    QString t_appDir = g_appPath + QDir::separator() + ".themetype.cfg";
+    QString t_appDir = g_appPath + QDir::separator() + "themetype.cfg";
     QFile t_configFile(t_appDir);
 
     t_configFile.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -75,7 +75,7 @@ DGuiApplicationHelper::ColorType getThemeTypeSetting()
 void saveThemeTypeSetting(int type)
 {
     //需要找到自己程序的配置文件路径，并写入配置，这里只是用home路径下themeType.cfg文件举例,具体配置文件根据自身项目情况
-    QString t_appDir = g_appPath + QDir::separator() + ".themetype.cfg";
+    QString t_appDir = g_appPath + QDir::separator() + "themetype.cfg";
     QFile t_configFile(t_appDir);
 
     t_configFile.open(QIODevice::WriteOnly | QIODevice::Text);
