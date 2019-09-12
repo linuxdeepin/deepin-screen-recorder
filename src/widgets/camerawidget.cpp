@@ -7,17 +7,6 @@
 
 CameraWidget::CameraWidget(DWidget *parent) : DWidget(parent)
 {
-    setWindowFlags(Qt::WindowStaysOnTopHint);
-    setFocusPolicy(Qt::StrongFocus);
-    setMouseTracking(true);
-    setAcceptDrops(true);
-    m_cameraUI = new DLabel(this);
-    m_wildScreen = false;
-
-    QHBoxLayout *t_hlayout = new QHBoxLayout(this);
-    t_hlayout->addWidget(m_cameraUI);
-    this->setLayout(t_hlayout);
-    initCamera();
 }
 
 CameraWidget::~CameraWidget()
@@ -65,6 +54,17 @@ int CameraWidget::getRecordHeight()
 }
 void CameraWidget::initCamera()
 {
+    setWindowFlags(Qt::WindowStaysOnTopHint);
+    setFocusPolicy(Qt::StrongFocus);
+    setMouseTracking(true);
+    setAcceptDrops(true);
+    m_cameraUI = new DLabel(this);
+    m_wildScreen = false;
+
+    QHBoxLayout *t_hlayout = new QHBoxLayout(this);
+    t_hlayout->addWidget(m_cameraUI);
+    this->setLayout(t_hlayout);
+
     camera = new QCamera(this);
     camera->setCaptureMode(QCamera::CaptureStillImage);
     imageCapture = new QCameraImageCapture(camera);

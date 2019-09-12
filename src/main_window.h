@@ -303,4 +303,5 @@ private:
     // int repaintCounter;
     CameraWidget *m_cameraWidget;
     bool m_selectedCamera = false;
+    bool m_initCamera = false;
 };

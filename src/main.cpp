@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
         else {
             // Init application attributes.
 
-            g_appPath = QDir::homePath() + QDir::separator() + qApp->applicationName();
+            g_appPath = QDir::homePath() + QDir::separator() + "." + qApp->applicationName();
             QDir t_appDir;
             t_appDir.mkpath(g_appPath);
 
