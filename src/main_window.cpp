@@ -108,7 +108,7 @@ void MainWindow::initAttributes()
     m_repaintSideBar = false;
     m_gifMode = true;
     m_mp4Mode = false;
-    m_keyBoardTimer = new QTimer(this);
+//    m_keyBoardTimer = new QTimer(this);
     m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
     m_keyButtonList.clear();
     m_tempkeyButtonList.clear();
@@ -375,7 +375,7 @@ void MainWindow::initScreenShot()
     m_repaintSideBar = false;
     m_gifMode = true;
     m_mp4Mode = false;
-    m_keyBoardTimer = new QTimer(this);
+//    m_keyBoardTimer = new QTimer(this);
     m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
     m_screenWidth = QApplication::desktop()->screen()->width();
     m_screenHeight = QApplication::desktop()->screen()->height();
@@ -445,7 +445,7 @@ void MainWindow::initScreenRecorder()
     m_repaintSideBar = false;
     m_gifMode = true;
     m_mp4Mode = false;
-    m_keyBoardTimer = new QTimer(this);
+//    m_keyBoardTimer = new QTimer(this);
     m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
 
     m_screenWidth = QApplication::desktop()->screen()->width();
@@ -934,6 +934,11 @@ void MainWindow::changeFrameRateEvent(int frameRate)
 
 void MainWindow::changeCameraSelectEvent(bool checked)
 {
+    if (m_initCamera == false) {
+        m_cameraWidget->initCamera();
+        m_initCamera = true;
+    }
+
     m_selectedCamera = checked;
     if (checked) {
         int cameraWidgetWidth = recordWidth * 2 / 5;

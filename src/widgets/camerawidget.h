@@ -30,6 +30,7 @@ public:
     void initCamera();
     void cameraStart();
     void cameraStop();
+    bool getScreenResolution();
 signals:
 
 public slots:
@@ -56,6 +57,8 @@ private:
     QCameraImageCapture *imageCapture; //截图部件
     QTimer *timer_image_capture;
     DLabel *m_cameraUI;
+
+    bool m_wildScreen;
 };
 
 #endif // CAMERAWIDGET_H

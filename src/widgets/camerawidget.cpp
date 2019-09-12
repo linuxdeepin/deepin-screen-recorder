@@ -7,16 +7,6 @@
 
 CameraWidget::CameraWidget(DWidget *parent) : DWidget(parent)
 {
-    setWindowFlags(Qt::WindowStaysOnTopHint);
-    setFocusPolicy(Qt::StrongFocus);
-    setMouseTracking(true);
-    setAcceptDrops(true);
-    m_cameraUI = new DLabel(this);
-
-    QHBoxLayout *t_hlayout = new QHBoxLayout(this);
-    t_hlayout->addWidget(m_cameraUI);
-    this->setLayout(t_hlayout);
-    initCamera();
 }
 
 CameraWidget::~CameraWidget()
@@ -64,6 +54,17 @@ int CameraWidget::getRecordHeight()
 }
 void CameraWidget::initCamera()
 {
+    setWindowFlags(Qt::WindowStaysOnTopHint);
+    setFocusPolicy(Qt::StrongFocus);
+    setMouseTracking(true);
+    setAcceptDrops(true);
+    m_cameraUI = new DLabel(this);
+    m_wildScreen = false;
+
+    QHBoxLayout *t_hlayout = new QHBoxLayout(this);
+    t_hlayout->addWidget(m_cameraUI);
+    this->setLayout(t_hlayout);
+
     camera = new QCamera(this);
     camera->setCaptureMode(QCamera::CaptureStillImage);
     imageCapture = new QCameraImageCapture(camera);
@@ -74,16 +75,38 @@ void CameraWidget::initCamera()
 
 void CameraWidget::cameraStart()
 {
-    timer_image_capture->start(50);
+
     camera->start();
 
     if (imageCapture->isCaptureDestinationSupported(QCameraImageCapture::CaptureToBuffer)) {
+        timer_image_capture->start(50);
         imageCapture->setCaptureDestination(QCameraImageCapture::CaptureToBuffer);
         qDebug() << imageCapture->supportedBufferFormats();
         imageCapture->setBufferFormat(QVideoFrame::PixelFormat::Format_Jpeg);
         qDebug() << imageCapture->supportedResolutions(imageCapture->encodingSettings());
+
+        QList<QSize> t_capSizeLst = imageCapture->supportedResolutions(imageCapture->encodingSettings());
+        QSize t_resolutionSize;
+
+        if (t_capSizeLst.contains(QSize(640, 360))) {
+            t_resolutionSize = QSize(640, 360);
+            m_wildScreen = false;
+        }
+
+        else if (t_capSizeLst.contains(QSize(640, 480))) {
+            t_resolutionSize = QSize(640, 480);
+            m_wildScreen = true;
+        }
+
+        else {
+            t_resolutionSize = t_capSizeLst.last();
+            m_wildScreen = false;
+        }
+
         QImageEncoderSettings iamge_setting;
-        iamge_setting.setResolution(640, 360);
+        iamge_setting.setResolution(t_resolutionSize.width(), t_resolutionSize.height());
+
+        qDebug() << iamge_setting.resolution();
         imageCapture->setEncodingSettings(iamge_setting);
         connect(imageCapture, &QCameraImageCapture::imageCaptured, this, &CameraWidget::processCapturedImage);
     }
@@ -97,6 +120,11 @@ void CameraWidget::cameraStop()
 {
     timer_image_capture->stop();
     camera->stop();
+}
+
+bool CameraWidget::getScreenResolution()
+{
+    return m_wildScreen;
 }
 
 void CameraWidget::captureImage()
