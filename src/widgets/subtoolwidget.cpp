@@ -32,6 +32,7 @@
 #include <DFontSizeManager>
 #include <DComboBox>
 #include <DListWidget>
+#include <QSizePolicy>
 #include "../settings.h"
 
 #include <unistd.h>
@@ -40,12 +41,12 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const int TOOLBAR_HEIGHT = 43;
-const int TOOLBAR_WIDTH = 380;
+const int TOOLBAR_WIDTH = 450;
 const int BUTTON_SPACING = 1;
-const int SHOT_BUTTON_SPACING = 2;
+const int SHOT_BUTTON_SPACING = 4;
 const int COLOR_NUM = 16;
-const QSize TOOL_ICON_SIZE = QSize(20, 20);
-const QSize MAX_TOOL_ICON_SIZE = QSize(35, 35);
+const QSize TOOL_ICON_SIZE = QSize(25, 25);
+const QSize MAX_TOOL_ICON_SIZE = QSize(40, 40);
 const QSize MAX_TOOL_BUTTON_SIZE = QSize(82, 40);
 const QSize TOOL_BUTTON_SIZE = QSize(62, 40);
 const QSize MEDIUM_TOOL_BUTTON_SIZE = QSize(52, 40);
@@ -90,10 +91,14 @@ void SubToolWidget::initRecordLabel()
     //保持格式的配置文件判断
     if (t_saveGifVar.toString() == "true") {
         t_saveGif = true;
+    } else if (t_saveGifVar.toString() == "false") {
+        t_saveGif = false;
     } else {
         t_settings->setOption("save_as_gif", true);
         t_saveGif = true;
     }
+
+
 
     //保持帧数的配置文件判断
     t_frameRate = t_frameRateVar.toString().toInt();
@@ -306,11 +311,13 @@ void SubToolWidget::initRecordLabel()
             this, SIGNAL(mouseBoardButtonClicked(bool)));
 //    QString button_style = "DPushButton{text-align: left;}";
 
-    QString format_button_style = "DPushButton{text-align: left;}"
-                                  "DPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
-                                  "left:-4px;"
-                                  "subcontrol-origin:padding;"
-                                  "subcontrol-position:right;}";
+//    QString format_button_style = "QPushButton{text-align: left;}"
+//                                  "QPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
+//                                  "left:-4px;"
+//                                  "subcontrol-origin:padding;"
+//                                  "subcontrol-position:right;}";
+
+//    QString format_button_style = "QPushButton{text-align: left;}";
 
     ToolButton *formatButton = new ToolButton();
     pa = formatButton->palette();
@@ -322,10 +329,12 @@ void SubToolWidget::initRecordLabel()
 //    formatButton->setFixedSize(MAX_TOOL_BUTTON_SIZE);
     DFontSizeManager::instance()->bind(formatButton, DFontSizeManager::T9);
     formatButton->setObjectName("FormatButton");
-    formatButton->setText(tr("fmt"));
+    formatButton->setText(tr("Webm"));
     formatButton->setIconSize(QSize(24, 24));
+    formatButton->setFixedSize(QSize(110, 40));
     formatButton->setIcon(QIcon(":/image/newUI/normal/format_normal.svg"));
-    formatButton->setContentsMargins(0, 20, 20, 20);
+//    formatButton->setLayoutDirection(Qt::LeftToRight);
+//    formatButton->setContentsMargins(0, 0, 0, 0);
 //    formatButton->setStyleSheet(format_button_style);
     rectBtnGroup->addButton(formatButton);
 
@@ -390,7 +399,8 @@ void SubToolWidget::initRecordLabel()
     fpsButton->setIconSize(QSize(20, 20));
     fpsButton->setIcon(QIcon(":/image/newUI/normal/Resolving power_normal.svg"));
     rectBtnGroup->addButton(fpsButton);
-//    fpsButton->setFixedSize(QSize(75, 40));
+//    fpsButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    fpsButton->setFixedSize(QSize(90, 40));
 //    fpsButton->setStyleSheet(fps_button_style);
     btnList.append(fpsButton);
 
@@ -589,7 +599,7 @@ void SubToolWidget::initShotLabel()
     pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     rectButton->setPalette(pa);
 
-    rectButton->setIconSize(QSize(30, 30));
+    rectButton->setIconSize(QSize(35, 35));
     rectButton->setIcon(QIcon(":/image/newUI/normal/rectangle-normal.svg"));
 
     rectButton->setObjectName("RectButton");
@@ -606,7 +616,7 @@ void SubToolWidget::initShotLabel()
     pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     circleButton->setPalette(pa);
 
-    circleButton->setIconSize(QSize(30, 30));
+    circleButton->setIconSize(QSize(35, 35));
     circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
     circleButton->setObjectName("CircleButton");
 
@@ -628,7 +638,7 @@ void SubToolWidget::initShotLabel()
     pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
     pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 
-    m_lineButton->setIconSize(QSize(30, 30));
+    m_lineButton->setIconSize(QSize(35, 35));
 
     bool t_arrowStatus = ConfigSettings::instance()->value("arrow", "is_straight").toBool();
 
@@ -656,7 +666,7 @@ void SubToolWidget::initShotLabel()
     pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
     pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
     pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    penButton->setIconSize(QSize(30, 30));
+    penButton->setIconSize(QSize(35, 35));
     penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
 
     penButton->setPalette(pa);
@@ -686,7 +696,7 @@ void SubToolWidget::initShotLabel()
     QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setMargin(0);
     rectLayout->setSpacing(0);
-    rectLayout->addSpacing(60);
+    rectLayout->addSpacing(90);
     for (int i = 0; i < btnList.length(); i++) {
         rectLayout->addWidget(btnList[i]);
         rectLayout->addSpacing(SHOT_BUTTON_SPACING);
@@ -823,7 +833,7 @@ void SubToolWidget::initVirtualCard()
     }
     bool isOk;
     QString text = DInputDialog::getText(this, tr("Need authorization"), tr("Please enter your sudo password to be authorized"),
-                                         DLineEdit::Password, "", &isOk);
+                                         QLineEdit::Password, "", &isOk);
     if (isOk) {
 
         QProcess p(this);

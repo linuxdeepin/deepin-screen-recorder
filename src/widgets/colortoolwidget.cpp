@@ -31,12 +31,12 @@ DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int TOOLBAR_HEIGHT = 155;
+const int TOOLBAR_HEIGHT = 175;
 const int TOOLBAR_WIDTH = 40;
-const int BUTTON_SPACING = 2;
+const int BUTTON_SPACING = 3;
 const int COLOR_NUM = 16;
 const QSize TOOL_BUTTON_SIZE = QSize(38, 38);
-const QSize TOOL_ICON_SIZE = QSize(25, 25);
+const QSize TOOL_ICON_SIZE = QSize(30, 30);
 const QSize SPLITTER_SIZE = QSize(30, 1);
 const QSize MIN_TOOL_BUTTON_SIZE = QSize(35, 30);
 }

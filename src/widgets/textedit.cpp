@@ -80,6 +80,7 @@ void TextEdit::setColor(QColor c)
     m_textColor = c;
 //    setStyleSheet(QString("TextEdit {background-color:  transparent;"
 //                          " color: %1; border: none;}").arg(m_textColor.name()));
+
     DPalette pa = this->palette();
     pa.setColor(DPalette::Base, QColor(255, 255, 255, 0));
     pa.setColor(DPalette::Dark, QColor(255, 255, 255, 0));

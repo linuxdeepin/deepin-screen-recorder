@@ -36,15 +36,15 @@ DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int TOOLBAR_HEIGHT = 203;
+const int TOOLBAR_HEIGHT = 223;
 const int TOOLBAR_WIDTH = 40;
 const int BUTTON_SPACING = 3;
 const int SHOT_BUTTON_SPACING = 3;
 const int COLOR_NUM = 16;
-const QSize TOOL_ICON_SIZE = QSize(25, 25);
+const QSize TOOL_ICON_SIZE = QSize(30, 30);
 const QSize TOOL_BUTTON_SIZE = QSize(38, 38);
-const QSize TOOL_SLIDERBlUR_SIZE = QSize(32, 190);
-const QSize TOOL_SLIDER_SIZE = QSize(32, 150);
+const QSize TOOL_SLIDERBlUR_SIZE = QSize(35, 190);
+const QSize TOOL_SLIDER_SIZE = QSize(40, 180);
 const QSize SPLITTER_SIZE = QSize(30, 1);
 const QSize MIN_TOOL_BUTTON_SIZE = QSize(35, 30);
 }
@@ -148,6 +148,7 @@ void ShotToolWidget::initRectLabel()
     rectLayout->addSpacing(5);
     for (int i = 0; i < btnList.length(); i++) {
         rectLayout->addWidget(btnList[i]);
+        rectLayout->addSpacing(BUTTON_SPACING);
         t_thicknessBtnGroup->addButton(btnList[i]);
     }
 
@@ -231,7 +232,7 @@ void ShotToolWidget::initRectLabel()
     ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 0);
 
 
-    rectLayout->addSpacing(4);
+    rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton();
     pa = t_seperator->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
@@ -371,9 +372,10 @@ void ShotToolWidget::initRectLabel()
 
     for (int j = 0; j < btnList.length(); j++) {
         rectLayout->addWidget(btnList[j]);
+        rectLayout->addSpacing(BUTTON_SPACING);
     }
 
-    rectLayout->addSpacing(4);
+    rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton();
     pa = t_seperator1->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
@@ -456,6 +458,7 @@ void ShotToolWidget::initCircLabel()
     rectLayout->addSpacing(5);
     for (int i = 0; i < btnList.length(); i++) {
         rectLayout->addWidget(btnList[i]);
+        rectLayout->addSpacing(BUTTON_SPACING);
         t_thicknessBtnGroup->addButton(btnList[i]);
     }
 
@@ -538,7 +541,7 @@ void ShotToolWidget::initCircLabel()
     thickOneBtn->click();
     ConfigSettings::instance()->setValue("oval", "linewidth_index", 0);
 
-    rectLayout->addSpacing(4);
+    rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton();
     pa = t_seperator->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
@@ -678,9 +681,10 @@ void ShotToolWidget::initCircLabel()
 
     for (int j = 0; j < btnList.length(); j++) {
         rectLayout->addWidget(btnList[j]);
+        rectLayout->addSpacing(BUTTON_SPACING);
     }
 
-    rectLayout->addSpacing(4);
+    rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton();
     pa = t_seperator1->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
@@ -762,6 +766,7 @@ void ShotToolWidget::initLineLabel()
     rectLayout->addSpacing(5);
     for (int i = 0; i < btnList.length(); i++) {
         rectLayout->addWidget(btnList[i]);
+        rectLayout->addSpacing(BUTTON_SPACING);
         t_thicknessBtnGroup->addButton(btnList[i]);
     }
 
@@ -849,7 +854,7 @@ void ShotToolWidget::initLineLabel()
     ConfigSettings::instance()->setValue("arrow", "arrow_linewidth_index", 0);
     ConfigSettings::instance()->setValue("arrow", "straightline_linewidth_index", 0);
 
-    rectLayout->addSpacing(4);
+    rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton();
     pa = t_seperator->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
@@ -967,10 +972,11 @@ void ShotToolWidget::initLineLabel()
 
     for (int j = 0; j < btnList.length(); j++) {
         rectLayout->addWidget(btnList[j]);
+        rectLayout->addSpacing(BUTTON_SPACING);
         t_funcBtnGroup->addButton(btnList[j]);
     }
 
-    rectLayout->addSpacing(4);
+    rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton();
     pa = t_seperator1->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
@@ -1049,6 +1055,7 @@ void ShotToolWidget::initPenLabel()
     rectLayout->addSpacing(5);
     for (int i = 0; i < btnList.length(); i++) {
         rectLayout->addWidget(btnList[i]);
+        rectLayout->addSpacing(BUTTON_SPACING);
         t_thicknessBtnGroup->addButton(btnList[i]);
     }
 
@@ -1174,6 +1181,7 @@ void ShotToolWidget::initTextLabel()
 //    t_textFontSize->setValue(2);
     t_textFontSize->setRightIcon(QIcon(":/image/newUI/normal/Aa small_normal.svg"));
     t_textFontSize->setLeftIcon(QIcon(":/image/newUI/normal/Aa big_normal.svg"));
+    t_textFontSize->setIconSize(TOOL_ICON_SIZE);
 //    ConfigSettings::instance()->setValue("text", "fontsize", 12);
 
     int t_fontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();

@@ -30,8 +30,8 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const int TOOLBAR_HEIGHT = 43;
-const int TOOLBAR_WIDTH = 125;
-const int BUTTON_SPACING = 2;
+const int TOOLBAR_WIDTH = 140;
+const int BUTTON_SPACING = 3;
 const int COLOR_NUM = 16;
 const QSize TOOL_BUTTON_SIZE = QSize(62, 40);
 const QSize MIN_TOOL_BUTTON_SIZE = QSize(50, 40);
@@ -76,7 +76,7 @@ void MainToolWidget::initMainLabel()
     m_recordBtn->setText(tr("Record"));
     m_recordBtn->setObjectName("RecordBtn");
     m_recordBtn->setFixedSize(TOOL_BUTTON_SIZE);
-    m_recordBtn->setIconSize(QSize(17, 17));
+    m_recordBtn->setIconSize(QSize(20, 20));
     m_recordBtn->setIcon(QIcon(":/image/newUI/normal"
                                "/screencap-normal.svg"));
 //    recordBtn->setStyleSheet(record_button_style);
@@ -95,7 +95,7 @@ void MainToolWidget::initMainLabel()
     m_shotBtn->setText(tr("Shot"));
     m_shotBtn->setObjectName("ShotBtn");
     m_shotBtn->setFixedSize(TOOL_BUTTON_SIZE);
-    m_shotBtn->setIconSize(QSize(17, 17));
+    m_shotBtn->setIconSize(QSize(20, 20));
     m_shotBtn->setIcon(QIcon(":/image/newUI/normal/screenshot-normal.svg"));
 //    shotBtn->setStyleSheet(shot_button_style);
     toolBtnList.append(m_shotBtn);
@@ -125,7 +125,7 @@ void MainToolWidget::initMainLabel()
             pa.setColor(DPalette::ButtonText, Qt::white);
             pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
             pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            m_recordBtn->setIconSize(QSize(17, 17));
+            m_recordBtn->setIconSize(QSize(20, 20));
             m_recordBtn->setIcon(QIcon(":/image/newUI/checked/screencap-checked.svg"));
             m_recordBtn->setPalette(pa);
 
@@ -140,7 +140,7 @@ void MainToolWidget::initMainLabel()
             pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
             pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             m_recordBtn->setPalette(pa);
-            m_recordBtn->setIconSize(QSize(17, 17));
+            m_recordBtn->setIconSize(QSize(20, 20));
             m_recordBtn->setIcon(QIcon(":/image/newUI/normal/screencap-normal.svg"));
             m_recordBtn->setPalette(pa);
         }
@@ -150,7 +150,7 @@ void MainToolWidget::initMainLabel()
             pa.setColor(DPalette::ButtonText, Qt::white);
             pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
             pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            m_shotBtn->setIconSize(QSize(17, 17));
+            m_shotBtn->setIconSize(QSize(20, 20));
             m_shotBtn->setIcon(QIcon(":/image/newUI/checked/screenshot-checked.svg"));
             m_shotBtn->setPalette(pa);
 
@@ -164,7 +164,7 @@ void MainToolWidget::initMainLabel()
             pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
             pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
             pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            m_shotBtn->setIconSize(QSize(17, 17));
+            m_shotBtn->setIconSize(QSize(20, 20));
             m_shotBtn->setIcon(QIcon(":/image/newUI/normal/screenshot-normal.svg"));
             m_shotBtn->setPalette(pa);
         }

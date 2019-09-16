@@ -37,6 +37,7 @@
 #include <QMouseEvent>
 #include <DLineEdit>
 #include <DInputDialog>
+#include <DDesktopServices>
 
 #include "main_window.h"
 #include "utils.h"
@@ -47,6 +48,7 @@
 #include "utils/tempfile.h"
 #include "utils/configsettings.h"
 #include "utils/audioutils.h"
+#include "utils/shortcut.h"
 
 
 const int MainWindow::CURSOR_BOUND = 5;
@@ -535,7 +537,7 @@ void MainWindow::initScreenShot()
     m_selectedSystemAudio = false;
 
     setDragCursor();
-    eventMonitor.quit();
+//    eventMonitor.quit();
 
     connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
 
@@ -609,7 +611,7 @@ void MainWindow::initScreenRecorder()
     m_selectedSystemAudio = false;
 
     setDragCursor();
-    eventMonitor.start();
+//    eventMonitor.start();
 }
 
 void MainWindow::initLaunchMode(const QString &launchMode)
@@ -1304,7 +1306,7 @@ void MainWindow::saveScreenShot()
     emit releaseEvent();
     emit saveActionTriggered();
 
-//    DDesktopServices::playSystemSoundEffect(DDesktopServices::SSE_Screenshot);
+    DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
 //    if (m_hotZoneInterface->isValid())
 //        m_hotZoneInterface->asyncCall("EnableZoneDetected",  true);
 //    m_needSaveScreenshot = true;
@@ -1659,7 +1661,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 qApp->quit();
             } else if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
                 if (keyEvent->key() == Qt::Key_Question) {
-//                    onViewShortcut();
+                    onViewShortcut();
                 }
             } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {
                 if (keyEvent->key() == Qt::Key_Z) {
@@ -1833,6 +1835,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             if (needRepaint) {
                 update();
             }
+            DWidget::keyPressEvent(keyEvent);
         }
 
 //        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
@@ -1938,7 +1941,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
         }
 
-    } else if (event->type() == QEvent::KeyRelease) {
+    } /*else if (event->type() == QEvent::KeyRelease) {
 
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
@@ -1962,7 +1965,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             if (needRepaint) {
                 update();
             }
-            DWidget::keyReleaseEvent(keyEvent);
+
         }
 
         else {
@@ -1983,7 +1986,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
         }
         // NOTE: must be use 'isAutoRepeat' to filter KeyRelease event send by Qt.
-    }
+        DWidget::keyReleaseEvent(keyEvent);
+    }*/
+
 
     if (event->type() == QEvent::MouseButtonPress) {
         if (!m_isShapesWidgetExist) {
@@ -2230,6 +2235,23 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     }
 
     return false;
+}
+
+void MainWindow::onViewShortcut()
+{
+    QRect rect = window()->geometry();
+    QPoint pos(rect.x() + rect.width() / 2, rect.y() + rect.height() / 2);
+    Shortcut sc;
+    QStringList shortcutString;
+    QString param1 = "-j=" + sc.toStr();
+    QString param2 = "-p=" + QString::number(pos.x()) + "," + QString::number(pos.y());
+    shortcutString << "-b" << param1 << param2;
+
+    QProcess *shortcutViewProc = new QProcess(this);
+    shortcutViewProc->startDetached("killall deepin-shortcut-viewer");
+    shortcutViewProc->startDetached("deepin-shortcut-viewer", shortcutString);
+
+    connect(shortcutViewProc, SIGNAL(finished(int)), shortcutViewProc, SLOT(deleteLater()));
 }
 
 void MainWindow::startRecord()
@@ -2716,7 +2738,8 @@ void MainWindow::initVirtualCard()
     }
     bool isOk;
     QString text = DInputDialog::getText(this, tr("Need authorization"), tr("Please enter your sudo password to be authorized"),
-                                         DLineEdit::Password, "", &isOk);
+                                         QLineEdit::Password, "", &isOk);
+
     if (isOk) {
 
         QProcess p(this);

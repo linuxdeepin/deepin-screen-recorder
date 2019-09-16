@@ -162,6 +162,7 @@ public slots:
     void changeArrowAndLineEvent(int line);
     void exitApp();
     void initVirtualCard();
+    void onViewShortcut();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
