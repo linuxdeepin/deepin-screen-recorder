@@ -151,6 +151,11 @@ void ToolBarWidget::changeArrowAndLineFromBar(int line)
     m_subTool->changeArrowAndLineFromSideBar(line);
 }
 
+void ToolBarWidget::setRecordButtonDisableFromMain()
+{
+    m_mainTool->setRecordButtonOut();
+}
+
 void ToolBarWidget::setExpand(bool expand, QString shapeType)
 {
 //    m_subToolbar->switchContent(shapeType);
@@ -284,6 +289,11 @@ void ToolBar::initToolBar()
     connect(m_toolbarWidget, &ToolBarWidget::mp4ActionCheckedSignal, this, &ToolBar::mp4ActionCheckedToMain);
     connect(m_toolbarWidget, &ToolBarWidget::frameRateChangedSignal, this, &ToolBar::frameRateChangedToMain);
     connect(m_toolbarWidget, &ToolBarWidget::shotToolChangedSignal, this, &ToolBar::shotToolChangedToMain);
+}
+
+void ToolBar::setRecordButtonDisable()
+{
+    m_toolbarWidget->setRecordButtonDisableFromMain();
 }
 bool ToolBar::isButtonChecked()
 {

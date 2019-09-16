@@ -2623,6 +2623,7 @@ void MainWindow::initShapeWidget(QString type)
     m_toolBar->raise();
     m_sideBar->raise();
     m_needDrawSelectedPoint = false;
+    m_toolBar->setRecordButtonDisable();
     update();
 
 //    connect(m_toolBar, &ToolBar::updateColor,

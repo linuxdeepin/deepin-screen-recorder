@@ -68,6 +68,7 @@ public slots:
     void specifiedSavePath();
     void keyBoardCheckedSlot(bool checked);
     void changeArrowAndLineFromBar(int line);
+    void setRecordButtonDisableFromMain();
 
 
 protected:
@@ -124,6 +125,7 @@ public slots:
     void systemAudioActionCheckedToMainSlot(bool checked);
     void changeArrowAndLineFromMain(int line);
     void initToolBar();
+    void setRecordButtonDisable();
 protected:
     void paintEvent(QPaintEvent *e);
     void enterEvent(QEvent *e);

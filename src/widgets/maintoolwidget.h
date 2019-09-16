@@ -23,6 +23,7 @@
 #include <QHBoxLayout>
 #include <DLabel>
 #include <DWidget>
+#include "toolbutton.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -41,10 +42,13 @@ signals:
     void buttonChecked(bool checked, QString type);
 public slots:
 //    void switchContent(QString shapeType);
+    void setRecordButtonOut();
 
 private:
     QHBoxLayout *m_baseLayout;
     bool m_isChecked;
+    ToolButton *m_recordBtn;
+    ToolButton *m_shotBtn;
 };
 
 #endif // MAINTOOLWIDGET_H
