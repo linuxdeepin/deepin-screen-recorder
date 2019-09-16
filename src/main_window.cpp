@@ -567,6 +567,7 @@ void MainWindow::compositeChanged()
 
 void MainWindow::updateToolBarPos()
 {
+    m_isToolBarInside = false;
     if (m_toolBarInit == false) {
         m_toolBar->initToolBar();
         m_toolBarInit = true;
@@ -587,8 +588,10 @@ void MainWindow::updateToolBarPos()
         m_repaintSideBar = true;
         if (recordY > 28 * 2 + 10) {
             toolbarPoint.setY(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING);
+
         } else {
             toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
+            m_isToolBarInside = true;
         }
     }
     m_toolBar->showAt(toolbarPoint);
@@ -2437,15 +2440,27 @@ void MainWindow::initShapeWidget(QString type)
         m_shapesWidget->setCurrentShape(type);
 
     m_shapesWidget->show();
-    if (m_isSideBarInside == false) {
+    if (m_isSideBarInside == false && m_isToolBarInside == false) {
         m_shapesWidget->setFixedSize(recordWidth - 4, recordHeight - 4);
+        m_shapesWidget->move(recordX + 2, recordY + 2);
     }
 
-    else {
+    else if (m_isSideBarInside == true && m_isToolBarInside == false) {
         m_shapesWidget->setFixedSize(recordWidth - m_sideBar->width(), recordHeight - 4);
+        m_shapesWidget->move(recordX + 2, recordY + 2);
     }
 
-    m_shapesWidget->move(recordX + 2, recordY + 2);
+    else if (m_isSideBarInside == true && m_isToolBarInside == true) {
+        m_shapesWidget->setFixedSize(recordWidth - m_sideBar->width(), recordHeight - m_toolBar->height());
+        m_shapesWidget->move(recordX + 2, recordY + m_toolBar->height());
+    }
+
+    else if (m_isSideBarInside == false && m_isToolBarInside == true) {
+        m_shapesWidget->setFixedSize(recordWidth - 4, recordHeight - m_toolBar->height());
+        m_shapesWidget->move(recordX + 2, recordY + m_toolBar->height());
+    }
+
+
 
     updateToolBarPos();
 //    m_toolBar->raise();

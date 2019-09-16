@@ -287,6 +287,7 @@ private:
     ZoomIndicator *m_zoomIndicator;
     bool m_isShapesWidgetExist = false;
     bool m_isSideBarInside = false;
+    bool m_isToolBarInside = false;
 
     DBusZone *m_hotZoneInterface;
     DBusNotify *m_notifyDBInterface;
