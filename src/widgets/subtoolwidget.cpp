@@ -144,13 +144,13 @@ void SubToolWidget::initRecordLabel()
     //for test
 //    audioMenu->setStyle(QStyleFactory::create("dlight"));
 
-    if (m_themeType == 1) {
-        audioMenu->setStyle(QStyleFactory::create("dlight"));
-    }
+//    if (m_themeType == 1) {
+//        audioMenu->setStyle(QStyleFactory::create("dlight"));
+//    }
 
-    else if (m_themeType == 2) {
-        audioMenu->setStyle(QStyleFactory::create("ddark"));
-    }
+//    else if (m_themeType == 2) {
+//        audioMenu->setStyle(QStyleFactory::create("ddark"));
+//    }
 
     //for test
 //    pa = audioMenu->palette();
@@ -173,11 +173,14 @@ void SubToolWidget::initRecordLabel()
         microphoneAction->setIcon(QIcon(":/image/newUI/dark/normal/microphone.svg"));
     }
 
+    bool t_haveMicroPhone = false;
 //    microphoneAction->setIcon(QIcon(":/image/newUI/normal/microphone.svg"));
     if (AudioUtils().canMicrophoneInput()) {
+        t_haveMicroPhone = true;
         microphoneAction->setCheckable(true);
         microphoneAction->setChecked(true);
     } else {
+        t_haveMicroPhone = false;
         microphoneAction->setDisabled(true);
     }
     systemAudioAction->setText(tr("SystemAudio"));
@@ -509,13 +512,13 @@ void SubToolWidget::initRecordLabel()
     DFontSizeManager::instance()->bind(OptionMenu, DFontSizeManager::T8);
     //for test
 //    OptionMenu->setStyle(QStyleFactory::create("dlight"));
-    if (m_themeType == 1) {
-        OptionMenu->setStyle(QStyleFactory::create("dlight"));
-    }
+//    if (m_themeType == 1) {
+//        OptionMenu->setStyle(QStyleFactory::create("dlight"));
+//    }
 
-    else if (m_themeType == 2) {
-        OptionMenu->setStyle(QStyleFactory::create("ddark"));
-    }
+//    else if (m_themeType == 2) {
+//        OptionMenu->setStyle(QStyleFactory::create("ddark"));
+//    }
     //for test
     QAction *formatTitleAction = new QAction(OptionMenu);
     QAction *gifAction = new QAction(OptionMenu);
@@ -584,6 +587,8 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(false);
         fps24Action->setEnabled(false);
         fps30Action->setEnabled(false);
+        microphoneAction->setEnabled(false);
+        systemAudioAction->setEnabled(false);
 
     } else {
         mp4Action->setChecked(true);
@@ -593,6 +598,11 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(true);
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
+        if (t_haveMicroPhone) {
+            microphoneAction->setEnabled(true);
+        }
+
+        systemAudioAction->setEnabled(true);
     }
 
     connect(gifAction, &QAction::triggered, this, [ = ] (bool checked) {
@@ -602,6 +612,8 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(false);
         fps24Action->setEnabled(false);
         fps30Action->setEnabled(false);
+        microphoneAction->setEnabled(false);
+        systemAudioAction->setEnabled(false);
         emit gifActionChecked(checked);
     });
 
@@ -612,6 +624,10 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(true);
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
+        if (t_haveMicroPhone) {
+            microphoneAction->setEnabled(true);
+        }
+        systemAudioAction->setEnabled(true);
         emit mp4ActionChecked(checked);
     });
 
@@ -1114,13 +1130,13 @@ void SubToolWidget::initShotLabel()
     DFontSizeManager::instance()->bind(OptionMenu, DFontSizeManager::T8);
     //for test
 //    OptionMenu->setStyle(QStyleFactory::create("dlight"));
-    if (m_themeType == 1) {
-        OptionMenu->setStyle(QStyleFactory::create("dlight"));
-    }
+//    if (m_themeType == 1) {
+//        OptionMenu->setStyle(QStyleFactory::create("dlight"));
+//    }
 
-    else if (m_themeType == 2) {
-        OptionMenu->setStyle(QStyleFactory::create("ddark"));
-    }
+//    else if (m_themeType == 2) {
+//        OptionMenu->setStyle(QStyleFactory::create("ddark"));
+//    }
     //for test
     QAction *saveTitleAction = new QAction(OptionMenu);
     QAction *saveToDesktopAction = new QAction(OptionMenu);

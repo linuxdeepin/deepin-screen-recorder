@@ -933,9 +933,7 @@ void ShapesWidget::handleRotate(QPointF pos)
                     m_shapes[m_selectedOrder].points[1] = m_pressedPoint;
                 }
             }
-        }
-
-        else {
+        } else {
             QPointF t_rotatepos;
 
             qreal t_minx = qMin(m_selectedShape.points[1].x(), m_selectedShape.points[0].x());
@@ -1487,12 +1485,30 @@ void ShapesWidget::paintEllipse(QPainter &painter, FourPoints ellipseFPoints, in
     FourPoints minorPoints = getAnotherFPoints(ellipseFPoints);
     QList<QPointF> eightControlPoints = getEightControlPoint(ellipseFPoints);
     QPainterPath ellipsePath;
-    ellipsePath.moveTo(minorPoints[0].x(), minorPoints[0].y());
-    ellipsePath.cubicTo(eightControlPoints[0], eightControlPoints[1], minorPoints[1]);
-    ellipsePath.cubicTo(eightControlPoints[4], eightControlPoints[5], minorPoints[2]);
-    ellipsePath.cubicTo(eightControlPoints[6], eightControlPoints[7], minorPoints[3]);
-    ellipsePath.cubicTo(eightControlPoints[3], eightControlPoints[2], minorPoints[0]);
-    painter.drawPath(ellipsePath);
+    QPainterPath rectPath;
+//    qDebug() << "here" << ellipseFPoints[0].y() - ellipseFPoints[2].y();
+
+    if (qAbs(ellipseFPoints[0].y() - ellipseFPoints[2].y()) <= 0.1
+            && qAbs(ellipseFPoints[1].y() - ellipseFPoints[3].y()) <= 0.1) {
+        QRect t_rect;
+        t_rect.setX(ellipseFPoints[0].x());
+        t_rect.setY(ellipseFPoints[0].y());
+        t_rect.setWidth(ellipseFPoints[3].x() - ellipseFPoints[0].x());
+        t_rect.setHeight(ellipseFPoints[3].y() - ellipseFPoints[0].y());
+
+        ellipsePath.addEllipse(t_rect);
+        painter.drawPath(ellipsePath);
+    }
+
+    else {
+        ellipsePath.moveTo(minorPoints[0].x(), minorPoints[0].y());
+        ellipsePath.cubicTo(eightControlPoints[0], eightControlPoints[1], minorPoints[1]);
+        ellipsePath.cubicTo(eightControlPoints[4], eightControlPoints[5], minorPoints[2]);
+        ellipsePath.cubicTo(eightControlPoints[6], eightControlPoints[7], minorPoints[3]);
+        ellipsePath.cubicTo(eightControlPoints[3], eightControlPoints[2], minorPoints[0]);
+        painter.drawPath(ellipsePath);
+    }
+
 
 //    using namespace utils;
     if (isBlur) {

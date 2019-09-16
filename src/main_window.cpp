@@ -611,8 +611,11 @@ void MainWindow::initScreenShot()
 
     setDragCursor();
 //    eventMonitor.quit();
-    eventMonitor.terminate();
-    eventMonitor.wait();
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+        eventMonitor.terminate();
+        eventMonitor.wait();
+    }
+
 
     connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
 
@@ -967,8 +970,10 @@ void MainWindow::responseEsc()
 {
     if (m_functionType == 0) {
         if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
-            eventMonitor.terminate();
-            eventMonitor.wait();
+            if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+                eventMonitor.terminate();
+                eventMonitor.wait();
+            }
             QApplication::quit();
         }
     }
@@ -978,9 +983,12 @@ void MainWindow::responseEsc()
 void MainWindow::compositeChanged()
 {
     if (!m_wmHelper->hasComposite()) {
+        qDebug() << "have no Composite";
         Utils::warnNoComposite();
-        eventMonitor.terminate();
-        eventMonitor.wait();
+        if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+            eventMonitor.terminate();
+            eventMonitor.wait();
+        }
         QApplication::quit();
     }
 }
@@ -1628,6 +1636,8 @@ void MainWindow::saveScreenShot()
     m_toolBar->setVisible(false);
     m_sizeTips->setVisible(false);
     m_sideBar->setVisible(false);
+    m_shotButton->setVisible(false);
+    m_recordButton->setVisible(false);
 
     shotCurrentImg();
 
@@ -1705,8 +1715,11 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     }
 
     QTimer::singleShot(2, [ = ] {
-        eventMonitor.terminate();
-        eventMonitor.wait();
+        if (QSysInfo::currentCpuArchitecture().startsWith("x86"))
+        {
+            eventMonitor.terminate();
+            eventMonitor.wait();
+        }
         qApp->quit();
     });
 }
@@ -2036,8 +2049,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                 }
                 qDebug() << "Key_Escape pressed: app quit!";
-                eventMonitor.terminate();
-                eventMonitor.wait();
+                if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+                    eventMonitor.terminate();
+                    eventMonitor.wait();
+                }
                 qApp->quit();
             } else if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
                 if (keyEvent->key() == Qt::Key_Question) {
@@ -2057,8 +2072,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             bool needRepaint = false;
             if (m_isShapesWidgetExist) {
                 if (keyEvent->key() == Qt::Key_Escape) {
-                    eventMonitor.terminate();
-                    eventMonitor.wait();
+                    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+                        eventMonitor.terminate();
+                        eventMonitor.wait();
+                    }
                     qApp->quit();
                 }
 
@@ -2873,10 +2890,12 @@ void MainWindow::updateCursor(QEvent *event)
             // Bottom.
             QApplication::setOverrideCursor(Qt::SizeVerCursor);
 
-        } else if (recordButton->geometry().contains(cursorX, cursorY) || recordOptionPanel->geometry().contains(cursorX, cursorY)) {
-            // Record area.
-            QApplication::setOverrideCursor(Qt::ArrowCursor);
-        } else if (t_rectbuttonRect.contains(cursorX, cursorY) || m_shotButton->geometry().contains(cursorX, cursorY)) {
+        }
+//        else if (recordButton->geometry().contains(cursorX, cursorY) || recordOptionPanel->geometry().contains(cursorX, cursorY)) {
+//            // Record area.
+//            QApplication::setOverrideCursor(Qt::ArrowCursor);
+//        }
+        else if (t_rectbuttonRect.contains(cursorX, cursorY) || m_shotButton->geometry().contains(cursorX, cursorY)) {
             // Record button.
             QApplication::setOverrideCursor(Qt::ArrowCursor);
         } else {
@@ -2908,8 +2927,10 @@ void MainWindow::stopRecord()
 {
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
         hide();
-        eventMonitor.terminate();
-        eventMonitor.wait();
+        if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+            eventMonitor.terminate();
+            eventMonitor.wait();
+        }
         recordProcess.stopRecord();
 //        voiceRecordProcess.stopRecord();
     }
@@ -3154,8 +3175,10 @@ void MainWindow::exitApp()
         if (m_hotZoneInterface->isValid())
             m_hotZoneInterface->asyncCall("EnableZoneDetected",  true);
     }
-    eventMonitor.terminate();
-    eventMonitor.wait();
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+        eventMonitor.terminate();
+        eventMonitor.wait();
+    }
     qApp->quit();
 }
 
