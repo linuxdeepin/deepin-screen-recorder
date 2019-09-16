@@ -21,6 +21,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
 #include <DWindowManagerHelper>
 #include <dscreenwindowsutil.h>
 #include <QApplication>
@@ -67,7 +70,7 @@ class MainWindow : public DWidget
 {
     Q_OBJECT
 
-    Q_CLASSINFO("D-Bus Interface", "com.deepin.ScreenRecorder")
+//    Q_CLASSINFO("D-Bus Interface", "com.deepin.ScreenRecorder")
 
     static const int CURSOR_BOUND;
     static const int RECORD_MIN_SIZE;
@@ -328,3 +331,5 @@ private:
     bool m_copyToClipboard = false;
     QString m_savePicturePath;
 };
+
+#endif //MAINWINDOW_H

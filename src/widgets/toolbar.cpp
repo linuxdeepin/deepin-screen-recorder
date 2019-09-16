@@ -57,6 +57,7 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
 
     if (t_themeType == 1) {
         setMaskColor(QColor(255, 255, 255, 76.5));
+//        setMaskColor(QColor(170, 170, 170, 140));
     }
 
     else if (t_themeType == 2) {

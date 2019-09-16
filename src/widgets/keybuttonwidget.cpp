@@ -19,6 +19,7 @@
 
 #include "keybuttonwidget.h"
 #include "../utils.h"
+#include "../utils/configsettings.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -37,20 +38,31 @@ KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
 //    setAttribute(Qt::WA_ShowWithoutActivating);
 //    setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
 
+    int t_themeType = 0;
+    t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
+
     setBlurRectXRadius(15);
     setBlurRectYRadius(15);
     setRadius(30);
     setMode(DBlurEffectWidget::GaussianBlur);
     setBlurEnabled(true);
 //    setBlendMode(DBlurEffectWidget::InWindowBlend);
-    setMaskColor(QColor(255, 255, 255, 140));
+//    setMaskColor(QColor(255, 255, 255, 140));
+
+    if (t_themeType == 1) {
+        setMaskColor(QColor(255, 255, 255, 140));
+    }
+
+    else if (t_themeType == 2) {
+        setMaskColor(QColor(0, 0, 0, 76.5));
+    }
     //设置透明效果
     setFixedWidth(_BUTTON_WIDTH);
     setFixedHeight(_BUTTON_HEIGHT);
     m_word = new DLabel();
     DFontSizeManager::instance()->bind(m_word, DFontSizeManager::T7);
     DPalette pa;
-    pa.setColor(DPalette::Text, Qt::black);
+//    pa.setColor(DPalette::Text, Qt::black);
     this->setPalette(pa);
 //    QFont t_wordFont;
 //    t_wordFont.setPixelSize(13);

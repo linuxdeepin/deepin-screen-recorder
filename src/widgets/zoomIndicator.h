@@ -40,6 +40,7 @@ protected:
     void paintEvent(QPaintEvent *);
 
 private:
+    QRect m_globalRect;
     QRect m_centerRect;
     QPixmap m_lastPic;
     QBrush m_lastCenterPosBrush;

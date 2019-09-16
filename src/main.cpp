@@ -35,8 +35,10 @@
 #include <QFile>
 #include <QDir>
 #include "main_window.h"
+#include "screenshot.h"
 #include "utils.h"
 #include "widgets/toolbutton.h"
+#include "dbusservice/dbusscreenshotservice.h"
 
 
 DWIDGET_USE_NAMESPACE
@@ -111,6 +113,7 @@ int main(int argc, char *argv[])
     }
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
+//    dbus.registerService("com.deepin.ScreenRecorder");
     if (dbus.registerService("com.deepin.ScreenRecorder")) {
         // Poup up warning dialog if window manager not support composite.
         if (!DWindowManagerHelper::instance()->hasComposite()) {
@@ -156,11 +159,11 @@ int main(int argc, char *argv[])
             QCommandLineOption dbusOption(QStringList() << "u" << "dbus",
                                           "Start  from dbus.");
             //for test
-            QCommandLineOption testOption(QStringList() << "t" << "test",
-                                          "Start  from test.");
+//            QCommandLineOption testOption(QStringList() << "t" << "test",
+//                                          "Start  from test.");
             //for test
             QCommandLineParser cmdParser;
-            cmdParser.setApplicationDescription("deepin-screenshot");
+            cmdParser.setApplicationDescription("deepin-screen-recorder");
             cmdParser.addHelpOption();
             cmdParser.addVersionOption();
             cmdParser.addOption(delayOption);
@@ -170,47 +173,60 @@ int main(int argc, char *argv[])
             cmdParser.addOption(prohibitNotifyOption);
             cmdParser.addOption(iconOption);
             cmdParser.addOption(dbusOption);
-            cmdParser.addOption(testOption);
+//            cmdParser.addOption(testOption);
             cmdParser.process(app);
 
             // Load translator.
             app.loadTranslator();
             // Show window.
-            MainWindow window;
+//            MainWindow window;
+            Screenshot window;
+            window.initLaunchMode(t_launchMode);
+            DBusScreenshotService dbusService (&window);
+
+
+            // Register debus service.
+            dbus.registerObject("/com/deepin/ScreenRecorder", &window, QDBusConnection::ExportScriptableSlots);
+            QDBusConnection conn = QDBusConnection::sessionBus();
+//            conn.unregisterObject("com.deepin.Screenshot");
+            if (!conn.registerService("com.deepin.Screenshot") ||
+                    !conn.registerObject("/com/deepin/Screenshot", &window)) {
+                qDebug() << "deepin-screenshot is running!";
+
+                qApp->quit();
+                return 0;
+            }
+
 
             if (cmdParser.isSet(dbusOption)) {
                 qDebug() << "dbus register waiting!";
-                window.initAttributes();
-                window.initResource();
-                window.initLaunchMode(t_launchMode);
-                window.showFullScreen();
+                return app.exec();
 
             } else {
+                dbusService.setSingleInstance(true);
                 if (cmdParser.isSet(delayOption)) {
                     qDebug() << "cmd delay screenshot";
                     window.delayScreenshot(cmdParser.value(delayOption).toInt());
                 } else if (cmdParser.isSet(fullscreenOption)) {
-                    window.fullScreenshot();
+                    window.fullscreenScreenshot();
                 } else if (cmdParser.isSet(topWindowOption)) {
                     qDebug() << "cmd topWindow screenshot";
-                    window.topWindow();
+                    window.topWindowScreenshot();
                 } else if (cmdParser.isSet(savePathOption)) {
                     qDebug() << "cmd savepath screenshot";
-                    window.savePath(cmdParser.value(savePathOption));
+                    window.savePathScreenshot(cmdParser.value(savePathOption));
                 } else if (cmdParser.isSet(prohibitNotifyOption)) {
                     qDebug() << "screenshot no notify!";
-                    window.noNotify();
+                    window.noNotifyScreenshot();
                 } else if (cmdParser.isSet(iconOption)) {
                     window.delayScreenshot(0.2);
-                } else if (cmdParser.isSet(testOption)) {
+                } /*else if (cmdParser.isSet(testOption)) {
                     window.testScreenshot();
-                } else {
-                    window.initAttributes();
-                    window.initResource();
-                    window.initLaunchMode(t_launchMode);
-                    window.showFullScreen();
+                }*/ else {
+                    window.startScreenshot();
                 }
             }
+
 
             // 应用已保存的主题设置
             DGuiApplicationHelper::ColorType t_type = DGuiApplicationHelper::instance()->themeType();
@@ -230,22 +246,12 @@ int main(int argc, char *argv[])
             });
 
 
-            // Register debus service.
-            dbus.registerObject("/com/deepin/ScreenRecorder", &window, QDBusConnection::ExportScriptableSlots);
 
-            QDBusConnection conn = QDBusConnection::sessionBus();
-            if (!conn.registerService("com.deepin.Screenshot") ||
-                    !conn.registerObject("/com/deepin/Screenshot", &window)) {
-                qDebug() << "deepin-screenshot is running!";
-
-                qApp->quit();
-                return 0;
-            }
 
             return app.exec();
         }
     } else {
-        // Send DBus message to stop screen-recorder if found other screen-recorder DBus service has started.
+//        Send DBus message to stop screen - recorder if found other screen - recorder DBus service has started.
         QDBusInterface notification("com.deepin.ScreenRecorder",
                                     "/com/deepin/ScreenRecorder",
                                     "com.deepin.ScreenRecorder",

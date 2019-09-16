@@ -21,6 +21,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef RECORDPROCESS_H
+#define RECORDPROCESS_H
+
 #include "settings.h"
 #include <QProcess>
 #include <QThread>
@@ -88,3 +91,5 @@ private:
 
     QString lastAudioSink;
 };
+
+#endif //RECORDPROCESS_H

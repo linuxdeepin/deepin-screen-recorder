@@ -35,7 +35,8 @@
 #include <QtCore/QObject>
 #include <QtDBus/QtDBus>
 
-#include "../main_window.h"
+//#include "../main_window.h"
+#include "../screenshot.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -69,14 +70,14 @@ class DBusScreenshotService: public QDBusAbstractAdaptor
                 "  </interface>\n"
                 "")
 public:
-    DBusScreenshotService(MainWindow *parent);
+    DBusScreenshotService(Screenshot *parent);
     ~DBusScreenshotService();
 
     void setSingleInstance(bool instance);
 
-    inline MainWindow *parent() const
+    inline Screenshot *parent() const
     {
-        return static_cast<MainWindow *>(QObject::parent());
+        return static_cast<Screenshot *>(QObject::parent());
     }
 
 public: // PROPERTIES

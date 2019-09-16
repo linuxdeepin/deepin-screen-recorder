@@ -1,4 +1,4 @@
-<interface name="com.deepin.DeepinScreenshot">\n
+<interface name="com.deepin.Screenshot">\n
     <method name="StartScreenshot"/>\n
     <method name="DelayScreenshot">\n
         <arg direction="in" type="x"/>\n

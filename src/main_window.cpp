@@ -502,7 +502,7 @@ void MainWindow::onHelp()
                          "/com/deepin/Manual/Open",
                          "com.deepin.Manual.Open");
     if (iface.isValid()) {
-        iface.call("ShowManual", "deepin-screenshot");
+        iface.call("ShowManual", "deepin-screen-recorder");
         exitApp();
     } else {
         qWarning() << "manual service not available, cannot open manual";
@@ -738,7 +738,7 @@ void MainWindow::delayScreenshot(double num)
     QVariantMap hints;
     DBusNotify *notifyDBus = new DBusNotify(this);
     if (num >= 2) {
-        notifyDBus->Notify("Deepin Screenshot", 0,  "deepin-screenshot", "",
+        notifyDBus->Notify("Deepin Screenshot", 0,  "deepin-screen-recorder", "",
                            summary, actions, hints, 0);
     }
 

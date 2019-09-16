@@ -40,12 +40,14 @@ ZoomIndicator::ZoomIndicator(DWidget *parent)
     setFixedSize(BACKGROUND_SIZE);
 //    setStyleSheet(getFileContent(":/resources/qss/zoomindicator.qss"));
     setAttribute(Qt::WA_TransparentForMouseEvents);
-    QString t_zoomStyle = QString("border-image: url(:/resources/images/action/magnifier.png);");
-    this->setStyleSheet(t_zoomStyle);
+//    QString t_zoomStyle = QString("border-image: url(:/resources/images/action/magnifier.png);");
+//    this->setStyleSheet(t_zoomStyle);
 
     m_centerRect = QRect((BACKGROUND_SIZE.width() - CENTER_RECT_WIDTH) / 2 + 1,
                          (BACKGROUND_SIZE.width() - CENTER_RECT_WIDTH) / 2 + 1,
                          CENTER_RECT_WIDTH, CENTER_RECT_WIDTH);
+
+    m_globalRect = QRect(0, 0, BACKGROUND_SIZE.width(), BACKGROUND_SIZE.height());
 }
 
 ZoomIndicator::~ZoomIndicator() {}
@@ -77,6 +79,8 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
 
 
     painter.drawPixmap(m_centerRect, QPixmap(":/resources/images/action/center_rect.png"));
+    painter.drawPixmap(m_globalRect, QPixmap(":/resources/images/action/magnifier.png"));
+
     m_lastCenterPosBrush = QBrush(QColor(qRed(centerRectRgb),
                                          qGreen(centerRectRgb), qBlue(centerRectRgb)));
     painter.fillRect(QRect(INDICATOR_WIDTH / 2 + 2, INDICATOR_WIDTH / 2 + 2,
