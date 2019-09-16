@@ -107,6 +107,7 @@ public slots:
     void menuSaveSlot();
     void menuCloseSlot();
     void updateSideBarPosition();
+    void setGlobalRect(QRect rect);
 
 protected:
     void mousePressEvent(QMouseEvent *e);
@@ -157,6 +158,8 @@ private:
     Toolshapes m_shapes;
     MenuController *m_menuController;
     SideBar *m_sideBar;
+
+    QRect m_globalRect;
 
     void paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bool isResize = true);
     void paintImgPointArrow(QPainter &painter, QPointF pos, QPixmap img);

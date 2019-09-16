@@ -28,6 +28,7 @@
 #include "utils.h"
 #include "constant.h"
 #include <DHiDPIHelper>
+#include <DIconButton>
 
 DWIDGET_USE_NAMESPACE
 

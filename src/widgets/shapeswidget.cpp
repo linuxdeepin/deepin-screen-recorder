@@ -158,6 +158,7 @@ void ShapesWidget::setAllTextEditReadOnly()
     while (i != m_editMap.end()) {
         i.value()->setReadOnly(true);
         i.value()->releaseKeyboard();
+        i.value()->setEditing(false);
 
         QTextCursor textCursor =  i.value()->textCursor();
         textCursor.clearSelection();
@@ -1143,9 +1144,22 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     }
 
                     connect(edit, &TextEdit::repaintTextRect, this, &ShapesWidget::updateTextRect);
-                    connect(edit, &TextEdit::backToEditing, this, [ = ] {
+//                    connect(edit, &TextEdit::backToEditing, this, [ = ] {
+//                        m_editing = true;
+//                    });
+                    connect(edit, &TextEdit::clickToEditing, this, [ = ] (int index) {
+//                        setAllTextEditReadOnly();
+                        QMap<int, TextEdit *>::iterator i = m_editMap.begin();
+                        while (i != m_editMap.end()) {
+                            if (i.key() == index) {
+                                i.value()->setEditing(true);
+                            }
+                            ++i;
+                        }
+//                        emit shapeClicked("text");
                         m_editing = true;
                     });
+
                     connect(edit, &TextEdit::textEditSelected, this, [ = ](int index) {
                         setAllTextEditReadOnly();
                         for (int k = 0; k < m_shapes.length(); k++) {
@@ -1238,6 +1252,14 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
 {
     m_isMoving = true;
     m_movingPoint = e->pos();
+
+//    if (!m_globalRect.contains(t_currentPos.x(), t_currentPos.y())) {
+//        qDebug() << "m_globalRect:" << e->globalPos();
+//        qApp->setOverrideCursor(Qt::ArrowCursor);
+//        return;
+//    }
+
+//    qDebug() << "m_movingPoint" << e->g
 
     if (m_isRecording && m_isPressed) {
         m_pos2 = e->pos();
@@ -1859,4 +1881,9 @@ void ShapesWidget::updateSideBarPosition()
 //    sidebarPoint = QPoint(t_posX + t_width - m_sideBar->width() - 3, t_posY + t_height / 2 - m_sideBar->height() / 2);
 //    qDebug() << "sidebar pos" << QPoint(mapToGlobal(sidebarPoint));
     m_sideBar->showAt(QPoint(this->pos()));
+}
+
+void ShapesWidget::setGlobalRect(QRect rect)
+{
+    m_globalRect = rect;
 }

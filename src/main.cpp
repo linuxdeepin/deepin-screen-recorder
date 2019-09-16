@@ -230,7 +230,6 @@ int main(int argc, char *argv[])
             });
 
 
-
             // Register debus service.
             dbus.registerObject("/com/deepin/ScreenRecorder", &window, QDBusConnection::ExportScriptableSlots);
 

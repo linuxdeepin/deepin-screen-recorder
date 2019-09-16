@@ -42,10 +42,12 @@ public slots:
     void keepReadOnlyStatus();
     void setFontSize(int fontsize);
     void updateContentSize(QString content);
+    void setEditing(bool edit);
 
 signals:
     void repaintTextRect(TextEdit *edit,  QRectF newPositiRect);
     void backToEditing();
+    void clickToEditing(int index);
     void textEditSelected(int index);
 
 protected:
@@ -60,6 +62,7 @@ private:
     int m_index;
     QColor m_textColor;
     QPainter *m_painter;
+    bool m_editing = false;
 
     QPointF m_pressPoint;
     bool m_isPressed;

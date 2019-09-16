@@ -33,7 +33,7 @@
 DGUI_USE_NAMESPACE
 
 const QSize CURSOR_SIZE = QSize(5, 20);
-const int TEXT_MARGIN = 10;
+const int TEXT_MARGIN = 12;
 
 TextEdit::TextEdit(int index, DWidget *parent)
     : DPlainTextEdit(parent),
@@ -51,6 +51,7 @@ TextEdit::TextEdit(int index, DWidget *parent)
     int defaultFontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();
     textFont.setPixelSize(defaultFontSize);
     this->document()->setDefaultFont(textFont);
+    this->setLineWrapMode(QPlainTextEdit::WidgetWidth);
 
     QTextCursor cursor = textCursor();
     QTextBlockFormat textBlockFormat = cursor.blockFormat();
@@ -118,6 +119,11 @@ void TextEdit::updateContentSize(QString content)
                                         docSize.width() + TEXT_MARGIN, docSize.height() + TEXT_MARGIN));
 }
 
+void TextEdit::setEditing(bool edit)
+{
+    m_editing = edit;
+}
+
 void TextEdit::updateCursor()
 {
 //    setTextColor(Qt::green);
@@ -139,7 +145,11 @@ void TextEdit::keepReadOnlyStatus()
 void TextEdit::mousePressEvent(QMouseEvent *e)
 {
     qDebug() << "TextEdit mousePressEvent" << e->pos();
-    if (!this->isReadOnly()) {
+//    if (!this->isReadOnly()) {
+//        DPlainTextEdit::mousePressEvent(e);
+//        return;
+//    }
+    if (m_editing == true) {
         DPlainTextEdit::mousePressEvent(e);
         return;
     }
@@ -159,6 +169,13 @@ void TextEdit::mousePressEvent(QMouseEvent *e)
 
 void TextEdit::mouseMoveEvent(QMouseEvent *e)
 {
+//    if (!this->isReadOnly()) {
+    if (m_editing == true) {
+        DPlainTextEdit::mouseMoveEvent(e);
+        return;
+    }
+
+//    }
     qApp->setOverrideCursor(Qt::ClosedHandCursor);
     QPointF posOrigin = QPointF(mapToGlobal(e->pos()));
     QPointF movePos = QPointF(posOrigin.x(), posOrigin.y());
@@ -178,6 +195,10 @@ void TextEdit::mouseMoveEvent(QMouseEvent *e)
 
 void TextEdit::mouseReleaseEvent(QMouseEvent *e)
 {
+    if (m_editing == true) {
+        DPlainTextEdit::mouseReleaseEvent(e);
+        return;
+    }
     m_isPressed = false;
     if (this->isReadOnly()) {
         setMouseTracking(false);
@@ -191,7 +212,9 @@ void TextEdit::mouseDoubleClickEvent(QMouseEvent *e)
 {
     this->setReadOnly(false);
     this->setCursorVisible(true);
-    emit backToEditing();
+//    emit backToEditing();
+    emit clickToEditing(getIndex());
+
     DPlainTextEdit::mouseDoubleClickEvent(e);
 }
 

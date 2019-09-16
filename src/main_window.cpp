@@ -126,7 +126,7 @@ void MainWindow::initAttributes()
 
     // Add Qt::WindowDoesNotAcceptFocus make window not accept focus forcely, avoid conflict with dde hot-corner.
 //    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint);
-    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint |  Qt::X11BypassWindowManagerHint);
+    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint  | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
     setMouseTracking(true);   // make MouseMove can response
     installEventFilter(this);  // add event filter
@@ -357,6 +357,7 @@ void MainWindow::initAttributes()
     m_recordButton->setPalette(pa);
     m_recordButton->setIconSize(QSize(30, 30));
     m_recordButton->setIcon(QIcon(":/image/newUI/checked/screencap-checked.svg"));
+    m_recordButton->setToolTip(tr("Start Record"));
 //    m_recordButton->setToolTip(tr("Switch to record mode"));
 
     m_recordButton->setFixedSize(60, 47);
@@ -372,6 +373,7 @@ void MainWindow::initAttributes()
     m_shotButton->setPalette(pa);
     m_shotButton->setIconSize(QSize(30, 30));
     m_shotButton->setIcon(QIcon(":/image/newUI/checked/screenshot-checked.svg"));
+    m_shotButton->setToolTip(tr("Start Shot"));
 //    m_shotButton->setToolTip(tr("Switch to shot mode"));
 
     m_shotButton->setFixedSize(60, 47);
@@ -442,6 +444,51 @@ void MainWindow::initAttributes()
 
 void MainWindow::initShortcut()
 {
+    QShortcut *rectSC = new QShortcut(QKeySequence("Alt+1"), this);
+    QShortcut *ovalSC = new QShortcut(QKeySequence("Alt+2"), this);
+    QShortcut *arrowSC = new QShortcut(QKeySequence("Alt+3"), this);
+    QShortcut *lineSC = new QShortcut(QKeySequence("Alt+4"), this);
+    QShortcut *textSC = new QShortcut(QKeySequence("Alt+5"), this);
+    QShortcut *colorSC = new QShortcut(QKeySequence("Alt+6"), this);
+
+    connect(rectSC, &QShortcut::activated, this, [ = ] {
+        if (m_functionType == 1)
+        {
+            emit m_toolBar->shapeClickedFromMain("rect");
+        }
+
+    });
+    connect(ovalSC, &QShortcut::activated, this, [ = ] {
+        if (m_functionType == 1)
+        {
+            emit m_toolBar->shapeClickedFromMain("circ");
+        }
+    });
+    connect(arrowSC, &QShortcut::activated, this, [ = ] {
+        if (m_functionType == 1)
+        {
+            emit m_toolBar->shapeClickedFromMain("line");
+        }
+    });
+    connect(lineSC, &QShortcut::activated, this, [ = ] {
+        if (m_functionType == 1)
+        {
+            emit m_toolBar->shapeClickedFromMain("pen");
+        }
+    });
+    connect(textSC, &QShortcut::activated, this, [ = ] {
+        if (m_functionType == 1)
+        {
+            emit m_toolBar->shapeClickedFromMain("text");
+        }
+    });
+    connect(colorSC, &QShortcut::activated, this, [ = ] {
+        if (m_functionType == 1)
+        {
+            emit m_toolBar->shapeClickedFromMain("option");
+        }
+    });
+
     if (isCommandExist("dman")) {
         QShortcut *helpSC = new QShortcut(QKeySequence("F1"), this);
         helpSC->setAutoRepeat(false);
@@ -1960,13 +2007,22 @@ void MainWindow::paintEvent(QPaintEvent *)
 //        }
     }
 }
-
 bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
-    if (!m_keyboardGrabbed && this->windowHandle() != NULL) {
-        m_keyboardGrabbed = this->windowHandle()->setKeyboardGrabEnabled(true);
-        qDebug() << "m_keyboardGrabbed:" << m_keyboardGrabbed;
+    if (m_functionType == 1) {
+        if (!m_keyboardGrabbed && this->windowHandle() != NULL) {
+            m_keyboardGrabbed = this->windowHandle()->setKeyboardGrabEnabled(true);
+            //        qDebug() << "m_keyboardGrabbed:" << m_keyboardGrabbed;
+        }
     }
+
+    else {
+        if (!m_keyboardGrabbed && this->windowHandle() != NULL) {
+            m_keyboardGrabbed = this->windowHandle()->setKeyboardGrabEnabled(false);
+            //        qDebug() << "m_keyboardGrabbed:" << m_keyboardGrabbed;
+        }
+    }
+
     bool needRepaint = false;
 #undef KeyPress
 #undef KeyRelease
@@ -2036,6 +2092,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         saveScreenShot();
                     } else if (keyEvent->key() == Qt::Key_S) {
 //                        expressSaveScreenshot();
+                        saveScreenShot();
                     }
                 }  else {
                     if (keyEvent->key() == Qt::Key_Left) {
@@ -2092,12 +2149,14 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {
                     if (keyEvent->key() == Qt::Key_S) {
 //                        expressSaveScreenshot();
+                        saveScreenShot();
                     }
 
                     if (keyEvent->key() == Qt::Key_C) {
 //                        ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
                         m_copyToClipboard = true;
 //                        saveScreenshot();
+                        saveScreenShot();
                     }
                     if (keyEvent->key() == Qt::Key_Left) {
                         recordX = std::max(0, recordX - 1);
@@ -2448,6 +2507,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
 
     } else if (event->type() == QEvent::MouseMove) {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         if (!m_isShapesWidgetExist) {
             m_sizeTips->updateTips(QPoint(recordX, recordY),
                                    QString("%1X%2").arg(recordWidth).arg(recordHeight));
@@ -2565,6 +2625,17 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
         }
 
+        else {
+            QRect t_rect;
+            t_rect.setX(recordX);
+            t_rect.setY(recordY);
+            t_rect.setWidth(recordWidth);
+            t_rect.setHeight(recordHeight);
+
+            if (!t_rect.contains(mouseEvent->x(), mouseEvent->y())) {
+                qApp->setOverrideCursor(Qt::ArrowCursor);
+            }
+        }
     }
 
     // Use flag instead call `repaint` directly,
@@ -2644,8 +2715,8 @@ void MainWindow::shotCurrentImg()
     const qreal ratio = this->devicePixelRatioF();
     QRect target( recordX * ratio + 2,
                   recordY * ratio + 2,
-                  recordWidth * ratio - 2,
-                  recordHeight * ratio - 2 );
+                  recordWidth * ratio - 3,
+                  recordHeight * ratio - 3 );
 
     m_resultPixmap = m_resultPixmap.copy(target);
 }
@@ -2837,6 +2908,8 @@ void MainWindow::stopRecord()
 {
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
         hide();
+        eventMonitor.terminate();
+        eventMonitor.wait();
         recordProcess.stopRecord();
 //        voiceRecordProcess.stopRecord();
     }
@@ -3036,6 +3109,12 @@ void MainWindow::initShapeWidget(QString type)
 
     m_shapesWidget->setFixedSize(recordWidth - 4, recordHeight - 4);
     m_shapesWidget->move(recordX + 2, recordY + 2);
+    QRect t_rect;
+    t_rect.setX(recordX);
+    t_rect.setY(recordY);
+    t_rect.setWidth(recordWidth);
+    t_rect.setHeight(recordHeight);
+    m_shapesWidget->setGlobalRect(t_rect);
 
 
     updateToolBarPos();

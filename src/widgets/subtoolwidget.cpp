@@ -127,6 +127,7 @@ void SubToolWidget::initRecordLabel()
     audioButton->setObjectName("AudioButton");
     audioButton->setText(tr(" "));
     audioButton->setIconSize(TOOL_ICON_SIZE);
+    audioButton->setToolTip(tr("Select Audio"));
     if (m_themeType == 1) {
         audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
     }
@@ -328,6 +329,7 @@ void SubToolWidget::initRecordLabel()
     m_keyBoardButton->setObjectName("KeyBoardButton");
 //    keyBoardButton->setText(tr("Key"));
     m_keyBoardButton->setIconSize(MAX_TOOL_ICON_SIZE);
+    m_keyBoardButton->setToolTip(tr("Show Key"));
 
     if (m_themeType == 1) {
         m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
@@ -383,6 +385,7 @@ void SubToolWidget::initRecordLabel()
     m_cameraButton->setObjectName("CameraButton");
 //    cameraButton->setText(tr("Camera"));
     m_cameraButton->setIconSize(MAX_TOOL_ICON_SIZE);
+    m_cameraButton->setToolTip(tr("Show Camera"));
 
     if (m_themeType == 1) {
         m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
@@ -431,6 +434,7 @@ void SubToolWidget::initRecordLabel()
 
     m_mouseButton->setObjectName("MouseButton");
     m_mouseButton->setIconSize(MAX_TOOL_ICON_SIZE);
+    m_mouseButton->setToolTip(tr("Show Mouse"));
     if (m_themeType == 1) {
         m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
     }
@@ -491,6 +495,7 @@ void SubToolWidget::initRecordLabel()
     DFontSizeManager::instance()->bind(m_optionButton, DFontSizeManager::T8);
     m_optionButton->setText(tr("Option"));
     m_optionButton->setFixedSize(QSize(70, 40));
+    m_optionButton->setToolTip(tr("Select Option"));
     rectBtnGroup->addButton(m_optionButton);
 
     btnList.append(m_optionButton);
@@ -961,6 +966,7 @@ void SubToolWidget::initShotLabel()
 //    rectButton->setText(tr("Rect"));
     rectBtnGroup->addButton(m_rectButton);
     m_rectButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
+    m_rectButton->setToolTip(tr("Select Rect"));
     btnList.append(m_rectButton);
 
     m_circleButton = new ToolButton();
@@ -972,6 +978,7 @@ void SubToolWidget::initShotLabel()
 //    m_circleButton->setPalette(pa);
 
     m_circleButton->setIconSize(QSize(35, 35));
+    m_circleButton->setToolTip(tr("Select Oval"));
     if (m_themeType == 1) {
         m_circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
     }
@@ -1002,6 +1009,7 @@ void SubToolWidget::initShotLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 
     m_lineButton->setIconSize(QSize(35, 35));
+    m_lineButton->setToolTip(tr("Select Arrow/Line"));
 
     bool t_arrowStatus = ConfigSettings::instance()->value("arrow", "is_straight").toBool();
 
@@ -1044,6 +1052,7 @@ void SubToolWidget::initShotLabel()
 //    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     m_penButton->setIconSize(QSize(35, 35));
+    m_penButton->setToolTip(tr("Select Pen"));
 //    m_penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
 
     if (m_themeType == 1) {
@@ -1068,6 +1077,7 @@ void SubToolWidget::initShotLabel()
 //    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     m_textButton->setIconSize(QSize(30, 30));
+    m_textButton->setToolTip(tr("Select Text"));
 //    m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
     if (m_themeType == 1) {
         m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
@@ -1090,6 +1100,7 @@ void SubToolWidget::initShotLabel()
     DFontSizeManager::instance()->bind(m_shotOptionButton, DFontSizeManager::T8);
     m_shotOptionButton->setText(tr("Option"));
     m_shotOptionButton->setFixedSize(QSize(70, 40));
+    m_shotOptionButton->setToolTip(tr("Select Option"));
     rectBtnGroup->addButton(m_shotOptionButton);
 
     btnList.append(m_shotOptionButton);
@@ -1627,6 +1638,8 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
             m_penButton->click();
         } else if (shape == "text") {
             m_textButton->click();
+        } else if (shape == "option") {
+            m_shotOptionButton->click();
         }
     }
 }
