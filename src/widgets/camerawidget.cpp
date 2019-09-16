@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <QPainter>
 #include <QHBoxLayout>
+#include <QDir>
 
 CameraWidget::CameraWidget(DWidget *parent) : DWidget(parent)
 {
@@ -61,6 +62,10 @@ void CameraWidget::initCamera()
     m_cameraUI = new DLabel(this);
     m_wildScreen = false;
 
+    m_capturePath = QDir::homePath() + QDir::separator() + "." + qApp->applicationName();
+    QDir t_appDir;
+    t_appDir.mkpath(m_capturePath);
+
     QHBoxLayout *t_hlayout = new QHBoxLayout(this);
     t_hlayout->addWidget(m_cameraUI);
     this->setLayout(t_hlayout);
@@ -75,12 +80,10 @@ void CameraWidget::initCamera()
 
 void CameraWidget::cameraStart()
 {
-
     camera->start();
 
-    if (imageCapture->isCaptureDestinationSupported(QCameraImageCapture::CaptureToBuffer)) {
-        timer_image_capture->start(50);
-        imageCapture->setCaptureDestination(QCameraImageCapture::CaptureToBuffer);
+    if (imageCapture->isCaptureDestinationSupported(QCameraImageCapture::CaptureToFile)) {
+        imageCapture->setCaptureDestination(QCameraImageCapture::CaptureToFile);
         qDebug() << imageCapture->supportedBufferFormats();
         imageCapture->setBufferFormat(QVideoFrame::PixelFormat::Format_Jpeg);
         qDebug() << imageCapture->supportedResolutions(imageCapture->encodingSettings());
@@ -109,6 +112,8 @@ void CameraWidget::cameraStart()
         qDebug() << iamge_setting.resolution();
         imageCapture->setEncodingSettings(iamge_setting);
         connect(imageCapture, &QCameraImageCapture::imageCaptured, this, &CameraWidget::processCapturedImage);
+        connect(imageCapture, &QCameraImageCapture::imageSaved, this, &CameraWidget::deleteCapturedImage);
+        timer_image_capture->start(50);
     }
 
     else {
@@ -129,7 +134,7 @@ bool CameraWidget::getScreenResolution()
 
 void CameraWidget::captureImage()
 {
-    imageCapture->capture();
+    imageCapture->capture(m_capturePath);
 }
 
 void CameraWidget::processCapturedImage(int request_id, const QImage &img)
@@ -137,6 +142,12 @@ void CameraWidget::processCapturedImage(int request_id, const QImage &img)
     QImage t_image = img.scaled(this->width(), this->height(), Qt::KeepAspectRatioByExpanding, Qt::FastTransformation);
     m_cameraUI->setPixmap(QPixmap::fromImage(t_image));
 }
+
+void CameraWidget::deleteCapturedImage(int id, const QString &fileName)
+{
+    QFile::remove(fileName);
+}
+
 void CameraWidget::enterEvent(QEvent *e)
 {
     qApp->setOverrideCursor(Qt::ArrowCursor);

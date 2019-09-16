@@ -36,6 +36,7 @@ signals:
 public slots:
     void captureImage();
     void processCapturedImage(int request_id, const QImage &img);
+    void deleteCapturedImage(int id, const QString &fileName);
 protected:
     void enterEvent(QEvent *e);
     void mousePressEvent(QMouseEvent *event);
@@ -57,6 +58,7 @@ private:
     QCameraImageCapture *imageCapture; //截图部件
     QTimer *timer_image_capture;
     DLabel *m_cameraUI;
+    QString m_capturePath;
 
     bool m_wildScreen;
 };
