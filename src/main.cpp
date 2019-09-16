@@ -22,8 +22,10 @@
  */
 
 #include <DWidget>
+#include <DLog>
 #include <QDBusConnection>
 #include <DApplication>
+#include <QCoreApplication>
 #include <QDBusInterface>
 #include <DWindowManagerHelper>
 #include <DWidgetUtil>
@@ -88,15 +90,19 @@ void saveThemeTypeSetting(int type)
 
 int main(int argc, char *argv[])
 {
+
+    DApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
     // Construct a QGuiApplication before accessing a platform function.
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
+
     DApplication::loadDXcbPlugin();
     DApplication app(argc, argv);
     QString t_launchMode;
 
     if (argc >= 2) {
         t_launchMode = QString(argv[1]);
-        qDebug() << t_launchMode;
+//        qDebug() << t_launchMode;
     }
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
@@ -118,10 +124,46 @@ int main(int argc, char *argv[])
             app.setApplicationName("deepin-screen-recorder");
             app.setApplicationVersion("1.0");
 
+            static const QDate buildDate = QLocale( QLocale::English ).
+                                           toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
+            QString t_date = buildDate.toString("MMdd");
+
+            // Version Time
+            app.setApplicationVersion(DApplication::buildVersion(t_date));
+
+            using namespace Dtk::Core;
+            Dtk::Core::DLogManager::registerConsoleAppender();
+            Dtk::Core::DLogManager::registerFileAppender();
+
+            QCommandLineOption  delayOption(QStringList() << "d" << "delay",
+                                            "Take a screenshot after NUM seconds.", "NUM");
+            QCommandLineOption fullscreenOption(QStringList() << "f" << "fullscreen",
+                                                "Take a screenshot the whole screen.");
+            QCommandLineOption topWindowOption(QStringList() << "w" << "top-window",
+                                               "Take a screenshot of the most top window.");
+            QCommandLineOption savePathOption(QStringList() << "s" << "save-path",
+                                              "Specify a path to save the screenshot.", "PATH");
+            QCommandLineOption prohibitNotifyOption(QStringList() << "n" << "no-notification",
+                                                    "Don't send notifications.");
+            QCommandLineOption iconOption(QStringList() << "i" << "icon",
+                                          "Indicate that this program's started by clicking.");
+            QCommandLineOption dbusOption(QStringList() << "u" << "dbus",
+                                          "Start  from dbus.");
+            QCommandLineParser cmdParser;
+            cmdParser.setApplicationDescription("deepin-screenshot");
+            cmdParser.addHelpOption();
+            cmdParser.addVersionOption();
+            cmdParser.addOption(delayOption);
+            cmdParser.addOption(fullscreenOption);
+            cmdParser.addOption(topWindowOption);
+            cmdParser.addOption(savePathOption);
+            cmdParser.addOption(prohibitNotifyOption);
+            cmdParser.addOption(iconOption);
+            cmdParser.addOption(dbusOption);
+            cmdParser.process(app);
+
             // Load translator.
             app.loadTranslator();
-//            app.setStyle("chameleon");
-//            app.setAttribute(Qt::AA_UseHighDpiPixmaps);
 
             // 应用已保存的主题设置
             DGuiApplicationHelper::instance()->setPaletteType(getThemeTypeSetting());
@@ -134,13 +176,6 @@ int main(int argc, char *argv[])
                 saveThemeTypeSetting(type);
             });
 
-
-            static const QDate buildDate = QLocale( QLocale::English ).
-                                           toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
-            QString t_date = buildDate.toString("MMdd");
-
-            // Version Time
-            app.setApplicationVersion(DApplication::buildVersion(t_date));
 
             // Show window.
             MainWindow window;

@@ -1941,7 +1941,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
         }
 
-    } /*else if (event->type() == QEvent::KeyRelease) {
+    } else if (event->type() == QEvent::KeyRelease) {
 
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
@@ -1987,7 +1987,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         }
         // NOTE: must be use 'isAutoRepeat' to filter KeyRelease event send by Qt.
         DWidget::keyReleaseEvent(keyEvent);
-    }*/
+    }
 
 
     if (event->type() == QEvent::MouseButtonPress) {
@@ -2298,10 +2298,10 @@ void MainWindow::shotCurrentImg()
     emit hideScreenshotUI();
 
     const qreal ratio = this->devicePixelRatioF();
-    QRect target( recordX * ratio,
-                  recordY * ratio,
-                  recordWidth * ratio,
-                  recordHeight * ratio );
+    QRect target( recordX * ratio + 2,
+                  recordY * ratio + 2,
+                  recordWidth * ratio - 2,
+                  recordHeight * ratio - 2 );
 
     m_resultPixmap = m_resultPixmap.copy(target);
 }
