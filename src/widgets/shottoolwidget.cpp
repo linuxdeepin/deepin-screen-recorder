@@ -949,7 +949,7 @@ void ShotToolWidget::initLineLabel()
 
     //选择功能按钮组
     QButtonGroup *t_funcBtnGroup = new QButtonGroup();
-    t_funcBtnGroup->setExclusive(false);
+    t_funcBtnGroup->setExclusive(true);
     QList<ToolButton *> btnList;
 
     //粗细程度１级按钮

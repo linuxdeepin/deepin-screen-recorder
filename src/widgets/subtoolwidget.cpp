@@ -1188,6 +1188,11 @@ void SubToolWidget::initShotLabel()
     OptionMenu->addAction(saveToSpecialPath);
     OptionMenu->addSeparator();
 
+    OptionMenu->addAction(clipTitleAction);
+    OptionMenu->addSeparator();
+    OptionMenu->addAction(clipAction);
+    OptionMenu->addSeparator();
+
     OptionMenu->addAction(formatTitleAction);
     OptionMenu->addSeparator();
     OptionMenu->addAction(pngAction);
@@ -1197,10 +1202,7 @@ void SubToolWidget::initShotLabel()
     OptionMenu->addAction(bmpAction);
     OptionMenu->addSeparator();
 
-    OptionMenu->addAction(clipTitleAction);
-    OptionMenu->addSeparator();
-    OptionMenu->addAction(clipAction);
-    OptionMenu->addSeparator();
+
 
     m_shotOptionButton->setMenu(OptionMenu);
 

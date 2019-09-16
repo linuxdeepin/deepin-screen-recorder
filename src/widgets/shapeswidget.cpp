@@ -65,6 +65,8 @@ ShapesWidget::ShapesWidget(DWidget *parent)
             this, &ShapesWidget::undoDrawShapes);
     connect(m_menuController, &MenuController::menuNoFocus,
             this, &ShapesWidget::menuNoFocus);
+    connect(this, &ShapesWidget::setShapesUndo,
+            m_menuController, &MenuController::setUndoEnable);
     connect(ConfigSettings::instance(), &ConfigSettings::shapeConfigChanged,
             this, &ShapesWidget::updateSelectedShape);
     m_sideBar = new SideBar(this);
@@ -185,6 +187,10 @@ void ShapesWidget::setNoChangedTextEditRemove()
             return;
         }
         i++;
+    }
+
+    if (m_shapes.length() == 0) {
+        emit setShapesUndo(false);
     }
 
     update();
@@ -1755,6 +1761,9 @@ void ShapesWidget::paintEvent(QPaintEvent *)
             }
         }
     }
+    if (m_shapes.length() > 0) {
+        emit setShapesUndo(true);
+    }
 }
 
 void ShapesWidget::enterEvent(QEvent *e)
@@ -1789,6 +1798,10 @@ void ShapesWidget::deleteCurrentShape()
         m_currentShape.mainPoints[i] = QPointF(0, 0);
     }
 
+    if (m_shapes.length() == 0) {
+        emit setShapesUndo(false);
+    }
+
     update();
     m_selectedIndex = -1;
     m_selectedOrder = -1;
@@ -1809,7 +1822,11 @@ void ShapesWidget::undoDrawShapes()
 
         m_shapes.removeLast();
     }
+    qDebug() << "undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
 
+    if (m_shapes.length() == 0) {
+        emit setShapesUndo(false);
+    }
     m_isSelected = false;
     update();
 }

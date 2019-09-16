@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QHBoxLayout>
 #include <QDir>
+#include <QBitmap>
 
 CameraWidget::CameraWidget(DWidget *parent) : DWidget(parent)
 {
@@ -140,7 +141,27 @@ void CameraWidget::captureImage()
 void CameraWidget::processCapturedImage(int request_id, const QImage &img)
 {
     QImage t_image = img.scaled(this->width(), this->height(), Qt::KeepAspectRatioByExpanding, Qt::FastTransformation);
-    m_cameraUI->setPixmap(QPixmap::fromImage(t_image));
+    QPixmap pixmap = round(QPixmap::fromImage(t_image),8);
+    m_cameraUI->setPixmap(pixmap);
+}
+
+QPixmap CameraWidget::round(const QPixmap& img_in, int radius)
+{
+    if (img_in.isNull())
+    {
+        return QPixmap();
+    }
+    QSize size(img_in.size());
+    QBitmap mask(size);
+    QPainter painter(&mask);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    painter.fillRect(mask.rect(), Qt::white);
+    painter.setBrush(QColor(0, 0, 0));
+    painter.drawRoundedRect(mask.rect(), radius, radius);
+    QPixmap image = img_in;// .scaled(size);
+    image.setMask(mask);
+    return image;
 }
 
 void CameraWidget::deleteCapturedImage(int id, const QString &fileName)

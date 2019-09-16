@@ -56,7 +56,8 @@
 
 
 const int MainWindow::CURSOR_BOUND = 5;
-const int MainWindow::RECORD_MIN_SIZE = 200;
+const int MainWindow::RECORD_MIN_SIZE = 580;
+const int MainWindow::RECORD_MIN_HEIGHT = 280;
 const int MainWindow::DRAG_POINT_RADIUS = 8;
 
 const int MainWindow::RECORD_BUTTON_NORMAL = 0;
@@ -181,11 +182,15 @@ void MainWindow::initAttributes()
     windowManager->setRootWindowRect(screenRect);
     QList<xcb_window_t> windows = windowManager->getWindows();
     rootWindowRect = windowManager->getRootWindowRect();
-
     for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
         if (wid == winId()) continue;
 
         DForeignWindow *window = DForeignWindow::fromWinId(wid);
+
+//        if (window->visibility() == QWindow::Hidden) {
+//            continue;
+//        }
+//        qDebug() << window->wmClass() << window->visibility();
         if (window) {
             int t_tempWidth = 0;
             int t_tempHeight = 0;
@@ -194,7 +199,6 @@ void MainWindow::initAttributes()
             //x坐标小于0时
             if (window->frameGeometry().x() < 0) {
                 if (window->frameGeometry().y() < 0) {
-
 
                     //x,y为负坐标情况
                     t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
@@ -536,16 +540,15 @@ void MainWindow::initScreenShot()
 
 //    installEventFilter(this);
 
-//    connect(this, &MainWindow::releaseEvent, this, [ = ] {
-//        qDebug() << "release event !!!";
-//        m_keyboardReleased = true;
-//        m_keyboardGrabbed =  windowHandle()->setKeyboardGrabEnabled(false);
-//        qDebug() << "keyboardGrabbed:" << m_keyboardGrabbed;
-//        removeEventFilter(this);
-//    });
+    connect(this, &MainWindow::releaseEvent, this, [ = ] {
+        qDebug() << "release event !!!";
+        m_keyboardReleased = true;
+        m_keyboardGrabbed =  windowHandle()->setKeyboardGrabEnabled(false);
+        qDebug() << "keyboardGrabbed:" << m_keyboardGrabbed;
+        removeEventFilter(this);
+    });
 
 //    connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
-
 
     m_functionType = 1;
     m_keyBoardStatus = 0;
@@ -611,6 +614,7 @@ void MainWindow::initScreenShot()
 
     setDragCursor();
 //    eventMonitor.quit();
+//    emit releaseEvent();
     if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
         eventMonitor.terminate();
         eventMonitor.wait();
@@ -624,6 +628,16 @@ void MainWindow::initScreenShot()
 
 void MainWindow::initScreenRecorder()
 {
+    if (!DWindowManagerHelper::instance()->hasComposite()) {
+        qDebug() << "no composite";
+        Utils::warnNoComposite();
+        if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+            eventMonitor.terminate();
+            eventMonitor.wait();
+        }
+        qApp->quit();
+    }
+
     m_functionType = 0;
     m_keyBoardStatus = 0;
     m_mouseStatus = 0;
@@ -970,6 +984,7 @@ void MainWindow::responseEsc()
 {
     if (m_functionType == 0) {
         if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
+            emit releaseEvent();
             if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
                 eventMonitor.terminate();
                 eventMonitor.wait();
@@ -985,6 +1000,7 @@ void MainWindow::compositeChanged()
     if (!m_wmHelper->hasComposite()) {
         qDebug() << "have no Composite";
         Utils::warnNoComposite();
+        emit releaseEvent();
         if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
             eventMonitor.terminate();
             eventMonitor.wait();
@@ -1625,7 +1641,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
 
 void MainWindow::saveScreenShot()
 {
-    emit releaseEvent();
+//    emit releaseEvent();
     emit saveActionTriggered();
 
     DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
@@ -1638,6 +1654,7 @@ void MainWindow::saveScreenShot()
     m_sideBar->setVisible(false);
     m_shotButton->setVisible(false);
     m_recordButton->setVisible(false);
+    m_sizeTips->setVisible(false);
 
     shotCurrentImg();
 
@@ -1715,6 +1732,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     }
 
     QTimer::singleShot(2, [ = ] {
+        emit releaseEvent();
         if (QSysInfo::currentCpuArchitecture().startsWith("x86"))
         {
             eventMonitor.terminate();
@@ -2025,14 +2043,16 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     if (m_functionType == 1) {
         if (!m_keyboardGrabbed && this->windowHandle() != NULL) {
             m_keyboardGrabbed = this->windowHandle()->setKeyboardGrabEnabled(true);
-            //        qDebug() << "m_keyboardGrabbed:" << m_keyboardGrabbed;
+            m_keyboardReleased = false;
+            qDebug() << "m_keyboardGrabbed:" << m_keyboardGrabbed;
         }
     }
 
     else {
-        if (!m_keyboardGrabbed && this->windowHandle() != NULL) {
-            m_keyboardGrabbed = this->windowHandle()->setKeyboardGrabEnabled(false);
-            //        qDebug() << "m_keyboardGrabbed:" << m_keyboardGrabbed;
+        if (!m_keyboardReleased && this->windowHandle() != NULL) {
+            m_keyboardReleased = this->windowHandle()->setKeyboardGrabEnabled(false);
+            m_keyboardGrabbed = false;
+            qDebug() << "m_keyboardGrabbed:" << m_keyboardGrabbed;
         }
     }
 
@@ -2049,6 +2069,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                 }
                 qDebug() << "Key_Escape pressed: app quit!";
+                emit releaseEvent();
                 if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
                     eventMonitor.terminate();
                     eventMonitor.wait();
@@ -2072,6 +2093,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             bool needRepaint = false;
             if (m_isShapesWidgetExist) {
                 if (keyEvent->key() == Qt::Key_Escape) {
+                    emit releaseEvent();
                     if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
                         eventMonitor.terminate();
                         eventMonitor.wait();
@@ -2149,17 +2171,17 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             needRepaint = true;
                         }
                     } else if (keyEvent->key() == Qt::Key_Up) {
-                        if (recordHeight > RECORD_MIN_SIZE) {
+                        if (recordHeight > RECORD_MIN_HEIGHT) {
                             recordY = std::max(0, recordY + 1);
 
                             recordHeight = std::max(std::min(recordHeight - 1,
-                                                             m_backgroundRect.height()), RECORD_MIN_SIZE);
+                                                             m_backgroundRect.height()), RECORD_MIN_HEIGHT);
                             needRepaint = true;
                         }
                     } else if (keyEvent->key() == Qt::Key_Down) {
-                        if (recordHeight > RECORD_MIN_SIZE) {
+                        if (recordHeight > RECORD_MIN_HEIGHT) {
                             recordHeight = std::max(std::min(recordHeight - 1,
-                                                             m_backgroundRect.height()), RECORD_MIN_SIZE);
+                                                             m_backgroundRect.height()), RECORD_MIN_HEIGHT);
                             needRepaint = true;
                         }
                     }
@@ -2480,17 +2502,34 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             }
                         }
                     } else {
-                        // Make sure record area not too small.
-                        recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
-                        recordHeight = recordHeight < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordHeight;
 
-                        if (recordX + recordWidth > rootWindowRect.width) {
-                            recordX = rootWindowRect.width - recordWidth;
-                        }
+                        if (m_functionType == 0) {
+                            // Make sure record area not too small.
+                            recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
+                            recordHeight = recordHeight < RECORD_MIN_HEIGHT ? RECORD_MIN_HEIGHT : recordHeight;
 
-                        if (recordY + recordHeight > rootWindowRect.height) {
-                            recordY = rootWindowRect.height - recordHeight;
+                            if (recordX + recordWidth > rootWindowRect.width) {
+                                recordX = rootWindowRect.width - recordWidth;
+                            }
+
+                            if (recordY + recordHeight > rootWindowRect.height) {
+                                recordY = rootWindowRect.height - recordHeight;
+                            }
                         }
+//                        else if (m_functionType == 1) {
+//                            // Make sure record area not too small.
+//                            recordWidth = recordWidth < 200 ? 200 : recordWidth;
+//                            recordHeight = recordHeight < 200 ? 200 : recordHeight;
+
+//                            if (recordX + recordWidth > rootWindowRect.width) {
+//                                recordX = rootWindowRect.width - recordWidth;
+//                            }
+
+//                            if (recordY + recordHeight > rootWindowRect.height) {
+//                                recordY = rootWindowRect.height - recordHeight;
+//                            }
+//                        }
+
                     }
 
                     showRecordButton();
@@ -2761,14 +2800,14 @@ void MainWindow::flashTrayIcon()
 void MainWindow::resizeTop(QMouseEvent *mouseEvent)
 {
     int offsetY = mouseEvent->y() - dragStartY;
-    recordY = std::max(std::min(dragRecordY + offsetY, dragRecordY + dragRecordHeight - RECORD_MIN_SIZE), 1);
-    recordHeight = std::max(std::min(dragRecordHeight - offsetY, rootWindowRect.height), RECORD_MIN_SIZE);
+    recordY = std::max(std::min(dragRecordY + offsetY, dragRecordY + dragRecordHeight - RECORD_MIN_HEIGHT), 1);
+    recordHeight = std::max(std::min(dragRecordHeight - offsetY, rootWindowRect.height), RECORD_MIN_HEIGHT);
 }
 
 void MainWindow::resizeBottom(QMouseEvent *mouseEvent)
 {
     int offsetY = mouseEvent->y() - dragStartY;
-    recordHeight = std::max(std::min(dragRecordHeight + offsetY, rootWindowRect.height), RECORD_MIN_SIZE);
+    recordHeight = std::max(std::min(dragRecordHeight + offsetY, rootWindowRect.height), RECORD_MIN_HEIGHT);
 }
 
 void MainWindow::resizeLeft(QMouseEvent *mouseEvent)
@@ -2927,6 +2966,7 @@ void MainWindow::stopRecord()
 {
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
         hide();
+        emit releaseEvent();
         if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
             eventMonitor.terminate();
             eventMonitor.wait();
@@ -3045,6 +3085,7 @@ void MainWindow::hideAllWidget()
     m_sideBar->hide();
     m_recordButton->hide();
     m_shotButton->hide();
+    m_sizeTips->hide();
 
     //隐藏键盘按钮控件
     if (m_keyButtonList.count() > 0) {
@@ -3175,6 +3216,7 @@ void MainWindow::exitApp()
         if (m_hotZoneInterface->isValid())
             m_hotZoneInterface->asyncCall("EnableZoneDetected",  true);
     }
+    emit releaseEvent();
     if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
         eventMonitor.terminate();
         eventMonitor.wait();

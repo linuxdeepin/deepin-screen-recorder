@@ -40,11 +40,13 @@ signals:
 
 public slots:
     void showMenu(QPoint pos);
+    void setUndoEnable(bool status);
 
 protected:
     void enterEvent(QEvent *e);
 private:
     DMenu *m_menu;
+    QAction *m_unDoAct;
     qreal m_ration;
 };
 #endif // MENUCONTROLLER_H

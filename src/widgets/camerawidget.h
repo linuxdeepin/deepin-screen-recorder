@@ -52,6 +52,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *e);
 private:
+    QPixmap round(const QPixmap& img_in, int radius);
+private:
     int recordX;
     int recordY;
     int recordWidth;

@@ -82,8 +82,8 @@ MenuController::MenuController(QObject *parent)
 //    unDoIcon.addFile(":/image/menu_icons/undo-menu-normal.svg", MENU_ICON_SIZE, QIcon::Normal);
 //    unDoIcon.addFile(":/image/menu_icons/undo-menu-hover.svg", MENU_ICON_SIZE, QIcon::Active);
 //    QAction *unDoAct = new QAction(unDoIcon, tr("Undo"), this);
-    QAction *unDoAct = new QAction(tr("Undo"), this);
-    connect(unDoAct, &QAction::triggered, [ = ] {
+    m_unDoAct = new QAction(tr("Undo"), this);
+    connect(m_unDoAct, &QAction::triggered, [ = ] {
         emit unDoAction();
     });
 
@@ -103,9 +103,11 @@ MenuController::MenuController(QObject *parent)
 //    m_menu->addAction(penAct);
 //    m_menu->addAction(textAct);
 //    m_menu->addSeparator();
-    m_menu->addAction(unDoAct);
+    m_menu->addAction(m_unDoAct);
     m_menu->addAction(saveAct);
     m_menu->addAction(closeAct);
+
+    m_unDoAct->setEnabled(false);
 
 //    QIcon saveIcon;
 //    saveIcon.addFile(":/image/menu_icons/save-menu-norml.svg", MENU_ICON_SIZE, QIcon::Normal);
@@ -158,6 +160,11 @@ MenuController::MenuController(QObject *parent)
 void MenuController::showMenu(QPoint pos)
 {
     m_menu->popup(pos);
+}
+
+void MenuController::setUndoEnable(bool status)
+{
+    m_unDoAct->setEnabled(status);
 }
 
 void MenuController::enterEvent(QEvent *e)

@@ -98,7 +98,7 @@ void saveThemeTypeSetting(int type)
 int main(int argc, char *argv[])
 {
 
-    DApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+//    DApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     // Construct a QGuiApplication before accessing a platform function.
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
 //    dbus.registerService("com.deepin.ScreenRecorder");
     if (dbus.registerService("com.deepin.ScreenRecorder")) {
         // Poup up warning dialog if window manager not support composite.
-        if (!DWindowManagerHelper::instance()->hasComposite()) {
+        if (!DWindowManagerHelper::instance()->hasComposite() && t_launchMode == "screenRecord") {
             Utils::warnNoComposite();
             return 0;
         }
