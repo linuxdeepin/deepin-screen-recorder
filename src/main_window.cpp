@@ -178,9 +178,164 @@ void MainWindow::initAttributes()
 
         DForeignWindow *window = DForeignWindow::fromWinId(wid);
         if (window) {
+            int t_tempWidth = 0;
+            int t_tempHeight = 0;
             window->deleteLater();
-            windowRects << Dtk::Wm::WindowRect { window->x(), window->y(), window->width(), window->height() };
-            windowNames << window->wmClass();
+            //修改部分窗口显示不全，截图框识别问题
+            //x坐标小于0时
+            if (window->x() < 0) {
+                if (window->y() < 0) {
+                    //x,y为负坐标情况
+                    t_tempWidth = window->width() + window->x();
+                    t_tempHeight = window->height() + window->y();
+
+                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
+                        windowRects << Dtk::Wm::WindowRect {0, 0, t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+
+                    else {
+                        continue;
+                    }
+                }
+
+                else if (window->y() >= 0 && window->y() <= m_screenHeight - window->height()) {
+                    //x为负坐标，y在正常屏幕区间内
+                    t_tempWidth = window->width() + window->x();
+                    t_tempHeight = window->height();
+
+                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
+                        windowRects << Dtk::Wm::WindowRect {0, window->y(), t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+
+                    else {
+                        continue;
+                    }
+                }
+
+                else if (window->y() > m_screenHeight - window->height()) {
+                    //x为负坐标，y方向窗口超出屏幕底部
+                    t_tempWidth = window->width() + window->x();
+                    t_tempHeight = m_screenHeight - window->y();
+
+                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
+                        windowRects << Dtk::Wm::WindowRect {0, window->y(), t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+
+                    else {
+                        continue;
+                    }
+                }
+            }
+
+            //x坐标位于正常屏幕区间时
+            else if (window->x() >= 0 && window->x() <= m_screenWidth - window->width()) {
+                if (window->y() < 0) {
+                    //y为负坐标情况
+                    t_tempWidth = window->width();
+                    t_tempHeight = window->height() + window->y();
+
+                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
+                        windowRects << Dtk::Wm::WindowRect {window->x(), 0, t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+
+                    else {
+                        continue;
+                    }
+                }
+
+                else if (window->y() >= 0 && window->y() <= m_screenHeight - window->height()) {
+                    //y在正常屏幕区间内
+                    t_tempWidth = window->width();
+                    t_tempHeight = window->height();
+
+                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
+                        windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+
+                    else {
+                        continue;
+                    }
+                }
+
+                else if (window->y() > m_screenHeight - window->height()) {
+                    //y方向窗口超出屏幕底部
+                    t_tempWidth = window->width();
+                    t_tempHeight = m_screenHeight - window->y();
+
+                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
+                        windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+
+                    else {
+                        continue;
+                    }
+                }
+            }
+
+            //x方向窗口超出屏幕右侧区域
+            else if (window->x() > m_screenWidth - window->width()) {
+                if (window->y() < 0) {
+                    //y为负坐标情况
+                    t_tempWidth = m_screenWidth - window->x();
+                    t_tempHeight = window->height() + window->y();
+
+                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
+                        windowRects << Dtk::Wm::WindowRect {window->x(), 0, t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+
+                    else {
+                        continue;
+                    }
+                }
+
+                else if (window->y() >= 0 && window->y() <= m_screenHeight - window->height()) {
+                    //y在正常屏幕区间内
+                    t_tempWidth = m_screenWidth - window->x();
+                    t_tempHeight = window->height();
+
+                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
+                        windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+
+                    else {
+                        continue;
+                    }
+                }
+
+                else if (window->y() > m_screenHeight - window->height()) {
+                    //y方向窗口超出屏幕底部
+                    t_tempWidth = m_screenWidth - window->x();
+                    t_tempHeight = m_screenHeight - window->y();
+
+                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
+                        windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+
+                    else {
+                        continue;
+                    }
+                }
+            }
+//                windowRects << Dtk::Wm::WindowRect { window->x(), window->y(), window->width(), window->height() };
+//                windowNames << window->wmClass();
         }
     }
 
