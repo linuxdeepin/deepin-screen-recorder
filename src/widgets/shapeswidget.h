@@ -71,6 +71,7 @@ public slots:
     void setPenColor(QColor color);
     void clearSelected();
     void setAllTextEditReadOnly();
+    void setNoChangedTextEditRemove();
     void saveActionTriggered();
 
     void handleDrag(QPointF oldPoint, QPointF newPoint);

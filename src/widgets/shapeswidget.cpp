@@ -167,6 +167,27 @@ void ShapesWidget::setAllTextEditReadOnly()
     update();
 }
 
+void ShapesWidget::setNoChangedTextEditRemove()
+{
+    QMap<int, TextEdit *>::iterator i = m_editMap.begin();
+    while (i != m_editMap.end()) {
+
+        if (i.value()->document()->toPlainText() == QString(tr("Input your content")) ||
+                i.value()->document()->toPlainText().isEmpty()) {
+            i.value()->clear();
+            delete i.value();
+            m_editMap.remove(i.key());
+            m_shapes.removeAt(i.key());
+            update();
+//            m_editing = true;
+            return;
+        }
+        i++;
+    }
+
+    update();
+}
+
 void ShapesWidget::saveActionTriggered()
 {
     qDebug() << "ShapesWidget saveActionTriggered!";
@@ -1083,6 +1104,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
             } else if (m_currentType == "text") {
                 if (!m_editing) {
                     setAllTextEditReadOnly();
+                    setNoChangedTextEditRemove();
                     m_currentShape.mainPoints[0] = m_pos1;
                     m_currentShape.index = m_currentIndex;
                     qDebug() << "new textedit:" << m_currentIndex;
@@ -1125,6 +1147,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                 } else {
                     m_editing = false;
                     setAllTextEditReadOnly();
+
                 }
             }
             update();
