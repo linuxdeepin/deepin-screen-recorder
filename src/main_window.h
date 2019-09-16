@@ -114,7 +114,13 @@ public:
     void initScreenShot();
     void initScreenRecorder();
     void initLaunchMode(const QString &launchMode);
+    void delayScreenshot(double num);
+    void fullScreenshot();
+    void testScreenshot();
 
+    void topWindow();
+    void savePath(const QString &path);
+    void noNotify();
 signals:
     void releaseEvent();
     void hideScreenshotUI();
@@ -311,4 +317,7 @@ private:
     bool m_selectedCamera = false;
     bool m_initCamera = false;
     bool m_launchWithRecordFunc = false;
+    bool m_shotWithPath = false;
+    int m_screenNum;
+    QString m_shotSavePath;
 };

@@ -30,10 +30,10 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const int TOOLBAR_HEIGHT = 43;
-const int TOOLBAR_WIDTH = 140;
+const int TOOLBAR_WIDTH = 155;
 const int BUTTON_SPACING = 3;
 const int COLOR_NUM = 16;
-const QSize TOOL_BUTTON_SIZE = QSize(62, 40);
+const QSize TOOL_BUTTON_SIZE = QSize(70, 40);
 const QSize MIN_TOOL_BUTTON_SIZE = QSize(50, 40);
 }
 
@@ -75,10 +75,12 @@ void MainToolWidget::initMainLabel()
     m_recordBtn->setCheckable(true);
     m_recordBtn->setText(tr("Record"));
     m_recordBtn->setObjectName("RecordBtn");
+//    m_recordBtn->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     m_recordBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_recordBtn->setIconSize(QSize(20, 20));
     m_recordBtn->setIcon(QIcon(":/image/newUI/normal"
                                "/screencap-normal.svg"));
+    m_recordBtn->setToolTip(tr("Switch to record mode"));
 //    recordBtn->setStyleSheet(record_button_style);
     toolBtnList.append(m_recordBtn);
 
@@ -94,9 +96,11 @@ void MainToolWidget::initMainLabel()
     m_shotBtn->setPalette(pa);
     m_shotBtn->setText(tr("Shot"));
     m_shotBtn->setObjectName("ShotBtn");
+//    m_shotBtn->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     m_shotBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_shotBtn->setIconSize(QSize(20, 20));
     m_shotBtn->setIcon(QIcon(":/image/newUI/normal/screenshot-normal.svg"));
+    m_shotBtn->setToolTip(tr("Switch to shot mode"));
 //    shotBtn->setStyleSheet(shot_button_style);
     toolBtnList.append(m_shotBtn);
 

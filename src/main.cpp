@@ -149,6 +149,10 @@ int main(int argc, char *argv[])
                                           "Indicate that this program's started by clicking.");
             QCommandLineOption dbusOption(QStringList() << "u" << "dbus",
                                           "Start  from dbus.");
+            //for test
+            QCommandLineOption testOption(QStringList() << "t" << "test",
+                                          "Start  from test.");
+            //for test
             QCommandLineParser cmdParser;
             cmdParser.setApplicationDescription("deepin-screenshot");
             cmdParser.addHelpOption();
@@ -160,10 +164,46 @@ int main(int argc, char *argv[])
             cmdParser.addOption(prohibitNotifyOption);
             cmdParser.addOption(iconOption);
             cmdParser.addOption(dbusOption);
+            cmdParser.addOption(testOption);
             cmdParser.process(app);
 
             // Load translator.
             app.loadTranslator();
+            // Show window.
+            MainWindow window;
+
+            if (cmdParser.isSet(dbusOption)) {
+                qDebug() << "dbus register waiting!";
+                window.initAttributes();
+                window.initLaunchMode(t_launchMode);
+                window.showFullScreen();
+                window.initResource();
+            } else {
+                if (cmdParser.isSet(delayOption)) {
+                    qDebug() << "cmd delay screenshot";
+                    window.delayScreenshot(cmdParser.value(delayOption).toInt());
+                } else if (cmdParser.isSet(fullscreenOption)) {
+                    window.fullScreenshot();
+                } else if (cmdParser.isSet(topWindowOption)) {
+                    qDebug() << "cmd topWindow screenshot";
+                    window.topWindow();
+                } else if (cmdParser.isSet(savePathOption)) {
+                    qDebug() << "cmd savepath screenshot";
+                    window.savePath(cmdParser.value(savePathOption));
+                } else if (cmdParser.isSet(prohibitNotifyOption)) {
+                    qDebug() << "screenshot no notify!";
+                    window.noNotify();
+                } else if (cmdParser.isSet(iconOption)) {
+                    window.delayScreenshot(0.2);
+                } else if (cmdParser.isSet(testOption)) {
+                    window.testScreenshot();
+                } else {
+                    window.initAttributes();
+                    window.initLaunchMode(t_launchMode);
+                    window.showFullScreen();
+                    window.initResource();
+                }
+            }
 
             // 应用已保存的主题设置
             DGuiApplicationHelper::instance()->setPaletteType(getThemeTypeSetting());
@@ -177,14 +217,6 @@ int main(int argc, char *argv[])
             });
 
 
-            // Show window.
-            MainWindow window;
-
-            window.initLaunchMode(t_launchMode);
-
-            window.showFullScreen();
-            // window.show();
-            window.initResource();
 
             // Register debus service.
             dbus.registerObject("/com/deepin/ScreenRecorder", &window, QDBusConnection::ExportScriptableSlots);

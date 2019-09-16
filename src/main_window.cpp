@@ -96,7 +96,7 @@ MainWindow::MainWindow(DWidget *parent) :
     DWidget(parent),
     m_wmHelper(DWindowManagerHelper::instance())
 {
-    initAttributes();
+//    initAttributes();
 
     connect(m_wmHelper, &DWindowManagerHelper::hasCompositeChanged, this, &MainWindow::compositeChanged);
 }
@@ -353,6 +353,7 @@ void MainWindow::initAttributes()
     m_recordButton->setPalette(pa);
     m_recordButton->setIconSize(QSize(30, 30));
     m_recordButton->setIcon(QIcon(":/image/newUI/checked/screencap-checked.svg"));
+//    m_recordButton->setToolTip(tr("Switch to record mode"));
 
     m_recordButton->setFixedSize(60, 47);
 //    m_recordButton->setText(tr("Record"));
@@ -367,6 +368,7 @@ void MainWindow::initAttributes()
     m_shotButton->setPalette(pa);
     m_shotButton->setIconSize(QSize(30, 30));
     m_shotButton->setIcon(QIcon(":/image/newUI/checked/screenshot-checked.svg"));
+//    m_shotButton->setToolTip(tr("Switch to shot mode"));
 
     m_shotButton->setFixedSize(60, 47);
 //    m_shotButton->setText(tr("Shot"));
@@ -377,6 +379,7 @@ void MainWindow::initAttributes()
 
     QPoint curPos = this->cursor().pos();
     m_swUtil = DScreenWindowsUtil::instance(curPos);
+    m_screenNum =  m_swUtil->getScreenNum();
     m_backgroundRect = m_swUtil->backgroundRect();
     m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
 
@@ -473,6 +476,7 @@ void MainWindow::initScreenShot()
 //    });
 
 //    connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
+
 
     m_functionType = 1;
     m_keyBoardStatus = 0;
@@ -645,6 +649,190 @@ void MainWindow::initLaunchMode(const QString &launchMode)
     }
 }
 
+void MainWindow::delayScreenshot(double num)
+{
+    QString summary = QString(tr("Deepin Screenshot will start after %1 seconds").arg(num));
+    QStringList actions = QStringList();
+    QVariantMap hints;
+    DBusNotify *notifyDBus = new DBusNotify(this);
+    if (num >= 2) {
+        notifyDBus->Notify("Deepin Screenshot", 0,  "deepin-screenshot", "",
+                           summary, actions, hints, 0);
+    }
+
+    QTimer *timer = new QTimer;
+    timer->setSingleShot(true);
+    timer->start(int(1000 * num));
+    connect(timer, &QTimer::timeout, this, [ = ] {
+        notifyDBus->CloseNotification(0);
+//        startScreenshot();
+        this->initAttributes();
+        this->initLaunchMode("screenShot");
+        this->showFullScreen();
+        this->initResource();
+    });
+}
+
+void MainWindow::fullScreenshot()
+{
+    this->initAttributes();
+    this->initLaunchMode("screenShot");
+    this->showFullScreen();
+    this->initResource();
+    m_mouseStatus = ShotMouseStatus::Shoting;
+    repaint();
+    qApp->setOverrideCursor(setCursorShape("start"));
+//    initDBusInterface();
+    this->setFocus();
+//    m_configSettings =  ConfigSettings::instance();
+    installEventFilter(this);
+
+//    if (m_hotZoneInterface->isValid())
+//        m_hotZoneInterface->asyncCall("EnableZoneDetected", false);
+
+    QPoint curPos = this->cursor().pos();
+    m_swUtil = DScreenWindowsUtil::instance(curPos);
+//    m_screenNum = m_swUtil->getScreenNum();
+    m_backgroundRect = m_swUtil->backgroundRect();
+
+    this->move(m_backgroundRect.x(), m_backgroundRect.y());
+    this->setFixedSize(m_backgroundRect.size());
+    m_needSaveScreenshot = true;
+    shotFullScreen();
+    m_toolBar = new ToolBar(this);
+    m_toolBar->hide();
+
+//    if (m_hotZoneInterface->isValid())
+//        m_hotZoneInterface->asyncCall("EnableZoneDetected",  true);
+
+//    emit this->hideScreenshotUI();
+//    DDesktopServices::playSystemSoundEffect(DDesktopServices::SSE_Screenshot);
+//    using namespace utils;
+
+    TempFile::instance()->setFullScreenPixmap(m_resultPixmap);
+    const auto r = saveAction(m_resultPixmap);
+    sendNotify(m_saveIndex, m_saveFileName, r);
+}
+
+void MainWindow::testScreenshot()
+{
+    this->initAttributes();
+    this->initLaunchMode("screenShot");
+    this->showFullScreen();
+    this->initResource();
+
+    m_shotWithPath = true;
+    m_shotSavePath = QDir::homePath() + QDir::separator() + QString("testShot");
+    QDir t_appDir;
+    t_appDir.mkpath(m_shotSavePath);
+
+    m_mouseStatus = ShotMouseStatus::Shoting;
+    repaint();
+    qApp->setOverrideCursor(setCursorShape("start"));
+//    initDBusInterface();
+    this->setFocus();
+//    m_configSettings =  ConfigSettings::instance();
+    installEventFilter(this);
+
+//    if (m_hotZoneInterface->isValid())
+//        m_hotZoneInterface->asyncCall("EnableZoneDetected", false);
+
+    QPoint curPos = this->cursor().pos();
+    m_swUtil = DScreenWindowsUtil::instance(curPos);
+//    m_screenNum = m_swUtil->getScreenNum();
+    m_backgroundRect = m_swUtil->backgroundRect();
+
+    this->move(m_backgroundRect.x(), m_backgroundRect.y());
+    this->setFixedSize(m_backgroundRect.size());
+    m_needSaveScreenshot = true;
+    shotFullScreen();
+    m_toolBar = new ToolBar(this);
+    m_toolBar->hide();
+
+//    if (m_hotZoneInterface->isValid())
+//        m_hotZoneInterface->asyncCall("EnableZoneDetected",  true);
+
+//    emit this->hideScreenshotUI();
+//    DDesktopServices::playSystemSoundEffect(DDesktopServices::SSE_Screenshot);
+//    using namespace utils;
+
+    TempFile::instance()->setFullScreenPixmap(m_resultPixmap);
+    const auto r = saveAction(m_resultPixmap);
+    sendNotify(m_saveIndex, m_saveFileName, r);
+}
+
+void MainWindow::topWindow()
+{
+    this->initAttributes();
+    this->initLaunchMode("screenShot");
+    this->showFullScreen();
+    this->initResource();
+
+    QList<QRect> t_windowRects;
+    if (m_screenNum == 0) {
+        t_windowRects  = m_swUtil->windowsRect();
+
+        recordX = t_windowRects[0].x();
+        recordY = t_windowRects[0].y();
+        recordWidth = t_windowRects[0].width();
+        recordHeight = t_windowRects[0].height();
+    } else {
+        recordX = m_backgroundRect.x();
+        recordY = m_backgroundRect.y();
+        recordWidth = m_backgroundRect.width();
+        recordHeight = m_backgroundRect.height();
+    }
+
+    this->hide();
+    emit this->hideScreenshotUI();
+
+    const qreal ratio = this->devicePixelRatioF();
+    QRect target( recordX * ratio,
+                  recordY * ratio,
+                  recordWidth * ratio,
+                  recordHeight * ratio );
+
+//    using namespace utils;
+    QPixmap screenShotPix =  m_backgroundPixmap.copy(target);
+    qDebug() << "topWindow grabImage is null:" << m_backgroundPixmap.isNull()
+             << QRect(recordX, recordY, recordWidth, recordHeight)
+             << "\n"
+             << "screenShot is null:" << screenShotPix.isNull();
+    m_needSaveScreenshot = true;
+    //    DDesktopServices::playSystemSoundEffect(DDesktopServices::SSE_Screenshot);
+
+    const auto r = saveAction(screenShotPix);
+    sendNotify(m_saveIndex, m_saveFileName, r);
+}
+
+void MainWindow::savePath(const QString &path)
+{
+    if (!QFileInfo(path).dir().exists()) {
+        exitApp();
+    }
+
+    qDebug() << "path exist!";
+
+    this->initAttributes();
+    this->initLaunchMode("screenShot");
+    this->showFullScreen();
+    this->initResource();
+
+    m_shotWithPath = true;
+    m_shotSavePath = path;
+}
+
+void MainWindow::noNotify()
+{
+    m_noNotify = true;
+
+    this->initAttributes();
+    this->initLaunchMode("screenShot");
+    this->showFullScreen();
+    this->initResource();
+}
+
+
 void MainWindow::initBackground()
 {
 //    QTimer::singleShot(200, this, [ = ] {
@@ -766,9 +954,14 @@ void MainWindow::updateSideBarPos()
     else if (m_sideBar->height() >= recordHeight) {
         sidebarPoint.setY(recordY - (m_sideBar->height() - recordHeight));
         if (sidebarPoint.x() >= m_screenWidth - m_sideBar->width() - SIDEBAR_X_SPACING) {
-            if (sidebarPoint.y() <= 0) {
+            if (sidebarPoint.y() - recordHeight <= 0) {
                 sidebarPoint.setX(recordX + recordWidth - m_sideBar->width() - SIDEBAR_X_SPACING);
                 sidebarPoint.setY(recordY + recordHeight + m_toolBar->height() + TOOLBAR_Y_SPACING * 2);
+
+                if (sidebarPoint.y() + m_sideBar->height() > m_screenHeight) {
+                    sidebarPoint.setX(recordX - m_sideBar->width() - SIDEBAR_X_SPACING);
+                    sidebarPoint.setY(recordY + recordHeight - m_sideBar->height() - TOOLBAR_Y_SPACING);
+                }
             }
 
             else {
@@ -1528,7 +1721,15 @@ bool MainWindow::saveAction(const QPixmap &pix)
         if (!screenShotPix.save(m_saveFileName,  QFileInfo(m_saveFileName).suffix().toLocal8Bit()))
             return false;
     } else if (saveOption != QStandardPaths::TempLocation && m_saveFileName.isEmpty()) {
-        QString savePath = QStandardPaths::writableLocation(saveOption);
+        QString savePath;
+        if (m_shotWithPath == false) {
+            savePath = QStandardPaths::writableLocation(saveOption);
+        }
+
+        else {
+            savePath = m_shotSavePath;
+        }
+
         QDir saveDir(savePath);
         if (!saveDir.exists()) {
             bool mkdirSucc = saveDir.mkpath(".");
@@ -1842,6 +2043,13 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
         else {
             if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+
+                if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
+                    if (keyEvent->key() == Qt::Key_Question) {
+                        onViewShortcut();
+                    }
+                }
+
                 if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
 
                     if (keyEvent->key() == Qt::Key_Left) {
@@ -2623,41 +2831,41 @@ void MainWindow::hideCameraWidget()
 }
 void MainWindow::adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight)
 {
-    if (recordHeight < layoutHeight) {
-        if (recordY + layoutHeight > rootWindowRect.height) {
-            layout->setContentsMargins(
-                recordX,
-                recordY - layoutHeight - Constant::RECTANGLE_PADDING,
-                rootWindowRect.width - recordX - recordWidth,
-                rootWindowRect.height - recordY + Constant::RECTANGLE_PADDING);
-        } else {
-            layout->setContentsMargins(
-                recordX,
-                recordY + recordHeight + Constant::RECTANGLE_PADDING,
-                rootWindowRect.width - recordX - recordWidth,
-                rootWindowRect.height - (recordY + recordHeight + layoutHeight) + Constant::RECTANGLE_PADDING);
-        }
-    } else if (recordWidth < layoutWidth) {
-        if (recordX + layoutWidth > rootWindowRect.width) {
-            layout->setContentsMargins(
-                recordX - layoutWidth - Constant::RECTANGLE_PADDING,
-                recordY,
-                rootWindowRect.width - recordX + Constant::RECTANGLE_PADDING,
-                rootWindowRect.height - recordY - recordHeight);
-        } else {
-            layout->setContentsMargins(
-                recordX + recordWidth + Constant::RECTANGLE_PADDING,
-                recordY,
-                rootWindowRect.width - (recordX + recordWidth + layoutWidth + Constant::RECTANGLE_PADDING),
-                rootWindowRect.height - recordY - recordHeight);
-        }
-    } else {
-        layout->setContentsMargins(
-            recordX,
-            recordY,
-            rootWindowRect.width - recordX - recordWidth,
-            rootWindowRect.height - recordY - recordHeight);
-    }
+//    if (recordHeight < layoutHeight) {
+//        if (recordY + layoutHeight > rootWindowRect.height) {
+//            layout->setContentsMargins(
+//                recordX,
+//                recordY - layoutHeight - Constant::RECTANGLE_PADDING,
+//                rootWindowRect.width - recordX - recordWidth,
+//                rootWindowRect.height - recordY + Constant::RECTANGLE_PADDING);
+//        } else {
+//            layout->setContentsMargins(
+//                recordX,
+//                recordY + recordHeight + Constant::RECTANGLE_PADDING,
+//                rootWindowRect.width - recordX - recordWidth,
+//                rootWindowRect.height - (recordY + recordHeight + layoutHeight) + Constant::RECTANGLE_PADDING);
+//        }
+//    } else if (recordWidth < layoutWidth) {
+//        if (recordX + layoutWidth > rootWindowRect.width) {
+//            layout->setContentsMargins(
+//                recordX - layoutWidth - Constant::RECTANGLE_PADDING,
+//                recordY,
+//                rootWindowRect.width - recordX + Constant::RECTANGLE_PADDING,
+//                rootWindowRect.height - recordY - recordHeight);
+//        } else {
+//            layout->setContentsMargins(
+//                recordX + recordWidth + Constant::RECTANGLE_PADDING,
+//                recordY,
+//                rootWindowRect.width - (recordX + recordWidth + layoutWidth + Constant::RECTANGLE_PADDING),
+//                rootWindowRect.height - recordY - recordHeight);
+//        }
+//    } else {
+    layout->setContentsMargins(
+        recordX,
+        recordY,
+        rootWindowRect.width - recordX - recordWidth,
+        rootWindowRect.height - recordY - recordHeight);
+//}
 }
 
 void MainWindow::initShapeWidget(QString type)
