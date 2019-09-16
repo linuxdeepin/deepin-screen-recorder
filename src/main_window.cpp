@@ -2595,30 +2595,33 @@ void MainWindow::initShapeWidget(QString type)
         m_shapesWidget->setCurrentShape(type);
 
     m_shapesWidget->show();
-    if (m_isSideBarInside == false && m_isToolBarInside == false) {
-        m_shapesWidget->setFixedSize(recordWidth - 4, recordHeight - 4);
-        m_shapesWidget->move(recordX + 2, recordY + 2);
-    }
+//    if (m_isSideBarInside == false && m_isToolBarInside == false) {
+//        m_shapesWidget->setFixedSize(recordWidth - 4, recordHeight - 4);
+//        m_shapesWidget->move(recordX + 2, recordY + 2);
+//    }
 
-    else if (m_isSideBarInside == true && m_isToolBarInside == false) {
-        m_shapesWidget->setFixedSize(recordWidth - m_sideBar->width(), recordHeight - 4);
-        m_shapesWidget->move(recordX + 2, recordY + 2);
-    }
+//    else if (m_isSideBarInside == true && m_isToolBarInside == false) {
+//        m_shapesWidget->setFixedSize(recordWidth - m_sideBar->width(), recordHeight - 4);
+//        m_shapesWidget->move(recordX + 2, recordY + 2);
+//    }
 
-    else if (m_isSideBarInside == true && m_isToolBarInside == true) {
-        m_shapesWidget->setFixedSize(recordWidth - m_sideBar->width(), recordHeight - m_toolBar->height());
-        m_shapesWidget->move(recordX + 2, recordY + m_toolBar->height());
-    }
+//    else if (m_isSideBarInside == true && m_isToolBarInside == true) {
+//        m_shapesWidget->setFixedSize(recordWidth - m_sideBar->width(), recordHeight - m_toolBar->height());
+//        m_shapesWidget->move(recordX + 2, recordY + m_toolBar->height());
+//    }
 
-    else if (m_isSideBarInside == false && m_isToolBarInside == true) {
-        m_shapesWidget->setFixedSize(recordWidth - 4, recordHeight - m_toolBar->height());
-        m_shapesWidget->move(recordX + 2, recordY + m_toolBar->height());
-    }
+//    else if (m_isSideBarInside == false && m_isToolBarInside == true) {
+//        m_shapesWidget->setFixedSize(recordWidth - 4, recordHeight - m_toolBar->height());
+//        m_shapesWidget->move(recordX + 2, recordY + m_toolBar->height());
+//    }
 
+    m_shapesWidget->setFixedSize(recordWidth - 4, recordHeight - 4);
+    m_shapesWidget->move(recordX + 2, recordY + 2);
 
 
     updateToolBarPos();
-//    m_toolBar->raise();
+    m_toolBar->raise();
+    m_sideBar->raise();
     m_needDrawSelectedPoint = false;
     update();
 
