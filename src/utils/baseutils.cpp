@@ -183,17 +183,17 @@ QColor colorIndexOf(int index)
 int colorIndex(QColor color)
 {
     QList<QColor> colorList;
+    colorList.append(QColor("#ff1c49"));
     colorList.append(QColor("#ffd903"));
+    colorList.append(QColor("#0089F7"));
+    colorList.append(QColor("#08ff77"));
     colorList.append(QColor("#ff5e1a"));
     colorList.append(QColor("#ff3305"));
-    colorList.append(QColor("#ff1c49"));
     colorList.append(QColor("#fb00ff"));
     colorList.append(QColor("#7700ed"));
 //    colorList.append(QColor("#3d08ff"));
-    colorList.append(QColor("#0089F7"));
     colorList.append(QColor("#3467ff"));
     colorList.append(QColor("#00aaff"));
-    colorList.append(QColor("#08ff77"));
     colorList.append(QColor("#03a60e"));
     colorList.append(QColor("#3c7d00"));
     colorList.append(QColor("#ffffff"));
@@ -203,7 +203,7 @@ int colorIndex(QColor color)
     return colorList.indexOf(color);
 }
 
-bool          isValidFormat(QString suffix)
+bool isValidFormat(QString suffix)
 {
     QStringList validFormat;
     validFormat << "bmp" << "jpg" << "jpeg" << "png" << "pbm" << "pgm" << "xbm" << "xpm";
@@ -214,7 +214,7 @@ bool          isValidFormat(QString suffix)
     }
 }
 
-bool          isCommandExist(QString command)
+bool isCommandExist(QString command)
 {
     QProcess *proc = new QProcess;
     QString cm = QString("which %1\n").arg(command);

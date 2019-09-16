@@ -1085,12 +1085,19 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     m_currentShape.index = m_currentIndex;
                     qDebug() << "new textedit:" << m_currentIndex;
                     TextEdit *edit = new TextEdit(m_currentIndex, this);
+                    QString t_editText = QString(tr("Input your content"));
+                    edit->setPlainText(t_editText);
                     m_editing = true;
                     int defaultFontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();
                     m_currentShape.fontSize = defaultFontSize;
                     edit->setFocus();
                     edit->move(m_pos1.x(), m_pos1.y());
                     edit->show();
+                    QTextCursor cs = edit->textCursor();
+                    edit->moveCursor(QTextCursor::Start);
+                    cs.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, t_editText.length());
+                    edit->setTextCursor(cs);
+
                     m_currentShape.mainPoints[0] = m_pos1;
                     m_currentShape.mainPoints[1] = QPointF(m_pos1.x(), m_pos1.y() + edit->height());
                     m_currentShape.mainPoints[2] = QPointF(m_pos1.x() + edit->width(), m_pos1.y());
