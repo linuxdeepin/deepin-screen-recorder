@@ -59,6 +59,12 @@ private:
     DLabel *m_penSubTool;
     DLabel *m_textSubTool;
 
+    bool m_rectInitFlag;
+    bool m_circInitFlag;
+    bool m_lineInitFlag;
+    bool m_penInitFlag;
+    bool m_textInitFlag;
+
     ToolButton *m_blurRectButton;
     ToolButton *m_mosaicRectButton;
     ToolButton *m_blurCircButton;

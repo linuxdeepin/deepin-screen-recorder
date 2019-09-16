@@ -33,6 +33,9 @@
 #include <DComboBox>
 #include <DListWidget>
 #include <QSizePolicy>
+#include <QStandardPaths>
+#include <QDir>
+#include <QFileDialog>
 #include "../settings.h"
 
 #include <unistd.h>
@@ -1078,10 +1081,198 @@ void SubToolWidget::initShotLabel()
     m_textButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_textButton);
 
+    //2019-10-15：添加截图选项按钮
+    m_shotOptionButton = new ToolButton();
+    DFontSizeManager::instance()->bind(m_shotOptionButton, DFontSizeManager::T8);
+    m_shotOptionButton->setText(tr("Option"));
+    m_shotOptionButton->setFixedSize(QSize(70, 40));
+    rectBtnGroup->addButton(m_shotOptionButton);
+
+    btnList.append(m_shotOptionButton);
+
+    QActionGroup *t_saveGroup = new QActionGroup(this);
+    QActionGroup *t_formatGroup = new QActionGroup(this);
+    t_saveGroup->setExclusive(true);
+    t_formatGroup->setExclusive(true);
+
+    DMenu *OptionMenu = new DMenu();
+    DFontSizeManager::instance()->bind(OptionMenu, DFontSizeManager::T8);
+    //for test
+//    OptionMenu->setStyle(QStyleFactory::create("dlight"));
+    if (m_themeType == 1) {
+        OptionMenu->setStyle(QStyleFactory::create("dlight"));
+    }
+
+    else if (m_themeType == 2) {
+        OptionMenu->setStyle(QStyleFactory::create("ddark"));
+    }
+    //for test
+    QAction *saveTitleAction = new QAction(OptionMenu);
+    QAction *saveToDesktopAction = new QAction(OptionMenu);
+    QAction *saveToPictureAction = new QAction(OptionMenu);
+    QAction *saveToSpecialPath = new QAction(OptionMenu);
+    QAction *formatTitleAction = new QAction(OptionMenu);
+    QAction *pngAction = new QAction(OptionMenu);
+    QAction *jpgAction = new QAction(OptionMenu);
+    QAction *bmpAction = new QAction(OptionMenu);
+    QAction *clipTitleAction = new QAction(OptionMenu);
+    QAction *clipAction = new QAction(OptionMenu);
+
+    saveTitleAction->setDisabled(true);
+    saveTitleAction->setText(tr("Save to"));
+    saveToDesktopAction->setText(tr("Save to desktop"));
+    saveToDesktopAction->setCheckable(true);
+    saveToPictureAction->setText(tr("Save to picture"));
+    saveToPictureAction->setCheckable(true);
+    saveToSpecialPath->setText(tr("Save to path"));
+    saveToSpecialPath->setCheckable(true);
+    t_saveGroup->addAction(saveToDesktopAction);
+    t_saveGroup->addAction(saveToPictureAction);
+    t_saveGroup->addAction(saveToSpecialPath);
+
+    formatTitleAction->setDisabled(true);
+    formatTitleAction->setText(tr("Format Option"));
+    pngAction->setText(tr("PNG"));
+    pngAction->setCheckable(true);
+    jpgAction->setText(tr("JPG"));
+    jpgAction->setCheckable(true);
+    bmpAction->setText(tr("BMP"));
+    bmpAction->setCheckable(true);
+
+    t_formatGroup->addAction(pngAction);
+    t_formatGroup->addAction(jpgAction);
+    t_formatGroup->addAction(bmpAction);
+
+    clipTitleAction->setDisabled(true);
+    clipTitleAction->setText(tr("Option"));
+    clipAction->setText(tr("Save to clipboard"));
+    clipAction->setCheckable(true);
+
+    OptionMenu->addAction(saveTitleAction);
+    OptionMenu->addSeparator();
+    OptionMenu->addAction(saveToDesktopAction);
+    OptionMenu->addSeparator();
+    OptionMenu->addAction(saveToPictureAction);
+    OptionMenu->addSeparator();
+    OptionMenu->addAction(saveToSpecialPath);
+    OptionMenu->addSeparator();
+
+    OptionMenu->addAction(formatTitleAction);
+    OptionMenu->addSeparator();
+    OptionMenu->addAction(pngAction);
+    OptionMenu->addSeparator();
+    OptionMenu->addAction(jpgAction);
+    OptionMenu->addSeparator();
+    OptionMenu->addAction(bmpAction);
+    OptionMenu->addSeparator();
+
+    OptionMenu->addAction(clipTitleAction);
+    OptionMenu->addSeparator();
+    OptionMenu->addAction(clipAction);
+    OptionMenu->addSeparator();
+
+    m_shotOptionButton->setMenu(OptionMenu);
+
+    SaveAction t_saveIndex = ConfigSettings::instance()->value("save", "save_op").value<SaveAction>();
+
+    switch (t_saveIndex) {
+    case SaveToDesktop: {
+        saveToDesktopAction->setChecked(true);
+        break;
+    }
+    case SaveToImage: {
+        saveToPictureAction->setChecked(true);
+        break;
+    }
+    case SaveToSpecificDir: {
+        saveToSpecialPath->setChecked(true);
+        break;
+    }
+    default:
+        saveToDesktopAction->setChecked(true);
+        break;
+    }
+
+    connect(t_saveGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
+    [ = ](QAction * t_act) {
+        if (t_act == saveToDesktopAction) {
+            qDebug() << "save to desktop";
+            ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToDesktop);
+            ConfigSettings::instance()->setValue("common", "default_savepath", QStandardPaths::writableLocation(
+                                                     QStandardPaths::DesktopLocation));
+        }
+
+        else if (t_act == saveToPictureAction) {
+            qDebug() << "save to picture";
+            ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToImage);
+            ConfigSettings::instance()->setValue("common", "default_savepath", QStandardPaths::writableLocation(
+                                                     QStandardPaths::PicturesLocation));
+        }
+
+        else if (t_act == saveToSpecialPath) {
+            qDebug() << "save to path";
+            ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToSpecificDir);
+        }
+    });
+
+    int t_pictureFormat = ConfigSettings::instance()->value("save", "format").toInt();
+
+    switch (t_pictureFormat) {
+    case 0:
+        pngAction->setChecked(true);
+        break;
+    case 1:
+        jpgAction->setChecked(true);
+        break;
+    case 2:
+        bmpAction->setChecked(true);
+        break;
+    default:
+        break;
+    }
+
+    connect(t_formatGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
+    [ = ](QAction * t_act) {
+        if (t_act == pngAction) {
+            ConfigSettings::instance()->setValue("save", "format", 0);
+        } else if (t_act == jpgAction) {
+            ConfigSettings::instance()->setValue("save", "format", 1);
+        } else if (t_act == bmpAction) {
+            ConfigSettings::instance()->setValue("save", "format", 2);
+        }
+    });
+
+    int t_saveToClipBoard = ConfigSettings::instance()->value("save", "saveClip").toInt();
+
+    switch (t_saveToClipBoard) {
+    case 0:
+        clipAction->setChecked(false);
+        break;
+    case 1:
+        clipAction->setChecked(true);
+        break;
+    default:
+        clipAction->setChecked(true);
+        break;
+    }
+
+    connect(clipAction, &QAction::triggered, [ = ] {
+        if (clipAction->isChecked())
+        {
+            ConfigSettings::instance()->setValue("save", "saveClip", 1);
+        }
+
+        else
+        {
+            ConfigSettings::instance()->setValue("save", "saveClip", 0);
+        }
+    });
+
+
     QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setMargin(0);
     rectLayout->setSpacing(0);
-    rectLayout->addSpacing(40);
+    rectLayout->addSpacing(3);
     for (int i = 0; i < btnList.length(); i++) {
         rectLayout->addWidget(btnList[i]);
         rectLayout->addSpacing(SHOT_BUTTON_SPACING);

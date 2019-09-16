@@ -180,9 +180,10 @@ int main(int argc, char *argv[])
             if (cmdParser.isSet(dbusOption)) {
                 qDebug() << "dbus register waiting!";
                 window.initAttributes();
+                window.initResource();
                 window.initLaunchMode(t_launchMode);
                 window.showFullScreen();
-                window.initResource();
+
             } else {
                 if (cmdParser.isSet(delayOption)) {
                     qDebug() << "cmd delay screenshot";
@@ -204,9 +205,9 @@ int main(int argc, char *argv[])
                     window.testScreenshot();
                 } else {
                     window.initAttributes();
+                    window.initResource();
                     window.initLaunchMode(t_launchMode);
                     window.showFullScreen();
-                    window.initResource();
                 }
             }
 

@@ -39,6 +39,7 @@
 #include <DHiDPIHelper>
 #include <QMouseEvent>
 #include <QClipboard>
+#include <QFileDialog>
 
 #include "main_window.h"
 #include "utils.h"
@@ -192,6 +193,7 @@ void MainWindow::initAttributes()
             //x坐标小于0时
             if (window->x() < 0) {
                 if (window->y() < 0) {
+
                     //x,y为负坐标情况
                     t_tempWidth = window->width() + window->x();
                     t_tempHeight = window->height() + window->y();
@@ -893,6 +895,8 @@ void MainWindow::responseEsc()
 {
     if (m_functionType == 0) {
         if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
+            eventMonitor.terminate();
+            eventMonitor.wait();
             QApplication::quit();
         }
     }
@@ -903,6 +907,8 @@ void MainWindow::compositeChanged()
 {
     if (!m_wmHelper->hasComposite()) {
         Utils::warnNoComposite();
+        eventMonitor.terminate();
+        eventMonitor.wait();
         QApplication::quit();
     }
 }
@@ -1645,21 +1651,38 @@ bool MainWindow::saveAction(const QPixmap &pix)
     m_saveFileName = "";
 
     QStandardPaths::StandardLocation saveOption = QStandardPaths::TempLocation;
-    bool copyToClipboard = true;
+//    bool copyToClipboard = true;
 
-//    std::pair<bool, SaveAction> temporarySaveAction = ConfigSettings::instance()->getTemporarySaveAction();
-//    if (temporarySaveAction.first) {
-//        m_saveIndex = temporarySaveAction.second;
-//    } else {
-//        m_saveIndex = ConfigSettings::instance()->value("save", "save_op").value<SaveAction>();
-//    }
+    int t_pictureFormat = ConfigSettings::instance()->value("save", "format").toInt();
+    int t_saveToClipBoard = ConfigSettings::instance()->value("save", "saveClip").toInt();
+
+    if (t_saveToClipBoard == 0) {
+        m_copyToClipboard = false;
+    }
+
+    else {
+        m_copyToClipboard = true;
+    }
+
+    std::pair<bool, SaveAction> temporarySaveAction = ConfigSettings::instance()->getTemporarySaveAction();
+    if (temporarySaveAction.first) {
+        m_saveIndex = temporarySaveAction.second;
+    } else {
+        m_saveIndex = ConfigSettings::instance()->value("save", "save_op").value<SaveAction>();
+    }
     //for test
-    m_saveIndex = SaveToDesktop;
+//    m_saveIndex = SaveToImage;
     switch (m_saveIndex) {
     case SaveToDesktop: {
         saveOption = QStandardPaths::DesktopLocation;
-//        ConfigSettings::instance()->setValue("common", "default_savepath", QStandardPaths::writableLocation(
-//                                                 QStandardPaths::DesktopLocation));
+        ConfigSettings::instance()->setValue("common", "default_savepath", QStandardPaths::writableLocation(
+                                                 QStandardPaths::DesktopLocation));
+        break;
+    }
+    case SaveToImage: {
+        saveOption = QStandardPaths::PicturesLocation;
+        ConfigSettings::instance()->setValue("common", "default_savepath", QStandardPaths::writableLocation(
+                                                 QStandardPaths::PicturesLocation));
         break;
     }
 //    case AutoSave: {
@@ -1680,45 +1703,44 @@ bool MainWindow::saveAction(const QPixmap &pix)
 //        }
 //        break;
 //    }
-//    case SaveToSpecificDir: {
-//        this->hide();
-//        this->releaseKeyboard();
+    case SaveToSpecificDir: {
+        this->hide();
+        this->releaseKeyboard();
 
-//        QString path = ConfigSettings::instance()->value("common", "default_savepath").toString();
-//        QString fileName = m_selectAreaName;
+        QString path = ConfigSettings::instance()->value("common", "default_savepath").toString();
+        QString fileName = selectAreaName;
 
-//        if (path.isEmpty() || !QDir(path).exists()) {
-//            path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
-//        }
+        if (path.isEmpty() || !QDir(path).exists()) {
+            path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+        }
 
-//        if (fileName.isEmpty()) {
-//            fileName = QString("%1_%2").arg(tr("DeepinScreenshot")).arg(currentTime);
-//        } else {
-//            fileName = QString("%1_%2_%3").arg(tr("DeepinScreenshot")).arg(m_selectAreaName).arg(currentTime);
-//        }
+        if (fileName.isEmpty()) {
+            fileName = QString("%1_%2").arg(tr("DeepinScreenshot")).arg(currentTime);
+        } else {
+            fileName = QString("%1_%2_%3").arg(tr("DeepinScreenshot")).arg(selectAreaName).arg(currentTime);
+        }
 
-//        QString lastFileName = QString("%1/%2.png").arg(path).arg(fileName);
+        QString lastFileName = QString("%1/%2.png").arg(path).arg(fileName);
 
-//        QFileDialog fileDialog;
-//        m_saveFileName =  fileDialog.getSaveFileName(this, "Save",  lastFileName,
-//                                                     tr("PNG (*.png);;JPEG (*.jpg *.jpeg);; BMP (*.bmp);; PGM (*.pgm);;"
-//                                                        "XBM (*.xbm);;XPM(*.xpm)"));
+        QFileDialog fileDialog;
+        m_saveFileName =  fileDialog.getSaveFileName(this, "Save",  lastFileName,
+                                                     tr("PNG (*.png);;JPEG (*.jpg *.jpeg);; BMP (*.bmp);;"));
 
-//        if (m_saveFileName.isEmpty() || QFileInfo(m_saveFileName).isDir())
-//            return false;
+        if (m_saveFileName.isEmpty() || QFileInfo(m_saveFileName).isDir())
+            return false;
 
-//        QString fileSuffix = QFileInfo(m_saveFileName).completeSuffix();
-//        if (fileSuffix.isEmpty()) {
-//            m_saveFileName = m_saveFileName + ".png";
-//        } else if ( !isValidFormat(fileSuffix)) {
-//            qWarning() << "The fileName has invalid suffix!" << fileSuffix << m_saveFileName;
-//            return false;
-//        }
+        QString fileSuffix = QFileInfo(m_saveFileName).completeSuffix();
+        if (fileSuffix.isEmpty()) {
+            m_saveFileName = m_saveFileName + ".png";
+        } else if ( !isValidFormat(fileSuffix)) {
+            qWarning() << "The fileName has invalid suffix!" << fileSuffix << m_saveFileName;
+            return false;
+        }
 
-//        ConfigSettings::instance()->setValue("common", "default_savepath",
-//                                             QFileInfo(m_saveFileName).dir().absolutePath());
-//        break;
-//    }
+        ConfigSettings::instance()->setValue("common", "default_savepath",
+                                             QFileInfo(m_saveFileName).dir().absolutePath());
+        break;
+    }
 //    case SaveToClipboard: {
 //        copyToClipboard = true;
 //        ConfigSettings::instance()->setValue("common", "default_savepath",   "clipboard");
@@ -1785,16 +1807,39 @@ bool MainWindow::saveAction(const QPixmap &pix)
                 savePath = QDir::tempPath();
             }
         }
-        if (selectAreaName.isEmpty()) {
-            m_saveFileName = QString("%1/%2_%3.png").arg(savePath, tr("DeepinScreenshot"), currentTime);
-        } else {
-            m_saveFileName = QString("%1/%2_%3_%4.png").arg(savePath, tr("DeepinScreenshot"), selectAreaName, currentTime);
+
+        QString t_formatStr;
+        QString t_formatBuffix;
+        switch (t_pictureFormat) {
+        case 0:
+            t_formatStr = "PNG";
+            t_formatBuffix = "png";
+            break;
+        case 1:
+            t_formatStr = "JPEG";
+            t_formatBuffix = "jpg";
+            break;
+        case 2:
+            t_formatStr = "BMP";
+            t_formatBuffix = "bmp";
+            break;
+        default:
+            t_formatStr = "PNG";
+            t_formatBuffix = "png";
+            break;
         }
-        if (!screenShotPix.save(m_saveFileName,  "PNG"))
+
+        if (selectAreaName.isEmpty()) {
+            m_saveFileName = QString("%1/%2_%3.%4").arg(savePath, tr("DeepinScreenshot"), currentTime, t_formatBuffix);
+        } else {
+            m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, tr("DeepinScreenshot"), selectAreaName, currentTime, t_formatBuffix);
+        }
+
+        if (!screenShotPix.save(m_saveFileName,  t_formatStr.toLatin1().data()))
             return false;
     }
 
-    if (copyToClipboard) {
+    if (m_copyToClipboard) {
         Q_ASSERT(!screenShotPix.isNull());
         QClipboard *cb = qApp->clipboard();
         cb->setPixmap(screenShotPix, QClipboard::Clipboard);
@@ -1915,7 +1960,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
             } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {
                 if (keyEvent->key() == Qt::Key_C) {
-                    ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
+//                    ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
+                    m_copyToClipboard = true;
                     saveScreenShot();
                 } else if (keyEvent->key() == Qt::Key_Z) {
                     qDebug() << "SDGF: ctrl+z !!!";
@@ -1956,7 +2002,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     } else if (keyEvent->key() == Qt::Key_Down) {
                         m_shapesWidget->microAdjust("Ctrl+Down");
                     } else if (keyEvent->key() == Qt::Key_C) {
-                        ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
+//                        ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
+                        m_copyToClipboard = true;
                         saveScreenShot();
                     } else if (keyEvent->key() == Qt::Key_S) {
 //                        expressSaveScreenshot();
@@ -2019,7 +2066,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
 
                     if (keyEvent->key() == Qt::Key_C) {
-                        ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
+//                        ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
+                        m_copyToClipboard = true;
 //                        saveScreenshot();
                     }
                     if (keyEvent->key() == Qt::Key_Left) {

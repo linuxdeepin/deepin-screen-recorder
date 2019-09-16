@@ -5,6 +5,7 @@
 
 enum SaveAction : unsigned int {
     SaveToDesktop,
+    SaveToImage,
     AutoSave,
     SaveToSpecificDir,
     SaveToClipboard,

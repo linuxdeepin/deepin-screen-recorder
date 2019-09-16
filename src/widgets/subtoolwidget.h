@@ -24,6 +24,7 @@
 #include <DLabel>
 #include <DStackedWidget>
 #include "toolbutton.h"
+#include "../utils/saveutils.h"
 DWIDGET_USE_NAMESPACE
 
 class SubToolWidget : public DStackedWidget
@@ -47,6 +48,8 @@ signals:
     void cameraActionChecked(bool checked);
     void videoFrameRateChanged(int frameRate);
     void changeShotToolFunc(const QString &func);
+    void saveMethodChanged(SaveAction saveact, const QString path);
+    void saveToClipBoard(bool isClip);
 public slots:
     void switchContent(QString shapeType);
     void systemAudioActionCheckedSlot(bool checked);
@@ -68,6 +71,7 @@ private:
     ToolButton *m_keyBoardButton;
     ToolButton *m_mouseButton;
     ToolButton *m_optionButton;
+    ToolButton *m_shotOptionButton;
     int m_lineflag;
     int m_themeType;
 };

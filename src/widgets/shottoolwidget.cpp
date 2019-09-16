@@ -74,12 +74,17 @@ void ShotToolWidget::initWidget()
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     m_arrowFlag = false;
 
-    initRectLabel();
-    initCircLabel();
-    initLineLabel();
-    initPenLabel();
-    initTextLabel();
-    setCurrentWidget(m_rectSubTool);
+    m_rectInitFlag = false;
+    m_circInitFlag = false;
+    m_lineInitFlag = false;
+    m_penInitFlag = false;
+    m_textInitFlag = false;
+//    initRectLabel();
+//    initCircLabel();
+//    initLineLabel();
+//    initPenLabel();
+//    initTextLabel();
+//    setCurrentWidget(m_rectSubTool);
 }
 
 void ShotToolWidget::initRectLabel()
@@ -1704,23 +1709,67 @@ void ShotToolWidget::switchContent(QString shapeType)
     QString t_mosaicVal;
     if (!shapeType.isEmpty()) {
         if (shapeType == "rectangle") {
-            setCurrentWidget(m_rectSubTool);
+            if (m_rectInitFlag == false) {
+                initRectLabel();
+                setCurrentWidget(m_rectSubTool);
+                m_rectInitFlag = true;
+            }
+
+            else {
+                setCurrentWidget(m_rectSubTool);
+            }
+
         }
 
         if (shapeType == "oval") {
-            setCurrentWidget(m_circSubTool);
+            if (m_circInitFlag == false) {
+                initCircLabel();
+                setCurrentWidget(m_circSubTool);
+                m_circInitFlag = true;
+            }
+
+            else {
+                setCurrentWidget(m_circSubTool);
+            }
         }
 
         if (shapeType == "arrow") {
-            setCurrentWidget(m_lineSubTool);
+//            setCurrentWidget(m_lineSubTool);
+            if (m_lineInitFlag == false) {
+                initLineLabel();
+                setCurrentWidget(m_lineSubTool);
+                m_lineInitFlag = true;
+            }
+
+            else {
+                setCurrentWidget(m_lineSubTool);
+            }
         }
 
         if (shapeType == "line") {
-            setCurrentWidget(m_penSubTool);
+//            setCurrentWidget(m_penSubTool);
+            if (m_penInitFlag == false) {
+                initPenLabel();
+                setCurrentWidget(m_penSubTool);
+                m_penInitFlag = true;
+            }
+
+            else {
+                setCurrentWidget(m_penSubTool);
+            }
         }
 
         if (shapeType == "text") {
-            setCurrentWidget(m_textSubTool);
+//            setCurrentWidget(m_textSubTool);
+            if (m_textInitFlag == false) {
+                initTextLabel();
+                setCurrentWidget(m_textSubTool);
+                m_textInitFlag = true;
+            }
+
+            else {
+                setCurrentWidget(m_textSubTool);
+            }
         }
     }
 }
