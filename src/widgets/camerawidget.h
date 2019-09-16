@@ -19,6 +19,13 @@ class CameraWidget : public DWidget
 {
     Q_OBJECT
 public:
+    enum Position {
+        leftTop,
+        leftBottom,
+        rightTop,
+        rightBottom,
+    };
+public:
     explicit CameraWidget(DWidget *parent = nullptr);
     ~CameraWidget();
     void setRecordRect(int x, int y, int width, int height);
@@ -31,6 +38,7 @@ public:
     void cameraStart();
     void cameraStop();
     bool getScreenResolution();
+    Position postion();
 signals:
 
 public slots:

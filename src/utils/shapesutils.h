@@ -43,6 +43,7 @@ public:
 
     QList<QPointF> points;
     QList<QList<qreal>> portion;
+    QPointF arrowRotatePos;
     Toolshape();
     ~Toolshape();
 

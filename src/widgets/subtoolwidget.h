@@ -52,12 +52,16 @@ public slots:
     void systemAudioActionCheckedSlot(bool checked);
     void changeArrowAndLineFromSideBar(int line);
     void setRecordLaunchMode(bool recordLaunch);
+    void setVideoButtonInitFromSub();
 private:
     DLabel *m_recordSubTool;
     DLabel *m_shotSubTool;
     QString m_currentType;
     QAction *m_systemAudioAction;
     ToolButton *m_lineButton;
+    ToolButton *m_cameraButton;
+    ToolButton *m_keyBoardButton;
+    ToolButton *m_mouseButton;
     int m_lineflag;
 };
 

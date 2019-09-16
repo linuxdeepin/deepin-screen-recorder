@@ -48,7 +48,7 @@ ConfigSettings::ConfigSettings(QObject *parent)
         setValue("rectangle", "color_index", 0);
         setValue("rectangle", "linewidth_index", 1);
         setValue("text", "color_index", 0);
-        setValue("text", "fontsize", 14);
+        setValue("text", "fontsize", 12);
 
         setValue("save", "save_op", SaveAction::SaveToDesktop);
         setValue("save", "save_quality", 100);

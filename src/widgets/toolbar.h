@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2017 ~ 2018 Deepin Technology Co., Ltd.
  *
  * Maintainer: Peng Hui<penghui@deepin.com>
@@ -70,7 +70,7 @@ public slots:
     void changeArrowAndLineFromBar(int line);
     void setRecordButtonDisableFromMain();
     void setRecordLaunchFromMain(bool recordLaunch);
-
+    void setVideoInitFromMain();
 
 protected:
     void paintEvent(QPaintEvent *e);
@@ -128,6 +128,7 @@ public slots:
     void initToolBar();
     void setRecordButtonDisable();
     void setRecordLaunchMode(bool recordLaunch);
+    void setVideoButtonInit();
 protected:
     void paintEvent(QPaintEvent *e);
     void enterEvent(QEvent *e);

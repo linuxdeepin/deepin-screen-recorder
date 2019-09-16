@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include "keybuttonwidget.h"
 #include "../utils.h"
 
@@ -33,8 +34,8 @@ const int BTN_RADIUS = 3;
 
 KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
 {
-    setAttribute(Qt::WA_ShowWithoutActivating);
-    setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
+//    setAttribute(Qt::WA_ShowWithoutActivating);
+//    setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
 
     setBlurRectXRadius(15);
     setBlurRectYRadius(15);

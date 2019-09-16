@@ -53,6 +53,7 @@ public:
         Eighth,
     };
 
+
 signals:
     void reloadEffectImg(QString effect);
     void requestScreenshot();
@@ -124,6 +125,7 @@ private:
     bool m_isPressed;
     bool m_isHovered;
     bool m_isRotated;
+    bool m_isArrowRotated;
     bool m_isResize;
     bool m_isShiftPressed;
     bool m_editing;
@@ -154,6 +156,7 @@ private:
     SideBar *m_sideBar;
 
     void paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bool isResize = true);
+    void paintImgPointArrow(QPainter &painter, QPointF pos, QPixmap img);
     void paintRect(QPainter &painter, FourPoints rectFPoints, int index,
                    ShapeBlurStatus  rectStatus = Normal, bool isBlur = false, bool isMosaic = false);
     void paintEllipse(QPainter &painter, FourPoints ellipseFPoints, int index,

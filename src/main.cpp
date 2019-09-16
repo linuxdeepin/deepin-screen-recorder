@@ -89,6 +89,7 @@ void saveThemeTypeSetting(int type)
 int main(int argc, char *argv[])
 {
     // Construct a QGuiApplication before accessing a platform function.
+    DGuiApplicationHelper::setUseInactiveColorGroup(false);
     DApplication::loadDXcbPlugin();
     DApplication app(argc, argv);
     QString t_launchMode;

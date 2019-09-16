@@ -120,7 +120,7 @@ void MainWindow::initAttributes()
 
     // Add Qt::WindowDoesNotAcceptFocus make window not accept focus forcely, avoid conflict with dde hot-corner.
 //    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint);
-    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint |  Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
     setMouseTracking(true);   // make MouseMove can response
     installEventFilter(this);  // add event filter
@@ -635,20 +635,17 @@ void MainWindow::initLaunchMode(const QString &launchMode)
     }
 
     else {
-        m_launchWithRecordFunc = true;
-        m_shotButton->hide();
-        m_recordButton->show();
-        m_functionType = 0;
-        initScreenRecorder();
-        if (m_sideBar->isVisible()) {
-            m_sideBar->hide();
-        }
+        m_launchWithRecordFunc = false;
+        m_recordButton->hide();
+        m_shotButton->show();
+        m_functionType = 1;
+        initScreenShot();
     }
 }
 
 void MainWindow::initBackground()
 {
-//    QTimer::singleShot(0, this, [ = ] {
+//    QTimer::singleShot(200, this, [ = ] {
     m_backgroundPixmap = getPixmapofRect(m_backgroundRect);
     m_resultPixmap = m_backgroundPixmap;
     TempFile::instance()->setFullScreenPixmap(m_backgroundPixmap);
@@ -894,8 +891,26 @@ void MainWindow::updateCameraWidgetPos()
         } else {
             cameraWidgetWidth = tempWidth;
         }
-        int x = recordX + recordWidth - cameraWidgetWidth;
-        int y = recordY + recordHeight - cameraWidgetHeight;
+        int x = recordX;
+        int y = recordY;
+        switch (m_cameraWidget->postion()) {
+        case CameraWidget::Position::leftTop:
+            x = recordX;
+            y = recordY;
+            break;
+        case CameraWidget::Position::leftBottom:
+            x = recordX;
+            y = recordY + recordHeight - cameraWidgetHeight;
+            break;
+        case CameraWidget::Position::rightTop:
+            x = recordX + recordWidth - cameraWidgetWidth;
+            y = recordY;
+            break;
+        case CameraWidget::Position::rightBottom:
+            x = recordX + recordWidth - cameraWidgetWidth;
+            y = recordY + recordHeight - cameraWidgetHeight;
+            break;
+        }
         m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
         m_cameraWidget->resize(cameraWidgetWidth, cameraWidgetHeight);
         m_cameraWidget->showAt(QPoint(x, y));
@@ -926,6 +941,11 @@ void MainWindow::changeFunctionButton(QString type)
     else if (type == "shot") {
         if (m_functionType == 1) {
             return;
+        }
+        m_toolBar->setVideoButtonInit();
+        if (m_cameraWidget->isVisible()) {
+            m_cameraWidget->cameraStop();
+            m_cameraWidget->hide();
         }
         m_recordButton->hide();
 //        updateShotButtonPos();

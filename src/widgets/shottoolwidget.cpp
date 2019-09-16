@@ -30,6 +30,7 @@
 #include <DPalette>
 #include <QDebug>
 #include <DFrame>
+#include <DBlurEffectWidget>
 
 DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
@@ -42,7 +43,8 @@ const int SHOT_BUTTON_SPACING = 3;
 const int COLOR_NUM = 16;
 const QSize TOOL_ICON_SIZE = QSize(25, 25);
 const QSize TOOL_BUTTON_SIZE = QSize(38, 38);
-const QSize TOOL_SLIDER_SIZE = QSize(38, 180);
+const QSize TOOL_SLIDERBlUR_SIZE = QSize(32, 190);
+const QSize TOOL_SLIDER_SIZE = QSize(32, 150);
 const QSize SPLITTER_SIZE = QSize(30, 1);
 const QSize MIN_TOOL_BUTTON_SIZE = QSize(35, 30);
 }
@@ -947,9 +949,21 @@ void ShotToolWidget::initLineLabel()
         }
     });
 
-    mosaicBtn->click();
-    m_arrowFlag = false;
-    ConfigSettings::instance()->setValue("arrow", "is_straight", false);
+//    mosaicBtn->click();
+//    m_arrowFlag = false;
+//    ConfigSettings::instance()->setValue("arrow", "is_straight", false);
+
+    bool t_arrowStatus = ConfigSettings::instance()->value("arrow", "is_straight").toBool();
+
+    if (t_arrowStatus) {
+        blurButton->click();
+        m_arrowFlag = true;
+    }
+
+    else {
+        mosaicBtn->click();
+        m_arrowFlag = false;
+    }
 
     for (int j = 0; j < btnList.length(); j++) {
         rectLayout->addWidget(btnList[j]);
@@ -1139,15 +1153,72 @@ void ShotToolWidget::initTextLabel()
 {
     m_textSubTool = new DLabel(this);
 
+    DBlurEffectWidget *t_blurArea = new DBlurEffectWidget();
+    t_blurArea->setBlurRectXRadius(7);
+    t_blurArea->setBlurRectYRadius(7);
+    t_blurArea->setRadius(15);
+    t_blurArea->setMode(DBlurEffectWidget::GaussianBlur);
+    t_blurArea->setBlurEnabled(true);
+    t_blurArea->setBlendMode(DBlurEffectWidget::InWindowBlend);
+    t_blurArea->setMaskColor(QColor(255, 255, 255, 0));
+    t_blurArea->setFixedSize(TOOL_SLIDERBlUR_SIZE);
+
+    QVBoxLayout *t_blurAreaLayout = new QVBoxLayout();
+
     DSlider *t_textFontSize = new DSlider(Qt::Vertical);
-//    t_textFontSize->setOrientation(Qt::Vertical);
+
+    t_textFontSize->slider()->setTickInterval(1);
     t_textFontSize->setFixedSize(TOOL_SLIDER_SIZE);
     t_textFontSize->setMinimum(0);
-    t_textFontSize->setMaximum(11);
-//    t_textFontSize->setTickInterval(1);
-    t_textFontSize->setValue(4);
-//    t_textFontSize->setLeftIcon()
-    ConfigSettings::instance()->setValue("text", "fontsize", 18);
+    t_textFontSize->setMaximum(10);
+//    t_textFontSize->setValue(2);
+    t_textFontSize->setRightIcon(QIcon(":/image/newUI/normal/Aa small_normal.svg"));
+    t_textFontSize->setLeftIcon(QIcon(":/image/newUI/normal/Aa big_normal.svg"));
+//    ConfigSettings::instance()->setValue("text", "fontsize", 12);
+
+    int t_fontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();
+
+    switch (t_fontSize) {
+    case 9:
+        t_textFontSize->setValue(0);
+        break;
+    case 10:
+        t_textFontSize->setValue(1);
+        break;
+    case 12:
+        t_textFontSize->setValue(2);
+        break;
+    case 14:
+        t_textFontSize->setValue(3);
+        break;
+    case 18:
+        t_textFontSize->setValue(4);
+        break;
+    case 24:
+        t_textFontSize->setValue(5);
+        break;
+    case 36:
+        t_textFontSize->setValue(6);
+        break;
+    case 48:
+        t_textFontSize->setValue(7);
+        break;
+    case 64:
+        t_textFontSize->setValue(8);
+        break;
+    case 72:
+        t_textFontSize->setValue(9);
+        break;
+    case 96:
+        t_textFontSize->setValue(10);
+        break;
+    default:
+        break;
+    }
+
+    t_blurAreaLayout->setContentsMargins(0, 0, 0, 0);
+    t_blurAreaLayout->addWidget(t_textFontSize, Qt::AlignVCenter);
+    t_blurArea->setLayout(t_blurAreaLayout);
 
     connect(t_textFontSize, &DSlider::valueChanged, this, [ = ] {
         int t_value = t_textFontSize->value();
@@ -1193,11 +1264,11 @@ void ShotToolWidget::initTextLabel()
     });
 
     QVBoxLayout *rectLayout = new QVBoxLayout();
-    rectLayout->setMargin(0);
+    rectLayout->setMargin(3);
     rectLayout->setSpacing(0);
-    rectLayout->addSpacing(5);
+    rectLayout->addSpacing(3);
 
-    rectLayout->addWidget(t_textFontSize, Qt::AlignHCenter);
+    rectLayout->addWidget(t_blurArea, Qt::AlignTop);
 
     m_textSubTool->setLayout(rectLayout);
     addWidget(m_textSubTool);

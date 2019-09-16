@@ -19,6 +19,7 @@
 #include "subtoolwidget.h"
 #include "../utils/audioutils.h"
 #include "../camera_process.h"
+#include "../utils/configsettings.h"
 #include <DSlider>
 #include <DLineEdit>
 #include <DMenu>
@@ -29,6 +30,8 @@
 #include <QDebug>
 #include <DInputDialog>
 #include <DFontSizeManager>
+#include <DComboBox>
+#include <DListWidget>
 #include "../settings.h"
 
 #include <unistd.h>
@@ -62,7 +65,7 @@ SubToolWidget::~SubToolWidget()
 void SubToolWidget::initWidget()
 {
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
-    m_lineflag = 1;
+
 //    initVirtualCard();
     initRecordLabel();
     initShotLabel();
@@ -100,7 +103,7 @@ void SubToolWidget::initRecordLabel()
                                  "left:-6px;"
                                  "subcontrol-origin:padding;"
                                  "subcontrol-position:right;}";
-    //添加音频按钮
+//    //添加音频按钮
     ToolButton *audioButton = new ToolButton();
 
     pa = audioButton->palette();
@@ -198,95 +201,108 @@ void SubToolWidget::initRecordLabel()
     connect(microphoneAction, SIGNAL(triggered(bool)), this, SIGNAL(microphoneActionChecked(bool)));
     connect(systemAudioAction, SIGNAL(triggered(bool)), this, SLOT(systemAudioActionCheckedSlot(bool)));
 
-    ToolButton *keyBoardButton = new ToolButton();
-    pa = keyBoardButton->palette();
+
+//    DComboBox *audioButton = new DComboBox();
+//    audioButton->addItem(QIcon(":/image/newUI/normal/microphone_normal.svg"), nullptr);
+//    audioButton->setStyle(QStyleFactory::create("dlight"));
+
+//    pa = audioButton->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    audioButton->setPalette(pa);
+
+
+
+    m_keyBoardButton = new ToolButton();
+    pa = m_keyBoardButton->palette();
     pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
     pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
     pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    keyBoardButton->setPalette(pa);
+    m_keyBoardButton->setPalette(pa);
 
-    keyBoardButton->setObjectName("KeyBoardButton");
+    m_keyBoardButton->setObjectName("KeyBoardButton");
 //    keyBoardButton->setText(tr("Key"));
-    keyBoardButton->setIconSize(MAX_TOOL_ICON_SIZE);
-    keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
-    rectBtnGroup->addButton(keyBoardButton);
-    keyBoardButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
-    btnList.append(keyBoardButton);
+    m_keyBoardButton->setIconSize(MAX_TOOL_ICON_SIZE);
+    m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
+    rectBtnGroup->addButton(m_keyBoardButton);
+    m_keyBoardButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
+    btnList.append(m_keyBoardButton);
 
     //发送键盘按键按钮状态信号
-    connect(keyBoardButton, SIGNAL(clicked(bool)),
+    connect(m_keyBoardButton, SIGNAL(clicked(bool)),
             this, SIGNAL(keyBoardButtonClicked(bool)));
 
-    connect(keyBoardButton, &DPushButton::clicked, this, [ = ] {
-        if (keyBoardButton->isChecked())
+    connect(m_keyBoardButton, &DPushButton::clicked, this, [ = ] {
+        if (m_keyBoardButton->isChecked())
         {
-            keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key display_mormal.svg"));
+            m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key display_mormal.svg"));
         }
 
-        if (!keyBoardButton->isChecked())
+        if (!m_keyBoardButton->isChecked())
         {
-            keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
+            m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
         }
     });
 
-    ToolButton *cameraButton = new ToolButton();
-    cameraButton->setDisabled(!CameraProcess::checkCameraAvailability());
-    pa = cameraButton->palette();
+    m_cameraButton = new ToolButton();
+    m_cameraButton->setDisabled(!CameraProcess::checkCameraAvailability());
+    pa = m_cameraButton->palette();
     pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
     pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
     pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    cameraButton->setPalette(pa);
+    m_cameraButton->setPalette(pa);
 
-    cameraButton->setObjectName("CameraButton");
+    m_cameraButton->setObjectName("CameraButton");
 //    cameraButton->setText(tr("Camera"));
-    cameraButton->setIconSize(MAX_TOOL_ICON_SIZE);
-    cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
-    rectBtnGroup->addButton(cameraButton);
-    cameraButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
-    btnList.append(cameraButton);
+    m_cameraButton->setIconSize(MAX_TOOL_ICON_SIZE);
+    m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
+    rectBtnGroup->addButton(m_cameraButton);
+    m_cameraButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
+    btnList.append(m_cameraButton);
 
-    connect(cameraButton, &DPushButton::clicked, this, [ = ] {
-        if (cameraButton->isChecked())
+    connect(m_cameraButton, &DPushButton::clicked, this, [ = ] {
+        if (m_cameraButton->isChecked())
         {
-            cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
+            m_cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
         }
 
-        if (!cameraButton->isChecked())
+        if (!m_cameraButton->isChecked())
         {
-            cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
+            m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
         }
-        emit cameraActionChecked(cameraButton->isChecked());
+        emit cameraActionChecked(m_cameraButton->isChecked());
     });
-    ToolButton *mouseButton = new ToolButton();
-    pa = mouseButton->palette();
+    m_mouseButton = new ToolButton();
+    pa = m_mouseButton->palette();
     pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
     pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
     pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    mouseButton->setPalette(pa);
+    m_mouseButton->setPalette(pa);
 
-    mouseButton->setObjectName("MouseButton");
-    mouseButton->setIconSize(MAX_TOOL_ICON_SIZE);
-    mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
+    m_mouseButton->setObjectName("MouseButton");
+    m_mouseButton->setIconSize(MAX_TOOL_ICON_SIZE);
+    m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
 //    mouseButton->setText(tr("Mouse"));
-    rectBtnGroup->addButton(mouseButton);
+    rectBtnGroup->addButton(m_mouseButton);
 
-    mouseButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
-    btnList.append(mouseButton);
+    m_mouseButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
+    btnList.append(m_mouseButton);
 
-    connect(mouseButton, &DPushButton::clicked, this, [ = ] {
-        if (mouseButton->isChecked())
+    connect(m_mouseButton, &DPushButton::clicked, this, [ = ] {
+        if (m_mouseButton->isChecked())
         {
-            mouseButton->setIcon(QIcon(":/image/newUI/checked/mouse_checked.svg"));
+            m_mouseButton->setIcon(QIcon(":/image/newUI/checked/mouse_checked.svg"));
         }
 
-        if (!mouseButton->isChecked())
+        if (!m_mouseButton->isChecked())
         {
-            mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
+            m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
         }
     });
 
     //发送鼠标按键按钮状态信号
-    connect(mouseButton, SIGNAL(clicked(bool)),
+    connect(m_mouseButton, SIGNAL(clicked(bool)),
             this, SIGNAL(mouseBoardButtonClicked(bool)));
 //    QString button_style = "DPushButton{text-align: left;}";
 
@@ -303,7 +319,7 @@ void SubToolWidget::initRecordLabel()
     pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     formatButton->setPalette(pa);
 
-    formatButton->setFixedSize(MAX_TOOL_BUTTON_SIZE);
+//    formatButton->setFixedSize(MAX_TOOL_BUTTON_SIZE);
     DFontSizeManager::instance()->bind(formatButton, DFontSizeManager::T9);
     formatButton->setObjectName("FormatButton");
     formatButton->setText(tr("fmt"));
@@ -374,7 +390,7 @@ void SubToolWidget::initRecordLabel()
     fpsButton->setIconSize(QSize(20, 20));
     fpsButton->setIcon(QIcon(":/image/newUI/normal/Resolving power_normal.svg"));
     rectBtnGroup->addButton(fpsButton);
-    fpsButton->setFixedSize(QSize(75, 40));
+//    fpsButton->setFixedSize(QSize(75, 40));
 //    fpsButton->setStyleSheet(fps_button_style);
     btnList.append(fpsButton);
 
@@ -491,6 +507,7 @@ void SubToolWidget::initRecordLabel()
     rectLayout->setMargin(0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(5);
+//    rectLayout->addWidget(audioButton);
     for (int i = 0; i < btnList.length(); i++) {
         rectLayout->addWidget(btnList[i]);
         rectLayout->addSpacing(BUTTON_SPACING);
@@ -505,52 +522,52 @@ void SubToolWidget::initRecordLabel()
     connect(rectBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
         DPalette pa;
-        if (keyBoardButton->isChecked()) {
-            pa = keyBoardButton->palette();
+        if (m_keyBoardButton->isChecked()) {
+            pa = m_keyBoardButton->palette();
             pa.setColor(DPalette::ButtonText, Qt::white);
             pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
             pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            keyBoardButton->setPalette(pa);
+            m_keyBoardButton->setPalette(pa);
         }
 
         else {
-            pa = keyBoardButton->palette();
+            pa = m_keyBoardButton->palette();
             pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
             pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
             pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            keyBoardButton->setPalette(pa);
+            m_keyBoardButton->setPalette(pa);
         }
 
-        if (cameraButton->isChecked()) {
-            pa = cameraButton->palette();
+        if (m_cameraButton->isChecked()) {
+            pa = m_cameraButton->palette();
             pa.setColor(DPalette::ButtonText, Qt::white);
             pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
             pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            cameraButton->setPalette(pa);
+            m_cameraButton->setPalette(pa);
         }
 
         else {
-            pa = cameraButton->palette();
+            pa = m_cameraButton->palette();
             pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
             pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
             pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            cameraButton->setPalette(pa);
+            m_cameraButton->setPalette(pa);
         }
 
-        if (mouseButton->isChecked()) {
-            pa = mouseButton->palette();
+        if (m_mouseButton->isChecked()) {
+            pa = m_mouseButton->palette();
             pa.setColor(DPalette::ButtonText, Qt::white);
             pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
             pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            mouseButton->setPalette(pa);
+            m_mouseButton->setPalette(pa);
         }
 
         else {
-            pa = mouseButton->palette();
+            pa = m_mouseButton->palette();
             pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
             pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
             pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            mouseButton->setPalette(pa);
+            m_mouseButton->setPalette(pa);
         }
     });
 }
@@ -612,7 +629,20 @@ void SubToolWidget::initShotLabel()
     pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 
     m_lineButton->setIconSize(QSize(30, 30));
-    m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
+
+    bool t_arrowStatus = ConfigSettings::instance()->value("arrow", "is_straight").toBool();
+
+    if (t_arrowStatus) {
+        m_lineflag = 0;
+        m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
+    }
+
+    else {
+        m_lineflag = 1;
+        m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
+    }
+
+
     m_lineButton->setPalette(pa);
 
     m_lineButton->setObjectName("LineButton");
@@ -861,5 +891,21 @@ void SubToolWidget::setRecordLaunchMode(bool recordLaunch)
     if (recordLaunch == true) {
         setCurrentWidget(m_recordSubTool);
     }
-//    qDebug() << "sub record mode";
+    //    qDebug() << "sub record mode";
+}
+
+void SubToolWidget::setVideoButtonInitFromSub()
+{
+    if (m_cameraButton->isChecked()) {
+        m_cameraButton->click();
+    }
+
+    if (m_keyBoardButton->isChecked()) {
+        m_keyBoardButton->click();
+    }
+
+    if (m_mouseButton->isChecked()) {
+        m_mouseButton->click();
+    }
+
 }

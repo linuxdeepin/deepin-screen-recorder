@@ -225,5 +225,37 @@ void CameraWidget::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton) {
         //改变移动状态.
         m_move = false;
+        int centerX = this->x() + this->width() / 2;
+        int centerY = this->y() + this->height() / 2;
+        if (centerX - recordX < recordWidth / 2) {
+            if (centerY - recordY < recordHeight / 2) {
+                this->move(recordX, recordY);
+            } else {
+                this->move(recordX, recordY + recordHeight - this->height());
+            }
+        } else {
+            if (centerY - recordY < recordHeight / 2) {
+                this->move(recordX + recordWidth - this->width(), recordY);
+            } else {
+                this->move(recordX + recordWidth - this->width(), recordY + recordHeight - this->height());
+            }
+        }
+    }
+}
+
+CameraWidget::Position CameraWidget::postion()
+{
+    if (this->x() == recordX) {
+        if (this->y() == recordY) {
+            return leftTop;
+        } else {
+            return leftBottom;
+        }
+    } else {
+        if (this->y() == recordY) {
+            return rightTop;
+        } else {
+            return rightBottom;
+        }
     }
 }

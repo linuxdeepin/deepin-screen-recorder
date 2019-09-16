@@ -169,7 +169,8 @@ QColor colorIndexOf(int index)
         return QColor("#ffd903");
     }
     case 2: {
-        return QColor("#3d08ff");
+//        return QColor("#3d08ff");
+        return QColor("#0089F7");
     }
     case 3: {
         return QColor("#08ff77");
@@ -188,7 +189,8 @@ int colorIndex(QColor color)
     colorList.append(QColor("#ff1c49"));
     colorList.append(QColor("#fb00ff"));
     colorList.append(QColor("#7700ed"));
-    colorList.append(QColor("#3d08ff"));
+//    colorList.append(QColor("#3d08ff"));
+    colorList.append(QColor("#0089F7"));
     colorList.append(QColor("#3467ff"));
     colorList.append(QColor("#00aaff"));
     colorList.append(QColor("#08ff77"));
