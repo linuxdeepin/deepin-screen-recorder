@@ -97,6 +97,7 @@ void ShapesWidget::updateSelectedShape(const QString &group,
                 m_editMap.value(tmpIndex)->update();
             }
         } else if (group == "text" && m_selectedShape.type == group && key == "fontsize")  {
+            qDebug() << "change font size";
             int tmpIndex = m_shapes[m_selectedOrder].index;
             if (m_editMap.contains(tmpIndex)) {
                 m_editMap.value(tmpIndex)->setFontSize(index);
@@ -201,6 +202,7 @@ bool ShapesWidget::clickedOnShapes(QPointF pos)
     bool onShapes = false;
     m_selectedOrder = -1;
 
+
     qDebug() << "ClickedOnShapes !!!!!!!" << m_shapes.length();
     for (int i = 0; i < m_shapes.length(); i++) {
         bool currentOnShape = false;
@@ -208,28 +210,33 @@ bool ShapesWidget::clickedOnShapes(QPointF pos)
             if (clickedOnRect(m_shapes[i].mainPoints, pos,
                               m_shapes[i].isBlur || m_shapes[i].isMosaic)) {
                 currentOnShape = true;
+                emit shapeClicked("rect");
             }
         }
         if (m_shapes[i].type == "oval") {
             if (clickedOnEllipse(m_shapes[i].mainPoints, pos,
                                  m_shapes[i].isBlur || m_shapes[i].isMosaic)) {
                 currentOnShape = true;
+                emit shapeClicked("circ");
             }
         }
         if (m_shapes[i].type == "arrow") {
             if (clickedOnArrow(m_shapes[i].points, pos)) {
                 currentOnShape = true;
+                emit shapeClicked("line");
             }
         }
         if (m_shapes[i].type == "line") {
             if (clickedOnLine(m_shapes[i].mainPoints, m_shapes[i].points, pos)) {
                 currentOnShape = true;
+                emit shapeClicked("pen");
             }
         }
 
         if (m_shapes[i].type == "text") {
             if (clickedOnText(m_shapes[i].mainPoints, pos)) {
                 currentOnShape = true;
+                emit shapeClicked("text");
             }
         }
 
@@ -499,6 +506,7 @@ bool ShapesWidget::clickedOnArrow(QList<QPointF> points, QPointF pos)
         m_pressedPoint = pos;
         return false;
     }
+
 }
 
 bool ShapesWidget::clickedOnLine(FourPoints mainPoints,
@@ -780,16 +788,16 @@ bool ShapesWidget::hoverOnLine(FourPoints mainPoints, QList<QPointF> points,
 
 bool ShapesWidget::hoverOnText(FourPoints mainPoints, QPointF pos)
 {
-    qDebug() << "hoverOnText:" <<  mainPoints << pos;
+//    qDebug() << "hoverOnText:" <<  mainPoints << pos;
 
     if (hoverOnRect(mainPoints, pos, true) ||  (pos.x() >= mainPoints[0].x() - 5
                                                 && pos.x() <= mainPoints[2].x() + 5 && pos.y() >= mainPoints[0].y() - 5
                                                 && pos.y() <= mainPoints[2].y() + 5)) {
-        qDebug() << "hoverOnText Moving";
+//        qDebug() << "hoverOnText Moving";
         m_resizeDirection = Moving;
         return true;
     } else {
-        qDebug() << "hoverOnText Outting";
+//        qDebug() << "hoverOnText Outting";
         m_resizeDirection = Outting;
         return false;
     }
@@ -801,7 +809,7 @@ bool ShapesWidget::hoverOnShapes(Toolshape toolShape, QPointF pos)
         return hoverOnRect(toolShape.mainPoints, pos);
     } else if (toolShape.type == "oval") {
         return hoverOnEllipse(toolShape.mainPoints, pos);
-    }  else if (toolShape.type == "arrow") {
+    } else if (toolShape.type == "arrow") {
         return hoverOnArrow(toolShape.points, pos);
     } else if (toolShape.type == "line") {
         return hoverOnLine(toolShape.mainPoints, toolShape.points, pos);
@@ -1128,22 +1136,30 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     m_currentShape.mainPoints[3] = QPointF(m_pos1.x() + edit->width(),
                                                            m_pos1.y() + edit->height());
                     m_editMap.insert(m_currentIndex, edit);
-//                    m_selectedShape = m_currentShape;
+                    m_selectedIndex = m_currentIndex;
+                    m_selectedShape = m_currentShape;
+                    if (m_selectedOrder == -1) {
+                        m_selectedOrder = 0;
+                    }
+
                     connect(edit, &TextEdit::repaintTextRect, this, &ShapesWidget::updateTextRect);
                     connect(edit, &TextEdit::backToEditing, this, [ = ] {
                         m_editing = true;
                     });
                     connect(edit, &TextEdit::textEditSelected, this, [ = ](int index) {
+                        setAllTextEditReadOnly();
                         for (int k = 0; k < m_shapes.length(); k++) {
                             if (m_shapes[k].type == "text" && m_shapes[k].index == index) {
                                 m_selectedIndex = index;
                                 m_selectedShape = m_shapes[k];
+                                m_selectedOrder = k;
                                 break;
                             }
                         }
+                        emit shapeClicked("text");
                     });
                     m_shapes.append(m_currentShape);
-                    qDebug() << "Insert text shape:" << m_currentShape.index;
+                    qDebug() << "Insert text shape:" << m_shapes.size() << m_currentShape.type << m_currentShape.index;
                 } else {
                     m_editing = false;
                     setAllTextEditReadOnly();
@@ -1562,7 +1578,7 @@ void ShapesWidget::paintEvent(QPaintEvent *)
             painter.setPen(pen);
             paintLine(painter, m_shapes[i].points);
         } else if (m_shapes[i].type == "text" && !m_clearAllTextBorder) {
-            qDebug() << "*&^" << m_shapes[i].type << m_shapes[i].index << m_selectedIndex << i;
+//            qDebug() << "*&^" << m_shapes[i].type << m_shapes[i].index << m_selectedIndex << i;
             QMap<int, TextEdit *>::iterator m = m_editMap.begin();
             while (m != m_editMap.end()) {
                 if (m.key() == m_shapes[i].index) {

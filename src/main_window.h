@@ -121,6 +121,7 @@ public:
     void topWindow();
     void savePath(const QString &path);
     void noNotify();
+    void setConfigThemeType(int themeType);
 signals:
     void releaseEvent();
     void hideScreenshotUI();
@@ -169,6 +170,7 @@ public slots:
     void exitApp();
     void initVirtualCard();
     void onViewShortcut();
+    void shapeClickedSlot(QString shape);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);

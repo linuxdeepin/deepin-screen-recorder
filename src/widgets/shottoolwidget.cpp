@@ -56,19 +56,21 @@ ShotToolWidget::ShotToolWidget(DWidget *parent) : DStackedWidget(parent)
 
 ShotToolWidget::~ShotToolWidget()
 {
-    delete m_rectSubTool;
-    delete m_circSubTool;
-    delete m_lineSubTool;
-    delete m_penSubTool;
-    delete m_textSubTool;
-    delete m_blurRectButton;
-    delete m_mosaicRectButton;
-    delete m_blurCircButton;
-    delete m_mosaicCircButton;
+//    delete m_rectSubTool;
+//    delete m_circSubTool;
+//    delete m_lineSubTool;
+//    delete m_penSubTool;
+//    delete m_textSubTool;
+//    delete m_blurRectButton;
+//    delete m_mosaicRectButton;
+//    delete m_blurCircButton;
+//    delete m_mosaicCircButton;
 }
 
 void ShotToolWidget::initWidget()
 {
+    m_themeType = 0;
+    m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     m_arrowFlag = false;
 
@@ -97,49 +99,71 @@ void ShotToolWidget::initRectLabel()
     //粗细程度１级按钮
     ToolButton *thickOneBtn = new ToolButton();
 
-    pa = thickOneBtn->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    thickOneBtn->setPalette(pa);
+//    pa = thickOneBtn->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    thickOneBtn->setPalette(pa);
 
     thickOneBtn->setToolTip(tr("fine"));
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
-    thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//    thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+    if (m_themeType == 1) {
+        thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+    }
+
     btnList.append(thickOneBtn);
 
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
 
-    pa = thickTwoBtn->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    thickTwoBtn->setPalette(pa);
+//    pa = thickTwoBtn->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    thickTwoBtn->setPalette(pa);
 
     thickTwoBtn->setToolTip(tr("medium"));
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
-    thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//    thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+    if (m_themeType == 1) {
+        thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+    }
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
     ToolButton *thickThreeBtn = new ToolButton();
 
-    pa = thickThreeBtn->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    thickThreeBtn->setPalette(pa);
+//    pa = thickThreeBtn->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    thickThreeBtn->setPalette(pa);
 
     thickThreeBtn->setToolTip(tr("thick"));
     thickThreeBtn->setObjectName("thickThreeBtn");
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);
-    thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//    thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+    if (m_themeType == 1) {
+        thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+    }
     btnList.append(thickThreeBtn);
 
     QVBoxLayout *rectLayout = new QVBoxLayout();
@@ -157,12 +181,19 @@ void ShotToolWidget::initRectLabel()
 
         DPalette pa;
         if (thickOneBtn->isChecked()) {
-            pa = thickOneBtn->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            thickOneBtn->setPalette(pa);
-            thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+//            pa = thickOneBtn->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            thickOneBtn->setPalette(pa);
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+            if (m_themeType == 1) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush small_checked.svg"));
+            }
 
             thickOneBtn->update();
 
@@ -170,23 +201,37 @@ void ShotToolWidget::initRectLabel()
         }
 
         else {
-            pa = thickOneBtn->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            thickOneBtn->setPalette(pa);
-            thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//            pa = thickOneBtn->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            thickOneBtn->setPalette(pa);
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+            if (m_themeType == 1) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+            }
 
             thickOneBtn->update();
         }
 
         if (thickTwoBtn->isChecked()) {
-            pa = thickTwoBtn->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            thickTwoBtn->setPalette(pa);
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+//            pa = thickTwoBtn->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            thickTwoBtn->setPalette(pa);
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+            if (m_themeType == 1) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush medium_checked.svg"));
+            }
 
             thickTwoBtn->update();
 
@@ -194,23 +239,37 @@ void ShotToolWidget::initRectLabel()
         }
 
         else {
-            pa = thickTwoBtn->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            thickTwoBtn->setPalette(pa);
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//            pa = thickTwoBtn->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            thickTwoBtn->setPalette(pa);
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+            if (m_themeType == 1) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+            }
 
             thickTwoBtn->update();
         }
 
         if (thickThreeBtn->isChecked()) {
-            pa = thickThreeBtn->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            thickThreeBtn->setPalette(pa);
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+//            pa = thickThreeBtn->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            thickThreeBtn->setPalette(pa);
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+            if (m_themeType == 1) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush big_checked.svg"));
+            }
 
             thickThreeBtn->update();
 
@@ -218,12 +277,19 @@ void ShotToolWidget::initRectLabel()
         }
 
         else {
-            pa = thickThreeBtn->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            thickThreeBtn->setPalette(pa);
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//            pa = thickThreeBtn->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            thickThreeBtn->setPalette(pa);
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+            if (m_themeType == 1) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+            }
 
             thickThreeBtn->update();
         }
@@ -250,35 +316,49 @@ void ShotToolWidget::initRectLabel()
     ConfigSettings::instance()->setValue("rectangle", "is_mosaic", false);
 
     //模糊按钮
-    m_blurRectButton = new ToolButton();
+    m_blurRectButton = new ToolButton(this);
 
     pa = m_blurRectButton->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    m_blurRectButton->setPalette(pa);
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    m_blurRectButton->setPalette(pa);
 
     m_blurRectButton->setToolTip(tr("blur"));
     m_blurRectButton->setObjectName("blurButton");
     m_blurRectButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_blurRectButton->setIconSize(TOOL_ICON_SIZE);
-    m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+//    m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+    if (m_themeType == 1) {
+        m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
+    }
     btnList.append(m_blurRectButton);
 
     //马赛克按钮
     m_mosaicRectButton = new ToolButton();
 
-    pa = m_mosaicRectButton->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    m_mosaicRectButton->setPalette(pa);
+//    pa = m_mosaicRectButton->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    m_mosaicRectButton->setPalette(pa);
 
     m_mosaicRectButton->setToolTip(tr("mosaic"));
     m_mosaicRectButton->setObjectName("mosaicBtn");
     m_mosaicRectButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_mosaicRectButton->setIconSize(TOOL_ICON_SIZE);
-    m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+//    m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+    if (m_themeType == 1) {
+        m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        m_mosaicRectButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
+    }
     btnList.append(m_mosaicRectButton);
 
     connect(m_blurRectButton, &ToolButton::clicked, this, [ = ] {
@@ -287,22 +367,36 @@ void ShotToolWidget::initRectLabel()
         if (t_status == true)
         {
             DPalette pa;
-            pa = m_blurRectButton->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            m_blurRectButton->setPalette(pa);
-            m_blurRectButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
+//            pa = m_blurRectButton->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            m_blurRectButton->setPalette(pa);
+//            m_blurRectButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
+            if (m_themeType == 1) {
+                m_blurRectButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/checked/vague_checked.svg"));
+            }
 
             ConfigSettings::instance()->setValue("rectangle", "is_blur", m_blurRectButton->isChecked());
 
             m_mosaicRectButton->setChecked(false);
-            pa = m_mosaicRectButton->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            m_mosaicRectButton->setPalette(pa);
-            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+//            pa = m_mosaicRectButton->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            m_mosaicRectButton->setPalette(pa);
+//            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+            if (m_themeType == 1) {
+                m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                m_mosaicRectButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
+            }
 
             m_mosaicRectButton->update();
             ConfigSettings::instance()->setValue("rectangle", "is_mosaic", m_mosaicRectButton->isChecked());
@@ -313,12 +407,19 @@ void ShotToolWidget::initRectLabel()
         {
             DPalette pa;
             m_blurRectButton->setChecked(false);
-            pa = m_blurRectButton->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            m_blurRectButton->setPalette(pa);
-            m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+//            pa = m_blurRectButton->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            m_blurRectButton->setPalette(pa);
+//            m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+            if (m_themeType == 1) {
+                m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
+            }
 
             m_blurRectButton->update();
             ConfigSettings::instance()->setValue("rectangle", "is_blur", m_blurRectButton->isChecked());
@@ -331,22 +432,36 @@ void ShotToolWidget::initRectLabel()
         if (t_status == true)
         {
             DPalette pa;
-            pa = m_mosaicRectButton->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            m_mosaicRectButton->setPalette(pa);
-            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
+//            pa = m_mosaicRectButton->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            m_mosaicRectButton->setPalette(pa);
+//            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
+            if (m_themeType == 1) {
+                m_mosaicRectButton->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                m_mosaicRectButton->setIcon(QIcon(":/image/newUI/dark/checked/Mosaic_checked.svg"));
+            }
 
             ConfigSettings::instance()->setValue("rectangle", "is_mosaic", m_mosaicRectButton->isChecked());
             m_arrowFlag = true;
             m_blurRectButton->setChecked(false);
-            pa = m_blurRectButton->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            m_blurRectButton->setPalette(pa);
-            m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+//            pa = m_blurRectButton->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            m_blurRectButton->setPalette(pa);
+//            m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+            if (m_themeType == 1) {
+                m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
+            }
 
             m_blurRectButton->update();
             ConfigSettings::instance()->setValue("rectangle", "is_blur", m_blurRectButton->isChecked());
@@ -356,11 +471,11 @@ void ShotToolWidget::initRectLabel()
         {
             DPalette pa;
             m_mosaicRectButton->setChecked(false);
-            pa = m_mosaicRectButton->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            m_mosaicRectButton->setPalette(pa);
+//            pa = m_mosaicRectButton->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            m_mosaicRectButton->setPalette(pa);
             m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
 
             m_mosaicRectButton->update();
@@ -407,49 +522,70 @@ void ShotToolWidget::initCircLabel()
     //粗细程度１级按钮
     ToolButton *thickOneBtn = new ToolButton();
 
-    pa = thickOneBtn->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    thickOneBtn->setPalette(pa);
+//    pa = thickOneBtn->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    thickOneBtn->setPalette(pa);
 
     thickOneBtn->setToolTip(tr("fine"));
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
-    thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//    thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+    if (m_themeType == 1) {
+        thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+    }
     btnList.append(thickOneBtn);
 
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
 
-    pa = thickTwoBtn->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    thickTwoBtn->setPalette(pa);
+//    pa = thickTwoBtn->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    thickTwoBtn->setPalette(pa);
 
     thickTwoBtn->setToolTip(tr("medium"));
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
-    thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//    thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+    if (m_themeType == 1) {
+        thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+    }
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
     ToolButton *thickThreeBtn = new ToolButton();
 
-    pa = thickThreeBtn->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    thickThreeBtn->setPalette(pa);
+//    pa = thickThreeBtn->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    thickThreeBtn->setPalette(pa);
 
     thickThreeBtn->setToolTip(tr("thick"));
     thickThreeBtn->setObjectName("thickThreeBtn");
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);
-    thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//    thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+    if (m_themeType == 1) {
+        thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+    }
     btnList.append(thickThreeBtn);
 
     QVBoxLayout *rectLayout = new QVBoxLayout();
@@ -467,12 +603,19 @@ void ShotToolWidget::initCircLabel()
 
         DPalette pa;
         if (thickOneBtn->isChecked()) {
-            pa = thickOneBtn->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            thickOneBtn->setPalette(pa);
-            thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+//            pa = thickOneBtn->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            thickOneBtn->setPalette(pa);
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+            if (m_themeType == 1) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush small_checked.svg"));
+            }
 
             thickOneBtn->update();
 
@@ -480,23 +623,37 @@ void ShotToolWidget::initCircLabel()
         }
 
         else {
-            pa = thickOneBtn->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            thickOneBtn->setPalette(pa);
-            thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//            pa = thickOneBtn->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            thickOneBtn->setPalette(pa);
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+            if (m_themeType == 1) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+            }
 
             thickOneBtn->update();
         }
 
         if (thickTwoBtn->isChecked()) {
-            pa = thickTwoBtn->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            thickTwoBtn->setPalette(pa);
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+//            pa = thickTwoBtn->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            thickTwoBtn->setPalette(pa);
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+            if (m_themeType == 1) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush medium_checked.svg"));
+            }
 
             thickTwoBtn->update();
 
@@ -504,23 +661,37 @@ void ShotToolWidget::initCircLabel()
         }
 
         else {
-            pa = thickTwoBtn->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            thickTwoBtn->setPalette(pa);
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//            pa = thickTwoBtn->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            thickTwoBtn->setPalette(pa);
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+            if (m_themeType == 1) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+            }
 
             thickTwoBtn->update();
         }
 
         if (thickThreeBtn->isChecked()) {
-            pa = thickThreeBtn->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            thickThreeBtn->setPalette(pa);
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+//            pa = thickThreeBtn->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            thickThreeBtn->setPalette(pa);
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+            if (m_themeType == 1) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush big_checked.svg"));
+            }
 
             thickThreeBtn->update();
 
@@ -528,12 +699,19 @@ void ShotToolWidget::initCircLabel()
         }
 
         else {
-            pa = thickThreeBtn->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            thickThreeBtn->setPalette(pa);
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//            pa = thickThreeBtn->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            thickThreeBtn->setPalette(pa);
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+            if (m_themeType == 1) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+            }
 
             thickThreeBtn->update();
         }
@@ -560,33 +738,47 @@ void ShotToolWidget::initCircLabel()
     //模糊按钮
     m_blurCircButton = new ToolButton();
 
-    pa = m_blurCircButton->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    m_blurCircButton->setPalette(pa);
+//    pa = m_blurCircButton->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    m_blurCircButton->setPalette(pa);
 
     m_blurCircButton->setToolTip(tr("blur"));
     m_blurCircButton->setObjectName("blurButton");
     m_blurCircButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_blurCircButton->setIconSize(TOOL_ICON_SIZE);
-    m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+//    m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+    if (m_themeType == 1) {
+        m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
+    }
     btnList.append(m_blurCircButton);
 
     //马赛克按钮
     m_mosaicCircButton = new ToolButton();
 
-    pa = m_mosaicCircButton->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    m_mosaicCircButton->setPalette(pa);
+//    pa = m_mosaicCircButton->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    m_mosaicCircButton->setPalette(pa);
 
     m_mosaicCircButton->setToolTip(tr("mosaic"));
     m_mosaicCircButton->setObjectName("mosaicBtn");
     m_mosaicCircButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_mosaicCircButton->setIconSize(TOOL_ICON_SIZE);
-    m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+//    m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+    if (m_themeType == 1) {
+        m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
+    }
     btnList.append(m_mosaicCircButton);
 
     connect(m_blurCircButton, &ToolButton::clicked, this, [ = ] {
@@ -595,22 +787,36 @@ void ShotToolWidget::initCircLabel()
         if (t_status == true)
         {
             DPalette pa;
-            pa = m_blurCircButton->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            m_blurCircButton->setPalette(pa);
-            m_blurCircButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
+//            pa = m_blurCircButton->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            m_blurCircButton->setPalette(pa);
+//            m_blurCircButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
+            if (m_themeType == 1) {
+                m_blurCircButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/checked/vague_checked.svg"));
+            }
 
             ConfigSettings::instance()->setValue("oval", "is_blur", m_blurCircButton->isChecked());
 
             m_mosaicCircButton->setChecked(false);
-            pa = m_mosaicCircButton->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            m_mosaicCircButton->setPalette(pa);
-            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+//            pa = m_mosaicCircButton->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            m_mosaicCircButton->setPalette(pa);
+//            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+            if (m_themeType == 1) {
+                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
+            }
 
             m_mosaicCircButton->update();
             ConfigSettings::instance()->setValue("oval", "is_mosaic", m_mosaicCircButton->isChecked());
@@ -621,12 +827,19 @@ void ShotToolWidget::initCircLabel()
         {
             DPalette pa;
             m_blurCircButton->setChecked(false);
-            pa = m_blurCircButton->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            m_blurCircButton->setPalette(pa);
-            m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+//            pa = m_blurCircButton->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            m_blurCircButton->setPalette(pa);
+//            m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+            if (m_themeType == 1) {
+                m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
+            }
 
             m_blurCircButton->update();
             ConfigSettings::instance()->setValue("oval", "is_blur", m_blurCircButton->isChecked());
@@ -639,22 +852,37 @@ void ShotToolWidget::initCircLabel()
         if (t_status == true)
         {
             DPalette pa;
-            pa = m_mosaicCircButton->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            m_mosaicCircButton->setPalette(pa);
-            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
+//            pa = m_mosaicCircButton->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            m_mosaicCircButton->setPalette(pa);
+//            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
+            if (m_themeType == 1) {
+                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/checked/Mosaic_checked.svg"));
+            }
+
 
             ConfigSettings::instance()->setValue("oval", "is_mosaic", m_mosaicCircButton->isChecked());
             m_arrowFlag = true;
             m_blurCircButton->setChecked(false);
-            pa = m_blurCircButton->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            m_blurCircButton->setPalette(pa);
-            m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+//            pa = m_blurCircButton->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            m_blurCircButton->setPalette(pa);
+//            m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+            if (m_themeType == 1) {
+                m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
+            }
 
             m_blurCircButton->update();
             ConfigSettings::instance()->setValue("oval", "is_blur", m_blurCircButton->isChecked());
@@ -664,12 +892,19 @@ void ShotToolWidget::initCircLabel()
         {
             DPalette pa;
             m_mosaicCircButton->setChecked(false);
-            pa = m_mosaicCircButton->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            m_mosaicCircButton->setPalette(pa);
-            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+//            pa = m_mosaicCircButton->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            m_mosaicCircButton->setPalette(pa);
+//            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+            if (m_themeType == 1) {
+                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
+            }
 
             m_mosaicCircButton->update();
             ConfigSettings::instance()->setValue("oval", "is_mosaic", m_mosaicCircButton->isChecked());
@@ -715,49 +950,70 @@ void ShotToolWidget::initLineLabel()
     //粗细程度１级按钮
     ToolButton *thickOneBtn = new ToolButton();
 
-    pa = thickOneBtn->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    thickOneBtn->setPalette(pa);
+//    pa = thickOneBtn->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    thickOneBtn->setPalette(pa);
 
     thickOneBtn->setToolTip(tr("fine"));
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
-    thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//    thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+    if (m_themeType == 1) {
+        thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+    }
     btnList.append(thickOneBtn);
 
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
 
-    pa = thickTwoBtn->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    thickTwoBtn->setPalette(pa);
+//    pa = thickTwoBtn->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    thickTwoBtn->setPalette(pa);
 
     thickTwoBtn->setToolTip(tr("medium"));
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
-    thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//    thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+    if (m_themeType == 1) {
+        thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+    }
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
     ToolButton *thickThreeBtn = new ToolButton();
 
-    pa = thickThreeBtn->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    thickThreeBtn->setPalette(pa);
+//    pa = thickThreeBtn->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    thickThreeBtn->setPalette(pa);
 
     thickThreeBtn->setToolTip(tr("thick"));
     thickThreeBtn->setObjectName("thickThreeBtn");
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);
-    thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//    thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+    if (m_themeType == 1) {
+        thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+    }
     btnList.append(thickThreeBtn);
 
     QVBoxLayout *rectLayout = new QVBoxLayout();
@@ -775,12 +1031,19 @@ void ShotToolWidget::initLineLabel()
 
         DPalette pa;
         if (thickOneBtn->isChecked()) {
-            pa = thickOneBtn->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            thickOneBtn->setPalette(pa);
-            thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+//            pa = thickOneBtn->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            thickOneBtn->setPalette(pa);
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+            if (m_themeType == 1) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush small_checked.svg"));
+            }
 
             thickOneBtn->update();
 
@@ -789,23 +1052,37 @@ void ShotToolWidget::initLineLabel()
         }
 
         else {
-            pa = thickOneBtn->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            thickOneBtn->setPalette(pa);
-            thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//            pa = thickOneBtn->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            thickOneBtn->setPalette(pa);
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+            if (m_themeType == 1) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+            }
 
             thickOneBtn->update();
         }
 
         if (thickTwoBtn->isChecked()) {
-            pa = thickTwoBtn->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            thickTwoBtn->setPalette(pa);
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+//            pa = thickTwoBtn->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            thickTwoBtn->setPalette(pa);
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+            if (m_themeType == 1) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush medium_checked.svg"));
+            }
 
             thickTwoBtn->update();
 
@@ -814,23 +1091,38 @@ void ShotToolWidget::initLineLabel()
         }
 
         else {
-            pa = thickTwoBtn->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            thickTwoBtn->setPalette(pa);
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//            pa = thickTwoBtn->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            thickTwoBtn->setPalette(pa);
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+            if (m_themeType == 1) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+            }
+
 
             thickTwoBtn->update();
         }
 
         if (thickThreeBtn->isChecked()) {
-            pa = thickThreeBtn->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            thickThreeBtn->setPalette(pa);
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+//            pa = thickThreeBtn->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            thickThreeBtn->setPalette(pa);
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+            if (m_themeType == 1) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush big_checked.svg"));
+            }
 
             thickThreeBtn->update();
 
@@ -839,12 +1131,19 @@ void ShotToolWidget::initLineLabel()
         }
 
         else {
-            pa = thickThreeBtn->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            thickThreeBtn->setPalette(pa);
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//            pa = thickThreeBtn->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            thickThreeBtn->setPalette(pa);
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+            if (m_themeType == 1) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+            }
 
             thickThreeBtn->update();
         }
@@ -869,43 +1168,66 @@ void ShotToolWidget::initLineLabel()
 
     //直线按钮
     ToolButton *blurButton = new ToolButton();
-    pa = blurButton->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    blurButton->setPalette(pa);
+//    pa = blurButton->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    blurButton->setPalette(pa);
 
     blurButton->setToolTip(tr("line"));
     blurButton->setObjectName("blurButton");
     blurButton->setFixedSize(TOOL_BUTTON_SIZE);
     blurButton->setIconSize(TOOL_ICON_SIZE);
-    blurButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
+//    blurButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
+    if (m_themeType == 1) {
+        blurButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        blurButton->setIcon(QIcon(":/image/newUI/dark/normal/line-normal_dark.svg"));
+    }
     btnList.append(blurButton);
 
     //箭头按钮
     ToolButton *mosaicBtn = new ToolButton();
 
-    pa = mosaicBtn->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    mosaicBtn->setPalette(pa);
+//    pa = mosaicBtn->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    mosaicBtn->setPalette(pa);
 
     mosaicBtn->setToolTip(tr("arrow"));
     mosaicBtn->setObjectName("mosaicBtn");
     mosaicBtn->setFixedSize(TOOL_BUTTON_SIZE);
     mosaicBtn->setIconSize(TOOL_ICON_SIZE);
-    mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
+//    mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
+    if (m_themeType == 1) {
+        mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        mosaicBtn->setIcon(QIcon(":/image/newUI/dark/normal/Arrow-normal_dark.svg"));
+    }
     btnList.append(mosaicBtn);
 
     connect(blurButton, &ToolButton::clicked, this, [ = ] {
         DPalette pa;
-        pa = blurButton->palette();
-        pa.setColor(DPalette::ButtonText, Qt::white);
-        pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-        pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-        blurButton->setPalette(pa);
-        blurButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
+//        pa = blurButton->palette();
+//        pa.setColor(DPalette::ButtonText, Qt::white);
+//        pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//        pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//        blurButton->setPalette(pa);
+//        blurButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
+        if (m_themeType == 1)
+        {
+            blurButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
+        }
+
+        else if (m_themeType == 2)
+        {
+            blurButton->setIcon(QIcon(":/image/newUI/dark/checked/line-checked.svg"));
+        }
 
         blurButton->update();
 
@@ -916,24 +1238,40 @@ void ShotToolWidget::initLineLabel()
         if (blurButton->isChecked())
         {
             mosaicBtn->setChecked(false);
-            pa = mosaicBtn->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            mosaicBtn->setPalette(pa);
-            mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
+//            pa = mosaicBtn->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            mosaicBtn->setPalette(pa);
+//            mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
+            if (m_themeType == 1) {
+                mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                mosaicBtn->setIcon(QIcon(":/image/newUI/dark/normal/Arrow-normal_dark.svg"));
+            }
 
             mosaicBtn->update();
         }
     });
     connect(mosaicBtn, &ToolButton::clicked, this, [ = ] {
         DPalette pa;
-        pa = mosaicBtn->palette();
-        pa.setColor(DPalette::ButtonText, Qt::white);
-        pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-        pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-        mosaicBtn->setPalette(pa);
-        mosaicBtn->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
+//        pa = mosaicBtn->palette();
+//        pa.setColor(DPalette::ButtonText, Qt::white);
+//        pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//        pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//        mosaicBtn->setPalette(pa);
+//        mosaicBtn->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
+        if (m_themeType == 1)
+        {
+            mosaicBtn->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
+        }
+
+        else if (m_themeType == 2)
+        {
+            mosaicBtn->setIcon(QIcon(":/image/newUI/dark/checked/Arrow-checked.svg"));
+        }
 
         mosaicBtn->update();
 
@@ -943,12 +1281,19 @@ void ShotToolWidget::initLineLabel()
         if (mosaicBtn->isChecked())
         {
             blurButton->setChecked(false);
-            pa = blurButton->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            blurButton->setPalette(pa);
-            blurButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
+//            pa = blurButton->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            blurButton->setPalette(pa);
+//            blurButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
+            if (m_themeType == 1) {
+                blurButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                blurButton->setIcon(QIcon(":/image/newUI/dark/normal/line-normal_dark.svg"));
+            }
 
             blurButton->update();
         }
@@ -1004,49 +1349,70 @@ void ShotToolWidget::initPenLabel()
     //粗细程度１级按钮
     ToolButton *thickOneBtn = new ToolButton();
 
-    pa = thickOneBtn->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    thickOneBtn->setPalette(pa);
+//    pa = thickOneBtn->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    thickOneBtn->setPalette(pa);
 
     thickOneBtn->setToolTip(tr("fine"));
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
-    thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//    thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+    if (m_themeType == 1) {
+        thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+    }
     btnList.append(thickOneBtn);
 
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
 
-    pa = thickTwoBtn->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    thickTwoBtn->setPalette(pa);
+//    pa = thickTwoBtn->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    thickTwoBtn->setPalette(pa);
 
     thickTwoBtn->setToolTip(tr("medium"));
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
-    thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//    thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+    if (m_themeType == 1) {
+        thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+    }
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
     ToolButton *thickThreeBtn = new ToolButton();
 
-    pa = thickThreeBtn->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-    thickThreeBtn->setPalette(pa);
+//    pa = thickThreeBtn->palette();
+//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//    thickThreeBtn->setPalette(pa);
 
     thickThreeBtn->setToolTip(tr("thick"));
     thickThreeBtn->setObjectName("thickThreeBtn");
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);
-    thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//    thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+    if (m_themeType == 1) {
+        thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+    }
+
+    else if (m_themeType == 2) {
+        thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+    }
     btnList.append(thickThreeBtn);
 
     QVBoxLayout *rectLayout = new QVBoxLayout();
@@ -1064,12 +1430,19 @@ void ShotToolWidget::initPenLabel()
 
         DPalette pa;
         if (thickOneBtn->isChecked()) {
-            pa = thickOneBtn->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            thickOneBtn->setPalette(pa);
-            thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+//            pa = thickOneBtn->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            thickOneBtn->setPalette(pa);
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+            if (m_themeType == 1) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush small_checked.svg"));
+            }
 
             thickOneBtn->update();
 
@@ -1077,23 +1450,37 @@ void ShotToolWidget::initPenLabel()
         }
 
         else {
-            pa = thickOneBtn->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            thickOneBtn->setPalette(pa);
-            thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//            pa = thickOneBtn->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            thickOneBtn->setPalette(pa);
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+            if (m_themeType == 1) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+            }
 
             thickOneBtn->update();
         }
 
         if (thickTwoBtn->isChecked()) {
-            pa = thickTwoBtn->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            thickTwoBtn->setPalette(pa);
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+//            pa = thickTwoBtn->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            thickTwoBtn->setPalette(pa);
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+            if (m_themeType == 1) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush medium_checked.svg"));
+            }
 
             thickTwoBtn->update();
 
@@ -1101,23 +1488,38 @@ void ShotToolWidget::initPenLabel()
         }
 
         else {
-            pa = thickTwoBtn->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            thickTwoBtn->setPalette(pa);
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//            pa = thickTwoBtn->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            thickTwoBtn->setPalette(pa);
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+            if (m_themeType == 1) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+            }
+
 
             thickTwoBtn->update();
         }
 
         if (thickThreeBtn->isChecked()) {
-            pa = thickThreeBtn->palette();
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-            thickThreeBtn->setPalette(pa);
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+//            pa = thickThreeBtn->palette();
+//            pa.setColor(DPalette::ButtonText, Qt::white);
+//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
+//            thickThreeBtn->setPalette(pa);
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+            if (m_themeType == 1) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush big_checked.svg"));
+            }
 
             thickThreeBtn->update();
 
@@ -1125,12 +1527,19 @@ void ShotToolWidget::initPenLabel()
         }
 
         else {
-            pa = thickThreeBtn->palette();
-            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-            thickThreeBtn->setPalette(pa);
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//            pa = thickThreeBtn->palette();
+//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+//            thickThreeBtn->setPalette(pa);
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+            if (m_themeType == 1) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+            }
+
+            else if (m_themeType == 2) {
+                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+            }
 
             thickThreeBtn->update();
         }
@@ -1180,6 +1589,13 @@ void ShotToolWidget::initTextLabel()
     t_textFontSize->setMaximum(10);
 //    t_textFontSize->setValue(2);
     t_textFontSize->setRightIcon(QIcon(":/image/newUI/normal/Aa small_normal.svg"));
+//    if (m_themeType == 1) {
+//        t_textFontSize->setRightIcon(QIcon(":/image/newUI/normal/Aa big_normal.svg"));
+//    }
+
+//    else if (m_themeType == 2) {
+//        t_textFontSize->setRightIcon(QIcon(":/image/newUI/dark/normal/Aa big_normal.svg"));
+//    }
     t_textFontSize->setLeftIcon(QIcon(":/image/newUI/normal/Aa big_normal.svg"));
     t_textFontSize->setIconSize(TOOL_ICON_SIZE);
 //    ConfigSettings::instance()->setValue("text", "fontsize", 12);

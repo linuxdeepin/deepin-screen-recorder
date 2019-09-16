@@ -45,11 +45,13 @@ public slots:
     void setRecordButtonOut();
     void setRecordLauchMode(bool recordLaunch);
 
+
 private:
     QHBoxLayout *m_baseLayout;
     bool m_isChecked;
     ToolButton *m_recordBtn;
     ToolButton *m_shotBtn;
+    int m_themeType;
 };
 
 #endif // MAINTOOLWIDGET_H

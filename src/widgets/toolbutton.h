@@ -35,6 +35,7 @@ public:
         Q_UNUSED(parent);
         setCheckable(true);
         m_tips = "";
+        this->setFocusPolicy(Qt::NoFocus);
     }
     ~ToolButton() {}
 

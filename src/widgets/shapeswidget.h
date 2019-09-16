@@ -63,6 +63,8 @@ signals:
     void menuNoFocus();
     void saveFromMenu();
     void closeFromMenu();
+    //选中某个形状后对应工具栏切换
+    void shapeClicked(QString shape);
 
 public slots:
     void updateSelectedShape(const QString &group, const QString &key, int index);

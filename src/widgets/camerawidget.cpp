@@ -12,13 +12,13 @@ CameraWidget::CameraWidget(DWidget *parent) : DWidget(parent)
 
 CameraWidget::~CameraWidget()
 {
-    camera->stop();
-    timer_image_capture->stop();
-    delete camera;
-    delete viewfinder;
-    delete imageCapture;
-    delete timer_image_capture;
-    delete m_cameraUI;
+//    camera->stop();
+//    timer_image_capture->stop();
+//    delete camera;
+//    delete viewfinder;
+//    delete imageCapture;
+//    delete timer_image_capture;
+//    delete m_cameraUI;
 }
 
 

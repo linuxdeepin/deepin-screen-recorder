@@ -30,14 +30,15 @@
 #include <QTimer>
 #include <QSettings>
 #include <QBitmap>
+#include "../utils/configsettings.h"
 
 DWIDGET_USE_NAMESPACE
 
 namespace {
 const int TOOLBAR_HEIGHT = 50;
-const int TOOLBAR_WIDTH = 610;
+const int TOOLBAR_WIDTH = 510;
 
-const QSize TOOLBAR_WIDGET_SIZE = QSize(610, 50);
+const QSize TOOLBAR_WIDGET_SIZE = QSize(510, 50);
 const int BUTTON_SPACING = 3;
 const int BTN_RADIUS = 3;
 }
@@ -46,13 +47,22 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
     : DBlurEffectWidget(parent),
       m_expanded(false)
 {
+    int t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     setBlurRectXRadius(10);
     setBlurRectYRadius(10);
     setRadius(30);
     setMode(DBlurEffectWidget::GaussianBlur);
     setBlurEnabled(true);
     setBlendMode(DBlurEffectWidget::InWindowBlend);
-    setMaskColor(QColor(255, 255, 255, 76.5));
+
+    if (t_themeType == 1) {
+        setMaskColor(QColor(255, 255, 255, 76.5));
+    }
+
+    else if (t_themeType == 2) {
+        setMaskColor(QColor(0, 0, 0, 76.5));
+    }
+//    setMaskColor(QColor(255, 255, 255, 76.5));
     //设置透明效果
 //    setMaskAlpha(0);
 //    setMaskColor(DBlurEffectWidget::LightColor);
@@ -78,8 +88,17 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
 //    m_closeButton->setIconSize(QSize(40, 40));
 //    m_closeButton->setIcon(QIcon(":/image/newUI/normal/close-normal.svg"));
 //    m_closeButton->resize(pixmap.size());
-    m_closeButton->setHoverPic(":/image/newUI/hover/close-hover.svg");
-    m_closeButton->setNormalPic(":/image/newUI/normal/close-normal.svg");
+//    m_closeButton->setHoverPic(":/image/newUI/hover/close-hover.svg");
+//    m_closeButton->setNormalPic(":/image/newUI/normal/close-normal.svg");
+    if (t_themeType == 1) {
+        m_closeButton->setHoverPic(":/image/newUI/hover/close-hover.svg");
+        m_closeButton->setNormalPic(":/image/newUI/normal/close-normal.svg");
+    }
+
+    else if (t_themeType == 2) {
+        m_closeButton->setHoverPic(":/image/newUI/dark/hover/close-hover_dark.svg");
+        m_closeButton->setNormalPic(":/image/newUI/dark/normal/close-normal_dark.svg");
+    }
     /* 设置按钮的有效区域 */
 //    m_closeButton->setMask(QBitmap(pixmap.mask()));
 //    m_closeButton->setStyleSheet(button_style);
@@ -166,6 +185,11 @@ void ToolBarWidget::setRecordLaunchFromMain(bool recordLaunch)
 void ToolBarWidget::setVideoInitFromMain()
 {
     m_subTool->setVideoButtonInitFromSub();
+}
+
+void ToolBarWidget::shapeClickedFromBar(QString shape)
+{
+    m_subTool->shapeClickedFromWidget(shape);
 }
 
 void ToolBarWidget::setExpand(bool expand, QString shapeType)
@@ -317,6 +341,11 @@ void ToolBar::setRecordLaunchMode(bool recordLaunch)
 void ToolBar::setVideoButtonInit()
 {
     m_toolbarWidget->setVideoInitFromMain();
+}
+
+void ToolBar::shapeClickedFromMain(QString shape)
+{
+    m_toolbarWidget->shapeClickedFromBar(shape);
 }
 
 bool ToolBar::isButtonChecked()

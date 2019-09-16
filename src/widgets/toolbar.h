@@ -71,6 +71,7 @@ public slots:
     void setRecordButtonDisableFromMain();
     void setRecordLaunchFromMain(bool recordLaunch);
     void setVideoInitFromMain();
+    void shapeClickedFromBar(QString shape);
 
 protected:
     void paintEvent(QPaintEvent *e);
@@ -129,6 +130,7 @@ public slots:
     void setRecordButtonDisable();
     void setRecordLaunchMode(bool recordLaunch);
     void setVideoButtonInit();
+    void shapeClickedFromMain(QString shape);
 protected:
     void paintEvent(QPaintEvent *e);
     void enterEvent(QEvent *e);

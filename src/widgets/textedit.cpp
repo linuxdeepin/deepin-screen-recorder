@@ -149,6 +149,7 @@ void TextEdit::mousePressEvent(QMouseEvent *e)
         m_pressPoint = QPointF(mapToGlobal(e->pos()));
 
         if (this->isReadOnly()) {
+            qDebug() << "text select:" << getIndex();
             emit textEditSelected(getIndex());
         }
     }

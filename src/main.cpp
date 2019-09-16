@@ -42,6 +42,7 @@
 DWIDGET_USE_NAMESPACE
 
 static QString g_appPath;//全局路径
+static int g_themeType = 0;
 
 //获取配置文件主题类型，并重新设置
 DGuiApplicationHelper::ColorType getThemeTypeSetting()
@@ -58,13 +59,16 @@ DGuiApplicationHelper::ColorType getThemeTypeSetting()
     switch (t_readType) {
     case 0:
         // 跟随系统主题
+        g_themeType = 0;
         return DGuiApplicationHelper::UnknownType;
     case 1:
 //        浅色主题
+        g_themeType = 1;
         return DGuiApplicationHelper::LightType;
 
     case 2:
 //        深色主题
+        g_themeType = 2;
         return DGuiApplicationHelper::DarkType;
     default:
         // 跟随系统主题
@@ -79,6 +83,7 @@ void saveThemeTypeSetting(int type)
     //需要找到自己程序的配置文件路径，并写入配置，这里只是用home路径下themeType.cfg文件举例,具体配置文件根据自身项目情况
     QString t_appDir = g_appPath + QDir::separator() + "themetype.cfg";
     QFile t_configFile(t_appDir);
+    g_themeType = type;
 
     t_configFile.open(QIODevice::WriteOnly | QIODevice::Text);
     //直接将主题类型保存到配置文件，具体配置key-value组合根据自身项目情况
@@ -206,6 +211,11 @@ int main(int argc, char *argv[])
             }
 
             // 应用已保存的主题设置
+            DGuiApplicationHelper::ColorType t_type = DGuiApplicationHelper::instance()->themeType();
+            saveThemeTypeSetting(t_type);
+
+            window.setConfigThemeType(g_themeType);
+
             DGuiApplicationHelper::instance()->setPaletteType(getThemeTypeSetting());
 
             //监听当前应用主题切换事件
@@ -214,6 +224,7 @@ int main(int argc, char *argv[])
                 qDebug() << type;
                 // 保存程序的主题设置  type : 0,系统主题， 1,浅色主题， 2,深色主题
                 saveThemeTypeSetting(type);
+                DGuiApplicationHelper::instance()->setPaletteType(type);
             });
 
 

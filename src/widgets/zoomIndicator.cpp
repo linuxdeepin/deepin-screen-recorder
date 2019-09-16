@@ -40,6 +40,8 @@ ZoomIndicator::ZoomIndicator(DWidget *parent)
     setFixedSize(BACKGROUND_SIZE);
 //    setStyleSheet(getFileContent(":/resources/qss/zoomindicator.qss"));
     setAttribute(Qt::WA_TransparentForMouseEvents);
+    QString t_zoomStyle = QString("border-image: url(:/resources/images/action/magnifier.png);");
+    this->setStyleSheet(t_zoomStyle);
 
     m_centerRect = QRect((BACKGROUND_SIZE.width() - CENTER_RECT_WIDTH) / 2 + 1,
                          (BACKGROUND_SIZE.width() - CENTER_RECT_WIDTH) / 2 + 1,

@@ -66,6 +66,7 @@ private:
 
     QString m_currentType;
     bool m_arrowFlag;
+    int m_themeType;
 };
 
 #endif // SHOTTOOLWIDGET_H

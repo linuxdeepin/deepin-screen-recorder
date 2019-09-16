@@ -28,6 +28,7 @@
 #include <QSettings>
 #include <QVBoxLayout>
 #include <QBitmap>
+#include "../utils/configsettings.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -45,13 +46,21 @@ SideBarWidget::SideBarWidget(DWidget *parent)
     : DBlurEffectWidget(parent),
       m_expanded(false)
 {
+    int t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     setBlurRectXRadius(10);
     setBlurRectYRadius(10);
     setRadius(30);
     setMode(DBlurEffectWidget::GaussianBlur);
     setBlurEnabled(true);
 //    setBlendMode(DBlurEffectWidget::InWindowBlend);
-    setMaskColor(QColor(255, 255, 255, 76.5));
+//    setMaskColor(QColor(255, 255, 255, 76.5));
+    if (t_themeType == 1) {
+        setMaskColor(QColor(255, 255, 255, 76.5));
+    }
+
+    else if (t_themeType == 2) {
+        setMaskColor(QColor(0, 0, 0, 76.5));
+    }
     //设置透明效果
 
     setFixedSize(TOOLBAR_WIDGET_SIZE);
@@ -81,8 +90,17 @@ SideBarWidget::SideBarWidget(DWidget *parent)
 //    m_closeButton->setIconSize(QSize(40, 40));
 //    m_closeButton->setIcon(QIcon(":/image/newUI/normal/close-normal.svg"));
 //    m_closeButton->resize(pixmap.size());
-    m_closeButton->setHoverPic(":/image/newUI/hover/close-hover.svg");
-    m_closeButton->setNormalPic(":/image/newUI/normal/close-normal.svg");
+//    m_closeButton->setHoverPic(":/image/newUI/hover/close-hover.svg");
+//    m_closeButton->setNormalPic(":/image/newUI/normal/close-normal.svg");
+    if (t_themeType == 1) {
+        m_closeButton->setHoverPic(":/image/newUI/hover/close-hover.svg");
+        m_closeButton->setNormalPic(":/image/newUI/normal/close-normal.svg");
+    }
+
+    else if (t_themeType == 2) {
+        m_closeButton->setHoverPic(":/image/newUI/dark/hover/close-hover_dark.svg");
+        m_closeButton->setNormalPic(":/image/newUI/dark/normal/close-normal_dark.svg");
+    }
 
     QVBoxLayout *VLayout = new QVBoxLayout();
     VLayout->setMargin(0);

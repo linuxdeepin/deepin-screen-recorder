@@ -24,6 +24,8 @@
 #include <QTemporaryFile>
 #include <QDebug>
 
+extern int g_configThemeType;
+
 ConfigSettings::ConfigSettings(QObject *parent)
     : QObject(parent)
 {
@@ -32,6 +34,7 @@ ConfigSettings::ConfigSettings(QObject *parent)
     if (m_settings->allKeys().isEmpty()) {
         setValue("common", "color_index", 0);
         setValue ("common", "default_savepath", "");
+        setValue("common", "themeType", 0);
 
         setValue("arrow", "color_index", 0);
         setValue("arrow", "arrow_linewidth_index", 1);
