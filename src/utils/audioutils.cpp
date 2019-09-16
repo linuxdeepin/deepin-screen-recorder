@@ -21,6 +21,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+#include "dbusutils.h"
+#include <QDBusObjectPath>
+#include <QDBusConnection>
+#include <QDBusReply>
+#include <QDBusInterface>
+#include <QDebug>
+#include <QDBusError>
+#include <QDBusMessage>
 
 AudioUtils::AudioUtils(QObject *parent)
 {
@@ -37,7 +45,7 @@ void AudioUtils::initProcess()
     env.insert("GDK_SCALE", "1");
     process->setProcessEnvironment(env);
 
-//    `connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
+    //    `connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
 }
 
 
@@ -112,6 +120,40 @@ bool AudioUtils::canVirtualCardOutput()
     QString str_output = process.readAllStandardOutput();
     process.close();
     return str_output.startsWith("1");
+}
+
+bool AudioUtils::canMicrophoneInput()
+{
+    QVariant v = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
+                                            "com.deepin.daemon.Audio", "DefaultSource");
+    if (v.isValid()) {
+        QDBusObjectPath path = v.value<QDBusObjectPath>();
+        qDebug() <<"path: "<<path.path();
+        QDBusInterface ainterface("com.deepin.daemon.Audio", path.path(),
+                                  "com.deepin.daemon.Audio.Source",
+                                  QDBusConnection::sessionBus());
+        if (!ainterface.isValid())
+        {
+            return false;
+        }
+        //调用远程的value方法
+        QDBusReply<QDBusObjectPath> reply = ainterface.call("GetMeter");
+        if (reply.isValid()){
+            path = reply.value();
+            qDebug()<<"path1" << path.path();
+            QVariant v = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", path.path(),
+                                                    "com.deepin.daemon.Audio.Meter", "Volume");
+            if (v.isValid()) {
+                double volume = v.toDouble();
+                qDebug()<<"volume" <<volume;
+                return volume != 0.0;
+            }
+        } else {
+           return  false;
+        }
+    }
+    return false;
+
 }
 
 QString AudioUtils::currentAudioSink()

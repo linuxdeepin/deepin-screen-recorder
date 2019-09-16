@@ -163,7 +163,7 @@ void SubToolWidget::initRecordLabel()
     QAction *systemAudioAction = new QAction(audioMenu);
     m_systemAudioAction = systemAudioAction;
     microphoneAction->setText(tr("Microphone"));
-
+    microphoneAction->setCheckable(true);
     if (m_themeType == 1) {
         microphoneAction->setIcon(QIcon(":/image/newUI/normal/microphone.svg"));
     }
@@ -173,8 +173,12 @@ void SubToolWidget::initRecordLabel()
     }
 
 //    microphoneAction->setIcon(QIcon(":/image/newUI/normal/microphone.svg"));
-    microphoneAction->setCheckable(true);
-    microphoneAction->setChecked(true);
+//    if (AudioUtils().canMicrophoneInput()) {
+//        microphoneAction->setCheckable(true);
+//        microphoneAction->setChecked(true);
+//    } else {
+//        microphoneAction->setDisabled(true);
+//    }
     systemAudioAction->setText(tr("SystemAudio"));
 //    systemAudioAction->setIcon(QIcon(":/image/newUI/normal/audio frequency.svg"));
     if (m_themeType == 1) {

@@ -113,6 +113,7 @@ public:
     void initResource();
     void initScreenShot();
     void initScreenRecorder();
+    void initShortcut();
     void initLaunchMode(const QString &launchMode);
     void delayScreenshot(double num);
     void fullScreenshot();
@@ -122,6 +123,7 @@ public:
     void savePath(const QString &path);
     void noNotify();
     void setConfigThemeType(int themeType);
+
 signals:
     void releaseEvent();
     void hideScreenshotUI();
@@ -135,6 +137,7 @@ public slots:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void shotCurrentImg();
     void shotFullScreen();
+    void onHelp();
 
     Q_SCRIPTABLE void stopRecord();
     void startCountdown();

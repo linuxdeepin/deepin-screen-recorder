@@ -128,6 +128,7 @@ int main(int argc, char *argv[])
             app.setOrganizationName("deepin");
             app.setApplicationName("deepin-screen-recorder");
             app.setApplicationVersion("1.0");
+            app.setAttribute(Qt::AA_UseHighDpiPixmaps);
 
             static const QDate buildDate = QLocale( QLocale::English ).
                                            toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");

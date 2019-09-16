@@ -40,6 +40,7 @@
 #include <QMouseEvent>
 #include <QClipboard>
 #include <QFileDialog>
+#include <QShortcut>
 
 #include "main_window.h"
 #include "utils.h"
@@ -191,100 +192,101 @@ void MainWindow::initAttributes()
             window->deleteLater();
             //修改部分窗口显示不全，截图框识别问题
             //x坐标小于0时
-            if (window->x() < 0) {
-                if (window->y() < 0) {
+            if (window->frameGeometry().x() < 0) {
+                if (window->frameGeometry().y() < 0) {
+
 
                     //x,y为负坐标情况
-                    t_tempWidth = window->width() + window->x();
-                    t_tempHeight = window->height() + window->y();
+                    t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
+                    t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
 
                     windowRects << Dtk::Wm::WindowRect {0, 0, t_tempWidth, t_tempHeight};
                     windowNames << window->wmClass();
                     continue;
                 }
 
-                else if (window->y() >= 0 && window->y() <= m_screenHeight - window->height()) {
+                else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
                     //x为负坐标，y在正常屏幕区间内
-                    t_tempWidth = window->width() + window->x();
-                    t_tempHeight = window->height();
+                    t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
+                    t_tempHeight = window->frameGeometry().height();
 
-                    windowRects << Dtk::Wm::WindowRect {0, window->y(), t_tempWidth, t_tempHeight};
+                    windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
                     windowNames << window->wmClass();
                     continue;
                 }
 
-                else if (window->y() > m_screenHeight - window->height()) {
+                else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
                     //x为负坐标，y方向窗口超出屏幕底部
-                    t_tempWidth = window->width() + window->x();
-                    t_tempHeight = m_screenHeight - window->y();
+                    t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
+                    t_tempHeight = m_screenHeight - window->frameGeometry().y();
 
-                    windowRects << Dtk::Wm::WindowRect {0, window->y(), t_tempWidth, t_tempHeight};
+                    windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
                     windowNames << window->wmClass();
                     continue;
                 }
             }
 
             //x坐标位于正常屏幕区间时
-            else if (window->x() >= 0 && window->x() <= m_screenWidth - window->width()) {
-                if (window->y() < 0) {
+            else if (window->frameGeometry().x() >= 0 && window->frameGeometry().x() <= m_screenWidth - window->frameGeometry().width()) {
+                if (window->frameGeometry().y() < 0) {
                     //y为负坐标情况
-                    t_tempWidth = window->width();
-                    t_tempHeight = window->height() + window->y();
+                    t_tempWidth = window->frameGeometry().width();
+                    t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
 
-                    windowRects << Dtk::Wm::WindowRect {window->x(), 0, t_tempWidth, t_tempHeight};
+                    windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight};
                     windowNames << window->wmClass();
                     continue;
                 }
 
-                else if (window->y() >= 0 && window->y() <= m_screenHeight - window->height()) {
+                else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
                     //y在正常屏幕区间内
-                    t_tempWidth = window->width();
-                    t_tempHeight = window->height();
+                    t_tempWidth = window->frameGeometry().width();
+                    t_tempHeight = window->frameGeometry().height();
 
-                    windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
+                    windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
                     windowNames << window->wmClass();
                     continue;
                 }
 
-                else if (window->y() > m_screenHeight - window->height()) {
+                else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
                     //y方向窗口超出屏幕底部
-                    t_tempWidth = window->width();
-                    t_tempHeight = m_screenHeight - window->y();
+                    t_tempWidth = window->frameGeometry().width();
+                    t_tempHeight = m_screenHeight - window->frameGeometry().y();
 
-                    windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
+                    windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
                     windowNames << window->wmClass();
                     continue;
                 }
             }
 
             //x方向窗口超出屏幕右侧区域
-            else if (window->x() > m_screenWidth - window->width()) {
-                if (window->y() < 0) {
+            else if (window->frameGeometry().x() > m_screenWidth - window->frameGeometry().width()) {
+                if (window->frameGeometry().y() < 0) {
                     //y为负坐标情况
-                    t_tempWidth = m_screenWidth - window->x();
-                    t_tempHeight = window->height() + window->y();
+                    t_tempWidth = m_screenWidth - window->frameGeometry().x();
+                    t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
 
-                    windowRects << Dtk::Wm::WindowRect {window->x(), 0, t_tempWidth, t_tempHeight};
+                    windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight};
                     windowNames << window->wmClass();
                     continue;
                 }
 
-                else if (window->y() >= 0 && window->y() <= m_screenHeight - window->height()) {
+                else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
                     //y在正常屏幕区间内
-                    t_tempWidth = m_screenWidth - window->x();
-                    t_tempHeight = window->height();
+                    t_tempWidth = m_screenWidth - window->frameGeometry().x();
+                    t_tempHeight = window->frameGeometry().height();
 
-                    windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
+                    windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
                     windowNames << window->wmClass();
                     continue;
                 }
 
-                else if (window->y() > m_screenHeight - window->height()) {
+                else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
                     //y方向窗口超出屏幕底部
-                    t_tempWidth = m_screenWidth - window->x();
-                    t_tempHeight = m_screenHeight - window->y();
+                    t_tempWidth = m_screenWidth - window->frameGeometry().x();
+                    t_tempHeight = m_screenHeight - window->frameGeometry().y();
 
-                    windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
+                    windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
                     windowNames << window->wmClass();
                     continue;
                 }
@@ -435,6 +437,29 @@ void MainWindow::initAttributes()
 
 //    m_functionType = 1;
 //    initScreenShot();
+    initShortcut();
+}
+
+void MainWindow::initShortcut()
+{
+    if (isCommandExist("dman")) {
+        QShortcut *helpSC = new QShortcut(QKeySequence("F1"), this);
+        helpSC->setAutoRepeat(false);
+        connect(helpSC,  SIGNAL(activated()), this, SLOT(onHelp()));
+    }
+}
+
+void MainWindow::onHelp()
+{
+    QDBusInterface iface("com.deepin.Manual.Open",
+                         "/com/deepin/Manual/Open",
+                         "com.deepin.Manual.Open");
+    if (iface.isValid()) {
+        iface.call("ShowManual", "deepin-screenshot");
+        exitApp();
+    } else {
+        qWarning() << "manual service not available, cannot open manual";
+    }
 }
 
 void MainWindow::initResource()
@@ -1938,6 +1963,10 @@ void MainWindow::paintEvent(QPaintEvent *)
 
 bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
+    if (!m_keyboardGrabbed && this->windowHandle() != NULL) {
+        m_keyboardGrabbed = this->windowHandle()->setKeyboardGrabEnabled(true);
+        qDebug() << "m_keyboardGrabbed:" << m_keyboardGrabbed;
+    }
     bool needRepaint = false;
 #undef KeyPress
 #undef KeyRelease
@@ -2033,7 +2062,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                     if (keyEvent->key() == Qt::Key_Left) {
                         if (recordWidth > RECORD_MIN_SIZE) {
-                            recordX = std::max(1, recordX + 1);
+                            recordX = std::max(0, recordX + 1);
                             recordWidth = std::max(std::min(recordWidth - 1,
                                                             m_backgroundRect.width()), RECORD_MIN_SIZE);
                             needRepaint = true;
@@ -2047,7 +2076,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         }
                     } else if (keyEvent->key() == Qt::Key_Up) {
                         if (recordHeight > RECORD_MIN_SIZE) {
-                            recordY = std::max(1, recordY + 1);
+                            recordY = std::max(0, recordY + 1);
 
                             recordHeight = std::max(std::min(recordHeight - 1,
                                                              m_backgroundRect.height()), RECORD_MIN_SIZE);
@@ -2071,25 +2100,25 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 //                        saveScreenshot();
                     }
                     if (keyEvent->key() == Qt::Key_Left) {
-                        recordX = std::max(1, recordX - 1);
+                        recordX = std::max(0, recordX - 1);
                         recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Right) {
                         if (recordX + recordWidth + 1 >= m_screenWidth) {
-                            recordX = std::min(m_screenWidth, recordX - 1);
+                            recordX = std::max(0, recordX - 1);
                         }
                         recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Up) {
-                        recordY = std::max(1, recordY - 1);
+                        recordY = std::max(0, recordY - 1);
                         recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Down) {
                         if (recordY + recordHeight + 1 >= m_screenHeight) {
-                            recordY = std::max(1, recordY - 1);
+                            recordY = std::max(0, recordY - 1);
                         }
                         recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
 
@@ -2097,7 +2126,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                 } else {
                     if (keyEvent->key() == Qt::Key_Left) {
-                        recordX = std::max(1, recordX - 1);
+                        recordX = std::max(0, recordX - 1);
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Right) {
@@ -2106,7 +2135,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Up) {
-                        recordY = std::max(1, recordY - 1);
+                        recordY = std::max(0, recordY - 1);
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Down) {
@@ -2156,7 +2185,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                     if (keyEvent->key() == Qt::Key_Left) {
                         if (recordWidth > RECORD_MIN_SIZE) {
-                            recordX = std::max(1, recordX + 1);
+                            recordX = std::max(0, recordX + 1);
                             recordWidth = std::max(std::min(recordWidth - 1,
                                                             m_backgroundRect.width()), RECORD_MIN_SIZE);
                             needRepaint = true;
@@ -2170,7 +2199,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         }
                     } else if (keyEvent->key() == Qt::Key_Up) {
                         if (recordHeight > RECORD_MIN_SIZE) {
-                            recordY = std::max(1, recordY + 1);
+                            recordY = std::max(0, recordY + 1);
 
                             recordHeight = std::max(std::min(recordHeight - 1,
                                                              m_backgroundRect.height()), RECORD_MIN_SIZE);
@@ -2185,25 +2214,25 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                 } else if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
                     if (keyEvent->key() == Qt::Key_Left) {
-                        recordX = std::max(1, recordX - 1);
+                        recordX = std::max(0, recordX - 1);
                         recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Right) {
                         if (recordX + recordWidth + 1 >= m_screenWidth) {
-                            recordX = std::min(m_screenWidth, recordX - 1);
+                            recordX = std::max(0, recordX - 1);
                         }
                         recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Up) {
-                        recordY = std::max(1, recordY - 1);
+                        recordY = std::max(0, recordY - 1);
                         recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Down) {
                         if (recordY + recordHeight + 1 >= m_screenHeight) {
-                            recordY = std::max(1, recordY - 1);
+                            recordY = std::max(0, recordY - 1);
                         }
                         recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
 
@@ -2211,7 +2240,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                 } else {
                     if (keyEvent->key() == Qt::Key_Left) {
-                        recordX = std::max(1, recordX - 1);
+                        recordX = std::max(0, recordX - 1);
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Right) {
@@ -2219,7 +2248,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Up) {
-                        recordY = std::max(1, recordY - 1);
+                        recordY = std::max(0, recordY - 1);
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Down) {
@@ -2483,8 +2512,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 } else if (isPressButton) {
                     if (recordButtonStatus == RECORD_BUTTON_NORMAL && dragRecordX >= 0 && dragRecordY >= 0) {
                         if (dragAction == ACTION_MOVE) {
-                            recordX = std::max(std::min(dragRecordX + mouseEvent->x() - dragStartX, rootWindowRect.width - recordWidth), 1);
-                            recordY = std::max(std::min(dragRecordY + mouseEvent->y() - dragStartY, rootWindowRect.height - recordHeight), 1);
+                            recordX = std::max(std::min(dragRecordX + mouseEvent->x() - dragStartX, rootWindowRect.width - recordWidth), 0);
+                            recordY = std::max(std::min(dragRecordY + mouseEvent->y() - dragStartY, rootWindowRect.height - recordHeight), 0);
                         } else if (dragAction == ACTION_RESIZE_TOP_LEFT) {
                             resizeTop(mouseEvent);
                             resizeLeft(mouseEvent);
