@@ -113,6 +113,7 @@ public:
     void initResource();
     void initScreenShot();
     void initScreenRecorder();
+    void initLaunchMode(const QString &launchMode);
 
 signals:
     void releaseEvent();
@@ -160,6 +161,7 @@ public slots:
     void shotImgWidthEffect();
     void changeArrowAndLineEvent(int line);
     void exitApp();
+    void initVirtualCard();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -289,6 +291,8 @@ private:
     bool m_isSideBarInside = false;
     bool m_isToolBarInside = false;
 
+
+    //截图功能使用的变量初始化
     DBusZone *m_hotZoneInterface;
     DBusNotify *m_notifyDBInterface;
     MenuController *m_menuController;
@@ -305,4 +309,5 @@ private:
     CameraWidget *m_cameraWidget;
     bool m_selectedCamera = false;
     bool m_initCamera = false;
+    bool m_launchWithRecordFunc = false;
 };

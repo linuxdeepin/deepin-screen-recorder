@@ -156,10 +156,10 @@ void CameraWidget::enterEvent(QEvent *e)
 
 void CameraWidget::paintEvent(QPaintEvent *e)
 {
-//    QPainter painter(this);
-//    painter.setPen(QColor(255, 255, 255, 255));
-//    painter.setRenderHint(QPainter::Antialiasing);
-//    painter.drawRect(rect());
+    QPainter painter(this);
+    painter.setBrush(QColor(0, 0, 0, 255));
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.drawRect(rect());
 
     DWidget::paintEvent(e);
 }

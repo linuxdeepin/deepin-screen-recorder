@@ -43,6 +43,14 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>MainWindow</name>
     <message>
+        <source>Need authorization</source>
+        <translation>需要授权</translation>
+    </message>
+    <message>
+        <source>Please enter your sudo password to be authorized</source>
+        <translation>输入sudo密码激活内置音频功能，取消将无法录制内置音频</translation>
+    </message>
+    <message>
         <source>DeepinScreenshot</source>
         <translation>深度截图</translation>
     </message>

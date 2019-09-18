@@ -63,7 +63,7 @@ void SubToolWidget::initWidget()
 {
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     m_lineflag = 0;
-    initVirtualCard();
+//    initVirtualCard();
     initRecordLabel();
     initShotLabel();
     setCurrentWidget(m_shotSubTool);
@@ -854,4 +854,12 @@ void SubToolWidget::changeArrowAndLineFromSideBar(int line)
             m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
         }
     }
+}
+
+void SubToolWidget::setRecordLaunchMode(bool recordLaunch)
+{
+    if (recordLaunch == true) {
+        setCurrentWidget(m_recordSubTool);
+    }
+    qDebug() << "sub record mode";
 }

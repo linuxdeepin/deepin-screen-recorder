@@ -35,6 +35,8 @@
 #include <QProcess>
 #include <DHiDPIHelper>
 #include <QMouseEvent>
+#include <DLineEdit>
+#include <DInputDialog>
 
 #include "main_window.h"
 #include "utils.h"
@@ -44,6 +46,7 @@
 #include "constant.h"
 #include "utils/tempfile.h"
 #include "utils/configsettings.h"
+#include "utils/audioutils.h"
 
 
 const int MainWindow::CURSOR_BOUND = 5;
@@ -172,6 +175,8 @@ void MainWindow::initAttributes()
     windowManager->setRootWindowRect(screenRect);
     QList<xcb_window_t> windows = windowManager->getWindows();
     rootWindowRect = windowManager->getRootWindowRect();
+
+    initVirtualCard();
 
     for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
         if (wid == winId()) continue;
@@ -474,7 +479,6 @@ void MainWindow::initAttributes()
 
     m_functionType = 1;
     initScreenShot();
-
 }
 
 void MainWindow::initResource()
@@ -534,6 +538,8 @@ void MainWindow::initScreenShot()
     m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
     m_screenWidth = QApplication::desktop()->screen()->width();
     m_screenHeight = QApplication::desktop()->screen()->height();
+
+    m_shotStatus = ShotMouseStatus::Normal;
 
     isFirstDrag = false;
     isFirstMove = false;
@@ -660,11 +666,44 @@ void MainWindow::initScreenRecorder()
     eventMonitor.start();
 }
 
+void MainWindow::initLaunchMode(const QString &launchMode)
+{
+    if (launchMode == "screenRecord") {
+        m_launchWithRecordFunc = true;
+        m_shotButton->hide();
+        m_recordButton->show();
+        m_functionType = 0;
+        initScreenRecorder();
+        if (m_sideBar->isVisible()) {
+            m_sideBar->hide();
+        }
+
+    }
+
+    else if (launchMode == "screenShot") {
+        m_launchWithRecordFunc = false;
+        m_recordButton->hide();
+        m_shotButton->show();
+        m_functionType = 1;
+        initScreenShot();
+    }
+
+    else {
+        m_launchWithRecordFunc = false;
+        m_recordButton->hide();
+        m_shotButton->show();
+        m_functionType = 1;
+        initScreenShot();
+    }
+}
+
 void MainWindow::initBackground()
 {
+//    QTimer::singleShot(0, this, [ = ] {
     m_backgroundPixmap = getPixmapofRect(m_backgroundRect);
     m_resultPixmap = m_backgroundPixmap;
     TempFile::instance()->setFullScreenPixmap(m_backgroundPixmap);
+//    });
 }
 
 QPixmap MainWindow::getPixmapofRect(const QRect &rect)
@@ -725,6 +764,7 @@ void MainWindow::updateToolBarPos()
     m_isToolBarInside = false;
     if (m_toolBarInit == false) {
         m_toolBar->initToolBar();
+        m_toolBar->setRecordLaunchMode(m_launchWithRecordFunc);
         m_toolBarInit = true;
     }
 
@@ -1719,7 +1759,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
 
                     if (keyEvent->key() == Qt::Key_Left) {
-                        recordX = std::max(0, recordX + 1);
+                        if (recordWidth != RECORD_MIN_SIZE) {
+                            recordX = std::max(0, recordX + 1);
+                        }
+
                         recordWidth = std::max(std::min(recordWidth - 1,
                                                         m_backgroundRect.width()), RECORD_MIN_SIZE);
 
@@ -1730,7 +1773,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Up) {
-                        recordY = std::max(0, recordY + 1);
+                        if (recordHeight != RECORD_MIN_SIZE) {
+                            recordY = std::max(0, recordY + 1);
+                        }
                         recordHeight = std::max(std::min(recordHeight - 1,
                                                          m_backgroundRect.height()), RECORD_MIN_SIZE);
 
@@ -1823,7 +1868,37 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
         else {
             if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-                if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
+                if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
+
+                    if (keyEvent->key() == Qt::Key_Left) {
+                        if (recordWidth != RECORD_MIN_SIZE) {
+                            recordX = std::max(0, recordX + 1);
+                        }
+
+                        recordWidth = std::max(std::min(recordWidth - 1,
+                                                        m_backgroundRect.width()), RECORD_MIN_SIZE);
+
+                        needRepaint = true;
+                    } else if (keyEvent->key() == Qt::Key_Right) {
+                        recordWidth = std::max(std::min(recordWidth - 1,
+                                                        m_backgroundRect.width()), RECORD_MIN_SIZE);
+
+                        needRepaint = true;
+                    } else if (keyEvent->key() == Qt::Key_Up) {
+                        if (recordHeight != RECORD_MIN_SIZE) {
+                            recordY = std::max(0, recordY + 1);
+                        }
+                        recordHeight = std::max(std::min(recordHeight - 1,
+                                                         m_backgroundRect.height()), RECORD_MIN_SIZE);
+
+                        needRepaint = true;
+                    } else if (keyEvent->key() == Qt::Key_Down) {
+                        recordHeight = std::max(std::min(recordHeight - 1,
+                                                         m_backgroundRect.height()), RECORD_MIN_SIZE);
+
+                        needRepaint = true;
+                    }
+                } else if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
                     if (keyEvent->key() == Qt::Key_Left) {
                         recordX = std::max(0, recordX - 1);
                         recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
@@ -2654,6 +2729,30 @@ void MainWindow::exitApp()
             m_hotZoneInterface->asyncCall("EnableZoneDetected",  true);
     }
     qApp->quit();
+}
+
+void MainWindow::initVirtualCard()
+{
+    if (AudioUtils().canVirtualCardOutput()) {
+        return;
+    }
+    bool isOk;
+    QString text = DInputDialog::getText(this, tr("Need authorization"), tr("Please enter your sudo password to be authorized"),
+                                         DLineEdit::Password, "", &isOk);
+    if (isOk) {
+
+        QProcess p(this);
+        QStringList arguments;
+        arguments << QString("-c");
+        arguments << QString("echo %1 | sudo -S modprobe snd-aloop pcm_substreams=1 ; sudo sed -i '$ a snd_aloop' /etc/modules").arg(text);
+        qDebug() << arguments;
+        p.start("/bin/bash", arguments);
+        p.waitForFinished();
+        p.waitForReadyRead();
+        p.close();
+
+        sleep(1);
+    }
 }
 
 int MainWindow::getRecordInputType(bool selectedMic, bool selectedSystemAudio)

@@ -51,6 +51,7 @@ public slots:
     void switchContent(QString shapeType);
     void systemAudioActionCheckedSlot(bool checked);
     void changeArrowAndLineFromSideBar(int line);
+    void setRecordLaunchMode(bool recordLaunch);
 private:
     DLabel *m_recordSubTool;
     DLabel *m_shotSubTool;

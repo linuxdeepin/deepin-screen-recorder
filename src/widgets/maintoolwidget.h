@@ -43,6 +43,7 @@ signals:
 public slots:
 //    void switchContent(QString shapeType);
     void setRecordButtonOut();
+    void setRecordLauchMode(bool recordLaunch);
 
 private:
     QHBoxLayout *m_baseLayout;

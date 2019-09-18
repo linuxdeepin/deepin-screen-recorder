@@ -69,6 +69,7 @@ public slots:
     void keyBoardCheckedSlot(bool checked);
     void changeArrowAndLineFromBar(int line);
     void setRecordButtonDisableFromMain();
+    void setRecordLaunchFromMain(bool recordLaunch);
 
 
 protected:
@@ -126,6 +127,7 @@ public slots:
     void changeArrowAndLineFromMain(int line);
     void initToolBar();
     void setRecordButtonDisable();
+    void setRecordLaunchMode(bool recordLaunch);
 protected:
     void paintEvent(QPaintEvent *e);
     void enterEvent(QEvent *e);

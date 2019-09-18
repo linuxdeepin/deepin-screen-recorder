@@ -156,6 +156,13 @@ void ToolBarWidget::setRecordButtonDisableFromMain()
     m_mainTool->setRecordButtonOut();
 }
 
+void ToolBarWidget::setRecordLaunchFromMain(bool recordLaunch)
+{
+    qDebug() << "main record mode2";
+    m_mainTool->setRecordLauchMode(recordLaunch);
+    m_subTool->setRecordLaunchMode(recordLaunch);
+}
+
 void ToolBarWidget::setExpand(bool expand, QString shapeType)
 {
 //    m_subToolbar->switchContent(shapeType);
@@ -294,6 +301,12 @@ void ToolBar::initToolBar()
 void ToolBar::setRecordButtonDisable()
 {
     m_toolbarWidget->setRecordButtonDisableFromMain();
+}
+
+void ToolBar::setRecordLaunchMode(bool recordLaunch)
+{
+    qDebug() << "main record mode1";
+    m_toolbarWidget->setRecordLaunchFromMain(recordLaunch);
 }
 bool ToolBar::isButtonChecked()
 {

@@ -91,6 +91,12 @@ int main(int argc, char *argv[])
     // Construct a QGuiApplication before accessing a platform function.
     DApplication::loadDXcbPlugin();
     DApplication app(argc, argv);
+    QString t_launchMode;
+
+    if (argc >= 2) {
+        t_launchMode = QString(argv[1]);
+        qDebug() << t_launchMode;
+    }
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
     if (dbus.registerService("com.deepin.ScreenRecorder")) {
@@ -137,6 +143,8 @@ int main(int argc, char *argv[])
 
             // Show window.
             MainWindow window;
+
+            window.initLaunchMode(t_launchMode);
 
             window.showFullScreen();
             // window.show();
