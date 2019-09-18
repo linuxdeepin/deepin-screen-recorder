@@ -158,7 +158,7 @@ void ToolBarWidget::setRecordButtonDisableFromMain()
 
 void ToolBarWidget::setRecordLaunchFromMain(bool recordLaunch)
 {
-    qDebug() << "main record mode2";
+//    qDebug() << "main record mode2";
     m_mainTool->setRecordLauchMode(recordLaunch);
     m_subTool->setRecordLaunchMode(recordLaunch);
 }
@@ -305,7 +305,7 @@ void ToolBar::setRecordButtonDisable()
 
 void ToolBar::setRecordLaunchMode(bool recordLaunch)
 {
-    qDebug() << "main record mode1";
+//    qDebug() << "main record mode1";
     m_toolbarWidget->setRecordLaunchFromMain(recordLaunch);
 }
 bool ToolBar::isButtonChecked()

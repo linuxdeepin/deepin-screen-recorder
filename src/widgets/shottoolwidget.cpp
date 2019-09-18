@@ -947,9 +947,9 @@ void ShotToolWidget::initLineLabel()
         }
     });
 
-    blurButton->click();
+    mosaicBtn->click();
     m_arrowFlag = false;
-    ConfigSettings::instance()->setValue("arrow", "is_straight", true);
+    ConfigSettings::instance()->setValue("arrow", "is_straight", false);
 
     for (int j = 0; j < btnList.length(); j++) {
         rectLayout->addWidget(btnList[j]);

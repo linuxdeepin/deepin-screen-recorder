@@ -1540,7 +1540,7 @@ void ShapesWidget::paintEvent(QPaintEvent *)
             paintLine(painter, m_hoveredShape.points);
         }
     } else {
-        qDebug() << "hoveredShape type:" << m_hoveredShape.type;
+//        qDebug() << "hoveredShape type:" << m_hoveredShape.type;
     }
 
     qreal ration =  this->devicePixelRatioF();

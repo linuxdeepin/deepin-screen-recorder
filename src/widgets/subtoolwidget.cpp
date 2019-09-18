@@ -62,7 +62,7 @@ SubToolWidget::~SubToolWidget()
 void SubToolWidget::initWidget()
 {
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
-    m_lineflag = 0;
+    m_lineflag = 1;
 //    initVirtualCard();
     initRecordLabel();
     initShotLabel();
@@ -612,7 +612,7 @@ void SubToolWidget::initShotLabel()
     pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 
     m_lineButton->setIconSize(QSize(30, 30));
-    m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
+    m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
     m_lineButton->setPalette(pa);
 
     m_lineButton->setObjectName("LineButton");
@@ -861,5 +861,5 @@ void SubToolWidget::setRecordLaunchMode(bool recordLaunch)
     if (recordLaunch == true) {
         setCurrentWidget(m_recordSubTool);
     }
-    qDebug() << "sub record mode";
+//    qDebug() << "sub record mode";
 }

@@ -179,7 +179,7 @@ void MainToolWidget::setRecordButtonOut()
 
 void MainToolWidget::setRecordLauchMode(bool recordLaunch)
 {
-    qDebug() << "main record mode";
+//    qDebug() << "main record mode";
     if (recordLaunch == true) {
         m_recordBtn->click();
     }

@@ -194,15 +194,9 @@ void MainWindow::initAttributes()
                     t_tempWidth = window->width() + window->x();
                     t_tempHeight = window->height() + window->y();
 
-                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
-                        windowRects << Dtk::Wm::WindowRect {0, 0, t_tempWidth, t_tempHeight};
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-
-                    else {
-                        continue;
-                    }
+                    windowRects << Dtk::Wm::WindowRect {0, 0, t_tempWidth, t_tempHeight};
+                    windowNames << window->wmClass();
+                    continue;
                 }
 
                 else if (window->y() >= 0 && window->y() <= m_screenHeight - window->height()) {
@@ -210,15 +204,9 @@ void MainWindow::initAttributes()
                     t_tempWidth = window->width() + window->x();
                     t_tempHeight = window->height();
 
-                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
-                        windowRects << Dtk::Wm::WindowRect {0, window->y(), t_tempWidth, t_tempHeight};
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-
-                    else {
-                        continue;
-                    }
+                    windowRects << Dtk::Wm::WindowRect {0, window->y(), t_tempWidth, t_tempHeight};
+                    windowNames << window->wmClass();
+                    continue;
                 }
 
                 else if (window->y() > m_screenHeight - window->height()) {
@@ -226,15 +214,9 @@ void MainWindow::initAttributes()
                     t_tempWidth = window->width() + window->x();
                     t_tempHeight = m_screenHeight - window->y();
 
-                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
-                        windowRects << Dtk::Wm::WindowRect {0, window->y(), t_tempWidth, t_tempHeight};
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-
-                    else {
-                        continue;
-                    }
+                    windowRects << Dtk::Wm::WindowRect {0, window->y(), t_tempWidth, t_tempHeight};
+                    windowNames << window->wmClass();
+                    continue;
                 }
             }
 
@@ -245,15 +227,9 @@ void MainWindow::initAttributes()
                     t_tempWidth = window->width();
                     t_tempHeight = window->height() + window->y();
 
-                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
-                        windowRects << Dtk::Wm::WindowRect {window->x(), 0, t_tempWidth, t_tempHeight};
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-
-                    else {
-                        continue;
-                    }
+                    windowRects << Dtk::Wm::WindowRect {window->x(), 0, t_tempWidth, t_tempHeight};
+                    windowNames << window->wmClass();
+                    continue;
                 }
 
                 else if (window->y() >= 0 && window->y() <= m_screenHeight - window->height()) {
@@ -261,15 +237,9 @@ void MainWindow::initAttributes()
                     t_tempWidth = window->width();
                     t_tempHeight = window->height();
 
-                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
-                        windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-
-                    else {
-                        continue;
-                    }
+                    windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
+                    windowNames << window->wmClass();
+                    continue;
                 }
 
                 else if (window->y() > m_screenHeight - window->height()) {
@@ -277,15 +247,9 @@ void MainWindow::initAttributes()
                     t_tempWidth = window->width();
                     t_tempHeight = m_screenHeight - window->y();
 
-                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
-                        windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-
-                    else {
-                        continue;
-                    }
+                    windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
+                    windowNames << window->wmClass();
+                    continue;
                 }
             }
 
@@ -296,15 +260,9 @@ void MainWindow::initAttributes()
                     t_tempWidth = m_screenWidth - window->x();
                     t_tempHeight = window->height() + window->y();
 
-                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
-                        windowRects << Dtk::Wm::WindowRect {window->x(), 0, t_tempWidth, t_tempHeight};
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-
-                    else {
-                        continue;
-                    }
+                    windowRects << Dtk::Wm::WindowRect {window->x(), 0, t_tempWidth, t_tempHeight};
+                    windowNames << window->wmClass();
+                    continue;
                 }
 
                 else if (window->y() >= 0 && window->y() <= m_screenHeight - window->height()) {
@@ -312,15 +270,9 @@ void MainWindow::initAttributes()
                     t_tempWidth = m_screenWidth - window->x();
                     t_tempHeight = window->height();
 
-                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
-                        windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-
-                    else {
-                        continue;
-                    }
+                    windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
+                    windowNames << window->wmClass();
+                    continue;
                 }
 
                 else if (window->y() > m_screenHeight - window->height()) {
@@ -328,15 +280,9 @@ void MainWindow::initAttributes()
                     t_tempWidth = m_screenWidth - window->x();
                     t_tempHeight = m_screenHeight - window->y();
 
-                    if (t_tempWidth >= 200 && t_tempHeight >= 200) {
-                        windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-
-                    else {
-                        continue;
-                    }
+                    windowRects << Dtk::Wm::WindowRect {window->x(), window->y(), t_tempWidth, t_tempHeight};
+                    windowNames << window->wmClass();
+                    continue;
                 }
             }
 //                windowRects << Dtk::Wm::WindowRect { window->x(), window->y(), window->width(), window->height() };
@@ -1762,32 +1708,33 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
 
                     if (keyEvent->key() == Qt::Key_Left) {
-                        if (recordWidth != RECORD_MIN_SIZE) {
+                        if (recordWidth > RECORD_MIN_SIZE) {
                             recordX = std::max(0, recordX + 1);
+                            recordWidth = std::max(std::min(recordWidth - 1,
+                                                            m_backgroundRect.width()), RECORD_MIN_SIZE);
+                            needRepaint = true;
                         }
 
-                        recordWidth = std::max(std::min(recordWidth - 1,
-                                                        m_backgroundRect.width()), RECORD_MIN_SIZE);
-
-                        needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Right) {
-                        recordWidth = std::max(std::min(recordWidth - 1,
-                                                        m_backgroundRect.width()), RECORD_MIN_SIZE);
-
-                        needRepaint = true;
-                    } else if (keyEvent->key() == Qt::Key_Up) {
-                        if (recordHeight != RECORD_MIN_SIZE) {
-                            recordY = std::max(0, recordY + 1);
+                        if (recordWidth > RECORD_MIN_SIZE) {
+                            recordWidth = std::max(std::min(recordWidth - 1,
+                                                            m_backgroundRect.width()), RECORD_MIN_SIZE);
+                            needRepaint = true;
                         }
-                        recordHeight = std::max(std::min(recordHeight - 1,
-                                                         m_backgroundRect.height()), RECORD_MIN_SIZE);
+                    } else if (keyEvent->key() == Qt::Key_Up) {
+                        if (recordHeight > RECORD_MIN_SIZE) {
+                            recordY = std::max(0, recordY + 1);
 
-                        needRepaint = true;
+                            recordHeight = std::max(std::min(recordHeight - 1,
+                                                             m_backgroundRect.height()), RECORD_MIN_SIZE);
+                            needRepaint = true;
+                        }
                     } else if (keyEvent->key() == Qt::Key_Down) {
-                        recordHeight = std::max(std::min(recordHeight - 1,
-                                                         m_backgroundRect.height()), RECORD_MIN_SIZE);
-
-                        needRepaint = true;
+                        if (recordHeight > RECORD_MIN_SIZE) {
+                            recordHeight = std::max(std::min(recordHeight - 1,
+                                                             m_backgroundRect.height()), RECORD_MIN_SIZE);
+                            needRepaint = true;
+                        }
                     }
                 } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {
                     if (keyEvent->key() == Qt::Key_S) {
@@ -1798,27 +1745,28 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
 //                        saveScreenshot();
                     }
-
                     if (keyEvent->key() == Qt::Key_Left) {
                         recordX = std::max(0, recordX - 1);
-                        recordWidth = std::max(std::min(recordWidth + 1,
-                                                        m_backgroundRect.width()), RECORD_MIN_SIZE);
+                        recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Right) {
-                        recordWidth = std::max(std::min(recordWidth + 1,
-                                                        m_backgroundRect.width()), RECORD_MIN_SIZE);
+                        if (recordX + recordWidth + 1 >= m_screenWidth) {
+                            recordX = std::min(m_screenWidth, recordX - 1);
+                        }
+                        recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Up) {
                         recordY = std::max(0, recordY - 1);
-                        recordHeight = std::max(std::min(recordHeight + 1,
-                                                         m_backgroundRect.height()), RECORD_MIN_SIZE);
+                        recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Down) {
-                        recordHeight = std::max(std::min(recordHeight + 1,
-                                                         m_backgroundRect.height()), RECORD_MIN_SIZE);
+                        if (recordY + recordHeight + 1 >= m_screenHeight) {
+                            recordY = std::min(m_screenHeight, recordY - 1);
+                        }
+                        recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
 
                         needRepaint = true;
                     }
@@ -1874,32 +1822,33 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
 
                     if (keyEvent->key() == Qt::Key_Left) {
-                        if (recordWidth != RECORD_MIN_SIZE) {
+                        if (recordWidth > RECORD_MIN_SIZE) {
                             recordX = std::max(0, recordX + 1);
+                            recordWidth = std::max(std::min(recordWidth - 1,
+                                                            m_backgroundRect.width()), RECORD_MIN_SIZE);
+                            needRepaint = true;
                         }
 
-                        recordWidth = std::max(std::min(recordWidth - 1,
-                                                        m_backgroundRect.width()), RECORD_MIN_SIZE);
-
-                        needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Right) {
-                        recordWidth = std::max(std::min(recordWidth - 1,
-                                                        m_backgroundRect.width()), RECORD_MIN_SIZE);
-
-                        needRepaint = true;
-                    } else if (keyEvent->key() == Qt::Key_Up) {
-                        if (recordHeight != RECORD_MIN_SIZE) {
-                            recordY = std::max(0, recordY + 1);
+                        if (recordWidth > RECORD_MIN_SIZE) {
+                            recordWidth = std::max(std::min(recordWidth - 1,
+                                                            m_backgroundRect.width()), RECORD_MIN_SIZE);
+                            needRepaint = true;
                         }
-                        recordHeight = std::max(std::min(recordHeight - 1,
-                                                         m_backgroundRect.height()), RECORD_MIN_SIZE);
+                    } else if (keyEvent->key() == Qt::Key_Up) {
+                        if (recordHeight > RECORD_MIN_SIZE) {
+                            recordY = std::max(0, recordY + 1);
 
-                        needRepaint = true;
+                            recordHeight = std::max(std::min(recordHeight - 1,
+                                                             m_backgroundRect.height()), RECORD_MIN_SIZE);
+                            needRepaint = true;
+                        }
                     } else if (keyEvent->key() == Qt::Key_Down) {
-                        recordHeight = std::max(std::min(recordHeight - 1,
-                                                         m_backgroundRect.height()), RECORD_MIN_SIZE);
-
-                        needRepaint = true;
+                        if (recordHeight > RECORD_MIN_SIZE) {
+                            recordHeight = std::max(std::min(recordHeight - 1,
+                                                             m_backgroundRect.height()), RECORD_MIN_SIZE);
+                            needRepaint = true;
+                        }
                     }
                 } else if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
                     if (keyEvent->key() == Qt::Key_Left) {
@@ -1908,6 +1857,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Right) {
+                        if (recordX + recordWidth + 1 >= m_screenWidth) {
+                            recordX = std::min(m_screenWidth, recordX - 1);
+                        }
                         recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
 
                         needRepaint = true;
@@ -1917,6 +1869,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Down) {
+                        if (recordY + recordHeight + 1 >= m_screenHeight) {
+                            recordY = std::min(m_screenHeight, recordY - 1);
+                        }
                         recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
 
                         needRepaint = true;
