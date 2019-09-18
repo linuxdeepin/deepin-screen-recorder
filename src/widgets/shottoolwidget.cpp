@@ -1139,13 +1139,14 @@ void ShotToolWidget::initTextLabel()
 {
     m_textSubTool = new DLabel(this);
 
-    DSlider *t_textFontSize = new DSlider();
-    t_textFontSize->setOrientation(Qt::Vertical);
+    DSlider *t_textFontSize = new DSlider(Qt::Vertical);
+//    t_textFontSize->setOrientation(Qt::Vertical);
     t_textFontSize->setFixedSize(TOOL_SLIDER_SIZE);
     t_textFontSize->setMinimum(0);
     t_textFontSize->setMaximum(11);
-    t_textFontSize->setTickInterval(1);
+//    t_textFontSize->setTickInterval(1);
     t_textFontSize->setValue(4);
+//    t_textFontSize->setLeftIcon()
     ConfigSettings::instance()->setValue("text", "fontsize", 18);
 
     connect(t_textFontSize, &DSlider::valueChanged, this, [ = ] {
@@ -1196,7 +1197,7 @@ void ShotToolWidget::initTextLabel()
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(5);
 
-    rectLayout->addWidget(t_textFontSize);
+    rectLayout->addWidget(t_textFontSize, Qt::AlignHCenter);
 
     m_textSubTool->setLayout(rectLayout);
     addWidget(m_textSubTool);
