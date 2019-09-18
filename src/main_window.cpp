@@ -635,14 +635,11 @@ void MainWindow::initLaunchMode(const QString &launchMode)
     }
 
     else {
-        m_launchWithRecordFunc = true;
-        m_shotButton->hide();
-        m_recordButton->show();
-        m_functionType = 0;
-        initScreenRecorder();
-        if (m_sideBar->isVisible()) {
-            m_sideBar->hide();
-        }
+        m_launchWithRecordFunc = false;
+        m_recordButton->hide();
+        m_shotButton->show();
+        m_functionType = 1;
+        initScreenShot();
     }
 }
 
