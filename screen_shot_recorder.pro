@@ -102,7 +102,6 @@ QT += gui
 QT += network
 QT += x11extras
 QT += dbus
-#添加摄像头支持
 QT += multimedia
 QT += multimediawidgets
 LIBS += -lX11 -lXext -lXtst -ldtkwm
@@ -125,15 +124,17 @@ icon.path = $$INSTROOT$$ICONDIR
 desktop.path = $$INSTROOT$$APPDIR
 translations.path = $$INSTROOT$$DSRDIR/translations
 manual.path = $$INSTROOT$$DOCDIR
+shotShell.path = $$INSTROOT$$BINDIR
 
-icon.files = image/deepin-screen-recorder.svg
-desktop.files = deepin-screen-recorder.desktop
+icon.files = image/deepin-screen-recorder.svg deepin-screenshot.svg
+desktop.files = deepin-screen-recorder.desktop deepin-screenshot.desktop
 manual.files = manual/*
+shotShell.files = deepin-screenshot
 
 dbus_service.files = $$PWD/com.deepin.ScreenRecorder.service
 dbus_service.path = $$PREFIX/share/dbus-1/services
 
-INSTALLS += target icon desktop manual dbus_service
+INSTALLS += target icon desktop manual dbus_service shotShell
 
 isEmpty(TRANSLATIONS) {
      include(translations.pri)

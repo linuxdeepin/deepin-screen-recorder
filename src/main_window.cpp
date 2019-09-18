@@ -103,7 +103,7 @@ void MainWindow::initAttributes()
 {
     // Init attributes.
     setWindowTitle(tr("Deepin screen recorder"));
-//    m_functionType = 0;
+    m_functionType = 0;
     m_keyBoardStatus = 0;
     m_mouseStatus = 0;
     m_multiKeyButtonsInOnSec = false;
@@ -477,8 +477,8 @@ void MainWindow::initAttributes()
 //    connect(m_menuController, &MenuController::unDoAction,
 //            this, &ShapesWidget::undoDrawShapes);
 
-    m_functionType = 1;
-    initScreenShot();
+//    m_functionType = 1;
+//    initScreenShot();
 }
 
 void MainWindow::initResource()
@@ -689,11 +689,14 @@ void MainWindow::initLaunchMode(const QString &launchMode)
     }
 
     else {
-        m_launchWithRecordFunc = false;
-        m_recordButton->hide();
-        m_shotButton->show();
-        m_functionType = 1;
-        initScreenShot();
+        m_launchWithRecordFunc = true;
+        m_shotButton->hide();
+        m_recordButton->show();
+        m_functionType = 0;
+        initScreenRecorder();
+        if (m_sideBar->isVisible()) {
+            m_sideBar->hide();
+        }
     }
 }
 
