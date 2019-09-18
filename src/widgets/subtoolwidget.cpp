@@ -88,8 +88,8 @@ void SubToolWidget::initRecordLabel()
     if (t_saveGifVar.toString() == "true") {
         t_saveGif = true;
     } else {
-        t_settings->setOption("save_as_gif", false);
-        t_saveGif = false;
+        t_settings->setOption("save_as_gif", true);
+        t_saveGif = true;
     }
 
     //保持帧数的配置文件判断
