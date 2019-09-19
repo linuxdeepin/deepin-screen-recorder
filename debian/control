@@ -12,5 +12,7 @@ Package: deepin-screen-recorder
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, byzanz, ffmpeg
 Recommends: dde-session-ui
+Conflicts: deepin-screenshot
+Replaces: deepin-screenshot
 Description: Simple recorder tools for deepin
  A simple recorder tools for deepin.
