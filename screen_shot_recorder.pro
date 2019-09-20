@@ -126,15 +126,18 @@ translations.path = $$INSTROOT$$DSRDIR/translations
 manual.path = $$INSTROOT$$DOCDIR
 shotShell.path = $$INSTROOT$$BINDIR
 
-icon.files = image/deepin-screen-recorder.svg deepin-screenshot.svg
-desktop.files = deepin-screen-recorder.desktop deepin-screenshot.desktop
+#icon.files = image/deepin-screen-recorder.svg deepin-screenshot.svg
+#desktop.files = deepin-screen-recorder.desktop deepin-screenshot.desktop
+icon.files = image/deepin-screen-recorder.svg
+desktop.files = deepin-screen-recorder.desktop
 manual.files = manual/*
 shotShell.files = deepin-screenshot
 
 dbus_service.files = $$PWD/com.deepin.ScreenRecorder.service
 dbus_service.path = $$PREFIX/share/dbus-1/services
 
-INSTALLS += target icon desktop manual dbus_service shotShell
+#INSTALLS += target icon desktop manual dbus_service shotShell
+INSTALLS += target icon desktop manual dbus_service
 
 isEmpty(TRANSLATIONS) {
      include(translations.pri)
