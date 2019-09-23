@@ -133,7 +133,7 @@ desktop.files = deepin-screen-recorder.desktop
 manual.files = manual/*
 shotShell.files = deepin-screenshot
 
-dbus_service.files = $$PWD/com.deepin.ScreenRecorder.service
+dbus_service.files = $$PWD/com.deepin.ScreenRecorder.service $$PWD/com.deepin.Screenshot.service
 dbus_service.path = $$PREFIX/share/dbus-1/services
 
 #INSTALLS += target icon desktop manual dbus_service shotShell
