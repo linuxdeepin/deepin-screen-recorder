@@ -126,6 +126,13 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>ShapesWidget</name>
+    <message>
+        <source>Input your content</source>
+        <translation>在此处插入文本</translation>
+    </message>
+</context>
+<context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>

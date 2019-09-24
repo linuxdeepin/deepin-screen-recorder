@@ -142,11 +142,11 @@
         <file>image/newUI/disable/screencap-disable.svg</file>
         <file>image/newUI/disable/Pulldown-disable.svg</file>
         <file>image/newUI/disable/webcam_disable.svg</file>
-        <file>image/color_pen/color6.svg</file>
-        <file>image/color_pen/color0.svg</file>
-        <file>image/color_pen/color3.svg</file>
-        <file>image/color_pen/color9.svg</file>
         <file>image/newUI/normal/Aa big_normal.svg</file>
         <file>image/newUI/normal/Aa small_normal.svg</file>
+        <file>image/color_pen/color3.svg</file>
+        <file>image/color_pen/color2.svg</file>
+        <file>image/color_pen/color0.svg</file>
+        <file>image/color_pen/color1.svg</file>
     </qresource>
 </RCC>
