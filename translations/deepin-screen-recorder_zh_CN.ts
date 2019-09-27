@@ -166,6 +166,13 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>Screenshot</name>
+    <message>
+        <source>Deepin Screenshot will start after %1 seconds</source>
+        <translation type="unfinished">深度截图将会在%1秒后启动</translation>
+    </message>
+</context>
+<context>
     <name>ShapesWidget</name>
     <message>
         <source>Input your content</source>
