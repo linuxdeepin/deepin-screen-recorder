@@ -19,6 +19,22 @@
         <source>green</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Select Red</source>
+        <translation>红色</translation>
+    </message>
+    <message>
+        <source>Select Yellow</source>
+        <translation>黄色</translation>
+    </message>
+    <message>
+        <source>Select Blue</source>
+        <translation>蓝色</translation>
+    </message>
+    <message>
+        <source>Select Green</source>
+        <translation>绿色</translation>
+    </message>
 </context>
 <context>
     <name>CountdownTooltip</name>
@@ -38,6 +54,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Shot</source>
         <translation>截图</translation>
+    </message>
+    <message>
+        <source>Switch to record mode</source>
+        <translation>切换录屏</translation>
+    </message>
+    <message>
+        <source>Switch to shot mode</source>
+        <translation>切换截屏</translation>
     </message>
 </context>
 <context>
@@ -97,6 +121,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);; BMP (*.bmp);;</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start Record</source>
+        <translation>开始录屏</translation>
+    </message>
+    <message>
+        <source>Start Shot</source>
+        <translation>开始截图</translation>
     </message>
 </context>
 <context>
@@ -243,31 +275,31 @@ or press the shortcut again to stop recording</source>
     <name>ShotToolWidget</name>
     <message>
         <source>blur</source>
-        <translation type="unfinished"></translation>
+        <translation>模糊效果</translation>
     </message>
     <message>
         <source>mosaic</source>
-        <translation type="unfinished"></translation>
+        <translation>马赛克效果</translation>
     </message>
     <message>
         <source>line</source>
-        <translation type="unfinished"></translation>
+        <translation>直线</translation>
     </message>
     <message>
         <source>arrow</source>
-        <translation type="unfinished"></translation>
+        <translation>箭头</translation>
     </message>
     <message>
         <source>fine</source>
-        <translation type="unfinished"></translation>
+        <translation>细</translation>
     </message>
     <message>
         <source>medium</source>
-        <translation type="unfinished"></translation>
+        <translation>中</translation>
     </message>
     <message>
         <source>thick</source>
-        <translation type="unfinished"></translation>
+        <translation>粗</translation>
     </message>
 </context>
 <context>
@@ -406,6 +438,46 @@ select the area to record</source>
     <message>
         <source>Save to clipboard</source>
         <translation>复制到剪贴板</translation>
+    </message>
+    <message>
+        <source>Select Audio</source>
+        <translation>选择音频</translation>
+    </message>
+    <message>
+        <source>Show Key</source>
+        <translation>显示按键</translation>
+    </message>
+    <message>
+        <source>Show Camera</source>
+        <translation>开启WebCam</translation>
+    </message>
+    <message>
+        <source>Show Mouse</source>
+        <translation>显示鼠标</translation>
+    </message>
+    <message>
+        <source>Select Option</source>
+        <translation>选项</translation>
+    </message>
+    <message>
+        <source>Select Rect</source>
+        <translation>矩形工具</translation>
+    </message>
+    <message>
+        <source>Select Oval</source>
+        <translation>圆形工具</translation>
+    </message>
+    <message>
+        <source>Select Arrow/Line</source>
+        <translation>箭头/直线工具</translation>
+    </message>
+    <message>
+        <source>Select Pen</source>
+        <translation>画笔工具</translation>
+    </message>
+    <message>
+        <source>Select Text</source>
+        <translation>文字工具</translation>
     </message>
 </context>
 <context>
