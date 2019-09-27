@@ -14,6 +14,7 @@
 #export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
 export QT_SELECT=5
+include /usr/share/dpkg/default.mk
 
 %:
 	dh $@
@@ -24,4 +25,5 @@ export QT_SELECT=5
 override_dh_auto_configure:
 	qmake
 #	dh_auto_configure -- #	-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH)
+dh_auto_configure -- VERSION=$(VERSION) LIB_INSTALL_DIR=/usr/lib/$(DEB_HOST_MULTIARCH) DEFINES+="VERSION=$(DEB_VERSION_UPSTREAM)"
 

@@ -329,23 +329,23 @@ select the area to record</source>
     </message>
     <message>
         <source>5 fps</source>
-        <translation type="unfinished"></translation>
+        <translation>5帧/秒</translation>
     </message>
     <message>
         <source>10 fps</source>
-        <translation type="unfinished"></translation>
+        <translation>10帧/秒</translation>
     </message>
     <message>
         <source>20 fps</source>
-        <translation type="unfinished"></translation>
+        <translation>20帧/秒</translation>
     </message>
     <message>
         <source>24 fps</source>
-        <translation type="unfinished"></translation>
+        <translation>24帧/秒</translation>
     </message>
     <message>
         <source>30 fps</source>
-        <translation type="unfinished"></translation>
+        <translation>30帧/秒</translation>
     </message>
     <message>
         <source> </source>
@@ -372,7 +372,7 @@ select the area to record</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>fmt</source>
+        <source>Webm</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
