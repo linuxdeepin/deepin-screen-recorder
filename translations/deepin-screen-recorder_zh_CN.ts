@@ -103,11 +103,7 @@ or press the shortcut again to stop recording</source>
         <translation>深度截图将会在%1秒后启动</translation>
     </message>
     <message>
-        <source>Switch to record mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Switch to shot mode</source>
+        <source>PNG (*.png);;JPEG (*.jpg *.jpeg);; BMP (*.bmp);;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -294,7 +290,7 @@ select the area to record</source>
     <name>SubToolBar</name>
     <message>
         <source>Save to desktop</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">保存到桌面</translation>
     </message>
     <message>
         <source>Autosave</source>
@@ -382,6 +378,42 @@ select the area to record</source>
     <message>
         <source>30fps</source>
         <translation>30帧/秒</translation>
+    </message>
+    <message>
+        <source>Save to</source>
+        <translation>存储到</translation>
+    </message>
+    <message>
+        <source>Save to desktop</source>
+        <translation>保存到桌面</translation>
+    </message>
+    <message>
+        <source>Save to picture</source>
+        <translation>保存到图片</translation>
+    </message>
+    <message>
+        <source>Save to path</source>
+        <translation>指定保存位置</translation>
+    </message>
+    <message>
+        <source>Format Option</source>
+        <translation>格式</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save to clipboard</source>
+        <translation>复制到剪贴板</translation>
     </message>
 </context>
 <context>
