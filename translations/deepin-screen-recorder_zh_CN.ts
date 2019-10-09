@@ -102,6 +102,14 @@ or press the shortcut again to stop recording</source>
         <source>Deepin Screenshot will start after %1 seconds</source>
         <translation>深度截图将会在%1秒后启动</translation>
     </message>
+    <message>
+        <source>Switch to record mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch to shot mode</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
