@@ -39,6 +39,14 @@ or press the shortcut again to stop recording</source>
         <source>Shot</source>
         <translation>截图</translation>
     </message>
+    <message>
+        <source>Switch to record mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch to shot mode</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -76,7 +84,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>View</source>
-        <translation type="unfinished">查看</translation>
+        <translation>查看</translation>
     </message>
     <message>
         <source>Picture has been saved to clipboard</source>
@@ -88,15 +96,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to</source>
-        <translation type="unfinished">保存在</translation>
+        <translation>保存在</translation>
     </message>
     <message>
-        <source>Switch to record mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Switch to shot mode</source>
-        <translation type="unfinished"></translation>
+        <source>Deepin Screenshot will start after %1 seconds</source>
+        <translation>深度截图将会在%1秒后启动</translation>
     </message>
 </context>
 <context>
