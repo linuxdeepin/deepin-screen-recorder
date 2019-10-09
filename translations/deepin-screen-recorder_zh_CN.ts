@@ -90,6 +90,14 @@ or press the shortcut again to stop recording</source>
         <source>Saved to</source>
         <translation type="unfinished">保存在</translation>
     </message>
+    <message>
+        <source>Switch to record mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch to shot mode</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
