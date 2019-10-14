@@ -148,7 +148,6 @@
         <file>image/color_pen/color2.svg</file>
         <file>image/color_pen/color0.svg</file>
         <file>image/color_pen/color1.svg</file>
-<<<<<<< HEAD
         <file>image/newUI/dark/checked/brush medium_checked.svg</file>
         <file>image/newUI/dark/checked/Pulldown-checked.svg</file>
         <file>image/newUI/dark/checked/Arrow-checked.svg</file>
@@ -248,7 +247,5 @@
         <file>image/newUI/dark/press/Combined Shape-press.svg</file>
         <file>image/newUI/dark/press/webcam_press.svg</file>
         <file>image/newUI/dark/press/mouse_press.svg</file>
-=======
->>>>>>> fix:fix text edit widget shapes
     </qresource>
 </RCC>
