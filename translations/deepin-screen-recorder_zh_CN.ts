@@ -88,11 +88,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Picture has been saved to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>图片已经保存至剪贴板</translation>
     </message>
     <message>
         <source>Picture has been saved to %1</source>
-        <translation type="unfinished"></translation>
+        <translation>图片已经保存到%1</translation>
     </message>
     <message>
         <source>Saved to</source>
@@ -348,52 +348,40 @@ select the area to record</source>
         <translation>内置音频</translation>
     </message>
     <message>
-        <source>5 fps</source>
-        <translation>5帧/秒</translation>
-    </message>
-    <message>
-        <source>10 fps</source>
-        <translation>10帧/秒</translation>
-    </message>
-    <message>
-        <source>20 fps</source>
-        <translation>20帧/秒</translation>
-    </message>
-    <message>
-        <source>24 fps</source>
-        <translation>24帧/秒</translation>
-    </message>
-    <message>
-        <source>30 fps</source>
-        <translation>30帧/秒</translation>
-    </message>
-    <message>
         <source> </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>24</source>
-        <translation type="unfinished"></translation>
+        <source>Option</source>
+        <translation>选项</translation>
     </message>
     <message>
-        <source>5</source>
-        <translation type="unfinished"></translation>
+        <source>format option</source>
+        <translation>格式</translation>
     </message>
     <message>
-        <source>10</source>
-        <translation type="unfinished"></translation>
+        <source>fps option</source>
+        <translation>帧率</translation>
     </message>
     <message>
-        <source>20</source>
-        <translation type="unfinished"></translation>
+        <source>5fps</source>
+        <translation>5帧/秒</translation>
     </message>
     <message>
-        <source>30</source>
-        <translation type="unfinished"></translation>
+        <source>10fps</source>
+        <translation>10帧/秒</translation>
     </message>
     <message>
-        <source>Webm</source>
-        <translation type="unfinished"></translation>
+        <source>20fps</source>
+        <translation>20帧/秒</translation>
+    </message>
+    <message>
+        <source>24fps</source>
+        <translation>24帧/秒</translation>
+    </message>
+    <message>
+        <source>30fps</source>
+        <translation>30帧/秒</translation>
     </message>
 </context>
 <context>
