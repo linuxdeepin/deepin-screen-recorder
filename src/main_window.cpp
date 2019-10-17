@@ -997,6 +997,7 @@ void MainWindow::updateToolBarPos()
     QPoint toolbarPoint;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
+    qDebug() << "toolbar recordx:" << recordX;
     toolbarPoint = QPoint(recordX + recordWidth - m_toolBar->width() - TOOLBAR_X_SPACING,
                           std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
 
