@@ -174,12 +174,12 @@ void SubToolWidget::initRecordLabel()
     }
 
 //    microphoneAction->setIcon(QIcon(":/image/newUI/normal/microphone.svg"));
-//    if (AudioUtils().canMicrophoneInput()) {
-//        microphoneAction->setCheckable(true);
-//        microphoneAction->setChecked(true);
-//    } else {
-//        microphoneAction->setDisabled(true);
-//    }
+    if (AudioUtils().canMicrophoneInput()) {
+        microphoneAction->setCheckable(true);
+        microphoneAction->setChecked(true);
+    } else {
+        microphoneAction->setDisabled(true);
+    }
     systemAudioAction->setText(tr("SystemAudio"));
 //    systemAudioAction->setIcon(QIcon(":/image/newUI/normal/audio frequency.svg"));
     if (m_themeType == 1) {
