@@ -89,7 +89,7 @@ void MainToolWidget::initMainLabel()
         m_recordBtn->setIcon(QIcon(":/image/newUI/dark/normal/screencap-normal_dark.svg"));
     }
 
-//    m_recordBtn->setToolTip(tr("Switch to record mode"));
+    m_recordBtn->setToolTip(tr("Switch to record mode"));
 //    recordBtn->setStyleSheet(record_button_style);
     toolBtnList.append(m_recordBtn);
 
@@ -117,7 +117,7 @@ void MainToolWidget::initMainLabel()
         m_shotBtn->setIcon(QIcon(":/image/newUI/dark/normal/screenshot-normal_dark.svg"));
     }
 
-//    m_shotBtn->setToolTip(tr("Switch to shot mode"));
+    m_shotBtn->setToolTip(tr("Switch to shot mode"));
 //    shotBtn->setStyleSheet(shot_button_style);
     toolBtnList.append(m_shotBtn);
 
