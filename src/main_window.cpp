@@ -2503,18 +2503,16 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         }
                     } else {
 
-                        if (m_functionType == 0) {
-                            // Make sure record area not too small.
-                            recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
-                            recordHeight = recordHeight < RECORD_MIN_HEIGHT ? RECORD_MIN_HEIGHT : recordHeight;
+                        // Make sure record area not too small.
+                        recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
+                        recordHeight = recordHeight < RECORD_MIN_HEIGHT ? RECORD_MIN_HEIGHT : recordHeight;
 
-                            if (recordX + recordWidth > rootWindowRect.width) {
-                                recordX = rootWindowRect.width - recordWidth;
-                            }
+                        if (recordX + recordWidth > rootWindowRect.width) {
+                            recordX = rootWindowRect.width - recordWidth;
+                        }
 
-                            if (recordY + recordHeight > rootWindowRect.height) {
-                                recordY = rootWindowRect.height - recordHeight;
-                            }
+                        if (recordY + recordHeight > rootWindowRect.height) {
+                            recordY = rootWindowRect.height - recordHeight;
                         }
 //                        else if (m_functionType == 1) {
 //                            // Make sure record area not too small.
