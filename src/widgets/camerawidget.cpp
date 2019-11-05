@@ -57,6 +57,7 @@ int CameraWidget::getRecordHeight()
 void CameraWidget::initCamera()
 {
     setWindowFlags(Qt::WindowStaysOnTopHint);
+    setAttribute(Qt::WA_TranslucentBackground, true);
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
     setAcceptDrops(true);
@@ -140,15 +141,15 @@ void CameraWidget::captureImage()
 
 void CameraWidget::processCapturedImage(int request_id, const QImage &img)
 {
-    QImage t_image = img.scaled(this->width(), this->height(), Qt::KeepAspectRatioByExpanding, Qt::FastTransformation);
-    QPixmap pixmap = round(QPixmap::fromImage(t_image),8);
+    QImage t_image = img.scaled(this->width(), this->height(), Qt::IgnoreAspectRatio, Qt::FastTransformation);
+//    QPixmap pixmap = round(QPixmap::fromImage(t_image), 35);
+    QPixmap pixmap = QPixmap::fromImage(t_image);
     m_cameraUI->setPixmap(pixmap);
 }
 
-QPixmap CameraWidget::round(const QPixmap& img_in, int radius)
+QPixmap CameraWidget::round(const QPixmap &img_in, int radius)
 {
-    if (img_in.isNull())
-    {
+    if (img_in.isNull()) {
         return QPixmap();
     }
     QSize size(img_in.size());
@@ -156,8 +157,8 @@ QPixmap CameraWidget::round(const QPixmap& img_in, int radius)
     QPainter painter(&mask);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
-    painter.fillRect(mask.rect(), Qt::white);
-    painter.setBrush(QColor(0, 0, 0));
+    painter.fillRect(mask.rect(), Qt::transparent);
+    painter.setBrush(Qt::transparent);
     painter.drawRoundedRect(mask.rect(), radius, radius);
     QPixmap image = img_in;// .scaled(size);
     image.setMask(mask);
@@ -182,7 +183,23 @@ void CameraWidget::paintEvent(QPaintEvent *e)
 //    painter.setRenderHint(QPainter::Antialiasing);
 //    painter.drawRect(rect());
 
-    DWidget::paintEvent(e);
+    QBitmap bmp(this->size());
+    bmp.fill();
+    QPainter p(&bmp);
+    p.setPen(Qt::NoPen);
+    p.setBrush(Qt::black);
+
+    p.setRenderHint(QPainter::Antialiasing, true);
+    p.setRenderHint(QPainter::HighQualityAntialiasing, true);
+//    p.fillRect(this->rect(), Qt::transparent);
+//    p.setBrush(Qt::transparent);
+//    p.drawRoundedRect(bmp.rect(), 30, 45, Qt::RelativeSize);
+    p.drawRoundedRect(12, 12, width() - 25, height() - 25, 8, 8);
+    setMask(bmp);
+
+
+
+//    DWidget::paintEvent(e);
 }
 void CameraWidget::mousePressEvent(QMouseEvent *event)
 {
