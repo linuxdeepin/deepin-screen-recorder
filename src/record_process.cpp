@@ -260,6 +260,7 @@ void RecordProcess::recordVideo()
 
         arguments << savePath;
     }
+    qDebug() << "arguments:" << arguments;
 
     process->start("ffmpeg", arguments);
 }
@@ -347,7 +348,10 @@ void RecordProcess::stopRecord()
     }
 
     // Wait thread.
-    wait();
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+        wait();
+    }
+
 
     // Move file to save directory.
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
