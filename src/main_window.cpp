@@ -1773,6 +1773,11 @@ bool MainWindow::saveAction(const QPixmap &pix)
     } else {
         m_saveIndex = ConfigSettings::instance()->value("save", "save_op").value<SaveAction>();
     }
+
+    if (m_shotWithPath == true) {
+        m_saveIndex = AutoSave;
+    }
+
     //for test
 //    m_saveIndex = SaveToImage;
     switch (m_saveIndex) {
@@ -1867,6 +1872,8 @@ bool MainWindow::saveAction(const QPixmap &pix)
 //        }
 //        break;
 //    }
+    case AutoSave:
+        break;
     default:
         break;
     }
@@ -1937,6 +1944,82 @@ bool MainWindow::saveAction(const QPixmap &pix)
         } else {
             m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, tr("DeepinScreenshot"), selectAreaName, currentTime, t_formatBuffix);
         }
+
+        if (!screenShotPix.save(m_saveFileName,  t_formatStr.toLatin1().data()))
+            return false;
+    } else if (m_saveIndex == AutoSave && m_saveFileName.isEmpty()) {
+        QString savePath;
+//        if (m_shotWithPath == false) {
+//            savePath = QStandardPaths::writableLocation(saveOption);
+//        }
+
+//        else {
+        savePath = m_shotSavePath;
+//        }
+        QString t_fileName = "";
+        if (savePath.contains(".png")) {
+            t_pictureFormat = 0;
+//            savePath.lastIndexOf("/");
+            t_fileName = savePath;
+        }
+
+        if (savePath.contains(".jpg")) {
+            t_pictureFormat = 1;
+//            savePath.lastIndexOf("/");
+            t_fileName = savePath;
+        }
+
+        if (savePath.contains(".bmp")) {
+            t_pictureFormat = 2;
+//            savePath.lastIndexOf("/");
+            t_fileName = savePath;
+        }
+
+
+        if (t_fileName == "") {
+            QDir saveDir(savePath);
+            if (!saveDir.exists()) {
+                bool mkdirSucc = saveDir.mkpath(".");
+                if (!mkdirSucc) {
+                    qCritical() << "Save path not exist and cannot be created:" << savePath;
+                    qCritical() << "Fall back to temp location!";
+                    savePath = QDir::tempPath();
+                }
+            }
+        }
+
+        QString t_formatStr;
+        QString t_formatBuffix;
+        switch (t_pictureFormat) {
+        case 0:
+            t_formatStr = "PNG";
+            t_formatBuffix = "png";
+            break;
+        case 1:
+            t_formatStr = "JPEG";
+            t_formatBuffix = "jpg";
+            break;
+        case 2:
+            t_formatStr = "BMP";
+            t_formatBuffix = "bmp";
+            break;
+        default:
+            t_formatStr = "PNG";
+            t_formatBuffix = "png";
+            break;
+        }
+        qDebug() << "save path" << savePath;
+
+        if (t_fileName != "") {
+            m_saveFileName = t_fileName;
+        } else {
+            if (selectAreaName.isEmpty()) {
+                m_saveFileName = QString("%1/%2_%3.%4").arg(savePath, tr("DeepinScreenshot"), currentTime, t_formatBuffix);
+            } else {
+                m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, tr("DeepinScreenshot"), selectAreaName, currentTime, t_formatBuffix);
+            }
+        }
+
 
         if (!screenShotPix.save(m_saveFileName,  t_formatStr.toLatin1().data()))
             return false;
