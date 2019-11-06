@@ -359,12 +359,12 @@ void MainWindow::initAttributes()
     pa.setColor(DPalette::Dark, QColor(229, 70, 61, 204));
     pa.setColor(DPalette::Light, QColor(229, 70, 61, 204));
     m_recordButton->setPalette(pa);
-    m_recordButton->setIconSize(QSize(30, 30));
+    m_recordButton->setIconSize(QSize(33, 33));
     m_recordButton->setIcon(QIcon(":/image/newUI/checked/screencap-checked.svg"));
     m_recordButton->setToolTip(tr("Start Record"));
 //    m_recordButton->setToolTip(tr("Switch to record mode"));
 
-    m_recordButton->setFixedSize(60, 47);
+    m_recordButton->setFixedSize(60, 51);
 //    m_recordButton->setText(tr("Record"));
     m_recordButton->setObjectName("mainRecordBtn");
 
@@ -375,12 +375,12 @@ void MainWindow::initAttributes()
     pa.setColor(DPalette::Dark, QColor(0, 129, 255, 204));
     pa.setColor(DPalette::Light, QColor(0, 129, 255, 204));
     m_shotButton->setPalette(pa);
-    m_shotButton->setIconSize(QSize(30, 30));
+    m_shotButton->setIconSize(QSize(33, 33));
     m_shotButton->setIcon(QIcon(":/image/newUI/checked/screenshot-checked.svg"));
     m_shotButton->setToolTip(tr("Start Shot"));
 //    m_shotButton->setToolTip(tr("Switch to shot mode"));
 
-    m_shotButton->setFixedSize(60, 47);
+    m_shotButton->setFixedSize(60, 51);
 //    m_shotButton->setText(tr("Shot"));
     m_shotButton->setObjectName("mainShotBtn");
 
@@ -2143,7 +2143,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 #undef KeyPress
 #undef KeyRelease
     if (event->type() == QEvent::KeyPress) {
+
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        qDebug() << "key press:" << keyEvent->key();
         if (m_functionType == 1) {
             if (keyEvent->key() == Qt::Key_Escape ) {
                 if (m_isShapesWidgetExist) {
@@ -2850,10 +2852,10 @@ void MainWindow::shotCurrentImg()
     emit hideScreenshotUI();
 
     const qreal ratio = this->devicePixelRatioF();
-    QRect target( recordX * ratio + 2,
-                  recordY * ratio + 2,
-                  recordWidth * ratio - 3,
-                  recordHeight * ratio - 3 );
+    QRect target( recordX * ratio + 1 * ratio,
+                  recordY * ratio + 1 * ratio,
+                  recordWidth * ratio - 3.5 * ratio,
+                  recordHeight * ratio - 3.5 * ratio );
 
     m_resultPixmap = m_resultPixmap.copy(target);
 }

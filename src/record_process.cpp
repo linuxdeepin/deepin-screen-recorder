@@ -152,7 +152,8 @@ void RecordProcess::recordVideo()
     // otherwise, it will report 'Unrecognized option' error.
     QStringList arguments;
 
-    if (settings->getOption("lossless_recording").toBool() || !QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+//    if (settings->getOption("lossless_recording").toBool() || !QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+    if (settings->getOption("lossless_recording").toBool()) {
 //        int framerate = 30;
 //        if (!settings->getOption("mkv_framerate").isNull()) {
 //            framerate = settings->getOption("mkv_framerate").toInt();
