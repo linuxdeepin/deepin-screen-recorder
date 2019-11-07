@@ -36,6 +36,7 @@ TopTips::TopTips(DWidget *parent)
 //                        "color: white;"
 //                        "font-size: 12px;}");
 //    this->setPixmap(QPixmap::fromImage(QImage(":/resources/images/action/sizetip.png")));
+
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
     DPalette pa = this->palette();
     pa.setColor(DPalette::Foreground, Qt::white);
@@ -67,5 +68,11 @@ void TopTips::updateTips(QPoint pos, QString text)
 
     this->move(startPoint);
 }
+
+void TopTips::mousePressEvent(QMouseEvent *ev)
+{
+    return;
+}
+
 
 TopTips::~TopTips() {}

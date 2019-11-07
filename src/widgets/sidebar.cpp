@@ -47,8 +47,8 @@ SideBarWidget::SideBarWidget(DWidget *parent)
       m_expanded(false)
 {
     int t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
-    setBlurRectXRadius(10);
-    setBlurRectYRadius(10);
+    setBlurRectXRadius(14);
+    setBlurRectYRadius(14);
     setRadius(30);
     setMode(DBlurEffectWidget::GaussianBlur);
     setBlurEnabled(true);
@@ -129,10 +129,10 @@ void SideBarWidget::paintEvent(QPaintEvent *e)
 {
     DBlurEffectWidget::paintEvent(e);
 
-    QPainter painter(this);
-    painter.setPen(QColor(255, 255, 255, 76.5));
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.drawLine(QPointF(BTN_RADIUS, 0), QPointF(this->width() - 1, 0));
+//    QPainter painter(this);
+//    painter.setPen(QColor(255, 255, 255, 76.5));
+//    painter.setRenderHint(QPainter::Antialiasing);
+//    painter.drawLine(QPointF(BTN_RADIUS, 0), QPointF(this->width() - 1, 0));
 }
 
 void SideBarWidget::showEvent(QShowEvent *event)

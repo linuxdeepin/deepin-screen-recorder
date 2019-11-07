@@ -32,7 +32,7 @@ public:
     void setupSystemAudioOutput();
     void setupAudioSink(QString sink);
     bool canVirtualCardOutput();
-    bool canMicrophoneInput();
+    static bool canMicrophoneInput();
     QString currentAudioSink();
     QString currentAudioSource();
 private:

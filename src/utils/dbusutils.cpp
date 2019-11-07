@@ -18,8 +18,7 @@ QVariant DBusUtils::redDBusProperty(const QString &service, const QString &path,
     QDBusInterface ainterface(service, path,
                               interface,
                               QDBusConnection::sessionBus());
-    if (!ainterface.isValid())
-    {
+    if (!ainterface.isValid()) {
         qDebug() << qPrintable(QDBusConnection::sessionBus().lastError().message());
         QVariant v(0) ;
         return  v;
@@ -34,15 +33,14 @@ QVariant DBusUtils::redDBusMethod(const QString &service, const QString &path, c
     QDBusInterface ainterface(service, path,
                               interface,
                               QDBusConnection::sessionBus());
-    if (!ainterface.isValid())
-    {
+    if (!ainterface.isValid()) {
         qDebug() <<  "error:" << qPrintable(QDBusConnection::sessionBus().lastError().message());
         QVariant v(0) ;
         return  v;
     }
     //调用远程的value方法
     QDBusReply<QDBusVariant> reply = ainterface.call(method);
-    if (reply.isValid()){
+    if (reply.isValid()) {
 //        return reply.value();
         QVariant v(0) ;
         return  v;

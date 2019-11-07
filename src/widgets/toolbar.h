@@ -72,6 +72,7 @@ public slots:
     void setRecordLaunchFromMain(bool recordLaunch);
     void setVideoInitFromMain();
     void shapeClickedFromBar(QString shape);
+    void setMicroPhoneEnable(bool status);
 
 protected:
     void paintEvent(QPaintEvent *e);
@@ -131,6 +132,7 @@ public slots:
     void setRecordLaunchMode(bool recordLaunch);
     void setVideoButtonInit();
     void shapeClickedFromMain(QString shape);
+    void setMicroPhoneEnable(bool status);
 protected:
     void paintEvent(QPaintEvent *e);
     void enterEvent(QEvent *e);

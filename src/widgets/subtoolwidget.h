@@ -57,6 +57,7 @@ public slots:
     void setRecordLaunchMode(bool recordLaunch);
     void setVideoButtonInitFromSub();
     void shapeClickedFromWidget(QString shape);
+    void setMicroPhoneEnable(bool status);
 private:
     DLabel *m_recordSubTool;
     DLabel *m_shotSubTool;
@@ -72,6 +73,8 @@ private:
     ToolButton *m_mouseButton;
     ToolButton *m_optionButton;
     ToolButton *m_shotOptionButton;
+    QAction *m_microphoneAction;
+    bool m_haveMicroPhone = false;
     int m_lineflag;
     int m_themeType;
 };

@@ -143,17 +143,17 @@ void SubToolWidget::initRecordLabel()
     DMenu *audioMenu = new DMenu();
 
     DFontSizeManager::instance()->bind(audioMenu, DFontSizeManager::T8);
-    QAction *microphoneAction = new QAction(audioMenu);
+    m_microphoneAction = new QAction(audioMenu);
     QAction *systemAudioAction = new QAction(audioMenu);
     m_systemAudioAction = systemAudioAction;
-    microphoneAction->setText(tr("Microphone"));
-    microphoneAction->setCheckable(true);
+    m_microphoneAction->setText(tr("Microphone"));
+    m_microphoneAction->setCheckable(true);
     if (m_themeType == 1) {
-        microphoneAction->setIcon(QIcon(":/image/newUI/normal/microphone.svg"));
+        m_microphoneAction->setIcon(QIcon(":/image/newUI/normal/microphone.svg"));
     }
 
     else if (m_themeType == 2) {
-        microphoneAction->setIcon(QIcon(":/image/newUI/dark/normal/microphone.svg"));
+        m_microphoneAction->setIcon(QIcon(":/image/newUI/dark/normal/microphone.svg"));
     }
 
 
@@ -169,8 +169,8 @@ void SubToolWidget::initRecordLabel()
     }
 
 
-    connect(microphoneAction, &QAction::triggered, this, [ = ] {
-        if (microphoneAction->isChecked() && systemAudioAction->isChecked())
+    connect(m_microphoneAction, &QAction::triggered, this, [ = ] {
+        if (m_microphoneAction->isChecked() && systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
             if (m_themeType == 1) {
@@ -182,7 +182,7 @@ void SubToolWidget::initRecordLabel()
             }
         }
 
-        if (microphoneAction->isChecked() && !systemAudioAction->isChecked())
+        if (m_microphoneAction->isChecked() && !systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
             if (m_themeType == 1) {
@@ -194,7 +194,7 @@ void SubToolWidget::initRecordLabel()
             }
         }
 
-        if (!microphoneAction->isChecked() && systemAudioAction->isChecked())
+        if (!m_microphoneAction->isChecked() && systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/audio frequency_normal.svg"));
             if (m_themeType == 1) {
@@ -206,7 +206,7 @@ void SubToolWidget::initRecordLabel()
             }
         }
 
-        if (!microphoneAction->isChecked() && !systemAudioAction->isChecked())
+        if (!m_microphoneAction->isChecked() && !systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
             if (m_themeType == 1) {
@@ -220,7 +220,7 @@ void SubToolWidget::initRecordLabel()
     });
 
     connect(systemAudioAction, &QAction::triggered, this, [ = ] {
-        if (microphoneAction->isChecked() && systemAudioAction->isChecked())
+        if (m_microphoneAction->isChecked() && systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
             if (m_themeType == 1) {
@@ -232,7 +232,7 @@ void SubToolWidget::initRecordLabel()
             }
         }
 
-        if (microphoneAction->isChecked() && !systemAudioAction->isChecked())
+        if (m_microphoneAction->isChecked() && !systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
             if (m_themeType == 1) {
@@ -244,7 +244,7 @@ void SubToolWidget::initRecordLabel()
             }
         }
 
-        if (!microphoneAction->isChecked() && systemAudioAction->isChecked())
+        if (!m_microphoneAction->isChecked() && systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/audio frequency_normal.svg"));
             if (m_themeType == 1) {
@@ -256,7 +256,7 @@ void SubToolWidget::initRecordLabel()
             }
         }
 
-        if (!microphoneAction->isChecked() && !systemAudioAction->isChecked())
+        if (!m_microphoneAction->isChecked() && !systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
             if (m_themeType == 1) {
@@ -268,26 +268,30 @@ void SubToolWidget::initRecordLabel()
             }
         }
     });
+    m_haveMicroPhone = true;
+    m_microphoneAction->setCheckable(true);
+    //        m_microphoneAction->setChecked(true);
+    m_microphoneAction->trigger();
 
-    bool t_haveMicroPhone = false;
-//    microphoneAction->setIcon(QIcon(":/image/newUI/normal/microphone.svg"));
-    if (AudioUtils().canMicrophoneInput()) {
-        t_haveMicroPhone = true;
-        microphoneAction->setCheckable(true);
-//        microphoneAction->setChecked(true);
-        microphoneAction->trigger();
-    } else {
-        t_haveMicroPhone = false;
-        microphoneAction->setDisabled(true);
+//    bool t_haveMicroPhone = false;
+//    m_microphoneAction->setIcon(QIcon(":/image/newUI/normal/microphone.svg"));
+//    if (AudioUtils().canMicrophoneInput()) {
+//        t_haveMicroPhone = true;
+//        m_microphoneAction->setCheckable(true);
+////        m_microphoneAction->setChecked(true);
+//        m_microphoneAction->trigger();
+//    } else {
+//        t_haveMicroPhone = false;
+//        m_microphoneAction->setDisabled(true);
 
-//        if (m_themeType == 1) {
-//            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
-//        }
+////        if (m_themeType == 1) {
+////            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
+////        }
 
-//        else if (m_themeType == 2) {
-//            audioButton->setIcon(QIcon(":/image/newUI/dark/normal/mute_normal.svg"));
-//        }
-    }
+////        else if (m_themeType == 2) {
+////            audioButton->setIcon(QIcon(":/image/newUI/dark/normal/mute_normal.svg"));
+////        }
+//    }
 
 
     if (AudioUtils().canVirtualCardOutput()) {
@@ -299,12 +303,12 @@ void SubToolWidget::initRecordLabel()
 
 
 //    systemAudioAction->setDisabled(!AudioUtils().canVirtualCardOutput());
-    audioMenu->addAction(microphoneAction);
+    audioMenu->addAction(m_microphoneAction);
     audioMenu->addSeparator();
     audioMenu->addAction(systemAudioAction);
     audioButton->setMenu(audioMenu);
 
-    connect(microphoneAction, SIGNAL(triggered(bool)), this, SIGNAL(microphoneActionChecked(bool)));
+    connect(m_microphoneAction, SIGNAL(triggered(bool)), this, SIGNAL(microphoneActionChecked(bool)));
     connect(systemAudioAction, SIGNAL(triggered(bool)), this, SLOT(systemAudioActionCheckedSlot(bool)));
 
 
@@ -592,7 +596,7 @@ void SubToolWidget::initRecordLabel()
         fps24Action->setEnabled(false);
         fps30Action->setEnabled(false);
         audioButton->setEnabled(false);
-        microphoneAction->setEnabled(false);
+        m_microphoneAction->setEnabled(false);
         systemAudioAction->setEnabled(false);
 
 
@@ -605,8 +609,8 @@ void SubToolWidget::initRecordLabel()
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
         audioButton->setEnabled(true);
-        if (t_haveMicroPhone) {
-            microphoneAction->setEnabled(true);
+        if (m_haveMicroPhone) {
+            m_microphoneAction->setEnabled(true);
         }
 
         systemAudioAction->setEnabled(true);
@@ -620,7 +624,7 @@ void SubToolWidget::initRecordLabel()
         fps24Action->setEnabled(false);
         fps30Action->setEnabled(false);
         audioButton->setEnabled(false);
-        microphoneAction->setEnabled(false);
+        m_microphoneAction->setEnabled(false);
         systemAudioAction->setEnabled(false);
         emit gifActionChecked(checked);
     });
@@ -633,8 +637,8 @@ void SubToolWidget::initRecordLabel()
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
         audioButton->setEnabled(true);
-        if (t_haveMicroPhone) {
-            microphoneAction->setEnabled(true);
+        if (m_haveMicroPhone) {
+            m_microphoneAction->setEnabled(true);
         }
         systemAudioAction->setEnabled(true);
         emit mp4ActionChecked(checked);
@@ -1662,6 +1666,37 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
             m_textButton->click();
         } else if (shape == "option") {
             m_shotOptionButton->click();
+        }
+    }
+}
+
+void SubToolWidget::setMicroPhoneEnable(bool status)
+{
+    qDebug() << "mic status" << status;
+    if (status) {
+        m_haveMicroPhone = true;
+
+        if (m_microphoneAction->isEnabled()) {
+            return;
+        } else {
+            m_microphoneAction->setEnabled(true);
+            if (m_microphoneAction->isChecked()) {
+                return;
+            } else {
+                m_microphoneAction->trigger();
+            }
+        }
+    } else {
+        m_haveMicroPhone = false;
+        if (!m_microphoneAction->isEnabled()) {
+            return;
+        } else {
+            m_microphoneAction->setEnabled(false);
+            if (!m_microphoneAction->isChecked()) {
+                return;
+            } else {
+                m_microphoneAction->trigger();
+            }
         }
     }
 }

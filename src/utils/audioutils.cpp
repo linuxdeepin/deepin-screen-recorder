@@ -128,7 +128,7 @@ bool AudioUtils::canMicrophoneInput()
                                             "com.deepin.daemon.Audio", "DefaultSource");
     if (v.isValid()) {
         QDBusObjectPath path = v.value<QDBusObjectPath>();
-        qDebug() << "path: " << path.path();
+        //qDebug() <<"path: "<<path.path();
         QDBusInterface ainterface("com.deepin.daemon.Audio", path.path(),
                                   "com.deepin.daemon.Audio.Source",
                                   QDBusConnection::sessionBus());
@@ -139,13 +139,18 @@ bool AudioUtils::canMicrophoneInput()
         QDBusReply<QDBusObjectPath> reply = ainterface.call("GetMeter");
         if (reply.isValid()) {
             path = reply.value();
-            qDebug() << "path1" << path.path();
+            //qDebug()<<"path1" << path.path();
             QVariant v = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", path.path(),
                                                     "com.deepin.daemon.Audio.Meter", "Volume");
             if (v.isValid()) {
                 double volume = v.toDouble();
-                qDebug() << "volume" << volume;
-                return volume != 0.0;
+                //qDebug()<<"volume:" <<volume;
+                if (0.0001 < volume) {
+                    return true;
+                } else {
+                    return false;
+                }
+                //return volume != 0.0;
             }
         } else {
             return  false;

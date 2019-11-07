@@ -52,6 +52,7 @@
 #include "widgets/zoomIndicator.h"
 #include "widgets/camerawidget.h"
 #include "utils/saveutils.h"
+#include "utils/voicevolumewatcher.h"
 
 #include "dbusinterface/dbuscontrolcenter.h"
 #include "dbusinterface/dbusnotify.h"
@@ -103,8 +104,8 @@ public:
     MainWindow(DWidget *parent = 0);
     ~MainWindow()
     {
-        // All process will quit if MainWindow destroy.
-        // So we don't need delete object by hand.
+        m_pVoiceVolumeWatcher->stopWatch();
+        QThread::currentThread()->msleep(500);
     }
 
     enum ShotMouseStatus {
@@ -180,6 +181,7 @@ public slots:
     void initVirtualCard();
     void onViewShortcut();
     void shapeClickedSlot(QString shape);
+    void on_CheckRecodeCouldUse(bool canUse);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -212,6 +214,7 @@ private:
     QRect screenRect;
 
     RecordProcess recordProcess;
+    voiceVolumeWatcher *m_pVoiceVolumeWatcher;
 //    VoiceRecordProcess voiceRecordProcess;
     WindowRect rootWindowRect;
 
@@ -334,6 +337,7 @@ private:
     bool m_copyToClipboard = false;
     QString m_savePicturePath;
     int m_shotflag = 0;
+    int m_firstShot = 0;
 };
 
 #endif //MAINWINDOW_H

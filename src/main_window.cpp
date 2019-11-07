@@ -44,6 +44,7 @@
 #include <QShortcut>
 #include <QDesktopWidget>
 
+
 #include "main_window.h"
 #include "utils.h"
 #include "record_button.h"
@@ -435,7 +436,11 @@ void MainWindow::initAttributes()
 //    m_recordButton->setText(tr("Record"));
     m_recordButton->setObjectName("mainRecordBtn");
 
+    m_recordButton->setFocusPolicy(Qt::ClickFocus);
+
+
     m_shotButton = new DPushButton(this);
+    m_shotButton->setFocusPolicy(Qt::ClickFocus);
 
     pa = m_shotButton->palette();
     pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
@@ -478,7 +483,7 @@ void MainWindow::initAttributes()
     recordOptionPanel->hide();
 
     m_selectedMic = true;
-    m_selectedSystemAudio = false;
+    m_selectedSystemAudio = true;
 
     m_swUtil = DScreenWindowsUtil::instance(curPos);
     m_backgroundRect = m_swUtil->backgroundRect();
@@ -621,34 +626,37 @@ void MainWindow::initScreenShot()
     m_multiKeyButtonsInOnSec = false;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
-    m_gifMode = true;
-    m_mp4Mode = false;
+    if (m_firstShot == 0) {
+        m_gifMode = true;
+        m_mp4Mode = false;
 //    m_keyBoardTimer = new QTimer(this);
-    m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
+        m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
+    }
     m_screenWidth = QApplication::desktop()->screen()->width();
     m_screenHeight = QApplication::desktop()->screen()->height();
 
     m_shotStatus = ShotMouseStatus::Normal;
 
-    isFirstDrag = false;
-    isFirstMove = false;
-    isFirstPressButton = false;
-    isFirstReleaseButton = false;
-    dragStartX = 0;
-    dragStartY = 0;
+//    isFirstDrag = false;
+//    isFirstMove = false;
+//    isFirstPressButton = false;
+//    isFirstReleaseButton = false;
+//    dragStartX = 0;
+//    dragStartY = 0;
 
     isPressButton = false;
     isReleaseButton = false;
 
-    recordX = 0;
-    recordY = 0;
-    recordWidth = 0;
-    recordHeight = 0;
 
-    dragRecordX = -1;
-    dragRecordY = -1;
+//    recordX = 0;
+//    recordY = 0;
+//    recordWidth = 0;
+//    recordHeight = 0;
 
-    drawDragPoint = false;
+//    dragRecordX = -1;
+//    dragRecordY = -1;
+
+//    drawDragPoint = false;
 
     recordButtonStatus = RECORD_BUTTON_NORMAL;
 
@@ -663,21 +671,42 @@ void MainWindow::initScreenShot()
         }
     }
     //构建截屏工具栏按钮 by zyg
-    m_toolBar->hide();
-    m_sideBar->hide();
+    if (m_firstShot == 0) {
+        m_toolBar->hide();
+        m_sideBar->hide();
 
-    m_recordButton->hide();
-    m_shotButton->hide();
+        m_recordButton->hide();
+        m_shotButton->hide();
+        m_sizeTips->hide();
+    }
+
+    else {
+        m_toolBar->show();
+        m_sideBar->hide();
+
+        m_recordButton->hide();
+        m_shotButton->show();
+        m_sizeTips->show();
+
+
+        updateToolBarPos();
+        updateShotButtonPos();
+        m_sizeTips->updateTips(QPoint(recordX, recordY),
+                               QString("%1X%2").arg(recordWidth).arg(recordHeight));
+    }
 
     recordButton->hide();
     recordOptionPanel->hide();
 
 
+    if (m_firstShot == 0) {
+        m_selectedMic = true;
+        m_selectedSystemAudio = true;
+    }
 
-    m_selectedMic = true;
-    m_selectedSystemAudio = false;
-
-    setDragCursor();
+    if (m_firstShot == 0) {
+        setDragCursor();
+    }
 //    eventMonitor.quit();
 //    emit releaseEvent();
     if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
@@ -688,7 +717,7 @@ void MainWindow::initScreenShot()
 
     connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
 
-
+    m_toolBar->setFocus();
 }
 
 void MainWindow::initScreenRecorder()
@@ -710,33 +739,54 @@ void MainWindow::initScreenRecorder()
     m_multiKeyButtonsInOnSec = false;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
-    m_gifMode = true;
-    m_mp4Mode = false;
-//    m_keyBoardTimer = new QTimer(this);
-    m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
+    if (m_firstShot == 0) {
+        m_gifMode = true;
+        m_mp4Mode = false;
+        //    m_keyBoardTimer = new QTimer(this);
+        m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
+    }
+
 
     m_screenWidth = QApplication::desktop()->screen()->width();
     m_screenHeight = QApplication::desktop()->screen()->height();
 
-    isFirstDrag = false;
-    isFirstMove = false;
-    isFirstPressButton = false;
-    isFirstReleaseButton = false;
-    dragStartX = 0;
-    dragStartY = 0;
+//    isFirstDrag = false;
+//    isFirstMove = false;
+//    isFirstPressButton = false;
+//    isFirstReleaseButton = false;
+//    dragStartX = 0;
+//    dragStartY = 0;
 
     isPressButton = false;
     isReleaseButton = false;
 
-    recordX = 0;
-    recordY = 0;
-    recordWidth = 0;
-    recordHeight = 0;
+    if (m_firstShot == 1) {
+        if (recordWidth < 580) {
+            recordWidth = 580;
+            if (recordX >= m_screenWidth - 580) {
+                recordX = m_screenWidth - 581;
+            }
 
-    dragRecordX = -1;
-    dragRecordY = -1;
+        }
 
-    drawDragPoint = false;
+        if (recordHeight < 280) {
+            recordHeight = 280;
+
+            if (recordY >= m_screenHeight - 280) {
+                recordY = m_screenHeight - 281;
+            }
+        }
+    }
+
+//    recordX = 0;
+//    recordY = 0;
+//    recordWidth = 0;
+//    recordHeight = 0;
+
+//    dragRecordX = -1;
+//    dragRecordY = -1;
+
+//    drawDragPoint = false;
 
     recordButtonStatus = RECORD_BUTTON_NORMAL;
 
@@ -753,23 +803,44 @@ void MainWindow::initScreenRecorder()
 
 
     //构建截屏工具栏按钮 by zyg
-    m_toolBar->hide();
-    m_sideBar->hide();
+    if (m_firstShot == 0) {
+        m_toolBar->hide();
+        m_sideBar->hide();
 
-    m_recordButton->hide();
-    m_shotButton->hide();
+        m_recordButton->hide();
+        m_shotButton->hide();
+        m_sizeTips->hide();
+    }
+
+    else {
+        m_toolBar->show();
+        m_sideBar->hide();
+
+        m_recordButton->show();
+        m_shotButton->hide();
+        m_sizeTips->show();
+
+        updateToolBarPos();
+        updateRecordButtonPos();
+        m_sizeTips->updateTips(QPoint(recordX, recordY),
+                               QString("%1X%2").arg(recordWidth).arg(recordHeight));
+    }
 
     recordButton->hide();
     recordOptionPanel->hide();
 
-    m_sizeTips->hide();
+
     m_zoomIndicator->hide();
 
-    m_selectedMic = true;
-    m_selectedSystemAudio = false;
+    if (m_firstShot == 0) {
+        m_selectedMic = true;
+        m_selectedSystemAudio = true;
+    }
 
     initVirtualCard();
-    setDragCursor();
+    if (m_firstShot == 0) {
+        setDragCursor();
+    }
 //    eventMonitor.start();
 
 
@@ -782,6 +853,8 @@ void MainWindow::initScreenRecorder()
     connect(&eventMonitor, SIGNAL(releaseKeyButton(unsigned char)), m_showButtons,
             SLOT(releaseContentButtons(unsigned char)), Qt::QueuedConnection);
     eventMonitor.start();
+
+    m_toolBar->setFocus();
 }
 
 void MainWindow::initLaunchMode(const QString &launchMode)
@@ -1087,6 +1160,10 @@ void MainWindow::updateToolBarPos()
     if (m_toolBarInit == false) {
         m_toolBar->initToolBar();
         m_toolBar->setRecordLaunchMode(m_launchWithRecordFunc);
+
+        m_pVoiceVolumeWatcher = new voiceVolumeWatcher(this);
+        m_pVoiceVolumeWatcher->start();
+        connect(m_pVoiceVolumeWatcher, SIGNAL(sigRecodeState(bool)), this, SLOT(on_CheckRecodeCouldUse(bool)));
         m_toolBarInit = true;
     }
 
@@ -1381,6 +1458,7 @@ void MainWindow::changeFunctionButton(QString type)
     }
 
     update();
+    repaint();
 }
 
 void MainWindow::showKeyBoardButtons(const QString &key)
@@ -2112,82 +2190,6 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
         if (!screenShotPix.save(m_saveFileName,  t_formatStr.toLatin1().data()))
             return false;
-    } else if (m_saveIndex == AutoSave && m_saveFileName.isEmpty()) {
-        QString savePath;
-//        if (m_shotWithPath == false) {
-//            savePath = QStandardPaths::writableLocation(saveOption);
-//        }
-
-//        else {
-        savePath = m_shotSavePath;
-//        }
-        QString t_fileName = "";
-        if (savePath.contains(".png")) {
-            t_pictureFormat = 0;
-//            savePath.lastIndexOf("/");
-            t_fileName = savePath;
-        }
-
-        if (savePath.contains(".jpg")) {
-            t_pictureFormat = 1;
-//            savePath.lastIndexOf("/");
-            t_fileName = savePath;
-        }
-
-        if (savePath.contains(".bmp")) {
-            t_pictureFormat = 2;
-//            savePath.lastIndexOf("/");
-            t_fileName = savePath;
-        }
-
-
-        if (t_fileName == "") {
-            QDir saveDir(savePath);
-            if (!saveDir.exists()) {
-                bool mkdirSucc = saveDir.mkpath(".");
-                if (!mkdirSucc) {
-                    qCritical() << "Save path not exist and cannot be created:" << savePath;
-                    qCritical() << "Fall back to temp location!";
-                    savePath = QDir::tempPath();
-                }
-            }
-        }
-
-        QString t_formatStr;
-        QString t_formatBuffix;
-        switch (t_pictureFormat) {
-        case 0:
-            t_formatStr = "PNG";
-            t_formatBuffix = "png";
-            break;
-        case 1:
-            t_formatStr = "JPEG";
-            t_formatBuffix = "jpg";
-            break;
-        case 2:
-            t_formatStr = "BMP";
-            t_formatBuffix = "bmp";
-            break;
-        default:
-            t_formatStr = "PNG";
-            t_formatBuffix = "png";
-            break;
-        }
-        qDebug() << "save path" << savePath;
-
-        if (t_fileName != "") {
-            m_saveFileName = t_fileName;
-        } else {
-            if (selectAreaName.isEmpty()) {
-                m_saveFileName = QString("%1/%2_%3.%4").arg(savePath, tr("DeepinScreenshot"), currentTime, t_formatBuffix);
-            } else {
-                m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, tr("DeepinScreenshot"), selectAreaName, currentTime, t_formatBuffix);
-            }
-        }
-
-
-        if (!screenShotPix.save(m_saveFileName,  t_formatStr.toLatin1().data()))
-            return false;
     }
 
     if (m_copyToClipboard) {
@@ -2218,7 +2220,7 @@ void MainWindow::paintEvent(QPaintEvent *)
     }
 
     if (recordWidth > 0 && recordHeight > 0) {
-
+        m_firstShot = 1;
         QRect backgroundRect = QRect(0, 0, rootWindowRect.width, rootWindowRect.height);
         QRect frameRect = QRect(recordX, recordY, recordWidth, recordHeight);
 
@@ -2970,6 +2972,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
     // Use flag instead call `repaint` directly,
     // to avoid repaint many times in one event function.
+
     if (needRepaint) {
         repaint();
     }
@@ -2997,6 +3000,11 @@ void MainWindow::onViewShortcut()
 void MainWindow::shapeClickedSlot(QString shape)
 {
     m_toolBar->shapeClickedFromMain(shape);
+}
+
+void MainWindow::on_CheckRecodeCouldUse(bool canUse)
+{
+    m_toolBar->setMicroPhoneEnable(canUse);
 }
 
 void MainWindow::startRecord()

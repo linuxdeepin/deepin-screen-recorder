@@ -36,5 +36,8 @@ public:
 public slots:
     void setContent(QString widthXHeight);
     void updateTips(QPoint pos, QString text);
+
+protected:
+    void mousePressEvent(QMouseEvent *ev) override;
 };
 #endif // TOPTIPS_H

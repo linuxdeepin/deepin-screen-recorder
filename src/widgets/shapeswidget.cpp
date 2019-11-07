@@ -1302,6 +1302,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
 
     if (m_isRecording && m_isPressed) {
         m_pos2 = e->pos();
+        updateCursorShape();
 
         if (m_currentShape.type == "arrow") {
             if (m_currentShape.points.length() <= 1) {
@@ -1331,6 +1332,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
         if (m_currentShape.type == "line") {
             if (getDistance(m_currentShape.points[m_currentShape.points.length() - 1], m_pos2) > 3) {
                 m_currentShape.points.append(m_pos2);
+
             }
         }
         update();
@@ -1356,6 +1358,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
             m_pressedPoint = m_movingPoint;
             update();
         }
+
     } else {
         if (!m_isRecording) {
             m_isHovered = false;

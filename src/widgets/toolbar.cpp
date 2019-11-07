@@ -48,8 +48,8 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
       m_expanded(false)
 {
     int t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
-    setBlurRectXRadius(10);
-    setBlurRectYRadius(10);
+    setBlurRectXRadius(14);
+    setBlurRectYRadius(14);
     setRadius(30);
     setMode(DBlurEffectWidget::GaussianBlur);
     setBlurEnabled(true);
@@ -130,10 +130,10 @@ void ToolBarWidget::paintEvent(QPaintEvent *e)
 {
     DBlurEffectWidget::paintEvent(e);
 
-    QPainter painter(this);
-    painter.setPen(QColor(255, 255, 255, 76.5));
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.drawLine(QPointF(BTN_RADIUS, 0), QPointF(this->width() - 1, 0));
+//    QPainter painter(this);
+//    painter.setPen(QColor(255, 255, 255, 76.5));
+//    painter.setRenderHint(QPainter::Antialiasing);
+//    painter.drawLine(QPointF(BTN_RADIUS, 0), QPointF(this->width() - 1, 0));
 }
 
 void ToolBarWidget::showEvent(QShowEvent *event)
@@ -191,6 +191,11 @@ void ToolBarWidget::setVideoInitFromMain()
 void ToolBarWidget::shapeClickedFromBar(QString shape)
 {
     m_subTool->shapeClickedFromWidget(shape);
+}
+
+void ToolBarWidget::setMicroPhoneEnable(bool status)
+{
+    m_subTool->setMicroPhoneEnable(status);
 }
 
 void ToolBarWidget::setExpand(bool expand, QString shapeType)
@@ -347,6 +352,11 @@ void ToolBar::setVideoButtonInit()
 void ToolBar::shapeClickedFromMain(QString shape)
 {
     m_toolbarWidget->shapeClickedFromBar(shape);
+}
+
+void ToolBar::setMicroPhoneEnable(bool status)
+{
+    m_toolbarWidget->setMicroPhoneEnable(status);
 }
 
 bool ToolBar::isButtonChecked()
