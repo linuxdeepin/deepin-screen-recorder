@@ -21,10 +21,11 @@
 #define TOPTIPS_H
 
 #include <DLabel>
+#include <QLabel>
 
 DWIDGET_USE_NAMESPACE
 
-class TopTips : public DLabel
+class TopTips : public QLabel
 {
     Q_OBJECT
 public:

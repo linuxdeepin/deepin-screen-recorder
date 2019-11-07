@@ -25,6 +25,7 @@
 #include <DPalette>
 
 DWIDGET_USE_NAMESPACE
+DGUI_USE_NAMESPACE
 
 class ToolButton : public DPushButton
 {
@@ -35,7 +36,10 @@ public:
         Q_UNUSED(parent);
         setCheckable(true);
         m_tips = "";
-        this->setFocusPolicy(Qt::NoFocus);
+//        this->setFocusPolicy(Qt::NoFocus);
+//        DPalette pa = this->palette();
+//        pa.setColor(DPalette::Highlight, Qt::transparent);
+//        this->setPalette(pa);
     }
     ~ToolButton() {}
 

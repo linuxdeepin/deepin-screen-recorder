@@ -23,28 +23,31 @@
 #include <QDebug>
 #include <DPalette>
 #include <QImage>
+#include <QSizePolicy>
 
 DGUI_USE_NAMESPACE
 
 TopTips::TopTips(DWidget *parent)
-    : DLabel(parent)
+    : QLabel(parent)
 {
-    setFixedSize(90, 20);
+//    setFixedSize(90, 20);
 //    this->setStyleSheet(" TopTips { background-color: transparent;"
 //                        "border-image: url(:/resources/images/action/sizetip.png)  no-repeat;"
 //                        "color: white;"
 //                        "font-size: 12px;}");
 //    this->setPixmap(QPixmap::fromImage(QImage(":/resources/images/action/sizetip.png")));
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
     DPalette pa = this->palette();
     pa.setColor(DPalette::Foreground, Qt::white);
     this->setPalette(pa);
+    this->setAlignment(Qt::AlignLeft | Qt::AlignBottom);
+
 
 }
 
 void TopTips::setContent(QString widthXHeight)
 {
     setText(widthXHeight);
-    setAlignment(Qt::AlignCenter);
 }
 
 void TopTips::updateTips(QPoint pos, QString text)
@@ -53,17 +56,16 @@ void TopTips::updateTips(QPoint pos, QString text)
         this->show();
 
     QPoint startPoint = pos;
-
+    setContent(text);
     startPoint.setX(pos.x());
 
     if (pos.y() > this->height()) {
         startPoint.setY(pos.y() - this->height() - 3);
     } else {
-        startPoint.setY(pos.y() + 3);
+        startPoint.setY(pos.y() - 3);
     }
 
     this->move(startPoint);
-    setContent(text);
 }
 
 TopTips::~TopTips() {}

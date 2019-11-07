@@ -2071,8 +2071,11 @@ void MainWindow::paintEvent(QPaintEvent *)
         // Draw frame.
         if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
             painter.setRenderHint(QPainter::Antialiasing, false);
-            QPen framePen(QColor("#01bdff"));
-            framePen.setWidth(2);
+//            QPen framePen(QColor("#01bdff"));
+            QPen framePen(Qt::white);
+            framePen.setStyle(Qt::DashLine);
+            framePen.setDashOffset(0);
+            framePen.setWidth(1);
             painter.setOpacity(1);
             painter.setBrush(QBrush());  // clear brush
             painter.setPen(framePen);
