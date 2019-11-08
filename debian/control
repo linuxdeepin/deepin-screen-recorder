@@ -10,7 +10,7 @@ Homepage: https://github.com/linuxdeepin/deepin-screen-recorder
 
 Package: deepin-screen-recorder
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, byzanz, ffmpeg
+Depends: ${shlibs:Depends}, ${misc:Depends}, byzanz, ffmpeg, deepin-turbo
 Recommends: dde-session-ui
 Conflicts: deepin-screenshot
 Replaces: deepin-screenshot
