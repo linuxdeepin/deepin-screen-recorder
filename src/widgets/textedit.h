@@ -44,6 +44,7 @@ public slots:
     void setFontSize(int fontsize);
     void updateContentSize(QString content);
     void setEditing(bool edit);
+    void setSelecting(bool select);
 
 signals:
     void repaintTextRect(TextEdit *edit,  QRectF newPositiRect);

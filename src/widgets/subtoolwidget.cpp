@@ -141,23 +141,6 @@ void SubToolWidget::initRecordLabel()
     btnList.append(audioButton);
 
     DMenu *audioMenu = new DMenu();
-    //for test
-//    audioMenu->setStyle(QStyleFactory::create("dlight"));
-
-//    if (m_themeType == 1) {
-//        audioMenu->setStyle(QStyleFactory::create("dlight"));
-//    }
-
-//    else if (m_themeType == 2) {
-//        audioMenu->setStyle(QStyleFactory::create("ddark"));
-//    }
-
-    //for test
-//    pa = audioMenu->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//    audioMenu->setPalette(pa);
 
     DFontSizeManager::instance()->bind(audioMenu, DFontSizeManager::T8);
     QAction *microphoneAction = new QAction(audioMenu);
@@ -608,8 +591,10 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(false);
         fps24Action->setEnabled(false);
         fps30Action->setEnabled(false);
+        audioButton->setEnabled(false);
         microphoneAction->setEnabled(false);
         systemAudioAction->setEnabled(false);
+
 
     } else {
         mp4Action->setChecked(true);
@@ -619,6 +604,7 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(true);
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
+        audioButton->setEnabled(true);
         if (t_haveMicroPhone) {
             microphoneAction->setEnabled(true);
         }
@@ -633,6 +619,7 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(false);
         fps24Action->setEnabled(false);
         fps30Action->setEnabled(false);
+        audioButton->setEnabled(false);
         microphoneAction->setEnabled(false);
         systemAudioAction->setEnabled(false);
         emit gifActionChecked(checked);
@@ -645,6 +632,7 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(true);
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
+        audioButton->setEnabled(true);
         if (t_haveMicroPhone) {
             microphoneAction->setEnabled(true);
         }
@@ -1148,6 +1136,7 @@ void SubToolWidget::initShotLabel()
     t_formatGroup->setExclusive(true);
 
     DMenu *OptionMenu = new DMenu();
+
     DFontSizeManager::instance()->bind(OptionMenu, DFontSizeManager::T8);
     //for test
 //    OptionMenu->setStyle(QStyleFactory::create("dlight"));
@@ -1200,29 +1189,23 @@ void SubToolWidget::initShotLabel()
     clipAction->setText(tr("Save to clipboard"));
     clipAction->setCheckable(true);
 
+    //保存方式
     OptionMenu->addAction(saveTitleAction);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(saveToDesktopAction);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(saveToPictureAction);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(saveToSpecialPath);
     OptionMenu->addSeparator();
 
+    //保存剪贴板
     OptionMenu->addAction(clipTitleAction);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(clipAction);
     OptionMenu->addSeparator();
 
+    //保存格式
     OptionMenu->addAction(formatTitleAction);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(pngAction);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(jpgAction);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(bmpAction);
-//    OptionMenu->addSeparator();
-
 
 
     m_shotOptionButton->setMenu(OptionMenu);

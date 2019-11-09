@@ -35,7 +35,7 @@ MenuController::MenuController(QObject *parent)
     m_menu = new DMenu();
     m_menu->setFocusPolicy(Qt::StrongFocus);
     //for test
-    m_menu->setStyle(QStyleFactory::create("dlight"));
+//    m_menu->setStyle(QStyleFactory::create("dlight"));
     //for test
 
 //    QIcon rectIcon;

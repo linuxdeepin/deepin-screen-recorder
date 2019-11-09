@@ -255,13 +255,15 @@ void ColorToolWidget::setFunction(const QString &func)
 {
     m_function = func;
     int t_color = 0;
-    if (func == "text") {
-        t_color = ConfigSettings::instance()->value(m_function, "prev_color").toInt();
-//        ConfigSettings::instance()->setValue(m_function, "color_index", 0);
-    } else {
-        t_color = ConfigSettings::instance()->value(m_function, "color_index").toInt();
-//        ConfigSettings::instance()->setValue(m_function, "color_index", 0);
-    }
+//    if (func == "text") {
+//        t_color = ConfigSettings::instance()->value(m_function, "prev_color").toInt();
+////        ConfigSettings::instance()->setValue(m_function, "color_index", 0);
+//    } else {
+//        t_color = ConfigSettings::instance()->value(m_function, "color_index").toInt();
+////        ConfigSettings::instance()->setValue(m_function, "color_index", 0);
+//    }
+    t_color = ConfigSettings::instance()->value(m_function, "color_index").toInt();
+//    ConfigSettings::instance()->setValue(m_function, "color_index", 0);
 
     switch (t_color) {
     case 0:

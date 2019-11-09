@@ -21,6 +21,7 @@
 #define TOPTIPS_H
 
 #include <DLabel>
+#include <DWidget>
 #include <QLabel>
 
 DWIDGET_USE_NAMESPACE

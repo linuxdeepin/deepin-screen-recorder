@@ -78,7 +78,7 @@ ShapesWidget::~ShapesWidget() {}
 void ShapesWidget::updateSelectedShape(const QString &group,
                                        const QString &key, int index)
 {
-//    qDebug() << "updateSelectedShapes" << m_selectedIndex << m_shapes.length() << m_selectedOrder;
+    qDebug() << "updateSelectedShapes" << m_selectedIndex << m_shapes.length() << m_selectedOrder;
     if ((group == m_currentShape.type || "common" == group) && key == "color_index") {
         m_penColor = colorIndexOf(index);
     }
@@ -153,6 +153,7 @@ void ShapesWidget::clearSelected()
     m_isSelected = false;
     m_selectedShape.points.clear();
     m_hoveredShape.points.clear();
+    updateCursorShape();
 }
 
 void ShapesWidget::setAllTextEditReadOnly()
@@ -174,22 +175,27 @@ void ShapesWidget::setAllTextEditReadOnly()
 
 void ShapesWidget::setNoChangedTextEditRemove()
 {
-    QMap<int, TextEdit *>::iterator i = m_editMap.begin();
-    while (i != m_editMap.end()) {
-
-        if (i.value()->document()->toPlainText() == QString(tr("Input your content")) ||
-                i.value()->document()->toPlainText().isEmpty()) {
-            i.value()->clear();
-            delete i.value();
-            m_editMap.remove(i.key());
-            m_shapes.removeAt(i.key());
-            update();
-//            m_editing = true;
-            return;
-        }
-        i++;
+    qDebug() << "delete text";
+    if (m_shapes.length() == 0) {
+        return;
     }
+    for (int i = 0; i < m_shapes.length(); i++) {
+        qDebug() << "delete text11111111111";
+        if (m_shapes[i].type == "text") {
+            qDebug() << "delete text22222222222222";
+            int t_tempIndex = m_shapes[i].index;
+            if (m_editMap.value(t_tempIndex)->document()->toPlainText() == QString(tr("Input your content"))
+                    || m_editMap.value(t_tempIndex)->document()->toPlainText().isEmpty()) {
+                m_shapes.removeAt(i);
+                m_editMap.value(t_tempIndex)->clear();
+                m_editMap.remove(t_tempIndex);
 
+                break;
+            }
+
+        }
+
+    }
     if (m_shapes.length() == 0) {
         emit setShapesUndo(false);
     }
@@ -244,12 +250,12 @@ bool ShapesWidget::clickedOnShapes(QPointF pos)
         if (m_shapes[i].type == "text") {
             if (clickedOnText(m_shapes[i].mainPoints, pos)) {
 
-                int tmpIndex = m_shapes[m_selectedOrder].index;
-                if (m_editMap.contains(tmpIndex)) {
-                    QColor t_color = m_editMap.value(tmpIndex)->getColor();
-                    int colorNum = colorIndex(t_color);
-                    ConfigSettings::instance()->setValue("text", "prev_color", colorNum);
-                }
+//                int tmpIndex = m_shapes[m_selectedOrder].index;
+//                if (m_editMap.contains(tmpIndex)) {
+//                    QColor t_color = m_editMap.value(tmpIndex)->getColor();
+////                    int colorNum = colorIndex(t_color);
+////                    ConfigSettings::instance()->setValue("text", "prev_color", colorNum);
+//                }
 
                 currentOnShape = true;
                 emit shapeClicked("text");
@@ -1136,13 +1142,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     m_editing = true;
                     int defaultFontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();
                     m_currentShape.fontSize = defaultFontSize;
-                    edit->setFocus();
-                    edit->move(m_pos1.x(), m_pos1.y());
-                    edit->show();
-                    QTextCursor cs = edit->textCursor();
-                    edit->moveCursor(QTextCursor::Start);
-                    cs.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, t_editText.length());
-                    edit->setTextCursor(cs);
+
 
                     m_currentShape.mainPoints[0] = m_pos1;
                     m_currentShape.mainPoints[1] = QPointF(m_pos1.x(), m_pos1.y() + edit->height());
@@ -1152,9 +1152,11 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     m_editMap.insert(m_currentIndex, edit);
                     m_selectedIndex = m_currentIndex;
                     m_selectedShape = m_currentShape;
-                    if (m_selectedOrder == -1) {
-                        m_selectedOrder = 0;
-                    }
+
+//                    m_selectedOrder = m_currentIndex;
+//                    updateTextRect();
+
+//
 
                     connect(edit, &TextEdit::repaintTextRect, this, &ShapesWidget::updateTextRect);
 //                    connect(edit, &TextEdit::backToEditing, this, [ = ] {
@@ -1174,7 +1176,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     });
 
                     connect(edit, &TextEdit::textEditSelected, this, [ = ](int index) {
-                        setAllTextEditReadOnly();
+//                        setAllTextEditReadOnly();
                         for (int k = 0; k < m_shapes.length(); k++) {
                             if (m_shapes[k].type == "text" && m_shapes[k].index == index) {
                                 m_selectedIndex = index;
@@ -1184,8 +1186,32 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                             }
                         }
                         emit shapeClicked("text");
+
+//
                     });
+
+                    edit->setSelecting(true);
+                    edit->setFocus();
+                    edit->move(m_pos1.x(), m_pos1.y());
+                    edit->show();
+                    QTextCursor cs = edit->textCursor();
+                    edit->moveCursor(QTextCursor::Start);
+                    cs.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, t_editText.length());
+                    edit->setTextCursor(cs);
+
+
+
+
                     m_shapes.append(m_currentShape);
+
+
+                    for (int k = 0; k < m_shapes.length(); k++) {
+                        if (m_shapes[k].type == "text" && m_shapes[k].index == m_currentIndex) {
+                            m_selectedOrder = k;
+                            break;
+                        }
+                    }
+
                     qDebug() << "Insert text shape:" << m_shapes.size() << m_currentShape.type << m_currentShape.index;
                 } else {
                     m_editing = false;
@@ -1789,6 +1815,7 @@ void ShapesWidget::enterEvent(QEvent *e)
 
 void ShapesWidget::deleteCurrentShape()
 {
+    qDebug() << "delete shape";
     if (m_selectedOrder < m_shapes.length()) {
         m_shapes.removeAt(m_selectedOrder);
     } else {
@@ -1837,6 +1864,7 @@ void ShapesWidget::undoDrawShapes()
         emit setShapesUndo(false);
     }
     m_isSelected = false;
+    clearSelected();
     update();
 }
 void ShapesWidget::undoAllDrawShapes()
@@ -1862,6 +1890,7 @@ void ShapesWidget::undoAllDrawShapes()
         emit setShapesUndo(false);
     }
     m_isSelected = false;
+    clearSelected();
     update();
 }
 QString ShapesWidget::getCurrentType()

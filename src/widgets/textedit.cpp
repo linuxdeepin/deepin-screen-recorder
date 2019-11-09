@@ -130,6 +130,15 @@ void TextEdit::setEditing(bool edit)
     m_editing = edit;
 }
 
+void TextEdit::setSelecting(bool select)
+{
+    if (select) {
+        emit textEditSelected(getIndex());
+    }
+
+//    emit clickToEditing(getIndex());
+}
+
 void TextEdit::updateCursor()
 {
 //    setTextColor(Qt::green);

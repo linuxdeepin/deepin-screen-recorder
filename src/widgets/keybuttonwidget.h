@@ -28,6 +28,7 @@
 #include <QDebug>
 #include <QFont>
 #include <QHBoxLayout>
+#include <DWidget>
 
 DWIDGET_USE_NAMESPACE
 
