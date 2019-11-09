@@ -2566,6 +2566,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         if (!m_isShapesWidgetExist) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             if (mouseEvent->button() == Qt::LeftButton) {
+                if (m_sizeTips->isVisible()) {
+                    m_sizeTips->updateTips(QPoint(recordX, recordY),
+                                           QString("%1X%2").arg(recordWidth).arg(recordHeight));
+                }
                 if (!isFirstReleaseButton) {
                     isFirstReleaseButton = true;
 
@@ -2574,10 +2578,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     if (m_functionType == 1 && m_sideBar->isVisible()) {
                         updateSideBarPos();
                         m_zoomIndicator->hide();
-                        if (m_sizeTips->isVisible()) {
-                            m_sizeTips->updateTips(QPoint(recordX, recordY),
-                                                   QString("%1X%2").arg(recordWidth).arg(recordHeight));
-                        }
                     }
                     updateRecordButtonPos();
                     updateShotButtonPos();
@@ -2642,6 +2642,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         updateShotButtonPos();
                         updateCameraWidgetPos();
                     }
+                }
+                if (m_sizeTips->isVisible()) {
+                    m_sizeTips->updateTips(QPoint(recordX, recordY),
+                                           QString("%1X%2").arg(recordWidth).arg(recordHeight));
                 }
 
                 isPressButton = false;
