@@ -449,12 +449,12 @@ void MainWindow::initAttributes()
 
 void MainWindow::initShortcut()
 {
-    QShortcut *rectSC = new QShortcut(QKeySequence("Alt+1"), this);
-    QShortcut *ovalSC = new QShortcut(QKeySequence("Alt+2"), this);
-    QShortcut *arrowSC = new QShortcut(QKeySequence("Alt+3"), this);
-    QShortcut *lineSC = new QShortcut(QKeySequence("Alt+4"), this);
-    QShortcut *textSC = new QShortcut(QKeySequence("Alt+5"), this);
-    QShortcut *colorSC = new QShortcut(QKeySequence("Alt+6"), this);
+    QShortcut *rectSC = new QShortcut(QKeySequence("R"), this);
+    QShortcut *ovalSC = new QShortcut(QKeySequence("O"), this);
+    QShortcut *arrowSC = new QShortcut(QKeySequence("L"), this);
+    QShortcut *lineSC = new QShortcut(QKeySequence("P"), this);
+    QShortcut *textSC = new QShortcut(QKeySequence("T"), this);
+//    QShortcut *colorSC = new QShortcut(QKeySequence("Alt+6"), this);
 
     connect(rectSC, &QShortcut::activated, this, [ = ] {
         if (m_functionType == 1)
@@ -487,12 +487,12 @@ void MainWindow::initShortcut()
             emit m_toolBar->shapeClickedFromMain("text");
         }
     });
-    connect(colorSC, &QShortcut::activated, this, [ = ] {
-        if (m_functionType == 1)
-        {
-            emit m_toolBar->shapeClickedFromMain("option");
-        }
-    });
+//    connect(colorSC, &QShortcut::activated, this, [ = ] {
+//        if (m_functionType == 1)
+//        {
+//            emit m_toolBar->shapeClickedFromMain("option");
+//        }
+//    });
 
     if (isCommandExist("dman")) {
         QShortcut *helpSC = new QShortcut(QKeySequence("F1"), this);
@@ -524,6 +524,7 @@ void MainWindow::initResource()
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
+    trayIcon->setToolTip(tr("Deepin screen recorder"));
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
     setDragCursor();
@@ -2169,7 +2170,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             } else if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
                 if (keyEvent->key() == Qt::Key_Question) {
                     onViewShortcut();
-                }
+                } else if (keyEvent->key() == Qt::Key_Z) {
+                   qDebug() << "SDGF: ctrl+shift+z !!!";
+                   emit unDoAll();
+               }
             } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {
                 if (keyEvent->key() == Qt::Key_C) {
 //                    ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
@@ -3335,6 +3339,7 @@ void MainWindow::initShapeWidget(QString type)
 //            m_toolBar, &ToolBar::saveBtnPressed);
 //    connect(m_shapesWidget, &ShapesWidget::requestExit, this, &MainWindow::exitApp);
     connect(this, &MainWindow::unDo, m_shapesWidget, &ShapesWidget::undoDrawShapes);
+    connect(this, &MainWindow::unDoAll, m_shapesWidget, &ShapesWidget::undoAllDrawShapes);
     connect(this, &MainWindow::saveActionTriggered,
             m_shapesWidget, &ShapesWidget::saveActionTriggered);
     connect(m_shapesWidget, &ShapesWidget::menuNoFocus, this, &MainWindow::activateWindow);

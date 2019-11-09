@@ -100,6 +100,7 @@ public slots:
     bool textEditIsReadOnly();
 
     void undoDrawShapes();
+    void undoAllDrawShapes();
     void deleteCurrentShape();
     QString  getCurrentType();
     void microAdjust(QString direction);

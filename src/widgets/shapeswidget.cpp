@@ -1830,7 +1830,31 @@ void ShapesWidget::undoDrawShapes()
     m_isSelected = false;
     update();
 }
+void ShapesWidget::undoAllDrawShapes()
+{
+    qDebug() << "undoAllDrawShapes undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
+    if (m_selectedOrder < m_shapes.length() && m_selectedIndex != -1) {
+        deleteCurrentShape();
+    } else if (m_shapes.length() > 0) {
+        while (m_shapes.length() > 0) {
+            int tmpIndex = m_shapes[m_shapes.length() - 1].index;
+            if (m_shapes[m_shapes.length() - 1].type == "text" && m_editMap.contains(tmpIndex) ) {
+                m_editMap.value(tmpIndex)->clear();
+                delete m_editMap.value(tmpIndex);
+                m_editMap.remove(tmpIndex);
+            }
 
+            m_shapes.removeLast();
+        }
+    }
+    qDebug() << "undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
+
+    if (m_shapes.length() == 0) {
+        emit setShapesUndo(false);
+    }
+    m_isSelected = false;
+    update();
+}
 QString ShapesWidget::getCurrentType()
 {
     return m_currentShape.type;

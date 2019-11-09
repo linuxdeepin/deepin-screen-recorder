@@ -173,24 +173,8 @@ void SubToolWidget::initRecordLabel()
         microphoneAction->setIcon(QIcon(":/image/newUI/dark/normal/microphone.svg"));
     }
 
-    bool t_haveMicroPhone = false;
-//    microphoneAction->setIcon(QIcon(":/image/newUI/normal/microphone.svg"));
-    if (AudioUtils().canMicrophoneInput()) {
-        t_haveMicroPhone = true;
-        microphoneAction->setCheckable(true);
-        microphoneAction->setChecked(true);
-    } else {
-        t_haveMicroPhone = false;
-        microphoneAction->setDisabled(true);
 
-        if (m_themeType == 1) {
-            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
-        }
 
-        else if (m_themeType == 2) {
-            audioButton->setIcon(QIcon(":/image/newUI/dark/normal/mute_normal.svg"));
-        }
-    }
     systemAudioAction->setText(tr("SystemAudio"));
 //    systemAudioAction->setIcon(QIcon(":/image/newUI/normal/audio frequency.svg"));
     if (m_themeType == 1) {
@@ -302,11 +286,34 @@ void SubToolWidget::initRecordLabel()
         }
     });
 
+    bool t_haveMicroPhone = false;
+//    microphoneAction->setIcon(QIcon(":/image/newUI/normal/microphone.svg"));
+    if (AudioUtils().canMicrophoneInput()) {
+        t_haveMicroPhone = true;
+        microphoneAction->setCheckable(true);
+//        microphoneAction->setChecked(true);
+        microphoneAction->trigger();
+    } else {
+        t_haveMicroPhone = false;
+        microphoneAction->setDisabled(true);
+
+//        if (m_themeType == 1) {
+//            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
+//        }
+
+//        else if (m_themeType == 2) {
+//            audioButton->setIcon(QIcon(":/image/newUI/dark/normal/mute_normal.svg"));
+//        }
+    }
+
+
     if (AudioUtils().canVirtualCardOutput()) {
         systemAudioAction->setCheckable(true);
+        systemAudioAction->trigger();
     } else {
         systemAudioAction->setDisabled(true);
     }
+
 
 //    systemAudioAction->setDisabled(!AudioUtils().canVirtualCardOutput());
     audioMenu->addAction(microphoneAction);
@@ -363,6 +370,7 @@ void SubToolWidget::initRecordLabel()
         if (m_keyBoardButton->isChecked())
         {
 //            m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key display_mormal.svg"));
+            m_keyBoardButton->setToolTip(tr("Hidden Key"));
             if (m_themeType == 1) {
                 m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key display_mormal.svg"));
             }
@@ -375,6 +383,7 @@ void SubToolWidget::initRecordLabel()
         if (!m_keyBoardButton->isChecked())
         {
 //            m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
+            m_keyBoardButton->setToolTip(tr("Show Key"));
             if (m_themeType == 1) {
                 m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
             }
@@ -414,6 +423,7 @@ void SubToolWidget::initRecordLabel()
         if (m_cameraButton->isChecked())
         {
 //            m_cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
+            m_cameraButton->setToolTip(tr("Close Camera"));
             if (m_themeType == 1) {
                 m_cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
             }
@@ -426,6 +436,7 @@ void SubToolWidget::initRecordLabel()
         if (!m_cameraButton->isChecked())
         {
 //            m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
+            m_cameraButton->setToolTip(tr("Show Camera"));
             if (m_themeType == 1) {
                 m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
             }
@@ -465,6 +476,7 @@ void SubToolWidget::initRecordLabel()
         if (m_mouseButton->isChecked())
         {
 //            m_mouseButton->setIcon(QIcon(":/image/newUI/checked/mouse_checked.svg"));
+            m_mouseButton->setToolTip(tr("Hidden Mouse"));
             if (m_themeType == 1) {
                 m_mouseButton->setIcon(QIcon(":/image/newUI/checked/mouse_checked.svg"));
             }
@@ -477,6 +489,7 @@ void SubToolWidget::initRecordLabel()
         if (!m_mouseButton->isChecked())
         {
 //            m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
+            m_mouseButton->setToolTip(tr("Show Mouse"));
             if (m_themeType == 1) {
                 m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
             }

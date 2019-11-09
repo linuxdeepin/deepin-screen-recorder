@@ -134,6 +134,7 @@ signals:
     void hideScreenshotUI();
     void saveActionTriggered();
     void unDo();
+    void unDoAll();
     void deleteShapes();
 
 public slots:
