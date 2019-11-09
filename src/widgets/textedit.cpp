@@ -78,6 +78,7 @@ int TextEdit::getIndex()
 
 void TextEdit::setColor(QColor c)
 {
+    qDebug() << "set color";
     m_textColor = c;
 //    setStyleSheet(QString("TextEdit {background-color:  transparent;"
 //                          " color: %1; border: none;}").arg(m_textColor.name()));

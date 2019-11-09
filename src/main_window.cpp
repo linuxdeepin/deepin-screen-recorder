@@ -58,6 +58,7 @@
 const int MainWindow::CURSOR_BOUND = 5;
 const int MainWindow::RECORD_MIN_SIZE = 580;
 const int MainWindow::RECORD_MIN_HEIGHT = 280;
+const int MainWindow::RECORD_MIN_SHOT_SIZE = 10;
 const int MainWindow::DRAG_POINT_RADIUS = 8;
 
 const int MainWindow::RECORD_BUTTON_NORMAL = 0;
@@ -2245,31 +2246,31 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
 
                     if (keyEvent->key() == Qt::Key_Left) {
-                        if (recordWidth > RECORD_MIN_SIZE) {
+                        if (recordWidth > RECORD_MIN_SHOT_SIZE) {
                             recordX = std::max(0, recordX + 1);
                             recordWidth = std::max(std::min(recordWidth - 1,
-                                                            m_backgroundRect.width()), RECORD_MIN_SIZE);
+                                                            m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
                             needRepaint = true;
                         }
 
                     } else if (keyEvent->key() == Qt::Key_Right) {
-                        if (recordWidth > RECORD_MIN_SIZE) {
+                        if (recordWidth > RECORD_MIN_SHOT_SIZE) {
                             recordWidth = std::max(std::min(recordWidth - 1,
-                                                            m_backgroundRect.width()), RECORD_MIN_SIZE);
+                                                            m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
                             needRepaint = true;
                         }
                     } else if (keyEvent->key() == Qt::Key_Up) {
-                        if (recordHeight > RECORD_MIN_HEIGHT) {
+                        if (recordHeight > RECORD_MIN_SHOT_SIZE) {
                             recordY = std::max(0, recordY + 1);
 
                             recordHeight = std::max(std::min(recordHeight - 1,
-                                                             m_backgroundRect.height()), RECORD_MIN_HEIGHT);
+                                                             m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
                             needRepaint = true;
                         }
                     } else if (keyEvent->key() == Qt::Key_Down) {
-                        if (recordHeight > RECORD_MIN_HEIGHT) {
+                        if (recordHeight > RECORD_MIN_SHOT_SIZE) {
                             recordHeight = std::max(std::min(recordHeight - 1,
-                                                             m_backgroundRect.height()), RECORD_MIN_HEIGHT);
+                                                             m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
                             needRepaint = true;
                         }
                     }
@@ -2591,30 +2592,33 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         }
                     } else {
 
-                        // Make sure record area not too small.
-                        recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
-                        recordHeight = recordHeight < RECORD_MIN_HEIGHT ? RECORD_MIN_HEIGHT : recordHeight;
+                        if (m_functionType == 0) {
+                            // Make sure record area not too small.
+                            recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
+                            recordHeight = recordHeight < RECORD_MIN_HEIGHT ? RECORD_MIN_HEIGHT : recordHeight;
 
-                        if (recordX + recordWidth > rootWindowRect.width) {
-                            recordX = rootWindowRect.width - recordWidth;
+                            if (recordX + recordWidth > rootWindowRect.width) {
+                                recordX = rootWindowRect.width - recordWidth;
+                            }
+
+                            if (recordY + recordHeight > rootWindowRect.height) {
+                                recordY = rootWindowRect.height - recordHeight;
+                            }
                         }
 
-                        if (recordY + recordHeight > rootWindowRect.height) {
-                            recordY = rootWindowRect.height - recordHeight;
+                        else if (m_functionType == 1) {
+                            // Make sure record area not too small.
+                            recordWidth = recordWidth < RECORD_MIN_SHOT_SIZE ? RECORD_MIN_SHOT_SIZE : recordWidth;
+                            recordHeight = recordHeight < RECORD_MIN_SHOT_SIZE ? RECORD_MIN_SHOT_SIZE : recordHeight;
+
+                            if (recordX + recordWidth > rootWindowRect.width) {
+                                recordX = rootWindowRect.width - recordWidth;
+                            }
+
+                            if (recordY + recordHeight > rootWindowRect.height) {
+                                recordY = rootWindowRect.height - recordHeight;
+                            }
                         }
-//                        else if (m_functionType == 1) {
-//                            // Make sure record area not too small.
-//                            recordWidth = recordWidth < 200 ? 200 : recordWidth;
-//                            recordHeight = recordHeight < 200 ? 200 : recordHeight;
-
-//                            if (recordX + recordWidth > rootWindowRect.width) {
-//                                recordX = rootWindowRect.width - recordWidth;
-//                            }
-
-//                            if (recordY + recordHeight > rootWindowRect.height) {
-//                                recordY = rootWindowRect.height - recordHeight;
-//                            }
-//                        }
 
                     }
 
@@ -2885,28 +2889,54 @@ void MainWindow::flashTrayIcon()
 
 void MainWindow::resizeTop(QMouseEvent *mouseEvent)
 {
-    int offsetY = mouseEvent->y() - dragStartY;
-    recordY = std::max(std::min(dragRecordY + offsetY, dragRecordY + dragRecordHeight - RECORD_MIN_HEIGHT), 1);
-    recordHeight = std::max(std::min(dragRecordHeight - offsetY, rootWindowRect.height), RECORD_MIN_HEIGHT);
+    if (m_functionType == 0) {
+        int offsetY = mouseEvent->y() - dragStartY;
+        recordY = std::max(std::min(dragRecordY + offsetY, dragRecordY + dragRecordHeight - RECORD_MIN_HEIGHT), 1);
+        recordHeight = std::max(std::min(dragRecordHeight - offsetY, rootWindowRect.height), RECORD_MIN_HEIGHT);
+    }
+
+    else if (m_functionType == 1) {
+        int offsetY = mouseEvent->y() - dragStartY;
+        recordY = std::max(std::min(dragRecordY + offsetY, dragRecordY + dragRecordHeight - RECORD_MIN_SHOT_SIZE), 1);
+        recordHeight = std::max(std::min(dragRecordHeight - offsetY, rootWindowRect.height), RECORD_MIN_SHOT_SIZE);
+    }
+
 }
 
 void MainWindow::resizeBottom(QMouseEvent *mouseEvent)
 {
-    int offsetY = mouseEvent->y() - dragStartY;
-    recordHeight = std::max(std::min(dragRecordHeight + offsetY, rootWindowRect.height), RECORD_MIN_HEIGHT);
+    if (m_functionType == 0) {
+        int offsetY = mouseEvent->y() - dragStartY;
+        recordHeight = std::max(std::min(dragRecordHeight + offsetY, rootWindowRect.height), RECORD_MIN_HEIGHT);
+    } else if (m_functionType == 1) {
+        int offsetY = mouseEvent->y() - dragStartY;
+        recordHeight = std::max(std::min(dragRecordHeight + offsetY, rootWindowRect.height), RECORD_MIN_SHOT_SIZE);
+    }
 }
 
 void MainWindow::resizeLeft(QMouseEvent *mouseEvent)
 {
-    int offsetX = mouseEvent->x() - dragStartX;
-    recordX = std::max(std::min(dragRecordX + offsetX, dragRecordX + dragRecordWidth - RECORD_MIN_SIZE), 1);
-    recordWidth = std::max(std::min(dragRecordWidth - offsetX, rootWindowRect.width), RECORD_MIN_SIZE);
+    if (m_functionType == 0) {
+        int offsetX = mouseEvent->x() - dragStartX;
+        recordX = std::max(std::min(dragRecordX + offsetX, dragRecordX + dragRecordWidth - RECORD_MIN_SIZE), 1);
+        recordWidth = std::max(std::min(dragRecordWidth - offsetX, rootWindowRect.width), RECORD_MIN_SIZE);
+    } else if (m_functionType ==  1) {
+        int offsetX = mouseEvent->x() - dragStartX;
+        recordX = std::max(std::min(dragRecordX + offsetX, dragRecordX + dragRecordWidth - RECORD_MIN_SHOT_SIZE), 1);
+        recordWidth = std::max(std::min(dragRecordWidth - offsetX, rootWindowRect.width), RECORD_MIN_SHOT_SIZE);
+    }
+
 }
 
 void MainWindow::resizeRight(QMouseEvent *mouseEvent)
 {
-    int offsetX = mouseEvent->x() - dragStartX;
-    recordWidth = std::max(std::min(dragRecordWidth + offsetX, rootWindowRect.width), RECORD_MIN_SIZE);
+    if (m_functionType == 0) {
+        int offsetX = mouseEvent->x() - dragStartX;
+        recordWidth = std::max(std::min(dragRecordWidth + offsetX, rootWindowRect.width), RECORD_MIN_SIZE);
+    } else if (m_functionType == 1) {
+        int offsetX = mouseEvent->x() - dragStartX;
+        recordWidth = std::max(std::min(dragRecordWidth + offsetX, rootWindowRect.width), RECORD_MIN_SHOT_SIZE);
+    }
 }
 
 int MainWindow::getAction(QEvent *event)

@@ -75,6 +75,7 @@ class MainWindow : public DWidget
     static const int CURSOR_BOUND;
     static const int RECORD_MIN_SIZE;
     static const int RECORD_MIN_HEIGHT;
+    static const int RECORD_MIN_SHOT_SIZE;
     static const int DRAG_POINT_RADIUS;
 
     static const int RECORD_BUTTON_NORMAL;
