@@ -290,7 +290,8 @@ void RecordProcess::initProcess()
             fileExtension = "gif";
         }
     } else {
-        if (settings->getOption("lossless_recording").toBool() || !QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+//        if (settings->getOption("lossless_recording").toBool() || !QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+        if (settings->getOption("lossless_recording").toBool()) {
             fileExtension = "mkv";
         } else {
             fileExtension = "mp4";

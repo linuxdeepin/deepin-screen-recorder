@@ -128,7 +128,7 @@ void MainWindow::initAttributes()
 
     // Add Qt::WindowDoesNotAcceptFocus make window not accept focus forcely, avoid conflict with dde hot-corner.
 //    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint);
-    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint  | Qt::X11BypassWindowManagerHint);
+    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint  | Qt::WindowStaysOnTopHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
     setMouseTracking(true);   // make MouseMove can response
     installEventFilter(this);  // add event filter
@@ -639,6 +639,7 @@ void MainWindow::initScreenRecorder()
         qApp->quit();
     }
 
+
     m_functionType = 0;
     m_keyBoardStatus = 0;
     m_mouseStatus = 0;
@@ -702,6 +703,7 @@ void MainWindow::initScreenRecorder()
 
     m_selectedMic = true;
     m_selectedSystemAudio = false;
+
     initVirtualCard();
     setDragCursor();
 //    eventMonitor.start();
