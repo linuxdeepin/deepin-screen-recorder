@@ -35,8 +35,8 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
                       ShortcutItem(tr("Quick start"), "Ctrl+Alt+A") <<
                       ShortcutItem(tr("Full screenshot"),  "Print") <<
                       ShortcutItem(tr("Delay screenshot"),  "Ctrl+Print") <<
-                      ShortcutItem(tr("Undo"), "Ctrl+Z") <<
-                      ShortcutItem(tr("Undo All"), "Ctrl+Shift+Z") <<
+                      ShortcutItem(tr("window screenshot"), "Alt+Print") <<
+
                       ShortcutItem(tr("Exit"),   "Esc");
 
     group2.groupItems << ShortcutItem(tr("Save"), "Ctrl+S")
@@ -48,7 +48,8 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
                       ShortcutItem(tr("Arrow"),        "L") <<
                       ShortcutItem(tr("Pencil"),        "P") <<
                       ShortcutItem(tr("Text"),           "T") <<
-//                      ShortcutItem(tr("Color"),         "Alt+6");
+                      ShortcutItem(tr("Undo"), "Ctrl+Z") <<
+                      ShortcutItem(tr("Undo All"), "Ctrl+Shift+Z");
 
     group4.groupItems <<
                       ShortcutItem(tr("Increase height up"), "Ctrl+Up") <<

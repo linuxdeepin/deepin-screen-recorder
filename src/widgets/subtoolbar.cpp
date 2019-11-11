@@ -395,6 +395,7 @@ void SubToolBar::initColorLabel()
 
 void SubToolBar::updateColor(QColor color)
 {
+//    qDebug() << "update text color";
     int colNum = colorIndex(color);
     ConfigSettings::instance()->setValue("common", "color_index", colNum);
     emit currentColorChanged(color);

@@ -78,7 +78,7 @@ ShapesWidget::~ShapesWidget() {}
 void ShapesWidget::updateSelectedShape(const QString &group,
                                        const QString &key, int index)
 {
-    qDebug() << "updateSelectedShapes" << m_selectedIndex << m_shapes.length() << m_selectedOrder;
+//    qDebug() << "updateSelectedShapes" << m_selectedIndex << m_shapes.length() << m_selectedOrder;
     if ((group == m_currentShape.type || "common" == group) && key == "color_index") {
         m_penColor = colorIndexOf(index);
     }
@@ -98,6 +98,7 @@ void ShapesWidget::updateSelectedShape(const QString &group,
                 m_editMap.value(tmpIndex)->setColor(colorIndexOf(index));
                 m_editMap.value(tmpIndex)->update();
             }
+
         } else if (group == "text" && m_selectedShape.type == group && key == "fontsize")  {
             qDebug() << "change font size";
             int tmpIndex = m_shapes[m_selectedOrder].index;
@@ -242,6 +243,14 @@ bool ShapesWidget::clickedOnShapes(QPointF pos)
 
         if (m_shapes[i].type == "text") {
             if (clickedOnText(m_shapes[i].mainPoints, pos)) {
+
+                int tmpIndex = m_shapes[m_selectedOrder].index;
+                if (m_editMap.contains(tmpIndex)) {
+                    QColor t_color = m_editMap.value(tmpIndex)->getColor();
+                    int colorNum = colorIndex(t_color);
+                    ConfigSettings::instance()->setValue("text", "prev_color", colorNum);
+                }
+
                 currentOnShape = true;
                 emit shapeClicked("text");
             }
@@ -1413,9 +1422,9 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
 void ShapesWidget::updateTextRect(TextEdit *edit, QRectF newRect)
 {
     int index = edit->getIndex();
-    qDebug() << "updateTextRect:" << newRect << index;
+//    qDebug() << "updateTextRect:" << newRect << index;
     for (int j = 0; j < m_shapes.length(); j++) {
-        qDebug() << "updateTextRect  updating:" << j << m_shapes[j].index << index;
+//        qDebug() << "updateTextRect  updating:" << j << m_shapes[j].index << index;
         if (m_shapes[j].type == "text" && m_shapes[j].index == index) {
             m_shapes[j].mainPoints[0] = QPointF(newRect.x(), newRect.y());
             m_shapes[j].mainPoints[1] = QPointF(newRect.x(), newRect.y() + newRect.height());

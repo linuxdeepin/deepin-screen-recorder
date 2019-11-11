@@ -92,6 +92,11 @@ void TextEdit::setColor(QColor c)
     this->updateGeometry();
 }
 
+QColor TextEdit::getColor()
+{
+    return m_textColor;
+}
+
 void TextEdit::setFontSize(int fontsize)
 {
     QFont font;

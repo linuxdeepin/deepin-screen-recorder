@@ -52,6 +52,7 @@ ConfigSettings::ConfigSettings(QObject *parent)
         setValue("rectangle", "linewidth_index", 1);
         setValue("text", "color_index", 0);
         setValue("text", "fontsize", 12);
+        setValue("text", "prev_color", 0);
 
         setValue("save", "save_op", SaveAction::SaveToDesktop);
         setValue("save", "save_quality", 100);
@@ -90,6 +91,7 @@ void ConfigSettings::setValue(const QString &group, const QString &key,
     m_settings->sync();
 
     if (val.type() == QVariant::Int) {
+        qDebug() << "config changed";
         emit shapeConfigChanged(group, key, val.toInt());
     }
 

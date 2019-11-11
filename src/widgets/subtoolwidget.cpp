@@ -580,22 +580,22 @@ void SubToolWidget::initRecordLabel()
     t_fpsGroup->addAction(fps30Action);
 
     OptionMenu->addAction(formatTitleAction);
-    OptionMenu->addSeparator();
+//    OptionMenu->addSeparator();
     OptionMenu->addAction(gifAction);
-    OptionMenu->addSeparator();
+//    OptionMenu->addSeparator();
     OptionMenu->addAction(mp4Action);
     OptionMenu->addSeparator();
 
     OptionMenu->addAction(fpsTitleAction);
-    OptionMenu->addSeparator();
+//    OptionMenu->addSeparator();
     OptionMenu->addAction(fps5Action);
-    OptionMenu->addSeparator();
+//    OptionMenu->addSeparator();
     OptionMenu->addAction(fps10Action);
-    OptionMenu->addSeparator();
+//    OptionMenu->addSeparator();
     OptionMenu->addAction(fps20Action);
-    OptionMenu->addSeparator();
+//    OptionMenu->addSeparator();
     OptionMenu->addAction(fps24Action);
-    OptionMenu->addSeparator();
+//    OptionMenu->addSeparator();
     OptionMenu->addAction(fps30Action);
 
     m_optionButton->setMenu(OptionMenu);
@@ -1201,27 +1201,27 @@ void SubToolWidget::initShotLabel()
     clipAction->setCheckable(true);
 
     OptionMenu->addAction(saveTitleAction);
-    OptionMenu->addSeparator();
+//    OptionMenu->addSeparator();
     OptionMenu->addAction(saveToDesktopAction);
-    OptionMenu->addSeparator();
+//    OptionMenu->addSeparator();
     OptionMenu->addAction(saveToPictureAction);
-    OptionMenu->addSeparator();
+//    OptionMenu->addSeparator();
     OptionMenu->addAction(saveToSpecialPath);
     OptionMenu->addSeparator();
 
     OptionMenu->addAction(clipTitleAction);
-    OptionMenu->addSeparator();
+//    OptionMenu->addSeparator();
     OptionMenu->addAction(clipAction);
     OptionMenu->addSeparator();
 
     OptionMenu->addAction(formatTitleAction);
-    OptionMenu->addSeparator();
+//    OptionMenu->addSeparator();
     OptionMenu->addAction(pngAction);
-    OptionMenu->addSeparator();
+//    OptionMenu->addSeparator();
     OptionMenu->addAction(jpgAction);
-    OptionMenu->addSeparator();
+//    OptionMenu->addSeparator();
     OptionMenu->addAction(bmpAction);
-    OptionMenu->addSeparator();
+//    OptionMenu->addSeparator();
 
 
 

@@ -28,6 +28,7 @@
 #include <DLineEdit>
 #include <DInputDialog>
 #include <DDesktopServices>
+
 #include <QApplication>
 #include <QTimer>
 #include <QKeyEvent>
@@ -41,6 +42,7 @@
 #include <QClipboard>
 #include <QFileDialog>
 #include <QShortcut>
+#include <QDesktopWidget>
 
 #include "main_window.h"
 #include "utils.h"
@@ -123,8 +125,28 @@ void MainWindow::initAttributes()
     m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
     m_keyButtonList.clear();
     m_tempkeyButtonList.clear();
-    m_screenWidth = QApplication::desktop()->screen()->width();
+    int t_screenCount = QApplication::desktop()->screenCount();
+    int t_indexScreen = 0;
     m_screenHeight = QApplication::desktop()->screen()->height();
+
+    //多屏情况下累加宽度
+    if (t_screenCount == 1) {
+        m_screenWidth = QApplication::desktop()->screen()->width();
+    }
+
+    else if (t_screenCount > 1) {
+        for (t_indexScreen = 0; t_indexScreen < t_screenCount;  t_indexScreen++) {
+            m_screenWidth += QApplication::desktop()->screen(t_indexScreen)->width();
+        }
+    }
+    QRect t_screenRect;
+    t_screenRect.setX(0);
+    t_screenRect.setY(0);
+    t_screenRect.setWidth(m_screenWidth);
+    t_screenRect.setHeight(m_screenHeight);
+
+    qDebug() << "screen width:" << m_screenWidth;
+
 
     // Add Qt::WindowDoesNotAcceptFocus make window not accept focus forcely, avoid conflict with dde hot-corner.
 //    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint);
@@ -166,139 +188,183 @@ void MainWindow::initAttributes()
     createWinId();
 
     ConfigSettings::instance();
+    const qreal ratio = devicePixelRatioF();
+    QPoint curPos = this->cursor().pos();
 
     // Get all windows geometry.
     // Below code must execute before `window.showFullscreen,
     // otherwise deepin-screen-recorder window will add in window lists.
-    QPoint pos = this->cursor().pos();
-    const qreal ratio = devicePixelRatioF();
-    DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(pos);
+
+    //多屏情况下累加窗口大小
+//    if (t_screenCount == 1) {
+//        QPoint pos = this->cursor().pos();
+    DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
     screenRect = screenWin->backgroundRect();
     screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
     this->move(static_cast<int>(screenRect.x() * ratio),
                static_cast<int>(screenRect.y() * ratio));
     this->setFixedSize(screenRect.width(), screenRect.height());
+    m_swUtil = DScreenWindowsUtil::instance(curPos);
+    m_screenNum =  m_swUtil->getScreenNum();
 
     windowManager = new DWindowManager();
     windowManager->setRootWindowRect(screenRect);
     QList<xcb_window_t> windows = windowManager->getWindows();
     rootWindowRect = windowManager->getRootWindowRect();
-    for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
-        if (wid == winId()) continue;
+//    }
 
-        DForeignWindow *window = DForeignWindow::fromWinId(wid);
+//    else if (t_screenCount > 1) {
+////        QPoint pos = this->cursor().pos();
+//        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
+//        screenRect = t_screenRect;
+//        screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
+//        this->move(static_cast<int>(screenRect.x() * ratio),
+//                   static_cast<int>(screenRect.y() * ratio));
+//        this->setFixedSize(screenRect.width(), screenRect.height());
+//        m_swUtil = DScreenWindowsUtil::instance(curPos);
+//        m_screenNum =  m_swUtil->getScreenNum();
 
-//        if (window->visibility() == QWindow::Hidden) {
-//            continue;
-//        }
-//        qDebug() << window->wmClass() << window->visibility();
-        if (window) {
-            int t_tempWidth = 0;
-            int t_tempHeight = 0;
-            window->deleteLater();
-            //修改部分窗口显示不全，截图框识别问题
-            //x坐标小于0时
-            if (window->frameGeometry().x() < 0) {
-                if (window->frameGeometry().y() < 0) {
+//        windowManager = new DWindowManager();
+//        windowManager->setRootWindowRect(screenWin->backgroundRect());
+//        QList<xcb_window_t> windows = windowManager->getWindows();
+//        rootWindowRect = windowManager->getRootWindowRect();
+//    }
 
-                    //x,y为负坐标情况
-                    t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
-                    t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
+    qDebug() << "screen num:" << t_screenCount;
 
-                    windowRects << Dtk::Wm::WindowRect {0, 0, t_tempWidth, t_tempHeight};
-                    windowNames << window->wmClass();
-                    continue;
-                }
+    if (t_screenCount > 1) {
+        for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
+            if (wid == winId()) continue;
 
-                else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
-                    //x为负坐标，y在正常屏幕区间内
-                    t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
-                    t_tempHeight = window->frameGeometry().height();
-
-                    windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                    windowNames << window->wmClass();
-                    continue;
-                }
-
-                else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
-                    //x为负坐标，y方向窗口超出屏幕底部
-                    t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
-                    t_tempHeight = m_screenHeight - window->frameGeometry().y();
-
-                    windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                    windowNames << window->wmClass();
-                    continue;
-                }
+            DForeignWindow *window = DForeignWindow::fromWinId(wid);
+            if (window) {
+                window->deleteLater();
+                windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(),
+                                                    window->frameGeometry().width(), window->frameGeometry().height()};
+                windowNames << window->wmClass();
             }
-
-            //x坐标位于正常屏幕区间时
-            else if (window->frameGeometry().x() >= 0 && window->frameGeometry().x() <= m_screenWidth - window->frameGeometry().width()) {
-                if (window->frameGeometry().y() < 0) {
-                    //y为负坐标情况
-                    t_tempWidth = window->frameGeometry().width();
-                    t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
-
-                    windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight};
-                    windowNames << window->wmClass();
-                    continue;
-                }
-
-                else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
-                    //y在正常屏幕区间内
-                    t_tempWidth = window->frameGeometry().width();
-                    t_tempHeight = window->frameGeometry().height();
-
-                    windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                    windowNames << window->wmClass();
-                    continue;
-                }
-
-                else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
-                    //y方向窗口超出屏幕底部
-                    t_tempWidth = window->frameGeometry().width();
-                    t_tempHeight = m_screenHeight - window->frameGeometry().y();
-
-                    windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                    windowNames << window->wmClass();
-                    continue;
-                }
-            }
-
-            //x方向窗口超出屏幕右侧区域
-            else if (window->frameGeometry().x() > m_screenWidth - window->frameGeometry().width()) {
-                if (window->frameGeometry().y() < 0) {
-                    //y为负坐标情况
-                    t_tempWidth = m_screenWidth - window->frameGeometry().x();
-                    t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
-
-                    windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight};
-                    windowNames << window->wmClass();
-                    continue;
-                }
-
-                else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
-                    //y在正常屏幕区间内
-                    t_tempWidth = m_screenWidth - window->frameGeometry().x();
-                    t_tempHeight = window->frameGeometry().height();
-
-                    windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                    windowNames << window->wmClass();
-                    continue;
-                }
-
-                else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
-                    //y方向窗口超出屏幕底部
-                    t_tempWidth = m_screenWidth - window->frameGeometry().x();
-                    t_tempHeight = m_screenHeight - window->frameGeometry().y();
-
-                    windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                    windowNames << window->wmClass();
-                    continue;
-                }
-            }
-//                windowRects << Dtk::Wm::WindowRect { window->x(), window->y(), window->width(), window->height() };
-//                windowNames << window->wmClass();
         }
+    }
+
+    else {
+        for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
+            if (wid == winId()) continue;
+
+            DForeignWindow *window = DForeignWindow::fromWinId(wid);
+
+            //        if (window->visibility() == QWindow::Hidden) {
+            //            continue;
+            //        }
+            //        qDebug() << window->wmClass() << window->visibility();
+            if (window) {
+                int t_tempWidth = 0;
+                int t_tempHeight = 0;
+                window->deleteLater();
+                //修改部分窗口显示不全，截图框识别问题
+                //x坐标小于0时
+                if (window->frameGeometry().x() < 0) {
+                    if (window->frameGeometry().y() < 0) {
+
+                        //x,y为负坐标情况
+                        t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
+                        t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
+
+                        windowRects << Dtk::Wm::WindowRect {0, 0, t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+
+                    else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
+                        //x为负坐标，y在正常屏幕区间内
+                        t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
+                        t_tempHeight = window->frameGeometry().height();
+
+                        windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+
+                    else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
+                        //x为负坐标，y方向窗口超出屏幕底部
+                        t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
+                        t_tempHeight = m_screenHeight - window->frameGeometry().y();
+
+                        windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+                }
+
+                //x坐标位于正常屏幕区间时
+                else if (window->frameGeometry().x() >= 0 && window->frameGeometry().x() <= m_screenWidth - window->frameGeometry().width()) {
+                    if (window->frameGeometry().y() < 0) {
+                        //y为负坐标情况
+                        t_tempWidth = window->frameGeometry().width();
+                        t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
+
+                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+
+                    else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
+                        //y在正常屏幕区间内
+                        t_tempWidth = window->frameGeometry().width();
+                        t_tempHeight = window->frameGeometry().height();
+
+                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+
+                    else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
+                        //y方向窗口超出屏幕底部
+                        t_tempWidth = window->frameGeometry().width();
+                        t_tempHeight = m_screenHeight - window->frameGeometry().y();
+
+                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+                }
+
+                //x方向窗口超出屏幕右侧区域
+                else if (window->frameGeometry().x() > m_screenWidth - window->frameGeometry().width()) {
+                    if (window->frameGeometry().y() < 0) {
+                        //y为负坐标情况
+                        t_tempWidth = m_screenWidth - window->frameGeometry().x();
+                        t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
+
+                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+
+                    else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
+                        //y在正常屏幕区间内
+                        t_tempWidth = m_screenWidth - window->frameGeometry().x();
+                        t_tempHeight = window->frameGeometry().height();
+
+                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+
+                    else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
+                        //y方向窗口超出屏幕底部
+                        t_tempWidth = m_screenWidth - window->frameGeometry().x();
+                        t_tempHeight = m_screenHeight - window->frameGeometry().y();
+
+                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                        windowNames << window->wmClass();
+                        continue;
+                    }
+                }
+                //                windowRects << Dtk::Wm::WindowRect { window->x(), window->y(), window->width(), window->height() };
+                //                windowNames << window->wmClass();
+            }
+        }
+
     }
 
     recordButtonLayout = new QVBoxLayout();
@@ -388,9 +454,6 @@ void MainWindow::initAttributes()
     m_recordButton->hide();
     m_shotButton->hide();
 
-    QPoint curPos = this->cursor().pos();
-    m_swUtil = DScreenWindowsUtil::instance(curPos);
-    m_screenNum =  m_swUtil->getScreenNum();
     m_backgroundRect = m_swUtil->backgroundRect();
     m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
 
@@ -2171,9 +2234,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (keyEvent->key() == Qt::Key_Question) {
                     onViewShortcut();
                 } else if (keyEvent->key() == Qt::Key_Z) {
-                   qDebug() << "SDGF: ctrl+shift+z !!!";
-                   emit unDoAll();
-               }
+                    qDebug() << "SDGF: ctrl+shift+z !!!";
+                    emit unDoAll();
+                }
             } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {
                 if (keyEvent->key() == Qt::Key_C) {
 //                    ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
@@ -2521,6 +2584,15 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         DWidget::keyReleaseEvent(keyEvent);
     }
 
+    if (event->type() == QEvent::MouseButtonDblClick) {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+        if (mouseEvent->button() == Qt::LeftButton) {
+            if (m_functionType == 1) {
+                saveScreenShot();
+            }
+
+        }
+    }
 
     if (event->type() == QEvent::MouseButtonPress) {
         if (!m_isShapesWidgetExist) {
@@ -2880,7 +2952,12 @@ void MainWindow::shotCurrentImg()
 
 void MainWindow::shotFullScreen()
 {
-    m_resultPixmap = getPixmapofRect(m_backgroundRect);
+    const qreal ratio = this->devicePixelRatioF();
+    QRect target( m_backgroundRect.x() * ratio + 1 * ratio,
+                  m_backgroundRect.y() * ratio + 1 * ratio,
+                  m_backgroundRect.width() * ratio - 3.5 * ratio,
+                  m_backgroundRect.height() * ratio - 3.5 * ratio );
+    m_resultPixmap = getPixmapofRect(target);
 }
 
 void MainWindow::flashTrayIcon()
@@ -3440,8 +3517,14 @@ void MainWindow::shotImgWidthEffect()
 
     qDebug() << m_toolBar->isVisible() << m_sizeTips->isVisible();
     const qreal ratio = devicePixelRatioF();
-    const QRect rect(m_shapesWidget->geometry().topLeft() * ratio, m_shapesWidget->geometry().size() * ratio);
-    m_resultPixmap = m_backgroundPixmap.copy(rect);
+//    const QRect rect(m_shapesWidget->geometry().topLeft() * ratio, m_shapesWidget->geometry().size() * ratio);
+
+    QRect target( m_shapesWidget->geometry().x() * ratio + 1 * ratio,
+                  m_shapesWidget->geometry().y() * ratio + 1 * ratio,
+                  m_shapesWidget->geometry().width() * ratio - 3.5 * ratio,
+                  m_shapesWidget->geometry().height() * ratio - 3.5 * ratio );
+
+    m_resultPixmap = m_backgroundPixmap.copy(target);
     m_drawNothing = false;
     update();
 }

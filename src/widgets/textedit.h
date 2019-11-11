@@ -36,6 +36,7 @@ public:
 
 public slots:
     void setColor(QColor c);
+    QColor getColor();
     int getIndex();
     void updateCursor();
     void setCursorVisible(bool visible);
