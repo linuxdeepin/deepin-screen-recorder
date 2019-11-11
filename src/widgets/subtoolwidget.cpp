@@ -182,6 +182,14 @@ void SubToolWidget::initRecordLabel()
     } else {
         t_haveMicroPhone = false;
         microphoneAction->setDisabled(true);
+
+        if (m_themeType == 1) {
+            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
+        }
+
+        else if (m_themeType == 2) {
+            audioButton->setIcon(QIcon(":/image/newUI/dark/normal/mute_normal.svg"));
+        }
     }
     systemAudioAction->setText(tr("SystemAudio"));
 //    systemAudioAction->setIcon(QIcon(":/image/newUI/normal/audio frequency.svg"));
