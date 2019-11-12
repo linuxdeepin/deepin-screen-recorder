@@ -181,6 +181,24 @@ int main(int argc, char *argv[])
             // Show window.
 //            MainWindow window;
             Screenshot window;
+
+            // 应用已保存的主题设置
+            DGuiApplicationHelper::ColorType t_type = DGuiApplicationHelper::instance()->themeType();
+            saveThemeTypeSetting(t_type);
+
+            window.setConfigThemeType(g_themeType);
+
+            DGuiApplicationHelper::instance()->setPaletteType(getThemeTypeSetting());
+
+            //监听当前应用主题切换事件
+            QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
+            [] (DGuiApplicationHelper::ColorType type) {
+                qDebug() << type;
+                // 保存程序的主题设置  type : 0,系统主题， 1,浅色主题， 2,深色主题
+                saveThemeTypeSetting(type);
+                DGuiApplicationHelper::instance()->setPaletteType(type);
+            });
+
             window.initLaunchMode(t_launchMode);
             DBusScreenshotService dbusService (&window);
 
@@ -196,6 +214,8 @@ int main(int argc, char *argv[])
                 qApp->quit();
                 return 0;
             }
+
+
 
 
             if (cmdParser.isSet(dbusOption)) {
@@ -226,27 +246,6 @@ int main(int argc, char *argv[])
                     window.startScreenshot();
                 }
             }
-
-
-            // 应用已保存的主题设置
-            DGuiApplicationHelper::ColorType t_type = DGuiApplicationHelper::instance()->themeType();
-            saveThemeTypeSetting(t_type);
-
-            window.setConfigThemeType(g_themeType);
-
-            DGuiApplicationHelper::instance()->setPaletteType(getThemeTypeSetting());
-
-            //监听当前应用主题切换事件
-            QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
-            [] (DGuiApplicationHelper::ColorType type) {
-                qDebug() << type;
-                // 保存程序的主题设置  type : 0,系统主题， 1,浅色主题， 2,深色主题
-                saveThemeTypeSetting(type);
-                DGuiApplicationHelper::instance()->setPaletteType(type);
-            });
-
-
-
 
             return app.exec();
         }
