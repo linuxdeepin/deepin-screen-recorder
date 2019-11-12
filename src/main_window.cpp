@@ -2661,8 +2661,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     } else if (event->type() == QEvent::MouseMove) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         if (!m_isShapesWidgetExist) {
-            m_sizeTips->updateTips(QPoint(recordX, recordY),
-                                   QString("%1X%2").arg(recordWidth).arg(recordHeight));
+
 
             if (m_toolBar->isVisible()) {
                 updateToolBarPos();
@@ -2788,6 +2787,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 qApp->setOverrideCursor(Qt::ArrowCursor);
             }
         }
+        m_sizeTips->updateTips(QPoint(recordX, recordY),
+                               QString("%1X%2").arg(recordWidth).arg(recordHeight));
     }
 
     // Use flag instead call `repaint` directly,
