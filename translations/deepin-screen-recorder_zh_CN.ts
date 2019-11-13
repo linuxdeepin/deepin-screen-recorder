@@ -242,10 +242,6 @@ or press the shortcut again to stop recording</source>
         <translation type="unfinished">文本</translation>
     </message>
     <message>
-        <source>Color</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Increase height up</source>
         <translation type="unfinished"></translation>
     </message>
@@ -276,6 +272,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Decrease width right</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Undo All</source>
+        <translation type="unfinished">撤销所有</translation>
     </message>
 </context>
 <context>
