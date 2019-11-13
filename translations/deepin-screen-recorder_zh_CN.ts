@@ -455,12 +455,24 @@ select the area to record</source>
         <translation>显示按键</translation>
     </message>
     <message>
+        <source>Hidden Key</source>
+        <translation>隐藏按键</translation>
+    </message>
+    <message>
         <source>Show Camera</source>
         <translation>开启WebCam</translation>
     </message>
     <message>
+        <source>Close Camera</source>
+        <translation>关闭WebCam</translation>
+    </message>
+    <message>
         <source>Show Mouse</source>
-        <translation>显示鼠标</translation>
+        <translation>显示点击</translation>
+    </message>
+    <message>
+        <source>Hidden Mouse</source>
+        <translation>隐藏点击</translation>
     </message>
     <message>
         <source>Select Option</source>
