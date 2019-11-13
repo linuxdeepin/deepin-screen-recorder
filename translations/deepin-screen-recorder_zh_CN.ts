@@ -42,7 +42,7 @@
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
         <translation>点击托盘图标以停止录制
-或再次按下深度录屏快捷键</translation>
+或再次按下录屏快捷键</translation>
     </message>
 </context>
 <context>
@@ -76,11 +76,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>DeepinScreenshot</source>
-        <translation>深度截图</translation>
+        <translation>截图</translation>
     </message>
     <message>
         <source>Deepin screen recorder</source>
-        <translation>深度录屏</translation>
+        <translation>录屏</translation>
     </message>
     <message>
         <source>Shotting finished</source>
@@ -116,7 +116,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>深度截图将会在%1秒后启动</translation>
+        <translation>截图将会在%1秒后启动</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);; BMP (*.bmp);;</source>
@@ -150,7 +150,7 @@ or press the shortcut again to stop recording</source>
     <name>RecordProcess</name>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>深度录屏</translation>
+        <translation>录屏</translation>
     </message>
     <message>
         <source>View</source>
@@ -169,7 +169,7 @@ or press the shortcut again to stop recording</source>
     <name>Screenshot</name>
     <message>
         <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation type="unfinished">深度截图将会在%1秒后启动</translation>
+        <translation type="unfinished">截图将会在%1秒后启动</translation>
     </message>
 </context>
 <context>
