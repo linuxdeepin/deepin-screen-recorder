@@ -183,99 +183,103 @@ or press the shortcut again to stop recording</source>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>开始截图</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished">保存</translation>
+        <translation>保存</translation>
     </message>
     <message>
         <source>Painting</source>
-        <translation type="unfinished"></translation>
+        <translation>绘制</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation type="unfinished"></translation>
+        <translation>调整大小</translation>
     </message>
     <message>
         <source>Quick start</source>
-        <translation type="unfinished"></translation>
+        <translation>快速截图</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>全屏截图</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>延时截图</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation type="unfinished">撤销</translation>
+        <translation>撤销</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>退出</translation>
     </message>
     <message>
         <source>Copy to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>复制到剪贴板</translation>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation type="unfinished"></translation>
+        <translation>矩形</translation>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation type="unfinished"></translation>
+        <translation>圆形</translation>
     </message>
     <message>
         <source>Arrow</source>
-        <translation type="unfinished"></translation>
+        <translation>箭头</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation type="unfinished"></translation>
+        <translation>画笔</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation type="unfinished">文本</translation>
+        <translation>文本</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation type="unfinished"></translation>
+        <translation>顶部扩充</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation type="unfinished"></translation>
+        <translation>底部扩充</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation type="unfinished"></translation>
+        <translation>左边扩充</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation type="unfinished"></translation>
+        <translation>右边扩充</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation type="unfinished"></translation>
+        <translation>顶部缩进</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation type="unfinished"></translation>
+        <translation>底部缩进</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation type="unfinished"></translation>
+        <translation>左边缩进</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation type="unfinished"></translation>
+        <translation>右边缩进</translation>
     </message>
     <message>
         <source>Undo All</source>
-        <translation type="unfinished">撤销所有</translation>
+        <translation>撤销所有</translation>
+    </message>
+    <message>
+        <source>window screenshot</source>
+        <translation>窗口截图</translation>
     </message>
 </context>
 <context>
@@ -333,7 +337,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Copy to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">复制到剪贴板</translation>
     </message>
     <message>
         <source>Autosave and copy to clipboard</source>
