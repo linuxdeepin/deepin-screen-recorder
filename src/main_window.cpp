@@ -864,9 +864,11 @@ void MainWindow::fullScreenshot()
     this->move(m_backgroundRect.x(), m_backgroundRect.y());
     this->setFixedSize(m_backgroundRect.size());
     m_needSaveScreenshot = true;
-    shotFullScreen();
+
     m_toolBar = new ToolBar(this);
     m_toolBar->hide();
+
+    shotFullScreen();
 
 //    if (m_hotZoneInterface->isValid())
 //        m_hotZoneInterface->asyncCall("EnableZoneDetected",  true);
@@ -1078,6 +1080,9 @@ void MainWindow::compositeChanged()
 
 void MainWindow::updateToolBarPos()
 {
+    if (m_shotflag == 1) {
+        return;
+    }
     m_isToolBarInside = false;
     if (m_toolBarInit == false) {
         m_toolBar->initToolBar();
@@ -1111,6 +1116,9 @@ void MainWindow::updateToolBarPos()
 
 void MainWindow::updateSideBarPos()
 {
+    if (m_shotflag == 1) {
+        return;
+    }
     m_isSideBarInside = false;
     if (m_sideBarInit == false) {
         m_sideBar->initSideBar();
@@ -1226,6 +1234,9 @@ void MainWindow::updateSideBarPos()
 
 void MainWindow::updateRecordButtonPos()
 {
+    if (m_shotflag == 1) {
+        return;
+    }
     QPoint recordButtonBarPoint;
     recordButtonBarPoint = QPoint(recordX + recordWidth - m_shotButton->width(),
                                   std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
@@ -1254,6 +1265,9 @@ void MainWindow::updateRecordButtonPos()
 
 void MainWindow::updateShotButtonPos()
 {
+    if (m_shotflag == 1) {
+        return;
+    }
     QPoint shotButtonBarPoint;
     shotButtonBarPoint = QPoint(recordX + recordWidth - m_shotButton->width(),
                                 std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
@@ -1280,6 +1294,9 @@ void MainWindow::updateShotButtonPos()
 }
 void MainWindow::updateCameraWidgetPos()
 {
+    if (m_shotflag == 1) {
+        return;
+    }
     if (!m_selectedCamera)
         return;
     bool isScaled = recordWidth != m_cameraWidget->getRecordWidth() || recordHeight != m_cameraWidget->getRecordHeight();
@@ -1709,7 +1726,9 @@ void MainWindow::changeShotToolEvent(const QString &func)
 void MainWindow::saveScreenShot()
 {
 //    emit releaseEvent();
+    m_shotflag = 1;
     emit saveActionTriggered();
+    hideAllWidget();
 
     DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
 //    if (m_hotZoneInterface->isValid())
@@ -1812,6 +1831,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
 bool MainWindow::saveAction(const QPixmap &pix)
 {
     emit releaseEvent();
+    qDebug() << "abcd1";
 
 //    using namespace utils;
     QPixmap screenShotPix = pix;
@@ -1947,7 +1967,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
 //    int toolBarSaveQuality = std::min(ConfigSettings::instance()->value("save",
 //                                                                        "save_quality").toInt(), 100);
-
+    qDebug() << "abcd2";
     int toolBarSaveQuality = 100;
     if (toolBarSaveQuality != 100) {
         qreal saveQuality = qreal(toolBarSaveQuality) * 5 / 1000 + 0.5;
@@ -1959,7 +1979,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         screenShotPix = screenShotPix.scaled(pixWidth,  pixHeight,
                                              Qt::KeepAspectRatio, Qt::FastTransformation);
     }
-
+    qDebug() << "abcd3";
     if (m_saveIndex == SaveToSpecificDir && m_saveFileName.isEmpty()) {
         return false;
     } else if (m_saveIndex == SaveToSpecificDir || !m_saveFileName.isEmpty()) {
@@ -1984,7 +2004,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                 savePath = QDir::tempPath();
             }
         }
-
+        qDebug() << "abcd";
         QString t_formatStr;
         QString t_formatBuffix;
         switch (t_pictureFormat) {
@@ -2005,15 +2025,17 @@ bool MainWindow::saveAction(const QPixmap &pix)
             t_formatBuffix = "png";
             break;
         }
-
+        qDebug() << "abcd4";
         if (selectAreaName.isEmpty()) {
             m_saveFileName = QString("%1/%2_%3.%4").arg(savePath, tr("DeepinScreenshot"), currentTime, t_formatBuffix);
         } else {
             m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, tr("DeepinScreenshot"), selectAreaName, currentTime, t_formatBuffix);
         }
-
+        qDebug() << m_saveFileName;
         if (!screenShotPix.save(m_saveFileName,  t_formatStr.toLatin1().data()))
             return false;
+
+        qDebug() << "abcd1111";
     } else if (m_saveIndex == AutoSave && m_saveFileName.isEmpty()) {
         QString savePath;
 //        if (m_shotWithPath == false) {
@@ -2041,7 +2063,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
 //            savePath.lastIndexOf("/");
             t_fileName = savePath;
         }
-
+        qDebug() << "abcd5";
 
         if (t_fileName == "") {
             QDir saveDir(savePath);
@@ -2054,7 +2076,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                 }
             }
         }
-
+        qDebug() << "abcd6";
         QString t_formatStr;
         QString t_formatBuffix;
         switch (t_pictureFormat) {
@@ -2863,8 +2885,11 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 qApp->setOverrideCursor(Qt::ArrowCursor);
             }
         }
-        m_sizeTips->updateTips(QPoint(recordX, recordY),
-                               QString("%1X%2").arg(recordWidth).arg(recordHeight));
+        if (m_shotflag == 0) {
+            m_sizeTips->updateTips(QPoint(recordX, recordY),
+                                   QString("%1X%2").arg(recordWidth).arg(recordHeight));
+        }
+
     }
 
     // Use flag instead call `repaint` directly,
@@ -2932,11 +2957,13 @@ void MainWindow::shotCurrentImg()
     eventloop1.exec();
 
     qDebug() << "shotCurrentImg shotFullScreen";
-//    using namespace utils;
-    shotFullScreen();
     if (m_isShapesWidgetExist) {
         m_shapesWidget->hide();
     }
+    m_sizeTips->hide();
+//    using namespace utils;
+    shotFullScreen();
+
 
     this->hide();
     emit hideScreenshotUI();
@@ -2953,10 +2980,12 @@ void MainWindow::shotCurrentImg()
 void MainWindow::shotFullScreen()
 {
     const qreal ratio = this->devicePixelRatioF();
-    QRect target( m_backgroundRect.x() * ratio + 1 * ratio,
-                  m_backgroundRect.y() * ratio + 1 * ratio,
-                  m_backgroundRect.width() * ratio - 3.5 * ratio,
-                  m_backgroundRect.height() * ratio - 3.5 * ratio );
+    QRect target( m_backgroundRect.x() + 1 * ratio,
+                  m_backgroundRect.y() + 1 * ratio,
+                  m_backgroundRect.width() - 3.5 * ratio,
+                  m_backgroundRect.height() - 3.5 * ratio );
+
+//    m_resultPixmap = getPixmapofRect(m_backgroundRect);
     m_resultPixmap = getPixmapofRect(target);
 }
 
@@ -3510,6 +3539,7 @@ void MainWindow::shotImgWidthEffect()
         return;
 
     update();
+    hideAllWidget();
 
 //    QEventLoop eventloop;
 //    QTimer::singleShot(100, &eventloop, SLOT(quit()));
