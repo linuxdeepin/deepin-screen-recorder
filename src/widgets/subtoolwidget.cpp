@@ -579,7 +579,7 @@ void SubToolWidget::initRecordLabel()
     QAction *fps30Action = new QAction(OptionMenu);
 
     formatTitleAction->setDisabled(true);
-    formatTitleAction->setText(tr("Format"));
+    formatTitleAction->setText(tr("Format:"));
     gifAction->setText(tr("GIF"));
     gifAction->setCheckable(true);
     mp4Action->setText(tr("MP4"));
@@ -588,7 +588,7 @@ void SubToolWidget::initRecordLabel()
     t_formatGroup->addAction(mp4Action);
 
     fpsTitleAction->setDisabled(true);
-    fpsTitleAction->setText(tr("FPS"));
+    fpsTitleAction->setText(tr("FPS:"));
     fps5Action->setText(tr("5 fps"));
     fps5Action->setCheckable(true);
     fps10Action->setText(tr("10 fps"));

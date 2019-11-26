@@ -41,8 +41,7 @@
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>点击托盘图标以停止录制
-或再次按下录屏快捷键</translation>
+        <translation>点击托盘图标或再次按下录屏快捷键停止录制</translation>
     </message>
 </context>
 <context>
@@ -96,7 +95,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to</source>
-        <translation>保存在</translation>
+        <translation>图片已经保存到</translation>
     </message>
     <message>
         <source>Deepin Screenshot will start after %1 seconds</source>
@@ -396,7 +395,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>圆形</translation>
+        <translation>椭圆</translation>
     </message>
     <message>
         <source>Pencil</source>
@@ -404,7 +403,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Text</source>
-        <translation>文本</translation>
+        <translation>文字</translation>
     </message>
     <message>
         <source>Line</source>
@@ -475,10 +474,6 @@ select the area to record</source>
         <translation>隐藏点击</translation>
     </message>
     <message>
-        <source>FPS</source>
-        <translation>帧数</translation>
-    </message>
-    <message>
         <source>5 fps</source>
         <translation>5帧/秒</translation>
     </message>
@@ -497,6 +492,14 @@ select the area to record</source>
     <message>
         <source>30 fps</source>
         <translation>30帧/秒</translation>
+    </message>
+    <message>
+        <source>Format:</source>
+        <translation>格式：</translation>
+    </message>
+    <message>
+        <source>FPS:</source>
+        <translation>帧数：</translation>
     </message>
 </context>
 <context>
