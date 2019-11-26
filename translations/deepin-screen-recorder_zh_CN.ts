@@ -223,7 +223,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>圆形</translation>
+        <translation>椭圆</translation>
     </message>
     <message>
         <source>Arrow</source>
@@ -235,7 +235,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Text</source>
-        <translation>文本</translation>
+        <translation>文字</translation>
     </message>
     <message>
         <source>Increase height up</source>

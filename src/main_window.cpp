@@ -29,6 +29,7 @@
 #include <DInputDialog>
 #include <DDesktopServices>
 
+
 #include <QApplication>
 #include <QTimer>
 #include <QKeyEvent>
@@ -43,7 +44,6 @@
 #include <QFileDialog>
 #include <QShortcut>
 #include <QDesktopWidget>
-
 
 #include "main_window.h"
 #include "utils.h"
@@ -2298,22 +2298,6 @@ void MainWindow::paintEvent(QPaintEvent *)
 }
 bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
-//    if (m_functionType == 1) {
-//        if (!m_keyboardGrabbed && this->windowHandle() != NULL) {
-//            m_keyboardGrabbed = this->windowHandle()->setKeyboardGrabEnabled(true);
-//            m_keyboardReleased = false;
-//            qDebug() << "m_keyboardGrabbed:" << m_keyboardGrabbed;
-//        }
-//    }
-
-//    else {
-//        if (!m_keyboardReleased && this->windowHandle() != NULL) {
-//            m_keyboardReleased = this->windowHandle()->setKeyboardGrabEnabled(false);
-//            m_keyboardGrabbed = false;
-//            qDebug() << "m_keyboardGrabbed:" << m_keyboardGrabbed;
-//        }
-//    }
-
     bool needRepaint = false;
 #undef KeyPress
 #undef KeyRelease
@@ -3627,8 +3611,6 @@ void MainWindow::shotImgWidthEffect()
     if (recordWidth == 0 || recordHeight == 0)
         return;
 
-    update();
-    hideAllWidget();
 
 //    QEventLoop eventloop;
 //    QTimer::singleShot(100, &eventloop, SLOT(quit()));
