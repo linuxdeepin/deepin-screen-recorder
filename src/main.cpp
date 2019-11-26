@@ -216,8 +216,6 @@ int main(int argc, char *argv[])
             }
 
 
-
-
             if (cmdParser.isSet(dbusOption)) {
                 qDebug() << "dbus register waiting!";
                 return app.exec();

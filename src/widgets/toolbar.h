@@ -74,9 +74,10 @@ public slots:
     void setVideoInitFromMain();
     void shapeClickedFromBar(QString shape);
     void setMicroPhoneEnable(bool status);
+    void setCameraDeviceEnable(bool status);
 
 protected:
-    void paintEvent(QPaintEvent *e);
+    void paintEvent(QPaintEvent *e)Q_DECL_OVERRIDE;
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
 private:
@@ -134,10 +135,11 @@ public slots:
     void setVideoButtonInit();
     void shapeClickedFromMain(QString shape);
     void setMicroPhoneEnable(bool status);
+    void setCameraDeviceEnable(bool status);
 protected:
-    void paintEvent(QPaintEvent *e);
-    void enterEvent(QEvent *e);
-    bool eventFilter(QObject *obj, QEvent *event) override;
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    void enterEvent(QEvent *e) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 
 private:
     ToolBarWidget *m_toolbarWidget;

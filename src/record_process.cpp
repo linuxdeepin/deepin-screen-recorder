@@ -343,10 +343,6 @@ void RecordProcess::stopRecord()
         qDebug() << "Kill byzanz-record's child process (sleep) pid: " << byzanzChildPid;
     } else {
         process->terminate();
-        AudioUtils *audioUtils = new AudioUtils(this);
-        if (lastAudioSink.length() > 0) {
-            audioUtils->setupAudioSink(lastAudioSink);
-        }
     }
 
     // Wait thread.
@@ -383,6 +379,11 @@ void RecordProcess::stopRecord()
         << hints                                                 // hints
         << (int) -1;                                             // timeout
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+
+    if (lastAudioSink.length() > 0) {
+        AudioUtils *audioUtils = new AudioUtils(this);
+        audioUtils->setupAudioSink(lastAudioSink);
+    }
 
     QApplication::quit();
 }

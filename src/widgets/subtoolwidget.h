@@ -58,6 +58,7 @@ public slots:
     void setVideoButtonInitFromSub();
     void shapeClickedFromWidget(QString shape);
     void setMicroPhoneEnable(bool status);
+    void setCameraDeviceEnable(bool status);
 private:
     DLabel *m_recordSubTool;
     DLabel *m_shotSubTool;

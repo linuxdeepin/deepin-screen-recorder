@@ -201,6 +201,11 @@ void ToolBarWidget::setMicroPhoneEnable(bool status)
     m_subTool->setMicroPhoneEnable(status);
 }
 
+void ToolBarWidget::setCameraDeviceEnable(bool status)
+{
+    m_subTool->setCameraDeviceEnable(status);
+}
+
 void ToolBarWidget::setExpand(bool expand, QString shapeType)
 {
 //    m_subToolbar->switchContent(shapeType);
@@ -360,6 +365,11 @@ void ToolBar::shapeClickedFromMain(QString shape)
 void ToolBar::setMicroPhoneEnable(bool status)
 {
     m_toolbarWidget->setMicroPhoneEnable(status);
+}
+
+void ToolBar::setCameraDeviceEnable(bool status)
+{
+    m_toolbarWidget->setCameraDeviceEnable(status);
 }
 
 bool ToolBar::isButtonChecked()

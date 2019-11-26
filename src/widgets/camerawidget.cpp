@@ -170,6 +170,28 @@ void CameraWidget::deleteCapturedImage(int id, const QString &fileName)
     QFile::remove(fileName);
 }
 
+void CameraWidget::setCameraStop(bool status)
+{
+    Q_UNUSED(status);
+    if (camera->status() == QCamera::ActiveStatus) {
+        return;
+    } else {
+        camera->stop();
+        timer_image_capture->stop();
+    }
+}
+
+bool CameraWidget::getcameraStatus()
+{
+    if (camera->status() == QCamera::ActiveStatus) {
+        return true;
+    }
+
+    else {
+        return false;
+    }
+}
+
 void CameraWidget::enterEvent(QEvent *e)
 {
     qApp->setOverrideCursor(Qt::ArrowCursor);

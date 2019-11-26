@@ -53,6 +53,7 @@
 #include "widgets/camerawidget.h"
 #include "utils/saveutils.h"
 #include "utils/voicevolumewatcher.h"
+#include "utils/camerawatcher.h"
 
 #include "dbusinterface/dbuscontrolcenter.h"
 #include "dbusinterface/dbusnotify.h"
@@ -182,6 +183,7 @@ public slots:
     void onViewShortcut();
     void shapeClickedSlot(QString shape);
     void on_CheckRecodeCouldUse(bool canUse);
+    void on_CheckVideoCouldUse(bool canUse);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -215,6 +217,7 @@ private:
 
     RecordProcess recordProcess;
     voiceVolumeWatcher *m_pVoiceVolumeWatcher;
+    CameraWatcher *m_pCameraWatcher;
 //    VoiceRecordProcess voiceRecordProcess;
     WindowRect rootWindowRect;
 

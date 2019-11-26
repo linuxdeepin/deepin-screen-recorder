@@ -46,6 +46,8 @@ public slots:
     void captureImage();
     void processCapturedImage(int request_id, const QImage &img);
     void deleteCapturedImage(int id, const QString &fileName);
+    void setCameraStop(bool status);
+    bool getcameraStatus();
 protected:
     void enterEvent(QEvent *e);
     void mousePressEvent(QMouseEvent *event);

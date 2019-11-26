@@ -1638,3 +1638,16 @@ void SubToolWidget::setMicroPhoneEnable(bool status)
         }
     }
 }
+
+void SubToolWidget::setCameraDeviceEnable(bool status)
+{
+    if (status) {
+
+        m_cameraButton->setEnabled(true);
+    }
+
+    else {
+//        m_cameraButton->setChecked(false);
+        m_cameraButton->setEnabled(false);
+    }
+}
