@@ -182,6 +182,12 @@ void TextEdit::mousePressEvent(QMouseEvent *e)
     DPlainTextEdit::mousePressEvent(e);
 }
 
+void TextEdit::wheelEvent(QWheelEvent *e)
+{
+    Q_UNUSED(e);
+    return;
+}
+
 void TextEdit::mouseMoveEvent(QMouseEvent *e)
 {
 //    if (!this->isReadOnly()) {

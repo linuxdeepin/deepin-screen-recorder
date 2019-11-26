@@ -55,6 +55,7 @@ signals:
 
 protected:
     void mousePressEvent(QMouseEvent *e);
+    void wheelEvent(QWheelEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
     void mouseDoubleClickEvent(QMouseEvent *e);
