@@ -113,7 +113,7 @@ MainWindow::MainWindow(DWidget *parent) :
 void MainWindow::initAttributes()
 {
     // Init attributes.
-    setWindowTitle(tr("Deepin screen recorder"));
+    setWindowTitle(tr("Screen Capture"));
     m_functionType = 0;
     m_keyBoardStatus = 0;
     m_mouseStatus = 0;
@@ -238,6 +238,10 @@ void MainWindow::initAttributes()
             if (wid == winId()) continue;
 
             DForeignWindow *window = DForeignWindow::fromWinId(wid);
+            //判断窗口是否被最小化
+            if (window->windowState() == Qt::WindowState::WindowMinimized) {
+                continue;
+            }
             if (window) {
                 window->deleteLater();
                 windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(),
@@ -252,11 +256,12 @@ void MainWindow::initAttributes()
             if (wid == winId()) continue;
 
             DForeignWindow *window = DForeignWindow::fromWinId(wid);
+//            qDebug() << window->wmClass() << window->windowState();
+            //判断窗口是否被最小化
+            if (window->windowState() == Qt::WindowState::WindowMinimized) {
+                continue;
+            }
 
-            //        if (window->visibility() == QWindow::Hidden) {
-            //            continue;
-            //        }
-            //        qDebug() << window->wmClass() << window->visibility();
             if (window) {
                 int t_tempWidth = 0;
                 int t_tempHeight = 0;
@@ -592,7 +597,7 @@ void MainWindow::initResource()
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
-    trayIcon->setToolTip(tr("Deepin screen recorder"));
+    trayIcon->setToolTip(tr("Screen Capture"));
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
     setDragCursor();
@@ -610,13 +615,13 @@ void MainWindow::initScreenShot()
 
 //    installEventFilter(this);
 
-    connect(this, &MainWindow::releaseEvent, this, [ = ] {
-        qDebug() << "release event !!!";
-        m_keyboardReleased = true;
-        m_keyboardGrabbed =  windowHandle()->setKeyboardGrabEnabled(false);
-        qDebug() << "keyboardGrabbed:" << m_keyboardGrabbed;
-        removeEventFilter(this);
-    });
+//    connect(this, &MainWindow::releaseEvent, this, [ = ] {
+//        qDebug() << "release event !!!";
+//        m_keyboardReleased = true;
+//        m_keyboardGrabbed =  windowHandle()->setKeyboardGrabEnabled(false);
+//        qDebug() << "keyboardGrabbed:" << m_keyboardGrabbed;
+//        removeEventFilter(this);
+//    });
 
 //    connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
 
@@ -1887,7 +1892,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         arg << (QCoreApplication::applicationName())                 // appname
             << ((unsigned int) 0)                                    // id
             << QString("Deepin Screenshot")                     // icon
-            << tr("Shotting finished")                              // summary
+            << tr("Screenshot finished")                              // summary
             << QString("%1 %2").arg(tr("Saved to")).arg(saveFilePath) // body
             << actions                                               // actions
             << hints                                                 // hints
@@ -1988,9 +1993,9 @@ bool MainWindow::saveAction(const QPixmap &pix)
         }
 
         if (fileName.isEmpty()) {
-            fileName = QString("%1_%2").arg(tr("DeepinScreenshot")).arg(currentTime);
+            fileName = QString("%1_%2").arg(tr("Screen Capture")).arg(currentTime);
         } else {
-            fileName = QString("%1_%2_%3").arg(tr("DeepinScreenshot")).arg(selectAreaName).arg(currentTime);
+            fileName = QString("%1_%2_%3").arg(tr("Screen Capture")).arg(selectAreaName).arg(currentTime);
         }
 
         QString lastFileName = QString("%1/%2.png").arg(path).arg(fileName);
@@ -2105,9 +2110,9 @@ bool MainWindow::saveAction(const QPixmap &pix)
         }
         qDebug() << "abcd4";
         if (selectAreaName.isEmpty()) {
-            m_saveFileName = QString("%1/%2_%3.%4").arg(savePath, tr("DeepinScreenshot"), currentTime, t_formatBuffix);
+            m_saveFileName = QString("%1/%2_%3.%4").arg(savePath, tr("Screen Capture"), currentTime, t_formatBuffix);
         } else {
-            m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, tr("DeepinScreenshot"), selectAreaName, currentTime, t_formatBuffix);
+            m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, tr("Screen Capture"), selectAreaName, currentTime, t_formatBuffix);
         }
         qDebug() << m_saveFileName;
         if (!screenShotPix.save(m_saveFileName,  t_formatStr.toLatin1().data()))
@@ -2181,9 +2186,9 @@ bool MainWindow::saveAction(const QPixmap &pix)
             m_saveFileName = t_fileName;
         } else {
             if (selectAreaName.isEmpty()) {
-                m_saveFileName = QString("%1/%2_%3.%4").arg(savePath, tr("DeepinScreenshot"), currentTime, t_formatBuffix);
+                m_saveFileName = QString("%1/%2_%3.%4").arg(savePath, tr("Screen Capture"), currentTime, t_formatBuffix);
             } else {
-                m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, tr("DeepinScreenshot"), selectAreaName, currentTime, t_formatBuffix);
+                m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, tr("Screen Capture"), selectAreaName, currentTime, t_formatBuffix);
             }
         }
 
@@ -2293,21 +2298,21 @@ void MainWindow::paintEvent(QPaintEvent *)
 }
 bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
-    if (m_functionType == 1) {
-        if (!m_keyboardGrabbed && this->windowHandle() != NULL) {
-            m_keyboardGrabbed = this->windowHandle()->setKeyboardGrabEnabled(true);
-            m_keyboardReleased = false;
-            qDebug() << "m_keyboardGrabbed:" << m_keyboardGrabbed;
-        }
-    }
+//    if (m_functionType == 1) {
+//        if (!m_keyboardGrabbed && this->windowHandle() != NULL) {
+//            m_keyboardGrabbed = this->windowHandle()->setKeyboardGrabEnabled(true);
+//            m_keyboardReleased = false;
+//            qDebug() << "m_keyboardGrabbed:" << m_keyboardGrabbed;
+//        }
+//    }
 
-    else {
-        if (!m_keyboardReleased && this->windowHandle() != NULL) {
-            m_keyboardReleased = this->windowHandle()->setKeyboardGrabEnabled(false);
-            m_keyboardGrabbed = false;
-            qDebug() << "m_keyboardGrabbed:" << m_keyboardGrabbed;
-        }
-    }
+//    else {
+//        if (!m_keyboardReleased && this->windowHandle() != NULL) {
+//            m_keyboardReleased = this->windowHandle()->setKeyboardGrabEnabled(false);
+//            m_keyboardGrabbed = false;
+//            qDebug() << "m_keyboardGrabbed:" << m_keyboardGrabbed;
+//        }
+//    }
 
     bool needRepaint = false;
 #undef KeyPress
@@ -2880,7 +2885,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (!isFirstDrag) {
                     isFirstDrag = true;
 
-                    selectAreaName = tr("Select area");
+                    selectAreaName = tr("select-area");
                 }
             }
 

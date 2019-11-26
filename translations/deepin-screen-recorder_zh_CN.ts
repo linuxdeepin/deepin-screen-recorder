@@ -75,24 +75,8 @@ or press the shortcut again to stop recording</source>
         <translation>输入sudo密码激活内置音频功能，取消将无法录制内置音频</translation>
     </message>
     <message>
-        <source>DeepinScreenshot</source>
-        <translation>截图</translation>
-    </message>
-    <message>
-        <source>Deepin screen recorder</source>
-        <translation>录屏</translation>
-    </message>
-    <message>
-        <source>Shotting finished</source>
-        <translation>截图完毕</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>开始录制</translation>
-    </message>
-    <message>
-        <source>Select area</source>
-        <translation>选择区域</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -130,6 +114,18 @@ or press the shortcut again to stop recording</source>
         <source>Start Shot</source>
         <translation>开始截图</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation>截图录屏</translation>
+    </message>
+    <message>
+        <source>Screenshot finished</source>
+        <translation>截图完成</translation>
+    </message>
+    <message>
+        <source>select-area</source>
+        <translation>选择区域</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -142,27 +138,27 @@ or press the shortcut again to stop recording</source>
         <translation>保存</translation>
     </message>
     <message>
-        <source>Close</source>
+        <source>Exit</source>
         <translation>退出</translation>
     </message>
 </context>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>deepin-screen-recorder</source>
-        <translation>录屏</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>查看</translation>
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>录制完毕</translation>
+        <translation>录制完成</translation>
     </message>
     <message>
         <source>Saved to</source>
-        <translation>保存在</translation>
+        <translation>文件已保存到</translation>
+    </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation>截图录屏</translation>
     </message>
 </context>
 <context>
@@ -175,8 +171,8 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShapesWidget</name>
     <message>
-        <source>Input your content</source>
-        <translation>在此处插入文本</translation>
+        <source>Input text here</source>
+        <translation>此处插入文本</translation>
     </message>
 </context>
 <context>
@@ -285,14 +281,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>blur</source>
-        <translation>模糊效果</translation>
-    </message>
-    <message>
-        <source>mosaic</source>
-        <translation>马赛克效果</translation>
-    </message>
-    <message>
         <source>line</source>
         <translation>直线</translation>
     </message>
@@ -311,6 +299,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>thick</source>
         <translation>粗</translation>
+    </message>
+    <message>
+        <source>Blur</source>
+        <translation>模糊</translation>
+    </message>
+    <message>
+        <source>Mosaic</source>
+        <translation>马赛克</translation>
     </message>
 </context>
 <context>
@@ -375,64 +371,12 @@ select the area to record</source>
         <translation>麦克风</translation>
     </message>
     <message>
-        <source>SystemAudio</source>
-        <translation>内置音频</translation>
-    </message>
-    <message>
         <source> </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Option</source>
-        <translation>选项</translation>
-    </message>
-    <message>
-        <source>format option</source>
-        <translation>格式</translation>
-    </message>
-    <message>
-        <source>fps option</source>
-        <translation>帧率</translation>
-    </message>
-    <message>
-        <source>5fps</source>
-        <translation>5帧/秒</translation>
-    </message>
-    <message>
-        <source>10fps</source>
-        <translation>10帧/秒</translation>
-    </message>
-    <message>
-        <source>20fps</source>
-        <translation>20帧/秒</translation>
-    </message>
-    <message>
-        <source>24fps</source>
-        <translation>24帧/秒</translation>
-    </message>
-    <message>
-        <source>30fps</source>
-        <translation>30帧/秒</translation>
-    </message>
-    <message>
         <source>Save to</source>
         <translation>存储到</translation>
-    </message>
-    <message>
-        <source>Save to desktop</source>
-        <translation>保存到桌面</translation>
-    </message>
-    <message>
-        <source>Save to picture</source>
-        <translation>保存到图片</translation>
-    </message>
-    <message>
-        <source>Save to path</source>
-        <translation>指定保存位置</translation>
-    </message>
-    <message>
-        <source>Format Option</source>
-        <translation>格式</translation>
     </message>
     <message>
         <source>PNG</source>
@@ -447,60 +391,112 @@ select the area to record</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Save to clipboard</source>
-        <translation>复制到剪贴板</translation>
+        <source>Rectangle</source>
+        <translation>矩形</translation>
     </message>
     <message>
-        <source>Select Audio</source>
-        <translation>选择音频</translation>
+        <source>Ellipse</source>
+        <translation>圆形</translation>
     </message>
     <message>
-        <source>Show Key</source>
-        <translation>显示按键</translation>
+        <source>Pencil</source>
+        <translation>画笔</translation>
     </message>
     <message>
-        <source>Hidden Key</source>
-        <translation>隐藏按键</translation>
+        <source>Text</source>
+        <translation>文本</translation>
     </message>
     <message>
-        <source>Show Camera</source>
-        <translation>开启WebCam</translation>
+        <source>Line</source>
+        <translation>直线</translation>
     </message>
     <message>
-        <source>Close Camera</source>
-        <translation>关闭WebCam</translation>
+        <source>Arrow</source>
+        <translation>箭头</translation>
     </message>
     <message>
-        <source>Show Mouse</source>
-        <translation>显示点击</translation>
-    </message>
-    <message>
-        <source>Hidden Mouse</source>
-        <translation>隐藏点击</translation>
-    </message>
-    <message>
-        <source>Select Option</source>
+        <source>Options</source>
         <translation>选项</translation>
     </message>
     <message>
-        <source>Select Rect</source>
-        <translation>矩形工具</translation>
+        <source>Desktop</source>
+        <translation>桌面</translation>
     </message>
     <message>
-        <source>Select Oval</source>
-        <translation>圆形工具</translation>
+        <source>Pictures</source>
+        <translation>图片</translation>
     </message>
     <message>
-        <source>Select Arrow/Line</source>
-        <translation>箭头/直线工具</translation>
+        <source>Folder</source>
+        <translation>指定位置</translation>
     </message>
     <message>
-        <source>Select Pen</source>
-        <translation>画笔工具</translation>
+        <source>Format</source>
+        <translation>格式</translation>
     </message>
     <message>
-        <source>Select Text</source>
-        <translation>文字工具</translation>
+        <source>Copy to clipboard</source>
+        <translation>复制到剪贴板</translation>
+    </message>
+    <message>
+        <source>System Audio</source>
+        <translation>系统音频</translation>
+    </message>
+    <message>
+        <source>Sound On</source>
+        <translation>录音开启</translation>
+    </message>
+    <message>
+        <source>Sound Off</source>
+        <translation>录音关闭</translation>
+    </message>
+    <message>
+        <source>Show Keystroke</source>
+        <translation>显示按键</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke</source>
+        <translation>隐藏按键</translation>
+    </message>
+    <message>
+        <source>Webcam On</source>
+        <translation>开启摄像头</translation>
+    </message>
+    <message>
+        <source>Webcam Off</source>
+        <translation>关闭摄像头</translation>
+    </message>
+    <message>
+        <source>Show Click</source>
+        <translation>显示点击</translation>
+    </message>
+    <message>
+        <source>Hide Click</source>
+        <translation>隐藏点击</translation>
+    </message>
+    <message>
+        <source>FPS</source>
+        <translation>帧数</translation>
+    </message>
+    <message>
+        <source>5 fps</source>
+        <translation>5帧/秒</translation>
+    </message>
+    <message>
+        <source>10 fps</source>
+        <translation>10帧/秒</translation>
+    </message>
+    <message>
+        <source>20 fps</source>
+        <translation>20帧/秒</translation>
+    </message>
+    <message>
+        <source>24 fps</source>
+        <translation>24帧/秒</translation>
+    </message>
+    <message>
+        <source>30 fps</source>
+        <translation>30帧/秒</translation>
     </message>
 </context>
 <context>

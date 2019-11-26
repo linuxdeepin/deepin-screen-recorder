@@ -297,7 +297,7 @@ void RecordProcess::initProcess()
             fileExtension = "mp4";
         }
     }
-    saveBaseName = QString("%1_%2_%3.%4").arg(tr("deepin-screen-recorder")).arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
+    saveBaseName = QString("%1_%2_%3.%4").arg(tr("Screen Capture")).arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
     savePath = QDir(saveTempDir).filePath(saveBaseName);
 
     // Remove same cache file first.

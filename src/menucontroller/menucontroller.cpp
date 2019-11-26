@@ -92,7 +92,7 @@ MenuController::MenuController(QObject *parent)
         emit saveAction();
     });
 
-    QAction *closeAct = new QAction(tr("Close"), this);
+    QAction *closeAct = new QAction(tr("Exit"), this);
     connect(closeAct, &QAction::triggered, [ = ] {
         emit closeAction();
     });

@@ -30,7 +30,7 @@ void voiceVolumeWatcher::setIsRecoding(bool value)
 void voiceVolumeWatcher::run()
 {
     m_loopwatch = true;
-    QThread::currentThread()->msleep(1000);
+    QThread::currentThread()->msleep(200);
     while (m_loopwatch) {
         QThread::currentThread()->msleep(200);
         //log缓存被更新并且仍进行loop循环

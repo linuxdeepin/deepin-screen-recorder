@@ -126,6 +126,7 @@ void ShapesWidget::updatePenColor()
 void ShapesWidget::setCurrentShape(QString shapeType)
 {
     qDebug() << "type: " << shapeType;
+    clearSelected();
     if (shapeType != "saveList")
         m_currentType = shapeType;
 }
@@ -184,7 +185,7 @@ void ShapesWidget::setNoChangedTextEditRemove()
         if (m_shapes[i].type == "text") {
             qDebug() << "delete text22222222222222";
             int t_tempIndex = m_shapes[i].index;
-            if (m_editMap.value(t_tempIndex)->document()->toPlainText() == QString(tr("Input your content"))
+            if (m_editMap.value(t_tempIndex)->document()->toPlainText() == QString(tr("Input text here"))
                     || m_editMap.value(t_tempIndex)->document()->toPlainText().isEmpty()) {
                 m_shapes.removeAt(i);
                 m_editMap.value(t_tempIndex)->clear();
@@ -1137,7 +1138,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     m_currentShape.index = m_currentIndex;
                     qDebug() << "new textedit:" << m_currentIndex;
                     TextEdit *edit = new TextEdit(m_currentIndex, this);
-                    QString t_editText = QString(tr("Input your content"));
+                    QString t_editText = QString(tr("Input text here"));
                     edit->setPlainText(t_editText);
                     m_editing = true;
                     int defaultFontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();
@@ -1188,6 +1189,11 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                         emit shapeClicked("text");
 
 //
+                    });
+
+                    connect(edit, &TextEdit::textEditFinish, this, [ = ] (int index) {
+//                        setAllTextEditReadOnly();
+                        setAllTextEditReadOnly();
                     });
 
                     edit->setSelecting(true);
@@ -1680,6 +1686,9 @@ void ShapesWidget::paintEvent(QPaintEvent *)
         pen.setWidthF(m_currentShape.lineWidth - 0.5);
 
         if (m_currentType == "rectangle") {
+            if (m_currentShape.type == "text") {
+                return;
+            }
             pen.setJoinStyle(Qt::MiterJoin);
             painter.setPen(pen);
             if (m_currentShape.isBlur || m_currentShape.isMosaic) {
@@ -1690,6 +1699,9 @@ void ShapesWidget::paintEvent(QPaintEvent *)
                           m_currentShape.isBlur, m_currentShape.isMosaic);
             }
         } else if (m_currentType == "oval") {
+            if (m_currentShape.type == "text") {
+                return;
+            }
             pen.setJoinStyle(Qt::MiterJoin);
             painter.setPen(pen);
             if (m_currentShape.isBlur || m_currentShape.isMosaic) {
@@ -1700,10 +1712,16 @@ void ShapesWidget::paintEvent(QPaintEvent *)
                              m_currentShape.isBlur, m_currentShape.isMosaic);
             }
         } else if (m_currentType == "arrow") {
+            if (m_currentShape.type == "text") {
+                return;
+            }
             pen.setJoinStyle(Qt::MiterJoin);
             painter.setPen(pen);
             paintArrow(painter, m_currentShape.points, pen.width(), m_currentShape.isStraight);
         } else if (m_currentType == "line") {
+            if (m_currentShape.type == "text") {
+                return;
+            }
             pen.setJoinStyle(Qt::RoundJoin);
             painter.setPen(pen);
             paintLine(painter, m_currentShape.points);
@@ -1719,6 +1737,7 @@ void ShapesWidget::paintEvent(QPaintEvent *)
         pen.setWidthF(0.5);
         pen.setColor("#01bdff");
         if (m_hoveredShape.type == "rectangle") {
+            qDebug() << "rect22222222222222" << m_hoveredShape.type;
             pen.setJoinStyle(Qt::MiterJoin);
             painter.setPen(pen);
             paintRect(painter, m_hoveredShape.mainPoints, m_hoveredIndex,  Hovered,

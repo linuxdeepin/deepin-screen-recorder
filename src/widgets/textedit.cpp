@@ -241,4 +241,13 @@ void TextEdit::keyPressEvent(QKeyEvent *e)
     }
 }
 
+void TextEdit::focusOutEvent(QFocusEvent *e)
+{
+    emit textEditFinish(getIndex());
+    setReadOnly(true);
+    releaseKeyboard();
+    setEditing(false);
+    DPlainTextEdit::focusOutEvent(e);
+}
+
 TextEdit::~TextEdit() {}

@@ -51,6 +51,7 @@ signals:
     void backToEditing();
     void clickToEditing(int index);
     void textEditSelected(int index);
+    void textEditFinish(int index);
 
 protected:
     void mousePressEvent(QMouseEvent *e);
@@ -59,6 +60,7 @@ protected:
     void mouseDoubleClickEvent(QMouseEvent *e);
     void inputMethodEvent(QInputMethodEvent *e);
     void keyPressEvent(QKeyEvent *e);
+    void focusOutEvent(QFocusEvent *e);
 
 private:
     int m_index;

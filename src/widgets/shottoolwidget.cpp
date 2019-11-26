@@ -329,7 +329,7 @@ void ShotToolWidget::initRectLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    m_blurRectButton->setPalette(pa);
 
-    m_blurRectButton->setToolTip(tr("blur"));
+    m_blurRectButton->setToolTip(tr("Blur"));
     m_blurRectButton->setObjectName("blurButton");
     m_blurRectButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_blurRectButton->setIconSize(TOOL_ICON_SIZE);
@@ -352,7 +352,7 @@ void ShotToolWidget::initRectLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    m_mosaicRectButton->setPalette(pa);
 
-    m_mosaicRectButton->setToolTip(tr("mosaic"));
+    m_mosaicRectButton->setToolTip(tr("Mosaic"));
     m_mosaicRectButton->setObjectName("mosaicBtn");
     m_mosaicRectButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_mosaicRectButton->setIconSize(TOOL_ICON_SIZE);
@@ -749,7 +749,7 @@ void ShotToolWidget::initCircLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    m_blurCircButton->setPalette(pa);
 
-    m_blurCircButton->setToolTip(tr("blur"));
+    m_blurCircButton->setToolTip(tr("Blur"));
     m_blurCircButton->setObjectName("blurButton");
     m_blurCircButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_blurCircButton->setIconSize(TOOL_ICON_SIZE);
@@ -772,7 +772,7 @@ void ShotToolWidget::initCircLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    m_mosaicCircButton->setPalette(pa);
 
-    m_mosaicCircButton->setToolTip(tr("mosaic"));
+    m_mosaicCircButton->setToolTip(tr("Mosaic"));
     m_mosaicCircButton->setObjectName("mosaicBtn");
     m_mosaicCircButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_mosaicCircButton->setIconSize(TOOL_ICON_SIZE);
