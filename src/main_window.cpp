@@ -3399,6 +3399,7 @@ void MainWindow::hideAllWidget()
     m_recordButton->hide();
     m_shotButton->hide();
     m_sizeTips->hide();
+    m_zoomIndicator->hide();
 
     //隐藏键盘按钮控件
     if (m_keyButtonList.count() > 0) {
