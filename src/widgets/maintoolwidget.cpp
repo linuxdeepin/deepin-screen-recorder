@@ -93,6 +93,18 @@ void MainToolWidget::initMainLabel()
 //    recordBtn->setStyleSheet(record_button_style);
     toolBtnList.append(m_recordBtn);
 
+    connect(m_recordBtn, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            m_recordBtn->setIcon(QIcon(":/image/newUI/press/screencap-press.svg"));
+        }
+
+        else if (m_themeType == 2)
+        {
+            m_recordBtn->setIcon(QIcon(":/image/newUI/dark/press/screencap-press.svg"));
+        }
+    });
+
 //    QString shot_button_style = "DPushButton:press{QIcon(:/image/newUI/press/shot-press.svg)}";
 
     m_shotBtn = new ToolButton();
@@ -117,14 +129,27 @@ void MainToolWidget::initMainLabel()
         m_shotBtn->setIcon(QIcon(":/image/newUI/dark/normal/screenshot-normal_dark.svg"));
     }
 
+    connect(m_shotBtn, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            m_shotBtn->setIcon(QIcon(":/image/newUI/press/screenshot-press.svg"));
+        }
+
+        else if (m_themeType == 2)
+        {
+            m_shotBtn->setIcon(QIcon(":/image/newUI/dark/press/screenshot-press.svg"));
+        }
+    });
+
     m_shotBtn->setToolTip(tr("Switch to shot mode"));
 //    shotBtn->setStyleSheet(shot_button_style);
     toolBtnList.append(m_shotBtn);
 
     m_baseLayout = new QHBoxLayout();
-    m_baseLayout->setMargin(0);
+    m_baseLayout->setContentsMargins(4, 0, 0, 0);
+//    m_baseLayout->setMargin(1);
     m_baseLayout->setSpacing(0);
-    m_baseLayout->addSpacing(4);
+    m_baseLayout->addSpacing(5);
 
     for (int k = 0; k < toolBtnList.length(); k++) {
         m_baseLayout->addWidget(toolBtnList[k]);

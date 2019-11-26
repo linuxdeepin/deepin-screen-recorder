@@ -89,8 +89,8 @@ DWIDGET_USE_NAMESPACE
 namespace {
 const int RECORD_MIN_SIZE = 10;
 const int SPACING = 10;
-const int TOOLBAR_X_SPACING = 70;
-const int TOOLBAR_Y_SPACING = 8;
+const int TOOLBAR_X_SPACING = 90;
+const int TOOLBAR_Y_SPACING = 3;
 const int SIDEBAR_X_SPACING = 8;
 const int SIDEBAR_Y_SPACING = 1;
 const int CURSOR_WIDTH = 8;
@@ -432,12 +432,12 @@ void MainWindow::initAttributes()
     pa.setColor(DPalette::Dark, QColor(229, 70, 61, 204));
     pa.setColor(DPalette::Light, QColor(229, 70, 61, 204));
     m_recordButton->setPalette(pa);
-    m_recordButton->setIconSize(QSize(33, 33));
+    m_recordButton->setIconSize(QSize(38, 38));
     m_recordButton->setIcon(QIcon(":/image/newUI/checked/screencap-checked.svg"));
     m_recordButton->setToolTip(tr("Start Record"));
 //    m_recordButton->setToolTip(tr("Switch to record mode"));
 
-    m_recordButton->setFixedSize(60, 51);
+    m_recordButton->setFixedSize(76, 58);
 //    m_recordButton->setText(tr("Record"));
     m_recordButton->setObjectName("mainRecordBtn");
 
@@ -452,12 +452,12 @@ void MainWindow::initAttributes()
     pa.setColor(DPalette::Dark, QColor(0, 129, 255, 204));
     pa.setColor(DPalette::Light, QColor(0, 129, 255, 204));
     m_shotButton->setPalette(pa);
-    m_shotButton->setIconSize(QSize(33, 33));
+    m_shotButton->setIconSize(QSize(38, 38));
     m_shotButton->setIcon(QIcon(":/image/newUI/checked/screenshot-checked.svg"));
     m_shotButton->setToolTip(tr("Start Shot"));
 //    m_shotButton->setToolTip(tr("Switch to shot mode"));
 
-    m_shotButton->setFixedSize(60, 51);
+    m_shotButton->setFixedSize(76, 58);
 //    m_shotButton->setText(tr("Shot"));
     m_shotButton->setObjectName("mainShotBtn");
 
@@ -1321,7 +1321,7 @@ void MainWindow::updateRecordButtonPos()
     }
     QPoint recordButtonBarPoint;
     recordButtonBarPoint = QPoint(recordX + recordWidth - m_shotButton->width(),
-                                  std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
+                                  std::max(recordY + recordHeight + TOOLBAR_Y_SPACING + 6, 0));
 
     if (m_repaintMainButton == true) {
         recordButtonBarPoint.setX(recordX + m_toolBar->width() + TOOLBAR_X_SPACING - m_recordButton->width());
@@ -1330,9 +1330,9 @@ void MainWindow::updateRecordButtonPos()
     if (recordButtonBarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
             - m_shotButton->height() - 28) {
         if (recordY > 28 * 2 + 10) {
-            recordButtonBarPoint.setY(recordY - m_shotButton->height() - TOOLBAR_Y_SPACING);
+            recordButtonBarPoint.setY(recordY - m_shotButton->height() - TOOLBAR_Y_SPACING - 6);
         } else {
-            recordButtonBarPoint.setY(recordY + TOOLBAR_Y_SPACING);
+            recordButtonBarPoint.setY(recordY + TOOLBAR_Y_SPACING + 6);
         }
     }
 
@@ -1352,7 +1352,7 @@ void MainWindow::updateShotButtonPos()
     }
     QPoint shotButtonBarPoint;
     shotButtonBarPoint = QPoint(recordX + recordWidth - m_shotButton->width(),
-                                std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
+                                std::max(recordY + recordHeight + TOOLBAR_Y_SPACING + 6, 0));
 
     if (m_repaintMainButton == true) {
         shotButtonBarPoint.setX(recordX + m_toolBar->width() + TOOLBAR_X_SPACING - m_shotButton->width());
@@ -1361,9 +1361,9 @@ void MainWindow::updateShotButtonPos()
     if (shotButtonBarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
             - m_shotButton->height() - 28) {
         if (recordY > 28 * 2 + 10) {
-            shotButtonBarPoint.setY(recordY - m_shotButton->height() - TOOLBAR_Y_SPACING);
+            shotButtonBarPoint.setY(recordY - m_shotButton->height() - TOOLBAR_Y_SPACING - 6);
         } else {
-            shotButtonBarPoint.setY(recordY + TOOLBAR_Y_SPACING);
+            shotButtonBarPoint.setY(recordY + TOOLBAR_Y_SPACING + 6);
         }
     }
 
@@ -3042,7 +3042,7 @@ void MainWindow::shotCurrentImg()
     update();
 
     QEventLoop eventloop1;
-    QTimer::singleShot(100, &eventloop1, SLOT(quit()));
+    QTimer::singleShot(300, &eventloop1, SLOT(quit()));
     eventloop1.exec();
 
     qDebug() << "shotCurrentImg shotFullScreen";

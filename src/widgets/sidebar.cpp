@@ -33,33 +33,35 @@
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int TOOLBAR_HEIGHT = 450;
-const int TOOLBAR_WIDTH = 50;
+const int TOOLBAR_HEIGHT = 465;
+const int TOOLBAR_WIDTH = 66;
 
-const QSize TOOLBAR_WIDGET_SIZE = QSize(50, 450);
+const QSize TOOLBAR_WIDGET_SIZE = QSize(66, 465);
 const int BUTTON_SPACING = 3;
 const int BTN_RADIUS = 3;
 }
 
 
 SideBarWidget::SideBarWidget(DWidget *parent)
-    : DBlurEffectWidget(parent),
+    : DFloatingWidget(parent),
       m_expanded(false)
 {
     int t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
-    setBlurRectXRadius(14);
-    setBlurRectYRadius(14);
-    setRadius(30);
-    setMode(DBlurEffectWidget::GaussianBlur);
-    setBlurEnabled(true);
+    setBlurBackgroundEnabled(true);
+
+//    setBlurRectXRadius(14);
+//    setBlurRectYRadius(14);
+    blurBackground()->setRadius(30);
+    blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
+    blurBackground()->setBlurEnabled(true);
 //    setBlendMode(DBlurEffectWidget::InWindowBlend);
 //    setMaskColor(QColor(255, 255, 255, 76.5));
     if (t_themeType == 1) {
-        setMaskColor(QColor(255, 255, 255, 76.5));
+        blurBackground()->setMaskColor(QColor(255, 255, 255, 76.5));
     }
 
     else if (t_themeType == 2) {
-        setMaskColor(QColor(0, 0, 0, 76.5));
+        blurBackground()->setMaskColor(QColor(0, 0, 0, 76.5));
     }
     //设置透明效果
 
@@ -105,9 +107,9 @@ SideBarWidget::SideBarWidget(DWidget *parent)
     QVBoxLayout *VLayout = new QVBoxLayout();
     VLayout->setMargin(0);
 //    VLayout->setSpacing(3);
-    VLayout->addWidget(m_shotTool, 0, Qt::AlignTop | Qt::AlignHCenter);
-    VLayout->addWidget(m_colorTool, 1,  Qt::AlignTop | Qt::AlignHCenter);
-    VLayout->addWidget(m_closeButton, 2, Qt::AlignTop | Qt::AlignHCenter);
+    VLayout->addWidget(m_shotTool, 0,  Qt::AlignCenter);
+    VLayout->addWidget(m_colorTool, 1,   Qt::AlignCenter);
+    VLayout->addWidget(m_closeButton, 2, Qt::AlignCenter);
     setLayout(VLayout);
 
     connect(m_shotTool, &ShotToolWidget::changeArrowAndLine, this, &SideBarWidget::changeArrowAndLineEvent);
@@ -127,7 +129,7 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
 
 void SideBarWidget::paintEvent(QPaintEvent *e)
 {
-    DBlurEffectWidget::paintEvent(e);
+    DFloatingWidget::paintEvent(e);
 
 //    QPainter painter(this);
 //    painter.setPen(QColor(255, 255, 255, 76.5));
@@ -139,7 +141,7 @@ void SideBarWidget::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
 
-    DBlurEffectWidget::showEvent(event);
+    DFloatingWidget::showEvent(event);
 }
 
 
@@ -207,11 +209,11 @@ void SideBar::setColorFunc(const QString &func)
 
 void SideBar::paintEvent(QPaintEvent *e)
 {
-    QPainter painter(this);
-    painter.setPen(QColor(0, 0, 0, 25));
-    painter.setRenderHint(QPainter::Antialiasing);
-    QRectF rect(0, 0, this->width() - 1, this->height() - 1);
-    painter.drawRoundedRect(rect.translated(0.5, 0.5), 3, 3, Qt::AbsoluteSize);
+//    QPainter painter(this);
+//    painter.setPen(QColor(0, 0, 0, 25));
+//    painter.setRenderHint(QPainter::Antialiasing);
+//    QRectF rect(0, 0, this->width() - 1, this->height() - 1);
+//    painter.drawRoundedRect(rect.translated(0.5, 0.5), 3, 3, Qt::AbsoluteSize);
 
     DLabel::paintEvent(e);
 }

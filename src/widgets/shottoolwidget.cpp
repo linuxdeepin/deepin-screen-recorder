@@ -125,6 +125,21 @@ void ShotToolWidget::initRectLabel()
 
     btnList.append(thickOneBtn);
 
+    connect(thickOneBtn, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            thickOneBtn->setIcon(QIcon(":/image/newUI/press/brush small_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            thickOneBtn->setIcon(QIcon(":/image/newUI/dark/press/brush small_press.svg"));
+
+        }
+    });
+
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
 
@@ -147,6 +162,21 @@ void ShotToolWidget::initRectLabel()
         thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
     }
     btnList.append(thickTwoBtn);
+
+    connect(thickTwoBtn, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            thickTwoBtn->setIcon(QIcon(":/image/newUI/press/brush medium_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/press/brush medium_press.svg"));
+
+        }
+    });
 
     //粗细程度3级按钮
     ToolButton *thickThreeBtn = new ToolButton();
@@ -171,8 +201,23 @@ void ShotToolWidget::initRectLabel()
     }
     btnList.append(thickThreeBtn);
 
+    connect(thickThreeBtn, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            thickThreeBtn->setIcon(QIcon(":/image/newUI/press/brush big_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/press/brush big_press.svg"));
+
+        }
+    });
+
     QVBoxLayout *rectLayout = new QVBoxLayout();
-    rectLayout->setMargin(0);
+    rectLayout->setContentsMargins(1, 4, 0, 0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(5);
     for (int i = 0; i < btnList.length(); i++) {
@@ -302,7 +347,6 @@ void ShotToolWidget::initRectLabel()
     thickOneBtn->click();
     ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 0);
 
-
     rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton();
     pa = t_seperator->palette();
@@ -341,6 +385,22 @@ void ShotToolWidget::initRectLabel()
     else if (m_themeType == 2) {
         m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
     }
+
+    connect(m_blurRectButton, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            m_blurRectButton->setIcon(QIcon(":/image/newUI/press/vague_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/press/vague_press.svg"));
+
+        }
+    });
+
     btnList.append(m_blurRectButton);
 
     //马赛克按钮
@@ -364,6 +424,22 @@ void ShotToolWidget::initRectLabel()
     else if (m_themeType == 2) {
         m_mosaicRectButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
     }
+
+    connect(m_mosaicRectButton, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/press/Mosaic_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/dark/press/Mosaic_press.svg"));
+
+        }
+    });
+
     btnList.append(m_mosaicRectButton);
 
     connect(m_blurRectButton, &ToolButton::clicked, this, [ = ] {
@@ -547,6 +623,21 @@ void ShotToolWidget::initCircLabel()
     }
     btnList.append(thickOneBtn);
 
+    connect(thickOneBtn, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            thickOneBtn->setIcon(QIcon(":/image/newUI/press/brush small_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            thickOneBtn->setIcon(QIcon(":/image/newUI/dark/press/brush small_press.svg"));
+
+        }
+    });
+
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
 
@@ -568,6 +659,21 @@ void ShotToolWidget::initCircLabel()
     else if (m_themeType == 2) {
         thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
     }
+
+    connect(thickTwoBtn, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            thickTwoBtn->setIcon(QIcon(":/image/newUI/press/brush medium_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/press/brush medium_press.svg"));
+
+        }
+    });
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
@@ -591,10 +697,25 @@ void ShotToolWidget::initCircLabel()
     else if (m_themeType == 2) {
         thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
     }
+
+    connect(thickThreeBtn, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            thickThreeBtn->setIcon(QIcon(":/image/newUI/press/brush big_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/press/brush big_press.svg"));
+
+        }
+    });
     btnList.append(thickThreeBtn);
 
     QVBoxLayout *rectLayout = new QVBoxLayout();
-    rectLayout->setMargin(0);
+    rectLayout->setContentsMargins(1, 4, 0, 0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(5);
     for (int i = 0; i < btnList.length(); i++) {
@@ -761,6 +882,21 @@ void ShotToolWidget::initCircLabel()
     else if (m_themeType == 2) {
         m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
     }
+
+    connect(m_blurCircButton, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            m_blurCircButton->setIcon(QIcon(":/image/newUI/press/vague_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/press/vague_press.svg"));
+
+        }
+    });
     btnList.append(m_blurCircButton);
 
     //马赛克按钮
@@ -784,6 +920,22 @@ void ShotToolWidget::initCircLabel()
     else if (m_themeType == 2) {
         m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
     }
+
+    connect(m_mosaicCircButton, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/press/Mosaic_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/press/Mosaic_press.svg"));
+
+        }
+    });
+
     btnList.append(m_mosaicCircButton);
 
     connect(m_blurCircButton, &ToolButton::clicked, this, [ = ] {
@@ -973,6 +1125,22 @@ void ShotToolWidget::initLineLabel()
     else if (m_themeType == 2) {
         thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
     }
+
+    connect(thickOneBtn, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            thickOneBtn->setIcon(QIcon(":/image/newUI/press/brush small_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            thickOneBtn->setIcon(QIcon(":/image/newUI/dark/press/brush small_press.svg"));
+
+        }
+    });
+
     btnList.append(thickOneBtn);
 
     //粗细程度２级按钮
@@ -996,6 +1164,22 @@ void ShotToolWidget::initLineLabel()
     else if (m_themeType == 2) {
         thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
     }
+
+    connect(thickTwoBtn, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            thickTwoBtn->setIcon(QIcon(":/image/newUI/press/brush medium_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/press/brush medium_press.svg"));
+
+        }
+    });
+
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
@@ -1019,10 +1203,26 @@ void ShotToolWidget::initLineLabel()
     else if (m_themeType == 2) {
         thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
     }
+
+    connect(thickThreeBtn, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            thickThreeBtn->setIcon(QIcon(":/image/newUI/press/brush big_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/press/brush big_press.svg"));
+
+        }
+    });
+
     btnList.append(thickThreeBtn);
 
     QVBoxLayout *rectLayout = new QVBoxLayout();
-    rectLayout->setMargin(0);
+    rectLayout->setContentsMargins(1, 4, 0, 0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(5);
     for (int i = 0; i < btnList.length(); i++) {
@@ -1191,6 +1391,22 @@ void ShotToolWidget::initLineLabel()
     else if (m_themeType == 2) {
         blurButton->setIcon(QIcon(":/image/newUI/dark/normal/line-normal_dark.svg"));
     }
+
+    connect(blurButton, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            blurButton->setIcon(QIcon(":/image/newUI/press/line-press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            blurButton->setIcon(QIcon(":/image/newUI/dark/press/line-press.svg"));
+
+        }
+    });
+
     btnList.append(blurButton);
 
     //箭头按钮
@@ -1214,6 +1430,22 @@ void ShotToolWidget::initLineLabel()
     else if (m_themeType == 2) {
         mosaicBtn->setIcon(QIcon(":/image/newUI/dark/normal/Arrow-normal_dark.svg"));
     }
+
+    connect(mosaicBtn, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            mosaicBtn->setIcon(QIcon(":/image/newUI/press/Arrow-press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            mosaicBtn->setIcon(QIcon(":/image/newUI/dark/press/Arrow-press.svg"));
+
+        }
+    });
+
     btnList.append(mosaicBtn);
 
     connect(blurButton, &ToolButton::clicked, this, [ = ] {
@@ -1372,6 +1604,22 @@ void ShotToolWidget::initPenLabel()
     else if (m_themeType == 2) {
         thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
     }
+
+    connect(thickOneBtn, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            thickOneBtn->setIcon(QIcon(":/image/newUI/press/brush small_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            thickOneBtn->setIcon(QIcon(":/image/newUI/dark/press/brush small_press.svg"));
+
+        }
+    });
+
     btnList.append(thickOneBtn);
 
     //粗细程度２级按钮
@@ -1395,6 +1643,23 @@ void ShotToolWidget::initPenLabel()
     else if (m_themeType == 2) {
         thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
     }
+
+    connect(thickTwoBtn, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            thickTwoBtn->setIcon(QIcon(":/image/newUI/press/brush medium_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/press/brush medium_press.svg"));
+
+        }
+    });
+
+
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
@@ -1418,10 +1683,27 @@ void ShotToolWidget::initPenLabel()
     else if (m_themeType == 2) {
         thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
     }
+
+    connect(thickThreeBtn, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            thickThreeBtn->setIcon(QIcon(":/image/newUI/press/brush big_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/press/brush big_press.svg"));
+
+        }
+    });
+
+
     btnList.append(thickThreeBtn);
 
     QVBoxLayout *rectLayout = new QVBoxLayout();
-    rectLayout->setMargin(0);
+    rectLayout->setContentsMargins(1, 4, 0, 0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(5);
     for (int i = 0; i < btnList.length(); i++) {

@@ -26,6 +26,7 @@
 #include <QEvent>
 #include <QDebug>
 #include <DImageButton>
+#include <DFloatingWidget>
 
 #include "majtoolbar.h"
 #include "subtoolbar.h"
@@ -35,7 +36,7 @@
 DWIDGET_USE_NAMESPACE
 
 enum SaveAction : unsigned int;
-class ToolBarWidget : public DBlurEffectWidget
+class ToolBarWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:

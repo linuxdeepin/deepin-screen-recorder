@@ -25,13 +25,14 @@
 #include <QEvent>
 #include <QDebug>
 #include <DImageButton>
+#include <DFloatingWidget>
 
 #include "colortoolwidget.h"
 #include "shottoolwidget.h"
 #include "toolbutton.h"
 DWIDGET_USE_NAMESPACE
 
-class SideBarWidget : public DBlurEffectWidget
+class SideBarWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:

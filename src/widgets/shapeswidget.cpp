@@ -126,7 +126,7 @@ void ShapesWidget::updatePenColor()
 void ShapesWidget::setCurrentShape(QString shapeType)
 {
     qDebug() << "type: " << shapeType;
-    clearSelected();
+//    clearSelected();
     if (shapeType != "saveList")
         m_currentType = shapeType;
 }

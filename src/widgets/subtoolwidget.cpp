@@ -348,6 +348,18 @@ void SubToolWidget::initRecordLabel()
         m_keyBoardButton->setIcon(QIcon(":/image/newUI/dark/normal/key_mormal.svg"));
     }
 
+    connect(m_keyBoardButton, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            m_keyBoardButton->setIcon(QIcon(":/image/newUI/press/key_press.svg"));
+        }
+
+        else if (m_themeType == 2)
+        {
+            m_keyBoardButton->setIcon(QIcon(":/image/newUI/dark/press/key_press.svg"));
+        }
+    });
+
 //    m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
     rectBtnGroup->addButton(m_keyBoardButton);
     m_keyBoardButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
@@ -405,6 +417,18 @@ void SubToolWidget::initRecordLabel()
     else if (m_themeType == 2) {
         m_cameraButton->setIcon(QIcon(":/image/newUI/dark/normal/webcam_normal.svg"));
     }
+
+    connect(m_cameraButton, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            m_cameraButton->setIcon(QIcon(":/image/newUI/press/webcam_press.svg"));
+        }
+
+        else if (m_themeType == 2)
+        {
+            m_cameraButton->setIcon(QIcon(":/image/newUI/dark/press/webcam_press.svg"));
+        }
+    });
 //    m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
     rectBtnGroup->addButton(m_cameraButton);
     m_cameraButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
@@ -455,6 +479,18 @@ void SubToolWidget::initRecordLabel()
     else if (m_themeType == 2) {
         m_mouseButton->setIcon(QIcon(":/image/newUI/dark/normal/mouse_mormal.svg"));
     }
+
+    connect(m_mouseButton, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            m_mouseButton->setIcon(QIcon(":/image/newUI/press/mouse_press.svg"));
+        }
+
+        else if (m_themeType == 2)
+        {
+            m_mouseButton->setIcon(QIcon(":/image/newUI/dark/press/mouse_press.svg"));
+        }
+    });
 
 //    m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
 //    mouseButton->setText(tr("Mouse"));
@@ -699,204 +735,8 @@ void SubToolWidget::initRecordLabel()
         break;
     }
 
-//    ToolButton *formatButton = new ToolButton();
-////    pa = formatButton->palette();
-////    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-////    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-////    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-////    formatButton->setPalette(pa);
-
-////    formatButton->setFixedSize(MAX_TOOL_BUTTON_SIZE);
-//    DFontSizeManager::instance()->bind(formatButton, DFontSizeManager::T9);
-//    formatButton->setObjectName("FormatButton");
-//    formatButton->setText(tr("Webm"));
-//    formatButton->setIconSize(QSize(24, 24));
-//    formatButton->setFixedSize(QSize(110, 40));
-
-//    formatButton->setIcon(QIcon(":/image/newUI/normal/format_normal.svg"));
-////    formatButton->setLayoutDirection(Qt::LeftToRight);
-////    formatButton->setContentsMargins(0, 0, 0, 0);
-////    formatButton->setStyleSheet(format_button_style);
-//    rectBtnGroup->addButton(formatButton);
-
-//    btnList.append(formatButton);
-
-
-//    QActionGroup *t_formatActionGroup = new QActionGroup(this);
-//    t_formatActionGroup->setExclusive(true);
-//    DMenu *formatMenu = new DMenu();
-//    DFontSizeManager::instance()->bind(formatMenu, DFontSizeManager::T8);
-//    //for test
-//    formatMenu->setStyle(QStyleFactory::create("dlight"));
-//    //for test
-//    QAction *gifAction = new QAction(formatMenu);
-//    QAction *mp4Action = new QAction(formatMenu);
-//    gifAction->setText(tr("GIF"));
-//    gifAction->setCheckable(true);
-////    gifAction->setChecked(true);
-//    mp4Action->setText(tr("MP4"));
-//    mp4Action->setCheckable(true);
-//    formatMenu->addAction(gifAction);
-//    formatMenu->addSeparator();
-//    formatMenu->addAction(mp4Action);
-//    formatButton->setMenu(formatMenu);
-//    t_formatActionGroup->addAction(gifAction);
-//    t_formatActionGroup->addAction(mp4Action);
-
-//    if (t_saveGif == true) {
-//        gifAction->setChecked(true);
-//        gifAction->trigger();
-//    } else {
-//        mp4Action->setChecked(true);
-//        mp4Action->trigger();
-//    }
-
-//    connect(gifAction, &QAction::triggered, this, [ = ] (bool checked) {
-//        t_settings->setOption("save_as_gif", true);
-//        emit gifActionChecked(checked);
-//    });
-
-//    connect(mp4Action, &QAction::triggered, this, [ = ] (bool checked) {
-//        t_settings->setOption("save_as_gif", false);
-//        emit mp4ActionChecked(checked);
-//    });
-
-//    QString fps_button_style = "DPushButton{text-align: left;}"
-//                               "DPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
-//                               "left:-4px;"
-//                               "subcontrol-origin:padding;"
-//                               "subcontrol-position:right;}";
-
-//    ToolButton *fpsButton = new ToolButton();
-//    DFontSizeManager::instance()->bind(fpsButton, DFontSizeManager::T9);
-////    pa = fpsButton->palette();
-////    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-////    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-////    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-////    fpsButton->setPalette(pa);
-
-//    fpsButton->setObjectName("FpsButton");
-//    fpsButton->setText(tr("24"));
-//    fpsButton->setIconSize(QSize(20, 20));
-//    fpsButton->setIcon(QIcon(":/image/newUI/normal/Resolving power_normal.svg"));
-//    rectBtnGroup->addButton(fpsButton);
-////    fpsButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-//    fpsButton->setFixedSize(QSize(90, 40));
-////    fpsButton->setStyleSheet(fps_button_style);
-//    btnList.append(fpsButton);
-
-//    //添加帧率选择下拉列表
-//    QActionGroup *t_fpsActionGroup = new QActionGroup(this);
-//    t_fpsActionGroup->setExclusive(true);
-//    DMenu *fpsMenu = new DMenu();
-//    DFontSizeManager::instance()->bind(fpsMenu, DFontSizeManager::T8);
-//    //for test
-//    fpsMenu->setStyle(QStyleFactory::create("dlight"));
-//    //for test
-////    pa = fpsMenu->palette();
-////    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-////    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-////    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-////    fpsMenu->setPalette(pa);
-
-//    QAction *frame5Action = new QAction(fpsMenu);
-//    QAction *frame10Action = new QAction(fpsMenu);
-//    QAction *frame20Action = new QAction(fpsMenu);
-//    QAction *frame24Action = new QAction(fpsMenu);
-//    QAction *frame30Action = new QAction(fpsMenu);
-
-//    frame5Action->setText(tr("5 fps"));
-//    frame5Action->setCheckable(true);
-
-//    frame10Action->setText(tr("10 fps"));
-//    frame10Action->setCheckable(true);
-
-//    frame20Action->setText(tr("20 fps"));
-//    frame20Action->setCheckable(true);
-
-//    frame24Action->setText(tr("24 fps"));
-//    frame24Action->setCheckable(true);
-////    frame24Action->setChecked(true);
-
-//    frame30Action->setText(tr("30 fps"));
-//    frame30Action->setCheckable(true);
-
-//    fpsMenu->addAction(frame5Action);
-//    fpsMenu->addSeparator();
-//    fpsMenu->addAction(frame10Action);
-//    fpsMenu->addSeparator();
-//    fpsMenu->addAction(frame20Action);
-//    fpsMenu->addSeparator();
-//    fpsMenu->addAction(frame24Action);
-//    fpsMenu->addSeparator();
-//    fpsMenu->addAction(frame30Action);
-
-//    fpsButton->setMenu(fpsMenu);
-//    t_fpsActionGroup->addAction(frame5Action);
-//    t_fpsActionGroup->addAction(frame10Action);
-//    t_fpsActionGroup->addAction(frame20Action);
-//    t_fpsActionGroup->addAction(frame24Action);
-//    t_fpsActionGroup->addAction(frame30Action);
-
-//    connect(t_fpsActionGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
-//    [ = ](QAction * t_act) {
-//        int t_frameRateSelected = 0;
-//        if (t_act == frame5Action) {
-//            t_frameRateSelected = 5;
-//            t_settings->setOption("mkv_framerate", "5");
-//            fpsButton->setText(tr("5"));
-//        } else if (t_act == frame10Action) {
-//            t_frameRateSelected = 10;
-//            t_settings->setOption("mkv_framerate", "10");
-//            fpsButton->setText(tr("10"));
-//        } else if (t_act == frame20Action) {
-//            t_frameRateSelected = 20;
-//            t_settings->setOption("mkv_framerate", "20");
-//            fpsButton->setText(tr("20"));
-//        } else if (t_act == frame24Action) {
-//            t_frameRateSelected = 24;
-//            t_settings->setOption("mkv_framerate", "24");
-//            fpsButton->setText(tr("24"));
-//        } else if (t_act == frame30Action) {
-//            t_frameRateSelected = 30;
-//            t_settings->setOption("mkv_framerate", "30");
-//            fpsButton->setText(tr("30"));
-//        }
-
-//        emit videoFrameRateChanged(t_frameRateSelected);
-//    });
-
-
-//    switch (t_frameRate) {
-//    case 5:
-//        frame5Action->triggered();
-//        frame5Action->setChecked(true);
-//        break;
-//    case 10:
-//        frame10Action->triggered();
-//        frame10Action->setChecked(true);
-//        break;
-//    case 20:
-//        frame20Action->triggered();
-//        frame20Action->setChecked(true);
-//        break;
-//    case 24:
-//        frame24Action->triggered();
-//        frame24Action->setChecked(true);
-//        break;
-//    case 30:
-//        frame30Action->triggered();
-//        frame30Action->setChecked(true);
-//        break;
-//    default:
-//        frame24Action->triggered();
-//        frame24Action->setChecked(true);
-//        break;
-//    }
-
-
     QHBoxLayout *rectLayout = new QHBoxLayout();
-    rectLayout->setMargin(0);
+    rectLayout->setMargin(1);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(5);
 //    rectLayout->addWidget(audioButton);
@@ -993,6 +833,20 @@ void SubToolWidget::initShotLabel()
     else if (m_themeType == 2) {
         m_rectButton->setIcon(QIcon(":/image/newUI/dark/normal/rectangle-normal_dark.svg"));
     }
+
+    connect(m_rectButton, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            m_rectButton->setIcon(QIcon(":/image/newUI/press/rectangle-press.svg"));
+        }
+
+        else if (m_themeType == 2)
+        {
+            m_rectButton->setIcon(QIcon(":/image/newUI/dark/press/rectangle-press.svg"));
+        }
+    });
+
+
 //    m_rectButton->setIcon(QIcon(":/image/newUI/normal/rectangle-normal.svg"));
 
     m_rectButton->setObjectName("RectButton");
@@ -1019,6 +873,18 @@ void SubToolWidget::initShotLabel()
     else if (m_themeType == 2) {
         m_circleButton->setIcon(QIcon(":/image/newUI/dark/normal/oval-normal_dark.svg"));
     }
+
+    connect(m_circleButton, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            m_circleButton->setIcon(QIcon(":/image/newUI/press/oval-press.svg"));
+        }
+
+        else if (m_themeType == 2)
+        {
+            m_circleButton->setIcon(QIcon(":/image/newUI/dark/press/oval-press.svg"));
+        }
+    });
 
 //    m_circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
     m_circleButton->setObjectName("CircleButton");
@@ -1053,6 +919,31 @@ void SubToolWidget::initShotLabel()
     else {
         m_lineButton->setToolTip(tr("Arrow"));
     }
+
+    connect(m_lineButton, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            if (t_arrowStatus) {
+                m_lineButton->setIcon(QIcon(":/image/newUI/press/line-press.svg"));
+            }
+
+            else {
+                m_lineButton->setIcon(QIcon(":/image/newUI/press/Arrow-press.svg"));
+            }
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            if (t_arrowStatus) {
+                m_lineButton->setIcon(QIcon(":/image/newUI/dark/press/line-press.svg"));
+            }
+
+            else {
+                m_lineButton->setIcon(QIcon(":/image/newUI/dark/press/Arrow-press.svg"));
+            }
+        }
+    });
 
 
     if (t_arrowStatus) {
@@ -1105,6 +996,21 @@ void SubToolWidget::initShotLabel()
         m_penButton->setIcon(QIcon(":/image/newUI/dark/normal/Combined Shape-normal_dark.svg"));
     }
 
+    connect(m_penButton, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            m_penButton->setIcon(QIcon(":/image/newUI/press/Combined Shape-press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            m_penButton->setIcon(QIcon(":/image/newUI/dark/press/Combined Shape-press.svg"));
+
+        }
+    });
+
 //    m_penButton->setPalette(pa);
 
     m_penButton->setObjectName("PenButton");
@@ -1128,6 +1034,21 @@ void SubToolWidget::initShotLabel()
     else if (m_themeType == 2) {
         m_textButton->setIcon(QIcon(":/image/newUI/dark/normal/text_normal_dark.svg"));
     }
+
+    connect(m_textButton, &ToolButton::onPress, this, [ = ] {
+        if (m_themeType == 1)
+        {
+            m_textButton->setIcon(QIcon(":/image/newUI/press/text_press.svg"));
+
+        }
+
+        else if (m_themeType == 2)
+        {
+
+            m_textButton->setIcon(QIcon(":/image/newUI/dark/press/text_press.svg"));
+
+        }
+    });
 
 //    m_textButton->setPalette(pa);
 

@@ -35,33 +35,35 @@
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int TOOLBAR_HEIGHT = 50;
-const int TOOLBAR_WIDTH = 510;
+const int TOOLBAR_HEIGHT = 70;
+const int TOOLBAR_WIDTH = 530;
 
-const QSize TOOLBAR_WIDGET_SIZE = QSize(510, 50);
+const QSize TOOLBAR_WIDGET_SIZE = QSize(530, 70);
 const int BUTTON_SPACING = 3;
 const int BTN_RADIUS = 3;
 }
 
 ToolBarWidget::ToolBarWidget(DWidget *parent)
-    : DBlurEffectWidget(parent),
+    : DFloatingWidget(parent),
       m_expanded(false)
 {
     int t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
-    setBlurRectXRadius(14);
-    setBlurRectYRadius(14);
-    setRadius(30);
-    setMode(DBlurEffectWidget::GaussianBlur);
-    setBlurEnabled(true);
-    setBlendMode(DBlurEffectWidget::InWindowBlend);
+    setBlurBackgroundEnabled(true);
+
+//    blurBackground()->setBlurRectXRadius(18);
+//    blurBackground()->setBlurRectYRadius(18);
+    blurBackground()->setRadius(30);
+    blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
+    blurBackground()->setBlurEnabled(true);
+    blurBackground()->setBlendMode(DBlurEffectWidget::InWindowBlend);
 
     if (t_themeType == 1) {
-        setMaskColor(QColor(255, 255, 255, 76.5));
+        blurBackground()->setMaskColor(QColor(255, 255, 255, 76.5));
 //        setMaskColor(QColor(170, 170, 170, 140));
     }
 
     else if (t_themeType == 2) {
-        setMaskColor(QColor(0, 0, 0, 76.5));
+        blurBackground()->setMaskColor(QColor(0, 0, 0, 76.5));
     }
 //    setMaskColor(QColor(255, 255, 255, 76.5));
     //设置透明效果
@@ -105,12 +107,13 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
 //    m_closeButton->setStyleSheet(button_style);
 
     QHBoxLayout *hLayout = new QHBoxLayout();
+//    hLayout->setContentsMargins(2, 3, 0, 0);
     hLayout->setMargin(0);
     hLayout->setSpacing(2);
-    hLayout->addWidget(m_mainTool, 0, Qt::AlignLeft);
-    hLayout->addWidget(m_subTool, 1, Qt::AlignLeft);
+    hLayout->addWidget(m_mainTool, 0,  Qt::AlignCenter);
+    hLayout->addWidget(m_subTool, 1, Qt::AlignCenter);
     hLayout->addSpacing(10);
-    hLayout->addWidget(m_closeButton, 2, Qt::AlignLeft);
+    hLayout->addWidget(m_closeButton, 2,  Qt::AlignCenter);
     setLayout(hLayout);
 
     connect(m_mainTool, &MainToolWidget::buttonChecked, this, &ToolBarWidget::setExpand);
@@ -128,7 +131,7 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
 
 void ToolBarWidget::paintEvent(QPaintEvent *e)
 {
-    DBlurEffectWidget::paintEvent(e);
+    DFloatingWidget::paintEvent(e);
 
 //    QPainter painter(this);
 //    painter.setPen(QColor(255, 255, 255, 76.5));
@@ -148,7 +151,7 @@ void ToolBarWidget::showEvent(QShowEvent *event)
     if (expand)
         QTimer::singleShot(0, this, [ = ] { setExpand(expand, "saveList"); });
 
-    DBlurEffectWidget::showEvent(event);
+    DFloatingWidget::showEvent(event);
 }
 
 bool ToolBarWidget::isButtonChecked()
@@ -239,11 +242,11 @@ void ToolBar::setExpand(bool expand, QString shapeType)
 
 void ToolBar::paintEvent(QPaintEvent *e)
 {
-    QPainter painter(this);
-    painter.setPen(QColor(0, 0, 0, 25));
-    painter.setRenderHint(QPainter::Antialiasing);
-    QRectF rect(0, 0, this->width() - 1, this->height() - 1);
-    painter.drawRoundedRect(rect.translated(0.5, 0.5), 3, 3, Qt::AbsoluteSize);
+//    QPainter painter(this);
+//    painter.setPen(QColor(0, 0, 0, 25));
+//    painter.setRenderHint(QPainter::Antialiasing);
+//    QRectF rect(0, 0, this->width() - 1, this->height() - 1);
+//    painter.drawRoundedRect(rect.translated(0.5, 0.5), 3, 3, Qt::AbsoluteSize);
 
     DLabel::paintEvent(e);
 }

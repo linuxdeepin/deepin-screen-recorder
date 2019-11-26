@@ -135,7 +135,8 @@ void ColorToolWidget::initColorLabel()
     toolBtnList.append(m_greenBtn);
 
     m_baseLayout = new QVBoxLayout();
-    m_baseLayout->setMargin(0);
+    m_baseLayout->setContentsMargins(1, 0, 0, 0);
+//    m_baseLayout->setMargin(0);
     m_baseLayout->setSpacing(0);
 
     for (int k = 0; k < toolBtnList.length(); k++) {

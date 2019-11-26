@@ -57,6 +57,7 @@ public slots:
 signals:
     void onEnter();
     void onExist();
+    void onPress();
 
 protected:
     void enterEvent(QEvent *e) override
@@ -69,6 +70,12 @@ protected:
     {
         emit onExist();
         DPushButton::leaveEvent(e);
+    }
+
+    void mousePressEvent(QMouseEvent *e) override
+    {
+        emit onPress();
+        DPushButton::mousePressEvent(e);
     }
 
 private:
