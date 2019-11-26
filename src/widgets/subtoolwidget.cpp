@@ -545,7 +545,7 @@ void SubToolWidget::initRecordLabel()
     m_optionButton = new ToolButton();
     DFontSizeManager::instance()->bind(m_optionButton, DFontSizeManager::T8);
     m_optionButton->setText(tr("Options"));
-    m_optionButton->setFixedSize(QSize(70, 40));
+    m_optionButton->setFixedSize(QSize(73, 40));
     m_optionButton->setToolTip(tr("Options"));
     rectBtnGroup->addButton(m_optionButton);
 
@@ -1062,7 +1062,7 @@ void SubToolWidget::initShotLabel()
     m_shotOptionButton = new ToolButton();
     DFontSizeManager::instance()->bind(m_shotOptionButton, DFontSizeManager::T8);
     m_shotOptionButton->setText(tr("Options"));
-    m_shotOptionButton->setFixedSize(QSize(70, 40));
+    m_shotOptionButton->setFixedSize(QSize(73, 40));
     m_shotOptionButton->setToolTip(tr("Options"));
     rectBtnGroup->addButton(m_shotOptionButton);
 

@@ -3047,10 +3047,10 @@ void MainWindow::shotCurrentImg()
     emit hideScreenshotUI();
 
     const qreal ratio = this->devicePixelRatioF();
-    QRect target( recordX * ratio + 1 * ratio,
-                  recordY * ratio + 1 * ratio,
-                  recordWidth * ratio - 3.5 * ratio,
-                  recordHeight * ratio - 3.5 * ratio );
+    QRect target( recordX * ratio,
+                  recordY * ratio,
+                  recordWidth * ratio,
+                  recordHeight * ratio);
 
     m_resultPixmap = m_resultPixmap.copy(target);
 }
@@ -3058,10 +3058,10 @@ void MainWindow::shotCurrentImg()
 void MainWindow::shotFullScreen()
 {
     const qreal ratio = this->devicePixelRatioF();
-    QRect target( m_backgroundRect.x() + 1 * ratio,
-                  m_backgroundRect.y() + 1 * ratio,
-                  m_backgroundRect.width() - 3.5 * ratio,
-                  m_backgroundRect.height() - 3.5 * ratio );
+    QRect target( m_backgroundRect.x(),
+                  m_backgroundRect.y(),
+                  m_backgroundRect.width(),
+                  m_backgroundRect.height() );
 
 //    m_resultPixmap = getPixmapofRect(m_backgroundRect);
     m_resultPixmap = getPixmapofRect(target);
@@ -3626,10 +3626,10 @@ void MainWindow::shotImgWidthEffect()
     const qreal ratio = devicePixelRatioF();
 //    const QRect rect(m_shapesWidget->geometry().topLeft() * ratio, m_shapesWidget->geometry().size() * ratio);
 
-    QRect target( m_shapesWidget->geometry().x() * ratio + 1 * ratio,
-                  m_shapesWidget->geometry().y() * ratio + 1 * ratio,
-                  m_shapesWidget->geometry().width() * ratio - 3.5 * ratio,
-                  m_shapesWidget->geometry().height() * ratio - 3.5 * ratio );
+    QRect target( m_shapesWidget->geometry().x() * ratio,
+                  m_shapesWidget->geometry().y() * ratio,
+                  m_shapesWidget->geometry().width() * ratio,
+                  m_shapesWidget->geometry().height() * ratio );
 
     m_resultPixmap = m_backgroundPixmap.copy(target);
     m_drawNothing = false;

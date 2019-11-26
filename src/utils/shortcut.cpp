@@ -25,31 +25,40 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
     ShortcutGroup group2;
     ShortcutGroup group3;
     ShortcutGroup group4;
+    ShortcutGroup group5;
 
     group1.groupName = tr("Start/Screenshot");
-    group2.groupName = tr("Save");
-    group3.groupName = tr("Painting");
+    group2.groupName = tr("Exit/Save");
+    group3.groupName = tr("Drawing");
     group4.groupName = tr("Size Adjustment");
+    group5.groupName = tr("Settings");
 
     group1.groupItems <<
                       ShortcutItem(tr("Quick start"), "Ctrl+Alt+A") <<
-                      ShortcutItem(tr("Full screenshot"),  "Print") <<
-                      ShortcutItem(tr("Delay screenshot"),  "Ctrl+Print") <<
-                      ShortcutItem(tr("window screenshot"), "Alt+Print") <<
+                      ShortcutItem(tr("Window screenshot"), "Alt+PrintScreen") <<
+                      ShortcutItem(tr("Delay screenshot"),  "Ctrl+PrintScreen") <<
+                      ShortcutItem(tr("Full screenshot"),  "PrintScreen") <<
+                      ShortcutItem(tr("Copy to clipboard"), "Ctrl+C");
 
-                      ShortcutItem(tr("Exit"),   "Esc");
 
-    group2.groupItems << ShortcutItem(tr("Save"), "Ctrl+S")
-                      << ShortcutItem(tr("Copy to clipboard"), "Ctrl+C");
+    group2.groupItems << ShortcutItem(tr("Exit"),   "Esc") <<
+                      ShortcutItem(tr("Save"), "Ctrl+S") <<
+                      ShortcutItem(tr(" "),   " ") <<
+                      ShortcutItem(tr(" "),   " ") <<
+                      ShortcutItem(tr(" "),   " ");
+
 
     group3.groupItems <<
                       ShortcutItem(tr("Rectangle"),  "R") <<
                       ShortcutItem(tr("Ellipse"),        "O") <<
-                      ShortcutItem(tr("Arrow"),        "L") <<
+                      ShortcutItem(tr("Line"),        "L") <<
                       ShortcutItem(tr("Pencil"),        "P") <<
                       ShortcutItem(tr("Text"),           "T") <<
+                      ShortcutItem(tr("Delete"),    "Delete") <<
                       ShortcutItem(tr("Undo"), "Ctrl+Z") <<
-                      ShortcutItem(tr("Undo All"), "Ctrl+Shift+Z");
+                      ShortcutItem(tr(" "),   " ") <<
+                      ShortcutItem(tr(" "),   " ") <<
+                      ShortcutItem(tr(" "),   " ");
 
     group4.groupItems <<
                       ShortcutItem(tr("Increase height up"), "Ctrl+Up") <<
@@ -60,7 +69,11 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
                       ShortcutItem(tr("Decrease height down"), "Ctrl+Shift+Down") <<
                       ShortcutItem(tr("Decrease width left"), "Ctrl+Shift+Left") <<
                       ShortcutItem(tr("Decrease width right"), "Ctrl+Shift+Right");
-    m_shortcutGroups << group1 << group2 << group3 << group4;
+
+    group5.groupItems << ShortcutItem(tr("Help"),   "F1") <<
+                      ShortcutItem(tr("Display shortcuts"), "Ctrl+Shift+?");
+
+    m_shortcutGroups << group1 << group2 << group3 << group4 << group5;
 
     //convert to json object
     QJsonArray jsonGroups;

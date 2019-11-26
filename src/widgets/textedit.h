@@ -60,7 +60,7 @@ protected:
     void mouseDoubleClickEvent(QMouseEvent *e);
     void inputMethodEvent(QInputMethodEvent *e);
     void keyPressEvent(QKeyEvent *e);
-    void focusOutEvent(QFocusEvent *e);
+//    void focusOutEvent(QFocusEvent *e);
 
 private:
     int m_index;

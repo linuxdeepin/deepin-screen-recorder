@@ -178,31 +178,27 @@ or press the shortcut again to stop recording</source>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>开始截图</translation>
+        <translation>开启/截图</translation>
     </message>
     <message>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <source>Painting</source>
-        <translation>绘制</translation>
-    </message>
-    <message>
         <source>Size Adjustment</source>
-        <translation>调整大小</translation>
+        <translation>调整区域</translation>
     </message>
     <message>
         <source>Quick start</source>
-        <translation>快速截图</translation>
+        <translation>快速启动截图</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>全屏截图</translation>
+        <translation>截取全屏</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>延时截图</translation>
+        <translation>延时5秒截图</translation>
     </message>
     <message>
         <source>Undo</source>
@@ -218,63 +214,87 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation>矩形</translation>
+        <translation>矩形工具</translation>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>椭圆</translation>
-    </message>
-    <message>
-        <source>Arrow</source>
-        <translation>箭头</translation>
+        <translation>椭圆工具</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>画笔</translation>
+        <translation>画笔工具</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation>文字</translation>
+        <translation>文本工具</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation>顶部扩充</translation>
+        <translation>向上放大选区高度</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation>底部扩充</translation>
+        <translation>向下放大选区高度</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>左边扩充</translation>
+        <translation>向左放大选区宽度</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>右边扩充</translation>
+        <translation>向右放大选区宽度</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation>顶部缩进</translation>
+        <translation>向上缩小选区高度</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation>底部缩进</translation>
+        <translation>向下缩小选区高度</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>左边缩进</translation>
+        <translation>向左缩小选区宽度</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>右边缩进</translation>
+        <translation>向右缩小选区宽度</translation>
     </message>
     <message>
-        <source>Undo All</source>
-        <translation>撤销所有</translation>
+        <source>Exit/Save</source>
+        <translation type="unfinished">退出/保存</translation>
     </message>
     <message>
-        <source>window screenshot</source>
-        <translation>窗口截图</translation>
+        <source>Drawing</source>
+        <translation type="unfinished">绘图</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished">设置</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished">直线工具</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">删除选中图形</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished">帮助</translation>
+    </message>
+    <message>
+        <source>Display shortcuts</source>
+        <translation type="unfinished">显示快捷键预览</translation>
+    </message>
+    <message>
+        <source>Window screenshot</source>
+        <translation type="unfinished">光标所在窗口截图</translation>
+    </message>
+    <message>
+        <source> </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
