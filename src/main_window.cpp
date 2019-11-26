@@ -1812,6 +1812,7 @@ void MainWindow::saveScreenShot()
     m_shotflag = 1;
     emit saveActionTriggered();
     hideAllWidget();
+    update();
 
     DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
 //    if (m_hotZoneInterface->isValid())
@@ -2212,6 +2213,10 @@ void MainWindow::paintEvent(QPaintEvent *)
     // Just use for debug.
     // repaintCounter++;
     // qDebug() << repaintCounter;
+
+    if (m_shotflag == 1) {
+        return;
+    }
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
