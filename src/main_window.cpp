@@ -2208,13 +2208,21 @@ bool MainWindow::saveAction(const QPixmap &pix)
     return true;
 }
 
-void MainWindow::paintEvent(QPaintEvent *)
+void MainWindow::paintEvent(QPaintEvent *event)
 {
     // Just use for debug.
     // repaintCounter++;
     // qDebug() << repaintCounter;
 
     if (m_shotflag == 1) {
+        QPainter painter(this);
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        QRect backgroundRect = QRect(0, 0, rootWindowRect.width, rootWindowRect.height);
+        // FIXME: Under the magnifying glass, it seems to be magnified two times.
+        m_backgroundPixmap.setDevicePixelRatio(devicePixelRatioF());
+        painter.drawPixmap(backgroundRect, m_backgroundPixmap);
+//        DWidget::paintEvent(event);
         return;
     }
 
