@@ -72,15 +72,16 @@ void CameraWidget::initCamera()
     t_hlayout->addWidget(m_cameraUI);
     this->setLayout(t_hlayout);
 
-    camera = new QCamera(this);
+    camera = new QCamera(QCameraInfo::defaultCamera(), this);
     camera->setCaptureMode(QCamera::CaptureStillImage);
+    connect(camera, SIGNAL(error(QCamera::Error)), this, SLOT(cameraInitError(QCamera::Error)));
     imageCapture = new QCameraImageCapture(camera);
 
     timer_image_capture = new QTimer(this);
     connect(timer_image_capture, &QTimer::timeout, this, &CameraWidget::captureImage);
 }
 
-void CameraWidget::cameraStart()
+bool CameraWidget::cameraStart()
 {
     camera->start();
 
@@ -91,7 +92,12 @@ void CameraWidget::cameraStart()
         qDebug() << imageCapture->supportedResolutions(imageCapture->encodingSettings());
 
         QList<QSize> t_capSizeLst = imageCapture->supportedResolutions(imageCapture->encodingSettings());
+
         QSize t_resolutionSize;
+        if (t_capSizeLst.isEmpty()) {
+            qDebug() << "no resolution";
+            return false;
+        }
 
         if (t_capSizeLst.contains(QSize(640, 360))) {
             t_resolutionSize = QSize(640, 360);
@@ -116,10 +122,11 @@ void CameraWidget::cameraStart()
         connect(imageCapture, &QCameraImageCapture::imageCaptured, this, &CameraWidget::processCapturedImage);
         connect(imageCapture, &QCameraImageCapture::imageSaved, this, &CameraWidget::deleteCapturedImage);
         timer_image_capture->start(50);
+        return true;
     }
 
     else {
-        return;
+        return false;
     }
 }
 
@@ -127,6 +134,16 @@ void CameraWidget::cameraStop()
 {
     timer_image_capture->stop();
     camera->stop();
+    m_cameraUI->clear();
+}
+
+void CameraWidget::cameraResume()
+{
+    qDebug() << "QCameraInfo::availableCameras" << QCameraInfo::defaultCamera();
+    camera = new QCamera(QCameraInfo::defaultCamera(), this);
+//    camera->load();
+    camera->setCaptureMode(QCamera::CaptureStillImage);
+    imageCapture = new QCameraImageCapture(camera);
 }
 
 bool CameraWidget::getScreenResolution()
@@ -170,26 +187,45 @@ void CameraWidget::deleteCapturedImage(int id, const QString &fileName)
     QFile::remove(fileName);
 }
 
-void CameraWidget::setCameraStop(bool status)
+bool CameraWidget::setCameraStop(bool status)
 {
     Q_UNUSED(status);
-    if (camera->status() == QCamera::ActiveStatus) {
-        return;
-    } else {
-        camera->stop();
-        timer_image_capture->stop();
+
+    camera->unload();
+//    delete camera;
+
+    if (camera) {
+        delete camera;
     }
+
+    if (imageCapture) {
+        delete imageCapture;
+    }
+    return true;
+
 }
 
 bool CameraWidget::getcameraStatus()
 {
-    if (camera->status() == QCamera::ActiveStatus) {
-        return true;
+    qDebug() << "camera->state()" << camera->state();
+    if ( camera->state() != QCamera::ActiveState) {
+        return false;
     }
 
     else {
-        return false;
+        return true;
     }
+}
+
+void CameraWidget::cameraStatus()
+{
+    qDebug() << "camera->status()" << camera->status();
+}
+
+void CameraWidget::cameraInitError(QCamera::Error error)
+{
+    qDebug() << "camera->error()" << error;
+//    camera = new QCamera(QCameraInfo::defaultCamera(), this);
 }
 
 void CameraWidget::enterEvent(QEvent *e)

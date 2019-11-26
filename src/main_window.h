@@ -106,6 +106,8 @@ public:
     ~MainWindow()
     {
         m_pVoiceVolumeWatcher->stopWatch();
+
+        m_pCameraWatcher->stopWatch();
         QThread::currentThread()->msleep(500);
     }
 
@@ -332,6 +334,7 @@ private:
     // int repaintCounter;
     CameraWidget *m_cameraWidget;
     bool m_selectedCamera = false;
+    bool m_cameraOffFlag = false;
     bool m_initCamera = false;
     bool m_launchWithRecordFunc = false;
     bool m_shotWithPath = false;

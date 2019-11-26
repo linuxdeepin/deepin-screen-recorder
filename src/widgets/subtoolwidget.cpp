@@ -1629,11 +1629,12 @@ void SubToolWidget::setMicroPhoneEnable(bool status)
         if (!m_microphoneAction->isEnabled()) {
             return;
         } else {
-            m_microphoneAction->setEnabled(false);
             if (!m_microphoneAction->isChecked()) {
+                m_microphoneAction->setEnabled(false);
                 return;
             } else {
                 m_microphoneAction->trigger();
+                m_microphoneAction->setEnabled(false);
             }
         }
     }
@@ -1642,12 +1643,57 @@ void SubToolWidget::setMicroPhoneEnable(bool status)
 void SubToolWidget::setCameraDeviceEnable(bool status)
 {
     if (status) {
+        if (!m_cameraButton->isEnabled()) {
+            m_cameraButton->setChecked(false);
+            m_cameraButton->setEnabled(true);
 
-        m_cameraButton->setEnabled(true);
+            if (!m_cameraButton->isChecked()) {
+                m_cameraButton->setToolTip(tr("Webcam On"));
+                if (m_themeType == 1) {
+                    m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
+                }
+
+                else if (m_themeType == 2) {
+                    m_cameraButton->setIcon(QIcon(":/image/newUI/dark/normal/webcam_normal.svg"));
+                }
+            }
+        }
+
+        else {
+            return;
+        }
     }
 
     else {
-//        m_cameraButton->setChecked(false);
-        m_cameraButton->setEnabled(false);
+        if (m_cameraButton->isEnabled()) {
+            qDebug() << "1111111111111";
+            m_cameraButton->setChecked(false);
+            if (m_cameraButton->isChecked()) {
+                m_cameraButton->setToolTip(tr("Webcam Off"));
+                if (m_themeType == 1) {
+                    m_cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
+                }
+
+                else if (m_themeType == 2) {
+                    m_cameraButton->setIcon(QIcon(":/image/newUI/dark/checked/webcam_checked.svg"));
+                }
+            }
+
+            if (!m_cameraButton->isChecked()) {
+                //            m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
+                m_cameraButton->setToolTip(tr("Webcam On"));
+                if (m_themeType == 1) {
+                    m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
+                }
+
+                else if (m_themeType == 2) {
+                    m_cameraButton->setIcon(QIcon(":/image/newUI/dark/normal/webcam_normal.svg"));
+                }
+            }
+            m_cameraButton->setDisabled(true);
+
+        } else {
+            return;
+        }
     }
 }

@@ -62,7 +62,7 @@ const int MainWindow::CURSOR_BOUND = 5;
 const int MainWindow::RECORD_MIN_SIZE = 580;
 const int MainWindow::RECORD_MIN_HEIGHT = 280;
 const int MainWindow::RECORD_MIN_SHOT_SIZE = 10;
-const int MainWindow::DRAG_POINT_RADIUS = 8;
+const int MainWindow::DRAG_POINT_RADIUS = 7;
 
 const int MainWindow::RECORD_BUTTON_NORMAL = 0;
 const int MainWindow::RECORD_BUTTON_WAIT = 1;
@@ -89,7 +89,7 @@ DWIDGET_USE_NAMESPACE
 namespace {
 const int RECORD_MIN_SIZE = 10;
 const int SPACING = 10;
-const int TOOLBAR_X_SPACING = 90;
+const int TOOLBAR_X_SPACING = 85;
 const int TOOLBAR_Y_SPACING = 3;
 const int SIDEBAR_X_SPACING = 8;
 const int SIDEBAR_Y_SPACING = 1;
@@ -1183,9 +1183,9 @@ void MainWindow::updateToolBarPos()
         connect(m_pVoiceVolumeWatcher, SIGNAL(sigRecodeState(bool)), this, SLOT(on_CheckRecodeCouldUse(bool)));
         m_toolBarInit = true;
 
-//        m_pCameraWatcher = new CameraWatcher(this);
-//        m_pCameraWatcher->start();
-//        connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
+        m_pCameraWatcher = new CameraWatcher(this);
+        m_pCameraWatcher->start();
+        connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
     }
 
     QPoint toolbarPoint;
@@ -1336,17 +1336,17 @@ void MainWindow::updateRecordButtonPos()
         return;
     }
     QPoint recordButtonBarPoint;
-    recordButtonBarPoint = QPoint(recordX + recordWidth - m_shotButton->width(),
+    recordButtonBarPoint = QPoint(recordX + recordWidth - m_recordButton->width() + 3,
                                   std::max(recordY + recordHeight + TOOLBAR_Y_SPACING + 6, 0));
 
     if (m_repaintMainButton == true) {
-        recordButtonBarPoint.setX(recordX + m_toolBar->width() + TOOLBAR_X_SPACING - m_recordButton->width());
+        recordButtonBarPoint.setX(recordX + m_toolBar->width() + TOOLBAR_X_SPACING - m_recordButton->width() + 3);
     }
 
     if (recordButtonBarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
-            - m_shotButton->height() - 28) {
+            - m_toolBar->height() - 28) {
         if (recordY > 28 * 2 + 10) {
-            recordButtonBarPoint.setY(recordY - m_shotButton->height() - TOOLBAR_Y_SPACING - 6);
+            recordButtonBarPoint.setY(recordY - m_recordButton->height() - TOOLBAR_Y_SPACING - 6);
         } else {
             recordButtonBarPoint.setY(recordY + TOOLBAR_Y_SPACING + 6);
         }
@@ -1367,15 +1367,15 @@ void MainWindow::updateShotButtonPos()
         return;
     }
     QPoint shotButtonBarPoint;
-    shotButtonBarPoint = QPoint(recordX + recordWidth - m_shotButton->width(),
+    shotButtonBarPoint = QPoint(recordX + recordWidth - m_shotButton->width() + 3,
                                 std::max(recordY + recordHeight + TOOLBAR_Y_SPACING + 6, 0));
 
     if (m_repaintMainButton == true) {
-        shotButtonBarPoint.setX(recordX + m_toolBar->width() + TOOLBAR_X_SPACING - m_shotButton->width());
+        shotButtonBarPoint.setX(recordX + m_toolBar->width() + TOOLBAR_X_SPACING - m_shotButton->width() + 3);
     }
 
     if (shotButtonBarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
-            - m_shotButton->height() - 28) {
+            - m_toolBar->height() - 28) {
         if (recordY > 28 * 2 + 10) {
             shotButtonBarPoint.setY(recordY - m_shotButton->height() - TOOLBAR_Y_SPACING - 6);
         } else {
@@ -1631,6 +1631,7 @@ void MainWindow::changeCameraSelectEvent(bool checked)
 
     m_selectedCamera = checked;
     if (checked) {
+        qDebug() << "camera checked" << checked;
         int cameraWidgetWidth = recordWidth * 2 / 5;
         if (cameraWidgetWidth > CAMERA_WIDGET_MAX_WIDTH)
             cameraWidgetWidth = CAMERA_WIDGET_MAX_WIDTH;
@@ -1650,7 +1651,9 @@ void MainWindow::changeCameraSelectEvent(bool checked)
         m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
         m_cameraWidget->resize(cameraWidgetWidth, cameraWidgetHeight);
         m_cameraWidget->showAt(QPoint(x, y));
-        m_cameraWidget->cameraStart();
+        if (!m_cameraWidget->cameraStart()) {
+            m_cameraWidget->cameraStart();
+        }
     } else {
         m_cameraWidget->cameraStop();
         m_cameraWidget->hide();
@@ -2206,10 +2209,14 @@ bool MainWindow::saveAction(const QPixmap &pix)
             return false;
     }
 
+    QMimeData *t_imageData = new QMimeData;
+    t_imageData->setImageData(screenShotPix);
+
     if (m_copyToClipboard) {
         Q_ASSERT(!screenShotPix.isNull());
         QClipboard *cb = qApp->clipboard();
-        cb->setPixmap(screenShotPix, QClipboard::Clipboard);
+//        cb->setPixmap(screenShotPix, QClipboard::Clipboard);
+        cb->setMimeData(t_imageData, QClipboard::Clipboard);
         qDebug() << "clip board success!";
     }
 
@@ -2283,11 +2290,11 @@ void MainWindow::paintEvent(QPaintEvent *event)
         // Draw drag pint.
         if (recordButtonStatus == RECORD_BUTTON_NORMAL && drawDragPoint) {
             painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS), resizeHandleBigImg);
-            painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS), resizeHandleBigImg);
+            painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth - 1, recordY - DRAG_POINT_RADIUS), resizeHandleBigImg);
             painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBigImg);
-            painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBigImg);
+            painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth - 1, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBigImg);
             painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight / 2), resizeHandleBigImg);
-            painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth, recordY - DRAG_POINT_RADIUS + recordHeight / 2), resizeHandleBigImg);
+            painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth - 1, recordY - DRAG_POINT_RADIUS + recordHeight / 2), resizeHandleBigImg);
             painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS), resizeHandleBigImg);
             painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth / 2, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBigImg);
 
@@ -2829,6 +2836,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         updateRecordButtonPos();
                         updateShotButtonPos();
                         updateCameraWidgetPos();
+
                     }
                 }
                 if (m_sizeTips->isVisible()) {
@@ -3020,16 +3028,25 @@ void MainWindow::on_CheckRecodeCouldUse(bool canUse)
 void MainWindow::on_CheckVideoCouldUse(bool canUse)
 {
     qDebug() << "camera canuse" << canUse;
-    if (canUse == false) {
-        if (m_cameraWidget->isVisible()) {
+    if (!canUse) {
+        if (m_initCamera && !m_cameraOffFlag) {
             if (m_cameraWidget->getcameraStatus() == false) {
+
+                m_cameraWidget->cameraStop();
                 m_cameraWidget->setCameraStop(canUse);
-                m_cameraWidget->setVisible(false);
+                m_cameraOffFlag = true;
+                m_cameraWidget->hide();
                 m_toolBar->setCameraDeviceEnable(canUse);
             }
-
+        } else {
+            m_toolBar->setCameraDeviceEnable(canUse);
         }
-
+    } else if (canUse) {
+        m_toolBar->setCameraDeviceEnable(canUse);
+        if (m_cameraOffFlag) {
+            m_cameraWidget->cameraResume();
+            m_cameraOffFlag = false;
+        }
     }
 }
 
