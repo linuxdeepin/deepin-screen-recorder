@@ -2229,28 +2229,28 @@ void MainWindow::paintEvent(QPaintEvent *event)
     // repaintCounter++;
     // qDebug() << repaintCounter;
 
-    if (m_shotflag == 1) {
-        QPainter painter(this);
-        painter.setRenderHint(QPainter::Antialiasing, true);
-        painter.setRenderHint(QPainter::Antialiasing, true);
-        QRect backgroundRect = QRect(0, 0, rootWindowRect.width, rootWindowRect.height);
-        // FIXME: Under the magnifying glass, it seems to be magnified two times.
-        m_backgroundPixmap.setDevicePixelRatio(devicePixelRatioF());
-        painter.drawPixmap(backgroundRect, m_backgroundPixmap);
-//        DWidget::paintEvent(event);
-        return;
-    }
+//    if (m_shotflag == 1) {
+//        QPainter painter(this);
+//        painter.setRenderHint(QPainter::Antialiasing, true);
+//        painter.setRenderHint(QPainter::Antialiasing, true);
+//        QRect backgroundRect = QRect(0, 0, rootWindowRect.width, rootWindowRect.height);
+//        // FIXME: Under the magnifying glass, it seems to be magnified two times.
+//        m_backgroundPixmap.setDevicePixelRatio(devicePixelRatioF());
+//        painter.drawPixmap(backgroundRect, m_backgroundPixmap);
+////        DWidget::paintEvent(event);
+//        return;
+//    }
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    if (m_functionType == 1) {
-        painter.setRenderHint(QPainter::Antialiasing, true);
-        QRect backgroundRect = QRect(0, 0, rootWindowRect.width, rootWindowRect.height);
-        // FIXME: Under the magnifying glass, it seems to be magnified two times.
-        m_backgroundPixmap.setDevicePixelRatio(devicePixelRatioF());
-        painter.drawPixmap(backgroundRect, m_backgroundPixmap);
-    }
+//    if (m_functionType == 1) {
+//        painter.setRenderHint(QPainter::Antialiasing, true);
+//        QRect backgroundRect = QRect(0, 0, rootWindowRect.width, rootWindowRect.height);
+//        // FIXME: Under the magnifying glass, it seems to be magnified two times.
+//        m_backgroundPixmap.setDevicePixelRatio(devicePixelRatioF());
+//        painter.drawPixmap(backgroundRect, m_backgroundPixmap);
+//    }
 
     if (recordWidth > 0 && recordHeight > 0) {
         m_firstShot = 1;
