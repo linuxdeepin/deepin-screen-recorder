@@ -58,7 +58,8 @@ HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src
     src/widgets/camerawidget.h \
     src/utils/dbusutils.h \
     src/screenshot.h \
-    src/utils/voicevolumewatcher.h
+    src/utils/voicevolumewatcher.h \
+    src/utils/camerawatcher.h
 SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.cpp src/utils.cpp src/record_button.cpp src/record_option_panel.cpp src/countdown_tooltip.cpp src/constant.cpp src/event_monitor.cpp src/start_tooltip.cpp src/button_feedback.cpp src/process_tree.cpp \
     src/camera_process.cpp \
     src/show_buttons.cpp  \
@@ -100,7 +101,8 @@ SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.
     src/widgets/camerawidget.cpp \
     src/utils/dbusutils.cpp \
     src/screenshot.cpp \
-    src/utils/voicevolumewatcher.cpp
+    src/utils/voicevolumewatcher.cpp \
+    src/utils/camerawatcher.cpp
 
 QT += core
 QT += widgets
