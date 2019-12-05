@@ -197,40 +197,40 @@ void MainWindow::initAttributes()
     // otherwise deepin-screen-recorder window will add in window lists.
 
     //多屏情况下累加窗口大小
-    if (t_screenCount == 1) {
-        QPoint pos = this->cursor().pos();
-        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
-        screenRect = screenWin->backgroundRect();
-        screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
-        this->move(static_cast<int>(screenRect.x() * ratio),
-                   static_cast<int>(screenRect.y() * ratio));
-        this->setFixedSize(screenRect.width(), screenRect.height());
-        m_swUtil = DScreenWindowsUtil::instance(curPos);
-        m_screenNum =  m_swUtil->getScreenNum();
+//    if (t_screenCount == 1) {
+    QPoint pos = this->cursor().pos();
+    DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
+    screenRect = screenWin->backgroundRect();
+    screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
+    this->move(static_cast<int>(screenRect.x() * ratio),
+               static_cast<int>(screenRect.y() * ratio));
+    this->setFixedSize(screenRect.width(), screenRect.height());
+    m_swUtil = DScreenWindowsUtil::instance(curPos);
+    m_screenNum =  m_swUtil->getScreenNum();
 
-        windowManager = new DWindowManager();
-        windowManager->setRootWindowRect(screenRect);
-        QList<xcb_window_t> windows = windowManager->getWindows();
-        rootWindowRect = windowManager->getRootWindowRect();
-    }
+    windowManager = new DWindowManager();
+    windowManager->setRootWindowRect(screenRect);
+    QList<xcb_window_t> windows = windowManager->getWindows();
+    rootWindowRect = windowManager->getRootWindowRect();
+//    }
 
-    else if (t_screenCount > 1) {
-//        QPoint pos = this->cursor().pos();
-        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
-        screenRect = t_screenRect;
-        screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
-        this->move(static_cast<int>(screenRect.x() * ratio),
-                   static_cast<int>(screenRect.y() * ratio));
-        this->setFixedSize(screenRect.width(), screenRect.height());
-        m_swUtil = DScreenWindowsUtil::instance(curPos);
-        m_screenNum =  m_swUtil->getScreenNum();
+//    else if (t_screenCount > 1) {
+////        QPoint pos = this->cursor().pos();
+//        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
+//        screenRect = t_screenRect;
+//        screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
+//        this->move(static_cast<int>(screenRect.x() * ratio),
+//                   static_cast<int>(screenRect.y() * ratio));
+//        this->setFixedSize(screenRect.width(), screenRect.height());
+//        m_swUtil = DScreenWindowsUtil::instance(curPos);
+//        m_screenNum =  m_swUtil->getScreenNum();
 
-        windowManager = new DWindowManager();
-        windowManager->setRootWindowRect(t_screenRect);
-        QList<xcb_window_t> windows = windowManager->getWindows();
-        rootWindowRect = Dtk::Wm::WindowRect {t_screenRect.x(), t_screenRect.y(),
-                                              t_screenRect.width(), t_screenRect.height()};
-    }
+//        windowManager = new DWindowManager();
+//        windowManager->setRootWindowRect(t_screenRect);
+//        QList<xcb_window_t> windows = windowManager->getWindows();
+//        rootWindowRect = Dtk::Wm::WindowRect {t_screenRect.x(), t_screenRect.y(),
+//                                              t_screenRect.width(), t_screenRect.height()};
+//    }
 
     qDebug() << "screen num:" << t_screenRect;
 
@@ -492,21 +492,21 @@ void MainWindow::initAttributes()
     m_selectedSystemAudio = true;
 
     m_swUtil = DScreenWindowsUtil::instance(curPos);
-    if (t_screenCount == 1) {
-        m_backgroundRect = m_swUtil->backgroundRect();
-        m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
+//    if (t_screenCount == 1) {
+    m_backgroundRect = m_swUtil->backgroundRect();
+    m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
 
-        move(m_backgroundRect.topLeft() * ratio);
-        this->setFixedSize(m_backgroundRect.size());
-    }
+    move(m_backgroundRect.topLeft() * ratio);
+    this->setFixedSize(m_backgroundRect.size());
+//    }
 
-    else if (t_screenCount > 1) {
-        m_backgroundRect = t_screenRect;
-        m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
-        move(m_backgroundRect.topLeft() * ratio);
-        this->setFixedSize(m_backgroundRect.size());
+//    else if (t_screenCount > 1) {
+//        m_backgroundRect = t_screenRect;
+//        m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
+//        move(m_backgroundRect.topLeft() * ratio);
+//        this->setFixedSize(m_backgroundRect.size());
 
-    }
+//    }
     initBackground();
 
     // Just use for debug.
