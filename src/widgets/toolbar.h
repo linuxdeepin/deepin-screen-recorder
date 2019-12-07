@@ -74,6 +74,7 @@ public slots:
     void setVideoInitFromMain();
     void shapeClickedFromBar(QString shape);
     void setMicroPhoneEnable(bool status);
+    void setSystemAudioEnable(bool status);
     void setCameraDeviceEnable(bool status);
 
 protected:
@@ -135,6 +136,7 @@ public slots:
     void setVideoButtonInit();
     void shapeClickedFromMain(QString shape);
     void setMicroPhoneEnable(bool status);
+    void setSystemAudioEnable(bool status);
     void setCameraDeviceEnable(bool status);
 protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;

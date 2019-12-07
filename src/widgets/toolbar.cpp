@@ -201,6 +201,11 @@ void ToolBarWidget::setMicroPhoneEnable(bool status)
     m_subTool->setMicroPhoneEnable(status);
 }
 
+void ToolBarWidget::setSystemAudioEnable(bool status)
+{
+    m_subTool->setSystemAudioEnable(status);
+}
+
 void ToolBarWidget::setCameraDeviceEnable(bool status)
 {
     m_subTool->setCameraDeviceEnable(status);
@@ -365,6 +370,11 @@ void ToolBar::shapeClickedFromMain(QString shape)
 void ToolBar::setMicroPhoneEnable(bool status)
 {
     m_toolbarWidget->setMicroPhoneEnable(status);
+}
+
+void ToolBar::setSystemAudioEnable(bool status)
+{
+    m_toolbarWidget->setSystemAudioEnable(status);
 }
 
 void ToolBar::setCameraDeviceEnable(bool status)

@@ -43,6 +43,6 @@ void voiceVolumeWatcher::run()
                 emit sigRecodeState(couldUse);
             }
         }
-        QThread::currentThread()->msleep(200);
+        QThread::currentThread()->msleep(1000);
     }
 }

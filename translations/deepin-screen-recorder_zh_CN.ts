@@ -125,6 +125,18 @@ or press the shortcut again to stop recording</source>
         <source>select-area</source>
         <translation>选择区域</translation>
     </message>
+    <message>
+        <source>Password Error!</source>
+        <translation>密码错误！</translation>
+    </message>
+    <message>
+        <source>Authentication success!</source>
+        <translation>认证成功！</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation>确定</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

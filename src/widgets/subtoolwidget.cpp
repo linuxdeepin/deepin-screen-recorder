@@ -144,8 +144,8 @@ void SubToolWidget::initRecordLabel()
 
     DFontSizeManager::instance()->bind(audioMenu, DFontSizeManager::T8);
     m_microphoneAction = new QAction(audioMenu);
-    QAction *systemAudioAction = new QAction(audioMenu);
-    m_systemAudioAction = systemAudioAction;
+    m_systemAudioAction = new QAction(audioMenu);
+//    m_m_systemAudioAction = m_systemAudioAction;
     m_microphoneAction->setText(tr("Microphone"));
     m_microphoneAction->setCheckable(true);
     if (m_themeType == 1) {
@@ -158,19 +158,19 @@ void SubToolWidget::initRecordLabel()
 
 
 
-    systemAudioAction->setText(tr("System Audio"));
-//    systemAudioAction->setIcon(QIcon(":/image/newUI/normal/audio frequency.svg"));
+    m_systemAudioAction->setText(tr("System Audio"));
+//    m_systemAudioAction->setIcon(QIcon(":/image/newUI/normal/audio frequency.svg"));
     if (m_themeType == 1) {
-        systemAudioAction->setIcon(QIcon(":/image/newUI/normal/audio frequency.svg"));
+        m_systemAudioAction->setIcon(QIcon(":/image/newUI/normal/audio frequency.svg"));
     }
 
     else if (m_themeType == 2) {
-        systemAudioAction->setIcon(QIcon(":/image/newUI/dark/normal/audio frequency.svg"));
+        m_systemAudioAction->setIcon(QIcon(":/image/newUI/dark/normal/audio frequency.svg"));
     }
 
 
     connect(m_microphoneAction, &QAction::triggered, this, [ = ] {
-        if (m_microphoneAction->isChecked() && systemAudioAction->isChecked())
+        if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
         {
             audioButton->setToolTip(tr("Sound On"));
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
@@ -183,7 +183,7 @@ void SubToolWidget::initRecordLabel()
             }
         }
 
-        if (m_microphoneAction->isChecked() && !systemAudioAction->isChecked())
+        if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
             if (m_themeType == 1) {
@@ -195,7 +195,7 @@ void SubToolWidget::initRecordLabel()
             }
         }
 
-        if (!m_microphoneAction->isChecked() && systemAudioAction->isChecked())
+        if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/audio frequency_normal.svg"));
             if (m_themeType == 1) {
@@ -207,7 +207,7 @@ void SubToolWidget::initRecordLabel()
             }
         }
 
-        if (!m_microphoneAction->isChecked() && !systemAudioAction->isChecked())
+        if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
         {
             audioButton->setToolTip(tr("Sound Off"));
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
@@ -221,8 +221,8 @@ void SubToolWidget::initRecordLabel()
         }
     });
 
-    connect(systemAudioAction, &QAction::triggered, this, [ = ] {
-        if (m_microphoneAction->isChecked() && systemAudioAction->isChecked())
+    connect(m_systemAudioAction, &QAction::triggered, this, [ = ] {
+        if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
         {
             audioButton->setToolTip(tr("Sound On"));
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
@@ -235,7 +235,7 @@ void SubToolWidget::initRecordLabel()
             }
         }
 
-        if (m_microphoneAction->isChecked() && !systemAudioAction->isChecked())
+        if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
             if (m_themeType == 1) {
@@ -247,7 +247,7 @@ void SubToolWidget::initRecordLabel()
             }
         }
 
-        if (!m_microphoneAction->isChecked() && systemAudioAction->isChecked())
+        if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/audio frequency_normal.svg"));
             if (m_themeType == 1) {
@@ -259,7 +259,7 @@ void SubToolWidget::initRecordLabel()
             }
         }
 
-        if (!m_microphoneAction->isChecked() && !systemAudioAction->isChecked())
+        if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
         {
             audioButton->setToolTip(tr("Sound Off"));
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
@@ -299,21 +299,23 @@ void SubToolWidget::initRecordLabel()
 
 
     if (AudioUtils().canVirtualCardOutput()) {
-        systemAudioAction->setCheckable(true);
-        systemAudioAction->trigger();
+        m_systemAudioAction->setCheckable(true);
+        m_systemAudioAction->trigger();
+        m_haveSystemAudio = true;
     } else {
-        systemAudioAction->setDisabled(true);
+        m_systemAudioAction->setDisabled(true);
+        m_haveSystemAudio = false;
     }
 
 
-//    systemAudioAction->setDisabled(!AudioUtils().canVirtualCardOutput());
+//    m_systemAudioAction->setDisabled(!AudioUtils().canVirtualCardOutput());
     audioMenu->addAction(m_microphoneAction);
     audioMenu->addSeparator();
-    audioMenu->addAction(systemAudioAction);
+    audioMenu->addAction(m_systemAudioAction);
     audioButton->setMenu(audioMenu);
 
     connect(m_microphoneAction, SIGNAL(triggered(bool)), this, SIGNAL(microphoneActionChecked(bool)));
-    connect(systemAudioAction, SIGNAL(triggered(bool)), this, SLOT(systemAudioActionCheckedSlot(bool)));
+    connect(m_systemAudioAction, SIGNAL(triggered(bool)), this, SLOT(systemAudioActionCheckedSlot(bool)));
 
 
 //    DComboBox *audioButton = new DComboBox();
@@ -636,8 +638,14 @@ void SubToolWidget::initRecordLabel()
         fps24Action->setEnabled(false);
         fps30Action->setEnabled(false);
         audioButton->setEnabled(false);
+        if (m_microphoneAction->isChecked()) {
+            m_microphoneAction->trigger();
+        }
         m_microphoneAction->setEnabled(false);
-        systemAudioAction->setEnabled(false);
+//        if (m_systemAudioAction->isChecked()) {
+//            m_systemAudioAction->trigger();
+//        }
+        m_systemAudioAction->setEnabled(false);
 
 
     } else {
@@ -653,7 +661,10 @@ void SubToolWidget::initRecordLabel()
             m_microphoneAction->setEnabled(true);
         }
 
-        systemAudioAction->setEnabled(true);
+        if (m_haveSystemAudio) {
+            m_systemAudioAction->setEnabled(true);
+        }
+
     }
 
     connect(gifAction, &QAction::triggered, this, [ = ] (bool checked) {
@@ -664,8 +675,14 @@ void SubToolWidget::initRecordLabel()
         fps24Action->setEnabled(false);
         fps30Action->setEnabled(false);
         audioButton->setEnabled(false);
+        if (m_microphoneAction->isChecked()) {
+            m_microphoneAction->trigger();
+        }
         m_microphoneAction->setEnabled(false);
-        systemAudioAction->setEnabled(false);
+//        if (m_systemAudioAction->isChecked()) {
+//            m_systemAudioAction->trigger();
+//        }
+        m_systemAudioAction->setEnabled(false);
         emit gifActionChecked(checked);
     });
 
@@ -680,7 +697,9 @@ void SubToolWidget::initRecordLabel()
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
         }
-        systemAudioAction->setEnabled(true);
+        if (m_haveSystemAudio) {
+            m_systemAudioAction->setEnabled(true);
+        }
         emit mp4ActionChecked(checked);
     });
 
@@ -921,9 +940,11 @@ void SubToolWidget::initShotLabel()
     }
 
     connect(m_lineButton, &ToolButton::onPress, this, [ = ] {
+        bool t_arrowStatustemp = ConfigSettings::instance()->value("arrow", "is_straight").toBool();
         if (m_themeType == 1)
         {
-            if (t_arrowStatus) {
+
+            if (t_arrowStatustemp) {
                 m_lineButton->setIcon(QIcon(":/image/newUI/press/line-press.svg"));
             }
 
@@ -935,7 +956,7 @@ void SubToolWidget::initShotLabel()
         else if (m_themeType == 2)
         {
 
-            if (t_arrowStatus) {
+            if (t_arrowStatustemp) {
                 m_lineButton->setIcon(QIcon(":/image/newUI/dark/press/line-press.svg"));
             }
 
@@ -1666,7 +1687,6 @@ void SubToolWidget::setCameraDeviceEnable(bool status)
 
     else {
         if (m_cameraButton->isEnabled()) {
-            qDebug() << "1111111111111";
             m_cameraButton->setChecked(false);
             if (m_cameraButton->isChecked()) {
                 m_cameraButton->setToolTip(tr("Webcam Off"));
@@ -1696,4 +1716,15 @@ void SubToolWidget::setCameraDeviceEnable(bool status)
             return;
         }
     }
+}
+
+void SubToolWidget::setSystemAudioEnable(bool status)
+{
+    if (status) {
+        m_systemAudioAction->setEnabled(true);
+        m_systemAudioAction->setCheckable(true);
+        m_systemAudioAction->trigger();
+        m_haveSystemAudio = true;
+    }
+
 }

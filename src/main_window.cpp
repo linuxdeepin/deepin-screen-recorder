@@ -28,6 +28,7 @@
 #include <DLineEdit>
 #include <DInputDialog>
 #include <DDesktopServices>
+#include <DDialog>
 
 
 #include <QApplication>
@@ -612,7 +613,7 @@ void MainWindow::initResource()
     trayIcon->setToolTip(tr("Screen Capture"));
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
-    setDragCursor();
+//    setDragCursor();
 
     buttonFeedback = new ButtonFeedback();
 
@@ -1030,10 +1031,19 @@ void MainWindow::topWindow()
     if (m_screenNum == 0) {
         t_windowRects  = m_swUtil->windowsRect();
 
-        recordX = t_windowRects[0].x();
-        recordY = t_windowRects[0].y();
-        recordWidth = t_windowRects[0].width();
-        recordHeight = t_windowRects[0].height();
+        if (t_windowRects.length() > 1 && t_windowRects[0] == m_backgroundRect) {
+            recordX = t_windowRects[1].x();
+            recordY = t_windowRects[1].y();
+            recordWidth = t_windowRects[1].width();
+            recordHeight = t_windowRects[1].height();
+        } else {
+            recordX = t_windowRects[0].x();
+            recordY = t_windowRects[0].y();
+            recordWidth = t_windowRects[0].width();
+            recordHeight = t_windowRects[0].height();
+        }
+
+
     } else {
         recordX = m_backgroundRect.x();
         recordY = m_backgroundRect.y();
@@ -1193,6 +1203,7 @@ void MainWindow::updateToolBarPos()
     m_repaintSideBar = false;
     toolbarPoint = QPoint(recordX + recordWidth - m_toolBar->width() - TOOLBAR_X_SPACING,
                           std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
+//    qDebug() << "toolbarPoint y" << toolbarPoint.y();
 
     if (toolbarPoint.x() <= 0) {
         m_repaintMainButton = true;
@@ -1332,6 +1343,7 @@ void MainWindow::updateSideBarPos()
 
 void MainWindow::updateRecordButtonPos()
 {
+
     if (m_shotflag == 1) {
         return;
     }
@@ -1339,12 +1351,14 @@ void MainWindow::updateRecordButtonPos()
     recordButtonBarPoint = QPoint(recordX + recordWidth - m_recordButton->width() + 3,
                                   std::max(recordY + recordHeight + TOOLBAR_Y_SPACING + 6, 0));
 
+//    qDebug() << "recordButtonBarPoint y" << recordButtonBarPoint.y();
+
     if (m_repaintMainButton == true) {
         recordButtonBarPoint.setX(recordX + m_toolBar->width() + TOOLBAR_X_SPACING - m_recordButton->width() + 3);
     }
 
     if (recordButtonBarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
-            - m_toolBar->height() - 28) {
+            - m_toolBar->height() - 22) {
         if (recordY > 28 * 2 + 10) {
             recordButtonBarPoint.setY(recordY - m_recordButton->height() - TOOLBAR_Y_SPACING - 6);
         } else {
@@ -1375,7 +1389,7 @@ void MainWindow::updateShotButtonPos()
     }
 
     if (shotButtonBarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
-            - m_toolBar->height() - 28) {
+            - m_toolBar->height() - 22) {
         if (recordY > 28 * 2 + 10) {
             shotButtonBarPoint.setY(recordY - m_shotButton->height() - TOOLBAR_Y_SPACING - 6);
         } else {
@@ -3027,7 +3041,7 @@ void MainWindow::on_CheckRecodeCouldUse(bool canUse)
 
 void MainWindow::on_CheckVideoCouldUse(bool canUse)
 {
-    qDebug() << "camera canuse" << canUse;
+//    qDebug() << "camera canuse" << canUse;
     if (!canUse) {
         if (m_initCamera && !m_cameraOffFlag) {
             if (m_cameraWidget->getcameraStatus() == false) {
@@ -3599,6 +3613,7 @@ void MainWindow::initVirtualCard()
         return;
     }
     bool isOk;
+
     QString text = DInputDialog::getText(this, tr("Need authorization"), tr("Please enter your sudo password to be authorized"),
                                          QLineEdit::Password, "", &isOk);
 
@@ -3611,11 +3626,35 @@ void MainWindow::initVirtualCard()
         qDebug() << arguments;
         p.start("/bin/bash", arguments);
         p.waitForFinished();
-        p.waitForReadyRead();
+//        p.waitForReadyRead();
         p.close();
-
         sleep(1);
+
+        if (!AudioUtils().canVirtualCardOutput()) {
+            DDialog warnDlg(this);
+            warnDlg.setIcon(QIcon::fromTheme("deepin-screen-recorder"));
+            warnDlg.setTitle(tr("Password Error!"));
+            warnDlg.addSpacing(20);
+            warnDlg.addButton(tr("Ok"));
+            warnDlg.exec();
+        }
+
+        else {
+            DDialog warnDlg(this);
+            warnDlg.setIcon(QIcon::fromTheme("deepin-screen-recorder"));
+            warnDlg.setTitle(tr("Authentication success!"));
+            warnDlg.addSpacing(20);
+            warnDlg.addButton(tr("Ok"));
+            warnDlg.exec();
+
+            if (m_toolBarInit) {
+                m_toolBar->setSystemAudioEnable(true);
+            }
+        }
+
+
     }
+
 }
 
 int MainWindow::getRecordInputType(bool selectedMic, bool selectedSystemAudio)

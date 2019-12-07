@@ -59,6 +59,7 @@ public slots:
     void shapeClickedFromWidget(QString shape);
     void setMicroPhoneEnable(bool status);
     void setCameraDeviceEnable(bool status);
+    void setSystemAudioEnable(bool status);
 private:
     DLabel *m_recordSubTool;
     DLabel *m_shotSubTool;
@@ -76,6 +77,7 @@ private:
     ToolButton *m_shotOptionButton;
     QAction *m_microphoneAction;
     bool m_haveMicroPhone = false;
+    bool m_haveSystemAudio = false;
     int m_lineflag;
     int m_themeType;
 };
