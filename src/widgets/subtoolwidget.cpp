@@ -71,7 +71,10 @@ void SubToolWidget::initWidget()
     m_themeType = 0;
     m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
 
-    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+//    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+//    setMinimumSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+//    setFixedHeight(TOOLBAR_HEIGHT);
+//    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
 //    initVirtualCard();
     initRecordLabel();
@@ -547,7 +550,8 @@ void SubToolWidget::initRecordLabel()
     m_optionButton = new ToolButton();
     DFontSizeManager::instance()->bind(m_optionButton, DFontSizeManager::T8);
     m_optionButton->setText(tr("Options"));
-    m_optionButton->setFixedSize(QSize(73, 40));
+//    m_optionButton->setFixedSize(QSize(73, 40));
+    m_optionButton->setMinimumSize(QSize(73, 40));
     m_optionButton->setToolTip(tr("Options"));
     rectBtnGroup->addButton(m_optionButton);
 
@@ -755,17 +759,18 @@ void SubToolWidget::initRecordLabel()
     }
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
-    rectLayout->setMargin(1);
+    rectLayout->setSizeConstraint(QLayout::SetFixedSize);
+    rectLayout->setMargin(0);
     rectLayout->setSpacing(0);
-    rectLayout->addSpacing(5);
+    rectLayout->addSpacing(7);
 //    rectLayout->addWidget(audioButton);
     for (int i = 0; i < btnList.length(); i++) {
         rectLayout->addWidget(btnList[i]);
         rectLayout->addSpacing(BUTTON_SPACING);
     }
 //    rectLayout->addSpacing(35);
-    rectLayout->addSpacing(SHOT_BUTTON_SPACING);
-    rectLayout->addStretch();
+//    rectLayout->addSpacing(SHOT_BUTTON_SPACING);
+//    rectLayout->addStretch();
 //    rectLayout->addSpacing(16);
 //    rectLayout->addSpacing(BUTTON_SPACING);
 //    rectLayout->addStretch();
@@ -1083,7 +1088,8 @@ void SubToolWidget::initShotLabel()
     m_shotOptionButton = new ToolButton();
     DFontSizeManager::instance()->bind(m_shotOptionButton, DFontSizeManager::T8);
     m_shotOptionButton->setText(tr("Options"));
-    m_shotOptionButton->setFixedSize(QSize(73, 40));
+//    m_shotOptionButton->setFixedSize(QSize(73, 40));
+    m_shotOptionButton->setMinimumSize(QSize(73, 40));
     m_shotOptionButton->setToolTip(tr("Options"));
     rectBtnGroup->addButton(m_shotOptionButton);
 
@@ -1266,6 +1272,7 @@ void SubToolWidget::initShotLabel()
 
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
+    rectLayout->setSizeConstraint(QLayout::SetFixedSize);
     rectLayout->setMargin(0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(3);
@@ -1273,10 +1280,10 @@ void SubToolWidget::initShotLabel()
         rectLayout->addWidget(btnList[i]);
         rectLayout->addSpacing(SHOT_BUTTON_SPACING);
     }
-    rectLayout->addSpacing(16);
-    rectLayout->addSpacing(16);
-    rectLayout->addSpacing(SHOT_BUTTON_SPACING);
-    rectLayout->addStretch();
+//    rectLayout->addSpacing(16);
+//    rectLayout->addSpacing(16);
+//    rectLayout->addSpacing(SHOT_BUTTON_SPACING);
+//    rectLayout->addStretch();
     m_shotSubTool->setLayout(rectLayout);
     addWidget(m_shotSubTool);
 
@@ -1659,6 +1666,7 @@ void SubToolWidget::setMicroPhoneEnable(bool status)
             }
         }
     }
+    update();
 }
 
 void SubToolWidget::setCameraDeviceEnable(bool status)

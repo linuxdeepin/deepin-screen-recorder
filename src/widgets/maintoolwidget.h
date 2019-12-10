@@ -27,7 +27,7 @@
 
 DWIDGET_USE_NAMESPACE
 
-class MainToolWidget : public DLabel
+class MainToolWidget : public DStackedWidget
 {
     Q_OBJECT
 public:
@@ -48,6 +48,7 @@ public slots:
 
 private:
     QHBoxLayout *m_baseLayout;
+    DLabel *m_mainTool;
     bool m_isChecked;
     ToolButton *m_recordBtn;
     ToolButton *m_shotBtn;

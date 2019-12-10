@@ -39,7 +39,7 @@ const QSize MIN_TOOL_BUTTON_SIZE = QSize(50, 40);
 }
 
 
-MainToolWidget::MainToolWidget(DWidget *parent) : DLabel(parent)
+MainToolWidget::MainToolWidget(DWidget *parent) : DStackedWidget(parent)
 {
     initWidget();
 }
@@ -51,16 +51,21 @@ MainToolWidget::~MainToolWidget()
 
 void MainToolWidget::initWidget()
 {
-    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+//    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+//    setFixedHeight(43);
+//    setMinimumSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+//    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     m_themeType = 0;
     m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
 //    setMouseTracking(true);
 //    setAcceptDrops(true);
     initMainLabel();
+    setCurrentWidget(m_mainTool);
 }
 
 void MainToolWidget::initMainLabel()
 {
+    m_mainTool = new DLabel(this);
     QList<ToolButton *> toolBtnList;
     QButtonGroup *buttonGroup = new QButtonGroup(this);
     buttonGroup->setExclusive(true);
@@ -70,17 +75,14 @@ void MainToolWidget::initMainLabel()
 
     m_recordBtn = new ToolButton();
     DFontSizeManager::instance()->bind(m_recordBtn, DFontSizeManager::T8);
-//    pa = m_recordBtn->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//    m_recordBtn->setPalette(pa);
+
     m_recordBtn->setCheckable(true);
     m_recordBtn->setText(tr("Record"));
     m_recordBtn->setObjectName("RecordBtn");
 //    m_recordBtn->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    m_recordBtn->setFixedSize(TOOL_BUTTON_SIZE);
-    m_recordBtn->setIconSize(QSize(25, 25));
+//    m_recordBtn->setMinimumSize(TOOL_BUTTON_SIZE);
+    m_recordBtn->setMinimumHeight(40);
+    m_recordBtn->setIconSize(QSize(20, 20));
     if (m_themeType == 1) {
         m_recordBtn->setIcon(QIcon(":/image/newUI/normal/screencap-normal.svg"));
     }
@@ -110,16 +112,12 @@ void MainToolWidget::initMainLabel()
     m_shotBtn = new ToolButton();
     DFontSizeManager::instance()->bind(m_shotBtn, DFontSizeManager::T8);
 
-//    pa = m_shotBtn->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//    m_shotBtn->setPalette(pa);
     m_shotBtn->setText(tr("Shot"));
     m_shotBtn->setObjectName("ShotBtn");
-//    m_shotBtn->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    m_shotBtn->setFixedSize(TOOL_BUTTON_SIZE);
-    m_shotBtn->setIconSize(QSize(25, 25));
+//    m_shotBtn->setMinimumSize(TOOL_BUTTON_SIZE);
+    m_shotBtn->setMinimumHeight(40);
+
+    m_shotBtn->setIconSize(QSize(20, 20));
 
     if (m_themeType == 1) {
         m_shotBtn->setIcon(QIcon(":/image/newUI/normal/screenshot-normal.svg"));
@@ -146,6 +144,7 @@ void MainToolWidget::initMainLabel()
     toolBtnList.append(m_shotBtn);
 
     m_baseLayout = new QHBoxLayout();
+    m_baseLayout->setSizeConstraint(QLayout::SetFixedSize);
     m_baseLayout->setContentsMargins(4, 0, 0, 0);
 //    m_baseLayout->setMargin(1);
     m_baseLayout->setSpacing(0);
@@ -157,7 +156,9 @@ void MainToolWidget::initMainLabel()
 
         buttonGroup->addButton(toolBtnList[k]);
     }
-    setLayout(m_baseLayout);
+//    setLayout(m_baseLayout);
+    m_mainTool->setLayout(m_baseLayout);
+    addWidget(m_mainTool);
 //    qDebug() << recordBtn->palette() << recordBtn->palette().dark().color().name(QColor::HexArgb);
 //    qDebug() << recordBtn->palette() << recordBtn->palette().light().color().name(QColor::HexArgb);
 //    qDebug() << recordBtn->palette() << recordBtn->palette().buttonText().color().name(QColor::HexArgb);
@@ -244,6 +245,7 @@ void MainToolWidget::initMainLabel()
         }
     });
     m_shotBtn->click();
+
 }
 
 void MainToolWidget::setRecordButtonOut()

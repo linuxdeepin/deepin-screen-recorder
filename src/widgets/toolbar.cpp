@@ -69,8 +69,10 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
     //设置透明效果
 //    setMaskAlpha(0);
 //    setMaskColor(DBlurEffectWidget::LightColor);
-    setFixedSize(TOOLBAR_WIDGET_SIZE);
-
+//    setFixedSize(TOOLBAR_WIDGET_SIZE);
+    setFixedHeight(TOOLBAR_HEIGHT);
+//    setMinimumSize(TOOLBAR_WIDGET_SIZE);
+//    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 //    qDebug() << "~~~~~~" << this->size();
     m_hSeparatorLine = new DLabel(this);
     m_hSeparatorLine->setObjectName("HorSeparatorLine");
@@ -107,13 +109,14 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
 //    m_closeButton->setStyleSheet(button_style);
 
     QHBoxLayout *hLayout = new QHBoxLayout();
+//    hLayout->setSizeConstraint(QLayout::SetFixedSize);
 //    hLayout->setContentsMargins(2, 3, 0, 0);
     hLayout->setMargin(0);
     hLayout->setSpacing(2);
     hLayout->addWidget(m_mainTool, 0,  Qt::AlignCenter);
-    hLayout->addWidget(m_subTool, 1, Qt::AlignCenter);
-    hLayout->addSpacing(10);
-    hLayout->addWidget(m_closeButton, 2,  Qt::AlignCenter);
+    hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
+//    hLayout->addSpacing(10);
+    hLayout->addWidget(m_closeButton, 0,  Qt::AlignCenter);
     setLayout(hLayout);
 
     connect(m_mainTool, &MainToolWidget::buttonChecked, this, &ToolBarWidget::setExpand);
@@ -240,12 +243,12 @@ ToolBar::ToolBar(DWidget *parent)
 void ToolBar::setExpand(bool expand, QString shapeType)
 {
     emit buttonChecked(shapeType);
-    if (expand) {
-        m_expanded = true;
-        setFixedSize(TOOLBAR_WIDTH,
-                     TOOLBAR_WIDGET_SIZE.height() * 2 + 3);
-        emit heightChanged();
-    }
+//    if (expand) {
+//        m_expanded = true;
+//        setFixedSize(TOOLBAR_WIDTH,
+//                     TOOLBAR_WIDGET_SIZE.height() * 2 + 3);
+//        emit heightChanged();
+//    }
 
     update();
 }
@@ -316,14 +319,17 @@ void ToolBar::changeArrowAndLineFromMain(int line)
 
 void ToolBar::initToolBar()
 {
-    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+//    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+    setFixedHeight(TOOLBAR_HEIGHT);
     m_toolbarWidget = new ToolBarWidget(this);
     QVBoxLayout *vLayout = new QVBoxLayout(this);
-    vLayout->setContentsMargins(1, 1, 1, 1);
+    vLayout->setSizeConstraint(QLayout::SetFixedSize);
+    vLayout->setContentsMargins(0, 0, 0, 0);
     vLayout->addStretch();
     vLayout->addWidget(m_toolbarWidget);
     vLayout->addStretch();
     setLayout(vLayout);
+    update();
 
     connect(m_toolbarWidget, &ToolBarWidget::expandChanged, this, &ToolBar::setExpand);
     connect(m_toolbarWidget, &ToolBarWidget::saveImage, this, &ToolBar::requestSaveScreenshot);

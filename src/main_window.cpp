@@ -127,6 +127,7 @@ void MainWindow::initAttributes()
     m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
     m_keyButtonList.clear();
     m_tempkeyButtonList.clear();
+
     int t_screenCount = QApplication::desktop()->screenCount();
     int t_indexScreen = 0;
     m_screenHeight = QApplication::desktop()->screen()->height();
@@ -198,42 +199,40 @@ void MainWindow::initAttributes()
     // otherwise deepin-screen-recorder window will add in window lists.
 
     //多屏情况下累加窗口大小
-//    if (t_screenCount == 1) {
-    QPoint pos = this->cursor().pos();
-    DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
-    screenRect = screenWin->backgroundRect();
-    screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
-    this->move(static_cast<int>(screenRect.x() * ratio),
-               static_cast<int>(screenRect.y() * ratio));
-    this->setFixedSize(screenRect.width(), screenRect.height());
-    m_swUtil = DScreenWindowsUtil::instance(curPos);
-    m_screenNum =  m_swUtil->getScreenNum();
+    if (t_screenCount == 1) {
+        QPoint pos = this->cursor().pos();
+        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
+        screenRect = screenWin->backgroundRect();
+        screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
+        this->move(static_cast<int>(screenRect.x() * ratio),
+                   static_cast<int>(screenRect.y() * ratio));
+        this->setFixedSize(screenRect.width(), screenRect.height());
+        m_swUtil = DScreenWindowsUtil::instance(curPos);
+        m_screenNum =  m_swUtil->getScreenNum();
 
-    windowManager = new DWindowManager();
-    windowManager->setRootWindowRect(screenRect);
-    QList<xcb_window_t> windows = windowManager->getWindows();
-    rootWindowRect = windowManager->getRootWindowRect();
-//    }
+        windowManager = new DWindowManager();
+        windowManager->setRootWindowRect(screenRect);
+        QList<xcb_window_t> windows = windowManager->getWindows();
+        rootWindowRect = windowManager->getRootWindowRect();
+    }
 
-//    else if (t_screenCount > 1) {
-////        QPoint pos = this->cursor().pos();
-//        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
-//        screenRect = t_screenRect;
-//        screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
-//        this->move(static_cast<int>(screenRect.x() * ratio),
-//                   static_cast<int>(screenRect.y() * ratio));
-//        this->setFixedSize(screenRect.width(), screenRect.height());
-//        m_swUtil = DScreenWindowsUtil::instance(curPos);
-//        m_screenNum =  m_swUtil->getScreenNum();
+    else if (t_screenCount > 1) {
+//        QPoint pos = this->cursor().pos();
+        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
+        screenRect = t_screenRect;
+        screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
+        this->move(static_cast<int>(screenRect.x() * ratio),
+                   static_cast<int>(screenRect.y() * ratio));
+        this->setFixedSize(screenRect.width(), screenRect.height());
+        m_swUtil = DScreenWindowsUtil::instance(curPos);
+        m_screenNum =  m_swUtil->getScreenNum();
 
-//        windowManager = new DWindowManager();
-//        windowManager->setRootWindowRect(t_screenRect);
-//        QList<xcb_window_t> windows = windowManager->getWindows();
-//        rootWindowRect = Dtk::Wm::WindowRect {t_screenRect.x(), t_screenRect.y(),
-//                                              t_screenRect.width(), t_screenRect.height()};
-//    }
-
-    qDebug() << "screen num:" << t_screenRect;
+        windowManager = new DWindowManager();
+        windowManager->setRootWindowRect(t_screenRect);
+        QList<xcb_window_t> windows = windowManager->getWindows();
+        rootWindowRect = Dtk::Wm::WindowRect {t_screenRect.x(), t_screenRect.y(),
+                                              t_screenRect.width(), t_screenRect.height()};
+    }
 
     if (t_screenCount > 1) {
         for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
@@ -493,21 +492,20 @@ void MainWindow::initAttributes()
     m_selectedSystemAudio = true;
 
     m_swUtil = DScreenWindowsUtil::instance(curPos);
-//    if (t_screenCount == 1) {
-    m_backgroundRect = m_swUtil->backgroundRect();
-    m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
+    if (t_screenCount == 1) {
+        m_backgroundRect = m_swUtil->backgroundRect();
+        m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
 
-    move(m_backgroundRect.topLeft() * ratio);
-    this->setFixedSize(m_backgroundRect.size());
-//    }
+        move(m_backgroundRect.topLeft() * ratio);
+        this->setFixedSize(m_backgroundRect.size());
+    }
 
-//    else if (t_screenCount > 1) {
-//        m_backgroundRect = t_screenRect;
-//        m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
-//        move(m_backgroundRect.topLeft() * ratio);
-//        this->setFixedSize(m_backgroundRect.size());
-
-//    }
+    else if (t_screenCount > 1) {
+        m_backgroundRect = t_screenRect;
+        m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
+        move(m_backgroundRect.topLeft() * ratio);
+        this->setFixedSize(m_backgroundRect.size());
+    }
     initBackground();
 
     // Just use for debug.
@@ -1109,6 +1107,7 @@ void MainWindow::initBackground()
 {
 //    QTimer::singleShot(200, this, [ = ] {
     m_backgroundPixmap = getPixmapofRect(m_backgroundRect);
+    qDebug() << "screen rect:" << m_backgroundPixmap.rect();
     m_resultPixmap = m_backgroundPixmap;
     TempFile::instance()->setFullScreenPixmap(m_backgroundPixmap);
 //    });
@@ -1118,11 +1117,20 @@ QPixmap MainWindow::getPixmapofRect(const QRect &rect)
 {
     QRect r(rect.topLeft() * devicePixelRatioF(), rect.size());
 
-    QList<QScreen *> screenList = qApp->screens();
-    for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
-        if ((*it)->geometry().contains(r)) {
-            return (*it)->grabWindow(m_swUtil->rootWindowId(), rect.x(), rect.y(), rect.width(), rect.height());
+    int t_screenNum = QApplication::desktop()->screenCount();
+
+    if (t_screenNum == 1) {
+        QList<QScreen *> screenList = qApp->screens();
+        for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
+            if ((*it)->geometry().contains(r)) {
+                return (*it)->grabWindow(m_swUtil->rootWindowId(), rect.x(), rect.y(), rect.width(), rect.height());
+            }
         }
+    }
+
+    else {
+        QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
+        return t_primaryScreen->grabWindow(0, rect.x(), rect.y(), rect.width(), rect.height());
     }
 
     return QPixmap();
@@ -1203,7 +1211,6 @@ void MainWindow::updateToolBarPos()
     m_repaintSideBar = false;
     toolbarPoint = QPoint(recordX + recordWidth - m_toolBar->width() - TOOLBAR_X_SPACING,
                           std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
-//    qDebug() << "toolbarPoint y" << toolbarPoint.y();
 
     if (toolbarPoint.x() <= 0) {
         m_repaintMainButton = true;
@@ -2030,12 +2037,34 @@ bool MainWindow::saveAction(const QPixmap &pix)
         } else {
             fileName = QString("%1_%2_%3").arg(tr("Screen Capture")).arg(selectAreaName).arg(currentTime);
         }
-
-        QString lastFileName = QString("%1/%2.png").arg(path).arg(fileName);
-
+        QString lastFileName;
         QFileDialog fileDialog;
-        m_saveFileName =  fileDialog.getSaveFileName(this, "Save",  lastFileName,
-                                                     tr("PNG (*.png);;JPEG (*.jpg *.jpeg);; BMP (*.bmp);;"));
+
+        switch (t_pictureFormat) {
+        case 0:
+            lastFileName    = QString("%1/%2.png").arg(path).arg(fileName);
+            m_saveFileName =  fileDialog.getSaveFileName(this, "Save",  lastFileName,
+                                                         tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
+            break;
+        case 1:
+            lastFileName    = QString("%1/%2.jpg").arg(path).arg(fileName);
+            m_saveFileName =  fileDialog.getSaveFileName(this, "Save",  lastFileName,
+                                                         tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)"));
+            break;
+        case 2:
+            lastFileName    = QString("%1/%2.bmp").arg(path).arg(fileName);
+            m_saveFileName =  fileDialog.getSaveFileName(this, "Save",  lastFileName,
+                                                         tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)"));
+            break;
+        default:
+            lastFileName    = QString("%1/%2.png").arg(path).arg(fileName);
+            m_saveFileName =  fileDialog.getSaveFileName(this, "Save",  lastFileName,
+                                                         tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
+            break;
+        }
+
+
+
 
         if (m_saveFileName.isEmpty() || QFileInfo(m_saveFileName).isDir())
             return false;
@@ -2052,29 +2081,6 @@ bool MainWindow::saveAction(const QPixmap &pix)
                                              QFileInfo(m_saveFileName).dir().absolutePath());
         break;
     }
-//    case SaveToClipboard: {
-//        copyToClipboard = true;
-//        ConfigSettings::instance()->setValue("common", "default_savepath",   "clipboard");
-//        break;
-//    }
-//    case SaveToAutoClipboard: {
-//        copyToClipboard = true;
-//        QString defaultSaveDir = ConfigSettings::instance()->value("common", "default_savepath").toString();
-//        if (defaultSaveDir.isEmpty()) {
-//            saveOption = QStandardPaths::DesktopLocation;
-//        } else if (defaultSaveDir == "clipboard") {
-//            m_saveIndex = SaveToSpecificDir;
-//        } else  {
-//            if (m_selectAreaName.isEmpty()) {
-//                m_saveFileName = QString("%1/%2_%3.png").arg(defaultSaveDir).arg(tr(
-//                                                                                     "DeepinScreenshot")).arg(currentTime);
-//            } else {
-//                m_saveFileName = QString("%1/%2_%3_%4.png").arg(defaultSaveDir).arg(tr(
-//                                                                                        "DeepinScreenshot")).arg(m_selectAreaName).arg(currentTime);
-//            }
-//        }
-//        break;
-//    }
     case AutoSave:
         break;
     default:
@@ -3110,6 +3116,7 @@ void MainWindow::shotCurrentImg()
     emit hideScreenshotUI();
 
     const qreal ratio = this->devicePixelRatioF();
+    qDebug() << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect();
     QRect target( recordX * ratio,
                   recordY * ratio,
                   recordWidth * ratio,
@@ -3125,9 +3132,11 @@ void MainWindow::shotFullScreen()
                   m_backgroundRect.y(),
                   m_backgroundRect.width(),
                   m_backgroundRect.height() );
+    qDebug() << "m_backgroundRect" << m_backgroundRect;
 
 //    m_resultPixmap = getPixmapofRect(m_backgroundRect);
     m_resultPixmap = getPixmapofRect(target);
+    qDebug() << "m_resultPixmap" << m_resultPixmap.rect();
 }
 
 void MainWindow::flashTrayIcon()
