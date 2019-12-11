@@ -7,6 +7,7 @@
 #include <QDir>
 #include <QBitmap>
 
+
 CameraWidget::CameraWidget(DWidget *parent) : DWidget(parent)
 {
 }
@@ -73,6 +74,9 @@ void CameraWidget::initCamera()
     this->setLayout(t_hlayout);
 
     camera = new QCamera(QCameraInfo::defaultCamera(), this);
+    m_deviceName = QCameraInfo::defaultCamera().deviceName();
+    m_deviceFile = new QFile(this);
+    m_deviceFile->setFileName(m_deviceName);
     camera->setCaptureMode(QCamera::CaptureStillImage);
     connect(camera, SIGNAL(error(QCamera::Error)), this, SLOT(cameraInitError(QCamera::Error)));
     imageCapture = new QCameraImageCapture(camera);
@@ -141,6 +145,8 @@ void CameraWidget::cameraResume()
 {
     qDebug() << "QCameraInfo::availableCameras" << QCameraInfo::defaultCamera();
     camera = new QCamera(QCameraInfo::defaultCamera(), this);
+    m_deviceName = QCameraInfo::defaultCamera().deviceName();
+    m_deviceFile->setFileName(m_deviceName);
 //    camera->load();
     camera->setCaptureMode(QCamera::CaptureStillImage);
     imageCapture = new QCameraImageCapture(camera);
@@ -207,8 +213,7 @@ bool CameraWidget::setCameraStop(bool status)
 
 bool CameraWidget::getcameraStatus()
 {
-    qDebug() << "camera->state()" << camera->state();
-    if ( camera->state() != QCamera::ActiveState) {
+    if ( camera->state() != QCamera::ActiveState || !m_deviceFile->exists()) {
         return false;
     }
 

@@ -1867,6 +1867,7 @@ void ShapesWidget::deleteCurrentShape()
 
 void ShapesWidget::undoDrawShapes()
 {
+    textEditIsReadOnly();
     qDebug() << "undoDrawShapes m_selectedIndex:" << m_selectedIndex << m_shapes.length();
     if (m_selectedOrder < m_shapes.length() && m_selectedIndex != -1) {
         deleteCurrentShape();

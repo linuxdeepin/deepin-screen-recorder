@@ -102,10 +102,6 @@ or press the shortcut again to stop recording</source>
         <translation>截图将会在%1秒后启动</translation>
     </message>
     <message>
-        <source>PNG (*.png);;JPEG (*.jpg *.jpeg);; BMP (*.bmp);;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Start Record</source>
         <translation>开始录屏</translation>
     </message>
@@ -136,6 +132,18 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Ok</source>
         <translation>确定</translation>
+    </message>
+    <message>
+        <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

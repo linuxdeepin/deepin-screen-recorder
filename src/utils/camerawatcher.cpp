@@ -35,7 +35,7 @@ void CameraWatcher::run()
         //log缓存被更新并且仍进行loop循环
         if (!m_isRecoding && m_loopwatch) {
             bool couldUse = false;
-//            qDebug() << "QCameraInfo::availableCameras()" << QCameraInfo::availableCameras();
+//            qDebug() << "QCameraInfo::availableCameras()" << QCameraInfo::defaultCamera().deviceName();
             if (QCameraInfo::availableCameras().count() > 0) {
                 couldUse = true;
             }

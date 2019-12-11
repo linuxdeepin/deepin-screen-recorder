@@ -678,7 +678,7 @@ void MainWindow::initScreenShot()
 
     flashTrayIconCounter = 0;
 
-    selectAreaName = "";
+//    selectAreaName = "";
 
     //隐藏键盘按钮控件
     if (m_keyButtonList.count() > 0) {
@@ -808,7 +808,7 @@ void MainWindow::initScreenRecorder()
 
     flashTrayIconCounter = 0;
 
-    selectAreaName = "";
+//    selectAreaName = "";
 
     if (m_isShapesWidgetExist) {
         m_shapesWidget->hide();
@@ -3033,6 +3033,12 @@ void MainWindow::onViewShortcut()
     shortcutViewProc->startDetached("deepin-shortcut-viewer", shortcutString);
 
     connect(shortcutViewProc, SIGNAL(finished(int)), shortcutViewProc, SLOT(deleteLater()));
+
+    if (m_isShapesWidgetExist) {
+        m_isShiftPressed =  false;
+        m_shapesWidget->setShiftKeyPressed(m_isShiftPressed);
+    }
+
 }
 
 void MainWindow::shapeClickedSlot(QString shape)
@@ -3047,11 +3053,11 @@ void MainWindow::on_CheckRecodeCouldUse(bool canUse)
 
 void MainWindow::on_CheckVideoCouldUse(bool canUse)
 {
-//    qDebug() << "camera canuse" << canUse;
+//
     if (!canUse) {
         if (m_initCamera && !m_cameraOffFlag) {
             if (m_cameraWidget->getcameraStatus() == false) {
-
+                qDebug() << "camera canuse" << canUse;
                 m_cameraWidget->cameraStop();
                 m_cameraWidget->setCameraStop(canUse);
                 m_cameraOffFlag = true;

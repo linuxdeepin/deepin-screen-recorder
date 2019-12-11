@@ -12,6 +12,7 @@
 #include <QTimer>
 #include <DLabel>
 #include <DWidget>
+#include <QFile>
 
 DWIDGET_USE_NAMESPACE
 
@@ -75,6 +76,8 @@ private:
     QTimer *timer_image_capture;
     DLabel *m_cameraUI;
     QString m_capturePath;
+    QString m_deviceName;
+    QFile *m_deviceFile;
 
     bool m_wildScreen;
 };
