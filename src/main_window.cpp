@@ -3406,24 +3406,24 @@ void MainWindow::startCountdown()
 
     recordProcess.setFrameRate(t_frameRate);
 
-    if (t_saveGif) {
-        qDebug() << "record format is gif";
-        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
-    } else if (t_saveGif == false) {
-        qDebug() << "record format is mp4";
-        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
-    }
-//    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
-//        if (t_saveGif) {
-//            qDebug() << "record format is gif";
-//            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
-//        } else if (t_saveGif == false) {
-//            qDebug() << "record format is mp4";
-//            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
-//        }
-//    } else {
+//    if (t_saveGif) {
+//        qDebug() << "record format is gif";
 //        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
+//    } else if (t_saveGif == false) {
+//        qDebug() << "record format is mp4";
+//        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
 //    }
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+        if (t_saveGif) {
+            qDebug() << "record format is gif";
+            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
+        } else if (t_saveGif == false) {
+            qDebug() << "record format is mp4";
+            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
+        }
+    } else {
+        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
+    }
 
     resetCursor();
 

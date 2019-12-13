@@ -633,9 +633,56 @@ void SubToolWidget::initRecordLabel()
 
     m_optionButton->setMenu(OptionMenu);
 
-    if (t_saveGif == true) {
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+        if (t_saveGif == true) {
+            gifAction->setChecked(true);
+            gifAction->trigger();
+            fps5Action->setEnabled(false);
+            fps10Action->setEnabled(false);
+            fps20Action->setEnabled(false);
+            fps24Action->setEnabled(false);
+            fps30Action->setEnabled(false);
+            audioButton->setEnabled(false);
+            if (m_microphoneAction->isChecked()) {
+                m_microphoneAction->trigger();
+            }
+            m_microphoneAction->setEnabled(false);
+//        if (m_systemAudioAction->isChecked()) {
+//            m_systemAudioAction->trigger();
+//        }
+            m_systemAudioAction->setEnabled(false);
+
+        } else {
+            mp4Action->setChecked(true);
+            mp4Action->trigger();
+            fps5Action->setEnabled(true);
+            fps10Action->setEnabled(true);
+            fps20Action->setEnabled(true);
+            fps24Action->setEnabled(true);
+            fps30Action->setEnabled(true);
+            audioButton->setEnabled(true);
+            if (m_haveMicroPhone) {
+                m_microphoneAction->setEnabled(true);
+            }
+
+            if (m_haveSystemAudio) {
+                m_systemAudioAction->setEnabled(true);
+            }
+
+        }
+    }
+
+    else {
+        t_saveGif = true;
         gifAction->setChecked(true);
+        mp4Action->setChecked(false);
+        mp4Action->setEnabled(false);
         gifAction->trigger();
+        fps5Action->setChecked(false);
+        fps10Action->setChecked(false);
+        fps20Action->setChecked(false);
+        fps24Action->setChecked(false);
+        fps30Action->setChecked(false);
         fps5Action->setEnabled(false);
         fps10Action->setEnabled(false);
         fps20Action->setEnabled(false);
@@ -650,25 +697,6 @@ void SubToolWidget::initRecordLabel()
 //            m_systemAudioAction->trigger();
 //        }
         m_systemAudioAction->setEnabled(false);
-
-
-    } else {
-        mp4Action->setChecked(true);
-        mp4Action->trigger();
-        fps5Action->setEnabled(true);
-        fps10Action->setEnabled(true);
-        fps20Action->setEnabled(true);
-        fps24Action->setEnabled(true);
-        fps30Action->setEnabled(true);
-        audioButton->setEnabled(true);
-        if (m_haveMicroPhone) {
-            m_microphoneAction->setEnabled(true);
-        }
-
-        if (m_haveSystemAudio) {
-            m_systemAudioAction->setEnabled(true);
-        }
-
     }
 
     connect(gifAction, &QAction::triggered, this, [ = ] (bool checked) {
@@ -730,32 +758,33 @@ void SubToolWidget::initRecordLabel()
         emit videoFrameRateChanged(t_frameRateSelected);
     });
 
-
-    switch (t_frameRate) {
-    case 5:
-        fps5Action->triggered();
-        fps5Action->setChecked(true);
-        break;
-    case 10:
-        fps10Action->triggered();
-        fps10Action->setChecked(true);
-        break;
-    case 20:
-        fps20Action->triggered();
-        fps20Action->setChecked(true);
-        break;
-    case 24:
-        fps24Action->triggered();
-        fps24Action->setChecked(true);
-        break;
-    case 30:
-        fps30Action->triggered();
-        fps30Action->setChecked(true);
-        break;
-    default:
-        fps24Action->triggered();
-        fps24Action->setChecked(true);
-        break;
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+        switch (t_frameRate) {
+        case 5:
+            fps5Action->triggered();
+            fps5Action->setChecked(true);
+            break;
+        case 10:
+            fps10Action->triggered();
+            fps10Action->setChecked(true);
+            break;
+        case 20:
+            fps20Action->triggered();
+            fps20Action->setChecked(true);
+            break;
+        case 24:
+            fps24Action->triggered();
+            fps24Action->setChecked(true);
+            break;
+        case 30:
+            fps30Action->triggered();
+            fps30Action->setChecked(true);
+            break;
+        default:
+            fps24Action->triggered();
+            fps24Action->setChecked(true);
+            break;
+        }
     }
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
