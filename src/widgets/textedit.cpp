@@ -223,10 +223,11 @@ void TextEdit::mouseReleaseEvent(QMouseEvent *e)
     m_isPressed = false;
     if (this->isReadOnly()) {
         setMouseTracking(false);
+        DPlainTextEdit::mouseReleaseEvent(e);
         return;
     }
 
-    DPlainTextEdit::mouseReleaseEvent(e);
+
 }
 
 void TextEdit::mouseDoubleClickEvent(QMouseEvent *e)
@@ -245,6 +246,12 @@ void TextEdit::keyPressEvent(QKeyEvent *e)
     if (e->key() == Qt::Key_Escape && !this->isReadOnly()) {
         this->setReadOnly(true);
     }
+}
+
+void TextEdit::focusInEvent(QFocusEvent *e)
+{
+    setAttribute(Qt::WA_InputMethodEnabled);
+    DPlainTextEdit::focusInEvent(e);
 }
 
 //void TextEdit::focusOutEvent(QFocusEvent *e)

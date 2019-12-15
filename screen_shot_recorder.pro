@@ -126,6 +126,7 @@ isEmpty(ICONDIR):ICONDIR=/usr/share/icons/hicolor/scalable/apps
 isEmpty(APPDIR):APPDIR=/usr/share/applications
 isEmpty(DSRDIR):DSRDIR=/usr/share/deepin-screen-recorder
 isEmpty(DOCDIR):DOCDIR=/usr/share/dman/deepin-screen-recorder
+isEmpty(ETCDIR):ETCDIR=/etc
 
 target.path = $$INSTROOT$$BINDIR
 icon.path = $$INSTROOT$$ICONDIR
@@ -133,6 +134,8 @@ desktop.path = $$INSTROOT$$APPDIR
 translations.path = $$INSTROOT$$DSRDIR/translations
 manual.path = $$INSTROOT$$DOCDIR
 shotShell.path = $$INSTROOT$$BINDIR
+modprobe.path = $$ETCDIR/modprobe.d
+modload.path = $$ETCDIR/modules-load.d
 
 #icon.files = image/deepin-screen-recorder.svg deepin-screenshot.svg
 #desktop.files = deepin-screen-recorder.desktop deepin-screenshot.desktop
@@ -140,12 +143,14 @@ icon.files = image/deepin-screen-recorder.svg
 desktop.files = deepin-screen-recorder.desktop
 manual.files = manual/*
 shotShell.files = deepin-screenshot
+modprobe.files = modinfo/modprobe.d/deepin-screen-recorder.conf
+modload.files = modinfo/modulesload.d/deepin-screen-recorder.conf
 
 dbus_service.files = $$PWD/com.deepin.ScreenRecorder.service $$PWD/com.deepin.Screenshot.service
 dbus_service.path = $$PREFIX/share/dbus-1/services
 
 #INSTALLS += target icon desktop manual dbus_service shotShell
-INSTALLS += target icon desktop manual dbus_service
+INSTALLS += target icon desktop manual dbus_service modload modprobe
 
 isEmpty(TRANSLATIONS) {
      include(translations.pri)

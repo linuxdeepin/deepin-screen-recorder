@@ -853,7 +853,7 @@ void MainWindow::initScreenRecorder()
         m_selectedSystemAudio = true;
     }
 
-    initVirtualCard();
+//    initVirtualCard();
     if (m_firstShot == 0) {
         setDragCursor();
     }
@@ -3378,6 +3378,7 @@ void MainWindow::startCountdown()
         static_cast<int>(recordWidth * ratio),
         static_cast<int>(recordHeight * ratio)
     };
+    qDebug() << "record rect:" << recordRect;
 
     recordProcess.setRecordInfo(recordRect, selectAreaName);
 //    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {

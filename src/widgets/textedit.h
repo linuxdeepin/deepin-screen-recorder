@@ -61,6 +61,7 @@ protected:
     void mouseDoubleClickEvent(QMouseEvent *e);
     void inputMethodEvent(QInputMethodEvent *e);
     void keyPressEvent(QKeyEvent *e);
+    void focusInEvent(QFocusEvent *e);
 //    void focusOutEvent(QFocusEvent *e);
 
 private:
