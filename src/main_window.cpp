@@ -1215,6 +1215,10 @@ void MainWindow::updateToolBarPos()
     if (toolbarPoint.x() <= 0) {
         m_repaintMainButton = true;
         toolbarPoint.setX(recordX);
+        if (recordX + m_toolBar->width() + TOOLBAR_X_SPACING + m_shotButton->width() > m_backgroundRect.width()) {
+
+            toolbarPoint.setX(0);
+        }
     }
     if (toolbarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
             - m_toolBar->height() - 28) {
@@ -1362,6 +1366,10 @@ void MainWindow::updateRecordButtonPos()
 
     if (m_repaintMainButton == true) {
         recordButtonBarPoint.setX(recordX + m_toolBar->width() + TOOLBAR_X_SPACING - m_recordButton->width() + 3);
+        if (recordX + m_toolBar->width() + TOOLBAR_X_SPACING + m_shotButton->width() > m_backgroundRect.width()) {
+
+            recordButtonBarPoint.setX(m_toolBar->width() + TOOLBAR_X_SPACING - m_recordButton->width() + 3);
+        }
     }
 
     if (recordButtonBarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
@@ -1393,6 +1401,10 @@ void MainWindow::updateShotButtonPos()
 
     if (m_repaintMainButton == true) {
         shotButtonBarPoint.setX(recordX + m_toolBar->width() + TOOLBAR_X_SPACING - m_shotButton->width() + 3);
+        if (recordX + m_toolBar->width() + TOOLBAR_X_SPACING + m_shotButton->width() > m_backgroundRect.width()) {
+
+            shotButtonBarPoint.setX(m_toolBar->width() + TOOLBAR_X_SPACING - m_shotButton->width() + 3);
+        }
     }
 
     if (shotButtonBarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
