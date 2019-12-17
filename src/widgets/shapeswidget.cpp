@@ -1205,9 +1205,6 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     cs.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, t_editText.length());
                     edit->setTextCursor(cs);
 
-
-
-
                     m_shapes.append(m_currentShape);
 
 
@@ -1341,6 +1338,8 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
 
             }
         }
+
+
         update();
     } else if (!m_isRecording && m_isPressed) {
         if (m_isRotated && m_isPressed) {
@@ -1358,12 +1357,20 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
 
         if (m_isSelected && m_isPressed && m_selectedIndex != -1) {
             handleDrag(m_pressedPoint, m_movingPoint);
+            qDebug() << "move m_selectedOrder:" << m_selectedOrder;
             m_selectedShape = m_shapes[m_selectedOrder];
             m_hoveredShape = m_shapes[m_selectedOrder];
+
+            if (m_selectedShape.type == "text") {
+                m_editMap.value(m_selectedIndex)->move(m_selectedShape.mainPoints[0].x(),
+                                                       m_selectedShape.mainPoints[0].y());
+            }
 
             m_pressedPoint = m_movingPoint;
             update();
         }
+
+
 
     } else {
         if (!m_isRecording) {
