@@ -24,6 +24,7 @@
 #include <DLabel>
 #include <DWidget>
 #include "toolbutton.h"
+#include "filter.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -37,6 +38,8 @@ public:
     void initWidget();
     //录屏截屏控件按钮初始化
     void initMainLabel();
+    void installTipHint(QWidget *w, const QString &hintstr);
+    void installHint(QWidget *w, QWidget *hint);
 
 signals:
     void buttonChecked(bool checked, QString type);
@@ -53,6 +56,7 @@ private:
     ToolButton *m_recordBtn;
     ToolButton *m_shotBtn;
     int m_themeType;
+    HintFilter *hintFilter = nullptr;
 };
 
 #endif // MAINTOOLWIDGET_H

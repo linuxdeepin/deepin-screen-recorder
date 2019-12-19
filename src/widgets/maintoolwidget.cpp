@@ -26,6 +26,7 @@
 #include <QDebug>
 #include <DFontSizeManager>
 #include "../utils/configsettings.h"
+#include "tooltips.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -55,6 +56,7 @@ void MainToolWidget::initWidget()
 //    setFixedHeight(43);
 //    setMinimumSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
 //    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    hintFilter = new HintFilter;
     m_themeType = 0;
     m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
 //    setMouseTracking(true);
@@ -91,7 +93,8 @@ void MainToolWidget::initMainLabel()
         m_recordBtn->setIcon(QIcon(":/image/newUI/dark/normal/screencap-normal_dark.svg"));
     }
 
-    m_recordBtn->setToolTip(tr("Switch to record mode"));
+//    m_recordBtn->setToolTip(tr("Switch to record mode"));
+    installTipHint(m_recordBtn, tr("Switch to record mode"));
 //    recordBtn->setStyleSheet(record_button_style);
     toolBtnList.append(m_recordBtn);
 
@@ -139,7 +142,8 @@ void MainToolWidget::initMainLabel()
         }
     });
 
-    m_shotBtn->setToolTip(tr("Switch to shot mode"));
+//    m_shotBtn->setToolTip(tr("Switch to shot mode"));
+    installTipHint(m_shotBtn, tr("Switch to shot mode"));
 //    shotBtn->setStyleSheet(shot_button_style);
     toolBtnList.append(m_shotBtn);
 
@@ -246,6 +250,22 @@ void MainToolWidget::initMainLabel()
     });
     m_shotBtn->click();
 
+}
+
+void MainToolWidget::installTipHint(QWidget *w, const QString &hintstr)
+{
+    // TODO: parent must be mainframe
+    auto hintWidget = new ToolTips("", this->parentWidget()->parentWidget()->parentWidget());
+    hintWidget->hide();
+    hintWidget->setText(hintstr);
+    hintWidget->setFixedHeight(32);
+    installHint(w, hintWidget);
+}
+
+void MainToolWidget::installHint(QWidget *w, QWidget *hint)
+{
+    w->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hint));
+    w->installEventFilter(hintFilter);
 }
 
 void MainToolWidget::setRecordButtonOut()

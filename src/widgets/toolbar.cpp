@@ -189,6 +189,11 @@ void ToolBarWidget::setRecordLaunchFromMain(bool recordLaunch)
     m_subTool->setRecordLaunchMode(recordLaunch);
 }
 
+void ToolBarWidget::setIsZhaoxinPlatform(bool isZhaoxin)
+{
+    m_subTool->setIsZhaoxinPlatform(isZhaoxin);
+}
+
 void ToolBarWidget::setVideoInitFromMain()
 {
     m_subTool->setVideoButtonInitFromSub();
@@ -361,6 +366,11 @@ void ToolBar::setRecordLaunchMode(bool recordLaunch)
 {
 //    qDebug() << "main record mode1";
     m_toolbarWidget->setRecordLaunchFromMain(recordLaunch);
+}
+
+void ToolBar::setIsZhaoxinPlatform(bool isZhaoxin)
+{
+    m_toolbarWidget->setIsZhaoxinPlatform(isZhaoxin);
 }
 
 void ToolBar::setVideoButtonInit()

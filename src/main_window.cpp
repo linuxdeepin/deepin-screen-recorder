@@ -57,6 +57,7 @@
 #include "utils/audioutils.h"
 #include "utils/shortcut.h"
 #include "camera_process.h"
+#include "widgets/tooltips.h"
 
 
 const int MainWindow::CURSOR_BOUND = 5;
@@ -114,6 +115,7 @@ MainWindow::MainWindow(DWidget *parent) :
 void MainWindow::initAttributes()
 {
     // Init attributes.
+    hintFilter = new HintFilter;
     setWindowTitle(tr("Screen Capture"));
     m_functionType = 0;
     m_keyBoardStatus = 0;
@@ -127,6 +129,8 @@ void MainWindow::initAttributes()
     m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
     m_keyButtonList.clear();
     m_tempkeyButtonList.clear();
+
+    checkCpuIsZhaoxin();
 
     int t_screenCount = QApplication::desktop()->screenCount();
     int t_indexScreen = 0;
@@ -435,7 +439,8 @@ void MainWindow::initAttributes()
     m_recordButton->setPalette(pa);
     m_recordButton->setIconSize(QSize(38, 38));
     m_recordButton->setIcon(QIcon(":/image/newUI/checked/screencap-checked.svg"));
-    m_recordButton->setToolTip(tr("Start Record"));
+//    m_recordButton->setToolTip(tr("Start Record"));
+    installTipHint(m_recordButton, tr("Start Record"));
 //    m_recordButton->setToolTip(tr("Switch to record mode"));
 
     m_recordButton->setFixedSize(76, 58);
@@ -455,7 +460,8 @@ void MainWindow::initAttributes()
     m_shotButton->setPalette(pa);
     m_shotButton->setIconSize(QSize(38, 38));
     m_shotButton->setIcon(QIcon(":/image/newUI/checked/screenshot-checked.svg"));
-    m_shotButton->setToolTip(tr("Start Shot"));
+//    m_shotButton->setToolTip(tr("Start Shot"));
+    installTipHint(m_shotButton, tr("Start Shot"));
 //    m_shotButton->setToolTip(tr("Switch to shot mode"));
 
     m_shotButton->setFixedSize(76, 58);
@@ -480,7 +486,8 @@ void MainWindow::initAttributes()
     recordButtonLayout->addStretch();
     recordButtonLayout->addWidget(recordButton, 0, Qt::AlignCenter);
     recordButtonLayout->addSpacing(RECORD_OPTIONAL_PADDING);
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
         recordButtonLayout->addWidget(recordOptionPanel, 0, Qt::AlignCenter);
     }
     recordButtonLayout->addStretch();
@@ -626,13 +633,10 @@ void MainWindow::initScreenShot()
 
 //    installEventFilter(this);
 
-//    connect(this, &MainWindow::releaseEvent, this, [ = ] {
-//        qDebug() << "release event !!!";
-//        m_keyboardReleased = true;
-//        m_keyboardGrabbed =  windowHandle()->setKeyboardGrabEnabled(false);
-//        qDebug() << "keyboardGrabbed:" << m_keyboardGrabbed;
-//        removeEventFilter(this);
-//    });
+    connect(this, &MainWindow::releaseEvent, this, [ = ] {
+        qDebug() << "release event !!!";
+        removeEventFilter(this);
+    });
 
 //    connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
 
@@ -725,7 +729,7 @@ void MainWindow::initScreenShot()
     }
 //    eventMonitor.quit();
 //    emit releaseEvent();
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
         eventMonitor.terminate();
         eventMonitor.wait();
     }
@@ -741,7 +745,7 @@ void MainWindow::initScreenRecorder()
     if (!DWindowManagerHelper::instance()->hasComposite()) {
         qDebug() << "no composite";
         Utils::warnNoComposite();
-        if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
             eventMonitor.terminate();
             eventMonitor.wait();
         }
@@ -1136,6 +1140,22 @@ QPixmap MainWindow::getPixmapofRect(const QRect &rect)
     return QPixmap();
 }
 
+void MainWindow::installTipHint(QWidget *w, const QString &hintstr)
+{
+    // TODO: parent must be mainframe
+    auto hintWidget = new ToolTips("", this);
+    hintWidget->hide();
+    hintWidget->setText(hintstr);
+    hintWidget->setFixedHeight(32);
+    installHint(w, hintWidget);
+}
+
+void MainWindow::installHint(QWidget *w, QWidget *hint)
+{
+    w->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hint));
+    w->installEventFilter(hintFilter);
+}
+
 void MainWindow::showPressFeedback(int x, int y)
 {
     if (recordButtonStatus == RECORD_BUTTON_RECORDING && m_mouseStatus == 1) {
@@ -1162,7 +1182,7 @@ void MainWindow::responseEsc()
     if (m_functionType == 0) {
         if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
             emit releaseEvent();
-            if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+            if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
                 eventMonitor.terminate();
                 eventMonitor.wait();
             }
@@ -1178,7 +1198,7 @@ void MainWindow::compositeChanged()
         qDebug() << "have no Composite";
         Utils::warnNoComposite();
         emit releaseEvent();
-        if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
             eventMonitor.terminate();
             eventMonitor.wait();
         }
@@ -1195,6 +1215,7 @@ void MainWindow::updateToolBarPos()
     if (m_toolBarInit == false) {
         m_toolBar->initToolBar();
         m_toolBar->setRecordLaunchMode(m_launchWithRecordFunc);
+        m_toolBar->setIsZhaoxinPlatform(m_isZhaoxin);
 
         m_pVoiceVolumeWatcher = new voiceVolumeWatcher(this);
         m_pVoiceVolumeWatcher->start();
@@ -1860,7 +1881,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
 
 void MainWindow::saveScreenShot()
 {
-//    emit releaseEvent();
+    emit releaseEvent();
     m_shotflag = 1;
     emit saveActionTriggered();
     hideAllWidget();
@@ -1935,7 +1956,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     if (saveAction == SaveAction::SaveToClipboard && !m_noNotify) {
 
         QVariantMap emptyMap;
-        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screen-recorder", "",
+        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screenshot", "",
                                     summary,  QStringList(), emptyMap, 0);
     }  else if ( !m_noNotify &&  !(m_saveIndex == SaveAction::SaveToSpecificDir && m_saveFileName.isEmpty())) {
 
@@ -1944,7 +1965,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         QList<QVariant> arg;
         arg << (QCoreApplication::applicationName())                 // appname
             << ((unsigned int) 0)                                    // id
-            << QString("Deepin Screenshot")                     // icon
+            << QString("deepin-screenshot")                     // icon
             << tr("Screenshot finished")                              // summary
             << QString("%1 %2").arg(tr("Saved to")).arg(saveFilePath) // body
             << actions                                               // actions
@@ -1955,7 +1976,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
 
     QTimer::singleShot(2, [ = ] {
         emit releaseEvent();
-        if (QSysInfo::currentCpuArchitecture().startsWith("x86"))
+        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false)
         {
             eventMonitor.terminate();
             eventMonitor.wait();
@@ -2374,7 +2395,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
                 qDebug() << "Key_Escape pressed: app quit!";
                 emit releaseEvent();
-                if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+                if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
                     eventMonitor.terminate();
                     eventMonitor.wait();
                 }
@@ -2401,7 +2422,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             if (m_isShapesWidgetExist) {
                 if (keyEvent->key() == Qt::Key_Escape) {
                     emit releaseEvent();
-                    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+                    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
                         eventMonitor.terminate();
                         eventMonitor.wait();
                     }
@@ -3088,6 +3109,29 @@ void MainWindow::on_CheckVideoCouldUse(bool canUse)
     }
 }
 
+void MainWindow::checkCpuIsZhaoxin()
+{
+    QStringList options;
+    options << "-c";
+    options << "lscpu | grep 'CentaurHauls'";
+    QProcess process;
+    process.start("bash", options);
+    process.waitForFinished();
+    process.waitForReadyRead();
+    QString str_output = process.readAllStandardOutput();
+    qDebug() << "is zhao xin:" << str_output;
+
+    if (str_output.length() == 0) {
+        m_isZhaoxin = false;
+    }
+
+    else {
+        m_isZhaoxin = true;
+    }
+
+    process.close();
+}
+
 void MainWindow::startRecord()
 {
     Utils::clearBlur(windowManager, this->winId());
@@ -3368,7 +3412,7 @@ void MainWindow::stopRecord()
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
         hide();
         emit releaseEvent();
-        if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
             eventMonitor.terminate();
             eventMonitor.wait();
         }
@@ -3426,7 +3470,7 @@ void MainWindow::startCountdown()
 //        qDebug() << "record format is mp4";
 //        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
 //    }
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
         if (t_saveGif) {
             qDebug() << "record format is gif";
             recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
@@ -3467,7 +3511,7 @@ void MainWindow::showRecordButton()
 {
 //    updateToolBarPos();
 //    recordButton->show();
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
 //        recordOptionPanel->show();
 
         adjustLayout(recordButtonLayout,
@@ -3628,7 +3672,7 @@ void MainWindow::exitApp()
             m_hotZoneInterface->asyncCall("EnableZoneDetected",  true);
     }
     emit releaseEvent();
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
         eventMonitor.terminate();
         eventMonitor.wait();
     }

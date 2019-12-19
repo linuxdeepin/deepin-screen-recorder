@@ -37,6 +37,7 @@
 #include <QDir>
 #include <QFileDialog>
 #include "../settings.h"
+#include "tooltips.h"
 
 #include <unistd.h>
 
@@ -68,6 +69,7 @@ SubToolWidget::~SubToolWidget()
 
 void SubToolWidget::initWidget()
 {
+    hintFilter = new HintFilter;
     m_themeType = 0;
     m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
 
@@ -130,7 +132,8 @@ void SubToolWidget::initRecordLabel()
     audioButton->setObjectName("AudioButton");
     audioButton->setText(tr(" "));
     audioButton->setIconSize(TOOL_ICON_SIZE);
-    audioButton->setToolTip(tr("Sound On"));
+//    audioButton->setToolTip(tr("Sound On"));
+    installTipHint(audioButton, tr("Sound On"));
     if (m_themeType == 1) {
         audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
     }
@@ -175,7 +178,8 @@ void SubToolWidget::initRecordLabel()
     connect(m_microphoneAction, &QAction::triggered, this, [ = ] {
         if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
         {
-            audioButton->setToolTip(tr("Sound On"));
+//            audioButton->setToolTip(tr("Sound On"));
+            installTipHint(audioButton, tr("Sound On"));
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
             if (m_themeType == 1) {
                 audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
@@ -212,7 +216,8 @@ void SubToolWidget::initRecordLabel()
 
         if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
         {
-            audioButton->setToolTip(tr("Sound Off"));
+//            audioButton->setToolTip(tr("Sound Off"));
+            installTipHint(audioButton, tr("Sound Off"));
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
             if (m_themeType == 1) {
                 audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
@@ -227,7 +232,8 @@ void SubToolWidget::initRecordLabel()
     connect(m_systemAudioAction, &QAction::triggered, this, [ = ] {
         if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
         {
-            audioButton->setToolTip(tr("Sound On"));
+//            audioButton->setToolTip(tr("Sound On"));
+            installTipHint(audioButton, tr("Sound On"));
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
             if (m_themeType == 1) {
                 audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
@@ -264,7 +270,8 @@ void SubToolWidget::initRecordLabel()
 
         if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
         {
-            audioButton->setToolTip(tr("Sound Off"));
+//            audioButton->setToolTip(tr("Sound Off"));
+            installTipHint(audioButton, tr("Sound Off"));
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
             if (m_themeType == 1) {
                 audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
@@ -343,7 +350,8 @@ void SubToolWidget::initRecordLabel()
     m_keyBoardButton->setObjectName("KeyBoardButton");
 //    keyBoardButton->setText(tr("Key"));
     m_keyBoardButton->setIconSize(MAX_TOOL_ICON_SIZE);
-    m_keyBoardButton->setToolTip(tr("Show Keystroke"));
+//    m_keyBoardButton->setToolTip(tr("Show Keystroke"));
+    installTipHint(m_keyBoardButton, tr("Show Keystroke"));
 
     if (m_themeType == 1) {
         m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
@@ -378,7 +386,8 @@ void SubToolWidget::initRecordLabel()
         if (m_keyBoardButton->isChecked())
         {
 //            m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key display_mormal.svg"));
-            m_keyBoardButton->setToolTip(tr("Hide Keystroke"));
+//            m_keyBoardButton->setToolTip(tr("Hide Keystroke"));
+            installTipHint(m_keyBoardButton, tr("Hide Keystroke"));
             if (m_themeType == 1) {
                 m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key display_mormal.svg"));
             }
@@ -391,7 +400,8 @@ void SubToolWidget::initRecordLabel()
         if (!m_keyBoardButton->isChecked())
         {
 //            m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
-            m_keyBoardButton->setToolTip(tr("Show Keystroke"));
+//            m_keyBoardButton->setToolTip(tr("Show Keystroke"));
+            installTipHint(m_keyBoardButton, tr("Show Keystroke"));
             if (m_themeType == 1) {
                 m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
             }
@@ -413,7 +423,8 @@ void SubToolWidget::initRecordLabel()
     m_cameraButton->setObjectName("CameraButton");
 //    cameraButton->setText(tr("Camera"));
     m_cameraButton->setIconSize(MAX_TOOL_ICON_SIZE);
-    m_cameraButton->setToolTip(tr("Webcam On"));
+//    m_cameraButton->setToolTip(tr("Webcam On"));
+    installTipHint(m_cameraButton, tr("Webcam On"));
 
     if (m_themeType == 1) {
         m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
@@ -443,7 +454,8 @@ void SubToolWidget::initRecordLabel()
         if (m_cameraButton->isChecked())
         {
 //            m_cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
-            m_cameraButton->setToolTip(tr("Webcam Off"));
+//            m_cameraButton->setToolTip(tr("Webcam Off"));
+            installTipHint(m_cameraButton, tr("Webcam Off"));
             if (m_themeType == 1) {
                 m_cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
             }
@@ -456,7 +468,8 @@ void SubToolWidget::initRecordLabel()
         if (!m_cameraButton->isChecked())
         {
 //            m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
-            m_cameraButton->setToolTip(tr("Webcam On"));
+//            m_cameraButton->setToolTip(tr("Webcam On"));
+            installTipHint(m_cameraButton, tr("Webcam On"));
             if (m_themeType == 1) {
                 m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
             }
@@ -476,7 +489,8 @@ void SubToolWidget::initRecordLabel()
 
     m_mouseButton->setObjectName("MouseButton");
     m_mouseButton->setIconSize(MAX_TOOL_ICON_SIZE);
-    m_mouseButton->setToolTip(tr("Show Click"));
+//    m_mouseButton->setToolTip(tr("Show Click"));
+    installTipHint(m_mouseButton, tr("Show Click"));
     if (m_themeType == 1) {
         m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
     }
@@ -508,7 +522,8 @@ void SubToolWidget::initRecordLabel()
         if (m_mouseButton->isChecked())
         {
 //            m_mouseButton->setIcon(QIcon(":/image/newUI/checked/mouse_checked.svg"));
-            m_mouseButton->setToolTip(tr("Hide Click"));
+//            m_mouseButton->setToolTip(tr("Hide Click"));
+            installTipHint(m_mouseButton, tr("Hide Click"));
             if (m_themeType == 1) {
                 m_mouseButton->setIcon(QIcon(":/image/newUI/checked/mouse_checked.svg"));
             }
@@ -521,7 +536,8 @@ void SubToolWidget::initRecordLabel()
         if (!m_mouseButton->isChecked())
         {
 //            m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
-            m_mouseButton->setToolTip(tr("Show Click"));
+//            m_mouseButton->setToolTip(tr("Show Click"));
+            installTipHint(m_mouseButton, tr("Show Click"));
             if (m_themeType == 1) {
                 m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
             }
@@ -552,7 +568,8 @@ void SubToolWidget::initRecordLabel()
     m_optionButton->setText(tr("Options"));
 //    m_optionButton->setFixedSize(QSize(73, 40));
     m_optionButton->setMinimumSize(QSize(73, 40));
-    m_optionButton->setToolTip(tr("Options"));
+//    m_optionButton->setToolTip(tr("Options"));
+    installTipHint(m_optionButton, tr("Options"));
     rectBtnGroup->addButton(m_optionButton);
 
     btnList.append(m_optionButton);
@@ -633,7 +650,7 @@ void SubToolWidget::initRecordLabel()
 
     m_optionButton->setMenu(OptionMenu);
 
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxinInSub == false) {
         if (t_saveGif == true) {
             gifAction->setChecked(true);
             gifAction->trigger();
@@ -758,7 +775,7 @@ void SubToolWidget::initRecordLabel()
         emit videoFrameRateChanged(t_frameRateSelected);
     });
 
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxinInSub == false) {
         switch (t_frameRate) {
         case 5:
             fps5Action->triggered();
@@ -906,7 +923,8 @@ void SubToolWidget::initShotLabel()
 //    rectButton->setText(tr("Rect"));
     rectBtnGroup->addButton(m_rectButton);
     m_rectButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
-    m_rectButton->setToolTip(tr("Rectangle"));
+//    m_rectButton->setToolTip(tr("Rectangle"));
+    installTipHint(m_rectButton, tr("Rectangle"));
     btnList.append(m_rectButton);
 
     m_circleButton = new ToolButton();
@@ -918,7 +936,8 @@ void SubToolWidget::initShotLabel()
 //    m_circleButton->setPalette(pa);
 
     m_circleButton->setIconSize(QSize(35, 35));
-    m_circleButton->setToolTip(tr("Ellipse"));
+//    m_circleButton->setToolTip(tr("Ellipse"));
+    installTipHint(m_circleButton, tr("Ellipse"));
     if (m_themeType == 1) {
         m_circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
     }
@@ -966,11 +985,13 @@ void SubToolWidget::initShotLabel()
 
     bool t_arrowStatus = ConfigSettings::instance()->value("arrow", "is_straight").toBool();
     if (t_arrowStatus) {
-        m_lineButton->setToolTip(tr("Line"));
+//        m_lineButton->setToolTip(tr("Line"));
+        installTipHint(m_lineButton, tr("Line"));
     }
 
     else {
-        m_lineButton->setToolTip(tr("Arrow"));
+//        m_lineButton->setToolTip(tr("Arrow"));
+        installTipHint(m_lineButton, tr("Arrow"));
     }
 
     connect(m_lineButton, &ToolButton::onPress, this, [ = ] {
@@ -1040,7 +1061,8 @@ void SubToolWidget::initShotLabel()
 //    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     m_penButton->setIconSize(QSize(35, 35));
-    m_penButton->setToolTip(tr("Pencil"));
+//    m_penButton->setToolTip(tr("Pencil"));
+    installTipHint(m_penButton, tr("Pencil"));
 //    m_penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
 
     if (m_themeType == 1) {
@@ -1080,7 +1102,8 @@ void SubToolWidget::initShotLabel()
 //    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     m_textButton->setIconSize(QSize(30, 30));
-    m_textButton->setToolTip(tr("Text"));
+//    m_textButton->setToolTip(tr("Text"));
+    installTipHint(m_textButton, tr("Text"));
 //    m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
     if (m_themeType == 1) {
         m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
@@ -1119,7 +1142,8 @@ void SubToolWidget::initShotLabel()
     m_shotOptionButton->setText(tr("Options"));
 //    m_shotOptionButton->setFixedSize(QSize(73, 40));
     m_shotOptionButton->setMinimumSize(QSize(73, 40));
-    m_shotOptionButton->setToolTip(tr("Options"));
+//    m_shotOptionButton->setToolTip(tr("Options"));
+    installTipHint(m_shotOptionButton, tr("Options"));
     rectBtnGroup->addButton(m_shotOptionButton);
 
     btnList.append(m_shotOptionButton);
@@ -1395,7 +1419,8 @@ void SubToolWidget::initShotLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            m_lineButton->setPalette(pa);
             if (m_lineflag == 0) {
-                m_lineButton->setToolTip(tr("Line"));
+//                m_lineButton->setToolTip(tr("Line"));
+                installTipHint(m_lineButton, tr("Line"));
 //                m_lineButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
 
                 if (m_themeType == 1) {
@@ -1408,7 +1433,8 @@ void SubToolWidget::initShotLabel()
             }
 
             else if (m_lineflag == 1) {
-                m_lineButton->setToolTip(tr("Arrow"));
+//                m_lineButton->setToolTip(tr("Arrow"));
+                installTipHint(m_lineButton, tr("Arrow"));
 //                m_lineButton->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
                 if (m_themeType == 1) {
                     m_lineButton->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
@@ -1429,7 +1455,8 @@ void SubToolWidget::initShotLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            m_lineButton->setPalette(pa);
             if (m_lineflag == 0) {
-                m_lineButton->setToolTip(tr("Line"));
+//                m_lineButton->setToolTip(tr("Line"));
+                installTipHint(m_lineButton, tr("Line"));
 //                m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
                 if (m_themeType == 1) {
                     m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
@@ -1441,7 +1468,8 @@ void SubToolWidget::initShotLabel()
             }
 
             else if (m_lineflag == 1) {
-                m_lineButton->setToolTip(tr("Arrow"));
+//                m_lineButton->setToolTip(tr("Arrow"));
+                installTipHint(m_lineButton, tr("Arrow"));
 //                m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
                 if (m_themeType == 1) {
                     m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
@@ -1547,6 +1575,23 @@ void SubToolWidget::initVirtualCard()
         sleep(1);
     }
 }
+
+void SubToolWidget::installTipHint(QWidget *w, const QString &hintstr)
+{
+    // TODO: parent must be mainframe
+    auto hintWidget = new ToolTips("", this->parentWidget()->parentWidget()->parentWidget());
+    hintWidget->hide();
+    hintWidget->setText(hintstr);
+    hintWidget->setFixedHeight(32);
+    installHint(w, hintWidget);
+}
+
+void SubToolWidget::installHint(QWidget *w, QWidget *hint)
+{
+    w->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hint));
+    w->installEventFilter(hintFilter);
+}
+
 void SubToolWidget::switchContent(QString shapeType)
 {
     if (shapeType == "record") {
@@ -1706,7 +1751,8 @@ void SubToolWidget::setCameraDeviceEnable(bool status)
             m_cameraButton->setEnabled(true);
 
             if (!m_cameraButton->isChecked()) {
-                m_cameraButton->setToolTip(tr("Webcam On"));
+//                m_cameraButton->setToolTip(tr("Webcam On"));
+                installTipHint(m_cameraButton, tr("Webcam On"));
                 if (m_themeType == 1) {
                     m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
                 }
@@ -1726,7 +1772,8 @@ void SubToolWidget::setCameraDeviceEnable(bool status)
         if (m_cameraButton->isEnabled()) {
             m_cameraButton->setChecked(false);
             if (m_cameraButton->isChecked()) {
-                m_cameraButton->setToolTip(tr("Webcam Off"));
+//                m_cameraButton->setToolTip(tr("Webcam Off"));
+                installTipHint(m_cameraButton, tr("Webcam Off"));
                 if (m_themeType == 1) {
                     m_cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
                 }
@@ -1738,7 +1785,8 @@ void SubToolWidget::setCameraDeviceEnable(bool status)
 
             if (!m_cameraButton->isChecked()) {
                 //            m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
-                m_cameraButton->setToolTip(tr("Webcam On"));
+//                m_cameraButton->setToolTip(tr("Webcam On"));
+                installTipHint(m_cameraButton, tr("Webcam On"));
                 if (m_themeType == 1) {
                     m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
                 }
@@ -1764,4 +1812,9 @@ void SubToolWidget::setSystemAudioEnable(bool status)
         m_haveSystemAudio = true;
     }
 
+}
+
+void SubToolWidget::setIsZhaoxinPlatform(bool isZhaoxin)
+{
+    m_isZhaoxinInSub = isZhaoxin;
 }

@@ -25,6 +25,7 @@
 #include <DStackedWidget>
 #include "toolbutton.h"
 #include "../utils/saveutils.h"
+#include "filter.h"
 DWIDGET_USE_NAMESPACE
 
 class SubToolWidget : public DStackedWidget
@@ -38,6 +39,8 @@ public:
     void initRecordLabel();
     void initShotLabel();
     void initVirtualCard();
+    void installTipHint(QWidget *w, const QString &hintstr);
+    void installHint(QWidget *w, QWidget *hint);
 signals:
     void keyBoardButtonClicked(bool checked);
     void mouseBoardButtonClicked(bool checked);
@@ -60,6 +63,7 @@ public slots:
     void setMicroPhoneEnable(bool status);
     void setCameraDeviceEnable(bool status);
     void setSystemAudioEnable(bool status);
+    void setIsZhaoxinPlatform(bool isZhaoxin);
 private:
     DLabel *m_recordSubTool;
     DLabel *m_shotSubTool;
@@ -80,6 +84,8 @@ private:
     bool m_haveSystemAudio = false;
     int m_lineflag;
     int m_themeType;
+    bool m_isZhaoxinInSub = false;
+    HintFilter *hintFilter = nullptr;
 };
 
 #endif // SUBTOOLWIDGET_H

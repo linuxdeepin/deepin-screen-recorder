@@ -51,6 +51,7 @@
 #include "widgets/keybuttonwidget.h"
 #include "widgets/zoomIndicator.h"
 #include "widgets/camerawidget.h"
+#include "widgets/filter.h"
 #include "utils/saveutils.h"
 #include "utils/voicevolumewatcher.h"
 #include "utils/camerawatcher.h"
@@ -186,6 +187,7 @@ public slots:
     void shapeClickedSlot(QString shape);
     void on_CheckRecodeCouldUse(bool canUse);
     void on_CheckVideoCouldUse(bool canUse);
+    void checkCpuIsZhaoxin();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -208,6 +210,8 @@ protected:
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
     void initBackground();
     QPixmap getPixmapofRect(const QRect &rect);
+    void installTipHint(QWidget *w, const QString &hintstr);
+    void installHint(QWidget *w, QWidget *hint);
 private:
     QList<WindowRect> windowRects;
     QList<QString> windowNames;
@@ -344,6 +348,8 @@ private:
     QString m_savePicturePath;
     int m_shotflag = 0;
     int m_firstShot = 0;
+    bool m_isZhaoxin = false;
+    HintFilter *hintFilter         = nullptr;
 };
 
 #endif //MAINWINDOW_H

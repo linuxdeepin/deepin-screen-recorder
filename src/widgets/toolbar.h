@@ -71,6 +71,7 @@ public slots:
     void changeArrowAndLineFromBar(int line);
     void setRecordButtonDisableFromMain();
     void setRecordLaunchFromMain(bool recordLaunch);
+    void setIsZhaoxinPlatform(bool isZhaoxin);
     void setVideoInitFromMain();
     void shapeClickedFromBar(QString shape);
     void setMicroPhoneEnable(bool status);
@@ -133,6 +134,7 @@ public slots:
     void initToolBar();
     void setRecordButtonDisable();
     void setRecordLaunchMode(bool recordLaunch);
+    void setIsZhaoxinPlatform(bool isZhaoxin);
     void setVideoButtonInit();
     void shapeClickedFromMain(QString shape);
     void setMicroPhoneEnable(bool status);
