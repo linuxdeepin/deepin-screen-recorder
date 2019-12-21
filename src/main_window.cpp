@@ -21,7 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <dscreenwindowsutil.h>
+//#include <dscreenwindowsutil.h>
 #include <DWidget>
 #include <DWindowManagerHelper>
 #include <DForeignWindow>
@@ -45,6 +45,7 @@
 #include <QFileDialog>
 #include <QShortcut>
 #include <QDesktopWidget>
+#include <QScreen>
 
 #include "main_window.h"
 #include "utils.h"
@@ -101,7 +102,7 @@ const int INDICATOR_WIDTH =  110;
 const qreal RESIZEPOINT_WIDTH = 15;
 }
 
-DWM_USE_NAMESPACE
+//DWM_USE_NAMESPACE
 
 MainWindow::MainWindow(DWidget *parent) :
     DWidget(parent),
@@ -205,37 +206,41 @@ void MainWindow::initAttributes()
     //多屏情况下累加窗口大小
     if (t_screenCount == 1) {
         QPoint pos = this->cursor().pos();
-        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
-        screenRect = screenWin->backgroundRect();
+//        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
+
+//        screenRect = screenWin->backgroundRect();
+        screenRect = QApplication::desktop()->screen()->geometry();
         screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
         this->move(static_cast<int>(screenRect.x() * ratio),
                    static_cast<int>(screenRect.y() * ratio));
         this->setFixedSize(screenRect.width(), screenRect.height());
-        m_swUtil = DScreenWindowsUtil::instance(curPos);
-        m_screenNum =  m_swUtil->getScreenNum();
+//        m_swUtil = DScreenWindowsUtil::instance(curPos);
+//        m_screenNum =  m_swUtil->getScreenNum();
 
-        windowManager = new DWindowManager();
-        windowManager->setRootWindowRect(screenRect);
-        QList<xcb_window_t> windows = windowManager->getWindows();
-        rootWindowRect = windowManager->getRootWindowRect();
+//        windowManager = new DWindowManager();
+//        windowManager->setRootWindowRect(screenRect);
+//        QList<xcb_window_t> windows = windowManager->getWindows();
+//        rootWindowRect = windowManager->getRootWindowRect();
+        rootWindowRect = QApplication::desktop()->screen()->geometry();
     }
 
     else if (t_screenCount > 1) {
 //        QPoint pos = this->cursor().pos();
-        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
+//        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
         screenRect = t_screenRect;
         screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
         this->move(static_cast<int>(screenRect.x() * ratio),
                    static_cast<int>(screenRect.y() * ratio));
         this->setFixedSize(screenRect.width(), screenRect.height());
-        m_swUtil = DScreenWindowsUtil::instance(curPos);
-        m_screenNum =  m_swUtil->getScreenNum();
+//        m_swUtil = DScreenWindowsUtil::instance(curPos);
+//        m_screenNum =  m_swUtil->getScreenNum();
 
-        windowManager = new DWindowManager();
-        windowManager->setRootWindowRect(t_screenRect);
-        QList<xcb_window_t> windows = windowManager->getWindows();
-        rootWindowRect = Dtk::Wm::WindowRect {t_screenRect.x(), t_screenRect.y(),
-                                              t_screenRect.width(), t_screenRect.height()};
+//        windowManager = new DWindowManager();
+//        windowManager->setRootWindowRect(t_screenRect);
+//        QList<xcb_window_t> windows = windowManager->getWindows();
+//        rootWindowRect = Dtk::Wm::WindowRect {t_screenRect.x(), t_screenRect.y(),
+//                                              t_screenRect.width(), t_screenRect.height()};
+        rootWindowRect = t_screenRect;
     }
 
     if (t_screenCount > 1) {
@@ -249,8 +254,10 @@ void MainWindow::initAttributes()
             }
             if (window) {
                 window->deleteLater();
-                windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(),
-                                                    window->frameGeometry().width(), window->frameGeometry().height()};
+//                windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(),
+//                                                    window->frameGeometry().width(), window->frameGeometry().height()};
+
+                windowRects << window->frameGeometry();
                 windowNames << window->wmClass();
             }
         }
@@ -280,7 +287,8 @@ void MainWindow::initAttributes()
                         t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
                         t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
 
-                        windowRects << Dtk::Wm::WindowRect {0, 0, t_tempWidth, t_tempHeight};
+//                        windowRects << Dtk::Wm::WindowRect {0, 0, t_tempWidth, t_tempHeight};
+                        windowRects << QRect(0, 0, t_tempWidth, t_tempHeight);
                         windowNames << window->wmClass();
                         continue;
                     }
@@ -290,7 +298,8 @@ void MainWindow::initAttributes()
                         t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
                         t_tempHeight = window->frameGeometry().height();
 
-                        windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+//                        windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                        windowRects << QRect(0, window->frameGeometry().y(), t_tempWidth, t_tempHeight);
                         windowNames << window->wmClass();
                         continue;
                     }
@@ -300,7 +309,8 @@ void MainWindow::initAttributes()
                         t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
                         t_tempHeight = m_screenHeight - window->frameGeometry().y();
 
-                        windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+//                        windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                        windowRects << QRect(0, window->frameGeometry().y(), t_tempWidth, t_tempHeight);
                         windowNames << window->wmClass();
                         continue;
                     }
@@ -313,7 +323,8 @@ void MainWindow::initAttributes()
                         t_tempWidth = window->frameGeometry().width();
                         t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
 
-                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight};
+//                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight};
+                        windowRects << QRect(window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight);
                         windowNames << window->wmClass();
                         continue;
                     }
@@ -323,7 +334,8 @@ void MainWindow::initAttributes()
                         t_tempWidth = window->frameGeometry().width();
                         t_tempHeight = window->frameGeometry().height();
 
-                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+//                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                        windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
                         windowNames << window->wmClass();
                         continue;
                     }
@@ -333,7 +345,8 @@ void MainWindow::initAttributes()
                         t_tempWidth = window->frameGeometry().width();
                         t_tempHeight = m_screenHeight - window->frameGeometry().y();
 
-                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+//                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                        windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
                         windowNames << window->wmClass();
                         continue;
                     }
@@ -346,7 +359,8 @@ void MainWindow::initAttributes()
                         t_tempWidth = m_screenWidth - window->frameGeometry().x();
                         t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
 
-                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight};
+//                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight};
+                        windowRects << QRect(window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight);
                         windowNames << window->wmClass();
                         continue;
                     }
@@ -356,7 +370,8 @@ void MainWindow::initAttributes()
                         t_tempWidth = m_screenWidth - window->frameGeometry().x();
                         t_tempHeight = window->frameGeometry().height();
 
-                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+//                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                        windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
                         windowNames << window->wmClass();
                         continue;
                     }
@@ -366,7 +381,8 @@ void MainWindow::initAttributes()
                         t_tempWidth = m_screenWidth - window->frameGeometry().x();
                         t_tempHeight = m_screenHeight - window->frameGeometry().y();
 
-                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+//                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                        windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
                         windowNames << window->wmClass();
                         continue;
                     }
@@ -471,7 +487,8 @@ void MainWindow::initAttributes()
     m_recordButton->hide();
     m_shotButton->hide();
 
-    m_backgroundRect = m_swUtil->backgroundRect();
+//    m_backgroundRect = m_swUtil->backgroundRect();
+    m_backgroundRect = QApplication::desktop()->screen()->geometry();
     m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
 
     recordButton = new RecordButton();
@@ -498,9 +515,11 @@ void MainWindow::initAttributes()
     m_selectedMic = true;
     m_selectedSystemAudio = true;
 
-    m_swUtil = DScreenWindowsUtil::instance(curPos);
+//    m_swUtil = DScreenWindowsUtil::instance(curPos);
+
     if (t_screenCount == 1) {
-        m_backgroundRect = m_swUtil->backgroundRect();
+//        m_backgroundRect = m_swUtil->backgroundRect();
+        m_backgroundRect = QApplication::desktop()->screen()->geometry();
         m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
 
         move(m_backgroundRect.topLeft() * ratio);
@@ -950,9 +969,11 @@ void MainWindow::fullScreenshot()
 //        m_hotZoneInterface->asyncCall("EnableZoneDetected", false);
 
     QPoint curPos = this->cursor().pos();
-    m_swUtil = DScreenWindowsUtil::instance(curPos);
+//    m_swUtil = DScreenWindowsUtil::instance(curPos);
 //    m_screenNum = m_swUtil->getScreenNum();
-    m_backgroundRect = m_swUtil->backgroundRect();
+//    m_backgroundRect = m_swUtil->backgroundRect();
+    int t_screen = QApplication::desktop()->screenNumber(curPos);
+    m_backgroundRect = QApplication::desktop()->screen(t_screen)->geometry();
 
     this->move(m_backgroundRect.x(), m_backgroundRect.y());
     this->setFixedSize(m_backgroundRect.size());
@@ -999,9 +1020,11 @@ void MainWindow::testScreenshot()
 //        m_hotZoneInterface->asyncCall("EnableZoneDetected", false);
 
     QPoint curPos = this->cursor().pos();
-    m_swUtil = DScreenWindowsUtil::instance(curPos);
+//    m_swUtil = DScreenWindowsUtil::instance(curPos);
 //    m_screenNum = m_swUtil->getScreenNum();
-    m_backgroundRect = m_swUtil->backgroundRect();
+//    m_backgroundRect = m_swUtil->backgroundRect();
+    int t_screen = QApplication::desktop()->screenNumber(curPos);
+    m_backgroundRect = QApplication::desktop()->screen(t_screen)->geometry();
 
     this->move(m_backgroundRect.x(), m_backgroundRect.y());
     this->setFixedSize(m_backgroundRect.size());
@@ -1029,28 +1052,57 @@ void MainWindow::topWindow()
     this->showFullScreen();
     this->initResource();
 
-    QList<QRect> t_windowRects;
-    if (m_screenNum == 0) {
-        t_windowRects  = m_swUtil->windowsRect();
+//    QList<QRect> t_windowRects;
+//    if (m_screenNum == 0) {
+//        t_windowRects  = m_swUtil->windowsRect();
 
-        if (t_windowRects.length() > 1 && t_windowRects[0] == m_backgroundRect) {
-            recordX = t_windowRects[1].x();
-            recordY = t_windowRects[1].y();
-            recordWidth = t_windowRects[1].width();
-            recordHeight = t_windowRects[1].height();
+//        if (t_windowRects.length() > 1 && t_windowRects[0] == m_backgroundRect) {
+//            recordX = t_windowRects[1].x();
+//            recordY = t_windowRects[1].y();
+//            recordWidth = t_windowRects[1].width();
+//            recordHeight = t_windowRects[1].height();
+//        } else {
+//            recordX = t_windowRects[0].x();
+//            recordY = t_windowRects[0].y();
+//            recordWidth = t_windowRects[0].width();
+//            recordHeight = t_windowRects[0].height();
+//        }
+
+
+//    } else {
+//        recordX = m_backgroundRect.x();
+//        recordY = m_backgroundRect.y();
+//        recordWidth = m_backgroundRect.width();
+//        recordHeight = m_backgroundRect.height();
+//    }
+
+//    for (auto wid : DWindowManagerHelper::instance()->allWindowIdList()) {
+//        DForeignWindow *window = DForeignWindow::fromWinId(wid);
+//        qDebug() << "window name:" << window->wmClass();
+//    }
+
+
+    int t_windowCount = DWindowManagerHelper::instance()->allWindowIdList().size();
+
+    for (int i = t_windowCount - 1; i >= 0; i--) {
+        auto wid = DWindowManagerHelper::instance()->allWindowIdList().at(i);
+        if (wid == winId()) continue;
+        DForeignWindow *window = DForeignWindow::fromWinId(wid);
+
+        if (window->type() == Qt::Window || window->type() == Qt::Desktop) {
+            //判断窗口是否被最小化
+            if (window->windowState() == Qt::WindowState::WindowMinimized) {
+                continue;
+            }
+            selectAreaName = window->wmClass();
+            recordX = window->frameGeometry().x();
+            recordY = window->frameGeometry().y();
+            recordWidth = window->frameGeometry().width();
+            recordHeight = window->frameGeometry().height();
+            break;
         } else {
-            recordX = t_windowRects[0].x();
-            recordY = t_windowRects[0].y();
-            recordWidth = t_windowRects[0].width();
-            recordHeight = t_windowRects[0].height();
+            continue;
         }
-
-
-    } else {
-        recordX = m_backgroundRect.x();
-        recordY = m_backgroundRect.y();
-        recordWidth = m_backgroundRect.width();
-        recordHeight = m_backgroundRect.height();
     }
 
     this->hide();
@@ -1127,7 +1179,7 @@ QPixmap MainWindow::getPixmapofRect(const QRect &rect)
         QList<QScreen *> screenList = qApp->screens();
         for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
             if ((*it)->geometry().contains(r)) {
-                return (*it)->grabWindow(m_swUtil->rootWindowId(), rect.x(), rect.y(), rect.width(), rect.height());
+                return (*it)->grabWindow(0, rect.x(), rect.y(), rect.width(), rect.height());
             }
         }
     }
@@ -2286,7 +2338,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setRenderHint(QPainter::Antialiasing, true);
-        QRect backgroundRect = QRect(0, 0, rootWindowRect.width, rootWindowRect.height);
+        QRect backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
         // FIXME: Under the magnifying glass, it seems to be magnified two times.
         m_backgroundPixmap.setDevicePixelRatio(devicePixelRatioF());
         painter.drawPixmap(backgroundRect, m_backgroundPixmap);
@@ -2299,7 +2351,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
     if (m_functionType == 1) {
         painter.setRenderHint(QPainter::Antialiasing, true);
-        QRect backgroundRect = QRect(0, 0, rootWindowRect.width, rootWindowRect.height);
+        QRect backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
         // FIXME: Under the magnifying glass, it seems to be magnified two times.
         m_backgroundPixmap.setDevicePixelRatio(devicePixelRatioF());
         painter.drawPixmap(backgroundRect, m_backgroundPixmap);
@@ -2307,7 +2359,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
     if (recordWidth > 0 && recordHeight > 0) {
         m_firstShot = 1;
-        QRect backgroundRect = QRect(0, 0, rootWindowRect.width, rootWindowRect.height);
+        QRect backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
         QRect frameRect = QRect(recordX, recordY, recordWidth, recordHeight);
 
         // Draw background.
@@ -2335,8 +2387,8 @@ void MainWindow::paintEvent(QPaintEvent *event)
             painter.drawRect(QRect(
                                  std::max(frameRect.x(), 1),
                                  std::max(frameRect.y(), 1),
-                                 std::min(frameRect.width() - 1, rootWindowRect.width - 2),
-                                 std::min(frameRect.height() - 1, rootWindowRect.height - 2)));
+                                 std::min(frameRect.width() - 1, rootWindowRect.width() - 2),
+                                 std::min(frameRect.height() - 1, rootWindowRect.height() - 2)));
             painter.setRenderHint(QPainter::Antialiasing, true);
         }
 
@@ -2364,7 +2416,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
 
 //        if (m_functionType == 0) {
-//            QRect backgroundRect = QRect(0, 0, rootWindowRect.width, rootWindowRect.height);
+//            QRect backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
 //            QRect frameRect = QRect(recordX, recordY, recordWidth, recordHeight);
 
 //            // Draw background.
@@ -2527,26 +2579,26 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                     if (keyEvent->key() == Qt::Key_Left) {
                         recordX = std::max(0, recordX - 1);
-                        recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
+                        recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Right) {
                         if (recordX + recordWidth + 1 >= m_screenWidth) {
                             recordX = std::max(0, recordX - 1);
                         }
-                        recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
+                        recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Up) {
                         recordY = std::max(0, recordY - 1);
-                        recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
+                        recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Down) {
                         if (recordY + recordHeight + 1 >= m_screenHeight) {
                             recordY = std::max(0, recordY - 1);
                         }
-                        recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
+                        recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
 
                         needRepaint = true;
                     }
@@ -2641,26 +2693,26 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 } else if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
                     if (keyEvent->key() == Qt::Key_Left) {
                         recordX = std::max(0, recordX - 1);
-                        recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
+                        recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Right) {
                         if (recordX + recordWidth + 1 >= m_screenWidth) {
                             recordX = std::max(0, recordX - 1);
                         }
-                        recordWidth = std::min(recordWidth + 1, rootWindowRect.width);
+                        recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Up) {
                         recordY = std::max(0, recordY - 1);
-                        recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
+                        recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Down) {
                         if (recordY + recordHeight + 1 >= m_screenHeight) {
                             recordY = std::max(0, recordY - 1);
                         }
-                        recordHeight = std::min(recordHeight + 1, rootWindowRect.height);
+                        recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
 
                         needRepaint = true;
                     }
@@ -2670,7 +2722,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Right) {
-                        recordX = std::min(rootWindowRect.width - recordWidth, recordX + 1);
+                        recordX = std::min(rootWindowRect.width() - recordWidth, recordX + 1);
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Up) {
@@ -2678,7 +2730,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                         needRepaint = true;
                     } else if (keyEvent->key() == Qt::Key_Down) {
-                        recordY = std::min(rootWindowRect.height - recordHeight, recordY + 1);
+                        recordY = std::min(rootWindowRect.height() - recordHeight, recordY + 1);
 
                         needRepaint = true;
                     }
@@ -2773,7 +2825,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (!isFirstPressButton) {
                     isFirstPressButton = true;
 
-                    Utils::clearBlur(windowManager, this->winId());
+//                    Utils::clearBlur(windowManager, this->winId());
                 } else {
                     dragAction = getAction(event);
 
@@ -2833,7 +2885,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     if (!isFirstDrag) {
                         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
                         for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
-                            if (QRect(it->x, it->y, it->width, it->height).contains(mouseEvent->pos() + screenRect.topLeft())) {
+                            if (QRect(it->x(), it->y(), it->width(), it->height()).contains(mouseEvent->pos() + screenRect.topLeft())) {
                                 selectAreaName = windowNames[windowRects.rend() - it - 1];
                                 break;
                             }
@@ -2845,12 +2897,12 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
                             recordHeight = recordHeight < RECORD_MIN_HEIGHT ? RECORD_MIN_HEIGHT : recordHeight;
 
-                            if (recordX + recordWidth > rootWindowRect.width) {
-                                recordX = rootWindowRect.width - recordWidth;
+                            if (recordX + recordWidth > rootWindowRect.width()) {
+                                recordX = rootWindowRect.width() - recordWidth;
                             }
 
-                            if (recordY + recordHeight > rootWindowRect.height) {
-                                recordY = rootWindowRect.height - recordHeight;
+                            if (recordY + recordHeight > rootWindowRect.height()) {
+                                recordY = rootWindowRect.height() - recordHeight;
                             }
                         }
 
@@ -2859,12 +2911,12 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             recordWidth = recordWidth < RECORD_MIN_SHOT_SIZE ? RECORD_MIN_SHOT_SIZE : recordWidth;
                             recordHeight = recordHeight < RECORD_MIN_SHOT_SIZE ? RECORD_MIN_SHOT_SIZE : recordHeight;
 
-                            if (recordX + recordWidth > rootWindowRect.width) {
-                                recordX = rootWindowRect.width - recordWidth;
+                            if (recordX + recordWidth > rootWindowRect.width()) {
+                                recordX = rootWindowRect.width() - recordWidth;
                             }
 
-                            if (recordY + recordHeight > rootWindowRect.height) {
-                                recordY = rootWindowRect.height - recordHeight;
+                            if (recordY + recordHeight > rootWindowRect.height()) {
+                                recordY = rootWindowRect.height() - recordHeight;
                             }
                         }
 
@@ -2970,8 +3022,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 } else if (isPressButton) {
                     if (recordButtonStatus == RECORD_BUTTON_NORMAL && dragRecordX >= 0 && dragRecordY >= 0) {
                         if (dragAction == ACTION_MOVE) {
-                            recordX = std::max(std::min(dragRecordX + mouseEvent->x() - dragStartX, rootWindowRect.width - recordWidth), 0);
-                            recordY = std::max(std::min(dragRecordY + mouseEvent->y() - dragStartY, rootWindowRect.height - recordHeight), 0);
+                            recordX = std::max(std::min(dragRecordX + mouseEvent->x() - dragStartX, rootWindowRect.width() - recordWidth), 0);
+                            recordY = std::max(std::min(dragRecordY + mouseEvent->y() - dragStartY, rootWindowRect.height() - recordHeight), 0);
                         } else if (dragAction == ACTION_RESIZE_TOP_LEFT) {
                             resizeTop(mouseEvent);
                             resizeLeft(mouseEvent);
@@ -3011,11 +3063,11 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 const qreal ratio = devicePixelRatioF();
                 const QPoint mousePoint = QCursor::pos();
                 for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
-                    if (QRect(it->x, it->y, it->width, it->height).contains(mousePoint)) {
-                        recordX = it->x - static_cast<int>(screenRect.x() * ratio);
-                        recordY = it->y - static_cast<int>(screenRect.y() * ratio);
-                        recordWidth = it->width;
-                        recordHeight = it->height;
+                    if (QRect(it->x(), it->y(), it->width(), it->height()).contains(mousePoint)) {
+                        recordX = it->x() - static_cast<int>(screenRect.x() * ratio);
+                        recordY = it->y() - static_cast<int>(screenRect.y() * ratio);
+                        recordWidth = it->width();
+                        recordHeight = it->height();
                         needRepaint = true;
                         break;
                     }
@@ -3134,7 +3186,7 @@ void MainWindow::checkCpuIsZhaoxin()
 
 void MainWindow::startRecord()
 {
-    Utils::clearBlur(windowManager, this->winId());
+//    Utils::clearBlur(windowManager, this->winId());
     recordButtonStatus = RECORD_BUTTON_RECORDING;
 
     resetCursor();
@@ -3221,13 +3273,13 @@ void MainWindow::resizeTop(QMouseEvent *mouseEvent)
     if (m_functionType == 0) {
         int offsetY = mouseEvent->y() - dragStartY;
         recordY = std::max(std::min(dragRecordY + offsetY, dragRecordY + dragRecordHeight - RECORD_MIN_HEIGHT), 1);
-        recordHeight = std::max(std::min(dragRecordHeight - offsetY, rootWindowRect.height), RECORD_MIN_HEIGHT);
+        recordHeight = std::max(std::min(dragRecordHeight - offsetY, rootWindowRect.height()), RECORD_MIN_HEIGHT);
     }
 
     else if (m_functionType == 1) {
         int offsetY = mouseEvent->y() - dragStartY;
         recordY = std::max(std::min(dragRecordY + offsetY, dragRecordY + dragRecordHeight - RECORD_MIN_SHOT_SIZE), 1);
-        recordHeight = std::max(std::min(dragRecordHeight - offsetY, rootWindowRect.height), RECORD_MIN_SHOT_SIZE);
+        recordHeight = std::max(std::min(dragRecordHeight - offsetY, rootWindowRect.height()), RECORD_MIN_SHOT_SIZE);
     }
 
 }
@@ -3236,10 +3288,10 @@ void MainWindow::resizeBottom(QMouseEvent *mouseEvent)
 {
     if (m_functionType == 0) {
         int offsetY = mouseEvent->y() - dragStartY;
-        recordHeight = std::max(std::min(dragRecordHeight + offsetY, rootWindowRect.height), RECORD_MIN_HEIGHT);
+        recordHeight = std::max(std::min(dragRecordHeight + offsetY, rootWindowRect.height()), RECORD_MIN_HEIGHT);
     } else if (m_functionType == 1) {
         int offsetY = mouseEvent->y() - dragStartY;
-        recordHeight = std::max(std::min(dragRecordHeight + offsetY, rootWindowRect.height), RECORD_MIN_SHOT_SIZE);
+        recordHeight = std::max(std::min(dragRecordHeight + offsetY, rootWindowRect.height()), RECORD_MIN_SHOT_SIZE);
     }
 }
 
@@ -3248,11 +3300,11 @@ void MainWindow::resizeLeft(QMouseEvent *mouseEvent)
     if (m_functionType == 0) {
         int offsetX = mouseEvent->x() - dragStartX;
         recordX = std::max(std::min(dragRecordX + offsetX, dragRecordX + dragRecordWidth - RECORD_MIN_SIZE), 1);
-        recordWidth = std::max(std::min(dragRecordWidth - offsetX, rootWindowRect.width), RECORD_MIN_SIZE);
+        recordWidth = std::max(std::min(dragRecordWidth - offsetX, rootWindowRect.width()), RECORD_MIN_SIZE);
     } else if (m_functionType ==  1) {
         int offsetX = mouseEvent->x() - dragStartX;
         recordX = std::max(std::min(dragRecordX + offsetX, dragRecordX + dragRecordWidth - RECORD_MIN_SHOT_SIZE), 1);
-        recordWidth = std::max(std::min(dragRecordWidth - offsetX, rootWindowRect.width), RECORD_MIN_SHOT_SIZE);
+        recordWidth = std::max(std::min(dragRecordWidth - offsetX, rootWindowRect.width()), RECORD_MIN_SHOT_SIZE);
     }
 
 }
@@ -3261,10 +3313,10 @@ void MainWindow::resizeRight(QMouseEvent *mouseEvent)
 {
     if (m_functionType == 0) {
         int offsetX = mouseEvent->x() - dragStartX;
-        recordWidth = std::max(std::min(dragRecordWidth + offsetX, rootWindowRect.width), RECORD_MIN_SIZE);
+        recordWidth = std::max(std::min(dragRecordWidth + offsetX, rootWindowRect.width()), RECORD_MIN_SIZE);
     } else if (m_functionType == 1) {
         int offsetX = mouseEvent->x() - dragStartX;
-        recordWidth = std::max(std::min(dragRecordWidth + offsetX, rootWindowRect.width), RECORD_MIN_SHOT_SIZE);
+        recordWidth = std::max(std::min(dragRecordWidth + offsetX, rootWindowRect.width()), RECORD_MIN_SHOT_SIZE);
     }
 }
 
@@ -3529,7 +3581,7 @@ void MainWindow::hideRecordButton()
     recordButton->hide();
     recordOptionPanel->hide();
 
-    Utils::clearBlur(windowManager, this->winId());
+//    Utils::clearBlur(windowManager, this->winId());
 }
 
 void MainWindow::hideAllWidget()
@@ -3548,7 +3600,7 @@ void MainWindow::hideAllWidget()
         }
     }
 
-    Utils::clearBlur(windowManager, this->winId());
+//    Utils::clearBlur(windowManager, this->winId());
 }
 void MainWindow::hideCameraWidget()
 {
@@ -3557,39 +3609,39 @@ void MainWindow::hideCameraWidget()
 void MainWindow::adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight)
 {
 //    if (recordHeight < layoutHeight) {
-//        if (recordY + layoutHeight > rootWindowRect.height) {
+//        if (recordY + layoutHeight > rootWindowRect.height()) {
 //            layout->setContentsMargins(
 //                recordX,
 //                recordY - layoutHeight - Constant::RECTANGLE_PADDING,
-//                rootWindowRect.width - recordX - recordWidth,
-//                rootWindowRect.height - recordY + Constant::RECTANGLE_PADDING);
+//                rootWindowRect.width() - recordX - recordWidth,
+//                rootWindowRect.height() - recordY + Constant::RECTANGLE_PADDING);
 //        } else {
 //            layout->setContentsMargins(
 //                recordX,
 //                recordY + recordHeight + Constant::RECTANGLE_PADDING,
-//                rootWindowRect.width - recordX - recordWidth,
-//                rootWindowRect.height - (recordY + recordHeight + layoutHeight) + Constant::RECTANGLE_PADDING);
+//                rootWindowRect.width() - recordX - recordWidth,
+//                rootWindowRect.height() - (recordY + recordHeight + layoutHeight) + Constant::RECTANGLE_PADDING);
 //        }
 //    } else if (recordWidth < layoutWidth) {
-//        if (recordX + layoutWidth > rootWindowRect.width) {
+//        if (recordX + layoutWidth > rootWindowRect.width()) {
 //            layout->setContentsMargins(
 //                recordX - layoutWidth - Constant::RECTANGLE_PADDING,
 //                recordY,
-//                rootWindowRect.width - recordX + Constant::RECTANGLE_PADDING,
-//                rootWindowRect.height - recordY - recordHeight);
+//                rootWindowRect.width() - recordX + Constant::RECTANGLE_PADDING,
+//                rootWindowRect.height() - recordY - recordHeight);
 //        } else {
 //            layout->setContentsMargins(
 //                recordX + recordWidth + Constant::RECTANGLE_PADDING,
 //                recordY,
-//                rootWindowRect.width - (recordX + recordWidth + layoutWidth + Constant::RECTANGLE_PADDING),
-//                rootWindowRect.height - recordY - recordHeight);
+//                rootWindowRect.width() - (recordX + recordWidth + layoutWidth + Constant::RECTANGLE_PADDING),
+//                rootWindowRect.height() - recordY - recordHeight);
 //        }
 //    } else {
     layout->setContentsMargins(
         recordX,
         recordY,
-        rootWindowRect.width - recordX - recordWidth,
-        rootWindowRect.height - recordY - recordHeight);
+        rootWindowRect.width() - recordX - recordWidth,
+        rootWindowRect.height() - recordY - recordHeight);
 //}
 }
 

@@ -31,11 +31,11 @@
 #include <QtX11Extras/QX11Info>
 #include <X11/extensions/shape.h>
 #include "utils.h"
-#include <dwindowmanager.h>
+//#include <dwindowmanager.h>
 #include "constant.h"
 #include <QStandardPaths>
 
-DWM_USE_NAMESPACE
+//DWM_USE_NAMESPACE
 
 static const QString WarningDialogService = "com.deepin.dde.WarningDialog";
 static const QString WarningDialogPath = "/com/deepin/dde/WarningDialog";
@@ -82,31 +82,31 @@ void Utils::warnNoComposite()
     iface.call("RaiseWindow");
 }
 
-void Utils::blurRect(DWindowManager *windowManager, int widgetId, QRectF rect)
-{
-    QVector<uint32_t> data;
+//void Utils::blurRect(DWindowManager *windowManager, int widgetId, QRectF rect)
+//{
+//    QVector<uint32_t> data;
 
-    qreal devicePixelRatio = qApp->devicePixelRatio();
-    data << rect.x() * devicePixelRatio << rect.y() * devicePixelRatio << rect.width() * devicePixelRatio << rect.height() * devicePixelRatio << Constant::RECTANGLE_RADIUS << Constant::RECTANGLE_RADIUS;
-    windowManager->setWindowBlur(widgetId, data);
-}
+//    qreal devicePixelRatio = qApp->devicePixelRatio();
+//    data << rect.x() * devicePixelRatio << rect.y() * devicePixelRatio << rect.width() * devicePixelRatio << rect.height() * devicePixelRatio << Constant::RECTANGLE_RADIUS << Constant::RECTANGLE_RADIUS;
+//    windowManager->setWindowBlur(widgetId, data);
+//}
 
-void Utils::blurRects(DWindowManager *windowManager, int widgetId, QList<QRectF> rects)
-{
-    QVector<uint32_t> data;
-    qreal devicePixelRatio = qApp->devicePixelRatio();
-    foreach (auto rect, rects) {
-        data << rect.x() * devicePixelRatio << rect.y() * devicePixelRatio << rect.width() * devicePixelRatio << rect.height() * devicePixelRatio << Constant::RECTANGLE_RADIUS << Constant::RECTANGLE_RADIUS;
-    }
-    windowManager->setWindowBlur(widgetId, data);
-}
+//void Utils::blurRects(DWindowManager *windowManager, int widgetId, QList<QRectF> rects)
+//{
+//    QVector<uint32_t> data;
+//    qreal devicePixelRatio = qApp->devicePixelRatio();
+//    foreach (auto rect, rects) {
+//        data << rect.x() * devicePixelRatio << rect.y() * devicePixelRatio << rect.width() * devicePixelRatio << rect.height() * devicePixelRatio << Constant::RECTANGLE_RADIUS << Constant::RECTANGLE_RADIUS;
+//    }
+//    windowManager->setWindowBlur(widgetId, data);
+//}
 
-void Utils::clearBlur(DWindowManager *windowManager, int widgetId)
-{
-    QVector<uint32_t> data;
-    data << 0 << 0 << 0 << 0 << 0 << 0;
-    windowManager->setWindowBlur(widgetId, data);
-}
+//void Utils::clearBlur(DWindowManager *windowManager, int widgetId)
+//{
+//    QVector<uint32_t> data;
+//    data << 0 << 0 << 0 << 0 << 0 << 0;
+//    windowManager->setWindowBlur(widgetId, data);
+//}
 
 void Utils::drawTooltipBackground(QPainter &painter, QRect rect, qreal opacity)
 {

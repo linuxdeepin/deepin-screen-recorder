@@ -27,9 +27,9 @@
 #include "dbusinterface/dbusnotify.h"
 #include "utils/configsettings.h"
 
-#include <dscreenwindowsutil.h>
+//#include <dscreenwindowsutil.h>
 
-DWM_USE_NAMESPACE
+//DWM_USE_NAMESPACE
 
 Screenshot::Screenshot(QObject *parent)
     : QObject(parent)

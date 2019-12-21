@@ -21,12 +21,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <dwindowmanager.h>
+//#include <dwindowmanager.h>
 #include <QObject>
 #include <QPainter>
 #include <QString>
 
-DWM_USE_NAMESPACE
+//DWM_USE_NAMESPACE
 
 class Utils : public QObject
 {
@@ -34,9 +34,9 @@ class Utils : public QObject
 public:
     static QSize getRenderSize(int fontSize, QString string);
     static QString getQrcPath(QString imageName);
-    static void blurRect(DWindowManager *windowManager, int widgetId, QRectF rect);
-    static void blurRects(DWindowManager *windowManager, int widgetId, QList<QRectF> rects);
-    static void clearBlur(DWindowManager *windowManager, int widgetId);
+//    static void blurRect(DWindowManager *windowManager, int widgetId, QRectF rect);
+//    static void blurRects(DWindowManager *windowManager, int widgetId, QList<QRectF> rects);
+//    static void clearBlur(DWindowManager *windowManager, int widgetId);
     static void drawTooltipBackground(QPainter &painter, QRect rect, qreal opacity = 0.4);
     static void drawTooltipText(QPainter &painter, QString text, QString textColor, int textSize, QRectF rect);
     static void passInputEvent(int wid);

@@ -25,7 +25,7 @@
 #define MAINWINDOW_H
 
 #include <DWindowManagerHelper>
-#include <dscreenwindowsutil.h>
+//#include <dscreenwindowsutil.h>
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QObject>
@@ -33,7 +33,7 @@
 #include <DWidget>
 #include <QSystemTrayIcon>
 #include <QVBoxLayout>
-#include <dwindowmanager.h>
+//#include <dwindowmanager.h>
 #include <QTimer>
 
 #include "record_process.h"
@@ -41,7 +41,7 @@
 #include "record_button.h"
 #include "record_option_panel.h"
 #include "countdown_tooltip.h"
-#include "start_tooltip.h"
+//#include "start_tooltip.h"
 #include "button_feedback.h"
 #include "show_buttons.h"
 #include "widgets/shapeswidget.h"
@@ -67,7 +67,7 @@
 
 DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
-DWM_USE_NAMESPACE
+//DWM_USE_NAMESPACE
 
 class MainWindow : public DWidget
 {
@@ -213,7 +213,8 @@ protected:
     void installTipHint(QWidget *w, const QString &hintstr);
     void installHint(QWidget *w, QWidget *hint);
 private:
-    QList<WindowRect> windowRects;
+//    QList<WindowRect> windowRects;
+    QList<QRect> windowRects;
     QList<QString> windowNames;
     ShowButtons *m_showButtons;
 
@@ -225,7 +226,8 @@ private:
     voiceVolumeWatcher *m_pVoiceVolumeWatcher;
     CameraWatcher *m_pCameraWatcher;
 //    VoiceRecordProcess voiceRecordProcess;
-    WindowRect rootWindowRect;
+//    WindowRect rootWindowRect;
+    QRect rootWindowRect;
 
     SaveAction m_saveIndex;
     //m_saveFileName is the storage path of the screenshot image.
@@ -275,14 +277,14 @@ private:
 
     QSystemTrayIcon *trayIcon;
 
-    DWindowManager *windowManager;
+//    DWindowManager *windowManager;
 
     QVBoxLayout *recordButtonLayout;
     QVBoxLayout *countdownLayout;
     RecordButton *recordButton;
     RecordOptionPanel *recordOptionPanel;
 
-    StartTooltip *startTooltip;
+//    StartTooltip *startTooltip;
     CountdownTooltip *countdownTooltip;
 
     ButtonFeedback *buttonFeedback;
@@ -292,7 +294,7 @@ private:
     ShapesWidget *m_shapesWidget;
     TopTips *m_sizeTips;
     ToolBar *m_toolBar;
-    DScreenWindowsUtil *m_swUtil;
+//    DScreenWindowsUtil *m_swUtil;
     QRect m_backgroundRect;
     //添加截屏和录屏的按钮
     DPushButton *m_recordButton;
