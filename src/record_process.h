@@ -58,6 +58,7 @@ public:
     void setFrameRate(int framerate);
     void setRecordAudioInputType(int inputType);
     void startRecord();
+    void setIsZhaoXinPlatform(bool status);
     void stopRecord();
     void recordGIF();
     void recordVideo();
@@ -90,6 +91,7 @@ private:
     int m_framerate;
 
     QString lastAudioSink;
+    bool m_isZhaoxin = false;
 };
 
 #endif //RECORDPROCESS_H

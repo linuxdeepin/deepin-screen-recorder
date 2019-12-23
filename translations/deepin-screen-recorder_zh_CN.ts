@@ -349,14 +349,6 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
-    <message>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>点击或拖拽来选择录制区域</translation>
-    </message>
-</context>
-<context>
     <name>SubToolBar</name>
     <message>
         <source>Save to desktop</source>

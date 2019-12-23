@@ -3200,6 +3200,7 @@ void MainWindow::startRecord()
     flashTrayIconTimer->start(800);
 
     recordProcess.setRecordAudioInputType(getRecordInputType(m_selectedMic, m_selectedSystemAudio));
+    recordProcess.setIsZhaoXinPlatform(m_isZhaoxin);
     recordProcess.startRecord();
 //    voiceRecordProcess.startRecord();
 }
@@ -3451,7 +3452,7 @@ void MainWindow::setDragCursor()
 
 void MainWindow::resetCursor()
 {
-    QApplication::overrideCursor();
+    QApplication::setOverrideCursor(Qt::ArrowCursor);
 }
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)
@@ -3515,24 +3516,24 @@ void MainWindow::startCountdown()
 
     recordProcess.setFrameRate(t_frameRate);
 
-//    if (t_saveGif) {
-//        qDebug() << "record format is gif";
-//        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
-//    } else if (t_saveGif == false) {
-//        qDebug() << "record format is mp4";
-//        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
-//    }
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-        if (t_saveGif) {
-            qDebug() << "record format is gif";
-            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
-        } else if (t_saveGif == false) {
-            qDebug() << "record format is mp4";
-            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
-        }
-    } else {
+    if (t_saveGif) {
+        qDebug() << "record format is gif";
         recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
+    } else if (t_saveGif == false) {
+        qDebug() << "record format is mp4";
+        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
     }
+//    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
+//        if (t_saveGif) {
+//            qDebug() << "record format is gif";
+//            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
+//        } else if (t_saveGif == false) {
+//            qDebug() << "record format is mp4";
+//            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
+//        }
+//    } else {
+//        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
+//    }
 
     resetCursor();
 

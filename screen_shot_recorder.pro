@@ -116,7 +116,7 @@ QT += x11extras
 QT += dbus
 QT += multimedia
 QT += multimediawidgets
-LIBS += -lX11 -lXext -lXtst -ldtkwm
+LIBS += -lX11 -lXext -lXtst
 LIBS += -L"libprocps" -lprocps
 
 QMAKE_CXXFLAGS += -g
