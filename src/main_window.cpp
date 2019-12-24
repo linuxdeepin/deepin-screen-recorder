@@ -1939,7 +1939,7 @@ void MainWindow::saveScreenShot()
     hideAllWidget();
     update();
 
-    DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
+
 //    if (m_hotZoneInterface->isValid())
 //        m_hotZoneInterface->asyncCall("EnableZoneDetected",  true);
 //    m_needSaveScreenshot = true;
@@ -2171,6 +2171,8 @@ bool MainWindow::saveAction(const QPixmap &pix)
     default:
         break;
     }
+
+    DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
 
 //    int toolBarSaveQuality = std::min(ConfigSettings::instance()->value("save",
 //                                                                        "save_quality").toInt(), 100);
