@@ -953,6 +953,7 @@ void MainWindow::delayScreenshot(double num)
 
 void MainWindow::fullScreenshot()
 {
+    DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
     this->initAttributes();
     this->initLaunchMode("screenShot");
     this->showFullScreen();
@@ -1047,6 +1048,7 @@ void MainWindow::testScreenshot()
 
 void MainWindow::topWindow()
 {
+    DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
     this->initAttributes();
     this->initLaunchMode("screenShot");
     this->showFullScreen();
@@ -2172,7 +2174,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         break;
     }
 
-    DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
+//    DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
 
 //    int toolBarSaveQuality = std::min(ConfigSettings::instance()->value("save",
 //                                                                        "save_quality").toInt(), 100);
