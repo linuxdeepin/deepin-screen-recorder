@@ -2643,6 +2643,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     if (m_shotButton->isVisible()) {
                         updateShotButtonPos();
                     }
+
+                    if (m_cameraWidget->isVisible()) {
+                        updateCameraWidgetPos();
+                    }
                 }
             }
 
@@ -2680,17 +2684,17 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             needRepaint = true;
                         }
                     } else if (keyEvent->key() == Qt::Key_Up) {
-                        if (recordHeight > RECORD_MIN_SIZE) {
+                        if (recordHeight > RECORD_MIN_HEIGHT) {
                             recordY = std::max(0, recordY + 1);
 
                             recordHeight = std::max(std::min(recordHeight - 1,
-                                                             m_backgroundRect.height()), RECORD_MIN_SIZE);
+                                                             m_backgroundRect.height()), RECORD_MIN_HEIGHT);
                             needRepaint = true;
                         }
                     } else if (keyEvent->key() == Qt::Key_Down) {
-                        if (recordHeight > RECORD_MIN_SIZE) {
+                        if (recordHeight > RECORD_MIN_HEIGHT) {
                             recordHeight = std::max(std::min(recordHeight - 1,
-                                                             m_backgroundRect.height()), RECORD_MIN_SIZE);
+                                                             m_backgroundRect.height()), RECORD_MIN_HEIGHT);
                             needRepaint = true;
                         }
                     }
@@ -2755,6 +2759,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     updateShotButtonPos();
                 }
 
+                if (m_cameraWidget->isVisible()) {
+                    updateCameraWidgetPos();
+                }
+
 
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL && needRepaint) {
                     hideRecordButton();
@@ -2803,6 +2811,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                     updateRecordButtonPos();
                     updateShotButtonPos();
+                    updateCameraWidgetPos();
                 }
             }
         }
