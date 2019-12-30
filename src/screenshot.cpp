@@ -70,11 +70,19 @@ void Screenshot::delayScreenshot(double num)
                            summary, actions, hints, 0);
     }
 
+
+    QTimer *timerNoti = new QTimer;
+    timerNoti->setSingleShot(true);
+    timerNoti->start(int(500 * num));
+    connect(timerNoti, &QTimer::timeout, this, [ = ] {
+        notifyDBus->CloseNotification(0);
+    });
+
     QTimer *timer = new QTimer;
     timer->setSingleShot(true);
     timer->start(int(1000 * num));
     connect(timer, &QTimer::timeout, this, [ = ] {
-        notifyDBus->CloseNotification(0);
+
         m_window->initAttributes();
         m_window->initLaunchMode("screenShot");
         m_window->showFullScreen();
