@@ -264,121 +264,121 @@ void RecordProcess::recordVideo()
         }
     }
 
-    else {
-        if (settings->getOption("lossless_recording").toBool()) {
-            //    if (settings->getOption("lossless_recording").toBool()) {
-            //        int framerate = 30;
-            //        if (!settings->getOption("mkv_framerate").isNull()) {
-            //            framerate = settings->getOption("mkv_framerate").toInt();
-            //        } else {
-            //            qDebug() << "Not found mkv_framerate option in config file, mkv use framerate 30";
-            //        }
+//    else {
+//        if (settings->getOption("lossless_recording").toBool()) {
+//            //    if (settings->getOption("lossless_recording").toBool()) {
+//            //        int framerate = 30;
+//            //        if (!settings->getOption("mkv_framerate").isNull()) {
+//            //            framerate = settings->getOption("mkv_framerate").toInt();
+//            //        } else {
+//            //            qDebug() << "Not found mkv_framerate option in config file, mkv use framerate 30";
+//            //        }
 
-            qDebug() << "mkv framerate " << m_framerate;
+//            qDebug() << "mkv framerate " << m_framerate;
 
-            arguments << QString("-vaapi_device");
-            arguments << QString("/dev/dri/renderD128");
-            arguments << QString("-video_size");
-            arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
-            arguments << QString("-framerate");
-            arguments << QString("%1").arg(m_framerate);
-            arguments << QString("-f");
-            arguments << QString("x11grab");
-            arguments << QString("-i");
-            arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
-            arguments << QString("-c:v");
-            arguments << QString("libx264");
-            arguments << QString("-qp");
-            arguments << QString("0");
-            arguments << QString("-preset");
-            arguments << QString("ultrafast");
-            arguments << savePath;
-        } else {
-            //        int framerate = 25;
+//            arguments << QString("-vaapi_device");
+//            arguments << QString("/dev/dri/renderD128");
+//            arguments << QString("-video_size");
+//            arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
+//            arguments << QString("-framerate");
+//            arguments << QString("%1").arg(m_framerate);
+//            arguments << QString("-f");
+//            arguments << QString("x11grab");
+//            arguments << QString("-i");
+//            arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
+//            arguments << QString("-c:v");
+//            arguments << QString("libx264");
+//            arguments << QString("-qp");
+//            arguments << QString("0");
+//            arguments << QString("-preset");
+//            arguments << QString("ultrafast");
+//            arguments << savePath;
+//        } else {
+//            //        int framerate = 25;
 
-            //        if (!settings->getOption("mp4_framerate").isNull()) {
-            //            framerate = settings->getOption("mp4_framerate").toInt();
-            //        } else {
-            //            qDebug() << "Not found mp4_framerate option in config file, mp4 use framerate 25";
-            //        }
+//            //        if (!settings->getOption("mp4_framerate").isNull()) {
+//            //            framerate = settings->getOption("mp4_framerate").toInt();
+//            //        } else {
+//            //            qDebug() << "Not found mp4_framerate option in config file, mp4 use framerate 25";
+//            //        }
 
-            qDebug() << "mp4 framerate" << m_framerate;
+//            qDebug() << "mp4 framerate" << m_framerate;
 
-            arguments << QString("-vaapi_device");
-            arguments << QString("/dev/dri/renderD128");
-            arguments << QString("-video_size");
-            arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
-            arguments << QString("-framerate");
-            arguments << QString("%1").arg(m_framerate);
-            arguments << QString("-f");
-            arguments << QString("x11grab");
-            arguments << QString("-i");
-            arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
-            if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
-                AudioUtils *audioUtils = new AudioUtils(this);
-                lastAudioSink = audioUtils->currentAudioSink();
-                audioUtils->setupSystemAudioOutput();
+//            arguments << QString("-vaapi_device");
+//            arguments << QString("/dev/dri/renderD128");
+//            arguments << QString("-video_size");
+//            arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
+//            arguments << QString("-framerate");
+//            arguments << QString("%1").arg(m_framerate);
+//            arguments << QString("-f");
+//            arguments << QString("x11grab");
+//            arguments << QString("-i");
+//            arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
+//            if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
+//                AudioUtils *audioUtils = new AudioUtils(this);
+//                lastAudioSink = audioUtils->currentAudioSink();
+//                audioUtils->setupSystemAudioOutput();
 
-                arguments << QString("-thread_queue_size");
-                arguments << QString("1024");
-                arguments << QString("-f");
-                arguments << QString("alsa");
-                arguments << QString("-ac");
-                arguments << QString("2");
-                arguments << QString("-i");
-                arguments << QString("hw:Loopback,1,0");
+//                arguments << QString("-thread_queue_size");
+//                arguments << QString("1024");
+//                arguments << QString("-f");
+//                arguments << QString("alsa");
+//                arguments << QString("-ac");
+//                arguments << QString("2");
+//                arguments << QString("-i");
+//                arguments << QString("hw:Loopback,1,0");
 
-                arguments << QString("-thread_queue_size");
-                arguments << QString("1024");
-                arguments << QString("-f");
-                arguments << QString("pulse");
-                arguments << QString("-ac");
-                arguments << QString("2");
-                arguments << QString("-i");
-                arguments << QString("default");
-                arguments << QString("-filter_complex");
-                arguments << QString("amix=inputs=2:duration=first:dropout_transition=0");
-            } else if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC) {
-                AudioUtils *audioUtils = new AudioUtils(this);
-                lastAudioSink = audioUtils->currentAudioSink();
+//                arguments << QString("-thread_queue_size");
+//                arguments << QString("1024");
+//                arguments << QString("-f");
+//                arguments << QString("pulse");
+//                arguments << QString("-ac");
+//                arguments << QString("2");
+//                arguments << QString("-i");
+//                arguments << QString("default");
+//                arguments << QString("-filter_complex");
+//                arguments << QString("amix=inputs=2:duration=first:dropout_transition=0");
+//            } else if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC) {
+//                AudioUtils *audioUtils = new AudioUtils(this);
+//                lastAudioSink = audioUtils->currentAudioSink();
 
-                arguments << QString("-thread_queue_size");
-                arguments << QString("1024");
-                arguments << QString("-f");
-                arguments << QString("pulse");
-                arguments << QString("-ac");
-                arguments << QString("2");
-                arguments << QString("-i");
-                arguments << QString("default");
-            } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
-                AudioUtils *audioUtils = new AudioUtils(this);
-                lastAudioSink = audioUtils->currentAudioSink();
-                audioUtils->setupSystemAudioOutput();
+//                arguments << QString("-thread_queue_size");
+//                arguments << QString("1024");
+//                arguments << QString("-f");
+//                arguments << QString("pulse");
+//                arguments << QString("-ac");
+//                arguments << QString("2");
+//                arguments << QString("-i");
+//                arguments << QString("default");
+//            } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
+//                AudioUtils *audioUtils = new AudioUtils(this);
+//                lastAudioSink = audioUtils->currentAudioSink();
+//                audioUtils->setupSystemAudioOutput();
 
-                arguments << QString("-thread_queue_size");
-                arguments << QString("1024");
-                arguments << QString("-f");
-                arguments << QString("alsa");
-                arguments << QString("-ac");
-                arguments << QString("2");
-                arguments << QString("-i");
-                arguments << QString("hw:Loopback,1,0");
-            }
+//                arguments << QString("-thread_queue_size");
+//                arguments << QString("1024");
+//                arguments << QString("-f");
+//                arguments << QString("alsa");
+//                arguments << QString("-ac");
+//                arguments << QString("2");
+//                arguments << QString("-i");
+//                arguments << QString("hw:Loopback,1,0");
+//            }
 
-            // Most mobile mplayer can't decode yuv444p (ffempg default format) video, yuv420p looks good.
-            arguments << QString("-pix_fmt");
-            arguments << QString("yuv420p");
+//            // Most mobile mplayer can't decode yuv444p (ffempg default format) video, yuv420p looks good.
+//            arguments << QString("-pix_fmt");
+//            arguments << QString("yuv420p");
 
-            // append crf parameter here
-            arguments << QString("-crf");
-            arguments << QString("25");
+//            // append crf parameter here
+//            arguments << QString("-crf");
+//            arguments << QString("25");
 
-            arguments << QString("-vf");
-            arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
+//            arguments << QString("-vf");
+//            arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
 
-            arguments << savePath;
-        }
-    }
+//            arguments << savePath;
+//        }
+//    }
 
     qDebug() << "arguments:" << arguments;
 
@@ -409,8 +409,8 @@ void RecordProcess::initProcess()
             fileExtension = "gif";
         }
     } else {
-//        if (settings->getOption("lossless_recording").toBool() || !QSysInfo::currentCpuArchitecture().startsWith("x86")) {
-        if (settings->getOption("lossless_recording").toBool()) {
+        if (settings->getOption("lossless_recording").toBool() || !QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+//        if (settings->getOption("lossless_recording").toBool()) {
             fileExtension = "mkv";
         } else {
             fileExtension = "mp4";
@@ -476,9 +476,10 @@ void RecordProcess::stopRecord()
     // Wait thread.
     if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
         wait();
-    } else {
-        wait(2000);
     }
+//    else {
+//        wait(2000);
+//    }
 
 
     // Move file to save directory.

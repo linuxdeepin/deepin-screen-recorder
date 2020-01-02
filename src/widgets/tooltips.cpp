@@ -67,7 +67,7 @@ public:
 ToolTips::ToolTips(const QString &text, QWidget *parent)
     : QFrame(parent), d_ptr(new ToolTipsPrivate(this))
 {
-    DThemeManager::instance()->registerWidget(this);
+//    DThemeManager::instance()->registerWidget(this);
     Q_D(ToolTips);
 
     setAttribute(Qt::WA_DeleteOnClose);
