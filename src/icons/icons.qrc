@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/icons/deepin/builtin">
+        <file>texts/webcam_normal_32px.svg</file>
+        <file>texts/audio frequency_normal_32px.svg</file>
+        <file>texts/microphone_normal_32px.svg</file>
+        <file>texts/mute_normal_32px.svg</file>
+    </qresource>
+</RCC>

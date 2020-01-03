@@ -11,7 +11,8 @@ CONFIG += link_pkgconfig
 CONFIG += c++11
 PKGCONFIG += xcb xcb-util
 RESOURCES = deepin-screen-recorder.qrc \
-    src/widgets/resources.qrc
+    src/widgets/resources.qrc \
+    src/icons/icons.qrc
 
 # Input
 HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src/record_button.h src/record_option_panel.h src/countdown_tooltip.h src/constant.h src/event_monitor.h src/button_feedback.h src/process_tree.h \

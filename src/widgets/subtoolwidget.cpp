@@ -134,13 +134,14 @@ void SubToolWidget::initRecordLabel()
     audioButton->setIconSize(TOOL_ICON_SIZE);
 //    audioButton->setToolTip(tr("Sound On"));
     installTipHint(audioButton, tr("Sound On"));
-    if (m_themeType == 1) {
-        audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        audioButton->setIcon(QIcon(":/image/newUI/dark/normal/microphone_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        audioButton->setIcon(QIcon(":/image/newUI/dark/normal/microphone_normal.svg"));
+//    }
+    audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
 
     rectBtnGroup->addButton(audioButton);
     audioButton->setFixedSize(MEDIUM_TOOL_BUTTON_SIZE);
@@ -181,37 +182,40 @@ void SubToolWidget::initRecordLabel()
 //            audioButton->setToolTip(tr("Sound On"));
             installTipHint(audioButton, tr("Sound On"));
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
-            if (m_themeType == 1) {
-                audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/volume_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/volume_normal.svg"));
+//            }
+            audioButton->setIcon(QIcon::fromTheme("volume_normal"));
         }
 
         if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
-            if (m_themeType == 1) {
-                audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/microphone_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/microphone_normal.svg"));
+//            }
+            audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
         }
 
         if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/audio frequency_normal.svg"));
-            if (m_themeType == 1) {
-                audioButton->setIcon(QIcon(":/image/newUI/normal/audio frequency_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                audioButton->setIcon(QIcon(":/image/newUI/normal/audio frequency_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/audio frequency_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/audio frequency_normal.svg"));
+//            }
+            audioButton->setIcon(QIcon::fromTheme("audio frequency_normal"));
         }
 
         if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
@@ -219,13 +223,14 @@ void SubToolWidget::initRecordLabel()
 //            audioButton->setToolTip(tr("Sound Off"));
             installTipHint(audioButton, tr("Sound Off"));
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
-            if (m_themeType == 1) {
-                audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/mute_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/mute_normal.svg"));
+//            }
+            audioButton->setIcon(QIcon::fromTheme("mute_normal"));
         }
     });
 
@@ -235,37 +240,40 @@ void SubToolWidget::initRecordLabel()
 //            audioButton->setToolTip(tr("Sound On"));
             installTipHint(audioButton, tr("Sound On"));
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
-            if (m_themeType == 1) {
-                audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/volume_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/volume_normal.svg"));
+//            }
+            audioButton->setIcon(QIcon::fromTheme("volume_normal"));
         }
 
         if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
-            if (m_themeType == 1) {
-                audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/microphone_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/microphone_normal.svg"));
+//            }
+            audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
         }
 
         if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
         {
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/audio frequency_normal.svg"));
-            if (m_themeType == 1) {
-                audioButton->setIcon(QIcon(":/image/newUI/normal/audio frequency_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                audioButton->setIcon(QIcon(":/image/newUI/normal/audio frequency_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/audio frequency_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/audio frequency_normal.svg"));
+//            }
+            audioButton->setIcon(QIcon::fromTheme("audio frequency_normal"));
         }
 
         if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
@@ -273,13 +281,14 @@ void SubToolWidget::initRecordLabel()
 //            audioButton->setToolTip(tr("Sound Off"));
             installTipHint(audioButton, tr("Sound Off"));
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
-            if (m_themeType == 1) {
-                audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/mute_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/mute_normal.svg"));
+//            }
+            audioButton->setIcon(QIcon::fromTheme("mute_normal"));
         }
     });
     m_haveMicroPhone = true;
@@ -426,25 +435,26 @@ void SubToolWidget::initRecordLabel()
 //    m_cameraButton->setToolTip(tr("Webcam On"));
     installTipHint(m_cameraButton, tr("Webcam On"));
 
-    if (m_themeType == 1) {
-        m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        m_cameraButton->setIcon(QIcon(":/image/newUI/dark/normal/webcam_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        m_cameraButton->setIcon(QIcon(":/image/newUI/dark/normal/webcam_normal.svg"));
+//    }
+    m_cameraButton->setIcon(QIcon::fromTheme("webcam_normal"));
 
-    connect(m_cameraButton, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            m_cameraButton->setIcon(QIcon(":/image/newUI/press/webcam_press.svg"));
-        }
+//    connect(m_cameraButton, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            m_cameraButton->setIcon(QIcon(":/image/newUI/press/webcam_press.svg"));
+//        }
 
-        else if (m_themeType == 2)
-        {
-            m_cameraButton->setIcon(QIcon(":/image/newUI/dark/press/webcam_press.svg"));
-        }
-    });
+//        else if (m_themeType == 2)
+//        {
+//            m_cameraButton->setIcon(QIcon(":/image/newUI/dark/press/webcam_press.svg"));
+//        }
+//    });
 //    m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
     rectBtnGroup->addButton(m_cameraButton);
     m_cameraButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
@@ -456,13 +466,13 @@ void SubToolWidget::initRecordLabel()
 //            m_cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
 //            m_cameraButton->setToolTip(tr("Webcam Off"));
             installTipHint(m_cameraButton, tr("Webcam Off"));
-            if (m_themeType == 1) {
-                m_cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_cameraButton->setIcon(QIcon(":/image/newUI/dark/checked/webcam_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_cameraButton->setIcon(QIcon(":/image/newUI/dark/checked/webcam_checked.svg"));
+//            }
         }
 
         if (!m_cameraButton->isChecked())
@@ -470,13 +480,13 @@ void SubToolWidget::initRecordLabel()
 //            m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
 //            m_cameraButton->setToolTip(tr("Webcam On"));
             installTipHint(m_cameraButton, tr("Webcam On"));
-            if (m_themeType == 1) {
-                m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_cameraButton->setIcon(QIcon(":/image/newUI/dark/normal/webcam_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_cameraButton->setIcon(QIcon(":/image/newUI/dark/normal/webcam_normal.svg"));
+//            }
         }
         emit cameraActionChecked(m_cameraButton->isChecked());
     });
@@ -1753,13 +1763,13 @@ void SubToolWidget::setCameraDeviceEnable(bool status)
             if (!m_cameraButton->isChecked()) {
 //                m_cameraButton->setToolTip(tr("Webcam On"));
                 installTipHint(m_cameraButton, tr("Webcam On"));
-                if (m_themeType == 1) {
-                    m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
-                }
+//                if (m_themeType == 1) {
+//                    m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
+//                }
 
-                else if (m_themeType == 2) {
-                    m_cameraButton->setIcon(QIcon(":/image/newUI/dark/normal/webcam_normal.svg"));
-                }
+//                else if (m_themeType == 2) {
+//                    m_cameraButton->setIcon(QIcon(":/image/newUI/dark/normal/webcam_normal.svg"));
+//                }
             }
         }
 
@@ -1774,26 +1784,26 @@ void SubToolWidget::setCameraDeviceEnable(bool status)
             if (m_cameraButton->isChecked()) {
 //                m_cameraButton->setToolTip(tr("Webcam Off"));
                 installTipHint(m_cameraButton, tr("Webcam Off"));
-                if (m_themeType == 1) {
-                    m_cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
-                }
+//                if (m_themeType == 1) {
+//                    m_cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
+//                }
 
-                else if (m_themeType == 2) {
-                    m_cameraButton->setIcon(QIcon(":/image/newUI/dark/checked/webcam_checked.svg"));
-                }
+//                else if (m_themeType == 2) {
+//                    m_cameraButton->setIcon(QIcon(":/image/newUI/dark/checked/webcam_checked.svg"));
+//                }
             }
 
             if (!m_cameraButton->isChecked()) {
                 //            m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
 //                m_cameraButton->setToolTip(tr("Webcam On"));
                 installTipHint(m_cameraButton, tr("Webcam On"));
-                if (m_themeType == 1) {
-                    m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
-                }
+//                if (m_themeType == 1) {
+//                    m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
+//                }
 
-                else if (m_themeType == 2) {
-                    m_cameraButton->setIcon(QIcon(":/image/newUI/dark/normal/webcam_normal.svg"));
-                }
+//                else if (m_themeType == 2) {
+//                    m_cameraButton->setIcon(QIcon(":/image/newUI/dark/normal/webcam_normal.svg"));
+//                }
             }
             m_cameraButton->setDisabled(true);
 
