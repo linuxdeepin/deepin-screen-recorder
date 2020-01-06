@@ -137,23 +137,30 @@ void MainWindow::initAttributes()
     int t_indexScreen = 0;
     m_screenHeight = QApplication::desktop()->screen()->height();
 
+    QRect t_screenRect;
+
     //多屏情况下累加宽度
     if (t_screenCount == 1) {
         m_screenWidth = QApplication::desktop()->screen()->width();
+
+        t_screenRect.setX(0);
+        t_screenRect.setY(0);
+        t_screenRect.setWidth(m_screenWidth);
+        t_screenRect.setHeight(m_screenHeight);
     }
 
     else if (t_screenCount > 1) {
-        for (t_indexScreen = 0; t_indexScreen < t_screenCount;  t_indexScreen++) {
-            m_screenWidth += QApplication::desktop()->screen(t_indexScreen)->width();
-        }
+//        for (t_indexScreen = 0; t_indexScreen < t_screenCount;  t_indexScreen++) {
+//            m_screenWidth += QApplication::desktop()->screen(t_indexScreen)->width();
+//        }
+        QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
+        t_screenRect = t_primaryScreen->virtualGeometry();
+        qDebug() << "screen size" << t_primaryScreen->virtualGeometry();
     }
-    QRect t_screenRect;
-    t_screenRect.setX(0);
-    t_screenRect.setY(0);
-    t_screenRect.setWidth(m_screenWidth);
-    t_screenRect.setHeight(m_screenHeight);
 
-    qDebug() << "screen width:" << m_screenWidth;
+
+
+//    qDebug() << "screen width:" << m_screenWidth;
 
 
     // Add Qt::WindowDoesNotAcceptFocus make window not accept focus forcely, avoid conflict with dde hot-corner.

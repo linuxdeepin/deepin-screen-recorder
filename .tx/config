@@ -5,7 +5,7 @@ mode = developer
 
 [deepin-screen-recorder.deepin-screen-recorder]
 file_filter = translations/deepin-screen-recorder_<lang>.ts
-source_file = translations/deepin-screen-recorder.ts
+source_file = translations/deepin-screen-recorder_en_US.ts
 source_lang = en
 type = QT
 
