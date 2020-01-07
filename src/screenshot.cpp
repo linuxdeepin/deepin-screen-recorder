@@ -67,7 +67,7 @@ void Screenshot::delayScreenshot(double num)
     DBusNotify *notifyDBus = new DBusNotify(this);
     if (num >= 2) {
         notifyDBus->Notify("Deepin Screenshot", 0,  "deepin-screen-recorder", "",
-                           summary, actions, hints, 0);
+                           summary, actions, hints, 3000);
     }
 
 

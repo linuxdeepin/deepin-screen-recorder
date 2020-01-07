@@ -1972,7 +1972,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     // failed notify
     if (!succeed) {
         const auto tips = tr("Save failed. Please save it in your home directory.");
-        m_notifyDBInterface->Notify("Deepin Screenshot", 0, "deepin-screen-recorder", QString(), tips, QStringList(), QVariantMap(), 0);
+        m_notifyDBInterface->Notify("Deepin Screenshot", 0, "deepin-screen-recorder", QString(), tips, QStringList(), QVariantMap(), 5000);
 
         exit(0);
     }
@@ -2019,7 +2019,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
 
         QVariantMap emptyMap;
         m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screenshot", "",
-                                    summary,  QStringList(), emptyMap, 0);
+                                    summary,  QStringList(), emptyMap, 5000);
     }  else if ( !m_noNotify &&  !(m_saveIndex == SaveAction::SaveToSpecificDir && m_saveFileName.isEmpty())) {
 
 //        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screen-recorder", "",
@@ -2032,7 +2032,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
             << QString("%1 %2").arg(tr("Saved to")).arg(saveFilePath) // body
             << actions                                               // actions
             << hints                                                 // hints
-            << (int) -1;
+            << (int) 5000;
         notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);// timeout
     }
 
