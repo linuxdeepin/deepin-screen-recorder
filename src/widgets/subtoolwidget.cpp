@@ -699,32 +699,32 @@ void SubToolWidget::initRecordLabel()
         }
     }
 
-//    else {
-//        t_saveGif = true;
-//        gifAction->setChecked(true);
-//        mp4Action->setChecked(false);
-//        mp4Action->setEnabled(false);
-//        gifAction->trigger();
-//        fps5Action->setChecked(false);
-//        fps10Action->setChecked(false);
-//        fps20Action->setChecked(false);
-//        fps24Action->setChecked(false);
-//        fps30Action->setChecked(false);
-//        fps5Action->setEnabled(false);
-//        fps10Action->setEnabled(false);
-//        fps20Action->setEnabled(false);
-//        fps24Action->setEnabled(false);
-//        fps30Action->setEnabled(false);
-//        audioButton->setEnabled(false);
-//        if (m_microphoneAction->isChecked()) {
-//            m_microphoneAction->trigger();
+    else {
+        t_saveGif = true;
+        gifAction->setChecked(true);
+        mp4Action->setChecked(false);
+        mp4Action->setEnabled(false);
+        gifAction->trigger();
+        fps5Action->setChecked(false);
+        fps10Action->setChecked(false);
+        fps20Action->setChecked(false);
+        fps24Action->setChecked(false);
+        fps30Action->setChecked(false);
+        fps5Action->setEnabled(false);
+        fps10Action->setEnabled(false);
+        fps20Action->setEnabled(false);
+        fps24Action->setEnabled(false);
+        fps30Action->setEnabled(false);
+        audioButton->setEnabled(false);
+        if (m_microphoneAction->isChecked()) {
+            m_microphoneAction->trigger();
+        }
+        m_microphoneAction->setEnabled(false);
+//        if (m_systemAudioAction->isChecked()) {
+//            m_systemAudioAction->trigger();
 //        }
-//        m_microphoneAction->setEnabled(false);
-////        if (m_systemAudioAction->isChecked()) {
-////            m_systemAudioAction->trigger();
-////        }
-//        m_systemAudioAction->setEnabled(false);
-//    }
+        m_systemAudioAction->setEnabled(false);
+    }
 
     connect(gifAction, &QAction::triggered, this, [ = ] (bool checked) {
         t_settings->setOption("save_as_gif", true);

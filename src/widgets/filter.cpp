@@ -95,12 +95,16 @@ void HintFilterPrivate::showHint(QWidget *hint)
 
     DUtil::TimerSingleShot(10, [w, this]() {
         auto centerPos = w->mapToGlobal(w->rect().center());
+
         hintWidget->show();
         hintWidget->adjustSize();
 
         auto sz = hintWidget->size();
-        centerPos.setX(centerPos.x()  - sz.width() / 2);
+        centerPos.setX(centerPos.x()  - sz.width() / 2 + 2);
         centerPos.setY(centerPos.y() - 32 - sz.height());
+        if (centerPos.y() - 32 - sz.height() <= 0) {
+            centerPos.setY(centerPos.y() + w->height() + 22 + sz.height());
+        }
         centerPos = hintWidget->mapFromGlobal(centerPos);
         centerPos = hintWidget->mapToParent(centerPos);
         hintWidget->move(centerPos);

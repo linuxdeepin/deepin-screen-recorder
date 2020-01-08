@@ -2334,6 +2334,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         QClipboard *cb = qApp->clipboard();
 //        cb->setPixmap(screenShotPix, QClipboard::Clipboard);
         cb->setMimeData(t_imageData, QClipboard::Clipboard);
+
         qDebug() << "clip board success!";
     }
 

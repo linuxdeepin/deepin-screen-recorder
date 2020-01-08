@@ -45,13 +45,31 @@ bool pointOnLine(QPointF point1, QPointF point2, QPointF point3)
             return true;
         }
     } else {
-        qreal k =  (point2.y() - point1.y()) / (point2.x() - point1.x());
-        qreal b = point1.y() - point1.x() * k;
+//        qreal k =  (point2.y() - point1.y()) / (point2.x() - point1.x());
+//        qreal b = point1.y() - point1.x() * k;
 
-        if ( point3.x() >= std::min(point1.x(), point2.x()) - padding && point3.x() <= std::max(point1.x(), point2.x() + padding)
-                && point3.y() >= k * point3.x() + b - padding && point3.y() <= k * point3.x() + b + padding) {
-            return true;
+        //利用向量点乘来计算点和线的距离
+        if (point3.x() >= std::min(point1.x(), point2.x()) - padding && point3.x() <= std::max(point1.x(), point2.x() + padding) &&
+                point3.y() >= std::min(point1.y(), point2.y()) - padding && point3.y() <= std::max(point1.y(), point2.y()) + padding) {
+            QPointF t_ac = point3 - point1;
+            QPointF t_ab = point2 - point1;
+
+            qreal k = QPointF::dotProduct(t_ab, t_ac) / QPointF::dotProduct(t_ab, t_ab);
+
+            QPointF t_dc = t_ac - k * t_ab;
+            int t_len = sqrt(QPointF::dotProduct(t_dc, t_dc));
+            qDebug() << "t_distance" << t_len;
+
+
+            if (t_len >= 0 && t_len < 5) {
+                return true;
+            }
         }
+
+//        if ( point3.x() >= std::min(point1.x(), point2.x()) - padding && point3.x() <= std::max(point1.x(), point2.x() + padding)
+//                && point3.y() >= k * point3.x() + b - padding && point3.y() <= k * point3.x() + b + padding) {
+//            return true;
+//        }
     }
     return false;
 }
