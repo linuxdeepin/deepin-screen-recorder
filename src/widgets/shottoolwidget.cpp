@@ -91,7 +91,6 @@ void ShotToolWidget::initRectLabel()
 {
     m_rectSubTool = new DLabel(this);
     DPalette pa;
-
     //选择粗细按钮组
     QButtonGroup *t_thicknessBtnGroup = new QButtonGroup();
     t_thicknessBtnGroup->setExclusive(true);
@@ -139,7 +138,6 @@ void ShotToolWidget::initRectLabel()
 
         }
     });
-
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
 
@@ -177,7 +175,6 @@ void ShotToolWidget::initRectLabel()
 
         }
     });
-
     //粗细程度3级按钮
     ToolButton *thickThreeBtn = new ToolButton();
 
@@ -215,7 +212,6 @@ void ShotToolWidget::initRectLabel()
 
         }
     });
-
     QVBoxLayout *rectLayout = new QVBoxLayout();
     rectLayout->setContentsMargins(1, 4, 0, 0);
     rectLayout->setSpacing(0);
@@ -344,6 +340,7 @@ void ShotToolWidget::initRectLabel()
             thickThreeBtn->update();
         }
     });
+
     thickOneBtn->click();
     ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 0);
 
@@ -363,7 +360,6 @@ void ShotToolWidget::initRectLabel()
 
     ConfigSettings::instance()->setValue("rectangle", "is_blur", false);
     ConfigSettings::instance()->setValue("rectangle", "is_mosaic", false);
-
     //模糊按钮
     m_blurRectButton = new ToolButton(this);
 
@@ -402,7 +398,6 @@ void ShotToolWidget::initRectLabel()
     });
 
     btnList.append(m_blurRectButton);
-
     //马赛克按钮
     m_mosaicRectButton = new ToolButton();
 
@@ -565,7 +560,6 @@ void ShotToolWidget::initRectLabel()
 
     });
 
-
     for (int j = 0; j < btnList.length(); j++) {
         rectLayout->addWidget(btnList[j]);
         rectLayout->addSpacing(BUTTON_SPACING);
@@ -581,7 +575,6 @@ void ShotToolWidget::initRectLabel()
     t_seperator1->setFixedSize(SPLITTER_SIZE);
     rectLayout->addWidget(t_seperator1, 0, Qt::AlignHCenter);
 //    rectLayout->addSpacing(BUTTON_SPACING);
-
     m_rectSubTool->setLayout(rectLayout);
     addWidget(m_rectSubTool);
 }

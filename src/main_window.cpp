@@ -1996,9 +1996,10 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
 
         QString fileDir  = QUrl::fromLocalFile(QFileInfo(saveFilePath).absoluteDir().absolutePath()).toString();
         QString filePath = QUrl::fromLocalFile(saveFilePath).toString();
+
         QString command;
         if (QFile("/usr/bin/dde-file-manager").exists()) {
-            command = QString("/usr/bin/dde-file-manager,%1?selectUrl=%2").arg(fileDir).arg(filePath);
+            command = QString("/usr/bin/dde-file-manager,--show-item,%1").arg(filePath);
         } else {
             command = QString("xdg-open,%1").arg(filePath);
         }
