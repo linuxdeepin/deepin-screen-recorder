@@ -4,5 +4,6 @@
         <file>texts/audio frequency_normal_32px.svg</file>
         <file>texts/microphone_normal_32px.svg</file>
         <file>texts/mute_normal_32px.svg</file>
+        <file>texts/volume_normal_32px.svg</file>
     </qresource>
 </RCC>
