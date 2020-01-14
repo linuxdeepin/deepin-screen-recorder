@@ -145,6 +145,10 @@ or press the shortcut again to stop recording</source>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">保存</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

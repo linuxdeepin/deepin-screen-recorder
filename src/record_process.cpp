@@ -474,9 +474,9 @@ void RecordProcess::stopRecord()
     }
 
     // Wait thread.
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
-        wait();
-    }
+//    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
+    wait();
+//    }
 //    else {
 //        wait(2000);
 //    }

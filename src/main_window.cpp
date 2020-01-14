@@ -166,7 +166,7 @@ void MainWindow::initAttributes()
     // Add Qt::WindowDoesNotAcceptFocus make window not accept focus forcely, avoid conflict with dde hot-corner.
 //    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint);
 //    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint  | Qt::WindowStaysOnTopHint);
-    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
     setMouseTracking(true);   // make MouseMove can response
     installEventFilter(this);  // add event filter
@@ -2030,7 +2030,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
             << ((unsigned int) 0)                                    // id
             << QString("deepin-screenshot")                     // icon
             << tr("Screenshot finished")                              // summary
-            << QString("%1 %2").arg(tr("Saved to")).arg(saveFilePath) // body
+            << QString(tr("Saved to %1")).arg(saveFilePath) // body
             << actions                                               // actions
             << hints                                                 // hints
             << (int) 5000;
@@ -2139,22 +2139,22 @@ bool MainWindow::saveAction(const QPixmap &pix)
         switch (t_pictureFormat) {
         case 0:
             lastFileName    = QString("%1/%2.png").arg(path).arg(fileName);
-            m_saveFileName =  fileDialog.getSaveFileName(this, "Save",  lastFileName,
+            m_saveFileName =  fileDialog.getSaveFileName(this, tr("Save"),  lastFileName,
                                                          tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
             break;
         case 1:
             lastFileName    = QString("%1/%2.jpg").arg(path).arg(fileName);
-            m_saveFileName =  fileDialog.getSaveFileName(this, "Save",  lastFileName,
+            m_saveFileName =  fileDialog.getSaveFileName(this, tr("Save"),  lastFileName,
                                                          tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)"));
             break;
         case 2:
             lastFileName    = QString("%1/%2.bmp").arg(path).arg(fileName);
-            m_saveFileName =  fileDialog.getSaveFileName(this, "Save",  lastFileName,
+            m_saveFileName =  fileDialog.getSaveFileName(this, tr("Save"),  lastFileName,
                                                          tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)"));
             break;
         default:
             lastFileName    = QString("%1/%2.png").arg(path).arg(fileName);
-            m_saveFileName =  fileDialog.getSaveFileName(this, "Save",  lastFileName,
+            m_saveFileName =  fileDialog.getSaveFileName(this, tr("Save"),  lastFileName,
                                                          tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
             break;
         }

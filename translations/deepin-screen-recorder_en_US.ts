@@ -145,6 +145,10 @@ or press the shortcut again to stop recording</source>
         <source>Authentication success!</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
