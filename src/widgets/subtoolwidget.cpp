@@ -361,26 +361,27 @@ void SubToolWidget::initRecordLabel()
     m_keyBoardButton->setIconSize(MAX_TOOL_ICON_SIZE);
 //    m_keyBoardButton->setToolTip(tr("Show Keystroke"));
     installTipHint(m_keyBoardButton, tr("Show Keystroke"));
+    m_keyBoardButton->setIcon(QIcon::fromTheme("key_mormal"));
 
-    if (m_themeType == 1) {
-        m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        m_keyBoardButton->setIcon(QIcon(":/image/newUI/dark/normal/key_mormal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        m_keyBoardButton->setIcon(QIcon(":/image/newUI/dark/normal/key_mormal.svg"));
+//    }
 
-    connect(m_keyBoardButton, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            m_keyBoardButton->setIcon(QIcon(":/image/newUI/press/key_press.svg"));
-        }
+//    connect(m_keyBoardButton, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            m_keyBoardButton->setIcon(QIcon(":/image/newUI/press/key_press.svg"));
+//        }
 
-        else if (m_themeType == 2)
-        {
-            m_keyBoardButton->setIcon(QIcon(":/image/newUI/dark/press/key_press.svg"));
-        }
-    });
+//        else if (m_themeType == 2)
+//        {
+//            m_keyBoardButton->setIcon(QIcon(":/image/newUI/dark/press/key_press.svg"));
+//        }
+//    });
 
 //    m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
     rectBtnGroup->addButton(m_keyBoardButton);
@@ -397,13 +398,13 @@ void SubToolWidget::initRecordLabel()
 //            m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key display_mormal.svg"));
 //            m_keyBoardButton->setToolTip(tr("Hide Keystroke"));
             installTipHint(m_keyBoardButton, tr("Hide Keystroke"));
-            if (m_themeType == 1) {
-                m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key display_mormal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key display_mormal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_keyBoardButton->setIcon(QIcon(":/image/newUI/dark/normal/key display_mormal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_keyBoardButton->setIcon(QIcon(":/image/newUI/dark/normal/key display_mormal.svg"));
+//            }
         }
 
         if (!m_keyBoardButton->isChecked())
@@ -411,13 +412,13 @@ void SubToolWidget::initRecordLabel()
 //            m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
 //            m_keyBoardButton->setToolTip(tr("Show Keystroke"));
             installTipHint(m_keyBoardButton, tr("Show Keystroke"));
-            if (m_themeType == 1) {
-                m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_keyBoardButton->setIcon(QIcon(":/image/newUI/dark/normal/key_mormal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_keyBoardButton->setIcon(QIcon(":/image/newUI/dark/normal/key_mormal.svg"));
+//            }
         }
     });
 
@@ -499,27 +500,28 @@ void SubToolWidget::initRecordLabel()
 
     m_mouseButton->setObjectName("MouseButton");
     m_mouseButton->setIconSize(MAX_TOOL_ICON_SIZE);
+    m_mouseButton->setIcon(QIcon::fromTheme("mouse_mormal"));
 //    m_mouseButton->setToolTip(tr("Show Click"));
     installTipHint(m_mouseButton, tr("Show Click"));
-    if (m_themeType == 1) {
-        m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        m_mouseButton->setIcon(QIcon(":/image/newUI/dark/normal/mouse_mormal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        m_mouseButton->setIcon(QIcon(":/image/newUI/dark/normal/mouse_mormal.svg"));
+//    }
 
-    connect(m_mouseButton, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            m_mouseButton->setIcon(QIcon(":/image/newUI/press/mouse_press.svg"));
-        }
+//    connect(m_mouseButton, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            m_mouseButton->setIcon(QIcon(":/image/newUI/press/mouse_press.svg"));
+//        }
 
-        else if (m_themeType == 2)
-        {
-            m_mouseButton->setIcon(QIcon(":/image/newUI/dark/press/mouse_press.svg"));
-        }
-    });
+//        else if (m_themeType == 2)
+//        {
+//            m_mouseButton->setIcon(QIcon(":/image/newUI/dark/press/mouse_press.svg"));
+//        }
+//    });
 
 //    m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
 //    mouseButton->setText(tr("Mouse"));
@@ -534,13 +536,13 @@ void SubToolWidget::initRecordLabel()
 //            m_mouseButton->setIcon(QIcon(":/image/newUI/checked/mouse_checked.svg"));
 //            m_mouseButton->setToolTip(tr("Hide Click"));
             installTipHint(m_mouseButton, tr("Hide Click"));
-            if (m_themeType == 1) {
-                m_mouseButton->setIcon(QIcon(":/image/newUI/checked/mouse_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_mouseButton->setIcon(QIcon(":/image/newUI/checked/mouse_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_mouseButton->setIcon(QIcon(":/image/newUI/dark/checked/mouse_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_mouseButton->setIcon(QIcon(":/image/newUI/dark/checked/mouse_checked.svg"));
+//            }
         }
 
         if (!m_mouseButton->isChecked())
@@ -548,13 +550,13 @@ void SubToolWidget::initRecordLabel()
 //            m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
 //            m_mouseButton->setToolTip(tr("Show Click"));
             installTipHint(m_mouseButton, tr("Show Click"));
-            if (m_themeType == 1) {
-                m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_mouseButton->setIcon(QIcon(":/image/newUI/dark/normal/mouse_mormal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_mouseButton->setIcon(QIcon(":/image/newUI/dark/normal/mouse_mormal.svg"));
+//            }
         }
     });
 
@@ -905,26 +907,26 @@ void SubToolWidget::initShotLabel()
 
     m_rectButton->setIconSize(QSize(35, 35));
 
+    m_rectButton->setIcon(QIcon::fromTheme("rectangle-normal"));
+//    if (m_themeType == 1) {
+//        m_rectButton->setIcon(QIcon(":/image/newUI/normal/rectangle-normal.svg"));
+//    }
 
-    if (m_themeType == 1) {
-        m_rectButton->setIcon(QIcon(":/image/newUI/normal/rectangle-normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        m_rectButton->setIcon(QIcon(":/image/newUI/dark/normal/rectangle-normal_dark.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        m_rectButton->setIcon(QIcon(":/image/newUI/dark/normal/rectangle-normal_dark.svg"));
-    }
+//    connect(m_rectButton, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            m_rectButton->setIcon(QIcon(":/image/newUI/press/rectangle-press.svg"));
+//        }
 
-    connect(m_rectButton, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            m_rectButton->setIcon(QIcon(":/image/newUI/press/rectangle-press.svg"));
-        }
-
-        else if (m_themeType == 2)
-        {
-            m_rectButton->setIcon(QIcon(":/image/newUI/dark/press/rectangle-press.svg"));
-        }
-    });
+//        else if (m_themeType == 2)
+//        {
+//            m_rectButton->setIcon(QIcon(":/image/newUI/dark/press/rectangle-press.svg"));
+//        }
+//    });
 
 
 //    m_rectButton->setIcon(QIcon(":/image/newUI/normal/rectangle-normal.svg"));
@@ -946,27 +948,28 @@ void SubToolWidget::initShotLabel()
 //    m_circleButton->setPalette(pa);
 
     m_circleButton->setIconSize(QSize(35, 35));
+    m_circleButton->setIcon(QIcon::fromTheme("oval-normal"));
 //    m_circleButton->setToolTip(tr("Ellipse"));
     installTipHint(m_circleButton, tr("Ellipse"));
-    if (m_themeType == 1) {
-        m_circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        m_circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        m_circleButton->setIcon(QIcon(":/image/newUI/dark/normal/oval-normal_dark.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        m_circleButton->setIcon(QIcon(":/image/newUI/dark/normal/oval-normal_dark.svg"));
+//    }
 
-    connect(m_circleButton, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            m_circleButton->setIcon(QIcon(":/image/newUI/press/oval-press.svg"));
-        }
+//    connect(m_circleButton, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            m_circleButton->setIcon(QIcon(":/image/newUI/press/oval-press.svg"));
+//        }
 
-        else if (m_themeType == 2)
-        {
-            m_circleButton->setIcon(QIcon(":/image/newUI/dark/press/oval-press.svg"));
-        }
-    });
+//        else if (m_themeType == 2)
+//        {
+//            m_circleButton->setIcon(QIcon(":/image/newUI/dark/press/oval-press.svg"));
+//        }
+//    });
 
 //    m_circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
     m_circleButton->setObjectName("CircleButton");
@@ -1004,56 +1007,56 @@ void SubToolWidget::initShotLabel()
         installTipHint(m_lineButton, tr("Arrow"));
     }
 
-    connect(m_lineButton, &ToolButton::onPress, this, [ = ] {
-        bool t_arrowStatustemp = ConfigSettings::instance()->value("arrow", "is_straight").toBool();
-        if (m_themeType == 1)
-        {
+//    connect(m_lineButton, &ToolButton::onPress, this, [ = ] {
+//        bool t_arrowStatustemp = ConfigSettings::instance()->value("arrow", "is_straight").toBool();
+//        if (m_themeType == 1)
+//        {
 
-            if (t_arrowStatustemp) {
-                m_lineButton->setIcon(QIcon(":/image/newUI/press/line-press.svg"));
-            }
+//            if (t_arrowStatustemp) {
+//                m_lineButton->setIcon(QIcon(":/image/newUI/press/line-press.svg"));
+//            }
 
-            else {
-                m_lineButton->setIcon(QIcon(":/image/newUI/press/Arrow-press.svg"));
-            }
-        }
+//            else {
+//                m_lineButton->setIcon(QIcon(":/image/newUI/press/Arrow-press.svg"));
+//            }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            if (t_arrowStatustemp) {
-                m_lineButton->setIcon(QIcon(":/image/newUI/dark/press/line-press.svg"));
-            }
+//            if (t_arrowStatustemp) {
+//                m_lineButton->setIcon(QIcon(":/image/newUI/dark/press/line-press.svg"));
+//            }
 
-            else {
-                m_lineButton->setIcon(QIcon(":/image/newUI/dark/press/Arrow-press.svg"));
-            }
-        }
-    });
+//            else {
+//                m_lineButton->setIcon(QIcon(":/image/newUI/dark/press/Arrow-press.svg"));
+//            }
+//        }
+//    });
 
 
     if (t_arrowStatus) {
         m_lineflag = 0;
-//        m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
-        if (m_themeType == 1) {
-            m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
-        }
+//        if (m_themeType == 1) {
+//            m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
+//        }
 
-        else if (m_themeType == 2) {
-            m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/line-normal_dark.svg"));
-        }
+//        else if (m_themeType == 2) {
+//            m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/line-normal_dark.svg"));
+//        }
+        m_lineButton->setIcon(QIcon::fromTheme("line-normal"));
     }
 
     else {
         m_lineflag = 1;
-//        m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
-        if (m_themeType == 1) {
-            m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
-        }
+//        if (m_themeType == 1) {
+//            m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
+//        }
 
-        else if (m_themeType == 2) {
-            m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/Arrow-normal_dark.svg"));
-        }
+//        else if (m_themeType == 2) {
+//            m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/Arrow-normal_dark.svg"));
+//        }
+        m_lineButton->setIcon(QIcon::fromTheme("Arrow-normal"));
     }
 
 
@@ -1073,30 +1076,31 @@ void SubToolWidget::initShotLabel()
     m_penButton->setIconSize(QSize(35, 35));
 //    m_penButton->setToolTip(tr("Pencil"));
     installTipHint(m_penButton, tr("Pencil"));
+    m_penButton->setIcon(QIcon::fromTheme("Combined Shape-normal"));
 //    m_penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
 
-    if (m_themeType == 1) {
-        m_penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        m_penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        m_penButton->setIcon(QIcon(":/image/newUI/dark/normal/Combined Shape-normal_dark.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        m_penButton->setIcon(QIcon(":/image/newUI/dark/normal/Combined Shape-normal_dark.svg"));
+//    }
 
-    connect(m_penButton, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            m_penButton->setIcon(QIcon(":/image/newUI/press/Combined Shape-press.svg"));
+//    connect(m_penButton, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            m_penButton->setIcon(QIcon(":/image/newUI/press/Combined Shape-press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            m_penButton->setIcon(QIcon(":/image/newUI/dark/press/Combined Shape-press.svg"));
+//            m_penButton->setIcon(QIcon(":/image/newUI/dark/press/Combined Shape-press.svg"));
 
-        }
-    });
+//        }
+//    });
 
 //    m_penButton->setPalette(pa);
 
@@ -1112,31 +1116,32 @@ void SubToolWidget::initShotLabel()
 //    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     m_textButton->setIconSize(QSize(30, 30));
+    m_textButton->setIcon(QIcon::fromTheme("text"));
 //    m_textButton->setToolTip(tr("Text"));
     installTipHint(m_textButton, tr("Text"));
 //    m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
-    if (m_themeType == 1) {
-        m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
-    }
+//    if (m_themeType == 1) {
+//        m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        m_textButton->setIcon(QIcon(":/image/newUI/dark/normal/text_normal_dark.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        m_textButton->setIcon(QIcon(":/image/newUI/dark/normal/text_normal_dark.svg"));
+//    }
 
-    connect(m_textButton, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            m_textButton->setIcon(QIcon(":/image/newUI/press/text_press.svg"));
+//    connect(m_textButton, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            m_textButton->setIcon(QIcon(":/image/newUI/press/text_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            m_textButton->setIcon(QIcon(":/image/newUI/dark/press/text_press.svg"));
+//            m_textButton->setIcon(QIcon(":/image/newUI/dark/press/text_press.svg"));
 
-        }
-    });
+//        }
+//    });
 
 //    m_textButton->setPalette(pa);
 
@@ -1361,32 +1366,32 @@ void SubToolWidget::initShotLabel()
 //            m_rectButton->setPalette(pa);
 //            m_rectButton->setIcon(QIcon(":/image/newUI/checked/rectangle-checked.svg"));
 
-            if (m_themeType == 1) {
-                m_rectButton->setIcon(QIcon(":/image/newUI/checked/rectangle-checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_rectButton->setIcon(QIcon(":/image/newUI/checked/rectangle-checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_rectButton->setIcon(QIcon(":/image/newUI/dark/checked/rectangle-checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_rectButton->setIcon(QIcon(":/image/newUI/dark/checked/rectangle-checked.svg"));
+//            }
 
             emit changeShotToolFunc("rectangle");
         }
 
-        else {
-//            pa = m_rectButton->palette();
-//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//            m_rectButton->setPalette(pa);
-//            m_rectButton->setIcon(QIcon(":/image/newUI/normal/rectangle-normal.svg"));
-            if (m_themeType == 1) {
-                m_rectButton->setIcon(QIcon(":/image/newUI/normal/rectangle-normal.svg"));
-            }
+//        else {
+////            pa = m_rectButton->palette();
+////            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+////            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+////            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+////            m_rectButton->setPalette(pa);
+////            m_rectButton->setIcon(QIcon(":/image/newUI/normal/rectangle-normal.svg"));
+//            if (m_themeType == 1) {
+//                m_rectButton->setIcon(QIcon(":/image/newUI/normal/rectangle-normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_rectButton->setIcon(QIcon(":/image/newUI/dark/normal/rectangle-normal_dark.svg"));
-            }
-        }
+//            else if (m_themeType == 2) {
+//                m_rectButton->setIcon(QIcon(":/image/newUI/dark/normal/rectangle-normal_dark.svg"));
+//            }
+//        }
 
         if (m_circleButton->isChecked()) {
 //            pa = m_circleButton->palette();
@@ -1397,30 +1402,30 @@ void SubToolWidget::initShotLabel()
 
             emit changeShotToolFunc("oval");
 //            m_circleButton->setIcon(QIcon(":/image/newUI/checked/oval-checked.svg"));
-            if (m_themeType == 1) {
-                m_circleButton->setIcon(QIcon(":/image/newUI/checked/oval-checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_circleButton->setIcon(QIcon(":/image/newUI/checked/oval-checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_circleButton->setIcon(QIcon(":/image/newUI/dark/checked/oval-checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_circleButton->setIcon(QIcon(":/image/newUI/dark/checked/oval-checked.svg"));
+//            }
         }
 
-        else {
-//            pa = m_circleButton->palette();
-//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//            m_circleButton->setPalette(pa);
-//            m_circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
-            if (m_themeType == 1) {
-                m_circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
-            }
+//        else {
+////            pa = m_circleButton->palette();
+////            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+////            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+////            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+////            m_circleButton->setPalette(pa);
+////            m_circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
+//            if (m_themeType == 1) {
+//                m_circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_circleButton->setIcon(QIcon(":/image/newUI/dark/normal/oval-normal_dark.svg"));
-            }
-        }
+//            else if (m_themeType == 2) {
+//                m_circleButton->setIcon(QIcon(":/image/newUI/dark/normal/oval-normal_dark.svg"));
+//            }
+//        }
 
         if (m_lineButton->isChecked()) {
 //            pa = m_lineButton->palette();
@@ -1433,26 +1438,28 @@ void SubToolWidget::initShotLabel()
                 installTipHint(m_lineButton, tr("Line"));
 //                m_lineButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
 
-                if (m_themeType == 1) {
-                    m_lineButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
-                }
+//                if (m_themeType == 1) {
+//                    m_lineButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
+//                }
 
-                else if (m_themeType == 2) {
-                    m_lineButton->setIcon(QIcon(":/image/newUI/dark/checked/line-checked.svg"));
-                }
+//                else if (m_themeType == 2) {
+//                    m_lineButton->setIcon(QIcon(":/image/newUI/dark/checked/line-checked.svg"));
+//                }
+                m_lineButton->setIcon(QIcon::fromTheme("line-normal"));
             }
 
             else if (m_lineflag == 1) {
 //                m_lineButton->setToolTip(tr("Arrow"));
                 installTipHint(m_lineButton, tr("Arrow"));
 //                m_lineButton->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
-                if (m_themeType == 1) {
-                    m_lineButton->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
-                }
+//                if (m_themeType == 1) {
+//                    m_lineButton->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
+//                }
 
-                else if (m_themeType == 2) {
-                    m_lineButton->setIcon(QIcon(":/image/newUI/dark/checked/Arrow-checked.svg"));
-                }
+//                else if (m_themeType == 2) {
+//                    m_lineButton->setIcon(QIcon(":/image/newUI/dark/checked/Arrow-checked.svg"));
+//                }
+                m_lineButton->setIcon(QIcon::fromTheme("Arrow-normal"));
             }
 
             emit changeShotToolFunc("arrow");
@@ -1468,26 +1475,28 @@ void SubToolWidget::initShotLabel()
 //                m_lineButton->setToolTip(tr("Line"));
                 installTipHint(m_lineButton, tr("Line"));
 //                m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
-                if (m_themeType == 1) {
-                    m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
-                }
+//                if (m_themeType == 1) {
+//                    m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
+//                }
 
-                else if (m_themeType == 2) {
-                    m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/line-normal_dark.svg"));
-                }
+//                else if (m_themeType == 2) {
+//                    m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/line-normal_dark.svg"));
+//                }
+                m_lineButton->setIcon(QIcon::fromTheme("line-normal"));
             }
 
             else if (m_lineflag == 1) {
 //                m_lineButton->setToolTip(tr("Arrow"));
                 installTipHint(m_lineButton, tr("Arrow"));
 //                m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
-                if (m_themeType == 1) {
-                    m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
-                }
+//                if (m_themeType == 1) {
+//                    m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
+//                }
 
-                else if (m_themeType == 2) {
-                    m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/Arrow-normal_dark.svg"));
-                }
+//                else if (m_themeType == 2) {
+//                    m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/Arrow-normal_dark.svg"));
+//                }
+                m_lineButton->setIcon(QIcon::fromTheme("Arrow-normal"));
             }
         }
 
@@ -1498,32 +1507,32 @@ void SubToolWidget::initShotLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            m_penButton->setPalette(pa);
 //            m_penButton->setIcon(QIcon(":/image/newUI/checked/Combined Shape-checked.svg"));
-            if (m_themeType == 1) {
-                m_penButton->setIcon(QIcon(":/image/newUI/checked/Combined Shape-checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_penButton->setIcon(QIcon(":/image/newUI/checked/Combined Shape-checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_penButton->setIcon(QIcon(":/image/newUI/dark/checked/Combined Shape-checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_penButton->setIcon(QIcon(":/image/newUI/dark/checked/Combined Shape-checked.svg"));
+//            }
 
             emit changeShotToolFunc("line");
         }
 
-        else {
-//            pa = m_penButton->palette();
-//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//            m_penButton->setPalette(pa);
-//            m_penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
-            if (m_themeType == 1) {
-                m_penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
-            }
+//        else {
+////            pa = m_penButton->palette();
+////            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+////            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+////            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+////            m_penButton->setPalette(pa);
+////            m_penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
+//            if (m_themeType == 1) {
+//                m_penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_penButton->setIcon(QIcon(":/image/newUI/dark/normal/Combined Shape-normal_dark.svg"));
-            }
-        }
+//            else if (m_themeType == 2) {
+//                m_penButton->setIcon(QIcon(":/image/newUI/dark/normal/Combined Shape-normal_dark.svg"));
+//            }
+//        }
 
         if (m_textButton->isChecked()) {
 //            pa = m_textButton->palette();
@@ -1532,32 +1541,32 @@ void SubToolWidget::initShotLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            m_textButton->setPalette(pa);
 //            m_textButton->setIcon(QIcon(":/image/newUI/checked/text_checked.svg"));
-            if (m_themeType == 1) {
-                m_textButton->setIcon(QIcon(":/image/newUI/checked/text_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_textButton->setIcon(QIcon(":/image/newUI/checked/text_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_textButton->setIcon(QIcon(":/image/newUI/dark/checked/text_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_textButton->setIcon(QIcon(":/image/newUI/dark/checked/text_checked.svg"));
+//            }
 
             emit changeShotToolFunc("text");
         }
 
-        else {
-//            pa = m_textButton->palette();
-//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//            m_textButton->setPalette(pa);
-//            m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
-            if (m_themeType == 1) {
-                m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
-            }
+//        else {
+////            pa = m_textButton->palette();
+////            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+////            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+////            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+////            m_textButton->setPalette(pa);
+////            m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
+//            if (m_themeType == 1) {
+//                m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_textButton->setIcon(QIcon(":/image/newUI/dark/normal/text_normal_dark.svg"));
-            }
-        }
+//            else if (m_themeType == 2) {
+//                m_textButton->setIcon(QIcon(":/image/newUI/dark/normal/text_normal_dark.svg"));
+//            }
+//        }
     });
 //    rectButton->click();
 }

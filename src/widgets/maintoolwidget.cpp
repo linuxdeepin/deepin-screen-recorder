@@ -85,30 +85,31 @@ void MainToolWidget::initMainLabel()
 //    m_recordBtn->setMinimumSize(TOOL_BUTTON_SIZE);
     m_recordBtn->setMinimumHeight(40);
     m_recordBtn->setIconSize(QSize(20, 20));
-    if (m_themeType == 1) {
-        m_recordBtn->setIcon(QIcon(":/image/newUI/normal/screencap-normal.svg"));
-    }
+    m_recordBtn->setIcon(QIcon::fromTheme("screencap-normal"));
+//    if (m_themeType == 1) {
+//        m_recordBtn->setIcon(QIcon(":/image/newUI/normal/screencap-normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        m_recordBtn->setIcon(QIcon(":/image/newUI/dark/normal/screencap-normal_dark.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        m_recordBtn->setIcon(QIcon(":/image/newUI/dark/normal/screencap-normal_dark.svg"));
+//    }
 
 //    m_recordBtn->setToolTip(tr("Switch to record mode"));
     installTipHint(m_recordBtn, tr("Switch to record mode"));
 //    recordBtn->setStyleSheet(record_button_style);
     toolBtnList.append(m_recordBtn);
 
-    connect(m_recordBtn, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            m_recordBtn->setIcon(QIcon(":/image/newUI/press/screencap-press.svg"));
-        }
+//    connect(m_recordBtn, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            m_recordBtn->setIcon(QIcon(":/image/newUI/press/screencap-press.svg"));
+//        }
 
-        else if (m_themeType == 2)
-        {
-            m_recordBtn->setIcon(QIcon(":/image/newUI/dark/press/screencap-press.svg"));
-        }
-    });
+//        else if (m_themeType == 2)
+//        {
+//            m_recordBtn->setIcon(QIcon(":/image/newUI/dark/press/screencap-press.svg"));
+//        }
+//    });
 
 //    QString shot_button_style = "DPushButton:press{QIcon(:/image/newUI/press/shot-press.svg)}";
 
@@ -121,26 +122,27 @@ void MainToolWidget::initMainLabel()
     m_shotBtn->setMinimumHeight(40);
 
     m_shotBtn->setIconSize(QSize(20, 20));
+    m_shotBtn->setIcon(QIcon::fromTheme("screenshot-normal"));
 
-    if (m_themeType == 1) {
-        m_shotBtn->setIcon(QIcon(":/image/newUI/normal/screenshot-normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        m_shotBtn->setIcon(QIcon(":/image/newUI/normal/screenshot-normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        m_shotBtn->setIcon(QIcon(":/image/newUI/dark/normal/screenshot-normal_dark.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        m_shotBtn->setIcon(QIcon(":/image/newUI/dark/normal/screenshot-normal_dark.svg"));
+//    }
 
-    connect(m_shotBtn, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            m_shotBtn->setIcon(QIcon(":/image/newUI/press/screenshot-press.svg"));
-        }
+//    connect(m_shotBtn, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            m_shotBtn->setIcon(QIcon(":/image/newUI/press/screenshot-press.svg"));
+//        }
 
-        else if (m_themeType == 2)
-        {
-            m_shotBtn->setIcon(QIcon(":/image/newUI/dark/press/screenshot-press.svg"));
-        }
-    });
+//        else if (m_themeType == 2)
+//        {
+//            m_shotBtn->setIcon(QIcon(":/image/newUI/dark/press/screenshot-press.svg"));
+//        }
+//    });
 
 //    m_shotBtn->setToolTip(tr("Switch to shot mode"));
     installTipHint(m_shotBtn, tr("Switch to shot mode"));
@@ -178,13 +180,13 @@ void MainToolWidget::initMainLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             m_recordBtn->setIconSize(QSize(20, 20));
 
-            if (m_themeType == 1) {
-                m_recordBtn->setIcon(QIcon(":/image/newUI/checked/screencap-checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_recordBtn->setIcon(QIcon(":/image/newUI/checked/screencap-checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_recordBtn->setIcon(QIcon(":/image/newUI/dark/checked/screencap-checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_recordBtn->setIcon(QIcon(":/image/newUI/dark/checked/screencap-checked.svg"));
+//            }
 //            m_recordBtn->setPalette(pa);
 
             m_isChecked = true;
@@ -200,13 +202,13 @@ void MainToolWidget::initMainLabel()
 //            m_recordBtn->setPalette(pa);
             m_recordBtn->setIconSize(QSize(20, 20));
 
-            if (m_themeType == 1) {
-                m_recordBtn->setIcon(QIcon(":/image/newUI/normal/screencap-normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_recordBtn->setIcon(QIcon(":/image/newUI/normal/screencap-normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_recordBtn->setIcon(QIcon(":/image/newUI/dark/normal/screencap-normal_dark.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_recordBtn->setIcon(QIcon(":/image/newUI/dark/normal/screencap-normal_dark.svg"));
+//            }
 //            m_recordBtn->setPalette(pa);
         }
 
@@ -217,13 +219,13 @@ void MainToolWidget::initMainLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
             m_shotBtn->setIconSize(QSize(20, 20));
 
-            if (m_themeType == 1) {
-                m_shotBtn->setIcon(QIcon(":/image/newUI/checked/screenshot-checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_shotBtn->setIcon(QIcon(":/image/newUI/checked/screenshot-checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_shotBtn->setIcon(QIcon(":/image/newUI/dark/checked/screenshot-checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_shotBtn->setIcon(QIcon(":/image/newUI/dark/checked/screenshot-checked.svg"));
+//            }
 //            m_shotBtn->setPalette(pa);
 
             m_isChecked = true;
@@ -238,13 +240,13 @@ void MainToolWidget::initMainLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
             m_shotBtn->setIconSize(QSize(20, 20));
 
-            if (m_themeType == 1) {
-                m_shotBtn->setIcon(QIcon(":/image/newUI/normal/screenshot-normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_shotBtn->setIcon(QIcon(":/image/newUI/normal/screenshot-normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_shotBtn->setIcon(QIcon(":/image/newUI/dark/normal/screenshot-normal_dark.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_shotBtn->setIcon(QIcon(":/image/newUI/dark/normal/screenshot-normal_dark.svg"));
+//            }
 //            m_shotBtn->setPalette(pa);
         }
     });

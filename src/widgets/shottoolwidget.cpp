@@ -113,31 +113,32 @@ void ShotToolWidget::initRectLabel()
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
+    thickOneBtn->setIcon(QIcon::fromTheme("brush small_normal"));
 //    thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-    if (m_themeType == 1) {
-        thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+//    }
 
     btnList.append(thickOneBtn);
 
-    connect(thickOneBtn, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            thickOneBtn->setIcon(QIcon(":/image/newUI/press/brush small_press.svg"));
+//    connect(thickOneBtn, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/press/brush small_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            thickOneBtn->setIcon(QIcon(":/image/newUI/dark/press/brush small_press.svg"));
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/dark/press/brush small_press.svg"));
 
-        }
-    });
+//        }
+//    });
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
 
@@ -151,30 +152,31 @@ void ShotToolWidget::initRectLabel()
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
+    thickTwoBtn->setIcon(QIcon::fromTheme("brush medium_normal"));
 //    thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-    if (m_themeType == 1) {
-        thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+//    }
     btnList.append(thickTwoBtn);
 
-    connect(thickTwoBtn, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/press/brush medium_press.svg"));
+//    connect(thickTwoBtn, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/press/brush medium_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/press/brush medium_press.svg"));
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/press/brush medium_press.svg"));
 
-        }
-    });
+//        }
+//    });
     //粗细程度3级按钮
     ToolButton *thickThreeBtn = new ToolButton();
 
@@ -189,29 +191,30 @@ void ShotToolWidget::initRectLabel()
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);
 //    thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-    if (m_themeType == 1) {
-        thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+//    }
+    thickThreeBtn->setIcon(QIcon::fromTheme("brush big_normal"));
     btnList.append(thickThreeBtn);
 
-    connect(thickThreeBtn, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/press/brush big_press.svg"));
+//    connect(thickThreeBtn, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/press/brush big_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/press/brush big_press.svg"));
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/press/brush big_press.svg"));
 
-        }
-    });
+//        }
+//    });
     QVBoxLayout *rectLayout = new QVBoxLayout();
     rectLayout->setContentsMargins(1, 4, 0, 0);
     rectLayout->setSpacing(0);
@@ -233,36 +236,36 @@ void ShotToolWidget::initRectLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            thickOneBtn->setPalette(pa);
 //            thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
-            if (m_themeType == 1) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush small_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush small_checked.svg"));
+//            }
 
             thickOneBtn->update();
 
             ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 0);
         }
 
-        else {
-//            pa = thickOneBtn->palette();
-//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//            thickOneBtn->setPalette(pa);
-//            thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-            if (m_themeType == 1) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-            }
+//        else {
+////            pa = thickOneBtn->palette();
+////            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+////            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+////            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+////            thickOneBtn->setPalette(pa);
+////            thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//            if (m_themeType == 1) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+//            }
 
-            thickOneBtn->update();
-        }
+//            thickOneBtn->update();
+//        }
 
         if (thickTwoBtn->isChecked()) {
 //            pa = thickTwoBtn->palette();
@@ -271,36 +274,36 @@ void ShotToolWidget::initRectLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            thickTwoBtn->setPalette(pa);
 //            thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
-            if (m_themeType == 1) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush medium_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush medium_checked.svg"));
+//            }
 
             thickTwoBtn->update();
 
             ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 1);
         }
 
-        else {
-//            pa = thickTwoBtn->palette();
-//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//            thickTwoBtn->setPalette(pa);
-//            thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-            if (m_themeType == 1) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-            }
+//        else {
+////            pa = thickTwoBtn->palette();
+////            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+////            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+////            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+////            thickTwoBtn->setPalette(pa);
+////            thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//            if (m_themeType == 1) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+//            }
 
-            thickTwoBtn->update();
-        }
+//            thickTwoBtn->update();
+//        }
 
         if (thickThreeBtn->isChecked()) {
 //            pa = thickThreeBtn->palette();
@@ -309,36 +312,36 @@ void ShotToolWidget::initRectLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            thickThreeBtn->setPalette(pa);
 //            thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
-            if (m_themeType == 1) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush big_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush big_checked.svg"));
+//            }
 
             thickThreeBtn->update();
 
             ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 2);
         }
 
-        else {
-//            pa = thickThreeBtn->palette();
-//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//            thickThreeBtn->setPalette(pa);
-//            thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-            if (m_themeType == 1) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-            }
+//        else {
+////            pa = thickThreeBtn->palette();
+////            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+////            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+////            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+////            thickThreeBtn->setPalette(pa);
+////            thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//            if (m_themeType == 1) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+//            }
 
-            thickThreeBtn->update();
-        }
+//            thickThreeBtn->update();
+//        }
     });
 
     thickOneBtn->click();
@@ -373,29 +376,30 @@ void ShotToolWidget::initRectLabel()
     m_blurRectButton->setObjectName("blurButton");
     m_blurRectButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_blurRectButton->setIconSize(TOOL_ICON_SIZE);
+    m_blurRectButton->setIcon(QIcon::fromTheme("vague_normal"));
 //    m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
-    if (m_themeType == 1) {
-        m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
+//    }
 
-    connect(m_blurRectButton, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            m_blurRectButton->setIcon(QIcon(":/image/newUI/press/vague_press.svg"));
+//    connect(m_blurRectButton, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            m_blurRectButton->setIcon(QIcon(":/image/newUI/press/vague_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/press/vague_press.svg"));
+//            m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/press/vague_press.svg"));
 
-        }
-    });
+//        }
+//    });
 
     btnList.append(m_blurRectButton);
     //马赛克按钮
@@ -411,29 +415,30 @@ void ShotToolWidget::initRectLabel()
     m_mosaicRectButton->setObjectName("mosaicBtn");
     m_mosaicRectButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_mosaicRectButton->setIconSize(TOOL_ICON_SIZE);
+    m_mosaicRectButton->setIcon(QIcon::fromTheme("Mosaic_normal"));
 //    m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
-    if (m_themeType == 1) {
-        m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        m_mosaicRectButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        m_mosaicRectButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
+//    }
 
-    connect(m_mosaicRectButton, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/press/Mosaic_press.svg"));
+//    connect(m_mosaicRectButton, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/press/Mosaic_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/dark/press/Mosaic_press.svg"));
+//            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/dark/press/Mosaic_press.svg"));
 
-        }
-    });
+//        }
+//    });
 
     btnList.append(m_mosaicRectButton);
 
@@ -449,13 +454,13 @@ void ShotToolWidget::initRectLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            m_blurRectButton->setPalette(pa);
 //            m_blurRectButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
-            if (m_themeType == 1) {
-                m_blurRectButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_blurRectButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/checked/vague_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/checked/vague_checked.svg"));
+//            }
 
             ConfigSettings::instance()->setValue("rectangle", "is_blur", m_blurRectButton->isChecked());
 
@@ -466,13 +471,13 @@ void ShotToolWidget::initRectLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            m_mosaicRectButton->setPalette(pa);
 //            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
-            if (m_themeType == 1) {
-                m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_mosaicRectButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_mosaicRectButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
+//            }
 
             m_mosaicRectButton->update();
             ConfigSettings::instance()->setValue("rectangle", "is_mosaic", m_mosaicRectButton->isChecked());
@@ -489,13 +494,13 @@ void ShotToolWidget::initRectLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            m_blurRectButton->setPalette(pa);
 //            m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
-            if (m_themeType == 1) {
-                m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
+//            }
 
             m_blurRectButton->update();
             ConfigSettings::instance()->setValue("rectangle", "is_blur", m_blurRectButton->isChecked());
@@ -514,13 +519,13 @@ void ShotToolWidget::initRectLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            m_mosaicRectButton->setPalette(pa);
 //            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
-            if (m_themeType == 1) {
-                m_mosaicRectButton->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_mosaicRectButton->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_mosaicRectButton->setIcon(QIcon(":/image/newUI/dark/checked/Mosaic_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_mosaicRectButton->setIcon(QIcon(":/image/newUI/dark/checked/Mosaic_checked.svg"));
+//            }
 
             ConfigSettings::instance()->setValue("rectangle", "is_mosaic", m_mosaicRectButton->isChecked());
             m_arrowFlag = true;
@@ -531,13 +536,13 @@ void ShotToolWidget::initRectLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            m_blurRectButton->setPalette(pa);
 //            m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
-            if (m_themeType == 1) {
-                m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_blurRectButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_blurRectButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
+//            }
 
             m_blurRectButton->update();
             ConfigSettings::instance()->setValue("rectangle", "is_blur", m_blurRectButton->isChecked());
@@ -552,7 +557,7 @@ void ShotToolWidget::initRectLabel()
 //            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            m_mosaicRectButton->setPalette(pa);
-            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+//            m_mosaicRectButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
 
             m_mosaicRectButton->update();
             ConfigSettings::instance()->setValue("rectangle", "is_mosaic", m_mosaicRectButton->isChecked());
@@ -606,30 +611,31 @@ void ShotToolWidget::initCircLabel()
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
+    thickOneBtn->setIcon(QIcon::fromTheme("brush small_normal"));
 //    thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-    if (m_themeType == 1) {
-        thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+//    }
     btnList.append(thickOneBtn);
 
-    connect(thickOneBtn, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            thickOneBtn->setIcon(QIcon(":/image/newUI/press/brush small_press.svg"));
+//    connect(thickOneBtn, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/press/brush small_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            thickOneBtn->setIcon(QIcon(":/image/newUI/dark/press/brush small_press.svg"));
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/dark/press/brush small_press.svg"));
 
-        }
-    });
+//        }
+//    });
 
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
@@ -644,29 +650,30 @@ void ShotToolWidget::initCircLabel()
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
+    thickTwoBtn->setIcon(QIcon::fromTheme("brush medium_normal"));
 //    thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-    if (m_themeType == 1) {
-        thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+//    }
 
-    connect(thickTwoBtn, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/press/brush medium_press.svg"));
+//    connect(thickTwoBtn, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/press/brush medium_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/press/brush medium_press.svg"));
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/press/brush medium_press.svg"));
 
-        }
-    });
+//        }
+//    });
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
@@ -682,29 +689,30 @@ void ShotToolWidget::initCircLabel()
     thickThreeBtn->setObjectName("thickThreeBtn");
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);
+    thickThreeBtn->setIcon(QIcon::fromTheme("brush big_normal"));
 //    thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-    if (m_themeType == 1) {
-        thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+//    }
 
-    connect(thickThreeBtn, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/press/brush big_press.svg"));
+//    connect(thickThreeBtn, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/press/brush big_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/press/brush big_press.svg"));
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/press/brush big_press.svg"));
 
-        }
-    });
+//        }
+//    });
     btnList.append(thickThreeBtn);
 
     QVBoxLayout *rectLayout = new QVBoxLayout();
@@ -728,13 +736,13 @@ void ShotToolWidget::initCircLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            thickOneBtn->setPalette(pa);
 //            thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
-            if (m_themeType == 1) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush small_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush small_checked.svg"));
+//            }
 
             thickOneBtn->update();
 
@@ -748,13 +756,13 @@ void ShotToolWidget::initCircLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            thickOneBtn->setPalette(pa);
 //            thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-            if (m_themeType == 1) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+//            }
 
             thickOneBtn->update();
         }
@@ -766,13 +774,13 @@ void ShotToolWidget::initCircLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            thickTwoBtn->setPalette(pa);
 //            thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
-            if (m_themeType == 1) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush medium_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush medium_checked.svg"));
+//            }
 
             thickTwoBtn->update();
 
@@ -786,13 +794,13 @@ void ShotToolWidget::initCircLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            thickTwoBtn->setPalette(pa);
 //            thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-            if (m_themeType == 1) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+//            }
 
             thickTwoBtn->update();
         }
@@ -804,13 +812,13 @@ void ShotToolWidget::initCircLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            thickThreeBtn->setPalette(pa);
 //            thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
-            if (m_themeType == 1) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush big_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush big_checked.svg"));
+//            }
 
             thickThreeBtn->update();
 
@@ -824,13 +832,13 @@ void ShotToolWidget::initCircLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            thickThreeBtn->setPalette(pa);
 //            thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-            if (m_themeType == 1) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+//            }
 
             thickThreeBtn->update();
         }
@@ -867,29 +875,30 @@ void ShotToolWidget::initCircLabel()
     m_blurCircButton->setObjectName("blurButton");
     m_blurCircButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_blurCircButton->setIconSize(TOOL_ICON_SIZE);
+    m_blurCircButton->setIcon(QIcon::fromTheme("vague_normal"));
 //    m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
-    if (m_themeType == 1) {
-        m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
+//    }
 
-    connect(m_blurCircButton, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            m_blurCircButton->setIcon(QIcon(":/image/newUI/press/vague_press.svg"));
+//    connect(m_blurCircButton, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            m_blurCircButton->setIcon(QIcon(":/image/newUI/press/vague_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/press/vague_press.svg"));
+//            m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/press/vague_press.svg"));
 
-        }
-    });
+//        }
+//    });
     btnList.append(m_blurCircButton);
 
     //马赛克按钮
@@ -905,29 +914,30 @@ void ShotToolWidget::initCircLabel()
     m_mosaicCircButton->setObjectName("mosaicBtn");
     m_mosaicCircButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_mosaicCircButton->setIconSize(TOOL_ICON_SIZE);
+    m_mosaicCircButton->setIcon(QIcon::fromTheme("Mosaic_normal"));
 //    m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
-    if (m_themeType == 1) {
-        m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
+//    }
 
-    connect(m_mosaicCircButton, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/press/Mosaic_press.svg"));
+//    connect(m_mosaicCircButton, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/press/Mosaic_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/press/Mosaic_press.svg"));
+//            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/press/Mosaic_press.svg"));
 
-        }
-    });
+//        }
+//    });
 
     btnList.append(m_mosaicCircButton);
 
@@ -943,13 +953,13 @@ void ShotToolWidget::initCircLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            m_blurCircButton->setPalette(pa);
 //            m_blurCircButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
-            if (m_themeType == 1) {
-                m_blurCircButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_blurCircButton->setIcon(QIcon(":/image/newUI/checked/vague_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/checked/vague_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/checked/vague_checked.svg"));
+//            }
 
             ConfigSettings::instance()->setValue("oval", "is_blur", m_blurCircButton->isChecked());
 
@@ -960,13 +970,13 @@ void ShotToolWidget::initCircLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            m_mosaicCircButton->setPalette(pa);
 //            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
-            if (m_themeType == 1) {
-                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
+//            }
 
             m_mosaicCircButton->update();
             ConfigSettings::instance()->setValue("oval", "is_mosaic", m_mosaicCircButton->isChecked());
@@ -983,13 +993,13 @@ void ShotToolWidget::initCircLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            m_blurCircButton->setPalette(pa);
 //            m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
-            if (m_themeType == 1) {
-                m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
+//            }
 
             m_blurCircButton->update();
             ConfigSettings::instance()->setValue("oval", "is_blur", m_blurCircButton->isChecked());
@@ -1008,13 +1018,13 @@ void ShotToolWidget::initCircLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            m_mosaicCircButton->setPalette(pa);
 //            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
-            if (m_themeType == 1) {
-                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/checked/Mosaic_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/checked/Mosaic_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/checked/Mosaic_checked.svg"));
+//            }
 
 
             ConfigSettings::instance()->setValue("oval", "is_mosaic", m_mosaicCircButton->isChecked());
@@ -1026,13 +1036,13 @@ void ShotToolWidget::initCircLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            m_blurCircButton->setPalette(pa);
 //            m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
-            if (m_themeType == 1) {
-                m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_blurCircButton->setIcon(QIcon(":/image/newUI/normal/vague_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_blurCircButton->setIcon(QIcon(":/image/newUI/dark/normal/vague_normal.svg"));
+//            }
 
             m_blurCircButton->update();
             ConfigSettings::instance()->setValue("oval", "is_blur", m_blurCircButton->isChecked());
@@ -1048,13 +1058,13 @@ void ShotToolWidget::initCircLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            m_mosaicCircButton->setPalette(pa);
 //            m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
-            if (m_themeType == 1) {
-                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/normal/Mosaic_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                m_mosaicCircButton->setIcon(QIcon(":/image/newUI/dark/normal/Mosaic_normal.svg"));
+//            }
 
             m_mosaicCircButton->update();
             ConfigSettings::instance()->setValue("oval", "is_mosaic", m_mosaicCircButton->isChecked());
@@ -1110,29 +1120,30 @@ void ShotToolWidget::initLineLabel()
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
+    thickOneBtn->setIcon(QIcon::fromTheme("brush small_normal"));
 //    thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-    if (m_themeType == 1) {
-        thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+//    }
 
-    connect(thickOneBtn, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            thickOneBtn->setIcon(QIcon(":/image/newUI/press/brush small_press.svg"));
+//    connect(thickOneBtn, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/press/brush small_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            thickOneBtn->setIcon(QIcon(":/image/newUI/dark/press/brush small_press.svg"));
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/dark/press/brush small_press.svg"));
 
-        }
-    });
+//        }
+//    });
 
     btnList.append(thickOneBtn);
 
@@ -1149,29 +1160,30 @@ void ShotToolWidget::initLineLabel()
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
+    thickTwoBtn->setIcon(QIcon::fromTheme("brush medium_normal"));
 //    thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-    if (m_themeType == 1) {
-        thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+//    }
 
-    connect(thickTwoBtn, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/press/brush medium_press.svg"));
+//    connect(thickTwoBtn, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/press/brush medium_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/press/brush medium_press.svg"));
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/press/brush medium_press.svg"));
 
-        }
-    });
+//        }
+//    });
 
     btnList.append(thickTwoBtn);
 
@@ -1188,29 +1200,30 @@ void ShotToolWidget::initLineLabel()
     thickThreeBtn->setObjectName("thickThreeBtn");
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);
+    thickThreeBtn->setIcon(QIcon::fromTheme("brush big_normal"));
 //    thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-    if (m_themeType == 1) {
-        thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+//    }
 
-    connect(thickThreeBtn, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/press/brush big_press.svg"));
+//    connect(thickThreeBtn, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/press/brush big_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/press/brush big_press.svg"));
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/press/brush big_press.svg"));
 
-        }
-    });
+//        }
+//    });
 
     btnList.append(thickThreeBtn);
 
@@ -1235,13 +1248,13 @@ void ShotToolWidget::initLineLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            thickOneBtn->setPalette(pa);
 //            thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
-            if (m_themeType == 1) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush small_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush small_checked.svg"));
+//            }
 
             thickOneBtn->update();
 
@@ -1256,13 +1269,13 @@ void ShotToolWidget::initLineLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            thickOneBtn->setPalette(pa);
 //            thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-            if (m_themeType == 1) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+//            }
 
             thickOneBtn->update();
         }
@@ -1274,13 +1287,13 @@ void ShotToolWidget::initLineLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            thickTwoBtn->setPalette(pa);
 //            thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
-            if (m_themeType == 1) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush medium_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush medium_checked.svg"));
+//            }
 
             thickTwoBtn->update();
 
@@ -1295,13 +1308,13 @@ void ShotToolWidget::initLineLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            thickTwoBtn->setPalette(pa);
 //            thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-            if (m_themeType == 1) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+//            }
 
 
             thickTwoBtn->update();
@@ -1314,13 +1327,13 @@ void ShotToolWidget::initLineLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            thickThreeBtn->setPalette(pa);
 //            thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
-            if (m_themeType == 1) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush big_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush big_checked.svg"));
+//            }
 
             thickThreeBtn->update();
 
@@ -1335,13 +1348,13 @@ void ShotToolWidget::initLineLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            thickThreeBtn->setPalette(pa);
 //            thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-            if (m_themeType == 1) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+//            }
 
             thickThreeBtn->update();
         }
@@ -1376,29 +1389,30 @@ void ShotToolWidget::initLineLabel()
     blurButton->setObjectName("blurButton");
     blurButton->setFixedSize(TOOL_BUTTON_SIZE);
     blurButton->setIconSize(TOOL_ICON_SIZE);
+    blurButton->setIcon(QIcon::fromTheme("line-normal"));
 //    blurButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
-    if (m_themeType == 1) {
-        blurButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        blurButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        blurButton->setIcon(QIcon(":/image/newUI/dark/normal/line-normal_dark.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        blurButton->setIcon(QIcon(":/image/newUI/dark/normal/line-normal_dark.svg"));
+//    }
 
-    connect(blurButton, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            blurButton->setIcon(QIcon(":/image/newUI/press/line-press.svg"));
+//    connect(blurButton, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            blurButton->setIcon(QIcon(":/image/newUI/press/line-press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            blurButton->setIcon(QIcon(":/image/newUI/dark/press/line-press.svg"));
+//            blurButton->setIcon(QIcon(":/image/newUI/dark/press/line-press.svg"));
 
-        }
-    });
+//        }
+//    });
 
     btnList.append(blurButton);
 
@@ -1416,28 +1430,30 @@ void ShotToolWidget::initLineLabel()
     mosaicBtn->setFixedSize(TOOL_BUTTON_SIZE);
     mosaicBtn->setIconSize(TOOL_ICON_SIZE);
 //    mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
-    if (m_themeType == 1) {
-        mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        mosaicBtn->setIcon(QIcon(":/image/newUI/dark/normal/Arrow-normal_dark.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        mosaicBtn->setIcon(QIcon(":/image/newUI/dark/normal/Arrow-normal_dark.svg"));
+//    }
 
-    connect(mosaicBtn, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            mosaicBtn->setIcon(QIcon(":/image/newUI/press/Arrow-press.svg"));
+    mosaicBtn->setIcon(QIcon::fromTheme("Arrow-normal"));
 
-        }
+//    connect(mosaicBtn, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            mosaicBtn->setIcon(QIcon(":/image/newUI/press/Arrow-press.svg"));
 
-        else if (m_themeType == 2)
-        {
+//        }
 
-            mosaicBtn->setIcon(QIcon(":/image/newUI/dark/press/Arrow-press.svg"));
+//        else if (m_themeType == 2)
+//        {
 
-        }
-    });
+//            mosaicBtn->setIcon(QIcon(":/image/newUI/dark/press/Arrow-press.svg"));
+
+//        }
+//    });
 
     btnList.append(mosaicBtn);
 
@@ -1449,15 +1465,16 @@ void ShotToolWidget::initLineLabel()
 //        pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //        blurButton->setPalette(pa);
 //        blurButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
-        if (m_themeType == 1)
-        {
-            blurButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
-        }
+//        if (m_themeType == 1)
+//        {
+//            blurButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
+//        }
 
-        else if (m_themeType == 2)
-        {
-            blurButton->setIcon(QIcon(":/image/newUI/dark/checked/line-checked.svg"));
-        }
+//        else if (m_themeType == 2)
+//        {
+//            blurButton->setIcon(QIcon(":/image/newUI/dark/checked/line-checked.svg"));
+//        }
+        blurButton->setIcon(QIcon::fromTheme("line-normal"));
 
         blurButton->update();
 
@@ -1474,13 +1491,14 @@ void ShotToolWidget::initLineLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            mosaicBtn->setPalette(pa);
 //            mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
-            if (m_themeType == 1) {
-                mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                mosaicBtn->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                mosaicBtn->setIcon(QIcon(":/image/newUI/dark/normal/Arrow-normal_dark.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                mosaicBtn->setIcon(QIcon(":/image/newUI/dark/normal/Arrow-normal_dark.svg"));
+//            }
+            mosaicBtn->setIcon(QIcon::fromTheme("Arrow-normal"));
 
             mosaicBtn->update();
         }
@@ -1493,15 +1511,15 @@ void ShotToolWidget::initLineLabel()
 //        pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //        mosaicBtn->setPalette(pa);
 //        mosaicBtn->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
-        if (m_themeType == 1)
-        {
-            mosaicBtn->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
-        }
+//        if (m_themeType == 1)
+//        {
+//            mosaicBtn->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
+//        }
 
-        else if (m_themeType == 2)
-        {
-            mosaicBtn->setIcon(QIcon(":/image/newUI/dark/checked/Arrow-checked.svg"));
-        }
+//        else if (m_themeType == 2)
+//        {
+//            mosaicBtn->setIcon(QIcon(":/image/newUI/dark/checked/Arrow-checked.svg"));
+//        }
 
         mosaicBtn->update();
 
@@ -1517,13 +1535,13 @@ void ShotToolWidget::initLineLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            blurButton->setPalette(pa);
 //            blurButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
-            if (m_themeType == 1) {
-                blurButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                blurButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                blurButton->setIcon(QIcon(":/image/newUI/dark/normal/line-normal_dark.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                blurButton->setIcon(QIcon(":/image/newUI/dark/normal/line-normal_dark.svg"));
+//            }
 
             blurButton->update();
         }
@@ -1589,29 +1607,30 @@ void ShotToolWidget::initPenLabel()
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
+    thickOneBtn->setIcon(QIcon::fromTheme("brush small_normal"));
 //    thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-    if (m_themeType == 1) {
-        thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+//    }
 
-    connect(thickOneBtn, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            thickOneBtn->setIcon(QIcon(":/image/newUI/press/brush small_press.svg"));
+//    connect(thickOneBtn, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/press/brush small_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            thickOneBtn->setIcon(QIcon(":/image/newUI/dark/press/brush small_press.svg"));
+//            thickOneBtn->setIcon(QIcon(":/image/newUI/dark/press/brush small_press.svg"));
 
-        }
-    });
+//        }
+//    });
 
     btnList.append(thickOneBtn);
 
@@ -1628,29 +1647,30 @@ void ShotToolWidget::initPenLabel()
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
+    thickTwoBtn->setIcon(QIcon::fromTheme("brush medium_normal"));
 //    thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-    if (m_themeType == 1) {
-        thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+//    }
 
-    connect(thickTwoBtn, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/press/brush medium_press.svg"));
+//    connect(thickTwoBtn, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/press/brush medium_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/press/brush medium_press.svg"));
+//            thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/press/brush medium_press.svg"));
 
-        }
-    });
+//        }
+//    });
 
 
     btnList.append(thickTwoBtn);
@@ -1668,29 +1688,30 @@ void ShotToolWidget::initPenLabel()
     thickThreeBtn->setObjectName("thickThreeBtn");
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);
+    thickThreeBtn->setIcon(QIcon::fromTheme("brush big_normal"));
 //    thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-    if (m_themeType == 1) {
-        thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-    }
+//    if (m_themeType == 1) {
+//        thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//    }
 
-    else if (m_themeType == 2) {
-        thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
-    }
+//    else if (m_themeType == 2) {
+//        thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+//    }
 
-    connect(thickThreeBtn, &ToolButton::onPress, this, [ = ] {
-        if (m_themeType == 1)
-        {
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/press/brush big_press.svg"));
+//    connect(thickThreeBtn, &ToolButton::onPress, this, [ = ] {
+//        if (m_themeType == 1)
+//        {
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/press/brush big_press.svg"));
 
-        }
+//        }
 
-        else if (m_themeType == 2)
-        {
+//        else if (m_themeType == 2)
+//        {
 
-            thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/press/brush big_press.svg"));
+//            thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/press/brush big_press.svg"));
 
-        }
-    });
+//        }
+//    });
 
 
     btnList.append(thickThreeBtn);
@@ -1716,13 +1737,13 @@ void ShotToolWidget::initPenLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            thickOneBtn->setPalette(pa);
 //            thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
-            if (m_themeType == 1) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/checked/brush small_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush small_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush small_checked.svg"));
+//            }
 
             thickOneBtn->update();
 
@@ -1736,13 +1757,13 @@ void ShotToolWidget::initPenLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            thickOneBtn->setPalette(pa);
 //            thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-            if (m_themeType == 1) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/normal/brush small_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickOneBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush small_normal.svg"));
+//            }
 
             thickOneBtn->update();
         }
@@ -1754,13 +1775,13 @@ void ShotToolWidget::initPenLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            thickTwoBtn->setPalette(pa);
 //            thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
-            if (m_themeType == 1) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/checked/brush medium_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush medium_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush medium_checked.svg"));
+//            }
 
             thickTwoBtn->update();
 
@@ -1774,13 +1795,13 @@ void ShotToolWidget::initPenLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            thickTwoBtn->setPalette(pa);
 //            thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-            if (m_themeType == 1) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/normal/brush medium_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickTwoBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush medium_normal.svg"));
+//            }
 
 
             thickTwoBtn->update();
@@ -1793,13 +1814,13 @@ void ShotToolWidget::initPenLabel()
 //            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
 //            thickThreeBtn->setPalette(pa);
 //            thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
-            if (m_themeType == 1) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/checked/brush big_checked.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush big_checked.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/checked/brush big_checked.svg"));
+//            }
 
             thickThreeBtn->update();
 
@@ -1813,13 +1834,13 @@ void ShotToolWidget::initPenLabel()
 //            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //            thickThreeBtn->setPalette(pa);
 //            thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-            if (m_themeType == 1) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
-            }
+//            if (m_themeType == 1) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/normal/brush big_normal.svg"));
+//            }
 
-            else if (m_themeType == 2) {
-                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
-            }
+//            else if (m_themeType == 2) {
+//                thickThreeBtn->setIcon(QIcon(":/image/newUI/dark/normal/brush big_normal.svg"));
+//            }
 
             thickThreeBtn->update();
         }

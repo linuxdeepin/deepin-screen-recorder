@@ -14,5 +14,5 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, byzanz, ffmpeg, deepin-turbo
 Recommends: dde-session-ui
 Conflicts: deepin-screenshot
 Replaces: deepin-screenshot
-Description: Simple recorder tools for deepin
- A simple recorder tools for deepin.
+Description: Simple recorder tools for UOS
+ A simple screen shot and recorder tools for UOS
