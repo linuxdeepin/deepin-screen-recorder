@@ -505,7 +505,7 @@ void RecordProcess::stopRecord()
         << ((unsigned int) 0)                                    // id
         << QString("deepin-screen-recorder")                     // icon
         << tr("Recording finished")                              // summary
-        << QString("%1 %2").arg(tr("Saved to")).arg(newSavePath) // body
+        << QString(tr("Saved to %1")).arg(newSavePath) // body
         << actions                                               // actions
         << hints                                                 // hints
         << (int) -1;                                             // timeout

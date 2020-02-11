@@ -159,7 +159,6 @@ void MainWindow::initAttributes()
     }
 
 
-
 //    qDebug() << "screen width:" << m_screenWidth;
 
 
@@ -464,7 +463,7 @@ void MainWindow::initAttributes()
     m_recordButton->setIconSize(QSize(38, 38));
     m_recordButton->setIcon(QIcon(":/image/newUI/checked/screencap-checked.svg"));
 //    m_recordButton->setToolTip(tr("Start Record"));
-    installTipHint(m_recordButton, tr("Start Record"));
+//    installTipHint(m_recordButton, tr("Start Record"));
 //    m_recordButton->setToolTip(tr("Switch to record mode"));
 
     m_recordButton->setFixedSize(76, 58);
@@ -485,7 +484,7 @@ void MainWindow::initAttributes()
     m_shotButton->setIconSize(QSize(38, 38));
     m_shotButton->setIcon(QIcon(":/image/newUI/checked/screenshot-checked.svg"));
 //    m_shotButton->setToolTip(tr("Start Shot"));
-    installTipHint(m_shotButton, tr("Start Shot"));
+//    installTipHint(m_shotButton, tr("Start Shot"));
 //    m_shotButton->setToolTip(tr("Switch to shot mode"));
 
     m_shotButton->setFixedSize(76, 58);
@@ -937,7 +936,7 @@ void MainWindow::initLaunchMode(const QString &launchMode)
 
 void MainWindow::delayScreenshot(double num)
 {
-    QString summary = QString(tr("Deepin Screenshot will start after %1 seconds").arg(num));
+    QString summary = QString(tr("Screen Capture will start in %1 seconds").arg(num));
     QStringList actions = QStringList();
     QVariantMap hints;
     DBusNotify *notifyDBus = new DBusNotify(this);
@@ -2009,33 +2008,33 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
 
     qDebug() << "saveFilePath:" << saveFilePath;
 
-    QString summary;
-    if (saveAction == SaveAction::SaveToClipboard) {
-        summary = QString(tr("Picture has been saved to clipboard"));
-    } else {
-        summary = QString(tr("Picture has been saved to %1")).arg(saveFilePath);
-    }
+//    QString summary;
+//    if (saveAction == SaveAction::SaveToClipboard) {
+//        summary = QString(tr("Picture has been saved to clipboard"));
+//    } else {
+//        summary = QString(tr("Picture has been saved to %1")).arg(saveFilePath);
+//    }
 
-    if (saveAction == SaveAction::SaveToClipboard && !m_noNotify) {
+//    if (saveAction == SaveAction::SaveToClipboard && !m_noNotify) {
 
-        QVariantMap emptyMap;
-        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screenshot", "",
-                                    summary,  QStringList(), emptyMap, 5000);
-    }  else if ( !m_noNotify &&  !(m_saveIndex == SaveAction::SaveToSpecificDir && m_saveFileName.isEmpty())) {
+//        QVariantMap emptyMap;
+//        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screenshot", "",
+//                                    summary,  QStringList(), emptyMap, 5000);
+//    }  else if ( !m_noNotify &&  !(m_saveIndex == SaveAction::SaveToSpecificDir && m_saveFileName.isEmpty())) {
 
 //        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screen-recorder", "",
 //                                    summary, actions, hints, 0);
-        QList<QVariant> arg;
-        arg << (QCoreApplication::applicationName())                 // appname
-            << ((unsigned int) 0)                                    // id
-            << QString("deepin-screenshot")                     // icon
-            << tr("Screenshot finished")                              // summary
-            << QString(tr("Saved to %1")).arg(saveFilePath) // body
-            << actions                                               // actions
-            << hints                                                 // hints
-            << (int) 5000;
-        notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);// timeout
-    }
+    QList<QVariant> arg;
+    arg << (QCoreApplication::applicationName())                 // appname
+        << ((unsigned int) 0)                                    // id
+        << QString("deepin-screenshot")                     // icon
+        << tr("Screenshot finished")                              // summary
+        << QString(tr("Saved to %1")).arg(saveFilePath) // body
+        << actions                                               // actions
+        << hints                                                 // hints
+        << (int) 5000;
+    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);// timeout
+//    }
 
     QTimer::singleShot(2, [ = ] {
         emit releaseEvent();
@@ -3756,55 +3755,55 @@ void MainWindow::exitApp()
     qApp->quit();
 }
 
-void MainWindow::initVirtualCard()
-{
-    if (AudioUtils().canVirtualCardOutput()) {
-        return;
-    }
-    bool isOk;
+//void MainWindow::initVirtualCard()
+//{
+//    if (AudioUtils().canVirtualCardOutput()) {
+//        return;
+//    }
+//    bool isOk;
 
-    QString text = DInputDialog::getText(this, tr("Need authorization"), tr("Please enter your sudo password to be authorized"),
-                                         QLineEdit::Password, "", &isOk);
+//    QString text = DInputDialog::getText(this, tr("Need authorization"), tr("Please enter your sudo password to be authorized"),
+//                                         QLineEdit::Password, "", &isOk);
 
-    if (isOk) {
+//    if (isOk) {
 
-        QProcess p(this);
-        QStringList arguments;
-        arguments << QString("-c");
-        arguments << QString("echo %1 | sudo -S modprobe snd-aloop pcm_substreams=1 ; sudo sed -i '$ a snd_aloop' /etc/modules").arg(text);
-        qDebug() << arguments;
-        p.start("/bin/bash", arguments);
-        p.waitForFinished();
-//        p.waitForReadyRead();
-        p.close();
-        sleep(1);
+//        QProcess p(this);
+//        QStringList arguments;
+//        arguments << QString("-c");
+//        arguments << QString("echo %1 | sudo -S modprobe snd-aloop pcm_substreams=1 ; sudo sed -i '$ a snd_aloop' /etc/modules").arg(text);
+//        qDebug() << arguments;
+//        p.start("/bin/bash", arguments);
+//        p.waitForFinished();
+////        p.waitForReadyRead();
+//        p.close();
+//        sleep(1);
 
-        if (!AudioUtils().canVirtualCardOutput()) {
-            DDialog warnDlg(this);
-            warnDlg.setIcon(QIcon::fromTheme("deepin-screen-recorder"));
-            warnDlg.setTitle(tr("Password Error!"));
-            warnDlg.addSpacing(20);
-            warnDlg.addButton(tr("Ok"));
-            warnDlg.exec();
-        }
+//        if (!AudioUtils().canVirtualCardOutput()) {
+//            DDialog warnDlg(this);
+//            warnDlg.setIcon(QIcon::fromTheme("deepin-screen-recorder"));
+//            warnDlg.setTitle(tr("Password Error!"));
+//            warnDlg.addSpacing(20);
+//            warnDlg.addButton(tr("Ok"));
+//            warnDlg.exec();
+//        }
 
-        else {
-            DDialog warnDlg(this);
-            warnDlg.setIcon(QIcon::fromTheme("deepin-screen-recorder"));
-            warnDlg.setTitle(tr("Authentication success!"));
-            warnDlg.addSpacing(20);
-            warnDlg.addButton(tr("Ok"));
-            warnDlg.exec();
+//        else {
+//            DDialog warnDlg(this);
+//            warnDlg.setIcon(QIcon::fromTheme("deepin-screen-recorder"));
+//            warnDlg.setTitle(tr("Authentication success!"));
+//            warnDlg.addSpacing(20);
+//            warnDlg.addButton(tr("Ok"));
+//            warnDlg.exec();
 
-            if (m_toolBarInit) {
-                m_toolBar->setSystemAudioEnable(true);
-            }
-        }
+//            if (m_toolBarInit) {
+//                m_toolBar->setSystemAudioEnable(true);
+//            }
+//        }
 
 
-    }
+//    }
 
-}
+//}
 
 int MainWindow::getRecordInputType(bool selectedMic, bool selectedSystemAudio)
 {

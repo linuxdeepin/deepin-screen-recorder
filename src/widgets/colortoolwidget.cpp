@@ -77,12 +77,12 @@ void ColorToolWidget::initColorLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    m_redBtn->setPalette(pa);
 
-    m_redBtn->setToolTip(tr("Red"));
+//    m_redBtn->setToolTip(tr("Red"));
     m_redBtn->setObjectName("redBtn");
     m_redBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_redBtn->setIconSize(TOOL_ICON_SIZE);
     m_redBtn->setIcon(QIcon(":/image/newUI/normal/red.svg"));
-    m_redBtn->setToolTip(tr("Select Red"));
+//    m_redBtn->setToolTip(tr("Select Red"));
     toolBtnList.append(m_redBtn);
 
     m_yellowBtn = new ToolButton();
@@ -94,12 +94,12 @@ void ColorToolWidget::initColorLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    m_yellowBtn->setPalette(pa);
 
-    m_yellowBtn->setToolTip(tr("yellow"));
+//    m_yellowBtn->setToolTip(tr("yellow"));
     m_yellowBtn->setObjectName("yellowBtn");
     m_yellowBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_yellowBtn->setIconSize(TOOL_ICON_SIZE);
     m_yellowBtn->setIcon(QIcon(":/image/newUI/normal/yellow.svg"));
-    m_yellowBtn->setToolTip(tr("Select Yellow"));
+//    m_yellowBtn->setToolTip(tr("Select Yellow"));
     toolBtnList.append(m_yellowBtn);
 
     m_blueBtn = new ToolButton();
@@ -110,12 +110,12 @@ void ColorToolWidget::initColorLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    m_blueBtn->setPalette(pa);
 
-    m_blueBtn->setToolTip(tr("blue"));
+//    m_blueBtn->setToolTip(tr("blue"));
     m_blueBtn->setObjectName("blueBtn");
     m_blueBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_blueBtn->setIconSize(TOOL_ICON_SIZE);
     m_blueBtn->setIcon(QIcon(":/image/newUI/normal/blue.svg"));
-    m_blueBtn->setToolTip(tr("Select Blue"));
+//    m_blueBtn->setToolTip(tr("Select Blue"));
     toolBtnList.append(m_blueBtn);
 
     m_greenBtn = new ToolButton();
@@ -126,12 +126,12 @@ void ColorToolWidget::initColorLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    m_greenBtn->setPalette(pa);
 
-    m_greenBtn->setToolTip(tr("green"));
+//    m_greenBtn->setToolTip(tr("green"));
     m_greenBtn->setObjectName("greenBtn");
     m_greenBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_greenBtn->setIconSize(TOOL_ICON_SIZE);
     m_greenBtn->setIcon(QIcon(":/image/newUI/normal/green.svg"));
-    m_greenBtn->setToolTip(tr("Select Green"));
+//    m_greenBtn->setToolTip(tr("Select Green"));
     toolBtnList.append(m_greenBtn);
 
     m_baseLayout = new QVBoxLayout();

@@ -1,39 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="en" version="2.1">
-<context>
-    <name>ColorToolWidget</name>
-    <message>
-        <source>Red</source>
-        <translation>Red</translation>
-    </message>
-    <message>
-        <source>Select Red</source>
-        <translation>Select Red</translation>
-    </message>
-    <message>
-        <source>yellow</source>
-        <translation>yellow</translation>
-    </message>
-    <message>
-        <source>Select Yellow</source>
-        <translation>Select Yellow</translation>
-    </message>
-    <message>
-        <source>blue</source>
-        <translation>blue</translation>
-    </message>
-    <message>
-        <source>Select Blue</source>
-        <translation>Select Blue</translation>
-    </message>
-    <message>
-        <source>green</source>
-        <translation>green</translation>
-    </message>
-    <message>
-        <source>Select Green</source>
-        <translation>Select Green</translation>
-    </message>
-</context>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="en">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -50,16 +17,8 @@ or press the shortcut again to stop recording</translation>
         <translation>Record</translation>
     </message>
     <message>
-        <source>Switch to record mode</source>
-        <translation>Switch to record mode</translation>
-    </message>
-    <message>
-        <source>Shot</source>
-        <translation>Shot</translation>
-    </message>
-    <message>
-        <source>Switch to shot mode</source>
-        <translation>Switch to shot mode</translation>
+        <source>Screenshot</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -69,20 +28,8 @@ or press the shortcut again to stop recording</translation>
         <translation>Screen Capture</translation>
     </message>
     <message>
-        <source>Start Record</source>
-        <translation>Start Record</translation>
-    </message>
-    <message>
-        <source>Start Shot</source>
-        <translation>Start Shot</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Start recording</translation>
-    </message>
-    <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Deepin Screenshot will start after %1 seconds</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -93,20 +40,8 @@ or press the shortcut again to stop recording</translation>
         <translation>View</translation>
     </message>
     <message>
-        <source>Picture has been saved to clipboard</source>
-        <translation>Picture has been saved to clipboard</translation>
-    </message>
-    <message>
-        <source>Picture has been saved to %1</source>
-        <translation>Picture has been saved to %1</translation>
-    </message>
-    <message>
         <source>Screenshot finished</source>
         <translation>Screenshot finished</translation>
-    </message>
-    <message>
-        <source>Saved to</source>
-        <translation>Saved to</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -125,28 +60,16 @@ or press the shortcut again to stop recording</translation>
         <translation>select-area</translation>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Need authorization</translation>
-    </message>
-    <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Please enter your sudo password to be authorized</translation>
-    </message>
-    <message>
-        <source>Password Error!</source>
-        <translation>Password Error!</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation>Ok</translation>
-    </message>
-    <message>
-        <source>Authentication success!</source>
-        <translation>Authentication success!</translation>
-    </message>
-    <message>
         <source>Save</source>
         <translation>Save</translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -179,15 +102,15 @@ or press the shortcut again to stop recording</translation>
         <translation>Recording finished</translation>
     </message>
     <message>
-        <source>Saved to</source>
-        <translation>Saved to</translation>
+        <source>Saved to %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Deepin Screenshot will start after %1 seconds</translation>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -246,10 +169,6 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Save</source>
         <translation>Save</translation>
-    </message>
-    <message>
-        <source> </source>
-        <translation> </translation>
     </message>
     <message>
         <source>Rectangle</source>
@@ -323,18 +242,6 @@ or press the shortcut again to stop recording</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>fine</source>
-        <translation>fine</translation>
-    </message>
-    <message>
-        <source>medium</source>
-        <translation>medium</translation>
-    </message>
-    <message>
-        <source>thick</source>
-        <translation>thick</translation>
-    </message>
-    <message>
         <source>Blur</source>
         <translation>Blur</translation>
     </message>
@@ -342,52 +249,9 @@ or press the shortcut again to stop recording</translation>
         <source>Mosaic</source>
         <translation>Mosaic</translation>
     </message>
-    <message>
-        <source>line</source>
-        <translation>line</translation>
-    </message>
-    <message>
-        <source>arrow</source>
-        <translation>arrow</translation>
-    </message>
-</context>
-<context>
-    <name>SubToolBar</name>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Save to desktop</translation>
-    </message>
-    <message>
-        <source>Autosave</source>
-        <translation>Autosave</translation>
-    </message>
-    <message>
-        <source>Save to specified folder</source>
-        <translation>Save to specified folder</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Copy to clipboard</translation>
-    </message>
-    <message>
-        <source>Autosave and copy to clipboard</source>
-        <translation>Autosave and copy to clipboard</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation>Low</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation>High</translation>
-    </message>
 </context>
 <context>
     <name>SubToolWidget</name>
-    <message>
-        <source> </source>
-        <translation> </translation>
-    </message>
     <message>
         <source>Sound On</source>
         <translation>Sound On</translation>
@@ -527,14 +391,6 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Copy to clipboard</source>
         <translation>Copy to clipboard</translation>
-    </message>
-    <message>
-        <source>Need authorization</source>
-        <translation>Need authorization</translation>
-    </message>
-    <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Please enter your sudo password to be authorized</translation>
     </message>
 </context>
 <context>

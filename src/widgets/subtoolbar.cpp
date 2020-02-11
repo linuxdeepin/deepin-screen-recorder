@@ -408,35 +408,35 @@ void SubToolBar::initSaveLabel()
     ToolButton *saveDesktopBtn = new ToolButton();
     saveDesktopBtn->setFixedSize(SAVEBTN_SIZE);
     saveDesktopBtn->setObjectName("SaveToDesktop");
-    saveDesktopBtn->setTips(tr("Save to desktop"));
+//    saveDesktopBtn->setTips(tr("Save to desktop"));
     toolBtnMap[SaveAction::SaveToDesktop] = saveDesktopBtn;
 
     ToolButton *savePicBtn = new ToolButton();
     savePicBtn->setFixedSize(SAVEBTN_SIZE);
     savePicBtn->setObjectName("SaveToPictureDir");
-    savePicBtn->setTips(tr("Autosave"));
+//    savePicBtn->setTips(tr("Autosave"));
     toolBtnMap[SaveAction::AutoSave] = savePicBtn;
 
     ToolButton *saveSpecificDirBtn = new ToolButton();
     saveSpecificDirBtn->setFixedSize(SAVEBTN_SIZE);
     saveSpecificDirBtn->setObjectName("SaveToSpecificDir");
-    saveSpecificDirBtn->setTips(tr("Save to specified folder"));
+//    saveSpecificDirBtn->setTips(tr("Save to specified folder"));
     toolBtnMap[SaveAction::SaveToSpecificDir] = saveSpecificDirBtn;
 
     ToolButton *saveClipboardBtn = new ToolButton();
     saveClipboardBtn->setFixedSize(SAVEBTN_SIZE);
     saveClipboardBtn->setObjectName("SaveToClipboard");
-    saveClipboardBtn->setTips(tr("Copy to clipboard"));
+//    saveClipboardBtn->setTips(tr("Copy to clipboard"));
     toolBtnMap[SaveAction::SaveToClipboard] = saveClipboardBtn;
 
     ToolButton *saveAutoClipboardBtn = new ToolButton();
     saveAutoClipboardBtn->setObjectName("SaveToAutoClipboard");
-    saveAutoClipboardBtn->setTips(tr("Autosave and copy to clipboard"));
+//    saveAutoClipboardBtn->setTips(tr("Autosave and copy to clipboard"));
     toolBtnMap[SaveAction::SaveToAutoClipboard] = saveAutoClipboardBtn;
 
     DLabel *lowQualityText = new DLabel();
     lowQualityText->setObjectName("LowQualityLabel");
-    lowQualityText->setText(tr("Low"));
+//    lowQualityText->setText(tr("Low"));
     QSlider *saveQualitySlider = new QSlider(Qt::Horizontal);
     saveQualitySlider->setFixedWidth(58);
     saveQualitySlider->setMinimum(50);
@@ -450,7 +450,7 @@ void SubToolBar::initSaveLabel()
 
     DLabel *highQualityText = new DLabel();
     highQualityText->setObjectName("HighQualityLabel");
-    highQualityText->setText(tr("High"));
+//    highQualityText->setText(tr("High"));
 
     m_saveLabel = new DLabel(this);
     QHBoxLayout *saveLayout = new QHBoxLayout();

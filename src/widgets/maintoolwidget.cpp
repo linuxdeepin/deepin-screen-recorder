@@ -95,7 +95,7 @@ void MainToolWidget::initMainLabel()
 //    }
 
 //    m_recordBtn->setToolTip(tr("Switch to record mode"));
-    installTipHint(m_recordBtn, tr("Switch to record mode"));
+//    installTipHint(m_recordBtn, tr("Switch to record mode"));
 //    recordBtn->setStyleSheet(record_button_style);
     toolBtnList.append(m_recordBtn);
 
@@ -116,7 +116,7 @@ void MainToolWidget::initMainLabel()
     m_shotBtn = new ToolButton();
     DFontSizeManager::instance()->bind(m_shotBtn, DFontSizeManager::T8);
 
-    m_shotBtn->setText(tr("Shot"));
+    m_shotBtn->setText(tr("Screenshot"));
     m_shotBtn->setObjectName("ShotBtn");
 //    m_shotBtn->setMinimumSize(TOOL_BUTTON_SIZE);
     m_shotBtn->setMinimumHeight(40);
@@ -145,7 +145,7 @@ void MainToolWidget::initMainLabel()
 //    });
 
 //    m_shotBtn->setToolTip(tr("Switch to shot mode"));
-    installTipHint(m_shotBtn, tr("Switch to shot mode"));
+//    installTipHint(m_shotBtn, tr("Switch to shot mode"));
 //    shotBtn->setStyleSheet(shot_button_style);
     toolBtnList.append(m_shotBtn);
 

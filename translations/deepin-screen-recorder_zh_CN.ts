@@ -2,41 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
-    <name>ColorToolWidget</name>
-    <message>
-        <source>Red</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>yellow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>blue</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>green</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select Red</source>
-        <translation>红色</translation>
-    </message>
-    <message>
-        <source>Select Yellow</source>
-        <translation>黄色</translation>
-    </message>
-    <message>
-        <source>Select Blue</source>
-        <translation>蓝色</translation>
-    </message>
-    <message>
-        <source>Select Green</source>
-        <translation>绿色</translation>
-    </message>
-</context>
-<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -51,63 +16,23 @@ or press the shortcut again to stop recording</source>
         <translation>录屏</translation>
     </message>
     <message>
-        <source>Shot</source>
+        <source>Screenshot</source>
         <translation>截图</translation>
-    </message>
-    <message>
-        <source>Switch to record mode</source>
-        <translation>切换录屏</translation>
-    </message>
-    <message>
-        <source>Switch to shot mode</source>
-        <translation>切换截屏</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
-    <message>
-        <source>Need authorization</source>
-        <translation>需要授权</translation>
-    </message>
-    <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>输入sudo密码激活内置音频功能，取消将无法录制内置音频</translation>
-    </message>
     <message>
         <source>Start recording</source>
         <translation>开始录制</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation type="unfinished"></translation>
+        <translation>保存失败，请保存到用户目录下</translation>
     </message>
     <message>
         <source>View</source>
         <translation>查看</translation>
-    </message>
-    <message>
-        <source>Picture has been saved to clipboard</source>
-        <translation>图片已经保存至剪贴板</translation>
-    </message>
-    <message>
-        <source>Picture has been saved to %1</source>
-        <translation>图片已经保存到%1</translation>
-    </message>
-    <message>
-        <source>Saved to</source>
-        <translation>图片已经保存到</translation>
-    </message>
-    <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>截图将会在%1秒后启动</translation>
-    </message>
-    <message>
-        <source>Start Record</source>
-        <translation>开始录屏</translation>
-    </message>
-    <message>
-        <source>Start Shot</source>
-        <translation>开始截图</translation>
     </message>
     <message>
         <source>Screen Capture</source>
@@ -120,18 +45,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>select-area</source>
         <translation>选择区域</translation>
-    </message>
-    <message>
-        <source>Password Error!</source>
-        <translation>密码错误！</translation>
-    </message>
-    <message>
-        <source>Authentication success!</source>
-        <translation>认证成功！</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation>确定</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -148,6 +61,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Save</source>
         <translation type="unfinished">保存</translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation>图片已保存到%1</translation>
+    </message>
+    <message>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>截图录屏将在%1秒后启动</translation>
     </message>
 </context>
 <context>
@@ -176,19 +97,19 @@ or press the shortcut again to stop recording</source>
         <translation>录制完成</translation>
     </message>
     <message>
-        <source>Saved to</source>
-        <translation>文件已保存到</translation>
-    </message>
-    <message>
         <source>Screen Capture</source>
         <translation>截图录屏</translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation>文件已保存到%1</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation type="unfinished">截图将会在%1秒后启动</translation>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation type="unfinished">截图录屏将在%1秒后启动</translation>
     </message>
 </context>
 <context>
@@ -316,33 +237,9 @@ or press the shortcut again to stop recording</source>
         <source>Window screenshot</source>
         <translation type="unfinished">光标所在窗口截图</translation>
     </message>
-    <message>
-        <source> </source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
-    <message>
-        <source>line</source>
-        <translation>直线</translation>
-    </message>
-    <message>
-        <source>arrow</source>
-        <translation>箭头</translation>
-    </message>
-    <message>
-        <source>fine</source>
-        <translation>细</translation>
-    </message>
-    <message>
-        <source>medium</source>
-        <translation>中</translation>
-    </message>
-    <message>
-        <source>thick</source>
-        <translation>粗</translation>
-    </message>
     <message>
         <source>Blur</source>
         <translation>模糊</translation>
@@ -353,46 +250,7 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
-    <name>SubToolBar</name>
-    <message>
-        <source>Save to desktop</source>
-        <translation type="unfinished">保存到桌面</translation>
-    </message>
-    <message>
-        <source>Autosave</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save to specified folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation type="unfinished">复制到剪贴板</translation>
-    </message>
-    <message>
-        <source>Autosave and copy to clipboard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>SubToolWidget</name>
-    <message>
-        <source>Need authorization</source>
-        <translation>需要授权</translation>
-    </message>
-    <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>输入sudo密码激活内置音频功能，取消将无法录制内置音频</translation>
-    </message>
     <message>
         <source>GIF</source>
         <translation>GIF格式</translation>
@@ -404,10 +262,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Microphone</source>
         <translation>麦克风</translation>
-    </message>
-    <message>
-        <source> </source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Save to</source>

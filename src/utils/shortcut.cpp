@@ -43,9 +43,9 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
 
     group2.groupItems << ShortcutItem(tr("Exit"),   "Esc") <<
                       ShortcutItem(tr("Save"), "Ctrl+S") <<
-                      ShortcutItem(tr(" "),   " ") <<
-                      ShortcutItem(tr(" "),   " ") <<
-                      ShortcutItem(tr(" "),   " ");
+                      ShortcutItem(" ",   " ") <<
+                      ShortcutItem(" ",   " ") <<
+                      ShortcutItem(" ",   " ");
 
 
     group3.groupItems <<
@@ -56,9 +56,9 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
                       ShortcutItem(tr("Text"),           "T") <<
                       ShortcutItem(tr("Delete"),    "Delete") <<
                       ShortcutItem(tr("Undo"), "Ctrl+Z") <<
-                      ShortcutItem(tr(" "),   " ") <<
-                      ShortcutItem(tr(" "),   " ") <<
-                      ShortcutItem(tr(" "),   " ");
+                      ShortcutItem(" ",   " ") <<
+                      ShortcutItem(" ",   " ") <<
+                      ShortcutItem(" ",   " ");
 
     group4.groupItems <<
                       ShortcutItem(tr("Increase height up"), "Ctrl+Up") <<

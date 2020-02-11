@@ -109,7 +109,7 @@ void ShotToolWidget::initRectLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    thickOneBtn->setPalette(pa);
 
-    thickOneBtn->setToolTip(tr("fine"));
+//    thickOneBtn->setToolTip(tr("fine"));
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
@@ -148,7 +148,7 @@ void ShotToolWidget::initRectLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    thickTwoBtn->setPalette(pa);
 
-    thickTwoBtn->setToolTip(tr("medium"));
+//    thickTwoBtn->setToolTip(tr("medium"));
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
@@ -186,7 +186,7 @@ void ShotToolWidget::initRectLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    thickThreeBtn->setPalette(pa);
 
-    thickThreeBtn->setToolTip(tr("thick"));
+//    thickThreeBtn->setToolTip(tr("thick"));
     thickThreeBtn->setObjectName("thickThreeBtn");
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);
@@ -607,7 +607,7 @@ void ShotToolWidget::initCircLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    thickOneBtn->setPalette(pa);
 
-    thickOneBtn->setToolTip(tr("fine"));
+//    thickOneBtn->setToolTip(tr("fine"));
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
@@ -646,7 +646,7 @@ void ShotToolWidget::initCircLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    thickTwoBtn->setPalette(pa);
 
-    thickTwoBtn->setToolTip(tr("medium"));
+//    thickTwoBtn->setToolTip(tr("medium"));
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
@@ -685,7 +685,7 @@ void ShotToolWidget::initCircLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    thickThreeBtn->setPalette(pa);
 
-    thickThreeBtn->setToolTip(tr("thick"));
+//    thickThreeBtn->setToolTip(tr("thick"));
     thickThreeBtn->setObjectName("thickThreeBtn");
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);
@@ -1116,7 +1116,7 @@ void ShotToolWidget::initLineLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    thickOneBtn->setPalette(pa);
 
-    thickOneBtn->setToolTip(tr("fine"));
+//    thickOneBtn->setToolTip(tr("fine"));
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
@@ -1156,7 +1156,7 @@ void ShotToolWidget::initLineLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    thickTwoBtn->setPalette(pa);
 
-    thickTwoBtn->setToolTip(tr("medium"));
+//    thickTwoBtn->setToolTip(tr("medium"));
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
@@ -1196,7 +1196,7 @@ void ShotToolWidget::initLineLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    thickThreeBtn->setPalette(pa);
 
-    thickThreeBtn->setToolTip(tr("thick"));
+//    thickThreeBtn->setToolTip(tr("thick"));
     thickThreeBtn->setObjectName("thickThreeBtn");
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);
@@ -1385,7 +1385,7 @@ void ShotToolWidget::initLineLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    blurButton->setPalette(pa);
 
-    blurButton->setToolTip(tr("line"));
+//    blurButton->setToolTip(tr("line"));
     blurButton->setObjectName("blurButton");
     blurButton->setFixedSize(TOOL_BUTTON_SIZE);
     blurButton->setIconSize(TOOL_ICON_SIZE);
@@ -1425,7 +1425,7 @@ void ShotToolWidget::initLineLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    mosaicBtn->setPalette(pa);
 
-    mosaicBtn->setToolTip(tr("arrow"));
+//    mosaicBtn->setToolTip(tr("arrow"));
     mosaicBtn->setObjectName("mosaicBtn");
     mosaicBtn->setFixedSize(TOOL_BUTTON_SIZE);
     mosaicBtn->setIconSize(TOOL_ICON_SIZE);
@@ -1603,7 +1603,7 @@ void ShotToolWidget::initPenLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    thickOneBtn->setPalette(pa);
 
-    thickOneBtn->setToolTip(tr("fine"));
+//    thickOneBtn->setToolTip(tr("fine"));
     thickOneBtn->setObjectName("thickOneBtn");
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
@@ -1643,7 +1643,7 @@ void ShotToolWidget::initPenLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    thickTwoBtn->setPalette(pa);
 
-    thickTwoBtn->setToolTip(tr("medium"));
+//    thickTwoBtn->setToolTip(tr("medium"));
     thickTwoBtn->setObjectName("thickTwoBtn");
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
@@ -1684,7 +1684,7 @@ void ShotToolWidget::initPenLabel()
 //    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
 //    thickThreeBtn->setPalette(pa);
 
-    thickThreeBtn->setToolTip(tr("thick"));
+//    thickThreeBtn->setToolTip(tr("thick"));
     thickThreeBtn->setObjectName("thickThreeBtn");
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);

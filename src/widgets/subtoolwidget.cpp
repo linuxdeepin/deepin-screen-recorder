@@ -130,7 +130,7 @@ void SubToolWidget::initRecordLabel()
 //    audioButton->setStyleSheet(audio_button_style);
 
     audioButton->setObjectName("AudioButton");
-    audioButton->setText(tr(" "));
+    audioButton->setText(" ");
     audioButton->setIconSize(TOOL_ICON_SIZE);
 //    audioButton->setToolTip(tr("Sound On"));
     installTipHint(audioButton, tr("Sound On"));
@@ -1571,29 +1571,29 @@ void SubToolWidget::initShotLabel()
 //    rectButton->click();
 }
 
-void SubToolWidget::initVirtualCard()
-{
-    if (AudioUtils().canVirtualCardOutput()) {
-        return;
-    }
-    bool isOk;
-    QString text = DInputDialog::getText(this, tr("Need authorization"), tr("Please enter your sudo password to be authorized"),
-                                         QLineEdit::Password, "", &isOk);
-    if (isOk) {
+//void SubToolWidget::initVirtualCard()
+//{
+//    if (AudioUtils().canVirtualCardOutput()) {
+//        return;
+//    }
+//    bool isOk;
+//    QString text = DInputDialog::getText(this, tr("Need authorization"), tr("Please enter your sudo password to be authorized"),
+//                                         QLineEdit::Password, "", &isOk);
+//    if (isOk) {
 
-        QProcess p(this);
-        QStringList arguments;
-        arguments << QString("-c");
-        arguments << QString("echo %1 | sudo -S modprobe snd-aloop pcm_substreams=1 ; sudo sed -i '$ a snd_aloop' /etc/modules").arg(text);
-        qDebug() << arguments;
-        p.start("/bin/bash", arguments);
-        p.waitForFinished();
-        p.waitForReadyRead();
-        p.close();
+//        QProcess p(this);
+//        QStringList arguments;
+//        arguments << QString("-c");
+//        arguments << QString("echo %1 | sudo -S modprobe snd-aloop pcm_substreams=1 ; sudo sed -i '$ a snd_aloop' /etc/modules").arg(text);
+//        qDebug() << arguments;
+//        p.start("/bin/bash", arguments);
+//        p.waitForFinished();
+//        p.waitForReadyRead();
+//        p.close();
 
-        sleep(1);
-    }
-}
+//        sleep(1);
+//    }
+//}
 
 void SubToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 {

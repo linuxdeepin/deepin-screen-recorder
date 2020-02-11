@@ -117,7 +117,7 @@ Name[zh_TW]=Deepin 螢幕錄影
 
 [X-Full Shortcut Group]
 Exec=dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.FullscreenScreenshot
-Name=Full screenshot
+Name=Full Screenshot
 
 # Translations:
 # Do not manually modify!
@@ -127,7 +127,7 @@ Name[zh_TW]=全屏截圖
 
 [X-Delay Shortcut Group]
 Exec=dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.DelayScreenshot int64:5
-Name=Delay screenshot
+Name=Delay Screenshot
 
 # Translations:
 # Do not manually modify!

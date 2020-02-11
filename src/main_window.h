@@ -182,7 +182,7 @@ public slots:
     void shotImgWidthEffect();
     void changeArrowAndLineEvent(int line);
     void exitApp();
-    void initVirtualCard();
+//    void initVirtualCard();
     void onViewShortcut();
     void shapeClickedSlot(QString shape);
     void on_CheckRecodeCouldUse(bool canUse);

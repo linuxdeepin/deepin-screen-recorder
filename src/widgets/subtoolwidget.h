@@ -38,7 +38,7 @@ public:
     void initWidget();
     void initRecordLabel();
     void initShotLabel();
-    void initVirtualCard();
+//    void initVirtualCard();
     void installTipHint(QWidget *w, const QString &hintstr);
     void installHint(QWidget *w, QWidget *hint);
 signals:
