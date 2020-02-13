@@ -186,3 +186,17 @@ QString AudioUtils::currentAudioSource()
     process.close();
     return str_output;
 }
+
+QString AudioUtils::currentAudioChannel()
+{
+    QStringList options;
+    options << "-c";
+    options << "pacmd list-sources | grep -PB 1 'analog.*monitor>' | head -n 1 | perl -pe 's/.* //g'";
+    QProcess process;
+    process.start("bash", options);
+    process.waitForFinished();
+    process.waitForReadyRead();
+    QString str_output = process.readAllStandardOutput();
+    process.close();
+    return str_output;
+}

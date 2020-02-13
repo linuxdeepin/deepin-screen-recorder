@@ -147,6 +147,12 @@ void RecordProcess::recordGIF()
 void RecordProcess::recordVideo()
 {
     initProcess();
+    //取系统音频的通道号
+    AudioUtils *audioUtils = new AudioUtils(this);
+    QString t_currentAudioChannel = audioUtils->currentAudioChannel();
+
+    t_currentAudioChannel = t_currentAudioChannel.left(t_currentAudioChannel.size() - 1);
+    qDebug() << "current audio channel:" << t_currentAudioChannel;
 
     // FFmpeg need pass arugment split two part: -option value,
     // otherwise, it will report 'Unrecognized option' error.
@@ -199,54 +205,87 @@ void RecordProcess::recordVideo()
             arguments << QString("-i");
             arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
             if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
-                AudioUtils *audioUtils = new AudioUtils(this);
+
                 lastAudioSink = audioUtils->currentAudioSink();
-                audioUtils->setupSystemAudioOutput();
+//                audioUtils->setupSystemAudioOutput();
 
-                arguments << QString("-thread_queue_size");
-                arguments << QString("1024");
-                arguments << QString("-f");
-                arguments << QString("alsa");
-                arguments << QString("-ac");
-                arguments << QString("2");
-                arguments << QString("-i");
-                arguments << QString("hw:Loopback,1,0");
+//                arguments << QString("-thread_queue_size");
+//                arguments << QString("1024");
+//                arguments << QString("-f");
+//                arguments << QString("alsa");
+//                arguments << QString("-ac");
+//                arguments << QString("2");
+//                arguments << QString("-i");
+//                arguments << QString("hw:Loopback,1,0");
 
-                arguments << QString("-thread_queue_size");
-                arguments << QString("1024");
+//                arguments << QString("-thread_queue_size");
+//                arguments << QString("1024");
+
                 arguments << QString("-f");
                 arguments << QString("pulse");
-                arguments << QString("-ac");
-                arguments << QString("2");
+
+                arguments << QString("-i");
+                arguments << QString("%1").arg(t_currentAudioChannel);
+
+
+                arguments << QString("-f");
+                arguments << QString("pulse");
+
                 arguments << QString("-i");
                 arguments << QString("default");
+
                 arguments << QString("-filter_complex");
-                arguments << QString("amix=inputs=2:duration=first:dropout_transition=0");
+                arguments << QString("amerge");
+
+                arguments << QString("-ac");
+                arguments << QString("2");
+
+                arguments << QString("-preset");
+                arguments << QString("ultrafast");
+//                arguments << QString("-filter_complex");
+//                arguments << QString("amix=inputs=2:duration=first:dropout_transition=0");
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC) {
-                AudioUtils *audioUtils = new AudioUtils(this);
+//                AudioUtils *audioUtils = new AudioUtils(this);
                 lastAudioSink = audioUtils->currentAudioSink();
 
-                arguments << QString("-thread_queue_size");
-                arguments << QString("1024");
+//                arguments << QString("-thread_queue_size");
+//                arguments << QString("1024");
                 arguments << QString("-f");
                 arguments << QString("pulse");
-                arguments << QString("-ac");
-                arguments << QString("2");
+//                arguments << QString("-ac");
+//                arguments << QString("2");
                 arguments << QString("-i");
                 arguments << QString("default");
-            } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
-                AudioUtils *audioUtils = new AudioUtils(this);
-                lastAudioSink = audioUtils->currentAudioSink();
-                audioUtils->setupSystemAudioOutput();
 
-                arguments << QString("-thread_queue_size");
-                arguments << QString("1024");
+                arguments << QString("-preset");
+                arguments << QString("ultrafast");
+            } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
+//                AudioUtils *audioUtils = new AudioUtils(this);
+                lastAudioSink = audioUtils->currentAudioSink();
+//                audioUtils->setupSystemAudioOutput();
+
+//                arguments << QString("-thread_queue_size");
+//                arguments << QString("1024");
+//                arguments << QString("-f");
+//                arguments << QString("alsa");
+//                arguments << QString("-ac");
+//                arguments << QString("2");
+//                arguments << QString("-i");
+//                arguments << QString("hw:Loopback,1,0");
+//                arguments << QString("-thread_queue_size");
+//                arguments << QString("4096");
                 arguments << QString("-f");
-                arguments << QString("alsa");
-                arguments << QString("-ac");
-                arguments << QString("2");
+                arguments << QString("pulse");
+//                arguments << QString("-ac");
+//                arguments << QString("2");
                 arguments << QString("-i");
-                arguments << QString("hw:Loopback,1,0");
+                arguments << QString("%1").arg(t_currentAudioChannel);
+
+//                arguments << QString("-crf");
+//                arguments << QString("0");
+
+                arguments << QString("-preset");
+                arguments << QString("ultrafast");
             }
 
             // Most mobile mplayer can't decode yuv444p (ffempg default format) video, yuv420p looks good.
@@ -255,10 +294,13 @@ void RecordProcess::recordVideo()
 
             // append crf parameter here
             arguments << QString("-crf");
-            arguments << QString("25");
+            arguments << QString("20");
 
             arguments << QString("-vf");
             arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
+
+//            arguments << QString("-threads");
+//            arguments << QString("0");
 
             arguments << savePath;
         }
@@ -511,10 +553,10 @@ void RecordProcess::stopRecord()
         << (int) -1;                                             // timeout
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
 
-    if (lastAudioSink.length() > 0) {
-        AudioUtils *audioUtils = new AudioUtils(this);
-        audioUtils->setupAudioSink(lastAudioSink);
-    }
+//    if (lastAudioSink.length() > 0) {
+//        AudioUtils *audioUtils = new AudioUtils(this);
+////        audioUtils->setupAudioSink(lastAudioSink);
+//    }
 
     QApplication::quit();
 }

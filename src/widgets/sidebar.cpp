@@ -43,8 +43,8 @@ const int BTN_RADIUS = 3;
 
 
 SideBarWidget::SideBarWidget(DWidget *parent)
-    : DFloatingWidget(parent),
-      m_expanded(false)
+    : DFloatingWidget(parent)
+    ,  m_expanded(false)
 {
     int t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     setBlurBackgroundEnabled(true);

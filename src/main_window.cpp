@@ -3225,6 +3225,10 @@ void MainWindow::startRecord()
     recordProcess.setRecordAudioInputType(getRecordInputType(m_selectedMic, m_selectedSystemAudio));
     recordProcess.setIsZhaoXinPlatform(m_isZhaoxin);
     recordProcess.startRecord();
+
+    m_pVoiceVolumeWatcher->stopWatch();
+
+    m_pCameraWatcher->stopWatch();
 //    voiceRecordProcess.startRecord();
 }
 

@@ -35,6 +35,7 @@ public:
     static bool canMicrophoneInput();
     QString currentAudioSink();
     QString currentAudioSource();
+    QString currentAudioChannel();
 private:
     void initProcess();
 
