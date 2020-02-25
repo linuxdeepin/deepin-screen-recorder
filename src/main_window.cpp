@@ -454,6 +454,7 @@ void MainWindow::initAttributes()
     //构建截屏录屏功能触发按钮
     DPalette pa;
     m_recordButton = new DPushButton(this);
+    m_recordButton->setFocusPolicy(Qt::NoFocus);
 
     pa = m_recordButton->palette();
     pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
@@ -474,7 +475,8 @@ void MainWindow::initAttributes()
 
 
     m_shotButton = new DPushButton(this);
-    m_shotButton->setFocusPolicy(Qt::ClickFocus);
+    m_recordButton->setFocusPolicy(Qt::NoFocus);
+//    m_shotButton->setFocusPolicy(Qt::ClickFocus);
 
     pa = m_shotButton->palette();
     pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
