@@ -2168,10 +2168,41 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
         QString fileSuffix = QFileInfo(m_saveFileName).completeSuffix();
         if (fileSuffix.isEmpty()) {
-            m_saveFileName = m_saveFileName + ".png";
+//            m_saveFileName = m_saveFileName + ".png";
+
+            switch (t_pictureFormat) {
+            case 0:
+                m_saveFileName = m_saveFileName + ".png";
+                break;
+            case 1:
+                m_saveFileName = m_saveFileName + ".jpg";
+                break;
+            case 2:
+                m_saveFileName = m_saveFileName + ".bmp";
+                break;
+            default:
+                m_saveFileName = m_saveFileName + ".png";
+                break;
+            }
         } else if ( !isValidFormat(fileSuffix)) {
             qWarning() << "The fileName has invalid suffix!" << fileSuffix << m_saveFileName;
-            return false;
+
+            switch (t_pictureFormat) {
+            case 0:
+                m_saveFileName = m_saveFileName + ".png";
+                break;
+            case 1:
+                m_saveFileName = m_saveFileName + ".jpg";
+                break;
+            case 2:
+                m_saveFileName = m_saveFileName + ".bmp";
+                break;
+            default:
+                m_saveFileName = m_saveFileName + ".png";
+                break;
+            }
+
+//            return false;
         }
 
         ConfigSettings::instance()->setValue("common", "default_savepath",
