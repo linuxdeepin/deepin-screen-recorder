@@ -3210,6 +3210,7 @@ void MainWindow::checkCpuIsZhaoxin()
 void MainWindow::startRecord()
 {
 //    Utils::clearBlur(windowManager, this->winId());
+//    emit releaseEvent();
     recordButtonStatus = RECORD_BUTTON_RECORDING;
 
     resetCursor();
@@ -3504,6 +3505,9 @@ void MainWindow::stopRecord()
 void MainWindow::startCountdown()
 {
     recordButtonStatus = RECORD_BUTTON_WAIT;
+
+    disconnect(m_recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
+    disconnect(m_shotButton, SIGNAL(clicked()), this, SLOT(saveScreenShot()));
 
     const qreal ratio = devicePixelRatioF();
     const QPoint topLeft = geometry().topLeft();
