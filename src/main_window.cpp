@@ -3245,11 +3245,12 @@ void MainWindow::shotCurrentImg()
     update();
 
     QEventLoop eventloop1;
-    QTimer::singleShot(300, &eventloop1, SLOT(quit()));
+    QTimer::singleShot(8, &eventloop1, SLOT(quit()));
     eventloop1.exec();
 
     qDebug() << "shotCurrentImg shotFullScreen";
     if (m_isShapesWidgetExist) {
+        qDebug() << "hide shotFullScreen";
         m_shapesWidget->hide();
     }
     m_sizeTips->hide();
