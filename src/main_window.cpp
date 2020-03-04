@@ -57,6 +57,7 @@
 #include "utils/configsettings.h"
 #include "utils/audioutils.h"
 #include "utils/shortcut.h"
+#include "utils/screengrabber.h"
 #include "camera_process.h"
 #include "widgets/tooltips.h"
 
@@ -203,7 +204,7 @@ void MainWindow::initAttributes()
     createWinId();
 
     ConfigSettings::instance();
-    const qreal ratio = devicePixelRatioF();
+    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     QPoint curPos = this->cursor().pos();
 
     // Get all windows geometry.
@@ -1119,7 +1120,7 @@ void MainWindow::topWindow()
     this->hide();
     emit this->hideScreenshotUI();
 
-    const qreal ratio = this->devicePixelRatioF();
+    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     QRect target( recordX * ratio,
                   recordY * ratio,
                   recordWidth * ratio,
@@ -1182,25 +1183,10 @@ void MainWindow::initBackground()
 
 QPixmap MainWindow::getPixmapofRect(const QRect &rect)
 {
-    QRect r(rect.topLeft() * devicePixelRatioF(), rect.size());
-
-    int t_screenNum = QApplication::desktop()->screenCount();
-
-    if (t_screenNum == 1) {
-        QList<QScreen *> screenList = qApp->screens();
-        for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
-            if ((*it)->geometry().contains(r)) {
-                return (*it)->grabWindow(0, rect.x(), rect.y(), rect.width(), rect.height());
-            }
-        }
-    }
-
-    else {
-        QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
-        return t_primaryScreen->grabWindow(0, rect.x(), rect.y(), rect.width(), rect.height());
-    }
-
-    return QPixmap();
+    QScreen *screen = qApp->primaryScreen();
+    const qreal dpiVal = screen->devicePixelRatio();
+    bool ok;
+    return m_screenGrabber.grabEntireDesktop(ok, rect, dpiVal);
 }
 
 void MainWindow::installTipHint(QWidget *w, const QString &hintstr)
@@ -2386,7 +2372,9 @@ void MainWindow::paintEvent(QPaintEvent *event)
         painter.setRenderHint(QPainter::Antialiasing, true);
         QRect backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
         // FIXME: Under the magnifying glass, it seems to be magnified two times.
-        m_backgroundPixmap.setDevicePixelRatio(devicePixelRatioF());
+        QScreen *screen = qApp->primaryScreen();
+        const qreal dpiVal = screen->devicePixelRatio();
+        m_backgroundPixmap.setDevicePixelRatio(dpiVal);
         painter.drawPixmap(backgroundRect, m_backgroundPixmap);
 //        DWidget::paintEvent(event);
         return;
@@ -2399,7 +2387,9 @@ void MainWindow::paintEvent(QPaintEvent *event)
         painter.setRenderHint(QPainter::Antialiasing, true);
         QRect backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
         // FIXME: Under the magnifying glass, it seems to be magnified two times.
-        m_backgroundPixmap.setDevicePixelRatio(devicePixelRatioF());
+        QScreen *screen = qApp->primaryScreen();
+        const qreal dpiVal = screen->devicePixelRatio();
+        m_backgroundPixmap.setDevicePixelRatio(dpiVal);
         painter.drawPixmap(backgroundRect, m_backgroundPixmap);
     }
 
@@ -3029,9 +3019,11 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             else {
                 if (m_functionType == 1) {
                     if (!m_toolBar->isVisible() && !isFirstReleaseButton) {
+                        QScreen *screen = qApp->primaryScreen();
+                        const qreal dpiVal = screen->devicePixelRatio();
                         QPoint curPos = this->cursor().pos();
                         QPoint tmpPos;
-                        QPoint topLeft = m_backgroundRect.topLeft() * devicePixelRatioF();
+                        QPoint topLeft = m_backgroundRect.topLeft() * dpiVal;
 
                         if (curPos.x() + INDICATOR_WIDTH + CURSOR_WIDTH > topLeft.x()
                                 + m_backgroundRect.width()) {
@@ -3115,7 +3107,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
             } else {
                 // Select the first window where the mouse is located
-                const qreal ratio = devicePixelRatioF();
+                QScreen *screen = qApp->primaryScreen();
+                const qreal ratio = screen->devicePixelRatio();
                 const QPoint mousePoint = QCursor::pos();
                 for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
                     if (QRect(it->x(), it->y(), it->width(), it->height()).contains(mousePoint)) {
@@ -3292,7 +3285,7 @@ void MainWindow::shotCurrentImg()
     this->hide();
     emit hideScreenshotUI();
 
-    const qreal ratio = this->devicePixelRatioF();
+    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     qDebug() << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect();
     QRect target( recordX * ratio,
                   recordY * ratio,
@@ -3304,7 +3297,7 @@ void MainWindow::shotCurrentImg()
 
 void MainWindow::shotFullScreen()
 {
-    const qreal ratio = this->devicePixelRatioF();
+    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     QRect target( m_backgroundRect.x(),
                   m_backgroundRect.y(),
                   m_backgroundRect.width(),
@@ -3543,7 +3536,7 @@ void MainWindow::startCountdown()
     disconnect(m_recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
     disconnect(m_shotButton, SIGNAL(clicked()), this, SLOT(saveScreenShot()));
 
-    const qreal ratio = devicePixelRatioF();
+    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     const QPoint topLeft = geometry().topLeft();
 
     QRect recordRect {
@@ -3901,7 +3894,7 @@ void MainWindow::shotImgWidthEffect()
 //    eventloop.exec();
 
     qDebug() << m_toolBar->isVisible() << m_sizeTips->isVisible();
-    const qreal ratio = devicePixelRatioF();
+    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
 //    const QRect rect(m_shapesWidget->geometry().topLeft() * ratio, m_shapesWidget->geometry().size() * ratio);
 
     QRect target( m_shapesWidget->geometry().x() * ratio,

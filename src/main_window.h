@@ -55,6 +55,7 @@
 #include "utils/saveutils.h"
 #include "utils/voicevolumewatcher.h"
 #include "utils/camerawatcher.h"
+#include "utils/screengrabber.h"
 
 #include "dbusinterface/dbuscontrolcenter.h"
 #include "dbusinterface/dbusnotify.h"
@@ -225,6 +226,7 @@ private:
     RecordProcess recordProcess;
     voiceVolumeWatcher *m_pVoiceVolumeWatcher;
     CameraWatcher *m_pCameraWatcher;
+    ScreenGrabber m_screenGrabber;
 //    VoiceRecordProcess voiceRecordProcess;
 //    WindowRect rootWindowRect;
     QRect rootWindowRect;
