@@ -3269,7 +3269,7 @@ void MainWindow::shotCurrentImg()
     update();
 
     QEventLoop eventloop1;
-    QTimer::singleShot(8, &eventloop1, SLOT(quit()));
+    QTimer::singleShot(60, &eventloop1, SLOT(quit()));
     eventloop1.exec();
 
     qDebug() << "shotCurrentImg shotFullScreen";
