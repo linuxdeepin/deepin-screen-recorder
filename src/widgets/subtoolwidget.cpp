@@ -93,10 +93,12 @@ void SubToolWidget::initRecordLabel()
     DPalette pa;
 
     bool t_saveGif = false;
+    bool t_saveMkv = false;
     int t_frameRate = 0;
 
     Settings *t_settings = new Settings();
     QVariant t_saveGifVar = t_settings->getOption("save_as_gif");
+    QVariant t_saveMkvVar = t_settings->getOption("lossless_recording");
     QVariant t_frameRateVar = t_settings->getOption("mkv_framerate");
 
     //保持格式的配置文件判断
@@ -109,6 +111,11 @@ void SubToolWidget::initRecordLabel()
         t_saveGif = true;
     }
 
+    if (t_saveMkvVar.toString() == "true") {
+        t_saveMkv = true;
+    } else if (t_saveMkvVar.toString() == "false") {
+        t_saveMkv = false;
+    }
 
 
     //保持帧数的配置文件判断
@@ -315,16 +322,18 @@ void SubToolWidget::initRecordLabel()
 ////            audioButton->setIcon(QIcon(":/image/newUI/dark/normal/mute_normal.svg"));
 ////        }
 //    }
+    m_systemAudioAction->setCheckable(true);
+    m_systemAudioAction->trigger();
+    m_haveSystemAudio = true;
 
+//    if (AudioUtils().canVirtualCardOutput()) {
+//        m_systemAudioAction->setCheckable(true);
+//        m_systemAudioAction->trigger();
 
-    if (AudioUtils().canVirtualCardOutput()) {
-        m_systemAudioAction->setCheckable(true);
-        m_systemAudioAction->trigger();
-        m_haveSystemAudio = true;
-    } else {
-        m_systemAudioAction->setDisabled(true);
-        m_haveSystemAudio = false;
-    }
+//    } else {
+//        m_systemAudioAction->setDisabled(true);
+//        m_haveSystemAudio = false;
+//    }
 
 
 //    m_systemAudioAction->setDisabled(!AudioUtils().canVirtualCardOutput());
@@ -606,6 +615,7 @@ void SubToolWidget::initRecordLabel()
     QAction *formatTitleAction = new QAction(OptionMenu);
     QAction *gifAction = new QAction(OptionMenu);
     QAction *mp4Action = new QAction(OptionMenu);
+//    QAction *mkvAction = new QAction(OptionMenu);
     QAction *fpsTitleAction = new QAction(OptionMenu);
     QAction *fps5Action = new QAction(OptionMenu);
     QAction *fps10Action = new QAction(OptionMenu);
@@ -619,6 +629,8 @@ void SubToolWidget::initRecordLabel()
     gifAction->setCheckable(true);
     mp4Action->setText(tr("MP4"));
     mp4Action->setCheckable(true);
+//    mkvAction->setText(tr("MKV"));
+//    mkvAction->setCheckable(true);
     t_formatGroup->addAction(gifAction);
     t_formatGroup->addAction(mp4Action);
 
@@ -647,6 +659,9 @@ void SubToolWidget::initRecordLabel()
 //    OptionMenu->addSeparator();
     OptionMenu->addAction(mp4Action);
     OptionMenu->addSeparator();
+
+//    OptionMenu->addAction(mkvAction);
+//    OptionMenu->addSeparator();
 
     OptionMenu->addAction(fpsTitleAction);
 //    OptionMenu->addSeparator();
@@ -681,7 +696,27 @@ void SubToolWidget::initRecordLabel()
 //        }
             m_systemAudioAction->setEnabled(false);
 
-        } else {
+        }
+//        else if(t_saveMkv == true){
+//            mkvAction->setChecked(true);
+//            mkvAction->trigger();
+//            fps5Action->setEnabled(true);
+//            fps10Action->setEnabled(true);
+//            fps20Action->setEnabled(true);
+//            fps24Action->setEnabled(true);
+//            fps30Action->setEnabled(true);
+//            audioButton->setEnabled(true);
+//            if (m_haveMicroPhone) {
+//                m_microphoneAction->setEnabled(true);
+//            }
+
+//            if (m_haveSystemAudio) {
+//                m_systemAudioAction->setEnabled(true);
+//            }
+
+//        }
+
+        else {
             mp4Action->setChecked(true);
             mp4Action->trigger();
             fps5Action->setEnabled(true);
@@ -706,6 +741,8 @@ void SubToolWidget::initRecordLabel()
         gifAction->setChecked(true);
         mp4Action->setChecked(false);
         mp4Action->setEnabled(false);
+//        mkvAction->setEnabled(false);
+//        mkvAction->setChecked(false);
         gifAction->trigger();
         fps5Action->setChecked(false);
         fps10Action->setChecked(false);
@@ -729,6 +766,7 @@ void SubToolWidget::initRecordLabel()
     }
 
     connect(gifAction, &QAction::triggered, this, [ = ] (bool checked) {
+        t_settings->setOption("lossless_recording", false);
         t_settings->setOption("save_as_gif", true);
         fps5Action->setEnabled(false);
         fps10Action->setEnabled(false);
@@ -748,6 +786,7 @@ void SubToolWidget::initRecordLabel()
     });
 
     connect(mp4Action, &QAction::triggered, this, [ = ] (bool checked) {
+        t_settings->setOption("lossless_recording", false);
         t_settings->setOption("save_as_gif", false);
         fps5Action->setEnabled(true);
         fps10Action->setEnabled(true);
@@ -763,6 +802,24 @@ void SubToolWidget::initRecordLabel()
         }
         emit mp4ActionChecked(checked);
     });
+
+//    connect(mkvAction, &QAction::triggered, this, [ = ] (bool checked) {
+//        t_settings->setOption("lossless_recording", true);
+//        t_settings->setOption("save_as_gif", false);
+//        fps5Action->setEnabled(true);
+//        fps10Action->setEnabled(true);
+//        fps20Action->setEnabled(true);
+//        fps24Action->setEnabled(true);
+//        fps30Action->setEnabled(true);
+//        audioButton->setEnabled(true);
+//        if (m_haveMicroPhone) {
+//            m_microphoneAction->setEnabled(true);
+//        }
+//        if (m_haveSystemAudio) {
+//            m_systemAudioAction->setEnabled(true);
+//        }
+//        emit mkvActionChecked(checked);
+//    });
 
     connect(t_fpsGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
     [ = ](QAction * t_act) {

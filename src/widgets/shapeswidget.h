@@ -135,7 +135,7 @@ private:
     bool m_isResize;
     bool m_isShiftPressed;
     bool m_editing;
-
+    bool m_isSlectedText;
     ResizeDirection m_resizeDirection;
     ClickedKey m_clickedKey;
 
