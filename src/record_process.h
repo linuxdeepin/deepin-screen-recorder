@@ -30,6 +30,7 @@
 #include <QRect>
 #include <proc/readproc.h>
 #include <proc/sysinfo.h>
+#include "utils/desktopinfo.h"
 
 class RecordProcess : public QThread
 {
@@ -92,6 +93,7 @@ private:
 
     QString lastAudioSink;
     bool m_isZhaoxin = false;
+    DesktopInfo m_info;
 };
 
 #endif //RECORDPROCESS_H

@@ -32,6 +32,7 @@
 #include "subtoolbar.h"
 #include "maintoolwidget.h"
 #include "subtoolwidget.h"
+#include "../utils/desktopinfo.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -90,6 +91,7 @@ private:
     MainToolWidget *m_mainTool;
     SubToolWidget *m_subTool;
     DImageButton *m_closeButton;
+    DesktopInfo m_deskinfo;
 
     bool  m_expanded;
 };

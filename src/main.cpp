@@ -112,6 +112,26 @@ int main(int argc, char *argv[])
 //        qDebug() << t_launchMode;
     }
 
+
+    //判断wayland平台
+    auto e = QProcessEnvironment::systemEnvironment();
+    QString XDG_CURRENT_DESKTOP = e.value(QStringLiteral("XDG_CURRENT_DESKTOP"));
+    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
+    QString KDE_FULL_SESSION = e.value(QStringLiteral("KDE_FULL_SESSION"));
+    QString GNOME_DESKTOP_SESSION_ID = e.value(QStringLiteral("GNOME_DESKTOP_SESSION_ID"));
+    QString DESKTOP_SESSION = e.value(QStringLiteral("DESKTOP_SESSION"));
+
+    bool t_waylandPlatform = XDG_SESSION_TYPE == QLatin1String("wayland") ||
+                             WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
+
+    if (t_waylandPlatform) {
+        if (t_launchMode == "screenRecord") {
+            return 0;
+        }
+    }
+
+
     QDBusConnection dbus = QDBusConnection::sessionBus();
 //    dbus.registerService("com.deepin.ScreenRecorder");
     if (dbus.registerService("com.deepin.ScreenRecorder")) {

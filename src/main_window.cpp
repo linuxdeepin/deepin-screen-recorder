@@ -917,7 +917,6 @@ void MainWindow::initLaunchMode(const QString &launchMode)
         if (m_sideBar->isVisible()) {
             m_sideBar->hide();
         }
-
     }
 
     else if (launchMode == "screenShot") {

@@ -34,6 +34,7 @@
 #include <QDir>
 #include <QStandardPaths>
 #include <QtDBus>
+#include <QScreen>
 
 const int RecordProcess::RECORD_TYPE_VIDEO = 0;
 const int RecordProcess::RECORD_TYPE_GIF = 1;
@@ -121,26 +122,58 @@ void RecordProcess::run()
 
 void RecordProcess::recordGIF()
 {
-    initProcess();
+    if (!m_info.waylandDectected()) {
+//        QRect target( m_recordRect.x(),
+//                      m_recordRect.y(),
+//                      m_recordRect.width(),
+//                      m_recordRect.height() );
+//        qDebug() << "m_backgroundRect" << m_recordRect;
 
-    // byzanz-record use command follow option --exec to stop recording gif.
-    // So we use command "sleep 365d" (sleep 365 days, haha) to make byzanz-record keep recording.
-    // We just need kill "sleep" process when we want stop recording gif.
-    // NOTE: don't kill byzanz-record process directly, otherwise recording content in system memory can't flush to disk.
-    QString sleepCommand = "sleep 365d";
+//        QPixmap res;
+//        QDBusInterface kwinInterface(QStringLiteral("org.kde.KWin"),
+//                                     QStringLiteral("/Screenshot"),
+//                                     QStringLiteral("org.kde.kwin.Screenshot"));
+//        QDBusReply<QString> reply = kwinInterface.call(QStringLiteral("screenshotFullscreen"));
+//        res = QPixmap(reply.value());
+//        if (!res.isNull()) {
+//            QFile dbusResult(reply.value());
+//            dbusResult.remove();
+//        }
 
-    QStringList arguments;
-    arguments << QString("--cursor");
-    arguments << QString("--x=%1").arg(m_recordRect.x()) << QString("--y=%1").arg(m_recordRect.y());
-    arguments << QString("--width=%1").arg(m_recordRect.width()) << QString(    "--height=%1").arg(m_recordRect.height());
-    arguments << QString("--exec=%1").arg(sleepCommand);
-    arguments << savePath;
+        QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
+        QPixmap res = t_primaryScreen->grabWindow(0, m_recordRect.x(), m_recordRect.y(), m_recordRect.width(), m_recordRect.height());
 
-    process->start("byzanz-record", arguments);
+//        QPixmap t_resultPixmap = res.copy(target);
 
-    byzanzProcessId = process->pid();
+        QDir saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
+        QString t_saveFileName = saveTempDir.path() + "123.png";
+        res.save(t_saveFileName,  "png");
 
-    qDebug() << "byzanz-record pid: " << byzanzProcessId;
+
+    } else {
+        initProcess();
+
+        // byzanz-record use command follow option --exec to stop recording gif.
+        // So we use command "sleep 365d" (sleep 365 days, haha) to make byzanz-record keep recording.
+        // We just need kill "sleep" process when we want stop recording gif.
+        // NOTE: don't kill byzanz-record process directly, otherwise recording content in system memory can't flush to disk.
+        QString sleepCommand = "sleep 365d";
+
+        QStringList arguments;
+        arguments << QString("--cursor");
+        arguments << QString("--x=%1").arg(m_recordRect.x()) << QString("--y=%1").arg(m_recordRect.y());
+        arguments << QString("--width=%1").arg(m_recordRect.width()) << QString(    "--height=%1").arg(m_recordRect.height());
+        arguments << QString("--exec=%1").arg(sleepCommand);
+        arguments << savePath;
+
+        process->start("byzanz-record", arguments);
+
+        byzanzProcessId = process->pid();
+
+        qDebug() << "byzanz-record pid: " << byzanzProcessId;
+
+    }
+
 
 }
 
