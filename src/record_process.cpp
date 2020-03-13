@@ -122,7 +122,7 @@ void RecordProcess::run()
 
 void RecordProcess::recordGIF()
 {
-    if (!m_info.waylandDectected()) {
+    if (m_info.waylandDectected()) {
 //        QRect target( m_recordRect.x(),
 //                      m_recordRect.y(),
 //                      m_recordRect.width(),
@@ -148,7 +148,6 @@ void RecordProcess::recordGIF()
         QDir saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
         QString t_saveFileName = saveTempDir.path() + "123.png";
         res.save(t_saveFileName,  "png");
-
 
     } else {
         initProcess();
