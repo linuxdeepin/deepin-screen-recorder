@@ -122,7 +122,7 @@ void RecordProcess::run()
 
 void RecordProcess::recordGIF()
 {
-    if (m_info.waylandDectected()) {
+//    if (!m_info.waylandDectected()) {
 //        QRect target( m_recordRect.x(),
 //                      m_recordRect.y(),
 //                      m_recordRect.width(),
@@ -140,16 +140,14 @@ void RecordProcess::recordGIF()
 //            dbusResult.remove();
 //        }
 
-        QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
-        QPixmap res = t_primaryScreen->grabWindow(0, m_recordRect.x(), m_recordRect.y(), m_recordRect.width(), m_recordRect.height());
-
 //        QPixmap t_resultPixmap = res.copy(target);
 
-        QDir saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
-        QString t_saveFileName = saveTempDir.path() + "123.png";
-        res.save(t_saveFileName,  "png");
+//        QDir saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
+//        QString t_saveFileName = saveTempDir.path() + "123.png";
+//        t_resultPixmap.save(t_saveFileName,  "png");
 
-    } else {
+
+//    } else {
         initProcess();
 
         // byzanz-record use command follow option --exec to stop recording gif.
@@ -171,7 +169,7 @@ void RecordProcess::recordGIF()
 
         qDebug() << "byzanz-record pid: " << byzanzProcessId;
 
-    }
+//    }
 
 
 }
@@ -190,7 +188,8 @@ void RecordProcess::recordVideo()
     // otherwise, it will report 'Unrecognized option' error.
     QStringList arguments;
 
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
+    //if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
+    //if (m_isZhaoxin == false) {
         if (settings->getOption("lossless_recording").toBool()) {
             //    if (settings->getOption("lossless_recording").toBool()) {
             //        int framerate = 30;
@@ -210,22 +209,60 @@ void RecordProcess::recordVideo()
             arguments << QString("x11grab");
             arguments << QString("-i");
             arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
+
+            if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
+
+                lastAudioSink = audioUtils->currentAudioSink();
+
+                arguments << QString("-f");
+                arguments << QString("pulse");
+
+                arguments << QString("-i");
+                arguments << QString("%1").arg(t_currentAudioChannel);
+
+
+                arguments << QString("-f");
+                arguments << QString("pulse");
+
+                arguments << QString("-i");
+                arguments << QString("default");
+
+                arguments << QString("-filter_complex");
+                arguments << QString("amerge");
+
+                arguments << QString("-ac");
+                arguments << QString("2");
+
+                arguments << QString("-preset");
+                arguments << QString("ultrafast");
+            } else if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC) {
+                lastAudioSink = audioUtils->currentAudioSink();
+                arguments << QString("-f");
+                arguments << QString("pulse");
+                arguments << QString("-i");
+                arguments << QString("default");
+
+                arguments << QString("-preset");
+                arguments << QString("ultrafast");
+            } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
+                lastAudioSink = audioUtils->currentAudioSink();
+                arguments << QString("-f");
+                arguments << QString("pulse");
+                arguments << QString("-i");
+                arguments << QString("%1").arg(t_currentAudioChannel);
+                arguments << QString("-preset");
+                arguments << QString("ultrafast");
+            }
+
             arguments << QString("-c:v");
             arguments << QString("libx264");
             arguments << QString("-qp");
             arguments << QString("0");
             arguments << QString("-preset");
             arguments << QString("ultrafast");
+
             arguments << savePath;
         } else {
-            //        int framerate = 25;
-
-            //        if (!settings->getOption("mp4_framerate").isNull()) {
-            //            framerate = settings->getOption("mp4_framerate").toInt();
-            //        } else {
-            //            qDebug() << "Not found mp4_framerate option in config file, mp4 use framerate 25";
-            //        }
-
             qDebug() << "mp4 framerate" << m_framerate;
 
             arguments << QString("-video_size");
@@ -336,7 +373,6 @@ void RecordProcess::recordVideo()
 
             arguments << savePath;
         }
-    }
 
 //    else {
 //        if (settings->getOption("lossless_recording").toBool()) {
@@ -483,8 +519,7 @@ void RecordProcess::initProcess()
             fileExtension = "gif";
         }
     } else {
-        if (settings->getOption("lossless_recording").toBool() || !QSysInfo::currentCpuArchitecture().startsWith("x86")) {
-//        if (settings->getOption("lossless_recording").toBool()) {
+        if (settings->getOption("lossless_recording").toBool()) {
             fileExtension = "mkv";
         } else {
             fileExtension = "mp4";
@@ -555,6 +590,16 @@ void RecordProcess::stopRecord()
 //        wait(2000);
 //    }
 
+/*
+    QEventLoop eventloop;
+    QTimer::singleShot(3000, &eventloop, SLOT(quit()));
+    eventloop.exec();
+*/
+    emit recordFinshed();
+}
+
+void RecordProcess::sendNotification()
+{
 
     // Move file to save directory.
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);

@@ -35,6 +35,7 @@
 #include <QVBoxLayout>
 //#include <dwindowmanager.h>
 #include <QTimer>
+#include <DDialog>
 
 #include "record_process.h"
 #include "voice_record_process.h"
@@ -354,6 +355,8 @@ private:
     int m_firstShot = 0;
     bool m_isZhaoxin = false;
     HintFilter *hintFilter         = nullptr;
+    bool m_recordCanceled = false;
+    DDialog *m_pDialog = nullptr;
 };
 
 #endif //MAINWINDOW_H

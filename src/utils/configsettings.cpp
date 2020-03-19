@@ -58,6 +58,7 @@ ConfigSettings::ConfigSettings(QObject *parent)
         setValue("save", "save_quality", 100);
         setValue("save", "format", 0);
         setValue("save", "saveClip", 1);
+        setValue("save", "saveCursor", 0);
     }
 
     setValue("effect", "is_blur", false);

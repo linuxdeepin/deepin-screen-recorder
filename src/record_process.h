@@ -65,7 +65,9 @@ public:
     void recordVideo();
     void initProcess();
     int readSleepProcessPid();
-
+    void sendNotification();
+signals:
+    void recordFinshed();
 protected:
     void run();
 

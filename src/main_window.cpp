@@ -29,6 +29,7 @@
 #include <DInputDialog>
 #include <DDesktopServices>
 #include <DDialog>
+#include <QBitmap>
 
 
 #include <QApplication>
@@ -46,6 +47,9 @@
 #include <QShortcut>
 #include <QDesktopWidget>
 #include <QScreen>
+#include <QMessageBox>
+//#include <QStyle>
+
 
 #include "main_window.h"
 #include "utils.h"
@@ -60,6 +64,8 @@
 #include "utils/screengrabber.h"
 #include "camera_process.h"
 #include "widgets/tooltips.h"
+
+//#include <X11/Xcursor/Xcursor.h>
 
 
 const int MainWindow::CURSOR_BOUND = 5;
@@ -564,6 +570,32 @@ void MainWindow::initAttributes()
 //    m_functionType = 1;
 //    initScreenShot();
     initShortcut();
+
+
+    //
+    m_pDialog = new DDialog();
+    m_pDialog->setWindowTitle(tr("Saving the screen recording,please wait..."));
+    m_pDialog->setIcon(QIcon::fromTheme("deepin-screen-recorder"));
+    m_pDialog->addButton(tr("Cancel"), true);
+    m_pDialog->addButton(tr("Ignore"), false, DDialog::ButtonRecommend);
+    m_pDialog->setFixedSize(400, 130);
+    m_pDialog->setOnButtonClickedClose(false);
+
+    connect(m_pDialog, &DDialog::buttonClicked, this, [ = ](int index, const QString) {
+        if (index == 0) {
+            m_recordCanceled = true;
+            m_pDialog->close();
+        } else {
+            m_pDialog->setHidden(true);
+        }
+    });
+    connect(&recordProcess, &RecordProcess::recordFinshed, this, [ = ] {
+        if (m_recordCanceled == false)
+        {
+            recordProcess.sendNotification();
+        }
+        m_pDialog->close();
+    });
 }
 
 void MainWindow::initShortcut()
@@ -977,14 +1009,25 @@ void MainWindow::fullScreenshot()
 
 //    if (m_hotZoneInterface->isValid())
 //        m_hotZoneInterface->asyncCall("EnableZoneDetected", false);
-
-    QPoint curPos = this->cursor().pos();
-//    m_swUtil = DScreenWindowsUtil::instance(curPos);
-//    m_screenNum = m_swUtil->getScreenNum();
-//    m_backgroundRect = m_swUtil->backgroundRect();
-    int t_screen = QApplication::desktop()->screenNumber(curPos);
-    m_backgroundRect = QApplication::desktop()->screen(t_screen)->geometry();
-
+    /*
+        QPoint curPos = this->cursor().pos();
+    //    m_swUtil = DScreenWindowsUtil::instance(curPos);
+    //    m_screenNum = m_swUtil->getScreenNum();
+    //    m_backgroundRect = m_swUtil->backgroundRect();
+        int t_screen = QApplication::desktop()->screenNumber(curPos);
+        m_backgroundRect = QApplication::desktop()->screen(t_screen)->geometry();
+    */
+    // 多屏截取全屏
+    int t_screenCount = QApplication::desktop()->screenCount();
+    if (t_screenCount == 1) {
+        m_backgroundRect = QApplication::desktop()->screen()->geometry();
+        m_backgroundRect = QRect(m_backgroundRect.topLeft(), m_backgroundRect.size());
+    } else if (t_screenCount > 1) {
+        QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
+        m_backgroundRect = t_primaryScreen->virtualGeometry();;
+        m_backgroundRect = QRect(m_backgroundRect.topLeft(), m_backgroundRect.size());
+    }
+    //
     this->move(m_backgroundRect.x(), m_backgroundRect.y());
     this->setFixedSize(m_backgroundRect.size());
     m_needSaveScreenshot = true;
@@ -2369,7 +2412,8 @@ void MainWindow::paintEvent(QPaintEvent *event)
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setRenderHint(QPainter::Antialiasing, true);
-        QRect backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
+        //QRect backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
+        QRect backgroundRect = QRect(QGuiApplication::primaryScreen()->geometry().x(), QGuiApplication::primaryScreen()->geometry().y(), rootWindowRect.width(), rootWindowRect.height());
         // FIXME: Under the magnifying glass, it seems to be magnified two times.
         QScreen *screen = qApp->primaryScreen();
         const qreal dpiVal = screen->devicePixelRatio();
@@ -2384,7 +2428,16 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
     if (m_functionType == 1) {
         painter.setRenderHint(QPainter::Antialiasing, true);
-        QRect backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
+        QRect backgroundRect;
+
+//        if(QGuiApplication::primaryScreen()->geometry().x()!= 0)
+//        {
+        backgroundRect = QRect(QGuiApplication::primaryScreen()->geometry().x(), QGuiApplication::primaryScreen()->geometry().y(), rootWindowRect.width(), rootWindowRect.height());
+//        }
+//        else {
+        //backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
+//        }
+
         // FIXME: Under the magnifying glass, it seems to be magnified two times.
         QScreen *screen = qApp->primaryScreen();
         const qreal dpiVal = screen->devicePixelRatio();
@@ -3277,7 +3330,6 @@ void MainWindow::shotCurrentImg()
         m_shapesWidget->hide();
     }
     m_sizeTips->hide();
-//    using namespace utils;
     shotFullScreen();
 
 
@@ -3285,13 +3337,36 @@ void MainWindow::shotCurrentImg()
     emit hideScreenshotUI();
 
     const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
-    qDebug() << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect();
+    qDebug() << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect() << ratio;
     QRect target( recordX * ratio,
                   recordY * ratio,
                   recordWidth * ratio,
                   recordHeight * ratio);
 
+
+
     m_resultPixmap = m_resultPixmap.copy(target);
+
+    //  获取配置是否截取光标
+    int t_saveCursor = ConfigSettings::instance()->value("save", "saveCursor").toInt();
+    if (t_saveCursor == 0) {
+        return;
+    }
+    QPoint coursePoint = this->cursor().pos();//获取当前光标的位置
+    int x = coursePoint.x();
+    int y = coursePoint.y();
+    // 光标是否在当前截取区域
+    bool isUnderRect = ((x > recordX) && (x < recordX + recordWidth)) && ((y > recordY) && (y < recordY + recordHeight));
+    if (isUnderRect == false) {
+        return;
+    }
+    // 获取光标资源
+    QPixmap cursorPixmap = this->cursor().pixmap();
+    if (cursorPixmap.isNull()) {
+        cursorPixmap  = QIcon(":/image/mouse_style/shape/rect_mouse.svg").pixmap(16, 16);
+    }
+    QPainter painter(&m_resultPixmap);
+    painter.drawPixmap(x - recordX - cursorPixmap.width() / 2, y - recordY - cursorPixmap.height() / 2, cursorPixmap.width(), cursorPixmap.height(), cursorPixmap);
 }
 
 void MainWindow::shotFullScreen()
@@ -3523,6 +3598,8 @@ void MainWindow::stopRecord()
             eventMonitor.terminate();
             eventMonitor.wait();
         }
+        m_pDialog->show();
+
         recordProcess.stopRecord();
 //        voiceRecordProcess.stopRecord();
     }
@@ -3573,23 +3650,12 @@ void MainWindow::startCountdown()
 
     recordProcess.setFrameRate(t_frameRate);
 
-//    if (t_saveGif) {
-//        qDebug() << "record format is gif";
-//        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
-//    } else if (t_saveGif == false) {
-//        qDebug() << "record format is mp4";
-//        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
-//    }
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-        if (t_saveGif) {
-            qDebug() << "record format is gif";
-            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
-        } else if (t_saveGif == false) {
-            qDebug() << "record format is mp4";
-            recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
-        }
-    } else {
+    if (t_saveGif) {
+        qDebug() << "record format is gif";
         recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
+    } else if (t_saveGif == false) {
+        qDebug() << "record format is mp4";
+        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
     }
 
     resetCursor();

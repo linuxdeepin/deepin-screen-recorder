@@ -615,7 +615,7 @@ void SubToolWidget::initRecordLabel()
     QAction *formatTitleAction = new QAction(OptionMenu);
     QAction *gifAction = new QAction(OptionMenu);
     QAction *mp4Action = new QAction(OptionMenu);
-//    QAction *mkvAction = new QAction(OptionMenu);
+    QAction *mkvAction = new QAction(OptionMenu);
     QAction *fpsTitleAction = new QAction(OptionMenu);
     QAction *fps5Action = new QAction(OptionMenu);
     QAction *fps10Action = new QAction(OptionMenu);
@@ -629,10 +629,11 @@ void SubToolWidget::initRecordLabel()
     gifAction->setCheckable(true);
     mp4Action->setText(tr("MP4"));
     mp4Action->setCheckable(true);
-//    mkvAction->setText(tr("MKV"));
-//    mkvAction->setCheckable(true);
+    mkvAction->setText(tr("MKV"));
+    mkvAction->setCheckable(true);
     t_formatGroup->addAction(gifAction);
     t_formatGroup->addAction(mp4Action);
+    t_formatGroup->addAction(mkvAction);
 
     fpsTitleAction->setDisabled(true);
     fpsTitleAction->setText(tr("FPS:"));
@@ -658,10 +659,10 @@ void SubToolWidget::initRecordLabel()
     OptionMenu->addAction(gifAction);
 //    OptionMenu->addSeparator();
     OptionMenu->addAction(mp4Action);
-    OptionMenu->addSeparator();
-
-//    OptionMenu->addAction(mkvAction);
 //    OptionMenu->addSeparator();
+
+    OptionMenu->addAction(mkvAction);
+    OptionMenu->addSeparator();
 
     OptionMenu->addAction(fpsTitleAction);
 //    OptionMenu->addSeparator();
@@ -677,78 +678,11 @@ void SubToolWidget::initRecordLabel()
 
     m_optionButton->setMenu(OptionMenu);
 
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxinInSub == false) {
-        if (t_saveGif == true) {
-            gifAction->setChecked(true);
-            gifAction->trigger();
-            fps5Action->setEnabled(false);
-            fps10Action->setEnabled(false);
-            fps20Action->setEnabled(false);
-            fps24Action->setEnabled(false);
-            fps30Action->setEnabled(false);
-            audioButton->setEnabled(false);
-            if (m_microphoneAction->isChecked()) {
-                m_microphoneAction->trigger();
-            }
-            m_microphoneAction->setEnabled(false);
-//        if (m_systemAudioAction->isChecked()) {
-//            m_systemAudioAction->trigger();
-//        }
-            m_systemAudioAction->setEnabled(false);
-
-        }
-//        else if(t_saveMkv == true){
-//            mkvAction->setChecked(true);
-//            mkvAction->trigger();
-//            fps5Action->setEnabled(true);
-//            fps10Action->setEnabled(true);
-//            fps20Action->setEnabled(true);
-//            fps24Action->setEnabled(true);
-//            fps30Action->setEnabled(true);
-//            audioButton->setEnabled(true);
-//            if (m_haveMicroPhone) {
-//                m_microphoneAction->setEnabled(true);
-//            }
-
-//            if (m_haveSystemAudio) {
-//                m_systemAudioAction->setEnabled(true);
-//            }
-
-//        }
-
-        else {
-            mp4Action->setChecked(true);
-            mp4Action->trigger();
-            fps5Action->setEnabled(true);
-            fps10Action->setEnabled(true);
-            fps20Action->setEnabled(true);
-            fps24Action->setEnabled(true);
-            fps30Action->setEnabled(true);
-            audioButton->setEnabled(true);
-            if (m_haveMicroPhone) {
-                m_microphoneAction->setEnabled(true);
-            }
-
-            if (m_haveSystemAudio) {
-                m_systemAudioAction->setEnabled(true);
-            }
-
-        }
-    }
-
-    else {
-        t_saveGif = true;
+    // change by hmy
+    //if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxinInSub == false) {
+    if (t_saveGif == true) {
         gifAction->setChecked(true);
-        mp4Action->setChecked(false);
-        mp4Action->setEnabled(false);
-//        mkvAction->setEnabled(false);
-//        mkvAction->setChecked(false);
         gifAction->trigger();
-        fps5Action->setChecked(false);
-        fps10Action->setChecked(false);
-        fps20Action->setChecked(false);
-        fps24Action->setChecked(false);
-        fps30Action->setChecked(false);
         fps5Action->setEnabled(false);
         fps10Action->setEnabled(false);
         fps20Action->setEnabled(false);
@@ -763,7 +697,43 @@ void SubToolWidget::initRecordLabel()
 //            m_systemAudioAction->trigger();
 //        }
         m_systemAudioAction->setEnabled(false);
+
+    } else if (t_saveMkv == true) {
+        mkvAction->setChecked(true);
+        mkvAction->trigger();
+        fps5Action->setEnabled(true);
+        fps10Action->setEnabled(true);
+        fps20Action->setEnabled(true);
+        fps24Action->setEnabled(true);
+        fps30Action->setEnabled(true);
+        audioButton->setEnabled(true);
+        if (m_haveMicroPhone) {
+            m_microphoneAction->setEnabled(true);
+        }
+
+        if (m_haveSystemAudio) {
+            m_systemAudioAction->setEnabled(true);
+        }
+
+    } else {
+        mp4Action->setChecked(true);
+        mp4Action->trigger();
+        fps5Action->setEnabled(true);
+        fps10Action->setEnabled(true);
+        fps20Action->setEnabled(true);
+        fps24Action->setEnabled(true);
+        fps30Action->setEnabled(true);
+        audioButton->setEnabled(true);
+        if (m_haveMicroPhone) {
+            m_microphoneAction->setEnabled(true);
+        }
+
+        if (m_haveSystemAudio) {
+            m_systemAudioAction->setEnabled(true);
+        }
+
     }
+
 
     connect(gifAction, &QAction::triggered, this, [ = ] (bool checked) {
         t_settings->setOption("lossless_recording", false);
@@ -803,23 +773,23 @@ void SubToolWidget::initRecordLabel()
         emit mp4ActionChecked(checked);
     });
 
-//    connect(mkvAction, &QAction::triggered, this, [ = ] (bool checked) {
-//        t_settings->setOption("lossless_recording", true);
-//        t_settings->setOption("save_as_gif", false);
-//        fps5Action->setEnabled(true);
-//        fps10Action->setEnabled(true);
-//        fps20Action->setEnabled(true);
-//        fps24Action->setEnabled(true);
-//        fps30Action->setEnabled(true);
-//        audioButton->setEnabled(true);
-//        if (m_haveMicroPhone) {
-//            m_microphoneAction->setEnabled(true);
-//        }
-//        if (m_haveSystemAudio) {
-//            m_systemAudioAction->setEnabled(true);
-//        }
-//        emit mkvActionChecked(checked);
-//    });
+    connect(mkvAction, &QAction::triggered, this, [ = ] (bool checked) {
+        t_settings->setOption("lossless_recording", true);
+        t_settings->setOption("save_as_gif", false);
+        fps5Action->setEnabled(true);
+        fps10Action->setEnabled(true);
+        fps20Action->setEnabled(true);
+        fps24Action->setEnabled(true);
+        fps30Action->setEnabled(true);
+        audioButton->setEnabled(true);
+        if (m_haveMicroPhone) {
+            m_microphoneAction->setEnabled(true);
+        }
+        if (m_haveSystemAudio) {
+            m_systemAudioAction->setEnabled(true);
+        }
+        emit mkvActionChecked(checked);
+    });
 
     connect(t_fpsGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
     [ = ](QAction * t_act) {
@@ -844,33 +814,32 @@ void SubToolWidget::initRecordLabel()
         emit videoFrameRateChanged(t_frameRateSelected);
     });
 
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxinInSub == false) {
-        switch (t_frameRate) {
-        case 5:
-            fps5Action->triggered();
-            fps5Action->setChecked(true);
-            break;
-        case 10:
-            fps10Action->triggered();
-            fps10Action->setChecked(true);
-            break;
-        case 20:
-            fps20Action->triggered();
-            fps20Action->setChecked(true);
-            break;
-        case 24:
-            fps24Action->triggered();
-            fps24Action->setChecked(true);
-            break;
-        case 30:
-            fps30Action->triggered();
-            fps30Action->setChecked(true);
-            break;
-        default:
-            fps24Action->triggered();
-            fps24Action->setChecked(true);
-            break;
-        }
+    //if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxinInSub == false) {
+    switch (t_frameRate) {
+    case 5:
+        fps5Action->triggered();
+        fps5Action->setChecked(true);
+        break;
+    case 10:
+        fps10Action->triggered();
+        fps10Action->setChecked(true);
+        break;
+    case 20:
+        fps20Action->triggered();
+        fps20Action->setChecked(true);
+        break;
+    case 24:
+        fps24Action->triggered();
+        fps24Action->setChecked(true);
+        break;
+    case 30:
+        fps30Action->triggered();
+        fps30Action->setChecked(true);
+        break;
+    default:
+        fps24Action->triggered();
+        fps24Action->setChecked(true);
+        break;
     }
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
@@ -1248,6 +1217,7 @@ void SubToolWidget::initShotLabel()
     QAction *bmpAction = new QAction(OptionMenu);
     QAction *clipTitleAction = new QAction(OptionMenu);
     QAction *clipAction = new QAction(OptionMenu);
+    QAction *saveCursorAction = new QAction(OptionMenu);
 
     saveTitleAction->setDisabled(true);
     saveTitleAction->setText(tr("Save to"));
@@ -1278,6 +1248,8 @@ void SubToolWidget::initShotLabel()
     clipTitleAction->setText(tr("Options"));
     clipAction->setText(tr("Copy to clipboard"));
     clipAction->setCheckable(true);
+    saveCursorAction->setText(tr("Show cursor"));
+    saveCursorAction->setCheckable(true);
 
     //保存方式
     OptionMenu->addAction(saveTitleAction);
@@ -1289,6 +1261,7 @@ void SubToolWidget::initShotLabel()
     //保存剪贴板
     OptionMenu->addAction(clipTitleAction);
     OptionMenu->addAction(clipAction);
+    OptionMenu->addAction(saveCursorAction);
     OptionMenu->addSeparator();
 
     //保存格式
@@ -1392,6 +1365,32 @@ void SubToolWidget::initShotLabel()
         else
         {
             ConfigSettings::instance()->setValue("save", "saveClip", 0);
+        }
+    });
+
+    int t_saveCursor = ConfigSettings::instance()->value("save", "saveCursor").toInt();
+
+    switch (t_saveCursor) {
+    case 0:
+        saveCursorAction->setChecked(false);
+        break;
+    case 1:
+        saveCursorAction->setChecked(true);
+        break;
+    default:
+        saveCursorAction->setChecked(false);
+        break;
+    }
+
+    connect(saveCursorAction, &QAction::triggered, [ = ] {
+        if (saveCursorAction->isChecked())
+        {
+            ConfigSettings::instance()->setValue("save", "saveCursor", 1);
+        }
+
+        else
+        {
+            ConfigSettings::instance()->setValue("save", "saveCursor", 0);
         }
     });
 
