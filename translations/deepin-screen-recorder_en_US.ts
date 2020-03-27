@@ -71,6 +71,14 @@ or press the shortcut again to stop recording</translation>
         <source>Screen Capture will start in %1 seconds</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Saving the screen recording,please wait...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -391,6 +399,14 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Copy to clipboard</source>
         <translation>Copy to clipboard</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show cursor</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

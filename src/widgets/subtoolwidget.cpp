@@ -343,7 +343,8 @@ void SubToolWidget::initRecordLabel()
     audioButton->setMenu(audioMenu);
 
     connect(m_microphoneAction, SIGNAL(triggered(bool)), this, SIGNAL(microphoneActionChecked(bool)));
-    connect(m_systemAudioAction, SIGNAL(triggered(bool)), this, SLOT(systemAudioActionCheckedSlot(bool)));
+    //connect(m_systemAudioAction, SIGNAL(triggered(bool)), this, SLOT(systemAudioActionCheckedSlot(bool)));
+    connect(m_systemAudioAction, SIGNAL(triggered(bool)), this, SIGNAL(systemAudioActionChecked(bool)));
 
 
 //    DComboBox *audioButton = new DComboBox();
