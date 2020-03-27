@@ -48,7 +48,8 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
         }
     } else {
         QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
-        return t_primaryScreen->grabWindow(0, rect.x(), rect.y(), rect.width(), rect.height());
+        // 在多屏模式下, winId 不是0 
+        return t_primaryScreen->grabWindow(QApplication::desktop()->winId(), rect.x(), rect.y(), rect.width(), rect.height());
     }
     return QPixmap();
 }

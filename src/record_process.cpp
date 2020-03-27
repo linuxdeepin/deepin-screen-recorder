@@ -582,7 +582,7 @@ void RecordProcess::stopRecord()
         process->terminate();
     }
 
-    // Wait thread.
+// Wait thread.
 //    if (QSysInfo::currentCpuArchitecture().startsWith("x86")) {
     wait();
 //    }
@@ -590,16 +590,6 @@ void RecordProcess::stopRecord()
 //        wait(2000);
 //    }
 
-/*
-    QEventLoop eventloop;
-    QTimer::singleShot(3000, &eventloop, SLOT(quit()));
-    eventloop.exec();
-*/
-    emit recordFinshed();
-}
-
-void RecordProcess::sendNotification()
-{
 
     // Move file to save directory.
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);

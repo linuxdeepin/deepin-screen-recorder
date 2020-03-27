@@ -70,6 +70,14 @@ or press the shortcut again to stop recording</source>
         <source>Screen Capture will start in %1 seconds</source>
         <translation>截图录屏将在%1秒后启动</translation>
     </message>
+    <message>
+        <source>Saving the screen recording,please wait...</source>
+        <translation>正在保存录屏文件,请稍后...</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>忽略</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -390,6 +398,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>FPS:</source>
         <translation>帧数：</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV格式</translation>
+    </message>
+    <message>
+        <source>Show cursor</source>
+        <translation>显示光标</translation>
     </message>
 </context>
 <context>

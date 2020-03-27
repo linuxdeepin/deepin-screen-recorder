@@ -135,6 +135,7 @@ public:
     void savePath(const QString &path);
     void noNotify();
     void setConfigThemeType(int themeType);
+    void sendSavingNotify();
 
 signals:
     void releaseEvent();
@@ -355,8 +356,6 @@ private:
     int m_firstShot = 0;
     bool m_isZhaoxin = false;
     HintFilter *hintFilter         = nullptr;
-    bool m_recordCanceled = false;
-    DDialog *m_pDialog = nullptr;
 };
 
 #endif //MAINWINDOW_H

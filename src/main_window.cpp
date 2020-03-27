@@ -48,7 +48,6 @@
 #include <QDesktopWidget>
 #include <QScreen>
 #include <QMessageBox>
-//#include <QStyle>
 
 
 #include "main_window.h"
@@ -64,8 +63,6 @@
 #include "utils/screengrabber.h"
 #include "camera_process.h"
 #include "widgets/tooltips.h"
-
-//#include <X11/Xcursor/Xcursor.h>
 
 
 const int MainWindow::CURSOR_BOUND = 5;
@@ -570,32 +567,29 @@ void MainWindow::initAttributes()
 //    m_functionType = 1;
 //    initScreenShot();
     initShortcut();
+}
+
+void MainWindow::sendSavingNotify()
+{
+    // Popup notify.
+    QDBusInterface notification("org.freedesktop.Notifications",
+                                "/org/freedesktop/Notifications",
+                                "org.freedesktop.Notifications",
+                                QDBusConnection::sessionBus());
+    QStringList actions;
+    actions << "_close" << tr("Ignore");
 
 
-    //
-    m_pDialog = new DDialog();
-    m_pDialog->setWindowTitle(tr("Saving the screen recording,please wait..."));
-    m_pDialog->setIcon(QIcon::fromTheme("deepin-screen-recorder"));
-    m_pDialog->addButton(tr("Cancel"), true);
-    m_pDialog->addButton(tr("Ignore"), false, DDialog::ButtonRecommend);
-    m_pDialog->setFixedSize(400, 130);
-    m_pDialog->setOnButtonClickedClose(false);
-
-    connect(m_pDialog, &DDialog::buttonClicked, this, [ = ](int index, const QString) {
-        if (index == 0) {
-            m_recordCanceled = true;
-            m_pDialog->close();
-        } else {
-            m_pDialog->setHidden(true);
-        }
-    });
-    connect(&recordProcess, &RecordProcess::recordFinshed, this, [ = ] {
-        if (m_recordCanceled == false)
-        {
-            recordProcess.sendNotification();
-        }
-        m_pDialog->close();
-    });
+    QList<QVariant> arg;
+    arg << (QCoreApplication::applicationName())                 // appname
+        << ((unsigned int) 0)                                    // id
+        << QString("deepin-screen-recorder")                     // icon
+        << QString(tr("Screen Capture"))                         // summary
+        << QString(tr("Saving the screen recording,please wait..."))  // body
+        << actions                                               // actions
+        << QVariantMap()                                         // hints
+        << (int) 3000;                                           // timeout
+    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
 }
 
 void MainWindow::initShortcut()
@@ -1998,6 +1992,9 @@ void MainWindow::saveScreenShot()
 
 void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const bool succeed)
 {
+    if(m_noNotify) {
+        exit(0);
+    }
     // failed notify
     if (!succeed) {
         const auto tips = tr("Save failed. Please save it in your home directory.");
@@ -2412,8 +2409,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setRenderHint(QPainter::Antialiasing, true);
-        //QRect backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
-        QRect backgroundRect = QRect(QGuiApplication::primaryScreen()->geometry().x(), QGuiApplication::primaryScreen()->geometry().y(), rootWindowRect.width(), rootWindowRect.height());
+        QRect backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
         // FIXME: Under the magnifying glass, it seems to be magnified two times.
         QScreen *screen = qApp->primaryScreen();
         const qreal dpiVal = screen->devicePixelRatio();
@@ -2430,13 +2426,8 @@ void MainWindow::paintEvent(QPaintEvent *event)
         painter.setRenderHint(QPainter::Antialiasing, true);
         QRect backgroundRect;
 
-//        if(QGuiApplication::primaryScreen()->geometry().x()!= 0)
-//        {
-        backgroundRect = QRect(QGuiApplication::primaryScreen()->geometry().x(), QGuiApplication::primaryScreen()->geometry().y(), rootWindowRect.width(), rootWindowRect.height());
-//        }
-//        else {
-        //backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
-//        }
+        backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
+
 
         // FIXME: Under the magnifying glass, it seems to be magnified two times.
         QScreen *screen = qApp->primaryScreen();
@@ -3598,7 +3589,10 @@ void MainWindow::stopRecord()
             eventMonitor.terminate();
             eventMonitor.wait();
         }
-        m_pDialog->show();
+        //正在保存录屏文件通知
+        sendSavingNotify();
+        // 停止闪烁
+        flashTrayIconTimer->stop();
 
         recordProcess.stopRecord();
 //        voiceRecordProcess.stopRecord();
