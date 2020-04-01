@@ -553,6 +553,8 @@ void MainWindow::initAttributes()
 //    if (CameraProcess::checkCameraAvailability()) {
     m_cameraWidget = new CameraWidget(this);
     hideCameraWidget();
+    // 摄像头界面层级下调,防止遮住工具栏
+    m_cameraWidget->lower();
 //    }
 
     m_menuController = new MenuController(this);
