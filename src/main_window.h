@@ -119,7 +119,13 @@ public:
         Wait,
         Shoting,
     };
-
+    struct ScreenInfo {
+        int x;
+        int y;
+        int width;
+        int height;
+        QString name;
+    };
     // Split attributes and resource for speed up start.
     void initAttributes();
     void initResource();
@@ -356,6 +362,7 @@ private:
     int m_firstShot = 0;
     bool m_isZhaoxin = false;
     HintFilter *hintFilter         = nullptr;
+    QList<ScreenInfo> m_screenInfo;
 };
 
 #endif //MAINWINDOW_H
