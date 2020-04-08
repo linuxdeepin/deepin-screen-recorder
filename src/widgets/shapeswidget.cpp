@@ -175,6 +175,7 @@ void ShapesWidget::setAllTextEditReadOnly()
         ++i;
     }
 
+    setNoChangedTextEditRemove();
     update();
 }
 
