@@ -260,15 +260,6 @@ void RecordProcess::recordVideo()
 //              arguments << QString("ultrafast");
             }
 
-            // append crf parameter here
-            arguments << QString("-acodec");
-            arguments << QString("aac");
-
-            arguments << QString("-crf");
-            arguments << QString("20");
-
-            arguments << QString("-bufsize");
-            arguments << QString("1024");
 
             arguments << QString("-c:v");
             arguments << QString("libx264");
@@ -385,15 +376,10 @@ void RecordProcess::recordVideo()
             arguments << QString("-pix_fmt");
             arguments << QString("yuv420p");
 
-            arguments << QString("-acodec");
-            arguments << QString("aac");
-
             // append crf parameter here
             arguments << QString("-crf");
             arguments << QString("20");
 
-            arguments << QString("-bufsize");
-            arguments << QString("1024");
 
             arguments << QString("-vf");
             arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
