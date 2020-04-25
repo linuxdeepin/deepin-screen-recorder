@@ -3082,7 +3082,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                                 break;
                             }
                         }
-                    } else {
+                    }
 
                         if (m_functionType == 0) {
                             // Make sure record area not too small.
@@ -3112,7 +3112,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             }
                         }
 
-                    }
+
 
                     showRecordButton();
                     updateToolBarPos();
@@ -3300,7 +3300,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
 void MainWindow::onViewShortcut()
 {
-    QRect rect = window()->geometry();
+    //QRect rect = window()->geometry();
+    //多屏情况下bug修复， 将快捷键预览框显示在主屏中央。
+    QRect rect = QGuiApplication::primaryScreen()->geometry();
     QPoint pos(rect.x() + rect.width() / 2, rect.y() + rect.height() / 2);
     Shortcut sc;
     QStringList shortcutString;
