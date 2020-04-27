@@ -659,10 +659,12 @@ void SubToolWidget::initRecordLabel()
 //    OptionMenu->addSeparator();
     OptionMenu->addAction(gifAction);
 //    OptionMenu->addSeparator();
-    OptionMenu->addAction(mp4Action);
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxinInSub == false) {
+        OptionMenu->addAction(mp4Action);
 //    OptionMenu->addSeparator();
 
-    OptionMenu->addAction(mkvAction);
+        OptionMenu->addAction(mkvAction);
+    }
     OptionMenu->addSeparator();
 
     OptionMenu->addAction(fpsTitleAction);
