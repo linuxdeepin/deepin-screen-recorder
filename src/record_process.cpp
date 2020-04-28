@@ -220,12 +220,18 @@ void RecordProcess::recordVideo()
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
 
+                arguments << QString("-ar");
+                arguments << QString("48000");
+
 
                 arguments << QString("-f");
                 arguments << QString("pulse");
 
                 arguments << QString("-i");
                 arguments << QString("default");
+
+                arguments << QString("-ar");
+                arguments << QString("48000");
 
                 arguments << QString("-filter_complex");
                 arguments << QString("amerge");
@@ -233,8 +239,8 @@ void RecordProcess::recordVideo()
                 arguments << QString("-ac");
                 arguments << QString("2");
 
-                arguments << QString("-preset");
-                arguments << QString("ultrafast");
+//                arguments << QString("-preset");
+//                arguments << QString("ultrafast");
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC) {
                 lastAudioSink = audioUtils->currentAudioSink();
                 arguments << QString("-f");
@@ -242,24 +248,26 @@ void RecordProcess::recordVideo()
                 arguments << QString("-i");
                 arguments << QString("default");
 
-                arguments << QString("-preset");
-                arguments << QString("ultrafast");
+//              arguments << QString("-preset");
+//              arguments << QString("ultrafast");
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
                 lastAudioSink = audioUtils->currentAudioSink();
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
-                arguments << QString("-preset");
-                arguments << QString("ultrafast");
+//              arguments << QString("-preset");
+//              arguments << QString("ultrafast");
             }
+
 
             arguments << QString("-c:v");
             arguments << QString("libx264");
             arguments << QString("-qp");
             arguments << QString("0");
-            arguments << QString("-preset");
-            arguments << QString("ultrafast");
+
+//          arguments << QString("-preset");
+//          arguments << QString("ultrafast");
 
             arguments << savePath;
         } else {
@@ -296,6 +304,10 @@ void RecordProcess::recordVideo()
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
 
+                arguments << QString("-ar");
+                arguments << QString("48000");
+
+
 
                 arguments << QString("-f");
                 arguments << QString("pulse");
@@ -303,14 +315,17 @@ void RecordProcess::recordVideo()
                 arguments << QString("-i");
                 arguments << QString("default");
 
+                arguments << QString("-ar");
+                arguments << QString("48000");
+
                 arguments << QString("-filter_complex");
                 arguments << QString("amerge");
 
                 arguments << QString("-ac");
                 arguments << QString("2");
 
-                arguments << QString("-preset");
-                arguments << QString("ultrafast");
+//                arguments << QString("-preset");
+ //               arguments << QString("ultrafast");
 //                arguments << QString("-filter_complex");
 //                arguments << QString("amix=inputs=2:duration=first:dropout_transition=0");
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC) {
@@ -326,8 +341,8 @@ void RecordProcess::recordVideo()
                 arguments << QString("-i");
                 arguments << QString("default");
 
-                arguments << QString("-preset");
-                arguments << QString("ultrafast");
+//                arguments << QString("-preset");
+//                arguments << QString("ultrafast");
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
 //                AudioUtils *audioUtils = new AudioUtils(this);
                 lastAudioSink = audioUtils->currentAudioSink();
@@ -353,8 +368,8 @@ void RecordProcess::recordVideo()
 //                arguments << QString("-crf");
 //                arguments << QString("0");
 
-                arguments << QString("-preset");
-                arguments << QString("ultrafast");
+//                arguments << QString("-preset");
+//                arguments << QString("ultrafast");
             }
 
             // Most mobile mplayer can't decode yuv444p (ffempg default format) video, yuv420p looks good.
@@ -364,6 +379,7 @@ void RecordProcess::recordVideo()
             // append crf parameter here
             arguments << QString("-crf");
             arguments << QString("20");
+
 
             arguments << QString("-vf");
             arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");

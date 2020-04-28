@@ -337,7 +337,7 @@ void SubToolWidget::initRecordLabel()
 
 
 //    m_systemAudioAction->setDisabled(!AudioUtils().canVirtualCardOutput());
-    audioMenu->addAction(m_microphoneAction);
+    //audioMenu->addAction(m_microphoneAction);
     audioMenu->addSeparator();
     audioMenu->addAction(m_systemAudioAction);
     audioButton->setMenu(audioMenu);
