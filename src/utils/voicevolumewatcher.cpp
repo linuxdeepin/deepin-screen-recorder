@@ -55,14 +55,16 @@ void voiceVolumeWatcher::run()
         */
          if (!m_isRecoding && m_loopwatch) {
              AudioPort activePort = m_defaultSource->activePort();
-             qDebug() << "=========" << activePort.name << activePort.description << activePort.availability << "--------";
+             //qDebug() << "=========" << activePort.name << activePort.description << activePort.availability << "--------";
              bool couldUse = false;
+             /*
              if (isMicrophoneAvail(activePort.name)) {
                  double currentMicrophoneVolume = m_defaultSource->volume();
                  if((currentMicrophoneVolume - volumeLowMark) > DBL_EPSILON) {
                      couldUse = true;
                  }
              }
+             */
              if (couldUse != m_coulduse) {
                  //发送log信息到UI
                  m_coulduse = couldUse;
@@ -141,7 +143,7 @@ void voiceVolumeWatcher::initAvailInputPorts(const QString &cards)
                 // 只添加输入port
                 if (port.isInputPort()) {
                     m_availableInputPorts.insert(port.portId, port);
-                    qDebug() << " " << port;
+                    //qDebug() << " " << port;
                 }
             }
         }

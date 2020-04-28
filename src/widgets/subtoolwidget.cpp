@@ -337,7 +337,7 @@ void SubToolWidget::initRecordLabel()
 
 
 //    m_systemAudioAction->setDisabled(!AudioUtils().canVirtualCardOutput());
-    audioMenu->addAction(m_microphoneAction);
+    //audioMenu->addAction(m_microphoneAction);
     audioMenu->addSeparator();
     audioMenu->addAction(m_systemAudioAction);
     audioButton->setMenu(audioMenu);
@@ -659,12 +659,10 @@ void SubToolWidget::initRecordLabel()
 //    OptionMenu->addSeparator();
     OptionMenu->addAction(gifAction);
 //    OptionMenu->addSeparator();
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxinInSub == false) {
-        OptionMenu->addAction(mp4Action);
+    OptionMenu->addAction(mp4Action);
 //    OptionMenu->addSeparator();
 
-        OptionMenu->addAction(mkvAction);
-    }
+    OptionMenu->addAction(mkvAction);
     OptionMenu->addSeparator();
 
     OptionMenu->addAction(fpsTitleAction);
