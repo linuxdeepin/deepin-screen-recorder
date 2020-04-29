@@ -36,7 +36,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screen Capture</source>
-        <translation>截图录屏</translation>
+        <translation>截屏工具</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
@@ -68,7 +68,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>截图录屏将在%1秒后启动</translation>
+        <translation>截屏工具将在%1秒后启动</translation>
     </message>
     <message>
         <source>Saving the screen recording,please wait...</source>
@@ -106,7 +106,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screen Capture</source>
-        <translation>截图录屏</translation>
+        <translation>截屏工具</translation>
     </message>
     <message>
         <source>Saved to %1</source>
@@ -117,7 +117,7 @@ or press the shortcut again to stop recording</source>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation type="unfinished">截图录屏将在%1秒后启动</translation>
+        <translation type="unfinished">截屏工具将在%1秒后启动</translation>
     </message>
 </context>
 <context>
