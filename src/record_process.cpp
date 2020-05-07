@@ -101,7 +101,7 @@ void RecordProcess::setFrameRate(int framerate)
 }
 void RecordProcess::setRecordAudioInputType(int inputType)
 {
-    recordAudioInputType = inputType;
+    recordAudioInputType = 0;
 }
 void RecordProcess::run()
 {

@@ -298,10 +298,10 @@ void SubToolWidget::initRecordLabel()
             audioButton->setIcon(QIcon::fromTheme("mute_normal"));
         }
     });
-    m_haveMicroPhone = true;
-    m_microphoneAction->setCheckable(true);
-    //        m_microphoneAction->setChecked(true);
+    m_haveMicroPhone = false;
+    m_microphoneAction->setCheckable(false);
     m_microphoneAction->trigger();
+    m_microphoneAction->setEnabled(false);
 
 //    bool t_haveMicroPhone = false;
 //    m_microphoneAction->setIcon(QIcon(":/image/newUI/normal/microphone.svg"));
@@ -322,9 +322,10 @@ void SubToolWidget::initRecordLabel()
 ////            audioButton->setIcon(QIcon(":/image/newUI/dark/normal/mute_normal.svg"));
 ////        }
 //    }
-    m_systemAudioAction->setCheckable(true);
+    m_systemAudioAction->setCheckable(false);
     m_systemAudioAction->trigger();
-    m_haveSystemAudio = true;
+    m_haveSystemAudio = false;
+    m_systemAudioAction->setEnabled(false);
 
 //    if (AudioUtils().canVirtualCardOutput()) {
 //        m_systemAudioAction->setCheckable(true);
@@ -339,7 +340,7 @@ void SubToolWidget::initRecordLabel()
 //    m_systemAudioAction->setDisabled(!AudioUtils().canVirtualCardOutput());
     //audioMenu->addAction(m_microphoneAction);
     audioMenu->addSeparator();
-    audioMenu->addAction(m_systemAudioAction);
+    //audioMenu->addAction(m_systemAudioAction);
     audioButton->setMenu(audioMenu);
 
     connect(m_microphoneAction, SIGNAL(triggered(bool)), this, SIGNAL(microphoneActionChecked(bool)));
