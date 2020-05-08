@@ -228,7 +228,7 @@ void SubToolWidget::initRecordLabel()
         if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
         {
 //            audioButton->setToolTip(tr("Sound Off"));
-            installTipHint(audioButton, tr("Sound Off"));
+            installTipHint(audioButton, tr("Unsupported"));
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
 //            if (m_themeType == 1) {
 //                audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
@@ -286,7 +286,7 @@ void SubToolWidget::initRecordLabel()
         if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
         {
 //            audioButton->setToolTip(tr("Sound Off"));
-            installTipHint(audioButton, tr("Sound Off"));
+            installTipHint(audioButton, tr("Unsupported"));
 //            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
 //            if (m_themeType == 1) {
 //                audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
@@ -708,7 +708,7 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(true);
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
-        audioButton->setEnabled(true);
+        audioButton->setEnabled(false);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
         }
@@ -725,7 +725,7 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(true);
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
-        audioButton->setEnabled(true);
+        audioButton->setEnabled(false);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
         }
@@ -765,7 +765,7 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(true);
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
-        audioButton->setEnabled(true);
+        audioButton->setEnabled(false);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
         }
@@ -783,7 +783,7 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(true);
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
-        audioButton->setEnabled(true);
+        audioButton->setEnabled(false);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
         }
