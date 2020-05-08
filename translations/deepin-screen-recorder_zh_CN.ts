@@ -345,7 +345,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Sound Off</source>
-        <translation>录音关闭</translation>
+        <translation type="vanished">录音关闭</translation>
     </message>
     <message>
         <source>Show Keystroke</source>
@@ -407,12 +407,24 @@ or press the shortcut again to stop recording</source>
         <source>Show cursor</source>
         <translation>显示光标</translation>
     </message>
+    <message>
+        <source>Unsupported</source>
+        <translation>暂不支持</translation>
+    </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Recordings</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>录屏功能暂不可用</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>退出</translation>
     </message>
 </context>
 <context>

@@ -274,7 +274,7 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>Sound Off</source>
-        <translation>Sound Off</translation>
+        <translation type="vanished">Sound Off</translation>
     </message>
     <message>
         <source>Show Keystroke</source>
@@ -408,12 +408,24 @@ or press the shortcut again to stop recording</translation>
         <source>Show cursor</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Unsupported</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Recordings</source>
         <translation>Recordings</translation>
+    </message>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished">Exit</translation>
     </message>
 </context>
 <context>
