@@ -407,6 +407,10 @@ or press the shortcut again to stop recording</source>
         <source>Show cursor</source>
         <translation>显示光标</translation>
     </message>
+    <message>
+        <source>Open With Draw</source>
+        <translation>画板打开</translation>
+    </message>
 </context>
 <context>
     <name>Utils</name>

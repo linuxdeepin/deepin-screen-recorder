@@ -63,6 +63,8 @@
 #include "utils/screengrabber.h"
 #include "camera_process.h"
 #include "widgets/tooltips.h"
+#include "dbusinterface/drawinterface.h"
+
 
 
 const int MainWindow::CURSOR_BOUND = 5;
@@ -1389,7 +1391,6 @@ void MainWindow::updateToolBarPos()
             break;
         }
     }
-
     m_toolBar->showAt(toolbarPoint);
 }
 
@@ -2499,7 +2500,14 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
         qDebug() << "clip board success!";
     }
-
+    // 调起画板， 传入截图路径
+    int t_saveCursor = ConfigSettings::instance()->value("open", "draw").toInt();
+    if (t_saveCursor == 1) {
+        DrawInterface *m_draw = new DrawInterface("com.deepin.Draw", "/com/deepin/Draw", QDBusConnection::sessionBus(), this);
+        QList<QString> list;
+        list.append(m_saveFileName);
+        m_draw->openFiles(list);
+    }
     return true;
 }
 
