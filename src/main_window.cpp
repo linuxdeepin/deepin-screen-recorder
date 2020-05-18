@@ -3579,7 +3579,10 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)
 {
     stopRecord();
 }
-
+void MainWindow::waylandRecordOver()
+{
+    recordProcess.waylandRecordOver();
+}
 void MainWindow::stopRecord()
 {
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {

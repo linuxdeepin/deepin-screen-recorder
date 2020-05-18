@@ -105,8 +105,12 @@ void RecordProcess::setRecordAudioInputType(int inputType)
 }
 void RecordProcess::run()
 {
-    // Start record.
-    recordType == RECORD_TYPE_GIF ? recordGIF() : recordVideo();
+    if (m_info.waylandDectected()) {
+        WaylandRecord();
+    }else{
+        // Start record.
+        recordType == RECORD_TYPE_GIF ? recordGIF() : recordVideo();
+    }
 
     // Got output or error.
     process->waitForFinished(-1);
@@ -119,7 +123,23 @@ void RecordProcess::run()
         qDebug() << "OK" << process->readAllStandardOutput() << process->readAllStandardError();
     }
 }
-
+void RecordProcess::WaylandRecord()
+{
+    // 启动wayland录屏
+    qDebug() << "RecordProcess::WaylandRecord()";
+    initProcess();
+    QStringList arguments;
+    arguments << QString("%1").arg(RECORD_TYPE_GIF);
+    arguments << QString("%1").arg(m_recordRect.width()) << QString("%1").arg(m_recordRect.height());
+    arguments << QString("%1").arg(m_recordRect.x()) << QString("%1").arg(m_recordRect.y());
+    arguments << QString("%1").arg(m_framerate);
+    arguments << QString("%1").arg(savePath);
+    arguments << QString("%1").arg(recordAudioInputType);
+    //arguments << QString("%d").arg(t_currentAudioChannel);
+    qDebug() << arguments;
+    process->start("xdg-desktop-portal-kde", arguments);
+    return;
+}
 void RecordProcess::recordGIF()
 {
 //    if (!m_info.waylandDectected()) {
@@ -570,9 +590,55 @@ int RecordProcess::readSleepProcessPid()
     return processTree->getAllChildPids(byzanzProcessId)[0];
 }
 
+void RecordProcess::waylandRecordOver()
+{
+    if(!m_info.waylandDectected()){
+        return;
+    }
+    // wayland录屏进程调用dbus通知保存完成。
+    qDebug() << "RecordProcess::waylandRecordOver()";
+    QString newSavePath = QDir(saveDir).filePath(saveBaseName);
+    QFile::rename(savePath, newSavePath);
+    // Popup notify.
+    QDBusInterface notification("org.freedesktop.Notifications",
+                                "/org/freedesktop/Notifications",
+                                "org.freedesktop.Notifications",
+                                QDBusConnection::sessionBus());
 
+    QStringList actions;
+    actions << "_open" << tr("View");
+
+    QVariantMap hints;
+    hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
+    QList<QVariant> arg;
+    arg << (QCoreApplication::applicationName())                 // appname
+        << ((unsigned int) 0)                                    // id
+        << QString("deepin-screen-recorder")                     // icon
+        << tr("Recording finished")                              // summary
+        << QString(tr("Saved to %1")).arg(newSavePath) // body
+        << actions                                               // actions
+        << hints                                                 // hints
+        << (int) -1;                                             // timeout
+    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+    QApplication::quit();
+}
 void RecordProcess::stopRecord()
 {
+
+    if(m_info.waylandDectected()){
+        // wayland 录屏通过dbus接口停止。
+        qDebug() << "RecordProcess::stopRecord()";
+        QDBusInterface waylandInterface("org.freedesktop.impl.portal.desktop",
+                                    "/org/freedesktop/portal/desktop",
+                                    "org.freedesktop.impl.portal.Settings",
+                                    QDBusConnection::sessionBus());
+
+        if(waylandInterface.isValid()) {
+            waylandInterface.call("stopRecord");
+        }
+        return;
+    }
+
     if (recordType == RECORD_TYPE_GIF) {
         int byzanzChildPid = readSleepProcessPid();
         kill(byzanzChildPid, SIGKILL);
