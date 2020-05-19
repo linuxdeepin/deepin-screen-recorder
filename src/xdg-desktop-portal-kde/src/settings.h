@@ -61,13 +61,13 @@ public:
 public Q_SLOTS:
     void ReadAll(const QStringList &groups);
     void Read(const QString &group, const QString &key);
+    //停止录屏
+    Q_SCRIPTABLE void stopRecord();
 
 Q_SIGNALS:
     void SettingChanged(const QString &group, const QString &key, const QDBusVariant &value);
 
 private Q_SLOTS:
-    //停止录屏
-    Q_SCRIPTABLE void stopRecord();
     void fontChanged();
     void globalSettingChanged(int type, int arg);
     void toolbarStyleChanged();

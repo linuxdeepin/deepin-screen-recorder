@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 
     QDBusConnection sessionBus = QDBusConnection::sessionBus();
 
-    if (sessionBus.registerService(QStringLiteral("org.freedesktop.impl.portal.desktop.kde"))) {
+    if (sessionBus.registerService(QStringLiteral("org.freedesktop.impl.portal.desktop"))) {
         DesktopPortal *desktopPortal = new DesktopPortal(argc,argv,&a);
         if (sessionBus.registerObject(QStringLiteral("/org/freedesktop/portal/desktop"), desktopPortal, QDBusConnection::ExportAdaptors)) {
             qCDebug(XdgDesktopPortalKde) << "Desktop portal registered successfully";

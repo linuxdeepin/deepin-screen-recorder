@@ -608,7 +608,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::initWayland(int &argc, char 
 {
     if(argc>8){
         // 0 2160 1440 0 0 24 ./33333h.mp4 2 10
-        //    程序名称，视频类型，视频宽，视频高，视频x坐标，视频y坐标，视频帧率，视频保存路径，音频类型, 录制时间单位:秒
+        // 程序名称，视频类型，视频宽，视频高，视频x坐标，视频y坐标，视频帧率，视频保存路径，音频类型, 录制时间单位:秒
         QString tempStr;
         if(!recordStreamMutexInit(0,RecordAudioType::NOS,0,0,0,0,tempStr)){
             return;
@@ -741,14 +741,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::removeOutput(quint32 name)
     qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "    model: " << output.model();
 }
 
-int i = 0;
-
 void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland::Client::RemoteBuffer* rbuf)
 {
-    QScopedPointer<const KWayland::Client::RemoteBuffer> guard(rbuf);
-    QTime time;
-    time.start();
-    // auto gbmHandle = rbuf->fd();
     auto dma_fd = rbuf->fd();
     auto width = rbuf->width();
     auto height = rbuf->height();
@@ -768,17 +762,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
                 recordType = StreamRecordAudioType::NOS;
             }else{
                 qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "startInit recordType error  recordType=%d"<< recordType;
-                //             return false;
-
             }
-            qDebug() << argvList;
-            qDebug() << "------format="<<format;
-            //        if(tempCw < 0){
-            //            tempCw = width;
-            //        }
-            //        if(tempCh < 0){
-            //            tempCh = height;
-            //        }
             QByteArray cpath =tempFilePath.toLocal8Bit();
             m_recordStreamObjPtr->startInit(width,height,tempFps,recordType,tempCx,tempCy,tempCw,tempCh,cpath.data());
         }
@@ -786,218 +770,20 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
         qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "record stream obj not created or stop record!!!" ;
         return ;
     }
-
-    //    qCDebug(XdgDesktopPortalKdeWaylandIntegration)
-    //            << QStringLiteral("Incoming dma fd %1, %2x%3, stride %4, fourcc 0x%5").arg(dma_fd).arg(width).arg(height).arg(stride).arg(QString::number(format, 16))
-    //            << format;
-
-    //    if (!m_streamingEnabled) {
-    //        qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Streaming is disabled";
-    //        close(gbmHandle);
-    //        return;
-    //    }
-
     if (m_lastFrameTime.isValid() &&
             m_lastFrameTime.msecsTo(QDateTime::currentDateTime()) < (1000 / m_stream->framerate())) {
         close(dma_fd);
         return;
     }
-
-    // if (!gbm_device_is_format_supported(m_gbmDevice, format, GBM_BO_USE_SCANOUT)) {
-    //     qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Failed to process buffer: GBM format is not supported by device!";
-    //     close(gbmHandle);
-    //     return;
-    // }
-
-    // // import GBM buffer that was passed from KWin
-    // gbm_import_fd_data importInfo = {gbmHandle, width, height, stride, format};
-    // gbm_bo *imported = gbm_bo_import(m_gbmDevice, GBM_BO_IMPORT_FD, &importInfo, GBM_BO_USE_SCANOUT);
-    // if (!imported) {
-    //     qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Failed to process buffer: Cannot import passed GBM fd - " << strerror(errno);
-    //     close(gbmHandle);
-    //     return;
-    // }
-
-    // unsigned int mapStride=0;
-    // unsigned char * mapData=0;
-    // unsigned char * mapbuf=0;
-    // mapbuf = (unsigned char *)gbm_bo_map(imported,0,0,width,height,GBM_BO_TRANSFER_READ,&mapStride,&mapData);
-
-    // unsigned char * mapData=0;
     unsigned char *mapData = (unsigned char *)mmap(0, stride * height, PROT_READ|PROT_WRITE, MAP_SHARED, dma_fd, 0);
     if (MAP_FAILED == mapData) {
         qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "dma fd " << dma_fd <<" mmap failed - ";
-        // goto error;
     }
-
-    //---------------------------------------------------------------------
     appendBuffer(mapData,(int)width,(int)height,(int)stride);
-
-
-
-    //    qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "dma fd " << dma_fd <<" mmap success mapData: " << mapData;
-
-    // save buffer to png
-    // QString filename(QLatin1String("/home/wugang/dumpDmaFd.png"));
-    // const QImage destImage = QImage(mapData, width, height, QImage::Format_RGB32);
-    // destImage.save(filename);
-
-    // qCDebug(XdgDesktopPortalKdeWaylandIntegration)
-    //         << QStringLiteral("mmap fd %1, %2x%3, stride %4, mapData:%p").arg(dma_fd).arg(width).arg(height).arg(stride).arg(mapData);
-
-    // bind context to render thread
-    eglMakeCurrent(m_egl.display, EGL_NO_SURFACE, EGL_NO_SURFACE, m_egl.context);
-
-    //const EGLint attribs[] = {
-    //        EGL_IMAGE_PRESERVED_KHR, EGL_TRUE,
-    //        EGL_NONE
-    //    };
-
-    // create EGL image from imported BO
-    // EGLImageKHR image = eglCreateImageKHR(m_egl.display, EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR, imported, 0);
-
-    // const EGLint attribs[] = {
-    //     EGL_WAYLAND_PLANE_WL, 0,
-    //     EGL_NONE
-    // };
-
-    // EGLImageKHR image = eglCreateImageKHR(m_egl.display, EGL_NO_CONTEXT, EGL_WAYLAND_BUFFER_WL,
-    //                                   (EGLClientBuffer)imported, attribs);
-
-
-    EGLint attribs[30];
-    unsigned int atti = 0;
-
-    attribs[atti++] = EGL_WIDTH;
-    attribs[atti++] = width;
-    attribs[atti++] = EGL_HEIGHT;
-    attribs[atti++] = height;
-    attribs[atti++] = EGL_LINUX_DRM_FOURCC_EXT;
-    attribs[atti++] = format;
-
-    attribs[atti++] = EGL_DMA_BUF_PLANE0_FD_EXT;
-    attribs[atti++] = dma_fd;
-    attribs[atti++] = EGL_DMA_BUF_PLANE0_OFFSET_EXT;
-    attribs[atti++] = 0;
-    attribs[atti++] = EGL_DMA_BUF_PLANE0_PITCH_EXT;
-    attribs[atti++] = stride;
-    attribs[atti++] = EGL_DMA_BUF_PLANE0_MODIFIER_LO_EXT;
-    attribs[atti++] = 0;
-    attribs[atti++] = EGL_DMA_BUF_PLANE0_MODIFIER_HI_EXT;
-    attribs[atti++] = 0;
-    attribs[atti] = EGL_NONE;
-
-    EGLImageKHR image = m_egl.create_image(m_egl.display, m_egl.context,
-                                           EGL_LINUX_DMA_BUF_EXT, NULL, attribs);
-
-    if (image == EGL_NO_IMAGE_KHR) {
-        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Failed to process buffer: Error creating EGLImageKHR - " << formatGLError(glGetError());
-        return;
-    } else {
-        //        qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "success to create texture image for dma fd "<< dma_fd;
-    }
-
-    // We can already close gbm handle
-    // gbm_bo_destroy(imported);
     close(dma_fd);
-
-    // create GL 2D texture for framebuffer
-    GLuint texture;
-    glGenTextures(1, &texture);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    // glBindTexture(GL_TEXTURE_2D, texture);
-    // glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image);
-    glBindTexture(GL_TEXTURE_EXTERNAL_OES, texture);
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    m_egl.image_target_texture_2d(GL_TEXTURE_EXTERNAL_OES, image);
-
-    // bind framebuffer to copy pixels from
-    // GLuint framebuffer;
-    // glGenFramebuffers(1, &framebuffer);
-    // glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    // glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-    // const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    // if (status != GL_FRAMEBUFFER_COMPLETE) {
-    //     qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Failed to process buffer: glCheckFramebufferStatus failed - " << formatGLError(glGetError());
-    //     glDeleteTextures(1, &texture);
-    //     glDeleteFramebuffers(1, &framebuffer);
-    //     eglDestroyImageKHR(m_egl.display, image);
-    //     return;
-    // }
-
-    // auto capture = new QImage(QSize(width, height), QImage::Format_RGBA8888);
-    // glViewport(0, 0, width, height);
-    // glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, capture->bits());
-    // glGetTexImage(GL_TEXTURE_EXTERNAL_OES, 0, GL_RGBA, GL_UNSIGNED_BYTE, capture->bits());
-    //   QImage* m_image =  new QImage(1920,1080, QImage::Format_RGB32);
-    //    m_image->fill(Qt::white);
-    //    int rawDataCount = 0;
-    //    for (int y = 0;y<1920;y++)
-    //    {
-    //        uint* line = (uint*)m_image->scanLine(y);
-    //        for (int x=0;x<1080;x++)
-    //        {
-    //            WORD temp = cameraZero[rawDataCount++];
-    //            BYTE value = temp >> 2;
-    //            QColor grey(value,value,value);
-    //            line[x] = qRgba(value,value,value,100);
-    //        }
-    //    }
-
-
-    //    QString path =QDir::currentPath();
-
-
-    //-----------------------------------------------------------------------------------------------
-    //    获取缓存函数 int getNextBuffer(unsigned char *& mapData,int &width,int& height,int& stride);
-    /***
- * int getNextBuffer(unsigned char *& mapData,int &width,int& height,int& stride){
- * mapData = ;
- * width = ;
- * height = ;
- * stride = ;
- * return 0; //成功返回0.
- * }
- *
- * */
-
-    //    waylandFrame wf;
-    //    getFrame(wf);
-    //    QString name = QString::fromUtf8("test666.jpg");
-
-
-
-    //    auto capture = new QImage(wf.frame, wf.width, wf.height, QImage::Format_RGB32);
-    //    capture->save(name);
-
-    //    QThread::sleep(10000);
-
-
-    //    m_recordStreamObjPtr->addImage(capture);
-
-    int elapsed = time.elapsed();
-    qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "-----frame elapsed " << elapsed ;
-    //-----------------------------------------------------------------------------------------------
-
-
-    //    if (m_stream->recordFrame(capture->bits())) {
-    //        m_lastFrameTime = QDateTime::currentDateTime();
-    //    }
-
-    glDeleteTextures(1, &texture);
-    // glDeleteFramebuffers(1, &framebuffer);
-    // eglDestroyImageKHR(m_egl.display, image);
-    m_egl.destroy_image(m_egl.display, image);
-
     munmap(mapData,stride * height);
-    //    delete capture;
 }
+
 void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 {
     m_queue = new KWayland::Client::EventQueue(this);
@@ -1033,7 +819,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
         {
             ch = new unsigned char[size];
             m_catchList.append(ch);
-            qDebug() << "创建内存空间";
+            //qDebug() << "创建内存空间";
         }
     }
     QMutexLocker locker(&m_mutex);
@@ -1048,7 +834,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
         m_waylandList.removeLast();
         //存队尾
         m_waylandList.append(ch);
-        qDebug() << "环形缓冲区已满，删队首，存队尾";
+        //qDebug() << "环形缓冲区已满，删队首，存队尾";
     }
     else if(0 <= m_waylandList.size() < m_bufferSize)
     {
@@ -1058,12 +844,11 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
             memset(ch,0,size);
             memcpy(ch,frame,size);
             m_waylandList.append(ch);
-            qDebug() << "环形缓冲区未满，存队尾";
+            //qDebug() << "环形缓冲区未满，存队尾";
             m_catchList.removeFirst();
         }
     }
 }
-
 
 bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &f)
 {
@@ -1082,7 +867,7 @@ bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &f)
         memcpy(f.frame,ch,size);
         m_waylandList.removeFirst();
         m_catchList.append(ch);
-        qDebug() << "获取视频帧";
+        //qDebug() << "获取视频帧";
         return true;
     }
 }

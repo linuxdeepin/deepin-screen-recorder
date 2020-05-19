@@ -124,7 +124,7 @@ private:
 public:
     /**
      * @ 内存由getFrame函数内部申请
-     * @ 保存视频帧之后，delete <unsigned char* frame>
+     * @ 保存视频帧之后，无需：delete <unsigned char* frame>
      * @brief getFrame:获取帧
      * @return
      */
