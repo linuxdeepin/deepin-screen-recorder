@@ -22,9 +22,9 @@ void WaylandIntegration::WriteFrameToStreamThread::run(){
        bool isSeccess = m_waylandIntegration->getFrame(wf);
        if(isSeccess){
 //           QString name = QString::fromUtf8("test1111111111.jpg");
-           auto capture = new QImage(wf.frame, wf.width, wf.height, QImage::Format_RGB32);
+           auto capture = new QImage(wf._frame, wf._width, wf._height, QImage::Format_RGB32);
 //           capture->save(name);
-           m_waylandIntegration->m_recordStreamObjPtr->addImage(capture);
+           m_waylandIntegration->m_recordStreamObjPtr->addImage(capture,wf._time);
            delete capture;
        }
    }

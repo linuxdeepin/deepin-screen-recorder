@@ -54,7 +54,7 @@ public:
     void  onsFinisheStream();
     void onFInishCleanImage();
     bool  StartCapture();
-    void writeToFrame(QImage *img);
+    void writeToFrame(QImage *img,int64_t time);
     void  SetVideoCaptureCB(VideoCaptureCB pFuncCB);
     void  SetAudioCaptureCB(AudioCaptureCB pFuncCB);
     void  SetAudioScardCaptureCB(AudioCaptureCB pFuncCB);

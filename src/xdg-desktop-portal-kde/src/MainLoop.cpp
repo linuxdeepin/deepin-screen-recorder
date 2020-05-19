@@ -145,10 +145,10 @@ void MainLoop::startInit(int img_width,int img_height,int fps,StreamRecordAudioT
     int rc = pthread_create(&m_mainThread, NULL, preStartSteam,(void*)this);
     pthread_detach(m_mainThread);
 }
-void  MainLoop::addImage(QImage *img)
+void  MainLoop::addImage(QImage *img, int64_t time)
 {
     if(m_canAddImage){
-        gpMainFrame->m_InputStream.writeToFrame(img);
+        gpMainFrame->m_InputStream.writeToFrame(img,time);
     }
 
 }

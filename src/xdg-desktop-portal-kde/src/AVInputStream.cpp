@@ -4,15 +4,17 @@
 #include <qbuffer.h>
 #include <QProcess>
 #include <QTime>
+#include <QDebug>
+
 CAVInputStream::CAVInputStream(void)
 {
     m_hCapAudioThread = NULL;
     m_exit_thread = false;
     m_outPutType = Nomal;
-//    m_pVidFmtCtx = NULL;
+    //    m_pVidFmtCtx = NULL;
     m_pAudFmtCtx = NULL;
     m_pAudFmtCtx_scard = NULL;
-//    m_pInputFormat = NULL;
+    //    m_pInputFormat = NULL;
     m_pAudioInputFormat = NULL;
 
     dec_pkt = NULL;
@@ -22,7 +24,7 @@ CAVInputStream::CAVInputStream(void)
     m_pAudioScardCBFunc = NULL;
     m_audio_device = "default";
     m_audio_device_scard = "default";
-//    m_videoindex = -1;
+    //    m_videoindex = -1;
     m_audioindex = -1;
     m_audioindex_scard = -1;
     m_start_time = 0;
@@ -64,7 +66,7 @@ void  CAVInputStream::SetWirteAmixtCB(AudioMixCB pFuncCB)
 void  CAVInputStream::setRecordAudioMic(bool isrecord)
 {
     if(isrecord){
-            m_audio_device = "default";
+        m_audio_device = "default";
     }else{
         m_audio_device = "";
     }
@@ -73,14 +75,14 @@ void  CAVInputStream::setRecordAudioMic(bool isrecord)
 void  CAVInputStream::setRecordAudioSCard(bool isrecord)
 {
     if(isrecord){
-            m_audio_device_scard = "default";
+        m_audio_device_scard = "default";
     }else{
         m_audio_device_scard = "";
     }
 }
 bool  CAVInputStream::OpenInputStream()
 {
-//    m_videoindex = 999;
+    //    m_videoindex = 999;
     if(m_outPutType==Gif){
         m_audio_device.clear();
         m_audio_device_scard.clear();
@@ -129,7 +131,7 @@ bool  CAVInputStream::OpenInputStream()
             printf("Couldn't find a audio stream.（没有找到音频流）\n");
             return false;
         }
-                   ///Caution, m_pAudFmtCtx->streams[m_audioindex]->codec->codec_id =14, AV_CODEC_ID_RAWVIDEO
+        ///Caution, m_pAudFmtCtx->streams[m_audioindex]->codec->codec_id =14, AV_CODEC_ID_RAWVIDEO
         if (avcodec_open2(m_pAudFmtCtx->streams[m_audioindex]->codec, avcodec_find_decoder(m_pAudFmtCtx->streams[m_audioindex]->codec->codec_id), NULL) < 0)
         {
             printf("Could not open audio codec.（无法打开解码器）\n");
@@ -149,7 +151,7 @@ bool  CAVInputStream::OpenInputStream()
     if(!m_audio_device_scard.empty())
     {
         string device_name;
-//        m_audio_device_scard;
+        //        m_audio_device_scard;
         if(m_audio_device_scard.compare("default")==0){
             QString device = currentAudioChannel();
             if(device.length()>0){
@@ -186,7 +188,7 @@ bool  CAVInputStream::OpenInputStream()
             printf("Couldn't find a audio stream.（没有找到音频流）\n");
             return false;
         }
-                   ///Caution, m_pAudFmtCtx->streams[m_audioindex]->codec->codec_id =14, AV_CODEC_ID_RAWVIDEO
+        ///Caution, m_pAudFmtCtx->streams[m_audioindex]->codec->codec_id =14, AV_CODEC_ID_RAWVIDEO
         if (avcodec_open2(m_pAudFmtCtx_scard->streams[m_audioindex_scard]->codec, avcodec_find_decoder(m_pAudFmtCtx_scard->streams[m_audioindex_scard]->codec->codec_id), NULL) < 0)
         {
             printf("Could not open audio codec.（无法打开解码器）\n");
@@ -204,13 +206,13 @@ bool  CAVInputStream::OpenInputStream()
 
 bool  CAVInputStream::StartCapture()
 {
-//    if(m_outPutType!=Gif){
-//        if (m_videoindex == -1)
-//        {
-//            printf("错误：你没有打开设备 \n");
-//            return false;
-//        }
-//    }
+    //    if(m_outPutType!=Gif){
+    //        if (m_videoindex == -1)
+    //        {
+    //            printf("错误：你没有打开设备 \n");
+    //            return false;
+    //        }
+    //    }
     m_start_time = av_gettime();
 
     m_exit_thread = false;
@@ -224,28 +226,28 @@ bool  CAVInputStream::StartCapture()
     {
         int rc = pthread_create(&m_hCapAudioScardThread, NULL, CaptureAudioSCardThreadFunc, (void *)this);
     }
-     beginWriteMixAudio();
+    beginWriteMixAudio();
 
     if(!m_audio_device.empty())
     {
         pthread_join(m_hCapAudioThread,NULL);
     }
     if(!m_audio_device_scard.empty()){
-         pthread_join(m_hCapAudioScardThread,NULL);
+        pthread_join(m_hCapAudioScardThread,NULL);
     }
     if(m_isMerge)
-    pthread_join(m_hReadMixThread,NULL);
+        pthread_join(m_hReadMixThread,NULL);
     onsFinisheStream();
 
     return true;
 }
-void CAVInputStream::writeToFrame(QImage *img){
+void CAVInputStream::writeToFrame(QImage *img, int64_t time){
     if (m_exit_thread)
         return;
-//    if(dec_pkt == NULL)
-//    {
-//        return;
-//    }
+    //    if(dec_pkt == NULL)
+    //    {
+    //        return;
+    //    }
     if(m_start_time<=0){
         return ;
     }
@@ -275,15 +277,16 @@ void CAVInputStream::writeToFrame(QImage *img){
         pframe->crop_right = m_cr;
         pframe->crop_bottom = m_cb;
         pframe->data[0] = imageTempt->bits();
-        int dec_got_frame = 0;
+        //int dec_got_frame = 0;
         if(m_pVideoCBFunc)
         {
             int64_t timeStamp = timeStamp1 - m_start_time;
-            if(timeStamp>=0){
-                pthread_mutex_lock(&mutex);
-                m_pVideoCBFunc(nullptr, m_ipix_fmt, pframe,timeStamp );
-                pthread_mutex_unlock(&mutex);
-            }
+            //if(timeStamp>=0){
+            pthread_mutex_lock(&mutex);
+            qDebug() << "+++++++++++++++++++++++++++++++++++" << timeStamp << time;
+            m_pVideoCBFunc(nullptr, m_ipix_fmt, pframe,time);
+            pthread_mutex_unlock(&mutex);
+            //}
         }
         av_frame_free(&pframe);
     }
@@ -297,12 +300,12 @@ void CAVInputStream::CloseInputStream()
     m_isWriting = false;
     usleep(200*1000);
 
-//    usleep(300000);
+    //    usleep(300000);
 }
 void  CAVInputStream::onsFinisheStream()
 {
-//    av_free_packet(dec_pkt);
-//   m_videoindex = -1;
+    //    av_free_packet(dec_pkt);
+    //   m_videoindex = -1;
     //关闭线程
     if(m_hCapAudioThread)
     {
@@ -326,7 +329,7 @@ void  *CAVInputStream::writeAmixThreadFunc(void* lParam)
 
     printf("CaptureAudioThread\n");
     pThis->doWritAmixAudio();
-     return NULL;
+    return NULL;
 }
 int CAVInputStream::beginWriteMixAudio(){
     if(m_isMerge)
@@ -334,7 +337,7 @@ int CAVInputStream::beginWriteMixAudio(){
         int rc = pthread_create(&m_hReadMixThread, NULL, writeAmixThreadFunc, (void *)this);
         return rc;
     }
-   return 0;
+    return 0;
 }
 void CAVInputStream::doWritAmixAudio(){
     if(!m_isMerge){
@@ -347,7 +350,7 @@ void CAVInputStream::doWritAmixAudio(){
     int ret;
     while (m_isWriting){
         pthread_mutex_lock(&mutex);
-         m_mixCBFunc();
+        m_mixCBFunc();
         pthread_mutex_unlock(&mutex);
 
     }
@@ -358,7 +361,7 @@ void* CAVInputStream::CaptureAudioThreadFunc(void* lParam)
 
     printf("CaptureAudioThread\n");
     pThis->ReadAudioPackets();
-     return NULL;
+    return NULL;
 }
 //ReadAudioPackets + ReadVideoPackets
 int CAVInputStream::ReadAudioPackets()
@@ -379,7 +382,7 @@ int CAVInputStream::ReadAudioPackets()
     {
         if (m_exit_thread)
         {
-           break;
+            break;
         }
 
         QTime timer12;
@@ -409,7 +412,7 @@ int CAVInputStream::ReadAudioPackets()
             else
             {
                 //printf("Could not read audio frame\n");
-//                return ret;
+                //                return ret;
                 //added by flq
                 continue;
                 //added end
@@ -429,9 +432,9 @@ int CAVInputStream::ReadAudioPackets()
             {
                 if(m_isMerge){
 
-//                     pthread_mutex_lock(&mutexAMix);
-                     m_pAudioCBFunc(m_pAudFmtCtx->streams[m_audioindex], input_frame, av_gettime() - m_start_time);
-//                     pthread_mutex_unlock(&mutexAMix);
+                    //                     pthread_mutex_lock(&mutexAMix);
+                    m_pAudioCBFunc(m_pAudFmtCtx->streams[m_audioindex], input_frame, av_gettime() - m_start_time);
+                    //                     pthread_mutex_unlock(&mutexAMix);
                 }else{
                     pthread_mutex_lock(&mutex);
                     ///音频输出的回调,param3:打时间戳 //tqq
@@ -453,7 +456,7 @@ int CAVInputStream::ReadAudioPackets()
 
 
     if(m_pAudFmtCtx)
-       avformat_free_context(m_pAudFmtCtx);
+        avformat_free_context(m_pAudFmtCtx);
 
     m_pAudFmtCtx = NULL;
     m_audioindex = -1;
@@ -465,7 +468,7 @@ void* CAVInputStream::CaptureAudioSCardThreadFunc(void* lParam)
 
     printf("CaptureAudioThread\n");
     pThis->ReadAudioSCardPackets();
-     return NULL;
+    return NULL;
 }
 
 //ReadAudioPackets + ReadVideoPackets
@@ -487,7 +490,7 @@ int CAVInputStream::ReadAudioSCardPackets()
     {
         if (m_exit_thread)
         {
-           break;
+            break;
         }
 
         AVFrame *input_frame = av_frame_alloc();
@@ -512,7 +515,7 @@ int CAVInputStream::ReadAudioSCardPackets()
             else
             {
                 //printf("Could not read audio frame\n");
-//                return ret;
+                //                return ret;
                 //added by flq
                 continue;
                 //added end
@@ -531,9 +534,9 @@ int CAVInputStream::ReadAudioSCardPackets()
             if(m_pAudioCBFunc)
             {
                 if(m_isMerge){
-//                    pthread_mutex_lock(&mutexAMix);
-                     m_pAudioScardCBFunc(m_pAudFmtCtx_scard->streams[m_audioindex_scard], input_frame, av_gettime() - m_start_time);
-//                     pthread_mutex_unlock(&mutexAMix);
+                    //                    pthread_mutex_lock(&mutexAMix);
+                    m_pAudioScardCBFunc(m_pAudFmtCtx_scard->streams[m_audioindex_scard], input_frame, av_gettime() - m_start_time);
+                    //                     pthread_mutex_unlock(&mutexAMix);
                 }else{
                     pthread_mutex_lock(&mutex);
                     ///音频输出的回调,param3:打时间戳 //tqq
@@ -555,7 +558,7 @@ int CAVInputStream::ReadAudioSCardPackets()
 
 
     if(m_pAudFmtCtx_scard)
-       avformat_free_context(m_pAudFmtCtx_scard);
+        avformat_free_context(m_pAudFmtCtx_scard);
 
     m_pAudFmtCtx_scard = NULL;
     m_audioindex_scard = -1;
@@ -563,7 +566,7 @@ int CAVInputStream::ReadAudioSCardPackets()
 }
 bool CAVInputStream::GetVideoInputInfo(int & width, int & height, int & frame_rate, AVPixelFormat & pixFmt)
 {
-//    if( m_outPutType == Gif)
+    //    if( m_outPutType == Gif)
     {
         width =m_screenDW-m_cl-m_cr;
         height = m_screenDH-m_ct-m_cb;
@@ -573,7 +576,7 @@ bool CAVInputStream::GetVideoInputInfo(int & width, int & height, int & frame_ra
         return true;
     }
 
-//    return false;
+    //    return false;
 }
 
 bool  CAVInputStream::GetAudioInputInfo(AVSampleFormat & sample_fmt, int & sample_rate, int & channels,int &layout)

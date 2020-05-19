@@ -59,10 +59,12 @@ public:
     //缓存帧
     typedef struct waylandFrame
     {
-        int width;
-        int height;
-        int stride;
-        unsigned char* frame;
+        //时间戳
+        int64_t _time;
+        int _width;
+        int _height;
+        int _stride;
+        unsigned char* _frame;
     };
 
     typedef struct {
@@ -119,16 +121,18 @@ private:
      * @param width:视频帧宽
      * @param height:视频帧高
      * @param stride:通道数
+     * @param time:时间戳
      */
-    void appendBuffer(unsigned char* frame,int width,int height,int stride);
+    void appendBuffer(unsigned char* frame,int width,int height,int stride,int64_t time);
 public:
     /**
      * @ 内存由getFrame函数内部申请
      * @ 保存视频帧之后，无需：delete <unsigned char* frame>
      * @brief getFrame:获取帧
+     * @param frame:视频帧
      * @return
      */
-    bool getFrame(waylandFrame &f);
+    bool getFrame(waylandFrame &frame);
 
 private:
     //参数列表：程序名称，视频类型，视频宽，视频高，视频x坐标，视频y坐标，视频帧率，视频保存路径，音频类型
@@ -144,9 +148,13 @@ private:
     bool m_bInit;
     QMutex m_mutex;
     //wayland缓冲区
-    QList<unsigned char*> m_waylandList;
-    QList<unsigned char*> m_catchList;
-    unsigned char* cacheFrame;
+    QList<waylandFrame> m_waylandList;
+    //空闲内存
+    QList<unsigned char*> m_freeList;
+    //ffmpeg视频帧
+    unsigned char* m_ffmFrame;
+    //起始时间戳
+    int64_t frameStartTime;
 
     bool m_eglInitialized;
     bool m_streamingEnabled;
