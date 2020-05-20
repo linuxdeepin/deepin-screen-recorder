@@ -262,11 +262,11 @@ void CAVInputStream::writeToFrame(QImage *img, int64_t time){
     if(ret==0)
     {
 
-        pthread_mutex_lock(&mutexScreenD);
+        //pthread_mutex_lock(&mutexScreenD);
         QImage* imageTempt = img;
         int64_t timeStamp1 =av_gettime();
 
-        pthread_mutex_unlock(&mutexScreenD);
+        //pthread_mutex_unlock(&mutexScreenD);
 
         pframe->width = imageTempt->width();
         pframe->height = imageTempt->height();
@@ -282,11 +282,46 @@ void CAVInputStream::writeToFrame(QImage *img, int64_t time){
         {
             int64_t timeStamp = timeStamp1 - m_start_time;
             //if(timeStamp>=0){
-            pthread_mutex_lock(&mutex);
-            qDebug() << "+++++++++++++++++++++++++++++++++++" << timeStamp << time;
+            //pthread_mutex_lock(&mutex);
+            static int s_flag = 0;
+            if (s_flag < time)
+            {
+                s_flag = time;
+            }
+            else {
+                qDebug() << "error=================";
+            }
+            //qDebug() << "+++++++++++++++++++++++++++++++++++:时间戳："  << time;
             m_pVideoCBFunc(nullptr, m_ipix_fmt, pframe,time);
-            pthread_mutex_unlock(&mutex);
+            //pthread_mutex_unlock(&mutex);
             //}
+        }
+        av_frame_free(&pframe);
+    }
+}
+
+void CAVInputStream::writeToFrame(WaylandIntegration::WaylandIntegrationPrivate::waylandFrame &frame)
+{
+    if (m_exit_thread || m_start_time<=0)
+        return;
+    AVFrame * pframe = av_frame_alloc();
+    pframe->width = m_screenDW;
+    pframe->height = m_screenDH;
+    pframe->format =AV_PIX_FMT_BGR32;
+    if(0 == av_frame_get_buffer(pframe,32))
+    {
+        pframe->width = frame._width;
+        pframe->height = frame._height;
+        pframe->format = m_ipix_fmt;
+        pframe->crop_left = m_cl;
+        pframe->crop_top = m_ct;
+        pframe->crop_right = m_cr;
+        pframe->crop_bottom = m_cb;
+        pframe->data[0] = frame._frame;
+        if(m_pVideoCBFunc)
+        {
+            //qDebug() << "+++++++++++++++++++++++++++++++++++:时间戳："  << time;
+            m_pVideoCBFunc(nullptr, m_ipix_fmt, pframe,frame._time);
         }
         av_frame_free(&pframe);
     }
@@ -349,9 +384,9 @@ void CAVInputStream::doWritAmixAudio(){
     m_isWriting = true;
     int ret;
     while (m_isWriting){
-        pthread_mutex_lock(&mutex);
+        //pthread_mutex_lock(&mutex);
         m_mixCBFunc();
-        pthread_mutex_unlock(&mutex);
+        //pthread_mutex_unlock(&mutex);
 
     }
 }
@@ -436,10 +471,10 @@ int CAVInputStream::ReadAudioPackets()
                     m_pAudioCBFunc(m_pAudFmtCtx->streams[m_audioindex], input_frame, av_gettime() - m_start_time);
                     //                     pthread_mutex_unlock(&mutexAMix);
                 }else{
-                    pthread_mutex_lock(&mutex);
+                    //pthread_mutex_lock(&mutex);
                     ///音频输出的回调,param3:打时间戳 //tqq
                     m_pAudioCBFunc(m_pAudFmtCtx->streams[m_audioindex], input_frame, av_gettime() - m_start_time);
-                    pthread_mutex_unlock(&mutex);
+                    //pthread_mutex_unlock(&mutex);
                 }
 
             }
@@ -538,10 +573,10 @@ int CAVInputStream::ReadAudioSCardPackets()
                     m_pAudioScardCBFunc(m_pAudFmtCtx_scard->streams[m_audioindex_scard], input_frame, av_gettime() - m_start_time);
                     //                     pthread_mutex_unlock(&mutexAMix);
                 }else{
-                    pthread_mutex_lock(&mutex);
+                    //pthread_mutex_lock(&mutex);
                     ///音频输出的回调,param3:打时间戳 //tqq
                     m_pAudioScardCBFunc(m_pAudFmtCtx_scard->streams[m_audioindex_scard], input_frame, av_gettime() - m_start_time);
-                    pthread_mutex_unlock(&mutex);
+                    //pthread_mutex_unlock(&mutex);
                 }
 
             }

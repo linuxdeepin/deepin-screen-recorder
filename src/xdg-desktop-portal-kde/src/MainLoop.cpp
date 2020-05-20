@@ -8,6 +8,8 @@
 #include <math.h>
 #include <unistd.h> //sleep()
 #include <qtimer.h>
+#include <QDebug>
+
 MainLoop* gpMainFrame = NULL;
 
 //采集到的视频图像回调 CALLBACK
@@ -151,6 +153,13 @@ void  MainLoop::addImage(QImage *img, int64_t time)
         gpMainFrame->m_InputStream.writeToFrame(img,time);
     }
 
+}
+
+void MainLoop::addImage(WaylandIntegration::WaylandIntegrationPrivate::waylandFrame &frame)
+{
+    if(m_canAddImage){
+        gpMainFrame->m_InputStream.writeToFrame(frame);
+    }
 }
 int MainLoop:: OnStartStream()
 {

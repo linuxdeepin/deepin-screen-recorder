@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.8.2, 2020-05-19T22:17:30. -->
+<!-- Written by QtCreator 4.8.2, 2020-05-20T17:16:17. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -515,7 +515,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">xdg-desktop-portal-kde4</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.xdg-desktop-portal-kde
 /data/home/uos/hl/git2/deepin-screen-recorder/src/xdg-desktop-portal-kde/src/</value>
-    <value type="QString" key="RunConfiguration.Arguments">0 2161 1441 0 0 24 ./3333.mp4 2 600</value>
+    <value type="QString" key="RunConfiguration.Arguments">0 2161 1441 0 0 24 ./7.gif 2 20</value>
     <value type="uint" key="RunConfiguration.QmlDebugServerPort">3768</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>

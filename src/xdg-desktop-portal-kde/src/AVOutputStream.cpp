@@ -16,6 +16,8 @@ DTS是AVPacket里的一个成员，表示这个压缩包应该什么时候被解
 #include "AVOutputStream.h"
 #include <unistd.h>
 #include <QTime>
+#include <QDebug>
+
 CAVOutputStream::CAVOutputStream(void)
 {
     m_video_codec_id = AV_CODEC_ID_NONE;
@@ -855,7 +857,7 @@ int CAVOutputStream::write_video_frame(AVStream * input_st, enum AVPixelFormat p
 
         /* write the compressed frame in the media file */
 
-        ret = av_interleaved_write_frame(ofmt_ctx, &enc_pkt);
+        ret = writeFrame(ofmt_ctx, &enc_pkt);
         if(ret < 0)
         {
             char tmpErrString[128] = {0};
@@ -980,16 +982,16 @@ int  CAVOutputStream::write_audio_frame(AVStream *input_st, AVFrame *input_frame
         if (fifo_net_space >= input_frame->nb_samples)
         {
             //EnterCriticalSection(&_section_spk);
-            pthread_mutex_lock(&mutexAMix);
+            //pthread_mutex_lock(&mutexAMix);
             //参数1: fifo   参数2: data   参数3:data size
-            if (av_audio_fifo_write(m_fifo, (void **)m_converted_input_samples, input_frame->nb_samples) < input_frame->nb_samples)
+            if (audioWrite(m_fifo, (void **)m_converted_input_samples, input_frame->nb_samples) < input_frame->nb_samples)
             {
                 printf("Could not write data to FIFO\n");
                 return AVERROR_EXIT;
             }
             printf("_fifo_spk write secceffull  m_fifo!\n");
             //LeaveCriticalSection(&_section_spk);
-            pthread_mutex_unlock(&mutexAMix);
+            //pthread_mutex_unlock(&mutexAMix);
         }
     }else{
 
@@ -1011,7 +1013,7 @@ int  CAVOutputStream::write_audio_frame(AVStream *input_st, AVFrame *input_frame
 
         /** Store the new samples in the FIFO buffer. */
         //参数1: fifo   参数2: data   参数3:data size
-        if (av_audio_fifo_write(m_fifo, (void **)m_converted_input_samples, input_frame->nb_samples) < input_frame->nb_samples)
+        if (audioWrite(m_fifo, (void **)m_converted_input_samples, input_frame->nb_samples) < input_frame->nb_samples)
         {
             printf("Could not write data to FIFO\n");
             return AVERROR_EXIT;
@@ -1084,7 +1086,7 @@ int  CAVOutputStream::write_audio_frame(AVStream *input_st, AVFrame *input_frame
         * Read as many samples from the FIFO buffer as required to fill the frame.
         * The samples are stored in the frame temporarily.
         */
-            if (av_audio_fifo_read(m_fifo, (void **)output_frame->data, frame_size) < frame_size)
+            if (audioRead(m_fifo, (void **)output_frame->data, frame_size) < frame_size)
             {
                 printf("Could not read data from FIFO\n");
                 return AVERROR_EXIT;
@@ -1134,7 +1136,7 @@ int  CAVOutputStream::write_audio_frame(AVStream *input_st, AVFrame *input_frame
 #endif
 
 
-                if ((ret = av_interleaved_write_frame(ofmt_ctx, &output_packet)) < 0)
+                if ((ret = writeFrame(ofmt_ctx, &output_packet)) < 0)
                 {
                     char tmpErrString[128] = {0};
                     printf("Could not write audio frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
@@ -1205,7 +1207,7 @@ int  CAVOutputStream::write_audio_frame(AVStream *input_st, AVFrame *input_frame
 #endif
 
 
-         if ((ret = av_interleaved_write_frame(ofmt_ctx, &output_packet)) < 0)
+         if ((ret = writeFrame(ofmt_ctx, &output_packet)) < 0)
          {
              char tmpErrString[128] = {0};
              printf("Could not write audio frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
@@ -1254,17 +1256,17 @@ int  CAVOutputStream::write_audio_frame(AVStream *input_st, AVFrame *input_frame
           av_frame_get_buffer(pFrame_temp, 0);
 
 
-          pthread_mutex_lock(&mutexAMixSCard);
+          //pthread_mutex_lock(&mutexAMixSCard);
           //EnterCriticalSection(&_section_spk);
-          ret = av_audio_fifo_read(m_fifo_scard, (void**)pFrame_scard->data, frame_scard_min_size);
+          ret = audioRead(m_fifo_scard, (void**)pFrame_scard->data, frame_scard_min_size);
           //LeaveCriticalSection(&_section_spk);
-          pthread_mutex_unlock(&mutexAMixSCard);
+          //pthread_mutex_unlock(&mutexAMixSCard);
 
-          pthread_mutex_lock(&mutexAMix);
+          //pthread_mutex_lock(&mutexAMix);
           //EnterCriticalSection(&_section_mic);
-          ret = av_audio_fifo_read(m_fifo, (void**)pFrame_temp->data, frame_min_size);
+          ret = audioRead(m_fifo, (void**)pFrame_temp->data, frame_min_size);
           //LeaveCriticalSection(&_section_mic);
-          pthread_mutex_unlock(&mutexAMix);
+          //pthread_mutex_unlock(&mutexAMix);
           int nFifoSamples = pFrame_scard->nb_samples;
 
           if(m_start_mix_time == -1)
@@ -1369,7 +1371,7 @@ int  CAVOutputStream::write_audio_frame(AVStream *input_st, AVFrame *input_frame
 
                       m_mixCount++;
 
-                      ret = av_interleaved_write_frame(ofmt_ctx, &packet_out);
+                      ret = writeFrame(ofmt_ctx, &packet_out);
                       if (ret < 0)
                       {
                           printf("Mixer: failed to call av_interleaved_write_frame\n");
@@ -1503,14 +1505,14 @@ int  CAVOutputStream::write_audio_card_frame(AVStream *input_st, AVFrame *input_
         if (fifo_net_space >= input_frame->nb_samples)
         {
             //EnterCriticalSection(&_section_spk);
-            pthread_mutex_lock(&mutexAMixSCard);
+            //pthread_mutex_lock(&mutexAMixSCard);
             //参数1: fifo   参数2: data   参数3:data size
-            if (av_audio_fifo_write(m_fifo_scard, (void **)m_converted_input_samples_scard, input_frame->nb_samples) < input_frame->nb_samples)
+            if (audioWrite(m_fifo_scard, (void **)m_converted_input_samples_scard, input_frame->nb_samples) < input_frame->nb_samples)
             {
                 printf("Could not write data to FIFO\n");
                 return AVERROR_EXIT;
             }
-            pthread_mutex_unlock(&mutexAMixSCard);
+            //pthread_mutex_unlock(&mutexAMixSCard);
         }
 
 
@@ -1532,7 +1534,7 @@ int  CAVOutputStream::write_audio_card_frame(AVStream *input_st, AVFrame *input_
 
         /** Store the new samples in the FIFO buffer. */
         //参数1: fifo   参数2: data   参数3:data size
-        if (av_audio_fifo_write(m_fifo_scard, (void **)m_converted_input_samples_scard, input_frame->nb_samples) < input_frame->nb_samples)
+        if (audioWrite(m_fifo_scard, (void **)m_converted_input_samples_scard, input_frame->nb_samples) < input_frame->nb_samples)
         {
             printf("Could not write data to FIFO\n");
             return AVERROR_EXIT;
@@ -1605,7 +1607,7 @@ int  CAVOutputStream::write_audio_card_frame(AVStream *input_st, AVFrame *input_
             * Read as many samples from the FIFO buffer as required to fill the frame.
             * The samples are stored in the frame temporarily.
             */
-            if (av_audio_fifo_read(m_fifo_scard, (void **)output_frame->data, frame_size) < frame_size)
+            if (audioRead(m_fifo_scard, (void **)output_frame->data, frame_size) < frame_size)
             {
                 printf("Could not read data from FIFO\n");
                 return AVERROR_EXIT;
@@ -1651,7 +1653,7 @@ int  CAVOutputStream::write_audio_card_frame(AVStream *input_st, AVFrame *input_
 
 #endif
 
-                    if ((ret = av_interleaved_write_frame(ofmt_ctx, &output_packet)) < 0)
+                    if ((ret = writeFrame(ofmt_ctx, &output_packet)) < 0)
                     {
                         char tmpErrString[128] = {0};
                         printf("Could not write audio frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
@@ -1685,7 +1687,7 @@ void  CAVOutputStream::CloseOutput()
         if(video_st != NULL || audio_st != NULL || audio_scard_st!=NULL || audio_amix_st!=NULL)
         {
             //Write file trailer
-            av_write_trailer(ofmt_ctx);
+            writeTrailer(ofmt_ctx);
         }
     }
 
@@ -1768,4 +1770,31 @@ void  CAVOutputStream::CloseOutput()
 void CAVOutputStream::setIsOverWrite(bool isCOntinue)
 {
     m_isOverWrite = isCOntinue;
+}
+
+int CAVOutputStream::audioRead(AVAudioFifo *af, void **data, int nb_samples)
+{
+    QMutexLocker locker(&m_audioReadWriteMutex);
+    //qDebug() << "+++++++++++++++++++++++ 读音帧";
+    return av_audio_fifo_read(af, data, nb_samples);
+}
+
+int CAVOutputStream::audioWrite(AVAudioFifo *af, void **data, int nb_samples)
+{
+    QMutexLocker locker(&m_audioReadWriteMutex);
+    //qDebug() << "+++++++++++++++++++++++ 写音帧";
+    return av_audio_fifo_write(af, data, nb_samples);
+}
+
+int CAVOutputStream::writeFrame(AVFormatContext *s, AVPacket *pkt)
+{
+    QMutexLocker locker(&writeFrameMutex);
+    //qDebug() << "+++++++++++++++++++++++ 写视频帧";
+    return av_interleaved_write_frame(s, pkt);
+}
+
+int CAVOutputStream::writeTrailer(AVFormatContext *s)
+{
+    QMutexLocker locker(&writeFrameMutex);
+    return av_write_trailer(s);
 }

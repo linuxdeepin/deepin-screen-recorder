@@ -3,6 +3,7 @@
 
 #include <string>
 #include <assert.h>
+#include <QMutex>
 
 
 extern "C"
@@ -64,7 +65,47 @@ public:
     int init_context_amix(int channel, uint64_t channel_layout,int sample_rate,int64_t bit_rate);
     void startWriteAmixData();
     void setIsOverWrite(bool isCOntinue);
+
+public:
+
+    /**
+     * @brief audioRead:读音频，自动锁
+     * @param af
+     * @param data
+     * @param nb_samples
+     * @return
+     */
+    int audioRead(AVAudioFifo *af, void **data, int nb_samples);
+
+    /**
+     * @brief audioWrite:写音频，自动锁
+     * @param af
+     * @param data
+     * @param nb_samples
+     * @return
+     */
+
+    int audioWrite(AVAudioFifo *af, void **data, int nb_samples);
+
+    /**
+     * @brief writeFrame:写视频帧，自动锁
+     * @param s
+     * @param pkt
+     * @return
+     */
+    int writeFrame(AVFormatContext *s, AVPacket *pkt);
+
+    /**
+     * @brief writeTrailer:写视频文件尾，自动锁
+     * @param s
+     * @return
+     */
+    int writeTrailer(AVFormatContext *s);
+
 private:
+
+    QMutex m_audioReadWriteMutex;
+    QMutex writeFrameMutex;
 
 
 protected:
@@ -119,8 +160,8 @@ protected:
     AVFilterContext *buffersink_ctx;
     AVFilterContext *buffersrc_ctx1;
     AVFilterContext *buffersrc_ctx2;
-     pthread_mutex_t mutexAMixSCard = PTHREAD_MUTEX_INITIALIZER;
-     pthread_mutex_t mutexAMix = PTHREAD_MUTEX_INITIALIZER;
+     //pthread_mutex_t mutexAMixSCard = PTHREAD_MUTEX_INITIALIZER;
+     //pthread_mutex_t mutexAMix = PTHREAD_MUTEX_INITIALIZER;
      int tmpFifoFailed;
 
      bool m_isOverWrite;

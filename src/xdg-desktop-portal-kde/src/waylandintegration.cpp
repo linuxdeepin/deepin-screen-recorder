@@ -88,7 +88,7 @@ void WaylandIntegration::stopStreaming()
 }
 bool WaylandIntegration::WaylandIntegrationPrivate::stopStreamMutex()
 {
-    pthread_mutex_lock(&m_mtx_stream);
+    //pthread_mutex_lock(&m_mtx_stream);
     bool returnVal = m_recordStreamObjPtr->stopStream();
     tempFps =0;
     tempType = RecordAudioType::NOS;
@@ -97,8 +97,8 @@ bool WaylandIntegration::WaylandIntegrationPrivate::stopStreamMutex()
     tempCw = -1;
     tempCh = -1;
     pthread_cond_signal(&m_cond_stream);
-    pthread_mutex_unlock(&m_mtx_stream);
-    waylandFrame wf;
+    //pthread_mutex_unlock(&m_mtx_stream);
+    //waylandFrame wf;
     //    while (getFrame(wf)) {
     //        //        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "write frame in thread------" ;
     //    }
@@ -208,8 +208,6 @@ WaylandIntegration::WaylandIntegrationPrivate::WaylandIntegrationPrivate()
     , m_registry(nullptr)
     , m_remoteAccessManager(nullptr)
 {
-
-    qDebug() << "test:++++++++++++++++++++++++++++++++++++++++++++++++++++:111111111111111111111111";
     m_bInit = true;
     m_bufferSize = 30;
     m_ffmFrame = nullptr;
@@ -359,24 +357,25 @@ QVariant WaylandIntegration::WaylandIntegrationPrivate::streams()
     stream.map = QVariantMap({{QLatin1String("size"), m_outputMap.value(m_output).resolution()}});
     return QVariant::fromValue<WaylandIntegrationPrivate::Streams>({stream});
 }
-void *  writeFrameToStreamThread(void * object){
-    WaylandIntegration::WaylandIntegrationPrivate * pThis = (WaylandIntegration::WaylandIntegrationPrivate*)object;
-    while (pThis->m_isStreamObjCreat) {
+//void *  writeFrameToStreamThread(void * object){
+//    WaylandIntegration::WaylandIntegrationPrivate * pThis = (WaylandIntegration::WaylandIntegrationPrivate*)object;
+//    while (pThis->m_isStreamObjCreat) {
 
-        WaylandIntegration::WaylandIntegrationPrivate::waylandFrame wf;
-        //        bool isSeccess = pThis->getFrame(wf);
-        //        if(isSeccess){
-        //            QString name = QString::fromUtf8("test66655.jpg");
-        //            auto capture = new QImage(wf._frame, wf._width, wf._height, QImage::Format_RGB32);
-        //            //capture->save(name);
-        //            pThis->m_recordStreamObjPtr->addImage(capture);
-        //            delete  capture;
-        //        }
+//        WaylandIntegration::WaylandIntegrationPrivate::waylandFrame wf;
+//        qDebug() << "=====================================================================================================";
+//        //        bool isSeccess = pThis->getFrame(wf);
+//        //        if(isSeccess){
+//        //            QString name = QString::fromUtf8("test66655.jpg");
+//        //            auto capture = new QImage(wf._frame, wf._width, wf._height, QImage::Format_RGB32);
+//        //            //capture->save(name);
+//        //            pThis->m_recordStreamObjPtr->addImage(capture);
+//        //            delete  capture;
+//        //        }
 
-        //        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "write frame in thread------" ;
-    }
-    return NULL;
-}
+//        //        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "write frame in thread------" ;
+//    }
+//    return NULL;
+//}
 void *stopRecordStream(void* object){
     WaylandIntegration::WaylandIntegrationPrivate * pThis = (WaylandIntegration::WaylandIntegrationPrivate*)object;
     sleep(pThis->m_recordTIme);
@@ -437,9 +436,11 @@ void * newStreamFuncOfMutxAuAndVidio(void * object){
     //           pthread_mutex_unlock(&pThis->m_mtx_stream);             //临界区数据操作完毕，释放互斥锁
     //       }
     pthread_mutex_lock(&pThis->m_mtx_stream);
+
     while(!pThis->m_recordStreamObjPtr->m_isOverFlage)
     {
         pthread_cond_wait(&pThis->m_cond_stream, &pThis->m_mtx_stream);
+
         //        printf("newStreamFuncOfMutxAuAndVidio isOver =/n",pThis->m_streamPtr->m_isOverFlage);
 
     }
@@ -449,6 +450,7 @@ void * newStreamFuncOfMutxAuAndVidio(void * object){
         pThis->m_recordStreamObjPtr = NULL;
     }
     pthread_mutex_unlock(&pThis->m_mtx_stream);
+
     pthread_cleanup_pop(0);
     return NULL;
 }
@@ -464,8 +466,6 @@ bool WaylandIntegration::WaylandIntegrationPrivate::recordStreamMutexInit(int fp
         printf("---streamInit is start not over!!/n");
         return false;
     }
-
-    qDebug() << "test:++++++++++++++++++++++++++++++++++++++++++++++++++++:22222222222222222222222222222222";
 
     m_writeFrameThread = new WriteFrameToStreamThread(this);
     m_writeFrameThread->start();

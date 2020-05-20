@@ -9,6 +9,8 @@
 #include <sys/time.h>
 #include <map>
 #include <qimage.h>
+#include "waylandintegration.h"
+#include "waylandintegration_p.h"
 #define AUDIO_INPUT_DEVICE    "hw:0,0"        //hw:0,0
 #define VIDEO_INPUT_DEVICE    "/dev/video0"   ///dev/video0
 
@@ -39,6 +41,9 @@ public:
     bool   IsPreview() { return m_bPreview; }
     void   startInit(int img_width,int img_height,int fps,StreamRecordAudioType type,int cx,int cy,int cw,int ch,const char* outfile);
     void   addImage(QImage *img,int64_t time);
+
+    void addImage(WaylandIntegration::WaylandIntegrationPrivate::waylandFrame &frame);
+
     int stopStream();
     void OnDestroy();
 protected:

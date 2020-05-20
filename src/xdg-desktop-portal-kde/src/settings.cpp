@@ -269,12 +269,7 @@ QDBusVariant SettingsPortal::readProperty(const QString &group, const QString &k
 }
 void SettingsPortal::stopRecord()
 {
-    //
-
-    qDebug() << "wayland stopRecord  +++++++++++++++++++++++";
-
     WaylandIntegration::stopStreaming();
-
 
     //通知录屏完成
     QDBusInterface notification(QString::fromUtf8("com.deepin.ScreenRecorder"),
@@ -283,8 +278,5 @@ void SettingsPortal::stopRecord()
                                 QDBusConnection::sessionBus());
     QList<QVariant> arg;
     notification.callWithArgumentList(QDBus::AutoDetect,QString::fromUtf8("waylandRecordOver"),arg);
-
-
-    //
     QApplication::quit();
 }

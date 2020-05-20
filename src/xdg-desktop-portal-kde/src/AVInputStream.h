@@ -5,6 +5,8 @@
 #include <assert.h>
 #include <qimage.h>
 #include <qqueue.h>
+#include "waylandintegration.h"
+#include "waylandintegration_p.h"
 extern "C"
 {
 #include <libavcodec/avcodec.h>
@@ -29,10 +31,10 @@ typedef int (*AudioMixCB)();
 //typedef LRESULT (CALLBACK* VideoCaptureCB)(AVStream * input_st, enum PixelFormat pix_fmt, AVFrame *pframe, INT64 lTimeStamp);
 //typedef LRESULT (CALLBACK* AudioCaptureCB)(AVStream * input_st, AVFrame *pframe, INT64 lTimeStamp);
 
-struct ScreenData{
-    QImage *image;
-    int64_t timeStamp;
-};
+//struct ScreenData{
+//    QImage *image;
+//    int64_t timeStamp;
+//};
 enum OUTPUT_TYPE{
     Nomal = 0,
     Gif
@@ -55,6 +57,9 @@ public:
     void onFInishCleanImage();
     bool  StartCapture();
     void writeToFrame(QImage *img,int64_t time);
+
+    void writeToFrame(WaylandIntegration::WaylandIntegrationPrivate::waylandFrame &frame);
+
     void  SetVideoCaptureCB(VideoCaptureCB pFuncCB);
     void  SetAudioCaptureCB(AudioCaptureCB pFuncCB);
     void  SetAudioScardCaptureCB(AudioCaptureCB pFuncCB);
@@ -117,8 +122,8 @@ public:
     AudioCaptureCB  m_pAudioScardCBFunc; //声卡音频数据回调函数指针
     AudioMixCB   m_mixCBFunc;
 ///    CCritSec     m_WriteLock;
-    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-    pthread_mutex_t mutexScreenD = PTHREAD_MUTEX_INITIALIZER;
+    //pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    //pthread_mutex_t mutexScreenD = PTHREAD_MUTEX_INITIALIZER;
 
 /// pthread_mutex_t counter_mutex = PTHREAD_MUTEX_INITIALIZER;
 

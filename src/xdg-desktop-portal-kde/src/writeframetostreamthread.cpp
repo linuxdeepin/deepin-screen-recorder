@@ -9,23 +9,20 @@ WaylandIntegration::WriteFrameToStreamThread::WriteFrameToStreamThread(WaylandIn
     m_waylandIntegration = waylandIntegration;
 }
 void WaylandIntegration::WriteFrameToStreamThread::run(){
-//    using namespace WaylandIntegration;
-//   WaylandIntegration::WaylandIntegrationPrivate* waylandIntegra = WaylandIntegration::waylandIntegration();
-   msleep(300);
+    //    using namespace WaylandIntegration;
+    //   WaylandIntegration::WaylandIntegrationPrivate* waylandIntegra = WaylandIntegration::waylandIntegration();
+    msleep(300);
     if(m_waylandIntegration==NULL){
-       qDebug()<<"WriteFrameToStreamThread get WaylandIntegration = null!!";
-       return;
-   }
-   while (m_waylandIntegration->m_isStreamObjCreat) {
+        qDebug()<<"WriteFrameToStreamThread get WaylandIntegration = null!!";
+        return;
+    }
 
-       WaylandIntegrationPrivate::waylandFrame wf;
-       bool isSeccess = m_waylandIntegration->getFrame(wf);
-       if(isSeccess){
-//           QString name = QString::fromUtf8("test1111111111.jpg");
-           auto capture = new QImage(wf._frame, wf._width, wf._height, QImage::Format_RGB32);
-//           capture->save(name);
-           m_waylandIntegration->m_recordStreamObjPtr->addImage(capture,wf._time);
-           delete capture;
-       }
-   }
+    WaylandIntegrationPrivate::waylandFrame frame;
+    while (m_waylandIntegration->m_isStreamObjCreat)
+    {
+        if(m_waylandIntegration->getFrame(frame))
+        {
+            m_waylandIntegration->m_recordStreamObjPtr->addImage(frame);
+        }
+    }
 }
