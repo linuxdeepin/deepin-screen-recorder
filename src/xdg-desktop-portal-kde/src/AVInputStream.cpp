@@ -317,6 +317,7 @@ void CAVInputStream::writeToFrame(WaylandIntegration::WaylandIntegrationPrivate:
         pframe->crop_top = m_ct;
         pframe->crop_right = m_cr;
         pframe->crop_bottom = m_cb;
+        pframe->linesize[0] = frame._stride;
         pframe->data[0] = frame._frame;
         if(m_pVideoCBFunc)
         {

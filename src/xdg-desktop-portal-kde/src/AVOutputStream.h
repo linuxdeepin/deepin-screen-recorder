@@ -30,6 +30,7 @@ extern "C"
 //#include "libavutil/audio_fifo.h"
 #include "libavutil/avutil.h"
 #include "libavutil/fifo.h"
+#include "gif_encoder.h"
 }
 
 using namespace std;
@@ -193,6 +194,7 @@ public:
     int m_audio_bitrate_card;
 //    int m_cw;
 //    int m_ch;
+    GifInfo *gifInfo;
 
 };
 

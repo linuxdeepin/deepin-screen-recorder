@@ -38,6 +38,9 @@ set(xdg_desktop_portal_kde_SRCS
     AVOutputStream.cpp
     AVInputStream.cpp
     writeframetostreamthread.cpp
+    gif_encoder.c
+    bit_writing_block.c
+    neu_quant.c
 )
 
 if (SCREENCAST_ENABLED)

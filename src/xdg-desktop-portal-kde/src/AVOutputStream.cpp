@@ -430,6 +430,12 @@ bool CAVOutputStream::OpenOutputStream(const char* out_path)
 
     ///视频
     if(m_isGif){
+        qDebug() << "m_width" << m_width << m_height;
+        gifInfo = init(gifInfo, m_width, m_height, out_path);
+        if(gifInfo == NULL){
+            qDebug() << "GIFINFO INIT FAIL" ;
+        }
+        /*
         int ret =0;
            ret = avio_open2(&ofmt_ctx->pb, out_path, AVIO_FLAG_WRITE, nullptr, nullptr);
            if (ret < 0) {
@@ -487,6 +493,7 @@ bool CAVOutputStream::OpenOutputStream(const char* out_path)
            }
 
            av_frame_make_writable(pFrameYUV);
+           */
     }else{
         if(m_video_codec_id != 0)
         {
@@ -753,16 +760,6 @@ bool CAVOutputStream::OpenOutputStream(const char* out_path)
 //lTimeStamp -- 时间戳，时间单位为1/1000000
 int CAVOutputStream::write_video_frame(AVStream * input_st, enum AVPixelFormat pix_fmt, AVFrame *pframe, int64_t lTimeStamp)
 {
-    static int64_t framecnt = 0;
-
-    if(video_st == NULL)
-    {
-       return -1;
-    }
-
-#ifdef DEBUG
-   //printf("Video timestamp: %ld \n", lTimeStamp);
-#endif
    if(m_first_vid_time1 == -1)
    {
        printf("First Video timestamp: %ld \n", lTimeStamp);
@@ -774,24 +771,53 @@ int CAVOutputStream::write_video_frame(AVStream * input_st, enum AVPixelFormat p
     if(img_convert_ctx == NULL)
     {
         if(m_isGif){
+            /*
             img_convert_ctx = sws_getCachedContext(
                             nullptr, m_width, m_height, AV_PIX_FMT_RGB32,
                             m_width, m_height, video_st->codec->pix_fmt, SWS_BICUBIC, nullptr, nullptr, nullptr);
+                            */
+
+            //AV_PIX_FMT_ARGB,
+            //AV_PIX_FMT_RGBA,
+            //AV_PIX_FMT_ABGR,
+            //AV_PIX_FMT_BGRA,
+            img_convert_ctx = sws_getContext(
+                            m_width, m_width, AV_PIX_FMT_BGRA,
+                            m_width, m_height,  AV_PIX_FMT_RGBA, SWS_BICUBIC, nullptr, nullptr, nullptr);
+
         }else{
             img_convert_ctx = sws_getContext(m_width, m_height,
                 pix_fmt, pCodecCtx->width, pCodecCtx->height, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL, NULL);
         }
 
     }
-
-
     if(av_frame_apply_cropping(pframe,AV_FRAME_CROP_UNALIGNED)<0){
         AVERROR(ERANGE);
         return 2;
     }
-    QTime timer12;
-    timer12.start();
     if(m_isGif){
+
+        int bufferSize = avpicture_get_size(AV_PIX_FMT_RGBA, m_width, m_height);
+        uint8_t* buffer = (uint8_t*)malloc(bufferSize);
+        AVFrame* pFrameRGBA;
+        pFrameRGBA = av_frame_alloc();
+        if(pFrameRGBA == NULL){
+            return  2;
+        }
+
+        avpicture_fill((AVPicture*)pFrameRGBA, buffer, AV_PIX_FMT_RGBA, m_width, m_height);
+
+        sws_scale(img_convert_ctx, pframe->data, pframe->linesize, 0, pframe->height, pFrameRGBA->data, pFrameRGBA->linesize);
+
+        basicReduceColor(gifInfo, (uint32_t*)buffer);
+        writeNetscapeExt(gifInfo);
+        graphicsControlExtension(gifInfo, 0);
+        imageDescriptor(gifInfo);
+        imageData(gifInfo, buffer);
+
+        av_free(pFrameRGBA);
+        free(buffer);
+        /*
         sws_scale(img_convert_ctx, pframe->data, pframe->linesize, 0, pframe->height, pFrameYUV->data, pFrameYUV->linesize);
         pFrameYUV->pts = m_mixCount++;
 
@@ -814,15 +840,13 @@ int CAVOutputStream::write_video_frame(AVStream * input_st, enum AVPixelFormat p
 //        std::cout << nb_frames << '\r' << std::flush;  // dump progress
 //        ++nb_frames;
         av_free_packet(&pkt);
+        */
         return 0;
     }
     sws_scale(img_convert_ctx, (const uint8_t* const*)pframe->data, pframe->linesize, 0, pCodecCtx->height, pFrameYUV->data, pFrameYUV->linesize);
     pFrameYUV->height = pframe->height;
     pFrameYUV->format = AV_PIX_FMT_YUV420P;
 
-
-    int elapsed = timer12.elapsed();
-    printf("----sws_scale elapsed=%d\n",elapsed) ;
     AVPacket enc_pkt;
     enc_pkt.data = NULL;
     enc_pkt.size = 0;
@@ -1682,6 +1706,12 @@ int  CAVOutputStream::write_audio_card_frame(AVStream *input_st, AVFrame *input_
 }
 void  CAVOutputStream::CloseOutput()
 {
+    if(gifInfo != NULL)
+    {
+        finish(gifInfo);
+        gifInfo = NULL;
+    }
+
     if(ofmt_ctx != NULL)
     {
         if(video_st != NULL || audio_st != NULL || audio_scard_st!=NULL || audio_amix_st!=NULL)
