@@ -162,7 +162,7 @@ INSTALLS += target icon desktop manual dbus_service shotShell
 #INSTALLS += target icon desktop manual dbus_service modload modprobe
 
 isEmpty(TRANSLATIONS) {
-     include(translations.pri)
+     include(../translations.pri)
 }
 
 TRANSLATIONS_COMPILED = $$TRANSLATIONS
@@ -185,4 +185,4 @@ DSR_LANG_PATH += $$DSRDIR/translations
 DEFINES += "DSR_LANG_PATH=\\\"$$DSR_LANG_PATH\\\""
 
 DISTFILES += \
-    image/newUI/focus/close-focus.svg
+    ../image/newUI/focus/close-focus.svg
