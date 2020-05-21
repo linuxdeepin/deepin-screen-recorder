@@ -782,7 +782,7 @@ int CAVOutputStream::write_video_frame(AVStream * input_st, enum AVPixelFormat p
             //AV_PIX_FMT_ABGR,
             //AV_PIX_FMT_BGRA,
             img_convert_ctx = sws_getContext(
-                            m_width, m_width, AV_PIX_FMT_BGRA,
+                            m_width, m_width, AV_PIX_FMT_ARGB,
                             m_width, m_height,  AV_PIX_FMT_RGBA, SWS_BICUBIC, nullptr, nullptr, nullptr);
 
         }else{
