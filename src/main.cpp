@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
     QString KDE_FULL_SESSION = e.value(QStringLiteral("KDE_FULL_SESSION"));
     QString GNOME_DESKTOP_SESSION_ID = e.value(QStringLiteral("GNOME_DESKTOP_SESSION_ID"));
     QString DESKTOP_SESSION = e.value(QStringLiteral("DESKTOP_SESSION"));
-
+/*
     bool t_waylandPlatform = XDG_SESSION_TYPE == QLatin1String("wayland") ||
                              WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
 
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
             return 0;
         }
     }
-
+*/
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
 //    dbus.registerService("com.deepin.ScreenRecorder");

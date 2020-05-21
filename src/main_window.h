@@ -154,6 +154,7 @@ public slots:
     void onHelp();
 
     Q_SCRIPTABLE void stopRecord();
+    void waylandRecordOver();
     void startCountdown();
     void showPressFeedback(int x, int y);
     void showDragFeedback(int x, int y);

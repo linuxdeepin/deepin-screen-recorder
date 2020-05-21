@@ -113,17 +113,17 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
 //    hLayout->setContentsMargins(2, 3, 0, 0);
     hLayout->setMargin(0);
     hLayout->setSpacing(2);
+//  wayland 打开录屏功能
+//    if (m_deskinfo.waylandDectected()) {
+//        hLayout->addSpacing(10);
+//        m_mainTool->hide();
+//        hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
+//    }
 
-    if (m_deskinfo.waylandDectected()) {
-        hLayout->addSpacing(10);
-        m_mainTool->hide();
-        hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
-    }
-
-    else {
+//    else {
         hLayout->addWidget(m_mainTool, 0,  Qt::AlignCenter);
         hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
-    }
+//    }
 
 
 //    hLayout->addSpacing(10);
