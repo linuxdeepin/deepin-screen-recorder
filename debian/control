@@ -4,7 +4,12 @@ Priority: optional
 Maintainer: Deepin Packages Builder <packages@deepin.com>
 Build-Depends: debhelper (>= 9), pkg-config, qt5-qmake,
  libxcb-util0-dev, libqt5x11extras5-dev, qttools5-dev-tools, 
- libdtkgui-dev, libdtkwidget-dev, libxtst-dev, libprocps-dev
+ libdtkgui-dev, libdtkwidget-dev, libxtst-dev, libprocps-dev,
+ qtbase5-dev,
+ qtbase5-private-dev,
+ libkf5windowsystem-dev,
+ libkf5wayland-dev,
+ libkf5i18n-dev
 Standards-Version: 3.9.8
 Homepage: https://github.com/linuxdeepin/deepin-screen-recorder
 
@@ -15,4 +20,10 @@ Recommends: dde-session-ui
 Conflicts: deepin-screenshot
 Replaces: deepin-screenshot
 Description: Simple recorder tools for UOS
+ A simple screen shot and recorder tools for UOS
+
+Package: xdg-desktop-portal-kde
+Architecture: any
+Recommends: dde-session-ui
+Description: Record tool for wayland platform
  A simple screen shot and recorder tools for UOS
