@@ -133,7 +133,12 @@ void RecordProcess::WaylandRecord()
     arguments << QString("%1").arg(m_recordRect.width()) << QString("%1").arg(m_recordRect.height());
     arguments << QString("%1").arg(m_recordRect.x()) << QString("%1").arg(m_recordRect.y());
     arguments << QString("%1").arg(m_framerate);
-    arguments << QString("%1").arg(savePath);
+
+    QString fileName = savePath;
+    if(recordType == RECORD_TYPE_GIF){
+        fileName.replace(".gif", ".mp4");
+    }
+    arguments << QString("%1").arg(fileName);
     arguments << QString("%1").arg(recordAudioInputType);
     //arguments << QString("%d").arg(t_currentAudioChannel);
     qDebug() << arguments;
@@ -595,6 +600,11 @@ void RecordProcess::waylandRecordOver()
     if(!m_info.waylandDectected()){
         return;
     }
+
+    if(recordType == RECORD_TYPE_GIF){
+        transformToGif();
+    }
+
     // wayland录屏进程调用dbus通知保存完成。
     qDebug() << "RecordProcess::waylandRecordOver()";
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
@@ -692,4 +702,21 @@ void RecordProcess::stopRecord()
 //    }
 
     QApplication::quit();
+}
+void RecordProcess::transformToGif()
+{
+    QStringList options;
+    options << "-i";
+    QString inputFile = savePath;
+    options << inputFile.replace("gif", "mp4");
+    options << savePath;
+    qDebug() << options;
+    QProcess process;
+    process.start("ffmpeg", options);
+    process.waitForFinished();
+    process.waitForReadyRead();
+    QString str_output = process.readAllStandardOutput();
+    process.close();
+    QFile(inputFile).remove();
+    qDebug() << str_output;
 }
