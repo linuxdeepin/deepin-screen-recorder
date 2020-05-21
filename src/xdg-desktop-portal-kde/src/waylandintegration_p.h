@@ -76,8 +76,8 @@ public:
     WaylandIntegrationPrivate();
     ~WaylandIntegrationPrivate();
 
-    void initDrm();
-    void initEGL();
+    //void initDrm();
+    //void initEGL();
     void initWayland(int &argc, char **argv);
 
     bool isEGLInitialized() const;
@@ -86,7 +86,7 @@ public:
     bool startStreaming(const WaylandOutput &output);
     void stopStreaming();
     QMap<quint32, WaylandOutput> screens();
-    QVariant streams();
+    //QVariant streams();
 
     bool recordStreamMutexInit(int fps,RecordAudioType type,int cx,int cy,int cw,int ch,QString outfile);
     void steamMutexStopInit();
@@ -162,7 +162,7 @@ private:
 
     quint32 m_output;
     QDateTime m_lastFrameTime;
-    ScreenCastStream *m_stream;
+    //ScreenCastStream *m_stream;
 
     QThread *m_thread;
 

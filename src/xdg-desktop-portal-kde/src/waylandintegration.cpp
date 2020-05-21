@@ -20,7 +20,7 @@
 
 #include "waylandintegration.h"
 #include "waylandintegration_p.h"
-#include "screencaststream.h"
+//#include "screencaststream.h"
 
 #include <QDBusArgument>
 #include <QDBusMetaType>
@@ -68,7 +68,7 @@ Q_GLOBAL_STATIC(WaylandIntegration::WaylandIntegrationPrivate, globalWaylandInte
 void WaylandIntegration::init(int &argc, char **argv)
 {
     globalWaylandIntegration->initWayland(argc,argv);
-    globalWaylandIntegration->initDrm();
+    //globalWaylandIntegration->initDrm();
 
 }
 
@@ -109,10 +109,10 @@ QMap<quint32, WaylandIntegration::WaylandOutput> WaylandIntegration::screens()
     return globalWaylandIntegration->screens();
 }
 
-QVariant WaylandIntegration::streams()
-{
-    return globalWaylandIntegration->streams();
-}
+//QVariant WaylandIntegration::streams()
+//{
+//    return globalWaylandIntegration->streams();
+//}
 
 WaylandIntegration::WaylandIntegration * WaylandIntegration::waylandIntegration()
 {
@@ -238,9 +238,9 @@ WaylandIntegration::WaylandIntegrationPrivate::~WaylandIntegrationPrivate()
         m_remoteAccessManager->destroy();
     }
 
-    if (m_gbmDevice) {
-        gbm_device_destroy(m_gbmDevice);
-    }
+//    if (m_gbmDevice) {
+//        gbm_device_destroy(m_gbmDevice);
+//    }
     if(m_recordStreamObjPtr){
         delete m_recordStreamObjPtr;
         m_recordStreamObjPtr = NULL;
@@ -265,62 +265,63 @@ void WaylandIntegration::WaylandIntegrationPrivate::bindOutput(int outputName, i
 
 bool WaylandIntegration::WaylandIntegrationPrivate::startStreaming(const WaylandOutput &output)
 {
-    m_stream = new ScreenCastStream(output.resolution());
-    m_stream->init();
+//    qDebug() << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+//    m_stream = new ScreenCastStream(output.resolution());
+//    m_stream->init();
 
-    connect(m_stream, &ScreenCastStream::startStreaming, this, [this, output] {
-        m_streamingEnabled = true;
-        bindOutput(output.waylandOutputName(), output.waylandOutputVersion());
-    });
+//    connect(m_stream, &ScreenCastStream::startStreaming, this, [this, output] {
+//        m_streamingEnabled = true;
+//        bindOutput(output.waylandOutputName(), output.waylandOutputVersion());
+//    });
 
-    connect(m_stream, &ScreenCastStream::stopStreaming, this, &WaylandIntegrationPrivate::stopStreaming);
+//    connect(m_stream, &ScreenCastStream::stopStreaming, this, &WaylandIntegrationPrivate::stopStreaming);
 
-    bool streamReady = false;
-    QEventLoop loop;
-    connect(m_stream, &ScreenCastStream::streamReady, this, [&loop, &streamReady] {
-        loop.quit();
-        streamReady = true;
-    });
+//    bool streamReady = false;
+//    QEventLoop loop;
+//    connect(m_stream, &ScreenCastStream::streamReady, this, [&loop, &streamReady] {
+//        loop.quit();
+//        streamReady = true;
+//    });
 
-    // HACK wait for stream to be ready
-    QTimer::singleShot(3000, &loop, &QEventLoop::quit);
-    loop.exec();
+//    // HACK wait for stream to be ready
+//    QTimer::singleShot(3000, &loop, &QEventLoop::quit);
+//    loop.exec();
 
-    disconnect(m_stream, &ScreenCastStream::streamReady, this, nullptr);
+//    disconnect(m_stream, &ScreenCastStream::streamReady, this, nullptr);
 
-    if (!streamReady) {
-        if (m_stream) {
-            delete m_stream;
-            m_stream = nullptr;
-        }
-        return false;
-    }
+//    if (!streamReady) {
+//        if (m_stream) {
+//            delete m_stream;
+//            m_stream = nullptr;
+//        }
+//        return false;
+//    }
 
-    // TODO support multiple outputs
+//    // TODO support multiple outputs
 
-    if (m_registry->hasInterface(KWayland::Client::Registry::Interface::RemoteAccessManager)) {
-        KWayland::Client::Registry::AnnouncedInterface interface = m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager);
-        if (!interface.name && !interface.version) {
-            qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Failed to start streaming: remote access manager interface is not initialized yet";
-            return false;
-        }
-        m_remoteAccessManager = m_registry->createRemoteAccessManager(interface.name, interface.version);
-        connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this] (const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
-            Q_UNUSED(output);
-            connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf] {
-                processBuffer(rbuf);
-            });
-        });
-        m_output = output.waylandOutputName();
-        return true;
-    }
+//    if (m_registry->hasInterface(KWayland::Client::Registry::Interface::RemoteAccessManager)) {
+//        KWayland::Client::Registry::AnnouncedInterface interface = m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager);
+//        if (!interface.name && !interface.version) {
+//            qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Failed to start streaming: remote access manager interface is not initialized yet";
+//            return false;
+//        }
+//        m_remoteAccessManager = m_registry->createRemoteAccessManager(interface.name, interface.version);
+//        connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this] (const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
+//            Q_UNUSED(output);
+//            connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf] {
+//                processBuffer(rbuf);
+//            });
+//        });
+//        m_output = output.waylandOutputName();
+//        return true;
+//    }
 
-    if (m_stream) {
-        delete m_stream;
-        m_stream = nullptr;
-    }
+//    if (m_stream) {
+//        delete m_stream;
+//        m_stream = nullptr;
+//    }
 
-    qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Failed to start streaming: no remote access manager interface";
+//    qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Failed to start streaming: no remote access manager interface";
     return false;
 }
 
@@ -338,10 +339,10 @@ void WaylandIntegration::WaylandIntegrationPrivate::stopStreaming()
         qDeleteAll(m_bindOutputs);
         m_bindOutputs.clear();
 
-        if (m_stream) {
-            delete m_stream;
-            m_stream = nullptr;
-        }
+//        if (m_stream) {
+//            delete m_stream;
+//            m_stream = nullptr;
+//        }
     }
 }
 
@@ -350,13 +351,13 @@ QMap<quint32, WaylandIntegration::WaylandOutput> WaylandIntegration::WaylandInte
     return m_outputMap;
 }
 
-QVariant WaylandIntegration::WaylandIntegrationPrivate::streams()
-{
-    Stream stream;
-    stream.nodeId = m_stream->nodeId();
-    stream.map = QVariantMap({{QLatin1String("size"), m_outputMap.value(m_output).resolution()}});
-    return QVariant::fromValue<WaylandIntegrationPrivate::Streams>({stream});
-}
+//QVariant WaylandIntegration::WaylandIntegrationPrivate::streams()
+//{
+//    Stream stream;
+//    stream.nodeId = m_stream->nodeId();
+//    stream.map = QVariantMap({{QLatin1String("size"), m_outputMap.value(m_output).resolution()}});
+//    return QVariant::fromValue<WaylandIntegrationPrivate::Streams>({stream});
+//}
 //void *  writeFrameToStreamThread(void * object){
 //    WaylandIntegration::WaylandIntegrationPrivate * pThis = (WaylandIntegration::WaylandIntegrationPrivate*)object;
 //    while (pThis->m_isStreamObjCreat) {
@@ -501,111 +502,111 @@ void WaylandIntegration::WaylandIntegrationPrivate::steamMutexStopInit(){
 
 // }
 
-void WaylandIntegration::WaylandIntegrationPrivate::initDrm()
-{
-    m_drmFd = open("/dev/dri/renderD128", O_RDWR);
+//void WaylandIntegration::WaylandIntegrationPrivate::initDrm()
+//{
+//    m_drmFd = open("/dev/dri/renderD128", O_RDWR);
 
-    if (m_drmFd == -1) {
-        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Cannot open render node: " << strerror(errno);
-        return;
-    }
+//    if (m_drmFd == -1) {
+//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Cannot open render node: " << strerror(errno);
+//        return;
+//    }
 
-    //    m_gbmDevice = gbm_create_device(m_drmFd);
+//    //    m_gbmDevice = gbm_create_device(m_drmFd);
 
-    //    if (!m_gbmDevice) {
-    //        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Cannot create GBM device: " << strerror(errno);
-    //    }
+//    //    if (!m_gbmDevice) {
+//    //        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Cannot create GBM device: " << strerror(errno);
+//    //    }
 
-    initEGL();
-}
+//    initEGL();
+//}
 
-void WaylandIntegration::WaylandIntegrationPrivate::initEGL()
-{
-    // Get the list of client extensions
-    const char* clientExtensionsCString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
-    qCWarning(XdgDesktopPortalKdeWaylandIntegration) <<clientExtensionsCString;
-    const QByteArray clientExtensionsString = QByteArray::fromRawData(clientExtensionsCString, qstrlen(clientExtensionsCString));
-    if (clientExtensionsString.isEmpty()) {
-        // If eglQueryString() returned NULL, the implementation doesn't support
-        // EGL_EXT_client_extensions. Expect an EGL_BAD_DISPLAY error.
-        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "No client extensions defined! " << formatGLError(eglGetError());
-        return;
-    }
+//void WaylandIntegration::WaylandIntegrationPrivate::initEGL()
+//{
+//    // Get the list of client extensions
+//    const char* clientExtensionsCString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
+//    qCWarning(XdgDesktopPortalKdeWaylandIntegration) <<clientExtensionsCString;
+//    const QByteArray clientExtensionsString = QByteArray::fromRawData(clientExtensionsCString, qstrlen(clientExtensionsCString));
+//    if (clientExtensionsString.isEmpty()) {
+//        // If eglQueryString() returned NULL, the implementation doesn't support
+//        // EGL_EXT_client_extensions. Expect an EGL_BAD_DISPLAY error.
+//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "No client extensions defined! " << formatGLError(eglGetError());
+//        return;
+//    }
 
-    m_egl.extensions = clientExtensionsString.split(' ');
-
-
-    qDebug() << Q_FUNC_INFO << "EGL扩展模块：" << m_egl.extensions;
+//    m_egl.extensions = clientExtensionsString.split(' ');
 
 
-    //("EGL_EXT_client_extensions", "EGL_EXT_platform_base",
-    //"EGL_KHR_client_get_all_proc_addresses", "EGL_KHR_platform_gbm",
-    //"EGL_KHR_platform_wayland", "EGL_EXT_platform_wayland")
-
-    // Use eglGetPlatformDisplayEXT() to get the display pointer
-    // if the implementation supports it.
-    if (!m_egl.extensions.contains(QByteArrayLiteral("EGL_EXT_platform_base")) ||
-            //            !m_egl.extensions.contains(QByteArrayLiteral("EGL_MESA_platform_gbm"))) {
-            !m_egl.extensions.contains(QByteArrayLiteral("EGL_EXT_platform_wayland"))) {
-        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "One of required EGL extensions is missing";
-        return;
-    }
-
-    //    m_egl.display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, m_gbmDevice, nullptr);
-    //m_egl.display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, m_gbmDevice, nullptr);
-    //m_egl.display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-    m_egl.display = eglGetDisplay((EGLNativeDisplayType)m_connection->display());
-
-    qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "m_egl.display: " << m_egl.display;
-
-    if (m_egl.display == EGL_NO_DISPLAY) {
-        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Error during obtaining EGL display: " << formatGLError(eglGetError());
-        return;
-    }
-
-    EGLint major, minor;
-    if (eglInitialize(m_egl.display, &major, &minor) == EGL_FALSE) {
-        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Error during eglInitialize: " << formatGLError(eglGetError());
-        return;
-    }
-    qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "major: " << major<<"minor: " << minor;
-
-    if (eglBindAPI(EGL_OPENGL_ES_API) == EGL_FALSE) {
-        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "bind OpenGL API failed";
-        return;
-    }
+//    qDebug() << Q_FUNC_INFO << "EGL扩展模块：" << m_egl.extensions;
 
 
-    m_egl.context = eglCreateContext(m_egl.display, nullptr, EGL_NO_CONTEXT, nullptr);
-    qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "m_egl.context: " << m_egl.context;
-    if (m_egl.context == EGL_NO_CONTEXT) {
-        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Couldn't create EGL context: " << formatGLError(eglGetError());
-        return;
-    }
+//    //("EGL_EXT_client_extensions", "EGL_EXT_platform_base",
+//    //"EGL_KHR_client_get_all_proc_addresses", "EGL_KHR_platform_gbm",
+//    //"EGL_KHR_platform_wayland", "EGL_EXT_platform_wayland")
 
-    m_egl.create_image = (void *) eglGetProcAddress("eglCreateImageKHR");
-    if (m_egl.create_image == nullptr) {
-        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Couldn't support eglCreateImageKHR";
-        return;
-    }
+//    // Use eglGetPlatformDisplayEXT() to get the display pointer
+//    // if the implementation supports it.
+//    if (!m_egl.extensions.contains(QByteArrayLiteral("EGL_EXT_platform_base")) ||
+//            //            !m_egl.extensions.contains(QByteArrayLiteral("EGL_MESA_platform_gbm"))) {
+//            !m_egl.extensions.contains(QByteArrayLiteral("EGL_EXT_platform_wayland"))) {
+//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "One of required EGL extensions is missing";
+//        return;
+//    }
 
-    m_egl.destroy_image = (void *) eglGetProcAddress("eglDestroyImageKHR");
-    if (m_egl.destroy_image == nullptr) {
-        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Couldn't support eglDestroyImageKHR";
-        return;
-    }
+//    //    m_egl.display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, m_gbmDevice, nullptr);
+//    //m_egl.display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, m_gbmDevice, nullptr);
+//    //m_egl.display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+//    m_egl.display = eglGetDisplay((EGLNativeDisplayType)m_connection->display());
 
-    m_egl.image_target_texture_2d = (void *) eglGetProcAddress("glEGLImageTargetTexture2DOES");
-    if (m_egl.image_target_texture_2d == nullptr) {
-        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Couldn't support glEGLImageTargetTexture2DOES";
-        return;
-    }
+//    qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "m_egl.display: " << m_egl.display;
 
-    qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Egl initialization succeeded";
-    qCDebug(XdgDesktopPortalKdeWaylandIntegration) << QStringLiteral("EGL version: %1.%2").arg(major).arg(minor);
+//    if (m_egl.display == EGL_NO_DISPLAY) {
+//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Error during obtaining EGL display: " << formatGLError(eglGetError());
+//        return;
+//    }
 
-    m_eglInitialized = true;
-}
+//    EGLint major, minor;
+//    if (eglInitialize(m_egl.display, &major, &minor) == EGL_FALSE) {
+//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Error during eglInitialize: " << formatGLError(eglGetError());
+//        return;
+//    }
+//    qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "major: " << major<<"minor: " << minor;
+
+//    if (eglBindAPI(EGL_OPENGL_ES_API) == EGL_FALSE) {
+//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "bind OpenGL API failed";
+//        return;
+//    }
+
+
+//    m_egl.context = eglCreateContext(m_egl.display, nullptr, EGL_NO_CONTEXT, nullptr);
+//    qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "m_egl.context: " << m_egl.context;
+//    if (m_egl.context == EGL_NO_CONTEXT) {
+//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Couldn't create EGL context: " << formatGLError(eglGetError());
+//        return;
+//    }
+
+//    m_egl.create_image = (void *) eglGetProcAddress("eglCreateImageKHR");
+//    if (m_egl.create_image == nullptr) {
+//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Couldn't support eglCreateImageKHR";
+//        return;
+//    }
+
+//    m_egl.destroy_image = (void *) eglGetProcAddress("eglDestroyImageKHR");
+//    if (m_egl.destroy_image == nullptr) {
+//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Couldn't support eglDestroyImageKHR";
+//        return;
+//    }
+
+//    m_egl.image_target_texture_2d = (void *) eglGetProcAddress("glEGLImageTargetTexture2DOES");
+//    if (m_egl.image_target_texture_2d == nullptr) {
+//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Couldn't support glEGLImageTargetTexture2DOES";
+//        return;
+//    }
+
+//    qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Egl initialization succeeded";
+//    qCDebug(XdgDesktopPortalKdeWaylandIntegration) << QStringLiteral("EGL version: %1.%2").arg(major).arg(minor);
+
+//    m_eglInitialized = true;
+//}
 
 void WaylandIntegration::WaylandIntegrationPrivate::initWayland(int &argc, char **argv)
 {
@@ -773,10 +774,10 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
         qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "record stream obj not created or stop record!!!" ;
         return ;
     }
-    if (m_lastFrameTime.isValid() &&m_lastFrameTime.msecsTo(QDateTime::currentDateTime()) < (1000 / m_stream->framerate())) {
-        close(dma_fd);
-        return;
-    }
+//    if (m_lastFrameTime.isValid() &&m_lastFrameTime.msecsTo(QDateTime::currentDateTime()) < (1000 / m_stream->framerate())) {
+//        close(dma_fd);
+//        return;
+//    }
     unsigned char *mapData = (unsigned char *)mmap(0, stride * height, PROT_READ|PROT_WRITE, MAP_SHARED, dma_fd, 0);
     if (MAP_FAILED == mapData) {
         qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "dma fd " << dma_fd <<" mmap failed - ";

@@ -17,22 +17,22 @@ FIND_LIBRARY(LIB_FILTER libavfilter.so /usr/lib/aarch64-linux-gnu NO_DEFAULT_PAT
 link_libraries(${LIB_FILTER})
 set(xdg_desktop_portal_kde_SRCS
     xdg-desktop-portal-kde.cpp
-    access.cpp
-    accessdialog.cpp
-    appchooser.cpp
-    appchooserdialog.cpp
-    appchooserdialogitem.cpp
+    #access.cpp
+    #accessdialog.cpp
+    #appchooser.cpp
+    #appchooserdialog.cpp
+    #appchooserdialogitem.cpp
     desktopportal.cpp
-    email.cpp
-    filechooser.cpp
-    inhibit.cpp
-    notification.cpp
-    print.cpp
-    request.cpp
-    session.cpp
-    screenshot.cpp
-    screenshotdialog.cpp
-    settings.cpp
+    #email.cpp
+    #filechooser.cpp
+    #inhibit.cpp
+    #notification.cpp
+    #print.cpp
+    #request.cpp
+    #session.cpp
+    #screenshot.cpp
+    #screenshotdialog.cpp
+    #settings.cpp
     utils.cpp
     MainLoop.cpp
     AVOutputStream.cpp
@@ -46,22 +46,23 @@ set(xdg_desktop_portal_kde_SRCS
 if (SCREENCAST_ENABLED)
     set (xdg_desktop_portal_kde_SRCS
          ${xdg_desktop_portal_kde_SRCS}
-         screencast.cpp
-         screencaststream.cpp
-         screencastwidget.cpp
-         screenchooserdialog.cpp
-         remotedesktop.cpp
-         remotedesktopdialog.cpp
+         #screencast.cpp
+         #screencaststream.cpp
+         #screencastwidget.cpp
+         #screenchooserdialog.cpp
+         #remotedesktop.cpp
+         #remotedesktopdialog.cpp
          waylandintegration.cpp)
 
     ki18n_wrap_ui(xdg_desktop_portal_kde_SRCS
-                  screenchooserdialog.ui
-                  remotedesktopdialog.ui)
+                  #screenchooserdialog.ui
+                  #remotedesktopdialog.ui
+                  )
 endif()
 
 ki18n_wrap_ui(xdg_desktop_portal_kde_SRCS
-    accessdialog.ui
-    screenshotdialog.ui
+    #accessdialog.ui
+    #screenshotdialog.ui
 )
 
 add_executable(xdg-desktop-portal-kde ${xdg_desktop_portal_kde_SRCS})

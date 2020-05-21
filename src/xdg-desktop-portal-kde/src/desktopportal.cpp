@@ -25,28 +25,29 @@
 #include <QDBusMessage>
 #include <QDBusConnection>
 #include <QLoggingCategory>
+#include "waylandintegration.h"
 
 Q_LOGGING_CATEGORY(XdgDesktopPortalKdeDesktopPortal, "xdp-kde-desktop-portal")
 
 DesktopPortal::DesktopPortal(int &argc, char **argv,QObject *parent)
     : QObject(parent)
-    , m_access(new AccessPortal(this))
-    , m_appChooser(new AppChooserPortal(this))
-    , m_email(new EmailPortal(this))
-    , m_fileChooser(new FileChooserPortal(this))
-    , m_inhibit(new InhibitPortal(this))
-    , m_notification(new NotificationPortal(this))
-    , m_print(new PrintPortal(this))
-#if SCREENCAST_ENABLED
-    , m_screenCast(new ScreenCastPortal(this))
-    , m_remoteDesktop(new RemoteDesktopPortal(this))
-#endif
-    , m_screenshot(new ScreenshotPortal(this))
-    , m_settings(new SettingsPortal(this))
+    //, m_access(new AccessPortal(this))
+    //, m_appChooser(new AppChooserPortal(this))
+    //, m_email(new EmailPortal(this))
+    //, m_fileChooser(new FileChooserPortal(this))
+    //, m_inhibit(new InhibitPortal(this))
+    //, m_notification(new NotificationPortal(this))
+    //, m_print(new PrintPortal(this))
+//#if SCREENCAST_ENABLED
+    //, m_screenCast(new ScreenCastPortal(this))
+    //, m_remoteDesktop(new RemoteDesktopPortal(this))
+//#endif
+    //, m_screenshot(new ScreenshotPortal(this))
+    //, m_settings(new SettingsPortal(this))
 {
-#if SCREENCAST_ENABLED
+//#if SCREENCAST_ENABLED
     WaylandIntegration::init(argc,argv);
-#endif
+//#endif
 }
 
 DesktopPortal::~DesktopPortal()
