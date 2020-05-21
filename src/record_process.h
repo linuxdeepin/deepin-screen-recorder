@@ -67,6 +67,7 @@ public:
     void initProcess();
     int readSleepProcessPid();
     void WaylandRecord();
+    void transformToGif();
 protected:
     void run();
 
