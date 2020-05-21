@@ -30,9 +30,3 @@ Conflicts: deepin-screenshot
 Replaces: deepin-screenshot
 Description: Simple recorder tools for UOS
  A simple screen shot and recorder tools for UOS
-
-Package: xdg-desktop-portal-kde
-Architecture: any
-Recommends: dde-session-ui
-Description: Record tool for wayland platform
- A simple screen shot and recorder tools for UOS
