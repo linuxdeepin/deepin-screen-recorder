@@ -38,7 +38,7 @@
 #include "waylandintegration.h"
 #endif
 //#include "screenshot.h"
-//#include "settings.h"
+#include "settings.h"
 
 class DesktopPortal : public QObject, public QDBusContext
 {
@@ -60,7 +60,7 @@ private:
     //RemoteDesktopPortal *m_remoteDesktop;
 //#endif
     //ScreenshotPortal *m_screenshot;
-    //SettingsPortal *m_settings;
+    SettingsPortal *m_settings;
 };
 
 #endif // XDG_DESKTOP_PORTAL_KDE_DESKTOP_PORTAL_H

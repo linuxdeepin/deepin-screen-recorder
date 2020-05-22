@@ -162,7 +162,7 @@ INSTALLS += target icon desktop manual dbus_service shotShell
 #INSTALLS += target icon desktop manual dbus_service modload modprobe
 
 isEmpty(TRANSLATIONS) {
-     include(../translations.pri)
+     include(translations.pri)
 }
 
 TRANSLATIONS_COMPILED = $$TRANSLATIONS

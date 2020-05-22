@@ -3,7 +3,7 @@
 ######################################################################
 
 #QT += core widgets dbus concurrent printsupport KCoreAddons KI18n KConfigCore KIOCore KNotifications KWaylandClient KWaylandServer KWidgetsAddons KWindowSystem KConfigWidgets KIOWidgets
-QT += core widgets dbus concurrent KWindowSystem KWaylandClient KI18n
+QT += core widgets dbus concurrent KWindowSystem KWaylandClient KI18n KConfigCore
 
 TEMPLATE = app
 TARGET = xdg-desktop-portal-kde
@@ -35,11 +35,8 @@ HEADERS += src/AVInputStream.h \
            src/utils.h \
            src/waylandintegration.h \
            src/waylandintegration_p.h \
-           src/writeframetostreamthread.h #\
-#           bin/src/ui_accessdialog.h \
-#           bin/src/ui_remotedesktopdialog.h \
-#           bin/src/ui_screenchooserdialog.h \
-#           bin/src/ui_screenshotdialog.h
+           src/writeframetostreamthread.h \
+           src/settings.h
 SOURCES += \
            src/AVInputStream.cpp \
            src/AVOutputStream.cpp \
@@ -51,7 +48,8 @@ SOURCES += \
            src/utils.cpp \
            src/waylandintegration.cpp \
            src/writeframetostreamthread.cpp \
-           src/xdg-desktop-portal-kde.cpp
+           src/xdg-desktop-portal-kde.cpp \
+           src/settings.cpp
 
 QMAKE_CXXFLAGS += -g
 
