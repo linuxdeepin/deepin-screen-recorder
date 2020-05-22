@@ -43,7 +43,7 @@ DesktopPortal::DesktopPortal(int &argc, char **argv,QObject *parent)
     //, m_remoteDesktop(new RemoteDesktopPortal(this))
 //#endif
     //, m_screenshot(new ScreenshotPortal(this))
-    //, m_settings(new SettingsPortal(this))
+    , m_settings(new SettingsPortal(this))
 {
 //#if SCREENCAST_ENABLED
     WaylandIntegration::init(argc,argv);
