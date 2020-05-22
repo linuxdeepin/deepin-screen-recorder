@@ -357,6 +357,7 @@ private:
     int m_firstShot = 0;
     bool m_isZhaoxin = false;
     HintFilter *hintFilter         = nullptr;
+    DesktopInfo m_desktopInfo;
 };
 
 #endif //MAINWINDOW_H
