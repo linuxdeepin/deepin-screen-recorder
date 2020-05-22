@@ -18,7 +18,8 @@ Build-Depends: debhelper (>= 9), pkg-config, qt5-qmake,
  libavformat-dev,
  libavutil-dev,
  libswscale-dev,
- libavresample-dev
+ libavresample-dev,
+ libkf5config-dev
 Standards-Version: 3.9.8
 Homepage: https://github.com/linuxdeepin/deepin-screen-recorder
 
