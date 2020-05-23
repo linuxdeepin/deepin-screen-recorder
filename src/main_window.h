@@ -160,6 +160,7 @@ public slots:
     void onHelp();
 
     Q_SCRIPTABLE void stopRecord();
+    void waylandRecordOver();
     void startCountdown();
     void showPressFeedback(int x, int y);
     void showDragFeedback(int x, int y);
@@ -362,7 +363,7 @@ private:
     int m_firstShot = 0;
     bool m_isZhaoxin = false;
     HintFilter *hintFilter         = nullptr;
-    QList<ScreenInfo> m_screenInfo;
+    DesktopInfo m_desktopInfo;
 };
 
 #endif //MAINWINDOW_H

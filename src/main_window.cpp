@@ -199,7 +199,12 @@ void MainWindow::initAttributes()
     // Add Qt::WindowDoesNotAcceptFocus make window not accept focus forcely, avoid conflict with dde hot-corner.
 //    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint);
 //    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint  | Qt::WindowStaysOnTopHint);
-    setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+    if(m_desktopInfo.waylandDectected()) {
+        setWindowFlags(Qt::FramelessWindowHint);
+    } else {
+        setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+    }
+
     setAttribute(Qt::WA_TranslucentBackground, true);
     setMouseTracking(true);   // make MouseMove can response
     installEventFilter(this);  // add event filter
@@ -3693,7 +3698,10 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)
 {
     stopRecord();
 }
-
+void MainWindow::waylandRecordOver()
+{
+    recordProcess.waylandRecordOver();
+}
 void MainWindow::stopRecord()
 {
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {

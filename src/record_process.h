@@ -61,10 +61,13 @@ public:
     void startRecord();
     void setIsZhaoXinPlatform(bool status);
     void stopRecord();
+    void waylandRecordOver();
     void recordGIF();
     void recordVideo();
     void initProcess();
     int readSleepProcessPid();
+    void WaylandRecord();
+    void transformToGif();
 protected:
     void run();
 
