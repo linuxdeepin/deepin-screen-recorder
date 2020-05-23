@@ -190,8 +190,18 @@ QString AudioUtils::currentAudioSource()
 QString AudioUtils::currentAudioChannel()
 {
     QStringList options;
+
     options << "-c";
-    options << "pacmd list-sources | grep -PB 1 'analog.*monitor>' | head -n 1 | perl -pe 's/.* //g'";
+    if(QSysInfo::currentCpuArchitecture().startsWith("arm")){
+        qDebug() << "ARM";
+        options << "pacmd list-sources | grep -PB 1 'USB.*stereo.*monitor>' | head -n 1 | perl -pe 's/.* //g'";
+    }else if(QSysInfo::currentCpuArchitecture().startsWith("mips")){
+        qDebug() << "MIPS";
+        options << "pacmd list-sources | grep -v 'hdmi' | grep -PB 1 'output.*monitor>' | head -n 1 | perl -pe 's/.* //g'";
+    }else {
+        qDebug() << "OTHER" << QSysInfo::currentCpuArchitecture();
+        options << "pacmd list-sources | grep -PB 1 'analog.*monitor>' | head -n 1 | perl -pe 's/.* //g'";
+    }
     QProcess process;
     process.start("bash", options);
     process.waitForFinished();

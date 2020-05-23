@@ -63,6 +63,8 @@
 #include "utils/screengrabber.h"
 #include "camera_process.h"
 #include "widgets/tooltips.h"
+#include "dbusinterface/drawinterface.h"
+
 
 
 const int MainWindow::CURSOR_BOUND = 5;
@@ -115,6 +117,34 @@ MainWindow::MainWindow(DWidget *parent) :
 //    initAttributes();
 
     connect(m_wmHelper, &DWindowManagerHelper::hasCompositeChanged, this, &MainWindow::compositeChanged);
+
+
+    // 初始化获取屏幕坐标信息
+    QDBusInterface displayInterface("com.deepin.daemon.Display",
+                                "/com/deepin/daemon/Display",
+                                "com.deepin.daemon.Display",
+                                QDBusConnection::sessionBus());
+
+    if(!displayInterface.isValid()) {
+        return;
+    }
+    QList<QDBusObjectPath> pathList = qvariant_cast< QList<QDBusObjectPath> >(displayInterface.property("Monitors"));
+    for(int i = 0; i < pathList.size(); ++i) {
+        QString path = pathList.at(i).path();
+        QDBusInterface monitorInterface("com.deepin.daemon.Display",path,"com.deepin.daemon.Display.Monitor",
+                                    QDBusConnection::sessionBus());
+
+        if(!monitorInterface.isValid()) {
+            continue;
+        }
+        ScreenInfo screenInfo;
+        screenInfo.x = monitorInterface.property("X").toInt();
+        screenInfo.y = monitorInterface.property("Y").toInt();
+        screenInfo.height =  monitorInterface.property("Height").toInt();
+        screenInfo.width = monitorInterface.property("Width").toInt();
+        screenInfo.name = monitorInterface.property("Name").toString();
+        m_screenInfo.append(screenInfo);
+    }
 }
 
 void MainWindow::initAttributes()
@@ -558,6 +588,8 @@ void MainWindow::initAttributes()
 //    if (CameraProcess::checkCameraAvailability()) {
     m_cameraWidget = new CameraWidget(this);
     hideCameraWidget();
+    // 摄像头界面层级下调,防止遮住工具栏
+    m_cameraWidget->lower();
 //    }
 
     m_menuController = new MenuController(this);
@@ -712,8 +744,11 @@ void MainWindow::initScreenShot()
 //    m_keyBoardTimer = new QTimer(this);
         m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
     }
-    m_screenWidth = QApplication::desktop()->screen()->width();
-    m_screenHeight = QApplication::desktop()->screen()->height();
+    // 多屏情况下， 屏幕宽高，用背景宽高获取
+    //m_screenWidth = QApplication::desktop()->screen()->width();
+    //m_screenHeight = QApplication::desktop()->screen()->height();
+    m_screenWidth = m_backgroundRect.width();
+    m_screenHeight = m_backgroundRect.height();
 
     m_shotStatus = ShotMouseStatus::Normal;
 
@@ -827,8 +862,10 @@ void MainWindow::initScreenRecorder()
     }
 
 
-    m_screenWidth = QApplication::desktop()->screen()->width();
-    m_screenHeight = QApplication::desktop()->screen()->height();
+    //m_screenWidth = QApplication::desktop()->screen()->width();
+    //m_screenHeight = QApplication::desktop()->screen()->height();
+    m_screenWidth = m_backgroundRect.width();
+    m_screenHeight = m_backgroundRect.height();
 
 //    isFirstDrag = false;
 //    isFirstMove = false;
@@ -1342,6 +1379,23 @@ void MainWindow::updateToolBarPos()
             m_isToolBarInside = true;
         }
     }
+    // 根据屏幕的具体实际坐标修正Y值
+    // 多屏情况下， 右下角有可能在屏幕外面。
+    for(int i = 0; i < m_screenInfo.size(); ++i) {
+        if(toolbarPoint.x() + m_toolBar->width() >= m_screenInfo[i].x && toolbarPoint.x() + m_toolBar->width() <= m_screenInfo[i].x + m_screenInfo[i].width) {
+            if(toolbarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING){
+                // 屏幕上超出            
+                toolbarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
+            }else if(toolbarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height - m_toolBar->height() - TOOLBAR_Y_SPACING) {
+                // 屏幕下超出
+                int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
+                if(y > m_screenInfo[i].y + m_screenInfo[i].height - m_toolBar->height() - TOOLBAR_Y_SPACING)
+                    y = m_screenInfo[i].y + m_screenInfo[i].height - m_toolBar->height() - TOOLBAR_Y_SPACING;
+                toolbarPoint.setY(y);
+            }
+            break;
+        }
+    }
     m_toolBar->showAt(toolbarPoint);
 }
 
@@ -1359,7 +1413,6 @@ void MainWindow::updateSideBarPos()
     QPoint sidebarPoint;
     sidebarPoint = QPoint(recordX + recordWidth + SIDEBAR_X_SPACING,
                           std::max(recordY + (recordHeight / 2 - m_sideBar->height() / 2), 0));
-
     if (m_sideBar->height() < recordHeight) {
         if (sidebarPoint.x() >= m_screenWidth - m_sideBar->width() - SIDEBAR_X_SPACING) {
             //修改属性栏在截图区域内部，无法触发的bug
@@ -1460,6 +1513,23 @@ void MainWindow::updateSideBarPos()
 
     }
 
+    // 根据屏幕的具体实际坐标修正Y值
+    // 多屏情况下， 右下角有可能在屏幕外面。
+    for(int i = 0; i < m_screenInfo.size(); ++i) {
+        if(sidebarPoint.x() + m_sideBar->width() >= m_screenInfo[i].x && sidebarPoint.x() + m_sideBar->width() <= m_screenInfo[i].x + m_screenInfo[i].width) {
+            if(sidebarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING){
+                // 屏幕上超出
+                sidebarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
+            }else if(sidebarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height - m_sideBar->height() - TOOLBAR_Y_SPACING) {
+                // 屏幕下超出
+                //int y = std::max(recordY - m_sideBar->height() - TOOLBAR_Y_SPACING, 0);
+                //if(y > m_screenInfo[i].y + m_screenInfo[i].height - m_sideBar->height() - TOOLBAR_Y_SPACING)
+                    //y = m_screenInfo[i].y + m_screenInfo[i].height - m_sideBar->height() - TOOLBAR_Y_SPACING;
+                sidebarPoint.setY(m_screenInfo[i].y + m_screenInfo[i].height - m_sideBar->height() - TOOLBAR_Y_SPACING);
+            }
+            break;
+        }
+    }
     m_sideBar->showAt(sidebarPoint);
 }
 
@@ -1498,6 +1568,23 @@ void MainWindow::updateRecordButtonPos()
         }
     }
 
+    // 根据屏幕的具体实际坐标修正Y值
+    for(int i = 0; i < m_screenInfo.size(); ++i) {
+        if(recordButtonBarPoint.x() > m_screenInfo[i].x && recordButtonBarPoint.x() < m_screenInfo[i].x + m_screenInfo[i].width) {
+            if(recordButtonBarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING){
+                // 屏幕上超出
+                recordButtonBarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING + 6);
+            }else if(recordButtonBarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height - m_recordButton->height() - TOOLBAR_Y_SPACING) {
+                // 屏幕下超出
+                int y = std::max(recordY - m_recordButton->height() - TOOLBAR_Y_SPACING - 6, 0);
+                if(y > m_screenInfo[i].y + m_screenInfo[i].height - m_recordButton->height() - TOOLBAR_Y_SPACING -6)
+                    y = m_screenInfo[i].y + m_screenInfo[i].height - m_recordButton->height() - TOOLBAR_Y_SPACING -6;
+                recordButtonBarPoint.setY(y);
+            }
+            break;
+        }
+    }
+
     m_recordButton->move(recordButtonBarPoint.x(), recordButtonBarPoint.y());
 }
 
@@ -1532,6 +1619,24 @@ void MainWindow::updateShotButtonPos()
             m_shotButton->show();
         }
     }
+
+    // 根据屏幕的具体实际坐标修正Y值
+    for(int i = 0; i < m_screenInfo.size(); ++i) {
+        if(shotButtonBarPoint.x() > m_screenInfo[i].x && shotButtonBarPoint.x() < m_screenInfo[i].x + m_screenInfo[i].width) {
+            if(shotButtonBarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING){
+                // 屏幕上超出
+                shotButtonBarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING + 6);
+            }else if(shotButtonBarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height - m_shotButton->height() - TOOLBAR_Y_SPACING) {
+                // 屏幕下超出
+                int y = std::max(recordY - m_shotButton->height() - TOOLBAR_Y_SPACING - 6, 0);
+                if(y > m_screenInfo[i].y + m_screenInfo[i].height - m_shotButton->height() - TOOLBAR_Y_SPACING - 6)
+                    y = m_screenInfo[i].y + m_screenInfo[i].height - m_shotButton->height() - TOOLBAR_Y_SPACING -6;
+                shotButtonBarPoint.setY(y);
+            }
+            break;
+        }
+    }
+
     m_shotButton->move(shotButtonBarPoint.x(), shotButtonBarPoint.y());
 }
 void MainWindow::updateCameraWidgetPos()
@@ -2400,7 +2505,14 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
         qDebug() << "clip board success!";
     }
-
+    // 调起画板， 传入截图路径
+    int t_saveCursor = ConfigSettings::instance()->value("open", "draw").toInt();
+    if (t_saveCursor == 1) {
+        DrawInterface *m_draw = new DrawInterface("com.deepin.Draw", "/com/deepin/Draw", QDBusConnection::sessionBus(), this);
+        QList<QString> list;
+        list.append(m_saveFileName);
+        m_draw->openFiles(list);
+    }
     return true;
 }
 
@@ -2983,7 +3095,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                                 break;
                             }
                         }
-                    } else {
+                    }
 
                         if (m_functionType == 0) {
                             // Make sure record area not too small.
@@ -3013,7 +3125,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             }
                         }
 
-                    }
+
 
                     showRecordButton();
                     updateToolBarPos();
@@ -3201,7 +3313,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
 void MainWindow::onViewShortcut()
 {
-    QRect rect = window()->geometry();
+    //QRect rect = window()->geometry();
+    //多屏情况下bug修复， 将快捷键预览框显示在主屏中央。
+    QRect rect = QGuiApplication::primaryScreen()->geometry();
     QPoint pos(rect.x() + rect.width() / 2, rect.y() + rect.height() / 2);
     Shortcut sc;
     QStringList shortcutString;
