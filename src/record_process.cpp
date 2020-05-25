@@ -246,8 +246,8 @@ void RecordProcess::recordVideo()
                 //arguments << QString("amerge");
 
                 arguments << QString("-filter_complex");
-                arguments << QString("[1:a]aselect=concatdec_select,aresample=async=1[a1];[2:a]aselect=concatdec_select,aresample=async=1[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=0[out]");
-                //arguments << QString("[1:a]asetpts=N/SR/TB[a1];[2:a]asetpts=N/SR/TB[a2];[a1][a2]amerge=inputs=2[out]");
+                //arguments << QString("[1:a]aselect=concatdec_select,aresample=async=1[a1];[2:a]aselect=concatdec_select,aresample=async=1[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=0[out]");
+                arguments << QString("[1:a]asetpts=N/SR/TB[a1];[2:a]asetpts=N/SR/TB[a2];[a1][a2]amerge=inputs=2[out]");
 
                 arguments << QString("-map");
                 arguments << QString("0:v");
@@ -266,11 +266,11 @@ void RecordProcess::recordVideo()
                 arguments << QString("2");
                 arguments << QString("-i");
                 arguments << QString("default");
-                arguments << QString("-af");
-                arguments << QString("aselect=concatdec_select,aresample=async=1");
+                //arguments << QString("-af");
+                //arguments << QString("aselect=concatdec_select,aresample=async=1");
                 //按当前采样率生成时间戳:
-                //arguments << QString("-filter:a");
-                //arguments << QString("asetpts=N/SR/TB");
+                arguments << QString("-filter:a");
+                arguments << QString("asetpts=N/SR/TB");
 
 //              arguments << QString("-preset");
 //              arguments << QString("ultrafast");
@@ -284,13 +284,18 @@ void RecordProcess::recordVideo()
                 arguments << QString("2");
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
-                arguments << QString("-af");
-                arguments << QString("aselect=concatdec_select,aresample=async=1");
+                //arguments << QString("-af");
+                //arguments << QString("aselect=concatdec_select,aresample=async=1");
                 //按当前采样率生成时间戳:
-                //arguments << QString("-filter:a");
-                //arguments << QString("asetpts=N/SR/TB");
+                arguments << QString("-filter:a");
+                arguments << QString("asetpts=N/SR/TB");
             }
 
+
+            //arguments << QString("-vf");
+            //arguments << QString("setpts=PTS-STARTPTS");
+            //arguments << QString("-vf");
+            //arguments << QString("setpts=N/FRAME_RATE/TB");
 
             arguments << QString("-c:v");
             arguments << QString("libx264");
@@ -359,7 +364,8 @@ void RecordProcess::recordVideo()
                 //arguments << QString("-filter_complex");
                 //arguments << QString("amerge");
                 arguments << QString("-filter_complex");
-                arguments << QString("[1:a]aselect=concatdec_select,aresample=async=1[a1];[2:a]aselect=concatdec_select,aresample=async=1[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=0[out]");
+                //arguments << QString("[1:a]aselect=concatdec_select,aresample=async=1[a1];[2:a]aselect=concatdec_select,aresample=async=1[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=0[out]");
+                arguments << QString("[1:a]asetpts=N/SR/TB[a1];[2:a]asetpts=N/SR/TB[a2];[a1][a2]amerge=inputs=2[out]");
 
                 arguments << QString("-map");
                 arguments << QString("0:v");
@@ -382,8 +388,11 @@ void RecordProcess::recordVideo()
                 arguments << QString("2");
                 arguments << QString("-i");
                 arguments << QString("default");
-                arguments << QString("-af");
-                arguments << QString("aselect=concatdec_select,aresample=async=1");
+                //arguments << QString("-af");
+                //arguments << QString("aselect=concatdec_select,aresample=async=1");
+                //按当前采样率生成时间戳:
+                arguments << QString("-filter:a");
+                arguments << QString("asetpts=N/SR/TB");
 
 //                arguments << QString("-preset");
 //                arguments << QString("ultrafast");
@@ -408,8 +417,11 @@ void RecordProcess::recordVideo()
                 arguments << QString("2");
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
-                arguments << QString("-af");
-                arguments << QString("aselect=concatdec_select,aresample=async=1");
+                //arguments << QString("-af");
+                //arguments << QString("aselect=concatdec_select,aresample=async=1");
+                //按当前采样率生成时间戳:
+                arguments << QString("-filter:a");
+                arguments << QString("asetpts=N/SR/TB");
 
 //                arguments << QString("-crf");
 //                arguments << QString("0");
