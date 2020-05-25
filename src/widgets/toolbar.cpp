@@ -253,7 +253,7 @@ ToolBarWidget::~ToolBarWidget() {}
 ToolBar::ToolBar(DWidget *parent)
     : DLabel(parent)
 {
-
+    m_toolbarWidget = nullptr;
 }
 
 void ToolBar::setExpand(bool expand, QString shapeType)
@@ -391,7 +391,12 @@ void ToolBar::setVideoButtonInit()
 
 void ToolBar::shapeClickedFromMain(QString shape)
 {
-    m_toolbarWidget->shapeClickedFromBar(shape);
+    // 在工具栏显示之前，触发MainWindow::initShortcut()中的快捷键
+    // R O L P T
+    // 导致button没有初始化就执行click，导致崩溃。
+    if(m_toolbarWidget){
+        m_toolbarWidget->shapeClickedFromBar(shape);
+    }
 }
 
 void ToolBar::setMicroPhoneEnable(bool status)

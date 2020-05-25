@@ -108,7 +108,9 @@ void voiceVolumeWatcher::initDeviceWatcher()
 void voiceVolumeWatcher::onCardsChanged(const QString &value)
 {
     qDebug() << "Cards changed:" << value;
-
+    if(value.isEmpty()){
+        return;
+    }
     initAvailInputPorts(value);
 }
 
