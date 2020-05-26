@@ -40,7 +40,7 @@ public:
     void   CalculateFPS();
     bool   IsPreview() { return m_bPreview; }
     void   startInit(int img_width,int img_height,int fps,StreamRecordAudioType type,int cx,int cy,int cw,int ch,const char* outfile);
-    void   addImage(QImage *img,int64_t time);
+    //void   addImage(QImage *img,int64_t time);
 
     void addImage(WaylandIntegration::WaylandIntegrationPrivate::waylandFrame &frame);
 

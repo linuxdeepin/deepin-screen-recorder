@@ -5,26 +5,25 @@
 #include <QProcess>
 #include <QTime>
 #include <QDebug>
+#include <QThread>
+#include <QMutexLocker>
 
 CAVInputStream::CAVInputStream(void)
 {
+    setIsWriteAmix(true);
     m_hCapAudioThread = NULL;
-    m_exit_thread = false;
+    //m_exit_thread = false;
+    setIsExitThread(false);
     m_outPutType = Nomal;
-    //    m_pVidFmtCtx = NULL;
     m_pAudFmtCtx = NULL;
     m_pAudFmtCtx_scard = NULL;
-    //    m_pInputFormat = NULL;
     m_pAudioInputFormat = NULL;
-
     dec_pkt = NULL;
-
     m_pVideoCBFunc = NULL;
     m_pAudioCBFunc = NULL;
     m_pAudioScardCBFunc = NULL;
     m_audio_device = "default";
     m_audio_device_scard = "default";
-    //    m_videoindex = -1;
     m_audioindex = -1;
     m_audioindex_scard = -1;
     m_start_time = 0;
@@ -33,7 +32,8 @@ CAVInputStream::CAVInputStream(void)
 CAVInputStream::~CAVInputStream(void)
 {
     printf("Desctruction Input!\n");
-    CloseInputStream();
+    setIsWriteAmix(false);
+    setIsExitThread(true);
 }
 
 
@@ -206,18 +206,8 @@ bool  CAVInputStream::OpenInputStream()
 
 bool  CAVInputStream::StartCapture()
 {
-    //    if(m_outPutType!=Gif){
-    //        if (m_videoindex == -1)
-    //        {
-    //            printf("错误：你没有打开设备 \n");
-    //            return false;
-    //        }
-    //    }
     m_start_time = av_gettime();
-
-    m_exit_thread = false;
-
-
+    //m_exit_thread = false;
     if(!m_audio_device.empty())
     {
         int rc = pthread_create(&m_hCapAudioThread, NULL, CaptureAudioThreadFunc, (void *)this);
@@ -226,83 +216,89 @@ bool  CAVInputStream::StartCapture()
     {
         int rc = pthread_create(&m_hCapAudioScardThread, NULL, CaptureAudioSCardThreadFunc, (void *)this);
     }
-    beginWriteMixAudio();
-
-    if(!m_audio_device.empty())
-    {
-        pthread_join(m_hCapAudioThread,NULL);
-    }
-    if(!m_audio_device_scard.empty()){
-        pthread_join(m_hCapAudioScardThread,NULL);
-    }
+    //beginWriteMixAudio();
     if(m_isMerge)
+    {
+        pthread_create(&m_hReadMixThread, NULL, writeAmixThreadFunc, (void *)this);
         pthread_join(m_hReadMixThread,NULL);
+    }
+    else
+    {
+        if(!m_audio_device.empty())
+        {
+            pthread_join(m_hCapAudioThread,NULL);
+        }
+        else if(!m_audio_device_scard.empty())
+        {
+            pthread_join(m_hCapAudioScardThread,NULL);
+        }
+    }
     onsFinisheStream();
-
     return true;
 }
-void CAVInputStream::writeToFrame(QImage *img, int64_t time){
-    if (m_exit_thread)
-        return;
-    //    if(dec_pkt == NULL)
-    //    {
-    //        return;
-    //    }
-    if(m_start_time<=0){
-        return ;
-    }
-    int encode_video = 1;
-    int ret;
-    AVFrame * pframe = NULL;
-    pframe = av_frame_alloc();
-    pframe->width = m_screenDW;
-    pframe->height = m_screenDH;
-    pframe->format =AV_PIX_FMT_BGR32;
-    ret = av_frame_get_buffer(pframe,32);
-    if(ret==0)
-    {
+//void CAVInputStream::writeToFrame(QImage *img, int64_t time){
+//    if (m_exit_thread)
+//        return;
+//    //    if(dec_pkt == NULL)
+//    //    {
+//    //        return;
+//    //    }
+//    if(m_start_time<=0){
+//        return ;
+//    }
+//    int encode_video = 1;
+//    int ret;
+//    AVFrame * pframe = NULL;
+//    pframe = av_frame_alloc();
+//    pframe->width = m_screenDW;
+//    pframe->height = m_screenDH;
+//    pframe->format =AV_PIX_FMT_BGR32;
+//    ret = av_frame_get_buffer(pframe,32);
+//    if(ret==0)
+//    {
 
-        //pthread_mutex_lock(&mutexScreenD);
-        QImage* imageTempt = img;
-        int64_t timeStamp1 =av_gettime();
+//        //pthread_mutex_lock(&mutexScreenD);
+//        QImage* imageTempt = img;
+//        int64_t timeStamp1 =av_gettime();
 
-        //pthread_mutex_unlock(&mutexScreenD);
+//        //pthread_mutex_unlock(&mutexScreenD);
 
-        pframe->width = imageTempt->width();
-        pframe->height = imageTempt->height();
-        pframe->format = m_ipix_fmt;
-        pframe->pts = 0;
-        pframe->crop_left = m_cl;
-        pframe->crop_top = m_ct;
-        pframe->crop_right = m_cr;
-        pframe->crop_bottom = m_cb;
-        pframe->data[0] = imageTempt->bits();
-        //int dec_got_frame = 0;
-        if(m_pVideoCBFunc)
-        {
-            int64_t timeStamp = timeStamp1 - m_start_time;
-            //if(timeStamp>=0){
-            //pthread_mutex_lock(&mutex);
-            static int s_flag = 0;
-            if (s_flag < time)
-            {
-                s_flag = time;
-            }
-            else {
-                qDebug() << "error=================";
-            }
-            //qDebug() << "+++++++++++++++++++++++++++++++++++:时间戳："  << time;
-            m_pVideoCBFunc(nullptr, m_ipix_fmt, pframe,time);
-            //pthread_mutex_unlock(&mutex);
-            //}
-        }
-        av_frame_free(&pframe);
-    }
-}
+//        pframe->width = imageTempt->width();
+//        pframe->height = imageTempt->height();
+//        pframe->format = m_ipix_fmt;
+//        pframe->pts = 0;
+//        pframe->crop_left = m_cl;
+//        pframe->crop_top = m_ct;
+//        pframe->crop_right = m_cr;
+//        pframe->crop_bottom = m_cb;
+//        pframe->data[0] = imageTempt->bits();
+//        //int dec_got_frame = 0;
+//        if(m_pVideoCBFunc)
+//        {
+//            int64_t timeStamp = timeStamp1 - m_start_time;
+//            //if(timeStamp>=0){
+//            //pthread_mutex_lock(&mutex);
+//            static int s_flag = 0;
+//            if (s_flag < time)
+//            {
+//                s_flag = time;
+//            }
+//            else {
+//                qDebug() << "error=================";
+//            }
+//            //qDebug() << "+++++++++++++++++++++++++++++++++++:时间戳："  << time;
+//            m_pVideoCBFunc(nullptr, m_ipix_fmt, pframe,time);
+//            //pthread_mutex_unlock(&mutex);
+//            //}
+//        }
+//        av_frame_free(&pframe);
+//    }
+//}
 
 void CAVInputStream::writeToFrame(WaylandIntegration::WaylandIntegrationPrivate::waylandFrame &frame)
 {
-    if (m_exit_thread || m_start_time<=0)
+    //qDebug() << "22222222222222222222222:writeToFrame" << QThread::currentThreadId();
+    if (isExitThread() || m_start_time<=0)
         return;
     AVFrame * pframe = av_frame_alloc();
     pframe->width = m_screenDW;
@@ -330,19 +326,54 @@ void CAVInputStream::writeToFrame(WaylandIntegration::WaylandIntegrationPrivate:
 void CAVInputStream::initScreenData(){
 
 }
-void CAVInputStream::CloseInputStream()
-{
-    m_exit_thread = true;
-    m_isWriting = false;
-    usleep(200*1000);
 
-    //    usleep(300000);
+bool CAVInputStream::isWriteAmix()
+{
+    QMutexLocker locker(&m_isExitMutex);
+    return m_isWriteAmix;
 }
+
+void CAVInputStream::setIsWriteAmix(bool isExit)
+{
+    QMutexLocker locker(&m_isExitMutex);
+    m_isWriteAmix = isExit;
+}
+
+bool CAVInputStream::isExitThread()
+{
+    QMutexLocker locker(&m_isExitThreadMutex);
+    return m_isExitThread;
+}
+
+void CAVInputStream::setIsExitThread(bool isExitThread)
+{
+    QMutexLocker locker(&m_isExitThreadMutex);
+    m_isExitThread = isExitThread;
+}
+//void CAVInputStream::CloseInputStream()
+//{
+//    qDebug() << "11111111111111111111111111:CloseInputStream" << QThread::currentThreadId();
+
+//    qDebug() << "test:2.0";
+//    //m_isWriting = false;
+//    setIsWriteAmix(false);
+//    //usleep(200*1000);
+//    qDebug() << "test:2.1";
+//    //m_exit_thread = true;
+//    setIsExitThread(true);
+//    qDebug() << "22222222222222222222222:CloseInputStream" << QThread::currentThreadId();
+
+//    //    usleep(300000);
+//}
 void  CAVInputStream::onsFinisheStream()
 {
     //    av_free_packet(dec_pkt);
     //   m_videoindex = -1;
     //关闭线程
+    if(m_hReadMixThread)
+    {
+        m_hReadMixThread = NULL;
+    }
     if(m_hCapAudioThread)
     {
         m_hCapAudioThread = NULL;
@@ -350,10 +381,6 @@ void  CAVInputStream::onsFinisheStream()
     if(m_hCapAudioScardThread)
     {
         m_hCapAudioScardThread = NULL;
-    }
-    if(m_hReadMixThread)
-    {
-        m_hReadMixThread = NULL;
     }
 }
 void CAVInputStream::onFInishCleanImage(){
@@ -367,30 +394,27 @@ void  *CAVInputStream::writeAmixThreadFunc(void* lParam)
     pThis->doWritAmixAudio();
     return NULL;
 }
-int CAVInputStream::beginWriteMixAudio(){
-    if(m_isMerge)
+//int CAVInputStream::beginWriteMixAudio(){
+//    if(m_isMerge)
+//    {
+//        int rc = pthread_create(&m_hReadMixThread, NULL, writeAmixThreadFunc, (void *)this);
+//        return rc;
+//    }
+//    return 0;
+//}
+
+void CAVInputStream::doWritAmixAudio()
+{
+    if(!m_isMerge || Gif == m_outPutType)
     {
-        int rc = pthread_create(&m_hReadMixThread, NULL, writeAmixThreadFunc, (void *)this);
-        return rc;
-    }
-    return 0;
-}
-void CAVInputStream::doWritAmixAudio(){
-    if(!m_isMerge){
         return;
     }
-    if(m_outPutType==Gif){
-        return ;
-    }
-    m_isWriting = true;
-    int ret;
-    while (m_isWriting){
-        //pthread_mutex_lock(&mutex);
+    while (isWriteAmix())
+    {
         m_mixCBFunc();
-        //pthread_mutex_unlock(&mutex);
-
     }
 }
+
 void* CAVInputStream::CaptureAudioThreadFunc(void* lParam)
 {
     CAVInputStream * pThis = (CAVInputStream*)lParam;
@@ -416,10 +440,8 @@ int CAVInputStream::ReadAudioPackets()
     //start decode and encode
     while (encode_audio)
     {
-        if (m_exit_thread)
-        {
+        if (isExitThread())
             break;
-        }
 
         QTime timer12;
         timer12.start();
@@ -524,10 +546,8 @@ int CAVInputStream::ReadAudioSCardPackets()
     //start decode and encode
     while (encode_audio)
     {
-        if (m_exit_thread)
-        {
+        if (isExitThread())
             break;
-        }
 
         AVFrame *input_frame = av_frame_alloc();
         if (!input_frame)

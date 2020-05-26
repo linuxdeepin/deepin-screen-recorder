@@ -103,23 +103,35 @@ public:
      */
     int writeTrailer(AVFormatContext *s);
 
+    int audioFifoSpace(AVAudioFifo *af);
+
+    int audioFifoSize(AVAudioFifo *af);
+
+    int audioFifoRealloc(AVAudioFifo *af, int nb_samples);
+
+    AVAudioFifo *audioFifoAlloc(enum AVSampleFormat sample_fmt, int channels,
+                                int nb_samples);
+
+
+    void audioFifoFree(AVAudioFifo *af);
+
+    bool isWriteFrame();
+    void setIsWriteFrame(bool isWriteFrame);
+
 private:
 
     QMutex m_audioReadWriteMutex;
-    QMutex writeFrameMutex;
+    QMutex m_writeFrameMutex;
+    bool m_isWriteFrame;
+    QMutex m_isWriteFrameMutex;
 
 
 protected:
-    //AVFormatContext *m_pVidFmtCtx;
-    // AVFormatContext *m_pAudFmtCtx;
-    //AVInputFormat* m_pInputFormat;
-
     AVStream* video_st;
     AVStream* audio_st;
     AVStream* audio_scard_st;
     AVStream* audio_amix_st;
     AVFormatContext *ofmt_ctx;
-
     AVCodecContext* pCodecCtx;  //video
     AVCodecContext* pCodecCtx_a;  //audio
     AVCodecContext* pCodecCtx_aCard;
@@ -128,8 +140,6 @@ protected:
     AVCodec* pCodec_a;  //audio
     AVCodec* pCodec_aCard;
     AVCodec* pCodec_amix;
-//    AVPacket enc_pkt;
-//    AVPacket enc_pkt_a;  //audio
     AVFrame *pFrameYUV;   ///转换为YUV420P保存的图像
     struct SwsContext *img_convert_ctx;
     struct SwrContext *aud_convert_ctx;
@@ -156,34 +166,25 @@ protected:
     uint8_t ** m_converted_input_samples;
     uint8_t * m_out_buffer;
     uint8_t ** m_converted_input_samples_scard;
-
     AVFilterGraph *filter_graph;
     AVFilterContext *buffersink_ctx;
     AVFilterContext *buffersrc_ctx1;
     AVFilterContext *buffersrc_ctx2;
-     //pthread_mutex_t mutexAMixSCard = PTHREAD_MUTEX_INITIALIZER;
-     //pthread_mutex_t mutexAMix = PTHREAD_MUTEX_INITIALIZER;
-     int tmpFifoFailed;
-
-     bool m_isOverWrite;
+    int tmpFifoFailed;
+    bool m_isOverWrite;
 public:
     string     m_output_path; //输出路径
-     bool m_isGif;
+    bool m_isGif;
     AVCodecID  m_video_codec_id;
     AVCodecID  m_audio_codec_id;
     AVCodecID  m_audio_card_codec_id;
-//    AVFormatContext *ifmt_ctx;
-//    AVFormatContext *ifmt_card_ctx;
     bool m_isMerge;
-     AVFrame * mMic_frame;
-      AVFrame * mSpeaker_frame;
-//    int istream_index;
-//    int istream_index_card;
+    AVFrame * mMic_frame;
+    AVFrame * mSpeaker_frame;
     int m_width, m_height;
     int m_framerate;
     int m_video_bitrate;
     int m_gopsize;
-
     int m_samplerate;
     int m_channels;
     int m_channels_layout;
@@ -192,10 +193,7 @@ public:
     int m_channels_card;
     int m_channels_card_layout;
     int m_audio_bitrate_card;
-//    int m_cw;
-//    int m_ch;
     GifInfo *gifInfo;
-
 };
 
 #endif //AVOUTPUTSTREAM_H

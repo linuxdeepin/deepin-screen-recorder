@@ -89,6 +89,7 @@ void WaylandIntegration::stopStreaming()
 bool WaylandIntegration::WaylandIntegrationPrivate::stopStreamMutex()
 {
     //pthread_mutex_lock(&m_mtx_stream);
+    qDebug() << "test:1";
     bool returnVal = m_recordStreamObjPtr->stopStream();
     tempFps =0;
     tempType = RecordAudioType::NOS;
@@ -327,6 +328,7 @@ bool WaylandIntegration::WaylandIntegrationPrivate::startStreaming(const Wayland
 
 void WaylandIntegration::WaylandIntegrationPrivate::stopStreaming()
 {
+    qDebug() << "test:0";
     stopStreamMutex();
     if (m_streamingEnabled) {
         m_streamingEnabled = false;

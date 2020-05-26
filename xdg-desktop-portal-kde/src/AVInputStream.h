@@ -52,11 +52,11 @@ public:
     void  setRecordAudioMic(bool isrecord);
     void  setRecordAudioSCard(bool isrecord);
     bool  OpenInputStream();
-    void  CloseInputStream();
+    //void  CloseInputStream();
     void  onsFinisheStream();
     void onFInishCleanImage();
     bool  StartCapture();
-    void writeToFrame(QImage *img,int64_t time);
+    //void writeToFrame(QImage *img,int64_t time);
 
     void writeToFrame(WaylandIntegration::WaylandIntegrationPrivate::waylandFrame &frame);
 
@@ -77,7 +77,7 @@ protected:
     static void  *CaptureAudioThreadFunc(void* lParam);
     static void  *CaptureAudioSCardThreadFunc(void* lParam);
     static void  *writeAmixThreadFunc(void* lParam);
-    int  beginWriteMixAudio();
+    //int  beginWriteMixAudio();
     void doWritAmixAudio();
     int  ReadAudioPackets();
     int  ReadAudioSCardPackets();
@@ -115,7 +115,7 @@ public:
 
     pthread_t  m_hCapAudioThread ,m_hCapAudioScardThread; //线程句柄
     pthread_t  m_hReadMixThread;
-    bool   m_exit_thread; //退出线程的标志变量
+    //bool   m_exit_thread; //退出线程的标志变量
 
     VideoCaptureCB  m_pVideoCBFunc; //视频数据回调函数指针
     AudioCaptureCB  m_pAudioCBFunc; //音频数据回调函数指针
@@ -129,7 +129,21 @@ public:
 
     int64_t     m_start_time; //采集的起点时间
     bool m_isMerge;
-    bool m_isWriting;
+    //bool m_isWriting;
+
+    bool isWriteAmix();
+    void setIsWriteAmix(bool isWriteAmix);
+
+
+    bool isExitThread() ;
+    void setIsExitThread(bool isExitThread);
+
+private:
+    bool m_isWriteAmix;
+    QMutex m_isExitMutex;
+
+    bool m_isExitThread;
+    QMutex m_isExitThreadMutex;
 };
 
 #endif //AVINPUTSTREAM_H
