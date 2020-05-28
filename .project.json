@@ -1,0 +1,6 @@
+   {
+       "type": "opensource",
+       "3rdparty": [],
+       "ignore": ["debian","hicolor","image","manual","modinfo","translations"],
+       "license": ["GPLv3"]
+   }
