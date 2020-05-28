@@ -2818,7 +2818,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if ( !m_needSaveScreenshot) {
                     m_sizeTips->updateTips(QPoint(recordX, recordY),
                                            QString("%1X%2").arg(recordWidth).arg(recordHeight));
-                    updateToolBarPos();
+                    if(m_toolBar->isVisible()) {
+                        updateToolBarPos();
+                    }
                     if (m_recordButton->isVisible()) {
                         updateRecordButtonPos();
                     }
@@ -2933,7 +2935,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                 m_sizeTips->updateTips(QPoint(recordX, recordY),
                                        QString("%1X%2").arg(recordWidth).arg(recordHeight));
-                updateToolBarPos();
+                if(m_toolBar->isVisible()){
+                    updateToolBarPos();
+                }
                 if (m_recordButton->isVisible()) {
                     updateRecordButtonPos();
                 }

@@ -39,13 +39,13 @@ void CameraWatcher::run()
             if (QCameraInfo::availableCameras().count() > 0) {
                 couldUse = true;
             }
-//            if (couldUse != m_coulduse) {
-//                //发送log信息到UI
-//                m_coulduse = couldUse;
-            emit sigCameraState(couldUse);
-//            }
+            if (couldUse != m_coulduse) {
+                //发送log信息到UI
+                m_coulduse = couldUse;
+                emit sigCameraState(couldUse);
+            }
         }
-        QThread::currentThread()->msleep(200);
+        QThread::currentThread()->msleep(1000);
     }
 }
 
