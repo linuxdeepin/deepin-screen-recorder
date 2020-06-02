@@ -1212,6 +1212,7 @@ void SubToolWidget::initShotLabel()
     QAction *saveToDesktopAction = new QAction(OptionMenu);
     QAction *saveToPictureAction = new QAction(OptionMenu);
     QAction *saveToSpecialPath = new QAction(OptionMenu);
+    QAction *openWithDraw = new QAction(OptionMenu);
     QAction *formatTitleAction = new QAction(OptionMenu);
     QAction *pngAction = new QAction(OptionMenu);
     QAction *jpgAction = new QAction(OptionMenu);
@@ -1228,6 +1229,8 @@ void SubToolWidget::initShotLabel()
     saveToPictureAction->setCheckable(true);
     saveToSpecialPath->setText(tr("Folder"));
     saveToSpecialPath->setCheckable(true);
+    openWithDraw->setText(tr("Open With Draw"));
+    openWithDraw->setCheckable(true);
     t_saveGroup->addAction(saveToDesktopAction);
     t_saveGroup->addAction(saveToPictureAction);
     t_saveGroup->addAction(saveToSpecialPath);
@@ -1257,12 +1260,14 @@ void SubToolWidget::initShotLabel()
     OptionMenu->addAction(saveToDesktopAction);
     OptionMenu->addAction(saveToPictureAction);
     OptionMenu->addAction(saveToSpecialPath);
+    OptionMenu->addAction(openWithDraw);
     OptionMenu->addSeparator();
 
     //保存剪贴板
     OptionMenu->addAction(clipTitleAction);
     OptionMenu->addAction(clipAction);
     OptionMenu->addAction(saveCursorAction);
+    OptionMenu->addAction(openWithDraw);
     OptionMenu->addSeparator();
 
     //保存格式
@@ -1394,6 +1399,33 @@ void SubToolWidget::initShotLabel()
             ConfigSettings::instance()->setValue("save", "saveCursor", 0);
         }
     });
+
+    int t_openWithDraw = ConfigSettings::instance()->value("open", "draw").toInt();
+
+    switch (t_openWithDraw) {
+    case 0:
+        openWithDraw->setChecked(false);
+        break;
+    case 1:
+        openWithDraw->setChecked(true);
+        break;
+    default:
+        openWithDraw->setChecked(false);
+        break;
+    }
+
+    connect(openWithDraw, &QAction::triggered, [ = ] {
+        if (openWithDraw->isChecked())
+        {
+            ConfigSettings::instance()->setValue("open", "draw", 1);
+        }
+
+        else
+        {
+            ConfigSettings::instance()->setValue("open", "draw", 0);
+        }
+    });
+
 
 
     QHBoxLayout *rectLayout = new QHBoxLayout();

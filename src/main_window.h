@@ -119,7 +119,13 @@ public:
         Wait,
         Shoting,
     };
-
+    struct ScreenInfo {
+        int x;
+        int y;
+        int width;
+        int height;
+        QString name;
+    };
     // Split attributes and resource for speed up start.
     void initAttributes();
     void initResource();

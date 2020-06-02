@@ -61,7 +61,10 @@ public:
 public Q_SLOTS:
     void ReadAll(const QStringList &groups);
     void Read(const QString &group, const QString &key);
-    //停止录屏
+
+    /**
+     * @brief stopRecord:停止录屏
+     */
     Q_SCRIPTABLE void stopRecord();
 
 Q_SIGNALS:

@@ -17,6 +17,7 @@ DTS是AVPacket里的一个成员，表示这个压缩包应该什么时候被解
 #include <unistd.h>
 #include <QTime>
 #include <QDebug>
+#include <QThread>
 
 CAVOutputStream::CAVOutputStream(void)
 {
@@ -81,6 +82,16 @@ CAVOutputStream::~CAVOutputStream(void)
 {
     printf("Desctruction Onput!\n");
     CloseOutput();
+    if (m_fifo)
+    {
+        audioFifoFree(m_fifo);
+        m_fifo = NULL;
+    }
+    if (m_fifo_scard)
+    {
+        audioFifoFree(m_fifo_scard);
+        m_fifo_scard = NULL;
+    }
 }
 
 
@@ -750,7 +761,8 @@ bool CAVOutputStream::OpenOutputStream(const char* out_path)
     m_first_vid_time1 = m_first_vid_time2 = -1;
     m_first_aud_time = -1;
     m_start_mix_time = -1;
-    m_isOverWrite = false;
+    //m_isOverWrite = false;
+    setIsWriteFrame(true);
     fflush(stdout);
     return true;
 }
@@ -952,7 +964,7 @@ int  CAVOutputStream::write_audio_frame(AVStream *input_st, AVFrame *input_frame
 
         swr_init(aud_convert_ctx);
         if(!m_fifo){
-            m_fifo = av_audio_fifo_alloc(pCodecCtx_a->sample_fmt, pCodecCtx_a->channels, 20*input_frame->nb_samples);
+            m_fifo = audioFifoAlloc(pCodecCtx_a->sample_fmt, pCodecCtx_a->channels, 20*input_frame->nb_samples);
         }
         is_fifo_scardinit++;
     }
@@ -986,21 +998,16 @@ int  CAVOutputStream::write_audio_frame(AVStream *input_st, AVFrame *input_frame
 
     if(m_isMerge){
 
-        int fifo_net_space = av_audio_fifo_space(m_fifo);
+        int fifo_net_space = audioFifoSpace(m_fifo);
         int checkTime = 0;
-        while(fifo_net_space < input_frame->nb_samples)
+        while(fifo_net_space < input_frame->nb_samples
+              && isWriteFrame()
+              && checkTime <= 1000)
         {
+            fifo_net_space = audioFifoSpace(m_fifo);
             usleep(10*1000);
-            if(m_isOverWrite){
-                return 1;
-            }
-            if(checkTime>1000){
-                return 1;
-            }
-
-            printf("_fifo_spk full  m_fifo!\n");
             checkTime ++;
-            fifo_net_space = av_audio_fifo_space(m_fifo);
+            printf("_fifo_spk full  m_fifo!\n");
         }
 
         if (fifo_net_space >= input_frame->nb_samples)
@@ -1021,7 +1028,7 @@ int  CAVOutputStream::write_audio_frame(AVStream *input_st, AVFrame *input_frame
 
         AVRational time_base_q;
 //        AVRational time_base_q = { 1, AV_TIME_BASE };
-        int nFifoSamples = av_audio_fifo_size(m_fifo);
+        int nFifoSamples = audioFifoSize(m_fifo);
         int64_t timeshift = (int64_t)nFifoSamples * AV_TIME_BASE /(int64_t)(input_st->codec->sample_rate); //因为Fifo里有之前未读完的数据，所以从Fifo队列里面取出的第一个音频包的时间戳等于当前时间减掉缓冲部分的时长
         m_aud_framecnt += input_frame->nb_samples;
         /** Add the converted input samples to the FIFO buffer for later processing. */
@@ -1029,7 +1036,7 @@ int  CAVOutputStream::write_audio_frame(AVStream *input_st, AVFrame *input_frame
     * Make the FIFO as large as it needs to be to hold both,
     * the old and the new samples.
     */
-        if ((ret = av_audio_fifo_realloc(m_fifo, av_audio_fifo_size(m_fifo) + input_frame->nb_samples)) < 0)
+        if ((ret = audioFifoRealloc(m_fifo, audioFifoSize(m_fifo) + input_frame->nb_samples)) < 0)
         {
             printf("Could not reallocate FIFO\n");
             return ret;
@@ -1059,7 +1066,7 @@ int  CAVOutputStream::write_audio_frame(AVStream *input_st, AVFrame *input_frame
             //    printf("EEErro!!!\n");
         }
 
-        while (av_audio_fifo_size(m_fifo) >= output_frame_size)
+        while (audioFifoSize(m_fifo) >= output_frame_size)
             /**
     * Take one frame worth of audio samples from the FIFO buffer,
     * encode it and write it to the output file.
@@ -1078,7 +1085,7 @@ int  CAVOutputStream::write_audio_frame(AVStream *input_st, AVFrame *input_frame
         * If there is less than the maximum possible frame size in the FIFO
         * buffer use this number. Otherwise, use the maximum possible frame size
         */
-            const int frame_size = FFMIN(av_audio_fifo_size(m_fifo), pCodecCtx_a->frame_size);
+            const int frame_size = FFMIN(audioFifoSize(m_fifo), pCodecCtx_a->frame_size);
 
 
             /** Initialize temporary storage for one output frame. */
@@ -1258,8 +1265,8 @@ int  CAVOutputStream::write_audio_frame(AVStream *input_st, AVFrame *input_frame
      }
      AVFrame* pFrame_scard = av_frame_alloc();
       AVFrame* pFrame_temp = av_frame_alloc();
-     int fifo_scard_size = av_audio_fifo_size(m_fifo_scard);
-     int fifo_size = av_audio_fifo_size(m_fifo);
+     int fifo_scard_size = audioFifoSize(m_fifo_scard);
+     int fifo_size = audioFifoSize(m_fifo);
      int frame_min_size = pCodecCtx_a->frame_size;
      int frame_scard_min_size = pCodecCtx_aCard->frame_size;
      int ret;
@@ -1338,11 +1345,8 @@ int  CAVOutputStream::write_audio_frame(AVStream *input_st, AVFrame *input_frame
               return;
           }
 
-          while (1)
+          while (isWriteFrame())
           {
-              if(m_isOverWrite){
-                  return ;
-              }
               AVFrame* pFrame_out = av_frame_alloc();
               //AVERROR(EAGAIN) 返回这个表示还没转换完成既 不存在帧，则返回AVERROR（EAGAIN）
               ret = av_buffersink_get_frame(buffersink_ctx, pFrame_out);
@@ -1478,7 +1482,7 @@ int  CAVOutputStream::write_audio_card_frame(AVStream *input_st, AVFrame *input_
 
         swr_init(aud_card_convert_ctx);
         if(!m_fifo_scard){
-            m_fifo_scard = av_audio_fifo_alloc(pCodecCtx_aCard->sample_fmt, pCodecCtx_aCard->channels, 20*input_frame->nb_samples);
+            m_fifo_scard = audioFifoAlloc(pCodecCtx_aCard->sample_fmt, pCodecCtx_aCard->channels, 20*input_frame->nb_samples);
         }
         is_fifo_scardinit ++;
     }
@@ -1510,20 +1514,16 @@ int  CAVOutputStream::write_audio_card_frame(AVStream *input_st, AVFrame *input_
         return ret;
     }
     if(m_isMerge){
-        int fifo_net_space = av_audio_fifo_space(m_fifo_scard);
+        int fifo_net_space = audioFifoSpace(m_fifo_scard);
         int checkTime = 0;
-        while(fifo_net_space < input_frame->nb_samples)
+        while(fifo_net_space < input_frame->nb_samples
+              && isWriteFrame()
+              && checkTime < 1000)
         {
-            usleep(10*1000);
-            if(m_isOverWrite){
-                return 1;
-            }
-            if(checkTime>1000){
-                return 1;
-            }
             printf("_fifo_spk full m_fifo_scard!\n");
             checkTime ++;
-            fifo_net_space = av_audio_fifo_space(m_fifo_scard);
+            fifo_net_space = audioFifoSpace(m_fifo_scard);
+            usleep(10*1000);
         }
 
         if (fifo_net_space >= input_frame->nb_samples)
@@ -1542,7 +1542,7 @@ int  CAVOutputStream::write_audio_card_frame(AVStream *input_st, AVFrame *input_
 
     }else{
         AVRational time_base_q = { 1, AV_TIME_BASE };
-       int nFifoSamples = av_audio_fifo_size(m_fifo_scard);
+       int nFifoSamples = audioFifoSize(m_fifo_scard);
        int64_t timeshift = (int64_t)nFifoSamples * AV_TIME_BASE /(int64_t)(input_st->codec->sample_rate);
        m_aud_card_framecnt += input_frame->nb_samples;
         /** Add the converted input samples to the FIFO buffer for later processing. */
@@ -1550,7 +1550,7 @@ int  CAVOutputStream::write_audio_card_frame(AVStream *input_st, AVFrame *input_
     * Make the FIFO as large as it needs to be to hold both,
     * the old and the new samples.
     */
-        if ((ret = av_audio_fifo_realloc(m_fifo_scard, av_audio_fifo_size(m_fifo_scard) + input_frame->nb_samples)) < 0)
+        if ((ret = audioFifoRealloc(m_fifo_scard, audioFifoSize(m_fifo_scard) + input_frame->nb_samples)) < 0)
         {
             printf("Could not reallocate FIFO\n");
             return ret;
@@ -1580,7 +1580,7 @@ int  CAVOutputStream::write_audio_card_frame(AVStream *input_st, AVFrame *input_
             //    printf("EEErro!!!\n");
         }
 
-        while (av_audio_fifo_size(m_fifo_scard) >= output_frame_size)
+        while (audioFifoSize(m_fifo_scard) >= output_frame_size)
             /**
         * Take one frame worth of audio samples from the FIFO buffer,
         * encode it and write it to the output file.
@@ -1599,7 +1599,7 @@ int  CAVOutputStream::write_audio_card_frame(AVStream *input_st, AVFrame *input_
             * If there is less than the maximum possible frame size in the FIFO
             * buffer use this number. Otherwise, use the maximum possible frame size
             */
-            const int frame_size = FFMIN(av_audio_fifo_size(m_fifo_scard), pCodecCtx_aCard->frame_size);
+            const int frame_size = FFMIN(audioFifoSize(m_fifo_scard), pCodecCtx_aCard->frame_size);
 
 
             /** Initialize temporary storage for one output frame. */
@@ -1757,16 +1757,16 @@ void  CAVOutputStream::CloseOutput()
     m_converted_input_samples_scard = NULL;
     }
 
-    if (m_fifo)
-    {
-    av_audio_fifo_free(m_fifo);
-    m_fifo = NULL;
-    }
-    if (m_fifo_scard)
-    {
-    av_audio_fifo_free(m_fifo_scard);
-    m_fifo_scard = NULL;
-    }
+//    if (m_fifo)
+//    {
+//        audioFifoFree(m_fifo);
+//        m_fifo = NULL;
+//    }
+//    if (m_fifo_scard)
+//    {
+//        audioFifoFree(m_fifo_scard);
+//        m_fifo_scard = NULL;
+//    }
     is_fifo_scardinit = 0;
     if(ofmt_ctx)
     {
@@ -1795,7 +1795,6 @@ void  CAVOutputStream::CloseOutput()
 //    ifmt_card_ctx = NULL;
 //    istream_index = -1;
 //    istream_index_card = -1;
-
 }
 void CAVOutputStream::setIsOverWrite(bool isCOntinue)
 {
@@ -1818,13 +1817,62 @@ int CAVOutputStream::audioWrite(AVAudioFifo *af, void **data, int nb_samples)
 
 int CAVOutputStream::writeFrame(AVFormatContext *s, AVPacket *pkt)
 {
-    QMutexLocker locker(&writeFrameMutex);
+    QMutexLocker locker(&m_writeFrameMutex);
     //qDebug() << "+++++++++++++++++++++++ 写视频帧";
     return av_interleaved_write_frame(s, pkt);
 }
 
 int CAVOutputStream::writeTrailer(AVFormatContext *s)
 {
-    QMutexLocker locker(&writeFrameMutex);
+    //qDebug() << "+++++++++++++++++++++++ 写视频尾";
+    QMutexLocker locker(&m_writeFrameMutex);
     return av_write_trailer(s);
 }
+
+int CAVOutputStream::audioFifoSpace(AVAudioFifo *af)
+{
+    //qDebug() << "+++++++++++++++++++++++ 1";
+    QMutexLocker locker(&m_audioReadWriteMutex);
+    return av_audio_fifo_space(af);
+}
+
+int CAVOutputStream::audioFifoSize(AVAudioFifo *af)
+{
+    //qDebug() << "+++++++++++++++++++++++ 2";
+    QMutexLocker locker(&m_audioReadWriteMutex);
+    return av_audio_fifo_size(af);
+}
+
+int CAVOutputStream::audioFifoRealloc(AVAudioFifo *af, int nb_samples)
+{
+    //qDebug() << "+++++++++++++++++++++++ 3";
+    QMutexLocker locker(&m_audioReadWriteMutex);
+    return av_audio_fifo_realloc(af,nb_samples);
+}
+
+AVAudioFifo *CAVOutputStream::audioFifoAlloc(AVSampleFormat sample_fmt, int channels, int nb_samples)
+{
+    //qDebug() << "+++++++++++++++++++++++ 4";
+    QMutexLocker locker(&m_audioReadWriteMutex);
+    return av_audio_fifo_alloc(sample_fmt,channels,nb_samples);
+}
+
+void CAVOutputStream::audioFifoFree(AVAudioFifo *af)
+{
+    //qDebug() << "+++++++++++++++++++++++ 5";
+    QMutexLocker locker(&m_audioReadWriteMutex);
+    av_audio_fifo_free(af);
+}
+
+bool CAVOutputStream::isWriteFrame()
+{
+    QMutexLocker locker(&m_isWriteFrameMutex);
+    return m_isWriteFrame;
+}
+
+void CAVOutputStream::setIsWriteFrame(bool isWriteFrame)
+{
+    QMutexLocker locker(&m_isWriteFrameMutex);
+    m_isWriteFrame = isWriteFrame;
+}
+

@@ -408,6 +408,10 @@ or press the shortcut again to stop recording</translation>
         <source>Show cursor</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Open With Draw</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Utils</name>

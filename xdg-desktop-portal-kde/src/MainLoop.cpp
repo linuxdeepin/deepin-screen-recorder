@@ -147,13 +147,13 @@ void MainLoop::startInit(int img_width,int img_height,int fps,StreamRecordAudioT
     int rc = pthread_create(&m_mainThread, NULL, preStartSteam,(void*)this);
     pthread_detach(m_mainThread);
 }
-void  MainLoop::addImage(QImage *img, int64_t time)
-{
-    if(m_canAddImage){
-        gpMainFrame->m_InputStream.writeToFrame(img,time);
-    }
+//void  MainLoop::addImage(QImage *img, int64_t time)
+//{
+//    if(m_canAddImage){
+//        gpMainFrame->m_InputStream.writeToFrame(img,time);
+//    }
 
-}
+//}
 
 void MainLoop::addImage(WaylandIntegration::WaylandIntegrationPrivate::waylandFrame &frame)
 {
@@ -241,9 +241,11 @@ int MainLoop:: stopStream()
     if(!m_isGif){
         sleep(2);
     }
-
-    m_InputStream.CloseInputStream();
-     m_OutputStream.setIsOverWrite(true);
+    //m_InputStream.CloseInputStream();
+    //m_OutputStream.setIsOverWrite(true);
+    m_InputStream.setIsWriteAmix(false);
+    m_InputStream.setIsExitThread(true);
+    m_OutputStream.setIsWriteFrame(false);
      if(m_isGif){
          OnDestroy();
      }
