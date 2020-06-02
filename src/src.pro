@@ -9,7 +9,7 @@ INCLUDEPATH += .
 
 CONFIG += link_pkgconfig
 CONFIG += c++11
-PKGCONFIG += xcb xcb-util
+PKGCONFIG += xcb xcb-util dframeworkdbus
 RESOURCES = ../deepin-screen-recorder.qrc \
     widgets/resources.qrc \
     icons/icons.qrc

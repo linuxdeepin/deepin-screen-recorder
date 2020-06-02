@@ -38,6 +38,9 @@
 
 const int RecordProcess::RECORD_TYPE_VIDEO = 0;
 const int RecordProcess::RECORD_TYPE_GIF = 1;
+const int RecordProcess::RECORD_TYPE_MP4 = 2;
+const int RecordProcess::RECORD_TYPE_MKV = 3;
+
 const int RecordProcess::RECORD_AUDIO_INPUT_MIC = 2;
 const int RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO = 3;
 const int RecordProcess::RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO = 4;
@@ -47,6 +50,10 @@ const int RecordProcess::RECORD_FRAMERATE_10 = 10;
 const int RecordProcess::RECORD_FRAMERATE_20 = 20;
 const int RecordProcess::RECORD_FRAMERATE_24 = 24;
 const int RecordProcess::RECORD_FRAMERATE_30 = 30;
+
+
+
+
 
 RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 {

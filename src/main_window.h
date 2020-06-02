@@ -364,6 +364,7 @@ private:
     bool m_isZhaoxin = false;
     HintFilter *hintFilter         = nullptr;
     DesktopInfo m_desktopInfo;
+    QList<ScreenInfo> m_screenInfo;
 };
 
 #endif //MAINWINDOW_H
