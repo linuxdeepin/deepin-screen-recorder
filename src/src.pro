@@ -155,7 +155,7 @@ shotShell.files = ../deepin-screenshot
 #modprobe.files = modinfo/modprobe.d/deepin-screen-recorder.conf
 #modload.files = modinfo/modulesload.d/deepin-screen-recorder.conf
 
-dbus_service.files = $$PWD/com.deepin.ScreenRecorder.service $$PWD/com.deepin.Screenshot.service
+dbus_service.files = $$PWD/../com.deepin.ScreenRecorder.service $$PWD/../com.deepin.Screenshot.service
 dbus_service.path = $$PREFIX/share/dbus-1/services
 
 INSTALLS += target icon desktop manual dbus_service shotShell
