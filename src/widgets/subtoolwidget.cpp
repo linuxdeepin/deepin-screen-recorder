@@ -666,15 +666,10 @@ void SubToolWidget::initRecordLabel()
     OptionMenu->addSeparator();
 
     OptionMenu->addAction(fpsTitleAction);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(fps5Action);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(fps10Action);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(fps20Action);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(fps24Action);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(fps30Action);
 
     m_optionButton->setMenu(OptionMenu);
@@ -1218,7 +1213,7 @@ void SubToolWidget::initShotLabel()
     QAction *jpgAction = new QAction(OptionMenu);
     QAction *bmpAction = new QAction(OptionMenu);
     QAction *clipTitleAction = new QAction(OptionMenu);
-    QAction *clipAction = new QAction(OptionMenu);
+    QAction *saveToClipAction = new QAction(OptionMenu);
     QAction *saveCursorAction = new QAction(OptionMenu);
 
     saveTitleAction->setDisabled(true);
@@ -1229,11 +1224,12 @@ void SubToolWidget::initShotLabel()
     saveToPictureAction->setCheckable(true);
     saveToSpecialPath->setText(tr("Folder"));
     saveToSpecialPath->setCheckable(true);
-    openWithDraw->setText(tr("Open With Draw"));
-    openWithDraw->setCheckable(true);
+    saveToClipAction->setText(tr("Clipboard"));
+    saveToClipAction->setCheckable(true);
     t_saveGroup->addAction(saveToDesktopAction);
     t_saveGroup->addAction(saveToPictureAction);
     t_saveGroup->addAction(saveToSpecialPath);
+    t_saveGroup->addAction(saveToClipAction);
 
     formatTitleAction->setDisabled(true);
     formatTitleAction->setText(tr("Format"));
@@ -1250,8 +1246,8 @@ void SubToolWidget::initShotLabel()
 
     clipTitleAction->setDisabled(true);
     clipTitleAction->setText(tr("Options"));
-    clipAction->setText(tr("Copy to clipboard"));
-    clipAction->setCheckable(true);
+    openWithDraw->setText(tr("Open With Draw"));
+    openWithDraw->setCheckable(true);
     saveCursorAction->setText(tr("Show cursor"));
     saveCursorAction->setCheckable(true);
 
@@ -1260,11 +1256,11 @@ void SubToolWidget::initShotLabel()
     OptionMenu->addAction(saveToDesktopAction);
     OptionMenu->addAction(saveToPictureAction);
     OptionMenu->addAction(saveToSpecialPath);
+    OptionMenu->addAction(saveToClipAction);
     OptionMenu->addSeparator();
 
     //保存剪贴板
     OptionMenu->addAction(clipTitleAction);
-    OptionMenu->addAction(clipAction);
     OptionMenu->addAction(saveCursorAction);
     // 屏蔽画板打开
     //OptionMenu->addAction(openWithDraw);
@@ -1295,7 +1291,7 @@ void SubToolWidget::initShotLabel()
         break;
     }
     default:
-        saveToDesktopAction->setChecked(true);
+        saveToClipAction->setChecked(true);
         break;
     }
 
@@ -1318,6 +1314,10 @@ void SubToolWidget::initShotLabel()
         else if (t_act == saveToSpecialPath) {
             qDebug() << "save to path";
             ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToSpecificDir);
+        }
+        else if(t_act == saveToClipAction) {
+            qDebug() << "save to clip";
+            ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
         }
     });
 
@@ -1347,7 +1347,7 @@ void SubToolWidget::initShotLabel()
             ConfigSettings::instance()->setValue("save", "format", 2);
         }
     });
-
+/*
     int t_saveToClipBoard = ConfigSettings::instance()->value("save", "saveClip").toInt();
 
     switch (t_saveToClipBoard) {
@@ -1373,7 +1373,7 @@ void SubToolWidget::initShotLabel()
             ConfigSettings::instance()->setValue("save", "saveClip", 0);
         }
     });
-
+*/
     int t_saveCursor = ConfigSettings::instance()->value("save", "saveCursor").toInt();
 
     switch (t_saveCursor) {

@@ -2124,7 +2124,8 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     QStringList actions;
     QVariantMap hints;
 
-    if (remote_dde_notify_obj_exist) {
+    // 保存到剪贴板， 通知不用open
+    if (remote_dde_notify_obj_exist && saveFilePath.compare(QString(tr("Clipboard")))) {
         actions << "_open" << tr("View");
 
         QString fileDir  = QUrl::fromLocalFile(QFileInfo(saveFilePath).absoluteDir().absolutePath()).toString();
@@ -2196,15 +2197,13 @@ bool MainWindow::saveAction(const QPixmap &pix)
 //    bool copyToClipboard = true;
 
     int t_pictureFormat = ConfigSettings::instance()->value("save", "format").toInt();
-    int t_saveToClipBoard = ConfigSettings::instance()->value("save", "saveClip").toInt();
+    //int t_saveToClipBoard = ConfigSettings::instance()->value("save", "saveClip").toInt();
 
-    if (t_saveToClipBoard == 0) {
-        m_copyToClipboard = false;
-    }
-
-    else {
-        m_copyToClipboard = true;
-    }
+    //if (t_saveToClipBoard == 0) {
+        //m_copyToClipboard = false;
+    //}else {
+        //m_copyToClipboard = true;
+    //}
 
     std::pair<bool, SaveAction> temporarySaveAction = ConfigSettings::instance()->getTemporarySaveAction();
     if (temporarySaveAction.first) {
@@ -2343,6 +2342,10 @@ bool MainWindow::saveAction(const QPixmap &pix)
     }
     case AutoSave:
         break;
+    case SaveToClipboard:{
+        qDebug() << SaveToClipboard << "SaveToClipboard";
+        break;
+    }
     default:
         break;
     }
@@ -2489,19 +2492,17 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
         if (!screenShotPix.save(m_saveFileName,  t_formatStr.toLatin1().data()))
             return false;
+    }else if(m_saveIndex == SaveToClipboard){
+       m_saveFileName = QString(tr("Clipboard"));
     }
 
+    // 保存到剪贴板
     QMimeData *t_imageData = new QMimeData;
     t_imageData->setImageData(screenShotPix);
-
-    if (m_copyToClipboard) {
-        Q_ASSERT(!screenShotPix.isNull());
-        QClipboard *cb = qApp->clipboard();
-//        cb->setPixmap(screenShotPix, QClipboard::Clipboard);
-        cb->setMimeData(t_imageData, QClipboard::Clipboard);
-
-        qDebug() << "clip board success!";
-    }
+    Q_ASSERT(!screenShotPix.isNull());
+    QClipboard *cb = qApp->clipboard();
+    cb->setMimeData(t_imageData, QClipboard::Clipboard);
+    //if (m_copyToClipboard) {}
     // 调起画板， 传入截图路径
     /*
     int t_saveCursor = ConfigSettings::instance()->value("open", "draw").toInt();
@@ -2657,7 +2658,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {
                 if (keyEvent->key() == Qt::Key_C) {
 //                    ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
-                    m_copyToClipboard = true;
+                        //m_copyToClipboard = true;
                     saveScreenShot();
                 } else if (keyEvent->key() == Qt::Key_Z) {
                     qDebug() << "SDGF: ctrl+z !!!";
@@ -2702,7 +2703,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         m_shapesWidget->microAdjust("Ctrl+Down");
                     } else if (keyEvent->key() == Qt::Key_C) {
 //                        ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
-                        m_copyToClipboard = true;
+                        //m_copyToClipboard = true;
                         saveScreenShot();
                     } else if (keyEvent->key() == Qt::Key_S) {
 //                        expressSaveScreenshot();
@@ -2768,7 +2769,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                     if (keyEvent->key() == Qt::Key_C) {
 //                        ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
-                        m_copyToClipboard = true;
+                        //m_copyToClipboard = true;
 //                        saveScreenshot();
                         saveScreenShot();
                     }
