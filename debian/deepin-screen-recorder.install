@@ -1,5 +1,5 @@
 usr/bin/deepin-screen-recorder
-usr/share/dde-desktop/translations/*.qm
+usr/share/deepin-screen-recorder/translations/*.qm
 usr/share/icons/hicolor/scalable/apps/deepin-screen-recorder.svg
 usr/share/applications/deepin-screen-recorder.desktop
 usr/share/dbus-1/services/com.deepin.ScreenRecorder.service
