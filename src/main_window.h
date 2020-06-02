@@ -356,7 +356,7 @@ private:
     bool m_shotWithPath = false;
     int m_screenNum;
     QString m_shotSavePath;
-    bool m_copyToClipboard = false;
+    //bool m_copyToClipboard = false;
     QString m_savePicturePath;
     int m_shotflag = 0;
     int m_firstShot = 0;

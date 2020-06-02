@@ -79,6 +79,10 @@ or press the shortcut again to stop recording</translation>
         <source>Ignore</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -398,7 +402,7 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>Copy to clipboard</source>
-        <translation>Copy to clipboard</translation>
+        <translation type="vanished">Copy to clipboard</translation>
     </message>
     <message>
         <source>MKV</source>
@@ -410,6 +414,10 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>Open With Draw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

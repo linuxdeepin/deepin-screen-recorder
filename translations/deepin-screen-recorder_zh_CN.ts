@@ -78,6 +78,10 @@ or press the shortcut again to stop recording</source>
         <source>Ignore</source>
         <translation>忽略</translation>
     </message>
+    <message>
+        <source>Clipboard</source>
+        <translation type="unfinished">剪贴板</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -333,7 +337,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Copy to clipboard</source>
-        <translation>复制到剪贴板</translation>
+        <translation type="vanished">复制到剪贴板</translation>
     </message>
     <message>
         <source>System Audio</source>
@@ -410,6 +414,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Open With Draw</source>
         <translation>画板打开</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation type="unfinished">剪贴板</translation>
     </message>
 </context>
 <context>
