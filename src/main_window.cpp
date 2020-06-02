@@ -1340,12 +1340,12 @@ void MainWindow::updateToolBarPos()
         m_toolBar->setIsZhaoxinPlatform(m_isZhaoxin);
 
         m_pVoiceVolumeWatcher = new voiceVolumeWatcher(this);
-        m_pVoiceVolumeWatcher->start();
+        //m_pVoiceVolumeWatcher->start();
         connect(m_pVoiceVolumeWatcher, SIGNAL(sigRecodeState(bool)), this, SLOT(on_CheckRecodeCouldUse(bool)));
         m_toolBarInit = true;
 
         m_pCameraWatcher = new CameraWatcher(this);
-        m_pCameraWatcher->start();
+        //m_pCameraWatcher->start();
         connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
     }
 
@@ -1701,6 +1701,8 @@ void MainWindow::changeFunctionButton(QString type)
         if (m_sideBar->isVisible()) {
             m_sideBar->hide();
         }
+        m_pVoiceVolumeWatcher->start();
+        m_pCameraWatcher->start();
 
     }
 
@@ -2501,6 +2503,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         qDebug() << "clip board success!";
     }
     // 调起画板， 传入截图路径
+    /*
     int t_saveCursor = ConfigSettings::instance()->value("open", "draw").toInt();
     if (t_saveCursor == 1) {
         DrawInterface *m_draw = new DrawInterface("com.deepin.Draw", "/com/deepin/Draw", QDBusConnection::sessionBus(), this);
@@ -2508,6 +2511,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         list.append(m_saveFileName);
         m_draw->openFiles(list);
     }
+    */
     return true;
 }
 

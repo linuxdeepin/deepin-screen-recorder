@@ -34,8 +34,10 @@
 //#include <dwindowmanager.h>
 #include "constant.h"
 #include <QStandardPaths>
+#include <DDialog>
 
 //DWM_USE_NAMESPACE
+DWIDGET_USE_NAMESPACE
 
 static const QString WarningDialogService = "com.deepin.dde.WarningDialog";
 static const QString WarningDialogPath = "/com/deepin/dde/WarningDialog";
@@ -80,6 +82,15 @@ void Utils::warnNoComposite()
                          WarningDialogPath,
                          WarningDialogService);
     iface.call("RaiseWindow");
+}
+void Utils::notSupportWarn()
+{
+   DDialog warnDlg;
+   warnDlg.setIcon(QIcon::fromTheme("deepin-screen-recorder"));
+   warnDlg.setMessage(tr("Screen recording is not supported at present"));
+   warnDlg.addSpacing(20);
+   warnDlg.addButton(tr("Exit"));
+   warnDlg.exec();
 }
 
 //void Utils::blurRect(DWindowManager *windowManager, int widgetId, QRectF rect)

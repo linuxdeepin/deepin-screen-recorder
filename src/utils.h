@@ -42,5 +42,6 @@ public:
     static void passInputEvent(int wid);
     static void setFontSize(QPainter &painter, int textSize);
     static void warnNoComposite();
+    static void notSupportWarn();
     static QString getRecordingSaveDirectory();
 };
