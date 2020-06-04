@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <qimage.h>
 #include <qqueue.h>
+#include <QMutex>
 #include "waylandintegration.h"
 #include "waylandintegration_p.h"
 extern "C"
@@ -19,50 +20,36 @@ extern "C"
 #include <libavutil/pixdesc.h>
 #include <libavutil/audio_fifo.h>
 #include <libswresample/swresample.h>
-#include <libavutil/time.h> ////av_gettime()
+#include <libavutil/time.h>
 }
 
 using namespace std;
 
-//typedef double (*VideoCaptureCB)(); //OK
 typedef int (*VideoCaptureCB)(AVStream * input_st,  enum AVPixelFormat pix_fmt, AVFrame *pframe, int64_t lTimeStamp);
 typedef int (*AudioCaptureCB)(AVStream *input_st, AVFrame *pframe, int64_t lTimeStamp);
 typedef int (*AudioMixCB)();
-//typedef LRESULT (CALLBACK* VideoCaptureCB)(AVStream * input_st, enum PixelFormat pix_fmt, AVFrame *pframe, INT64 lTimeStamp);
-//typedef LRESULT (CALLBACK* AudioCaptureCB)(AVStream * input_st, AVFrame *pframe, INT64 lTimeStamp);
 
-//struct ScreenData{
-//    QImage *image;
-//    int64_t timeStamp;
-//};
-enum OUTPUT_TYPE{
-    Nomal = 0,
+enum OUTPUT_TYPE
+{
+    MP4_MKV = 0,
     Gif
 };
 
 class CAVInputStream
 {
 public:
-    CAVInputStream(void);
+    CAVInputStream(WaylandIntegration::WaylandIntegrationPrivate* context);
     ~CAVInputStream(void);
 
 public:
-//    void  SetVideoCaptureDevice(string device_name);
-//    void  SetAudioCaptureDevice(string device_name);
-    void  setRecordAudioMic(bool isrecord);
-    void  setRecordAudioSCard(bool isrecord);
-    bool  OpenInputStream();
-    //void  CloseInputStream();
+    void  setMicAudioRecord(bool bRecord);
+    void  setSysAudioRecord(bool bRecord);
+    bool  openInputStream();
     void  onsFinisheStream();
-    void onFInishCleanImage();
-    bool  StartCapture();
-    //void writeToFrame(QImage *img,int64_t time);
-
-    void writeToFrame(WaylandIntegration::WaylandIntegrationPrivate::waylandFrame &frame);
-
-    void  SetVideoCaptureCB(VideoCaptureCB pFuncCB);
-    void  SetAudioCaptureCB(AudioCaptureCB pFuncCB);
-    void  SetAudioScardCaptureCB(AudioCaptureCB pFuncCB);
+    bool  audioCapture();
+    //void  SetVideoCaptureCB(VideoCaptureCB pFuncCB);
+    //void  SetAudioCaptureCB(AudioCaptureCB pFuncCB);
+    //void  SetAudioScardCaptureCB(AudioCaptureCB pFuncCB);
     void  SetWirteAmixtCB(AudioMixCB pFuncCB);
     bool  GetVideoInputInfo(int & width, int & height, int & framerate, AVPixelFormat & pixFmt);
     bool  GetAudioInputInfo(AVSampleFormat & sample_fmt, int & sample_rate, int & channels,int &layout);
@@ -70,80 +57,62 @@ public:
     void  setVidioOutPutType(OUTPUT_TYPE outType);
     OUTPUT_TYPE getVidioOutPutType();
     QString currentAudioChannel();
-protected:
-//    static /*unsigned long*/void  CaptureVideoThreadFunc(void* lParam);
-//    static /*unsigned long*/void  CaptureAudioThreadFunc(void* lParam);
-//    static void  *CaptureVideoThreadFunc(void* lParam);
-    static void  *CaptureAudioThreadFunc(void* lParam);
-    static void  *CaptureAudioSCardThreadFunc(void* lParam);
-    static void  *writeAmixThreadFunc(void* lParam);
-    //int  beginWriteMixAudio();
-    void doWritAmixAudio();
-    int  ReadAudioPackets();
-    int  ReadAudioSCardPackets();
-    void initScreenData();
-//protected:
+
 public:
-//    string  m_video_device;
-//    string b;
-    string  m_audio_device;
-    string  m_audio_device_scard;
+    bool m_bMicAudio;
+    bool m_bSysAudio;
     OUTPUT_TYPE m_outPutType;
-//    int     m_videoindex;
-    int     m_audioindex;
-    int     m_audioindex_scard;
-    int m_cl;
-    int m_ct;
-    int m_cr;
-    int m_cb;
-    int m_cw;
-    int m_ch;
+    int     m_micAudioindex;
+    int     m_sysAudioindex;
+    int m_left;
+    int m_top;
+    int m_right;
+    int m_bottom;
+    int m_selectWidth;
+    int m_selectHeight;
     AVPixelFormat m_ipix_fmt; //输入图像格式
     int m_fps;
     int m_screenDW; //输入图像宽
     int m_screenDH; //输入图像高
-//     QQueue<ScreenData> m_ScreenDatas;//输入图像集合
-
-//    AVFormatContext *m_pVidFmtCtx;
-    AVFormatContext *m_pAudFmtCtx; //音频context
-    AVFormatContext *m_pAudFmtCtx_scard; //声卡音频context
-//    AVInputFormat  *m_pInputFormat;
+    //音频上下文
+    AVFormatContext *m_pMicAudioFormatContext;
+    //声卡音频 context
+    AVFormatContext *m_pSysAudioFormatContext;
     AVInputFormat  *m_pAudioInputFormat;
     AVInputFormat  *m_pAudioCardInputFormat;
-
     AVPacket *dec_pkt;
-
-    pthread_t  m_hCapAudioThread ,m_hCapAudioScardThread; //线程句柄
-    pthread_t  m_hReadMixThread;
-    //bool   m_exit_thread; //退出线程的标志变量
-
+    pthread_t  m_hMicAudioThread ,m_hSysAudioThread; //线程句柄
+    pthread_t  m_hMixThread;
     VideoCaptureCB  m_pVideoCBFunc; //视频数据回调函数指针
-    AudioCaptureCB  m_pAudioCBFunc; //音频数据回调函数指针
+    //AudioCaptureCB  m_pAudioCBFunc; //音频数据回调函数指针
     AudioCaptureCB  m_pAudioScardCBFunc; //声卡音频数据回调函数指针
-    AudioMixCB   m_mixCBFunc;
-///    CCritSec     m_WriteLock;
-    //pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-    //pthread_mutex_t mutexScreenD = PTHREAD_MUTEX_INITIALIZER;
-
-/// pthread_mutex_t counter_mutex = PTHREAD_MUTEX_INITIALIZER;
-
+    //AudioMixCB   m_mixCBFunc;
     int64_t     m_start_time; //采集的起点时间
-    bool m_isMerge;
-    //bool m_isWriting;
+    bool m_bMix;
+    bool bWriteMix();
+    void setbWriteAmix(bool bWriteMix);
+    bool bRunThread() ;
+    void setbRunThread(bool bRunThread);
 
-    bool isWriteAmix();
-    void setIsWriteAmix(bool isWriteAmix);
-
-
-    bool isExitThread() ;
-    void setIsExitThread(bool isExitThread);
+protected:
+    static void *captureMicAudioThreadFunc(void* param);
+    static void *captureMicToMixAudioThreadFunc(void* param);
+    static void *captureSysAudioThreadFunc(void* param);
+    static void *captureSysToMixAudioThreadFunc(void* param);
+    static void  *writeMixThreadFunc(void* param);
+    void writMixAudio();
+    int  readMicAudioPacket();
+    int  readMicToMixAudioPacket();
+    int  readSysAudioPacket();
+    int  readSysToMixAudioPacket();
+    void initScreenData();
 
 private:
-    bool m_isWriteAmix;
-    QMutex m_isExitMutex;
-
-    bool m_isExitThread;
-    QMutex m_isExitThreadMutex;
+    bool m_bWriteMix;
+    QMutex m_bWriteMixMutex;
+    bool m_bRunThread;
+    QMutex m_bRunThreadMutex;
+    WaylandIntegration::WaylandIntegrationPrivate* m_context;
 };
 
 #endif //AVINPUTSTREAM_H

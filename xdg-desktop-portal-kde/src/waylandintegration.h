@@ -66,12 +66,7 @@ private:
     int m_waylandOutputName;
     int m_waylandOutputVersion;
 };
-enum  RecordAudioType{
-    MIC,//只录制麦克风
-    SYS,//之录制系统音频
-    MIC_SYS,//录制麦克风+系统音频
-    NOS //不录音
-};
+
 class WaylandIntegration : public QObject
 {
     Q_OBJECT

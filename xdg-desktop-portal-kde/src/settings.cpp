@@ -279,5 +279,34 @@ void SettingsPortal::stopRecord()
                                 QDBusConnection::sessionBus());
     QList<QVariant> arg;
     notification.callWithArgumentList(QDBus::AutoDetect,QString::fromUtf8("waylandRecordOver"),arg);
-    QApplication::quit();
+    qDebug() << Q_FUNC_INFO;
+    //QApplication::quit();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

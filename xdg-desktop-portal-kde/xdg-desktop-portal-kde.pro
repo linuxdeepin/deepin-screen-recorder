@@ -29,27 +29,25 @@ HEADERS += src/AVInputStream.h \
            src/AVOutputStream.h \
            src/bit_writing_block.h \
            src/desktopportal.h \
-           src/gif_encoder.h \
-           src/MainLoop.h \
            src/neu_quant.h \
            src/utils.h \
            src/waylandintegration.h \
            src/waylandintegration_p.h \
-           src/writeframetostreamthread.h \
-           src/settings.h
+           src/settings.h \
+    src/recordAdmin.h \
+    src/writeFrameThread.h
 SOURCES += \
            src/AVInputStream.cpp \
            src/AVOutputStream.cpp \
            src/bit_writing_block.c \
            src/desktopportal.cpp \
-           src/gif_encoder.c \
-           src/MainLoop.cpp \
            src/neu_quant.c \
            src/utils.cpp \
            src/waylandintegration.cpp \
-           src/writeframetostreamthread.cpp \
            src/xdg-desktop-portal-kde.cpp \
-           src/settings.cpp
+           src/settings.cpp \
+    src/recordAdmin.cpp \
+    src/writeFrameThread.cpp
 
 QMAKE_CXXFLAGS += -g
 

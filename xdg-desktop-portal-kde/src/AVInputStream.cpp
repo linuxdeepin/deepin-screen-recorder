@@ -7,53 +7,56 @@
 #include <QDebug>
 #include <QThread>
 #include <QMutexLocker>
+#include "recordAdmin.h"
 
-CAVInputStream::CAVInputStream(void)
+CAVInputStream::CAVInputStream(WaylandIntegration::WaylandIntegrationPrivate *context):
+    m_context(context)
 {
-    setIsWriteAmix(true);
-    m_hCapAudioThread = NULL;
+    m_bMix = false;
+    setbWriteAmix(true);
+    m_hMicAudioThread = NULL;
     //m_exit_thread = false;
-    setIsExitThread(false);
-    m_outPutType = Nomal;
-    m_pAudFmtCtx = NULL;
-    m_pAudFmtCtx_scard = NULL;
+    setbRunThread(true);
+    m_outPutType = MP4_MKV;
+    m_pMicAudioFormatContext = NULL;
+    m_pSysAudioFormatContext = NULL;
     m_pAudioInputFormat = NULL;
     dec_pkt = NULL;
     m_pVideoCBFunc = NULL;
-    m_pAudioCBFunc = NULL;
+    //m_pAudioCBFunc = NULL;
     m_pAudioScardCBFunc = NULL;
-    m_audio_device = "default";
-    m_audio_device_scard = "default";
-    m_audioindex = -1;
-    m_audioindex_scard = -1;
+    m_bMicAudio = false;
+    m_bSysAudio = false;
+    m_micAudioindex = -1;
+    m_sysAudioindex = -1;
     m_start_time = 0;
 }
 
 CAVInputStream::~CAVInputStream(void)
 {
     printf("Desctruction Input!\n");
-    setIsWriteAmix(false);
-    setIsExitThread(true);
+    setbWriteAmix(false);
+    setbRunThread(false);
 }
 
 
-void  CAVInputStream::SetVideoCaptureCB(VideoCaptureCB pFuncCB)
-{
-    m_pVideoCBFunc = pFuncCB;
-}
+//void  CAVInputStream::SetVideoCaptureCB(VideoCaptureCB pFuncCB)
+//{
+//    m_pVideoCBFunc = pFuncCB;
+//}
 
-void  CAVInputStream::SetAudioCaptureCB(AudioCaptureCB pFuncCB)
-{
-    m_pAudioCBFunc = pFuncCB;
-}
-void  CAVInputStream::SetAudioScardCaptureCB(AudioCaptureCB pFuncCB)
-{
-    m_pAudioScardCBFunc = pFuncCB;
-}
-void  CAVInputStream::SetWirteAmixtCB(AudioMixCB pFuncCB)
-{
-    m_mixCBFunc = pFuncCB;
-}
+//void  CAVInputStream::SetAudioCaptureCB(AudioCaptureCB pFuncCB)
+//{
+//    m_pAudioCBFunc = pFuncCB;
+//}
+//void  CAVInputStream::SetAudioScardCaptureCB(AudioCaptureCB pFuncCB)
+//{
+//    m_pAudioScardCBFunc = pFuncCB;
+//}
+//void  CAVInputStream::SetWirteAmixtCB(AudioMixCB pFuncCB)
+//{
+//    m_mixCBFunc = pFuncCB;
+//}
 //void  CAVInputStream::SetVideoCaptureDevice(string device_name)
 //{
 //    m_video_device = device_name;
@@ -63,83 +66,65 @@ void  CAVInputStream::SetWirteAmixtCB(AudioMixCB pFuncCB)
 //{
 //    m_audio_device_mic = device_name;
 //}
-void  CAVInputStream::setRecordAudioMic(bool isrecord)
-{
-    if(isrecord){
-        m_audio_device = "default";
-    }else{
-        m_audio_device = "";
-    }
 
-}
-void  CAVInputStream::setRecordAudioSCard(bool isrecord)
+void CAVInputStream::setMicAudioRecord(bool bRecord)
 {
-    if(isrecord){
-        m_audio_device_scard = "default";
-    }else{
-        m_audio_device_scard = "";
-    }
+    m_bMicAudio = bRecord;
 }
-bool  CAVInputStream::OpenInputStream()
+
+void CAVInputStream::setSysAudioRecord(bool bRecord)
 {
-    //    m_videoindex = 999;
-    if(m_outPutType==Gif){
-        m_audio_device.clear();
-        m_audio_device_scard.clear();
-        return true;
-    }
+    m_bSysAudio = bRecord;
+}
+
+bool CAVInputStream::openInputStream()
+{
     AVDictionary *device_param = 0;
     int i;
-    m_isMerge = false;
-
-    ///音频...
     m_pAudioInputFormat = av_find_input_format("pulse"); //alsa
     assert(m_pAudioInputFormat != NULL);
     if(m_pAudioInputFormat == NULL)
     {
         printf("did not find this audio input devices\n");
     }
-
-    if(!m_audio_device.empty())
+    if(m_bMicAudio)
     {
-        string device_name = m_audio_device;
-
+        string device_name = "default";
         //Set own audio device's name
-        if (avformat_open_input(&m_pAudFmtCtx, device_name.c_str(), m_pAudioInputFormat, &device_param) != 0){
-
+        if (avformat_open_input(&m_pMicAudioFormatContext, device_name.c_str(), m_pAudioInputFormat, &device_param) != 0)
+        {
             printf("Couldn't open input audio stream.（无法打开输入流）\n");
             return false;
         }
-
+        qDebug() << "test:mic:" << device_name.c_str();
         //input audio initialize
-        if (avformat_find_stream_info(m_pAudFmtCtx, NULL) < 0)
+        if (avformat_find_stream_info(m_pMicAudioFormatContext, NULL) < 0)
         {
             printf("Couldn't find audio stream information.（无法获取流信息）\n");
             return false;
         }
-        m_audioindex = -1;
-        for (i = 0; i < m_pAudFmtCtx->nb_streams; i++)
+        m_micAudioindex = -1;
+        for (i = 0; i < m_pMicAudioFormatContext->nb_streams; i++)
         {
-            if (m_pAudFmtCtx->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO)
+            if (m_pMicAudioFormatContext->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO)
             {
-                m_audioindex = i;
+                m_micAudioindex = i;
                 break;
             }
         }
-        if (m_audioindex == -1)
+        if (m_micAudioindex == -1)
         {
             printf("Couldn't find a audio stream.（没有找到音频流）\n");
             return false;
         }
-        ///Caution, m_pAudFmtCtx->streams[m_audioindex]->codec->codec_id =14, AV_CODEC_ID_RAWVIDEO
-        if (avcodec_open2(m_pAudFmtCtx->streams[m_audioindex]->codec, avcodec_find_decoder(m_pAudFmtCtx->streams[m_audioindex]->codec->codec_id), NULL) < 0)
+        if (avcodec_open2(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec, avcodec_find_decoder(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec->codec_id), NULL) < 0)
         {
             printf("Could not open audio codec.（无法打开解码器）\n");
             return false;
         }
 
         /* print Video device information*/
-        av_dump_format(m_pAudFmtCtx, 0, "default", 0);
+        av_dump_format(m_pMicAudioFormatContext, 0, "default", 0);
     }
     m_pAudioCardInputFormat = av_find_input_format("pulse"); //alsa
     assert(m_pAudioCardInputFormat != NULL);
@@ -147,95 +132,87 @@ bool  CAVInputStream::OpenInputStream()
     {
         printf("did not find this card audio input devices\n");
     }
-
-    if(!m_audio_device_scard.empty())
+    string device_name;
+    if(m_bSysAudio)
     {
-        string device_name;
-        //        m_audio_device_scard;
-        if(m_audio_device_scard.compare("default")==0){
-            QString device = currentAudioChannel();
-            if(device.length()>0){
-                device_name = device.toLatin1().data()[0];
-            }else{
-                printf("did not find this card AudioChannel \n");
-            }
-
-        }else{
-            device_name = m_audio_device_scard;
+        QString device = currentAudioChannel();
+        if(device.length()>0)
+        {
+            device_name = device.toLatin1().data()[0];
         }
-
-        if (avformat_open_input(&m_pAudFmtCtx_scard, device_name.c_str(), m_pAudioCardInputFormat, &device_param) != 0){
+        else
+        {
+            printf("did not find this card AudioChannel \n");
+        }
+        if (avformat_open_input(&m_pSysAudioFormatContext, device_name.c_str(), m_pAudioCardInputFormat, &device_param) != 0)
+        {
             printf("Couldn't open input audio stream.（无法打开输入流）\n");
             return false;
         }
-        if (avformat_find_stream_info(m_pAudFmtCtx_scard, NULL) < 0)
+        qDebug() << "test:sys:" << device_name.c_str();
+        if (avformat_find_stream_info(m_pSysAudioFormatContext, NULL) < 0)
         {
             printf("Couldn't find audio stream information.（无法获取流信息）\n");
             return false;
         }
         fflush(stdout);
-        m_audioindex_scard = -1;
-        for (i = 0; i < m_pAudFmtCtx_scard->nb_streams; i++)
+        m_sysAudioindex = -1;
+        for (i = 0; i < m_pSysAudioFormatContext->nb_streams; i++)
         {
-            if (m_pAudFmtCtx_scard->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO)
+            if (m_pSysAudioFormatContext->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO)
             {
-                m_audioindex_scard = i;
+                m_sysAudioindex = i;
                 break;
             }
         }
-        if (m_audioindex_scard == -1)
+        if (m_sysAudioindex == -1)
         {
             printf("Couldn't find a audio stream.（没有找到音频流）\n");
             return false;
         }
         ///Caution, m_pAudFmtCtx->streams[m_audioindex]->codec->codec_id =14, AV_CODEC_ID_RAWVIDEO
-        if (avcodec_open2(m_pAudFmtCtx_scard->streams[m_audioindex_scard]->codec, avcodec_find_decoder(m_pAudFmtCtx_scard->streams[m_audioindex_scard]->codec->codec_id), NULL) < 0)
+        if (avcodec_open2(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec, avcodec_find_decoder(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec->codec_id), NULL) < 0)
         {
             printf("Could not open audio codec.（无法打开解码器）\n");
             return false;
         }
-
         /* print Video device information*/
-        av_dump_format(m_pAudFmtCtx_scard, 0, device_name.c_str(), 0);
-    }
-    if(!m_audio_device_scard.empty() && !m_audio_device.empty()){
-        m_isMerge = true;
-    }
-    return true;
-}
-
-bool  CAVInputStream::StartCapture()
-{
-    m_start_time = av_gettime();
-    //m_exit_thread = false;
-    if(!m_audio_device.empty())
-    {
-        int rc = pthread_create(&m_hCapAudioThread, NULL, CaptureAudioThreadFunc, (void *)this);
-    }
-    if(!m_audio_device_scard.empty())
-    {
-        int rc = pthread_create(&m_hCapAudioScardThread, NULL, CaptureAudioSCardThreadFunc, (void *)this);
-    }
-    //beginWriteMixAudio();
-    if(m_isMerge)
-    {
-        pthread_create(&m_hReadMixThread, NULL, writeAmixThreadFunc, (void *)this);
-        pthread_join(m_hReadMixThread,NULL);
+        av_dump_format(m_pSysAudioFormatContext, 0, device_name.c_str(), 0);
     }
     else
     {
-        if(!m_audio_device.empty())
-        {
-            pthread_join(m_hCapAudioThread,NULL);
-        }
-        else if(!m_audio_device_scard.empty())
-        {
-            pthread_join(m_hCapAudioScardThread,NULL);
-        }
+        device_name = "default";
     }
-    onsFinisheStream();
+    if(m_bSysAudio && m_bMicAudio)
+    {
+        m_bMix = true;
+    }
     return true;
 }
+
+bool CAVInputStream::audioCapture()
+{
+    m_start_time = av_gettime();
+    if(m_bMix)
+    {
+        pthread_create(&m_hMicAudioThread, nullptr, captureMicToMixAudioThreadFunc,static_cast<void*>(this));
+        pthread_create(&m_hSysAudioThread, nullptr, captureSysToMixAudioThreadFunc,static_cast<void*>(this));
+        pthread_create(&m_hMixThread, nullptr, writeMixThreadFunc,static_cast<void*>(this));
+    }
+    else
+    {
+        if(m_bMicAudio)
+        {
+            pthread_create(&m_hMicAudioThread, nullptr, captureMicAudioThreadFunc,static_cast<void*>(this));
+        }
+        if(m_bSysAudio)
+        {
+            pthread_create(&m_hSysAudioThread, nullptr, captureSysAudioThreadFunc,static_cast<void*>(this));
+        }
+    }
+    return true;
+}
+
 //void CAVInputStream::writeToFrame(QImage *img, int64_t time){
 //    if (m_exit_thread)
 //        return;
@@ -295,337 +272,354 @@ bool  CAVInputStream::StartCapture()
 //    }
 //}
 
-void CAVInputStream::writeToFrame(WaylandIntegration::WaylandIntegrationPrivate::waylandFrame &frame)
-{
-    //qDebug() << "22222222222222222222222:writeToFrame" << QThread::currentThreadId();
-    if (isExitThread() || m_start_time<=0)
-        return;
-    AVFrame * pframe = av_frame_alloc();
-    pframe->width = m_screenDW;
-    pframe->height = m_screenDH;
-    pframe->format =AV_PIX_FMT_BGR32;
-    if(0 == av_frame_get_buffer(pframe,32))
-    {
-        pframe->width = frame._width;
-        pframe->height = frame._height;
-        pframe->format = m_ipix_fmt;
-        pframe->crop_left = m_cl;
-        pframe->crop_top = m_ct;
-        pframe->crop_right = m_cr;
-        pframe->crop_bottom = m_cb;
-        pframe->linesize[0] = frame._stride;
-        pframe->data[0] = frame._frame;
-        if(m_pVideoCBFunc)
-        {
-            //qDebug() << "+++++++++++++++++++++++++++++++++++:时间戳："  << time;
-            m_pVideoCBFunc(nullptr, m_ipix_fmt, pframe,frame._time);
-        }
-        av_frame_free(&pframe);
-    }
-}
+//void CAVInputStream::writeFrame(WaylandIntegration::WaylandIntegrationPrivate::waylandFrame &frame)
+//{
+//    //qDebug() << "22222222222222222222222:writeToFrame" << QThread::currentThreadId();
+//    if (isExitThread() || m_start_time<=0)
+//        return;
+//    AVFrame * pframe = av_frame_alloc();
+//    pframe->width = m_screenDW;
+//    pframe->height = m_screenDH;
+//    pframe->format =AV_PIX_FMT_BGR32;
+//    if(0 == av_frame_get_buffer(pframe,32))
+//    {
+//        pframe->width = frame._width;
+//        pframe->height = frame._height;
+//        pframe->format = m_ipix_fmt;
+//        pframe->crop_left = m_left;
+//        pframe->crop_top = m_top;
+//        pframe->crop_right = m_right;
+//        pframe->crop_bottom = m_bottom;
+//        pframe->linesize[0] = frame._stride;
+//        pframe->data[0] = frame._frame;
+////        if(m_pVideoCBFunc)
+////        {
+////            //qDebug() << "+++++++++++++++++++++++++++++++++++:时间戳："  << time;
+////            m_pVideoCBFunc(nullptr, m_ipix_fmt, pframe,frame._time);
+////        }
+//        av_frame_free(&pframe);
+//    }
+//}
 void CAVInputStream::initScreenData(){
 
 }
 
-bool CAVInputStream::isWriteAmix()
+bool CAVInputStream::bWriteMix()
 {
-    QMutexLocker locker(&m_isExitMutex);
-    return m_isWriteAmix;
+    QMutexLocker locker(&m_bWriteMixMutex);
+    return m_bWriteMix;
 }
 
-void CAVInputStream::setIsWriteAmix(bool isExit)
+void CAVInputStream::setbWriteAmix(bool bWriteMix)
 {
-    QMutexLocker locker(&m_isExitMutex);
-    m_isWriteAmix = isExit;
+    QMutexLocker locker(&m_bWriteMixMutex);
+    m_bWriteMix = bWriteMix;
 }
 
-bool CAVInputStream::isExitThread()
+bool CAVInputStream::bRunThread()
 {
-    QMutexLocker locker(&m_isExitThreadMutex);
-    return m_isExitThread;
+    QMutexLocker locker(&m_bRunThreadMutex);
+    return m_bRunThread;
 }
 
-void CAVInputStream::setIsExitThread(bool isExitThread)
+void CAVInputStream::setbRunThread(bool bRunThread)
 {
-    QMutexLocker locker(&m_isExitThreadMutex);
-    m_isExitThread = isExitThread;
+    QMutexLocker locker(&m_bRunThreadMutex);
+    m_bRunThread = bRunThread;
 }
-//void CAVInputStream::CloseInputStream()
-//{
-//    qDebug() << "11111111111111111111111111:CloseInputStream" << QThread::currentThreadId();
 
-//    qDebug() << "test:2.0";
-//    //m_isWriting = false;
-//    setIsWriteAmix(false);
-//    //usleep(200*1000);
-//    qDebug() << "test:2.1";
-//    //m_exit_thread = true;
-//    setIsExitThread(true);
-//    qDebug() << "22222222222222222222222:CloseInputStream" << QThread::currentThreadId();
-
-//    //    usleep(300000);
-//}
 void  CAVInputStream::onsFinisheStream()
 {
-    //    av_free_packet(dec_pkt);
-    //   m_videoindex = -1;
     //关闭线程
-    if(m_hReadMixThread)
+    if(m_hMixThread)
     {
-        m_hReadMixThread = NULL;
+        m_hMixThread = NULL;
     }
-    if(m_hCapAudioThread)
+    if(m_hMicAudioThread)
     {
-        m_hCapAudioThread = NULL;
+        m_hMicAudioThread = NULL;
     }
-    if(m_hCapAudioScardThread)
+    if(m_hSysAudioThread)
     {
-        m_hCapAudioScardThread = NULL;
+        m_hSysAudioThread = NULL;
     }
-}
-void CAVInputStream::onFInishCleanImage(){
 }
 
-void  *CAVInputStream::writeAmixThreadFunc(void* lParam)
+void *CAVInputStream::writeMixThreadFunc(void* param)
 {
-    CAVInputStream * pThis = (CAVInputStream*)lParam;
-
-    printf("CaptureAudioThread\n");
-    pThis->doWritAmixAudio();
-    return NULL;
+    CAVInputStream *inputStream = static_cast<CAVInputStream*>(param);
+    inputStream->writMixAudio();
+    return nullptr;
 }
-//int CAVInputStream::beginWriteMixAudio(){
-//    if(m_isMerge)
-//    {
-//        int rc = pthread_create(&m_hReadMixThread, NULL, writeAmixThreadFunc, (void *)this);
-//        return rc;
-//    }
-//    return 0;
-//}
 
-void CAVInputStream::doWritAmixAudio()
+void CAVInputStream::writMixAudio()
 {
-    if(!m_isMerge || Gif == m_outPutType)
+    while(bWriteMix() && m_bMix)
     {
-        return;
-    }
-    while (isWriteAmix())
-    {
-        m_mixCBFunc();
+        m_context->m_recordAdmin->m_pOutputStream->writeMixAudio();
     }
 }
 
-void* CAVInputStream::CaptureAudioThreadFunc(void* lParam)
+void* CAVInputStream::captureMicAudioThreadFunc(void* param)
 {
-    CAVInputStream * pThis = (CAVInputStream*)lParam;
-
-    printf("CaptureAudioThread\n");
-    pThis->ReadAudioPackets();
-    return NULL;
+    CAVInputStream *inputStream = static_cast<CAVInputStream*>(param);
+    inputStream->readMicAudioPacket();
+    return nullptr;
 }
+
+void *CAVInputStream::captureMicToMixAudioThreadFunc(void *param)
+{
+    CAVInputStream *inputStream = static_cast<CAVInputStream*>(param);
+    inputStream->readMicToMixAudioPacket();
+    return nullptr;
+}
+
 //ReadAudioPackets + ReadVideoPackets
-int CAVInputStream::ReadAudioPackets()
+int CAVInputStream::readMicAudioPacket()
 {
-    //audio trancoding here
     int ret;
-    if(m_outPutType==Gif){
-        return 1;
-    }
-    if(m_audio_device.empty()){
-        return 1;
-    }
-    int encode_audio = 1;
-    int dec_got_frame_a = 0;
-
+    int got_frame_ptr = 0;
     //start decode and encode
-    while (encode_audio)
+    while (bRunThread())
     {
-        if (isExitThread())
-            break;
-
-        QTime timer12;
-        timer12.start();
-        AVFrame *input_frame = av_frame_alloc();
-        if (!input_frame)
-        {
-            ret = AVERROR(ENOMEM);
-            return ret;
-        }
-
+        AVFrame *inputFrame = av_frame_alloc();
+        if (!inputFrame)
+            return AVERROR(ENOMEM);
         /** Decode one frame worth of audio samples. */
         /** Packet used for temporary storage. */
-        AVPacket input_packet;
-        av_init_packet(&input_packet);
-        input_packet.data = NULL;
-        input_packet.size = 0;
-
+        AVPacket inputPacket;
+        av_init_packet(&inputPacket);
+        inputPacket.data = nullptr;
+        inputPacket.size = 0;
         /** Read one audio frame from the input file into a temporary packet. */
-        if ((ret = av_read_frame(m_pAudFmtCtx, &input_packet)) < 0)
+        if ((ret = av_read_frame(m_pMicAudioFormatContext, &inputPacket)) < 0)
         {
             /** If we are at the end of the file, flush the decoder below. */
             if (ret == AVERROR_EOF)
             {
-                encode_audio = 0;
+                setbRunThread(false);
             }
             else
             {
-                //printf("Could not read audio frame\n");
-                //                return ret;
-                //added by flq
                 continue;
-                //added end
             }
         }
-
-        if ((ret = avcodec_decode_audio4(m_pAudFmtCtx->streams[m_audioindex]->codec, input_frame, &dec_got_frame_a, &input_packet)) < 0)
+        //AVPacket -> AVFrame
+        if ((ret = avcodec_decode_audio4(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec, inputFrame, &got_frame_ptr, &inputPacket)) < 0)
         {
             printf("Could not decode audio frame\n");
             return ret;
         }
-        av_packet_unref(&input_packet);
+        av_packet_unref(&inputPacket);
         /** If there is decoded data, convert and store it */
-        if (dec_got_frame_a)
+        if (got_frame_ptr)
         {
-            if(m_pAudioCBFunc)
-            {
-                if(m_isMerge){
-
-                    //                     pthread_mutex_lock(&mutexAMix);
-                    m_pAudioCBFunc(m_pAudFmtCtx->streams[m_audioindex], input_frame, av_gettime() - m_start_time);
-                    //                     pthread_mutex_unlock(&mutexAMix);
-                }else{
-                    //pthread_mutex_lock(&mutex);
-                    ///音频输出的回调,param3:打时间戳 //tqq
-                    m_pAudioCBFunc(m_pAudFmtCtx->streams[m_audioindex], input_frame, av_gettime() - m_start_time);
-                    //pthread_mutex_unlock(&mutex);
-                }
-
-            }
+            m_context->m_recordAdmin->m_pOutputStream->writeMicAudioFrame(m_pMicAudioFormatContext->streams[m_micAudioindex], inputFrame, av_gettime() - m_start_time);
         }
-        av_frame_free(&input_frame);
-        int elapsed = timer12.elapsed();
-        printf("----fram audio elapsed=%d\n",elapsed) ;
+        av_frame_free(&inputFrame);
         fflush(stdout);
-    }//while
-    if (m_pAudFmtCtx != NULL)
+    }// -- while end
+    if (nullptr != m_pMicAudioFormatContext)
     {
-        avformat_close_input(&m_pAudFmtCtx);
+        avformat_close_input(&m_pMicAudioFormatContext);
     }
-
-
-    if(m_pAudFmtCtx)
-        avformat_free_context(m_pAudFmtCtx);
-
-    m_pAudFmtCtx = NULL;
-    m_audioindex = -1;
+    if(nullptr != m_pMicAudioFormatContext)
+    {
+        avformat_free_context(m_pMicAudioFormatContext);
+        m_pMicAudioFormatContext = nullptr;
+    }
+    m_micAudioindex = -1;
     return 0;
 }
-void* CAVInputStream::CaptureAudioSCardThreadFunc(void* lParam)
-{
-    CAVInputStream * pThis = (CAVInputStream*)lParam;
 
-    printf("CaptureAudioThread\n");
-    pThis->ReadAudioSCardPackets();
-    return NULL;
+int CAVInputStream::readMicToMixAudioPacket()
+{
+    int ret;
+    int got_frame_ptr = 0;
+    //start decode and encode
+    while (bRunThread())
+    {
+        AVFrame *inputFrame = av_frame_alloc();
+        if (!inputFrame)
+            return AVERROR(ENOMEM);
+        /** Decode one frame worth of audio samples. */
+        /** Packet used for temporary storage. */
+        AVPacket inputPacket;
+        av_init_packet(&inputPacket);
+        inputPacket.data = nullptr;
+        inputPacket.size = 0;
+        /** Read one audio frame from the input file into a temporary packet. */
+        if ((ret = av_read_frame(m_pMicAudioFormatContext, &inputPacket)) < 0)
+        {
+            /** If we are at the end of the file, flush the decoder below. */
+            if (ret == AVERROR_EOF)
+            {
+                setbRunThread(false);
+            }
+            else
+            {
+                continue;
+            }
+        }
+        //AVPacket -> AVFrame
+        if ((ret = avcodec_decode_audio4(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec, inputFrame, &got_frame_ptr, &inputPacket)) < 0)
+        {
+            printf("Could not decode audio frame\n");
+            return ret;
+        }
+        av_packet_unref(&inputPacket);
+        /** If there is decoded data, convert and store it */
+        if (got_frame_ptr)
+        {
+            m_context->m_recordAdmin->m_pOutputStream->writeMicToMixAudioFrame(m_pMicAudioFormatContext->streams[m_micAudioindex], inputFrame, av_gettime() - m_start_time);
+        }
+        av_frame_free(&inputFrame);
+        fflush(stdout);
+    }// -- while end
+    if (nullptr != m_pMicAudioFormatContext)
+    {
+        avformat_close_input(&m_pMicAudioFormatContext);
+    }
+    if(nullptr != m_pMicAudioFormatContext)
+    {
+        avformat_free_context(m_pMicAudioFormatContext);
+        m_pMicAudioFormatContext = nullptr;
+    }
+    m_micAudioindex = -1;
+    return 0;
+}
+
+void* CAVInputStream::captureSysAudioThreadFunc(void* param)
+{
+    CAVInputStream *inputStream = static_cast<CAVInputStream*>(param);
+    inputStream->readSysAudioPacket();
+    return nullptr;
+}
+
+void *CAVInputStream::captureSysToMixAudioThreadFunc(void *param)
+{
+    CAVInputStream *inputStream = static_cast<CAVInputStream*>(param);
+    inputStream->readSysToMixAudioPacket();
+    return nullptr;
 }
 
 //ReadAudioPackets + ReadVideoPackets
-int CAVInputStream::ReadAudioSCardPackets()
+int CAVInputStream::readSysAudioPacket()
 {
-    //audio trancoding here
+    if(!m_bSysAudio)
+        return 1;
     int ret;
-    if(m_outPutType==Gif){
-        return 1;
-    }
-    if(m_audio_device_scard.empty()){
-        return 1;
-    }
-    int encode_audio = 1;
-    int dec_got_frame_a = 0;
-
+    int got_frame_ptr = 0;
     //start decode and encode
-    while (encode_audio)
+    while (bRunThread())
     {
-        if (isExitThread())
-            break;
-
         AVFrame *input_frame = av_frame_alloc();
         if (!input_frame)
         {
-            ret = AVERROR(ENOMEM);
-            return ret;
+            return AVERROR(ENOMEM);
         }
-        AVPacket input_packet;
-        av_init_packet(&input_packet);
-        input_packet.data = NULL;
-        input_packet.size = 0;
-
+        AVPacket inputPacket;
+        av_init_packet(&inputPacket);
+        inputPacket.data = nullptr;
+        inputPacket.size = 0;
         /** Read one audio frame from the input file into a temporary packet. */
-        if ((ret = av_read_frame(m_pAudFmtCtx_scard, &input_packet)) < 0)
+        if ((ret = av_read_frame(m_pSysAudioFormatContext, &inputPacket)) < 0)
         {
             /** If we are at the end of the file, flush the decoder below. */
             if (ret == AVERROR_EOF)
             {
-                encode_audio = 0;
+                setbRunThread(false);
             }
             else
             {
-                //printf("Could not read audio frame\n");
-                //                return ret;
-                //added by flq
                 continue;
-                //added end
             }
         }
-
-        if ((ret = avcodec_decode_audio4(m_pAudFmtCtx_scard->streams[m_audioindex_scard]->codec, input_frame, &dec_got_frame_a, &input_packet)) < 0)
+        if ((ret = avcodec_decode_audio4(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec, input_frame, &got_frame_ptr, &inputPacket)) < 0)
         {
             printf("Could not decode audio frame\n");
             return ret;
         }
-        av_packet_unref(&input_packet);
+        av_packet_unref(&inputPacket);
         /** If there is decoded data, convert and store it */
-        if (dec_got_frame_a)
+        if (got_frame_ptr)
         {
-            if(m_pAudioCBFunc)
-            {
-                if(m_isMerge){
-                    //                    pthread_mutex_lock(&mutexAMix);
-                    m_pAudioScardCBFunc(m_pAudFmtCtx_scard->streams[m_audioindex_scard], input_frame, av_gettime() - m_start_time);
-                    //                     pthread_mutex_unlock(&mutexAMix);
-                }else{
-                    //pthread_mutex_lock(&mutex);
-                    ///音频输出的回调,param3:打时间戳 //tqq
-                    m_pAudioScardCBFunc(m_pAudFmtCtx_scard->streams[m_audioindex_scard], input_frame, av_gettime() - m_start_time);
-                    //pthread_mutex_unlock(&mutex);
-                }
-
-            }
+            m_context->m_recordAdmin->m_pOutputStream->writeSysAudioFrame(m_pSysAudioFormatContext->streams[m_sysAudioindex], input_frame, av_gettime() - m_start_time);
         }
-
         av_frame_free(&input_frame);
-
-
-    }//while
-    if (m_pAudFmtCtx_scard != NULL)
+    }// -- while end
+    if (nullptr != m_pSysAudioFormatContext)
     {
-        avformat_close_input(&m_pAudFmtCtx_scard);
+        avformat_close_input(&m_pSysAudioFormatContext);
     }
-
-
-    if(m_pAudFmtCtx_scard)
-        avformat_free_context(m_pAudFmtCtx_scard);
-
-    m_pAudFmtCtx_scard = NULL;
-    m_audioindex_scard = -1;
+    if(nullptr != m_pSysAudioFormatContext)
+    {
+        avformat_free_context(m_pSysAudioFormatContext);
+        m_pSysAudioFormatContext = nullptr;
+    }
+    m_sysAudioindex = -1;
     return 0;
 }
+
+int CAVInputStream::readSysToMixAudioPacket()
+{
+    int ret;
+    int got_frame_ptr = 0;
+    while (bRunThread())
+    {
+        AVFrame *inputFrame = av_frame_alloc();
+        if (!inputFrame)
+        {
+            return AVERROR(ENOMEM);
+        }
+        AVPacket inputPacket;
+        av_init_packet(&inputPacket);
+        inputPacket.data = nullptr;
+        inputPacket.size = 0;
+        /** Read one audio frame from the input file into a temporary packet. */
+        if ((ret = av_read_frame(m_pSysAudioFormatContext, &inputPacket)) < 0)
+        {
+            /** If we are at the end of the file, flush the decoder below. */
+            if (ret == AVERROR_EOF)
+            {
+                setbRunThread(false);
+            }
+            else
+            {
+                continue;
+            }
+        }
+        if ((ret = avcodec_decode_audio4(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec, inputFrame, &got_frame_ptr, &inputPacket)) < 0)
+        {
+            printf("Could not decode audio frame\n");
+            return ret;
+        }
+        av_packet_unref(&inputPacket);
+        if (got_frame_ptr)
+        {
+            m_context->m_recordAdmin->m_pOutputStream->writeSysToMixAudioFrame(m_pSysAudioFormatContext->streams[m_sysAudioindex], inputFrame, av_gettime() - m_start_time);
+        }
+        av_frame_free(&inputFrame);
+    }// -- while end
+    if (nullptr != m_pSysAudioFormatContext)
+    {
+        avformat_close_input(&m_pSysAudioFormatContext);
+    }
+    if(nullptr != m_pSysAudioFormatContext)
+    {
+        avformat_free_context(m_pSysAudioFormatContext);
+        m_pSysAudioFormatContext = nullptr;
+    }
+    m_sysAudioindex = -1;
+    return 0;
+}
+
 bool CAVInputStream::GetVideoInputInfo(int & width, int & height, int & frame_rate, AVPixelFormat & pixFmt)
 {
     //    if( m_outPutType == Gif)
     {
-        width =m_screenDW-m_cl-m_cr;
-        height = m_screenDH-m_ct-m_cb;
+        width =m_screenDW-m_left-m_right;
+        height = m_screenDH-m_top-m_bottom;
         pixFmt = m_ipix_fmt;
         frame_rate = m_fps;
 
@@ -637,15 +631,15 @@ bool CAVInputStream::GetVideoInputInfo(int & width, int & height, int & frame_ra
 
 bool  CAVInputStream::GetAudioInputInfo(AVSampleFormat & sample_fmt, int & sample_rate, int & channels,int &layout)
 {
-    if(m_outPutType==Gif){
-        return false;
-    }
-    if(m_audioindex != -1)
+    //    if(m_outPutType==Gif){
+    //        return false;
+    //    }
+    if(m_micAudioindex != -1)
     {
-        sample_fmt = m_pAudFmtCtx->streams[m_audioindex]->codec->sample_fmt;
-        sample_rate = m_pAudFmtCtx->streams[m_audioindex]->codec->sample_rate;
-        channels = m_pAudFmtCtx->streams[m_audioindex]->codec->channels;
-        layout = m_pAudFmtCtx->streams[m_audioindex]->codec->channel_layout;
+        sample_fmt = m_pMicAudioFormatContext->streams[m_micAudioindex]->codec->sample_fmt;
+        sample_rate = m_pMicAudioFormatContext->streams[m_micAudioindex]->codec->sample_rate;
+        channels = m_pMicAudioFormatContext->streams[m_micAudioindex]->codec->channels;
+        layout = m_pMicAudioFormatContext->streams[m_micAudioindex]->codec->channel_layout;
         return true;
     }
 
@@ -653,16 +647,16 @@ bool  CAVInputStream::GetAudioInputInfo(AVSampleFormat & sample_fmt, int & sampl
 }
 bool  CAVInputStream::GetAudioSCardInputInfo(AVSampleFormat & sample_fmt, int & sample_rate, int & channels,int& layout)
 {
-    if(m_outPutType==Gif){
-        return false;
-    }
+    //    if(m_outPutType==Gif){
+    //        return false;
+    //    }
 
-    if(m_audioindex_scard != -1)
+    if(m_sysAudioindex != -1)
     {
-        sample_fmt = m_pAudFmtCtx_scard->streams[m_audioindex_scard]->codec->sample_fmt;
-        sample_rate = m_pAudFmtCtx_scard->streams[m_audioindex_scard]->codec->sample_rate;
-        channels =m_pAudFmtCtx_scard->streams[m_audioindex_scard]->codec->channels;
-        layout = m_pAudFmtCtx_scard->streams[m_audioindex_scard]->codec->channel_layout;
+        sample_fmt = m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec->sample_fmt;
+        sample_rate = m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec->sample_rate;
+        channels =m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec->channels;
+        layout = m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec->channel_layout;
         return true;
     }
 
