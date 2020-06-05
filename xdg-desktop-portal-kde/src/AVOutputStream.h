@@ -32,11 +32,8 @@ using namespace std;
 class CAVOutputStream
 {
 public:
-
     CAVOutputStream(WaylandIntegration::WaylandIntegrationPrivate* context);
     ~CAVOutputStream(void);
-
-public:
 
     //初始化视频编码器
     void SetVideoCodecProp(AVCodecID codec_id, int framerate, int bitrate, int gopsize, int width, int height);
@@ -46,7 +43,7 @@ public:
     void SetAudioCardCodecProp(AVCodecID codec_id, int samplerate, int channels,int layout, int bitrate);
 
     //创建编码器和混合器，打开输出
-    bool open(const char* out_path);
+    bool open(QString path);
 
     /**
      * @brief close:关闭输出
@@ -62,20 +59,15 @@ public:
      * @return
      */
     int writeVideoFrame(WaylandIntegration::WaylandIntegrationPrivate::waylandFrame &frame);
-
-
     int writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, int64_t lTimeStamp);
     int writeMicToMixAudioFrame(AVStream *stream, AVFrame *inputFrame, int64_t lTimeStamp);
     int writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, int64_t lTimeStamp);
     int writeSysToMixAudioFrame(AVStream *stream, AVFrame *inputFrame, int64_t lTimeStamp);
-
     int write_filter_audio_frame(AVStream *&outst,AVCodecContext* &codecCtx_audio,AVFrame *&outframe);
     int init_filters();
     int init_context_amix(int channel, uint64_t channel_layout,int sample_rate,int64_t bit_rate);
     void writeMixAudio();
     void setIsOverWrite(bool isCOntinue);
-
-public:
 
     /**
      * @brief audioRead:读音频，自动锁
@@ -110,37 +102,28 @@ public:
      * @return
      */
     int writeTrailer(AVFormatContext *s);
-
     int audioFifoSpace(AVAudioFifo *af);
-
     int audioFifoSize(AVAudioFifo *af);
-
     int audioFifoRealloc(AVAudioFifo *af, int nb_samples);
+    AVAudioFifo *audioFifoAlloc(enum AVSampleFormat sample_fmt, int channels,int nb_samples);
+    void audioFifoFree(AVAudioFifo *af);
+    bool isWriteFrame();
+    void setIsWriteFrame(bool isWriteFrame);
 
-    AVAudioFifo *audioFifoAlloc(enum AVSampleFormat sample_fmt, int channels,
-                                int nb_samples);
+public:
     //截图区域
     int m_left;
     int m_top;
     int m_right;
     int m_bottom;
 
-
-    void audioFifoFree(AVAudioFifo *af);
-
-    bool isWriteFrame();
-    void setIsWriteFrame(bool isWriteFrame);
-
 private:
-
+    const char *m_path;
     QMutex m_audioReadWriteMutex;
     QMutex m_writeFrameMutex;
     bool m_isWriteFrame;
     QMutex m_isWriteFrameMutex;
     WaylandIntegration::WaylandIntegrationPrivate* m_context;
-
-
-protected:
     AVStream* m_videoStream;
     AVStream* m_micAudioStream;
     AVStream* m_sysAudioStream;
@@ -158,21 +141,16 @@ protected:
     struct SwsContext *m_pVideoSwsContext;
     struct SwrContext *m_pMicAudioSwrContext;
     struct SwrContext *m_pSysAudioSwrContext;
-
     AVAudioFifo * m_micAudioFifo;
     AVAudioFifo * m_sysAudioFifo;
     int is_fifo_scardinit;
-    //int  m_vid_framecnt;
     int  m_micAudioFrame;
     int  m_sysAudioFrame;
     int  m_nb_samples;
-
     //int64_t m_first_vid_time1, m_first_vid_time2; //前者是采集视频的第一帧的时间，后者是编码器输出的第一帧的时间
     int64_t m_start_mix_time; //第一个音频帧的时间
-
     int64_t m_next_vid_time;
     int64_t m_next_aud_time;
-
     int64_t  m_nLastAudioPresentationTime; //记录上一帧的音频时间戳
     int64_t  m_nLastAudioCardPresentationTime;
     int64_t  m_nLastAudioMixPresentationTime;
@@ -186,10 +164,6 @@ protected:
     AVFilterContext *buffersrc_ctx2;
     int tmpFifoFailed;
     bool m_isOverWrite;
-
-public:
-    //视频文件输出路径
-    string     m_path;
     AVCodecID  m_videoCodecID;
     AVCodecID  m_micAudioCodecID;
     AVCodecID  m_sysAudioCodecID;
@@ -208,7 +182,6 @@ public:
     int m_channels_card;
     int m_channels_card_layout;
     int m_audio_bitrate_card;
-    //GifInfo *gifInfo;
 };
 
 #endif //AVOUTPUTSTREAM_H

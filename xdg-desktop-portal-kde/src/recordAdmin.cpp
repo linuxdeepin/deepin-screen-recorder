@@ -1,5 +1,4 @@
 #include "recordAdmin.h"
-
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -10,52 +9,79 @@
 #include <qtimer.h>
 #include <QDebug>
 
-RecordAdmin* gpMainFrame = NULL;
-
-//采集到的视频图像回调 CALLBACK
-//int VideoCaptureCallback(AVStream * input_st, enum AVPixelFormat pix_fmt, AVFrame *pframe, int64_t lTimeStamp)
-//{
-////    if(gpMainFrame->IsPreview())
-////    {
-////       printf("XXX\n");
-////    }
-//    gpMainFrame->m_outputStream.writeVideoFrame(input_st, pix_fmt, pframe, lTimeStamp);
-//    return 0;
-//}
-
-//采集到的音频数据回调 CALLBACK
-//int AudioCaptureCallback(AVStream * input_st, AVFrame *pframe, int64_t lTimeStamp)
-//{
-//    gpMainFrame->m_pOutputStream->writeMicAudioFrame(input_st, pframe, lTimeStamp);
-//    return 0;
-//}
-//int AudioScardCaptureCallback(AVStream * input_st, AVFrame *pframe, int64_t lTimeStamp)
-//{
-//    gpMainFrame->m_pOutputStream->writeSysAudioFrame(input_st, pframe, lTimeStamp);
-//    return 0;
-//}
-//int writeAmixCallback()
-//{
-//    gpMainFrame->m_pOutputStream->startWriteMix();
-//    return 0;
-//}
-RecordAdmin::RecordAdmin(WaylandIntegration::WaylandIntegrationPrivate *context, QObject *parent): QObject(parent),
+RecordAdmin::RecordAdmin(int &argc, char **argv, WaylandIntegration::WaylandIntegrationPrivate *context, QObject *parent): QObject(parent),
     m_writeFrameThread(nullptr),
     m_context(context),
-    m_pOutputStream(nullptr)
+    m_pOutputStream(nullptr),
+    m_pGifRecord(nullptr)
 {
-    m_pInputStream  = new CAVInputStream(context);
-    m_pOutputStream = new CAVOutputStream(context);
-    gpMainFrame = this;
-    //m_isOverFlage = false;
-    //m_outFilePath = nullptr;
-    m_nChannelNum = -1;
-    m_nFPS = 0;
-    /* register all codecs, demux and protocols */
-    avcodec_register_all();
-    av_register_all();
-    avdevice_register_all();
-    m_writeFrameThread = new WaylandIntegration::WriteFrameThread(context);
+    if(argc > 7)
+    {
+        QString tempStr;
+        QString str;
+        for(int i=0;i<argc;i++)
+        {
+            str = QString::fromUtf8(argv[i]);
+            argvList.append(str);
+            switch (i)
+            {
+            case 1:
+                m_videoType = str.toInt();
+                break;
+            case 2:
+                //录屏不支持奇数，转偶数
+                m_selectWidth = str.toInt()/2*2;
+                break;
+            case 3:
+                m_selectHeight = str.toInt()/2*2;
+                break;
+            case 4:
+                m_x =  str.toInt();
+                break;
+            case 5:
+                m_y = str.toInt();
+                break;
+            case 6:
+                m_fps = str.toInt();
+                break;
+            case 7:
+                m_filePath = str;
+                break;
+            case 8:
+                m_audioType = str.toInt();
+                break;
+            }
+        }
+    }
+
+    switch (m_videoType)
+    {
+    case videoType::GIF:
+        m_pGifRecord = new WaylandIntegration::GifRecord(context);
+        break;
+    case videoType::MP4:
+    {
+        m_pInputStream  = new CAVInputStream(context);
+        m_pOutputStream = new CAVOutputStream(context);
+        avcodec_register_all();
+        av_register_all();
+        avdevice_register_all();
+        m_writeFrameThread = new WaylandIntegration::WriteFrameThread(context);
+    }
+        break;
+    case videoType::MKV:
+    {
+        m_pInputStream  = new CAVInputStream(context);
+        m_pOutputStream = new CAVOutputStream(context);
+        avcodec_register_all();
+        av_register_all();
+        avdevice_register_all();
+        m_writeFrameThread = new WaylandIntegration::WriteFrameThread(context);
+    }
+        break;
+    default:
+        break;
+    }
 }
 
 RecordAdmin::~RecordAdmin()
@@ -74,6 +100,11 @@ RecordAdmin::~RecordAdmin()
     {
         delete m_pInputStream;
         m_pInputStream = nullptr;
+    }
+    if(nullptr != m_pGifRecord)
+    {
+        delete m_pGifRecord;
+        m_pGifRecord = nullptr;
     }
 }
 
@@ -114,39 +145,78 @@ void  RecordAdmin::setSysAudioRecord(bool bRecord)
     m_pInputStream->setSysAudioRecord(bRecord);
 }
 
-void RecordAdmin::init(int screenWidth, int screenHeight, int fps, int audioType, int x, int y, int selectWidth, int selectHeight, const char* path)
+void RecordAdmin::init(int screenWidth, int screenHeight)
 {
-    m_pInputStream->m_screenDW = screenWidth;
-    m_pInputStream->m_screenDH = screenHeight;
-    m_pInputStream->m_ipix_fmt = AV_PIX_FMT_RGB32;
-    m_pInputStream->m_fps = fps;
-    m_pOutputStream->m_left = m_pInputStream->m_left = x;
-    m_pOutputStream->m_top = m_pInputStream->m_top = y;
-    m_pOutputStream->m_right = m_pInputStream->m_right = screenWidth-x-selectWidth;
-    m_pOutputStream->m_bottom = m_pInputStream->m_bottom = screenHeight-y-selectHeight;
-    if(m_pInputStream->m_right<0)
+    switch (m_videoType)
     {
-        selectWidth += m_pInputStream->m_right;
-        m_pInputStream->m_selectWidth = selectWidth;
-        m_pInputStream->m_right = 0;
-    }
-    if(m_pInputStream->m_bottom<0)
+    case videoType::GIF:
     {
-        selectHeight += m_pInputStream->m_bottom;
-        m_pInputStream->m_selectHeight = selectHeight;
-        m_pInputStream->m_bottom = 0;
+        m_pGifRecord->init(screenWidth,screenHeight,m_x,m_y,m_selectWidth,m_selectHeight,m_fps,m_filePath);
+        m_pGifRecord->setBWriteFrame(true);
+        m_pGifRecord->start();
     }
-    setRecordAudioType(audioType);
-    m_pInputStream->setVidioOutPutType(OUTPUT_TYPE::MP4_MKV);
-    m_outFilePath = new char[strlen(path)+1];
-    strcpy(m_outFilePath,path);
-    pthread_create(&m_mainThread, nullptr, stream,static_cast<void*>(this));
-    pthread_detach(m_mainThread);
+        break;
+    case videoType::MP4:
+    {
+        m_pInputStream->m_screenDW = screenWidth;
+        m_pInputStream->m_screenDH = screenHeight;
+        m_pInputStream->m_ipix_fmt = AV_PIX_FMT_RGB32;
+        m_pInputStream->m_fps = m_fps;
+        m_pOutputStream->m_left = m_pInputStream->m_left = m_x;
+        m_pOutputStream->m_top = m_pInputStream->m_top = m_y;
+        m_pOutputStream->m_right = m_pInputStream->m_right = screenWidth-m_x-m_selectWidth;
+        m_pOutputStream->m_bottom = m_pInputStream->m_bottom = screenHeight-m_y-m_selectHeight;
+        if(m_pInputStream->m_right<0)
+        {
+            m_selectWidth += m_pInputStream->m_right;
+            m_pInputStream->m_selectWidth = m_selectWidth;
+            m_pInputStream->m_right = 0;
+        }
+        if(m_pInputStream->m_bottom<0)
+        {
+            m_selectHeight += m_pInputStream->m_bottom;
+            m_pInputStream->m_selectHeight = m_selectHeight;
+            m_pInputStream->m_bottom = 0;
+        }
+        setRecordAudioType(m_audioType);
+        pthread_create(&m_mainThread, nullptr, stream,static_cast<void*>(this));
+        pthread_detach(m_mainThread);
+    }
+        break;
+    case videoType::MKV:
+    {
+        m_pInputStream->m_screenDW = screenWidth;
+        m_pInputStream->m_screenDH = screenHeight;
+        m_pInputStream->m_ipix_fmt = AV_PIX_FMT_RGB32;
+        m_pInputStream->m_fps = m_fps;
+        m_pOutputStream->m_left = m_pInputStream->m_left = m_x;
+        m_pOutputStream->m_top = m_pInputStream->m_top = m_y;
+        m_pOutputStream->m_right = m_pInputStream->m_right = screenWidth-m_x-m_selectWidth;
+        m_pOutputStream->m_bottom = m_pInputStream->m_bottom = screenHeight-m_y-m_selectHeight;
+        if(m_pInputStream->m_right<0)
+        {
+            m_selectWidth += m_pInputStream->m_right;
+            m_pInputStream->m_selectWidth = m_selectWidth;
+            m_pInputStream->m_right = 0;
+        }
+        if(m_pInputStream->m_bottom<0)
+        {
+            m_selectHeight += m_pInputStream->m_bottom;
+            m_pInputStream->m_selectHeight = m_selectHeight;
+            m_pInputStream->m_bottom = 0;
+        }
+        setRecordAudioType(m_audioType);
+        pthread_create(&m_mainThread, nullptr, stream,static_cast<void*>(this));
+        pthread_detach(m_mainThread);
+    }
+        break;
+    default:
+        break;
+    }
 }
 
 int RecordAdmin::startStream()
 {
-    //m_pInputStream->SetWirteAmixtCB(writeAmixCallback);
     bool bRet;
     bRet = m_pInputStream->openInputStream(); //初始化采集设备
     if(!bRet)
@@ -173,13 +243,13 @@ int RecordAdmin::startStream()
     {
         m_pOutputStream->SetAudioCardCodecProp(AV_CODEC_ID_MP3, sample_rate, channels,layout, 32000); //设置音频编码器属性
     }
-    bRet = m_pOutputStream->open(m_outFilePath); //设置输出路径
+    bRet = m_pOutputStream->open(m_filePath);
     if(!bRet)
     {
         printf("初始化输出失败\n");
         return 1;
     }
-    //设置写视频帧
+    //设置写mp4/mkv视频帧
     m_writeFrameThread->setBWriteFrame(true);
     m_writeFrameThread->start();
     //采集音频
@@ -196,46 +266,50 @@ void* RecordAdmin::stream(void* param)
 
 int RecordAdmin::stopStream()
 {
-    //设置是否获取视频帧
-    //m_context->setBGetFrame(false);
-    //设置是否写视频帧
-    m_writeFrameThread->setBWriteFrame(false);
-    //设置是否写混音
-    m_pInputStream->setbWriteAmix(false);
-    //设置是否写音频帧
-    m_pOutputStream->setIsWriteFrame(false);
-    //设置是否运行线程
-    m_pInputStream->setbRunThread(false);
-    //关闭输出
-    m_pOutputStream->close();
+    switch (m_videoType)
+    {
+    case videoType::GIF:
+        //设置是否写gif视频帧
+        m_pGifRecord->setBWriteFrame(false);
+        break;
+    case videoType::MP4:
+    {
+        //设置是否获取视频帧
+        //m_context->setBGetFrame(false);
+        //设置是否写MP4/MKV视频帧
+        m_writeFrameThread->setBWriteFrame(false);
+        //设置是否写gif视频帧
+        m_pGifRecord->setBWriteFrame(false);
+        //设置是否写混音
+        m_pInputStream->setbWriteAmix(false);
+        //设置是否写音频帧
+        m_pOutputStream->setIsWriteFrame(false);
+        //设置是否运行线程
+        m_pInputStream->setbRunThread(false);
+        //关闭输出
+        m_pOutputStream->close();
+    }
+        break;
+    case videoType::MKV:
+    {
+        //设置是否获取视频帧
+        //m_context->setBGetFrame(false);
+        //设置是否写MP4/MKV视频帧
+        m_writeFrameThread->setBWriteFrame(false);
+        //设置是否写gif视频帧
+        m_pGifRecord->setBWriteFrame(false);
+        //设置是否写混音
+        m_pInputStream->setbWriteAmix(false);
+        //设置是否写音频帧
+        m_pOutputStream->setIsWriteFrame(false);
+        //设置是否运行线程
+        m_pInputStream->setbRunThread(false);
+        //关闭输出
+        m_pOutputStream->close();
+    }
+        break;
+    default:
+        break;
+    }
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

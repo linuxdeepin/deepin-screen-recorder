@@ -280,7 +280,7 @@ void SettingsPortal::stopRecord()
     QList<QVariant> arg;
     notification.callWithArgumentList(QDBus::AutoDetect,QString::fromUtf8("waylandRecordOver"),arg);
     qDebug() << Q_FUNC_INFO;
-    //QApplication::quit();
+    QApplication::quit();
 }
 
 

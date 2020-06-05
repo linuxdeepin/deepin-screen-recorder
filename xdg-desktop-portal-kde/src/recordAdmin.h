@@ -10,11 +10,12 @@
 #include <qimage.h>
 #include "AVInputStream.h"
 #include "AVInputStream.h"
+#include "gifrecord.h"
 #include "waylandintegration.h"
 #include "waylandintegration_p.h"
 #include "writeFrameThread.h"
-#define AUDIO_INPUT_DEVICE    "hw:0,0"        //hw:0,0
-#define VIDEO_INPUT_DEVICE    "/dev/video0"   ///dev/video0
+#define AUDIO_INPUT_DEVICE    "hw:0,0"
+#define VIDEO_INPUT_DEVICE    "/dev/video0"
 #include <QThread>
 
 extern "C"
@@ -28,13 +29,10 @@ class RecordAdmin :public QObject
     Q_OBJECT
 
 public:
-    RecordAdmin(WaylandIntegration::WaylandIntegrationPrivate* context,QObject *parent = nullptr);
+    RecordAdmin(int &argc, char **argv,WaylandIntegration::WaylandIntegrationPrivate* context,QObject *parent = nullptr);
     virtual ~RecordAdmin();
 
 public:
-    void   CalculateFPS();
-    //bool   IsPreview() { return m_bPreview; }
-
     /**
      * @brief init:初始化录屏管理
      * @param screenWidth:原图宽度
@@ -47,37 +45,48 @@ public:
      * @param selectHeight:选择的高度
      * @param path:视频保存路径
      */
-    void init(int screenWidth, int screenHeight, int fps, int audioType, int x, int y, int selectWidth, int selectHeight, const char* path);
+    void init(int screenWidth, int screenHeight);
 
-    //void addImage(WaylandIntegration::WaylandIntegrationPrivate::waylandFrame &frame);
+    /**
+     * @brief stopStream:停止录屏
+     * @return
+     */
     int stopStream();
-    //void OnDestroy();
+
 protected:
     void  setRecordAudioType(int audioType);
     void  setMicAudioRecord(bool bRecord);
     void  setSysAudioRecord(bool bRecord);
-
-    int startStream();
+    int   startStream();
     static void* stream(void* param);
-    long              m_nChannelNum; //通道号
-    uint64_t              m_frmCount;
-    int              m_nFPS;
-    //bool              m_bPreview;
-    char* m_outFilePath ;
-    //timeval p_start;
-    //timeval p_end;
-    pthread_t  m_mainThread;
-    int m_fps;
-    //bool m_isGif;
+
 public:
-    CAVInputStream    *m_pInputStream;
-    CAVOutputStream   *m_pOutputStream;
-    WaylandIntegration::WriteFrameThread *m_writeFrameThread;
-    //bool m_isOverFlage;
-    //bool m_canAddImage; //是否正在结束
+    CAVInputStream                           *m_pInputStream;
+    CAVOutputStream                          *m_pOutputStream;
+    WaylandIntegration::WriteFrameThread     *m_writeFrameThread;
+    WaylandIntegration::GifRecord            *m_pGifRecord;
 
 private:
     WaylandIntegration::WaylandIntegrationPrivate* m_context;
+    //参数列表：程序名称，视频类型，视频宽，视频高，视频x坐标，视频y坐标，视频帧率，视频保存路径，音频类型
+    QList<QString> argvList;
+    //文件路径
+    QString m_filePath;
+    //帧率
+    int m_fps;
+    //音频类型
+    int m_audioType;
+    //视频类型
+    int  m_videoType;
+    //x坐标
+    int m_x;
+    //y坐标
+    int m_y;
+    //帧宽
+    int m_selectWidth;
+    //帧高
+    int m_selectHeight;
+    pthread_t  m_mainThread;
 };
 
 #endif // RECORDADMIN_H

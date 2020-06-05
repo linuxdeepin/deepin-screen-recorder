@@ -25,15 +25,11 @@ extern "C"
 
 using namespace std;
 
-typedef int (*VideoCaptureCB)(AVStream * input_st,  enum AVPixelFormat pix_fmt, AVFrame *pframe, int64_t lTimeStamp);
-typedef int (*AudioCaptureCB)(AVStream *input_st, AVFrame *pframe, int64_t lTimeStamp);
-typedef int (*AudioMixCB)();
-
-enum OUTPUT_TYPE
-{
-    MP4_MKV = 0,
-    Gif
-};
+//enum OUTPUT_TYPE
+//{
+//    MP4_MKV_ = 0,
+//    //Gif
+//};
 
 class CAVInputStream
 {
@@ -47,21 +43,15 @@ public:
     bool  openInputStream();
     void  onsFinisheStream();
     bool  audioCapture();
-    //void  SetVideoCaptureCB(VideoCaptureCB pFuncCB);
-    //void  SetAudioCaptureCB(AudioCaptureCB pFuncCB);
-    //void  SetAudioScardCaptureCB(AudioCaptureCB pFuncCB);
-    void  SetWirteAmixtCB(AudioMixCB pFuncCB);
     bool  GetVideoInputInfo(int & width, int & height, int & framerate, AVPixelFormat & pixFmt);
     bool  GetAudioInputInfo(AVSampleFormat & sample_fmt, int & sample_rate, int & channels,int &layout);
     bool  GetAudioSCardInputInfo(AVSampleFormat & sample_fmt, int & sample_rate, int & channels,int &layout);
-    void  setVidioOutPutType(OUTPUT_TYPE outType);
-    OUTPUT_TYPE getVidioOutPutType();
     QString currentAudioChannel();
 
 public:
     bool m_bMicAudio;
     bool m_bSysAudio;
-    OUTPUT_TYPE m_outPutType;
+    //OUTPUT_TYPE m_outPutType;
     int     m_micAudioindex;
     int     m_sysAudioindex;
     int m_left;
@@ -83,9 +73,9 @@ public:
     AVPacket *dec_pkt;
     pthread_t  m_hMicAudioThread ,m_hSysAudioThread; //线程句柄
     pthread_t  m_hMixThread;
-    VideoCaptureCB  m_pVideoCBFunc; //视频数据回调函数指针
+    //VideoCaptureCB  m_pVideoCBFunc; //视频数据回调函数指针
     //AudioCaptureCB  m_pAudioCBFunc; //音频数据回调函数指针
-    AudioCaptureCB  m_pAudioScardCBFunc; //声卡音频数据回调函数指针
+    //AudioCaptureCB  m_pAudioScardCBFunc; //声卡音频数据回调函数指针
     //AudioMixCB   m_mixCBFunc;
     int64_t     m_start_time; //采集的起点时间
     bool m_bMix;
