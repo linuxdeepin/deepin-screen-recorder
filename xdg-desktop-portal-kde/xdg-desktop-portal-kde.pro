@@ -35,7 +35,9 @@ HEADERS += src/AVInputStream.h \
            src/waylandintegration_p.h \
            src/settings.h \
     src/recordAdmin.h \
-    src/writeFrameThread.h
+    src/writeFrameThread.h \
+    src/gifrecord.h \
+    src/gif.h
 SOURCES += \
            src/AVInputStream.cpp \
            src/AVOutputStream.cpp \
@@ -47,7 +49,8 @@ SOURCES += \
            src/xdg-desktop-portal-kde.cpp \
            src/settings.cpp \
     src/recordAdmin.cpp \
-    src/writeFrameThread.cpp
+    src/writeFrameThread.cpp \
+    src/gifrecord.cpp
 
 QMAKE_CXXFLAGS += -g
 

@@ -203,10 +203,10 @@ WaylandIntegration::WaylandIntegrationPrivate::WaylandIntegrationPrivate()
     qDBusRegisterMetaType<WaylandIntegrationPrivate::Stream>();
     qDBusRegisterMetaType<WaylandIntegrationPrivate::Streams>();
     m_recordAdmin = nullptr;
-    //m_writeFrameThread = NULL;
+    //m_writeFrameThread = nullptr;
     m_bInitRecordAdmin = true;
     m_bGetFrame = false;
-    m_recordTIme = -1;
+    //m_recordTIme = -1;
 }
 
 WaylandIntegration::WaylandIntegrationPrivate::~WaylandIntegrationPrivate()
@@ -336,241 +336,11 @@ QMap<quint32, WaylandIntegration::WaylandOutput> WaylandIntegration::WaylandInte
     return m_outputMap;
 }
 
-//QVariant WaylandIntegration::WaylandIntegrationPrivate::streams()
-//{
-//    Stream stream;
-//    stream.nodeId = m_stream->nodeId();
-//    stream.map = QVariantMap({{QLatin1String("size"), m_outputMap.value(m_output).resolution()}});
-//    return QVariant::fromValue<WaylandIntegrationPrivate::Streams>({stream});
-//}
-//void *  writeFrameToStreamThread(void * object){
-//    WaylandIntegration::WaylandIntegrationPrivate * pThis = (WaylandIntegration::WaylandIntegrationPrivate*)object;
-//    while (pThis->m_isStreamObjCreat) {
-
-//        WaylandIntegration::WaylandIntegrationPrivate::waylandFrame wf;
-//        qDebug() << "=====================================================================================================";
-//        //        bool isSeccess = pThis->getFrame(wf);
-//        //        if(isSeccess){
-//        //            QString name = QString::fromUtf8("test66655.jpg");
-//        //            auto capture = new QImage(wf._frame, wf._width, wf._height, QImage::Format_RGB32);
-//        //            //capture->save(name);
-//        //            pThis->m_recordAdmin->addImage(capture);
-//        //            delete  capture;
-//        //        }
-
-//        //        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "write frame in thread------" ;
-//    }
-//    return NULL;
-//}
-void *stopRecordStream(void* object){
-    //WaylandIntegration::WaylandIntegrationPrivate * pThis = (WaylandIntegration::WaylandIntegrationPrivate*)object;
-    sleep(globalWaylandIntegration->m_recordTIme);
-    WaylandIntegration::stopStreaming();
-    return NULL;
-}
-void cleanup_handler(void *arg)
-{
-    //WaylandIntegration::WaylandIntegrationPrivate * pThis = (WaylandIntegration::WaylandIntegrationPrivate*)arg;
-    //printf("Cleanup handler of second thread./n");
-
-    (void)pthread_mutex_unlock(&globalWaylandIntegration->m_mtx_stream);
-}
-
-//void * newStreamFuncOfMutxAuAndVidio(void * object){
-//    pthread_cleanup_push(cleanup_handler, object);
-//    if(globalWaylandIntegration->m_recordAdmin){
-//        delete globalWaylandIntegration->m_recordAdmin;
-//    }
-//    globalWaylandIntegration->m_recordAdmin = new RecordAdmin();
-//    globalWaylandIntegration->m_isStreamObjCreat = true;
-//    pthread_mutex_lock(&globalWaylandIntegration->m_mtx_stream);
-
-//    while(!globalWaylandIntegration->m_recordAdmin->m_isOverFlage)
-//    {
-//        pthread_cond_wait(&globalWaylandIntegration->m_cond_stream, &globalWaylandIntegration->m_mtx_stream);
-//    }
-//    globalWaylandIntegration->m_isStreamObjCreat = false;
-//    if(globalWaylandIntegration->m_recordAdmin){
-//        delete globalWaylandIntegration->m_recordAdmin;
-//        globalWaylandIntegration->m_recordAdmin = NULL;
-//    }
-//    pthread_mutex_unlock(&globalWaylandIntegration->m_mtx_stream);
-//    pthread_cleanup_pop(0);
-//    return NULL;
-//}
-
-bool WaylandIntegration::WaylandIntegrationPrivate::initRecord()
-{
-    m_recordAdmin = new RecordAdmin(this);
-    //设置获取视频帧
-    setBGetFrame(true);
-    return true;
-}
-
-void WaylandIntegration::WaylandIntegrationPrivate::steamMutexStopInit(){
-    int rc = pthread_create(&m_stopRecordstreamThread2, NULL, stopRecordStream, (void *)this);
-    pthread_detach(m_stopRecordstreamThread2);
-}
-// void WaylandIntegration::WaylandIntegrationPrivate::stopRecord()
-// {
-//     //通知录屏完成
-//     QDBusInterface notification(QString::fromUtf8("com.deepin.ScreenRecorder"),
-//                                QString::fromUtf8("/com/deepin/ScreenRecorder"),
-//                                QString::fromUtf8("com.deepin.ScreenRecorder"),
-//                                QDBusConnection::sessionBus());
-//     QList<QVariant> arg;
-//     notification.callWithArgumentList(QDBus::AutoDetect,QString::fromUtf8("stopRecord"),arg);
-
-
-
-// }
-
-//void WaylandIntegration::WaylandIntegrationPrivate::initDrm()
-//{
-//    m_drmFd = open("/dev/dri/renderD128", O_RDWR);
-
-//    if (m_drmFd == -1) {
-//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Cannot open render node: " << strerror(errno);
-//        return;
-//    }
-
-//    //    m_gbmDevice = gbm_create_device(m_drmFd);
-
-//    //    if (!m_gbmDevice) {
-//    //        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Cannot create GBM device: " << strerror(errno);
-//    //    }
-
-//    initEGL();
-//}
-
-//void WaylandIntegration::WaylandIntegrationPrivate::initEGL()
-//{
-//    // Get the list of client extensions
-//    const char* clientExtensionsCString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
-//    qCWarning(XdgDesktopPortalKdeWaylandIntegration) <<clientExtensionsCString;
-//    const QByteArray clientExtensionsString = QByteArray::fromRawData(clientExtensionsCString, qstrlen(clientExtensionsCString));
-//    if (clientExtensionsString.isEmpty()) {
-//        // If eglQueryString() returned NULL, the implementation doesn't support
-//        // EGL_EXT_client_extensions. Expect an EGL_BAD_DISPLAY error.
-//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "No client extensions defined! " << formatGLError(eglGetError());
-//        return;
-//    }
-
-//    m_egl.extensions = clientExtensionsString.split(' ');
-
-
-//    qDebug() << Q_FUNC_INFO << "EGL扩展模块：" << m_egl.extensions;
-
-
-//    //("EGL_EXT_client_extensions", "EGL_EXT_platform_base",
-//    //"EGL_KHR_client_get_all_proc_addresses", "EGL_KHR_platform_gbm",
-//    //"EGL_KHR_platform_wayland", "EGL_EXT_platform_wayland")
-
-//    // Use eglGetPlatformDisplayEXT() to get the display pointer
-//    // if the implementation supports it.
-//    if (!m_egl.extensions.contains(QByteArrayLiteral("EGL_EXT_platform_base")) ||
-//            //            !m_egl.extensions.contains(QByteArrayLiteral("EGL_MESA_platform_gbm"))) {
-//            !m_egl.extensions.contains(QByteArrayLiteral("EGL_EXT_platform_wayland"))) {
-//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "One of required EGL extensions is missing";
-//        return;
-//    }
-
-//    //    m_egl.display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, m_gbmDevice, nullptr);
-//    //m_egl.display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, m_gbmDevice, nullptr);
-//    //m_egl.display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-//    m_egl.display = eglGetDisplay((EGLNativeDisplayType)m_connection->display());
-
-//    qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "m_egl.display: " << m_egl.display;
-
-//    if (m_egl.display == EGL_NO_DISPLAY) {
-//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Error during obtaining EGL display: " << formatGLError(eglGetError());
-//        return;
-//    }
-
-//    EGLint major, minor;
-//    if (eglInitialize(m_egl.display, &major, &minor) == EGL_FALSE) {
-//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Error during eglInitialize: " << formatGLError(eglGetError());
-//        return;
-//    }
-//    qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "major: " << major<<"minor: " << minor;
-
-//    if (eglBindAPI(EGL_OPENGL_ES_API) == EGL_FALSE) {
-//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "bind OpenGL API failed";
-//        return;
-//    }
-
-
-//    m_egl.context = eglCreateContext(m_egl.display, nullptr, EGL_NO_CONTEXT, nullptr);
-//    qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "m_egl.context: " << m_egl.context;
-//    if (m_egl.context == EGL_NO_CONTEXT) {
-//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Couldn't create EGL context: " << formatGLError(eglGetError());
-//        return;
-//    }
-
-//    m_egl.create_image = (void *) eglGetProcAddress("eglCreateImageKHR");
-//    if (m_egl.create_image == nullptr) {
-//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Couldn't support eglCreateImageKHR";
-//        return;
-//    }
-
-//    m_egl.destroy_image = (void *) eglGetProcAddress("eglDestroyImageKHR");
-//    if (m_egl.destroy_image == nullptr) {
-//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Couldn't support eglDestroyImageKHR";
-//        return;
-//    }
-
-//    m_egl.image_target_texture_2d = (void *) eglGetProcAddress("glEGLImageTargetTexture2DOES");
-//    if (m_egl.image_target_texture_2d == nullptr) {
-//        qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Couldn't support glEGLImageTargetTexture2DOES";
-//        return;
-//    }
-
-//    qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Egl initialization succeeded";
-//    qCDebug(XdgDesktopPortalKdeWaylandIntegration) << QStringLiteral("EGL version: %1.%2").arg(major).arg(minor);
-
-//    m_eglInitialized = true;
-//}
-
 void WaylandIntegration::WaylandIntegrationPrivate::initWayland(int &argc, char **argv)
 {
-    if(argc > 7 && initRecord())
-    {
-        QString tempStr;
-        QString str;
-        for(int i=0;i<argc;i++)
-        {
-            str = QString::fromUtf8(argv[i]);
-            argvList.append(str);
-            switch (i)
-            {
-            case 1:
-                m_videoType = str.toInt();
-                break;
-            case 2:
-                //录屏不支持奇数，转偶数
-                m_width = str.toInt()/2*2;
-                break;
-            case 3:
-                m_height = str.toInt()/2*2;
-                break;
-            case 4:
-                m_x =  str.toInt();
-                break;
-            case 5:
-                m_y = str.toInt();
-                break;
-            case 6:
-                m_fps = str.toInt();
-                break;
-            case 7:
-                m_filePath = str;
-                break;
-            case 8:
-                m_audioType = str.toInt();
-                break;
-            }
-        }
-    }
+    m_recordAdmin = new RecordAdmin(argc,argv,this);
+    //设置获取视频帧
+    setBGetFrame(true);
 
     m_thread = new QThread(this);
     m_connection = new KWayland::Client::ConnectionThread;
@@ -667,16 +437,15 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     if(m_bInitRecordAdmin)
     {
         m_bInitRecordAdmin = false;
-        QByteArray cpath = m_filePath.toLocal8Bit();
-        m_recordAdmin->init(width,height,m_fps,m_audioType,m_x,m_y,m_width,m_height,cpath.data());
+        m_recordAdmin->init(static_cast<int>(width),static_cast<int>(height));
         frameStartTime = av_gettime();
     }
-    unsigned char *mapData = (unsigned char *)mmap(0, stride * height, PROT_READ|PROT_WRITE, MAP_SHARED, dma_fd, 0);
+    unsigned char *mapData = static_cast<unsigned char *>(mmap(nullptr, stride * height, PROT_READ|PROT_WRITE, MAP_SHARED, dma_fd, 0));
     if (MAP_FAILED == mapData)
     {
         qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "dma fd " << dma_fd <<" mmap failed - ";
     }
-    appendBuffer(mapData,width,height,stride,av_gettime()-frameStartTime);
+    appendBuffer(mapData,static_cast<int>(width),static_cast<int>(height),static_cast<int>(stride),av_gettime()-frameStartTime);
     munmap(mapData,stride * height);
     close(dma_fd);
 }
