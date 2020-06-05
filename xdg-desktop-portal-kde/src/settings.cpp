@@ -33,6 +33,8 @@
 #include <KConfigCore/KConfigGroup>
 #include "desktopportal.h"
 #include "waylandintegration.h"
+#include <QDBusPendingCall>
+
 Q_LOGGING_CATEGORY(XdgDesktopPortalKdeSettings, "xdp-kde-settings")
 
 Q_DECLARE_METATYPE(SettingsPortal::VariantMapMap)
@@ -271,15 +273,12 @@ QDBusVariant SettingsPortal::readProperty(const QString &group, const QString &k
 void SettingsPortal::stopRecord()
 {
     WaylandIntegration::stopStreaming();
-
     //通知录屏完成
     QDBusInterface notification(QString::fromUtf8("com.deepin.ScreenRecorder"),
                                 QString::fromUtf8("/com/deepin/ScreenRecorder"),
                                 QString::fromUtf8("com.deepin.ScreenRecorder"),
                                 QDBusConnection::sessionBus());
-    QList<QVariant> arg;
-    notification.callWithArgumentList(QDBus::AutoDetect,QString::fromUtf8("waylandRecordOver"),arg);
-    qDebug() << Q_FUNC_INFO;
+    notification.asyncCall("waylandRecordOver");
     QApplication::quit();
 }
 

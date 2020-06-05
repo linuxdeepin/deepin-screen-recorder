@@ -82,10 +82,10 @@ CAVOutputStream::~CAVOutputStream(void)
         audioFifoFree(m_sysAudioFifo);
         m_sysAudioFifo = nullptr;
     }
-    if(nullptr != m_path)
-    {
-        delete m_path;
-    }
+//    if(nullptr != m_path)
+//    {
+//        delete m_path;
+//    }
 }
 
 
@@ -412,7 +412,10 @@ int CAVOutputStream::init_context_amix(int channel, uint64_t channel_layout,int 
 //创建编码器和混合器
 bool CAVOutputStream::open(QString path)
 {
-    m_path = path.toLatin1();
+    QByteArray pathArry = path.toLocal8Bit();
+    m_path = new char[strlen(pathArry.data())+1];
+    strcpy(m_path,pathArry.data());
+
     avformat_alloc_output_context2(&m_videoFormatContext, nullptr, nullptr, m_path);
 
     if(m_videoCodecID  != 0)

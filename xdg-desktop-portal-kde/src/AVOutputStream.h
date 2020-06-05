@@ -118,7 +118,7 @@ public:
     int m_bottom;
 
 private:
-    const char *m_path;
+    char *m_path;
     QMutex m_audioReadWriteMutex;
     QMutex m_writeFrameMutex;
     bool m_isWriteFrame;

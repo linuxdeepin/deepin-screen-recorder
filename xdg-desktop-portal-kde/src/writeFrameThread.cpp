@@ -12,7 +12,7 @@ WaylandIntegration::WriteFrameThread::WriteFrameThread(WaylandIntegrationPrivate
     m_context = context;
 }
 
-int test = 0;
+//int test = 0;
 void WaylandIntegration::WriteFrameThread::run()
 {
     if(nullptr == m_context)
@@ -22,7 +22,7 @@ void WaylandIntegration::WriteFrameThread::run()
     {
         if(m_context->getFrame(frame))
         {
-            qDebug() << Q_FUNC_INFO << "++++++++++++++++++++++++" << test++ << frame._width <<  frame._height;
+            //qDebug() << Q_FUNC_INFO << "++++++++++++++++++++++++" << test++ << frame._width <<  frame._height;
             m_context->m_recordAdmin->m_pOutputStream->writeVideoFrame(frame);
         }
     }

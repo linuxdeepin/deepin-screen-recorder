@@ -84,8 +84,8 @@ bool WaylandIntegration::startStreaming(const WaylandOutput &output)
 
 void WaylandIntegration::stopStreaming()
 {
-    globalWaylandIntegration->stopStreaming();
     globalWaylandIntegration->stopVideoRecord();
+    globalWaylandIntegration->stopStreaming();
 }
 
 bool WaylandIntegration::WaylandIntegrationPrivate::stopVideoRecord()

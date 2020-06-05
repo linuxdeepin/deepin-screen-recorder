@@ -13,7 +13,8 @@ RecordAdmin::RecordAdmin(int &argc, char **argv, WaylandIntegration::WaylandInte
     m_writeFrameThread(nullptr),
     m_context(context),
     m_pOutputStream(nullptr),
-    m_pGifRecord(nullptr)
+    m_pGifRecord(nullptr),
+    m_pInputStream(nullptr)
 {
     if(argc > 7)
     {
@@ -278,8 +279,6 @@ int RecordAdmin::stopStream()
         //m_context->setBGetFrame(false);
         //设置是否写MP4/MKV视频帧
         m_writeFrameThread->setBWriteFrame(false);
-        //设置是否写gif视频帧
-        m_pGifRecord->setBWriteFrame(false);
         //设置是否写混音
         m_pInputStream->setbWriteAmix(false);
         //设置是否写音频帧
@@ -296,8 +295,6 @@ int RecordAdmin::stopStream()
         //m_context->setBGetFrame(false);
         //设置是否写MP4/MKV视频帧
         m_writeFrameThread->setBWriteFrame(false);
-        //设置是否写gif视频帧
-        m_pGifRecord->setBWriteFrame(false);
         //设置是否写混音
         m_pInputStream->setbWriteAmix(false);
         //设置是否写音频帧

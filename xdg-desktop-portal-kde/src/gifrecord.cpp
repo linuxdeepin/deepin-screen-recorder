@@ -31,7 +31,10 @@ void WaylandIntegration::GifRecord::init(int screenWidth,
     m_fps = fps;
     m_filePath = filePath;
     m_delay = 30;
-    GifBegin(&m_gitWrite,m_filePath.toLatin1(),static_cast<uint32_t>(m_selectWidth),static_cast<uint32_t>(m_selectHeight),static_cast<uint32_t>(m_delay));
+    QByteArray pathArry = m_filePath.toLocal8Bit();
+    char *pathCh = new char[strlen(pathArry.data())+1];
+    strcpy(pathCh,pathArry.data());
+    GifBegin(&m_gitWrite,pathCh,static_cast<uint32_t>(m_selectWidth),static_cast<uint32_t>(m_selectHeight),static_cast<uint32_t>(m_delay));
 }
 
 void WaylandIntegration::GifRecord::run()

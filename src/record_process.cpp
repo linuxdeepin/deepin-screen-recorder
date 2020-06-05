@@ -676,7 +676,7 @@ void RecordProcess::waylandRecordOver()
     }
 
     // wayland录屏进程调用dbus通知保存完成。
-    qDebug() << "RecordProcess::waylandRecordOver()";
+    qDebug() << Q_FUNC_INFO;
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
     QFile::rename(savePath, newSavePath);
     // Popup notify.
@@ -714,7 +714,7 @@ void RecordProcess::stopRecord()
                                     QDBusConnection::sessionBus());
 
         if(waylandInterface.isValid()) {
-            waylandInterface.call("stopRecord");
+            waylandInterface.asyncCall("stopRecord");
         }
         return;
     }
