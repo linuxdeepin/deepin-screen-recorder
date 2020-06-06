@@ -22,18 +22,35 @@
 #define XDG_DESKTOP_PORTAL_KDE_WAYLAND_INTEGRATION_P_H
 
 #include "waylandintegration.h"
-
 #include <QDateTime>
 #include <QObject>
 #include <QMap>
-
 #include <gbm.h>
-
 #include <epoxy/egl.h>
 #include <epoxy/gl.h>
 #include <QMutex>
 
-class MainLoop;
+
+enum audioType
+{
+    //麦克风
+    MIC = 2,
+    //系统音频
+    SYS,
+    //麦克风+系统音频
+    MIC_SYS,
+    //不录音
+    NOS
+};
+
+enum videoType
+{
+    GIF = 1,
+    MP4,
+    MKV
+};
+
+class RecordAdmin;
 class ScreenCastStream;
 
 namespace KWayland {
@@ -49,14 +66,14 @@ class Output;
 }
 
 namespace WaylandIntegration {
-class WriteFrameToStreamThread;
+class WriteFrameThread;
 class WaylandIntegrationPrivate : public WaylandIntegration::WaylandIntegration
 {
     Q_OBJECT
-public:
 
+public:
     //缓存帧
-    typedef struct waylandFrame {
+    struct waylandFrame {
         //时间戳
         int64_t _time;
         int _width;
@@ -84,28 +101,19 @@ public:
     bool startStreaming(const WaylandOutput &output);
     void stopStreaming();
     QMap<quint32, WaylandOutput> screens();
-    //QVariant streams();
 
-    bool recordStreamMutexInit(int fps, RecordAudioType type, int cx, int cy, int cw, int ch, QString outfile);
-    void steamMutexStopInit();
-    bool stopStreamMutex();
+    /**
+     * @brief stopVideoRecord:停止获取视频流
+     * @return
+     */
+    bool stopVideoRecord();
     inline bool writeFrameToStream();
-    MainLoop *m_recordStreamObjPtr;
-
-    pthread_mutex_t m_mtx_stream = PTHREAD_MUTEX_INITIALIZER;
-    pthread_cond_t m_cond_stream = PTHREAD_COND_INITIALIZER;
-    int tempFps;
-    RecordAudioType tempType;
-    int tempCx;
-    int tempCy;
-    int tempCw;
-    int tempCh;
-    QString tempFilePath;
-    int m_recordTIme;
-    bool m_isStreamObjCreat;
-    bool m_isStreamInit;
-    WriteFrameToStreamThread *m_writeFrameThread;
-//     pthread_t m_writeFrameThread;
+    //录屏管理器
+    RecordAdmin *m_recordAdmin;
+    //是否初始化录屏管理
+    bool m_bInitRecordAdmin;
+    //WriteFrameThread *m_writeFrameThread;
+    //     pthread_t m_writeFrameThread;
 protected Q_SLOTS:
     void addOutput(quint32 name, quint32 version);
     void removeOutput(quint32 name);
@@ -131,15 +139,13 @@ public:
      * @return
      */
     bool getFrame(waylandFrame &frame);
+    bool bGetFrame();
+    void setBGetFrame(bool bGetFrame);
 
 private:
-    //参数列表：程序名称，视频类型，视频宽，视频高，视频x坐标，视频y坐标，视频帧率，视频保存路径，音频类型
-    QList<QString> argvList;
     //缓存帧容量
     int m_bufferSize;
-    //帧宽
     int m_width;
-    //帧高
     int m_height;
     //通道数
     int m_stride;
@@ -153,6 +159,9 @@ private:
     unsigned char *m_ffmFrame;
     //起始时间戳
     int64_t frameStartTime;
+    //是否获取视频帧
+    bool m_bGetFrame;
+    QMutex m_bGetFrameMutex;
 
     bool m_eglInitialized;
     bool m_streamingEnabled;
@@ -174,8 +183,8 @@ private:
 
     qint32 m_drmFd = 0; // for GBM buffer mmap
     gbm_device *m_gbmDevice = nullptr; // for passed GBM buffer retrieval
-    pthread_t  m_initRecordStreamThread;
-    pthread_t m_stopRecordstreamThread2;
+    pthread_t  m_initRecordThread;
+    //pthread_t m_stopRecordstreamThread2;
     struct {
         QList<QByteArray> extensions;
         EGLDisplay display = EGL_NO_DISPLAY;
