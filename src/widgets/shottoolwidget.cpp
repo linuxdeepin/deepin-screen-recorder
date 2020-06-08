@@ -85,6 +85,10 @@ void ShotToolWidget::initWidget()
 //    initPenLabel();
 //    initTextLabel();
 //    setCurrentWidget(m_rectSubTool);
+    m_blurRectButton = nullptr;
+    m_mosaicRectButton = nullptr;
+    m_blurCircButton = nullptr;
+    m_mosaicCircButton = nullptr;
 }
 
 void ShotToolWidget::initRectLabel()
@@ -247,6 +251,10 @@ void ShotToolWidget::initRectLabel()
             thickOneBtn->update();
 
             ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 0);
+            if(m_blurRectButton && m_blurRectButton->isChecked())
+                m_blurRectButton->click();
+            if(m_mosaicRectButton && m_mosaicRectButton->isChecked())
+                m_mosaicRectButton->click();
         }
 
 //        else {
@@ -285,6 +293,10 @@ void ShotToolWidget::initRectLabel()
             thickTwoBtn->update();
 
             ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 1);
+            if(m_blurRectButton && m_blurRectButton->isChecked())
+                m_blurRectButton->click();
+            if(m_mosaicRectButton && m_mosaicRectButton->isChecked())
+                m_mosaicRectButton->click();
         }
 
 //        else {
@@ -323,6 +335,10 @@ void ShotToolWidget::initRectLabel()
             thickThreeBtn->update();
 
             ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 2);
+            if(m_blurRectButton && m_blurRectButton->isChecked())
+                m_blurRectButton->click();
+            if(m_mosaicRectButton && m_mosaicRectButton->isChecked())
+                m_mosaicRectButton->click();
         }
 
 //        else {
@@ -747,6 +763,10 @@ void ShotToolWidget::initCircLabel()
             thickOneBtn->update();
 
             ConfigSettings::instance()->setValue("oval", "linewidth_index", 0);
+            if(m_blurCircButton && m_blurCircButton->isChecked())
+                m_blurCircButton->click();
+            if(m_mosaicCircButton && m_mosaicCircButton->isChecked())
+                m_mosaicCircButton->click();
         }
 
         else {
@@ -785,6 +805,10 @@ void ShotToolWidget::initCircLabel()
             thickTwoBtn->update();
 
             ConfigSettings::instance()->setValue("oval", "linewidth_index", 1);
+            if(m_blurCircButton && m_blurCircButton->isChecked())
+                m_blurCircButton->click();
+            if(m_mosaicCircButton && m_mosaicCircButton->isChecked())
+                m_mosaicCircButton->click();
         }
 
         else {
@@ -823,6 +847,10 @@ void ShotToolWidget::initCircLabel()
             thickThreeBtn->update();
 
             ConfigSettings::instance()->setValue("oval", "linewidth_index", 2);
+            if(m_blurCircButton && m_blurCircButton->isChecked())
+                m_blurCircButton->click();
+            if(m_mosaicCircButton && m_mosaicCircButton->isChecked())
+                m_mosaicCircButton->click();
         }
 
         else {
@@ -2068,4 +2096,19 @@ void ShotToolWidget::switchContent(QString shapeType)
             }
         }
     }
+}
+void ShotToolWidget::colorChecked(QString colorType)
+{
+    qDebug() << colorType << m_currentType;
+    //if(m_currentType == "rectangle"){
+        if(m_blurRectButton && m_blurRectButton->isChecked())
+            m_blurRectButton->click();
+        if(m_mosaicRectButton && m_mosaicRectButton->isChecked())
+            m_mosaicRectButton->click();
+    //}else if(m_currentType == "oval"){
+        if(m_blurCircButton && m_blurCircButton->isChecked())
+            m_blurCircButton->click();
+        if(m_mosaicCircButton && m_mosaicCircButton->isChecked())
+            m_mosaicCircButton->click();
+   // }
 }

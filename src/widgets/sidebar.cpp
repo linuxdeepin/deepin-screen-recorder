@@ -114,6 +114,7 @@ SideBarWidget::SideBarWidget(DWidget *parent)
 
     connect(m_shotTool, &ShotToolWidget::changeArrowAndLine, this, &SideBarWidget::changeArrowAndLineEvent);
     connect(m_closeButton, &DImageButton::clicked, this, &SideBarWidget::closeSideBar);
+    connect(m_colorTool, &ColorToolWidget::colorChecked, m_shotTool, &ShotToolWidget::colorChecked);
 }
 
 SideBarWidget::~SideBarWidget()

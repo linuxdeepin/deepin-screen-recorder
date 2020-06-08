@@ -1339,14 +1339,17 @@ void MainWindow::updateToolBarPos()
         m_toolBar->setRecordLaunchMode(m_launchWithRecordFunc);
         m_toolBar->setIsZhaoxinPlatform(m_isZhaoxin);
 
-        m_pVoiceVolumeWatcher = new voiceVolumeWatcher(this);
-        //m_pVoiceVolumeWatcher->start();
-        connect(m_pVoiceVolumeWatcher, SIGNAL(sigRecodeState(bool)), this, SLOT(on_CheckRecodeCouldUse(bool)));
-        m_toolBarInit = true;
+        QString arch = QSysInfo::currentCpuArchitecture();
+        if(!arch.startsWith("MIPS", Qt::CaseInsensitive)) {
+            m_pVoiceVolumeWatcher = new voiceVolumeWatcher(this);
+            m_pVoiceVolumeWatcher->start();
+            connect(m_pVoiceVolumeWatcher, SIGNAL(sigRecodeState(bool)), this, SLOT(on_CheckRecodeCouldUse(bool)));
+            m_toolBarInit = true;
 
-        m_pCameraWatcher = new CameraWatcher(this);
-        //m_pCameraWatcher->start();
-        connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
+            m_pCameraWatcher = new CameraWatcher(this);
+            m_pCameraWatcher->start();
+            connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
+        }
     }
 
     QPoint toolbarPoint;
@@ -1701,9 +1704,6 @@ void MainWindow::changeFunctionButton(QString type)
         if (m_sideBar->isVisible()) {
             m_sideBar->hide();
         }
-        m_pVoiceVolumeWatcher->start();
-        m_pCameraWatcher->start();
-
     }
 
     else if (type == "shot") {

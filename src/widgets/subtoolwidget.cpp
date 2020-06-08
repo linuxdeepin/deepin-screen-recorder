@@ -705,6 +705,7 @@ void SubToolWidget::initRecordLabel()
         audioButton->setEnabled(true);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
+            m_microphoneAction->setChecked(true);
         }
 
         if (m_haveSystemAudio) {
@@ -722,6 +723,7 @@ void SubToolWidget::initRecordLabel()
         audioButton->setEnabled(true);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
+            m_microphoneAction->setChecked(true);
         }
 
         if (m_haveSystemAudio) {
@@ -762,6 +764,7 @@ void SubToolWidget::initRecordLabel()
         audioButton->setEnabled(true);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
+            m_microphoneAction->setChecked(true);
         }
         if (m_haveSystemAudio) {
             m_systemAudioAction->setEnabled(true);
@@ -780,6 +783,7 @@ void SubToolWidget::initRecordLabel()
         audioButton->setEnabled(true);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
+            m_microphoneAction->setChecked(true);
         }
         if (m_haveSystemAudio) {
             m_systemAudioAction->setEnabled(true);
@@ -1253,10 +1257,10 @@ void SubToolWidget::initShotLabel()
 
     //保存方式
     OptionMenu->addAction(saveTitleAction);
+    OptionMenu->addAction(saveToClipAction);
     OptionMenu->addAction(saveToDesktopAction);
     OptionMenu->addAction(saveToPictureAction);
     OptionMenu->addAction(saveToSpecialPath);
-    OptionMenu->addAction(saveToClipAction);
     OptionMenu->addSeparator();
 
     //保存剪贴板

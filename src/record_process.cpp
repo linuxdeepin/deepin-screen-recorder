@@ -188,6 +188,7 @@ void RecordProcess::recordVideo()
     // otherwise, it will report 'Unrecognized option' error.
     QStringList arguments;
 
+    QString arch = QSysInfo::currentCpuArchitecture();
     //if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
     //if (m_isZhaoxin == false) {
         if (settings->getOption("lossless_recording").toBool()) {
@@ -208,46 +209,48 @@ void RecordProcess::recordVideo()
             arguments << QString("-probesize");
             arguments << QString("24M");
             arguments << QString("-thread_queue_size");
-            arguments << QString("256");
+            arguments << QString("512");
             arguments << QString("-f");
             arguments << QString("x11grab");
             arguments << QString("-i");
             arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
+
 
             if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
 
                 lastAudioSink = audioUtils->currentAudioSink();
 
                 arguments << QString("-thread_queue_size");
-                arguments << QString("256");
-
+                arguments << QString("512");
                 arguments << QString("-f");
                 arguments << QString("pulse");
-
                 arguments << QString("-ac");
                 arguments << QString("2");
-
-                arguments << QString("-i");
-                arguments << QString("default");
-
-                arguments << QString("-thread_queue_size");
-                arguments << QString("256");
-
-                arguments << QString("-f");
-                arguments << QString("pulse");
-
-                arguments << QString("-ac");
-                arguments << QString("2");
-
+                arguments << QString("-ar");
+                arguments << QString("44100");
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
+
+                arguments << QString("-thread_queue_size");
+                arguments << QString("512");
+                arguments << QString("-f");
+                arguments << QString("pulse");
+                arguments << QString("-ac");
+                arguments << QString("2");
+                arguments << QString("-ar");
+                arguments << QString("44100");
+                arguments << QString("-i");
+                arguments << QString("default");
 
                 //arguments << QString("-filter_complex");
                 //arguments << QString("amerge");
 
                 arguments << QString("-filter_complex");
-                arguments << QString("[1:a]aselect=concatdec_select,aresample=async=48000[a1];[2:a]aselect=concatdec_select,aresample=async=48000[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=0[out]");
-
+                if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+                    arguments << QString("[1:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select,volume=30dB[a1];[2:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=0[out]");
+                }else {
+                    arguments << QString("[1:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select[a1];[2:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=0[out]");
+                }
 
                 arguments << QString("-map");
                 arguments << QString("0:v");
@@ -257,52 +260,61 @@ void RecordProcess::recordVideo()
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC) {
 
                 arguments << QString("-thread_queue_size");
-                arguments << QString("256");
+                arguments << QString("512");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
                 arguments << QString("2");
+                arguments << QString("-ar");
+                arguments << QString("44100");
                 arguments << QString("-i");
                 arguments << QString("default");
                 arguments << QString("-af");
-                arguments << QString("aselect=concatdec_select,aresample=async=48000");
+                arguments << QString("aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select");
                 //按当前采样率生成时间戳:
                 //arguments << QString("-filter:a");
                 //arguments << QString("asetpts=N/SR/TB");
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
                 lastAudioSink = audioUtils->currentAudioSink();
                 arguments << QString("-thread_queue_size");
-                arguments << QString("256");
+                arguments << QString("512");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
                 arguments << QString("2");
+                arguments << QString("-ar");
+                arguments << QString("44100");
+                //arguments << QString("-ss");
+                //arguments << QString("-itsoffset");
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
                 arguments << QString("-af");
-                arguments << QString("aselect=concatdec_select,aresample=async=48000");
-                //按当前采样率生成时间戳:
-                //arguments << QString("-filter:a");
-                //arguments << QString("asetpts=N/SR/TB");
+                if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+                    arguments << QString("aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select,volume=30dB");
+                }else {
+                    arguments << QString("aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select");
+                }
+
+
             }
-
-            arguments << QString("-vf");
-            arguments << QString("setpts=(RTCTIME-RTCSTART)/(TB*1000000)");
-
-            arguments << QString("-vsync");
-            arguments << QString("1");
 
             arguments << QString("-c:v");
             arguments << QString("libx264");
 
-            //arguments << QString("-acodec");
-            //arguments << QString("libmp3lame");
+            arguments << QString("-pix_fmt");
+            arguments << QString("yuv420p");
+
+            arguments << QString("-profile:v");
+            arguments << QString("baseline");
 
             arguments << QString("-qp");
             arguments << QString("23");
 
             arguments << QString("-preset");
             arguments << QString("ultrafast");
+
+            arguments << QString("-vf");
+            arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2,setpts=(RTCTIME-RTCSTART)");
 
             arguments << savePath;
         } else {
@@ -315,7 +327,7 @@ void RecordProcess::recordVideo()
             arguments << QString("-probesize");
             arguments << QString("24M");
             arguments << QString("-thread_queue_size");
-            arguments << QString("256");
+            arguments << QString("512");
             arguments << QString("-f");
             arguments << QString("x11grab");
             arguments << QString("-i");
@@ -323,34 +335,37 @@ void RecordProcess::recordVideo()
             if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
 
                 arguments << QString("-thread_queue_size");
-                arguments << QString("256");
-
+                arguments << QString("512");
                 arguments << QString("-f");
                 arguments << QString("pulse");
-
                 arguments << QString("-ac");
                 arguments << QString("2");
-
+                arguments << QString("-ar");
+                arguments << QString("44100");
                 arguments << QString("-i");
-                arguments << QString("default");
+                arguments << QString("%1").arg(t_currentAudioChannel);
 
 
                 arguments << QString("-thread_queue_size");
-                arguments << QString("256");
-
+                arguments << QString("512");
                 arguments << QString("-f");
                 arguments << QString("pulse");
-
                 arguments << QString("-ac");
                 arguments << QString("2");
-
+                arguments << QString("-ar");
+                arguments << QString("44100");
                 arguments << QString("-i");
-                arguments << QString("%1").arg(t_currentAudioChannel);
+                arguments << QString("default");
 
                 //arguments << QString("-filter_complex");
                 //arguments << QString("amerge");
                 arguments << QString("-filter_complex");
-                arguments << QString("[1:a]aselect=concatdec_select,aresample=async=48000[a1];[2:a]aselect=concatdec_select,aresample=async=48000[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=0[out]");
+
+                if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+                    arguments << QString("[1:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select,volume=30dB[a1];[2:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=0[out]");
+                }else {
+                    arguments << QString("[1:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select[a1];[2:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=0[out]");
+                }
 
                 arguments << QString("-map");
                 arguments << QString("0:v");
@@ -364,15 +379,17 @@ void RecordProcess::recordVideo()
                 lastAudioSink = audioUtils->currentAudioSink();
 
                 arguments << QString("-thread_queue_size");
-                arguments << QString("256");
+                arguments << QString("512");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
                 arguments << QString("2");
+                arguments << QString("-ar");
+                arguments << QString("44100");
                 arguments << QString("-i");
                 arguments << QString("default");
                 arguments << QString("-af");
-                arguments << QString("aselect=concatdec_select,aresample=async=48000");
+                arguments << QString("aresample=48000,asetpts=N/SR/TB,aselect=concatdec_select");
                 //按当前采样率生成时间戳:
                 //arguments << QString("-filter:a");
                 //arguments << QString("asetpts=N/SR/TB");
@@ -380,15 +397,25 @@ void RecordProcess::recordVideo()
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
 
                 arguments << QString("-thread_queue_size");
-                arguments << QString("256");
+                arguments << QString("512");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
                 arguments << QString("2");
+                arguments << QString("-ar");
+                arguments << QString("44100");
+                //arguments << QString("-wallclock");
+                //arguments << QString("0");
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
+                /*
                 arguments << QString("-af");
-                arguments << QString("aselect=concatdec_select,aresample=async=48000");
+                if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+                    arguments << QString("aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select,volume=30dB");
+                }else {
+                    arguments << QString("aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select");
+                }
+                */
                 //按当前采样率生成时间戳:
                 //arguments << QString("-filter:a");
                 //arguments << QString("asetpts=N/SR/TB");
@@ -400,6 +427,12 @@ void RecordProcess::recordVideo()
             arguments << QString("-pix_fmt");
             arguments << QString("yuv420p");
 
+            arguments << QString("-c:v");
+            arguments << QString("libx264");
+
+            arguments << QString("-profile:v");
+            arguments << QString("baseline");
+
             // append crf parameter here
             arguments << QString("-crf");
             arguments << QString("23");
@@ -407,15 +440,8 @@ void RecordProcess::recordVideo()
             arguments << QString("-preset");
             arguments << QString("ultrafast");
 
-
             arguments << QString("-vf");
-            arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2,setpts=(RTCTIME-RTCSTART)/(TB*1000000)");
-
-            arguments << QString("-vsync");
-            arguments << QString("1");
-
-//            arguments << QString("-threads");
-//            arguments << QString("0");
+            arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2,setpts=(RTCTIME-RTCSTART)");
 
             arguments << savePath;
         }
