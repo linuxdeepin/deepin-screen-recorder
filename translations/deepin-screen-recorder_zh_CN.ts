@@ -336,10 +336,6 @@ or press the shortcut again to stop recording</source>
         <translation>格式</translation>
     </message>
     <message>
-        <source>Copy to clipboard</source>
-        <translation type="vanished">复制到剪贴板</translation>
-    </message>
-    <message>
         <source>System Audio</source>
         <translation>系统音频</translation>
     </message>

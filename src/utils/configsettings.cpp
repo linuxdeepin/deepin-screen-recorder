@@ -54,7 +54,7 @@ ConfigSettings::ConfigSettings(QObject *parent)
         setValue("text", "fontsize", 12);
         setValue("text", "prev_color", 0);
 
-        setValue("save", "save_op", SaveAction::SaveToDesktop);
+        setValue("save", "save_op", SaveAction::SaveToClipboard);
         setValue("save", "save_quality", 100);
         setValue("save", "format", 0);
         setValue("save", "saveClip", 1);

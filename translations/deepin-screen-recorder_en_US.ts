@@ -401,10 +401,6 @@ or press the shortcut again to stop recording</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>Copy to clipboard</source>
-        <translation type="vanished">Copy to clipboard</translation>
-    </message>
-    <message>
         <source>MKV</source>
         <translation type="unfinished"></translation>
     </message>
