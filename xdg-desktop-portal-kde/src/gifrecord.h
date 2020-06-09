@@ -3,19 +3,13 @@
 #include <QThread>
 #include "waylandintegration.h"
 #include "waylandintegration_p.h"
-
-extern "C"
-{
 #include "gif.h"
-}
-namespace WaylandIntegration
-{
-class WaylandIntegrationPrivate;
+
 class GifRecord : public QThread
 {
     Q_OBJECT
 public:
-    explicit GifRecord(WaylandIntegrationPrivate* context,QObject *parent = nullptr);
+    explicit GifRecord(WaylandIntegration::WaylandIntegrationPrivate* context,int index,QObject *parent = nullptr);
     ~GifRecord();
 
     void init(int screenWidth,
@@ -37,8 +31,7 @@ signals:
 public slots:
 
 private:
-    WaylandIntegrationPrivate * m_context;
-    GifWriter m_gitWrite;
+    WaylandIntegration::WaylandIntegrationPrivate * m_context;
     QString m_filePath;
     int m_x;
     int m_y;
@@ -51,6 +44,7 @@ private:
     //是否写视频帧
     bool m_bWriteFrame;
     QMutex m_writeFrameMutex;
+    int m_index;
+    static int test;
 };
-}
 #endif // GIFRECORD_H

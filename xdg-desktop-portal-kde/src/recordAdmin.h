@@ -11,6 +11,7 @@
 #include "AVInputStream.h"
 #include "AVInputStream.h"
 #include "gifrecord.h"
+#include "gifwrite.h"
 #include "waylandintegration.h"
 #include "waylandintegration_p.h"
 #include "writeFrameThread.h"
@@ -64,7 +65,9 @@ public:
     CAVInputStream                           *m_pInputStream;
     CAVOutputStream                          *m_pOutputStream;
     WaylandIntegration::WriteFrameThread     *m_writeFrameThread;
-    WaylandIntegration::GifRecord            *m_pGifRecord;
+    GifRecord                                *m_pGifRecord[3];
+    GifWrite                                 *m_pGifWrite;
+    GifCreator                               *m_pGifCreator;
 
 private:
     WaylandIntegration::WaylandIntegrationPrivate* m_context;
@@ -87,6 +90,7 @@ private:
     //帧高
     int m_selectHeight;
     pthread_t  m_mainThread;
+    int m_delay;
 };
 
 #endif // RECORDADMIN_H

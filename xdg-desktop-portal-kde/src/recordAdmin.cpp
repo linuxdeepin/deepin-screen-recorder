@@ -13,8 +13,9 @@ RecordAdmin::RecordAdmin(int &argc, char **argv, WaylandIntegration::WaylandInte
     m_writeFrameThread(nullptr),
     m_context(context),
     m_pOutputStream(nullptr),
-    m_pGifRecord(nullptr),
-    m_pInputStream(nullptr)
+    m_pInputStream(nullptr),
+    m_pGifWrite(nullptr),
+    m_pGifCreator(nullptr)
 {
     if(argc > 7)
     {
@@ -58,7 +59,13 @@ RecordAdmin::RecordAdmin(int &argc, char **argv, WaylandIntegration::WaylandInte
     switch (m_videoType)
     {
     case videoType::GIF:
-        m_pGifRecord = new WaylandIntegration::GifRecord(context);
+        m_pGifCreator = new GifCreator(context);
+        for(int i=0;i<3;i++)
+        {
+            m_pGifRecord[i] = nullptr;
+            m_pGifRecord[i] = new GifRecord(context,i);
+        }
+        m_pGifWrite = new GifWrite(context);
         break;
     case videoType::MP4:
     {
@@ -102,10 +109,13 @@ RecordAdmin::~RecordAdmin()
         delete m_pInputStream;
         m_pInputStream = nullptr;
     }
-    if(nullptr != m_pGifRecord)
+    for (int i=0;i<3;i++)
     {
-        delete m_pGifRecord;
-        m_pGifRecord = nullptr;
+        if(nullptr != m_pGifRecord[i])
+        {
+            delete m_pGifRecord[i];
+            m_pGifRecord[i] = nullptr;
+        }
     }
 }
 
@@ -152,9 +162,19 @@ void RecordAdmin::init(int screenWidth, int screenHeight)
     {
     case videoType::GIF:
     {
-        m_pGifRecord->init(screenWidth,screenHeight,m_x,m_y,m_selectWidth,m_selectHeight,m_fps,m_filePath);
-        m_pGifRecord->setBWriteFrame(true);
-        m_pGifRecord->start();
+//        QByteArray pathArry = m_filePath.toLocal8Bit();
+//        char *pathCh = new char[strlen(pathArry.data())+1];
+//        strcpy(pathCh,pathArry.data());
+//        m_delay = 15;
+        m_pGifCreator->init(screenWidth,screenHeight,m_x,m_y,m_selectWidth,m_selectHeight,m_fps,m_filePath);
+        //GifBegin(m_context->m_recordAdmin->m_pGifWriter,pathCh,static_cast<uint32_t>(m_selectWidth),static_cast<uint32_t>(m_selectHeight),static_cast<uint32_t>(m_delay));
+        for (int i=0;i<3;i++)
+        {
+            m_pGifRecord[i]->init(screenWidth,screenHeight,m_x,m_y,m_selectWidth,m_selectHeight,m_fps,m_filePath);
+            m_pGifRecord[i]->setBWriteFrame(true);
+            m_pGifRecord[i]->start();
+        }
+        m_pGifWrite->start();
     }
         break;
     case videoType::MP4:
@@ -271,7 +291,12 @@ int RecordAdmin::stopStream()
     {
     case videoType::GIF:
         //设置是否写gif视频帧
-        m_pGifRecord->setBWriteFrame(false);
+        for(int i =0;i<3;i++)
+        {
+            m_pGifRecord[i]->setBWriteFrame(false);
+        }
+        //设置是否缓存区排序
+        m_pGifWrite->setBCache(false);
         break;
     case videoType::MP4:
     {

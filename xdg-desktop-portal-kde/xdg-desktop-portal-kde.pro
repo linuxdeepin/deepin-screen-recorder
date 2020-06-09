@@ -37,7 +37,8 @@ HEADERS += src/AVInputStream.h \
     src/recordAdmin.h \
     src/writeFrameThread.h \
     src/gifrecord.h \
-    src/gif.h
+    src/gif.h \
+    src/gifwrite.h
 SOURCES += \
            src/AVInputStream.cpp \
            src/AVOutputStream.cpp \
@@ -50,7 +51,9 @@ SOURCES += \
            src/settings.cpp \
     src/recordAdmin.cpp \
     src/writeFrameThread.cpp \
-    src/gifrecord.cpp
+    src/gifrecord.cpp \
+    src/gifwrite.cpp \
+    src/gif.cpp
 
 QMAKE_CXXFLAGS += -g
 
