@@ -246,20 +246,20 @@ void RecordProcess::recordVideo()
                 arguments << QString("-i");
                 arguments << QString("default");
 
-                //arguments << QString("-filter_complex");
-                //arguments << QString("amerge");
 
                 arguments << QString("-filter_complex");
                 if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
-                    arguments << QString("[1:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select,volume=30dB[a1];[2:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=0[out]");
+                    arguments << QString("[1:a]volume=30dB[a1];[a1][2:a]amix=inputs=2:duration=first:dropout_transition=0[out]");
+                    arguments << QString("-map");
+                    arguments << QString("0:v");
+                    arguments << QString("-map");
+                    arguments << QString("[out]");
                 }else {
-                    arguments << QString("[1:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select[a1];[2:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=0[out]");
+                    arguments << QString("amerge");
                 }
 
-                arguments << QString("-map");
-                arguments << QString("0:v");
-                arguments << QString("-map");
-                arguments << QString("[out]");
+
+
 
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC) {
 
@@ -275,8 +275,8 @@ void RecordProcess::recordVideo()
                 arguments << QString("44100");
                 arguments << QString("-i");
                 arguments << QString("default");
-                arguments << QString("-af");
-                arguments << QString("aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select");
+                //arguments << QString("-af");
+                //arguments << QString("aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select");
                 //按当前采样率生成时间戳:
                 //arguments << QString("-filter:a");
                 //arguments << QString("asetpts=N/SR/TB");
@@ -292,18 +292,12 @@ void RecordProcess::recordVideo()
                 arguments << QString("2");
                 arguments << QString("-ar");
                 arguments << QString("44100");
-                //arguments << QString("-ss");
-                //arguments << QString("-itsoffset");
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
-                arguments << QString("-af");
                 if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
-                    arguments << QString("aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select,volume=30dB");
-                }else {
-                    arguments << QString("aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select");
+                    arguments << QString("-af");
+                    arguments << QString("volume=30dB");
                 }
-
-
             }
 
             arguments << QString("-c:v");
@@ -322,7 +316,7 @@ void RecordProcess::recordVideo()
             arguments << QString("ultrafast");
 
             arguments << QString("-vf");
-            arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2,setpts=(RTCTIME-RTCSTART)");
+            arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
 
             arguments << savePath;
         } else {
@@ -369,21 +363,17 @@ void RecordProcess::recordVideo()
                 arguments << QString("-i");
                 arguments << QString("default");
 
-                //arguments << QString("-filter_complex");
-                //arguments << QString("amerge");
                 arguments << QString("-filter_complex");
-
                 if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
-                    arguments << QString("[1:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select,volume=30dB[a1];[2:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=0[out]");
+                    arguments << QString("[1:a]volume=30dB[a1];[a1][2:a]amix=inputs=2:duration=first:dropout_transition=0[out]");
+                    arguments << QString("-map");
+                    arguments << QString("0:v");
+                    arguments << QString("-map");
+                    arguments << QString("[out]");
+
                 }else {
-                    arguments << QString("[1:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select[a1];[2:a]aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select[a2];[a1][a2]amix=inputs=2:duration=first:dropout_transition=0[out]");
+                    arguments << QString("amerge");
                 }
-
-                arguments << QString("-map");
-                arguments << QString("0:v");
-                arguments << QString("-map");
-                arguments << QString("[out]");
-
 //                arguments << QString("-filter_complex");
 //                arguments << QString("amix=inputs=2:duration=first:dropout_transition=0");
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC) {
@@ -402,8 +392,6 @@ void RecordProcess::recordVideo()
                 arguments << QString("44100");
                 arguments << QString("-i");
                 arguments << QString("default");
-                arguments << QString("-af");
-                arguments << QString("aresample=48000,asetpts=N/SR/TB,aselect=concatdec_select");
                 //按当前采样率生成时间戳:
                 //arguments << QString("-filter:a");
                 //arguments << QString("asetpts=N/SR/TB");
@@ -422,18 +410,11 @@ void RecordProcess::recordVideo()
                 arguments << QString("44100");
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
-                /*
-                arguments << QString("-af");
-                if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
-                    arguments << QString("aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select,volume=30dB");
-                }else {
-                    arguments << QString("aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select");
-                }
-                */
-                //按当前采样率生成时间戳:
-                //arguments << QString("-filter:a");
-                //arguments << QString("asetpts=N/SR/TB");
 
+                if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+                    arguments << QString("-af");
+                    arguments << QString("volume=30dB");
+                }
             }
 
 
@@ -455,7 +436,7 @@ void RecordProcess::recordVideo()
             arguments << QString("ultrafast");
 
             arguments << QString("-vf");
-            arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2,setpts=(RTCTIME-RTCSTART)");
+            arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
 
             arguments << savePath;
         }
