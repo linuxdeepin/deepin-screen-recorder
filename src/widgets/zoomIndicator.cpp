@@ -28,7 +28,7 @@
 
 namespace {
 const QSize BACKGROUND_SIZE = QSize(59, 59);
-const int SCALE_VALUE = 4;
+//const int SCALE_VALUE = 4;
 const int IMG_WIDTH =  12;
 const int INDICATOR_WIDTH = 49;
 const int CENTER_RECT_WIDTH = 12;

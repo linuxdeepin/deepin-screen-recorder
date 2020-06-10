@@ -44,15 +44,15 @@
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int TOOLBAR_HEIGHT = 43;
-const int TOOLBAR_WIDTH = 350;
+//const int TOOLBAR_HEIGHT = 43;
+//const int TOOLBAR_WIDTH = 350;
 const int BUTTON_SPACING = 4;
 const int SHOT_BUTTON_SPACING = 4;
-const int COLOR_NUM = 16;
+//const int COLOR_NUM = 16;
 const QSize TOOL_ICON_SIZE = QSize(25, 25);
 const QSize MAX_TOOL_ICON_SIZE = QSize(40, 40);
-const QSize MAX_TOOL_BUTTON_SIZE = QSize(82, 40);
-const QSize TOOL_BUTTON_SIZE = QSize(62, 40);
+//const QSize MAX_TOOL_BUTTON_SIZE = QSize(82, 40);
+//const QSize TOOL_BUTTON_SIZE = QSize(62, 40);
 const QSize MEDIUM_TOOL_BUTTON_SIZE = QSize(52, 40);
 const QSize MIN_TOOL_BUTTON_SIZE = QSize(42, 40);
 }

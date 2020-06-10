@@ -53,7 +53,7 @@ public:
     int             radius              = 8;
     int             shadowWidth         = 20;
     QMargins        shadowMargins       = QMargins(20, 20, 20, 20);
-    QColor          borderColor         = QColor(0, 0, 0, 0.2 * 255);
+    QColor          borderColor         = QColor(0, 0, 0, 51);
 
     DLabel          *textLable          = nullptr;
     QFrame          *m_interFrame       = nullptr;
@@ -117,7 +117,7 @@ ToolTips::ToolTips(const QString &text, QWidget *parent)
 
     auto *bodyShadow = new QGraphicsDropShadowEffect;
     bodyShadow->setBlurRadius(10.0);
-    bodyShadow->setColor(QColor(0, 0, 0, 0.1 * 255));
+    bodyShadow->setColor(QColor(0, 0, 0, 25));
     bodyShadow->setOffset(0, 2.0);
 //    this->setGraphicsEffect(bodyShadow);
     hide();
