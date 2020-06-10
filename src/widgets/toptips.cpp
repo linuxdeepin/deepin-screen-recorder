@@ -71,6 +71,7 @@ void TopTips::updateTips(QPoint pos, QString text)
 
 void TopTips::mousePressEvent(QMouseEvent *ev)
 {
+    Q_UNUSED(ev);
     return;
 }
 

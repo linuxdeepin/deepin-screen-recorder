@@ -181,7 +181,7 @@ void MainToolWidget::initMainLabel()
 
     connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
-
+        Q_UNUSED(status);
         DPalette pa;
         if (m_recordBtn->isChecked()) {
 //            pa = m_recordBtn->palette();

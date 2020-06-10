@@ -150,7 +150,7 @@ void ColorToolWidget::initColorLabel()
 
     connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
-
+        Q_UNUSED(status);
         DPalette pa;
         if (m_redBtn->isChecked()) {
 //            pa = m_redBtn->palette();

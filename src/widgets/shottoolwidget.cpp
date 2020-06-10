@@ -39,14 +39,14 @@ namespace {
 const int TOOLBAR_HEIGHT = 223;
 const int TOOLBAR_WIDTH = 40;
 const int BUTTON_SPACING = 3;
-const int SHOT_BUTTON_SPACING = 3;
-const int COLOR_NUM = 16;
+//const int SHOT_BUTTON_SPACING = 3;
+//const int COLOR_NUM = 16;
 const QSize TOOL_ICON_SIZE = QSize(30, 30);
 const QSize TOOL_BUTTON_SIZE = QSize(38, 38);
 const QSize TOOL_SLIDERBlUR_SIZE = QSize(35, 190);
 const QSize TOOL_SLIDER_SIZE = QSize(40, 180);
 const QSize SPLITTER_SIZE = QSize(30, 1);
-const QSize MIN_TOOL_BUTTON_SIZE = QSize(35, 30);
+//const QSize MIN_TOOL_BUTTON_SIZE = QSize(35, 30);
 }
 
 ShotToolWidget::ShotToolWidget(DWidget *parent) : DStackedWidget(parent)
@@ -231,7 +231,7 @@ void ShotToolWidget::initRectLabel()
 
     connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
-
+        Q_UNUSED(status);
         DPalette pa;
         if (thickOneBtn->isChecked()) {
 //            pa = thickOneBtn->palette();
@@ -743,7 +743,7 @@ void ShotToolWidget::initCircLabel()
 
     connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
-
+        Q_UNUSED(status);
         DPalette pa;
         if (thickOneBtn->isChecked()) {
 //            pa = thickOneBtn->palette();
@@ -1267,7 +1267,7 @@ void ShotToolWidget::initLineLabel()
 
     connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
-
+        Q_UNUSED(status);
         DPalette pa;
         if (thickOneBtn->isChecked()) {
 //            pa = thickOneBtn->palette();
@@ -1756,7 +1756,7 @@ void ShotToolWidget::initPenLabel()
 
     connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
-
+        Q_UNUSED(status);
         DPalette pa;
         if (thickOneBtn->isChecked()) {
 //            pa = thickOneBtn->palette();
@@ -2099,7 +2099,7 @@ void ShotToolWidget::switchContent(QString shapeType)
 }
 void ShotToolWidget::colorChecked(QString colorType)
 {
-    qDebug() << colorType << m_currentType;
+    Q_UNUSED(colorType);
     //if(m_currentType == "rectangle"){
         if(m_blurRectButton && m_blurRectButton->isChecked())
             m_blurRectButton->click();
