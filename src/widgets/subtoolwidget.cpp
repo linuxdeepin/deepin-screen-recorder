@@ -1450,6 +1450,7 @@ void SubToolWidget::initShotLabel()
 
     connect(rectBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
+        Q_UNUSED(status);
         DPalette pa;
         if (m_rectButton->isChecked()) {
 //            pa = m_rectButton->palette();
@@ -1807,9 +1808,11 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
 {
     if (!shape.isEmpty()) {
         if (shape == "rect") {
-            m_rectButton->click();
+            if(!m_rectButton->isChecked())
+                m_rectButton->click();
         } else if (shape == "circ") {
-            m_circleButton->click();
+            if(!m_circleButton->isChecked())
+                m_circleButton->click();
         } else if (shape == "line") {
             m_lineButton->click();
         } else if (shape == "pen") {

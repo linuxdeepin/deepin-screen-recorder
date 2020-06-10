@@ -31,6 +31,7 @@
 #include <QSettings>
 #include <QBitmap>
 #include "../utils/configsettings.h"
+#include <DIconButton>
 
 DWIDGET_USE_NAMESPACE
 
@@ -58,12 +59,12 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
     blurBackground()->setBlendMode(DBlurEffectWidget::InWindowBlend);
 
     if (t_themeType == 1) {
-        blurBackground()->setMaskColor(QColor(255, 255, 255, 76.5));
+        blurBackground()->setMaskColor(QColor(255, 255, 255, 76));
 //        setMaskColor(QColor(170, 170, 170, 140));
     }
 
     else if (t_themeType == 2) {
-        blurBackground()->setMaskColor(QColor(0, 0, 0, 76.5));
+        blurBackground()->setMaskColor(QColor(0, 0, 0, 76));
     }
 //    setMaskColor(QColor(255, 255, 255, 76.5));
     //设置透明效果
@@ -88,7 +89,7 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
                            "DPushButton::hover{border-image: url(:/image/newUI/hover/close-hover.svg)}";
 
     QPixmap pixmap(":/image/newUI/normal/close-normal.svg");
-
+    //DIconButton
     m_closeButton = new DImageButton(this);
 //    m_closeButton->setIconSize(QSize(40, 40));
 //    m_closeButton->setIcon(QIcon(":/image/newUI/normal/close-normal.svg"));
@@ -232,6 +233,7 @@ void ToolBarWidget::setCameraDeviceEnable(bool status)
 
 void ToolBarWidget::setExpand(bool expand, QString shapeType)
 {
+    Q_UNUSED(expand);
 //    m_subToolbar->switchContent(shapeType);
     m_subTool->switchContent(shapeType);
 //    emit expandChanged(expand, shapeType);
@@ -258,6 +260,7 @@ ToolBar::ToolBar(DWidget *parent)
 
 void ToolBar::setExpand(bool expand, QString shapeType)
 {
+    Q_UNUSED(expand);
     emit buttonChecked(shapeType);
 //    if (expand) {
 //        m_expanded = true;
@@ -338,7 +341,7 @@ void ToolBar::initToolBar()
 //    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     setFixedHeight(TOOLBAR_HEIGHT);
     m_toolbarWidget = new ToolBarWidget(this);
-    QVBoxLayout *vLayout = new QVBoxLayout(this);
+    QVBoxLayout *vLayout = new QVBoxLayout();
     vLayout->setSizeConstraint(QLayout::SetFixedSize);
     vLayout->setContentsMargins(0, 0, 0, 0);
     vLayout->addStretch();

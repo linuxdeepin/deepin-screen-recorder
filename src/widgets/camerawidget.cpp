@@ -164,6 +164,7 @@ void CameraWidget::captureImage()
 
 void CameraWidget::processCapturedImage(int request_id, const QImage &img)
 {
+    Q_UNUSED(request_id);
     QImage t_image = img.scaled(this->width(), this->height(), Qt::IgnoreAspectRatio, Qt::FastTransformation);
 //    QPixmap pixmap = round(QPixmap::fromImage(t_image), 35);
     QPixmap pixmap = QPixmap::fromImage(t_image);
@@ -190,6 +191,7 @@ QPixmap CameraWidget::round(const QPixmap &img_in, int radius)
 
 void CameraWidget::deleteCapturedImage(int id, const QString &fileName)
 {
+    Q_UNUSED(id);
     QFile::remove(fileName);
 }
 
@@ -235,12 +237,14 @@ void CameraWidget::cameraInitError(QCamera::Error error)
 
 void CameraWidget::enterEvent(QEvent *e)
 {
+    Q_UNUSED(e);
     qApp->setOverrideCursor(Qt::ArrowCursor);
     qDebug() << "CameraWidget enterEvent";
 }
 
 void CameraWidget::paintEvent(QPaintEvent *e)
 {
+    Q_UNUSED(e);
 //    QPainter painter(this);
 //    painter.setBrush(QColor(0, 0, 0, 255));
 //    painter.setRenderHint(QPainter::Antialiasing);

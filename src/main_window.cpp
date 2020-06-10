@@ -96,16 +96,16 @@ const int MainWindow::CAMERA_WIDGET_MIN_HEIGHT = 45;
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int RECORD_MIN_SIZE = 10;
-const int SPACING = 10;
+//const int RECORD_MIN_SIZE = 10;
+//const int SPACING = 10;
 const int TOOLBAR_X_SPACING = 85;
 const int TOOLBAR_Y_SPACING = 3;
 const int SIDEBAR_X_SPACING = 8;
-const int SIDEBAR_Y_SPACING = 1;
+//const int SIDEBAR_Y_SPACING = 1;
 const int CURSOR_WIDTH = 8;
 const int CURSOR_HEIGHT = 18;
 const int INDICATOR_WIDTH =  110;
-const qreal RESIZEPOINT_WIDTH = 15;
+//const qreal RESIZEPOINT_WIDTH = 15;
 }
 
 //DWM_USE_NAMESPACE
@@ -168,7 +168,6 @@ void MainWindow::initAttributes()
     checkCpuIsZhaoxin();
 
     int t_screenCount = QApplication::desktop()->screenCount();
-    int t_indexScreen = 0;
     m_screenHeight = QApplication::desktop()->screen()->height();
 
     QRect t_screenRect;
@@ -238,7 +237,6 @@ void MainWindow::initAttributes()
 
     ConfigSettings::instance();
     const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
-    QPoint curPos = this->cursor().pos();
 
     // Get all windows geometry.
     // Below code must execute before `window.showFullscreen,
@@ -246,7 +244,6 @@ void MainWindow::initAttributes()
 
     //多屏情况下累加窗口大小
     if (t_screenCount == 1) {
-        QPoint pos = this->cursor().pos();
 //        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
 
 //        screenRect = screenWin->backgroundRect();
@@ -2099,6 +2096,7 @@ void MainWindow::saveScreenShot()
 
 void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const bool succeed)
 {
+    Q_UNUSED(saveAction);
     if(m_noNotify) {
         exit(0);
     }
@@ -2518,6 +2516,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
 void MainWindow::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event);
     // Just use for debug.
     // repaintCounter++;
     // qDebug() << repaintCounter;
@@ -2659,11 +2658,13 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (keyEvent->key() == Qt::Key_C) {
 //                    ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
                         //m_copyToClipboard = true;
-                    saveScreenShot();
+                        //saveScreenShot();
                 } else if (keyEvent->key() == Qt::Key_Z) {
                     qDebug() << "SDGF: ctrl+z !!!";
                     emit unDo();
                 }
+            } else if(keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter){
+                saveScreenShot();
             }
 
             bool needRepaint = false;
@@ -2704,7 +2705,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     } else if (keyEvent->key() == Qt::Key_C) {
 //                        ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
                         //m_copyToClipboard = true;
-                        saveScreenShot();
+                        //saveScreenShot();
                     } else if (keyEvent->key() == Qt::Key_S) {
 //                        expressSaveScreenshot();
                         saveScreenShot();
@@ -2771,7 +2772,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 //                        ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
                         //m_copyToClipboard = true;
 //                        saveScreenshot();
-                        saveScreenShot();
+                        //saveScreenShot();
                     }
                     if (keyEvent->key() == Qt::Key_Left) {
                         recordX = std::max(0, recordX - 1);
@@ -3485,7 +3486,7 @@ void MainWindow::shotCurrentImg()
 
 void MainWindow::shotFullScreen()
 {
-    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
+    //const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     QRect target( m_backgroundRect.x(),
                   m_backgroundRect.y(),
                   m_backgroundRect.width(),
@@ -3849,6 +3850,8 @@ void MainWindow::hideCameraWidget()
 }
 void MainWindow::adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight)
 {
+    Q_UNUSED(layoutWidth);
+    Q_UNUSED(layoutHeight);
 //    if (recordHeight < layoutHeight) {
 //        if (recordY + layoutHeight > rootWindowRect.height()) {
 //            layout->setContentsMargins(

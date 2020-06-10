@@ -1233,6 +1233,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
 
                     connect(edit, &TextEdit::textEditFinish, this, [ = ] (int index) {
 //                        setAllTextEditReadOnly();
+                        Q_UNUSED(index);
                         setAllTextEditReadOnly();
                     });
 

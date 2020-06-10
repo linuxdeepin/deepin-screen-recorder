@@ -133,6 +133,7 @@ ToolTips::~ToolTips()
 
 void ToolTips::enterEvent(QEvent *e)
 {
+    Q_UNUSED(e);
     hide();
 }
 

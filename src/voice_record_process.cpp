@@ -91,7 +91,7 @@ void VoiceRecordProcess::resumeRecord()
 
 void VoiceRecordProcess::renderLevel(const QAudioBuffer &buffer)
 {
-
+    Q_UNUSED(buffer);
 }
 
 QString VoiceRecordProcess::generateRecordingFilepath()

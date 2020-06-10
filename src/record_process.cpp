@@ -222,6 +222,8 @@ void RecordProcess::recordVideo()
 
                 arguments << QString("-thread_queue_size");
                 arguments << QString("512");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
@@ -233,6 +235,8 @@ void RecordProcess::recordVideo()
 
                 arguments << QString("-thread_queue_size");
                 arguments << QString("512");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
@@ -261,6 +265,8 @@ void RecordProcess::recordVideo()
 
                 arguments << QString("-thread_queue_size");
                 arguments << QString("512");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
@@ -278,6 +284,8 @@ void RecordProcess::recordVideo()
                 lastAudioSink = audioUtils->currentAudioSink();
                 arguments << QString("-thread_queue_size");
                 arguments << QString("512");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
@@ -336,6 +344,8 @@ void RecordProcess::recordVideo()
 
                 arguments << QString("-thread_queue_size");
                 arguments << QString("512");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
@@ -348,6 +358,8 @@ void RecordProcess::recordVideo()
 
                 arguments << QString("-thread_queue_size");
                 arguments << QString("512");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
@@ -380,6 +392,8 @@ void RecordProcess::recordVideo()
 
                 arguments << QString("-thread_queue_size");
                 arguments << QString("512");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
@@ -398,14 +412,14 @@ void RecordProcess::recordVideo()
 
                 arguments << QString("-thread_queue_size");
                 arguments << QString("512");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
                 arguments << QString("2");
                 arguments << QString("-ar");
                 arguments << QString("44100");
-                //arguments << QString("-wallclock");
-                //arguments << QString("0");
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
                 /*
