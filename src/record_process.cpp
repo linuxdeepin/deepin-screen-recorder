@@ -626,7 +626,7 @@ int RecordProcess::readSleepProcessPid()
     memset(&proc_info, 0, sizeof(proc_t));
 
     StoredProcType processes;
-    while (readproc(proc, &proc_info) != NULL) {
+    while (readproc(proc, &proc_info) != nullptr) {
         processes[proc_info.tid] = proc_info;
     }
     closeproc(proc);

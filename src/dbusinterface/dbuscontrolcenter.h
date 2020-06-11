@@ -70,7 +70,7 @@ public:
     { return "com.deepin.dde.ControlCenter"; }
 
 public:
-    DBusControlCenter(QObject *parent = 0);
+    DBusControlCenter(QObject *parent = nullptr);
 
     ~DBusControlCenter();
 

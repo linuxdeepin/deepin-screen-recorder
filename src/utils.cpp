@@ -149,7 +149,7 @@ void Utils::passInputEvent(int wid)
     reponseArea->width = 0;
     reponseArea->height = 0;
 
-    XShapeCombineRectangles(QX11Info::display(), wid, ShapeInput, 0, 0, reponseArea, 1, ShapeSet, YXBanded);
+    XShapeCombineRectangles(QX11Info::display(), static_cast<unsigned long>(wid), ShapeInput, 0, 0, reponseArea, 1, ShapeSet, YXBanded);
 
     delete reponseArea;
 }

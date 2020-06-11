@@ -67,7 +67,7 @@ public:
     { return "com.deepin.daemon.SoundEffect"; }
 
 public:
-    DBusSoundEffect(QObject *parent = 0);
+    DBusSoundEffect(QObject *parent = nullptr);
 
     ~DBusSoundEffect();
 

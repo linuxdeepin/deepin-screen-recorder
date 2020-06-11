@@ -27,6 +27,7 @@
 #include <QDebug>
 #include <DImageButton>
 #include <DFloatingWidget>
+#include <DIconButton>
 
 #include "majtoolbar.h"
 #include "subtoolbar.h"
@@ -100,7 +101,7 @@ class ToolBar : public DLabel
 {
     Q_OBJECT
 public:
-    ToolBar(DWidget *parent = 0);
+    ToolBar(DWidget *parent = nullptr);
     ~ToolBar() Q_DECL_OVERRIDE;
 
 signals:

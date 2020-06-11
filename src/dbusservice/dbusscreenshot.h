@@ -31,7 +31,7 @@ public:
     { return "com.deepin.DeepinScreenshot"; }
 
 public:
-    DBusScreenshot(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent = 0);
+    DBusScreenshot(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent = nullptr);
 
     ~DBusScreenshot();
 

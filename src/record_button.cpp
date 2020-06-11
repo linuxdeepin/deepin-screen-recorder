@@ -86,8 +86,8 @@ void RecordButton::paintEvent(QPaintEvent *)
     // Draw icon.
     qreal devicePixelRatio = qApp->devicePixelRatio();
     painter.setOpacity(1);
-    int iconX = rect().x() + (rect().width() - normalImg.width() / devicePixelRatio) / 2;
-    int iconY = rect().y() + (rect().height() - normalImg.height() / devicePixelRatio - textSize.height() - TEXT_PADDING) / 2;
+    int iconX = static_cast<int>(rect().x() + (rect().width() - normalImg.width() / devicePixelRatio) / 2);
+    int iconY = static_cast<int>(rect().y() + (rect().height() - normalImg.height() / devicePixelRatio - textSize.height() - TEXT_PADDING) / 2);
     if (status == "NORMAL") {
         painter.drawPixmap(QPoint(iconX, iconY), normalImg);
     } else if (status == "PRESS") {
@@ -98,7 +98,7 @@ void RecordButton::paintEvent(QPaintEvent *)
 
     // Draw text.
     int textX = rect().x();
-    int textY = iconY + normalImg.height() / devicePixelRatio + TEXT_PADDING;
+    int textY = static_cast<int>(iconY + normalImg.height() / devicePixelRatio + TEXT_PADDING);
     Utils::drawTooltipText(painter, text, "#e34342", Constant::RECTANGLE_FONT_SIZE, QRect(textX, textY, rect().width(), textSize.height()));
 }
 

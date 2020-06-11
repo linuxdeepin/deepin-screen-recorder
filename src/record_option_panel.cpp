@@ -93,10 +93,10 @@ void RecordOptionPanel::paintEvent(QPaintEvent *)
     }
     Utils::drawTooltipText(painter, "GIF", gifColor, 9, QRectF(gifTextX, rect().y(), gifTextWidth, rect().height()));
 
-    int videoIconX = rect().x() + rect().width() / 2;
-    int videoIconY = rect().y() + (rect().height() - videoCheckedImg.height() / devicePixelRatio) / 2;
-    int videoTextX = videoIconX + videoCheckedImg.width() / devicePixelRatio;
-    int videoTextWidth = rect().width() / 2 - ICON_OFFSET_X / devicePixelRatio - gifCheckedImg.width() / devicePixelRatio;
+    int videoIconX = static_cast<int>(rect().x() + rect().width() / 2);
+    int videoIconY = static_cast<int>(rect().y() + (rect().height() - videoCheckedImg.height() / devicePixelRatio) / 2);
+    int videoTextX = static_cast<int>(videoIconX + videoCheckedImg.width() / devicePixelRatio);
+    int videoTextWidth = static_cast<int>(rect().width() / 2 - ICON_OFFSET_X / devicePixelRatio - gifCheckedImg.width() / devicePixelRatio);
     QString videoColor;
     if (!saveAsGif) {
         painter.drawPixmap(QPoint(videoIconX, videoIconY), videoCheckedImg);

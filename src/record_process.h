@@ -52,7 +52,7 @@ public:
     static const int RECORD_FRAMERATE_24;
     static const int RECORD_FRAMERATE_30;
 
-    RecordProcess(QObject *parent = 0);
+    RecordProcess(QObject *parent = nullptr);
 
     void setRecordInfo(const QRect &recordRect, const QString &filename);
     void setRecordType(int recordType);
