@@ -64,7 +64,7 @@ void BigColorButton::paintEvent(QPaintEvent *)
     painter.setRenderHints(QPainter::Antialiasing);
     painter.setPen(Qt::transparent);
 
-    painter.setBrush(QBrush(QColor(0, 0, 0, 20.4)));
+    painter.setBrush(QBrush(QColor(0, 0, 0, 20)));
     if (m_isHover) {
         painter.drawRoundedRect(rect(), 4, 4);
     }

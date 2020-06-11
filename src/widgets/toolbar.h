@@ -27,6 +27,7 @@
 #include <QDebug>
 #include <DImageButton>
 #include <DFloatingWidget>
+#include <DIconButton>
 
 #include "majtoolbar.h"
 #include "subtoolbar.h"
@@ -41,8 +42,8 @@ class ToolBarWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:
-    ToolBarWidget(DWidget *parent = 0);
-    ~ToolBarWidget();
+    ToolBarWidget(DWidget *parent = nullptr);
+    ~ToolBarWidget() Q_DECL_OVERRIDE;
 
 signals:
     void buttonChecked(QString shapeType);
@@ -100,8 +101,8 @@ class ToolBar : public DLabel
 {
     Q_OBJECT
 public:
-    ToolBar(DWidget *parent = 0);
-    ~ToolBar();
+    ToolBar(DWidget *parent = nullptr);
+    ~ToolBar() Q_DECL_OVERRIDE;
 
 signals:
     void heightChanged();

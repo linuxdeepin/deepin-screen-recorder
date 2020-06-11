@@ -67,7 +67,7 @@ public:
     { return "org.freedesktop.Notifications"; }
 
 public:
-    DBusNotify(QObject *parent = 0);
+    DBusNotify(QObject *parent = nullptr);
 
     ~DBusNotify();
 

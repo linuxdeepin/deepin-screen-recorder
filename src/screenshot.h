@@ -29,7 +29,7 @@ class Screenshot : public QObject
 
     Q_CLASSINFO("D-Bus Interface", "com.deepin.ScreenRecorder")
 public:
-    Screenshot(QObject *parent = 0);
+    Screenshot(QObject *parent = nullptr);
     ~Screenshot();
 
     void setConfigThemeType(int themeType);

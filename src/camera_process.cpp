@@ -70,8 +70,8 @@ void CameraProcess::displayImage(int, QImage image)
     //qDebug() << (int)format;
     image = image.convertToFormat(QImage::Format_RGB888);
 //    ui->label->setPixmap(QPixmap::fromImage(image));
-    QImage::Format format =  image.format();
-    qDebug() << (int)format;
+    //QImage::Format format =  image.format();
+    //qDebug() << (int)format;
 }
 
 bool CameraProcess::checkCameraAvailability()

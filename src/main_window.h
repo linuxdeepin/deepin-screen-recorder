@@ -105,7 +105,7 @@ class MainWindow : public DWidget
     static const int CAMERA_WIDGET_MIN_HEIGHT;
 
 public:
-    MainWindow(DWidget *parent = 0);
+    MainWindow(DWidget *parent = nullptr);
     ~MainWindow()
     {
         m_pVoiceVolumeWatcher->stopWatch();

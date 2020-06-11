@@ -25,7 +25,7 @@ class AudioUtils: public QObject
 {
     Q_OBJECT
 public:
-    explicit AudioUtils(QObject *parent = 0);
+    explicit AudioUtils(QObject *parent = nullptr);
     bool isSystemAudioOutput();
     bool isMicrophoneOutput();
     void setupMicrophoneOutput();

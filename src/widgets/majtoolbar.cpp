@@ -34,7 +34,7 @@ namespace {
 const int TOOLBAR_HEIGHT = 28;
 const int TOOLBAR_WIDTH = 276;
 const int BTN_SPACING = 1;
-const int TOOLBUTTON_WIDTH = 22;
+//const int TOOLBUTTON_WIDTH = 22;
 const QSize SAVE_BTN = QSize(30, 26);
 const QSize LIST_BTN = QSize(12, 26);
 }

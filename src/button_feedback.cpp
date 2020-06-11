@@ -126,7 +126,7 @@ void ButtonFeedback::showPressFeedback(int x, int y)
     show();
     repaint();
     qreal devicePixelRatio = qApp->devicePixelRatio();
-    move(x / devicePixelRatio - rect().width() / devicePixelRatio / 2, y / devicePixelRatio - rect().height() / devicePixelRatio / 2);
+    move(static_cast<int>(x / devicePixelRatio - rect().width() / devicePixelRatio / 2), static_cast<int>(y / devicePixelRatio - rect().height() / devicePixelRatio / 2));
     timer->start(FRAME_RATE);
 }
 
@@ -137,7 +137,7 @@ void ButtonFeedback::showDragFeedback(int x, int y)
     show();
     repaint();
     qreal devicePixelRatio = qApp->devicePixelRatio();
-    move(x / devicePixelRatio - rect().width() / devicePixelRatio / 2, y / devicePixelRatio - rect().height() / devicePixelRatio / 2);
+    move(static_cast<int>(x / devicePixelRatio - rect().width() / devicePixelRatio / 2), static_cast<int>(y / devicePixelRatio - rect().height() / devicePixelRatio / 2));
 
     if (timer->isActive()) {
         timer->stop();

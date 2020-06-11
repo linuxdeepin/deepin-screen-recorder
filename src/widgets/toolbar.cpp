@@ -37,11 +37,11 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const int TOOLBAR_HEIGHT = 70;
-const int TOOLBAR_WIDTH = 530;
+//const int TOOLBAR_WIDTH = 530;
 
-const QSize TOOLBAR_WIDGET_SIZE = QSize(530, 70);
-const int BUTTON_SPACING = 3;
-const int BTN_RADIUS = 3;
+//const QSize TOOLBAR_WIDGET_SIZE = QSize(530, 70);
+//const int BUTTON_SPACING = 3;
+//const int BTN_RADIUS = 3;
 }
 
 ToolBarWidget::ToolBarWidget(DWidget *parent)
