@@ -209,7 +209,7 @@ void RecordProcess::recordVideo()
             arguments << QString("-probesize");
             arguments << QString("24M");
             arguments << QString("-thread_queue_size");
-            arguments << QString("512");
+            arguments << QString("24");
             arguments << QString("-f");
             arguments << QString("x11grab");
             arguments << QString("-i");
@@ -220,8 +220,8 @@ void RecordProcess::recordVideo()
 
                 lastAudioSink = audioUtils->currentAudioSink();
 
-                arguments << QString("-thread_queue_size");
-                arguments << QString("512");
+                //arguments << QString("-thread_queue_size");
+                //arguments << QString("64");
                 arguments << QString("-fragment_size");
                 arguments << QString("4096");
                 arguments << QString("-f");
@@ -233,8 +233,8 @@ void RecordProcess::recordVideo()
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
 
-                arguments << QString("-thread_queue_size");
-                arguments << QString("512");
+                //arguments << QString("-thread_queue_size");
+                //arguments << QString("64");
                 arguments << QString("-fragment_size");
                 arguments << QString("4096");
                 arguments << QString("-f");
@@ -263,8 +263,8 @@ void RecordProcess::recordVideo()
 
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC) {
 
-                arguments << QString("-thread_queue_size");
-                arguments << QString("512");
+                //arguments << QString("-thread_queue_size");
+                //arguments << QString("64");
                 arguments << QString("-fragment_size");
                 arguments << QString("4096");
                 arguments << QString("-f");
@@ -282,8 +282,8 @@ void RecordProcess::recordVideo()
                 //arguments << QString("asetpts=N/SR/TB");
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
                 lastAudioSink = audioUtils->currentAudioSink();
-                arguments << QString("-thread_queue_size");
-                arguments << QString("512");
+                //arguments << QString("-thread_queue_size");
+                //arguments << QString("64");
                 arguments << QString("-fragment_size");
                 arguments << QString("4096");
                 arguments << QString("-f");
@@ -329,15 +329,15 @@ void RecordProcess::recordVideo()
             arguments << QString("-probesize");
             arguments << QString("24M");
             arguments << QString("-thread_queue_size");
-            arguments << QString("512");
+            arguments << QString("24");
             arguments << QString("-f");
             arguments << QString("x11grab");
             arguments << QString("-i");
             arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
             if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
 
-                arguments << QString("-thread_queue_size");
-                arguments << QString("512");
+                //arguments << QString("-thread_queue_size");
+                //arguments << QString("64");
                 arguments << QString("-fragment_size");
                 arguments << QString("4096");
                 arguments << QString("-f");
@@ -350,8 +350,8 @@ void RecordProcess::recordVideo()
                 arguments << QString("%1").arg(t_currentAudioChannel);
 
 
-                arguments << QString("-thread_queue_size");
-                arguments << QString("512");
+                //arguments << QString("-thread_queue_size");
+                //arguments << QString("64");
                 arguments << QString("-fragment_size");
                 arguments << QString("4096");
                 arguments << QString("-f");
@@ -380,8 +380,8 @@ void RecordProcess::recordVideo()
 //                AudioUtils *audioUtils = new AudioUtils(this);
                 lastAudioSink = audioUtils->currentAudioSink();
 
-                arguments << QString("-thread_queue_size");
-                arguments << QString("512");
+                //arguments << QString("-thread_queue_size");
+                //arguments << QString("64");
                 arguments << QString("-fragment_size");
                 arguments << QString("4096");
                 arguments << QString("-f");
@@ -398,8 +398,8 @@ void RecordProcess::recordVideo()
 
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
 
-                arguments << QString("-thread_queue_size");
-                arguments << QString("512");
+                //arguments << QString("-thread_queue_size");
+                //arguments << QString("64");
                 arguments << QString("-fragment_size");
                 arguments << QString("4096");
                 arguments << QString("-f");

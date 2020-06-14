@@ -127,6 +127,7 @@ LIBS += -lX11 -lXext -lXtst
 LIBS += -L"libprocps" -lprocps
 
 QMAKE_CXXFLAGS += -g
+QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations
 
 isEmpty(PREFIX){
     PREFIX = /usr

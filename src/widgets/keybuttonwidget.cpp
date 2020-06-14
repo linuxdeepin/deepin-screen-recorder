@@ -54,7 +54,7 @@ KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
     }
 
     else if (t_themeType == 2) {
-        setMaskColor(QColor(0, 0, 0, 76.5));
+        setMaskColor(QColor(0, 0, 0, 76));
     }
     //设置透明效果
     setFixedWidth(_BUTTON_WIDTH);

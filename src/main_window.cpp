@@ -1191,10 +1191,10 @@ void MainWindow::topWindow()
     emit this->hideScreenshotUI();
 
     const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
-    QRect target( recordX * ratio,
-                  recordY * ratio,
-                  recordWidth * ratio,
-                  recordHeight * ratio );
+    QRect target( static_cast<int>(recordX * ratio),
+                  static_cast<int>(recordY * ratio),
+                  static_cast<int>(recordWidth * ratio),
+                  static_cast<int>(recordHeight * ratio) );
 
 //    using namespace utils;
     QPixmap screenShotPix =  m_backgroundPixmap.copy(target);
@@ -1955,13 +1955,13 @@ void MainWindow::updateMultiKeyBoardPos()
         //两个按键的情况
         case 2:
             m_keyButtonList.at(0)->hide();
-            t_keyPoint1 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() / 1.5,
+            t_keyPoint1 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() / 1.5),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(0)->move(t_keyPoint1.x(), t_keyPoint1.y());
             m_keyButtonList.at(0)->show();
 
             m_keyButtonList.at(1)->hide();
-            t_keyPoint2 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2 + m_keyButtonList.at(1)->width() / 1.5,
+            t_keyPoint2 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2 + m_keyButtonList.at(1)->width() / 1.5),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(1)->move(t_keyPoint2.x(), t_keyPoint2.y());
             m_keyButtonList.at(1)->show();
@@ -1969,7 +1969,7 @@ void MainWindow::updateMultiKeyBoardPos()
         //三个按键的情况
         case 3:
             m_keyButtonList.at(0)->hide();
-            t_keyPoint1 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() * 1.3,
+            t_keyPoint1 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() * 1.3),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(0)->move(t_keyPoint1.x(), t_keyPoint1.y());
             m_keyButtonList.at(0)->show();
@@ -1981,7 +1981,7 @@ void MainWindow::updateMultiKeyBoardPos()
             m_keyButtonList.at(1)->show();
 
             m_keyButtonList.at(2)->hide();
-            t_keyPoint3 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(2)->width() / 2 + m_keyButtonList.at(2)->width() * 1.3,
+            t_keyPoint3 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(2)->width() / 2 + m_keyButtonList.at(2)->width() * 1.3),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(2)->move(t_keyPoint3.x(), t_keyPoint3.y());
             m_keyButtonList.at(2)->show();
@@ -1995,13 +1995,13 @@ void MainWindow::updateMultiKeyBoardPos()
             m_keyButtonList.at(0)->show();
 
             m_keyButtonList.at(1)->hide();
-            t_keyPoint2 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2 - m_keyButtonList.at(1)->width() / 1.5,
+            t_keyPoint2 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2 - m_keyButtonList.at(1)->width() / 1.5),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(1)->move(t_keyPoint2.x(), t_keyPoint2.y());
             m_keyButtonList.at(1)->show();
 
             m_keyButtonList.at(2)->hide();
-            t_keyPoint3 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(2)->width() / 2 + m_keyButtonList.at(2)->width() / 1.5,
+            t_keyPoint3 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(2)->width() / 2 + m_keyButtonList.at(2)->width() / 1.5),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(2)->move(t_keyPoint3.x(), t_keyPoint3.y());
             m_keyButtonList.at(2)->show();
@@ -2015,13 +2015,13 @@ void MainWindow::updateMultiKeyBoardPos()
         //五个按键的情况
         case 5:
             m_keyButtonList.at(0)->hide();
-            t_keyPoint1 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() * 2.6,
+            t_keyPoint1 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() * 2.6),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(0)->move(t_keyPoint1.x(), t_keyPoint1.y());
             m_keyButtonList.at(0)->show();
 
             m_keyButtonList.at(1)->hide();
-            t_keyPoint2 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2 - m_keyButtonList.at(1)->width() * 1.3,
+            t_keyPoint2 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2 - m_keyButtonList.at(1)->width() * 1.3),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(1)->move(t_keyPoint2.x(), t_keyPoint2.y());
             m_keyButtonList.at(1)->show();
@@ -2033,13 +2033,13 @@ void MainWindow::updateMultiKeyBoardPos()
             m_keyButtonList.at(2)->show();
 
             m_keyButtonList.at(3)->hide();
-            t_keyPoint4 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(3)->width() / 2 + m_keyButtonList.at(3)->width() * 1.3,
+            t_keyPoint4 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(3)->width() / 2 + m_keyButtonList.at(3)->width() * 1.3),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(3)->move(t_keyPoint4.x(), t_keyPoint4.y());
             m_keyButtonList.at(3)->show();
 
             m_keyButtonList.at(4)->hide();
-            t_keyPoint5 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(3)->width() / 2 + m_keyButtonList.at(4)->width() * 2.6,
+            t_keyPoint5 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(3)->width() / 2 + m_keyButtonList.at(4)->width() * 2.6),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(4)->move(t_keyPoint5.x(), t_keyPoint5.y());
             m_keyButtonList.at(4)->show();
@@ -2358,7 +2358,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
         int pixWidth = screenShotPix.width();
         int pixHeight = screenShotPix.height();
-        screenShotPix = screenShotPix.scaled(pixWidth * saveQuality, pixHeight * saveQuality,
+        screenShotPix = screenShotPix.scaled(static_cast<int>(pixWidth * saveQuality), static_cast<int>(pixHeight * saveQuality),
                                              Qt::KeepAspectRatio, Qt::FastTransformation);
         screenShotPix = screenShotPix.scaled(pixWidth,  pixHeight,
                                              Qt::KeepAspectRatio, Qt::FastTransformation);
@@ -3453,10 +3453,10 @@ void MainWindow::shotCurrentImg()
 
     const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     qDebug() << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect() << ratio;
-    QRect target( recordX * ratio,
-                  recordY * ratio,
-                  recordWidth * ratio,
-                  recordHeight * ratio);
+    QRect target( static_cast<int>(recordX * ratio),
+                  static_cast<int>(recordY * ratio),
+                  static_cast<int>(recordWidth * ratio),
+                  static_cast<int>(recordHeight * ratio));
 
 
 
@@ -4082,10 +4082,10 @@ void MainWindow::shotImgWidthEffect()
     const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
 //    const QRect rect(m_shapesWidget->geometry().topLeft() * ratio, m_shapesWidget->geometry().size() * ratio);
 
-    QRect target( m_shapesWidget->geometry().x() * ratio,
-                  m_shapesWidget->geometry().y() * ratio,
-                  m_shapesWidget->geometry().width() * ratio,
-                  m_shapesWidget->geometry().height() * ratio );
+    QRect target( static_cast<int>(m_shapesWidget->geometry().x() * ratio),
+                  static_cast<int>(m_shapesWidget->geometry().y() * ratio),
+                  static_cast<int>(m_shapesWidget->geometry().width() * ratio),
+                  static_cast<int>(m_shapesWidget->geometry().height() * ratio) );
 
     m_resultPixmap = m_backgroundPixmap.copy(target);
     m_drawNothing = false;
