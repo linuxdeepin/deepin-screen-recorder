@@ -209,7 +209,7 @@ void RecordProcess::recordVideo()
             arguments << QString("-probesize");
             arguments << QString("24M");
             arguments << QString("-thread_queue_size");
-            arguments << QString("24");
+            arguments << QString("48");
             arguments << QString("-f");
             arguments << QString("x11grab");
             arguments << QString("-i");
@@ -329,7 +329,7 @@ void RecordProcess::recordVideo()
             arguments << QString("-probesize");
             arguments << QString("24M");
             arguments << QString("-thread_queue_size");
-            arguments << QString("24");
+            arguments << QString("48");
             arguments << QString("-f");
             arguments << QString("x11grab");
             arguments << QString("-i");
