@@ -20,8 +20,8 @@
 
 const int padding = 2;
 const int ROTATEPOINT_PADDING = 30;
-const int TANT_EDGEVALUE = 0.78539;
-const int TANT2_EDGEVALUE = 2.35619;
+const int TANT_EDGEVALUE = 0;
+const int TANT2_EDGEVALUE = 2;
 const int MIN_PADDING = 3;
 const qreal SLOPE = 0.5522848;
 
@@ -39,7 +39,7 @@ bool pointClickIn(QPointF point2, QPointF point1, int padding)
 /* judge whether the point3 is on the segment*/
 bool pointOnLine(QPointF point1, QPointF point2, QPointF point3)
 {
-    if (point1.x() == point2.x()) {
+    if (static_cast<int>(point1.x()) == static_cast<int>(point2.x())) {
         if (point3.x() >= point1.x() - padding && point3.x() <= point1.x() + padding &&
                 point3.y() >= std::min(point1.y(), point2.y()) - padding && point3.y() <= std::max(point1.y(), point2.y()) + padding) {
             return true;
@@ -57,7 +57,7 @@ bool pointOnLine(QPointF point1, QPointF point2, QPointF point3)
             qreal k = QPointF::dotProduct(t_ab, t_ac) / QPointF::dotProduct(t_ab, t_ab);
 
             QPointF t_dc = t_ac - k * t_ab;
-            int t_len = sqrt(QPointF::dotProduct(t_dc, t_dc));
+            int t_len = static_cast<int>(sqrt(QPointF::dotProduct(t_dc, t_dc)));
             qDebug() << "t_distance" << t_len;
 
 
@@ -83,7 +83,7 @@ qreal getDistance(QPointF point1, QPointF point2)
 /* get the point who splid a distance on a line */
 QPointF pointSplid(QPointF point1, QPointF point2, qreal padding)
 {
-    if (point1.x() == point2.x()) {
+    if (static_cast<int>(point1.x()) == static_cast<int>(point2.x())) {
         return QPointF(0, padding);
     } else {
         qreal tmpX = padding * std::cos(std::atan2(std::abs(point1.y() - point2.y()), std::abs(point1.x() - point2.x())));
@@ -167,14 +167,15 @@ FourPoints getAnotherFPoints(FourPoints mainPoints)
     if (mainPoints.length() != 4) {
         return otherFPoints;
     }
-    otherFPoints[0] = QPoint((mainPoints[0].x() + mainPoints[1].x()) / 2,
-                             (mainPoints[0].y() + mainPoints[1].y()) / 2);
-    otherFPoints[1] = QPoint((mainPoints[0].x() + mainPoints[2].x()) / 2,
-                             (mainPoints[0].y() + mainPoints[2].y()) / 2);
-    otherFPoints[2] = QPoint((mainPoints[2].x() + mainPoints[3].x()) / 2,
-                             (mainPoints[2].y() + mainPoints[3].y()) / 2);
-    otherFPoints[3] = (QPoint((mainPoints[1].x() + mainPoints[3].x()) / 2,
-                              (mainPoints[1].y() + mainPoints[3].y()) / 2));
+
+    otherFPoints[0] = QPoint(static_cast<int>((mainPoints[0].x() + mainPoints[1].x()) / 2),
+                             static_cast<int>((mainPoints[0].y() + mainPoints[1].y()) / 2));
+    otherFPoints[1] = QPoint(static_cast<int>((mainPoints[0].x() + mainPoints[2].x()) / 2),
+                             static_cast<int>((mainPoints[0].y() + mainPoints[2].y()) / 2));
+    otherFPoints[2] = QPoint(static_cast<int>((mainPoints[2].x() + mainPoints[3].x()) / 2),
+                             static_cast<int>((mainPoints[2].y() + mainPoints[3].y()) / 2));
+    otherFPoints[3] = QPoint(static_cast<int>((mainPoints[1].x() + mainPoints[3].x()) / 2),
+                              static_cast<int>((mainPoints[1].y() + mainPoints[3].y()) / 2));
     return otherFPoints;
 }
 /*
@@ -229,7 +230,7 @@ QPointF pointRotate(QPointF point1, QPointF point2, qreal angle)
 /* the distance from a point(point3) to a line(point1, point2) */
 qreal pointToLineDistance(QPointF point1, QPointF point2, QPointF point3)
 {
-    if (point1.x() == point2.x()) {
+    if (static_cast<int>(point1.x()) == static_cast<int>(point2.x())) {
         return std::abs(point3.x() - point1.x());
     } else {
         qreal k = (point1.y() - point2.y()) / (point1.x() - point2.x());
@@ -239,9 +240,9 @@ qreal pointToLineDistance(QPointF point1, QPointF point2, QPointF point3)
 }
 
 /* judge the direction of point3 of line(point1, point2) */
-qreal pointLineDir(QPointF point1, QPointF point2, QPointF point3)
+int pointLineDir(QPointF point1, QPointF point2, QPointF point3)
 {
-    if (point1.x() == point2.x()) {
+    if (static_cast<int>(point1.x()) == static_cast<int>(point2.x())) {
         if (point3.x() <= point1.x()) {
             return -1;
         } else {
@@ -270,8 +271,8 @@ QPointF getControlPoint(QPointF point1, QPointF point2, bool direction)
     } else {
         k3 = k1 / k2;
     }
-    QPointF resultPoint = QPoint((point1.x() + k3 * point2.x()) / (1 + k3),
-                                 (point1.y() + k3 * point2.y()) / (1 + k3));
+    QPointF resultPoint = QPoint(static_cast<int>((point1.x() + k3 * point2.x()) / (1 + k3)),
+                                 static_cast<int>((point1.y() + k3 * point2.y()) / (1 + k3)));
     return resultPoint;
 }
 
@@ -340,13 +341,13 @@ bool pointOnEllipse(FourPoints rectFPoints, QPointF pos)
 QList<QPointF> pointOfArrow(QPointF startPoint, QPointF endPoint, qreal arrowLength)
 {
     qreal xMultiplier, yMultiplier;
-    if (startPoint.x() == endPoint.x()) {
+    if (static_cast<int>(startPoint.x()) == static_cast<int>(endPoint.x())) {
         xMultiplier = 1;
     } else {
         xMultiplier = (startPoint.x() - endPoint.x()) / std::abs(startPoint.x() - endPoint.x());
     }
 
-    if (startPoint.y() == endPoint.y()) {
+    if (static_cast<int>(startPoint.y()) == static_cast<int>(endPoint.y())) {
         yMultiplier = 1;
     } else {
         yMultiplier = (startPoint.y() - endPoint.y()) / std::abs(startPoint.y() - endPoint.y());
@@ -393,13 +394,13 @@ QList<qreal> relativePosition(FourPoints mainPoints,  QPointF pos)
     qreal distance13 = pointToLineDistance(mainPoints[0], mainPoints[2], pos);
     qreal distance24 = pointToLineDistance(mainPoints[1], mainPoints[3], pos);
 
-    if (distance34 == 0) {
+    if (static_cast<int>(distance34) == 0) {
         firstRelaPosit = -2;
     } else {
         firstRelaPosit = distance12 / distance34;
     }
 
-    if (distance24 == 0) {
+    if (static_cast<int>(distance24) == 0) {
         secondRelaPosit = -2;
     } else {
         secondRelaPosit = distance13 / distance24;
@@ -414,30 +415,31 @@ QList<qreal> relativePosition(FourPoints mainPoints,  QPointF pos)
 
 QPointF           getNewPosition(FourPoints mainPoints, QList<qreal> re)
 {
-    qreal changeX, changeY;
+    qreal changeX = 0;
+    qreal changeY = 0;
 
-    if (re[0] == -2) {
+    if (static_cast<int>(re[0]) == -2) {
         changeX = mainPoints[2].x();
         changeY = (mainPoints[0].y() + re[1] * mainPoints[1].y()) / (1 + re[1]);
     }
-    if (re[1] == -2) {
+    if (static_cast<int>(re[1]) == -2) {
         changeX = (mainPoints[1].x() + re[0] * mainPoints[3].x()) / (1 + re[0]);
         changeY = mainPoints[1].y();
     }
-    if (re[0] != -2 && re[1] != -2) {
+    if (static_cast<int>(re[0]) != -2 && static_cast<int>(re[1]) != -2) {
         QPointF pointi = QPointF((mainPoints[1].x() + re[0] * mainPoints[3].x()) / (1 + re[0]),
                                  (mainPoints[1].y() + re[0] * mainPoints[3].y()) / (1 + re[0]));
         QPointF pointj = QPointF((mainPoints[0].x() + re[1] * mainPoints[1].x()) / (1 + re[1]),
                                  (mainPoints[0].y() + re[1] * mainPoints[1].y()) / (1 + re[1]));
-        if (mainPoints[0].x() == mainPoints[1].x()) {
+        if (static_cast<int>(mainPoints[0].x()) == static_cast<int>(mainPoints[1].x())) {
             changeX = pointi.x();
             changeY = pointj.y();
         }
-        if (mainPoints[0].x() == mainPoints[2].x()) {
+        if (static_cast<int>(mainPoints[0].x()) == static_cast<int>(mainPoints[2].x())) {
             changeX = pointj.x();
             changeY = pointi.y();
         }
-        if (mainPoints[0].x() != mainPoints[1].x() && mainPoints[0].x() != mainPoints[2].x()) {
+        if (static_cast<int>(mainPoints[0].x()) != static_cast<int>(mainPoints[1].x()) && static_cast<int>(mainPoints[0].x()) != static_cast<int>(mainPoints[2].x())) {
             qreal k1 = (mainPoints[0].y() - mainPoints[1].y()) / (mainPoints[0].x() - mainPoints[1].x());
             qreal b1 = pointi.y() - k1 * pointi.x();
 
@@ -620,8 +622,8 @@ FourPoints resizePointPosition(QPointF point1, QPointF point2, QPointF point3, Q
         }
         }
     }
-    if (point1.x() == point2.x() && point1.y() < point2.y() &&
-            point1.x() < point3.x() && point1.y() == point3.y()) {
+    if (static_cast<int>(point1.x()) == static_cast<int>(point2.x()) && point1.y() < point2.y() &&
+            point1.x() < point3.x() && static_cast<int>(point1.y()) == static_cast<int>(point3.y())) {
         switch (key) {
         case 0: {
             resizeFPoints = point1Resize5(point1, point2, point3, point4, pos, isShift);
@@ -657,8 +659,8 @@ FourPoints resizePointPosition(QPointF point1, QPointF point2, QPointF point3, Q
         }
         }
     }
-    if (point1.x() < point2.x() && point1.y() == point2.y() &&
-            point1.x() == point3.x() && point1.y() < point3.y()) {
+    if (point1.x() < point2.x() && static_cast<int>(point1.y()) == static_cast<int>(point2.y()) &&
+            static_cast<int>(point1.x()) == static_cast<int>(point3.x()) && point1.y() < point3.y()) {
         switch (key) {
         case 0: {
             resizeFPoints = point1Resize6(point1, point2, point3, point4, pos, isShift);
@@ -694,8 +696,8 @@ FourPoints resizePointPosition(QPointF point1, QPointF point2, QPointF point3, Q
         }
         }
     }
-    if (point1.x() < point2.x() && point1.y() == point2.y() &&
-            point1.x() == point3.x() && point1.y() > point3.y()) {
+    if (point1.x() < point2.x() && static_cast<int>(point1.y()) == static_cast<int>(point2.y()) &&
+            static_cast<int>(point1.x()) == static_cast<int>(point3.x()) && point1.y() > point3.y()){
         switch (key) {
         case 0: {
             resizeFPoints = point1Resize7(point1, point2, point3, point4, pos, isShift);
@@ -824,7 +826,7 @@ FourPoints point1Resize1(QPointF point1, QPointF point2, QPointF point3,
                 newResizeFPoints[3] = point4;
                 return newResizeFPoints;
             }
-            return newResizeFPoints;
+            //return newResizeFPoints;
         }
     }
 }
@@ -915,7 +917,7 @@ FourPoints point1Resize2(QPointF point1, QPointF point2, QPointF point3,
             return newResizeFPoints;
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point1 in the third position*/
@@ -1007,7 +1009,7 @@ FourPoints point1Resize3(QPointF point1, QPointF point2, QPointF point3,
                 return newResizeFPoints;
             }
         }
-        return newResizeFPoints;
+        //return newResizeFPoints;
     }
 }
 
@@ -1102,7 +1104,7 @@ FourPoints point1Resize4(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point1 in the fifth position */
@@ -1168,7 +1170,7 @@ FourPoints point1Resize5(QPointF point1, QPointF point2, QPointF point3,
             return newResizeFPoints;
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point1 in the sixth position */
@@ -1292,7 +1294,7 @@ FourPoints point2Resize1(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point2 in the second position */
@@ -1385,7 +1387,7 @@ FourPoints point2Resize2(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point2 in the third position */
@@ -1478,7 +1480,7 @@ FourPoints point2Resize3(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point2 in the fourth position */
@@ -1572,7 +1574,7 @@ FourPoints point2Resize4(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point2 in the fifth position*/
@@ -1622,7 +1624,7 @@ FourPoints point2Resize5(QPointF point1, QPointF point2, QPointF point3,
             return newResizeFPoints;
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point2 in the sixth position */
@@ -1748,7 +1750,7 @@ FourPoints point3Resize1(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point3 in the second position */
@@ -1841,7 +1843,7 @@ FourPoints point3Resize2(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point3 in the third position */
@@ -1934,7 +1936,7 @@ FourPoints point3Resize3(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point3 in the fourth position */
@@ -2028,7 +2030,7 @@ FourPoints point3Resize4(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point3 in the fifth position */
@@ -2079,7 +2081,7 @@ FourPoints point3Resize5(QPointF point1, QPointF point2, QPointF point3,
             return newResizeFPoints;
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point3 in the sixth position */
 FourPoints point3Resize6(QPointF point1, QPointF point2, QPointF point3,
@@ -2203,7 +2205,7 @@ FourPoints point4Resize1(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point4 in the second position */
@@ -2296,7 +2298,7 @@ FourPoints point4Resize2(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point4 in the third position */
@@ -2389,7 +2391,7 @@ FourPoints point4Resize3(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point4 in the third position */
@@ -2482,7 +2484,7 @@ FourPoints point4Resize4(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point4 in the fifth position */
@@ -2533,7 +2535,7 @@ FourPoints point4Resize5(QPointF point1, QPointF point2, QPointF point3,
             return newResizeFPoints;
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point4 in the sixth position */
 FourPoints point4Resize6(QPointF point1, QPointF point2, QPointF point3,
@@ -2633,7 +2635,7 @@ FourPoints point5Resize1(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point5 in the second position */
@@ -2702,7 +2704,7 @@ FourPoints point5Resize2(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point5 in the  third position */
@@ -2771,7 +2773,7 @@ FourPoints point5Resize3(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point5 in the  fourth position */
@@ -2841,7 +2843,7 @@ FourPoints point5Resize4(QPointF point1, QPointF point2, QPointF point3,
         }
     }
 
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point5 in the fifth position */
@@ -2900,7 +2902,7 @@ FourPoints point5Resize5(QPointF point1, QPointF point2, QPointF point3,
             return newResizeFPoints;
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 
 /* point5 in the sixth position */
@@ -3006,7 +3008,7 @@ FourPoints point6Resize1(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point6 in the second position */
 FourPoints point6Resize2(QPointF point1, QPointF point2, QPointF point3,
@@ -3074,7 +3076,7 @@ FourPoints point6Resize2(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point6 in the third position */
 FourPoints point6Resize3(QPointF point1, QPointF point2, QPointF point3,
@@ -3142,7 +3144,7 @@ FourPoints point6Resize3(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point6 in the fourth position */
 FourPoints point6Resize4(QPointF point1, QPointF point2, QPointF point3,
@@ -3210,7 +3212,7 @@ FourPoints point6Resize4(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point6 in the fifth position */
 FourPoints point6Resize5(QPointF point1, QPointF point2, QPointF point3,
@@ -3268,7 +3270,7 @@ FourPoints point6Resize5(QPointF point1, QPointF point2, QPointF point3,
             return newResizeFPoints;
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point6 in the sixth position */
 FourPoints point6Resize6(QPointF point1, QPointF point2, QPointF point3,
@@ -3372,7 +3374,7 @@ FourPoints point7Resize1(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point7 in the second position */
 FourPoints point7Resize2(QPointF point1, QPointF point2, QPointF point3,
@@ -3440,7 +3442,7 @@ FourPoints point7Resize2(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point7 in the third position */
 FourPoints point7Resize3(QPointF point1, QPointF point2, QPointF point3,
@@ -3508,7 +3510,7 @@ FourPoints point7Resize3(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point7 in the fourth position */
 FourPoints point7Resize4(QPointF point1, QPointF point2, QPointF point3,
@@ -3576,7 +3578,7 @@ FourPoints point7Resize4(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point7 in the fifth position */
 FourPoints point7Resize5(QPointF point1, QPointF point2, QPointF point3,
@@ -3634,7 +3636,7 @@ FourPoints point7Resize5(QPointF point1, QPointF point2, QPointF point3,
             return newResizeFPoints;
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point7 in the sixth position */
 FourPoints point7Resize6(QPointF point1, QPointF point2, QPointF point3,
@@ -3742,7 +3744,7 @@ FourPoints point8Resize1(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point8 in the second position */
 FourPoints point8Resize2(QPointF point1, QPointF point2, QPointF point3,
@@ -3810,7 +3812,7 @@ FourPoints point8Resize2(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point8 in the third position */
 FourPoints point8Resize3(QPointF point1, QPointF point2, QPointF point3,
@@ -3878,7 +3880,7 @@ FourPoints point8Resize3(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point8 in the fourth position */
 FourPoints point8Resize4(QPointF point1, QPointF point2, QPointF point3,
@@ -3946,7 +3948,7 @@ FourPoints point8Resize4(QPointF point1, QPointF point2, QPointF point3,
             }
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point8 in the fifth position */
 FourPoints point8Resize5(QPointF point1, QPointF point2, QPointF point3,
@@ -4004,7 +4006,7 @@ FourPoints point8Resize5(QPointF point1, QPointF point2, QPointF point3,
             return newResizeFPoints;
         }
     }
-    return newResizeFPoints;
+    //return newResizeFPoints;
 }
 /* point8 in the sixth position */
 FourPoints point8Resize6(QPointF point1, QPointF point2, QPointF point3,
@@ -4045,28 +4047,28 @@ FourPoints pointMoveMicro(FourPoints fourPoints, QString dir)
     QPointF point3 = fourPoints[2];
     QPointF point4 = fourPoints[3];
     if (dir == "Left") {
-        point1 = QPoint(point1.x() - 1, point1.y());
-        point2 = QPoint(point2.x() - 1, point2.y());
-        point3 = QPoint(point3.x() - 1, point3.y());
-        point4 = QPoint(point4.x() - 1, point4.y());
+        point1 = QPoint(static_cast<int>(point1.x() - 1), static_cast<int>(point1.y()));
+        point2 = QPoint(static_cast<int>(point2.x() - 1), static_cast<int>(point2.y()));
+        point3 = QPoint(static_cast<int>(point3.x() - 1), static_cast<int>(point3.y()));
+        point4 = QPoint(static_cast<int>(point4.x() - 1), static_cast<int>(point4.y()));
     }
     if (dir == "Right") {
-        point1 = QPoint(point1.x() + 1, point1.y());
-        point2 = QPoint(point2.x() + 1, point2.y());
-        point3 = QPoint(point3.x() + 1, point3.y());
-        point4 = QPoint(point4.x() + 1, point4.y());
+        point1 = QPoint(static_cast<int>(point1.x() + 1), static_cast<int>(point1.y()));
+        point2 = QPoint(static_cast<int>(point2.x() + 1), static_cast<int>(point2.y()));
+        point3 = QPoint(static_cast<int>(point3.x() + 1), static_cast<int>(point3.y()));
+        point4 = QPoint(static_cast<int>(point4.x() + 1), static_cast<int>(point4.y()));
     }
     if (dir == "Up") {
-        point1 = QPoint(point1.x(), point1.y() - 1);
-        point2 = QPoint(point2.x(), point2.y() - 1);
-        point3 = QPoint(point3.x(), point3.y() - 1);
-        point4 = QPoint(point4.x(), point4.y() - 1);
+        point1 = QPoint(static_cast<int>(point1.x()), static_cast<int>(point1.y() - 1));
+        point2 = QPoint(static_cast<int>(point2.x()), static_cast<int>(point2.y() - 1));
+        point3 = QPoint(static_cast<int>(point3.x()), static_cast<int>(point3.y() - 1));
+        point4 = QPoint(static_cast<int>(point4.x()), static_cast<int>(point4.y() - 1));
     }
     if (dir == "Down") {
-        point1 = QPoint(point1.x(), point1.y() + 1);
-        point2 = QPoint(point2.x(), point2.y() + 1);
-        point3 = QPoint(point3.x(), point3.y() + 1);
-        point4 = QPoint(point4.x(), point4.y() + 1);
+        point1 = QPoint(static_cast<int>(point1.x()), static_cast<int>(point1.y() + 1));
+        point2 = QPoint(static_cast<int>(point2.x()), static_cast<int>(point2.y() + 1));
+        point3 = QPoint(static_cast<int>(point3.x()), static_cast<int>(point3.y() + 1));
+        point4 = QPoint(static_cast<int>(point4.x()), static_cast<int>(point4.y() + 1));
     }
     fourPoints[0] = point1;
     fourPoints[1] = point2;

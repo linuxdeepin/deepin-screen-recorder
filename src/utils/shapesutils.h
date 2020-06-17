@@ -45,7 +45,7 @@ public:
     QList<QList<qreal>> portion;
     QPointF arrowRotatePos;
     Toolshape();
-    ~Toolshape();
+    //~Toolshape();
 
     friend QDebug &operator<<(QDebug &argument, const Toolshape &obj);
     friend QDataStream &operator>>(QDataStream &in, Toolshape &obj);

@@ -73,7 +73,7 @@ KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
     hLayout->addWidget(m_word, 0, Qt::AlignVCenter | Qt::AlignHCenter);
     this->setLayout(hLayout);
 
-    Utils::passInputEvent(this->winId());
+    Utils::passInputEvent(static_cast<int>(this->winId()));
 }
 
 KeyButtonWidget::~KeyButtonWidget()

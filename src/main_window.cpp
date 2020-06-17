@@ -3793,7 +3793,7 @@ void MainWindow::startCountdown()
     countdownTooltip->start();
 
 
-    Utils::passInputEvent(this->winId());
+    Utils::passInputEvent(static_cast<int>(this->winId()));
 
     repaint();
 }
