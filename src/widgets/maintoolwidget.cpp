@@ -102,11 +102,12 @@ void MainToolWidget::initMainLabel()
     if(!DWindowManagerHelper::instance()->hasComposite()) {
         m_recordBtn->hide();
     }
+    /*
     QString arch = QSysInfo::currentCpuArchitecture();
     if(!(arch.startsWith("x86", Qt::CaseInsensitive) || arch.startsWith("ARM", Qt::CaseInsensitive))) {
         m_recordBtn->hide();
     }
-
+    */
     toolBtnList.append(m_recordBtn);
 
 //    connect(m_recordBtn, &ToolButton::onPress, this, [ = ] {

@@ -64,6 +64,7 @@
 #include "camera_process.h"
 #include "widgets/tooltips.h"
 #include "dbusinterface/drawinterface.h"
+#include <X11/Xcursor/Xcursor.h>
 
 
 
@@ -302,6 +303,8 @@ void MainWindow::initAttributes()
     }
 
     else {
+        m_screenHeight = t_screenRect.height();
+        m_screenWidth = t_screenRect.width();
         for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
             if (wid == winId()) continue;
 
@@ -607,17 +610,18 @@ void MainWindow::sendSavingNotify()
                                 QDBusConnection::sessionBus());
     QStringList actions;
     actions << "_close" << tr("Ignore");
-
+    int timeout = 3000;
+    unsigned int id = 0;
 
     QList<QVariant> arg;
     arg << (QCoreApplication::applicationName())                 // appname
-        << ((unsigned int) 0)                                    // id
+        << id                                                   // id
         << QString("deepin-screen-recorder")                     // icon
         << QString(tr("Screen Capture"))                         // summary
         << QString(tr("Saving the screen recording,please wait..."))  // body
         << actions                                               // actions
         << QVariantMap()                                         // hints
-        << (int) 3000;                                           // timeout
+        << timeout;                                           // timeout
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
 }
 
@@ -2067,6 +2071,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
 
 void MainWindow::saveScreenShot()
 {
+    m_CursorImage = eventMonitor.GetCursorImage();
     emit releaseEvent();
     m_shotflag = 1;
     emit saveActionTriggered();
@@ -2155,14 +2160,16 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
 //        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screen-recorder", "",
 //                                    summary, actions, hints, 0);
     QList<QVariant> arg;
+    int timeout = 5000;
+    unsigned int id = 0;
     arg << (QCoreApplication::applicationName())                 // appname
-        << ((unsigned int) 0)                                    // id
+        << id                                                    // id
         << QString("deepin-screenshot")                     // icon
         << tr("Screenshot finished")                              // summary
         << QString(tr("Saved to %1")).arg(saveFilePath) // body
         << actions                                               // actions
         << hints                                                 // hints
-        << (int) 5000;
+        << timeout;
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);// timeout
 //    }
 
@@ -2499,15 +2506,14 @@ bool MainWindow::saveAction(const QPixmap &pix)
     cb->setMimeData(t_imageData, QClipboard::Clipboard);
     //if (m_copyToClipboard) {}
     // 调起画板， 传入截图路径
-    /*
-    int t_saveCursor = ConfigSettings::instance()->value("open", "draw").toInt();
-    if (t_saveCursor == 1) {
+    int t_openWithDraw = ConfigSettings::instance()->value("open", "draw").toInt();
+    if (t_openWithDraw == 1) {
         DrawInterface *m_draw = new DrawInterface("com.deepin.Draw", "/com/deepin/Draw", QDBusConnection::sessionBus(), this);
-        QList<QString> list;
-        list.append(m_saveFileName);
-        m_draw->openFiles(list);
+        QList<QImage> list;
+        list.append(screenShotPix.toImage());
+        m_draw->openImages(list);
+        delete m_draw;
     }
-    */
     return true;
 }
 
@@ -3455,11 +3461,13 @@ void MainWindow::shotCurrentImg()
                   static_cast<int>(recordWidth * ratio),
                   static_cast<int>(recordHeight * ratio));
 
-
-
     m_resultPixmap = m_resultPixmap.copy(target);
+    addCursorToImage();
+}
 
-    //  获取配置是否截取光标
+void MainWindow::addCursorToImage()
+{
+    //获取配置是否截取光标
     int t_saveCursor = ConfigSettings::instance()->value("save", "saveCursor").toInt();
     if (t_saveCursor == 0) {
         return;
@@ -3467,18 +3475,29 @@ void MainWindow::shotCurrentImg()
     QPoint coursePoint = this->cursor().pos();//获取当前光标的位置
     int x = coursePoint.x();
     int y = coursePoint.y();
-    // 光标是否在当前截取区域
+    //光标是否在当前截取区域
     bool isUnderRect = ((x > recordX) && (x < recordX + recordWidth)) && ((y > recordY) && (y < recordY + recordHeight));
     if (isUnderRect == false) {
         return;
     }
-    // 获取光标资源
-    QPixmap cursorPixmap = this->cursor().pixmap();
-    if (cursorPixmap.isNull()) {
-        cursorPixmap  = QIcon(":/image/mouse_style/shape/rect_mouse.svg").pixmap(16, 16);
+    if(m_CursorImage == nullptr)
+        return;
+    const int dataSize = m_CursorImage->width * m_CursorImage->height * 4;
+    uchar *pixels = new uchar[dataSize];
+    int index = 0;
+    for(int j = 0; j < m_CursorImage->width * m_CursorImage->height; ++j) {
+        unsigned long curValue = m_CursorImage->pixels[j];
+        pixels[index++] = static_cast<uchar>(curValue >> 0);
+        pixels[index++] = static_cast<uchar>(curValue >> 8);
+        pixels[index++] = static_cast<uchar>(curValue >> 16);
+        pixels[index++] = static_cast<uchar>(curValue >> 24);
     }
+    QImage cursorImage = QImage(pixels, m_CursorImage->width, m_CursorImage->height, QImage::Format_ARGB32_Premultiplied);
     QPainter painter(&m_resultPixmap);
-    painter.drawPixmap(x - recordX - cursorPixmap.width() / 2, y - recordY - cursorPixmap.height() / 2, cursorPixmap.width(), cursorPixmap.height(), cursorPixmap);
+    painter.drawImage(QRect(x - recordX - m_CursorImage->width / 2, y - recordY - m_CursorImage->height / 2, m_CursorImage->width, m_CursorImage->height), cursorImage);
+    delete[] pixels;
+    XFree(m_CursorImage);
+    return;
 }
 
 void MainWindow::shotFullScreen()

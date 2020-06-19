@@ -156,6 +156,7 @@ public slots:
     void flashTrayIcon();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void shotCurrentImg();
+    void addCursorToImage();
     void shotFullScreen();
     void onHelp();
 
@@ -363,6 +364,7 @@ private:
     bool m_isZhaoxin = false;
     HintFilter *hintFilter         = nullptr;
     QList<ScreenInfo> m_screenInfo;
+    XFixesCursorImage *m_CursorImage = nullptr;
 };
 
 #endif //MAINWINDOW_H
