@@ -27,10 +27,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # Input
 HEADERS += src/AVInputStream.h \
            src/AVOutputStream.h \
-           src/bit_writing_block.h \
+           #src/bit_writing_block.h \
            src/desktopportal.h \
-           src/neu_quant.h \
-           src/utils.h \
+           #src/neu_quant.h \ #
+           #src/utils.h \ #
            src/waylandintegration.h \
            src/waylandintegration_p.h \
            src/settings.h \
@@ -42,10 +42,10 @@ HEADERS += src/AVInputStream.h \
 SOURCES += \
            src/AVInputStream.cpp \
            src/AVOutputStream.cpp \
-           src/bit_writing_block.c \
+           #src/bit_writing_block.c \ #
            src/desktopportal.cpp \
-           src/neu_quant.c \
-           src/utils.cpp \
+           #src/neu_quant.c \ #
+           #src/utils.cpp \ #
            src/waylandintegration.cpp \
            src/xdg-desktop-portal-kde.cpp \
            src/settings.cpp \
@@ -66,3 +66,5 @@ isEmpty(BINDIR):BINDIR=/usr/bin
 target.path = $$INSTROOT$$BINDIR
 
 INSTALLS += target
+
+DISTFILES +=

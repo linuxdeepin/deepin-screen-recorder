@@ -4,14 +4,15 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#define		NETSIZE				256
+#define		NETSIZE				256								// number of colours used
 
-
+// four primes near 500 - assume no image has a length so large
+// that it is divisible by all four primes
 #define		PRIME1				499
 #define		PRIME2				491	
 #define		PRIME3				487
 #define		PRIME4				503
-#define		MIN_PICTURE_BYTES	3 * PRIME4
+#define		MIN_PICTURE_BYTES	3 * PRIME4						// minimum size for input image
 
 /* minimum size for input image */
 
@@ -28,32 +29,32 @@
 */
 
 #define		MAX_NET_POS			NETSIZE - 1
-#define		NET_BIAS_SHIFT		4
-#define		NCYCLES				100
+#define		NET_BIAS_SHIFT		4									// bias for colour values
+#define		NCYCLES				100									// no, of learning cycles
 
+// defs for freq and bias
 
-
-#define		INT_BIAS_SHIFT		16
+#define		INT_BIAS_SHIFT		16									// bias for fractions
 #define		INT_BIAS			((int) 1) << INT_BIAS_SHIFT
-#define		GAMMA_SHIFT			10
+#define		GAMMA_SHIFT			10									// gamma = 1024
 #define		GAMMA				((int) 1) << GAMMA_SHIFT
 #define		BETA_SHIFT			10
-#define		BETA				(INT_BIAS >> BETA_SHIFT)
+#define		BETA				(INT_BIAS >> BETA_SHIFT)			// beta = 1/1024
 #define		BETA_GAMMA			INT_BIAS << (GAMMA_SHIFT - BETA_SHIFT)
 
-
-#define		INITRAD				NETSIZE>>3
-#define		RADIUS_BIAS_SHIFT	6
+// defs for decreasing radius factor
+#define		INITRAD				NETSIZE>>3							// for 256 cols, radius starts
+#define		RADIUS_BIAS_SHIFT	6									// at 32.0 biased by 6 bits
 #define		RADIUS_BIAS			(((int)1) << RADIUS_BIAS_SHIFT)
-#define		INIT_RADIUS			(INITRAD * RADIUS_BIAS)
-#define		RADIUS_DEC			30
+#define		INIT_RADIUS			(INITRAD * RADIUS_BIAS)				// and decreases by a
+#define		RADIUS_DEC			30									// factor of 1/30 each cycle
 
-
-#define		ALPHA_BIAS_SHIFT	10
+// defs for decreasing alpha factor
+#define		ALPHA_BIAS_SHIFT	10									// alpha starts at 1.0
 #define		INIT_ALPHA			((int)1) << ALPHA_BIAS_SHIFT
-int ALPHA_DEC;
+int ALPHA_DEC;					// biased by 10 bits
 
-
+// radbias and alpharadbias used for radpower calculation
 #define		RAD_BIAS_SHIFT		8
 #define		RAD_BIAS			((int) 1) << RAD_BIAS_SHIFT)
 #define		ALPHA_RAD_B_SHIFT	ALPHA_BIAS_SHIFT + RAD_BIAS_SHIFT
@@ -62,10 +63,10 @@ int ALPHA_DEC;
 
 typedef struct _NeuQuant {
 
-    uint32_t* thePicture;
-    int lengthCount;
-    int sampleFac;
-    int** network;
+	uint32_t* thePicture;		// the input image itself
+	int lengthCount;			// lengthcount = H*W*3
+	int sampleFac;				// sampling factor 1..30
+	int** network;				// the network itself - [NETSIZE][4]
 	int* netindex;
 	int* bias;
 	int* freq;

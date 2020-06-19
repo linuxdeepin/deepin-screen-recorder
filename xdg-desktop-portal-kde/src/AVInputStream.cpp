@@ -47,7 +47,7 @@ void CAVInputStream::setSysAudioRecord(bool bRecord)
 
 bool CAVInputStream::openInputStream()
 {
-    AVDictionary *device_param = 0;
+    AVDictionary *device_param = nullptr;
     int i;
     m_pAudioInputFormat = av_find_input_format("pulse"); //alsa
     assert(m_pAudioInputFormat != nullptr);
@@ -72,7 +72,7 @@ bool CAVInputStream::openInputStream()
             return false;
         }
         m_micAudioindex = -1;
-        for (i = 0; i < m_pMicAudioFormatContext->nb_streams; i++)
+        for (i = 0; i < static_cast<int>(m_pMicAudioFormatContext->nb_streams); i++)
         {
             if (m_pMicAudioFormatContext->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO)
             {
@@ -124,7 +124,7 @@ bool CAVInputStream::openInputStream()
         }
         fflush(stdout);
         m_sysAudioindex = -1;
-        for (i = 0; i < m_pSysAudioFormatContext->nb_streams; i++)
+        for (i = 0; i < static_cast<int>(m_pSysAudioFormatContext->nb_streams); i++)
         {
             if (m_pSysAudioFormatContext->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO)
             {
@@ -596,7 +596,7 @@ bool  CAVInputStream::GetAudioInputInfo(AVSampleFormat & sample_fmt, int & sampl
         sample_fmt = m_pMicAudioFormatContext->streams[m_micAudioindex]->codec->sample_fmt;
         sample_rate = m_pMicAudioFormatContext->streams[m_micAudioindex]->codec->sample_rate;
         channels = m_pMicAudioFormatContext->streams[m_micAudioindex]->codec->channels;
-        layout = m_pMicAudioFormatContext->streams[m_micAudioindex]->codec->channel_layout;
+        layout = static_cast<int>(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec->channel_layout);
         return true;
     }
 
@@ -609,7 +609,7 @@ bool  CAVInputStream::GetAudioSCardInputInfo(AVSampleFormat & sample_fmt, int & 
         sample_fmt = m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec->sample_fmt;
         sample_rate = m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec->sample_rate;
         channels =m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec->channels;
-        layout = m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec->channel_layout;
+        layout = static_cast<int>(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec->channel_layout);
         return true;
     }
     return false;

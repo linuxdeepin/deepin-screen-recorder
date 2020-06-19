@@ -77,10 +77,10 @@ bool WaylandIntegration::isEGLInitialized()
     return globalWaylandIntegration->isEGLInitialized();
 }
 
-bool WaylandIntegration::startStreaming(const WaylandOutput &output)
-{
-    return globalWaylandIntegration->startStreaming(output);
-}
+//bool WaylandIntegration::startStreaming(const WaylandOutput &output)
+//{
+//    return globalWaylandIntegration->startStreaming(output);
+//}
 
 void WaylandIntegration::stopStreaming()
 {
@@ -108,27 +108,27 @@ WaylandIntegration::WaylandIntegration * WaylandIntegration::waylandIntegration(
     return globalWaylandIntegration;
 }
 
-static const char * formatGLError(GLenum err)
-{
-    switch(err) {
-    case GL_NO_ERROR:
-        return "GL_NO_ERROR";
-    case GL_INVALID_ENUM:
-        return "GL_INVALID_ENUM";
-    case GL_INVALID_VALUE:
-        return "GL_INVALID_VALUE";
-    case GL_INVALID_OPERATION:
-        return "GL_INVALID_OPERATION";
-    case GL_STACK_OVERFLOW:
-        return "GL_STACK_OVERFLOW";
-    case GL_STACK_UNDERFLOW:
-        return "GL_STACK_UNDERFLOW";
-    case GL_OUT_OF_MEMORY:
-        return "GL_OUT_OF_MEMORY";
-    default:
-        return (QLatin1String("0x") + QString::number(err, 16)).toLocal8Bit().constData();
-    }
-}
+//static const char * formatGLError(GLenum err)
+//{
+//    switch(err) {
+//    case GL_NO_ERROR:
+//        return "GL_NO_ERROR";
+//    case GL_INVALID_ENUM:
+//        return "GL_INVALID_ENUM";
+//    case GL_INVALID_VALUE:
+//        return "GL_INVALID_VALUE";
+//    case GL_INVALID_OPERATION:
+//        return "GL_INVALID_OPERATION";
+//    case GL_STACK_OVERFLOW:
+//        return "GL_STACK_OVERFLOW";
+//    case GL_STACK_UNDERFLOW:
+//        return "GL_STACK_UNDERFLOW";
+//    case GL_OUT_OF_MEMORY:
+//        return "GL_OUT_OF_MEMORY";
+//    default:
+//        return (QLatin1String("0x") + QString::number(err, 16)).toLocal8Bit().constData();
+//    }
+//}
 
 // Thank you kscreen
 void WaylandIntegration::WaylandOutput::setOutputType(const QString &type)
@@ -198,7 +198,7 @@ WaylandIntegration::WaylandIntegrationPrivate::WaylandIntegrationPrivate()
     , m_remoteAccessManager(nullptr)
 {
     m_bInit = true;
-    m_bufferSize = 30;
+    m_bufferSize = 60;
     m_ffmFrame = nullptr;
     qDBusRegisterMetaType<WaylandIntegrationPrivate::Stream>();
     qDBusRegisterMetaType<WaylandIntegrationPrivate::Streams>();
@@ -231,11 +231,11 @@ WaylandIntegration::WaylandIntegrationPrivate::~WaylandIntegrationPrivate()
         delete m_recordAdmin;
         m_recordAdmin = nullptr;
     }
-//    if(nullptr != m_writeFrameThread)
-//    {
-//        delete m_writeFrameThread;
-//        m_writeFrameThread = nullptr;
-//    }
+    //    if(nullptr != m_writeFrameThread)
+    //    {
+    //        delete m_writeFrameThread;
+    //        m_writeFrameThread = nullptr;
+    //    }
 }
 
 bool WaylandIntegration::WaylandIntegrationPrivate::isEGLInitialized() const
@@ -246,71 +246,71 @@ bool WaylandIntegration::WaylandIntegrationPrivate::isEGLInitialized() const
 void WaylandIntegration::WaylandIntegrationPrivate::bindOutput(int outputName, int outputVersion)
 {
     KWayland::Client::Output *output = new KWayland::Client::Output(this);
-    output->setup(m_registry->bindOutput(outputName, outputVersion));
+    output->setup(m_registry->bindOutput(static_cast<uint32_t>(outputName), static_cast<uint32_t>(outputVersion)));
     m_bindOutputs << output;
 }
 
-bool WaylandIntegration::WaylandIntegrationPrivate::startStreaming(const WaylandOutput &output)
-{
-    //    qDebug() << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
-    //    m_stream = new ScreenCastStream(output.resolution());
-    //    m_stream->init();
+//bool WaylandIntegration::WaylandIntegrationPrivate::startStreaming(const WaylandOutput &output)
+//{
+//    //    qDebug() << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+//    //    m_stream = new ScreenCastStream(output.resolution());
+//    //    m_stream->init();
 
-    //    connect(m_stream, &ScreenCastStream::startStreaming, this, [this, output] {
-    //        m_streamingEnabled = true;
-    //        bindOutput(output.waylandOutputName(), output.waylandOutputVersion());
-    //    });
+//    //    connect(m_stream, &ScreenCastStream::startStreaming, this, [this, output] {
+//    //        m_streamingEnabled = true;
+//    //        bindOutput(output.waylandOutputName(), output.waylandOutputVersion());
+//    //    });
 
-    //    connect(m_stream, &ScreenCastStream::stopStreaming, this, &WaylandIntegrationPrivate::stopStreaming);
+//    //    connect(m_stream, &ScreenCastStream::stopStreaming, this, &WaylandIntegrationPrivate::stopStreaming);
 
-    //    bool streamReady = false;
-    //    QEventLoop loop;
-    //    connect(m_stream, &ScreenCastStream::streamReady, this, [&loop, &streamReady] {
-    //        loop.quit();
-    //        streamReady = true;
-    //    });
+//    //    bool streamReady = false;
+//    //    QEventLoop loop;
+//    //    connect(m_stream, &ScreenCastStream::streamReady, this, [&loop, &streamReady] {
+//    //        loop.quit();
+//    //        streamReady = true;
+//    //    });
 
-    //    // HACK wait for stream to be ready
-    //    QTimer::singleShot(3000, &loop, &QEventLoop::quit);
-    //    loop.exec();
+//    //    // HACK wait for stream to be ready
+//    //    QTimer::singleShot(3000, &loop, &QEventLoop::quit);
+//    //    loop.exec();
 
-    //    disconnect(m_stream, &ScreenCastStream::streamReady, this, nullptr);
+//    //    disconnect(m_stream, &ScreenCastStream::streamReady, this, nullptr);
 
-    //    if (!streamReady) {
-    //        if (m_stream) {
-    //            delete m_stream;
-    //            m_stream = nullptr;
-    //        }
-    //        return false;
-    //    }
+//    //    if (!streamReady) {
+//    //        if (m_stream) {
+//    //            delete m_stream;
+//    //            m_stream = nullptr;
+//    //        }
+//    //        return false;
+//    //    }
 
-    //    // TODO support multiple outputs
+//    //    // TODO support multiple outputs
 
-    //    if (m_registry->hasInterface(KWayland::Client::Registry::Interface::RemoteAccessManager)) {
-    //        KWayland::Client::Registry::AnnouncedInterface interface = m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager);
-    //        if (!interface.name && !interface.version) {
-    //            qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Failed to start streaming: remote access manager interface is not initialized yet";
-    //            return false;
-    //        }
-    //        m_remoteAccessManager = m_registry->createRemoteAccessManager(interface.name, interface.version);
-    //        connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this] (const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
-    //            Q_UNUSED(output);
-    //            connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf] {
-    //                processBuffer(rbuf);
-    //            });
-    //        });
-    //        m_output = output.waylandOutputName();
-    //        return true;
-    //    }
+//    //    if (m_registry->hasInterface(KWayland::Client::Registry::Interface::RemoteAccessManager)) {
+//    //        KWayland::Client::Registry::AnnouncedInterface interface = m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager);
+//    //        if (!interface.name && !interface.version) {
+//    //            qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Failed to start streaming: remote access manager interface is not initialized yet";
+//    //            return false;
+//    //        }
+//    //        m_remoteAccessManager = m_registry->createRemoteAccessManager(interface.name, interface.version);
+//    //        connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this] (const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
+//    //            Q_UNUSED(output);
+//    //            connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf] {
+//    //                processBuffer(rbuf);
+//    //            });
+//    //        });
+//    //        m_output = output.waylandOutputName();
+//    //        return true;
+//    //    }
 
-    //    if (m_stream) {
-    //        delete m_stream;
-    //        m_stream = nullptr;
-    //    }
+//    //    if (m_stream) {
+//    //        delete m_stream;
+//    //        m_stream = nullptr;
+//    //    }
 
-    //    qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Failed to start streaming: no remote access manager interface";
-    return false;
-}
+//    //    qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Failed to start streaming: no remote access manager interface";
+//    return false;
+//}
 
 void WaylandIntegration::WaylandIntegrationPrivate::stopStreaming()
 {
@@ -324,10 +324,10 @@ void WaylandIntegration::WaylandIntegrationPrivate::stopStreaming()
         }
         qDeleteAll(m_bindOutputs);
         m_bindOutputs.clear();
-//        if (m_stream) {
-//            delete m_stream;
-//            m_stream = nullptr;
-//        }
+        //        if (m_stream) {
+        //            delete m_stream;
+        //            m_stream = nullptr;
+        //        }
     }
 }
 
@@ -391,8 +391,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::addOutput(quint32 name, quin
         portalOutput.setModel(output->model());
         portalOutput.setOutputType(output->model());
         portalOutput.setResolution(output->pixelSize());
-        portalOutput.setWaylandOutputName(name);
-        portalOutput.setWaylandOutputVersion(version);
+        portalOutput.setWaylandOutputName(static_cast<int>(name));
+        portalOutput.setWaylandOutputVersion(static_cast<int>(version));
 
         if (m_registry->hasInterface(KWayland::Client::Registry::Interface::RemoteAccessManager)) {
             KWayland::Client::Registry::AnnouncedInterface interface = m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager);
@@ -432,8 +432,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     quint32 width = rbuf->width();
     quint32 height = rbuf->height();
     quint32 stride = rbuf->stride();
-//    if(!bGetFrame())
-//        return;
+    //    if(!bGetFrame())
+    //        return;
     if(m_bInitRecordAdmin)
     {
         m_bInitRecordAdmin = false;
@@ -480,10 +480,10 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
         m_width = width;
         m_height = height;
         m_stride = stride;
-        m_ffmFrame = new unsigned char[size];
+        m_ffmFrame = new unsigned char[static_cast<unsigned long>(size)];
         for (int i=0;i< m_bufferSize;i++)
         {
-            ch = new unsigned char[size];
+            ch = new unsigned char[static_cast<unsigned long>(size)];
             m_freeList.append(ch);
             //qDebug() << "创建内存空间";
         }
@@ -493,9 +493,9 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
         //先进先出
         //取队首
         waylandFrame wFrame = m_waylandList.first();
-        memset(wFrame._frame,0,size);
+        memset(wFrame._frame,0,static_cast<size_t>(size));
         //拷贝当前帧
-        memcpy(wFrame._frame,frame,size);
+        memcpy(wFrame._frame,frame,static_cast<size_t>(size));
         wFrame._time = time;
         wFrame._width = width;
         wFrame._height = height;
@@ -506,7 +506,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
         m_waylandList.append(wFrame);
         //qDebug() << "环形缓冲区已满，删队首，存队尾";
     }
-    else if(0 <= m_waylandList.size() < m_bufferSize)
+    else if(0 <= m_waylandList.size() &&  m_waylandList.size() < m_bufferSize)
     {
         if(m_freeList.size()>0)
         {
@@ -515,16 +515,20 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
             wFrame._width = width;
             wFrame._height = height;
             wFrame._stride = stride;
+            //分配空闲内存
             wFrame._frame = m_freeList.first();
-            memset(wFrame._frame,0,size);
-            memcpy(wFrame._frame,frame,size);
+            memset(wFrame._frame,0,static_cast<size_t>(size));
+            //拷贝wayland推送的视频帧
+            memcpy(wFrame._frame,frame,static_cast<size_t>(size));
             m_waylandList.append(wFrame);
-            //qDebug() << "环形缓冲区未满，存队尾";
-            //空闲内存占用
+            //qDebug() << "环形缓冲区未满，存队尾"
+            //空闲内存占用，仅删除索引，不删除空间
             m_freeList.removeFirst();
         }
     }
 }
+
+int WaylandIntegration::WaylandIntegrationPrivate::frameIndex = 0;
 
 bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &frame)
 {
@@ -540,9 +544,14 @@ bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &frame
         frame._height = wFrame._height;
         frame._stride = wFrame._stride;
         frame._time = wFrame._time;
+        //m_ffmFrame 视频帧缓存
         frame._frame = m_ffmFrame;
-        memcpy(frame._frame,wFrame._frame,size);
+        frame._index = frameIndex++;
+        //拷贝到 m_ffmFrame 视频帧缓存
+        memcpy(frame._frame,wFrame._frame,static_cast<size_t>(size));
+        //删队首视频帧 waylandFrame，未删空闲内存 waylandFrame::_frame，只删索引，不删内存空间
         m_waylandList.removeFirst();
+        //回收空闲内存，重复使用
         m_freeList.append(wFrame._frame);
         //qDebug() << "获取视频帧";
         return true;

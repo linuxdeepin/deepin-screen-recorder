@@ -78,6 +78,8 @@ struct GifPalette
 
 struct GifFrame
 {
+    //索引
+    int index;
     FILE* f;
     uint32_t width;
     uint32_t height;
@@ -179,7 +181,6 @@ public:
     // AFAIK, it is legal to use different bit depths for different frames of an image -
     // this may be handy to save bits in animations that don't change much.
     GifFrame GifWriteFrame(GifWriter* writer,
-                           uint8_t *oldImage,
                            const uint8_t* inImage,
                            uint32_t time,
                            uint32_t width,

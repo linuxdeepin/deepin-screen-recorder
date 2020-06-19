@@ -21,10 +21,11 @@ DTS是AVPacket里的一个成员，表示这个压缩包应该什么时候被解
 
 CAVOutputStream::CAVOutputStream(WaylandIntegration::WaylandIntegrationPrivate *context):
     m_context(context),
-    m_sysAudioFifo(nullptr),
+    m_pSysAudioSwrContext(nullptr),
     m_micAudioFifo(nullptr),
-    m_pSysAudioSwrContext(nullptr)
+    m_sysAudioFifo(nullptr)
 {
+    Q_UNUSED(m_context)
     m_videoCodecID  = AV_CODEC_ID_NONE;
     m_micAudioCodecID = AV_CODEC_ID_NONE;
     m_sysAudioCodecID = AV_CODEC_ID_NONE;
@@ -82,10 +83,10 @@ CAVOutputStream::~CAVOutputStream(void)
         audioFifoFree(m_sysAudioFifo);
         m_sysAudioFifo = nullptr;
     }
-//    if(nullptr != m_path)
-//    {
-//        delete m_path;
-//    }
+    if(nullptr != m_path)
+    {
+        delete[] m_path;
+    }
 }
 
 
@@ -152,11 +153,15 @@ int CAVOutputStream::init_filters()
     /* buffer audio source: the decoded frames from the decoder will be inserted here. */
     dec_ctx1 = m_pMicCodecContext;
     if (!dec_ctx1->channel_layout)
-        dec_ctx1->channel_layout = av_get_default_channel_layout(dec_ctx1->channels);
-    snprintf(args1, sizeof(args1),
+        dec_ctx1->channel_layout = static_cast<uint64_t>(av_get_default_channel_layout(dec_ctx1->channels));
+    snprintf(args1,
+             sizeof(args1),
              formatStr.c_str(),
-             time_base_1.num, time_base_1.den, dec_ctx1->sample_rate,
-             av_get_sample_fmt_name(dec_ctx1->sample_fmt), dec_ctx1->channel_layout);
+             time_base_1.num,
+             time_base_1.den,
+             dec_ctx1->sample_rate,
+             av_get_sample_fmt_name(dec_ctx1->sample_fmt),
+             dec_ctx1->channel_layout);
     ret = avfilter_graph_create_filter(&buffersrc_ctx1, abuffersrc1, "in0",
                                        args1, nullptr, filter_graph);
 
@@ -340,12 +345,10 @@ int CAVOutputStream::init_filters()
 
     av_get_channel_layout_string(args1, sizeof(args1), -1, outlink->channel_layout);
 
+
     av_log(nullptr, AV_LOG_INFO, "Output: srate:%dHz fmt:%s chlayout:%s\n",
-
-           (int)outlink->sample_rate,
-
-           (char *)av_x_if_null(av_get_sample_fmt_name((AVSampleFormat)outlink->format), "?"),
-
+           outlink->sample_rate,
+           static_cast<char *>(av_x_if_null(av_get_sample_fmt_name(static_cast<AVSampleFormat>(outlink->format)), "?")),
            args1);
     mMic_frame = av_frame_alloc();
     mSpeaker_frame = av_frame_alloc();
@@ -355,7 +358,12 @@ int CAVOutputStream::init_filters()
     return ret;
 
 }
-int CAVOutputStream::init_context_amix(int channel, uint64_t channel_layout,int sample_rate,int64_t bit_rate){
+int CAVOutputStream::init_context_amix(int channel, uint64_t channel_layout,int sample_rate,int64_t bit_rate)
+{
+    Q_UNUSED(channel)
+    Q_UNUSED(channel_layout)
+    Q_UNUSED(sample_rate)
+    Q_UNUSED(bit_rate)
     pCodec_amix = avcodec_find_encoder(m_sysAudioCodecID);
     if (!pCodec_amix)
     {
@@ -366,7 +374,7 @@ int CAVOutputStream::init_context_amix(int channel, uint64_t channel_layout,int 
     pCodecCtx_amix = avcodec_alloc_context3(pCodec_amix);
     pCodecCtx_amix = avcodec_alloc_context3(pCodec_a);
     pCodecCtx_amix->channels = m_channels;
-    pCodecCtx_amix->channel_layout = m_channels_layout;
+    pCodecCtx_amix->channel_layout = static_cast<uint64_t>(m_channels_layout);
     if (pCodecCtx_amix->channel_layout == 0)
     {
         pCodecCtx_amix->channel_layout = AV_CH_LAYOUT_STEREO;
@@ -451,7 +459,7 @@ bool CAVOutputStream::open(QString path)
             pCodecCtx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
 
-        AVDictionary *param = 0;
+        AVDictionary *param = nullptr;
 
         //set H264 codec param
         if(m_videoCodecID  == AV_CODEC_ID_H264)
@@ -485,7 +493,7 @@ bool CAVOutputStream::open(QString path)
         //Initialize the buffer to store YUV frames to be encoded.
         //
         pFrameYUV = av_frame_alloc();
-        m_out_buffer = (uint8_t *)av_malloc(avpicture_get_size(AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height));
+        m_out_buffer = static_cast<uint8_t *>(av_malloc(static_cast<size_t>(avpicture_get_size(AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height))));
         avpicture_fill((AVPicture *)pFrameYUV, m_out_buffer, AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height);
 
     }
@@ -513,7 +521,7 @@ bool CAVOutputStream::open(QString path)
         m_pMicCodecContext = avcodec_alloc_context3(pCodec_a);
         m_pMicCodecContext->channels = m_channels;
         //        pCodecCtx_a->channel_layout = av_get_default_channel_layout(m_channels);
-        m_pMicCodecContext->channel_layout =m_channels_layout;
+        m_pMicCodecContext->channel_layout = static_cast<uint64_t>(m_channels_layout);
         //      pCodecCtx_a->channels = av_get_channel_layout_nb_channels(pAudioStream->codec->channel_layout);
         if (m_pMicCodecContext->channel_layout == 0)
         {
@@ -566,7 +574,7 @@ bool CAVOutputStream::open(QString path)
         * Each pointer will later point to the audio samples of the corresponding
         * channels (although it may be nullptr for interleaved formats).
         */
-        if (!(m_convertedMicSamples = (uint8_t**)calloc(m_pMicCodecContext->channels, sizeof(**m_convertedMicSamples))))
+        if (!(m_convertedMicSamples = static_cast<uint8_t**>(calloc(static_cast<size_t>(m_pMicCodecContext->channels), sizeof(**m_convertedMicSamples)))))
         {
             printf("Could not allocate converted input sample pointers\n");
             return false;
@@ -586,7 +594,7 @@ bool CAVOutputStream::open(QString path)
         m_pSysCodecContext = avcodec_alloc_context3(pCodec_aCard);
         m_pSysCodecContext->channels = m_channels_card;
         //        pCodecCtx_aCard->channel_layout = av_get_default_channel_layout(m_channels_card);
-        m_pSysCodecContext->channel_layout = m_channels_card_layout;
+        m_pSysCodecContext->channel_layout = static_cast<uint64_t>(m_channels_card_layout);
         //                pCodecCtx_aCard->channels = av_get_channel_layout_nb_channels(pAudioStream->codec->channel_layout);
         if (m_pSysCodecContext->channel_layout == 0)
         {
@@ -628,7 +636,7 @@ bool CAVOutputStream::open(QString path)
             m_sysAudioStream->codec = m_pSysCodecContext;
         }
         m_convertedSysSamples = nullptr;
-        if (!(m_convertedSysSamples = (uint8_t**)calloc(m_pSysCodecContext->channels, sizeof(**m_convertedSysSamples))))
+        if (!(m_convertedSysSamples = static_cast<uint8_t**>(calloc(static_cast<size_t>(m_pSysCodecContext->channels), sizeof(**m_convertedSysSamples)))))
         {
             printf("Could not allocate converted input sample pointers\n");
             return false;
@@ -684,10 +692,10 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
         pRgbFrame->width  = frame._width;
         pRgbFrame->height = frame._height;
         //pRgbFrame->format = AV_PIX_FMT_RGB32;
-        pRgbFrame->crop_left   = m_left;
-        pRgbFrame->crop_top    = m_top;
-        pRgbFrame->crop_right  = m_right;
-        pRgbFrame->crop_bottom = m_bottom;
+        pRgbFrame->crop_left   = static_cast<size_t>(m_left);
+        pRgbFrame->crop_top    = static_cast<size_t>(m_top);
+        pRgbFrame->crop_right  = static_cast<size_t>(m_right);
+        pRgbFrame->crop_bottom = static_cast<size_t>(m_bottom);
         pRgbFrame->linesize[0] = frame._stride;
         pRgbFrame->data[0]     = frame._frame;
     }
@@ -721,7 +729,7 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
     if (1 == enc_got_frame)
     {
         packet.stream_index = m_videoStream->index;
-        packet.pts = (int64_t)m_videoStream->time_base.den * frame._time/AV_TIME_BASE;
+        packet.pts = static_cast<int64_t>(m_videoStream->time_base.den) * frame._time/AV_TIME_BASE;
         int ret = writeFrame(m_videoFormatContext, &packet);
         if(ret < 0)
         {
@@ -793,7 +801,7 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
     */
     /** Convert the samples using the resampler. */
     //extended_data -> m_convertedMicSamples
-    if ((ret = swr_convert(m_pMicAudioSwrContext,m_convertedMicSamples, inputFrame->nb_samples,(const uint8_t**)inputFrame->extended_data,inputFrame->nb_samples)) < 0)
+    if ((ret = swr_convert(m_pMicAudioSwrContext,m_convertedMicSamples, inputFrame->nb_samples,const_cast<const uint8_t**>(inputFrame->extended_data),inputFrame->nb_samples)) < 0)
     {
         printf("Could not convert input samples\n");
         return ret;
@@ -801,7 +809,7 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
     AVRational rational;
     int audioSize = audioFifoSize(m_micAudioFifo);
     //因为Fifo里有之前未读完的数据，所以从Fifo队列里面取出的第一个音频包的时间戳等于当前时间减掉缓冲部分的时长
-    int64_t timeshift = (int64_t)audioSize * AV_TIME_BASE /(int64_t)(stream->codec->sample_rate);
+    int64_t timeshift = static_cast<int64_t>(audioSize * AV_TIME_BASE) / static_cast<int64_t>(stream->codec->sample_rate);
     m_micAudioFrame += inputFrame->nb_samples;
     /** Add the converted input samples to the FIFO buffer for later processing. */
 
@@ -817,12 +825,13 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
 
     /** Store the new samples in the FIFO buffer. */
     //write m_convertedMicSamples
-    if (audioWrite(m_micAudioFifo, (void **)m_convertedMicSamples, inputFrame->nb_samples) < inputFrame->nb_samples)
+    //static_cast、dynamic_cast、const_cast、reinterpret_cast
+    if (audioWrite(m_micAudioFifo, reinterpret_cast<void **>(m_convertedMicSamples), inputFrame->nb_samples) < inputFrame->nb_samples)
     {
         printf("Could not write data to FIFO\n");
         return AVERROR_EXIT;
     }
-    int64_t timeinc = (int64_t)m_pMicCodecContext->frame_size * AV_TIME_BASE /(int64_t)(stream->codec->sample_rate);
+    int64_t timeinc = static_cast<int64_t>(m_pMicCodecContext->frame_size * AV_TIME_BASE /stream->codec->sample_rate);
     //当前帧的时间戳不能小于上一帧的值
     if(lTimeStamp - timeshift > m_nLastAudioPresentationTime )
     {
@@ -924,6 +933,7 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
 
 int CAVOutputStream::writeMicToMixAudioFrame(AVStream *stream, AVFrame *inputFrame, int64_t lTimeStamp)
 {
+    Q_UNUSED(lTimeStamp)
     int ret;
     if(nullptr == m_pMicAudioSwrContext)
     {
@@ -952,7 +962,7 @@ int CAVOutputStream::writeMicToMixAudioFrame(AVStream *stream, AVFrame *inputFra
         free(*m_convertedMicSamples);
         return ret;
     }
-    if ((ret = swr_convert(m_pMicAudioSwrContext,m_convertedMicSamples, inputFrame->nb_samples,(const uint8_t**)inputFrame->extended_data,inputFrame->nb_samples)) < 0)
+    if ((ret = swr_convert(m_pMicAudioSwrContext,m_convertedMicSamples, inputFrame->nb_samples,const_cast<const uint8_t**>(inputFrame->extended_data),inputFrame->nb_samples)) < 0)
     {
         printf("Could not convert input samples\n");
         return ret;
@@ -1070,8 +1080,8 @@ void CAVOutputStream::writeMixAudio()
         pFrame_temp->format = m_pMicCodecContext->sample_fmt;
         pFrame_temp->sample_rate = m_pMicCodecContext->sample_rate;
         av_frame_get_buffer(pFrame_temp, 0);
-        ret = audioRead(m_sysAudioFifo, (void**)pFrame_scard->data, minSysFrameSize);
-        ret = audioRead(m_micAudioFifo, (void**)pFrame_temp->data, minMicFrameSize);
+        ret = audioRead(m_sysAudioFifo, reinterpret_cast<void **>(pFrame_scard->data), minSysFrameSize);
+        ret = audioRead(m_micAudioFifo, reinterpret_cast<void **>(pFrame_temp->data), minMicFrameSize);
         int nFifoSamples = pFrame_scard->nb_samples;
         if(m_start_mix_time == -1)
         {
@@ -1227,7 +1237,7 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
     * This requires a temporary storage provided by converted_input_samples.
     */
     /** Convert the samples using the resampler. */
-    if ((ret = swr_convert(m_pSysAudioSwrContext,m_convertedSysSamples, inputFrame->nb_samples,(const uint8_t**)inputFrame->extended_data, inputFrame->nb_samples)) < 0)
+    if ((ret = swr_convert(m_pSysAudioSwrContext,m_convertedSysSamples, inputFrame->nb_samples,const_cast<const uint8_t**>(inputFrame->extended_data), inputFrame->nb_samples)) < 0)
     {
         return ret;
     }
@@ -1247,12 +1257,13 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
     }
 
     /** Store the new samples in the FIFO buffer. */
-    if (audioWrite(m_sysAudioFifo, (void **)m_convertedSysSamples, inputFrame->nb_samples) < inputFrame->nb_samples)
+    if (audioWrite(m_sysAudioFifo, reinterpret_cast<void **>(m_convertedSysSamples), inputFrame->nb_samples) < inputFrame->nb_samples)
     {
         printf("Could not write data to FIFO\n");
         return AVERROR_EXIT;
     }
-    int64_t timeinc = (int64_t)m_pSysCodecContext->frame_size * AV_TIME_BASE /(int64_t)(stream->codec->sample_rate);
+
+    int64_t timeinc = static_cast<int64_t>(m_pSysCodecContext->frame_size * AV_TIME_BASE /stream->codec->sample_rate);
     //当前帧的时间戳不能小于上一帧的值
     if(lTimeStamp - timeshift > m_nLastAudioCardPresentationTime )
     {
@@ -1349,6 +1360,7 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
 
 int CAVOutputStream::writeSysToMixAudioFrame(AVStream *stream, AVFrame *inputFrame, int64_t lTimeStamp)
 {
+    Q_UNUSED(lTimeStamp)
     int ret;
     if(nullptr == m_pSysAudioSwrContext)
     {
@@ -1375,7 +1387,7 @@ int CAVOutputStream::writeSysToMixAudioFrame(AVStream *stream, AVFrame *inputFra
         free(*m_convertedSysSamples);
         return ret;
     }
-    if ((ret = swr_convert(m_pSysAudioSwrContext,m_convertedSysSamples, inputFrame->nb_samples,(const uint8_t**)inputFrame->extended_data, inputFrame->nb_samples)) < 0)
+    if ((ret = swr_convert(m_pSysAudioSwrContext,m_convertedSysSamples, inputFrame->nb_samples,const_cast<const uint8_t**>(inputFrame->extended_data), inputFrame->nb_samples)) < 0)
     {
         return ret;
     }
@@ -1392,7 +1404,7 @@ int CAVOutputStream::writeSysToMixAudioFrame(AVStream *stream, AVFrame *inputFra
     }
     if (fifoSpace >= inputFrame->nb_samples)
     {
-        if (audioWrite(m_sysAudioFifo, (void **)m_convertedSysSamples, inputFrame->nb_samples) < inputFrame->nb_samples)
+        if (audioWrite(m_sysAudioFifo, reinterpret_cast<void **>(m_convertedSysSamples), inputFrame->nb_samples) < inputFrame->nb_samples)
         {
             printf("Could not write data to FIFO\n");
             return AVERROR_EXIT;

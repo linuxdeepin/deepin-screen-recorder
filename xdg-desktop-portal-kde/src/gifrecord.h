@@ -1,7 +1,7 @@
 #ifndef GIFRECORD_H
 #define GIFRECORD_H
 #include <QThread>
-#include "waylandintegration.h"
+//#include "waylandintegration.h"
 #include "waylandintegration_p.h"
 #include "gif.h"
 
@@ -45,6 +45,6 @@ private:
     bool m_bWriteFrame;
     QMutex m_writeFrameMutex;
     int m_index;
-    static int test;
+    //static int test;
 };
 #endif // GIFRECORD_H

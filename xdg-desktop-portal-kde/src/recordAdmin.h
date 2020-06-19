@@ -8,11 +8,11 @@
 #include <sys/time.h>
 #include <map>
 #include <qimage.h>
-#include "AVInputStream.h"
-#include "AVInputStream.h"
+//#include "AVInputStream.h"
+//#include "AVInputStream.h"
 #include "gifrecord.h"
 #include "gifwrite.h"
-#include "waylandintegration.h"
+//#include "waylandintegration.h"
 #include "waylandintegration_p.h"
 #include "writeFrameThread.h"
 #define AUDIO_INPUT_DEVICE    "hw:0,0"
@@ -54,6 +54,13 @@ public:
      */
     int stopStream();
 
+    /**
+     * @brief insertOldFrame:缓存历史帧，自动排序
+     * @param frame:gif帧
+     */
+    void insertOldFrame(GifFrame frame);
+    GifFrame getOldFrame(int index);
+
 protected:
     void  setRecordAudioType(int audioType);
     void  setMicAudioRecord(bool bRecord);
@@ -64,7 +71,7 @@ protected:
 public:
     CAVInputStream                           *m_pInputStream;
     CAVOutputStream                          *m_pOutputStream;
-    WaylandIntegration::WriteFrameThread     *m_writeFrameThread;
+    WriteFrameThread                         *m_writeFrameThread;
     GifRecord                                *m_pGifRecord[3];
     GifWrite                                 *m_pGifWrite;
     GifCreator                               *m_pGifCreator;
@@ -91,6 +98,10 @@ private:
     int m_selectHeight;
     pthread_t  m_mainThread;
     int m_delay;
+    //历史帧
+    QMap<int,GifFrame> m_oldFrameMap;
+    QMutex m_oldFrameMutex;
+    int m_gifBuffersize;
 };
 
 #endif // RECORDADMIN_H

@@ -45,7 +45,7 @@ void GifWrite::insertFrame(GifFrame frame)
 GifFrame GifWrite::getFrame()
 {
     QMutexLocker locker(&m_cacheMutex);
-    if((m_cacheMap.size() < 120 && getBCache()) || 0 == m_cacheMap.size())
+    if((m_cacheMap.size() < 30 && getBCache()) || 0 == m_cacheMap.size())
     {
         GifFrame frame;
         frame.data = nullptr;

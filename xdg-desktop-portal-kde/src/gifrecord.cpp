@@ -36,14 +36,13 @@ void GifRecord::init(int screenWidth,
 }
 
 
-//int GifRecord::test =0;
+int test =0;
 void GifRecord::run()
 {
     if(nullptr == m_context)
         return;
 
-    uint8_t *m_cacheOldImage = new uint8_t[m_selectWidth*m_selectHeight*4];
-
+    uint8_t *m_cacheOldImage = new uint8_t[static_cast<unsigned long>(m_selectWidth*m_selectHeight*4)];
     WaylandIntegration::WaylandIntegrationPrivate::waylandFrame inFrame;
     GifFrame outFrame;
     while (bWriteFrame())
@@ -51,7 +50,6 @@ void GifRecord::run()
         if(m_context->getFrame(inFrame))
         {
             outFrame = m_context->m_recordAdmin->m_pGifCreator->GifWriteFrame(m_context->m_recordAdmin->m_pGifCreator->m_pGifWriter,
-                                                                              m_cacheOldImage,
                                                                               QImage(inFrame._frame,inFrame._width,inFrame._height,QImage::Format_RGB32).copy(m_x,m_y,m_selectWidth,m_selectHeight).
                                                                               convertToFormat(QImage::Format_RGBA8888).bits(),
                                                                               static_cast<uint32_t>(inFrame._time),
@@ -61,7 +59,9 @@ void GifRecord::run()
 
             if(nullptr != outFrame.data)
             {
-                //qDebug() << "+++++++++++++++++++++++++++++++++++++++++" << test++;
+                qDebug() << "+++++++++++++++++++++++++++++++++++++++++" << test++ << QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss.zzz");
+                outFrame.index =  inFrame._index;
+                m_context->m_recordAdmin->insertOldFrame(outFrame);
                 m_context->m_recordAdmin->m_pGifWrite->insertFrame(outFrame);
             }
         }
