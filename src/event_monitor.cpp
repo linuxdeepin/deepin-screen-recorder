@@ -133,3 +133,12 @@ void EventMonitor::handleRecordEvent(XRecordInterceptData *data)
     fflush(stdout);
     XRecordFreeData(data);
 }
+XFixesCursorImage* EventMonitor::GetCursorImage()
+{
+    Display *m_x11_display = XOpenDisplay(nullptr);
+    if(m_x11_display == nullptr){
+        fprintf(stderr, "unable to open display\n");
+        return nullptr;
+    }
+    return XFixesGetCursorImage(m_x11_display);
+}

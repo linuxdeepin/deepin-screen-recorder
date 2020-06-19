@@ -281,27 +281,8 @@ void MainWindow::initAttributes()
         rootWindowRect = t_screenRect;
     }
 
-    if (t_screenCount > 1) {
-        for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
-            if (wid == winId()) continue;
-
-            DForeignWindow *window = DForeignWindow::fromWinId(wid);
-            //判断窗口是否被最小化
-            if (window->windowState() == Qt::WindowState::WindowMinimized) {
-                continue;
-            }
-            if (window) {
-                window->deleteLater();
-//                windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(),
-//                                                    window->frameGeometry().width(), window->frameGeometry().height()};
-
-                windowRects << window->frameGeometry();
-                windowNames << window->wmClass();
-            }
-        }
-    }
-
-    else {
+        m_screenHeight = t_screenRect.height();
+        m_screenWidth = t_screenRect.width();
         for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
             if (wid == winId()) continue;
 
@@ -429,8 +410,6 @@ void MainWindow::initAttributes()
                 //                windowNames << window->wmClass();
             }
         }
-
-    }
 
     recordButtonLayout = new QVBoxLayout();
     setLayout(recordButtonLayout);
@@ -2067,6 +2046,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
 
 void MainWindow::saveScreenShot()
 {
+    m_CursorImage = eventMonitor.GetCursorImage();
     emit releaseEvent();
     m_shotflag = 1;
     emit saveActionTriggered();
@@ -3458,8 +3438,11 @@ void MainWindow::shotCurrentImg()
 
 
     m_resultPixmap = m_resultPixmap.copy(target);
-
-    //  获取配置是否截取光标
+    addCursorToImage();
+}
+void MainWindow::addCursorToImage()
+{
+    //获取配置是否截取光标
     int t_saveCursor = ConfigSettings::instance()->value("save", "saveCursor").toInt();
     if (t_saveCursor == 0) {
         return;
@@ -3467,20 +3450,30 @@ void MainWindow::shotCurrentImg()
     QPoint coursePoint = this->cursor().pos();//获取当前光标的位置
     int x = coursePoint.x();
     int y = coursePoint.y();
-    // 光标是否在当前截取区域
+    //光标是否在当前截取区域
     bool isUnderRect = ((x > recordX) && (x < recordX + recordWidth)) && ((y > recordY) && (y < recordY + recordHeight));
     if (isUnderRect == false) {
         return;
     }
-    // 获取光标资源
-    QPixmap cursorPixmap = this->cursor().pixmap();
-    if (cursorPixmap.isNull()) {
-        cursorPixmap  = QIcon(":/image/mouse_style/shape/rect_mouse.svg").pixmap(16, 16);
+    if(m_CursorImage == nullptr)
+        return;
+    const int dataSize = m_CursorImage->width * m_CursorImage->height * 4;
+    uchar *pixels = new uchar[dataSize];
+    int index = 0;
+    for(int j = 0; j < m_CursorImage->width * m_CursorImage->height; ++j) {
+        unsigned long curValue = m_CursorImage->pixels[j];
+        pixels[index++] = static_cast<uchar>(curValue >> 0);
+        pixels[index++] = static_cast<uchar>(curValue >> 8);
+        pixels[index++] = static_cast<uchar>(curValue >> 16);
+        pixels[index++] = static_cast<uchar>(curValue >> 24);
     }
+    QImage cursorImage = QImage(pixels, m_CursorImage->width, m_CursorImage->height, QImage::Format_ARGB32_Premultiplied);
     QPainter painter(&m_resultPixmap);
-    painter.drawPixmap(x - recordX - cursorPixmap.width() / 2, y - recordY - cursorPixmap.height() / 2, cursorPixmap.width(), cursorPixmap.height(), cursorPixmap);
+    painter.drawImage(QRect(x - recordX - m_CursorImage->width / 2, y - recordY - m_CursorImage->height / 2, m_CursorImage->width, m_CursorImage->height), cursorImage);
+    delete[] pixels;
+    XFree(m_CursorImage);
+    return;
 }
-
 void MainWindow::shotFullScreen()
 {
     //const qreal ratio = qApp->primaryScreen()->devicePixelRatio();

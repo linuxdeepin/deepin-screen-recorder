@@ -27,6 +27,7 @@
 #include <QThread>
 #include <X11/Xlib.h>
 #include <X11/extensions/record.h>
+#include <X11/extensions/Xfixes.h>
 
 class EventMonitor : public QThread
 {
@@ -36,6 +37,7 @@ public:
     EventMonitor(QObject *parent = nullptr);
     static void callback(XPointer trash, XRecordInterceptData *data);
     void handleRecordEvent(XRecordInterceptData *);
+    XFixesCursorImage* GetCursorImage();
 
 signals:
     void buttonedPress(int x, int y);

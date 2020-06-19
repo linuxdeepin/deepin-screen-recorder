@@ -646,7 +646,8 @@ void RecordProcess::stopRecord()
 
         qDebug() << "Kill byzanz-record's child process (sleep) pid: " << byzanzChildPid;
     } else {
-        process->terminate();
+        //process->terminate();
+        process->write("q");
     }
 
 // Wait thread.
