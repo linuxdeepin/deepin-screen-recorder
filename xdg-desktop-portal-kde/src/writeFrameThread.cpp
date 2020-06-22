@@ -5,7 +5,7 @@
 #include <qimage.h>
 #include "recordAdmin.h"
 
-WaylandIntegration::WriteFrameThread::WriteFrameThread(WaylandIntegrationPrivate* context, QObject *parent) :
+WriteFrameThread::WriteFrameThread(WaylandIntegration::WaylandIntegrationPrivate* context, QObject *parent) :
     QThread(parent),
     m_bWriteFrame(false)
 {
@@ -13,11 +13,11 @@ WaylandIntegration::WriteFrameThread::WriteFrameThread(WaylandIntegrationPrivate
 }
 
 //int test = 0;
-void WaylandIntegration::WriteFrameThread::run()
+void WriteFrameThread::run()
 {
     if(nullptr == m_context)
         return;
-    WaylandIntegrationPrivate::waylandFrame frame;
+    WaylandIntegration::WaylandIntegrationPrivate::waylandFrame frame;
     while (bWriteFrame())
     {
         if(m_context->getFrame(frame))
@@ -28,13 +28,13 @@ void WaylandIntegration::WriteFrameThread::run()
     }
 }
 
-bool WaylandIntegration::WriteFrameThread::bWriteFrame()
+bool WriteFrameThread::bWriteFrame()
 {
     QMutexLocker locker(&m_writeFrameMutex);
     return m_bWriteFrame;
 }
 
-void WaylandIntegration::WriteFrameThread::setBWriteFrame(bool bWriteFrame)
+void WriteFrameThread::setBWriteFrame(bool bWriteFrame)
 {
     QMutexLocker locker(&m_writeFrameMutex);
     m_bWriteFrame = bWriteFrame;

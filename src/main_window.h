@@ -156,7 +156,7 @@ public slots:
     void flashTrayIcon();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void shotCurrentImg();
-    void shotFullScreen();
+    void shotFullScreen(bool isFull = false);
     void onHelp();
 
     Q_SCRIPTABLE void stopRecord();

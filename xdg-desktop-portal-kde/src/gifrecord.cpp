@@ -1,26 +1,28 @@
 #include "gifrecord.h"
 #include <QImage>
 #include <qdebug.h>
+#include "gifwrite.h"
+#include "recordAdmin.h"
 
-WaylandIntegration::GifRecord::GifRecord(WaylandIntegrationPrivate *context, QObject *parent) : QThread(parent),
-    m_context(context)
+GifRecord::GifRecord(WaylandIntegration::WaylandIntegrationPrivate *context, int index, QObject *parent) : QThread(parent),
+    m_context(context),
+    m_index(index)
+{
+}
+
+GifRecord::~GifRecord()
 {
 
 }
 
-WaylandIntegration::GifRecord::~GifRecord()
-{
-
-}
-
-void WaylandIntegration::GifRecord::init(int screenWidth,
-                                         int screenHeight,
-                                         int x,
-                                         int y,
-                                         int selectWidth,
-                                         int selectHeight,
-                                         int fps,
-                                         QString filePath)
+void GifRecord::init(int screenWidth,
+                     int screenHeight,
+                     int x,
+                     int y,
+                     int selectWidth,
+                     int selectHeight,
+                     int fps,
+                     QString filePath)
 {
     m_screenWidth = screenWidth;
     m_screenHeight = screenHeight;
@@ -30,46 +32,56 @@ void WaylandIntegration::GifRecord::init(int screenWidth,
     m_selectHeight = selectHeight;
     m_fps = fps;
     m_filePath = filePath;
-    m_delay = 30;
-    QByteArray pathArry = m_filePath.toLocal8Bit();
-    char *pathCh = new char[strlen(pathArry.data())+1];
-    strcpy(pathCh,pathArry.data());
-    GifBegin(&m_gitWrite,pathCh,static_cast<uint32_t>(m_selectWidth),static_cast<uint32_t>(m_selectHeight),static_cast<uint32_t>(m_delay));
+    m_delay = 15;
 }
 
-void WaylandIntegration::GifRecord::run()
+
+int test =0;
+void GifRecord::run()
 {
     if(nullptr == m_context)
         return;
-    WaylandIntegrationPrivate::waylandFrame frame;
+
+    uint8_t *m_cacheOldImage = new uint8_t[static_cast<unsigned long>(m_selectWidth*m_selectHeight*4)];
+    WaylandIntegration::WaylandIntegrationPrivate::waylandFrame inFrame;
+    GifFrame outFrame;
     while (bWriteFrame())
     {
-        if(m_context->getFrame(frame))
+        if(m_context->getFrame(inFrame))
         {
-            GifWriteFrame(&m_gitWrite,
-                          QImage(frame._frame,frame._width,frame._height,QImage::Format_RGB32).copy(m_x,m_y,m_selectWidth,m_selectHeight).
-                          convertToFormat(QImage::Format_RGBA8888).bits(),
-                          static_cast<uint32_t>(m_selectWidth),
-                          static_cast<uint32_t>(m_selectHeight),
-                          static_cast<uint32_t>(m_delay));
+            outFrame = m_context->m_recordAdmin->m_pGifCreator->GifWriteFrame(m_context->m_recordAdmin->m_pGifCreator->m_pGifWriter,
+                                                                              QImage(inFrame._frame,inFrame._width,inFrame._height,QImage::Format_RGB32).copy(m_x,m_y,m_selectWidth,m_selectHeight).
+                                                                              convertToFormat(QImage::Format_RGBA8888).bits(),
+                                                                              static_cast<uint32_t>(inFrame._time),
+                                                                              static_cast<uint32_t>(m_selectWidth),
+                                                                              static_cast<uint32_t>(m_selectHeight),
+                                                                              static_cast<uint32_t>(m_delay));
+
+            if(nullptr != outFrame.data)
+            {
+                qDebug() << "+++++++++++++++++++++++++++++++++++++++++" << test++ << QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss.zzz");
+                outFrame.index =  inFrame._index;
+                m_context->m_recordAdmin->insertOldFrame(outFrame);
+                m_context->m_recordAdmin->m_pGifWrite->insertFrame(outFrame);
+            }
         }
     }
-    stop();
+    delete[] m_cacheOldImage;
 }
 
-void WaylandIntegration::GifRecord::stop()
+void GifRecord::stop()
 {
-    GifEnd(&m_gitWrite);
+    //GifEnd(m_context->m_recordAdmin->m_pGifWriter);
     qDebug() << "写gif文件尾";
 }
 
-bool WaylandIntegration::GifRecord::bWriteFrame()
+bool GifRecord::bWriteFrame()
 {
     QMutexLocker locker(&m_writeFrameMutex);
     return m_bWriteFrame;
 }
 
-void WaylandIntegration::GifRecord::setBWriteFrame(bool bWriteFrame)
+void GifRecord::setBWriteFrame(bool bWriteFrame)
 {
     QMutexLocker locker(&m_writeFrameMutex);
     m_bWriteFrame = bWriteFrame;

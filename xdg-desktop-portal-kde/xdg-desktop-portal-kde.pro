@@ -27,30 +27,33 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # Input
 HEADERS += src/AVInputStream.h \
            src/AVOutputStream.h \
-           src/bit_writing_block.h \
+           #src/bit_writing_block.h \
            src/desktopportal.h \
-           src/neu_quant.h \
-           src/utils.h \
+           #src/neu_quant.h \ #
+           #src/utils.h \ #
            src/waylandintegration.h \
            src/waylandintegration_p.h \
            src/settings.h \
     src/recordAdmin.h \
     src/writeFrameThread.h \
     src/gifrecord.h \
-    src/gif.h
+    src/gif.h \
+    src/gifwrite.h
 SOURCES += \
            src/AVInputStream.cpp \
            src/AVOutputStream.cpp \
-           src/bit_writing_block.c \
+           #src/bit_writing_block.c \ #
            src/desktopportal.cpp \
-           src/neu_quant.c \
-           src/utils.cpp \
+           #src/neu_quant.c \ #
+           #src/utils.cpp \ #
            src/waylandintegration.cpp \
            src/xdg-desktop-portal-kde.cpp \
            src/settings.cpp \
     src/recordAdmin.cpp \
     src/writeFrameThread.cpp \
-    src/gifrecord.cpp
+    src/gifrecord.cpp \
+    src/gifwrite.cpp \
+    src/gif.cpp
 
 QMAKE_CXXFLAGS += -g
 
@@ -63,3 +66,5 @@ isEmpty(BINDIR):BINDIR=/usr/bin
 target.path = $$INSTROOT$$BINDIR
 
 INSTALLS += target
+
+DISTFILES +=

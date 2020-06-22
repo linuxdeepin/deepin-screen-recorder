@@ -20,11 +20,10 @@
 */
 
 #include "neu_quant.h"
-#include <stdlib.h>
 
 NeuQuant * initNeuQuant(NeuQuant * neuQuant, uint32_t* pixels, int len, int sample) {
 
-    neuQuant = (NeuQuant *)malloc(sizeof(NeuQuant));
+	neuQuant = (NeuQuant *)malloc(sizeof(NeuQuant));
 
 	neuQuant->thePicture = pixels;
 	neuQuant->lengthCount = len;
@@ -34,13 +33,13 @@ NeuQuant * initNeuQuant(NeuQuant * neuQuant, uint32_t* pixels, int len, int samp
 	neuQuant->netindex = (int *)malloc(sizeof(int) * 256);
 	neuQuant->bias = (int *)malloc(sizeof(int) * NETSIZE);
 	neuQuant->freq = (int *)malloc(sizeof(int) * NETSIZE);
-    neuQuant->radpower = (int *)malloc(sizeof(int) * INITRAD);
-    int i;
-    for (i = 0; i < NETSIZE; i++) {
+	neuQuant->radpower = (int *)malloc(sizeof(int) * INITRAD);
+
+	for (int i = 0; i < NETSIZE; i++) {
 		neuQuant->network[i] = (int *)malloc(sizeof(int) * 4);
 		neuQuant->network[i][0] = neuQuant->network[i][1] = neuQuant->network[i][2]
 			= (i << (NET_BIAS_SHIFT + 8)) / NETSIZE;
-        neuQuant->freq[i] = INT_BIAS / NETSIZE;
+		neuQuant->freq[i] = INT_BIAS / NETSIZE;					// 1 / NETSIZE
 		neuQuant->bias[i] = 0;
 	}
 
@@ -64,16 +63,17 @@ int inxbuild(NeuQuant * neuQuant) {
 	for (i = 0; i < NETSIZE; i++) {
 		p = neuQuant->network[i];
 		smallpos = i;
-        smallval = p[1];
-
+		smallval = p[1];			// index on g
+		// find smallest in i..NETSIZE-1
 		for (j = i + 1; j < NETSIZE; j++) {
 			q = neuQuant->network[j];
 			if (q[1] < smallval) {
-                smallpos = j;
-                smallval = q[1];
+				smallpos = j;		// index on g
+				smallval = q[1];	// index on g
 			}
 		}
 		q = neuQuant->network[smallpos];
+		// swap p(i) and q(smallpos) entries
 		if (i != smallpos) {
 			j = q[0];
 			q[0] = p[0];
@@ -88,6 +88,7 @@ int inxbuild(NeuQuant * neuQuant) {
 			q[3] = p[3];
 			p[3] = j;
 		}
+		// smallval entry is now in position i
 		if (smallval != previoscol) {
 			neuQuant->netindex[previoscol] = (startpos + i) >> 1;
 			for (j = previoscol + 1; j < smallval; j++) {
@@ -98,7 +99,7 @@ int inxbuild(NeuQuant * neuQuant) {
 		}
 		neuQuant->netindex[previoscol] = (startpos + MAX_NET_POS) >> 1;
 		for (j = previoscol + 1; j < 256; j++)
-            neuQuant->netindex[j] = MAX_NET_POS;
+			neuQuant->netindex[j] = MAX_NET_POS;		// really 256
 	}
 
 	return 0;
@@ -152,7 +153,7 @@ int learn(NeuQuant * neuQuant) {
 
 		altersingle(neuQuant, alpha, j, b, g, r);
 		if (rad != 0)
-            alterneigh(neuQuant, rad, j, b, g, r);
+			alterneigh(neuQuant, rad, j, b, g, r);			// alter neighbours
 
 		pix += step;
 		if (pix >= lim)
@@ -181,10 +182,10 @@ int map(NeuQuant * neuQuant, int b, int g, int r) {
 	int *p;
 	int best;
 
-    bestd = 1000;
+	bestd = 1000;						// biggest possible dist is 256*3
 	best = -1;
-    i = neuQuant->netindex[g];
-    j = i - 1;
+	i = neuQuant->netindex[g];			// index on g
+	j = i - 1;							// start at netindex[g] and work outwards
 
 	while ((i < NETSIZE) || (j >= 0)) {
 		if (i < NETSIZE) {
@@ -302,11 +303,10 @@ int unbiasnet(NeuQuant * neuQuant) {
 uint32_t * colorMap(NeuQuant * neuQuant) {
 	uint32_t * map = (uint32_t*)malloc(sizeof(uint32_t) * 3 * NETSIZE);
 	int * index = (int*)malloc(sizeof(int) * NETSIZE);
-    int i;
-    for (i = 0; i < NETSIZE; i++)
+	for (int i = 0; i < NETSIZE; i++)
 		index[neuQuant->network[i][3]] = i;
 	int k = 0;
-    for (i = 0; i < NETSIZE; i++) {
+	for (int i = 0; i < NETSIZE; i++) {
 		int j = index[i];
 		map[k++] = (uint32_t)(neuQuant->network[j][0]);
 		map[k++] = (uint32_t)(neuQuant->network[j][1]);

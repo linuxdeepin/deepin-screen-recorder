@@ -76,6 +76,8 @@ public:
     struct waylandFrame {
         //时间戳
         int64_t _time;
+        //索引
+        int _index;
         int _width;
         int _height;
         int _stride;
@@ -98,7 +100,7 @@ public:
     bool isEGLInitialized() const;
 
     void bindOutput(int outputName, int outputVersion);
-    bool startStreaming(const WaylandOutput &output);
+    //bool startStreaming(const WaylandOutput &output);
     void stopStreaming();
     QMap<quint32, WaylandOutput> screens();
 
@@ -162,6 +164,7 @@ private:
     //是否获取视频帧
     bool m_bGetFrame;
     QMutex m_bGetFrameMutex;
+    static int frameIndex;
 
     bool m_eglInitialized;
     bool m_streamingEnabled;

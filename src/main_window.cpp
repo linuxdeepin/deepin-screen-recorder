@@ -1071,7 +1071,7 @@ void MainWindow::fullScreenshot()
     m_toolBar = new ToolBar(this);
     m_toolBar->hide();
 
-    shotFullScreen();
+    shotFullScreen(true);
 
 //    if (m_hotZoneInterface->isValid())
 //        m_hotZoneInterface->asyncCall("EnableZoneDetected",  true);
@@ -3480,7 +3480,7 @@ void MainWindow::shotCurrentImg()
     painter.drawPixmap(x - recordX - cursorPixmap.width() / 2, y - recordY - cursorPixmap.height() / 2, cursorPixmap.width(), cursorPixmap.height(), cursorPixmap);
 }
 
-void MainWindow::shotFullScreen()
+void MainWindow::shotFullScreen(bool isFull)
 {
     const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     QRect target( m_backgroundRect.x(),
@@ -3490,7 +3490,11 @@ void MainWindow::shotFullScreen()
     qDebug() << "m_backgroundRect" << m_backgroundRect;
 
 //    m_resultPixmap = getPixmapofRect(m_backgroundRect);
-    m_resultPixmap = getPixmapofRect(target);
+    if(isFull){
+        m_resultPixmap = m_backgroundPixmap;
+    }else{
+        m_resultPixmap = getPixmapofRect(target);
+    }
     qDebug() << "m_resultPixmap" << m_resultPixmap.rect();
 }
 

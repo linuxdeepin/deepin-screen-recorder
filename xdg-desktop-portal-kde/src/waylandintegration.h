@@ -78,7 +78,7 @@ Q_SIGNALS:
 
     bool isEGLInitialized();
 
-    bool startStreaming(const WaylandOutput &output);
+    //bool startStreaming(const WaylandOutput &output);
     void stopStreaming();
 
     QMap<quint32, WaylandOutput> screens();

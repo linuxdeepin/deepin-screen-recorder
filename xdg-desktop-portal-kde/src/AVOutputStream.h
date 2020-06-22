@@ -4,7 +4,7 @@
 #include <string>
 #include <assert.h>
 #include <QMutex>
-#include "waylandintegration.h"
+//#include "waylandintegration.h"
 #include "waylandintegration_p.h"
 
 extern "C"
