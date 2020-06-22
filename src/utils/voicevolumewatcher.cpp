@@ -55,7 +55,7 @@ void voiceVolumeWatcher::run()
         */
          if (!m_isRecoding && m_loopwatch) {
              AudioPort activePort = m_defaultSource->activePort();
-             qDebug() << "=========" << activePort.name << activePort.description << activePort.availability << "--------";
+             //qDebug() << "=========" << activePort.name << activePort.description << activePort.availability << "--------";
              bool couldUse = false;
              if (isMicrophoneAvail(activePort.name)) {
                  double currentMicrophoneVolume = m_defaultSource->volume();
@@ -107,8 +107,6 @@ void voiceVolumeWatcher::initDeviceWatcher()
 
 void voiceVolumeWatcher::onCardsChanged(const QString &value)
 {
-    qDebug() << "Cards changed:" << value;
-
     initAvailInputPorts(value);
 }
 
@@ -141,7 +139,7 @@ void voiceVolumeWatcher::initAvailInputPorts(const QString &cards)
                 // 只添加输入port
                 if (port.isInputPort()) {
                     m_availableInputPorts.insert(port.portId, port);
-                    qDebug() << " " << port;
+                    //qDebug() << " " << port;
                 }
             }
         }
