@@ -3,7 +3,7 @@
 #include <QThread>
 //#include "waylandintegration.h"
 #include "waylandintegration_p.h"
-#include "gif.h"
+//#include "gif.h"
 
 class GifRecord : public QThread
 {

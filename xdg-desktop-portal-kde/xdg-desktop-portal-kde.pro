@@ -37,8 +37,12 @@ HEADERS += src/AVInputStream.h \
     src/recordAdmin.h \
     src/writeFrameThread.h \
     src/gifrecord.h \
-    src/gif.h \
-    src/gifwrite.h
+    #src/lib/GifH/gif.h \
+    src/gifwrite.h \
+    src/qgifglobal.h \
+    src/qgifimage_p.h \
+    src/qgifimage.h \
+    src/lib/GifLib/gif_lib_private.h
 SOURCES += \
            src/AVInputStream.cpp \
            src/AVOutputStream.cpp \
@@ -52,8 +56,15 @@ SOURCES += \
     src/recordAdmin.cpp \
     src/writeFrameThread.cpp \
     src/gifrecord.cpp \
-    src/gifwrite.cpp \
-    src/gif.cpp
+    src/gifwrite.cpp \ #\
+    src/lib/GifLib/dgif_lib.c \
+    src/lib/GifLib/egif_lib.c \
+    src/lib/GifLib/gif_err.c \
+    src/lib/GifLib/gif_hash.c \
+    src/lib/GifLib/gifalloc.c \
+    src/lib/GifLib/quantize.c \
+    src/qgifimage.cpp
+    #src/lib/GifH/gif.cpp
 
 QMAKE_CXXFLAGS += -g
 

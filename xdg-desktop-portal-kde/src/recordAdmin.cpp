@@ -5,8 +5,9 @@
 #include <stdio.h>
 #include <cstring>
 #include <math.h>
-#include <unistd.h> //sleep()
+#include <unistd.h>
 #include <qtimer.h>
+#include "qgifimage.h"
 #include <QDebug>
 
 RecordAdmin::RecordAdmin(int &argc, char **argv, WaylandIntegration::WaylandIntegrationPrivate *context, QObject *parent): QObject(parent),
@@ -14,7 +15,7 @@ RecordAdmin::RecordAdmin(int &argc, char **argv, WaylandIntegration::WaylandInte
     m_pOutputStream(nullptr),
     m_writeFrameThread(nullptr),
     m_pGifWrite(nullptr),
-    m_pGifCreator(nullptr),
+    //m_pGifCreator(nullptr),
     m_context(context)
 {
     if(argc > 7)
@@ -60,8 +61,8 @@ RecordAdmin::RecordAdmin(int &argc, char **argv, WaylandIntegration::WaylandInte
     {
     case videoType::GIF:
         m_gifBuffersize = 60;
-        m_pGifCreator = new GifCreator(context);
-        for(int i=0;i<3;i++)
+        //m_pGifCreator = new GifCreator(context);
+        for(int i=0;i<1;i++)
         {
             m_pGifRecord[i] = nullptr;
             m_pGifRecord[i] = new GifRecord(context,i);
@@ -110,7 +111,7 @@ RecordAdmin::~RecordAdmin()
         delete m_pInputStream;
         m_pInputStream = nullptr;
     }
-    for (int i=0;i<3;i++)
+    for (int i=0;i<1;i++)
     {
         if(nullptr != m_pGifRecord[i])
         {
@@ -163,19 +164,22 @@ void RecordAdmin::init(int screenWidth, int screenHeight)
     {
     case videoType::GIF:
     {
-        //        QByteArray pathArry = m_filePath.toLocal8Bit();
-        //        char *pathCh = new char[strlen(pathArry.data())+1];
-        //        strcpy(pathCh,pathArry.data());
-        //        m_delay = 15;
-        m_pGifCreator->init(screenWidth,screenHeight,m_x,m_y,m_selectWidth,m_selectHeight,m_fps,m_filePath);
-        //GifBegin(m_context->m_recordAdmin->m_pGifWriter,pathCh,static_cast<uint32_t>(m_selectWidth),static_cast<uint32_t>(m_selectHeight),static_cast<uint32_t>(m_delay));
-        for (int i=0;i<3;i++)
-        {
-            m_pGifRecord[i]->init(screenWidth,screenHeight,m_x,m_y,m_selectWidth,m_selectHeight,m_fps,m_filePath);
-            m_pGifRecord[i]->setBWriteFrame(true);
-            m_pGifRecord[i]->start();
-        }
-        m_pGifWrite->start();
+        qDebug()  <<  QThread::currentThread();
+        m_pGifRecord[0]->init(screenWidth,screenHeight,m_x,m_y,m_selectWidth,m_selectHeight,m_fps,m_filePath);
+        m_pGifRecord[0]->start();
+//                QByteArray pathArry = m_filePath.toLocal8Bit();
+//                char *pathCh = new char[strlen(pathArry.data())+1];
+//                strcpy(pathCh,pathArry.data());
+//                m_delay = 15;
+//        m_pGifCreator->init(screenWidth,screenHeight,m_x,m_y,m_selectWidth,m_selectHeight,m_fps,m_filePath);
+//        GifBegin(m_context->m_recordAdmin->m_pGifWriter,pathCh,static_cast<uint32_t>(m_selectWidth),static_cast<uint32_t>(m_selectHeight),static_cast<uint32_t>(m_delay));
+//        for (int i=0;i<1;i++)
+//        {
+//            m_pGifRecord[i]->init(screenWidth,screenHeight,m_x,m_y,m_selectWidth,m_selectHeight,m_fps,m_filePath);
+//            m_pGifRecord[i]->setBWriteFrame(true);
+//            m_pGifRecord[i]->start();
+//        }
+//        m_pGifWrite->start();
     }
         break;
     case videoType::MP4:
@@ -292,12 +296,12 @@ int RecordAdmin::stopStream()
     {
     case videoType::GIF:
         //设置是否写gif视频帧
-        for(int i =0;i<3;i++)
+        for(int i =0;i<1;i++)
         {
             m_pGifRecord[i]->setBWriteFrame(false);
         }
         //设置是否缓存区排序
-        m_pGifWrite->setBCache(false);
+        //m_pGifWrite->setBCache(false);
         break;
     case videoType::MP4:
     {
@@ -337,27 +341,27 @@ int RecordAdmin::stopStream()
     return 0;
 }
 
-void RecordAdmin::insertOldFrame(GifFrame frame)
-{
-    QMutexLocker locker(&m_oldFrameMutex);
-    if(m_oldFrameMap.size() >= m_gifBuffersize)
-    {
-        m_oldFrameMap.remove(m_oldFrameMap.firstKey());
-    }
-    m_oldFrameMap.insert(frame.index,frame);
-}
+//void RecordAdmin::insertOldFrame(GifFrame frame)
+//{
+//    QMutexLocker locker(&m_oldFrameMutex);
+//    if(m_oldFrameMap.size() >= m_gifBuffersize)
+//    {
+//        m_oldFrameMap.remove(m_oldFrameMap.firstKey());
+//    }
+//    m_oldFrameMap.insert(frame.index,frame);
+//}
 
-GifFrame RecordAdmin::getOldFrame(int index)
-{
-    QMutexLocker locker(&m_oldFrameMutex);
-    if(m_oldFrameMap.contains(index))
-    {
-        return m_oldFrameMap.value(index);
-    }
-    else
-    {
-        GifFrame frame;
-        frame.data = nullptr;
-        return frame;
-    }
-}
+//GifFrame RecordAdmin::getOldFrame(int index)
+//{
+//    QMutexLocker locker(&m_oldFrameMutex);
+//    if(m_oldFrameMap.contains(index))
+//    {
+//        return m_oldFrameMap.value(index);
+//    }
+//    else
+//    {
+//        GifFrame frame;
+//        frame.data = nullptr;
+//        return frame;
+//    }
+//}
