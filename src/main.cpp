@@ -49,7 +49,6 @@ static int g_themeType = 0;
 //获取配置文件主题类型，并重新设置
 DGuiApplicationHelper::ColorType getThemeTypeSetting()
 {
-
     //需要找到自己程序的配置文件路径，并读取配置，这里只是用home路径下themeType.cfg文件举例,具体配置文件根据自身项目情况
     QString t_appDir = g_appPath + QDir::separator() + "themetype.cfg";
     QFile t_configFile(t_appDir);
