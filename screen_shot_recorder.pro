@@ -65,8 +65,7 @@ HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src
     src/widgets/filter.h \
     src/utils/desktopinfo.h \
     src/utils/screengrabber.h \
-    src/dbusinterface/drawinterface.h \
-    src/screen_shot_event.h
+    src/dbusinterface/drawinterface.h
 SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.cpp src/utils.cpp src/record_button.cpp src/record_option_panel.cpp src/countdown_tooltip.cpp src/constant.cpp src/event_monitor.cpp src/button_feedback.cpp src/process_tree.cpp \
     src/camera_process.cpp \
     src/show_buttons.cpp  \
@@ -114,8 +113,7 @@ SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.
     src/widgets/filter.cpp \
     src/utils/desktopinfo.cpp \
     src/utils/screengrabber.cpp \
-    src/dbusinterface/drawinterface.cpp \
-    src/screen_shot_event.cpp
+    src/dbusinterface/drawinterface.cpp
 
 QT += core
 QT += widgets

@@ -190,6 +190,8 @@ void ToolTips::pop(QPoint center)
 {
     Q_D(ToolTips);
 
+    Q_UNUSED(d)
+
 //    if (m_isVertical) {
 //        this->show();
 //        center = center + QPoint(width(), height());
