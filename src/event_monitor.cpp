@@ -87,9 +87,9 @@ void EventMonitor::callback(XPointer ptr, XRecordInterceptData *data)
 void EventMonitor::handleRecordEvent(XRecordInterceptData *data)
 {
     if (data->category == XRecordFromServer) {
-        emit activateWindow();
+
         xEvent *event = reinterpret_cast<xEvent *>(data->data);
-        //        XKeyPressedEvent *t_keyEvent;
+//        XKeyPressedEvent *t_keyEvent;
         switch (event->u.u.type) {
         case ButtonPress:
             if (event->u.u.detail != WheelUp &&

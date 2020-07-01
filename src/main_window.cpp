@@ -113,29 +113,8 @@ MainWindow::MainWindow(DWidget *parent) :
 {
     //    initAttributes();
 
-    //m_pScreenShotEvent =  new ScreenShotEvent();
-    m_pEventMonitor = new EventMonitor();
-    if (!DWindowManagerHelper::instance()->hasComposite()) {
-        qDebug() << "no composite";
-        Utils::warnNoComposite();
-        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-            m_pEventMonitor->terminate();
-            m_pEventMonitor->wait();
-        }
-        qApp->quit();
-    }
-    connect(m_pEventMonitor, SIGNAL(buttonedPress(int, int)), this, SLOT(showPressFeedback(int, int)), Qt::QueuedConnection);
-    connect(m_pEventMonitor, SIGNAL(buttonedDrag(int, int)), this, SLOT(showDragFeedback(int, int)), Qt::QueuedConnection);
-    connect(m_pEventMonitor, SIGNAL(buttonedRelease(int, int)), this, SLOT(showReleaseFeedback(int, int)), Qt::QueuedConnection);
-    connect(m_pEventMonitor, SIGNAL(pressEsc()), this, SLOT(responseEsc()), Qt::QueuedConnection);
-    connect(m_pEventMonitor, SIGNAL(pressKeyButton(unsigned char)), m_showButtons,
-            SLOT(showContentButtons(unsigned char)), Qt::QueuedConnection);
-    connect(m_pEventMonitor, SIGNAL(releaseKeyButton(unsigned char)), m_showButtons,
-            SLOT(releaseContentButtons(unsigned char)), Qt::QueuedConnection);
-    connect(m_pEventMonitor, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
-    m_pEventMonitor->start();
-
-
+    m_pScreenShotEvent =  new ScreenShotEvent();
+    m_pScreenRecordEvent = new EventMonitor();
     connect(m_wmHelper, &DWindowManagerHelper::hasCompositeChanged, this, &MainWindow::compositeChanged);
 
 
@@ -644,18 +623,8 @@ void MainWindow::initResource()
 
 void MainWindow::initScreenShot()
 {
-//    if (!DWindowManagerHelper::instance()->hasComposite())
-//    {
-//        Utils::warnNoComposite();
-//        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-//            m_pScreenShotEvent->terminate();
-//            m_pScreenShotEvent->wait();
-//        }
-//        qApp->quit();
-//    }
-//    connect(m_pScreenShotEvent, SIGNAL(pressEsc()), this, SLOT(responseEsc()), Qt::QueuedConnection);
-//    connect(m_pScreenShotEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
-//    m_pScreenShotEvent->start();
+    connect(m_pScreenShotEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
+    m_pScreenShotEvent->start();
 
     connect(this, &MainWindow::releaseEvent, this, [ = ] {
         qDebug() << "release event !!!";
@@ -740,10 +709,10 @@ void MainWindow::initScreenShot()
     }
     //    eventMonitor.quit();
     //    emit releaseEvent();
-//    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-//        m_pEventMonitor->terminate();
-//        m_pEventMonitor->wait();
-//    }
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
+        m_pScreenRecordEvent->terminate();
+        m_pScreenRecordEvent->wait();
+    }
 
 
     connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
@@ -753,16 +722,23 @@ void MainWindow::initScreenShot()
 
 void MainWindow::initScreenRecorder()
 {
-//    if (!DWindowManagerHelper::instance()->hasComposite()) {
-//        qDebug() << "no composite";
-//        Utils::warnNoComposite();
-//        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-//            m_pEventMonitor->terminate();
-//            m_pEventMonitor->wait();
-//        }
-//        qApp->quit();
-//    }
-
+    if (!DWindowManagerHelper::instance()->hasComposite()) {
+        qDebug() << "no composite";
+        Utils::warnNoComposite();
+        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
+            if(nullptr != m_pScreenRecordEvent){
+                m_pScreenRecordEvent->terminate();
+                m_pScreenRecordEvent->wait();
+                m_pScreenRecordEvent = nullptr;
+            }
+            if(nullptr != m_pScreenShotEvent){
+                m_pScreenShotEvent->terminate();
+                m_pScreenShotEvent->wait();
+                m_pScreenShotEvent = nullptr;
+            }
+        }
+        qApp->quit();
+    }
 
     m_functionType = 0;
     m_keyBoardStatus = 0;
@@ -860,15 +836,15 @@ void MainWindow::initScreenRecorder()
     //    eventMonitor.start();
 
 
-//    connect(m_pEventMonitor, SIGNAL(buttonedPress(int, int)), this, SLOT(showPressFeedback(int, int)), Qt::QueuedConnection);
-//    connect(m_pEventMonitor, SIGNAL(buttonedDrag(int, int)), this, SLOT(showDragFeedback(int, int)), Qt::QueuedConnection);
-//    connect(m_pEventMonitor, SIGNAL(buttonedRelease(int, int)), this, SLOT(showReleaseFeedback(int, int)), Qt::QueuedConnection);
-//    connect(m_pEventMonitor, SIGNAL(pressEsc()), this, SLOT(responseEsc()), Qt::QueuedConnection);
-//    connect(m_pEventMonitor, SIGNAL(pressKeyButton(unsigned char)), m_showButtons,
-//            SLOT(showContentButtons(unsigned char)), Qt::QueuedConnection);
-//    connect(m_pEventMonitor, SIGNAL(releaseKeyButton(unsigned char)), m_showButtons,
-//            SLOT(releaseContentButtons(unsigned char)), Qt::QueuedConnection);
-//    m_pEventMonitor->start();
+    connect(m_pScreenRecordEvent, SIGNAL(buttonedPress(int, int)), this, SLOT(showPressFeedback(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenRecordEvent, SIGNAL(buttonedDrag(int, int)), this, SLOT(showDragFeedback(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenRecordEvent, SIGNAL(buttonedRelease(int, int)), this, SLOT(showReleaseFeedback(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenRecordEvent, SIGNAL(pressEsc()), this, SLOT(responseEsc()), Qt::QueuedConnection);
+    connect(m_pScreenRecordEvent, SIGNAL(pressKeyButton(unsigned char)), m_showButtons,
+            SLOT(showContentButtons(unsigned char)), Qt::QueuedConnection);
+    connect(m_pScreenRecordEvent, SIGNAL(releaseKeyButton(unsigned char)), m_showButtons,
+            SLOT(releaseContentButtons(unsigned char)), Qt::QueuedConnection);
+    m_pScreenRecordEvent->start();
 
     m_toolBar->setFocus();
 }
@@ -1150,21 +1126,21 @@ void MainWindow::showReleaseFeedback(int x, int y)
 
 void MainWindow::responseEsc()
 {
-    if (0 == m_functionType)
-    {
-        if (RECORD_BUTTON_RECORDING != recordButtonStatus)
-        {
-            emit releaseEvent();
-            if (QSysInfo::currentCpuArchitecture().startsWith("x86")
-                    && false == m_isZhaoxin
-                    && nullptr != m_pEventMonitor)
-            {
-                m_pEventMonitor->terminate();
-                m_pEventMonitor->wait();
-                m_pEventMonitor = nullptr;
+    if (0 == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus){
+        emit releaseEvent();
+        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && false == m_isZhaoxin){
+            if (nullptr != m_pScreenRecordEvent){
+                m_pScreenRecordEvent->terminate();
+                m_pScreenRecordEvent->wait();
+                m_pScreenRecordEvent = nullptr;
             }
-            QApplication::quit();
+            if(nullptr != m_pScreenShotEvent){
+                m_pScreenShotEvent->terminate();
+                m_pScreenShotEvent->wait();
+                m_pScreenShotEvent = nullptr;
+            }
         }
+        QApplication::quit();
     }
 }
 
@@ -1180,8 +1156,8 @@ void MainWindow::compositeChanged()
         Utils::warnNoComposite();
         emit releaseEvent();
         if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-            m_pEventMonitor->terminate();
-            m_pEventMonitor->wait();
+            m_pScreenRecordEvent->terminate();
+            m_pScreenRecordEvent->wait();
         }
         QApplication::quit();
     }
@@ -1856,7 +1832,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
 
 void MainWindow::saveScreenShot()
 {
-    m_CursorImage = m_pEventMonitor->GetCursorImage();
+    m_CursorImage = m_pScreenRecordEvent->GetCursorImage();
     emit releaseEvent();
     m_shotflag = 1;
     emit saveActionTriggered();
@@ -1940,8 +1916,16 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         emit releaseEvent();
         if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false)
         {
-            m_pEventMonitor->terminate();
-            m_pEventMonitor->wait();
+            if(nullptr != m_pScreenRecordEvent){
+                m_pScreenRecordEvent->terminate();
+                m_pScreenRecordEvent->wait();
+                m_pScreenRecordEvent = nullptr;
+            }
+            if(nullptr != m_pScreenShotEvent){
+                m_pScreenShotEvent->terminate();
+                m_pScreenShotEvent->wait();
+                m_pScreenShotEvent = nullptr;
+            }
         }
         qApp->quit();
     });
@@ -2355,8 +2339,16 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 qDebug() << "Key_Escape pressed: app quit!";
                 emit releaseEvent();
                 if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-                    m_pEventMonitor->terminate();
-                    m_pEventMonitor->wait();
+                    if(nullptr != m_pScreenRecordEvent){
+                        m_pScreenRecordEvent->terminate();
+                        m_pScreenRecordEvent->wait();
+                        m_pScreenRecordEvent = nullptr;
+                    }
+                    if(nullptr != m_pScreenShotEvent){
+                        m_pScreenShotEvent->terminate();
+                        m_pScreenShotEvent->wait();
+                        m_pScreenShotEvent = nullptr;
+                    }
                 }
                 qApp->quit();
             } else if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
@@ -2384,8 +2376,16 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (keyEvent->key() == Qt::Key_Escape) {
                     emit releaseEvent();
                     if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-                        m_pEventMonitor->terminate();
-                        m_pEventMonitor->wait();
+                        if(nullptr != m_pScreenRecordEvent){
+                            m_pScreenRecordEvent->terminate();
+                            m_pScreenRecordEvent->wait();
+                            m_pScreenRecordEvent = nullptr;
+                        }
+                        if(nullptr != m_pScreenShotEvent){
+                            m_pScreenShotEvent->terminate();
+                            m_pScreenShotEvent->wait();
+                            m_pScreenShotEvent = nullptr;
+                        }
                     }
                     qApp->quit();
                 }
@@ -3436,8 +3436,8 @@ void MainWindow::stopRecord()
         hide();
         emit releaseEvent();
         if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-            m_pEventMonitor->terminate();
-            m_pEventMonitor->wait();
+            m_pScreenRecordEvent->terminate();
+            m_pScreenRecordEvent->wait();
         }
         //正在保存录屏文件通知
         sendSavingNotify();
@@ -3451,7 +3451,12 @@ void MainWindow::stopRecord()
 
 void MainWindow::startCountdown()
 {
-    disconnect(m_pEventMonitor, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()));
+    if(nullptr != m_pScreenShotEvent)
+    {
+        m_pScreenShotEvent->terminate();
+        m_pScreenShotEvent->wait();
+        m_pScreenShotEvent = nullptr;
+    }
 
     recordButtonStatus = RECORD_BUTTON_WAIT;
 
@@ -3634,8 +3639,16 @@ void MainWindow::exitApp()
     }
     emit releaseEvent();
     if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-        m_pEventMonitor->terminate();
-        m_pEventMonitor->wait();
+        if(nullptr != m_pScreenRecordEvent){
+            m_pScreenRecordEvent->terminate();
+            m_pScreenRecordEvent->wait();
+            m_pScreenRecordEvent = nullptr;
+        }
+        if(nullptr != m_pScreenShotEvent){
+            m_pScreenShotEvent->terminate();
+            m_pScreenShotEvent->wait();
+            m_pScreenShotEvent = nullptr;
+        }
     }
     qApp->quit();
 }

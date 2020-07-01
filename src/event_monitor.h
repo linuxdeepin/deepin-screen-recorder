@@ -47,7 +47,6 @@ signals:
     //键盘按钮事件采集信号
     void pressKeyButton(unsigned char keyCode);
     void releaseKeyButton(unsigned char keyCode);
-    void activateWindow();
 
 protected:
     void run();

@@ -189,7 +189,6 @@ void ToolTips::setVertical()
 void ToolTips::pop(QPoint center)
 {
     Q_D(ToolTips);
-
     Q_UNUSED(d)
 
 //    if (m_isVertical) {
@@ -279,7 +278,7 @@ void ToolTips::paintEvent(QPaintEvent *)
     painter.strokePath(borderPath, borderPen);
 }
 
-}
+//}
 #else
 void ToolTips::paintEvent(QPaintEvent *)
 {
