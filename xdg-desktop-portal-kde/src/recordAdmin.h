@@ -18,6 +18,9 @@
 #define AUDIO_INPUT_DEVICE    "hw:0,0"
 #define VIDEO_INPUT_DEVICE    "/dev/video0"
 #include <QThread>
+#include "qgifimage.h"
+#include "qgifimage.h"
+#include "qgifimage_p.h"
 
 extern "C"
 {
@@ -58,8 +61,8 @@ public:
      * @brief insertOldFrame:缓存历史帧，自动排序
      * @param frame:gif帧
      */
-    void insertOldFrame(GifFrame frame);
-    GifFrame getOldFrame(int index);
+//    void insertOldFrame(GifFrame frame);
+//    GifFrame getOldFrame(int index);
 
 protected:
     void  setRecordAudioType(int audioType);
@@ -74,7 +77,8 @@ public:
     WriteFrameThread                         *m_writeFrameThread;
     GifRecord                                *m_pGifRecord[3];
     GifWrite                                 *m_pGifWrite;
-    GifCreator                               *m_pGifCreator;
+    //GifCreator                               *m_pGifCreator;
+    QGifImage                                *m_pGifImage;
 
 private:
     WaylandIntegration::WaylandIntegrationPrivate* m_context;
@@ -99,7 +103,7 @@ private:
     pthread_t  m_mainThread;
     int m_delay;
     //历史帧
-    QMap<int,GifFrame> m_oldFrameMap;
+    //QMap<int,GifFrame> m_oldFrameMap;
     QMutex m_oldFrameMutex;
     int m_gifBuffersize;
 };

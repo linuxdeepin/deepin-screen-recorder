@@ -6,7 +6,7 @@
 #include <QThread>
 #include "waylandintegration.h"
 #include "waylandintegration_p.h"
-#include "gif.h"
+//#include "gif.h"
 
 class GifWrite : public QThread
 {
@@ -22,8 +22,8 @@ public:
 
     void run();
 
-    void insertFrame(GifFrame frame);
-    GifFrame getFrame();
+//    void insertFrame(GifFrame frame);
+//    GifFrame getFrame();
     int getCacheSize();
 
     bool getBCache();
@@ -31,7 +31,7 @@ public:
 
 private:
     WaylandIntegration::WaylandIntegrationPrivate * m_context;
-    QMap<uint32_t,GifFrame> m_cacheMap;
+//    QMap<uint32_t,GifFrame> m_cacheMap;
     QMutex m_cacheMutex;
     QMutex m_bCacheMutex;
     bool m_bCache;
