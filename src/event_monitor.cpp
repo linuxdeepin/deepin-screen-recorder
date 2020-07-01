@@ -38,8 +38,8 @@ EventMonitor::EventMonitor(QObject *parent) : QThread(parent)
 
 void EventMonitor::run()
 {
-    Display *display = XOpenDisplay(0);
-    if (display == 0) {
+    Display *display = XOpenDisplay(nullptr);
+    if (display == nullptr) {
         fprintf(stderr, "unable to open display\n");
         return;
     }
@@ -47,7 +47,7 @@ void EventMonitor::run()
     // Receive from ALL clients, including future clients.
     XRecordClientSpec clients = XRecordAllClients;
     XRecordRange *range = XRecordAllocRange();
-    if (range == 0) {
+    if (range == nullptr) {
         fprintf(stderr, "unable to allocate XRecordRange\n");
         return;
     }
@@ -67,13 +67,13 @@ void EventMonitor::run()
 
     XSync(display, True);
 
-    Display *display_datalink = XOpenDisplay(0);
-    if (display_datalink == 0) {
+    Display *display_datalink = XOpenDisplay(nullptr);
+    if (display_datalink == nullptr) {
         fprintf(stderr, "unable to open second display\n");
         return;
     }
 
-    if (!XRecordEnableContext(display_datalink, context,  callback, (XPointer) this)) {
+    if (!XRecordEnableContext(display_datalink, context,  callback, reinterpret_cast<XPointer>(this))) {
         fprintf(stderr, "XRecordEnableContext() failed\n");
         return;
     }
@@ -81,14 +81,14 @@ void EventMonitor::run()
 
 void EventMonitor::callback(XPointer ptr, XRecordInterceptData *data)
 {
-    ((EventMonitor *) ptr)->handleRecordEvent(data);
+    (reinterpret_cast<EventMonitor *>(ptr))->handleRecordEvent(data);
 }
 
 void EventMonitor::handleRecordEvent(XRecordInterceptData *data)
 {
     if (data->category == XRecordFromServer) {
 
-        xEvent *event = (xEvent *)data->data;
+        xEvent *event = reinterpret_cast<xEvent *>(data->data);
 //        XKeyPressedEvent *t_keyEvent;
         switch (event->u.u.type) {
         case ButtonPress:
@@ -116,14 +116,14 @@ void EventMonitor::handleRecordEvent(XRecordInterceptData *data)
             break;
         case KeyPress:
             // If key is equal to esc, emit pressEsc signal.
-            if (((unsigned char *) data->data)[1] == KEY_ESCAPE) {
+            if ((reinterpret_cast<unsigned char *>(data->data))[1] == KEY_ESCAPE) {
                 emit pressEsc();
             } else {
-                emit pressKeyButton(((unsigned char *) data->data)[1]);
+                emit pressKeyButton((reinterpret_cast<unsigned char *>(data->data))[1]);
             }
             break;
         case KeyRelease:
-            emit releaseKeyButton(((unsigned char *) data->data)[1]);
+            emit releaseKeyButton((reinterpret_cast<unsigned char *>(data->data))[1]);
             break;
         default:
             break;

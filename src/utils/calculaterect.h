@@ -64,7 +64,7 @@ QPointF  pointRotate(QPointF point1, QPointF point2, qreal angle);
 qreal   pointToLineDistance(QPointF point1, QPointF point2, QPointF point3);
 
 /* judge the direction of point3 of line(point1, point2) */
-qreal pointLineDir(QPointF point1, QPointF point2, QPointF point3);
+int pointLineDir(QPointF point1, QPointF point2, QPointF point3);
 
 /*get another four points in rectangle (Top/Bottom/Left/Right) */
 FourPoints getAnotherFPoints(FourPoints mainPoints);

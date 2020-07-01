@@ -76,10 +76,10 @@ void RecordOptionPanel::paintEvent(QPaintEvent *)
     // Draw icon.
     qreal devicePixelRatio = qApp->devicePixelRatio();
     painter.setOpacity(1);
-    int gifIconX = rect().x() + ICON_OFFSET_X / devicePixelRatio;
-    int gifIconY = rect().y() + (rect().height() - gifCheckedImg.height() / devicePixelRatio) / 2;
-    int gifTextX = gifIconX + gifCheckedImg.width() / devicePixelRatio;
-    int gifTextWidth = rect().width() / 2 - ICON_OFFSET_X / devicePixelRatio - gifCheckedImg.width() / devicePixelRatio;
+    int gifIconX = static_cast<int>(rect().x() + ICON_OFFSET_X / devicePixelRatio);
+    int gifIconY = static_cast<int>(rect().y() + (rect().height() - gifCheckedImg.height() / devicePixelRatio) / 2);
+    int gifTextX = static_cast<int>(gifIconX + gifCheckedImg.width() / devicePixelRatio);
+    int gifTextWidth = static_cast<int>(rect().width() / 2 - ICON_OFFSET_X / devicePixelRatio - gifCheckedImg.width() / devicePixelRatio);
     QString gifColor;
     if (saveAsGif) {
         painter.drawPixmap(QPoint(gifIconX, gifIconY), gifCheckedImg);

@@ -675,17 +675,18 @@ void RecordProcess::stopRecord()
 
     QVariantMap hints;
     hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
-
+    int timeout = -1;
+    unsigned int id = 0;
 
     QList<QVariant> arg;
     arg << (QCoreApplication::applicationName())                 // appname
-        << ((unsigned int) 0)                                    // id
+        << id                                    // id
         << QString("deepin-screen-recorder")                     // icon
         << tr("Recording finished")                              // summary
         << QString(tr("Saved to %1")).arg(newSavePath) // body
         << actions                                               // actions
         << hints                                                 // hints
-        << (int) -1;                                             // timeout
+        << timeout;                                              // timeout
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
 
 //    if (lastAudioSink.length() > 0) {
