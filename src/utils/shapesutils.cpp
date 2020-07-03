@@ -30,9 +30,9 @@ Toolshape::Toolshape()
     portion.clear();
 }
 
-Toolshape::~Toolshape()
-{
-}
+//Toolshape::~Toolshape()
+//{
+//}
 
 void Toolshape::registerMetaType()
 {
