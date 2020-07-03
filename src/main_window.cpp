@@ -130,6 +130,10 @@ MainWindow::MainWindow(DWidget *parent) :
     if(!displayInterface.isValid()) {
         return;
     }
+    int w = displayInterface.property("ScreenWidth").toInt();
+    int h = displayInterface.property("ScreenHeight").toInt();
+    m_screenSize.setWidth(w);
+    m_screenSize.setHeight(h);
     QList<QDBusObjectPath> pathList = qvariant_cast< QList<QDBusObjectPath> >(displayInterface.property("Monitors"));
     for(int i = 0; i < pathList.size(); ++i) {
         QString path = pathList.at(i).path();
@@ -189,8 +193,9 @@ void MainWindow::initAttributes()
 //            m_screenWidth += QApplication::desktop()->screen(t_indexScreen)->width();
 //        }
         QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
-        t_screenRect = t_primaryScreen->virtualGeometry();
-        qDebug() << "screen size" << t_primaryScreen->virtualGeometry();
+        const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
+        t_screenRect = QRect(0, 0,m_screenSize.width() / ratio, m_screenSize.height() / ratio);
+        qDebug() << "screen size" << t_primaryScreen->virtualGeometry() << t_screenRect;
     }
 
 
@@ -283,8 +288,8 @@ void MainWindow::initAttributes()
         rootWindowRect = t_screenRect;
     }
 
-        m_screenHeight = t_screenRect.height();
-        m_screenWidth = t_screenRect.width();
+        m_screenHeight = m_screenSize.height();
+        m_screenWidth = m_screenSize.width();
         for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
             if (wid == winId()) continue;
 
