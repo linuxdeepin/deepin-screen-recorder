@@ -127,6 +127,10 @@ MainWindow::MainWindow(DWidget *parent) :
     if(!displayInterface.isValid()) {
         return;
     }
+    int w = displayInterface.property("ScreenWidth").toInt();
+    int h = displayInterface.property("ScreenHeight").toInt();
+    m_screenSize.setWidth(w);
+    m_screenSize.setHeight(h);
     QList<QDBusObjectPath> pathList = qvariant_cast< QList<QDBusObjectPath> >(displayInterface.property("Monitors"));
     for(int i = 0; i < pathList.size(); ++i) {
         QString path = pathList.at(i).path();
@@ -183,8 +187,9 @@ void MainWindow::initAttributes()
 
     else if (t_screenCount > 1) {
         QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
-        t_screenRect = t_primaryScreen->virtualGeometry();
-        qDebug() << "screen size" << t_primaryScreen->virtualGeometry();
+        const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
+        t_screenRect = QRect(0, 0, static_cast<int>(m_screenSize.width() / ratio), static_cast<int>(m_screenSize.height() / ratio));
+        qDebug() << "screen size" << t_primaryScreen->virtualGeometry() << t_screenRect;
     }
 
     setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
@@ -255,8 +260,8 @@ void MainWindow::initAttributes()
         rootWindowRect = t_screenRect;
     }
 
-    m_screenHeight = t_screenRect.height();
-    m_screenWidth = t_screenRect.width();
+    m_screenHeight = m_screenSize.height();
+    m_screenWidth = m_screenSize.width();
     for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
         if (wid == winId()) continue;
 
@@ -722,24 +727,6 @@ void MainWindow::initScreenShot()
 
 void MainWindow::initScreenRecorder()
 {
-    if (!DWindowManagerHelper::instance()->hasComposite()) {
-        qDebug() << "no composite";
-        Utils::warnNoComposite();
-        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-            if(nullptr != m_pScreenRecordEvent){
-                m_pScreenRecordEvent->terminate();
-                m_pScreenRecordEvent->wait();
-                m_pScreenRecordEvent = nullptr;
-            }
-            if(nullptr != m_pScreenShotEvent){
-                m_pScreenShotEvent->terminate();
-                m_pScreenShotEvent->wait();
-                m_pScreenShotEvent = nullptr;
-            }
-        }
-        qApp->quit();
-    }
-
     m_functionType = 0;
     m_keyBoardStatus = 0;
     m_mouseStatus = 0;
@@ -2258,7 +2245,8 @@ void MainWindow::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    if (m_functionType == 1) {
+    // 2D窗管模式下，录屏背景用截图背景。
+    if (m_functionType == 1 || (!DWindowManagerHelper::instance()->hasComposite())) {
         painter.setRenderHint(QPainter::Antialiasing, true);
         QRect backgroundRect;
 
@@ -2451,6 +2439,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             recordWidth = std::max(std::min(recordWidth - 1,
                                                             m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
                             needRepaint = true;
+                            selectAreaName = tr("select-area");
                         }
 
                     } else if (keyEvent->key() == Qt::Key_Right) {
@@ -2458,6 +2447,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             recordWidth = std::max(std::min(recordWidth - 1,
                                                             m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
                             needRepaint = true;
+                            selectAreaName = tr("select-area");
                         }
                     } else if (keyEvent->key() == Qt::Key_Up) {
                         if (recordHeight > RECORD_MIN_SHOT_SIZE) {
@@ -2466,12 +2456,14 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             recordHeight = std::max(std::min(recordHeight - 1,
                                                              m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
                             needRepaint = true;
+                            selectAreaName = tr("select-area");
                         }
                     } else if (keyEvent->key() == Qt::Key_Down) {
                         if (recordHeight > RECORD_MIN_SHOT_SIZE) {
                             recordHeight = std::max(std::min(recordHeight - 1,
                                                              m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
                             needRepaint = true;
+                            selectAreaName = tr("select-area");
                         }
                     }
                 } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {
@@ -2491,6 +2483,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     } else if (keyEvent->key() == Qt::Key_Right) {
                         if (recordX + recordWidth + 1 >= m_screenWidth) {
                             recordX = std::max(0, recordX - 1);
@@ -2498,11 +2491,13 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     } else if (keyEvent->key() == Qt::Key_Up) {
                         recordY = std::max(0, recordY - 1);
                         recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     } else if (keyEvent->key() == Qt::Key_Down) {
                         if (recordY + recordHeight + 1 >= m_screenHeight) {
                             recordY = std::max(0, recordY - 1);
@@ -2510,26 +2505,31 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     }
                 } else {
                     if (keyEvent->key() == Qt::Key_Left) {
                         recordX = std::max(0, recordX - 1);
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     } else if (keyEvent->key() == Qt::Key_Right) {
                         recordX = std::min(m_backgroundRect.width() - recordWidth,
                                            recordX + 1);
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     } else if (keyEvent->key() == Qt::Key_Up) {
                         recordY = std::max(0, recordY - 1);
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     } else if (keyEvent->key() == Qt::Key_Down) {
                         recordY = std::min(m_backgroundRect.height() -
                                            recordHeight, recordY + 1);
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     }
                 }
 
@@ -3136,6 +3136,11 @@ void MainWindow::startRecord()
 
     m_pCameraWatcher->stopWatch();
     //    voiceRecordProcess.startRecord();
+
+    // 录屏开始后，隐藏窗口。（2D窗管下支持录屏, 但是会导致摄像头录制不到）
+    if(!DWindowManagerHelper::instance()->hasComposite()){
+        hide();
+    }
 }
 
 void MainWindow::shotCurrentImg()

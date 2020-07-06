@@ -369,6 +369,7 @@ private:
     HintFilter *hintFilter         = nullptr;
     QList<ScreenInfo> m_screenInfo;
     XFixesCursorImage *m_CursorImage = nullptr;
+    QSize m_screenSize;
 };
 
 #endif //MAINWINDOW_H

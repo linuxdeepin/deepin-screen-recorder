@@ -98,16 +98,6 @@ void MainToolWidget::initMainLabel()
 //    m_recordBtn->setToolTip(tr("Switch to record mode"));
 //    installTipHint(m_recordBtn, tr("Switch to record mode"));
 //    recordBtn->setStyleSheet(record_button_style);
-    // 2D 窗管下，隐藏录屏功能
-    if(!DWindowManagerHelper::instance()->hasComposite()) {
-        m_recordBtn->hide();
-    }
-    /*
-    QString arch = QSysInfo::currentCpuArchitecture();
-    if(!(arch.startsWith("x86", Qt::CaseInsensitive) || arch.startsWith("ARM", Qt::CaseInsensitive))) {
-        m_recordBtn->hide();
-    }
-    */
     toolBtnList.append(m_recordBtn);
 
 //    connect(m_recordBtn, &ToolButton::onPress, this, [ = ] {
