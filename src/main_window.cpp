@@ -1123,8 +1123,10 @@ void MainWindow::responseEsc()
             }
             if(nullptr != m_pScreenShotEvent){
                 m_pScreenShotEvent->terminate();
-                m_pScreenShotEvent->wait();
-                m_pScreenShotEvent = nullptr;
+                if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
+                    m_pScreenShotEvent->wait();
+                    m_pScreenShotEvent = nullptr;
+                }
             }
         }
         QApplication::quit();
@@ -1910,8 +1912,10 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
             }
             if(nullptr != m_pScreenShotEvent){
                 m_pScreenShotEvent->terminate();
-                m_pScreenShotEvent->wait();
-                m_pScreenShotEvent = nullptr;
+                if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
+                    m_pScreenShotEvent->wait();
+                    m_pScreenShotEvent = nullptr;
+                }
             }
         }
         qApp->quit();
@@ -2334,8 +2338,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                     if(nullptr != m_pScreenShotEvent){
                         m_pScreenShotEvent->terminate();
-                        m_pScreenShotEvent->wait();
-                        m_pScreenShotEvent = nullptr;
+                        if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
+                            m_pScreenShotEvent->wait();
+                            m_pScreenShotEvent = nullptr;
+                        }
                     }
                 }
                 qApp->quit();
@@ -2371,8 +2377,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         }
                         if(nullptr != m_pScreenShotEvent){
                             m_pScreenShotEvent->terminate();
-                            m_pScreenShotEvent->wait();
-                            m_pScreenShotEvent = nullptr;
+                            if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
+                                m_pScreenShotEvent->wait();
+                                m_pScreenShotEvent = nullptr;
+                            }
                         }
                     }
                     qApp->quit();
@@ -3459,8 +3467,10 @@ void MainWindow::startCountdown()
     if(nullptr != m_pScreenShotEvent)
     {
         m_pScreenShotEvent->terminate();
-        m_pScreenShotEvent->wait();
-        m_pScreenShotEvent = nullptr;
+        if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
+            m_pScreenShotEvent->wait();
+            m_pScreenShotEvent = nullptr;
+        }
     }
 
     recordButtonStatus = RECORD_BUTTON_WAIT;
@@ -3646,13 +3656,17 @@ void MainWindow::exitApp()
     if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
         if(nullptr != m_pScreenRecordEvent){
             m_pScreenRecordEvent->terminate();
-            m_pScreenRecordEvent->wait();
-            m_pScreenRecordEvent = nullptr;
+            if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
+                m_pScreenRecordEvent->wait();
+                m_pScreenRecordEvent = nullptr;
+            }
         }
         if(nullptr != m_pScreenShotEvent){
             m_pScreenShotEvent->terminate();
-            m_pScreenShotEvent->wait();
-            m_pScreenShotEvent = nullptr;
+            if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
+                m_pScreenShotEvent->wait();
+                m_pScreenShotEvent = nullptr;
+            }
         }
     }
     qApp->quit();
