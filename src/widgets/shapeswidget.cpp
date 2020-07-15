@@ -32,7 +32,7 @@
 
 const int DRAG_BOUND_RADIUS = 8;
 const int SPACING = 12;
-const qreal RESIZEPOINT_WIDTH = 15;
+const int RESIZEPOINT_WIDTH = 15;
 const QSize ROTATE_ICON_SIZE = QSize(30, 30);
 
 ShapesWidget::ShapesWidget(DWidget *parent)
@@ -965,8 +965,8 @@ void ShapesWidget::handleRotate(QPointF pos)
 
             qreal t_minx = qMin(m_selectedShape.points[1].x(), m_selectedShape.points[0].x());
             qreal t_miny = qMin(m_selectedShape.points[1].y(), m_selectedShape.points[0].y());
-            int t_height = qAbs(m_selectedShape.points[1].y() - m_selectedShape.points[0].y());
-            int t_width = qAbs(m_selectedShape.points[1].x() - m_selectedShape.points[0].x());
+            int t_height = static_cast<int>(qAbs(m_selectedShape.points[1].y() - m_selectedShape.points[0].y()));
+            int t_width = static_cast<int>(qAbs(m_selectedShape.points[1].x() - m_selectedShape.points[0].x()));
 
             t_rotatepos.setX(t_minx + t_width / 2);
             t_rotatepos.setY(t_miny + t_height / 2);
@@ -1239,7 +1239,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
 
                     edit->setSelecting(true);
                     edit->setFocus();
-                    edit->move(m_pos1.x(), m_pos1.y());
+                    edit->move(static_cast<int>(m_pos1.x()), static_cast<int>(m_pos1.y()));
                     edit->show();
                     QTextCursor cs = edit->textCursor();
                     edit->moveCursor(QTextCursor::Start);
@@ -1403,8 +1403,8 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
             m_hoveredShape = m_shapes[m_selectedOrder];
 
             if (m_selectedShape.type == "text") {
-                m_editMap.value(m_selectedIndex)->move(m_selectedShape.mainPoints[0].x(),
-                                                       m_selectedShape.mainPoints[0].y());
+                m_editMap.value(m_selectedIndex)->move(static_cast<int>(m_selectedShape.mainPoints[0].x()),
+                                                       static_cast<int>(m_selectedShape.mainPoints[0].y()));
             }
 
             m_pressedPoint = m_movingPoint;
@@ -1589,10 +1589,10 @@ void ShapesWidget::paintEllipse(QPainter &painter, FourPoints ellipseFPoints, in
     if (qAbs(ellipseFPoints[0].y() - ellipseFPoints[2].y()) <= 0.1
             && qAbs(ellipseFPoints[1].y() - ellipseFPoints[3].y()) <= 0.1) {
         QRect t_rect;
-        t_rect.setX(ellipseFPoints[0].x());
-        t_rect.setY(ellipseFPoints[0].y());
-        t_rect.setWidth(ellipseFPoints[3].x() - ellipseFPoints[0].x());
-        t_rect.setHeight(ellipseFPoints[3].y() - ellipseFPoints[0].y());
+        t_rect.setX(static_cast<int>(ellipseFPoints[0].x()));
+        t_rect.setY(static_cast<int>(ellipseFPoints[0].y()));
+        t_rect.setWidth(static_cast<int>(ellipseFPoints[3].x() - ellipseFPoints[0].x()));
+        t_rect.setHeight(static_cast<int>(ellipseFPoints[3].y() - ellipseFPoints[0].y()));
 
         ellipsePath.addEllipse(t_rect);
         painter.drawPath(ellipsePath);
@@ -2033,7 +2033,7 @@ void ShapesWidget::menuCloseSlot()
 
 void ShapesWidget::updateSideBarPosition()
 {
-    QPoint sidebarPoint;
+    //QPoint sidebarPoint;
     if (m_sideBarInit == false) {
         m_sideBar->initSideBar();
         m_sideBarInit = true;

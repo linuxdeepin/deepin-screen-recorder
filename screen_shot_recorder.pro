@@ -65,7 +65,8 @@ HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src
     src/widgets/filter.h \
     src/utils/desktopinfo.h \
     src/utils/screengrabber.h \
-    src/dbusinterface/drawinterface.h
+    src/dbusinterface/drawinterface.h \
+    src/screen_shot_event.h
 SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.cpp src/utils.cpp src/record_button.cpp src/record_option_panel.cpp src/countdown_tooltip.cpp src/constant.cpp src/event_monitor.cpp src/button_feedback.cpp src/process_tree.cpp \
     src/camera_process.cpp \
     src/show_buttons.cpp  \
@@ -113,7 +114,8 @@ SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.
     src/widgets/filter.cpp \
     src/utils/desktopinfo.cpp \
     src/utils/screengrabber.cpp \
-    src/dbusinterface/drawinterface.cpp
+    src/dbusinterface/drawinterface.cpp \
+    src/screen_shot_event.cpp
 
 QT += core
 QT += widgets
@@ -123,10 +125,11 @@ QT += x11extras
 QT += dbus
 QT += multimedia
 QT += multimediawidgets
-LIBS += -lX11 -lXext -lXtst
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor
 LIBS += -L"libprocps" -lprocps
 
 QMAKE_CXXFLAGS += -g
+QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations
 
 isEmpty(PREFIX){
     PREFIX = /usr

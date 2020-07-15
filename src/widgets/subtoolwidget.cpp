@@ -1267,7 +1267,7 @@ void SubToolWidget::initShotLabel()
     OptionMenu->addAction(clipTitleAction);
     OptionMenu->addAction(saveCursorAction);
     // 屏蔽画板打开
-    //OptionMenu->addAction(openWithDraw);
+    OptionMenu->addAction(openWithDraw);
     OptionMenu->addSeparator();
 
     //保存格式

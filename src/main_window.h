@@ -64,6 +64,7 @@
 
 // Make this include at last, otherwise QtX11 will conflict with x11 lib to make compile failed.
 #include "event_monitor.h"
+#include "screen_shot_event.h"
 
 #undef Bool
 
@@ -156,7 +157,8 @@ public slots:
     void flashTrayIcon();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void shotCurrentImg();
-    void shotFullScreen();
+    void addCursorToImage();
+    void shotFullScreen(bool isFull = false);
     void onHelp();
 
     Q_SCRIPTABLE void stopRecord();
@@ -165,6 +167,7 @@ public slots:
     void showDragFeedback(int x, int y);
     void showReleaseFeedback(int x, int y);
     void responseEsc();
+    void onActivateWindow();
     void compositeChanged();
     void updateToolBarPos();
     void updateSideBarPos();
@@ -299,7 +302,9 @@ private:
 
     ButtonFeedback *buttonFeedback;
 
-    EventMonitor eventMonitor;
+    EventMonitor *m_pScreenRecordEvent;
+    ScreenShotEvent *m_pScreenShotEvent;
+
     DWindowManagerHelper *m_wmHelper;
     ShapesWidget *m_shapesWidget;
     TopTips *m_sizeTips;
@@ -363,6 +368,8 @@ private:
     bool m_isZhaoxin = false;
     HintFilter *hintFilter         = nullptr;
     QList<ScreenInfo> m_screenInfo;
+    XFixesCursorImage *m_CursorImage = nullptr;
+    QSize m_screenSize;
 };
 
 #endif //MAINWINDOW_H

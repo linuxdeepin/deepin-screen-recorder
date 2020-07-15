@@ -54,7 +54,7 @@ KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
     }
 
     else if (t_themeType == 2) {
-        setMaskColor(QColor(0, 0, 0, 76.5));
+        setMaskColor(QColor(0, 0, 0, 76));
     }
     //设置透明效果
     setFixedWidth(_BUTTON_WIDTH);
@@ -73,7 +73,7 @@ KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
     hLayout->addWidget(m_word, 0, Qt::AlignVCenter | Qt::AlignHCenter);
     this->setLayout(hLayout);
 
-    Utils::passInputEvent(this->winId());
+    Utils::passInputEvent(static_cast<int>(this->winId()));
 }
 
 KeyButtonWidget::~KeyButtonWidget()
