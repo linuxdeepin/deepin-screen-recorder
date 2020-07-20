@@ -255,14 +255,14 @@ bool QGifImagePrivate::save(QIODevice *device, int x, int y, int selectWidth, in
         if(m_context->getFrame(inFrame))
         {
             gifFile->ImageCount = 1;
-            gifFile->SWidth = inFrame._width;
-            gifFile->SHeight = inFrame._height;
             qDebug()  <<  QDateTime::currentDateTime().toString("hh:mm:ss.zzz");
             QImage image = QImage(inFrame._frame,inFrame._width,inFrame._height,QImage::Format_RGB32).
                     copy(x,y,selectWidth,selectHeight).
                     convertToFormat(QImage::Format_Indexed8);
             gifFile->SavedImages = static_cast<SavedImage *>(calloc(1, sizeof(SavedImage)));
             SavedImage *gifImage = gifFile->SavedImages;
+            gifFile->SWidth = image.width();
+            gifFile->SHeight = image.height();
             gifImage->ImageDesc.Left = 0;
             gifImage->ImageDesc.Top  = 0;
             gifImage->ImageDesc.Width = image.width();
@@ -276,7 +276,12 @@ bool QGifImagePrivate::save(QIODevice *device, int x, int y, int selectWidth, in
             {
                 gifImage->ImageDesc.ColorMap = nullptr;
             }
-            gifImage->RasterBits = image.bits();
+
+            GifByteType *data = (GifByteType *)malloc(image.width()*image.height()*sizeof (GifByteType));
+            for(int row =0;row < image.height();row++){
+                memcpy(data+row*image.width(),image.scanLine(row),image.width());
+            }
+            gifImage->RasterBits = data;
             if (m_bInit)
             {
                 m_bInit = false;
