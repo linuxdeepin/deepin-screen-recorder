@@ -61,6 +61,7 @@
 #include "dbusinterface/dbuscontrolcenter.h"
 #include "dbusinterface/dbusnotify.h"
 #include "dbusinterface/dbuszone.h"
+#include "RecorderRegionShow.h"
 
 // Make this include at last, otherwise QtX11 will conflict with x11 lib to make compile failed.
 #include "event_monitor.h"
@@ -370,6 +371,9 @@ private:
     QList<ScreenInfo> m_screenInfo;
     XFixesCursorImage *m_CursorImage = nullptr;
     QSize m_screenSize;
+    RecorderRegionShow *m_pRecorderRegion = nullptr;
+    QSize m_virtualGeometrySize;
+    qreal m_pixelRatio;
 };
 
 #endif //MAINWINDOW_H

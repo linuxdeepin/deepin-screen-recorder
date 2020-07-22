@@ -73,6 +73,11 @@ void CameraWidget::initCamera()
     t_hlayout->addWidget(m_cameraUI);
     this->setLayout(t_hlayout);
 
+    while (QCameraInfo::defaultCamera().isNull()) {
+        QEventLoop loop;
+        QTimer::singleShot(200, &loop, SLOT(quit()));
+        loop.exec();
+    }
     camera = new QCamera(QCameraInfo::defaultCamera(), this);
     m_deviceName = QCameraInfo::defaultCamera().deviceName();
     m_deviceFile = new QFile(this);

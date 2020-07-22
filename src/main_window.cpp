@@ -112,9 +112,12 @@ MainWindow::MainWindow(DWidget *parent) :
     m_wmHelper(DWindowManagerHelper::instance())
 {
     //    initAttributes();
+    QScreen *screen = qApp->primaryScreen();
+    m_pixelRatio = screen->devicePixelRatio();
 
     m_pScreenShotEvent =  new ScreenShotEvent();
     m_pScreenRecordEvent = new EventMonitor();
+    m_pRecorderRegion =  new RecorderRegionShow();
     connect(m_wmHelper, &DWindowManagerHelper::hasCompositeChanged, this, &MainWindow::compositeChanged);
 
 
@@ -187,9 +190,9 @@ void MainWindow::initAttributes()
 
     else if (t_screenCount > 1) {
         QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
-        const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
-        t_screenRect = QRect(0, 0, static_cast<int>(m_screenSize.width() / ratio), static_cast<int>(m_screenSize.height() / ratio));
+        t_screenRect = QRect(0, 0, static_cast<int>(m_screenSize.width() / m_pixelRatio), static_cast<int>(m_screenSize.height() / m_pixelRatio));
         qDebug() << "screen size" << t_primaryScreen->virtualGeometry() << t_screenRect;
+        m_virtualGeometrySize = t_primaryScreen->virtualGeometry().size();
     }
 
     setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
@@ -230,7 +233,7 @@ void MainWindow::initAttributes()
     createWinId();
 
     ConfigSettings::instance();
-    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
+
 
     // Get all windows geometry.
     // Below code must execute before `window.showFullscreen,
@@ -242,9 +245,9 @@ void MainWindow::initAttributes()
 
         //        screenRect = screenWin->backgroundRect();
         screenRect = QApplication::desktop()->screen()->geometry();
-        screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
-        this->move(static_cast<int>(screenRect.x() * ratio),
-                   static_cast<int>(screenRect.y() * ratio));
+        screenRect = QRect(screenRect.topLeft() / m_pixelRatio, screenRect.size());
+        this->move(static_cast<int>(screenRect.x() * m_pixelRatio),
+                   static_cast<int>(screenRect.y() * m_pixelRatio));
         this->setFixedSize(screenRect.width(), screenRect.height());
         rootWindowRect = QApplication::desktop()->screen()->geometry();
     }
@@ -253,10 +256,11 @@ void MainWindow::initAttributes()
         //        QPoint pos = this->cursor().pos();
         //        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
         screenRect = t_screenRect;
-        screenRect = QRect(screenRect.topLeft() / ratio, screenRect.size());
-        this->move(static_cast<int>(screenRect.x() * ratio),
-                   static_cast<int>(screenRect.y() * ratio));
-        this->setFixedSize(screenRect.width(), screenRect.height());
+
+        screenRect = QRect(screenRect.topLeft() / m_pixelRatio, screenRect.size());
+        this->move(static_cast<int>(screenRect.x() * m_pixelRatio),
+                   static_cast<int>(screenRect.y() * m_pixelRatio));
+        this->setFixedSize(m_virtualGeometrySize);
         rootWindowRect = t_screenRect;
     }
 
@@ -385,10 +389,10 @@ void MainWindow::initAttributes()
                     continue;
                 }
             }
-            //                windowRects << Dtk::Wm::WindowRect { window->x(), window->y(), window->width(), window->height() };
-            //                windowNames << window->wmClass();
         }
     }
+
+
     recordButtonLayout = new QVBoxLayout();
     setLayout(recordButtonLayout);
 
@@ -466,7 +470,7 @@ void MainWindow::initAttributes()
     m_shotButton->hide();
 
     m_backgroundRect = QApplication::desktop()->screen()->geometry();
-    m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
+    m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
 
     recordButton = new RecordButton();
     recordButton->setText(tr("Start recording"));
@@ -494,17 +498,17 @@ void MainWindow::initAttributes()
 
     if (t_screenCount == 1) {
         m_backgroundRect = QApplication::desktop()->screen()->geometry();
-        m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
+        m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
 
-        move(m_backgroundRect.topLeft() * ratio);
+        move(m_backgroundRect.topLeft() * m_pixelRatio);
         this->setFixedSize(m_backgroundRect.size());
     }
 
     else if (t_screenCount > 1) {
         m_backgroundRect = t_screenRect;
-        m_backgroundRect = QRect(m_backgroundRect.topLeft() / ratio, m_backgroundRect.size());
-        move(m_backgroundRect.topLeft() * ratio);
-        this->setFixedSize(m_backgroundRect.size());
+        m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
+        move(m_backgroundRect.topLeft() * m_pixelRatio);
+        this->setFixedSize(m_virtualGeometrySize);
     }
     initBackground();
 
@@ -1004,12 +1008,10 @@ void MainWindow::topWindow()
 
     this->hide();
     emit this->hideScreenshotUI();
-
-    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
-    QRect target( static_cast<int>(recordX * ratio),
-                  static_cast<int>(recordY * ratio),
-                  static_cast<int>(recordWidth * ratio),
-                  static_cast<int>(recordHeight * ratio) );
+    QRect target( static_cast<int>(recordX * m_pixelRatio),
+                  static_cast<int>(recordY * m_pixelRatio),
+                  static_cast<int>(recordWidth * m_pixelRatio),
+                  static_cast<int>(recordHeight * m_pixelRatio) );
 
     //    using namespace utils;
     QPixmap screenShotPix =  m_backgroundPixmap.copy(target);
@@ -1068,10 +1070,8 @@ void MainWindow::initBackground()
 
 QPixmap MainWindow::getPixmapofRect(const QRect &rect)
 {
-    QScreen *screen = qApp->primaryScreen();
-    const qreal dpiVal = screen->devicePixelRatio();
     bool ok;
-    return m_screenGrabber.grabEntireDesktop(ok, rect, dpiVal);
+    return m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
 }
 
 void MainWindow::installTipHint(QWidget *w, const QString &hintstr)
@@ -1547,7 +1547,11 @@ void MainWindow::showKeyBoardButtons(const QString &key)
 {
     //键盘按钮启用状态下创建按键控件
     if (m_keyBoardStatus == 1) {
-
+        if(!DWindowManagerHelper::instance()->hasComposite()) {
+            // 2D 录屏下将按键发送至m_pRecorderRegion区域。
+            m_pRecorderRegion->showKeyBoardButtons(key);
+            return;
+        }
 
         KeyButtonWidget *t_keyWidget = new KeyButtonWidget(this);
         t_keyWidget->setKeyLabelWord(key);
@@ -2238,9 +2242,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
         painter.setRenderHint(QPainter::Antialiasing, true);
         QRect backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
         // FIXME: Under the magnifying glass, it seems to be magnified two times.
-        QScreen *screen = qApp->primaryScreen();
-        const qreal dpiVal = screen->devicePixelRatio();
-        m_backgroundPixmap.setDevicePixelRatio(dpiVal);
+        m_backgroundPixmap.setDevicePixelRatio(m_pixelRatio);
         painter.drawPixmap(backgroundRect, m_backgroundPixmap);
         //        DWidget::paintEvent(event);
         return;
@@ -2255,12 +2257,8 @@ void MainWindow::paintEvent(QPaintEvent *event)
         QRect backgroundRect;
 
         backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
-
-
         // FIXME: Under the magnifying glass, it seems to be magnified two times.
-        QScreen *screen = qApp->primaryScreen();
-        const qreal dpiVal = screen->devicePixelRatio();
-        m_backgroundPixmap.setDevicePixelRatio(dpiVal);
+        m_backgroundPixmap.setDevicePixelRatio(m_pixelRatio);
         painter.drawPixmap(backgroundRect, m_backgroundPixmap);
     }
 
@@ -2904,11 +2902,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             else {
                 if (m_functionType == 1) {
                     if (!m_toolBar->isVisible() && !isFirstReleaseButton) {
-                        QScreen *screen = qApp->primaryScreen();
-                        const qreal dpiVal = screen->devicePixelRatio();
-                        QPoint curPos = this->cursor().pos();
+                        //QPoint curPos = this->cursor().pos(); 采用全局坐标，替换局部坐标
+                        QPoint curPos = mouseEvent->globalPos();
                         QPoint tmpPos;
-                        QPoint topLeft = m_backgroundRect.topLeft() * dpiVal;
+                        QPoint topLeft = m_backgroundRect.topLeft() * m_pixelRatio;
 
                         if (curPos.x() + INDICATOR_WIDTH + CURSOR_WIDTH > topLeft.x()
                                 + m_backgroundRect.width()) {
@@ -2992,13 +2989,11 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
             } else {
                 // Select the first window where the mouse is located
-                QScreen *screen = qApp->primaryScreen();
-                const qreal ratio = screen->devicePixelRatio();
                 const QPoint mousePoint = QCursor::pos();
                 for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
                     if (QRect(it->x(), it->y(), it->width(), it->height()).contains(mousePoint)) {
-                        recordX = it->x() - static_cast<int>(screenRect.x() * ratio);
-                        recordY = it->y() - static_cast<int>(screenRect.y() * ratio);
+                        recordX = it->x() - static_cast<int>(screenRect.x() * m_pixelRatio);
+                        recordY = it->y() - static_cast<int>(screenRect.y() * m_pixelRatio);
                         recordWidth = it->width();
                         recordHeight = it->height();
                         needRepaint = true;
@@ -3139,15 +3134,12 @@ void MainWindow::startRecord()
     recordProcess.setRecordAudioInputType(getRecordInputType(m_selectedMic, m_selectedSystemAudio));
     recordProcess.setIsZhaoXinPlatform(m_isZhaoxin);
     recordProcess.startRecord();
-
-    m_pVoiceVolumeWatcher->stopWatch();
-
-    m_pCameraWatcher->stopWatch();
     //    voiceRecordProcess.startRecord();
-
     // 录屏开始后，隐藏窗口。（2D窗管下支持录屏, 但是会导致摄像头录制不到）
     if(!DWindowManagerHelper::instance()->hasComposite()){
         hide();
+        // 显示录屏框区域。
+        m_pRecorderRegion->show();
     }
 }
 
@@ -3175,13 +3167,11 @@ void MainWindow::shotCurrentImg()
 
     this->hide();
     emit hideScreenshotUI();
-
-    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
-    qDebug() << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect() << ratio;
-    QRect target( static_cast<int>(recordX * ratio),
-                  static_cast<int>(recordY * ratio),
-                  static_cast<int>(recordWidth * ratio),
-                  static_cast<int>(recordHeight * ratio));
+    qDebug() << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect() << m_pixelRatio;
+    QRect target( static_cast<int>(recordX * m_pixelRatio),
+                  static_cast<int>(recordY * m_pixelRatio),
+                  static_cast<int>(recordWidth * m_pixelRatio),
+                  static_cast<int>(recordHeight * m_pixelRatio));
 
     m_resultPixmap = m_resultPixmap.copy(target);
     addCursorToImage();
@@ -3224,7 +3214,6 @@ void MainWindow::addCursorToImage()
 
 void MainWindow::shotFullScreen(bool isFull)
 {
-    //const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     QRect target( m_backgroundRect.x(),
                   m_backgroundRect.y(),
                   m_backgroundRect.width(),
@@ -3477,15 +3466,13 @@ void MainWindow::startCountdown()
 
     disconnect(m_recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
     disconnect(m_shotButton, SIGNAL(clicked()), this, SLOT(saveScreenShot()));
-
-    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     const QPoint topLeft = geometry().topLeft();
 
     QRect recordRect {
-        static_cast<int>(recordX * ratio + topLeft.x()),
-                static_cast<int>(recordY * ratio + topLeft.y()),
-                static_cast<int>(recordWidth * ratio),
-                static_cast<int>(recordHeight * ratio)
+        static_cast<int>(recordX * m_pixelRatio + topLeft.x()),
+                static_cast<int>(recordY * m_pixelRatio + topLeft.y()),
+                static_cast<int>(recordWidth * m_pixelRatio),
+                static_cast<int>(recordHeight * m_pixelRatio)
     };
     qDebug() << "record rect:" << recordRect;
 
@@ -3533,8 +3520,19 @@ void MainWindow::startCountdown()
     adjustLayout(countdownLayout, countdownTooltip->rect().width(), countdownTooltip->rect().height());
 
     countdownTooltip->start();
+    m_pVoiceVolumeWatcher->stopWatch();
+    m_pCameraWatcher->stopWatch();
 
-
+    if(!DWindowManagerHelper::instance()->hasComposite()){
+        // 设置录屏框区域。
+        m_pRecorderRegion->resize(std::min(recordWidth + 2, rootWindowRect.width() - 2), std::min(recordHeight + 2, rootWindowRect.height() - 2));
+        m_pRecorderRegion->move(std::max(recordX - 1, 1), std::max(recordY - 1, 1));
+        if (m_cameraWidget->isVisible()) {
+            m_cameraWidget->cameraStop();
+            m_cameraWidget->setCameraStop(true);
+            m_pRecorderRegion->initCameraInfo(m_cameraWidget->postion(), m_cameraWidget->geometry().size());
+        }
+    }
     Utils::passInputEvent(static_cast<int>(this->winId()));
 
     repaint();
@@ -3581,7 +3579,7 @@ void MainWindow::hideAllWidget()
         }
     }
 
-    //    Utils::clearBlur(windowManager, this->winId());
+    // Utils::clearBlur(windowManager, this->winId());
 }
 void MainWindow::hideCameraWidget()
 {
@@ -3718,16 +3716,10 @@ void MainWindow::shotImgWidthEffect()
 {
     if (recordWidth == 0 || recordHeight == 0)
         return;
-
-
-    qDebug() << m_toolBar->isVisible() << m_sizeTips->isVisible();
-    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
-    //    const QRect rect(m_shapesWidget->geometry().topLeft() * ratio, m_shapesWidget->geometry().size() * ratio);
-
-    QRect target( static_cast<int>(m_shapesWidget->geometry().x() * ratio),
-                  static_cast<int>(m_shapesWidget->geometry().y() * ratio),
-                  static_cast<int>(m_shapesWidget->geometry().width() * ratio),
-                  static_cast<int>(m_shapesWidget->geometry().height() * ratio) );
+    QRect target( static_cast<int>(m_shapesWidget->geometry().x() * m_pixelRatio),
+                  static_cast<int>(m_shapesWidget->geometry().y() * m_pixelRatio),
+                  static_cast<int>(m_shapesWidget->geometry().width() * m_pixelRatio),
+                  static_cast<int>(m_shapesWidget->geometry().height() * m_pixelRatio));
 
     m_resultPixmap = m_backgroundPixmap.copy(target);
     m_drawNothing = false;
