@@ -221,7 +221,7 @@ void RecordProcess::recordVideo()
         arguments << QString("-c:a");
         arguments << QString("libmp3lame");
         arguments << QString("-q:v");
-        arguments << QString("1");
+        arguments << QString("4");
         arguments << QString("-s");
         arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
         if(settings->getOption("lossless_recording").toBool()){
