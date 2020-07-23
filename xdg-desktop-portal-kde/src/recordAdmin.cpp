@@ -7,14 +7,14 @@
 #include <math.h>
 #include <unistd.h>
 #include <qtimer.h>
-#include "qgifimage.h"
+//#include "qgifimage.h"
 #include <QDebug>
 
 RecordAdmin::RecordAdmin(int &argc, char **argv, WaylandIntegration::WaylandIntegrationPrivate *context, QObject *parent): QObject(parent),
     m_pInputStream(nullptr),
     m_pOutputStream(nullptr),
     m_writeFrameThread(nullptr),
-    m_pGifWrite(nullptr),
+//    m_pGifWrite(nullptr),
     //m_pGifCreator(nullptr),
     m_context(context)
 {
@@ -62,12 +62,11 @@ RecordAdmin::RecordAdmin(int &argc, char **argv, WaylandIntegration::WaylandInte
     case videoType::GIF:
         m_gifBuffersize = 60;
         //m_pGifCreator = new GifCreator(context);
-        for(int i=0;i<1;i++)
-        {
-            m_pGifRecord[i] = nullptr;
-            m_pGifRecord[i] = new GifRecord(context,i);
-        }
-        m_pGifWrite = new GifWrite(context);
+
+        m_pGifRecord = nullptr;
+        m_pGifRecord = new GifRecord(context);
+
+//        m_pGifWrite = new GifWrite(context);
         break;
     case videoType::MP4:
     {
@@ -111,14 +110,13 @@ RecordAdmin::~RecordAdmin()
         delete m_pInputStream;
         m_pInputStream = nullptr;
     }
-    for (int i=0;i<1;i++)
+
+    if(nullptr != m_pGifRecord)
     {
-        if(nullptr != m_pGifRecord[i])
-        {
-            delete m_pGifRecord[i];
-            m_pGifRecord[i] = nullptr;
-        }
+        delete m_pGifRecord;
+        m_pGifRecord = nullptr;
     }
+
 }
 
 void RecordAdmin::setRecordAudioType(int audioType)
@@ -165,8 +163,8 @@ void RecordAdmin::init(int screenWidth, int screenHeight)
     case videoType::GIF:
     {
         qDebug()  <<  QThread::currentThread();
-        m_pGifRecord[0]->init(screenWidth,screenHeight,m_x,m_y,m_selectWidth,m_selectHeight,m_fps,m_filePath);
-        m_pGifRecord[0]->start();
+        m_pGifRecord->init(screenWidth,screenHeight,m_x,m_y,m_selectWidth,m_selectHeight,m_fps,m_filePath);
+        m_pGifRecord->start();
 //                QByteArray pathArry = m_filePath.toLocal8Bit();
 //                char *pathCh = new char[strlen(pathArry.data())+1];
 //                strcpy(pathCh,pathArry.data());
@@ -296,10 +294,7 @@ int RecordAdmin::stopStream()
     {
     case videoType::GIF:
         //设置是否写gif视频帧
-        for(int i =0;i<1;i++)
-        {
-            m_pGifRecord[i]->setBWriteFrame(false);
-        }
+        m_pGifRecord->setBWriteFrame(false);
         //设置是否缓存区排序
         //m_pGifWrite->setBCache(false);
         break;
