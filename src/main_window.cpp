@@ -130,11 +130,31 @@ MainWindow::MainWindow(DWidget *parent) :
     if(!displayInterface.isValid()) {
         return;
     }
+    //qDebug() << displayInterface.property("PrimaryRect").toList();
+    QList<QDBusObjectPath> pathList = qvariant_cast< QList<QDBusObjectPath> >(displayInterface.property("Monitors"));
+    QDBusInterface monitorInterface("com.deepin.daemon.Display",pathList.at(0).path(),"com.deepin.daemon.Display.Monitor",
+                                    QDBusConnection::sessionBus());
+    // 获取屏幕是否旋转, 四个方向，
+    // rotation值如下，在左右方向上， 宽高值互换
+    /*
+            4
+            |
+     8<-         -> 2
+            |
+            1
+    */
+    int rotation = monitorInterface.property("Rotation").toInt();
+    qDebug() << rotation;
     int w = displayInterface.property("ScreenWidth").toInt();
     int h = displayInterface.property("ScreenHeight").toInt();
-    m_screenSize.setWidth(w);
-    m_screenSize.setHeight(h);
-    QList<QDBusObjectPath> pathList = qvariant_cast< QList<QDBusObjectPath> >(displayInterface.property("Monitors"));
+    if(rotation == 2 || rotation == 8){
+        m_screenSize.setWidth(h);
+        m_screenSize.setHeight(w);
+    }else {
+        m_screenSize.setWidth(w);
+        m_screenSize.setHeight(h);
+    }
+
     for(int i = 0; i < pathList.size(); ++i) {
         QString path = pathList.at(i).path();
         QDBusInterface monitorInterface("com.deepin.daemon.Display",path,"com.deepin.daemon.Display.Monitor",
@@ -266,6 +286,7 @@ void MainWindow::initAttributes()
 
     m_screenHeight = m_screenSize.height();
     m_screenWidth = m_screenSize.width();
+
     for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
         if (wid == winId()) continue;
 
@@ -1041,6 +1062,22 @@ void MainWindow::savePath(const QString &path)
 
     m_shotWithPath = true;
     m_shotSavePath = path;
+}
+
+void MainWindow::startScreenshotFor3rd(const QString &path)
+{
+    m_shotSavePath = path;
+    if (!QFileInfo(path).dir().exists()) {
+        // 传入的文件目录不存在，保存在系统pictures路径下
+        m_shotSavePath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+    }
+    this->initAttributes();
+    this->initLaunchMode("screenShot");
+    this->showFullScreen();
+    this->initResource();
+    m_shotWithPath = true; // 自带路径
+    m_noNotify = true; // 关闭通知
+
 }
 
 void MainWindow::noNotify()
@@ -1848,6 +1885,9 @@ void MainWindow::saveScreenShot()
 void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const bool succeed)
 {
     Q_UNUSED(saveAction);
+    QDBusMessage msg =QDBusMessage::createSignal("/com/deepin/Screenshot", "com.deepin.Screenshot", "Done");
+    msg << saveFilePath;
+    qDebug() << QDBusConnection::sessionBus().send(msg);
     if(m_noNotify) {
         exit(0);
     }
@@ -2067,18 +2107,6 @@ bool MainWindow::saveAction(const QPixmap &pix)
     }
     default:
         break;
-    }
-
-    int toolBarSaveQuality = 100;
-    if (toolBarSaveQuality != 100) {
-        qreal saveQuality = qreal(toolBarSaveQuality) * 5 / 1000 + 0.5;
-
-        int pixWidth = screenShotPix.width();
-        int pixHeight = screenShotPix.height();
-        screenShotPix = screenShotPix.scaled(static_cast<int>(pixWidth * saveQuality), static_cast<int>(pixHeight * saveQuality),
-                                             Qt::KeepAspectRatio, Qt::FastTransformation);
-        screenShotPix = screenShotPix.scaled(pixWidth,  pixHeight,
-                                             Qt::KeepAspectRatio, Qt::FastTransformation);
     }
     if (m_saveIndex == SaveToSpecificDir && m_saveFileName.isEmpty()) {
         return false;

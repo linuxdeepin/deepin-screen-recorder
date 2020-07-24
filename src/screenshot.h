@@ -40,6 +40,7 @@ public slots:
     void topWindowScreenshot();
     void noNotifyScreenshot();
     void savePathScreenshot(const QString &path);
+    void startScreenshotFor3rd(const QString &path);
     void initLaunchMode(const QString &launchmode);
     Q_SCRIPTABLE void stopRecord();
 

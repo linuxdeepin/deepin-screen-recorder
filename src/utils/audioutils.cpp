@@ -141,10 +141,10 @@ bool AudioUtils::canMicrophoneInput()
         if (reply.isValid()) {
             path = reply.value();
             //qDebug()<<"path1" << path.path();
-            QVariant v = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", path.path(),
+            QVariant vv = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", path.path(),
                                                     "com.deepin.daemon.Audio.Meter", "Volume");
-            if (v.isValid()) {
-                double volume = v.toDouble();
+            if (vv.isValid()) {
+                double volume = vv.toDouble();
                 //qDebug()<<"volume:" <<volume;
                 if (0.0001 < volume) {
                     return true;

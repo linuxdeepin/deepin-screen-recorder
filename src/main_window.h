@@ -141,6 +141,7 @@ public:
 
     void topWindow();
     void savePath(const QString &path);
+    void startScreenshotFor3rd(const QString &path);
     void noNotify();
     void setConfigThemeType(int themeType);
     void sendSavingNotify();
