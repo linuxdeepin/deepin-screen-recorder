@@ -1,15 +1,19 @@
 #ifndef GIFRECORD_H
 #define GIFRECORD_H
 #include <QThread>
-//#include "waylandintegration.h"
+#include "waylandintegration.h"
 #include "waylandintegration_p.h"
-//#include "gif.h"
+
+extern "C"
+{
+#include "lib/GifH/gif.h"
+}
 
 class GifRecord : public QThread
 {
     Q_OBJECT
 public:
-    explicit GifRecord(WaylandIntegration::WaylandIntegrationPrivate* context,int index,QObject *parent = nullptr);
+    explicit GifRecord(WaylandIntegration::WaylandIntegrationPrivate* context,QObject *parent = nullptr);
     ~GifRecord();
 
     void init(int screenWidth,
@@ -32,6 +36,7 @@ public slots:
 
 private:
     WaylandIntegration::WaylandIntegrationPrivate * m_context;
+    GifWriter m_gitWrite;
     QString m_filePath;
     int m_x;
     int m_y;
@@ -44,7 +49,7 @@ private:
     //是否写视频帧
     bool m_bWriteFrame;
     QMutex m_writeFrameMutex;
-    int m_index;
+//    int m_index;
     //static int test;
 };
 #endif // GIFRECORD_H

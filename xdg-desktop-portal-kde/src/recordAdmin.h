@@ -11,7 +11,7 @@
 //#include "AVInputStream.h"
 //#include "AVInputStream.h"
 #include "gifrecord.h"
-#include "gifwrite.h"
+//#include "gifwrite.h"
 //#include "waylandintegration.h"
 #include "waylandintegration_p.h"
 #include "writeFrameThread.h"
@@ -75,8 +75,8 @@ public:
     CAVInputStream                           *m_pInputStream;
     CAVOutputStream                          *m_pOutputStream;
     WriteFrameThread                         *m_writeFrameThread;
-    GifRecord                                *m_pGifRecord[3];
-    GifWrite                                 *m_pGifWrite;
+    GifRecord                                *m_pGifRecord;
+//    GifWrite                                 *m_pGifWrite;
     //GifCreator                               *m_pGifCreator;
     QGifImage                                *m_pGifImage;
 
