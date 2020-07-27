@@ -186,7 +186,7 @@ public slots:
     void changeMp4SelectEvent(bool checked);
     void changeFrameRateEvent(int frameRate);
     void changeCameraSelectEvent(bool checked);
-    void showMultiKeyBoardButtons();
+    //void showMultiKeyBoardButtons();
     void updateMultiKeyBoardPos();
     void changeShotToolEvent(const QString &func);
     void saveScreenShot();
@@ -325,7 +325,7 @@ private:
     bool m_repaintMainButton;//false: no need to repaint record button or shot button, true:...
     bool m_repaintSideBar;   //false: no need to repaint sidebar, true:...
     QTimer *m_keyBoardTimer;
-    bool m_multiKeyButtonsInOnSec;
+    //bool m_multiKeyButtonsInOnSec;
 
     bool m_selectedMic;
     bool m_selectedSystemAudio;

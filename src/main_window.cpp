@@ -181,7 +181,7 @@ void MainWindow::initAttributes()
     m_functionType = 0;
     m_keyBoardStatus = 0;
     m_mouseStatus = 0;
-    m_multiKeyButtonsInOnSec = false;
+    //m_multiKeyButtonsInOnSec = false;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
     m_gifMode = true;
@@ -666,7 +666,7 @@ void MainWindow::initScreenShot()
     m_functionType = 1;
     m_keyBoardStatus = 0;
     m_mouseStatus = 0;
-    m_multiKeyButtonsInOnSec = false;
+    //m_multiKeyButtonsInOnSec = false;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
     if (m_firstShot == 0) {
@@ -755,7 +755,7 @@ void MainWindow::initScreenRecorder()
     m_functionType = 0;
     m_keyBoardStatus = 0;
     m_mouseStatus = 0;
-    m_multiKeyButtonsInOnSec = false;
+    //m_multiKeyButtonsInOnSec = false;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
     if (m_firstShot == 0) {
@@ -1720,12 +1720,13 @@ void MainWindow::changeCameraSelectEvent(bool checked)
         m_cameraWidget->hide();
     }
 }
-
+/*
+ * never used
 void MainWindow::showMultiKeyBoardButtons()
 {
     m_multiKeyButtonsInOnSec = false;
 }
-
+*/
 void MainWindow::updateMultiKeyBoardPos()
 {
     QPoint t_keyPoint1;

@@ -30,7 +30,7 @@
 #include <QDBusError>
 #include <QDBusMessage>
 
-AudioUtils::AudioUtils(QObject *parent)
+AudioUtils::AudioUtils(QObject *parent):process(nullptr)
 {
     Q_UNUSED(parent);
 }
@@ -49,7 +49,8 @@ void AudioUtils::initProcess()
     //    `connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
 }
 
-
+/*
+ * never used
 bool AudioUtils::isSystemAudioOutput()
 {
     char buf[1024] = {0};
@@ -65,7 +66,9 @@ bool AudioUtils::isSystemAudioOutput()
     qDebug() << str_output;
     return str_output.startsWith("1");
 }
-
+*/
+/*
+ * never used
 bool AudioUtils::isMicrophoneOutput()
 {
     char buf[1024] = {0};
@@ -81,7 +84,6 @@ bool AudioUtils::isMicrophoneOutput()
     qDebug() << str_output;
     return str_output.startsWith("1");
 }
-
 void AudioUtils::setupMicrophoneOutput()
 {
     initProcess();
@@ -108,7 +110,7 @@ void AudioUtils::setupAudioSink(QString sink)
     arguments << sink;
     process->start("pacmd", arguments);
 }
-
+*/
 bool AudioUtils::canVirtualCardOutput()
 {
     QStringList options;
@@ -122,7 +124,8 @@ bool AudioUtils::canVirtualCardOutput()
     process.close();
     return str_output.startsWith("1");
 }
-
+/*
+ * never used
 bool AudioUtils::canMicrophoneInput()
 {
     QVariant v = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
@@ -160,7 +163,7 @@ bool AudioUtils::canMicrophoneInput()
     return false;
 
 }
-
+*/
 QString AudioUtils::currentAudioSink()
 {
     QStringList options;
@@ -174,20 +177,21 @@ QString AudioUtils::currentAudioSink()
     process.close();
     return str_output;
 }
-QString AudioUtils::currentAudioSource()
-{
-    QStringList options;
-    options << "-c";
-    options << "pacmd list-sources | sed  -n '/\\*.*index:.*\\([0-9]\\+\\).*/{n;p}' | sed -n 's/name: <\\(.*\\)>/\\1/p' | sed -e 's/^[\\t]*//'";
-    QProcess process;
-    process.start("bash", options);
-    process.waitForFinished();
-    process.waitForReadyRead();
-    QString str_output = process.readAllStandardOutput();
-    process.close();
-    return str_output;
-}
 
+//never used
+//QString AudioUtils::currentAudioSource()
+//{
+//    QStringList options;
+//    options << "-c";
+//    options << "pacmd list-sources | sed  -n '/\\*.*index:.*\\([0-9]\\+\\).*/{n;p}' | sed -n 's/name: <\\(.*\\)>/\\1/p' | sed -e 's/^[\\t]*//'";
+//    QProcess process;
+//    process.start("bash", options);
+//    process.waitForFinished();
+//    process.waitForReadyRead();
+//    QString str_output = process.readAllStandardOutput();
+//    process.close();
+//    return str_output;
+//}
 QString AudioUtils::currentAudioChannel()
 {
     QStringList options;

@@ -545,10 +545,11 @@ void SubToolBar::setSaveQualityIndex(int saveQuality)
 {
     ConfigSettings::instance()->setValue("save", "save_quality", saveQuality);
 }
-
+/*
+ * never used
 int SubToolBar::getSaveQualityIndex()
 {
     return m_saveQuality;
 }
-
+*/
 SubToolBar::~SubToolBar() {}

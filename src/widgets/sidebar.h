@@ -76,7 +76,7 @@ public slots:
     void setExpand(bool expand, QString shapeType);
     void showAt(QPoint pos);
     void initSideBar();
-    void setColorFunc(const QString &func);
+    //void setColorFunc(const QString &func);
 
 protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;

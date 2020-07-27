@@ -91,12 +91,13 @@ void TextEdit::setColor(QColor c)
     this->setPalette(pa);
     this->updateGeometry();
 }
-
+/*
+ * never used
 QColor TextEdit::getColor()
 {
     return m_textColor;
 }
-
+*/
 void TextEdit::setFontSize(int fontsize)
 {
     QFont font;
@@ -152,11 +153,6 @@ void TextEdit::setCursorVisible(bool visible)
         setCursorWidth(0);
     }
 }
-
-void TextEdit::keepReadOnlyStatus()
-{
-}
-
 void TextEdit::mousePressEvent(QMouseEvent *e)
 {
     qDebug() << "TextEdit mousePressEvent" << e->pos();

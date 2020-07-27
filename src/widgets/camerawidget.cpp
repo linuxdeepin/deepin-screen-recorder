@@ -156,12 +156,13 @@ void CameraWidget::cameraResume()
     camera->setCaptureMode(QCamera::CaptureStillImage);
     imageCapture = new QCameraImageCapture(camera);
 }
-
+/*
+ * never used
 bool CameraWidget::getScreenResolution()
 {
     return m_wildScreen;
 }
-
+*/
 void CameraWidget::captureImage()
 {
     imageCapture->capture(m_capturePath);
@@ -175,7 +176,8 @@ void CameraWidget::processCapturedImage(int request_id, const QImage &img)
     QPixmap pixmap = QPixmap::fromImage(t_image);
     m_cameraUI->setPixmap(pixmap);
 }
-
+/*
+ * never used
 QPixmap CameraWidget::round(const QPixmap &img_in, int radius)
 {
     if (img_in.isNull()) {
@@ -193,7 +195,7 @@ QPixmap CameraWidget::round(const QPixmap &img_in, int radius)
     image.setMask(mask);
     return image;
 }
-
+*/
 void CameraWidget::deleteCapturedImage(int id, const QString &fileName)
 {
     Q_UNUSED(id);
@@ -228,12 +230,13 @@ bool CameraWidget::getcameraStatus()
         return true;
     }
 }
-
+/*
+ * never used
 void CameraWidget::cameraStatus()
 {
     qDebug() << "camera->status()" << camera->status();
 }
-
+*/
 void CameraWidget::cameraInitError(QCamera::Error error)
 {
     qDebug() << "camera->error()" << error;

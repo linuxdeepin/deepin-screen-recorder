@@ -6,7 +6,7 @@
 const int INDICATOR_WIDTH = 110;
 const int CAMERA_Y_OFFSET = 40;
 
-RecorderRegionShow::RecorderRegionShow()
+RecorderRegionShow::RecorderRegionShow():m_cameraWidget(nullptr)
 {
     setAttribute (Qt::WA_AlwaysShowToolTips);
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::ToolTip);

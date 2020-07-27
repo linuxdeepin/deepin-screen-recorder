@@ -93,7 +93,8 @@ void ProcessTree::getChildPids(int pid)
         }
     }
 }
-
+/*
+ * never used
 void ProcessTree::printNode(int pid)
 {
     qDebug() << "* Node " << pid;
@@ -106,9 +107,8 @@ void ProcessTree::printNode(int pid)
         }
     }
 }
-
 void ProcessTree::printTree()
 {
     printNode(rootPid);
 }
-
+*/
