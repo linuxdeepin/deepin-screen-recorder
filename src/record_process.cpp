@@ -106,6 +106,17 @@ void RecordProcess::setRecordAudioInputType(int inputType)
 void RecordProcess::run()
 {
     // Start record.
+    QVariant t_saveGifVar = settings->getOption("save_as_gif");
+    QVariant t_frameRateVar = settings->getOption("mkv_framerate");
+    //保持帧数的配置文件判断
+    int t_frameRate = t_frameRateVar.toString().toInt();
+    m_framerate = t_frameRate;
+    if (t_saveGifVar.toString() == "true") {
+        recordType = RECORD_TYPE_GIF;
+    } else {
+        recordType = RECORD_TYPE_VIDEO;
+    }
+
     recordType == RECORD_TYPE_GIF ? recordGIF() : recordVideo();
 
     // Got output or error.
@@ -159,7 +170,7 @@ void RecordProcess::recordVideo()
     QStringList arguments;
 
     QString arch = QSysInfo::currentCpuArchitecture();
-    if(true || arch.startsWith("mips", Qt::CaseInsensitive) || arch.startsWith("sw", Qt::CaseInsensitive)){
+    if(arch.startsWith("mips", Qt::CaseInsensitive) || arch.startsWith("sw", Qt::CaseInsensitive)){
         // mips sw 视频编码 mpeg4 音频编码 mp3
         /*
          * mkv
@@ -218,7 +229,7 @@ void RecordProcess::recordVideo()
         arguments << QString("yuv420p");
         arguments << QString("-c:v");
         //arguments << QString("mpeg4");
-        //arguments << QString("mpeg2video");
+        arguments << QString("mpeg2video");
         //arguments << QString("mpeg1video");
         //arguments << QString("libx264rgb");
         //arguments << QString("h263p");
@@ -227,7 +238,7 @@ void RecordProcess::recordVideo()
         arguments << QString("-c:a");
         arguments << QString("libmp3lame");
         arguments << QString("-q:v");
-        arguments << QString("1");
+        arguments << QString("10");
         //arguments << QString("31"); // 视频质量
         arguments << QString("-s");
         arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());

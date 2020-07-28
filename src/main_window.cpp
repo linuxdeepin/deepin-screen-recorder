@@ -176,6 +176,9 @@ MainWindow::MainWindow(DWidget *parent) :
 void MainWindow::initAttributes()
 {
     // Init attributes.
+    if (m_firstShot == 0) {
+        setDragCursor();
+    }
     hintFilter = new HintFilter;
     setWindowTitle(tr("Screen Capture"));
     m_functionType = 0;
@@ -184,10 +187,10 @@ void MainWindow::initAttributes()
     //m_multiKeyButtonsInOnSec = false;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
-    m_gifMode = true;
-    m_mp4Mode = false;
+    //m_gifMode = true;
+    //m_mp4Mode = false;
     //    m_keyBoardTimer = new QTimer(this);
-    m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
+    //m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
     m_keyButtonList.clear();
     m_tempkeyButtonList.clear();
 
@@ -247,7 +250,7 @@ void MainWindow::initAttributes()
     selectAreaName = "";
 
     m_isShapesWidgetExist = false;
-    m_needDrawSelectedPoint = false;
+    //m_needDrawSelectedPoint = false;
 
 
     createWinId();
@@ -446,9 +449,9 @@ void MainWindow::initAttributes()
     connect(m_toolBar, &ToolBar::microphoneActionCheckedToMain, this, &MainWindow::changeMicrophoneSelectEvent);
     connect(m_toolBar, &ToolBar::systemAudioActionCheckedToMain, this, &MainWindow::changeSystemAudioSelectEvent);
     connect(m_toolBar, &ToolBar::cameraActionCheckedToMain, this, &MainWindow::changeCameraSelectEvent);
-    connect(m_toolBar, &ToolBar::gifActionCheckedToMain, this, &MainWindow::changeGifSelectEvent);
-    connect(m_toolBar, &ToolBar::mp4ActionCheckedToMain, this, &MainWindow::changeMp4SelectEvent);
-    connect(m_toolBar, &ToolBar::frameRateChangedToMain, this, &MainWindow::changeFrameRateEvent);
+    //connect(m_toolBar, &ToolBar::gifActionCheckedToMain, this, &MainWindow::changeGifSelectEvent);
+    //connect(m_toolBar, &ToolBar::mp4ActionCheckedToMain, this, &MainWindow::changeMp4SelectEvent);
+    //connect(m_toolBar, &ToolBar::frameRateChangedToMain, this, &MainWindow::changeFrameRateEvent);
     connect(m_toolBar, &ToolBar::shotToolChangedToMain, this, &MainWindow::changeShotToolEvent);
     connect(m_toolBar, &ToolBar::closeButtonToMain, this, &MainWindow::exitApp);
     connect(m_sideBar, &SideBar::changeArrowAndLineToMain, this, &MainWindow::changeArrowAndLineEvent);
@@ -669,12 +672,12 @@ void MainWindow::initScreenShot()
     //m_multiKeyButtonsInOnSec = false;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
-    if (m_firstShot == 0) {
-        m_gifMode = true;
-        m_mp4Mode = false;
+    //if (m_firstShot == 0) {
+        //m_gifMode = true;
+        //m_mp4Mode = false;
         //    m_keyBoardTimer = new QTimer(this);
-        m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
-    }
+        //m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
+    //}
     // 多屏情况下， 屏幕宽高，用背景宽高获取
     //m_screenWidth = QApplication::desktop()->screen()->width();
     //m_screenHeight = QApplication::desktop()->screen()->height();
@@ -733,10 +736,6 @@ void MainWindow::initScreenShot()
         m_selectedMic = true;
         m_selectedSystemAudio = true;
     }
-
-    if (m_firstShot == 0) {
-        setDragCursor();
-    }
     //    eventMonitor.quit();
     //    emit releaseEvent();
     if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
@@ -758,12 +757,12 @@ void MainWindow::initScreenRecorder()
     //m_multiKeyButtonsInOnSec = false;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
-    if (m_firstShot == 0) {
-        m_gifMode = true;
-        m_mp4Mode = false;
+    //if (m_firstShot == 0) {
+        //m_gifMode = true;
+        //m_mp4Mode = false;
         //    m_keyBoardTimer = new QTimer(this);
-        m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
-    }
+        //m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
+    //}
 
 
     //m_screenWidth = QApplication::desktop()->screen()->width();
@@ -803,7 +802,7 @@ void MainWindow::initScreenRecorder()
     }
 
     m_isShapesWidgetExist = false;
-    m_needDrawSelectedPoint = false;
+    //m_needDrawSelectedPoint = false;
 
 
     //构建截屏工具栏按钮 by zyg
@@ -840,13 +839,6 @@ void MainWindow::initScreenRecorder()
         m_selectedMic = true;
         m_selectedSystemAudio = true;
     }
-
-    //    initVirtualCard();
-    if (m_firstShot == 0) {
-        setDragCursor();
-    }
-    //    eventMonitor.start();
-
 
     connect(m_pScreenRecordEvent, SIGNAL(buttonedPress(int, int)), this, SLOT(showPressFeedback(int, int)), Qt::QueuedConnection);
     connect(m_pScreenRecordEvent, SIGNAL(buttonedDrag(int, int)), this, SLOT(showDragFeedback(int, int)), Qt::QueuedConnection);
@@ -1643,7 +1635,7 @@ void MainWindow::changeSystemAudioSelectEvent(bool checked)
 {
     m_selectedSystemAudio = checked;
 }
-
+/*
 void MainWindow::changeGifSelectEvent(bool checked)
 {
     m_gifMode = true;
@@ -1682,7 +1674,7 @@ void MainWindow::changeFrameRateEvent(int frameRate)
         break;
     }
 }
-
+*/
 void MainWindow::changeCameraSelectEvent(bool checked)
 {
     if (m_initCamera == false) {
@@ -3177,8 +3169,8 @@ void MainWindow::shotCurrentImg()
     if (recordWidth == 0 || recordHeight == 0)
         return;
 
-    m_needDrawSelectedPoint = false;
-    m_drawNothing = true;
+    //m_needDrawSelectedPoint = false;
+    //m_drawNothing = true;
     update();
 
     QEventLoop eventloop1;
@@ -3506,7 +3498,7 @@ void MainWindow::startCountdown()
     qDebug() << "record rect:" << recordRect;
 
     recordProcess.setRecordInfo(recordRect, selectAreaName);
-
+/*
     Settings *t_settings = new Settings();
     QVariant t_saveGifVar = t_settings->getOption("save_as_gif");
     QVariant t_frameRateVar = t_settings->getOption("mkv_framerate");
@@ -3530,7 +3522,7 @@ void MainWindow::startCountdown()
         qDebug() << "record format is mp4";
         recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
     }
-
+*/
     resetCursor();
 
     //    hideRecordButton();
@@ -3650,7 +3642,7 @@ void MainWindow::initShapeWidget(QString type)
     m_toolBar->raise();
     m_sideBar->raise();
     m_shotButton->raise();
-    m_needDrawSelectedPoint = false;
+    //m_needDrawSelectedPoint = false;
     m_toolBar->setRecordButtonDisable();
     update();
 
@@ -3675,10 +3667,12 @@ void MainWindow::initShapeWidget(QString type)
 
 void MainWindow::exitApp()
 {
+    /*
     if (m_interfaceExist && nullptr != m_hotZoneInterface) {
         if (m_hotZoneInterface->isValid())
             m_hotZoneInterface->asyncCall("EnableZoneDetected",  true);
     }
+    */
     emit releaseEvent();
     if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
         if(nullptr != m_pScreenRecordEvent){
@@ -3751,7 +3745,7 @@ void MainWindow::shotImgWidthEffect()
                   static_cast<int>(m_shapesWidget->geometry().height() * m_pixelRatio));
 
     m_resultPixmap = m_backgroundPixmap.copy(target);
-    m_drawNothing = false;
+    //m_drawNothing = false;
     update();
 }
 
