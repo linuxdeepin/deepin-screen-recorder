@@ -70,7 +70,7 @@ signals:
 public slots:
     void updateSelectedShape(const QString &group, const QString &key, int index);
     void setCurrentShape(QString shapeType);
-    void updatePenColor();
+    //void updatePenColor();
     void setPenColor(QColor color);
     void clearSelected();
     void setAllTextEditReadOnly();
@@ -102,13 +102,13 @@ public slots:
     void undoDrawShapes();
     void undoAllDrawShapes();
     void deleteCurrentShape();
-    QString  getCurrentType();
+    //QString  getCurrentType();
     void microAdjust(QString direction);
     void setShiftKeyPressed(bool isShift);
     void updateCursorShape();
     void menuSaveSlot();
     void menuCloseSlot();
-    void updateSideBarPosition();
+    //void updateSideBarPosition();
     void setGlobalRect(QRect rect);
 
 protected:
@@ -164,7 +164,7 @@ private:
     QRect m_globalRect;
 
     void paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bool isResize = true);
-    void paintImgPointArrow(QPainter &painter, QPointF pos, QPixmap img);
+    //void paintImgPointArrow(QPainter &painter, QPointF pos, QPixmap img);
     void paintRect(QPainter &painter, FourPoints rectFPoints, int index,
                    ShapeBlurStatus  rectStatus = Normal, bool isBlur = false, bool isMosaic = false);
     void paintEllipse(QPainter &painter, FourPoints ellipseFPoints, int index,

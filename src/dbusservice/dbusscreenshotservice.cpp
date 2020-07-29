@@ -113,3 +113,10 @@ void DBusScreenshotService::SavePathScreenshot(const QString &in0)
         parent()->savePathScreenshot(in0);
     m_singleInstance = true;
 }
+void DBusScreenshotService::StartScreenshotFor3rd(const QString &in0)
+{
+    qDebug() << "DBus screenshot service! startScreenshotFor3rd";
+    if (!m_singleInstance)
+        parent()->startScreenshotFor3rd(in0);
+    m_singleInstance = true;
+}

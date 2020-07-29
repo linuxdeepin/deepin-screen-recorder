@@ -36,11 +36,11 @@ public:
 
 public slots:
     void setColor(QColor c);
-    QColor getColor();
+    //QColor getColor();
     int getIndex();
     void updateCursor();
     void setCursorVisible(bool visible);
-    void keepReadOnlyStatus();
+    //void keepReadOnlyStatus();
     void setFontSize(int fontsize);
     void updateContentSize(QString content);
     void setEditing(bool edit);

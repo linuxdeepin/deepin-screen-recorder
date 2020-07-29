@@ -46,8 +46,8 @@ public:
 
     QList<int> getAllChildPids(int pid);
     void getChildPids(int pid);
-    void printNode(int pid);
-    void printTree();
+    //void printNode(int pid);
+    //void printTree();
     void scanProcesses(StoredProcType processes);
 
 private:

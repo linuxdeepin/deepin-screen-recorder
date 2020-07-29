@@ -100,14 +100,15 @@ void BigColorButton::setColor(QColor color)
     m_color = color;
     update();
 }
-
+/*
+ * never used
 void BigColorButton::setColorIndex()
 {
     int colorNum = ConfigSettings::instance()->value("common", "color_index").toInt();
     m_color = colorIndexOf(colorNum);
     update();
 }
-
+*/
 void BigColorButton::setCheckedStatus(bool checked)
 {
     if (checked) {

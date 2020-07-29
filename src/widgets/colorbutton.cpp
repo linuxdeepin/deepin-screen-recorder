@@ -42,12 +42,13 @@ void ColorButton::setColorBtnChecked()
         emit updatePaintColor(m_bgColor);
     }
 }
-
+/*
+ * never used
 QColor ColorButton::getColor()
 {
     return m_bgColor;
 }
-
+*/
 //void ColorButton::paintEvent(QPaintEvent *) {
 //    QPainter painter(this);
 //    painter.setPen(QPen(QColor(Qt::transparent)));

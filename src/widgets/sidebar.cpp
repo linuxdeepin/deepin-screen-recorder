@@ -44,7 +44,7 @@ const QSize TOOLBAR_WIDGET_SIZE = QSize(66, 465);
 
 SideBarWidget::SideBarWidget(DWidget *parent)
     : DFloatingWidget(parent)
-    ,  m_expanded(false)
+    ,m_expanded(false)
 {
     int t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     setBlurBackgroundEnabled(true);
@@ -148,6 +148,7 @@ void SideBarWidget::showEvent(QShowEvent *event)
 
 
 SideBar::SideBar(DWidget *parent) : DLabel(parent)
+  ,m_sidebarWidget(nullptr)
 {
 
 }
@@ -202,12 +203,13 @@ void SideBar::initSideBar()
     connect(m_sidebarWidget, &SideBarWidget::changeArrowAndLineEvent, this, &SideBar::changeArrowAndLineToMain);
     connect(m_sidebarWidget, &SideBarWidget::closeSideBar, this, &SideBar::closeSideBarToMain);
 }
-
+/*
+ * never used
 void SideBar::setColorFunc(const QString &func)
 {
     m_sidebarWidget->changeShotToolWidget(func);
 }
-
+*/
 void SideBar::paintEvent(QPaintEvent *e)
 {
 //    QPainter painter(this);

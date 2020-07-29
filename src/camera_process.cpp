@@ -45,19 +45,8 @@ void CameraProcess::ShowTheCapture()
     //展示摄像头采集画面
     imageCapture->capture();
 }
-
-void CameraProcess::SavePicture()
-{
-
-//    const QPixmap *pixmap = ui->label->pixmap();
-//    if(pixmap)
-//    {
-//         pixmap->save("E:\\hallo.jpg");
-//         qDebug()<<"保存上了"<<endl;
-//    }
-
-}
-
+/*
+ * never used
 void CameraProcess::displayImage(int, QImage image)
 {
     //QImage image1(ui->label->x(),ui->label->y(),QImage::Format_RGB888);
@@ -73,7 +62,7 @@ void CameraProcess::displayImage(int, QImage image)
     //QImage::Format format =  image.format();
     //qDebug() << (int)format;
 }
-
+*/
 bool CameraProcess::checkCameraAvailability()
 {
     if(QCameraInfo::availableCameras().count() > 0)

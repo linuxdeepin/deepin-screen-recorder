@@ -162,25 +162,21 @@ QColor ToolTips::borderColor() const
     Q_D(const ToolTips);
     return d->borderColor;
 }
-
 void ToolTips::setBackground(QBrush background)
 {
     Q_D(ToolTips);
     d->background = background;
 }
-
 void ToolTips::setRadius(int radius)
 {
     Q_D(ToolTips);
     d->radius = radius;
 }
-
 void ToolTips::setBorderColor(QColor borderColor)
 {
     Q_D(ToolTips);
     d->borderColor = borderColor;
 }
-
 void ToolTips::setVertical()
 {
     m_isVertical = true;
