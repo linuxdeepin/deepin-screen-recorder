@@ -40,7 +40,7 @@ class RecordOptionPanel : public DPushButton
 public:
     RecordOptionPanel(DPushButton *parent = nullptr);
     ~RecordOptionPanel();
-    bool isSaveAsGif();
+    //bool isSaveAsGif();
 
 protected:
     void paintEvent(QPaintEvent *event);

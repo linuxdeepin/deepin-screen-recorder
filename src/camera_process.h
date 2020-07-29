@@ -42,8 +42,7 @@ signals:
 
 public slots:
     void ShowTheCapture();
-    void SavePicture();
-    void displayImage(int, QImage image);
+    //void displayImage(int, QImage image);
 
 private:
     QCamera *camera;//摄像头

@@ -423,20 +423,5 @@ or press the shortcut again to stop recording</translation>
         <source>Recordings</source>
         <translation>Recordings</translation>
     </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation type="unfinished">Exit</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>New recording</translation>
-    </message>
 </context>
 </TS>

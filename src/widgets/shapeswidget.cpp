@@ -120,13 +120,14 @@ void ShapesWidget::updateSelectedShape(const QString &group,
         update();
     }
 }
-
+/*
+ * never used
 void ShapesWidget::updatePenColor()
 {
     setPenColor(colorIndexOf(ConfigSettings::instance()->value(
                                  "common", "color_index").toInt()));
 }
-
+*/
 void ShapesWidget::setCurrentShape(QString shapeType)
 {
     qDebug() << "type: " << shapeType;
@@ -1533,13 +1534,14 @@ void ShapesWidget::paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bo
                                    pos.y() - 10), img);
     }
 }
-
+/*
+ * never used
 void ShapesWidget::paintImgPointArrow(QPainter &painter, QPointF pos, QPixmap img)
 {
     painter.drawPixmap(QPointF(pos.x() - 18,
                                pos.y() - 45), img);
 }
-
+*/
 void ShapesWidget::paintRect(QPainter &painter, FourPoints rectFPoints, int index,
                              ShapeBlurStatus rectStatus, bool isBlur, bool isMosaic)
 {
@@ -1964,11 +1966,13 @@ void ShapesWidget::undoAllDrawShapes()
     clearSelected();
     update();
 }
+/*
+ * never used
 QString ShapesWidget::getCurrentType()
 {
     return m_currentShape.type;
 }
-
+*/
 void ShapesWidget::microAdjust(QString direction)
 {
     if (m_selectedIndex != -1 && m_selectedOrder < m_shapes.length()) {
@@ -2030,7 +2034,8 @@ void ShapesWidget::menuCloseSlot()
 {
     emit closeFromMenu();
 }
-
+/*
+ * never used
 void ShapesWidget::updateSideBarPosition()
 {
     //QPoint sidebarPoint;
@@ -2048,7 +2053,7 @@ void ShapesWidget::updateSideBarPosition()
 //    qDebug() << "sidebar pos" << QPoint(mapToGlobal(sidebarPoint));
     m_sideBar->showAt(QPoint(this->pos()));
 }
-
+*/
 void ShapesWidget::setGlobalRect(QRect rect)
 {
     m_globalRect = rect;

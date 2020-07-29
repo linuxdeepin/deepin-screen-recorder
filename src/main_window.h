@@ -61,6 +61,7 @@
 #include "dbusinterface/dbuscontrolcenter.h"
 #include "dbusinterface/dbusnotify.h"
 #include "dbusinterface/dbuszone.h"
+#include "RecorderRegionShow.h"
 
 // Make this include at last, otherwise QtX11 will conflict with x11 lib to make compile failed.
 #include "event_monitor.h"
@@ -140,6 +141,7 @@ public:
 
     void topWindow();
     void savePath(const QString &path);
+    void startScreenshotFor3rd(const QString &path);
     void noNotify();
     void setConfigThemeType(int themeType);
     void sendSavingNotify();
@@ -180,11 +182,11 @@ public slots:
     void changeMouseShowEvent(bool checked);
     void changeMicrophoneSelectEvent(bool checked);
     void changeSystemAudioSelectEvent(bool checked);
-    void changeGifSelectEvent(bool checked);
-    void changeMp4SelectEvent(bool checked);
-    void changeFrameRateEvent(int frameRate);
+    //void changeGifSelectEvent(bool checked);
+    //void changeMp4SelectEvent(bool checked);
+    //void changeFrameRateEvent(int frameRate);
     void changeCameraSelectEvent(bool checked);
-    void showMultiKeyBoardButtons();
+    //void showMultiKeyBoardButtons();
     void updateMultiKeyBoardPos();
     void changeShotToolEvent(const QString &func);
     void saveScreenShot();
@@ -263,14 +265,14 @@ private:
     int dragStartX;
     int dragStartY;
 
-    int m_shotStatus;
+    int m_shotStatus; //
     int recordButtonStatus;
     int recordHeight;
     int recordWidth;
     int recordX;
     int recordY;
 
-    int recordButtonState;
+    //int recordButtonState;
 
     int flashTrayIconCounter;
 
@@ -279,8 +281,8 @@ private:
     //for shot
     QPixmap m_backgroundPixmap;
     QPixmap m_resultPixmap;
-    bool m_keyboardGrabbed = false;
-    bool m_keyboardReleased = false;
+    //bool m_keyboardGrabbed = false;
+    //bool m_keyboardReleased = false;
     //for shot
 
     QPixmap resizeHandleBigImg;
@@ -322,14 +324,14 @@ private:
     int m_mouseStatus; //0: keyBoard off, 1:keyBoard On
     bool m_repaintMainButton;//false: no need to repaint record button or shot button, true:...
     bool m_repaintSideBar;   //false: no need to repaint sidebar, true:...
-    QTimer *m_keyBoardTimer;
-    bool m_multiKeyButtonsInOnSec;
+    //QTimer *m_keyBoardTimer;
+    //bool m_multiKeyButtonsInOnSec;
 
     bool m_selectedMic;
     bool m_selectedSystemAudio;
-    bool m_gifMode;
-    bool m_mp4Mode;
-    int m_frameRate;
+    //bool m_gifMode;
+    //bool m_mp4Mode;
+    //int m_frameRate;
     int m_screenWidth;  //屏幕宽度
     int m_screenHeight; //屏幕高度
     SideBar *m_sideBar; //截图功能侧边栏功能
@@ -340,15 +342,15 @@ private:
 
 
     //截图功能使用的变量初始化
-    DBusZone *m_hotZoneInterface;
+    //DBusZone *m_hotZoneInterface;
     DBusNotify *m_notifyDBInterface;
     MenuController *m_menuController;
     bool m_noNotify = false;
     bool m_isShiftPressed = false;
-    bool m_drawNothing = false;
-    bool m_needDrawSelectedPoint;
+    //bool m_drawNothing = false;
+    //bool m_needDrawSelectedPoint;
     bool m_needSaveScreenshot = false;
-    bool m_interfaceExist = false;
+    //bool m_interfaceExist = false;
     bool m_toolBarInit = false;
     bool m_sideBarInit = false;
     // Just use for debug.
@@ -362,7 +364,7 @@ private:
     int m_screenNum;
     QString m_shotSavePath;
     //bool m_copyToClipboard = false;
-    QString m_savePicturePath;
+    //QString m_savePicturePath;
     int m_shotflag = 0;
     int m_firstShot = 0;
     bool m_isZhaoxin = false;
@@ -370,6 +372,9 @@ private:
     QList<ScreenInfo> m_screenInfo;
     XFixesCursorImage *m_CursorImage = nullptr;
     QSize m_screenSize;
+    RecorderRegionShow *m_pRecorderRegion = nullptr;
+    QSize m_virtualGeometrySize;
+    qreal m_pixelRatio;
 };
 
 #endif //MAINWINDOW_H

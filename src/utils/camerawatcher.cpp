@@ -21,12 +21,13 @@ void CameraWatcher::stopWatch()
 {
     m_loopwatch = false;
 }
-
+/*
+ * never used
 void CameraWatcher::setIsRecoding(bool value)
 {
     m_isRecoding = value;
 }
-
+*/
 void CameraWatcher::run()
 {
     m_loopwatch = true;

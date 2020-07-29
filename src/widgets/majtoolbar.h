@@ -48,7 +48,7 @@ signals:
 
 public slots:
     void initWidgets();
-    bool isButtonChecked();
+    //bool isButtonChecked();
 
 private:
     QHBoxLayout *m_baseLayout;
