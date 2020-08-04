@@ -48,6 +48,7 @@
 #include <QDesktopWidget>
 #include <QScreen>
 #include <QMessageBox>
+#include <QGestureEvent>
 
 
 #include "main_window.h"
@@ -111,6 +112,18 @@ MainWindow::MainWindow(DWidget *parent) :
     DWidget(parent),
     m_wmHelper(DWindowManagerHelper::instance())
 {
+    //手势事件消息订阅
+    QList<Qt::GestureType> gestures;
+    gestures << Qt::PanGesture;
+    gestures << Qt::PinchGesture;
+    gestures << Qt::SwipeGesture;
+    gestures << Qt::TapGesture;
+    gestures << Qt::TapAndHoldGesture;
+    gestures << Qt::CustomGesture;
+    gestures << Qt::LastGestureType;
+    foreach (Qt::GestureType gesture, gestures)
+        grabGesture(gesture);
+
     //    initAttributes();
     QScreen *screen = qApp->primaryScreen();
     m_pixelRatio = screen->devicePixelRatio();
@@ -2272,8 +2285,8 @@ void MainWindow::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    // 2D窗管模式下，录屏背景用截图背景。
-    if (m_functionType == 1 || (!DWindowManagerHelper::instance()->hasComposite())) {
+    // 2D窗管模式下，录屏背景用截图背景。//test false
+    if (/*false && */m_functionType == 1 || (!DWindowManagerHelper::instance()->hasComposite())) {
         painter.setRenderHint(QPainter::Antialiasing, true);
         QRect backgroundRect;
 
@@ -2331,13 +2344,13 @@ void MainWindow::paintEvent(QPaintEvent *event)
         }
     }
 }
+
 bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
     bool needRepaint = false;
 #undef KeyPress
 #undef KeyRelease
     if (event->type() == QEvent::KeyPress) {
-
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         qDebug() << "key press:" << keyEvent->key();
         if (m_functionType == 1) {

@@ -21,6 +21,7 @@
 #define SHAPESWIDGET_H
 
 #include <DFrame>
+#include <QGestureEvent>
 #include <QMouseEvent>
 
 #include "../utils/shapesutils.h"
@@ -82,6 +83,7 @@ public slots:
     void handleResize(QPointF pos, int key);
 
     bool clickedOnShapes(QPointF pos);
+
     bool clickedOnRect(FourPoints rectPoints, QPointF pos, bool isBlurMosaic = false);
     bool clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isBlurMosaic = false);
     bool clickedOnArrow(QList<QPointF> points, QPointF pos);
@@ -112,11 +114,29 @@ public slots:
     void setGlobalRect(QRect rect);
 
 protected:
+    bool event(QEvent *event);
     void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
     void paintEvent(QPaintEvent *);
     void enterEvent(QEvent *e);
+
+    /**
+     * @brief clickeShapes:判断是否选中图形
+     * @param pos:坐标
+     * @return
+     */
+    bool clickedShapes(QPointF pos);
+    /**
+     * @brief pinchTriggered:捏合手势事件处理
+     * @param pinch:捏合手势
+     */
+    void pinchTriggered(QPinchGesture *pinch);
+    /**
+     * @brief tapTriggered:单击手势事件处理
+     * @param tap:单击手势
+     */
+    void tapTriggered(QTapGesture *tap);
 
 private:
     QPointF m_pos1 = QPointF(0, 0);
