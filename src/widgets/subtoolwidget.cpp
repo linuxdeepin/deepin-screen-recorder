@@ -232,7 +232,7 @@ void SubToolWidget::initRecordLabel()
     });
 
     m_cameraButton = new ToolButton();
-    m_cameraButton->setDisabled(!CameraProcess::checkCameraAvailability());
+    m_cameraButton->setDisabled((QCameraInfo::availableCameras().count() <= 0));
 
     m_cameraButton->setObjectName("CameraButton");
     m_cameraButton->setIconSize(MAX_TOOL_ICON_SIZE);

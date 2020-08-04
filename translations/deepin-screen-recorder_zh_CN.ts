@@ -23,10 +23,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <source>Start recording</source>
-        <translation>开始录制</translation>
-    </message>
-    <message>
         <source>Save failed. Please save it in your home directory.</source>
         <translation>保存失败，请保存到用户目录下</translation>
     </message>

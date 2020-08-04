@@ -430,8 +430,8 @@ void MainWindow::initAttributes()
     }
 
 
-    recordButtonLayout = new QVBoxLayout();
-    setLayout(recordButtonLayout);
+    //recordButtonLayout = new QVBoxLayout();
+    //setLayout(recordButtonLayout);
 
     //构建截屏工具栏按钮 by zyg
     m_toolBar = new ToolBar(this);
@@ -509,26 +509,26 @@ void MainWindow::initAttributes()
     m_backgroundRect = QApplication::desktop()->screen()->geometry();
     m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
 
-    recordButton = new RecordButton();
-    recordButton->setText(tr("Start recording"));
+    //recordButton = new RecordButton();
+    //recordButton->setText(tr("Start recording"));
     connect(m_recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
     connect(m_shotButton, SIGNAL(clicked()), this, SLOT(saveScreenShot()));
 
-    recordOptionPanel = new RecordOptionPanel();
+    //recordOptionPanel = new RecordOptionPanel();
 
-    recordOptionPanel->setFixedWidth(recordButton->width());
+    //recordOptionPanel->setFixedWidth(recordButton->width());
 
-    recordButtonLayout->addStretch();
-    recordButtonLayout->addWidget(recordButton, 0, Qt::AlignCenter);
-    recordButtonLayout->addSpacing(RECORD_OPTIONAL_PADDING);
+    //recordButtonLayout->addStretch();
+    //recordButtonLayout->addWidget(recordButton, 0, Qt::AlignCenter);
+    //recordButtonLayout->addSpacing(RECORD_OPTIONAL_PADDING);
 
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-        recordButtonLayout->addWidget(recordOptionPanel, 0, Qt::AlignCenter);
-    }
-    recordButtonLayout->addStretch();
+    //if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
+        //recordButtonLayout->addWidget(recordOptionPanel, 0, Qt::AlignCenter);
+    //}
+    //recordButtonLayout->addStretch();
 
-    recordButton->hide();
-    recordOptionPanel->hide();
+    //recordButton->hide();
+    //recordOptionPanel->hide();
 
     m_selectedMic = true;
     m_selectedSystemAudio = true;
@@ -741,8 +741,8 @@ void MainWindow::initScreenShot()
                                QString("%1X%2").arg(recordWidth).arg(recordHeight));
     }
 
-    recordButton->hide();
-    recordOptionPanel->hide();
+    //recordButton->hide();
+    //recordOptionPanel->hide();
 
 
     if (m_firstShot == 0) {
@@ -842,8 +842,8 @@ void MainWindow::initScreenRecorder()
                                QString("%1X%2").arg(recordWidth).arg(recordHeight));
     }
 
-    recordButton->hide();
-    recordOptionPanel->hide();
+    //recordButton->hide();
+    //recordOptionPanel->hide();
 
 
     m_zoomIndicator->hide();
@@ -2714,7 +2714,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
 
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL && needRepaint) {
-                    hideRecordButton();
+                    //hideRecordButton();
                 }
             }
         }
@@ -2753,7 +2753,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
 
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL && needRepaint) {
-                    showRecordButton();
+                    //showRecordButton();
                     updateToolBarPos();
                     if (m_functionType == 1 && m_sideBar->isVisible()) {
                         updateSideBarPos();
@@ -2797,7 +2797,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     dragRecordHeight = recordHeight;
 
                     if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-                        hideRecordButton();
+                        //hideRecordButton();
                         hideAllWidget();
                         hideCameraWidget();
                         //隐藏键盘按钮控件
@@ -2884,7 +2884,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
 
 
-                    showRecordButton();
+                    //showRecordButton();
                     updateToolBarPos();
                     if (m_functionType == 1 && m_sideBar->isVisible()) {
                         updateSideBarPos();
@@ -2895,7 +2895,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     needRepaint = true;
                 } else {
                     if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-                        showRecordButton();
+                        //showRecordButton();
                         updateToolBarPos();
                         if (m_functionType == 1 && m_sideBar->isVisible()) {
                             updateSideBarPos();
@@ -3571,7 +3571,7 @@ void MainWindow::startCountdown()
 
     repaint();
 }
-
+/*
 void MainWindow::showRecordButton()
 {
     //    updateToolBarPos();
@@ -3596,7 +3596,7 @@ void MainWindow::hideRecordButton()
 
     //    Utils::clearBlur(windowManager, this->winId());
 }
-
+*/
 void MainWindow::hideAllWidget()
 {
     m_toolBar->hide();
