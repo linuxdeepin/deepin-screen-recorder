@@ -38,9 +38,9 @@
 #include <DDialog>
 
 #include "record_process.h"
-#include "voice_record_process.h"
-#include "record_button.h"
-#include "record_option_panel.h"
+//#include "voice_record_process.h"
+//#include "record_button.h"
+//#include "record_option_panel.h"
 #include "countdown_tooltip.h"
 //#include "start_tooltip.h"
 #include "button_feedback.h"
@@ -215,8 +215,8 @@ protected:
     void setDragCursor();
     void resetCursor();
     void setFontSize(QPainter &painter, int textSize);
-    void showRecordButton();
-    void hideRecordButton();
+//    void showRecordButton();
+//    void hideRecordButton();
     void hideAllWidget();
     void hideCameraWidget();
     void adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight);
@@ -296,8 +296,8 @@ private:
 
     QVBoxLayout *recordButtonLayout;
     QVBoxLayout *countdownLayout;
-    RecordButton *recordButton;
-    RecordOptionPanel *recordOptionPanel;
+//    RecordButton *recordButton;
+//    RecordOptionPanel *recordOptionPanel;
 
 //    StartTooltip *startTooltip;
     CountdownTooltip *countdownTooltip;

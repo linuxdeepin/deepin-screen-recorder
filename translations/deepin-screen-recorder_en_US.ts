@@ -28,10 +28,6 @@ or press the shortcut again to stop recording</translation>
         <translation>Screen Capture</translation>
     </message>
     <message>
-        <source>Start recording</source>
-        <translation>Start recording</translation>
-    </message>
-    <message>
         <source>Save failed. Please save it in your home directory.</source>
         <translation>Save failed. Please save it in your home directory.</translation>
     </message>
