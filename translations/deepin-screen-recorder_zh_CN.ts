@@ -23,10 +23,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <source>Start recording</source>
-        <translation>开始录制</translation>
-    </message>
-    <message>
         <source>Save failed. Please save it in your home directory.</source>
         <translation>保存失败，请保存到用户目录下</translation>
     </message>
@@ -420,21 +416,6 @@ or press the shortcut again to stop recording</source>
     <name>Utils</name>
     <message>
         <source>Recordings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation type="unfinished">录屏功能暂不可用</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation type="unfinished">退出</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

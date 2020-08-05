@@ -118,6 +118,12 @@ void Screenshot::savePathScreenshot(const QString &path)
     m_window->savePath(path);
 }
 
+void Screenshot::startScreenshotFor3rd(const QString &path)
+{
+    initUI();
+    m_window->startScreenshotFor3rd(path);
+}
+
 void Screenshot::initLaunchMode(const QString &launchmode)
 {
     m_launchMode = launchmode;

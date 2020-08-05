@@ -94,7 +94,8 @@ int stringWidth(const QFont &f, const QString &str)
     QFontMetrics fm(f);
     return fm.boundingRect(str).width();
 }
-
+/*
+ * never used
 QString getFileContent(const QString &file)
 {
     QFile f(file);
@@ -105,7 +106,7 @@ QString getFileContent(const QString &file)
     }
     return fileContent;
 }
-
+*/
 QColor colorIndexOf(int index)
 {
 //    switch (index) {
@@ -227,8 +228,10 @@ bool isCommandExist(QString command)
         return false;
     }
 }
-
+/*
+ * never used
 void   paintSelectedPoint(QPainter &painter, QPointF pos, QPixmap pointImg)
 {
     painter.drawPixmap(pos, pointImg);
 }
+*/

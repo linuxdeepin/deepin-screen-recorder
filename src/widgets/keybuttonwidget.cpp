@@ -20,6 +20,7 @@
 #include "keybuttonwidget.h"
 #include "../utils.h"
 #include "../utils/configsettings.h"
+#include <DWindowManagerHelper>
 
 DWIDGET_USE_NAMESPACE
 
@@ -41,8 +42,13 @@ KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
     int t_themeType = 0;
     t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
 
-    setBlurRectXRadius(15);
-    setBlurRectYRadius(15);
+    if(DWindowManagerHelper::instance()->hasComposite()){
+        setBlurRectXRadius(15);
+        setBlurRectYRadius(15);
+    }else {
+        setBlurRectXRadius(0);
+        setBlurRectYRadius(0);
+    }
     setRadius(30);
     setMode(DBlurEffectWidget::GaussianBlur);
     setBlurEnabled(true);

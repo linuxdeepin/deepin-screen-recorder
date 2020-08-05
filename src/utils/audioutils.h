@@ -28,13 +28,13 @@ public:
     explicit AudioUtils(QObject *parent = nullptr);
     bool isSystemAudioOutput();
     bool isMicrophoneOutput();
-    void setupMicrophoneOutput();
-    void setupSystemAudioOutput();
-    void setupAudioSink(QString sink);
+    //void setupMicrophoneOutput();
+    //void setupSystemAudioOutput();
+    //void setupAudioSink(QString sink);
     bool canVirtualCardOutput();
-    static bool canMicrophoneInput();
+    //static bool canMicrophoneInput();
     QString currentAudioSink();
-    QString currentAudioSource();
+    //QString currentAudioSource();
     QString currentAudioChannel();
 private:
     void initProcess();

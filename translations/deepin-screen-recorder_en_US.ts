@@ -28,10 +28,6 @@ or press the shortcut again to stop recording</translation>
         <translation>Screen Capture</translation>
     </message>
     <message>
-        <source>Start recording</source>
-        <translation>Start recording</translation>
-    </message>
-    <message>
         <source>Save failed. Please save it in your home directory.</source>
         <translation>Save failed. Please save it in your home directory.</translation>
     </message>
@@ -422,21 +418,6 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Recordings</source>
         <translation>Recordings</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation type="unfinished">Exit</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>New recording</translation>
     </message>
 </context>
 </TS>

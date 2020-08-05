@@ -160,9 +160,6 @@ public:
 
     explicit ShowButtons(DWidget *parent = nullptr);
 
-private:
-    void initButtons();
-
 signals:
     void keyShowSignal(const QString &key);
 

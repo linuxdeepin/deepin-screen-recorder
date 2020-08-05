@@ -35,7 +35,7 @@ public:
     ~BigColorButton();
 
     void setColor(QColor color);
-    void setColorIndex();
+    //void setColorIndex();
     void setCheckedStatus(bool checked);
     void updateConfigColor(const QString &shape,  const QString &key, int index);
 

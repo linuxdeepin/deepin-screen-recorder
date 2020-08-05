@@ -46,7 +46,7 @@ public slots:
     void switchContent(QString shapeType);
     void setSaveOption(SaveAction action);
     void setSaveQualityIndex(int saveQuality);
-    int  getSaveQualityIndex();
+    //int  getSaveQualityIndex();
     void updateColor(QColor color);
 
 signals:

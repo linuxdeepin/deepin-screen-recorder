@@ -39,7 +39,7 @@ public:
     bool cameraStart();
     void cameraStop();
     void cameraResume();
-    bool getScreenResolution();
+    //bool getScreenResolution();
     Position postion();
     QPixmap scaledPixmap(const QPixmap &src, int width, int height);
 signals:
@@ -50,7 +50,7 @@ public slots:
     void deleteCapturedImage(int id, const QString &fileName);
     bool setCameraStop(bool status);
     bool getcameraStatus();
-    void cameraStatus();
+    //void cameraStatus();
     void cameraInitError(QCamera::Error error);
 protected:
     void enterEvent(QEvent *e);
@@ -59,7 +59,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *e);
 private:
-    QPixmap round(const QPixmap &img_in, int radius);
+    //QPixmap round(const QPixmap &img_in, int radius);
 private:
     int recordX;
     int recordY;

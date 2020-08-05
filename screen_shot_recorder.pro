@@ -15,14 +15,11 @@ RESOURCES = deepin-screen-recorder.qrc \
     src/icons/icons.qrc
 
 # Input
-HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src/record_button.h src/record_option_panel.h src/countdown_tooltip.h src/constant.h src/event_monitor.h src/button_feedback.h src/process_tree.h \
-    src/camera_process.h \
+HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src/countdown_tooltip.h src/constant.h src/event_monitor.h src/button_feedback.h src/process_tree.h \
     src/show_buttons.h \
     src/keydefine.h   \
     src/utils/audioutils.h \
-    src/voice_record_process.h \
     src/menucontroller/menucontroller.h \
-    src/utils/screenutils.h \
     src/utils/baseutils.h \
     src/utils/configsettings.h \
     src/utils/shortcut.h \
@@ -66,19 +63,17 @@ HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src
     src/utils/desktopinfo.h \
     src/utils/screengrabber.h \
     src/dbusinterface/drawinterface.h \
-    src/screen_shot_event.h
-SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.cpp src/utils.cpp src/record_button.cpp src/record_option_panel.cpp src/countdown_tooltip.cpp src/constant.cpp src/event_monitor.cpp src/button_feedback.cpp src/process_tree.cpp \
-    src/camera_process.cpp \
+    src/screen_shot_event.h\
+    src/RecorderRegionShow.h
+SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.cpp src/utils.cpp src/countdown_tooltip.cpp src/constant.cpp src/event_monitor.cpp src/button_feedback.cpp src/process_tree.cpp \
     src/show_buttons.cpp  \
     src/utils/audioutils.cpp \
-    src/voice_record_process.cpp \
     src/menucontroller/menucontroller.cpp \
     src/utils/shapesutils.cpp \
     src/utils/tempfile.cpp \
     src/utils/calculaterect.cpp \
     src/utils/shortcut.cpp \
     src/utils/configsettings.cpp \
-    src/utils/screenutils.cpp \
     src/utils/baseutils.cpp \
     src/widgets/savebutton.cpp \
     src/widgets/toptips.cpp \
@@ -115,7 +110,8 @@ SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.
     src/utils/desktopinfo.cpp \
     src/utils/screengrabber.cpp \
     src/dbusinterface/drawinterface.cpp \
-    src/screen_shot_event.cpp
+    src/screen_shot_event.cpp\
+    src/RecorderRegionShow.cpp
 
 QT += core
 QT += widgets

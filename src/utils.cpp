@@ -83,6 +83,8 @@ void Utils::warnNoComposite()
                          WarningDialogService);
     iface.call("RaiseWindow");
 }
+/*
+ * never used
 void Utils::notSupportWarn()
 {
    DDialog warnDlg;
@@ -92,7 +94,7 @@ void Utils::notSupportWarn()
    warnDlg.addButton(tr("Exit"));
    warnDlg.exec();
 }
-
+*/
 //void Utils::blurRect(DWindowManager *windowManager, int widgetId, QRectF rect)
 //{
 //    QVector<uint32_t> data;
