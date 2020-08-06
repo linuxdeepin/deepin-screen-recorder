@@ -68,7 +68,7 @@ signals:
 public slots:
     bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
-    void specifiedSavePath();
+    //void specifiedSavePath();
     void keyBoardCheckedSlot(bool checked);
     void changeArrowAndLineFromBar(int line);
     void setRecordButtonDisableFromMain();
@@ -85,9 +85,9 @@ protected:
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    MajToolBar *m_majToolbar;
+    //MajToolBar *m_majToolbar;
     DLabel *m_hSeparatorLine;
-    SubToolBar *m_subToolbar;
+    //SubToolBar *m_subToolbar;
 
     MainToolWidget *m_mainTool;
     SubToolWidget *m_subTool;
@@ -128,7 +128,7 @@ public slots:
     bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
     void showAt(QPoint pos);
-    void specificedSavePath();
+//    void specificedSavePath();
     void currentFunctionMode(QString shapeType);
     void keyBoardCheckedToMainSlot(bool checked);
     void microphoneActionCheckedToMainSlot(bool checked);
