@@ -173,12 +173,12 @@ bool ToolBarWidget::isButtonChecked()
 {
     return m_expanded;
 }
-
+/*
 void ToolBarWidget::specifiedSavePath()
 {
     m_majToolbar->specificedSavePath();
 }
-
+*/
 void ToolBarWidget::keyBoardCheckedSlot(bool checked)
 {
     emit keyBoardCheckedSignal(checked);
@@ -306,12 +306,12 @@ void ToolBar::showAt(QPoint pos)
 
     move(pos.x(), pos.y());
 }
-
+/*
 void ToolBar::specificedSavePath()
 {
     m_toolbarWidget->specifiedSavePath();
 }
-
+*/
 void ToolBar::currentFunctionMode(QString shapeType)
 {
     emit currentFunctionToMain(shapeType);

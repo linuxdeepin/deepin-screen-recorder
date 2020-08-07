@@ -2285,8 +2285,8 @@ void MainWindow::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    // 2D窗管模式下，录屏背景用截图背景。//test false
-    if (/*false && */m_functionType == 1 || (!DWindowManagerHelper::instance()->hasComposite())) {
+    // 2D窗管模式下，录屏背景用截图背景。
+    if (m_functionType == 1 || (!DWindowManagerHelper::instance()->hasComposite())) {
         painter.setRenderHint(QPainter::Antialiasing, true);
         QRect backgroundRect;
 
@@ -2344,13 +2344,13 @@ void MainWindow::paintEvent(QPaintEvent *event)
         }
     }
 }
-
 bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
     bool needRepaint = false;
 #undef KeyPress
 #undef KeyRelease
     if (event->type() == QEvent::KeyPress) {
+
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         qDebug() << "key press:" << keyEvent->key();
         if (m_functionType == 1) {
@@ -3166,7 +3166,7 @@ void MainWindow::startRecord()
     flashTrayIconTimer->start(800);
 
     recordProcess.setRecordAudioInputType(getRecordInputType(m_selectedMic, m_selectedSystemAudio));
-    recordProcess.setIsZhaoXinPlatform(m_isZhaoxin);
+    //recordProcess.setIsZhaoXinPlatform(m_isZhaoxin);
     recordProcess.startRecord();
     //    voiceRecordProcess.startRecord();
     // 录屏开始后，隐藏窗口。（2D窗管下支持录屏, 但是会导致摄像头录制不到）

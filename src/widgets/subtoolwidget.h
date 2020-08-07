@@ -56,7 +56,7 @@ signals:
     void saveToClipBoard(bool isClip);
 public slots:
     void switchContent(QString shapeType);
-    void systemAudioActionCheckedSlot(bool checked);
+    //void systemAudioActionCheckedSlot(bool checked);
     void changeArrowAndLineFromSideBar(int line);
     void setRecordLaunchMode(bool recordLaunch);
     void setVideoButtonInitFromSub();

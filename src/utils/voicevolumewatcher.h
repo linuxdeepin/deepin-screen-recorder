@@ -52,7 +52,7 @@ private:
 
 
     bool m_loopwatch;
-    bool m_isRecoding;
+    //bool m_isRecoding;
     bool m_coulduse;
 };
 
