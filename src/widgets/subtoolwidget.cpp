@@ -914,7 +914,7 @@ void SubToolWidget::switchContent(QString shapeType)
         m_currentType = shapeType;
     }
 }
-
+/*
 void SubToolWidget::systemAudioActionCheckedSlot(bool checked)
 {
     if (AudioUtils().canVirtualCardOutput()) {
@@ -923,7 +923,7 @@ void SubToolWidget::systemAudioActionCheckedSlot(bool checked)
         m_systemAudioAction->setChecked(false);
     }
 }
-
+*/
 void SubToolWidget::changeArrowAndLineFromSideBar(int line)
 {
     qDebug() << line;

@@ -111,19 +111,19 @@ void AudioUtils::setupAudioSink(QString sink)
     process->start("pacmd", arguments);
 }
 */
-bool AudioUtils::canVirtualCardOutput()
-{
-    QStringList options;
-    options << "-c";
-    options << "pacmd list-sinks | sed  -n '/.*index:.*\\([0-9]\\+\\).*/{n;p}' |  sed -n 's/name: <\\(.*\\)>/\\1/p' | grep 'alsa_output.platform-snd_aloop.0.analog-stereo' | wc -l";
-    QProcess process;
-    process.start("bash", options);
-    process.waitForFinished();
-    process.waitForReadyRead();
-    QString str_output = process.readAllStandardOutput();
-    process.close();
-    return str_output.startsWith("1");
-}
+//bool AudioUtils::canVirtualCardOutput()
+//{
+//    QStringList options;
+//    options << "-c";
+//    options << "pacmd list-sinks | sed  -n '/.*index:.*\\([0-9]\\+\\).*/{n;p}' |  sed -n 's/name: <\\(.*\\)>/\\1/p' | grep 'alsa_output.platform-snd_aloop.0.analog-stereo' | wc -l";
+//    QProcess process;
+//    process.start("bash", options);
+//    process.waitForFinished();
+//    process.waitForReadyRead();
+//    QString str_output = process.readAllStandardOutput();
+//    process.close();
+//    return str_output.startsWith("1");
+//}
 /*
  * never used
 bool AudioUtils::canMicrophoneInput()

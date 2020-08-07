@@ -133,7 +133,7 @@ modload.path = $$ETCDIR/modules-load.d
 
 #icon.files = image/deepin-screen-recorder.svg deepin-screenshot.svg
 #desktop.files = deepin-screen-recorder.desktop deepin-screenshot.desktop
-icon.files = image/deepin-screen-recorder.svg
+icon.files = image/deepin-screen-recorder.svg deepin-screenshot.svg
 desktop.files = deepin-screen-recorder.desktop
 manual.files = manual/*
 shotShell.files = deepin-screenshot
