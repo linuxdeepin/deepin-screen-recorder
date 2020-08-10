@@ -7,7 +7,7 @@
 CameraWatcher::CameraWatcher(QObject *parent) : QThread(parent)
 {
     m_loopwatch = true;
-    m_isRecoding = false;
+    //m_isRecoding = false;
     m_coulduse = true;
 }
 
@@ -31,21 +31,20 @@ void CameraWatcher::setIsRecoding(bool value)
 void CameraWatcher::run()
 {
     m_loopwatch = true;
-//    QThread::currentThread()->msleep(1000);
+    //    QThread::currentThread()->msleep(1000);
     while (m_loopwatch) {
-        //log缓存被更新并且仍进行loop循环
-        if (!m_isRecoding && m_loopwatch) {
-            bool couldUse = false;
-            //qDebug() << "QCameraInfo::availableCameras()" << QCameraInfo::defaultCamera().deviceName();
-            if (QCameraInfo::availableCameras().count() > 0) {
-                couldUse = true;
-            }
-            if (couldUse != m_coulduse) {
-                //发送log信息到UI
-                m_coulduse = couldUse;
-                emit sigCameraState(couldUse);
-            }
+
+        bool couldUse = false;
+        //qDebug() << "QCameraInfo::availableCameras()" << QCameraInfo::defaultCamera().deviceName();
+        if (QCameraInfo::availableCameras().count() > 0) {
+            couldUse = true;
         }
+        if (couldUse != m_coulduse) {
+            //发送log信息到UI
+            m_coulduse = couldUse;
+            emit sigCameraState(couldUse);
+        }
+
         QThread::currentThread()->msleep(1000);
     }
 }

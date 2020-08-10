@@ -265,7 +265,7 @@ void RecordProcess::recordVideo()
 
 
         if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO || recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
-            lastAudioSink = audioUtils->currentAudioSink();
+            //lastAudioSink = audioUtils->currentAudioSink();
             arguments << QString("-thread_queue_size");
             arguments << QString("32");
             arguments << QString("-fragment_size");
@@ -377,7 +377,7 @@ void RecordProcess::startRecord()
 {
     QThread::start();
 }
-
+/*
 void RecordProcess::setIsZhaoXinPlatform(bool status)
 {
     if (status) {
@@ -386,7 +386,7 @@ void RecordProcess::setIsZhaoXinPlatform(bool status)
         m_isZhaoxin = false;
     }
 }
-
+*/
 int RecordProcess::readSleepProcessPid()
 {
     // Read the list of open processes information.

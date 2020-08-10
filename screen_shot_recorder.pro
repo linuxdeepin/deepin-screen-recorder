@@ -27,16 +27,11 @@ HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src
     src/utils/calculaterect.h \
     src/utils/saveutils.h \
     src/utils/shapesutils.h \
-    src/widgets/savetips.h \
-    src/widgets/fontsizewidget.h \
     src/widgets/colorbutton.h \
     src/widgets/zoomIndicator.h \
-    src/widgets/majtoolbar.h \
     src/widgets/textedit.h \
-    src/widgets/bigcolorbutton.h \
     src/widgets/toptips.h \
     src/widgets/toolbar.h \
-    src/widgets/savebutton.h \
     src/widgets/textbutton.h \
     src/widgets/shapeswidget.h \
     src/widgets/toolbutton.h \
@@ -47,10 +42,7 @@ HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src
     src/widgets/sidebar.h \
     src/widgets/shottoolwidget.h \
     src/widgets/colortoolwidget.h \
-    src/dbusinterface/dbuszone.h \
-    src/dbusinterface/dbuscontrolcenter.h \
     src/dbusinterface/dbusnotify.h \
-    src/dbusinterface/dbussoundeffect.h \
     src/dbusservice/dbusscreenshotservice.h \
     src/dbusservice/dbusscreenshot.h \
     src/widgets/camerawidget.h \
@@ -75,18 +67,13 @@ SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.
     src/utils/shortcut.cpp \
     src/utils/configsettings.cpp \
     src/utils/baseutils.cpp \
-    src/widgets/savebutton.cpp \
     src/widgets/toptips.cpp \
     src/widgets/shapeswidget.cpp \
     src/widgets/textbutton.cpp \
     src/widgets/colorbutton.cpp \
-    src/widgets/fontsizewidget.cpp \
     src/widgets/textedit.cpp \
-    src/widgets/bigcolorbutton.cpp \
     src/widgets/zoomIndicator.cpp \
-    src/widgets/majtoolbar.cpp \
     src/widgets/subtoolbar.cpp \
-    src/widgets/savetips.cpp \
     src/widgets/toolbar.cpp \
     src/widgets/maintoolwidget.cpp \
     src/widgets/subtoolwidget.cpp \
@@ -95,9 +82,6 @@ SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.
     src/widgets/shottoolwidget.cpp \
     src/widgets/colortoolwidget.cpp \
     src/dbusinterface/dbusnotify.cpp \
-    src/dbusinterface/dbuszone.cpp \
-    src/dbusinterface/dbuscontrolcenter.cpp \
-    src/dbusinterface/dbussoundeffect.cpp \
     src/dbusservice/dbusscreenshotservice.cpp \
     src/dbusservice/dbusscreenshot.cpp \
     src/widgets/camerawidget.cpp \
@@ -149,7 +133,7 @@ modload.path = $$ETCDIR/modules-load.d
 
 #icon.files = image/deepin-screen-recorder.svg deepin-screenshot.svg
 #desktop.files = deepin-screen-recorder.desktop deepin-screenshot.desktop
-icon.files = image/deepin-screen-recorder.svg
+icon.files = image/deepin-screen-recorder.svg deepin-screenshot.svg
 desktop.files = deepin-screen-recorder.desktop
 manual.files = manual/*
 shotShell.files = deepin-screenshot
