@@ -7,6 +7,14 @@ TEMPLATE = app
 TARGET = deepin-screen-recorder
 INCLUDEPATH += .
 
+
+ARCH = $$QMAKE_HOST.arch
+isEqual(ARCH, mips64) {
+    QMAKE_CXX += -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi
+    QMAKE_CXXFLAGS += -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi
+    QMAKE_LFLAGS += -Wl,--as-needed
+}
+
 CONFIG += link_pkgconfig
 CONFIG += c++11
 PKGCONFIG += xcb xcb-util dframeworkdbus
