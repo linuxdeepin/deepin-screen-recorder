@@ -228,8 +228,8 @@ void RecordProcess::recordVideo()
         arguments << QString("-pix_fmt");
         arguments << QString("yuv420p");
         arguments << QString("-c:v");
-        //arguments << QString("mpeg4");
-        arguments << QString("mpeg2video");
+        arguments << QString("mpeg4");
+        //arguments << QString("mpeg2video");
         //arguments << QString("mpeg1video");
         //arguments << QString("libx264rgb");
         //arguments << QString("h263p");
@@ -238,7 +238,7 @@ void RecordProcess::recordVideo()
         arguments << QString("-c:a");
         arguments << QString("libmp3lame");
         arguments << QString("-q:v");
-        arguments << QString("10");
+        arguments << QString("20");
         //arguments << QString("31"); // 视频质量
         arguments << QString("-s");
         arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
@@ -279,10 +279,10 @@ void RecordProcess::recordVideo()
             arguments << QString("-i");
             arguments << QString("%1").arg(t_currentAudioChannel);
             if(recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO){
-                if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+                //if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
                     arguments << QString("-af");
                     arguments << QString("volume=30dB");
-                }
+                //}
             }
         }
         if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC || recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {

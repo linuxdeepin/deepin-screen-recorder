@@ -1942,7 +1942,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     unsigned int id = 0;
     arg << (QCoreApplication::applicationName())                 // appname
         << id                                                    // id
-        << QString("deepin-screenshot")                     // icon
+        << QString("deepin-screen-recorder")                     // icon
         << tr("Screenshot finished")                              // summary
         << QString(tr("Saved to %1")).arg(saveFilePath) // body
         << actions                                               // actions
