@@ -373,7 +373,6 @@ private:
     XFixesCursorImage *m_CursorImage = nullptr;
     QSize m_screenSize;
     RecorderRegionShow *m_pRecorderRegion = nullptr;
-    QSize m_virtualGeometrySize;
     qreal m_pixelRatio;
 };
 

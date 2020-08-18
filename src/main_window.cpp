@@ -184,6 +184,12 @@ MainWindow::MainWindow(DWidget *parent) :
         screenInfo.name = monitorInterface.property("Name").toString();
         m_screenInfo.append(screenInfo);
     }
+    if(m_screenInfo.size() > 1) {
+        // 排序
+        qSort(m_screenInfo.begin(), m_screenInfo.end(), [ = ](const ScreenInfo info1, const ScreenInfo info2){
+            return info1.x < info2.x;
+        });
+    }
 }
 
 void MainWindow::initAttributes()
@@ -228,7 +234,6 @@ void MainWindow::initAttributes()
         QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
         t_screenRect = QRect(0, 0, static_cast<int>(m_screenSize.width() / m_pixelRatio), static_cast<int>(m_screenSize.height() / m_pixelRatio));
         qDebug() << "screen size" << t_primaryScreen->virtualGeometry() << t_screenRect;
-        m_virtualGeometrySize = t_primaryScreen->virtualGeometry().size();
     }
 
     setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
@@ -296,7 +301,7 @@ void MainWindow::initAttributes()
         screenRect = QRect(screenRect.topLeft() / m_pixelRatio, screenRect.size());
         this->move(static_cast<int>(screenRect.x() * m_pixelRatio),
                    static_cast<int>(screenRect.y() * m_pixelRatio));
-        this->setFixedSize(m_virtualGeometrySize);
+        this->setFixedSize(t_screenRect.size());
         rootWindowRect = t_screenRect;
     }
 
@@ -545,7 +550,7 @@ void MainWindow::initAttributes()
         m_backgroundRect = t_screenRect;
         m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
         move(m_backgroundRect.topLeft() * m_pixelRatio);
-        this->setFixedSize(m_virtualGeometrySize);
+        this->setFixedSize(m_backgroundRect.size());
     }
     initBackground();
 
@@ -561,6 +566,12 @@ void MainWindow::initAttributes()
     connect(m_menuController, &MenuController::closeAction,
             this, &MainWindow::exitApp);
     initShortcut();
+    if(t_screenCount > 1 && m_pixelRatio  > 1) {
+        if(m_screenInfo[0].width < m_screenInfo[1].width)
+            // QT bug，这里暂时做特殊处理
+            // 多屏放缩情况下，小屏在前，整体需要偏移一定距离
+            this->move(m_screenInfo[0].width - static_cast<int>(m_screenInfo[0].width / m_pixelRatio), 0);
+    }
 }
 
 void MainWindow::sendSavingNotify()
