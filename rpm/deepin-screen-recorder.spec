@@ -6,7 +6,6 @@ Summary:        Deepin Screen Recorder
 License:        GPLv3+
 URL:            https://github.com/linuxdeepin/deepin-screen-recorder
 Source0:        %{name}_%{version}.orig.tar.xz
-Source1:        deepin-screen-recorder.appdata.xml
 
 BuildRequires:  qt5-linguist
 BuildRequires:  dtkwidget-devel
@@ -39,7 +38,6 @@ Requires:       deepin-manual-directory
 
 %prep
 %setup -q
-sed -i 's|=lupdate|=lupdate-qt5|;s|=lrelease|=lrelease-qt5|' %{soname}.pro
 
 %build
 export PATH=%{_qt5_bindir}:$PATH
