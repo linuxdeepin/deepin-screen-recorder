@@ -27,7 +27,7 @@ BuildRequires:  pkgconfig(xcb)
 BuildRequires:  pkgconfig(xcb-util)
 BuildRequires:  desktop-file-utils
 BuildRequires:  libappstream-glib
-BuildRequires:   gcc
+#BuildRequires:   gcc
 Requires:       byzanz
 Requires:       ffmpeg
 Requires:       hicolor-icon-theme
