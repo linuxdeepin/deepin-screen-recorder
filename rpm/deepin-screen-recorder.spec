@@ -12,7 +12,7 @@ BuildRequires:  qt5-linguist
 BuildRequires:  dtkwidget-devel
 #BuildRequires:  pkgconfig(dtkwm)
 #BuildRequires:  pkgconfig(libprocps)
-BuildRequires:  procps-ng-devel
+#BuildRequires:  procps-ng-devel
 BuildRequires:  qt5-qtmultimedia-devel
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5DBus)
@@ -26,7 +26,7 @@ BuildRequires:  pkgconfig(xtst)
 BuildRequires:  pkgconfig(xcb)
 BuildRequires:  pkgconfig(xcb-util)
 BuildRequires:  desktop-file-utils
-BuildRequires:  libappstream-glib
+#BuildRequires:  libappstream-glib
 #BuildRequires:   gcc
 Requires:       byzanz
 Requires:       ffmpeg
