@@ -26,7 +26,7 @@ BuildRequires:  pkgconfig(xtst)
 BuildRequires:  pkgconfig(xcb)
 BuildRequires:  pkgconfig(xcb-util)
 BuildRequires:  desktop-file-utils
-#BuildRequires:  libappstream-glib
+BuildRequires:  libappstream-glib
 #BuildRequires:   gcc
 Requires:       byzanz
 Requires:       ffmpeg
@@ -42,16 +42,13 @@ Requires:       deepin-manual-directory
 sed -i 's|=lupdate|=lupdate-qt5|;s|=lrelease|=lrelease-qt5|' %{soname}.pro
 
 %build
+export PATH=%{_qt5_bindir}:$PATH
 %qmake_qt5 PREFIX=%{_prefix}
 %make_build
 
 %install
 %make_install INSTALL_ROOT=%{buildroot}
 
-%check
-desktop-file-validate %{buildroot}/%{_datadir}/applications/%{name}.desktop 
-install -pDm644 %{S:1} %{buildroot}/%{_datadir}/appdata/%{name}.appdata.xml
-appstream-util validate-relax --nonet %{buildroot}%{_datadir}/appdata/%{name}.appdata.xml
 
 %files
 %doc README.md
