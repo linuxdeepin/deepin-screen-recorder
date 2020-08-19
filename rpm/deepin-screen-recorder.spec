@@ -25,6 +25,7 @@ BuildRequires:  pkgconfig(xext)
 BuildRequires:  pkgconfig(xtst)
 BuildRequires:  pkgconfig(xcb)
 BuildRequires:  pkgconfig(xcb-util)
+BuildRequires:  pkgconfig(xcursor)
 BuildRequires:  desktop-file-utils
 BuildRequires:  libappstream-glib
 BuildRequires:  gcc-c++
