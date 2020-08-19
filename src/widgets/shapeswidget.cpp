@@ -47,7 +47,6 @@ ShapesWidget::ShapesWidget(DWidget *parent)
       m_selectedOrder(-1),
       m_menuController(new MenuController)
 {
-
     //订阅手势事件
     QList<Qt::GestureType> gestures;
     gestures << Qt::PanGesture;
@@ -1108,18 +1107,18 @@ bool ShapesWidget::event(QEvent *event)
         if (QGesture *pinch = static_cast<QGestureEvent *>(event)->gesture(Qt::PinchGesture)){
             pinchTriggered(static_cast<QPinchGesture *>(pinch));
         }
-        if (QGesture *pan = static_cast<QGestureEvent *>(event)->gesture(Qt::PanGesture)){
-            if(static_cast<QPanGesture *>(pan)->state() == Qt::GestureState::GestureFinished){
-            }
-        }
-        if (QGesture *tap = static_cast<QGestureEvent *>(event)->gesture(Qt::TapAndHoldGesture)){
-            if(static_cast<QTapAndHoldGesture *>(tap)->state() == Qt::GestureState::GestureFinished){
-            }
-        }
-        if (QGesture *tap = static_cast<QGestureEvent *>(event)->gesture(Qt::SwipeGesture)){
-        }
-        if (QGesture *tap = static_cast<QGestureEvent *>(event)->gesture(Qt::CustomGesture)){
-        }
+//        if (QGesture *pan = static_cast<QGestureEvent *>(event)->gesture(Qt::PanGesture)){
+//            if(static_cast<QPanGesture *>(pan)->state() == Qt::GestureState::GestureFinished){
+//            }
+//        }
+//        if (QGesture *tap = static_cast<QGestureEvent *>(event)->gesture(Qt::TapAndHoldGesture)){
+//            if(static_cast<QTapAndHoldGesture *>(tap)->state() == Qt::GestureState::GestureFinished){
+//            }
+//        }
+//        if (QGesture *tap = static_cast<QGestureEvent *>(event)->gesture(Qt::SwipeGesture)){
+//        }
+//        if (QGesture *tap = static_cast<QGestureEvent *>(event)->gesture(Qt::CustomGesture)){
+//        }
     }
     update();
     return QWidget::event(event);
@@ -1127,6 +1126,18 @@ bool ShapesWidget::event(QEvent *event)
 
 void ShapesWidget::mousePressEvent(QMouseEvent *e)
 {
+    if(Qt::MouseEventSource::MouseEventSynthesizedByQt != e->source()
+            && m_selectedIndex != -1){
+        clearSelected();
+        setAllTextEditReadOnly();
+        m_editing = false;
+        m_selectedIndex = -1;
+        m_selectedOrder = -1;
+        m_selectedShape.type = "";
+        update();
+        DFrame::mousePressEvent(e);
+    }
+
     if(Qt::MouseEventSource::MouseEventSynthesizedByQt == e->source()
             && m_selectedIndex != -1
             && !clickedShapes(e->pos())
@@ -1372,7 +1383,7 @@ void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)
         return;
     }
 
-    if (!(clickedOnShapes(e->pos()) && m_isRotated) && m_selectedIndex == -1 && "text" != m_currentType) {
+    if (!m_isRotated && m_selectedIndex == -1 && "text" != m_currentType) {
         clearSelected();
         setAllTextEditReadOnly();
         m_editing = false;
@@ -1384,7 +1395,7 @@ void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)
     }
 
     qDebug() << m_isRecording << m_isSelected << m_pos2;
-    if (m_isRecording && !m_isSelected && m_pos2 != QPointF(0, 0)) {
+    if (m_isRecording && !m_isSelected && m_pos2 != QPointF(0, 0) ) {
         if (m_currentType == "arrow") {
             if (m_currentShape.points.length() == 2) {
                 if (m_isShiftPressed) {
@@ -1986,12 +1997,13 @@ void ShapesWidget::pinchTriggered(QPinchGesture *pinch)
         return;
     QPinchGesture::ChangeFlags changeFlags = pinch->changeFlags();
     if (changeFlags & QPinchGesture::RotationAngleChanged) {
-        qreal rotationDelta = (pinch->rotationAngle() - pinch->lastRotationAngle())*0.05;
+        qreal rotationDelta = (pinch->rotationAngle() - pinch->lastRotationAngle())*0.01;
         qreal centerX = (m_shapes[m_selectedOrder].mainPoints[0].x() + m_shapes[m_selectedOrder].mainPoints[3].x()) / 2;
         qreal centerY = (m_shapes[m_selectedOrder].mainPoints[0].y() + m_shapes[m_selectedOrder].mainPoints[3].y()) / 2;
         for(int i = 0; i < m_shapes[m_selectedOrder].mainPoints.size(); ++i){
             qreal x = centerX + (m_shapes[m_selectedOrder].mainPoints[i].x() - centerX) * cos(rotationDelta) - (m_shapes[m_selectedOrder].mainPoints[i].y() - centerY) * sin(rotationDelta);
             qreal y = centerY + (m_shapes[m_selectedOrder].mainPoints[i].x() - centerX) * sin(rotationDelta) + (m_shapes[m_selectedOrder].mainPoints[i].y() - centerY) * cos(rotationDelta);
+            //图形
             m_shapes[m_selectedOrder].mainPoints[i].setX(x);
             m_shapes[m_selectedOrder].mainPoints[i].setY(y);
         }
@@ -2000,19 +2012,21 @@ void ShapesWidget::pinchTriggered(QPinchGesture *pinch)
         for ( int i = 0; i < m_selectedShape.mainPoints.length(); i ++) {
             qreal x = centerMainX + (m_selectedShape.mainPoints[i].x() - centerMainX) * cos(rotationDelta) - (m_selectedShape.mainPoints[i].y() - centerMainY) * sin(rotationDelta);
             qreal y = centerMainY + (m_selectedShape.mainPoints[i].x() - centerMainX) * sin(rotationDelta) + (m_selectedShape.mainPoints[i].y() - centerMainY) * cos(rotationDelta);
+            //选中状态，点+线条
             m_selectedShape.mainPoints[i].setX(x);
             m_selectedShape.mainPoints[i].setY(y);
         }
         for (int k = 0; k < m_selectedShape.points.length(); k++) {
             qreal x = centerMainX + (m_shapes[m_selectedOrder].points[k].x() - centerMainX) * cos(rotationDelta) - (m_shapes[m_selectedOrder].points[k].y() - centerMainY) * sin(rotationDelta);
             qreal y = centerMainY + (m_shapes[m_selectedOrder].points[k].x() - centerMainX) * sin(rotationDelta) + (m_shapes[m_selectedOrder].points[k].y() - centerMainY) * cos(rotationDelta);
+            //线条
             m_shapes[m_selectedOrder].points[k].setX(x);
             m_shapes[m_selectedOrder].points[k].setY(y);
         }
     }
     if (changeFlags & QPinchGesture::ScaleFactorChanged) {
         qreal scale = pinch->scaleFactor();
-        qreal ascanle = (scale - 1) * 0.5 + 1;
+        qreal ascanle = (scale - 1) * 0.3 + 1;
         qreal centerX = (m_shapes[m_selectedOrder].mainPoints[0].x() + m_shapes[m_selectedOrder].mainPoints[3].x()) / 2;
         qreal centerY = (m_shapes[m_selectedOrder].mainPoints[0].y() + m_shapes[m_selectedOrder].mainPoints[3].y()) / 2;
         for(int i = 0; i < m_shapes[m_selectedOrder].mainPoints.size(); ++i){
@@ -2040,7 +2054,7 @@ void ShapesWidget::pinchTriggered(QPinchGesture *pinch)
 
 void ShapesWidget::tapTriggered(QTapGesture *tap)
 {
-    if(tap->state() == Qt::GestureState::GestureFinished && -1 != m_selectedIndex && "text" != m_currentType){
+    if(tap->state() == Qt::GestureState::GestureFinished && !clickedOnShapes(m_movingPoint) && -1 != m_selectedIndex && "text" != m_currentType){
         m_isPressed = false;
         m_isMoving = false;
         clearSelected();
