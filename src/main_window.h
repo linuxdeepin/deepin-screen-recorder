@@ -137,7 +137,7 @@ public:
     void initLaunchMode(const QString &launchMode);
     void delayScreenshot(double num);
     void fullScreenshot();
-    void testScreenshot();
+    //void testScreenshot();
 
     void topWindow();
     void savePath(const QString &path);

@@ -279,10 +279,10 @@ void RecordProcess::recordVideo()
             arguments << QString("-i");
             arguments << QString("%1").arg(t_currentAudioChannel);
             if(recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO){
-                //if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+                if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
                     arguments << QString("-af");
-                    arguments << QString("volume=30dB");
-                //}
+                    arguments << QString("volume=20dB");
+                }
             }
         }
         if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC || recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
