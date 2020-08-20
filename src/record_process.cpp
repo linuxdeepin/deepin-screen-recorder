@@ -89,7 +89,7 @@ void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filena
     m_recordRect = recordRect;
     saveAreaName = filename;
 }
-
+/*
 void RecordProcess::setRecordType(int type)
 {
     recordType = type;
@@ -99,6 +99,7 @@ void RecordProcess::setFrameRate(int framerate)
 {
     m_framerate = framerate;
 }
+*/
 void RecordProcess::setRecordAudioInputType(int inputType)
 {
     recordAudioInputType = inputType;

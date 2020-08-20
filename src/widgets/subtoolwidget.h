@@ -64,7 +64,7 @@ public slots:
     void setMicroPhoneEnable(bool status);
     void setCameraDeviceEnable(bool status);
     void setSystemAudioEnable(bool status);
-    void setIsZhaoxinPlatform(bool isZhaoxin);
+    //void setIsZhaoxinPlatform(bool isZhaoxin);
 private:
     DLabel *m_recordSubTool;
     DLabel *m_shotSubTool;
@@ -85,7 +85,7 @@ private:
     bool m_haveSystemAudio = false;
     int m_lineflag;
     int m_themeType;
-    bool m_isZhaoxinInSub = false;
+    //bool m_isZhaoxinInSub = false;
     HintFilter *hintFilter = nullptr;
 };
 

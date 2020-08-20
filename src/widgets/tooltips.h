@@ -20,7 +20,7 @@ public:
                       QWidget *parent = nullptr);
     ~ToolTips() override;
 
-    void pop(QPoint center);
+    //void pop(QPoint center);
 
     int radius() const;
     QColor borderColor() const;

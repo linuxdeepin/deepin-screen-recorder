@@ -361,7 +361,7 @@ private:
     bool m_initCamera = false;
     bool m_launchWithRecordFunc = false;
     bool m_shotWithPath = false;
-    int m_screenNum;
+    int m_screenCount;
     QString m_shotSavePath;
     //bool m_copyToClipboard = false;
     //QString m_savePicturePath;

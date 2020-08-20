@@ -162,12 +162,12 @@ void SideBar::changeShotToolFunc(const QString &func)
 {
     m_sidebarWidget->changeShotToolWidget(func);
 }
-
+/*
 bool SideBar::isButtonChecked()
 {
     return m_expanded;
 }
-
+*/
 void SideBar::setExpand(bool expand, QString shapeType)
 {
     emit buttonChecked(shapeType);

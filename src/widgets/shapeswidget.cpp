@@ -150,7 +150,7 @@ void ShapesWidget::setCurrentShape(QString shapeType)
     if (shapeType != "saveList")
         m_currentType = shapeType;
 }
-
+/*
 void ShapesWidget::setPenColor(QColor color)
 {
     int colorNum = colorIndex(color);
@@ -162,7 +162,7 @@ void ShapesWidget::setPenColor(QColor color)
 
     update();
 }
-
+*/
 void ShapesWidget::clearSelected()
 {
     for (int j = 0; j < m_selectedShape.mainPoints.length(); j++) {
