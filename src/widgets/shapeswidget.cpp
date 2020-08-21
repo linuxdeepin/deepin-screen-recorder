@@ -45,6 +45,7 @@ ShapesWidget::ShapesWidget(DWidget *parent)
       m_shapesIndex(-1),
       m_selectedIndex(-1),
       m_selectedOrder(-1),
+      m_lastAngle(0),
       m_menuController(new MenuController)
 {
     //订阅手势事件
@@ -1045,17 +1046,44 @@ void ShapesWidget::handleRotate(QPointF pos)
                                      m_selectedShape.mainPoints[3].x()) / 2,
                                     (m_selectedShape.mainPoints[0].y() +
                                      m_selectedShape.mainPoints[3].y()) / 2);
-    qreal angle = calculateAngle(m_pressedPoint, pos, centerInPoint) / 35;
-
-    for (int i = 0; i < 4; i++) {
-        m_shapes[m_selectedOrder].mainPoints[i] = pointRotate(centerInPoint,
-                                                              m_selectedShape.mainPoints[i], angle);
+    QLineF linePressed(centerInPoint,m_movingPoint);
+    qreal pressedAngle = 360 - linePressed.angle();
+    qreal angle;
+    if(0 == static_cast<int>(m_lastAngle)){
+        m_lastAngle = pressedAngle;
+        angle = 0;
     }
-
+    else {
+        angle = pressedAngle - m_lastAngle;
+    }
+    if(angle < -100){
+        m_lastAngle = pressedAngle - m_lastAngle + 360;
+        angle = m_lastAngle;
+    }
+    else if(angle > 100){
+        m_lastAngle = pressedAngle - m_lastAngle - 360;
+        angle = m_lastAngle;
+    }
+    qreal rotationDelta = (angle*M_PI)/180;
+    qreal centerX = (m_shapes[m_selectedOrder].mainPoints[0].x() + m_shapes[m_selectedOrder].mainPoints[3].x()) / 2;
+    qreal centerY = (m_shapes[m_selectedOrder].mainPoints[0].y() + m_shapes[m_selectedOrder].mainPoints[3].y()) / 2;
+    for(int i = 0; i < m_shapes[m_selectedOrder].mainPoints.size(); ++i){
+        qreal x = centerX + (m_shapes[m_selectedOrder].mainPoints[i].x() - centerX) * cos(rotationDelta) - (m_shapes[m_selectedOrder].mainPoints[i].y() - centerY) * sin(rotationDelta);
+        qreal y = centerY + (m_shapes[m_selectedOrder].mainPoints[i].x() - centerX) * sin(rotationDelta) + (m_shapes[m_selectedOrder].mainPoints[i].y() - centerY) * cos(rotationDelta);
+        //图形
+        m_shapes[m_selectedOrder].mainPoints[i].setX(x);
+        m_shapes[m_selectedOrder].mainPoints[i].setY(y);
+    }
+    qreal centerMainX = (m_selectedShape.mainPoints[0].x() + m_selectedShape.mainPoints[3].x()) / 2;
+    qreal centerMainY = (m_selectedShape.mainPoints[0].y() + m_selectedShape.mainPoints[3].y()) / 2;
     for (int k = 0; k < m_selectedShape.points.length(); k++) {
-        m_shapes[m_selectedOrder].points[k] = pointRotate(centerInPoint,
-                                                          m_selectedShape.points[k], angle);
+        qreal x = centerMainX + (m_shapes[m_selectedOrder].points[k].x() - centerMainX) * cos(rotationDelta) - (m_shapes[m_selectedOrder].points[k].y() - centerMainY) * sin(rotationDelta);
+        qreal y = centerMainY + (m_shapes[m_selectedOrder].points[k].x() - centerMainX) * sin(rotationDelta) + (m_shapes[m_selectedOrder].points[k].y() - centerMainY) * cos(rotationDelta);
+        //线条
+        m_shapes[m_selectedOrder].points[k].setX(x);
+        m_shapes[m_selectedOrder].points[k].setY(y);
     }
+    m_lastAngle = pressedAngle;
 
     m_selectedShape.mainPoints = m_shapes[m_selectedOrder].mainPoints;
     m_hoveredShape.mainPoints =  m_shapes[m_selectedOrder].mainPoints;
@@ -1126,6 +1154,7 @@ bool ShapesWidget::event(QEvent *event)
 
 void ShapesWidget::mousePressEvent(QMouseEvent *e)
 {
+    m_lastAngle = 0;
     if(Qt::MouseEventSource::MouseEventSynthesizedByQt != e->source()
             && m_selectedIndex != -1){
         clearSelected();
