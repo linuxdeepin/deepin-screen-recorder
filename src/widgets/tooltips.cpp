@@ -162,6 +162,7 @@ QColor ToolTips::borderColor() const
     Q_D(const ToolTips);
     return d->borderColor;
 }
+
 void ToolTips::setBackground(QBrush background)
 {
     Q_D(ToolTips);
@@ -172,6 +173,7 @@ void ToolTips::setRadius(int radius)
     Q_D(ToolTips);
     d->radius = radius;
 }
+
 void ToolTips::setBorderColor(QColor borderColor)
 {
     Q_D(ToolTips);
@@ -181,7 +183,7 @@ void ToolTips::setVertical()
 {
     m_isVertical = true;
 }
-
+/*
 void ToolTips::pop(QPoint center)
 {
     Q_D(ToolTips);
@@ -220,7 +222,7 @@ void ToolTips::pop(QPoint center)
 //        this->hide();
 //    });
 }
-
+*/
 #ifdef _OLD
 void ToolTips::paintEvent(QPaintEvent *)
 {

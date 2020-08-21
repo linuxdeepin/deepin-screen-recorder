@@ -37,7 +37,7 @@ public:
     //QString currentAudioSource();
     QString currentAudioChannel();
 private:
-    void initProcess();
+    //void initProcess();
 
 private:
     QProcess *process;

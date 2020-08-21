@@ -89,7 +89,7 @@ void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filena
     m_recordRect = recordRect;
     saveAreaName = filename;
 }
-
+/*
 void RecordProcess::setRecordType(int type)
 {
     recordType = type;
@@ -99,6 +99,7 @@ void RecordProcess::setFrameRate(int framerate)
 {
     m_framerate = framerate;
 }
+*/
 void RecordProcess::setRecordAudioInputType(int inputType)
 {
     recordAudioInputType = inputType;
@@ -228,8 +229,8 @@ void RecordProcess::recordVideo()
         arguments << QString("-pix_fmt");
         arguments << QString("yuv420p");
         arguments << QString("-c:v");
-        //arguments << QString("mpeg4");
-        arguments << QString("mpeg2video");
+        arguments << QString("mpeg4");
+        //arguments << QString("mpeg2video");
         //arguments << QString("mpeg1video");
         //arguments << QString("libx264rgb");
         //arguments << QString("h263p");
@@ -238,7 +239,7 @@ void RecordProcess::recordVideo()
         arguments << QString("-c:a");
         arguments << QString("libmp3lame");
         arguments << QString("-q:v");
-        arguments << QString("10");
+        arguments << QString("20");
         //arguments << QString("31"); // 视频质量
         arguments << QString("-s");
         arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
@@ -281,7 +282,7 @@ void RecordProcess::recordVideo()
             if(recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO){
                 if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
                     arguments << QString("-af");
-                    arguments << QString("volume=30dB");
+                    arguments << QString("volume=20dB");
                 }
             }
         }

@@ -184,6 +184,15 @@ MainWindow::MainWindow(DWidget *parent) :
         screenInfo.name = monitorInterface.property("Name").toString();
         m_screenInfo.append(screenInfo);
     }
+    if(m_screenInfo.size() > 1) {
+        // 排序
+        qSort(m_screenInfo.begin(), m_screenInfo.end(), [ = ](const ScreenInfo info1, const ScreenInfo info2){
+            return info1.x < info2.x;
+        });
+    }
+
+
+    m_screenCount = QApplication::desktop()->screenCount();
 }
 
 void MainWindow::initAttributes()
@@ -209,13 +218,11 @@ void MainWindow::initAttributes()
 
     checkCpuIsZhaoxin();
 
-    int t_screenCount = QApplication::desktop()->screenCount();
     m_screenHeight = QApplication::desktop()->screen()->height();
-
     QRect t_screenRect;
 
     //多屏情况下累加宽度
-    if (t_screenCount == 1) {
+    if (m_screenCount == 1) {
         m_screenWidth = QApplication::desktop()->screen()->width();
 
         t_screenRect.setX(0);
@@ -224,11 +231,10 @@ void MainWindow::initAttributes()
         t_screenRect.setHeight(m_screenHeight);
     }
 
-    else if (t_screenCount > 1) {
+    else if (m_screenCount > 1) {
         QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
         t_screenRect = QRect(0, 0, static_cast<int>(m_screenSize.width() / m_pixelRatio), static_cast<int>(m_screenSize.height() / m_pixelRatio));
         qDebug() << "screen size" << t_primaryScreen->virtualGeometry() << t_screenRect;
-        m_virtualGeometrySize = t_primaryScreen->virtualGeometry().size();
     }
 
     setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
@@ -276,7 +282,7 @@ void MainWindow::initAttributes()
     // otherwise deepin-screen-recorder window will add in window lists.
 
     //多屏情况下累加窗口大小
-    if (t_screenCount == 1) {
+    if (m_screenCount == 1) {
         //        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
 
         //        screenRect = screenWin->backgroundRect();
@@ -288,7 +294,7 @@ void MainWindow::initAttributes()
         rootWindowRect = QApplication::desktop()->screen()->geometry();
     }
 
-    else if (t_screenCount > 1) {
+    else if (m_screenCount > 1) {
         //        QPoint pos = this->cursor().pos();
         //        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
         screenRect = t_screenRect;
@@ -296,7 +302,7 @@ void MainWindow::initAttributes()
         screenRect = QRect(screenRect.topLeft() / m_pixelRatio, screenRect.size());
         this->move(static_cast<int>(screenRect.x() * m_pixelRatio),
                    static_cast<int>(screenRect.y() * m_pixelRatio));
-        this->setFixedSize(m_virtualGeometrySize);
+        this->setFixedSize(t_screenRect.size());
         rootWindowRect = t_screenRect;
     }
 
@@ -429,10 +435,6 @@ void MainWindow::initAttributes()
         }
     }
 
-
-    //recordButtonLayout = new QVBoxLayout();
-    //setLayout(recordButtonLayout);
-
     //构建截屏工具栏按钮 by zyg
     m_toolBar = new ToolBar(this);
     m_toolBar->hide();
@@ -533,7 +535,7 @@ void MainWindow::initAttributes()
     m_selectedMic = true;
     m_selectedSystemAudio = true;
 
-    if (t_screenCount == 1) {
+    if (m_screenCount == 1) {
         m_backgroundRect = QApplication::desktop()->screen()->geometry();
         m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
 
@@ -541,11 +543,11 @@ void MainWindow::initAttributes()
         this->setFixedSize(m_backgroundRect.size());
     }
 
-    else if (t_screenCount > 1) {
+    else if (m_screenCount > 1) {
         m_backgroundRect = t_screenRect;
         m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
         move(m_backgroundRect.topLeft() * m_pixelRatio);
-        this->setFixedSize(m_virtualGeometrySize);
+        this->setFixedSize(m_backgroundRect.size());
     }
     initBackground();
 
@@ -561,6 +563,12 @@ void MainWindow::initAttributes()
     connect(m_menuController, &MenuController::closeAction,
             this, &MainWindow::exitApp);
     initShortcut();
+    if(m_screenCount > 1 && m_pixelRatio  > 1) {
+        if(m_screenInfo[0].width < m_screenInfo[1].width)
+            // QT bug，这里暂时做特殊处理
+            // 多屏放缩情况下，小屏在前，整体需要偏移一定距离
+            this->move(m_screenInfo[0].width - static_cast<int>(m_screenInfo[0].width / m_pixelRatio), 0);
+    }
 }
 
 void MainWindow::sendSavingNotify()
@@ -922,7 +930,7 @@ void MainWindow::delayScreenshot(double num)
 
 void MainWindow::fullScreenshot()
 {
-    DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
+    //DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
     this->initAttributes();
     this->initLaunchMode("screenShot");
     this->showFullScreen();
@@ -936,11 +944,11 @@ void MainWindow::fullScreenshot()
     installEventFilter(this);
 
     // 多屏截取全屏
-    int t_screenCount = QApplication::desktop()->screenCount();
-    if (t_screenCount == 1) {
+
+    if (m_screenCount == 1) {
         m_backgroundRect = QApplication::desktop()->screen()->geometry();
         m_backgroundRect = QRect(m_backgroundRect.topLeft(), m_backgroundRect.size());
-    } else if (t_screenCount > 1) {
+    } else if (m_screenCount > 1) {
         QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
         m_backgroundRect = t_primaryScreen->virtualGeometry();;
         m_backgroundRect = QRect(m_backgroundRect.topLeft(), m_backgroundRect.size());
@@ -960,7 +968,7 @@ void MainWindow::fullScreenshot()
     const auto r = saveAction(m_resultPixmap);
     sendNotify(m_saveIndex, m_saveFileName, r);
 }
-
+/*
 void MainWindow::testScreenshot()
 {
     this->initAttributes();
@@ -1000,10 +1008,10 @@ void MainWindow::testScreenshot()
     const auto r = saveAction(m_resultPixmap);
     sendNotify(m_saveIndex, m_saveFileName, r);
 }
-
+*/
 void MainWindow::topWindow()
 {
-    DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
+    //DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
     this->initAttributes();
     this->initLaunchMode("screenShot");
     this->showFullScreen();
@@ -1203,7 +1211,7 @@ void MainWindow::updateToolBarPos()
     if (m_toolBarInit == false) {
         m_toolBar->initToolBar();
         m_toolBar->setRecordLaunchMode(m_launchWithRecordFunc);
-        m_toolBar->setIsZhaoxinPlatform(m_isZhaoxin);
+        //m_toolBar->setIsZhaoxinPlatform(m_isZhaoxin);
 
         m_pVoiceVolumeWatcher = new voiceVolumeWatcher(this);
         m_pVoiceVolumeWatcher->start();
@@ -1942,7 +1950,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     unsigned int id = 0;
     arg << (QCoreApplication::applicationName())                 // appname
         << id                                                    // id
-        << QString("deepin-screenshot")                     // icon
+        << QString("deepin-screen-recorder")                     // icon
         << tr("Screenshot finished")                              // summary
         << QString(tr("Saved to %1")).arg(saveFilePath) // body
         << actions                                               // actions
@@ -2845,9 +2853,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     updateShotButtonPos();
                     // Record select area name with window name if just click (no drag).
                     if (!isFirstDrag) {
-                        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+                        //QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
                         for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
-                            if (QRect(it->x(), it->y(), it->width(), it->height()).contains(mouseEvent->pos() + screenRect.topLeft())) {
+                            if (QRect(it->x(), it->y(), it->width(), it->height()).contains(this->cursor().pos() + screenRect.topLeft())) {
                                 selectAreaName = windowNames[windowRects.rend() - it - 1];
                                 break;
                             }
@@ -3026,8 +3034,23 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 const QPoint mousePoint = QCursor::pos();
                 for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
                     if (QRect(it->x(), it->y(), it->width(), it->height()).contains(mousePoint)) {
-                        recordX = it->x() - static_cast<int>(screenRect.x() * m_pixelRatio);
-                        recordY = it->y() - static_cast<int>(screenRect.y() * m_pixelRatio);
+                        if(!qFuzzyCompare(1.0, m_pixelRatio) && m_screenCount > 1){
+                            int x = it->x();
+                            int y = it->y();
+                            if(x < m_screenInfo[1].x){
+                                recordX = x;
+                            }else {
+                                recordX = static_cast<int>(m_screenInfo[1].x / m_pixelRatio + (x - m_screenInfo[1].x));
+                            }
+                            if(y < m_screenInfo[1].y){
+                                recordY = y;
+                            }else{
+                                recordY = static_cast<int>(m_screenInfo[1].y / m_pixelRatio +  (y - m_screenInfo[1].y));
+                            }
+                        } else {
+                            recordX = it->x() - static_cast<int>(screenRect.x() * m_pixelRatio);
+                            recordY = it->y() - static_cast<int>(screenRect.y() * m_pixelRatio);
+                        }
                         recordWidth = it->width();
                         recordHeight = it->height();
                         needRepaint = true;

@@ -34,6 +34,9 @@ AudioUtils::AudioUtils(QObject *parent):process(nullptr)
 {
     Q_UNUSED(parent);
 }
+
+/*
+ * never used
 void AudioUtils::initProcess()
 {
     // Create process and handle finish signal.
@@ -48,9 +51,6 @@ void AudioUtils::initProcess()
 
     //    `connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
 }
-
-/*
- * never used
 bool AudioUtils::isSystemAudioOutput()
 {
     char buf[1024] = {0};

@@ -418,5 +418,13 @@ or press the shortcut again to stop recording</source>
         <source>Recordings</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation type="unfinished">录屏功能暂不可用</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished">退出</translation>
+    </message>
 </context>
 </TS>

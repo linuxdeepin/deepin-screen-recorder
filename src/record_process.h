@@ -55,8 +55,8 @@ public:
     RecordProcess(QObject *parent = nullptr);
 
     void setRecordInfo(const QRect &recordRect, const QString &filename);
-    void setRecordType(int recordType);
-    void setFrameRate(int framerate);
+    //void setRecordType(int recordType);
+    //void setFrameRate(int framerate);
     void setRecordAudioInputType(int inputType);
     void startRecord();
     //void setIsZhaoXinPlatform(bool status);
