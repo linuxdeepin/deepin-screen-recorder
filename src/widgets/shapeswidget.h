@@ -72,7 +72,7 @@ public slots:
     void updateSelectedShape(const QString &group, const QString &key, int index);
     void setCurrentShape(QString shapeType);
     //void updatePenColor();
-    void setPenColor(QColor color);
+    //void setPenColor(QColor color);
     void clearSelected();
     void setAllTextEditReadOnly();
     void setNoChangedTextEditRemove();

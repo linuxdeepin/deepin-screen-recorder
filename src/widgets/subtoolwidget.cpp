@@ -1085,8 +1085,9 @@ void SubToolWidget::setSystemAudioEnable(bool status)
     }
 
 }
-
+/*
 void SubToolWidget::setIsZhaoxinPlatform(bool isZhaoxin)
 {
     m_isZhaoxinInSub = isZhaoxin;
 }
+*/

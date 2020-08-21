@@ -137,7 +137,7 @@ public:
     void initLaunchMode(const QString &launchMode);
     void delayScreenshot(double num);
     void fullScreenshot();
-    void testScreenshot();
+    //void testScreenshot();
 
     void topWindow();
     void savePath(const QString &path);
@@ -361,7 +361,7 @@ private:
     bool m_initCamera = false;
     bool m_launchWithRecordFunc = false;
     bool m_shotWithPath = false;
-    int m_screenNum;
+    int m_screenCount;
     QString m_shotSavePath;
     //bool m_copyToClipboard = false;
     //QString m_savePicturePath;

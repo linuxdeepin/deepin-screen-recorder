@@ -89,7 +89,7 @@ void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filena
     m_recordRect = recordRect;
     saveAreaName = filename;
 }
-
+/*
 void RecordProcess::setRecordType(int type)
 {
     recordType = type;
@@ -99,6 +99,7 @@ void RecordProcess::setFrameRate(int framerate)
 {
     m_framerate = framerate;
 }
+*/
 void RecordProcess::setRecordAudioInputType(int inputType)
 {
     recordAudioInputType = inputType;
@@ -279,10 +280,10 @@ void RecordProcess::recordVideo()
             arguments << QString("-i");
             arguments << QString("%1").arg(t_currentAudioChannel);
             if(recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO){
-                //if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+                if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
                     arguments << QString("-af");
-                    arguments << QString("volume=30dB");
-                //}
+                    arguments << QString("volume=20dB");
+                }
             }
         }
         if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC || recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {

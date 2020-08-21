@@ -130,7 +130,7 @@ HintFilter::~HintFilter()
 {
 
 }
-
+/*
 void HintFilter::hideAll()
 {
     Q_D(HintFilter);
@@ -139,7 +139,7 @@ void HintFilter::hideAll()
         d->delayShowTimer->stop();
     }
 }
-
+*/
 bool HintFilter::eventFilter(QObject *obj, QEvent *event)
 {
     Q_D(HintFilter);
