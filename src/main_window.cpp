@@ -194,7 +194,7 @@ void MainWindow::initAttributes()
 //        }
         QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
         const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
-        t_screenRect = QRect(0, 0,m_screenSize.width() / ratio, m_screenSize.height() / ratio);
+        t_screenRect = QRect(0, 0, static_cast<int>(m_screenSize.width() / ratio), static_cast<int>(m_screenSize.height() / ratio));
         qDebug() << "screen size" << t_primaryScreen->virtualGeometry() << t_screenRect;
     }
 
@@ -205,7 +205,12 @@ void MainWindow::initAttributes()
     // Add Qt::WindowDoesNotAcceptFocus make window not accept focus forcely, avoid conflict with dde hot-corner.
 //    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint);
 //    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint  | Qt::WindowStaysOnTopHint);
-    setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+    if(m_desktopInfo.waylandDectected()) {
+        setWindowFlags(Qt::FramelessWindowHint);
+    } else {
+        setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+    }
+
     setAttribute(Qt::WA_TranslucentBackground, true);
     setMouseTracking(true);   // make MouseMove can response
     installEventFilter(this);  // add event filter
@@ -3540,7 +3545,8 @@ void MainWindow::addCursorToImage()
     XFree(m_CursorImage);
     return;
 }
-void MainWindow::shotFullScreen()
+
+void MainWindow::shotFullScreen(bool isFull)
 {
     //const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     QRect target( m_backgroundRect.x(),
@@ -3550,7 +3556,11 @@ void MainWindow::shotFullScreen()
     qDebug() << "m_backgroundRect" << m_backgroundRect;
 
 //    m_resultPixmap = getPixmapofRect(m_backgroundRect);
-    m_resultPixmap = getPixmapofRect(target);
+    if(isFull){
+        m_resultPixmap = m_backgroundPixmap;
+    }else{
+        m_resultPixmap = getPixmapofRect(target);
+    }
     qDebug() << "m_resultPixmap" << m_resultPixmap.rect();
 }
 
@@ -3759,7 +3769,10 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)
 {
     stopRecord();
 }
-
+void MainWindow::waylandRecordOver()
+{
+    recordProcess.waylandRecordOver();
+}
 void MainWindow::stopRecord()
 {
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {

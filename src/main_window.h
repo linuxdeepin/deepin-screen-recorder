@@ -158,10 +158,11 @@ public slots:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void shotCurrentImg();
     void addCursorToImage();
-    void shotFullScreen();
+    void shotFullScreen(bool isFull = false);
     void onHelp();
 
     Q_SCRIPTABLE void stopRecord();
+    void waylandRecordOver();
     void startCountdown();
     void showPressFeedback(int x, int y);
     void showDragFeedback(int x, int y);
@@ -367,6 +368,7 @@ private:
     int m_firstShot = 0;
     bool m_isZhaoxin = false;
     HintFilter *hintFilter         = nullptr;
+    DesktopInfo m_desktopInfo;
     QList<ScreenInfo> m_screenInfo;
     XFixesCursorImage *m_CursorImage = nullptr;
     QSize m_screenSize;
