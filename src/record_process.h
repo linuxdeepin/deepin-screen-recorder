@@ -41,6 +41,8 @@ class RecordProcess : public QThread
 public:
     static const int RECORD_TYPE_VIDEO;
     static const int RECORD_TYPE_GIF;
+    static const int RECORD_TYPE_MP4;
+    static const int RECORD_TYPE_MKV;
     static const int RECORD_GIF_SLEEP_TIME;
     static const int RECORD_AUDIO_INPUT_MIC;
     static const int RECORD_AUDIO_INPUT_SYSTEMAUDIO;
@@ -61,10 +63,12 @@ public:
     void startRecord();
     void setIsZhaoXinPlatform(bool status);
     void stopRecord();
+    void waylandRecordOver();
     void recordGIF();
     void recordVideo();
     void initProcess();
     int readSleepProcessPid();
+    void WaylandRecord();
 protected:
     void run();
 
