@@ -2,4 +2,4 @@ TEMPLATE  = subdirs
 
 SUBDIRS  += \
     src \
-    #xdg-desktop-portal-kde
+    xdg-desktop-portal-kde
