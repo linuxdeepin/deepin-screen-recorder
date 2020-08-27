@@ -50,14 +50,14 @@ ShapesWidget::ShapesWidget(DWidget *parent)
 {
     //订阅手势事件
     QList<Qt::GestureType> gestures;
-    gestures << Qt::PanGesture;
+//    gestures << Qt::PanGesture;
     gestures << Qt::PinchGesture;
-    gestures << Qt::SwipeGesture;
+//    gestures << Qt::SwipeGesture;
     gestures << Qt::TapGesture;
-    gestures << Qt::TapGesture;
-    gestures << Qt::TapAndHoldGesture;
-    gestures << Qt::CustomGesture;
-    gestures << Qt::LastGestureType;
+//    gestures << Qt::TapGesture;
+//    gestures << Qt::TapAndHoldGesture;
+//    gestures << Qt::CustomGesture;
+//    gestures << Qt::LastGestureType;
     foreach (Qt::GestureType gesture, gestures)
         grabGesture(gesture);
 

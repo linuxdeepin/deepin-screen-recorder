@@ -113,16 +113,16 @@ MainWindow::MainWindow(DWidget *parent) :
     m_wmHelper(DWindowManagerHelper::instance())
 {
     //手势事件消息订阅
-    QList<Qt::GestureType> gestures;
-    gestures << Qt::PanGesture;
-    gestures << Qt::PinchGesture;
-    gestures << Qt::SwipeGesture;
-    gestures << Qt::TapGesture;
-    gestures << Qt::TapAndHoldGesture;
-    gestures << Qt::CustomGesture;
-    gestures << Qt::LastGestureType;
-    foreach (Qt::GestureType gesture, gestures)
-        grabGesture(gesture);
+//    QList<Qt::GestureType> gestures;
+//    gestures << Qt::PanGesture;
+//    gestures << Qt::PinchGesture;
+//    gestures << Qt::SwipeGesture;
+//    gestures << Qt::TapGesture;
+//    gestures << Qt::TapAndHoldGesture;
+//    gestures << Qt::CustomGesture;
+//    gestures << Qt::LastGestureType;
+//    foreach (Qt::GestureType gesture, gestures)
+//        grabGesture(gesture);
 
     //    initAttributes();
     QScreen *screen = qApp->primaryScreen();
