@@ -144,6 +144,7 @@ private:
     QPointF m_pos3, m_pos4;
     QPointF m_pressedPoint;
     QPointF m_movingPoint;
+    qreal   m_lastAngle;
 
     bool m_isRecording;
     bool m_isMoving;
