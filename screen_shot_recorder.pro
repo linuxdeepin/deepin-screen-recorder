@@ -35,7 +35,7 @@ HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src
     src/widgets/textbutton.h \
     src/widgets/shapeswidget.h \
     src/widgets/toolbutton.h \
-    src/widgets/subtoolbar.h \
+    #src/widgets/subtoolbar.h \
     src/widgets/maintoolwidget.h \
     src/widgets/subtoolwidget.h \
     src/widgets/keybuttonwidget.h \
@@ -73,7 +73,7 @@ SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.
     src/widgets/colorbutton.cpp \
     src/widgets/textedit.cpp \
     src/widgets/zoomIndicator.cpp \
-    src/widgets/subtoolbar.cpp \
+    #src/widgets/subtoolbar.cpp \
     src/widgets/toolbar.cpp \
     src/widgets/maintoolwidget.cpp \
     src/widgets/subtoolwidget.cpp \

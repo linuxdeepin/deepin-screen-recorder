@@ -343,7 +343,7 @@ private:
 
     //截图功能使用的变量初始化
     //DBusZone *m_hotZoneInterface;
-    DBusNotify *m_notifyDBInterface;
+    //DBusNotify *m_notifyDBInterface;
     MenuController *m_menuController;
     bool m_noNotify = false;
     bool m_isShiftPressed = false;
