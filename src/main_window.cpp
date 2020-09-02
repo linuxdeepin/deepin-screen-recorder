@@ -588,7 +588,7 @@ void MainWindow::sendSavingNotify()
         << id                                                   // id
         << QString("deepin-screen-recorder")                     // icon
         << QString(tr("Screen Capture"))                         // summary
-        << QString(tr("Saving the screen recording,please wait..."))  // body
+        << QString(tr("Saving the screen recording file, please wait..."))  // body
         << actions                                               // actions
         << QVariantMap()                                         // hints
         << timeout;                                           // timeout

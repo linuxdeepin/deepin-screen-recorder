@@ -661,9 +661,9 @@ void SubToolWidget::initShotLabel()
 
     clipTitleAction->setDisabled(true);
     clipTitleAction->setText(tr("Options"));
-    openWithDraw->setText(tr("Open With Draw"));
+    openWithDraw->setText(tr("Edit in Draw"));
     openWithDraw->setCheckable(true);
-    saveCursorAction->setText(tr("Show cursor"));
+    saveCursorAction->setText(tr("Show pointer"));
     saveCursorAction->setCheckable(true);
 
     //保存方式

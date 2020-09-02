@@ -1,41 +1,41 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="pl" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="br" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Kliknij ikonę zasobnika 
-lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
+        <translation>Klikit war an ikon barrenn-stad
+pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     </message>
 </context>
 <context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation>Nagraj</translation>
+        <translation>Enrollañ</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Zrzut ekranu</translation>
+        <translation>Tapadenn-skramm</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Zrzut ekranu</translation>
+        <translation>Tapadenn skramm</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>Zapisywanie nie powiodło się. Proszę zapisać go w swoim katalogu domowym.</translation>
+        <translation>Chomet eo sac&apos;het an enrollañ. Enrollit e-barzh ur c&apos;havlec&apos;h personel eta.</translation>
     </message>
     <message>
         <source>View</source>
-        <translation>Widok</translation>
+        <translation>Gwelet</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Zrzut ekranu zakończony</translation>
+        <translation>Tapadenn-skramm echuet</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -51,19 +51,19 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation>wybierz obszar</translation>
+        <translation>zonenn diuzañ</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Zapisz</translation>
+        <translation>Enrollañ</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>Zapisano w %1</translation>
+        <translation>Enrollet e-barzh %1</translation>
     </message>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>Przechwytywanie ekranu rozpocznie się za %1 sekund</translation>
+        <translation>An dapadenn-skramm a loc&apos;ho a-benn %1 eilenn</translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -82,185 +82,185 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <name>MenuController</name>
     <message>
         <source>Undo</source>
-        <translation>Cofnij</translation>
+        <translation>Dizober</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Zapisz</translation>
+        <translation>Enrollañ</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Wyjście</translation>
+        <translation>Kuitaat</translation>
     </message>
 </context>
 <context>
     <name>RecordProcess</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Zrzut ekranu</translation>
+        <translation>Tapadenn skramm</translation>
     </message>
     <message>
         <source>View</source>
-        <translation>Podgląd</translation>
+        <translation>Gwelet</translation>
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>Nagrywanie zakończone</translation>
+        <translation>Enrollañ echuet</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>Zapisano w %1</translation>
+        <translation>Enrollet e-barzh %1</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>Przechwytywanie ekranu rozpocznie się za %1 sekund</translation>
+        <translation>An dapadenn-skramm a loc&apos;ho a-benn %1 eilenn</translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>Wpisz tekst tutaj</translation>
+        <translation>Skrivit ho testenn amañ</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>Start/Zrzut ekranu</translation>
+        <translation>Loc&apos;hañ/Tapadenn-skramm</translation>
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation>Wyjście/Zapisz</translation>
+        <translation>Kuitaat/Enrollañ</translation>
     </message>
     <message>
         <source>Drawing</source>
-        <translation>Rysowanie</translation>
+        <translation>Tresadenn</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation>Regulacja rozmiaru</translation>
+        <translation>Brasadur ar ment</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Ustawienia</translation>
+        <translation>Arventennoù</translation>
     </message>
     <message>
         <source>Quick start</source>
-        <translation>Szybki start</translation>
+        <translation>Loc&apos;hañ buan</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>Zrzut ekranu okna</translation>
+        <translation>Tapadenn-skramm eus ar prenestr</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>Opóźnij zrzut ekranu</translation>
+        <translation>Dale an dapadenn-skramm</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>Pełny zrzut ekranu</translation>
+        <translation>Tapadenn-skramm klok</translation>
     </message>
     <message>
         <source>Copy to clipboard</source>
-        <translation>Pełny zrzut ekranu</translation>
+        <translation>Eilañ er golver</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Wyjście</translation>
+        <translation>Kuitaat</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Zapisz</translation>
+        <translation>Enrollañ</translation>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation>Prostokąt</translation>
+        <translation>Skouergornek</translation>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>Elipsa</translation>
+        <translation>Elipsenn</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation>Linia</translation>
+        <translation>Linenn</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>Ołówek</translation>
+        <translation>Kreion</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation>Tekst</translation>
+        <translation>Testenn</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Usuń</translation>
+        <translation>Dilemel</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation>Cofnij</translation>
+        <translation>Dizober</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation>Zwiększ wysokość</translation>
+        <translation>Brasaat an uhelder</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation>Zwiększ wysokość w dół</translation>
+        <translation>Brasaat an uhelder war-draoñ</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>Zwiększ szerokość w lewo</translation>
+        <translation>Brasaat al ledander a-gleiz</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>Zwiększ szerokość w prawo</translation>
+        <translation>Brasaat al ledander a-zehoù</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation>Zmniejsz wysokość w górę</translation>
+        <translation>Bihanaat an uhelder</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation>Zmniejsz wysokość w dół</translation>
+        <translation>Bihanaat an uhelder war-draoñ</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>Zmniejsz szerokość w lewo</translation>
+        <translation>Bihanaat al ledander a-gleiz</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>Zmniejsz szerokość w prawo</translation>
+        <translation>Bihanaat al ledander a-zehoù</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Pomoc</translation>
+        <translation>Skoazell</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Wyświetl skróty</translation>
+        <translation>Diskouez ar berradurioù</translation>
     </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
     <message>
         <source>Blur</source>
-        <translation>Rozmaż</translation>
+        <translation>Dispis</translation>
     </message>
     <message>
         <source>Mosaic</source>
-        <translation>Mozaika</translation>
+        <translation>Mozaik</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
         <source>Sound On</source>
-        <translation>Włącz dźwięk</translation>
+        <translation>Son enaouet</translation>
     </message>
     <message>
         <source>Microphone</source>
@@ -268,43 +268,43 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>System Audio</source>
-        <translation>System audio</translation>
+        <translation>Sistem aodio</translation>
     </message>
     <message>
         <source>Sound Off</source>
-        <translation>Wyłącz dźwięk</translation>
+        <translation>Son lazhet</translation>
     </message>
     <message>
         <source>Show Keystroke</source>
-        <translation>Pokaż naciśnięcie klawisza</translation>
+        <translation>Diskouez pa vizskriver</translation>
     </message>
     <message>
         <source>Hide Keystroke</source>
-        <translation>Ukryj naciśnięcie klawisza</translation>
+        <translation>Kuzhat pa vizskriver</translation>
     </message>
     <message>
         <source>Webcam On</source>
-        <translation>Włącz kamerę</translation>
+        <translation>Webkam enaouet</translation>
     </message>
     <message>
         <source>Webcam Off</source>
-        <translation>Wyłącz kamerę</translation>
+        <translation>Webkam lazhet</translation>
     </message>
     <message>
         <source>Show Click</source>
-        <translation>Pokaż kliknięcie</translation>
+        <translation>Diskouez ar c&apos;hlik</translation>
     </message>
     <message>
         <source>Hide Click</source>
-        <translation>Ukryj kliknięcie</translation>
+        <translation>Kuzhat ar c&apos;hlik</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation>Opcję</translation>
+        <translation>Dibarzhioù</translation>
     </message>
     <message>
         <source>Format:</source>
-        <translation>Format:</translation>
+        <translation>Stumm:</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -340,47 +340,47 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation>Prostokąt</translation>
+        <translation>Skouergornek</translation>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>Elipsa</translation>
+        <translation>Elipsenn</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation>Linia</translation>
+        <translation>Linenn</translation>
     </message>
     <message>
         <source>Arrow</source>
-        <translation>Strzałka</translation>
+        <translation>Bir</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>Ołówek</translation>
+        <translation>Kreion</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation>Tekst</translation>
+        <translation>Testenn</translation>
     </message>
     <message>
         <source>Save to</source>
-        <translation>Zapisz do</translation>
+        <translation>Enrollañ e-barzh</translation>
     </message>
     <message>
         <source>Desktop</source>
-        <translation>Pulpit</translation>
+        <translation>Burev</translation>
     </message>
     <message>
         <source>Pictures</source>
-        <translation>Zdjęcia</translation>
+        <translation>Skeudennoù</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation>Folder</translation>
+        <translation>Teuliad</translation>
     </message>
     <message>
         <source>Format</source>
-        <translation>Format</translation>
+        <translation>Stumm</translation>
     </message>
     <message>
         <source>PNG</source>
@@ -415,7 +415,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <name>Utils</name>
     <message>
         <source>Recordings</source>
-        <translation>Nagrania</translation>
+        <translation>Enrolladennoù</translation>
     </message>
     <message>
         <source>Screen recording is not supported at present</source>
@@ -423,7 +423,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Wyjście</translation>
+        <translation>Kuitaat</translation>
     </message>
 </context>
 </TS>

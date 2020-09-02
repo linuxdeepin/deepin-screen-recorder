@@ -2,7 +2,6 @@
 <context>
     <name>CountdownTooltip</name>
     <message>
-        <location filename="../src/countdown_tooltip.cpp" line="78"/>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
         <translation>Klik ikon talam
@@ -10,54 +9,421 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
 </context>
 <context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>Rakam</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Tangkap Layar</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/main_window.cpp" line="76"/>
-        <source>Deepin screen recorder</source>
-        <translation>Perakam skrin Deepin</translation>
+        <source>Screen Capture</source>
+        <translation>Tangkap Skrin</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="136"/>
-        <source>Start recording</source>
-        <translation>Mula merakam</translation>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Gagal simpan. Sila simpan ia dalam direktori rumah anda.</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="454"/>
-        <source>Select area</source>
-        <translation>Pilih kawasan</translation>
+        <source>View</source>
+        <translation>Lihat</translation>
+    </message>
+    <message>
+        <source>Screenshot finished</source>
+        <translation>Tangkap layar selesai</translation>
+    </message>
+    <message>
+        <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
+        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
+    </message>
+    <message>
+        <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
+        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
+    </message>
+    <message>
+        <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
+        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
+    </message>
+    <message>
+        <source>select-area</source>
+        <translation>pilih-kawasan</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Simpan</translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation>Disimpan ke %1</translation>
+    </message>
+    <message>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Tangkap Skrin akan bermula dalam tempoh %1 saat</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Saving the screen recording, please wait...</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>MenuController</name>
+    <message>
+        <source>Undo</source>
+        <translation>Buat Asal</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Simpan</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Keluar</translation>
     </message>
 </context>
 <context>
     <name>RecordProcess</name>
     <message>
-        <location filename="../src/record_process.cpp" line="229"/>
-        <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <source>Screen Capture</source>
+        <translation>Tangkap Skrin</translation>
     </message>
     <message>
-        <location filename="../src/record_process.cpp" line="291"/>
         <source>View</source>
         <translation>Lihat</translation>
     </message>
     <message>
-        <location filename="../src/record_process.cpp" line="301"/>
         <source>Recording finished</source>
         <translation>Rakaman selesai</translation>
     </message>
     <message>
-        <location filename="../src/record_process.cpp" line="302"/>
-        <source>Saved to</source>
-        <translation>Disimpan ke</translation>
+        <source>Saved to %1</source>
+        <translation>Disimpan ke %1</translation>
     </message>
 </context>
 <context>
-    <name>StartTooltip</name>
+    <name>Screenshot</name>
     <message>
-        <location filename="../src/start_tooltip.cpp" line="48"/>
-        <source>Click or drag to
-select the area to record</source>
-        <translation>Klik atau seret untuk
-pilih kawasan rakaman</translation>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Tangkap Skrin akan bermula dalam tempoh %1 saat</translation>
+    </message>
+</context>
+<context>
+    <name>ShapesWidget</name>
+    <message>
+        <source>Input text here</source>
+        <translation>Masukkan teks di sini</translation>
+    </message>
+</context>
+<context>
+    <name>Shortcut</name>
+    <message>
+        <source>Start/Screenshot</source>
+        <translation>Mula/Tangkap Layar</translation>
+    </message>
+    <message>
+        <source>Exit/Save</source>
+        <translation>Keluar/Simpan</translation>
+    </message>
+    <message>
+        <source>Drawing</source>
+        <translation>Lukis</translation>
+    </message>
+    <message>
+        <source>Size Adjustment</source>
+        <translation>Pelarasan Saiz</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Tetapan</translation>
+    </message>
+    <message>
+        <source>Quick start</source>
+        <translation>Mula pantas</translation>
+    </message>
+    <message>
+        <source>Window screenshot</source>
+        <translation>Tangkap layar tetingkap</translation>
+    </message>
+    <message>
+        <source>Delay screenshot</source>
+        <translation>Tangkap layar lengah</translation>
+    </message>
+    <message>
+        <source>Full screenshot</source>
+        <translation>Tangkap layar penuh</translation>
+    </message>
+    <message>
+        <source>Copy to clipboard</source>
+        <translation>Salin ke papan keratan</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Keluar</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Simpan</translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation>Petak</translation>
+    </message>
+    <message>
+        <source>Ellipse</source>
+        <translation>Elips</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation>Garisan</translation>
+    </message>
+    <message>
+        <source>Pencil</source>
+        <translation>Pensel</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation>Teks</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Padam</translation>
+    </message>
+    <message>
+        <source>Undo</source>
+        <translation>Buat Asal</translation>
+    </message>
+    <message>
+        <source>Increase height up</source>
+        <translation>Tingkatkan tinggi ke atas</translation>
+    </message>
+    <message>
+        <source>Increase height down</source>
+        <translation>Tingkatkan tinggi ke bawah</translation>
+    </message>
+    <message>
+        <source>Increase width left</source>
+        <translation>Tingkatkan lebar ke kiri</translation>
+    </message>
+    <message>
+        <source>Increase width right</source>
+        <translation>Tingkatkan lebar ke kanan</translation>
+    </message>
+    <message>
+        <source>Decrease height up</source>
+        <translation>Kurangkan tinggi ke atas</translation>
+    </message>
+    <message>
+        <source>Decrease height down</source>
+        <translation>Kurangkan tinggi ke bawah</translation>
+    </message>
+    <message>
+        <source>Decrease width left</source>
+        <translation>Kurangkan lebar ke kiri</translation>
+    </message>
+    <message>
+        <source>Decrease width right</source>
+        <translation>Kurangkan lebar ke kanan</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Bantuan</translation>
+    </message>
+    <message>
+        <source>Display shortcuts</source>
+        <translation>Papar pintasan</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
+    <message>
+        <source>Blur</source>
+        <translation>Kabur</translation>
+    </message>
+    <message>
+        <source>Mosaic</source>
+        <translation>Mozek</translation>
+    </message>
+</context>
+<context>
+    <name>SubToolWidget</name>
+    <message>
+        <source>Sound On</source>
+        <translation>Bunyi Hidup</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation>Mikrofon</translation>
+    </message>
+    <message>
+        <source>System Audio</source>
+        <translation>Audio Sistem</translation>
+    </message>
+    <message>
+        <source>Sound Off</source>
+        <translation>Bunyi Mati</translation>
+    </message>
+    <message>
+        <source>Show Keystroke</source>
+        <translation>Tunjuk Ketukan Kekunci</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke</source>
+        <translation>Sembunyi Ketukan Kekunci</translation>
+    </message>
+    <message>
+        <source>Webcam On</source>
+        <translation>Kamera Sesawang Hidup</translation>
+    </message>
+    <message>
+        <source>Webcam Off</source>
+        <translation>Kamera Sesawang Mati</translation>
+    </message>
+    <message>
+        <source>Show Click</source>
+        <translation>Tunjuk Klik</translation>
+    </message>
+    <message>
+        <source>Hide Click</source>
+        <translation>Sembunyi Klik</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Pilihan</translation>
+    </message>
+    <message>
+        <source>Format:</source>
+        <translation>Format:</translation>
+    </message>
+    <message>
+        <source>GIF</source>
+        <translation>GIF</translation>
+    </message>
+    <message>
+        <source>MP4</source>
+        <translation>MP4</translation>
+    </message>
+    <message>
+        <source>FPS:</source>
+        <translation>FPS:</translation>
+    </message>
+    <message>
+        <source>5 fps</source>
+        <translation>5 fps</translation>
+    </message>
+    <message>
+        <source>10 fps</source>
+        <translation>10 fps</translation>
+    </message>
+    <message>
+        <source>20 fps</source>
+        <translation>20 fps</translation>
+    </message>
+    <message>
+        <source>24 fps</source>
+        <translation>24 fps</translation>
+    </message>
+    <message>
+        <source>30 fps</source>
+        <translation>30 fps</translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation>Petak</translation>
+    </message>
+    <message>
+        <source>Ellipse</source>
+        <translation>Elips</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation>Garisan</translation>
+    </message>
+    <message>
+        <source>Arrow</source>
+        <translation>Anak Panah</translation>
+    </message>
+    <message>
+        <source>Pencil</source>
+        <translation>Pensel</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation>Teks</translation>
+    </message>
+    <message>
+        <source>Save to</source>
+        <translation>Simpan ke</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Atas Meja</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Gambar</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Folder</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>Format</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Edit in Draw</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Recordings</source>
+        <translation>Rakaman</translation>
+    </message>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Keluar</translation>
     </message>
 </context>
 </TS>

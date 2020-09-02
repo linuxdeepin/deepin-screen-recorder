@@ -1,40 +1,5 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS language="de" version="2.1">
 <context>
-    <name>ColorToolWidget</name>
-    <message>
-        <source>Red</source>
-        <translation>Rot</translation>
-    </message>
-    <message>
-        <source>Select Red</source>
-        <translation>Rot auswählen</translation>
-    </message>
-    <message>
-        <source>yellow</source>
-        <translation>gelb</translation>
-    </message>
-    <message>
-        <source>Select Yellow</source>
-        <translation>Gelb markieren</translation>
-    </message>
-    <message>
-        <source>blue</source>
-        <translation>blau</translation>
-    </message>
-    <message>
-        <source>Select Blue</source>
-        <translation>Blau markieren</translation>
-    </message>
-    <message>
-        <source>green</source>
-        <translation>grün</translation>
-    </message>
-    <message>
-        <source>Select Green</source>
-        <translation>Grün markieren</translation>
-    </message>
-</context>
-<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -50,16 +15,8 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <translation>Aufnehmen</translation>
     </message>
     <message>
-        <source>Switch to record mode</source>
-        <translation>In den Aufnahmemodus wechseln</translation>
-    </message>
-    <message>
-        <source>Shot</source>
-        <translation>Aufzeichnung</translation>
-    </message>
-    <message>
-        <source>Switch to shot mode</source>
-        <translation>Zu Aufzeichnungsmodus wechseln</translation>
+        <source>Screenshot</source>
+        <translation>Bildschirmaufnahme</translation>
     </message>
 </context>
 <context>
@@ -67,22 +24,6 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <message>
         <source>Screen Capture</source>
         <translation>Bildschirmaufnahme</translation>
-    </message>
-    <message>
-        <source>Start Record</source>
-        <translation>Aufzeichnung starten</translation>
-    </message>
-    <message>
-        <source>Start Shot</source>
-        <translation>Aufzeichnung starten</translation>
-    </message>
-    <message>
-        <source>Start recording</source>
-        <translation>Aufnahme starten</translation>
-    </message>
-    <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Deepin Bildschirmaufzeichnung startet in %1 Sekunden</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -93,20 +34,8 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <translation>Ansicht</translation>
     </message>
     <message>
-        <source>Picture has been saved to clipboard</source>
-        <translation>Bild wurde in der Zwischanblage gespeichert</translation>
-    </message>
-    <message>
-        <source>Picture has been saved to %1</source>
-        <translation>Bild wurde in %1 gespeichert</translation>
-    </message>
-    <message>
         <source>Screenshot finished</source>
         <translation>Bildschirmaufzeichnung beendet</translation>
-    </message>
-    <message>
-        <source>Saved to</source>
-        <translation>Gespeichert unter</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -125,28 +54,28 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <translation>Auswahlbereich</translation>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Benötige Authorisierung</translation>
-    </message>
-    <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Bitte geben Sie Ihr Sudo-Passwort zur Authorisierung ein</translation>
-    </message>
-    <message>
-        <source>Password Error!</source>
-        <translation>Passwort-Fehler!</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation>Ok</translation>
-    </message>
-    <message>
-        <source>Authentication success!</source>
-        <translation>Authentifizierung erfolgreich!</translation>
-    </message>
-    <message>
         <source>Save</source>
         <translation>Speichern</translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation>Gespeichert unter %1</translation>
+    </message>
+    <message>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Bildschirmaufzeichnung startet in %1 Sekunden</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Saving the screen recording, please wait...</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -179,15 +108,15 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <translation>Aufnahme beendet</translation>
     </message>
     <message>
-        <source>Saved to</source>
-        <translation>Gespeichert nach</translation>
+        <source>Saved to %1</source>
+        <translation>Gespeichert unter %1</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Deepin Bildschirmaufzeichnung startet in %1 Sekunden</translation>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Bildschirmaufzeichnung startet in %1 Sekunden</translation>
     </message>
 </context>
 <context>
@@ -246,10 +175,6 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <message>
         <source>Save</source>
         <translation>Speichern</translation>
-    </message>
-    <message>
-        <source> </source>
-        <translation> </translation>
     </message>
     <message>
         <source>Rectangle</source>
@@ -323,18 +248,6 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>fine</source>
-        <translation>fein</translation>
-    </message>
-    <message>
-        <source>medium</source>
-        <translation>mittel</translation>
-    </message>
-    <message>
-        <source>thick</source>
-        <translation>dick</translation>
-    </message>
-    <message>
         <source>Blur</source>
         <translation>Unschärfe</translation>
     </message>
@@ -342,52 +255,9 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <source>Mosaic</source>
         <translation>Mosaik</translation>
     </message>
-    <message>
-        <source>line</source>
-        <translation>Linie</translation>
-    </message>
-    <message>
-        <source>arrow</source>
-        <translation>Pfeil</translation>
-    </message>
-</context>
-<context>
-    <name>SubToolBar</name>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Auf dem Schreibtisch speichern</translation>
-    </message>
-    <message>
-        <source>Autosave</source>
-        <translation>Automatisches Speichern</translation>
-    </message>
-    <message>
-        <source>Save to specified folder</source>
-        <translation>Speichern in den angegebenen Ordner</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>In die Zwischenablage kopieren</translation>
-    </message>
-    <message>
-        <source>Autosave and copy to clipboard</source>
-        <translation>Automatisch speichern und in die Zwischenablage kopieren</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation>Niedrig</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation>Hoch</translation>
-    </message>
 </context>
 <context>
     <name>SubToolWidget</name>
-    <message>
-        <source> </source>
-        <translation> </translation>
-    </message>
     <message>
         <source>Sound On</source>
         <translation>Ton an</translation>
@@ -525,16 +395,20 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <translation>BMP</translation>
     </message>
     <message>
-        <source>Copy to clipboard</source>
-        <translation>In die Zwischenablage kopieren</translation>
+        <source>MKV</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Benötige Authorisierung</translation>
+        <source>Clipboard</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Bitte geben Sie Ihr Sudo-Passwort zur Authorisierung ein</translation>
+        <source>Edit in Draw</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -543,12 +417,13 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <source>Recordings</source>
         <translation>Aufnahmen</translation>
     </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
     <message>
-        <source>New recording</source>
-        <translation>Neue Aufnahme</translation>
+        <source>Screen recording is not supported at present</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Beenden</translation>
     </message>
 </context>
 </TS>

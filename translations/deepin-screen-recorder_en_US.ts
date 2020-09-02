@@ -68,15 +68,15 @@ or press the shortcut again to stop recording</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Saving the screen recording,please wait...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving the screen recording file, please wait...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -401,15 +401,15 @@ or press the shortcut again to stop recording</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show cursor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open With Draw</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit in Draw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

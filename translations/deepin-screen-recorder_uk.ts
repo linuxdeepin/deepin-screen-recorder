@@ -1,40 +1,5 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS language="uk" version="2.1">
 <context>
-    <name>ColorToolWidget</name>
-    <message>
-        <source>Red</source>
-        <translation>Червоний</translation>
-    </message>
-    <message>
-        <source>Select Red</source>
-        <translation>Вибрати червоний</translation>
-    </message>
-    <message>
-        <source>yellow</source>
-        <translation>жовтий</translation>
-    </message>
-    <message>
-        <source>Select Yellow</source>
-        <translation>Вибрати жовтий</translation>
-    </message>
-    <message>
-        <source>blue</source>
-        <translation>синій</translation>
-    </message>
-    <message>
-        <source>Select Blue</source>
-        <translation>Вибрати синій</translation>
-    </message>
-    <message>
-        <source>green</source>
-        <translation>зелений</translation>
-    </message>
-    <message>
-        <source>Select Green</source>
-        <translation>Вибрати зелений</translation>
-    </message>
-</context>
-<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -50,16 +15,8 @@ or press the shortcut again to stop recording</source>
         <translation>Записати</translation>
     </message>
     <message>
-        <source>Switch to record mode</source>
-        <translation>Перемкнутися у режим записування</translation>
-    </message>
-    <message>
-        <source>Shot</source>
+        <source>Screenshot</source>
         <translation>Знімок</translation>
-    </message>
-    <message>
-        <source>Switch to shot mode</source>
-        <translation>Перемкнутися у режимі знімків</translation>
     </message>
 </context>
 <context>
@@ -67,22 +24,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screen Capture</source>
         <translation>Захоплення екрана</translation>
-    </message>
-    <message>
-        <source>Start Record</source>
-        <translation>Почати записування</translation>
-    </message>
-    <message>
-        <source>Start Shot</source>
-        <translation>Почати знімання</translation>
-    </message>
-    <message>
-        <source>Start recording</source>
-        <translation>Розпочати запис</translation>
-    </message>
-    <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Знімок вікна Deepin запуститься за %1 секунд</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -93,20 +34,8 @@ or press the shortcut again to stop recording</source>
         <translation>Перегляд</translation>
     </message>
     <message>
-        <source>Picture has been saved to clipboard</source>
-        <translation>Зображення збережено до буфера обміну даними</translation>
-    </message>
-    <message>
-        <source>Picture has been saved to %1</source>
-        <translation>Зображення збережено до %1</translation>
-    </message>
-    <message>
         <source>Screenshot finished</source>
         <translation>Знімок створено</translation>
-    </message>
-    <message>
-        <source>Saved to</source>
-        <translation>Збережено у</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -125,28 +54,28 @@ or press the shortcut again to stop recording</source>
         <translation>вибір_області</translation>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Потрібне уповноваження</translation>
-    </message>
-    <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Будь ласка, вкажіть ваш пароль sudo, щоб пройти розпізнавання</translation>
-    </message>
-    <message>
-        <source>Password Error!</source>
-        <translation>Неправильний пароль!</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation>Гаразд</translation>
-    </message>
-    <message>
-        <source>Authentication success!</source>
-        <translation>Розпізнавання успішно пройдено!</translation>
-    </message>
-    <message>
         <source>Save</source>
-        <translation type="unfinished"/>
+        <translation>Зберегти</translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation>Збережено до %1</translation>
+    </message>
+    <message>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Захоплення зображення з екрана розпочнеться за %1 секунд</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>Ігнорувати</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Буфер обміну</translation>
+    </message>
+    <message>
+        <source>Saving the screen recording, please wait...</source>
+        <translation>Зберігаємо записане з екрана. Будь ласка, зачекайте…</translation>
     </message>
 </context>
 <context>
@@ -179,15 +108,15 @@ or press the shortcut again to stop recording</source>
         <translation>Запис закінчено</translation>
     </message>
     <message>
-        <source>Saved to</source>
-        <translation>Збережено у</translation>
+        <source>Saved to %1</source>
+        <translation>Збережено до %1</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Знімок вікна Deepin запуститься за %1 секунд</translation>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Захоплення зображення з екрана розпочнеться за %1 секунд</translation>
     </message>
 </context>
 <context>
@@ -246,10 +175,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Save</source>
         <translation>Зберегти</translation>
-    </message>
-    <message>
-        <source> </source>
-        <translation> </translation>
     </message>
     <message>
         <source>Rectangle</source>
@@ -323,18 +248,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>fine</source>
-        <translation>тонка</translation>
-    </message>
-    <message>
-        <source>medium</source>
-        <translation>середня</translation>
-    </message>
-    <message>
-        <source>thick</source>
-        <translation>товста</translation>
-    </message>
-    <message>
         <source>Blur</source>
         <translation>Розмивання</translation>
     </message>
@@ -342,52 +255,9 @@ or press the shortcut again to stop recording</source>
         <source>Mosaic</source>
         <translation>Мозаїка</translation>
     </message>
-    <message>
-        <source>line</source>
-        <translation>пряма</translation>
-    </message>
-    <message>
-        <source>arrow</source>
-        <translation>стрілка</translation>
-    </message>
-</context>
-<context>
-    <name>SubToolBar</name>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Зберегти на стільницю</translation>
-    </message>
-    <message>
-        <source>Autosave</source>
-        <translation>Автозбереження</translation>
-    </message>
-    <message>
-        <source>Save to specified folder</source>
-        <translation>Зберегти до вказаної теки</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Копіювати до буфера обміну</translation>
-    </message>
-    <message>
-        <source>Autosave and copy to clipboard</source>
-        <translation>Автоматично зберегти і скопіювати до буфера обміну</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation>Низька</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation>Висока</translation>
-    </message>
 </context>
 <context>
     <name>SubToolWidget</name>
-    <message>
-        <source> </source>
-        <translation> </translation>
-    </message>
     <message>
         <source>Sound On</source>
         <translation>Увімкнути звук</translation>
@@ -525,16 +395,20 @@ or press the shortcut again to stop recording</source>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>Copy to clipboard</source>
-        <translation>Копіювати до буфера обміну</translation>
+        <source>MKV</source>
+        <translation>MKV</translation>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Потрібне уповноваження</translation>
+        <source>Clipboard</source>
+        <translation>Буфер обміну</translation>
     </message>
     <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Будь ласка, вкажіть ваш пароль sudo, щоб пройти розпізнавання</translation>
+        <source>Edit in Draw</source>
+        <translation>Редагувати у Draw</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>Показати вказівник</translation>
     </message>
 </context>
 <context>
@@ -543,12 +417,13 @@ or press the shortcut again to stop recording</source>
         <source>Recordings</source>
         <translation>Записи</translation>
     </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
     <message>
-        <source>New recording</source>
-        <translation>Новий запис</translation>
+        <source>Screen recording is not supported at present</source>
+        <translation>Зараз підтримки запису з екрана не передбачено</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Вийти</translation>
     </message>
 </context>
 </TS>

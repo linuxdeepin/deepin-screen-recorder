@@ -1,40 +1,5 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS language="pt_BR" version="2.1">
 <context>
-    <name>ColorToolWidget</name>
-    <message>
-        <source>Red</source>
-        <translation>Vermelho</translation>
-    </message>
-    <message>
-        <source>Select Red</source>
-        <translation>Selecionar Vermelho</translation>
-    </message>
-    <message>
-        <source>yellow</source>
-        <translation>amarelo</translation>
-    </message>
-    <message>
-        <source>Select Yellow</source>
-        <translation>Selecionar Amarelo</translation>
-    </message>
-    <message>
-        <source>blue</source>
-        <translation>azul</translation>
-    </message>
-    <message>
-        <source>Select Blue</source>
-        <translation>Selecionar Azul</translation>
-    </message>
-    <message>
-        <source>green</source>
-        <translation>verde</translation>
-    </message>
-    <message>
-        <source>Select Green</source>
-        <translation>Selecionar Verde</translation>
-    </message>
-</context>
-<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
@@ -50,16 +15,8 @@ clique no ícone da bandeja ou use o atalho</translation>
         <translation>Gravar</translation>
     </message>
     <message>
-        <source>Switch to record mode</source>
-        <translation>Alternar para Modo de Gravação</translation>
-    </message>
-    <message>
-        <source>Shot</source>
-        <translation>Instantâneo</translation>
-    </message>
-    <message>
-        <source>Switch to shot mode</source>
-        <translation>Alternar para Modo Instantâneo</translation>
+        <source>Screenshot</source>
+        <translation>Capturar</translation>
     </message>
 </context>
 <context>
@@ -67,22 +24,6 @@ clique no ícone da bandeja ou use o atalho</translation>
     <message>
         <source>Screen Capture</source>
         <translation>Captura de Tela</translation>
-    </message>
-    <message>
-        <source>Start Record</source>
-        <translation>Iniciar Gravação</translation>
-    </message>
-    <message>
-        <source>Start Shot</source>
-        <translation>Iniciar Instantâneo</translation>
-    </message>
-    <message>
-        <source>Start recording</source>
-        <translation>Iniciar Gravação</translation>
-    </message>
-    <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>A captura iniciará em %1s</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -93,20 +34,8 @@ clique no ícone da bandeja ou use o atalho</translation>
         <translation>Visualizar</translation>
     </message>
     <message>
-        <source>Picture has been saved to clipboard</source>
-        <translation>Salvado na Área de Transferência</translation>
-    </message>
-    <message>
-        <source>Picture has been saved to %1</source>
-        <translation>Salvada em %1</translation>
-    </message>
-    <message>
         <source>Screenshot finished</source>
-        <translation>Captura Concluída</translation>
-    </message>
-    <message>
-        <source>Saved to</source>
-        <translation>Salvado em</translation>
+        <translation>Captura concluída</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -125,28 +54,28 @@ clique no ícone da bandeja ou use o atalho</translation>
         <translation>select-area</translation>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Necessita de Autorização</translation>
-    </message>
-    <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Digite a Senha do Administrador para Autorizar</translation>
-    </message>
-    <message>
-        <source>Password Error!</source>
-        <translation>Erro de Senha!</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation>Ok</translation>
-    </message>
-    <message>
-        <source>Authentication success!</source>
-        <translation>Autenticado com Sucesso!</translation>
-    </message>
-    <message>
         <source>Save</source>
         <translation>Salvar</translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation>Salvo em %1</translation>
+    </message>
+    <message>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>A captura iniciará em %1s</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Saving the screen recording, please wait...</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -176,17 +105,17 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>Gravação Concluída</translation>
+        <translation>Gravação concluída</translation>
     </message>
     <message>
-        <source>Saved to</source>
-        <translation>Salvo em</translation>
+        <source>Saved to %1</source>
+        <translation>Salvo em %1</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
+        <source>Screen Capture will start in %1 seconds</source>
         <translation>A captura iniciará em %1s</translation>
     </message>
 </context>
@@ -194,14 +123,14 @@ clique no ícone da bandeja ou use o atalho</translation>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>Insira o Texto aqui</translation>
+        <translation>Insira o texto aqui</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>Iniciar/Capturar</translation>
+        <translation>Capturar</translation>
     </message>
     <message>
         <source>Exit/Save</source>
@@ -221,19 +150,19 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Quick start</source>
-        <translation>Início Rápido</translation>
+        <translation>Início rápido</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>Capturar Janela</translation>
+        <translation>Capturar janela</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>Atrasar Captura</translation>
+        <translation>Atrasar captura</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>Capturar em Tela Cheia</translation>
+        <translation>Capturar a tela inteira</translation>
     </message>
     <message>
         <source>Copy to clipboard</source>
@@ -246,10 +175,6 @@ clique no ícone da bandeja ou use o atalho</translation>
     <message>
         <source>Save</source>
         <translation>Salvar</translation>
-    </message>
-    <message>
-        <source> </source>
-        <translation> </translation>
     </message>
     <message>
         <source>Rectangle</source>
@@ -281,35 +206,35 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation>Aumentar Altura</translation>
+        <translation>Aumentar altura</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation>Aumentar Altura para Baixo</translation>
+        <translation>Aumentar altura para baixo</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>Aumentar Largura à Esquerda</translation>
+        <translation>Aumentar largura à esquerda</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>Aumentar Largura à Direita</translation>
+        <translation>Aumentar largura à direita</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation>Reduzir Altura</translation>
+        <translation>Reduzir altura</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation>Reduzir Altura para Baixo</translation>
+        <translation>Reduzir altura para baixo</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>Reduzir Largura à Esquerda</translation>
+        <translation>Reduzir largura à esquerda</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>Reduzir Altura à Direita</translation>
+        <translation>Reduzir altura à direita</translation>
     </message>
     <message>
         <source>Help</source>
@@ -317,23 +242,11 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Exibir Atalhos</translation>
+        <translation>Exibir atalhos</translation>
     </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
-    <message>
-        <source>fine</source>
-        <translation>fino</translation>
-    </message>
-    <message>
-        <source>medium</source>
-        <translation>médio</translation>
-    </message>
-    <message>
-        <source>thick</source>
-        <translation>grosso</translation>
-    </message>
     <message>
         <source>Blur</source>
         <translation>Borrar</translation>
@@ -342,52 +255,9 @@ clique no ícone da bandeja ou use o atalho</translation>
         <source>Mosaic</source>
         <translation>Mosaico</translation>
     </message>
-    <message>
-        <source>line</source>
-        <translation>linha</translation>
-    </message>
-    <message>
-        <source>arrow</source>
-        <translation>seta</translation>
-    </message>
-</context>
-<context>
-    <name>SubToolBar</name>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Salvar na Área de Trabalho</translation>
-    </message>
-    <message>
-        <source>Autosave</source>
-        <translation>Salvar Automaticamente</translation>
-    </message>
-    <message>
-        <source>Save to specified folder</source>
-        <translation>Salvar em Pasta Especificada</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Copiar para Área de Transferência</translation>
-    </message>
-    <message>
-        <source>Autosave and copy to clipboard</source>
-        <translation>Salvar e Copiar para Área de Transferência</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation>Baixo</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation>Alto</translation>
-    </message>
 </context>
 <context>
     <name>SubToolWidget</name>
-    <message>
-        <source> </source>
-        <translation> </translation>
-    </message>
     <message>
         <source>Sound On</source>
         <translation>Som Ligado</translation>
@@ -525,16 +395,20 @@ clique no ícone da bandeja ou use o atalho</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>Copy to clipboard</source>
-        <translation>Copiar para Área de Transferência</translation>
+        <source>MKV</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Necessita de Autorização</translation>
+        <source>Clipboard</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Digite a Senha do Administrador para Autorizar</translation>
+        <source>Edit in Draw</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -543,12 +417,13 @@ clique no ícone da bandeja ou use o atalho</translation>
         <source>Recordings</source>
         <translation>Gravações</translation>
     </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
     <message>
-        <source>New recording</source>
-        <translation>Nova Gravação</translation>
+        <source>Screen recording is not supported at present</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Sair</translation>
     </message>
 </context>
 </TS>

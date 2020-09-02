@@ -1,46 +1,11 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS language="nl" version="2.1">
 <context>
-    <name>ColorToolWidget</name>
-    <message>
-        <source>Red</source>
-        <translation>Rood</translation>
-    </message>
-    <message>
-        <source>Select Red</source>
-        <translation>Kies rood</translation>
-    </message>
-    <message>
-        <source>yellow</source>
-        <translation>Geel</translation>
-    </message>
-    <message>
-        <source>Select Yellow</source>
-        <translation>Kies geel</translation>
-    </message>
-    <message>
-        <source>blue</source>
-        <translation>Blauw</translation>
-    </message>
-    <message>
-        <source>Select Blue</source>
-        <translation>Kies blauw</translation>
-    </message>
-    <message>
-        <source>green</source>
-        <translation>Groen</translation>
-    </message>
-    <message>
-        <source>Select Green</source>
-        <translation>Kies groen</translation>
-    </message>
-</context>
-<context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
         <translation>Klik op het systeemvakpictogram
-of druk nogmaals op de sneltoets om de opname te stoppen</translation>
+of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
 </context>
 <context>
@@ -50,16 +15,8 @@ of druk nogmaals op de sneltoets om de opname te stoppen</translation>
         <translation>Opnemen</translation>
     </message>
     <message>
-        <source>Switch to record mode</source>
-        <translation>Opnamemodus starten</translation>
-    </message>
-    <message>
-        <source>Shot</source>
+        <source>Screenshot</source>
         <translation>Schermfoto</translation>
-    </message>
-    <message>
-        <source>Switch to shot mode</source>
-        <translation>Schermfotomodus starten</translation>
     </message>
 </context>
 <context>
@@ -69,44 +26,16 @@ of druk nogmaals op de sneltoets om de opname te stoppen</translation>
         <translation>Scherm vastleggen</translation>
     </message>
     <message>
-        <source>Start Record</source>
-        <translation>Opname starten</translation>
-    </message>
-    <message>
-        <source>Start Shot</source>
-        <translation>Schermfoto maken</translation>
-    </message>
-    <message>
-        <source>Start recording</source>
-        <translation>Opname starten</translation>
-    </message>
-    <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Deepin Schermfoto wordt over %1 seconden gestart</translation>
-    </message>
-    <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>Het opslaan is mislukt. Sla het bestand op in ke persoonlijke map.</translation>
+        <translation>Het opslaan is mislukt. Sla het bestand op in je persoonlijke map.</translation>
     </message>
     <message>
         <source>View</source>
         <translation>Bekijken</translation>
     </message>
     <message>
-        <source>Picture has been saved to clipboard</source>
-        <translation>De schermfoto is opgeslagen op het klembord</translation>
-    </message>
-    <message>
-        <source>Picture has been saved to %1</source>
-        <translation>De schermfoto is opgeslagen in %1</translation>
-    </message>
-    <message>
         <source>Screenshot finished</source>
-        <translation>Schermfoto gestopt</translation>
-    </message>
-    <message>
-        <source>Saved to</source>
-        <translation>Opgeslagen in</translation>
+        <translation>De schermfoto is genomen</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -125,28 +54,28 @@ of druk nogmaals op de sneltoets om de opname te stoppen</translation>
         <translation>Gebied selecteren</translation>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Goedkeuring vereist</translation>
-    </message>
-    <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Voer je wachtwoord in om over te schakelen naar de opnamemodus</translation>
-    </message>
-    <message>
-        <source>Password Error!</source>
-        <translation>Onjuist wachtwoord!</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation>Oké</translation>
-    </message>
-    <message>
-        <source>Authentication success!</source>
-        <translation>Goedgekeurd!</translation>
-    </message>
-    <message>
         <source>Save</source>
         <translation>Opslaan</translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation>Opgeslagen in %1</translation>
+    </message>
+    <message>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Het scherm wordt over %1 seconden vastgelegd</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Saving the screen recording, please wait...</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -176,18 +105,18 @@ of druk nogmaals op de sneltoets om de opname te stoppen</translation>
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>Opname gestopt</translation>
+        <translation>De opname is afgerond</translation>
     </message>
     <message>
-        <source>Saved to</source>
-        <translation>Opgeslagen in</translation>
+        <source>Saved to %1</source>
+        <translation>Opgeslagen in %1</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Deepin Schermfoto wordt over %1 seconden gestart</translation>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Het scherm wordt over %1 seconden vastgelegd</translation>
     </message>
 </context>
 <context>
@@ -246,10 +175,6 @@ of druk nogmaals op de sneltoets om de opname te stoppen</translation>
     <message>
         <source>Save</source>
         <translation>Opslaan</translation>
-    </message>
-    <message>
-        <source> </source>
-        <translation> </translation>
     </message>
     <message>
         <source>Rectangle</source>
@@ -323,18 +248,6 @@ of druk nogmaals op de sneltoets om de opname te stoppen</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>fine</source>
-        <translation>fijn</translation>
-    </message>
-    <message>
-        <source>medium</source>
-        <translation>normaal</translation>
-    </message>
-    <message>
-        <source>thick</source>
-        <translation>dik</translation>
-    </message>
-    <message>
         <source>Blur</source>
         <translation>Vervagen</translation>
     </message>
@@ -342,52 +255,9 @@ of druk nogmaals op de sneltoets om de opname te stoppen</translation>
         <source>Mosaic</source>
         <translation>Mozaïek</translation>
     </message>
-    <message>
-        <source>line</source>
-        <translation>lijn</translation>
-    </message>
-    <message>
-        <source>arrow</source>
-        <translation>pijl</translation>
-    </message>
-</context>
-<context>
-    <name>SubToolBar</name>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Opslaan op bureaublad</translation>
-    </message>
-    <message>
-        <source>Autosave</source>
-        <translation>Automatisch opslaan</translation>
-    </message>
-    <message>
-        <source>Save to specified folder</source>
-        <translation>Opslaan in opgegeven map</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Kopiëren naar klembord</translation>
-    </message>
-    <message>
-        <source>Autosave and copy to clipboard</source>
-        <translation>Automatisch opslaan en kopiëren naar klembord</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation>Laag</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation>Hoog</translation>
-    </message>
 </context>
 <context>
     <name>SubToolWidget</name>
-    <message>
-        <source> </source>
-        <translation> </translation>
-    </message>
     <message>
         <source>Sound On</source>
         <translation>Geluid aan</translation>
@@ -525,16 +395,20 @@ of druk nogmaals op de sneltoets om de opname te stoppen</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>Copy to clipboard</source>
-        <translation>Kopiëren naar klembord</translation>
+        <source>MKV</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Goedkeuring vereist</translation>
+        <source>Clipboard</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Voer je wachtwoord in om over te schakelen naar de opnamemodus</translation>
+        <source>Edit in Draw</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -543,12 +417,13 @@ of druk nogmaals op de sneltoets om de opname te stoppen</translation>
         <source>Recordings</source>
         <translation>Opnames</translation>
     </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
     <message>
-        <source>New recording</source>
-        <translation>Opname maken</translation>
+        <source>Screen recording is not supported at present</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Afsluiten</translation>
     </message>
 </context>
 </TS>
