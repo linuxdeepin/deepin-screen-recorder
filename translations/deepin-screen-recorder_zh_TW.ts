@@ -67,15 +67,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"/>
+        <translation>忽略</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>剪貼簿</translation>
     </message>
     <message>
-        <source>Saving the screen recording, please wait...</source>
-        <translation type="unfinished"/>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>正在儲存錄屏文件，請稍候...</translation>
     </message>
 </context>
 <context>
@@ -396,19 +396,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"/>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>剪貼簿</translation>
     </message>
     <message>
         <source>Edit in Draw</source>
-        <translation type="unfinished"/>
+        <translation>在畫板中編輯</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"/>
+        <translation>顯示游標</translation>
     </message>
 </context>
 <context>
@@ -419,7 +419,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"/>
+        <translation>錄屏功能暫不可用</translation>
     </message>
     <message>
         <source>Exit</source>
