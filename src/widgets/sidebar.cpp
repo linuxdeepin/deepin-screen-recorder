@@ -37,8 +37,8 @@ const int TOOLBAR_HEIGHT = 465;
 const int TOOLBAR_WIDTH = 66;
 
 const QSize TOOLBAR_WIDGET_SIZE = QSize(66, 465);
-const int BUTTON_SPACING = 3;
-const int BTN_RADIUS = 3;
+//const int BUTTON_SPACING = 3;
+//const int BTN_RADIUS = 3;
 }
 
 
@@ -57,11 +57,11 @@ SideBarWidget::SideBarWidget(DWidget *parent)
 //    setBlendMode(DBlurEffectWidget::InWindowBlend);
 //    setMaskColor(QColor(255, 255, 255, 76.5));
     if (t_themeType == 1) {
-        blurBackground()->setMaskColor(QColor(255, 255, 255, 76.5));
+        blurBackground()->setMaskColor(QColor(255, 255, 255, 76));
     }
 
     else if (t_themeType == 2) {
-        blurBackground()->setMaskColor(QColor(0, 0, 0, 76.5));
+        blurBackground()->setMaskColor(QColor(0, 0, 0, 76));
     }
     //设置透明效果
 
@@ -114,6 +114,7 @@ SideBarWidget::SideBarWidget(DWidget *parent)
 
     connect(m_shotTool, &ShotToolWidget::changeArrowAndLine, this, &SideBarWidget::changeArrowAndLineEvent);
     connect(m_closeButton, &DImageButton::clicked, this, &SideBarWidget::closeSideBar);
+    connect(m_colorTool, &ColorToolWidget::colorChecked, m_shotTool, &ShotToolWidget::colorChecked);
 }
 
 SideBarWidget::~SideBarWidget()

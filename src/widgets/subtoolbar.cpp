@@ -63,7 +63,7 @@ void SubToolBar::initWidget()
     initColorLabel();
     initSaveLabel();
 
-    setCurrentWidget(0);
+    setCurrentWidget(nullptr);
 }
 
 void SubToolBar::initRectLabel()

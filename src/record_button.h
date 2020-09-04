@@ -37,7 +37,7 @@ class RecordButton : public DPushButton
     static const int TEXT_PADDING;
 
 public:
-    RecordButton(DPushButton *parent = 0);
+    RecordButton(DPushButton *parent = nullptr);
     void setText(QString string);
 
 protected:

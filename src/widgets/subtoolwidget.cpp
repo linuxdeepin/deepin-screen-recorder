@@ -44,15 +44,15 @@
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int TOOLBAR_HEIGHT = 43;
-const int TOOLBAR_WIDTH = 350;
+//const int TOOLBAR_HEIGHT = 43;
+//const int TOOLBAR_WIDTH = 350;
 const int BUTTON_SPACING = 4;
 const int SHOT_BUTTON_SPACING = 4;
-const int COLOR_NUM = 16;
+//const int COLOR_NUM = 16;
 const QSize TOOL_ICON_SIZE = QSize(25, 25);
 const QSize MAX_TOOL_ICON_SIZE = QSize(40, 40);
-const QSize MAX_TOOL_BUTTON_SIZE = QSize(82, 40);
-const QSize TOOL_BUTTON_SIZE = QSize(62, 40);
+//const QSize MAX_TOOL_BUTTON_SIZE = QSize(82, 40);
+//const QSize TOOL_BUTTON_SIZE = QSize(62, 40);
 const QSize MEDIUM_TOOL_BUTTON_SIZE = QSize(52, 40);
 const QSize MIN_TOOL_BUTTON_SIZE = QSize(42, 40);
 }
@@ -666,15 +666,10 @@ void SubToolWidget::initRecordLabel()
     OptionMenu->addSeparator();
 
     OptionMenu->addAction(fpsTitleAction);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(fps5Action);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(fps10Action);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(fps20Action);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(fps24Action);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(fps30Action);
 
     m_optionButton->setMenu(OptionMenu);
@@ -710,6 +705,7 @@ void SubToolWidget::initRecordLabel()
         audioButton->setEnabled(true);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
+            m_microphoneAction->setChecked(true);
         }
 
         if (m_haveSystemAudio) {
@@ -727,6 +723,7 @@ void SubToolWidget::initRecordLabel()
         audioButton->setEnabled(true);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
+            m_microphoneAction->setChecked(true);
         }
 
         if (m_haveSystemAudio) {
@@ -767,6 +764,7 @@ void SubToolWidget::initRecordLabel()
         audioButton->setEnabled(true);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
+            m_microphoneAction->setChecked(true);
         }
         if (m_haveSystemAudio) {
             m_systemAudioAction->setEnabled(true);
@@ -785,6 +783,7 @@ void SubToolWidget::initRecordLabel()
         audioButton->setEnabled(true);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
+            m_microphoneAction->setChecked(true);
         }
         if (m_haveSystemAudio) {
             m_systemAudioAction->setEnabled(true);
@@ -1212,12 +1211,13 @@ void SubToolWidget::initShotLabel()
     QAction *saveToDesktopAction = new QAction(OptionMenu);
     QAction *saveToPictureAction = new QAction(OptionMenu);
     QAction *saveToSpecialPath = new QAction(OptionMenu);
+    QAction *openWithDraw = new QAction(OptionMenu);
     QAction *formatTitleAction = new QAction(OptionMenu);
     QAction *pngAction = new QAction(OptionMenu);
     QAction *jpgAction = new QAction(OptionMenu);
     QAction *bmpAction = new QAction(OptionMenu);
     QAction *clipTitleAction = new QAction(OptionMenu);
-    QAction *clipAction = new QAction(OptionMenu);
+    QAction *saveToClipAction = new QAction(OptionMenu);
     QAction *saveCursorAction = new QAction(OptionMenu);
 
     saveTitleAction->setDisabled(true);
@@ -1228,9 +1228,12 @@ void SubToolWidget::initShotLabel()
     saveToPictureAction->setCheckable(true);
     saveToSpecialPath->setText(tr("Folder"));
     saveToSpecialPath->setCheckable(true);
+    saveToClipAction->setText(tr("Clipboard"));
+    saveToClipAction->setCheckable(true);
     t_saveGroup->addAction(saveToDesktopAction);
     t_saveGroup->addAction(saveToPictureAction);
     t_saveGroup->addAction(saveToSpecialPath);
+    t_saveGroup->addAction(saveToClipAction);
 
     formatTitleAction->setDisabled(true);
     formatTitleAction->setText(tr("Format"));
@@ -1247,13 +1250,14 @@ void SubToolWidget::initShotLabel()
 
     clipTitleAction->setDisabled(true);
     clipTitleAction->setText(tr("Options"));
-    clipAction->setText(tr("Copy to clipboard"));
-    clipAction->setCheckable(true);
+    openWithDraw->setText(tr("Open With Draw"));
+    openWithDraw->setCheckable(true);
     saveCursorAction->setText(tr("Show cursor"));
     saveCursorAction->setCheckable(true);
 
     //保存方式
     OptionMenu->addAction(saveTitleAction);
+    OptionMenu->addAction(saveToClipAction);
     OptionMenu->addAction(saveToDesktopAction);
     OptionMenu->addAction(saveToPictureAction);
     OptionMenu->addAction(saveToSpecialPath);
@@ -1261,8 +1265,9 @@ void SubToolWidget::initShotLabel()
 
     //保存剪贴板
     OptionMenu->addAction(clipTitleAction);
-    OptionMenu->addAction(clipAction);
     OptionMenu->addAction(saveCursorAction);
+    // 屏蔽画板打开
+    //OptionMenu->addAction(openWithDraw);
     OptionMenu->addSeparator();
 
     //保存格式
@@ -1290,7 +1295,7 @@ void SubToolWidget::initShotLabel()
         break;
     }
     default:
-        saveToDesktopAction->setChecked(true);
+        saveToClipAction->setChecked(true);
         break;
     }
 
@@ -1313,6 +1318,10 @@ void SubToolWidget::initShotLabel()
         else if (t_act == saveToSpecialPath) {
             qDebug() << "save to path";
             ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToSpecificDir);
+        }
+        else if(t_act == saveToClipAction) {
+            qDebug() << "save to clip";
+            ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
         }
     });
 
@@ -1342,7 +1351,7 @@ void SubToolWidget::initShotLabel()
             ConfigSettings::instance()->setValue("save", "format", 2);
         }
     });
-
+/*
     int t_saveToClipBoard = ConfigSettings::instance()->value("save", "saveClip").toInt();
 
     switch (t_saveToClipBoard) {
@@ -1368,7 +1377,7 @@ void SubToolWidget::initShotLabel()
             ConfigSettings::instance()->setValue("save", "saveClip", 0);
         }
     });
-
+*/
     int t_saveCursor = ConfigSettings::instance()->value("save", "saveCursor").toInt();
 
     switch (t_saveCursor) {
@@ -1395,6 +1404,33 @@ void SubToolWidget::initShotLabel()
         }
     });
 
+    int t_openWithDraw = ConfigSettings::instance()->value("open", "draw").toInt();
+
+    switch (t_openWithDraw) {
+    case 0:
+        openWithDraw->setChecked(false);
+        break;
+    case 1:
+        openWithDraw->setChecked(true);
+        break;
+    default:
+        openWithDraw->setChecked(false);
+        break;
+    }
+
+    connect(openWithDraw, &QAction::triggered, [ = ] {
+        if (openWithDraw->isChecked())
+        {
+            ConfigSettings::instance()->setValue("open", "draw", 1);
+        }
+
+        else
+        {
+            ConfigSettings::instance()->setValue("open", "draw", 0);
+        }
+    });
+
+
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setSizeConstraint(QLayout::SetFixedSize);
@@ -1414,6 +1450,7 @@ void SubToolWidget::initShotLabel()
 
     connect(rectBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
+        Q_UNUSED(status);
         DPalette pa;
         if (m_rectButton->isChecked()) {
 //            pa = m_rectButton->palette();
@@ -1771,9 +1808,11 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
 {
     if (!shape.isEmpty()) {
         if (shape == "rect") {
-            m_rectButton->click();
+            if(!m_rectButton->isChecked())
+                m_rectButton->click();
         } else if (shape == "circ") {
-            m_circleButton->click();
+            if(!m_circleButton->isChecked())
+                m_circleButton->click();
         } else if (shape == "line") {
             m_lineButton->click();
         } else if (shape == "pen") {

@@ -32,12 +32,12 @@
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int TOOLBAR_HEIGHT = 43;
-const int TOOLBAR_WIDTH = 155;
+//const int TOOLBAR_HEIGHT = 43;
+//const int TOOLBAR_WIDTH = 155;
 const int BUTTON_SPACING = 3;
-const int COLOR_NUM = 16;
-const QSize TOOL_BUTTON_SIZE = QSize(70, 40);
-const QSize MIN_TOOL_BUTTON_SIZE = QSize(50, 40);
+//const int COLOR_NUM = 16;
+//const QSize TOOL_BUTTON_SIZE = QSize(70, 40);
+//const QSize MIN_TOOL_BUTTON_SIZE = QSize(50, 40);
 }
 
 
@@ -102,6 +102,11 @@ void MainToolWidget::initMainLabel()
     if(!DWindowManagerHelper::instance()->hasComposite()) {
         m_recordBtn->hide();
     }
+    QString arch = QSysInfo::currentCpuArchitecture();
+    if(!(arch.startsWith("x86", Qt::CaseInsensitive) || arch.startsWith("ARM", Qt::CaseInsensitive))) {
+        m_recordBtn->hide();
+    }
+
     toolBtnList.append(m_recordBtn);
 
 //    connect(m_recordBtn, &ToolButton::onPress, this, [ = ] {
@@ -176,7 +181,7 @@ void MainToolWidget::initMainLabel()
 
     connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
-
+        Q_UNUSED(status);
         DPalette pa;
         if (m_recordBtn->isChecked()) {
 //            pa = m_recordBtn->palette();

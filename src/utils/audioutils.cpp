@@ -32,6 +32,7 @@
 
 AudioUtils::AudioUtils(QObject *parent)
 {
+    Q_UNUSED(parent);
 }
 void AudioUtils::initProcess()
 {

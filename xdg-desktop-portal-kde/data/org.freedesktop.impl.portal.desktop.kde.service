@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=org.freedesktop.impl.portal.desktop.kde
+Exec=/usr/local/lib/aarch64-linux-gnu/libexec/xdg-desktop-portal-kde

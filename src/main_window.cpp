@@ -63,6 +63,8 @@
 #include "utils/screengrabber.h"
 #include "camera_process.h"
 #include "widgets/tooltips.h"
+#include "dbusinterface/drawinterface.h"
+
 
 
 const int MainWindow::CURSOR_BOUND = 5;
@@ -94,16 +96,16 @@ const int MainWindow::CAMERA_WIDGET_MIN_HEIGHT = 45;
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int RECORD_MIN_SIZE = 10;
-const int SPACING = 10;
+//const int RECORD_MIN_SIZE = 10;
+//const int SPACING = 10;
 const int TOOLBAR_X_SPACING = 85;
 const int TOOLBAR_Y_SPACING = 3;
 const int SIDEBAR_X_SPACING = 8;
-const int SIDEBAR_Y_SPACING = 1;
+//const int SIDEBAR_Y_SPACING = 1;
 const int CURSOR_WIDTH = 8;
 const int CURSOR_HEIGHT = 18;
 const int INDICATOR_WIDTH =  110;
-const qreal RESIZEPOINT_WIDTH = 15;
+//const qreal RESIZEPOINT_WIDTH = 15;
 }
 
 //DWM_USE_NAMESPACE
@@ -114,6 +116,8 @@ MainWindow::MainWindow(DWidget *parent) :
 {
 //    initAttributes();
 
+    m_pScreenShotEvent =  new ScreenShotEvent();
+    m_pScreenRecordEvent = new EventMonitor();
     connect(m_wmHelper, &DWindowManagerHelper::hasCompositeChanged, this, &MainWindow::compositeChanged);
 
 
@@ -126,6 +130,10 @@ MainWindow::MainWindow(DWidget *parent) :
     if(!displayInterface.isValid()) {
         return;
     }
+    int w = displayInterface.property("ScreenWidth").toInt();
+    int h = displayInterface.property("ScreenHeight").toInt();
+    m_screenSize.setWidth(w);
+    m_screenSize.setHeight(h);
     QList<QDBusObjectPath> pathList = qvariant_cast< QList<QDBusObjectPath> >(displayInterface.property("Monitors"));
     for(int i = 0; i < pathList.size(); ++i) {
         QString path = pathList.at(i).path();
@@ -166,7 +174,6 @@ void MainWindow::initAttributes()
     checkCpuIsZhaoxin();
 
     int t_screenCount = QApplication::desktop()->screenCount();
-    int t_indexScreen = 0;
     m_screenHeight = QApplication::desktop()->screen()->height();
 
     QRect t_screenRect;
@@ -186,8 +193,9 @@ void MainWindow::initAttributes()
 //            m_screenWidth += QApplication::desktop()->screen(t_indexScreen)->width();
 //        }
         QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
-        t_screenRect = t_primaryScreen->virtualGeometry();
-        qDebug() << "screen size" << t_primaryScreen->virtualGeometry();
+        const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
+        t_screenRect = QRect(0, 0, static_cast<int>(m_screenSize.width() / ratio), static_cast<int>(m_screenSize.height() / ratio));
+        qDebug() << "screen size" << t_primaryScreen->virtualGeometry() << t_screenRect;
     }
 
 
@@ -197,7 +205,12 @@ void MainWindow::initAttributes()
     // Add Qt::WindowDoesNotAcceptFocus make window not accept focus forcely, avoid conflict with dde hot-corner.
 //    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowDoesNotAcceptFocus | Qt::X11BypassWindowManagerHint);
 //    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint  | Qt::WindowStaysOnTopHint);
-    setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+    if(m_desktopInfo.waylandDectected()) {
+        setWindowFlags(Qt::FramelessWindowHint);
+    } else {
+        setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+    }
+
     setAttribute(Qt::WA_TranslucentBackground, true);
     setMouseTracking(true);   // make MouseMove can response
     installEventFilter(this);  // add event filter
@@ -236,7 +249,6 @@ void MainWindow::initAttributes()
 
     ConfigSettings::instance();
     const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
-    QPoint curPos = this->cursor().pos();
 
     // Get all windows geometry.
     // Below code must execute before `window.showFullscreen,
@@ -244,7 +256,6 @@ void MainWindow::initAttributes()
 
     //多屏情况下累加窗口大小
     if (t_screenCount == 1) {
-        QPoint pos = this->cursor().pos();
 //        DScreenWindowsUtil *screenWin = DScreenWindowsUtil::instance(curPos);
 
 //        screenRect = screenWin->backgroundRect();
@@ -282,27 +293,8 @@ void MainWindow::initAttributes()
         rootWindowRect = t_screenRect;
     }
 
-    if (t_screenCount > 1) {
-        for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
-            if (wid == winId()) continue;
-
-            DForeignWindow *window = DForeignWindow::fromWinId(wid);
-            //判断窗口是否被最小化
-            if (window->windowState() == Qt::WindowState::WindowMinimized) {
-                continue;
-            }
-            if (window) {
-                window->deleteLater();
-//                windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(),
-//                                                    window->frameGeometry().width(), window->frameGeometry().height()};
-
-                windowRects << window->frameGeometry();
-                windowNames << window->wmClass();
-            }
-        }
-    }
-
-    else {
+        m_screenHeight = m_screenSize.height();
+        m_screenWidth = m_screenSize.width();
         for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
             if (wid == winId()) continue;
 
@@ -430,8 +422,6 @@ void MainWindow::initAttributes()
                 //                windowNames << window->wmClass();
             }
         }
-
-    }
 
     recordButtonLayout = new QVBoxLayout();
     setLayout(recordButtonLayout);
@@ -608,17 +598,18 @@ void MainWindow::sendSavingNotify()
                                 QDBusConnection::sessionBus());
     QStringList actions;
     actions << "_close" << tr("Ignore");
-
+    int timeout = 3000;
+    unsigned int id = 0;
 
     QList<QVariant> arg;
     arg << (QCoreApplication::applicationName())                 // appname
-        << ((unsigned int) 0)                                    // id
+        << id                                                   // id
         << QString("deepin-screen-recorder")                     // icon
         << QString(tr("Screen Capture"))                         // summary
         << QString(tr("Saving the screen recording,please wait..."))  // body
         << actions                                               // actions
         << QVariantMap()                                         // hints
-        << (int) 3000;                                           // timeout
+        << timeout;                                           // timeout
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
 }
 
@@ -717,6 +708,8 @@ void MainWindow::initScreenShot()
 {
 
 //    installEventFilter(this);
+    connect(m_pScreenShotEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
+    m_pScreenShotEvent->start();
 
     connect(this, &MainWindow::releaseEvent, this, [ = ] {
         qDebug() << "release event !!!";
@@ -818,8 +811,8 @@ void MainWindow::initScreenShot()
 //    eventMonitor.quit();
 //    emit releaseEvent();
     if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-        eventMonitor.terminate();
-        eventMonitor.wait();
+        m_pScreenRecordEvent->terminate();
+        m_pScreenRecordEvent->wait();
     }
 
 
@@ -834,8 +827,16 @@ void MainWindow::initScreenRecorder()
         qDebug() << "no composite";
         Utils::warnNoComposite();
         if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-            eventMonitor.terminate();
-            eventMonitor.wait();
+            if(nullptr != m_pScreenRecordEvent){
+                m_pScreenRecordEvent->terminate();
+                m_pScreenRecordEvent->wait();
+                m_pScreenRecordEvent = nullptr;
+            }
+            if(nullptr != m_pScreenShotEvent){
+                m_pScreenShotEvent->terminate();
+                m_pScreenShotEvent->wait();
+                m_pScreenShotEvent = nullptr;
+            }
         }
         qApp->quit();
     }
@@ -954,15 +955,15 @@ void MainWindow::initScreenRecorder()
 //    eventMonitor.start();
 
 
-    connect(&eventMonitor, SIGNAL(buttonedPress(int, int)), this, SLOT(showPressFeedback(int, int)), Qt::QueuedConnection);
-    connect(&eventMonitor, SIGNAL(buttonedDrag(int, int)), this, SLOT(showDragFeedback(int, int)), Qt::QueuedConnection);
-    connect(&eventMonitor, SIGNAL(buttonedRelease(int, int)), this, SLOT(showReleaseFeedback(int, int)), Qt::QueuedConnection);
-    connect(&eventMonitor, SIGNAL(pressEsc()), this, SLOT(responseEsc()), Qt::QueuedConnection);
-    connect(&eventMonitor, SIGNAL(pressKeyButton(unsigned char)), m_showButtons,
+    connect(m_pScreenRecordEvent, SIGNAL(buttonedPress(int, int)), this, SLOT(showPressFeedback(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenRecordEvent, SIGNAL(buttonedDrag(int, int)), this, SLOT(showDragFeedback(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenRecordEvent, SIGNAL(buttonedRelease(int, int)), this, SLOT(showReleaseFeedback(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenRecordEvent, SIGNAL(pressEsc()), this, SLOT(responseEsc()), Qt::QueuedConnection);
+    connect(m_pScreenRecordEvent, SIGNAL(pressKeyButton(unsigned char)), m_showButtons,
             SLOT(showContentButtons(unsigned char)), Qt::QueuedConnection);
-    connect(&eventMonitor, SIGNAL(releaseKeyButton(unsigned char)), m_showButtons,
+    connect(m_pScreenRecordEvent, SIGNAL(releaseKeyButton(unsigned char)), m_showButtons,
             SLOT(releaseContentButtons(unsigned char)), Qt::QueuedConnection);
-    eventMonitor.start();
+    m_pScreenRecordEvent->start();
 
     m_toolBar->setFocus();
 }
@@ -1023,7 +1024,7 @@ void MainWindow::delayScreenshot(double num)
 
 void MainWindow::fullScreenshot()
 {
-    DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
+    //DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
     this->initAttributes();
     this->initLaunchMode("screenShot");
     this->showFullScreen();
@@ -1129,7 +1130,7 @@ void MainWindow::testScreenshot()
 
 void MainWindow::topWindow()
 {
-    DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
+    //DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
     this->initAttributes();
     this->initLaunchMode("screenShot");
     this->showFullScreen();
@@ -1192,10 +1193,10 @@ void MainWindow::topWindow()
     emit this->hideScreenshotUI();
 
     const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
-    QRect target( recordX * ratio,
-                  recordY * ratio,
-                  recordWidth * ratio,
-                  recordHeight * ratio );
+    QRect target( static_cast<int>(recordX * ratio),
+                  static_cast<int>(recordY * ratio),
+                  static_cast<int>(recordWidth * ratio),
+                  static_cast<int>(recordHeight * ratio) );
 
 //    using namespace utils;
     QPixmap screenShotPix =  m_backgroundPixmap.copy(target);
@@ -1299,17 +1300,27 @@ void MainWindow::showReleaseFeedback(int x, int y)
 
 void MainWindow::responseEsc()
 {
-    if (m_functionType == 0) {
-        if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
-            emit releaseEvent();
-            if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-                eventMonitor.terminate();
-                eventMonitor.wait();
+    if (0 == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus){
+        emit releaseEvent();
+        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && false == m_isZhaoxin){
+            if (nullptr != m_pScreenRecordEvent){
+                m_pScreenRecordEvent->terminate();
+                m_pScreenRecordEvent->wait();
+                m_pScreenRecordEvent = nullptr;
             }
-            QApplication::quit();
+            if(nullptr != m_pScreenShotEvent){
+                m_pScreenShotEvent->terminate();
+                m_pScreenShotEvent->wait();
+                m_pScreenShotEvent = nullptr;
+            }
         }
+        QApplication::quit();
     }
+}
 
+void MainWindow::onActivateWindow()
+{
+    activateWindow();
 }
 
 void MainWindow::compositeChanged()
@@ -1319,8 +1330,8 @@ void MainWindow::compositeChanged()
         Utils::warnNoComposite();
         emit releaseEvent();
         if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-            eventMonitor.terminate();
-            eventMonitor.wait();
+            m_pScreenRecordEvent->terminate();
+            m_pScreenRecordEvent->wait();
         }
         QApplication::quit();
     }
@@ -1389,7 +1400,6 @@ void MainWindow::updateToolBarPos()
             break;
         }
     }
-
     m_toolBar->showAt(toolbarPoint);
 }
 
@@ -1700,7 +1710,6 @@ void MainWindow::changeFunctionButton(QString type)
         if (m_sideBar->isVisible()) {
             m_sideBar->hide();
         }
-
     }
 
     else if (type == "shot") {
@@ -1955,21 +1964,21 @@ void MainWindow::updateMultiKeyBoardPos()
         //两个按键的情况
         case 2:
             m_keyButtonList.at(0)->hide();
-            t_keyPoint1 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() / 1.5,
+            t_keyPoint1 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() / 1.5),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(0)->move(t_keyPoint1.x(), t_keyPoint1.y());
             m_keyButtonList.at(0)->show();
 
             m_keyButtonList.at(1)->hide();
-            t_keyPoint2 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2 + m_keyButtonList.at(1)->width() / 1.5,
+            t_keyPoint2 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2 + m_keyButtonList.at(1)->width() / 1.5),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(1)->move(t_keyPoint2.x(), t_keyPoint2.y());
             m_keyButtonList.at(1)->show();
             break;
-        //三个按键的情况
+            //三个按键的情况
         case 3:
             m_keyButtonList.at(0)->hide();
-            t_keyPoint1 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() * 1.3,
+            t_keyPoint1 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() * 1.3),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(0)->move(t_keyPoint1.x(), t_keyPoint1.y());
             m_keyButtonList.at(0)->show();
@@ -1981,7 +1990,7 @@ void MainWindow::updateMultiKeyBoardPos()
             m_keyButtonList.at(1)->show();
 
             m_keyButtonList.at(2)->hide();
-            t_keyPoint3 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(2)->width() / 2 + m_keyButtonList.at(2)->width() * 1.3,
+            t_keyPoint3 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(2)->width() / 2 + m_keyButtonList.at(2)->width() * 1.3),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(2)->move(t_keyPoint3.x(), t_keyPoint3.y());
             m_keyButtonList.at(2)->show();
@@ -1995,13 +2004,13 @@ void MainWindow::updateMultiKeyBoardPos()
             m_keyButtonList.at(0)->show();
 
             m_keyButtonList.at(1)->hide();
-            t_keyPoint2 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2 - m_keyButtonList.at(1)->width() / 1.5,
+            t_keyPoint2 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2 - m_keyButtonList.at(1)->width() / 1.5),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(1)->move(t_keyPoint2.x(), t_keyPoint2.y());
             m_keyButtonList.at(1)->show();
 
             m_keyButtonList.at(2)->hide();
-            t_keyPoint3 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(2)->width() / 2 + m_keyButtonList.at(2)->width() / 1.5,
+            t_keyPoint3 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(2)->width() / 2 + m_keyButtonList.at(2)->width() / 1.5),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(2)->move(t_keyPoint3.x(), t_keyPoint3.y());
             m_keyButtonList.at(2)->show();
@@ -2012,16 +2021,16 @@ void MainWindow::updateMultiKeyBoardPos()
             m_keyButtonList.at(3)->move(t_keyPoint4.x(), t_keyPoint4.y());
             m_keyButtonList.at(3)->show();
             break;
-        //五个按键的情况
+            //五个按键的情况
         case 5:
             m_keyButtonList.at(0)->hide();
-            t_keyPoint1 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() * 2.6,
+            t_keyPoint1 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(0)->width() / 2 - m_keyButtonList.at(0)->width() * 2.6),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(0)->move(t_keyPoint1.x(), t_keyPoint1.y());
             m_keyButtonList.at(0)->show();
 
             m_keyButtonList.at(1)->hide();
-            t_keyPoint2 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2 - m_keyButtonList.at(1)->width() * 1.3,
+            t_keyPoint2 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(1)->width() / 2 - m_keyButtonList.at(1)->width() * 1.3),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(1)->move(t_keyPoint2.x(), t_keyPoint2.y());
             m_keyButtonList.at(1)->show();
@@ -2033,13 +2042,13 @@ void MainWindow::updateMultiKeyBoardPos()
             m_keyButtonList.at(2)->show();
 
             m_keyButtonList.at(3)->hide();
-            t_keyPoint4 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(3)->width() / 2 + m_keyButtonList.at(3)->width() * 1.3,
+            t_keyPoint4 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(3)->width() / 2 + m_keyButtonList.at(3)->width() * 1.3),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(3)->move(t_keyPoint4.x(), t_keyPoint4.y());
             m_keyButtonList.at(3)->show();
 
             m_keyButtonList.at(4)->hide();
-            t_keyPoint5 = QPoint(recordX + recordWidth / 2 - m_keyButtonList.at(3)->width() / 2 + m_keyButtonList.at(4)->width() * 2.6,
+            t_keyPoint5 = QPoint(static_cast<int>(recordX + recordWidth / 2 - m_keyButtonList.at(3)->width() / 2 + m_keyButtonList.at(4)->width() * 2.6),
                                  std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
             m_keyButtonList.at(4)->move(t_keyPoint5.x(), t_keyPoint5.y());
             m_keyButtonList.at(4)->show();
@@ -2070,6 +2079,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
 
 void MainWindow::saveScreenShot()
 {
+    m_CursorImage = m_pScreenRecordEvent->GetCursorImage();
     emit releaseEvent();
     m_shotflag = 1;
     emit saveActionTriggered();
@@ -2096,6 +2106,7 @@ void MainWindow::saveScreenShot()
 
 void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const bool succeed)
 {
+    Q_UNUSED(saveAction);
     if(m_noNotify) {
         exit(0);
     }
@@ -2121,7 +2132,8 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     QStringList actions;
     QVariantMap hints;
 
-    if (remote_dde_notify_obj_exist) {
+    // 保存到剪贴板， 通知不用open
+    if (remote_dde_notify_obj_exist && saveFilePath.compare(QString(tr("Clipboard")))) {
         actions << "_open" << tr("View");
 
         QString fileDir  = QUrl::fromLocalFile(QFileInfo(saveFilePath).absoluteDir().absolutePath()).toString();
@@ -2156,14 +2168,16 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
 //        m_notifyDBInterface->Notify("Deepin Screenshot", 0,  "deepin-screen-recorder", "",
 //                                    summary, actions, hints, 0);
     QList<QVariant> arg;
+    int timeout = 5000;
+    unsigned int id = 0;
     arg << (QCoreApplication::applicationName())                 // appname
-        << ((unsigned int) 0)                                    // id
-        << QString("deepin-screenshot")                     // icon
+        << id                                                    // id
+        << QString("deepin-screen-recorder")                     // icon
         << tr("Screenshot finished")                              // summary
         << QString(tr("Saved to %1")).arg(saveFilePath) // body
         << actions                                               // actions
         << hints                                                 // hints
-        << (int) 5000;
+        << timeout;
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);// timeout
 //    }
 
@@ -2171,8 +2185,16 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         emit releaseEvent();
         if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false)
         {
-            eventMonitor.terminate();
-            eventMonitor.wait();
+            if(nullptr != m_pScreenRecordEvent){
+                m_pScreenRecordEvent->terminate();
+                m_pScreenRecordEvent->wait();
+                m_pScreenRecordEvent = nullptr;
+            }
+            if(nullptr != m_pScreenShotEvent){
+                m_pScreenShotEvent->terminate();
+                m_pScreenShotEvent->wait();
+                m_pScreenShotEvent = nullptr;
+            }
         }
         qApp->quit();
     });
@@ -2193,15 +2215,13 @@ bool MainWindow::saveAction(const QPixmap &pix)
 //    bool copyToClipboard = true;
 
     int t_pictureFormat = ConfigSettings::instance()->value("save", "format").toInt();
-    int t_saveToClipBoard = ConfigSettings::instance()->value("save", "saveClip").toInt();
+    //int t_saveToClipBoard = ConfigSettings::instance()->value("save", "saveClip").toInt();
 
-    if (t_saveToClipBoard == 0) {
-        m_copyToClipboard = false;
-    }
-
-    else {
-        m_copyToClipboard = true;
-    }
+    //if (t_saveToClipBoard == 0) {
+        //m_copyToClipboard = false;
+    //}else {
+        //m_copyToClipboard = true;
+    //}
 
     std::pair<bool, SaveAction> temporarySaveAction = ConfigSettings::instance()->getTemporarySaveAction();
     if (temporarySaveAction.first) {
@@ -2340,6 +2360,10 @@ bool MainWindow::saveAction(const QPixmap &pix)
     }
     case AutoSave:
         break;
+    case SaveToClipboard:{
+        qDebug() << SaveToClipboard << "SaveToClipboard";
+        break;
+    }
     default:
         break;
     }
@@ -2354,7 +2378,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
         int pixWidth = screenShotPix.width();
         int pixHeight = screenShotPix.height();
-        screenShotPix = screenShotPix.scaled(pixWidth * saveQuality, pixHeight * saveQuality,
+        screenShotPix = screenShotPix.scaled(static_cast<int>(pixWidth * saveQuality), static_cast<int>(pixHeight * saveQuality),
                                              Qt::KeepAspectRatio, Qt::FastTransformation);
         screenShotPix = screenShotPix.scaled(pixWidth,  pixHeight,
                                              Qt::KeepAspectRatio, Qt::FastTransformation);
@@ -2486,25 +2510,33 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
         if (!screenShotPix.save(m_saveFileName,  t_formatStr.toLatin1().data()))
             return false;
+    }else if(m_saveIndex == SaveToClipboard){
+       m_saveFileName = QString(tr("Clipboard"));
     }
 
+    // 保存到剪贴板
     QMimeData *t_imageData = new QMimeData;
     t_imageData->setImageData(screenShotPix);
-
-    if (m_copyToClipboard) {
-        Q_ASSERT(!screenShotPix.isNull());
-        QClipboard *cb = qApp->clipboard();
-//        cb->setPixmap(screenShotPix, QClipboard::Clipboard);
-        cb->setMimeData(t_imageData, QClipboard::Clipboard);
-
-        qDebug() << "clip board success!";
+    Q_ASSERT(!screenShotPix.isNull());
+    QClipboard *cb = qApp->clipboard();
+    cb->setMimeData(t_imageData, QClipboard::Clipboard);
+    //if (m_copyToClipboard) {}
+    // 调起画板， 传入截图路径
+    /*
+    int t_saveCursor = ConfigSettings::instance()->value("open", "draw").toInt();
+    if (t_saveCursor == 1) {
+        DrawInterface *m_draw = new DrawInterface("com.deepin.Draw", "/com/deepin/Draw", QDBusConnection::sessionBus(), this);
+        QList<QString> list;
+        list.append(m_saveFileName);
+        m_draw->openFiles(list);
     }
-
+    */
     return true;
 }
 
 void MainWindow::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event);
     // Just use for debug.
     // repaintCounter++;
     // qDebug() << repaintCounter;
@@ -2631,8 +2663,16 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 qDebug() << "Key_Escape pressed: app quit!";
                 emit releaseEvent();
                 if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-                    eventMonitor.terminate();
-                    eventMonitor.wait();
+                    if(nullptr != m_pScreenRecordEvent){
+                        m_pScreenRecordEvent->terminate();
+                        m_pScreenRecordEvent->wait();
+                        m_pScreenRecordEvent = nullptr;
+                    }
+                    if(nullptr != m_pScreenShotEvent){
+                        m_pScreenShotEvent->terminate();
+                        m_pScreenShotEvent->wait();
+                        m_pScreenShotEvent = nullptr;
+                    }
                 }
                 qApp->quit();
             } else if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
@@ -2645,12 +2685,14 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {
                 if (keyEvent->key() == Qt::Key_C) {
 //                    ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
-                    m_copyToClipboard = true;
-                    saveScreenShot();
+                        //m_copyToClipboard = true;
+                        //saveScreenShot();
                 } else if (keyEvent->key() == Qt::Key_Z) {
                     qDebug() << "SDGF: ctrl+z !!!";
                     emit unDo();
                 }
+            } else if(keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter){
+                saveScreenShot();
             }
 
             bool needRepaint = false;
@@ -2658,8 +2700,16 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (keyEvent->key() == Qt::Key_Escape) {
                     emit releaseEvent();
                     if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-                        eventMonitor.terminate();
-                        eventMonitor.wait();
+                        if(nullptr != m_pScreenRecordEvent){
+                            m_pScreenRecordEvent->terminate();
+                            m_pScreenRecordEvent->wait();
+                            m_pScreenRecordEvent = nullptr;
+                        }
+                        if(nullptr != m_pScreenShotEvent){
+                            m_pScreenShotEvent->terminate();
+                            m_pScreenShotEvent->wait();
+                            m_pScreenShotEvent = nullptr;
+                        }
                     }
                     qApp->quit();
                 }
@@ -2690,8 +2740,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         m_shapesWidget->microAdjust("Ctrl+Down");
                     } else if (keyEvent->key() == Qt::Key_C) {
 //                        ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
-                        m_copyToClipboard = true;
-                        saveScreenShot();
+                        //m_copyToClipboard = true;
+                        //saveScreenShot();
                     } else if (keyEvent->key() == Qt::Key_S) {
 //                        expressSaveScreenshot();
                         saveScreenShot();
@@ -2725,6 +2775,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             recordWidth = std::max(std::min(recordWidth - 1,
                                                             m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
                             needRepaint = true;
+                            selectAreaName = tr("select-area");
                         }
 
                     } else if (keyEvent->key() == Qt::Key_Right) {
@@ -2732,6 +2783,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             recordWidth = std::max(std::min(recordWidth - 1,
                                                             m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
                             needRepaint = true;
+                            selectAreaName = tr("select-area");
                         }
                     } else if (keyEvent->key() == Qt::Key_Up) {
                         if (recordHeight > RECORD_MIN_SHOT_SIZE) {
@@ -2740,12 +2792,14 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             recordHeight = std::max(std::min(recordHeight - 1,
                                                              m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
                             needRepaint = true;
+                            selectAreaName = tr("select-area");
                         }
                     } else if (keyEvent->key() == Qt::Key_Down) {
                         if (recordHeight > RECORD_MIN_SHOT_SIZE) {
                             recordHeight = std::max(std::min(recordHeight - 1,
                                                              m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
                             needRepaint = true;
+                            selectAreaName = tr("select-area");
                         }
                     }
                 } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {
@@ -2756,15 +2810,16 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                     if (keyEvent->key() == Qt::Key_C) {
 //                        ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
-                        m_copyToClipboard = true;
+                        //m_copyToClipboard = true;
 //                        saveScreenshot();
-                        saveScreenShot();
+                        //saveScreenShot();
                     }
                     if (keyEvent->key() == Qt::Key_Left) {
                         recordX = std::max(0, recordX - 1);
                         recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     } else if (keyEvent->key() == Qt::Key_Right) {
                         if (recordX + recordWidth + 1 >= m_screenWidth) {
                             recordX = std::max(0, recordX - 1);
@@ -2772,11 +2827,13 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     } else if (keyEvent->key() == Qt::Key_Up) {
                         recordY = std::max(0, recordY - 1);
                         recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     } else if (keyEvent->key() == Qt::Key_Down) {
                         if (recordY + recordHeight + 1 >= m_screenHeight) {
                             recordY = std::max(0, recordY - 1);
@@ -2784,33 +2841,40 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     }
                 } else {
                     if (keyEvent->key() == Qt::Key_Left) {
                         recordX = std::max(0, recordX - 1);
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     } else if (keyEvent->key() == Qt::Key_Right) {
                         recordX = std::min(m_backgroundRect.width() - recordWidth,
                                            recordX + 1);
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     } else if (keyEvent->key() == Qt::Key_Up) {
                         recordY = std::max(0, recordY - 1);
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     } else if (keyEvent->key() == Qt::Key_Down) {
                         recordY = std::min(m_backgroundRect.height() -
                                            recordHeight, recordY + 1);
 
                         needRepaint = true;
+                        selectAreaName = tr("select-area");
                     }
                 }
 
                 if ( !m_needSaveScreenshot) {
                     m_sizeTips->updateTips(QPoint(recordX, recordY),
                                            QString("%1X%2").arg(recordWidth).arg(recordHeight));
-                    updateToolBarPos();
+                    if(m_toolBar->isVisible()) {
+                        updateToolBarPos();
+                    }
                     if (m_recordButton->isVisible()) {
                         updateRecordButtonPos();
                     }
@@ -2925,7 +2989,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                 m_sizeTips->updateTips(QPoint(recordX, recordY),
                                        QString("%1X%2").arg(recordWidth).arg(recordHeight));
-                updateToolBarPos();
+                if(m_toolBar->isVisible()){
+                    updateToolBarPos();
+                }
                 if (m_recordButton->isVisible()) {
                     updateRecordButtonPos();
                 }
@@ -3435,16 +3501,19 @@ void MainWindow::shotCurrentImg()
 
     const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     qDebug() << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect() << ratio;
-    QRect target( recordX * ratio,
-                  recordY * ratio,
-                  recordWidth * ratio,
-                  recordHeight * ratio);
+    QRect target( static_cast<int>(recordX * ratio),
+                  static_cast<int>(recordY * ratio),
+                  static_cast<int>(recordWidth * ratio),
+                  static_cast<int>(recordHeight * ratio));
 
 
 
     m_resultPixmap = m_resultPixmap.copy(target);
-
-    //  获取配置是否截取光标
+    addCursorToImage();
+}
+void MainWindow::addCursorToImage()
+{
+    //获取配置是否截取光标
     int t_saveCursor = ConfigSettings::instance()->value("save", "saveCursor").toInt();
     if (t_saveCursor == 0) {
         return;
@@ -3452,23 +3521,34 @@ void MainWindow::shotCurrentImg()
     QPoint coursePoint = this->cursor().pos();//获取当前光标的位置
     int x = coursePoint.x();
     int y = coursePoint.y();
-    // 光标是否在当前截取区域
+    //光标是否在当前截取区域
     bool isUnderRect = ((x > recordX) && (x < recordX + recordWidth)) && ((y > recordY) && (y < recordY + recordHeight));
     if (isUnderRect == false) {
         return;
     }
-    // 获取光标资源
-    QPixmap cursorPixmap = this->cursor().pixmap();
-    if (cursorPixmap.isNull()) {
-        cursorPixmap  = QIcon(":/image/mouse_style/shape/rect_mouse.svg").pixmap(16, 16);
+    if(m_CursorImage == nullptr)
+        return;
+    const int dataSize = m_CursorImage->width * m_CursorImage->height * 4;
+    uchar *pixels = new uchar[dataSize];
+    int index = 0;
+    for(int j = 0; j < m_CursorImage->width * m_CursorImage->height; ++j) {
+        unsigned long curValue = m_CursorImage->pixels[j];
+        pixels[index++] = static_cast<uchar>(curValue >> 0);
+        pixels[index++] = static_cast<uchar>(curValue >> 8);
+        pixels[index++] = static_cast<uchar>(curValue >> 16);
+        pixels[index++] = static_cast<uchar>(curValue >> 24);
     }
+    QImage cursorImage = QImage(pixels, m_CursorImage->width, m_CursorImage->height, QImage::Format_ARGB32_Premultiplied);
     QPainter painter(&m_resultPixmap);
-    painter.drawPixmap(x - recordX - cursorPixmap.width() / 2, y - recordY - cursorPixmap.height() / 2, cursorPixmap.width(), cursorPixmap.height(), cursorPixmap);
+    painter.drawImage(QRect(x - recordX - m_CursorImage->width / 2, y - recordY - m_CursorImage->height / 2, m_CursorImage->width, m_CursorImage->height), cursorImage);
+    delete[] pixels;
+    XFree(m_CursorImage);
+    return;
 }
 
-void MainWindow::shotFullScreen()
+void MainWindow::shotFullScreen(bool isFull)
 {
-    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
+    //const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     QRect target( m_backgroundRect.x(),
                   m_backgroundRect.y(),
                   m_backgroundRect.width(),
@@ -3476,7 +3556,11 @@ void MainWindow::shotFullScreen()
     qDebug() << "m_backgroundRect" << m_backgroundRect;
 
 //    m_resultPixmap = getPixmapofRect(m_backgroundRect);
-    m_resultPixmap = getPixmapofRect(target);
+    if(isFull){
+        m_resultPixmap = m_backgroundPixmap;
+    }else{
+        m_resultPixmap = getPixmapofRect(target);
+    }
     qDebug() << "m_resultPixmap" << m_resultPixmap.rect();
 }
 
@@ -3685,15 +3769,18 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)
 {
     stopRecord();
 }
-
+void MainWindow::waylandRecordOver()
+{
+    recordProcess.waylandRecordOver();
+}
 void MainWindow::stopRecord()
 {
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
         hide();
         emit releaseEvent();
         if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-            eventMonitor.terminate();
-            eventMonitor.wait();
+            m_pScreenRecordEvent->terminate();
+            m_pScreenRecordEvent->wait();
         }
         //正在保存录屏文件通知
         sendSavingNotify();
@@ -3707,6 +3794,13 @@ void MainWindow::stopRecord()
 
 void MainWindow::startCountdown()
 {
+    if(nullptr != m_pScreenShotEvent)
+    {
+        m_pScreenShotEvent->terminate();
+        m_pScreenShotEvent->wait();
+        m_pScreenShotEvent = nullptr;
+    }
+
     recordButtonStatus = RECORD_BUTTON_WAIT;
 
     disconnect(m_recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
@@ -3778,7 +3872,7 @@ void MainWindow::startCountdown()
     countdownTooltip->start();
 
 
-    Utils::passInputEvent(this->winId());
+    Utils::passInputEvent(static_cast<int>(this->winId()));
 
     repaint();
 }
@@ -3832,6 +3926,8 @@ void MainWindow::hideCameraWidget()
 }
 void MainWindow::adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight)
 {
+    Q_UNUSED(layoutWidth);
+    Q_UNUSED(layoutHeight);
 //    if (recordHeight < layoutHeight) {
 //        if (recordY + layoutHeight > rootWindowRect.height()) {
 //            layout->setContentsMargins(
@@ -3949,8 +4045,16 @@ void MainWindow::exitApp()
     }
     emit releaseEvent();
     if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-        eventMonitor.terminate();
-        eventMonitor.wait();
+        if(nullptr != m_pScreenRecordEvent){
+            m_pScreenRecordEvent->terminate();
+            m_pScreenRecordEvent->wait();
+            m_pScreenRecordEvent = nullptr;
+        }
+        if(nullptr != m_pScreenShotEvent){
+            m_pScreenShotEvent->terminate();
+            m_pScreenShotEvent->wait();
+            m_pScreenShotEvent = nullptr;
+        }
     }
     qApp->quit();
 }
@@ -4062,10 +4166,10 @@ void MainWindow::shotImgWidthEffect()
     const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
 //    const QRect rect(m_shapesWidget->geometry().topLeft() * ratio, m_shapesWidget->geometry().size() * ratio);
 
-    QRect target( m_shapesWidget->geometry().x() * ratio,
-                  m_shapesWidget->geometry().y() * ratio,
-                  m_shapesWidget->geometry().width() * ratio,
-                  m_shapesWidget->geometry().height() * ratio );
+    QRect target( static_cast<int>(m_shapesWidget->geometry().x() * ratio),
+                  static_cast<int>(m_shapesWidget->geometry().y() * ratio),
+                  static_cast<int>(m_shapesWidget->geometry().width() * ratio),
+                  static_cast<int>(m_shapesWidget->geometry().height() * ratio) );
 
     m_resultPixmap = m_backgroundPixmap.copy(target);
     m_drawNothing = false;

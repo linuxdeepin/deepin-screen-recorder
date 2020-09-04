@@ -27,15 +27,17 @@
 #include <QThread>
 #include <X11/Xlib.h>
 #include <X11/extensions/record.h>
+#include <X11/extensions/Xfixes.h>
 
 class EventMonitor : public QThread
 {
     Q_OBJECT
 
 public:
-    EventMonitor(QObject *parent = 0);
+    EventMonitor(QObject *parent = nullptr);
     static void callback(XPointer trash, XRecordInterceptData *data);
     void handleRecordEvent(XRecordInterceptData *);
+    XFixesCursorImage* GetCursorImage();
 
 signals:
     void buttonedPress(int x, int y);

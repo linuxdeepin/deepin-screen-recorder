@@ -35,17 +35,17 @@ void CameraWatcher::run()
         //log缓存被更新并且仍进行loop循环
         if (!m_isRecoding && m_loopwatch) {
             bool couldUse = false;
-//            qDebug() << "QCameraInfo::availableCameras()" << QCameraInfo::defaultCamera().deviceName();
+            //qDebug() << "QCameraInfo::availableCameras()" << QCameraInfo::defaultCamera().deviceName();
             if (QCameraInfo::availableCameras().count() > 0) {
                 couldUse = true;
             }
-//            if (couldUse != m_coulduse) {
-//                //发送log信息到UI
-//                m_coulduse = couldUse;
-            emit sigCameraState(couldUse);
-//            }
+            if (couldUse != m_coulduse) {
+                //发送log信息到UI
+                m_coulduse = couldUse;
+                emit sigCameraState(couldUse);
+            }
         }
-        QThread::currentThread()->msleep(200);
+        QThread::currentThread()->msleep(1000);
     }
 }
 

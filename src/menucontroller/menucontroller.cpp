@@ -26,7 +26,7 @@
 #include <QDebug>
 #include <map>
 DWIDGET_USE_NAMESPACE
-const QSize MENU_ICON_SIZE = QSize(14, 14);
+//const QSize MENU_ICON_SIZE = QSize(14, 14);
 
 MenuController::MenuController(QObject *parent)
     : QObject(parent)
@@ -169,6 +169,7 @@ void MenuController::setUndoEnable(bool status)
 
 void MenuController::enterEvent(QEvent *e)
 {
+    Q_UNUSED(e);
     qApp->setOverrideCursor(Qt::ArrowCursor);
 }
 

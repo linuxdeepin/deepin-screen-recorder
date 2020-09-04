@@ -51,6 +51,7 @@ signals:
 
 public slots:
     void switchContent(QString shapeType);
+    void colorChecked(QString colorType);
 
 private:
     DLabel *m_rectSubTool;

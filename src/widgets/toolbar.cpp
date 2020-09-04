@@ -31,16 +31,17 @@
 #include <QSettings>
 #include <QBitmap>
 #include "../utils/configsettings.h"
+#include <DIconButton>
 
 DWIDGET_USE_NAMESPACE
 
 namespace {
 const int TOOLBAR_HEIGHT = 70;
-const int TOOLBAR_WIDTH = 530;
+//const int TOOLBAR_WIDTH = 530;
 
-const QSize TOOLBAR_WIDGET_SIZE = QSize(530, 70);
-const int BUTTON_SPACING = 3;
-const int BTN_RADIUS = 3;
+//const QSize TOOLBAR_WIDGET_SIZE = QSize(530, 70);
+//const int BUTTON_SPACING = 3;
+//const int BTN_RADIUS = 3;
 }
 
 ToolBarWidget::ToolBarWidget(DWidget *parent)
@@ -58,12 +59,12 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
     blurBackground()->setBlendMode(DBlurEffectWidget::InWindowBlend);
 
     if (t_themeType == 1) {
-        blurBackground()->setMaskColor(QColor(255, 255, 255, 76.5));
+        blurBackground()->setMaskColor(QColor(255, 255, 255, 76));
 //        setMaskColor(QColor(170, 170, 170, 140));
     }
 
     else if (t_themeType == 2) {
-        blurBackground()->setMaskColor(QColor(0, 0, 0, 76.5));
+        blurBackground()->setMaskColor(QColor(0, 0, 0, 76));
     }
 //    setMaskColor(QColor(255, 255, 255, 76.5));
     //设置透明效果
@@ -88,7 +89,7 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
                            "DPushButton::hover{border-image: url(:/image/newUI/hover/close-hover.svg)}";
 
     QPixmap pixmap(":/image/newUI/normal/close-normal.svg");
-
+    //DIconButton
     m_closeButton = new DImageButton(this);
 //    m_closeButton->setIconSize(QSize(40, 40));
 //    m_closeButton->setIcon(QIcon(":/image/newUI/normal/close-normal.svg"));
@@ -113,17 +114,17 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
 //    hLayout->setContentsMargins(2, 3, 0, 0);
     hLayout->setMargin(0);
     hLayout->setSpacing(2);
+//  wayland 打开录屏功能
+//    if (m_deskinfo.waylandDectected()) {
+//        hLayout->addSpacing(10);
+//        m_mainTool->hide();
+//        hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
+//    }
 
-    if (m_deskinfo.waylandDectected()) {
-        hLayout->addSpacing(10);
-        m_mainTool->hide();
-        hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
-    }
-
-    else {
+//    else {
         hLayout->addWidget(m_mainTool, 0,  Qt::AlignCenter);
         hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
-    }
+//    }
 
 
 //    hLayout->addSpacing(10);
@@ -232,6 +233,7 @@ void ToolBarWidget::setCameraDeviceEnable(bool status)
 
 void ToolBarWidget::setExpand(bool expand, QString shapeType)
 {
+    Q_UNUSED(expand);
 //    m_subToolbar->switchContent(shapeType);
     m_subTool->switchContent(shapeType);
 //    emit expandChanged(expand, shapeType);
@@ -253,11 +255,12 @@ ToolBarWidget::~ToolBarWidget() {}
 ToolBar::ToolBar(DWidget *parent)
     : DLabel(parent)
 {
-
+    m_toolbarWidget = nullptr;
 }
 
 void ToolBar::setExpand(bool expand, QString shapeType)
 {
+    Q_UNUSED(expand);
     emit buttonChecked(shapeType);
 //    if (expand) {
 //        m_expanded = true;
@@ -338,7 +341,7 @@ void ToolBar::initToolBar()
 //    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     setFixedHeight(TOOLBAR_HEIGHT);
     m_toolbarWidget = new ToolBarWidget(this);
-    QVBoxLayout *vLayout = new QVBoxLayout(this);
+    QVBoxLayout *vLayout = new QVBoxLayout();
     vLayout->setSizeConstraint(QLayout::SetFixedSize);
     vLayout->setContentsMargins(0, 0, 0, 0);
     vLayout->addStretch();
@@ -391,7 +394,12 @@ void ToolBar::setVideoButtonInit()
 
 void ToolBar::shapeClickedFromMain(QString shape)
 {
-    m_toolbarWidget->shapeClickedFromBar(shape);
+    // 在工具栏显示之前，触发MainWindow::initShortcut()中的快捷键
+    // R O L P T
+    // 导致button没有初始化就执行click，导致崩溃。
+    if(m_toolbarWidget){
+        m_toolbarWidget->shapeClickedFromBar(shape);
+    }
 }
 
 void ToolBar::setMicroPhoneEnable(bool status)

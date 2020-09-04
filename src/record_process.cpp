@@ -38,6 +38,9 @@
 
 const int RecordProcess::RECORD_TYPE_VIDEO = 0;
 const int RecordProcess::RECORD_TYPE_GIF = 1;
+const int RecordProcess::RECORD_TYPE_MP4 = 2;
+const int RecordProcess::RECORD_TYPE_MKV = 3;
+
 const int RecordProcess::RECORD_AUDIO_INPUT_MIC = 2;
 const int RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO = 3;
 const int RecordProcess::RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO = 4;
@@ -93,6 +96,13 @@ void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filena
 void RecordProcess::setRecordType(int type)
 {
     recordType = type;
+    if((recordType != RECORD_TYPE_GIF) && m_info.waylandDectected()) {
+        if(settings->getOption("lossless_recording").toBool()){
+            recordType = RECORD_TYPE_MKV;
+        }else {
+            recordType = RECORD_TYPE_MP4;
+        }
+    }
 }
 
 void RecordProcess::setFrameRate(int framerate)
@@ -105,8 +115,12 @@ void RecordProcess::setRecordAudioInputType(int inputType)
 }
 void RecordProcess::run()
 {
-    // Start record.
-    recordType == RECORD_TYPE_GIF ? recordGIF() : recordVideo();
+    if (m_info.waylandDectected()) {
+        WaylandRecord();
+    }else{
+        // Start record.
+        recordType == RECORD_TYPE_GIF ? recordGIF() : recordVideo();
+    }
 
     // Got output or error.
     process->waitForFinished(-1);
@@ -119,7 +133,23 @@ void RecordProcess::run()
         qDebug() << "OK" << process->readAllStandardOutput() << process->readAllStandardError();
     }
 }
-
+void RecordProcess::WaylandRecord()
+{
+    // 启动wayland录屏
+    qDebug() << "RecordProcess::WaylandRecord()";
+    initProcess();
+    QStringList arguments;
+    arguments << QString("%1").arg(recordType);
+    arguments << QString("%1").arg(m_recordRect.width()) << QString("%1").arg(m_recordRect.height());
+    arguments << QString("%1").arg(m_recordRect.x()) << QString("%1").arg(m_recordRect.y());
+    arguments << QString("%1").arg(m_framerate);
+    arguments << QString("%1").arg(savePath);
+    arguments << QString("%1").arg(recordAudioInputType);
+    //arguments << QString("%d").arg(t_currentAudioChannel);
+    qDebug() << arguments;
+    process->start("xdg-desktop-portal-kde", arguments);
+    return;
+}
 void RecordProcess::recordGIF()
 {
 //    if (!m_info.waylandDectected()) {
@@ -165,7 +195,7 @@ void RecordProcess::recordGIF()
 
         process->start("byzanz-record", arguments);
 
-        byzanzProcessId = process->pid();
+        byzanzProcessId = static_cast<int>(process->pid());
 
         qDebug() << "byzanz-record pid: " << byzanzProcessId;
 
@@ -188,6 +218,7 @@ void RecordProcess::recordVideo()
     // otherwise, it will report 'Unrecognized option' error.
     QStringList arguments;
 
+    QString arch = QSysInfo::currentCpuArchitecture();
     //if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
     //if (m_isZhaoxin == false) {
         if (settings->getOption("lossless_recording").toBool()) {
@@ -205,76 +236,117 @@ void RecordProcess::recordVideo()
             arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
             arguments << QString("-framerate");
             arguments << QString("%1").arg(m_framerate);
+            arguments << QString("-probesize");
+            arguments << QString("24M");
+            arguments << QString("-thread_queue_size");
+            arguments << QString("64");
             arguments << QString("-f");
             arguments << QString("x11grab");
             arguments << QString("-i");
             arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
 
+
             if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
 
                 lastAudioSink = audioUtils->currentAudioSink();
 
+                arguments << QString("-thread_queue_size");
+                arguments << QString("32");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
-
                 arguments << QString("-ac");
                 arguments << QString("2");
-
+                arguments << QString("-ar");
+                arguments << QString("44100");
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
 
-                arguments << QString("-ar");
-                arguments << QString("48000");
-
-
+                arguments << QString("-thread_queue_size");
+                arguments << QString("32");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
-
                 arguments << QString("-ac");
                 arguments << QString("2");
-
+                arguments << QString("-ar");
+                arguments << QString("44100");
                 arguments << QString("-i");
                 arguments << QString("default");
 
-                arguments << QString("-ar");
-                arguments << QString("48000");
 
                 arguments << QString("-filter_complex");
-                arguments << QString("amerge");
+                if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+                    arguments << QString("[1:a]volume=30dB[a1];[a1][2:a]amix=inputs=2:duration=first:dropout_transition=0[out]");
+                    arguments << QString("-map");
+                    arguments << QString("0:v");
+                    arguments << QString("-map");
+                    arguments << QString("[out]");
+                }else {
+                    arguments << QString("amerge");
+                }
 
-//                arguments << QString("-preset");
-//                arguments << QString("ultrafast");
+
+
+
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC) {
-                lastAudioSink = audioUtils->currentAudioSink();
+
+                arguments << QString("-thread_queue_size");
+                arguments << QString("32");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
                 arguments << QString("2");
+                arguments << QString("-ar");
+                arguments << QString("44100");
                 arguments << QString("-i");
                 arguments << QString("default");
-
-//              arguments << QString("-preset");
-//              arguments << QString("ultrafast");
+                //arguments << QString("-af");
+                //arguments << QString("aresample=44100,asetpts=N/SR/TB,aselect=concatdec_select");
+                //按当前采样率生成时间戳:
+                //arguments << QString("-filter:a");
+                //arguments << QString("asetpts=N/SR/TB");
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
                 lastAudioSink = audioUtils->currentAudioSink();
+                arguments << QString("-thread_queue_size");
+                arguments << QString("32");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
                 arguments << QString("2");
+                arguments << QString("-ar");
+                arguments << QString("44100");
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
-//              arguments << QString("-preset");
-//              arguments << QString("ultrafast");
+                if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+                    arguments << QString("-af");
+                    arguments << QString("volume=30dB");
+                }
             }
-
 
             arguments << QString("-c:v");
             arguments << QString("libx264");
-            arguments << QString("-qp");
-            arguments << QString("0");
 
-//          arguments << QString("-preset");
-//          arguments << QString("ultrafast");
+            arguments << QString("-pix_fmt");
+            arguments << QString("yuv420p");
+
+            arguments << QString("-profile:v");
+            arguments << QString("baseline");
+
+            arguments << QString("-qp");
+            arguments << QString("23");
+
+            arguments << QString("-preset");
+            arguments << QString("ultrafast");
+
+            arguments << QString("-vf");
+            arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
 
             arguments << savePath;
         } else {
@@ -284,118 +356,117 @@ void RecordProcess::recordVideo()
             arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
             arguments << QString("-framerate");
             arguments << QString("%1").arg(m_framerate);
+            arguments << QString("-probesize");
+            arguments << QString("24M");
+            arguments << QString("-thread_queue_size");
+            arguments << QString("64");
             arguments << QString("-f");
             arguments << QString("x11grab");
             arguments << QString("-i");
             arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
             if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
 
-                lastAudioSink = audioUtils->currentAudioSink();
-//                audioUtils->setupSystemAudioOutput();
-
-//                arguments << QString("-thread_queue_size");
-//                arguments << QString("1024");
-//                arguments << QString("-f");
-//                arguments << QString("alsa");
-//                arguments << QString("-ac");
-//                arguments << QString("2");
-//                arguments << QString("-i");
-//                arguments << QString("hw:Loopback,1,0");
-
-//                arguments << QString("-thread_queue_size");
-//                arguments << QString("1024");
-
+                arguments << QString("-thread_queue_size");
+                arguments << QString("32");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
-
                 arguments << QString("-ac");
                 arguments << QString("2");
-
+                arguments << QString("-ar");
+                arguments << QString("44100");
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
 
-                arguments << QString("-ar");
-                arguments << QString("48000");
 
-
-
+                arguments << QString("-thread_queue_size");
+                arguments << QString("32");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
-
                 arguments << QString("-ac");
                 arguments << QString("2");
-
+                arguments << QString("-ar");
+                arguments << QString("44100");
                 arguments << QString("-i");
                 arguments << QString("default");
 
-                arguments << QString("-ar");
-                arguments << QString("48000");
-
                 arguments << QString("-filter_complex");
-                arguments << QString("amerge");
+                if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+                    arguments << QString("[1:a]volume=30dB[a1];[a1][2:a]amix=inputs=2:duration=first:dropout_transition=0[out]");
+                    arguments << QString("-map");
+                    arguments << QString("0:v");
+                    arguments << QString("-map");
+                    arguments << QString("[out]");
 
-//                arguments << QString("-preset");
- //               arguments << QString("ultrafast");
+                }else {
+                    arguments << QString("amerge");
+                }
 //                arguments << QString("-filter_complex");
 //                arguments << QString("amix=inputs=2:duration=first:dropout_transition=0");
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC) {
 //                AudioUtils *audioUtils = new AudioUtils(this);
                 lastAudioSink = audioUtils->currentAudioSink();
 
-//                arguments << QString("-thread_queue_size");
-//                arguments << QString("1024");
+                arguments << QString("-thread_queue_size");
+                arguments << QString("32");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
                 arguments << QString("2");
+                arguments << QString("-ar");
+                arguments << QString("44100");
                 arguments << QString("-i");
                 arguments << QString("default");
+                //按当前采样率生成时间戳:
+                //arguments << QString("-filter:a");
+                //arguments << QString("asetpts=N/SR/TB");
 
-//                arguments << QString("-preset");
-//                arguments << QString("ultrafast");
             } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
-//                AudioUtils *audioUtils = new AudioUtils(this);
-                lastAudioSink = audioUtils->currentAudioSink();
-//                audioUtils->setupSystemAudioOutput();
 
-//                arguments << QString("-thread_queue_size");
-//                arguments << QString("1024");
-//                arguments << QString("-f");
-//                arguments << QString("alsa");
-//                arguments << QString("-ac");
-//                arguments << QString("2");
-//                arguments << QString("-i");
-//                arguments << QString("hw:Loopback,1,0");
-//                arguments << QString("-thread_queue_size");
-//                arguments << QString("4096");
+                arguments << QString("-thread_queue_size");
+                arguments << QString("32");
+                arguments << QString("-fragment_size");
+                arguments << QString("4096");
                 arguments << QString("-f");
                 arguments << QString("pulse");
                 arguments << QString("-ac");
                 arguments << QString("2");
+                arguments << QString("-ar");
+                arguments << QString("44100");
                 arguments << QString("-i");
                 arguments << QString("%1").arg(t_currentAudioChannel);
 
-//                arguments << QString("-crf");
-//                arguments << QString("0");
-
-//                arguments << QString("-preset");
-//                arguments << QString("ultrafast");
+                if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+                    arguments << QString("-af");
+                    arguments << QString("volume=30dB");
+                }
             }
+
 
             // Most mobile mplayer can't decode yuv444p (ffempg default format) video, yuv420p looks good.
             arguments << QString("-pix_fmt");
             arguments << QString("yuv420p");
 
+            arguments << QString("-c:v");
+            arguments << QString("libx264");
+
+            arguments << QString("-profile:v");
+            arguments << QString("baseline");
+
             // append crf parameter here
             arguments << QString("-crf");
-            arguments << QString("20");
+            arguments << QString("23");
 
+            arguments << QString("-preset");
+            arguments << QString("ultrafast");
 
             arguments << QString("-vf");
             arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
-
-//            arguments << QString("-threads");
-//            arguments << QString("0");
 
             arguments << savePath;
         }
@@ -585,7 +656,7 @@ int RecordProcess::readSleepProcessPid()
     memset(&proc_info, 0, sizeof(proc_t));
 
     StoredProcType processes;
-    while (readproc(proc, &proc_info) != NULL) {
+    while (readproc(proc, &proc_info) != nullptr) {
         processes[proc_info.tid] = proc_info;
     }
     closeproc(proc);
@@ -596,16 +667,64 @@ int RecordProcess::readSleepProcessPid()
     return processTree->getAllChildPids(byzanzProcessId)[0];
 }
 
+void RecordProcess::waylandRecordOver()
+{
+    if(!m_info.waylandDectected()){
+        return;
+    }
 
+    // wayland录屏进程调用dbus通知保存完成。
+    qDebug() << Q_FUNC_INFO;
+    QString newSavePath = QDir(saveDir).filePath(saveBaseName);
+    QFile::rename(savePath, newSavePath);
+    // Popup notify.
+    QDBusInterface notification("org.freedesktop.Notifications",
+                                "/org/freedesktop/Notifications",
+                                "org.freedesktop.Notifications",
+                                QDBusConnection::sessionBus());
+
+    QStringList actions;
+    actions << "_open" << tr("View");
+
+    QVariantMap hints;
+    hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
+    QList<QVariant> arg;
+    arg << (QCoreApplication::applicationName())                 // appname
+        << ((unsigned int) 0)                                    // id
+        << QString("deepin-screen-recorder")                     // icon
+        << tr("Recording finished")                              // summary
+        << QString(tr("Saved to %1")).arg(newSavePath) // body
+        << actions                                               // actions
+        << hints                                                 // hints
+        << (int) -1;                                             // timeout
+    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+    QApplication::quit();
+}
 void RecordProcess::stopRecord()
 {
+
+    if(m_info.waylandDectected()){
+        // wayland 录屏通过dbus接口停止。
+        qDebug() << "RecordProcess::stopRecord()";
+        QDBusInterface waylandInterface("org.freedesktop.impl.portal.desktop",
+                                    "/org/freedesktop/portal/desktop",
+                                    "org.freedesktop.impl.portal.Settings",
+                                    QDBusConnection::sessionBus());
+
+        if(waylandInterface.isValid()) {
+            waylandInterface.asyncCall("stopRecord");
+        }
+        return;
+    }
+
     if (recordType == RECORD_TYPE_GIF) {
         int byzanzChildPid = readSleepProcessPid();
         kill(byzanzChildPid, SIGKILL);
 
         qDebug() << "Kill byzanz-record's child process (sleep) pid: " << byzanzChildPid;
     } else {
-        process->terminate();
+        //process->terminate();
+        process->write("q");
     }
 
 // Wait thread.
@@ -633,17 +752,18 @@ void RecordProcess::stopRecord()
 
     QVariantMap hints;
     hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
-
+    int timeout = -1;
+    unsigned int id = 0;
 
     QList<QVariant> arg;
     arg << (QCoreApplication::applicationName())                 // appname
-        << ((unsigned int) 0)                                    // id
+        << id                                    // id
         << QString("deepin-screen-recorder")                     // icon
         << tr("Recording finished")                              // summary
         << QString(tr("Saved to %1")).arg(newSavePath) // body
         << actions                                               // actions
         << hints                                                 // hints
-        << (int) -1;                                             // timeout
+        << timeout;                                              // timeout
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
 
 //    if (lastAudioSink.length() > 0) {

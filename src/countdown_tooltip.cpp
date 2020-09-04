@@ -55,8 +55,8 @@ void CountdownTooltip::paintEvent(QPaintEvent *)
 
         qreal devicePixelRatio = qApp->devicePixelRatio();
         painter.setOpacity(1);
-        int countdownX = rect().x() + (rect().width() - countdown1Img.width() / devicePixelRatio) / 2;
-        int countdownY = rect().y() + NUMBER_PADDING_Y * devicePixelRatio;
+        int countdownX = static_cast<int>(rect().x() + (rect().width() - countdown1Img.width() / devicePixelRatio) / 2);
+        int countdownY = static_cast<int>(rect().y() + NUMBER_PADDING_Y * devicePixelRatio);
         if (showCountdownCounter == 1) {
             painter.drawPixmap(QPoint(countdownX, countdownY), countdown1Img);
         } else if (showCountdownCounter == 2) {

@@ -36,7 +36,7 @@ class ButtonFeedback : public DWidget
     static const int FRAME_RATE;
 
 public:
-    ButtonFeedback(DWidget *parent = 0);
+    ButtonFeedback(DWidget *parent = nullptr);
 
 protected:
     void paintEvent(QPaintEvent *event);
