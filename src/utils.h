@@ -44,4 +44,5 @@ public:
     static void warnNoComposite();
     static void notSupportWarn();
     static QString getRecordingSaveDirectory();
+    static bool is3rdInterfaceStart;
 };

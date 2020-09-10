@@ -26,11 +26,11 @@
 
 #include "dbusinterface/dbusnotify.h"
 #include "utils/configsettings.h"
+#include "utils.h"
 
 //#include <dscreenwindowsutil.h>
 
 //DWM_USE_NAMESPACE
-
 Screenshot::Screenshot(QObject *parent)
     : QObject(parent)
 {
@@ -120,6 +120,7 @@ void Screenshot::savePathScreenshot(const QString &path)
 
 void Screenshot::startScreenshotFor3rd(const QString &path)
 {
+    Utils::is3rdInterfaceStart = true;
     initUI();
     m_window->startScreenshotFor3rd(path);
 }

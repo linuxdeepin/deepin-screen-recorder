@@ -43,6 +43,8 @@ static const QString WarningDialogService = "com.deepin.dde.WarningDialog";
 static const QString WarningDialogPath = "/com/deepin/dde/WarningDialog";
 static const QString WarningDialogInterface = "com.deepin.dde.WarningDialog";
 
+bool Utils::is3rdInterfaceStart = false;
+
 QString Utils::getQrcPath(QString imageName)
 {
     return QString(":/image/%1").arg(imageName);

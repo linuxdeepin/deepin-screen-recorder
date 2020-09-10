@@ -1080,8 +1080,9 @@ void MainWindow::savePath(const QString &path)
 void MainWindow::startScreenshotFor3rd(const QString &path)
 {
     m_shotSavePath = path;
-    if (!QFileInfo(path).dir().exists()) {
+    if (path == "" || (!QDir(path).exists())) {
         // 传入的文件目录不存在，保存在系统pictures路径下
+        qDebug() << path <<"not exist! change path to QStandardPaths::PicturesLocation";
         m_shotSavePath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
     }
     this->initAttributes();
@@ -1899,9 +1900,12 @@ void MainWindow::saveScreenShot()
 void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const bool succeed)
 {
     Q_UNUSED(saveAction);
-    QDBusMessage msg =QDBusMessage::createSignal("/com/deepin/Screenshot", "com.deepin.Screenshot", "Done");
-    msg << saveFilePath;
-    qDebug() << QDBusConnection::sessionBus().send(msg);
+    if(Utils::is3rdInterfaceStart){
+        QDBusMessage msg =QDBusMessage::createSignal("/com/deepin/Screenshot", "com.deepin.Screenshot", "Done");
+        msg << saveFilePath;
+        QDBusConnection::sessionBus().send(msg);
+        exit(0);
+    }
     if(m_noNotify) {
         exit(0);
     }
@@ -2253,20 +2257,22 @@ bool MainWindow::saveAction(const QPixmap &pix)
         m_saveFileName = QString(tr("Clipboard"));
     }
     // 保存到剪贴板
-    QMimeData *t_imageData = new QMimeData;
-    t_imageData->setImageData(screenShotPix);
-    Q_ASSERT(!screenShotPix.isNull());
-    QClipboard *cb = qApp->clipboard();
-    cb->setMimeData(t_imageData, QClipboard::Clipboard);
-    //if (m_copyToClipboard) {}
-    // 调起画板， 传入截图路径
-    int t_openWithDraw = ConfigSettings::instance()->value("open", "draw").toInt();
-    if (t_openWithDraw == 1) {
-        DrawInterface *m_draw = new DrawInterface("com.deepin.Draw", "/com/deepin/Draw", QDBusConnection::sessionBus(), this);
-        QList<QImage> list;
-        list.append(screenShotPix.toImage());
-        m_draw->openImages(list);
-        delete m_draw;
+    if(Utils::is3rdInterfaceStart == false) {
+        QMimeData *t_imageData = new QMimeData;
+        t_imageData->setImageData(screenShotPix);
+        Q_ASSERT(!screenShotPix.isNull());
+        QClipboard *cb = qApp->clipboard();
+        cb->setMimeData(t_imageData, QClipboard::Clipboard);
+        //if (m_copyToClipboard) {}
+        // 调起画板， 传入截图路径
+        int t_openWithDraw = ConfigSettings::instance()->value("open", "draw").toInt();
+        if (t_openWithDraw == 1) {
+            DrawInterface *m_draw = new DrawInterface("com.deepin.Draw", "/com/deepin/Draw", QDBusConnection::sessionBus(), this);
+            QList<QImage> list;
+            list.append(screenShotPix.toImage());
+            m_draw->openImages(list);
+            delete m_draw;
+        }
     }
     return true;
 }

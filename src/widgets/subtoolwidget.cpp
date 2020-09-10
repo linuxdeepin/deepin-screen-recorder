@@ -38,6 +38,7 @@
 #include <QFileDialog>
 #include "../settings.h"
 #include "tooltips.h"
+#include "../utils.h"
 
 #include <unistd.h>
 
@@ -606,7 +607,9 @@ void SubToolWidget::initShotLabel()
     m_shotOptionButton->setMinimumSize(QSize(73, 40));
     installTipHint(m_shotOptionButton, tr("Options"));
     rectBtnGroup->addButton(m_shotOptionButton);
-
+    if(Utils::is3rdInterfaceStart){
+        m_shotOptionButton->hide();
+    }
     btnList.append(m_shotOptionButton);
 
     QActionGroup *t_saveGroup = new QActionGroup(this);

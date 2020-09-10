@@ -28,6 +28,7 @@
 #include <DWindowManagerHelper>
 #include "../utils/configsettings.h"
 #include "tooltips.h"
+#include "../utils.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -89,7 +90,7 @@ void MainToolWidget::initMainLabel()
     m_recordBtn->setIcon(QIcon::fromTheme("screencap-normal"));
 
     // 2D 窗管下，隐藏录屏功能
-    if(!DWindowManagerHelper::instance()->hasComposite()) {
+    if((!DWindowManagerHelper::instance()->hasComposite()) || Utils::is3rdInterfaceStart) {
         m_recordBtn->hide();
     }
     // mips 与 sw 隐藏录屏功能

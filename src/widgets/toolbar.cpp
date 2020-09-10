@@ -20,6 +20,7 @@
 #include "toolbar.h"
 #include "../utils/baseutils.h"
 #include "../utils/saveutils.h"
+#include "../utils.h"
 
 #include <QPainter>
 #include <QDebug>
@@ -37,7 +38,7 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const int TOOLBAR_HEIGHT = 70;
-//const int TOOLBAR_WIDTH = 530;
+const int TOOLBAR_WIDTH = 390;
 
 //const QSize TOOLBAR_WIDGET_SIZE = QSize(530, 70);
 //const int BUTTON_SPACING = 3;
@@ -72,6 +73,9 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
 //    setMaskColor(DBlurEffectWidget::LightColor);
 //    setFixedSize(TOOLBAR_WIDGET_SIZE);
     setFixedHeight(TOOLBAR_HEIGHT);
+    if(Utils::is3rdInterfaceStart){
+        setFixedWidth(TOOLBAR_WIDTH);
+    }
 //    setMinimumSize(TOOLBAR_WIDGET_SIZE);
 //    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 //    qDebug() << "~~~~~~" << this->size();
