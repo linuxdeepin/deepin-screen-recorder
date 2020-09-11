@@ -34,7 +34,7 @@ Requires:       byzanz
 Requires:       ffmpeg
 Requires:       hicolor-icon-theme
 Requires:       dbus
-#Requires:       deepin-manual-directory
+Requires:       deepin-turbo
 
 %description
 %{summary}.
