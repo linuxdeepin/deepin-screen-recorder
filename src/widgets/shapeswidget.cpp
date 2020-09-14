@@ -20,6 +20,7 @@
 #include "shapeswidget.h"
 #include <QApplication>
 #include <QPainter>
+#include <QPainterPath>
 #include <QDebug>
 
 #include "../utils/calculaterect.h"
