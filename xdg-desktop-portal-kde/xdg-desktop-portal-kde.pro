@@ -9,7 +9,7 @@ TEMPLATE = app
 TARGET = xdg-desktop-portal-kde
 INCLUDEPATH += .
 
-LIBS += -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample
+LIBS += -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample -lKF5WaylandClient -lKF5ConfigCore
 
 PKGCONFIG += gbm epoxy
 
