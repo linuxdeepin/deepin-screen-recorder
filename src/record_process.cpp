@@ -316,8 +316,9 @@ void RecordProcess::recordVideo()
         arguments << QString("libx264");
         arguments << QString("-pix_fmt");
         arguments << QString("yuv420p");
-        arguments << QString("-profile:v");
-        arguments << QString("baseline");
+        // baseline 算法，录制的视频在windos自带播放器不能播放
+        //arguments << QString("-profile:v");
+        //arguments << QString("baseline");
         if (settings->getOption("lossless_recording").toBool()) {
             arguments << QString("-qp");
             arguments << QString("23");
