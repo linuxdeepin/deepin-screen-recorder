@@ -1065,7 +1065,7 @@ void MainWindow::fullScreenshot()
     m_toolBar = new ToolBar(this);
     m_toolBar->hide();
 
-    shotFullScreen();
+    shotFullScreen(true);
 
 //    if (m_hotZoneInterface->isValid())
 //        m_hotZoneInterface->asyncCall("EnableZoneDetected",  true);
