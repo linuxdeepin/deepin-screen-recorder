@@ -127,10 +127,7 @@ void Screenshot::stopRecord()
 {
     m_window->stopRecord();
 }
-void Screenshot::waylandRecordOver()
-{
-    m_window->waylandRecordOver();
-}
+
 void Screenshot::setConfigThemeType(int themeType)
 {
     ConfigSettings::instance()->setValue("common", "themeType", themeType);

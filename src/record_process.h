@@ -31,6 +31,7 @@
 #include <proc/readproc.h>
 #include <proc/sysinfo.h>
 #include "utils/desktopinfo.h"
+#include "desktopportal.h"
 
 class RecordProcess : public QThread
 {
@@ -63,7 +64,6 @@ public:
     void startRecord();
     void setIsZhaoXinPlatform(bool status);
     void stopRecord();
-    void waylandRecordOver();
     void recordGIF();
     void recordVideo();
     void initProcess();
@@ -97,6 +97,8 @@ private:
     QString lastAudioSink;
     bool m_isZhaoxin = false;
     DesktopInfo m_info;
+    //wayland 录屏模块
+    DesktopPortal *m_pDesktopPortal;
 };
 
 #endif //RECORDPROCESS_H
