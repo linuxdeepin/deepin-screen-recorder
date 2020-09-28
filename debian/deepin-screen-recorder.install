@@ -1,6 +1,0 @@
-usr/bin/deepin-screen-recorder
-usr/share/deepin-screen-recorder/translations/*.qm
-usr/share/icons/hicolor/scalable/apps/deepin-screen-recorder.svg
-usr/share/applications/deepin-screen-recorder.desktop
-usr/share/dbus-1/services/com.deepin.ScreenRecorder.service
-usr/share/dbus-1/services/com.deepin.Screenshot.service

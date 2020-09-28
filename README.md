@@ -56,6 +56,24 @@ We encourage you to report issues and contribute changes
 * [Contribution guide for users](http://wiki.deepin.org/index.php?title=Contribution_Guidelines_for_Users)
 * [Contribution guide for developers](http://wiki.deepin.org/index.php?title=Contribution_Guidelines_for_Developers).
 
+## Third party library
+
+Part of the source code in xdg-desktop-portal-kde is adopted.
+
+desktopportal.h
+
+desktopportal.cpp
+
+waylandintegration.h
+
+waylandintegration.cpp
+
+waylandintegration_p.h
+
+settings.h
+
+settings.cpp
+
 ## License
 
 Deepin Screen Recorder is licensed under [GPLv3](LICENSE).
