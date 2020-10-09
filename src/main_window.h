@@ -294,7 +294,7 @@ private:
 
 //    DWindowManager *windowManager;
 
-    QVBoxLayout *recordButtonLayout;
+    //QVBoxLayout *recordButtonLayout;
     QVBoxLayout *countdownLayout;
 //    RecordButton *recordButton;
 //    RecordOptionPanel *recordOptionPanel;

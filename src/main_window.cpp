@@ -3572,7 +3572,7 @@ void MainWindow::startCountdown()
     hideAllWidget();
 
 
-    delete recordButtonLayout;
+    //delete recordButtonLayout;
 
     countdownLayout = new QVBoxLayout();
     setLayout(countdownLayout);
