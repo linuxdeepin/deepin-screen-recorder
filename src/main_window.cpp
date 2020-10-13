@@ -1124,7 +1124,7 @@ QPixmap MainWindow::getPixmapofRect(const QRect &rect)
     bool ok;
     return m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
 }
-
+/*
 void MainWindow::installTipHint(QWidget *w, const QString &hintstr)
 {
     // TODO: parent must be mainframe
@@ -1140,7 +1140,7 @@ void MainWindow::installHint(QWidget *w, QWidget *hint)
     w->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hint));
     w->installEventFilter(hintFilter);
 }
-
+*/
 void MainWindow::showPressFeedback(int x, int y)
 {
     if (recordButtonStatus == RECORD_BUTTON_RECORDING && m_mouseStatus == 1) {
@@ -2738,7 +2738,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
         if (m_functionType == 1) {
-            bool needRepaint = false;
+            bool isNeedRepaint = false;
 
             if (m_isShapesWidgetExist) {
                 if (keyEvent->key() == Qt::Key_Shift) {
@@ -2751,10 +2751,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (keyEvent->key() == Qt::Key_Left || keyEvent->key()
                         == Qt::Key_Right || keyEvent->key() == Qt::Key_Up ||
                         keyEvent->key() == Qt::Key_Down) {
-                    needRepaint = true;
+                    isNeedRepaint = true;
                 }
             }
-            if (needRepaint) {
+            if (isNeedRepaint) {
                 update();
             }
 

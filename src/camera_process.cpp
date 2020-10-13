@@ -62,7 +62,7 @@ void CameraProcess::displayImage(int, QImage image)
     //QImage::Format format =  image.format();
     //qDebug() << (int)format;
 }
-*/
+
 bool CameraProcess::checkCameraAvailability()
 {
     if(QCameraInfo::availableCameras().count() > 0)
@@ -70,3 +70,4 @@ bool CameraProcess::checkCameraAvailability()
     else
         return false;
 }
+*/

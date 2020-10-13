@@ -42,7 +42,7 @@ class ToolBarWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:
-    ToolBarWidget(DWidget *parent = nullptr);
+    explicit ToolBarWidget(DWidget *parent = nullptr);
     ~ToolBarWidget() Q_DECL_OVERRIDE;
 
 signals:
@@ -66,7 +66,7 @@ signals:
     void shotToolChangedSignal(const QString &func);
     void closeButtonSignal();
 public slots:
-    bool isButtonChecked();
+    //bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
     //void specifiedSavePath();
     void keyBoardCheckedSlot(bool checked);
@@ -94,14 +94,14 @@ private:
     DImageButton *m_closeButton;
     DesktopInfo m_deskinfo;
 
-    bool  m_expanded;
+    //bool  m_expanded;
 };
 
 class ToolBar : public DLabel
 {
     Q_OBJECT
 public:
-    ToolBar(DWidget *parent = nullptr);
+    explicit ToolBar(DWidget *parent = nullptr);
     ~ToolBar() Q_DECL_OVERRIDE;
 
 signals:
@@ -125,7 +125,7 @@ signals:
     void shotToolChangedToMain(const QString &func);
     void closeButtonToMain();
 public slots:
-    bool isButtonChecked();
+    //bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
     void showAt(QPoint pos);
 //    void specificedSavePath();
@@ -151,6 +151,6 @@ protected:
 private:
     ToolBarWidget *m_toolbarWidget;
 
-    bool m_expanded;
+    //bool m_expanded;
 };
 #endif // TOOLBAR_H

@@ -36,7 +36,7 @@ class SideBarWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:
-    SideBarWidget(DWidget *parent = nullptr);
+    explicit SideBarWidget(DWidget *parent = nullptr);
     ~SideBarWidget() Q_DECL_OVERRIDE;
 
     void changeShotToolWidget(const QString &func);

@@ -52,7 +52,7 @@ public:
     static const int RECORD_FRAMERATE_24;
     static const int RECORD_FRAMERATE_30;
 
-    RecordProcess(QObject *parent = nullptr);
+    explicit RecordProcess(QObject *parent = nullptr);
 
     void setRecordInfo(const QRect &recordRect, const QString &filename);
     //void setRecordType(int recordType);
@@ -69,10 +69,10 @@ protected:
     void run();
 
 private:
-    QProcess *process;
+    QProcess *process = nullptr;
 
-    int recordType;
-    int recordAudioInputType;
+    int recordType = 0;
+    int recordAudioInputType = 0;
 
     QRect m_recordRect;
 
@@ -84,10 +84,9 @@ private:
     QString saveAreaName;
     QString displayNumber;
 
-    Settings *settings;
+    Settings *settings = nullptr;
 
-    int byzanzProcessId;
-    int sleepProcessId;
+    int byzanzProcessId = 0;
     int m_framerate;
 
     //QString lastAudioSink;

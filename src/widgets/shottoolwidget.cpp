@@ -232,7 +232,7 @@ void ShotToolWidget::initRectLabel()
     connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
         Q_UNUSED(status);
-        DPalette pa;
+        //DPalette pa;
         if (thickOneBtn->isChecked()) {
 //            pa = thickOneBtn->palette();
 //            pa.setColor(DPalette::ButtonText, Qt::white);
@@ -463,7 +463,7 @@ void ShotToolWidget::initRectLabel()
 
         if (t_status == true)
         {
-            DPalette pa;
+            //DPalette pa;
 //            pa = m_blurRectButton->palette();
 //            pa.setColor(DPalette::ButtonText, Qt::white);
 //            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
@@ -502,7 +502,7 @@ void ShotToolWidget::initRectLabel()
 
         else
         {
-            DPalette pa;
+            //DPalette pa;
             m_blurRectButton->setChecked(false);
 //            pa = m_blurRectButton->palette();
 //            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
@@ -528,7 +528,7 @@ void ShotToolWidget::initRectLabel()
 
         if (t_status == true)
         {
-            DPalette pa;
+            //DPalette pa;
 //            pa = m_mosaicRectButton->palette();
 //            pa.setColor(DPalette::ButtonText, Qt::white);
 //            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
@@ -566,7 +566,7 @@ void ShotToolWidget::initRectLabel()
 
         else
         {
-            DPalette pa;
+            //DPalette pa;
             m_mosaicRectButton->setChecked(false);
 //            pa = m_mosaicRectButton->palette();
 //            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
@@ -744,7 +744,7 @@ void ShotToolWidget::initCircLabel()
     connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
         Q_UNUSED(status);
-        DPalette pa;
+        //DPalette pa;
         if (thickOneBtn->isChecked()) {
 //            pa = thickOneBtn->palette();
 //            pa.setColor(DPalette::ButtonText, Qt::white);
@@ -974,7 +974,7 @@ void ShotToolWidget::initCircLabel()
 
         if (t_status == true)
         {
-            DPalette pa;
+            //DPalette pa;
 //            pa = m_blurCircButton->palette();
 //            pa.setColor(DPalette::ButtonText, Qt::white);
 //            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
@@ -1013,7 +1013,7 @@ void ShotToolWidget::initCircLabel()
 
         else
         {
-            DPalette pa;
+            //DPalette pa;
             m_blurCircButton->setChecked(false);
 //            pa = m_blurCircButton->palette();
 //            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
@@ -1039,7 +1039,7 @@ void ShotToolWidget::initCircLabel()
 
         if (t_status == true)
         {
-            DPalette pa;
+            //DPalette pa;
 //            pa = m_mosaicCircButton->palette();
 //            pa.setColor(DPalette::ButtonText, Qt::white);
 //            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
@@ -1078,7 +1078,7 @@ void ShotToolWidget::initCircLabel()
 
         else
         {
-            DPalette pa;
+            //DPalette pa;
             m_mosaicCircButton->setChecked(false);
 //            pa = m_mosaicCircButton->palette();
 //            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
@@ -1268,7 +1268,7 @@ void ShotToolWidget::initLineLabel()
     connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
         Q_UNUSED(status);
-        DPalette pa;
+        //DPalette pa;
         if (thickOneBtn->isChecked()) {
 //            pa = thickOneBtn->palette();
 //            pa.setColor(DPalette::ButtonText, Qt::white);
@@ -1486,7 +1486,7 @@ void ShotToolWidget::initLineLabel()
     btnList.append(mosaicBtn);
 
     connect(blurButton, &ToolButton::clicked, this, [ = ] {
-        DPalette pa;
+        //DPalette pa;
 //        pa = blurButton->palette();
 //        pa.setColor(DPalette::ButtonText, Qt::white);
 //        pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
@@ -1532,7 +1532,7 @@ void ShotToolWidget::initLineLabel()
         }
     });
     connect(mosaicBtn, &ToolButton::clicked, this, [ = ] {
-        DPalette pa;
+        //DPalette pa;
 //        pa = mosaicBtn->palette();
 //        pa.setColor(DPalette::ButtonText, Qt::white);
 //        pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
@@ -1757,7 +1757,7 @@ void ShotToolWidget::initPenLabel()
     connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
         Q_UNUSED(status);
-        DPalette pa;
+        //DPalette pa;
         if (thickOneBtn->isChecked()) {
 //            pa = thickOneBtn->palette();
 //            pa.setColor(DPalette::ButtonText, Qt::white);

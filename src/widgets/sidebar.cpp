@@ -148,7 +148,7 @@ void SideBarWidget::showEvent(QShowEvent *event)
 
 
 SideBar::SideBar(DWidget *parent) : DLabel(parent)
-  ,m_sidebarWidget(nullptr)
+  ,m_sidebarWidget(nullptr), m_expanded(false)
 {
 
 }

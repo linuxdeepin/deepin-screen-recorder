@@ -65,7 +65,7 @@ void ColorToolWidget::initColorLabel()
     QList<ToolButton *> toolBtnList;
     QButtonGroup *buttonGroup = new QButtonGroup(this);
     buttonGroup->setExclusive(true);
-    DPalette pa;
+    //DPalette pa;
 
     m_redBtn = new ToolButton();
     m_redBtn->setCheckable(true);
@@ -151,7 +151,7 @@ void ColorToolWidget::initColorLabel()
     connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
         Q_UNUSED(status);
-        DPalette pa;
+        //DPalette pa;
         if (m_redBtn->isChecked()) {
 //            pa = m_redBtn->palette();
 //            pa.setColor(DPalette::ButtonText, Qt::white);

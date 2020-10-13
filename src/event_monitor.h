@@ -34,7 +34,7 @@ class EventMonitor : public QThread
     Q_OBJECT
 
 public:
-    EventMonitor(QObject *parent = nullptr);
+    explicit EventMonitor(QObject *parent = nullptr);
     static void callback(XPointer trash, XRecordInterceptData *data);
     void handleRecordEvent(XRecordInterceptData *);
     XFixesCursorImage* GetCursorImage();

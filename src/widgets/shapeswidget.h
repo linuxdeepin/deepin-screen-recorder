@@ -34,7 +34,7 @@ class ShapesWidget : public DFrame
 {
     Q_OBJECT
 public:
-    ShapesWidget(DWidget *parent = 0);
+    explicit ShapesWidget(DWidget *parent = 0);
     ~ShapesWidget();
 
     enum ShapeBlurStatus {

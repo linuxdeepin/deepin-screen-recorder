@@ -32,7 +32,7 @@ class MajToolBar : public DLabel
 {
     Q_OBJECT
 public:
-    MajToolBar(DWidget *parent = 0);
+    explicit MajToolBar(DWidget *parent = 0);
     ~MajToolBar();
 
 signals:

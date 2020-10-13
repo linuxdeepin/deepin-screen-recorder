@@ -36,7 +36,7 @@ class CountdownTooltip : public DWidget
     static const int NUMBER_PADDING_Y;
 
 public:
-    CountdownTooltip(DWidget *parent = 0);
+    explicit CountdownTooltip(DWidget *parent = 0);
     void start();
 
 signals:

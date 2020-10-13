@@ -31,7 +31,7 @@ class SubToolBar : public DStackedWidget
 {
     Q_OBJECT
 public:
-    SubToolBar(DWidget *parent = 0);
+    explicit SubToolBar(DWidget *parent = 0);
     ~SubToolBar();
 
     void initWidget();

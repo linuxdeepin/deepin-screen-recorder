@@ -45,7 +45,7 @@ HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src
     src/dbusservice/dbusscreenshotservice.h \
     src/dbusservice/dbusscreenshot.h \
     src/widgets/camerawidget.h \
-    src/utils/dbusutils.h \
+    #src/utils/dbusutils.h \
     src/screenshot.h \
     src/utils/voicevolumewatcher.h \
     src/utils/camerawatcher.h \
@@ -83,7 +83,7 @@ SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.
     src/dbusservice/dbusscreenshotservice.cpp \
     src/dbusservice/dbusscreenshot.cpp \
     src/widgets/camerawidget.cpp \
-    src/utils/dbusutils.cpp \
+    #src/utils/dbusutils.cpp \
     src/screenshot.cpp \
     src/utils/voicevolumewatcher.cpp \
     src/utils/camerawatcher.cpp \

@@ -11,7 +11,7 @@ class ScreenShotEvent : public QThread
     Q_OBJECT
 
 public:
-    ScreenShotEvent(QObject *parent = nullptr);
+    explicit ScreenShotEvent(QObject *parent = nullptr);
 
     static void callback(XPointer trash, XRecordInterceptData *data);
     void handleRecordEvent(XRecordInterceptData *);

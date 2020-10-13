@@ -107,7 +107,7 @@ class MainWindow : public DWidget
     static const int CAMERA_WIDGET_MIN_HEIGHT;
 
 public:
-    MainWindow(DWidget *parent = nullptr);
+    explicit MainWindow(DWidget *parent = nullptr);
     ~MainWindow()
     {
         m_pVoiceVolumeWatcher->stopWatch();
@@ -224,8 +224,8 @@ protected:
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
     void initBackground();
     QPixmap getPixmapofRect(const QRect &rect);
-    void installTipHint(QWidget *w, const QString &hintstr);
-    void installHint(QWidget *w, QWidget *hint);
+    //void installTipHint(QWidget *w, const QString &hintstr);
+    //void installHint(QWidget *w, QWidget *hint);
 private:
 //    QList<WindowRect> windowRects;
     QList<QRect> windowRects;

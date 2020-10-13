@@ -61,25 +61,25 @@ protected:
 private:
     //QPixmap round(const QPixmap &img_in, int radius);
 private:
-    int recordX;
-    int recordY;
-    int recordWidth;
-    int recordHeight;
-    bool m_move;
+    int recordX = 0;
+    int recordY = 0;
+    int recordWidth = 0;
+    int recordHeight = 0;
+    bool m_move = false;
     QPoint m_startPoint;
     QPoint m_windowTopLeftPoint;
     QPoint m_windowTopRightPoint;
     QPoint m_windowBottomLeftPoint;
-    QCamera *camera;//摄像头
-    QCameraViewfinder *viewfinder; //摄像头取景器部件
-    QCameraImageCapture *imageCapture; //截图部件
-    QTimer *timer_image_capture;
-    DLabel *m_cameraUI;
+    QCamera *camera = nullptr;//摄像头
+    QCameraViewfinder *viewfinder = nullptr; //摄像头取景器部件
+    QCameraImageCapture *imageCapture = nullptr; //截图部件
+    QTimer *timer_image_capture = nullptr;
+    DLabel *m_cameraUI = nullptr;
     QString m_capturePath;
     QString m_deviceName;
-    QFile *m_deviceFile;
+    QFile *m_deviceFile = nullptr;
 
-    bool m_wildScreen;
+    bool m_wildScreen = false;
 };
 
 #endif // CAMERAWIDGET_H

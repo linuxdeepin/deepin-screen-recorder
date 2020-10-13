@@ -46,8 +46,7 @@ const int TOOLBAR_WIDTH = 390;
 }
 
 ToolBarWidget::ToolBarWidget(DWidget *parent)
-    : DFloatingWidget(parent),
-      m_expanded(false)
+    : DFloatingWidget(parent)
 {
     int t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     setBlurBackgroundEnabled(true);
@@ -172,12 +171,12 @@ void ToolBarWidget::showEvent(QShowEvent *event)
 
     DFloatingWidget::showEvent(event);
 }
-
+/*
 bool ToolBarWidget::isButtonChecked()
 {
     return m_expanded;
 }
-/*
+
 void ToolBarWidget::specifiedSavePath()
 {
     m_majToolbar->specificedSavePath();
@@ -420,12 +419,12 @@ void ToolBar::setCameraDeviceEnable(bool status)
 {
     m_toolbarWidget->setCameraDeviceEnable(status);
 }
-
+/*
 bool ToolBar::isButtonChecked()
 {
     return m_expanded;
 }
-
+*/
 ToolBar::~ToolBar()
 {
 }

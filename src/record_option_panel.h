@@ -38,7 +38,7 @@ class RecordOptionPanel : public DPushButton
     static const int ICON_OFFSET_X;
 
 public:
-    RecordOptionPanel(DPushButton *parent = nullptr);
+    explicit RecordOptionPanel(DPushButton *parent = nullptr);
     ~RecordOptionPanel();
     //bool isSaveAsGif();
 

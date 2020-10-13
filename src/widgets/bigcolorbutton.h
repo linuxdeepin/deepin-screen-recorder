@@ -31,7 +31,7 @@ class BigColorButton : public DPushButton
 {
     Q_OBJECT
 public:
-    BigColorButton(DWidget *parent = 0);
+    explicit BigColorButton(DWidget *parent = 0);
     ~BigColorButton();
 
     void setColor(QColor color);

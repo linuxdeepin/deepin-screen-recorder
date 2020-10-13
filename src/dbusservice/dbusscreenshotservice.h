@@ -76,7 +76,7 @@ class DBusScreenshotService: public QDBusAbstractAdaptor
                 "  </interface>\n"
                 "")
 public:
-    DBusScreenshotService(Screenshot *parent);
+    explicit DBusScreenshotService(Screenshot *parent);
     ~DBusScreenshotService();
 
     void setSingleInstance(bool instance);

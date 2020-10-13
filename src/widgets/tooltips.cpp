@@ -45,7 +45,7 @@ DWIDGET_USE_NAMESPACE
 class ToolTipsPrivate
 {
 public:
-    ToolTipsPrivate(ToolTips *parent) : q_ptr(parent) {}
+    explicit ToolTipsPrivate(ToolTips *parent) : q_ptr(parent) {}
 
     void setBackgroundImage(const QPixmap &srcPixmap);
 

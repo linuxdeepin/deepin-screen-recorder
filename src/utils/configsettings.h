@@ -49,7 +49,7 @@ signals:
     void straightLineConfigChanged(bool isStraightLine);
 
 private:
-    ConfigSettings(QObject *parent = nullptr);
+    explicit ConfigSettings(QObject *parent = nullptr);
     ~ConfigSettings();
 
     static ConfigSettings *m_configSettings;

@@ -31,7 +31,7 @@ class Settings : public QObject
     Q_OBJECT
 
 public:
-    Settings(QObject *parent = nullptr);
+    explicit Settings(QObject *parent = nullptr);
     ~Settings();
     QString configPath();
 

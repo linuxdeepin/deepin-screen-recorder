@@ -31,7 +31,7 @@ class ZoomIndicator : public DLabel
 {
     Q_OBJECT
 public:
-    ZoomIndicator(DWidget *parent = 0);
+    explicit ZoomIndicator(DWidget *parent = 0);
     ~ZoomIndicator();
 
     void showMagnifier(QPoint pos);

@@ -48,7 +48,7 @@ public slots:
     void setMosaicPixmap(const QPixmap &pixmap);
 
 private:
-    TempFile(QObject *parent = 0);
+    explicit TempFile(QObject *parent = 0);
     ~TempFile();
 
     QPixmap m_fullscreenPixmap;

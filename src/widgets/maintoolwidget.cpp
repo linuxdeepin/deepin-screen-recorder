@@ -136,7 +136,7 @@ void MainToolWidget::initMainLabel()
     connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
             [ = ](int status) {
         Q_UNUSED(status);
-        DPalette pa;
+        //DPalette pa;
         if (m_recordBtn->isChecked()) {
             m_recordBtn->setIconSize(QSize(20, 20));
             m_isChecked = true;

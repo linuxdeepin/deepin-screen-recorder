@@ -27,7 +27,7 @@ class MenuController : public QObject
 {
     Q_OBJECT
 public:
-    MenuController(QObject *parent = nullptr);
+    explicit MenuController(QObject *parent = nullptr);
     ~MenuController();
 
 signals:

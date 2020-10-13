@@ -38,6 +38,7 @@ const QSize ROTATE_ICON_SIZE = QSize(30, 30);
 
 ShapesWidget::ShapesWidget(DWidget *parent)
     : DFrame(parent),
+      m_lastAngle(0),
       m_isMoving(false),
       m_isSelected(false),
       m_isShiftPressed(false),
@@ -45,7 +46,6 @@ ShapesWidget::ShapesWidget(DWidget *parent)
       m_shapesIndex(-1),
       m_selectedIndex(-1),
       m_selectedOrder(-1),
-      m_lastAngle(0),
       m_menuController(new MenuController)
 {
     //订阅手势事件
@@ -990,7 +990,7 @@ void ShapesWidget::handleRotate(QPointF pos)
     if (m_selectedShape.type == "arrow") {
         if (m_isArrowRotated == false) {
             if (m_shapes[m_selectedOrder].isShiftPressed) {
-                if (m_shapes[m_selectedOrder].points[0].x() == m_shapes[m_selectedOrder].points[1].x()) {
+                if (static_cast<int>(m_shapes[m_selectedOrder].points[0].x()) == static_cast<int>(m_shapes[m_selectedOrder].points[1].x())) {
                     if (m_clickedKey == First) {
                         m_shapes[m_selectedOrder].points[0] = QPointF(m_shapes[m_selectedOrder].points[1].x(),
                                                                       pos.y());
