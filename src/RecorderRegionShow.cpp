@@ -26,22 +26,22 @@ void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, c
     m_cameraWidget->initCamera();
     m_cameraWidget->setRecordRect(r.x(), r.y(), r.width(), r.height());
     switch (position) {
-        case CameraWidget::Position::rightBottom:{
-            m_cameraWidget->showAt(QPoint(r.x() + r.width() - m_cameraWidget->width(), r.y() + r.height() - m_cameraWidget->height() + CAMERA_Y_OFFSET));
-            break;
-        }
-        case CameraWidget::Position::rightTop:{
-            m_cameraWidget->showAt(QPoint(r.x() + r.width() - m_cameraWidget->width(), r.y() + CAMERA_Y_OFFSET));
-            break;
-        }
-        case CameraWidget::Position::leftBottom:{
-            m_cameraWidget->showAt(QPoint(r.x(), r.y() + r.height() - m_cameraWidget->height() + CAMERA_Y_OFFSET));
-            break;
-        }
-        case CameraWidget::Position::leftTop:{
-            m_cameraWidget->showAt(QPoint(r.x(), r.y() + CAMERA_Y_OFFSET));
-            break;
-        }
+    case CameraWidget::Position::rightBottom:{
+        m_cameraWidget->showAt(QPoint(r.x() + r.width() - m_cameraWidget->width(), r.y() + r.height() - m_cameraWidget->height() + CAMERA_Y_OFFSET));
+        break;
+    }
+    case CameraWidget::Position::rightTop:{
+        m_cameraWidget->showAt(QPoint(r.x() + r.width() - m_cameraWidget->width(), r.y() + CAMERA_Y_OFFSET));
+        break;
+    }
+    case CameraWidget::Position::leftBottom:{
+        m_cameraWidget->showAt(QPoint(r.x(), r.y() + r.height() - m_cameraWidget->height() + CAMERA_Y_OFFSET));
+        break;
+    }
+    case CameraWidget::Position::leftTop:{
+        m_cameraWidget->showAt(QPoint(r.x(), r.y() + CAMERA_Y_OFFSET));
+        break;
+    }
     }
 
     m_cameraWidget->cameraStart();
@@ -91,6 +91,25 @@ void RecorderRegionShow::paintEvent(QPaintEvent *event)
 }
 void RecorderRegionShow::updateMultiKeyBoardPos()
 {
+    QPoint t_keyPoint[5];
+    static float posfix[5][5] = {{-0.5f, 0}, {-(0.5f + 1 / 1.5f), (1 / 1.5f - 0.5f), 0}, {-1.8f, -0.5f, 0.8f, 0},{-2.5f, -(0.5f + 1 / 1.5f), (1 / 1.5f - 0.5f), 1.5, 0},{-3.1f, -1.8f, -0.5, 0.8f, 2.1f}};
+    QRect r = this->geometry();
+    int recordX = r.x();
+    int recordY = r.y();
+    int recordWidth = r.width();
+    int recordHeight = r.height();
+
+
+    int count = m_keyButtonList.count();
+        for(int j = 0; j < count; ++j){
+            m_keyButtonList.at(j)->hide();
+            t_keyPoint[j] = QPoint(static_cast<int>(recordX + recordWidth / 2 + m_keyButtonList.at(j)->width() * posfix[count-1][j]), std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            m_keyButtonList.at(j)->move(t_keyPoint[j].x(), t_keyPoint[j].y());
+            m_keyButtonList.at(j)->show();
+        }
+
+    /*
+
     QPoint t_keyPoint1;
     QPoint t_keyPoint2;
     QPoint t_keyPoint3;
@@ -209,4 +228,5 @@ void RecorderRegionShow::updateMultiKeyBoardPos()
             break;
         }
     }
+    */
 }

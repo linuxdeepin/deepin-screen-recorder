@@ -30,6 +30,7 @@
 #include <X11/extensions/XTest.h>
 #include "keydefine.h"
 #include <iostream>
+#include <dlfcn.h>
 
 EventMonitor::EventMonitor(QObject *parent) : QThread(parent)
 {
@@ -143,5 +144,23 @@ XFixesCursorImage* EventMonitor::GetCursorImage()
         fprintf(stderr, "unable to open display\n");
         return nullptr;
     }
-    return XFixesGetCursorImage(m_x11_display);
+
+    // dlopen
+    void *handle = dlopen("libXfixes.so", RTLD_LAZY);
+    if(!handle){
+        fprintf(stderr, "open libXfixes.so failure\n");
+        return nullptr;
+    }
+
+    XFixesCursorImage *(*XFixesGetCursorImage_hand) (Display *);
+    char *error;
+    XFixesGetCursorImage_hand = (XFixesCursorImage *(*)(Display *))dlsym(handle, "XFixesGetCursorImage");
+    if((error = dlerror()) != nullptr){
+        fprintf(stderr, "get libXfixes.so function  XFixesGetCursorImage failure\n");
+        return nullptr;
+    }
+    dlclose(handle);
+    //end
+    return XFixesGetCursorImage_hand(m_x11_display);
+    //return XFixesGetCursorImage(m_x11_display);
 }

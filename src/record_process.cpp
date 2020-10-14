@@ -35,6 +35,7 @@
 #include <QStandardPaths>
 #include <QtDBus>
 #include <QScreen>
+#include <dlfcn.h>
 
 const int RecordProcess::RECORD_TYPE_VIDEO = 0;
 const int RecordProcess::RECORD_TYPE_GIF = 1;
@@ -392,6 +393,7 @@ void RecordProcess::setIsZhaoXinPlatform(bool status)
 int RecordProcess::readSleepProcessPid()
 {
     // Read the list of open processes information.
+    /*
     PROCTAB *proc = openproc(
                 PROC_FILLMEM |          // memory status: read information from /proc/#pid/statm
                 PROC_FILLSTAT |         // cpu status: read information from /proc/#pid/stat
@@ -408,6 +410,54 @@ int RecordProcess::readSleepProcessPid()
 
     ProcessTree *processTree = new ProcessTree();
     processTree->scanProcesses(processes);
+    */
+
+    //
+    char *error;
+    void *handle = dlopen("libprocps.so", RTLD_LAZY);
+    if(!handle){
+        qDebug() << "open libprocps.so failure";
+        return 0;
+    }
+
+    PROCTAB*(*openproc_handle)(int, ...);
+    openproc_handle = (PROCTAB*(*)(int, ...))dlsym(handle, "openproc");
+    if((error = dlerror()) != nullptr){
+        qDebug() << "get libprocps.so function openproc failure";
+        return 0;
+    }
+
+    PROCTAB *proc = openproc_handle(
+                PROC_FILLMEM |          // memory status: read information from /proc/#pid/statm
+                PROC_FILLSTAT |         // cpu status: read information from /proc/#pid/stat
+                PROC_FILLUSR            // user status: resolve user ids to names via /etc/passwd
+                );
+    static proc_t proc_info;
+    memset(&proc_info, 0, sizeof(proc_t));
+
+    proc_t* (*readproc_handle)(PROCTAB *__restrict const, proc_t *__restrict );
+    readproc_handle = (proc_t* (*)(PROCTAB *__restrict const, proc_t *__restrict ))dlsym(handle, "readproc");
+    if((error = dlerror()) != nullptr){
+        qDebug() << "get libprocps.so function readproc failure";
+        return 0;
+    }
+    StoredProcType processes;
+    while (readproc_handle(proc, &proc_info) != nullptr) {
+        processes[proc_info.tid] = proc_info;
+    }
+
+    void(*closeproc_handle)(PROCTAB*);
+    closeproc_handle = (void(*)(PROCTAB*))dlsym(handle, "closeproc");
+    if((error = dlerror()) != nullptr){
+        qDebug() << "get libprocps.so function closeproc failure";
+        return 0;
+    }
+    closeproc_handle(proc);
+
+    ProcessTree *processTree = new ProcessTree();
+    processTree->scanProcesses(processes);
+
+    dlclose(handle);
 
     return processTree->getAllChildPids(byzanzProcessId)[0];
 }

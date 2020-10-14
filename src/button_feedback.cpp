@@ -41,6 +41,11 @@ ButtonFeedback::ButtonFeedback(DWidget *parent) : DWidget(parent)
     setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
+    for(int i = 0; i < 10; ++i){
+        QString svgName = QString("button_feedback_%1.svg").arg(i);
+        buttonFeedbackImg[i] = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath(svgName));
+    }
+    /*
     buttonFeedback0Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_0.svg"));
     buttonFeedback1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_1.svg"));
     buttonFeedback2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_2.svg"));
@@ -51,8 +56,8 @@ ButtonFeedback::ButtonFeedback(DWidget *parent) : DWidget(parent)
     buttonFeedback7Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_7.svg"));
     buttonFeedback8Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_8.svg"));
     buttonFeedback9Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_9.svg"));
-
-    setFixedSize(buttonFeedback0Img.width(), buttonFeedback0Img.height());
+    */
+    setFixedSize(buttonFeedbackImg[0].width(), buttonFeedbackImg[0].height());
 
     frameIndex = 0;
 
@@ -84,7 +89,8 @@ void ButtonFeedback::paintEvent(QPaintEvent *)
     QPainter painter(this);
 
     painter.setOpacity(1);
-
+    painter.drawPixmap(QPoint(0, 0), buttonFeedbackImg[frameIndex]);
+    /*
     switch (frameIndex) {
     case 0:
         painter.drawPixmap(QPoint(0, 0), buttonFeedback0Img);
@@ -117,6 +123,7 @@ void ButtonFeedback::paintEvent(QPaintEvent *)
         painter.drawPixmap(QPoint(0, 0), buttonFeedback9Img);
         break;
     }
+    */
 }
 
 void ButtonFeedback::showPressFeedback(int x, int y)

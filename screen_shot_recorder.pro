@@ -7,6 +7,16 @@ TEMPLATE = app
 TARGET = deepin-screen-recorder
 INCLUDEPATH += .
 
+QMAKE_CXX += -Wl,--as-need -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
+QMAKE_CXXFLAGS += -Wl,--as-need -fPIE -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
+QMAKE_LFLAGS += -Wl,--as-needed -pie
+
+ARCH = $$QMAKE_HOST.arch
+isEqual(ARCH, mips64) {
+    QMAKE_CXX += -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi
+    QMAKE_CXXFLAGS+= -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi
+}
+
 CONFIG += link_pkgconfig c++11
 PKGCONFIG += dtkgui dtkwidget xcb xcb-util dframeworkdbus
 
@@ -45,7 +55,6 @@ HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src
     src/dbusservice/dbusscreenshotservice.h \
     src/dbusservice/dbusscreenshot.h \
     src/widgets/camerawidget.h \
-    #src/utils/dbusutils.h \
     src/screenshot.h \
     src/utils/voicevolumewatcher.h \
     src/utils/camerawatcher.h \
@@ -83,7 +92,6 @@ SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.
     src/dbusservice/dbusscreenshotservice.cpp \
     src/dbusservice/dbusscreenshot.cpp \
     src/widgets/camerawidget.cpp \
-    #src/utils/dbusutils.cpp \
     src/screenshot.cpp \
     src/utils/voicevolumewatcher.cpp \
     src/utils/camerawatcher.cpp \
@@ -98,14 +106,10 @@ SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.
 QT += core
 QT += widgets
 QT += gui
-QT += network
 QT += x11extras
 QT += dbus
-QT += multimedia
 QT += multimediawidgets
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor
-LIBS += -L"libprocps" -lprocps
-
+LIBS += -lX11 -lXtst -ldl
 QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations
 

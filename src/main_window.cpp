@@ -112,28 +112,12 @@ MainWindow::MainWindow(DWidget *parent) :
     DWidget(parent),
     m_wmHelper(DWindowManagerHelper::instance())
 {
-    //手势事件消息订阅
-//    QList<Qt::GestureType> gestures;
-//    gestures << Qt::PanGesture;
-//    gestures << Qt::PinchGesture;
-//    gestures << Qt::SwipeGesture;
-//    gestures << Qt::TapGesture;
-//    gestures << Qt::TapAndHoldGesture;
-//    gestures << Qt::CustomGesture;
-//    gestures << Qt::LastGestureType;
-//    foreach (Qt::GestureType gesture, gestures)
-//        grabGesture(gesture);
-
-    //    initAttributes();
+    setDragCursor();
     QScreen *screen = qApp->primaryScreen();
     m_pixelRatio = screen->devicePixelRatio();
 
     m_pScreenShotEvent =  new ScreenShotEvent();
     m_pScreenRecordEvent = new EventMonitor();
-    m_pRecorderRegion =  new RecorderRegionShow();
-    connect(m_wmHelper, &DWindowManagerHelper::hasCompositeChanged, this, &MainWindow::compositeChanged);
-
-
     // 初始化获取屏幕坐标信息
     QDBusInterface displayInterface("com.deepin.daemon.Display",
                                     "/com/deepin/daemon/Display",
@@ -197,25 +181,8 @@ MainWindow::MainWindow(DWidget *parent) :
 
 void MainWindow::initAttributes()
 {
-    // Init attributes.
-    if (m_firstShot == 0) {
-        setDragCursor();
-    }
-    hintFilter = new HintFilter;
     setWindowTitle(tr("Screen Capture"));
-    m_functionType = 0;
-    m_keyBoardStatus = 0;
-    m_mouseStatus = 0;
-    //m_multiKeyButtonsInOnSec = false;
-    m_repaintMainButton = false;
-    m_repaintSideBar = false;
-    //m_gifMode = true;
-    //m_mp4Mode = false;
-    //    m_keyBoardTimer = new QTimer(this);
-    //m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
     m_keyButtonList.clear();
-    m_tempkeyButtonList.clear();
-
     checkCpuIsZhaoxin();
 
     m_screenHeight = QApplication::desktop()->screen()->height();
@@ -229,9 +196,7 @@ void MainWindow::initAttributes()
         t_screenRect.setY(0);
         t_screenRect.setWidth(m_screenWidth);
         t_screenRect.setHeight(m_screenHeight);
-    }
-
-    else if (m_screenCount > 1) {
+    } else if (m_screenCount > 1) {
         QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
         t_screenRect = QRect(0, 0, static_cast<int>(m_screenSize.width() / m_pixelRatio), static_cast<int>(m_screenSize.height() / m_pixelRatio));
         qDebug() << "screen size" << t_primaryScreen->virtualGeometry() << t_screenRect;
@@ -241,45 +206,7 @@ void MainWindow::initAttributes()
     setAttribute(Qt::WA_TranslucentBackground, true);
     setMouseTracking(true);   // make MouseMove can response
     installEventFilter(this);  // add event filter
-
-    isFirstDrag = false;
-    isFirstMove = false;
-    isFirstPressButton = false;
-    isFirstReleaseButton = false;
-    dragStartX = 0;
-    dragStartY = 0;
-
-    isPressButton = false;
-    isReleaseButton = false;
-
-    recordX = 0;
-    recordY = 0;
-    recordWidth = 0;
-    recordHeight = 0;
-
-    dragRecordX = -1;
-    dragRecordY = -1;
-
-    drawDragPoint = false;
-
-    recordButtonStatus = RECORD_BUTTON_NORMAL;
-
-    flashTrayIconCounter = 0;
-
-    selectAreaName = "";
-
-    m_isShapesWidgetExist = false;
-    //m_needDrawSelectedPoint = false;
-
-
     createWinId();
-
-    ConfigSettings::instance();
-
-
-    // Get all windows geometry.
-    // Below code must execute before `window.showFullscreen,
-    // otherwise deepin-screen-recorder window will add in window lists.
 
     //多屏情况下累加窗口大小
     if (m_screenCount == 1) {
@@ -336,9 +263,7 @@ void MainWindow::initAttributes()
                     windowRects << QRect(0, 0, t_tempWidth, t_tempHeight);
                     windowNames << window->wmClass();
                     continue;
-                }
-
-                else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
+                } else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
                     //x为负坐标，y在正常屏幕区间内
                     t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
                     t_tempHeight = window->frameGeometry().height();
@@ -347,9 +272,7 @@ void MainWindow::initAttributes()
                     windowRects << QRect(0, window->frameGeometry().y(), t_tempWidth, t_tempHeight);
                     windowNames << window->wmClass();
                     continue;
-                }
-
-                else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
+                } else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
                     //x为负坐标，y方向窗口超出屏幕底部
                     t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
                     t_tempHeight = m_screenHeight - window->frameGeometry().y();
@@ -372,9 +295,7 @@ void MainWindow::initAttributes()
                     windowRects << QRect(window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight);
                     windowNames << window->wmClass();
                     continue;
-                }
-
-                else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
+                } else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
                     //y在正常屏幕区间内
                     t_tempWidth = window->frameGeometry().width();
                     t_tempHeight = window->frameGeometry().height();
@@ -383,9 +304,7 @@ void MainWindow::initAttributes()
                     windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
                     windowNames << window->wmClass();
                     continue;
-                }
-
-                else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
+                } else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
                     //y方向窗口超出屏幕底部
                     t_tempWidth = window->frameGeometry().width();
                     t_tempHeight = m_screenHeight - window->frameGeometry().y();
@@ -408,9 +327,7 @@ void MainWindow::initAttributes()
                     windowRects << QRect(window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight);
                     windowNames << window->wmClass();
                     continue;
-                }
-
-                else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
+                } else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
                     //y在正常屏幕区间内
                     t_tempWidth = m_screenWidth - window->frameGeometry().x();
                     t_tempHeight = window->frameGeometry().height();
@@ -419,9 +336,7 @@ void MainWindow::initAttributes()
                     windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
                     windowNames << window->wmClass();
                     continue;
-                }
-
-                else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
+                } else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
                     //y方向窗口超出屏幕底部
                     t_tempWidth = m_screenWidth - window->frameGeometry().x();
                     t_tempHeight = m_screenHeight - window->frameGeometry().y();
@@ -441,11 +356,8 @@ void MainWindow::initAttributes()
 
     m_sideBar = new SideBar(this);
     m_sideBar->hide();
-
-
     connect(m_sideBar, &SideBar::closeSideBarToMain, this, [ = ] {
-        if (m_sideBar->isVisible())
-        {
+        if (m_sideBar->isVisible()){
             m_sideBar->hide();
         }
     });
@@ -455,18 +367,12 @@ void MainWindow::initAttributes()
     m_zoomIndicator = new ZoomIndicator(this);
     m_zoomIndicator->hide();
 
-    countdownTooltip = new CountdownTooltip();
-    connect(countdownTooltip, SIGNAL(finished()), this, SLOT(startRecord()));
-
     connect(m_toolBar, &ToolBar::currentFunctionToMain, this, &MainWindow::changeFunctionButton);
     connect(m_toolBar, &ToolBar::keyBoardCheckedToMain, this, &MainWindow::changeKeyBoardShowEvent);
     connect(m_toolBar, &ToolBar::mouseCheckedToMain, this, &MainWindow::changeMouseShowEvent);
     connect(m_toolBar, &ToolBar::microphoneActionCheckedToMain, this, &MainWindow::changeMicrophoneSelectEvent);
     connect(m_toolBar, &ToolBar::systemAudioActionCheckedToMain, this, &MainWindow::changeSystemAudioSelectEvent);
     connect(m_toolBar, &ToolBar::cameraActionCheckedToMain, this, &MainWindow::changeCameraSelectEvent);
-    //connect(m_toolBar, &ToolBar::gifActionCheckedToMain, this, &MainWindow::changeGifSelectEvent);
-    //connect(m_toolBar, &ToolBar::mp4ActionCheckedToMain, this, &MainWindow::changeMp4SelectEvent);
-    //connect(m_toolBar, &ToolBar::frameRateChangedToMain, this, &MainWindow::changeFrameRateEvent);
     connect(m_toolBar, &ToolBar::shotToolChangedToMain, this, &MainWindow::changeShotToolEvent);
     connect(m_toolBar, &ToolBar::closeButtonToMain, this, &MainWindow::exitApp);
     connect(m_sideBar, &SideBar::changeArrowAndLineToMain, this, &MainWindow::changeArrowAndLineEvent);
@@ -475,7 +381,6 @@ void MainWindow::initAttributes()
     DPalette pa;
     m_recordButton = new DPushButton(this);
     m_recordButton->setFocusPolicy(Qt::NoFocus);
-
     pa = m_recordButton->palette();
     pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
     pa.setColor(DPalette::Dark, QColor(229, 70, 61, 204));
@@ -483,17 +388,13 @@ void MainWindow::initAttributes()
     m_recordButton->setPalette(pa);
     m_recordButton->setIconSize(QSize(38, 38));
     m_recordButton->setIcon(QIcon(":/image/newUI/checked/screencap-checked.svg"));
-
-
     m_recordButton->setFixedSize(76, 58);
     m_recordButton->setObjectName("mainRecordBtn");
-
     m_recordButton->setFocusPolicy(Qt::ClickFocus);
 
 
     m_shotButton = new DPushButton(this);
-    m_recordButton->setFocusPolicy(Qt::NoFocus);
-
+    m_shotButton->setFocusPolicy(Qt::NoFocus);
     pa = m_shotButton->palette();
     pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
     pa.setColor(DPalette::Dark, QColor(0, 129, 255, 204));
@@ -501,7 +402,6 @@ void MainWindow::initAttributes()
     m_shotButton->setPalette(pa);
     m_shotButton->setIconSize(QSize(38, 38));
     m_shotButton->setIcon(QIcon(":/image/newUI/checked/screenshot-checked.svg"));
-
     m_shotButton->setFixedSize(76, 58);
     m_shotButton->setObjectName("mainShotBtn");
 
@@ -511,29 +411,8 @@ void MainWindow::initAttributes()
     m_backgroundRect = QApplication::desktop()->screen()->geometry();
     m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
 
-    //recordButton = new RecordButton();
-    //recordButton->setText(tr("Start recording"));
     connect(m_recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
     connect(m_shotButton, SIGNAL(clicked()), this, SLOT(saveScreenShot()));
-
-    //recordOptionPanel = new RecordOptionPanel();
-
-    //recordOptionPanel->setFixedWidth(recordButton->width());
-
-    //recordButtonLayout->addStretch();
-    //recordButtonLayout->addWidget(recordButton, 0, Qt::AlignCenter);
-    //recordButtonLayout->addSpacing(RECORD_OPTIONAL_PADDING);
-
-    //if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-        //recordButtonLayout->addWidget(recordOptionPanel, 0, Qt::AlignCenter);
-    //}
-    //recordButtonLayout->addStretch();
-
-    //recordButton->hide();
-    //recordOptionPanel->hide();
-
-    m_selectedMic = true;
-    m_selectedSystemAudio = true;
 
     if (m_screenCount == 1) {
         m_backgroundRect = QApplication::desktop()->screen()->geometry();
@@ -541,28 +420,16 @@ void MainWindow::initAttributes()
 
         move(m_backgroundRect.topLeft() * m_pixelRatio);
         this->setFixedSize(m_backgroundRect.size());
-    }
-
-    else if (m_screenCount > 1) {
+    } else if (m_screenCount > 1) {
         m_backgroundRect = t_screenRect;
         m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
         move(m_backgroundRect.topLeft() * m_pixelRatio);
         this->setFixedSize(m_backgroundRect.size());
     }
     initBackground();
-
-    m_cameraWidget = new CameraWidget(this);
-    hideCameraWidget();
-    // 摄像头界面层级下调,防止遮住工具栏
-    m_cameraWidget->lower();
-
-    m_menuController = new MenuController(this);
-
-    connect(m_menuController, &MenuController::saveAction,
-            this, &MainWindow::saveScreenShot);
-    connect(m_menuController, &MenuController::closeAction,
-            this, &MainWindow::exitApp);
     initShortcut();
+
+
     if(m_screenCount > 1 && m_pixelRatio  > 1) {
         if(m_screenInfo[0].width < m_screenInfo[1].width)
             // QT bug，这里暂时做特殊处理
@@ -684,24 +551,12 @@ void MainWindow::initScreenShot()
         qDebug() << "release event !!!";
         removeEventFilter(this);
     });
-
-    //    connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
-
     m_functionType = 1;
-    m_keyBoardStatus = 0;
+    m_keyBoardStatus = false;
     m_mouseStatus = 0;
     //m_multiKeyButtonsInOnSec = false;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
-    //if (m_firstShot == 0) {
-        //m_gifMode = true;
-        //m_mp4Mode = false;
-        //    m_keyBoardTimer = new QTimer(this);
-        //m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
-    //}
-    // 多屏情况下， 屏幕宽高，用背景宽高获取
-    //m_screenWidth = QApplication::desktop()->screen()->width();
-    //m_screenHeight = QApplication::desktop()->screen()->height();
     m_screenWidth = m_backgroundRect.width();
     m_screenHeight = m_backgroundRect.height();
 
@@ -773,21 +628,10 @@ void MainWindow::initScreenShot()
 void MainWindow::initScreenRecorder()
 {
     m_functionType = 0;
-    m_keyBoardStatus = 0;
+    m_keyBoardStatus = false;
     m_mouseStatus = 0;
-    //m_multiKeyButtonsInOnSec = false;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
-    //if (m_firstShot == 0) {
-        //m_gifMode = true;
-        //m_mp4Mode = false;
-        //    m_keyBoardTimer = new QTimer(this);
-        //m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
-    //}
-
-
-    //m_screenWidth = QApplication::desktop()->screen()->width();
-    //m_screenHeight = QApplication::desktop()->screen()->height();
     m_screenWidth = m_backgroundRect.width();
     m_screenHeight = m_backgroundRect.height();
 
@@ -968,47 +812,6 @@ void MainWindow::fullScreenshot()
     const auto r = saveAction(m_resultPixmap);
     sendNotify(m_saveIndex, m_saveFileName, r);
 }
-/*
-void MainWindow::testScreenshot()
-{
-    this->initAttributes();
-    this->initLaunchMode("screenShot");
-    this->showFullScreen();
-    this->initResource();
-
-    m_shotWithPath = true;
-    m_shotSavePath = QDir::homePath() + QDir::separator() + QString("testShot");
-    QDir t_appDir;
-    t_appDir.mkpath(m_shotSavePath);
-
-    m_mouseStatus = ShotMouseStatus::Shoting;
-    repaint();
-    qApp->setOverrideCursor(setCursorShape("start"));
-    //    initDBusInterface();
-    this->setFocus();
-    //    m_configSettings =  ConfigSettings::instance();
-    installEventFilter(this);
-
-    //    if (m_hotZoneInterface->isValid())
-    //        m_hotZoneInterface->asyncCall("EnableZoneDetected", false);
-
-    QPoint curPos = this->cursor().pos();
-    int t_screen = QApplication::desktop()->screenNumber(curPos);
-    m_backgroundRect = QApplication::desktop()->screen(t_screen)->geometry();
-
-    this->move(m_backgroundRect.x(), m_backgroundRect.y());
-    this->setFixedSize(m_backgroundRect.size());
-    m_needSaveScreenshot = true;
-    shotFullScreen();
-    m_toolBar = new ToolBar(this);
-    m_toolBar->hide();
-
-
-    TempFile::instance()->setFullScreenPixmap(m_resultPixmap);
-    const auto r = saveAction(m_resultPixmap);
-    sendNotify(m_saveIndex, m_saveFileName, r);
-}
-*/
 void MainWindow::topWindow()
 {
     //DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
@@ -1038,6 +841,20 @@ void MainWindow::topWindow()
         } else {
             continue;
         }
+    }
+    // 放缩情况下，修正顶层窗口位置。
+    if(!qFuzzyCompare(1.0, m_pixelRatio) && m_screenCount > 1){
+        int x = recordX;
+        int y = recordY;
+        if(x >= m_screenInfo[1].x){
+            recordX = static_cast<int>(m_screenInfo[1].x / m_pixelRatio + (x - m_screenInfo[1].x));
+        }
+        if(y >= m_screenInfo[1].y){
+            recordY = static_cast<int>(m_screenInfo[1].y / m_pixelRatio +  (y - m_screenInfo[1].y));
+        }
+    } else {
+        recordX = recordX - static_cast<int>(screenRect.x() * m_pixelRatio);
+        recordY = recordY - static_cast<int>(screenRect.y() * m_pixelRatio);
     }
 
     this->hide();
@@ -1104,11 +921,6 @@ void MainWindow::noNotify()
     this->initResource();
 }
 
-void MainWindow::setConfigThemeType(int themeType)
-{
-    ConfigSettings::instance()->setValue("common", "themeType", themeType);
-}
-
 void MainWindow::initBackground()
 {
     //    QTimer::singleShot(200, this, [ = ] {
@@ -1124,23 +936,6 @@ QPixmap MainWindow::getPixmapofRect(const QRect &rect)
     bool ok;
     return m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
 }
-/*
-void MainWindow::installTipHint(QWidget *w, const QString &hintstr)
-{
-    // TODO: parent must be mainframe
-    auto hintWidget = new ToolTips("", this);
-    hintWidget->hide();
-    hintWidget->setText(hintstr);
-    hintWidget->setFixedHeight(32);
-    installHint(w, hintWidget);
-}
-
-void MainWindow::installHint(QWidget *w, QWidget *hint)
-{
-    w->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hint));
-    w->installEventFilter(hintFilter);
-}
-*/
 void MainWindow::showPressFeedback(int x, int y)
 {
     if (recordButtonStatus == RECORD_BUTTON_RECORDING && m_mouseStatus == 1) {
@@ -1505,7 +1300,7 @@ void MainWindow::updateShotButtonPos()
 }
 void MainWindow::updateCameraWidgetPos()
 {
-    if (m_shotflag == 1) {
+    if (m_cameraWidget == nullptr || m_shotflag == 1) {
         return;
     }
     if (!m_selectedCamera)
@@ -1577,7 +1372,7 @@ void MainWindow::changeFunctionButton(QString type)
             return;
         }
         m_toolBar->setVideoButtonInit();
-        if (m_cameraWidget->isVisible()) {
+        if (m_cameraWidget && m_cameraWidget->isVisible()) {
             m_cameraWidget->cameraStop();
             m_cameraWidget->hide();
         }
@@ -1597,7 +1392,7 @@ void MainWindow::changeFunctionButton(QString type)
 void MainWindow::showKeyBoardButtons(const QString &key)
 {
     //键盘按钮启用状态下创建按键控件
-    if (m_keyBoardStatus == 1) {
+    if (m_keyBoardStatus) {
         if(!DWindowManagerHelper::instance()->hasComposite()) {
             // 2D 录屏下将按键发送至m_pRecorderRegion区域。
             m_pRecorderRegion->showKeyBoardButtons(key);
@@ -1622,18 +1417,11 @@ void MainWindow::showKeyBoardButtons(const QString &key)
 void MainWindow::changeKeyBoardShowEvent(bool checked)
 {
     qDebug() << "keyboard" << checked;
-
-    if (checked == false) {
-        m_keyBoardStatus = 0;
-        if (m_keyButtonList.count() > 0) {
-            for (int t_index = 0; t_index < m_keyButtonList.count(); t_index++) {
-                m_keyButtonList.at(t_index)->hide();
-            }
-        }
-    }
-
-    else if (checked == true) {
-        m_keyBoardStatus = 1;
+    m_keyBoardStatus = checked;
+    if (m_keyButtonList.count() > 0) {
+          for (int t_index = 0; t_index < m_keyButtonList.count(); t_index++) {
+               m_keyButtonList.at(t_index)->setVisible(checked);
+          }
     }
 }
 
@@ -1657,51 +1445,14 @@ void MainWindow::changeSystemAudioSelectEvent(bool checked)
 {
     m_selectedSystemAudio = checked;
 }
-/*
-void MainWindow::changeGifSelectEvent(bool checked)
-{
-    m_gifMode = true;
-    m_mp4Mode = false;
-    qDebug() << "gif: " << checked;
-}
-
-void MainWindow::changeMp4SelectEvent(bool checked)
-{
-    m_gifMode = false;
-    m_mp4Mode = true;
-    qDebug() << "mp4: " << checked;
-}
-
-void MainWindow::changeFrameRateEvent(int frameRate)
-{
-    qDebug() << "frameRate: " << frameRate;
-    switch (frameRate) {
-    case 5:
-        m_frameRate = RecordProcess::RECORD_FRAMERATE_5;
-        break;
-    case 10:
-        m_frameRate = RecordProcess::RECORD_FRAMERATE_10;
-        break;
-    case 20:
-        m_frameRate = RecordProcess::RECORD_FRAMERATE_20;
-        break;
-    case 24:
-        m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
-        break;
-    case 30:
-        m_frameRate = RecordProcess::RECORD_FRAMERATE_30;
-        break;
-    default:
-        m_frameRate = RecordProcess::RECORD_FRAMERATE_24;
-        break;
-    }
-}
-*/
 void MainWindow::changeCameraSelectEvent(bool checked)
 {
-    if (m_initCamera == false) {
+    if (m_cameraWidget == nullptr) {
+        m_cameraWidget = new CameraWidget(this);
+        m_cameraWidget->hide();
+        // 摄像头界面层级下调,防止遮住工具栏
+        m_cameraWidget->lower();
         m_cameraWidget->initCamera();
-        m_initCamera = true;
     }
 
     m_selectedCamera = checked;
@@ -1743,6 +1494,18 @@ void MainWindow::showMultiKeyBoardButtons()
 */
 void MainWindow::updateMultiKeyBoardPos()
 {
+    QPoint t_keyPoint[5];
+    static float posfix[5][5] = {{-0.5f, 0}, {-(0.5f + 1 / 1.5f), (1 / 1.5f - 0.5f), 0}, {-1.8f, -0.5f, 0.8f, 0},{-2.5f, -(0.5f + 1 / 1.5f), (1 / 1.5f - 0.5f), 1.5, 0},{-3.1f, -1.8f, -0.5, 0.8f, 2.1f}};
+    if(!m_keyButtonList.isEmpty()) {
+        int count = m_keyButtonList.count();
+        for(int j = 0; j < count; ++j){
+            m_keyButtonList.at(j)->hide();
+            t_keyPoint[j] = QPoint(static_cast<int>(recordX + recordWidth / 2 + m_keyButtonList.at(j)->width() * posfix[count-1][j]), std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            m_keyButtonList.at(j)->move(t_keyPoint[j].x(), t_keyPoint[j].y());
+            m_keyButtonList.at(j)->show();
+        }
+    }
+    /*
     QPoint t_keyPoint1;
     QPoint t_keyPoint2;
     QPoint t_keyPoint3;
@@ -1855,7 +1618,7 @@ void MainWindow::updateMultiKeyBoardPos()
             break;
         }
     }
-
+    */
 }
 
 void MainWindow::changeShotToolEvent(const QString &func)
@@ -2605,7 +2368,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         updateShotButtonPos();
                     }
 
-                    if (m_cameraWidget->isVisible()) {
+                    if (m_cameraWidget && m_cameraWidget->isVisible()) {
                         updateCameraWidgetPos();
                     }
                 }
@@ -2722,7 +2485,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     updateShotButtonPos();
                 }
 
-                if (m_cameraWidget->isVisible()) {
+                if (m_cameraWidget && m_cameraWidget->isVisible()) {
                     updateCameraWidgetPos();
                 }
 
@@ -2813,7 +2576,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
                         //hideRecordButton();
                         hideAllWidget();
-                        hideCameraWidget();
+                        if(m_cameraWidget && m_cameraWidget->isVisible()){
+                            m_cameraWidget->hide();
+                        }
                         //隐藏键盘按钮控件
                         if (m_keyButtonList.count() > 0) {
                             for (int t_index = 0; t_index < m_keyButtonList.count(); t_index++) {
@@ -2832,6 +2597,11 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     return false;
                 }
                 if (m_functionType == 1) {
+                    if(m_menuController == nullptr){
+                        m_menuController = new MenuController(this);
+                        connect(m_menuController, &MenuController::saveAction,this, &MainWindow::saveScreenShot);
+                        connect(m_menuController, &MenuController::closeAction, this, &MainWindow::exitApp);
+                    }
                     m_menuController->showMenu(QPoint(mapToGlobal(mouseEvent->pos())));
                 }
             }
@@ -2979,7 +2749,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             if (isPressButton && isFirstPressButton) {
                 if (!isFirstDrag) {
                     isFirstDrag = true;
-
                     selectAreaName = tr("select-area");
                 }
             }
@@ -3134,7 +2903,7 @@ void MainWindow::on_CheckVideoCouldUse(bool canUse)
 {
     //
     if (!canUse) {
-        if (m_initCamera && !m_cameraOffFlag) {
+        if (m_cameraWidget && !m_cameraOffFlag) {
             if (m_cameraWidget->getcameraStatus() == false) {
                 qDebug() << "camera canuse" << canUse;
                 m_cameraWidget->cameraStop();
@@ -3166,38 +2935,27 @@ void MainWindow::checkCpuIsZhaoxin()
     process.waitForReadyRead();
     QString str_output = process.readAllStandardOutput();
     qDebug() << "is zhao xin:" << str_output;
-
     if (str_output.length() == 0) {
         m_isZhaoxin = false;
-    }
-
-    else {
+    } else {
         m_isZhaoxin = true;
     }
-
     process.close();
 }
 
 void MainWindow::startRecord()
 {
-    //    Utils::clearBlur(windowManager, this->winId());
-    //    emit releaseEvent();
     recordButtonStatus = RECORD_BUTTON_RECORDING;
-
     resetCursor();
-
     repaint();
 
     trayIcon->show();
-
     flashTrayIconTimer = new QTimer(this);
     connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
     flashTrayIconTimer->start(800);
 
     recordProcess.setRecordAudioInputType(getRecordInputType(m_selectedMic, m_selectedSystemAudio));
-    //recordProcess.setIsZhaoXinPlatform(m_isZhaoxin);
     recordProcess.startRecord();
-    //    voiceRecordProcess.startRecord();
     // 录屏开始后，隐藏窗口。（2D窗管下支持录屏, 但是会导致摄像头录制不到）
     if(!DWindowManagerHelper::instance()->hasComposite()){
         hide();
@@ -3508,9 +3266,7 @@ void MainWindow::stopRecord()
         sendSavingNotify();
         // 停止闪烁
         flashTrayIconTimer->stop();
-
         recordProcess.stopRecord();
-        //        voiceRecordProcess.stopRecord();
     }
 }
 
@@ -3529,8 +3285,9 @@ void MainWindow::startCountdown()
 
     disconnect(m_recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
     disconnect(m_shotButton, SIGNAL(clicked()), this, SLOT(saveScreenShot()));
+    // 监控录屏过程中， 特效窗口的变化。
+    connect(m_wmHelper, &DWindowManagerHelper::hasCompositeChanged, this, &MainWindow::compositeChanged);
     const QPoint topLeft = geometry().topLeft();
-
     QRect recordRect {
         static_cast<int>(recordX * m_pixelRatio + topLeft.x()),
                 static_cast<int>(recordY * m_pixelRatio + topLeft.y()),
@@ -3540,42 +3297,13 @@ void MainWindow::startCountdown()
     qDebug() << "record rect:" << recordRect;
 
     recordProcess.setRecordInfo(recordRect, selectAreaName);
-/*
-    Settings *t_settings = new Settings();
-    QVariant t_saveGifVar = t_settings->getOption("save_as_gif");
-    QVariant t_frameRateVar = t_settings->getOption("mkv_framerate");
-    //保持帧数的配置文件判断
-    int t_frameRate = t_frameRateVar.toString().toInt();
-
-    bool t_saveGif = false;
-    //保持格式的配置文件判断
-    if (t_saveGifVar.toString() == "true") {
-        t_saveGif = true;
-    } else {
-        t_saveGif = false;
-    }
-
-    recordProcess.setFrameRate(t_frameRate);
-
-    if (t_saveGif) {
-        qDebug() << "record format is gif";
-        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_GIF);
-    } else if (t_saveGif == false) {
-        qDebug() << "record format is mp4";
-        recordProcess.setRecordType(RecordProcess::RECORD_TYPE_VIDEO);
-    }
-*/
     resetCursor();
-
-    //    hideRecordButton();
-    //隐藏所有的控件
     hideAllWidget();
-
-
-    //delete recordButtonLayout;
-
-    countdownLayout = new QVBoxLayout();
+    QVBoxLayout *countdownLayout = new QVBoxLayout();
     setLayout(countdownLayout);
+
+    countdownTooltip = new CountdownTooltip();
+    connect(countdownTooltip, SIGNAL(finished()), this, SLOT(startRecord()));
 
     countdownLayout->addStretch();
     countdownLayout->addWidget(countdownTooltip, 0, Qt::AlignCenter);
@@ -3588,9 +3316,10 @@ void MainWindow::startCountdown()
 
     if(!DWindowManagerHelper::instance()->hasComposite()){
         // 设置录屏框区域。
+        m_pRecorderRegion =  new RecorderRegionShow();
         m_pRecorderRegion->resize(std::min(recordWidth + 2, rootWindowRect.width() - 2), std::min(recordHeight + 2, rootWindowRect.height() - 2));
         m_pRecorderRegion->move(std::max(recordX - 1, 1), std::max(recordY - 1, 1));
-        if (m_cameraWidget->isVisible()) {
+        if (m_cameraWidget && m_cameraWidget->isVisible()) {
             m_cameraWidget->cameraStop();
             m_cameraWidget->setCameraStop(true);
             m_pRecorderRegion->initCameraInfo(m_cameraWidget->postion(), m_cameraWidget->geometry().size());
@@ -3600,32 +3329,6 @@ void MainWindow::startCountdown()
 
     repaint();
 }
-/*
-void MainWindow::showRecordButton()
-{
-    //    updateToolBarPos();
-    //    recordButton->show();
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-        //        recordOptionPanel->show();
-
-        adjustLayout(recordButtonLayout,
-                     recordButton->width(),
-                     recordButton->height() + RECORD_OPTIONAL_PADDING + recordOptionPanel->height());
-    } else {
-        adjustLayout(recordButtonLayout,
-                     recordButton->width(),
-                     recordButton->height() + RECORD_OPTIONAL_PADDING);
-    }
-}
-
-void MainWindow::hideRecordButton()
-{
-    recordButton->hide();
-    recordOptionPanel->hide();
-
-    //    Utils::clearBlur(windowManager, this->winId());
-}
-*/
 void MainWindow::hideAllWidget()
 {
     m_toolBar->hide();
@@ -3643,10 +3346,6 @@ void MainWindow::hideAllWidget()
     }
 
     // Utils::clearBlur(windowManager, this->winId());
-}
-void MainWindow::hideCameraWidget()
-{
-    m_cameraWidget->hide();
 }
 void MainWindow::adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight)
 {
@@ -3709,12 +3408,6 @@ void MainWindow::initShapeWidget(QString type)
 
 void MainWindow::exitApp()
 {
-    /*
-    if (m_interfaceExist && nullptr != m_hotZoneInterface) {
-        if (m_hotZoneInterface->isValid())
-            m_hotZoneInterface->asyncCall("EnableZoneDetected",  true);
-    }
-    */
     emit releaseEvent();
     if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
         if(nullptr != m_pScreenRecordEvent){

@@ -48,14 +48,9 @@ SideBarWidget::SideBarWidget(DWidget *parent)
 {
     int t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     setBlurBackgroundEnabled(true);
-
-//    setBlurRectXRadius(14);
-//    setBlurRectYRadius(14);
     blurBackground()->setRadius(30);
     blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
     blurBackground()->setBlurEnabled(true);
-//    setBlendMode(DBlurEffectWidget::InWindowBlend);
-//    setMaskColor(QColor(255, 255, 255, 76.5));
     if (t_themeType == 1) {
         blurBackground()->setMaskColor(QColor(255, 255, 255, 76));
     }
@@ -79,21 +74,7 @@ SideBarWidget::SideBarWidget(DWidget *parent)
                            "DPushButton::hover{border-image: url(:/image/newUI/hover/close-hover.svg)}";
 
     QPixmap pixmap(":/image/newUI/normal/close-normal.svg");
-
-//    m_closeButton = new ToolButton(this);
-//    m_closeButton->setIconSize(QSize(40, 40));
-//    m_closeButton->setIcon(QIcon(":/image/newUI/normal/close-normal.svg"));
-//    m_closeButton->resize(pixmap.size());
-//    /* 设置按钮的有效区域 */
-//    m_closeButton->setMask(QBitmap(pixmap.mask()));
-//    m_closeButton->setStyleSheet(button_style);
-
     m_closeButton = new DImageButton(this);
-//    m_closeButton->setIconSize(QSize(40, 40));
-//    m_closeButton->setIcon(QIcon(":/image/newUI/normal/close-normal.svg"));
-//    m_closeButton->resize(pixmap.size());
-//    m_closeButton->setHoverPic(":/image/newUI/hover/close-hover.svg");
-//    m_closeButton->setNormalPic(":/image/newUI/normal/close-normal.svg");
     if (t_themeType == 1) {
         m_closeButton->setHoverPic(":/image/newUI/hover/close-hover.svg");
         m_closeButton->setNormalPic(":/image/newUI/normal/close-normal.svg");
@@ -131,11 +112,6 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
 void SideBarWidget::paintEvent(QPaintEvent *e)
 {
     DFloatingWidget::paintEvent(e);
-
-//    QPainter painter(this);
-//    painter.setPen(QColor(255, 255, 255, 76.5));
-//    painter.setRenderHint(QPainter::Antialiasing);
-//    painter.drawLine(QPointF(BTN_RADIUS, 0), QPointF(this->width() - 1, 0));
 }
 
 void SideBarWidget::showEvent(QShowEvent *event)
@@ -212,12 +188,6 @@ void SideBar::setColorFunc(const QString &func)
 */
 void SideBar::paintEvent(QPaintEvent *e)
 {
-//    QPainter painter(this);
-//    painter.setPen(QColor(0, 0, 0, 25));
-//    painter.setRenderHint(QPainter::Antialiasing);
-//    QRectF rect(0, 0, this->width() - 1, this->height() - 1);
-//    painter.drawRoundedRect(rect.translated(0.5, 0.5), 3, 3, Qt::AbsoluteSize);
-
     DLabel::paintEvent(e);
 }
 

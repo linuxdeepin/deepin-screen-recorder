@@ -43,6 +43,8 @@ public:
                    const QVariant &defaultValue = QVariant());
     QStringList keys(const QString &group);
 
+    QVariant getDefaultValue(const QString &group, const QString &key);
+
 signals:
     void colorChanged();
     void shapeConfigChanged(const QString &shape,  const QString &key, int index);

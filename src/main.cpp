@@ -42,7 +42,9 @@
 
 
 DWIDGET_USE_NAMESPACE
-
+/*
+ * 截图录屏不能从界面设置主题，不存在主题设置，保存设置的主题过程
+ * 初始化利用系统主题来设置
 static QString g_appPath;//全局路径
 static int g_themeType = 0;
 
@@ -94,7 +96,7 @@ void saveThemeTypeSetting(int type)
     t_configFile.close();
 }
 
-
+*/
 int main(int argc, char *argv[])
 {
 
@@ -114,6 +116,7 @@ int main(int argc, char *argv[])
 
 
     //判断wayland平台
+    /*
     auto e = QProcessEnvironment::systemEnvironment();
     QString XDG_CURRENT_DESKTOP = e.value(QStringLiteral("XDG_CURRENT_DESKTOP"));
     QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
@@ -130,7 +133,7 @@ int main(int argc, char *argv[])
             return 0;
         }
     }
-
+    */
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
 //    dbus.registerService("com.deepin.ScreenRecorder");
@@ -144,9 +147,9 @@ int main(int argc, char *argv[])
         //else {
             // Init application attributes.
 
-            g_appPath = QDir::homePath() + QDir::separator() + "." + qApp->applicationName();
-            QDir t_appDir;
-            t_appDir.mkpath(g_appPath);
+            //g_appPath = QDir::homePath() + QDir::separator() + "." + qApp->applicationName();
+            //QDir t_appDir;
+            //t_appDir.mkpath(g_appPath);
 
             app.setOrganizationName("deepin");
             app.setApplicationName("deepin-screen-recorder");
@@ -204,13 +207,14 @@ int main(int argc, char *argv[])
 
             // 应用已保存的主题设置
             DGuiApplicationHelper::ColorType t_type = DGuiApplicationHelper::instance()->themeType();
-            saveThemeTypeSetting(t_type);
+            //saveThemeTypeSetting(t_type);
 
-            window.setConfigThemeType(g_themeType);
+            window.setConfigThemeType(t_type);
 
-            DGuiApplicationHelper::instance()->setPaletteType(getThemeTypeSetting());
+            DGuiApplicationHelper::instance()->setPaletteType(t_type);
 
             //监听当前应用主题切换事件
+            /* 截图过程中不存在切换主题的操作
             QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
             [] (DGuiApplicationHelper::ColorType type) {
                 qDebug() << type;
@@ -218,7 +222,7 @@ int main(int argc, char *argv[])
                 saveThemeTypeSetting(type);
                 DGuiApplicationHelper::instance()->setPaletteType(type);
             });
-
+            */
             window.initLaunchMode(t_launchMode);
             DBusScreenshotService dbusService (&window);
 
