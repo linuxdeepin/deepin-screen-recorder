@@ -295,133 +295,8 @@ void MainWindow::initAttributes()
 
         m_screenHeight = m_screenSize.height();
         m_screenWidth = m_screenSize.width();
-        for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
-            if (wid == winId()) continue;
 
-            DForeignWindow *window = DForeignWindow::fromWinId(wid);
-//            qDebug() << window->wmClass() << window->windowState();
-            //判断窗口是否被最小化
-            if (window->windowState() == Qt::WindowState::WindowMinimized) {
-                continue;
-            }
 
-            if (window) {
-                int t_tempWidth = 0;
-                int t_tempHeight = 0;
-                window->deleteLater();
-                //修改部分窗口显示不全，截图框识别问题
-                //x坐标小于0时
-                if (window->frameGeometry().x() < 0) {
-                    if (window->frameGeometry().y() < 0) {
-
-                        //x,y为负坐标情况
-                        t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
-                        t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
-
-//                        windowRects << Dtk::Wm::WindowRect {0, 0, t_tempWidth, t_tempHeight};
-                        windowRects << QRect(0, 0, t_tempWidth, t_tempHeight);
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-
-                    else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
-                        //x为负坐标，y在正常屏幕区间内
-                        t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
-                        t_tempHeight = window->frameGeometry().height();
-
-//                        windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                        windowRects << QRect(0, window->frameGeometry().y(), t_tempWidth, t_tempHeight);
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-
-                    else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
-                        //x为负坐标，y方向窗口超出屏幕底部
-                        t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
-                        t_tempHeight = m_screenHeight - window->frameGeometry().y();
-
-//                        windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                        windowRects << QRect(0, window->frameGeometry().y(), t_tempWidth, t_tempHeight);
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-                }
-
-                //x坐标位于正常屏幕区间时
-                else if (window->frameGeometry().x() >= 0 && window->frameGeometry().x() <= m_screenWidth - window->frameGeometry().width()) {
-                    if (window->frameGeometry().y() < 0) {
-                        //y为负坐标情况
-                        t_tempWidth = window->frameGeometry().width();
-                        t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
-
-//                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight};
-                        windowRects << QRect(window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight);
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-
-                    else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
-                        //y在正常屏幕区间内
-                        t_tempWidth = window->frameGeometry().width();
-                        t_tempHeight = window->frameGeometry().height();
-
-//                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                        windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-
-                    else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
-                        //y方向窗口超出屏幕底部
-                        t_tempWidth = window->frameGeometry().width();
-                        t_tempHeight = m_screenHeight - window->frameGeometry().y();
-
-//                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                        windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-                }
-
-                //x方向窗口超出屏幕右侧区域
-                else if (window->frameGeometry().x() > m_screenWidth - window->frameGeometry().width()) {
-                    if (window->frameGeometry().y() < 0) {
-                        //y为负坐标情况
-                        t_tempWidth = m_screenWidth - window->frameGeometry().x();
-                        t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
-
-//                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight};
-                        windowRects << QRect(window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight);
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-
-                    else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= m_screenHeight - window->frameGeometry().height()) {
-                        //y在正常屏幕区间内
-                        t_tempWidth = m_screenWidth - window->frameGeometry().x();
-                        t_tempHeight = window->frameGeometry().height();
-
-//                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                        windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-
-                    else if (window->frameGeometry().y() > m_screenHeight - window->frameGeometry().height()) {
-                        //y方向窗口超出屏幕底部
-                        t_tempWidth = m_screenWidth - window->frameGeometry().x();
-                        t_tempHeight = m_screenHeight - window->frameGeometry().y();
-
-//                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
-                        windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
-                        windowNames << window->wmClass();
-                        continue;
-                    }
-                }
-                //                windowRects << Dtk::Wm::WindowRect { window->x(), window->y(), window->width(), window->height() };
-                //                windowNames << window->wmClass();
-            }
-        }
 
     recordButtonLayout = new QVBoxLayout();
     setLayout(recordButtonLayout);
@@ -587,8 +462,84 @@ void MainWindow::initAttributes()
 //    m_functionType = 1;
 //    initScreenShot();
     initShortcut();
+
+
+    //
+    m_connectionThread = new QThread(this);
+    m_connectionThreadObject = new ConnectionThread();
+    connect(m_connectionThreadObject, &ConnectionThread::connected, this,
+        [this] {
+            m_eventQueue = new EventQueue(this);
+            m_eventQueue->setup(m_connectionThreadObject);
+
+            Registry *registry = new Registry(this);
+            setupRegistry(registry);
+        },
+        Qt::QueuedConnection
+    );
+    m_connectionThreadObject->moveToThread(m_connectionThread);
+    m_connectionThread->start();
+    m_connectionThreadObject->initConnection();
 }
 
+
+void MainWindow::setupRegistry(Registry *registry)
+{
+    connect(registry, &Registry::compositorAnnounced, this,
+            [this, registry](quint32 name, quint32 version) {
+        m_compositor = registry->createCompositor(name, version, this);
+    }
+    );
+
+    connect(registry, &Registry::clientManagementAnnounced, this,
+            [this, registry] (quint32 name, quint32 version) {
+        m_clientManagement = registry->createClientManagement(name, version, this);
+        qDebug() << QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ")) << "createClientManagement";
+        connect(m_clientManagement, &ClientManagement::windowStatesChanged, this,
+                [this] {
+            m_windowStates = m_clientManagement->getWindowStates();
+            qDebug() << "Get new window states";
+            this->waylandwindowinfo(m_windowStates);
+        }
+        );
+    }
+    );
+
+    connect(registry, &Registry::interfacesAnnounced, this,
+            [this] {
+        Q_ASSERT(m_compositor);
+        Q_ASSERT(m_clientManagement);
+        qDebug() << "request getWindowStates";
+        m_windowStates = m_clientManagement->getWindowStates();
+        this->waylandwindowinfo(m_windowStates);
+    }
+    );
+
+    registry->setEventQueue(m_eventQueue);
+    registry->create(m_connectionThreadObject);
+    registry->setup();
+}
+
+void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> &windowStates)
+{
+    if(windowStates.count() == 0){
+        return;
+    }
+    for (int i = 0; i < windowStates.count(); ++i) {
+        if(windowStates.at(i).isMinimized == false && windowStates.at(i).pid != getpid() && windowStates.at(i).resourceName != ""){
+            windowRects << QRect(windowStates.at(i).geometry.x, windowStates.at(i).geometry.y, windowStates.at(i).geometry.width, windowStates.at(i).geometry.height);
+            windowNames << windowStates.at(i).resourceName;
+        }
+    }
+    if(windowStates.count() > 0){
+        m_connectionThread->quit();
+        m_connectionThread->wait();
+        m_connectionThreadObject->deleteLater();
+        if(m_isFullScreenShot) {
+            saveTopWindow();
+        }
+    }
+}
 void MainWindow::sendSavingNotify()
 {
     // Popup notify.
@@ -1128,13 +1079,48 @@ void MainWindow::testScreenshot()
     sendNotify(m_saveIndex, m_saveFileName, r);
 }
 
+void MainWindow::saveTopWindow()
+{
+    int topWindowIndex = windowRects.size() - 2;
+    if(topWindowIndex < 0){
+        topWindowIndex = 0;
+    }
+    selectAreaName = windowNames[topWindowIndex];
+    recordX = windowRects[topWindowIndex].x();
+    recordY = windowRects[topWindowIndex].y();
+    recordWidth = windowRects[topWindowIndex].width();
+    recordHeight = windowRects[topWindowIndex].height();
+
+    this->hide();
+    emit this->hideScreenshotUI();
+    const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
+    qDebug() << ratio << recordX << recordY << recordWidth << recordHeight;
+    QRect target( static_cast<int>(recordX * ratio),
+                  static_cast<int>(recordY * ratio),
+                  static_cast<int>(recordWidth * ratio),
+                  static_cast<int>(recordHeight * ratio) );
+//    using namespace utils;
+    QPixmap screenShotPix =  m_backgroundPixmap.copy(target);
+    qDebug() << "topWindow grabImage is null:" << m_backgroundPixmap.isNull()
+             << QRect(recordX, recordY, recordWidth, recordHeight)
+             << "\n"
+             << "screenShot is null:" << screenShotPix.isNull();
+    m_needSaveScreenshot = true;
+    //    DDesktopServices::playSystemSoundEffect(DDesktopServices::SSE_Screenshot);
+    const auto r = saveAction(screenShotPix);
+    sendNotify(m_saveIndex, m_saveFileName, r);
+}
+
 void MainWindow::topWindow()
 {
     //DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
+    m_isFullScreenShot = true;
     this->initAttributes();
     this->initLaunchMode("screenShot");
     this->showFullScreen();
     this->initResource();
+    // wayland
+    return;
 
 //    QList<QRect> t_windowRects;
 //    if (m_screenNum == 0) {
@@ -1165,7 +1151,7 @@ void MainWindow::topWindow()
 //        qDebug() << "window name:" << window->wmClass();
 //    }
 
-
+/*
     int t_windowCount = DWindowManagerHelper::instance()->allWindowIdList().size();
 
     for (int i = t_windowCount - 1; i >= 0; i--) {
@@ -1209,6 +1195,7 @@ void MainWindow::topWindow()
 
     const auto r = saveAction(screenShotPix);
     sendNotify(m_saveIndex, m_saveFileName, r);
+*/
 }
 
 void MainWindow::savePath(const QString &path)

@@ -66,12 +66,19 @@
 #include "event_monitor.h"
 #include "screen_shot_event.h"
 
+
+#include <KF5/KWayland/Client/connection_thread.h>
+#include <KF5/KWayland/Client/clientmanagement.h>
+#include <KF5/KWayland/Client/event_queue.h>
+#include <KF5/KWayland/Client/registry.h>
+
 #undef Bool
 
 DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 //DWM_USE_NAMESPACE
 
+using namespace KWayland::Client;
 class MainWindow : public DWidget
 {
     Q_OBJECT
@@ -139,6 +146,7 @@ public:
     void testScreenshot();
 
     void topWindow();
+    void saveTopWindow();
     void savePath(const QString &path);
     void noNotify();
     void setConfigThemeType(int themeType);
@@ -200,6 +208,7 @@ public slots:
     void on_CheckRecodeCouldUse(bool canUse);
     void on_CheckVideoCouldUse(bool canUse);
     void checkCpuIsZhaoxin();
+    void waylandwindowinfo(const QVector<ClientManagement::WindowState> &m_windowStates);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -224,6 +233,7 @@ protected:
     QPixmap getPixmapofRect(const QRect &rect);
     void installTipHint(QWidget *w, const QString &hintstr);
     void installHint(QWidget *w, QWidget *hint);
+    void setupRegistry(Registry *registry);
 private:
 //    QList<WindowRect> windowRects;
     QList<QRect> windowRects;
@@ -371,6 +381,16 @@ private:
     QList<ScreenInfo> m_screenInfo;
     XFixesCursorImage *m_CursorImage = nullptr;
     QSize m_screenSize;
+
+    // 获取wayland窗口信息相关。
+    QThread *m_connectionThread;
+    ConnectionThread *m_connectionThreadObject;
+    EventQueue *m_eventQueue = nullptr;
+    Compositor *m_compositor = nullptr;
+    PlasmaWindowManagement *m_windowManagement = nullptr;
+    ClientManagement *m_clientManagement = nullptr;
+    QVector<ClientManagement::WindowState> m_windowStates;
+    bool m_isFullScreenShot = false;
 };
 
 #endif //MAINWINDOW_H
