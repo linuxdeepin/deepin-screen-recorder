@@ -36,6 +36,8 @@
 #include "constant.h"
 #include <QStandardPaths>
 #include <DDialog>
+#include <QWidget>
+#include <QWindow>
 
 //DWM_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
@@ -144,15 +146,20 @@ void Utils::drawTooltipText(QPainter &painter, QString text, QString textColor, 
 
 void Utils::passInputEvent(int wid)
 {
-    XRectangle *reponseArea = new XRectangle;
-    reponseArea->x = 0;
-    reponseArea->y = 0;
-    reponseArea->width = 0;
-    reponseArea->height = 0;
+    // wayland
+    QWidget *widget = QWidget::find(static_cast<WId>(wid));
+    if(widget && widget->windowHandle()) {
+      widget->windowHandle()->setMask(QRegion(0, 0, 0, 0));
+    }
+    //XRectangle *reponseArea = new XRectangle;
+    //reponseArea->x = 0;
+    //reponseArea->y = 0;
+    //reponseArea->width = 0;
+    //reponseArea->height = 0;
 
-    XShapeCombineRectangles(QX11Info::display(), static_cast<unsigned long>(wid), ShapeInput, 0, 0, reponseArea, 1, ShapeSet, YXBanded);
+    //XShapeCombineRectangles(QX11Info::display(), static_cast<unsigned long>(wid), ShapeInput, 0, 0, reponseArea, 1, ShapeSet, YXBanded);
 
-    delete reponseArea;
+    //delete reponseArea;
 }
 
 QString Utils::getRecordingSaveDirectory()

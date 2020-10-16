@@ -102,8 +102,8 @@ int main(int argc, char *argv[])
 
     // Construct a QGuiApplication before accessing a platform function.
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
-
-    DApplication::loadDXcbPlugin();
+    qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
+    //DApplication::loadDXcbPlugin();
     DApplication app(argc, argv);
     QString t_launchMode;
 
