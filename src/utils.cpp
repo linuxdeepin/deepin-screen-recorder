@@ -147,9 +147,10 @@ void Utils::drawTooltipText(QPainter &painter, QString text, QString textColor, 
 void Utils::passInputEvent(int wid)
 {
     // wayland
+    // QRegion(0, 0, 0, 0) wayland 下还存在边界值bug。
     QWidget *widget = QWidget::find(static_cast<WId>(wid));
     if(widget && widget->windowHandle()) {
-      widget->windowHandle()->setMask(QRegion(0, 0, 0, 0));
+      widget->windowHandle()->setMask(QRegion(0, 0, 1, 1));
     }
     //XRectangle *reponseArea = new XRectangle;
     //reponseArea->x = 0;
