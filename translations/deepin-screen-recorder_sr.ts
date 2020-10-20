@@ -67,15 +67,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"/>
+        <translation>Занемари</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Остава</translation>
     </message>
     <message>
-        <source>Saving the screen recording, please wait...</source>
-        <translation type="unfinished"/>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>Чување датототеке снимка, сачекајте...</translation>
     </message>
 </context>
 <context>
@@ -166,7 +166,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Copy to clipboard</source>
-        <translation>Копирај у бележницу</translation>
+        <translation>Копирај у оставу</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -396,19 +396,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"/>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Остава</translation>
     </message>
     <message>
         <source>Edit in Draw</source>
-        <translation type="unfinished"/>
+        <translation>Уреди у Цртању</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"/>
+        <translation>Прикажи показивач</translation>
     </message>
 </context>
 <context>
@@ -419,7 +419,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"/>
+        <translation>Снимање екрана тренутно није подржано</translation>
     </message>
     <message>
         <source>Exit</source>

@@ -51,7 +51,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation>aluevalinta</translation>
+        <translation>valitse alue</translation>
     </message>
     <message>
         <source>Save</source>
@@ -67,15 +67,15 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"/>
+        <translation>Ohita</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Leikepöydälle</translation>
     </message>
     <message>
-        <source>Saving the screen recording, please wait...</source>
-        <translation type="unfinished"/>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>Näyttöä tallennetaan, odota...</translation>
     </message>
 </context>
 <context>
@@ -130,7 +130,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>Käynnistä/Kuvakaappaus</translation>
+        <translation>Aloita/Kuvakaappaus</translation>
     </message>
     <message>
         <source>Exit/Save</source>
@@ -142,7 +142,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation>Koon säätö</translation>
+        <translation>Säädä koko</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -249,11 +249,11 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <name>ShotToolWidget</name>
     <message>
         <source>Blur</source>
-        <translation>hämärä</translation>
+        <translation>Hämärtää</translation>
     </message>
     <message>
         <source>Mosaic</source>
-        <translation>mosaiikki</translation>
+        <translation>Ruudukkoa</translation>
     </message>
 </context>
 <context>
@@ -396,19 +396,19 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"/>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Leikepöydälle</translation>
     </message>
     <message>
         <source>Edit in Draw</source>
-        <translation type="unfinished"/>
+        <translation>Muokkaa ohjelmassa Piirtäminen</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"/>
+        <translation>Näytä osoitin</translation>
     </message>
 </context>
 <context>
@@ -419,7 +419,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"/>
+        <translation>Näytön tallennusta ei tueta tällä hetkellä</translation>
     </message>
     <message>
         <source>Exit</source>

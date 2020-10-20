@@ -67,15 +67,15 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"/>
+        <translation>Ignorar</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Área de Transferência</translation>
     </message>
     <message>
-        <source>Saving the screen recording, please wait...</source>
-        <translation type="unfinished"/>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>Salvando o arquivo de gravação da tela, aguarde...</translation>
     </message>
 </context>
 <context>
@@ -396,19 +396,19 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"/>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Área de Transferência</translation>
     </message>
     <message>
         <source>Edit in Draw</source>
-        <translation type="unfinished"/>
+        <translation>Editar no Desenhos</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"/>
+        <translation>Exibir cursor</translation>
     </message>
 </context>
 <context>
@@ -419,7 +419,7 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"/>
+        <translation>No momento, a gravação em tela não é suportada</translation>
     </message>
     <message>
         <source>Exit</source>

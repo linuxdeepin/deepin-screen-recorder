@@ -4,7 +4,7 @@
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Pro zastavení záznamu klikněte na ikonu
+        <translation>Pro zastavení záznamu klepněte na ikonu
 v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
 </context>
@@ -74,8 +74,8 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <translation>Schránka</translation>
     </message>
     <message>
-        <source>Saving the screen recording, please wait...</source>
-        <translation type="unfinished"/>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>Ukládání souboru se záznamem obrazovky – čekejte prosím…</translation>
     </message>
 </context>
 <context>
@@ -292,11 +292,11 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Show Click</source>
-        <translation>Ukázat kliknutí</translation>
+        <translation>Ukázat klepnutí</translation>
     </message>
     <message>
         <source>Hide Click</source>
-        <translation>Skrýt kliknutí</translation>
+        <translation>Skrýt klepnutí</translation>
     </message>
     <message>
         <source>Options</source>
@@ -404,11 +404,11 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Edit in Draw</source>
-        <translation type="unfinished"/>
+        <translation>Upravit v kreslení</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"/>
+        <translation>Zobrazit ukazatel</translation>
     </message>
 </context>
 <context>

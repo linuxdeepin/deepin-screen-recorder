@@ -74,7 +74,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Saving the screen recording, please wait...</source>
+        <source>Saving the screen recording file, please wait...</source>
         <translation type="unfinished"/>
     </message>
 </context>

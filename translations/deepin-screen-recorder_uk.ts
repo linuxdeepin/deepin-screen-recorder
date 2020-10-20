@@ -74,8 +74,8 @@ or press the shortcut again to stop recording</source>
         <translation>Буфер обміну</translation>
     </message>
     <message>
-        <source>Saving the screen recording, please wait...</source>
-        <translation>Зберігаємо записане з екрана. Будь ласка, зачекайте…</translation>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>Зберігаємо записаний з екрана файл. Будь ласка, зачекайте…</translation>
     </message>
 </context>
 <context>

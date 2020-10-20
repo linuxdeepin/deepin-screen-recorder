@@ -90,7 +90,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Exit</source>
-        <translation>退出</translation>
+        <translation>離開</translation>
     </message>
 </context>
 <context>
@@ -134,7 +134,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation>退出/儲存</translation>
+        <translation>離開/儲存</translation>
     </message>
     <message>
         <source>Drawing</source>
@@ -170,7 +170,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Exit</source>
-        <translation>退出</translation>
+        <translation>離開</translation>
     </message>
     <message>
         <source>Save</source>
@@ -238,7 +238,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Help</source>
-        <translation>幫助</translation>
+        <translation>說明</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
@@ -423,7 +423,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Exit</source>
-        <translation>退出</translation>
+        <translation>離開</translation>
     </message>
 </context>
 </TS>

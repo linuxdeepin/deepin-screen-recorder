@@ -67,15 +67,15 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"/>
+        <translation>Ignorar</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Área de transferência</translation>
     </message>
     <message>
-        <source>Saving the screen recording, please wait...</source>
-        <translation type="unfinished"/>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>A guardar o ficheiro da gravação do ecrã, aguarde...</translation>
     </message>
 </context>
 <context>
@@ -396,19 +396,19 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"/>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Área de transferência</translation>
     </message>
     <message>
         <source>Edit in Draw</source>
-        <translation type="unfinished"/>
+        <translation>Editar no Desenho</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"/>
+        <translation>Mostrar cursor</translation>
     </message>
 </context>
 <context>
@@ -419,7 +419,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"/>
+        <translation>A gravação do ecrã não é atualmente suportada</translation>
     </message>
     <message>
         <source>Exit</source>

@@ -12,7 +12,7 @@ or press the shortcut again to stop recording</source>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation>Записыват</translation>
+        <translation>Запись</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -27,7 +27,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>Сохранение не удалось. Пожалуйста, сохраните его в своем домашнем каталоге</translation>
+        <translation>Сохранение не удалось. Пожалуйста, сохраните файл в своем домашнем каталоге</translation>
     </message>
     <message>
         <source>View</source>
@@ -35,7 +35,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Скриншот завершена</translation>
+        <translation>Завершение процесса скриншота</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -51,7 +51,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>select-area</source>
-        <translation>ьыберите-область</translation>
+        <translation>Выберите область</translation>
     </message>
     <message>
         <source>Save</source>
@@ -67,15 +67,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"/>
+        <translation>Игнорировать</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Буфер обмена</translation>
     </message>
     <message>
-        <source>Saving the screen recording, please wait...</source>
-        <translation type="unfinished"/>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>Сохранение файла записи с экрана, пожалуйста подождите...</translation>
     </message>
 </context>
 <context>
@@ -123,7 +123,7 @@ or press the shortcut again to stop recording</source>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>Ввод текста здесь </translation>
+        <translation>Введите текст здесь</translation>
     </message>
 </context>
 <context>
@@ -142,7 +142,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation>Регулировка размера</translation>
+        <translation>Настройка размера</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -150,7 +150,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Quick start</source>
-        <translation>Быстрый старт</translation>
+        <translation>Быстрый пуск</translation>
     </message>
     <message>
         <source>Window screenshot</source>
@@ -162,11 +162,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>Скриншот полного экрана</translation>
+        <translation>Скриншот всего экрана</translation>
     </message>
     <message>
         <source>Copy to clipboard</source>
-        <translation>Копировать в буфер</translation>
+        <translation>Копировать в буфер обмена</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -182,7 +182,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>Элипс</translation>
+        <translation>Эллипс</translation>
     </message>
     <message>
         <source>Line</source>
@@ -198,7 +198,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Vymazat</translation>
+        <translation>Удалить</translation>
     </message>
     <message>
         <source>Undo</source>
@@ -206,35 +206,35 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation>Увеличить высоту вверх</translation>
+        <translation>Растянуть вверх</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation>Увеличить высоту вниз</translation>
+        <translation>Растянуть вниз</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>Увеличить ширину слева</translation>
+        <translation>Растянуть влево</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>Увеличить ширину справа</translation>
+        <translation>Растянуть вправо</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation>Увеличить высоту вверх</translation>
+        <translation>Уменьшить размер  сверху</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation>Увеличить высоту вниз</translation>
+        <translation>Уменьшить размер снизу</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>Увеличить ширину слева</translation>
+        <translation>Уменьшить ширину слева</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>Увеличить ширину справа</translation>
+        <translation>Уменьшить ширину справа</translation>
     </message>
     <message>
         <source>Help</source>
@@ -268,7 +268,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>System Audio</source>
-        <translation>Аудио системы</translation>
+        <translation>Аудиосистема</translation>
     </message>
     <message>
         <source>Sound Off</source>
@@ -284,19 +284,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Webcam On</source>
-        <translation>Вебка Включена</translation>
+        <translation>Веб-камера включена</translation>
     </message>
     <message>
         <source>Webcam Off</source>
-        <translation>Вебка выключена</translation>
+        <translation>Веб-камера выключена</translation>
     </message>
     <message>
         <source>Show Click</source>
-        <translation>Показывать щелчки мыши в записи</translation>
+        <translation>Показывать щелчки мыши в процессе записи</translation>
     </message>
     <message>
         <source>Hide Click</source>
-        <translation>Не показывать щелчки мыши в записи</translation>
+        <translation>Скрыть щелчки мыши в процессе записи</translation>
     </message>
     <message>
         <source>Options</source>
@@ -316,7 +316,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>FPS:</source>
-        <translation>FPS:</translation>
+        <translation>Кадры в секунду:</translation>
     </message>
     <message>
         <source>5 fps</source>
@@ -344,7 +344,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>Элипс</translation>
+        <translation>Эллипс</translation>
     </message>
     <message>
         <source>Line</source>
@@ -396,19 +396,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"/>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Буфер обмена</translation>
     </message>
     <message>
         <source>Edit in Draw</source>
-        <translation type="unfinished"/>
+        <translation>Редактировать в приложении Рисование</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"/>
+        <translation>Показать указатель</translation>
     </message>
 </context>
 <context>
@@ -419,7 +419,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"/>
+        <translation>На данный момент запись экрана не поддерживается</translation>
     </message>
     <message>
         <source>Exit</source>

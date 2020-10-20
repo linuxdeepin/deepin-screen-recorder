@@ -27,7 +27,7 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>Het opslaan is mislukt. Sla het bestand op in je persoonlijke map.</translation>
+        <translation>Het opslaan is mislukt. Sla het op in je persoonlijke map.</translation>
     </message>
     <message>
         <source>View</source>
@@ -67,15 +67,15 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"/>
+        <translation>Negeren</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Klembord</translation>
     </message>
     <message>
-        <source>Saving the screen recording, please wait...</source>
-        <translation type="unfinished"/>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>Bezig met opslaan van schermopname...</translation>
     </message>
 </context>
 <context>
@@ -396,19 +396,19 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"/>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Klembord</translation>
     </message>
     <message>
         <source>Edit in Draw</source>
-        <translation type="unfinished"/>
+        <translation>Bewerken in Deepin Tekenen</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"/>
+        <translation>Cursor vastleggen</translation>
     </message>
 </context>
 <context>
@@ -419,7 +419,7 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"/>
+        <translation>Schermopname wordt momenteel niet ondersteund</translation>
     </message>
     <message>
         <source>Exit</source>

@@ -67,15 +67,15 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"/>
+        <translation>Ignora</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Porta-retalls</translation>
     </message>
     <message>
-        <source>Saving the screen recording, please wait...</source>
-        <translation type="unfinished"/>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>S&apos;està desant el fitxer de gravació de pantalla, espereu...</translation>
     </message>
 </context>
 <context>
@@ -396,19 +396,19 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"/>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Porta-retalls</translation>
     </message>
     <message>
         <source>Edit in Draw</source>
-        <translation type="unfinished"/>
+        <translation>Edita al Dibuix</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"/>
+        <translation>Mostra el punter</translation>
     </message>
 </context>
 <context>
@@ -419,7 +419,7 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"/>
+        <translation>Actualment no s&apos;admet la gravació de pantalla</translation>
     </message>
     <message>
         <source>Exit</source>

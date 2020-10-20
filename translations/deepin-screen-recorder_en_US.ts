@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="en">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="en" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -18,7 +16,7 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Screenshot</translation>
     </message>
 </context>
 <context>
@@ -61,23 +59,23 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Saved to %1</translation>
     </message>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>Screen Capture will start in %1 seconds</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignore</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Clipboard</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>Saving the screen recording file, please wait...</translation>
     </message>
 </context>
 <context>
@@ -111,14 +109,14 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Saved to %1</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>Screen Capture will start in %1 seconds</translation>
     </message>
 </context>
 <context>
@@ -398,19 +396,19 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"></translation>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Clipboard</translation>
     </message>
     <message>
         <source>Edit in Draw</source>
-        <translation type="unfinished"></translation>
+        <translation>Edit in Draw</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"></translation>
+        <translation>Show pointer</translation>
     </message>
 </context>
 <context>
@@ -421,11 +419,11 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"></translation>
+        <translation>Screen recording is not supported at present</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation type="unfinished">Exit</translation>
+        <translation>Exit</translation>
     </message>
 </context>
 </TS>
