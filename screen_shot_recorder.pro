@@ -108,6 +108,7 @@ QT += widgets
 QT += gui
 QT += x11extras
 QT += dbus
+QT += multimedia
 QT += multimediawidgets
 LIBS += -lX11 -lXtst -ldl
 QMAKE_CXXFLAGS += -g

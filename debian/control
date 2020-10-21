@@ -3,9 +3,10 @@ Section: utils
 Priority: optional
 Maintainer: Deepin Packages Builder <packages@deepin.com>
 Build-Depends: debhelper (>= 9), pkg-config, qt5-qmake,
- libxcb-util0-dev, libqt5x11extras5-dev, qttools5-dev-tools, 
- libdtkgui-dev, libdtkwidget-dev, libxtst-dev, libprocps-dev, 
- libdframeworkdbus-dev,libxcursor-dev,libxfixes-dev
+ libxcb-util0-dev, libqt5x11extras5-dev, qttools5-dev-tools,
+ libdtkgui-dev, libdtkwidget-dev, libxtst-dev, libprocps-dev,
+ libdframeworkdbus-dev,libxcursor-dev,libxfixes-dev,libqt5multimediawidgets5,
+ qtmultimedia5-dev
 Standards-Version: 3.9.8
 Homepage: https://github.com/linuxdeepin/deepin-screen-recorder
 

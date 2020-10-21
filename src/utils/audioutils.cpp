@@ -214,5 +214,14 @@ QString AudioUtils::currentAudioChannel()
     process.waitForReadyRead();
     QString str_output = process.readAllStandardOutput();
     process.close();
+    if(str_output.isEmpty() && QSysInfo::currentCpuArchitecture().startsWith("arm")){
+        options.clear();
+        options << "-c" << "pacmd list-sources | grep -v 'hdmi' | grep -PB 1 'output.*monitor>' | head -n 1 | perl -pe 's/.* //g'";
+        process.start("bash", options);
+        process.waitForFinished();
+        process.waitForReadyRead();
+        str_output = process.readAllStandardOutput();
+        process.close();
+    }
     return str_output;
 }
