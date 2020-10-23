@@ -36,7 +36,6 @@
 #include <QtDBus>
 #include <QScreen>
 #include <dlfcn.h>
-#include <QtConcurrent>
 
 const int RecordProcess::RECORD_TYPE_VIDEO = 0;
 const int RecordProcess::RECORD_TYPE_GIF = 1;
@@ -52,7 +51,6 @@ const int RecordProcess::RECORD_FRAMERATE_30 = 30;
 
 RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 {
-    m_bufferSize = 60;
     settings = new Settings();
     m_framerate = RECORD_FRAMERATE_24;
 
@@ -87,6 +85,15 @@ RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
     }
 }
 
+RecordProcess::~RecordProcess()
+{
+    if(nullptr != m_pXGifRecord ){
+        m_pXGifRecord->wait();
+        delete m_pXGifRecord;
+        m_pXGifRecord = nullptr;
+    }
+}
+
 void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filename)
 {
     m_recordRect = recordRect;
@@ -107,6 +114,9 @@ void RecordProcess::setRecordAudioInputType(int inputType)
 {
     recordAudioInputType = inputType;
 }
+
+
+
 void RecordProcess::run()
 {
     // Start record.
@@ -135,85 +145,12 @@ void RecordProcess::run()
     }
 }
 
-void RecordProcess::screenshots()
-{
-    QScreen *screen = QGuiApplication::primaryScreen();
-    while (bWriteFrame()) {
-        appendBuffer(screen->grabWindow(0,
-                                        m_recordRect.x(),
-                                        m_recordRect.y(),
-                                        m_recordRect.width(),
-                                        m_recordRect.height()).toImage());
-    }
-}
-
-void RecordProcess::appendBuffer(QImage img)
-{
-    QMutexLocker locker(&m_mutex);
-    if(m_imageList.size() >= m_bufferSize){
-        m_imageList.removeFirst();
-        m_imageList.append(img);
-    }
-    else if(0 <= m_imageList.size() && m_imageList.size() < m_bufferSize){
-        m_imageList.append(img);
-    }
-}
-
-bool RecordProcess::getFrame(QImage &img)
-{
-    QMutexLocker locker(&m_mutex);
-    if(m_imageList.size() <= 0){
-        img = QImage();
-        return false;
-    }
-    else {
-        img = m_imageList.first();
-        m_imageList.removeFirst();
-        return true;
-    }
-}
-
-bool RecordProcess::bWriteFrame()
-{
-    QMutexLocker locker(&m_writeFrameMutex);
-    return m_bWriteFrame;
-}
-
-void RecordProcess::setBWriteFrame(bool bWriteFrame)
-{
-    QMutexLocker locker(&m_writeFrameMutex);
-    m_bWriteFrame = bWriteFrame;
-}
-
 void RecordProcess::recordGIF()
 {
-    setBWriteFrame(true);
     initProcess();
-    QtConcurrent::run(this,&RecordProcess::screenshots);
-    m_delay = 15;
-    QByteArray pathArry = savePath.toLocal8Bit();
-    char *pathCh = new char[strlen(pathArry.data())+1];
-    strcpy(pathCh,pathArry.data());
-    GifBegin(&m_gifWrite,
-             pathCh,
-             static_cast<uint32_t>(m_recordRect.width()),
-             static_cast<uint32_t>(m_recordRect.height()),
-             static_cast<uint32_t>(m_delay));
-    QScreen *screen = QGuiApplication::primaryScreen();
-    while (bWriteFrame())
-    {
-        QImage img;
-        if(getFrame(img)){
-            GifWriteFrame(&m_gifWrite,
-                          img.convertToFormat(QImage::Format_RGBA8888).bits(),
-                          static_cast<uint32_t>(m_recordRect.width()),
-                          static_cast<uint32_t>(m_recordRect.height()),
-                          static_cast<uint32_t>(m_delay));
-        }
-    }
 
-    GifEnd(&m_gifWrite);
-
+    m_pXGifRecord = new XGifRecord(m_recordRect,savePath);
+    m_pXGifRecord->start();
 
 
     // byzanz-record use command follow option --exec to stop recording gif.
@@ -543,9 +480,9 @@ int RecordProcess::readSleepProcessPid()
 void RecordProcess::stopRecord()
 {
     if (recordType == RECORD_TYPE_GIF) {
+        m_pXGifRecord->stop();
 //        int byzanzChildPid = readSleepProcessPid();
 //        kill(byzanzChildPid, SIGKILL);
-        setBWriteFrame(false);
         //qDebug() << "Kill byzanz-record's child process (sleep) pid: " << byzanzChildPid;
     } else {
         //process->terminate();

@@ -31,14 +31,8 @@
 #include <proc/readproc.h>
 #include <proc/sysinfo.h>
 #include "utils/desktopinfo.h"
-#include <QList>
-#include <QImage>
-#include <QMutex>
+#include "xgifrecord.h"
 
-extern "C"
-{
-#include "lib/GifH/gif.h"
-}
 
 class RecordProcess : public QThread
 {
@@ -61,6 +55,7 @@ public:
     static const int RECORD_FRAMERATE_30;
 
     explicit RecordProcess(QObject *parent = nullptr);
+    ~RecordProcess();
 
     void setRecordInfo(const QRect &recordRect, const QString &filename);
     //void setRecordType(int recordType);
@@ -75,12 +70,6 @@ public:
     int readSleepProcessPid();
 protected:
     void run();
-
-    void appendBuffer(QImage img);
-    void screenshots();
-    bool getFrame(QImage &img);
-    bool bWriteFrame();
-    void setBWriteFrame(bool bWriteFrame);
 
 private:
     QProcess *process = nullptr;
@@ -106,13 +95,7 @@ private:
     //QString lastAudioSink;
     //bool m_isZhaoxin = false;
     DesktopInfo m_info;
-    GifWriter m_gifWrite;
-    int m_delay;
-    QList<QImage> m_imageList;
-    int m_bufferSize;
-    QMutex m_mutex;
-    bool m_bWriteFrame;
-    QMutex m_writeFrameMutex;
+    XGifRecord *m_pXGifRecord;
 };
 
 #endif //RECORDPROCESS_H

@@ -1,10 +1,12 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ko" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ko">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>트레이 아이콘 클릭 
+        <translation>트레이 아이콘 클릭&#xa0;
 또는 단축키를 다시 눌러 녹화를 중지하십시오</translation>
     </message>
 </context>
@@ -67,15 +69,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -396,19 +398,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Edit in Draw</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -419,7 +421,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Exit</source>

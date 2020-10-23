@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="sq" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sq">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -51,7 +53,7 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Save</source>
