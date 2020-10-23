@@ -144,7 +144,7 @@ XFixesCursorImage* EventMonitor::GetCursorImage()
         fprintf(stderr, "unable to open display\n");
         return nullptr;
     }
-
+    /*
     // dlopen
     void *handle = dlopen("libXfixes.so", RTLD_LAZY);
     if(!handle){
@@ -162,5 +162,6 @@ XFixesCursorImage* EventMonitor::GetCursorImage()
     dlclose(handle);
     //end
     return XFixesGetCursorImage_hand(m_x11_display);
-    //return XFixesGetCursorImage(m_x11_display);
+    */
+    return XFixesGetCursorImage(m_x11_display);
 }

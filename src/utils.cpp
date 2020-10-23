@@ -153,8 +153,9 @@ void Utils::passInputEvent(int wid)
     reponseArea->width = 0;
     reponseArea->height = 0;
 
-    //XShapeCombineRectangles(QX11Info::display(), static_cast<unsigned long>(wid), ShapeInput, 0, 0, reponseArea, 1, ShapeSet, YXBanded);
+    XShapeCombineRectangles(QX11Info::display(), static_cast<unsigned long>(wid), ShapeInput, 0, 0, reponseArea, 1, ShapeSet, YXBanded);
     // dlopen 加载库
+    /*
     void *handle = dlopen("libXtst.so", RTLD_LAZY);
     if(!handle){
         qDebug() << "open libXtst.so failure";
@@ -177,6 +178,7 @@ void Utils::passInputEvent(int wid)
 
 
     delete reponseArea;
+    */
 }
 
 QString Utils::getRecordingSaveDirectory()

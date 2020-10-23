@@ -112,7 +112,8 @@ QT += dbus
 QT += multimedia
 QT += multimediawidgets
 QT += concurrent
-LIBS += -lX11 -lXtst -ldl
+LIBS += -lX11 -lXext -lXtst -lXfixes
+LIBS += -L"libprocps" -lprocps
 QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations
 

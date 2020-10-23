@@ -472,7 +472,7 @@ void RecordProcess::setIsZhaoXinPlatform(bool status)
 int RecordProcess::readSleepProcessPid()
 {
     // Read the list of open processes information.
-    /*
+
     PROCTAB *proc = openproc(
                 PROC_FILLMEM |          // memory status: read information from /proc/#pid/statm
                 PROC_FILLSTAT |         // cpu status: read information from /proc/#pid/stat
@@ -489,9 +489,7 @@ int RecordProcess::readSleepProcessPid()
 
     ProcessTree *processTree = new ProcessTree();
     processTree->scanProcesses(processes);
-    */
-
-    //
+    /*
     char *error;
     void *handle = dlopen("libprocps.so", RTLD_LAZY);
     if(!handle){
@@ -537,7 +535,7 @@ int RecordProcess::readSleepProcessPid()
     processTree->scanProcesses(processes);
 
     dlclose(handle);
-
+    */
     return processTree->getAllChildPids(byzanzProcessId)[0];
 }
 
