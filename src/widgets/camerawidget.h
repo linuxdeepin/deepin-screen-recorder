@@ -39,7 +39,7 @@ public:
     bool cameraStart();
     void cameraStop();
     void cameraResume();
-    bool getScreenResolution();
+    //bool getScreenResolution();
     Position postion();
     QPixmap scaledPixmap(const QPixmap &src, int width, int height);
 signals:
@@ -50,7 +50,7 @@ public slots:
     void deleteCapturedImage(int id, const QString &fileName);
     bool setCameraStop(bool status);
     bool getcameraStatus();
-    void cameraStatus();
+    //void cameraStatus();
     void cameraInitError(QCamera::Error error);
 protected:
     void enterEvent(QEvent *e);
@@ -59,27 +59,27 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *e);
 private:
-    QPixmap round(const QPixmap &img_in, int radius);
+    //QPixmap round(const QPixmap &img_in, int radius);
 private:
-    int recordX;
-    int recordY;
-    int recordWidth;
-    int recordHeight;
-    bool m_move;
+    int recordX = 0;
+    int recordY = 0;
+    int recordWidth = 0;
+    int recordHeight = 0;
+    bool m_move = false;
     QPoint m_startPoint;
     QPoint m_windowTopLeftPoint;
     QPoint m_windowTopRightPoint;
     QPoint m_windowBottomLeftPoint;
-    QCamera *camera;//摄像头
-    QCameraViewfinder *viewfinder; //摄像头取景器部件
-    QCameraImageCapture *imageCapture; //截图部件
-    QTimer *timer_image_capture;
-    DLabel *m_cameraUI;
+    QCamera *camera = nullptr;//摄像头
+    QCameraViewfinder *viewfinder = nullptr; //摄像头取景器部件
+    QCameraImageCapture *imageCapture = nullptr; //截图部件
+    QTimer *timer_image_capture = nullptr;
+    DLabel *m_cameraUI = nullptr;
     QString m_capturePath;
     QString m_deviceName;
-    QFile *m_deviceFile;
+    QFile *m_deviceFile = nullptr;
 
-    bool m_wildScreen;
+    bool m_wildScreen = false;
 };
 
 #endif // CAMERAWIDGET_H

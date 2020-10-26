@@ -42,7 +42,7 @@ class ToolBarWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:
-    ToolBarWidget(DWidget *parent = nullptr);
+    explicit ToolBarWidget(DWidget *parent = nullptr);
     ~ToolBarWidget() Q_DECL_OVERRIDE;
 
 signals:
@@ -66,14 +66,14 @@ signals:
     void shotToolChangedSignal(const QString &func);
     void closeButtonSignal();
 public slots:
-    bool isButtonChecked();
+    //bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
-    void specifiedSavePath();
+    //void specifiedSavePath();
     void keyBoardCheckedSlot(bool checked);
     void changeArrowAndLineFromBar(int line);
     void setRecordButtonDisableFromMain();
     void setRecordLaunchFromMain(bool recordLaunch);
-    void setIsZhaoxinPlatform(bool isZhaoxin);
+    //void setIsZhaoxinPlatform(bool isZhaoxin);
     void setVideoInitFromMain();
     void shapeClickedFromBar(QString shape);
     void setMicroPhoneEnable(bool status);
@@ -85,23 +85,23 @@ protected:
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    MajToolBar *m_majToolbar;
+    //MajToolBar *m_majToolbar;
     DLabel *m_hSeparatorLine;
-    SubToolBar *m_subToolbar;
+    //SubToolBar *m_subToolbar;
 
     MainToolWidget *m_mainTool;
     SubToolWidget *m_subTool;
     DImageButton *m_closeButton;
     DesktopInfo m_deskinfo;
 
-    bool  m_expanded;
+    //bool  m_expanded;
 };
 
 class ToolBar : public DLabel
 {
     Q_OBJECT
 public:
-    ToolBar(DWidget *parent = nullptr);
+    explicit ToolBar(DWidget *parent = nullptr);
     ~ToolBar() Q_DECL_OVERRIDE;
 
 signals:
@@ -125,10 +125,10 @@ signals:
     void shotToolChangedToMain(const QString &func);
     void closeButtonToMain();
 public slots:
-    bool isButtonChecked();
+    //bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
     void showAt(QPoint pos);
-    void specificedSavePath();
+//    void specificedSavePath();
     void currentFunctionMode(QString shapeType);
     void keyBoardCheckedToMainSlot(bool checked);
     void microphoneActionCheckedToMainSlot(bool checked);
@@ -137,7 +137,7 @@ public slots:
     void initToolBar();
     void setRecordButtonDisable();
     void setRecordLaunchMode(bool recordLaunch);
-    void setIsZhaoxinPlatform(bool isZhaoxin);
+    //void setIsZhaoxinPlatform(bool isZhaoxin);
     void setVideoButtonInit();
     void shapeClickedFromMain(QString shape);
     void setMicroPhoneEnable(bool status);
@@ -151,6 +151,6 @@ protected:
 private:
     ToolBarWidget *m_toolbarWidget;
 
-    bool m_expanded;
+    //bool m_expanded;
 };
 #endif // TOOLBAR_H

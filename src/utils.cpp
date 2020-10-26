@@ -35,6 +35,7 @@
 #include "constant.h"
 #include <QStandardPaths>
 #include <DDialog>
+#include <dlfcn.h>
 
 //DWM_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
@@ -42,6 +43,8 @@ DWIDGET_USE_NAMESPACE
 static const QString WarningDialogService = "com.deepin.dde.WarningDialog";
 static const QString WarningDialogPath = "/com/deepin/dde/WarningDialog";
 static const QString WarningDialogInterface = "com.deepin.dde.WarningDialog";
+
+bool Utils::is3rdInterfaceStart = false;
 
 QString Utils::getQrcPath(QString imageName)
 {
@@ -83,6 +86,8 @@ void Utils::warnNoComposite()
                          WarningDialogService);
     iface.call("RaiseWindow");
 }
+
+
 void Utils::notSupportWarn()
 {
    DDialog warnDlg;
@@ -92,7 +97,6 @@ void Utils::notSupportWarn()
    warnDlg.addButton(tr("Exit"));
    warnDlg.exec();
 }
-
 //void Utils::blurRect(DWindowManager *windowManager, int widgetId, QRectF rect)
 //{
 //    QVector<uint32_t> data;
@@ -150,8 +154,31 @@ void Utils::passInputEvent(int wid)
     reponseArea->height = 0;
 
     XShapeCombineRectangles(QX11Info::display(), static_cast<unsigned long>(wid), ShapeInput, 0, 0, reponseArea, 1, ShapeSet, YXBanded);
+    // dlopen 加载库
+    /*
+    void *handle = dlopen("libXtst.so", RTLD_LAZY);
+    if(!handle){
+        qDebug() << "open libXtst.so failure";
+        delete reponseArea;
+        return;
+    }
+
+    void (*XShapeCombineRectangles_handle) (Display*, Window, int, int, int, XRectangle*, int, int, int);
+    char *error;
+
+    XShapeCombineRectangles_handle = (void (*) (Display*, Window, int, int, int, XRectangle*, int, int, int))dlsym(handle, "XShapeCombineRectangles");
+
+    if((error = dlerror()) != nullptr){
+        qDebug() <<"get libXtst.so function  XShapeCombineRectangles failure";
+        delete reponseArea;
+        return;
+    }
+    XShapeCombineRectangles_handle(QX11Info::display(), static_cast<unsigned long>(wid), ShapeInput, 0, 0, reponseArea, 1, ShapeSet, YXBanded);
+    dlclose(handle);
+
 
     delete reponseArea;
+    */
 }
 
 QString Utils::getRecordingSaveDirectory()

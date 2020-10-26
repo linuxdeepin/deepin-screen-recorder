@@ -1,46 +1,13 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="es" version="2.1">
-<context>
-    <name>ColorToolWidget</name>
-    <message>
-        <source>Red</source>
-        <translation>Rojo</translation>
-    </message>
-    <message>
-        <source>Select Red</source>
-        <translation>Seleccionar Rojo</translation>
-    </message>
-    <message>
-        <source>yellow</source>
-        <translation>amarillo</translation>
-    </message>
-    <message>
-        <source>Select Yellow</source>
-        <translation>Seleccioinar Amarillo</translation>
-    </message>
-    <message>
-        <source>blue</source>
-        <translation>azul</translation>
-    </message>
-    <message>
-        <source>Select Blue</source>
-        <translation>Seleccionar Azul</translation>
-    </message>
-    <message>
-        <source>green</source>
-        <translation>verde</translation>
-    </message>
-    <message>
-        <source>Select Green</source>
-        <translation>Seleccionar Verde</translation>
-    </message>
-</context>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="es">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Haz clic en el icono de la bandeja o presiona 
-la tecla atajo nuevamente para detener la grabación.</translation>
+        <translation>Detener con el mismo atajo de teclado
+o con clic en el icono de la bandeja</translation>
     </message>
 </context>
 <context>
@@ -50,63 +17,27 @@ la tecla atajo nuevamente para detener la grabación.</translation>
         <translation>Grabar</translation>
     </message>
     <message>
-        <source>Switch to record mode</source>
-        <translation>Cambiar al modo de grabación</translation>
-    </message>
-    <message>
-        <source>Shot</source>
-        <translation>Capturar</translation>
-    </message>
-    <message>
-        <source>Switch to shot mode</source>
-        <translation>Cambiar al modo de captura</translation>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Capturar pantalla</translation>
-    </message>
-    <message>
-        <source>Start Record</source>
-        <translation>Iniciar grabación</translation>
-    </message>
-    <message>
-        <source>Start Shot</source>
-        <translation>Iniciar captura</translation>
-    </message>
-    <message>
-        <source>Start recording</source>
-        <translation>Iniciar grabación</translation>
-    </message>
-    <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Deepin Screenshot iniciará despues de %1 segundos</translation>
+        <translation>Captura de pantalla</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>Guardado fallido. Por favor guardelo en su directorio principal.</translation>
+        <translation>Error al guardar. Por favor guárdelo en su carpeta personal.</translation>
     </message>
     <message>
         <source>View</source>
-        <translation>Vista</translation>
-    </message>
-    <message>
-        <source>Picture has been saved to clipboard</source>
-        <translation>La imagen fue guardada en el portapapeles</translation>
-    </message>
-    <message>
-        <source>Picture has been saved to %1</source>
-        <translation>La imagen fue guardada a %1</translation>
+        <translation>Ver</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
         <translation>Captura de pantalla finalizada</translation>
-    </message>
-    <message>
-        <source>Saved to</source>
-        <translation>Guardada en</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -122,31 +53,31 @@ la tecla atajo nuevamente para detener la grabación.</translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation>area de selección</translation>
-    </message>
-    <message>
-        <source>Need authorization</source>
-        <translation>Se necesita autorización</translation>
-    </message>
-    <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Por favor ingrese su contraseña sudo para ser autorizado</translation>
-    </message>
-    <message>
-        <source>Password Error!</source>
-        <translation>¡Error en la contraseña!</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation>Ok</translation>
-    </message>
-    <message>
-        <source>Authentication success!</source>
-        <translation>¡Autenticación exitosa!</translation>
+        <translation>área-de-selección</translation>
     </message>
     <message>
         <source>Save</source>
         <translation>Guardar</translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation>Guardado en %1</translation>
+    </message>
+    <message>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Captura empieza en %1 segundos</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>Ignorar</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Portapapeles</translation>
+    </message>
+    <message>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>Guardando el archivo de la grabación de pantalla, por favor espere...</translation>
     </message>
 </context>
 <context>
@@ -179,15 +110,15 @@ la tecla atajo nuevamente para detener la grabación.</translation>
         <translation>Grabación finalizada</translation>
     </message>
     <message>
-        <source>Saved to</source>
-        <translation>Guardada en</translation>
+        <source>Saved to %1</source>
+        <translation>Guardado en %1</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Deepin Screenshot iniciará despues de %1 segundos</translation>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Captura empieza en %1 segundos</translation>
     </message>
 </context>
 <context>
@@ -229,7 +160,7 @@ la tecla atajo nuevamente para detener la grabación.</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>Retrasar captura de pantalla</translation>
+        <translation>Captura temporizada</translation>
     </message>
     <message>
         <source>Full screenshot</source>
@@ -246,10 +177,6 @@ la tecla atajo nuevamente para detener la grabación.</translation>
     <message>
         <source>Save</source>
         <translation>Guardar</translation>
-    </message>
-    <message>
-        <source> </source>
-        <translation> </translation>
     </message>
     <message>
         <source>Rectangle</source>
@@ -273,7 +200,7 @@ la tecla atajo nuevamente para detener la grabación.</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Eliminar</translation>
+        <translation>Borrar</translation>
     </message>
     <message>
         <source>Undo</source>
@@ -323,71 +250,16 @@ la tecla atajo nuevamente para detener la grabación.</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>fine</source>
-        <translation>fino</translation>
-    </message>
-    <message>
-        <source>medium</source>
-        <translation>medio</translation>
-    </message>
-    <message>
-        <source>thick</source>
-        <translation>grueso</translation>
-    </message>
-    <message>
         <source>Blur</source>
-        <translation>difuminar</translation>
+        <translation>Difuminar</translation>
     </message>
     <message>
         <source>Mosaic</source>
-        <translation>Mosaico</translation>
-    </message>
-    <message>
-        <source>line</source>
-        <translation>línea</translation>
-    </message>
-    <message>
-        <source>arrow</source>
-        <translation>flecha</translation>
-    </message>
-</context>
-<context>
-    <name>SubToolBar</name>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Guardar en escritorio</translation>
-    </message>
-    <message>
-        <source>Autosave</source>
-        <translation>Guardado automático</translation>
-    </message>
-    <message>
-        <source>Save to specified folder</source>
-        <translation>Guardar en carpeta especificada</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Copiar al portapapeles</translation>
-    </message>
-    <message>
-        <source>Autosave and copy to clipboard</source>
-        <translation>Guardar automáticamente y copiar al portapapeles</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation>Baja</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation>Alta</translation>
+        <translation>Pixelar</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
-    <message>
-        <source> </source>
-        <translation> </translation>
-    </message>
     <message>
         <source>Sound On</source>
         <translation>Sonido activado</translation>
@@ -525,16 +397,20 @@ la tecla atajo nuevamente para detener la grabación.</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>Copy to clipboard</source>
-        <translation>Copiar al portapapeles</translation>
+        <source>MKV</source>
+        <translation>MKV</translation>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Se necesita autorización</translation>
+        <source>Clipboard</source>
+        <translation>Portapapeles</translation>
     </message>
     <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Por favor ingrese su contraseña sudo para ser autorizado</translation>
+        <source>Edit in Draw</source>
+        <translation>Editar en Dibujo</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>Mostrar puntero</translation>
     </message>
 </context>
 <context>
@@ -543,12 +419,13 @@ la tecla atajo nuevamente para detener la grabación.</translation>
         <source>Recordings</source>
         <translation>Grabaciones</translation>
     </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
     <message>
-        <source>New recording</source>
-        <translation>Nueva grabación</translation>
+        <source>Screen recording is not supported at present</source>
+        <translation>No es posible grabar la pantalla en este momento</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Salir</translation>
     </message>
 </context>
 </TS>

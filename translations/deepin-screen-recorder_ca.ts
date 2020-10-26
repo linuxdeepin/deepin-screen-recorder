@@ -1,39 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ca" version="2.1">
-<context>
-    <name>ColorToolWidget</name>
-    <message>
-        <source>Red</source>
-        <translation>Vermell</translation>
-    </message>
-    <message>
-        <source>Select Red</source>
-        <translation>Selecciona vermell</translation>
-    </message>
-    <message>
-        <source>yellow</source>
-        <translation>Groc</translation>
-    </message>
-    <message>
-        <source>Select Yellow</source>
-        <translation>Selecciona groc</translation>
-    </message>
-    <message>
-        <source>blue</source>
-        <translation>Blau</translation>
-    </message>
-    <message>
-        <source>Select Blue</source>
-        <translation>Selecciona blau</translation>
-    </message>
-    <message>
-        <source>green</source>
-        <translation>Verd</translation>
-    </message>
-    <message>
-        <source>Select Green</source>
-        <translation>Selecciona verd</translation>
-    </message>
-</context>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ca">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -50,16 +17,8 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Grava</translation>
     </message>
     <message>
-        <source>Switch to record mode</source>
-        <translation>Canvia al mode de gravació</translation>
-    </message>
-    <message>
-        <source>Shot</source>
-        <translation>Captura</translation>
-    </message>
-    <message>
-        <source>Switch to shot mode</source>
-        <translation>Canvia al mode de captura</translation>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
     </message>
 </context>
 <context>
@@ -67,22 +26,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Screen Capture</source>
         <translation>Captura de pantalla</translation>
-    </message>
-    <message>
-        <source>Start Record</source>
-        <translation>Inicia la gravació</translation>
-    </message>
-    <message>
-        <source>Start Shot</source>
-        <translation>Inicia la captura</translation>
-    </message>
-    <message>
-        <source>Start recording</source>
-        <translation>Inicia la gravació</translation>
-    </message>
-    <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>La Captura de pantalla del Deepin s&apos;iniciarà després de %1 segons</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -93,20 +36,8 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Vista</translation>
     </message>
     <message>
-        <source>Picture has been saved to clipboard</source>
-        <translation>La imatge s&apos;ha desat al porta-retalls</translation>
-    </message>
-    <message>
-        <source>Picture has been saved to %1</source>
-        <translation>La imatge s&apos;ha desat a %1</translation>
-    </message>
-    <message>
         <source>Screenshot finished</source>
         <translation>Captura finalitzada</translation>
-    </message>
-    <message>
-        <source>Saved to</source>
-        <translation>Desat a</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -125,28 +56,28 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Seleccioneu l&apos;àrea</translation>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Cal autorització</translation>
-    </message>
-    <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Introduïu la vostra contrasenya sudo per a continuar</translation>
-    </message>
-    <message>
-        <source>Password Error!</source>
-        <translation>Contrasenya no vàlida!</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation>D&apos;acord</translation>
-    </message>
-    <message>
-        <source>Authentication success!</source>
-        <translation>Autenticació amb èxit!</translation>
-    </message>
-    <message>
         <source>Save</source>
-        <translation type="unfinished"/>
+        <translation>Desa</translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation>S&apos;ha desat a %1</translation>
+    </message>
+    <message>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>La Captura de pantalla s&apos;iniciarà d&apos;aquí a %1 segons</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>Ignora</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Porta-retalls</translation>
+    </message>
+    <message>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>S&apos;està desant el fitxer de gravació de pantalla, espereu...</translation>
     </message>
 </context>
 <context>
@@ -179,15 +110,15 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Gravació acabada</translation>
     </message>
     <message>
-        <source>Saved to</source>
-        <translation>Desat a</translation>
+        <source>Saved to %1</source>
+        <translation>S&apos;ha desat a %1</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>La Captura de pantalla del Deepin s&apos;iniciarà després de %1 segons</translation>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>La Captura de pantalla s&apos;iniciarà d&apos;aquí a %1 segons</translation>
     </message>
 </context>
 <context>
@@ -246,10 +177,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Save</source>
         <translation>Desa</translation>
-    </message>
-    <message>
-        <source> </source>
-        <translation> </translation>
     </message>
     <message>
         <source>Rectangle</source>
@@ -323,18 +250,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>fine</source>
-        <translation>fina</translation>
-    </message>
-    <message>
-        <source>medium</source>
-        <translation>mitjana</translation>
-    </message>
-    <message>
-        <source>thick</source>
-        <translation>gruixuda</translation>
-    </message>
-    <message>
         <source>Blur</source>
         <translation>Difumina</translation>
     </message>
@@ -342,52 +257,9 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <source>Mosaic</source>
         <translation>Mosaic</translation>
     </message>
-    <message>
-        <source>line</source>
-        <translation>línia</translation>
-    </message>
-    <message>
-        <source>arrow</source>
-        <translation>fletxa</translation>
-    </message>
-</context>
-<context>
-    <name>SubToolBar</name>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Desa a l&apos;escriptori</translation>
-    </message>
-    <message>
-        <source>Autosave</source>
-        <translation>Desa automàticament</translation>
-    </message>
-    <message>
-        <source>Save to specified folder</source>
-        <translation>Desa a la carpeta especificada</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Copia al porta-retalls</translation>
-    </message>
-    <message>
-        <source>Autosave and copy to clipboard</source>
-        <translation>Desa automàticament i copia-ho al porta-retalls</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation>Baix</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation>Alt</translation>
-    </message>
 </context>
 <context>
     <name>SubToolWidget</name>
-    <message>
-        <source> </source>
-        <translation> </translation>
-    </message>
     <message>
         <source>Sound On</source>
         <translation>So activat</translation>
@@ -525,16 +397,20 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>Copy to clipboard</source>
-        <translation>Copia al porta-retalls</translation>
+        <source>MKV</source>
+        <translation>MKV</translation>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Cal autorització</translation>
+        <source>Clipboard</source>
+        <translation>Porta-retalls</translation>
     </message>
     <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Introduïu la vostra contrasenya sudo per a continuar</translation>
+        <source>Edit in Draw</source>
+        <translation>Edita al Dibuix</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>Mostra el punter</translation>
     </message>
 </context>
 <context>
@@ -543,12 +419,13 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <source>Recordings</source>
         <translation>Gravacions</translation>
     </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
     <message>
-        <source>New recording</source>
-        <translation>Gravació nova</translation>
+        <source>Screen recording is not supported at present</source>
+        <translation>Actualment no s&apos;admet la gravació de pantalla</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Surt</translation>
     </message>
 </context>
 </TS>

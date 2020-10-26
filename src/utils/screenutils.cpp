@@ -49,12 +49,10 @@ ScreenUtils::ScreenUtils(QPoint pos, QObject *parent)
 }
 
 ScreenUtils::~ScreenUtils() {}
-
 int ScreenUtils::getScreenNum()
 {
     return m_screenNum;
 }
-
 QRect ScreenUtils::backgroundRect()
 {
     return m_backgroundRect;

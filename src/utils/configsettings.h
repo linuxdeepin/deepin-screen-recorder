@@ -43,13 +43,15 @@ public:
                    const QVariant &defaultValue = QVariant());
     QStringList keys(const QString &group);
 
+    QVariant getDefaultValue(const QString &group, const QString &key);
+
 signals:
     void colorChanged();
     void shapeConfigChanged(const QString &shape,  const QString &key, int index);
     void straightLineConfigChanged(bool isStraightLine);
 
 private:
-    ConfigSettings(QObject *parent = nullptr);
+    explicit ConfigSettings(QObject *parent = nullptr);
     ~ConfigSettings();
 
     static ConfigSettings *m_configSettings;

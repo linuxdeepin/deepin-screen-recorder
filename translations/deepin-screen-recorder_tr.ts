@@ -1,39 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="tr" version="2.1">
-<context>
-    <name>ColorToolWidget</name>
-    <message>
-        <source>Red</source>
-        <translation>Kırmızı</translation>
-    </message>
-    <message>
-        <source>Select Red</source>
-        <translation>Kırmızı Seç</translation>
-    </message>
-    <message>
-        <source>yellow</source>
-        <translation>sarı</translation>
-    </message>
-    <message>
-        <source>Select Yellow</source>
-        <translation>Sarı Seç</translation>
-    </message>
-    <message>
-        <source>blue</source>
-        <translation>mavi</translation>
-    </message>
-    <message>
-        <source>Select Blue</source>
-        <translation>Mavi Seç</translation>
-    </message>
-    <message>
-        <source>green</source>
-        <translation>yeşil</translation>
-    </message>
-    <message>
-        <source>Select Green</source>
-        <translation>Yeşil Seç</translation>
-    </message>
-</context>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="tr">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -50,39 +17,15 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation>Kayıt</translation>
     </message>
     <message>
-        <source>Switch to record mode</source>
-        <translation>Kayıt kipine geç</translation>
-    </message>
-    <message>
-        <source>Shot</source>
-        <translation>Çekim</translation>
-    </message>
-    <message>
-        <source>Switch to shot mode</source>
-        <translation>Çekim kipini değiştir</translation>
+        <source>Screenshot</source>
+        <translation>Ekran Görüntüsü</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Ekran Görüntüsü</translation>
-    </message>
-    <message>
-        <source>Start Record</source>
-        <translation>Kaydı Başlat</translation>
-    </message>
-    <message>
-        <source>Start Shot</source>
-        <translation>Çekimi Başlat</translation>
-    </message>
-    <message>
-        <source>Start recording</source>
-        <translation>Ekran kaydını başlat</translation>
-    </message>
-    <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Deepin Ekran Görüntüsü %1 saniye sonra başlayacak</translation>
+        <translation>Ekran Alıntısı</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -93,20 +36,8 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation>Görünüm</translation>
     </message>
     <message>
-        <source>Picture has been saved to clipboard</source>
-        <translation>Resim panoya kaydedildi</translation>
-    </message>
-    <message>
-        <source>Picture has been saved to %1</source>
-        <translation>Resim %1 klasörüne kaydedildi</translation>
-    </message>
-    <message>
         <source>Screenshot finished</source>
         <translation>Ekran görüntüsü tamamlandı</translation>
-    </message>
-    <message>
-        <source>Saved to</source>
-        <translation>Şuraya kaydedildi</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -125,28 +56,28 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation>alan seç</translation>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Yetkilendirme gerekiyor</translation>
-    </message>
-    <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Lütfen yetkilendirmek için sudo parolanızı girin</translation>
-    </message>
-    <message>
-        <source>Password Error!</source>
-        <translation>Parola Hatası!</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation>Tamam</translation>
-    </message>
-    <message>
-        <source>Authentication success!</source>
-        <translation>Yetkilendirme başarılı!</translation>
-    </message>
-    <message>
         <source>Save</source>
         <translation>Kaydet</translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation>Şuraya kaydedildi %1</translation>
+    </message>
+    <message>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Ekran Alıntısı %1 saniye içinde başlayacak</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>Yoksay</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Pano</translation>
+    </message>
+    <message>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>Ekran kayıt dosyası kaydediliyor, lütfen bekleyin...</translation>
     </message>
 </context>
 <context>
@@ -179,15 +110,15 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation>Kayıt tamamlandı</translation>
     </message>
     <message>
-        <source>Saved to</source>
-        <translation>Şuraya kaydedildi</translation>
+        <source>Saved to %1</source>
+        <translation>Şuraya kaydedildi %1</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Deepin Ekran Görüntüsü %1 saniye sonra başlayacak</translation>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Ekran Alıntısı %1 saniye içinde başlayacak</translation>
     </message>
 </context>
 <context>
@@ -246,10 +177,6 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Save</source>
         <translation>Kaydet</translation>
-    </message>
-    <message>
-        <source> </source>
-        <translation> </translation>
     </message>
     <message>
         <source>Rectangle</source>
@@ -323,18 +250,6 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>fine</source>
-        <translation>iyi</translation>
-    </message>
-    <message>
-        <source>medium</source>
-        <translation>orta</translation>
-    </message>
-    <message>
-        <source>thick</source>
-        <translation>ince</translation>
-    </message>
-    <message>
         <source>Blur</source>
         <translation>Bulanık</translation>
     </message>
@@ -342,52 +257,9 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <source>Mosaic</source>
         <translation>Mozaik</translation>
     </message>
-    <message>
-        <source>line</source>
-        <translation>çizgi</translation>
-    </message>
-    <message>
-        <source>arrow</source>
-        <translation>ok</translation>
-    </message>
-</context>
-<context>
-    <name>SubToolBar</name>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Masaüstüne kaydet</translation>
-    </message>
-    <message>
-        <source>Autosave</source>
-        <translation>Otomatik kaydet</translation>
-    </message>
-    <message>
-        <source>Save to specified folder</source>
-        <translation>Belirtilen klasöre kaydet</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Panoya kopyala</translation>
-    </message>
-    <message>
-        <source>Autosave and copy to clipboard</source>
-        <translation>Otomatik kaydet ve panoya kopyala</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation>Düşük</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation>Yüksek</translation>
-    </message>
 </context>
 <context>
     <name>SubToolWidget</name>
-    <message>
-        <source> </source>
-        <translation> </translation>
-    </message>
     <message>
         <source>Sound On</source>
         <translation>Ses Aç</translation>
@@ -525,16 +397,20 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>Copy to clipboard</source>
-        <translation>Panoya kopyala</translation>
+        <source>MKV</source>
+        <translation>MKV</translation>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Yetkilendirme gerekiyor</translation>
+        <source>Clipboard</source>
+        <translation>Pano</translation>
     </message>
     <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Lütfen yetkilendirmek için sudo parolanızı girin</translation>
+        <source>Edit in Draw</source>
+        <translation>Çizim ile düzelt</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>İşaretçiyi göster</translation>
     </message>
 </context>
 <context>
@@ -543,12 +419,13 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <source>Recordings</source>
         <translation>Kayıtlar</translation>
     </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
     <message>
-        <source>New recording</source>
-        <translation>Yeni kayıt</translation>
+        <source>Screen recording is not supported at present</source>
+        <translation>Ekran kaydı şu anda desteklenmiyor</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Çıkış</translation>
     </message>
 </context>
 </TS>

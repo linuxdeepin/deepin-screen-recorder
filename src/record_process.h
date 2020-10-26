@@ -31,6 +31,8 @@
 #include <proc/readproc.h>
 #include <proc/sysinfo.h>
 #include "utils/desktopinfo.h"
+#include "xgifrecord.h"
+
 
 class RecordProcess : public QThread
 {
@@ -41,8 +43,6 @@ class RecordProcess : public QThread
 public:
     static const int RECORD_TYPE_VIDEO;
     static const int RECORD_TYPE_GIF;
-    static const int RECORD_TYPE_MP4;
-    static const int RECORD_TYPE_MKV;
     static const int RECORD_GIF_SLEEP_TIME;
     static const int RECORD_AUDIO_INPUT_MIC;
     static const int RECORD_AUDIO_INPUT_SYSTEMAUDIO;
@@ -54,29 +54,28 @@ public:
     static const int RECORD_FRAMERATE_24;
     static const int RECORD_FRAMERATE_30;
 
-    RecordProcess(QObject *parent = nullptr);
+    explicit RecordProcess(QObject *parent = nullptr);
+    ~RecordProcess();
 
     void setRecordInfo(const QRect &recordRect, const QString &filename);
-    void setRecordType(int recordType);
-    void setFrameRate(int framerate);
+    //void setRecordType(int recordType);
+    //void setFrameRate(int framerate);
     void setRecordAudioInputType(int inputType);
     void startRecord();
-    void setIsZhaoXinPlatform(bool status);
+    //void setIsZhaoXinPlatform(bool status);
     void stopRecord();
-    void waylandRecordOver();
     void recordGIF();
     void recordVideo();
     void initProcess();
     int readSleepProcessPid();
-    void WaylandRecord();
 protected:
     void run();
 
 private:
-    QProcess *process;
+    QProcess *process = nullptr;
 
-    int recordType;
-    int recordAudioInputType;
+    int recordType = 0;
+    int recordAudioInputType = 0;
 
     QRect m_recordRect;
 
@@ -88,15 +87,15 @@ private:
     QString saveAreaName;
     QString displayNumber;
 
-    Settings *settings;
+    Settings *settings = nullptr;
 
-    int byzanzProcessId;
-    int sleepProcessId;
+    int byzanzProcessId = 0;
     int m_framerate;
 
-    QString lastAudioSink;
-    bool m_isZhaoxin = false;
+    //QString lastAudioSink;
+    //bool m_isZhaoxin = false;
     DesktopInfo m_info;
+    XGifRecord *m_pXGifRecord;
 };
 
 #endif //RECORDPROCESS_H

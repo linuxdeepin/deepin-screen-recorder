@@ -36,7 +36,7 @@ class ButtonFeedback : public DWidget
     static const int FRAME_RATE;
 
 public:
-    ButtonFeedback(DWidget *parent = nullptr);
+    explicit ButtonFeedback(DWidget *parent = nullptr);
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -48,16 +48,7 @@ public slots:
     void update();
 
 private:
-    QPixmap buttonFeedback0Img;
-    QPixmap buttonFeedback1Img;
-    QPixmap buttonFeedback2Img;
-    QPixmap buttonFeedback3Img;
-    QPixmap buttonFeedback4Img;
-    QPixmap buttonFeedback5Img;
-    QPixmap buttonFeedback6Img;
-    QPixmap buttonFeedback7Img;
-    QPixmap buttonFeedback8Img;
-    QPixmap buttonFeedback9Img;
+    QPixmap buttonFeedbackImg[10];
 
     QTimer *timer;
 

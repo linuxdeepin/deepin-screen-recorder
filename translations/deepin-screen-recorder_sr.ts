@@ -1,45 +1,12 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="sr" version="2.1">
-<context>
-    <name>ColorToolWidget</name>
-    <message>
-        <source>Red</source>
-        <translation>Црвено</translation>
-    </message>
-    <message>
-        <source>Select Red</source>
-        <translation>Изабери црвено</translation>
-    </message>
-    <message>
-        <source>yellow</source>
-        <translation>Жуто</translation>
-    </message>
-    <message>
-        <source>Select Yellow</source>
-        <translation>Изабери жуто</translation>
-    </message>
-    <message>
-        <source>blue</source>
-        <translation>Плаво</translation>
-    </message>
-    <message>
-        <source>Select Blue</source>
-        <translation>Изабери плаво</translation>
-    </message>
-    <message>
-        <source>green</source>
-        <translation>Зелено</translation>
-    </message>
-    <message>
-        <source>Select Green</source>
-        <translation>Изабери зелено</translation>
-    </message>
-</context>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sr">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Кликни на икону у касети 
+        <translation>Кликни на иконицу у касети 
 или притисни поново пречицу да зауставиш снимање</translation>
     </message>
 </context>
@@ -47,19 +14,11 @@ or press the shortcut again to stop recording</source>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation>Снимај</translation>
+        <translation>Снимање</translation>
     </message>
     <message>
-        <source>Switch to record mode</source>
-        <translation>Пређи на режим снимања</translation>
-    </message>
-    <message>
-        <source>Shot</source>
-        <translation>Усликај</translation>
-    </message>
-    <message>
-        <source>Switch to shot mode</source>
-        <translation>Пређи на режи усликавања</translation>
+        <source>Screenshot</source>
+        <translation>Усликавање</translation>
     </message>
 </context>
 <context>
@@ -67,22 +26,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screen Capture</source>
         <translation>Снимак екрана</translation>
-    </message>
-    <message>
-        <source>Start Record</source>
-        <translation>Почни снимање</translation>
-    </message>
-    <message>
-        <source>Start Shot</source>
-        <translation>Почни усликавање</translation>
-    </message>
-    <message>
-        <source>Start recording</source>
-        <translation>Почни снимање</translation>
-    </message>
-    <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Дипин Слика Екрана ће се покренути за %1 секунде/и</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -93,20 +36,8 @@ or press the shortcut again to stop recording</source>
         <translation>Прикажи</translation>
     </message>
     <message>
-        <source>Picture has been saved to clipboard</source>
-        <translation>Слика је сачувана у бележници</translation>
-    </message>
-    <message>
-        <source>Picture has been saved to %1</source>
-        <translation>Слика је сачувана у %1</translation>
-    </message>
-    <message>
         <source>Screenshot finished</source>
         <translation>Усликавање завршено</translation>
-    </message>
-    <message>
-        <source>Saved to</source>
-        <translation>Сачувај у</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -125,28 +56,28 @@ or press the shortcut again to stop recording</source>
         <translation>изабери-површину</translation>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Потребно овлашћење</translation>
-    </message>
-    <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Унесите sudo лозинку за овлашћење</translation>
-    </message>
-    <message>
-        <source>Password Error!</source>
-        <translation>Грешка лозинке!</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation>У реду</translation>
-    </message>
-    <message>
-        <source>Authentication success!</source>
-        <translation>Успешна аутентификација!</translation>
-    </message>
-    <message>
         <source>Save</source>
         <translation>Сачувај</translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation>Сачувано у %1</translation>
+    </message>
+    <message>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Снимач Екрана ће се покренути за %1 сек.</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>Занемари</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Остава</translation>
+    </message>
+    <message>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>Чување датототеке снимка, сачекајте...</translation>
     </message>
 </context>
 <context>
@@ -179,15 +110,15 @@ or press the shortcut again to stop recording</source>
         <translation>Снимање завршено</translation>
     </message>
     <message>
-        <source>Saved to</source>
-        <translation>Сачувај у</translation>
+        <source>Saved to %1</source>
+        <translation>Сачувано у %1</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Дипин Слика Екрана ће се покренути за %1 секунде/и</translation>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Снимач Екрана ће се покренути за %1 сек.</translation>
     </message>
 </context>
 <context>
@@ -237,7 +168,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Copy to clipboard</source>
-        <translation>Копирај у бележницу</translation>
+        <translation>Копирај у оставу</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -246,10 +177,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Save</source>
         <translation>Сачувај</translation>
-    </message>
-    <message>
-        <source> </source>
-        <translation> </translation>
     </message>
     <message>
         <source>Rectangle</source>
@@ -323,18 +250,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>fine</source>
-        <translation>танко</translation>
-    </message>
-    <message>
-        <source>medium</source>
-        <translation>средње</translation>
-    </message>
-    <message>
-        <source>thick</source>
-        <translation>дебело</translation>
-    </message>
-    <message>
         <source>Blur</source>
         <translation>Замућење</translation>
     </message>
@@ -342,52 +257,9 @@ or press the shortcut again to stop recording</source>
         <source>Mosaic</source>
         <translation>Мозаик</translation>
     </message>
-    <message>
-        <source>line</source>
-        <translation>линија</translation>
-    </message>
-    <message>
-        <source>arrow</source>
-        <translation>стрелица</translation>
-    </message>
-</context>
-<context>
-    <name>SubToolBar</name>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Сачувај на радној површини</translation>
-    </message>
-    <message>
-        <source>Autosave</source>
-        <translation>Аутоматско чување</translation>
-    </message>
-    <message>
-        <source>Save to specified folder</source>
-        <translation>Сачувај у одређену фасциклу</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Копирај у бележницу</translation>
-    </message>
-    <message>
-        <source>Autosave and copy to clipboard</source>
-        <translation>Ауто. сачувај и копирај у бележницу</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation>Низак</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation>Висок</translation>
-    </message>
 </context>
 <context>
     <name>SubToolWidget</name>
-    <message>
-        <source> </source>
-        <translation> </translation>
-    </message>
     <message>
         <source>Sound On</source>
         <translation>Са звуком</translation>
@@ -525,16 +397,20 @@ or press the shortcut again to stop recording</source>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>Copy to clipboard</source>
-        <translation>Копирај у бележницу</translation>
+        <source>MKV</source>
+        <translation>MKV</translation>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Потребно овлашћење</translation>
+        <source>Clipboard</source>
+        <translation>Остава</translation>
     </message>
     <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Унесите sudo лозинку за овлашћење</translation>
+        <source>Edit in Draw</source>
+        <translation>Уреди у Цртању</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>Прикажи показивач</translation>
     </message>
 </context>
 <context>
@@ -543,12 +419,13 @@ or press the shortcut again to stop recording</source>
         <source>Recordings</source>
         <translation>Снимци</translation>
     </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
     <message>
-        <source>New recording</source>
-        <translation>Нови снимци</translation>
+        <source>Screen recording is not supported at present</source>
+        <translation>Снимање екрана тренутно није подржано</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Изађи</translation>
     </message>
 </context>
 </TS>

@@ -38,9 +38,9 @@
 #include <DDialog>
 
 #include "record_process.h"
-#include "voice_record_process.h"
-#include "record_button.h"
-#include "record_option_panel.h"
+//#include "voice_record_process.h"
+//#include "record_button.h"
+//#include "record_option_panel.h"
 #include "countdown_tooltip.h"
 //#include "start_tooltip.h"
 #include "button_feedback.h"
@@ -61,6 +61,7 @@
 #include "dbusinterface/dbuscontrolcenter.h"
 #include "dbusinterface/dbusnotify.h"
 #include "dbusinterface/dbuszone.h"
+#include "RecorderRegionShow.h"
 
 // Make this include at last, otherwise QtX11 will conflict with x11 lib to make compile failed.
 #include "event_monitor.h"
@@ -106,7 +107,7 @@ class MainWindow : public DWidget
     static const int CAMERA_WIDGET_MIN_HEIGHT;
 
 public:
-    MainWindow(DWidget *parent = nullptr);
+    explicit MainWindow(DWidget *parent = nullptr);
     ~MainWindow()
     {
         m_pVoiceVolumeWatcher->stopWatch();
@@ -136,12 +137,11 @@ public:
     void initLaunchMode(const QString &launchMode);
     void delayScreenshot(double num);
     void fullScreenshot();
-    void testScreenshot();
 
     void topWindow();
     void savePath(const QString &path);
+    void startScreenshotFor3rd(const QString &path);
     void noNotify();
-    void setConfigThemeType(int themeType);
     void sendSavingNotify();
 
 signals:
@@ -162,7 +162,6 @@ public slots:
     void onHelp();
 
     Q_SCRIPTABLE void stopRecord();
-    void waylandRecordOver();
     void startCountdown();
     void showPressFeedback(int x, int y);
     void showDragFeedback(int x, int y);
@@ -181,11 +180,7 @@ public slots:
     void changeMouseShowEvent(bool checked);
     void changeMicrophoneSelectEvent(bool checked);
     void changeSystemAudioSelectEvent(bool checked);
-    void changeGifSelectEvent(bool checked);
-    void changeMp4SelectEvent(bool checked);
-    void changeFrameRateEvent(int frameRate);
     void changeCameraSelectEvent(bool checked);
-    void showMultiKeyBoardButtons();
     void updateMultiKeyBoardPos();
     void changeShotToolEvent(const QString &func);
     void saveScreenShot();
@@ -195,7 +190,6 @@ public slots:
     void shotImgWidthEffect();
     void changeArrowAndLineEvent(int line);
     void exitApp();
-//    void initVirtualCard();
     void onViewShortcut();
     void shapeClickedSlot(QString shape);
     void on_CheckRecodeCouldUse(bool canUse);
@@ -214,164 +208,115 @@ protected:
     void setDragCursor();
     void resetCursor();
     void setFontSize(QPainter &painter, int textSize);
-    void showRecordButton();
-    void hideRecordButton();
     void hideAllWidget();
-    void hideCameraWidget();
     void adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight);
     void initShapeWidget(QString type);
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
     void initBackground();
     QPixmap getPixmapofRect(const QRect &rect);
-    void installTipHint(QWidget *w, const QString &hintstr);
-    void installHint(QWidget *w, QWidget *hint);
 private:
 //    QList<WindowRect> windowRects;
     QList<QRect> windowRects;
     QList<QString> windowNames;
-    ShowButtons *m_showButtons;
-
-    QTimer *flashTrayIconTimer;
-
+    ShowButtons *m_showButtons = nullptr;
+    QTimer *flashTrayIconTimer = nullptr;
     QRect screenRect;
-
     RecordProcess recordProcess;
-    voiceVolumeWatcher *m_pVoiceVolumeWatcher;
-    CameraWatcher *m_pCameraWatcher;
+    voiceVolumeWatcher *m_pVoiceVolumeWatcher = nullptr;
+    CameraWatcher *m_pCameraWatcher = nullptr;
     ScreenGrabber m_screenGrabber;
 //    VoiceRecordProcess voiceRecordProcess;
 //    WindowRect rootWindowRect;
     QRect rootWindowRect;
-
-    SaveAction m_saveIndex;
+    SaveAction m_saveIndex = SaveAction::SaveToClipboard;
     //m_saveFileName is the storage path of the screenshot image.
     QString m_saveFileName;
 
-    bool drawDragPoint;
+    bool drawDragPoint = false;
+    bool isFirstDrag = false;
+    bool isFirstMove = false;
+    bool isFirstPressButton = false;
+    bool isFirstReleaseButton = false;
+    bool isPressButton = false;
+    bool isReleaseButton = false;
 
-    bool isFirstDrag;
-    bool isFirstMove;
-    bool isFirstPressButton;
-    bool isFirstReleaseButton;
-    bool isPressButton;
-    bool isReleaseButton;
+    int dragAction = 0;
+    int dragRecordHeight = 0;
+    int dragRecordWidth = 0;
+    int dragRecordX = -1;
+    int dragRecordY = -1;
+    int dragStartX = 0;
+    int dragStartY = 0;
 
-    int dragAction;
-    int dragRecordHeight;
-    int dragRecordWidth;
-    int dragRecordX;
-    int dragRecordY;
-    int dragStartX;
-    int dragStartY;
+    int m_shotStatus = ShotMouseStatus::Normal; //
+    int recordButtonStatus = RECORD_BUTTON_NORMAL;
+    int recordHeight = 0;
+    int recordWidth = 0;
+    int recordX = 0;
+    int recordY = 0;
 
-    int m_shotStatus;
-    int recordButtonStatus;
-    int recordHeight;
-    int recordWidth;
-    int recordX;
-    int recordY;
-
-    int recordButtonState;
-
-    int flashTrayIconCounter;
-
-
-//    QRect m_backgroundRect;
-    //for shot
+    int flashTrayIconCounter = 0;
     QPixmap m_backgroundPixmap;
     QPixmap m_resultPixmap;
-    bool m_keyboardGrabbed = false;
-    bool m_keyboardReleased = false;
-    //for shot
-
     QPixmap resizeHandleBigImg;
     QPixmap resizeHandleSmallImg;
 
-    QString selectAreaName;
-
-    QSystemTrayIcon *trayIcon;
-
-//    DWindowManager *windowManager;
-
-    QVBoxLayout *recordButtonLayout;
-    QVBoxLayout *countdownLayout;
-    RecordButton *recordButton;
-    RecordOptionPanel *recordOptionPanel;
-
-//    StartTooltip *startTooltip;
-    CountdownTooltip *countdownTooltip;
-
-    ButtonFeedback *buttonFeedback;
-
-    EventMonitor *m_pScreenRecordEvent;
-    ScreenShotEvent *m_pScreenShotEvent;
+    QString selectAreaName = "";
+    QSystemTrayIcon *trayIcon = nullptr;
+    CountdownTooltip *countdownTooltip = nullptr;
+    ButtonFeedback *buttonFeedback = nullptr;
+    EventMonitor *m_pScreenRecordEvent = nullptr;
+    ScreenShotEvent *m_pScreenShotEvent = nullptr;
 
     DWindowManagerHelper *m_wmHelper;
-    ShapesWidget *m_shapesWidget;
-    TopTips *m_sizeTips;
-    ToolBar *m_toolBar;
-//    DScreenWindowsUtil *m_swUtil;
+    ShapesWidget *m_shapesWidget = nullptr;
+    TopTips *m_sizeTips = nullptr;
+    ToolBar *m_toolBar = nullptr;
     QRect m_backgroundRect;
     //添加截屏和录屏的按钮
-    DPushButton *m_recordButton;
-    DPushButton *m_shotButton;
+    DPushButton *m_recordButton = nullptr;
+    DPushButton *m_shotButton = nullptr;
     QList<KeyButtonWidget *> m_keyButtonList;
-    QList<KeyButtonWidget *> m_tempkeyButtonList;
 
-    int m_functionType;  //0: record, 1: shot
-    int m_keyBoardStatus; //0: keyBoard off, 1:keyBoard On
-    int m_mouseStatus; //0: keyBoard off, 1:keyBoard On
-    bool m_repaintMainButton;//false: no need to repaint record button or shot button, true:...
-    bool m_repaintSideBar;   //false: no need to repaint sidebar, true:...
-    QTimer *m_keyBoardTimer;
-    bool m_multiKeyButtonsInOnSec;
+    int m_functionType = 0;  //0: record, 1: shot
+    bool m_keyBoardStatus = false; //false: keyBoard off, true:keyBoard On
+    int m_mouseStatus = 0; //0: keyBoard off, 1:keyBoard On
+    bool m_repaintMainButton = false;//false: no need to repaint record button or shot button, true:...
+    bool m_repaintSideBar = false;   //false: no need to repaint sidebar, true:...
 
-    bool m_selectedMic;
-    bool m_selectedSystemAudio;
-    bool m_gifMode;
-    bool m_mp4Mode;
-    int m_frameRate;
-    int m_screenWidth;  //屏幕宽度
-    int m_screenHeight; //屏幕高度
-    SideBar *m_sideBar; //截图功能侧边栏功能
-    ZoomIndicator *m_zoomIndicator;
+    bool m_selectedMic = true;
+    bool m_selectedSystemAudio = true;
+    int m_screenWidth = 0;  //屏幕宽度
+    int m_screenHeight = 0; //屏幕高度
+    SideBar *m_sideBar = nullptr; //截图功能侧边栏功能
+    ZoomIndicator *m_zoomIndicator = nullptr;
     bool m_isShapesWidgetExist = false;
     bool m_isSideBarInside = false;
     bool m_isToolBarInside = false;
 
 
     //截图功能使用的变量初始化
-    DBusZone *m_hotZoneInterface;
-    DBusNotify *m_notifyDBInterface;
-    MenuController *m_menuController;
+    MenuController *m_menuController = nullptr;
     bool m_noNotify = false;
     bool m_isShiftPressed = false;
-    bool m_drawNothing = false;
-    bool m_needDrawSelectedPoint;
     bool m_needSaveScreenshot = false;
-    bool m_interfaceExist = false;
     bool m_toolBarInit = false;
     bool m_sideBarInit = false;
-    // Just use for debug.
-    // int repaintCounter;
-    CameraWidget *m_cameraWidget;
+    CameraWidget *m_cameraWidget = nullptr;
     bool m_selectedCamera = false;
     bool m_cameraOffFlag = false;
-    bool m_initCamera = false;
     bool m_launchWithRecordFunc = false;
     bool m_shotWithPath = false;
-    int m_screenNum;
+    int m_screenCount;
     QString m_shotSavePath;
-    //bool m_copyToClipboard = false;
-    QString m_savePicturePath;
     int m_shotflag = 0;
     int m_firstShot = 0;
     bool m_isZhaoxin = false;
-    HintFilter *hintFilter         = nullptr;
-    DesktopInfo m_desktopInfo;
     QList<ScreenInfo> m_screenInfo;
     XFixesCursorImage *m_CursorImage = nullptr;
     QSize m_screenSize;
+    RecorderRegionShow *m_pRecorderRegion = nullptr;
+    qreal m_pixelRatio = 1.0;
 };
 
 #endif //MAINWINDOW_H

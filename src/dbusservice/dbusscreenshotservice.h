@@ -67,10 +67,16 @@ class DBusScreenshotService: public QDBusAbstractAdaptor
                 "    <method name=\"SavePathScreenshot\">\n"
                 "      <arg direction=\"in\" type=\"s\"/>\n"
                 "    </method>\n"
+                "    <method name=\"StartScreenshotFor3rd\">\n"
+                "      <arg direction=\"in\" type=\"s\"/>\n"
+                "    </method>\n"
+                "    <signal name=\"Done\">\n"
+                "      <arg type=\"s\"/>\n"
+                "    </signal>\n"
                 "  </interface>\n"
                 "")
 public:
-    DBusScreenshotService(Screenshot *parent);
+    explicit DBusScreenshotService(Screenshot *parent);
     ~DBusScreenshotService();
 
     void setSingleInstance(bool instance);
@@ -88,7 +94,9 @@ public Q_SLOTS: // METHODS
     void TopWindowScreenshot();
     void FullscreenScreenshot();
     void SavePathScreenshot(const QString &in0);
+    void StartScreenshotFor3rd(const QString &in0);
 Q_SIGNALS: // SIGNALS
+    void Done(const QString &in0);
 private:
     bool m_singleInstance;
 };

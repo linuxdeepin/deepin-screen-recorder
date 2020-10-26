@@ -36,7 +36,7 @@ public:
     void setColorBtnChecked();
 
 public slots:
-    QColor getColor();
+    //QColor getColor();
 
 signals:
     void updatePaintColor(QColor paintColor);

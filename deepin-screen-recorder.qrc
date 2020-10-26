@@ -247,5 +247,6 @@
         <file>image/newUI/dark/press/webcam_press.svg</file>
         <file>image/newUI/dark/press/mouse_press.svg</file>
         <file>image/newUI/press/Arrow-press.svg</file>
+        <file>deepin-screenshot.svg</file>
     </qresource>
 </RCC>

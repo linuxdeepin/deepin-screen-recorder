@@ -31,11 +31,11 @@ class BigColorButton : public DPushButton
 {
     Q_OBJECT
 public:
-    BigColorButton(DWidget *parent = 0);
+    explicit BigColorButton(DWidget *parent = 0);
     ~BigColorButton();
 
     void setColor(QColor color);
-    void setColorIndex();
+    //void setColorIndex();
     void setCheckedStatus(bool checked);
     void updateConfigColor(const QString &shape,  const QString &key, int index);
 

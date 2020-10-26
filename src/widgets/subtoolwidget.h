@@ -56,7 +56,7 @@ signals:
     void saveToClipBoard(bool isClip);
 public slots:
     void switchContent(QString shapeType);
-    void systemAudioActionCheckedSlot(bool checked);
+    //void systemAudioActionCheckedSlot(bool checked);
     void changeArrowAndLineFromSideBar(int line);
     void setRecordLaunchMode(bool recordLaunch);
     void setVideoButtonInitFromSub();
@@ -64,7 +64,7 @@ public slots:
     void setMicroPhoneEnable(bool status);
     void setCameraDeviceEnable(bool status);
     void setSystemAudioEnable(bool status);
-    void setIsZhaoxinPlatform(bool isZhaoxin);
+    //void setIsZhaoxinPlatform(bool isZhaoxin);
 private:
     DLabel *m_recordSubTool;
     DLabel *m_shotSubTool;
@@ -85,7 +85,7 @@ private:
     bool m_haveSystemAudio = false;
     int m_lineflag;
     int m_themeType;
-    bool m_isZhaoxinInSub = false;
+    //bool m_isZhaoxinInSub = false;
     HintFilter *hintFilter = nullptr;
 };
 

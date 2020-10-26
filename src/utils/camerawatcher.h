@@ -11,7 +11,7 @@ public:
     explicit CameraWatcher(QObject *parent = nullptr);
     ~CameraWatcher();
     void stopWatch();
-    void setIsRecoding(bool value);
+    //void setIsRecoding(bool value);
     void run();
 
 signals:
@@ -20,7 +20,7 @@ signals:
 
 private:
     bool m_loopwatch;
-    bool m_isRecoding;
+    //bool m_isRecoding;
     bool m_coulduse;
 };
 

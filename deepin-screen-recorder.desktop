@@ -1,7 +1,8 @@
 [Desktop Entry]
 Categories=AudioVideo;Recorder;
 Comment=Record screen
-Exec=deepin-screen-recorder
+#Exec=deepin-screen-recorder
+Exec=/usr/bin/deepin-turbo-invoker --type=dtkwidget /usr/bin/deepin-screen-recorder
 GenericName=Screen Capture
 Icon=deepin-screen-recorder
 Name=Deepin Screen Capture

@@ -24,13 +24,13 @@
 #include <QTemporaryFile>
 #include <QDebug>
 
-extern int g_configThemeType;
+//extern int g_configThemeType;
 
 ConfigSettings::ConfigSettings(QObject *parent)
     : QObject(parent)
 {
     m_settings = new QSettings("deepin", "deepin-screen-recorder");
-
+    /*
     if (m_settings->allKeys().isEmpty()) {
         setValue("common", "color_index", 0);
         setValue ("common", "default_savepath", "");
@@ -60,7 +60,7 @@ ConfigSettings::ConfigSettings(QObject *parent)
         setValue("save", "saveClip", 1);
         setValue("save", "saveCursor", 0);
     }
-
+*/
     setValue("effect", "is_blur", false);
     setValue("effect", "is_mosaic", false);
 
@@ -106,14 +106,39 @@ void ConfigSettings::setValue(const QString &group, const QString &key,
 QVariant ConfigSettings::value(const QString &group, const QString &key,
                                const QVariant &defaultValue)
 {
+    Q_UNUSED(defaultValue);
     QMutexLocker locker(&m_mutex);
 
     QVariant value;
     m_settings->beginGroup(group);
-    value = m_settings->value(key, defaultValue);
+
+    if (m_settings->contains(key)) {
+        value = m_settings->value(key);
+    } else {
+        value = getDefaultValue(group, key);
+    }
     m_settings->endGroup();
 
     return value;
+}
+
+QVariant ConfigSettings::getDefaultValue(const QString &group, const QString &key)
+{
+    Q_UNUSED(group);
+    QVariant value;
+    // QVariant 初始化默认值
+    // toInt() == 0, toString() == "", toBool() == false
+    if(key == "fontsize"){
+        value.setValue(12);
+    }else if (key == "linewidth_index"
+              || key == "saveClip"
+              || key == "arrow_linewidth_index"
+              || key == "straightline_linewidth_index") {
+        value.setValue(1);
+    }else if(key == "save_op") {
+        value.setValue(SaveAction::SaveToClipboard);
+    }
+    return  value;
 }
 
 QStringList ConfigSettings::keys(const QString &group)

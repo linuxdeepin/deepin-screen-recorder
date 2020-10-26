@@ -26,11 +26,11 @@
 
 #include "dbusinterface/dbusnotify.h"
 #include "utils/configsettings.h"
+#include "utils.h"
 
 //#include <dscreenwindowsutil.h>
 
 //DWM_USE_NAMESPACE
-
 Screenshot::Screenshot(QObject *parent)
     : QObject(parent)
 {
@@ -118,6 +118,13 @@ void Screenshot::savePathScreenshot(const QString &path)
     m_window->savePath(path);
 }
 
+void Screenshot::startScreenshotFor3rd(const QString &path)
+{
+    Utils::is3rdInterfaceStart = true;
+    initUI();
+    m_window->startScreenshotFor3rd(path);
+}
+
 void Screenshot::initLaunchMode(const QString &launchmode)
 {
     m_launchMode = launchmode;
@@ -127,10 +134,7 @@ void Screenshot::stopRecord()
 {
     m_window->stopRecord();
 }
-void Screenshot::waylandRecordOver()
-{
-    m_window->waylandRecordOver();
-}
+
 void Screenshot::setConfigThemeType(int themeType)
 {
     ConfigSettings::instance()->setValue("common", "themeType", themeType);

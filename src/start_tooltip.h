@@ -35,7 +35,7 @@ class StartTooltip : public DWidget
     Q_OBJECT
 
 public:
-    StartTooltip(DWidget *parent = 0);
+    explicit StartTooltip(DWidget *parent = 0);
     void setWindowManager(DWindowManager *wm);
 
 protected:

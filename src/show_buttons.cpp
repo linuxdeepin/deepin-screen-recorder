@@ -150,21 +150,8 @@ const ShowButtons::KeyDescription ShowButtons::keyDescriptions[] = {
 
 ShowButtons::ShowButtons(DWidget *parent) : DWidget(parent)
 {
-    initButtons();
 }
 
-void ShowButtons::initButtons()
-{
-//    const int count = sizeof(keyDescriptions) / sizeof(keyDescriptions[0]);
-//    for (int i = 0; i < count; ++i) {
-//        const KeyDescription *desc = keyDescriptions + i;
-//        DPushButton *button;
-//        button = new TextButton(desc->text);
-//        m_textButtonMap.insert(desc->text, button);
-//    }
-
-    return;
-}
 
 void ShowButtons::showContentButtons(unsigned char keyCode)
 {

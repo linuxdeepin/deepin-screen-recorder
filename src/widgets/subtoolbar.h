@@ -31,7 +31,7 @@ class SubToolBar : public DStackedWidget
 {
     Q_OBJECT
 public:
-    SubToolBar(DWidget *parent = 0);
+    explicit SubToolBar(DWidget *parent = 0);
     ~SubToolBar();
 
     void initWidget();
@@ -46,7 +46,7 @@ public slots:
     void switchContent(QString shapeType);
     void setSaveOption(SaveAction action);
     void setSaveQualityIndex(int saveQuality);
-    int  getSaveQualityIndex();
+    //int  getSaveQualityIndex();
     void updateColor(QColor color);
 
 signals:

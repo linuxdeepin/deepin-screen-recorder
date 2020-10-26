@@ -21,6 +21,7 @@
 #define SHAPESWIDGET_H
 
 #include <DFrame>
+#include <QGestureEvent>
 #include <QMouseEvent>
 
 #include "../utils/shapesutils.h"
@@ -33,7 +34,7 @@ class ShapesWidget : public DFrame
 {
     Q_OBJECT
 public:
-    ShapesWidget(DWidget *parent = 0);
+    explicit ShapesWidget(DWidget *parent = 0);
     ~ShapesWidget();
 
     enum ShapeBlurStatus {
@@ -70,8 +71,8 @@ signals:
 public slots:
     void updateSelectedShape(const QString &group, const QString &key, int index);
     void setCurrentShape(QString shapeType);
-    void updatePenColor();
-    void setPenColor(QColor color);
+    //void updatePenColor();
+    //void setPenColor(QColor color);
     void clearSelected();
     void setAllTextEditReadOnly();
     void setNoChangedTextEditRemove();
@@ -82,6 +83,7 @@ public slots:
     void handleResize(QPointF pos, int key);
 
     bool clickedOnShapes(QPointF pos);
+
     bool clickedOnRect(FourPoints rectPoints, QPointF pos, bool isBlurMosaic = false);
     bool clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isBlurMosaic = false);
     bool clickedOnArrow(QList<QPointF> points, QPointF pos);
@@ -102,21 +104,39 @@ public slots:
     void undoDrawShapes();
     void undoAllDrawShapes();
     void deleteCurrentShape();
-    QString  getCurrentType();
+    //QString  getCurrentType();
     void microAdjust(QString direction);
     void setShiftKeyPressed(bool isShift);
     void updateCursorShape();
     void menuSaveSlot();
     void menuCloseSlot();
-    void updateSideBarPosition();
+    //void updateSideBarPosition();
     void setGlobalRect(QRect rect);
 
 protected:
+    bool event(QEvent *event);
     void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
     void paintEvent(QPaintEvent *);
     void enterEvent(QEvent *e);
+
+    /**
+     * @brief clickeShapes:判断是否选中图形
+     * @param pos:坐标
+     * @return
+     */
+    bool clickedShapes(QPointF pos);
+    /**
+     * @brief pinchTriggered:捏合手势事件处理
+     * @param pinch:捏合手势
+     */
+    void pinchTriggered(QPinchGesture *pinch);
+    /**
+     * @brief tapTriggered:单击手势事件处理
+     * @param tap:单击手势
+     */
+    void tapTriggered(QTapGesture *tap);
 
 private:
     QPointF m_pos1 = QPointF(0, 0);
@@ -124,6 +144,7 @@ private:
     QPointF m_pos3, m_pos4;
     QPointF m_pressedPoint;
     QPointF m_movingPoint;
+    qreal   m_lastAngle;
 
     bool m_isRecording;
     bool m_isMoving;
@@ -164,7 +185,7 @@ private:
     QRect m_globalRect;
 
     void paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bool isResize = true);
-    void paintImgPointArrow(QPainter &painter, QPointF pos, QPixmap img);
+    //void paintImgPointArrow(QPainter &painter, QPointF pos, QPixmap img);
     void paintRect(QPainter &painter, FourPoints rectFPoints, int index,
                    ShapeBlurStatus  rectStatus = Normal, bool isBlur = false, bool isMosaic = false);
     void paintEllipse(QPainter &painter, FourPoints ellipseFPoints, int index,

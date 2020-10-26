@@ -7,7 +7,7 @@
 voiceVolumeWatcher::voiceVolumeWatcher(QObject *parent) : QThread(parent)
 {
     m_loopwatch = true;
-    m_isRecoding = false;
+    //m_isRecoding = false;
     m_coulduse = true;
 
     // 初始化Dus接口
@@ -25,49 +25,34 @@ void voiceVolumeWatcher::stopWatch()
 {
     m_loopwatch = false;
 }
-
+/*
 void voiceVolumeWatcher::setIsRecoding(bool value)
 {
     m_isRecoding = value;
 }
-
+*/
 void voiceVolumeWatcher::run()
 {
     m_loopwatch = true;
-//    QThread::currentThread()->msleep(200);
+    //    QThread::currentThread()->msleep(200);
 
     static const double DBL_EPSILON = 0.000001;
     static const double volumeLowMark = 0.2; //20% volume
 
     while (m_loopwatch) {
-
-        //log缓存被更新并且仍进行loop循环
-        /*
-        if (!m_isRecoding && m_loopwatch) {
-            bool couldUse = false;
-            couldUse = AudioUtils::canMicrophoneInput();
-            if (couldUse != m_coulduse) {
-                //发送log信息到UI
-                m_coulduse = couldUse;
-                emit sigRecodeState(couldUse);
+        AudioPort activePort = m_defaultSource->activePort();
+        //qDebug() << "=========" << activePort.name << activePort.description << activePort.availability << "--------";
+        bool couldUse = false;
+        if (isMicrophoneAvail(activePort.name)) {
+            double currentMicrophoneVolume = m_defaultSource->volume();
+            if((currentMicrophoneVolume - volumeLowMark) > DBL_EPSILON) {
+                couldUse = true;
             }
         }
-        */
-         if (!m_isRecoding && m_loopwatch) {
-             AudioPort activePort = m_defaultSource->activePort();
-             //qDebug() << "=========" << activePort.name << activePort.description << activePort.availability << "--------";
-             bool couldUse = false;
-             if (isMicrophoneAvail(activePort.name)) {
-                 double currentMicrophoneVolume = m_defaultSource->volume();
-                 if((currentMicrophoneVolume - volumeLowMark) > DBL_EPSILON) {
-                     couldUse = true;
-                 }
-             }
-             if (couldUse != m_coulduse) {
-                 //发送log信息到UI
-                 m_coulduse = couldUse;
-                 emit sigRecodeState(couldUse);
-             }
+        if (couldUse != m_coulduse) {
+            //发送log信息到UI
+            m_coulduse = couldUse;
+            emit sigRecodeState(couldUse);
         }
         QThread::currentThread()->msleep(1000);
     }
@@ -76,14 +61,14 @@ void voiceVolumeWatcher::run()
 // 麦克风声音检测
 bool voiceVolumeWatcher::isMicrophoneAvail(const QString &activePort) const
 {
-     bool available = false;
-     QMap<QString, Port>::const_iterator iter = m_availableInputPorts.find(activePort);
-     if (iter != m_availableInputPorts.end()) {
-         if (!iter->isLoopback()) {
-             available = true;
-         }
-     }
-     return available;
+    bool available = false;
+    QMap<QString, Port>::const_iterator iter = m_availableInputPorts.find(activePort);
+    if (iter != m_availableInputPorts.end()) {
+        if (!iter->isLoopback()) {
+            available = true;
+        }
+    }
+    return available;
 }
 void voiceVolumeWatcher::initDeviceWatcher()
 {
@@ -182,7 +167,7 @@ void voiceVolumeWatcher::onDefaultSourceChanaged(const QDBusObjectPath &value)
     //    When default source changed, need recreate
     // the source Object
     qDebug() << "Source change-->from:" << m_defaultSource->path()
-            << " name:" << m_defaultSource->name();
+             << " name:" << m_defaultSource->name();
 
     m_defaultSource.reset(
                 new com::deepin::daemon::audio::Source (

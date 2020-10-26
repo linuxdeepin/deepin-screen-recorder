@@ -45,7 +45,7 @@ DWIDGET_USE_NAMESPACE
 class ToolTipsPrivate
 {
 public:
-    ToolTipsPrivate(ToolTips *parent) : q_ptr(parent) {}
+    explicit ToolTipsPrivate(ToolTips *parent) : q_ptr(parent) {}
 
     void setBackgroundImage(const QPixmap &srcPixmap);
 
@@ -168,7 +168,6 @@ void ToolTips::setBackground(QBrush background)
     Q_D(ToolTips);
     d->background = background;
 }
-
 void ToolTips::setRadius(int radius)
 {
     Q_D(ToolTips);
@@ -180,16 +179,15 @@ void ToolTips::setBorderColor(QColor borderColor)
     Q_D(ToolTips);
     d->borderColor = borderColor;
 }
-
 void ToolTips::setVertical()
 {
     m_isVertical = true;
 }
-
+/*
 void ToolTips::pop(QPoint center)
 {
     Q_D(ToolTips);
-    Q_UNUSED(d);
+    Q_UNUSED(d)
 
 //    if (m_isVertical) {
 //        this->show();
@@ -224,7 +222,7 @@ void ToolTips::pop(QPoint center)
 //        this->hide();
 //    });
 }
-
+*/
 #ifdef _OLD
 void ToolTips::paintEvent(QPaintEvent *)
 {

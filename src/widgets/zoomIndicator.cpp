@@ -64,8 +64,8 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
     const QPixmap &fullscreenImgFile = TempFile::instance()->getFullscreenPixmap();
     qreal ration = this->devicePixelRatioF();
     QImage fullscreenImg = fullscreenImgFile.toImage();
-    fullscreenImg =  fullscreenImg.scaled(fullscreenImg.width() / ration,
-                                          fullscreenImg.height() / ration, Qt::KeepAspectRatio);
+    fullscreenImg =  fullscreenImg.scaled(static_cast<int>(fullscreenImg.width() / ration),
+                                          static_cast<int>(fullscreenImg.height() / ration), Qt::KeepAspectRatio);
     const QRgb centerRectRgb = fullscreenImg.pixel(centerPos);
     QPixmap zoomPix = QPixmap(fullscreenImgFile).scaled(
                           fullscreenImg.width(), fullscreenImg.height()).copy(

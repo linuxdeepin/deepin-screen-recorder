@@ -36,14 +36,13 @@ class CameraProcess : public QObject
 public:
     explicit CameraProcess(QObject *parent = nullptr);
     ~CameraProcess();
-    static bool checkCameraAvailability();
+    //static bool checkCameraAvailability();
 
 signals:
 
 public slots:
     void ShowTheCapture();
-    void SavePicture();
-    void displayImage(int, QImage image);
+    //void displayImage(int, QImage image);
 
 private:
     QCamera *camera;//摄像头

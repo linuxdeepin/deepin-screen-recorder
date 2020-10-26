@@ -30,7 +30,7 @@ class TopTips : public QLabel
 {
     Q_OBJECT
 public:
-    TopTips(DWidget *parent = nullptr);
+    explicit TopTips(DWidget *parent = nullptr);
     ~TopTips() override;
 
 public slots:

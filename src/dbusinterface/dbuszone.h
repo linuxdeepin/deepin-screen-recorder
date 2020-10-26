@@ -71,7 +71,7 @@ public:
     { return "com.deepin.daemon.Zone"; }
 
 public:
-    DBusZone(QObject *parent = nullptr);
+    explicit DBusZone(QObject *parent = nullptr);
 
     ~DBusZone();
 

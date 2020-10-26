@@ -32,7 +32,7 @@ class SaveTips : public DLabel
     Q_PROPERTY(int tipWidth READ tipWidth WRITE setTipWidth NOTIFY tipWidthChanged)
 
 public:
-    SaveTips(DWidget *parent = 0);
+    explicit SaveTips(DWidget *parent = 0);
     ~SaveTips();
 
 signals:

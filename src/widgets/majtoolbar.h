@@ -32,7 +32,7 @@ class MajToolBar : public DLabel
 {
     Q_OBJECT
 public:
-    MajToolBar(DWidget *parent = 0);
+    explicit MajToolBar(DWidget *parent = 0);
     ~MajToolBar();
 
 signals:
@@ -48,7 +48,7 @@ signals:
 
 public slots:
     void initWidgets();
-    bool isButtonChecked();
+    //bool isButtonChecked();
 
 private:
     QHBoxLayout *m_baseLayout;

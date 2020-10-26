@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ug">
+<context>
+    <name>CountdownTooltip</name>
+    <message>
+        <source>Click the tray icon 
+or press the shortcut again to stop recording</source>
+        <translation> ‫بەلگىنى بېسىپ ياكى يەنە بىر قېتىم تېزلەتمە كۇنۇپكىسىنى بېسىش ئارقىلىق سىن ئېلىشنى توختىتىڭ</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>سىنغا ئېلىش</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>رەسىم تۇتۇش</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation>ئېكراننى رەسىم تۇتۇش، سىنغا ئېلىش</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>ساقلانمىدى. نۆۋەتتىكى ئىشلەتكۈچى مۇندەرىجىسىگە ساقلاڭ.</translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation>كۆرۈش</translation>
+    </message>
+    <message>
+        <source>Screenshot finished</source>
+        <translation>رەسىم تۇتۇلدى</translation>
+    </message>
+    <message>
+        <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
+        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
+    </message>
+    <message>
+        <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
+        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
+    </message>
+    <message>
+        <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
+        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
+    </message>
+    <message>
+        <source>select-area</source>
+        <translation>رايون تاللاش</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>ساقلاش</translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation>رەسىم %1 گە ساقلاندى</translation>
+    </message>
+    <message>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>ئېكراننى رەسىمگە تۇتۇش، سىنغا ئېلىش %1 سىېكونتتىن كېيىن قوزغىلىدۇ</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>ئۆتكۈزۈۋېتىش</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>چاپلاش تاختىسى</translation>
+    </message>
+    <message>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>سىن ساقلىنىۋاتىدۇ، سەل ساقلاڭ</translation>
+    </message>
+</context>
+<context>
+    <name>MenuController</name>
+    <message>
+        <source>Undo</source>
+        <translation>ئەمەلدىن قالدۇرۇش</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>ساقلاش</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>چېكىنىش</translation>
+    </message>
+</context>
+<context>
+    <name>RecordProcess</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation>ئېكراننى رەسىم تۇتۇش، سىنغا ئېلىش</translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation>كۆرۈش</translation>
+    </message>
+    <message>
+        <source>Recording finished</source>
+        <translation>سىنغا ئېلىش تاماملاندى </translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation> %1 گە ساقلاندى</translation>
+    </message>
+</context>
+<context>
+    <name>Screenshot</name>
+    <message>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>ئېكراننى رەسىمگە تۇتۇش، سىنغا ئېلىش %1 سىېكونتتىن كېيىن قوزغىلىدۇ</translation>
+    </message>
+</context>
+<context>
+    <name>ShapesWidget</name>
+    <message>
+        <source>Input text here</source>
+        <translation>بۇ يەرگە خەت قوشۇڭ</translation>
+    </message>
+</context>
+<context>
+    <name>Shortcut</name>
+    <message>
+        <source>Start/Screenshot</source>
+        <translation>قوزغىتىش/رەسىم تۇتۇش</translation>
+    </message>
+    <message>
+        <source>Exit/Save</source>
+        <translation>چېكىنىش/ساقلاش</translation>
+    </message>
+    <message>
+        <source>Drawing</source>
+        <translation>رەسىم سىزىش</translation>
+    </message>
+    <message>
+        <source>Size Adjustment</source>
+        <translation>رايون تەڭشەش</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>تەڭشەك</translation>
+    </message>
+    <message>
+        <source>Quick start</source>
+        <translation>رەسىم تۇتۇشنى تېز قوزغىتىش</translation>
+    </message>
+    <message>
+        <source>Window screenshot</source>
+        <translation>مائوس بار كۆزنەكنى تۇتۇش</translation>
+    </message>
+    <message>
+        <source>Delay screenshot</source>
+        <translation>5 سېكونت كېچىكتۈرۈپ تۇتۇش</translation>
+    </message>
+    <message>
+        <source>Full screenshot</source>
+        <translation>پۈتۈن ئېكران تۇتۇش</translation>
+    </message>
+    <message>
+        <source>Copy to clipboard</source>
+        <translation>چاپلاش تاختىسىغا كۆچۈرۈش</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>چېكىنىش</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>ساقلاش</translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation>تىك تۆت بۇلۇڭ</translation>
+    </message>
+    <message>
+        <source>Ellipse</source>
+        <translation>ئېللىپىس</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation>تۈز سىزىق</translation>
+    </message>
+    <message>
+        <source>Pencil</source>
+        <translation>قەلەم</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation>يېزىق</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>ئۆچۈرۈش</translation>
+    </message>
+    <message>
+        <source>Undo</source>
+        <translation>ئەمەلدىن قالدۇرۇش</translation>
+    </message>
+    <message>
+        <source>Increase height up</source>
+        <translation>تاللىغان رايون ئېگىزلىكىنى يۇقىرىغا چوڭايتىش</translation>
+    </message>
+    <message>
+        <source>Increase height down</source>
+        <translation>تاللىغان رايون ئېگىزلىكىنى تۆۋەنگە چوڭايتىش</translation>
+    </message>
+    <message>
+        <source>Increase width left</source>
+        <translation>تاللىغان رايون كەڭلىكىنى سولغا چوڭايتىش</translation>
+    </message>
+    <message>
+        <source>Increase width right</source>
+        <translation>تاللىغان رايون كەڭلىكىنى ئوڭغا چوڭايتىش</translation>
+    </message>
+    <message>
+        <source>Decrease height up</source>
+        <translation>تاللىغان رايون ئېگىزلىكىنى يۇقىرىغا كىچىكلىتىش</translation>
+    </message>
+    <message>
+        <source>Decrease height down</source>
+        <translation>تاللىغان رايون ئېگىزلىكىنى تۆۋەنگە كىچىكلىتىش</translation>
+    </message>
+    <message>
+        <source>Decrease width left</source>
+        <translation>تاللىغان رايون كەڭلىكىنى سولغا كىچىكلىتىش</translation>
+    </message>
+    <message>
+        <source>Decrease width right</source>
+        <translation>تاللىغان رايون كەڭلىكىنى ئوڭغا كىچىكلىتىش</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>ياردەم</translation>
+    </message>
+    <message>
+        <source>Display shortcuts</source>
+        <translation>تېزلەتمە كۆرۈنسۇن</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
+    <message>
+        <source>Blur</source>
+        <translation>غۇۋا</translation>
+    </message>
+    <message>
+        <source>Mosaic</source>
+        <translation>موزايكا</translation>
+    </message>
+</context>
+<context>
+    <name>SubToolWidget</name>
+    <message>
+        <source>Sound On</source>
+        <translation>ئۈنئالغۇنى ئېچىش</translation>
+    </message>
+    <message>
+        <source>Microphone</source>
+        <translation>مىكروفون</translation>
+    </message>
+    <message>
+        <source>System Audio</source>
+        <translation>سىستما ئاۋازى</translation>
+    </message>
+    <message>
+        <source>Sound Off</source>
+        <translation>ئۈنئالغۇنى تاقاش</translation>
+    </message>
+    <message>
+        <source>Show Keystroke</source>
+        <translation>كۇنۇپكا كۆرۈنسۇن</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke</source>
+        <translation>كۇنۇپكا يوشۇرۇنسۇن</translation>
+    </message>
+    <message>
+        <source>Webcam On</source>
+        <translation>كامېرانى ئېچىش</translation>
+    </message>
+    <message>
+        <source>Webcam Off</source>
+        <translation>كامېرانى تاقاش</translation>
+    </message>
+    <message>
+        <source>Show Click</source>
+        <translation>كۇنۇپكا كۆرۈنسۇن</translation>
+    </message>
+    <message>
+        <source>Hide Click</source>
+        <translation>كۇنۇپكا يوشۇرۇنسۇن</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>تاللاش</translation>
+    </message>
+    <message>
+        <source>Format:</source>
+        <translation>فورماتى:</translation>
+    </message>
+    <message>
+        <source>GIF</source>
+        <translation>GIF</translation>
+    </message>
+    <message>
+        <source>MP4</source>
+        <translation>MP4</translation>
+    </message>
+    <message>
+        <source>FPS:</source>
+        <translation>كاندۇك سانى:</translation>
+    </message>
+    <message>
+        <source>5 fps</source>
+        <translation>5 fps</translation>
+    </message>
+    <message>
+        <source>10 fps</source>
+        <translation>10 fps</translation>
+    </message>
+    <message>
+        <source>20 fps</source>
+        <translation>20 fps</translation>
+    </message>
+    <message>
+        <source>24 fps</source>
+        <translation>24 fps</translation>
+    </message>
+    <message>
+        <source>30 fps</source>
+        <translation>30 fps</translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation>تىك تۆت بۇلۇڭ</translation>
+    </message>
+    <message>
+        <source>Ellipse</source>
+        <translation>ئېللىپىس</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation>تۈز سىزىق</translation>
+    </message>
+    <message>
+        <source>Arrow</source>
+        <translation>ئوقيا</translation>
+    </message>
+    <message>
+        <source>Pencil</source>
+        <translation>قەلەم</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation>يېزىق</translation>
+    </message>
+    <message>
+        <source>Save to</source>
+        <translation>گە ساقلاش</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>ئۈستەليۈزى</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>رەسىم</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>بەلگىلەنگەن ئورۇن</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>فورماتى</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>چاپلاش تاختىسى</translation>
+    </message>
+    <message>
+        <source>Edit in Draw</source>
+        <translation>رەسىم تاختىسىدا تەھرىرلەش</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>مائوس كۆرۈنسۇن</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Recordings</source>
+        <translation>ئۈنگە ئېلىش</translation>
+    </message>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>سىنغا ئېلىش ئىقتىدارى ۋاقتىنچە ئىشلىمەيدۇ</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>چېكىنىش</translation>
+    </message>
+</context>
+</TS>

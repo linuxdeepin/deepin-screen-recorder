@@ -31,7 +31,7 @@ class Separator : public DLabel
 {
     Q_OBJECT
 public:
-    Separator(DWidget *parent);
+    explicit Separator(DWidget *parent);
     ~Separator();
 };
 
@@ -39,7 +39,7 @@ class FontSizeWidget : public DLabel
 {
     Q_OBJECT
 public:
-    FontSizeWidget(DWidget *parent = 0);
+    explicit FontSizeWidget(DWidget *parent = 0);
     ~FontSizeWidget();
 
     void initWidget();

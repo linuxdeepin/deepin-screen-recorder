@@ -151,8 +151,10 @@ bool RecordOptionPanel::eventFilter(QObject *, QEvent *event)
 
     return false;
 }
-
+/*
+ * never used
 bool RecordOptionPanel::isSaveAsGif()
 {
     return saveAsGif;
 }
+*/

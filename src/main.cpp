@@ -42,7 +42,9 @@
 
 
 DWIDGET_USE_NAMESPACE
-
+/*
+ * 截图录屏不能从界面设置主题，不存在主题设置，保存设置的主题过程
+ * 初始化利用系统主题来设置
 static QString g_appPath;//全局路径
 static int g_themeType = 0;
 
@@ -94,7 +96,7 @@ void saveThemeTypeSetting(int type)
     t_configFile.close();
 }
 
-
+*/
 int main(int argc, char *argv[])
 {
 
@@ -114,6 +116,7 @@ int main(int argc, char *argv[])
 
 
     //判断wayland平台
+    /*
     auto e = QProcessEnvironment::systemEnvironment();
     QString XDG_CURRENT_DESKTOP = e.value(QStringLiteral("XDG_CURRENT_DESKTOP"));
     QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
@@ -121,7 +124,7 @@ int main(int argc, char *argv[])
     QString KDE_FULL_SESSION = e.value(QStringLiteral("KDE_FULL_SESSION"));
     QString GNOME_DESKTOP_SESSION_ID = e.value(QStringLiteral("GNOME_DESKTOP_SESSION_ID"));
     QString DESKTOP_SESSION = e.value(QStringLiteral("DESKTOP_SESSION"));
-/*
+
     bool t_waylandPlatform = XDG_SESSION_TYPE == QLatin1String("wayland") ||
                              WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
 
@@ -130,155 +133,157 @@ int main(int argc, char *argv[])
             return 0;
         }
     }
-*/
+    */
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
 //    dbus.registerService("com.deepin.ScreenRecorder");
     if (dbus.registerService("com.deepin.ScreenRecorder")) {
         // Poup up warning dialog if window manager not support composite.
         //if (!DWindowManagerHelper::instance()->hasComposite() && t_launchMode == "screenRecord") {
-        //Utils::warnNoComposite();
-        //return 0;
+            //Utils::warnNoComposite();
+            //return 0;
         //}
         // Start screen-recorder process if not other screen-recorder DBus service started.
         //else {
-        // Init application attributes.
+            // Init application attributes.
 
-        g_appPath = QDir::homePath() + QDir::separator() + "." + qApp->applicationName();
-        QDir t_appDir;
-        t_appDir.mkpath(g_appPath);
+            //g_appPath = QDir::homePath() + QDir::separator() + "." + qApp->applicationName();
+            //QDir t_appDir;
+            //t_appDir.mkpath(g_appPath);
 
-        app.setOrganizationName("deepin");
-        app.setApplicationName("deepin-screen-recorder");
-        app.setApplicationVersion("1.0");
-        app.setAttribute(Qt::AA_UseHighDpiPixmaps);
+            app.setOrganizationName("deepin");
+            app.setApplicationName("deepin-screen-recorder");
+            app.setApplicationVersion("1.0");
+            app.setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-        static const QDate buildDate = QLocale( QLocale::English ).
-                                       toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
-        QString t_date = buildDate.toString("MMdd");
+            static const QDate buildDate = QLocale( QLocale::English ).
+                                           toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
+            QString t_date = buildDate.toString("MMdd");
 
-        // Version Time
-        app.setApplicationVersion(DApplication::buildVersion(t_date));
+            // Version Time
+            app.setApplicationVersion(DApplication::buildVersion(t_date));
 
-        using namespace Dtk::Core;
-        Dtk::Core::DLogManager::registerConsoleAppender();
-        Dtk::Core::DLogManager::registerFileAppender();
+            using namespace Dtk::Core;
+            Dtk::Core::DLogManager::registerConsoleAppender();
+            Dtk::Core::DLogManager::registerFileAppender();
 
-        QCommandLineOption  delayOption(QStringList() << "d" << "delay",
-                                        "Take a screenshot after NUM seconds.", "NUM");
-        QCommandLineOption fullscreenOption(QStringList() << "f" << "fullscreen",
-                                            "Take a screenshot the whole screen.");
-        QCommandLineOption topWindowOption(QStringList() << "w" << "top-window",
-                                           "Take a screenshot of the most top window.");
-        QCommandLineOption savePathOption(QStringList() << "s" << "save-path",
-                                          "Specify a path to save the screenshot.", "PATH");
-        QCommandLineOption prohibitNotifyOption(QStringList() << "n" << "no-notification",
-                                                "Don't send notifications.");
-        QCommandLineOption iconOption(QStringList() << "i" << "icon",
-                                      "Indicate that this program's started by clicking.");
-        QCommandLineOption dbusOption(QStringList() << "u" << "dbus",
-                                      "Start  from dbus.");
-        //for test
+            QCommandLineOption  delayOption(QStringList() << "d" << "delay",
+                                            "Take a screenshot after NUM seconds.", "NUM");
+            QCommandLineOption fullscreenOption(QStringList() << "f" << "fullscreen",
+                                                "Take a screenshot the whole screen.");
+            QCommandLineOption topWindowOption(QStringList() << "w" << "top-window",
+                                               "Take a screenshot of the most top window.");
+            QCommandLineOption savePathOption(QStringList() << "s" << "save-path",
+                                              "Specify a path to save the screenshot.", "PATH");
+            QCommandLineOption prohibitNotifyOption(QStringList() << "n" << "no-notification",
+                                                    "Don't send notifications.");
+            QCommandLineOption iconOption(QStringList() << "i" << "icon",
+                                          "Indicate that this program's started by clicking.");
+            QCommandLineOption dbusOption(QStringList() << "u" << "dbus",
+                                          "Start  from dbus.");
+            //for test
 //            QCommandLineOption testOption(QStringList() << "t" << "test",
 //                                          "Start  from test.");
-        //for test
-        QCommandLineParser cmdParser;
-        cmdParser.setApplicationDescription("deepin-screen-recorder");
-        cmdParser.addHelpOption();
-        cmdParser.addVersionOption();
-        cmdParser.addOption(delayOption);
-        cmdParser.addOption(fullscreenOption);
-        cmdParser.addOption(topWindowOption);
-        cmdParser.addOption(savePathOption);
-        cmdParser.addOption(prohibitNotifyOption);
-        cmdParser.addOption(iconOption);
-        cmdParser.addOption(dbusOption);
+            //for test
+            QCommandLineParser cmdParser;
+            cmdParser.setApplicationDescription("deepin-screen-recorder");
+            cmdParser.addHelpOption();
+            cmdParser.addVersionOption();
+            cmdParser.addOption(delayOption);
+            cmdParser.addOption(fullscreenOption);
+            cmdParser.addOption(topWindowOption);
+            cmdParser.addOption(savePathOption);
+            cmdParser.addOption(prohibitNotifyOption);
+            cmdParser.addOption(iconOption);
+            cmdParser.addOption(dbusOption);
 //            cmdParser.addOption(testOption);
-        cmdParser.process(app);
+            cmdParser.process(app);
 
-        // Load translator.
-        app.loadTranslator();
-        // Show window.
+            // Load translator.
+            app.loadTranslator();
+            // Show window.
 //            MainWindow window;
-        Screenshot window;
+            Screenshot window;
 
-        // 应用已保存的主题设置
-        DGuiApplicationHelper::ColorType t_type = DGuiApplicationHelper::instance()->themeType();
-        saveThemeTypeSetting(t_type);
+            // 应用已保存的主题设置
+            DGuiApplicationHelper::ColorType t_type = DGuiApplicationHelper::instance()->themeType();
+            //saveThemeTypeSetting(t_type);
 
-        window.setConfigThemeType(g_themeType);
+            window.setConfigThemeType(t_type);
 
-        DGuiApplicationHelper::instance()->setPaletteType(getThemeTypeSetting());
+            DGuiApplicationHelper::instance()->setPaletteType(t_type);
 
-        //监听当前应用主题切换事件
-        QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
-        [] (DGuiApplicationHelper::ColorType type) {
-            qDebug() << type;
-            // 保存程序的主题设置  type : 0,系统主题， 1,浅色主题， 2,深色主题
-            saveThemeTypeSetting(type);
-            DGuiApplicationHelper::instance()->setPaletteType(type);
-        });
+            //监听当前应用主题切换事件
+            /* 截图过程中不存在切换主题的操作
+            QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
+            [] (DGuiApplicationHelper::ColorType type) {
+                qDebug() << type;
+                // 保存程序的主题设置  type : 0,系统主题， 1,浅色主题， 2,深色主题
+                saveThemeTypeSetting(type);
+                DGuiApplicationHelper::instance()->setPaletteType(type);
+            });
+            */
+            window.initLaunchMode(t_launchMode);
+            DBusScreenshotService dbusService (&window);
 
-        window.initLaunchMode(t_launchMode);
-        DBusScreenshotService dbusService (&window);
+            QString arch = QSysInfo::currentCpuArchitecture();
+            if (!(arch.startsWith("x86", Qt::CaseInsensitive) || arch.startsWith("ARM", Qt::CaseInsensitive))) {
+                if (t_launchMode == "screenRecord") {
+                    Utils::notSupportWarn();
+                    qApp->quit();
+                    return 0;
+                }
+            }
 
-        QString arch = QSysInfo::currentCpuArchitecture();
-        if (!(arch.startsWith("x86", Qt::CaseInsensitive) || arch.startsWith("ARM", Qt::CaseInsensitive))) {
-            if (t_launchMode == "screenRecord") {
-                Utils::notSupportWarn();
+            if (!DWindowManagerHelper::instance()->hasComposite() && t_launchMode == "screenRecord") {
+                Utils::warnNoComposite();
                 qApp->quit();
                 return 0;
             }
-        }
 
-        if (!DWindowManagerHelper::instance()->hasComposite() && t_launchMode == "screenRecord") {
-            Utils::warnNoComposite();
-            qApp->quit();
-            return 0;
-        }
-        // Register debus service.
-        dbus.registerObject("/com/deepin/ScreenRecorder", &window, QDBusConnection::ExportScriptableSlots);
-        QDBusConnection conn = QDBusConnection::sessionBus();
+            // Register debus service.
+            dbus.registerObject("/com/deepin/ScreenRecorder", &window, QDBusConnection::ExportScriptableSlots);
+            QDBusConnection conn = QDBusConnection::sessionBus();
 //            conn.unregisterObject("com.deepin.Screenshot");
-        if (!conn.registerService("com.deepin.Screenshot") ||
-                !conn.registerObject("/com/deepin/Screenshot", &window)) {
-            qDebug() << "deepin-screenshot is running!";
+            if (!conn.registerService("com.deepin.Screenshot") ||
+                    !conn.registerObject("/com/deepin/Screenshot", &window)) {
+                qDebug() << "deepin-screenshot is running!";
 
-            qApp->quit();
-            return 0;
-        }
+                qApp->quit();
+                return 0;
+            }
 
 
-        if (cmdParser.isSet(dbusOption)) {
-            qDebug() << "dbus register waiting!";
-            return app.exec();
+            if (cmdParser.isSet(dbusOption)) {
+                qDebug() << "dbus register waiting!";
+                return app.exec();
 
-        } else {
-            dbusService.setSingleInstance(true);
-            if (cmdParser.isSet(delayOption)) {
-                qDebug() << "cmd delay screenshot";
-                window.delayScreenshot(cmdParser.value(delayOption).toInt());
-            } else if (cmdParser.isSet(fullscreenOption)) {
-                window.fullscreenScreenshot();
-            } else if (cmdParser.isSet(topWindowOption)) {
-                qDebug() << "cmd topWindow screenshot";
-                window.topWindowScreenshot();
-            } else if (cmdParser.isSet(savePathOption)) {
-                qDebug() << "cmd savepath screenshot";
-                window.savePathScreenshot(cmdParser.value(savePathOption));
-            } else if (cmdParser.isSet(prohibitNotifyOption)) {
-                qDebug() << "screenshot no notify!";
-                window.noNotifyScreenshot();
-            } else if (cmdParser.isSet(iconOption)) {
-                window.delayScreenshot(0.2);
-            } /*else if (cmdParser.isSet(testOption)) {
+            } else {
+                dbusService.setSingleInstance(true);
+                if (cmdParser.isSet(delayOption)) {
+                    qDebug() << "cmd delay screenshot";
+                    window.delayScreenshot(cmdParser.value(delayOption).toInt());
+                } else if (cmdParser.isSet(fullscreenOption)) {
+                    window.fullscreenScreenshot();
+                } else if (cmdParser.isSet(topWindowOption)) {
+                    qDebug() << "cmd topWindow screenshot";
+                    window.topWindowScreenshot();
+                } else if (cmdParser.isSet(savePathOption)) {
+                    qDebug() << "cmd savepath screenshot";
+                    window.savePathScreenshot(cmdParser.value(savePathOption));
+                } else if (cmdParser.isSet(prohibitNotifyOption)) {
+                    qDebug() << "screenshot no notify!";
+                    window.noNotifyScreenshot();
+                } else if (cmdParser.isSet(iconOption)) {
+                    window.delayScreenshot(0.2);
+                } /*else if (cmdParser.isSet(testOption)) {
                     window.testScreenshot();
                 }*/ else {
-                window.startScreenshot();
+                    window.startScreenshot();
+                }
             }
-        }
 
-        return app.exec();
+            return app.exec();
         //}
     } else {
 //        Send DBus message to stop screen - recorder if found other screen - recorder DBus service has started.

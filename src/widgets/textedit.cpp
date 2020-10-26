@@ -62,7 +62,7 @@ TextEdit::TextEdit(int index, DWidget *parent)
     QSizeF originSize = QSizeF(m_fontMetric.boundingRect(
                                    "d").width()  + TEXT_MARGIN,  m_fontMetric.boundingRect(
                                    "d").height() + TEXT_MARGIN);
-    this->resize(originSize.width(), originSize.height());
+    this->resize(static_cast<int>(originSize.width()), static_cast<int>(originSize.height()));
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -91,12 +91,13 @@ void TextEdit::setColor(QColor c)
     this->setPalette(pa);
     this->updateGeometry();
 }
-
+/*
+ * never used
 QColor TextEdit::getColor()
 {
     return m_textColor;
 }
-
+*/
 void TextEdit::setFontSize(int fontsize)
 {
     QFont font;
@@ -119,8 +120,8 @@ void TextEdit::updateContentSize(QString content)
 {
     QFontMetricsF fontMetric = QFontMetricsF(this->document()->defaultFont());
     QSizeF docSize =  fontMetric.size(0,  content);
-    this->setMinimumSize(docSize.width() + TEXT_MARGIN, docSize.height() + TEXT_MARGIN);
-    this->resize(docSize.width() + TEXT_MARGIN, docSize.height() + TEXT_MARGIN);
+    this->setMinimumSize(static_cast<int>(docSize.width() + TEXT_MARGIN), static_cast<int>(docSize.height() + TEXT_MARGIN));
+    this->resize(static_cast<int>(docSize.width() + TEXT_MARGIN), static_cast<int>(docSize.height() + TEXT_MARGIN));
     emit  repaintTextRect(this,  QRectF(this->x(), this->y(),
                                         docSize.width() + TEXT_MARGIN, docSize.height() + TEXT_MARGIN));
 }
@@ -152,11 +153,6 @@ void TextEdit::setCursorVisible(bool visible)
         setCursorWidth(0);
     }
 }
-
-void TextEdit::keepReadOnlyStatus()
-{
-}
-
 void TextEdit::mousePressEvent(QMouseEvent *e)
 {
     qDebug() << "TextEdit mousePressEvent" << e->pos();
@@ -202,8 +198,8 @@ void TextEdit::mouseMoveEvent(QMouseEvent *e)
     QPointF movePos = QPointF(posOrigin.x(), posOrigin.y());
 
     if (m_isPressed && movePos != m_pressPoint) {
-        this->move(this->x() + movePos.x() - m_pressPoint.x(),
-                   this->y() + movePos.y() - m_pressPoint.y());
+        this->move(static_cast<int>(this->x() + movePos.x() - m_pressPoint.x()),
+                   static_cast<int>(this->y() + movePos.y() - m_pressPoint.y()));
 
         emit  repaintTextRect(this,  QRectF(qreal(this->x()), qreal(this->y()),
                                             this->width(),  this->height()));

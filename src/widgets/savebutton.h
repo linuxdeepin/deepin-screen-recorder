@@ -26,7 +26,7 @@ class SaveButton : public DPushButton
 {
     Q_OBJECT
 public:
-    SaveButton(DWidget *parent = 0);
+    explicit SaveButton(DWidget *parent = 0);
     ~SaveButton();
 
 signals:

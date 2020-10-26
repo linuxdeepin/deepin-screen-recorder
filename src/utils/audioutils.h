@@ -26,18 +26,18 @@ class AudioUtils: public QObject
     Q_OBJECT
 public:
     explicit AudioUtils(QObject *parent = nullptr);
-    bool isSystemAudioOutput();
-    bool isMicrophoneOutput();
-    void setupMicrophoneOutput();
-    void setupSystemAudioOutput();
-    void setupAudioSink(QString sink);
-    bool canVirtualCardOutput();
-    static bool canMicrophoneInput();
-    QString currentAudioSink();
-    QString currentAudioSource();
+    //bool isSystemAudioOutput();
+    //bool isMicrophoneOutput();
+    //void setupMicrophoneOutput();
+    //void setupSystemAudioOutput();
+    //void setupAudioSink(QString sink);
+    //bool canVirtualCardOutput();
+    //static bool canMicrophoneInput();
+    //QString currentAudioSink();
+    //QString currentAudioSource();
     QString currentAudioChannel();
 private:
-    void initProcess();
+    //void initProcess();
 
 private:
     QProcess *process;

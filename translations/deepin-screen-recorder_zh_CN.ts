@@ -6,7 +6,8 @@
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>点击托盘图标或再次按下录屏快捷键停止录制</translation>
+        <translation>点击托盘图标
+或再次按下录屏快捷键停止录制</translation>
     </message>
 </context>
 <context>
@@ -23,44 +24,40 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <source>Start recording</source>
-        <translation>开始录制</translation>
+        <source>Screen Capture</source>
+        <translation>截图录屏</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>保存失败，请保存到用户目录下</translation>
+        <translation>保存失败。请保存在当前用户目录下。</translation>
     </message>
     <message>
         <source>View</source>
         <translation>查看</translation>
     </message>
     <message>
-        <source>Screen Capture</source>
-        <translation>截图录屏</translation>
-    </message>
-    <message>
         <source>Screenshot finished</source>
         <translation>截图完成</translation>
+    </message>
+    <message>
+        <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
+        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
+    </message>
+    <message>
+        <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
+        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
+    </message>
+    <message>
+        <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
+        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
     </message>
     <message>
         <source>select-area</source>
         <translation>选择区域</translation>
     </message>
     <message>
-        <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Save</source>
-        <translation type="unfinished">保存</translation>
+        <translation>保存</translation>
     </message>
     <message>
         <source>Saved to %1</source>
@@ -71,16 +68,16 @@ or press the shortcut again to stop recording</source>
         <translation>截图录屏将在%1秒后启动</translation>
     </message>
     <message>
-        <source>Saving the screen recording,please wait...</source>
-        <translation>正在保存录屏文件,请稍后...</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>忽略</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished">剪贴板</translation>
+        <translation>剪贴板</translation>
+    </message>
+    <message>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>正在保存录屏文件，请稍候...</translation>
     </message>
 </context>
 <context>
@@ -101,16 +98,16 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>RecordProcess</name>
     <message>
+        <source>Screen Capture</source>
+        <translation>截图录屏</translation>
+    </message>
+    <message>
         <source>View</source>
         <translation>查看</translation>
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>录制完成</translation>
-    </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation>截图录屏</translation>
+        <translation>录制完毕</translation>
     </message>
     <message>
         <source>Saved to %1</source>
@@ -121,85 +118,109 @@ or press the shortcut again to stop recording</source>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation type="unfinished">截图录屏将在%1秒后启动</translation>
+        <translation>截图录屏将在%1秒后启动</translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>此处插入文本</translation>
+        <translation>在此处添加文本</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>开启/截图</translation>
+        <translation>启动/截图 </translation>
     </message>
     <message>
-        <source>Save</source>
-        <translation>保存</translation>
+        <source>Exit/Save</source>
+        <translation>退出/保存</translation>
+    </message>
+    <message>
+        <source>Drawing</source>
+        <translation>绘图</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
         <translation>调整区域</translation>
     </message>
     <message>
+        <source>Settings</source>
+        <translation>设置</translation>
+    </message>
+    <message>
         <source>Quick start</source>
         <translation>快速启动截图</translation>
+    </message>
+    <message>
+        <source>Window screenshot</source>
+        <translation>光标所在窗口截图</translation>
+    </message>
+    <message>
+        <source>Delay screenshot</source>
+        <translation>延时5秒截屏</translation>
     </message>
     <message>
         <source>Full screenshot</source>
         <translation>截取全屏</translation>
     </message>
     <message>
-        <source>Delay screenshot</source>
-        <translation>延时5秒截图</translation>
-    </message>
-    <message>
-        <source>Undo</source>
-        <translation>撤销</translation>
+        <source>Copy to clipboard</source>
+        <translation>复制到剪贴板</translation>
     </message>
     <message>
         <source>Exit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <source>Copy to clipboard</source>
-        <translation>复制到剪贴板</translation>
+        <source>Save</source>
+        <translation>保存</translation>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation>矩形工具</translation>
+        <translation>矩形</translation>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>椭圆工具</translation>
+        <translation>椭圆</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation>直线</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>画笔工具</translation>
+        <translation>画笔</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation>文本工具</translation>
+        <translation>文字</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>删除选中图形</translation>
+    </message>
+    <message>
+        <source>Undo</source>
+        <translation>撤销</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation>向上放大选区高度</translation>
+        <translation>向上扩大选区高度</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation>向下放大选区高度</translation>
+        <translation>向下扩大选区高度</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>向左放大选区宽度</translation>
+        <translation>向左扩大选区宽度</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>向右放大选区宽度</translation>
+        <translation>向右扩大选区宽度</translation>
     </message>
     <message>
         <source>Decrease height up</source>
@@ -218,36 +239,12 @@ or press the shortcut again to stop recording</source>
         <translation>向右缩小选区宽度</translation>
     </message>
     <message>
-        <source>Exit/Save</source>
-        <translation type="unfinished">退出/保存</translation>
-    </message>
-    <message>
-        <source>Drawing</source>
-        <translation type="unfinished">绘图</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation type="unfinished">设置</translation>
-    </message>
-    <message>
-        <source>Line</source>
-        <translation type="unfinished">直线工具</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="unfinished">删除选中图形</translation>
-    </message>
-    <message>
         <source>Help</source>
-        <translation type="unfinished">帮助</translation>
+        <translation>帮助</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished">显示快捷键预览</translation>
-    </message>
-    <message>
-        <source>Window screenshot</source>
-        <translation type="unfinished">光标所在窗口截图</translation>
+        <translation>显示快捷键</translation>
     </message>
 </context>
 <context>
@@ -264,84 +261,16 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>GIF</source>
-        <translation>GIF格式</translation>
-    </message>
-    <message>
-        <source>MP4</source>
-        <translation>Mp4格式</translation>
+        <source>Sound On</source>
+        <translation>录音开启</translation>
     </message>
     <message>
         <source>Microphone</source>
         <translation>麦克风</translation>
     </message>
     <message>
-        <source>Save to</source>
-        <translation>存储到</translation>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Rectangle</source>
-        <translation>矩形</translation>
-    </message>
-    <message>
-        <source>Ellipse</source>
-        <translation>椭圆</translation>
-    </message>
-    <message>
-        <source>Pencil</source>
-        <translation>画笔</translation>
-    </message>
-    <message>
-        <source>Text</source>
-        <translation>文字</translation>
-    </message>
-    <message>
-        <source>Line</source>
-        <translation>直线</translation>
-    </message>
-    <message>
-        <source>Arrow</source>
-        <translation>箭头</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>选项</translation>
-    </message>
-    <message>
-        <source>Desktop</source>
-        <translation>桌面</translation>
-    </message>
-    <message>
-        <source>Pictures</source>
-        <translation>图片</translation>
-    </message>
-    <message>
-        <source>Folder</source>
-        <translation>指定位置</translation>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation>格式</translation>
-    </message>
-    <message>
         <source>System Audio</source>
         <translation>系统音频</translation>
-    </message>
-    <message>
-        <source>Sound On</source>
-        <translation>录音开启</translation>
     </message>
     <message>
         <source>Sound Off</source>
@@ -372,70 +301,131 @@ or press the shortcut again to stop recording</source>
         <translation>隐藏点击</translation>
     </message>
     <message>
-        <source>5 fps</source>
-        <translation>5帧/秒</translation>
-    </message>
-    <message>
-        <source>10 fps</source>
-        <translation>10帧/秒</translation>
-    </message>
-    <message>
-        <source>20 fps</source>
-        <translation>20帧/秒</translation>
-    </message>
-    <message>
-        <source>24 fps</source>
-        <translation>24帧/秒</translation>
-    </message>
-    <message>
-        <source>30 fps</source>
-        <translation>30帧/秒</translation>
+        <source>Options</source>
+        <translation>选项</translation>
     </message>
     <message>
         <source>Format:</source>
         <translation>格式：</translation>
     </message>
     <message>
+        <source>GIF</source>
+        <translation>GIF</translation>
+    </message>
+    <message>
+        <source>MP4</source>
+        <translation>MP4</translation>
+    </message>
+    <message>
         <source>FPS:</source>
         <translation>帧数：</translation>
     </message>
     <message>
+        <source>5 fps</source>
+        <translation>5 fps</translation>
+    </message>
+    <message>
+        <source>10 fps</source>
+        <translation>10 fps</translation>
+    </message>
+    <message>
+        <source>20 fps</source>
+        <translation>20 fps</translation>
+    </message>
+    <message>
+        <source>24 fps</source>
+        <translation>24 fps</translation>
+    </message>
+    <message>
+        <source>30 fps</source>
+        <translation>30 fps</translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation>矩形</translation>
+    </message>
+    <message>
+        <source>Ellipse</source>
+        <translation>椭圆</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation>直线</translation>
+    </message>
+    <message>
+        <source>Arrow</source>
+        <translation>箭头</translation>
+    </message>
+    <message>
+        <source>Pencil</source>
+        <translation>画笔</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation>文字</translation>
+    </message>
+    <message>
+        <source>Save to</source>
+        <translation>保存到</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>桌面</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>图片</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>指定位置</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>格式</translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
         <source>MKV</source>
-        <translation>MKV格式</translation>
-    </message>
-    <message>
-        <source>Show cursor</source>
-        <translation>显示光标</translation>
-    </message>
-    <message>
-        <source>Open With Draw</source>
-        <translation>画板打开</translation>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished">剪贴板</translation>
+        <translation>剪贴板</translation>
+    </message>
+    <message>
+        <source>Edit in Draw</source>
+        <translation>在画板中编辑</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>显示光标</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Recordings</source>
-        <translation type="unfinished"></translation>
+        <translation>录音</translation>
     </message>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished">录屏功能暂不可用</translation>
+        <translation>录屏功能暂不可用</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation type="unfinished">退出</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation type="unfinished"></translation>
+        <translation>退出</translation>
     </message>
 </context>
 </TS>

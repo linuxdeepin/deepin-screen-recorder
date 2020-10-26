@@ -1,39 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="fi" version="2.1">
-<context>
-    <name>ColorToolWidget</name>
-    <message>
-        <source>Red</source>
-        <translation>Punainen</translation>
-    </message>
-    <message>
-        <source>Select Red</source>
-        <translation>Valitse punainen</translation>
-    </message>
-    <message>
-        <source>yellow</source>
-        <translation>keltainen</translation>
-    </message>
-    <message>
-        <source>Select Yellow</source>
-        <translation>Valitse keltainen</translation>
-    </message>
-    <message>
-        <source>blue</source>
-        <translation>sininen</translation>
-    </message>
-    <message>
-        <source>Select Blue</source>
-        <translation>Valitse sininen</translation>
-    </message>
-    <message>
-        <source>green</source>
-        <translation>vihreä</translation>
-    </message>
-    <message>
-        <source>Select Green</source>
-        <translation>Valitse vihreä</translation>
-    </message>
-</context>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="fi">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -50,39 +17,15 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <translation>Tallenna</translation>
     </message>
     <message>
-        <source>Switch to record mode</source>
-        <translation>Vaihda tallennustilaan</translation>
-    </message>
-    <message>
-        <source>Shot</source>
-        <translation>Otos</translation>
-    </message>
-    <message>
-        <source>Switch to shot mode</source>
-        <translation>Vaihda kuvaustilaan</translation>
+        <source>Screenshot</source>
+        <translation>Kuvakaappaus</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Kuvakaappaus</translation>
-    </message>
-    <message>
-        <source>Start Record</source>
-        <translation>Aloita nauhoitus</translation>
-    </message>
-    <message>
-        <source>Start Shot</source>
-        <translation>Ota kuva</translation>
-    </message>
-    <message>
-        <source>Start recording</source>
-        <translation>Aloita tallennus</translation>
-    </message>
-    <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Deepin kuvakaappaus alkaa %1 sekunnissa</translation>
+        <translation>Ruudunkaappaus</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -93,20 +36,8 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <translation>Näytä</translation>
     </message>
     <message>
-        <source>Picture has been saved to clipboard</source>
-        <translation>Kuva on tallennettu leikepöydälle</translation>
-    </message>
-    <message>
-        <source>Picture has been saved to %1</source>
-        <translation>Kuva on tallennettu kansioon %1</translation>
-    </message>
-    <message>
         <source>Screenshot finished</source>
-        <translation>Kuvakaappaus valmis</translation>
-    </message>
-    <message>
-        <source>Saved to</source>
-        <translation>Tallenna nimellä</translation>
+        <translation>Kuva valmiina</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -122,31 +53,31 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation>aluevalinta</translation>
-    </message>
-    <message>
-        <source>Need authorization</source>
-        <translation>Lupa tarvitaan</translation>
-    </message>
-    <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Sudo -salasanasi tarvitaan vahvistukseksi</translation>
-    </message>
-    <message>
-        <source>Password Error!</source>
-        <translation>Salasanavirhe!</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation>Ok</translation>
-    </message>
-    <message>
-        <source>Authentication success!</source>
-        <translation>Aitous tunnistettu!</translation>
+        <translation>valitse alue</translation>
     </message>
     <message>
         <source>Save</source>
         <translation>Tallenna</translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation>Tallenna nimellä %1</translation>
+    </message>
+    <message>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Ruudunkaappaus alkaa %1 sekunnissa</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>Ohita</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Leikepöydälle</translation>
+    </message>
+    <message>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>Näyttöä tallennetaan, odota...</translation>
     </message>
 </context>
 <context>
@@ -168,7 +99,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <name>RecordProcess</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Kuvakaappaus</translation>
+        <translation>Ruudunkaappaus</translation>
     </message>
     <message>
         <source>View</source>
@@ -179,15 +110,15 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <translation>Tallennus valmis</translation>
     </message>
     <message>
-        <source>Saved to</source>
-        <translation>Tallenna nimellä</translation>
+        <source>Saved to %1</source>
+        <translation>Tallenna nimellä %1</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
-        <source>Deepin Screenshot will start after %1 seconds</source>
-        <translation>Deepin kuvakaappaus alkaa %1 sekunnissa</translation>
+        <source>Screen Capture will start in %1 seconds</source>
+        <translation>Ruudunkaappaus alkaa %1 sekunnissa</translation>
     </message>
 </context>
 <context>
@@ -201,7 +132,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>Käynnistä/Kuvakaappaus</translation>
+        <translation>Aloita/Kuvakaappaus</translation>
     </message>
     <message>
         <source>Exit/Save</source>
@@ -213,7 +144,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation>Koon säätö</translation>
+        <translation>Säädä koko</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -248,10 +179,6 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <translation>Tallenna</translation>
     </message>
     <message>
-        <source> </source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <source>Rectangle</source>
         <translation>Suorakulmio</translation>
     </message>
@@ -265,7 +192,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>Lyijykynä</translation>
+        <translation>Kynä</translation>
     </message>
     <message>
         <source>Text</source>
@@ -323,71 +250,16 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>fine</source>
-        <translation>hieno</translation>
-    </message>
-    <message>
-        <source>medium</source>
-        <translation>keskikokoinen</translation>
-    </message>
-    <message>
-        <source>thick</source>
-        <translation>paksu</translation>
-    </message>
-    <message>
         <source>Blur</source>
-        <translation>Hämärä</translation>
+        <translation>Hämärtää</translation>
     </message>
     <message>
         <source>Mosaic</source>
-        <translation>Mosaiikki</translation>
-    </message>
-    <message>
-        <source>line</source>
-        <translation>Viiva</translation>
-    </message>
-    <message>
-        <source>arrow</source>
-        <translation>nuoli</translation>
-    </message>
-</context>
-<context>
-    <name>SubToolBar</name>
-    <message>
-        <source>Save to desktop</source>
-        <translation>Tallenna työpöydälle</translation>
-    </message>
-    <message>
-        <source>Autosave</source>
-        <translation>Autom-tallennus</translation>
-    </message>
-    <message>
-        <source>Save to specified folder</source>
-        <translation>Tallenna määritettyyn kansioon</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Kopioi leikepöydälle</translation>
-    </message>
-    <message>
-        <source>Autosave and copy to clipboard</source>
-        <translation>Automaattinen tallennus ja kopiointi leikepöydälle</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation>Matala</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation>Korkea</translation>
+        <translation>Ruudukkoa</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
-    <message>
-        <source> </source>
-        <translation type="unfinished"/>
-    </message>
     <message>
         <source>Sound On</source>
         <translation>Ääni päällä</translation>
@@ -430,7 +302,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation>Vaihtoehtoja</translation>
+        <translation>Valinnat</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -482,11 +354,11 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Arrow</source>
-        <translation>nuoli</translation>
+        <translation>Nuoli</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>Lyijykynä</translation>
+        <translation>Kynä</translation>
     </message>
     <message>
         <source>Text</source>
@@ -525,16 +397,20 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>Copy to clipboard</source>
-        <translation>Kopioi leikepöydälle</translation>
+        <source>MKV</source>
+        <translation>MKV</translation>
     </message>
     <message>
-        <source>Need authorization</source>
-        <translation>Lupa tarvitaan</translation>
+        <source>Clipboard</source>
+        <translation>Leikepöydälle</translation>
     </message>
     <message>
-        <source>Please enter your sudo password to be authorized</source>
-        <translation>Sudo -salasanasi tarvitaan vahvistukseksi</translation>
+        <source>Edit in Draw</source>
+        <translation>Muokkaa ohjelmassa Piirtäminen</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>Näytä osoitin</translation>
     </message>
 </context>
 <context>
@@ -543,12 +419,13 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <source>Recordings</source>
         <translation>Äänitykset</translation>
     </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
     <message>
-        <source>New recording</source>
-        <translation>Uusi äänitys</translation>
+        <source>Screen recording is not supported at present</source>
+        <translation>Näytön tallennusta ei tueta tällä hetkellä</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Poistu</translation>
     </message>
 </context>
 </TS>

@@ -33,7 +33,7 @@ class VoiceRecordProcess : public QThread
     Q_OBJECT
 
 public:
-    VoiceRecordProcess(QObject *parent = nullptr);
+    explicit VoiceRecordProcess(QObject *parent = nullptr);
 
     QString generateRecordingFilepath();
     QString getRecordingFilepath();

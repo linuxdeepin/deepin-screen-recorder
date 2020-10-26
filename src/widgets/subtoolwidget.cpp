@@ -38,23 +38,19 @@
 #include <QFileDialog>
 #include "../settings.h"
 #include "tooltips.h"
+#include "../utils.h"
 
 #include <unistd.h>
 
 DWIDGET_USE_NAMESPACE
 
 namespace {
-//const int TOOLBAR_HEIGHT = 43;
-//const int TOOLBAR_WIDTH = 350;
-const int BUTTON_SPACING = 4;
-const int SHOT_BUTTON_SPACING = 4;
-//const int COLOR_NUM = 16;
-const QSize TOOL_ICON_SIZE = QSize(25, 25);
-const QSize MAX_TOOL_ICON_SIZE = QSize(40, 40);
-//const QSize MAX_TOOL_BUTTON_SIZE = QSize(82, 40);
-//const QSize TOOL_BUTTON_SIZE = QSize(62, 40);
-const QSize MEDIUM_TOOL_BUTTON_SIZE = QSize(52, 40);
-const QSize MIN_TOOL_BUTTON_SIZE = QSize(42, 40);
+    const int BUTTON_SPACING = 4;
+    const int SHOT_BUTTON_SPACING = 4;
+    const QSize TOOL_ICON_SIZE = QSize(25, 25);
+    const QSize MAX_TOOL_ICON_SIZE = QSize(40, 40);
+    const QSize MEDIUM_TOOL_BUTTON_SIZE = QSize(52, 40);
+    const QSize MIN_TOOL_BUTTON_SIZE = QSize(42, 40);
 }
 
 SubToolWidget::SubToolWidget(DWidget *parent) : DStackedWidget(parent)
@@ -72,13 +68,6 @@ void SubToolWidget::initWidget()
     hintFilter = new HintFilter;
     m_themeType = 0;
     m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
-
-//    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
-//    setMinimumSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
-//    setFixedHeight(TOOLBAR_HEIGHT);
-//    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-
-//    initVirtualCard();
     initRecordLabel();
     initShotLabel();
     setCurrentWidget(m_shotSubTool);
@@ -120,34 +109,13 @@ void SubToolWidget::initRecordLabel()
 
     //保持帧数的配置文件判断
     t_frameRate = t_frameRateVar.toString().toInt();
-
-
-//    QString audio_button_style = "DPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
-//                                 "left:-6px;"
-//                                 "subcontrol-origin:padding;"
-//                                 "subcontrol-position:right;}";
-//    //添加音频按钮
+    //    //添加音频按钮
     ToolButton *audioButton = new ToolButton();
-
-//    pa = audioButton->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//    audioButton->setPalette(pa);
-//    audioButton->setStyleSheet(audio_button_style);
 
     audioButton->setObjectName("AudioButton");
     audioButton->setText(" ");
     audioButton->setIconSize(TOOL_ICON_SIZE);
-//    audioButton->setToolTip(tr("Sound On"));
     installTipHint(audioButton, tr("Sound On"));
-//    if (m_themeType == 1) {
-//        audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
-//    }
-
-//    else if (m_themeType == 2) {
-//        audioButton->setIcon(QIcon(":/image/newUI/dark/normal/microphone_normal.svg"));
-//    }
     audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
 
     rectBtnGroup->addButton(audioButton);
@@ -159,7 +127,7 @@ void SubToolWidget::initRecordLabel()
     DFontSizeManager::instance()->bind(audioMenu, DFontSizeManager::T8);
     m_microphoneAction = new QAction(audioMenu);
     m_systemAudioAction = new QAction(audioMenu);
-//    m_m_systemAudioAction = m_systemAudioAction;
+    //    m_m_systemAudioAction = m_systemAudioAction;
     m_microphoneAction->setText(tr("Microphone"));
     m_microphoneAction->setCheckable(true);
     if (m_themeType == 1) {
@@ -170,10 +138,8 @@ void SubToolWidget::initRecordLabel()
         m_microphoneAction->setIcon(QIcon(":/image/newUI/dark/normal/microphone.svg"));
     }
 
-
-
     m_systemAudioAction->setText(tr("System Audio"));
-//    m_systemAudioAction->setIcon(QIcon(":/image/newUI/normal/audio frequency.svg"));
+    //    m_systemAudioAction->setIcon(QIcon(":/image/newUI/normal/audio frequency.svg"));
     if (m_themeType == 1) {
         m_systemAudioAction->setIcon(QIcon(":/image/newUI/normal/audio frequency.svg"));
     }
@@ -184,216 +150,70 @@ void SubToolWidget::initRecordLabel()
 
 
     connect(m_microphoneAction, &QAction::triggered, this, [ = ] {
-        if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
-        {
-//            audioButton->setToolTip(tr("Sound On"));
+        if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked()){
             installTipHint(audioButton, tr("Sound On"));
-//            audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
-//            if (m_themeType == 1) {
-//                audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/volume_normal.svg"));
-//            }
             audioButton->setIcon(QIcon::fromTheme("volume_normal"));
         }
 
-        if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
-        {
-//            audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
-//            if (m_themeType == 1) {
-//                audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/microphone_normal.svg"));
-//            }
+        if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked()){
             audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
         }
 
-        if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
-        {
-//            audioButton->setIcon(QIcon(":/image/newUI/normal/audio frequency_normal.svg"));
-//            if (m_themeType == 1) {
-//                audioButton->setIcon(QIcon(":/image/newUI/normal/audio frequency_normal.svg"));
-//            }
+        if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked()){
 
-//            else if (m_themeType == 2) {
-//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/audio frequency_normal.svg"));
-//            }
             audioButton->setIcon(QIcon::fromTheme("audio frequency_normal"));
         }
 
-        if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
-        {
-//            audioButton->setToolTip(tr("Sound Off"));
-            installTipHint(audioButton, tr("Sound Off"));
-//            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
-//            if (m_themeType == 1) {
-//                audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
-//            }
+        if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked()){
 
-//            else if (m_themeType == 2) {
-//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/mute_normal.svg"));
-//            }
+            installTipHint(audioButton, tr("Sound Off"));
             audioButton->setIcon(QIcon::fromTheme("mute_normal"));
         }
     });
 
     connect(m_systemAudioAction, &QAction::triggered, this, [ = ] {
-        if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
-        {
-//            audioButton->setToolTip(tr("Sound On"));
+        if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked()){
             installTipHint(audioButton, tr("Sound On"));
-//            audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
-//            if (m_themeType == 1) {
-//                audioButton->setIcon(QIcon(":/image/newUI/normal/volume_normal.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/volume_normal.svg"));
-//            }
             audioButton->setIcon(QIcon::fromTheme("volume_normal"));
         }
 
-        if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
-        {
-//            audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
-//            if (m_themeType == 1) {
-//                audioButton->setIcon(QIcon(":/image/newUI/normal/microphone_normal.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/microphone_normal.svg"));
-//            }
+        if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked()){
             audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
         }
 
-        if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
-        {
-//            audioButton->setIcon(QIcon(":/image/newUI/normal/audio frequency_normal.svg"));
-//            if (m_themeType == 1) {
-//                audioButton->setIcon(QIcon(":/image/newUI/normal/audio frequency_normal.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/audio frequency_normal.svg"));
-//            }
+        if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked()){
             audioButton->setIcon(QIcon::fromTheme("audio frequency_normal"));
         }
 
-        if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
-        {
-//            audioButton->setToolTip(tr("Sound Off"));
+        if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked()){
             installTipHint(audioButton, tr("Sound Off"));
-//            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
-//            if (m_themeType == 1) {
-//                audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                audioButton->setIcon(QIcon(":/image/newUI/dark/normal/mute_normal.svg"));
-//            }
             audioButton->setIcon(QIcon::fromTheme("mute_normal"));
         }
     });
     m_haveMicroPhone = true;
     m_microphoneAction->setCheckable(true);
-    //        m_microphoneAction->setChecked(true);
     m_microphoneAction->trigger();
-
-//    bool t_haveMicroPhone = false;
-//    m_microphoneAction->setIcon(QIcon(":/image/newUI/normal/microphone.svg"));
-//    if (AudioUtils().canMicrophoneInput()) {
-//        t_haveMicroPhone = true;
-//        m_microphoneAction->setCheckable(true);
-////        m_microphoneAction->setChecked(true);
-//        m_microphoneAction->trigger();
-//    } else {
-//        t_haveMicroPhone = false;
-//        m_microphoneAction->setDisabled(true);
-
-////        if (m_themeType == 1) {
-////            audioButton->setIcon(QIcon(":/image/newUI/normal/mute_normal.svg"));
-////        }
-
-////        else if (m_themeType == 2) {
-////            audioButton->setIcon(QIcon(":/image/newUI/dark/normal/mute_normal.svg"));
-////        }
-//    }
     m_systemAudioAction->setCheckable(true);
     m_systemAudioAction->trigger();
     m_haveSystemAudio = true;
 
-//    if (AudioUtils().canVirtualCardOutput()) {
-//        m_systemAudioAction->setCheckable(true);
-//        m_systemAudioAction->trigger();
-
-//    } else {
-//        m_systemAudioAction->setDisabled(true);
-//        m_haveSystemAudio = false;
-//    }
-
-
-//    m_systemAudioAction->setDisabled(!AudioUtils().canVirtualCardOutput());
+    //    m_systemAudioAction->setDisabled(!AudioUtils().canVirtualCardOutput());
     audioMenu->addAction(m_microphoneAction);
     audioMenu->addSeparator();
     audioMenu->addAction(m_systemAudioAction);
     audioButton->setMenu(audioMenu);
 
     connect(m_microphoneAction, SIGNAL(triggered(bool)), this, SIGNAL(microphoneActionChecked(bool)));
-    //connect(m_systemAudioAction, SIGNAL(triggered(bool)), this, SLOT(systemAudioActionCheckedSlot(bool)));
     connect(m_systemAudioAction, SIGNAL(triggered(bool)), this, SIGNAL(systemAudioActionChecked(bool)));
 
-
-//    DComboBox *audioButton = new DComboBox();
-//    audioButton->addItem(QIcon(":/image/newUI/normal/microphone_normal.svg"), nullptr);
-//    audioButton->setStyle(QStyleFactory::create("dlight"));
-
-//    pa = audioButton->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//    audioButton->setPalette(pa);
-
-
-
     m_keyBoardButton = new ToolButton();
-//    pa = m_keyBoardButton->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//    m_keyBoardButton->setPalette(pa);
 
     m_keyBoardButton->setObjectName("KeyBoardButton");
-//    keyBoardButton->setText(tr("Key"));
     m_keyBoardButton->setIconSize(MAX_TOOL_ICON_SIZE);
-//    m_keyBoardButton->setToolTip(tr("Show Keystroke"));
     installTipHint(m_keyBoardButton, tr("Show Keystroke"));
     m_keyBoardButton->setIcon(QIcon::fromTheme("key_mormal"));
 
-//    if (m_themeType == 1) {
-//        m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
-//    }
 
-//    else if (m_themeType == 2) {
-//        m_keyBoardButton->setIcon(QIcon(":/image/newUI/dark/normal/key_mormal.svg"));
-//    }
-
-//    connect(m_keyBoardButton, &ToolButton::onPress, this, [ = ] {
-//        if (m_themeType == 1)
-//        {
-//            m_keyBoardButton->setIcon(QIcon(":/image/newUI/press/key_press.svg"));
-//        }
-
-//        else if (m_themeType == 2)
-//        {
-//            m_keyBoardButton->setIcon(QIcon(":/image/newUI/dark/press/key_press.svg"));
-//        }
-//    });
-
-//    m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
     rectBtnGroup->addButton(m_keyBoardButton);
     m_keyBoardButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_keyBoardButton);
@@ -403,194 +223,66 @@ void SubToolWidget::initRecordLabel()
             this, SIGNAL(keyBoardButtonClicked(bool)));
 
     connect(m_keyBoardButton, &DPushButton::clicked, this, [ = ] {
-        if (m_keyBoardButton->isChecked())
-        {
-//            m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key display_mormal.svg"));
-//            m_keyBoardButton->setToolTip(tr("Hide Keystroke"));
+        if (m_keyBoardButton->isChecked()){
             installTipHint(m_keyBoardButton, tr("Hide Keystroke"));
-//            if (m_themeType == 1) {
-//                m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key display_mormal.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                m_keyBoardButton->setIcon(QIcon(":/image/newUI/dark/normal/key display_mormal.svg"));
-//            }
         }
 
-        if (!m_keyBoardButton->isChecked())
-        {
-//            m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
-//            m_keyBoardButton->setToolTip(tr("Show Keystroke"));
+        if (!m_keyBoardButton->isChecked()){
             installTipHint(m_keyBoardButton, tr("Show Keystroke"));
-//            if (m_themeType == 1) {
-//                m_keyBoardButton->setIcon(QIcon(":/image/newUI/normal/key_mormal.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                m_keyBoardButton->setIcon(QIcon(":/image/newUI/dark/normal/key_mormal.svg"));
-//            }
         }
     });
 
     m_cameraButton = new ToolButton();
-    m_cameraButton->setDisabled(!CameraProcess::checkCameraAvailability());
-//    pa = m_cameraButton->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//    m_cameraButton->setPalette(pa);
+    m_cameraButton->setDisabled((QCameraInfo::availableCameras().count() <= 0));
 
     m_cameraButton->setObjectName("CameraButton");
-//    cameraButton->setText(tr("Camera"));
     m_cameraButton->setIconSize(MAX_TOOL_ICON_SIZE);
-//    m_cameraButton->setToolTip(tr("Webcam On"));
     installTipHint(m_cameraButton, tr("Webcam On"));
 
-//    if (m_themeType == 1) {
-//        m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
-//    }
-
-//    else if (m_themeType == 2) {
-//        m_cameraButton->setIcon(QIcon(":/image/newUI/dark/normal/webcam_normal.svg"));
-//    }
     m_cameraButton->setIcon(QIcon::fromTheme("webcam_normal"));
-
-//    connect(m_cameraButton, &ToolButton::onPress, this, [ = ] {
-//        if (m_themeType == 1)
-//        {
-//            m_cameraButton->setIcon(QIcon(":/image/newUI/press/webcam_press.svg"));
-//        }
-
-//        else if (m_themeType == 2)
-//        {
-//            m_cameraButton->setIcon(QIcon(":/image/newUI/dark/press/webcam_press.svg"));
-//        }
-//    });
-//    m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
     rectBtnGroup->addButton(m_cameraButton);
     m_cameraButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_cameraButton);
 
     connect(m_cameraButton, &DPushButton::clicked, this, [ = ] {
-        if (m_cameraButton->isChecked())
-        {
-//            m_cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
-//            m_cameraButton->setToolTip(tr("Webcam Off"));
+        if (m_cameraButton->isChecked()){
             installTipHint(m_cameraButton, tr("Webcam Off"));
-//            if (m_themeType == 1) {
-//                m_cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                m_cameraButton->setIcon(QIcon(":/image/newUI/dark/checked/webcam_checked.svg"));
-//            }
         }
 
-        if (!m_cameraButton->isChecked())
-        {
-//            m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
-//            m_cameraButton->setToolTip(tr("Webcam On"));
+        if (!m_cameraButton->isChecked()){
             installTipHint(m_cameraButton, tr("Webcam On"));
-//            if (m_themeType == 1) {
-//                m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                m_cameraButton->setIcon(QIcon(":/image/newUI/dark/normal/webcam_normal.svg"));
-//            }
         }
         emit cameraActionChecked(m_cameraButton->isChecked());
     });
     m_mouseButton = new ToolButton();
-//    pa = m_mouseButton->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//    m_mouseButton->setPalette(pa);
-
     m_mouseButton->setObjectName("MouseButton");
     m_mouseButton->setIconSize(MAX_TOOL_ICON_SIZE);
     m_mouseButton->setIcon(QIcon::fromTheme("mouse_mormal"));
-//    m_mouseButton->setToolTip(tr("Show Click"));
     installTipHint(m_mouseButton, tr("Show Click"));
-//    if (m_themeType == 1) {
-//        m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
-//    }
-
-//    else if (m_themeType == 2) {
-//        m_mouseButton->setIcon(QIcon(":/image/newUI/dark/normal/mouse_mormal.svg"));
-//    }
-
-//    connect(m_mouseButton, &ToolButton::onPress, this, [ = ] {
-//        if (m_themeType == 1)
-//        {
-//            m_mouseButton->setIcon(QIcon(":/image/newUI/press/mouse_press.svg"));
-//        }
-
-//        else if (m_themeType == 2)
-//        {
-//            m_mouseButton->setIcon(QIcon(":/image/newUI/dark/press/mouse_press.svg"));
-//        }
-//    });
-
-//    m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
-//    mouseButton->setText(tr("Mouse"));
     rectBtnGroup->addButton(m_mouseButton);
 
     m_mouseButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_mouseButton);
 
     connect(m_mouseButton, &DPushButton::clicked, this, [ = ] {
-        if (m_mouseButton->isChecked())
-        {
-//            m_mouseButton->setIcon(QIcon(":/image/newUI/checked/mouse_checked.svg"));
-//            m_mouseButton->setToolTip(tr("Hide Click"));
+        if (m_mouseButton->isChecked()){
             installTipHint(m_mouseButton, tr("Hide Click"));
-//            if (m_themeType == 1) {
-//                m_mouseButton->setIcon(QIcon(":/image/newUI/checked/mouse_checked.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                m_mouseButton->setIcon(QIcon(":/image/newUI/dark/checked/mouse_checked.svg"));
-//            }
         }
 
-        if (!m_mouseButton->isChecked())
-        {
-//            m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
-//            m_mouseButton->setToolTip(tr("Show Click"));
+        if (!m_mouseButton->isChecked()){
             installTipHint(m_mouseButton, tr("Show Click"));
-//            if (m_themeType == 1) {
-//                m_mouseButton->setIcon(QIcon(":/image/newUI/normal/mouse_mormal.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                m_mouseButton->setIcon(QIcon(":/image/newUI/dark/normal/mouse_mormal.svg"));
-//            }
         }
     });
 
     //发送鼠标按键按钮状态信号
     connect(m_mouseButton, SIGNAL(clicked(bool)),
             this, SIGNAL(mouseBoardButtonClicked(bool)));
-//    QString button_style = "DPushButton{text-align: left;}";
-
-//    QString format_button_style = "QPushButton{text-align: left;}"
-//                                  "QPushButton::menu-indicator{image:url(':/image/newUI/normal/Pulldown-normal.svg');"
-//                                  "left:-4px;"
-//                                  "subcontrol-origin:padding;"
-//                                  "subcontrol-position:right;}";
-
-//    QString format_button_style = "QPushButton{text-align: left;}";
-
 
     //2019-10-14：新增选项按钮
     m_optionButton = new ToolButton();
     DFontSizeManager::instance()->bind(m_optionButton, DFontSizeManager::T8);
     m_optionButton->setText(tr("Options"));
-//    m_optionButton->setFixedSize(QSize(73, 40));
     m_optionButton->setMinimumSize(QSize(73, 40));
-//    m_optionButton->setToolTip(tr("Options"));
     installTipHint(m_optionButton, tr("Options"));
     rectBtnGroup->addButton(m_optionButton);
 
@@ -603,15 +295,6 @@ void SubToolWidget::initRecordLabel()
 
     DMenu *OptionMenu = new DMenu();
     DFontSizeManager::instance()->bind(OptionMenu, DFontSizeManager::T8);
-    //for test
-//    OptionMenu->setStyle(QStyleFactory::create("dlight"));
-//    if (m_themeType == 1) {
-//        OptionMenu->setStyle(QStyleFactory::create("dlight"));
-//    }
-
-//    else if (m_themeType == 2) {
-//        OptionMenu->setStyle(QStyleFactory::create("ddark"));
-//    }
     //for test
     QAction *formatTitleAction = new QAction(OptionMenu);
     QAction *gifAction = new QAction(OptionMenu);
@@ -656,11 +339,8 @@ void SubToolWidget::initRecordLabel()
     t_fpsGroup->addAction(fps30Action);
 
     OptionMenu->addAction(formatTitleAction);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(gifAction);
-//    OptionMenu->addSeparator();
     OptionMenu->addAction(mp4Action);
-//    OptionMenu->addSeparator();
 
     OptionMenu->addAction(mkvAction);
     OptionMenu->addSeparator();
@@ -675,7 +355,7 @@ void SubToolWidget::initRecordLabel()
     m_optionButton->setMenu(OptionMenu);
 
     // change by hmy
-    //if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxinInSub == false) {
+
     if (t_saveGif == true) {
         gifAction->setChecked(true);
         gifAction->trigger();
@@ -689,9 +369,6 @@ void SubToolWidget::initRecordLabel()
             m_microphoneAction->trigger();
         }
         m_microphoneAction->setEnabled(false);
-//        if (m_systemAudioAction->isChecked()) {
-//            m_systemAudioAction->trigger();
-//        }
         m_systemAudioAction->setEnabled(false);
 
     } else if (t_saveMkv == true) {
@@ -746,9 +423,6 @@ void SubToolWidget::initRecordLabel()
             m_microphoneAction->trigger();
         }
         m_microphoneAction->setEnabled(false);
-//        if (m_systemAudioAction->isChecked()) {
-//            m_systemAudioAction->trigger();
-//        }
         m_systemAudioAction->setEnabled(false);
         emit gifActionChecked(checked);
     });
@@ -792,7 +466,7 @@ void SubToolWidget::initRecordLabel()
     });
 
     connect(t_fpsGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
-    [ = ](QAction * t_act) {
+            [ = ](QAction * t_act) {
         int t_frameRateSelected = 0;
         if (t_act == fps5Action) {
             t_frameRateSelected = 5;
@@ -813,8 +487,6 @@ void SubToolWidget::initRecordLabel()
 
         emit videoFrameRateChanged(t_frameRateSelected);
     });
-
-    //if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxinInSub == false) {
     switch (t_frameRate) {
     case 5:
         fps5Action->triggered();
@@ -847,71 +519,13 @@ void SubToolWidget::initRecordLabel()
     rectLayout->setMargin(0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(7);
-//    rectLayout->addWidget(audioButton);
+    //    rectLayout->addWidget(audioButton);
     for (int i = 0; i < btnList.length(); i++) {
         rectLayout->addWidget(btnList[i]);
         rectLayout->addSpacing(BUTTON_SPACING);
     }
-//    rectLayout->addSpacing(35);
-//    rectLayout->addSpacing(SHOT_BUTTON_SPACING);
-//    rectLayout->addStretch();
-//    rectLayout->addSpacing(16);
-//    rectLayout->addSpacing(BUTTON_SPACING);
-//    rectLayout->addStretch();
     m_recordSubTool->setLayout(rectLayout);
     addWidget(m_recordSubTool);
-
-//    connect(rectBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
-//    [ = ](int status) {
-//        DPalette pa;
-//        if (m_keyBoardButton->isChecked()) {
-//            pa = m_keyBoardButton->palette();
-//            pa.setColor(DPalette::ButtonText, Qt::white);
-//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-//            m_keyBoardButton->setPalette(pa);
-//        }
-
-//        else {
-//            pa = m_keyBoardButton->palette();
-//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//            m_keyBoardButton->setPalette(pa);
-//        }
-
-//        if (m_cameraButton->isChecked()) {
-//            pa = m_cameraButton->palette();
-//            pa.setColor(DPalette::ButtonText, Qt::white);
-//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-//            m_cameraButton->setPalette(pa);
-//        }
-
-//        else {
-//            pa = m_cameraButton->palette();
-//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//            m_cameraButton->setPalette(pa);
-//        }
-
-//        if (m_mouseButton->isChecked()) {
-//            pa = m_mouseButton->palette();
-//            pa.setColor(DPalette::ButtonText, Qt::white);
-//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-//            m_mouseButton->setPalette(pa);
-//        }
-
-//        else {
-//            pa = m_mouseButton->palette();
-//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//            m_mouseButton->setPalette(pa);
-//        }
-//    });
 }
 
 void SubToolWidget::initShotLabel()
@@ -924,255 +538,64 @@ void SubToolWidget::initShotLabel()
 
     //添加矩形按钮
     m_rectButton = new ToolButton();
-
-//    pa = m_rectButton->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//    m_rectButton->setPalette(pa);
-
     m_rectButton->setIconSize(QSize(35, 35));
 
     m_rectButton->setIcon(QIcon::fromTheme("rectangle-normal"));
-//    if (m_themeType == 1) {
-//        m_rectButton->setIcon(QIcon(":/image/newUI/normal/rectangle-normal.svg"));
-//    }
-
-//    else if (m_themeType == 2) {
-//        m_rectButton->setIcon(QIcon(":/image/newUI/dark/normal/rectangle-normal_dark.svg"));
-//    }
-
-//    connect(m_rectButton, &ToolButton::onPress, this, [ = ] {
-//        if (m_themeType == 1)
-//        {
-//            m_rectButton->setIcon(QIcon(":/image/newUI/press/rectangle-press.svg"));
-//        }
-
-//        else if (m_themeType == 2)
-//        {
-//            m_rectButton->setIcon(QIcon(":/image/newUI/dark/press/rectangle-press.svg"));
-//        }
-//    });
-
-
-//    m_rectButton->setIcon(QIcon(":/image/newUI/normal/rectangle-normal.svg"));
-
     m_rectButton->setObjectName("RectButton");
-//    rectButton->setText(tr("Rect"));
     rectBtnGroup->addButton(m_rectButton);
     m_rectButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
-//    m_rectButton->setToolTip(tr("Rectangle"));
     installTipHint(m_rectButton, tr("Rectangle"));
     btnList.append(m_rectButton);
 
     m_circleButton = new ToolButton();
-
-//    pa = m_circleButton->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//    m_circleButton->setPalette(pa);
-
     m_circleButton->setIconSize(QSize(35, 35));
     m_circleButton->setIcon(QIcon::fromTheme("oval-normal"));
-//    m_circleButton->setToolTip(tr("Ellipse"));
     installTipHint(m_circleButton, tr("Ellipse"));
-//    if (m_themeType == 1) {
-//        m_circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
-//    }
-
-//    else if (m_themeType == 2) {
-//        m_circleButton->setIcon(QIcon(":/image/newUI/dark/normal/oval-normal_dark.svg"));
-//    }
-
-//    connect(m_circleButton, &ToolButton::onPress, this, [ = ] {
-//        if (m_themeType == 1)
-//        {
-//            m_circleButton->setIcon(QIcon(":/image/newUI/press/oval-press.svg"));
-//        }
-
-//        else if (m_themeType == 2)
-//        {
-//            m_circleButton->setIcon(QIcon(":/image/newUI/dark/press/oval-press.svg"));
-//        }
-//    });
-
-//    m_circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
     m_circleButton->setObjectName("CircleButton");
 
-//    pa = m_circleButton->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//    m_circleButton->setPalette(pa);
-
-
-//    circleButton->setText(tr("Circ"));
     rectBtnGroup->addButton(m_circleButton);
     m_circleButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_circleButton);
 
     m_lineButton = new ToolButton();
-//    pa = m_lineButton->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-
     m_lineButton->setIconSize(QSize(35, 35));
 
 
 
     bool t_arrowStatus = ConfigSettings::instance()->value("arrow", "is_straight").toBool();
     if (t_arrowStatus) {
-//        m_lineButton->setToolTip(tr("Line"));
         installTipHint(m_lineButton, tr("Line"));
-    }
-
-    else {
-//        m_lineButton->setToolTip(tr("Arrow"));
+    } else {
         installTipHint(m_lineButton, tr("Arrow"));
     }
 
-//    connect(m_lineButton, &ToolButton::onPress, this, [ = ] {
-//        bool t_arrowStatustemp = ConfigSettings::instance()->value("arrow", "is_straight").toBool();
-//        if (m_themeType == 1)
-//        {
-
-//            if (t_arrowStatustemp) {
-//                m_lineButton->setIcon(QIcon(":/image/newUI/press/line-press.svg"));
-//            }
-
-//            else {
-//                m_lineButton->setIcon(QIcon(":/image/newUI/press/Arrow-press.svg"));
-//            }
-//        }
-
-//        else if (m_themeType == 2)
-//        {
-
-//            if (t_arrowStatustemp) {
-//                m_lineButton->setIcon(QIcon(":/image/newUI/dark/press/line-press.svg"));
-//            }
-
-//            else {
-//                m_lineButton->setIcon(QIcon(":/image/newUI/dark/press/Arrow-press.svg"));
-//            }
-//        }
-//    });
-
-
     if (t_arrowStatus) {
         m_lineflag = 0;
-//        if (m_themeType == 1) {
-//            m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
-//        }
-
-//        else if (m_themeType == 2) {
-//            m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/line-normal_dark.svg"));
-//        }
         m_lineButton->setIcon(QIcon::fromTheme("line-normal"));
-    }
-
-    else {
+    } else {
         m_lineflag = 1;
-//        if (m_themeType == 1) {
-//            m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
-//        }
-
-//        else if (m_themeType == 2) {
-//            m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/Arrow-normal_dark.svg"));
-//        }
         m_lineButton->setIcon(QIcon::fromTheme("Arrow-normal"));
     }
-
-
-//    m_lineButton->setPalette(pa);
-
     m_lineButton->setObjectName("LineButton");
-//    lineButton->setText(tr("Line"));
     rectBtnGroup->addButton(m_lineButton);
     m_lineButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_lineButton);
 
     m_penButton = new ToolButton();
-//    pa = m_penButton->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     m_penButton->setIconSize(QSize(35, 35));
-//    m_penButton->setToolTip(tr("Pencil"));
     installTipHint(m_penButton, tr("Pencil"));
     m_penButton->setIcon(QIcon::fromTheme("Combined Shape-normal"));
-//    m_penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
-
-//    if (m_themeType == 1) {
-//        m_penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
-//    }
-
-//    else if (m_themeType == 2) {
-//        m_penButton->setIcon(QIcon(":/image/newUI/dark/normal/Combined Shape-normal_dark.svg"));
-//    }
-
-//    connect(m_penButton, &ToolButton::onPress, this, [ = ] {
-//        if (m_themeType == 1)
-//        {
-//            m_penButton->setIcon(QIcon(":/image/newUI/press/Combined Shape-press.svg"));
-
-//        }
-
-//        else if (m_themeType == 2)
-//        {
-
-//            m_penButton->setIcon(QIcon(":/image/newUI/dark/press/Combined Shape-press.svg"));
-
-//        }
-//    });
-
-//    m_penButton->setPalette(pa);
-
     m_penButton->setObjectName("PenButton");
-//    penButton->setText(tr("Pen"));
     rectBtnGroup->addButton(m_penButton);
     m_penButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_penButton);
 
     m_textButton = new ToolButton();
-//    pa = m_textButton->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
     m_textButton->setIconSize(QSize(30, 30));
     m_textButton->setIcon(QIcon::fromTheme("text"));
-//    m_textButton->setToolTip(tr("Text"));
+    //    m_textButton->setToolTip(tr("Text"));
     installTipHint(m_textButton, tr("Text"));
-//    m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
-//    if (m_themeType == 1) {
-//        m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
-//    }
-
-//    else if (m_themeType == 2) {
-//        m_textButton->setIcon(QIcon(":/image/newUI/dark/normal/text_normal_dark.svg"));
-//    }
-
-//    connect(m_textButton, &ToolButton::onPress, this, [ = ] {
-//        if (m_themeType == 1)
-//        {
-//            m_textButton->setIcon(QIcon(":/image/newUI/press/text_press.svg"));
-
-//        }
-
-//        else if (m_themeType == 2)
-//        {
-
-//            m_textButton->setIcon(QIcon(":/image/newUI/dark/press/text_press.svg"));
-
-//        }
-//    });
-
-//    m_textButton->setPalette(pa);
-
     m_textButton->setObjectName("TextButton");
-//    textButton->setText(tr("Text"));
     rectBtnGroup->addButton(m_textButton);
     m_textButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_textButton);
@@ -1181,12 +604,12 @@ void SubToolWidget::initShotLabel()
     m_shotOptionButton = new ToolButton();
     DFontSizeManager::instance()->bind(m_shotOptionButton, DFontSizeManager::T8);
     m_shotOptionButton->setText(tr("Options"));
-//    m_shotOptionButton->setFixedSize(QSize(73, 40));
     m_shotOptionButton->setMinimumSize(QSize(73, 40));
-//    m_shotOptionButton->setToolTip(tr("Options"));
     installTipHint(m_shotOptionButton, tr("Options"));
     rectBtnGroup->addButton(m_shotOptionButton);
-
+    if(Utils::is3rdInterfaceStart){
+        m_shotOptionButton->hide();
+    }
     btnList.append(m_shotOptionButton);
 
     QActionGroup *t_saveGroup = new QActionGroup(this);
@@ -1197,15 +620,6 @@ void SubToolWidget::initShotLabel()
     DMenu *OptionMenu = new DMenu();
 
     DFontSizeManager::instance()->bind(OptionMenu, DFontSizeManager::T8);
-    //for test
-//    OptionMenu->setStyle(QStyleFactory::create("dlight"));
-//    if (m_themeType == 1) {
-//        OptionMenu->setStyle(QStyleFactory::create("dlight"));
-//    }
-
-//    else if (m_themeType == 2) {
-//        OptionMenu->setStyle(QStyleFactory::create("ddark"));
-//    }
     //for test
     QAction *saveTitleAction = new QAction(OptionMenu);
     QAction *saveToDesktopAction = new QAction(OptionMenu);
@@ -1250,9 +664,9 @@ void SubToolWidget::initShotLabel()
 
     clipTitleAction->setDisabled(true);
     clipTitleAction->setText(tr("Options"));
-    openWithDraw->setText(tr("Open With Draw"));
+    openWithDraw->setText(tr("Edit in Draw"));
     openWithDraw->setCheckable(true);
-    saveCursorAction->setText(tr("Show cursor"));
+    saveCursorAction->setText(tr("Show pointer"));
     saveCursorAction->setCheckable(true);
 
     //保存方式
@@ -1300,7 +714,7 @@ void SubToolWidget::initShotLabel()
     }
 
     connect(t_saveGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
-    [ = ](QAction * t_act) {
+            [ = ](QAction * t_act) {
         if (t_act == saveToDesktopAction) {
             qDebug() << "save to desktop";
             ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToDesktop);
@@ -1342,7 +756,7 @@ void SubToolWidget::initShotLabel()
     }
 
     connect(t_formatGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
-    [ = ](QAction * t_act) {
+            [ = ](QAction * t_act) {
         if (t_act == pngAction) {
             ConfigSettings::instance()->setValue("save", "format", 0);
         } else if (t_act == jpgAction) {
@@ -1351,33 +765,7 @@ void SubToolWidget::initShotLabel()
             ConfigSettings::instance()->setValue("save", "format", 2);
         }
     });
-/*
-    int t_saveToClipBoard = ConfigSettings::instance()->value("save", "saveClip").toInt();
 
-    switch (t_saveToClipBoard) {
-    case 0:
-        clipAction->setChecked(false);
-        break;
-    case 1:
-        clipAction->setChecked(true);
-        break;
-    default:
-        clipAction->setChecked(true);
-        break;
-    }
-
-    connect(clipAction, &QAction::triggered, [ = ] {
-        if (clipAction->isChecked())
-        {
-            ConfigSettings::instance()->setValue("save", "saveClip", 1);
-        }
-
-        else
-        {
-            ConfigSettings::instance()->setValue("save", "saveClip", 0);
-        }
-    });
-*/
     int t_saveCursor = ConfigSettings::instance()->value("save", "saveCursor").toInt();
 
     switch (t_saveCursor) {
@@ -1441,253 +829,65 @@ void SubToolWidget::initShotLabel()
         rectLayout->addWidget(btnList[i]);
         rectLayout->addSpacing(SHOT_BUTTON_SPACING);
     }
-//    rectLayout->addSpacing(16);
-//    rectLayout->addSpacing(16);
-//    rectLayout->addSpacing(SHOT_BUTTON_SPACING);
-//    rectLayout->addStretch();
+
     m_shotSubTool->setLayout(rectLayout);
     addWidget(m_shotSubTool);
 
     connect(rectBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
-    [ = ](int status) {
+            [ = ](int status) {
         Q_UNUSED(status);
-        DPalette pa;
+        //DPalette pa;
         if (m_rectButton->isChecked()) {
-//            pa = m_rectButton->palette();
-//            pa.setColor(DPalette::ButtonText, Qt::white);
-//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-//            m_rectButton->setPalette(pa);
-//            m_rectButton->setIcon(QIcon(":/image/newUI/checked/rectangle-checked.svg"));
-
-//            if (m_themeType == 1) {
-//                m_rectButton->setIcon(QIcon(":/image/newUI/checked/rectangle-checked.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                m_rectButton->setIcon(QIcon(":/image/newUI/dark/checked/rectangle-checked.svg"));
-//            }
-
             emit changeShotToolFunc("rectangle");
         }
-
-//        else {
-////            pa = m_rectButton->palette();
-////            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-////            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-////            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-////            m_rectButton->setPalette(pa);
-////            m_rectButton->setIcon(QIcon(":/image/newUI/normal/rectangle-normal.svg"));
-//            if (m_themeType == 1) {
-//                m_rectButton->setIcon(QIcon(":/image/newUI/normal/rectangle-normal.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                m_rectButton->setIcon(QIcon(":/image/newUI/dark/normal/rectangle-normal_dark.svg"));
-//            }
-//        }
-
         if (m_circleButton->isChecked()) {
-//            pa = m_circleButton->palette();
-//            pa.setColor(DPalette::ButtonText, Qt::white);
-//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-//            m_circleButton->setPalette(pa);
-
             emit changeShotToolFunc("oval");
-//            m_circleButton->setIcon(QIcon(":/image/newUI/checked/oval-checked.svg"));
-//            if (m_themeType == 1) {
-//                m_circleButton->setIcon(QIcon(":/image/newUI/checked/oval-checked.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                m_circleButton->setIcon(QIcon(":/image/newUI/dark/checked/oval-checked.svg"));
-//            }
         }
-
-//        else {
-////            pa = m_circleButton->palette();
-////            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-////            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-////            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-////            m_circleButton->setPalette(pa);
-////            m_circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
-//            if (m_themeType == 1) {
-//                m_circleButton->setIcon(QIcon(":/image/newUI/normal/oval-normal.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                m_circleButton->setIcon(QIcon(":/image/newUI/dark/normal/oval-normal_dark.svg"));
-//            }
-//        }
-
         if (m_lineButton->isChecked()) {
-//            pa = m_lineButton->palette();
-//            pa.setColor(DPalette::ButtonText, Qt::white);
-//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-//            m_lineButton->setPalette(pa);
             if (m_lineflag == 0) {
-//                m_lineButton->setToolTip(tr("Line"));
+                //                m_lineButton->setToolTip(tr("Line"));
                 installTipHint(m_lineButton, tr("Line"));
-//                m_lineButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
-
-//                if (m_themeType == 1) {
-//                    m_lineButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
-//                }
-
-//                else if (m_themeType == 2) {
-//                    m_lineButton->setIcon(QIcon(":/image/newUI/dark/checked/line-checked.svg"));
-//                }
                 m_lineButton->setIcon(QIcon::fromTheme("line-normal"));
-            }
-
-            else if (m_lineflag == 1) {
-//                m_lineButton->setToolTip(tr("Arrow"));
+            } else if (m_lineflag == 1) {
                 installTipHint(m_lineButton, tr("Arrow"));
-//                m_lineButton->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
-//                if (m_themeType == 1) {
-//                    m_lineButton->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
-//                }
-
-//                else if (m_themeType == 2) {
-//                    m_lineButton->setIcon(QIcon(":/image/newUI/dark/checked/Arrow-checked.svg"));
-//                }
                 m_lineButton->setIcon(QIcon::fromTheme("Arrow-normal"));
             }
 
             emit changeShotToolFunc("arrow");
-        }
-
-        else {
-//            pa = m_lineButton->palette();
-//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//            m_lineButton->setPalette(pa);
+        } else {
             if (m_lineflag == 0) {
-//                m_lineButton->setToolTip(tr("Line"));
                 installTipHint(m_lineButton, tr("Line"));
-//                m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
-//                if (m_themeType == 1) {
-//                    m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
-//                }
-
-//                else if (m_themeType == 2) {
-//                    m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/line-normal_dark.svg"));
-//                }
                 m_lineButton->setIcon(QIcon::fromTheme("line-normal"));
-            }
-
-            else if (m_lineflag == 1) {
-//                m_lineButton->setToolTip(tr("Arrow"));
+            } else if (m_lineflag == 1) {
                 installTipHint(m_lineButton, tr("Arrow"));
-//                m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
-//                if (m_themeType == 1) {
-//                    m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
-//                }
-
-//                else if (m_themeType == 2) {
-//                    m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/Arrow-normal_dark.svg"));
-//                }
                 m_lineButton->setIcon(QIcon::fromTheme("Arrow-normal"));
             }
         }
 
         if (m_penButton->isChecked()) {
-//            pa = m_penButton->palette();
-//            pa.setColor(DPalette::ButtonText, Qt::white);
-//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-//            m_penButton->setPalette(pa);
-//            m_penButton->setIcon(QIcon(":/image/newUI/checked/Combined Shape-checked.svg"));
-//            if (m_themeType == 1) {
-//                m_penButton->setIcon(QIcon(":/image/newUI/checked/Combined Shape-checked.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                m_penButton->setIcon(QIcon(":/image/newUI/dark/checked/Combined Shape-checked.svg"));
-//            }
-
             emit changeShotToolFunc("line");
         }
-
-//        else {
-////            pa = m_penButton->palette();
-////            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-////            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-////            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-////            m_penButton->setPalette(pa);
-////            m_penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
-//            if (m_themeType == 1) {
-//                m_penButton->setIcon(QIcon(":/image/newUI/normal/Combined Shape-normal.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                m_penButton->setIcon(QIcon(":/image/newUI/dark/normal/Combined Shape-normal_dark.svg"));
-//            }
-//        }
-
         if (m_textButton->isChecked()) {
-//            pa = m_textButton->palette();
-//            pa.setColor(DPalette::ButtonText, Qt::white);
-//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-//            m_textButton->setPalette(pa);
-//            m_textButton->setIcon(QIcon(":/image/newUI/checked/text_checked.svg"));
-//            if (m_themeType == 1) {
-//                m_textButton->setIcon(QIcon(":/image/newUI/checked/text_checked.svg"));
-//            }
-
-//            else if (m_themeType == 2) {
-//                m_textButton->setIcon(QIcon(":/image/newUI/dark/checked/text_checked.svg"));
-//            }
-
             emit changeShotToolFunc("text");
         }
 
-//        else {
-////            pa = m_textButton->palette();
-////            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-////            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-////            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-////            m_textButton->setPalette(pa);
-////            m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
-//            if (m_themeType == 1) {
-//                m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
-//            }
+        //        else {
+        ////            pa = m_textButton->palette();
+        ////            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+        ////            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
+        ////            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
+        ////            m_textButton->setPalette(pa);
+        ////            m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
+        //            if (m_themeType == 1) {
+        //                m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
+        //            }
 
-//            else if (m_themeType == 2) {
-//                m_textButton->setIcon(QIcon(":/image/newUI/dark/normal/text_normal_dark.svg"));
-//            }
-//        }
+        //            else if (m_themeType == 2) {
+        //                m_textButton->setIcon(QIcon(":/image/newUI/dark/normal/text_normal_dark.svg"));
+        //            }
+        //        }
     });
-//    rectButton->click();
 }
-
-//void SubToolWidget::initVirtualCard()
-//{
-//    if (AudioUtils().canVirtualCardOutput()) {
-//        return;
-//    }
-//    bool isOk;
-//    QString text = DInputDialog::getText(this, tr("Need authorization"), tr("Please enter your sudo password to be authorized"),
-//                                         QLineEdit::Password, "", &isOk);
-//    if (isOk) {
-
-//        QProcess p(this);
-//        QStringList arguments;
-//        arguments << QString("-c");
-//        arguments << QString("echo %1 | sudo -S modprobe snd-aloop pcm_substreams=1 ; sudo sed -i '$ a snd_aloop' /etc/modules").arg(text);
-//        qDebug() << arguments;
-//        p.start("/bin/bash", arguments);
-//        p.waitForFinished();
-//        p.waitForReadyRead();
-//        p.close();
-
-//        sleep(1);
-//    }
-//}
 
 void SubToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 {
@@ -1717,7 +917,7 @@ void SubToolWidget::switchContent(QString shapeType)
         m_currentType = shapeType;
     }
 }
-
+/*
 void SubToolWidget::systemAudioActionCheckedSlot(bool checked)
 {
     if (AudioUtils().canVirtualCardOutput()) {
@@ -1726,54 +926,39 @@ void SubToolWidget::systemAudioActionCheckedSlot(bool checked)
         m_systemAudioAction->setChecked(false);
     }
 }
-
+*/
 void SubToolWidget::changeArrowAndLineFromSideBar(int line)
 {
+    qDebug() << line;
     if (line == 0) {
         m_lineflag = 0;
+        installTipHint(m_lineButton, tr("Line"));
         if (m_lineButton->isChecked()) {
-//            m_lineButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
             if (m_themeType == 1) {
                 m_lineButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
-            }
-
-            else if (m_themeType == 2) {
+            } else if (m_themeType == 2) {
                 m_lineButton->setIcon(QIcon(":/image/newUI/dark/checked/line-checked.svg"));
             }
-        }
-
-        else {
-//            m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
+        }else {
             if (m_themeType == 1) {
                 m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
-            }
-
-            else if (m_themeType == 2) {
+            } else if (m_themeType == 2) {
                 m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/line-normal_dark.svg"));
             }
         }
-    }
-
-    else if (line == 1) {
+    }else if (line == 1) {
         m_lineflag = 1;
+        installTipHint(m_lineButton, tr("Arrow"));
         if (m_lineButton->isChecked()) {
-//            m_lineButton->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
             if (m_themeType == 1) {
                 m_lineButton->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
-            }
-
-            else if (m_themeType == 2) {
+            } else if (m_themeType == 2) {
                 m_lineButton->setIcon(QIcon(":/image/newUI/dark/checked/Arrow-checked.svg"));
             }
-        }
-
-        else {
-//            m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
+        } else {
             if (m_themeType == 1) {
                 m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
-            }
-
-            else if (m_themeType == 2) {
+            } else if (m_themeType == 2) {
                 m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/Arrow-normal_dark.svg"));
             }
         }
@@ -1866,15 +1051,7 @@ void SubToolWidget::setCameraDeviceEnable(bool status)
             m_cameraButton->setEnabled(true);
 
             if (!m_cameraButton->isChecked()) {
-//                m_cameraButton->setToolTip(tr("Webcam On"));
                 installTipHint(m_cameraButton, tr("Webcam On"));
-//                if (m_themeType == 1) {
-//                    m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
-//                }
-
-//                else if (m_themeType == 2) {
-//                    m_cameraButton->setIcon(QIcon(":/image/newUI/dark/normal/webcam_normal.svg"));
-//                }
             }
         }
 
@@ -1887,28 +1064,11 @@ void SubToolWidget::setCameraDeviceEnable(bool status)
         if (m_cameraButton->isEnabled()) {
             m_cameraButton->setChecked(false);
             if (m_cameraButton->isChecked()) {
-//                m_cameraButton->setToolTip(tr("Webcam Off"));
                 installTipHint(m_cameraButton, tr("Webcam Off"));
-//                if (m_themeType == 1) {
-//                    m_cameraButton->setIcon(QIcon(":/image/newUI/checked/webcam_checked.svg"));
-//                }
-
-//                else if (m_themeType == 2) {
-//                    m_cameraButton->setIcon(QIcon(":/image/newUI/dark/checked/webcam_checked.svg"));
-//                }
             }
 
             if (!m_cameraButton->isChecked()) {
-                //            m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
-//                m_cameraButton->setToolTip(tr("Webcam On"));
                 installTipHint(m_cameraButton, tr("Webcam On"));
-//                if (m_themeType == 1) {
-//                    m_cameraButton->setIcon(QIcon(":/image/newUI/normal/webcam_normal.svg"));
-//                }
-
-//                else if (m_themeType == 2) {
-//                    m_cameraButton->setIcon(QIcon(":/image/newUI/dark/normal/webcam_normal.svg"));
-//                }
             }
             m_cameraButton->setDisabled(true);
 
@@ -1928,8 +1088,9 @@ void SubToolWidget::setSystemAudioEnable(bool status)
     }
 
 }
-
+/*
 void SubToolWidget::setIsZhaoxinPlatform(bool isZhaoxin)
 {
     m_isZhaoxinInSub = isZhaoxin;
 }
+*/

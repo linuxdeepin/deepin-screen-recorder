@@ -65,19 +65,10 @@ void ColorToolWidget::initColorLabel()
     QList<ToolButton *> toolBtnList;
     QButtonGroup *buttonGroup = new QButtonGroup(this);
     buttonGroup->setExclusive(true);
-    DPalette pa;
+    //DPalette pa;
 
     m_redBtn = new ToolButton();
     m_redBtn->setCheckable(true);
-//    redBtn->setText(tr("Red"));
-
-//    pa = m_redBtn->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//    m_redBtn->setPalette(pa);
-
-//    m_redBtn->setToolTip(tr("Red"));
     m_redBtn->setObjectName("redBtn");
     m_redBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_redBtn->setIconSize(TOOL_ICON_SIZE);
@@ -86,15 +77,6 @@ void ColorToolWidget::initColorLabel()
     toolBtnList.append(m_redBtn);
 
     m_yellowBtn = new ToolButton();
-//    yellowBtn->setText(tr("yellow"));
-
-//    pa = m_yellowBtn->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//    m_yellowBtn->setPalette(pa);
-
-//    m_yellowBtn->setToolTip(tr("yellow"));
     m_yellowBtn->setObjectName("yellowBtn");
     m_yellowBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_yellowBtn->setIconSize(TOOL_ICON_SIZE);
@@ -103,14 +85,6 @@ void ColorToolWidget::initColorLabel()
     toolBtnList.append(m_yellowBtn);
 
     m_blueBtn = new ToolButton();
-//    blueBtn->setText(tr("blue"));
-//    pa = m_blueBtn->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//    m_blueBtn->setPalette(pa);
-
-//    m_blueBtn->setToolTip(tr("blue"));
     m_blueBtn->setObjectName("blueBtn");
     m_blueBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_blueBtn->setIconSize(TOOL_ICON_SIZE);
@@ -119,14 +93,6 @@ void ColorToolWidget::initColorLabel()
     toolBtnList.append(m_blueBtn);
 
     m_greenBtn = new ToolButton();
-//    greenBtn->setText(tr("green"));
-//    pa = m_greenBtn->palette();
-//    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//    pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//    pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//    m_greenBtn->setPalette(pa);
-
-//    m_greenBtn->setToolTip(tr("green"));
     m_greenBtn->setObjectName("greenBtn");
     m_greenBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_greenBtn->setIconSize(TOOL_ICON_SIZE);
@@ -151,14 +117,8 @@ void ColorToolWidget::initColorLabel()
     connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
         Q_UNUSED(status);
-        DPalette pa;
+        //DPalette pa;
         if (m_redBtn->isChecked()) {
-//            pa = m_redBtn->palette();
-//            pa.setColor(DPalette::ButtonText, Qt::white);
-//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-//            m_redBtn->setPalette(pa);
-
             m_isChecked = true;
             m_redBtn->update();
             emit colorChecked("red");
@@ -167,43 +127,14 @@ void ColorToolWidget::initColorLabel()
             ConfigSettings::instance()->setValue("common", "color_index", 0);
         }
 
-//        else {
-//            pa = m_redBtn->palette();
-//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//            m_redBtn->setPalette(pa);
-//        }
-
         if (m_yellowBtn->isChecked()) {
-//            pa = m_yellowBtn->palette();
-//            pa.setColor(DPalette::ButtonText, Qt::white);
-//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-//            m_yellowBtn->setPalette(pa);
-
             m_isChecked = true;
             m_yellowBtn->update();
             emit colorChecked("yellow");
             ConfigSettings::instance()->setValue(m_function, "color_index", 1);
             ConfigSettings::instance()->setValue("common", "color_index", 1);
         }
-
-//        else {
-//            pa = m_yellowBtn->palette();
-//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//            m_yellowBtn->setPalette(pa);
-//        }
-
         if (m_blueBtn->isChecked()) {
-//            pa = m_blueBtn->palette();
-//            pa.setColor(DPalette::ButtonText, Qt::white);
-//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-//            m_blueBtn->setPalette(pa);
-
             m_isChecked = true;
             m_blueBtn->update();
             emit colorChecked("blue");
@@ -212,21 +143,7 @@ void ColorToolWidget::initColorLabel()
             ConfigSettings::instance()->setValue("common", "color_index", 2);
         }
 
-//        else {
-//            pa = m_blueBtn->palette();
-//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//            m_blueBtn->setPalette(pa);
-//        }
-
         if (m_greenBtn->isChecked()) {
-//            pa = m_greenBtn->palette();
-//            pa.setColor(DPalette::ButtonText, Qt::white);
-//            pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
-//            pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-//            m_greenBtn->setPalette(pa);
-
             m_isChecked = true;
             m_greenBtn->update();
             emit colorChecked("green");
@@ -234,35 +151,13 @@ void ColorToolWidget::initColorLabel()
             ConfigSettings::instance()->setValue(m_function, "color_index", 3);
             ConfigSettings::instance()->setValue("common", "color_index", 3);
         }
-
-//        else {
-//            pa = m_greenBtn->palette();
-//            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-//            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-//            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-//            m_greenBtn->setPalette(pa);
-//        }
     });
-//    m_redBtn->click();
-//    ConfigSettings::instance()->setValue("common", "color_index", 0);
-//    ConfigSettings::instance()->setValue("rectangle", "color_index", 0);
-//    ConfigSettings::instance()->setValue("oval", "color_index", 0);
-//    ConfigSettings::instance()->setValue("arrow", "color_index", 0);
-//    ConfigSettings::instance()->setValue("line", "color_index", 0);
-//    ConfigSettings::instance()->setValue("text", "color_index", 0);
 }
 
 void ColorToolWidget::setFunction(const QString &func)
 {
     m_function = func;
     int t_color = 0;
-//    if (func == "text") {
-//        t_color = ConfigSettings::instance()->value(m_function, "prev_color").toInt();
-////        ConfigSettings::instance()->setValue(m_function, "color_index", 0);
-//    } else {
-//        t_color = ConfigSettings::instance()->value(m_function, "color_index").toInt();
-////        ConfigSettings::instance()->setValue(m_function, "color_index", 0);
-//    }
     t_color = ConfigSettings::instance()->value(m_function, "color_index").toInt();
 //    ConfigSettings::instance()->setValue(m_function, "color_index", 0);
 

@@ -293,8 +293,10 @@ void MajToolBar::initWidgets()
     });
     connect(closeBtn, &ToolButton::clicked, this, &MajToolBar::closed);
 }
-
+/*
+ * never used
 bool MajToolBar::isButtonChecked()
 {
     return m_isChecked;
 }
+*/

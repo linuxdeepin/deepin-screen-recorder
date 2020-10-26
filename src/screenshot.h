@@ -29,7 +29,7 @@ class Screenshot : public QObject
 
     Q_CLASSINFO("D-Bus Interface", "com.deepin.ScreenRecorder")
 public:
-    Screenshot(QObject *parent = nullptr);
+    explicit Screenshot(QObject *parent = nullptr);
     ~Screenshot();
 
     void setConfigThemeType(int themeType);
@@ -40,9 +40,9 @@ public slots:
     void topWindowScreenshot();
     void noNotifyScreenshot();
     void savePathScreenshot(const QString &path);
+    void startScreenshotFor3rd(const QString &path);
     void initLaunchMode(const QString &launchmode);
     Q_SCRIPTABLE void stopRecord();
-    Q_SCRIPTABLE void waylandRecordOver();
 
 private:
     void initUI();

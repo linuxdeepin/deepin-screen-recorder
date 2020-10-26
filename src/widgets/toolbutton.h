@@ -31,7 +31,7 @@ class ToolButton : public DPushButton
 {
     Q_OBJECT
 public:
-    ToolButton(DWidget *parent = 0)
+    explicit ToolButton(DWidget *parent = 0)
     {
         Q_UNUSED(parent);
         setCheckable(true);

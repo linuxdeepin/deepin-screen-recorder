@@ -36,7 +36,7 @@ class SideBarWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:
-    SideBarWidget(DWidget *parent = nullptr);
+    explicit SideBarWidget(DWidget *parent = nullptr);
     ~SideBarWidget() Q_DECL_OVERRIDE;
 
     void changeShotToolWidget(const QString &func);
@@ -72,11 +72,11 @@ signals:
     void changeArrowAndLineToMain(int line);
     void closeSideBarToMain();
 public slots:
-    bool isButtonChecked();
+    //bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
     void showAt(QPoint pos);
     void initSideBar();
-    void setColorFunc(const QString &func);
+    //void setColorFunc(const QString &func);
 
 protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;

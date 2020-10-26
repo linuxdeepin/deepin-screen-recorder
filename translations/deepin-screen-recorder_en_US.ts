@@ -18,7 +18,7 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Screenshot</translation>
     </message>
 </context>
 <context>
@@ -26,10 +26,6 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Screen Capture</source>
         <translation>Screen Capture</translation>
-    </message>
-    <message>
-        <source>Start recording</source>
-        <translation>Start recording</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -65,23 +61,23 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Saved to %1</translation>
     </message>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Saving the screen recording,please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>Screen Capture will start in %1 seconds</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignore</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Clipboard</translation>
+    </message>
+    <message>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>Saving the screen recording file, please wait...</translation>
     </message>
 </context>
 <context>
@@ -115,14 +111,14 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Saved to %1</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>Screen Capture will start in %1 seconds</translation>
     </message>
 </context>
 <context>
@@ -402,19 +398,19 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show cursor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open With Draw</source>
-        <translation type="unfinished"></translation>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Clipboard</translation>
+    </message>
+    <message>
+        <source>Edit in Draw</source>
+        <translation>Edit in Draw</translation>
+    </message>
+    <message>
+        <source>Show pointer</source>
+        <translation>Show pointer</translation>
     </message>
 </context>
 <context>
@@ -425,18 +421,11 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"></translation>
+        <translation>Screen recording is not supported at present</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation type="unfinished">Exit</translation>
-    </message>
-</context>
-<context>
-    <name>VoiceRecordProcess</name>
-    <message>
-        <source>New recording</source>
-        <translation>New recording</translation>
+        <translation>Exit</translation>
     </message>
 </context>
 </TS>

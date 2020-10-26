@@ -30,7 +30,7 @@ DGUI_USE_NAMESPACE
 TopTips::TopTips(DWidget *parent)
     : QLabel(parent)
 {
-//    setFixedSize(90, 20);
+    setFixedSize(90, 20);
 //    this->setStyleSheet(" TopTips { background-color: transparent;"
 //                        "border-image: url(:/resources/images/action/sizetip.png)  no-repeat;"
 //                        "color: white;"
@@ -63,7 +63,7 @@ void TopTips::updateTips(QPoint pos, QString text)
     if (pos.y() > this->height()) {
         startPoint.setY(pos.y() - this->height() - 3);
     } else {
-        startPoint.setY(pos.y() - 3);
+        startPoint.setY(pos.y() + 3);
     }
 
     this->move(startPoint);

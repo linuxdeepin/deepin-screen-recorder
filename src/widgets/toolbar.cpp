@@ -20,6 +20,7 @@
 #include "toolbar.h"
 #include "../utils/baseutils.h"
 #include "../utils/saveutils.h"
+#include "../utils.h"
 
 #include <QPainter>
 #include <QDebug>
@@ -37,7 +38,7 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const int TOOLBAR_HEIGHT = 70;
-//const int TOOLBAR_WIDTH = 530;
+const int TOOLBAR_WIDTH = 390;
 
 //const QSize TOOLBAR_WIDGET_SIZE = QSize(530, 70);
 //const int BUTTON_SPACING = 3;
@@ -45,8 +46,7 @@ const int TOOLBAR_HEIGHT = 70;
 }
 
 ToolBarWidget::ToolBarWidget(DWidget *parent)
-    : DFloatingWidget(parent),
-      m_expanded(false)
+    : DFloatingWidget(parent)
 {
     int t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     setBlurBackgroundEnabled(true);
@@ -72,6 +72,9 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
 //    setMaskColor(DBlurEffectWidget::LightColor);
 //    setFixedSize(TOOLBAR_WIDGET_SIZE);
     setFixedHeight(TOOLBAR_HEIGHT);
+    if(Utils::is3rdInterfaceStart){
+        setFixedWidth(TOOLBAR_WIDTH);
+    }
 //    setMinimumSize(TOOLBAR_WIDGET_SIZE);
 //    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 //    qDebug() << "~~~~~~" << this->size();
@@ -114,17 +117,17 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
 //    hLayout->setContentsMargins(2, 3, 0, 0);
     hLayout->setMargin(0);
     hLayout->setSpacing(2);
-//  wayland 打开录屏功能
-//    if (m_deskinfo.waylandDectected()) {
-//        hLayout->addSpacing(10);
-//        m_mainTool->hide();
-//        hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
-//    }
 
-//    else {
+    if (m_deskinfo.waylandDectected()) {
+        hLayout->addSpacing(10);
+        m_mainTool->hide();
+        hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
+    }
+
+    else {
         hLayout->addWidget(m_mainTool, 0,  Qt::AlignCenter);
         hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
-//    }
+    }
 
 
 //    hLayout->addSpacing(10);
@@ -168,7 +171,7 @@ void ToolBarWidget::showEvent(QShowEvent *event)
 
     DFloatingWidget::showEvent(event);
 }
-
+/*
 bool ToolBarWidget::isButtonChecked()
 {
     return m_expanded;
@@ -178,7 +181,7 @@ void ToolBarWidget::specifiedSavePath()
 {
     m_majToolbar->specificedSavePath();
 }
-
+*/
 void ToolBarWidget::keyBoardCheckedSlot(bool checked)
 {
     emit keyBoardCheckedSignal(checked);
@@ -200,12 +203,12 @@ void ToolBarWidget::setRecordLaunchFromMain(bool recordLaunch)
     m_mainTool->setRecordLauchMode(recordLaunch);
     m_subTool->setRecordLaunchMode(recordLaunch);
 }
-
+/*
 void ToolBarWidget::setIsZhaoxinPlatform(bool isZhaoxin)
 {
     m_subTool->setIsZhaoxinPlatform(isZhaoxin);
 }
-
+*/
 void ToolBarWidget::setVideoInitFromMain()
 {
     m_subTool->setVideoButtonInitFromSub();
@@ -306,12 +309,12 @@ void ToolBar::showAt(QPoint pos)
 
     move(pos.x(), pos.y());
 }
-
+/*
 void ToolBar::specificedSavePath()
 {
     m_toolbarWidget->specifiedSavePath();
 }
-
+*/
 void ToolBar::currentFunctionMode(QString shapeType)
 {
     emit currentFunctionToMain(shapeType);
@@ -381,12 +384,12 @@ void ToolBar::setRecordLaunchMode(bool recordLaunch)
 //    qDebug() << "main record mode1";
     m_toolbarWidget->setRecordLaunchFromMain(recordLaunch);
 }
-
+/*
 void ToolBar::setIsZhaoxinPlatform(bool isZhaoxin)
 {
     m_toolbarWidget->setIsZhaoxinPlatform(isZhaoxin);
 }
-
+*/
 void ToolBar::setVideoButtonInit()
 {
     m_toolbarWidget->setVideoInitFromMain();
@@ -416,12 +419,12 @@ void ToolBar::setCameraDeviceEnable(bool status)
 {
     m_toolbarWidget->setCameraDeviceEnable(status);
 }
-
+/*
 bool ToolBar::isButtonChecked()
 {
     return m_expanded;
 }
-
+*/
 ToolBar::~ToolBar()
 {
 }
