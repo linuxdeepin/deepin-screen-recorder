@@ -95,6 +95,7 @@ private:
     //QString lastAudioSink;
     //bool m_isZhaoxin = false;
     DesktopInfo m_info;
+    //x11 gif 录屏模块
     XGifRecord *m_pXGifRecord;
 };
 
