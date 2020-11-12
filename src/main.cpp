@@ -106,7 +106,14 @@ int main(int argc, char *argv[])
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
 
     DApplication::loadDXcbPlugin();
-    DApplication app(argc, argv);
+    DApplication *app = nullptr;
+    // 适配deepin-turbo 启动加速
+#if(DTK_VERSION < DTK_VERSION_CHECK(5,4,0,0))
+    app = new DApplication(argc, argv);
+#else
+    app = DApplication::globalApplication(argc,argv);
+#endif
+
     QString t_launchMode;
 
     if (argc >= 2) {
@@ -151,17 +158,17 @@ int main(int argc, char *argv[])
             //QDir t_appDir;
             //t_appDir.mkpath(g_appPath);
 
-            app.setOrganizationName("deepin");
-            app.setApplicationName("deepin-screen-recorder");
-            app.setApplicationVersion("1.0");
-            app.setAttribute(Qt::AA_UseHighDpiPixmaps);
+            app->setOrganizationName("deepin");
+            app->setApplicationName("deepin-screen-recorder");
+            app->setApplicationVersion("1.0");
+            app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
             static const QDate buildDate = QLocale( QLocale::English ).
                                            toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
             QString t_date = buildDate.toString("MMdd");
 
             // Version Time
-            app.setApplicationVersion(DApplication::buildVersion(t_date));
+            app->setApplicationVersion(DApplication::buildVersion(t_date));
 
             using namespace Dtk::Core;
             Dtk::Core::DLogManager::registerConsoleAppender();
@@ -197,10 +204,10 @@ int main(int argc, char *argv[])
             cmdParser.addOption(iconOption);
             cmdParser.addOption(dbusOption);
 //            cmdParser.addOption(testOption);
-            cmdParser.process(app);
+            cmdParser.process(*app);
 
             // Load translator.
-            app.loadTranslator();
+            app->loadTranslator();
             // Show window.
 //            MainWindow window;
             Screenshot window;
@@ -256,7 +263,7 @@ int main(int argc, char *argv[])
 
             if (cmdParser.isSet(dbusOption)) {
                 qDebug() << "dbus register waiting!";
-                return app.exec();
+                return app->exec();
 
             } else {
                 dbusService.setSingleInstance(true);
@@ -283,7 +290,7 @@ int main(int argc, char *argv[])
                 }
             }
 
-            return app.exec();
+            return app->exec();
         //}
     } else {
 //        Send DBus message to stop screen - recorder if found other screen - recorder DBus service has started.

@@ -6,6 +6,7 @@ XGifRecord::XGifRecord(QRect rect,QString savePath,QObject *parent) :QThread(par
 {
     m_bufferSize = 60;
     m_delay = 15;
+    m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
 }
 
 void XGifRecord::run()
@@ -15,19 +16,23 @@ void XGifRecord::run()
     QByteArray pathArry = m_savePath.toLocal8Bit();
     char *pathCh = new char[strlen(pathArry.data())+1];
     strcpy(pathCh,pathArry.data());
-    GifBegin(&m_gifWrite,
-             pathCh,
-             static_cast<uint32_t>(m_recordRect.width()),
-             static_cast<uint32_t>(m_recordRect.height()),
-             static_cast<uint32_t>(m_delay));
+    bool bFirst = true;
     while (bWriteFrame())
     {
         QImage img;
         if(getFrame(img)){
+            if(bFirst){
+                bFirst = false;
+                GifBegin(&m_gifWrite,
+                         pathCh,
+                         img.width(),
+                         img.height(),
+                         static_cast<uint32_t>(m_delay));
+            }
             GifWriteFrame(&m_gifWrite,
                           img.convertToFormat(QImage::Format_RGBA8888).bits(),
-                          static_cast<uint32_t>(m_recordRect.width()),
-                          static_cast<uint32_t>(m_recordRect.height()),
+                          static_cast<uint32_t>(img.width()),
+                          static_cast<uint32_t>(img.height()),
                           static_cast<uint32_t>(m_delay));
         }
     }
@@ -52,10 +57,10 @@ void XGifRecord::screenshots()
     QScreen *screen = QGuiApplication::primaryScreen();
     while (bWriteFrame()) {
         appendBuffer(screen->grabWindow(QApplication::desktop()->winId(),
-                                        m_recordRect.x(),
-                                        m_recordRect.y(),
-                                        m_recordRect.width(),
-                                        m_recordRect.height()).toImage());
+                                        m_recordRect.x()/m_pixelRatio,
+                                        m_recordRect.y()/m_pixelRatio,
+                                        m_recordRect.width()/m_pixelRatio,
+                                        m_recordRect.height()/m_pixelRatio).toImage());
     }
 }
 
