@@ -105,24 +105,13 @@ int main(int argc, char *argv[])
     // Construct a QGuiApplication before accessing a platform function.
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
 
-    DApplication::loadDXcbPlugin();
-    DApplication app(argc, argv);
     // 适配deepin-turbo 启动加速
-
-#if 0
 #if(DTK_VERSION < DTK_VERSION_CHECK(5,4,0,0))
-    app = new DApplication(argc, argv);
+    DApplication::loadDXcbPlugin();
+    QScopedPointer<DApplication> app(new DApplication(argc, argv));
 #else
-    app = DApplication::globalApplication(argc,argv);
+    QScopedPointer<DApplication> app(DApplication::globalApplication(argc, argv));
 #endif
-#endif
-    QString t_launchMode;
-
-    if (argc >= 2) {
-        t_launchMode = QString(argv[1]);
-//        qDebug() << t_launchMode;
-    }
-
 
     //判断wayland平台
     /*
@@ -160,17 +149,17 @@ int main(int argc, char *argv[])
             //QDir t_appDir;
             //t_appDir.mkpath(g_appPath);
 
-            app.setOrganizationName("deepin");
-            app.setApplicationName("deepin-screen-recorder");
-            app.setApplicationVersion("1.0");
-            app.setAttribute(Qt::AA_UseHighDpiPixmaps);
+            app->setOrganizationName("deepin");
+            app->setApplicationName("deepin-screen-recorder");
+            app->setApplicationVersion("1.0");
+            app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
             static const QDate buildDate = QLocale( QLocale::English ).
                                            toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
             QString t_date = buildDate.toString("MMdd");
 
             // Version Time
-            app.setApplicationVersion(DApplication::buildVersion(t_date));
+            app->setApplicationVersion(DApplication::buildVersion(t_date));
 
             using namespace Dtk::Core;
             Dtk::Core::DLogManager::registerConsoleAppender();
@@ -190,6 +179,8 @@ int main(int argc, char *argv[])
                                           "Indicate that this program's started by clicking.");
             QCommandLineOption dbusOption(QStringList() << "u" << "dbus",
                                           "Start  from dbus.");
+            QCommandLineOption screenRecordOption(QStringList() << "record" << "screenRecord" << "start screen record");
+            QCommandLineOption screenShotOption(QStringList() << "shot" << "screenShot" << "start screen shot");
             //for test
 //            QCommandLineOption testOption(QStringList() << "t" << "test",
 //                                          "Start  from test.");
@@ -205,11 +196,13 @@ int main(int argc, char *argv[])
             cmdParser.addOption(prohibitNotifyOption);
             cmdParser.addOption(iconOption);
             cmdParser.addOption(dbusOption);
+            cmdParser.addOption(screenRecordOption);
+            cmdParser.addOption(screenShotOption);
 //            cmdParser.addOption(testOption);
-            cmdParser.process(app);
+            cmdParser.process(*app);
 
             // Load translator.
-            app.loadTranslator();
+            app->loadTranslator();
             // Show window.
 //            MainWindow window;
             Screenshot window;
@@ -232,6 +225,8 @@ int main(int argc, char *argv[])
                 DGuiApplicationHelper::instance()->setPaletteType(type);
             });
             */
+
+            const QString& t_launchMode = cmdParser.isSet(screenRecordOption) ? "screenRecord" : "screenShot";
             window.initLaunchMode(t_launchMode);
             DBusScreenshotService dbusService (&window);
 
@@ -265,7 +260,7 @@ int main(int argc, char *argv[])
 
             if (cmdParser.isSet(dbusOption)) {
                 qDebug() << "dbus register waiting!";
-                return app.exec();
+                return app->exec();
 
             } else {
                 dbusService.setSingleInstance(true);
@@ -292,7 +287,7 @@ int main(int argc, char *argv[])
                 }
             }
 
-            return app.exec();
+            return app->exec();
         //}
     } else {
 //        Send DBus message to stop screen - recorder if found other screen - recorder DBus service has started.
@@ -306,5 +301,4 @@ int main(int argc, char *argv[])
     }
 
     return 0;
-
 }

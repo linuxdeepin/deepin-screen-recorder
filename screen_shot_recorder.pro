@@ -7,9 +7,9 @@ TEMPLATE = app
 TARGET = deepin-screen-recorder
 INCLUDEPATH += .
 
-QMAKE_CXX += -Wl,--as-need -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
-QMAKE_CXXFLAGS += -Wl,--as-need -fPIE -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
-QMAKE_LFLAGS += -Wl,--as-needed -pie
+QMAKE_CXX += -Wl,--as-need -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1 -Wl,-E -fPIE
+QMAKE_CXXFLAGS += -Wl,--as-need -fPIE -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1 -Wl,-E
+QMAKE_LFLAGS += -Wl,--as-needed -Wl,-E -pie
 
 ARCH = $$QMAKE_HOST.arch
 isEqual(ARCH, mips64) {

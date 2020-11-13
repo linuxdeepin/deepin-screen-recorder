@@ -1,8 +1,7 @@
 [Desktop Entry]
 Categories=Graphics;GTK;
 Comment=Screen capturing application
-Exec=deepin-turbo-invoker --type=dtkwidget deepin-screenshot --icon
-#Exec=deepin-screenshot
+Exec=/usr/bin/deepin-screenshot --icon
 GenericName=Screenshot
 Icon=deepin-screenshot
 Name=Deepin Screenshot
@@ -10,6 +9,7 @@ StartupNotify=false
 Type=Application
 X-Deepin-ManualID=deepin-screenshot
 X-Deepin-Vendor=deepin
+X-Deepin-TurboType=dtkwidget
 
 # Translations:
 # Do not manually modify!
@@ -242,7 +242,7 @@ Name[he]=צילום כל המסך
 Name[hr]=Cjelozaslonski snimak zaslona
 Name[hu]=Teljes képernyőkép
 Name[id]=Tangkapan layar penuh
-Name[it]=Screenshot 
+Name[it]=Screenshot
 Name[ja]=フルスクリーンショット
 Name[ko]=전체 스크린샷
 Name[lt]=Viso ekrano kopija
@@ -259,4 +259,3 @@ Name[tr]=Tam Ekran Görüntüsü
 Name[uk]=Повний знімок екрана
 Name[zh_CN]=全屏截图
 Name[zh_TW]=全螢幕截圖
-
