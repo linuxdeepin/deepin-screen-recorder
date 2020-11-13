@@ -30,7 +30,7 @@ DGUI_USE_NAMESPACE
 TopTips::TopTips(DWidget *parent)
     : QLabel(parent)
 {
-    setFixedSize(90, 20);
+    setFixedSize(100, 30);
 //    this->setStyleSheet(" TopTips { background-color: transparent;"
 //                        "border-image: url(:/resources/images/action/sizetip.png)  no-repeat;"
 //                        "color: white;"
