@@ -7,6 +7,18 @@ TEMPLATE = app
 TARGET = deepin-screen-recorder
 INCLUDEPATH += .
 
+#DEFINES += TSAN #互斥
+#contains(DEFINES,TSAN){
+#   QMAKE_CXXFLAGS+="-fsanitize=thread"
+#   QMAKE_CFLAGS+="-fsanitize=thread"
+#   QMAKE_LFLAGS+="-fsanitize=thread"
+#}
+#else{
+#   QMAKE_CXXFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+#   QMAKE_CFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+#   QMAKE_LFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+#}
+
 QMAKE_CXX += -Wl,--as-need -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
 QMAKE_CXXFLAGS += -Wl,--as-need -fPIE -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
 QMAKE_LFLAGS += -Wl,--as-needed -pie
