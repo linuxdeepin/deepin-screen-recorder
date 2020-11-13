@@ -22,15 +22,16 @@
  */
 
 #include "event_monitor.h"
+#include "keydefine.h"
+#include <iostream>
+#include <dlfcn.h>
+
 #include <X11/Xlibint.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 #include <X11/keysymdef.h>
 #include <X11/keysym.h>
 #include <X11/extensions/XTest.h>
-#include "keydefine.h"
-#include <iostream>
-#include <dlfcn.h>
 
 EventMonitor::EventMonitor(QObject *parent) : QThread(parent)
 {

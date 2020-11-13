@@ -1,8 +1,7 @@
 [Desktop Entry]
 Categories=AudioVideo;Recorder;
 Comment=Record screen
-Exec=deepin-screen-recorder
-#Exec=/usr/bin/deepin-turbo-invoker --type=dtkwidget /usr/bin/deepin-screen-recorder
+Exec=/usr/bin/deepin-screen-recorder
 GenericName=Screen Capture
 Icon=deepin-screen-recorder
 Name=Deepin Screen Capture
@@ -10,7 +9,7 @@ TryExec=deepin-screen-recorder
 Type=Application
 X-Deepin-ManualID=deepin-screen-recorder
 X-Deepin-Vendor=deepin
-#X-Deepin-TurboType=dtkwidget
+X-Deepin-TurboType=dtkwidget
 
 # Translations:
 # Do not manually modify!
@@ -107,7 +106,7 @@ Name[nl]=Deepin Schermopname
 Name[pl]=Nagrywanie ekranu Deepin
 Name[pt]=Screen Capture
 Name[pt_BR]=Gravador de Tela Deepin
-Name[ru]=Запись с Экрана Deepin 
+Name[ru]=Запись с Экрана Deepin
 Name[sk]=Deepin Nahrávanie obrazovky
 Name[sq]=Regjistrues Ekrani Deepin
 Name[sr]=Дипин Снимач Екрана
@@ -136,4 +135,3 @@ Name=Delay Screenshot
 Name[zh_CN]=延时截图
 Name[zh_HK]=延時截圖
 Name[zh_TW]=延時截圖
-

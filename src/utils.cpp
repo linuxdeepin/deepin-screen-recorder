@@ -27,6 +27,7 @@
 #include <QDebug>
 #include <QFontMetrics>
 #include <QPainter>
+#include <QPainterPath>
 #include <QDBusInterface>
 #include <QtX11Extras/QX11Info>
 #include <X11/extensions/shape.h>

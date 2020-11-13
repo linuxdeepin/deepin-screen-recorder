@@ -1,2 +1,2 @@
 #!/bin/bash
-deepin-screen-recorder screenShot
+deepin-screen-recorder --screenShot $@
