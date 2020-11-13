@@ -2,7 +2,10 @@
 
 XGifRecord::XGifRecord(QRect rect,QString savePath,QObject *parent) :QThread(parent),
     m_recordRect(rect),
-    m_savePath(savePath)
+    m_savePath(savePath),
+    m_bWriteFrame(false),
+    m_pixelRatio(-1)
+
 {
     m_bufferSize = 60;
     m_delay = 15;
