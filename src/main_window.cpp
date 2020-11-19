@@ -1051,11 +1051,11 @@ void MainWindow::updateToolBarPos()
             if(toolbarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING){
                 // 屏幕上超出
                 toolbarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
-            }else if(toolbarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height - m_toolBar->height() - TOOLBAR_Y_SPACING) {
+            }else if(toolbarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
                 // 屏幕下超出
                 int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
-                if(y > m_screenInfo[i].y + m_screenInfo[i].height - m_toolBar->height() - TOOLBAR_Y_SPACING)
-                    y = m_screenInfo[i].y + m_screenInfo[i].height - m_toolBar->height() - TOOLBAR_Y_SPACING;
+                if(y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING)
+                    y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_toolBar->height() - TOOLBAR_Y_SPACING;
                 toolbarPoint.setY(y);
             }
             break;
@@ -1233,11 +1233,11 @@ void MainWindow::updateRecordButtonPos()
             if(recordButtonBarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING){
                 // 屏幕上超出
                 recordButtonBarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING + 6);
-            }else if(recordButtonBarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height - m_recordButton->height() - TOOLBAR_Y_SPACING) {
+            }else if(recordButtonBarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_recordButton->height() - TOOLBAR_Y_SPACING) {
                 // 屏幕下超出
                 int y = std::max(recordY - m_recordButton->height() - TOOLBAR_Y_SPACING - 6, 0);
-                if(y > m_screenInfo[i].y + m_screenInfo[i].height - m_recordButton->height() - TOOLBAR_Y_SPACING -6)
-                    y = m_screenInfo[i].y + m_screenInfo[i].height - m_recordButton->height() - TOOLBAR_Y_SPACING -6;
+                if(y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_recordButton->height() - TOOLBAR_Y_SPACING -6)
+                    y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_recordButton->height() - TOOLBAR_Y_SPACING -6;
                 recordButtonBarPoint.setY(y);
             }
             break;
@@ -1285,11 +1285,11 @@ void MainWindow::updateShotButtonPos()
             if(shotButtonBarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING){
                 // 屏幕上超出
                 shotButtonBarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING + 6);
-            }else if(shotButtonBarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height - m_shotButton->height() - TOOLBAR_Y_SPACING) {
+            }else if(shotButtonBarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_shotButton->height() - TOOLBAR_Y_SPACING) {
                 // 屏幕下超出
                 int y = std::max(recordY - m_shotButton->height() - TOOLBAR_Y_SPACING - 6, 0);
-                if(y > m_screenInfo[i].y + m_screenInfo[i].height - m_shotButton->height() - TOOLBAR_Y_SPACING - 6)
-                    y = m_screenInfo[i].y + m_screenInfo[i].height - m_shotButton->height() - TOOLBAR_Y_SPACING -6;
+                if(y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_shotButton->height() - TOOLBAR_Y_SPACING - 6)
+                    y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_shotButton->height() - TOOLBAR_Y_SPACING -6;
                 shotButtonBarPoint.setY(y);
             }
             break;
@@ -1806,27 +1806,28 @@ bool MainWindow::saveAction(const QPixmap &pix)
             fileName = QString("%1_%2_%3").arg(tr("Screen Capture")).arg(selectAreaName).arg(currentTime);
         }
         QString lastFileName;
-        QFileDialog fileDialog;
 
+        // 自动化测试反馈, dde-desktop里面有2个computer_window. 修改直接调用QFileDialog类的静态函数. 不用创建其对象
+        //QFileDialog fileDialog;
         switch (t_pictureFormat) {
         case 0:
             lastFileName    = QString("%1/%2.png").arg(path).arg(fileName);
-            m_saveFileName =  fileDialog.getSaveFileName(this, tr("Save"),  lastFileName,
+            m_saveFileName =  QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
                                                          tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
             break;
         case 1:
             lastFileName    = QString("%1/%2.jpg").arg(path).arg(fileName);
-            m_saveFileName =  fileDialog.getSaveFileName(this, tr("Save"),  lastFileName,
+            m_saveFileName =  QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
                                                          tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)"));
             break;
         case 2:
             lastFileName    = QString("%1/%2.bmp").arg(path).arg(fileName);
-            m_saveFileName =  fileDialog.getSaveFileName(this, tr("Save"),  lastFileName,
+            m_saveFileName =  QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
                                                          tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)"));
             break;
         default:
             lastFileName    = QString("%1/%2.png").arg(path).arg(fileName);
-            m_saveFileName =  fileDialog.getSaveFileName(this, tr("Save"),  lastFileName,
+            m_saveFileName =  QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
                                                          tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
             break;
         }
