@@ -20,6 +20,7 @@
 #include "menucontroller.h"
 #include "../utils/configsettings.h"
 #include "../utils/saveutils.h"
+#include "../utils.h"
 
 #include <QApplication>
 #include <QStyleFactory>
@@ -83,16 +84,19 @@ MenuController::MenuController(QObject *parent)
 //    unDoIcon.addFile(":/image/menu_icons/undo-menu-hover.svg", MENU_ICON_SIZE, QIcon::Active);
 //    QAction *unDoAct = new QAction(unDoIcon, tr("Undo"), this);
     m_unDoAct = new QAction(tr("Undo"), this);
+    Utils::setAccessibility(m_unDoAct, "menuUndo");
     connect(m_unDoAct, &QAction::triggered, [ = ] {
         emit unDoAction();
     });
 
     QAction *saveAct = new QAction(tr("Save"), this);
+    Utils::setAccessibility(saveAct, "menuSave");
     connect(saveAct, &QAction::triggered, [ = ] {
         emit saveAction();
     });
 
     QAction *closeAct = new QAction(tr("Exit"), this);
+    Utils::setAccessibility(closeAct, "menuExit");
     connect(closeAct, &QAction::triggered, [ = ] {
         emit closeAction();
     });

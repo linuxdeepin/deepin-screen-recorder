@@ -18,6 +18,8 @@
  */
 #include "colortoolwidget.h"
 #include "../utils/configsettings.h"
+#include "../utils.h"
+#include "../accessibility/acTextDefine.h"
 
 #include <DSlider>
 #include <DLineEdit>
@@ -69,7 +71,8 @@ void ColorToolWidget::initColorLabel()
 
     m_redBtn = new ToolButton();
     m_redBtn->setCheckable(true);
-    m_redBtn->setObjectName("redBtn");
+    //m_redBtn->setObjectName("redBtn");
+    Utils::setAccessibility(m_redBtn, AC_COLORTOOLWIDGET_RED_BUT);
     m_redBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_redBtn->setIconSize(TOOL_ICON_SIZE);
     m_redBtn->setIcon(QIcon(":/image/newUI/normal/red.svg"));
@@ -77,7 +80,8 @@ void ColorToolWidget::initColorLabel()
     toolBtnList.append(m_redBtn);
 
     m_yellowBtn = new ToolButton();
-    m_yellowBtn->setObjectName("yellowBtn");
+    //m_yellowBtn->setObjectName("yellowBtn");
+    Utils::setAccessibility(m_yellowBtn, AC_COLORTOOLWIDGET_YELLOW_BUT);
     m_yellowBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_yellowBtn->setIconSize(TOOL_ICON_SIZE);
     m_yellowBtn->setIcon(QIcon(":/image/newUI/normal/yellow.svg"));
@@ -85,7 +89,8 @@ void ColorToolWidget::initColorLabel()
     toolBtnList.append(m_yellowBtn);
 
     m_blueBtn = new ToolButton();
-    m_blueBtn->setObjectName("blueBtn");
+    //m_blueBtn->setObjectName("blueBtn");
+    Utils::setAccessibility(m_blueBtn, AC_COLORTOOLWIDGET_BLUE_BUT);
     m_blueBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_blueBtn->setIconSize(TOOL_ICON_SIZE);
     m_blueBtn->setIcon(QIcon(":/image/newUI/normal/blue.svg"));
@@ -93,7 +98,8 @@ void ColorToolWidget::initColorLabel()
     toolBtnList.append(m_blueBtn);
 
     m_greenBtn = new ToolButton();
-    m_greenBtn->setObjectName("greenBtn");
+    //m_greenBtn->setObjectName("greenBtn");
+    Utils::setAccessibility(m_greenBtn, AC_COLORTOOLWIDGET_GREEN_BUT);
     m_greenBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_greenBtn->setIconSize(TOOL_ICON_SIZE);
     m_greenBtn->setIcon(QIcon(":/image/newUI/normal/green.svg"));

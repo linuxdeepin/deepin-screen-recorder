@@ -24,9 +24,11 @@
 //#include <dwindowmanager.h>
 #include <QObject>
 #include <QPainter>
+#include <DPushButton>
+#include <QAction>
 #include <QString>
 
-//DWM_USE_NAMESPACE
+DWIDGET_USE_NAMESPACE
 
 class Utils : public QObject
 {
@@ -44,5 +46,7 @@ public:
     static void warnNoComposite();
     static void notSupportWarn();
     static QString getRecordingSaveDirectory();
+    static void setAccessibility(DPushButton *button,const QString name);
+    static void setAccessibility(QAction *action, const QString name);
     static bool is3rdInterfaceStart;
 };
