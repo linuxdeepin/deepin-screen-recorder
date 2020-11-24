@@ -623,7 +623,7 @@ void SubToolWidget::initShotLabel()
     //2019-10-15：添加截图选项按钮
     m_shotOptionButton = new ToolButton();
     DFontSizeManager::instance()->bind(m_shotOptionButton, DFontSizeManager::T8);
-    //m_shotOptionButton->setText(tr("Options"));
+    m_shotOptionButton->setText(tr("Options"));
     Utils::setAccessibility(m_shotOptionButton, AC_SUBTOOLWIDGET_SHOT_OPTION_BUT);
     m_shotOptionButton->setMinimumSize(QSize(73, 40));
     installTipHint(m_shotOptionButton, tr("Options"));
