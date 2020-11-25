@@ -2974,8 +2974,27 @@ void MainWindow::shotCurrentImg()
     //m_drawNothing = true;
     update();
 
+    int eventTime = 60;
+    QRect rect = QApplication::desktop()->screenGeometry();
+    if(rect.width()*rect.height() > 1920*1080){
+        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin) {
+            eventTime = 120;
+        }
+        else if(QSysInfo::currentCpuArchitecture().startsWith("mips")){
+            eventTime = 160;
+        }
+        else if(QSysInfo::currentCpuArchitecture().startsWith("arm")){
+            eventTime = 115;
+        }
+    }
+    else {
+        if(QSysInfo::currentCpuArchitecture().startsWith("mips")){
+            eventTime = 100;
+        }
+    }
+
     QEventLoop eventloop1;
-    QTimer::singleShot(60, &eventloop1, SLOT(quit()));
+    QTimer::singleShot(eventTime, &eventloop1, SLOT(quit()));
     eventloop1.exec();
 
     qDebug() << "shotCurrentImg shotFullScreen";
