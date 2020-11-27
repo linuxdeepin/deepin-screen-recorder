@@ -16,6 +16,16 @@ RecorderRegionShow::RecorderRegionShow():m_cameraWidget(nullptr)
 }
 RecorderRegionShow::~RecorderRegionShow()
 {
+    delete m_painter;
+    if(m_cameraWidget) {
+      	if(m_cameraWidget->getcameraStatus()) {
+        	m_cameraWidget->cameraStop();
+        }
+        delete m_cameraWidget;
+    }
+    for(int i = 0; i < m_keyButtonList.count(); ++i) {
+        delete m_keyButtonList[i];
+    }
 }
 
 void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, const QSize size)

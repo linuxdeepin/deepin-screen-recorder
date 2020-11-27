@@ -110,9 +110,10 @@ public:
     explicit MainWindow(DWidget *parent = nullptr);
     ~MainWindow()
     {
-        m_pVoiceVolumeWatcher->stopWatch();
-
-        m_pCameraWatcher->stopWatch();
+        if(m_pVoiceVolumeWatcher)
+            m_pVoiceVolumeWatcher->stopWatch();
+        if(m_pCameraWatcher)
+            m_pCameraWatcher->stopWatch();
         QThread::currentThread()->msleep(500);
     }
 

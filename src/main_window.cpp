@@ -2032,6 +2032,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         cb->setMimeData(t_imageData, QClipboard::Clipboard);
         /*
         // 调起画板， 传入截图路径
+        /*
         int t_openWithDraw = ConfigSettings::instance()->value("open", "draw").toInt();
         if (t_openWithDraw == 1) {
             DrawInterface *m_draw = new DrawInterface("com.deepin.Draw", "/com/deepin/Draw", QDBusConnection::sessionBus(), this);
