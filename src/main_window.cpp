@@ -1670,17 +1670,17 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         QDBusMessage msg =QDBusMessage::createSignal("/com/deepin/Screenshot", "com.deepin.Screenshot", "Done");
         msg << saveFilePath;
         QDBusConnection::sessionBus().send(msg);
-        exit(0);
+        qApp->quit();
     }
     if(m_noNotify) {
-        exit(0);
+        qApp->quit();
     }
     // failed notify
     if (!succeed) {
         DBusNotify saveFailedNotify;
         QString tips = QString(tr("Save failed. Please save it in your home directory."));
         saveFailedNotify.Notify(QCoreApplication::applicationName(), 0, "deepin-screen-recorder", QString(), tips, QStringList(), QVariantMap(), 5000);
-        exit(0);
+        qApp->quit();
     }
 
     QDBusInterface remote_dde_notify_obj("com.deepin.dde.Notification", "/com/deepin/dde/Notification",
@@ -2030,7 +2030,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         Q_ASSERT(!screenShotPix.isNull());
         QClipboard *cb = qApp->clipboard();
         cb->setMimeData(t_imageData, QClipboard::Clipboard);
-        //if (m_copyToClipboard) {}
+        /*
         // 调起画板， 传入截图路径
         int t_openWithDraw = ConfigSettings::instance()->value("open", "draw").toInt();
         if (t_openWithDraw == 1) {
@@ -2040,6 +2040,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
             m_draw->openImages(list);
             delete m_draw;
         }
+        */
     }
     return true;
 }

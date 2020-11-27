@@ -51,12 +51,12 @@ HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src
     src/utils/calculaterect.h \
     src/utils/saveutils.h \
     src/utils/shapesutils.h \
-    src/widgets/colorbutton.h \
+    #src/widgets/colorbutton.h \
     src/widgets/zoomIndicator.h \
     src/widgets/textedit.h \
     src/widgets/toptips.h \
     src/widgets/toolbar.h \
-    src/widgets/textbutton.h \
+    #src/widgets/textbutton.h \
     src/widgets/shapeswidget.h \
     src/widgets/toolbutton.h \
     src/widgets/maintoolwidget.h \
@@ -76,7 +76,7 @@ HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src
     src/widgets/filter.h \
     src/utils/desktopinfo.h \
     src/utils/screengrabber.h \
-    src/dbusinterface/drawinterface.h \
+    #src/dbusinterface/drawinterface.h \
     src/screen_shot_event.h\
     src/RecorderRegionShow.h \
     src/lib/GifH/gif.h \
@@ -93,8 +93,8 @@ SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.
     src/utils/baseutils.cpp \
     src/widgets/toptips.cpp \
     src/widgets/shapeswidget.cpp \
-    src/widgets/textbutton.cpp \
-    src/widgets/colorbutton.cpp \
+    #src/widgets/textbutton.cpp \
+    #src/widgets/colorbutton.cpp \
     src/widgets/textedit.cpp \
     src/widgets/zoomIndicator.cpp \
     src/widgets/toolbar.cpp \
@@ -115,7 +115,7 @@ SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.
     src/widgets/filter.cpp \
     src/utils/desktopinfo.cpp \
     src/utils/screengrabber.cpp \
-    src/dbusinterface/drawinterface.cpp \
+    #src/dbusinterface/drawinterface.cpp \
     src/screen_shot_event.cpp\
     src/RecorderRegionShow.cpp \
     src/xgifrecord.cpp
