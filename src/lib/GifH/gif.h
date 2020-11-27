@@ -206,7 +206,8 @@ static void GifPartitionByMedian(uint8_t* image, int left, int right, int com, i
 // Builds a palette by creating a balanced k-d tree of all pixels in the image
 static void GifSplitPalette(uint8_t* image, int numPixels, int firstElt, int lastElt, int splitElt, int splitDist, int treeNode, bool buildForDither, GifPalette* pal)
 {
-    if(lastElt <= firstElt || numPixels == 0)
+    //lastElt - firstElt 除数不能为 0
+    if(lastElt <= firstElt || numPixels == 0 || 0 == lastElt - firstElt)
         return;
 
     // base case, bottom of the tree
@@ -307,7 +308,10 @@ static void GifSplitPalette(uint8_t* image, int numPixels, int firstElt, int las
     if(bRange > gRange) splitCom = 2;
     if(rRange > bRange && rRange > gRange) splitCom = 0;
 
-    int subPixelsA = numPixels * (splitElt - firstElt) / (lastElt - firstElt);
+   //除数不能为0,由函数第一行检测，此处是为了让cppcheck检测通过
+   int subPixelsA = 0;
+   if(0 != lastElt - firstElt)
+       subPixelsA = numPixels * (splitElt - firstElt) / (lastElt - firstElt);
     int subPixelsB = numPixels-subPixelsA;
 
     GifPartitionByMedian(image, 0, numPixels, splitCom, subPixelsA);

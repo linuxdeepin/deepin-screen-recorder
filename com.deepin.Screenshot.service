@@ -1,3 +1,5 @@
 [D-BUS Service]
 Name=com.deepin.Screenshot
+#Exec=/usr/bin/deepin-turbo-invoker --type=dtkwidget /usr/bin/deepin-screen-recorder --dbus
+#Exec=/usr/bin/deepin-screen-recorder --dbus
 Exec=/usr/bin/qdbus --literal com.deepin.SessionManager /com/deepin/StartManager com.deepin.StartManager.LaunchApp /usr/share/applications/deepin-screen-recorder.desktop 0 --dbus

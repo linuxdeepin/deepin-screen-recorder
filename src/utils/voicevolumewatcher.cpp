@@ -37,7 +37,7 @@ void voiceVolumeWatcher::run()
     //    QThread::currentThread()->msleep(200);
 
     static const double DBL_EPSILON = 0.000001;
-    static const double volumeLowMark = 0.2; //20% volume
+    //static const double volumeLowMark = 0.2; //20% volume
 
     while (m_loopwatch) {
         AudioPort activePort = m_defaultSource->activePort();
@@ -45,7 +45,7 @@ void voiceVolumeWatcher::run()
         bool couldUse = false;
         if (isMicrophoneAvail(activePort.name)) {
             double currentMicrophoneVolume = m_defaultSource->volume();
-            if((currentMicrophoneVolume - volumeLowMark) > DBL_EPSILON) {
+            if(currentMicrophoneVolume > DBL_EPSILON) {
                 couldUse = true;
             }
         }

@@ -39,7 +39,7 @@
 #include "../settings.h"
 #include "tooltips.h"
 #include "../utils.h"
-
+#include "../accessibility/acTextDefine.h"
 #include <unistd.h>
 
 DWIDGET_USE_NAMESPACE
@@ -112,7 +112,8 @@ void SubToolWidget::initRecordLabel()
     //    //添加音频按钮
     ToolButton *audioButton = new ToolButton();
 
-    audioButton->setObjectName("AudioButton");
+    //audioButton->setObjectName("AudioButton");
+    Utils::setAccessibility(audioButton, AC_SUBTOOLWIDGET_AUDIO_BUTTON);
     audioButton->setText(" ");
     audioButton->setIconSize(TOOL_ICON_SIZE);
     installTipHint(audioButton, tr("Sound On"));
@@ -208,7 +209,8 @@ void SubToolWidget::initRecordLabel()
 
     m_keyBoardButton = new ToolButton();
 
-    m_keyBoardButton->setObjectName("KeyBoardButton");
+    //m_keyBoardButton->setObjectName("KeyBoardButton");
+    Utils::setAccessibility(m_keyBoardButton, AC_SUBTOOLWIDGET_KEYBOARD_BUTTON);
     m_keyBoardButton->setIconSize(MAX_TOOL_ICON_SIZE);
     installTipHint(m_keyBoardButton, tr("Show Keystroke"));
     m_keyBoardButton->setIcon(QIcon::fromTheme("key_mormal"));
@@ -235,7 +237,8 @@ void SubToolWidget::initRecordLabel()
     m_cameraButton = new ToolButton();
     m_cameraButton->setDisabled((QCameraInfo::availableCameras().count() <= 0));
 
-    m_cameraButton->setObjectName("CameraButton");
+    //m_cameraButton->setObjectName("CameraButton");
+    Utils::setAccessibility(m_cameraButton, AC_SUBTOOLWIDGET_CAMERA_BUTTON);
     m_cameraButton->setIconSize(MAX_TOOL_ICON_SIZE);
     installTipHint(m_cameraButton, tr("Webcam On"));
 
@@ -255,7 +258,8 @@ void SubToolWidget::initRecordLabel()
         emit cameraActionChecked(m_cameraButton->isChecked());
     });
     m_mouseButton = new ToolButton();
-    m_mouseButton->setObjectName("MouseButton");
+    //m_mouseButton->setObjectName("MouseButton");
+    Utils::setAccessibility(m_mouseButton, AC_SUBTOOLWIDGET_MOUSE_BUTTON);
     m_mouseButton->setIconSize(MAX_TOOL_ICON_SIZE);
     m_mouseButton->setIcon(QIcon::fromTheme("mouse_mormal"));
     installTipHint(m_mouseButton, tr("Show Click"));
@@ -281,6 +285,7 @@ void SubToolWidget::initRecordLabel()
     //2019-10-14：新增选项按钮
     m_optionButton = new ToolButton();
     DFontSizeManager::instance()->bind(m_optionButton, DFontSizeManager::T8);
+    Utils::setAccessibility(m_optionButton, AC_SUBTOOLWIDGET_RECORD_OPTION_BUT);
     m_optionButton->setText(tr("Options"));
     m_optionButton->setMinimumSize(QSize(73, 40));
     installTipHint(m_optionButton, tr("Options"));
@@ -306,6 +311,16 @@ void SubToolWidget::initRecordLabel()
     QAction *fps20Action = new QAction(OptionMenu);
     QAction *fps24Action = new QAction(OptionMenu);
     QAction *fps30Action = new QAction(OptionMenu);
+
+
+    Utils::setAccessibility(gifAction, "gifAction");
+    Utils::setAccessibility(mp4Action, "mp4Action");
+    Utils::setAccessibility(mkvAction, "mkvAction");
+    Utils::setAccessibility(fps5Action, "fps5Action");
+    Utils::setAccessibility(fps10Action, "fps10Action");
+    Utils::setAccessibility(fps20Action, "fps20Action");
+    Utils::setAccessibility(fps24Action, "fps24Action");
+    Utils::setAccessibility(fps30Action, "fps30Action");
 
     formatTitleAction->setDisabled(true);
     formatTitleAction->setText(tr("Format:"));
@@ -541,7 +556,8 @@ void SubToolWidget::initShotLabel()
     m_rectButton->setIconSize(QSize(35, 35));
 
     m_rectButton->setIcon(QIcon::fromTheme("rectangle-normal"));
-    m_rectButton->setObjectName("RectButton");
+    //m_rectButton->setObjectName("RectButton");
+    Utils::setAccessibility(m_rectButton, AC_SUBTOOLWIDGET_RECT_BUTTON);
     rectBtnGroup->addButton(m_rectButton);
     m_rectButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     installTipHint(m_rectButton, tr("Rectangle"));
@@ -551,7 +567,8 @@ void SubToolWidget::initShotLabel()
     m_circleButton->setIconSize(QSize(35, 35));
     m_circleButton->setIcon(QIcon::fromTheme("oval-normal"));
     installTipHint(m_circleButton, tr("Ellipse"));
-    m_circleButton->setObjectName("CircleButton");
+    //m_circleButton->setObjectName("CircleButton");
+    Utils::setAccessibility(m_circleButton, AC_SUBTOOLWIDGET_CIRCL_BUTTON);
 
     rectBtnGroup->addButton(m_circleButton);
     m_circleButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
@@ -576,7 +593,8 @@ void SubToolWidget::initShotLabel()
         m_lineflag = 1;
         m_lineButton->setIcon(QIcon::fromTheme("Arrow-normal"));
     }
-    m_lineButton->setObjectName("LineButton");
+    //m_lineButton->setObjectName("LineButton");
+    Utils::setAccessibility(m_lineButton, AC_SUBTOOLWIDGET_LINE_BUTTON);
     rectBtnGroup->addButton(m_lineButton);
     m_lineButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_lineButton);
@@ -585,7 +603,8 @@ void SubToolWidget::initShotLabel()
     m_penButton->setIconSize(QSize(35, 35));
     installTipHint(m_penButton, tr("Pencil"));
     m_penButton->setIcon(QIcon::fromTheme("Combined Shape-normal"));
-    m_penButton->setObjectName("PenButton");
+    //m_penButton->setObjectName("PenButton");
+    Utils::setAccessibility(m_penButton, AC_SUBTOOLWIDGET_PEN_BUTTON);
     rectBtnGroup->addButton(m_penButton);
     m_penButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_penButton);
@@ -595,7 +614,8 @@ void SubToolWidget::initShotLabel()
     m_textButton->setIcon(QIcon::fromTheme("text"));
     //    m_textButton->setToolTip(tr("Text"));
     installTipHint(m_textButton, tr("Text"));
-    m_textButton->setObjectName("TextButton");
+    //m_textButton->setObjectName("TextButton");
+    Utils::setAccessibility(m_textButton, AC_SUBTOOLWIDGET_TEXT_BUTTON);
     rectBtnGroup->addButton(m_textButton);
     m_textButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_textButton);
@@ -604,6 +624,7 @@ void SubToolWidget::initShotLabel()
     m_shotOptionButton = new ToolButton();
     DFontSizeManager::instance()->bind(m_shotOptionButton, DFontSizeManager::T8);
     m_shotOptionButton->setText(tr("Options"));
+    Utils::setAccessibility(m_shotOptionButton, AC_SUBTOOLWIDGET_SHOT_OPTION_BUT);
     m_shotOptionButton->setMinimumSize(QSize(73, 40));
     installTipHint(m_shotOptionButton, tr("Options"));
     rectBtnGroup->addButton(m_shotOptionButton);
@@ -633,6 +654,16 @@ void SubToolWidget::initShotLabel()
     QAction *clipTitleAction = new QAction(OptionMenu);
     QAction *saveToClipAction = new QAction(OptionMenu);
     QAction *saveCursorAction = new QAction(OptionMenu);
+
+    Utils::setAccessibility(saveToDesktopAction, "saveToDesktopAction");
+    Utils::setAccessibility(saveToPictureAction, "saveToPictureAction");
+    Utils::setAccessibility(saveToSpecialPath, "saveToSpecialPath");
+    Utils::setAccessibility(saveToClipAction, "saveToClipAction");
+    Utils::setAccessibility(openWithDraw, "openWithDraw");
+    Utils::setAccessibility(saveCursorAction, "saveCursorAction");
+    Utils::setAccessibility(pngAction, "pngAction");
+    Utils::setAccessibility(jpgAction, "jpgAction");
+    Utils::setAccessibility(bmpAction, "bmpAction");
 
     saveTitleAction->setDisabled(true);
     saveTitleAction->setText(tr("Save to"));

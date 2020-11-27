@@ -39,7 +39,7 @@
 #include "utils.h"
 #include "widgets/toolbutton.h"
 #include "dbusservice/dbusscreenshotservice.h"
-
+#include "accessibility/acObjectList.h"
 
 DWIDGET_USE_NAMESPACE
 /*
@@ -105,13 +105,26 @@ int main(int argc, char *argv[])
     // Construct a QGuiApplication before accessing a platform function.
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
 
-    // 适配deepin-turbo 启动加速
+// 适配deepin-turbo 启动加速
 #if(DTK_VERSION < DTK_VERSION_CHECK(5,4,0,0))
     DApplication::loadDXcbPlugin();
     QScopedPointer<DApplication> app(new DApplication(argc, argv));
 #else
-    QScopedPointer<DApplication> app(DApplication::globalApplication(argc, argv));
+    QScopedPointer<DApplication> app(DApplication::globalApplication(argc,argv));
 #endif
+
+    // 集成测试标签
+#ifdef ENABLE_ACCESSIBILITY
+        QAccessible::installFactory(accessibleFactory);
+#endif
+    /*
+    QString t_launchMode;
+
+    if (argc >= 2) {
+        t_launchMode = QString(argv[1]);
+//        qDebug() << t_launchMode;
+    }
+    */
 
     //判断wayland平台
     /*
@@ -180,7 +193,6 @@ int main(int argc, char *argv[])
             QCommandLineOption dbusOption(QStringList() << "u" << "dbus",
                                           "Start  from dbus.");
             QCommandLineOption screenRecordOption(QStringList() << "record" << "screenRecord" << "start screen record");
-            QCommandLineOption screenShotOption(QStringList() << "shot" << "screenShot" << "start screen shot");
             //for test
 //            QCommandLineOption testOption(QStringList() << "t" << "test",
 //                                          "Start  from test.");
@@ -199,6 +211,7 @@ int main(int argc, char *argv[])
             cmdParser.addOption(screenRecordOption);
             cmdParser.addOption(screenShotOption);
 //            cmdParser.addOption(testOption);
+            cmdParser.addOption(screenRecordOption);
             cmdParser.process(*app);
 
             // Load translator.
@@ -225,7 +238,6 @@ int main(int argc, char *argv[])
                 DGuiApplicationHelper::instance()->setPaletteType(type);
             });
             */
-
             const QString& t_launchMode = cmdParser.isSet(screenRecordOption) ? "screenRecord" : "screenShot";
             window.initLaunchMode(t_launchMode);
             DBusScreenshotService dbusService (&window);
