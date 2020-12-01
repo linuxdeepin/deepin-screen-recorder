@@ -32,8 +32,8 @@ lcov --list-full-path -e $build_dir/coverage.info –o $build_dir/coverage-strip
 
 genhtml -o $result_coverage_dir $build_dir/coverage.info
 
-nohup x-www-browser $result_coverage_dir/index.html &
-nohup x-www-browser $result_report_dir &
+#nohup x-www-browser $result_coverage_dir/index.html &
+#nohup x-www-browser $result_report_dir &
  
-lcov -d $build_dir –z
+#lcov -d $build_dir –z
 exit 0
