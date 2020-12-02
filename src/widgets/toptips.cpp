@@ -20,6 +20,7 @@
 #include "toptips.h"
 
 #include "../utils/baseutils.h"
+#include <cmath>
 #include <QDebug>
 #include <DPalette>
 #include <QImage>
@@ -30,7 +31,7 @@ DGUI_USE_NAMESPACE
 TopTips::TopTips(DWidget *parent)
     : QLabel(parent)
 {
-    setFixedSize(100, 30);
+    setFixedSize(500, 30);
 //    this->setStyleSheet(" TopTips { background-color: transparent;"
 //                        "border-image: url(:/resources/images/action/sizetip.png)  no-repeat;"
 //                        "color: white;"
@@ -46,18 +47,28 @@ TopTips::TopTips(DWidget *parent)
 
 }
 
-void TopTips::setContent(QString widthXHeight)
+void TopTips::setContent(const QSize size)
 {
-    setText(widthXHeight);
+    QString text = QString("%1X%2").arg(size.width()).arg(size.height());
+    if(m_showRecorderTips && size.width() * size.height() > 1920 * 1080 && size.width() != m_width && size.height() != m_height) {
+        // 1920 / 1080 = w / h
+        // w h 等比缩放
+        int h = static_cast<int>(sqrt(1920.0 * 1080 * size.height() / size.width()));
+        int w = static_cast<int>(sqrt(1920.0 * 1080 * size.width() / size.height()));
+        QString recorderTips = tr(" Adjust the recording area within %1*%2 to get better video effect");
+        setText(text + recorderTips.arg(w).arg(h));
+    } else {
+        setText(text);
+    }
 }
 
-void TopTips::updateTips(QPoint pos, QString text)
+void TopTips::updateTips(QPoint pos, const QSize size)
 {
     if (!this->isVisible())
         this->show();
 
     QPoint startPoint = pos;
-    setContent(text);
+    setContent(size);
     startPoint.setX(pos.x());
 
     if (pos.y() > this->height()) {
@@ -77,3 +88,10 @@ void TopTips::mousePressEvent(QMouseEvent *ev)
 
 
 TopTips::~TopTips() {}
+
+void TopTips::setRecorderTipsInfo(const bool showState)
+{
+    if(QSysInfo::currentCpuArchitecture().startsWith("mips")){
+        m_showRecorderTips = showState;
+    }
+}

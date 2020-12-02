@@ -22,7 +22,7 @@
  */
 
 #include "record_process.h"
-#include "settings.h"
+#include "utils/configsettings.h"
 #include "process_tree.h"
 #include "utils.h"
 #include "utils/audioutils.h"
@@ -51,7 +51,7 @@ const int RecordProcess::RECORD_FRAMERATE_30 = 30;
 
 RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 {
-    settings = new Settings();
+    settings = ConfigSettings::instance();
     m_framerate = RECORD_FRAMERATE_24;
 
     saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
@@ -59,7 +59,7 @@ RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 
     displayNumber = QString(std::getenv("DISPLAY"));
 
-    QVariant saveDirectoryOption = settings->getOption("save_directory");
+    QVariant saveDirectoryOption = settings->value("recordConfig", "save_directory");
     if (saveDirectoryOption.isNull()) {
         saveDir = defaultSaveDir;
     } else {
@@ -78,10 +78,10 @@ RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
         }
     }
 
-    settings->setOption("save_directory", saveDir);
+    settings->setValue("recordConfig", "save_directory", saveDir);
 
-    if (settings->getOption("lossless_recording").toString() == "") {
-        settings->setOption("lossless_recording", false);
+    if (settings->value("recordConfig", "lossless_recording").toString() == "") {
+        settings->setValue("recordConfig", "lossless_recording", false);
     }
 }
 
@@ -120,8 +120,8 @@ void RecordProcess::setRecordAudioInputType(int inputType)
 void RecordProcess::run()
 {
     // Start record.
-    QVariant t_saveGifVar = settings->getOption("save_as_gif");
-    QVariant t_frameRateVar = settings->getOption("mkv_framerate");
+    QVariant t_saveGifVar = settings->value("recordConfig", "save_as_gif");
+    QVariant t_frameRateVar = settings->value("recordConfig", "mkv_framerate");
     //保持帧数的配置文件判断
     int t_frameRate = t_frameRateVar.toString().toInt();
     m_framerate = t_frameRate;
@@ -207,7 +207,7 @@ void RecordProcess::recordVideo()
         arguments << QString("-video_size");
         arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
         arguments << QString("-thread_queue_size");
-        arguments << QString("64");
+        arguments << QString("128");
         arguments << QString("-i");
         arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
         if(recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO || recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO){
@@ -260,7 +260,7 @@ void RecordProcess::recordVideo()
         //arguments << QString("31"); // 视频质量
         arguments << QString("-s");
         arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
-        if(settings->getOption("lossless_recording").toBool()){
+        if(settings->value("recordConfig", "lossless_recording").toBool()){
             arguments << QString("-f");
             arguments << QString("matroska");
         }else {
@@ -336,7 +336,7 @@ void RecordProcess::recordVideo()
         // baseline 算法，录制的视频在windos自带播放器不能播放
         //arguments << QString("-profile:v");
         //arguments << QString("baseline");
-        if (settings->getOption("lossless_recording").toBool()) {
+        if (settings->value("recordConfig", "lossless_recording").toBool()) {
             arguments << QString("-qp");
             arguments << QString("23");
         }else {
@@ -372,13 +372,13 @@ void RecordProcess::initProcess()
     QDateTime date = QDateTime::currentDateTime();
     QString fileExtension;
     if (recordType == RECORD_TYPE_GIF) {
-        if (settings->getOption("lossless_recording").toBool()) {
+        if (settings->value("recordConfig", "lossless_recording").toBool()) {
             fileExtension = "flv";
         } else {
             fileExtension = "gif";
         }
     } else {
-        if (settings->getOption("lossless_recording").toBool()) {
+        if (settings->value("recordConfig", "lossless_recording").toBool()) {
             fileExtension = "mkv";
         } else {
             fileExtension = "mp4";

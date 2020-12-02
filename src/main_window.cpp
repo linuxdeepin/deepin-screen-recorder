@@ -603,8 +603,8 @@ void MainWindow::initScreenShot()
 
         updateToolBarPos();
         updateShotButtonPos();
-        m_sizeTips->updateTips(QPoint(recordX, recordY),
-                               QString("%1X%2").arg(recordWidth).arg(recordHeight));
+        m_sizeTips->setRecorderTipsInfo(false);
+        m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
     }
 
     //recordButton->hide();
@@ -693,8 +693,8 @@ void MainWindow::initScreenRecorder()
 
         updateToolBarPos();
         updateRecordButtonPos();
-        m_sizeTips->updateTips(QPoint(recordX, recordY),
-                               QString("%1X%2").arg(recordWidth).arg(recordHeight));
+        m_sizeTips->setRecorderTipsInfo(true);
+        m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
     }
 
     //recordButton->hide();
@@ -732,17 +732,7 @@ void MainWindow::initLaunchMode(const QString &launchMode)
         if (m_sideBar->isVisible()) {
             m_sideBar->hide();
         }
-    }
-
-    else if (launchMode == "screenShot") {
-        m_launchWithRecordFunc = false;
-        m_recordButton->hide();
-        m_shotButton->show();
-        m_functionType = 1;
-        initScreenShot();
-    }
-
-    else {
+    } else {
         m_launchWithRecordFunc = false;
         m_recordButton->hide();
         m_shotButton->show();
@@ -2032,7 +2022,6 @@ bool MainWindow::saveAction(const QPixmap &pix)
         cb->setMimeData(t_imageData, QClipboard::Clipboard);
         /*
         // 调起画板， 传入截图路径
-        /*
         int t_openWithDraw = ConfigSettings::instance()->value("open", "draw").toInt();
         if (t_openWithDraw == 1) {
             DrawInterface *m_draw = new DrawInterface("com.deepin.Draw", "/com/deepin/Draw", QDBusConnection::sessionBus(), this);
@@ -2357,8 +2346,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
 
                 if ( !m_needSaveScreenshot) {
-                    m_sizeTips->updateTips(QPoint(recordX, recordY),
-                                           QString("%1X%2").arg(recordWidth).arg(recordHeight));
+                    m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
                     if(m_toolBar->isVisible()) {
                         updateToolBarPos();
                     }
@@ -2474,8 +2462,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                 }
 
-                m_sizeTips->updateTips(QPoint(recordX, recordY),
-                                       QString("%1X%2").arg(recordWidth).arg(recordHeight));
+                m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
                 if(m_toolBar->isVisible()){
                     updateToolBarPos();
                 }
@@ -2619,8 +2606,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             if (mouseEvent->button() == Qt::LeftButton) {
                 if (m_sizeTips->isVisible()) {
-                    m_sizeTips->updateTips(QPoint(recordX, recordY),
-                                           QString("%1X%2").arg(recordWidth).arg(recordHeight));
+                    m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
                 }
                 if (!isFirstReleaseButton) {
                     isFirstReleaseButton = true;
@@ -2697,8 +2683,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                 }
                 if (m_sizeTips->isVisible()) {
-                    m_sizeTips->updateTips(QPoint(recordX, recordY),
-                                           QString("%1X%2").arg(recordWidth).arg(recordHeight));
+                    m_sizeTips->updateTips(QPoint(recordX, recordY),QSize(recordWidth,recordHeight));
                 }
 
                 isPressButton = false;
@@ -2853,8 +2838,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
         }
         if (m_shotflag == 0) {
-            m_sizeTips->updateTips(QPoint(recordX, recordY),
-                                   QString("%1X%2").arg(recordWidth).arg(recordHeight));
+            m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
         }
 
     }

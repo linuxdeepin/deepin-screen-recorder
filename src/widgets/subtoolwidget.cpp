@@ -85,10 +85,10 @@ void SubToolWidget::initRecordLabel()
     bool t_saveMkv = false;
     int t_frameRate = 0;
 
-    Settings *t_settings = new Settings();
-    QVariant t_saveGifVar = t_settings->getOption("save_as_gif");
-    QVariant t_saveMkvVar = t_settings->getOption("lossless_recording");
-    QVariant t_frameRateVar = t_settings->getOption("mkv_framerate");
+    ConfigSettings *t_settings = ConfigSettings::instance();
+    QVariant t_saveGifVar = t_settings->value("recordConfig", "save_as_gif");
+    QVariant t_saveMkvVar = t_settings->value("recordConfig", "lossless_recording");
+    QVariant t_frameRateVar = t_settings->value("recordConfig", "mkv_framerate");
 
     //保持格式的配置文件判断
     if (t_saveGifVar.toString() == "true") {
@@ -96,7 +96,7 @@ void SubToolWidget::initRecordLabel()
     } else if (t_saveGifVar.toString() == "false") {
         t_saveGif = false;
     } else {
-        t_settings->setOption("save_as_gif", true);
+        t_settings->setValue("recordConfig", "save_as_gif", true);
         t_saveGif = true;
     }
 
@@ -106,6 +106,11 @@ void SubToolWidget::initRecordLabel()
         t_saveMkv = false;
     }
 
+    // mips 不支持GIF录制
+    if(QSysInfo::currentCpuArchitecture().startsWith("mips")){
+        t_settings->setValue("recordConfig", "save_as_gif", false);
+        t_saveGif = false;
+    }
 
     //保持帧数的配置文件判断
     t_frameRate = t_frameRateVar.toString().toInt();
@@ -354,7 +359,9 @@ void SubToolWidget::initRecordLabel()
     t_fpsGroup->addAction(fps30Action);
 
     OptionMenu->addAction(formatTitleAction);
-    OptionMenu->addAction(gifAction);
+    if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
+        OptionMenu->addAction(gifAction);
+    }
     OptionMenu->addAction(mp4Action);
 
     OptionMenu->addAction(mkvAction);
@@ -426,8 +433,8 @@ void SubToolWidget::initRecordLabel()
 
 
     connect(gifAction, &QAction::triggered, this, [ = ] (bool checked) {
-        t_settings->setOption("lossless_recording", false);
-        t_settings->setOption("save_as_gif", true);
+        t_settings->setValue("recordConfig", "lossless_recording", false);
+        t_settings->setValue("recordConfig", "save_as_gif", true);
         fps5Action->setEnabled(false);
         fps10Action->setEnabled(false);
         fps20Action->setEnabled(false);
@@ -443,8 +450,8 @@ void SubToolWidget::initRecordLabel()
     });
 
     connect(mp4Action, &QAction::triggered, this, [ = ] (bool checked) {
-        t_settings->setOption("lossless_recording", false);
-        t_settings->setOption("save_as_gif", false);
+        t_settings->setValue("recordConfig", "lossless_recording", false);
+        t_settings->setValue("recordConfig", "save_as_gif", false);
         fps5Action->setEnabled(true);
         fps10Action->setEnabled(true);
         fps20Action->setEnabled(true);
@@ -462,8 +469,8 @@ void SubToolWidget::initRecordLabel()
     });
 
     connect(mkvAction, &QAction::triggered, this, [ = ] (bool checked) {
-        t_settings->setOption("lossless_recording", true);
-        t_settings->setOption("save_as_gif", false);
+        t_settings->setValue("recordConfig", "lossless_recording", true);
+        t_settings->setValue("recordConfig", "save_as_gif", false);
         fps5Action->setEnabled(true);
         fps10Action->setEnabled(true);
         fps20Action->setEnabled(true);
@@ -485,19 +492,19 @@ void SubToolWidget::initRecordLabel()
         int t_frameRateSelected = 0;
         if (t_act == fps5Action) {
             t_frameRateSelected = 5;
-            t_settings->setOption("mkv_framerate", "5");
+            t_settings->setValue("recordConfig", "mkv_framerate", "5");
         } else if (t_act == fps10Action) {
             t_frameRateSelected = 10;
-            t_settings->setOption("mkv_framerate", "10");
+            t_settings->setValue("recordConfig", "mkv_framerate", "10");
         } else if (t_act == fps20Action) {
             t_frameRateSelected = 20;
-            t_settings->setOption("mkv_framerate", "20");
+            t_settings->setValue("recordConfig", "mkv_framerate", "20");
         } else if (t_act == fps24Action) {
             t_frameRateSelected = 24;
-            t_settings->setOption("mkv_framerate", "24");
+            t_settings->setValue("recordConfig", "mkv_framerate", "24");
         } else if (t_act == fps30Action) {
             t_frameRateSelected = 30;
-            t_settings->setOption("mkv_framerate", "30");
+            t_settings->setValue("recordConfig", "mkv_framerate", "30");
         }
 
         emit videoFrameRateChanged(t_frameRateSelected);

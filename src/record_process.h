@@ -24,7 +24,7 @@
 #ifndef RECORDPROCESS_H
 #define RECORDPROCESS_H
 
-#include "settings.h"
+#include "utils/configsettings.h"
 #include <QProcess>
 #include <QThread>
 #include <QRect>
@@ -87,7 +87,7 @@ private:
     QString saveAreaName;
     QString displayNumber;
 
-    Settings *settings = nullptr;
+    ConfigSettings *settings = nullptr;
 
     int byzanzProcessId = 0;
     int m_framerate;

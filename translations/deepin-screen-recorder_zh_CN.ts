@@ -414,6 +414,13 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>TopTips</name>
+    <message>
+        <source> Adjust the recording area within %1*%2 to get better video effect</source>
+        <translation> 调整录制区域范围在%1*%2以内，视频效果更佳</translation>
+    </message>
+</context>
+<context>
     <name>Utils</name>
     <message>
         <source>Recordings</source>

@@ -39,7 +39,7 @@ RESOURCES = deepin-screen-recorder.qrc \
     src/icons/icons.qrc
 
 # Input
-HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src/countdown_tooltip.h src/constant.h src/event_monitor.h src/button_feedback.h src/process_tree.h \
+HEADERS += src/main_window.h src/record_process.h src/utils.h src/countdown_tooltip.h src/constant.h src/event_monitor.h src/button_feedback.h src/process_tree.h \
     src/show_buttons.h \
     src/keydefine.h   \
     src/utils/audioutils.h \
@@ -81,7 +81,7 @@ HEADERS += src/main_window.h src/record_process.h src/settings.h src/utils.h src
     src/RecorderRegionShow.h \
     src/lib/GifH/gif.h \
     src/xgifrecord.h
-SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/settings.cpp src/utils.cpp src/countdown_tooltip.cpp src/constant.cpp src/event_monitor.cpp src/button_feedback.cpp src/process_tree.cpp \
+SOURCES += src/main.cpp src/main_window.cpp src/record_process.cpp src/utils.cpp src/countdown_tooltip.cpp src/constant.cpp src/event_monitor.cpp src/button_feedback.cpp src/process_tree.cpp \
     src/show_buttons.cpp  \
     src/utils/audioutils.cpp \
     src/menucontroller/menucontroller.cpp \
