@@ -36,6 +36,19 @@ QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declaration
 QMAKE_CXXFLAGS += -g -Wall -fprofile-arcs -ftest-coverage -O0
 QMAKE_LFLAGS += -g -Wall -fprofile-arcs -ftest-coverage  -O0
 
+
+#DEFINES += TSAN #互斥
+contains(DEFINES,TSAN){
+   QMAKE_CXXFLAGS+="-fsanitize=thread"
+   QMAKE_CFLAGS+="-fsanitize=thread"
+   QMAKE_LFLAGS+="-fsanitize=thread"
+}
+else{
+   QMAKE_CXXFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+   QMAKE_CFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+   QMAKE_LFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+}
+
 # The following define makes your compiler warn you if you use any
 # feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the

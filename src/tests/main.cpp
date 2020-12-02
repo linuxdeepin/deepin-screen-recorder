@@ -6,7 +6,7 @@
 
 int main(int argc, char *argv[])
 {
-    //QApplication app(argc, argv);
+    QApplication app(argc, argv);
     qDebug() << "start test cases ..............";
     testing::InitGoogleTest(&argc, argv);
     int ret = RUN_ALL_TESTS();
