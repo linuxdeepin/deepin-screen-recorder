@@ -136,7 +136,7 @@ public:
     void initScreenRecorder();
     void initShortcut();
     void initLaunchMode(const QString &launchMode);
-    void delayScreenshot(double num);
+    //void delayScreenshot(double num);
     void fullScreenshot();
 
     void topWindow();

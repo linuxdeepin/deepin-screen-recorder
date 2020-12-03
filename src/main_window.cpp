@@ -740,7 +740,7 @@ void MainWindow::initLaunchMode(const QString &launchMode)
         initScreenShot();
     }
 }
-
+/*
 void MainWindow::delayScreenshot(double num)
 {
     QString summary = QString(tr("Screen Capture will start in %1 seconds").arg(num));
@@ -764,7 +764,7 @@ void MainWindow::delayScreenshot(double num)
         this->initResource();
     });
 }
-
+*/
 void MainWindow::fullScreenshot()
 {
     //DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
@@ -3307,6 +3307,13 @@ void MainWindow::startCountdown()
     recordProcess.setRecordInfo(recordRect, selectAreaName);
     resetCursor();
     hideAllWidget();
+
+    //释放正式录屏前显示的按钮
+    for (int t_index = 0; t_index < m_keyButtonList.count(); t_index++) {
+       delete m_keyButtonList.at(t_index);
+    }
+    m_keyButtonList.clear();
+
     QVBoxLayout *countdownLayout = new QVBoxLayout();
     setLayout(countdownLayout);
 
