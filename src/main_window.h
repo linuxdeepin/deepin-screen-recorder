@@ -155,7 +155,7 @@ signals:
 
 public slots:
     void startRecord();
-    void flashTrayIcon();
+    //void flashTrayIcon();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void shotCurrentImg();
     void addCursorToImage();
@@ -220,7 +220,7 @@ private:
     QList<QRect> windowRects;
     QList<QString> windowNames;
     ShowButtons *m_showButtons = nullptr;
-    QTimer *flashTrayIconTimer = nullptr;
+    //QTimer *flashTrayIconTimer = nullptr;
     QRect screenRect;
     RecordProcess recordProcess;
     voiceVolumeWatcher *m_pVoiceVolumeWatcher = nullptr;
@@ -263,7 +263,7 @@ private:
     QPixmap resizeHandleSmallImg;
 
     QString selectAreaName = "";
-    QSystemTrayIcon *trayIcon = nullptr;
+    //QSystemTrayIcon *trayIcon = nullptr;
     CountdownTooltip *countdownTooltip = nullptr;
     ButtonFeedback *buttonFeedback = nullptr;
     EventMonitor *m_pScreenRecordEvent = nullptr;

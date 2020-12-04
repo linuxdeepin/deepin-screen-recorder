@@ -535,10 +535,10 @@ void MainWindow::initResource()
     resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(":/image/newUI/normal/node.svg");
     resizeHandleSmallImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_small.svg"));
 
-    trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
-    trayIcon->setToolTip(tr("Screen Capture"));
-    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+//    trayIcon = new QSystemTrayIcon(this);
+//    trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
+//    trayIcon->setToolTip(tr("Screen Capture"));
+//    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
     //    setDragCursor();
 
@@ -2939,10 +2939,10 @@ void MainWindow::startRecord()
     resetCursor();
     repaint();
 
-    trayIcon->show();
-    flashTrayIconTimer = new QTimer(this);
-    connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
-    flashTrayIconTimer->start(800);
+//    trayIcon->show();
+//    flashTrayIconTimer = new QTimer(this);
+//    connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
+//    flashTrayIconTimer->start(800);
 
     recordProcess.setRecordAudioInputType(getRecordInputType(m_selectedMic, m_selectedSystemAudio));
     recordProcess.startRecord();
@@ -3058,20 +3058,20 @@ void MainWindow::shotFullScreen(bool isFull)
     qDebug() << "m_resultPixmap" << m_resultPixmap.rect();
 }
 
-void MainWindow::flashTrayIcon()
-{
-    if (flashTrayIconCounter % 2 == 0) {
-        trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon2.svg"))));
-    } else {
-        trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
-    }
+//void MainWindow::flashTrayIcon()
+//{
+//    if (flashTrayIconCounter % 2 == 0) {
+//        trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon2.svg"))));
+//    } else {
+//        trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
+//    }
 
-    flashTrayIconCounter++;
+//    flashTrayIconCounter++;
 
-    if (flashTrayIconCounter > 10) {
-        flashTrayIconCounter = 1;
-    }
-}
+//    if (flashTrayIconCounter > 10) {
+//        flashTrayIconCounter = 1;
+//    }
+//}
 
 void MainWindow::resizeTop(QMouseEvent *mouseEvent)
 {
@@ -3273,7 +3273,7 @@ void MainWindow::stopRecord()
         //正在保存录屏文件通知
         sendSavingNotify();
         // 停止闪烁
-        flashTrayIconTimer->stop();
+        //flashTrayIconTimer->stop();
         recordProcess.stopRecord();
     }
 }

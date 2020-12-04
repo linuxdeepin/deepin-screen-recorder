@@ -395,6 +395,14 @@ void RecordProcess::initProcess()
 void RecordProcess::startRecord()
 {
     QThread::start();
+    QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
+                                                                                             "/com/deepin/ScreenRecorder/time",
+                                                                                             "com.deepin.ScreenRecorder.time",
+                                                                                             "onStart"));
+    if (QDBusMessage::ReplyMessage == message.type()){
+        if(!message.arguments().takeFirst().toBool())
+            qDebug() << "dde dock screen-recorder-plugin did not receive start message!";
+    }
 }
 /*
 void RecordProcess::setIsZhaoXinPlatform(bool status)
@@ -487,6 +495,14 @@ void RecordProcess::stopRecord()
     } else {
         //process->terminate();
         process->write("q");
+    }
+    QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
+                                                                                             "/com/deepin/ScreenRecorder/time",
+                                                                                             "com.deepin.ScreenRecorder.time",
+                                                                                             "onStop"));
+    if (QDBusMessage::ReplyMessage == message.type()){
+        if(!message.arguments().takeFirst().toBool())
+            qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
     }
 
     wait();
