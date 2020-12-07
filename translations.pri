@@ -1,32 +1,32 @@
 TRANSLATIONS += \
-    translations/deepin-screen-recorder_zh_CN.ts \
-    translations/deepin-screen-recorder_en_US.ts \
-    translations/deepin-screen-recorder_zh_HK.ts \
-    translations/deepin-screen-recorder_zh_TW.ts \
-    translations/deepin-screen-recorder_ar.ts \
-    translations/deepin-screen-recorder_br.ts \
-    translations/deepin-screen-recorder_ca.ts \
-    translations/deepin-screen-recorder_cs.ts \
-    translations/deepin-screen-recorder_da.ts \
-    translations/deepin-screen-recorder_de.ts \
-    translations/deepin-screen-recorder_es.ts \
-    translations/deepin-screen-recorder_fi.ts \
-    translations/deepin-screen-recorder_fr.ts \
-    translations/deepin-screen-recorder_gl_ES.ts \
-    translations/deepin-screen-recorder_hu.ts \
-    translations/deepin-screen-recorder_it.ts \
-    translations/deepin-screen-recorder_ko.ts \
-    translations/deepin-screen-recorder_ms.ts \
-    translations/deepin-screen-recorder_nl.ts \
-    translations/deepin-screen-recorder_pl.ts \
-    translations/deepin-screen-recorder_pt.ts \
-    translations/deepin-screen-recorder_pt_BR.ts \
-    translations/deepin-screen-recorder_ru.ts \
-    translations/deepin-screen-recorder_sq.ts \
-    translations/deepin-screen-recorder_sr.ts \
-    translations/deepin-screen-recorder_tr.ts \
-    translations/deepin-screen-recorder_uk.ts \
-    translations/deepin-screen-recorder_ug.ts
+    $$PWD/translations/deepin-screen-recorder_zh_CN.ts \
+    $$PWD/translations/deepin-screen-recorder_en_US.ts \
+    $$PWD/translations/deepin-screen-recorder_zh_HK.ts \
+    $$PWD/translations/deepin-screen-recorder_zh_TW.ts \
+    $$PWD/translations/deepin-screen-recorder_ar.ts \
+    $$PWD/translations/deepin-screen-recorder_br.ts \
+    $$PWD/translations/deepin-screen-recorder_ca.ts \
+    $$PWD/translations/deepin-screen-recorder_cs.ts \
+    $$PWD/translations/deepin-screen-recorder_da.ts \
+    $$PWD/translations/deepin-screen-recorder_de.ts \
+    $$PWD/translations/deepin-screen-recorder_es.ts \
+    $$PWD/translations/deepin-screen-recorder_fi.ts \
+    $$PWD/translations/deepin-screen-recorder_fr.ts \
+    $$PWD/translations/deepin-screen-recorder_gl_ES.ts \
+    $$PWD/translations/deepin-screen-recorder_hu.ts \
+    $$PWD/translations/deepin-screen-recorder_it.ts \
+    $$PWD/translations/deepin-screen-recorder_ko.ts \
+    $$PWD/translations/deepin-screen-recorder_ms.ts \
+    $$PWD/translations/deepin-screen-recorder_nl.ts \
+    $$PWD/translations/deepin-screen-recorder_pl.ts \
+    $$PWD/translations/deepin-screen-recorder_pt.ts \
+    $$PWD/translations/deepin-screen-recorder_pt_BR.ts \
+    $$PWD/translations/deepin-screen-recorder_ru.ts \
+    $$PWD/translations/deepin-screen-recorder_sq.ts \
+    $$PWD/translations/deepin-screen-recorder_sr.ts \
+    $$PWD/translations/deepin-screen-recorder_tr.ts \
+    $$PWD/translations/deepin-screen-recorder_uk.ts \
+    $$PWD/translations/deepin-screen-recorder_ug.ts
 
 
 

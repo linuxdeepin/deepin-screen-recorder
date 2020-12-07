@@ -242,15 +242,6 @@ int main(int argc, char *argv[])
             window.initLaunchMode(t_launchMode);
             DBusScreenshotService dbusService (&window);
 
-            QString arch = QSysInfo::currentCpuArchitecture();
-            if (!(arch.startsWith("x86", Qt::CaseInsensitive) || arch.startsWith("ARM", Qt::CaseInsensitive))) {
-                if (t_launchMode == "screenRecord") {
-                    Utils::notSupportWarn();
-                    qApp->quit();
-                    return 0;
-                }
-            }
-
             if (!DWindowManagerHelper::instance()->hasComposite() && t_launchMode == "screenRecord") {
                 Utils::warnNoComposite();
                 qApp->quit();

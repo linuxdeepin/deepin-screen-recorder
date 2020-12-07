@@ -535,10 +535,10 @@ void MainWindow::initResource()
     resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(":/image/newUI/normal/node.svg");
     resizeHandleSmallImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_small.svg"));
 
-    trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
-    trayIcon->setToolTip(tr("Screen Capture"));
-    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+//    trayIcon = new QSystemTrayIcon(this);
+//    trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
+//    trayIcon->setToolTip(tr("Screen Capture"));
+//    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
     //    setDragCursor();
 
@@ -603,8 +603,8 @@ void MainWindow::initScreenShot()
 
         updateToolBarPos();
         updateShotButtonPos();
-        m_sizeTips->updateTips(QPoint(recordX, recordY),
-                               QString("%1X%2").arg(recordWidth).arg(recordHeight));
+        m_sizeTips->setRecorderTipsInfo(false);
+        m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
     }
 
     //recordButton->hide();
@@ -693,8 +693,8 @@ void MainWindow::initScreenRecorder()
 
         updateToolBarPos();
         updateRecordButtonPos();
-        m_sizeTips->updateTips(QPoint(recordX, recordY),
-                               QString("%1X%2").arg(recordWidth).arg(recordHeight));
+        m_sizeTips->setRecorderTipsInfo(true);
+        m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
     }
 
     //recordButton->hide();
@@ -732,17 +732,7 @@ void MainWindow::initLaunchMode(const QString &launchMode)
         if (m_sideBar->isVisible()) {
             m_sideBar->hide();
         }
-    }
-
-    else if (launchMode == "screenShot") {
-        m_launchWithRecordFunc = false;
-        m_recordButton->hide();
-        m_shotButton->show();
-        m_functionType = 1;
-        initScreenShot();
-    }
-
-    else {
+    } else {
         m_launchWithRecordFunc = false;
         m_recordButton->hide();
         m_shotButton->show();
@@ -750,7 +740,7 @@ void MainWindow::initLaunchMode(const QString &launchMode)
         initScreenShot();
     }
 }
-
+/*
 void MainWindow::delayScreenshot(double num)
 {
     QString summary = QString(tr("Screen Capture will start in %1 seconds").arg(num));
@@ -774,7 +764,7 @@ void MainWindow::delayScreenshot(double num)
         this->initResource();
     });
 }
-
+*/
 void MainWindow::fullScreenshot()
 {
     //DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
@@ -1670,17 +1660,17 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         QDBusMessage msg =QDBusMessage::createSignal("/com/deepin/Screenshot", "com.deepin.Screenshot", "Done");
         msg << saveFilePath;
         QDBusConnection::sessionBus().send(msg);
-        exit(0);
+        qApp->quit();
     }
     if(m_noNotify) {
-        exit(0);
+        qApp->quit();
     }
     // failed notify
     if (!succeed) {
         DBusNotify saveFailedNotify;
         QString tips = QString(tr("Save failed. Please save it in your home directory."));
         saveFailedNotify.Notify(QCoreApplication::applicationName(), 0, "deepin-screen-recorder", QString(), tips, QStringList(), QVariantMap(), 5000);
-        exit(0);
+        qApp->quit();
     }
 
     QDBusInterface remote_dde_notify_obj("com.deepin.dde.Notification", "/com/deepin/dde/Notification",
@@ -2030,7 +2020,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         Q_ASSERT(!screenShotPix.isNull());
         QClipboard *cb = qApp->clipboard();
         cb->setMimeData(t_imageData, QClipboard::Clipboard);
-        //if (m_copyToClipboard) {}
+        /*
         // 调起画板， 传入截图路径
         int t_openWithDraw = ConfigSettings::instance()->value("open", "draw").toInt();
         if (t_openWithDraw == 1) {
@@ -2040,6 +2030,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
             m_draw->openImages(list);
             delete m_draw;
         }
+        */
     }
     return true;
 }
@@ -2355,8 +2346,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
 
                 if ( !m_needSaveScreenshot) {
-                    m_sizeTips->updateTips(QPoint(recordX, recordY),
-                                           QString("%1X%2").arg(recordWidth).arg(recordHeight));
+                    m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
                     if(m_toolBar->isVisible()) {
                         updateToolBarPos();
                     }
@@ -2472,8 +2462,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                 }
 
-                m_sizeTips->updateTips(QPoint(recordX, recordY),
-                                       QString("%1X%2").arg(recordWidth).arg(recordHeight));
+                m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
                 if(m_toolBar->isVisible()){
                     updateToolBarPos();
                 }
@@ -2617,8 +2606,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             if (mouseEvent->button() == Qt::LeftButton) {
                 if (m_sizeTips->isVisible()) {
-                    m_sizeTips->updateTips(QPoint(recordX, recordY),
-                                           QString("%1X%2").arg(recordWidth).arg(recordHeight));
+                    m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
                 }
                 if (!isFirstReleaseButton) {
                     isFirstReleaseButton = true;
@@ -2695,8 +2683,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                 }
                 if (m_sizeTips->isVisible()) {
-                    m_sizeTips->updateTips(QPoint(recordX, recordY),
-                                           QString("%1X%2").arg(recordWidth).arg(recordHeight));
+                    m_sizeTips->updateTips(QPoint(recordX, recordY),QSize(recordWidth,recordHeight));
                 }
 
                 isPressButton = false;
@@ -2851,8 +2838,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
         }
         if (m_shotflag == 0) {
-            m_sizeTips->updateTips(QPoint(recordX, recordY),
-                                   QString("%1X%2").arg(recordWidth).arg(recordHeight));
+            m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
         }
 
     }
@@ -2953,10 +2939,10 @@ void MainWindow::startRecord()
     resetCursor();
     repaint();
 
-    trayIcon->show();
-    flashTrayIconTimer = new QTimer(this);
-    connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
-    flashTrayIconTimer->start(800);
+//    trayIcon->show();
+//    flashTrayIconTimer = new QTimer(this);
+//    connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
+//    flashTrayIconTimer->start(800);
 
     recordProcess.setRecordAudioInputType(getRecordInputType(m_selectedMic, m_selectedSystemAudio));
     recordProcess.startRecord();
@@ -3072,20 +3058,20 @@ void MainWindow::shotFullScreen(bool isFull)
     qDebug() << "m_resultPixmap" << m_resultPixmap.rect();
 }
 
-void MainWindow::flashTrayIcon()
-{
-    if (flashTrayIconCounter % 2 == 0) {
-        trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon2.svg"))));
-    } else {
-        trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
-    }
+//void MainWindow::flashTrayIcon()
+//{
+//    if (flashTrayIconCounter % 2 == 0) {
+//        trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon2.svg"))));
+//    } else {
+//        trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
+//    }
 
-    flashTrayIconCounter++;
+//    flashTrayIconCounter++;
 
-    if (flashTrayIconCounter > 10) {
-        flashTrayIconCounter = 1;
-    }
-}
+//    if (flashTrayIconCounter > 10) {
+//        flashTrayIconCounter = 1;
+//    }
+//}
 
 void MainWindow::resizeTop(QMouseEvent *mouseEvent)
 {
@@ -3287,7 +3273,7 @@ void MainWindow::stopRecord()
         //正在保存录屏文件通知
         sendSavingNotify();
         // 停止闪烁
-        flashTrayIconTimer->stop();
+        //flashTrayIconTimer->stop();
         recordProcess.stopRecord();
     }
 }
@@ -3321,6 +3307,13 @@ void MainWindow::startCountdown()
     recordProcess.setRecordInfo(recordRect, selectAreaName);
     resetCursor();
     hideAllWidget();
+
+    //释放正式录屏前显示的按钮
+    for (int t_index = 0; t_index < m_keyButtonList.count(); t_index++) {
+       delete m_keyButtonList.at(t_index);
+    }
+    m_keyButtonList.clear();
+
     QVBoxLayout *countdownLayout = new QVBoxLayout();
     setLayout(countdownLayout);
 

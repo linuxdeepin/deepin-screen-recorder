@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/light.svg</file>
+        <file>res/shade.svg</file>
+    </qresource>
+</RCC>

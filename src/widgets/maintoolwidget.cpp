@@ -95,11 +95,6 @@ void MainToolWidget::initMainLabel()
     if((!DWindowManagerHelper::instance()->hasComposite()) || Utils::is3rdInterfaceStart) {
         m_recordBtn->hide();
     }
-    // mips 与 sw 隐藏录屏功能
-    QString arch = QSysInfo::currentCpuArchitecture();
-    if(!(arch.startsWith("x86", Qt::CaseInsensitive) || arch.startsWith("ARM", Qt::CaseInsensitive))) {
-        m_recordBtn->hide();
-    }
 
     toolBtnList.append(m_recordBtn);
 

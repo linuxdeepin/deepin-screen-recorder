@@ -30,8 +30,8 @@
 #include <QPainterPath>
 #include <QDBusInterface>
 #include <QtX11Extras/QX11Info>
-#include <X11/extensions/shape.h>
 #include "utils.h"
+#include <X11/extensions/shape.h>
 //#include <dwindowmanager.h>
 #include "constant.h"
 #include <QStandardPaths>

@@ -32,12 +32,15 @@ class TopTips : public QLabel
 public:
     explicit TopTips(DWidget *parent = nullptr);
     ~TopTips() override;
-
+    void setRecorderTipsInfo(const bool showState);
 public slots:
-    void setContent(QString widthXHeight);
-    void updateTips(QPoint pos, QString text);
+    void setContent(const QSize rect);
+    void updateTips(QPoint pos, const QSize rect);
 
 protected:
     void mousePressEvent(QMouseEvent *ev) override;
+    bool m_showRecorderTips = false;
+    int m_width = 0;
+    int m_height = 0;
 };
 #endif // TOPTIPS_H

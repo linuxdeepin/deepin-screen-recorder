@@ -414,6 +414,13 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
 </context>
 <context>
+    <name>TopTips</name>
+    <message>
+        <source> Adjust the recording area within %1*%2 to get better video effect</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Utils</name>
     <message>
         <source>Recordings</source>

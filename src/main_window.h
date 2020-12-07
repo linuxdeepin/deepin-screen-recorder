@@ -110,9 +110,10 @@ public:
     explicit MainWindow(DWidget *parent = nullptr);
     ~MainWindow()
     {
-        m_pVoiceVolumeWatcher->stopWatch();
-
-        m_pCameraWatcher->stopWatch();
+        if(m_pVoiceVolumeWatcher)
+            m_pVoiceVolumeWatcher->stopWatch();
+        if(m_pCameraWatcher)
+            m_pCameraWatcher->stopWatch();
         QThread::currentThread()->msleep(500);
     }
 
@@ -135,7 +136,7 @@ public:
     void initScreenRecorder();
     void initShortcut();
     void initLaunchMode(const QString &launchMode);
-    void delayScreenshot(double num);
+    //void delayScreenshot(double num);
     void fullScreenshot();
 
     void topWindow();
@@ -154,7 +155,7 @@ signals:
 
 public slots:
     void startRecord();
-    void flashTrayIcon();
+    //void flashTrayIcon();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void shotCurrentImg();
     void addCursorToImage();
@@ -219,7 +220,7 @@ private:
     QList<QRect> windowRects;
     QList<QString> windowNames;
     ShowButtons *m_showButtons = nullptr;
-    QTimer *flashTrayIconTimer = nullptr;
+    //QTimer *flashTrayIconTimer = nullptr;
     QRect screenRect;
     RecordProcess recordProcess;
     voiceVolumeWatcher *m_pVoiceVolumeWatcher = nullptr;
@@ -262,7 +263,7 @@ private:
     QPixmap resizeHandleSmallImg;
 
     QString selectAreaName = "";
-    QSystemTrayIcon *trayIcon = nullptr;
+    //QSystemTrayIcon *trayIcon = nullptr;
     CountdownTooltip *countdownTooltip = nullptr;
     ButtonFeedback *buttonFeedback = nullptr;
     EventMonitor *m_pScreenRecordEvent = nullptr;
