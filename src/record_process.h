@@ -67,7 +67,7 @@ public:
     void recordGIF();
     void recordVideo();
     void initProcess();
-    int readSleepProcessPid();
+    //int readSleepProcessPid();
 protected:
     void run();
 

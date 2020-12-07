@@ -34,6 +34,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QDir>
+#include <sanitizer/asan_interface.h>
 #include "main_window.h"
 #include "screenshot.h"
 #include "utils.h"
@@ -105,6 +106,12 @@ int main(int argc, char *argv[])
     // Construct a QGuiApplication before accessing a platform function.
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
 
+
+    // 内存检测标签
+#ifdef ENABLE_TSAN_TOOL
+    __sanitizer_set_report_path("./asan.log");
+#endif
+
 // 适配deepin-turbo 启动加速
 #if(DTK_VERSION < DTK_VERSION_CHECK(5,4,0,0))
     DApplication::loadDXcbPlugin();
@@ -123,26 +130,6 @@ int main(int argc, char *argv[])
     if (argc >= 2) {
         t_launchMode = QString(argv[1]);
 //        qDebug() << t_launchMode;
-    }
-    */
-
-    //判断wayland平台
-    /*
-    auto e = QProcessEnvironment::systemEnvironment();
-    QString XDG_CURRENT_DESKTOP = e.value(QStringLiteral("XDG_CURRENT_DESKTOP"));
-    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
-    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
-    QString KDE_FULL_SESSION = e.value(QStringLiteral("KDE_FULL_SESSION"));
-    QString GNOME_DESKTOP_SESSION_ID = e.value(QStringLiteral("GNOME_DESKTOP_SESSION_ID"));
-    QString DESKTOP_SESSION = e.value(QStringLiteral("DESKTOP_SESSION"));
-
-    bool t_waylandPlatform = XDG_SESSION_TYPE == QLatin1String("wayland") ||
-                             WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
-
-    if (t_waylandPlatform) {
-        if (t_launchMode == "screenRecord") {
-            return 0;
-        }
     }
     */
 
@@ -193,6 +180,7 @@ int main(int argc, char *argv[])
             QCommandLineOption dbusOption(QStringList() << "u" << "dbus",
                                           "Start  from dbus.");
             QCommandLineOption screenRecordOption(QStringList() << "record" << "screenRecord" << "start screen record");
+            QCommandLineOption screenShotOption(QStringList() << "shot" << "screenShot" << "start screen shot");
             //for test
 //            QCommandLineOption testOption(QStringList() << "t" << "test",
 //                                          "Start  from test.");
@@ -210,8 +198,6 @@ int main(int argc, char *argv[])
             cmdParser.addOption(dbusOption);
             cmdParser.addOption(screenRecordOption);
             cmdParser.addOption(screenShotOption);
-//            cmdParser.addOption(testOption);
-            cmdParser.addOption(screenRecordOption);
             cmdParser.process(*app);
 
             // Load translator.

@@ -203,7 +203,7 @@ bool HintFilter::eventFilter(QObject *obj, QEvent *event)
     }
     return QObject::eventFilter(obj, event);
 }
-
+/*
 void HintFilter::showHitsFor(QWidget *w, QWidget *hint)
 {
     Q_D(HintFilter);
@@ -227,7 +227,7 @@ void HintFilter::showHitsFor(QWidget *w, QWidget *hint)
 
     d->hintWidget->setCursor(QCursor(Qt::PointingHandCursor));
 }
-
+*/
 HoverShadowFilter::HoverShadowFilter(QObject *parent): QObject(parent)
 {
 

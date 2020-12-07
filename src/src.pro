@@ -9,17 +9,6 @@ INCLUDEPATH += .
 
 include(accessibility/accessible.pri)
 
-#DEFINES += TSAN #互斥
-#contains(DEFINES,TSAN){
-#   QMAKE_CXXFLAGS+="-fsanitize=thread"
-#   QMAKE_CFLAGS+="-fsanitize=thread"
-#   QMAKE_LFLAGS+="-fsanitize=thread"
-#}
-#else{
-#   QMAKE_CXXFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
-#   QMAKE_CFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
-#   QMAKE_LFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
-#}
 
 QMAKE_CXX += -Wl,--as-need -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
 QMAKE_CXXFLAGS += -Wl,--as-need -fPIE -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
@@ -46,7 +35,7 @@ HEADERS += main_window.h \
     constant.h \
     event_monitor.h \
     button_feedback.h \
-    process_tree.h \
+    #process_tree.h \
     show_buttons.h \
     keydefine.h   \
     utils/audioutils.h \
@@ -97,7 +86,7 @@ SOURCES += main.cpp \
     constant.cpp \
     event_monitor.cpp \
     button_feedback.cpp \
-    process_tree.cpp \
+    #process_tree.cpp \
     show_buttons.cpp  \
     utils/audioutils.cpp \
     menucontroller/menucontroller.cpp \
@@ -212,11 +201,28 @@ DISTFILES += \
 
 
 
+# 检查集成测试标签
 AC_FUNC_ENABLE = true
 # 获取标签系统设置
 #AC_FUNC_ENABLE = $$(ENABLE_AC_FUNC)
-# 检查集成测试标签
 equals(AC_FUNC_ENABLE, true ){
     DEFINES += ENABLE_ACCESSIBILITY
     message("deepin-screen-recorder enabled accessibility function with set: " $$AC_FUNC_ENABLE)
+}
+
+#内存检测标签
+TSAN_TOOL_ENABLE = false
+equals(TSAN_TOOL_ENABLE, true ){
+    #DEFINES += TSAN_THREAD #互斥
+    DEFINES += ENABLE_TSAN_TOOL
+    message("deepin-screen-recorder enabled TSAN function with set: " $$TSAN_TOOL_ENABLE)
+    contains(DEFINES, TSAN_THREAD){
+       QMAKE_CXXFLAGS+="-fsanitize=thread"
+       QMAKE_CFLAGS+="-fsanitize=thread"
+       QMAKE_LFLAGS+="-fsanitize=thread"
+    } else {
+       QMAKE_CXXFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+       QMAKE_CFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+       QMAKE_LFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+    }
 }

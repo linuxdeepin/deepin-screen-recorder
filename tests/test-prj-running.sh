@@ -14,7 +14,7 @@ executable=ut_screen_shot_recorder #可执行程序的文件名
 
 #下面是覆盖率目录操作，一种正向操作，一种逆向操作
 extract_info="*/deepin-screen-recorder/*" #针对当前目录进行覆盖率操作
-remove_info="*/src/tests* */src/stub_linux* */src/lib/*" #排除当前目录进行覆盖率操作
+remove_info="*tests*" #排除当前目录进行覆盖率操作
 
 
 build_dir=$workdir

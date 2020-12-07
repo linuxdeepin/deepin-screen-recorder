@@ -51,7 +51,7 @@ public:
     friend QDataStream &operator>>(QDataStream &in, Toolshape &obj);
     Toolshape operator=(Toolshape obj);
     bool operator==(const Toolshape &other) const;
-    static void registerMetaType();
+    //static void registerMetaType();
 };
 
 //typedef QList<QPointF> FourPoints;

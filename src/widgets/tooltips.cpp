@@ -230,7 +230,7 @@ void ToolTips::paintEvent(QPaintEvent *)
     Q_D(ToolTips);
 //    QFrame::paintEvent(e);
 //    return;
-    bool outer = true;
+//    bool outer = true;
 
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing);
@@ -264,13 +264,13 @@ void ToolTips::paintEvent(QPaintEvent *)
     QRectF borderRect = QRectF(rect());
     auto borderRadius = radius;
     QMarginsF borderMargin(penWidthf / 2, penWidthf / 2, penWidthf / 2, penWidthf / 2);
-    if (outer) {
+//    if (outer) {
         borderRadius += penWidthf / 2;
         borderRect = borderRect.marginsAdded(borderMargin).marginsRemoved(shadowMargins);
-    } else {
-        borderRadius -= penWidthf / 2;
-        borderRect = borderRect.marginsRemoved(borderMargin).marginsRemoved(shadowMargins);
-    }
+    //} else {
+        //borderRadius -= penWidthf / 2;
+        //borderRect = borderRect.marginsRemoved(borderMargin).marginsRemoved(shadowMargins);
+    //}
     borderPath.addRoundedRect(borderRect, borderRadius, borderRadius);
     QPen borderPen(borderColor);
     borderPen.setWidthF(penWidthf);

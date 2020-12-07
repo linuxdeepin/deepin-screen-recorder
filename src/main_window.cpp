@@ -155,18 +155,18 @@ MainWindow::MainWindow(DWidget *parent) :
 
     for(int i = 0; i < pathList.size(); ++i) {
         QString path = pathList.at(i).path();
-        QDBusInterface monitorInterface("com.deepin.daemon.Display",path,"com.deepin.daemon.Display.Monitor",
+        QDBusInterface displayMonitorInterface("com.deepin.daemon.Display",path,"com.deepin.daemon.Display.Monitor",
                                         QDBusConnection::sessionBus());
 
-        if(!monitorInterface.isValid()) {
+        if(!displayMonitorInterface.isValid()) {
             continue;
         }
         ScreenInfo screenInfo;
-        screenInfo.x = monitorInterface.property("X").toInt();
-        screenInfo.y = monitorInterface.property("Y").toInt();
-        screenInfo.height =  monitorInterface.property("Height").toInt();
-        screenInfo.width = monitorInterface.property("Width").toInt();
-        screenInfo.name = monitorInterface.property("Name").toString();
+        screenInfo.x = displayMonitorInterface.property("X").toInt();
+        screenInfo.y = displayMonitorInterface.property("Y").toInt();
+        screenInfo.height =  displayMonitorInterface.property("Height").toInt();
+        screenInfo.width = displayMonitorInterface.property("Width").toInt();
+        screenInfo.name = displayMonitorInterface.property("Name").toString();
         m_screenInfo.append(screenInfo);
     }
     if(m_screenInfo.size() > 1) {

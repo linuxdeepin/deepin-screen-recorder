@@ -28,10 +28,10 @@ public:
     }
 
     virtual void TearDown() override{
-
         std::cout << "end RecordProcessTest" << std::endl;
         stub.reset(ADDR(QCoreApplication, quit));
         stub.reset(ADDR(ConfigSettings, value));
+        stub.reset(ADDR(QSysInfo, currentCpuArchitecture));
     }
 };
 
@@ -72,13 +72,18 @@ QVariant getOption_mkv_stub(void* obj, const QString &group, const QString &key)
     return  false;
 }
 
+QString currentCpuArchitecture_stub(void* obj)
+{
+    return  "mips";
+}
+
 TEST_F(RecordProcessTest, recordGIF)
 {
     stub.set(ADDR(ConfigSettings, value), getOption_gif_stub);
     RecordProcess *m_process;
     m_process = new RecordProcess;
     m_process->setRecordAudioInputType(RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO);
-    m_process->setRecordInfo(QRect(0, 0, 1920, 1080), "test");
+    m_process->setRecordInfo(QRect(0, 0, 1920, 1080), "gif");
     m_process->startRecord();
     QEventLoop loop;
     QTimer::singleShot(5000, &loop, SLOT(quit()));
@@ -93,7 +98,7 @@ TEST_F(RecordProcessTest, recordVideoMp4)
     RecordProcess *m_process;
     m_process = new RecordProcess;
     m_process->setRecordAudioInputType(RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO);
-    m_process->setRecordInfo(QRect(0, 0, 1920, 1080), "test");
+    m_process->setRecordInfo(QRect(0, 0, 1920, 1080), "mp4");
     m_process->startRecord();
     QEventLoop loop;
     QTimer::singleShot(5000, &loop, SLOT(quit()));
@@ -108,7 +113,41 @@ TEST_F(RecordProcessTest, recordVideoMKV)
     RecordProcess *m_process;
     m_process = new RecordProcess;
     m_process->setRecordAudioInputType(RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO);
-    m_process->setRecordInfo(QRect(0, 0, 1920, 1080), "test");
+    m_process->setRecordInfo(QRect(0, 0, 1920, 1080), "mkv");
+    m_process->startRecord();
+    QEventLoop loop;
+    QTimer::singleShot(5000, &loop, SLOT(quit()));
+    loop.exec();
+    m_process->stopRecord();
+    delete  m_process;
+    sleep(1);
+}
+
+
+TEST_F(RecordProcessTest, mpisRecordVideoMp4)
+{
+    stub.set(ADDR(QSysInfo, currentCpuArchitecture), currentCpuArchitecture_stub);
+    stub.set(ADDR(ConfigSettings, value), getOption_mp4_stub);
+    RecordProcess *m_process;
+    m_process = new RecordProcess;
+    m_process->setRecordAudioInputType(RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO);
+    m_process->setRecordInfo(QRect(0, 0, 1920, 1080), "mips_mp4");
+    m_process->startRecord();
+    QEventLoop loop;
+    QTimer::singleShot(5000, &loop, SLOT(quit()));
+    loop.exec();
+    m_process->stopRecord();
+    delete  m_process;
+}
+
+TEST_F(RecordProcessTest, mpisRecordVideoMKV)
+{
+    stub.set(ADDR(ConfigSettings, value), getOption_mkv_stub);
+    stub.set(ADDR(QSysInfo, currentCpuArchitecture), currentCpuArchitecture_stub);
+    RecordProcess *m_process;
+    m_process = new RecordProcess;
+    m_process->setRecordAudioInputType(RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO);
+    m_process->setRecordInfo(QRect(0, 0, 1920, 1080), "mips_mkv");
     m_process->startRecord();
     QEventLoop loop;
     QTimer::singleShot(5000, &loop, SLOT(quit()));

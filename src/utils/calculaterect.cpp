@@ -58,7 +58,7 @@ bool pointOnLine(QPointF point1, QPointF point2, QPointF point3)
 
             QPointF t_dc = t_ac - k * t_ab;
             int t_len = static_cast<int>(sqrt(QPointF::dotProduct(t_dc, t_dc)));
-            qDebug() << "t_distance" << t_len;
+            //qDebug() << "t_distance" << t_len;
 
 
             if (t_len >= 0 && t_len < 5) {
@@ -141,7 +141,7 @@ QPointF getRotatePoint(QPointF point1, QPointF point2, QPointF point3, QPointF p
 FourPoints fourPointsOfLine(QList<QPointF> points)
 {
     FourPoints resultFPoint;
-    const int MIN_PADDING = 10;
+    const int _MIN_PADDING = 10;
     resultFPoint = initFourPoints(resultFPoint);
     if (points.length() < 2) {
         return initFourPoints(resultFPoint);
@@ -154,10 +154,10 @@ FourPoints fourPointsOfLine(QList<QPointF> points)
         maxPointF = QPointF(std::max(maxPointF.x(), point.x()), std::max(maxPointF.y(), point.y()));
     }
 
-    resultFPoint[0] = QPointF(minPointF.x() - MIN_PADDING, minPointF.y() - MIN_PADDING);
-    resultFPoint[1] = QPointF(minPointF.x() - MIN_PADDING, maxPointF.y() + MIN_PADDING);
-    resultFPoint[2] = QPointF(maxPointF.x() + MIN_PADDING, minPointF.y() - MIN_PADDING);
-    resultFPoint[3] = QPointF(maxPointF.x() + MIN_PADDING, maxPointF.y() + MIN_PADDING);
+    resultFPoint[0] = QPointF(minPointF.x() - _MIN_PADDING, minPointF.y() - _MIN_PADDING);
+    resultFPoint[1] = QPointF(minPointF.x() - _MIN_PADDING, maxPointF.y() + _MIN_PADDING);
+    resultFPoint[2] = QPointF(maxPointF.x() + _MIN_PADDING, minPointF.y() - _MIN_PADDING);
+    resultFPoint[3] = QPointF(maxPointF.x() + _MIN_PADDING, maxPointF.y() + _MIN_PADDING);
     return resultFPoint;
 }
 FourPoints getAnotherFPoints(FourPoints mainPoints)
@@ -298,14 +298,14 @@ QList<QPointF> getEightControlPoint(FourPoints rectFPoints)
 /* 0 <= pos.x() <= 1*/
 bool pointOnBezier(QPointF point1, QPointF point2, QPointF point3, QPointF point4, QPointF pos)
 {
-    const int MIN_PADDING = 10;
+    const int _MIN_PADDING = 10;
     for (qreal t = 0; t <= 1; t = t + 0.1) {
         qreal bx = point1.x() * (1 - t) * std::pow(1 - t, 2) + 3 * point2.x() * t * std::pow(1 - t, 2)
                    + 3 * point3.x() * std::pow(t, 2) * (1 - t) + point4.x() * t * std::pow(t, 2);
         qreal by = point1.y() * (1 - t) * std::pow(1 - t, 2) + 3 * point2.y() * t * std::pow(1 - t, 2)
                    + 3 * point3.y() * std::pow(t, 2) * (1 - t) + point4.y() * t * std::pow(t, 2);
-        if (pos.x() >= bx - MIN_PADDING && pos.x() <= bx + MIN_PADDING &&
-                pos.y() >= by - MIN_PADDING && pos.y() <= by + MIN_PADDING) {
+        if (pos.x() >= bx - _MIN_PADDING && pos.x() <= bx + _MIN_PADDING &&
+                pos.y() >= by - _MIN_PADDING && pos.y() <= by + _MIN_PADDING) {
             return true;
         }
     }
@@ -4360,13 +4360,13 @@ FourPoints getMainPoints(QPointF point1, QPointF point2, bool isShift)
 {
     FourPoints fourPoints;
     fourPoints = initFourPoints(fourPoints);
-    qreal padding = 4;
+    qreal _padding = 4;
 
     qreal leftX = std::min(point1.x(), point2.x());
     qreal leftY = std::min(point1.y(), point2.y());
 
-    qreal pWidth = std::max(std::abs(point1.x() - point2.x()), padding);
-    qreal pHeight = std::max(std::abs(point1.y() - point2.y()), padding);
+    qreal pWidth = std::max(std::abs(point1.x() - point2.x()), _padding);
+    qreal pHeight = std::max(std::abs(point1.y() - point2.y()), _padding);
 
     if (isShift) {
         qreal shiftWidth = std::min(pWidth, pHeight);

@@ -37,16 +37,21 @@ QMAKE_CXXFLAGS += -g -Wall -fprofile-arcs -ftest-coverage -O0
 QMAKE_LFLAGS += -g -Wall -fprofile-arcs -ftest-coverage  -O0
 
 
-#DEFINES += TSAN #互斥
-contains(DEFINES,TSAN){
-   QMAKE_CXXFLAGS+="-fsanitize=thread"
-   QMAKE_CFLAGS+="-fsanitize=thread"
-   QMAKE_LFLAGS+="-fsanitize=thread"
-}
-else{
-   QMAKE_CXXFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
-   QMAKE_CFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
-   QMAKE_LFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+#内存检测标签
+TSAN_TOOL_ENABLE = true
+equals(TSAN_TOOL_ENABLE, true ){
+    #DEFINES += TSAN_THREAD #互斥
+    DEFINES += ENABLE_TSAN_TOOL
+    message("deepin-screen-recorder enabled TSAN function with set: " $$TSAN_TOOL_ENABLE)
+    contains(DEFINES, TSAN_THREAD){
+       QMAKE_CXXFLAGS+="-fsanitize=thread"
+       QMAKE_CFLAGS+="-fsanitize=thread"
+       QMAKE_LFLAGS+="-fsanitize=thread"
+    } else {
+       QMAKE_CXXFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+       QMAKE_CFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+       QMAKE_LFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+    }
 }
 
 # The following define makes your compiler warn you if you use any
@@ -65,7 +70,7 @@ HEADERS += test_all_interfaces.h \
            ut_button_feedback.h \
            ut_countdown_tooltip.h \
            ut_main_window.h \
-           ut_process_tree.h \
+           #ut_process_tree.h \
            ut_record_process.h \
            ut_RecorderRegionShow.h \
            ut_screenshot.h \
@@ -127,7 +132,7 @@ HEADERS += test_all_interfaces.h \
         ../src/screenshot.h \
         ../src/settings.h \
         ../src/show_buttons.h \
-        ../src/process_tree.h \
+        #../src/process_tree.h \
         ../src/screen_shot_event.h \
         ../src/event_monitor.h \
         ../src/lib/GifH/gif.h \
@@ -173,7 +178,7 @@ SOURCES += main.cpp \
     ../src/screenshot.cpp \
     ../src/settings.cpp \
     ../src/show_buttons.cpp \
-    ../src/process_tree.cpp \
+    #../src/process_tree.cpp \
     ../src/screen_shot_event.cpp \
     ../src/event_monitor.cpp \
     ../src/xgifrecord.cpp

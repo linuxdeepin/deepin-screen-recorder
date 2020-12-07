@@ -33,12 +33,12 @@ Toolshape::Toolshape()
 //Toolshape::~Toolshape()
 //{
 //}
-
+/*
 void Toolshape::registerMetaType()
 {
     qRegisterMetaType<Toolshape>();
 }
-
+*/
 QDebug &operator<<(QDebug &argument, const Toolshape &obj)
 {
     argument.nospace()

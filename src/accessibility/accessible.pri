@@ -2,6 +2,6 @@ INCLUDEPATH += $$PWD
 
 #SOURCES += src/stub_linux/elfio.hpp
 
-HEADERS += accessiblefunctions.h \
-            acObjectList.h \
-            acTextDefine.h
+HEADERS += accessibility/accessiblefunctions.h \
+            accessibility/acObjectList.h \
+            accessibility/acTextDefine.h
