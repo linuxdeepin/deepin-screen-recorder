@@ -1633,7 +1633,9 @@ void MainWindow::changeShotToolEvent(const QString &func)
 
 void MainWindow::saveScreenShot()
 {
-    m_CursorImage = m_pScreenRecordEvent->GetCursorImage();
+    if(m_pScreenRecordEvent) {
+        m_CursorImage = m_pScreenRecordEvent->GetCursorImage();
+    }
     emit releaseEvent();
     m_shotflag = 1;
     emit saveActionTriggered();

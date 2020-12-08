@@ -141,4 +141,5 @@ void Screenshot::setConfigThemeType(int themeType)
 }
 
 
-Screenshot::~Screenshot() {}
+Screenshot::~Screenshot() {
+}
