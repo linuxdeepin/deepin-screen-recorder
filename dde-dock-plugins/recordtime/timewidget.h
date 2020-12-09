@@ -11,8 +11,8 @@
 #include <QBoxLayout>
 #include <QLabel>
 
-#define RECORDER_TIME_LEVEL_ICON_SIZE 32
-#define RECORDER_TIME_VERTICAL_ICON_SIZE 28
+#define RECORDER_TIME_LEVEL_ICON_SIZE 22
+#define RECORDER_TIME_VERTICAL_ICON_SIZE 22
 #define RECORDER_TIME_LEVEL_SIZE "00000 00:00:00"
 #define RECORDER_TIME_VERTICAL_SIZE "0000"
 #define RECORDER_TIME_FONT DFontSizeManager::instance()->t8()
@@ -25,11 +25,7 @@ class TimeWidget : public DWidget
     Q_OBJECT
 public:
     explicit TimeWidget(DWidget *parent = nullptr);
-
-    //---------------------------------------------------------------
     ~TimeWidget();
-
-    //---------------------------------------------------------------
     bool enabled();
     void start();
     void stop();
@@ -43,7 +39,7 @@ private slots:
     void onPositionChanged(int value);
 
 private:
-    const QPixmap loadSvg(const QString &fileName, const QSize &size) const;
+    //const QPixmap loadSvg(const QString &fileName, const QSize &size) const;
     void paintEvent(QPaintEvent *e);
 
 private:

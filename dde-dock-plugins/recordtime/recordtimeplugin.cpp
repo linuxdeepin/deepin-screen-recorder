@@ -3,6 +3,7 @@
 
 RecordTimePlugin::RecordTimePlugin(QObject *parent)
     : QObject(parent)
+    , m_bshow(false)
 {
     m_timer = new QTimer(this);
     m_timeWidget = new TimeWidget();
@@ -55,6 +56,7 @@ void RecordTimePlugin::onStart()
     if (m_timeWidget->enabled())
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
+        m_bshow = true;
     m_timeWidget->start();
 }
 
@@ -62,6 +64,7 @@ void RecordTimePlugin::onStop()
 {
     if (m_timeWidget->enabled())
         m_proxyInter->itemRemoved(this, pluginName());
+        m_bshow = false;
     m_timeWidget->stop();
 }
 
@@ -70,7 +73,8 @@ void RecordTimePlugin::refresh()
     QSize size = m_timeWidget->sizeHint();
     if(size.width() > m_timeWidget->width()
             && 1 != position()
-            && 3 != position()){
+            && 3 != position()
+            && m_bshow){
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
     }

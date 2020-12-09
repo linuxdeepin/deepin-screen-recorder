@@ -2972,15 +2972,18 @@ void MainWindow::shotCurrentImg()
             eventTime = 120;
         }
         else if(QSysInfo::currentCpuArchitecture().startsWith("mips")){
-            eventTime = 160;
+            eventTime = 260;
         }
         else if(QSysInfo::currentCpuArchitecture().startsWith("arm")){
-            eventTime = 115;
+            eventTime = 220;
         }
     }
     else {
         if(QSysInfo::currentCpuArchitecture().startsWith("mips")){
-            eventTime = 100;
+            eventTime = 160;
+        }
+        else if(QSysInfo::currentCpuArchitecture().startsWith("arm")){
+            eventTime = 120;
         }
     }
     QEventLoop eventloop1;
