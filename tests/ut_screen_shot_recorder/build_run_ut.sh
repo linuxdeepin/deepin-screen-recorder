@@ -1,8 +1,10 @@
 #!/bin/bash
-pwd
-cd ../build-ut
+rm -rf ./ut_screen_shot_recorder/build-ut
+mkdir ./ut_screen_shot_recorder/build-ut
+
+cd ./ut_screen_shot_recorder/build-ut
 export QT_SELECT=qt5
-qmake ../tests/ut_screen_shot_recorder/
+qmake ../
 make -j4
 
 #workdir=$(cd ../../$(dirname $0)/build-filemanager-unknown-Debug/test; pwd)
@@ -28,6 +30,10 @@ lcov --remove $build_dir/coverage.info $remove_info --output-file $build_dir/cov
 lcov --list-full-path -e $build_dir/coverage.info –o $build_dir/coverage-stripped.info
 
 genhtml -o $result_coverage_dir $build_dir/coverage.info
+
+cp $build_dir/report/report_ut_screen_shot_recorder.xml ../../../build-ut/report/report_ut_screen_shot_recorder.xml
+cp $build_dir/html/index.html ../../../build-ut/html/cov_ut_screen_shot_recorder.html
+cp $build_dir/asan_ut_screen_shot_recorder.log.* ../../../build-ut/asan_ut_screen_shot_recorder.log  
 
 #nohup x-www-browser $result_coverage_dir/index.html &
 #nohup x-www-browser $result_report_dir &
