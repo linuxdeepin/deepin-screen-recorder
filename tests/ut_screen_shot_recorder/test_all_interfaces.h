@@ -23,3 +23,8 @@
 #include "ut_button_feedback.h"
 #include "ut_record_process.h"
 #include "ut_screenshot.h"
+#include "ut_shapeswidget.h"
+#include "ut_toptips.h"
+#include "ut_camerawidget.h"
+#include "ut_filter.h"
+#include "ut_tooltips.h"

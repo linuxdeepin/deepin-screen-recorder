@@ -31,7 +31,7 @@ TEST_F(ButtonFeedbackTest, showPressFeedback)
 
 TEST_F(ButtonFeedbackTest, showDragFeedback)
 {
-    buttonFeedback->showPressFeedback(50, 100);
+    buttonFeedback->showDragFeedback(50, 100);
     QEventLoop loop;
     QTimer::singleShot(3000, &loop, SLOT(quit()));
     loop.exec();

@@ -133,7 +133,12 @@ HEADERS += test_all_interfaces.h \
         ../../src/screen_shot_event.h \
         ../../src/event_monitor.h \
         ../../src/lib/GifH/gif.h \
-        ../../src/xgifrecord.h
+        ../../src/xgifrecord.h \
+        ut_shapeswidget.h \
+        ut_toptips.h \
+        ut_camerawidget.h \
+        ut_filter.h \
+        ut_tooltips.h
 
 
 SOURCES += main.cpp \
