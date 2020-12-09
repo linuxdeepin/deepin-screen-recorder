@@ -156,7 +156,7 @@ signals:
 public slots:
     void startRecord();
     //void flashTrayIcon();
-    void iconActivated(QSystemTrayIcon::ActivationReason reason);
+    //void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void shotCurrentImg();
     void addCursorToImage();
     void shotFullScreen(bool isFull = false);

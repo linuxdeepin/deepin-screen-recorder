@@ -130,8 +130,16 @@ MainWindow::MainWindow(DWidget *parent) :
     }
     //qDebug() << displayInterface.property("PrimaryRect").toList();
     QList<QDBusObjectPath> pathList = qvariant_cast< QList<QDBusObjectPath> >(displayInterface.property("Monitors"));
+    if(pathList.size() == 0) {
+        return;
+    }
+
     QDBusInterface monitorInterface("com.deepin.daemon.Display",pathList.at(0).path(),"com.deepin.daemon.Display.Monitor",
                                     QDBusConnection::sessionBus());
+
+    if(!monitorInterface.isValid()) {
+        return;
+    }
     // 获取屏幕是否旋转, 四个方向，
     // rotation值如下，在左右方向上， 宽高值互换
     /*
@@ -3260,12 +3268,12 @@ void MainWindow::resetCursor()
 {
     QApplication::setOverrideCursor(Qt::ArrowCursor);
 }
-
+/*
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)
 {
     stopRecord();
 }
-
+*/
 void MainWindow::stopRecord()
 {
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {

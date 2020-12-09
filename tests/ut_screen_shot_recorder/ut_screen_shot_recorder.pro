@@ -81,7 +81,7 @@ HEADERS += test_all_interfaces.h \
            utils/ut_baseutils.h \
            utils/ut_calculaterect.h \
            utils/ut_configsettings.h \
-           utils/ut_dbusutils.h \
+           #utils/ut_dbusutils.h \
            utils/ut_desktopinfo.h \
            utils/ut_screengrabber.h \
            utils/ut_shortcut.h \
@@ -95,7 +95,7 @@ HEADERS += test_all_interfaces.h \
         ../../src/utils/baseutils.h \
         ../../src/utils/calculaterect.h \
         ../../src/utils/configsettings.h \
-        ../../src/utils/dbusutils.h \
+        #../../src/utils/dbusutils.h \
         ../../src/utils/desktopinfo.h \
         ../../src/utils/screengrabber.h \
         ../../src/utils/shortcut.h \
@@ -141,7 +141,7 @@ SOURCES += main.cpp \
     ../../src/utils/baseutils.cpp \
     ../../src/utils/calculaterect.cpp \
     ../../src/utils/configsettings.cpp \
-    ../../src/utils/dbusutils.cpp \
+    #../../src/utils/dbusutils.cpp \
     ../../src/utils/desktopinfo.cpp \
     ../../src/utils/screengrabber.cpp \
     ../../src/utils/shortcut.cpp \

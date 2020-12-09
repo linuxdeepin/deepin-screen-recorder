@@ -16,6 +16,7 @@ int MainWindow_quit_stub(void* obj)
     return 0;
 }
 ACCESS_PRIVATE_FIELD(MainWindow, ToolBar*, m_toolBar);
+ACCESS_PRIVATE_FIELD(MainWindow, int,  m_screenCount);
 ACCESS_PRIVATE_FIELD(MainWindow, ShapesWidget*, m_shapesWidget);
 class MainWindowTest:public testing::Test{
 
@@ -45,6 +46,7 @@ TEST_F(MainWindowTest, screenShotShapes)
     m_window->initLaunchMode("screenShot");
     m_window->showFullScreen();
 
+    access_private_field::MainWindowm_screenCount(*m_window) = 1;
 
     QEventLoop loop;
 
@@ -60,10 +62,64 @@ TEST_F(MainWindowTest, screenShotShapes)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::keyClick(m_window, Qt::Key_R);
+
+
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(800,600));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
+    QTest::mouseMove(m_window, QPoint(900,700));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(900,700));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+
+
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(900,10));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseMove(m_window, QPoint(800,20));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(800,20));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+
+
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(800,300));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseMove(m_window, QPoint(900,300));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(900,300));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400,700));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseMove(m_window, QPoint(400,900));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400,900));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::keyClick(m_window, Qt::Key_R);
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
 
     ShapesWidget *m_shapesWidget = access_private_field::MainWindowm_shapesWidget(*m_window);
 
@@ -236,7 +292,6 @@ TEST_F(MainWindowTest, screenShotShapes)
 
     //delete m_window;
 }
-
 TEST_F(MainWindowTest, screenShot)
 {
     MainWindow *m_window = new MainWindow;;
@@ -544,6 +599,7 @@ TEST_F(MainWindowTest, onHelp)
     m_window->onHelp();
     delete m_window;
 }
+
 /*
 TEST_F(MainWindowTest, Key_Enter)
 {

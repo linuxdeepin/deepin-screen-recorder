@@ -3,27 +3,14 @@
 #include <QTest>
 #include <QPoint>
 #include "../../src/screenshot.h"
+#include "../../src/main_window.h"
 #include "stub.h"
 #include "addr_pri.h"
 
 
 using namespace testing;
-
 ACCESS_PRIVATE_FIELD(Screenshot, MainWindow*, m_window);
-int quit_stub(void* obj)
-{
-    qDebug() <<"I am QCoreApplication quit";
-    return 0;
-}
-
-QDBusMessage callWithArgumentList_stub(void *obj,QDBus::CallMode mode,
-                                  const QString &method,
-                                       const QList<QVariant> &args){
-
-    qDebug() <<"I am QDBusInterface callWithArgumentList";
-    return QDBusMessage();
-
-}
+static int state = 0;
 class ScreenshotTest:public testing::Test{
 
 public:
@@ -33,20 +20,11 @@ public:
     Stub stub;
     virtual void SetUp() override{
         qDebug() << "++++++" << __FUNCTION__ << __LINE__;
-        stub.set(ADDR(QCoreApplication, quit), quit_stub);
-        stub.set(ADDR(QDBusInterface, callWithArgumentList), callWithArgumentList_stub);
-        //std::cout << "start ScreenshotTest" << std::endl;
     }
 
     virtual void TearDown() override{
-        //shot->stopRecord();
+        stub.reset(ADDR(ConfigSettings, value));
         qDebug() << "++++++" << __FUNCTION__ << __LINE__;
-        stub.reset(ADDR(QCoreApplication, quit));
-        stub.reset(ADDR(QDBusInterface, callWithArgumentList));
-        //mwindow->setEnabled(false);
-        //delete mwindow;
-        //delete shot;
-        //std::cout << "end ScreenshotTest" << std::endl;
     }
 };
 
@@ -90,8 +68,23 @@ TEST_F(ScreenshotTest, delayScreenshot)
     loop.exec();
 }
 
+QVariant getShotCfg_stub(void* obj, const QString &group, const QString &key)
+{
+    if(group == "save") {
+        if(key == "format") {
+            return state % 3;
+        }else if(key == "save_op"){
+            return  (state + 1)% 3; // 0 desktop 1 image 2autoSave 3 SaveToSpecificDir
+        }
+    }
+    return true;
+}
+
+
 TEST_F(ScreenshotTest, fullscreenScreenshot)
 {
+    state = 0;
+    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub);
     shot->fullscreenScreenshot();
     QTimer::singleShot(2000, &loop, SLOT(quit()));
     loop.exec();
@@ -99,6 +92,63 @@ TEST_F(ScreenshotTest, fullscreenScreenshot)
 
 TEST_F(ScreenshotTest, topWindowScreenshot)
 {
+    state = 1;
+    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub);
+    shot->topWindowScreenshot();
+    QTimer::singleShot(2000, &loop, SLOT(quit()));
+    loop.exec();
+}
+
+TEST_F(ScreenshotTest, desktop_fullscreenScreenshot)
+{
+    state = 2;
+    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub);
+    shot->fullscreenScreenshot();
+    QTimer::singleShot(2000, &loop, SLOT(quit()));
+    loop.exec();
+}
+
+TEST_F(ScreenshotTest, clipboard_topWindowScreenshot)
+{
+    state = 3;
+    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub);
+    shot->topWindowScreenshot();
+    QTimer::singleShot(2000, &loop, SLOT(quit()));
+    loop.exec();
+}
+
+
+TEST_F(ScreenshotTest, fullscreenScreenshot_)
+{
+    state = 4;
+    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub);
+    shot->fullscreenScreenshot();
+    QTimer::singleShot(2000, &loop, SLOT(quit()));
+    loop.exec();
+}
+
+TEST_F(ScreenshotTest, topWindowScreenshot_)
+{
+    state = 5;
+    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub);
+    shot->topWindowScreenshot();
+    QTimer::singleShot(2000, &loop, SLOT(quit()));
+    loop.exec();
+}
+
+TEST_F(ScreenshotTest, desktop_fullscreenScreenshot_)
+{
+    state = 6;
+    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub);
+    shot->fullscreenScreenshot();
+    QTimer::singleShot(2000, &loop, SLOT(quit()));
+    loop.exec();
+}
+
+TEST_F(ScreenshotTest, clipboard_topWindowScreenshot_)
+{
+    state = 7;
+    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub);
     shot->topWindowScreenshot();
     QTimer::singleShot(2000, &loop, SLOT(quit()));
     loop.exec();

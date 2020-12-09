@@ -24,7 +24,7 @@
 #include <QColor>
 
 typedef QList<QPointF> FourPoints;
-Q_DECLARE_METATYPE(FourPoints)
+//Q_DECLARE_METATYPE(FourPoints)
 
 /* shape*/
 class Toolshape
@@ -47,16 +47,16 @@ public:
     Toolshape();
     //~Toolshape();
 
-    friend QDebug &operator<<(QDebug &argument, const Toolshape &obj);
-    friend QDataStream &operator>>(QDataStream &in, Toolshape &obj);
-    Toolshape operator=(Toolshape obj);
-    bool operator==(const Toolshape &other) const;
+    //friend QDebug &operator<<(QDebug &argument, const Toolshape &obj);
+    //friend QDataStream &operator>>(QDataStream &in, Toolshape &obj);
+    //Toolshape operator=(Toolshape obj);
+    //bool operator==(const Toolshape &other) const;
     //static void registerMetaType();
 };
 
 //typedef QList<QPointF> FourPoints;
 typedef QList <Toolshape> Toolshapes;
-Q_DECLARE_METATYPE(Toolshape)
-Q_DECLARE_METATYPE(Toolshapes)
+//Q_DECLARE_METATYPE(Toolshape)
+//Q_DECLARE_METATYPE(Toolshapes)
 
 #endif // SHAPESUTILS_H

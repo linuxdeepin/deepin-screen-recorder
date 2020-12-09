@@ -38,7 +38,7 @@ void Toolshape::registerMetaType()
 {
     qRegisterMetaType<Toolshape>();
 }
-*/
+
 QDebug &operator<<(QDebug &argument, const Toolshape &obj)
 {
     argument.nospace()
@@ -102,3 +102,4 @@ bool Toolshape::operator==(const Toolshape &other) const
         return false;
     }
 }
+*/

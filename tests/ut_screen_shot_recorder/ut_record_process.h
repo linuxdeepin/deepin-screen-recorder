@@ -9,13 +9,6 @@
 
 using namespace testing;
 
-
-int RecordProcess_quit_stub(void* obj)
-{
-    qDebug() <<"I am QCoreApplication quit";
-    return 0;
-}
-
 class RecordProcessTest:public testing::Test{
 
 public:
@@ -24,12 +17,10 @@ public:
     virtual void SetUp() override{
         std::cout << "start RecordProcessTest" << std::endl;
 
-        stub.set(ADDR(QCoreApplication, quit), RecordProcess_quit_stub);
     }
 
     virtual void TearDown() override{
         std::cout << "end RecordProcessTest" << std::endl;
-        stub.reset(ADDR(QCoreApplication, quit));
         stub.reset(ADDR(ConfigSettings, value));
         stub.reset(ADDR(QSysInfo, currentCpuArchitecture));
     }
