@@ -2,6 +2,8 @@
 #include <gtest/gtest.h>
 #include <QDebug>
 #include <QCameraInfo>
+#include <QDBusMessage>
+#include <QtDBus>
 #include <sanitizer/asan_interface.h>
 #include "test_all_interfaces.h"
 #include "stub.h"
@@ -23,12 +25,16 @@ QDBusMessage callWithArgumentList_stub(void *obj, QDBus::CallMode mode, const QS
     return QDBusMessage();
 }
 
-
+bool isNull_stub(void *obj)
+{
+    return false;
+}
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     qDebug() << "start test cases ..............";
     globalStub.set(ADDR(QCameraInfo, availableCameras), availableCameras_stub);
+    globalStub.set(ADDR(QCameraInfo, isNull), isNull_stub);
     globalStub.set(ADDR(QCoreApplication, quit), quit_stub);
     globalStub.set(ADDR(QDBusInterface, callWithArgumentList), callWithArgumentList_stub);
     //testing::GTEST_FLAG(output) = "xml:./report/report.xml";

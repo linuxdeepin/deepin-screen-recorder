@@ -36,7 +36,6 @@ public:
     }
 };
 
-
 TEST_F(MainWindowTest, screenShotShapes)
 {
     MainWindow *m_window = new MainWindow;;
@@ -117,11 +116,42 @@ TEST_F(MainWindowTest, screenShotShapes)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
+
+
+
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(10,10));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseMove(m_window, QPoint(20,30));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(20,30));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+
+
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(20,50));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseMove(m_window, QPoint(30,50));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(30,50));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+
     QTest::keyClick(m_window, Qt::Key_R);
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
     ShapesWidget *m_shapesWidget = access_private_field::MainWindowm_shapesWidget(*m_window);
+
 
     QTest::mousePress(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400,200));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
@@ -155,6 +185,22 @@ TEST_F(MainWindowTest, screenShotShapes)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
+
+    QTest::keyClick(m_shapesWidget, Qt::Key_Left,  Qt::ShiftModifier | Qt::ControlModifier);
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::keyClick(m_shapesWidget, Qt::Key_Right, Qt::ShiftModifier | Qt::ControlModifier);
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::keyClick(m_shapesWidget, Qt::Key_Up, Qt::ShiftModifier | Qt::ControlModifier);
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::keyClick(m_shapesWidget, Qt::Key_Down, Qt::ShiftModifier | Qt::ControlModifier);
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
 
     QTest::keyClick(m_shapesWidget, Qt::Key_Left, Qt::NoModifier);
     QTimer::singleShot(1000, &loop, SLOT(quit()));
@@ -284,6 +330,7 @@ TEST_F(MainWindowTest, screenShotShapes)
     QTest::keyClick(m_shapesWidget, Qt::Key_Z, Qt::ControlModifier | Qt::ShiftModifier);
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
+
 
     m_window->saveScreenShot();
 
@@ -490,7 +537,18 @@ TEST_F(MainWindowTest, screenShot)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
+    m_window->responseEsc();
+
     m_window->saveScreenShot();
+
+
+    QTest::mouseClick(m_window, Qt::MouseButton::RightButton, Qt::KeyboardModifier::NoModifier, QPoint(400,200));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseClick(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400,250));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
 
     QTimer::singleShot(3000, &loop, SLOT(quit()));
     loop.exec();
@@ -550,10 +608,6 @@ TEST_F(MainWindowTest, screenRecord)
     loop.exec();
 
 
-    m_window->startCountdown();
-    QTimer::singleShot(5000, &loop, SLOT(quit()));
-    loop.exec();
-
     m_window->showKeyBoardButtons("F1");
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
@@ -563,6 +617,14 @@ TEST_F(MainWindowTest, screenRecord)
     m_window->showKeyBoardButtons("F3");
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
+
+    m_window->changeSystemAudioSelectEvent(true);
+    m_window->changeCameraSelectEvent(true);
+
+    m_window->startCountdown();
+    QTimer::singleShot(5000, &loop, SLOT(quit()));
+    loop.exec();
+
     m_window->showKeyBoardButtons("F4");
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
@@ -593,19 +655,26 @@ TEST_F(MainWindowTest, screenRecord)
 
     //delete m_window;
 }
+
+static bool hasComposite_stub(void * obj) {
+    return false;
+}
+
+
+static QString CpuArchitecture_stub(void* obj)
+{
+    return  "mips";
+}
 TEST_F(MainWindowTest, onHelp)
 {
     MainWindow *m_window = new MainWindow;
     m_window->onHelp();
-    delete m_window;
-}
-
 /*
-TEST_F(MainWindowTest, Key_Enter)
-{
-    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(0,0));
-    QTest::mouseMove(m_window, QPoint(100,100));
-    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(100,100));
-    QTest::keyClick(m_window, Qt::Key_Enter);
-}
+    stub.set(ADDR(DWindowManagerHelper, hasComposite), hasComposite_stub);
+    stub.set(ADDR(QSysInfo, currentCpuArchitecture), CpuArchitecture_stub);
+    m_window->compositeChanged();
+    stub.reset(ADDR(DWindowManagerHelper, hasComposite));
+    stub.reset(ADDR(QSysInfo, currentCpuArchitecture));
 */
+   delete m_window;
+}

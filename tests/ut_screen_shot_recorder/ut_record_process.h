@@ -63,7 +63,7 @@ QVariant getOption_mkv_stub(void* obj, const QString &group, const QString &key)
     return  false;
 }
 
-QString currentCpuArchitecture_stub(void* obj)
+static QString currentCpuArchitecture_stub(void* obj)
 {
     return  "mips";
 }
