@@ -34,7 +34,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QDir>
-#include <sanitizer/asan_interface.h>
+//#include <sanitizer/asan_interface.h>
 #include "main_window.h"
 #include "screenshot.h"
 #include "utils.h"
@@ -108,9 +108,9 @@ int main(int argc, char *argv[])
 
 
     // 内存检测标签
-#ifdef ENABLE_TSAN_TOOL
-    __sanitizer_set_report_path("./asan.log");
-#endif
+//#ifdef ENABLE_TSAN_TOOL
+//    __sanitizer_set_report_path("./asan.log");
+//#endif
 
 // 适配deepin-turbo 启动加速
 #if(DTK_VERSION < DTK_VERSION_CHECK(5,4,0,0))
