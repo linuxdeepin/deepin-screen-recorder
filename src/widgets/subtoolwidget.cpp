@@ -929,6 +929,10 @@ void SubToolWidget::initShotLabel()
 
 void SubToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 {
+    if(nullptr == this->parentWidget()
+            || nullptr == this->parentWidget()->parentWidget()
+            || nullptr == this->parentWidget()->parentWidget()->parentWidget())
+        return;
     // TODO: parent must be mainframe
     auto hintWidget = new ToolTips("", this->parentWidget()->parentWidget()->parentWidget());
     hintWidget->hide();

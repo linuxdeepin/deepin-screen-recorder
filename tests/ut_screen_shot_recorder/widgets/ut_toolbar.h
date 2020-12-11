@@ -43,9 +43,9 @@ public:
 
     virtual void TearDown() override{
         if(nullptr != m_toolBar)
-            m_toolBar->deleteLater();
+            delete m_toolBar;
         if(nullptr != m_mainWindow)
-            m_mainWindow->deleteLater();
+            delete m_mainWindow;
     }
 };
 
@@ -93,7 +93,7 @@ TEST_F(ToolBarTest, systemAudioActionCheckedToMainSlot)
 
 //TEST_F(ToolBarTest, changeArrowAndLineFromMain)
 //{
-//    m_toolBar->changeArrowAndLineFromMain(1);
+//    m_toolBar->changeArrowAndLineFromMain(5);
 //}
 
 TEST_F(ToolBarTest, initToolBar)
