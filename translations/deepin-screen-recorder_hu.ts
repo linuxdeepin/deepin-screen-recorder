@@ -64,10 +64,6 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
         <translation>Mentve ide: %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>A képernyő rögzítése %1 másodperc múlva indul</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>Mellőzés</translation>
     </message>
@@ -136,7 +132,7 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation>Kilépés/Mentés</translation>
+        <translation>Kilépés / Mentés</translation>
     </message>
     <message>
         <source>Drawing</source>
@@ -425,14 +421,6 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
     <message>
         <source>Recordings</source>
         <translation>Felvételek</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>A képernyőfelvétel jelenleg nem támogatott</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Kilépés</translation>
     </message>
 </context>
 </TS>

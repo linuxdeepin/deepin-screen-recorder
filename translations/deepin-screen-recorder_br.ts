@@ -64,10 +64,6 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <translation>Enrollet e-barzh %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>An dapadenn-skramm a loc&apos;ho a-benn %1 eilenn</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation type="unfinished"></translation>
     </message>
@@ -425,14 +421,6 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     <message>
         <source>Recordings</source>
         <translation>Enrolladennoù</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Kuitaat</translation>
     </message>
 </context>
 </TS>

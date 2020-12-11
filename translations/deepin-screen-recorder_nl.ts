@@ -64,10 +64,6 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <translation>Opgeslagen in %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>Het scherm wordt over %1 seconden vastgelegd</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>Negeren</translation>
     </message>
@@ -99,7 +95,7 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <name>RecordProcess</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Scherm vastleggen</translation>
+        <translation>Schermfoto</translation>
     </message>
     <message>
         <source>View</source>
@@ -425,14 +421,6 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Recordings</source>
         <translation>Opnames</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>Schermopname wordt momenteel niet ondersteund</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Afsluiten</translation>
     </message>
 </context>
 </TS>

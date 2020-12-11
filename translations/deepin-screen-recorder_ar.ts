@@ -64,10 +64,6 @@ or press the shortcut again to stop recording</source>
         <translation>تم حفظ 1%</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>إلتقاط صورة الشاشة سيبدأ خلال 1 ثانية</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation type="unfinished"></translation>
     </message>
@@ -425,14 +421,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recordings</source>
         <translation>تسجيلات</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>خروج</translation>
     </message>
 </context>
 </TS>

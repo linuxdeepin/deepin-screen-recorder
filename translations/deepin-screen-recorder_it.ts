@@ -64,10 +64,6 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <translation>Salvato in %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>Deepin Screenshot si avvierà dopo %1 secondi</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>Ignora</translation>
     </message>
@@ -425,14 +421,6 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Recordings</source>
         <translation>Registrazioni</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>La registrazione dello schermo non è supportata al momento</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Esci</translation>
     </message>
 </context>
 </TS>

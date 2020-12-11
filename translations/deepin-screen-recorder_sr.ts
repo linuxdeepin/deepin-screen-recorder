@@ -64,10 +64,6 @@ or press the shortcut again to stop recording</source>
         <translation>Сачувано у %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>Снимач Екрана ће се покренути за %1 сек.</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>Занемари</translation>
     </message>
@@ -425,14 +421,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recordings</source>
         <translation>Снимци</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>Снимање екрана тренутно није подржано</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Изађи</translation>
     </message>
 </context>
 </TS>

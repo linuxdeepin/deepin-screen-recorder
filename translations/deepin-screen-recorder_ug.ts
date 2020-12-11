@@ -63,10 +63,6 @@ or press the shortcut again to stop recording</source>
         <translation>رەسىم %1 گە ساقلاندى</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>ئېكراننى رەسىمگە تۇتۇش، سىنغا ئېلىش %1 سىېكونتتىن كېيىن قوزغىلىدۇ</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>ئۆتكۈزۈۋېتىش</translation>
     </message>
@@ -424,14 +420,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recordings</source>
         <translation>ئۈنگە ئېلىش</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>سىنغا ئېلىش ئىقتىدارى ۋاقتىنچە ئىشلىمەيدۇ</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>چېكىنىش</translation>
     </message>
 </context>
 </TS>

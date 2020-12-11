@@ -53,19 +53,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>select-area</source>
-        <translation>圖片已保存到%1</translation>
+        <translation>選取範圍</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>截圖錄屏將在%1秒後啟動</translation>
+        <translation>保存</translation>
     </message>
     <message>
         <source>Saved to %1</source>
         <translation>圖片已保存到%1</translation>
-    </message>
-    <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>截圖錄屏將在%1秒後啟動</translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -425,14 +421,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recordings</source>
         <translation>錄音</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>錄屏功能暫不可用</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>退出</translation>
     </message>
 </context>
 </TS>

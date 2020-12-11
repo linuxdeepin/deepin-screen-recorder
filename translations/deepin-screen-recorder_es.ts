@@ -64,10 +64,6 @@ o con clic en el icono de la bandeja</translation>
         <translation>Guardado en %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>Captura empieza en %1 segundos</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>Ignorar</translation>
     </message>
@@ -425,14 +421,6 @@ o con clic en el icono de la bandeja</translation>
     <message>
         <source>Recordings</source>
         <translation>Grabaciones</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>No es posible grabar la pantalla en este momento</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Salir</translation>
     </message>
 </context>
 </TS>

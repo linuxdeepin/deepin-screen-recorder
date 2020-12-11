@@ -64,10 +64,6 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <translation>Gardar en %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>A captura de pantalla comezará en %1 segundos</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation type="unfinished"></translation>
     </message>
@@ -425,14 +421,6 @@ ou prema de novo o atallo para deixar de gravar</translation>
     <message>
         <source>Recordings</source>
         <translation>Gravacións</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Saír</translation>
     </message>
 </context>
 </TS>

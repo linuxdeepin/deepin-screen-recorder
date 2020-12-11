@@ -64,10 +64,6 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation>Şuraya kaydedildi %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>Ekran Alıntısı %1 saniye içinde başlayacak</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>Yoksay</translation>
     </message>
@@ -425,14 +421,6 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Recordings</source>
         <translation>Kayıtlar</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>Ekran kaydı şu anda desteklenmiyor</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Çıkış</translation>
     </message>
 </context>
 </TS>

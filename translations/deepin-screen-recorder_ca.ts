@@ -64,10 +64,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>S&apos;ha desat a %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>La Captura de pantalla s&apos;iniciarà d&apos;aquí a %1 segons</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>Ignora</translation>
     </message>
@@ -425,14 +421,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Recordings</source>
         <translation>Gravacions</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>Actualment no s&apos;admet la gravació de pantalla</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Surt</translation>
     </message>
 </context>
 </TS>

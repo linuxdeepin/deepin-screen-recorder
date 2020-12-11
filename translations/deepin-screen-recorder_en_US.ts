@@ -64,10 +64,6 @@ or press the shortcut again to stop recording</translation>
         <translation>Saved to %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>Screen Capture will start in %1 seconds</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>Ignore</translation>
     </message>
@@ -425,14 +421,6 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Recordings</source>
         <translation>Recordings</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>Screen recording is not supported at present</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Exit</translation>
     </message>
 </context>
 </TS>

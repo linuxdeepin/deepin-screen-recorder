@@ -64,10 +64,6 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <translation>Enregistré dans %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>La capture d&apos;écran démarrera dans %1 secondes</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>Ignorer</translation>
     </message>
@@ -425,14 +421,6 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source>Recordings</source>
         <translation>Enregistrements</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>L&apos;enregistrement de l&apos;écran n&apos;est pas pris en charge actuellement</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Quitter</translation>
     </message>
 </context>
 </TS>

@@ -64,10 +64,6 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <translation>Zapisano w %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>Przechwytywanie ekranu rozpocznie się za %1 sekund</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>Ignoruj</translation>
     </message>
@@ -425,14 +421,6 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <message>
         <source>Recordings</source>
         <translation>Nagrania</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>Nagrywanie ekranu nie jest obecnie obsługiwane</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Wyjście</translation>
     </message>
 </context>
 </TS>

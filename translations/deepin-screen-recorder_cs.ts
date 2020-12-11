@@ -64,10 +64,6 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <translation>Uloženo do %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>Zaznamenávání obrazovky se spustí za %1 sekund</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>Ignorovat</translation>
     </message>
@@ -425,14 +421,6 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Recordings</source>
         <translation>Nahrávky</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>V současnosti není zaznamenávání obrazovky podporováno</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Ukončit</translation>
     </message>
 </context>
 </TS>

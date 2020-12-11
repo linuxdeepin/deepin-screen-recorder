@@ -64,10 +64,6 @@ or press the shortcut again to stop recording</source>
         <translation>%1에 저장됨</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>화면 캡처는 %1초에 시작됩니다</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation type="unfinished"></translation>
     </message>
@@ -425,14 +421,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recordings</source>
         <translation>녹화</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>종료</translation>
     </message>
 </context>
 </TS>

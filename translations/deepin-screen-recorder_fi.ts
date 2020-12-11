@@ -64,10 +64,6 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <translation>Tallenna nimellä %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>Ruudunkaappaus alkaa %1 sekunnissa</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>Ohita</translation>
     </message>
@@ -425,14 +421,6 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Recordings</source>
         <translation>Äänitykset</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>Näytön tallennusta ei tueta tällä hetkellä</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Poistu</translation>
     </message>
 </context>
 </TS>

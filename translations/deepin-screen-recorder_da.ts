@@ -64,10 +64,6 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <translation>Gemt til %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>Skærmoptagelse starter om %1 sekunder</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation type="unfinished"></translation>
     </message>
@@ -425,14 +421,6 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <message>
         <source>Recordings</source>
         <translation>Optagelser</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Afslut</translation>
     </message>
 </context>
 </TS>

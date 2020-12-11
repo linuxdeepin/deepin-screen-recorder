@@ -64,10 +64,6 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <translation>Disimpan ke %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>Tangkap Skrin akan bermula dalam tempoh %1 saat</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation type="unfinished"></translation>
     </message>
@@ -425,14 +421,6 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>Recordings</source>
         <translation>Rakaman</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Keluar</translation>
     </message>
 </context>
 </TS>

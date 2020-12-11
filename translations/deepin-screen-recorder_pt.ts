@@ -64,10 +64,6 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <translation>Guardado em %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>A captura de ecrã irá começar em %1 segundos</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>Ignorar</translation>
     </message>
@@ -425,14 +421,6 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Recordings</source>
         <translation>Gravações</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>A gravação do ecrã não é atualmente suportada</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Sair</translation>
     </message>
 </context>
 </TS>

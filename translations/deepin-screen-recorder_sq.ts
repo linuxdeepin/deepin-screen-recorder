@@ -64,10 +64,6 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
         <translation>U ruajt te %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>Regjistrimi i Ekranit do të fillojë për %1 sekonda</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>Shpërfille</translation>
     </message>
@@ -425,14 +421,6 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     <message>
         <source>Recordings</source>
         <translation>Regjistrime</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>Regjistrimet e ekranit hëpërhë nuk mbulohen</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Dil</translation>
     </message>
 </context>
 </TS>

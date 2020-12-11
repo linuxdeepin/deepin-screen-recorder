@@ -64,10 +64,6 @@ or press the shortcut again to stop recording</source>
         <translation>图片已保存到%1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>截图录屏将在%1秒后启动</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>忽略</translation>
     </message>
@@ -417,7 +413,7 @@ or press the shortcut again to stop recording</source>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation> 调整录制区域范围在%1*%2以内，视频效果更佳</translation>
+        <translation>  调整录制区域范围在%1*%2以内，视频效果更佳</translation>
     </message>
 </context>
 <context>
@@ -425,14 +421,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recordings</source>
         <translation>录音</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>录屏功能暂不可用</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>退出</translation>
     </message>
 </context>
 </TS>

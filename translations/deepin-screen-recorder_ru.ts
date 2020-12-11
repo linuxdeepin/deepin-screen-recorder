@@ -64,10 +64,6 @@ or press the shortcut again to stop recording</source>
         <translation>Сохранить в %1</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>Захват экрана начнется через %1 секунды</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>Игнорировать</translation>
     </message>
@@ -425,14 +421,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recordings</source>
         <translation>Записи</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>На данный момент запись экрана не поддерживается</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Выход</translation>
     </message>
 </context>
 </TS>
