@@ -26,7 +26,8 @@ TRANSLATIONS += \
     translations/deepin-screen-recorder_sr.ts \
     translations/deepin-screen-recorder_tr.ts \
     translations/deepin-screen-recorder_uk.ts \
-    translations/deepin-screen-recorder_ug.ts
+    translations/deepin-screen-recorder_ug.ts \
+    translations/deepin-screen-recorder_bo.ts
 
 
 

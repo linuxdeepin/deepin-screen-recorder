@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_HK">
+<TS version="2.1" language="bo">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>點擊托盤圖標
-或再次按下錄屏快捷鍵停止錄製</translation>
+        <translation>སྡེར་མའི་མཚོན་རྟགས་ལ་གནོན་རྒྱུ།
+ཡང་ན་བརྙན་ཕབ་ཀྱི་མྱུར་མཐེབ་མནན་ནས་བརྙན་ཕབ་མཚམས་འཇོག་བྱ་རྒྱུ།</translation>
     </message>
 </context>
 <context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation>錄屏</translation>
+        <translation>བརྙན་ཕབ།</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>截圖</translation>
+        <translation>བརྙན་བཤུས།</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>截圖錄屏</translation>
+        <translation>བརྙན་བཤུས་བརྙན་ཕབ།</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>保存失敗。請保存在當前用戶目錄下。</translation>
+        <translation>ཉར་མི་ཐུབ་པས། མིག་སྔའི་སྤྱོད་མཁན་གྱི་དཀར་ཆག་འོག་ཏུ་ཉར་རོགས།</translation>
     </message>
     <message>
         <source>View</source>
-        <translation>檢視</translation>
+        <translation>ལྟ་བ།</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>截圖完成</translation>
+        <translation>བརྙན་བཤུས་ཚར་བ།</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -53,260 +53,260 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>select-area</source>
-        <translation>選取範圍</translation>
+        <translation>ཁུལ་ཁོངས་འདེམས་པ།</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>保存</translation>
+        <translation>ཉར་བ།</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>圖片已保存到%1</translation>
+        <translation>པར་%1དུ་ཉར་ཟིན།</translation>
     </message>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>截圖錄屏將在%1秒後啟動</translation>
+        <translation>བརྙན་བཤུས་བརྙན་ཕབ་སྐར་ཆ་%1རྗེས་སུ་འགོ་སློང་སྲིད།</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation>忽略</translation>
+        <translation>སྣང་མེད།</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>剪貼板</translation>
+        <translation>དྲས་སྦྱར་པང་།</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation>正在保存錄屏文件，請稍候...</translation>
+        <translation>བརྙན་ཕབ་ཡིག་ཆ་ཉར་བཞིན་ཡོད་པས། སྒུག་རོགས་གནང་།</translation>
     </message>
 </context>
 <context>
     <name>MenuController</name>
     <message>
         <source>Undo</source>
-        <translation>撤銷</translation>
+        <translation>མི་བྱེད།</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>保存</translation>
+        <translation>ཉར་བ།</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>退出</translation>
+        <translation>ཕྱིར་འཐེན།</translation>
     </message>
 </context>
 <context>
     <name>RecordProcess</name>
     <message>
         <source>Screen Capture</source>
-        <translation>截圖錄屏</translation>
+        <translation>བརྙན་བཤུས་བརྙན་ཕབ།</translation>
     </message>
     <message>
         <source>View</source>
-        <translation>檢視</translation>
+        <translation>ལྟ་བ།</translation>
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>錄製完畢</translation>
+        <translation>ཕབ་འཇུག་བྱས་ཟིན།</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>圖片已保存到%1</translation>
+        <translation>པར་%1དུ་ཉར་ཟིན།</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>截圖錄屏將在%1秒後啟動</translation>
+        <translation>བརྙན་བཤུས་བརྙན་ཕབ་སྐར་ཆ་%1རྗེས་སུ་འགོ་སློང་སྲིད།</translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>在此處添加文本</translation>
+        <translation>འདིར་ཡིག་ཆ་སྣོན་རོགས་གནང་།</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>啟動/截圖</translation>
+        <translation>འགོ་སློང་།/བརྙན་བཤུས།</translation>
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation>退出/保存</translation>
+        <translation>ཕྱིར་འཐེན།/ཉར་བ།</translation>
     </message>
     <message>
         <source>Drawing</source>
-        <translation>繪圖</translation>
+        <translation>རི་མོ་བྲི་བ།</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation>調整區域</translation>
+        <translation>ཁུལ་ཁོངས་སྙོམས་སྒྲིག</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>設置</translation>
+        <translation>སྒྲིག་བཀོད།</translation>
     </message>
     <message>
         <source>Quick start</source>
-        <translation>快速啟動截圖</translation>
+        <translation>བརྙན་བཤུས་མགྱོགས་མྱུར་འགོ་སློང་བ།</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>光標所在窗口截圖</translation>
+        <translation>འོད་རྟགས་ཡོད་པའི་སྒེའུ་ཁུང་བརྙན་བཤུས་བྱེད་པ།</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>延時5秒截屏</translation>
+        <translation>སྐར་ཆ་5འགྱངས་ནས་བརྙན་བཤུས་བྱེད་པ།</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>截取全屏</translation>
+        <translation>བརྙན་ཡོལ་ཡོངས་བཤུ་ལེན་བྱེད་པ།</translation>
     </message>
     <message>
         <source>Copy to clipboard</source>
-        <translation>複製到剪貼板</translation>
+        <translation>དྲས་སྦྱར་པང་དུ་པར་སློག་བྱེད་པ།</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>退出</translation>
+        <translation>ཕྱིར་འཐེན།</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>保存</translation>
+        <translation>ཉར་བ།</translation>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation>矩形</translation>
+        <translation>གྲུ་བཞི་ནར་མོ།</translation>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>橢圓</translation>
+        <translation>འཇོང་དབྱིབས།</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation>直線</translation>
+        <translation>དྲང་ཕིག</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>畫筆</translation>
+        <translation>པིར་སྨྱུག</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation>文字</translation>
+        <translation>ཡི་གེ།</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>刪除選中圖形</translation>
+        <translation>བདམས་པའི་རི་མོ་སུབ་པ།</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation>撤銷</translation>
+        <translation>མི་བྱེད།</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation>向上擴大選區高度</translation>
+        <translation>ཡར་འདེམས་ཁུལ་གྱི་མཐོ་ཚད་ཆེ་རུ་གཏོང་བ།</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation>向下擴大選區高度</translation>
+        <translation>མར་འདེམས་ཁུལ་གྱི་མཐོ་ཚད་ཆེ་རུ་གཏོང་བ།</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>向左擴大選區寬度</translation>
+        <translation>གཡོན་ཏུ་འདེམས་ཁུལ་གྱི་ཞེང་ཚད་ཆེ་རུ་གཏོང་བ།</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>向右擴大選區寬度</translation>
+        <translation>གཡས་སུ་འདེམས་ཁུལ་གྱི་ཞེང་ཚད་ཆེ་རུ་གཏོང་བ།</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation>向上縮小選區高度</translation>
+        <translation>ཡར་འདེམས་ཁུལ་གྱི་མཐོ་ཚད་ནུང་རུ་གཏོང་བ།</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation>向下縮小選區高度</translation>
+        <translation>མར་འདེམས་ཁུལ་གྱི་མཐོ་ཚད་ཆུང་རུ་གཏོང་བ།</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>向左縮小選區寬度</translation>
+        <translation>གཡོན་ཏུ་འདེམས་ཁུལ་གྱི་ཞེང་ཚད་ཆུང་རུ་གཏོང་བ།</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>向右縮小選區寬度</translation>
+        <translation>གཡས་སུ་འདེམས་ཁུལ་གྱི་ཞེང་ཚད་ཆུང་རུ་གཏོང་བ།</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>幫助</translation>
+        <translation>རོགས་པ།</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>顯示快捷鍵</translation>
+        <translation>མྱུར་མཐེབ་གསལ་བ།</translation>
     </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
     <message>
         <source>Blur</source>
-        <translation>模糊</translation>
+        <translation>རབ་རིབ།</translation>
     </message>
     <message>
         <source>Mosaic</source>
-        <translation>馬賽克</translation>
+        <translation>མོ་སའེ་ཁེ།</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
         <source>Sound On</source>
-        <translation>錄音開啟</translation>
+        <translation>སྒྲ་ཕབ་ཁ་ཕྱེ།</translation>
     </message>
     <message>
         <source>Microphone</source>
-        <translation>麥克風</translation>
+        <translation>སྐད་དུང་།</translation>
     </message>
     <message>
         <source>System Audio</source>
-        <translation>系統音頻</translation>
+        <translation>མ་ལག་སྒྲ་ཟློས།</translation>
     </message>
     <message>
         <source>Sound Off</source>
-        <translation>錄音關閉</translation>
+        <translation>སྒྲ་ཕབ་ཁ་རྒྱག</translation>
     </message>
     <message>
         <source>Show Keystroke</source>
-        <translation>顯示按鍵</translation>
+        <translation>མཐེབ་གཅུས་མངོན་པ།</translation>
     </message>
     <message>
         <source>Hide Keystroke</source>
-        <translation>隱藏按鍵</translation>
+        <translation>མཐེབ་གཅུས་ཡིབ་པ།</translation>
     </message>
     <message>
         <source>Webcam On</source>
-        <translation>開啟鏡頭</translation>
+        <translation>བརྙན་མིག་ཁ་ཕྱེ།</translation>
     </message>
     <message>
         <source>Webcam Off</source>
-        <translation>關閉鏡頭</translation>
+        <translation>བརྙན་མིག་ཁ་རྒྱག</translation>
     </message>
     <message>
         <source>Show Click</source>
-        <translation>顯示點擊</translation>
+        <translation>གནོན་པ་གསལ་བ།</translation>
     </message>
     <message>
         <source>Hide Click</source>
-        <translation>隱藏點擊</translation>
+        <translation>གནོན་པ་ཡིབ་པ།</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation>選項</translation>
+        <translation>གདམ་ག</translation>
     </message>
     <message>
         <source>Format:</source>
-        <translation>格式：</translation>
+        <translation>རྣམ་བཞག</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -318,7 +318,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>FPS:</source>
-        <translation>幀數：</translation>
+        <translation>ལྡེབ་གྲངས།</translation>
     </message>
     <message>
         <source>5 fps</source>
@@ -342,47 +342,47 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation>矩形</translation>
+        <translation>གྲུ་བཞི་ནར་མོ།</translation>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>橢圓</translation>
+        <translation>འཇོང་དབྱིབས།</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation>直線</translation>
+        <translation>དྲང་ཕིག</translation>
     </message>
     <message>
         <source>Arrow</source>
-        <translation>箭頭</translation>
+        <translation>མདའ་རྟགས།</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>畫筆</translation>
+        <translation>པིར་སྨྱུག</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation>文字</translation>
+        <translation>ཡི་གེ།</translation>
     </message>
     <message>
         <source>Save to</source>
-        <translation>保存到</translation>
+        <translation>དུ་ཉར་བ།</translation>
     </message>
     <message>
         <source>Desktop</source>
-        <translation>桌面</translation>
+        <translation>ཅོག་ངོས།</translation>
     </message>
     <message>
         <source>Pictures</source>
-        <translation>圖片</translation>
+        <translation>པར་རིས།</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation>指定位置</translation>
+        <translation>དམིགས་བཙུགས་ས་གནས།</translation>
     </message>
     <message>
         <source>Format</source>
-        <translation>格式</translation>
+        <translation>རྣམ་བཞག་ </translation>
     </message>
     <message>
         <source>PNG</source>
@@ -402,30 +402,30 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>剪貼板</translation>
+        <translation>དྲས་སྦྱར་པང་།</translation>
     </message>
     <message>
         <source>Edit in Draw</source>
-        <translation>在畫板中編輯</translation>
+        <translation>བྲི་གདན་ཐོག་རྩོམ་སྒྲིག་བྱེད་པ།</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation>顯示光標</translation>
+        <translation>འོད་རྟགས་གསལ་བ།</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Recordings</source>
-        <translation>錄音</translation>
+        <translation>སྒྲ་ཕབ།</translation>
     </message>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation>錄屏功能暫不可用</translation>
+        <translation>བརྙན་ཕབ་བྱེད་ནུས་གནས་སྐབས་སྤྱོད་མི་ཆོག</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>退出</translation>
+        <translation>ཕྱིར་འཐེན།</translation>
     </message>
 </context>
 </TS>

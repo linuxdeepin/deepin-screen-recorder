@@ -69,11 +69,11 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignorieren</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Zwischenablage</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
@@ -278,11 +278,11 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Show Keystroke</source>
-        <translation>Zeige Tastendruck</translation>
+        <translation>Tastendruck anzeigen</translation>
     </message>
     <message>
         <source>Hide Keystroke</source>
-        <translation>Verstecke Tastendruck</translation>
+        <translation>Tastendruck ausblenden</translation>
     </message>
     <message>
         <source>Webcam On</source>
@@ -294,11 +294,11 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Show Click</source>
-        <translation>Zeige Klick</translation>
+        <translation>Klick anzeigen</translation>
     </message>
     <message>
         <source>Hide Click</source>
-        <translation>Verstecke Klick</translation>
+        <translation>Klick ausblenden</translation>
     </message>
     <message>
         <source>Options</source>
@@ -318,7 +318,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>FPS:</source>
-        <translation>Bilder pro Sekunde:</translation>
+        <translation>BpS:</translation>
     </message>
     <message>
         <source>5 fps</source>
@@ -398,11 +398,11 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"></translation>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Zwischenablage</translation>
     </message>
     <message>
         <source>Edit in Draw</source>
@@ -410,7 +410,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeiger anzeigen</translation>
     </message>
 </context>
 <context>

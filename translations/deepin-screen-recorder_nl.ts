@@ -99,7 +99,7 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <name>RecordProcess</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Scherm vastleggen</translation>
+        <translation>Schermfoto</translation>
     </message>
     <message>
         <source>View</source>

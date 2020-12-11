@@ -136,7 +136,7 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation>Kilépés/Mentés</translation>
+        <translation>Kilépés / Mentés</translation>
     </message>
     <message>
         <source>Drawing</source>
