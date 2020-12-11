@@ -134,11 +134,20 @@ HEADERS += test_all_interfaces.h \
         ../../src/event_monitor.h \
         ../../src/lib/GifH/gif.h \
         ../../src/xgifrecord.h \
-        ut_shapeswidget.h \
-        ut_toptips.h \
-        ut_camerawidget.h \
-        ut_filter.h \
-        ut_tooltips.h
+        widgets/ut_shapeswidget.h \
+        widgets/ut_toptips.h \
+        widgets/ut_camerawidget.h \
+        widgets/ut_tooltips.h \
+        widgets/ut_textedit.h \
+        widgets/ut_shottoolwidget.h \
+        widgets/ut_subtoolwidget.h \
+        widgets/ut_hovershadowfilter.h \
+        widgets/ut_hoverfilter.h \
+        widgets/ut_hintfilter.h \
+        widgets/ut_toolbutton.h \
+        widgets/ut_toolbarwidget.h \
+        widgets/ut_toolbar.h \
+        widgets/ut_hintfilterprivate.h
 
 
 SOURCES += main.cpp \

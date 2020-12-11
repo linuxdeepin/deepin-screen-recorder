@@ -1,10 +1,19 @@
 #pragma once
 #include <gtest/gtest.h>
 #include <QTest>
+#include "stub.h"
+#include "addr_pri.h"
 
 #define private public
 #define protected public
 #include "../../src/widgets/shapeswidget.h"
+
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QMouseEvent *event), mousePressEvent);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QMouseEvent *event), mouseReleaseEvent);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QMouseEvent *event), mouseMoveEvent);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QPaintEvent *e), paintEvent);
+ACCESS_PRIVATE_FUN(ShapesWidget, void(QEvent *e), enterEvent);
+ACCESS_PRIVATE_FUN(ShapesWidget, bool(QPointF pos), clickedShapes);
 
 using namespace testing;
 class ShapesWidgetTest:public testing::Test{
@@ -20,6 +29,36 @@ public:
             delete shapesWidget;
     }
 };
+
+TEST_F(ShapesWidgetTest, enterEvent)
+{
+    QEvent *e = new QEvent(QEvent::Enter);
+    call_private_fun::ShapesWidgetenterEvent(*shapesWidget,e);
+}
+
+TEST_F(ShapesWidgetTest, paintEvent)
+{
+    QPaintEvent *e = new QPaintEvent(QRect());
+    call_private_fun::ShapesWidgetpaintEvent(*shapesWidget,e);
+}
+
+TEST_F(ShapesWidgetTest, mousePressEvent)
+{
+    QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    call_private_fun::ShapesWidgetmousePressEvent(*shapesWidget,ev);
+}
+
+TEST_F(ShapesWidgetTest, mouseMoveEvent)
+{
+    QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    call_private_fun::ShapesWidgetmouseMoveEvent(*shapesWidget,ev);
+}
+
+TEST_F(ShapesWidgetTest, mouseReleaseEvent)
+{
+    QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    call_private_fun::ShapesWidgetmouseReleaseEvent(*shapesWidget,ev);
+}
 
 TEST_F(ShapesWidgetTest, updateSelectedShape)
 {
@@ -99,6 +138,28 @@ TEST_F(ShapesWidgetTest, clickedOnRect)
     EXPECT_FALSE(shapesWidget->clickedOnRect(rectPoints,pos,isBlurMosaic));
 }
 
+TEST_F(ShapesWidgetTest, hoverOnText)
+{
+    FourPoints rectPoints;
+    rectPoints << QPointF(96,235);
+    rectPoints << QPointF(96,335);
+    rectPoints << QPointF(265,235);
+    rectPoints << QPointF(265,335);
+    QPointF pos = QPointF(220,233);
+    EXPECT_TRUE(shapesWidget->hoverOnText(rectPoints,pos));
+}
+
+TEST_F(ShapesWidgetTest, hoverOnRotatePoint)
+{
+    FourPoints rectPoints;
+    rectPoints << QPointF(96,235);
+    rectPoints << QPointF(96,335);
+    rectPoints << QPointF(265,235);
+    rectPoints << QPointF(265,335);
+    QPointF pos = QPointF(220,233);
+    EXPECT_FALSE(shapesWidget->hoverOnRotatePoint(rectPoints,pos));
+}
+
 TEST_F(ShapesWidgetTest, clickedOnEllipse)
 {
     FourPoints mainPoints;
@@ -140,7 +201,45 @@ TEST_F(ShapesWidgetTest, clickedOnLine)
     EXPECT_FALSE(shapesWidget->clickedOnLine(mainPoints,points,pos));
 }
 
+TEST_F(ShapesWidgetTest, hoverOnLine)
+{
+    FourPoints mainPoints;
+    mainPoints << QPointF(96,235);
+    mainPoints << QPointF(96,335);
+    mainPoints << QPointF(265,235);
+    mainPoints << QPointF(265,335);
+    QList<QPointF> points;
+    points << QPointF(96,235);
+    points << QPointF(96,335);
+    points << QPointF(265,235);
+    points << QPointF(265,335);
+    QPointF pos = QPointF(220,233);
+    EXPECT_FALSE(shapesWidget->hoverOnLine(mainPoints,points,pos));
+}
+
+TEST_F(ShapesWidgetTest, hoverOnArrow)
+{
+    QList<QPointF> points;
+    points << QPointF(96,235);
+    points << QPointF(96,335);
+    points << QPointF(265,235);
+    points << QPointF(265,335);
+    QPointF pos = QPointF(220,233);
+    EXPECT_FALSE(shapesWidget->hoverOnArrow(points,pos));
+}
+
 TEST_F(ShapesWidgetTest, clickedOnText)
+{
+    FourPoints mainPoints;
+    mainPoints << QPointF(96,235);
+    mainPoints << QPointF(96,335);
+    mainPoints << QPointF(265,235);
+    mainPoints << QPointF(265,335);
+    QPointF pos = QPointF(220,233);
+    EXPECT_FALSE(shapesWidget->clickedOnText(mainPoints,pos));
+}
+
+TEST_F(ShapesWidgetTest, rotateOnPoint)
 {
     FourPoints mainPoints;
     mainPoints << QPointF(96,235);
@@ -161,6 +260,23 @@ TEST_F(ShapesWidgetTest, hoverOnRect)
     QPointF pos = QPointF(220,233);
     bool isTextBorder = false;
     EXPECT_TRUE(shapesWidget->hoverOnRect(rectPoints,pos,isTextBorder));
+}
+
+TEST_F(ShapesWidgetTest, hoverOnEllipse)
+{
+    FourPoints rectPoints;
+    rectPoints << QPointF(96,235);
+    rectPoints << QPointF(96,335);
+    rectPoints << QPointF(265,235);
+    rectPoints << QPointF(265,335);
+    QPointF pos = QPointF(220,233);
+    EXPECT_TRUE(shapesWidget->hoverOnEllipse(rectPoints,pos));
+}
+
+TEST_F(ShapesWidgetTest, hoverOnShapes)
+{
+    Toolshape toolshape;
+    EXPECT_FALSE(shapesWidget->hoverOnShapes(toolshape,QPointF(96,235)));
 }
 
 TEST_F(ShapesWidgetTest, textEditIsReadOnly)
@@ -207,4 +323,22 @@ TEST_F(ShapesWidgetTest, microAdjust)
 {
     shapesWidget->microAdjust("Left");
 }
+
+TEST_F(ShapesWidgetTest, handleResize)
+{
+    shapesWidget->handleResize(QPointF(503,462),1);
+}
+
+TEST_F(ShapesWidgetTest, menuSaveSlot)
+{
+    shapesWidget->menuSaveSlot();
+}
+
+TEST_F(ShapesWidgetTest, clickedShapes)
+{
+    //shapesWidget->clickedShapes(QPointF(10,10));
+    call_private_fun::ShapesWidgetclickedShapes(*shapesWidget,QPointF(10,10));
+}
+
+
 

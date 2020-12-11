@@ -91,7 +91,7 @@ TopTips::~TopTips() {}
 
 void TopTips::setRecorderTipsInfo(const bool showState)
 {
-    if(QSysInfo::currentCpuArchitecture().startsWith("mips")){
+    if(QSysInfo::currentCpuArchitecture().startsWith(QString("mips"))){
         m_showRecorderTips = showState;
     }
 }

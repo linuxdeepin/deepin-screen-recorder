@@ -21,6 +21,18 @@ public:
     }
 };
 
+TEST_F(HoverShadowFilterTest, eventFilter)
+{
+    QWidget *widget = new QWidget();
+    QEvent *enterEvent = new QEvent(QEvent::Enter);
+    m_hoverShadowFilter->eventFilter(widget,enterEvent);
+    QEvent *enterLeave = new QEvent(QEvent::Leave);
+    m_hoverShadowFilter->eventFilter(widget,enterLeave);
+    QEvent *enterMove = new QEvent(QEvent::Move);
+    m_hoverShadowFilter->eventFilter(widget,enterMove);
+}
+
+
 
 
 
