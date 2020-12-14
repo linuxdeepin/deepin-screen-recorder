@@ -30,6 +30,8 @@ TEST_F(HoverShadowFilterTest, eventFilter)
     m_hoverShadowFilter->eventFilter(widget,enterLeave);
     QEvent *enterMove = new QEvent(QEvent::Move);
     m_hoverShadowFilter->eventFilter(widget,enterMove);
+    if(nullptr != widget)
+        widget->deleteLater();
 }
 
 

@@ -2,11 +2,16 @@
 #include <gtest/gtest.h>
 #include <QTest>
 #include <QDebug>
+#include <QTimer>
+#include <DPalette>
+
 #include "stub.h"
 #include "addr_pri.h"
 #include "../../src/widgets/textedit.h"
 
 using namespace testing;
+DGUI_USE_NAMESPACE
+
 ACCESS_PRIVATE_FUN(TextEdit, void(QMouseEvent *e), mousePressEvent);
 ACCESS_PRIVATE_FUN(TextEdit, void(QMouseEvent *e), mouseMoveEvent);
 ACCESS_PRIVATE_FUN(TextEdit, void(QMouseEvent *e), mouseReleaseEvent);
@@ -14,9 +19,18 @@ ACCESS_PRIVATE_FUN(TextEdit, void(QMouseEvent *e), mouseDoubleClickEvent);
 ACCESS_PRIVATE_FUN(TextEdit, void(QInputMethodEvent *e),inputMethodEvent);
 ACCESS_PRIVATE_FUN(TextEdit, void(QKeyEvent *e),keyPressEvent);
 ACCESS_PRIVATE_FUN(TextEdit, void(QFocusEvent *e), focusInEvent);
+ACCESS_PRIVATE_FIELD(TextEdit, bool, m_isPressed);
+ACCESS_PRIVATE_FIELD(TextEdit, QPointF, m_pressPoint);
+
+//void focusInEvent_stub(QFocusEvent *e)
+//{
+
+//}
+
 class TextEditTest:public testing::Test{
 
 public:
+    Stub stub;
     TextEdit *m_textEdit;
     QString m_tips = QString("tips");
     virtual void SetUp() override{
@@ -51,13 +65,19 @@ TEST_F(TextEditTest, mouseMoveEvent)
     QMouseEvent *e = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::TextEditmouseMoveEvent(*m_textEdit,e);
 
-    m_textEdit->setEditing(true);
+    m_textEdit->setEditing(false);
+    access_private_field::TextEditm_isPressed(*m_textEdit) = true;
+    access_private_field::TextEditm_pressPoint(*m_textEdit) = QPointF(0,10);
     call_private_fun::TextEditmouseMoveEvent(*m_textEdit,e);
 }
 
 TEST_F(TextEditTest, mouseReleaseEvent)
 {
     QMouseEvent *e = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    m_textEdit->setEditing(true);
+    call_private_fun::TextEditmouseReleaseEvent(*m_textEdit,e);
+    m_textEdit->setEditing(false);
+    m_textEdit->setReadOnly(true);
     call_private_fun::TextEditmouseReleaseEvent(*m_textEdit,e);
 }
 
@@ -80,12 +100,21 @@ TEST_F(TextEditTest, inputMethodEvent)
 //    m_textEdit->setReadOnly(false);
 //    QKeyEvent *escEvent = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Escape, Qt::NoModifier);
 //    call_private_fun::TextEditkeyPressEvent(*m_textEdit,escEvent);
+
+//    QEventLoop eventloop;
+//    QTimer::singleShot(1000, &eventloop, SLOT(quit()));
+//    eventloop.exec();
 //}
 
 //TEST_F(TextEditTest, focusInEvent)
 //{
+//    stub.set(ADDR(DPlainTextEdit,focusInEvent),focusInEvent_stub);
 //    QFocusEvent *e = new QFocusEvent(QEvent::FocusIn);
 //    call_private_fun::TextEditfocusInEvent(*m_textEdit,e);
+
+//    QEventLoop eventloop;
+//    QTimer::singleShot(1000, &eventloop, SLOT(quit()));
+//    eventloop.exec();
 //}
 
 TEST_F(TextEditTest, setColor)
@@ -95,7 +124,7 @@ TEST_F(TextEditTest, setColor)
 
 TEST_F(TextEditTest, getIndex)
 {
-    m_textEdit->getIndex();
+    EXPECT_EQ(1,m_textEdit->getIndex());
 }
 
 TEST_F(TextEditTest, updateCursor)
@@ -106,6 +135,7 @@ TEST_F(TextEditTest, updateCursor)
 TEST_F(TextEditTest, setCursorVisible)
 {
     m_textEdit->setCursorVisible(true);
+    m_textEdit->setCursorVisible(false);
 }
 
 TEST_F(TextEditTest, setFontSize)

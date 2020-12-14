@@ -4,8 +4,6 @@
 #include "stub.h"
 #include "addr_pri.h"
 
-#define private public
-#define protected public
 #include "../../src/widgets/shapeswidget.h"
 
 ACCESS_PRIVATE_FUN(ShapesWidget, void(QMouseEvent *event), mousePressEvent);

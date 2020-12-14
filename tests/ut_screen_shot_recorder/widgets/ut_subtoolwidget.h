@@ -7,15 +7,20 @@
 #include "../../src/widgets/subtoolwidget.h"
 
 using namespace testing;
+void click_stub()
+{
+
+}
 class SubToolWidgetTest:public testing::Test{
 
 public:
+    Stub stub;
     SubToolWidget *m_subToolWidget;
     virtual void SetUp() override{
         m_subToolWidget = new SubToolWidget();
-        m_subToolWidget->initWidget();
-        m_subToolWidget->initRecordLabel();
-        m_subToolWidget->initShotLabel();
+//        m_subToolWidget->initWidget();
+//        m_subToolWidget->initRecordLabel();
+//        m_subToolWidget->initShotLabel();
     }
 
     virtual void TearDown() override{
@@ -27,11 +32,17 @@ public:
 TEST_F(SubToolWidgetTest, installTipHint)
 {
     QWidget *w1 = new QWidget();
-    m_subToolWidget->installTipHint(w1,QString("ut"));
+    m_subToolWidget->installTipHint(w1,QString("矩形"));
 
     QWidget *w2 = new QWidget(w1);
     QWidget *w3 = new QWidget(w2);
-    m_subToolWidget->installTipHint(w3,QString("ut"));
+    m_subToolWidget->installTipHint(w3,QString("画笔"));
+    if(nullptr != w3)
+        w1->deleteLater();
+    if(nullptr != w2)
+        w2->deleteLater();
+    if(nullptr != w1)
+        w3->deleteLater();
 }
 
 
@@ -40,6 +51,10 @@ TEST_F(SubToolWidgetTest, installHint)
     QWidget *w = new QWidget();
     QWidget *hint = new QWidget();
     m_subToolWidget->installHint(w,hint);
+    if(nullptr != w)
+        w->deleteLater();
+    if(nullptr != hint)
+        hint->deleteLater();
 }
 
 TEST_F(SubToolWidgetTest, switchContent)
@@ -71,7 +86,9 @@ TEST_F(SubToolWidgetTest, shapeClickedFromWidget)
     m_subToolWidget->shapeClickedFromWidget(QString("line"));
     m_subToolWidget->shapeClickedFromWidget(QString("pen"));
     m_subToolWidget->shapeClickedFromWidget(QString("text"));
+    stub.set(ADDR(QAbstractButton,click),click_stub);
     m_subToolWidget->shapeClickedFromWidget(QString("option"));
+    stub.reset(ADDR(QAbstractButton,click));
 }
 
 TEST_F(SubToolWidgetTest, setMicroPhoneEnable)

@@ -147,7 +147,9 @@ HEADERS += test_all_interfaces.h \
         widgets/ut_toolbutton.h \
         widgets/ut_toolbarwidget.h \
         widgets/ut_toolbar.h \
-        widgets/ut_hintfilterprivate.h
+        widgets/ut_hintfilterprivate.h \
+        widgets/ut_sidebar.h \
+        widgets/ut_sidebarwidget.h
 
 
 SOURCES += main.cpp \

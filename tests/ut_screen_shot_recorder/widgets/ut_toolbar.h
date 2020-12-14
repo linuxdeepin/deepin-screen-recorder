@@ -10,25 +10,9 @@
 #include "../../src/widgets/toolbar.h"
 
 using namespace testing;
-//ACCESS_PRIVATE_FUN(ToolTips, void(QResizeEvent *ev), resizeEvent);
-//ACCESS_PRIVATE_FUN(ToolButton, void(QEvent *e), enterEvent);
-//ACCESS_PRIVATE_FUN(ToolButton, void(QEvent *e), leaveEvent);
-//ACCESS_PRIVATE_FUN(ToolButton, void(QMouseEvent *e), mousePressEvent);
-//ACCESS_PRIVATE_FUN(ToolBarWidget, void(QPaintEvent *), paintEvent);
-//ACCESS_PRIVATE_FUN(ToolBarWidget, void(QShowEvent *), showEvent);
-//DGuiApplicationHelper::ColorType themeType_default_stub()
-//{
-//    return DGuiApplicationHelper::ColorType::UnknownType;
-//}
-//DGuiApplicationHelper::ColorType themeType_Light_stub()
-//{
-//    return DGuiApplicationHelper::ColorType::LightType;
-//}
-//DGuiApplicationHelper::ColorType themeType_Dark_stub()
-//{
-//    return DGuiApplicationHelper::ColorType::DarkType;
-//}
-
+ACCESS_PRIVATE_FUN(ToolBar, void(QPaintEvent *), paintEvent);
+ACCESS_PRIVATE_FUN(ToolBar, void(QEvent *), enterEvent);
+ACCESS_PRIVATE_FUN(ToolBar, bool(QObject *,QEvent *), eventFilter);
 
 class ToolBarTest:public testing::Test{
 
@@ -39,6 +23,7 @@ public:
     virtual void SetUp() override{
         m_mainWindow = new MainWindow;
         m_toolBar = new ToolBar(m_mainWindow);
+        m_toolBar->initToolBar();
     }
 
     virtual void TearDown() override{
@@ -49,17 +34,29 @@ public:
     }
 };
 
-//TEST_F(ToolBarTest, paintEvent)
-//{
-//    QPaintEvent *paintEvent = new QPaintEvent(QRect());
-//    call_private_fun::ToolBarWidgetpaintEvent(*m_toolBarWidget,paintEvent);
-//}
+TEST_F(ToolBarTest, paintEvent)
+{
+    QPaintEvent *paintEvent = new QPaintEvent(QRect());
+    call_private_fun::ToolBarpaintEvent(*m_toolBar,paintEvent);
+}
 
-//TEST_F(ToolBarTest, showEvent)
-//{
-//    QShowEvent *showEvent = new QShowEvent();
-//    call_private_fun::ToolBarWidgetshowEvent(*m_toolBarWidget,showEvent);
-//}
+TEST_F(ToolBarTest, enterEvent)
+{
+    QEvent *e = new QEvent(QEvent::Enter);
+    call_private_fun::ToolBarenterEvent(*m_toolBar,e);
+}
+
+TEST_F(ToolBarTest, eventFilter)
+{
+    QObject *obj = new QObject();
+    QEvent *e = new QEvent(QEvent::Enter);
+    call_private_fun::ToolBareventFilter(*m_toolBar,obj,e);
+
+    QEvent *paletteEvent = new QEvent(QEvent::PaletteChange);
+    call_private_fun::ToolBareventFilter(*m_toolBar,obj,paletteEvent);
+    if(nullptr != obj)
+        obj->deleteLater();
+}
 
 TEST_F(ToolBarTest, setExpand)
 {
@@ -91,53 +88,42 @@ TEST_F(ToolBarTest, systemAudioActionCheckedToMainSlot)
     m_toolBar->systemAudioActionCheckedToMainSlot(true);
 }
 
-//TEST_F(ToolBarTest, changeArrowAndLineFromMain)
-//{
-//    m_toolBar->changeArrowAndLineFromMain(5);
-//}
-
-TEST_F(ToolBarTest, initToolBar)
+TEST_F(ToolBarTest, changeArrowAndLineFromMain)
 {
-    m_toolBar->initToolBar();
+    m_toolBar->changeArrowAndLineFromMain(5);
 }
 
-//TEST_F(ToolBarTest, setRecordButtonDisable)
-//{
-//    m_toolBar->setRecordButtonDisable();
-//}
+TEST_F(ToolBarTest, setRecordButtonDisable)
+{
+    m_toolBar->setRecordButtonDisable();
+}
 
-//TEST_F(ToolBarTest, setRecordLaunchMode)
-//{
-//    m_toolBar->setRecordLaunchMode(true);
-//}
+TEST_F(ToolBarTest, setRecordLaunchMode)
+{
+    m_toolBar->setRecordLaunchMode(true);
+}
 
-//TEST_F(ToolBarTest, setVideoButtonInit)
-//{
-//    m_toolBar->setVideoButtonInit();
-//}
+TEST_F(ToolBarTest, setVideoButtonInit)
+{
+    m_toolBar->setVideoButtonInit();
+}
 
 TEST_F(ToolBarTest, shapeClickedFromMain)
 {
     m_toolBar->shapeClickedFromMain(QString("rect"));
 }
 
-//TEST_F(ToolBarTest, setMicroPhoneEnable)
-//{
-//    m_toolBar->setMicroPhoneEnable(true);
-//}
+TEST_F(ToolBarTest, setMicroPhoneEnable)
+{
+    m_toolBar->setMicroPhoneEnable(true);
+}
 
-//TEST_F(ToolBarTest, setSystemAudioEnable)
-//{
-//    m_toolBar->setSystemAudioEnable(true);
-//}
+TEST_F(ToolBarTest, setSystemAudioEnable)
+{
+    m_toolBar->setSystemAudioEnable(true);
+}
 
-//TEST_F(ToolBarTest, setCameraDeviceEnable)
-//{
-//    m_toolBar->setCameraDeviceEnable(true);
-//}
-
-
-
-
-
-
+TEST_F(ToolBarTest, setCameraDeviceEnable)
+{
+    m_toolBar->setCameraDeviceEnable(true);
+}
