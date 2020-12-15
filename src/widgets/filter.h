@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include <QScopedPointer>
+#include <QTimer>
 
 class HoverFilter : public QObject
 {
@@ -41,7 +42,24 @@ public:
 };
 
 
-class HintFilterPrivate;
+//class HintFilterPrivate;
+class HintFilter;
+class HintFilterPrivate
+{
+public:
+    explicit HintFilterPrivate(HintFilter *parent) : q_ptr(parent) {}
+
+    void showHint(QWidget *hint);
+
+    QTimer  *delayShowTimer = nullptr;
+
+    QWidget *parentWidget = nullptr;
+    QWidget *hintWidget = nullptr;
+
+    HintFilter *q_ptr;
+    Q_DECLARE_PUBLIC(HintFilter)
+};
+
 class HintFilter: public QObject
 {
     Q_OBJECT

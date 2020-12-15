@@ -61,21 +61,21 @@ bool HoverFilter::eventFilter(QObject *obj, QEvent *event)
 }
 
 
-class HintFilterPrivate
-{
-public:
-    explicit HintFilterPrivate(HintFilter *parent) : q_ptr(parent) {}
+//class HintFilterPrivate
+//{
+//public:
+//    explicit HintFilterPrivate(HintFilter *parent) : q_ptr(parent) {}
 
-    void showHint(QWidget *hint);
+//    void showHint(QWidget *hint);
 
-    QTimer  *delayShowTimer = nullptr;
+//    QTimer  *delayShowTimer = nullptr;
 
-    QWidget *parentWidget = nullptr;
-    QWidget *hintWidget = nullptr;
+//    QWidget *parentWidget = nullptr;
+//    QWidget *hintWidget = nullptr;
 
-    HintFilter *q_ptr;
-    Q_DECLARE_PUBLIC(HintFilter)
-};
+//    HintFilter *q_ptr;
+//    Q_DECLARE_PUBLIC(HintFilter)
+//};
 
 
 void HintFilterPrivate::showHint(QWidget *hint)

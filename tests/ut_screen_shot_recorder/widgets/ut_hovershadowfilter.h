@@ -2,8 +2,6 @@
 #include <gtest/gtest.h>
 #include <QTest>
 
-#define private public
-#define protected public
 #include "../../src/widgets/filter.h"
 
 using namespace testing;
