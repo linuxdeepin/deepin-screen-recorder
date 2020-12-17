@@ -111,7 +111,8 @@ namespace {
 
 MainWindow::MainWindow(DWidget *parent) :
     DWidget(parent),
-    m_wmHelper(DWindowManagerHelper::instance())
+    m_wmHelper(DWindowManagerHelper::instance()),
+    m_hasComposite(DWindowManagerHelper::instance()->hasComposite())
 {
     setDragCursor();
     QScreen *screen = qApp->primaryScreen();
@@ -987,7 +988,12 @@ void MainWindow::onActivateWindow()
 
 void MainWindow::compositeChanged()
 {
-    if (!m_wmHelper->hasComposite()) {
+    if (m_hasComposite == true  && !m_wmHelper->hasComposite()) {
+        // 录屏过程中 由初始3D转2D模式, 强制暂停录屏.
+        // 如果录屏由 由初始2D转3D模式, 则不强制退出录屏.
+        stopRecord();
+        return;
+        /*
         qDebug() << "have no Composite";
         Utils::warnNoComposite();
         emit releaseEvent();
@@ -996,6 +1002,11 @@ void MainWindow::compositeChanged()
             m_pScreenRecordEvent->wait();
         }
         QApplication::quit();
+        */
+    }
+    //2D录屏, 切换模式后,更新当前按钮的样式
+    if(m_keyBoardStatus && m_pRecorderRegion){
+        m_pRecorderRegion->updateKeyBoardButtonStyle();
     }
 }
 
@@ -1394,12 +1405,11 @@ void MainWindow::showKeyBoardButtons(const QString &key)
 {
     //键盘按钮启用状态下创建按键控件
     if (m_keyBoardStatus) {
-        if(!DWindowManagerHelper::instance()->hasComposite()) {
+        if(m_hasComposite == false && RECORD_BUTTON_RECORDING == recordButtonStatus) {
             // 2D 录屏下将按键发送至m_pRecorderRegion区域。
             m_pRecorderRegion->showKeyBoardButtons(key);
             return;
         }
-
         KeyButtonWidget *t_keyWidget = new KeyButtonWidget(this);
         t_keyWidget->setKeyLabelWord(key);
         m_keyButtonList.append(t_keyWidget);
@@ -2068,7 +2078,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     // 2D窗管模式下，录屏背景用截图背景。
-    if (m_functionType == 1 || (!DWindowManagerHelper::instance()->hasComposite())) {
+    if (m_functionType == 1 || m_hasComposite == false) {
         painter.setRenderHint(QPainter::Antialiasing, true);
         QRect backgroundRect;
 
@@ -2957,7 +2967,7 @@ void MainWindow::startRecord()
     recordProcess.setRecordAudioInputType(getRecordInputType(m_selectedMic, m_selectedSystemAudio));
     recordProcess.startRecord();
     // 录屏开始后，隐藏窗口。（2D窗管下支持录屏, 但是会导致摄像头录制不到）
-    if(!DWindowManagerHelper::instance()->hasComposite()){
+    if(m_hasComposite == false){
         hide();
         // 显示录屏框区域。
         m_pRecorderRegion->show();
@@ -3342,7 +3352,7 @@ void MainWindow::startCountdown()
     m_pVoiceVolumeWatcher->stopWatch();
     m_pCameraWatcher->stopWatch();
 
-    if(!DWindowManagerHelper::instance()->hasComposite()){
+    if(m_hasComposite == false){
         // 设置录屏框区域。
         m_pRecorderRegion =  new RecorderRegionShow();
         m_pRecorderRegion->resize(std::min(recordWidth + 2, rootWindowRect.width() - 2), std::min(recordHeight + 2, rootWindowRect.height() - 2));

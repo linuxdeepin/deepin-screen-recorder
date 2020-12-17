@@ -318,6 +318,7 @@ private:
     QSize m_screenSize;
     RecorderRegionShow *m_pRecorderRegion = nullptr;
     qreal m_pixelRatio = 1.0;
+    bool m_hasComposite = true;
 };
 
 #endif //MAINWINDOW_H

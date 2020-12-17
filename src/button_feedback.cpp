@@ -27,7 +27,8 @@
 #include <QTimer>
 #include <QApplication>
 #include <DHiDPIHelper>
-
+#include <QBitmap>
+#include <QPaintEvent>
 #include <QDebug>
 
 const int ButtonFeedback::FRAME_RATE = 40; // ms
@@ -65,6 +66,7 @@ ButtonFeedback::ButtonFeedback(DWidget *parent) : DWidget(parent)
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 
     Utils::passInputEvent(static_cast<int>(this->winId()));
+    m_painter =  new QPainter();
 }
 
 void ButtonFeedback::update()
@@ -84,51 +86,47 @@ void ButtonFeedback::update()
     }
 }
 
-void ButtonFeedback::paintEvent(QPaintEvent *)
+void ButtonFeedback::paintEvent(QPaintEvent *event)
 {
+    /*
     QPainter painter(this);
+    QPixmap pixmap(width(), height());
+    pixmap.fill(Qt::transparent);
+    painter.begin( &pixmap );
+    painter.setRenderHints( QPainter::Antialiasing, true);
+
+
 
     painter.setOpacity(1);
     painter.drawPixmap(QPoint(0, 0), buttonFeedbackImg[frameIndex]);
-    /*
-    switch (frameIndex) {
-    case 0:
-        painter.drawPixmap(QPoint(0, 0), buttonFeedback0Img);
-        break;
-    case 1:
-        painter.drawPixmap(QPoint(0, 0), buttonFeedback1Img);
-        break;
-    case 2:
-        painter.drawPixmap(QPoint(0, 0), buttonFeedback2Img);
-        break;
-    case 3:
-        painter.drawPixmap(QPoint(0, 0), buttonFeedback3Img);
-        break;
-    case 4:
-        painter.drawPixmap(QPoint(0, 0), buttonFeedback4Img);
-        break;
-    case 5:
-        painter.drawPixmap(QPoint(0, 0), buttonFeedback5Img);
-        break;
-    case 6:
-        painter.drawPixmap(QPoint(0, 0), buttonFeedback6Img);
-        break;
-    case 7:
-        painter.drawPixmap(QPoint(0, 0), buttonFeedback7Img);
-        break;
-    case 8:
-        painter.drawPixmap(QPoint(0, 0), buttonFeedback8Img);
-        break;
-    case 9:
-        painter.drawPixmap(QPoint(0, 0), buttonFeedback9Img);
-        break;
-    }
+    painter.end();
+
+    painter.begin(this);
+    painter.drawPixmap(QPoint(0, 0), pixmap);
+    painter.end();
+    //setMask(pixmap.mask());
+    //event->accept();
     */
+
+    QPixmap pixmap(width() + 6, height() + 6);
+    pixmap.fill(Qt::transparent);
+    m_painter->begin( &pixmap );
+    m_painter->setRenderHints( QPainter::Antialiasing, true);
+
+    m_painter->setOpacity(1);
+    m_painter->drawPixmap(QPoint(0, 0), buttonFeedbackImg[frameIndex]);
+    m_painter->end();
+
+    m_painter->begin(this);
+    m_painter->drawPixmap(QPoint(0, 0), pixmap);
+    m_painter->end();
+    setMask(pixmap.mask());
+    event->accept();
 }
 
 void ButtonFeedback::showPressFeedback(int x, int y)
 {
-    frameIndex = 0;
+    frameIndex = 1;
 
     show();
     repaint();

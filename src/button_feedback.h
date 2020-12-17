@@ -53,6 +53,7 @@ private:
     QTimer *timer;
 
     int frameIndex;
+    QPainter* m_painter = nullptr;
 };
 
 #endif

@@ -227,13 +227,13 @@ int main(int argc, char *argv[])
             const QString& t_launchMode = cmdParser.isSet(screenRecordOption) ? "screenRecord" : "screenShot";
             window.initLaunchMode(t_launchMode);
             DBusScreenshotService dbusService (&window);
-
+            /*
             if (!DWindowManagerHelper::instance()->hasComposite() && t_launchMode == "screenRecord") {
                 Utils::warnNoComposite();
                 qApp->quit();
                 return 0;
             }
-
+            */
             // Register debus service.
             dbus.registerObject("/com/deepin/ScreenRecorder", &window, QDBusConnection::ExportScriptableSlots);
             QDBusConnection conn = QDBusConnection::sessionBus();

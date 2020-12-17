@@ -92,9 +92,9 @@ void MainToolWidget::initMainLabel()
     m_recordBtn->setIcon(QIcon::fromTheme("screencap-normal"));
 
     // 2D 窗管下，隐藏录屏功能
-    if((!DWindowManagerHelper::instance()->hasComposite()) || Utils::is3rdInterfaceStart) {
-        m_recordBtn->hide();
-    }
+    //if((!DWindowManagerHelper::instance()->hasComposite()) || Utils::is3rdInterfaceStart) {
+        //m_recordBtn->hide();
+    //}
 
     toolBtnList.append(m_recordBtn);
 

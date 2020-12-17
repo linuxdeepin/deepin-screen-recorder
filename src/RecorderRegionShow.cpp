@@ -1,5 +1,6 @@
 #include <QBitmap>
 #include <QVector>
+#include <DWindowManagerHelper>
 #include "RecorderRegionShow.h"
 #include "utils.h"
 
@@ -8,8 +9,15 @@ const int CAMERA_Y_OFFSET = 40;
 
 RecorderRegionShow::RecorderRegionShow():m_cameraWidget(nullptr)
 {
+    /*
     setAttribute (Qt::WA_AlwaysShowToolTips);
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::ToolTip);
+    setAttribute(Qt::WA_TranslucentBackground, true);
+    */
+
+    installEventFilter(this);  // add event filter
+    setAttribute(Qt::WA_ShowWithoutActivating);
+    setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     m_painter =  new QPainter();
@@ -72,6 +80,20 @@ void RecorderRegionShow::showKeyBoardButtons(const QString &key)
     //更新多按钮的位置
     updateMultiKeyBoardPos();
     repaint();
+}
+
+void RecorderRegionShow::updateKeyBoardButtonStyle()
+{
+    int count = m_keyButtonList.count();
+    for(int j = 0; j < count; ++j){
+        if(DWindowManagerHelper::instance()->hasComposite()){
+            m_keyButtonList.at(j)->setBlurRectXRadius(15);
+            m_keyButtonList.at(j)->setBlurRectYRadius(15);
+        }else {
+            m_keyButtonList.at(j)->setBlurRectXRadius(0);
+            m_keyButtonList.at(j)->setBlurRectYRadius(0);
+        }
+    }
 }
 
 void RecorderRegionShow::paintEvent(QPaintEvent *event)

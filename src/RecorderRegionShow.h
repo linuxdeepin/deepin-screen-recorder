@@ -8,7 +8,7 @@
 #include "widgets/camerawidget.h"
 #include "widgets/keybuttonwidget.h"
 
-class RecorderRegionShow : public QWidget
+class RecorderRegionShow : public DWidget
 { 
     Q_OBJECT
 public:
@@ -16,6 +16,7 @@ public:
     virtual ~RecorderRegionShow();
     void initCameraInfo(const CameraWidget::Position position, const QSize size);
     void showKeyBoardButtons(const QString &key);
+    void updateKeyBoardButtonStyle();
 
 protected:
     void paintEvent(QPaintEvent *event);
