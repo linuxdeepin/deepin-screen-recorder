@@ -19,7 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef S_FILTER_H_C
+#define S_FILTER_H_C
+
 
 #include <QObject>
 #include <QScopedPointer>
@@ -74,3 +76,4 @@ private:
     QScopedPointer<HintFilterPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), HintFilter)
 };
+#endif // S_FILTER_H_C

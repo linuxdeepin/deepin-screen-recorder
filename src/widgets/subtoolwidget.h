@@ -81,6 +81,7 @@ private:
     ToolButton *m_optionButton;
     ToolButton *m_shotOptionButton;
     QAction *m_microphoneAction;
+    ToolButton *m_audioButton;
     bool m_haveMicroPhone = false;
     bool m_haveSystemAudio = false;
     int m_lineflag;

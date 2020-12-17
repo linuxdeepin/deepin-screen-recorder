@@ -481,9 +481,15 @@ void MainWindow::initShortcut()
     QShortcut *arrowSC = new QShortcut(QKeySequence("L"), this);
     QShortcut *lineSC = new QShortcut(QKeySequence("P"), this);
     QShortcut *textSC = new QShortcut(QKeySequence("T"), this);
+    QShortcut *optionSC = new QShortcut(QKeySequence("F3"), this);
+    QShortcut *keyBoardSC = new QShortcut(QKeySequence("K"), this);
+    QShortcut *mouseSC = new QShortcut(QKeySequence("C"), this);
+    QShortcut *cameraSC = new QShortcut(QKeySequence("W"), this);
+    QShortcut *audioSC = new QShortcut(QKeySequence("S"), this);
     //    QShortcut *colorSC = new QShortcut(QKeySequence("Alt+6"), this);
 
     connect(rectSC, &QShortcut::activated, this, [ = ] {
+        emit m_toolBar->shapeClickedFromMain("rect");
         if (m_functionType == 1)
         {
             emit m_toolBar->shapeClickedFromMain("rect");
@@ -513,6 +519,26 @@ void MainWindow::initShortcut()
         {
             emit m_toolBar->shapeClickedFromMain("text");
         }
+    });
+    connect(optionSC, &QShortcut::activated, this, [ = ] {
+        if (m_functionType == 1)
+            emit m_toolBar->shapeClickedFromMain("option");
+    });
+    connect(keyBoardSC, &QShortcut::activated, this, [ = ] {
+        if (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)
+            emit m_toolBar->shapeClickedFromMain("keyBoard");
+    });
+    connect(mouseSC, &QShortcut::activated, this, [ = ] {
+        if (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)
+            emit m_toolBar->shapeClickedFromMain("mouse");
+    });
+    connect(cameraSC, &QShortcut::activated, this, [ = ] {
+        if (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)
+            emit m_toolBar->shapeClickedFromMain("camera");
+    });
+    connect(audioSC, &QShortcut::activated, this, [ = ] {
+        if (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)
+            emit m_toolBar->shapeClickedFromMain("audio");
     });
 
     if (isCommandExist("dman")) {

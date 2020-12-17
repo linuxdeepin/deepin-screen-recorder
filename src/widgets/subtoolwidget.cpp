@@ -115,18 +115,18 @@ void SubToolWidget::initRecordLabel()
     //保持帧数的配置文件判断
     t_frameRate = t_frameRateVar.toString().toInt();
     //    //添加音频按钮
-    ToolButton *audioButton = new ToolButton();
+    m_audioButton = new ToolButton();
 
     //audioButton->setObjectName("AudioButton");
-    Utils::setAccessibility(audioButton, AC_SUBTOOLWIDGET_AUDIO_BUTTON);
-    audioButton->setText(" ");
-    audioButton->setIconSize(TOOL_ICON_SIZE);
-    installTipHint(audioButton, tr("Sound On"));
-    audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
+    Utils::setAccessibility(m_audioButton, AC_SUBTOOLWIDGET_AUDIO_BUTTON);
+    m_audioButton->setText(" ");
+    m_audioButton->setIconSize(TOOL_ICON_SIZE);
+    installTipHint(m_audioButton, tr("Sound On"));
+    m_audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
 
-    rectBtnGroup->addButton(audioButton);
-    audioButton->setFixedSize(MEDIUM_TOOL_BUTTON_SIZE);
-    btnList.append(audioButton);
+    rectBtnGroup->addButton(m_audioButton);
+    m_audioButton->setFixedSize(MEDIUM_TOOL_BUTTON_SIZE);
+    btnList.append(m_audioButton);
 
     DMenu *audioMenu = new DMenu();
 
@@ -157,43 +157,43 @@ void SubToolWidget::initRecordLabel()
 
     connect(m_microphoneAction, &QAction::triggered, this, [ = ] {
         if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked()){
-            installTipHint(audioButton, tr("Sound On"));
-            audioButton->setIcon(QIcon::fromTheme("volume_normal"));
+            installTipHint(m_audioButton, tr("Sound On"));
+            m_audioButton->setIcon(QIcon::fromTheme("volume_normal"));
         }
 
         if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked()){
-            audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
+            m_audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
         }
 
         if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked()){
 
-            audioButton->setIcon(QIcon::fromTheme("audio frequency_normal"));
+            m_audioButton->setIcon(QIcon::fromTheme("audio frequency_normal"));
         }
 
         if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked()){
 
-            installTipHint(audioButton, tr("Sound Off"));
-            audioButton->setIcon(QIcon::fromTheme("mute_normal"));
+            installTipHint(m_audioButton, tr("Sound Off"));
+            m_audioButton->setIcon(QIcon::fromTheme("mute_normal"));
         }
     });
 
     connect(m_systemAudioAction, &QAction::triggered, this, [ = ] {
         if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked()){
-            installTipHint(audioButton, tr("Sound On"));
-            audioButton->setIcon(QIcon::fromTheme("volume_normal"));
+            installTipHint(m_audioButton, tr("Sound On"));
+            m_audioButton->setIcon(QIcon::fromTheme("volume_normal"));
         }
 
         if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked()){
-            audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
+            m_audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
         }
 
         if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked()){
-            audioButton->setIcon(QIcon::fromTheme("audio frequency_normal"));
+            m_audioButton->setIcon(QIcon::fromTheme("audio frequency_normal"));
         }
 
         if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked()){
-            installTipHint(audioButton, tr("Sound Off"));
-            audioButton->setIcon(QIcon::fromTheme("mute_normal"));
+            installTipHint(m_audioButton, tr("Sound Off"));
+            m_audioButton->setIcon(QIcon::fromTheme("mute_normal"));
         }
     });
     m_haveMicroPhone = true;
@@ -207,7 +207,7 @@ void SubToolWidget::initRecordLabel()
     audioMenu->addAction(m_microphoneAction);
     audioMenu->addSeparator();
     audioMenu->addAction(m_systemAudioAction);
-    audioButton->setMenu(audioMenu);
+    m_audioButton->setMenu(audioMenu);
 
     connect(m_microphoneAction, SIGNAL(triggered(bool)), this, SIGNAL(microphoneActionChecked(bool)));
     connect(m_systemAudioAction, SIGNAL(triggered(bool)), this, SIGNAL(systemAudioActionChecked(bool)));
@@ -386,7 +386,7 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(false);
         fps24Action->setEnabled(false);
         fps30Action->setEnabled(false);
-        audioButton->setEnabled(false);
+        m_audioButton->setEnabled(false);
         if (m_microphoneAction->isChecked()) {
             m_microphoneAction->trigger();
         }
@@ -401,7 +401,7 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(true);
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
-        audioButton->setEnabled(true);
+        m_audioButton->setEnabled(true);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
             m_microphoneAction->setChecked(true);
@@ -419,7 +419,7 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(true);
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
-        audioButton->setEnabled(true);
+        m_audioButton->setEnabled(true);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
             m_microphoneAction->setChecked(true);
@@ -440,7 +440,7 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(false);
         fps24Action->setEnabled(false);
         fps30Action->setEnabled(false);
-        audioButton->setEnabled(false);
+        m_audioButton->setEnabled(false);
         if (m_microphoneAction->isChecked()) {
             m_microphoneAction->trigger();
         }
@@ -457,7 +457,7 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(true);
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
-        audioButton->setEnabled(true);
+        m_audioButton->setEnabled(true);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
             m_microphoneAction->setChecked(true);
@@ -476,7 +476,7 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(true);
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
-        audioButton->setEnabled(true);
+        m_audioButton->setEnabled(true);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
             m_microphoneAction->setChecked(true);
@@ -1048,6 +1048,14 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
             m_textButton->click();
         } else if (shape == "option") {
             m_shotOptionButton->click();
+        }else if (shape == "keyBoard") {
+            m_keyBoardButton->click();
+        }else if (shape == "mouse") {
+            m_mouseButton->click();
+        }else if (shape == "camera") {
+            m_cameraButton->click();
+        }else if (shape == "audio") {
+            m_audioButton->click();
         }
     }
 }

@@ -25,12 +25,12 @@ public:
 };
 }
 
-//TEST_F(TestDBusService,onStart)
-//{
-//    m_dBusService->onStart();
-//}
+TEST_F(TestDBusService,onStart)
+{
+    m_dBusService->onStart();
+}
 
-//TEST_F(TestDBusService,onStop)
-//{
-//    m_dBusService->onStop();
-//}
+TEST_F(TestDBusService,onStop)
+{
+    m_dBusService->onStop();
+}

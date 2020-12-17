@@ -34,8 +34,6 @@ TimeWidget::~TimeWidget()
         delete m_lightIcon;
     if(nullptr != m_shadeIcon)
         delete m_shadeIcon;
-    if(nullptr != m_currentIcon)
-        delete m_currentIcon;
     if(nullptr != m_timer)
         m_timer->deleteLater();
     if(nullptr != m_dockInter)

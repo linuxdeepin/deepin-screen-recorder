@@ -1,15 +1,23 @@
 #include <QWidget>
 #include <gtest/gtest.h>
 #include <DGuiApplicationHelper>
+#include <QMouseEvent>
 
-#define protected public
-#define private public
+#include "stub.h"
+#include "addr_pri.h"
 #include "../../../dde-dock-plugins/recordtime/timewidget.h"
 
 DGUI_USE_NAMESPACE
+ACCESS_PRIVATE_FUN(TimeWidget, void(QMouseEvent *e), mousePressEvent);
+ACCESS_PRIVATE_FUN(TimeWidget, void(QPaintEvent *e), paintEvent);
+ACCESS_PRIVATE_FUN(TimeWidget, void(), onTimeout);
+ACCESS_PRIVATE_FUN(TimeWidget, void(int), onPositionChanged);
 
+ACCESS_PRIVATE_FIELD(TimeWidget,int, m_position)
+ACCESS_PRIVATE_FIELD(TimeWidget,QPixmap, m_pixmap)
 namespace  {
-    class TestDBusService : public testing::Test {
+
+    class TestTimeWidget : public testing::Test {
 
     public:
 
@@ -19,6 +27,8 @@ namespace  {
         }
         void TearDown() override
         {
+            if(nullptr != m_timeWidget)
+                delete m_timeWidget;
         }
 
     public:
@@ -26,33 +36,53 @@ namespace  {
     };
 }
 
-TEST_F(TestDBusService,enabled)
+TEST_F(TestTimeWidget,enabled)
 {
     EXPECT_EQ(true,m_timeWidget->enabled());
 }
 
-TEST_F(TestDBusService,start)
+TEST_F(TestTimeWidget,start)
 {
     m_timeWidget->start();
 }
 
-TEST_F(TestDBusService,stop)
+TEST_F(TestTimeWidget,stop)
 {
     m_timeWidget->stop();
 }
 
-TEST_F(TestDBusService,sizeHint)
+TEST_F(TestTimeWidget,sizeHint)
 {
     EXPECT_EQ(86,m_timeWidget->sizeHint().width());
     EXPECT_EQ(36,m_timeWidget->sizeHint().height());
 }
 
-TEST_F(TestDBusService,onTimeout)
+TEST_F(TestTimeWidget,onTimeout)
 {
-    m_timeWidget->onTimeout();
+    call_private_fun::TimeWidgetonTimeout(*m_timeWidget);
 }
 
-TEST_F(TestDBusService,onPositionChanged)
+TEST_F(TestTimeWidget,onPositionChanged)
 {
-    m_timeWidget->onPositionChanged(1);
+    call_private_fun::TimeWidgetonPositionChanged(*m_timeWidget,1);
+}
+
+TEST_F(TestTimeWidget,paintEvent)
+{
+    QPaintEvent *e = new QPaintEvent(QRect());
+    access_private_field::TimeWidgetm_position(*m_timeWidget) = 0;
+    call_private_fun::TimeWidgetpaintEvent(*m_timeWidget,e);
+
+    access_private_field::TimeWidgetm_position(*m_timeWidget) = 1;
+    call_private_fun::TimeWidgetpaintEvent(*m_timeWidget,e);
+
+    access_private_field::TimeWidgetm_position(*m_timeWidget) = 0;
+    access_private_field::TimeWidgetm_pixmap(*m_timeWidget) = QPixmap();
+    call_private_fun::TimeWidgetpaintEvent(*m_timeWidget,e);
+}
+
+TEST_F(TestTimeWidget,mousePressEvent)
+{
+    QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    call_private_fun::TimeWidgetmousePressEvent(*m_timeWidget,ev);
 }

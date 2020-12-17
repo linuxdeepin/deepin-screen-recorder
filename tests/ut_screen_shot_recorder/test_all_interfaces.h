@@ -1,4 +1,5 @@
 #pragma once
+#include "widgets/ut_shapeswidget.h" //放前面
 #include "ut_main_window.h"
 #include "utils/ut_audioutils.h"
 #include "utils/ut_baseutils.h"
@@ -23,7 +24,7 @@
 #include "ut_button_feedback.h"
 #include "ut_record_process.h"
 #include "ut_screenshot.h"
-#include "widgets/ut_shapeswidget.h"
+//#include "widgets/ut_shapeswidget.h"
 #include "widgets/ut_toptips.h"
 #include "widgets/ut_camerawidget.h"
 #include "widgets/ut_tooltips.h"

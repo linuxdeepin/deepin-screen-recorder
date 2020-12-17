@@ -57,7 +57,7 @@ bool waylandDectected_false_stub()
     return false;
 }
 
-bool toBool_stub()
+bool toolBar_toBool_stub()
 {
     return true;
 }
@@ -110,7 +110,7 @@ public:
 
 TEST_F(ToolBarWidgetTest, showEvent)
 {
-    stub.set(ADDR(QVariant,toBool),toBool_stub);
+    stub.set(ADDR(QVariant,toBool),toolBar_toBool_stub);
     QShowEvent *showEvent = new QShowEvent();
     call_private_fun::ToolBarWidgetshowEvent(*m_toolBarWidget,showEvent);
 }
