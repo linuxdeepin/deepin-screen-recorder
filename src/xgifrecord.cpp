@@ -2,10 +2,9 @@
 
 XGifRecord::XGifRecord(QRect rect,QString savePath,QObject *parent) :QThread(parent),
     m_recordRect(rect),
-    m_savePath(savePath),
     m_bWriteFrame(false),
+    m_savePath(savePath),
     m_pixelRatio(-1)
-
 {
     m_bufferSize = 60;
     m_delay = 15;
@@ -28,8 +27,8 @@ void XGifRecord::run()
                 bFirst = false;
                 GifBegin(&m_gifWrite,
                          pathCh,
-                         img.width(),
-                         img.height(),
+                         static_cast<uint32_t>(img.width()),
+                         static_cast<uint32_t>(img.height()),
                          static_cast<uint32_t>(m_delay));
             }
             GifWriteFrame(&m_gifWrite,

@@ -11,10 +11,13 @@
 
 TimeWidget::TimeWidget(DWidget *parent):
     DWidget(parent),
-    m_bRefresh(true),
+    m_timer(nullptr),
+    m_dockInter(nullptr),
     m_lightIcon(nullptr),
     m_shadeIcon(nullptr),
-    m_currentIcon(nullptr)
+    m_currentIcon(nullptr),
+    m_bRefresh(true),
+    m_position(-1)
 {
     QFontMetrics fm(RECORDER_TIME_FONT);
     m_showTimeStr = QString("00:00:00");

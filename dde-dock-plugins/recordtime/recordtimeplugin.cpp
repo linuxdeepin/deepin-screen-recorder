@@ -53,19 +53,21 @@ QWidget *RecordTimePlugin::itemWidget(const QString &itemKey)
 
 void RecordTimePlugin::onStart()
 {
-    if (m_timeWidget->enabled())
+    if (m_timeWidget->enabled()){
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
         m_bshow = true;
-    m_timeWidget->start();
+        m_timeWidget->start();
+    }
 }
 
 void RecordTimePlugin::onStop()
 {
-    if (m_timeWidget->enabled())
+    if (m_timeWidget->enabled()){
         m_proxyInter->itemRemoved(this, pluginName());
         m_bshow = false;
-    m_timeWidget->stop();
+        m_timeWidget->stop();
+    }
 }
 
 void RecordTimePlugin::refresh()
