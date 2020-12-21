@@ -75,6 +75,10 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <source>Saving the screen recording file, please wait...</source>
         <translation>Salvataggio della registrazione, attendere...</translation>
     </message>
+    <message>
+        <source>As the window effect is disabled during the process, the recording has to be stopped</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

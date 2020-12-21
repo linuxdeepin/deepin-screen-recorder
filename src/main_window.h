@@ -144,6 +144,8 @@ public:
     void startScreenshotFor3rd(const QString &path);
     void noNotify();
     void sendSavingNotify();
+    // 强制录屏保存退出通知,3D->2D模式
+    void forciblySavingNotify();
 
 signals:
     void releaseEvent();

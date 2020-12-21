@@ -75,6 +75,10 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
         <source>Saving the screen recording file, please wait...</source>
         <translation>A képernyőrögzítő fájl mentése, kérjük várjon ...</translation>
     </message>
+    <message>
+        <source>As the window effect is disabled during the process, the recording has to be stopped</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

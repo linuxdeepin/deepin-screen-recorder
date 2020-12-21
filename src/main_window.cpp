@@ -474,6 +474,30 @@ void MainWindow::sendSavingNotify()
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
 }
 
+void MainWindow::forciblySavingNotify()
+{
+    // Popup notify.
+    QDBusInterface notification("org.freedesktop.Notifications",
+                                "/org/freedesktop/Notifications",
+                                "org.freedesktop.Notifications",
+                                QDBusConnection::sessionBus());
+    QStringList actions;
+    actions << "_close" << tr("Ignore");
+    int timeout = 3000;
+    unsigned int id = 0;
+
+    QList<QVariant> arg;
+    arg << (QCoreApplication::applicationName())                 // appname
+        << id                                                   // id
+        << QString("deepin-screen-recorder")                     // icon
+        << QString(tr("Screen Capture"))                         // summary
+        << QString(tr("As the window effect is disabled during the process, the recording has to be stopped"))  // body
+        << actions                                               // actions
+        << QVariantMap()                                         // hints
+        << timeout;                                           // timeout
+    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+}
+
 void MainWindow::initShortcut()
 {
     QShortcut *rectSC = new QShortcut(QKeySequence("R"), this);
@@ -1017,6 +1041,8 @@ void MainWindow::compositeChanged()
     if (m_hasComposite == true  && !m_wmHelper->hasComposite()) {
         // 录屏过程中 由初始3D转2D模式, 强制暂停录屏.
         // 如果录屏由 由初始2D转3D模式, 则不强制退出录屏.
+        // 强制退出通知
+        forciblySavingNotify();
         stopRecord();
         return;
         /*

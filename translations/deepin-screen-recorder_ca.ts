@@ -75,6 +75,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <source>Saving the screen recording file, please wait...</source>
         <translation>S&apos;està desant el fitxer de gravació de pantalla, espereu...</translation>
     </message>
+    <message>
+        <source>As the window effect is disabled during the process, the recording has to be stopped</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

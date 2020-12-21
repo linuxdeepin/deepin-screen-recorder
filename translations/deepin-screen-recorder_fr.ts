@@ -75,6 +75,10 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <source>Saving the screen recording file, please wait...</source>
         <translation>Sauvegarde du fichier d&apos;enregistrement d&apos;écran, veuillez patienter...</translation>
     </message>
+    <message>
+        <source>As the window effect is disabled during the process, the recording has to be stopped</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

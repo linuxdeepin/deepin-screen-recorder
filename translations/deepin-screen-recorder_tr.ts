@@ -75,6 +75,10 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <source>Saving the screen recording file, please wait...</source>
         <translation>Ekran kayıt dosyası kaydediliyor, lütfen bekleyin...</translation>
     </message>
+    <message>
+        <source>As the window effect is disabled during the process, the recording has to be stopped</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

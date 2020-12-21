@@ -75,6 +75,10 @@ or press the shortcut again to stop recording</source>
         <source>Saving the screen recording file, please wait...</source>
         <translation>正在保存录屏文件，请稍候...</translation>
     </message>
+    <message>
+        <source>As the window effect is disabled during the process, the recording has to be stopped</source>
+        <translation>因在录制过程中关闭了窗口特效，录屏已结束</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

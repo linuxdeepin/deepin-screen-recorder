@@ -75,6 +75,10 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <source>Saving the screen recording file, please wait...</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>As the window effect is disabled during the process, the recording has to be stopped</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

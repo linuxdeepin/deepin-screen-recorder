@@ -75,6 +75,10 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <source>Saving the screen recording file, please wait...</source>
         <translation>A guardar o ficheiro da gravação do ecrã, aguarde...</translation>
     </message>
+    <message>
+        <source>As the window effect is disabled during the process, the recording has to be stopped</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
