@@ -52,6 +52,44 @@ bool toBool_stub()
     return true;
 }
 
+bool clickedOnRect_stub(FourPoints rectPoints, QPointF pos, bool isBlurMosaic = false)
+{
+    Q_UNUSED(rectPoints)
+    Q_UNUSED(pos)
+    Q_UNUSED(isBlurMosaic)
+    return true;
+}
+
+bool clickedOnEllipse_stub(FourPoints mainPoints, QPointF pos, bool isBlurMosaic = false)
+{
+    Q_UNUSED(mainPoints)
+    Q_UNUSED(pos)
+    Q_UNUSED(isBlurMosaic)
+    return true;
+}
+
+bool clickedOnArrow_stub(QList<QPointF> points, QPointF pos)
+{
+    Q_UNUSED(points)
+    Q_UNUSED(pos)
+    return true;
+}
+
+bool clickedOnLine_stub(FourPoints mainPoints, QList<QPointF> points, QPointF pos)
+{
+    Q_UNUSED(mainPoints)
+    Q_UNUSED(points)
+    Q_UNUSED(pos)
+    return true;
+}
+
+bool clickedOnText_stub(FourPoints mainPoints, QPointF pos)
+{
+    Q_UNUSED(mainPoints)
+    Q_UNUSED(pos)
+    return true;
+}
+
 class ShapesWidgetTest:public testing::Test{
 
 public:
@@ -83,6 +121,7 @@ TEST_F(ShapesWidgetTest, paintEvent)
     QPaintEvent *e = new QPaintEvent(QRect());
     QList <Toolshape> toolShapes;
     Toolshape toolShape1;
+    shapesWidget->m_currentShape.type = QString("text");
     toolShape1.type = QString("rectangle");
     Toolshape toolShape2;
     toolShape2.type = QString("oval");
@@ -104,6 +143,19 @@ TEST_F(ShapesWidgetTest, paintEvent)
     toolShapes << toolShape4;
     toolShapes << toolShape5;
     access_private_field::ShapesWidgetm_shapes(*shapesWidget) = toolShapes;
+    shapesWidget->m_pos1 = QPointF(2, 2);
+    shapesWidget->m_pos2 = QPointF(2, 2);
+
+    shapesWidget->m_currentType = QString("oval");
+    call_private_fun::ShapesWidgetpaintEvent(*shapesWidget,e);
+
+    shapesWidget->m_currentType = QString("arrow");
+    call_private_fun::ShapesWidgetpaintEvent(*shapesWidget,e);
+
+    shapesWidget->m_currentType = QString("line");
+    call_private_fun::ShapesWidgetpaintEvent(*shapesWidget,e);
+
+    shapesWidget->m_currentType = QString("text");
     call_private_fun::ShapesWidgetpaintEvent(*shapesWidget,e);
 }
 
@@ -296,7 +348,7 @@ TEST_F(ShapesWidgetTest, updateTextRect)
 
 
 TEST_F(ShapesWidgetTest, updateSelectedShape)
-{
+{ 
     QMap<int, TextEdit *> editMap;
     TextEdit *textEdit0 = new TextEdit(0,nullptr);
     TextEdit *textEdit1 = new TextEdit(1,nullptr);
@@ -313,8 +365,33 @@ TEST_F(ShapesWidgetTest, updateSelectedShape)
 
     access_private_field::ShapesWidgetm_selectedIndex(*shapesWidget) = 0;
     access_private_field::ShapesWidgetm_selectedOrder(*shapesWidget) = 0;
+//    QList <Toolshape> toolShapes;
+//    toolShapes << Toolshape();
     QList <Toolshape> toolShapes;
-    toolShapes << Toolshape();
+    Toolshape toolShape1;
+    toolShape1.type = QString("rectangle");
+    toolShape1.index = 0;
+    Toolshape toolShape2;
+    toolShape2.type = QString("oval");
+    toolShape2.index = 1;
+    Toolshape toolShape3;
+    toolShape3.type = QString("arrow");
+    toolShape3.index = 2;
+    QList<QPointF> points;
+    points << QPointF(96,235);
+    points << QPointF(96,335);
+    points << QPointF(265,235);
+    points << QPointF(265,335);
+    toolShape3.points = points;
+    Toolshape toolShape4;
+    toolShape4.type = QString("line");
+    Toolshape toolShape5;
+    toolShape5.type = QString("text");
+    toolShapes << toolShape1;
+    toolShapes << toolShape2;
+    toolShapes << toolShape3;
+    toolShapes << toolShape4;
+    toolShapes << toolShape5;
     access_private_field::ShapesWidgetm_shapes(*shapesWidget) = toolShapes;
     access_private_field::ShapesWidgetm_selectedShape(*shapesWidget).type = QString("arrow");
     key = QString("arrow_linewidth_index");
@@ -618,7 +695,26 @@ TEST_F(ShapesWidgetTest, clickedOnShapes)
     toolShapes << toolShape4;
     toolShapes << toolShape5;
     access_private_field::ShapesWidgetm_shapes(*shapesWidget) = toolShapes;
+
+    stub.set(ADDR(ShapesWidget,clickedOnRect),clickedOnRect_stub);
     shapesWidget->clickedOnShapes(pos);
+    stub.reset(ADDR(ShapesWidget,clickedOnRect));
+
+    stub.set(ADDR(ShapesWidget,clickedOnEllipse),clickedOnEllipse_stub);
+    shapesWidget->clickedOnShapes(pos);
+    stub.reset(ADDR(ShapesWidget,clickedOnEllipse));
+
+    stub.set(ADDR(ShapesWidget,clickedOnArrow),clickedOnArrow_stub);
+    shapesWidget->clickedOnShapes(pos);
+    stub.reset(ADDR(ShapesWidget,clickedOnArrow));
+
+    stub.set(ADDR(ShapesWidget,clickedOnLine),clickedOnLine_stub);
+    shapesWidget->clickedOnShapes(pos);
+    stub.reset(ADDR(ShapesWidget,clickedOnLine));
+
+    stub.set(ADDR(ShapesWidget,clickedOnText),clickedOnText_stub);
+    shapesWidget->clickedOnShapes(pos);
+    stub.reset(ADDR(ShapesWidget,clickedOnText));
 }
 
 TEST_F(ShapesWidgetTest, clickedOnRect)
@@ -934,6 +1030,74 @@ TEST_F(ShapesWidgetTest, clickedOnLine)
     points << QPointF(265,335);
     QPointF pos = QPointF(220,233);
     EXPECT_FALSE(shapesWidget->clickedOnLine(mainPoints,points,pos));
+    EXPECT_FALSE(shapesWidget->clickedOnLine(mainPoints,points,QPoint(0,0)));
+    EXPECT_FALSE(shapesWidget->clickedOnLine(mainPoints,points,QPoint(100,200)));
+
+    FourPoints mainPoints1;
+    mainPoints1 << QPointF(92,307);
+    mainPoints1 << QPointF(92,329);
+    mainPoints1 << QPointF(172,307);
+    mainPoints1 << QPointF(172,329);
+    QList<QPointF> points1;
+    points1 << QPointF(102,319);
+    points1 << QPointF(109,319);
+    points1 << QPointF(114,319);
+    points1 << QPointF(119,319);
+    points1 << QPointF(124,319);
+    points1 << QPointF(129,319);
+    points1 << QPointF(133,319);
+    points1 << QPointF(137,319);
+    points1 << QPointF(143,319);
+    points1 << QPointF(147,319);
+    points1 << QPointF(162,317);
+    QPointF pos1 = QPointF(175,331);
+    shapesWidget->clickedOnLine(mainPoints1,points1,pos1);
+    shapesWidget->clickedOnLine(mainPoints1,points1,QPoint(0,0));
+    shapesWidget->clickedOnLine(mainPoints1,points1,QPoint(10,10));
+
+    FourPoints mainPoints2;
+    mainPoints2 << QPointF(92,307);
+    mainPoints2 << QPointF(92,362);
+    mainPoints2 << QPointF(163,307);
+    mainPoints2 << QPointF(163,362);
+    QList<QPointF> points2;
+    points2 << QPointF(100.875,337);
+    points2 << QPointF(107.088,337);
+    points2 << QPointF(111.525,337);
+    points2 << QPointF(115.963,337);
+    points2 << QPointF(120.4,337);
+    points2 << QPointF(124.838,337);
+    points2 << QPointF(128.388,337);
+    points2 << QPointF(131.938,337);
+    points2 << QPointF(137.262,337);
+    points2 << QPointF(140.813,337);
+    points2 << QPointF(146.137,334.5);
+    points2 << QPointF(150.575,334.5);
+    points2 << QPointF(154.125,332);
+    QPointF pos2 = QPointF(126,283);
+    shapesWidget->clickedOnLine(mainPoints2,points2,pos2);
+
+    FourPoints mainPoints3;
+    mainPoints3 << QPointF(92,307);
+    mainPoints3 << QPointF(92,329);
+    mainPoints3 << QPointF(172,307);
+    mainPoints3 << QPointF(172,329);
+    QList<QPointF> points3;
+    points3 << QPointF(102,319);
+    points3 << QPointF(109,319);
+    points3 << QPointF(114,319);
+    points3 << QPointF(119,319);
+    points3 << QPointF(124,319);
+    points3 << QPointF(129,319);
+    points3 << QPointF(133,319);
+    points3 << QPointF(137,319);
+    points3 << QPointF(143,319);
+    points3 << QPointF(147,319);
+    points3 << QPointF(153,318);
+    points3 << QPointF(158,318);
+    points3 << QPointF(162,317);
+    QPointF pos3 = QPointF(147,321);
+    shapesWidget->clickedOnLine(mainPoints3,points3,pos3);
 }
 
 TEST_F(ShapesWidgetTest, hoverOnLine)
@@ -1278,6 +1442,42 @@ TEST_F(ShapesWidgetTest, clickedShapes)
     toolShapes << toolShape5;
     access_private_field::ShapesWidgetm_shapes(*shapesWidget) = toolShapes;
     call_private_fun::ShapesWidgetclickedShapes(*shapesWidget,QPointF(10,10));
+
+
+    QList <Toolshape> toolShapes1;
+    Toolshape toolShape11;
+    toolShape11.type = QString("arrow");
+    toolShapes1 << toolShape11;
+    access_private_field::ShapesWidgetm_shapes(*shapesWidget) = toolShapes1;
+    stub.set(ADDR(ShapesWidget,clickedOnRect),clickedOnRect_stub);
+    call_private_fun::ShapesWidgetclickedShapes(*shapesWidget,QPointF(10,10));
+    stub.reset(ADDR(ShapesWidget,clickedOnRect));
+
+    QList <Toolshape> toolShapes2;
+    Toolshape toolShape22;
+    toolShape22.type = QString("line");
+    toolShapes2 << toolShape22;
+    access_private_field::ShapesWidgetm_shapes(*shapesWidget) = toolShapes2;
+    stub.set(ADDR(ShapesWidget,clickedOnEllipse),clickedOnEllipse_stub);
+    call_private_fun::ShapesWidgetclickedShapes(*shapesWidget,QPointF(10,10));
+    stub.reset(ADDR(ShapesWidget,clickedOnEllipse));
+
+    QList <Toolshape> toolShapes3;
+    Toolshape toolShape33;
+    toolShape33.type = QString("text");
+    toolShapes3 << toolShape33;
+    access_private_field::ShapesWidgetm_shapes(*shapesWidget) = toolShapes3;
+    stub.set(ADDR(ShapesWidget,clickedOnArrow),clickedOnArrow_stub);
+    call_private_fun::ShapesWidgetclickedShapes(*shapesWidget,QPointF(10,10));
+    stub.reset(ADDR(ShapesWidget,clickedOnArrow));
+
+    stub.set(ADDR(ShapesWidget,clickedOnLine),clickedOnLine_stub);
+    call_private_fun::ShapesWidgetclickedShapes(*shapesWidget,QPointF(10,10));
+    stub.reset(ADDR(ShapesWidget,clickedOnLine));
+
+    stub.set(ADDR(ShapesWidget,clickedOnText),clickedOnText_stub);
+    call_private_fun::ShapesWidgetclickedShapes(*shapesWidget,QPointF(10,10));
+    stub.reset(ADDR(ShapesWidget,clickedOnText));
 }
 
 

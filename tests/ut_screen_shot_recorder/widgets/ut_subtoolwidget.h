@@ -2,6 +2,10 @@
 #include <gtest/gtest.h>
 #include <QTest>
 #include <QDebug>
+#include <QAction>
+
+#define private public
+#define project public
 #include "stub.h"
 #include "addr_pri.h"
 #include "../../src/widgets/subtoolwidget.h"
@@ -11,6 +15,27 @@ void click_stub()
 {
 
 }
+
+bool isChecked_true_stub_ut()
+{
+    return true;
+}
+
+bool isChecked_false_stub()
+{
+    return false;
+}
+
+QString toString_true_stub()
+{
+    return QString("true");
+}
+
+QString toString_false_stub()
+{
+    return QString("false");
+}
+
 class SubToolWidgetTest:public testing::Test{
 
 public:
@@ -18,7 +43,7 @@ public:
     SubToolWidget *m_subToolWidget;
     virtual void SetUp() override{
         m_subToolWidget = new SubToolWidget();
-//        m_subToolWidget->initWidget();
+        m_subToolWidget->initWidget();
 //        m_subToolWidget->initRecordLabel();
 //        m_subToolWidget->initShotLabel();
     }
@@ -66,7 +91,19 @@ TEST_F(SubToolWidgetTest, switchContent)
 TEST_F(SubToolWidgetTest, changeArrowAndLineFromSideBar)
 {
     m_subToolWidget->changeArrowAndLineFromSideBar(0);
+    m_subToolWidget->m_themeType = 1;
+    stub.set(ADDR(QAbstractButton, isChecked), isChecked_true_stub_ut);
     m_subToolWidget->changeArrowAndLineFromSideBar(1);
+    stub.set(ADDR(QAbstractButton, isChecked), isChecked_false_stub);
+    m_subToolWidget->changeArrowAndLineFromSideBar(1);
+    stub.reset(ADDR(QAbstractButton, isChecked));
+
+    m_subToolWidget->m_themeType = 2;
+    stub.set(ADDR(QAbstractButton, isChecked), isChecked_true_stub);
+    m_subToolWidget->changeArrowAndLineFromSideBar(1);
+    stub.set(ADDR(QAbstractButton, isChecked), isChecked_false_stub);
+    m_subToolWidget->changeArrowAndLineFromSideBar(1);
+    stub.reset(ADDR(QAbstractButton, isChecked));
 }
 
 TEST_F(SubToolWidgetTest, setRecordLaunchMode)
@@ -76,6 +113,7 @@ TEST_F(SubToolWidgetTest, setRecordLaunchMode)
 
 TEST_F(SubToolWidgetTest, setVideoButtonInitFromSub)
 {
+    m_subToolWidget->m_cameraButton->setChecked(true);
     m_subToolWidget->setVideoButtonInitFromSub();
 }
 
@@ -86,6 +124,10 @@ TEST_F(SubToolWidgetTest, shapeClickedFromWidget)
     m_subToolWidget->shapeClickedFromWidget(QString("line"));
     m_subToolWidget->shapeClickedFromWidget(QString("pen"));
     m_subToolWidget->shapeClickedFromWidget(QString("text"));
+    m_subToolWidget->shapeClickedFromWidget(QString("keyBoard"));
+    m_subToolWidget->shapeClickedFromWidget(QString("mouse"));
+    m_subToolWidget->shapeClickedFromWidget(QString("camera"));
+    m_subToolWidget->shapeClickedFromWidget(QString("audio"));
     stub.set(ADDR(QAbstractButton,click),click_stub);
     m_subToolWidget->shapeClickedFromWidget(QString("option"));
     stub.reset(ADDR(QAbstractButton,click));
@@ -108,6 +150,27 @@ TEST_F(SubToolWidgetTest, setSystemAudioEnable)
     m_subToolWidget->setSystemAudioEnable(false);
     m_subToolWidget->setSystemAudioEnable(true);
 }
+
+TEST_F(SubToolWidgetTest, initRecordLabel)
+{
+    m_subToolWidget->m_haveMicroPhone = true;
+    m_subToolWidget->m_themeType = 1;
+    stub.set(ADDR(QVariant, toString), toString_true_stub);
+    m_subToolWidget->initRecordLabel();
+    stub.reset(ADDR(QVariant, toString));
+
+    m_subToolWidget->m_themeType = 2;
+    stub.set(ADDR(QVariant, toString), toString_false_stub);
+    m_subToolWidget->initRecordLabel();
+    stub.reset(ADDR(QVariant, toString));
+    m_subToolWidget->m_systemAudioAction->triggered(true);
+
+    QEventLoop loop;
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+}
+
+
 
 //TEST_F(SubToolWidgetTest, installHint)
 //{
