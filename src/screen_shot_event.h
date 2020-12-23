@@ -18,6 +18,7 @@ public:
 
 signals:
     void activateWindow();
+    void sendEvent(QString);
 
 protected:
     void run();

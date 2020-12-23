@@ -544,10 +544,10 @@ void MainWindow::initShortcut()
             emit m_toolBar->shapeClickedFromMain("text");
         }
     });
-    connect(optionSC, &QShortcut::activated, this, [ = ] {
-        if (m_functionType == 1)
-            emit m_toolBar->shapeClickedFromMain("option");
-    });
+//    connect(optionSC, &QShortcut::activated, this, [ = ] {
+//        if (m_functionType == 1)
+//            emit m_toolBar->shapeClickedFromMain("option");
+//    });
     connect(keyBoardSC, &QShortcut::activated, this, [ = ] {
         if (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)
             emit m_toolBar->shapeClickedFromMain("keyBoard");
@@ -560,10 +560,10 @@ void MainWindow::initShortcut()
         if (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)
             emit m_toolBar->shapeClickedFromMain("camera");
     });
-    connect(audioSC, &QShortcut::activated, this, [ = ] {
-        if (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)
-            emit m_toolBar->shapeClickedFromMain("audio");
-    });
+//    connect(audioSC, &QShortcut::activated, this, [ = ] {
+//        if (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)
+//            emit m_toolBar->shapeClickedFromMain("audio");
+//    });
 
     if (isCommandExist("dman")) {
         QShortcut *helpSC = new QShortcut(QKeySequence("F1"), this);
@@ -604,11 +604,11 @@ void MainWindow::initResource()
     buttonFeedback = new ButtonFeedback();
 }
 
-void MainWindow::initScreenShot()
+bool MainWindow::initScreenShot()
 {
     connect(m_pScreenShotEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
+    connect(m_pScreenShotEvent, SIGNAL(sendEvent(QString)), this, SLOT(onSendEvent(QString)), Qt::QueuedConnection);
     m_pScreenShotEvent->start();
-
     connect(this, &MainWindow::releaseEvent, this, [ = ] {
         qDebug() << "release event !!!";
         removeEventFilter(this);
@@ -685,6 +685,7 @@ void MainWindow::initScreenShot()
     connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
 
     m_toolBar->setFocus();
+    return true;
 }
 
 void MainWindow::initScreenRecorder()
@@ -796,7 +797,8 @@ void MainWindow::initLaunchMode(const QString &launchMode)
         m_recordButton->hide();
         m_shotButton->show();
         m_functionType = 1;
-        initScreenShot();
+        if(!m_initScreenShot)
+            m_initScreenShot = initScreenShot();
     }
 }
 /*
@@ -1444,9 +1446,8 @@ void MainWindow::changeFunctionButton(QString type)
         //        updateShotButtonPos();
         m_shotButton->show();
         m_functionType = 1;
-        initScreenShot();
-
-
+        if(!m_initScreenShot)
+            m_initScreenShot = initScreenShot();
     }
 
     update();
@@ -3003,6 +3004,18 @@ void MainWindow::checkCpuIsZhaoxin()
         m_isZhaoxin = true;
     }
     process.close();
+}
+
+void MainWindow::onSendEvent(QString event)
+{
+    if(QString("audio") == event){
+        if (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)
+            emit m_toolBar->shapeClickedFromMain("audio");
+    }
+    else if (QString("option") == event) {
+        if (m_functionType == 1)
+            emit m_toolBar->shapeClickedFromMain("option");
+    }
 }
 
 void MainWindow::startRecord()

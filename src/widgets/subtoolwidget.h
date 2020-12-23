@@ -88,6 +88,8 @@ private:
     int m_themeType;
     //bool m_isZhaoxinInSub = false;
     HintFilter *hintFilter = nullptr;
+    DMenu *m_optionMenu;
+    DMenu *m_audioMenu;
 };
 
 #endif // SUBTOOLWIDGET_H

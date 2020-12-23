@@ -132,7 +132,7 @@ public:
     // Split attributes and resource for speed up start.
     void initAttributes();
     void initResource();
-    void initScreenShot();
+    bool initScreenShot();
     void initScreenRecorder();
     void initShortcut();
     void initLaunchMode(const QString &launchMode);
@@ -198,6 +198,7 @@ public slots:
     void on_CheckRecodeCouldUse(bool canUse);
     void on_CheckVideoCouldUse(bool canUse);
     void checkCpuIsZhaoxin();
+    void onSendEvent(QString event);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -321,6 +322,7 @@ private:
     RecorderRegionShow *m_pRecorderRegion = nullptr;
     qreal m_pixelRatio = 1.0;
     bool m_hasComposite = true;
+    bool m_initScreenShot = false;
 };
 
 #endif //MAINWINDOW_H

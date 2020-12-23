@@ -66,6 +66,19 @@ void ScreenShotEvent::handleRecordEvent(XRecordInterceptData *data)
     if (data->category == XRecordFromServer)
     {
         emit activateWindow();
+        xEvent *event = reinterpret_cast<xEvent *>(data->data);
+        switch (event->u.u.type) {
+        case KeyPress:
+            if ((reinterpret_cast<unsigned char *>(data->data))[1] == KEY_F3) {
+                emit sendEvent(QString("option"));
+            }
+            else if((reinterpret_cast<unsigned char *>(data->data))[1] == KEY_S){
+                emit sendEvent(QString("audio"));
+            }
+            break;
+        default:
+            break;
+        }
     }
     fflush(stdout);
     XRecordFreeData(data);

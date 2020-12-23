@@ -41,6 +41,7 @@
 #include "../utils.h"
 #include "../accessibility/acTextDefine.h"
 #include <unistd.h>
+#include <QThread>
 
 DWIDGET_USE_NAMESPACE
 
@@ -128,11 +129,11 @@ void SubToolWidget::initRecordLabel()
     m_audioButton->setFixedSize(MEDIUM_TOOL_BUTTON_SIZE);
     btnList.append(m_audioButton);
 
-    DMenu *audioMenu = new DMenu();
+    m_audioMenu = new DMenu();
 
-    DFontSizeManager::instance()->bind(audioMenu, DFontSizeManager::T8);
-    m_microphoneAction = new QAction(audioMenu);
-    m_systemAudioAction = new QAction(audioMenu);
+    DFontSizeManager::instance()->bind(m_audioMenu, DFontSizeManager::T8);
+    m_microphoneAction = new QAction(m_audioMenu);
+    m_systemAudioAction = new QAction(m_audioMenu);
     //    m_m_systemAudioAction = m_systemAudioAction;
     m_microphoneAction->setText(tr("Microphone"));
     m_microphoneAction->setCheckable(true);
@@ -204,10 +205,10 @@ void SubToolWidget::initRecordLabel()
     m_haveSystemAudio = true;
 
     //    m_systemAudioAction->setDisabled(!AudioUtils().canVirtualCardOutput());
-    audioMenu->addAction(m_microphoneAction);
-    audioMenu->addSeparator();
-    audioMenu->addAction(m_systemAudioAction);
-    m_audioButton->setMenu(audioMenu);
+    m_audioMenu->addAction(m_microphoneAction);
+    m_audioMenu->addSeparator();
+    m_audioMenu->addAction(m_systemAudioAction);
+    m_audioButton->setMenu(m_audioMenu);
 
     connect(m_microphoneAction, SIGNAL(triggered(bool)), this, SIGNAL(microphoneActionChecked(bool)));
     connect(m_systemAudioAction, SIGNAL(triggered(bool)), this, SIGNAL(systemAudioActionChecked(bool)));
@@ -645,22 +646,22 @@ void SubToolWidget::initShotLabel()
     t_saveGroup->setExclusive(true);
     t_formatGroup->setExclusive(true);
 
-    DMenu *OptionMenu = new DMenu();
+    m_optionMenu = new DMenu();
 
-    DFontSizeManager::instance()->bind(OptionMenu, DFontSizeManager::T8);
+    DFontSizeManager::instance()->bind(m_optionMenu, DFontSizeManager::T8);
     //for test
-    QAction *saveTitleAction = new QAction(OptionMenu);
-    QAction *saveToDesktopAction = new QAction(OptionMenu);
-    QAction *saveToPictureAction = new QAction(OptionMenu);
-    QAction *saveToSpecialPath = new QAction(OptionMenu);
-    QAction *openWithDraw = new QAction(OptionMenu);
-    QAction *formatTitleAction = new QAction(OptionMenu);
-    QAction *pngAction = new QAction(OptionMenu);
-    QAction *jpgAction = new QAction(OptionMenu);
-    QAction *bmpAction = new QAction(OptionMenu);
-    QAction *clipTitleAction = new QAction(OptionMenu);
-    QAction *saveToClipAction = new QAction(OptionMenu);
-    QAction *saveCursorAction = new QAction(OptionMenu);
+    QAction *saveTitleAction = new QAction(m_optionMenu);
+    QAction *saveToDesktopAction = new QAction(m_optionMenu);
+    QAction *saveToPictureAction = new QAction(m_optionMenu);
+    QAction *saveToSpecialPath = new QAction(m_optionMenu);
+    QAction *openWithDraw = new QAction(m_optionMenu);
+    QAction *formatTitleAction = new QAction(m_optionMenu);
+    QAction *pngAction = new QAction(m_optionMenu);
+    QAction *jpgAction = new QAction(m_optionMenu);
+    QAction *bmpAction = new QAction(m_optionMenu);
+    QAction *clipTitleAction = new QAction(m_optionMenu);
+    QAction *saveToClipAction = new QAction(m_optionMenu);
+    QAction *saveCursorAction = new QAction(m_optionMenu);
 
     Utils::setAccessibility(saveToDesktopAction, "saveToDesktopAction");
     Utils::setAccessibility(saveToPictureAction, "saveToPictureAction");
@@ -708,28 +709,28 @@ void SubToolWidget::initShotLabel()
     saveCursorAction->setCheckable(true);
 
     //保存方式
-    OptionMenu->addAction(saveTitleAction);
-    OptionMenu->addAction(saveToClipAction);
-    OptionMenu->addAction(saveToDesktopAction);
-    OptionMenu->addAction(saveToPictureAction);
-    OptionMenu->addAction(saveToSpecialPath);
-    OptionMenu->addSeparator();
+    m_optionMenu->addAction(saveTitleAction);
+    m_optionMenu->addAction(saveToClipAction);
+    m_optionMenu->addAction(saveToDesktopAction);
+    m_optionMenu->addAction(saveToPictureAction);
+    m_optionMenu->addAction(saveToSpecialPath);
+    m_optionMenu->addSeparator();
 
     //保存剪贴板
-    OptionMenu->addAction(clipTitleAction);
-    OptionMenu->addAction(saveCursorAction);
+    m_optionMenu->addAction(clipTitleAction);
+    m_optionMenu->addAction(saveCursorAction);
     // 屏蔽画板打开
     //OptionMenu->addAction(openWithDraw);
-    OptionMenu->addSeparator();
+    m_optionMenu->addSeparator();
 
     //保存格式
-    OptionMenu->addAction(formatTitleAction);
-    OptionMenu->addAction(pngAction);
-    OptionMenu->addAction(jpgAction);
-    OptionMenu->addAction(bmpAction);
+    m_optionMenu->addAction(formatTitleAction);
+    m_optionMenu->addAction(pngAction);
+    m_optionMenu->addAction(jpgAction);
+    m_optionMenu->addAction(bmpAction);
 
 
-    m_shotOptionButton->setMenu(OptionMenu);
+    m_shotOptionButton->setMenu(m_optionMenu);
 
     SaveAction t_saveIndex = ConfigSettings::instance()->value("save", "save_op").value<SaveAction>();
 
@@ -1047,7 +1048,15 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
         } else if (shape == "text") {
             m_textButton->click();
         } else if (shape == "option") {
-            m_shotOptionButton->click();
+            if(m_optionMenu->isHidden()){
+                //m_shotOptionButton->click();
+                QPoint point = QWidget::mapToGlobal(m_shotOptionButton->pos());
+                m_optionMenu->move(point.x(),point.y()+m_shotOptionButton->size().height());
+                m_optionMenu->show();
+            }
+            else{
+                m_optionMenu->hide();
+            }
         }else if (shape == "keyBoard") {
             m_keyBoardButton->click();
         }else if (shape == "mouse") {
@@ -1055,7 +1064,13 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
         }else if (shape == "camera") {
             m_cameraButton->click();
         }else if (shape == "audio") {
-            m_audioButton->click();
+            if(m_audioMenu->isHidden()){
+                QPoint point = QWidget::mapToGlobal(m_audioButton->pos());
+                m_audioMenu->move(point.x(),point.y()+m_audioButton->size().height());
+                m_audioMenu->show();
+            }
+            else
+                m_audioMenu->hide();
         }
     }
 }

@@ -1414,6 +1414,45 @@ TEST_F(ShapesWidgetTest, microAdjust)
 
 TEST_F(ShapesWidgetTest, handleResize)
 {
+    shapesWidget->m_isResize = true;
+    shapesWidget->m_selectedIndex = 0;
+    QList <Toolshape> toolShapes;
+    Toolshape toolShape1;
+    toolShape1.type = QString("rectangle");
+    Toolshape toolShape2;
+    toolShape2.type = QString("oval");
+    Toolshape toolShape3;
+    toolShape3.type = QString("arrow");
+    QList<QPointF> points;
+    points << QPointF(96,235);
+    points << QPointF(96,335);
+    points << QPointF(265,235);
+    points << QPointF(265,335);
+    toolShape3.points = points;
+    Toolshape toolShape4;
+    toolShape4.type = QString("line");
+    Toolshape toolShape5;
+    toolShape5.type = QString("text");
+    toolShapes << toolShape1;
+    toolShapes << toolShape2;
+    toolShapes << toolShape3;
+    toolShapes << toolShape4;
+    toolShapes << toolShape5;
+    access_private_field::ShapesWidgetm_shapes(*shapesWidget) = toolShapes;
+    shapesWidget->m_selectedOrder = 2;
+
+    FourPoints mainPoints;
+    mainPoints << QPointF(96,235);
+    mainPoints << QPointF(96,335);
+    mainPoints << QPointF(265,235);
+    mainPoints << QPointF(265,335);
+    access_private_field::ShapesWidgetm_selectedShape(*shapesWidget).mainPoints = mainPoints;
+    QList<QPointF> lineFPoints;
+    lineFPoints << QPointF(96,235);
+    lineFPoints << QPointF(96,335);
+    lineFPoints << QPointF(96,600);
+    lineFPoints << QPointF(60,500);
+    access_private_field::ShapesWidgetm_selectedShape(*shapesWidget).points = lineFPoints;
     shapesWidget->handleResize(QPointF(503,462),1);
 }
 
