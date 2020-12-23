@@ -66,6 +66,7 @@
 #include "widgets/tooltips.h"
 #include "dbusinterface/drawinterface.h"
 #include <X11/Xcursor/Xcursor.h>
+#include "accessibility/acTextDefine.h"
 
 
 
@@ -389,7 +390,8 @@ void MainWindow::initAttributes()
     m_recordButton->setIconSize(QSize(38, 38));
     m_recordButton->setIcon(QIcon(":/image/newUI/checked/screencap-checked.svg"));
     m_recordButton->setFixedSize(76, 58);
-    m_recordButton->setObjectName("mainRecordBtn");
+    //m_recordButton->setObjectName("mainRecordBtn");
+    Utils::setAccessibility(m_recordButton, AC_MAINWINDOW_MAINRECORDBTN);
     m_recordButton->setFocusPolicy(Qt::ClickFocus);
 
 
@@ -403,7 +405,8 @@ void MainWindow::initAttributes()
     m_shotButton->setIconSize(QSize(38, 38));
     m_shotButton->setIcon(QIcon(":/image/newUI/checked/screenshot-checked.svg"));
     m_shotButton->setFixedSize(76, 58);
-    m_shotButton->setObjectName("mainShotBtn");
+    //m_shotButton->setObjectName("mainShotBtn");
+    Utils::setAccessibility(m_shotButton, AC_MAINWINDOW_MAINSHOTBTN);
 
     m_recordButton->hide();
     m_shotButton->hide();

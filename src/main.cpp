@@ -39,6 +39,7 @@
 #include "utils.h"
 #include "widgets/toolbutton.h"
 #include "dbusservice/dbusscreenshotservice.h"
+#include "accessibility/acObjectList.h"
 
 
 DWIDGET_USE_NAMESPACE
@@ -111,6 +112,10 @@ int main(int argc, char *argv[])
     QScopedPointer<DApplication> app(new DApplication(argc, argv));
 #else
     QScopedPointer<DApplication> app(DApplication::globalApplication(argc,argv));
+#endif
+    // 集成测试标签
+#ifdef ENABLE_ACCESSIBILITY
+        QAccessible::installFactory(accessibleFactory);
 #endif
     /*
     QString t_launchMode;

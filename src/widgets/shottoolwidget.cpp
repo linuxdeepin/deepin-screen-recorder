@@ -31,6 +31,8 @@
 #include <QDebug>
 #include <DFrame>
 #include <DBlurEffectWidget>
+#include "../utils.h"
+#include "../accessibility/acTextDefine.h"
 
 DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
@@ -92,7 +94,8 @@ void ShotToolWidget::initRectLabel()
 
     //粗细程度１级按钮
     ToolButton *thickOneBtn = new ToolButton();
-    thickOneBtn->setObjectName("thickOneBtn");
+    //thickOneBtn->setObjectName("thickOneBtn");
+    Utils::setAccessibility(thickOneBtn, AC_SHOTTOOLWIDGET_THICK_ONE_RECT);
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
     thickOneBtn->setIcon(QIcon::fromTheme("brush small_normal"));
@@ -100,7 +103,8 @@ void ShotToolWidget::initRectLabel()
 
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
-    thickTwoBtn->setObjectName("thickTwoBtn");
+    //thickTwoBtn->setObjectName("thickTwoBtn");
+    Utils::setAccessibility(thickTwoBtn, AC_SHOTTOOLWIDGET_THICK_TWO_RECT);
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
     thickTwoBtn->setIcon(QIcon::fromTheme("brush medium_normal"));
@@ -108,8 +112,8 @@ void ShotToolWidget::initRectLabel()
 
     //粗细程度3级按钮
     ToolButton *thickThreeBtn = new ToolButton();
-
-    thickThreeBtn->setObjectName("thickThreeBtn");
+    //thickThreeBtn->setObjectName("thickThreeBtn");
+    Utils::setAccessibility(thickThreeBtn, AC_SHOTTOOLWIDGET_THICK_THREE_RECT);
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);
     thickThreeBtn->setIcon(QIcon::fromTheme("brush big_normal"));
@@ -181,7 +185,8 @@ void ShotToolWidget::initRectLabel()
 
     pa = m_blurRectButton->palette();
     m_blurRectButton->setToolTip(tr("Blur"));
-    m_blurRectButton->setObjectName("blurButton");
+    //m_blurRectButton->setObjectName("blurButton");
+    Utils::setAccessibility(m_blurRectButton, AC_SHOTTOOLWIDGET_BLUR_RECT);
     m_blurRectButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_blurRectButton->setIconSize(TOOL_ICON_SIZE);
     m_blurRectButton->setIcon(QIcon::fromTheme("vague_normal"));
@@ -189,7 +194,8 @@ void ShotToolWidget::initRectLabel()
     //马赛克按钮
     m_mosaicRectButton = new ToolButton();
     m_mosaicRectButton->setToolTip(tr("Mosaic"));
-    m_mosaicRectButton->setObjectName("mosaicBtn");
+    //m_mosaicRectButton->setObjectName("mosaicBtn");
+    Utils::setAccessibility(m_mosaicRectButton, AC_SHOTTOOLWIDGET_MOSAIC_RECT);
     m_mosaicRectButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_mosaicRectButton->setIconSize(TOOL_ICON_SIZE);
     m_mosaicRectButton->setIcon(QIcon::fromTheme("Mosaic_normal"));
@@ -260,7 +266,8 @@ void ShotToolWidget::initCircLabel()
 
     //粗细程度１级按钮
     ToolButton *thickOneBtn = new ToolButton();
-    thickOneBtn->setObjectName("thickOneBtn");
+    //thickOneBtn->setObjectName("thickOneBtn");
+    Utils::setAccessibility(thickOneBtn, AC_SHOTTOOLWIDGET_THICK_ONE_CIRC);
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
     thickOneBtn->setIcon(QIcon::fromTheme("brush small_normal"));
@@ -268,7 +275,8 @@ void ShotToolWidget::initCircLabel()
 
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
-    thickTwoBtn->setObjectName("thickTwoBtn");
+    //thickTwoBtn->setObjectName("thickTwoBtn");
+    Utils::setAccessibility(thickTwoBtn, AC_SHOTTOOLWIDGET_THICK_TWO_CIRC);
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
     thickTwoBtn->setIcon(QIcon::fromTheme("brush medium_normal"));
@@ -276,7 +284,8 @@ void ShotToolWidget::initCircLabel()
 
     //粗细程度3级按钮
     ToolButton *thickThreeBtn = new ToolButton();
-    thickThreeBtn->setObjectName("thickThreeBtn");
+    //thickThreeBtn->setObjectName("thickThreeBtn");
+    Utils::setAccessibility(thickThreeBtn, AC_SHOTTOOLWIDGET_THICK_THREE_CIRC);
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);
     thickThreeBtn->setIcon(QIcon::fromTheme("brush big_normal"));
@@ -351,7 +360,8 @@ void ShotToolWidget::initCircLabel()
     //模糊按钮
     m_blurCircButton = new ToolButton();
     m_blurCircButton->setToolTip(tr("Blur"));
-    m_blurCircButton->setObjectName("blurButton");
+    //m_blurCircButton->setObjectName("blurButton");
+    Utils::setAccessibility(m_blurCircButton, AC_SHOTTOOLWIDGET_BLUR_CIRC);
     m_blurCircButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_blurCircButton->setIconSize(TOOL_ICON_SIZE);
     m_blurCircButton->setIcon(QIcon::fromTheme("vague_normal"));
@@ -360,7 +370,8 @@ void ShotToolWidget::initCircLabel()
     //马赛克按钮
     m_mosaicCircButton = new ToolButton();
     m_mosaicCircButton->setToolTip(tr("Mosaic"));
-    m_mosaicCircButton->setObjectName("mosaicBtn");
+    //m_mosaicCircButton->setObjectName("mosaicBtn");
+    Utils::setAccessibility(m_mosaicCircButton, AC_SHOTTOOLWIDGET_MOSAIC_CIRC);
     m_mosaicCircButton->setFixedSize(TOOL_BUTTON_SIZE);
     m_mosaicCircButton->setIconSize(TOOL_ICON_SIZE);
     m_mosaicCircButton->setIcon(QIcon::fromTheme("Mosaic_normal"));
@@ -438,7 +449,8 @@ void ShotToolWidget::initLineLabel()
 
     //粗细程度１级按钮
     ToolButton *thickOneBtn = new ToolButton();
-    thickOneBtn->setObjectName("thickOneBtn");
+    //thickOneBtn->setObjectName("thickOneBtn");
+    Utils::setAccessibility(thickOneBtn, AC_SHOTTOOLWIDGET_THICK_ONE_LINE);
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
     thickOneBtn->setIcon(QIcon::fromTheme("brush small_normal"));
@@ -446,7 +458,8 @@ void ShotToolWidget::initLineLabel()
 
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
-    thickTwoBtn->setObjectName("thickTwoBtn");
+    //thickTwoBtn->setObjectName("thickTwoBtn");
+    Utils::setAccessibility(thickTwoBtn, AC_SHOTTOOLWIDGET_THICK_TWO_LINE);
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
     thickTwoBtn->setIcon(QIcon::fromTheme("brush medium_normal"));
@@ -454,7 +467,8 @@ void ShotToolWidget::initLineLabel()
 
     //粗细程度3级按钮
     ToolButton *thickThreeBtn = new ToolButton();
-    thickThreeBtn->setObjectName("thickThreeBtn");
+    //thickThreeBtn->setObjectName("thickThreeBtn");
+    Utils::setAccessibility(thickThreeBtn, AC_SHOTTOOLWIDGET_THICK_THREE_LINE);
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);
     thickThreeBtn->setIcon(QIcon::fromTheme("brush big_normal"));
@@ -517,7 +531,8 @@ void ShotToolWidget::initLineLabel()
 
     //直线按钮
     ToolButton *blurButton = new ToolButton();
-    blurButton->setObjectName("blurButton");
+    //blurButton->setObjectName("blurButton");
+    Utils::setAccessibility(blurButton, AC_SHOTTOOLWIDGET_LINE_BUTTON);
     blurButton->setFixedSize(TOOL_BUTTON_SIZE);
     blurButton->setIconSize(TOOL_ICON_SIZE);
     blurButton->setIcon(QIcon::fromTheme("line-normal"));
@@ -525,7 +540,8 @@ void ShotToolWidget::initLineLabel()
 
     //箭头按钮
     ToolButton *mosaicBtn = new ToolButton();
-    mosaicBtn->setObjectName("mosaicBtn");
+    //mosaicBtn->setObjectName("mosaicBtn");
+    Utils::setAccessibility(mosaicBtn, AC_SHOTTOOLWIDGET_ARROW_BUTTON);
     mosaicBtn->setFixedSize(TOOL_BUTTON_SIZE);
     mosaicBtn->setIconSize(TOOL_ICON_SIZE);
     mosaicBtn->setIcon(QIcon::fromTheme("Arrow-normal"));
@@ -596,7 +612,8 @@ void ShotToolWidget::initPenLabel()
 
     //粗细程度１级按钮
     ToolButton *thickOneBtn = new ToolButton();
-    thickOneBtn->setObjectName("thickOneBtn");
+    //thickOneBtn->setObjectName("thickOneBtn");
+    Utils::setAccessibility(thickOneBtn, AC_SHOTTOOLWIDGET_THICK_ONE_PEN);
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickOneBtn->setIconSize(TOOL_ICON_SIZE);
     thickOneBtn->setIcon(QIcon::fromTheme("brush small_normal"));
@@ -604,7 +621,8 @@ void ShotToolWidget::initPenLabel()
 
     //粗细程度２级按钮
     ToolButton *thickTwoBtn = new ToolButton();
-    thickTwoBtn->setObjectName("thickTwoBtn");
+    //thickTwoBtn->setObjectName("thickTwoBtn");
+    Utils::setAccessibility(thickTwoBtn, AC_SHOTTOOLWIDGET_THICK_TWO_PEN);
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickTwoBtn->setIconSize(TOOL_ICON_SIZE);
     thickTwoBtn->setIcon(QIcon::fromTheme("brush medium_normal"));
@@ -612,7 +630,8 @@ void ShotToolWidget::initPenLabel()
 
     //粗细程度3级按钮
     ToolButton *thickThreeBtn = new ToolButton();
-    thickThreeBtn->setObjectName("thickThreeBtn");
+    //thickThreeBtn->setObjectName("thickThreeBtn");
+    Utils::setAccessibility(thickThreeBtn, AC_SHOTTOOLWIDGET_THICK_THREE_PEN);
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
     thickThreeBtn->setIconSize(TOOL_ICON_SIZE);
     thickThreeBtn->setIcon(QIcon::fromTheme("brush big_normal"));

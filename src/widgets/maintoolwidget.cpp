@@ -29,6 +29,7 @@
 #include "../utils/configsettings.h"
 #include "tooltips.h"
 #include "../utils.h"
+#include "../accessibility/acTextDefine.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -82,7 +83,8 @@ void MainToolWidget::initMainLabel()
 
     m_recordBtn->setCheckable(true);
     m_recordBtn->setText(tr("Record"));
-    m_recordBtn->setObjectName("RecordBtn");
+    //m_recordBtn->setObjectName("RecordBtn");
+    Utils::setAccessibility(m_recordBtn, AC_MAINTOOLWIDGET_RECORD_BUT);
     //    m_recordBtn->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     //    m_recordBtn->setMinimumSize(TOOL_BUTTON_SIZE);
     m_recordBtn->setMinimumHeight(40);
@@ -106,7 +108,8 @@ void MainToolWidget::initMainLabel()
     DFontSizeManager::instance()->bind(m_shotBtn, DFontSizeManager::T8);
 
     m_shotBtn->setText(tr("Screenshot"));
-    m_shotBtn->setObjectName("ShotBtn");
+    //m_shotBtn->setObjectName("ShotBtn");
+    Utils::setAccessibility(m_shotBtn, AC_MAINTOOLWIDGET_SHOT_BUT);
     //    m_shotBtn->setMinimumSize(TOOL_BUTTON_SIZE);
     m_shotBtn->setMinimumHeight(40);
 

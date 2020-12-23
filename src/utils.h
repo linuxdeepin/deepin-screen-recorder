@@ -20,13 +20,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+#ifndef UTILS_H
+#define UTILS_H
 //#include <dwindowmanager.h>
 #include <QObject>
 #include <QPainter>
 #include <QString>
+#include <DPushButton>
+#include <QAction>
 
-//DWM_USE_NAMESPACE
+DWIDGET_USE_NAMESPACE
 
 class Utils : public QObject
 {
@@ -44,5 +47,8 @@ public:
     static void warnNoComposite();
     static void notSupportWarn();
     static QString getRecordingSaveDirectory();
+    static void setAccessibility(DPushButton *button,const QString name);
+    static void setAccessibility(QAction *action, const QString name);
     static bool is3rdInterfaceStart;
 };
+#endif //UTILS_H

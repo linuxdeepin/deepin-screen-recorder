@@ -7,17 +7,7 @@ TEMPLATE = app
 TARGET = deepin-screen-recorder
 INCLUDEPATH += .
 
-#DEFINES += TSAN #互斥
-#contains(DEFINES,TSAN){
-#   QMAKE_CXXFLAGS+="-fsanitize=thread"
-#   QMAKE_CFLAGS+="-fsanitize=thread"
-#   QMAKE_LFLAGS+="-fsanitize=thread"
-#}
-#else{
-#   QMAKE_CXXFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
-#   QMAKE_CFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
-#   QMAKE_LFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
-#}
+include(accessibility/accessible.pri)
 
 QMAKE_CXX += -Wl,--as-need -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
 QMAKE_CXXFLAGS += -Wl,--as-need -fPIE -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
@@ -191,3 +181,13 @@ DEFINES += "DSR_LANG_PATH=\\\"$$DSR_LANG_PATH\\\""
 
 DISTFILES += \
     image/newUI/focus/close-focus.svg
+
+
+# 检查集成测试标签
+AC_FUNC_ENABLE = true
+# 获取标签系统设置
+#AC_FUNC_ENABLE = $$(ENABLE_AC_FUNC)
+equals(AC_FUNC_ENABLE, true ){
+    DEFINES += ENABLE_ACCESSIBILITY
+    message("deepin-screen-recorder enabled accessibility function with set: " $$AC_FUNC_ENABLE)
+}
