@@ -106,9 +106,12 @@ void EventMonitor::handleRecordEvent(XRecordInterceptData *data)
             if (isPress) {
                 emit buttonedDrag(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             }
+            /*
+             *
             else{
                 emit buttonedPress(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             }
+            */
             break;
         case ButtonRelease:
             if (event->u.u.detail != WheelUp &&

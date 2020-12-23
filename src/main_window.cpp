@@ -1045,8 +1045,20 @@ void MainWindow::compositeChanged()
         // 如果录屏由 由初始2D转3D模式, 则不强制退出录屏.
         // 强制退出通知
         forciblySavingNotify();
-        stopRecord();
-        return;
+        if(recordButtonStatus == RECORD_BUTTON_RECORDING) {
+            // 录屏过程中， 从3D切换回2D， 停止录屏。
+            stopRecord();
+            return;
+        } else {
+            // 倒计时3s内， 从3D切换回2D直接退出。
+            emit releaseEvent();
+            if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
+                m_pScreenRecordEvent->terminate();
+                m_pScreenRecordEvent->wait();
+            }
+            QApplication::quit();
+        }
+
         /*
         qDebug() << "have no Composite";
         Utils::warnNoComposite();
