@@ -19,17 +19,19 @@
 #ifndef SIDEBAR_H
 #define SIDEBAR_H
 
-#include <DLabel>
-#include <QPainter>
-#include <DBlurEffectWidget>
-#include <QEvent>
-#include <QDebug>
-#include <DImageButton>
-#include <DFloatingWidget>
-
 #include "colortoolwidget.h"
 #include "shottoolwidget.h"
 #include "toolbutton.h"
+
+#include <DLabel>
+#include <DBlurEffectWidget>
+#include <DImageButton>
+#include <DFloatingWidget>
+
+#include <QPainter>
+#include <QEvent>
+#include <QDebug>
+
 DWIDGET_USE_NAMESPACE
 
 class SideBarWidget : public DFloatingWidget

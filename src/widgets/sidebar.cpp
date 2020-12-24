@@ -17,18 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "sidebar.h"
+#include "../utils/configsettings.h"
 
 #include <QPainter>
 #include <QDebug>
 #include <QApplication>
 #include <QCursor>
 #include <QGraphicsDropShadowEffect>
-#include <dgraphicsgloweffect.h>
 #include <QTimer>
 #include <QSettings>
 #include <QVBoxLayout>
 #include <QBitmap>
-#include "../utils/configsettings.h"
+
+#include <dgraphicsgloweffect.h>
+
 
 DWIDGET_USE_NAMESPACE
 

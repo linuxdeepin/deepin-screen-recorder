@@ -3,9 +3,11 @@
  *
  * Copyright (C) 2011 ~ 2018 Deepin, Inc.
  *               2011 ~ 2018 Wang Yong
+ *               2020 ~ 2021 He Ming Yang.
  *
  * Author:     Wang Yong <wangyong@deepin.com>
  * Maintainer: Wang Yong <wangyong@deepin.com>
+ *             He Ming Yang <hemingyang@uniontech.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,25 +26,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <DWindowManagerHelper>
-//#include <dscreenwindowsutil.h>
-#include <QApplication>
-#include <QDesktopWidget>
-#include <QObject>
-#include <QPainter>
-#include <DWidget>
-#include <QSystemTrayIcon>
-#include <QVBoxLayout>
-//#include <dwindowmanager.h>
-#include <QTimer>
-#include <DDialog>
-
 #include "record_process.h"
-//#include "voice_record_process.h"
-//#include "record_button.h"
-//#include "record_option_panel.h"
 #include "countdown_tooltip.h"
-//#include "start_tooltip.h"
 #include "button_feedback.h"
 #include "show_buttons.h"
 #include "widgets/shapeswidget.h"
@@ -57,15 +42,24 @@
 #include "utils/voicevolumewatcher.h"
 #include "utils/camerawatcher.h"
 #include "utils/screengrabber.h"
-
 #include "dbusinterface/dbuscontrolcenter.h"
 #include "dbusinterface/dbusnotify.h"
 #include "dbusinterface/dbuszone.h"
 #include "RecorderRegionShow.h"
-
-// Make this include at last, otherwise QtX11 will conflict with x11 lib to make compile failed.
 #include "event_monitor.h"
 #include "screen_shot_event.h"
+
+#include <DWindowManagerHelper>
+#include <DDialog>
+#include <DWidget>
+
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QObject>
+#include <QPainter>
+#include <QSystemTrayIcon>
+#include <QVBoxLayout>
+#include <QTimer>
 
 #undef Bool
 

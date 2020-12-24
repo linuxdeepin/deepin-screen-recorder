@@ -18,21 +18,22 @@
  */
 #include "shottoolwidget.h"
 #include "../utils/configsettings.h"
+#include "../utils.h"
+#include "../accessibility/acTextDefine.h"
 
 #include <DSlider>
 #include <DLineEdit>
 #include <DMenu>
+#include <DFrame>
+#include <DBlurEffectWidget>
+#include <DPalette>
+
 #include <QAction>
 #include <QButtonGroup>
 #include <QVBoxLayout>
 #include <QStyleFactory>
 #include <QLine>
-#include <DPalette>
 #include <QDebug>
-#include <DFrame>
-#include <DBlurEffectWidget>
-#include "../utils.h"
-#include "../accessibility/acTextDefine.h"
 
 DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE

@@ -1,7 +1,8 @@
-#include <QThread>
-#include <QCameraInfo>
 #include "camerawatcher.h"
 #include "audioutils.h"
+
+#include <QThread>
+#include <QCameraInfo>
 #include <QDebug>
 
 CameraWatcher::CameraWatcher(QObject *parent) : QThread(parent)

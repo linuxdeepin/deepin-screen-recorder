@@ -1,8 +1,8 @@
-#include <QThread>
 #include "voicevolumewatcher.h"
-//#include "uiutil.h"
 #include "audioutils.h"
+
 #include <QDebug>
+#include <QThread>
 
 voiceVolumeWatcher::voiceVolumeWatcher(QObject *parent) : QThread(parent)
 {

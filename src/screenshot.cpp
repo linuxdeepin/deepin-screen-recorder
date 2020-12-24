@@ -18,15 +18,14 @@
  */
 
 #include "screenshot.h"
+#include "dbusinterface/dbusnotify.h"
+#include "utils/configsettings.h"
+#include "utils.h"
 
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QScreen>
 #include <QWindow>
-
-#include "dbusinterface/dbusnotify.h"
-#include "utils/configsettings.h"
-#include "utils.h"
 
 //#include <dscreenwindowsutil.h>
 

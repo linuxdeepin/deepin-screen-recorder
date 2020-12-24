@@ -20,15 +20,15 @@
 #ifndef SHAPESWIDGET_H
 #define SHAPESWIDGET_H
 
-#include <DFrame>
-#include <QGestureEvent>
-#include <QMouseEvent>
-
 #include "../utils/shapesutils.h"
 #include "../utils/baseutils.h"
 #include "../widgets/textedit.h"
 #include "../widgets/sidebar.h"
 #include "../menucontroller/menucontroller.h"
+
+#include <DFrame>
+#include <QGestureEvent>
+#include <QMouseEvent>
 
 class ShapesWidget : public DFrame
 {

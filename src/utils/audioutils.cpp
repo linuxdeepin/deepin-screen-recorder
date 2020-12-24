@@ -17,11 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "audioutils.h"
-#include <QDebug>
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
 #include "dbusutils.h"
+
+#include <QDebug>
 #include <QDBusObjectPath>
 #include <QDBusConnection>
 #include <QDBusReply>
@@ -29,6 +27,10 @@
 #include <QDebug>
 #include <QDBusError>
 #include <QDBusMessage>
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
 
 AudioUtils::AudioUtils(QObject *parent):process(nullptr)
 {

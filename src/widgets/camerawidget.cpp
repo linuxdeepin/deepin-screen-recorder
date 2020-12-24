@@ -1,4 +1,5 @@
 #include "camerawidget.h"
+
 #include <QMouseEvent>
 #include <QDebug>
 #include <QApplication>

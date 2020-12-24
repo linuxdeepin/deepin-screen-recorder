@@ -31,12 +31,11 @@
 #ifndef DBUSSCREENSHOTSERVICE_H
 #define DBUSSCREENSHOTSERVICE_H
 
+#include "../screenshot.h"
+
 #include <QDBusAbstractAdaptor>
 #include <QtCore/QObject>
 #include <QtDBus/QtDBus>
-
-//#include "../main_window.h"
-#include "../screenshot.h"
 
 QT_BEGIN_NAMESPACE
 

@@ -18,6 +18,10 @@
  */
 
 #include "textedit.h"
+#include "../utils/configsettings.h"
+#include "../utils/baseutils.h"
+
+#include <DPalette>
 
 #include <QDebug>
 #include <QPen>
@@ -25,10 +29,7 @@
 #include <QPixmap>
 #include <QFontMetricsF>
 #include <QApplication>
-#include <DPalette>
 
-#include "../utils/configsettings.h"
-#include "../utils/baseutils.h"
 
 DGUI_USE_NAMESPACE
 

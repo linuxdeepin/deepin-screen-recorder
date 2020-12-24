@@ -17,17 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "../utils/calculaterect.h"
+#include "../utils/configsettings.h"
+#include "../utils/tempfile.h"
 #include "shapeswidget.h"
+
 #include <QApplication>
 #include <QPainter>
 #include <QPainterPath>
 #include <QDebug>
-
-#include "../utils/calculaterect.h"
-#include "../utils/configsettings.h"
-#include "../utils/tempfile.h"
-
 #include <QGestureEvent>
+
 #include <cmath>
 
 #define LINEWIDTH(index) (index*2+3)

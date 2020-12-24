@@ -21,15 +21,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "countdown_tooltip.h"
+#include "utils.h"
+#include "constant.h"
+
 #include <DWidget>
+#include <DHiDPIHelper>
+
 #include <QTimer>
 #include <QApplication>
 #include <QPen>
 #include <QPainter>
-#include "countdown_tooltip.h"
-#include "utils.h"
-#include "constant.h"
-#include <DHiDPIHelper>
 
 const int CountdownTooltip::NUMBER_PADDING_Y = 30;
 

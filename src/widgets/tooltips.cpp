@@ -29,6 +29,9 @@
  */
 #include "tooltips.h"
 
+#include <DUtil>
+#include <DLabel>
+
 #include <QDebug>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -38,9 +41,7 @@
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
 
-#include <DUtil>
 #include <dthememanager.h>
-#include <DLabel>
 
 DWIDGET_USE_NAMESPACE
 class ToolTipsPrivate

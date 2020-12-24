@@ -19,11 +19,12 @@
 #ifndef SHOTTOOLWIDGET_H
 #define SHOTTOOLWIDGET_H
 
-#include <QObject>
+#include "toolbutton.h"
+
 #include <DLabel>
 #include <DStackedWidget>
 
-#include "toolbutton.h"
+#include <QObject>
 
 DWIDGET_USE_NAMESPACE
 

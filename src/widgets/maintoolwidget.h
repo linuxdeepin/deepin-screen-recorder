@@ -19,12 +19,14 @@
 #ifndef MAINTOOLWIDGET_H
 #define MAINTOOLWIDGET_H
 
-#include <DStackedWidget>
-#include <QHBoxLayout>
-#include <DLabel>
-#include <DWidget>
 #include "toolbutton.h"
 #include "filter.h"
+
+#include <DStackedWidget>
+#include <DLabel>
+#include <DWidget>
+
+#include <QHBoxLayout>
 
 DWIDGET_USE_NAMESPACE
 

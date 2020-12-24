@@ -17,19 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "maintoolwidget.h"
-#include <DSlider>
-#include <DLineEdit>
-#include <QButtonGroup>
-#include <QHBoxLayout>
-//#include <QSlider>
-#include <QStyleFactory>
-#include <QDebug>
-#include <DFontSizeManager>
-#include <DWindowManagerHelper>
 #include "../utils/configsettings.h"
 #include "tooltips.h"
 #include "../utils.h"
 #include "../accessibility/acTextDefine.h"
+
+#include <DSlider>
+#include <DLineEdit>
+#include <DFontSizeManager>
+#include <DWindowManagerHelper>
+
+#include <QButtonGroup>
+#include <QHBoxLayout>
+#include <QStyleFactory>
+#include <QDebug>
 
 DWIDGET_USE_NAMESPACE
 

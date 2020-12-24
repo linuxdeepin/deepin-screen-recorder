@@ -21,18 +21,20 @@
 #include "../utils/baseutils.h"
 #include "../utils/saveutils.h"
 #include "../utils.h"
+#include "../utils/configsettings.h"
+
+#include <DIconButton>
 
 #include <QPainter>
 #include <QDebug>
 #include <QApplication>
 #include <QCursor>
 #include <QGraphicsDropShadowEffect>
-#include <dgraphicsgloweffect.h>
 #include <QTimer>
 #include <QSettings>
 #include <QBitmap>
-#include "../utils/configsettings.h"
-#include <DIconButton>
+
+#include <dgraphicsgloweffect.h>
 
 DWIDGET_USE_NAMESPACE
 

@@ -24,9 +24,10 @@
 #ifndef UTILS_H
 #define UTILS_H
 //#include <dwindowmanager.h>
+#include <DPushButton>
+
 #include <QObject>
 #include <QPainter>
-#include <DPushButton>
 #include <QAction>
 #include <QString>
 

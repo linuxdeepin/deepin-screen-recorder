@@ -3,9 +3,11 @@
  *
  * Copyright (C) 2011 ~ 2018 Deepin, Inc.
  *               2011 ~ 2018 Wang Yong
+ *               2020 ~ 2021 He Ming Yang.
  *
  * Author:     Wang Yong <wangyong@deepin.com>
  * Maintainer: Wang Yong <wangyong@deepin.com>
+ *             He Ming Yang <hemingyang@uniontech.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,34 +24,6 @@
  */
 
 //#include <dscreenwindowsutil.h>
-#include <DWidget>
-#include <DWindowManagerHelper>
-#include <DForeignWindow>
-#include <DLineEdit>
-#include <DInputDialog>
-#include <DDesktopServices>
-#include <DDialog>
-#include <QBitmap>
-
-
-#include <QApplication>
-#include <QTimer>
-#include <QKeyEvent>
-#include <QObject>
-#include <QPainter>
-#include <QDebug>
-#include <QVBoxLayout>
-#include <QProcess>
-#include <DHiDPIHelper>
-#include <QMouseEvent>
-#include <QClipboard>
-#include <QFileDialog>
-#include <QShortcut>
-#include <QDesktopWidget>
-#include <QScreen>
-#include <QMessageBox>
-#include <QGestureEvent>
-
 
 #include "main_window.h"
 #include "utils.h"
@@ -65,10 +39,36 @@
 #include "camera_process.h"
 #include "widgets/tooltips.h"
 #include "dbusinterface/drawinterface.h"
-#include <X11/Xcursor/Xcursor.h>
 #include "accessibility/acTextDefine.h"
 
+#include <DWidget>
+#include <DWindowManagerHelper>
+#include <DForeignWindow>
+#include <DLineEdit>
+#include <DInputDialog>
+#include <DDesktopServices>
+#include <DDialog>
+#include <DHiDPIHelper>
 
+#include <QBitmap>
+#include <QApplication>
+#include <QTimer>
+#include <QKeyEvent>
+#include <QObject>
+#include <QPainter>
+#include <QDebug>
+#include <QVBoxLayout>
+#include <QProcess>
+#include <QMouseEvent>
+#include <QClipboard>
+#include <QFileDialog>
+#include <QShortcut>
+#include <QDesktopWidget>
+#include <QScreen>
+#include <QMessageBox>
+#include <QGestureEvent>
+
+#include <X11/Xcursor/Xcursor.h>
 
 const int MainWindow::CURSOR_BOUND = 5;
 const int MainWindow::RECORD_MIN_SIZE = 580;
@@ -637,8 +637,8 @@ bool MainWindow::initScreenShot()
 
     //隐藏键盘按钮控件
     if (m_keyButtonList.count() > 0) {
-        for (int t_index = 0; t_index < m_keyButtonList.count(); t_index++) {
-            m_keyButtonList.at(t_index)->hide();
+        for (int i = 0; i < m_keyButtonList.count(); i++) {
+            m_keyButtonList.at(i)->hide();
         }
     }
     //构建截屏工具栏按钮 by zyg

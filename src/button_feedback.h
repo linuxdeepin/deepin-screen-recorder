@@ -37,6 +37,7 @@ class ButtonFeedback : public DWidget
 
 public:
     explicit ButtonFeedback(DWidget *parent = nullptr);
+    virtual ~ButtonFeedback();
 
 protected:
     void paintEvent(QPaintEvent *event);

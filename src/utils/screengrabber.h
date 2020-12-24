@@ -1,8 +1,9 @@
 #ifndef SCREENGRABBER_H
 #define SCREENGRABBER_H
 
-#include <QObject>
 #include "../utils/desktopinfo.h"
+
+#include <QObject>
 
 class ScreenGrabber : public QObject
 {

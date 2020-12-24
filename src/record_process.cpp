@@ -23,11 +23,9 @@
 
 #include "record_process.h"
 #include "utils/configsettings.h"
-//#include "process_tree.h"
 #include "utils.h"
 #include "utils/audioutils.h"
-#include <signal.h>
-#include <proc/sysinfo.h>
+
 #include <QApplication>
 #include <QDate>
 #include <QDebug>
@@ -35,7 +33,10 @@
 #include <QStandardPaths>
 #include <QtDBus>
 #include <QScreen>
+
+#include <proc/sysinfo.h>
 #include <dlfcn.h>
+#include <signal.h>
 
 const int RecordProcess::RECORD_TYPE_VIDEO = 0;
 const int RecordProcess::RECORD_TYPE_GIF = 1;
@@ -201,27 +202,27 @@ void RecordProcess::recordVideo()
         -pix_fmt yuv420p -c:v mpeg4 -c:a libmp3lame -q:v 1 -s 1920x1080 -f mp4 ./out.mp4
         */
         arguments << QString("-f");
-        arguments << QString("x11grab");
-        arguments << QString("-framerate");
+        arguments << QString("x11grab"); // 视频源
+        arguments << QString("-framerate"); // 视频帧数
         arguments << QString("%1").arg(m_framerate);
-        arguments << QString("-video_size");
-        arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
-        arguments << QString("-thread_queue_size");
+        arguments << QString("-video_size"); // 视频分辨率
+        arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height()); // 录制区域宽高
+        arguments << QString("-thread_queue_size"); // 输入线程缓冲区大小
         arguments << QString("128");
         arguments << QString("-i");
-        arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
+        arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y()); // 录制区域左上角坐标
         if(recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO || recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO){
             arguments << QString("-thread_queue_size");
             arguments << QString("32");
             arguments << QString("-fragment_size");
             arguments << QString("2048");
             arguments << QString("-f");
-            arguments << QString("pulse");
-            arguments << QString("-ac");
+            arguments << QString("pulse");// 音频源
+            arguments << QString("-ac"); // 输出通道数
             arguments << QString("2");
-            arguments << QString("-ar");
+            arguments << QString("-ar"); // 音频采样率
             arguments << QString("44100");
-            arguments << QString("-i");
+            arguments << QString("-i"); // 系统音频id
             arguments << QString("%1").arg(t_currentAudioChannel);
         }
         if(recordAudioInputType == RECORD_AUDIO_INPUT_MIC || recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO){
@@ -235,7 +236,7 @@ void RecordProcess::recordVideo()
             arguments << QString("2");
             arguments << QString("-ar");
             arguments << QString("44100");
-            arguments << QString("-i");
+            arguments << QString("-i"); // 麦克风音频id，值为固定"default"
             arguments << QString("default");
         }
         if(recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO){
@@ -243,9 +244,9 @@ void RecordProcess::recordVideo()
             arguments << QString("amerge");
         }
 
-        arguments << QString("-pix_fmt");
+        arguments << QString("-pix_fmt"); // 像素格式
         arguments << QString("yuv420p");
-        arguments << QString("-c:v");
+        arguments << QString("-c:v"); // 视频编码器
         arguments << QString("mpeg4");
         //arguments << QString("mpeg2video");
         //arguments << QString("mpeg1video");
@@ -253,19 +254,19 @@ void RecordProcess::recordVideo()
         //arguments << QString("h263p");
         //arguments << QString("mjpeg");
         //arguments << QString("flv");
-        arguments << QString("-c:a");
+        arguments << QString("-c:a"); // 音频编码器
         arguments << QString("libmp3lame");
-        arguments << QString("-q:v");
+        arguments << QString("-q:v"); // 视频质量，值越小，画质越好。
         arguments << QString("20");
         //arguments << QString("31"); // 视频质量
         arguments << QString("-s");
         arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
         if(settings->value("recordConfig", "lossless_recording").toBool()){
             arguments << QString("-f");
-            arguments << QString("matroska");
+            arguments << QString("matroska"); // mkv视频
         }else {
             arguments << QString("-f");
-            arguments << QString("mp4");
+            arguments << QString("mp4"); // mp4视频
         }
     }else{
         arguments << QString("-video_size");

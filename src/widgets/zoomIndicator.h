@@ -21,9 +21,9 @@
 #define ZOOMINDICATOR_H
 
 #include <DLabel>
+#include <DWidget>
 #include <QPainter>
 #include <QPaintEvent>
-#include <DWidget>
 
 DWIDGET_USE_NAMESPACE
 

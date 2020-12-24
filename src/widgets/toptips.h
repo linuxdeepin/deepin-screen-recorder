@@ -34,8 +34,8 @@ public:
     ~TopTips() override;
     void setRecorderTipsInfo(const bool showState);
 public slots:
-    void setContent(const QSize rect);
-    void updateTips(QPoint pos, const QSize rect);
+    void setContent(const QSize &rect);
+    void updateTips(QPoint pos, const QSize &rect);
 
 protected:
     void mousePressEvent(QMouseEvent *ev) override;

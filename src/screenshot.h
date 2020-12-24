@@ -18,10 +18,10 @@
 #ifndef SCREENSHOT_H
 #define SCREENSHOT_H
 
+#include "main_window.h"
+
 #include <QObject>
 
-#include "main_window.h"
-//#include "eventcontainer.h"
 
 class Screenshot : public QObject
 {

@@ -21,8 +21,9 @@
 #define TOOLBUTTON_H
 
 #include <DPushButton>
-#include <QApplication>
 #include <DPalette>
+
+#include <QApplication>
 
 DWIDGET_USE_NAMESPACE
 DGUI_USE_NAMESPACE

@@ -19,16 +19,17 @@
 #ifndef KEYBUTTONWIDGET_H
 #define KEYBUTTONWIDGET_H
 
-#include <QObject>
 #include <DLabel>
-#include <QPainter>
 #include <DBlurEffectWidget>
 #include <DFontSizeManager>
+#include <DWidget>
+
+#include <QObject>
+#include <QPainter>
 #include <QEvent>
 #include <QDebug>
 #include <QFont>
 #include <QHBoxLayout>
-#include <DWidget>
 
 DWIDGET_USE_NAMESPACE
 

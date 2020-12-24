@@ -19,10 +19,12 @@
 #ifndef COLORTOOLWIDGET_H
 #define COLORTOOLWIDGET_H
 
-#include <DStackedWidget>
-#include <QVBoxLayout>
-#include <DLabel>
 #include "toolbutton.h"
+
+#include <DStackedWidget>
+#include <DLabel>
+
+#include <QVBoxLayout>
 
 DWIDGET_USE_NAMESPACE
 

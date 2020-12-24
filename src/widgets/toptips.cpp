@@ -18,13 +18,14 @@
  */
 
 #include "toptips.h"
-
 #include "../utils/baseutils.h"
-#include <cmath>
-#include <QDebug>
+
 #include <DPalette>
 #include <QImage>
 #include <QSizePolicy>
+#include <QDebug>
+
+#include <cmath>
 
 DGUI_USE_NAMESPACE
 
@@ -47,7 +48,7 @@ TopTips::TopTips(DWidget *parent)
 
 }
 
-void TopTips::setContent(const QSize size)
+void TopTips::setContent(const QSize &size)
 {
     QString text = QString("%1X%2").arg(size.width()).arg(size.height());
     if(m_showRecorderTips && size.width() * size.height() > 1920 * 1080 && size.width() != m_width && size.height() != m_height) {
@@ -62,7 +63,7 @@ void TopTips::setContent(const QSize size)
     }
 }
 
-void TopTips::updateTips(QPoint pos, const QSize size)
+void TopTips::updateTips(QPoint pos, const QSize &size)
 {
     if (!this->isVisible())
         this->show();

@@ -21,17 +21,17 @@
 
 #include "filter.h"
 
-#include <QDebug>
+#include <DWidget>
+#include <DUtil>
 
+#include <QDebug>
 #include <QTimer>
 #include <QEvent>
 #include <QCursor>
-#include <DWidget>
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsDropShadowEffect>
 #include <QApplication>
 
-#include <DUtil>
 
 HoverFilter::HoverFilter(QObject *parent) : QObject(parent)
 {

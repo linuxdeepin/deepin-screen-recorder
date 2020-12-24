@@ -21,12 +21,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QPainter>
+
 #include "button_feedback.h"
 #include "utils.h"
+
+#include <DHiDPIHelper>
+
+#include <QPainter>
 #include <QTimer>
 #include <QApplication>
-#include <DHiDPIHelper>
 #include <QBitmap>
 #include <QPaintEvent>
 #include <QDebug>
@@ -67,6 +70,11 @@ ButtonFeedback::ButtonFeedback(DWidget *parent) : DWidget(parent)
 
     Utils::passInputEvent(static_cast<int>(this->winId()));
     m_painter =  new QPainter();
+}
+
+ButtonFeedback::~ButtonFeedback()
+{
+    delete m_painter;
 }
 
 void ButtonFeedback::update()

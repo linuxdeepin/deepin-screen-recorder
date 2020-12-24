@@ -20,9 +20,11 @@
 #ifndef CALCULATERECT_H
 #define CALCULATERECT_H
 
+#include "shapesutils.h"
+
 #include <QPointF>
 #include <QtMath>
-#include "shapesutils.h"
+
 
 ///* get a rect by diagPoints */
 //QRect   diagPointsRect(DiagPoints diagPoints);

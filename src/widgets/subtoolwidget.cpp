@@ -20,28 +20,32 @@
 #include "../utils/audioutils.h"
 #include "../camera_process.h"
 #include "../utils/configsettings.h"
+#include "../settings.h"
+#include "tooltips.h"
+#include "../utils.h"
+#include "../accessibility/acTextDefine.h"
+
 #include <DSlider>
 #include <DLineEdit>
 #include <DMenu>
+#include <DInputDialog>
+#include <DFontSizeManager>
+#include <DComboBox>
+#include <DListWidget>
+
 #include <QAction>
 #include <QButtonGroup>
 #include <QHBoxLayout>
 #include <QStyleFactory>
 #include <QDebug>
-#include <DInputDialog>
-#include <DFontSizeManager>
-#include <DComboBox>
-#include <DListWidget>
 #include <QSizePolicy>
 #include <QStandardPaths>
 #include <QDir>
 #include <QFileDialog>
-#include "../settings.h"
-#include "tooltips.h"
-#include "../utils.h"
-#include "../accessibility/acTextDefine.h"
-#include <unistd.h>
 #include <QThread>
+
+#include <unistd.h>
+
 
 DWIDGET_USE_NAMESPACE
 

@@ -20,20 +20,21 @@
 #ifndef TOOLBAR_H
 #define TOOLBAR_H
 
-#include <DLabel>
-#include <QPainter>
-#include <DBlurEffectWidget>
-#include <QEvent>
-#include <QDebug>
-#include <DImageButton>
-#include <DFloatingWidget>
-#include <DIconButton>
-
 #include "majtoolbar.h"
 #include "subtoolbar.h"
 #include "maintoolwidget.h"
 #include "subtoolwidget.h"
 #include "../utils/desktopinfo.h"
+
+#include <DLabel>
+#include <DBlurEffectWidget>
+#include <DImageButton>
+#include <DFloatingWidget>
+#include <DIconButton>
+
+#include <QPainter>
+#include <QEvent>
+#include <QDebug>
 
 DWIDGET_USE_NAMESPACE
 

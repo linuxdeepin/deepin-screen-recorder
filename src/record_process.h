@@ -24,16 +24,16 @@
 #ifndef RECORDPROCESS_H
 #define RECORDPROCESS_H
 
+#include "utils/desktopinfo.h"
+#include "xgifrecord.h"
 #include "utils/configsettings.h"
+
 #include <QProcess>
 #include <QThread>
 #include <QRect>
+
 #include <proc/readproc.h>
 #include <proc/sysinfo.h>
-#include "utils/desktopinfo.h"
-#include "xgifrecord.h"
-
-
 class RecordProcess : public QThread
 {
     Q_OBJECT

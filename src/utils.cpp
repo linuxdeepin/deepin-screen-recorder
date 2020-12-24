@@ -21,6 +21,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "utils.h"
+#include "constant.h"
+#include <DDialog>
+
 #include <QString>
 #include <QDir>
 #include <QApplication>
@@ -30,12 +34,9 @@
 #include <QPainterPath>
 #include <QDBusInterface>
 #include <QtX11Extras/QX11Info>
-#include "utils.h"
-#include <X11/extensions/shape.h>
-//#include <dwindowmanager.h>
-#include "constant.h"
 #include <QStandardPaths>
-#include <DDialog>
+
+#include <X11/extensions/shape.h>
 #include <dlfcn.h>
 
 //DWM_USE_NAMESPACE

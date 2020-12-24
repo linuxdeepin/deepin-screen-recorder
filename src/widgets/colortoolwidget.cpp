@@ -23,11 +23,12 @@
 
 #include <DSlider>
 #include <DLineEdit>
+#include <DPalette>
 #include <QButtonGroup>
 #include <QHBoxLayout>
 #include <QStyleFactory>
 #include <QDebug>
-#include <DPalette>
+
 
 DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE

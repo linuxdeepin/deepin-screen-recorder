@@ -20,12 +20,15 @@
 #ifndef SUBTOOLWIDGET_H
 #define SUBTOOLWIDGET_H
 
-#include <QObject>
-#include <DLabel>
-#include <DStackedWidget>
 #include "toolbutton.h"
 #include "../utils/saveutils.h"
 #include "filter.h"
+
+#include <DLabel>
+#include <DStackedWidget>
+
+#include <QObject>
+
 DWIDGET_USE_NAMESPACE
 
 class SubToolWidget : public DStackedWidget

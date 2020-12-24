@@ -1,12 +1,14 @@
 #ifndef TOOLTIPS_H
 #define TOOLTIPS_H
-#include <QFrame>
-#include <QGuiApplication>
+
 #include <DPalette>
 #include <DApplicationHelper>
 #include <DFontSizeManager>
+
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QFrame>
+#include <QGuiApplication>
 
 class ToolTipsPrivate;
 class ToolTips : public QFrame
