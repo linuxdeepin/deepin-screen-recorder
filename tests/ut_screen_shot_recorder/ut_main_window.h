@@ -10,11 +10,7 @@
 
 using namespace testing;
 
-int MainWindow_quit_stub(void* obj)
-{
-    qDebug() <<"I am QCoreApplication quit";
-    return 0;
-}
+
 ACCESS_PRIVATE_FIELD(MainWindow, ToolBar*, m_toolBar);
 ACCESS_PRIVATE_FIELD(MainWindow, int,  m_screenCount);
 ACCESS_PRIVATE_FIELD(MainWindow, ShapesWidget*, m_shapesWidget);
@@ -24,15 +20,14 @@ public:
     Stub stub;
     virtual void SetUp() override{
         std::cout << "start MainWindowTest" << std::endl;
-        stub.set(ADDR(QCoreApplication, quit), MainWindow_quit_stub);
-
+        ConfigSettings::instance()->setValue("save", "saveCursor", true);
     }
 
     virtual void TearDown() override{
         //delete m_window;
         std::cout << "end MainWindowTest" << std::endl;
         system("killall deepin-shortcut-viewer");
-        stub.reset(ADDR(QCoreApplication, quit));
+
     }
 };
 
@@ -427,7 +422,11 @@ TEST_F(MainWindowTest, screenShot)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::keyClick(m_window, Qt::Key_R);
+    QTest::keyClick(m_window, Qt::Key_K);
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::keyClick(m_window, Qt::Key_C);
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -648,6 +647,7 @@ TEST_F(MainWindowTest, screenRecord)
 
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
+    m_window->forciblySavingNotify();
 
     m_window->stopRecord();
     QTimer::singleShot(1000, &loop, SLOT(quit()));
