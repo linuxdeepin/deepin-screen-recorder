@@ -11,7 +11,7 @@ class DBusService : public QDBusAbstractAdaptor
     Q_CLASSINFO("D-Bus Interface","com.deepin.ScreenRecorder.time")
 
 public:
-    DBusService(QObject *parent);
+    explicit DBusService(QObject *parent = nullptr);
 
 public slots:
     Q_SCRIPTABLE bool onStart();

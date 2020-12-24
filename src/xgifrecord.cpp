@@ -59,10 +59,10 @@ void XGifRecord::screenshots()
     QScreen *screen = QGuiApplication::primaryScreen();
     while (bWriteFrame()) {
         appendBuffer(screen->grabWindow(QApplication::desktop()->winId(),
-                                        m_recordRect.x()/m_pixelRatio,
-                                        m_recordRect.y()/m_pixelRatio,
-                                        m_recordRect.width()/m_pixelRatio,
-                                        m_recordRect.height()/m_pixelRatio).toImage());
+                                        static_cast<int>(m_recordRect.x()/m_pixelRatio),
+                                        static_cast<int>(m_recordRect.y()/m_pixelRatio),
+                                        static_cast<int>(m_recordRect.width()/m_pixelRatio),
+                                        static_cast<int>(m_recordRect.height()/m_pixelRatio)).toImage());
     }
 }
 

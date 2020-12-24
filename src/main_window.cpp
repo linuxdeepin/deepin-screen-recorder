@@ -505,11 +505,13 @@ void MainWindow::initShortcut()
     QShortcut *arrowSC = new QShortcut(QKeySequence("L"), this);
     QShortcut *lineSC = new QShortcut(QKeySequence("P"), this);
     QShortcut *textSC = new QShortcut(QKeySequence("T"), this);
-    QShortcut *optionSC = new QShortcut(QKeySequence("F3"), this);
+    //转全局事件，此处未使用
+    //QShortcut *optionSC = new QShortcut(QKeySequence("F3"), this);
     QShortcut *keyBoardSC = new QShortcut(QKeySequence("K"), this);
     QShortcut *mouseSC = new QShortcut(QKeySequence("C"), this);
     QShortcut *cameraSC = new QShortcut(QKeySequence("W"), this);
-    QShortcut *audioSC = new QShortcut(QKeySequence("S"), this);
+    //转全局事件，此处未使用
+    //QShortcut *audioSC = new QShortcut(QKeySequence("S"), this);
     //    QShortcut *colorSC = new QShortcut(QKeySequence("Alt+6"), this);
 
     connect(rectSC, &QShortcut::activated, this, [ = ] {

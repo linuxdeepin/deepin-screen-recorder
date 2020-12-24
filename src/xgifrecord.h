@@ -73,6 +73,7 @@ protected:
 private:
     //录屏区域
     QRect m_recordRect;
+    //cppcheck误报：未在构造函数中初始化
     GifWriter m_gifWrite;
     int m_delay;
     //视频帧缓存

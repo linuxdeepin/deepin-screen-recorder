@@ -14,10 +14,13 @@ class RecordTimePlugin : public QObject,PluginsItemInterface
 
 public:
     explicit RecordTimePlugin(QObject *parent = nullptr);
-    ~RecordTimePlugin();
+    ~RecordTimePlugin() override;
     const QString pluginName() const override;
+    //cppcheck误报：此函数从未被使用，其实这个函数由dde-dock框架调用
     const QString pluginDisplayName() const override;
+    //cppcheck误报：此函数从未被使用，其实这个函数由dde-dock框架调用
     void init(PluginProxyInterface *proxyInter) override;
+    //cppcheck误报：此函数从未被使用，其实这个函数由dde-dock框架调用
     bool pluginIsAllowDisable() override { return true; }
     QWidget *itemWidget(const QString &itemKey) override;
 
