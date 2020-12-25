@@ -33,8 +33,8 @@ public:
     QString type;
     FourPoints mainPoints;
     int index = -1;
-    int lineWidth;
-    int colorIndex;
+    int lineWidth = 1;
+    int colorIndex = 0;
     bool isBlur = false;
     bool isMosaic = false;
     bool isStraight = false;
