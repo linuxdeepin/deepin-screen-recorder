@@ -18,7 +18,7 @@ public:
 
 signals:
     void activateWindow();
-    void sendEvent(QString);
+    void shotKeyPressEvent(const unsigned char &keyCode);
 
 protected:
     void run();

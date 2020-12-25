@@ -40,6 +40,7 @@
 #include "widgets/tooltips.h"
 #include "dbusinterface/drawinterface.h"
 #include "accessibility/acTextDefine.h"
+#include "keydefine.h"
 
 #include <DWidget>
 #include <DWindowManagerHelper>
@@ -112,7 +113,9 @@ namespace {
 MainWindow::MainWindow(DWidget *parent) :
     DWidget(parent),
     m_wmHelper(DWindowManagerHelper::instance()),
-    m_hasComposite(DWindowManagerHelper::instance()->hasComposite())
+    m_hasComposite(DWindowManagerHelper::instance()->hasComposite()),
+    m_initScreenShot(false),
+    m_initScreenRecorder(false)
 {
     setDragCursor();
     QScreen *screen = qApp->primaryScreen();
@@ -606,10 +609,16 @@ void MainWindow::initResource()
     buttonFeedback = new ButtonFeedback();
 }
 
-bool MainWindow::initScreenShot()
+void MainWindow::initScreenShot()
 {
+    if(!m_initScreenShot){
+        m_initScreenShot = true;
+    }
+    else {
+        return;
+    }
     connect(m_pScreenShotEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
-    connect(m_pScreenShotEvent, SIGNAL(sendEvent(QString)), this, SLOT(onSendEvent(QString)), Qt::QueuedConnection);
+    connect(m_pScreenShotEvent, SIGNAL(shotKeyPressEvent(const unsigned char &)), this, SLOT(onShotKeyPressEvent(const unsigned char &)), Qt::QueuedConnection);
     m_pScreenShotEvent->start();
     connect(this, &MainWindow::releaseEvent, this, [ = ] {
         qDebug() << "release event !!!";
@@ -687,11 +696,16 @@ bool MainWindow::initScreenShot()
     connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
 
     m_toolBar->setFocus();
-    return true;
 }
 
 void MainWindow::initScreenRecorder()
 {
+    if(!m_initScreenRecorder){
+        m_initScreenRecorder = true;
+    }
+    else {
+        return;
+    }
     m_functionType = 0;
     m_keyBoardStatus = false;
     m_mouseStatus = 0;
@@ -776,6 +790,8 @@ void MainWindow::initScreenRecorder()
     connect(m_pScreenRecordEvent, SIGNAL(pressEsc()), this, SLOT(responseEsc()), Qt::QueuedConnection);
     connect(m_pScreenRecordEvent, SIGNAL(pressKeyButton(unsigned char)), m_showButtons,
             SLOT(showContentButtons(unsigned char)), Qt::QueuedConnection);
+    connect(m_pScreenRecordEvent, SIGNAL(pressKeyButton(unsigned char)), this,
+            SLOT(onRecordKeyPressEvent(const unsigned char&)), Qt::QueuedConnection);
     connect(m_pScreenRecordEvent, SIGNAL(releaseKeyButton(unsigned char)), m_showButtons,
             SLOT(releaseContentButtons(unsigned char)), Qt::QueuedConnection);
     m_pScreenRecordEvent->start();
@@ -799,8 +815,7 @@ void MainWindow::initLaunchMode(const QString &launchMode)
         m_recordButton->hide();
         m_shotButton->show();
         m_functionType = 1;
-        if(!m_initScreenShot)
-            m_initScreenShot = initScreenShot();
+        initScreenShot();
     }
 }
 /*
@@ -1460,8 +1475,7 @@ void MainWindow::changeFunctionButton(QString type)
         //        updateShotButtonPos();
         m_shotButton->show();
         m_functionType = 1;
-        if(!m_initScreenShot)
-            m_initScreenShot = initScreenShot();
+        initScreenShot();
     }
 
     update();
@@ -3020,15 +3034,17 @@ void MainWindow::checkCpuIsZhaoxin()
     process.close();
 }
 
-void MainWindow::onSendEvent(QString event)
+void MainWindow::onShotKeyPressEvent(const unsigned char &keyCode)
 {
-    if(QString("audio") == event){
-        if (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)
-            emit m_toolBar->shapeClickedFromMain("audio");
+    if (KEY_F3 == keyCode && 1 == m_functionType) {
+        emit m_toolBar->shapeClickedFromMain("option");
     }
-    else if (QString("option") == event) {
-        if (m_functionType == 1)
-            emit m_toolBar->shapeClickedFromMain("option");
+}
+
+void MainWindow::onRecordKeyPressEvent(const unsigned char &keyCode)
+{
+    if(KEY_S == keyCode && 0 == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus){
+        emit m_toolBar->shapeClickedFromMain("audio");
     }
 }
 

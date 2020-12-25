@@ -70,12 +70,9 @@ void ScreenShotEvent::handleRecordEvent(XRecordInterceptData *data)
         xEvent *event = reinterpret_cast<xEvent *>(data->data);
         switch (event->u.u.type) {
         case KeyPress:
-            if ((reinterpret_cast<unsigned char *>(data->data))[1] == KEY_F3) {
-                emit sendEvent(QString("option"));
-            }
-            else if((reinterpret_cast<unsigned char *>(data->data))[1] == KEY_S){
-                emit sendEvent(QString("audio"));
-            }
+        {
+            emit shotKeyPressEvent((reinterpret_cast<unsigned char *>(data->data))[1]);
+        }
             break;
         default:
             break;
