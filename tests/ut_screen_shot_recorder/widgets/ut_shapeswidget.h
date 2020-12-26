@@ -171,6 +171,34 @@ TEST_F(ShapesWidgetTest, pinchTriggered)
 
 TEST_F(ShapesWidgetTest, mousePressEvent)
 {
+    QMap<int, TextEdit *> editMap;
+    TextEdit *textEdit = new TextEdit(-1,nullptr);
+    TextEdit *textEdit0 = new TextEdit(0,nullptr);
+    TextEdit *textEdit1 = new TextEdit(1,nullptr);
+    TextEdit *textEdit2 = new TextEdit(2,nullptr);
+    editMap.insert(-1,textEdit);
+    editMap.insert(0,textEdit0);
+    editMap.insert(1,textEdit1);
+    editMap.insert(2,textEdit2);
+    shapesWidget->m_editMap = editMap;
+    QList <Toolshape> toolShapes;
+    Toolshape toolShape1;
+    toolShape1.type = QString("rectangle");
+    Toolshape toolShape2;
+    toolShape2.type = QString("oval");
+    Toolshape toolShape3;
+    toolShape3.type = QString("arrow");
+    Toolshape toolShape4;
+    toolShape4.type = QString("line");
+    Toolshape toolShape5;
+    toolShape5.type = QString("text");
+    toolShapes << toolShape1;
+    toolShapes << toolShape2;
+    toolShapes << toolShape3;
+    toolShapes << toolShape4;
+    toolShapes << toolShape5;
+    access_private_field::ShapesWidgetm_shapes(*shapesWidget) = toolShapes;
+
     QMouseEvent *ev0 = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::ShapesWidgetmousePressEvent(*shapesWidget,ev0);
     //1220
@@ -225,11 +253,29 @@ TEST_F(ShapesWidgetTest, mousePressEvent)
     QMouseEvent *ev9 = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     access_private_field::ShapesWidgetm_currentType(*shapesWidget) = QString("arrow");
     call_private_fun::ShapesWidgetmousePressEvent(*shapesWidget,ev9);
-
 }
 
 TEST_F(ShapesWidgetTest, mouseMoveEvent)
-{
+{ 
+    access_private_field::ShapesWidgetm_currentType(*shapesWidget) = QString("line");
+    shapesWidget->m_clickedKey = ShapesWidget::ClickedKey::Fifth;
+    QList <Toolshape> toolShapes;
+    Toolshape toolShape1;
+    toolShape1.type = QString("rectangle");
+    Toolshape toolShape2;
+    toolShape2.type = QString("oval");
+    Toolshape toolShape3;
+    toolShape3.type = QString("arrow");
+    toolShapes << toolShape1;
+    toolShapes << toolShape2;
+    toolShapes << toolShape3;
+    access_private_field::ShapesWidgetm_shapes(*shapesWidget) = toolShapes;
+    shapesWidget->m_selectedOrder = 0;
+    shapesWidget->m_isResize = true;
+    shapesWidget->m_isPressed = true;
+    shapesWidget->m_isSelected = true;
+    shapesWidget->m_selectedIndex = 0;
+    shapesWidget->m_currentType = QString("arrow");
     QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     access_private_field::ShapesWidgetm_isRecording(*shapesWidget) = true;
     access_private_field::ShapesWidgetm_isPressed(*shapesWidget) = true;
@@ -266,17 +312,17 @@ TEST_F(ShapesWidgetTest, mouseMoveEvent)
 
     access_private_field::ShapesWidgetm_isPressed(*shapesWidget) = false;
     access_private_field::ShapesWidgetm_isRecording(*shapesWidget) = false;
-    QList <Toolshape> toolShapes;
-    Toolshape toolShape1;
-    toolShape1.type = QString("rectangle");
-    Toolshape toolShape2;
-    toolShape2.type = QString("oval");
-    Toolshape toolShape3;
-    toolShape3.type = QString("arrow");
-    toolShapes << toolShape1;
-    toolShapes << toolShape2;
-    toolShapes << toolShape3;
-    access_private_field::ShapesWidgetm_shapes(*shapesWidget) = toolShapes;
+//    QList <Toolshape> toolShapes;
+//    Toolshape toolShape1;
+//    toolShape1.type = QString("rectangle");
+//    Toolshape toolShape2;
+//    toolShape2.type = QString("oval");
+//    Toolshape toolShape3;
+//    toolShape3.type = QString("arrow");
+//    toolShapes << toolShape1;
+//    toolShapes << toolShape2;
+//    toolShapes << toolShape3;
+//    access_private_field::ShapesWidgetm_shapes(*shapesWidget) = toolShapes;
     access_private_field::ShapesWidgetm_isRotated(*shapesWidget) = true;
     access_private_field::ShapesWidgetm_isSelected(*shapesWidget) = true;
     access_private_field::ShapesWidgetm_resizeDirection(*shapesWidget) = Left;
@@ -309,6 +355,12 @@ TEST_F(ShapesWidgetTest, mouseMoveEvent)
 
 TEST_F(ShapesWidgetTest, mouseReleaseEvent)
 {
+    shapesWidget->m_isRecording = true;
+    shapesWidget->m_isSelected = false;
+    shapesWidget->m_pos2 = QPointF(10, 10);
+    shapesWidget->m_isRotated = false;
+    shapesWidget->m_selectedIndex = 0;
+    shapesWidget->m_currentType = QString("arrow");
     QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::ShapesWidgetmouseReleaseEvent(*shapesWidget,ev);
 }
@@ -349,6 +401,7 @@ TEST_F(ShapesWidgetTest, updateTextRect)
 
 TEST_F(ShapesWidgetTest, updateSelectedShape)
 { 
+    shapesWidget->m_isSlectedText = true;
     QMap<int, TextEdit *> editMap;
     TextEdit *textEdit0 = new TextEdit(0,nullptr);
     TextEdit *textEdit1 = new TextEdit(1,nullptr);
@@ -395,6 +448,7 @@ TEST_F(ShapesWidgetTest, updateSelectedShape)
     access_private_field::ShapesWidgetm_shapes(*shapesWidget) = toolShapes;
     access_private_field::ShapesWidgetm_selectedShape(*shapesWidget).type = QString("arrow");
     key = QString("arrow_linewidth_index");
+    shapesWidget->m_isSlectedText = false;
     shapesWidget->updateSelectedShape(group,key,index);
 
     access_private_field::ShapesWidgetm_selectedShape(*shapesWidget).isStraight = true;
@@ -488,6 +542,7 @@ TEST_F(ShapesWidgetTest, setCurrentShape)
 
 TEST_F(ShapesWidgetTest, clearSelected)
 {
+    access_private_field::ShapesWidgetm_currentType(*shapesWidget) = QString("line");
     shapesWidget->clearSelected();
 }
 
@@ -581,16 +636,46 @@ TEST_F(ShapesWidgetTest, paintText)
 
 TEST_F(ShapesWidgetTest, setAllTextEditReadOnly)
 {
+    QMap<int, TextEdit *> editMap;
+    TextEdit *textEdit = new TextEdit(-1,nullptr);
+    TextEdit *textEdit0 = new TextEdit(0,nullptr);
+    TextEdit *textEdit1 = new TextEdit(1,nullptr);
+    TextEdit *textEdit2 = new TextEdit(2,nullptr);
+    editMap.insert(-1,textEdit);
+    editMap.insert(0,textEdit0);
+    editMap.insert(1,textEdit1);
+    editMap.insert(2,textEdit2);
+    shapesWidget->m_editMap = editMap;
     shapesWidget->setAllTextEditReadOnly();
 }
 
 TEST_F(ShapesWidgetTest, setNoChangedTextEditRemove)
 {
+    QMap<int, TextEdit *> editMap;
+    TextEdit *textEdit = new TextEdit(-1,nullptr);
+    TextEdit *textEdit0 = new TextEdit(0,nullptr);
+    TextEdit *textEdit1 = new TextEdit(1,nullptr);
+    TextEdit *textEdit2 = new TextEdit(2,nullptr);
+    editMap.insert(-1,textEdit);
+    editMap.insert(0,textEdit0);
+    editMap.insert(1,textEdit1);
+    editMap.insert(2,textEdit2);
+    shapesWidget->m_editMap = editMap;
     shapesWidget->setNoChangedTextEditRemove();
 }
 
 TEST_F(ShapesWidgetTest, saveActionTriggered)
 {
+    QMap<int, TextEdit *> editMap;
+    TextEdit *textEdit = new TextEdit(-1,nullptr);
+    TextEdit *textEdit0 = new TextEdit(0,nullptr);
+    TextEdit *textEdit1 = new TextEdit(1,nullptr);
+    TextEdit *textEdit2 = new TextEdit(2,nullptr);
+    editMap.insert(-1,textEdit);
+    editMap.insert(0,textEdit0);
+    editMap.insert(1,textEdit1);
+    editMap.insert(2,textEdit2);
+    shapesWidget->m_editMap = editMap;
     shapesWidget->saveActionTriggered();
 }
 
@@ -676,7 +761,7 @@ TEST_F(ShapesWidgetTest, handleRotate)
 TEST_F(ShapesWidgetTest, clickedOnShapes)
 {
     QPointF pos(500,500);
-    shapesWidget->clickedOnShapes(pos);
+    //shapesWidget->clickedOnShapes(pos);
 
     QList <Toolshape> toolShapes;
     Toolshape toolShape1;
@@ -1344,6 +1429,24 @@ TEST_F(ShapesWidgetTest, menuCloseSlot)
 //(QTapGesture *tap)
 TEST_F(ShapesWidgetTest, tapTriggered)
 {
+    QList <Toolshape> toolShapes;
+    Toolshape toolShape1;
+    toolShape1.type = QString("rectangle");
+    Toolshape toolShape2;
+    toolShape2.type = QString("oval");
+    Toolshape toolShape3;
+    toolShape3.type = QString("arrow");
+    Toolshape toolShape4;
+    toolShape4.type = QString("line");
+    Toolshape toolShape5;
+    toolShape5.type = QString("text");
+    toolShapes << toolShape1;
+    toolShapes << toolShape2;
+    toolShapes << toolShape3;
+    toolShapes << toolShape4;
+    toolShapes << toolShape5;
+    access_private_field::ShapesWidgetm_shapes(*shapesWidget) = toolShapes;
+
     QTapGesture *tap = new QTapGesture();
     call_private_fun::ShapesWidgettapTriggered(*shapesWidget,tap);
 }
