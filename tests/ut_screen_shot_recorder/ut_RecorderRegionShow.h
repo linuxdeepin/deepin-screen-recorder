@@ -26,26 +26,26 @@ public:
     }
 };
 
-TEST_F(RecorderRegionShowTest, showKeyBoardButtons)
-{
-    for(int i = 0; i < 6; ++i) {
-        QString key = QString("%1").arg(i);
-        m_pRecorderRegion->showKeyBoardButtons(key);
-        m_pRecorderRegion->update();
-        QEventLoop loop;
-        QTimer::singleShot(1000, &loop, SLOT(quit()));
-        loop.exec();
-    }
-    QEventLoop loop;
-    QTimer::singleShot(3000, &loop, SLOT(quit()));
-    loop.exec();
-}
+//TEST_F(RecorderRegionShowTest, showKeyBoardButtons)
+//{
+//    for(int i = 0; i < 6; ++i) {
+//        QString key = QString("%1").arg(i);
+//        m_pRecorderRegion->showKeyBoardButtons(key);
+//        m_pRecorderRegion->update();
+//        QEventLoop loop;
+//        QTimer::singleShot(1000, &loop, SLOT(quit()));
+//        loop.exec();
+//    }
+//    QEventLoop loop;
+//    QTimer::singleShot(3000, &loop, SLOT(quit()));
+//    loop.exec();
+//}
 
-TEST_F(RecorderRegionShowTest, initCameraInfo)
-{
-    m_pRecorderRegion->initCameraInfo(CameraWidget::Position::rightBottom, QSize(420, 250));
-    QEventLoop loop;
-    QTimer::singleShot(3000, &loop, SLOT(quit()));
-    loop.exec();
-}
+//TEST_F(RecorderRegionShowTest, initCameraInfo)
+//{
+//    m_pRecorderRegion->initCameraInfo(CameraWidget::Position::rightBottom, QSize(420, 250));
+//    QEventLoop loop;
+//    QTimer::singleShot(3000, &loop, SLOT(quit()));
+//    loop.exec();
+//}
 

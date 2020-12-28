@@ -20,7 +20,7 @@ public:
         std::cout << "end KeyButtonWidgetTest" << std::endl;
     }
 };
-TEST_F(KeyButtonWidgetTest, setKeyLabelWord)
-{
-    ASSERT_NO_THROW(keyWidget->setKeyLabelWord("Del"););
-}
+//TEST_F(KeyButtonWidgetTest, setKeyLabelWord)
+//{
+//    ASSERT_NO_THROW(keyWidget->setKeyLabelWord("Del"););
+//}

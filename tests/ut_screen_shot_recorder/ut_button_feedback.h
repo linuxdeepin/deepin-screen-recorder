@@ -20,29 +20,29 @@ public:
     }
 };
 
-TEST_F(ButtonFeedbackTest, showPressFeedback)
-{
-    buttonFeedback->showPressFeedback(50, 50);
-    QEventLoop loop;
-    QTimer::singleShot(3000, &loop, SLOT(quit()));
-    loop.exec();
-}
+//TEST_F(ButtonFeedbackTest, showPressFeedback)
+//{
+//    buttonFeedback->showPressFeedback(50, 50);
+//    QEventLoop loop;
+//    QTimer::singleShot(3000, &loop, SLOT(quit()));
+//    loop.exec();
+//}
 
 
-TEST_F(ButtonFeedbackTest, showDragFeedback)
-{
-    buttonFeedback->showDragFeedback(50, 100);
-    QEventLoop loop;
-    QTimer::singleShot(3000, &loop, SLOT(quit()));
-    loop.exec();
-}
+//TEST_F(ButtonFeedbackTest, showDragFeedback)
+//{
+//    buttonFeedback->showDragFeedback(50, 100);
+//    QEventLoop loop;
+//    QTimer::singleShot(3000, &loop, SLOT(quit()));
+//    loop.exec();
+//}
 
 
-TEST_F(ButtonFeedbackTest, showReleaseFeedback)
-{
+//TEST_F(ButtonFeedbackTest, showReleaseFeedback)
+//{
 
-    buttonFeedback->showReleaseFeedback(50, 150);
-    QEventLoop loop;
-    QTimer::singleShot(3000, &loop, SLOT(quit()));
-    loop.exec();
-}
+//    buttonFeedback->showReleaseFeedback(50, 150);
+//    QEventLoop loop;
+//    QTimer::singleShot(3000, &loop, SLOT(quit()));
+//    loop.exec();
+//}
