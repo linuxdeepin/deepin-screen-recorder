@@ -584,7 +584,10 @@ void MainWindow::onHelp()
                          "com.deepin.Manual.Open");
     if (iface.isValid()) {
         iface.call("ShowManual", "deepin-screen-recorder");
-        exitApp();
+        // 录屏的时候，如果焦点还在录屏应用上，会导致录屏退出。添加条件判断，修复。
+        if((m_functionType == 1) || (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)) {
+            exitApp();
+        }
     } else {
         qWarning() << "manual service not available, cannot open manual";
     }
