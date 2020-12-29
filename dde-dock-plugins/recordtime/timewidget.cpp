@@ -33,14 +33,22 @@ TimeWidget::TimeWidget(DWidget *parent):
 
 TimeWidget::~TimeWidget()
 {
-    if(nullptr != m_lightIcon)
+    if(nullptr != m_lightIcon){
         delete m_lightIcon;
-    if(nullptr != m_shadeIcon)
+        m_lightIcon = nullptr;
+    }
+    if(nullptr != m_shadeIcon){
         delete m_shadeIcon;
-    if(nullptr != m_timer)
+        m_shadeIcon = nullptr;
+    }
+    if(nullptr != m_timer){
         m_timer->deleteLater();
-    if(nullptr != m_dockInter)
+        m_timer = nullptr;
+    }
+    if(nullptr != m_dockInter){
         m_dockInter->deleteLater();
+        m_dockInter = nullptr;
+    }
 }
 
 bool TimeWidget::enabled()
@@ -55,11 +63,11 @@ QSize TimeWidget::sizeHint() const
     int height = -1;
     if(0 == m_position || 2 == m_position){
         width = fm.boundingRect(RECORDER_TIME_LEVEL_SIZE).size().width();
-        height = fm.boundingRect(RECORDER_TIME_LEVEL_SIZE).size().height()*2;
+        height = RECORDER_TIME_LEVEL_ICON_SIZE;
     }
     else if(1 == m_position || 3 == m_position){
         width = fm.boundingRect(RECORDER_TIME_VERTICAL_SIZE).size().width();
-        height = fm.boundingRect(RECORDER_TIME_VERTICAL_SIZE).size().height()*2;
+        height = RECORDER_TIME_VERTICAL_ICON_SIZE;
     }
     return QSize(width,height);
 }

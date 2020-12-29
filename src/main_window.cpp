@@ -599,6 +599,7 @@ void MainWindow::initResource()
     resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(":/image/newUI/normal/node.svg");
     resizeHandleSmallImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_small.svg"));
 
+//　　　dde-dock显示时长插件代替系统托盘
 //    trayIcon = new QSystemTrayIcon(this);
 //    trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
 //    trayIcon->setToolTip(tr("Screen Capture"));
@@ -607,7 +608,6 @@ void MainWindow::initResource()
     //    setDragCursor();
 
     buttonFeedback = new ButtonFeedback();
-
     connect(m_pScreenShotEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
     connect(m_pScreenShotEvent, SIGNAL(shotKeyPressEvent(const unsigned char &)), this, SLOT(onShotKeyPressEvent(const unsigned char &)), Qt::QueuedConnection);
     m_pScreenShotEvent->start();

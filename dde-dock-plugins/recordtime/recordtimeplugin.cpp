@@ -24,7 +24,7 @@ const QString RecordTimePlugin::pluginName() const
 
 const QString RecordTimePlugin::pluginDisplayName() const
 {
-    return QString("截图录屏");
+    return QString("deepin-screen-recorder");
 }
 
 void RecordTimePlugin::init(PluginProxyInterface *proxyInter)

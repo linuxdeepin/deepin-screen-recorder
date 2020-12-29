@@ -27,15 +27,36 @@ public:
     explicit TimeWidget(DWidget *parent = nullptr);
     ~TimeWidget();
     bool enabled();
+
+    /**
+     * @brief start:开始计时
+     */
     void start();
+
+    /**
+     * @brief stop:停止计时
+     */
     void stop();
+
+    /**
+     * @brief sizeHint:返回控件大小
+     * @return
+     */
     QSize sizeHint() const;
 
 protected:
     void mousePressEvent(QMouseEvent *e);
 
 private slots:
+    /**
+     * @brief onTimeout:更新数据
+     */
     void onTimeout();
+
+    /**
+     * @brief onPositionChanged:dde-dock位置变化通知
+     * @param value
+     */
     void onPositionChanged(int value);
 
 private:

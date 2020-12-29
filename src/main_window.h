@@ -261,6 +261,7 @@ private:
     QPixmap resizeHandleSmallImg;
 
     QString selectAreaName = "";
+    //dde-dock显示时长插件代替系统托盘
     //QSystemTrayIcon *trayIcon = nullptr;
     CountdownTooltip *countdownTooltip = nullptr;
     ButtonFeedback *buttonFeedback = nullptr;

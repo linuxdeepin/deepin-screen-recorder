@@ -14,7 +14,16 @@ public:
     explicit DBusService(QObject *parent = nullptr);
 
 public slots:
+    /**
+     * @brief onStart:主程序通知插件开始计时
+     * @return
+     */
     Q_SCRIPTABLE bool onStart();
+
+    /**
+     * @brief onStop:主程序通知插件结束计时
+     * @return
+     */
     Q_SCRIPTABLE bool onStop();
 
 signals:
