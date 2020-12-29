@@ -607,6 +607,10 @@ void MainWindow::initResource()
     //    setDragCursor();
 
     buttonFeedback = new ButtonFeedback();
+
+    connect(m_pScreenShotEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
+    connect(m_pScreenShotEvent, SIGNAL(shotKeyPressEvent(const unsigned char &)), this, SLOT(onShotKeyPressEvent(const unsigned char &)), Qt::QueuedConnection);
+    m_pScreenShotEvent->start();
 }
 
 void MainWindow::initScreenShot()
@@ -617,9 +621,6 @@ void MainWindow::initScreenShot()
     else {
         return;
     }
-    connect(m_pScreenShotEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
-    connect(m_pScreenShotEvent, SIGNAL(shotKeyPressEvent(const unsigned char &)), this, SLOT(onShotKeyPressEvent(const unsigned char &)), Qt::QueuedConnection);
-    m_pScreenShotEvent->start();
     connect(this, &MainWindow::releaseEvent, this, [ = ] {
         qDebug() << "release event !!!";
         removeEventFilter(this);
@@ -3450,8 +3451,8 @@ void MainWindow::startCountdown()
     if(m_hasComposite == false){
         // 设置录屏框区域。
         m_pRecorderRegion =  new RecorderRegionShow();
-        m_pRecorderRegion->resize(std::min(recordWidth + 2, rootWindowRect.width() - 2), std::min(recordHeight + 2, rootWindowRect.height() - 2));
-        m_pRecorderRegion->move(std::max(recordX - 1, 1), std::max(recordY - 1, 1));
+        m_pRecorderRegion->resize(recordWidth + 2, recordHeight + 2);
+        m_pRecorderRegion->move(std::max(recordX - 1, 0), std::max(recordY - 1, 0));
         if (m_cameraWidget && m_cameraWidget->isVisible()) {
             m_cameraWidget->cameraStop();
             m_cameraWidget->setCameraStop(true);

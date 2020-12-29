@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_CN" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -246,6 +244,34 @@ or press the shortcut again to stop recording</source>
         <source>Display shortcuts</source>
         <translation>显示快捷键</translation>
     </message>
+    <message>
+        <source>Record</source>
+        <translation>录屏</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>录音</translation>
+    </message>
+    <message>
+        <source>Keystroke</source>
+        <translation>按键</translation>
+    </message>
+    <message>
+        <source>Webcam</source>
+        <translation>摄像头</translation>
+    </message>
+    <message>
+        <source>Click</source>
+        <translation>点击</translation>
+    </message>
+    <message>
+        <source>Start recording</source>
+        <translation>快速启动录屏</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>选项</translation>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -417,7 +443,7 @@ or press the shortcut again to stop recording</source>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation>  调整录制区域范围在%1*%2以内，视频效果更佳</translation>
+        <translation> 调整录制区域范围在%1*%2以内，视频效果更佳</translation>
     </message>
 </context>
 <context>

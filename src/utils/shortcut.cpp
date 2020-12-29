@@ -58,10 +58,11 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
                       ShortcutItem(tr("Text"),           "T") <<
                       ShortcutItem(tr("Delete"),    "Delete") <<
                       ShortcutItem(tr("Undo"), "Ctrl+Z") <<
-                      ShortcutItem(tr("option"), "F3");
+                      ShortcutItem(tr("Options"), "F3");
 
-    group3_1.groupItems << ShortcutItem(tr("Sound"), "S")
-                        << ShortcutItem(tr("Keystorke"), "k")
+    group3_1.groupItems << ShortcutItem(tr("Start recording"), "Ctr+Alt+R")
+                        << ShortcutItem(tr("Sound"), "S")
+                        << ShortcutItem(tr("Keystroke"), "K")
                         << ShortcutItem(tr("Webcam"), "W")
                         << ShortcutItem(tr("Click"), "C") ;
 

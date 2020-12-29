@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="hu">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="hu" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -77,7 +75,7 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>Mivel az ablakok effektezése le van tiltva a folyamat során, a felvételt le kell állítani</translation>
     </message>
 </context>
 <context>
@@ -245,6 +243,34 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
     <message>
         <source>Display shortcuts</source>
         <translation>Gyorsbillentyűk megjelenítése</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Rögzítés</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>Hang</translation>
+    </message>
+    <message>
+        <source>Keystroke</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Webcam</source>
+        <translation>Webkamera</translation>
+    </message>
+    <message>
+        <source>Click</source>
+        <translation>Kattintás</translation>
+    </message>
+    <message>
+        <source>Start recording</source>
+        <translation>Felvétel megkezdése</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Beállítások</translation>
     </message>
 </context>
 <context>
@@ -417,7 +443,7 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"></translation>
+        <translation>A jobb videoeffektus elérése érdekében állítsa be a felvételi területet %1*%2</translation>
     </message>
 </context>
 <context>

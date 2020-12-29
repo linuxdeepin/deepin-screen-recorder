@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ca">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="ca" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -77,7 +75,7 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -245,6 +243,34 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Display shortcuts</source>
         <translation>Mostra les dreceres</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Grava</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Keystroke</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Webcam</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Click</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start recording</source>
+        <translation>Inicia la gravació</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Opcions</translation>
     </message>
 </context>
 <context>
@@ -417,7 +443,7 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

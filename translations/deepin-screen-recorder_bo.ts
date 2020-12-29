@@ -62,10 +62,6 @@ or press the shortcut again to stop recording</source>
         <translation>པར་%1དུ་ཉར་ཟིན།</translation>
     </message>
     <message>
-        <source>Screen Capture will start in %1 seconds</source>
-        <translation>བརྙན་བཤུས་བརྙན་ཕབ་སྐར་ཆ་%1རྗེས་སུ་འགོ་སློང་སྲིད།</translation>
-    </message>
-    <message>
         <source>Ignore</source>
         <translation>སྣང་མེད།</translation>
     </message>
@@ -76,6 +72,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Saving the screen recording file, please wait...</source>
         <translation>བརྙན་ཕབ་ཡིག་ཆ་ཉར་བཞིན་ཡོད་པས། སྒུག་རོགས་གནང་།</translation>
+    </message>
+    <message>
+        <source>As the window effect is disabled during the process, the recording has to be stopped</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -243,6 +243,34 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Display shortcuts</source>
         <translation>མྱུར་མཐེབ་གསལ་བ།</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>བརྙན་ཕབ།</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Keystroke</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Webcam</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Click</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>གདམ་ག</translation>
     </message>
 </context>
 <context>
@@ -412,18 +440,17 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>TopTips</name>
+    <message>
+        <source> Adjust the recording area within %1*%2 to get better video effect</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>Utils</name>
     <message>
         <source>Recordings</source>
         <translation>སྒྲ་ཕབ།</translation>
-    </message>
-    <message>
-        <source>Screen recording is not supported at present</source>
-        <translation>བརྙན་ཕབ་བྱེད་ནུས་གནས་སྐབས་སྤྱོད་མི་ཆོག</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>ཕྱིར་འཐེན།</translation>
     </message>
 </context>
 </TS>

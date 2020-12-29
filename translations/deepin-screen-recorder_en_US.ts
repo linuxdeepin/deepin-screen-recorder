@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="en">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="en" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -77,7 +75,7 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>As the window effect is disabled during the process, the recording has to be stopped</translation>
     </message>
 </context>
 <context>
@@ -245,6 +243,34 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Display shortcuts</source>
         <translation>Display shortcuts</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Record</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>Sound</translation>
+    </message>
+    <message>
+        <source>Keystroke</source>
+        <translation>Keystroke</translation>
+    </message>
+    <message>
+        <source>Webcam</source>
+        <translation>Webcam</translation>
+    </message>
+    <message>
+        <source>Click</source>
+        <translation>Click</translation>
+    </message>
+    <message>
+        <source>Start recording</source>
+        <translation>Start recording</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Options</translation>
     </message>
 </context>
 <context>
@@ -417,7 +443,7 @@ or press the shortcut again to stop recording</translation>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"></translation>
+        <translation> Adjust the recording area within %1*%2 to get better video effect</translation>
     </message>
 </context>
 <context>

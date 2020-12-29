@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_TW">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_TW" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -77,7 +75,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>因在錄製過程中關閉了窗口特效，錄屏已結束</translation>
     </message>
 </context>
 <context>
@@ -245,6 +243,34 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Display shortcuts</source>
         <translation>顯示快捷鍵</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>錄屏</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>錄音</translation>
+    </message>
+    <message>
+        <source>Keystroke</source>
+        <translation>按鍵</translation>
+    </message>
+    <message>
+        <source>Webcam</source>
+        <translation>攝影機</translation>
+    </message>
+    <message>
+        <source>Click</source>
+        <translation>點擊</translation>
+    </message>
+    <message>
+        <source>Start recording</source>
+        <translation>快速啟動錄屏</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>選項</translation>
     </message>
 </context>
 <context>
@@ -417,7 +443,7 @@ or press the shortcut again to stop recording</source>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"></translation>
+        <translation> 調整錄製區域範圍在%1*%2以內，視頻效果更佳</translation>
     </message>
 </context>
 <context>
