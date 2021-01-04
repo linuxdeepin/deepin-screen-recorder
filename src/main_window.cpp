@@ -1543,6 +1543,7 @@ void MainWindow::changeSystemAudioSelectEvent(bool checked)
 }
 void MainWindow::changeCameraSelectEvent(bool checked)
 {
+    m_recordButton->setEnabled(false);
     if (m_cameraWidget == nullptr) {
         m_cameraWidget = new CameraWidget(this);
         m_cameraWidget->hide();
@@ -1580,6 +1581,7 @@ void MainWindow::changeCameraSelectEvent(bool checked)
         m_cameraWidget->cameraStop();
         m_cameraWidget->hide();
     }
+    m_recordButton->setEnabled(true);
 }
 /*
  * never used
@@ -3456,7 +3458,7 @@ void MainWindow::startCountdown()
         m_pRecorderRegion =  new RecorderRegionShow();
         m_pRecorderRegion->resize(recordWidth + 2, recordHeight + 2);
         m_pRecorderRegion->move(std::max(recordX - 1, 0), std::max(recordY - 1, 0));
-        if (m_cameraWidget && m_cameraWidget->isVisible()) {
+        if (m_cameraWidget && m_selectedCamera) {
             m_cameraWidget->cameraStop();
             m_cameraWidget->setCameraStop(true);
             m_pRecorderRegion->initCameraInfo(m_cameraWidget->postion(), m_cameraWidget->geometry().size());
