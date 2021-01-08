@@ -38,7 +38,7 @@ void XGifRecord::run()
                           static_cast<uint32_t>(m_delay));
         }
     }
-
+    delete [] pathCh;
     GifEnd(&m_gifWrite);
 }
 

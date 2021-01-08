@@ -38,21 +38,23 @@ void voiceVolumeWatcher::run()
 
     static const double DBL_EPSILON = 0.000001;
     //static const double volumeLowMark = 0.2; //20% volume
-
     while (m_loopwatch) {
-        AudioPort activePort = m_defaultSource->activePort();
-        //qDebug() << "=========" << activePort.name << activePort.description << activePort.availability << "--------";
-        bool couldUse = false;
-        if (isMicrophoneAvail(activePort.name)) {
-            double currentMicrophoneVolume = m_defaultSource->volume();
-            if(currentMicrophoneVolume > DBL_EPSILON) {
-                couldUse = true;
+        if(nullptr != m_defaultSource){
+            //https://pms.uniontech.com/zentao/bug-view-52019.html
+            AudioPort activePort = m_defaultSource->activePort();
+            //qDebug() << "=========" << activePort.name << activePort.description << activePort.availability << "--------";
+            bool couldUse = false;
+            if (isMicrophoneAvail(activePort.name)) {
+                double currentMicrophoneVolume = m_defaultSource->volume();
+                if(currentMicrophoneVolume > DBL_EPSILON) {
+                    couldUse = true;
+                }
             }
-        }
-        if (couldUse != m_coulduse) {
-            //发送log信息到UI
-            m_coulduse = couldUse;
-            emit sigRecodeState(couldUse);
+            if (couldUse != m_coulduse) {
+                //发送log信息到UI
+                m_coulduse = couldUse;
+                emit sigRecodeState(couldUse);
+            }
         }
         QThread::currentThread()->msleep(1000);
     }
