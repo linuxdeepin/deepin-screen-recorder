@@ -41,7 +41,9 @@ Screenshot::Screenshot(QObject *parent)
 void Screenshot::initUI()
 {
 //    m_eventContainer = new EventContainer(this);
-    m_window = new MainWindow;
+    if(nullptr == m_window){
+        m_window = new MainWindow;
+    }
 }
 
 void Screenshot::startScreenshot()
@@ -50,10 +52,12 @@ void Screenshot::startScreenshot()
 //    m_window->show();
 
 //    m_window->startScreenshot();
-    m_window->initAttributes();
-    m_window->initResource();
-    m_window->initLaunchMode(m_launchMode);
-    m_window->showFullScreen();
+    if(nullptr != m_window){
+        m_window->initAttributes();
+        m_window->initResource();
+        m_window->initLaunchMode(m_launchMode);
+        m_window->showFullScreen();
+    }
 }
 
 void Screenshot::delayScreenshot(double num)
@@ -141,4 +145,8 @@ void Screenshot::setConfigThemeType(int themeType)
 
 
 Screenshot::~Screenshot() {
+    if(nullptr != m_window){
+        m_window->deleteLater();
+        m_window = nullptr;
+    }
 }

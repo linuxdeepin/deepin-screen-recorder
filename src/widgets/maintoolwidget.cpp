@@ -60,7 +60,9 @@ void MainToolWidget::initWidget()
     //    setFixedHeight(43);
     //    setMinimumSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     //    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    hintFilter = new HintFilter;
+    if(nullptr == hintFilter){
+        hintFilter = new HintFilter;
+    }
     m_themeType = 0;
     m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     //    setMouseTracking(true);
@@ -171,7 +173,9 @@ void MainToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 void MainToolWidget::installHint(QWidget *w, QWidget *hint)
 {
     w->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hint));
-    w->installEventFilter(hintFilter);
+    if(nullptr != hintFilter){
+        w->installEventFilter(hintFilter);
+    }
 }
 
 void MainToolWidget::setRecordButtonOut()
