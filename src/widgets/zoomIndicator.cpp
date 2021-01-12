@@ -78,8 +78,8 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
     painter.drawPixmap(QRect(5, 5, INDICATOR_WIDTH, INDICATOR_WIDTH), zoomPix);
 
 
-    painter.drawPixmap(m_centerRect, QPixmap(":/resources/images/action/center_rect.png"));
-    painter.drawPixmap(m_globalRect, QPixmap(":/resources/images/action/magnifier.png"));
+    painter.drawPixmap(m_centerRect, QPixmap(":/images/action/center_rect.png"));
+    painter.drawPixmap(m_globalRect, QPixmap(":/images/action/magnifier.png"));
 
     m_lastCenterPosBrush = QBrush(QColor(qRed(centerRectRgb),
                                          qGreen(centerRectRgb), qBlue(centerRectRgb)));

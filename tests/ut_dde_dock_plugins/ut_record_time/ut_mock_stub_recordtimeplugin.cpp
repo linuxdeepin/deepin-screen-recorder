@@ -4,7 +4,7 @@
 
 #define protected public
 #define private public
-#include "../../../dde-dock-plugins/recordtime/recordtimeplugin.h"
+#include "../../../src/dde-dock-plugins/recordtime/recordtimeplugin.h"
 
 namespace  {
 class TestRecordTimePlugin : public testing::Test {

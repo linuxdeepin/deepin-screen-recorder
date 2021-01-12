@@ -3,7 +3,7 @@
 #include <QTest>
 #include <QPoint>
 
-#include "../../../src/main_window.h"
+#include "../../src/main_window.h"
 #include "stub.h"
 #include "addr_pri.h"
 

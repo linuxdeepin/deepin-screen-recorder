@@ -50,7 +50,7 @@ bool Utils::is3rdInterfaceStart = false;
 
 QString Utils::getQrcPath(QString imageName)
 {
-    return QString(":/image/%1").arg(imageName);
+    return QString(":/%1").arg(imageName);
 }
 
 QSize Utils::getRenderSize(int fontSize, QString string)

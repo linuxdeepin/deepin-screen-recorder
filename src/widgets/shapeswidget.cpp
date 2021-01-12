@@ -1947,7 +1947,7 @@ void ShapesWidget::paintEvent(QPaintEvent *)
     }
 
     qreal ration =  this->devicePixelRatioF();
-    QIcon icon(":/resources/images/size/resize_handle_big.svg");
+    QIcon icon(":/images/size/resize_handle_big.svg");
     QPixmap resizePointImg = icon.pixmap(QSize(RESIZEPOINT_WIDTH,
                                                RESIZEPOINT_WIDTH));
     resizePointImg.setDevicePixelRatio(ration);
@@ -1989,7 +1989,7 @@ void ShapesWidget::paintEvent(QPaintEvent *)
 
             QPixmap rotatePointImg;
 //            rotatePointImg = QIcon(":/resources/images/size/rotate.svg").pixmap(ROTATE_ICON_SIZE);
-            rotatePointImg = QIcon(":/image/newUI/normal/icon_rotate.svg").pixmap(ROTATE_ICON_SIZE);
+            rotatePointImg = QIcon(":/newUI/normal/icon_rotate.svg").pixmap(ROTATE_ICON_SIZE);
             rotatePointImg.setDevicePixelRatio(this->devicePixelRatioF());
             paintImgPoint(painter, rotatePoint, rotatePointImg, false);
 

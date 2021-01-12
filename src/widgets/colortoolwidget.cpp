@@ -76,7 +76,7 @@ void ColorToolWidget::initColorLabel()
     Utils::setAccessibility(m_redBtn, AC_COLORTOOLWIDGET_RED_BUT);
     m_redBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_redBtn->setIconSize(TOOL_ICON_SIZE);
-    m_redBtn->setIcon(QIcon(":/image/newUI/normal/red.svg"));
+    m_redBtn->setIcon(QIcon(":/newUI/normal/red.svg"));
 //    m_redBtn->setToolTip(tr("Select Red"));
     toolBtnList.append(m_redBtn);
 
@@ -85,7 +85,7 @@ void ColorToolWidget::initColorLabel()
     Utils::setAccessibility(m_yellowBtn, AC_COLORTOOLWIDGET_YELLOW_BUT);
     m_yellowBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_yellowBtn->setIconSize(TOOL_ICON_SIZE);
-    m_yellowBtn->setIcon(QIcon(":/image/newUI/normal/yellow.svg"));
+    m_yellowBtn->setIcon(QIcon(":/newUI/normal/yellow.svg"));
 //    m_yellowBtn->setToolTip(tr("Select Yellow"));
     toolBtnList.append(m_yellowBtn);
 
@@ -94,7 +94,7 @@ void ColorToolWidget::initColorLabel()
     Utils::setAccessibility(m_blueBtn, AC_COLORTOOLWIDGET_BLUE_BUT);
     m_blueBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_blueBtn->setIconSize(TOOL_ICON_SIZE);
-    m_blueBtn->setIcon(QIcon(":/image/newUI/normal/blue.svg"));
+    m_blueBtn->setIcon(QIcon(":/newUI/normal/blue.svg"));
 //    m_blueBtn->setToolTip(tr("Select Blue"));
     toolBtnList.append(m_blueBtn);
 
@@ -103,7 +103,7 @@ void ColorToolWidget::initColorLabel()
     Utils::setAccessibility(m_greenBtn, AC_COLORTOOLWIDGET_GREEN_BUT);
     m_greenBtn->setFixedSize(TOOL_BUTTON_SIZE);
     m_greenBtn->setIconSize(TOOL_ICON_SIZE);
-    m_greenBtn->setIcon(QIcon(":/image/newUI/normal/green.svg"));
+    m_greenBtn->setIcon(QIcon(":/newUI/normal/green.svg"));
 //    m_greenBtn->setToolTip(tr("Select Green"));
     toolBtnList.append(m_greenBtn);
 

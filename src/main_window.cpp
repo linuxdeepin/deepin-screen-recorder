@@ -400,7 +400,7 @@ void MainWindow::initAttributes()
     pa.setColor(DPalette::Light, QColor(229, 70, 61, 204));
     m_recordButton->setPalette(pa);
     m_recordButton->setIconSize(QSize(38, 38));
-    m_recordButton->setIcon(QIcon(":/image/newUI/checked/screencap-checked.svg"));
+    m_recordButton->setIcon(QIcon(":/newUI/checked/screencap-checked.svg"));
     m_recordButton->setFixedSize(76, 58);
     //m_recordButton->setObjectName("mainRecordBtn");
     Utils::setAccessibility(m_recordButton, AC_MAINWINDOW_MAINRECORDBTN);
@@ -415,7 +415,7 @@ void MainWindow::initAttributes()
     pa.setColor(DPalette::Light, QColor(0, 129, 255, 204));
     m_shotButton->setPalette(pa);
     m_shotButton->setIconSize(QSize(38, 38));
-    m_shotButton->setIcon(QIcon(":/image/newUI/checked/screenshot-checked.svg"));
+    m_shotButton->setIcon(QIcon(":/newUI/checked/screenshot-checked.svg"));
     m_shotButton->setFixedSize(76, 58);
     //m_shotButton->setObjectName("mainShotBtn");
     Utils::setAccessibility(m_shotButton, AC_MAINWINDOW_MAINSHOTBTN);
@@ -599,7 +599,7 @@ void MainWindow::initResource()
     connect(m_showButtons, SIGNAL(keyShowSignal(const QString &)),
             this, SLOT(showKeyBoardButtons(const QString &)));
     //    resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_big.svg"));
-    resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(":/image/newUI/normal/node.svg");
+    resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(":/newUI/normal/node.svg");
     resizeHandleSmallImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_small.svg"));
 
 //　　　dde-dock显示时长插件代替系统托盘

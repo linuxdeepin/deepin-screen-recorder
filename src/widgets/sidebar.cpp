@@ -75,16 +75,16 @@ SideBarWidget::SideBarWidget(DWidget *parent)
     QString button_style = "DPushButton{border-radius:30px;} "
                            "DPushButton::hover{border-image: url(:/image/newUI/hover/close-hover.svg)}";
 
-    QPixmap pixmap(":/image/newUI/normal/close-normal.svg");
+    QPixmap pixmap(":/newUI/normal/close-normal.svg");
     m_closeButton = new DImageButton(this);
     if (t_themeType == 1) {
-        m_closeButton->setHoverPic(":/image/newUI/hover/close-hover.svg");
-        m_closeButton->setNormalPic(":/image/newUI/normal/close-normal.svg");
+        m_closeButton->setHoverPic(":/newUI/hover/close-hover.svg");
+        m_closeButton->setNormalPic(":/newUI/normal/close-normal.svg");
     }
 
     else if (t_themeType == 2) {
-        m_closeButton->setHoverPic(":/image/newUI/dark/hover/close-hover_dark.svg");
-        m_closeButton->setNormalPic(":/image/newUI/dark/normal/close-normal_dark.svg");
+        m_closeButton->setHoverPic(":/newUI/dark/hover/close-hover_dark.svg");
+        m_closeButton->setNormalPic(":/newUI/dark/normal/close-normal_dark.svg");
     }
 
     QVBoxLayout *VLayout = new QVBoxLayout();

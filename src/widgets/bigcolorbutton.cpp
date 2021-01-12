@@ -75,19 +75,19 @@ void BigColorButton::paintEvent(QPaintEvent *)
 
     qreal ration = this->devicePixelRatioF();
     if (m_isChecked) {
-        QPixmap checkedPic = QIcon(":/resources/images/action/colors_checked.svg"
+        QPixmap checkedPic = QIcon(":/images/action/colors_checked.svg"
                                   ).pixmap(BTN_SIZE);
         checkedPic.setDevicePixelRatio(ration);
 
         painter.drawPixmap(rect(), checkedPic);
     } else if (m_isHover && !m_isChecked) {
-        QPixmap hoverPic = QIcon(":/resources/images/action/colors_hover.svg"
+        QPixmap hoverPic = QIcon(":/images/action/colors_hover.svg"
                                 ).pixmap(BTN_SIZE);
         hoverPic.setDevicePixelRatio(ration);
 
         painter.drawPixmap(rect(), hoverPic);
     } else {
-        QPixmap normalPic = QIcon(":/resources/images/action/colors_hover.svg"
+        QPixmap normalPic = QIcon(":/images/action/colors_hover.svg"
                                  ).pixmap(BTN_SIZE);
         normalPic.setDevicePixelRatio(ration);
 

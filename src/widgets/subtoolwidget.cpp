@@ -142,21 +142,21 @@ void SubToolWidget::initRecordLabel()
     m_microphoneAction->setText(tr("Microphone"));
     m_microphoneAction->setCheckable(true);
     if (m_themeType == 1) {
-        m_microphoneAction->setIcon(QIcon(":/image/newUI/normal/microphone.svg"));
+        m_microphoneAction->setIcon(QIcon(":/newUI/normal/microphone.svg"));
     }
 
     else if (m_themeType == 2) {
-        m_microphoneAction->setIcon(QIcon(":/image/newUI/dark/normal/microphone.svg"));
+        m_microphoneAction->setIcon(QIcon(":/newUI/dark/normal/microphone.svg"));
     }
 
     m_systemAudioAction->setText(tr("System Audio"));
     //    m_systemAudioAction->setIcon(QIcon(":/image/newUI/normal/audio frequency.svg"));
     if (m_themeType == 1) {
-        m_systemAudioAction->setIcon(QIcon(":/image/newUI/normal/audio frequency.svg"));
+        m_systemAudioAction->setIcon(QIcon(":/newUI/normal/audio frequency.svg"));
     }
 
     else if (m_themeType == 2) {
-        m_systemAudioAction->setIcon(QIcon(":/image/newUI/dark/normal/audio frequency.svg"));
+        m_systemAudioAction->setIcon(QIcon(":/newUI/dark/normal/audio frequency.svg"));
     }
 
 
@@ -982,15 +982,15 @@ void SubToolWidget::changeArrowAndLineFromSideBar(int line)
         installTipHint(m_lineButton, tr("Line"));
         if (m_lineButton->isChecked()) {
             if (m_themeType == 1) {
-                m_lineButton->setIcon(QIcon(":/image/newUI/checked/line-checked.svg"));
+                m_lineButton->setIcon(QIcon(":/newUI/checked/line-checked.svg"));
             } else if (m_themeType == 2) {
-                m_lineButton->setIcon(QIcon(":/image/newUI/dark/checked/line-checked.svg"));
+                m_lineButton->setIcon(QIcon(":/newUI/dark/checked/line-checked.svg"));
             }
         }else {
             if (m_themeType == 1) {
-                m_lineButton->setIcon(QIcon(":/image/newUI/normal/line-normal.svg"));
+                m_lineButton->setIcon(QIcon(":/newUI/normal/line-normal.svg"));
             } else if (m_themeType == 2) {
-                m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/line-normal_dark.svg"));
+                m_lineButton->setIcon(QIcon(":/newUI/dark/normal/line-normal_dark.svg"));
             }
         }
     }else if (line == 1) {
@@ -998,15 +998,15 @@ void SubToolWidget::changeArrowAndLineFromSideBar(int line)
         installTipHint(m_lineButton, tr("Arrow"));
         if (m_lineButton->isChecked()) {
             if (m_themeType == 1) {
-                m_lineButton->setIcon(QIcon(":/image/newUI/checked/Arrow-checked.svg"));
+                m_lineButton->setIcon(QIcon(":/newUI/checked/Arrow-checked.svg"));
             } else if (m_themeType == 2) {
-                m_lineButton->setIcon(QIcon(":/image/newUI/dark/checked/Arrow-checked.svg"));
+                m_lineButton->setIcon(QIcon(":/newUI/dark/checked/Arrow-checked.svg"));
             }
         } else {
             if (m_themeType == 1) {
-                m_lineButton->setIcon(QIcon(":/image/newUI/normal/Arrow-normal.svg"));
+                m_lineButton->setIcon(QIcon(":/newUI/normal/Arrow-normal.svg"));
             } else if (m_themeType == 2) {
-                m_lineButton->setIcon(QIcon(":/image/newUI/dark/normal/Arrow-normal_dark.svg"));
+                m_lineButton->setIcon(QIcon(":/newUI/dark/normal/Arrow-normal_dark.svg"));
             }
         }
     }

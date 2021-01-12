@@ -1,7 +1,7 @@
 QT              += core widgets dbus
 CONFIG          += c++11 plugin link_pkgconfig
 PKGCONFIG += dframeworkdbus dtkgui dtkwidget
-include(../../third-party/stub_linux/stub.pri)
+include(../../../3rdparty/stub_linux/stub.pri)
 
 TARGET = ut_record_time
 
@@ -27,19 +27,19 @@ equals(TSAN_TOOL_ENABLE, true ){
 
 HEADERS += \
     ut_mock_pluginproxyinterface.h \
-    ../../../dde-dock-plugins/recordtime/timewidget.h \
-    ../../../dde-dock-plugins/recordtime/dbusservice.h \
-    ../../../dde-dock-plugins/recordtime/recordtimeplugin.h
+    ../../../src/dde-dock-plugins/recordtime/timewidget.h \
+    ../../../src/dde-dock-plugins/recordtime/dbusservice.h \
+    ../../../src/dde-dock-plugins/recordtime/recordtimeplugin.h
 
 SOURCES += \
     main.cpp \
-    ../../../dde-dock-plugins/recordtime/recordtimeplugin.cpp \
-    ../../../dde-dock-plugins/recordtime/timewidget.cpp \
-    ../../../dde-dock-plugins/recordtime/dbusservice.cpp \
+    ../../../src/dde-dock-plugins/recordtime/recordtimeplugin.cpp \
+    ../../../src/dde-dock-plugins/recordtime/timewidget.cpp \
+    ../../../src/dde-dock-plugins/recordtime/dbusservice.cpp \
     ut_mock_stub_recordtimeplugin.cpp \
     ut_timewidget.cpp \
     ut_dbusservice.cpp
 
 INCLUDEPATH += /usr/include/dde-dock
-include(../../third-party/googletest/gtest_dependency.pri)
+include(../../../3rdparty/googletest/gtest_dependency.pri)
 

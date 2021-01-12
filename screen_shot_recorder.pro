@@ -2,4 +2,4 @@ TEMPLATE  = subdirs
 
 SUBDIRS  += \
     src \
-    dde-dock-plugins
+    src/dde-dock-plugins

@@ -716,8 +716,8 @@ void ShotToolWidget::initTextLabel()
     t_textFontSize->setFixedSize(TOOL_SLIDER_SIZE);
     t_textFontSize->setMinimum(0);
     t_textFontSize->setMaximum(10);
-    t_textFontSize->setRightIcon(QIcon(":/image/newUI/normal/Aa small_normal.svg"));
-    t_textFontSize->setLeftIcon(QIcon(":/image/newUI/normal/Aa big_normal.svg"));
+    t_textFontSize->setRightIcon(QIcon(":/newUI/normal/Aa small_normal.svg"));
+    t_textFontSize->setLeftIcon(QIcon(":/newUI/normal/Aa big_normal.svg"));
     t_textFontSize->setIconSize(TOOL_ICON_SIZE);
 
     static const int indexTofontsize[11] = {9, 10, 12, 14, 18, 24, 36, 48, 64, 72, 96};

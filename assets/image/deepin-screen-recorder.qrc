@@ -1,0 +1,252 @@
+<RCC>
+    <qresource prefix="/">
+        <file>button_feedback_0.svg</file>
+        <file>button_feedback_1.svg</file>
+        <file>button_feedback_2.svg</file>
+        <file>button_feedback_3.svg</file>
+        <file>button_feedback_4.svg</file>
+        <file>button_feedback_5.svg</file>
+        <file>button_feedback_6.svg</file>
+        <file>button_feedback_7.svg</file>
+        <file>button_feedback_8.svg</file>
+        <file>button_feedback_9.svg</file>
+        <file>countdown_1.svg</file>
+        <file>countdown_2.svg</file>
+        <file>countdown_3.svg</file>
+        <file>deepin-screen-recorder.svg</file>
+        <file>gif_checked.svg</file>
+        <file>gif_normal.svg</file>
+        <file>gif_press.svg</file>
+        <file>video_checked.svg</file>
+        <file>video_normal.svg</file>
+        <file>video_press.svg</file>
+        <file>record_icon_hover.svg</file>
+        <file>record_icon_normal.svg</file>
+        <file>record_icon_press.svg</file>
+        <file>resize_handle_big.svg</file>
+        <file>resize_handle_small.svg</file>
+        <file>trayicon1.svg</file>
+        <file>trayicon2.svg</file>
+        <file>mouse_style/shape/start_mouse@2x.svg</file>
+        <file>mouse_style/shape/line_mouse.svg</file>
+        <file>mouse_style/shape/rect_mouse.svg</file>
+        <file>mouse_style/shape/text_mouse.svg</file>
+        <file>mouse_style/shape/ellipse_mouse.svg</file>
+        <file>mouse_style/shape/start_mouse.svg</file>
+        <file>mouse_style/shape/arrow_mouse.svg</file>
+        <file>mouse_style/shape/rotate_mouse.svg</file>
+        <file>mouse_style/color_pen/color5.svg</file>
+        <file>mouse_style/color_pen/color9.svg</file>
+        <file>mouse_style/color_pen/color0.svg</file>
+        <file>mouse_style/color_pen/color12.svg</file>
+        <file>mouse_style/color_pen/color6.svg</file>
+        <file>mouse_style/color_pen/color4.svg</file>
+        <file>mouse_style/color_pen/color10.svg</file>
+        <file>mouse_style/color_pen/color1.svg</file>
+        <file>mouse_style/color_pen/color2.svg</file>
+        <file>mouse_style/color_pen/color7.svg</file>
+        <file>mouse_style/color_pen/color13.svg</file>
+        <file>mouse_style/color_pen/color3.svg</file>
+        <file>mouse_style/color_pen/color15.svg</file>
+        <file>mouse_style/color_pen/color14.svg</file>
+        <file>mouse_style/color_pen/color8.svg</file>
+        <file>mouse_style/color_pen/color11.svg</file>
+        <file>newUI/normal/webcam_normal.svg</file>
+        <file>newUI/normal/brush big_normal.svg</file>
+        <file>newUI/normal/close-normal.svg</file>
+        <file>newUI/normal/icon_drag.svg</file>
+        <file>newUI/normal/microphone.svg</file>
+        <file>newUI/normal/icon_rotate.svg</file>
+        <file>newUI/normal/mouse_mormal.svg</file>
+        <file>newUI/normal/audio frequency.svg</file>
+        <file>newUI/normal/screencap-normal.svg</file>
+        <file>newUI/normal/Selection.svg</file>
+        <file>newUI/normal/yellow.svg</file>
+        <file>newUI/normal/Arrow-normal.svg</file>
+        <file>newUI/normal/key display_mormal.svg</file>
+        <file>newUI/normal/volume_normal.svg</file>
+        <file>newUI/normal/brush medium_normal.svg</file>
+        <file>newUI/normal/video-x-mp4.svg</file>
+        <file>newUI/normal/text.svg</file>
+        <file>newUI/normal/format_normal.svg</file>
+        <file>newUI/normal/Resolving power_normal.svg</file>
+        <file>newUI/normal/screenshot button-normal.svg</file>
+        <file>newUI/normal/mute_normal.svg</file>
+        <file>newUI/normal/green.svg</file>
+        <file>newUI/normal/microphone_normal.svg</file>
+        <file>newUI/normal/node.svg</file>
+        <file>newUI/normal/blue.svg</file>
+        <file>newUI/normal/screencap button-normal.svg</file>
+        <file>newUI/normal/Mosaic_normal.svg</file>
+        <file>newUI/normal/screenshot-normal.svg</file>
+        <file>newUI/normal/line-normal.svg</file>
+        <file>newUI/normal/video.svg</file>
+        <file>newUI/normal/vague_normal.svg</file>
+        <file>newUI/normal/Pulldown-normal.svg</file>
+        <file>newUI/normal/red.svg</file>
+        <file>newUI/normal/audio frequency_normal.svg</file>
+        <file>newUI/normal/Combined Shape-normal.svg</file>
+        <file>newUI/normal/video-x-mkv.svg</file>
+        <file>newUI/normal/oval-normal.svg</file>
+        <file>newUI/normal/slider.svg</file>
+        <file>newUI/normal/rectangle-normal.svg</file>
+        <file>newUI/normal/key_mormal.svg</file>
+        <file>newUI/normal/brush small_normal.svg</file>
+        <file>newUI/normal/hand.svg</file>
+        <file>newUI/press/close-press.svg</file>
+        <file>newUI/press/mouse_press.svg</file>
+        <file>newUI/press/line-press.svg</file>
+        <file>newUI/press/oval-press.svg</file>
+        <file>newUI/press/mute_press.svg</file>
+        <file>newUI/press/key_press.svg</file>
+        <file>newUI/press/Mosaic_press.svg</file>
+        <file>newUI/press/text_press.svg</file>
+        <file>newUI/press/webcam_press.svg</file>
+        <file>newUI/press/format_press.svg</file>
+        <file>newUI/press/brush medium_press.svg</file>
+        <file>newUI/press/Combined Shape-press.svg</file>
+        <file>newUI/press/brush small_press.svg</file>
+        <file>newUI/press/rectangle-press.svg</file>
+        <file>newUI/press/Resolving power_press.svg</file>
+        <file>newUI/press/screenshot-press.svg</file>
+        <file>newUI/press/brush big_press.svg</file>
+        <file>newUI/press/screenshot button-press.svg</file>
+        <file>newUI/press/vague_press.svg</file>
+        <file>newUI/press/screencap button-press.svg</file>
+        <file>newUI/press/screencap-press.svg</file>
+        <file>newUI/press/Pulldown-press.svg</file>
+        <file>newUI/hover/close-hover.svg</file>
+        <file>newUI/checked/brush medium_checked.svg</file>
+        <file>newUI/checked/screenshot-checked.svg</file>
+        <file>newUI/checked/mute_checked.svg</file>
+        <file>newUI/checked/brush big_checked.svg</file>
+        <file>newUI/checked/Resolving power_checked.svg</file>
+        <file>newUI/checked/Mosaic_checked.svg</file>
+        <file>newUI/checked/line-checked.svg</file>
+        <file>newUI/checked/oval-checked.svg</file>
+        <file>newUI/checked/rectangle-checked.svg</file>
+        <file>newUI/checked/format_checked.svg</file>
+        <file>newUI/checked/mouse_checked.svg</file>
+        <file>newUI/checked/Pulldown-checked.svg</file>
+        <file>newUI/checked/Combined Shape-checked.svg</file>
+        <file>newUI/checked/webcam_checked.svg</file>
+        <file>newUI/checked/text_checked.svg</file>
+        <file>newUI/checked/screencap-checked.svg</file>
+        <file>newUI/checked/brush small_checked.svg</file>
+        <file>newUI/checked/Arrow-checked.svg</file>
+        <file>newUI/checked/vague_checked.svg</file>
+        <file>newUI/focus/close-focus.svg</file>
+        <file>newUI/disable/screenshot-disable.svg</file>
+        <file>newUI/disable/mute_disable.svg</file>
+        <file>newUI/disable/screencap-disable.svg</file>
+        <file>newUI/disable/Pulldown-disable.svg</file>
+        <file>newUI/disable/webcam_disable.svg</file>
+        <file>newUI/normal/Aa big_normal.svg</file>
+        <file>newUI/normal/Aa small_normal.svg</file>
+        <file>color_pen/color3.svg</file>
+        <file>color_pen/color2.svg</file>
+        <file>color_pen/color0.svg</file>
+        <file>color_pen/color1.svg</file>
+        <file>newUI/dark/checked/brush medium_checked.svg</file>
+        <file>newUI/dark/checked/Pulldown-checked.svg</file>
+        <file>newUI/dark/checked/Arrow-checked.svg</file>
+        <file>newUI/dark/checked/vague_checked.svg</file>
+        <file>newUI/dark/checked/mouse_checked.svg</file>
+        <file>newUI/dark/checked/line-checked.svg</file>
+        <file>newUI/dark/checked/screenshot-checked.svg</file>
+        <file>newUI/dark/checked/screencap-checked.svg</file>
+        <file>newUI/dark/checked/oval-checked.svg</file>
+        <file>newUI/dark/checked/mute_checked.svg</file>
+        <file>newUI/dark/checked/Mosaic_checked.svg</file>
+        <file>newUI/dark/checked/brush small_checked.svg</file>
+        <file>newUI/dark/checked/brush big_checked.svg</file>
+        <file>newUI/dark/checked/format_checked.svg</file>
+        <file>newUI/dark/checked/Resolving power_checked.svg</file>
+        <file>newUI/dark/checked/text_checked.svg</file>
+        <file>newUI/dark/checked/rectangle-checked.svg</file>
+        <file>newUI/dark/checked/webcam_checked.svg</file>
+        <file>newUI/dark/checked/Combined Shape-checked.svg</file>
+        <file>newUI/dark/disabled/screenshot-normal.svg</file>
+        <file>newUI/dark/disabled/screencap-normal.svg</file>
+        <file>newUI/dark/disabled/Pulldown-disable.svg</file>
+        <file>newUI/dark/disabled/webcam_normal.svg</file>
+        <file>newUI/dark/disabled/mute_disable.svg</file>
+        <file>newUI/dark/focus/close-focus_dark.svg</file>
+        <file>newUI/dark/hover/audio frequency_hover.svg</file>
+        <file>newUI/dark/hover/Selection_hover.svg</file>
+        <file>newUI/dark/hover/close-hover_dark.svg</file>
+        <file>newUI/dark/hover/microphone_hover.svg</file>
+        <file>newUI/dark/normal/key_mormal.svg</file>
+        <file>newUI/dark/normal/icon_rotate.svg</file>
+        <file>newUI/dark/normal/webcam_normal.svg</file>
+        <file>newUI/dark/normal/brush blue.svg</file>
+        <file>newUI/dark/normal/microphone.svg</file>
+        <file>newUI/dark/normal/green.svg</file>
+        <file>newUI/dark/normal/mute_normal.svg</file>
+        <file>newUI/dark/normal/hand.svg</file>
+        <file>newUI/dark/normal/rectangle-normal_dark.svg</file>
+        <file>newUI/dark/normal/slider.svg</file>
+        <file>newUI/dark/normal/Aa small_normal.svg</file>
+        <file>newUI/dark/normal/mouse_mormal.svg</file>
+        <file>newUI/dark/normal/close-normal_dark.svg</file>
+        <file>newUI/dark/normal/brush big_normal.svg</file>
+        <file>newUI/dark/normal/brush medium_normal.svg</file>
+        <file>newUI/dark/normal/node.svg</file>
+        <file>newUI/dark/normal/oval-normal_dark.svg</file>
+        <file>newUI/dark/normal/video.svg</file>
+        <file>newUI/dark/normal/Aa big_normal.svg</file>
+        <file>newUI/dark/normal/audio frequency_normal.svg</file>
+        <file>newUI/dark/normal/brush small_normal.svg</file>
+        <file>newUI/dark/normal/screencap button-normal.svg</file>
+        <file>newUI/dark/normal/blue.svg</file>
+        <file>newUI/dark/normal/volume_normal.svg</file>
+        <file>newUI/dark/normal/Pulldown-normal_dark.svg</file>
+        <file>newUI/dark/normal/icon_drag.svg</file>
+        <file>newUI/dark/normal/brush red.svg</file>
+        <file>newUI/dark/normal/video-x-mkv.svg</file>
+        <file>newUI/dark/normal/yellow.svg</file>
+        <file>newUI/dark/normal/Combined Shape-normal_dark.svg</file>
+        <file>newUI/dark/normal/Arrow-normal_dark.svg</file>
+        <file>newUI/dark/normal/video-x-mp4.svg</file>
+        <file>newUI/dark/normal/brush green.svg</file>
+        <file>newUI/dark/normal/Selection.svg</file>
+        <file>newUI/dark/normal/key display_mormal.svg</file>
+        <file>newUI/dark/normal/screencap-normal_dark.svg</file>
+        <file>newUI/dark/normal/text_normal_dark.svg</file>
+        <file>newUI/dark/normal/red.svg</file>
+        <file>newUI/dark/normal/audio frequency.svg</file>
+        <file>newUI/dark/normal/brush yellow.svg</file>
+        <file>newUI/dark/normal/line-normal_dark.svg</file>
+        <file>newUI/dark/normal/screenshot button-normal.svg</file>
+        <file>newUI/dark/normal/Mosaic_normal.svg</file>
+        <file>newUI/dark/normal/vague_normal.svg</file>
+        <file>newUI/dark/normal/screenshot-normal_dark.svg</file>
+        <file>newUI/dark/normal/video1.svg</file>
+        <file>newUI/dark/normal/microphone_normal.svg</file>
+        <file>newUI/dark/press/key_press.svg</file>
+        <file>newUI/dark/press/Mosaic_press.svg</file>
+        <file>newUI/dark/press/Resolving power_press.svg</file>
+        <file>newUI/dark/press/brush big_press.svg</file>
+        <file>newUI/dark/press/screenshot-press.svg</file>
+        <file>newUI/dark/press/format_press.svg</file>
+        <file>newUI/dark/press/brush medium_press.svg</file>
+        <file>newUI/dark/press/rectangle-press.svg</file>
+        <file>newUI/dark/press/brush small_press.svg</file>
+        <file>newUI/dark/press/oval-press.svg</file>
+        <file>newUI/dark/press/screenshot button-press.svg</file>
+        <file>newUI/dark/press/mute_press.svg</file>
+        <file>newUI/dark/press/text_press.svg</file>
+        <file>newUI/dark/press/Arrow-press.svg</file>
+        <file>newUI/dark/press/line-press.svg</file>
+        <file>newUI/dark/press/Pulldown-press.svg</file>
+        <file>newUI/dark/press/screencap button-press.svg</file>
+        <file>newUI/dark/press/screencap-press.svg</file>
+        <file>newUI/dark/press/vague_press.svg</file>
+        <file>newUI/dark/press/close-press.svg</file>
+        <file>newUI/dark/press/Combined Shape-press.svg</file>
+        <file>newUI/dark/press/webcam_press.svg</file>
+        <file>newUI/dark/press/mouse_press.svg</file>
+        <file>newUI/press/Arrow-press.svg</file>
+        <file>deepin-screenshot.svg</file>
+    </qresource>
+</RCC>

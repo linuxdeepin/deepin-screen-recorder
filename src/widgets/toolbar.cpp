@@ -93,7 +93,7 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
     QString button_style = "DPushButton{border-radius:30px;} "
                            "DPushButton::hover{border-image: url(:/image/newUI/hover/close-hover.svg)}";
 
-    QPixmap pixmap(":/image/newUI/normal/close-normal.svg");
+    QPixmap pixmap(":/newUI/normal/close-normal.svg");
     //DIconButton
     m_closeButton = new DImageButton(this);
 //    m_closeButton->setIconSize(QSize(40, 40));
@@ -102,13 +102,13 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
 //    m_closeButton->setHoverPic(":/image/newUI/hover/close-hover.svg");
 //    m_closeButton->setNormalPic(":/image/newUI/normal/close-normal.svg");
     if (t_themeType == 1) {
-        m_closeButton->setHoverPic(":/image/newUI/hover/close-hover.svg");
-        m_closeButton->setNormalPic(":/image/newUI/normal/close-normal.svg");
+        m_closeButton->setHoverPic(":/newUI/hover/close-hover.svg");
+        m_closeButton->setNormalPic(":/newUI/normal/close-normal.svg");
     }
 
     else if (t_themeType == 2) {
-        m_closeButton->setHoverPic(":/image/newUI/dark/hover/close-hover_dark.svg");
-        m_closeButton->setNormalPic(":/image/newUI/dark/normal/close-normal_dark.svg");
+        m_closeButton->setHoverPic(":/newUI/dark/hover/close-hover_dark.svg");
+        m_closeButton->setNormalPic(":/newUI/dark/normal/close-normal_dark.svg");
     }
     /* 设置按钮的有效区域 */
 //    m_closeButton->setMask(QBitmap(pixmap.mask()));
