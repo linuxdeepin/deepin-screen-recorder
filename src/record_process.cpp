@@ -150,8 +150,12 @@ void RecordProcess::recordGIF()
 {
     initProcess();
 
-    m_pXGifRecord = new XGifRecord(m_recordRect,savePath);
-    m_pXGifRecord->start();
+    if(nullptr == m_pXGifRecord){
+        m_pXGifRecord = new XGifRecord(m_recordRect,savePath);
+    }
+    if(nullptr != m_pXGifRecord ){
+        m_pXGifRecord->start();
+    }
 
 
     // byzanz-record use command follow option --exec to stop recording gif.
@@ -490,7 +494,9 @@ int RecordProcess::readSleepProcessPid()
 void RecordProcess::stopRecord()
 {
     if (recordType == RECORD_TYPE_GIF) {
-        m_pXGifRecord->stop();
+        if(nullptr != m_pXGifRecord ){
+            m_pXGifRecord->stop();
+        }
 //        int byzanzChildPid = readSleepProcessPid();
 //        kill(byzanzChildPid, SIGKILL);
         //qDebug() << "Kill byzanz-record's child process (sleep) pid: " << byzanzChildPid;

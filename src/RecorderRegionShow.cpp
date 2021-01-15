@@ -31,7 +31,9 @@
 const int INDICATOR_WIDTH = 110;
 const int CAMERA_Y_OFFSET = 40;
 
-RecorderRegionShow::RecorderRegionShow():m_cameraWidget(nullptr)
+RecorderRegionShow::RecorderRegionShow():
+    m_painter(nullptr),
+    m_cameraWidget(nullptr)
 {
     /*
     setAttribute (Qt::WA_AlwaysShowToolTips);
@@ -48,12 +50,16 @@ RecorderRegionShow::RecorderRegionShow():m_cameraWidget(nullptr)
 }
 RecorderRegionShow::~RecorderRegionShow()
 {
-    delete m_painter;
+    if(nullptr != m_painter){
+        delete m_painter;
+        m_painter = nullptr;
+    }
     if(m_cameraWidget) {
       	if(m_cameraWidget->getcameraStatus()) {
         	m_cameraWidget->cameraStop();
         }
         delete m_cameraWidget;
+        m_cameraWidget = nullptr;
     }
     for(int i = 0; i < m_keyButtonList.count(); ++i) {
         delete m_keyButtonList[i];
@@ -62,7 +68,14 @@ RecorderRegionShow::~RecorderRegionShow()
 
 void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, const QSize size)
 {
-    m_cameraWidget = new CameraWidget();
+    if(nullptr == m_cameraWidget){
+        m_cameraWidget = new CameraWidget();
+    }
+
+    if(nullptr == m_cameraWidget){
+        return;
+    }
+
     QRect r = this->geometry();
     m_cameraWidget->setFixedSize(size);
     m_cameraWidget->initCamera();
@@ -122,6 +135,8 @@ void RecorderRegionShow::updateKeyBoardButtonStyle()
 
 void RecorderRegionShow::paintEvent(QPaintEvent *event)
 {
+    if(nullptr == m_painter)
+        return;
     QPixmap pixmap(width(), height());
     pixmap.fill(Qt::transparent);
     m_painter->begin( &pixmap );

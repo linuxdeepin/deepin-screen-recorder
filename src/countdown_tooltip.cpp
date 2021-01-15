@@ -37,7 +37,8 @@ const int CountdownTooltip::NUMBER_PADDING_Y = 30;
 
 DWIDGET_USE_NAMESPACE
 
-CountdownTooltip::CountdownTooltip(DWidget *parent) : DWidget(parent)
+CountdownTooltip::CountdownTooltip(DWidget *parent) : DWidget(parent),
+    showCountdownTimer(nullptr)
 {
     installEventFilter(this);
 
@@ -84,16 +85,20 @@ void CountdownTooltip::start()
     setFixedSize(width, height);
 
     showCountdownCounter = 3;
-    showCountdownTimer = new QTimer(this);
-    connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(update()));
-    showCountdownTimer->start(1000);
+    if(nullptr == showCountdownTimer){
+        showCountdownTimer = new QTimer(this);
+    }
+    if(nullptr != showCountdownTimer){
+        connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(update()));
+        showCountdownTimer->start(1000);
+    }
 }
 
 void CountdownTooltip::update()
 {
     showCountdownCounter--;
 
-    if (showCountdownCounter <= 0) {
+    if (showCountdownCounter <= 0 && nullptr != showCountdownTimer) {
         showCountdownTimer->stop();
 
         emit finished();
