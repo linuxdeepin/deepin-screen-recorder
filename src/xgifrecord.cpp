@@ -2,17 +2,33 @@
 
 XGifRecord::XGifRecord(QRect rect,QString savePath,QObject *parent) :QThread(parent),
     m_recordRect(rect),
+    m_gifWrite(nullptr),
     m_bWriteFrame(false),
     m_savePath(savePath),
     m_pixelRatio(-1)
 {
+    if(nullptr == m_gifWrite){
+        m_gifWrite = new GifWriter();
+    }
     m_bufferSize = 60;
     m_delay = 15;
     m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
 }
 
+XGifRecord::~XGifRecord()
+{
+    if(nullptr != m_gifWrite){
+        delete m_gifWrite;
+        m_gifWrite = nullptr;
+    }
+}
+
 void XGifRecord::run()
 {
+    if(nullptr == m_gifWrite){
+        return;
+    }
+
     setBWriteFrame(true);
     QtConcurrent::run(this,&XGifRecord::screenshots);
     QByteArray pathArry = m_savePath.toLocal8Bit();
@@ -25,13 +41,13 @@ void XGifRecord::run()
         if(getFrame(img)){
             if(bFirst){
                 bFirst = false;
-                GifBegin(&m_gifWrite,
+                GifBegin(m_gifWrite,
                          pathCh,
                          static_cast<uint32_t>(img.width()),
                          static_cast<uint32_t>(img.height()),
                          static_cast<uint32_t>(m_delay));
             }
-            GifWriteFrame(&m_gifWrite,
+            GifWriteFrame(m_gifWrite,
                           img.convertToFormat(QImage::Format_RGBA8888).bits(),
                           static_cast<uint32_t>(img.width()),
                           static_cast<uint32_t>(img.height()),
@@ -39,7 +55,7 @@ void XGifRecord::run()
         }
     }
     delete [] pathCh;
-    GifEnd(&m_gifWrite);
+    GifEnd(m_gifWrite);
 }
 
 void XGifRecord::appendBuffer(QImage img)

@@ -32,6 +32,8 @@ class XGifRecord : public QThread
 public:
     explicit XGifRecord(QRect rect,QString savePath,QObject *parent = nullptr);
 
+    ~XGifRecord();
+
     /**
      * @brief stop:停止录屏
      */
@@ -73,8 +75,8 @@ protected:
 private:
     //录屏区域
     QRect m_recordRect;
-    //cppcheck误报：未在构造函数中初始化
-    GifWriter m_gifWrite;
+    //cppcheck误报：未在构造函数中初始化：修改成指针，cppcheck检测通过
+    GifWriter *m_gifWrite;
     int m_delay;
     //视频帧缓存
     QList<QImage> m_imageList;
