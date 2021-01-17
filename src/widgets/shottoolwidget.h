@@ -25,6 +25,7 @@
 #include <DStackedWidget>
 
 #include <QObject>
+#include <QVBoxLayout>
 
 DWIDGET_USE_NAMESPACE
 
@@ -75,6 +76,10 @@ private:
     QString m_currentType;
     bool m_arrowFlag;
     int m_themeType;
+    QButtonGroup *m_buttonGroup;
+    QButtonGroup *m_thicknessBtnGroup;
+    QButtonGroup *m_funcBtnGroup;
+    QVBoxLayout *m_rectLayout;
 };
 
 #endif // SHOTTOOLWIDGET_H

@@ -30,7 +30,6 @@
 
 #include <QAction>
 #include <QButtonGroup>
-#include <QVBoxLayout>
 #include <QStyleFactory>
 #include <QLine>
 #include <QDebug>
@@ -52,14 +51,34 @@ namespace {
     //const QSize MIN_TOOL_BUTTON_SIZE = QSize(35, 30);
 }
 
-ShotToolWidget::ShotToolWidget(DWidget *parent) : DStackedWidget(parent)
+ShotToolWidget::ShotToolWidget(DWidget *parent) :
+    DStackedWidget(parent),
+    m_buttonGroup(nullptr),
+    m_thicknessBtnGroup(nullptr),
+    m_funcBtnGroup(nullptr),
+    m_rectLayout(nullptr)
 {
     initWidget();
 }
 
 ShotToolWidget::~ShotToolWidget()
 {
-
+    if(nullptr != m_buttonGroup){
+        m_buttonGroup->deleteLater();
+        m_buttonGroup = nullptr;
+    }
+    if(nullptr != m_thicknessBtnGroup){
+        m_thicknessBtnGroup->deleteLater();
+        m_thicknessBtnGroup = nullptr;
+    }
+    if(nullptr != m_funcBtnGroup){
+        m_funcBtnGroup->deleteLater();
+        m_funcBtnGroup = nullptr;
+    }
+    if(nullptr != m_rectLayout){
+        m_rectLayout->deleteLater();
+        m_rectLayout = nullptr;
+    }
 }
 
 void ShotToolWidget::initWidget()
@@ -89,8 +108,8 @@ void ShotToolWidget::initRectLabel()
     t_thicknessBtnGroup->setExclusive(true);
 
     //选择功能按钮组
-    QButtonGroup *t_funcBtnGroup = new QButtonGroup();
-    t_funcBtnGroup->setExclusive(false);
+    m_buttonGroup = new QButtonGroup();
+    m_buttonGroup->setExclusive(false);
     QList<ToolButton *> btnList;
 
     //粗细程度１级按钮
@@ -257,12 +276,12 @@ void ShotToolWidget::initCircLabel()
     DPalette pa;
 
     //选择粗细按钮组
-    QButtonGroup *t_thicknessBtnGroup = new QButtonGroup();
-    t_thicknessBtnGroup->setExclusive(true);
+    m_thicknessBtnGroup = new QButtonGroup();
+    m_thicknessBtnGroup->setExclusive(true);
 
     //选择功能按钮组
-    QButtonGroup *t_funcBtnGroup = new QButtonGroup();
-    t_funcBtnGroup->setExclusive(false);
+    m_funcBtnGroup = new QButtonGroup();
+    m_funcBtnGroup->setExclusive(false);
     QList<ToolButton *> btnList;
 
     //粗细程度１级按钮
@@ -292,17 +311,17 @@ void ShotToolWidget::initCircLabel()
     thickThreeBtn->setIcon(QIcon::fromTheme("brush big_normal"));
     btnList.append(thickThreeBtn);
 
-    QVBoxLayout *rectLayout = new QVBoxLayout();
-    rectLayout->setContentsMargins(1, 4, 0, 0);
-    rectLayout->setSpacing(0);
-    rectLayout->addSpacing(5);
+    m_rectLayout = new QVBoxLayout();
+    m_rectLayout->setContentsMargins(1, 4, 0, 0);
+    m_rectLayout->setSpacing(0);
+    m_rectLayout->addSpacing(5);
     for (int i = 0; i < btnList.length(); i++) {
-        rectLayout->addWidget(btnList[i]);
-        rectLayout->addSpacing(BUTTON_SPACING);
-        t_thicknessBtnGroup->addButton(btnList[i]);
+        m_rectLayout->addWidget(btnList[i]);
+        m_rectLayout->addSpacing(BUTTON_SPACING);
+        m_thicknessBtnGroup->addButton(btnList[i]);
     }
 
-    connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
+    connect(m_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
             [ = ](int status) {
         Q_UNUSED(status);
         //DPalette pa;
@@ -342,7 +361,7 @@ void ShotToolWidget::initCircLabel()
     thickOneBtn->click();
     ConfigSettings::instance()->setValue("oval", "linewidth_index", 0);
 
-    rectLayout->addSpacing(2);
+    m_rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton();
     pa = t_seperator->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
@@ -350,8 +369,8 @@ void ShotToolWidget::initCircLabel()
     t_seperator->setDisabled(true);
     t_seperator->setPalette(pa);
     t_seperator->setFixedSize(SPLITTER_SIZE);
-    rectLayout->addWidget(t_seperator, 0, Qt::AlignHCenter);
-    rectLayout->addSpacing(BUTTON_SPACING);
+    m_rectLayout->addWidget(t_seperator, 0, Qt::AlignHCenter);
+    m_rectLayout->addSpacing(BUTTON_SPACING);
 
     btnList.clear();
 
@@ -416,11 +435,11 @@ void ShotToolWidget::initCircLabel()
 
 
     for (int j = 0; j < btnList.length(); j++) {
-        rectLayout->addWidget(btnList[j]);
-        rectLayout->addSpacing(BUTTON_SPACING);
+        m_rectLayout->addWidget(btnList[j]);
+        m_rectLayout->addSpacing(BUTTON_SPACING);
     }
 
-    rectLayout->addSpacing(2);
+    m_rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton();
     pa = t_seperator1->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
@@ -428,9 +447,9 @@ void ShotToolWidget::initCircLabel()
     t_seperator1->setDisabled(true);
     t_seperator1->setPalette(pa);
     t_seperator1->setFixedSize(SPLITTER_SIZE);
-    rectLayout->addWidget(t_seperator1, 0, Qt::AlignHCenter);
+    m_rectLayout->addWidget(t_seperator1, 0, Qt::AlignHCenter);
 
-    m_circSubTool->setLayout(rectLayout);
+    m_circSubTool->setLayout(m_rectLayout);
     addWidget(m_circSubTool);
 }
 

@@ -9,6 +9,7 @@
 #include <QDesktopWidget>
 #include <QFrame>
 #include <QGuiApplication>
+#include <QGraphicsOpacityEffect>
 
 class ToolTipsPrivate;
 class ToolTips : public QFrame
@@ -48,6 +49,7 @@ private:
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), ToolTips)
     QString m_strText;
     bool m_isVertical = false;
+    QGraphicsDropShadowEffect *m_bodyShadow;
 };
 
 

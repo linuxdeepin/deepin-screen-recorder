@@ -39,7 +39,6 @@
 #include <QPainterPath>
 #include <QGraphicsDropShadowEffect>
 #include <QPropertyAnimation>
-#include <QGraphicsOpacityEffect>
 
 #include <dthememanager.h>
 
@@ -66,8 +65,10 @@ public:
 };
 
 
-ToolTips::ToolTips(const QString &text, QWidget *parent)
-    : QFrame(parent), d_ptr(new ToolTipsPrivate(this))
+ToolTips::ToolTips(const QString &text, QWidget *parent):
+    QFrame(parent),
+    d_ptr(new ToolTipsPrivate(this)),
+    m_bodyShadow(nullptr)
 {
 //    DThemeManager::instance()->registerWidget(this);
     Q_D(ToolTips);
@@ -117,10 +118,10 @@ ToolTips::ToolTips(const QString &text, QWidget *parent)
 
     adjustSize();
 
-    auto *bodyShadow = new QGraphicsDropShadowEffect;
-    bodyShadow->setBlurRadius(10.0);
-    bodyShadow->setColor(QColor(0, 0, 0, 25));
-    bodyShadow->setOffset(0, 2.0);
+    m_bodyShadow = new QGraphicsDropShadowEffect;
+    m_bodyShadow->setBlurRadius(10.0);
+    m_bodyShadow->setColor(QColor(0, 0, 0, 25));
+    m_bodyShadow->setOffset(0, 2.0);
 //    this->setGraphicsEffect(bodyShadow);
     hide();
 //    d->textLable->hide();
@@ -130,7 +131,10 @@ ToolTips::ToolTips(const QString &text, QWidget *parent)
 
 ToolTips::~ToolTips()
 {
-
+    if(nullptr != m_bodyShadow){
+        m_bodyShadow->deleteLater();
+        m_bodyShadow = nullptr;
+    }
 }
 
 void ToolTips::enterEvent(QEvent *e)

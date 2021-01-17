@@ -251,8 +251,7 @@ void MainWindow::initAttributes()
 
     for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
         if (wid == winId()) continue;
-
-        DForeignWindow *window = DForeignWindow::fromWinId(wid);
+        DForeignWindow *window = DForeignWindow::fromWinId(wid);//sanitizer dtk
         //            qDebug() << window->wmClass() << window->windowState();
         //判断窗口是否被最小化
         if (window->windowState() == Qt::WindowState::WindowMinimized) {
@@ -262,7 +261,8 @@ void MainWindow::initAttributes()
         if (window) {
             int t_tempWidth = 0;
             int t_tempHeight = 0;
-            window->deleteLater();
+            //window:后面代码有使用
+            //window->deleteLater();
             //修改部分窗口显示不全，截图框识别问题
             //x坐标小于0时
             if (window->frameGeometry().x() < 0) {
