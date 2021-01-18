@@ -2176,6 +2176,10 @@ void MainWindow::paintEvent(QPaintEvent *event)
     }
 
     if (recordWidth > 0 && recordHeight > 0) {
+        if(Utils::isTabletEnvironment && m_functionType == 0) {
+            // 屏蔽录屏， 不绘制线框
+            return;
+        }
         m_firstShot = 1;
         QRect backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
         QRect frameRect = QRect(recordX, recordY, recordWidth, recordHeight);
@@ -2959,7 +2963,24 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
     return false;
 }
+void MainWindow::tableRecordSet()
+{
+    m_tabletRecorderHandle = new RecorderTablet(nullptr);
 
+    recordX = 0;
+    recordY = 0;
+    recordWidth = m_screenSize.width();
+    recordHeight = m_screenSize.height();
+
+    // 鼠标点击状态录制
+    m_mouseStatus = 1;
+
+    // 录制系统音频
+    m_selectedMic = false;
+    m_selectedSystemAudio = true;
+
+    startCountdown();
+}
 void MainWindow::onViewShortcut()
 {
     //QRect rect = window()->geometry();
@@ -3064,6 +3085,10 @@ void MainWindow::startRecord()
 //    flashTrayIconTimer = new QTimer(this);
 //    connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
 //    flashTrayIconTimer->start(800);
+    // 状态栏闪烁
+    if(Utils::isTabletEnvironment && m_tabletRecorderHandle) {
+        m_tabletRecorderHandle->startStatusBar();
+    }
 
     recordProcess.setRecordAudioInputType(getRecordInputType(m_selectedMic, m_selectedSystemAudio));
     recordProcess.startRecord();
@@ -3398,6 +3423,10 @@ void MainWindow::stopRecord()
         sendSavingNotify();
         // 停止闪烁
         //flashTrayIconTimer->stop();
+        // 状态栏闪烁停止
+        if(Utils::isTabletEnvironment && m_tabletRecorderHandle) {
+            m_tabletRecorderHandle->stop();
+        }
         recordProcess.stopRecord();
     }
 }
@@ -3438,20 +3467,25 @@ void MainWindow::startCountdown()
     }
     m_keyButtonList.clear();
 
-    QVBoxLayout *countdownLayout = new QVBoxLayout();
-    setLayout(countdownLayout);
+    //平板模式
+    if(Utils::isTabletEnvironment && m_tabletRecorderHandle) {
+        connect(m_tabletRecorderHandle, SIGNAL(finished()), this, SLOT(startRecord()));
+        m_tabletRecorderHandle->start();
+    } else {
+        QVBoxLayout *countdownLayout = new QVBoxLayout();
+        setLayout(countdownLayout);
+        countdownTooltip = new CountdownTooltip();
+        connect(countdownTooltip, SIGNAL(finished()), this, SLOT(startRecord()));
 
-    countdownTooltip = new CountdownTooltip();
-    connect(countdownTooltip, SIGNAL(finished()), this, SLOT(startRecord()));
+        countdownLayout->addStretch();
+        countdownLayout->addWidget(countdownTooltip, 0, Qt::AlignCenter);
+        countdownLayout->addStretch();
+        adjustLayout(countdownLayout, countdownTooltip->rect().width(), countdownTooltip->rect().height());
+        countdownTooltip->start();
 
-    countdownLayout->addStretch();
-    countdownLayout->addWidget(countdownTooltip, 0, Qt::AlignCenter);
-    countdownLayout->addStretch();
-    adjustLayout(countdownLayout, countdownTooltip->rect().width(), countdownTooltip->rect().height());
-
-    countdownTooltip->start();
-    m_pVoiceVolumeWatcher->stopWatch();
-    m_pCameraWatcher->stopWatch();
+        m_pVoiceVolumeWatcher->stopWatch();
+        m_pCameraWatcher->stopWatch();
+    }
 
     if(m_hasComposite == false){
         // 设置录屏框区域。

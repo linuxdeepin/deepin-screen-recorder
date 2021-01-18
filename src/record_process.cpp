@@ -57,6 +57,13 @@ RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 
     saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
     defaultSaveDir = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
+    if(Utils::isTabletEnvironment){
+        defaultSaveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first() + tr("/Record/");
+        QDir dir;
+        if(!dir.exists(defaultSaveDir)) {
+            dir.mkdir(defaultSaveDir);
+        }
+    }
 
     displayNumber = QString(std::getenv("DISPLAY"));
 
@@ -400,6 +407,10 @@ void RecordProcess::initProcess()
 void RecordProcess::startRecord()
 {
     QThread::start();
+
+    if(Utils::isTabletEnvironment) {
+        return;
+    }
     QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
                                                                                              "/com/deepin/ScreenRecorder/time",
                                                                                              "com.deepin.ScreenRecorder.time",

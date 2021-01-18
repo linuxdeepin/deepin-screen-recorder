@@ -57,6 +57,11 @@ void Screenshot::startScreenshot()
         m_window->initResource();
         m_window->initLaunchMode(m_launchMode);
         m_window->showFullScreen();
+        // 平板模式录屏
+        if(Utils::isTabletEnvironment && m_launchMode == "screenRecord") {
+            //m_window->removeEventFilter(m_window);
+            m_window->tableRecordSet();
+        }
     }
 }
 
@@ -136,6 +141,11 @@ void Screenshot::initLaunchMode(const QString &launchmode)
 void Screenshot::stopRecord()
 {
     m_window->stopRecord();
+}
+
+QString Screenshot::getRecorderNormalIcon()
+{
+    return RecorderTablet::getRecorderNormalIcon();
 }
 
 void Screenshot::setConfigThemeType(int themeType)

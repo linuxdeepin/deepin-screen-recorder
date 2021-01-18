@@ -43,6 +43,9 @@ public slots:
     void startScreenshotFor3rd(const QString &path);
     void initLaunchMode(const QString &launchmode);
     Q_SCRIPTABLE void stopRecord();
+    Q_SCRIPTABLE QString getRecorderNormalIcon();
+signals:
+    Q_SCRIPTABLE void RecorderState(const bool isStart); // true begin recorder; false stop recorder;
 
 private:
     void initUI();

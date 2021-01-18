@@ -48,6 +48,7 @@
 #include "RecorderRegionShow.h"
 #include "event_monitor.h"
 #include "screen_shot_event.h"
+#include "recordertablet.h"
 
 #include <DWindowManagerHelper>
 #include <DDialog>
@@ -194,6 +195,7 @@ public slots:
     void checkCpuIsZhaoxin();
     void onShotKeyPressEvent(const unsigned char &keyCode);
     void onRecordKeyPressEvent(const unsigned char &keyCode);
+    void tableRecordSet();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -320,6 +322,7 @@ private:
     bool m_hasComposite = true;
     bool m_initScreenShot;
     bool m_initScreenRecorder;
+    RecorderTablet *m_tabletRecorderHandle = nullptr;
 };
 
 #endif //MAINWINDOW_H

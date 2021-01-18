@@ -63,7 +63,7 @@ HEADERS += main_window.h \
     widgets/colortoolwidget.h \
     dbusinterface/dbusnotify.h \
     dbusservice/dbusscreenshotservice.h \
-    dbusservice/dbusscreenshot.h \
+    #dbusservice/dbusscreenshot.h \
     widgets/camerawidget.h \
     screenshot.h \
     utils/voicevolumewatcher.h \
@@ -76,7 +76,8 @@ HEADERS += main_window.h \
     screen_shot_event.h\
     RecorderRegionShow.h \
     lib/GifH/gif.h \
-    xgifrecord.h
+    xgifrecord.h \
+    recordertablet.h
 
 SOURCES += main.cpp \
     main_window.cpp \
@@ -111,7 +112,7 @@ SOURCES += main.cpp \
     widgets/colortoolwidget.cpp \
     dbusinterface/dbusnotify.cpp \
     dbusservice/dbusscreenshotservice.cpp \
-    dbusservice/dbusscreenshot.cpp \
+    #dbusservice/dbusscreenshot.cpp \
     widgets/camerawidget.cpp \
     screenshot.cpp \
     utils/voicevolumewatcher.cpp \
@@ -123,7 +124,8 @@ SOURCES += main.cpp \
     #dbusinterface/drawinterface.cpp \
     screen_shot_event.cpp\
     RecorderRegionShow.cpp \
-    xgifrecord.cpp
+    xgifrecord.cpp \
+    recordertablet.cpp
 
 QT += core
 QT += widgets
@@ -170,9 +172,15 @@ desktop.files = ../deepin-screen-recorder.desktop
 dbus_service.files = $$PWD/../com.deepin.ScreenRecorder.service $$PWD/../com.deepin.Screenshot.service
 dbus_service.path = $$PREFIX/share/dbus-1/services
 
+tablet_resources.path = $$INSTROOT$$DSRDIR/tablet_resources
+tablet_resources.files = ../image/tabletUI/fast-icon_recording_active.svg ../image/tabletUI/fast-icon_recording_normal.svg \
+            ../image/tabletUI/counting1.svg ../image/tabletUI/counting2.svg ../image/tabletUI/counting3.svg \
+            ../image/tabletUI/recording0.svg ../image/tabletUI/recording1.svg
+
+
 #INSTALLS += target icon desktop manual dbus_service shotShell
 #INSTALLS += target icon desktop manual dbus_service modload modprobe
-INSTALLS += target icon desktop dbus_service
+INSTALLS += target icon desktop dbus_service tablet_resources
 
 isEmpty(TRANSLATIONS) {
      include(../translations.pri)

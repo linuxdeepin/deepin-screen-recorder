@@ -108,7 +108,8 @@ int main(int argc, char *argv[])
 
     // Construct a QGuiApplication before accessing a platform function.
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
-
+    Utils::isTabletEnvironment = DGuiApplicationHelper::isTabletEnvironment();
+    qDebug() << Utils::isTabletEnvironment;
 
     // 内存检测标签
 //#ifdef ENABLE_TSAN_TOOL
@@ -238,7 +239,7 @@ int main(int argc, char *argv[])
             }
             */
             // Register debus service.
-            dbus.registerObject("/com/deepin/ScreenRecorder", &window, QDBusConnection::ExportScriptableSlots);
+            dbus.registerObject("/com/deepin/ScreenRecorder", &window, QDBusConnection::ExportScriptableSignals | QDBusConnection::ExportScriptableSlots);
             QDBusConnection conn = QDBusConnection::sessionBus();
 //            conn.unregisterObject("com.deepin.Screenshot");
             if (!conn.registerService("com.deepin.Screenshot") ||

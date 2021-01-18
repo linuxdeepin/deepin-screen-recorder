@@ -52,6 +52,7 @@ public:
     static void setAccessibility(DPushButton *button,const QString name);
     static void setAccessibility(QAction *action, const QString name);
     static bool is3rdInterfaceStart;
+    static bool isTabletEnvironment;
 };
 
 #endif //UTILS_H
