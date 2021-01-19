@@ -16,6 +16,8 @@
  */
 
 #include "calculaterect.h"
+#include "utils.h"
+
 #include <cmath>
 
 const int padding = 2;
@@ -28,8 +30,19 @@ const qreal SLOPE = 0.5522848;
 /* judge whether the point1 is on the point2 or not */
 bool pointClickIn(QPointF point2, QPointF point1, int padding)
 {
-    if (point2.x() >= point1.x() - padding && point2.x() <= point1.x() + padding &&
-            point2.y() >= point1.y() - padding && point2.y() <= point1.y() + padding) {
+    //参数padding不再使用，pointClickIn函数有多处调用，以最小修改量为原则不改变原函数参数个数
+    Q_UNUSED(padding);
+    int pointPadding = 0;
+  
+    if (Utils::isTabletEnvironment) {
+        //平板需求暂定20，根据测试反馈可调
+        pointPadding = 20;
+    } else {
+        pointPadding = 4;
+    }
+  
+    if (point2.x() >= point1.x() - pointPadding && point2.x() <= point1.x() + pointPadding &&
+            point2.y() >= point1.y() - pointPadding && point2.y() <= point1.y() + pointPadding) {
         return true;
     } else {
         return false;
