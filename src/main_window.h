@@ -196,6 +196,10 @@ public slots:
     void onShotKeyPressEvent(const unsigned char &keyCode);
     void onRecordKeyPressEvent(const unsigned char &keyCode);
     void tableRecordSet();
+    /**
+     * @brief initPadShot:初始化平板截图
+     */
+    void initPadShot();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);

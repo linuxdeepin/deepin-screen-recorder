@@ -49,18 +49,21 @@ void Screenshot::initUI()
 void Screenshot::startScreenshot()
 {
     initUI();
-//    m_window->show();
-
-//    m_window->startScreenshot();
+    //m_window->show();
+    //m_window->startScreenshot();
     if(nullptr != m_window){
         m_window->initAttributes();
         m_window->initResource();
         m_window->initLaunchMode(m_launchMode);
         m_window->showFullScreen();
-        // 平板模式录屏
-        if(Utils::isTabletEnvironment && m_launchMode == "screenRecord") {
+        //平板模式截图录屏
+        if (Utils::isTabletEnvironment) {
             //m_window->removeEventFilter(m_window);
-            m_window->tableRecordSet();
+            if (QString("screenRecord") == m_launchMode) {
+                m_window->tableRecordSet();
+            } else {
+                m_window->initPadShot();
+            }
         }
     }
 }

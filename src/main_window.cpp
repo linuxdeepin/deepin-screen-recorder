@@ -2981,6 +2981,21 @@ void MainWindow::tableRecordSet()
 
     startCountdown();
 }
+
+void MainWindow::initPadShot()
+{
+    recordX = 0;
+    recordY = 0;
+    recordWidth = QApplication::desktop()->width();
+    recordHeight = QApplication::desktop()->height();
+    updateToolBarPos();
+    updateShotButtonPos();
+    QPoint toolbarPoint;
+    toolbarPoint = QPoint(recordX + recordWidth - m_toolBar->width() - TOOLBAR_X_SPACING,std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
+    toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
+    m_toolBar->showAt(toolbarPoint);
+}
+
 void MainWindow::onViewShortcut()
 {
     //QRect rect = window()->geometry();
