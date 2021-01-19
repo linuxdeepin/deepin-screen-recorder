@@ -82,6 +82,9 @@ void MainToolWidget::initMainLabel()
     //    QString record_button_style = "DPushButton:press{QIcon(:/image/newUI/press/screencap-press.svg)}";
 
     m_recordBtn = new ToolButton();
+    if (Utils::isTabletEnvironment && nullptr != m_recordBtn) {
+        m_recordBtn->hide();
+    }
     DFontSizeManager::instance()->bind(m_recordBtn, DFontSizeManager::T8);
 
     m_recordBtn->setCheckable(true);
@@ -103,6 +106,9 @@ void MainToolWidget::initMainLabel()
 
 
     m_shotBtn = new ToolButton();
+    if (Utils::isTabletEnvironment && nullptr != m_shotBtn) {
+        m_shotBtn->hide();
+    }
     DFontSizeManager::instance()->bind(m_shotBtn, DFontSizeManager::T8);
 
     m_shotBtn->setText(tr("Screenshot"));
