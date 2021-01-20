@@ -634,6 +634,9 @@ void SubToolWidget::initShotLabel()
 
     //2019-10-15：添加截图选项按钮
     m_shotOptionButton = new ToolButton();
+    if (Utils::isTabletEnvironment && nullptr != m_shotOptionButton) {
+        m_shotOptionButton->hide();
+    }
     DFontSizeManager::instance()->bind(m_shotOptionButton, DFontSizeManager::T8);
     m_shotOptionButton->setText(tr("Options"));
     Utils::setAccessibility(m_shotOptionButton, AC_SUBTOOLWIDGET_SHOT_OPTION_BUT);
@@ -864,7 +867,11 @@ void SubToolWidget::initShotLabel()
 
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
-    rectLayout->setSizeConstraint(QLayout::SetFixedSize);
+    if (Utils::isTabletEnvironment) {
+        rectLayout->setSizeConstraint(QLayout::SetMinimumSize);
+    } else {
+        rectLayout->setSizeConstraint(QLayout::SetFixedSize);
+    }
     rectLayout->setMargin(0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(3);
@@ -1052,13 +1059,12 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
         } else if (shape == "text") {
             m_textButton->click();
         } else if (shape == "option") {
-            if(m_optionMenu->isHidden()){
+            if (m_optionMenu->isHidden() && !Utils::isTabletEnvironment) {
                 //m_shotOptionButton->click();
                 QPoint point = QWidget::mapToGlobal(m_shotOptionButton->pos());
                 m_optionMenu->move(point.x(),point.y()+m_shotOptionButton->size().height());
                 m_optionMenu->show();
-            }
-            else{
+            } else {
                 m_optionMenu->hide();
             }
         }else if (shape == "keyBoard") {
