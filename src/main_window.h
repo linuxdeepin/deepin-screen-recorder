@@ -74,7 +74,7 @@ class MainWindow : public DWidget
 
 //    Q_CLASSINFO("D-Bus Interface", "com.deepin.ScreenRecorder")
 
-    static const int CURSOR_BOUND;
+    //static const int CURSOR_BOUND;
     static const int RECORD_MIN_SIZE;
     static const int RECORD_MIN_HEIGHT;
     static const int RECORD_MIN_SHOT_SIZE;
@@ -327,6 +327,7 @@ private:
     bool m_initScreenShot;
     bool m_initScreenRecorder;
     RecorderTablet *m_tabletRecorderHandle = nullptr;
+    int m_cursorBound;
 };
 
 #endif //MAINWINDOW_H
