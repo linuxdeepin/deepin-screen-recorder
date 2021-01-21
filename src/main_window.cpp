@@ -1993,6 +1993,24 @@ bool MainWindow::saveAction(const QPixmap &pix)
         qDebug() << SaveToClipboard << "SaveToClipboard";
         break;
     }
+    case PadDefaultPath:{
+        QDir dir;
+        QString padImgPath = QString("%1%2%3")
+                .arg(QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first())
+                .arg(QDir::separator())
+                .arg(tr("screenshot"));
+        if (!dir.exists(padImgPath)) {
+            dir.mkpath(padImgPath);
+        }
+
+        if (selectAreaName.isEmpty()) {
+            m_saveFileName = QString("%1%2%3_%4.png").arg(padImgPath,QDir::separator(),tr("Screen Capture"), currentTime);
+        } else {
+            m_saveFileName = QString("%1%2%3_%4_%5.png").arg(padImgPath,QDir::separator(),tr("Screen Capture"), selectAreaName, currentTime);
+        }
+      
+        break;
+    }
     default:
         break;
     }
@@ -2045,7 +2063,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         } else {
             m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, tr("Screen Capture"), selectAreaName, currentTime, t_formatBuffix);
         }
-        qDebug() << m_saveFileName;
+
         if (!screenShotPix.save(m_saveFileName,  t_formatStr.toLatin1().data()))
             return false;
 

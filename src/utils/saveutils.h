@@ -9,7 +9,8 @@ enum SaveAction : unsigned int {
     AutoSave,
     SaveToSpecificDir,
     SaveToClipboard,
-    SaveToAutoClipboard
+    SaveToAutoClipboard,
+    PadDefaultPath //平板适配采用扩展的思维，尽量可能少的修改桌面代码
 };
 
 Q_DECLARE_METATYPE(SaveAction);

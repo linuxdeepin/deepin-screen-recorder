@@ -147,8 +147,12 @@ QVariant ConfigSettings::getDefaultValue(const QString &group, const QString &ke
               || key == "arrow_linewidth_index"
               || key == "straightline_linewidth_index") {
         value.setValue(1);
-    }else if(key == "save_op") {
-        value.setValue(SaveAction::SaveToClipboard);
+    } else if (key == "save_op") {
+        if (Utils::isTabletEnvironment) {
+            value.setValue(SaveAction::PadDefaultPath);
+        } else {
+            value.setValue(SaveAction::SaveToClipboard);
+        }
     }
     return  value;
 }
