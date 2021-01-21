@@ -201,6 +201,9 @@ public slots:
      */
     void initPadShot();
 
+    void exitScreenRecordEvent();
+    void exitScreenShotEvent();
+
 protected:
     bool eventFilter(QObject *object, QEvent *event);
     int getAction(QEvent *event);

@@ -124,11 +124,12 @@ MainWindow::MainWindow(DWidget *parent) :
     }
 
     setDragCursor();
-    QScreen *screen = qApp->primaryScreen();
-    m_pixelRatio = screen->devicePixelRatio();
+    //QScreen *screen = qApp->primaryScreen();
+    m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
 
     m_pScreenShotEvent =  new ScreenShotEvent();
     m_pScreenRecordEvent = new EventMonitor();
+
     // 初始化获取屏幕坐标信息
     QDBusInterface displayInterface("com.deepin.daemon.Display",
                                     "/com/deepin/daemon/Display",
@@ -602,6 +603,9 @@ void MainWindow::onHelp()
 void MainWindow::initResource()
 {
     m_showButtons = new ShowButtons(this);
+    if (!m_pScreenShotEvent || !m_showButtons)
+      return;
+  
     connect(m_showButtons, SIGNAL(keyShowSignal(const QString &)),
             this, SLOT(showKeyBoardButtons(const QString &)));
     //    resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_big.svg"));
@@ -617,6 +621,7 @@ void MainWindow::initResource()
     //    setDragCursor();
 
     buttonFeedback = new ButtonFeedback();
+
     connect(m_pScreenShotEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
     connect(m_pScreenShotEvent, SIGNAL(shotKeyPressEvent(const unsigned char &)), this, SLOT(onShotKeyPressEvent(const unsigned char &)), Qt::QueuedConnection);
     m_pScreenShotEvent->start();
@@ -697,12 +702,7 @@ void MainWindow::initScreenShot()
     }
     //    eventMonitor.quit();
     //    emit releaseEvent();
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-        m_pScreenRecordEvent->terminate();
-        m_pScreenRecordEvent->wait();
-    }
-
-
+    exitScreenRecordEvent();
     connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
 
     m_toolBar->setFocus();
@@ -710,6 +710,9 @@ void MainWindow::initScreenShot()
 
 void MainWindow::initScreenRecorder()
 {
+    if (!m_pScreenRecordEvent)
+      return;
+  
     if(!m_initScreenRecorder){
         m_initScreenRecorder = true;
     }
@@ -1042,20 +1045,8 @@ void MainWindow::responseEsc()
 {
     if (0 == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus){
         emit releaseEvent();
-        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && false == m_isZhaoxin){
-            if (nullptr != m_pScreenRecordEvent){
-                m_pScreenRecordEvent->terminate();
-                m_pScreenRecordEvent->wait();
-                m_pScreenRecordEvent = nullptr;
-            }
-            if(nullptr != m_pScreenShotEvent){
-                m_pScreenShotEvent->terminate();
-                if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
-                    m_pScreenShotEvent->wait();
-                    m_pScreenShotEvent = nullptr;
-                }
-            }
-        }
+        exitScreenRecordEvent();
+        exitScreenShotEvent();
         QApplication::quit();
     }
 }
@@ -1079,10 +1070,7 @@ void MainWindow::compositeChanged()
         } else {
             // 倒计时3s内， 从3D切换回2D直接退出。
             emit releaseEvent();
-            if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-                m_pScreenRecordEvent->terminate();
-                m_pScreenRecordEvent->wait();
-            }
+            exitScreenRecordEvent();
             QApplication::quit();
         }
 
@@ -1834,21 +1822,8 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
 
     QTimer::singleShot(2, [ = ] {
         emit releaseEvent();
-        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false)
-        {
-            if(nullptr != m_pScreenRecordEvent){
-                m_pScreenRecordEvent->terminate();
-                m_pScreenRecordEvent->wait();
-                m_pScreenRecordEvent = nullptr;
-            }
-            if(nullptr != m_pScreenShotEvent){
-                m_pScreenShotEvent->terminate();
-                if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
-                    m_pScreenShotEvent->wait();
-                    m_pScreenShotEvent = nullptr;
-                }
-            }
-        }
+        exitScreenRecordEvent();
+        exitScreenShotEvent();
         qApp->quit();
     });
 }
@@ -2269,20 +2244,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
                 qDebug() << "Key_Escape pressed: app quit!";
                 emit releaseEvent();
-                if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-                    if(nullptr != m_pScreenRecordEvent){
-                        m_pScreenRecordEvent->terminate();
-                        m_pScreenRecordEvent->wait();
-                        m_pScreenRecordEvent = nullptr;
-                    }
-                    if(nullptr != m_pScreenShotEvent){
-                        m_pScreenShotEvent->terminate();
-                        if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
-                            m_pScreenShotEvent->wait();
-                            m_pScreenShotEvent = nullptr;
-                        }
-                    }
-                }
+                exitScreenRecordEvent();
+                exitScreenShotEvent();
                 qApp->quit();
             } else if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
                 if (keyEvent->key() == Qt::Key_Question) {
@@ -2308,20 +2271,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             if (m_isShapesWidgetExist) {
                 if (keyEvent->key() == Qt::Key_Escape) {
                     emit releaseEvent();
-                    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-                        if(nullptr != m_pScreenRecordEvent){
-                            m_pScreenRecordEvent->terminate();
-                            m_pScreenRecordEvent->wait();
-                            m_pScreenRecordEvent = nullptr;
-                        }
-                        if(nullptr != m_pScreenShotEvent){
-                            m_pScreenShotEvent->terminate();
-                            if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
-                                m_pScreenShotEvent->wait();
-                                m_pScreenShotEvent = nullptr;
-                            }
-                        }
-                    }
+                    exitScreenRecordEvent();
+                    exitScreenShotEvent();
                     qApp->quit();
                 }
 
@@ -3022,6 +2973,28 @@ void MainWindow::initPadShot()
     m_toolBar->showAt(toolbarPoint);
 }
 
+void MainWindow::exitScreenRecordEvent()
+{
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86")
+            && !m_isZhaoxin
+            && m_pScreenRecordEvent) {
+        m_pScreenRecordEvent->terminate();
+        m_pScreenRecordEvent->wait();
+        m_pScreenRecordEvent = nullptr;
+    }
+}
+
+void MainWindow::exitScreenShotEvent()
+{
+    if (QSysInfo::currentCpuArchitecture().startsWith("x86")
+            && !m_isZhaoxin
+            && m_pScreenShotEvent) {
+        m_pScreenShotEvent->terminate();
+        m_pScreenShotEvent->wait();
+        m_pScreenShotEvent = nullptr;
+    }
+}
+
 void MainWindow::onViewShortcut()
 {
     //QRect rect = window()->geometry();
@@ -3456,10 +3429,7 @@ void MainWindow::stopRecord()
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
         hide();
         emit releaseEvent();
-        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-            m_pScreenRecordEvent->terminate();
-            m_pScreenRecordEvent->wait();
-        }
+        exitScreenRecordEvent();
         //正在保存录屏文件通知
         sendSavingNotify();
         // 停止闪烁
@@ -3623,22 +3593,8 @@ void MainWindow::initShapeWidget(QString type)
 void MainWindow::exitApp()
 {
     emit releaseEvent();
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin == false) {
-        if(nullptr != m_pScreenRecordEvent){
-            m_pScreenRecordEvent->terminate();
-            if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
-                m_pScreenRecordEvent->wait();
-                m_pScreenRecordEvent = nullptr;
-            }
-        }
-        if(nullptr != m_pScreenShotEvent){
-            m_pScreenShotEvent->terminate();
-            if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
-                m_pScreenShotEvent->wait();
-                m_pScreenShotEvent = nullptr;
-            }
-        }
-    }
+    exitScreenShotEvent();
+    exitScreenRecordEvent();
     qApp->quit();
 }
 int MainWindow::getRecordInputType(bool selectedMic, bool selectedSystemAudio)
