@@ -26,7 +26,8 @@ TRANSLATIONS += \
     $$PWD/translations/deepin-screen-recorder_sr.ts \
     $$PWD/translations/deepin-screen-recorder_tr.ts \
     $$PWD/translations/deepin-screen-recorder_uk.ts \
-    $$PWD/translations/deepin-screen-recorder_ug.ts
+    $$PWD/translations/deepin-screen-recorder_ug.ts \
+    $$PWD/translations/deepin-screen-recorder_bo.ts
 
 
 
