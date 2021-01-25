@@ -3066,7 +3066,8 @@ void MainWindow::checkCpuIsZhaoxin()
     process.waitForFinished();
     process.waitForReadyRead();
     QString str_output = process.readAllStandardOutput();
-    qDebug() << "is zhao xin:" << str_output;
+    // 安全问题， 日志隐私，暴露cpu类型
+    //qDebug() << "is zhao xin:" << str_output;
     if (str_output.length() == 0) {
         m_isZhaoxin = false;
     } else {

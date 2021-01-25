@@ -64,8 +64,8 @@ ConfigSettings::ConfigSettings(QObject *parent)
 */
     setValue("effect", "is_blur", false);
     setValue("effect", "is_mosaic", false);
-
-    qDebug() << "Setting file:" << m_settings->fileName();
+    // 日志隐私，配置文件路径会打印用户名，安全问题。
+    //qDebug() << "Setting file:" << m_settings->fileName();
 }
 
 ConfigSettings *ConfigSettings::m_configSettings = nullptr;
