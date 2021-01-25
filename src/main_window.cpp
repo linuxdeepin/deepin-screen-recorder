@@ -127,6 +127,8 @@ MainWindow::MainWindow(DWidget *parent) :
     //QScreen *screen = qApp->primaryScreen();
     m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
 
+    connect(qApp,&QGuiApplication::screenAdded,this,&MainWindow::onExit);
+    connect(qApp,&QGuiApplication::screenRemoved,this,&MainWindow::onExit);
     m_pScreenShotEvent =  new ScreenShotEvent();
     m_pScreenRecordEvent = new EventMonitor();
 
@@ -508,6 +510,15 @@ void MainWindow::forciblySavingNotify()
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
 }
 
+void MainWindow::onExit()
+{
+    if(RECORD_BUTTON_RECORDING == recordButtonStatus) {
+        stopRecord();
+    }else {
+        exitApp();
+    }
+}
+
 void MainWindow::initShortcut()
 {
     QShortcut *rectSC = new QShortcut(QKeySequence("R"), this);
@@ -526,54 +537,54 @@ void MainWindow::initShortcut()
 
     connect(rectSC, &QShortcut::activated, this, [ = ] {
         emit m_toolBar->shapeClickedFromMain("rect");
-        if (m_functionType == 1)
+        if (status::shot == m_functionType)
         {
             emit m_toolBar->shapeClickedFromMain("rect");
         }
 
     });
     connect(ovalSC, &QShortcut::activated, this, [ = ] {
-        if (m_functionType == 1)
+        if (status::shot == m_functionType)
         {
             emit m_toolBar->shapeClickedFromMain("circ");
         }
     });
     connect(arrowSC, &QShortcut::activated, this, [ = ] {
-        if (m_functionType == 1)
+        if (status::shot == m_functionType)
         {
             emit m_toolBar->shapeClickedFromMain("line");
         }
     });
     connect(lineSC, &QShortcut::activated, this, [ = ] {
-        if (m_functionType == 1)
+        if (status::shot == m_functionType)
         {
             emit m_toolBar->shapeClickedFromMain("pen");
         }
     });
     connect(textSC, &QShortcut::activated, this, [ = ] {
-        if (m_functionType == 1)
+        if (status::shot == m_functionType)
         {
             emit m_toolBar->shapeClickedFromMain("text");
         }
     });
 //    connect(optionSC, &QShortcut::activated, this, [ = ] {
-//        if (m_functionType == 1)
+//        if (status::shot == m_functionType)
 //            emit m_toolBar->shapeClickedFromMain("option");
 //    });
     connect(keyBoardSC, &QShortcut::activated, this, [ = ] {
-        if (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)
+        if (status::record == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus)
             emit m_toolBar->shapeClickedFromMain("keyBoard");
     });
     connect(mouseSC, &QShortcut::activated, this, [ = ] {
-        if (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)
+        if (status::record == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus)
             emit m_toolBar->shapeClickedFromMain("mouse");
     });
     connect(cameraSC, &QShortcut::activated, this, [ = ] {
-        if (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)
+        if (status::record == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus)
             emit m_toolBar->shapeClickedFromMain("camera");
     });
 //    connect(audioSC, &QShortcut::activated, this, [ = ] {
-//        if (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)
+//        if (status::record == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus)
 //            emit m_toolBar->shapeClickedFromMain("audio");
 //    });
 
@@ -592,7 +603,7 @@ void MainWindow::onHelp()
     if (iface.isValid()) {
         iface.call("ShowManual", "deepin-screen-recorder");
         // 录屏的时候，如果焦点还在录屏应用上，会导致录屏退出。添加条件判断，修复。
-        if((m_functionType == 1) || (m_functionType == 0 && RECORD_BUTTON_RECORDING != recordButtonStatus)) {
+        if((status::shot == m_functionType) || (status::record == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus)) {
             exitApp();
         }
     } else {
@@ -719,7 +730,7 @@ void MainWindow::initScreenRecorder()
     else {
         return;
     }
-    m_functionType = 0;
+    m_functionType = status::record;
     m_keyBoardStatus = false;
     m_mouseStatus = 0;
     m_repaintMainButton = false;
@@ -818,7 +829,7 @@ void MainWindow::initLaunchMode(const QString &launchMode)
         m_launchWithRecordFunc = true;
         m_shotButton->hide();
         m_recordButton->show();
-        m_functionType = 0;
+        m_functionType = status::record;
         initScreenRecorder();
         if (m_sideBar->isVisible()) {
             m_sideBar->hide();
@@ -1314,7 +1325,7 @@ void MainWindow::updateRecordButtonPos()
         }
     }
 
-    if (m_functionType == 0) {
+    if (status::record == m_functionType) {
         if (!m_recordButton->isVisible()) {
             m_recordButton->show();
         }
@@ -1366,7 +1377,7 @@ void MainWindow::updateShotButtonPos()
         }
     }
 
-    if (m_functionType == 1) {
+    if (status::shot == m_functionType) {
         if (!m_shotButton->isVisible()) {
             m_shotButton->show();
         }
@@ -1447,13 +1458,13 @@ void MainWindow::updateCameraWidgetPos()
 void MainWindow::changeFunctionButton(QString type)
 {
     if (type == "record") {
-        if (m_functionType == 0) {
+        if (status::record == m_functionType) {
             return;
         }
         m_shotButton->hide();
         //        updateRecordButtonPos();
         m_recordButton->show();
-        m_functionType = 0;
+        m_functionType = status::record;
         initScreenRecorder();
         if (m_sideBar->isVisible()) {
             m_sideBar->hide();
@@ -1461,7 +1472,7 @@ void MainWindow::changeFunctionButton(QString type)
     }
 
     else if (type == "shot") {
-        if (m_functionType == 1) {
+        if (status::shot == m_functionType) {
             return;
         }
         m_toolBar->setVideoButtonInit();
@@ -2165,7 +2176,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     // 2D窗管模式下，录屏背景用截图背景。
-    if (m_functionType == 1 || m_hasComposite == false) {
+    if (status::shot == m_functionType || m_hasComposite == false) {
         painter.setRenderHint(QPainter::Antialiasing, true);
         QRect backgroundRect;
 
@@ -2176,7 +2187,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
     }
 
     if (recordWidth > 0 && recordHeight > 0) {
-        if(Utils::isTabletEnvironment && m_functionType == 0) {
+        if(Utils::isTabletEnvironment && status::record == m_functionType) {
             // 屏蔽录屏， 不绘制线框
             return;
         }
@@ -2236,7 +2247,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         qDebug() << "key press:" << keyEvent->key();
-        if (m_functionType == 1) {
+        if (status::shot == m_functionType) {
             if (keyEvent->key() == Qt::Key_Escape ) {
                 if (m_isShapesWidgetExist) {
                     if (m_shapesWidget->textEditIsReadOnly()) {
@@ -2580,7 +2591,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
-        if (m_functionType == 1) {
+        if (status::shot == m_functionType) {
             bool isNeedRepaint = false;
 
             if (m_isShapesWidgetExist) {
@@ -2612,7 +2623,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (recordButtonStatus == RECORD_BUTTON_NORMAL && needRepaint) {
                     //showRecordButton();
                     updateToolBarPos();
-                    if (m_functionType == 1 && m_sideBar->isVisible()) {
+                    if (status::shot == m_functionType && m_sideBar->isVisible()) {
                         updateSideBarPos();
                     }
                     updateRecordButtonPos();
@@ -2628,7 +2639,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     if (event->type() == QEvent::MouseButtonDblClick) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         if (mouseEvent->button() == Qt::LeftButton) {
-            if (m_functionType == 1) {
+            if (status::shot == m_functionType) {
                 saveScreenShot();
             }
 
@@ -2676,7 +2687,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (!isFirstPressButton) {
                     return false;
                 }
-                if (m_functionType == 1) {
+                if (status::shot == m_functionType) {
                     if(m_menuController == nullptr){
                         m_menuController = new MenuController(this);
                         connect(m_menuController, &MenuController::saveAction,this, &MainWindow::saveScreenShot);
@@ -2700,7 +2711,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                     updateCursor(event);
                     updateToolBarPos();
-                    if (m_functionType == 1 && m_sideBar->isVisible()) {
+                    if (status::shot == m_functionType && m_sideBar->isVisible()) {
                         updateSideBarPos();
                         m_zoomIndicator->hide();
                     }
@@ -2717,7 +2728,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         }
                     }
 
-                    if (m_functionType == 0) {
+                    if (status::record == m_functionType) {
                         // Make sure record area not too small.
                         recordWidth = recordWidth < RECORD_MIN_SIZE ? RECORD_MIN_SIZE : recordWidth;
                         recordHeight = recordHeight < RECORD_MIN_HEIGHT ? RECORD_MIN_HEIGHT : recordHeight;
@@ -2731,7 +2742,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         }
                     }
 
-                    else if (m_functionType == 1) {
+                    else if (status::shot == m_functionType) {
                         // Make sure record area not too small.
                         recordWidth = recordWidth < RECORD_MIN_SHOT_SIZE ? RECORD_MIN_SHOT_SIZE : recordWidth;
                         recordHeight = recordHeight < RECORD_MIN_SHOT_SIZE ? RECORD_MIN_SHOT_SIZE : recordHeight;
@@ -2749,7 +2760,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                     //showRecordButton();
                     updateToolBarPos();
-                    if (m_functionType == 1 && m_sideBar->isVisible()) {
+                    if (status::shot == m_functionType && m_sideBar->isVisible()) {
                         updateSideBarPos();
                     }
                     updateRecordButtonPos();
@@ -2760,7 +2771,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
                         //showRecordButton();
                         updateToolBarPos();
-                        if (m_functionType == 1 && m_sideBar->isVisible()) {
+                        if (status::shot == m_functionType && m_sideBar->isVisible()) {
                             updateSideBarPos();
                         }
                         updateRecordButtonPos();
@@ -2796,7 +2807,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
 
             else {
-                if (m_functionType == 1) {
+                if (status::shot == m_functionType) {
                     if (!m_toolBar->isVisible() && !isFirstReleaseButton) {
                         //QPoint curPos = this->cursor().pos(); 采用全局坐标，替换局部坐标
                         QPoint curPos = mouseEvent->globalPos();
@@ -3240,13 +3251,13 @@ void MainWindow::shotFullScreen(bool isFull)
 
 void MainWindow::resizeTop(QMouseEvent *mouseEvent)
 {
-    if (m_functionType == 0) {
+    if (status::record == m_functionType) {
         int offsetY = mouseEvent->y() - dragStartY;
         recordY = std::max(std::min(dragRecordY + offsetY, dragRecordY + dragRecordHeight - RECORD_MIN_HEIGHT), 1);
         recordHeight = std::max(std::min(dragRecordHeight - offsetY, rootWindowRect.height()), RECORD_MIN_HEIGHT);
     }
 
-    else if (m_functionType == 1) {
+    else if (status::shot == m_functionType) {
         int offsetY = mouseEvent->y() - dragStartY;
         recordY = std::max(std::min(dragRecordY + offsetY, dragRecordY + dragRecordHeight - RECORD_MIN_SHOT_SIZE), 1);
         recordHeight = std::max(std::min(dragRecordHeight - offsetY, rootWindowRect.height()), RECORD_MIN_SHOT_SIZE);
@@ -3256,10 +3267,10 @@ void MainWindow::resizeTop(QMouseEvent *mouseEvent)
 
 void MainWindow::resizeBottom(QMouseEvent *mouseEvent)
 {
-    if (m_functionType == 0) {
+    if (status::record == m_functionType) {
         int offsetY = mouseEvent->y() - dragStartY;
         recordHeight = std::max(std::min(dragRecordHeight + offsetY, rootWindowRect.height()), RECORD_MIN_HEIGHT);
-    } else if (m_functionType == 1) {
+    } else if (status::shot == m_functionType) {
         int offsetY = mouseEvent->y() - dragStartY;
         recordHeight = std::max(std::min(dragRecordHeight + offsetY, rootWindowRect.height()), RECORD_MIN_SHOT_SIZE);
     }
@@ -3267,7 +3278,7 @@ void MainWindow::resizeBottom(QMouseEvent *mouseEvent)
 
 void MainWindow::resizeLeft(QMouseEvent *mouseEvent)
 {
-    if (m_functionType == 0) {
+    if (status::record == m_functionType) {
         int offsetX = mouseEvent->x() - dragStartX;
         recordX = std::max(std::min(dragRecordX + offsetX, dragRecordX + dragRecordWidth - RECORD_MIN_SIZE), 1);
         recordWidth = std::max(std::min(dragRecordWidth - offsetX, rootWindowRect.width()), RECORD_MIN_SIZE);
@@ -3281,10 +3292,10 @@ void MainWindow::resizeLeft(QMouseEvent *mouseEvent)
 
 void MainWindow::resizeRight(QMouseEvent *mouseEvent)
 {
-    if (m_functionType == 0) {
+    if (status::record == m_functionType) {
         int offsetX = mouseEvent->x() - dragStartX;
         recordWidth = std::max(std::min(dragRecordWidth + offsetX, rootWindowRect.width()), RECORD_MIN_SIZE);
-    } else if (m_functionType == 1) {
+    } else if (status::shot == m_functionType) {
         int offsetX = mouseEvent->x() - dragStartX;
         recordWidth = std::max(std::min(dragRecordWidth + offsetX, rootWindowRect.width()), RECORD_MIN_SHOT_SIZE);
     }

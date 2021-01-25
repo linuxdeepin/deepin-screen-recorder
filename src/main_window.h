@@ -101,6 +101,11 @@ class MainWindow : public DWidget
     static const int CAMERA_WIDGET_MIN_WIDTH;
     static const int CAMERA_WIDGET_MIN_HEIGHT;
 
+    enum status{
+        record = 0,
+        shot
+    };
+
 public:
     explicit MainWindow(DWidget *parent = nullptr);
     ~MainWindow()
@@ -151,6 +156,7 @@ signals:
     void deleteShapes();
 
 public slots:
+    void onExit();
     void startRecord();
     //void flashTrayIcon();
     //void iconActivated(QSystemTrayIcon::ActivationReason reason);
@@ -287,7 +293,7 @@ private:
     DPushButton *m_shotButton = nullptr;
     QList<KeyButtonWidget *> m_keyButtonList;
 
-    int m_functionType = 0;  //0: record, 1: shot
+    int m_functionType = status::record;  //0: record, 1: shot
     bool m_keyBoardStatus = false; //false: keyBoard off, true:keyBoard On
     int m_mouseStatus = 0; //0: keyBoard off, 1:keyBoard On
     bool m_repaintMainButton = false;//false: no need to repaint record button or shot button, true:...
