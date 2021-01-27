@@ -37,7 +37,7 @@ public:
     explicit EventMonitor(QObject *parent = nullptr);
     static void callback(XPointer trash, XRecordInterceptData *data);
     void handleRecordEvent(XRecordInterceptData *);
-    XFixesCursorImage* GetCursorImage();
+    //XFixesCursorImage* GetCursorImage();
 
 signals:
     void buttonedPress(int x, int y);

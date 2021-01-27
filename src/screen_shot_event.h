@@ -15,6 +15,7 @@ public:
 
     static void callback(XPointer trash, XRecordInterceptData *data);
     void handleRecordEvent(XRecordInterceptData *);
+    XFixesCursorImage* getCursorImage();
 
 signals:
     void activateWindow();

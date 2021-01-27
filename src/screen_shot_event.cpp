@@ -81,3 +81,13 @@ void ScreenShotEvent::handleRecordEvent(XRecordInterceptData *data)
     fflush(stdout);
     XRecordFreeData(data);
 }
+
+XFixesCursorImage *ScreenShotEvent::getCursorImage()
+{
+    Display *x11Display = XOpenDisplay(nullptr);
+    if(!x11Display){
+        fprintf(stderr, "unable to open display\n");
+        return nullptr;
+    }
+    return XFixesGetCursorImage(x11Display);
+}
