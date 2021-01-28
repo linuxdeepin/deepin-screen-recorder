@@ -3511,6 +3511,12 @@ void MainWindow::startCountdown()
             m_pRecorderRegion->initCameraInfo(m_cameraWidget->postion(), m_cameraWidget->geometry().size());
         }
     }
+
+    //先隐藏，再显示
+    //目的是解决触控操作无法选中部份应用程序的 QLineEdit 控件的问题
+    hide();
+    show();
+
     Utils::passInputEvent(static_cast<int>(this->winId()));
 
     repaint();
