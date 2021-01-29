@@ -3,6 +3,6 @@ set (PROJECT_NAME deepin-screen-recorder)
 project( ${PROJECT_NAME} )
 
 add_subdirectory(src)
-add_subdirectory(dde-dock-plugins)
+add_subdirectory(src/dde-dock-plugins)
 
 

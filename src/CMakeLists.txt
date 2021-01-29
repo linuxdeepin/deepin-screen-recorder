@@ -80,6 +80,7 @@ set ( deepin-screen-recorder_HDRS
     screen_shot_event.h
     lib/GifH/gif.h
     xgifrecord.h
+    recordertablet.h
     )
 
 set ( deepin-screen-recorder_SRCS
@@ -142,12 +143,13 @@ set ( deepin-screen-recorder_SRCS
     screen_shot_event.cpp
     RecorderRegionShow.cpp
     xgifrecord.cpp
+    recordertablet.cpp
     )
 
 set ( deepin-screen-recorder_RSCS
-    ../deepin-screen-recorder.qrc
-    widgets/resources.qrc
-    icons/icons.qrc
+    ../assets/image/deepin-screen-recorder.qrc
+    ../assets/resources/resources.qrc
+    ../assets/icons/icons.qrc
     )
 
 add_executable(${PROJECT_NAME}
@@ -162,3 +164,4 @@ pkg_check_modules(3rd_lib REQUIRED
 target_include_directories(${PROJECT_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} )
 target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES} ${LINK_DIR} )
 
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets/deepin-screen-recorder DESTINATION /usr/share/deepin-manual/manual-assets/application)

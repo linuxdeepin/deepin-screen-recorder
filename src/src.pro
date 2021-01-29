@@ -180,7 +180,7 @@ tablet_resources.files = ../image/tabletUI/fast-icon_recording_active.svg ../ima
 
 #INSTALLS += target icon desktop manual dbus_service shotShell
 #INSTALLS += target icon desktop manual dbus_service modload modprobe
-INSTALLS += target icon desktop dbus_service tablet_resources
+#INSTALLS += target icon desktop dbus_service tablet_resources
 
 isEmpty(TRANSLATIONS) {
      include(../translations.pri)
@@ -190,7 +190,12 @@ TRANSLATIONS_COMPILED = $$TRANSLATIONS
 TRANSLATIONS_COMPILED ~= s/\.ts/.qm/g
 
 translations.files = $$TRANSLATIONS_COMPILED
-INSTALLS += translations
+#INSTALLS += translations
+
+manual_dir.files = $$PWD/../assets/deepin-screen-recorder
+manual_dir.path= /usr/share/deepin-manual/manual-assets/application/
+INSTALLS += target icon desktop dbus_service tablet_resources translations manual_dir
+
 CONFIG *= update_translations release_translations
 
 CONFIG(update_translations) {
