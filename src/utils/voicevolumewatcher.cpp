@@ -4,11 +4,12 @@
 #include <QDebug>
 #include <QThread>
 
-voiceVolumeWatcher::voiceVolumeWatcher(QObject *parent) : QThread(parent)
+voiceVolumeWatcher::voiceVolumeWatcher(QObject *parent)
+    : QThread(parent)
+    , m_loopwatch(true)
+    , m_coulduse(true)
 {
-    m_loopwatch = true;
     //m_isRecoding = false;
-    m_coulduse = true;
 
     // 初始化Dus接口
     initDeviceWatcher();
@@ -21,9 +22,16 @@ voiceVolumeWatcher::~voiceVolumeWatcher()
 }
 
 //停止log循环读取
-void voiceVolumeWatcher::stopWatch()
+void voiceVolumeWatcher::setWatch(const bool &is)
 {
-    m_loopwatch = false;
+    QMutexLocker locker(&m_mutex);
+    m_loopwatch = is;
+}
+
+bool voiceVolumeWatcher::isWatch()
+{
+    QMutexLocker locker(&m_mutex);
+    return m_loopwatch;
 }
 /*
 void voiceVolumeWatcher::setIsRecoding(bool value)
@@ -33,20 +41,22 @@ void voiceVolumeWatcher::setIsRecoding(bool value)
 */
 void voiceVolumeWatcher::run()
 {
-    m_loopwatch = true;
-    //    QThread::currentThread()->msleep(200);
-
+    setWatch(true);
+    //QThread::currentThread()->msleep(200);
     static const double DBL_EPSILON = 0.000001;
     //static const double volumeLowMark = 0.2; //20% volume
-    while (m_loopwatch) {
+    //防止反复申请和释放内存，减少内存碎片
+    bool couldUse = false;
+    double currentMicrophoneVolume = 0.0;
+    while (isWatch()) {
         if(nullptr != m_defaultSource){
             //https://pms.uniontech.com/zentao/bug-view-52019.html
             AudioPort activePort = m_defaultSource->activePort();
             //qDebug() << "=========" << activePort.name << activePort.description << activePort.availability << "--------";
-            bool couldUse = false;
+            couldUse = false;
             if (isMicrophoneAvail(activePort.name)) {
-                double currentMicrophoneVolume = m_defaultSource->volume();
-                if(currentMicrophoneVolume > DBL_EPSILON) {
+                currentMicrophoneVolume = m_defaultSource->volume();
+                if (currentMicrophoneVolume > DBL_EPSILON) {
                     couldUse = true;
                 }
             }

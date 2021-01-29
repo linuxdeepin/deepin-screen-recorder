@@ -13,7 +13,8 @@ class voiceVolumeWatcher : public QThread
 public:
     explicit voiceVolumeWatcher(QObject *parent = nullptr);
     ~voiceVolumeWatcher();
-    void stopWatch();
+    void setWatch(const bool &is);
+    bool isWatch();
     void setIsRecoding(bool value);
     void run();
 protected:
@@ -50,10 +51,11 @@ private:
     //All available input ports.except loopback port.
     QMap<QString, Port> m_availableInputPorts;
 
-
     bool m_loopwatch;
     //bool m_isRecoding;
     bool m_coulduse;
+    //多线程加锁
+    QMutex m_mutex;
 };
 
 

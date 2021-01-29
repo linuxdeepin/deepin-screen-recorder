@@ -3507,8 +3507,8 @@ void MainWindow::startCountdown()
         adjustLayout(countdownLayout, countdownTooltip->rect().width(), countdownTooltip->rect().height());
         countdownTooltip->start();
 
-        m_pVoiceVolumeWatcher->stopWatch();
-        m_pCameraWatcher->stopWatch();
+        m_pVoiceVolumeWatcher->setWatch(false);
+        m_pCameraWatcher->setWatch(false);
     }
 
     if(m_hasComposite == false){

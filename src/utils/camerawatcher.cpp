@@ -5,11 +5,12 @@
 #include <QCameraInfo>
 #include <QDebug>
 
-CameraWatcher::CameraWatcher(QObject *parent) : QThread(parent)
+CameraWatcher::CameraWatcher(QObject *parent)
+    : QThread(parent)
+    , m_loopwatch(true)
+    , m_coulduse(true)
 {
-    m_loopwatch = true;
     //m_isRecoding = false;
-    m_coulduse = true;
 }
 
 CameraWatcher::~CameraWatcher()
@@ -17,11 +18,18 @@ CameraWatcher::~CameraWatcher()
 
 }
 
-//停止log循环读取
-void CameraWatcher::stopWatch()
+void CameraWatcher::setWatch(const bool &is)
 {
-    m_loopwatch = false;
+    QMutexLocker locker(&m_mutex);
+    m_loopwatch = is;
 }
+
+bool CameraWatcher::isWatch()
+{
+    QMutexLocker locker(&m_mutex);
+    return m_loopwatch;
+}
+
 /*
  * never used
 void CameraWatcher::setIsRecoding(bool value)
@@ -29,17 +37,20 @@ void CameraWatcher::setIsRecoding(bool value)
     m_isRecoding = value;
 }
 */
+
 void CameraWatcher::run()
 {
-    m_loopwatch = true;
+    setWatch(true);
     //    QThread::currentThread()->msleep(1000);
-    while (m_loopwatch) {
-
-        bool couldUse = false;
+    //防止反复申请和释放内存，减少内存碎片
+    bool couldUse = false;
+    while (isWatch()) {
+        couldUse = false;
         //qDebug() << "QCameraInfo::availableCameras()" << QCameraInfo::defaultCamera().deviceName();
         if (QCameraInfo::availableCameras().count() > 0) {
             couldUse = true;
         }
+
         if (couldUse != m_coulduse) {
             //发送log信息到UI
             m_coulduse = couldUse;

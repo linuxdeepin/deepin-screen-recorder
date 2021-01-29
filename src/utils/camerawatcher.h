@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QThread>
+#include <QMutex>
 
 class CameraWatcher : public QThread
 {
@@ -10,7 +11,8 @@ class CameraWatcher : public QThread
 public:
     explicit CameraWatcher(QObject *parent = nullptr);
     ~CameraWatcher();
-    void stopWatch();
+    void setWatch(const bool &is);
+    bool isWatch();
     //void setIsRecoding(bool value);
     void run();
 
@@ -22,6 +24,8 @@ private:
     bool m_loopwatch;
     //bool m_isRecoding;
     bool m_coulduse;
+    //多线程加锁
+    QMutex m_mutex;
 };
 
 #endif // CAMERAWATCHER_H

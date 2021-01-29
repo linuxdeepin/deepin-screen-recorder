@@ -110,10 +110,88 @@ public:
     explicit MainWindow(DWidget *parent = nullptr);
     ~MainWindow()
     {
-        if(m_pVoiceVolumeWatcher)
-            m_pVoiceVolumeWatcher->stopWatch();
-        if(m_pCameraWatcher)
-            m_pCameraWatcher->stopWatch();
+        if (m_pVoiceVolumeWatcher) {
+            m_pVoiceVolumeWatcher->setWatch(false);
+            m_pVoiceVolumeWatcher->wait();
+            m_pVoiceVolumeWatcher = nullptr;
+        }
+        if (m_pCameraWatcher) {
+            m_pCameraWatcher->setWatch(false);
+            m_pCameraWatcher->wait();
+            m_pCameraWatcher = nullptr;
+        }
+        if (m_pScreenRecordEvent) {
+            m_pScreenRecordEvent->terminate();
+            m_pScreenRecordEvent->wait();
+            m_pScreenRecordEvent = nullptr;
+        }
+        if (m_pScreenShotEvent) {
+            m_pScreenShotEvent->terminate();
+            m_pScreenShotEvent->wait();
+            m_pScreenShotEvent = nullptr;
+        }
+        if (m_showButtons) {
+            //退出进程，最好不用deleteLater，因为有可能等不到下一次事件循环，导致资源不能释放
+            delete m_showButtons;
+            m_showButtons = nullptr;
+        }
+        if (countdownTooltip) {
+            delete countdownTooltip;
+            countdownTooltip = nullptr;
+        }
+        if (buttonFeedback) {
+            delete buttonFeedback;
+            buttonFeedback = nullptr;
+        }
+        if (m_shapesWidget) {
+            delete m_shapesWidget;
+            m_shapesWidget = nullptr;
+        }
+        if (m_sizeTips) {
+            delete m_sizeTips;
+            m_sizeTips = nullptr;
+        }
+        if (m_toolBar) {
+            delete m_toolBar;
+            m_toolBar = nullptr;
+        }
+        if (m_recordButton) {
+            delete m_recordButton;
+            m_recordButton = nullptr;
+        }
+        if (m_shotButton) {
+            delete m_shotButton;
+            m_shotButton = nullptr;
+        }
+        if (m_zoomIndicator) {
+            delete m_zoomIndicator;
+            m_zoomIndicator = nullptr;
+        }
+        if (m_menuController) {
+            delete m_menuController;
+            m_menuController = nullptr;
+        }
+        if (m_cameraWidget) {
+            delete m_cameraWidget;
+            m_cameraWidget = nullptr;
+        }
+        if (m_tabletRecorderHandle) {
+            delete m_tabletRecorderHandle;
+            m_tabletRecorderHandle = nullptr;
+        }
+        if (m_sideBar) {
+            delete m_sideBar;
+            m_sideBar = nullptr;
+        }
+        if (m_pRecorderRegion) {
+            delete m_pRecorderRegion;
+            m_pRecorderRegion = nullptr;
+        }
+        for (int i = 0; i < m_keyButtonList.count(); i++) {
+            delete m_keyButtonList.at(i);
+        }
+        m_keyButtonList.clear();
+
         QThread::currentThread()->msleep(500);
     }
 

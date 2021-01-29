@@ -156,10 +156,11 @@ void Screenshot::setConfigThemeType(int themeType)
     ConfigSettings::instance()->setValue("common", "themeType", themeType);
 }
 
-
-Screenshot::~Screenshot() {
+Screenshot::~Screenshot() 
+{
     if(nullptr != m_window){
-        m_window->deleteLater();
+        //此处不能用deleteLater，未到下一次事件循环，进程都已经退出了
+        delete m_window;
         m_window = nullptr;
     }
 }
