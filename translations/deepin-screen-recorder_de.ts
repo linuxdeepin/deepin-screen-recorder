@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="de">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="de" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -73,11 +71,11 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>Die Bildschirmaufnahme-Datei wird gespeichert, bitte warten ...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>Da der Fenstereffekt während des Vorgangs deaktiviert ist, muss die Aufnahme gestoppt werden</translation>
     </message>
 </context>
 <context>
@@ -252,19 +250,19 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Ton</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"></translation>
+        <translation>Tastendruck</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"></translation>
+        <translation>Webcam</translation>
     </message>
     <message>
         <source>Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Klick</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -434,7 +432,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Edit in Draw</source>
-        <translation type="unfinished"></translation>
+        <translation>In Zeichnen bearbeiten</translation>
     </message>
     <message>
         <source>Show pointer</source>
@@ -445,7 +443,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"></translation>
+        <translation>Passe den Aufnahmebereich innerhalb von %1*%2 an, um einen besseren Videoeffekt zu erhalten</translation>
     </message>
 </context>
 <context>

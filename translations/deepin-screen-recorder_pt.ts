@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="pt">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="pt" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -77,7 +75,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>Como os efeitos visuais são desativados durante o processo, a gravação tem de ser interrompida</translation>
     </message>
 </context>
 <context>
@@ -252,19 +250,19 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Som</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"></translation>
+        <translation>Tecla</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"></translation>
+        <translation>Webcam</translation>
     </message>
     <message>
         <source>Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Clique</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -445,7 +443,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"></translation>
+        <translation> Ajustar a área de gravação dentro de %1*%2 para obter um melhor efeito de vídeo</translation>
     </message>
 </context>
 <context>

@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="sr">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="sr" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -77,7 +75,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>Ефекти прозора су искључени у току процеса, снимање је морало бити заустављено</translation>
     </message>
 </context>
 <context>
@@ -252,19 +250,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Звук</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"></translation>
+        <translation>Куцање</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"></translation>
+        <translation>Мрежна камера</translation>
     </message>
     <message>
         <source>Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Клик</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -314,11 +312,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Webcam On</source>
-        <translation>Укључи веб-камеру</translation>
+        <translation>Укључи камеру</translation>
     </message>
     <message>
         <source>Webcam Off</source>
-        <translation>Искључи веб-камеру</translation>
+        <translation>Искључи камеру</translation>
     </message>
     <message>
         <source>Show Click</source>
@@ -445,7 +443,7 @@ or press the shortcut again to stop recording</source>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"></translation>
+        <translation> подесите површину снимања у оквиру %1*%2 да добијете бољи видео ефекат</translation>
     </message>
 </context>
 <context>

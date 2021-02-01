@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="fi">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="fi" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -77,7 +75,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>Koska ikkunatehosteet on poistettu käytöstä prosessin aikana, tallennus on pysäytetty</translation>
     </message>
 </context>
 <context>
@@ -252,19 +250,19 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Ääni</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"></translation>
+        <translation>Näppäimistö</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"></translation>
+        <translation>Kamera</translation>
     </message>
     <message>
         <source>Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Napsautus</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -445,7 +443,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"></translation>
+        <translation> Säädä tallennuksen aluetta %1*%2 saadaksesi paremman videotehosteen</translation>
     </message>
 </context>
 <context>

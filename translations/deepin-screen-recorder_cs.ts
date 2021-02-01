@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="cs">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="cs" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -77,7 +75,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>Protože v průběhu byl vypnutý efekt pro okno, nahrávání bylo zastaveno</translation>
     </message>
 </context>
 <context>
@@ -252,19 +250,19 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Zvuk</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"></translation>
+        <translation>Stisknutí klávesy</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"></translation>
+        <translation>Webová kamera</translation>
     </message>
     <message>
         <source>Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Klepnutí</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -445,7 +443,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"></translation>
+        <translation> Upravte oblast nahrávání v %1*%2 a získejte tak lepší video efekt</translation>
     </message>
 </context>
 <context>

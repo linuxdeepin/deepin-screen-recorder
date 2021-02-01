@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="fr">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="fr" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -77,7 +75,7 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>Comme l&apos;effet de fenêtre est désactivé pendant le processus, l&apos;enregistrement doit être arrêté</translation>
     </message>
 </context>
 <context>
@@ -252,19 +250,19 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Son</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"></translation>
+        <translation>Frappe</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"></translation>
+        <translation>Caméra</translation>
     </message>
     <message>
         <source>Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Cliquer</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -445,7 +443,7 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"></translation>
+        <translation> Ajuster la zone d&apos;enregistrement dans %1 *%2 pour obtenir un meilleur effet vidéo</translation>
     </message>
 </context>
 <context>

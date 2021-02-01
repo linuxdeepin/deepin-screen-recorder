@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="tr">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="tr" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -77,7 +75,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>İşlem sırasında pencere efekti devre dışı bırakıldığı için, kayıt durdurulmalıdır.</translation>
     </message>
 </context>
 <context>
@@ -252,19 +250,19 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Ses</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"></translation>
+        <translation>Vuruş</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"></translation>
+        <translation>Webcam</translation>
     </message>
     <message>
         <source>Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Tıkla</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -445,7 +443,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"></translation>
+        <translation>Daha iyi video efekti elde etmek için kayıt alanını %1*%2 içinde ayarlayın</translation>
     </message>
 </context>
 <context>

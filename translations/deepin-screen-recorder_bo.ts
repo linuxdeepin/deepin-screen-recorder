@@ -75,7 +75,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"/>
+        <translation>ཕབ་བཟོ་བྱེད་པའི་བརྒྱུད་རིམ་ནང་སྒེའུ་ཁུང་གི་ཁྱད་ནུས་སྒོ་བརྒྱབ་པས། བརྙན་ལེན་མཚམས་བཞག་པ།</translation>
     </message>
 </context>
 <context>
@@ -250,23 +250,23 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"/>
+        <translation>སྒྲ་འབེབས།</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"/>
+        <translation>མཐེབ་གནོན།</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"/>
+        <translation>བརྙན་མིག </translation>
     </message>
     <message>
         <source>Click</source>
-        <translation type="unfinished"/>
+        <translation>གནོན་པ།</translation>
     </message>
     <message>
         <source>Start recording</source>
-        <translation type="unfinished"/>
+        <translation>བརྙན་འབེབས་གང་མགྱོགས་འགོ་སློང་།</translation>
     </message>
     <message>
         <source>Options</source>
@@ -443,7 +443,7 @@ or press the shortcut again to stop recording</source>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"/>
+        <translation>ཕབ་བཟོ་ཁུལ་ཁོངས་ཀྱི་ཁྱབ་ཁོངས་%1*%2ནང་ཚུན་ལེགས་སྒྲིག་བྱས་ན། བརྙན་འཕྲིན་གྱི་གྲུབ་འབྲས་དེ་བས་ཡག </translation>
     </message>
 </context>
 <context>

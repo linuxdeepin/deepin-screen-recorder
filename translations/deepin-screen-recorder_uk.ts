@@ -1,12 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="uk">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="uk" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Натисніть іконку в треї
+        <translation>Натисніть піктограму у лотку
 або натисніть гарячі клавіші ще раз, щоб зупинити запис</translation>
     </message>
 </context>
@@ -77,7 +75,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>Оскільки під час процедури було вимкнено ефекти вікон, запис довелося припинити</translation>
     </message>
 </context>
 <context>
@@ -252,19 +250,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Звук</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"></translation>
+        <translation>Натискання клавіш</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"></translation>
+        <translation>Вебкамера</translation>
     </message>
     <message>
         <source>Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Клацання</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -445,7 +443,7 @@ or press the shortcut again to stop recording</source>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"></translation>
+        <translation> Скоригуйте ділянку запису до %1*%2, щоб отримати краще відео</translation>
     </message>
 </context>
 <context>
