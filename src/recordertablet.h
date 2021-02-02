@@ -19,7 +19,6 @@ public:
 signals:
     Q_SCRIPTABLE void StatusBarIconChange(const QString &in0);
     Q_SCRIPTABLE void DropDownIconChange(const QString &in0);
-    Q_SCRIPTABLE void RecorderState(const bool isStart); // true begin recorder; false stop recorder;
     void finished();
 public slots:
     void update();

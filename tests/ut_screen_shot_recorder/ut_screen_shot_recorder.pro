@@ -38,7 +38,11 @@ QMAKE_LFLAGS += -g -Wall -fprofile-arcs -ftest-coverage  -O0
 
 #内存检测标签
 TSAN_TOOL_ENABLE = true
-equals(TSAN_TOOL_ENABLE, true ){
+ARCH = $$QMAKE_HOST.arch
+isEqual(ARCH, mips64) {
+    TSAN_TOOL_ENABLE = false
+}
+equals(TSAN_TOOL_ENABLE, true ) {
     #DEFINES += TSAN_THREAD #互斥
     DEFINES += ENABLE_TSAN_TOOL
     message("deepin-screen-recorder enabled TSAN function with set: " $$TSAN_TOOL_ENABLE)
@@ -134,6 +138,7 @@ HEADERS += test_all_interfaces.h \
         ../../src/event_monitor.h \
         ../../src/lib/GifH/gif.h \
         ../../src/xgifrecord.h \
+        ../../src/recordertablet.h \
         widgets/ut_shapeswidget.h \
         widgets/ut_toptips.h \
         widgets/ut_camerawidget.h \
@@ -193,4 +198,5 @@ SOURCES += main.cpp \
     ../../src/show_buttons.cpp \
     ../../src/screen_shot_event.cpp \
     ../../src/event_monitor.cpp \
-    ../../src/xgifrecord.cpp
+    ../../src/xgifrecord.cpp \
+    ../../src/recordertablet.cpp

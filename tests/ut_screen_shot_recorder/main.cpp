@@ -4,7 +4,9 @@
 #include <QCameraInfo>
 #include <QDBusMessage>
 #include <QtDBus>
+#ifdef ENABLE_TSAN_TOOL
 #include <sanitizer/asan_interface.h>
+#endif
 #include "test_all_interfaces.h"
 #include "stub.h"
 

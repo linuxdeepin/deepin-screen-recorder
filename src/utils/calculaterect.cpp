@@ -16,7 +16,7 @@
  */
 
 #include "calculaterect.h"
-#include "utils.h"
+#include "../utils.h"
 
 #include <cmath>
 
