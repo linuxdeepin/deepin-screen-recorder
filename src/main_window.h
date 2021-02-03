@@ -351,7 +351,7 @@ private:
     QPixmap m_backgroundPixmap;
     QPixmap m_resultPixmap;
     QPixmap resizeHandleBigImg;
-    QPixmap resizeHandleSmallImg;
+    //QPixmap resizeHandleSmallImg;
 
     QString selectAreaName = "";
     //dde-dock显示时长插件代替系统托盘

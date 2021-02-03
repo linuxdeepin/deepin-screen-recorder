@@ -32,7 +32,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-AudioUtils::AudioUtils(QObject *parent):process(nullptr)
+AudioUtils::AudioUtils(QObject *parent)
 {
     Q_UNUSED(parent);
 }

@@ -621,7 +621,7 @@ void MainWindow::initResource()
             this, SLOT(showKeyBoardButtons(const QString &)));
     //    resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_big.svg"));
     resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(":/newUI/normal/node.svg");
-    resizeHandleSmallImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_small.svg"));
+    //resizeHandleSmallImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_small.svg"));
 
 //　　　dde-dock显示时长插件代替系统托盘
 //    trayIcon = new QSystemTrayIcon(this);

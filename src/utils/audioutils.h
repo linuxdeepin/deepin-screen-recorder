@@ -40,7 +40,7 @@ private:
     //void initProcess();
 
 private:
-    QProcess *process;
+    //QProcess *process;
 
 };
 

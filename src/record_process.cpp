@@ -268,7 +268,7 @@ void RecordProcess::recordVideo()
         arguments << QString("-c:a"); // 音频编码器
         arguments << QString("libmp3lame");
         arguments << QString("-q:v"); // 视频质量，值越小，画质越好。
-        arguments << QString("20");
+        arguments << QString("6");
         //arguments << QString("31"); // 视频质量
         arguments << QString("-s");
         arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
