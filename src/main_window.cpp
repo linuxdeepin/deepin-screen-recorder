@@ -1221,7 +1221,7 @@ void MainWindow::updateSideBarPos()
                     }
 
                     else {
-                        sidebarPoint.setX(m_toolBar->x() - m_sideBar->width() - SIDEBAR_X_SPACING);
+                        sidebarPoint.setX(recordX - m_sideBar->width()- SIDEBAR_X_SPACING);
                         if (sidebarPoint.x() <= m_screenWidth - recordX) {
                             sidebarPoint.setX(recordX - m_sideBar->width() - SIDEBAR_X_SPACING);
                             if (sidebarPoint.x() <= 0) {
