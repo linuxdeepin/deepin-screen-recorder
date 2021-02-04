@@ -713,7 +713,8 @@ void MainWindow::initScreenShot()
     }
     //    eventMonitor.quit();
     //    emit releaseEvent();
-    exitScreenRecordEvent();
+    //初始化截图，不退出录屏全局事件监控
+    //exitScreenRecordEvent();
     connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
 
     m_toolBar->setFocus();
@@ -726,8 +727,7 @@ void MainWindow::initScreenRecorder()
   
     if(!m_initScreenRecorder){
         m_initScreenRecorder = true;
-    }
-    else {
+    } else {
         return;
     }
     m_functionType = status::record;

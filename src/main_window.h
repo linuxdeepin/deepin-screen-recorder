@@ -112,11 +112,14 @@ public:
     {
         if (m_pVoiceVolumeWatcher) {
             m_pVoiceVolumeWatcher->setWatch(false);
+            //run函数里面有sleep,所以此处加terminate
+            m_pVoiceVolumeWatcher->terminate();
             m_pVoiceVolumeWatcher->wait();
             m_pVoiceVolumeWatcher = nullptr;
         }
         if (m_pCameraWatcher) {
             m_pCameraWatcher->setWatch(false);
+            m_pCameraWatcher->terminate();
             m_pCameraWatcher->wait();
             m_pCameraWatcher = nullptr;
         }
@@ -192,7 +195,8 @@ public:
         }
         m_keyButtonList.clear();
 
-        QThread::currentThread()->msleep(500);
+        //以前的流程没执行到此处，没暴露延迟500ms的问题，以前的无用代码
+        //QThread::currentThread()->msleep(500);
     }
 
     enum ShotMouseStatus {
