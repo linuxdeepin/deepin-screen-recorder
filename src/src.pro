@@ -150,6 +150,7 @@ isEmpty(APPDIR):APPDIR=/usr/share/applications
 isEmpty(DSRDIR):DSRDIR=/usr/share/deepin-screen-recorder
 isEmpty(DOCDIR):DOCDIR=/usr/share/dman/deepin-screen-recorder
 isEmpty(ETCDIR):ETCDIR=/etc
+isEmpty(TABCONDIR):TABCONDIR=/etc/due-shell/json
 
 target.path = $$INSTROOT$$BINDIR
 icon.path = $$INSTROOT$$ICONDIR
@@ -162,7 +163,7 @@ translations.path = $$INSTROOT$$DSRDIR/translations
 
 #icon.files = image/deepin-screen-recorder.svg deepin-screenshot.svg
 #desktop.files = deepin-screen-recorder.desktop deepin-screenshot.desktop
-icon.files = ../image/deepin-screen-recorder.svg ../image/deepin-screenshot.svg
+icon.files = ../assets/image/deepin-screen-recorder.svg ../assets/image/deepin-screenshot.svg
 desktop.files = ../deepin-screen-recorder.desktop
 #manual.files = ../manual/*
 #shotShell.files = ../deepin-screenshot
@@ -172,10 +173,14 @@ desktop.files = ../deepin-screen-recorder.desktop
 dbus_service.files = $$PWD/../com.deepin.ScreenRecorder.service $$PWD/../com.deepin.Screenshot.service
 dbus_service.path = $$PREFIX/share/dbus-1/services
 
+#平板图标资源
 tablet_resources.path = $$INSTROOT$$DSRDIR/tablet_resources
-tablet_resources.files = ../image/tabletUI/fast-icon_recording_active.svg ../image/tabletUI/fast-icon_recording_normal.svg \
-            ../image/tabletUI/counting1.svg ../image/tabletUI/counting2.svg ../image/tabletUI/counting3.svg \
-            ../image/tabletUI/recording0.svg ../image/tabletUI/recording1.svg
+tablet_resources.files = ../assets/tabletUI/fast-icon_recording_active.svg ../assets/tabletUI/fast-icon_recording_normal.svg \
+            ../assets/tabletUI/counting1.svg ../assets/tabletUI/counting2.svg ../assets/tabletUI/counting3.svg \
+            ../assets/tabletUI/recording0.svg ../assets/tabletUI/recording1.svg
+#平板配置资源
+tablet_config.path = $$TABCONDIR
+tablet_config.files = ../assets/screenRecorder.json
 
 
 #INSTALLS += target icon desktop manual dbus_service shotShell
@@ -194,7 +199,7 @@ translations.files = $$TRANSLATIONS_COMPILED
 
 manual_dir.files = $$PWD/../assets/deepin-screen-recorder
 manual_dir.path= /usr/share/deepin-manual/manual-assets/application/
-INSTALLS += target icon desktop dbus_service tablet_resources translations manual_dir
+INSTALLS += target icon desktop dbus_service tablet_resources tablet_config translations manual_dir
 
 CONFIG *= update_translations release_translations
 
@@ -211,7 +216,7 @@ DSR_LANG_PATH += $$DSRDIR/translations
 DEFINES += "DSR_LANG_PATH=\\\"$$DSR_LANG_PATH\\\""
 
 DISTFILES += \
-    ../image/newUI/focus/close-focus.svg
+    ../assets/image/newUI/focus/close-focus.svg
 
 
 

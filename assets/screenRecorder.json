@@ -1,0 +1,17 @@
+{
+    "dbus info": {
+            "dbus_service": "com.deepin.TabletScreenRecorder",
+            "dbus_path": "/com/deepin/TabletScreenRecorder",
+            "dbus_interface": "com.deepin.TabletScreenRecorder"
+    },
+    "status bar": {
+            "default_icon": "/usr/share/deepin-screen-recorder/tablet_resources/fast-icon_recording_normal.svg",
+            "dbus_properties": "StatusBarIconChange",
+            "command": "dbus-send --print-reply --dest=com.deepin.ScreenRecorder /com/deepin/ScreenRecorder com.deepin.ScreenRecorder.stopRecord"
+    },
+    "drop down": {
+            "default_icon": "/usr/share/deepin-screen-recorder/tablet_resources/fast-icon_recording_normal.svg",
+            "dbus_properties": "DropDownIconChange",
+            "command": "dbus-send --print-reply --dest=com.deepin.ScreenRecorder /com/deepin/ScreenRecorder com.deepin.ScreenRecorder.stopRecord"
+    }
+}
