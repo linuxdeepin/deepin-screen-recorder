@@ -310,6 +310,7 @@ protected:
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
     void initBackground();
     QPixmap getPixmapofRect(const QRect &rect);
+    bool saveImg(const QPixmap &pix, const QString& fileName, const char* format = nullptr);
 private:
 //    QList<WindowRect> windowRects;
     QList<QRect> windowRects;

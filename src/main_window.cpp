@@ -1031,6 +1031,25 @@ QPixmap MainWindow::getPixmapofRect(const QRect &rect)
     bool ok;
     return m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
 }
+
+bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char *format)
+{
+    int quality = -1;
+    //qt5环境，经测试quality值对png效果明显，对jpg和bmp不明显
+    if (pix.width() * pix.height() > 1920 * 1080 && QString("PNG") == QString(format).toUpper()) {
+        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && !m_isZhaoxin) {
+            quality = 60;
+        } else if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin) {
+            quality = 70;
+        } else if (QSysInfo::currentCpuArchitecture().startsWith("arm")) {
+            quality = 75;
+        } else if (QSysInfo::currentCpuArchitecture().startsWith("mips")) {
+            quality = 80;
+        }
+    }
+    return pix.save(fileName,format,quality);
+}
+
 void MainWindow::showPressFeedback(int x, int y)
 {
     if (recordButtonStatus == RECORD_BUTTON_RECORDING && m_mouseStatus == 1) {
@@ -1845,7 +1864,8 @@ bool MainWindow::saveAction(const QPixmap &pix)
     emit releaseEvent();
 
     //    using namespace utils;
-    QPixmap screenShotPix = pix;
+    //不必要的拷贝，浪费时间
+    //QPixmap screenShotPix = pix;
     QDateTime currentDate;
     QString currentTime =  currentDate.currentDateTime().
             toString("yyyyMMddHHmmss");
@@ -2004,7 +2024,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
     if (m_saveIndex == SaveToSpecificDir && m_saveFileName.isEmpty()) {
         return false;
     } else if (m_saveIndex == SaveToSpecificDir || !m_saveFileName.isEmpty()) {
-        if (!screenShotPix.save(m_saveFileName,  QFileInfo(m_saveFileName).suffix().toLocal8Bit()))
+        if (!saveImg(pix, m_saveFileName, QFileInfo(m_saveFileName).suffix().toLocal8Bit()))
             return false;
     } else if (saveOption != QStandardPaths::TempLocation && m_saveFileName.isEmpty()) {
         QString savePath;
@@ -2051,7 +2071,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
             m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, tr("Screen Capture"), selectAreaName, currentTime, t_formatBuffix);
         }
 
-        if (!screenShotPix.save(m_saveFileName,  t_formatStr.toLatin1().data()))
+        if (!saveImg(pix, m_saveFileName, t_formatStr.toLatin1().data()))
             return false;
 
     } else if (m_saveIndex == AutoSave && m_saveFileName.isEmpty()) {
@@ -2126,7 +2146,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         }
 
 
-        if (!screenShotPix.save(m_saveFileName,  t_formatStr.toLatin1().data()))
+        if (!saveImg(pix, m_saveFileName, t_formatStr.toLatin1().data()))
             return false;
     }else if(m_saveIndex == SaveToClipboard){
         m_saveFileName = QString(tr("Clipboard"));
@@ -2134,8 +2154,8 @@ bool MainWindow::saveAction(const QPixmap &pix)
     // 保存到剪贴板
     if(Utils::is3rdInterfaceStart == false) {
         QMimeData *t_imageData = new QMimeData;
-        t_imageData->setImageData(screenShotPix);
-        Q_ASSERT(!screenShotPix.isNull());
+        t_imageData->setImageData(pix);
+        Q_ASSERT(!pix.isNull());
         QClipboard *cb = qApp->clipboard();
         cb->setMimeData(t_imageData, QClipboard::Clipboard);
         /*
