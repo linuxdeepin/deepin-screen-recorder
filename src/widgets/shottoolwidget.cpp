@@ -63,22 +63,23 @@ ShotToolWidget::ShotToolWidget(DWidget *parent) :
 
 ShotToolWidget::~ShotToolWidget()
 {
-    if(nullptr != m_buttonGroup){
-        m_buttonGroup->deleteLater();
-        m_buttonGroup = nullptr;
-    }
-    if(nullptr != m_thicknessBtnGroup){
-        m_thicknessBtnGroup->deleteLater();
-        m_thicknessBtnGroup = nullptr;
-    }
-    if(nullptr != m_funcBtnGroup){
-        m_funcBtnGroup->deleteLater();
-        m_funcBtnGroup = nullptr;
-    }
-    if(nullptr != m_rectLayout){
-        m_rectLayout->deleteLater();
-        m_rectLayout = nullptr;
-    }
+//指定父指针，利用qt对象树自动析构机制释放资源
+//    if(nullptr != m_buttonGroup){
+//        m_buttonGroup->deleteLater();
+//        m_buttonGroup = nullptr;
+//    }
+//    if(nullptr != m_thicknessBtnGroup){
+//        m_thicknessBtnGroup->deleteLater();
+//        m_thicknessBtnGroup = nullptr;
+//    }
+//    if(nullptr != m_funcBtnGroup){
+//        m_funcBtnGroup->deleteLater();
+//        m_funcBtnGroup = nullptr;
+//    }
+//    if(nullptr != m_rectLayout){
+//        m_rectLayout->deleteLater();
+//        m_rectLayout = nullptr;
+//    }
 }
 
 void ShotToolWidget::initWidget()
@@ -104,16 +105,16 @@ void ShotToolWidget::initRectLabel()
     m_rectSubTool = new DLabel(this);
     DPalette pa;
     //选择粗细按钮组
-    QButtonGroup *t_thicknessBtnGroup = new QButtonGroup();
+    QButtonGroup *t_thicknessBtnGroup = new QButtonGroup(this);
     t_thicknessBtnGroup->setExclusive(true);
 
     //选择功能按钮组
-    m_buttonGroup = new QButtonGroup();
+    m_buttonGroup = new QButtonGroup(this);
     m_buttonGroup->setExclusive(false);
     QList<ToolButton *> btnList;
 
     //粗细程度１级按钮
-    ToolButton *thickOneBtn = new ToolButton();
+    ToolButton *thickOneBtn = new ToolButton(this);
     //thickOneBtn->setObjectName("thickOneBtn");
     Utils::setAccessibility(thickOneBtn, AC_SHOTTOOLWIDGET_THICK_ONE_RECT);
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
@@ -122,7 +123,7 @@ void ShotToolWidget::initRectLabel()
     btnList.append(thickOneBtn);
 
     //粗细程度２级按钮
-    ToolButton *thickTwoBtn = new ToolButton();
+    ToolButton *thickTwoBtn = new ToolButton(this);
     //thickTwoBtn->setObjectName("thickTwoBtn");
     Utils::setAccessibility(thickTwoBtn, AC_SHOTTOOLWIDGET_THICK_TWO_RECT);
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
@@ -131,7 +132,7 @@ void ShotToolWidget::initRectLabel()
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
-    ToolButton *thickThreeBtn = new ToolButton();
+    ToolButton *thickThreeBtn = new ToolButton(this);
     //thickThreeBtn->setObjectName("thickThreeBtn");
     Utils::setAccessibility(thickThreeBtn, AC_SHOTTOOLWIDGET_THICK_THREE_RECT);
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
@@ -140,7 +141,7 @@ void ShotToolWidget::initRectLabel()
     btnList.append(thickThreeBtn);
 
 
-    QVBoxLayout *rectLayout = new QVBoxLayout();
+    QVBoxLayout *rectLayout = new QVBoxLayout(this);
     rectLayout->setContentsMargins(1, 4, 0, 0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(5);
@@ -186,7 +187,7 @@ void ShotToolWidget::initRectLabel()
     ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 0);
 
     rectLayout->addSpacing(2);
-    ToolButton *t_seperator = new ToolButton();
+    ToolButton *t_seperator = new ToolButton(this);
     pa = t_seperator->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
     pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
@@ -212,7 +213,7 @@ void ShotToolWidget::initRectLabel()
     m_blurRectButton->setIcon(QIcon::fromTheme("vague_normal"));
     btnList.append(m_blurRectButton);
     //马赛克按钮
-    m_mosaicRectButton = new ToolButton();
+    m_mosaicRectButton = new ToolButton(this);
     m_mosaicRectButton->setToolTip(tr("Mosaic"));
     //m_mosaicRectButton->setObjectName("mosaicBtn");
     Utils::setAccessibility(m_mosaicRectButton, AC_SHOTTOOLWIDGET_MOSAIC_RECT);
@@ -258,7 +259,7 @@ void ShotToolWidget::initRectLabel()
     }
 
     rectLayout->addSpacing(2);
-    ToolButton *t_seperator1 = new ToolButton();
+    ToolButton *t_seperator1 = new ToolButton(this);
     pa = t_seperator1->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
     pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
@@ -276,16 +277,16 @@ void ShotToolWidget::initCircLabel()
     DPalette pa;
 
     //选择粗细按钮组
-    m_thicknessBtnGroup = new QButtonGroup();
+    m_thicknessBtnGroup = new QButtonGroup(this);
     m_thicknessBtnGroup->setExclusive(true);
 
     //选择功能按钮组
-    m_funcBtnGroup = new QButtonGroup();
+    m_funcBtnGroup = new QButtonGroup(this);
     m_funcBtnGroup->setExclusive(false);
     QList<ToolButton *> btnList;
 
     //粗细程度１级按钮
-    ToolButton *thickOneBtn = new ToolButton();
+    ToolButton *thickOneBtn = new ToolButton(this);
     thickOneBtn->setObjectName("thickOneBtn");
     Utils::setAccessibility(thickOneBtn, AC_SHOTTOOLWIDGET_THICK_ONE_CIRC);
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
@@ -294,7 +295,7 @@ void ShotToolWidget::initCircLabel()
     btnList.append(thickOneBtn);
 
     //粗细程度２级按钮
-    ToolButton *thickTwoBtn = new ToolButton();
+    ToolButton *thickTwoBtn = new ToolButton(this);
     //thickTwoBtn->setObjectName("thickTwoBtn");
     Utils::setAccessibility(thickTwoBtn, AC_SHOTTOOLWIDGET_THICK_TWO_CIRC);
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
@@ -303,7 +304,7 @@ void ShotToolWidget::initCircLabel()
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
-    ToolButton *thickThreeBtn = new ToolButton();
+    ToolButton *thickThreeBtn = new ToolButton(this);
     //thickThreeBtn->setObjectName("thickThreeBtn");
     Utils::setAccessibility(thickThreeBtn, AC_SHOTTOOLWIDGET_THICK_THREE_CIRC);
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
@@ -311,7 +312,7 @@ void ShotToolWidget::initCircLabel()
     thickThreeBtn->setIcon(QIcon::fromTheme("brush big_normal"));
     btnList.append(thickThreeBtn);
 
-    m_rectLayout = new QVBoxLayout();
+    m_rectLayout = new QVBoxLayout(this);
     m_rectLayout->setContentsMargins(1, 4, 0, 0);
     m_rectLayout->setSpacing(0);
     m_rectLayout->addSpacing(5);
@@ -362,7 +363,7 @@ void ShotToolWidget::initCircLabel()
     ConfigSettings::instance()->setValue("oval", "linewidth_index", 0);
 
     m_rectLayout->addSpacing(2);
-    ToolButton *t_seperator = new ToolButton();
+    ToolButton *t_seperator = new ToolButton(this);
     pa = t_seperator->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
     pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
@@ -378,7 +379,7 @@ void ShotToolWidget::initCircLabel()
     ConfigSettings::instance()->setValue("oval", "is_mosaic", false);
 
     //模糊按钮
-    m_blurCircButton = new ToolButton();
+    m_blurCircButton = new ToolButton(this);
     m_blurCircButton->setToolTip(tr("Blur"));
     //m_blurCircButton->setObjectName("blurButton");
     Utils::setAccessibility(m_blurCircButton, AC_SHOTTOOLWIDGET_BLUR_CIRC);
@@ -388,7 +389,7 @@ void ShotToolWidget::initCircLabel()
     btnList.append(m_blurCircButton);
 
     //马赛克按钮
-    m_mosaicCircButton = new ToolButton();
+    m_mosaicCircButton = new ToolButton(this);
     m_mosaicCircButton->setToolTip(tr("Mosaic"));
     //m_mosaicCircButton->setObjectName("mosaicBtn");
     Utils::setAccessibility(m_mosaicCircButton, AC_SHOTTOOLWIDGET_MOSAIC_CIRC);
@@ -440,7 +441,7 @@ void ShotToolWidget::initCircLabel()
     }
 
     m_rectLayout->addSpacing(2);
-    ToolButton *t_seperator1 = new ToolButton();
+    ToolButton *t_seperator1 = new ToolButton(this);
     pa = t_seperator1->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
     pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
@@ -459,16 +460,16 @@ void ShotToolWidget::initLineLabel()
     DPalette pa;
 
     //选择粗细按钮组
-    QButtonGroup *t_thicknessBtnGroup = new QButtonGroup();
+    QButtonGroup *t_thicknessBtnGroup = new QButtonGroup(this);
     t_thicknessBtnGroup->setExclusive(true);
 
     //选择功能按钮组
-    QButtonGroup *t_funcBtnGroup = new QButtonGroup();
+    QButtonGroup *t_funcBtnGroup = new QButtonGroup(this);
     t_funcBtnGroup->setExclusive(true);
     QList<ToolButton *> btnList;
 
     //粗细程度１级按钮
-    ToolButton *thickOneBtn = new ToolButton();
+    ToolButton *thickOneBtn = new ToolButton(this);
     //thickOneBtn->setObjectName("thickOneBtn");
     Utils::setAccessibility(thickOneBtn, AC_SHOTTOOLWIDGET_THICK_ONE_LINE);
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
@@ -477,7 +478,7 @@ void ShotToolWidget::initLineLabel()
     btnList.append(thickOneBtn);
 
     //粗细程度２级按钮
-    ToolButton *thickTwoBtn = new ToolButton();
+    ToolButton *thickTwoBtn = new ToolButton(this);
     //thickTwoBtn->setObjectName("thickTwoBtn");
     Utils::setAccessibility(thickTwoBtn, AC_SHOTTOOLWIDGET_THICK_TWO_LINE);
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
@@ -486,7 +487,7 @@ void ShotToolWidget::initLineLabel()
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
-    ToolButton *thickThreeBtn = new ToolButton();
+    ToolButton *thickThreeBtn = new ToolButton(this);
     //thickThreeBtn->setObjectName("thickThreeBtn");
     Utils::setAccessibility(thickThreeBtn, AC_SHOTTOOLWIDGET_THICK_THREE_LINE);
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
@@ -494,7 +495,7 @@ void ShotToolWidget::initLineLabel()
     thickThreeBtn->setIcon(QIcon::fromTheme("brush big_normal"));
     btnList.append(thickThreeBtn);
 
-    QVBoxLayout *rectLayout = new QVBoxLayout();
+    QVBoxLayout *rectLayout = new QVBoxLayout(this);
     rectLayout->setContentsMargins(1, 4, 0, 0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(5);
@@ -537,7 +538,7 @@ void ShotToolWidget::initLineLabel()
     ConfigSettings::instance()->setValue("arrow", "straightline_linewidth_index", 0);
 
     rectLayout->addSpacing(2);
-    ToolButton *t_seperator = new ToolButton();
+    ToolButton *t_seperator = new ToolButton(this);
     pa = t_seperator->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
     pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
@@ -550,7 +551,7 @@ void ShotToolWidget::initLineLabel()
     btnList.clear();
 
     //直线按钮
-    ToolButton *blurButton = new ToolButton();
+    ToolButton *blurButton = new ToolButton(this);
     //blurButton->setObjectName("blurButton");
     Utils::setAccessibility(blurButton, AC_SHOTTOOLWIDGET_LINE_BUTTON);
     blurButton->setFixedSize(TOOL_BUTTON_SIZE);
@@ -559,7 +560,7 @@ void ShotToolWidget::initLineLabel()
     btnList.append(blurButton);
 
     //箭头按钮
-    ToolButton *mosaicBtn = new ToolButton();
+    ToolButton *mosaicBtn = new ToolButton(this);
     //mosaicBtn->setObjectName("mosaicBtn");
     Utils::setAccessibility(mosaicBtn, AC_SHOTTOOLWIDGET_ARROW_BUTTON);
     mosaicBtn->setFixedSize(TOOL_BUTTON_SIZE);
@@ -606,7 +607,7 @@ void ShotToolWidget::initLineLabel()
     }
 
     rectLayout->addSpacing(2);
-    ToolButton *t_seperator1 = new ToolButton();
+    ToolButton *t_seperator1 = new ToolButton(this);
     pa = t_seperator1->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
     pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
@@ -625,13 +626,13 @@ void ShotToolWidget::initPenLabel()
     DPalette pa;
 
     //选择粗细按钮组
-    QButtonGroup *t_thicknessBtnGroup = new QButtonGroup();
+    QButtonGroup *t_thicknessBtnGroup = new QButtonGroup(this);
     t_thicknessBtnGroup->setExclusive(true);
 
     QList<ToolButton *> btnList;
 
     //粗细程度１级按钮
-    ToolButton *thickOneBtn = new ToolButton();
+    ToolButton *thickOneBtn = new ToolButton(this);
     //thickOneBtn->setObjectName("thickOneBtn");
     Utils::setAccessibility(thickOneBtn, AC_SHOTTOOLWIDGET_THICK_ONE_PEN);
     thickOneBtn->setFixedSize(TOOL_BUTTON_SIZE);
@@ -640,7 +641,7 @@ void ShotToolWidget::initPenLabel()
     btnList.append(thickOneBtn);
 
     //粗细程度２级按钮
-    ToolButton *thickTwoBtn = new ToolButton();
+    ToolButton *thickTwoBtn = new ToolButton(this);
     //thickTwoBtn->setObjectName("thickTwoBtn");
     Utils::setAccessibility(thickTwoBtn, AC_SHOTTOOLWIDGET_THICK_TWO_PEN);
     thickTwoBtn->setFixedSize(TOOL_BUTTON_SIZE);
@@ -649,7 +650,7 @@ void ShotToolWidget::initPenLabel()
     btnList.append(thickTwoBtn);
 
     //粗细程度3级按钮
-    ToolButton *thickThreeBtn = new ToolButton();
+    ToolButton *thickThreeBtn = new ToolButton(this);
     //thickThreeBtn->setObjectName("thickThreeBtn");
     Utils::setAccessibility(thickThreeBtn, AC_SHOTTOOLWIDGET_THICK_THREE_PEN);
     thickThreeBtn->setFixedSize(TOOL_BUTTON_SIZE);
@@ -657,7 +658,7 @@ void ShotToolWidget::initPenLabel()
     thickThreeBtn->setIcon(QIcon::fromTheme("brush big_normal"));
     btnList.append(thickThreeBtn);
 
-    QVBoxLayout *rectLayout = new QVBoxLayout();
+    QVBoxLayout *rectLayout = new QVBoxLayout(this);
     rectLayout->setContentsMargins(1, 4, 0, 0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(5);
@@ -697,7 +698,7 @@ void ShotToolWidget::initPenLabel()
 
 
     rectLayout->addSpacing(70);
-    ToolButton *t_seperator = new ToolButton();
+    ToolButton *t_seperator = new ToolButton(this);
     pa = t_seperator->palette();
     pa.setColor(DPalette::Light, QColor("#1C1C1C"));
     pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
@@ -717,7 +718,7 @@ void ShotToolWidget::initTextLabel()
 {
     m_textSubTool = new DLabel(this);
 
-    DBlurEffectWidget *t_blurArea = new DBlurEffectWidget();
+    DBlurEffectWidget *t_blurArea = new DBlurEffectWidget(this);
     t_blurArea->setBlurRectXRadius(7);
     t_blurArea->setBlurRectYRadius(7);
     t_blurArea->setRadius(15);
@@ -727,9 +728,9 @@ void ShotToolWidget::initTextLabel()
     t_blurArea->setMaskColor(QColor(255, 255, 255, 0));
     t_blurArea->setFixedSize(TOOL_SLIDERBlUR_SIZE);
 
-    QVBoxLayout *t_blurAreaLayout = new QVBoxLayout();
+    QVBoxLayout *t_blurAreaLayout = new QVBoxLayout(this);
 
-    DSlider *t_textFontSize = new DSlider(Qt::Vertical);
+    DSlider *t_textFontSize = new DSlider(Qt::Vertical,this);
 
     t_textFontSize->slider()->setTickInterval(1);
     t_textFontSize->setFixedSize(TOOL_SLIDER_SIZE);
@@ -836,7 +837,7 @@ void ShotToolWidget::initTextLabel()
         */
     });
 
-    QVBoxLayout *rectLayout = new QVBoxLayout();
+    QVBoxLayout *rectLayout = new QVBoxLayout(this);
     rectLayout->setMargin(3);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(3);

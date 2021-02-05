@@ -87,7 +87,7 @@ SideBarWidget::SideBarWidget(DWidget *parent)
         m_closeButton->setNormalPic(":/newUI/dark/normal/close-normal_dark.svg");
     }
 
-    QVBoxLayout *VLayout = new QVBoxLayout();
+    QVBoxLayout *VLayout = new QVBoxLayout(this);
     VLayout->setMargin(0);
 //    VLayout->setSpacing(3);
     VLayout->addWidget(m_shotTool, 0,  Qt::AlignCenter);
