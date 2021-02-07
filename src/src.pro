@@ -75,8 +75,6 @@ HEADERS += main_window.h \
     #dbusinterface/drawinterface.h \
     screen_shot_event.h\
     RecorderRegionShow.h \
-    lib/GifH/gif.h \
-    xgifrecord.h \
     recordertablet.h
 
 SOURCES += main.cpp \
@@ -124,7 +122,6 @@ SOURCES += main.cpp \
     #dbusinterface/drawinterface.cpp \
     screen_shot_event.cpp\
     RecorderRegionShow.cpp \
-    xgifrecord.cpp \
     recordertablet.cpp
 
 QT += core

@@ -136,8 +136,8 @@ HEADERS += test_all_interfaces.h \
         ../../src/show_buttons.h \
         ../../src/screen_shot_event.h \
         ../../src/event_monitor.h \
-        ../../src/lib/GifH/gif.h \
-        ../../src/xgifrecord.h \
+        #../../src/lib/GifH/gif.h \
+        #../../src/xgifrecord.h \
         ../../src/recordertablet.h \
         widgets/ut_shapeswidget.h \
         widgets/ut_toptips.h \
@@ -198,5 +198,5 @@ SOURCES += main.cpp \
     ../../src/show_buttons.cpp \
     ../../src/screen_shot_event.cpp \
     ../../src/event_monitor.cpp \
-    ../../src/xgifrecord.cpp \
+    #../../src/xgifrecord.cpp \
     ../../src/recordertablet.cpp

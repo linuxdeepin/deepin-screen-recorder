@@ -25,16 +25,17 @@
 #define RECORDPROCESS_H
 
 #include "utils/desktopinfo.h"
-#include "xgifrecord.h"
 #include "utils/configsettings.h"
 
 #include <QProcess>
-#include <QThread>
+#include <QObject>
 #include <QRect>
 
 #include <proc/readproc.h>
 #include <proc/sysinfo.h>
-class RecordProcess : public QThread
+
+//不需要开启线程，用信号槽代替 process->waitForFinished(-1); 避免线程等待浪费系统资源
+class RecordProcess  : public QObject
 {
     Q_OBJECT
 
@@ -64,15 +65,28 @@ public:
     void startRecord();
     //void setIsZhaoXinPlatform(bool status);
     void stopRecord();
-    void recordGIF();
     void recordVideo();
     void initProcess();
     //int readSleepProcessPid();
-protected:
-    void run();
+
+private slots:
+    /**
+     * @brief onRecordFinish:录屏完成
+     */
+    void onRecordFinish();
+
+    /**
+     * @brief onStartTranscode:开始转码
+     */
+    void onStartTranscode();
+
+    /**
+     * @brief onTranscodeFinish:转码完成
+     */
+    void onTranscodeFinish();
 
 private:
-    QProcess *process = nullptr;
+    QProcess *m_recorderProcess = nullptr;
 
     int recordType = 0;
     int recordAudioInputType = 0;
@@ -95,8 +109,7 @@ private:
     //QString lastAudioSink;
     //bool m_isZhaoxin = false;
     DesktopInfo m_info;
-    //x11 gif 录屏模块
-    XGifRecord *m_pXGifRecord = nullptr;
+    QProcess *m_pTranscodeProcess = nullptr;
 };
 
 #endif //RECORDPROCESS_H

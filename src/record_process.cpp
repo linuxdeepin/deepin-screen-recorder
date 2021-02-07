@@ -50,7 +50,7 @@ const int RecordProcess::RECORD_FRAMERATE_20 = 20;
 const int RecordProcess::RECORD_FRAMERATE_24 = 24;
 const int RecordProcess::RECORD_FRAMERATE_30 = 30;
 
-RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
+RecordProcess::RecordProcess(QObject *parent) : QObject(parent)
 {
     settings = ConfigSettings::instance();
     m_framerate = RECORD_FRAMERATE_24;
@@ -95,11 +95,6 @@ RecordProcess::RecordProcess(QObject *parent) : QThread(parent)
 
 RecordProcess::~RecordProcess()
 {
-    if(nullptr != m_pXGifRecord ){
-        m_pXGifRecord->wait();
-        delete m_pXGifRecord;
-        m_pXGifRecord = nullptr;
-    }
 }
 
 void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filename)
@@ -123,66 +118,111 @@ void RecordProcess::setRecordAudioInputType(int inputType)
     recordAudioInputType = inputType;
 }
 
-
-
-void RecordProcess::run()
+void RecordProcess::onStartTranscode()
 {
-    // Start record.
-    QVariant t_saveGifVar = settings->value("recordConfig", "save_as_gif");
-    QVariant t_frameRateVar = settings->value("recordConfig", "mkv_framerate");
-    //保持帧数的配置文件判断
-    int t_frameRate = t_frameRateVar.toString().toInt();
-    m_framerate = t_frameRate;
-    if (t_saveGifVar.toString() == "true") {
-        recordType = RECORD_TYPE_GIF;
-    } else {
-        recordType = RECORD_TYPE_VIDEO;
+    QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
+                                                                                             "/com/deepin/ScreenRecorder/time",
+                                                                                             "com.deepin.ScreenRecorder.time",
+                                                                                             "onStop"));
+    if (QDBusMessage::ReplyMessage == message.type()){
+        if(!message.arguments().takeFirst().toBool())
+            qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
+    }
+    m_pTranscodeProcess = new QProcess();
+    connect(m_pTranscodeProcess, SIGNAL(finished(int)), this, SLOT(onTranscodeFinish()));
+    connect(m_pTranscodeProcess, SIGNAL(finished(int)), m_recorderProcess, SLOT(deleteLater()));
+    QString path = savePath;
+    QStringList arg;
+    arg << "-i";
+    arg << savePath;
+    arg << "-r";
+    arg << "24";
+    arg << path.replace("mp4","gif");
+    m_pTranscodeProcess->start("ffmpeg",arg);
+}
+
+void RecordProcess::onTranscodeFinish()
+{
+    QString path = savePath;
+    QString gifOldPath = path.replace("mp4","gif");
+    QString gifNewPath = QDir(saveDir).filePath(saveBaseName).replace(QString("mp4"),QString("gif"));
+    qDebug() << "" << savePath << gifOldPath << gifNewPath;
+    QFile::rename(gifOldPath, gifNewPath);
+    QDBusInterface notification("org.freedesktop.Notifications",
+                                "/org/freedesktop/Notifications",
+                                "org.freedesktop.Notifications",
+                                QDBusConnection::sessionBus());
+    QStringList actions;
+    actions << "_open" << tr("View");
+    QVariantMap hints;
+    hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(gifNewPath);
+    int timeout = -1;
+    unsigned int id = 0;
+    QList<QVariant> arg;
+    arg << (QCoreApplication::applicationName())                 // appname
+        << id                                                    // id
+        << QString("deepin-screen-recorder")                     // icon
+        << tr("Recording finished")                              // summary
+        << QString(tr("Saved to %1")).arg(gifNewPath)            // body
+        << actions                                               // actions
+        << hints                                                 // hints
+        << timeout;                                              // timeout
+    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+    QFile::remove(savePath);
+    QApplication::quit();
+}
+
+void RecordProcess::onRecordFinish()
+{
+    QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
+                                                                                             "/com/deepin/ScreenRecorder/time",
+                                                                                             "com.deepin.ScreenRecorder.time",
+                                                                                             "onStop"));
+    if (QDBusMessage::ReplyMessage == message.type()){
+        if(!message.arguments().takeFirst().toBool())
+            qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
     }
 
-    recordType == RECORD_TYPE_GIF ? recordGIF() : recordVideo();
-
-    // Got output or error.
-    process->waitForFinished(-1);
-    if (process->exitCode() != 0) {
+    if (QProcess::ProcessState::NotRunning != m_recorderProcess->exitCode()) {
         qDebug() << "Error";
-        foreach (auto line, (process->readAllStandardError().split('\n'))) {
+        foreach (auto line, (m_recorderProcess->readAllStandardError().split('\n'))) {
             qDebug() << line;
         }
     } else {
-        qDebug() << "OK" << process->readAllStandardOutput() << process->readAllStandardError();
-    }
-}
-
-void RecordProcess::recordGIF()
-{
-    initProcess();
-
-    if(nullptr == m_pXGifRecord){
-        m_pXGifRecord = new XGifRecord(m_recordRect,savePath);
-    }
-    if(nullptr != m_pXGifRecord ){
-        m_pXGifRecord->start();
+        qDebug() << "OK" << m_recorderProcess->readAllStandardOutput() << m_recorderProcess->readAllStandardError();
     }
 
+    // Move file to save directory.
+    QString newSavePath = QDir(saveDir).filePath(saveBaseName);
+    QFile::rename(savePath, newSavePath);
 
-    // byzanz-record use command follow option --exec to stop recording gif.
-    // So we use command "sleep 365d" (sleep 365 days, haha) to make byzanz-record keep recording.
-    // We just need kill "sleep" process when we want stop recording gif.
-    // NOTE: don't kill byzanz-record process directly, otherwise recording content in system memory can't flush to disk.
-//    QString sleepCommand = "sleep 365d";
 
-//    QStringList arguments;
-//    arguments << QString("--cursor");
-//    arguments << QString("--x=%1").arg(m_recordRect.x()) << QString("--y=%1").arg(m_recordRect.y());
-//    arguments << QString("--width=%1").arg(m_recordRect.width()) << QString(    "--height=%1").arg(m_recordRect.height());
-//    arguments << QString("--exec=%1").arg(sleepCommand);
-//    arguments << savePath;
+    // Popup notify.
+    QDBusInterface notification("org.freedesktop.Notifications",
+                                "/org/freedesktop/Notifications",
+                                "org.freedesktop.Notifications",
+                                QDBusConnection::sessionBus());
 
-//    process->start("byzanz-record", arguments);
+    QStringList actions;
+    actions << "_open" << tr("View");
 
-//    byzanzProcessId = static_cast<int>(process->pid());
+    QVariantMap hints;
+    hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
+    int timeout = -1;
+    unsigned int id = 0;
 
-//    qDebug() << "byzanz-record pid: " << byzanzProcessId;
+    QList<QVariant> arg;
+    arg << (QCoreApplication::applicationName())                 // appname
+        << id                                                    // id
+        << QString("deepin-screen-recorder")                     // icon
+        << tr("Recording finished")                              // summary
+        << QString(tr("Saved to %1")).arg(newSavePath)           // body
+        << actions                                               // actions
+        << hints                                                 // hints
+        << timeout;                                              // timeout
+    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+
+    QApplication::quit();
 }
 
 void RecordProcess::recordVideo()
@@ -362,23 +402,22 @@ void RecordProcess::recordVideo()
     }
 
     arguments << savePath;
-    qDebug() << "arguments:" << arguments;
-    process->start("ffmpeg", arguments);
+    m_recorderProcess->start("ffmpeg", arguments);
 }
 
 void RecordProcess::initProcess()
 {
     // Create process and handle finish signal.
-    process = new QProcess();
+    m_recorderProcess = new QProcess();
 
     // Disable scaling of byzanz-record (GTK3 based) here, because we pass subprocesses
     // absolute device geometry information, byzanz-record should not scale the information
     // one more time.
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("GDK_SCALE", "1");
-    process->setProcessEnvironment(env);
+    m_recorderProcess->setProcessEnvironment(env);
 
-    connect(process, SIGNAL(finished(int)), process, SLOT(deleteLater()));
+    connect(m_recorderProcess, SIGNAL(finished(int)), m_recorderProcess, SLOT(deleteLater()));
 
     // Build temp save path.
     QDateTime date = QDateTime::currentDateTime();
@@ -387,7 +426,8 @@ void RecordProcess::initProcess()
         if (settings->value("recordConfig", "lossless_recording").toBool()) {
             fileExtension = "flv";
         } else {
-            fileExtension = "gif";
+            //先录制mp4再转gif
+            fileExtension = "mp4";
         }
     } else {
         if (settings->value("recordConfig", "lossless_recording").toBool()) {
@@ -398,7 +438,6 @@ void RecordProcess::initProcess()
     }
     saveBaseName = QString("%1_%2_%3.%4").arg(tr("Screen Capture")).arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
     savePath = QDir(saveTempDir).filePath(saveBaseName);
-
     // Remove same cache file first.
     QFile file(savePath);
     file.remove();
@@ -406,8 +445,14 @@ void RecordProcess::initProcess()
 
 void RecordProcess::startRecord()
 {
-    QThread::start();
-
+    m_framerate = settings->value("recordConfig", "mkv_framerate").toString().toInt();
+    if (settings->value("recordConfig", "save_as_gif").toBool()) {
+        recordType = RECORD_TYPE_GIF;
+        setRecordAudioInputType(RECORD_TYPE_GIF);
+    } else {
+        recordType = RECORD_TYPE_VIDEO;
+    }
+    recordVideo();
     if(Utils::isTabletEnvironment) {
         return;
     }
@@ -420,6 +465,7 @@ void RecordProcess::startRecord()
             qDebug() << "dde dock screen-recorder-plugin did not receive start message!";
     }
 }
+
 /*
 void RecordProcess::setIsZhaoXinPlatform(bool status)
 {
@@ -504,56 +550,11 @@ int RecordProcess::readSleepProcessPid()
 
 void RecordProcess::stopRecord()
 {
-    if (recordType == RECORD_TYPE_GIF) {
-        if(nullptr != m_pXGifRecord ){
-            m_pXGifRecord->stop();
-        }
-//        int byzanzChildPid = readSleepProcessPid();
-//        kill(byzanzChildPid, SIGKILL);
-        //qDebug() << "Kill byzanz-record's child process (sleep) pid: " << byzanzChildPid;
+    qDebug() << Q_FUNC_INFO;
+    m_recorderProcess->write("q");
+    if(RECORD_TYPE_GIF == recordType){
+        connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onStartTranscode()));
     } else {
-        //process->terminate();
-        process->write("q");
+        connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onRecordFinish()));
     }
-    QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
-                                                                                             "/com/deepin/ScreenRecorder/time",
-                                                                                             "com.deepin.ScreenRecorder.time",
-                                                                                             "onStop"));
-    if (QDBusMessage::ReplyMessage == message.type()){
-        if(!message.arguments().takeFirst().toBool())
-            qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
-    }
-
-    wait();
-    // Move file to save directory.
-    QString newSavePath = QDir(saveDir).filePath(saveBaseName);
-    QFile::rename(savePath, newSavePath);
-
-
-    // Popup notify.
-    QDBusInterface notification("org.freedesktop.Notifications",
-                                "/org/freedesktop/Notifications",
-                                "org.freedesktop.Notifications",
-                                QDBusConnection::sessionBus());
-
-    QStringList actions;
-    actions << "_open" << tr("View");
-
-    QVariantMap hints;
-    hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
-    int timeout = -1;
-    unsigned int id = 0;
-
-    QList<QVariant> arg;
-    arg << (QCoreApplication::applicationName())                 // appname
-        << id                                    // id
-        << QString("deepin-screen-recorder")                     // icon
-        << tr("Recording finished")                              // summary
-        << QString(tr("Saved to %1")).arg(newSavePath) // body
-        << actions                                               // actions
-        << hints                                                 // hints
-        << timeout;                                              // timeout
-    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
-
-    QApplication::quit();
 }

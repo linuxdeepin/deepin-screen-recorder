@@ -68,20 +68,20 @@ static QString currentCpuArchitecture_stub(void* obj)
     return  "mips";
 }
 
-TEST_F(RecordProcessTest, recordGIF)
-{
-    stub.set(ADDR(ConfigSettings, value), getOption_gif_stub);
-    RecordProcess *m_process;
-    m_process = new RecordProcess;
-    m_process->setRecordAudioInputType(RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO);
-    m_process->setRecordInfo(QRect(0, 0, 1920, 1080), "gif");
-    m_process->startRecord();
-    QEventLoop loop;
-    QTimer::singleShot(5000, &loop, SLOT(quit()));
-    loop.exec();
-    m_process->stopRecord();
-    delete  m_process;
-}
+//TEST_F(RecordProcessTest, recordGIF)
+//{
+//    stub.set(ADDR(ConfigSettings, value), getOption_gif_stub);
+//    RecordProcess *m_process;
+//    m_process = new RecordProcess;
+//    m_process->setRecordAudioInputType(RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO);
+//    m_process->setRecordInfo(QRect(0, 0, 1920, 1080), "gif");
+//    m_process->startRecord();
+//    QEventLoop loop;
+//    QTimer::singleShot(5000, &loop, SLOT(quit()));
+//    loop.exec();
+//    m_process->stopRecord();
+//    delete  m_process;
+//}
 
 //TEST_F(RecordProcessTest, recordVideoMp4)
 //{
