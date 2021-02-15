@@ -5,7 +5,8 @@
         <location filename="../src/countdown_tooltip.cpp" line="78"/>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation type="unfinished"/>
+        <translation>Κάντε κλικ το εικονίδιο της ειδοποίησης
+ή ξανά τη συντόμευση για λήξη της εγγραφής</translation>
     </message>
 </context>
 <context>
@@ -13,7 +14,7 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/main_window.cpp" line="76"/>
         <source>Deepin screen recorder</source>
-        <translation> Kαταγραφέας Oθόνης Deepin</translation>
+        <translation>Kαταγραφέας οθόνης Deepin</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="136"/>
@@ -41,7 +42,7 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/record_process.cpp" line="301"/>
         <source>Recording finished</source>
-        <translation type="unfinished"/>
+        <translation>Η εγγραφή ολοκληρώθηκε</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="302"/>
@@ -56,7 +57,7 @@ or press the shortcut again to stop recording</source>
         <source>Click or drag to
 select the area to record</source>
         <translation>Κάντε κλικ ή σύρετε για να
- επιλέξετε την περιοχή για εγγραφή</translation>
+ επιλέξετε την περιοχή εγγραφής</translation>
     </message>
 </context>
 </TS>
