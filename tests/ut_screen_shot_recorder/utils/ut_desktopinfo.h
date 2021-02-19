@@ -22,8 +22,3 @@ TEST_F(DesktopInfoTest, waylandDectected)
 {
     EXPECT_FALSE(deskInfo.waylandDectected());
 }
-
-TEST_F(DesktopInfoTest, windowManager)
-{
-    EXPECT_NE(DesktopInfo::OTHER, deskInfo.windowManager());
-}

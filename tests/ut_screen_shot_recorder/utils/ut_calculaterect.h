@@ -58,7 +58,7 @@ TEST_F(CalculaterectTest, test_base)
     fourPoints << point1 << point2 << point3 << point4;
     mainPoints << point1 << point2 << point3 << point4;
 
-    EXPECT_TRUE(pointClickIn(QPointF(0, 0), QPointF(10, 10), 100));
+    EXPECT_FALSE(pointClickIn(QPointF(0, 0), QPointF(10, 10), 100));
     EXPECT_TRUE(pointOnLine(point1,  point2,  point3));
     EXPECT_EQ(5,  getDistance(point1, point4));
 

@@ -39,9 +39,9 @@ TEST_F(ScreenGrabberTest, grabEntireDesktop)
 TEST_F(ScreenGrabberTest, grabEntireDesktop_wayland)
 {
     stub.set(ADDR( DesktopInfo, waylandDectected), waylandDectected_stub);
-    bool ok = false;
+    bool ok = true;
     QRect rect;
     QPixmap pix = screenGrabber.grabEntireDesktop(ok, rect, 0);
     qDebug() << pix.rect();
-    EXPECT_EQ(true, ok);
+    EXPECT_EQ(false, ok);
 }

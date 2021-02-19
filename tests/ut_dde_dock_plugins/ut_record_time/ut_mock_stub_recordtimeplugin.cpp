@@ -26,7 +26,7 @@ public:
 }
 
 static const QString PLUGIN_NAME = QString("deepin-screen-recorder-plugin");
-static const QString PLUGIN_DISPLAY_NAME = QString("截图录屏");
+static const QString PLUGIN_DISPLAY_NAME = QString("deepin-screen-recorder");
 
 TEST_F(TestRecordTimePlugin, pluginName)
 {
