@@ -114,24 +114,32 @@ public:
             m_pVoiceVolumeWatcher->setWatch(false);
             //run函数里面有sleep,所以此处加terminate
             m_pVoiceVolumeWatcher->terminate();
-            m_pVoiceVolumeWatcher->wait();
-            m_pVoiceVolumeWatcher = nullptr;
+            if (!QSysInfo::currentCpuArchitecture().startsWith("mips")) {
+                m_pVoiceVolumeWatcher->wait();
+                m_pVoiceVolumeWatcher = nullptr;
+            }
         }
         if (m_pCameraWatcher) {
             m_pCameraWatcher->setWatch(false);
             m_pCameraWatcher->terminate();
-            m_pCameraWatcher->wait();
-            m_pCameraWatcher = nullptr;
+            if (!QSysInfo::currentCpuArchitecture().startsWith("mips")) {
+                m_pCameraWatcher->wait();
+                m_pCameraWatcher = nullptr;
+            }
         }
         if (m_pScreenRecordEvent) {
             m_pScreenRecordEvent->terminate();
-            m_pScreenRecordEvent->wait();
-            m_pScreenRecordEvent = nullptr;
+            if (!QSysInfo::currentCpuArchitecture().startsWith("mips")) {
+                m_pScreenRecordEvent->wait();
+                m_pScreenRecordEvent = nullptr;
+            }
         }
         if (m_pScreenShotEvent) {
             m_pScreenShotEvent->terminate();
-            m_pScreenShotEvent->wait();
-            m_pScreenShotEvent = nullptr;
+            if (!QSysInfo::currentCpuArchitecture().startsWith("mips")) {
+                m_pScreenShotEvent->wait();
+                m_pScreenShotEvent = nullptr;
+            }
         }
         if (m_showButtons) {
             //退出进程，最好不用deleteLater，因为有可能等不到下一次事件循环，导致资源不能释放
