@@ -572,19 +572,19 @@ void MainWindow::initShortcut()
 //            emit m_toolBar->shapeClickedFromMain("option");
 //    });
     connect(keyBoardSC, &QShortcut::activated, this, [ = ] {
-        if (status::record == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus)
+        if (status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus)
             emit m_toolBar->shapeClickedFromMain("keyBoard");
     });
     connect(mouseSC, &QShortcut::activated, this, [ = ] {
-        if (status::record == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus)
+        if (status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus)
             emit m_toolBar->shapeClickedFromMain("mouse");
     });
     connect(cameraSC, &QShortcut::activated, this, [ = ] {
-        if (status::record == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus)
+        if (status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus)
             emit m_toolBar->shapeClickedFromMain("camera");
     });
 //    connect(audioSC, &QShortcut::activated, this, [ = ] {
-//        if (status::record == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus)
+//        if (status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus)
 //            emit m_toolBar->shapeClickedFromMain("audio");
 //    });
 
@@ -3117,7 +3117,7 @@ void MainWindow::onShotKeyPressEvent(const unsigned char &keyCode)
 
 void MainWindow::onRecordKeyPressEvent(const unsigned char &keyCode)
 {
-    if(KEY_S == keyCode && 0 == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus){
+    if (KEY_S == keyCode && status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus) {
         emit m_toolBar->shapeClickedFromMain("audio");
     }
 }
