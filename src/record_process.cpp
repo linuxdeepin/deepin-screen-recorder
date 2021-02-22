@@ -120,17 +120,9 @@ void RecordProcess::setRecordAudioInputType(int inputType)
 
 void RecordProcess::onStartTranscode()
 {
-    QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
-                                                                                             "/com/deepin/ScreenRecorder/time",
-                                                                                             "com.deepin.ScreenRecorder.time",
-                                                                                             "onStop"));
-    if (QDBusMessage::ReplyMessage == message.type()){
-        if(!message.arguments().takeFirst().toBool())
-            qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
-    }
     m_pTranscodeProcess = new QProcess();
     connect(m_pTranscodeProcess, SIGNAL(finished(int)), this, SLOT(onTranscodeFinish()));
-    connect(m_pTranscodeProcess, SIGNAL(finished(int)), m_recorderProcess, SLOT(deleteLater()));
+    connect(m_pTranscodeProcess, SIGNAL(finished(int)), m_pTranscodeProcess, SLOT(deleteLater()));
     QString path = savePath;
     QStringList arg;
     arg << "-i";
@@ -174,15 +166,6 @@ void RecordProcess::onTranscodeFinish()
 
 void RecordProcess::onRecordFinish()
 {
-    QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
-                                                                                             "/com/deepin/ScreenRecorder/time",
-                                                                                             "com.deepin.ScreenRecorder.time",
-                                                                                             "onStop"));
-    if (QDBusMessage::ReplyMessage == message.type()){
-        if(!message.arguments().takeFirst().toBool())
-            qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
-    }
-
     if (QProcess::ProcessState::NotRunning != m_recorderProcess->exitCode()) {
         qDebug() << "Error";
         foreach (auto line, (m_recorderProcess->readAllStandardError().split('\n'))) {
@@ -550,11 +533,18 @@ int RecordProcess::readSleepProcessPid()
 
 void RecordProcess::stopRecord()
 {
-    qDebug() << Q_FUNC_INFO;
-    m_recorderProcess->write("q");
-    if(RECORD_TYPE_GIF == recordType){
+    if (RECORD_TYPE_GIF == recordType) {
         connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onStartTranscode()));
     } else {
         connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onRecordFinish()));
+    }
+    m_recorderProcess->write("q");
+    QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
+                                                                                             "/com/deepin/ScreenRecorder/time",
+                                                                                             "com.deepin.ScreenRecorder.time",
+                                                                                             "onStop"));
+    if (QDBusMessage::ReplyMessage == message.type()) {
+        if(!message.arguments().takeFirst().toBool())
+            qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
     }
 }
