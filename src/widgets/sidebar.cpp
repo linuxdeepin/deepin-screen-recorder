@@ -18,6 +18,8 @@
  */
 #include "sidebar.h"
 #include "../utils/configsettings.h"
+#include "../utils.h"
+#include "../accessibility/acTextDefine.h"
 
 #include <QPainter>
 #include <QDebug>
@@ -77,6 +79,7 @@ SideBarWidget::SideBarWidget(DWidget *parent)
 
     QPixmap pixmap(":/newUI/normal/close-normal.svg");
     m_closeButton = new DImageButton(this);
+    Utils::setAccessibility(m_closeButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_SIDE);
     if (t_themeType == 1) {
         m_closeButton->setHoverPic(":/newUI/hover/close-hover.svg");
         m_closeButton->setNormalPic(":/newUI/normal/close-normal.svg");

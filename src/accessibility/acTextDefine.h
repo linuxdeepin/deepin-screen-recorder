@@ -23,8 +23,8 @@
 #define AC_MAINTOOLWIDGET_SHOT_BUT "to_shot_but"// 切换到截图功能按钮
 
 // 关闭按钮
-#define AC_TOOLBARWIDGET_CLOSE_BUTTON "close_button"// 关闭按钮
-
+#define AC_TOOLBARWIDGET_CLOSE_BUTTON_TOOL "toolbar_close_button"// 关闭按钮
+#define AC_TOOLBARWIDGET_CLOSE_BUTTON_SIDE "sidebarclose_button"// 关闭按钮
 
 // 底部工具栏按钮
 #define AC_SUBTOOLWIDGET_AUDIO_BUTTON "audio_button"// 录屏 音频按钮

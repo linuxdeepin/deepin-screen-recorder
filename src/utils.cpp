@@ -198,7 +198,11 @@ void Utils::setAccessibility(DPushButton *button, const QString name)
     button->setObjectName(name);
     button->setAccessibleName(name);
 }
-
+void Utils::setAccessibility(DImageButton *button, const QString name)
+{
+    button->setObjectName(name);
+    button->setAccessibleName(name);
+}
 void Utils::setAccessibility(QAction *action, const QString name)
 {
     action->setObjectName(name);

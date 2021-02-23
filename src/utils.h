@@ -25,6 +25,7 @@
 #define UTILS_H
 //#include <dwindowmanager.h>
 #include <DPushButton>
+#include <DImageButton>
 
 #include <QObject>
 #include <QPainter>
@@ -50,6 +51,7 @@ public:
 //    static void notSupportWarn();
     static QString getRecordingSaveDirectory();
     static void setAccessibility(DPushButton *button,const QString name);
+    static void setAccessibility(DImageButton *button,const QString name);
     static void setAccessibility(QAction *action, const QString name);
     static bool is3rdInterfaceStart;
     static bool isTabletEnvironment;
