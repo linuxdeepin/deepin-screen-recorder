@@ -691,6 +691,9 @@ void SubToolWidget::initShotLabel()
     m_textButton = new ToolButton();
     m_textButton->setIconSize(QSize(30, 30));
     m_textButton->setIcon(QIcon::fromTheme("text"));
+    if (Utils::isTabletEnvironment) {
+        m_textButton->hide();
+    }
     //    m_textButton->setToolTip(tr("Text"));
     installTipHint(m_textButton, tr("Text"));
     //m_textButton->setObjectName("TextButton");
