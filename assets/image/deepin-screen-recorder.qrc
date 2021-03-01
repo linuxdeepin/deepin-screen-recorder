@@ -247,6 +247,14 @@
         <file>newUI/dark/press/webcam_press.svg</file>
         <file>newUI/dark/press/mouse_press.svg</file>
         <file>newUI/press/Arrow-press.svg</file>
+        <file>newUI/dark/normal/hide.svg</file>
+        <file>newUI/dark/normal/mouse2.svg</file>
+        <file>newUI/dark/normal/touch.svg</file>
+        <file>newUI/dark/normal/mouseandtouch.svg</file>
+        <file>newUI/normal/hide.svg</file>
+        <file>newUI/normal/mouse2.svg</file>
+        <file>newUI/normal/touch.svg</file>
+        <file>newUI/normal/mouseandtouch.svg</file>
         <file>deepin-screenshot.svg</file>
     </qresource>
 </RCC>

@@ -267,6 +267,7 @@ void SubToolWidget::initRecordLabel()
         }
         emit cameraActionChecked(m_cameraButton->isChecked());
     });
+    /*
     m_mouseButton = new ToolButton();
     //m_mouseButton->setObjectName("MouseButton");
     Utils::setAccessibility(m_mouseButton, AC_SUBTOOLWIDGET_MOUSE_BUTTON);
@@ -291,6 +292,72 @@ void SubToolWidget::initRecordLabel()
     //发送鼠标按键按钮状态信号
     connect(m_mouseButton, SIGNAL(clicked(bool)),
             this, SIGNAL(mouseBoardButtonClicked(bool)));
+    */
+    // 新增光标选项
+    m_mouseButton = new ToolButton();
+
+    //audioButton->setObjectName("AudioButton");
+    Utils::setAccessibility(m_mouseButton, AC_SUBTOOLWIDGET_AUDIO_BUTTON);
+    m_mouseButton->setText(" ");
+    m_mouseButton->setIconSize(TOOL_ICON_SIZE);
+    installTipHint(m_mouseButton, tr("Mouse"));
+    m_mouseButton->setIcon(QIcon::fromTheme("mouse2"));
+    rectBtnGroup->addButton(m_mouseButton);
+    m_mouseButton->setFixedSize(MEDIUM_TOOL_BUTTON_SIZE);
+    btnList.append(m_mouseButton);
+
+    m_cursorMenu = new DMenu();
+    DFontSizeManager::instance()->bind(m_cursorMenu, DFontSizeManager::T8);
+    m_recorderMouse = new QAction(m_cursorMenu);
+    m_recorderCheck = new QAction(m_cursorMenu);
+
+    m_recorderMouse->setText(tr("Show Pointer"));
+    m_recorderMouse->setCheckable(true);
+    m_recorderMouse->setChecked(true);
+    m_recorderCheck->setText(tr("Show Click"));
+    m_recorderCheck->setCheckable(true);
+
+    m_recorderMouse->setIcon(QIcon(":/newUI/normal/mouse2.svg"));
+    m_recorderCheck->setIcon(QIcon(":/newUI/normal/touch.svg"));
+
+    m_cursorMenu->addAction(m_recorderMouse);
+    m_cursorMenu->addAction(m_recorderCheck);
+
+
+    connect(m_recorderMouse, &QAction::triggered, this, [ = ] {
+        emit mouseShowButtonClicked(m_recorderMouse->isChecked());
+        if(m_recorderCheck->isChecked() && m_recorderMouse->isChecked()) {
+            m_mouseButton->setIcon(QIcon::fromTheme("mouseandtouch"));
+        }
+        if(!m_recorderCheck->isChecked() && !m_recorderMouse->isChecked()) {
+            m_mouseButton->setIcon(QIcon::fromTheme("hide"));
+        }
+        if(!m_recorderCheck->isChecked() && m_recorderMouse->isChecked()) {
+            m_mouseButton->setIcon(QIcon::fromTheme("mouse2"));
+        }
+        if(m_recorderCheck->isChecked() && !m_recorderMouse->isChecked()) {
+            m_mouseButton->setIcon(QIcon::fromTheme("touch"));
+        }
+    });
+
+    connect(m_recorderCheck, &QAction::triggered, this, [ = ] {
+        emit mouseBoardButtonClicked(m_recorderCheck->isChecked());
+        if(m_recorderCheck->isChecked() && m_recorderMouse->isChecked()) {
+            m_mouseButton->setIcon(QIcon::fromTheme("mouseandtouch"));
+        }
+        if(!m_recorderCheck->isChecked() && !m_recorderMouse->isChecked()) {
+            m_mouseButton->setIcon(QIcon::fromTheme("hide"));
+        }
+        if(!m_recorderCheck->isChecked() && m_recorderMouse->isChecked()) {
+            m_mouseButton->setIcon(QIcon::fromTheme("mouse2"));
+        }
+        if(m_recorderCheck->isChecked() && !m_recorderMouse->isChecked()) {
+            m_mouseButton->setIcon(QIcon::fromTheme("touch"));
+        }
+    });
+
+    m_mouseButton->setMenu(m_cursorMenu);
+
 
     //2019-10-14：新增选项按钮
     m_optionButton = new ToolButton();
@@ -1070,7 +1137,14 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
         }else if (shape == "keyBoard") {
             m_keyBoardButton->click();
         }else if (shape == "mouse") {
-            m_mouseButton->click();
+            //m_mouseButton->click();
+            if(m_cursorMenu->isHidden()) {
+                QPoint point = QWidget::mapToGlobal(m_mouseButton->pos());
+                m_cursorMenu->move(point.x(),point.y() + m_mouseButton->size().height());
+                m_cursorMenu->show();
+            } else {
+                m_cursorMenu->hide();
+            }
         }else if (shape == "camera") {
             m_cameraButton->click();
         }else if (shape == "audio") {

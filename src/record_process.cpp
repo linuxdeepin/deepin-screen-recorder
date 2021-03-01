@@ -241,6 +241,10 @@ void RecordProcess::recordVideo()
         arguments << QString("%1").arg(m_framerate);
         arguments << QString("-video_size"); // 视频分辨率
         arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height()); // 录制区域宽高
+        if(!m_isRecordMouse) { // 不录制光标
+            arguments << QString("-draw_mouse");
+            arguments << QString("0");
+        }
         arguments << QString("-thread_queue_size"); // 输入线程缓冲区大小
         arguments << QString("128");
         arguments << QString("-i");
@@ -305,6 +309,10 @@ void RecordProcess::recordVideo()
     }else{
         arguments << QString("-video_size");
         arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
+        if(!m_isRecordMouse) {
+            arguments << QString("-draw_mouse");
+            arguments << QString("0");
+        }
         arguments << QString("-framerate");
         arguments << QString("%1").arg(m_framerate);
         arguments << QString("-probesize");
@@ -424,6 +432,11 @@ void RecordProcess::initProcess()
     // Remove same cache file first.
     QFile file(savePath);
     file.remove();
+}
+
+void RecordProcess::setRecordMouse(const bool status)
+{
+    m_isRecordMouse = status;
 }
 
 void RecordProcess::startRecord()

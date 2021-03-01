@@ -61,6 +61,7 @@ signals:
     void systemAudioActionCheckedSignal(bool checked);
     void cameraActionCheckedSignal(bool checked);
     void mouseCheckedSignalToToolBar(bool checked);
+    void mouseShowCheckedSignalToToolBar(bool checked);
     void gifActionCheckedSignal(bool checked);
     void mp4ActionCheckedSignal(bool checked);
     void frameRateChangedSignal(int frameRate);
@@ -120,6 +121,7 @@ signals:
     void systemAudioActionCheckedToMain(bool checked);
     void cameraActionCheckedToMain(bool checked);
     void mouseCheckedToMain(bool checked);
+    void mouseShowCheckedToMain(bool checked);
     void gifActionCheckedToMain(bool checked);
     void mp4ActionCheckedToMain(bool checked);
     void frameRateChangedToMain(int frameRate);

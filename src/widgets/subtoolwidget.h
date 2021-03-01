@@ -47,6 +47,7 @@ public:
 signals:
     void keyBoardButtonClicked(bool checked);
     void mouseBoardButtonClicked(bool checked);
+    void mouseShowButtonClicked(bool checked);
     void microphoneActionChecked(bool checked);
     void systemAudioActionChecked(bool checked);
     void gifActionChecked(bool checked);
@@ -85,6 +86,8 @@ private:
     ToolButton *m_shotOptionButton;
     QAction *m_microphoneAction;
     ToolButton *m_audioButton;
+    QAction *m_recorderCheck;
+    QAction *m_recorderMouse;
     bool m_haveMicroPhone = false;
     bool m_haveSystemAudio = false;
     int m_lineflag;
@@ -93,6 +96,7 @@ private:
     HintFilter *hintFilter = nullptr;
     DMenu *m_optionMenu;
     DMenu *m_audioMenu;
+    DMenu *m_cursorMenu;
 };
 
 #endif // SUBTOOLWIDGET_H

@@ -392,6 +392,7 @@ void MainWindow::initAttributes()
     connect(m_toolBar, &ToolBar::currentFunctionToMain, this, &MainWindow::changeFunctionButton);
     connect(m_toolBar, &ToolBar::keyBoardCheckedToMain, this, &MainWindow::changeKeyBoardShowEvent);
     connect(m_toolBar, &ToolBar::mouseCheckedToMain, this, &MainWindow::changeMouseShowEvent);
+    connect(m_toolBar, &ToolBar::mouseShowCheckedToMain, this, &MainWindow::changeShowMouseShowEvent);
     connect(m_toolBar, &ToolBar::microphoneActionCheckedToMain, this, &MainWindow::changeMicrophoneSelectEvent);
     connect(m_toolBar, &ToolBar::systemAudioActionCheckedToMain, this, &MainWindow::changeSystemAudioSelectEvent);
     connect(m_toolBar, &ToolBar::cameraActionCheckedToMain, this, &MainWindow::changeCameraSelectEvent);
@@ -529,7 +530,7 @@ void MainWindow::initShortcut()
     //转全局事件，此处未使用
     //QShortcut *optionSC = new QShortcut(QKeySequence("F3"), this);
     QShortcut *keyBoardSC = new QShortcut(QKeySequence("K"), this);
-    QShortcut *mouseSC = new QShortcut(QKeySequence("C"), this);
+    //QShortcut *mouseSC = new QShortcut(QKeySequence("C"), this);
     QShortcut *cameraSC = new QShortcut(QKeySequence("W"), this);
     //转全局事件，此处未使用
     //QShortcut *audioSC = new QShortcut(QKeySequence("S"), this);
@@ -575,10 +576,12 @@ void MainWindow::initShortcut()
         if (status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus)
             emit m_toolBar->shapeClickedFromMain("keyBoard");
     });
+    /*
     connect(mouseSC, &QShortcut::activated, this, [ = ] {
         if (status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus)
             emit m_toolBar->shapeClickedFromMain("mouse");
     });
+    */
     connect(cameraSC, &QShortcut::activated, this, [ = ] {
         if (status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus)
             emit m_toolBar->shapeClickedFromMain("camera");
@@ -1555,6 +1558,13 @@ void MainWindow::changeMouseShowEvent(bool checked)
     else {
         m_mouseStatus = 1;
     }
+    return;
+}
+
+void MainWindow::changeShowMouseShowEvent(bool checked)
+{
+    qDebug() << "show mouse" << checked;
+    m_mouseShowStatus = checked;
     return;
 }
 void MainWindow::changeMicrophoneSelectEvent(bool checked)
@@ -3120,6 +3130,9 @@ void MainWindow::onRecordKeyPressEvent(const unsigned char &keyCode)
     if (KEY_S == keyCode && status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus) {
         emit m_toolBar->shapeClickedFromMain("audio");
     }
+    if (KEY_M == keyCode && status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus) {
+        emit m_toolBar->shapeClickedFromMain("mouse");
+    }
 }
 
 void MainWindow::startRecord()
@@ -3138,6 +3151,7 @@ void MainWindow::startRecord()
     }
 
     recordProcess.setRecordAudioInputType(getRecordInputType(m_selectedMic, m_selectedSystemAudio));
+    recordProcess.setRecordMouse(m_mouseShowStatus);
     recordProcess.startRecord();
     // 录屏开始后，隐藏窗口。（2D窗管下支持录屏, 但是会导致摄像头录制不到）
     if(m_hasComposite == false){

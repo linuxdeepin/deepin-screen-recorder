@@ -272,6 +272,7 @@ public slots:
     void showKeyBoardButtons(const QString &key);
     void changeKeyBoardShowEvent(bool checked);
     void changeMouseShowEvent(bool checked);
+    void changeShowMouseShowEvent(bool checked);
     void changeMicrophoneSelectEvent(bool checked);
     void changeSystemAudioSelectEvent(bool checked);
     void changeCameraSelectEvent(bool checked);
@@ -386,7 +387,8 @@ private:
 
     int m_functionType = status::record;  //0: record, 1: shot
     bool m_keyBoardStatus = false; //false: keyBoard off, true:keyBoard On
-    int m_mouseStatus = 0; //0: keyBoard off, 1:keyBoard On
+    int m_mouseStatus = 0; //0: mouse check off, 1:mouse check On
+    bool m_mouseShowStatus = true; //0: show mouse off, 1:show mouse On
     bool m_repaintMainButton = false;//false: no need to repaint record button or shot button, true:...
     bool m_repaintSideBar = false;   //false: no need to repaint sidebar, true:...
 

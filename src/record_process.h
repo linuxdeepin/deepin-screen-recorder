@@ -67,6 +67,7 @@ public:
     void stopRecord();
     void recordVideo();
     void initProcess();
+    void setRecordMouse(const bool status);
     //int readSleepProcessPid();
 
 private slots:
@@ -90,6 +91,7 @@ private:
 
     int recordType = 0;
     int recordAudioInputType = 0;
+    bool m_isRecordMouse = true;
 
     QRect m_recordRect;
 
