@@ -24,6 +24,8 @@
 #include <QImage>
 #include <QSizePolicy>
 #include <QDebug>
+#include <QApplication>
+#include <QScreen>
 
 #include <cmath>
 
@@ -69,7 +71,9 @@ void TopTips::updateTips(QPoint pos, const QSize &size)
         this->show();
 
     QPoint startPoint = pos;
-    setContent(size);
+    qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
+    QSize s = QSize(static_cast<int>(size.width()*pixelRatio),static_cast<int>(size.height()*pixelRatio));
+    setContent(s);
     startPoint.setX(pos.x());
 
     if (pos.y() > this->height()) {
