@@ -537,35 +537,34 @@ void MainWindow::initShortcut()
     //    QShortcut *colorSC = new QShortcut(QKeySequence("Alt+6"), this);
 
     connect(rectSC, &QShortcut::activated, this, [ = ] {
-        emit m_toolBar->shapeClickedFromMain("rect");
         if (status::shot == m_functionType)
         {
-            emit m_toolBar->shapeClickedFromMain("rect");
+            m_toolBar->shapeClickedFromMain("rect");
         }
 
     });
     connect(ovalSC, &QShortcut::activated, this, [ = ] {
         if (status::shot == m_functionType)
         {
-            emit m_toolBar->shapeClickedFromMain("circ");
+            m_toolBar->shapeClickedFromMain("circ");
         }
     });
     connect(arrowSC, &QShortcut::activated, this, [ = ] {
         if (status::shot == m_functionType)
         {
-            emit m_toolBar->shapeClickedFromMain("line");
+            m_toolBar->shapeClickedFromMain("line");
         }
     });
     connect(lineSC, &QShortcut::activated, this, [ = ] {
         if (status::shot == m_functionType)
         {
-            emit m_toolBar->shapeClickedFromMain("pen");
+            m_toolBar->shapeClickedFromMain("pen");
         }
     });
     connect(textSC, &QShortcut::activated, this, [ = ] {
         if (status::shot == m_functionType)
         {
-            emit m_toolBar->shapeClickedFromMain("text");
+            m_toolBar->shapeClickedFromMain("text");
         }
     });
 //    connect(optionSC, &QShortcut::activated, this, [ = ] {
@@ -574,7 +573,7 @@ void MainWindow::initShortcut()
 //    });
     connect(keyBoardSC, &QShortcut::activated, this, [ = ] {
         if (status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus)
-            emit m_toolBar->shapeClickedFromMain("keyBoard");
+            m_toolBar->shapeClickedFromMain("keyBoard");
     });
     /*
     connect(mouseSC, &QShortcut::activated, this, [ = ] {
@@ -584,7 +583,7 @@ void MainWindow::initShortcut()
     */
     connect(cameraSC, &QShortcut::activated, this, [ = ] {
         if (status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus)
-            emit m_toolBar->shapeClickedFromMain("camera");
+            m_toolBar->shapeClickedFromMain("camera");
     });
 //    connect(audioSC, &QShortcut::activated, this, [ = ] {
 //        if (status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus)
@@ -3120,18 +3119,20 @@ void MainWindow::checkCpuIsZhaoxin()
 
 void MainWindow::onShotKeyPressEvent(const unsigned char &keyCode)
 {
-    if (KEY_F3 == keyCode && 1 == m_functionType) {
-        emit m_toolBar->shapeClickedFromMain("option");
+    if (KEY_F3 == keyCode && status::shot == m_functionType) {
+        m_toolBar->shapeClickedFromMain("option");
     }
 }
 
 void MainWindow::onRecordKeyPressEvent(const unsigned char &keyCode)
 {
     if (KEY_S == keyCode && status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus) {
-        emit m_toolBar->shapeClickedFromMain("audio");
+        m_toolBar->shapeClickedFromMain("audio");
     }
     if (KEY_M == keyCode && status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus) {
-        emit m_toolBar->shapeClickedFromMain("mouse");
+        m_toolBar->shapeClickedFromMain("mouse");
+    } else if (KEY_F3 == keyCode && status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus) {
+        m_toolBar->shapeClickedFromMain("record_option");
     }
 }
 

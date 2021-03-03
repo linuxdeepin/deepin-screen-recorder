@@ -375,19 +375,19 @@ void SubToolWidget::initRecordLabel()
     t_formatGroup->setExclusive(true);
     t_fpsGroup->setExclusive(true);
 
-    DMenu *OptionMenu = new DMenu();
-    DFontSizeManager::instance()->bind(OptionMenu, DFontSizeManager::T8);
+    m_recordOptionMenu = new DMenu();
+    DFontSizeManager::instance()->bind(m_recordOptionMenu, DFontSizeManager::T8);
     //for test
-    QAction *formatTitleAction = new QAction(OptionMenu);
-    QAction *gifAction = new QAction(OptionMenu);
-    QAction *mp4Action = new QAction(OptionMenu);
-    QAction *mkvAction = new QAction(OptionMenu);
-    QAction *fpsTitleAction = new QAction(OptionMenu);
-    QAction *fps5Action = new QAction(OptionMenu);
-    QAction *fps10Action = new QAction(OptionMenu);
-    QAction *fps20Action = new QAction(OptionMenu);
-    QAction *fps24Action = new QAction(OptionMenu);
-    QAction *fps30Action = new QAction(OptionMenu);
+    QAction *formatTitleAction = new QAction(m_recordOptionMenu);
+    QAction *gifAction = new QAction(m_recordOptionMenu);
+    QAction *mp4Action = new QAction(m_recordOptionMenu);
+    QAction *mkvAction = new QAction(m_recordOptionMenu);
+    QAction *fpsTitleAction = new QAction(m_recordOptionMenu);
+    QAction *fps5Action = new QAction(m_recordOptionMenu);
+    QAction *fps10Action = new QAction(m_recordOptionMenu);
+    QAction *fps20Action = new QAction(m_recordOptionMenu);
+    QAction *fps24Action = new QAction(m_recordOptionMenu);
+    QAction *fps30Action = new QAction(m_recordOptionMenu);
 
 
     Utils::setAccessibility(gifAction, "gifAction");
@@ -430,23 +430,23 @@ void SubToolWidget::initRecordLabel()
     t_fpsGroup->addAction(fps24Action);
     t_fpsGroup->addAction(fps30Action);
 
-    OptionMenu->addAction(formatTitleAction);
+    m_recordOptionMenu->addAction(formatTitleAction);
     if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
-        OptionMenu->addAction(gifAction);
+        m_recordOptionMenu->addAction(gifAction);
     }
-    OptionMenu->addAction(mp4Action);
+    m_recordOptionMenu->addAction(mp4Action);
 
-    OptionMenu->addAction(mkvAction);
-    OptionMenu->addSeparator();
+    m_recordOptionMenu->addAction(mkvAction);
+    m_recordOptionMenu->addSeparator();
 
-    OptionMenu->addAction(fpsTitleAction);
-    OptionMenu->addAction(fps5Action);
-    OptionMenu->addAction(fps10Action);
-    OptionMenu->addAction(fps20Action);
-    OptionMenu->addAction(fps24Action);
-    OptionMenu->addAction(fps30Action);
+    m_recordOptionMenu->addAction(fpsTitleAction);
+    m_recordOptionMenu->addAction(fps5Action);
+    m_recordOptionMenu->addAction(fps10Action);
+    m_recordOptionMenu->addAction(fps20Action);
+    m_recordOptionMenu->addAction(fps24Action);
+    m_recordOptionMenu->addAction(fps30Action);
 
-    m_optionButton->setMenu(OptionMenu);
+    m_optionButton->setMenu(m_recordOptionMenu);
 
     // change by hmy
 
@@ -1130,16 +1130,23 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
             m_textButton->click();
         } else if (shape == "option") {
             if (m_optionMenu->isHidden() && !Utils::isTabletEnvironment) {
-                //m_shotOptionButton->click();
                 QPoint point = QWidget::mapToGlobal(m_shotOptionButton->pos());
                 m_optionMenu->move(point.x(),point.y()+m_shotOptionButton->size().height());
                 m_optionMenu->show();
             } else {
                 m_optionMenu->hide();
             }
-        }else if (shape == "keyBoard") {
+        } else if (QString("record_option") == shape) {
+            if (m_recordOptionMenu->isHidden() && !Utils::isTabletEnvironment) {
+                QPoint point = QWidget::mapToGlobal(m_optionButton->pos());
+                m_recordOptionMenu->move(point.x(),point.y()+m_optionButton->size().height());
+                m_recordOptionMenu->show();
+            } else {
+                m_recordOptionMenu->hide();
+            }
+        } else if (shape == "keyBoard") {
             m_keyBoardButton->click();
-        }else if (shape == "mouse") {
+        } else if (shape == "mouse") {
             //m_mouseButton->click();
             if(m_cursorMenu->isHidden()) {
                 QPoint point = QWidget::mapToGlobal(m_mouseButton->pos());
@@ -1148,10 +1155,10 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
             } else {
                 m_cursorMenu->hide();
             }
-        }else if (shape == "camera") {
+        } else if (shape == "camera") {
             m_cameraButton->click();
-        }else if (shape == "audio") {
-            if(m_audioMenu->isHidden()){
+        } else if (shape == "audio") {
+            if (m_audioMenu->isHidden()) {
                 QPoint point = QWidget::mapToGlobal(m_audioButton->pos());
                 m_audioMenu->move(point.x(),point.y()+m_audioButton->size().height());
                 m_audioMenu->show();
