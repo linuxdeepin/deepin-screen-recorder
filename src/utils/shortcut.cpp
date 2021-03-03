@@ -21,65 +21,58 @@
 
 Shortcut::Shortcut(QObject *parent) : QObject(parent)
 {
-    ShortcutGroup group1;
-    ShortcutGroup group2;
-    ShortcutGroup group3;
-    ShortcutGroup group3_1;
-    ShortcutGroup group4;
-    ShortcutGroup group5;
+    ShortcutGroup screenshotGroup;
+    ShortcutGroup exitGroup;
+    ShortcutGroup drawGroup;
+    ShortcutGroup recordGroup;
+    ShortcutGroup sizeGroup;
+    ShortcutGroup setGroup;
 
-    group1.groupName = tr("Start/Screenshot");
-    group2.groupName = tr("Exit/Save");
-    group3.groupName = tr("Drawing");
-    group3_1.groupName = tr("Record");
-    group4.groupName = tr("Size Adjustment");
-    group5.groupName = tr("Settings");
+    screenshotGroup.groupName = tr("Start/Screenshot");
+    exitGroup.groupName = tr("Exit/Save");
+    drawGroup.groupName = tr("Drawing");
+    recordGroup.groupName = tr("Start/Record");
+    sizeGroup.groupName = tr("Size Adjustment");
+    setGroup.groupName = tr("Settings");
 
-    group1.groupItems <<
-                      ShortcutItem(tr("Quick start"), "Ctrl+Alt+A") <<
-                      ShortcutItem(tr("Window screenshot"), "Alt+PrintScreen") <<
-                      ShortcutItem(tr("Delay screenshot"),  "Ctrl+PrintScreen") <<
-                      ShortcutItem(tr("Full screenshot"),  "PrintScreen") <<
-                      ShortcutItem(tr("Copy to clipboard"), "Ctrl+C");
+    screenshotGroup.groupItems << ShortcutItem(tr("Quick start"), "Ctrl+Alt+A")
+                               << ShortcutItem(tr("Window screenshot"), "Alt+PrintScreen")
+                               << ShortcutItem(tr("Delay screenshot"),  "Ctrl+PrintScreen")
+                               << ShortcutItem(tr("Full screenshot"),  "PrintScreen");
 
+    exitGroup.groupItems << ShortcutItem(tr("Exit"), "Esc")
+                         << ShortcutItem(tr("Save"), "Ctrl+S")
+                         << ShortcutItem(" ", " ");
 
-    group2.groupItems << ShortcutItem(tr("Exit"),   "Esc") <<
-                      ShortcutItem(tr("Save"), "Ctrl+S") <<
-                      ShortcutItem(" ",   " ") <<
-                      ShortcutItem(" ",   " ") <<
-                      ShortcutItem(" ",   " ") <<
-                      ShortcutItem(" ",   " ");
+    drawGroup.groupItems << ShortcutItem(tr("Rectangle"), "R")
+                         << ShortcutItem(tr("Ellipse"), "O")
+                         << ShortcutItem(tr("Line"), "L")
+                         << ShortcutItem(tr("Pencil"), "P")
+                         << ShortcutItem(tr("Text"), "T")
+                         << ShortcutItem(tr("Delete"), "Delete")
+                         << ShortcutItem(tr("Undo"), "Ctrl+Z")
+                         << ShortcutItem(tr("Options"), "F3");
 
-    group3.groupItems <<
-                      ShortcutItem(tr("Rectangle"),  "R") <<
-                      ShortcutItem(tr("Ellipse"),        "O") <<
-                      ShortcutItem(tr("Line"),        "L") <<
-                      ShortcutItem(tr("Pencil"),        "P") <<
-                      ShortcutItem(tr("Text"),           "T") <<
-                      ShortcutItem(tr("Delete"),    "Delete") <<
-                      ShortcutItem(tr("Undo"), "Ctrl+Z") <<
-                      ShortcutItem(tr("Options"), "F3");
+    recordGroup.groupItems << ShortcutItem(tr("Start/Record"), "Ctr+Alt+R")
+                           << ShortcutItem(tr("Sound"), "S")
+                           << ShortcutItem(tr("Keystroke"), "K")
+                           << ShortcutItem(tr("Webcam"), "W")
+                           << ShortcutItem(tr("Mouse"), "M")
+                           << ShortcutItem(tr("Options"), "F3");
 
-    group3_1.groupItems << ShortcutItem(tr("Start recording"), "Ctr+Alt+R")
-                        << ShortcutItem(tr("Sound"), "S")
-                        << ShortcutItem(tr("Keystroke"), "K")
-                        << ShortcutItem(tr("Webcam"), "W")
-                        << ShortcutItem(tr("Click"), "C") ;
+    sizeGroup.groupItems << ShortcutItem(tr("Increase height up"), "Ctrl+Up")
+                         << ShortcutItem(tr("Increase height down"), "Ctrl+Down")
+                         << ShortcutItem(tr("Increase width left"), "Ctrl+Left")
+                         << ShortcutItem(tr("Increase width right"), "Ctrl+Right")
+                         << ShortcutItem(tr("Decrease height up"), "Ctrl+Shift+Up")
+                         << ShortcutItem(tr("Decrease height down"), "Ctrl+Shift+Down")
+                         << ShortcutItem(tr("Decrease width left"), "Ctrl+Shift+Left")
+                         << ShortcutItem(tr("Decrease width right"), "Ctrl+Shift+Right");
 
-    group4.groupItems <<
-                      ShortcutItem(tr("Increase height up"), "Ctrl+Up") <<
-                      ShortcutItem(tr("Increase height down"), "Ctrl+Down") <<
-                      ShortcutItem(tr("Increase width left"), "Ctrl+Left") <<
-                      ShortcutItem(tr("Increase width right"), "Ctrl+Right") <<
-                      ShortcutItem(tr("Decrease height up"), "Ctrl+Shift+Up") <<
-                      ShortcutItem(tr("Decrease height down"), "Ctrl+Shift+Down") <<
-                      ShortcutItem(tr("Decrease width left"), "Ctrl+Shift+Left") <<
-                      ShortcutItem(tr("Decrease width right"), "Ctrl+Shift+Right");
+    setGroup.groupItems << ShortcutItem(tr("Help"), "F1")
+                        << ShortcutItem(tr("Display shortcuts"), "Ctrl+Shift+?");
 
-    group5.groupItems << ShortcutItem(tr("Help"),   "F1") <<
-                      ShortcutItem(tr("Display shortcuts"), "Ctrl+Shift+?");
-
-    m_shortcutGroups << group1 << group2 << group3 << group3_1 << group4 << group5;
+    m_shortcutGroups << screenshotGroup <<  recordGroup<< drawGroup <<  exitGroup << sizeGroup << setGroup;
 
     //convert to json object
     QJsonArray jsonGroups;
