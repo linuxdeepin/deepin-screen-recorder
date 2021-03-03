@@ -1771,9 +1771,11 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         msg << saveFilePath;
         QDBusConnection::sessionBus().send(msg);
         qApp->quit();
+        return;
     }
     if(m_noNotify) {
         qApp->quit();
+        return;
     }
     // failed notify
     if (!succeed) {
@@ -1781,6 +1783,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         QString tips = QString(tr("Save failed. Please save it in your home directory."));
         saveFailedNotify.Notify(QCoreApplication::applicationName(), 0, "deepin-screen-recorder", QString(), tips, QStringList(), QVariantMap(), 5000);
         qApp->quit();
+        return;
     }
 
     QDBusInterface remote_dde_notify_obj("com.deepin.dde.Notification", "/com/deepin/dde/Notification",
