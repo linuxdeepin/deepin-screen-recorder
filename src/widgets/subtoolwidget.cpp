@@ -143,9 +143,7 @@ void SubToolWidget::initRecordLabel()
     m_microphoneAction->setCheckable(true);
     if (m_themeType == 1) {
         m_microphoneAction->setIcon(QIcon(":/newUI/normal/microphone.svg"));
-    }
-
-    else if (m_themeType == 2) {
+    } else if (m_themeType == 2) {
         m_microphoneAction->setIcon(QIcon(":/newUI/dark/normal/microphone.svg"));
     }
 
@@ -153,9 +151,7 @@ void SubToolWidget::initRecordLabel()
     //    m_systemAudioAction->setIcon(QIcon(":/image/newUI/normal/audio frequency.svg"));
     if (m_themeType == 1) {
         m_systemAudioAction->setIcon(QIcon(":/newUI/normal/audio frequency.svg"));
-    }
-
-    else if (m_themeType == 2) {
+    } else if (m_themeType == 2) {
         m_systemAudioAction->setIcon(QIcon(":/newUI/dark/normal/audio frequency.svg"));
     }
 
@@ -237,9 +233,7 @@ void SubToolWidget::initRecordLabel()
     connect(m_keyBoardButton, &DPushButton::clicked, this, [ = ] {
         if (m_keyBoardButton->isChecked()){
             installTipHint(m_keyBoardButton, tr("Hide Keystroke"));
-        }
-
-        if (!m_keyBoardButton->isChecked()){
+        } else {
             installTipHint(m_keyBoardButton, tr("Show Keystroke"));
         }
     });
@@ -661,14 +655,10 @@ void SubToolWidget::initShotLabel()
     bool t_arrowStatus = ConfigSettings::instance()->value("arrow", "is_straight").toBool();
     if (t_arrowStatus) {
         installTipHint(m_lineButton, tr("Line"));
-    } else {
-        installTipHint(m_lineButton, tr("Arrow"));
-    }
-
-    if (t_arrowStatus) {
         m_lineflag = 0;
         m_lineButton->setIcon(QIcon::fromTheme("line-normal"));
     } else {
+        installTipHint(m_lineButton, tr("Arrow"));
         m_lineflag = 1;
         m_lineButton->setIcon(QIcon::fromTheme("Arrow-normal"));
     }
@@ -731,7 +721,7 @@ void SubToolWidget::initShotLabel()
     QAction *saveToDesktopAction = new QAction(m_optionMenu);
     QAction *saveToPictureAction = new QAction(m_optionMenu);
     QAction *saveToSpecialPath = new QAction(m_optionMenu);
-    QAction *openWithDraw = new QAction(m_optionMenu);
+    //QAction *openWithDraw = new QAction(m_optionMenu);
     QAction *formatTitleAction = new QAction(m_optionMenu);
     QAction *pngAction = new QAction(m_optionMenu);
     QAction *jpgAction = new QAction(m_optionMenu);
@@ -744,7 +734,7 @@ void SubToolWidget::initShotLabel()
     Utils::setAccessibility(saveToPictureAction, "saveToPictureAction");
     Utils::setAccessibility(saveToSpecialPath, "saveToSpecialPath");
     Utils::setAccessibility(saveToClipAction, "saveToClipAction");
-    Utils::setAccessibility(openWithDraw, "openWithDraw");
+    //Utils::setAccessibility(openWithDraw, "openWithDraw");
     Utils::setAccessibility(saveCursorAction, "saveCursorAction");
     Utils::setAccessibility(pngAction, "pngAction");
     Utils::setAccessibility(jpgAction, "jpgAction");
@@ -780,8 +770,8 @@ void SubToolWidget::initShotLabel()
 
     clipTitleAction->setDisabled(true);
     clipTitleAction->setText(tr("Options"));
-    openWithDraw->setText(tr("Edit in Draw"));
-    openWithDraw->setCheckable(true);
+    //openWithDraw->setText(tr("Edit in Draw"));
+    //openWithDraw->setCheckable(true);
     saveCursorAction->setText(tr("Show pointer"));
     saveCursorAction->setCheckable(true);
 
@@ -836,20 +826,15 @@ void SubToolWidget::initShotLabel()
             ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToDesktop);
             ConfigSettings::instance()->setValue("common", "default_savepath", QStandardPaths::writableLocation(
                                                      QStandardPaths::DesktopLocation));
-        }
-
-        else if (t_act == saveToPictureAction) {
+        } else if (t_act == saveToPictureAction) {
             qDebug() << "save to picture";
             ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToImage);
             ConfigSettings::instance()->setValue("common", "default_savepath", QStandardPaths::writableLocation(
                                                      QStandardPaths::PicturesLocation));
-        }
-
-        else if (t_act == saveToSpecialPath) {
+        } else if (t_act == saveToSpecialPath) {
             qDebug() << "save to path";
             ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToSpecificDir);
-        }
-        else if(t_act == saveToClipAction) {
+        } else if(t_act == saveToClipAction) {
             qDebug() << "save to clip";
             ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
         }
@@ -897,17 +882,9 @@ void SubToolWidget::initShotLabel()
     }
 
     connect(saveCursorAction, &QAction::triggered, [ = ] {
-        if (saveCursorAction->isChecked())
-        {
-            ConfigSettings::instance()->setValue("save", "saveCursor", 1);
-        }
-
-        else
-        {
-            ConfigSettings::instance()->setValue("save", "saveCursor", 0);
-        }
+        ConfigSettings::instance()->setValue("save", "saveCursor", saveCursorAction->isChecked() ? 1 : 0);
     });
-
+/*
     int t_openWithDraw = ConfigSettings::instance()->value("open", "draw").toInt();
 
     switch (t_openWithDraw) {
@@ -933,7 +910,7 @@ void SubToolWidget::initShotLabel()
             ConfigSettings::instance()->setValue("open", "draw", 0);
         }
     });
-
+*/
 
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
@@ -963,25 +940,17 @@ void SubToolWidget::initShotLabel()
         if (m_circleButton->isChecked()) {
             emit changeShotToolFunc("oval");
         }
-        if (m_lineButton->isChecked()) {
-            if (m_lineflag == 0) {
-                //                m_lineButton->setToolTip(tr("Line"));
-                installTipHint(m_lineButton, tr("Line"));
-                m_lineButton->setIcon(QIcon::fromTheme("line-normal"));
-            } else if (m_lineflag == 1) {
-                installTipHint(m_lineButton, tr("Arrow"));
-                m_lineButton->setIcon(QIcon::fromTheme("Arrow-normal"));
-            }
 
+        if (m_lineflag == 0) {
+            installTipHint(m_lineButton, tr("Line"));
+            m_lineButton->setIcon(QIcon::fromTheme("line-normal"));
+        } else if (m_lineflag == 1) {
+            installTipHint(m_lineButton, tr("Arrow"));
+            m_lineButton->setIcon(QIcon::fromTheme("Arrow-normal"));
+        }
+
+        if (m_lineButton->isChecked()) {
             emit changeShotToolFunc("arrow");
-        } else {
-            if (m_lineflag == 0) {
-                installTipHint(m_lineButton, tr("Line"));
-                m_lineButton->setIcon(QIcon::fromTheme("line-normal"));
-            } else if (m_lineflag == 1) {
-                installTipHint(m_lineButton, tr("Arrow"));
-                m_lineButton->setIcon(QIcon::fromTheme("Arrow-normal"));
-            }
         }
 
         if (m_penButton->isChecked()) {
@@ -990,22 +959,6 @@ void SubToolWidget::initShotLabel()
         if (m_textButton->isChecked()) {
             emit changeShotToolFunc("text");
         }
-
-        //        else {
-        ////            pa = m_textButton->palette();
-        ////            pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-        ////            pa.setColor(DPalette::Dark, QColor(227, 227, 227, 150));
-        ////            pa.setColor(DPalette::Light, QColor(230, 230, 230, 150));
-        ////            m_textButton->setPalette(pa);
-        ////            m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
-        //            if (m_themeType == 1) {
-        //                m_textButton->setIcon(QIcon(":/image/newUI/normal/text.svg"));
-        //            }
-
-        //            else if (m_themeType == 2) {
-        //                m_textButton->setIcon(QIcon(":/image/newUI/dark/normal/text_normal_dark.svg"));
-        //            }
-        //        }
     });
 }
 
@@ -1213,10 +1166,6 @@ void SubToolWidget::setCameraDeviceEnable(bool status)
                 installTipHint(m_cameraButton, tr("Webcam On"));
             }
         }
-
-        else {
-            return;
-        }
     }
 
     else {
@@ -1224,15 +1173,11 @@ void SubToolWidget::setCameraDeviceEnable(bool status)
             m_cameraButton->setChecked(false);
             if (m_cameraButton->isChecked()) {
                 installTipHint(m_cameraButton, tr("Webcam Off"));
-            }
-
-            if (!m_cameraButton->isChecked()) {
+            } else {
                 installTipHint(m_cameraButton, tr("Webcam On"));
             }
             m_cameraButton->setDisabled(true);
 
-        } else {
-            return;
         }
     }
 }

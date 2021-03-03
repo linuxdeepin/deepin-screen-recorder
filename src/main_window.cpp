@@ -132,64 +132,33 @@ MainWindow::MainWindow(DWidget *parent) :
     m_pScreenShotEvent =  new ScreenShotEvent();
     m_pScreenRecordEvent = new EventMonitor();
 
-    // 初始化获取屏幕坐标信息
-    QDBusInterface displayInterface("com.deepin.daemon.Display",
-                                    "/com/deepin/daemon/Display",
-                                    "com.deepin.daemon.Display",
-                                    QDBusConnection::sessionBus());
-
-    if(!displayInterface.isValid()) {
-        return;
-    }
-    //qDebug() << displayInterface.property("PrimaryRect").toList();
-    QList<QDBusObjectPath> pathList = qvariant_cast< QList<QDBusObjectPath> >(displayInterface.property("Monitors"));
-    if(pathList.size() == 0) {
-        return;
-    }
-
-    QDBusInterface monitorInterface("com.deepin.daemon.Display",pathList.at(0).path(),"com.deepin.daemon.Display.Monitor",
-                                    QDBusConnection::sessionBus());
-
-    if(!monitorInterface.isValid()) {
-        return;
-    }
-    // 获取屏幕是否旋转, 四个方向，
-    // rotation值如下，在左右方向上， 宽高值互换
-    /*
-            4
-            |
-     8<-         -> 2
-            |
-            1
-    */
-    int rotation = monitorInterface.property("Rotation").toInt();
-    qDebug() << rotation;
-    int w = displayInterface.property("ScreenWidth").toInt();
-    int h = displayInterface.property("ScreenHeight").toInt();
-    if(rotation == 2 || rotation == 8){
-        m_screenSize.setWidth(h);
-        m_screenSize.setHeight(w);
-    }else {
-        m_screenSize.setWidth(w);
-        m_screenSize.setHeight(h);
-    }
-
-    for(int i = 0; i < pathList.size(); ++i) {
-        QString path = pathList.at(i).path();
-        QDBusInterface displayMonitorInterface("com.deepin.daemon.Display",path,"com.deepin.daemon.Display.Monitor",
-                                        QDBusConnection::sessionBus());
-
-        if(!displayMonitorInterface.isValid()) {
-            continue;
-        }
+    m_screenCount = QApplication::desktop()->screenCount();
+    QList<QScreen *> screenList = qApp->screens();
+    for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
+        QRect rect = (*it)->geometry();
+        qDebug() << (*it)->name() << rect;
         ScreenInfo screenInfo;
-        screenInfo.x = displayMonitorInterface.property("X").toInt();
-        screenInfo.y = displayMonitorInterface.property("Y").toInt();
-        screenInfo.height =  displayMonitorInterface.property("Height").toInt();
-        screenInfo.width = displayMonitorInterface.property("Width").toInt();
-        screenInfo.name = displayMonitorInterface.property("Name").toString();
+        screenInfo.x = rect.x();
+        screenInfo.y = rect.y();
+        screenInfo.height =  static_cast<int>(rect.height() * m_pixelRatio);
+        screenInfo.width = static_cast<int>(rect.width() * m_pixelRatio);
+        screenInfo.name = (*it)->name();
         m_screenInfo.append(screenInfo);
     }
+
+    m_screenSize.setWidth(m_screenInfo[0].x + m_screenInfo[0].width);
+    m_screenSize.setHeight(m_screenInfo[0].y + m_screenInfo[0].height);
+
+    // 通过每个屏幕， 右下角的坐标来计算屏幕总大小。
+    for(int i = 1; i < m_screenInfo.size(); ++i) {
+        if((m_screenInfo[i].height + m_screenInfo[i].y) > m_screenSize.height())
+            m_screenSize.setHeight(m_screenInfo[i].height + m_screenInfo[i].y);
+
+        if((m_screenInfo[i].width + m_screenInfo[i].x) > m_screenSize.width())
+            m_screenSize.setWidth(m_screenInfo[i].width + m_screenInfo[i].x);
+    }
+
+    qDebug() << m_screenSize;
     if(m_screenInfo.size() > 1) {
         // 排序
         qSort(m_screenInfo.begin(), m_screenInfo.end(), [ = ](const ScreenInfo info1, const ScreenInfo info2){
@@ -3675,19 +3644,12 @@ void MainWindow::reloadImage(QString effect)
     int imgHeight = tmpImg.height();
 
     TempFile *tempFile = TempFile::instance();
-
-    if (effect == "blur") {
-        if (!tmpImg.isNull()) {
-            tmpImg = tmpImg.scaled(imgWidth / radius, imgHeight / radius,
-                                   Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            tmpImg = tmpImg.scaled(imgWidth, imgHeight, Qt::IgnoreAspectRatio,
-                                   Qt::SmoothTransformation);
+    if (!tmpImg.isNull()) {
+        tmpImg = tmpImg.scaled(imgWidth / radius, imgHeight / radius, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        if(effect == "blur") {
+            tmpImg = tmpImg.scaled(imgWidth, imgHeight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
             tempFile->setBlurPixmap(tmpImg);
-        }
-    } else {
-        if (!tmpImg.isNull()) {
-            tmpImg = tmpImg.scaled(imgWidth / radius, imgHeight / radius,
-                                   Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        } else {
             tmpImg = tmpImg.scaled(imgWidth, imgHeight);
             tempFile->setMosaicPixmap(tmpImg);
         }

@@ -35,6 +35,7 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
         }
         return res;
     }
+/*
     QRect r(rect.topLeft() * devicePixelRatio, rect.size());
 
     int t_screenNum = QApplication::desktop()->screenCount();
@@ -47,9 +48,10 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
             }
         }
     } else {
+    */
         QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
         // 在多屏模式下, winId 不是0 
         return t_primaryScreen->grabWindow(QApplication::desktop()->winId(), rect.x(), rect.y(), rect.width(), rect.height());
-    }
-    return QPixmap();
+    //}
+    //return QPixmap();
 }
