@@ -77,6 +77,10 @@ or press the shortcut again to stop recording</source>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>Оскільки під час процедури було вимкнено ефекти вікон, запис довелося припинити</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Знімок</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Захоплення зображення на екрані</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Вид</translation>
     </message>
@@ -110,6 +110,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Saved to %1</source>
         <translation>Збережено до %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Записати</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Full screenshot</source>
         <translation>Повний знімок екрана</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Копіювати до буфера обміну</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ or press the shortcut again to stop recording</source>
         <translation>Показати клавіатурні скорочення</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Записати</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>Звук</translation>
     </message>
@@ -261,16 +257,20 @@ or press the shortcut again to stop recording</source>
         <translation>Вебкамера</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Клацання</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Розпочати запис</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Параметри</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Миша</translation>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Show Click</source>
         <translation>Показати клацання</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Приховати клацання</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,11 +427,15 @@ or press the shortcut again to stop recording</source>
         <translation>Буфер обміну</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Редагувати у Draw</translation>
+        <source>Show pointer</source>
+        <translation>Показати вказівник</translation>
     </message>
     <message>
-        <source>Show pointer</source>
+        <source>Mouse</source>
+        <translation>Миша</translation>
+    </message>
+    <message>
+        <source>Show Pointer</source>
         <translation>Показати вказівник</translation>
     </message>
 </context>

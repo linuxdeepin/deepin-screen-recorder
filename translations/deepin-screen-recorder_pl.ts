@@ -77,6 +77,10 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Zrzut ekranu</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Zrzut ekranu</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Podgląd</translation>
     </message>
@@ -110,6 +110,10 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <message>
         <source>Saved to %1</source>
         <translation>Zapisano w %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Nagraj</translation>
     </message>
 </context>
 <context>
@@ -162,10 +166,6 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>Pełny zrzut ekranu</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
         <translation>Pełny zrzut ekranu</translation>
     </message>
     <message>
@@ -245,10 +245,6 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <translation>Wyświetl skróty</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Nagraj</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation type="unfinished"/>
     </message>
@@ -261,16 +257,20 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Click</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Rozpocznij nagrywanie</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Opcję</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <message>
         <source>Show Click</source>
         <translation>Pokaż kliknięcie</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Ukryj kliknięcie</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,12 +427,16 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <translation>Schowek</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Edytuj w Draw</translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>Pokaż wskaźnik</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

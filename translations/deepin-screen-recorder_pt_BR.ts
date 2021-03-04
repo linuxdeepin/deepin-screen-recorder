@@ -77,6 +77,10 @@ clique no ícone da bandeja ou use o atalho</translation>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>O efeito janela será desativado durante o processo; e a gravação deverá ser interrompida</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Capturar</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ clique no ícone da bandeja ou use o atalho</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Captura de Tela</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Visualizar</translation>
     </message>
@@ -110,6 +110,10 @@ clique no ícone da bandeja ou use o atalho</translation>
     <message>
         <source>Saved to %1</source>
         <translation>Salvo em %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Gravar</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ clique no ícone da bandeja ou use o atalho</translation>
     <message>
         <source>Full screenshot</source>
         <translation>Capturar a tela inteira</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Copiar para Área de Transferência</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ clique no ícone da bandeja ou use o atalho</translation>
         <translation>Exibir atalhos</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Gravar</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>Som</translation>
     </message>
@@ -261,16 +257,20 @@ clique no ícone da bandeja ou use o atalho</translation>
         <translation>Webcam</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Clique</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Iniciar gravação</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Opções</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Mouse</translation>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ clique no ícone da bandeja ou use o atalho</translation>
     <message>
         <source>Show Click</source>
         <translation>Exibir Clique</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Ocultar Clique</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,11 +427,15 @@ clique no ícone da bandeja ou use o atalho</translation>
         <translation>Área de Transferência</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Editar no Desenhos</translation>
+        <source>Show pointer</source>
+        <translation>Exibir cursor</translation>
     </message>
     <message>
-        <source>Show pointer</source>
+        <source>Mouse</source>
+        <translation>Mouse</translation>
+    </message>
+    <message>
+        <source>Show Pointer</source>
         <translation>Exibir cursor</translation>
     </message>
 </context>

@@ -77,6 +77,10 @@ or press the shortcut again to stop recording</source>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Скриншот</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Захват экрана</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Просмотр</translation>
     </message>
@@ -110,6 +110,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Saved to %1</source>
         <translation>Сохранить в %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Запись</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Full screenshot</source>
         <translation>Скриншот всего экрана</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Копировать в буфер обмена</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ or press the shortcut again to stop recording</source>
         <translation>Показать комбинации клавиш</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Запись</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation type="unfinished"/>
     </message>
@@ -261,16 +257,20 @@ or press the shortcut again to stop recording</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Click</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Начало записи</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Опции</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Show Click</source>
         <translation>Показывать щелчки мыши в процессе записи</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Скрыть щелчки мыши в процессе записи</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,12 +427,16 @@ or press the shortcut again to stop recording</source>
         <translation>Буфер обмена</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Редактировать в приложении Рисование</translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>Показать указатель</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

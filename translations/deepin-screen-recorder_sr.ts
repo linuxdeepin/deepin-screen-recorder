@@ -77,6 +77,10 @@ or press the shortcut again to stop recording</source>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>Ефекти прозора су искључени у току процеса, снимање је морало бити заустављено</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Усликавање</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Снимак екрана</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Пусти</translation>
     </message>
@@ -110,6 +110,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Saved to %1</source>
         <translation>Сачувано у %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Снимање</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Full screenshot</source>
         <translation>Целовито усликавање</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Копирај у оставу</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ or press the shortcut again to stop recording</source>
         <translation>Прикажи пречице</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Снимање</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>Звук</translation>
     </message>
@@ -261,16 +257,20 @@ or press the shortcut again to stop recording</source>
         <translation>Мрежна камера</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Клик</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Почни снимање</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Опције</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Show Click</source>
         <translation>Прикажи клик</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Сакриј клик</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,12 +427,16 @@ or press the shortcut again to stop recording</source>
         <translation>Остава</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Уреди у Цртању</translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>Прикажи показивач</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

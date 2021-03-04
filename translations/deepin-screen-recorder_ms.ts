@@ -77,6 +77,10 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Tangkap Layar</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Tangkap Skrin</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Lihat</translation>
     </message>
@@ -110,6 +110,10 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>Saved to %1</source>
         <translation>Disimpan ke %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Rakam</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>Full screenshot</source>
         <translation>Tangkap layar penuh</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Salin ke papan keratan</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <translation>Papar pintasan</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Rakam</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation type="unfinished"/>
     </message>
@@ -261,16 +257,20 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Click</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Mula merakam</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Pilihan</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>Show Click</source>
         <translation>Tunjuk Klik</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Sembunyi Klik</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,11 +427,15 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Edit in Draw</source>
+        <source>Show pointer</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Show pointer</source>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
         <translation type="unfinished"/>
     </message>
 </context>

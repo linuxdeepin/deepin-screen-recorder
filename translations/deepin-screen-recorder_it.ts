@@ -77,6 +77,10 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>Poiché l&apos;effetto finestra è disabilitato durante il processo, la registrazione deve essere interrotta</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Screenshot</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Cattura schermo</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Visualizza</translation>
     </message>
@@ -110,6 +110,10 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Saved to %1</source>
         <translation>Salvato in %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Registrazione</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Full screenshot</source>
         <translation>Istantanea schermo intero</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Copia negli Appunti</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <translation>Visualizza scorciatoie</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Registrazione</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>Suono</translation>
     </message>
@@ -261,16 +257,20 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <translation>Webcam</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Click</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Inizia la registrazione</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Opzioni</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Mouse</translation>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Show Click</source>
         <translation>Mostra click</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Nascondi click</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,11 +427,15 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <translation>Appunti</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Edita nell&apos;app</translation>
+        <source>Show pointer</source>
+        <translation>Mostra il puntatore</translation>
     </message>
     <message>
-        <source>Show pointer</source>
+        <source>Mouse</source>
+        <translation>Mouse</translation>
+    </message>
+    <message>
+        <source>Show Pointer</source>
         <translation>Mostra il puntatore</translation>
     </message>
 </context>

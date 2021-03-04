@@ -77,6 +77,10 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>Protože v průběhu byl vypnutý efekt pro okno, nahrávání bylo zastaveno</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Pořídit snímek obrazovky</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Zachytávání obrazovky</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Pohled</translation>
     </message>
@@ -110,6 +110,10 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Saved to %1</source>
         <translation>Uloženo do %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Pořídit záznam</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Full screenshot</source>
         <translation>Celá obrazovka</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Zkopírovat do schránky</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <translation>Zobrazit klávesové zkratky</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Pořídit záznam</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>Zvuk</translation>
     </message>
@@ -261,16 +257,20 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <translation>Webová kamera</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Klepnutí</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Spustit záznam</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Volby</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Show Click</source>
         <translation>Ukázat klepnutí</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Skrýt klepnutí</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,12 +427,16 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <translation>Schránka</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Upravit v kreslení</translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>Zobrazit ukazatel</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

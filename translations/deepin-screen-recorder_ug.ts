@@ -76,6 +76,10 @@ or press the shortcut again to stop recording</source>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>سىنغا ئېلىش جەريانىدا كۆزنەكنىڭ ئالاھىدە ئۈنۈمى تاقىۋېتىلگەچكە، ئېكراننى سىنغا ئېلىش ئاياغلاشتۇرۇلدى</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>رەسىم تۇتۇش</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -95,10 +99,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>ئېكراننى رەسىم تۇتۇش، سىنغا ئېلىش</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>كۆرۈش</translation>
     </message>
@@ -109,6 +109,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Saved to %1</source>
         <translation> %1 گە ساقلاندى</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>سىنغا ئېلىش</translation>
     </message>
 </context>
 <context>
@@ -162,10 +166,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Full screenshot</source>
         <translation>پۈتۈن ئېكران تۇتۇش</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>چاپلاش تاختىسىغا كۆچۈرۈش</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -244,10 +244,6 @@ or press the shortcut again to stop recording</source>
         <translation>تېزلەتمە كۆرۈنسۇن</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>سىنغا ئېلىش</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>ئۈن ئېلىش</translation>
     </message>
@@ -260,16 +256,20 @@ or press the shortcut again to stop recording</source>
         <translation>كامېرا</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>چېكىش</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>سىن ئېلىشنى باشلاش</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>تاللاش</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -320,10 +320,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Show Click</source>
         <translation>كۇنۇپكا كۆرۈنسۇن</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>كۇنۇپكا يوشۇرۇنسۇن</translation>
     </message>
     <message>
         <source>Options</source>
@@ -430,12 +426,16 @@ or press the shortcut again to stop recording</source>
         <translation>چاپلاش تاختىسى</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>رەسىم تاختىسىدا تەھرىرلەش</translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>مائوس كۆرۈنسۇن</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

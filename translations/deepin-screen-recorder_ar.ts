@@ -77,6 +77,10 @@ or press the shortcut again to stop recording</source>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>لقطة شاشة</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>إلتقاط صورة الشاشة</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>معاينة</translation>
     </message>
@@ -110,6 +110,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Saved to %1</source>
         <translation>تم حفظ 1%</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>تسجيل</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Full screenshot</source>
         <translation>لقطة شاشة كاملة</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>نسخ إلى الحافظة</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ or press the shortcut again to stop recording</source>
         <translation>اختصارات شاشة العرض</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>تسجيل</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation type="unfinished"/>
     </message>
@@ -261,16 +257,20 @@ or press the shortcut again to stop recording</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Click</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>ابدأ التسجيل</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>خيارات</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Show Click</source>
         <translation>إظهار النقرات</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>إخفاء النقرات</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,11 +427,15 @@ or press the shortcut again to stop recording</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Edit in Draw</source>
+        <source>Show pointer</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Show pointer</source>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
         <translation type="unfinished"/>
     </message>
 </context>

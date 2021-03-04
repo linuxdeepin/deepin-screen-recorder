@@ -77,6 +77,10 @@ or press the shortcut again to stop recording</source>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>ཕབ་བཟོ་བྱེད་པའི་བརྒྱུད་རིམ་ནང་སྒེའུ་ཁུང་གི་ཁྱད་ནུས་སྒོ་བརྒྱབ་པས། བརྙན་ལེན་མཚམས་བཞག་པ།</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>བརྙན་བཤུས།</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>བརྙན་བཤུས་བརྙན་ཕབ།</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>ལྟ་བ།</translation>
     </message>
@@ -110,6 +110,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Saved to %1</source>
         <translation>པར་%1དུ་ཉར་ཟིན།</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>བརྙན་ཕབ།</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Full screenshot</source>
         <translation>བརྙན་ཡོལ་ཡོངས་བཤུ་ལེན་བྱེད་པ།</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>དྲས་སྦྱར་པང་དུ་པར་སློག་བྱེད་པ།</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ or press the shortcut again to stop recording</source>
         <translation>མྱུར་མཐེབ་གསལ་བ།</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>བརྙན་ཕབ།</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>སྒྲ་འབེབས།</translation>
     </message>
@@ -261,16 +257,20 @@ or press the shortcut again to stop recording</source>
         <translation>བརྙན་མིག </translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>གནོན་པ།</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>བརྙན་འབེབས་གང་མགྱོགས་འགོ་སློང་།</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>གདམ་ག</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Show Click</source>
         <translation>གནོན་པ་གསལ་བ།</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>གནོན་པ་ཡིབ་པ།</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,12 +427,16 @@ or press the shortcut again to stop recording</source>
         <translation>དྲས་སྦྱར་པང་།</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>བྲི་གདན་ཐོག་རྩོམ་སྒྲིག་བྱེད་པ།</translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>འོད་རྟགས་གསལ་བ།</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

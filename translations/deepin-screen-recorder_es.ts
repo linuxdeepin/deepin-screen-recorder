@@ -77,6 +77,10 @@ o con clic en el icono de la bandeja</translation>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ o con clic en el icono de la bandeja</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Captura de pantalla</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Ver</translation>
     </message>
@@ -110,6 +110,10 @@ o con clic en el icono de la bandeja</translation>
     <message>
         <source>Saved to %1</source>
         <translation>Guardado en %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Grabar</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ o con clic en el icono de la bandeja</translation>
     <message>
         <source>Full screenshot</source>
         <translation>Captura de pantalla completa</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Copiar al portapapeles</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ o con clic en el icono de la bandeja</translation>
         <translation>Mostrar atajos</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Grabar</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>Sonido</translation>
     </message>
@@ -261,16 +257,20 @@ o con clic en el icono de la bandeja</translation>
         <translation>Carama</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Click</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Iniciar grabación</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Opciones</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ o con clic en el icono de la bandeja</translation>
     <message>
         <source>Show Click</source>
         <translation>Mostrar clic</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Ocultar clic</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,12 +427,16 @@ o con clic en el icono de la bandeja</translation>
         <translation>Portapapeles</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Editar en Dibujo</translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>Mostrar puntero</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

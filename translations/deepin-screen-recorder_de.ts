@@ -77,6 +77,10 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>Da der Fenstereffekt während des Vorgangs deaktiviert ist, muss die Aufnahme gestoppt werden</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Bildschirmaufnahme</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Bildschirmaufnahme</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Ansicht</translation>
     </message>
@@ -110,6 +110,10 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <message>
         <source>Saved to %1</source>
         <translation>Gespeichert unter %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Aufnehmen</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <message>
         <source>Full screenshot</source>
         <translation>Volle Bildschirmaufnahme</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>In die Zwischenablage kopieren</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <translation>Tastenkombinationen anzeigen</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Aufnehmen</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>Ton</translation>
     </message>
@@ -261,16 +257,20 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <translation>Webcam</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Klick</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Aufnahme starten</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Optionen</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <message>
         <source>Show Click</source>
         <translation>Klick anzeigen</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Klick ausblenden</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,12 +427,16 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <translation>Zwischenablage</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>In Zeichnen bearbeiten</translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>Zeiger anzeigen</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

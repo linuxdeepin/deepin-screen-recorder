@@ -77,6 +77,10 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>Comme l&apos;effet de fenêtre est désactivé pendant le processus, l&apos;enregistrement doit être arrêté</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Capture d&apos;écran</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Capture d&apos;écran</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Afficher</translation>
     </message>
@@ -110,6 +110,10 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source>Saved to %1</source>
         <translation>Enregistré dans %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Enregistrer</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source>Full screenshot</source>
         <translation>Capture d&apos;écran complète</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Copier dans le presse-papiers</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <translation>Afficher les raccourcis</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Enregistrer</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>Son</translation>
     </message>
@@ -261,16 +257,20 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <translation>Caméra</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Cliquer</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Démarrer l&apos;enregistrement</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Options</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source>Show Click</source>
         <translation>Afficher le clic</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Masquer le clic</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,12 +427,16 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <translation>Presse-papiers</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Éditer </translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>Afficher le pointeur</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

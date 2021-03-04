@@ -77,6 +77,10 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>Ngaqë efekti i dritares është çaktivizuar gjatë procesit, regjistrimi duhet të ndalet.</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Foto ekrani</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Regjistrim Ekrani</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Shihni</translation>
     </message>
@@ -110,6 +110,10 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     <message>
         <source>Saved to %1</source>
         <translation>U ruajt te %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Regjistroje</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     <message>
         <source>Full screenshot</source>
         <translation>Foto ekrani e plotë</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Kopjoje në të papastër</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
         <translation>Shfaq shkurtore</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Regjistroje</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>Tingull</translation>
     </message>
@@ -261,16 +257,20 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
         <translation>Kamerë Web</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Klikim</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Fillo regjistrim</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Mundësi</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     <message>
         <source>Show Click</source>
         <translation>Shfaq Klikim</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Fshih Klikim</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,12 +427,16 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
         <translation>E papastër</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Përpunojeni në Draw</translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>Shfaq treguesin</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

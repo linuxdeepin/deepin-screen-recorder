@@ -77,6 +77,10 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ ou prema de novo o atallo para deixar de gravar</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Captura de pantalla</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Ver</translation>
     </message>
@@ -110,6 +110,10 @@ ou prema de novo o atallo para deixar de gravar</translation>
     <message>
         <source>Saved to %1</source>
         <translation>Gardar en %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Gravar</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ ou prema de novo o atallo para deixar de gravar</translation>
     <message>
         <source>Full screenshot</source>
         <translation>Captura de pantalla enteira</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Copiar ao portapapeis</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <translation>Amosar atallos</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Gravar</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation type="unfinished"/>
     </message>
@@ -261,16 +257,20 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Click</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Iniciar gravación</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Opcións</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ ou prema de novo o atallo para deixar de gravar</translation>
     <message>
         <source>Show Click</source>
         <translation>Amosar Premer</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Agochar Premer</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,11 +427,15 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Edit in Draw</source>
+        <source>Show pointer</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Show pointer</source>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
         <translation type="unfinished"/>
     </message>
 </context>

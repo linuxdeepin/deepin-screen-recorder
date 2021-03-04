@@ -19,6 +19,7 @@ ScreenGrabber::ScreenGrabber(QObject *parent) : QObject(parent)
 
 QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qreal devicePixelRatio)
 {
+    Q_UNUSED(devicePixelRatio);
     ok = true;
     if (m_info.waylandDectected()) {
         QPixmap res;

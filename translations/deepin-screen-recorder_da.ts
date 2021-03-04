@@ -77,6 +77,10 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Skærmbillede</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Skærmoptagelse</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Vis</translation>
     </message>
@@ -110,6 +110,10 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <message>
         <source>Saved to %1</source>
         <translation>Gemt til %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Optag</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <message>
         <source>Full screenshot</source>
         <translation>Fuldt skærmbillede</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Kopiér til udklipsholder</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <translation>Vis genveje</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Optag</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation type="unfinished"/>
     </message>
@@ -261,16 +257,20 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Click</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Start optagelse</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Valgmuligheder</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <message>
         <source>Show Click</source>
         <translation>Vis klik</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Skjul klik</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,11 +427,15 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Edit in Draw</source>
+        <source>Show pointer</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Show pointer</source>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
         <translation type="unfinished"/>
     </message>
 </context>

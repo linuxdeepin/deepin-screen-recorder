@@ -77,6 +77,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>Com que l’efecte de finestra es desactiva durant el procés, s’ha d’aturar la gravació.</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Captura de pantalla</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Vista</translation>
     </message>
@@ -110,6 +110,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Saved to %1</source>
         <translation>S&apos;ha desat a %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Grava</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Full screenshot</source>
         <translation>Captura de pantalla completa</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Copia al porta-retalls</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Mostra les dreceres</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Grava</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>So</translation>
     </message>
@@ -261,16 +257,20 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Càmera web</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Clic</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Inicia la gravació</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Opcions</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Ratolí</translation>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Show Click</source>
         <translation>Mostra els clics</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Amaga els clics</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,12 +427,16 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Porta-retalls</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Edita al Dibuix</translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>Mostra el punter</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Ratolí</translation>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation>Mostra&apos;n el punter</translation>
     </message>
 </context>
 <context>

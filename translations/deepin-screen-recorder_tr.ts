@@ -77,6 +77,10 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>İşlem sırasında pencere efekti devre dışı bırakıldığı için, kayıt durdurulmalıdır.</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ekran Görüntüsü</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Ekran Görüntüsü</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Görünüm</translation>
     </message>
@@ -110,6 +110,10 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Saved to %1</source>
         <translation>Şuraya kaydedildi %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Kayıt</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Full screenshot</source>
         <translation>Tam ekran görüntüsü</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Panoya kopyala</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation>Kısayolları görüntüle</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Kayıt</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>Ses</translation>
     </message>
@@ -261,16 +257,20 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation>Webcam</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Tıkla</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Ekran kaydını başlat</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Seçenekler</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Show Click</source>
         <translation>Tıklamayı Göster</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Tıklamayı Gizle</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,12 +427,16 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation>Pano</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Çizim ile düzelt</translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>İşaretçiyi göster</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

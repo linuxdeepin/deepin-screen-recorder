@@ -77,6 +77,10 @@ or press the shortcut again to stop recording</translation>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>As the window effect is disabled during the process, the recording has to be stopped</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Screenshot</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ or press the shortcut again to stop recording</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Screen Capture</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>View</translation>
     </message>
@@ -110,6 +110,10 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Saved to %1</source>
         <translation>Saved to %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Record</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Full screenshot</source>
         <translation>Full screenshot</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Copy to clipboard</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ or press the shortcut again to stop recording</translation>
         <translation>Display shortcuts</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Record</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>Sound</translation>
     </message>
@@ -261,16 +257,20 @@ or press the shortcut again to stop recording</translation>
         <translation>Webcam</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Click</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Start recording</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Options</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation>Start/Recording</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Mouse</translation>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Show Click</source>
         <translation>Show Click</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Hide Click</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,12 +427,16 @@ or press the shortcut again to stop recording</translation>
         <translation>Clipboard</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Edit in Draw</translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>Show pointer</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Mouse</translation>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation>Show Pointer</translation>
     </message>
 </context>
 <context>

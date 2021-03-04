@@ -77,6 +77,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>De opname moet worden gestopt omdat vensteranimaties moeten worden uitgeschakeld</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Schermfoto</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Schermfoto</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Bekijken</translation>
     </message>
@@ -110,6 +110,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Saved to %1</source>
         <translation>Opgeslagen in %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Opnemen</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Full screenshot</source>
         <translation>Schermfoto van volledig scherm</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Kopiëren naar klembord</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <translation>Sneltoetsen tonen</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Opnemen</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>Geluid</translation>
     </message>
@@ -261,16 +257,20 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <translation>Webcam</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Muisklik</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Opname starten</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Opties</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Show Click</source>
         <translation>Muisklikken tonen</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Muisklikken verbergen</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,12 +427,16 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <translation>Klembord</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Bewerken in Deepin Tekenen</translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>Cursor vastleggen</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

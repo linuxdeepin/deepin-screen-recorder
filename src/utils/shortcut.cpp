@@ -31,7 +31,7 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
     screenshotGroup.groupName = tr("Start/Screenshot");
     exitGroup.groupName = tr("Exit/Save");
     drawGroup.groupName = tr("Drawing");
-    recordGroup.groupName = tr("Start/Record");
+    recordGroup.groupName = tr("Start/Recording");
     sizeGroup.groupName = tr("Size Adjustment");
     setGroup.groupName = tr("Settings");
 
@@ -53,7 +53,7 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
                          << ShortcutItem(tr("Undo"), "Ctrl+Z")
                          << ShortcutItem(tr("Options"), "F3");
 
-    recordGroup.groupItems << ShortcutItem(tr("Start/Record"), "Ctr+Alt+R")
+    recordGroup.groupItems << ShortcutItem(tr("Start recording"), "Ctr+Alt+R")
                            << ShortcutItem(tr("Sound"), "S")
                            << ShortcutItem(tr("Keystroke"), "K")
                            << ShortcutItem(tr("Webcam"), "W")

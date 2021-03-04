@@ -77,6 +77,10 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>Koska ikkunatehosteet on poistettu käytöstä prosessin aikana, tallennus on pysäytetty</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Kuvakaappaus</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Ruudunkaappaus</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Näytä</translation>
     </message>
@@ -110,6 +110,10 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Saved to %1</source>
         <translation>Tallenna nimellä %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Tallenna</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Full screenshot</source>
         <translation>Kokoruudun kaappaus</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Kopioi leikepöydälle</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <translation>Näytä kuvakkeet</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Tallenna</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>Ääni</translation>
     </message>
@@ -261,16 +257,20 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <translation>Kamera</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Napsautus</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Aloita tallennus</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Valinnat</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Show Click</source>
         <translation>Näytä napsautus</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Piilota napsautus</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,12 +427,16 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <translation>Leikepöydälle</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Muokkaa ohjelmassa Piirtäminen</translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>Näytä osoitin</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

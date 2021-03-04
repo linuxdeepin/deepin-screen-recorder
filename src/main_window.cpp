@@ -1986,7 +1986,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         QString padImgPath = QString("%1%2%3")
                 .arg(QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first())
                 .arg(QDir::separator())
-                .arg(tr("screenshot"));
+                .arg(tr("Screenshot"));
         if (!dir.exists(padImgPath)) {
             dir.mkpath(padImgPath);
         }

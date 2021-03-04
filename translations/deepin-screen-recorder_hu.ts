@@ -77,6 +77,10 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>Mivel az ablakok effektezése le van tiltva a folyamat során, a felvételt le kell állítani</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Képernyőkép</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Képernyőrögzítő</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Megtekintés</translation>
     </message>
@@ -110,6 +110,10 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
     <message>
         <source>Saved to %1</source>
         <translation>Mentve ide: %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Rögzítés</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
     <message>
         <source>Full screenshot</source>
         <translation>Teljes képernyőkép</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Másolás a vágólapra</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
         <translation>Gyorsbillentyűk megjelenítése</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Rögzítés</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>Hang</translation>
     </message>
@@ -261,16 +257,20 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
         <translation>Webkamera</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Kattintás</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Felvétel megkezdése</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Beállítások</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Egér</translation>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
     <message>
         <source>Show Click</source>
         <translation>Kattintás megjelenítése</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Kattintás elrejtése</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,11 +427,15 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
         <translation>Vágólap</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Szerkesztés a Rajzolóban</translation>
+        <source>Show pointer</source>
+        <translation>Mutató megjelenítése</translation>
     </message>
     <message>
-        <source>Show pointer</source>
+        <source>Mouse</source>
+        <translation>Egér</translation>
+    </message>
+    <message>
+        <source>Show Pointer</source>
         <translation>Mutató megjelenítése</translation>
     </message>
 </context>

@@ -77,6 +77,10 @@ or press the shortcut again to stop recording</source>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>因在录制过程中关闭了窗口特效，录屏已结束</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>截图</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>截图录屏</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>查看</translation>
     </message>
@@ -110,6 +110,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Saved to %1</source>
         <translation>文件已保存到%1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>录屏</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Full screenshot</source>
         <translation>截取全屏</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>复制到剪贴板</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ or press the shortcut again to stop recording</source>
         <translation>显示快捷键</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>录屏</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>录音</translation>
     </message>
@@ -261,16 +257,20 @@ or press the shortcut again to stop recording</source>
         <translation>摄像头</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>点击</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>快速启动录屏</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>选项</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation>启动/录屏</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>录制鼠标</translation>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Show Click</source>
         <translation>显示点击</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>隐藏点击</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,11 +427,15 @@ or press the shortcut again to stop recording</source>
         <translation>剪贴板</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>在画板中编辑</translation>
+        <source>Show pointer</source>
+        <translation>显示光标</translation>
     </message>
     <message>
-        <source>Show pointer</source>
+        <source>Mouse</source>
+        <translation>录制鼠标</translation>
+    </message>
+    <message>
+        <source>Show Pointer</source>
         <translation>显示光标</translation>
     </message>
 </context>

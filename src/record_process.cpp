@@ -58,7 +58,7 @@ RecordProcess::RecordProcess(QObject *parent) : QObject(parent)
     saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
     defaultSaveDir = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
     if(Utils::isTabletEnvironment){
-        defaultSaveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first() + tr("/Record/");
+        defaultSaveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first() + QDir::separator() + tr("Record") + QDir::separator();
         QDir dir;
         if(!dir.exists(defaultSaveDir)) {
             dir.mkdir(defaultSaveDir);
@@ -427,7 +427,7 @@ void RecordProcess::initProcess()
             fileExtension = "mp4";
         }
     }
-    saveBaseName = QString("%1_%2_%3.%4").arg(tr("Record screen")).arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
+    saveBaseName = QString("%1_%2_%3.%4").arg(tr("Record")).arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
     savePath = QDir(saveTempDir).filePath(saveBaseName);
     // Remove same cache file first.
     QFile file(savePath);

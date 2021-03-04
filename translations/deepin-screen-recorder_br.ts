@@ -77,6 +77,10 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Tapadenn-skramm</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Tapadenn skramm</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Gwelet</translation>
     </message>
@@ -110,6 +110,10 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     <message>
         <source>Saved to %1</source>
         <translation>Enrollet e-barzh %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Enrollañ</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     <message>
         <source>Full screenshot</source>
         <translation>Tapadenn-skramm klok</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Eilañ er golver</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <translation>Diskouez ar berradurioù</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Enrollañ</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation type="unfinished"/>
     </message>
@@ -261,16 +257,20 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Click</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Kregiñ da enrollañ</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Dibarzhioù</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     <message>
         <source>Show Click</source>
         <translation>Diskouez ar c&apos;hlik</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Kuzhat ar c&apos;hlik</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,11 +427,15 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Edit in Draw</source>
+        <source>Show pointer</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Show pointer</source>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
         <translation type="unfinished"/>
     </message>
 </context>

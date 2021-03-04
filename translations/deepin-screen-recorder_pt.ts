@@ -77,6 +77,10 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation>Como os efeitos visuais são desativados durante o processo, a gravação tem de ser interrompida</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Captura de ecrã</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -96,10 +100,6 @@ ou pressione novamente o atalho para parar de gravar</translation>
 <context>
     <name>RecordProcess</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Captura de ecrã</translation>
-    </message>
-    <message>
         <source>View</source>
         <translation>Ver</translation>
     </message>
@@ -110,6 +110,10 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Saved to %1</source>
         <translation>Guardado em %1</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Gravar</translation>
     </message>
 </context>
 <context>
@@ -163,10 +167,6 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Full screenshot</source>
         <translation>Captura de ecrã inteiro</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation>Copiar para área de transferência</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -245,10 +245,6 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <translation>Mostrar atalhos</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation>Gravar</translation>
-    </message>
-    <message>
         <source>Sound</source>
         <translation>Som</translation>
     </message>
@@ -261,16 +257,20 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <translation>Webcam</translation>
     </message>
     <message>
-        <source>Click</source>
-        <translation>Clique</translation>
-    </message>
-    <message>
         <source>Start recording</source>
         <translation>Iniciar a gravação</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Opções</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -321,10 +321,6 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Show Click</source>
         <translation>Mostrar clique</translation>
-    </message>
-    <message>
-        <source>Hide Click</source>
-        <translation>Ocultar clique</translation>
     </message>
     <message>
         <source>Options</source>
@@ -431,12 +427,16 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <translation>Área de transferência</translation>
     </message>
     <message>
-        <source>Edit in Draw</source>
-        <translation>Editar no Desenho</translation>
-    </message>
-    <message>
         <source>Show pointer</source>
         <translation>Mostrar cursor</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Pointer</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
