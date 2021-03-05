@@ -383,7 +383,6 @@ void MainWindow::initAttributes()
     m_recordButton->setFixedSize(76, 58);
     //m_recordButton->setObjectName("mainRecordBtn");
     Utils::setAccessibility(m_recordButton, AC_MAINWINDOW_MAINRECORDBTN);
-    m_recordButton->setFocusPolicy(Qt::ClickFocus);
 
 
     m_shotButton = new DPushButton(this);
