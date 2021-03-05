@@ -311,8 +311,15 @@ void SubToolWidget::initRecordLabel()
     m_recorderCheck->setText(tr("Show Click"));
     m_recorderCheck->setCheckable(true);
 
-    m_recorderMouse->setIcon(QIcon(":/newUI/normal/mouse2.svg"));
-    m_recorderCheck->setIcon(QIcon(":/newUI/normal/touch.svg"));
+    if (m_themeType == 1) {
+        m_recorderMouse->setIcon(QIcon(":/newUI/normal/mouse2.svg"));
+        m_recorderCheck->setIcon(QIcon(":/newUI/normal/touch.svg"));
+    } else if (m_themeType == 2) {
+        m_recorderMouse->setIcon(QIcon(":/newUI/dark/normal/mouse2.svg"));
+        m_recorderCheck->setIcon(QIcon(":/newUI/dark/normal/touch.svg"));
+    }
+
+
 
     m_cursorMenu->addAction(m_recorderMouse);
     m_cursorMenu->addAction(m_recorderCheck);
