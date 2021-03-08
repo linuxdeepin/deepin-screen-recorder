@@ -80,6 +80,7 @@ const int MainWindow::DRAG_POINT_RADIUS = 7;
 const int MainWindow::RECORD_BUTTON_NORMAL = 0;
 const int MainWindow::RECORD_BUTTON_WAIT = 1;
 const int MainWindow::RECORD_BUTTON_RECORDING = 2;
+const int MainWindow::RECORD_BUTTON_SAVEING=3;
 
 const int MainWindow::ACTION_MOVE = 0;
 const int MainWindow::ACTION_RESIZE_TOP_LEFT = 1;
@@ -3457,6 +3458,7 @@ void MainWindow::stopRecord()
         if(Utils::isTabletEnvironment && m_tabletRecorderHandle) {
             m_tabletRecorderHandle->stop();
         }
+        recordButtonStatus = RECORD_BUTTON_SAVEING;
         recordProcess.stopRecord();
     }
 }

@@ -83,6 +83,7 @@ class MainWindow : public DWidget
     static const int RECORD_BUTTON_NORMAL;
     static const int RECORD_BUTTON_WAIT;
     static const int RECORD_BUTTON_RECORDING;
+    static const int RECORD_BUTTON_SAVEING;
 
     static const int ACTION_MOVE;
     static const int ACTION_RESIZE_TOP_LEFT;
