@@ -1,5 +1,9 @@
 #include "timewidget.h"
 #include "dde-dock/constants.h"
+
+#include <DGuiApplicationHelper>
+#include <DStyle>
+
 #include <QApplication>
 #include <QPainter>
 #include <QDebug>
@@ -17,7 +21,9 @@ TimeWidget::TimeWidget(DWidget *parent):
     m_shadeIcon(nullptr),
     m_currentIcon(nullptr),
     m_bRefresh(true),
-    m_position(-1)
+    m_position(-1),
+    m_hover(false),
+    m_pressed(false)
 {
     QFontMetrics fm(RECORDER_TIME_FONT);
     m_showTimeStr = QString("00:00:00");
@@ -46,7 +52,7 @@ TimeWidget::~TimeWidget()
         m_timer = nullptr;
     }
     if(nullptr != m_dockInter){
-        m_dockInter->deleteLater();
+        m_dockInter->deleteLater(); 
         m_dockInter = nullptr;
     }
 }
@@ -96,39 +102,78 @@ void TimeWidget::onPositionChanged(int value)
 void TimeWidget::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
+    if (rect().height() > PLUGIN_BACKGROUND_MIN_SIZE) {
+        QColor color;
+        if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
+            color = Qt::black;
+            painter.setOpacity(0.5);
+
+            if (m_hover) {
+                painter.setOpacity(0.6);
+            }
+
+            if (m_pressed) {
+                painter.setOpacity(0.3);
+            }
+        } else {
+            color = Qt::white;
+            painter.setOpacity(0.1);
+
+            if (m_hover) {
+                painter.setOpacity(0.2);
+            }
+
+            if (m_pressed) {
+                painter.setOpacity(0.05);
+            }
+        }
+        painter.setPen(Qt::white);
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        DStyleHelper dstyle(style());
+        const int radius = dstyle.pixelMetric(DStyle::PM_FrameRadius);
+        QPainterPath path;
+        if (position::top == m_position || position::bottom == m_position) {
+            QRect rc(0, 0, rect().width(), rect().height());
+            rc.moveTo(rect().center() - rc.center());
+            path.addRoundedRect(rc, radius, radius);
+
+        } else if (position::right == m_position || position::left == m_position) {
+            int minSize = std::min(width(), height());
+            QRect rc(0, 0, minSize, minSize);
+            rc.moveTo(rect().center() - rc.center());
+            path.addRoundedRect(rc, radius, radius);
+        }
+        painter.fillPath(path, color);
+    } else {
+        painter.setPen(Qt::black);
+    }
+    painter.setOpacity(1);
     painter.setRenderHints(QPainter::Antialiasing|QPainter::SmoothPixmapTransform,true);
     const auto ratio = devicePixelRatioF();
-    if(0 == m_position || 2 == m_position){
+    if (position::top == m_position || position::bottom == m_position) {
         m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_LEVEL_ICON_SIZE, RECORDER_TIME_LEVEL_ICON_SIZE) * ratio);
         m_pixmap.setDevicePixelRatio(ratio);
         const QRectF &rf = QRectF(rect());
         const QRectF &prf = QRectF(m_pixmap.rect());
         QPointF pf = rf.center() - prf.center() / m_pixmap.devicePixelRatioF();
-        painter.drawPixmap(0,static_cast<int>(pf.y()), m_pixmap);
+        painter.drawPixmap(RECORDER_ICON_TOP_BOTTOM_X,static_cast<int>(pf.y()), m_pixmap);
         QFont font = RECORDER_TIME_FONT;
-        //painter.setPen(Qt::white);
         painter.setFont(font);
         QFontMetrics fm(font);
-        painter.drawText(m_pixmap.width()*static_cast<int>(devicePixelRatioF())+3,rect().y(),rect().width(),rect().height(), Qt::AlignLeft|Qt::AlignVCenter,m_showTimeStr);
-    }
-    else if(1 == m_position || 3 == m_position){
+        painter.drawText(m_pixmap.width() * static_cast<int>(devicePixelRatioF()) + RECORDER_TEXT_TOP_BOTTOM_X + RECORDER_ICON_TOP_BOTTOM_X, rect().y(), rect().width(), rect().height(), Qt::AlignLeft|Qt::AlignVCenter, m_showTimeStr);
+    } else if (position::right == m_position || position::left == m_position) {
         m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_VERTICAL_ICON_SIZE, RECORDER_TIME_VERTICAL_ICON_SIZE) * ratio);
         m_pixmap.setDevicePixelRatio(ratio);
-        painter.drawPixmap(0,0, m_pixmap);
+        const QRectF &rf = QRectF(rect());
+        const QRectF &rfp = QRectF(m_pixmap.rect());
+        painter.drawPixmap(rf.center() - rfp.center() / m_pixmap.devicePixelRatioF(), m_pixmap);
     }
     QWidget::paintEvent(e);
 }
 
-//const QPixmap TimeWidget::loadSvg(const QString &fileName, const QSize &size) const
-//{
-//    const auto ratio = devicePixelRatioF();
-//    QPixmap pixmap = QIcon::fromTheme(fileName, *m_currentIcon).pixmap(size * ratio);
-//    pixmap.setDevicePixelRatio(ratio);
-//    return pixmap;
-//}
-
 void TimeWidget::mousePressEvent(QMouseEvent *e)
 { 
+    m_pressed = true;
     if(e->pos().x() > 0 && e->pos().x() < m_pixmap.width()){
         QDBusInterface notification(QString::fromUtf8("com.deepin.ScreenRecorder"),
                                     QString::fromUtf8("/com/deepin/ScreenRecorder"),
@@ -136,7 +181,31 @@ void TimeWidget::mousePressEvent(QMouseEvent *e)
                                     QDBusConnection::sessionBus());
         notification.asyncCall("stopRecord");
     }
+    update();
     QWidget::mousePressEvent(e);
+}
+
+void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
+{
+    m_pressed = false;
+    m_hover = false;
+    update();
+    QWidget::mouseReleaseEvent(e);
+}
+
+void TimeWidget::mouseMoveEvent(QMouseEvent *e)
+{
+    m_hover = true;
+    update();
+    QWidget::mouseMoveEvent(e);
+}
+
+void TimeWidget::leaveEvent(QEvent *e)
+{
+    m_hover = false;
+    m_pressed = false;
+    update();
+    QWidget::leaveEvent(e);
 }
 
 void TimeWidget::start()

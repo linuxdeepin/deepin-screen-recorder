@@ -16,6 +16,8 @@
 #define RECORDER_TIME_LEVEL_SIZE "00000 00:00:00"
 #define RECORDER_TIME_VERTICAL_SIZE "0000"
 #define RECORDER_TIME_FONT DFontSizeManager::instance()->t8()
+#define RECORDER_ICON_TOP_BOTTOM_X 8
+#define RECORDER_TEXT_TOP_BOTTOM_X 3
 
 DWIDGET_USE_NAMESPACE
 using DBusDock = com::deepin::dde::daemon::Dock;
@@ -23,6 +25,14 @@ using DBusDock = com::deepin::dde::daemon::Dock;
 class TimeWidget : public DWidget
 {
     Q_OBJECT
+
+    enum position {
+        top = 0,
+        right,
+        bottom,
+        left
+    };
+
 public:
     explicit TimeWidget(DWidget *parent = nullptr);
     ~TimeWidget();
@@ -42,10 +52,14 @@ public:
      * @brief sizeHint:返回控件大小
      * @return
      */
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
 
 protected:
-    void mousePressEvent(QMouseEvent *e);
+    void paintEvent(QPaintEvent *e) override;
+    void mousePressEvent(QMouseEvent *e) override;
+    void mouseReleaseEvent(QMouseEvent *e) override;
+    void mouseMoveEvent(QMouseEvent *e) override;
+    void leaveEvent(QEvent *e) override;
 
 private slots:
     /**
@@ -60,10 +74,6 @@ private slots:
     void onPositionChanged(int value);
 
 private:
-    //const QPixmap loadSvg(const QString &fileName, const QSize &size) const;
-    void paintEvent(QPaintEvent *e);
-
-private:
     QTimer *m_timer;
     DBusDock *m_dockInter;
     QIcon *m_lightIcon;
@@ -76,6 +86,8 @@ private:
     bool m_bRefresh;
     int m_position;
     QBoxLayout *centralLayout;
+    bool m_hover;
+    bool m_pressed;
 };
 
 #endif // TIMEWIDGET_H
