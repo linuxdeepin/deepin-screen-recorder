@@ -1,7 +1,9 @@
 /*
- * Copyright (C) 2019 ~ 2020 Deepin Technology Co., Ltd.
+ * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
  *
- * Author:     Zheng Youge<youge.zheng@deepin.com>
+ * Author:     He MingYang <hemingyang@uniontech.com>
+ *
+ * Maintainer: Liu Zheng <liuzheng@uniontech.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include "sidebar.h"
 #include "../utils/configsettings.h"
 #include "../utils.h"

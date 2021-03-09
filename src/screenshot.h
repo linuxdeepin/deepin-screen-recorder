@@ -1,5 +1,9 @@
 /*
- * Maintainer: Peng Hui<penghui@deepin.com>
+ * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+ *
+ * Author:     Hou Lei <houlei@uniontech.com>
+ *
+ * Maintainer: Liu Zheng <liuzheng@uniontech.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

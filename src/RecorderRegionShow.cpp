@@ -1,11 +1,9 @@
-/* -*- Mode: C++; indent-tabs-mode: nil; tab-width: 4 -*-
- * -*- coding: utf-8 -*-
+/*
+ * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
  *
- * Copyright (C) 2011 ~ 2018 Deepin, Inc.
- *               2020 ~ 2021 He Ming Yang.
+ * Author:     He MingYang <hemingyang@uniontech.com>
  *
- * Author:     He Ming Yang <hemingyang@uniontech.com>
- * Maintainer: He Ming Yang <hemingyang@uniontech.com>
+ * Maintainer: Liu Zheng <liuzheng@uniontech.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include "RecorderRegionShow.h"
 #include "utils.h"
 

@@ -1,9 +1,9 @@
 /*
- * Copyright (C) 2016 ~ 2018 Wuhan Deepin Technology Co., Ltd.
+ * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
  *
- * Author:     Iceyer <me@iceyer.net>
+ * Author:     He MingYang <hemingyang@uniontech.com>
  *
- * Maintainer: Iceyer <me@iceyer.net>
+ * Maintainer: Liu Zheng <liuzheng@uniontech.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

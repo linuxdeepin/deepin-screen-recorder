@@ -3,17 +3,17 @@ Upstream-Name: deepin-screen-recorder
 Source: https://github.com/manateelazycat/deepin-screen-recorder
 
 Files: *
-Copyright: 2017 Andy Stewart <lazycat.manatee@gmail.com>
+Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd. 
 License: GPL-3+
 
 Files: debian/*
-Copyright: 2017 Deepin <deepin@deepin.com>
+Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd. 
 License: GPL-3+
 
 License: GPL-3+
  This package is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
+ the Free Software Foundation; either version 3 of the License, or
  (at your option) any later version.
  .
  This package is distributed in the hope that it will be useful,
