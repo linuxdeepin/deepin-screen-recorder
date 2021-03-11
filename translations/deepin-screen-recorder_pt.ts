@@ -266,11 +266,11 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Iniciar/Gravação</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Rato</translation>
     </message>
 </context>
 <context>
@@ -432,11 +432,11 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Rato</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation type="unfinished"/>
+        <translation>Mostrar cursor</translation>
     </message>
 </context>
 <context>

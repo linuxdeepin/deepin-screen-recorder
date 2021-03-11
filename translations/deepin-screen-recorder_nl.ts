@@ -266,11 +266,11 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Opname starten</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Cursor</translation>
     </message>
 </context>
 <context>
@@ -432,11 +432,11 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Cursor</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation type="unfinished"/>
+        <translation>Cursor vastleggen</translation>
     </message>
 </context>
 <context>

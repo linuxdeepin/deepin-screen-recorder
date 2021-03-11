@@ -266,7 +266,7 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Iniciar / Gravação</translation>
     </message>
     <message>
         <source>Mouse</source>

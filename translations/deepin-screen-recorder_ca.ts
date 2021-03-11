@@ -266,7 +266,7 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Inici / gravació</translation>
     </message>
     <message>
         <source>Mouse</source>

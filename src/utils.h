@@ -45,9 +45,9 @@ public:
     static void drawTooltipText(QPainter &painter, QString text, QString textColor, int textSize, QRectF rect);
     static void passInputEvent(int wid);
     static void setFontSize(QPainter &painter, int textSize);
-    static void warnNoComposite();
+//    static void warnNoComposite();
 //    static void notSupportWarn();
-    static QString getRecordingSaveDirectory();
+//    static QString getRecordingSaveDirectory();
     static void setAccessibility(DPushButton *button,const QString name);
     static void setAccessibility(DImageButton *button,const QString name);
     static void setAccessibility(QAction *action, const QString name);

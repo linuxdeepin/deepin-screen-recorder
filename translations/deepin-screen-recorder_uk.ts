@@ -266,7 +266,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Почати/Запис</translation>
     </message>
     <message>
         <source>Mouse</source>

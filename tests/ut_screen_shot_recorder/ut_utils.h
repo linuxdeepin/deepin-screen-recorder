@@ -22,32 +22,6 @@ public:
         std::cout << "end UtilsTest" << std::endl;
     }
 };
-
-TEST_F(UtilsTest, getRenderSize)
-{
-
-
-}
-TEST_F(UtilsTest, getQrcPath)
-{
-
-
-}
-TEST_F(UtilsTest, drawTooltipBackground)
-{
-
-
-}
-TEST_F(UtilsTest, drawTooltipText)
-{
-
-
-}
-TEST_F(UtilsTest, passInputEvent)
-{
-
-
-}
 TEST_F(UtilsTest, setFontSize)
 {
 
@@ -58,12 +32,4 @@ TEST_F(UtilsTest, setFontSize)
     int setsize = 24;
     Utils::setFontSize(painter, setsize);
     //EXPECT_EQ(painter.font().pointSize(), setsize);
-}
-TEST_F(UtilsTest, warnNoComposite)
-{
-    Utils::warnNoComposite();
-}
-TEST_F(UtilsTest, getRecordingSaveDirectory)
-{
-    QString subDir = Utils::getRecordingSaveDirectory();
 }

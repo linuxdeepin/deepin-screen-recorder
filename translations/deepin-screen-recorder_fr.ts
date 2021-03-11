@@ -266,11 +266,11 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Commencer l&apos;enregistrement</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Souris</translation>
     </message>
 </context>
 <context>
@@ -432,11 +432,11 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Souris</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation type="unfinished"/>
+        <translation>Afficher le pointeur</translation>
     </message>
 </context>
 <context>

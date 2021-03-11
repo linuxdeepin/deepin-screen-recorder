@@ -266,11 +266,11 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Aloita tallennus</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Hiiri</translation>
     </message>
 </context>
 <context>
@@ -432,11 +432,11 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Hiiri</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation type="unfinished"/>
+        <translation>Näytä osoitin</translation>
     </message>
 </context>
 <context>

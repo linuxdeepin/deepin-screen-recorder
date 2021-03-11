@@ -266,7 +266,7 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Avvia/Registra</translation>
     </message>
     <message>
         <source>Mouse</source>

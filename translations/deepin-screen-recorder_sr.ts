@@ -266,11 +266,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Почни/Снимање</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Миш</translation>
     </message>
 </context>
 <context>
@@ -432,11 +432,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Миш</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation type="unfinished"/>
+        <translation>Прикажи показивач</translation>
     </message>
 </context>
 <context>

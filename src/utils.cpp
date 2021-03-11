@@ -78,7 +78,7 @@ void Utils::setFontSize(QPainter &painter, int textSize)
     font.setPointSize(textSize);
     painter.setFont(font);
 }
-
+/*
 void Utils::warnNoComposite()
 {
     QDBusInterface iface(WarningDialogService,
@@ -87,7 +87,7 @@ void Utils::warnNoComposite()
     iface.call("RaiseWindow");
 }
 
-/*
+
 void Utils::notSupportWarn()
 {
    DDialog warnDlg;
@@ -182,7 +182,7 @@ void Utils::passInputEvent(int wid)
     delete reponseArea;
     */
 }
-
+/*
 QString Utils::getRecordingSaveDirectory()
 {
     QDir musicDirectory = QDir(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
@@ -190,7 +190,7 @@ QString Utils::getRecordingSaveDirectory()
     musicDirectory.mkdir(subDirectory);
     return musicDirectory.filePath(subDirectory);
 }
-
+*/
 void Utils::setAccessibility(DPushButton *button, const QString name)
 {
     button->setObjectName(name);

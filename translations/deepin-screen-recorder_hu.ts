@@ -5,7 +5,7 @@
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
         <translation>Kattintson a tálcaikonra
-vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</translation>
+vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</translation>
     </message>
 </context>
 <context>
@@ -105,7 +105,7 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>A rögzítés befejeződött</translation>
+        <translation>A felvétel befejeződött</translation>
     </message>
     <message>
         <source>Saved to %1</source>
@@ -113,7 +113,7 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
     </message>
     <message>
         <source>Record</source>
-        <translation>Rögzítés</translation>
+        <translation>Felvétel</translation>
     </message>
 </context>
 <context>
@@ -266,7 +266,7 @@ vagy nyomja le a gyorsbillentyűt ismét a rögzítés megállításához</trans
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Indítás/Felvétel</translation>
     </message>
     <message>
         <source>Mouse</source>
