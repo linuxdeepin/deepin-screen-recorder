@@ -22,10 +22,6 @@ ACCESS_PRIVATE_FUN(TextEdit, void(QFocusEvent *e), focusInEvent);
 ACCESS_PRIVATE_FIELD(TextEdit, bool, m_isPressed);
 ACCESS_PRIVATE_FIELD(TextEdit, QPointF, m_pressPoint);
 
-//void focusInEvent_stub(QFocusEvent *e)
-//{
-
-//}
 
 class TextEditTest:public testing::Test{
 
@@ -93,29 +89,26 @@ TEST_F(TextEditTest, inputMethodEvent)
     call_private_fun::TextEditinputMethodEvent(*m_textEdit,e);
 }
 
-//TEST_F(TextEditTest, keyPressEvent)
-//{
-//    QKeyEvent *e = new QKeyEvent(QKeyEvent::KeyPress, 'a', Qt::NoModifier);
-//    call_private_fun::TextEditkeyPressEvent(*m_textEdit,e);
-//    m_textEdit->setReadOnly(false);
-//    QKeyEvent *escEvent = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Escape, Qt::NoModifier);
-//    call_private_fun::TextEditkeyPressEvent(*m_textEdit,escEvent);
+TEST_F(TextEditTest, keyPressEvent)
+{
+    m_textEdit->setReadOnly(false);
+    QKeyEvent *escEvent = new QKeyEvent(static_cast<QKeyEvent::Type>(6), Qt::Key_Escape, Qt::NoModifier);
+    call_private_fun::TextEditkeyPressEvent(*m_textEdit,escEvent);
 
-//    QEventLoop eventloop;
-//    QTimer::singleShot(1000, &eventloop, SLOT(quit()));
-//    eventloop.exec();
-//}
+    QEventLoop eventloop;
+    QTimer::singleShot(200, &eventloop, SLOT(quit()));
+    eventloop.exec();
+}
 
-//TEST_F(TextEditTest, focusInEvent)
-//{
-//    stub.set(ADDR(DPlainTextEdit,focusInEvent),focusInEvent_stub);
-//    QFocusEvent *e = new QFocusEvent(QEvent::FocusIn);
-//    call_private_fun::TextEditfocusInEvent(*m_textEdit,e);
+TEST_F(TextEditTest, focusInEvent)
+{
+    QFocusEvent *e = new QFocusEvent(static_cast<QKeyEvent::Type>(8));
+    call_private_fun::TextEditfocusInEvent(*m_textEdit,e);
 
-//    QEventLoop eventloop;
-//    QTimer::singleShot(1000, &eventloop, SLOT(quit()));
-//    eventloop.exec();
-//}
+    QEventLoop eventloop;
+    QTimer::singleShot(200, &eventloop, SLOT(quit()));
+    eventloop.exec();
+}
 
 TEST_F(TextEditTest, setColor)
 {

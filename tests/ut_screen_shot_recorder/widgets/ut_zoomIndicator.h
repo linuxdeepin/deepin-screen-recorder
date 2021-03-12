@@ -1,4 +1,7 @@
 #pragma once
+#include "stub.h"
+#include "addr_pri.h"
+
 #include <QtTest>
 #include <QColor>
 #include <QDebug>
@@ -7,6 +10,7 @@
 
 
 using namespace testing;
+ACCESS_PRIVATE_FUN(ZoomIndicator, void(QPaintEvent *), paintEvent);
 
 class ZoomIndicatorTest:public testing::Test, public QObject{
 
@@ -23,7 +27,14 @@ public:
         std::cout << "end ZoomIndicatorTest" << std::endl;
     }
 };
+
 TEST_F(ZoomIndicatorTest, ButtonClicked)
 {
     zoomindicator->showMagnifier(QPoint(100, 100));
+}
+
+TEST_F(ZoomIndicatorTest, paintEvent)
+{
+    QPaintEvent *paintEvent = new QPaintEvent(QRect());
+    call_private_fun::ZoomIndicatorpaintEvent(*zoomindicator,paintEvent);
 }
