@@ -1,4 +1,4 @@
-# Screen Capture|../common/deepin_screen_capture_96.svg|
+# Screen Capture|deepin-screen-recorder|
 
 ## Overview
 
@@ -88,9 +88,8 @@ You can fine-tune the screenshot and recording area. For example, you can enlarg
 
 #### Enlarge/Reduce the Screenshot and Recording Area
 
-Place the pointer over the white boarder of the screenshot area and the pointer will be changed to ![mouse_arrow](../common/Mouse_Arrow.svg). You can:
+- Place the pointer over the white boarder of the screenshot area and the pointer will be changed to ![mouse_arrow](../common/Mouse_Arrow.svg). Hold down the left mouse button and drag the mouse to enlarge or reduce the screenshot area. 
 
-- Hold down the left mouse button and drag the mouse to enlarge or reduce the screenshot area. 
 - Press **Ctrl** + ![up](../common/Up.svg) , ![down](../common/Down.svg) , ![left](../common/Left.svg) or ![right](../common/Right.svg) and drag the mouse to enlarge or reduce the screenshot area vertically or horizontally.
 
 #### Move the Screenshot and Recording Area Position
@@ -105,7 +104,6 @@ Place the pointer over the screenshot and recording area and it will be changed 
 Under the screenshot mode, click the corresponding icons on the toolbar and you can perform operations such as drawing and editing graphics, adding text annotations, etc. in the screenshot  area.
 
 ![0|caputure_bar](fig/capture_bar.png)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <table class="block1">
     <caption>Icon Description</caption>
@@ -113,20 +111,16 @@ Under the screenshot mode, click the corresponding icons on the toolbar and you 
         <tr>
             <td><img src="../common/rectangle_normal.svg" alt="Rectangle" class="inline" /></td>
             <td>Rectangle</td>
-            <td class="blank"></td>
             <td><img src="../common/oval_normal.svg" alt="Elipse" class="inline" /></td>
             <td>Elipse</td>
-        <td class="blank"></td>
             <td><img src="../common/line_normal.svg" alt="Arrow" class="inline" /></td>
             <td>Line</td>
         </tr>
           <tr>
             <td><img src="../common/Combined_Shape.svg" alt="Pencil" class="inline" /></td>
             <td>Pencil</td>
-            <td class="blank"></td>
             <td><img src="../common/text_normal.svg" alt="文本工具" class="inline" /></td>
             <td>Text</td>
-            <td class="blank"></td>
             <td><img src="../common/close.svg" alt="关闭" class="inline" /></td>
             <td>Exit</td>
         </tr>
@@ -258,7 +252,7 @@ You can save the screenshot in the following ways after launching Screen Capture
 
 - Double-click to save the screen capture.
 
-  > ![notes](../common/notes.svg) Notes: If your computer is equipped with a touchscreen or touchpad,  you can use touchscreen gestures to operate instead of the mouse: Double-click with one finger to finish screenshots.
+  > ![notes](../common/notes.svg) Notes: If your computer is equipped with a touchscreen or touchpad, double-click with one finger to finish screenshots.
 
 - Click ![notes](../common/screenshot_button.svg) on the toolbar.
 
@@ -269,7 +263,7 @@ You can save the screenshot in the following ways after launching Screen Capture
 
 Click **Options** on the toolbar of the Screen Capture interface, and expand the drop-down list:
 
-![0|option](fig/option-1.png)
+![0|option](fig/option.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 - Select **Clipboard** to save the screenshot to the clipboard.
@@ -284,7 +278,6 @@ Click **Options** on the toolbar of the Screen Capture interface, and expand the
 Under the recording mode, click the icons on the toolbar and you can perform recording with audio, video, keystroke and mouse clicks. 
 
 ![0|recorder_bar](fig/recorder_bar.png)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <table class="block1">
     <caption>Icon Description</caption>
@@ -292,38 +285,41 @@ Under the recording mode, click the icons on the toolbar and you can perform rec
         <tr>
             <td><img src="../common/microphone_normal.svg" alt="microphone_normal" class="inline" /></td>
             <td>Microphone</td>
-            <td class="blank"></td>
             <td><img src="../common/audio_frequency_normal.svg" alt="audio_frequency_normal" class="inline" /></td>
             <td>Sound On</td>
-        <td class="blank"></td>
             <td><img src="../common/key_normal.svg" alt="key_normal" class="inline" /></td>
             <td>Show Keystroke</td>
-        </tr>
-          <tr>
             <td><img src="../common/webcam_normal.svg" alt="webcam_normal" class="inline" /></td>
             <td>Webcam On</td>
-            <td class="blank"></td>
-            <td><img src="../common/mouse_mormal.svg" alt="mouse_normal" class="inline" /></td>
+        </tr>
+          <tr>
+            <td><img src="../common/cursor.svg" alt="Show Pointer" class="inline" /></td>
+            <td>Show Pointer</td>
+            <td><img src="../common/touch.svg" alt="Show Click" class="inline" /></td>
             <td>Show Click</td>
-            <td class="blank"></td>
             <td><img src="../common/close.svg" alt="close" class="inline" /></td>
             <td>Exit</td>
+            <td></td>
+            <td></td>
         </tr>
     </tbody>
 </table>
 
-> ![notes](../common/notes.svg)Notes: 
+
+> ![notes](../common/notes.svg)Notes: Screen recording is not available on the SW platform.
 >
-> - Screen recording is not available on the SW platform.
 
 #### Set Recording Settings
 
 On the toolbar of Screen Capture, you can set sound, keystroke, camera, etc. to get ready for video recording.
 
-- Sound: include microphone and built-in audio.
+- Sound: Include microphone and built-in audio. You can select one of them or both.
+
 - Keystroke: Click ![icon](../common/key_normal.svg)and the operation keystroke will be displayed during screen recording. Up to five recent operation keystrokes can be displayed at the same time. Click the icon again to enable **Hide Keystroke** and cancel keystroke display.
-- Camera: Click![icon](../common/webcam_normal.svg) and the camera window will be displayed on the recording screen. Drag the camera window outline to adjust the window size and position. Click the icon again to disable the camera. 
-- Click: Click ![icon](../common/mouse_mormal.svg) to display mouse click and touchscreen during screen recording. Click it again to cancel display.
+
+- Camera: Click![icon](../common/webcam_normal.svg) to start camera. Both the camera picture and window picture are recorded during screen recording. Drag the camera window outline to adjust the window size and position. Click the icon again to disable the camera. 
+
+- Mouse:  Include **Show Pointer**, **Show Click** or both.
   
 >![attention](../common/attention.svg) Attention: First, check whether the device connected supports sound recording and camera functions. Otherwise you cannot perform relevant operations.
 

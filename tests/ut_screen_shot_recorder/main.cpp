@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     qDebug() << "start test cases ..............";
     globalStub.set(ADDR(QCameraInfo, availableCameras), availableCameras_stub);
     globalStub.set(ADDR(QCameraInfo, isNull), isNull_stub);
-    globalStub.set(ADDR(QCoreApplication, quit), quit_stub);
+    //globalStub.set(ADDR(QCoreApplication, quit), quit_stub);
     globalStub.set(ADDR(QDBusInterface, callWithArgumentList), callWithArgumentList_stub);
     //testing::GTEST_FLAG(output) = "xml:./report/report.xml";
     testing::InitGoogleTest(&argc, argv);

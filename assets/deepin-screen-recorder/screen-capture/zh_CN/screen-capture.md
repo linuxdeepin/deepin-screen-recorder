@@ -1,4 +1,4 @@
-# 截图录屏|../common/deepin_screen_capture_96.svg|
+# 截图录屏|deepin-screen-recorder|
 
 ## 概述
 
@@ -121,25 +121,22 @@
         <tr>
             <td><img src="../common/rectangle_normal.svg" alt="矩形工具" class="inline" /></td>
             <td>矩形工具</td>
-            <td class="blank"></td>
             <td><img src="../common/oval_normal.svg" alt="椭圆工具" class="inline" /></td>
             <td>椭圆工具</td>
-        <td class="blank"></td>
             <td><img src="../common/line_normal.svg" alt="箭头工具" class="inline" /></td>
             <td>线条工具</td>
         </tr>
           <tr>
             <td><img src="../common/Combined_Shape.svg" alt="画笔工具" class="inline" /></td>
             <td>画笔工具</td>
-            <td class="blank"></td>
             <td><img src="../common/text_normal.svg" alt="文本工具" class="inline" /></td>
             <td>文本工具</td>
-            <td class="blank"></td>
             <td><img src="../common/close.svg" alt="关闭" class="inline" /></td>
             <td>退出截图</td>
         </tr>
     </tbody>
 </table>
+
 
 
 
@@ -228,7 +225,7 @@
 
 ### 添加文字批注
 
-对截取的图片进行文字补充和说明，帮助他人更清楚地理解。
+对截取的图片进行文字补充和说明，帮助他人更清楚地了解截取的图片。
 
 ![0|文本框](fig/text.png)
 
@@ -264,9 +261,7 @@
 您可以通过延时截图功能，捕捉特定状态或时间下的屏幕内容。
 
 - 将截图录屏图标固定在任务栏，右键单击图标，选择 **延时截图**。
-
 - 使用快捷键 **Ctrl** + ![icon](../common/Print.svg)，启动延时截图。
-
 - 在终端中执行命令 “deepin-screen-recorder -d n”，其中n表示以秒为单位的延时时长。
 
    
@@ -282,7 +277,7 @@
 - 双击鼠标左键来保存。
   
    >![notes](../common/notes.svg)说明：如果您的电脑支持触控屏或触控板，可以使用手势替代鼠标操作：一指双击完成截图。
-- 单击截图工具栏中的![icon](../common/screenshot_button.svg)按钮。
+- 单击工具栏中的截图按钮![icon](../common/screenshot_button.svg)。
 - 按下键盘上的 **Ctrl + S** 组合键来保存。
 - 单击鼠标右键，选择 **保存**。
 
@@ -299,7 +294,7 @@
 - 选择 **图片**，截图文件自动保存到图片文件夹目录下。
 - 选择 **指定位置**，截图文件将保存到用户设定的文件夹目录下。
 - 选择 **显示光标**，光标在截图区域内，截图生成图片时会同时显示光标所在的位置和样式。
-- 选择 **PNG/fig/BMP**，设置图片格式。
+- 选择 **PNG/JPG/BMP**，设置图片格式。
 
 
 
@@ -313,38 +308,41 @@
     <caption>工具栏说明</caption>
     <tbody>
         <tr>
-            <td><img src="../common/microphone_normal.svg" alt="录制声音" class="inline" /></td>
+            <td><img src="../common/microphone_normal.svg" alt/></td>
             <td>麦克风</td>
-            <td class="blank"></td>
-            <td><img src="../common/audio_frequency_normal.svg" alt="录制声音" class="inline" /></td>
+            <td><img src="../common/audio_frequency_normal.svg" alt/></td>
             <td>系统音频</td>
-        <td class="blank"></td>
-            <td><img src="../common/key_normal.svg" alt="按键" class="inline" /></td>
+            <td><img src="../common/key_normal.svg" alt/></td>
             <td>显示按键</td>
+            <td><img src="../common/webcam_normal.svg" alt/></td>
+            <td>开启摄像头</td>
         </tr>
           <tr>
-            <td><img src="../common/webcam_normal.svg" alt="摄像头" class="inline" /></td>
-            <td>开启摄像头</td>
-            <td class="blank"></td>
-            <td><img src="../common/mouse_mormal.svg" alt="鼠标点击" class="inline" /></td>
-            <td>显示鼠标点击</td>
-            <td class="blank"></td>
-            <td><img src="../common/close.svg" alt="关闭" class="inline" /></td>
+            <td><img src="../common/cursor.svg" alt/></td>
+            <td>显示光标</td>
+            <td><img src="../common/touch.svg" alt/></td>
+            <td>显示点击</td>
+            <td><img src="../common/close.svg" alt/></td>
             <td>退出录屏</td>
+            <td></td>
+            <td></td>
         </tr>
     </tbody>
 </table>
+
+
+
 
 > ![notes](../common/notes.svg)说明：SW平台不支持录屏功能。
 
 ### 录屏设置
 
-在录屏工具栏中，您可以设置：
+在录屏工具栏中，您可以：
 
-- 声音：包含麦克风、系统音频。
-- 按键：单击![icon](../common/key_normal.svg)显示按键，录屏时显示操作按键，最多支持5个最近操作按键同时显示；再次单击可以取消按键显示。
-- 摄像头：单击![icon](../common/webcam_normal.svg)显示摄像头窗口，录屏时显示摄像头画面，可拖拽摄像头窗口调整位置；再次单击取消开启。
-- 鼠标点击：单击![icon](../common/mouse_mormal.svg)，录屏时显示鼠标、触屏；再次单击取消显示。
+- 录制声音：在录制声音下拉选项中选择开启 **麦克风** 或 **系统音频**，也可以全部选择。
+- 显示按键：单击按钮 ![icon](../common/key_normal.svg)，录屏时显示键盘按键操作，最多同时显示5个按键操作。
+- 开启摄像头：单击按钮 ![icon](../common/webcam_normal.svg) ，启动摄像头，录屏时同时录制摄像头画面和屏幕画面，拖拽摄像头窗口可以调整位置。
+- 录制鼠标操作：在录制鼠标下拉选项中可以选择 **显示光标** 或 **显示点击**，也可以全部选择。
 
 > ![attention](../common/attention.svg)注意：请先检测接入的设备是否支持声音录制或摄像头功能，若不支持，则无法进行相应的操作。
 
@@ -359,8 +357,8 @@
 1. 使用快捷键 **Ctrl + Alt + R** 启动录屏。
 2. 选择录屏区域。
 3. 在录屏工具栏中，对录屏进行相关的设置。
-4. 单击 ![icon](../common/recorder_button.svg) 按钮，3秒倒计时结束后开始录制，此时托盘区域出现录制图标并闪烁。
-5. 您可以使用以下方法结束录制。
+4. 单击录屏按钮 ![icon](../common/recorder_button.svg) ，3秒倒计时结束后开始录制，此时托盘区域出现录制图标并闪烁。
+5. 您可以使用以下方法结束录制：
    - 使用快捷键 **Ctrl + Alt + R**。
    - 单击任务栏上的截图录屏图标。
    - 单击托盘区域录制图标。
