@@ -108,8 +108,9 @@ int main(int argc, char *argv[])
 
     // Construct a QGuiApplication before accessing a platform function.
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
-    Utils::isTabletEnvironment = DGuiApplicationHelper::isTabletEnvironment();
-    //Utils::isTabletEnvironment = false;
+    //Utils::isTabletEnvironment = DGuiApplicationHelper::isTabletEnvironment();
+    // DGuiApplicationHelper::isTabletEnvironment(); DTK 版本原因暂时不可用，pc环境直接赋值为false
+    Utils::isTabletEnvironment = false;
     qDebug() << Utils::isTabletEnvironment;
 
     // 内存检测标签
