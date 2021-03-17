@@ -60,6 +60,14 @@ bool clickedOnRect_stub(FourPoints rectPoints, QPointF pos, bool isBlurMosaic = 
     return true;
 }
 
+bool pointInRect_stub(FourPoints fourPoints, QPointF pos)
+{
+    Q_UNUSED(fourPoints)
+    Q_UNUSED(pos)
+    return true;
+}
+
+
 bool clickedOnEllipse_stub(FourPoints mainPoints, QPointF pos, bool isBlurMosaic = false)
 {
     Q_UNUSED(mainPoints)
@@ -1183,6 +1191,72 @@ TEST_F(ShapesWidgetTest, clickedOnLine)
     points3 << QPointF(162,317);
     QPointF pos3 = QPointF(147,321);
     shapesWidget->clickedOnLine(mainPoints3,points3,pos3);
+
+    FourPoints mainPoints4;
+    mainPoints4 << QPointF(92,307);
+    mainPoints4 << QPointF(92,329);
+    mainPoints4 << QPointF(172,329);
+    mainPoints4 << QPointF(172,307);
+    QList<QPointF> points4;
+    points4 << QPointF(102,319);
+    points4 << QPointF(109,319);
+    points4 << QPointF(114,319);
+    points4 << QPointF(119,319);
+    points4 << QPointF(124,319);
+    points4 << QPointF(129,319);
+    points4 << QPointF(133,319);
+    points4 << QPointF(137,319);
+    points4 << QPointF(143,319);
+    points4 << QPointF(147,319);
+    points4 << QPointF(153,318);
+    points4 << QPointF(158,318);
+    points4 << QPointF(162,317);
+    QPointF pos4 = QPointF(175,331);
+    shapesWidget->clickedOnLine(mainPoints4,points4,pos4);
+
+    FourPoints mainPoints5;
+    mainPoints5 << QPointF(92,307);
+    mainPoints5 << QPointF(172,329);
+    mainPoints5 << QPointF(92,329);
+    mainPoints5 << QPointF(172,307);
+    QList<QPointF> points5;
+    points5 << QPointF(102,319);
+    points5 << QPointF(109,319);
+    points5 << QPointF(114,319);
+    points5 << QPointF(119,319);
+    points5 << QPointF(124,319);
+    points5 << QPointF(129,319);
+    points5 << QPointF(133,319);
+    points5 << QPointF(137,319);
+    points5 << QPointF(143,319);
+    points5 << QPointF(147,319);
+    points5 << QPointF(153,318);
+    points5 << QPointF(158,318);
+    points5 << QPointF(162,317);
+    QPointF pos5 = QPointF(175,331);
+    shapesWidget->clickedOnLine(mainPoints5,points5,pos5);
+
+    FourPoints mainPoints6;
+    mainPoints6 << QPointF(172,329);
+    mainPoints6 << QPointF(92,307);
+    mainPoints6 << QPointF(92,329);
+    mainPoints6 << QPointF(172,307);
+    QList<QPointF> points6;
+    points6 << QPointF(102,319);
+    points6 << QPointF(109,319);
+    points6 << QPointF(114,319);
+    points6 << QPointF(119,319);
+    points6 << QPointF(124,319);
+    points6 << QPointF(129,319);
+    points6 << QPointF(133,319);
+    points6 << QPointF(137,319);
+    points6 << QPointF(143,319);
+    points6 << QPointF(147,319);
+    points6 << QPointF(153,318);
+    points6 << QPointF(158,318);
+    points6 << QPointF(162,317);
+    QPointF pos6 = QPointF(175,331);
+    shapesWidget->clickedOnLine(mainPoints6,points6,pos6);
 }
 
 TEST_F(ShapesWidgetTest, hoverOnLine)
