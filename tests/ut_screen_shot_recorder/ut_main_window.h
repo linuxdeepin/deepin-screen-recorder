@@ -1,12 +1,16 @@
 #pragma once
-#include <gtest/gtest.h>
+
+#include "../../src/utils.h"
+#include "../../src/main_window.h"
+
 #include <QTest>
 #include <QPoint>
+#include <QScreen>
 
-#include "../../src/main_window.h"
 #include "stub.h"
 #include "addr_pri.h"
 
+#include <gtest/gtest.h>
 
 using namespace testing;
 
@@ -14,30 +18,81 @@ using namespace testing;
 ACCESS_PRIVATE_FIELD(MainWindow, ToolBar*, m_toolBar);
 ACCESS_PRIVATE_FIELD(MainWindow, int,  m_screenCount);
 ACCESS_PRIVATE_FIELD(MainWindow, ShapesWidget*, m_shapesWidget);
+
+QRect geometry_stub()
+{
+    return QRect(0,0,1920,1080);
+}
+
+void passInputEvent_stub(int wid)
+{
+    Q_UNUSED(wid);
+}
+
 class MainWindowTest:public testing::Test{
 
 public:
     Stub stub;
+    MainWindow *m_window = nullptr;
     virtual void SetUp() override{
+        m_window = new MainWindow;
         std::cout << "start MainWindowTest" << std::endl;
         ConfigSettings::instance()->setValue("save", "saveCursor", true);
     }
 
     virtual void TearDown() override{
-        //delete m_window;
+        if (m_window) {
+            m_window->deleteLater();
+            m_window = nullptr;
+        }
         std::cout << "end MainWindowTest" << std::endl;
         system("killall deepin-shortcut-viewer");
-
     }
 };
-/*
+
+TEST_F(MainWindowTest, initAttributes)
+{
+    stub.set(ADDR(QScreen,geometry),geometry_stub);
+    m_window->initAttributes();
+    stub.reset(ADDR(QScreen,geometry));
+}
+
+TEST_F(MainWindowTest, initResource)
+{
+    stub.set(ADDR(QScreen,geometry),geometry_stub);
+    m_window->initAttributes();
+    stub.reset(ADDR(QScreen,geometry));
+
+    stub.set(ADDR(Utils,passInputEvent),passInputEvent_stub);
+    m_window->initResource();
+    stub.reset(ADDR(Utils,passInputEvent));
+}
+
+TEST_F(MainWindowTest, initLaunchMode)
+{
+    stub.set(ADDR(QScreen,geometry),geometry_stub);
+    m_window->initAttributes();
+    stub.reset(ADDR(QScreen,geometry));
+
+    stub.set(ADDR(Utils,passInputEvent),passInputEvent_stub);
+    m_window->initResource();
+    stub.reset(ADDR(Utils,passInputEvent));
+
+    m_window->initLaunchMode("screenShot");
+}
+
 TEST_F(MainWindowTest, screenShotShapes)
 {
-    MainWindow *m_window = new MainWindow;;
-
+    stub.set(ADDR(QScreen,geometry),geometry_stub);
     m_window->initAttributes();
+    stub.reset(ADDR(QScreen,geometry));
+
+    stub.set(ADDR(Utils,passInputEvent),passInputEvent_stub);
     m_window->initResource();
+    stub.reset(ADDR(Utils,passInputEvent));
+
     m_window->initLaunchMode("screenShot");
+
     m_window->showFullScreen();
 
     access_private_field::MainWindowm_screenCount(*m_window) = 1;
@@ -326,21 +381,24 @@ TEST_F(MainWindowTest, screenShotShapes)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-
     m_window->saveScreenShot();
-
     QTimer::singleShot(2000, &loop, SLOT(quit()));
     loop.exec();
-
-    //delete m_window;
 }
+
+
 TEST_F(MainWindowTest, screenShot)
 {
-    MainWindow *m_window = new MainWindow;;
-
+    stub.set(ADDR(QScreen,geometry),geometry_stub);
     m_window->initAttributes();
+    stub.reset(ADDR(QScreen,geometry));
+
+    stub.set(ADDR(Utils,passInputEvent),passInputEvent_stub);
     m_window->initResource();
+    stub.reset(ADDR(Utils,passInputEvent));
+
     m_window->initLaunchMode("screenShot");
+
     m_window->showFullScreen();
 
 
@@ -551,17 +609,21 @@ TEST_F(MainWindowTest, screenShot)
 
     QTimer::singleShot(3000, &loop, SLOT(quit()));
     loop.exec();
-
-    //delete m_window;
 }
 
+/*
 TEST_F(MainWindowTest, screenRecord)
 {
-    MainWindow *m_window = new MainWindow;
-
+    stub.set(ADDR(QScreen,geometry),geometry_stub);
     m_window->initAttributes();
+    stub.reset(ADDR(QScreen,geometry));
+
+    stub.set(ADDR(Utils,passInputEvent),passInputEvent_stub);
     m_window->initResource();
-    m_window->initLaunchMode("screenRecord");
+    stub.reset(ADDR(Utils,passInputEvent));
+
+    m_window->initLaunchMode("screenShot");
+
     m_window->showFullScreen();
 
 
@@ -652,10 +714,8 @@ TEST_F(MainWindowTest, screenRecord)
     m_window->stopRecord();
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
+}*/
 
-    //delete m_window;
-}
-*/
 static bool hasComposite_stub(void * obj) {
     return false;
 }
@@ -667,7 +727,6 @@ static QString CpuArchitecture_stub(void* obj)
 }
 TEST_F(MainWindowTest, onHelp)
 {
-    MainWindow *m_window = new MainWindow;
     m_window->onHelp();
 /*
     stub.set(ADDR(DWindowManagerHelper, hasComposite), hasComposite_stub);
@@ -676,5 +735,4 @@ TEST_F(MainWindowTest, onHelp)
     stub.reset(ADDR(DWindowManagerHelper, hasComposite));
     stub.reset(ADDR(QSysInfo, currentCpuArchitecture));
 */
-   delete m_window;
 }
