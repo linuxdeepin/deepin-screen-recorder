@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
 #endif
 
 
-    Utils::isTabletEnvironment = DGuiApplicationHelper::isTabletEnvironment();
+    Utils::isTabletEnvironment = false; // DGuiApplicationHelper::isTabletEnvironment();
     //Utils::isTabletEnvironment = false;
     qDebug() << Utils::isTabletEnvironment;
 

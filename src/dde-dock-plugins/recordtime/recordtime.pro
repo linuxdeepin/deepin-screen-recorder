@@ -1,8 +1,8 @@
 QT              += widgets dbus
 TEMPLATE        = lib
 CONFIG          += c++11 plugin link_pkgconfig
-QT              += dtkgui5.5
-QT              += dtkwidget5.5
+QT              += dtkgui
+QT              += dtkwidget
 PKGCONFIG += dframeworkdbus
 
 #TARGET          = deepin-screen-recorder-plugin
