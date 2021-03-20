@@ -33,7 +33,7 @@
 #include <QThread>
 #include <QDBusInterface>
 #include <QDBusPendingCall>
-
+#include <QPainterPath>
 TimeWidget::TimeWidget(DWidget *parent):
     DWidget(parent),
     m_timer(nullptr),
