@@ -4,8 +4,8 @@
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Detener con el mismo atajo de teclado
-o con clic en el icono de la bandeja</translation>
+        <translation>Detenga con el mismo atajo de teclado
+o haga clic en el icono de la bandeja</translation>
     </message>
 </context>
 <context>
@@ -75,7 +75,7 @@ o con clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"/>
+        <translation>Debido a que los efectos de ventana se desactivaron, el proceso de grabado se detuvo</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -113,7 +113,7 @@ o con clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Grabar</translation>
+        <translation>Grabación</translation>
     </message>
 </context>
 <context>
@@ -254,7 +254,7 @@ o con clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation>Carama</translation>
+        <translation>Cámara web</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -266,11 +266,11 @@ o con clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Iniciar/Detener</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Ratón</translation>
     </message>
 </context>
 <context>
@@ -312,11 +312,11 @@ o con clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Webcam On</source>
-        <translation>Cámara web encendida</translation>
+        <translation>Encender cámara web</translation>
     </message>
     <message>
         <source>Webcam Off</source>
-        <translation>Cámara web apagada</translation>
+        <translation>Apagar cámara web</translation>
     </message>
     <message>
         <source>Show Click</source>
@@ -432,11 +432,11 @@ o con clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Ratón</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation type="unfinished"/>
+        <translation>Mostrar puntero</translation>
     </message>
 </context>
 <context>
