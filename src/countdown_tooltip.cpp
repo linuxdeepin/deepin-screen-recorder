@@ -30,6 +30,7 @@
 #include <QApplication>
 #include <QPen>
 #include <QPainter>
+#include <QDebug>
 
 const int CountdownTooltip::NUMBER_PADDING_Y = 30;
 
@@ -45,6 +46,12 @@ CountdownTooltip::CountdownTooltip(DWidget *parent) : DWidget(parent),
     countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_3.svg"));
 
     showCountdownCounter = 0;
+
+    text = tr("Click the tray icon \nor press the shortcut again to stop recording");
+    QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, text);
+    int width = size.width() + Constant::RECTANGLE_PADDING * 2;
+    int height = size.height() + Constant::RECTANGLE_PADDING * 2 + countdown1Img.height() + NUMBER_PADDING_Y;
+    setFixedSize(width, height);
 }
 
 void CountdownTooltip::paintEvent(QPaintEvent *)
@@ -76,12 +83,6 @@ void CountdownTooltip::paintEvent(QPaintEvent *)
 
 void CountdownTooltip::start()
 {
-    text = tr("Click the tray icon \nor press the shortcut again to stop recording");
-    QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, text);
-    int width = size.width() + Constant::RECTANGLE_PADDING * 2;
-    int height = size.height() + Constant::RECTANGLE_PADDING * 2 + countdown1Img.height() + NUMBER_PADDING_Y;
-    setFixedSize(width, height);
-
     showCountdownCounter = 3;
     if(nullptr == showCountdownTimer){
         showCountdownTimer = new QTimer(this);

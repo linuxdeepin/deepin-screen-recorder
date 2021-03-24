@@ -311,7 +311,7 @@ protected:
     void resetCursor();
     void setFontSize(QPainter &painter, int textSize);
     void hideAllWidget();
-    void adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight);
+    //void adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight);
     void initShapeWidget(QString type);
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
     void initBackground();

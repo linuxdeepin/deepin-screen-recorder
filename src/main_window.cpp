@@ -1480,6 +1480,7 @@ void MainWindow::changeFunctionButton(QString type)
 void MainWindow::showKeyBoardButtons(const QString &key)
 {
     //键盘按钮启用状态下创建按键控件
+    qDebug() <<this->geometry();
     if (m_keyBoardStatus) {
         if(m_hasComposite == false && RECORD_BUTTON_RECORDING == recordButtonStatus) {
             // 2D 录屏下将按键发送至m_pRecorderRegion区域。
@@ -3500,17 +3501,20 @@ void MainWindow::startCountdown()
         connect(m_tabletRecorderHandle, SIGNAL(finished()), this, SLOT(startRecord()));
         m_tabletRecorderHandle->start();
     } else {
-        QVBoxLayout *countdownLayout = new QVBoxLayout();
-        setLayout(countdownLayout);
-        countdownTooltip = new CountdownTooltip();
+        //QVBoxLayout *countdownLayout = new QVBoxLayout(this);
+        //setLayout(countdownLayout);
+        countdownTooltip = new CountdownTooltip(this);
         connect(countdownTooltip, SIGNAL(finished()), this, SLOT(startRecord()));
 
-        countdownLayout->addStretch();
-        countdownLayout->addWidget(countdownTooltip, 0, Qt::AlignCenter);
-        countdownLayout->addStretch();
-        adjustLayout(countdownLayout, countdownTooltip->rect().width(), countdownTooltip->rect().height());
-        countdownTooltip->start();
+        //countdownLayout->addStretch();
+        //countdownLayout->addWidget(countdownTooltip, 0, Qt::AlignCenter);
+        //countdownLayout->addStretch();
+        //adjustLayout(countdownLayout, countdownTooltip->rect().width(), countdownTooltip->rect().height());
+        //countdownTooltip->move(recordRect.x() + recordRect.width() / 2 - countdownTooltip->width() / 2, recordRect.y() + recordRect.height() / 2 - countdownTooltip->height() / 2);
 
+        countdownTooltip->move(recordRect.x() + (recordRect.width()  - countdownTooltip->width()) / 2, recordRect.y() + (recordRect.height() - countdownTooltip->height()) / 2);
+        countdownTooltip->start();
+        countdownTooltip->show();
         m_pVoiceVolumeWatcher->setWatch(false);
         m_pCameraWatcher->setWatch(false);
     }
@@ -3554,16 +3558,16 @@ void MainWindow::hideAllWidget()
 
     // Utils::clearBlur(windowManager, this->winId());
 }
-void MainWindow::adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight)
-{
-    Q_UNUSED(layoutWidth);
-    Q_UNUSED(layoutHeight);
-    layout->setContentsMargins(
-                recordX,
-                recordY,
-                rootWindowRect.width() - recordX - recordWidth,
-                rootWindowRect.height() - recordY - recordHeight);
-}
+//void MainWindow::adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight)
+//{
+//    Q_UNUSED(layoutWidth);
+//    Q_UNUSED(layoutHeight);
+//    layout->setContentsMargins(
+//                recordX,
+//                recordY,
+//                rootWindowRect.width() - recordX - recordWidth,
+//                rootWindowRect.height() - recordY - recordHeight);
+//}
 
 void MainWindow::initShapeWidget(QString type)
 {
