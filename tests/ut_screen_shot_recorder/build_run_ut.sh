@@ -1,4 +1,9 @@
 #!/bin/bash
+export QT_LOGGING_RULES="qt.qpa.xcb.xcberror=false"
+export QT_LOGGING_RULES="qt.qpa.xcb.*=false"
+export QT_LOGGING_RULES="qt.qpa.*=false"
+export QT_LOGGING_RULES="*=false"
+
 rm -rf ./ut_screen_shot_recorder/build-ut
 mkdir ./ut_screen_shot_recorder/build-ut
 
@@ -13,7 +18,7 @@ executable=ut_screen_shot_recorder #可执行程序的文件名
 
 #下面是覆盖率目录操作，一种正向操作，一种逆向操作
 extract_info="*/deepin-screen-recorder/*" #针对当前目录进行覆盖率操作
-remove_info="*tests* *build-ut*" #排除当前目录进行覆盖率操作
+remove_info="*tests* *build-ut* *3rdparty*" #排除当前目录进行覆盖率操作
 
 
 build_dir=$workdir

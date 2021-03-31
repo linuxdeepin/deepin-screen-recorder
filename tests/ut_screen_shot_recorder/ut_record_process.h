@@ -82,7 +82,7 @@ static QString currentCpuArchitecture_stub(void* obj)
 //    m_process->stopRecord();
 //    delete  m_process;
 //}
-/*
+
 TEST_F(RecordProcessTest, recordVideoMp4)
 {
     stub.set(ADDR(ConfigSettings, value), getOption_mp4_stub);
@@ -113,7 +113,6 @@ TEST_F(RecordProcessTest, recordVideoMKV)
     delete  m_process;
     sleep(1);
 }
-
 
 TEST_F(RecordProcessTest, mpisRecordVideoMp4)
 {
@@ -147,4 +146,5 @@ TEST_F(RecordProcessTest, mpisRecordVideoMKV)
     delete  m_process;
     sleep(1);
 }
-*/
+
+

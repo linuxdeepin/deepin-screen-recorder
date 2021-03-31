@@ -29,6 +29,26 @@ void passInputEvent_stub(int wid)
     Q_UNUSED(wid);
 }
 
+qreal devicePixelRatio_stub_2()
+{
+    return 1;
+}
+
+int width_stub_2()
+{
+    return 1920;
+}
+
+int height_stub_2()
+{
+    return 1080;
+}
+
+int screenCount_stub()
+{
+    return 1;
+}
+
 class MainWindowTest:public testing::Test{
 
 public:
@@ -611,21 +631,20 @@ TEST_F(MainWindowTest, screenShot)
     loop.exec();
 }
 
-/*
+
 TEST_F(MainWindowTest, screenRecord)
 {
+    stub.set(ADDR(QScreen,devicePixelRatio),devicePixelRatio_stub_2);
+    stub.set(ADDR(QWidget,width),width_stub_2);
+    stub.set(ADDR(QWidget,height),height_stub_2);
     stub.set(ADDR(QScreen,geometry),geometry_stub);
-    m_window->initAttributes();
-    stub.reset(ADDR(QScreen,geometry));
-
     stub.set(ADDR(Utils,passInputEvent),passInputEvent_stub);
+    stub.set(ADDR(QDesktopWidget,screenCount),screenCount_stub);
+
+    m_window->initAttributes();
     m_window->initResource();
-    stub.reset(ADDR(Utils,passInputEvent));
-
     m_window->initLaunchMode("screenShot");
-
     m_window->showFullScreen();
-
 
     ToolBar *m_toolBar = access_private_field::MainWindowm_toolBar(*m_window);
 
@@ -713,8 +732,17 @@ TEST_F(MainWindowTest, screenRecord)
 
     m_window->stopRecord();
     QTimer::singleShot(1000, &loop, SLOT(quit()));
+
+
+    stub.reset(ADDR(QScreen,devicePixelRatio));
+    stub.reset(ADDR(QWidget,width));
+    stub.reset(ADDR(QWidget,height));
+    stub.reset(ADDR(QScreen,geometry));
+    stub.reset(ADDR(Utils,passInputEvent));
+    stub.reset(ADDR(QDesktopWidget,screenCount));
+
     loop.exec();
-}*/
+}
 
 static bool hasComposite_stub(void * obj) {
     return false;
@@ -728,11 +756,11 @@ static QString CpuArchitecture_stub(void* obj)
 TEST_F(MainWindowTest, onHelp)
 {
     m_window->onHelp();
-/*
+
     stub.set(ADDR(DWindowManagerHelper, hasComposite), hasComposite_stub);
     stub.set(ADDR(QSysInfo, currentCpuArchitecture), CpuArchitecture_stub);
     m_window->compositeChanged();
     stub.reset(ADDR(DWindowManagerHelper, hasComposite));
     stub.reset(ADDR(QSysInfo, currentCpuArchitecture));
-*/
+
 }
