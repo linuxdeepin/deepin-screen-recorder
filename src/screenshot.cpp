@@ -79,7 +79,7 @@ void Screenshot::delayScreenshot(double num)
     QVariantMap hints;
     DBusNotify *notifyDBus = new DBusNotify(this);
     if (num >= 2) {
-        notifyDBus->Notify("Deepin Screenshot", 0,  "deepin-screen-recorder", "",
+        notifyDBus->Notify(QCoreApplication::applicationName(), 0,  "deepin-screen-recorder", "",
                            summary, actions, hints, 3000);
     }
 
