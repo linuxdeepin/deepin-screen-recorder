@@ -1926,8 +1926,11 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
 
 
-        if (m_saveFileName.isEmpty() || QFileInfo(m_saveFileName).isDir())
+        if (m_saveFileName.isEmpty() || QFileInfo(m_saveFileName).isDir()) {
+            // 保存到指定位置, 用户在选择保存目录时，点击取消。保存失败，且不显示通知信息
+            m_noNotify = true;
             return false;
+        }
 
         QString fileSuffix = QFileInfo(m_saveFileName).completeSuffix();
         if (fileSuffix.isEmpty()) {
