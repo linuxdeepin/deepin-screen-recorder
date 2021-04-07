@@ -51,7 +51,7 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation type="unfinished"/>
+        <translation>Fillo/Regjistrim</translation>
     </message>
     <message>
         <source>Save</source>
@@ -266,11 +266,11 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Fillo/Regjistrim</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Mi</translation>
     </message>
 </context>
 <context>
@@ -432,11 +432,11 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Mi</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation type="unfinished"/>
+        <translation>Shfaq Treguesin</translation>
     </message>
 </context>
 <context>

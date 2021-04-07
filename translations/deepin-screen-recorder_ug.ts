@@ -265,11 +265,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>باشلاش/سىنغا ئېلىش</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>مائۇسنى سىنغا ئېلىش</translation>
     </message>
 </context>
 <context>
@@ -431,11 +431,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>مائۇسنى سىنغا ئېلىش</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation type="unfinished"/>
+        <translation>نۇر بەلگە كۆرۈنسۇن</translation>
     </message>
 </context>
 <context>

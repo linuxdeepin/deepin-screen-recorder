@@ -266,11 +266,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>བརྙན་འབེབས་དང་འགོ་སློང་།</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>ཕབ་བཟོའི་ཙི་གུ།</translation>
     </message>
 </context>
 <context>
@@ -432,11 +432,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>ཕབ་བཟོའི་ཙི་གུ།</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation type="unfinished"/>
+        <translation>འོད་རྟགས་གསལ་བ།</translation>
     </message>
 </context>
 <context>
