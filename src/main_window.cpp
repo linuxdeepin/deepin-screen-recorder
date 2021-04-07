@@ -3515,7 +3515,9 @@ void MainWindow::startCountdown()
         //adjustLayout(countdownLayout, countdownTooltip->rect().width(), countdownTooltip->rect().height());
         //countdownTooltip->move(recordRect.x() + recordRect.width() / 2 - countdownTooltip->width() / 2, recordRect.y() + recordRect.height() / 2 - countdownTooltip->height() / 2);
 
-        countdownTooltip->move(recordRect.x() + (recordRect.width()  - countdownTooltip->width()) / 2, recordRect.y() + (recordRect.height() - countdownTooltip->height()) / 2);
+        countdownTooltip->move(static_cast<int>((recordRect.x() / m_pixelRatio + (recordRect.width() / m_pixelRatio  - countdownTooltip->width()) / 2)),
+                               static_cast<int>((recordRect.y() / m_pixelRatio + (recordRect.height() / m_pixelRatio - countdownTooltip->height()) / 2)));
+
         countdownTooltip->start();
         countdownTooltip->show();
         m_pVoiceVolumeWatcher->setWatch(false);
