@@ -294,7 +294,7 @@ void SubToolWidget::initRecordLabel()
     m_mouseButton = new ToolButton();
 
     //audioButton->setObjectName("AudioButton");
-    Utils::setAccessibility(m_mouseButton, AC_SUBTOOLWIDGET_AUDIO_BUTTON);
+    Utils::setAccessibility(m_mouseButton, AC_SUBTOOLWIDGET_MOUSE_BUTTON);
     m_mouseButton->setText(" ");
     m_mouseButton->setIconSize(TOOL_ICON_SIZE);
     installTipHint(m_mouseButton, tr("Mouse"));

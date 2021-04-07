@@ -48,6 +48,9 @@ CountdownTooltip::CountdownTooltip(DWidget *parent) : DWidget(parent),
     showCountdownCounter = 0;
 
     text = tr("Click the tray icon \nor press the shortcut again to stop recording");
+    if (Utils::isTabletEnvironment) {
+	text = tr("Do not rotate your screen during recording");
+    }
     QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, text);
     int width = size.width() + Constant::RECTANGLE_PADDING * 2;
     int height = size.height() + Constant::RECTANGLE_PADDING * 2 + countdown1Img.height() + NUMBER_PADDING_Y;
