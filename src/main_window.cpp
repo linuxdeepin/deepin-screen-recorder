@@ -1798,17 +1798,25 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     QVariantMap hints;
 
     // 保存到剪贴板， 通知不用open
+    QString tips;
     if (remote_dde_notify_obj_exist && saveFilePath.compare(QString(tr("Clipboard")))) {
         actions << "_open" << tr("View");
 
-        QString fileDir  = QUrl::fromLocalFile(QFileInfo(saveFilePath).absoluteDir().absolutePath()).toString();
-        QString filePath = QUrl::fromLocalFile(saveFilePath).toString();
+        //QString fileDir  = QUrl::fromLocalFile(QFileInfo(saveFilePath).absoluteDir().absolutePath()).toString();
+        //QString filePath = QUrl::fromLocalFile(saveFilePath).toString();
 
         QString command;
-        if (QFile("/usr/bin/dde-file-manager").exists()) {
-            command = QString("/usr/bin/dde-file-manager,--show-item,%1").arg(filePath);
+
+        tips = QString(tr("Saved to %1")).arg(saveFilePath);
+        if (Utils::isTabletEnvironment && QFile("/usr/bin/deepin-album").exists()) {
+            command = QString("deepin-album,%1").arg(saveFilePath);
+            tips = tr("The screenshot file has been saved in the album");
+        } else if (Utils::isTabletEnvironment && !QFile("/usr/bin/deepin-album").exists() && QFile("/usr/bin/deepin-image-viewer").exists()) {
+            command = QString("deepin-image-viewer,%1").arg(saveFilePath);
+        } else if (!Utils::isTabletEnvironment && QFile("/usr/bin/dde-file-manager").exists()) {
+            command = QString("dde-file-manager,--show-item,%1").arg(saveFilePath);
         } else {
-            command = QString("xdg-open,%1").arg(filePath);
+            command = QString("xdg-open,%1").arg(saveFilePath);
         }
 
         hints["x-deepin-action-_open"] = command;
@@ -1821,8 +1829,8 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     arg << (QCoreApplication::applicationName())                 // appname
         << id                                                    // id
         << QString("deepin-screen-recorder")                     // icon
-        << tr("Screenshot finished")                              // summary
-        << QString(tr("Saved to %1")).arg(saveFilePath) // body
+        << tr("Screenshot finished")                             // summary
+        << tips                                                  // body
         << actions                                               // actions
         << hints                                                 // hints
         << timeout;
