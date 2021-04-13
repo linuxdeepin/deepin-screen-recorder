@@ -186,8 +186,15 @@ void ShotToolWidget::initRectLabel()
         }
     });
 
-    thickOneBtn->click();
-    ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 0);
+
+    int linewidth_index = ConfigSettings::instance()->value("rectangle", "linewidth_index").toInt();
+    if(linewidth_index == 0) {
+        thickOneBtn->click();
+    } else if (linewidth_index == 1) {
+        thickTwoBtn->click();
+    } else {
+        thickThreeBtn->click();
+    }
 
     rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton(this);
@@ -362,8 +369,16 @@ void ShotToolWidget::initCircLabel()
             thickThreeBtn->update();
         }
     });
-    thickOneBtn->click();
-    ConfigSettings::instance()->setValue("oval", "linewidth_index", 0);
+
+    int linewidth_index = ConfigSettings::instance()->value("oval", "linewidth_index").toInt();
+    if(linewidth_index == 0) {
+        thickOneBtn->click();
+    } else if (linewidth_index == 1) {
+        thickTwoBtn->click();
+    } else {
+        thickThreeBtn->click();
+    }
+
 
     m_rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton(this);
@@ -535,10 +550,15 @@ void ShotToolWidget::initLineLabel()
             thickThreeBtn->update();
         }
     });
-    thickOneBtn->click();
 
-    ConfigSettings::instance()->setValue("arrow", "arrow_linewidth_index", 0);
-    ConfigSettings::instance()->setValue("arrow", "straightline_linewidth_index", 0);
+    int linewidth_index = ConfigSettings::instance()->value("arrow", "arrow_linewidth_index").toInt();
+    if(linewidth_index == 0) {
+        thickOneBtn->click();
+    } else if (linewidth_index == 1) {
+        thickTwoBtn->click();
+    } else {
+        thickThreeBtn->click();
+    }
 
     rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton(this);
@@ -696,8 +716,15 @@ void ShotToolWidget::initPenLabel()
             thickThreeBtn->update();
         }
     });
-    thickOneBtn->click();
-    ConfigSettings::instance()->setValue("line", "linewidth_index", 0);
+
+    int linewidth_index = ConfigSettings::instance()->value("line", "linewidth_index").toInt();
+    if(linewidth_index == 0) {
+        thickOneBtn->click();
+    } else if (linewidth_index == 1) {
+        thickTwoBtn->click();
+    } else {
+        thickThreeBtn->click();
+    }
 
 
     rectLayout->addSpacing(70);
