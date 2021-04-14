@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>Cliquer sur l&apos;icône de la barre d&apos;état 
 ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source>Screenshot</source>
         <translation>Capture d&apos;écran</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Ajuster la zone d&apos;enregistrement dans %1 *%2 pour obtenir un meilleur effet vidéo</translation>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>Enregistrements</translation>
     </message>
 </context>
 </TS>

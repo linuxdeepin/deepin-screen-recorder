@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>Kattintson a tálcaikonra
 vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>Screenshot</source>
         <translation>Képernyőkép</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation>A jobb videoeffektus elérése érdekében állítsa be a felvételi területet %1*%2</translation>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>Felvételek</translation>
     </message>
 </context>
 </TS>

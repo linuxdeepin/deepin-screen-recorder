@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>Clicca sulla Tray
 o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Screenshot</source>
         <translation>Screenshot</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Sistema l&apos;area di registrazione tra %1*%2 per i migliori effetti video</translation>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>Registrazioni</translation>
     </message>
 </context>
 </TS>

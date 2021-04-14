@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>སྡེར་མའི་མཚོན་རྟགས་ལ་གནོན་རྒྱུ།
 ཡང་ན་བརྙན་ཕབ་ཀྱི་མྱུར་མཐེབ་མནན་ནས་བརྙན་ཕབ་མཚམས་འཇོག་བྱ་རྒྱུ།</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screenshot</source>
         <translation>བརྙན་བཤུས།</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation>ཕབ་བཟོ་ཁུལ་ཁོངས་ཀྱི་ཁྱབ་ཁོངས་%1*%2ནང་ཚུན་ལེགས་སྒྲིག་བྱས་ན། བརྙན་འཕྲིན་གྱི་གྲུབ་འབྲས་དེ་བས་ཡག </translation>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>སྒྲ་ཕབ།</translation>
     </message>
 </context>
 </TS>

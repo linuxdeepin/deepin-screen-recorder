@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>Detenga con el mismo atajo de teclado
 o haga clic en el icono de la bandeja</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ o haga clic en el icono de la bandeja</translation>
     <message>
         <source>Screenshot</source>
         <translation>Captura de pantalla</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ o haga clic en el icono de la bandeja</translation>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Ajustar el área de grabación dentro de %1*%2 para obtener un mejor efecto de vídeo</translation>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>Grabaciones</translation>
     </message>
 </context>
 </TS>

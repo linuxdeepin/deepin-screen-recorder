@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>Klikit war an ikon barrenn-stad
 pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     <message>
         <source>Screenshot</source>
         <translation>Tapadenn-skramm</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation type="unfinished"/>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>Enrolladennoù</translation>
     </message>
 </context>
 </TS>

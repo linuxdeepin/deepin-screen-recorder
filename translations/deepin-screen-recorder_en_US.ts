@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>Click the tray icon 
 or press the shortcut again to stop recording</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation>Do not rotate your screen during recording</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Screenshot</source>
         <translation>Screenshot</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation>The screenshot has been saved in the album</translation>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Adjust the recording area within %1*%2 to get better video effect</translation>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>Recordings</translation>
     </message>
 </context>
 </TS>

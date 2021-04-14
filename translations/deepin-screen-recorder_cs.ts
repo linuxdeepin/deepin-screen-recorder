@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>Pro zastavení záznamu klepněte na ikonu
 v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Screenshot</source>
         <translation>Pořídit snímek obrazovky</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Upravte oblast nahrávání v %1*%2 a získejte tak lepší video efekt</translation>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>Nahrávky</translation>
     </message>
 </context>
 </TS>

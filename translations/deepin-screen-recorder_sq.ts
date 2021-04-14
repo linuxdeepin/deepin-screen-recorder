@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>Që të ndalet regjistrimi, 
 klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     <message>
         <source>Screenshot</source>
         <translation>Foto ekrani</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Që të keni efekt video më të mirë, përshtatni zonën e regjistrimit brenda %1*%2</translation>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>Regjistrime</translation>
     </message>
 </context>
 </TS>

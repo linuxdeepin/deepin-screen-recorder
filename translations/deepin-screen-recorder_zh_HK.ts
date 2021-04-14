@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>點擊托盤圖標
 或再次按下錄屏快捷鍵停止錄製</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation>螢幕錄製中請勿旋轉螢幕</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screenshot</source>
         <translation>截圖</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation>截圖文件已保存到相冊</translation>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> 調整錄製區域範圍在%1*%2以內，視頻效果更佳</translation>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>錄音</translation>
     </message>
 </context>
 </TS>

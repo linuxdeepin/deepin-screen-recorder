@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>트레이 아이콘 클릭 
 또는 단축키를 다시 눌러 녹화를 중지하십시오</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screenshot</source>
         <translation>스크린샷</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation type="unfinished"/>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>녹화</translation>
     </message>
 </context>
 </TS>

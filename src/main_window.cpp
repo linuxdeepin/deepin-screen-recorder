@@ -1810,7 +1810,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         tips = QString(tr("Saved to %1")).arg(saveFilePath);
         if (Utils::isTabletEnvironment && QFile("/usr/bin/deepin-album").exists()) {
             command = QString("deepin-album,%1").arg(saveFilePath);
-            tips = tr("The screenshot file has been saved in the album");
+            tips = tr("The screenshot has been saved in the album");
         } else if (Utils::isTabletEnvironment && !QFile("/usr/bin/deepin-album").exists() && QFile("/usr/bin/deepin-image-viewer").exists()) {
             command = QString("deepin-image-viewer,%1").arg(saveFilePath);
         } else if (!Utils::isTabletEnvironment && QFile("/usr/bin/dde-file-manager").exists()) {

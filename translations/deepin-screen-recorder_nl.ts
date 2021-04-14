@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>Klik op het systeemvakpictogram
 of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Screenshot</source>
         <translation>Schermfoto</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Verhoog de resolutie van het opnamegebied naar %1*%2 voor een betere opname</translation>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>Opnames</translation>
     </message>
 </context>
 </TS>

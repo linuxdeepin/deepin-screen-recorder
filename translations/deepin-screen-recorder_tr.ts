@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>Ekran kaydını durdurmak için 
 tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Screenshot</source>
         <translation>Ekran Görüntüsü</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation>Daha iyi video efekti elde etmek için kayıt alanını %1*%2 içinde ayarlayın</translation>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>Kayıtlar</translation>
     </message>
 </context>
 </TS>

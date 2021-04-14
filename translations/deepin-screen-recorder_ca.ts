@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>Feu clic a la icona de la safata
 o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Screenshot</source>
         <translation>Captura de pantalla</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Ajusteu l&apos;àrea de gravació dins %1*%2 per obtenir un efecte de vídeo millor.</translation>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>Gravacions</translation>
     </message>
 </context>
 </TS>

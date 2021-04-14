@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>انقر على الأيقونة بالأسفل
 أو اضغط على الاختصار مرة أخرى لإيقاف التسجيل</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screenshot</source>
         <translation>لقطة شاشة</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation type="unfinished"/>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>تسجيلات</translation>
     </message>
 </context>
 </TS>

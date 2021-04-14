@@ -7,6 +7,10 @@ or press the shortcut again to stop recording</source>
         <translation>Klicken Sie auf das Taskleistensymbol 
 oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -80,6 +84,10 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <message>
         <source>Screenshot</source>
         <translation>Bildschirmaufnahme</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -444,13 +452,6 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation>Passe den Aufnahmebereich innerhalb von %1*%2 an, um einen besseren Videoeffekt zu erhalten</translation>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>Aufnahmen</translation>
     </message>
 </context>
 </TS>

@@ -6,6 +6,10 @@
 or press the shortcut again to stop recording</source>
         <translation> ‫بەلگىنى بېسىپ ياكى يەنە بىر قېتىم تېزلەتمە كۇنۇپكىسىنى بېسىش ئارقىلىق سىن ئېلىشنى توختىتىڭ</translation>
     </message>
+    <message>
+        <source>Do not rotate your screen during recording</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -79,6 +83,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screenshot</source>
         <translation>رەسىم تۇتۇش</translation>
+    </message>
+    <message>
+        <source>The screenshot has been saved in the album</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -443,13 +451,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation>سىنغا ئېلىش دائىرىسى %1*%2 ئىچىدە تەڭشەلسە، سىن ئۈنۈمى تېخىمۇ ياخشى بولىدۇ</translation>
-    </message>
-</context>
-<context>
-    <name>Utils</name>
-    <message>
-        <source>Recordings</source>
-        <translation>ئۈنگە ئېلىش</translation>
     </message>
 </context>
 </TS>
