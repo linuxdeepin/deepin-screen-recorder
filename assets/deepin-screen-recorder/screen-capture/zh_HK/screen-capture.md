@@ -13,15 +13,15 @@
 
 ### 運行螢幕錄影
 
-1. 單擊桌面底部的 ![deepin_launcher](../common/deepin_launcher.svg)，進入啟動器界面。
-2. 上下滾動鼠標滾輪瀏覽或通過搜索，找到螢幕錄影 ![deepin_screenshot](../common/deepin_screenshot.svg) 單擊運行。
+1. 單擊任務欄上的啟動器圖標 ![deepin_launcher](../common/deepin_launcher.svg)，進入啟動器界面。
+2. 上下滾動鼠標滾輪瀏覽或通過搜索，找到螢幕錄影圖標 ![deepin_screenshot](../common/deepin_screenshot.svg)，單擊運行。
 3. 右鍵單擊 ![deepin_screenshot](../common/deepin_screenshot.svg)，您可以：
 
    - 單擊 **傳送到桌面**，在桌面創建快捷方式。
    - 單擊 **傳送到任務欄**，將應用程序固定到任務欄。
    - 單擊 **加至開機啟動**，將應用程序添加到開機啟動項，在電腦開機時自動運行該應用。
 
-> ![notes](../common/notes.svg)說明：如果螢幕錄影已經默認固定在任務欄上，您也可以單擊任務欄上的 ![deepin_screenshot](../common/deepin_screenshot.svg) 來運行。
+
 
 ### 關閉螢幕錄影
 
@@ -33,7 +33,7 @@
 
 ### 快捷鍵
 
-按下鍵盤上的 **Ctrl + Shift + ?** 組合鍵，打開快捷鍵預覽界面。
+使用快捷鍵 **Ctrl + Shift + ?** 打開快捷鍵預覽界面。熟練地使用快捷鍵，將大大提升您的操作效率。
 
 ![1|快捷鍵](fig/hotkey.png)
 
@@ -61,7 +61,7 @@
 
 您也可以直接操作以下步驟來進行全螢幕截圖：
 
-- 如果您已經將截圖錄屏固定到任務欄，右鍵單擊任務欄上的![deepin_screenshot](../common/deepin_screenshot.svg)，選擇 **全屏截圖** 。
+- 如果您已經將截圖錄屏固定到任務欄，右鍵單擊任務欄上的圖標![deepin_screenshot](../common/deepin_screenshot.svg)，選擇 **全屏截圖** 。
 - 按下鍵盤上的 ![print](../common/Print.svg)鍵，實現全螢幕截圖。
 
 #### 選擇窗口

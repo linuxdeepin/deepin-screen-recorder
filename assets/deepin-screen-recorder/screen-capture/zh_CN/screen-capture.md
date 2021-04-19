@@ -14,15 +14,15 @@
 
 ### 运行截图录屏
 
-1. 单击桌面底部的 ![deepin_launcher](../common/deepin_launcher.svg)，进入启动器界面。
-2. 上下滚动鼠标滚轮浏览或通过搜索，找到截图录屏 ![deepin_screenshot](../common/deepin_screenshot.svg)单击运行。
+1. 单击任务栏上的启动器图标 ![deepin_launcher](../common/deepin_launcher.svg)，进入启动器界面。
+2. 上下滚动鼠标滚轮浏览或通过搜索，找到截图录屏图标 ![deepin_screenshot](../common/deepin_screenshot.svg)，单击运行。
 3. 右键单击 ![deepin_screenshot](../common/deepin_screenshot.svg)，您可以：
 
    - 单击 **发送到桌面**，在桌面创建快捷方式。
    - 单击 **发送到任务栏**，将应用程序固定到任务栏。
    - 单击 **开机自动启动**，将应用程序添加到开机启动项，在电脑开机时自动运行该应用。
 
-> ![notes](../common/notes.svg)说明：如果截图录屏已经默认固定在任务栏上，您也可以单击任务栏上的 ![deepin_screenshot](../common/deepin_screenshot.svg)来运行。
+
 
 ### 关闭截图录屏
 
@@ -33,7 +33,7 @@
 
 ### 快捷键
 
-按下键盘上的 **Ctrl + Shift + ?** 组合键，打开快捷键预览界面。
+使用快捷键 **Ctrl + Shift + ?** 打开快捷键预览界面。熟练地使用快捷键，将大大提升您的操作效率。
 
 ![1|快捷键](fig/hotkey.png)
 
@@ -61,7 +61,7 @@
 
 您也可以直接操作以下步骤来截取全屏：
 
-- 如果您已经将截图录屏固定到任务栏，右键单击任务栏上的![deepin_screenshot](../common/deepin_screenshot.svg)，选择 **全屏截图** 。
+- 如果您已经将截图录屏固定到任务栏，右键单击任务栏上的图标![deepin_screenshot](../common/deepin_screenshot.svg)，选择 **全屏截图** 。
 - 按下键盘上的 ![print](../common/Print.svg)键，实现全屏截图。
 
 #### 选择窗口
@@ -275,10 +275,8 @@
 开启截图录屏，选定截图区域后，通过以下操作之一来保存截取的图片：
 
 - 双击鼠标左键来保存。
-  
-   >![notes](../common/notes.svg)说明：如果您的电脑支持触控屏或触控板，可以使用手势替代鼠标操作：一指双击完成截图。
-- 单击工具栏中的截图按钮![icon](../common/screenshot_button.svg)。
-- 按下键盘上的 **Ctrl + S** 组合键来保存。
+- 单击工具栏中的截图按钮 ![icon](../common/screenshot_button.svg)。
+- 使用快捷键 **Ctrl + S** 来保存。
 - 单击鼠标右键，选择 **保存**。
 
 > ![notes](../common/notes.svg)说明：在以上操作中，截取的图片默认存放到剪贴板。
@@ -329,8 +327,6 @@
         </tr>
     </tbody>
 </table>
-
-
 
 
 > ![notes](../common/notes.svg)说明：SW平台不支持录屏功能。

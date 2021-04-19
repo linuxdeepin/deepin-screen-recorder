@@ -2,7 +2,7 @@
 
 ## Overview
 
-Screen Capture is a tool which integrates the screen capture and recorder functions into one. You are free to select windows or areas automatically or manually during screen capturing or recording. 
+Screen Capture is a tool which integrates the screen capture and recorder functions into one. You are free to select windows or areas automatically or manually during screen capture. 
 
 ![partarea](fig/partarea.png)
 
@@ -20,8 +20,6 @@ You can run, close, and create shortcuts for Screen Capture in the following ope
     - Click **Send to dock** to fix it in the Dock.
     - Click **Add to startup** to add it to startup and it will automatically run when the system starts up.
 
-> ![notes](../common/notes.svg) Notes: If Screen Capture has been fixed in the dock by default, you can click ![deepin_screenshot](../common/deepin_screenshot.svg) in the dock to run it.
-
 ### Close Screen Capture
 
 - Screen Capture will exit automatically after screen capturing or screen recording completes.
@@ -34,11 +32,11 @@ In the Screenshot mode on the Screen Capture interface, press **Ctrl + Shift + ?
 
 ![1|hotkey](fig/hotkey.png)
 
-## Select and Adjust Screenshot and Recording Area
+## Select and Adjust Screen Capture Area
 
-### Select Screenshot and Recording Area
+### Select Screen Capture Area
 
-There are three kinds of common screenshot and recording areas, namely the full screen, program window, and customized area. When a screenshot and recording area is captured, the selected area will be bordered with dashed white line and looks brighter than the other area.
+There are three kinds of common screen capture areas, namely the full screen, program window, and customized area. When a screen capture area is captured, the selected area will be bordered with dashed white line and looks brighter than the other area.
 
 > ![notes](../common/notes.svg) Notes: When the computer is connected to multiple monitors, you can also use Screen Capture to capture areas on different monitors.
 
@@ -52,7 +50,7 @@ Full screen selection is used to identify the entire screen of the current monit
 You can select the full screen in the following ways:
 
 1. Press **Ctrl + Alt + A** or **Ctrl + Alt + R** on the keyboard to enter the screen capture mode.
-2. Move the pointer to the desktop and the full screen will be selected automatically. The screenshot dimension will be displayed in the upper left corner. 
+2. Move the pointer to the desktop and the full screen will be selected automatically. The screen capture dimension will be displayed in the upper left corner. 
 3. Click the desktop and a toolbar will pop up.
 
 You can also take a full screen screenshot directly in the following ways:
@@ -68,33 +66,33 @@ Program window selection is used to identify the current application window auto
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Press **Ctrl + Alt + A**  or  **Ctrl + Alt + R** on the keyboard to enter the screen capture mode.
-2. Move the pointer to the application window and the window will be selected automatically. The screenshot dimension will be displayed in the upper left corner. 
+2. Move the pointer to the application window and the window will be selected automatically. The screen capture dimension will be displayed in the upper left corner. 
 3. Click the window and a toolbar will pop up.
 
 #### Select Customized Area
 
-Customized area selection is used to select the screenshot area freely by dragging the mouse.
+Customized area selection is used to select the screen capture area freely by dragging the mouse.
 
 ![1|partarea](fig/partarea.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Press **Ctrl + Alt + A** or **Ctrl + Alt + R** on the keyboard to enter the screen capture mode.
-2. Hold down and drag the left mouse button to select the screen capture area. The screenshot dimension will be displayed in the upper left corner. 
+2. Hold down and drag the left mouse button to select the screen capture area. The screen capture dimension will be displayed in the upper left corner. 
 3. Release the left mouse button to complete area selection, and a toolbar will pop up.
 
-### Adjust the Screenshot and Recording Area
+### Adjust the Screen Capture Area
 
-You can fine-tune the screenshot and recording area. For example, you can enlarge or reduce the screenshot area, and move the screenshot position, among other functions. 
+You can fine-tune the screen capture area. For example, you can enlarge or reduce the screenshot area, and move the screenshot position, among other functions. 
 
-#### Enlarge/Reduce the Screenshot and Recording Area
+#### Enlarge/Reduce the Screen Capture Area
 
 - Place the pointer over the white boarder of the screenshot area and the pointer will be changed to ![mouse_arrow](../common/Mouse_Arrow.svg). Hold down the left mouse button and drag the mouse to enlarge or reduce the screenshot area. 
 
 - Press **Ctrl** + ![up](../common/Up.svg) , ![down](../common/Down.svg) , ![left](../common/Left.svg) or ![right](../common/Right.svg) and drag the mouse to enlarge or reduce the screenshot area vertically or horizontally.
 
-#### Move the Screenshot and Recording Area Position
+#### Move the Screen Capture Area Position
 
-Place the pointer over the screenshot and recording area and it will be changed to ![finger](fig/fingers2.png). You can:
+Place the pointer over the screen capture area and it will be changed to ![finger](fig/fingers2.png). You can:
 
 - Hold down the left mouse button and drag the mouse to move the position of the screenshot area.
 - Press ![up](../common/Up.svg) , ![down](../common/Down.svg) , ![left](../common/Left.svg) or ![right](../common/Right.svg) on the keyboard to move the screenshot area vertically or horizontally.
@@ -240,7 +238,7 @@ You are able to capture the screenshot in a specific state or at specific time w
 
 - Right-click the Screen Capture icon fixed in dock and select **Delay Screenshot**.
 - Press  **Ctrl** + ![icon](../common/Print.svg) to start delay screenshot.
-- Execute  “deepin-screen-recorder -d n”  in Terminal, among which n represents the delayed time in second.
+- Execute  “deepin-screen-recorder -d n”  in Terminal, among which n represents the delayed time in seconds.
 
 ### Save Screenshots
 
@@ -251,11 +249,7 @@ When the screenshot is saved successfully, you can see a prompt message in the u
 You can save the screenshot in the following ways after launching Screen Capture, and selecting the screenshot area:
 
 - Double-click to save the screen capture.
-
-  > ![notes](../common/notes.svg) Notes: If your computer is equipped with a touchscreen or touchpad, double-click with one finger to finish screenshots.
-
 - Click ![notes](../common/screenshot_button.svg) on the toolbar.
-
 - Press **Ctrl + S** on the keyboard to save the screenshot.
 - Right-click the screenshot, and select **Save** to save it.
 
@@ -269,7 +263,7 @@ Click **Options** on the toolbar of the Screen Capture interface, and expand the
 - Select **Clipboard** to save the screenshot to the clipboard.
 - Click **Desktop** and the screenshot will be saved to the desktop.
 - Click **Pictures**, and the screenshot will be saved to the pictures folder.
-- Click **Folder**. Select the destination folder of the screenshot, and the screenshot will be saved to the folder directory selected by you. 
+- Click **Folder**. Select the destination folder of the screenshot, and the screenshot will be saved to your specific folder directory. 
 - Select **Show pointer**, and the pointer will be displayed in the screenshot area. Its position and pattern will also be saved in the picture.
 - Select **PNG/JPG/BMP** to set the screenshot format.
 
@@ -286,7 +280,7 @@ Under the recording mode, click the icons on the toolbar and you can perform rec
             <td><img src="../common/microphone_normal.svg" alt="microphone_normal" class="inline" /></td>
             <td>Microphone</td>
             <td><img src="../common/audio_frequency_normal.svg" alt="audio_frequency_normal" class="inline" /></td>
-            <td>Sound On</td>
+            <td>System Audio</td>
             <td><img src="../common/key_normal.svg" alt="key_normal" class="inline" /></td>
             <td>Show Keystroke</td>
             <td><img src="../common/webcam_normal.svg" alt="webcam_normal" class="inline" /></td>
