@@ -1448,7 +1448,7 @@ void MainWindow::changeFunctionButton(QString type)
             return;
         }
         m_shotButton->hide();
-        //        updateRecordButtonPos();
+        updateRecordButtonPos();
         m_recordButton->show();
         m_functionType = status::record;
         initScreenRecorder();
@@ -1467,7 +1467,7 @@ void MainWindow::changeFunctionButton(QString type)
             m_cameraWidget->hide();
         }
         m_recordButton->hide();
-        //        updateShotButtonPos();
+        updateShotButtonPos();
         m_shotButton->show();
         m_functionType = 1;
         initScreenShot();
