@@ -2,7 +2,7 @@
 
 ## Overview
 
-Screen Capture is a tool which integrates the screen capture and recorder functions into one. You are free to select windows or areas automatically or manually during screen capture. 
+Screen Capture is a tool which integrates the screen capture and recorder functions into one. You are free to select windows or areas automatically or manually during screen capturing or recording. 
 
 ![partarea](fig/partarea.png)
 
@@ -97,7 +97,7 @@ Place the pointer over the screen capture area and it will be changed to ![finge
 - Hold down the left mouse button and drag the mouse to move the position of the screenshot area.
 - Press ![up](../common/Up.svg) , ![down](../common/Down.svg) , ![left](../common/Left.svg) or ![right](../common/Right.svg) on the keyboard to move the screenshot area vertically or horizontally.
 
-# Take Screenshots
+## Take Screenshots
 
 Under the screenshot mode, click the corresponding icons on the toolbar and you can perform operations such as drawing and editing graphics, adding text annotations, etc. in the screenshot  area.
 
@@ -202,7 +202,7 @@ You can modify and move the drawn graphics in the screenshot.
    - Place the pointer over ![rotate](../common/icon_rotate.svg) in the edit box, and the pointer will be changed to ![rotate](../common/rotate_mouse.svg). Rotate the graphics by dragging the pointer.
 3. Left-click outside the edit box to exit the editing mode.
 
-#### Add Text Annotation
+### Add Text Annotation
 
 Add text annotations to the screenshot in order to help others better understand.
 
@@ -253,7 +253,7 @@ You can save the screenshot in the following ways after launching Screen Capture
 - Press **Ctrl + S** on the keyboard to save the screenshot.
 - Right-click the screenshot, and select **Save** to save it.
 
-> ![notes](../common/notes.svg) Notes: The screenshot is saved to the clipboard by default.
+   > ![notes](../common/notes.svg) Notes: The screenshot is saved to the clipboard by default.
 
 Click **Options** on the toolbar of the Screen Capture interface, and expand the drop-down list:
 
@@ -301,25 +301,21 @@ Under the recording mode, click the icons on the toolbar and you can perform rec
 
 
 > ![notes](../common/notes.svg)Notes: Screen recording is not available on the SW platform.
->
 
-#### Set Recording Settings
+### Set Recording Settings
 
 On the toolbar of Screen Capture, you can set sound, keystroke, camera, etc. to get ready for video recording.
 
 - Sound: Include microphone and built-in audio. You can select one of them or both.
-
 - Keystroke: Click ![icon](../common/key_normal.svg)and the operation keystroke will be displayed during screen recording. Up to five recent operation keystrokes can be displayed at the same time. Click the icon again to enable **Hide Keystroke** and cancel keystroke display.
-
 - Camera: Click![icon](../common/webcam_normal.svg) to start camera. Both the camera picture and window picture are recorded during screen recording. Drag the camera window outline to adjust the window size and position. Click the icon again to disable the camera. 
 
-- Mouse:  Include **Show Pointer**, **Show Click** or both.
-  
->![attention](../common/attention.svg) Attention: First, check whether the device connected supports sound recording and camera functions. Otherwise you cannot perform relevant operations.
+   >![attention](../common/attention.svg) Attention: First, check whether the device connected supports sound recording and camera functions. Otherwise you cannot perform relevant operations.
 
+- Mouse:  Include **Show Pointer**, **Show Click** or both.
 - Options: Select the **GIF**, **MP4** or **MKV** format and FPS in the Options dropdown list.
 
-> ![notes](../common/notes.svg)Notes: GIF is not supported on the MIPS architecture devices.
+   > ![notes](../common/notes.svg)Notes: GIF is not supported on the MIPS architecture devices.
 
 ### Record a Screen
 
@@ -333,7 +329,6 @@ You can capture the screen activities in the following ways:
 The recorded video will be saved to the desktop automatically.
 
 > ![notes](../common/notes.svg) Notes: 
->
 > - Recording time will be displayed together with the **Record** icon when Dock is at top or bottom of the desktop.
 > - During video recording, if multiple monitors are connected, whether the multi-monitor display is set in copy mode or extended mode, only the current operation screen is recorded.
 
