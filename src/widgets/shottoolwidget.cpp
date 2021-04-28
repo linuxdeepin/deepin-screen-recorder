@@ -52,6 +52,8 @@ namespace {
     const QSize TOOL_SLIDER_SIZE = QSize(40, 180);
     const QSize SPLITTER_SIZE = QSize(30, 1);
     //const QSize MIN_TOOL_BUTTON_SIZE = QSize(35, 30);
+    const QColor DARK_COLOR_SEPER = QColor(255, 255, 255, 26);
+    const QColor NORMAL_CLOR_SEPER = QColor(0, 0, 0, 77);
 }
 
 ShotToolWidget::ShotToolWidget(DWidget *parent) :
@@ -199,8 +201,13 @@ void ShotToolWidget::initRectLabel()
     rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton(this);
     pa = t_seperator->palette();
-    pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-    pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+    if(m_themeType == 1) {
+        pa.setColor(DPalette::Light, NORMAL_CLOR_SEPER);
+        pa.setColor(DPalette::Dark, NORMAL_CLOR_SEPER);
+    } else {
+        pa.setColor(DPalette::Light, DARK_COLOR_SEPER);
+        pa.setColor(DPalette::Dark, DARK_COLOR_SEPER);
+    }
     t_seperator->setDisabled(true);
     t_seperator->setPalette(pa);
     t_seperator->setFixedSize(SPLITTER_SIZE);
@@ -271,8 +278,13 @@ void ShotToolWidget::initRectLabel()
     rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton(this);
     pa = t_seperator1->palette();
-    pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-    pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+    if(m_themeType == 1) {
+        pa.setColor(DPalette::Light, NORMAL_CLOR_SEPER);
+        pa.setColor(DPalette::Dark, NORMAL_CLOR_SEPER);
+    } else {
+        pa.setColor(DPalette::Light, DARK_COLOR_SEPER);
+        pa.setColor(DPalette::Dark, DARK_COLOR_SEPER);
+    }
     t_seperator1->setDisabled(true);
     t_seperator1->setPalette(pa);
     t_seperator1->setFixedSize(SPLITTER_SIZE);
@@ -383,8 +395,13 @@ void ShotToolWidget::initCircLabel()
     m_rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton(this);
     pa = t_seperator->palette();
-    pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-    pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+    if(m_themeType == 1) {
+        pa.setColor(DPalette::Light, NORMAL_CLOR_SEPER);
+        pa.setColor(DPalette::Dark, NORMAL_CLOR_SEPER);
+    } else {
+        pa.setColor(DPalette::Light, DARK_COLOR_SEPER);
+        pa.setColor(DPalette::Dark, DARK_COLOR_SEPER);
+    }
     t_seperator->setDisabled(true);
     t_seperator->setPalette(pa);
     t_seperator->setFixedSize(SPLITTER_SIZE);
@@ -461,8 +478,13 @@ void ShotToolWidget::initCircLabel()
     m_rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton(this);
     pa = t_seperator1->palette();
-    pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-    pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+    if(m_themeType == 1) {
+        pa.setColor(DPalette::Light, NORMAL_CLOR_SEPER);
+        pa.setColor(DPalette::Dark, NORMAL_CLOR_SEPER);
+    } else {
+        pa.setColor(DPalette::Light, DARK_COLOR_SEPER);
+        pa.setColor(DPalette::Dark, DARK_COLOR_SEPER);
+    }
     t_seperator1->setDisabled(true);
     t_seperator1->setPalette(pa);
     t_seperator1->setFixedSize(SPLITTER_SIZE);
@@ -563,8 +585,13 @@ void ShotToolWidget::initLineLabel()
     rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton(this);
     pa = t_seperator->palette();
-    pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-    pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+    if(m_themeType == 1) {
+        pa.setColor(DPalette::Light, NORMAL_CLOR_SEPER);
+        pa.setColor(DPalette::Dark, NORMAL_CLOR_SEPER);
+    } else {
+        pa.setColor(DPalette::Light, DARK_COLOR_SEPER);
+        pa.setColor(DPalette::Dark, DARK_COLOR_SEPER);
+    }
     t_seperator->setDisabled(true);
     t_seperator->setPalette(pa);
     t_seperator->setFixedSize(SPLITTER_SIZE);
@@ -632,8 +659,13 @@ void ShotToolWidget::initLineLabel()
     rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton(this);
     pa = t_seperator1->palette();
-    pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-    pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+    if(m_themeType == 1) {
+        pa.setColor(DPalette::Light, NORMAL_CLOR_SEPER);
+        pa.setColor(DPalette::Dark, NORMAL_CLOR_SEPER);
+    } else {
+        pa.setColor(DPalette::Light, DARK_COLOR_SEPER);
+        pa.setColor(DPalette::Dark, DARK_COLOR_SEPER);
+    }
     t_seperator1->setDisabled(true);
     t_seperator1->setPalette(pa);
     t_seperator1->setFixedSize(SPLITTER_SIZE);
@@ -730,8 +762,13 @@ void ShotToolWidget::initPenLabel()
     rectLayout->addSpacing(70);
     ToolButton *t_seperator = new ToolButton(this);
     pa = t_seperator->palette();
-    pa.setColor(DPalette::Light, QColor("#1C1C1C"));
-    pa.setColor(DPalette::Dark, QColor("#1C1C1C"));
+    if(m_themeType == 1) {
+        pa.setColor(DPalette::Light, NORMAL_CLOR_SEPER);
+        pa.setColor(DPalette::Dark, NORMAL_CLOR_SEPER);
+    } else {
+        pa.setColor(DPalette::Light, DARK_COLOR_SEPER);
+        pa.setColor(DPalette::Dark, DARK_COLOR_SEPER);
+    }
     t_seperator->setDisabled(true);
     t_seperator->setPalette(pa);
     t_seperator->setFixedSize(SPLITTER_SIZE);

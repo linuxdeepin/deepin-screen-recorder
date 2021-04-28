@@ -124,12 +124,12 @@ void Utils::notSupportWarn()
 //    windowManager->setWindowBlur(widgetId, data);
 //}
 
-void Utils::drawTooltipBackground(QPainter &painter, QRect rect, qreal opacity)
+void Utils::drawTooltipBackground(QPainter &painter, QRect rect, QString textColor, qreal opacity)
 {
     painter.setOpacity(opacity);
     QPainterPath path;
     path.addRoundedRect(QRectF(rect), Constant::RECTANGLE_RADIUS, Constant::RECTANGLE_RADIUS);
-    painter.fillPath(path, QColor("#F5F5F5"));
+    painter.fillPath(path, QColor(textColor));
 
     QPen pen(QColor("#000000"));
     painter.setOpacity(0.04);
@@ -140,9 +140,11 @@ void Utils::drawTooltipBackground(QPainter &painter, QRect rect, qreal opacity)
 
 void Utils::drawTooltipText(QPainter &painter, QString text, QString textColor, int textSize, QRectF rect)
 {
+    Q_UNUSED(textColor);
+
     Utils::setFontSize(painter, textSize);
     painter.setOpacity(1);
-    painter.setPen(QPen(QColor(textColor)));
+    painter.setPen(QPen(QGuiApplication::palette().color(QPalette::BrightText)));
     painter.drawText(rect, Qt::AlignCenter, text);
 }
 

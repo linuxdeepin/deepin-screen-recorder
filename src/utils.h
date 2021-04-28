@@ -41,7 +41,7 @@ public:
 //    static void blurRect(DWindowManager *windowManager, int widgetId, QRectF rect);
 //    static void blurRects(DWindowManager *windowManager, int widgetId, QList<QRectF> rects);
 //    static void clearBlur(DWindowManager *windowManager, int widgetId);
-    static void drawTooltipBackground(QPainter &painter, QRect rect, qreal opacity = 0.4);
+    static void drawTooltipBackground(QPainter &painter, QRect rect, QString textColor, qreal opacity = 0.4);
     static void drawTooltipText(QPainter &painter, QString text, QString textColor, int textSize, QRectF rect);
     static void passInputEvent(int wid);
     static void setFontSize(QPainter &painter, int textSize);

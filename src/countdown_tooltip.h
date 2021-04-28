@@ -54,7 +54,7 @@ private:
     int showCountdownCounter;
 
     QTimer *showCountdownTimer;
-
+    int m_themeType = 0;
     QString text;
 };
 

@@ -22,6 +22,7 @@
 #include "countdown_tooltip.h"
 #include "utils.h"
 #include "constant.h"
+#include "utils/configsettings.h"
 
 #include <DWidget>
 #include <DHiDPIHelper>
@@ -41,9 +42,19 @@ CountdownTooltip::CountdownTooltip(DWidget *parent) : DWidget(parent),
 {
     installEventFilter(this);
 
-    countdown1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_1.svg"));
-    countdown2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_2.svg"));
-    countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_3.svg"));
+
+
+
+    m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
+    if(m_themeType == 1) {
+        countdown1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_1.svg"));
+        countdown2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_2.svg"));
+        countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_3.svg"));
+    } else {
+        countdown1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_1-01.svg"));
+        countdown2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_2-01.svg"));
+        countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_3-01.svg"));
+    }
 
     showCountdownCounter = 0;
 
@@ -61,8 +72,11 @@ void CountdownTooltip::paintEvent(QPaintEvent *)
 {
     if (showCountdownCounter > 0) {
         QPainter painter(this);
-
-        Utils::drawTooltipBackground(painter, rect());
+        if(m_themeType == 1) {
+            Utils::drawTooltipBackground(painter, rect(), "#EBEBEB", 0.3);
+        } else {
+            Utils::drawTooltipBackground(painter, rect(), "#191919", 0.8);
+        }
 
         qreal devicePixelRatio = qApp->devicePixelRatio();
         painter.setOpacity(1);
