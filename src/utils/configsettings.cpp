@@ -146,10 +146,7 @@ QVariant ConfigSettings::getDefaultValue(const QString &group, const QString &ke
 
     if(key == "fontsize"){
         value.setValue(12);
-    }else if (key == "linewidth_index"
-              || key == "saveClip"
-              || key == "arrow_linewidth_index"
-              || key == "straightline_linewidth_index") {
+    }else if (key == "saveClip") {
         value.setValue(1);
     } else if (key == "save_op") {
         if (Utils::isTabletEnvironment) {
