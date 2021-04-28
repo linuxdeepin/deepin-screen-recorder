@@ -44,16 +44,11 @@ namespace {
     const int TOOLBAR_HEIGHT = 223;
     const int TOOLBAR_WIDTH = 40;
     const int BUTTON_SPACING = 3;
-    //const int SHOT_BUTTON_SPACING = 3;
-    //const int COLOR_NUM = 16;
     const QSize TOOL_ICON_SIZE = QSize(30, 30);
     const QSize TOOL_BUTTON_SIZE = QSize(38, 38);
     const QSize TOOL_SLIDERBlUR_SIZE = QSize(35, 190);
     const QSize TOOL_SLIDER_SIZE = QSize(40, 180);
     const QSize SPLITTER_SIZE = QSize(30, 1);
-    //const QSize MIN_TOOL_BUTTON_SIZE = QSize(35, 30);
-    const QColor DARK_COLOR_SEPER = QColor(255, 255, 255, 26);
-    const QColor NORMAL_CLOR_SEPER = QColor(0, 0, 0, 77);
 }
 
 ShotToolWidget::ShotToolWidget(DWidget *parent) :
@@ -200,16 +195,13 @@ void ShotToolWidget::initRectLabel()
 
     rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton(this);
-    pa = t_seperator->palette();
     if(m_themeType == 1) {
-        pa.setColor(DPalette::Light, NORMAL_CLOR_SEPER);
-        pa.setColor(DPalette::Dark, NORMAL_CLOR_SEPER);
+        t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
     } else {
-        pa.setColor(DPalette::Light, DARK_COLOR_SEPER);
-        pa.setColor(DPalette::Dark, DARK_COLOR_SEPER);
+        t_seperator->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
     }
+
     t_seperator->setDisabled(true);
-    t_seperator->setPalette(pa);
     t_seperator->setFixedSize(SPLITTER_SIZE);
     rectLayout->addWidget(t_seperator, 0, Qt::AlignHCenter);
     rectLayout->addSpacing(BUTTON_SPACING);
@@ -277,16 +269,12 @@ void ShotToolWidget::initRectLabel()
 
     rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton(this);
-    pa = t_seperator1->palette();
     if(m_themeType == 1) {
-        pa.setColor(DPalette::Light, NORMAL_CLOR_SEPER);
-        pa.setColor(DPalette::Dark, NORMAL_CLOR_SEPER);
+        t_seperator1->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
     } else {
-        pa.setColor(DPalette::Light, DARK_COLOR_SEPER);
-        pa.setColor(DPalette::Dark, DARK_COLOR_SEPER);
+        t_seperator1->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
     }
     t_seperator1->setDisabled(true);
-    t_seperator1->setPalette(pa);
     t_seperator1->setFixedSize(SPLITTER_SIZE);
     rectLayout->addWidget(t_seperator1, 0, Qt::AlignHCenter);
     m_rectSubTool->setLayout(rectLayout);
@@ -394,16 +382,12 @@ void ShotToolWidget::initCircLabel()
 
     m_rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton(this);
-    pa = t_seperator->palette();
     if(m_themeType == 1) {
-        pa.setColor(DPalette::Light, NORMAL_CLOR_SEPER);
-        pa.setColor(DPalette::Dark, NORMAL_CLOR_SEPER);
+        t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
     } else {
-        pa.setColor(DPalette::Light, DARK_COLOR_SEPER);
-        pa.setColor(DPalette::Dark, DARK_COLOR_SEPER);
+        t_seperator->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
     }
     t_seperator->setDisabled(true);
-    t_seperator->setPalette(pa);
     t_seperator->setFixedSize(SPLITTER_SIZE);
     m_rectLayout->addWidget(t_seperator, 0, Qt::AlignHCenter);
     m_rectLayout->addSpacing(BUTTON_SPACING);
@@ -477,16 +461,12 @@ void ShotToolWidget::initCircLabel()
 
     m_rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton(this);
-    pa = t_seperator1->palette();
     if(m_themeType == 1) {
-        pa.setColor(DPalette::Light, NORMAL_CLOR_SEPER);
-        pa.setColor(DPalette::Dark, NORMAL_CLOR_SEPER);
+        t_seperator1->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
     } else {
-        pa.setColor(DPalette::Light, DARK_COLOR_SEPER);
-        pa.setColor(DPalette::Dark, DARK_COLOR_SEPER);
+        t_seperator1->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
     }
     t_seperator1->setDisabled(true);
-    t_seperator1->setPalette(pa);
     t_seperator1->setFixedSize(SPLITTER_SIZE);
     m_rectLayout->addWidget(t_seperator1, 0, Qt::AlignHCenter);
 
@@ -584,16 +564,12 @@ void ShotToolWidget::initLineLabel()
 
     rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton(this);
-    pa = t_seperator->palette();
     if(m_themeType == 1) {
-        pa.setColor(DPalette::Light, NORMAL_CLOR_SEPER);
-        pa.setColor(DPalette::Dark, NORMAL_CLOR_SEPER);
+        t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
     } else {
-        pa.setColor(DPalette::Light, DARK_COLOR_SEPER);
-        pa.setColor(DPalette::Dark, DARK_COLOR_SEPER);
+        t_seperator->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
     }
     t_seperator->setDisabled(true);
-    t_seperator->setPalette(pa);
     t_seperator->setFixedSize(SPLITTER_SIZE);
     rectLayout->addWidget(t_seperator, 0, Qt::AlignHCenter);
     rectLayout->addSpacing(BUTTON_SPACING);
@@ -658,14 +634,12 @@ void ShotToolWidget::initLineLabel()
 
     rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton(this);
-    pa = t_seperator1->palette();
     if(m_themeType == 1) {
-        pa.setColor(DPalette::Light, NORMAL_CLOR_SEPER);
-        pa.setColor(DPalette::Dark, NORMAL_CLOR_SEPER);
+        t_seperator1->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
     } else {
-        pa.setColor(DPalette::Light, DARK_COLOR_SEPER);
-        pa.setColor(DPalette::Dark, DARK_COLOR_SEPER);
+        t_seperator1->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
     }
+
     t_seperator1->setDisabled(true);
     t_seperator1->setPalette(pa);
     t_seperator1->setFixedSize(SPLITTER_SIZE);
@@ -761,16 +735,12 @@ void ShotToolWidget::initPenLabel()
 
     rectLayout->addSpacing(70);
     ToolButton *t_seperator = new ToolButton(this);
-    pa = t_seperator->palette();
     if(m_themeType == 1) {
-        pa.setColor(DPalette::Light, NORMAL_CLOR_SEPER);
-        pa.setColor(DPalette::Dark, NORMAL_CLOR_SEPER);
+        t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
     } else {
-        pa.setColor(DPalette::Light, DARK_COLOR_SEPER);
-        pa.setColor(DPalette::Dark, DARK_COLOR_SEPER);
+        t_seperator->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
     }
     t_seperator->setDisabled(true);
-    t_seperator->setPalette(pa);
     t_seperator->setFixedSize(SPLITTER_SIZE);
     rectLayout->addWidget(t_seperator, 0, Qt::AlignHCenter);
     rectLayout->addSpacing(70);
