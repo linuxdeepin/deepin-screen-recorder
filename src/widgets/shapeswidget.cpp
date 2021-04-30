@@ -1158,6 +1158,7 @@ bool ShapesWidget::event(QEvent *event)
 void ShapesWidget::mousePressEvent(QMouseEvent *e)
 {
     m_lastAngle = 0;
+    //选中图形后，重新按下真实鼠标左键
     if(Qt::MouseEventSource::MouseEventSynthesizedByQt != e->source()
             && m_selectedIndex != -1){
         clearSelected();
@@ -1168,13 +1169,27 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
         m_selectedShape.type = "";
         update();
         DFrame::mousePressEvent(e);
+
     }
 
+    //选中图形后，重新按下触摸屏左键
     if(Qt::MouseEventSource::MouseEventSynthesizedByQt == e->source()
             && m_selectedIndex != -1
             && !clickedShapes(e->pos())
             && "text" != m_currentType)
-        return;
+    {
+        clearSelected();
+        setAllTextEditReadOnly();
+        m_editing = false;
+        m_selectedIndex = -1;
+        m_selectedOrder = -1;
+        m_selectedShape.type = "";
+        update();
+        DFrame::mousePressEvent(e);
+
+        //return;
+
+    }
 
     if (m_selectedIndex != -1) {
         if (!(clickedOnShapes(e->pos()) && m_isRotated) && m_selectedIndex == -1 && "text" == m_currentType) {
@@ -1202,6 +1217,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
     qDebug() << "mouse pressed!" << m_pressedPoint;
 
     if (!clickedOnShapes(m_pressedPoint)) {
+
         m_isRecording = true;
         qDebug() << "no one shape be clicked!" << m_selectedIndex << m_shapes.length();
 
@@ -1402,6 +1418,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
         update();
     }
     DFrame::mousePressEvent(e);
+
 }
 
 void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)

@@ -84,6 +84,11 @@ public slots:
     void handleRotate(QPointF pos);
     void handleResize(QPointF pos, int key);
 
+    /**
+     * @brief clickedOnShapes 图形是否被点击
+     * @param pos
+     * @return 被点击：true 未被点击：false
+     */
     bool clickedOnShapes(QPointF pos);
 
     bool clickedOnRect(FourPoints rectPoints, QPointF pos, bool isBlurMosaic = false);
@@ -163,6 +168,9 @@ private:
     ClickedKey m_clickedKey;
 
     int m_shapesIndex;
+    /**
+     * @brief m_selectedIndex 被选中图形的索引号
+     */
     int m_selectedIndex;
     int m_currentIndex;
     int m_hoveredIndex;
