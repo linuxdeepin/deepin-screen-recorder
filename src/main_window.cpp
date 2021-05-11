@@ -889,7 +889,13 @@ void MainWindow::topWindow()
         if (wid == winId()) continue;
         DForeignWindow *window = DForeignWindow::fromWinId(wid);
 
-        if (window->type() == Qt::Window || window->type() == Qt::Desktop) {
+        //if (window->type() == Qt::Window || window->type() == Qt::Desktop) {
+        // 经DTK确认，type存在bug。用flags替换，获取窗口类型功能。bug 77300；
+        if(window->flags().testFlag(Qt::Window) || window->flags().testFlag(Qt::Desktop)) {
+            // 排除dde-dock作为顶层窗口
+            if (window->wmClass() == "dde-dock") {
+                continue;
+            }
             //判断窗口是否被最小化
             if (window->windowState() == Qt::WindowState::WindowMinimized) {
                 continue;
