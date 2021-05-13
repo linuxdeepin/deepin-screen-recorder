@@ -994,6 +994,12 @@ void MainWindow::initBackground()
     //    QTimer::singleShot(200, this, [ = ] {
     m_backgroundPixmap = getPixmapofRect(m_backgroundRect);
     qDebug() << "screen rect:" << m_backgroundPixmap.rect();
+    if(m_backgroundPixmap.isNull()) {
+        DBusNotify shotFailedNotify;
+        QString tips = QString(tr("Screenshot failed."));
+        shotFailedNotify.Notify(QCoreApplication::applicationName(), 0, "deepin-screen-recorder", QString(), tips, QStringList(), QVariantMap(), 5000);
+        exit(0);
+    }
     m_resultPixmap = m_backgroundPixmap;
     TempFile::instance()->setFullScreenPixmap(m_backgroundPixmap);
     //    });

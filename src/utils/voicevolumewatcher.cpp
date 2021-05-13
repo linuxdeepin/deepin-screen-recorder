@@ -33,8 +33,11 @@ voiceVolumeWatcher::voiceVolumeWatcher(QObject *parent)
     //m_isRecoding = false;
 
     // 初始化Dus接口
-    initDeviceWatcher();
-    initConnections();
+
+    if(QDBusConnection::sessionBus().interface()->isServiceRegistered("com.deepin.daemon.Audio").value()) {
+        initDeviceWatcher();
+        initConnections();
+    }
 }
 
 voiceVolumeWatcher::~voiceVolumeWatcher()
@@ -81,6 +84,12 @@ void voiceVolumeWatcher::run()
                     couldUse = true;
                 }
             }
+            if (couldUse != m_coulduse) {
+                //发送log信息到UI
+                m_coulduse = couldUse;
+                emit sigRecodeState(couldUse);
+            }
+        } else {
             if (couldUse != m_coulduse) {
                 //发送log信息到UI
                 m_coulduse = couldUse;
