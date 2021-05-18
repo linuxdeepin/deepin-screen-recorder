@@ -793,6 +793,8 @@ void MainWindow::initScreenRecorder()
 void MainWindow::initLaunchMode(const QString &launchMode)
 {
     if (launchMode == "screenRecord") {
+        m_sizeTips->setRecorderTipsInfo(true);
+        m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
         m_launchWithRecordFunc = true;
         m_shotButton->hide();
         m_recordButton->show();
@@ -1459,6 +1461,8 @@ void MainWindow::changeFunctionButton(QString type)
         if (status::record == m_functionType) {
             return;
         }
+        m_sizeTips->setRecorderTipsInfo(true);
+         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
         m_shotButton->hide();
         updateRecordButtonPos();
         m_recordButton->show();
@@ -1473,6 +1477,8 @@ void MainWindow::changeFunctionButton(QString type)
         if (status::shot == m_functionType) {
             return;
         }
+        m_sizeTips->setRecorderTipsInfo(false);
+        m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
         m_toolBar->setVideoButtonInit();
         if (m_cameraWidget && m_cameraWidget->isVisible()) {
             m_cameraWidget->cameraStop();
