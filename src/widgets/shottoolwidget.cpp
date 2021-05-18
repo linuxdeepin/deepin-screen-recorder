@@ -194,11 +194,14 @@ void ShotToolWidget::initRectLabel()
     }
 
     rectLayout->addSpacing(2);
+    //分割线
     ToolButton *t_seperator = new ToolButton(this);
     if(m_themeType == 1) {
-        t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
+        //t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
+        t_seperator->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
-        t_seperator->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
+        //t_seperator->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px;");
+        t_seperator->setStyleSheet("border:0px solid rgba(255, 255, 255, 26);border-radius:0px;background-color:rgba(255, 255, 255, 26)");
     }
 
     t_seperator->setDisabled(true);
@@ -270,13 +273,16 @@ void ShotToolWidget::initRectLabel()
     rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton(this);
     if(m_themeType == 1) {
-        t_seperator1->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
+        //t_seperator1->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
+        t_seperator1->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
-        t_seperator1->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
+        //t_seperator1->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
+        t_seperator1->setStyleSheet("border:0px solid rgba(255, 255, 255, 26);border-radius:0px;background-color:rgba(255, 255, 255, 26)");
     }
     t_seperator1->setDisabled(true);
     t_seperator1->setFixedSize(SPLITTER_SIZE);
     rectLayout->addWidget(t_seperator1, 0, Qt::AlignHCenter);
+    rectLayout->addSpacing(2);
     m_rectSubTool->setLayout(rectLayout);
     addWidget(m_rectSubTool);
 }
@@ -383,9 +389,11 @@ void ShotToolWidget::initCircLabel()
     m_rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton(this);
     if(m_themeType == 1) {
-        t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
+        //t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
+        t_seperator->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
-        t_seperator->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
+        //t_seperator->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
+        t_seperator->setStyleSheet("border:0px solid rgba(255, 255, 255, 26);border-radius:0px;background-color:rgba(255, 255, 255, 26)");
     }
     t_seperator->setDisabled(true);
     t_seperator->setFixedSize(SPLITTER_SIZE);
@@ -462,14 +470,17 @@ void ShotToolWidget::initCircLabel()
     m_rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton(this);
     if(m_themeType == 1) {
-        t_seperator1->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
+        //t_seperator1->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
+        t_seperator1->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
-        t_seperator1->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
+        //t_seperator1->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
+        t_seperator1->setStyleSheet("border:0px solid rgba(255, 255, 255, 26);border-radius:0px;background-color:rgba(255, 255, 255, 26)");
     }
     t_seperator1->setDisabled(true);
     t_seperator1->setFixedSize(SPLITTER_SIZE);
     m_rectLayout->addWidget(t_seperator1, 0, Qt::AlignHCenter);
 
+    m_rectLayout->addSpacing(2);  
     m_circSubTool->setLayout(m_rectLayout);
     addWidget(m_circSubTool);
 }
@@ -565,9 +576,11 @@ void ShotToolWidget::initLineLabel()
     rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton(this);
     if(m_themeType == 1) {
-        t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
+        //t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
+        t_seperator->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
-        t_seperator->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
+        //t_seperator->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
+        t_seperator->setStyleSheet("border:0px solid rgba(255, 255, 255, 26);border-radius:0px;background-color:rgba(255, 255, 255, 26)");
     }
     t_seperator->setDisabled(true);
     t_seperator->setFixedSize(SPLITTER_SIZE);
@@ -635,15 +648,18 @@ void ShotToolWidget::initLineLabel()
     rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton(this);
     if(m_themeType == 1) {
-        t_seperator1->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
+        //t_seperator1->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
+        t_seperator1->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
-        t_seperator1->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
+        //t_seperator1->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
+        t_seperator1->setStyleSheet("border:0px solid rgba(255, 255, 255, 26);border-radius:0px;background-color:rgba(255, 255, 255, 26)");
     }
 
     t_seperator1->setDisabled(true);
     t_seperator1->setPalette(pa);
     t_seperator1->setFixedSize(SPLITTER_SIZE);
     rectLayout->addWidget(t_seperator1, 0, Qt::AlignHCenter);
+    rectLayout->addSpacing(2);
 
     m_lineSubTool->setLayout(rectLayout);
     addWidget(m_lineSubTool);
@@ -733,18 +749,21 @@ void ShotToolWidget::initPenLabel()
     }
 
 
-    rectLayout->addSpacing(70);
+    //rectLayout->addSpacing(70);
+    rectLayout->addSpacing(40);
     ToolButton *t_seperator = new ToolButton(this);
     if(m_themeType == 1) {
-        t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
+        //t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
+        t_seperator->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
-        t_seperator->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
+        //t_seperator->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
+        t_seperator->setStyleSheet("border:0px solid rgba(255, 255, 255, 26);border-radius:0px;background-color:rgba(255, 255, 255, 26)");
     }
     t_seperator->setDisabled(true);
     t_seperator->setFixedSize(SPLITTER_SIZE);
     rectLayout->addWidget(t_seperator, 0, Qt::AlignHCenter);
-    rectLayout->addSpacing(70);
-
+    //rectLayout->addSpacing(70);
+    rectLayout->addSpacing(40);
     btnList.clear();
 
     m_penSubTool->setLayout(rectLayout);
