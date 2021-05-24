@@ -279,6 +279,7 @@ void ShotToolWidget::initRectLabel()
         //t_seperator1->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
         t_seperator1->setStyleSheet("border:0px solid rgba(255, 255, 255, 26);border-radius:0px;background-color:rgba(255, 255, 255, 26)");
     }
+    qDebug()<<"test";
     t_seperator1->setDisabled(true);
     t_seperator1->setFixedSize(SPLITTER_SIZE);
     rectLayout->addWidget(t_seperator1, 0, Qt::AlignHCenter);
