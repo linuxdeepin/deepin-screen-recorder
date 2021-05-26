@@ -2730,9 +2730,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         if (!m_isShapesWidgetExist) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             if (mouseEvent->button() == Qt::LeftButton) {
-                if (m_sizeTips->isVisible()) {
-                    m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
-                }
+                m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
                 if (!isFirstReleaseButton) {
                     isFirstReleaseButton = true;
 
