@@ -40,7 +40,7 @@ public slots:
     void updateTips(QPoint pos, const QSize &rect);
 
 protected:
-    void mousePressEvent(QMouseEvent *ev) override;
+    //void mousePressEvent(QMouseEvent *ev) override;
     bool m_showRecorderTips = false;
     int m_width = 0;
     int m_height = 0;

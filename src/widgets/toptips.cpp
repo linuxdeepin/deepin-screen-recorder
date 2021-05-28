@@ -87,12 +87,14 @@ void TopTips::updateTips(QPoint pos, const QSize &size)
     this->move(startPoint);
 }
 
+/*
 void TopTips::mousePressEvent(QMouseEvent *ev)
 {
     Q_UNUSED(ev);
+    qDebug() << "";
     return;
 }
-
+*/
 
 TopTips::~TopTips() {}
 
