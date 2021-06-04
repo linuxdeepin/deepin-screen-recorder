@@ -8,7 +8,7 @@
 #include "../../src/widgets/toptips.h"
 
 using namespace testing;
-ACCESS_PRIVATE_FUN(TopTips, void(QMouseEvent *ev), mousePressEvent);
+//ACCESS_PRIVATE_FUN(TopTips, void(QMouseEvent *ev), mousePressEvent);
 bool startsWith_stub(const QString &s, Qt::CaseSensitivity cs = Qt::CaseSensitive)
 {
     Q_UNUSED(s);
@@ -50,9 +50,10 @@ TEST_F(TopTipsTest, updateTips)
     m_topTips->updateTips(QPoint(0,0),QSize(1920,1040));
     m_topTips->updateTips(QPoint(200,200),QSize(100,100));
 }
-
+/*
 TEST_F(TopTipsTest, mousePressEvent)
 {
     QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::TopTipsmousePressEvent(*m_topTips,ev);
 }
+*/

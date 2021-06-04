@@ -13,7 +13,7 @@ qmake ../
 make -j4
 
 #workdir=$(cd ../../$(dirname $0)/build-filemanager-unknown-Debug/test; pwd)
-workdir=$(cd ../$(dirname $0)/build-ut; pwd)
+workdir=$(cd ../../$(dirname $0)/build-ut; pwd)
 executable=ut_screen_shot_recorder #可执行程序的文件名
 
 #下面是覆盖率目录操作，一种正向操作，一种逆向操作
