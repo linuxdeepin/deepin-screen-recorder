@@ -103,8 +103,11 @@ void saveThemeTypeSetting(int type)
 */
 int main(int argc, char *argv[])
 {
-
-//    DApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    //for qt5platform-plugins load DPlatformIntegration or DPlatformIntegrationParent
+    if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")){
+        setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
+    }
+    //    DApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     // Construct a QGuiApplication before accessing a platform function.
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
