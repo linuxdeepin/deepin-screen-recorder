@@ -76,6 +76,8 @@ private:
     DLabel *m_shotSubTool = nullptr;
     QString m_currentType;
     QAction *m_systemAudioAction = nullptr;
+    ToolButton *m_ocrButton = nullptr;
+
     ToolButton *m_rectButton = nullptr;
     ToolButton *m_circleButton = nullptr;
     ToolButton *m_lineButton = nullptr;

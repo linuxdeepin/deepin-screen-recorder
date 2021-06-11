@@ -246,6 +246,13 @@ bool ShapesWidget::clickedOnShapes(QPointF pos)
     qDebug() << "ClickedOnShapes !!!!!!!" << m_shapes.length();
     for (int i = 0; i < m_shapes.length(); i++) {
         bool currentOnShape = false;
+        if (m_shapes[i].type == "ocr") {
+            if (clickedOnRect(m_shapes[i].mainPoints, pos,
+                              m_shapes[i].isBlur || m_shapes[i].isMosaic)) {
+                currentOnShape = true;
+                emit shapeClicked("ocr");
+            }
+        }
         if (m_shapes[i].type == "rectangle") {
             if (clickedOnRect(m_shapes[i].mainPoints, pos,
                               m_shapes[i].isBlur || m_shapes[i].isMosaic)) {

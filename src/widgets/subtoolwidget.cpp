@@ -634,6 +634,15 @@ void SubToolWidget::initShotLabel()
     QList<ToolButton *> btnList;
     DPalette pa;
 
+    //添加ocr图文识别按钮
+    m_ocrButton = new ToolButton();
+    m_ocrButton->setIconSize(QSize(35, 35));
+    m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
+    Utils::setAccessibility(m_ocrButton, AC_SUBTOOLWIDGET_OCR_BUTTON);
+    rectBtnGroup->addButton(m_ocrButton);
+    m_ocrButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
+    installTipHint(m_ocrButton, tr("OCR"));
+    btnList.append(m_ocrButton);
     //添加矩形按钮
     m_rectButton = new ToolButton();
     m_rectButton->setIconSize(QSize(35, 35));
@@ -943,6 +952,10 @@ void SubToolWidget::initShotLabel()
     connect(rectBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
             [ = ](int status) {
         Q_UNUSED(status);
+        if(m_ocrButton->isChecked())
+        {
+            emit changeShotToolFunc("ocr");
+        }
         //DPalette pa;
         if (m_rectButton->isChecked()) {
             emit changeShotToolFunc("rectangle");
@@ -1079,7 +1092,11 @@ void SubToolWidget::setVideoButtonInitFromSub()
 void SubToolWidget::shapeClickedFromWidget(QString shape)
 {
     if (!shape.isEmpty()) {
-        if (shape == "rect") {
+        if(shape == "ocr"){
+            if(!m_ocrButton->isChecked())
+                m_ocrButton->click();
+        }
+        else if (shape == "rect") {
             if(!m_rectButton->isChecked())
                 m_rectButton->click();
         } else if (shape == "circ") {

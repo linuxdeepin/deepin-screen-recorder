@@ -487,6 +487,9 @@ void MainWindow::onExit()
 
 void MainWindow::initShortcut()
 {
+    //应用内快捷键
+    QShortcut *ocrSC = new QShortcut(QKeySequence("Alt+O"), this);
+
     QShortcut *rectSC = new QShortcut(QKeySequence("R"), this);
     QShortcut *ovalSC = new QShortcut(QKeySequence("O"), this);
     QShortcut *arrowSC = new QShortcut(QKeySequence("L"), this);
@@ -500,6 +503,14 @@ void MainWindow::initShortcut()
     //转全局事件，此处未使用
     //QShortcut *audioSC = new QShortcut(QKeySequence("S"), this);
     //    QShortcut *colorSC = new QShortcut(QKeySequence("Alt+6"), this);
+
+    connect(ocrSC, &QShortcut::activated, this, [ = ] {
+        if (status::shot == m_functionType)
+        {
+            m_toolBar->shapeClickedFromMain("ocr");
+        }
+
+    });
 
     connect(rectSC, &QShortcut::activated, this, [ = ] {
         if (status::shot == m_functionType)
@@ -1455,6 +1466,7 @@ void MainWindow::updateCameraWidgetPos()
         m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
     }
 }
+//
 void MainWindow::changeFunctionButton(QString type)
 {
     if (type == "record") {
@@ -1739,18 +1751,23 @@ void MainWindow::updateMultiKeyBoardPos()
 void MainWindow::changeShotToolEvent(const QString &func)
 {
 
-    if (!m_sideBar->isVisible()) {
-        updateSideBarPos();
-    }
+    qDebug() << "MainWindow::changeShotToolEvent >> func: " << func;
+    //调用ocr功能时先截图后，退出截图录屏，将刚截图的图片串递到ocr识别界面；
+    if(func == "ocr"){
+        saveScreenShot();
 
-    if (m_isShapesWidgetExist && func != "color") {
-        m_shapesWidget->setCurrentShape(func);
-    } else if (func != "color") {
-        initShapeWidget(func);
-        m_isShapesWidgetExist = true;
+    }else{
+        if (!m_sideBar->isVisible()) {
+            updateSideBarPos();
+        }
+        if (m_isShapesWidgetExist && func != "color") {
+            m_shapesWidget->setCurrentShape(func);
+        } else if (func != "color") {
+            initShapeWidget(func);
+            m_isShapesWidgetExist = true;
+        }
+        m_sideBar->changeShotToolFunc(func);
     }
-
-    m_sideBar->changeShotToolFunc(func);
 }
 
 void MainWindow::saveScreenShot()

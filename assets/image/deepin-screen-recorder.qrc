@@ -259,5 +259,7 @@
         <file>newUI/normal/touch.svg</file>
         <file>newUI/normal/mouseandtouch.svg</file>
         <file>deepin-screenshot.svg</file>
+        <file>newUI/normal/ocr-normal.svg</file>
+        <file>newUI/dark/normal/ocr-normal.svg</file>
     </qresource>
 </RCC>
