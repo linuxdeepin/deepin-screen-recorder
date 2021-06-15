@@ -45,6 +45,7 @@
 #include "event_monitor.h"
 #include "screen_shot_event.h"
 #include "recordertablet.h"
+#include "dbusinterface/ocrinterface.h"
 
 #include <DWindowManagerHelper>
 #include <DDialog>
@@ -194,6 +195,10 @@ public:
         if (m_pRecorderRegion) {
             delete m_pRecorderRegion;
             m_pRecorderRegion = nullptr;
+        }
+        if (m_ocrInterface) {
+            delete m_ocrInterface;
+            m_ocrInterface = nullptr;
         }
         for (int i = 0; i < m_keyButtonList.count(); i++) {
             delete m_keyButtonList.at(i);
@@ -427,6 +432,8 @@ private:
     bool m_initScreenRecorder;
     RecorderTablet *m_tabletRecorderHandle = nullptr;
     int m_cursorBound;
+    //ocr接口
+    OcrInterface *m_ocrInterface;
 };
 
 #endif //MAINWINDOW_H

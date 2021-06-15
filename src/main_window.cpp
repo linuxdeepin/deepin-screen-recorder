@@ -695,6 +695,8 @@ void MainWindow::initScreenShot()
     //exitScreenRecordEvent();
     connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
 
+    //初始化ocr
+    m_ocrInterface = nullptr;
     m_toolBar->setFocus();
 }
 
@@ -1754,6 +1756,9 @@ void MainWindow::changeShotToolEvent(const QString &func)
     qDebug() << "MainWindow::changeShotToolEvent >> func: " << func;
     //调用ocr功能时先截图后，退出截图录屏，将刚截图的图片串递到ocr识别界面；
     if(func == "ocr"){
+        //qDebug() << "m_saveFileName: " << m_saveFileName;
+        // 调起OCR识别界面， 传入截图路径
+        m_ocrInterface= new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
         saveScreenShot();
 
     }else{
@@ -2193,6 +2198,11 @@ bool MainWindow::saveAction(const QPixmap &pix)
             delete m_draw;
         }
         */
+    }
+    if(m_ocrInterface != nullptr)
+    {
+        m_ocrInterface->openImage(pix.toImage());
+        //m_ocrInterface->openFile(m_saveFileName);
     }
     return true;
 }
