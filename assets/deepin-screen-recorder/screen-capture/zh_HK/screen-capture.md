@@ -121,7 +121,7 @@
             <td><img src="../common/oval_normal.svg" alt="橢圓工具" class="inline" /></td>
             <td>橢圓工具</td>
             <td><img src="../common/line_normal.svg" alt="箭頭工具" class="inline" /></td>
-            <td>線條工具</td>
+            <td>直線工具</td>
         </tr>
           <tr>
             <td><img src="../common/Combined_Shape.svg" alt="畫筆工具" class="inline" /></td>
@@ -133,6 +133,7 @@
         </tr>
     </tbody>
 </table>
+
 
 
 > ![notes](../common/notes.svg)說明：如果您已經對工具欄和屬性欄中，如線條粗細、字體大小等進行了設置，截圖會保存該設置。再次啟動截圖錄屏，將默認使用該設置，您也可以重新進行選擇。
@@ -253,7 +254,7 @@
 
 您可以通過延時截圖功能，捕捉特定狀態或時間下的螢幕內容。
 
-- 將截圖錄屏圖標固定在任務欄，右鍵單擊圖標，選擇 **延時截圖**。
+- 將螢幕錄影圖標固定在任務欄，右鍵單擊圖標，選擇 **延時截圖**。
 - 使用快捷鍵 **Ctrl** + ![icon](../common/Print.svg)，啟動延時截圖。
 - 在終端中執行命令 “deepin-screen-recorder -d n”，其中n表示以秒為單位的延時時長。
 
@@ -262,7 +263,7 @@
 
 當截圖保存成功之後，在桌面上方彈出提示訊息，單擊 **查看**，打開截圖所在的文件夾。
 
-開啟截圖錄屏，選定截圖區域後，通過執行以下操作之一來保存圖片：
+開啟螢幕錄影，選定截圖區域後，通過執行以下操作之一來保存圖片：
 
 - 雙擊鼠標左鍵來保存。
 - 單擊截圖工具欄中的 ![icon](../common/screenshot_button.svg)按鈕。

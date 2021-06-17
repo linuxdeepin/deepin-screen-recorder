@@ -12,8 +12,8 @@ You can run, close, and create shortcuts for Screen Capture in the following ope
 
 ### Run Screen Capture
 
-1. Click ![deepin_launcher](../common/deepin_launcher.svg) in the dock to enter the launcher interface.
-2. Locate ![deepin_screenshot](../common/deepin_screenshot.svg) by scrolling the mouse wheel or searching "screen capture" in the Launcher interface and click it to run. 
+1. Click the Launcher icon ![deepin_launcher](../common/deepin_launcher.svg) in the dock to enter the launcher interface.
+2. Locate Screen Capture ![deepin_screenshot](../common/deepin_screenshot.svg) by scrolling the mouse wheel or searching "screen capture" in the Launcher interface and click it to run. 
 3. Right-click ![deepin_screenshot](../common/deepin_screenshot.svg) and you can:
 
     - Click **Send to desktop** to create a desktop shortcut.
@@ -125,7 +125,7 @@ Under the screenshot mode, click the corresponding icons on the toolbar and you 
     </tbody>
 </table>
 
-> ![notes](../common/notes.svg)Notes: Your settings in the toolbar and attribute column, such as the line weight and font size, are remembered and applied by default and will be resumed the next time when you launch Screen Capture. You are able to reset it as well. 
+> ![notes](../common/notes.svg) Notes: Your settings in the toolbar and attribute column, such as the line weight and font size, are remembered and applied by default and will be resumed the next time when you launch Screen Capture. You are able to reset it as well. 
 
 ### Draw
 
@@ -300,7 +300,7 @@ Under the recording mode, click the icons on the toolbar and you can perform rec
 </table>
 
 
-> ![notes](../common/notes.svg)Notes: Screen recording is not available on the SW platform.
+> ![notes](../common/notes.svg) Notes: Screen recording is not available on the SW platform.
 
 ### Set Recording Settings
 
@@ -315,7 +315,7 @@ On the toolbar of Screen Capture, you can set sound, keystroke, camera, etc. to 
 - Mouse:  Include **Show Pointer**, **Show Click** or both.
 - Options: Select the **GIF**, **MP4** or **MKV** format and FPS in the Options dropdown list.
 
-   > ![notes](../common/notes.svg)Notes: GIF is not supported on the MIPS architecture devices.
+   > ![notes](../common/notes.svg) Notes: GIF is not supported on the MIPS architecture devices.
 
 ### Record a Screen
 

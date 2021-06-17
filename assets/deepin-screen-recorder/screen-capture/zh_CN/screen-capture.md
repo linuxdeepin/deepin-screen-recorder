@@ -59,7 +59,7 @@
 2. 将鼠标指针移至桌面上，截图录屏会自动选中整个屏幕，并在其左上角显示当前截图录屏区域的尺寸大小。
 3. 鼠标左键单击桌面，弹出工具栏。
 
-您也可以直接操作以下步骤来截取全屏：
+您也可以直接通过以下步骤来截取全屏：
 
 - 如果您已经将截图录屏固定到任务栏，右键单击任务栏上的图标![deepin_screenshot](../common/deepin_screenshot.svg)，选择 **全屏截图** 。
 - 按下键盘上的 ![print](../common/Print.svg)键，实现全屏截图。
@@ -124,7 +124,7 @@
             <td><img src="../common/oval_normal.svg" alt="椭圆工具" class="inline" /></td>
             <td>椭圆工具</td>
             <td><img src="../common/line_normal.svg" alt="箭头工具" class="inline" /></td>
-            <td>线条工具</td>
+            <td>直线工具</td>
         </tr>
           <tr>
             <td><img src="../common/Combined_Shape.svg" alt="画笔工具" class="inline" /></td>
@@ -136,6 +136,7 @@
         </tr>
     </tbody>
 </table>
+
 
 
 
