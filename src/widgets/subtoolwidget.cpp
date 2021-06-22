@@ -641,7 +641,7 @@ void SubToolWidget::initShotLabel()
     Utils::setAccessibility(m_ocrButton, AC_SUBTOOLWIDGET_OCR_BUTTON);
     rectBtnGroup->addButton(m_ocrButton);
     m_ocrButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
-    installTipHint(m_ocrButton, tr("OCR"));
+    installTipHint(m_ocrButton, tr("Extract Text"));
     btnList.append(m_ocrButton);
     //添加矩形按钮
     m_rectButton = new ToolButton();

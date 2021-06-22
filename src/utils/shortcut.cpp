@@ -25,14 +25,14 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
 {
     ShortcutGroup screenshotGroup;
     ShortcutGroup exitGroup;
-    ShortcutGroup drawGroup;
+    ShortcutGroup toolsGroup;
     ShortcutGroup recordGroup;
     ShortcutGroup sizeGroup;
     ShortcutGroup setGroup;
 
     screenshotGroup.groupName = tr("Start/Screenshot");
     exitGroup.groupName = tr("Exit/Save");
-    drawGroup.groupName = tr("Drawing");
+    toolsGroup.groupName = tr("Tools");
     recordGroup.groupName = tr("Start/Recording");
     sizeGroup.groupName = tr("Size Adjustment");
     setGroup.groupName = tr("Settings");
@@ -46,11 +46,12 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
                          << ShortcutItem(tr("Save"), "Ctrl+S")
                          << ShortcutItem(" ", " ");
 
-    drawGroup.groupItems << ShortcutItem(tr("Rectangle"), "R")
+    toolsGroup.groupItems << ShortcutItem(tr("Rectangle"), "R")
                          << ShortcutItem(tr("Ellipse"), "O")
                          << ShortcutItem(tr("Line"), "L")
                          << ShortcutItem(tr("Pencil"), "P")
                          << ShortcutItem(tr("Text"), "T")
+                         << ShortcutItem(tr("Extract text"), "Alt+O")
                          << ShortcutItem(tr("Delete"), "Delete")
                          << ShortcutItem(tr("Undo"), "Ctrl+Z")
                          << ShortcutItem(tr("Options"), "F3");
@@ -74,7 +75,7 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
     setGroup.groupItems << ShortcutItem(tr("Help"), "F1")
                         << ShortcutItem(tr("Display shortcuts"), "Ctrl+Shift+?");
 
-    m_shortcutGroups << screenshotGroup <<  recordGroup<< drawGroup <<  exitGroup << sizeGroup << setGroup;
+    m_shortcutGroups << screenshotGroup <<  recordGroup<< toolsGroup <<  exitGroup << sizeGroup << setGroup;
 
     //convert to json object
     QJsonArray jsonGroups;
