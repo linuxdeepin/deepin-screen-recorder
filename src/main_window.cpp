@@ -594,7 +594,7 @@ void MainWindow::initResource()
     m_showButtons = new ShowButtons(this);
     if (!m_pScreenShotEvent || !m_showButtons)
       return;
-  
+
     connect(m_showButtons, SIGNAL(keyShowSignal(const QString &)),
             this, SLOT(showKeyBoardButtons(const QString &)));
     //    resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_big.svg"));
@@ -704,7 +704,7 @@ void MainWindow::initScreenRecorder()
 {
     if (!m_pScreenRecordEvent)
       return;
-  
+
     if(!m_initScreenRecorder){
         m_initScreenRecorder = true;
     } else {
@@ -1897,6 +1897,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
             toString("yyyyMMddHHmmss");
     m_saveFileName = "";
 
+    QString tempFileName = "";
     QStandardPaths::StandardLocation saveOption = QStandardPaths::TempLocation;
     //    bool copyToClipboard = true;
 
@@ -2044,7 +2045,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         } else {
             m_saveFileName = QString("%1%2%3_%4_%5.png").arg(padImgPath,QDir::separator(),tr("Screenshot"), selectAreaName, currentTime);
         }
-      
+
         break;
     }
     default:
@@ -2178,6 +2179,12 @@ bool MainWindow::saveAction(const QPixmap &pix)
         if (!saveImg(pix, m_saveFileName, t_formatStr.toLatin1().data()))
             return false;
     }else if(m_saveIndex == SaveToClipboard){
+        if (selectAreaName.isEmpty()) {
+            tempFileName = QString("%1_%2_%3").arg(tr("Clipboard"),tr("Screenshot"), currentTime);
+        } else {
+            tempFileName = QString("%1_%2_%3_%4").arg( tr("Clipboard"),tr("Screenshot"), selectAreaName, currentTime);
+        }
+        qDebug() << "m_saveFileName: " <<m_saveFileName;
         m_saveFileName = QString(tr("Clipboard"));
     }
     // 保存到剪贴板
@@ -2201,7 +2208,11 @@ bool MainWindow::saveAction(const QPixmap &pix)
     }
     if(m_ocrInterface != nullptr)
     {
-        m_ocrInterface->openImage(pix.toImage());
+      if(m_saveIndex == SaveToClipboard){
+            m_ocrInterface->openImageAndName(pix.toImage(),tempFileName);
+      }else {
+            m_ocrInterface->openImageAndName(pix.toImage(),m_saveFileName);
+      }
         //m_ocrInterface->openFile(m_saveFileName);
     }
     return true;

@@ -81,6 +81,25 @@ public Q_SLOTS: // METHODS
         return call(QStringLiteral("openImage"), QVariant::fromValue(data));
     }
 
+    /*
+    * @bref:openImages
+    * @param: image 图片
+    * @param: imageName 图片名称
+    * @return: QDBusPendingReply
+    * @note:
+    */
+    inline QDBusPendingReply<> openImageAndName(const QImage &image,const QString &imageName)
+    {
+        qDebug() << __FUNCTION__;
+        QByteArray data;
+        QBuffer buf(&data);
+        if (image.save(&buf, "PNG")) {
+            data = qCompress(data, 9);
+            data = data.toBase64();
+        }
+        return call(QStringLiteral("openImageAndName"), QVariant::fromValue(data),imageName);
+    }
+
 Q_SIGNALS: // SIGNALS
 };
 
