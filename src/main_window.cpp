@@ -123,6 +123,8 @@ MainWindow::MainWindow(DWidget *parent) :
     setDragCursor();
     //QScreen *screen = qApp->primaryScreen();
     m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
+    // 监控录屏过程中， 特效窗口的变化。
+    connect(m_wmHelper, &DWindowManagerHelper::hasCompositeChanged, this, &MainWindow::compositeChanged);
 
     connect(qApp,&QGuiApplication::screenAdded,this,&MainWindow::onExit);
     connect(qApp,&QGuiApplication::screenRemoved,this,&MainWindow::onExit);
@@ -1082,6 +1084,14 @@ void MainWindow::onActivateWindow()
 
 void MainWindow::compositeChanged()
 {
+
+    // 在非录屏状态下，通过快捷键关闭特效模式
+    if(recordButtonStatus != RECORD_BUTTON_RECORDING) {
+        m_hasComposite = m_wmHelper->hasComposite();
+        update();
+        return;
+    }
+
     if (m_hasComposite == true  && !m_wmHelper->hasComposite()) {
         // 录屏过程中 由初始3D转2D模式, 强制暂停录屏.
         // 如果录屏由 由初始2D转3D模式, 则不强制退出录屏.
@@ -3540,8 +3550,6 @@ void MainWindow::startCountdown()
 
     disconnect(m_recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
     disconnect(m_shotButton, SIGNAL(clicked()), this, SLOT(saveScreenShot()));
-    // 监控录屏过程中， 特效窗口的变化。
-    connect(m_wmHelper, &DWindowManagerHelper::hasCompositeChanged, this, &MainWindow::compositeChanged);
     const QPoint topLeft = geometry().topLeft();
     QRect recordRect {
         static_cast<int>(recordX * m_pixelRatio + topLeft.x()),
