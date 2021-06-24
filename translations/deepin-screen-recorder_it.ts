@@ -9,7 +9,7 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>Non ruotare lo schermo durante la registrazione</translation>
     </message>
 </context>
 <context>
@@ -87,6 +87,10 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
+        <translation>Lo screenshot è stato salvato nell&apos;album</translation>
+    </message>
+    <message>
+        <source>Screenshot failed.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -147,10 +151,6 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Exit/Save</source>
         <translation>Esci/Salva</translation>
-    </message>
-    <message>
-        <source>Drawing</source>
-        <translation>Disegno</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -279,6 +279,14 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Mouse</source>
         <translation>Mouse</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -445,6 +453,10 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Show Pointer</source>
         <translation>Mostra il puntatore</translation>
+    </message>
+    <message>
+        <source>Extract Text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

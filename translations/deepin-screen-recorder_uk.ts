@@ -9,7 +9,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>Не обертайте екран під час запису</translation>
     </message>
 </context>
 <context>
@@ -87,6 +87,10 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
+        <translation>Знімок вікна було збережено до альбому</translation>
+    </message>
+    <message>
+        <source>Screenshot failed.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -147,10 +151,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Exit/Save</source>
         <translation>Вийти/Зберегти</translation>
-    </message>
-    <message>
-        <source>Drawing</source>
-        <translation>Малюнок</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -279,6 +279,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Mouse</source>
         <translation>Миша</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -445,6 +453,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Show Pointer</source>
         <translation>Показати вказівник</translation>
+    </message>
+    <message>
+        <source>Extract Text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

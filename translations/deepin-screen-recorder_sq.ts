@@ -9,7 +9,7 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>Mos e rrotulloni ekranin tuaj gjatë regjistrimit</translation>
     </message>
 </context>
 <context>
@@ -87,6 +87,10 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
+        <translation>Fotoja e ekranit është ruajtur te albumi</translation>
+    </message>
+    <message>
+        <source>Screenshot failed.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -147,10 +151,6 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     <message>
         <source>Exit/Save</source>
         <translation>Dil/Ruaje</translation>
-    </message>
-    <message>
-        <source>Drawing</source>
-        <translation>Vizatim</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -279,6 +279,14 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     <message>
         <source>Mouse</source>
         <translation>Mi</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -445,6 +453,10 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     <message>
         <source>Show Pointer</source>
         <translation>Shfaq Treguesin</translation>
+    </message>
+    <message>
+        <source>Extract Text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

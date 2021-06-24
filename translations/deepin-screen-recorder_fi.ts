@@ -9,7 +9,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>Älä kierrä näyttöä tallennuksen aikana</translation>
     </message>
 </context>
 <context>
@@ -20,7 +20,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Kuvakaappaus</translation>
+        <translation>Ruudunkaappaus</translation>
     </message>
 </context>
 <context>
@@ -39,7 +39,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Kuva valmiina</translation>
+        <translation>Kaappaus valmiina</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -83,10 +83,14 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Kuvakaappaus</translation>
+        <translation>Ruudunkaappaus</translation>
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
+        <translation>Ruudunkaappaus on tallennettu albumiin</translation>
+    </message>
+    <message>
+        <source>Screenshot failed.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -142,15 +146,11 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>Aloita/Kuvakaappaus</translation>
+        <translation>Aloita/Kaappaa</translation>
     </message>
     <message>
         <source>Exit/Save</source>
         <translation>Poistu/Tallenna</translation>
-    </message>
-    <message>
-        <source>Drawing</source>
-        <translation>Piirtäminen</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -166,11 +166,11 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>Ikkunan kuvakaappaus</translation>
+        <translation>Ikkunan kaappaus</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>Kuvakaappaus viiveellä</translation>
+        <translation>Kaappaus viiveellä</translation>
     </message>
     <message>
         <source>Full screenshot</source>
@@ -279,6 +279,14 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Mouse</source>
         <translation>Hiiri</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -445,6 +453,10 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Show Pointer</source>
         <translation>Näytä osoitin</translation>
+    </message>
+    <message>
+        <source>Extract Text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

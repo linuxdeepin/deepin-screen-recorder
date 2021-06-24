@@ -9,7 +9,7 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>Ne faites pas pivoter votre écran pendant l&apos;enregistrement</translation>
     </message>
 </context>
 <context>
@@ -79,7 +79,7 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>Comme l&apos;effet de fenêtre est désactivé pendant le processus, l&apos;enregistrement doit être arrêté</translation>
+        <translation>Comme l&apos;effet de fenêtre a été désactivé pendant le processus, l&apos;enregistrement doit être arrêté</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -87,6 +87,10 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
+        <translation>La capture d&apos;écran a été enregistrée dans l&apos;album</translation>
+    </message>
+    <message>
+        <source>Screenshot failed.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -147,10 +151,6 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source>Exit/Save</source>
         <translation>Quitter/Enregistrer</translation>
-    </message>
-    <message>
-        <source>Drawing</source>
-        <translation>Dessin</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -279,6 +279,14 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source>Mouse</source>
         <translation>Souris</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -446,12 +454,16 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <source>Show Pointer</source>
         <translation>Afficher le pointeur</translation>
     </message>
+    <message>
+        <source>Extract Text</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation> Ajuster la zone d&apos;enregistrement dans %1 *%2 pour obtenir un meilleur effet vidéo</translation>
+        <translation> Ajustez la zone d&apos;enregistrement dans %1*%2 pour obtenir un meilleur effet vidéo</translation>
     </message>
 </context>
 </TS>

@@ -9,7 +9,7 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>No gireu la pantalla durant la gravació.</translation>
     </message>
 </context>
 <context>
@@ -87,6 +87,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
+        <translation>La captura s&apos;ha desat a l&apos;àlbum.</translation>
+    </message>
+    <message>
+        <source>Screenshot failed.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -147,10 +151,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Exit/Save</source>
         <translation>Surt/Desa</translation>
-    </message>
-    <message>
-        <source>Drawing</source>
-        <translation>Dibuix</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -279,6 +279,14 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Mouse</source>
         <translation>Ratolí</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -445,6 +453,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Show Pointer</source>
         <translation>Mostra&apos;n el punter</translation>
+    </message>
+    <message>
+        <source>Extract Text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

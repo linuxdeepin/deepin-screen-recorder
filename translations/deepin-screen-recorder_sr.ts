@@ -9,7 +9,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>Немојте окретати екран током снимања</translation>
     </message>
 </context>
 <context>
@@ -87,6 +87,10 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
+        <translation>Слика екрана је сачувана у албуму</translation>
+    </message>
+    <message>
+        <source>Screenshot failed.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -147,10 +151,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Exit/Save</source>
         <translation>Изађи/Сачувај</translation>
-    </message>
-    <message>
-        <source>Drawing</source>
-        <translation>Цртање</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -279,6 +279,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Mouse</source>
         <translation>Миш</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -445,6 +453,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Show Pointer</source>
         <translation>Прикажи показивач</translation>
+    </message>
+    <message>
+        <source>Extract Text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

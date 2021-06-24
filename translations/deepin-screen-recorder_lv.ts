@@ -1,45 +1,45 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="da" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="lv" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Klik på bakkeikonet
-eller tryk på genvejen igen, for at stoppe optagelse</translation>
+        <translation>Noklikšķiniet uz ikonas
+vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>Nerotējiet ekrānu ieraksta laikā</translation>
     </message>
 </context>
 <context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation>Optag</translation>
+        <translation>Ierakstīt</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Skærmbillede</translation>
+        <translation>Ekrānuzņēmums</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Skærmoptagelse</translation>
+        <translation>Ekrāna ierakstīšana</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>Gem mislykkedes. Gem den venligst i din hjemmemappe.</translation>
+        <translation>Saglabāšana neizdevās. Lūzu saglabājiet mājas mapē</translation>
     </message>
     <message>
         <source>View</source>
-        <translation>Vis</translation>
+        <translation>Apskatīt</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Skærmbilledet er færdigt</translation>
+        <translation>Ekrāna uzņēmums izveidots</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -55,39 +55,39 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation>markeringsområde</translation>
+        <translation>izvēlēties-laukumu</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Gem</translation>
+        <translation>Saglabāt</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>Gemt til %1</translation>
+        <translation>Saglabāt %1</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"/>
+        <translation>Ignorēt</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Starpliktuve</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation type="unfinished"/>
+        <translation>Saglabā ekrāna ierakstu, lūdzu uzgaidiet...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"/>
+        <translation>Tā kā procesa laikā loga efekts ir atspējots, ieraksts ir jāpārtrauc</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Skærmbillede</translation>
+        <translation>Ekrānuzņēmums</translation>
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
-        <translation type="unfinished"/>
+        <translation>Ekrānuzņēmums saglabāts albumā</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
@@ -98,187 +98,187 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <name>MenuController</name>
     <message>
         <source>Undo</source>
-        <translation>Fortryd</translation>
+        <translation>Atsaukt</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Gem</translation>
+        <translation>Saglabāt</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Afslut</translation>
+        <translation>Iziet</translation>
     </message>
 </context>
 <context>
     <name>RecordProcess</name>
     <message>
         <source>View</source>
-        <translation>Vis</translation>
+        <translation>Apskatīt</translation>
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>Optagelse færdig</translation>
+        <translation>Ieraksts pabeigts</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>Gemt til %1</translation>
+        <translation>Saglabāt %1</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Optag</translation>
+        <translation>Ierakstīt</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>Skærmoptagelse starter om %1 sekunder</translation>
+        <translation>Ekrāna ierakstīšana sāksies pēc %1 sekundēm</translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>Skriv teksten her</translation>
+        <translation>Ievadiet tekstu šeit</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>Start/skærmbillede</translation>
+        <translation>Sākt/Ekrānuzņēmums</translation>
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation>Afslut/gem</translation>
+        <translation>Iziet/Saglabāt</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation>Justering af størrelse</translation>
+        <translation>Pielāgot izmēru</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Indstillinger</translation>
+        <translation>Iestatījumi</translation>
     </message>
     <message>
         <source>Quick start</source>
-        <translation>Hurtig start</translation>
+        <translation>Ātrais sākums</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>Vinduesskærmbillede</translation>
+        <translation>Loga ekrānuzņēmums</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>Forsink skærmbillede</translation>
+        <translation>Atlikt ekrānuzņēmumu</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>Fuldt skærmbillede</translation>
+        <translation>Viss ekrānuzņēmums</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Afslut</translation>
+        <translation>Iziet</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Gem</translation>
+        <translation>Saglabāt</translation>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation>Rektangel</translation>
+        <translation>Taisnstūris</translation>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>Ellipse</translation>
+        <translation>Elipse</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation>Linje</translation>
+        <translation>Līnija</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>Blyant</translation>
+        <translation>Zīmulis</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation>Tekst</translation>
+        <translation>Teksts</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Slet</translation>
+        <translation>Dzēst</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation>Fortryd</translation>
+        <translation>Atsaukt</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation>Højere øverst</translation>
+        <translation>Palielināt augstumu augšā</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation>Højere nederst</translation>
+        <translation>Palielināt augstumu lejā</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>Bredere til venstre</translation>
+        <translation>Palielināt platumu kreisajā pusē</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>Bredere til højre</translation>
+        <translation>Palielināt platumu labajā pusē</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation>Lavere øverst</translation>
+        <translation>Samazināt augstumu augšā</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation>Lavere nederst</translation>
+        <translation>Samazināt augstumu lejā</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>Lavere til venstre</translation>
+        <translation>Samazināt platumu kreisajā pusē</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>Lavere til højre</translation>
+        <translation>Samazināt platumu labajā pusē</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Hjælp</translation>
+        <translation>Palīdzība</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Vis genveje</translation>
+        <translation>Rādīt saīsnes</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"/>
+        <translation>Skaņa</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"/>
+        <translation>Taustiņa nospiešana</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"/>
+        <translation>Kamera</translation>
     </message>
     <message>
         <source>Start recording</source>
-        <translation>Start optagelse</translation>
+        <translation>Sākt ierakstu</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation>Valgmuligheder</translation>
+        <translation>Iestatījumi</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Sākt/Ierakstīt</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Pele</translation>
     </message>
     <message>
         <source>Tools</source>
@@ -293,58 +293,58 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <name>ShotToolWidget</name>
     <message>
         <source>Blur</source>
-        <translation>Sløring</translation>
+        <translation>Izpludināt</translation>
     </message>
     <message>
         <source>Mosaic</source>
-        <translation>Mosaik</translation>
+        <translation>Mozaīka</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
         <source>Sound On</source>
-        <translation>Lyd til</translation>
+        <translation>Ieslēgt skaņu</translation>
     </message>
     <message>
         <source>Microphone</source>
-        <translation>Mikrofon</translation>
+        <translation>Mikrofons</translation>
     </message>
     <message>
         <source>System Audio</source>
-        <translation>Systemlyd</translation>
+        <translation>Sistēmas skaņa</translation>
     </message>
     <message>
         <source>Sound Off</source>
-        <translation>Lyd fra</translation>
+        <translation>Izslēgt skaņu</translation>
     </message>
     <message>
         <source>Show Keystroke</source>
-        <translation>Vis tastetryk</translation>
+        <translation>Rādīt taustiņu nospiešanu</translation>
     </message>
     <message>
         <source>Hide Keystroke</source>
-        <translation>Skjul tastetryk</translation>
+        <translation>Nerādīt taustiņu nospiešanu</translation>
     </message>
     <message>
         <source>Webcam On</source>
-        <translation>Webcam til</translation>
+        <translation>Ieslēgt kameru</translation>
     </message>
     <message>
         <source>Webcam Off</source>
-        <translation>Webcam fra</translation>
+        <translation>Izslēgt kameru</translation>
     </message>
     <message>
         <source>Show Click</source>
-        <translation>Vis klik</translation>
+        <translation>Rādīt klikšķus</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation>Valgmuligheder</translation>
+        <translation>Iestatījumi</translation>
     </message>
     <message>
         <source>Format:</source>
-        <translation>Format:</translation>
+        <translation>Formāts:</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -356,71 +356,71 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     </message>
     <message>
         <source>FPS:</source>
-        <translation>FPS:</translation>
+        <translation>Kadri sekundē:</translation>
     </message>
     <message>
         <source>5 fps</source>
-        <translation>5 fps</translation>
+        <translation>5 kadri sekundē</translation>
     </message>
     <message>
         <source>10 fps</source>
-        <translation>10 fps</translation>
+        <translation>10 kadri sekundē</translation>
     </message>
     <message>
         <source>20 fps</source>
-        <translation>20 fps</translation>
+        <translation>20 kadri sekundē</translation>
     </message>
     <message>
         <source>24 fps</source>
-        <translation>24 fps</translation>
+        <translation>24 kadri sekundē</translation>
     </message>
     <message>
         <source>30 fps</source>
-        <translation>30 fps</translation>
+        <translation>30 kadri sekundē</translation>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation>Rektangel</translation>
+        <translation>Taisnstūris</translation>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>Ellipse</translation>
+        <translation>Elipse</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation>Linje</translation>
+        <translation>Līnija</translation>
     </message>
     <message>
         <source>Arrow</source>
-        <translation>Pil</translation>
+        <translation>Bulta</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>Blyant</translation>
+        <translation>Zīmulis</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation>Tekst</translation>
+        <translation>Teksts</translation>
     </message>
     <message>
         <source>Save to</source>
-        <translation>Gem til</translation>
+        <translation>Saglabāt</translation>
     </message>
     <message>
         <source>Desktop</source>
-        <translation>Skrivebord</translation>
+        <translation>Darbavirsma</translation>
     </message>
     <message>
         <source>Pictures</source>
-        <translation>Billeder</translation>
+        <translation>Attēli</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation>Mappe</translation>
+        <translation>Mape</translation>
     </message>
     <message>
         <source>Format</source>
-        <translation>Format</translation>
+        <translation>Formāts</translation>
     </message>
     <message>
         <source>PNG</source>
@@ -436,23 +436,23 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"/>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Starpliktuve</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"/>
+        <translation>Rādīt rādītāju</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Pele</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation type="unfinished"/>
+        <translation>Rādīt Rādītāju</translation>
     </message>
     <message>
         <source>Extract Text</source>
@@ -463,7 +463,7 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"/>
+        <translation>Atzimējiet ieraksta laukumu iekļaujoties %1*%2 lai iegūtu labāku video</translation>
     </message>
 </context>
 </TS>

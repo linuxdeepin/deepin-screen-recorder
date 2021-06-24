@@ -89,6 +89,10 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <source>The screenshot has been saved in the album</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Screenshot failed.</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -147,10 +151,6 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     <message>
         <source>Exit/Save</source>
         <translation>Kuitaat/Enrollañ</translation>
-    </message>
-    <message>
-        <source>Drawing</source>
-        <translation>Tresadenn</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -278,6 +278,14 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     </message>
     <message>
         <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -444,6 +452,10 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     </message>
     <message>
         <source>Show Pointer</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract Text</source>
         <translation type="unfinished"/>
     </message>
 </context>

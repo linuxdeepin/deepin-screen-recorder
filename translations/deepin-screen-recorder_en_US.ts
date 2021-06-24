@@ -89,6 +89,10 @@ or press the shortcut again to stop recording</translation>
         <source>The screenshot has been saved in the album</source>
         <translation>The screenshot has been saved in the album</translation>
     </message>
+    <message>
+        <source>Screenshot failed.</source>
+        <translation>Screenshot failed.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -147,10 +151,6 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Exit/Save</source>
         <translation>Exit/Save</translation>
-    </message>
-    <message>
-        <source>Drawing</source>
-        <translation>Drawing</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -279,6 +279,14 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Mouse</source>
         <translation>Mouse</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>Tools</translation>
+    </message>
+    <message>
+        <source>Extract text</source>
+        <translation>Extract text</translation>
     </message>
 </context>
 <context>
@@ -445,6 +453,10 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Show Pointer</source>
         <translation>Show Pointer</translation>
+    </message>
+    <message>
+        <source>Extract Text</source>
+        <translation>Extract Text</translation>
     </message>
 </context>
 <context>

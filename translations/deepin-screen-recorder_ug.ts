@@ -8,7 +8,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>ئېكراننى سىنغا ئالغاندا ئېكراننى يانتۇ قىلماڭ</translation>
     </message>
 </context>
 <context>
@@ -86,6 +86,10 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
+        <translation>ئېكران كەسمە سۈرىتى ئالبۇمغا ساقلاندى</translation>
+    </message>
+    <message>
+        <source>Screenshot failed.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -146,10 +150,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Exit/Save</source>
         <translation>چېكىنىش/ساقلاش</translation>
-    </message>
-    <message>
-        <source>Drawing</source>
-        <translation>رەسىم سىزىش</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -278,6 +278,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Mouse</source>
         <translation>مائۇسنى سىنغا ئېلىش</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -444,6 +452,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Show Pointer</source>
         <translation>نۇر بەلگە كۆرۈنسۇن</translation>
+    </message>
+    <message>
+        <source>Extract Text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

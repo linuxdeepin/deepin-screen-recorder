@@ -9,7 +9,7 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>Não gire a tela durante a gravação</translation>
     </message>
 </context>
 <context>
@@ -87,6 +87,10 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
+        <translation>A captura de tela foi salva no álbum</translation>
+    </message>
+    <message>
+        <source>Screenshot failed.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -147,10 +151,6 @@ clique no ícone da bandeja ou use o atalho</translation>
     <message>
         <source>Exit/Save</source>
         <translation>Sair/Salvar</translation>
-    </message>
-    <message>
-        <source>Drawing</source>
-        <translation>Desenhar</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -279,6 +279,14 @@ clique no ícone da bandeja ou use o atalho</translation>
     <message>
         <source>Mouse</source>
         <translation>Mouse</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -445,6 +453,10 @@ clique no ícone da bandeja ou use o atalho</translation>
     <message>
         <source>Show Pointer</source>
         <translation>Exibir cursor</translation>
+    </message>
+    <message>
+        <source>Extract Text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

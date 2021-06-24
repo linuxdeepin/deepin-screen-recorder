@@ -89,6 +89,10 @@ or press the shortcut again to stop recording</source>
         <source>The screenshot has been saved in the album</source>
         <translation>截图文件已保存到相册</translation>
     </message>
+    <message>
+        <source>Screenshot failed.</source>
+        <translation>截图失败。</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -147,10 +151,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Exit/Save</source>
         <translation>退出/保存</translation>
-    </message>
-    <message>
-        <source>Drawing</source>
-        <translation>绘图</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -279,6 +279,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Mouse</source>
         <translation>录制鼠标</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>工具</translation>
+    </message>
+    <message>
+        <source>Extract text</source>
+        <translation>识别文字</translation>
     </message>
 </context>
 <context>
@@ -445,6 +453,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Show Pointer</source>
         <translation>显示光标</translation>
+    </message>
+    <message>
+        <source>Extract Text</source>
+        <translation>识别文字</translation>
     </message>
 </context>
 <context>

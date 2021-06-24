@@ -9,7 +9,7 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>Scherm niet draaien tijdens opname</translation>
     </message>
 </context>
 <context>
@@ -87,6 +87,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
+        <translation>De schermfoto is opgeslagen in het album</translation>
+    </message>
+    <message>
+        <source>Screenshot failed.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -147,10 +151,6 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Exit/Save</source>
         <translation>Afsluiten/Opslaan</translation>
-    </message>
-    <message>
-        <source>Drawing</source>
-        <translation>Tekenen</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -279,6 +279,14 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Mouse</source>
         <translation>Cursor</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -445,6 +453,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Show Pointer</source>
         <translation>Cursor vastleggen</translation>
+    </message>
+    <message>
+        <source>Extract Text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

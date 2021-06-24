@@ -9,7 +9,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>Não rodar o seu ecrã durante a gravação</translation>
     </message>
 </context>
 <context>
@@ -87,6 +87,10 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
+        <translation>A captura de ecrã foi guardada no álbum</translation>
+    </message>
+    <message>
+        <source>Screenshot failed.</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -147,10 +151,6 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Exit/Save</source>
         <translation>Sair/Guardar</translation>
-    </message>
-    <message>
-        <source>Drawing</source>
-        <translation>Desenhar</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -279,6 +279,14 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Mouse</source>
         <translation>Rato</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -445,6 +453,10 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Show Pointer</source>
         <translation>Mostrar cursor</translation>
+    </message>
+    <message>
+        <source>Extract Text</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
