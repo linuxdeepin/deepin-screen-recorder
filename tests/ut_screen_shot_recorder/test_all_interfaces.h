@@ -37,7 +37,7 @@
 #include "widgets/ut_hintfilterprivate.h"
 #include "widgets/ut_toolbutton.h"
 #include "widgets/ut_toolbarwidget.h"
-#include "widgets/ut_toolbar.h"
+//#include "widgets/ut_toolbar.h"
 #include "widgets/ut_sidebar.h"
 #include "widgets/ut_sidebarwidget.h"
 

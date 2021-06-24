@@ -69,7 +69,7 @@ public:
         system("killall deepin-shortcut-viewer");
     }
 };
-
+/*
 TEST_F(MainWindowTest, initAttributes)
 {
     stub.set(ADDR(QScreen,geometry),geometry_stub);
@@ -100,7 +100,7 @@ TEST_F(MainWindowTest, initLaunchMode)
 
     m_window->initLaunchMode("screenShot");
 }
-
+*/
 TEST_F(MainWindowTest, screenShotShapes)
 {
     stub.set(ADDR(QScreen,geometry),geometry_stub);
