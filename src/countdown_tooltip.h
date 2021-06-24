@@ -46,6 +46,21 @@ public slots:
 protected:
     void paintEvent(QPaintEvent *event);
 
+    /**
+     * 2021.6.24新增
+     * @brief getTooltipBackground 先获取模糊背景图
+     * @return
+     */
+    QPixmap getTooltipBackground();
+    /**
+     * 2021.6.24新增
+     * @brief paintRect  画模糊背景
+     * @param painter
+     * @param blurPixmap  矩形框位置的模糊图形
+     */
+    void paintRect(QPainter &painter,QPixmap &blurPixmap);
+
+
 private:
     QPixmap countdown1Img;
     QPixmap countdown2Img;
@@ -56,6 +71,8 @@ private:
     QTimer *showCountdownTimer;
     int m_themeType = 0;
     QString text;
+
+
 };
 
 #endif // COUNTDOWNTOOLTIP_H
