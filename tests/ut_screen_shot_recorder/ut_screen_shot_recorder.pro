@@ -80,6 +80,7 @@ HEADERS += test_all_interfaces.h \
            ut_show_buttons.h \
            ut_utils.h \
            dbusinterface/ut_dbusnotify.h \
+           dbusinterface/ut_ocrinterface.h \
            menucontroller/ut_menucontroller.h \
            utils/ut_audioutils.h \
            utils/ut_baseutils.h \
@@ -155,7 +156,8 @@ HEADERS += test_all_interfaces.h \
         widgets/ut_toolbar.h \
         widgets/ut_hintfilterprivate.h \
         widgets/ut_sidebar.h \
-        widgets/ut_sidebarwidget.h
+        widgets/ut_sidebarwidget.h \
+    dbusinterface/ut_ocrinterface.h
 
 
 SOURCES += main.cpp \

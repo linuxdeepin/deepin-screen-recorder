@@ -16,6 +16,7 @@
 #include "widgets/ut_zoomIndicator.h"
 #include "menucontroller/ut_menucontroller.h"
 #include "dbusinterface/ut_dbusnotify.h"
+#include "dbusinterface/ut_ocrinterface.h"
 #include "ut_RecorderRegionShow.h"
 #include "ut_countdown_tooltip.h"
 #include "ut_settings.h"
