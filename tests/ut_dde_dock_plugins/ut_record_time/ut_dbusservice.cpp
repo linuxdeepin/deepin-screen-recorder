@@ -18,6 +18,10 @@ public:
     }
     void TearDown() override
     {
+        if(m_dBusService){
+            delete  m_dBusService;
+            m_dBusService = nullptr;
+        }
     }
 
 public:

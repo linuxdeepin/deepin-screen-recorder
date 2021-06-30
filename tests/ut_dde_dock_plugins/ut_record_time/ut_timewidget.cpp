@@ -80,10 +80,12 @@ TEST_F(TestTimeWidget,paintEvent)
     access_private_field::TimeWidgetm_position(*m_timeWidget) = 0;
     access_private_field::TimeWidgetm_pixmap(*m_timeWidget) = QPixmap();
     call_private_fun::TimeWidgetpaintEvent(*m_timeWidget,e);
+    delete  e;
 }
 
 TEST_F(TestTimeWidget,mousePressEvent)
 {
     QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::TimeWidgetmousePressEvent(*m_timeWidget,ev);
+    delete  ev;
 }
