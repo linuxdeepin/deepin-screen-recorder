@@ -110,15 +110,12 @@ void CountdownTooltip::paintEvent(QPaintEvent *)
             //判断是否获取到当前的模糊背景未获取到直接画一个矩形
             if (!blurPixmap.isNull()) {
                 paintRect(painter,blurPixmap);
-            }else{
                 Utils::drawTooltipBackground(painter, rect(), "#EBEBEB", 0.3);
             }
         } else {
             //判断是否获取到当前的模糊背景未获取到直接画一个矩形
             if (!blurPixmap.isNull()) {
                 paintRect(painter,blurPixmap);
-                qDebug() << "blurPixmap.width(),blurPixmap.height()" << blurPixmap.width() << "," << blurPixmap.height();
-            }else{
                 Utils::drawTooltipBackground(painter, rect(), "#191919", 0.8);
             }
         }
@@ -173,7 +170,7 @@ void CountdownTooltip::paintRect(QPainter &painter,QPixmap &blurPixmap)
 {
     QPainterPath rectPath;
     painter.setPen(Qt::transparent);
-    rectPath.addRoundedRect(QRectF(rect()), 20, 20);
+    rectPath.addRoundedRect(QRectF(rect()), 8, 8);
     painter.drawPath(rectPath);
     painter.setClipPath(rectPath);
     painter.drawPixmap(0, 0,  width(), height(), blurPixmap);
