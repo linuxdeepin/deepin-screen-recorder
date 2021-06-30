@@ -43,8 +43,7 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
                                << ShortcutItem(tr("Full screenshot"),  "PrintScreen");
 
     exitGroup.groupItems << ShortcutItem(tr("Exit"), "Esc")
-                         << ShortcutItem(tr("Save"), "Ctrl+S")
-                         << ShortcutItem(" ", " ");
+                         << ShortcutItem(tr("Save"), "Ctrl+S");
 
     toolsGroup.groupItems << ShortcutItem(tr("Rectangle"), "R")
                          << ShortcutItem(tr("Ellipse"), "O")
@@ -61,7 +60,8 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
                            << ShortcutItem(tr("Keystroke"), "K")
                            << ShortcutItem(tr("Webcam"), "W")
                            << ShortcutItem(tr("Mouse"), "M")
-                           << ShortcutItem(tr("Options"), "F3");
+                           << ShortcutItem(tr("Options"), "F3")
+                           << ShortcutItem(" ", " ");
 
     sizeGroup.groupItems << ShortcutItem(tr("Increase height up"), "Ctrl+Up")
                          << ShortcutItem(tr("Increase height down"), "Ctrl+Down")
