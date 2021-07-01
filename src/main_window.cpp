@@ -702,16 +702,12 @@ void MainWindow::initScreenShot()
     m_toolBar->setFocus();
 }
 
+//初始化录屏窗口
 void MainWindow::initScreenRecorder()
 {
     if (!m_pScreenRecordEvent)
       return;
 
-    if(!m_initScreenRecorder){
-        m_initScreenRecorder = true;
-    } else {
-        return;
-    }
     m_functionType = status::record;
     m_keyBoardStatus = false;
     m_mouseStatus = 0;
@@ -789,7 +785,12 @@ void MainWindow::initScreenRecorder()
         m_selectedMic = true;
         m_selectedSystemAudio = true;
     }
-
+    //录屏初次进来此字段为false，后面进来此字段为ture故不会改变默认框选区域大小
+    if(!m_initScreenRecorder){
+        m_initScreenRecorder = true;
+    } else {
+        return;
+    }
     connect(m_pScreenRecordEvent, SIGNAL(buttonedPress(int, int)), this, SLOT(showPressFeedback(int, int)), Qt::QueuedConnection);
     connect(m_pScreenRecordEvent, SIGNAL(buttonedDrag(int, int)), this, SLOT(showDragFeedback(int, int)), Qt::QueuedConnection);
     connect(m_pScreenRecordEvent, SIGNAL(buttonedRelease(int, int)), this, SLOT(showReleaseFeedback(int, int)), Qt::QueuedConnection);
@@ -1486,7 +1487,7 @@ void MainWindow::changeFunctionButton(QString type)
             return;
         }
         m_sizeTips->setRecorderTipsInfo(true);
-         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
+        m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth,recordHeight));
         m_shotButton->hide();
         updateRecordButtonPos();
         m_recordButton->show();
