@@ -62,7 +62,8 @@ public:
 
     virtual void TearDown() override{
         if (m_window) {
-            m_window->deleteLater();
+            //m_window->deleteLater();
+            delete  m_window;
             m_window = nullptr;
         }
         std::cout << "end MainWindowTest" << std::endl;
