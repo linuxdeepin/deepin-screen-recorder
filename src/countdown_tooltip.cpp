@@ -33,6 +33,7 @@
 #include <QPen>
 #include <QPainter>
 #include <QDebug>
+#include <QPainterPath>
 
 const int CountdownTooltip::NUMBER_PADDING_Y = 30;
 
