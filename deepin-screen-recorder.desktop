@@ -1,5 +1,6 @@
 [Desktop Entry]
 Categories=AudioVideo;Recorder;
+Keywords=screen;capture;recorder;screenshot;deepin;dde;
 Comment=Record screen
 Exec=/usr/bin/deepin-screen-recorder %F
 #Exec=/usr/bin/deepin-turbo-invoker --type=dtkwidget /usr/bin/deepin-screen-recorder
