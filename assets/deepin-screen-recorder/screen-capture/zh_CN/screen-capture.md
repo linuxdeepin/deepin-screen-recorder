@@ -219,7 +219,7 @@
 2. 单击鼠标左键，进入图形的编辑模式，您可以：
    - 按下键盘上的 **Delete** 键，删除图形。
    - 将鼠标指针置于编辑框上，此时鼠标指针变成 ![双箭头](../common/Mouse_Arrow.svg)，通过拖动鼠标指针，来放大或缩小图形区域。
-   - 按下键盘上的 **Ctrl** + ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 来上下扩展图形区域，按下键盘上的 **Ctrl**l+ ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 来左右扩展图形区域。
+   - 按下键盘上的 **Ctrl** + ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 来上下扩展图形区域，按下键盘上的 **Ctrl** + ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 来左右扩展图形区域。
    - 将鼠标指针置于编辑框的 ![旋转](../common/icon_rotate.svg) 上，此时鼠标指针变成 ![旋转](../common/rotate_mouse.svg)，通过拖动鼠标指针，来旋转图形。
 3. 在编辑框外单击鼠标左键，退出编辑模式。
 
