@@ -124,7 +124,8 @@ ToolTips::ToolTips(const QString &text, QWidget *parent):
 ToolTips::~ToolTips()
 {
     if(nullptr != m_bodyShadow){
-        m_bodyShadow->deleteLater();
+        //m_bodyShadow->deleteLater();
+        delete m_bodyShadow;
         m_bodyShadow = nullptr;
     }
 }

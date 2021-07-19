@@ -116,6 +116,7 @@ void RecorderRegionShow::showKeyBoardButtons(const QString &key)
     //更新多按钮的位置
     updateMultiKeyBoardPos();
     repaint();
+    delete  t_keyWidget;
 }
 
 void RecorderRegionShow::updateKeyBoardButtonStyle()

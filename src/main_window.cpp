@@ -229,7 +229,7 @@ void MainWindow::initAttributes()
     for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
         if (wid == winId()) continue;
         DForeignWindow *window = DForeignWindow::fromWinId(wid);//sanitizer dtk
-        //            qDebug() << window->wmClass() << window->windowState();
+        //qDebug() << "当前处于激活状态的窗口： " << window->wmClass() << "，当前窗口的状态： " << window->windowState();
         //判断窗口是否被最小化
         if (window->windowState() == Qt::WindowState::WindowMinimized) {
             continue;
@@ -249,7 +249,7 @@ void MainWindow::initAttributes()
                     t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
                     t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
 
-                    //                        windowRects << Dtk::Wm::WindowRect {0, 0, t_tempWidth, t_tempHeight};
+                    //windowRects << Dtk::Wm::WindowRect {0, 0, t_tempWidth, t_tempHeight};
                     windowRects << QRect(0, 0, t_tempWidth, t_tempHeight);
                     windowNames << window->wmClass();
                     continue;
@@ -258,7 +258,7 @@ void MainWindow::initAttributes()
                     t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
                     t_tempHeight = window->frameGeometry().height();
 
-                    //                        windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                    //windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
                     windowRects << QRect(0, window->frameGeometry().y(), t_tempWidth, t_tempHeight);
                     windowNames << window->wmClass();
                     continue;
@@ -3066,6 +3066,7 @@ void MainWindow::exitScreenRecordEvent()
             && m_pScreenRecordEvent) {
         m_pScreenRecordEvent->terminate();
         m_pScreenRecordEvent->wait();
+        delete m_pScreenRecordEvent;
         m_pScreenRecordEvent = nullptr;
     }
 }
@@ -3077,6 +3078,7 @@ void MainWindow::exitScreenShotEvent()
             && m_pScreenShotEvent) {
         m_pScreenShotEvent->terminate();
         m_pScreenShotEvent->wait();
+        delete m_pScreenShotEvent;
         m_pScreenShotEvent = nullptr;
     }
 }

@@ -54,7 +54,10 @@ MainToolWidget::MainToolWidget(DWidget *parent) : DStackedWidget(parent)
 
 MainToolWidget::~MainToolWidget()
 {
-
+    if(nullptr != hintFilter){
+        delete hintFilter;
+        hintFilter = nullptr;
+    }
 }
 
 void MainToolWidget::initWidget()

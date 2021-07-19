@@ -50,6 +50,12 @@ class HintFilterPrivate
 {
 public:
     explicit HintFilterPrivate(HintFilter *parent) : q_ptr(parent) {}
+    ~HintFilterPrivate(){
+        if(nullptr != delayShowTimer){
+            delete delayShowTimer;
+            delayShowTimer = nullptr;
+        }
+    }
 
     void showHint(QWidget *hint);
 

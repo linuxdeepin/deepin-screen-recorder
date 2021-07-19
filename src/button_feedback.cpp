@@ -73,6 +73,10 @@ ButtonFeedback::ButtonFeedback(DWidget *parent) : DWidget(parent)
 ButtonFeedback::~ButtonFeedback()
 {
     delete m_painter;
+    if(nullptr != timer){
+        delete  timer;
+        timer = nullptr;
+    }
 }
 
 void ButtonFeedback::update()

@@ -200,6 +200,10 @@ public:
             delete m_ocrInterface;
             m_ocrInterface = nullptr;
         }
+        if (m_CursorImage) {
+            free(m_CursorImage);
+            m_CursorImage = nullptr;
+        }
         for (int i = 0; i < m_keyButtonList.count(); i++) {
             delete m_keyButtonList.at(i);
         }

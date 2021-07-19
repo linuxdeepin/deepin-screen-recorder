@@ -68,7 +68,34 @@ SubToolWidget::SubToolWidget(DWidget *parent) : DStackedWidget(parent)
 
 SubToolWidget::~SubToolWidget()
 {
-
+    if(nullptr != hintFilter){
+        delete hintFilter;
+        hintFilter = nullptr;
+    }
+    if(nullptr != m_recordOptionMenu){
+        delete m_recordOptionMenu;
+        m_recordOptionMenu = nullptr;
+    }
+    if(nullptr != m_cursorMenu){
+        delete m_cursorMenu;
+        m_cursorMenu = nullptr;
+    }
+    if(nullptr != m_audioButton){
+        delete m_audioButton;
+        m_audioButton = nullptr;
+    }
+    if(nullptr != m_audioMenu){
+        delete m_audioMenu;
+        m_audioMenu = nullptr;
+    }
+    if(nullptr != m_recordBtnGroup){
+        delete m_recordBtnGroup;
+        m_recordBtnGroup = nullptr;
+    }
+    if(nullptr != m_shotBtnGroup){
+        delete m_shotBtnGroup;
+        m_shotBtnGroup = nullptr;
+    }
 }
 
 void SubToolWidget::initWidget()
@@ -84,8 +111,9 @@ void SubToolWidget::initWidget()
 void SubToolWidget::initRecordLabel()
 {
     m_recordSubTool = new DLabel(this);
-    QButtonGroup *rectBtnGroup = new QButtonGroup();
-    rectBtnGroup->setExclusive(false);
+    //QButtonGroup *rectBtnGroup = new QButtonGroup();
+    m_recordBtnGroup = new QButtonGroup();
+    m_recordBtnGroup->setExclusive(false);
     QList<ToolButton *> btnList;
     DPalette pa;
 
@@ -132,7 +160,7 @@ void SubToolWidget::initRecordLabel()
     installTipHint(m_audioButton, tr("Sound On"));
     m_audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
 
-    rectBtnGroup->addButton(m_audioButton);
+    m_recordBtnGroup->addButton(m_audioButton);
     m_audioButton->setFixedSize(MEDIUM_TOOL_BUTTON_SIZE);
     btnList.append(m_audioButton);
 
@@ -225,7 +253,7 @@ void SubToolWidget::initRecordLabel()
     m_keyBoardButton->setIcon(QIcon::fromTheme("key_mormal"));
 
 
-    rectBtnGroup->addButton(m_keyBoardButton);
+    m_recordBtnGroup->addButton(m_keyBoardButton);
     m_keyBoardButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_keyBoardButton);
 
@@ -250,7 +278,7 @@ void SubToolWidget::initRecordLabel()
     installTipHint(m_cameraButton, tr("Webcam On"));
 
     m_cameraButton->setIcon(QIcon::fromTheme("webcam_normal"));
-    rectBtnGroup->addButton(m_cameraButton);
+    m_recordBtnGroup->addButton(m_cameraButton);
     m_cameraButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_cameraButton);
 
@@ -299,7 +327,7 @@ void SubToolWidget::initRecordLabel()
     m_mouseButton->setIconSize(TOOL_ICON_SIZE);
     installTipHint(m_mouseButton, tr("Mouse"));
     m_mouseButton->setIcon(QIcon::fromTheme("mouse2"));
-    rectBtnGroup->addButton(m_mouseButton);
+    m_recordBtnGroup->addButton(m_mouseButton);
     m_mouseButton->setFixedSize(MEDIUM_TOOL_BUTTON_SIZE);
     btnList.append(m_mouseButton);
 
@@ -370,7 +398,7 @@ void SubToolWidget::initRecordLabel()
     m_optionButton->setText(tr("Options"));
     m_optionButton->setMinimumSize(QSize(73, 40));
     installTipHint(m_optionButton, tr("Options"));
-    rectBtnGroup->addButton(m_optionButton);
+    m_recordBtnGroup->addButton(m_optionButton);
 
     btnList.append(m_optionButton);
 
@@ -629,8 +657,9 @@ void SubToolWidget::initRecordLabel()
 void SubToolWidget::initShotLabel()
 {
     m_shotSubTool = new DLabel(this);
-    QButtonGroup *rectBtnGroup = new QButtonGroup();
-    rectBtnGroup->setExclusive(true);
+    //QButtonGroup *rectBtnGroup = new QButtonGroup();
+    m_shotBtnGroup = new QButtonGroup();
+    m_shotBtnGroup->setExclusive(true);
     QList<ToolButton *> btnList;
     DPalette pa;
 
@@ -639,7 +668,7 @@ void SubToolWidget::initShotLabel()
     m_ocrButton->setIconSize(QSize(35, 35));
     m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
     Utils::setAccessibility(m_ocrButton, AC_SUBTOOLWIDGET_OCR_BUTTON);
-    rectBtnGroup->addButton(m_ocrButton);
+    m_shotBtnGroup->addButton(m_ocrButton);
     m_ocrButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     installTipHint(m_ocrButton, tr("Extract Text"));
     btnList.append(m_ocrButton);
@@ -650,7 +679,7 @@ void SubToolWidget::initShotLabel()
     m_rectButton->setIcon(QIcon::fromTheme("rectangle-normal"));
     //m_rectButton->setObjectName("RectButton");
     Utils::setAccessibility(m_rectButton, AC_SUBTOOLWIDGET_RECT_BUTTON);
-    rectBtnGroup->addButton(m_rectButton);
+    m_shotBtnGroup->addButton(m_rectButton);
     m_rectButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     installTipHint(m_rectButton, tr("Rectangle"));
     btnList.append(m_rectButton);
@@ -662,7 +691,7 @@ void SubToolWidget::initShotLabel()
     //m_circleButton->setObjectName("CircleButton");
     Utils::setAccessibility(m_circleButton, AC_SUBTOOLWIDGET_CIRCL_BUTTON);
 
-    rectBtnGroup->addButton(m_circleButton);
+    m_shotBtnGroup->addButton(m_circleButton);
     m_circleButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_circleButton);
 
@@ -683,7 +712,7 @@ void SubToolWidget::initShotLabel()
     }
     //m_lineButton->setObjectName("LineButton");
     Utils::setAccessibility(m_lineButton, AC_SUBTOOLWIDGET_LINE_BUTTON);
-    rectBtnGroup->addButton(m_lineButton);
+    m_shotBtnGroup->addButton(m_lineButton);
     m_lineButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_lineButton);
 
@@ -693,7 +722,7 @@ void SubToolWidget::initShotLabel()
     m_penButton->setIcon(QIcon::fromTheme("Combined Shape-normal"));
     //m_penButton->setObjectName("PenButton");
     Utils::setAccessibility(m_penButton, AC_SUBTOOLWIDGET_PEN_BUTTON);
-    rectBtnGroup->addButton(m_penButton);
+    m_shotBtnGroup->addButton(m_penButton);
     m_penButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_penButton);
 
@@ -707,7 +736,7 @@ void SubToolWidget::initShotLabel()
     installTipHint(m_textButton, tr("Text"));
     //m_textButton->setObjectName("TextButton");
     Utils::setAccessibility(m_textButton, AC_SUBTOOLWIDGET_TEXT_BUTTON);
-    rectBtnGroup->addButton(m_textButton);
+    m_shotBtnGroup->addButton(m_textButton);
     m_textButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_textButton);
 
@@ -721,7 +750,7 @@ void SubToolWidget::initShotLabel()
     Utils::setAccessibility(m_shotOptionButton, AC_SUBTOOLWIDGET_SHOT_OPTION_BUT);
     m_shotOptionButton->setMinimumSize(QSize(73, 40));
     installTipHint(m_shotOptionButton, tr("Options"));
-    rectBtnGroup->addButton(m_shotOptionButton);
+    m_shotBtnGroup->addButton(m_shotOptionButton);
     if(Utils::is3rdInterfaceStart){
         m_shotOptionButton->hide();
     }
@@ -949,7 +978,7 @@ void SubToolWidget::initShotLabel()
     m_shotSubTool->setLayout(rectLayout);
     addWidget(m_shotSubTool);
 
-    connect(rectBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
+    connect(m_shotBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
             [ = ](int status) {
         Q_UNUSED(status);
         if(m_ocrButton->isChecked())

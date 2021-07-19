@@ -102,6 +102,8 @@ private:
     DMenu *m_audioMenu = nullptr;
     DMenu *m_cursorMenu = nullptr;
     DMenu *m_recordOptionMenu = nullptr;
+    QButtonGroup *m_recordBtnGroup = nullptr;
+    QButtonGroup *m_shotBtnGroup = nullptr;
 };
 
 #endif // SUBTOOLWIDGET_H
