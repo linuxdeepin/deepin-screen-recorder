@@ -119,7 +119,6 @@ MainWindow::MainWindow(DWidget *parent) :
     } else {
         m_cursorBound = 5;
     }
-
     setDragCursor();
     //QScreen *screen = qApp->primaryScreen();
     m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
@@ -225,11 +224,18 @@ void MainWindow::initAttributes()
 
     m_screenHeight = m_screenSize.height();
     m_screenWidth = m_screenSize.width();
-
+    DForeignWindow *prewindow = nullptr;
     for (auto wid : DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
         if (wid == winId()) continue;
+        if(prewindow){
+            delete prewindow;
+            prewindow = nullptr;
+        }
+
         DForeignWindow *window = DForeignWindow::fromWinId(wid);//sanitizer dtk
-        //qDebug() << "当前处于激活状态的窗口： " << window->wmClass() << "，当前窗口的状态： " << window->windowState();
+
+        prewindow = window;
+
         //判断窗口是否被最小化
         if (window->windowState() == Qt::WindowState::WindowMinimized) {
             continue;
@@ -339,7 +345,11 @@ void MainWindow::initAttributes()
             }
         }
     }
-
+    if(prewindow)
+    {
+        delete prewindow;
+        prewindow = nullptr;
+    }
     //构建截屏工具栏按钮 by zyg
     m_toolBar = new ToolBar(this);
     m_toolBar->hide();
@@ -611,7 +621,7 @@ void MainWindow::initResource()
 
     //    setDragCursor();
 
-    buttonFeedback = new ButtonFeedback();
+    buttonFeedback = new ButtonFeedback(this);
 
     connect(m_pScreenShotEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
     connect(m_pScreenShotEvent, SIGNAL(shotKeyPressEvent(const unsigned char &)), this, SLOT(onShotKeyPressEvent(const unsigned char &)), Qt::QueuedConnection);
@@ -901,12 +911,16 @@ void MainWindow::topWindow()
     this->initResource();
 
     int t_windowCount = DWindowManagerHelper::instance()->allWindowIdList().size();
-
+    DForeignWindow *prewindow = nullptr;
     for (int i = t_windowCount - 1; i >= 0; i--) {
         auto wid = DWindowManagerHelper::instance()->allWindowIdList().at(i);
         if (wid == winId()) continue;
+        if(prewindow){
+            delete prewindow;
+            prewindow = nullptr;
+        }
         DForeignWindow *window = DForeignWindow::fromWinId(wid);
-
+        prewindow = window;
         //if (window->type() == Qt::Window || window->type() == Qt::Desktop) {
         // 经DTK确认，type存在bug。用flags替换，获取窗口类型功能。bug 77300；
         if(window->flags().testFlag(Qt::Window) || window->flags().testFlag(Qt::Desktop)) {
@@ -927,6 +941,11 @@ void MainWindow::topWindow()
         } else {
             continue;
         }
+    }
+    if(prewindow)
+    {
+        delete prewindow;
+        prewindow = nullptr;
     }
     // 放缩情况下，修正顶层窗口位置。
     if(!qFuzzyCompare(1.0, m_pixelRatio) && m_screenCount > 1){
@@ -1133,7 +1152,7 @@ void MainWindow::updateToolBarPos()
     }
     m_isToolBarInside = false;
     if (m_toolBarInit == false) {
-        m_toolBar->initToolBar();
+        m_toolBar->initToolBar(this);
         m_toolBar->setRecordLaunchMode(m_launchWithRecordFunc);
         //m_toolBar->setIsZhaoxinPlatform(m_isZhaoxin);
 
@@ -3545,6 +3564,7 @@ void MainWindow::startCountdown()
         m_pScreenShotEvent->terminate();
         if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
             m_pScreenShotEvent->wait();
+            delete  m_pScreenShotEvent;
             m_pScreenShotEvent = nullptr;
         }
     }

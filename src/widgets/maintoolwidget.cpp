@@ -67,7 +67,7 @@ void MainToolWidget::initWidget()
     //    setMinimumSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     //    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     if(nullptr == hintFilter){
-        hintFilter = new HintFilter;
+        hintFilter = new HintFilter(this);
     }
     m_themeType = 0;
     m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();

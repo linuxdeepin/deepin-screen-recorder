@@ -115,7 +115,7 @@ void HintFilterPrivate::showHint(QWidget *hint)
 HintFilter::HintFilter(QObject *parent)  : QObject(parent), d_ptr(new HintFilterPrivate(this))
 {
     Q_D(HintFilter);
-    d->delayShowTimer = new QTimer;
+    d->delayShowTimer = new QTimer(this);
     d->delayShowTimer->setInterval(1000);
     connect(d->delayShowTimer, &QTimer::timeout, this, [ = ]() {
         if (d->parentWidget) {

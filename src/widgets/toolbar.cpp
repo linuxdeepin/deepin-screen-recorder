@@ -25,6 +25,7 @@
 #include "../utils.h"
 #include "../utils/configsettings.h"
 #include "../accessibility/acTextDefine.h"
+#include "main_window.h"
 
 #include <DIconButton>
 
@@ -50,7 +51,7 @@ const int TOOLBAR_WIDTH = 425;
 //const int BTN_RADIUS = 3;
 }
 
-ToolBarWidget::ToolBarWidget(DWidget *parent)
+ToolBarWidget::ToolBarWidget(MainWindow* pMainwindow,DWidget *parent)
     : DFloatingWidget(parent)
 {
     int t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
@@ -91,8 +92,8 @@ ToolBarWidget::ToolBarWidget(DWidget *parent)
 //    m_subToolbar = new SubToolBar(this);
 
     m_mainTool = new MainToolWidget(this);
-    m_subTool = new SubToolWidget(this);
-
+    //分配pMainwindow主窗口指针给SubToolWidget（ToolTips需要该指针）
+    m_subTool = new SubToolWidget(pMainwindow,this);
     QString button_style = "DPushButton{border-radius:30px;} "
                            "DPushButton::hover{border-image: url(:/image/newUI/hover/close-hover.svg)}";
 
@@ -346,11 +347,11 @@ void ToolBar::changeArrowAndLineFromMain(int line)
     m_toolbarWidget->changeArrowAndLineFromBar(line);
 }
 
-void ToolBar::initToolBar()
+void ToolBar::initToolBar(MainWindow* pmainWindow)
 {
 //    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     setFixedHeight(TOOLBAR_HEIGHT);
-    m_toolbarWidget = new ToolBarWidget(this);
+    m_toolbarWidget = new ToolBarWidget(pmainWindow,this);
     QVBoxLayout *vLayout = new QVBoxLayout();
     vLayout->setSizeConstraint(QLayout::SetFixedSize);
     vLayout->setContentsMargins(0, 0, 0, 0);

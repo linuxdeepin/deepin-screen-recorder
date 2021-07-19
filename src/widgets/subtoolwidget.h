@@ -32,12 +32,12 @@
 #include <QObject>
 
 DWIDGET_USE_NAMESPACE
-
+class MainWindow;
 class SubToolWidget : public DStackedWidget
 {
     Q_OBJECT
 public:
-    explicit SubToolWidget(DWidget *parent = nullptr);
+    explicit SubToolWidget(MainWindow* pmainwindow,DWidget *parent = nullptr);
     ~SubToolWidget();
 
     void initWidget();
@@ -102,8 +102,11 @@ private:
     DMenu *m_audioMenu = nullptr;
     DMenu *m_cursorMenu = nullptr;
     DMenu *m_recordOptionMenu = nullptr;
+
     QButtonGroup *m_recordBtnGroup = nullptr;
     QButtonGroup *m_shotBtnGroup = nullptr;
+
+    MainWindow *m_pMainWindow = nullptr;
 };
 
 #endif // SUBTOOLWIDGET_H

@@ -27,6 +27,7 @@
 #include "tooltips.h"
 #include "../utils.h"
 #include "../accessibility/acTextDefine.h"
+#include "main_window.h"
 
 #include <DSlider>
 #include <DLineEdit>
@@ -61,8 +62,9 @@ namespace {
     const QSize MIN_TOOL_BUTTON_SIZE = QSize(42, 40);
 }
 
-SubToolWidget::SubToolWidget(DWidget *parent) : DStackedWidget(parent)
+SubToolWidget::SubToolWidget(MainWindow* pmainwindow ,DWidget *parent) : DStackedWidget(parent)
 {
+    m_pMainWindow = pmainwindow;
     initWidget();
 }
 
@@ -100,7 +102,7 @@ SubToolWidget::~SubToolWidget()
 
 void SubToolWidget::initWidget()
 {
-    hintFilter = new HintFilter;
+    hintFilter = new HintFilter(this);
     m_themeType = 0;
     m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     initRecordLabel();
@@ -112,7 +114,7 @@ void SubToolWidget::initRecordLabel()
 {
     m_recordSubTool = new DLabel(this);
     //QButtonGroup *rectBtnGroup = new QButtonGroup();
-    m_recordBtnGroup = new QButtonGroup();
+    m_recordBtnGroup = new QButtonGroup(this);
     m_recordBtnGroup->setExclusive(false);
     QList<ToolButton *> btnList;
     DPalette pa;
@@ -151,7 +153,7 @@ void SubToolWidget::initRecordLabel()
     //保持帧数的配置文件判断
     t_frameRate = t_frameRateVar.toString().toInt();
     //    //添加音频按钮
-    m_audioButton = new ToolButton();
+    m_audioButton = new ToolButton(this);
 
     //audioButton->setObjectName("AudioButton");
     Utils::setAccessibility(m_audioButton, AC_SUBTOOLWIDGET_AUDIO_BUTTON);
@@ -164,7 +166,7 @@ void SubToolWidget::initRecordLabel()
     m_audioButton->setFixedSize(MEDIUM_TOOL_BUTTON_SIZE);
     btnList.append(m_audioButton);
 
-    m_audioMenu = new DMenu();
+    m_audioMenu = new DMenu(this);
 
     DFontSizeManager::instance()->bind(m_audioMenu, DFontSizeManager::T8);
     m_microphoneAction = new QAction(m_audioMenu);
@@ -331,7 +333,7 @@ void SubToolWidget::initRecordLabel()
     m_mouseButton->setFixedSize(MEDIUM_TOOL_BUTTON_SIZE);
     btnList.append(m_mouseButton);
 
-    m_cursorMenu = new DMenu();
+    m_cursorMenu = new DMenu(this);
     DFontSizeManager::instance()->bind(m_cursorMenu, DFontSizeManager::T8);
     m_recorderMouse = new QAction(m_cursorMenu);
     m_recorderCheck = new QAction(m_cursorMenu);
@@ -407,7 +409,7 @@ void SubToolWidget::initRecordLabel()
     t_formatGroup->setExclusive(true);
     t_fpsGroup->setExclusive(true);
 
-    m_recordOptionMenu = new DMenu();
+    m_recordOptionMenu = new DMenu(this);
     DFontSizeManager::instance()->bind(m_recordOptionMenu, DFontSizeManager::T8);
     //for test
     QAction *formatTitleAction = new QAction(m_recordOptionMenu);
@@ -658,8 +660,9 @@ void SubToolWidget::initShotLabel()
 {
     m_shotSubTool = new DLabel(this);
     //QButtonGroup *rectBtnGroup = new QButtonGroup();
-    m_shotBtnGroup = new QButtonGroup();
+    m_shotBtnGroup = new QButtonGroup(this);
     m_shotBtnGroup->setExclusive(true);
+
     QList<ToolButton *> btnList;
     DPalette pa;
 
@@ -761,7 +764,7 @@ void SubToolWidget::initShotLabel()
     t_saveGroup->setExclusive(true);
     t_formatGroup->setExclusive(true);
 
-    m_optionMenu = new DMenu();
+    m_optionMenu = new DMenu(this);
 
     DFontSizeManager::instance()->bind(m_optionMenu, DFontSizeManager::T8);
     //for test
@@ -1016,12 +1019,12 @@ void SubToolWidget::initShotLabel()
 
 void SubToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 {
-    if(nullptr == this->parentWidget()
-            || nullptr == this->parentWidget()->parentWidget()
-            || nullptr == this->parentWidget()->parentWidget()->parentWidget())
-        return;
+//    if(nullptr == this->parentWidget()
+//            || nullptr == this->parentWidget()->parentWidget()
+//            || nullptr == this->parentWidget()->parentWidget()->parentWidget())
+//        return;
     // TODO: parent must be mainframe
-    auto hintWidget = new ToolTips("", this->parentWidget()->parentWidget()->parentWidget());
+    auto hintWidget = new ToolTips("", m_pMainWindow);
     hintWidget->hide();
     hintWidget->setText(hintstr);
     hintWidget->setFixedHeight(32);

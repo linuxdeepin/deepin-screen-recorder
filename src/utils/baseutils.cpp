@@ -225,13 +225,12 @@ bool isCommandExist(QString command)
     QString cm = QString("which %1\n").arg(command);
     proc->start(cm);
     proc->waitForFinished(1000);
-    if (proc->exitCode() == 0) {
-        delete proc;
-        return true;
-    } else {
-        delete proc;
-        return false;
+    int ret = proc->exitCode() == 0;
+    if(proc)
+    {
+        proc->deleteLater();
     }
+    return ret;
 }
 /*
  * never used

@@ -10,7 +10,6 @@ INCLUDEPATH += .
 
 include(accessibility/accessible.pri)
 
-
 QMAKE_CXX += -Wl,--as-need -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
 QMAKE_CXXFLAGS += -Wl,--as-need -fPIE -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
 QMAKE_LFLAGS += -Wl,--as-needed -pie

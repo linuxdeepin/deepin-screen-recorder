@@ -63,7 +63,7 @@ ButtonFeedback::ButtonFeedback(DWidget *parent) : DWidget(parent)
 
     frameIndex = 0;
 
-    timer = new QTimer();
+    timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 
     Utils::passInputEvent(static_cast<int>(this->winId()));

@@ -40,12 +40,13 @@
 
 DWIDGET_USE_NAMESPACE
 
+class MainWindow;
 enum SaveAction : unsigned int;
 class ToolBarWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:
-    explicit ToolBarWidget(DWidget *parent = nullptr);
+    explicit ToolBarWidget(MainWindow* pMainwindow,DWidget *parent = nullptr);
     ~ToolBarWidget() Q_DECL_OVERRIDE;
 
 signals:
@@ -107,7 +108,8 @@ class ToolBar : public DLabel
 public:
     explicit ToolBar(DWidget *parent = nullptr);
     ~ToolBar() Q_DECL_OVERRIDE;
-
+    //public接口非slots
+    void initToolBar(MainWindow* pmainWindow);
 signals:
     void heightChanged();
     void buttonChecked(QString shape);
@@ -139,7 +141,6 @@ public slots:
     void microphoneActionCheckedToMainSlot(bool checked);
     void systemAudioActionCheckedToMainSlot(bool checked);
     void changeArrowAndLineFromMain(int line);
-    void initToolBar();
     void setRecordButtonDisable();
     void setRecordLaunchMode(bool recordLaunch);
     //void setIsZhaoxinPlatform(bool isZhaoxin);

@@ -110,7 +110,7 @@ ToolTips::ToolTips(const QString &text, QWidget *parent):
 
     adjustSize();
 
-    m_bodyShadow = new QGraphicsDropShadowEffect;
+    m_bodyShadow = new QGraphicsDropShadowEffect(this);
     m_bodyShadow->setBlurRadius(10.0);
     m_bodyShadow->setColor(QColor(0, 0, 0, 25));
     m_bodyShadow->setOffset(0, 2.0);

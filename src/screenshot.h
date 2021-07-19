@@ -52,11 +52,11 @@ signals:
     Q_SCRIPTABLE void RecorderState(const bool isStart); // true begin recorder; false stop recorder;
 
 private:
-    void initUI();
+    //void initUI();
 
 //    EventContainer *m_eventContainer = nullptr;
     QString m_launchMode;
-    MainWindow *m_window = nullptr;
+    MainWindow m_window;
 
 };
 
