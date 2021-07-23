@@ -40,7 +40,10 @@ CameraWidget::~CameraWidget()
 //    timer_image_capture->stop();
 //    delete camera;
 //    delete viewfinder;
-//    delete imageCapture;
+    if(imageCapture){
+        delete imageCapture;
+        imageCapture = nullptr;
+    }
 //    delete timer_image_capture;
 //    delete m_cameraUI;
 }

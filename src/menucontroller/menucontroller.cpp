@@ -161,6 +161,8 @@ MenuController::MenuController(QObject *parent)
     connect(m_menu, &DMenu::aboutToHide, this, [ = ] {
         emit menuNoFocus();
     });
+    delete saveAct;
+    delete closeAct;
 }
 
 void MenuController::showMenu(QPoint pos)
@@ -181,5 +183,13 @@ void MenuController::enterEvent(QEvent *e)
 
 MenuController::~MenuController()
 {
+    if(m_menu){
+        delete  m_menu;
+        m_menu = nullptr;
+    }
+    if(m_unDoAct){
+        delete  m_unDoAct;
+        m_unDoAct = nullptr;
+    }
 
 }
