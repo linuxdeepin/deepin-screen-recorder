@@ -1,4 +1,8 @@
 #!/bin/bash
+
+export DISPLAY=":0"
+export QT_QPA_PLATFORM=
+
 rm -rf ./ut_dde_dock_plugins/ut_record_time/build-ut
 mkdir ./ut_dde_dock_plugins/ut_record_time/build-ut
 

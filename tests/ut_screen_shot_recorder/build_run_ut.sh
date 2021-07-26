@@ -1,4 +1,8 @@
 #!/bin/bash
+
+export DISPLAY=":0"
+export QT_QPA_PLATFORM=
+
 export QT_LOGGING_RULES="qt.qpa.xcb.xcberror=false"
 export QT_LOGGING_RULES="qt.qpa.xcb.*=false"
 export QT_LOGGING_RULES="qt.qpa.*=false"
