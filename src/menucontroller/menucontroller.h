@@ -49,6 +49,8 @@ protected:
 private:
     DMenu *m_menu;
     QAction *m_unDoAct;
+    QAction *m_saveAct;
+    QAction *m_closeAct;
     qreal m_ration;
 };
 #endif // MENUCONTROLLER_H

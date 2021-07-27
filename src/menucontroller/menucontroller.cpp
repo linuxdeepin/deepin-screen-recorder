@@ -91,15 +91,17 @@ MenuController::MenuController(QObject *parent)
         emit unDoAction();
     });
 
-    QAction *saveAct = new QAction(tr("Save"), this);
-    Utils::setAccessibility(saveAct, "menuSave");
-    connect(saveAct, &QAction::triggered, [ = ] {
+    //QAction *saveAct = new QAction(tr("Save"), this);
+    m_saveAct = new QAction(tr("Save"), this);
+    Utils::setAccessibility(m_saveAct, "menuSave");
+    connect(m_saveAct, &QAction::triggered, [ = ] {
         emit saveAction();
     });
 
-    QAction *closeAct = new QAction(tr("Exit"), this);
-    Utils::setAccessibility(closeAct, "menuExit");
-    connect(closeAct, &QAction::triggered, [ = ] {
+    //QAction *closeAct = new QAction(tr("Exit"), this);
+    m_closeAct = new QAction(tr("Exit"), this);
+    Utils::setAccessibility(m_closeAct, "menuExit");
+    connect(m_closeAct, &QAction::triggered, [ = ] {
         emit closeAction();
     });
 
@@ -110,8 +112,8 @@ MenuController::MenuController(QObject *parent)
 //    m_menu->addAction(textAct);
 //    m_menu->addSeparator();
     m_menu->addAction(m_unDoAct);
-    m_menu->addAction(saveAct);
-    m_menu->addAction(closeAct);
+    m_menu->addAction(m_saveAct);
+    m_menu->addAction(m_closeAct);
 
     m_unDoAct->setEnabled(false);
 
@@ -161,8 +163,6 @@ MenuController::MenuController(QObject *parent)
     connect(m_menu, &DMenu::aboutToHide, this, [ = ] {
         emit menuNoFocus();
     });
-    delete saveAct;
-    delete closeAct;
 }
 
 void MenuController::showMenu(QPoint pos)
@@ -191,5 +191,12 @@ MenuController::~MenuController()
         delete  m_unDoAct;
         m_unDoAct = nullptr;
     }
-
+    if(m_saveAct){
+        delete  m_saveAct;
+        m_saveAct = nullptr;
+    }
+    if(m_closeAct){
+        delete  m_closeAct;
+        m_closeAct = nullptr;
+    }
 }
