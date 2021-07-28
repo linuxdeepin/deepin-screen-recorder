@@ -621,7 +621,7 @@ void MainWindow::initResource()
 
     //    setDragCursor();
 
-    buttonFeedback = new ButtonFeedback(this);
+    buttonFeedback = new ButtonFeedback();
 
     connect(m_pScreenShotEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
     connect(m_pScreenShotEvent, SIGNAL(shotKeyPressEvent(const unsigned char &)), this, SLOT(onShotKeyPressEvent(const unsigned char &)), Qt::QueuedConnection);
