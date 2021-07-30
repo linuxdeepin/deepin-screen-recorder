@@ -40,7 +40,7 @@ CameraWidget::~CameraWidget()
 //    timer_image_capture->stop();
 //    delete camera;
 //    delete viewfinder;
-    if(imageCapture){
+    if(nullptr != imageCapture){
         delete imageCapture;
         imageCapture = nullptr;
     }
@@ -240,6 +240,7 @@ bool CameraWidget::setCameraStop(bool status)
 
     if (imageCapture) {
         delete imageCapture;
+        imageCapture = nullptr;
     }
     return true;
 

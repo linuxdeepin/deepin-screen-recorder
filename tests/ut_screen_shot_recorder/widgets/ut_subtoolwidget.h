@@ -9,6 +9,7 @@
 #include "stub.h"
 #include "addr_pri.h"
 #include "../../src/widgets/subtoolwidget.h"
+#include "../../src/main_window.h"
 
 using namespace testing;
 void click_stub()
@@ -41,8 +42,10 @@ class SubToolWidgetTest:public testing::Test{
 public:
     Stub stub;
     SubToolWidget *m_subToolWidget;
+    MainWindow *m_mainWindow;
     virtual void SetUp() override{
-        m_subToolWidget = new SubToolWidget();
+        m_mainWindow = new MainWindow;
+        m_subToolWidget = new SubToolWidget(m_mainWindow);
         m_subToolWidget->initWidget();
 //        m_subToolWidget->initRecordLabel();
 //        m_subToolWidget->initShotLabel();
@@ -51,6 +54,8 @@ public:
     virtual void TearDown() override{
         if(nullptr != m_subToolWidget)
             delete m_subToolWidget;
+        if(nullptr != m_mainWindow)
+            m_mainWindow->deleteLater();
     }
 };
 

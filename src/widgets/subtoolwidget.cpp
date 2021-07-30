@@ -27,7 +27,7 @@
 #include "tooltips.h"
 #include "../utils.h"
 #include "../accessibility/acTextDefine.h"
-#include "main_window.h"
+#include "../main_window.h"
 
 #include <DSlider>
 #include <DLineEdit>

@@ -25,7 +25,7 @@
 #include "../utils.h"
 #include "../utils/configsettings.h"
 #include "../accessibility/acTextDefine.h"
-#include "main_window.h"
+#include "../main_window.h"
 
 #include <DIconButton>
 

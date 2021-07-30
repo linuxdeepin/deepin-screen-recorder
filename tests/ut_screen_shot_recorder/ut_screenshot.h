@@ -11,7 +11,7 @@
 
 
 using namespace testing;
-ACCESS_PRIVATE_FIELD(Screenshot, MainWindow*, m_window);
+//ACCESS_PRIVATE_FIELD(Screenshot, MainWindow*, m_window);
 static int state = 0;
 
 QRect geometry_stub_()

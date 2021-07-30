@@ -652,17 +652,17 @@ TEST_F(MainWindowTest, screenRecord)
     QEventLoop loop;
 
 
-    QTest::mouseMove(m_window, QPoint(0,0));
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
-    loop.exec();
+//    QTest::mouseMove(m_window, QPoint(0,0));
+//    QTimer::singleShot(1000, &loop, SLOT(quit()));
+//    loop.exec();
 
     QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(0,0));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_window, QPoint(1400,1050));
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
-    loop.exec();
+//    QTest::mouseMove(m_window, QPoint(1400,1050));
+//    QTimer::singleShot(1000, &loop, SLOT(quit()));
+//    loop.exec();
 
     QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(1400,1050));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
