@@ -1205,17 +1205,20 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
             m_textButton->click();
         } else if (shape == "option") {
             if (m_optionMenu->isHidden() && !Utils::isTabletEnvironment) {
-                QPoint point = QWidget::mapToGlobal(m_shotOptionButton->pos());
-                m_optionMenu->move(point.x(),point.y()+m_shotOptionButton->size().height());
-                m_optionMenu->show();
+                m_shotOptionButton->showMenu();
+//                QPoint point = QWidget::mapToGlobal(m_shotOptionButton->pos());
+//                m_optionMenu->move(point.x(),point.y()+m_shotOptionButton->size().height());
+//                m_optionMenu->show();
             } else {
+
                 m_optionMenu->hide();
             }
         } else if (QString("record_option") == shape) {
             if (m_recordOptionMenu->isHidden() && !Utils::isTabletEnvironment) {
-                QPoint point = QWidget::mapToGlobal(m_optionButton->pos());
-                m_recordOptionMenu->move(point.x(),point.y()+m_optionButton->size().height());
-                m_recordOptionMenu->show();
+                m_optionButton->showMenu();
+//                QPoint point = QWidget::mapToGlobal(m_optionButton->pos());
+//                m_recordOptionMenu->move(point.x(),point.y()+m_optionButton->size().height());
+//                m_recordOptionMenu->show();
             } else {
                 m_recordOptionMenu->hide();
             }
@@ -1224,9 +1227,10 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
         } else if (shape == "mouse") {
             //m_mouseButton->click();
             if(m_cursorMenu->isHidden()) {
-                QPoint point = QWidget::mapToGlobal(m_mouseButton->pos());
-                m_cursorMenu->move(point.x(),point.y() + m_mouseButton->size().height());
-                m_cursorMenu->show();
+                m_mouseButton->showMenu();
+//                QPoint point = QWidget::mapToGlobal(m_mouseButton->pos());
+//                m_cursorMenu->move(point.x(),point.y() + m_mouseButton->size().height());
+//                m_cursorMenu->show();
             } else {
                 m_cursorMenu->hide();
             }
@@ -1234,9 +1238,10 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
             m_cameraButton->click();
         } else if (shape == "audio") {
             if (m_audioMenu->isHidden()) {
-                QPoint point = QWidget::mapToGlobal(m_audioButton->pos());
-                m_audioMenu->move(point.x(),point.y()+m_audioButton->size().height());
-                m_audioMenu->show();
+                m_audioButton->showMenu();
+//                QPoint point = QWidget::mapToGlobal(m_audioButton->pos());
+//                m_audioMenu->move(point.x(),point.y()+m_audioButton->size().height());
+//                m_audioMenu->show();
             }
             else
                 m_audioMenu->hide();
