@@ -77,7 +77,10 @@ HEADERS += main_window.h \
     RecorderRegionShow.h \
     recordertablet.h \
     dbusinterface/ocrinterface.h \
-    widgets/scrollshottip.h
+    widgets/scrollshottip.h \
+    utils/pixmergethread.h \
+    utils/scrollScreenshot.h
+
 
 SOURCES += main.cpp \
     main_window.cpp \
@@ -126,7 +129,9 @@ SOURCES += main.cpp \
     RecorderRegionShow.cpp \
     recordertablet.cpp \
     dbusinterface/ocrinterface.cpp \
-    widgets/scrollshottip.cpp
+    widgets/scrollshottip.cpp \
+    utils/pixmergethread.cpp \
+    utils/scrollScreenshot.cpp
 
 QT += core
 QT += widgets
@@ -136,7 +141,7 @@ QT += dbus
 QT += multimedia
 QT += multimediawidgets
 QT += concurrent
-LIBS += -lX11 -lXext -lXtst -lXfixes
+LIBS += -lX11 -lXext -lXtst -lXfixes -lopencv_core -lopencv_imgproc
 LIBS += -L"libprocps" -lprocps
 QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations

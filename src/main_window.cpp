@@ -895,17 +895,15 @@ void MainWindow::initScrollShot()
     repaint();
 
     //捕捉区域穿透
-    Utils::getInputEvent(static_cast<int>(this->winId()), recordX, recordY, recordWidth, recordHeight);
+    Utils::getInputEvent(static_cast<int>(this->winId()), static_cast<short>(recordX), static_cast<short>(recordY), static_cast<unsigned short>(recordWidth), static_cast<unsigned short>(recordHeight));
 
-//    m_scrollShot = new ScrollScreenshot ();
-//    connect(m_scrollShot, &ScrollScreenshot::getOneImg, this, [ = ] {
-//        bool ok;
-//        QRect rect(recordX+1, recordY+1, recordWidth-2, recordHeight-2);
-//        QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
-//        m_scrollShot->addPixmap(img);
-//    });
-
-
+    m_scrollShot = new ScrollScreenshot ();
+    connect(m_scrollShot, &ScrollScreenshot::getOneImg, this, [ = ] {
+        bool ok;
+        QRect rect(recordX+1, recordY+1, recordWidth-2, recordHeight-2);
+        QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
+        m_scrollShot->addPixmap(img);
+    });
 }
 
 void MainWindow::initLaunchMode(const QString &launchMode)
@@ -1924,16 +1922,12 @@ void MainWindow::saveScreenShot()
     m_recordButton->setVisible(false);
     m_sizeTips->setVisible(false);
 
-    shotCurrentImg();
 
-    //qDebug() << "m_scrollShotStatus:  " << m_scrollShotStatus;
-    //保存滚动截图todo 如果第一次进入滚动截图模式且还未启动滚动截图
-//    if(status::scrollshot == m_functionType && m_scrollShotStatus != 0){
-//        m_scrollShot->savePixmap();
-//        m_resultPixmap = m_scrollShot->getResultPixmap();
-//    }
-
-
+    if(status::scrollshot == m_functionType && m_scrollShotStatus != 0){
+        m_resultPixmap = QPixmap::fromImage(m_scrollShot->savePixmap());
+    } else {
+        shotCurrentImg();
+    }
     const bool r = saveAction(m_resultPixmap);
     sendNotify(m_saveIndex, m_saveFileName, r);
 }
@@ -2448,7 +2442,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
         }
     }
 }
-bool MainWindow::eventFilter(QObject *object, QEvent *event)
+bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
     bool needRepaint = false;
 #undef KeyPress
@@ -3394,7 +3388,7 @@ void MainWindow::startScrollShot()
     bool ok;
     QRect rect(recordX+1, recordY+1, recordWidth-2, recordHeight-2);
     QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
-//    m_scrollShot->addPixmap(img);
+    m_scrollShot->addPixmap(img);
 }
 
 void MainWindow::shotCurrentImg()

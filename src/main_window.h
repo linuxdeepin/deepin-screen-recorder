@@ -21,7 +21,7 @@
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-//#include "utils/scrollScreenshot.h"
+#include "utils/scrollScreenshot.h"
 #include "record_process.h"
 #include "countdown_tooltip.h"
 #include "button_feedback.h"
@@ -517,7 +517,7 @@ private:
     /**
      * @brief 滚动截图图像拼接
      */
-    //ScrollScreenshot *m_scrollShot;
+    ScrollScreenshot *m_scrollShot;
 
 };
 
