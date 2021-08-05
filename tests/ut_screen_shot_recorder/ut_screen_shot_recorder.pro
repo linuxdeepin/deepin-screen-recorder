@@ -4,7 +4,7 @@
 include($$PWD/../../3rdparty/stub_linux/stub.pri)
 TEMPLATE = app
 TARGET = ut_screen_shot_recorder
-INCLUDEPATH += .
+INCLUDEPATH += . ../../src/
 
 QT += core gui testlib
 
@@ -17,7 +17,7 @@ QT += dbus
 QT += multimedia
 QT += multimediawidgets
 QT += concurrent
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_core -lopencv_imgproc
 LIBS += -L"libprocps" -lprocps
 
 CONFIG += link_pkgconfig
@@ -108,6 +108,9 @@ HEADERS += test_all_interfaces.h \
         ../../src/utils/shapesutils.h \
         ../../src/utils/camerawatcher.h \
         ../../src/utils/voicevolumewatcher.h \
+        ../../src/utils/pixmergethread.h \
+        ../../src/utils/scrollScreenshot.h \
+        ../../src/widgets/scrollshottip.h \
         ../../src/widgets/colortoolwidget.h \
         ../../src/widgets/keybuttonwidget.h \
         ../../src/widgets/maintoolwidget.h \
@@ -173,6 +176,9 @@ SOURCES += main.cpp \
     ../../src/utils/shapesutils.cpp \
     ../../src/utils/camerawatcher.cpp \
     ../../src/utils/voicevolumewatcher.cpp \
+    ../../src/utils/pixmergethread.cpp \
+    ../../src/utils/scrollScreenshot.cpp \
+    ../../src/widgets/scrollshottip.cpp \
     ../../src/widgets/colortoolwidget.cpp \
     ../../src/widgets/keybuttonwidget.cpp \
     ../../src/widgets/maintoolwidget.cpp \
