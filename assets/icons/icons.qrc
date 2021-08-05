@@ -36,5 +36,6 @@
         <file>texts/mouseandtouch_32px.svg</file>
         <file>texts/touch_32px.svg</file>
         <file>texts/ocr-normal_32px.svg</file>
+        <file>texts/scrollShot_32px.svg</file>
     </qresource>
 </RCC>

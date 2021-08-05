@@ -261,5 +261,8 @@
         <file>deepin-screenshot.svg</file>
         <file>newUI/normal/ocr-normal.svg</file>
         <file>newUI/dark/normal/ocr-normal.svg</file>
+        <file>newUI/normal/scrollShot.svg</file>
+        <file>newUI/dark/normal/scrollShot.svg</file>
+        <file>warming.svg</file>
     </qresource>
 </RCC>

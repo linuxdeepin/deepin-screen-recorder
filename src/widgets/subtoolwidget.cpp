@@ -66,6 +66,8 @@ SubToolWidget::SubToolWidget(MainWindow* pmainwindow ,DWidget *parent) : DStacke
 {
     m_pMainWindow = pmainwindow;
     initWidget();
+//    this->setAttribute(Qt::WA_StyledBackground,true);
+//    this->setStyleSheet("background-color: rgb(255,122, 255)");
 }
 
 SubToolWidget::~SubToolWidget()
@@ -659,12 +661,23 @@ void SubToolWidget::initRecordLabel()
 void SubToolWidget::initShotLabel()
 {
     m_shotSubTool = new DLabel(this);
+
     //QButtonGroup *rectBtnGroup = new QButtonGroup();
     m_shotBtnGroup = new QButtonGroup(this);
     m_shotBtnGroup->setExclusive(true);
 
     QList<ToolButton *> btnList;
     DPalette pa;
+
+    //添加滚动截图按钮
+    m_scrollShotButton = new ToolButton();
+    m_scrollShotButton->setIconSize(QSize(35, 35));
+    m_scrollShotButton->setIcon(QIcon::fromTheme("scrollShot"));
+    Utils::setAccessibility(m_scrollShotButton, AC_SUBTOOLWIDGET_OCR_BUTTON);
+    m_shotBtnGroup->addButton(m_scrollShotButton);
+    m_scrollShotButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
+    installTipHint(m_scrollShotButton, tr("Scroll Shot"));
+    btnList.append(m_scrollShotButton);
 
     //添加ocr图文识别按钮
     m_ocrButton = new ToolButton();
@@ -777,16 +790,16 @@ void SubToolWidget::initShotLabel()
     QAction *pngAction = new QAction(m_optionMenu);
     QAction *jpgAction = new QAction(m_optionMenu);
     QAction *bmpAction = new QAction(m_optionMenu);
-    QAction *clipTitleAction = new QAction(m_optionMenu);
+    m_clipTitleAction = new QAction(m_optionMenu);
     QAction *saveToClipAction = new QAction(m_optionMenu);
-    QAction *saveCursorAction = new QAction(m_optionMenu);
+    m_saveCursorAction = new QAction(m_optionMenu);
 
     Utils::setAccessibility(saveToDesktopAction, "saveToDesktopAction");
     Utils::setAccessibility(saveToPictureAction, "saveToPictureAction");
     Utils::setAccessibility(saveToSpecialPath, "saveToSpecialPath");
     Utils::setAccessibility(saveToClipAction, "saveToClipAction");
     //Utils::setAccessibility(openWithDraw, "openWithDraw");
-    Utils::setAccessibility(saveCursorAction, "saveCursorAction");
+    Utils::setAccessibility(m_saveCursorAction, "saveCursorAction");
     Utils::setAccessibility(pngAction, "pngAction");
     Utils::setAccessibility(jpgAction, "jpgAction");
     Utils::setAccessibility(bmpAction, "bmpAction");
@@ -819,12 +832,12 @@ void SubToolWidget::initShotLabel()
     t_formatGroup->addAction(jpgAction);
     t_formatGroup->addAction(bmpAction);
 
-    clipTitleAction->setDisabled(true);
-    clipTitleAction->setText(tr("Options"));
+    m_clipTitleAction->setDisabled(true);
+    m_clipTitleAction->setText(tr("Options"));
     //openWithDraw->setText(tr("Edit in Draw"));
     //openWithDraw->setCheckable(true);
-    saveCursorAction->setText(tr("Show pointer"));
-    saveCursorAction->setCheckable(true);
+    m_saveCursorAction->setText(tr("Show pointer"));
+    m_saveCursorAction->setCheckable(true);
 
     //保存方式
     m_optionMenu->addAction(saveTitleAction);
@@ -835,8 +848,8 @@ void SubToolWidget::initShotLabel()
     m_optionMenu->addSeparator();
 
     //保存剪贴板
-    m_optionMenu->addAction(clipTitleAction);
-    m_optionMenu->addAction(saveCursorAction);
+    m_optionMenu->addAction(m_clipTitleAction);
+    m_optionMenu->addAction(m_saveCursorAction);
     // 屏蔽画板打开
     //OptionMenu->addAction(openWithDraw);
     m_optionMenu->addSeparator();
@@ -922,18 +935,18 @@ void SubToolWidget::initShotLabel()
 
     switch (t_saveCursor) {
     case 0:
-        saveCursorAction->setChecked(false);
+        m_saveCursorAction->setChecked(false);
         break;
     case 1:
-        saveCursorAction->setChecked(true);
+        m_saveCursorAction->setChecked(true);
         break;
     default:
-        saveCursorAction->setChecked(false);
+        m_saveCursorAction->setChecked(false);
         break;
     }
 
-    connect(saveCursorAction, &QAction::triggered, [ = ] {
-        ConfigSettings::instance()->setValue("save", "saveCursor", saveCursorAction->isChecked() ? 1 : 0);
+    connect(m_saveCursorAction, &QAction::triggered, [ = ] {
+        ConfigSettings::instance()->setValue("save", "saveCursor", m_saveCursorAction->isChecked() ? 1 : 0);
     });
 /*
     int t_openWithDraw = ConfigSettings::instance()->value("open", "draw").toInt();
@@ -978,12 +991,17 @@ void SubToolWidget::initShotLabel()
         rectLayout->addSpacing(SHOT_BUTTON_SPACING);
     }
 
+
     m_shotSubTool->setLayout(rectLayout);
     addWidget(m_shotSubTool);
 
     connect(m_shotBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
             [ = ](int status) {
         Q_UNUSED(status);
+        if(m_scrollShotButton->isChecked())
+        {
+            emit changeShotToolFunc("scrollShot");
+        }
         if(m_ocrButton->isChecked())
         {
             emit changeShotToolFunc("ocr");
@@ -1035,6 +1053,47 @@ void SubToolWidget::installHint(QWidget *w, QWidget *hint)
 {
     w->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hint));
     w->installEventFilter(hintFilter);
+}
+
+void SubToolWidget::hideSomeToolBtn()
+{
+    //隐藏原工具栏中的不相关按钮
+    m_scrollShotButton->hide();
+    m_rectButton->hide();
+    m_circleButton->hide();
+    m_lineButton->hide();
+    m_penButton->hide();
+    m_textButton->hide();
+    //将选择中的显示光标及选项去除
+    m_optionMenu->removeAction(m_clipTitleAction);
+    m_optionMenu->removeAction(m_saveCursorAction);
+    //获取原水平布局，进行重新布局
+    QHBoxLayout *rectLayout = static_cast<QHBoxLayout*>(m_shotSubTool->layout());
+    //清楚原水平布局中的所有元素
+    QLayoutItem *child;
+    while ((child = rectLayout->takeAt(0)) != 0)
+    {
+        //setParent为NULL，防止删除之后界面不消失
+        if(child->widget())
+        {
+            child->widget()->setParent(NULL);
+        }
+        delete child;
+    }
+    rectLayout->setMargin(0);
+    rectLayout->setSpacing(0);
+    rectLayout->addSpacing(7);
+    rectLayout->setSizeConstraint(QLayout::SetFixedSize);
+    rectLayout->addWidget(m_ocrButton);
+    rectLayout->addSpacing(SHOT_BUTTON_SPACING);
+    rectLayout->addWidget(m_shotOptionButton);
+    this->removeWidget(m_recordSubTool);
+
+}
+
+void SubToolWidget::setScrollShotDisabled()
+{
+    m_scrollShotButton->setEnabled(false);
 }
 
 void SubToolWidget::switchContent(QString shapeType)
@@ -1124,7 +1183,11 @@ void SubToolWidget::setVideoButtonInitFromSub()
 void SubToolWidget::shapeClickedFromWidget(QString shape)
 {
     if (!shape.isEmpty()) {
-        if(shape == "ocr"){
+        if(shape == "scrollShot"){
+            if(!m_scrollShotButton->isChecked())
+                m_scrollShotButton->click();
+        }
+        else if(shape == "ocr"){
             if(!m_ocrButton->isChecked())
                 m_ocrButton->click();
         }

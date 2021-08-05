@@ -21,7 +21,7 @@
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+//#include "utils/scrollScreenshot.h"
 #include "record_process.h"
 #include "countdown_tooltip.h"
 #include "button_feedback.h"
@@ -34,6 +34,7 @@
 #include "widgets/zoomIndicator.h"
 #include "widgets/camerawidget.h"
 #include "widgets/filter.h"
+#include "widgets/scrollshottip.h"
 #include "utils/saveutils.h"
 #include "utils/voicevolumewatcher.h"
 #include "utils/camerawatcher.h"
@@ -77,9 +78,21 @@ class MainWindow : public DWidget
     static const int RECORD_MIN_SHOT_SIZE;
     static const int DRAG_POINT_RADIUS;
 
+    /**
+     * @brief 录屏开始按钮未点击的状态
+     */
     static const int RECORD_BUTTON_NORMAL;
+    /**
+     * @brief 录屏开始按钮点击后3秒倒计时的状态
+     */
     static const int RECORD_BUTTON_WAIT;
+    /**
+     * @brief 录屏按钮点击后正在录屏的状态
+     */
     static const int RECORD_BUTTON_RECORDING;
+    /**
+     * @brief 录屏按钮点击后录屏结束保存时的状态
+     */
     static const int RECORD_BUTTON_SAVEING;
 
     static const int ACTION_MOVE;
@@ -101,7 +114,8 @@ class MainWindow : public DWidget
 
     enum status{
         record = 0,
-        shot
+        shot,
+        scrollshot
     };
 
 public:
@@ -230,6 +244,13 @@ public:
     void initResource();
     void initScreenShot();
     void initScreenRecorder();
+    /**
+     * @brief 初始化滚动截图
+     */
+    void initScrollShot();
+    /**
+     * @brief 初始化应用内快捷键
+     */
     void initShortcut();
     void initLaunchMode(const QString &launchMode);
     //void delayScreenshot(double num);
@@ -242,7 +263,10 @@ public:
     void sendSavingNotify();
     // 强制录屏保存退出通知,3D->2D模式
     void forciblySavingNotify();
-
+    /**
+     * @brief 开始滚动截图
+     */
+    void startScrollShot();
 signals:
     void releaseEvent();
     void hideScreenshotUI();
@@ -254,6 +278,7 @@ signals:
 public slots:
     void onExit();
     void startRecord();
+
     //void flashTrayIcon();
     //void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void shotCurrentImg();
@@ -283,6 +308,10 @@ public slots:
     void changeSystemAudioSelectEvent(bool checked);
     void changeCameraSelectEvent(bool checked);
     void updateMultiKeyBoardPos();
+    /**
+     * @brief 改变截图工具栏操作入口
+     * @param 工具栏点击的按钮类型，例如：ocr、pen等
+     */
     void changeShotToolEvent(const QString &func);
     void saveScreenShot();
     bool saveAction(const QPixmap &pix);
@@ -299,6 +328,12 @@ public slots:
     void onShotKeyPressEvent(const unsigned char &keyCode);
     void onRecordKeyPressEvent(const unsigned char &keyCode);
     void tableRecordSet();
+    /**
+     * @brief 滚动截图时通过x11获取鼠标按键操作
+     * @param
+     */
+    void onScrollShotButtonPressEvent(int x, int y);
+
     /**
      * @brief initPadShot:初始化平板截图
      */
@@ -349,7 +384,13 @@ private:
     bool isFirstMove = false;
     bool isFirstPressButton = false;
     bool isFirstReleaseButton = false;
+    /**
+     * @brief 是否按压按钮
+     */
     bool isPressButton = false;
+    /**
+     * @brief 是否释放按钮
+     */
     bool isReleaseButton = false;
 
     int dragAction = 0;
@@ -377,6 +418,14 @@ private:
     //dde-dock显示时长插件代替系统托盘
     //QSystemTrayIcon *trayIcon = nullptr;
     CountdownTooltip *countdownTooltip = nullptr;
+    /**
+     * @brief 滚动截图的提示
+     */
+    ScrollShotTip *m_scrollShotTip = nullptr;
+    /**
+     * @brief 滚动截图状态 0：停止(第一次进入)； 1：启动(第一次进入)； 2：继续； 3：暂停； 4：结束；
+     */
+    int m_scrollShotStatus = 0;
     ButtonFeedback *buttonFeedback = nullptr;
     EventMonitor *m_pScreenRecordEvent = nullptr;
     ScreenShotEvent *m_pScreenShotEvent = nullptr;
@@ -387,15 +436,39 @@ private:
     ToolBar *m_toolBar = nullptr;
     QRect m_backgroundRect;
     //添加截屏和录屏的按钮
+    /**
+     * @brief 录屏开始按钮
+     */
     DPushButton *m_recordButton = nullptr;
+    /**
+     * @brief 截图保存按钮
+     */
     DPushButton *m_shotButton = nullptr;
     QList<KeyButtonWidget *> m_keyButtonList;
 
-    int m_functionType = status::record;  //0: record, 1: shot
+    /**
+     * @brief 功能类型
+     */
+    int m_functionType = status::record;  //0: record, 1: shot , 2: scrollshot
+    /**
+     * @brief 键盘开关状态
+     */
     bool m_keyBoardStatus = false; //false: keyBoard off, true:keyBoard On
+    /**
+     * @brief 鼠标开关状态
+     */
     int m_mouseStatus = 0; //0: mouse check off, 1:mouse check On
+    /**
+     * @brief 鼠标显示开关状态
+     */
     bool m_mouseShowStatus = true; //0: show mouse off, 1:show mouse On
+    /**
+     * @brief 是否重绘录屏或截图按钮
+     */
     bool m_repaintMainButton = false;//false: no need to repaint record button or shot button, true:...
+    /**
+     * @brief 是否重绘侧工具栏
+     */
     bool m_repaintSideBar = false;   //false: no need to repaint sidebar, true:...
 
     bool m_selectedMic = true;
@@ -423,6 +496,9 @@ private:
     bool m_shotWithPath = false;
     int m_screenCount;
     QString m_shotSavePath;
+    /**
+     * @brief 保存截图的标志，进入保存截图时会置为1
+     */
     int m_shotflag = 0;
     int m_firstShot = 0;
     bool m_isZhaoxin = false;
@@ -438,6 +514,11 @@ private:
     int m_cursorBound;
     //ocr接口
     OcrInterface *m_ocrInterface;
+    /**
+     * @brief 滚动截图图像拼接
+     */
+    //ScrollScreenshot *m_scrollShot;
+
 };
 
 #endif //MAINWINDOW_H

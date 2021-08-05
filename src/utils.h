@@ -53,6 +53,17 @@ public:
     static void setAccessibility(QAction *action, const QString name);
     static bool is3rdInterfaceStart;
     static bool isTabletEnvironment;
+
+    /**
+     * @brief 对目标区域做穿透处理
+     * @param 窗口id
+     * @param 区域位置x坐标
+     * @param 区域位置y坐标
+     * @param 区域宽
+     * @param 区域高
+     */
+    static void getInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height);
+
 };
 
 #endif //UTILS_H

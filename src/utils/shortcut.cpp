@@ -45,7 +45,8 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
     exitGroup.groupItems << ShortcutItem(tr("Exit"), "Esc")
                          << ShortcutItem(tr("Save"), "Ctrl+S");
 
-    toolsGroup.groupItems << ShortcutItem(tr("Rectangle"), "R")
+    toolsGroup.groupItems << ShortcutItem(tr("Scrollshot"), "Alt+I")
+                         << ShortcutItem(tr("Rectangle"), "R")
                          << ShortcutItem(tr("Ellipse"), "O")
                          << ShortcutItem(tr("Line"), "L")
                          << ShortcutItem(tr("Pencil"), "P")

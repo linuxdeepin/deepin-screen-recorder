@@ -95,6 +95,14 @@ void ScreenShotEvent::handleRecordEvent(XRecordInterceptData *data)
             emit shotKeyPressEvent((reinterpret_cast<unsigned char *>(data->data))[1]);
         }
             break;
+        case ButtonPress:
+        {
+            if (event->u.u.detail == Button1) {
+                emit buttonedPress(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+            }
+        }
+            break;
+
         default:
             break;
         }

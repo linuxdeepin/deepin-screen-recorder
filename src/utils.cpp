@@ -208,3 +208,14 @@ void Utils::setAccessibility(QAction *action, const QString name)
     action->setObjectName(name);
     //action->setAccessibleName(name);
 }
+
+void Utils::getInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height)
+{
+    XRectangle *reponseArea = new XRectangle;
+    reponseArea->x = x;
+    reponseArea->y = y;
+    reponseArea->width = width;
+    reponseArea->height = height;
+
+    XShapeCombineRectangles(QX11Info::display(), static_cast<unsigned long>(wid), ShapeInput, 0, 0, reponseArea, 1, ShapeSubtract, YXBanded);
+}

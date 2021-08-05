@@ -48,6 +48,15 @@ class ToolBarWidget : public DFloatingWidget
 public:
     explicit ToolBarWidget(MainWindow* pMainwindow,DWidget *parent = nullptr);
     ~ToolBarWidget() Q_DECL_OVERRIDE;
+    /**
+     * @brief 隐藏工具栏矩形、圆形、箭头、笔画、选项中裁切选项-显示光标
+     */
+    void hideSomeToolBtn();
+
+    /**
+     * @brief 设置禁止滚动截图
+     */
+    void setScrollShotDisabled();
 
 signals:
     void buttonChecked(QString shapeType);
@@ -89,6 +98,7 @@ protected:
     void paintEvent(QPaintEvent *e)Q_DECL_OVERRIDE;
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
+
 private:
     //MajToolBar *m_majToolbar;
     DLabel *m_hSeparatorLine;
@@ -110,6 +120,17 @@ public:
     ~ToolBar() Q_DECL_OVERRIDE;
     //public接口非slots
     void initToolBar(MainWindow* pmainWindow);
+
+    /**
+     * @brief 点击滚动截图时，工具栏隐藏一些按钮
+     */
+    void hideSomeToolBtn();
+
+    /**
+     * @brief 设置禁止滚动截图
+     */
+    void setScrollShotDisabled();
+
 signals:
     void heightChanged();
     void buttonChecked(QString shape);

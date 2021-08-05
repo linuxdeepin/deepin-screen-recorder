@@ -179,6 +179,17 @@ void ToolBarWidget::showEvent(QShowEvent *event)
 
     DFloatingWidget::showEvent(event);
 }
+
+void ToolBarWidget::hideSomeToolBtn()
+{
+    m_subTool->hideSomeToolBtn();
+    m_mainTool->hide();
+}
+
+void ToolBarWidget::setScrollShotDisabled()
+{
+    m_subTool->setScrollShotDisabled();
+}
 /*
 bool ToolBarWidget::isButtonChecked()
 {
@@ -308,6 +319,16 @@ bool ToolBar::eventFilter(QObject *obj, QEvent *event)
     }
 
     return DLabel::eventFilter(obj, event);
+}
+
+void ToolBar::hideSomeToolBtn()
+{
+    m_toolbarWidget->hideSomeToolBtn();
+}
+
+void ToolBar::setScrollShotDisabled()
+{
+    m_toolbarWidget->setScrollShotDisabled();
 }
 
 void ToolBar::showAt(QPoint pos)

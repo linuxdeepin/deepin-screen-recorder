@@ -170,6 +170,7 @@ MainWindow::MainWindow(DWidget *parent) :
 
 void MainWindow::initAttributes()
 {
+    qDebug() << "FunctionName: " << __func__;
     setWindowTitle(tr("Screen Capture"));
     m_keyButtonList.clear();
     checkCpuIsZhaoxin();
@@ -499,7 +500,9 @@ void MainWindow::onExit()
 
 void MainWindow::initShortcut()
 {
-    //应用内快捷键
+    //滚动截图应用内快捷键
+    QShortcut *scrollShotSC = new QShortcut(QKeySequence("Alt+I"), this);
+    //ocr应用内快捷键
     QShortcut *ocrSC = new QShortcut(QKeySequence("Alt+O"), this);
 
     QShortcut *rectSC = new QShortcut(QKeySequence("R"), this);
@@ -515,6 +518,14 @@ void MainWindow::initShortcut()
     //转全局事件，此处未使用
     //QShortcut *audioSC = new QShortcut(QKeySequence("S"), this);
     //    QShortcut *colorSC = new QShortcut(QKeySequence("Alt+6"), this);
+
+    connect(scrollShotSC, &QShortcut::activated, this, [ = ] {
+        if (status::shot == m_functionType)
+        {
+            m_toolBar->shapeClickedFromMain("scrollShot");
+        }
+
+    });
 
     connect(ocrSC, &QShortcut::activated, this, [ = ] {
         if (status::shot == m_functionType)
@@ -625,6 +636,7 @@ void MainWindow::initResource()
 
     connect(m_pScreenShotEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
     connect(m_pScreenShotEvent, SIGNAL(shotKeyPressEvent(const unsigned char &)), this, SLOT(onShotKeyPressEvent(const unsigned char &)), Qt::QueuedConnection);
+    qDebug() << "截图事件监控线程启动！";
     m_pScreenShotEvent->start();
 }
 
@@ -814,6 +826,86 @@ void MainWindow::initScreenRecorder()
     m_pScreenRecordEvent->start();
 
     m_toolBar->setFocus();
+}
+
+//滚动截图的初始化函数
+void MainWindow::initScrollShot()
+{
+    //滚动截图激活鼠标点击事件
+    connect(m_pScreenShotEvent, SIGNAL(buttonedPress(int , int )), this, SLOT(onScrollShotButtonPressEvent(int , int )), Qt::QueuedConnection);
+
+    //设置当前功能类型
+    m_functionType = status::scrollshot;
+    m_keyBoardStatus = false;
+    m_mouseStatus = 0;
+    m_repaintMainButton = false;
+    m_repaintSideBar = false;
+    m_screenWidth = m_backgroundRect.width();
+    m_screenHeight = m_backgroundRect.height();
+    isPressButton = false;
+    isReleaseButton = false;
+
+    //隐藏工具栏矩形、圆形、箭头、笔画、选项中裁切选项-显示光标
+    m_toolBar->hideSomeToolBtn();
+
+    //捕捉区域不能进行拖动
+    recordButtonStatus = RECORD_BUTTON_WAIT;
+
+    //重新设置鼠标形状
+    resetCursor();
+
+    //提示开始滚动截图的方法
+    m_scrollShotTip = new ScrollShotTip (this);
+    m_scrollShotTip->showTip(TipType::StartScrollShotTip);
+    //m_scrollShotTip->showTip(TipType::EndScrollShotTip);
+    //m_scrollShotTip->showTip(TipType::ErrorScrollShotTip);
+
+    const QPoint topLeft = geometry().topLeft();
+    QRect recordRect {
+        static_cast<int>(recordX * m_pixelRatio + topLeft.x()),
+                static_cast<int>(recordY * m_pixelRatio + topLeft.y()),
+                static_cast<int>(recordWidth * m_pixelRatio),
+                static_cast<int>(recordHeight * m_pixelRatio)
+    };
+    int leftTopX = 0, leftTopY =0;
+    int screenWidth = 0,screenHeight = 0;
+
+    //单个屏幕的长宽
+    screenWidth = m_screenWidth/m_screenCount;
+    screenHeight = m_screenHeight;
+
+    //捕捉区域的宽小于300或者高小于100 则提示内容在屏幕中间且与捕捉区域左上角在一个屏幕
+    if(recordWidth < 300 || recordHeight < 100){
+        leftTopX = static_cast<int>((recordRect.x()/screenWidth)*screenWidth + (screenWidth - m_scrollShotTip->width()) / 2);
+        leftTopY = static_cast<int>((screenHeight - m_scrollShotTip->height()) / 2);
+    }
+    else{
+        //    qDebug() << "m_pixelRatio: " << m_pixelRatio ;
+        //    qDebug() << "recordRect.x(): " << recordRect.x() << ",recordRect.y(): " <<recordRect.y() <<",recordRect.width(): " << recordRect.width() <<",recordRect.height(): " << recordRect.height() ;
+        //    qDebug() <<"m_scrollShotTip->width(): " << m_scrollShotTip->width() <<",m_scrollShotTip->height(): " << m_scrollShotTip->height() ;
+             leftTopX = static_cast<int>((recordRect.x() / m_pixelRatio + (recordRect.width() / m_pixelRatio  - m_scrollShotTip->width()) / 2));
+        //    int leftTopY = static_cast<int>((recordRect.y() / m_pixelRatio + (recordRect.height() / m_pixelRatio - m_scrollShotTip->height()) / 2));
+             leftTopY = static_cast<int>((recordRect.y() / m_pixelRatio + (recordRect.height() / m_pixelRatio - m_scrollShotTip->height()) /100 * 97));
+        //    qDebug() << "leftTopX: " << leftTopX << ",leftTopY: " <<leftTopY;
+    }
+
+    m_scrollShotTip->move(leftTopX,leftTopY);
+    //显示开始滚动 截图的提示
+    m_scrollShotTip->show();
+    repaint();
+
+    //捕捉区域穿透
+    Utils::getInputEvent(static_cast<int>(this->winId()), recordX, recordY, recordWidth, recordHeight);
+
+//    m_scrollShot = new ScrollScreenshot ();
+//    connect(m_scrollShot, &ScrollScreenshot::getOneImg, this, [ = ] {
+//        bool ok;
+//        QRect rect(recordX+1, recordY+1, recordWidth-2, recordHeight-2);
+//        QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
+//        m_scrollShot->addPixmap(img);
+//    });
+
+
 }
 
 void MainWindow::initLaunchMode(const QString &launchMode)
@@ -1791,6 +1883,10 @@ void MainWindow::changeShotToolEvent(const QString &func)
         m_ocrInterface= new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
         saveScreenShot();
 
+    }else if(func == "scrollShot"){ //点击滚动截图
+        //初始化滚动截图
+        initScrollShot();
+
     }else{
         if (!m_sideBar->isVisible()) {
             updateSideBarPos();
@@ -1802,6 +1898,10 @@ void MainWindow::changeShotToolEvent(const QString &func)
             m_isShapesWidgetExist = true;
         }
         m_sideBar->changeShotToolFunc(func);
+
+        //禁用滚动截图按钮
+        m_toolBar->setScrollShotDisabled();
+
     }
 }
 
@@ -1825,6 +1925,14 @@ void MainWindow::saveScreenShot()
     m_sizeTips->setVisible(false);
 
     shotCurrentImg();
+
+    //qDebug() << "m_scrollShotStatus:  " << m_scrollShotStatus;
+    //保存滚动截图todo 如果第一次进入滚动截图模式且还未启动滚动截图
+//    if(status::scrollshot == m_functionType && m_scrollShotStatus != 0){
+//        m_scrollShot->savePixmap();
+//        m_resultPixmap = m_scrollShot->getResultPixmap();
+//    }
+
 
     const bool r = saveAction(m_resultPixmap);
     sendNotify(m_saveIndex, m_saveFileName, r);
@@ -1926,6 +2034,13 @@ bool MainWindow::saveAction(const QPixmap &pix)
     QString currentTime =  currentDate.currentDateTime().
             toString("yyyyMMddHHmmss");
     m_saveFileName = "";
+    QString functionTypeStr = tr("Screenshot");
+    if(status::scrollshot == m_functionType){
+        functionTypeStr = tr("Scrollshot");
+
+    }else {
+        functionTypeStr = tr("Screenshot");
+    }
 
     QString tempFileName = "";
     QStandardPaths::StandardLocation saveOption = QStandardPaths::TempLocation;
@@ -1971,9 +2086,9 @@ bool MainWindow::saveAction(const QPixmap &pix)
         }
 
         if (fileName.isEmpty()) {
-            fileName = QString("%1_%2").arg(tr("Screenshot")).arg(currentTime);
+            fileName = QString("%1_%2").arg(functionTypeStr).arg(currentTime);
         } else {
-            fileName = QString("%1_%2_%3").arg(tr("Screenshot")).arg(selectAreaName).arg(currentTime);
+            fileName = QString("%1_%2_%3").arg(functionTypeStr).arg(selectAreaName).arg(currentTime);
         }
         QString lastFileName;
 
@@ -2065,15 +2180,15 @@ bool MainWindow::saveAction(const QPixmap &pix)
         QString padImgPath = QString("%1%2%3")
                 .arg(QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first())
                 .arg(QDir::separator())
-                .arg(tr("Screenshot"));
+                .arg(functionTypeStr);
         if (!dir.exists(padImgPath)) {
             dir.mkpath(padImgPath);
         }
 
         if (selectAreaName.isEmpty()) {
-            m_saveFileName = QString("%1%2%3_%4.png").arg(padImgPath,QDir::separator(),tr("Screenshot"), currentTime);
+            m_saveFileName = QString("%1%2%3_%4.png").arg(padImgPath,QDir::separator(),functionTypeStr, currentTime);
         } else {
-            m_saveFileName = QString("%1%2%3_%4_%5.png").arg(padImgPath,QDir::separator(),tr("Screenshot"), selectAreaName, currentTime);
+            m_saveFileName = QString("%1%2%3_%4_%5.png").arg(padImgPath,QDir::separator(),functionTypeStr, selectAreaName, currentTime);
         }
 
         break;
@@ -2126,9 +2241,9 @@ bool MainWindow::saveAction(const QPixmap &pix)
             break;
         }
         if (selectAreaName.isEmpty()) {
-            m_saveFileName = QString("%1/%2_%3.%4").arg(savePath, tr("Screenshot"), currentTime, t_formatBuffix);
+            m_saveFileName = QString("%1/%2_%3.%4").arg(savePath, functionTypeStr, currentTime, t_formatBuffix);
         } else {
-            m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, tr("Screenshot"), selectAreaName, currentTime, t_formatBuffix);
+            m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, functionTypeStr, selectAreaName, currentTime, t_formatBuffix);
         }
 
         if (!saveImg(pix, m_saveFileName, t_formatStr.toLatin1().data()))
@@ -2199,9 +2314,9 @@ bool MainWindow::saveAction(const QPixmap &pix)
             m_saveFileName = t_fileName;
         } else {
             if (selectAreaName.isEmpty()) {
-                m_saveFileName = QString("%1/%2_%3.%4").arg(savePath, tr("Screenshot"), currentTime, t_formatBuffix);
+                m_saveFileName = QString("%1/%2_%3.%4").arg(savePath, functionTypeStr, currentTime, t_formatBuffix);
             } else {
-                m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, tr("Screenshot"), selectAreaName, currentTime, t_formatBuffix);
+                m_saveFileName = QString("%1/%2_%3_%4.%5").arg(savePath, functionTypeStr, selectAreaName, currentTime, t_formatBuffix);
             }
         }
 
@@ -2210,9 +2325,9 @@ bool MainWindow::saveAction(const QPixmap &pix)
             return false;
     }else if(m_saveIndex == SaveToClipboard){
         if (selectAreaName.isEmpty()) {
-            tempFileName = QString("%1_%2_%3").arg(tr("Clipboard"),tr("Screenshot"), currentTime);
+            tempFileName = QString("%1_%2_%3").arg(tr("Clipboard"),functionTypeStr, currentTime);
         } else {
-            tempFileName = QString("%1_%2_%3_%4").arg( tr("Clipboard"),tr("Screenshot"), selectAreaName, currentTime);
+            tempFileName = QString("%1_%2_%3_%4").arg( tr("Clipboard"),functionTypeStr, selectAreaName, currentTime);
         }
         qDebug() << "m_saveFileName: " <<m_saveFileName;
         m_saveFileName = QString(tr("Clipboard"));
@@ -2282,8 +2397,8 @@ void MainWindow::paintEvent(QPaintEvent *event)
     }
 
     if (recordWidth > 0 && recordHeight > 0) {
-        if(Utils::isTabletEnvironment && status::record == m_functionType) {
-            // 屏蔽录屏， 不绘制线框
+        if(Utils::isTabletEnvironment && (status::record == m_functionType || status::scrollshot == m_functionType)) {
+            // 平板环境屏蔽录屏和滚动截图， 不绘制线框
             return;
         }
         m_firstShot = 1;
@@ -2333,13 +2448,12 @@ void MainWindow::paintEvent(QPaintEvent *event)
         }
     }
 }
-bool MainWindow::eventFilter(QObject *, QEvent *event)
+bool MainWindow::eventFilter(QObject *object, QEvent *event)
 {
     bool needRepaint = false;
 #undef KeyPress
 #undef KeyRelease
     if (event->type() == QEvent::KeyPress) {
-
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         qDebug() << "key press:" << keyEvent->key();
         if (status::shot == m_functionType) {
@@ -2734,7 +2848,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     if (event->type() == QEvent::MouseButtonDblClick) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         if (mouseEvent->button() == Qt::LeftButton) {
-            if (status::shot == m_functionType) {
+            if (status::shot == m_functionType || status::scrollshot == m_functionType) {
+                qDebug() << "双击鼠标按钮！进行截图保存！";
                 saveScreenShot();
             }
 
@@ -2759,7 +2874,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     dragRecordWidth = recordWidth;
                     dragRecordHeight = recordHeight;
 
-                    if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
+                    if (recordButtonStatus == RECORD_BUTTON_NORMAL ) {
                         //hideRecordButton();
                         hideAllWidget();
                         if(m_cameraWidget && m_cameraWidget->isVisible()){
@@ -2782,7 +2897,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (!isFirstPressButton) {
                     return false;
                 }
-                if (status::shot == m_functionType) {
+                if (status::shot == m_functionType || status::scrollshot == m_functionType) {
                     if(m_menuController == nullptr){
                         m_menuController = new MenuController(this);
                         connect(m_menuController, &MenuController::saveAction,this, &MainWindow::saveScreenShot);
@@ -3064,6 +3179,43 @@ void MainWindow::tableRecordSet()
     startCountdown();
 }
 
+void MainWindow::onScrollShotButtonPressEvent(int x, int y)
+{
+   //qDebug() << "鼠标按键 x,y :  " << x << " , " << y;
+   //将当前捕捉区域画为一个矩形
+   QRect recordRect {
+               static_cast<int>(recordX ),
+               static_cast<int>(recordY ),
+               static_cast<int>(recordWidth),
+               static_cast<int>(recordHeight )
+   };
+   //当前鼠标点击的点
+   QPoint mouseClickPoint(x,y);
+
+   //判断当前点击的点是否在捕捉区域内部
+   if(recordRect.contains(mouseClickPoint))
+   {
+       //第一次进入滚动截图，开始滚动截图
+       if(m_scrollShotStatus == 0){
+           m_scrollShotTip->hide();
+           m_scrollShotStatus = 1;
+           startScrollShot();
+       }
+       //第n次进入 n不等于1，继续滚动截图
+       else if(1 == m_scrollShotStatus || 2 == m_scrollShotStatus ){
+           m_scrollShotStatus = 3;
+
+       }
+       //第n次进入 n不等于1,暂停滚动截图
+       else if(3 == m_scrollShotStatus){
+           m_scrollShotStatus = 2;
+
+       }
+   }
+
+
+}
+
 void MainWindow::initPadShot()
 {
     recordX = 0;
@@ -3188,6 +3340,11 @@ void MainWindow::onShotKeyPressEvent(const unsigned char &keyCode)
     if (KEY_F3 == keyCode && status::shot == m_functionType) {
         m_toolBar->shapeClickedFromMain("option");
     }
+
+    //滚动截图模式下，按下enter按键进行保存截图
+    if (KEY_ENTER == keyCode && status::scrollshot == m_functionType){
+        saveScreenShot();
+    }
 }
 
 void MainWindow::onRecordKeyPressEvent(const unsigned char &keyCode)
@@ -3226,6 +3383,18 @@ void MainWindow::startRecord()
         // 显示录屏框区域。
         m_pRecorderRegion->show();
     }
+}
+
+/**
+ * @brief 开始滚动截图的方式：鼠标左键点击捕捉区域
+ */
+void MainWindow::startScrollShot()
+{
+    qDebug() << "开始滚动截图！";
+    bool ok;
+    QRect rect(recordX+1, recordY+1, recordWidth-2, recordHeight-2);
+    QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
+//    m_scrollShot->addPixmap(img);
 }
 
 void MainWindow::shotCurrentImg()
@@ -3273,7 +3442,7 @@ void MainWindow::shotCurrentImg()
 
     this->hide();
     emit hideScreenshotUI();
-    qDebug() << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect() << m_pixelRatio;
+    //qDebug() << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect() << m_pixelRatio;
     QRect target( static_cast<int>(recordX * m_pixelRatio),
                   static_cast<int>(recordY * m_pixelRatio),
                   static_cast<int>(recordWidth * m_pixelRatio),
@@ -3559,6 +3728,7 @@ void MainWindow::stopRecord()
 
 void MainWindow::startCountdown()
 {
+    qDebug() << "function: " << __func__ ;
     if(nullptr != m_pScreenShotEvent)
     {
         m_pScreenShotEvent->terminate();
@@ -3669,7 +3839,7 @@ void MainWindow::hideAllWidget()
 
 void MainWindow::initShapeWidget(QString type)
 {
-    qDebug() << "show shapesWidget";
+    qDebug() << "function: " << __func__ << " , line: " << __LINE__;
     m_shapesWidget = new ShapesWidget(this);
     m_shapesWidget->setShiftKeyPressed(m_isShiftPressed);
 

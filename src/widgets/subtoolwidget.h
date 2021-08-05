@@ -46,6 +46,16 @@ public:
 //    void initVirtualCard();
     void installTipHint(QWidget *w, const QString &hintstr);
     void installHint(QWidget *w, QWidget *hint);
+
+    /**
+     * @brief 隐藏工具栏矩形、圆形、箭头、笔画、选项中裁切选项-显示光标
+     */
+    void hideSomeToolBtn();
+
+    /**
+     * @brief 设置禁止滚动截图
+     */
+    void setScrollShotDisabled();
 signals:
     void keyBoardButtonClicked(bool checked);
     void mouseBoardButtonClicked(bool checked);
@@ -76,8 +86,14 @@ private:
     DLabel *m_shotSubTool = nullptr;
     QString m_currentType;
     QAction *m_systemAudioAction = nullptr;
+    /**
+     * @brief 滚动截图工具栏按钮
+     */
+    ToolButton *m_scrollShotButton = nullptr;
+    /**
+     * @brief ocr识别工具栏按钮
+     */
     ToolButton *m_ocrButton = nullptr;
-
     ToolButton *m_rectButton = nullptr;
     ToolButton *m_circleButton = nullptr;
     ToolButton *m_lineButton = nullptr;
@@ -92,6 +108,16 @@ private:
     ToolButton *m_audioButton = nullptr;
     QAction *m_recorderCheck = nullptr;
     QAction *m_recorderMouse = nullptr;
+
+    /**
+     * @brief 截图选项中的选项
+     */
+    QAction *m_clipTitleAction = nullptr;
+    /**
+     * @brief 截图选项中的显示光标
+     */
+    QAction *m_saveCursorAction = nullptr;
+
     bool m_haveMicroPhone = false;
     bool m_haveSystemAudio = false;
     int m_lineflag;
@@ -107,6 +133,7 @@ private:
     QButtonGroup *m_shotBtnGroup = nullptr;
 
     MainWindow *m_pMainWindow = nullptr;
+
 };
 
 #endif // SUBTOOLWIDGET_H

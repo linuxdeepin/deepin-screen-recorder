@@ -41,6 +41,12 @@ public:
 signals:
     void activateWindow();
     void shotKeyPressEvent(const unsigned char &keyCode);
+    /**
+     * @brief 通过x11从底层获取鼠标点击事件
+     * @param 鼠标按下的x坐标
+     * @param 鼠标按下的y坐标
+     */
+    void buttonedPress(int x, int y);
 
 protected:
     void run();

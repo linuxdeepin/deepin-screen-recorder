@@ -76,7 +76,8 @@ HEADERS += main_window.h \
     screen_shot_event.h\
     RecorderRegionShow.h \
     recordertablet.h \
-    dbusinterface/ocrinterface.h
+    dbusinterface/ocrinterface.h \
+    widgets/scrollshottip.h
 
 SOURCES += main.cpp \
     main_window.cpp \
@@ -124,7 +125,8 @@ SOURCES += main.cpp \
     screen_shot_event.cpp\
     RecorderRegionShow.cpp \
     recordertablet.cpp \
-    dbusinterface/ocrinterface.cpp
+    dbusinterface/ocrinterface.cpp \
+    widgets/scrollshottip.cpp
 
 QT += core
 QT += widgets
