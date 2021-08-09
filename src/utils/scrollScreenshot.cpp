@@ -23,14 +23,15 @@
 #include <X11/Xlibint.h>
 #include <X11/extensions/XTest.h>
 
+
 ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
 {
     Q_UNUSED(parent);
 
     m_mouseWheelTimer = new QTimer(this);
-    connect(m_mouseWheelTimer, &QTimer::timeout, this, [=] {
+    connect(m_mouseWheelTimer, &QTimer::timeout, this, [ = ] {
         // 发送滚轮事件， 自动滚动
-        static Display* m_display = XOpenDisplay(nullptr);
+        static Display *m_display = XOpenDisplay(nullptr);
         XTestFakeButtonEvent(m_display, 5, 1, CurrentTime);
         XFlush(m_display);
         XTestFakeButtonEvent(m_display, 5, 0, CurrentTime);
@@ -40,7 +41,8 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
         // 滚动区域高度 200-300 取值2
         // 滚动区域高度 > 300  取值 3
         // 滚动区域高度 > 600  取值 5
-        if(m_shotFrequency % 5 == 0) {
+        if (m_shotFrequency % 5 == 0)
+        {
             emit getOneImg();
         }
     });
@@ -54,13 +56,13 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
 void ScrollScreenshot::addPixmap(QPixmap piximg)
 {
 
-    if(!m_mouseWheelTimer->isActive()) {
+    if (!m_mouseWheelTimer->isActive()) {
         m_mouseWheelTimer->start(300);
     }
 
     m_PicMerageThread->addShotImg(piximg);
 
-    if(!m_PicMerageThread->isRunning()) {
+    if (!m_PicMerageThread->isRunning()) {
         m_PicMerageThread->start();
     }
 
@@ -85,14 +87,14 @@ QRect ScrollScreenshot::getChangeArea(cv::Mat &img1, cv::Mat &img2)
     int maxI = 0;
     int maxJ = 0;
     // 计算变化部分
-    for(int i = 0; i < img1.rows; ++i) {
-        for(int j = 0; j < img1.cols; ++j) {
+    for (int i = 0; i < img1.rows; ++i) {
+        for (int j = 0; j < img1.cols; ++j) {
             //if(img1.at<Vec3b>(i, j)[0] != img2.at<Vec3b>(i, j)[0] || img1.at<Vec3b>(i, j)[1] != img2.at<Vec3b>(i, j)[1] || img1.at<Vec3b>(i, j)[2] != img2.at<Vec3b>(i, j)[2]) {
-            if(img1.at<cv::Vec3b>(i, j) != img2.at<cv::Vec3b>(i, j)){
-                if( i < minI) minI = i;
-                if( j < minJ) minJ = j;
-                if( i > maxI) maxI = i;
-                if( j > maxJ) maxJ = j;
+            if (img1.at<cv::Vec3b>(i, j) != img2.at<cv::Vec3b>(i, j)) {
+                if (i < minI) minI = i;
+                if (j < minJ) minJ = j;
+                if (i > maxI) maxI = i;
+                if (j > maxJ) maxJ = j;
             }
         }
     }
@@ -107,5 +109,6 @@ void ScrollScreenshot::calcHeadHeight()
 
 void ScrollScreenshot::merageImgState(int state)
 {
-    qDebug() << "拼接状态值:" <<state;
+    qDebug() << "拼接状态值:" << state;
 }
+

@@ -47,25 +47,25 @@ void PixMergeThread::addShotImg(const QPixmap &picture)
 
 QImage PixMergeThread::getMerageResult() const
 {
-    return  QImage(m_curImg.data, m_curImg.cols, m_curImg.rows, static_cast<int>(m_curImg.step),QImage::Format_ARGB32);
+    return  QImage(m_curImg.data, m_curImg.cols, m_curImg.rows, static_cast<int>(m_curImg.step), QImage::Format_ARGB32);
 }
 
 void PixMergeThread::run()
 {
     m_loopTask = true;
     while (m_loopTask) {
-        if(!m_pixImgs.isEmpty()) {
+        if (!m_pixImgs.isEmpty()) {
             QPixmap temp = m_pixImgs.dequeue();
             cv::Mat matImg = qPixmapToCvMat(temp);
-            if(m_curImg.empty()) {
+            if (m_curImg.empty()) {
                 m_curImg = matImg;
                 continue;
             }
-            if (false == mergeImageWork(matImg)){
+            if (false == mergeImageWork(matImg)) {
                 break;
             }
             // 更新预览图
-            emit updatePreviewImg(QImage(m_curImg.data, m_curImg.cols, m_curImg.rows, static_cast<int>(m_curImg.step),QImage::Format_ARGB32));
+            emit updatePreviewImg(QImage(m_curImg.data, m_curImg.cols, m_curImg.rows, static_cast<int>(m_curImg.step), QImage::Format_ARGB32));
         }
         QThread::currentThread()->msleep(500);
     }
@@ -74,9 +74,9 @@ void PixMergeThread::run()
 cv::Mat PixMergeThread::qPixmapToCvMat(const QPixmap &inPixmap)
 {
     //qDebug() << inPixmap.toImage().format();
-    if(QImage::Format_RGB32 == inPixmap.toImage().format()) {
+    if (QImage::Format_RGB32 == inPixmap.toImage().format()) {
         QImage   swapped = inPixmap.toImage();
-        return cv::Mat(swapped.height(), swapped.width(), CV_8UC4, const_cast<uchar*>(swapped.bits()),
+        return cv::Mat(swapped.height(), swapped.width(), CV_8UC4, const_cast<uchar *>(swapped.bits()),
                        static_cast<size_t>(swapped.bytesPerLine())).clone();
 
     }
@@ -84,7 +84,7 @@ cv::Mat PixMergeThread::qPixmapToCvMat(const QPixmap &inPixmap)
 
 bool PixMergeThread::mergeImageWork(const cv::Mat &image)
 {
-    if(m_curImg.rows > LONG_IMG_MAX_HEIGHT) {
+    if (m_curImg.rows > LONG_IMG_MAX_HEIGHT) {
         // 拼接超过了最大限度
         emit merageImgState(3);
         return false;
@@ -115,8 +115,7 @@ bool PixMergeThread::mergeImageWork(const cv::Mat &image)
     minMaxLoc(res, &minVal, &maxVal, &minLoc, &maxLoc);
     /*图像拼接*/
     cv::Mat temp1, result;
-    if (maxVal >= thresholdv && maxLoc.y > 0)//只有度量值大于阈值才认为是匹配
-    {
+    if (maxVal >= thresholdv && maxLoc.y > 0) { //只有度量值大于阈值才认为是匹配
         result = cv::Mat::zeros(cvSize(m_curImg.cols, maxLoc.y + image.rows), m_curImg.type());
         temp1 = m_curImg(cv::Rect(0, 0, m_curImg.cols, maxLoc.y));
         /*将图1的非模板部分和图2拷贝到result*/

@@ -79,7 +79,8 @@ HEADERS += main_window.h \
     dbusinterface/ocrinterface.h \
     widgets/scrollshottip.h \
     utils/pixmergethread.h \
-    utils/scrollScreenshot.h
+    utils/scrollScreenshot.h \
+    widgets/previewwidget.h
 
 
 SOURCES += main.cpp \
@@ -131,7 +132,8 @@ SOURCES += main.cpp \
     dbusinterface/ocrinterface.cpp \
     widgets/scrollshottip.cpp \
     utils/pixmergethread.cpp \
-    utils/scrollScreenshot.cpp
+    utils/scrollScreenshot.cpp \
+    widgets/previewwidget.cpp
 
 QT += core
 QT += widgets

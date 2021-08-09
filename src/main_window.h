@@ -35,6 +35,7 @@
 #include "widgets/camerawidget.h"
 #include "widgets/filter.h"
 #include "widgets/scrollshottip.h"
+#include "widgets/previewwidget.h"
 #include "utils/saveutils.h"
 #include "utils/voicevolumewatcher.h"
 #include "utils/camerawatcher.h"
@@ -112,7 +113,7 @@ class MainWindow : public DWidget
     static const int CAMERA_WIDGET_MIN_WIDTH;
     static const int CAMERA_WIDGET_MIN_HEIGHT;
 
-    enum status{
+    enum status {
         record = 0,
         shot,
         scrollshot
@@ -341,7 +342,7 @@ public slots:
 
     void exitScreenRecordEvent();
     void exitScreenShotEvent();
-
+    void showPreviewWidgetImage(QImage img);//显示预览窗口和图片
 protected:
     bool eventFilter(QObject *object, QEvent *event);
     int getAction(QEvent *event);
@@ -360,7 +361,8 @@ protected:
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
     void initBackground();
     QPixmap getPixmapofRect(const QRect &rect);
-    bool saveImg(const QPixmap &pix, const QString& fileName, const char* format = nullptr);
+    bool saveImg(const QPixmap &pix, const QString &fileName, const char *format = nullptr);
+    QRect previewGeomtroy(); //预览窗口
 private:
 //    QList<WindowRect> windowRects;
     QList<QRect> windowRects;
@@ -514,6 +516,8 @@ private:
     int m_cursorBound;
     //ocr接口
     OcrInterface *m_ocrInterface;
+    //预览窗口
+    PreviewWidget *m_previewWidget = nullptr;
     /**
      * @brief 滚动截图图像拼接
      */
