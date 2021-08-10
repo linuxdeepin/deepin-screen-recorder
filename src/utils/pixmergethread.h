@@ -21,6 +21,7 @@
 #define PIXMERGETHREAD_H
 
 #include <QObject>
+#include <QMutex>
 #include <QThread>
 #include <QPixmap>
 #include <QImage>
@@ -33,7 +34,15 @@
 class PixMergeThread : public QThread
 {
     Q_OBJECT
+
+    Q_ENUMS(MergeErrorValue)
 public:
+
+    enum MergeErrorValue{
+        Failed = 1,     // 拼接失败， 拼接出现不重叠区域
+        ReachBottom,    // 图片长度不再曾涨(滚动到底)，甚至减少（反向滚动出现）
+        MaxHeight,      // 最大高度
+    };
     explicit PixMergeThread(QObject *parent = nullptr);
     ~PixMergeThread();
     void stopTask();
@@ -43,15 +52,21 @@ public:
 protected:
     cv::Mat qPixmapToCvMat( const QPixmap &inPixmap);
     bool mergeImageWork(const cv::Mat &image);
+    int getFixedHigh(cv::Mat &img1, cv::Mat &img2);
 signals:
-    void merageImgState(int state);
+    void merageError(MergeErrorValue state);
     void updatePreviewImg(QImage img);
 private:
+    QMutex m_Mutex;
     bool m_loopTask = true;
     cv::Mat m_curImg;
     QQueue<QPixmap> m_pixImgs;
     unsigned int m_ImageCount = 0;
     unsigned int m_MeragerCount = 0;
+    // 长图顶部固定区域高度
+    int m_headHeight = -1;
     static const int LONG_IMG_MAX_HEIGHT;
 };
+
+Q_DECLARE_METATYPE(PixMergeThread::MergeErrorValue);
 #endif //
