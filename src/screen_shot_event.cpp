@@ -102,6 +102,9 @@ void ScreenShotEvent::handleRecordEvent(XRecordInterceptData *data)
             }
         }
             break;
+        case MotionNotify:
+                emit moveMouse(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+            break;
 
         default:
             break;

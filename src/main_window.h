@@ -211,6 +211,18 @@ public:
             delete m_pRecorderRegion;
             m_pRecorderRegion = nullptr;
         }
+//        if (m_scrollShotTip) {
+//            delete m_scrollShotTip;
+//            m_scrollShotTip = nullptr;
+//        }
+//        if (m_scrollShot) {
+//            delete m_scrollShot;
+//            m_scrollShot = nullptr;
+//        }
+//        if (m_previewWidget) {
+//            delete m_previewWidget;
+//            m_previewWidget = nullptr;
+//        }
 //        if (m_ocrInterface) {
 //            delete m_ocrInterface;
 //            m_ocrInterface = nullptr;
@@ -249,6 +261,7 @@ public:
      * @brief 初始化滚动截图
      */
     void initScrollShot();
+
     /**
      * @brief 初始化应用内快捷键
      */
@@ -268,6 +281,16 @@ public:
      * @brief 开始滚动截图
      */
     void startScrollShot();
+
+    /**
+     * @brief 暂停滚动截图
+     */
+    void pauseScrollShot();
+
+    /**
+     * @brief 继续滚动截图
+     */
+    void continueScrollShot();
 signals:
     void releaseEvent();
     void hideScreenshotUI();
@@ -336,6 +359,32 @@ public slots:
     void onScrollShotButtonPressEvent(int x, int y);
 
     /**
+     * @brief 滚动截图是通过x11获取鼠标移动操作
+     * @param x
+     * @param y
+     */
+    void onScrollShotMoveMouseEvent(int x,int y);
+
+    /**
+     * @brief 监听锁屏信号，滚动截图时锁屏进行暂停处理
+     */
+    void onLockScreenEvent(QDBusMessage msg);
+
+    /**
+     * @brief 打开截图录屏帮助文档并定位到滚动截图
+     */
+    void openScrollShotHelp();
+
+    /**
+     * @brief 获取滚动截图拼接的状态
+     * @param 拼接的状态
+     * 1：拼接失败
+     * 2：滚动到底部
+     * 3：拼接截图到截图最大限度
+     */
+    void scrollShotMerageImgState(PixMergeThread::MergeErrorValue state);
+
+    /**
      * @brief initPadShot:初始化平板截图
      */
     void initPadShot();
@@ -361,7 +410,13 @@ protected:
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
     void initBackground();
     QPixmap getPixmapofRect(const QRect &rect);
-    bool saveImg(const QPixmap &pix, const QString &fileName, const char *format = nullptr);
+    bool saveImg(const QPixmap &pix, const QString& fileName, const char* format = nullptr);
+    /**
+     * @brief 滚动截图时鼠标穿透设置
+     * 之所以需要单独用来设置，因为有些时候捕捉区域太大，
+     * 工具栏在捕捉区域内部，需要将工具栏这片区域给排除掉
+     */
+    void setInputEvent();
     QRect previewGeomtroy(); //预览窗口
 private:
 //    QList<WindowRect> windowRects;
@@ -425,9 +480,27 @@ private:
      */
     ScrollShotTip *m_scrollShotTip = nullptr;
     /**
-     * @brief 滚动截图状态 0：停止(第一次进入)； 1：启动(第一次进入)； 2：继续； 3：暂停； 4：结束；
+     * @brief 滚动截图状态 0：停止(第一次进入)； 1：启动(第一次进入)； 2：继续； 3：(鼠标点击触发)暂停； 4：(鼠标移除捕捉区域)暂停； 5：结束；
+     *
+     * 在捕捉区域内点击鼠标触发暂停，当鼠标移动到捕捉区域外，暂停改为鼠标移动触发，移回捕捉区域继续
      */
     int m_scrollShotStatus = 0;
+    /**
+     * @brief 滚动截图模式下，是否进行鼠标左键点击的次数
+     * 0：鼠标未点击
+     * 1：鼠标点击一次
+     * 2：鼠标点击两次
+     * >2: 默认为两次
+     * 点击间隔为0.5s，点击间隔的时间大于0.5s，不进行点击次数累加
+     * scrollShotCDB
+     */
+    int m_scrollShotMouseClick = 0;
+    /**
+     * @brief 滚动截图是否出现错误
+     * 当拼接图片出现异常时此字段置为true,当拼接未出现异常时此字段为false;
+     */
+    bool m_isErrorWithScrollShot = false;
+
     ButtonFeedback *buttonFeedback = nullptr;
     EventMonitor *m_pScreenRecordEvent = nullptr;
     ScreenShotEvent *m_pScreenShotEvent = nullptr;
@@ -522,6 +595,7 @@ private:
      * @brief 滚动截图图像拼接
      */
     ScrollScreenshot *m_scrollShot;
+
 
 };
 

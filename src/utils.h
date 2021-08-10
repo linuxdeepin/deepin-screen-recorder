@@ -63,6 +63,25 @@ public:
      * @param 区域高
      */
     static void getInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height);
+    /**
+     * @brief 取消对目标区域的穿透处理
+     * @param wid  窗口id
+     * @param x  区域位置x坐标
+     * @param y  区域位置y坐标
+     * @param width  区域宽
+     * @param height  区域高
+     */
+    static void cancelInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height);
+
+    /**
+     * @brief 取消对目标区域的穿透处理
+     * @param wid  窗口id
+     * @param x  区域位置x坐标
+     * @param y  区域位置y坐标
+     * @param width  区域宽
+     * @param height  区域高
+     */
+    static void cancelInputEvent1(const int wid, const short x, const short y, const unsigned short width, const unsigned short height);
 
 };
 

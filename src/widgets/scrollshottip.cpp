@@ -57,8 +57,7 @@ const int ScrollShotTip::NUMBER_PADDING_Y = 30;
 
 DWIDGET_USE_NAMESPACE
 
-ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent),
-    m_showTimer(nullptr)
+ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
 {
     installEventFilter(this);
     m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
@@ -67,26 +66,36 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent),
     } else {
         m_warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
     }
-    m_showCounter = 0;
+    m_scrollShotHelp = new DCommandLinkButton(tr("Get help."), this);
+    connect(m_scrollShotHelp, &DCommandLinkButton::clicked, this, &ScrollShotTip::openScrollShotHelp);
 }
 
+ScrollShotTip::~ScrollShotTip()
+{
+    if(m_scrollShotHelp){
+        delete  m_scrollShotHelp;
+        m_scrollShotHelp = nullptr;
+    }
+}
+
+//根据提示的类型选取相应的提示方法
 void ScrollShotTip::showTip(TipType tipType)
 {
-    switch (tipType) {
+    m_tipType = tipType;
+    switch (m_tipType) {
     case TipType::StartScrollShotTip:
-        m_tipType = TipType::StartScrollShotTip;
         showStartScrollShotTip();
         break;
     case TipType::ErrorScrollShotTip:
         showErrorScrollShotTip();
-        m_tipType = TipType::ErrorScrollShotTip;
         break;
     case TipType::EndScrollShotTip:
         showEndScrollShotTip();
-        m_tipType = TipType::EndScrollShotTip;
         break;
     case TipType::QuickScrollShotTip:
-        m_tipType = TipType::QuickScrollShotTip;
+        break;
+    case TipType::MaxLengthScrollShotTip:
+        showMaxScrollShotTip();
         break;
     }
 
@@ -108,6 +117,9 @@ void ScrollShotTip::paintEvent(QPaintEvent *)
         radius = 20;
         break;
     case TipType::EndScrollShotTip:
+        radius = 20;
+        break;
+    case TipType::MaxLengthScrollShotTip:
         radius = 20;
         break;
     }
@@ -142,12 +154,13 @@ void ScrollShotTip::paintEvent(QPaintEvent *)
         painter.drawPixmap(QPoint(warmingX, warmingY), m_warmingImg);
         tipWidth = rect().width() - Constant::RECTANGLE_PADDING  ;
     }
-    qDebug() << "tipX: " << tipX << "tipY: " << tipY << "tipWidth: " << tipWidth <<"tipHeight: " << tipHeight ;
+    //qDebug() << "tipX: " << tipX << "tipY: " << tipY << "tipWidth: " << tipWidth <<"tipHeight: " << tipHeight ;
     QRectF tooltipRect(tipX,tipY ,tipWidth,tipHeight);
     Utils::drawTooltipText(painter, m_tipText, "#000000", Constant::RECTANGLE_FONT_SIZE, tooltipRect);
 
 }
 
+//获取提示框的模糊背景图
 QPixmap ScrollShotTip::getTooltipBackground()
 {
     TempFile *tempFile = TempFile::instance();
@@ -174,6 +187,7 @@ QPixmap ScrollShotTip::getTooltipBackground()
     return  tmpImg;
 }
 
+//画矩形
 void ScrollShotTip::paintRect(QPainter &painter,QPixmap &blurPixmap,int radius)
 {
     QPainterPath rectPath;
@@ -186,6 +200,7 @@ void ScrollShotTip::paintRect(QPainter &painter,QPixmap &blurPixmap,int radius)
     painter.setClipping(false);
 }
 
+//画提示背景
 void ScrollShotTip::drawTooltipBackground(QPainter &painter, QRect rect, QString textColor, qreal opacity,int radius)
 {
     painter.setOpacity(opacity);
@@ -200,6 +215,7 @@ void ScrollShotTip::drawTooltipBackground(QPainter &painter, QRect rect, QString
     painter.drawPath(path);
 }
 
+//开始滚动截图前的提示
 void ScrollShotTip::showStartScrollShotTip()
 {
     //m_tipText = "滚动鼠标滚轮或单击滚动区域";
@@ -213,6 +229,7 @@ void ScrollShotTip::showStartScrollShotTip()
 
 }
 
+//滚动截图出现错误的提示
 void ScrollShotTip::showErrorScrollShotTip()
 {
     //m_tipText = tr("无法继续截图，查看帮助");
@@ -225,19 +242,19 @@ void ScrollShotTip::showErrorScrollShotTip()
 
     QHBoxLayout *pHBoxLayout = new QHBoxLayout();
     size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, "Get help.");
-    DCommandLinkButton *pDCommandLinkButton = new DCommandLinkButton(tr("Get help."), this);
-    connect(pDCommandLinkButton, &DCommandLinkButton::clicked, this, [=] {
-        qDebug() << "编辑！！";
-    });
-    pDCommandLinkButton->setMinimumSize(size.width(), size.height());
-    pDCommandLinkButton->show();
-    pDCommandLinkButton->setStyleSheet("text-decoration: underline;");
+
+    m_scrollShotHelp->setMinimumSize(size.width(), size.height());
+    m_scrollShotHelp->setStyleSheet("text-decoration: underline;");
+
+    m_scrollShotHelp->show();
+
     pHBoxLayout->addSpacing(width);
-    pHBoxLayout->addWidget(pDCommandLinkButton);
+    pHBoxLayout->addWidget(m_scrollShotHelp);
     this->setLayout(pHBoxLayout);
 
 }
 
+//滚动截图到底部出现的提示
 void ScrollShotTip::showEndScrollShotTip()
 {
     //m_tipText = tr("已到滚动区域底部");
@@ -248,3 +265,18 @@ void ScrollShotTip::showEndScrollShotTip()
     setFixedSize(width, height);
     repaint();
 }
+
+//图像拼接长度限制
+void ScrollShotTip::showMaxScrollShotTip()
+{
+    //m_tipText = tr("已到最大长度");
+    m_tipText = tr("Reached the maximum length");
+    QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, m_tipText);
+    int width = size.width() + Constant::RECTANGLE_PADDING * 2 + m_warmingImg.height() ;
+    int height = size.height() + 17;
+    setFixedSize(width, height);
+    repaint();
+
+}
+
+

@@ -41,9 +41,12 @@
 #define SCROLLSHOTTIP_H
 
 #include <DWidget>
-#include <QTimer>
-#include <QHBoxLayout>
 #include <DCommandLinkButton>
+
+
+#include <QtDBus/QtDBus>
+#include <QHBoxLayout>
+#include <QTimer>
 
 DWIDGET_USE_NAMESPACE
 
@@ -51,7 +54,8 @@ enum TipType{
     StartScrollShotTip,  //开始滚动截图前的提示
     ErrorScrollShotTip,  //滚动截图出现错误的提示
     EndScrollShotTip,     //滚动截图到底部出现的提示
-    QuickScrollShotTip    //滚动速度过快出现的提示
+    QuickScrollShotTip,    //滚动速度过快出现的提示
+    MaxLengthScrollShotTip  //滚动截图拼接已到达最大长度
 };
 
 /**
@@ -64,16 +68,23 @@ public:
     static const int NUMBER_PADDING_Y;
 
     explicit ScrollShotTip(DWidget *parent = 0);
+    ~ScrollShotTip();
 
     Q_OBJECT
 
 public:
 
     /**
-     * @brief 根据提示的类型选取相应的
+     * @brief 根据提示的类型选取相应的提示方法
      * @param tipText
      */
     void showTip(TipType tipType);
+
+signals:
+    /**
+     * @brief 打开截图录屏帮助文档并定位到滚动截图
+     */
+    void openScrollShotHelp();
 
 protected:
     /**
@@ -90,6 +101,11 @@ protected:
      * @brief 滚动截图到底部出现的提示
      */
     void showEndScrollShotTip();
+
+    /**
+     * @brief 图像拼接长度限制
+     */
+    void showMaxScrollShotTip();
 
     void paintEvent(QPaintEvent *event);
 
@@ -114,21 +130,27 @@ protected:
      */
     void drawTooltipBackground(QPainter &painter, QRect rect, QString textColor, qreal opacity,int radius);
 
+
+
 private:
+    //警告图片
     QPixmap m_warmingImg;
 
-    //计时器时间
-    int m_showCounter;
-
-    //计时器
-    QTimer *m_showTimer;
     //系统主题
     int m_themeType = 0;
-    //提示的信息
+    //提示的内容
     QString m_tipText;
 
+    /**
+     * @brief 提示的类型
+     * 参见 TipType 定义
+     */
     TipType m_tipType;
 
+    /**
+     * @brief 帮助文字按钮
+     */
+    DCommandLinkButton *m_scrollShotHelp;
 
 
 };

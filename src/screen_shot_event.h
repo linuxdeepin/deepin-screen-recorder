@@ -48,6 +48,13 @@ signals:
      */
     void buttonedPress(int x, int y);
 
+    /**
+     * @brief 通过x11从底层获取鼠标移动事件
+     * @param 鼠标移动的x坐标
+     * @param 鼠标移动的y坐标
+     */
+    void moveMouse(int x , int y);
+
 protected:
     void run();
 };
