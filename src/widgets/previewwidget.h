@@ -12,33 +12,36 @@ class PreviewWidget : public QWidget
     Q_OBJECT
 public:
     explicit PreviewWidget(const QRect &rect, QWidget *parent = nullptr);
-    void updateImage(const QImage &image)
-    {
-        int himage = image.height() > m_maxHeight ? m_maxHeight : image.height();
-        //判断向上是否超出屏幕外todo
-        int previewY = m_previewRect.y() + m_previewRect.height() - himage;
-        if (previewY < 0) {
-            //to do...
-        }
-        qDebug() << __FUNCTION__ << "Y:" << previewY;
-        m_previewRect.setY(previewY);
-        m_previewRect.setSize(QSize(image.width(), himage));
-        setGeometry(m_previewRect);
-        m_currentPix = image;
-        update();
-    }
-
     void paintEvent(QPaintEvent *event) override;
+    //更新图片
+    void updateImage(const QImage &image);
+    //标记预览位置在左还是在右，0:右，1：左, 2内部
+    void setPreviewWidgetStatusPos(int statusPos);
+    //计算预览位置或大小
+    QRect previewGeomtroy();
+    //计算预览位置
+    QRect calculatePreviewPosition(int previewWidth, int previewHeight);
+    //设置屏幕宽度
+    void setScreenWidth(int screenWidth);
+    //初始化预览位置大小
+    void initPreviewWidget();
 
-    void setRect(const QRect &rect);
 signals:
 
 public slots:
 
 private:
     QImage m_currentPix = QImage("/home/hjlt/Desktop/t.png");
-    QRect m_previewRect;
-    int m_maxHeight = 0;
+    QRect m_previewRect; //预览区域
+    //QRect m_RecordRect; //捕捉区域
+    int m_maxHeight = 0; //预览最高高度
+    int m_StatusPos = 0; //位置状态
+
+    int m_recordHeight = 0; //捕捉区域高度
+    int m_recordWidth = 0; //捕捉区域宽度
+    int m_recordX = 0;//捕捉区域x坐标
+    int m_recordY = 0;//捕捉区域y坐标
+    int m_screenWidth = 0;//屏幕宽度
 };
 
 #endif // SCANPAGEWIDGET_H

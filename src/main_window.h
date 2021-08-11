@@ -364,7 +364,7 @@ public slots:
      * @param x
      * @param y
      */
-    void onScrollShotMoveMouseEvent(int x,int y);
+    void onScrollShotMoveMouseEvent(int x, int y);
 
     /**
      * @brief 监听锁屏信号，滚动截图时锁屏进行暂停处理
@@ -411,14 +411,13 @@ protected:
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
     void initBackground();
     QPixmap getPixmapofRect(const QRect &rect);
-    bool saveImg(const QPixmap &pix, const QString& fileName, const char* format = nullptr);
+    bool saveImg(const QPixmap &pix, const QString &fileName, const char *format = nullptr);
     /**
      * @brief 滚动截图时鼠标穿透设置
      * 之所以需要单独用来设置，因为有些时候捕捉区域太大，
      * 工具栏在捕捉区域内部，需要将工具栏这片区域给排除掉
      */
     void setInputEvent();
-    QRect previewGeomtroy(); //预览窗口
 private:
 //    QList<WindowRect> windowRects;
     QList<QRect> windowRects;
