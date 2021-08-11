@@ -37,4 +37,6 @@ TEST_F(ZoomIndicatorTest, paintEvent)
 {
     QPaintEvent *paintEvent = new QPaintEvent(QRect());
     call_private_fun::ZoomIndicatorpaintEvent(*zoomindicator,paintEvent);
+
+    delete paintEvent;
 }

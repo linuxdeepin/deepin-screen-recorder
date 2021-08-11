@@ -55,18 +55,21 @@ TEST_F(ToolButtonTest, enterEvent)
 {
     QEvent *e = new QEvent(QEvent::ToolTip);
     call_private_fun::ToolButtonenterEvent(*m_toolButton,e);
+    delete e;
 }
 
 TEST_F(ToolButtonTest, leaveEvent)
 {
     QEvent *e = new QEvent(QEvent::ToolTip);
     call_private_fun::ToolButtonleaveEvent(*m_toolButton,e);
+    delete e;
 }
 
 TEST_F(ToolButtonTest, mousePressEvent)
 {
     QMouseEvent *e = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::ToolButtonmousePressEvent(*m_toolButton,e);
+    delete e;
 }
 
 

@@ -251,6 +251,7 @@ public:
         int width;
         int height;
         QString name;
+        ~ScreenInfo() {}
     };
     // Split attributes and resource for speed up start.
     void initAttributes();

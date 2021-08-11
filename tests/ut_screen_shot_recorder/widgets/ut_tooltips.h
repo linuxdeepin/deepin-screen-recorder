@@ -49,6 +49,7 @@ TEST_F(ToolTipsTest, enterEvent)
 {
     QEvent *e = new QEvent(QEvent::ToolTip);
     call_private_fun::ToolTipsenterEvent(*m_toolTips,e);
+    delete e;
 }
 
 TEST_F(ToolTipsTest, borderColor)
@@ -95,6 +96,7 @@ TEST_F(ToolTipsTest, resizeEvent)
 {
     QResizeEvent *resizeEvent = new QResizeEvent(QSize(100,100),QSize(200,200));
     call_private_fun::ToolTipsresizeEvent(*m_toolTips,resizeEvent);
+    delete resizeEvent;
 }
 
 TEST_F(ToolTipsTest, paintEvent)
@@ -112,6 +114,8 @@ TEST_F(ToolTipsTest, paintEvent)
     call_private_fun::ToolTipspaintEvent(*m_toolTips,paintEvent);
 
     stub.reset(ADDR(DGuiApplicationHelper,themeType));
+
+    delete paintEvent;
 }
 
 

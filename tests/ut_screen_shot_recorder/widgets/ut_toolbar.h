@@ -19,18 +19,14 @@ class ToolBarTest:public testing::Test{
 public:
     Stub stub;
     ToolBar *m_toolBar;
-    MainWindow *m_mainWindow;
     virtual void SetUp() override{
-        m_mainWindow = new MainWindow;
-        m_toolBar = new ToolBar(m_mainWindow);
+        m_toolBar = new ToolBar();
         m_toolBar->initToolBar();
     }
 
     virtual void TearDown() override{
         if(nullptr != m_toolBar)
             delete m_toolBar;
-        if(nullptr != m_mainWindow)
-            delete m_mainWindow;
     }
 };
 
@@ -38,12 +34,16 @@ TEST_F(ToolBarTest, paintEvent)
 {
     QPaintEvent *paintEvent = new QPaintEvent(QRect());
     call_private_fun::ToolBarpaintEvent(*m_toolBar,paintEvent);
+
+    delete paintEvent;
 }
 
 TEST_F(ToolBarTest, enterEvent)
 {
     QEvent *e = new QEvent(QEvent::Enter);
     call_private_fun::ToolBarenterEvent(*m_toolBar,e);
+
+    delete e;
 }
 
 TEST_F(ToolBarTest, eventFilter)
@@ -54,8 +54,10 @@ TEST_F(ToolBarTest, eventFilter)
 
     QEvent *paletteEvent = new QEvent(QEvent::PaletteChange);
     call_private_fun::ToolBareventFilter(*m_toolBar,obj,paletteEvent);
-    if(nullptr != obj)
-        obj->deleteLater();
+
+    delete obj;
+    delete e;
+    delete paletteEvent;
 }
 
 TEST_F(ToolBarTest, setExpand)

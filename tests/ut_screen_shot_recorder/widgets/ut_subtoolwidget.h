@@ -55,7 +55,7 @@ public:
         if(nullptr != m_subToolWidget)
             delete m_subToolWidget;
         if(nullptr != m_mainWindow)
-            m_mainWindow->deleteLater();
+            delete m_mainWindow;
     }
 };
 
@@ -75,7 +75,7 @@ TEST_F(SubToolWidgetTest, installTipHint)
         w3->deleteLater();
 }
 
-
+/*
 TEST_F(SubToolWidgetTest, installHint)
 {
     QWidget *w = new QWidget();
@@ -92,7 +92,7 @@ TEST_F(SubToolWidgetTest, switchContent)
     m_subToolWidget->switchContent(QString("record"));
     m_subToolWidget->switchContent(QString("shot"));
 }
-
+*/
 TEST_F(SubToolWidgetTest, changeArrowAndLineFromSideBar)
 {
     m_subToolWidget->changeArrowAndLineFromSideBar(0);

@@ -113,6 +113,8 @@ TEST_F(ToolBarWidgetTest, showEvent)
     stub.set(ADDR(QVariant,toBool),toolBar_toBool_stub);
     QShowEvent *showEvent = new QShowEvent();
     call_private_fun::ToolBarWidgetshowEvent(*m_toolBarWidget,showEvent);
+
+    delete showEvent;
 }
 
 TEST_F(ToolBarWidgetTest, setExpand)

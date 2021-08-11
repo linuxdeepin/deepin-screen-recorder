@@ -93,6 +93,15 @@ RecordProcess::RecordProcess(QObject *parent) : QObject(parent)
 
 RecordProcess::~RecordProcess()
 {
+    if (m_pTranscodeProcess) {
+        delete m_pTranscodeProcess;
+        m_pTranscodeProcess = nullptr;
+    }
+
+    if (m_recorderProcess) {
+        delete m_recorderProcess;
+        m_recorderProcess = nullptr;
+    }
 }
 
 void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filename)

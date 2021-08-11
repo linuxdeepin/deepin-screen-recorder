@@ -67,6 +67,8 @@ TEST_F(SideBarWidgetTest, showEvent)
     QEventLoop loop;
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
+
+     delete e;
 }
 
 

@@ -41,30 +41,39 @@ TEST_F(CameraWidgetTest, enterEvent)
 {
     QEvent *e = new QEvent(QEvent::Enter);
     call_private_fun::CameraWidgetenterEvent(*m_cameraWidget,e);
+
+    delete e;
 }
 
 TEST_F(CameraWidgetTest, mousePressEvent)
 {
     QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::CameraWidgetmousePressEvent(*m_cameraWidget,ev);
+
+    delete ev;
 }
 
 TEST_F(CameraWidgetTest, mouseMoveEvent)
 {
     QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::CameraWidgetmouseMoveEvent(*m_cameraWidget,ev);
+    delete ev;
 }
 
 TEST_F(CameraWidgetTest, mouseReleaseEvent)
 {
     QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::CameraWidgetmouseReleaseEvent(*m_cameraWidget,ev);
+
+    delete ev;
 }
 
 TEST_F(CameraWidgetTest, paintEvent)
 {
     QPaintEvent *e = new QPaintEvent(QRect());
     call_private_fun::CameraWidgetpaintEvent(*m_cameraWidget,e);
+
+    delete e;
 }
 
 TEST_F(CameraWidgetTest, setRecordRect)

@@ -92,7 +92,13 @@ ShapesWidget::ShapesWidget(DWidget *parent)
     m_sideBar->hide();
 }
 
-ShapesWidget::~ShapesWidget() {}
+ShapesWidget::~ShapesWidget()
+{
+    if (m_menuController) {
+        delete m_menuController;
+        m_menuController = nullptr;
+    }
+}
 
 void ShapesWidget::updateSelectedShape(const QString &group,
                                        const QString &key, int index)

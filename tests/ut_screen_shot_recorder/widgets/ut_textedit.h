@@ -53,6 +53,9 @@ TEST_F(TextEditTest, mousePressEvent)
     m_textEdit->setEditing(false);
     QMouseEvent *leftButtonEvent = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::TextEditmousePressEvent(*m_textEdit,leftButtonEvent);
+
+    delete e;
+    delete leftButtonEvent;
 }
 
 TEST_F(TextEditTest, mouseMoveEvent)
@@ -65,6 +68,8 @@ TEST_F(TextEditTest, mouseMoveEvent)
     access_private_field::TextEditm_isPressed(*m_textEdit) = true;
     access_private_field::TextEditm_pressPoint(*m_textEdit) = QPointF(0,10);
     call_private_fun::TextEditmouseMoveEvent(*m_textEdit,e);
+
+    delete e;
 }
 
 TEST_F(TextEditTest, mouseReleaseEvent)
@@ -75,18 +80,22 @@ TEST_F(TextEditTest, mouseReleaseEvent)
     m_textEdit->setEditing(false);
     m_textEdit->setReadOnly(true);
     call_private_fun::TextEditmouseReleaseEvent(*m_textEdit,e);
+
+    delete e;
 }
 
 TEST_F(TextEditTest, mouseDoubleClickEvent)
 {
     QMouseEvent *e = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::TextEditmouseDoubleClickEvent(*m_textEdit,e);
+    delete e;
 }
 
 TEST_F(TextEditTest, inputMethodEvent)
 {
     QInputMethodEvent *e = new QInputMethodEvent();
     call_private_fun::TextEditinputMethodEvent(*m_textEdit,e);
+    delete e;
 }
 
 TEST_F(TextEditTest, keyPressEvent)
@@ -98,6 +107,8 @@ TEST_F(TextEditTest, keyPressEvent)
     QEventLoop eventloop;
     QTimer::singleShot(200, &eventloop, SLOT(quit()));
     eventloop.exec();
+
+    delete escEvent;
 }
 
 TEST_F(TextEditTest, focusInEvent)
@@ -108,6 +119,8 @@ TEST_F(TextEditTest, focusInEvent)
     QEventLoop eventloop;
     QTimer::singleShot(200, &eventloop, SLOT(quit()));
     eventloop.exec();
+
+    delete e;
 }
 
 TEST_F(TextEditTest, setColor)

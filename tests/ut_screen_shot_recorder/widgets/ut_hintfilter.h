@@ -66,6 +66,14 @@ TEST_F(HintFilterTest, eventFilter)
     QEventLoop loop;
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
+
+    delete widget;
+    delete hintWidget;
+    delete w;
+    delete enterEvent;
+    delete enterLeave;
+    delete enterLeave1;
+    delete enterMove;
 }
 
 

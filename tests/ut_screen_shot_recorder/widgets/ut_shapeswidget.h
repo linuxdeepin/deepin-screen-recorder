@@ -102,11 +102,9 @@ class ShapesWidgetTest:public testing::Test{
 
 public:
     Stub stub;
-    MainWindow *m_mainWindow;
     ShapesWidget *shapesWidget;
     virtual void SetUp() override{
-        m_mainWindow = new MainWindow;
-        shapesWidget = new ShapesWidget(m_mainWindow);
+        shapesWidget = new ShapesWidget();
     }
 
     virtual void TearDown() override{
@@ -122,6 +120,8 @@ TEST_F(ShapesWidgetTest, enterEvent)
 
     access_private_field::ShapesWidgetm_currentType(*shapesWidget) = QString("line");
     call_private_fun::ShapesWidgetenterEvent(*shapesWidget,e);
+
+    delete e;
 }
 
 TEST_F(ShapesWidgetTest, paintEvent)
@@ -165,6 +165,8 @@ TEST_F(ShapesWidgetTest, paintEvent)
 
     shapesWidget->m_currentType = QString("text");
     call_private_fun::ShapesWidgetpaintEvent(*shapesWidget,e);
+
+    delete e;
 }
 
 TEST_F(ShapesWidgetTest, pinchTriggered)
@@ -175,6 +177,8 @@ TEST_F(ShapesWidgetTest, pinchTriggered)
 
     access_private_field::ShapesWidgetm_selectedIndex(*shapesWidget) = 0;
     call_private_fun::ShapesWidgetpinchTriggered(*shapesWidget,pinch);
+
+    delete pinch;
 }
 
 TEST_F(ShapesWidgetTest, mousePressEvent)
@@ -209,58 +213,74 @@ TEST_F(ShapesWidgetTest, mousePressEvent)
 
     QMouseEvent *ev0 = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::ShapesWidgetmousePressEvent(*shapesWidget,ev0);
+    delete ev0;
     //1220
     QMouseEvent *ev1 = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     access_private_field::ShapesWidgetm_currentType(*shapesWidget) = QString("line");
     access_private_field::ShapesWidgetm_pos1(*shapesWidget) = QPointF(0, 0);
     call_private_fun::ShapesWidgetmousePressEvent(*shapesWidget,ev1);
+    delete ev1;
 
     QMouseEvent *ev2 = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     access_private_field::ShapesWidgetm_pos1(*shapesWidget) = QPointF(0, 0);
     access_private_field::ShapesWidgetm_currentType(*shapesWidget) = QString("arrow");
     access_private_field::ShapesWidgetm_currentShape(*shapesWidget).isStraight = true;
     call_private_fun::ShapesWidgetmousePressEvent(*shapesWidget,ev2);
+    delete ev2;
 
     QMouseEvent *ev21 = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     access_private_field::ShapesWidgetm_pos1(*shapesWidget) = QPointF(0, 0);
     access_private_field::ShapesWidgetm_currentType(*shapesWidget) = QString("arrow");
     access_private_field::ShapesWidgetm_currentShape(*shapesWidget).isStraight = false;
     call_private_fun::ShapesWidgetmousePressEvent(*shapesWidget,ev21);
+    delete ev21;
 
     QMouseEvent *ev3 = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     access_private_field::ShapesWidgetm_pos1(*shapesWidget) = QPointF(0, 0);
     access_private_field::ShapesWidgetm_currentType(*shapesWidget) = QString("rectangle");
     call_private_fun::ShapesWidgetmousePressEvent(*shapesWidget,ev3);
+    delete ev3;
 
     QMouseEvent *ev4 = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     access_private_field::ShapesWidgetm_pos1(*shapesWidget) = QPointF(0, 0);
     access_private_field::ShapesWidgetm_currentType(*shapesWidget) = QString("oval");
     call_private_fun::ShapesWidgetmousePressEvent(*shapesWidget,ev4);
+    delete ev4;
 
     QMouseEvent *ev5 = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     access_private_field::ShapesWidgetm_pos1(*shapesWidget) = QPointF(0, 0);
     access_private_field::ShapesWidgetm_currentType(*shapesWidget) = QString("text");
     call_private_fun::ShapesWidgetmousePressEvent(*shapesWidget,ev5);
+    delete ev5;
 
     //1162
     QMouseEvent *ev6 = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     access_private_field::ShapesWidgetm_selectedIndex(*shapesWidget) = 0;
     call_private_fun::ShapesWidgetmousePressEvent(*shapesWidget,ev6);
+    delete ev6;
 
     //1178
     QMouseEvent *ev7 = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     access_private_field::ShapesWidgetm_selectedIndex(*shapesWidget) = -1;
     call_private_fun::ShapesWidgetmousePressEvent(*shapesWidget,ev7);
+    delete ev7;
 
     //1220
     QMouseEvent *ev8 = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     access_private_field::ShapesWidgetm_selectedIndex(*shapesWidget) = -1;
     access_private_field::ShapesWidgetm_currentType(*shapesWidget) = QString("line");
     call_private_fun::ShapesWidgetmousePressEvent(*shapesWidget,ev8);
+    delete ev8;
 
     QMouseEvent *ev9 = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     access_private_field::ShapesWidgetm_currentType(*shapesWidget) = QString("arrow");
     call_private_fun::ShapesWidgetmousePressEvent(*shapesWidget,ev9);
+    delete ev9;
+
+    delete textEdit;
+    delete textEdit0;
+    delete textEdit1;
+    delete textEdit2;
 }
 
 TEST_F(ShapesWidgetTest, mouseMoveEvent)
@@ -359,6 +379,8 @@ TEST_F(ShapesWidgetTest, mouseMoveEvent)
     access_private_field::ShapesWidgetm_isHovered(*shapesWidget) = false;
     access_private_field::ShapesWidgetm_shapes(*shapesWidget).clear();
     call_private_fun::ShapesWidgetmouseMoveEvent(*shapesWidget,ev);
+
+    delete ev;
 }
 
 TEST_F(ShapesWidgetTest, mouseReleaseEvent)
@@ -371,6 +393,8 @@ TEST_F(ShapesWidgetTest, mouseReleaseEvent)
     shapesWidget->m_currentType = QString("arrow");
     QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::ShapesWidgetmouseReleaseEvent(*shapesWidget,ev);
+
+    delete ev;
 }
 
 TEST_F(ShapesWidgetTest, updateTextRect)
@@ -404,6 +428,9 @@ TEST_F(ShapesWidgetTest, updateTextRect)
     toolShapes << toolShape5;
     access_private_field::ShapesWidgetm_shapes(*shapesWidget) = toolShapes;
     call_private_fun::ShapesWidgetupdateTextRect(*shapesWidget,edit,*newRect);
+
+    delete edit;
+    delete newRect;
 }
 
 
@@ -538,6 +565,10 @@ TEST_F(ShapesWidgetTest, updateSelectedShape)
     shapesWidget->updateSelectedShape(group,key,index);
 
     access_private_field::ShapesWidgetm_selectedShape(*shapesWidget).type = QString("arrow");
+
+    delete textEdit0;
+    delete textEdit1;
+    delete textEdit2;
 }
 
 TEST_F(ShapesWidgetTest, setCurrentShape)
@@ -561,6 +592,8 @@ TEST_F(ShapesWidgetTest, paintImgPoint)
     QPixmap *img = new QPixmap();
     call_private_fun::ShapesWidgetpaintImgPoint(*shapesWidget,painter,*pos,*img,true);
     call_private_fun::ShapesWidgetpaintImgPoint(*shapesWidget,painter,*pos,*img,false);
+    delete pos;
+    delete img;
 }
 
 TEST_F(ShapesWidgetTest, paintRect)
@@ -655,6 +688,11 @@ TEST_F(ShapesWidgetTest, setAllTextEditReadOnly)
     editMap.insert(2,textEdit2);
     shapesWidget->m_editMap = editMap;
     shapesWidget->setAllTextEditReadOnly();
+
+    delete  textEdit;
+    delete  textEdit0;
+    delete  textEdit1;
+    delete  textEdit2;
 }
 
 TEST_F(ShapesWidgetTest, setNoChangedTextEditRemove)
@@ -670,6 +708,11 @@ TEST_F(ShapesWidgetTest, setNoChangedTextEditRemove)
     editMap.insert(2,textEdit2);
     shapesWidget->m_editMap = editMap;
     shapesWidget->setNoChangedTextEditRemove();
+
+    delete  textEdit;
+    delete  textEdit0;
+    delete  textEdit1;
+    delete  textEdit2;
 }
 
 TEST_F(ShapesWidgetTest, saveActionTriggered)
@@ -685,6 +728,11 @@ TEST_F(ShapesWidgetTest, saveActionTriggered)
     editMap.insert(2,textEdit2);
     shapesWidget->m_editMap = editMap;
     shapesWidget->saveActionTriggered();
+
+    delete  textEdit;
+    delete  textEdit0;
+    delete  textEdit1;
+    delete  textEdit2;
 }
 
 TEST_F(ShapesWidgetTest, handleDrag)
@@ -1374,7 +1422,7 @@ TEST_F(ShapesWidgetTest, undoDrawShapes)
 
     access_private_field::ShapesWidgetm_selectedIndex(*shapesWidget) = 0;
     shapesWidget->undoDrawShapes();
-
+/*
     QMap<int, TextEdit *> editMap;
     TextEdit *textEdit = new TextEdit(-1,nullptr);
     TextEdit *textEdit0 = new TextEdit(0,nullptr);
@@ -1389,6 +1437,7 @@ TEST_F(ShapesWidgetTest, undoDrawShapes)
 
     access_private_field::ShapesWidgetm_shapes(*shapesWidget).clear();
     shapesWidget->undoDrawShapes();
+*/
 }
 
 TEST_F(ShapesWidgetTest, undoAllDrawShapes)
@@ -1423,7 +1472,7 @@ TEST_F(ShapesWidgetTest, undoAllDrawShapes)
     access_private_field::ShapesWidgetm_selectedOrder(*shapesWidget) = 0;
     access_private_field::ShapesWidgetm_selectedIndex(*shapesWidget) = 0;
     shapesWidget->undoAllDrawShapes();
-
+/*
     access_private_field::ShapesWidgetm_selectedIndex(*shapesWidget) = -1;
     QMap<int, TextEdit *> editMap;
     TextEdit *textEdit = new TextEdit(-1,nullptr);
@@ -1436,6 +1485,7 @@ TEST_F(ShapesWidgetTest, undoAllDrawShapes)
     editMap.insert(2,textEdit2);
     shapesWidget->m_editMap = editMap;
     shapesWidget->undoAllDrawShapes();
+*/
 }
 
 TEST_F(ShapesWidgetTest, deleteCurrentShape)
@@ -1483,6 +1533,10 @@ TEST_F(ShapesWidgetTest, deleteCurrentShape)
     shapesWidget->deleteCurrentShape();
     access_private_field::ShapesWidgetm_shapes(*shapesWidget).clear();
     shapesWidget->deleteCurrentShape();
+
+    delete  textEdit0;
+    delete  textEdit1;
+    delete  textEdit2;
 }
 
 TEST_F(ShapesWidgetTest, updateCursorShape)

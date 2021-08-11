@@ -37,12 +37,14 @@ TEST_F(SideBarTest, paintEvent)
 {
     QPaintEvent *e = new QPaintEvent(QRect());
     call_private_fun::SideBarpaintEvent(*m_sideBar,e);
+    delete e;
 }
 
 TEST_F(SideBarTest, enterEvent)
 {
     QEvent *e = new QEvent(QEvent::Enter);
     call_private_fun::SideBarenterEvent(*m_sideBar,e);
+    delete e;
 }
 
 TEST_F(SideBarTest, eventFilter)
@@ -53,6 +55,10 @@ TEST_F(SideBarTest, eventFilter)
 
     QEvent *paletteEvent = new QEvent(QEvent::PaletteChange);
     call_private_fun::SideBareventFilter(*m_sideBar,obj,paletteEvent);
+
+    delete obj;
+    delete e;
+    delete paletteEvent;
 }
 
 TEST_F(SideBarTest, setExpand)

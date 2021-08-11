@@ -30,8 +30,11 @@ TEST_F(HoverFilterTest, eventFilter)
     m_hoverFilter->eventFilter(widget,enterLeave);
     QEvent *enterMove = new QEvent(QEvent::Move);
     m_hoverFilter->eventFilter(widget,enterMove);
-    if(nullptr != widget)
-        widget->deleteLater();
+
+    delete widget;
+    delete enterEvent;
+    delete enterLeave;
+    delete enterMove;
 }
 
 

@@ -222,14 +222,14 @@ bool isValidFormat(QString suffix)
 bool isCommandExist(QString command)
 {
     QProcess *proc = new QProcess;
+    if (!proc) {
+        return false;
+    }
     QString cm = QString("which %1\n").arg(command);
     proc->start(cm);
     proc->waitForFinished(1000);
     int ret = proc->exitCode() == 0;
-    if(proc)
-    {
-        proc->deleteLater();
-    }
+    delete proc;
     return ret;
 }
 /*

@@ -40,10 +40,10 @@ CameraWidget::~CameraWidget()
 //    timer_image_capture->stop();
 //    delete camera;
 //    delete viewfinder;
-    if(nullptr != imageCapture){
-        delete imageCapture;
-        imageCapture = nullptr;
-    }
+//    if(nullptr != imageCapture){
+//        delete imageCapture;
+//        imageCapture = nullptr;
+//    }
 //    delete timer_image_capture;
 //    delete m_cameraUI;
 }
@@ -109,7 +109,7 @@ void CameraWidget::initCamera()
     m_deviceFile->setFileName(m_deviceName);
     camera->setCaptureMode(QCamera::CaptureStillImage);
     connect(camera, SIGNAL(error(QCamera::Error)), this, SLOT(cameraInitError(QCamera::Error)));
-    imageCapture = new QCameraImageCapture(camera);
+    imageCapture = new QCameraImageCapture(camera, this);
 
     timer_image_capture = new QTimer(this);
     connect(timer_image_capture, &QTimer::timeout, this, &CameraWidget::captureImage);
@@ -179,7 +179,7 @@ void CameraWidget::cameraResume()
     m_deviceFile->setFileName(m_deviceName);
 //    camera->load();
     camera->setCaptureMode(QCamera::CaptureStillImage);
-    imageCapture = new QCameraImageCapture(camera);
+    imageCapture = new QCameraImageCapture(camera, this);
 }
 /*
  * never used
