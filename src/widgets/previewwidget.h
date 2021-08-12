@@ -33,7 +33,8 @@ public slots:
 private:
     QImage m_currentPix = QImage("/home/hjlt/Desktop/t.png");
     QRect m_previewRect; //预览区域
-    int m_maxHeight = 0; //预览最高高度
+    int m_maxHeight = 0; //预览最大高度
+    int m_maxWidth = 0;//预览最大宽度
     int m_StatusPos = 0; //位置状态
 
     int m_recordHeight = 0; //捕捉区域高度

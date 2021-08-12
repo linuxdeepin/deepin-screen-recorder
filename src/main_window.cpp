@@ -909,6 +909,16 @@ void MainWindow::initScrollShot()
     //滚动截图的处理类
     m_scrollShot = new ScrollScreenshot();
     qRegisterMetaType<PixMergeThread::MergeErrorValue>("MergeErrorValue");
+    if (!m_previewWidget) { //滚动预览开启初始化
+        m_previewWidget = new PreviewWidget(recordRect, this);
+        m_previewWidget->setScreenWidth(m_screenWidth);
+        m_previewWidget->initPreviewWidget();
+        m_previewWidget->show();
+        bool ok;
+        QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
+        QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
+        m_previewWidget->updateImage(img.toImage());
+    }
 
     connect(m_scrollShot, &ScrollScreenshot::updatePreviewImg, this, &MainWindow::showPreviewWidgetImage);//显示预览窗口和图片
     connect(m_scrollShot, &ScrollScreenshot::getOneImg, this, [ = ] {
@@ -937,7 +947,8 @@ void MainWindow::initScrollShot()
                                           SLOT(onLockScreenEvent(QDBusMessage))
                                          );
     QTimer::singleShot(100, this, [ = ] {
-        if (m_toolBar->isVisible()) {
+        if (m_toolBar->isVisible())
+        {
             updateToolBarPos();
             updateShotButtonPos();
             m_sizeTips->hide();
@@ -952,21 +963,6 @@ void MainWindow::initScrollShot()
 void MainWindow::showPreviewWidgetImage(QImage img)
 {
     m_scrollShotSizeTips ->updateTips(QPoint(recordX, recordY), QSize(img.width(), img.height()));
-    qDebug() << "========showPreviewWidgetImage============";
-    QRect previewRecordRect {
-        static_cast<int>(recordX),
-        static_cast<int>(recordY),
-        static_cast<int>(recordWidth),
-        static_cast<int>(recordHeight)
-    };
-
-    if (!m_previewWidget) {
-        m_previewWidget = new PreviewWidget(previewRecordRect, this);
-        qDebug() << "========showPreviewWidgetImage============m_screenWidth : " << m_screenWidth;
-        m_previewWidget->setScreenWidth(m_screenWidth);
-        m_previewWidget->initPreviewWidget();
-        m_previewWidget->show();
-    }
     m_previewWidget->updateImage(img);
 }
 
@@ -3006,7 +3002,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             if (mouseEvent->button() == Qt::LeftButton) {
                 //滚动截图的图片大小提示不使用此方法
-                if(status::scrollshot != m_functionType){
+                if (status::scrollshot != m_functionType) {
                     m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
                 }
                 if (!isFirstReleaseButton) {
@@ -3085,8 +3081,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
                 if (m_sizeTips->isVisible()) {
                     //滚动截图的图片大小提示不使用此方法
-                    if(status::scrollshot != m_functionType)
-                    {
+                    if (status::scrollshot != m_functionType) {
                         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
                     }
                 }
@@ -3246,8 +3241,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         }
         if (m_shotflag == 0) {
             //滚动截图的图片大小提示不使用此方法
-            if(status::scrollshot != m_functionType)
-            {
+            if (status::scrollshot != m_functionType) {
                 m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
             }
         }

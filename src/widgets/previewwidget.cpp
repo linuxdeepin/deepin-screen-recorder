@@ -9,7 +9,9 @@ PreviewWidget::PreviewWidget(const QRect &rect, QWidget *parent) : QWidget(paren
     m_recordWidth = rect.width();
     m_recordX = rect.x();
     m_recordY = rect.y();
-    m_maxHeight = QApplication::desktop()->screen()->geometry().height() * 7 / 10;
+    QRect mainRect = QApplication::desktop()->screen()->geometry();
+    m_maxHeight = mainRect.height() * 7 / 10 ; //最大预览高度
+    m_maxWidth = mainRect.width() / 4 ; //最大预览宽度
 }
 //初始化位置，大小
 void PreviewWidget::initPreviewWidget()
@@ -34,19 +36,39 @@ void PreviewWidget::setPreviewWidgetStatusPos(int statusPos)
 //更新图片
 void PreviewWidget::updateImage(const QImage &image)
 {
-    int previewHight = image.height() >= m_maxHeight ? m_maxHeight : image.height();//是否超出最大高度
-    int hightDiff_t = previewHight - m_previewRect.height(); //高度差
+    int previewHeight = 0; //预览高度
+    int previewWidth = 0; //预览宽度
+    int imageHight = image.height();
+    int imageWidth = image.width();
+    //计算图片缩放后的预览宽高
+    if (imageHight <= m_maxHeight && imageWidth <= m_maxWidth) {
+        previewHeight = imageHight;
+        previewWidth = imageWidth;
+    } else if (imageHight <= m_maxHeight && imageWidth > m_maxWidth) {
+        previewHeight = m_maxWidth * imageHight / imageWidth;
+        previewWidth = m_maxWidth;
+    } else if (imageHight > m_maxHeight && imageWidth <= m_maxWidth) {
+        previewHeight = m_maxHeight;
+        previewWidth = m_maxHeight * imageWidth / imageHight;
+    } else if (imageHight > m_maxHeight && imageWidth > m_maxWidth) {
+        previewHeight = m_maxWidth * imageHight / imageWidth; //假设宽度为最大
+        previewWidth = m_maxHeight * imageWidth / imageHight;//假设高度为最大
+        if (previewHeight <= m_maxHeight) {
+            previewWidth = m_maxWidth;
+        } else if (previewWidth <= m_maxWidth) {
+            previewHeight = m_maxHeight;
+        }
+    }
+    int hightDiff_t = previewHeight - m_previewRect.height(); //高度差
     //判断向上是否超出屏幕外
     int previewY = m_previewRect.y() - hightDiff_t;
     if (previewY <= 0) {
         previewY = 0;
-        previewHight = m_recordY + m_recordHeight;//设置此时的预览高度=捕捉区域的高度+y轴坐标
+        previewHeight = m_recordY + m_recordHeight;//设置此时的预览高度=捕捉区域的高度+y轴坐标
     }
     m_previewRect.setY(previewY);//重新设置y坐标
-    m_previewRect.setHeight(previewHight);//重新设置预览高度
-    //当预览高度大于最大高度、或者向上到顶时，进行图片缩放，
-    QImage tempImage = image.scaled(image.width(), previewHight, Qt::KeepAspectRatio, Qt::SmoothTransformation);//以预览框的宽高等比例缩放
-    int widthDiff_t = m_previewRect.width() - tempImage.width();//宽度差
+    m_previewRect.setHeight(previewHeight);//重新设置预览高度
+    int widthDiff_t = m_previewRect.width() - previewWidth; //宽度差
     if (m_StatusPos == 1) {//预览框在左
         m_previewRect.setX(m_previewRect.x() + widthDiff_t);//重新设置x坐标
     } else if (m_StatusPos == 0) {//预览框在右
@@ -54,44 +76,40 @@ void PreviewWidget::updateImage(const QImage &image)
     } else {//预览框在内部
         m_previewRect.setX(m_previewRect.x() + widthDiff_t);
     }
-    m_previewRect.setWidth(tempImage.width());//重新设置预览宽度
+    m_previewRect.setWidth(previewWidth);//重新设置预览宽度
+    QImage tempImage = image.scaled(previewWidth, previewHeight, Qt::KeepAspectRatio, Qt::SmoothTransformation);//以预览框的宽高等比例缩放
     setGeometry(m_previewRect);
-    m_currentPix = image;
+    m_currentPix = tempImage;
     update();
 }
 
 //根据捕捉区域大小初始化预览框位置大小
 QRect PreviewWidget::previewGeomtroy()
 {
-    //考虑双屏，todo
     QRect rt;
-    QDesktopWidget *desktop = QApplication::desktop();
-    QRect mainRect = desktop->screen()->geometry();
-    int propMaxHeight = mainRect.height() * 7 / 10 ; //最大高度
-    int propMaxWidth = mainRect.width() / 4 ; //最大宽度
     int previewHeight = 0; //预览高度
     int previewWidth = 0; //预览宽度
 
-    if (m_recordHeight <= propMaxHeight && m_recordWidth <= propMaxWidth) {
+    if (m_recordHeight <= m_maxHeight && m_recordWidth <= m_maxWidth) {
         previewHeight = m_recordHeight;
         previewWidth = m_recordWidth;
         rt = calculatePreviewPosition(previewWidth, previewHeight);
-    } else if (m_recordHeight <= propMaxHeight && m_recordWidth > propMaxWidth) {
-        previewHeight = propMaxWidth * m_recordHeight / m_recordWidth;;
-        previewWidth = propMaxWidth;
+    } else if (m_recordHeight <= m_maxHeight && m_recordWidth > m_maxWidth) {
+        previewHeight = m_maxWidth * m_recordHeight / m_recordWidth;;
+        previewWidth = m_maxWidth;
         rt = calculatePreviewPosition(previewWidth, previewHeight);
-    } else if (m_recordHeight > propMaxHeight && m_recordWidth <= propMaxWidth) {
-        previewHeight = propMaxHeight;
-        previewWidth = propMaxHeight * m_recordWidth / m_recordHeight;
-        rt = calculatePreviewPosition(previewWidth, propMaxHeight);
-    } else if (m_recordHeight > propMaxHeight && m_recordWidth > propMaxWidth) {
-        previewHeight = propMaxWidth * m_recordHeight / m_recordWidth; //假设宽度为最大
-        previewWidth = propMaxHeight * m_recordWidth / m_recordHeight;//假设高度为最大
-        if (previewHeight <= propMaxHeight) {
-            previewWidth = propMaxWidth;
+    } else if (m_recordHeight > m_maxHeight && m_recordWidth <= m_maxWidth) {
+        previewHeight = m_maxHeight;
+        previewWidth = m_maxHeight * m_recordWidth / m_recordHeight;
+        rt = calculatePreviewPosition(previewWidth, previewWidth);
+    } else if (m_recordHeight > m_maxHeight && m_recordWidth > m_maxWidth) {
+        previewHeight = m_maxWidth * m_recordHeight / m_recordWidth; //假设宽度为最大
+        previewWidth = m_maxHeight * m_recordWidth / m_recordHeight;//假设高度为最大
+        if (previewHeight <= m_maxHeight) {
+            previewWidth = m_maxWidth;
             rt = calculatePreviewPosition(previewWidth, previewHeight);
-        } else if (previewWidth <= propMaxWidth) {
-            previewHeight = propMaxHeight;
+        } else if (previewWidth <= m_maxWidth) {
+            previewHeight = m_maxHeight;
             rt = calculatePreviewPosition(previewWidth, previewHeight);
         }
     }
