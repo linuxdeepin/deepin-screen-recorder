@@ -67,6 +67,7 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
         m_warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
     }
     m_scrollShotHelp = new DCommandLinkButton(tr("Get help."), this);
+    m_scrollShotHelp->hide();
     connect(m_scrollShotHelp, &DCommandLinkButton::clicked, this, &ScrollShotTip::openScrollShotHelp);
 }
 

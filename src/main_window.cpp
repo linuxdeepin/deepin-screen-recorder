@@ -857,7 +857,7 @@ void MainWindow::initScrollShot()
 
     //隐藏工具栏矩形、圆形、箭头、笔画、选项中裁切选项-显示光标
     m_toolBar->hideSomeToolBtn();
-    updateToolBarPos();
+    update();
 
     //捕捉区域不能进行拖动
     recordButtonStatus = RECORD_BUTTON_WAIT;
@@ -906,8 +906,6 @@ void MainWindow::initScrollShot()
     m_scrollShotTip->show();
     repaint();
 
-//    setInputEvent();
-
     //滚动截图的处理类
     m_scrollShot = new ScrollScreenshot();
     qRegisterMetaType<PixMergeThread::MergeErrorValue>("MergeErrorValue");
@@ -938,12 +936,22 @@ void MainWindow::initScrollShot()
                                           this,
                                           SLOT(onLockScreenEvent(QDBusMessage))
                                          );
+    QTimer::singleShot(100, this, [ = ] {
+        if (m_toolBar->isVisible()) {
+            updateToolBarPos();
+            updateShotButtonPos();
+            m_sizeTips->hide();
+        }
+    });
 
+    m_scrollShotSizeTips = new TopTips(this);
+    m_scrollShotSizeTips->show();
+    m_scrollShotSizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
 }
 //显示预览窗口和图片
 void MainWindow::showPreviewWidgetImage(QImage img)
 {
-    m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(img.width(), img.height()));
+    m_scrollShotSizeTips ->updateTips(QPoint(recordX, recordY), QSize(img.width(), img.height()));
     qDebug() << "========showPreviewWidgetImage============";
     QRect previewRecordRect {
         static_cast<int>(recordX),
@@ -2997,7 +3005,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         if (!m_isShapesWidgetExist) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             if (mouseEvent->button() == Qt::LeftButton) {
-                m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
+                //滚动截图的图片大小提示不使用此方法
+                if(status::scrollshot != m_functionType){
+                    m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
+                }
                 if (!isFirstReleaseButton) {
                     isFirstReleaseButton = true;
 
@@ -3073,7 +3084,11 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                 }
                 if (m_sizeTips->isVisible()) {
-                    m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
+                    //滚动截图的图片大小提示不使用此方法
+                    if(status::scrollshot != m_functionType)
+                    {
+                        m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
+                    }
                 }
 
                 isPressButton = false;
@@ -3230,7 +3245,11 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
         }
         if (m_shotflag == 0) {
-            m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
+            //滚动截图的图片大小提示不使用此方法
+            if(status::scrollshot != m_functionType)
+            {
+                m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
+            }
         }
 
     }
@@ -3398,7 +3417,7 @@ void MainWindow::openScrollShotHelp()
                              QDBusConnection::sessionBus());
     QList<QVariant> arg;
     arg << (QCoreApplication::applicationName())                  // 应用名称
-        << QString(tr("Screen Capture"));                         // 帮助文案中的标题名称
+        << QString(tr("Scrollshot"));                         // 帮助文案中的标题名称
     interFace.callWithArgumentList(QDBus::AutoDetect, "OpenTitle", arg);
 
     exitApp();

@@ -211,18 +211,18 @@ public:
             delete m_pRecorderRegion;
             m_pRecorderRegion = nullptr;
         }
-//        if (m_scrollShotTip) {
-//            delete m_scrollShotTip;
-//            m_scrollShotTip = nullptr;
-//        }
+        if (m_scrollShotTip) {
+            delete m_scrollShotTip;
+            m_scrollShotTip = nullptr;
+        }
 //        if (m_scrollShot) {
 //            delete m_scrollShot;
 //            m_scrollShot = nullptr;
 //        }
-//        if (m_previewWidget) {
-//            delete m_previewWidget;
-//            m_previewWidget = nullptr;
-//        }
+        if (m_previewWidget) {
+            delete m_previewWidget;
+            m_previewWidget = nullptr;
+        }
 //        if (m_ocrInterface) {
 //            delete m_ocrInterface;
 //            m_ocrInterface = nullptr;
@@ -508,6 +508,10 @@ private:
     DWindowManagerHelper *m_wmHelper;
     ShapesWidget *m_shapesWidget = nullptr;
     TopTips *m_sizeTips = nullptr;
+    /**
+     * @brief 滚动截图时图片的大小
+     */
+    TopTips *m_scrollShotSizeTips = nullptr;
     ToolBar *m_toolBar = nullptr;
     QRect m_backgroundRect;
     //添加截屏和录屏的按钮
