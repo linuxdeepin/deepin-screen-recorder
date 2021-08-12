@@ -5,14 +5,11 @@
 
 PreviewWidget::PreviewWidget(const QRect &rect, QWidget *parent) : QWidget(parent), m_previewRect(rect)
 {
-    //m_RecordRect = rect;
     m_recordHeight = rect.height();
     m_recordWidth = rect.width();
     m_recordX = rect.x();
     m_recordY = rect.y();
     m_maxHeight = QApplication::desktop()->screen()->geometry().height() * 7 / 10;
-    //计算位置
-
 }
 //初始化位置，大小
 void PreviewWidget::initPreviewWidget()
@@ -45,24 +42,19 @@ void PreviewWidget::updateImage(const QImage &image)
         previewY = 0;
         previewHight = m_recordY + m_recordHeight;//设置此时的预览高度=捕捉区域的高度+y轴坐标
     }
-    qDebug() << "1   m_previewRect.x(): " << m_previewRect.x() << ", m_previewRect.y(): " << m_previewRect.y() << ", m_previewRect.width(): " << m_previewRect.width() << ", m_previewRect.height(): " << m_previewRect.height();
     m_previewRect.setY(previewY);//重新设置y坐标
     m_previewRect.setHeight(previewHight);//重新设置预览高度
     //当预览高度大于最大高度、或者向上到顶时，进行图片缩放，
-    if (previewHight == m_maxHeight || previewY == 0) {
-        QImage tempImage = image.scaled(m_previewRect.width(), previewHight, Qt::KeepAspectRatio, Qt::SmoothTransformation);//以预览框的宽高等比例缩放
-        int widthDiff_t = m_previewRect.width() - tempImage.width();//宽度差
-        if (m_StatusPos == 1) {//预览框在左
-            m_previewRect.setX(m_previewRect.x() + widthDiff_t);//重新设置x坐标
-        } else if (m_StatusPos == 0) {//预览框在右
-            m_previewRect.setX(m_previewRect.x());
-        } else {//预览框在内部
-            m_previewRect.setX(m_previewRect.x() + widthDiff_t);
-        }
-        m_previewRect.setWidth(tempImage.width());//重新设置预览宽度
+    QImage tempImage = image.scaled(image.width(), previewHight, Qt::KeepAspectRatio, Qt::SmoothTransformation);//以预览框的宽高等比例缩放
+    int widthDiff_t = m_previewRect.width() - tempImage.width();//宽度差
+    if (m_StatusPos == 1) {//预览框在左
+        m_previewRect.setX(m_previewRect.x() + widthDiff_t);//重新设置x坐标
+    } else if (m_StatusPos == 0) {//预览框在右
+        m_previewRect.setX(m_previewRect.x());
+    } else {//预览框在内部
+        m_previewRect.setX(m_previewRect.x() + widthDiff_t);
     }
-
-    qDebug() << "2  m_previewRect.x(): " << m_previewRect.x() << ", m_previewRect.y(): " << m_previewRect.y() << ", m_previewRect.width(): " << m_previewRect.width() << ", m_previewRect.height(): " << m_previewRect.height();
+    m_previewRect.setWidth(tempImage.width());//重新设置预览宽度
     setGeometry(m_previewRect);
     m_currentPix = image;
     update();
@@ -76,7 +68,7 @@ QRect PreviewWidget::previewGeomtroy()
     QDesktopWidget *desktop = QApplication::desktop();
     QRect mainRect = desktop->screen()->geometry();
     int propMaxHeight = mainRect.height() * 7 / 10 ; //最大高度
-    int propMaxWidth = mainRect.width() / 4 ; //屏幕宽度50%，除以2，最大宽度
+    int propMaxWidth = mainRect.width() / 4 ; //最大宽度
     int previewHeight = 0; //预览高度
     int previewWidth = 0; //预览宽度
 
@@ -103,9 +95,6 @@ QRect PreviewWidget::previewGeomtroy()
             rt = calculatePreviewPosition(previewWidth, previewHeight);
         }
     }
-    qDebug() << "propMaxHeight: " << propMaxHeight << ", propMaxWidth: " << propMaxWidth;
-    qDebug() << "previewHeight: " << previewHeight << ", previewWidth: " << previewWidth;
-    qDebug() << "rt.x(): " << rt.x() << ", rt.y(): " << rt.y() << ", rt.width(): " << rt.width() << ", rt.height(): " << rt.height();
     return rt;
 }
 //判定在左还是在右
@@ -113,12 +102,10 @@ QRect PreviewWidget::calculatePreviewPosition(int previewWidth, int previewHeigh
 {
     QRect rt;
     int previewY = m_recordY + m_recordHeight - previewHeight;
-    int rightX = m_recordX + m_recordWidth + 23; //根据捕捉区域计算预览向右的起始x
-    int leftX = m_recordX - previewWidth - 23; //根据捕捉区域计算预览向左的起始x
-    qDebug() << "m_screenWidth: " << m_screenWidth ;
+    int rightX = m_recordX + m_recordWidth + 20; //根据捕捉区域计算预览向右的起始x
+    int leftX = m_recordX - previewWidth - 20; //根据捕捉区域计算预览向左的起始x
     int rightMargin = m_screenWidth - rightX; //右边距
     int leftMargin = m_recordX; //左边距
-    qDebug() << "leftMargin: " << leftMargin << ", rightMargin: " << rightMargin;
     //判断位置是左还是右
     if (rightMargin >= leftMargin && rightMargin >= previewWidth + 1) {
         rt.setX(rightX);
@@ -127,14 +114,22 @@ QRect PreviewWidget::calculatePreviewPosition(int previewWidth, int previewHeigh
         rt.setHeight(previewHeight);
         setPreviewWidgetStatusPos(0);//设置位置状态
     } else if (rightMargin < leftMargin && leftMargin >= previewWidth + 1) {
-        rt.setX(leftX);
-        rt.setY(previewY);
-        rt.setWidth(previewWidth);
-        rt.setHeight(previewHeight);
-        setPreviewWidgetStatusPos(1);
+        if (rightMargin >= previewWidth + 1) { //默认优先显示在右边
+            rt.setX(rightX);
+            rt.setY(previewY);
+            rt.setWidth(previewWidth);
+            rt.setHeight(previewHeight);
+            setPreviewWidgetStatusPos(0);
+        } else {
+            rt.setX(leftX);
+            rt.setY(previewY);
+            rt.setWidth(previewWidth);
+            rt.setHeight(previewHeight);
+            setPreviewWidgetStatusPos(1);
+        }
     } else {
-        int nX = m_recordX + m_recordWidth - 23 - previewWidth;//根据捕捉区域计算内部预览的起始x
-        int ny = m_recordY + m_recordHeight - previewHeight - 23;//根据捕捉区域计算内部预览的起始y
+        int nX = m_recordX + m_recordWidth - previewWidth - 20; //根据捕捉区域计算内部预览的起始x
+        int ny = m_recordY + m_recordHeight - previewHeight - 20;//根据捕捉区域计算内部预览的起始y
         rt.setX(nX);
         rt.setY(ny);
         rt.setWidth(previewWidth);
