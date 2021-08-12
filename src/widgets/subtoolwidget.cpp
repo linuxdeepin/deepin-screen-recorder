@@ -676,7 +676,7 @@ void SubToolWidget::initShotLabel()
     Utils::setAccessibility(m_scrollShotButton, AC_SUBTOOLWIDGET_OCR_BUTTON);
     m_shotBtnGroup->addButton(m_scrollShotButton);
     m_scrollShotButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
-    installTipHint(m_scrollShotButton, tr("Scroll Shot"));
+    installTipHint(m_scrollShotButton, tr("Scrollshot"));
     btnList.append(m_scrollShotButton);
 
     //添加ocr图文识别按钮

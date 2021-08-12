@@ -93,6 +93,10 @@ or press the shortcut again to stop recording</source>
         <source>Screenshot failed.</source>
         <translation>截图失败。</translation>
     </message>
+    <message>
+        <source>Scrollshot</source>
+        <translation>滚动截图</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -133,6 +137,29 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
         <translation>截图录屏将在%1秒后启动</translation>
+    </message>
+</context>
+<context>
+    <name>ScrollShotTip</name>
+    <message>
+        <source>Get help.</source>
+        <translation>查看帮助</translation>
+    </message>
+    <message>
+        <source>Click to take a scrolling screenshot</source>
+        <translation>单击捕捉区域</translation>
+    </message>
+    <message>
+        <source>Failed to take a continuous screenshot.</source>
+        <translation>无法继续截图，</translation>
+    </message>
+    <message>
+        <source>Reached the bottom of the scroll area</source>
+        <translation>已到滚动区域底部</translation>
+    </message>
+    <message>
+        <source>Reached the maximum length</source>
+        <translation>已到最大长度</translation>
     </message>
 </context>
 <context>
@@ -287,6 +314,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Extract text</source>
         <translation>识别文字</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
+        <translation>滚动截图</translation>
     </message>
 </context>
 <context>
@@ -457,6 +488,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Extract Text</source>
         <translation>识别文字</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
+        <translation>滚动截图</translation>
     </message>
 </context>
 <context>

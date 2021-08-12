@@ -91,6 +91,10 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
+        <translation>Captura de pantalla fallida</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -133,6 +137,29 @@ o haga clic en el icono de la bandeja</translation>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
         <translation>Captura empieza en %1 segundos</translation>
+    </message>
+</context>
+<context>
+    <name>ScrollShotTip</name>
+    <message>
+        <source>Get help.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Failed to take a continuous screenshot.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Reached the bottom of the scroll area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Reached the maximum length</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -282,10 +309,14 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"/>
+        <translation>Herramientas</translation>
     </message>
     <message>
         <source>Extract text</source>
+        <translation>Extraer texto</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -456,6 +487,10 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Extract Text</source>
+        <translation>Extraer texto</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>

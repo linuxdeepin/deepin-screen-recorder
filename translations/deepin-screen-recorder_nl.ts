@@ -91,6 +91,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
+        <translation>De schermfoto kan niet worden gemaakt.</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -133,6 +137,29 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
         <translation>Het scherm wordt over %1 seconden vastgelegd</translation>
+    </message>
+</context>
+<context>
+    <name>ScrollShotTip</name>
+    <message>
+        <source>Get help.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Failed to take a continuous screenshot.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Reached the bottom of the scroll area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Reached the maximum length</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -282,10 +309,14 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"/>
+        <translation>Gereedschap</translation>
     </message>
     <message>
         <source>Extract text</source>
+        <translation>Tekst extraheren</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -456,6 +487,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Extract Text</source>
+        <translation>Tekst extraheren</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>

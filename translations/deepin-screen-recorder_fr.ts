@@ -91,6 +91,10 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>Screenshot failed.</source>
+        <translation>Échec de la capture d&apos;écran.</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -133,6 +137,29 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source>Screen Capture will start in %1 seconds</source>
         <translation>La capture d&apos;écran démarrera dans %1 secondes</translation>
+    </message>
+</context>
+<context>
+    <name>ScrollShotTip</name>
+    <message>
+        <source>Get help.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Failed to take a continuous screenshot.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Reached the bottom of the scroll area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Reached the maximum length</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -282,10 +309,14 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"/>
+        <translation>Outils</translation>
     </message>
     <message>
         <source>Extract text</source>
+        <translation>Extraire le texte</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -456,6 +487,10 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>Extract Text</source>
+        <translation>Extraire le texte</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>

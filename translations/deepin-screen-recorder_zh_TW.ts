@@ -93,6 +93,10 @@ or press the shortcut again to stop recording</source>
         <source>Screenshot failed.</source>
         <translation>截圖失敗。</translation>
     </message>
+    <message>
+        <source>Scrollshot</source>
+        <translation>滾動截圖</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -106,7 +110,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Exit</source>
-        <translation>離開</translation>
+        <translation>退出</translation>
     </message>
 </context>
 <context>
@@ -136,6 +140,29 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>ScrollShotTip</name>
+    <message>
+        <source>Get help.</source>
+        <translation>查看幫助</translation>
+    </message>
+    <message>
+        <source>Click to take a scrolling screenshot</source>
+        <translation>單擊捕捉區域</translation>
+    </message>
+    <message>
+        <source>Failed to take a continuous screenshot.</source>
+        <translation>無法繼續截圖，</translation>
+    </message>
+    <message>
+        <source>Reached the bottom of the scroll area</source>
+        <translation>已到滾動區域底部</translation>
+    </message>
+    <message>
+        <source>Reached the maximum length</source>
+        <translation>已到最大長度</translation>
+    </message>
+</context>
+<context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
@@ -150,7 +177,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation>離開/儲存</translation>
+        <translation>退出/儲存</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -178,7 +205,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Exit</source>
-        <translation>離開</translation>
+        <translation>退出</translation>
     </message>
     <message>
         <source>Save</source>
@@ -287,6 +314,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Extract text</source>
         <translation>識別文字</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
+        <translation>滾動截圖</translation>
     </message>
 </context>
 <context>
@@ -457,6 +488,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Extract Text</source>
         <translation>識別文字</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
+        <translation>滾動截圖</translation>
     </message>
 </context>
 <context>

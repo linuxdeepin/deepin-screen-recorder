@@ -39,7 +39,7 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Captura finalitzada</translation>
+        <translation>Captura acabada</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -91,6 +91,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
+        <translation>Ha fallat la captura</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -133,6 +137,29 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
         <translation>La Captura de pantalla s&apos;iniciarà d&apos;aquí a %1 segons</translation>
+    </message>
+</context>
+<context>
+    <name>ScrollShotTip</name>
+    <message>
+        <source>Get help.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Failed to take a continuous screenshot.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Reached the bottom of the scroll area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Reached the maximum length</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -282,10 +309,14 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"/>
+        <translation>Eines</translation>
     </message>
     <message>
         <source>Extract text</source>
+        <translation>Extreu-ne el text</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -456,6 +487,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Extract Text</source>
+        <translation>Extreu-ne el text</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>

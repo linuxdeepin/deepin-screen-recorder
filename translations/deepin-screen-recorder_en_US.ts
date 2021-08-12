@@ -93,6 +93,10 @@ or press the shortcut again to stop recording</translation>
         <source>Screenshot failed.</source>
         <translation>Screenshot failed.</translation>
     </message>
+    <message>
+        <source>Scrollshot</source>
+        <translation>Scrollshot</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -133,6 +137,29 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
         <translation>Screen Capture will start in %1 seconds</translation>
+    </message>
+</context>
+<context>
+    <name>ScrollShotTip</name>
+    <message>
+        <source>Get help.</source>
+        <translation>Get help.</translation>
+    </message>
+    <message>
+        <source>Click to take a scrolling screenshot</source>
+        <translation>Click to take a scrolling screenshot</translation>
+    </message>
+    <message>
+        <source>Failed to take a continuous screenshot.</source>
+        <translation>Failed to take a continuous screenshot.</translation>
+    </message>
+    <message>
+        <source>Reached the bottom of the scroll area</source>
+        <translation>Reached the bottom of the scroll area</translation>
+    </message>
+    <message>
+        <source>Reached the maximum length</source>
+        <translation>Reached the maximum length</translation>
     </message>
 </context>
 <context>
@@ -287,6 +314,10 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Extract text</source>
         <translation>Extract text</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
+        <translation>Scrollshot</translation>
     </message>
 </context>
 <context>
@@ -457,6 +488,10 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Extract Text</source>
         <translation>Extract Text</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
+        <translation>Scrollshot</translation>
     </message>
 </context>
 <context>

@@ -90,6 +90,10 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot failed.</source>
+        <translation>رەسىم تۇتۇلمىدى</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -132,6 +136,29 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
         <translation>ئېكراننى رەسىمگە تۇتۇش، سىنغا ئېلىش %1 سىېكونتتىن كېيىن قوزغىلىدۇ</translation>
+    </message>
+</context>
+<context>
+    <name>ScrollShotTip</name>
+    <message>
+        <source>Get help.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Failed to take a continuous screenshot.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Reached the bottom of the scroll area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Reached the maximum length</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -281,10 +308,14 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"/>
+        <translation>قورال</translation>
     </message>
     <message>
         <source>Extract text</source>
+        <translation>تېكىستنى تونۇتۇش</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -455,6 +486,10 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Extract Text</source>
+        <translation>تېكىستنى تونۇتۇش</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>

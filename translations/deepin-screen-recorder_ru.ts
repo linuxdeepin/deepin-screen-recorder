@@ -9,7 +9,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>Не поворачивайте экран во время записи</translation>
     </message>
 </context>
 <context>
@@ -79,7 +79,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"/>
+        <translation>Поскольку эффект окна отключен во время процесса записи, запись должна быть остановлена</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -87,10 +87,14 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
-        <translation type="unfinished"/>
+        <translation>Снимок экрана был сохранен в альбоме</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
+        <translation>Не удалось создать Снимок экрана</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -133,6 +137,29 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
         <translation>Захват экрана начнется через %1 секунды</translation>
+    </message>
+</context>
+<context>
+    <name>ScrollShotTip</name>
+    <message>
+        <source>Get help.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Failed to take a continuous screenshot.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Reached the bottom of the scroll area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Reached the maximum length</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -254,7 +281,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"/>
+        <translation>Звук</translation>
     </message>
     <message>
         <source>Keystroke</source>
@@ -262,7 +289,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"/>
+        <translation>Веб-камера</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -274,18 +301,22 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Старт/Запись</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Мышь</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"/>
+        <translation>Инструменты</translation>
     </message>
     <message>
         <source>Extract text</source>
+        <translation>Извлечь Текст</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -448,14 +479,18 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Мышь</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation type="unfinished"/>
+        <translation>Показать Указатель</translation>
     </message>
     <message>
         <source>Extract Text</source>
+        <translation>Извлечь Текст</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -463,7 +498,7 @@ or press the shortcut again to stop recording</source>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"/>
+        <translation>Отрегулируйте область записи в пределах %1*%2, чтобы получить лучший видеоэффект</translation>
     </message>
 </context>
 </TS>

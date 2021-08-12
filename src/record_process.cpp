@@ -315,6 +315,8 @@ void RecordProcess::recordVideo()
         arguments << QString("-f");
         arguments << QString("mp4"); // mp4视频
     }
+    arguments << QString("-vf");
+    arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
 #else
     arguments << QString("-video_size");
     arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
