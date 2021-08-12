@@ -29,6 +29,7 @@ build_dir=$workdir
 result_coverage_dir=$build_dir/html
 result_report_dir=$build_dir/report/report_ut_screen_shot_recorder.xml
 
+ASAN_OPTIONS="fast_unwind_on_malloc=1"
 $build_dir/$executable --gtest_output=xml:$result_report_dir
 
 lcov -d $build_dir -c -o $build_dir/coverage.info
@@ -48,4 +49,3 @@ cp $build_dir/asan_ut_screen_shot_recorder.log.* ../../../build-ut/asan_ut_scree
 #nohup x-www-browser $result_report_dir &
  
 #lcov -d $build_dir –z
-exit 0

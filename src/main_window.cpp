@@ -127,8 +127,8 @@ MainWindow::MainWindow(DWidget *parent) :
 
     connect(qApp, &QGuiApplication::screenAdded, this, &MainWindow::onExit);
     connect(qApp, &QGuiApplication::screenRemoved, this, &MainWindow::onExit);
-    m_pScreenShotEvent =  new ScreenShotEvent(this);
-    m_pScreenRecordEvent = new EventMonitor(this);
+    m_pScreenShotEvent =  new ScreenShotEvent();
+    m_pScreenRecordEvent = new EventMonitor();
 
     m_screenCount = QApplication::desktop()->screenCount();
     QList<QScreen *> screenList = qApp->screens();

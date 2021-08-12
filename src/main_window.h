@@ -126,7 +126,7 @@ public:
         if (m_pVoiceVolumeWatcher) {
             m_pVoiceVolumeWatcher->setWatch(false);
             //run函数里面有sleep,所以此处加terminate
-            m_pVoiceVolumeWatcher->terminate();
+            m_pVoiceVolumeWatcher->exit();
             if (!QSysInfo::currentCpuArchitecture().startsWith("mips")) {
                 m_pVoiceVolumeWatcher->wait();
                 m_pVoiceVolumeWatcher = nullptr;
@@ -134,26 +134,24 @@ public:
         }
         if (m_pCameraWatcher) {
             m_pCameraWatcher->setWatch(false);
-            m_pCameraWatcher->terminate();
+            m_pCameraWatcher->exit();
             if (!QSysInfo::currentCpuArchitecture().startsWith("mips")) {
                 m_pCameraWatcher->wait();
                 m_pCameraWatcher = nullptr;
             }
         }
-        if (m_pScreenRecordEvent) {
+#ifdef __x86_64__
+        if (m_pScreenRecordEvent && m_isZhaoxin == false) {
             m_pScreenRecordEvent->terminate();
-            if (!QSysInfo::currentCpuArchitecture().startsWith("mips")) {
-                m_pScreenRecordEvent->wait();
-                m_pScreenRecordEvent = nullptr;
-            }
+            m_pScreenRecordEvent->wait();
+            m_pScreenRecordEvent = nullptr;
         }
-        if (m_pScreenShotEvent) {
+        if (m_pScreenShotEvent && m_isZhaoxin == false) {
             m_pScreenShotEvent->terminate();
-            if (!QSysInfo::currentCpuArchitecture().startsWith("mips")) {
-                m_pScreenShotEvent->wait();
-                m_pScreenShotEvent = nullptr;
-            }
+            m_pScreenShotEvent->wait();
+            m_pScreenShotEvent = nullptr;
         }
+#endif
         if (m_showButtons) {
             //退出进程，最好不用deleteLater，因为有可能等不到下一次事件循环，导致资源不能释放
             delete m_showButtons;

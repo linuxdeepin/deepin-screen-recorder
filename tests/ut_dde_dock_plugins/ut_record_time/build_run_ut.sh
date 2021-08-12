@@ -22,6 +22,7 @@ remove_info="*tests* *build-ut*" #排除当前目录进行覆盖率操作
 build_dir=$workdir
 result_coverage_dir=$build_dir/html
 result_report_dir=$build_dir/report/report_ut_record_time.xml
+ASAN_OPTIONS="fast_unwind_on_malloc=1"
 $build_dir/$executable --gtest_output=xml:$result_report_dir
 
 lcov -d $build_dir -c -o $build_dir/coverage.info
@@ -36,6 +37,3 @@ genhtml -o $result_coverage_dir $build_dir/coverage.info
 cp $build_dir/report/report_ut_record_time.xml ../../../../build-ut/report/report_ut_record_time.xml
 cp $build_dir/html/index.html ../../../../build-ut/html/cov_ut_record_time.html
 cp $build_dir/asan_ut_record_time.log.* ../../../../build-ut/asan_ut_record_time.log  
-
-exit 0
-
