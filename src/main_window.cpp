@@ -528,7 +528,8 @@ void MainWindow::initShortcut()
     });
 
     connect(ocrSC, &QShortcut::activated, this, [ = ] {
-        if (status::shot == m_functionType)
+        //滚动截图及普通截图都可以通过快捷键触发ocr
+        if (status::shot == m_functionType || status::scrollshot == m_functionType)
         {
             m_toolBar->shapeClickedFromMain("ocr");
         }
@@ -2544,6 +2545,17 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         qDebug() << "key press:" << keyEvent->key();
+        //滚动截图情况下键盘按键操作
+        if (status::scrollshot == m_functionType) {
+            if (keyEvent->key() == Qt::Key_Escape) {
+                qDebug() << "Key_Escape pressed: app quit!";
+                emit releaseEvent();
+                exitScreenRecordEvent();
+                exitScreenShotEvent();
+                qApp->quit();
+            }
+        }
+
         if (status::shot == m_functionType) {
             if (keyEvent->key() == Qt::Key_Escape) {
                 if (m_isShapesWidgetExist) {
@@ -3635,7 +3647,8 @@ void MainWindow::checkCpuIsZhaoxin()
 //截图模式及滚动截图模式键盘按下执行的操作
 void MainWindow::onShotKeyPressEvent(const unsigned char &keyCode)
 {
-    if (KEY_F3 == keyCode && status::shot == m_functionType) {
+    //滚动截图及普通截图都可以通过快捷键触发F3
+    if (KEY_F3 == keyCode && ( status::shot == m_functionType || status::scrollshot == m_functionType)) {
         m_toolBar->shapeClickedFromMain("option");
     }
 
