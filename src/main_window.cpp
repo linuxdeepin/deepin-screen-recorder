@@ -921,6 +921,7 @@ void MainWindow::initScrollShot()
         m_previewWidget->setScreenWidth(m_screenWidth);
         m_previewWidget->initPreviewWidget();
         m_previewWidget->show();
+        //打开滚动截图时，预览窗口显示的第一张图片
         bool ok;
         QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
         QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
@@ -2559,6 +2560,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 exitScreenRecordEvent();
                 exitScreenShotEvent();
                 qApp->quit();
+            }else if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
+                if (keyEvent->key() == Qt::Key_Question) {
+                    onViewShortcut();
+                }
             }
         }
 
@@ -3497,7 +3502,7 @@ void MainWindow::scrollShotMerageImgState(PixMergeThread::MergeErrorValue state)
     }
     //3：拼接截图到截图最大限度
     else if (state == PixMergeThread::MergeErrorValue::MaxHeight) {
-        m_scrollShotTip->showTip(TipType::EndScrollShotTip);
+        m_scrollShotTip->showTip(TipType::MaxLengthScrollShotTip);
         //捕捉区域的宽大于等于300或者高大于等于100 则提示内容在在捕捉区域内
         if (recordWidth >= 300 && recordHeight >= 100) {
             leftTopX = static_cast<int>((recordRect.x() / m_pixelRatio + (recordRect.width() / m_pixelRatio  - m_scrollShotTip->width()) / 2));
