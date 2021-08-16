@@ -22,6 +22,7 @@
 #include <QMutexLocker>
 
 const int PixMergeThread::LONG_IMG_MAX_HEIGHT = 10000;
+const int PixMergeThread::TEMPLATE_HEIGHT = 35;
 
 PixMergeThread::PixMergeThread(QObject *parent) : QThread(parent)
 {
@@ -116,6 +117,11 @@ bool PixMergeThread::mergeImageWork(const cv::Mat &image)
         return false;
     }
 
+    if(image.rows <= TEMPLATE_HEIGHT) {
+        emit merageError(Failed);
+        return false;
+    }
+
     ++m_MeragerCount;
     qDebug() << "**************" << m_MeragerCount;
     /*转灰度图像*/
@@ -126,8 +132,7 @@ bool PixMergeThread::mergeImageWork(const cv::Mat &image)
      * 取图像2的全部行，1到35列作为模板
      * 这样image1作为原图，temp作为模板图像
      */
-    cv::Mat temp = image2_gray(cv::Range(0, 35), cv::Range::all());
-
+    cv::Mat temp = image2_gray(cv::Range(0, TEMPLATE_HEIGHT), cv::Range::all());
     /*结果矩阵图像,大小，数据类型*/
     cv::Mat res(image1_gray.rows - temp.rows + 1, image2_gray.cols - temp.cols + 1, CV_32FC1);
     /*模板匹配，采用归一化相关系数匹配*/

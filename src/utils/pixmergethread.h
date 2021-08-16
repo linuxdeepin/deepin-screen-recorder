@@ -66,6 +66,7 @@ private:
     // 长图顶部固定区域高度
     int m_headHeight = -1;
     static const int LONG_IMG_MAX_HEIGHT;
+    static const int TEMPLATE_HEIGHT;
 };
 
 Q_DECLARE_METATYPE(PixMergeThread::MergeErrorValue);
