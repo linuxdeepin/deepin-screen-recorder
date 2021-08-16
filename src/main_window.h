@@ -126,7 +126,11 @@ public:
         if (m_pVoiceVolumeWatcher) {
             m_pVoiceVolumeWatcher->setWatch(false);
             //run函数里面有sleep,所以此处加terminate
+#ifdef __x86_64__
+            m_pVoiceVolumeWatcher->terminate();
+#else
             m_pVoiceVolumeWatcher->exit();
+#endif
             if (!QSysInfo::currentCpuArchitecture().startsWith("mips")) {
                 m_pVoiceVolumeWatcher->wait();
                 m_pVoiceVolumeWatcher = nullptr;
@@ -134,7 +138,11 @@ public:
         }
         if (m_pCameraWatcher) {
             m_pCameraWatcher->setWatch(false);
+#ifdef __x86_64__
+            m_pCameraWatcher->terminate();
+#else
             m_pCameraWatcher->exit();
+#endif
             if (!QSysInfo::currentCpuArchitecture().startsWith("mips")) {
                 m_pCameraWatcher->wait();
                 m_pCameraWatcher = nullptr;
