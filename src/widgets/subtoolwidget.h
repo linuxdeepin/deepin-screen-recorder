@@ -44,7 +44,17 @@ public:
     void initRecordLabel();
     void initShotLabel();
 //    void initVirtualCard();
+    /**
+     * @brief 安装工具栏的提示
+     * @param w : 工具按钮
+     * @param hintstr : 提示信息
+     */
     void installTipHint(QWidget *w, const QString &hintstr);
+    /**
+     * @brief 安装工具栏提示的触发
+     * @param w : 工具按钮
+     * @param hint : 提示信息
+     */
     void installHint(QWidget *w, QWidget *hint);
 
     /**
@@ -67,10 +77,18 @@ signals:
     void mkvActionChecked(bool checked);
     void cameraActionChecked(bool checked);
     void videoFrameRateChanged(int frameRate);
+    /**
+     * @brief 截图功能选择的工具被改变
+     * @param 工具的名称
+     */
     void changeShotToolFunc(const QString &func);
     void saveMethodChanged(SaveAction saveact, const QString path);
     void saveToClipBoard(bool isClip);
 public slots:
+    /**
+     * @brief 切换截图功能或者录屏功能
+     * @param shapeType : "record" or "shot"
+     */
     void switchContent(QString shapeType);
     //void systemAudioActionCheckedSlot(bool checked);
     void changeArrowAndLineFromSideBar(int line);
@@ -82,7 +100,13 @@ public slots:
     void setSystemAudioEnable(bool status);
     //void setIsZhaoxinPlatform(bool isZhaoxin);
 private:
+    /**
+     * @brief 录屏功能工具栏
+     */
     DLabel *m_recordSubTool = nullptr;
+    /**
+     * @brief 截屏功能工具栏
+     */
     DLabel *m_shotSubTool = nullptr;
     QString m_currentType;
     QAction *m_systemAudioAction = nullptr;
@@ -94,23 +118,56 @@ private:
      * @brief ocr识别工具栏按钮
      */
     ToolButton *m_ocrButton = nullptr;
+    /**
+     * @brief 截图功能中矩形工具按钮
+     */
     ToolButton *m_rectButton = nullptr;
+    /**
+     * @brief 截图功能中圆形工具按钮
+     */
     ToolButton *m_circleButton = nullptr;
+    /**
+     * @brief 截图功能中箭头工具按钮
+     */
     ToolButton *m_lineButton = nullptr;
+    /**
+     * @brief 截图功能中画笔工具按钮
+     */
     ToolButton *m_penButton = nullptr;
+    /**
+     * @brief 截图功能中文本编辑工具按钮
+     */
     ToolButton *m_textButton = nullptr;
+    /**
+     * @brief 录屏功能中摄像头工具按钮
+     */
     ToolButton *m_cameraButton = nullptr;
+    /**
+     * @brief 录屏功能中键盘工具按钮
+     */
     ToolButton *m_keyBoardButton = nullptr;
+    /**
+     * @brief 录屏功能中鼠标工具按钮
+     */
     ToolButton *m_mouseButton = nullptr;
+    /**
+     * @brief 录屏功能中选项按钮
+     */
     ToolButton *m_optionButton = nullptr;
+    /**
+     * @brief 截图功能中选项按钮
+     */
     ToolButton *m_shotOptionButton = nullptr;
     QAction *m_microphoneAction = nullptr;
+    /**
+     * @brief 录屏功能中音频工具按钮
+     */
     ToolButton *m_audioButton = nullptr;
     QAction *m_recorderCheck = nullptr;
     QAction *m_recorderMouse = nullptr;
 
     /**
-     * @brief 截图选项中的选项
+     * @brief 截图功能选项按钮打开的二级菜单中的选项
      */
     QAction *m_clipTitleAction = nullptr;
     /**

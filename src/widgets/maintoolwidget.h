@@ -47,6 +47,11 @@ public:
     void installHint(QWidget *w, QWidget *hint);
 
 signals:
+    /**
+     * @brief 发射截图功能或录屏功能被点击的信号
+     * @param checked : 点击与否
+     * @param type : "record" or "shot"
+     */
     void buttonChecked(bool checked, QString type);
 public slots:
 //    void switchContent(QString shapeType);

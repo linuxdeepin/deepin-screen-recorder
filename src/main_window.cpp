@@ -1687,7 +1687,7 @@ void MainWindow::updateCameraWidgetPos()
         m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
     }
 }
-//
+//切换截图功能或者录屏功能
 void MainWindow::changeFunctionButton(QString type)
 {
     if (type == "record") {
@@ -1721,6 +1721,7 @@ void MainWindow::changeFunctionButton(QString type)
         updateShotButtonPos();
         m_shotButton->show();
         m_functionType = 1;
+        updateToolBarPos();
         initScreenShot();
     }
 
@@ -2562,6 +2563,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (keyEvent->key() == Qt::Key_Question) {
                     onViewShortcut();
                 }
+            }else if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {//滚动截图模式下，按下enter按键进行保存截图
+                saveScreenShot();
             }
         }
 
@@ -3449,7 +3452,7 @@ void MainWindow::scrollShotMerageImgState(PixMergeThread::MergeErrorValue state)
     //滚动截图出现异常
     m_isErrorWithScrollShot = true;
 
-    //qDebug() << "function:" << __func__ << " ,line: " << __LINE__ <<"state: " << state;
+    qDebug() << "function:" << __func__ << " ,line: " << __LINE__ <<" , 拼接时的状态: " << state;
     //m_scrollShotTip = new ScrollShotTip (this);
     const QPoint topLeft = geometry().topLeft();
     //qDebug() << "function:" << __func__ << " ,line: " << __LINE__ <<"state: " << state;
@@ -3661,10 +3664,6 @@ void MainWindow::onShotKeyPressEvent(const unsigned char &keyCode)
         m_toolBar->shapeClickedFromMain("option");
     }
 
-    //滚动截图模式下，按下enter按键进行保存截图
-    if (KEY_ENTER == keyCode && status::scrollshot == m_functionType) {
-        saveScreenShot();
-    }
 }
 
 //录屏模式下键盘按下执行的操作

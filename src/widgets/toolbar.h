@@ -67,6 +67,10 @@ signals:
     void saveBtnPressed(SaveAction index);
     void saveSpecifiedPath();
     void closed();
+    /**
+     * @brief 切换截图功能或者录屏功能的信号
+     * @param shapeType : "record" or "shot"
+     */
     void changeFunctionSignal(QString shapeType);
     void keyBoardCheckedSignal(bool checked);
     void microphoneActionCheckedSignal(bool checked);
@@ -81,6 +85,11 @@ signals:
     void closeButtonSignal();
 public slots:
     //bool isButtonChecked();
+    /**
+     * @brief 切换截图功能或者录屏功能
+     * @param expand :
+     * @param shapeType : "record" or "shot"
+     */
     void setExpand(bool expand, QString shapeType);
     //void specifiedSavePath();
     void keyBoardCheckedSlot(bool checked);
@@ -140,6 +149,10 @@ signals:
     void saveBtnPressed(SaveAction index);
     void saveSpecifiedPath();
     void closed();
+    /**
+     * @brief 通知主窗口切换截图功能或者录屏功能的信号
+     * @param shapeType : "record" or "shot"
+     */
     void currentFunctionToMain(QString shapeType);
     void keyBoardCheckedToMain(bool checked);
     void microphoneActionCheckedToMain(bool checked);
@@ -157,6 +170,10 @@ public slots:
     void setExpand(bool expand, QString shapeType);
     void showAt(QPoint pos);
 //    void specificedSavePath();
+    /**
+     * @brief 切换截图功能或者录屏功能
+     * @param shapeType : "record" or "shot"
+     */
     void currentFunctionMode(QString shapeType);
     void keyBoardCheckedToMainSlot(bool checked);
     void microphoneActionCheckedToMainSlot(bool checked);

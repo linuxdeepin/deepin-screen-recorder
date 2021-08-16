@@ -330,6 +330,10 @@ public slots:
     void updateRecordButtonPos();
     void updateShotButtonPos();
     void updateCameraWidgetPos();
+    /**
+     * @brief 切换截图功能或者录屏功能
+     * @param shapeType : "record" or "shot"
+     */
     void changeFunctionButton(QString type);
     void showKeyBoardButtons(const QString &key);
     void changeKeyBoardShowEvent(bool checked);
@@ -513,6 +517,9 @@ private:
 
     DWindowManagerHelper *m_wmHelper;
     ShapesWidget *m_shapesWidget = nullptr;
+    /**
+     * @brief 左上角图片大小提示
+     */
     TopTips *m_sizeTips = nullptr;
     /**
      * @brief 滚动截图时图片的大小

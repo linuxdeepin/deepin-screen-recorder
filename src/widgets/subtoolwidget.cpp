@@ -1099,14 +1099,18 @@ void SubToolWidget::setScrollShotDisabled()
 void SubToolWidget::switchContent(QString shapeType)
 {
     if (shapeType == "record") {
+        this->addWidget(m_recordSubTool);
+        this->removeWidget(m_shotSubTool);
         setCurrentWidget(m_recordSubTool);
         m_currentType = shapeType;
     }
 
     if (shapeType == "shot") {
+        this->addWidget(m_shotSubTool);
+        this->removeWidget(m_recordSubTool);
         setCurrentWidget(m_shotSubTool);
         m_currentType = shapeType;
-    }
+   }
 }
 /*
 void SubToolWidget::systemAudioActionCheckedSlot(bool checked)
