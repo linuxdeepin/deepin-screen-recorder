@@ -866,6 +866,25 @@ void MainWindow::initScrollShot()
     //重新设置鼠标形状
     resetCursor();
 
+    //滚动预览开启初始化
+    if (!m_previewWidget) {
+        QRect previewRecordRect {
+            static_cast<int>(recordX),
+            static_cast<int>(recordY),
+            static_cast<int>(recordWidth),
+            static_cast<int>(recordHeight)
+        };
+        m_previewWidget = new PreviewWidget(previewRecordRect, this);
+        m_previewWidget->setScreenWidth(m_screenWidth);
+        m_previewWidget->initPreviewWidget();
+        m_previewWidget->show();
+        //打开滚动截图时，预览窗口显示的第一张图片
+        bool ok;
+        QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
+        QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
+        m_previewWidget->updateImage(img.toImage());
+    }
+
     //提示开始滚动截图的方法
     m_scrollShotTip = new ScrollShotTip(this);
     //链接拼接失败提示，点击打开帮助
@@ -910,24 +929,6 @@ void MainWindow::initScrollShot()
     //滚动截图的处理类
     m_scrollShot = new ScrollScreenshot();
     qRegisterMetaType<PixMergeThread::MergeErrorValue>("MergeErrorValue");
-    if (!m_previewWidget) { //滚动预览开启初始化
-        QRect previewRecordRect {
-            static_cast<int>(recordX),
-            static_cast<int>(recordY),
-            static_cast<int>(recordWidth),
-            static_cast<int>(recordHeight)
-        };
-        m_previewWidget = new PreviewWidget(previewRecordRect, this);
-        m_previewWidget->setScreenWidth(m_screenWidth);
-        m_previewWidget->initPreviewWidget();
-        m_previewWidget->show();
-        //打开滚动截图时，预览窗口显示的第一张图片
-        bool ok;
-        QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
-        QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
-        m_previewWidget->updateImage(img.toImage());
-    }
-
     connect(m_scrollShot, &ScrollScreenshot::updatePreviewImg, this, &MainWindow::showPreviewWidgetImage);//显示预览窗口和图片
     connect(m_scrollShot, &ScrollScreenshot::getOneImg, this, [ = ] {
         bool ok;
@@ -962,6 +963,8 @@ void MainWindow::initScrollShot()
             m_sizeTips->hide();
         }
     });
+
+
 
     m_scrollShotSizeTips = new TopTips(this);
     m_scrollShotSizeTips->show();
