@@ -911,7 +911,13 @@ void MainWindow::initScrollShot()
     m_scrollShot = new ScrollScreenshot();
     qRegisterMetaType<PixMergeThread::MergeErrorValue>("MergeErrorValue");
     if (!m_previewWidget) { //滚动预览开启初始化
-        m_previewWidget = new PreviewWidget(recordRect, this);
+        QRect previewRecordRect {
+            static_cast<int>(recordX),
+            static_cast<int>(recordY),
+            static_cast<int>(recordWidth),
+            static_cast<int>(recordHeight)
+        };
+        m_previewWidget = new PreviewWidget(previewRecordRect, this);
         m_previewWidget->setScreenWidth(m_screenWidth);
         m_previewWidget->initPreviewWidget();
         m_previewWidget->show();

@@ -66,12 +66,12 @@ void PreviewWidget::updateImage(const QImage &image)
         previewY = 0;
         previewHeight = m_recordY + m_recordHeight;//设置此时的预览高度=捕捉区域的高度+y轴坐标
     }
-    m_previewRect.setY(previewY);//重新设置y坐标
+    m_previewRect.setY(previewY); //重新设置y坐标
     m_previewRect.setHeight(previewHeight);//重新设置预览高度
     int widthDiff_t = m_previewRect.width() - previewWidth; //宽度差
-    if (m_StatusPos == 1) {//预览框在左
-        m_previewRect.setX(m_previewRect.x() + widthDiff_t);//重新设置x坐标
-    } else if (m_StatusPos == 0) {//预览框在右
+    if (m_StatusPos == LEFT) {//预览框在左
+        m_previewRect.setX(m_previewRect.x() + widthDiff_t); //重新设置x坐标
+    } else if (m_StatusPos == RIGHT) {//预览框在右
         m_previewRect.setX(m_previewRect.x());
     } else {//预览框在内部
         m_previewRect.setX(m_previewRect.x() + widthDiff_t);
@@ -130,20 +130,20 @@ QRect PreviewWidget::calculatePreviewPosition(int previewWidth, int previewHeigh
         rt.setY(previewY);
         rt.setWidth(previewWidth);
         rt.setHeight(previewHeight);
-        setPreviewWidgetStatusPos(0);//设置位置状态
+        setPreviewWidgetStatusPos(RIGHT);//设置位置状态
     } else if (rightMargin < leftMargin && leftMargin >= previewWidth + 1) {
         if (rightMargin >= previewWidth + 1) { //默认优先显示在右边
             rt.setX(rightX);
             rt.setY(previewY);
             rt.setWidth(previewWidth);
             rt.setHeight(previewHeight);
-            setPreviewWidgetStatusPos(0);
+            setPreviewWidgetStatusPos(RIGHT);
         } else {
             rt.setX(leftX);
             rt.setY(previewY);
             rt.setWidth(previewWidth);
             rt.setHeight(previewHeight);
-            setPreviewWidgetStatusPos(1);
+            setPreviewWidgetStatusPos(LEFT);
         }
     } else {
         int nX = m_recordX + m_recordWidth - previewWidth - 20; //根据捕捉区域计算内部预览的起始x
@@ -152,7 +152,7 @@ QRect PreviewWidget::calculatePreviewPosition(int previewWidth, int previewHeigh
         rt.setY(ny);
         rt.setWidth(previewWidth);
         rt.setHeight(previewHeight);
-        setPreviewWidgetStatusPos(2);
+        setPreviewWidgetStatusPos(INSIDE);
     }
     return rt;
 }

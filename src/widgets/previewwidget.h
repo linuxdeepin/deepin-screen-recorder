@@ -42,6 +42,12 @@ private:
     int m_recordX = 0;//捕捉区域x坐标
     int m_recordY = 0;//捕捉区域y坐标
     int m_screenWidth = 0;//屏幕宽度
+    //预览位置
+    enum PostionStatus {
+        RIGHT = 0,
+        LEFT,
+        INSIDE
+    };
 };
 
 #endif // SCANPAGEWIDGET_H
