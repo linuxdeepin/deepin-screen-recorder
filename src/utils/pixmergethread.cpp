@@ -150,11 +150,15 @@ bool PixMergeThread::mergeImageWork(const cv::Mat &image)
         //image.copyTo(cv::Mat(result, cv::Rect(0, maxLoc.y - 1, image.cols, image.rows)));
         image.copyTo(cv::Mat(result, cv::Rect(0, maxLoc.y, image.cols, image.rows)));
 
-        if (result.rows <= m_curImg.rows) {
-            // 拼接前后图片高度不变，或减少了
+        if (result.rows == m_curImg.rows) {
+            // 拼接前后图片高度不变
             // 拼接到重复图片，拼接到低了
-            // 往回滚动导致拼接比之前还低了
             emit merageError(ReachBottom);
+            return false;
+        } else if (result.rows < m_curImg.rows) {
+            // 拼接前后图片高度减少了
+            // 往回滚动导致拼接比之前还低了
+            emit merageError(Failed);
             return false;
         }
         m_curImg = result;
@@ -163,8 +167,6 @@ bool PixMergeThread::mergeImageWork(const cv::Mat &image)
         // 测试代码
         //imwrite("curImg.png", m_curImg);
         //imwrite("image.png", image);
-
-        // 拼接失败
         emit merageError(Failed);
         return false;
     }
