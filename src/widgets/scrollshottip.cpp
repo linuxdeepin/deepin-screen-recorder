@@ -147,15 +147,16 @@ void ScrollShotTip::paintEvent(QPaintEvent *)
     tipY = rect().y();
     tipWidth = rect().width();
     tipHeight = rect().height();
-    int warmingX = static_cast<int>(rect().x() + 5);
-    int warmingY = static_cast<int>(rect().y() + 10 );
+    int warmingX = static_cast<int>(rect().x() + 8);
+    int warmingY = static_cast<int>(rect().y() + (tipHeight - m_warmingImg.height())/2 + 3 );
     if(m_tipType == TipType::EndScrollShotTip){
         painter.drawPixmap(QPoint(warmingX, warmingY), m_warmingImg);
     }else if(m_tipType == TipType::ErrorScrollShotTip){
         painter.drawPixmap(QPoint(warmingX, warmingY), m_warmingImg);
-        tipWidth = rect().width() - Constant::RECTANGLE_PADDING  ;
+        tipWidth = rect().width() - m_warmingImg.width() ;
     }
-    //qDebug() << "tipX: " << tipX << "tipY: " << tipY << "tipWidth: " << tipWidth <<"tipHeight: " << tipHeight ;
+//    qDebug() << "warmingX: " << warmingX << " warmingY: " << warmingY << " m_warmingImg.width(): " << m_warmingImg.width() <<" m_warmingImg.height(): " << m_warmingImg.height() ;
+//    qDebug() << "tipX: " << tipX << "tipY: " << tipY << "tipWidth: " << tipWidth <<"tipHeight: " << tipHeight ;
     QRectF tooltipRect(tipX,tipY ,tipWidth,tipHeight);
     Utils::drawTooltipText(painter, m_tipText, "#000000", Constant::RECTANGLE_FONT_SIZE, tooltipRect);
 
@@ -261,7 +262,7 @@ void ScrollShotTip::showEndScrollShotTip()
     //m_tipText = tr("已到滚动区域底部");
     m_tipText = tr("Reached the bottom of the scroll area");
     QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, m_tipText);
-    int width = size.width() + Constant::RECTANGLE_PADDING * 2 + m_warmingImg.height() ;
+    int width = size.width() + Constant::RECTANGLE_PADDING * 2 + m_warmingImg.width() ;
     int height = size.height() + 17;
     setFixedSize(width, height);
     repaint();
@@ -273,7 +274,7 @@ void ScrollShotTip::showMaxScrollShotTip()
     //m_tipText = tr("已到最大长度");
     m_tipText = tr("Reached the maximum length");
     QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, m_tipText);
-    int width = size.width() + Constant::RECTANGLE_PADDING * 2 + m_warmingImg.height() ;
+    int width = size.width() + Constant::RECTANGLE_PADDING * 2 + m_warmingImg.width() ;
     int height = size.height() + 17;
     setFixedSize(width, height);
     repaint();
