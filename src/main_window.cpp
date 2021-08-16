@@ -2133,10 +2133,8 @@ bool MainWindow::saveAction(const QPixmap &pix)
     m_saveFileName = "";
     QString functionTypeStr = tr("Screenshot");
     if (status::scrollshot == m_functionType) {
-        functionTypeStr = tr("Scrollshot");
-
-    } else {
-        functionTypeStr = tr("Screenshot");
+        functionTypeStr = functionTypeStr + "_" + tr("Scrollshot");
+        selectAreaName.clear();
     }
 
     QString tempFileName = "";
