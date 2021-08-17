@@ -3427,12 +3427,13 @@ void MainWindow::onLockScreenEvent(QDBusMessage msg)
     }
     //锁屏时暂停滚动
     if (isLocked) {
+        m_scrollShotStatus = 3;
         pauseScrollShot();
     }
     //解锁时恢复滚动
-    else {
-        continueScrollShot();
-    }
+    //else {
+        //continueScrollShot();
+    //}
 
 }
 
