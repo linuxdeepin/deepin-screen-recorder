@@ -42,7 +42,8 @@
 
 #include <DWidget>
 #include <DCommandLinkButton>
-
+#include <DLabel>
+#include <DIconButton>
 
 #include <QtDBus/QtDBus>
 #include <QHBoxLayout>
@@ -66,6 +67,7 @@ class ScrollShotTip : public DWidget
 
 public:
     static const int NUMBER_PADDING_Y;
+    static const int TIP_HEIGHT;
 
     explicit ScrollShotTip(DWidget *parent = 0);
     ~ScrollShotTip();
@@ -134,12 +136,14 @@ protected:
 
 private:
     //警告图片
-    QPixmap m_warmingImg;
-
+    DIconButton *m_warmingIconButton;
     //系统主题
     int m_themeType = 0;
     //提示的内容
     QString m_tipText;
+
+    DLabel *m_tipTextLable;
+
 
     /**
      * @brief 提示的类型

@@ -54,6 +54,7 @@
 #include <QPainterPath>
 
 const int ScrollShotTip::NUMBER_PADDING_Y = 30;
+const int ScrollShotTip::TIP_HEIGHT = 40;
 
 DWIDGET_USE_NAMESPACE
 
@@ -61,14 +62,45 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
 {
     installEventFilter(this);
     m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
+    QPixmap warmingImg ;
+    //警告图片
     if(m_themeType == 1) {
-        m_warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
+        warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
     } else {
-        m_warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
+        warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
     }
+    this->setMinimumSize(100, TIP_HEIGHT);
+
+    m_warmingIconButton = new DIconButton(this);
+    m_warmingIconButton->setIcon(warmingImg);
+    m_warmingIconButton->setIconSize(QSize(30, 30));
+    m_warmingIconButton->setFlat(true);
+    m_warmingIconButton->setFixedSize(QSize(30, 30));
+
+    //提示内容
+    m_tipTextLable = new DLabel(this);
+    m_tipTextLable->setObjectName("TipText");
+    m_tipTextLable->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    //m_tipTextLable->setStyleSheet("QLabel{background-color:rgb(200,101,102);}");
+    //设置背景透明
+    //m_tipTextLable->setStyleSheet("QLabel {background-color: transparent;}");
+
+    //帮助文字按钮
     m_scrollShotHelp = new DCommandLinkButton(tr("Get help."), this);
+    QString str = "查看帮助";
     m_scrollShotHelp->hide();
+    //m_scrollShotHelp->setStyleSheet("text-decoration: underline;");
+    m_scrollShotHelp->resize(static_cast<int>(strlen(reinterpret_cast<char*>(m_scrollShotHelp->text().data()))) * m_scrollShotHelp->font().pointSize(),m_scrollShotHelp->height());
     connect(m_scrollShotHelp, &DCommandLinkButton::clicked, this, &ScrollShotTip::openScrollShotHelp);
+
+    QHBoxLayout *pHBoxLayout = new QHBoxLayout();
+    pHBoxLayout->addWidget(m_warmingIconButton);
+    pHBoxLayout->addSpacing(2);
+    pHBoxLayout->addWidget(m_tipTextLable);
+    pHBoxLayout->addSpacing(2);
+    pHBoxLayout->addWidget(m_scrollShotHelp);
+    this->setLayout(pHBoxLayout);
+
 }
 
 ScrollShotTip::~ScrollShotTip()
@@ -140,26 +172,6 @@ void ScrollShotTip::paintEvent(QPaintEvent *)
         }
     }
     painter.setOpacity(1);
-    //qDebug() << "m_tipText: " << m_tipText;
-    //qDebug() << "rect().x(): " << rect().x() << "rect().y(): " << rect().y() <<"rect().width(): " << rect().width() <<"rect().height(): " << rect().height() ;
-    qreal tipX = 0,tipY = 0,tipWidth = 0,tipHeight = 0;
-    tipX = rect().x();
-    tipY = rect().y();
-    tipWidth = rect().width();
-    tipHeight = rect().height();
-    int warmingX = static_cast<int>(rect().x() + 8);
-    int warmingY = static_cast<int>(rect().y() + (tipHeight - m_warmingImg.height())/2 + 3 );
-    if(m_tipType == TipType::EndScrollShotTip){
-        painter.drawPixmap(QPoint(warmingX, warmingY), m_warmingImg);
-    }else if(m_tipType == TipType::ErrorScrollShotTip){
-        painter.drawPixmap(QPoint(warmingX, warmingY), m_warmingImg);
-        tipWidth = rect().width() - m_warmingImg.width() ;
-    }
-//    qDebug() << "warmingX: " << warmingX << " warmingY: " << warmingY << " m_warmingImg.width(): " << m_warmingImg.width() <<" m_warmingImg.height(): " << m_warmingImg.height() ;
-//    qDebug() << "tipX: " << tipX << "tipY: " << tipY << "tipWidth: " << tipWidth <<"tipHeight: " << tipHeight ;
-    QRectF tooltipRect(tipX,tipY ,tipWidth,tipHeight);
-    Utils::drawTooltipText(painter, m_tipText, "#000000", Constant::RECTANGLE_FONT_SIZE, tooltipRect);
-
 }
 
 //获取提示框的模糊背景图
@@ -222,13 +234,13 @@ void ScrollShotTip::showStartScrollShotTip()
 {
     //m_tipText = "滚动鼠标滚轮或单击滚动区域";
     m_tipText = tr("Click to take a scrolling screenshot");
-    QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, m_tipText);
-    int width = size.width() + Constant::RECTANGLE_PADDING * 2;
-    int height = size.height()+17;
-    //qDebug() << "width: " << width << ",height: " << height;
-    setFixedSize(width, height);
-    repaint();
-
+    int width = 0;
+    m_tipTextLable->setText(m_tipText);
+    m_tipTextLable->adjustSize();
+    m_warmingIconButton->hide();
+    m_scrollShotHelp->hide();
+    width =  m_tipTextLable->width() + 20;
+    setFixedSize(width, TIP_HEIGHT);
 }
 
 //滚动截图出现错误的提示
@@ -236,24 +248,13 @@ void ScrollShotTip::showErrorScrollShotTip()
 {
     //m_tipText = tr("无法继续截图，查看帮助");
     m_tipText = tr("Failed to take a continuous screenshot.");
-    QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, m_tipText);
-    int width = size.width() + Constant::RECTANGLE_PADDING * 4 + m_warmingImg.width() ;
-    int height = size.height() + 17;
-    setFixedSize(width, height);
-    repaint();
-
-    QHBoxLayout *pHBoxLayout = new QHBoxLayout();
-    size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, "Get help.");
-
-    m_scrollShotHelp->setMinimumSize(size.width(), size.height());
-    m_scrollShotHelp->setStyleSheet("text-decoration: underline;");
-
+    int width = 0;
+    m_tipTextLable->setText(m_tipText);
+    m_tipTextLable->adjustSize();
+    m_warmingIconButton->show();
     m_scrollShotHelp->show();
-
-    pHBoxLayout->addSpacing(width);
-    pHBoxLayout->addWidget(m_scrollShotHelp);
-    this->setLayout(pHBoxLayout);
-
+    width = m_warmingIconButton->width() + 4 + m_tipTextLable->width() + m_scrollShotHelp->width();
+    setFixedSize(width, TIP_HEIGHT);
 }
 
 //滚动截图到底部出现的提示
@@ -261,11 +262,13 @@ void ScrollShotTip::showEndScrollShotTip()
 {
     //m_tipText = tr("已到滚动区域底部");
     m_tipText = tr("Reached the bottom of the scroll area");
-    QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, m_tipText);
-    int width = size.width() + Constant::RECTANGLE_PADDING * 2 + m_warmingImg.width() ;
-    int height = size.height() + 17;
-    setFixedSize(width, height);
-    repaint();
+    int width = 0;
+    m_tipTextLable->setText(m_tipText);
+    m_tipTextLable->adjustSize();
+    m_scrollShotHelp->hide();
+    m_warmingIconButton->show();
+    width = m_warmingIconButton->width() + 30 + m_tipTextLable->width();
+    setFixedSize(width, TIP_HEIGHT);
 }
 
 //图像拼接长度限制
@@ -273,12 +276,13 @@ void ScrollShotTip::showMaxScrollShotTip()
 {
     //m_tipText = tr("已到最大长度");
     m_tipText = tr("Reached the maximum length");
-    QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, m_tipText);
-    int width = size.width() + Constant::RECTANGLE_PADDING * 2 + m_warmingImg.width() ;
-    int height = size.height() + 17;
-    setFixedSize(width, height);
-    repaint();
-
+    int width = 0;
+    m_tipTextLable->setText(m_tipText);
+    m_tipTextLable->adjustSize();
+    m_scrollShotHelp->hide();
+    m_warmingIconButton->show();
+    width = m_warmingIconButton->width() + 30 + m_tipTextLable->width();
+    setFixedSize(width, TIP_HEIGHT);
 }
 
 
