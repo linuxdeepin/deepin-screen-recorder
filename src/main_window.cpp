@@ -106,7 +106,6 @@ const int INDICATOR_WIDTH =  110;
 }
 
 //DWM_USE_NAMESPACE
-
 MainWindow::MainWindow(DWidget *parent) :
     DWidget(parent),
     m_wmHelper(DWindowManagerHelper::instance()),
@@ -912,13 +911,18 @@ void MainWindow::initScrollShot()
         leftTopX = static_cast<int>((recordRect.x() / screenWidth) * screenWidth + (screenWidth - m_scrollShotTip->width()) / 2);
         leftTopY = static_cast<int>((screenHeight - m_scrollShotTip->height()) / 2);
     } else {
-        //    qDebug() << "m_pixelRatio: " << m_pixelRatio ;
-        //    qDebug() << "recordRect.x(): " << recordRect.x() << ",recordRect.y(): " <<recordRect.y() <<",recordRect.width(): " << recordRect.width() <<",recordRect.height(): " << recordRect.height() ;
-        //    qDebug() <<"m_scrollShotTip->width(): " << m_scrollShotTip->width() <<",m_scrollShotTip->height(): " << m_scrollShotTip->height() ;
         leftTopX = static_cast<int>((recordRect.x() / m_pixelRatio + (recordRect.width() / m_pixelRatio  - m_scrollShotTip->width()) / 2));
-        //    int leftTopY = static_cast<int>((recordRect.y() / m_pixelRatio + (recordRect.height() / m_pixelRatio - m_scrollShotTip->height()) / 2));
-        leftTopY = static_cast<int>((recordRect.y() / m_pixelRatio + (recordRect.height() / m_pixelRatio - m_scrollShotTip->height()) / 100 * 97));
-        //    qDebug() << "leftTopX: " << leftTopX << ",leftTopY: " <<leftTopY;
+        //工具栏在捕捉区域下
+        if(m_toolBar->y() > recordRect.y()){
+            leftTopY = static_cast<int>(m_toolBar->y() / m_pixelRatio - 55 / m_pixelRatio );
+        }
+        //工具栏在捕捉区域上
+        else {
+            leftTopY = static_cast<int>((m_toolBar->y() + m_toolBar->height()) / m_pixelRatio + 15 / m_pixelRatio );
+        }
+        //qDebug() << "m_toolBar.x(): " << m_toolBar->x() << ",m_toolBar.y(): " <<m_toolBar->y() <<",m_toolBar.width(): " << m_toolBar->width() <<",m_toolBar.height(): " << m_toolBar->height() ;
+        //qDebug() << "leftTopX: " << leftTopX << ",leftTopY: " <<leftTopY;
+        //leftTopY = static_cast<int>((recordRect.y() / m_pixelRatio + (recordRect.height() / m_pixelRatio - m_scrollShotTip->height()) / 100 * 97));
     }
 
     m_scrollShotTip->move(leftTopX, leftTopY);
