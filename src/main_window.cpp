@@ -1235,30 +1235,30 @@ void MainWindow::setInputEvent()
 {
     //将当前捕捉区域画为一个矩形
     QRect recordRect {
-        static_cast<int>(recordX),
-        static_cast<int>(recordY),
-        static_cast<int>(recordWidth),
-        static_cast<int>(recordHeight)
+        static_cast<int>(recordX * m_pixelRatio),
+        static_cast<int>(recordY * m_pixelRatio),
+        static_cast<int>(recordWidth * m_pixelRatio),
+        static_cast<int>(recordHeight * m_pixelRatio)
     };
     //当前鼠标点击的点
-    QPoint toolBarPoint(m_toolBar->x(), m_toolBar->y());
+    QPoint toolBarPoint(m_toolBar->x() * m_pixelRatio, m_toolBar->y() * m_pixelRatio);
     //判断工具栏位置是否在捕捉区域内部
     if (recordRect.contains(toolBarPoint)) {
         //工具栏位置在捕捉区域内部，穿透的位置下移一断距离
         Utils::getInputEvent(
             static_cast<int>(this->winId()),
-            static_cast<short>(recordX),
-            static_cast<short>(recordY + m_toolBar->height()),
-            static_cast<unsigned short>(recordWidth),
-            static_cast<unsigned short>(recordHeight - m_toolBar->height()));
+            static_cast<short>(recordX * m_pixelRatio),
+            static_cast<short>((recordY + m_toolBar->height()) * m_pixelRatio),
+            static_cast<unsigned short>(recordWidth * m_pixelRatio),
+            static_cast<unsigned short>((recordHeight - m_toolBar->height()) * m_pixelRatio));
     } else {
         //捕捉区域穿透
         Utils::getInputEvent(
             static_cast<int>(this->winId()),
-            static_cast<short>(recordX),
-            static_cast<short>(recordY),
-            static_cast<unsigned short>(recordWidth),
-            static_cast<unsigned short>(recordHeight));
+            static_cast<short>(recordX * m_pixelRatio),
+            static_cast<short>(recordY * m_pixelRatio),
+            static_cast<unsigned short>(recordWidth * m_pixelRatio),
+            static_cast<unsigned short>(recordHeight * m_pixelRatio));
     }
 }
 
@@ -3310,7 +3310,6 @@ void MainWindow::tableRecordSet()
 //滚动截图鼠标按钮事件
 void MainWindow::onScrollShotButtonPressEvent(int x, int y)
 {
-    //qDebug() << "鼠标按键 x,y :  " << x << " , " << y;
     //滚动截图出现异常时屏蔽鼠标点击事件
     if (m_isErrorWithScrollShot) return;
 
@@ -3322,13 +3321,19 @@ void MainWindow::onScrollShotButtonPressEvent(int x, int y)
 
     //将当前捕捉区域画为一个矩形
     QRect recordRect {
-        static_cast<int>(recordX),
-        static_cast<int>(recordY),
-        static_cast<int>(recordWidth),
-        static_cast<int>(recordHeight)
+        static_cast<int>(recordX * m_pixelRatio),
+        static_cast<int>(recordY * m_pixelRatio),
+        static_cast<int>(recordWidth * m_pixelRatio),
+        static_cast<int>(recordHeight * m_pixelRatio)
     };
+    //qDebug() << "m_pixelRatio :  " << m_pixelRatio;
+    //qDebug() << "recordX: " << recordX << ",recordY: " << recordY <<",recordWidth: " << recordWidth <<",recordHeight: " << recordHeight ;
+    //qDebug() << "recordRect.x(): " << recordRect.x() << ",recordRect.y(): " <<recordRect.y() <<",recordRect.width(): " << recordRect.width() <<",recordRect.height(): " << recordRect.height() ;
+
     //当前鼠标点击的点
-    QPoint mouseClickPoint(x, y);
+    QPoint mouseClickPoint(x , y);
+    //qDebug() << "鼠标按键 x,y :  " << x << " , " << y;
+    //qDebug() << "mouseClickPoint x,y :  " << mouseClickPoint.x() << " , " << mouseClickPoint.y();
     //判断当前点击的点是否在捕捉区域内部,不在捕捉区域内则不做以下处理
     if (!recordRect.contains(mouseClickPoint)) {
         return;
@@ -3374,10 +3379,10 @@ void MainWindow::onScrollShotMoveMouseEvent(int x, int y)
 
     //将当前捕捉区域画为一个矩形
     QRect recordRect {
-        static_cast<int>(recordX),
-        static_cast<int>(recordY),
-        static_cast<int>(recordWidth),
-        static_cast<int>(recordHeight)
+        static_cast<int>(recordX * m_pixelRatio),
+        static_cast<int>(recordY * m_pixelRatio),
+        static_cast<int>(recordWidth * m_pixelRatio),
+        static_cast<int>(recordHeight * m_pixelRatio)
     };
     //当前鼠标的点
     QPoint mouseMovePoint(x, y);
@@ -3734,15 +3739,15 @@ void MainWindow::pauseScrollShot()
 
     //将当前捕捉区域画为一个矩形
     QRect recordRect {
-        static_cast<int>(recordX),
-        static_cast<int>(recordY),
-        static_cast<int>(recordWidth),
-        static_cast<int>(recordHeight)
+        static_cast<int>(recordX * m_pixelRatio),
+        static_cast<int>(recordY * m_pixelRatio),
+        static_cast<int>(recordWidth * m_pixelRatio),
+        static_cast<int>(recordHeight * m_pixelRatio)
     };
     //当前鼠标点击的点
-    QPoint toolBarPoint(m_toolBar->x(), m_toolBar->y());
+    QPoint toolBarPoint(m_toolBar->x() * m_pixelRatio, m_toolBar->y() * m_pixelRatio);
     //暂停滚动时取消窗口穿透
-    Utils::cancelInputEvent(static_cast<int>(this->winId()), static_cast<short>(this->x()), static_cast<short>(this->y()), static_cast<unsigned short>(this->width()), static_cast<unsigned short>(this->height()));
+    Utils::cancelInputEvent(static_cast<int>(this->winId()), static_cast<short>(this->x()), static_cast<short>(this->y()), static_cast<unsigned short>(this->width() * m_pixelRatio), static_cast<unsigned short>(this->height() * m_pixelRatio));
     //滚动截图改变状态，暂停滚动
     m_scrollShot->changeState(true);
 }
