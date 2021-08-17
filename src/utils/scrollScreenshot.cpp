@@ -66,7 +66,7 @@ void ScrollScreenshot::addPixmap(const QPixmap &piximg)
 
 void ScrollScreenshot::changeState(const bool isStop)
 {
-    qDebug() << __FUNCTION__ << "==================" <<isStop;
+    qDebug() << __FUNCTION__ << "====" <<isStop;
     // 暂停
     if (isStop && m_curStatus == Merging) {
         m_curStatus = Stop;
@@ -125,6 +125,8 @@ void ScrollScreenshot::merageImgState(PixMergeThread::MergeErrorValue state)
 {
     qDebug() << "拼接状态值:" <<state;
     m_mouseWheelTimer->stop();
-    m_curStatus = ScrollStatus::Mistake;
+    if (state == PixMergeThread::MaxHeight) {
+        m_curStatus = ScrollStatus::Mistake;
+    }
     emit merageError(state);
 }

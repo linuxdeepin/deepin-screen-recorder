@@ -3012,7 +3012,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (!isFirstPressButton) {
                     return false;
                 }
-                if (status::shot == m_functionType || status::scrollshot == m_functionType) {
+                if (status::shot == m_functionType) {
                     if (m_menuController == nullptr) {
                         m_menuController = new MenuController(this);
                         connect(m_menuController, &MenuController::saveAction, this, &MainWindow::saveScreenShot);

@@ -22,7 +22,7 @@
 #include <QMutexLocker>
 
 const int PixMergeThread::LONG_IMG_MAX_HEIGHT = 10000;
-const int PixMergeThread::TEMPLATE_HEIGHT = 35;
+const int PixMergeThread::TEMPLATE_HEIGHT = 50;
 
 PixMergeThread::PixMergeThread(QObject *parent) : QThread(parent)
 {
@@ -86,13 +86,12 @@ void PixMergeThread::run()
                 temp = m_pixImgs.dequeue();
             }
             cv::Mat matImg = qPixmapToCvMat(temp);
-            if (!mergeImageWork(matImg)) {
-                //拼接失败
-                qDebug() << __FUNCTION__ << __LINE__ << "Merge ERROR!!!!!!!";
-                return;
+            if (mergeImageWork(matImg)) {
+                // 更新预览图
+                emit updatePreviewImg(QImage(m_curImg.data, m_curImg.cols, m_curImg.rows,
+                                             static_cast<int>(m_curImg.step),QImage::Format_ARGB32));
             }
-            // 更新预览图
-            emit updatePreviewImg(QImage(m_curImg.data, m_curImg.cols, m_curImg.rows, static_cast<int>(m_curImg.step),QImage::Format_ARGB32));
+
         }
         QThread::currentThread()->msleep(300);
     }
