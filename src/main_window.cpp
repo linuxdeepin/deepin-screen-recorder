@@ -3322,7 +3322,7 @@ void MainWindow::tableRecordSet()
 void MainWindow::onScrollShotButtonPressEvent(int x, int y)
 {
     //滚动截图出现异常时屏蔽鼠标点击事件
-    if (m_isErrorWithScrollShot) return;
+    //if (m_isErrorWithScrollShot) return;
 
     //鼠标点击次数
     m_scrollShotMouseClick += 1;
@@ -3386,7 +3386,7 @@ void MainWindow::onScrollShotButtonPressEvent(int x, int y)
 void MainWindow::onScrollShotMoveMouseEvent(int x, int y)
 {
     //滚动截图出现异常时屏蔽鼠标移动事件
-    if (m_isErrorWithScrollShot) return;
+    //if (m_isErrorWithScrollShot) return;
 
     //将当前捕捉区域画为一个矩形
     QRect recordRect {
@@ -3470,11 +3470,12 @@ void MainWindow::openScrollShotHelp()
 //滚动截图时，获取拼接时的状态
 void MainWindow::scrollShotMerageImgState(PixMergeThread::MergeErrorValue state)
 {
-    //暂停滚动截图
+    //暂停滚动截图,可以通过点击继续进行截图
+    m_scrollShotStatus = 3;
     pauseScrollShot();
 
     //滚动截图出现异常
-    m_isErrorWithScrollShot = true;
+    //m_isErrorWithScrollShot = true;
 
     qDebug() << "function:" << __func__ << " ,line: " << __LINE__ <<" , 拼接时的状态: " << state;
     //m_scrollShotTip = new ScrollShotTip (this);

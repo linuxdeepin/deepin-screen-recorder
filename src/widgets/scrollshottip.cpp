@@ -115,6 +115,7 @@ ScrollShotTip::~ScrollShotTip()
 void ScrollShotTip::showTip(TipType tipType)
 {
     m_tipType = tipType;
+    m_scrollShotHelp->hide();
     switch (m_tipType) {
     case TipType::StartScrollShotTip:
         showStartScrollShotTip();

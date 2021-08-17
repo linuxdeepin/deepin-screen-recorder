@@ -509,7 +509,7 @@ private:
      * @brief 滚动截图是否出现错误
      * 当拼接图片出现异常时此字段置为true,当拼接未出现异常时此字段为false;
      */
-    bool m_isErrorWithScrollShot = false;
+    //bool m_isErrorWithScrollShot = false;
 
     ButtonFeedback *buttonFeedback = nullptr;
     EventMonitor *m_pScreenRecordEvent = nullptr;
