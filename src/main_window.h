@@ -602,6 +602,12 @@ private:
     XFixesCursorImage *m_CursorImage = nullptr;
     QSize m_screenSize;
     RecorderRegionShow *m_pRecorderRegion = nullptr;
+    /**
+     * @brief 屏幕的缩放比例
+     * 1.当屏幕缩放比例为1.25时，此时的屏幕实际大小为1536*864
+     *   1.1.如果需将当前屏幕的点换算到1920*1080上需乘上m_pixelRatio
+     *   1.2.如果需将1920*1080上的点换算到此屏幕应该除以m_pixelRatio
+     */
     qreal m_pixelRatio = 1.0;
     bool m_hasComposite = true;
     bool m_initScreenShot;

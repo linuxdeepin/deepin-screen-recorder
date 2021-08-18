@@ -901,39 +901,43 @@ void MainWindow::initScrollShot()
     };
     int leftTopX = 0, leftTopY = 0;
     int screenWidth = 0, screenHeight = 0;
+    int toolbarX = static_cast<int>(m_toolBar->x() * m_pixelRatio);
+    int toolbarY = static_cast<int>(m_toolBar->y() * m_pixelRatio);
+    int toolbarWidth = static_cast<int>(m_toolBar->width() * m_pixelRatio);
+    int toolbarHeight = static_cast<int>(m_toolBar->height() * m_pixelRatio);
     //单个屏幕的长宽
-    screenWidth = m_screenWidth / m_screenCount;
-    screenHeight = m_screenHeight;
+    screenWidth = static_cast<int>(m_screenWidth * m_pixelRatio) / m_screenCount;
+    screenHeight = static_cast<int>(m_screenHeight * m_pixelRatio);
+
     //捕捉区域的宽小于300或者高小于100 则提示内容在屏幕中间且与捕捉区域左上角在一个屏幕
-    if (recordWidth < 300 || recordHeight < 100) {
-        leftTopX = static_cast<int>((recordRect.x() / screenWidth) * screenWidth + (screenWidth - m_scrollShotTip->width()) / 2);
-        leftTopY = static_cast<int>((screenHeight - m_scrollShotTip->height()) / 2);
+    if (recordRect.width() < 300 || recordRect.height() < 100) {
+        leftTopX = static_cast<int>((recordRect.x() / screenWidth) * screenWidth + (screenWidth - m_scrollShotTip->width()* m_pixelRatio) / 2);
+        leftTopY = static_cast<int>((screenHeight - m_scrollShotTip->height()* m_pixelRatio) / 2);
     } else {
-        leftTopX = static_cast<int>((recordRect.x() / m_pixelRatio + (recordRect.width() / m_pixelRatio  - m_scrollShotTip->width()) / 2));
-        //工具栏在捕捉区域内部部
-        if(recordRect.contains(m_toolBar->x(),m_toolBar->y())){
-            if(m_toolBar->y() > recordRect.y() && m_toolBar->y() < (recordRect.y()+recordRect.height())){
-                //leftTopY = static_cast<int>((recordRect.y() / m_pixelRatio + (recordRect.height() / m_pixelRatio - m_scrollShotTip->height()) / 100 * 97));
-                leftTopY = static_cast<int>((m_toolBar->y() + m_toolBar->height()) / m_pixelRatio + 15 / m_pixelRatio );
-                qDebug() << "leftTopX: " << leftTopX << ",leftTopY: " <<leftTopY;
-            }
+        leftTopX = static_cast<int>((recordRect.x()  + (recordRect.width()  - m_scrollShotTip->width() * m_pixelRatio) / 2));
+        //工具栏在捕捉区域内部 ,判断工具栏的四个点是否在内部
+        if(recordRect.contains(toolbarX,toolbarY) ||
+           recordRect.contains(toolbarX + toolbarWidth,toolbarY ||
+           recordRect.contains(toolbarX,toolbarY + toolbarHeight)) ||
+           recordRect.contains(toolbarX + toolbarWidth,toolbarY + toolbarHeight))
+        {
+            //leftTopY = static_cast<int>((recordRect.y() * m_pixelRatio + (recordRect.height() * m_pixelRatio - m_scrollShotTip->height()) / 100 * 97));
+            leftTopY = static_cast<int>(toolbarY + toolbarHeight + 15 * m_pixelRatio);
         }else {
             //工具栏在捕捉区域下,且在捕捉区域外部
-            if(m_toolBar->y() > recordRect.y()){
-                leftTopY = static_cast<int>(m_toolBar->y() / m_pixelRatio - 55 / m_pixelRatio );
+            if( toolbarY > recordRect.y()){
+                leftTopY = static_cast<int>(toolbarY - m_scrollShotTip->height() * m_pixelRatio - 15 * m_pixelRatio );
             }
-            //工具栏在捕捉区域上
+            //工具栏在捕捉区域上,且在捕捉区域外部
             else {
-                leftTopY = static_cast<int>((m_toolBar->y() + m_toolBar->height()) / m_pixelRatio + 15 / m_pixelRatio );
+                leftTopY = static_cast<int>(toolbarY + toolbarHeight + 15 * m_pixelRatio );
             }
         }
-
-        qDebug() << "m_toolBar.x(): " << m_toolBar->x() << ",m_toolBar.y(): " <<m_toolBar->y() <<",m_toolBar.width(): " << m_toolBar->width() <<",m_toolBar.height(): " << m_toolBar->height() ;
         //qDebug() << "leftTopX: " << leftTopX << ",leftTopY: " <<leftTopY;
         //leftTopY = static_cast<int>((recordRect.y() / m_pixelRatio + (recordRect.height() / m_pixelRatio - m_scrollShotTip->height()) / 100 * 97));
     }
     //提示信息移动到指定位置
-    m_scrollShotTip->move(leftTopX, leftTopY);
+    m_scrollShotTip->move(static_cast<int>(leftTopX/m_pixelRatio), static_cast<int>(leftTopY/m_pixelRatio));
     //滚动截图的处理类
     m_scrollShot = new ScrollScreenshot();
     qRegisterMetaType<PixMergeThread::MergeErrorValue>("MergeErrorValue");
@@ -980,7 +984,11 @@ void MainWindow::initScrollShot()
                                          );
 
     //工具栏在捕捉区域内部需对工具栏及提示延时显示
-    if(recordRect.contains(m_toolBar->x(),m_toolBar->y())){
+    if(recordRect.contains(toolbarX,toolbarY) ||
+       recordRect.contains(toolbarX + toolbarWidth,toolbarY ||
+       recordRect.contains(toolbarX,toolbarY + toolbarHeight)) ||
+       recordRect.contains(toolbarX + toolbarWidth,toolbarY + toolbarHeight))
+    {
         //延时100ms之后使预览窗口显示第一张预览图
         QTimer::singleShot(100, this, [ = ] {
             showScrollShot();
