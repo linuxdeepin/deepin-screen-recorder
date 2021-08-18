@@ -867,6 +867,7 @@ void MainWindow::initScrollShot()
 
     m_toolBar->hide();
     m_shotButton -> hide();
+    //隐藏截图模式下左上角提示的图片大小
     m_sizeTips->hide();
 
     //滚动预览开启初始化
@@ -882,6 +883,8 @@ void MainWindow::initScrollShot()
         m_previewWidget->initPreviewWidget();
         m_previewWidget->show();
     }
+    //获取预览框相对于捕捉区域的位置
+    PreviewWidget::PostionStatus previewPostion = m_previewWidget->getPreviewPostion();
 
     //提示开始滚动截图的方法
     m_scrollShotTip = new ScrollShotTip(this);
@@ -907,15 +910,25 @@ void MainWindow::initScrollShot()
         leftTopY = static_cast<int>((screenHeight - m_scrollShotTip->height()) / 2);
     } else {
         leftTopX = static_cast<int>((recordRect.x() / m_pixelRatio + (recordRect.width() / m_pixelRatio  - m_scrollShotTip->width()) / 2));
-        //工具栏在捕捉区域下
-        if(m_toolBar->y() > recordRect.y()){
-            leftTopY = static_cast<int>(m_toolBar->y() / m_pixelRatio - 55 / m_pixelRatio );
+        //工具栏在捕捉区域内部部
+        if(recordRect.contains(m_toolBar->x(),m_toolBar->y())){
+            if(m_toolBar->y() > recordRect.y() && m_toolBar->y() < (recordRect.y()+recordRect.height())){
+                //leftTopY = static_cast<int>((recordRect.y() / m_pixelRatio + (recordRect.height() / m_pixelRatio - m_scrollShotTip->height()) / 100 * 97));
+                leftTopY = static_cast<int>((m_toolBar->y() + m_toolBar->height()) / m_pixelRatio + 15 / m_pixelRatio );
+                qDebug() << "leftTopX: " << leftTopX << ",leftTopY: " <<leftTopY;
+            }
+        }else {
+            //工具栏在捕捉区域下,且在捕捉区域外部
+            if(m_toolBar->y() > recordRect.y()){
+                leftTopY = static_cast<int>(m_toolBar->y() / m_pixelRatio - 55 / m_pixelRatio );
+            }
+            //工具栏在捕捉区域上
+            else {
+                leftTopY = static_cast<int>((m_toolBar->y() + m_toolBar->height()) / m_pixelRatio + 15 / m_pixelRatio );
+            }
         }
-        //工具栏在捕捉区域上
-        else {
-            leftTopY = static_cast<int>((m_toolBar->y() + m_toolBar->height()) / m_pixelRatio + 15 / m_pixelRatio );
-        }
-        //qDebug() << "m_toolBar.x(): " << m_toolBar->x() << ",m_toolBar.y(): " <<m_toolBar->y() <<",m_toolBar.width(): " << m_toolBar->width() <<",m_toolBar.height(): " << m_toolBar->height() ;
+
+        qDebug() << "m_toolBar.x(): " << m_toolBar->x() << ",m_toolBar.y(): " <<m_toolBar->y() <<",m_toolBar.width(): " << m_toolBar->width() <<",m_toolBar.height(): " << m_toolBar->height() ;
         //qDebug() << "leftTopX: " << leftTopX << ",leftTopY: " <<leftTopY;
         //leftTopY = static_cast<int>((recordRect.y() / m_pixelRatio + (recordRect.height() / m_pixelRatio - m_scrollShotTip->height()) / 100 * 97));
     }
@@ -928,17 +941,26 @@ void MainWindow::initScrollShot()
     connect(m_scrollShot, &ScrollScreenshot::updatePreviewImg, this, &MainWindow::showPreviewWidgetImage);
     //链接滚动截图抓取当前捕捉区图片进行图片拼接
     connect(m_scrollShot, &ScrollScreenshot::getOneImg, this, [ = ] {
-        bool ok;
-        if (m_previewWidget)
-        {
-            m_previewWidget->hide();
-        }
-        QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
-        QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
-        m_scrollShot->addPixmap(img);
-        if (m_previewWidget)
-        {
-            m_previewWidget->show();
+        if(PreviewWidget::PostionStatus::INSIDE == previewPostion){
+            if (m_previewWidget)
+            {
+                m_previewWidget->hide();
+            }
+            QTimer::singleShot(30, this, [ = ] {
+                bool ok;
+                QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
+                QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
+                m_scrollShot->addPixmap(img);
+                if (m_previewWidget)
+                {
+                    m_previewWidget->show();
+                }
+            });
+        }else {
+            bool ok;
+            QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
+            QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
+            m_scrollShot->addPixmap(img);
         }
     });
     //链接滚动截图拼接过程中返回的错误状态
@@ -957,32 +979,44 @@ void MainWindow::initScrollShot()
                                           SLOT(onLockScreenEvent(QDBusMessage))
                                          );
 
-    //延时100ms之后使预览窗口显示第一张预览图
-    QTimer::singleShot(100, this, [ = ] {
-        //打开滚动截图时，预览窗口显示的第一张图片
-        bool ok;
-        QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
-        //截取指定区域的图片
-        //预览区域显示当前指定区域的图片
-        QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
-        m_previewWidget->updateImage(img.toImage());
-        //打开工具栏显示 需放在更新工具栏之前，避免出现工具栏没显示但是已经执行位置更新
-        m_toolBar->show();
-        //打开截图保存按钮显示
-        m_shotButton->show();
-        //打开滚动截图左上角当前图片的大小显示
-        m_scrollShotSizeTips->show();
-        //显示开始滚动 截图的提示
-        m_scrollShotTip->show();
-        repaint();
-        //延时50ms之后更新工具栏及截图保存按钮的位置
-        QTimer::singleShot(50, this, [ = ] {
-            if (m_toolBar->isVisible())
-            {
-                updateToolBarPos();
-                updateShotButtonPos();
-            }
+    //工具栏在捕捉区域内部需对工具栏及提示延时显示
+    if(recordRect.contains(m_toolBar->x(),m_toolBar->y())){
+        //延时100ms之后使预览窗口显示第一张预览图
+        QTimer::singleShot(100, this, [ = ] {
+            showScrollShot();
         });
+    }else {
+        showScrollShot();
+
+    }
+
+}
+//初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小
+void MainWindow::showScrollShot()
+{
+    //打开滚动截图时，预览窗口显示的第一张图片
+    bool ok;
+    QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
+    //截取指定区域的图片
+    //预览区域显示当前指定区域的图片
+    QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
+    m_previewWidget->updateImage(img.toImage());
+    //打开工具栏显示 需放在更新工具栏之前，避免出现工具栏没显示但是已经执行位置更新
+    m_toolBar->show();
+    //打开截图保存按钮显示
+    m_shotButton->show();
+    //打开滚动截图左上角当前图片的大小显示
+    m_scrollShotSizeTips->show();
+    //显示开始滚动 截图的提示
+    m_scrollShotTip->show();
+    repaint();
+    //延时50ms之后更新工具栏及截图保存按钮的位置
+    QTimer::singleShot(50, this, [ = ] {
+        if (m_toolBar->isVisible())
+        {
+            updateToolBarPos();
+            updateShotButtonPos();
+        }
     });
 }
 //显示预览窗口和图片
@@ -1251,8 +1285,8 @@ void MainWindow::setInputEvent()
         static_cast<int>(recordWidth * m_pixelRatio),
         static_cast<int>(recordHeight * m_pixelRatio)
     };
-    //当前鼠标点击的点
-    QPoint toolBarPoint(m_toolBar->x() * m_pixelRatio, m_toolBar->y() * m_pixelRatio);
+    //当前工具栏位置
+    QPoint toolBarPoint(static_cast<int>(m_toolBar->x() * m_pixelRatio), static_cast<int>(m_toolBar->y() * m_pixelRatio));
     //判断工具栏位置是否在捕捉区域内部
     if (recordRect.contains(toolBarPoint)) {
         //工具栏位置在捕捉区域内部，穿透的位置下移一断距离
@@ -1272,6 +1306,8 @@ void MainWindow::setInputEvent()
             static_cast<unsigned short>(recordHeight * m_pixelRatio));
     }
 }
+
+
 
 void MainWindow::showPressFeedback(int x, int y)
 {
@@ -2583,6 +2619,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
             }else if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {//滚动截图模式下，按下enter按键进行保存截图
                 saveScreenShot();
+            }else if (qApp->keyboardModifiers() & Qt::ControlModifier) {//滚动截图模式下，按下ctrl按键进行保存截图
+                if (keyEvent->key() == Qt::Key_S) {
+                    saveScreenShot();
+                }
             }
         }
 
@@ -3544,7 +3584,7 @@ void MainWindow::scrollShotMerageImgState(PixMergeThread::MergeErrorValue state)
     m_scrollShotTip->move(leftTopX, leftTopY);
     //显示提示
     m_scrollShotTip->show();
-    repaint();
+    //repaint();
     //qDebug() << "function:" << __func__ << " ,line: " << __LINE__ <<"state: " << state;
 
 

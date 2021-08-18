@@ -428,6 +428,10 @@ protected:
      * 工具栏在捕捉区域内部，需要将工具栏这片区域给排除掉
      */
     void setInputEvent();
+    /**
+     * @brief 初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小
+     */
+    void showScrollShot();
 private:
 //    QList<WindowRect> windowRects;
     QList<QRect> windowRects;

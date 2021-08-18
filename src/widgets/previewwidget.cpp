@@ -20,6 +20,11 @@ void PreviewWidget::initPreviewWidget()
     setGeometry(m_previewRect);
 }
 
+PreviewWidget::PostionStatus PreviewWidget::getPreviewPostion()
+{
+    return m_StatusPos;
+}
+
 void PreviewWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
@@ -29,7 +34,7 @@ void PreviewWidget::paintEvent(QPaintEvent *event)
     painter.drawImage(rect(), m_currentPix);
 }
 //设置位置状态
-void PreviewWidget::setPreviewWidgetStatusPos(int statusPos)
+void PreviewWidget::setPreviewWidgetStatusPos(PostionStatus statusPos)
 {
     m_StatusPos = statusPos;
 }

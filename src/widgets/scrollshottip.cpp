@@ -92,7 +92,6 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
     //m_scrollShotHelp->setStyleSheet("text-decoration: underline;");
     m_scrollShotHelp->resize(static_cast<int>(strlen(reinterpret_cast<char*>(m_scrollShotHelp->text().data()))) * m_scrollShotHelp->font().pointSize(),m_scrollShotHelp->height());
     connect(m_scrollShotHelp, &DCommandLinkButton::clicked, this, &ScrollShotTip::openScrollShotHelp);
-
     QHBoxLayout *pHBoxLayout = new QHBoxLayout();
     pHBoxLayout->addWidget(m_warmingIconButton);
     pHBoxLayout->addSpacing(2);
@@ -100,6 +99,7 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
     pHBoxLayout->addSpacing(2);
     pHBoxLayout->addWidget(m_scrollShotHelp);
     this->setLayout(pHBoxLayout);
+    update();
 
 }
 
@@ -242,6 +242,8 @@ void ScrollShotTip::showStartScrollShotTip()
     m_scrollShotHelp->hide();
     width =  m_tipTextLable->width() + 20;
     setFixedSize(width, TIP_HEIGHT);
+    update();
+
 }
 
 //滚动截图出现错误的提示
@@ -253,9 +255,15 @@ void ScrollShotTip::showErrorScrollShotTip()
     m_tipTextLable->setText(m_tipText);
     m_tipTextLable->adjustSize();
     m_warmingIconButton->show();
+    m_scrollShotHelp->resize(static_cast<int>(strlen(reinterpret_cast<char*>(m_scrollShotHelp->text().data()))) * m_scrollShotHelp->font().pointSize(),m_scrollShotHelp->height());
     m_scrollShotHelp->show();
-    width = m_warmingIconButton->width() + 4 + m_tipTextLable->width() + m_scrollShotHelp->width();
+    width = m_warmingIconButton->width() + 10 + m_tipTextLable->width() + m_scrollShotHelp->width();
     setFixedSize(width, TIP_HEIGHT);
+    update();
+    //qDebug() << "1111 >> m_warmingIconButton->width(): " << m_warmingIconButton->width() <<"m_warmingIconButton->height(): " << m_warmingIconButton->height() ;
+    //qDebug() << "1111 >> m_tipTextLable->width(): " << m_tipTextLable->width() <<"m_tipTextLable->height(): " << m_tipTextLable->height() ;
+    //qDebug() << "1111 >> m_scrollShotHelp->width(): " << m_scrollShotHelp->width() <<"m_scrollShotHelp->height(): " << m_scrollShotHelp->height() ;
+    //qDebug() << "1111 >> this->width(): " << this->width() <<"this->height(): " << this->height() ;
 }
 
 //滚动截图到底部出现的提示
@@ -270,6 +278,8 @@ void ScrollShotTip::showEndScrollShotTip()
     m_warmingIconButton->show();
     width = m_warmingIconButton->width() + 30 + m_tipTextLable->width();
     setFixedSize(width, TIP_HEIGHT);
+    update();
+
 }
 
 //图像拼接长度限制
@@ -284,6 +294,7 @@ void ScrollShotTip::showMaxScrollShotTip()
     m_warmingIconButton->show();
     width = m_warmingIconButton->width() + 30 + m_tipTextLable->width();
     setFixedSize(width, TIP_HEIGHT);
+    update();
 }
 
 
