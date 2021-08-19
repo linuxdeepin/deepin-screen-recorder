@@ -64,7 +64,7 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
     m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     QPixmap warmingImg ;
     //警告图片
-    if(m_themeType == 1) {
+    if (m_themeType == 1) {
         warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
     } else {
         warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
@@ -89,16 +89,16 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
     m_scrollShotHelp = new DCommandLinkButton(tr("Get help."), this);
     QString str = "查看帮助";
     m_scrollShotHelp->hide();
-    //m_scrollShotHelp->setStyleSheet("text-decoration: underline;");
-    m_scrollShotHelp->resize(static_cast<int>(strlen(reinterpret_cast<char*>(m_scrollShotHelp->text().data()))) * m_scrollShotHelp->font().pointSize(),m_scrollShotHelp->height());
+    QFontMetrics helpFontMetrics(m_scrollShotHelp->font());
+    m_scrollShotHelp->resize(helpFontMetrics.width(m_scrollShotHelp->text()), m_scrollShotHelp->height());
     connect(m_scrollShotHelp, &DCommandLinkButton::clicked, this, &ScrollShotTip::openScrollShotHelp);
     QHBoxLayout *pHBoxLayout = new QHBoxLayout();
     pHBoxLayout->setAlignment(Qt::AlignCenter);
     pHBoxLayout->addWidget(m_warmingIconButton);
     pHBoxLayout->addStretch();
     pHBoxLayout->addWidget(m_tipTextLable);
-    pHBoxLayout->addWidget(m_scrollShotHelp);
     pHBoxLayout->addStretch();
+    pHBoxLayout->addWidget(m_scrollShotHelp);
     this->setLayout(pHBoxLayout);
     update();
 
@@ -106,7 +106,7 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
 
 ScrollShotTip::~ScrollShotTip()
 {
-    if(m_scrollShotHelp){
+    if (m_scrollShotHelp) {
         delete  m_scrollShotHelp;
         m_scrollShotHelp = nullptr;
     }
@@ -160,17 +160,17 @@ void ScrollShotTip::paintEvent(QPaintEvent *)
     }
     //获取模糊背景的像素图
     QPixmap blurPixmap = getTooltipBackground();
-    if(m_themeType == 1) {
+    if (m_themeType == 1) {
         //判断是否获取到当前的模糊背景未获取到直接画一个矩形
         if (!blurPixmap.isNull()) {
-            paintRect(painter,blurPixmap,radius);
-            drawTooltipBackground(painter, rect(), "#EBEBEB", 0.3,radius);
+            paintRect(painter, blurPixmap, radius);
+            drawTooltipBackground(painter, rect(), "#EBEBEB", 0.3, radius);
         }
     } else {
         //判断是否获取到当前的模糊背景未获取到直接画一个矩形
         if (!blurPixmap.isNull()) {
-            paintRect(painter,blurPixmap,radius);
-            drawTooltipBackground(painter, rect(), "#191919", 0.8,radius);
+            paintRect(painter, blurPixmap, radius);
+            drawTooltipBackground(painter, rect(), "#191919", 0.8, radius);
         }
     }
     painter.setOpacity(1);
@@ -186,10 +186,10 @@ QPixmap ScrollShotTip::getTooltipBackground()
     //qDebug() << "this->x(): " << this->x() << "this->y(): " << this->y() <<"this->width(): " << this->width() <<"this->height(): " << this->height() ;
 
     //用当前提示窗口的位置和提示框的大小构建一个矩形框
-    QRect target( static_cast<int>(this->x()),
-                      static_cast<int>(this->y()),
-                      static_cast<int>(this->width() ),
-                      static_cast<int>(this->height()));
+    QRect target(static_cast<int>(this->x()),
+                 static_cast<int>(this->y()),
+                 static_cast<int>(this->width()),
+                 static_cast<int>(this->height()));
     QPixmap tmpImg = tempFile->getFullscreenPixmap().copy(target);
     //qDebug() << "tmpImg.width1(),tmpImg.height1()" << tmpImg.width() << "," << tmpImg.height();
 
@@ -204,7 +204,7 @@ QPixmap ScrollShotTip::getTooltipBackground()
 }
 
 //画矩形
-void ScrollShotTip::paintRect(QPainter &painter,QPixmap &blurPixmap,int radius)
+void ScrollShotTip::paintRect(QPainter &painter, QPixmap &blurPixmap, int radius)
 {
     QPainterPath rectPath;
     painter.setPen(Qt::transparent);
@@ -217,7 +217,7 @@ void ScrollShotTip::paintRect(QPainter &painter,QPixmap &blurPixmap,int radius)
 }
 
 //画提示背景
-void ScrollShotTip::drawTooltipBackground(QPainter &painter, QRect rect, QString textColor, qreal opacity,int radius)
+void ScrollShotTip::drawTooltipBackground(QPainter &painter, QRect rect, QString textColor, qreal opacity, int radius)
 {
     painter.setOpacity(opacity);
     QPainterPath path;
@@ -243,7 +243,8 @@ void ScrollShotTip::showStartScrollShotTip()
     m_tipText = tr("Click to take a scrolling screenshot");
     int width = 0;
     m_tipTextLable->setText(m_tipText);
-    m_tipTextLable->adjustSize();
+    QFontMetrics fontMetrics(m_tipTextLable->font());
+    m_tipTextLable->resize(fontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
     m_warmingIconButton->hide();
     m_scrollShotHelp->hide();
     width =  m_tipTextLable->width() + 20;
@@ -259,11 +260,13 @@ void ScrollShotTip::showErrorScrollShotTip()
     m_tipText = tr("Failed to take a continuous screenshot.");
     int width = 0;
     m_tipTextLable->setText(m_tipText);
-    m_tipTextLable->adjustSize();
+    QFontMetrics labFontMetrics(m_tipTextLable->font());
+    m_tipTextLable->resize(labFontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
     m_warmingIconButton->show();
-    m_scrollShotHelp->resize(static_cast<int>(strlen(reinterpret_cast<char*>(m_scrollShotHelp->text().data()))) * m_scrollShotHelp->font().pointSize(),m_scrollShotHelp->height());
+    QFontMetrics helpFontMetrics(m_scrollShotHelp->font());
+    m_scrollShotHelp->resize(helpFontMetrics.width(m_scrollShotHelp->text()), m_scrollShotHelp->height());
     m_scrollShotHelp->show();
-    width = m_warmingIconButton->width() + 10 + m_tipTextLable->width() + m_scrollShotHelp->width();
+    width = m_warmingIconButton->width() + 10 + m_tipTextLable->width() + 30 + m_scrollShotHelp->width();
     setFixedSize(width, TIP_HEIGHT);
     update();
     //qDebug() << "1111 >> m_warmingIconButton->width(): " << m_warmingIconButton->width() <<"m_warmingIconButton->height(): " << m_warmingIconButton->height() ;
@@ -279,7 +282,8 @@ void ScrollShotTip::showEndScrollShotTip()
     m_tipText = tr("Reached the bottom of the scroll area");
     int width = 0;
     m_tipTextLable->setText(m_tipText);
-    m_tipTextLable->adjustSize();
+    QFontMetrics fontMetrics(m_tipTextLable->font());
+    m_tipTextLable->resize(fontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
     m_scrollShotHelp->hide();
     m_warmingIconButton->show();
     width = m_warmingIconButton->width() + 30 + m_tipTextLable->width();
@@ -295,7 +299,8 @@ void ScrollShotTip::showMaxScrollShotTip()
     m_tipText = tr("Reached the maximum length");
     int width = 0;
     m_tipTextLable->setText(m_tipText);
-    m_tipTextLable->adjustSize();
+    QFontMetrics fontMetrics(m_tipTextLable->font());
+    m_tipTextLable->resize(fontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
     m_scrollShotHelp->hide();
     m_warmingIconButton->show();
     width = m_warmingIconButton->width() + 30 + m_tipTextLable->width();
