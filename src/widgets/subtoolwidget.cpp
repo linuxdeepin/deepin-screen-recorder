@@ -481,7 +481,7 @@ void SubToolWidget::initRecordLabel()
     m_recordOptionMenu->addAction(fps20Action);
     m_recordOptionMenu->addAction(fps24Action);
     m_recordOptionMenu->addAction(fps30Action);
-
+    m_recordOptionMenu->hide();
     m_optionButton->setMenu(m_recordOptionMenu);
 
     // change by hmy
@@ -860,7 +860,7 @@ void SubToolWidget::initShotLabel()
     m_optionMenu->addAction(jpgAction);
     m_optionMenu->addAction(bmpAction);
 
-
+    m_optionMenu->hide();
     m_shotOptionButton->setMenu(m_optionMenu);
 
     SaveAction t_saveIndex = ConfigSettings::instance()->value("save", "save_op").value<SaveAction>();
