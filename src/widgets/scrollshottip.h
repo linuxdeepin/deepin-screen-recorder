@@ -82,6 +82,12 @@ public:
      */
     void showTip(TipType tipType);
 
+    /**
+     * @brief 获取当前的提示类型
+     * @return
+     */
+    TipType getTipType();
+
 signals:
     /**
      * @brief 打开截图录屏帮助文档并定位到滚动截图
@@ -131,7 +137,6 @@ protected:
      * @param opacity
      */
     void drawTooltipBackground(QPainter &painter, QRect rect, QString textColor, qreal opacity,int radius);
-
 
 
 private:

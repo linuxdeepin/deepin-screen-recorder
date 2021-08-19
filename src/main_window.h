@@ -270,6 +270,12 @@ public:
     void initScrollShot();
 
     /**
+     * @brief 根据工具栏获取滚动截图提示框的坐标
+     * @return  提示框的位置
+     */
+    QPoint getScrollShotTipPosition();
+
+    /**
      * @brief 初始化应用内快捷键
      */
     void initShortcut();
@@ -514,6 +520,11 @@ private:
      * 当拼接图片出现异常时此字段置为true,当拼接未出现异常时此字段为false;
      */
     //bool m_isErrorWithScrollShot = false;
+
+    /**
+      * @brief 滚动截图提示显示时间的定时器
+      */
+    QTimer *m_tipShowtimer = nullptr;
 
     ButtonFeedback *buttonFeedback = nullptr;
     EventMonitor *m_pScreenRecordEvent = nullptr;

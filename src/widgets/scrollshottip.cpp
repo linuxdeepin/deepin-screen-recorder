@@ -73,14 +73,14 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
 
     m_warmingIconButton = new DIconButton(this);
     m_warmingIconButton->setIcon(warmingImg);
-    m_warmingIconButton->setIconSize(QSize(30, 30));
+    m_warmingIconButton->setIconSize(QSize(26, 26));
     m_warmingIconButton->setFlat(true);
     m_warmingIconButton->setFixedSize(QSize(30, 30));
 
     //提示内容
     m_tipTextLable = new DLabel(this);
     m_tipTextLable->setObjectName("TipText");
-    m_tipTextLable->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    //m_tipTextLable->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     //m_tipTextLable->setStyleSheet("QLabel{background-color:rgb(200,101,102);}");
     //设置背景透明
     //m_tipTextLable->setStyleSheet("QLabel {background-color: transparent;}");
@@ -93,11 +93,12 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
     m_scrollShotHelp->resize(static_cast<int>(strlen(reinterpret_cast<char*>(m_scrollShotHelp->text().data()))) * m_scrollShotHelp->font().pointSize(),m_scrollShotHelp->height());
     connect(m_scrollShotHelp, &DCommandLinkButton::clicked, this, &ScrollShotTip::openScrollShotHelp);
     QHBoxLayout *pHBoxLayout = new QHBoxLayout();
+    pHBoxLayout->setAlignment(Qt::AlignCenter);
     pHBoxLayout->addWidget(m_warmingIconButton);
-    pHBoxLayout->addSpacing(2);
+    pHBoxLayout->addStretch();
     pHBoxLayout->addWidget(m_tipTextLable);
-    pHBoxLayout->addSpacing(2);
     pHBoxLayout->addWidget(m_scrollShotHelp);
+    pHBoxLayout->addStretch();
     this->setLayout(pHBoxLayout);
     update();
 
@@ -228,6 +229,11 @@ void ScrollShotTip::drawTooltipBackground(QPainter &painter, QRect rect, QString
     pen.setWidth(1);
     painter.setPen(pen);
     painter.drawPath(path);
+}
+
+TipType ScrollShotTip::getTipType()
+{
+    return m_tipType;
 }
 
 //开始滚动截图前的提示
