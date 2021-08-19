@@ -2091,6 +2091,7 @@ void MainWindow::saveScreenShot()
 
     if (status::scrollshot == m_functionType && m_scrollShotStatus != 0) {
         m_resultPixmap = QPixmap::fromImage(m_scrollShot->savePixmap());
+        m_previewWidget->hide();
     } else {
         shotCurrentImg();
     }
