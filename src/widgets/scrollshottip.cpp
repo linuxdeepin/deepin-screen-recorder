@@ -179,7 +179,6 @@ void ScrollShotTip::paintEvent(QPaintEvent *)
 //获取提示框的模糊背景图
 QPixmap ScrollShotTip::getTooltipBackground()
 {
-    TempFile *tempFile = TempFile::instance();
     const int radius = 10;
     int imgWidth = 0;
     int imgHeight = 0;
@@ -190,7 +189,7 @@ QPixmap ScrollShotTip::getTooltipBackground()
                  static_cast<int>(this->y()),
                  static_cast<int>(this->width()),
                  static_cast<int>(this->height()));
-    QPixmap tmpImg = tempFile->getFullscreenPixmap().copy(target);
+    QPixmap tmpImg = m_backgroundPixmap.copy(target);
     //qDebug() << "tmpImg.width1(),tmpImg.height1()" << tmpImg.width() << "," << tmpImg.height();
 
     if (!tmpImg.isNull()) {
@@ -234,6 +233,12 @@ void ScrollShotTip::drawTooltipBackground(QPainter &painter, QRect rect, QString
 TipType ScrollShotTip::getTipType()
 {
     return m_tipType;
+}
+
+void ScrollShotTip::setBackgroundPixmap(QPixmap &backgroundPixmap)
+{
+    m_backgroundPixmap = backgroundPixmap;
+
 }
 
 //开始滚动截图前的提示

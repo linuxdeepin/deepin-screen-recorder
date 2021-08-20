@@ -88,6 +88,12 @@ public:
      */
     TipType getTipType();
 
+    /**
+     * @brief 设置滚动截图当前屏幕的背景
+     * @param backgroundPixmap
+     */
+    void setBackgroundPixmap(QPixmap &backgroundPixmap);
+
 signals:
     /**
      * @brief 打开截图录屏帮助文档并定位到滚动截图
@@ -148,6 +154,10 @@ private:
     QString m_tipText;
 
     DLabel *m_tipTextLable;
+    /**
+     * @brief 背景图片
+     */
+    QPixmap m_backgroundPixmap;
 
 
     /**

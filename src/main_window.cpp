@@ -892,6 +892,7 @@ void MainWindow::initScrollShot()
     connect(m_scrollShotTip, &ScrollShotTip::openScrollShotHelp, this, &MainWindow::openScrollShotHelp);
     //选择提示类型
     m_scrollShotTip->showTip(TipType::StartScrollShotTip);
+    m_scrollShotTip->setBackgroundPixmap(m_backgroundPixmap);
     //根据工具栏获取滚动截图提示框的坐标
     QPoint tipPosition = getScrollShotTipPosition();
     //提示信息移动到指定位置
@@ -953,8 +954,8 @@ void MainWindow::initScrollShot()
     int toolbarHeight = static_cast<int>(m_toolBar->height() * m_pixelRatio);
     //工具栏在捕捉区域内部需对工具栏及提示延时显示
     if(recordRect.contains(toolbarX,toolbarY) ||
-       recordRect.contains(toolbarX + toolbarWidth,toolbarY ||
-       recordRect.contains(toolbarX,toolbarY + toolbarHeight)) ||
+       recordRect.contains(toolbarX + toolbarWidth,toolbarY) ||
+       recordRect.contains(toolbarX,toolbarY + toolbarHeight) ||
        recordRect.contains(toolbarX + toolbarWidth,toolbarY + toolbarHeight))
     {
         //延时100ms之后使预览窗口显示第一张预览图
@@ -982,8 +983,8 @@ QPoint MainWindow::getScrollShotTipPosition()
 {
     const QPoint topLeft = geometry().topLeft();
     QRect recordRect {
-        static_cast<int>(recordX * m_pixelRatio + topLeft.x()),
-        static_cast<int>(recordY * m_pixelRatio + topLeft.y()),
+        static_cast<int>(recordX * m_pixelRatio),
+        static_cast<int>(recordY * m_pixelRatio),
         static_cast<int>(recordWidth * m_pixelRatio),
         static_cast<int>(recordHeight * m_pixelRatio)
     };
@@ -993,6 +994,9 @@ QPoint MainWindow::getScrollShotTipPosition()
     int toolbarY = static_cast<int>(m_toolBar->y() * m_pixelRatio);
     int toolbarWidth = static_cast<int>(m_toolBar->width() * m_pixelRatio);
     int toolbarHeight = static_cast<int>(m_toolBar->height() * m_pixelRatio);
+    //qDebug() << "toolbarX: " << toolbarX << ",toolbarY: " <<toolbarY << "toolbarWidth: " << toolbarWidth << ",toolbarHeight: " << toolbarHeight;
+    //qDebug() << "recordRect.x(): " << recordRect.x() << ",recordRect.y(): " << recordRect.y() << "recordRect.width(): " << recordRect.width() << ",recordRect.height(): " << recordRect.height();
+
     //单个屏幕的长宽
     screenWidth = static_cast<int>(m_screenWidth * m_pixelRatio) / m_screenCount;
     screenHeight = static_cast<int>(m_screenHeight * m_pixelRatio);
@@ -1005,8 +1009,8 @@ QPoint MainWindow::getScrollShotTipPosition()
         leftTopX = static_cast<int>((recordRect.x()  + (recordRect.width()  - m_scrollShotTip->width() * m_pixelRatio) / 2));
         //工具栏在捕捉区域内部 ,判断工具栏的四个点是否在内部
         if(recordRect.contains(toolbarX,toolbarY) ||
-           recordRect.contains(toolbarX + toolbarWidth,toolbarY ||
-           recordRect.contains(toolbarX,toolbarY + toolbarHeight)) ||
+           recordRect.contains(toolbarX + toolbarWidth,toolbarY) ||
+           recordRect.contains(toolbarX,toolbarY + toolbarHeight) ||
            recordRect.contains(toolbarX + toolbarWidth,toolbarY + toolbarHeight))
         {
             //leftTopY = static_cast<int>((recordRect.y() * m_pixelRatio + (recordRect.height() * m_pixelRatio - m_scrollShotTip->height()) / 100 * 97));
@@ -3457,7 +3461,7 @@ void MainWindow::onScrollShotButtonPressEvent(int x, int y)
             pauseScrollShot();
         }
         //第n次进入 n不等于1,继续滚动截图
-        else if (3 == m_scrollShotStatus) {
+        else if (3 == m_scrollShotStatus || 4 == m_scrollShotStatus) {
             m_scrollShotStatus = 2;
             continueScrollShot();
         }
@@ -3494,13 +3498,13 @@ void MainWindow::onScrollShotMoveMouseEvent(int x, int y)
         }
     }
     //判断当前点是否在捕捉区域内部,在捕捉区域内则继续滚动
-    else {
-        //鼠标点击触发的暂停，不论鼠标在捕捉区域内如何移动都不继续
-        if (4 == m_scrollShotStatus) {
-            m_scrollShotStatus = 2;
-            continueScrollShot();
-        }
-    }
+    //else {
+    //    //鼠标点击触发的暂停，不论鼠标在捕捉区域内如何移动都不继续
+    //    if (4 == m_scrollShotStatus) {
+    //        m_scrollShotStatus = 2;
+    //        continueScrollShot();
+    //    }
+    //}
 
 }
 
@@ -3591,6 +3595,8 @@ void MainWindow::scrollShotMerageImgState(PixMergeThread::MergeErrorValue state)
     QPoint tipPosition = getScrollShotTipPosition();
     //提示信息移动到指定位置
     m_scrollShotTip->move(tipPosition);
+    QPixmap currentBackgroundPixmap = getPixmapofRect(m_backgroundRect);
+    m_scrollShotTip->setBackgroundPixmap(currentBackgroundPixmap);
     //显示提示
     //m_scrollShotTip->show();
     m_scrollShotTip->setVisible(true);
