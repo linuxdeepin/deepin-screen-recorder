@@ -22,6 +22,7 @@
 #include "utils.h"
 #include "constant.h"
 #include <DDialog>
+#include <DSysInfo>
 
 #include <QString>
 #include <QDir>
@@ -39,6 +40,7 @@
 
 //DWM_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
+DCORE_USE_NAMESPACE
 
 static const QString WarningDialogService = "com.deepin.dde.WarningDialog";
 static const QString WarningDialogPath = "/com/deepin/dde/WarningDialog";
@@ -258,4 +260,20 @@ void Utils::cancelInputEvent1(const int wid, const short x, const short y, const
     XShapeCombineRectangles(QX11Info::display(), static_cast<unsigned long>(wid), ShapeInput, 0, 0, reponseArea, 0, ShapeSubtract, YXBanded);
     delete reponseArea;
 
+}
+
+
+// 录屏显示录制时长， 依赖dde-dock。
+// 判断系统是否是大于1040, 大于1040才显示录制时长功能。
+bool Utils::isSysHighVersion1040()
+{
+    const int version1040 = 1040;
+    if(DSysInfo::isDeepin()) {
+        bool correct = false;
+        int version = DSysInfo::minorVersion().toInt(&correct);
+        if (correct && (version >= version1040)) {
+            return true;
+        }
+    }
+    return false;
 }

@@ -463,6 +463,9 @@ void RecordProcess::startRecord()
     if(Utils::isTabletEnvironment) {
         return;
     }
+    if (Utils::isSysHighVersion1040() == false) {
+        return;
+    }
     QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
                                                                                              "/com/deepin/ScreenRecorder/time",
                                                                                              "com.deepin.ScreenRecorder.time",

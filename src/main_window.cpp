@@ -3751,10 +3751,23 @@ void MainWindow::startRecord()
     resetCursor();
     repaint();
 
-//    trayIcon->show();
-//    flashTrayIconTimer = new QTimer(this);
-//    connect(flashTrayIconTimer, SIGNAL(timeout()), this, SLOT(flashTrayIcon()));
-//    flashTrayIconTimer->start(800);
+    if (Utils::isSysHighVersion1040() == false) {
+        QSystemTrayIcon* trayIcon = new QSystemTrayIcon(this);
+        trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
+        trayIcon->setToolTip(tr("Screen Capture"));
+        connect(trayIcon, &QSystemTrayIcon::activated, this, [ = ] {
+            stopRecord();
+        });
+        QTimer* flashTrayIconTimer = new QTimer(this);
+        connect(flashTrayIconTimer, &QTimer::timeout, this, [ = ] {
+            static int flashTrayIconCounter = 0;
+            QString iconIndex = QString("trayicon%1.svg").arg(flashTrayIconCounter % 2 + 1);
+            trayIcon->setIcon(QIcon((Utils::getQrcPath(iconIndex))));
+            flashTrayIconCounter++;
+        });
+        flashTrayIconTimer->start(800);
+        trayIcon->show();
+    }
     // 状态栏闪烁
     if (Utils::isTabletEnvironment && m_tabletRecorderHandle) {
         m_tabletRecorderHandle->startStatusBar();

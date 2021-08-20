@@ -83,6 +83,8 @@ public:
      */
     static void cancelInputEvent1(const int wid, const short x, const short y, const unsigned short width, const unsigned short height);
 
+    static bool isSysHighVersion1040();
+
 };
 
 #endif //UTILS_H
