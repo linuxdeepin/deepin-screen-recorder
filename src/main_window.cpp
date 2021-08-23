@@ -879,7 +879,7 @@ void MainWindow::initScrollShot()
             static_cast<int>(recordHeight)
         };
         m_previewWidget = new PreviewWidget(previewRecordRect, this);
-        m_previewWidget->setScreenWidth(m_screenWidth);
+        m_previewWidget->setScreenInfo(m_screenWidth, m_pixelRatio);
         m_previewWidget->initPreviewWidget();
         m_previewWidget->show();
     }
@@ -904,9 +904,9 @@ void MainWindow::initScrollShot()
     connect(m_scrollShot, &ScrollScreenshot::updatePreviewImg, this, &MainWindow::showPreviewWidgetImage);
     //链接滚动截图抓取当前捕捉区图片进行图片拼接
     connect(m_scrollShot, &ScrollScreenshot::getOneImg, this, [ = ] {
-        if(PreviewWidget::PostionStatus::INSIDE == previewPostion){
-            if (m_previewWidget)
-            {
+        if (PreviewWidget::PostionStatus::INSIDE == previewPostion)
+        {
+            if (m_previewWidget) {
                 m_previewWidget->hide();
             }
             QTimer::singleShot(30, this, [ = ] {
@@ -919,7 +919,8 @@ void MainWindow::initScrollShot()
                     m_previewWidget->show();
                 }
             });
-        }else {
+        } else
+        {
             bool ok;
             QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
             QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
@@ -953,16 +954,15 @@ void MainWindow::initScrollShot()
     int toolbarWidth = static_cast<int>(m_toolBar->width() * m_pixelRatio);
     int toolbarHeight = static_cast<int>(m_toolBar->height() * m_pixelRatio);
     //工具栏在捕捉区域内部需对工具栏及提示延时显示
-    if(recordRect.contains(toolbarX,toolbarY) ||
-       recordRect.contains(toolbarX + toolbarWidth,toolbarY) ||
-       recordRect.contains(toolbarX,toolbarY + toolbarHeight) ||
-       recordRect.contains(toolbarX + toolbarWidth,toolbarY + toolbarHeight))
-    {
+    if (recordRect.contains(toolbarX, toolbarY) ||
+            recordRect.contains(toolbarX + toolbarWidth, toolbarY) ||
+            recordRect.contains(toolbarX, toolbarY + toolbarHeight) ||
+            recordRect.contains(toolbarX + toolbarWidth, toolbarY + toolbarHeight)) {
         //延时100ms之后使预览窗口显示第一张预览图
         QTimer::singleShot(100, this, [ = ] {
             showScrollShot();
         });
-    }else {
+    } else {
         showScrollShot();
 
     }
@@ -1003,39 +1003,38 @@ QPoint MainWindow::getScrollShotTipPosition()
 
     //捕捉区域的宽小于300或者高小于100 则提示内容在屏幕中间且与捕捉区域左上角在一个屏幕
     if (recordRect.width() < 300 || recordRect.height() < 100) {
-        leftTopX = static_cast<int>((recordRect.x() / screenWidth) * screenWidth + (screenWidth - m_scrollShotTip->width()* m_pixelRatio) / 2);
-        leftTopY = static_cast<int>((screenHeight - m_scrollShotTip->height()* m_pixelRatio) / 2);
+        leftTopX = static_cast<int>((recordRect.x() / screenWidth) * screenWidth + (screenWidth - m_scrollShotTip->width() * m_pixelRatio) / 2);
+        leftTopY = static_cast<int>((screenHeight - m_scrollShotTip->height() * m_pixelRatio) / 2);
     } else {
         leftTopX = static_cast<int>((recordRect.x()  + (recordRect.width()  - m_scrollShotTip->width() * m_pixelRatio) / 2));
         //工具栏在捕捉区域内部 ,判断工具栏的四个点是否在内部
-        if(recordRect.contains(toolbarX,toolbarY) ||
-           recordRect.contains(toolbarX + toolbarWidth,toolbarY) ||
-           recordRect.contains(toolbarX,toolbarY + toolbarHeight) ||
-           recordRect.contains(toolbarX + toolbarWidth,toolbarY + toolbarHeight))
-        {
+        if (recordRect.contains(toolbarX, toolbarY) ||
+                recordRect.contains(toolbarX + toolbarWidth, toolbarY) ||
+                recordRect.contains(toolbarX, toolbarY + toolbarHeight) ||
+                recordRect.contains(toolbarX + toolbarWidth, toolbarY + toolbarHeight)) {
             //leftTopY = static_cast<int>((recordRect.y() * m_pixelRatio + (recordRect.height() * m_pixelRatio - m_scrollShotTip->height()) / 100 * 97));
             leftTopY = static_cast<int>(toolbarY + toolbarHeight + 15 * m_pixelRatio);
-        }else {
+        } else {
             //工具栏在捕捉区域下,且在捕捉区域外部
-            if( toolbarY > recordRect.y()){
-                leftTopY = static_cast<int>(toolbarY - m_scrollShotTip->height() * m_pixelRatio - 15 * m_pixelRatio );
+            if (toolbarY > recordRect.y()) {
+                leftTopY = static_cast<int>(toolbarY - m_scrollShotTip->height() * m_pixelRatio - 15 * m_pixelRatio);
             }
             //工具栏在捕捉区域上,且在捕捉区域外部
             else {
-                leftTopY = static_cast<int>(toolbarY + toolbarHeight + 15 * m_pixelRatio );
+                leftTopY = static_cast<int>(toolbarY + toolbarHeight + 15 * m_pixelRatio);
             }
         }
         //qDebug() << "leftTopX: " << leftTopX << ",leftTopY: " <<leftTopY;
     }
 
-    return QPoint(static_cast<int>(leftTopX/m_pixelRatio), static_cast<int>(leftTopY/m_pixelRatio));
+    return QPoint(static_cast<int>(leftTopX / m_pixelRatio), static_cast<int>(leftTopY / m_pixelRatio));
 }
 //初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小
 void MainWindow::showScrollShot()
 {
     //打开滚动截图时，预览窗口显示的第一张图片
     bool ok;
-    QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
+    QRect rect(recordX, recordY, recordWidth, recordHeight);
     //截取指定区域的图片
     //预览区域显示当前指定区域的图片
     QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
@@ -1061,7 +1060,7 @@ void MainWindow::showScrollShot()
 //显示预览窗口和图片
 void MainWindow::showPreviewWidgetImage(QImage img)
 {
-    m_scrollShotSizeTips ->updateTips(QPoint(recordX, recordY), QSize(img.width(), img.height()));
+    m_scrollShotSizeTips ->updateTips(QPoint(recordX, recordY), QSize(int(img.width() / m_pixelRatio + 2), int(img.height() / m_pixelRatio + 2)));
     m_previewWidget->updateImage(img);
 }
 
@@ -2653,13 +2652,13 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 exitScreenRecordEvent();
                 exitScreenShotEvent();
                 qApp->quit();
-            }else if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
+            } else if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
                 if (keyEvent->key() == Qt::Key_Question) {
                     onViewShortcut();
                 }
-            }else if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {//滚动截图模式下，按下enter按键进行保存截图
+            } else if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {//滚动截图模式下，按下enter按键进行保存截图
                 saveScreenShot();
-            }else if (qApp->keyboardModifiers() & Qt::ControlModifier) {//滚动截图模式下，按下ctrl按键进行保存截图
+            } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {//滚动截图模式下，按下ctrl按键进行保存截图
                 if (keyEvent->key() == Qt::Key_S) {
                     saveScreenShot();
                 }
@@ -3415,9 +3414,9 @@ void MainWindow::onScrollShotButtonPressEvent(int x, int y)
     //qDebug() << "scrollShotRect.x(): " << scrollShotRect.x() << ",scrollShotRect.y(): " <<scrollShotRect.y() <<",scrollShotRect.width(): " << scrollShotRect.width() <<",scrollShotRect.height(): " << scrollShotRect.height() ;
 
     //当前鼠标点击的点
-    QPoint mouseClickPoint(x , y);
+    QPoint mouseClickPoint(x, y);
     //使滚动拼接错误提示显示的情况下，鼠标点击无法帮助按钮不能启动继续截图
-    if(m_scrollShotTip != nullptr && m_scrollShotTip->isVisible() && m_scrollShotTip->getTipType()==TipType::ErrorScrollShotTip){
+    if (m_scrollShotTip != nullptr && m_scrollShotTip->isVisible() && m_scrollShotTip->getTipType() == TipType::ErrorScrollShotTip) {
         QRect scrollShotTipRect {
             static_cast<int>(m_scrollShotTip->x() * m_pixelRatio),
             static_cast<int>(m_scrollShotTip->y() * m_pixelRatio),
@@ -3536,7 +3535,7 @@ void MainWindow::onLockScreenEvent(QDBusMessage msg)
     }
     //解锁时恢复滚动
     //else {
-        //continueScrollShot();
+    //continueScrollShot();
     //}
 
 }
@@ -3568,7 +3567,7 @@ void MainWindow::scrollShotMerageImgState(PixMergeThread::MergeErrorValue state)
     pauseScrollShot();
     //滚动截图出现异常
     //m_isErrorWithScrollShot = true;
-    qDebug() << "function:" << __func__ << " ,line: " << __LINE__ <<" , 拼接时的状态: " << state;
+    qDebug() << "function:" << __func__ << " ,line: " << __LINE__ << " , 拼接时的状态: " << state;
     //qDebug() << "function:" << __func__ << " ,line: " << __LINE__ <<"state: " << state;
     //1：拼接失败
     if (state == PixMergeThread::MergeErrorValue::Failed) {
@@ -3732,7 +3731,7 @@ void MainWindow::checkCpuIsZhaoxin()
 void MainWindow::onShotKeyPressEvent(const unsigned char &keyCode)
 {
     //滚动截图及普通截图都可以通过快捷键触发F3
-    if (KEY_F3 == keyCode && ( status::shot == m_functionType || status::scrollshot == m_functionType)) {
+    if (KEY_F3 == keyCode && (status::shot == m_functionType || status::scrollshot == m_functionType)) {
         m_toolBar->shapeClickedFromMain("option");
     }
 
@@ -3758,13 +3757,13 @@ void MainWindow::startRecord()
     repaint();
 
     if (Utils::isSysHighVersion1040() == false) {
-        QSystemTrayIcon* trayIcon = new QSystemTrayIcon(this);
+        QSystemTrayIcon *trayIcon = new QSystemTrayIcon(this);
         trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
         trayIcon->setToolTip(tr("Screen Capture"));
         connect(trayIcon, &QSystemTrayIcon::activated, this, [ = ] {
             stopRecord();
         });
-        QTimer* flashTrayIconTimer = new QTimer(this);
+        QTimer *flashTrayIconTimer = new QTimer(this);
         connect(flashTrayIconTimer, &QTimer::timeout, this, [ = ] {
             static int flashTrayIconCounter = 0;
             QString iconIndex = QString("trayicon%1.svg").arg(flashTrayIconCounter % 2 + 1);
@@ -3826,7 +3825,7 @@ void MainWindow::pauseScrollShot()
 //继续滚动截图
 void MainWindow::continueScrollShot()
 {
-    if(m_tipShowtimer != nullptr){
+    if (m_tipShowtimer != nullptr) {
         m_tipShowtimer->stop();
         m_scrollShotTip->hide();
     }

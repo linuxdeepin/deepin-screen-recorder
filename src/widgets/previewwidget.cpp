@@ -43,12 +43,14 @@ void PreviewWidget::updateImage(const QImage &image)
 {
     int previewHeight = 0; //预览高度
     int previewWidth = 0; //预览宽度
-    int imageHight = image.height();
-    int imageWidth = image.width();
+    int imageHight = int(image.height() / m_screenRatio);
+    int imageWidth = int(image.width() / m_screenRatio);
+    bool unchanged = false; //是否高宽不变
     //计算图片缩放后的预览宽高
     if (imageHight <= m_maxHeight && imageWidth <= m_maxWidth) {
         previewHeight = imageHight;
         previewWidth = imageWidth;
+        unchanged = true;
     } else if (imageHight <= m_maxHeight && imageWidth > m_maxWidth) {
         previewHeight = m_maxWidth * imageHight / imageWidth;
         previewWidth = m_maxWidth;
@@ -82,9 +84,14 @@ void PreviewWidget::updateImage(const QImage &image)
         m_previewRect.setX(m_previewRect.x() + widthDiff_t);
     }
     m_previewRect.setWidth(previewWidth);//重新设置预览宽度
-    QImage tempImage = image.scaled(previewWidth, previewHeight, Qt::KeepAspectRatio, Qt::SmoothTransformation);//以预览框的宽高等比例缩放
     setGeometry(m_previewRect);
-    m_currentPix = tempImage;
+    if (true == unchanged) {//高宽不变,不进行宽高等比缩放
+        m_currentPix = image;
+    } else {
+        QImage tempImage = image.scaled(previewWidth, previewHeight, Qt::
+                                        KeepAspectRatioByExpanding, Qt::SmoothTransformation);//以预览框的宽高等比例缩放
+        m_currentPix = image;
+    }
     update();
 }
 
@@ -94,7 +101,6 @@ QRect PreviewWidget::previewGeomtroy()
     QRect rt;
     int previewHeight = 0; //预览高度
     int previewWidth = 0; //预览宽度
-
     if (m_recordHeight <= m_maxHeight && m_recordWidth <= m_maxWidth) {
         previewHeight = m_recordHeight;
         previewWidth = m_recordWidth;
@@ -162,7 +168,8 @@ QRect PreviewWidget::calculatePreviewPosition(int previewWidth, int previewHeigh
     return rt;
 }
 //设置屏幕宽度
-void PreviewWidget::setScreenWidth(int screenWidth)
+void PreviewWidget::setScreenInfo(int screenWidth, double screenRatio)
 {
     m_screenWidth = screenWidth;
+    m_screenRatio = screenRatio;
 }
