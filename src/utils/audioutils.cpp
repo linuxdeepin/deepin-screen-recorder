@@ -31,6 +31,8 @@
 #include <QDBusError>
 #include <QDBusMessage>
 
+#include <com_deepin_daemon_audio.h>
+#include <com_deepin_daemon_audio_sink.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -200,33 +202,39 @@ bool AudioUtils::canMicrophoneInput()
 //}
 QString AudioUtils::currentAudioChannel()
 {
-    QStringList options;
+    const QString serviceName {"com.deepin.daemon.Audio"};
 
-    options << "-c";
-    if(QSysInfo::currentCpuArchitecture().startsWith("arm")){
-        qDebug() << "ARM";
-        options << "pacmd list-sources | grep -PB 1 'USB.*stereo.*monitor>' | head -n 1 | perl -pe 's/.* //g'";
-    }else if(QSysInfo::currentCpuArchitecture().startsWith("mips")){
-        qDebug() << "MIPS";
-        options << "pacmd list-sources | grep -v 'hdmi' | grep -PB 1 'output.*monitor>' | head -n 1 | perl -pe 's/.* //g'";
-    }else {
-        qDebug() << "OTHER" << QSysInfo::currentCpuArchitecture();
-        options << "pacmd list-sources | grep -PB 1 'analog.*monitor>' | head -n 1 | perl -pe 's/.* //g'";
-    }
-    QProcess process;
-    process.start("bash", options);
-    process.waitForFinished();
-    process.waitForReadyRead();
-    QString str_output = process.readAllStandardOutput();
-    process.close();
-    if(str_output.isEmpty() && QSysInfo::currentCpuArchitecture().startsWith("arm")){
-        options.clear();
-        options << "-c" << "pacmd list-sources | grep -v 'hdmi' | grep -PB 1 'output.*monitor>' | head -n 1 | perl -pe 's/.* //g'";
+    QScopedPointer<com::deepin::daemon::Audio> audioInterface;
+    QScopedPointer<com::deepin::daemon::audio::Sink> defaultSink;
+
+    audioInterface.reset(
+                new com::deepin::daemon::Audio(
+                    serviceName,
+                    "/com/deepin/daemon/Audio",
+                    QDBusConnection::sessionBus(),
+                    this )
+                );
+
+    defaultSink.reset(
+                new com::deepin::daemon::audio::Sink (
+                    serviceName,
+                    audioInterface->defaultSink().path(),
+                    QDBusConnection::sessionBus(),
+                    this)
+                );
+    if (defaultSink->isValid()){
+        QString sinkName = defaultSink->name();
+        QStringList options;
+        options << "-c";
+        options << QString("pacmd list-sources | grep -PB 1 %1 | head -n 1 | perl -pe 's/.* //g'").arg(sinkName);
+
+        QProcess process;
         process.start("bash", options);
         process.waitForFinished();
         process.waitForReadyRead();
-        str_output = process.readAllStandardOutput();
-        process.close();
+        QString str_output = process.readAllStandardOutput();
+        qDebug() << options << str_output;
+        return str_output;
     }
-    return str_output;
+    return "";
 }
