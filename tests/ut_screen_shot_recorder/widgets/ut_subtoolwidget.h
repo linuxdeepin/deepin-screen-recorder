@@ -99,6 +99,8 @@ TEST_F(SubToolWidgetTest, changeArrowAndLineFromSideBar)
     m_subToolWidget->m_themeType = 1;
     stub.set(ADDR(QAbstractButton, isChecked), isChecked_true_stub_ut);
     m_subToolWidget->changeArrowAndLineFromSideBar(1);
+    stub.reset(ADDR(QAbstractButton, isChecked));
+
     stub.set(ADDR(QAbstractButton, isChecked), isChecked_false_stub);
     m_subToolWidget->changeArrowAndLineFromSideBar(1);
     stub.reset(ADDR(QAbstractButton, isChecked));
@@ -106,6 +108,8 @@ TEST_F(SubToolWidgetTest, changeArrowAndLineFromSideBar)
     m_subToolWidget->m_themeType = 2;
     stub.set(ADDR(QAbstractButton, isChecked), isChecked_true_stub_ut);
     m_subToolWidget->changeArrowAndLineFromSideBar(1);
+    stub.reset(ADDR(QAbstractButton, isChecked));
+
     stub.set(ADDR(QAbstractButton, isChecked), isChecked_false_stub);
     m_subToolWidget->changeArrowAndLineFromSideBar(1);
     stub.reset(ADDR(QAbstractButton, isChecked));

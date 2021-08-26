@@ -219,9 +219,9 @@ void RecordProcess::recordVideo()
 {
     initProcess();
     //取系统音频的通道号
-    AudioUtils *audioUtils = new AudioUtils(this);
-    QString t_currentAudioChannel = audioUtils->currentAudioChannel();
-    audioUtils->deleteLater();
+    AudioUtils audioUtils;
+    QString t_currentAudioChannel = audioUtils.currentAudioChannel();
+
     t_currentAudioChannel = t_currentAudioChannel.left(t_currentAudioChannel.size() - 1);
     qDebug() << "current audio channel:" << t_currentAudioChannel;
 

@@ -1577,6 +1577,7 @@ TEST_F(ShapesWidgetTest, tapTriggered)
 
     QTapGesture *tap = new QTapGesture();
     call_private_fun::ShapesWidgettapTriggered(*shapesWidget,tap);
+    delete tap;
 }
 
 TEST_F(ShapesWidgetTest, setGlobalRect)
