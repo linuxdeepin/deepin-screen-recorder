@@ -54,38 +54,13 @@ RecordProcess::RecordProcess(QObject *parent) : QObject(parent)
     m_framerate = RECORD_FRAMERATE_24;
 
     saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
-    defaultSaveDir = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
-    if(Utils::isTabletEnvironment){
-        defaultSaveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first() + QDir::separator() + tr("Record") + QDir::separator();
-        QDir dir;
-        if(!dir.exists(defaultSaveDir)) {
-            dir.mkdir(defaultSaveDir);
-        }
-    }
-
+    saveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first() + QDir::separator() + "Screen Recordings" + QDir::separator();
     displayNumber = QString(std::getenv("DISPLAY"));
 
-    QVariant saveDirectoryOption = settings->value("recordConfig", "save_directory");
-    if (saveDirectoryOption.isNull()) {
-        saveDir = defaultSaveDir;
-    } else {
-        // Make save directory as user's setting if directory exists and writable.
-        QString saveDirectory = saveDirectoryOption.toString();
-        if (QDir(saveDirectory).exists()) {
-            if (QFileInfo(saveDirectory).isWritable()) {
-                saveDir = saveDirectory;
-            } else {
-                saveDir = defaultSaveDir;
-                qDebug() << QString("Directory %1 is not writable, save to %2").arg(saveDirectory).arg(defaultSaveDir);
-            }
-        } else {
-            saveDir = defaultSaveDir;
-            qDebug() << QString("Directory %1 not exists, save to %2").arg(saveDirectory).arg(defaultSaveDir);
-        }
+    if(!QDir(saveDir).exists() && QDir().mkdir(saveDir) == false) {
+        saveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first();
     }
-
-    settings->setValue("recordConfig", "save_directory", saveDir);
-
+    qDebug() << saveDir;
     if (settings->value("recordConfig", "lossless_recording").toString() == "") {
         settings->setValue("recordConfig", "lossless_recording", false);
     }
