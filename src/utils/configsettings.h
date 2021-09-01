@@ -34,11 +34,13 @@ class ConfigSettings : public QObject
 public:
     static ConfigSettings *instance();
 
+    /*
     void setTemporarySaveAction(const std::pair<bool, SaveAction> temporarySaveAction);
     inline std::pair<bool, SaveAction> getTemporarySaveAction()
     {
         return m_temporarySaveOp;
     }
+    */
     void setValue(const QString &group, const QString &key,
                   QVariant val);
     QVariant value(const QString &group, const QString &key,
@@ -57,7 +59,7 @@ private:
     ~ConfigSettings();
 
     static ConfigSettings *m_configSettings;
-    std::pair<bool, SaveAction> m_temporarySaveOp;
+    //std::pair<bool, SaveAction> m_temporarySaveOp;
     QSettings *m_settings;
     QMutex m_mutex;
 };

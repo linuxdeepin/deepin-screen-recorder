@@ -83,11 +83,12 @@ ConfigSettings *ConfigSettings::instance()
 }
 
 // TODO(justforlxz): use qApp to check shift
+/*
 void ConfigSettings::setTemporarySaveAction(const std::pair<bool, SaveAction> temporarySaveAction)
 {
     m_temporarySaveOp = temporarySaveAction;
 }
-
+*/
 void ConfigSettings::setValue(const QString &group, const QString &key,
                               QVariant val)
 {
@@ -152,7 +153,7 @@ QVariant ConfigSettings::getDefaultValue(const QString &group, const QString &ke
         if (Utils::isTabletEnvironment) {
             value.setValue(SaveAction::PadDefaultPath);
         } else {
-            value.setValue(SaveAction::SaveToClipboard);
+            value.setValue(SaveAction::SaveToImage);
         }
     }
     return  value;

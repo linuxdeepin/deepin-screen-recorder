@@ -28,7 +28,7 @@ TEST_F(ConfigSettingsTest, configsettings)
     EXPECT_LT(0, configInstance->keys("common").size());
     EXPECT_NE("", configInstance->value("common", "default_savepath", ""));
 }
-
+/*
 TEST_F(ConfigSettingsTest, setTemporarySaveAction)
 {
     configInstance->setTemporarySaveAction(std::pair<bool, SaveAction>(true, SaveToDesktop));
@@ -36,6 +36,7 @@ TEST_F(ConfigSettingsTest, setTemporarySaveAction)
     EXPECT_EQ(true, value.first);
     EXPECT_EQ(SaveToDesktop, value.second);
 }
+*/
 TEST_F(ConfigSettingsTest, keys)
 {
     QStringList keys = configInstance->keys("common");

@@ -2237,13 +2237,16 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
     int t_pictureFormat = ConfigSettings::instance()->value("save", "format").toInt();
 
+    /*
     std::pair<bool, SaveAction> temporarySaveAction = ConfigSettings::instance()->getTemporarySaveAction();
     if (temporarySaveAction.first) {
         m_saveIndex = temporarySaveAction.second;
     } else {
         m_saveIndex = ConfigSettings::instance()->value("save", "save_op").value<SaveAction>();
     }
+    */
 
+    m_saveIndex = ConfigSettings::instance()->value("save", "save_op").value<SaveAction>();
     if (m_shotWithPath == true) {
         m_saveIndex = AutoSave;
     }
@@ -2391,24 +2394,21 @@ bool MainWindow::saveAction(const QPixmap &pix)
         if (!saveImg(pix, m_saveFileName, QFileInfo(m_saveFileName).suffix().toLocal8Bit()))
             return false;
     } else if (saveOption != QStandardPaths::TempLocation && m_saveFileName.isEmpty()) {
+
         QString savePath;
-        if (m_shotWithPath == false) {
+        if(m_shotWithPath == true) {
+            savePath = m_shotSavePath;
+        } else if(m_saveIndex == SaveToImage){
+            savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first() + QDir::separator() + "Screenshots" + QDir::separator();
+        } else {
             savePath = QStandardPaths::writableLocation(saveOption);
         }
 
-        else {
-            savePath = m_shotSavePath;
+        // 判断目录是否存在
+        if(!QDir(savePath).exists() && QDir().mkdir(savePath) == false) {
+            savePath = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first();
         }
 
-        QDir saveDir(savePath);
-        if (!saveDir.exists()) {
-            bool mkdirSucc = saveDir.mkpath(".");
-            if (!mkdirSucc) {
-                qCritical() << "Save path not exist and cannot be created:" << savePath;
-                qCritical() << "Fall back to temp location!";
-                savePath = QDir::tempPath();
-            }
-        }
         QString t_formatStr;
         QString t_formatBuffix;
         switch (t_pictureFormat) {
