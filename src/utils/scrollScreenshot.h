@@ -25,12 +25,13 @@
 #include <QTimer>
 #include <QRect>
 #include<opencv2/opencv.hpp>
+#include "keydefine.h"
 
 class ScrollScreenshot: public QObject
 {
     Q_OBJECT
 
-    enum ScrollStatus{
+    enum ScrollStatus {
         Wait = 0,  // 初始状态
         Merging,   // 拼接过程中
         Stop,      // 停止拼接
@@ -38,17 +39,22 @@ class ScrollScreenshot: public QObject
     };
 public:
     explicit ScrollScreenshot(QObject *parent = nullptr);
-    void addPixmap(const QPixmap &piximg);
+    void addPixmap(const QPixmap &piximg, int wheelDirection = WheelDown); //添加图片到拼接线程
     void changeState(const bool isStop);
     QImage savePixmap();
     QRect getChangeArea(cv::Mat &img1, cv::Mat &img2);
     void calcHeadHeight();
+
+    //手动滚动时的函数处理
+    void setScrollModel(bool model); //设置滚动模式，先设置滚动模式，再添加图片
+    QRect getInvalidArea();//获取调整区域
 signals:
     void getOneImg();
     void updatePreviewImg(QImage img);
     void merageError(PixMergeThread::MergeErrorValue);
 public slots:
     void merageImgState(PixMergeThread::MergeErrorValue state);
+    void merageInvalidArea(PixMergeThread::MergeErrorValue state, QRect rect); //调整捕捉区域
 private:
 
     PixMergeThread *m_PixMerageThread = nullptr;
@@ -66,6 +72,10 @@ private:
     unsigned int m_scrollCount = 0;
 
     ScrollStatus m_curStatus = ScrollStatus::Wait;
+
+    //处理手动滚动时新增
+    bool m_isManualScrollModel = false;//是否手动模式
+    QRect m_rect;//调整区域
 };
 
 #endif // AUDIOUTILS_H

@@ -39,7 +39,51 @@ void PixMergeThread::stopTask()
     m_loopTask = false;
 }
 
-void PixMergeThread::addShotImg(const QPixmap &picture)
+//滚动向上时添加
+void PixMergeThread::ScrollUpAddImg(const QPixmap &picture)
+{
+    if (m_bottomHeight == -1) {
+        cv::Mat tempData = qPixmapToCvMat(picture);
+        m_bottomHeight = getBottomFixedHigh(m_curImg, tempData);
+        qDebug() << "计算出底部固定高度:" << m_bottomHeight;
+    }
+    QPair<QPixmap, PictureDirection> pair;
+    QMutexLocker locker(&m_Mutex);
+    if (m_bottomHeight > 0) {
+        // 将图片底部固定区域裁剪掉后，加入拼接队列
+        pair.first = picture.copy(0, 0, picture.width(), m_bottomHeight);
+        pair.second = ScrollUp;
+        m_pixImgs.enqueue(pair);
+    } else {
+        pair.first = picture;
+        pair.second = ScrollUp;
+        m_pixImgs.enqueue(pair);
+    }
+}
+
+//滚动向下时添加
+void PixMergeThread::ScrollDwonAddImg(const QPixmap &picture)
+{
+    if (m_headHeight == -1) {
+        cv::Mat tempData = qPixmapToCvMat(picture);
+        m_headHeight = getTopFixedHigh(m_curImg, tempData);
+        qDebug() << "计算出顶部固定高度:" << m_headHeight;
+    }
+    QPair<QPixmap, PictureDirection> pair;
+    QMutexLocker locker(&m_Mutex);
+    if (m_headHeight > 0) {
+        // 将图片顶部固定区域裁剪掉后，加入拼接队列
+        pair.first = picture.copy(0, m_headHeight, picture.width(), picture.height() - m_headHeight);
+        pair.second = ScrollDown;
+        m_pixImgs.enqueue(pair);
+    } else {
+        pair.first = picture;
+        pair.second = ScrollDown;
+        m_pixImgs.enqueue(pair);
+    }
+}
+
+void PixMergeThread::addShotImg(const QPixmap &picture, PictureDirection direction)
 {
     if (m_loopTask == false)
         return;
@@ -53,26 +97,18 @@ void PixMergeThread::addShotImg(const QPixmap &picture)
         m_curImg = qPixmapToCvMat(picture);
         return;
     }
-
-
-    if (m_headHeight == -1) {
-        cv::Mat tempData = qPixmapToCvMat(picture);
-        m_headHeight = getFixedHigh(m_curImg, tempData);
-        qDebug() << "计算出顶部固定高度:"<< m_headHeight;
-    }
-
-    QMutexLocker locker(&m_Mutex);
-    if(m_headHeight > 0) {
-        // 将图片顶部固定区域裁剪掉后，加入拼接队列
-        m_pixImgs.enqueue(picture.copy(0, m_headHeight, picture.width(), picture.height() - m_headHeight));
+    //将图片去除顶部或者底部的固定区域，放入图片队列
+    if (direction == ScrollDown) {
+        ScrollDwonAddImg(picture);
     } else {
-        m_pixImgs.enqueue(picture);
+        ScrollUpAddImg(picture);
     }
+
 }
 
 QImage PixMergeThread::getMerageResult() const
 {
-    return  QImage(m_curImg.data, m_curImg.cols, m_curImg.rows, static_cast<int>(m_curImg.step),QImage::Format_ARGB32);
+    return  QImage(m_curImg.data, m_curImg.cols, m_curImg.rows, static_cast<int>(m_curImg.step), QImage::Format_ARGB32);
 }
 
 void PixMergeThread::run()
@@ -80,21 +116,26 @@ void PixMergeThread::run()
     m_loopTask = true;
     while (m_loopTask) {
         while (!m_pixImgs.isEmpty()) {
-            QPixmap temp;
+            QPair<QPixmap, PictureDirection> pair;
             {
                 QMutexLocker locker(&m_Mutex);
-                temp = m_pixImgs.dequeue();
+                pair = m_pixImgs.dequeue();
             }
-            cv::Mat matImg = qPixmapToCvMat(temp);
-            if (mergeImageWork(matImg)) {
+            cv::Mat matImg = qPixmapToCvMat(pair.first);
+            if (mergeImageWork(matImg, pair.second)) {
                 // 更新预览图
                 emit updatePreviewImg(QImage(m_curImg.data, m_curImg.cols, m_curImg.rows,
-                                             static_cast<int>(m_curImg.step),QImage::Format_ARGB32));
+                                             static_cast<int>(m_curImg.step), QImage::Format_ARGB32));
             }
 
         }
         QThread::currentThread()->msleep(300);
     }
+}
+//设置是否为手动模式
+void PixMergeThread::setScrollModel(bool isManualScrollMode)
+{
+    m_isManualScrollModel = isManualScrollMode;
 }
 
 cv::Mat PixMergeThread::qPixmapToCvMat(const QPixmap &inPixmap)
@@ -102,27 +143,131 @@ cv::Mat PixMergeThread::qPixmapToCvMat(const QPixmap &inPixmap)
     //qDebug() << inPixmap.toImage().format();
     //if(QImage::Format_RGB32 == inPixmap.toImage().format()) {
     QImage   swapped = inPixmap.toImage();
-    return cv::Mat(swapped.height(), swapped.width(), CV_8UC4, const_cast<uchar*>(swapped.bits()),
+    return cv::Mat(swapped.height(), swapped.width(), CV_8UC4, const_cast<uchar *>(swapped.bits()),
                    static_cast<size_t>(swapped.bytesPerLine())).clone();
 
     //}
 }
 
-bool PixMergeThread::mergeImageWork(const cv::Mat &image)
+bool PixMergeThread::mergeImageWork(const cv::Mat &image, int imageStatus)
 {
-    if(m_curImg.rows > LONG_IMG_MAX_HEIGHT) {
+    bool isSucess = false;
+    switch (imageStatus) {
+    case ScrollDown:
+        isSucess = splicePictureDown(image);
+        return isSucess;
+    case ScrollUp:
+        isSucess = splicePictureUp(image);
+        return isSucess;
+    default:
+        return isSucess;
+    }
+}
+
+int PixMergeThread::getTopFixedHigh(cv::Mat &img1, cv::Mat &img2)
+{
+    // 计算变化部分
+    for (int i = 0; i < img1.rows; ++i) {
+        for (int j = 0; j < img1.cols; ++j) {
+            if (img1.at<cv::Vec3b>(i, j) != img2.at<cv::Vec3b>(i, j)) {
+                return i;
+            }
+        }
+    }
+    return 0;
+}
+//裁剪底部固定区域
+int PixMergeThread::getBottomFixedHigh(cv::Mat &img1, cv::Mat &img2)
+{
+    // 计算变化部分
+    for (int i = img1.rows - 1; i > 0; i--) {
+        for (int j = 0; j < img1.cols; ++j) {
+            if (img1.at<cv::Vec3b>(i, j) != img2.at<cv::Vec3b>(i, j)) {
+                return i;
+            }
+        }
+    }
+    return 0;
+}
+
+//向上拼接图片
+bool PixMergeThread::splicePictureUp(const cv::Mat &image)
+{
+    if (m_curImg.rows > LONG_IMG_MAX_HEIGHT) {
         // 拼接超过了最大限度
         emit merageError(MaxHeight);
         return false;
     }
 
-    if(image.rows <= TEMPLATE_HEIGHT) {
-        emit merageError(Failed);
+    ++m_MeragerCount;
+    //qDebug() << "********m_MeragerCount******: " << m_MeragerCount;
+    /*转灰度图像*/
+    cv::Mat image1_gray, image2_gray;
+    cvtColor(image, image1_gray, CV_BGR2GRAY);
+    cvtColor(m_curImg, image2_gray, CV_BGR2GRAY);
+    /*
+     * 取图像2的全部行，1到35列作为模板
+     * 这样image1作为原图，temp作为模板图像
+     */
+    cv::Mat temp = image2_gray(cv::Range(0, TEMPLATE_HEIGHT), cv::Range::all());
+    /*结果矩阵图像,大小，数据类型*/
+    cv::Mat res(image1_gray.rows - temp.rows + 1, image2_gray.cols - temp.cols + 1, CV_32FC1);
+    /*模板匹配，采用归一化相关系数匹配*/
+    matchTemplate(image1_gray, temp, res, CV_TM_CCOEFF_NORMED);
+    /*结果矩阵阈值化处理*/
+    threshold(res, res, 0.8, 1, CV_THRESH_TOZERO);
+    double minVal, maxVal, thresholdv = 0.8;
+
+    /*查找最大值及位置*/
+    cv::Point minLoc, maxLoc;
+    minMaxLoc(res, &minVal, &maxVal, &minLoc, &maxLoc);
+    /*图像拼接*/
+    cv::Mat temp1, result;
+    if (maxVal >= thresholdv && maxLoc.y > 0) { //只有度量值大于阈值才认为是匹配
+        result = cv::Mat::zeros(cvSize(image.cols, maxLoc.y + m_curImg.rows), image.type());
+        temp1 = image(cv::Rect(0, 0, image.cols, maxLoc.y));
+        temp1.copyTo(cv::Mat(result, cv::Rect(0, 0, image.cols, maxLoc.y)));
+        m_curImg.copyTo(cv::Mat(result, cv::Rect(0, maxLoc.y, m_curImg.cols, m_curImg.rows)));
+
+        if (result.rows == m_curImg.rows) {
+            // 拼接前后图片高度不变
+            // 拼接到重复图片，拼接到低了
+            emit merageError(ReachBottom);
+            return false;
+        }
+        m_curImg = result;
+        m_successfullySplicedUp = true;
+        return true;
+    } else {
+        if (m_MeragerCount == 1) {
+            QRect rect = getScrollChangeRectArea(m_curImg, image);
+            if (rect.width() < 0 || rect.height() < 0) {
+                emit merageError(Failed);
+            } else {
+                emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
+            }
+        } else {
+            if (m_successfullySplicedDwon == false && m_isManualScrollModel == false) {
+                emit merageError(Failed);
+            } else if (m_successfullySplicedDwon == false && m_isManualScrollModel == true) {
+                emit merageError(RoollingTooFast);
+            }
+        }
+    }
+    return false;
+}
+
+//向下拼接图片
+bool PixMergeThread::splicePictureDown(const cv::Mat &image)
+{
+    if (m_curImg.rows > LONG_IMG_MAX_HEIGHT) {
+        // 拼接超过了最大限度
+        emit merageError(MaxHeight);
         return false;
     }
 
     ++m_MeragerCount;
-    qDebug() << "**************" << m_MeragerCount;
+    //qDebug() << "**************m_MeragerCount: " << m_MeragerCount;
     /*转灰度图像*/
     cv::Mat image1_gray, image2_gray;
     cvtColor(m_curImg, image1_gray, CV_BGR2GRAY);
@@ -145,48 +290,62 @@ bool PixMergeThread::mergeImageWork(const cv::Mat &image)
     minMaxLoc(res, &minVal, &maxVal, &minLoc, &maxLoc);
     /*图像拼接*/
     cv::Mat temp1, result;
-    if (maxVal >= thresholdv && maxLoc.y > 0)//只有度量值大于阈值才认为是匹配
-    {
+    if (maxVal >= thresholdv && maxLoc.y > 0) { //只有度量值大于阈值才认为是匹配
         result = cv::Mat::zeros(cvSize(m_curImg.cols, maxLoc.y + image.rows), m_curImg.type());
         temp1 = m_curImg(cv::Rect(0, 0, m_curImg.cols, maxLoc.y));
         /*将图1的非模板部分和图2拷贝到result*/
         temp1.copyTo(cv::Mat(result, cv::Rect(0, 0, m_curImg.cols, maxLoc.y)));
         //image.copyTo(cv::Mat(result, cv::Rect(0, maxLoc.y - 1, image.cols, image.rows)));
         image.copyTo(cv::Mat(result, cv::Rect(0, maxLoc.y, image.cols, image.rows)));
-
         if (result.rows == m_curImg.rows) {
             // 拼接前后图片高度不变
             // 拼接到重复图片，拼接到低了
+            qDebug() << "========拼接到重复图片，拼接到低了=====";
             emit merageError(ReachBottom);
-            return false;
-        } else if (result.rows < m_curImg.rows) {
-            // 拼接前后图片高度减少了
-            // 往回滚动导致拼接比之前还低了
-            emit merageError(Failed);
             return false;
         }
         m_curImg = result;
+        m_successfullySplicedDwon = true;
         return true;
     } else {
-        // 测试代码
-        //imwrite("curImg.png", m_curImg);
-        //imwrite("image.png", image);
-        emit merageError(Failed);
+        if (m_MeragerCount == 1) {
+            QRect rect = getScrollChangeRectArea(m_curImg, image);
+            if (rect.width() < 0 || rect.height() < 0) {
+                emit merageError(Failed);
+            } else {
+                emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
+            }
+        } else {
+            if (m_successfullySplicedUp == false && m_isManualScrollModel == false) {
+                emit merageError(Failed);
+            } else if (m_successfullySplicedUp == false && m_isManualScrollModel == true) {
+                emit merageError(RoollingTooFast);
+            }
+        }
         return false;
     }
 }
 
-int PixMergeThread::getFixedHigh(cv::Mat &img1, cv::Mat &img2)
+//计算可以滚动的区域
+QRect PixMergeThread::getScrollChangeRectArea(cv::Mat &img1, const cv::Mat &img2)
 {
+    int minI = img1.rows;
+    int minJ = img1.cols;
+    int maxI = 0;
+    int maxJ = 0;
     // 计算变化部分
-    for(int i = 0; i < img1.rows; ++i) {
-        for(int j = 0; j < img1.cols; ++j) {
-            if(img1.at<cv::Vec3b>(i, j) != img2.at<cv::Vec3b>(i, j)){
-                return i;
+    for (int i = 0; i < img1.rows; ++i) {
+        for (int j = 0; j < img1.cols; ++j) {
+            //if(img1.at<Vec3b>(i, j)[0] != img2.at<Vec3b>(i, j)[0] || img1.at<Vec3b>(i, j)[1] != img2.at<Vec3b>(i, j)[1] || img1.at<Vec3b>(i, j)[2] != img2.at<Vec3b>(i, j)[2]) {
+            if (img1.at<cv::Vec3b>(i, j) != img2.at<cv::Vec3b>(i, j)) {
+                if (i < minI) minI = i;
+                if (j < minJ) minJ = j;
+                if (i > maxI) maxI = i;
+                if (j > maxJ) maxJ = j;
             }
         }
     }
-    return 0;
+    return  QRect(minJ, minI, maxJ - minJ, maxI - minI);
 }
 
 
