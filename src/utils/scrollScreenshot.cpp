@@ -36,6 +36,10 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
         XFlush(m_display);
         XTestFakeButtonEvent(m_display, 5, 0, CurrentTime);
         XFlush(m_display);
+        //当模拟鼠标进行自动滚动时，会发射此信号
+        qDebug() << "1 >> m_autoScrollFlag: " << m_autoScrollFlag;
+        emit autoScroll(m_autoScrollFlag++);
+        qDebug() << "2 >> m_autoScrollFlag: " << m_autoScrollFlag;
         // 滚动区域高度 200-300 取值2
         // 滚动区域高度 > 300  取值 3
         // 滚动区域高度 > 600  取值 5
@@ -55,27 +59,32 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
 
 void ScrollScreenshot::addPixmap(const QPixmap &piximg, int wheelDirection)
 {
+    qDebug() << "function : " << __func__ << " ,line: " << __LINE__ << " ,m_startPixMerageThread" << m_startPixMerageThread;
+    if (m_startPixMerageThread == false) {
+        m_PixMerageThread->start();
+        m_startPixMerageThread = true;
+    }
     if (m_isManualScrollModel == false) {//自动
         if (m_curStatus == Wait) {
             m_PixMerageThread->setScrollModel(false);
             m_mouseWheelTimer->start(300);
-            m_PixMerageThread->start();
             m_curStatus = Merging;
         }
         if (m_curStatus == Merging) {
             m_PixMerageThread->addShotImg(piximg, PixMergeThread::PictureDirection::ScrollDown);
         }
     } else if (m_isManualScrollModel == true) {//手动
-        if (m_curStatus == Wait) {
-            m_PixMerageThread->setScrollModel(true);
-            m_PixMerageThread->start();
-            m_curStatus = Merging;
-        }
-        if (m_curStatus == Merging) {
-            m_mouseWheelTimer->stop();
-            PixMergeThread::PictureDirection  status = (wheelDirection == WheelDown) ? (PixMergeThread::PictureDirection::ScrollDown) : (PixMergeThread::PictureDirection::ScrollUp);
-            m_PixMerageThread->addShotImg(piximg, status);
-        }
+        //if (piximg.isNull() == true)
+        qDebug() << "function piximg is null: " << __func__ << " ,line: " << __LINE__;
+        //if (m_curStatus == Wait) {
+        m_PixMerageThread->setScrollModel(true);
+        m_mouseWheelTimer->stop();
+        // m_curStatus = Merging;
+        // }
+        //if (m_curStatus == Merging) {
+        PixMergeThread::PictureDirection  status = (wheelDirection == WheelDown) ? (PixMergeThread::PictureDirection::ScrollDown) : (PixMergeThread::PictureDirection::ScrollUp);
+        m_PixMerageThread->addShotImg(piximg, status);
+        // }
     }
 }
 
@@ -143,6 +152,16 @@ void ScrollScreenshot::setScrollModel(bool model)
 QRect ScrollScreenshot::getInvalidArea()
 {
     return m_rect;
+}
+//获取拼接线状态
+bool ScrollScreenshot::getPixMerageThreadStatus()
+{
+    return m_startPixMerageThread;
+}
+//设置拼接线状态
+void ScrollScreenshot::setPixMerageThreadStatus(bool status)
+{
+    m_startPixMerageThread = status;
 }
 
 

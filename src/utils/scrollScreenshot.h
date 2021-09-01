@@ -48,14 +48,25 @@ public:
     //手动滚动时的函数处理
     void setScrollModel(bool model); //设置滚动模式，先设置滚动模式，再添加图片
     QRect getInvalidArea();//获取调整区域
+    bool getPixMerageThreadStatus(); //获取拼接线状态
+    void setPixMerageThreadStatus(bool status); //设置拼接线状态
 signals:
     void getOneImg();
     void updatePreviewImg(QImage img);
     void merageError(PixMergeThread::MergeErrorValue);
+
+    /**
+     * @brief 当模拟鼠标进行自动滚动时，会发射此信号
+     */
+    void autoScroll(int autoScrollFlag);
 public slots:
     void merageImgState(PixMergeThread::MergeErrorValue state);
     void merageInvalidArea(PixMergeThread::MergeErrorValue state, QRect rect); //调整捕捉区域
 private:
+    /**
+     * @brief 用来监听模拟自动滚动截图的标志,只有当进行自动滚动截图时此属性的值会一直增加
+     */
+    int m_autoScrollFlag = 1;
 
     PixMergeThread *m_PixMerageThread = nullptr;
 
@@ -76,6 +87,7 @@ private:
     //处理手动滚动时新增
     bool m_isManualScrollModel = false;//是否手动模式
     QRect m_rect;//调整区域
+    bool m_startPixMerageThread = false;
 };
 
 #endif // AUDIOUTILS_H

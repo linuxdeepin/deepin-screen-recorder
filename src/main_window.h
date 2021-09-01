@@ -118,6 +118,12 @@ class MainWindow : public DWidget
         shot,
         scrollshot
     };
+    //滚动截图的滚动模式
+    enum ScrollShotType {
+        AutoScroll = 0, //自动滚动
+        ManualScroll,  //手动滚动
+        Unknow
+    };
 
 public:
     explicit MainWindow(DWidget *parent = nullptr);
@@ -295,17 +301,17 @@ public:
     /**
      * @brief 开始滚动截图
      */
-    void startScrollShot();
+    void startAutoScrollShot();
 
     /**
      * @brief 暂停滚动截图
      */
-    void pauseScrollShot();
+    void pauseAutoScrollShot();
 
     /**
      * @brief 继续滚动截图
      */
-    void continueScrollShot();
+    void continueAutoScrollShot();
 signals:
     void releaseEvent();
     void hideScreenshotUI();
@@ -373,19 +379,34 @@ public slots:
     void tableRecordSet();
     /**
      * @brief 滚动截图时通过x11获取鼠标按键操作
-     * @param
-     */
-    void onScrollShotButtonPressEvent(int x, int y);
-
-    /**
-     * @brief 滚动截图是通过x11获取鼠标移动操作
      * @param x
      * @param y
      */
-    void onScrollShotMoveMouseEvent(int x, int y);
+    void onScrollShotMouseClickEvent(int x, int y);
+
+    /**
+     * @brief 滚动截图时通过x11获取鼠标移动操作
+     * @param x
+     * @param y
+     */
+    void onScrollShotMouseMoveEvent(int x, int y);
+    /**
+     * @brief 滚动截图时处理鼠标滚轮滚动
+     * @param direction 鼠标滚动的方向： 1：向上滚动； 0：向下滚动
+     * @param x 当前的x坐标
+     * @param y 当前的y坐标
+     */
+    void onScrollShotMouseScrollEvent(int direction, int x, int y);
+
+    /**
+     * @brief 监听是否正在进行自动滚动
+     * @param autoScrollFlag 进行自动滚动时,模拟滚动的操作会,进行次数加1
+     */
+    void onScrollShotCheckScrollType(int autoScrollFlag);
 
     /**
      * @brief 监听锁屏信号，滚动截图时锁屏进行暂停处理
+     * @param msg
      */
     void onLockScreenEvent(QDBusMessage msg);
 
@@ -401,7 +422,7 @@ public slots:
      * 2：滚动到底部
      * 3：拼接截图到截图最大限度
      */
-    void scrollShotMerageImgState(PixMergeThread::MergeErrorValue state);
+    void onScrollShotMerageImgState(PixMergeThread::MergeErrorValue state);
 
     /**
      * @brief initPadShot:初始化平板截图
@@ -440,6 +461,11 @@ protected:
      * @brief 初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小
      */
     void showScrollShot();
+
+    /**
+     * @brief 处理手动滚动截图逻辑
+     */
+    void handleManualScrollShot(int direction);
 private:
 //    QList<WindowRect> windowRects;
     QList<QRect> windowRects;
@@ -501,12 +527,36 @@ private:
      * @brief 滚动截图的提示
      */
     ScrollShotTip *m_scrollShotTip = nullptr;
+
     /**
-     * @brief 滚动截图状态 0：停止(第一次进入)； 1：启动(第一次进入)； 2：继续； 3：(鼠标点击触发)暂停； 4：(鼠标移除捕捉区域)暂停； 5：结束；
+     * @brief 滚动截图状态
+     * 0：停止(第一次进入)；
+     * 1：自动滚动启动(第一次进入)；
+     * 2：自动滚动继续；
+     * 3：自动滚动(鼠标点击触发)暂停；
+     * 4：自动滚动(鼠标移除捕捉区域)暂停；
+     * 5：手动滚动启动(第一次进入)；
+     * 6：自动滚动(手动滚动触发)暂停；
      *
      * 在捕捉区域内点击鼠标触发暂停，当鼠标移动到捕捉区域外，暂停改为鼠标移动触发，移回捕捉区域继续
      */
     int m_scrollShotStatus = 0;
+
+    /**
+     * @brief 当前滚动截图的类型：0：自动滚动截图；  1：手动滚动截图；
+     */
+    int m_scrollShotType = ScrollShotType::AutoScroll;
+
+    /**
+     * @brief 自动滚动截图发出的前一次标志
+     */
+    int m_autoScrollFlagLast = 0;
+
+    /**
+     * @brief 自动滚动截图发出的后一次标志
+     */
+    int m_autoScrollFlagNext = 0;
+
     /**
      * @brief 滚动截图模式下，是否进行鼠标左键点击的次数
      * 0：鼠标未点击

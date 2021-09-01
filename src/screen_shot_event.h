@@ -36,7 +36,7 @@ public:
 
     static void callback(XPointer trash, XRecordInterceptData *data);
     void handleRecordEvent(XRecordInterceptData *);
-    XFixesCursorImage* getCursorImage();
+    XFixesCursorImage *getCursorImage();
 
 signals:
     void activateWindow();
@@ -46,14 +46,21 @@ signals:
      * @param 鼠标按下的x坐标
      * @param 鼠标按下的y坐标
      */
-    void buttonedPress(int x, int y);
-
+    void mouseClick(int x, int y);
     /**
      * @brief 通过x11从底层获取鼠标移动事件
      * @param 鼠标移动的x坐标
      * @param 鼠标移动的y坐标
      */
-    void moveMouse(int x , int y);
+    void mouseMove(int x, int y);
+
+    /**
+     * @brief 滚动鼠标滚轮,此处需区分是由模拟滚动触发的还是通过真实的鼠标事件触发的效果
+     * @param direction 鼠标滚动的方向： 1：向上滚动； 0：向下滚动
+     * @param 鼠标移动的x坐标
+     * @param 鼠标移动的y坐标
+    */
+    void mouseScroll(int direction, int x, int y);
 
 protected:
     void run();

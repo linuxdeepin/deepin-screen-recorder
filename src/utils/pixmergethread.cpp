@@ -234,6 +234,8 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
             // 拼接到重复图片，拼接到低了
             emit merageError(ReachBottom);
             return false;
+        } else if (result.rows < m_curImg.rows) {
+            return false;
         }
         m_curImg = result;
         m_successfullySplicedUp = true;
@@ -302,6 +304,8 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
             // 拼接到重复图片，拼接到低了
             qDebug() << "========拼接到重复图片，拼接到低了=====";
             emit merageError(ReachBottom);
+            return false;
+        } else if (result.rows < m_curImg.rows) {
             return false;
         }
         m_curImg = result;
