@@ -16,7 +16,7 @@ libc6 (>= 2.14), libgcc1 (>= 1:3.0), libgl1-mesa-glx | libgl1, libqt5core5a (>= 
 * cd build
 * qmake ..
 * make
-* ./deepin-screen-recorder
+* ./src/deepin-screen-recorder
 
 ## Usage
 
