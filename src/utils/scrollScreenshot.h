@@ -40,6 +40,11 @@ class ScrollScreenshot: public QObject
 public:
     explicit ScrollScreenshot(QObject *parent = nullptr);
     void addPixmap(const QPixmap &piximg, int wheelDirection = WheelDown); //添加图片到拼接线程
+
+    /**
+     * @brief 清除内存中用来存储图片的矩阵数据
+     */
+    void clearPixmap();
     void changeState(const bool isStop);
     QImage savePixmap();
     QRect getChangeArea(cv::Mat &img1, cv::Mat &img2);

@@ -138,6 +138,11 @@ void PixMergeThread::setScrollModel(bool isManualScrollMode)
     m_isManualScrollModel = isManualScrollMode;
 }
 
+void PixMergeThread::clearCurImg()
+{
+    m_curImg.release();
+}
+
 cv::Mat PixMergeThread::qPixmapToCvMat(const QPixmap &inPixmap)
 {
     //qDebug() << inPixmap.toImage().format();
@@ -333,6 +338,16 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
 //计算可以滚动的区域
 QRect PixMergeThread::getScrollChangeRectArea(cv::Mat &img1, const cv::Mat &img2)
 {
+    QImage tempImg = QImage(img1.data, img1.cols, img1.rows, static_cast<int>(img1.step), QImage::Format_ARGB32);
+    if (m_headHeight > 0) {
+        tempImg = tempImg.copy(0, m_headHeight, tempImg.width(), tempImg.height() - m_headHeight);
+    }
+    if (m_bottomHeight > 0) {
+        tempImg = tempImg.copy(0, 0, tempImg.width(), m_bottomHeight);
+    }
+
+    img1 = qPixmapToCvMat(QPixmap::fromImage(tempImg));
+
     int minI = img1.rows;
     int minJ = img1.cols;
     int maxI = 0;

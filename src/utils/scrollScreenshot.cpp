@@ -37,9 +37,7 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
         XTestFakeButtonEvent(m_display, 5, 0, CurrentTime);
         XFlush(m_display);
         //当模拟鼠标进行自动滚动时，会发射此信号
-        qDebug() << "1 >> m_autoScrollFlag: " << m_autoScrollFlag;
         emit autoScroll(m_autoScrollFlag++);
-        qDebug() << "2 >> m_autoScrollFlag: " << m_autoScrollFlag;
         // 滚动区域高度 200-300 取值2
         // 滚动区域高度 > 300  取值 3
         // 滚动区域高度 > 600  取值 5
@@ -59,7 +57,6 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
 
 void ScrollScreenshot::addPixmap(const QPixmap &piximg, int wheelDirection)
 {
-    qDebug() << "function : " << __func__ << " ,line: " << __LINE__ << " ,m_startPixMerageThread" << m_startPixMerageThread;
     if (m_startPixMerageThread == false) {
         m_PixMerageThread->start();
         m_startPixMerageThread = true;
@@ -75,7 +72,7 @@ void ScrollScreenshot::addPixmap(const QPixmap &piximg, int wheelDirection)
         }
     } else if (m_isManualScrollModel == true) {//手动
         //if (piximg.isNull() == true)
-        qDebug() << "function piximg is null: " << __func__ << " ,line: " << __LINE__;
+        //qDebug() << "function piximg is null: " << __func__ << " ,line: " << __LINE__;
         //if (m_curStatus == Wait) {
         m_PixMerageThread->setScrollModel(true);
         m_mouseWheelTimer->stop();
@@ -86,6 +83,11 @@ void ScrollScreenshot::addPixmap(const QPixmap &piximg, int wheelDirection)
         m_PixMerageThread->addShotImg(piximg, status);
         // }
     }
+}
+
+void ScrollScreenshot::clearPixmap()
+{
+    m_PixMerageThread->clearCurImg();
 }
 
 void ScrollScreenshot::changeState(const bool isStop)
@@ -178,10 +180,11 @@ void ScrollScreenshot::merageImgState(PixMergeThread::MergeErrorValue state)
 //调整捕捉区域
 void ScrollScreenshot::merageInvalidArea(PixMergeThread::MergeErrorValue state, QRect rect)
 {
+    m_rect = rect;
     m_mouseWheelTimer->stop();
     if (state == PixMergeThread::MaxHeight) {
         m_curStatus = ScrollStatus::Mistake;
     }
-    m_rect = rect;
+
     emit merageError(state);
 }

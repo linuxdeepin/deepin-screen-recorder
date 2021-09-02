@@ -51,12 +51,13 @@
 
 DWIDGET_USE_NAMESPACE
 
-enum TipType{
+enum TipType {
     StartScrollShotTip,  //开始滚动截图前的提示
     ErrorScrollShotTip,  //滚动截图出现错误的提示
     EndScrollShotTip,     //滚动截图到底部出现的提示
     QuickScrollShotTip,    //滚动速度过快出现的提示
-    MaxLengthScrollShotTip  //滚动截图拼接已到达最大长度
+    MaxLengthScrollShotTip,  //滚动截图拼接已到达最大长度
+    InvalidAreaShotTip      //无效区域,点击调整捕捉区域
 };
 
 /**
@@ -100,6 +101,11 @@ signals:
      */
     void openScrollShotHelp();
 
+    /**
+     * @brief 调整捕捉区域
+     */
+    void adjustCaptureArea();
+
 protected:
     /**
      * @brief 开始滚动截图前的提示
@@ -121,6 +127,16 @@ protected:
      */
     void showMaxScrollShotTip();
 
+    /**
+     * @brief 显示提示滚动速度过快
+     */
+    void showQuickScrollShotTip();
+
+    /**
+     * @brief 显示无效区域,调整捕捉区域提示
+     */
+    void showInvalidAreaShotTip();
+
     void paintEvent(QPaintEvent *event);
 
     /**
@@ -133,7 +149,7 @@ protected:
      * @param painter
      * @param blurPixmap  矩形框位置的模糊图形
      */
-    void paintRect(QPainter &painter,QPixmap &blurPixmap,int radius);
+    void paintRect(QPainter &painter, QPixmap &blurPixmap, int radius);
 
     /**
      * @brief 画提示的背景
@@ -142,7 +158,7 @@ protected:
      * @param textColor
      * @param opacity
      */
-    void drawTooltipBackground(QPainter &painter, QRect rect, QString textColor, qreal opacity,int radius);
+    void drawTooltipBackground(QPainter &painter, QRect rect, QString textColor, qreal opacity, int radius);
 
 
 private:
@@ -171,7 +187,10 @@ private:
      */
     DCommandLinkButton *m_scrollShotHelp;
 
-
+    /**
+     * @brief 调整捕捉区域文字按钮
+     */
+    DCommandLinkButton *m_scrollShotAdjust;
 };
 
 #endif // SCROLLSHOTTIP_H

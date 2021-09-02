@@ -416,6 +416,12 @@ public slots:
     void openScrollShotHelp();
 
     /**
+     * @brief 自动调整捕捉区域的大小及位置
+     */
+    void onAdjustCaptureArea();
+
+
+    /**
      * @brief 获取滚动截图拼接的状态
      * @param 拼接的状态
      * 1：拼接失败
@@ -423,6 +429,7 @@ public slots:
      * 3：拼接截图到截图最大限度
      */
     void onScrollShotMerageImgState(PixMergeThread::MergeErrorValue state);
+
 
     /**
      * @brief initPadShot:初始化平板截图
@@ -466,6 +473,11 @@ protected:
      * @brief 处理手动滚动截图逻辑
      */
     void handleManualScrollShot(int direction);
+
+    /**
+     * @brief 显示可调整的捕捉区域大小及位置
+     */
+    void showAdjustArea();
 private:
 //    QList<WindowRect> windowRects;
     QList<QRect> windowRects;
@@ -543,6 +555,11 @@ private:
     int m_scrollShotStatus = 0;
 
     /**
+     * @brief 自动滚动截图是否启动
+     */
+    bool m_isAutoScrollShotStart = false;
+
+    /**
      * @brief 当前滚动截图的类型：0：自动滚动截图；  1：手动滚动截图；
      */
     int m_scrollShotType = ScrollShotType::AutoScroll;
@@ -556,6 +573,18 @@ private:
      * @brief 自动滚动截图发出的后一次标志
      */
     int m_autoScrollFlagNext = 0;
+
+    /**
+     * @brief 是否显示自动调整的捕捉区域
+     * false : 不显示
+     * true : 显示
+     */
+    bool m_isAdjustArea = false;
+
+    /**
+     * @brief 滚动截图时,可自动调整的捕捉区域
+     */
+    QRect m_adjustArea ;
 
     /**
      * @brief 滚动截图模式下，是否进行鼠标左键点击的次数

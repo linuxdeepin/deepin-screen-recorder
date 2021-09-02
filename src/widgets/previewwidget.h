@@ -33,6 +33,13 @@ public:
     void initPreviewWidget();
 
     /**
+     * @brief 当捕捉区域发生改变时，用来更新预览图的位置
+     * @param rect 捕捉区域的大小及位置
+     * 自动调整捕捉区域时，捕捉区域的位置及大小会改变
+     */
+    void updatePreviewSize(const QRect &rect);
+
+    /**
      * @brief 获取预览框相对于捕捉区域的位置；
      */
     PostionStatus getPreviewPostion();

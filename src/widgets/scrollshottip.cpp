@@ -87,11 +87,18 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
 
     //帮助文字按钮
     m_scrollShotHelp = new DCommandLinkButton(tr("Get help."), this);
-    QString str = "查看帮助";
     m_scrollShotHelp->hide();
     QFontMetrics helpFontMetrics(m_scrollShotHelp->font());
     m_scrollShotHelp->resize(helpFontMetrics.width(m_scrollShotHelp->text()), m_scrollShotHelp->height());
     connect(m_scrollShotHelp, &DCommandLinkButton::clicked, this, &ScrollShotTip::openScrollShotHelp);
+
+    //调整捕捉区域文字按钮
+    m_scrollShotAdjust = new DCommandLinkButton(tr("adjust the capture area."), this) ;
+    m_scrollShotAdjust->hide();
+    QFontMetrics adjustFontMetrics(m_scrollShotAdjust->font());
+    m_scrollShotAdjust->resize(helpFontMetrics.width(m_scrollShotAdjust->text()), m_scrollShotAdjust->height());
+    connect(m_scrollShotAdjust, &DCommandLinkButton::clicked, this, &ScrollShotTip::adjustCaptureArea);
+
     QHBoxLayout *pHBoxLayout = new QHBoxLayout();
     pHBoxLayout->setAlignment(Qt::AlignCenter);
     pHBoxLayout->addWidget(m_warmingIconButton);
@@ -99,6 +106,8 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
     pHBoxLayout->addWidget(m_tipTextLable);
     pHBoxLayout->addStretch();
     pHBoxLayout->addWidget(m_scrollShotHelp);
+    pHBoxLayout->addStretch();
+    pHBoxLayout->addWidget(m_scrollShotAdjust);
     this->setLayout(pHBoxLayout);
     update();
 
@@ -110,6 +119,10 @@ ScrollShotTip::~ScrollShotTip()
         delete  m_scrollShotHelp;
         m_scrollShotHelp = nullptr;
     }
+    if (m_scrollShotAdjust) {
+        delete  m_scrollShotAdjust;
+        m_scrollShotAdjust = nullptr;
+    }
 }
 
 //根据提示的类型选取相应的提示方法
@@ -117,6 +130,7 @@ void ScrollShotTip::showTip(TipType tipType)
 {
     m_tipType = tipType;
     m_scrollShotHelp->hide();
+    m_scrollShotAdjust->hide();
     switch (m_tipType) {
     case TipType::StartScrollShotTip:
         showStartScrollShotTip();
@@ -128,9 +142,13 @@ void ScrollShotTip::showTip(TipType tipType)
         showEndScrollShotTip();
         break;
     case TipType::QuickScrollShotTip:
+        showQuickScrollShotTip();
         break;
     case TipType::MaxLengthScrollShotTip:
         showMaxScrollShotTip();
+        break;
+    case TipType::InvalidAreaShotTip:
+        showInvalidAreaShotTip();
         break;
     }
 
@@ -155,6 +173,9 @@ void ScrollShotTip::paintEvent(QPaintEvent *)
         radius = 20;
         break;
     case TipType::MaxLengthScrollShotTip:
+        radius = 20;
+        break;
+    case TipType::InvalidAreaShotTip:
         radius = 20;
         break;
     }
@@ -241,17 +262,19 @@ void ScrollShotTip::setBackgroundPixmap(QPixmap &backgroundPixmap)
 
 }
 
+
 //开始滚动截图前的提示
 void ScrollShotTip::showStartScrollShotTip()
 {
     //m_tipText = "滚动鼠标滚轮或单击滚动区域";
-    m_tipText = tr("Click to take a scrolling screenshot");
+    m_tipText = tr("Scroll your mouse wheel or click to take a scrolling screenshot");
     int width = 0;
     m_tipTextLable->setText(m_tipText);
     QFontMetrics fontMetrics(m_tipTextLable->font());
     m_tipTextLable->resize(fontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
     m_warmingIconButton->hide();
     m_scrollShotHelp->hide();
+    m_scrollShotAdjust->hide();
     width =  m_tipTextLable->width() + 20;
     setFixedSize(width, TIP_HEIGHT);
     update();
@@ -271,6 +294,7 @@ void ScrollShotTip::showErrorScrollShotTip()
     QFontMetrics helpFontMetrics(m_scrollShotHelp->font());
     m_scrollShotHelp->resize(helpFontMetrics.width(m_scrollShotHelp->text()), m_scrollShotHelp->height());
     m_scrollShotHelp->show();
+    m_scrollShotAdjust->hide();
     width = m_warmingIconButton->width() + 10 + m_tipTextLable->width() + 30 + m_scrollShotHelp->width();
     setFixedSize(width, TIP_HEIGHT);
     update();
@@ -290,6 +314,7 @@ void ScrollShotTip::showEndScrollShotTip()
     QFontMetrics fontMetrics(m_tipTextLable->font());
     m_tipTextLable->resize(fontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
     m_scrollShotHelp->hide();
+    m_scrollShotAdjust->hide();
     m_warmingIconButton->show();
     width = m_warmingIconButton->width() + 30 + m_tipTextLable->width();
     setFixedSize(width, TIP_HEIGHT);
@@ -307,10 +332,51 @@ void ScrollShotTip::showMaxScrollShotTip()
     QFontMetrics fontMetrics(m_tipTextLable->font());
     m_tipTextLable->resize(fontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
     m_scrollShotHelp->hide();
+    m_scrollShotAdjust->hide();
     m_warmingIconButton->show();
     width = m_warmingIconButton->width() + 30 + m_tipTextLable->width();
     setFixedSize(width, TIP_HEIGHT);
     update();
+}
+
+//滚动速度过快
+void ScrollShotTip::showQuickScrollShotTip()
+{
+
+    //m_tipText = tr("请放慢滚动速度");
+    m_tipText = tr("Slow down the scrolling speed");
+    int width = 0;
+    m_tipTextLable->setText(m_tipText);
+    QFontMetrics fontMetrics(m_tipTextLable->font());
+    m_tipTextLable->resize(fontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
+    m_scrollShotHelp->hide();
+    m_scrollShotAdjust->hide();
+    m_warmingIconButton->show();
+    width = m_warmingIconButton->width() + 30 + m_tipTextLable->width();
+    setFixedSize(width, TIP_HEIGHT);
+    update();
+}
+
+void ScrollShotTip::showInvalidAreaShotTip()
+{
+    //m_tipText = tr("无效区域，点击调整捕捉区域");
+    m_tipText = tr("Invalid area, click to ");
+    int width = 0;
+    m_tipTextLable->setText(m_tipText);
+    QFontMetrics labFontMetrics(m_tipTextLable->font());
+    m_tipTextLable->resize(labFontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
+    m_warmingIconButton->show();
+    QFontMetrics adjustFontMetrics(m_scrollShotAdjust->font());
+    m_scrollShotAdjust->resize(adjustFontMetrics.width(m_scrollShotAdjust->text()), m_scrollShotAdjust->height());
+    m_scrollShotAdjust->show();
+    m_scrollShotHelp->hide();
+    width = m_warmingIconButton->width() + 10 + m_tipTextLable->width() + 30 + m_scrollShotAdjust->width();
+    setFixedSize(width, TIP_HEIGHT);
+    update();
+    //qDebug() << "1111 >> m_warmingIconButton->width(): " << m_warmingIconButton->width() <<"m_warmingIconButton->height(): " << m_warmingIconButton->height() ;
+    //qDebug() << "1111 >> m_tipTextLable->width(): " << m_tipTextLable->width() <<"m_tipTextLable->height(): " << m_tipTextLable->height() ;
+    //qDebug() << "1111 >> m_scrollShotAdjust->width(): " << m_scrollShotAdjust->width() <<"m_scrollShotAdjust->height(): " << m_scrollShotAdjust->height() ;
+    //qDebug() << "1111 >> this->width(): " << this->width() <<"this->height(): " << this->height() ;
 }
 
 

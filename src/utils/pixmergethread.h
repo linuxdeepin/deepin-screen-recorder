@@ -61,6 +61,8 @@ public:
     //手动滚动时的函数处理
     void setScrollModel(bool isManualScrollMode); //设置是否为手动模式
 
+    void clearCurImg();
+
 protected:
     cv::Mat qPixmapToCvMat(const QPixmap &inPixmap);
     bool mergeImageWork(const cv::Mat &image, int imageStatus = ScrollDown);

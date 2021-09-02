@@ -20,6 +20,16 @@ void PreviewWidget::initPreviewWidget()
     setGeometry(m_previewRect);
 }
 
+//更新捕捉区域的大小及位置
+void PreviewWidget::updatePreviewSize(const QRect &rect)
+{
+    m_recordHeight = rect.height();
+    m_recordWidth = rect.width();
+    m_recordX = rect.x();
+    m_recordY = rect.y();
+    initPreviewWidget();
+}
+
 PreviewWidget::PostionStatus PreviewWidget::getPreviewPostion()
 {
     return m_StatusPos;
