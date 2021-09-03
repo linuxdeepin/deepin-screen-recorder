@@ -147,7 +147,7 @@ or press the shortcut again to stop recording</translation>
     </message>
     <message>
         <source>Click to take a scrolling screenshot</source>
-        <translation>Click to take a scrolling screenshot</translation>
+        <translation type="vanished">Click to take a scrolling screenshot</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
@@ -160,6 +160,22 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Reached the maximum length</source>
         <translation>Reached the maximum length</translation>
+    </message>
+    <message>
+        <source>adjust the capture area</source>
+        <translation>adjust the capture area</translation>
+    </message>
+    <message>
+        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
+        <translation>Scroll your mouse wheel or click to take a scrolling screenshot</translation>
+    </message>
+    <message>
+        <source>Slow down the scrolling speed</source>
+        <translation>Slow down the scrolling speed</translation>
+    </message>
+    <message>
+        <source>Invalid area, click to </source>
+        <translation>Invalid area, click to </translation>
     </message>
 </context>
 <context>

@@ -93,7 +93,7 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
     connect(m_scrollShotHelp, &DCommandLinkButton::clicked, this, &ScrollShotTip::openScrollShotHelp);
 
     //调整捕捉区域文字按钮
-    m_scrollShotAdjust = new DCommandLinkButton(tr("adjust the capture area."), this) ;
+    m_scrollShotAdjust = new DCommandLinkButton(tr("adjust the capture area"), this) ;
     m_scrollShotAdjust->hide();
     QFontMetrics adjustFontMetrics(m_scrollShotAdjust->font());
     m_scrollShotAdjust->resize(helpFontMetrics.width(m_scrollShotAdjust->text()), m_scrollShotAdjust->height());

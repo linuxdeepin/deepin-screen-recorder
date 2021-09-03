@@ -147,7 +147,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Click to take a scrolling screenshot</source>
-        <translation>单击捕捉区域</translation>
+        <translation type="vanished">单击捕捉区域</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
@@ -160,6 +160,22 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Reached the maximum length</source>
         <translation>已到最大长度</translation>
+    </message>
+    <message>
+        <source>adjust the capture area</source>
+        <translation>调整捕捉区域</translation>
+    </message>
+    <message>
+        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
+        <translation>滚动鼠标滚轮或单击捕捉区域</translation>
+    </message>
+    <message>
+        <source>Slow down the scrolling speed</source>
+        <translation>请放慢滚动速度</translation>
+    </message>
+    <message>
+        <source>Invalid area, click to </source>
+        <translation>无效区域，点击</translation>
     </message>
 </context>
 <context>

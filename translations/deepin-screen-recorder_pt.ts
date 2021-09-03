@@ -143,7 +143,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>Obter ajuda.</translation>
     </message>
     <message>
         <source>Click to take a scrolling screenshot</source>
@@ -151,14 +151,30 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>Falha ao tirar uma captura de ecrã contínua.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>Atingiu o fundo da área de rolagem</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
+        <translation>Atingiu o comprimento máximo</translation>
+    </message>
+    <message>
+        <source>adjust the capture area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Slow down the scrolling speed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Invalid area, click to </source>
         <translation type="unfinished"/>
     </message>
 </context>

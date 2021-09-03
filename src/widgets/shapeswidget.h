@@ -190,7 +190,7 @@ private:
     void updateTextRect(TextEdit *edit, QRectF newRect);
     Toolshapes m_shapes;
     MenuController *m_menuController;
-    SideBar *m_sideBar;
+    //SideBar *m_sideBar;
 
     QRect m_globalRect;
 

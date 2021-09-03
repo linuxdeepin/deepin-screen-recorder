@@ -143,7 +143,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>Yardım al.</translation>
     </message>
     <message>
         <source>Click to take a scrolling screenshot</source>
@@ -151,14 +151,30 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>Sürekli ekran görüntüsü alınamadı.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>Kaydırma alanının altına ulaştı</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
+        <translation>Maksimum uzunluğa ulaştı</translation>
+    </message>
+    <message>
+        <source>adjust the capture area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Slow down the scrolling speed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Invalid area, click to </source>
         <translation type="unfinished"/>
     </message>
 </context>

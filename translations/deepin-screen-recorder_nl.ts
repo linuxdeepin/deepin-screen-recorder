@@ -95,7 +95,7 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Scrollende schermfoto</translation>
     </message>
 </context>
 <context>
@@ -143,22 +143,38 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>Verkrijg hulp.</translation>
     </message>
     <message>
         <source>Click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Klik hier om een scrollende schermfoto te maken</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>De scrollende schermfoto kan niet worden gemaakt.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>De onderkant van het scrollgebied is bereikt</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
+        <translation>De maximale lengte is bereikt</translation>
+    </message>
+    <message>
+        <source>adjust the capture area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Slow down the scrolling speed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Invalid area, click to </source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -317,7 +333,7 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Scrollende schermfoto</translation>
     </message>
 </context>
 <context>
@@ -491,7 +507,7 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Scrollende schermfoto</translation>
     </message>
 </context>
 <context>

@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ms">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="ms" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -11,7 +9,7 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"></translation>
+        <translation>Jangan putar skrin anda ketika merakam</translation>
     </message>
 </context>
 <context>
@@ -69,19 +67,19 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>Abai</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Papan keratan</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>Menyimpan fail rakaman skrin, tunggu sebentar...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>Setelah kesan tetingkap dilumpuhkan ketika proses, rakaman telah dihentikan</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -89,15 +87,15 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
-        <translation type="unfinished"></translation>
+        <translation>Tangkap layar telah disimpan di dalam album</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Gagal ditangkap layar.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Tangkap tatal</translation>
     </message>
 </context>
 <context>
@@ -145,23 +143,39 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dapatkan bantuan.</translation>
     </message>
     <message>
         <source>Click to take a scrolling screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Klik untuk ambil tangkap layar bertatal</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"></translation>
+        <translation>Gagal mengambil tangkap layar berterusan.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"></translation>
+        <translation>Sampai bahagian terbawah kawasan tatal</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation type="unfinished"></translation>
+        <translation>Sampai panjang maksimum</translation>
+    </message>
+    <message>
+        <source>adjust the capture area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Slow down the scrolling speed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Invalid area, click to </source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -283,15 +297,15 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Bunyi</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"></translation>
+        <translation>Ketukan kekunci</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"></translation>
+        <translation>Kamera sesawang</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -303,23 +317,23 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"></translation>
+        <translation>Mula/Rakaman</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"></translation>
+        <translation>Tetikus</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>Alatan</translation>
     </message>
     <message>
         <source>Extract text</source>
-        <translation type="unfinished"></translation>
+        <translation>Ekstrak teks</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Tangkap tatal</translation>
     </message>
 </context>
 <context>
@@ -469,38 +483,38 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"></translation>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Papan keratan</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"></translation>
+        <translation>Tunjuk penuding</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"></translation>
+        <translation>Tetikus</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation type="unfinished"></translation>
+        <translation>Tunjuk Penuding</translation>
     </message>
     <message>
         <source>Extract Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Ekstrak Teks</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Tangkap tatal</translation>
     </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"></translation>
+        <translation> Laras kawasan rakaman dalam lingkungan %1*%2 untuk mendapatkan kesan video lebih baik</translation>
     </message>
 </context>
 </TS>

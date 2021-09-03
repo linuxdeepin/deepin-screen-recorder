@@ -161,6 +161,22 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
         <source>Reached the maximum length</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>adjust the capture area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Slow down the scrolling speed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Invalid area, click to </source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShapesWidget</name>

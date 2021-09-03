@@ -95,7 +95,7 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Görgethető képernyőkép</translation>
     </message>
 </context>
 <context>
@@ -143,23 +143,39 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>Segítséget kaphat</translation>
     </message>
     <message>
         <source>Click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Görgethető képernyőkép készítéséhez kattintson ide</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>A folyamatos képernyőkép készítése sikertelen.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>Elérte a görgetési terület alját</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation type="unfinished"/>
+        <translation>Elérte a maximális hosszúságot</translation>
+    </message>
+    <message>
+        <source>adjust the capture area</source>
+        <translation>Állítsa be a rögzítési területet</translation>
+    </message>
+    <message>
+        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
+        <translation>Görgessen az egérgörgőn, vagy kattintson rá, hogy görgethető képernyőképet készítsen</translation>
+    </message>
+    <message>
+        <source>Slow down the scrolling speed</source>
+        <translation>Lassítson a görgetési sebességen</translation>
+    </message>
+    <message>
+        <source>Invalid area, click to </source>
+        <translation>Érvénytelen terület, kattintson rá</translation>
     </message>
 </context>
 <context>
@@ -317,7 +333,7 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Görgethető képernyőkép</translation>
     </message>
 </context>
 <context>
@@ -491,7 +507,7 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Görgethető képernyőkép</translation>
     </message>
 </context>
 <context>

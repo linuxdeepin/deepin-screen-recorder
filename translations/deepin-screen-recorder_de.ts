@@ -9,7 +9,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>Drehen Sie Ihren Bildschirm während der Aufnahme nicht</translation>
     </message>
 </context>
 <context>
@@ -39,7 +39,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Bildschirmaufzeichnung beendet</translation>
+        <translation>Bildschirmaufnahme beendet</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -87,11 +87,11 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
-        <translation type="unfinished"/>
+        <translation>Die Bildschirmaufnahme wurde im Album gespeichert</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation type="unfinished"/>
+        <translation>Bildschirmaufnahme fehlgeschlagen.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -143,7 +143,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>Hilfe holen.</translation>
     </message>
     <message>
         <source>Click to take a scrolling screenshot</source>
@@ -159,6 +159,22 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Reached the maximum length</source>
+        <translation>Die maximale Länge wurde erreicht</translation>
+    </message>
+    <message>
+        <source>adjust the capture area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Slow down the scrolling speed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Invalid area, click to </source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -301,19 +317,19 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Start/Aufnahme</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Maus</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"/>
+        <translation>Werkzeuge</translation>
     </message>
     <message>
         <source>Extract text</source>
-        <translation type="unfinished"/>
+        <translation>Text extrahieren</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -335,7 +351,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <name>SubToolWidget</name>
     <message>
         <source>Sound On</source>
-        <translation>Ton an</translation>
+        <translation>Ton ein</translation>
     </message>
     <message>
         <source>Microphone</source>
@@ -479,15 +495,15 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Maus</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation type="unfinished"/>
+        <translation>Zeiger anzeigen</translation>
     </message>
     <message>
         <source>Extract Text</source>
-        <translation type="unfinished"/>
+        <translation>Text extrahieren</translation>
     </message>
     <message>
         <source>Scrollshot</source>

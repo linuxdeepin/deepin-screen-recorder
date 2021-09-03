@@ -88,8 +88,8 @@ ShapesWidget::ShapesWidget(DWidget *parent)
             m_menuController, &MenuController::setUndoEnable);
     connect(ConfigSettings::instance(), &ConfigSettings::shapeConfigChanged,
             this, &ShapesWidget::updateSelectedShape);
-    m_sideBar = new SideBar(this);
-    m_sideBar->hide();
+    //m_sideBar = new SideBar(this);
+    //m_sideBar->hide();
 }
 
 ShapesWidget::~ShapesWidget()

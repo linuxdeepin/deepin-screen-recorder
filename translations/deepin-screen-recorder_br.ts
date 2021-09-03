@@ -148,10 +148,6 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Failed to take a continuous screenshot.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -161,6 +157,22 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>adjust the capture area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slow down the scrolling speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid area, click to </source>
         <translation type="unfinished"></translation>
     </message>
 </context>

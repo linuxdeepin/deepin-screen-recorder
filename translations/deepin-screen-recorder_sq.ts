@@ -143,7 +143,7 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>Merrni ndihmë.</translation>
     </message>
     <message>
         <source>Click to take a scrolling screenshot</source>
@@ -151,14 +151,30 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>S’u arrit të bëhet një foto e vazhdueshme.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>U mbërrit në fund të fushës së rrëshqitjes</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
+        <translation>U mbërrit në maksimumin e gjatësisë</translation>
+    </message>
+    <message>
+        <source>adjust the capture area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Slow down the scrolling speed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Invalid area, click to </source>
         <translation type="unfinished"/>
     </message>
 </context>

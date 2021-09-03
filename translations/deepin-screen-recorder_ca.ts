@@ -95,7 +95,7 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Captura de desplaçament</translation>
     </message>
 </context>
 <context>
@@ -143,22 +143,38 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>Obteniu ajuda</translation>
     </message>
     <message>
         <source>Click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Cliqueu per fer una captura de desplaçament</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>Ha fallat fer una captura de pantalla contínua.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>S&apos;ha arribat al capdavall de l&apos;àrea de desplaçament.</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
+        <translation>S&apos;ha arribat a l&apos;extensió màxima.</translation>
+    </message>
+    <message>
+        <source>adjust the capture area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Slow down the scrolling speed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Invalid area, click to </source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -317,7 +333,7 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Captura de desplaçament</translation>
     </message>
 </context>
 <context>
@@ -491,7 +507,7 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Captura de desplaçament</translation>
     </message>
 </context>
 <context>

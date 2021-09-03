@@ -95,7 +95,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Vierittävä kaappaus</translation>
     </message>
 </context>
 <context>
@@ -143,22 +143,38 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>Hae apua.</translation>
     </message>
     <message>
         <source>Click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Ota vierittävä kaappaus napsauttamalla</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>Jatkuvan kaappauksen ottaminen epäonnistui.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>Vieritysalueen alareuna saavutettu</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
+        <translation>Suurin pituus saavutettu</translation>
+    </message>
+    <message>
+        <source>adjust the capture area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Slow down the scrolling speed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Invalid area, click to </source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -317,7 +333,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Vierittävä kaappaus</translation>
     </message>
 </context>
 <context>
@@ -491,7 +507,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Vierittävä kaappaus</translation>
     </message>
 </context>
 <context>

@@ -95,7 +95,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>འགུལ་ནས་ཡོལ་པར་བླངས།</translation>
     </message>
 </context>
 <context>
@@ -143,22 +143,38 @@ or press the shortcut again to stop recording</source>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>རོགས་རམ་འཚོལ་བ།</translation>
     </message>
     <message>
         <source>Click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">གཅིག་རྡེབ་ཀྱིས་ཡོལ་པར་བླངས་པ།</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>མུ་མཐུད་ཡོལ་པར་རྒྱག་ཐབས་མེད།</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>འགུལ་ཁུལ་གྱི་མཇུག་ངོས་ལ་སླེབས།</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
+        <translation>རིང་ཐུང་རིང་ཤོས་སླེབས་ཟིན།</translation>
+    </message>
+    <message>
+        <source>adjust the capture area</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Slow down the scrolling speed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Invalid area, click to </source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -317,7 +333,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>འགུལ་ནས་ཡོལ་པར་བླངས།</translation>
     </message>
 </context>
 <context>
@@ -491,7 +507,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>འགུལ་ནས་ཡོལ་པར་བླངས།</translation>
     </message>
 </context>
 <context>
