@@ -184,13 +184,15 @@ int PixMergeThread::getTopFixedHigh(cv::Mat &img1, cv::Mat &img2)
 //裁剪底部固定区域
 int PixMergeThread::getBottomFixedHigh(cv::Mat &img1, cv::Mat &img2)
 {
+    int rowsCount = img2.rows - 1;
     // 计算变化部分
     for (int i = img1.rows - 1; i > 0; i--) {
         for (int j = 0; j < img1.cols; ++j) {
-            if (img1.at<cv::Vec3b>(i, j) != img2.at<cv::Vec3b>(i, j)) {
-                return i;
+            if (img1.at<cv::Vec3b>(i, j) != img2.at<cv::Vec3b>(rowsCount, j)) {
+                return rowsCount;
             }
         }
+        --rowsCount;
     }
     return 0;
 }
