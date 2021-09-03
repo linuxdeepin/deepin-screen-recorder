@@ -214,11 +214,11 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
      * 取图像2的全部行，1到35列作为模板
      * 这样image1作为原图，temp作为模板图像
      */
-    cv::Mat temp = image2_gray(cv::Range(0, TEMPLATE_HEIGHT), cv::Range::all());
+    cv::Mat temp = image1_gray(cv::Range(image.rows - TEMPLATE_HEIGHT, image.rows), cv::Range::all());
     /*结果矩阵图像,大小，数据类型*/
-    cv::Mat res(image1_gray.rows - temp.rows + 1, image2_gray.cols - temp.cols + 1, CV_32FC1);
+    cv::Mat res(image2_gray.rows - temp.rows + 1 - TEMPLATE_HEIGHT, image2_gray.cols - temp.cols + 1, CV_32FC1);
     /*模板匹配，采用归一化相关系数匹配*/
-    matchTemplate(image1_gray, temp, res, CV_TM_CCOEFF_NORMED);
+    matchTemplate(image2_gray, temp, res, CV_TM_CCOEFF_NORMED);
     /*结果矩阵阈值化处理*/
     threshold(res, res, 0.8, 1, CV_THRESH_TOZERO);
     double minVal, maxVal, thresholdv = 0.8;
@@ -229,10 +229,10 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
     /*图像拼接*/
     cv::Mat temp1, result;
     if (maxVal >= thresholdv && maxLoc.y > 0) { //只有度量值大于阈值才认为是匹配
-        result = cv::Mat::zeros(cvSize(image.cols, maxLoc.y + m_curImg.rows), image.type());
-        temp1 = image(cv::Rect(0, 0, image.cols, maxLoc.y));
-        temp1.copyTo(cv::Mat(result, cv::Rect(0, 0, image.cols, maxLoc.y)));
-        m_curImg.copyTo(cv::Mat(result, cv::Rect(0, maxLoc.y, m_curImg.cols, m_curImg.rows)));
+        result = cv::Mat::zeros(cvSize(image.cols, image.rows + m_curImg.rows - maxLoc.y - TEMPLATE_HEIGHT), image.type());
+        temp1 = m_curImg(cv::Rect(0, maxLoc.y + TEMPLATE_HEIGHT, m_curImg.cols, m_curImg.rows - maxLoc.y - TEMPLATE_HEIGHT));
+        image.copyTo(cv::Mat(result, cv::Rect(0, 0, image.cols, image.rows)));
+        temp1.copyTo(cv::Mat(result, cv::Rect(0, image.rows, temp1.cols, temp1.rows)));
 
         if (result.rows == m_curImg.rows) {
             // 拼接前后图片高度不变
