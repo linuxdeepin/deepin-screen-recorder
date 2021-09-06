@@ -471,6 +471,7 @@ protected:
 
     /**
      * @brief 处理手动滚动截图逻辑
+     * @param 鼠标滚动的方向
      */
     void handleManualScrollShot(int direction);
 
@@ -478,6 +479,15 @@ protected:
      * @brief 显示可调整的捕捉区域大小及位置
      */
     void showAdjustArea();
+
+    /**
+     * @brief 滚动截图模式，抓取当前捕捉区域的图片，传递给滚动截图处理类进行图片的拼接
+     * @param previewPostion 预览框相对于捕捉区域的位置
+     * @param direction 滚动的方向
+     */
+    void scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostion, int direction);
+
+
 private:
 //    QList<WindowRect> windowRects;
     QList<QRect> windowRects;
@@ -541,6 +551,11 @@ private:
     ScrollShotTip *m_scrollShotTip = nullptr;
 
     /**
+     * @brief 获取预览框相对于捕捉区域的位置
+     */
+    PreviewWidget::PostionStatus m_previewPostion = PreviewWidget::PostionStatus::RIGHT;
+
+    /**
      * @brief 滚动截图状态
      * 0：停止(第一次进入)；
      * 1：自动滚动启动(第一次进入)；
@@ -576,8 +591,8 @@ private:
 
     /**
      * @brief 是否显示自动调整的捕捉区域
-     * false : 不显示
-     * true : 显示
+     * false : 不显示；
+     * true : 显示；
      */
     bool m_isAdjustArea = false;
 
@@ -597,10 +612,13 @@ private:
      */
     int m_scrollShotMouseClick = 0;
     /**
-     * @brief 滚动截图是否出现错误
-     * 当拼接图片出现异常时此字段置为true,当拼接未出现异常时此字段为false;
+     * @brief 滚动截图是否出现错误，当出现错误时暂停继续滚动流程，直到错误被解决或者2s后错误消失
+     * 默认为 false
+     * 只当拼接图片出现自动调整捕捉区域异常时，此字段置为 true ;
+     * 当点击自动调整捕捉区域时将 m_isErrorWithScrollShot 置为 false
+     * 当自动调整捕捉区域提示 2s 后消失时将 m_isErrorWithScrollShot 置为 false
      */
-    //bool m_isErrorWithScrollShot = false;
+    bool m_isErrorWithScrollShot = false;
 
     /**
       * @brief 滚动截图提示显示时间的定时器
