@@ -235,11 +235,21 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
         temp1 = m_curImg(cv::Rect(0, maxLoc.y + TEMPLATE_HEIGHT, m_curImg.cols, m_curImg.rows - maxLoc.y - TEMPLATE_HEIGHT));
         image.copyTo(cv::Mat(result, cv::Rect(0, 0, image.cols, image.rows)));
         temp1.copyTo(cv::Mat(result, cv::Rect(0, image.rows, temp1.cols, temp1.rows)));
-
-        if (result.rows == m_curImg.rows) {
-            // 拼接前后图片高度不变
-            // 拼接到重复图片，拼接到低了
-            emit merageError(ReachBottom);
+        if (result.rows == m_curImg.rows) {// 拼接前后图片高度不变
+            if (m_MeragerCount == 1) {
+                QRect rect = getScrollChangeRectArea(m_curImg, image);
+                if (rect.width() < 0 || rect.height() < 0) {
+                    emit merageError(Failed);
+                } else {
+                    m_headHeight = -1;
+                    qDebug() << "1 无效区域，点击调整捕捉区域";
+                    emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
+                }
+            }
+            if (m_isManualScrollModel == false && m_MeragerCount > 1) {
+                emit merageError(ReachBottom); // 拼接到重复图片，拼接到低了
+            }
+            m_MeragerCount = 0;
             return false;
         } else if (result.rows < m_curImg.rows) {
             return false;
@@ -253,12 +263,15 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
             if (rect.width() < 0 || rect.height() < 0) {
                 emit merageError(Failed);
             } else {
+                qDebug() << "2 无效区域，点击调整捕捉区域";
                 emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
             }
+            m_MeragerCount = 0;
         } else {
             if (m_successfullySplicedDwon == false && m_isManualScrollModel == false) {
                 emit merageError(Failed);
             } else if (m_successfullySplicedDwon == false && m_isManualScrollModel == true) {
+                qDebug() << "========滚动速度过快";
                 emit merageError(RoollingTooFast);
             }
         }
@@ -306,11 +319,21 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
         temp1.copyTo(cv::Mat(result, cv::Rect(0, 0, m_curImg.cols, maxLoc.y)));
         //image.copyTo(cv::Mat(result, cv::Rect(0, maxLoc.y - 1, image.cols, image.rows)));
         image.copyTo(cv::Mat(result, cv::Rect(0, maxLoc.y, image.cols, image.rows)));
-        if (result.rows == m_curImg.rows) {
-            // 拼接前后图片高度不变
-            // 拼接到重复图片，拼接到低了
-            qDebug() << "========拼接到重复图片，拼接到低了=====";
-            emit merageError(ReachBottom);
+        if (result.rows == m_curImg.rows) {// 拼接前后图片高度不变
+            if (m_MeragerCount == 1) {//第一次拼接相同时
+                QRect rect = getScrollChangeRectArea(m_curImg, image);
+                if (rect.width() < 0 || rect.height() < 0) {
+                    emit merageError(Failed);
+                } else {
+                    m_headHeight = -1;
+                    emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
+                }
+            }
+            if (m_isManualScrollModel == false && m_MeragerCount > 1) {
+                qDebug() << "========拼接到重复图片，拼接到低了=====";
+                emit merageError(ReachBottom);
+            }
+            m_MeragerCount = 0;
             return false;
         } else if (result.rows < m_curImg.rows) {
             return false;
@@ -324,14 +347,18 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
             if (rect.width() < 0 || rect.height() < 0) {
                 emit merageError(Failed);
             } else {
+                m_headHeight = -1;
                 emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
             }
+            m_MeragerCount = 0;
         } else {
             if (m_successfullySplicedUp == false && m_isManualScrollModel == false) {
                 emit merageError(Failed);
             } else if (m_successfullySplicedUp == false && m_isManualScrollModel == true) {
+                qDebug() << "========滚动速度过快";
                 emit merageError(RoollingTooFast);
             }
+            m_MeragerCount = 0;
         }
         return false;
     }
