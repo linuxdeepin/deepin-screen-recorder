@@ -2477,14 +2477,15 @@ bool MainWindow::saveAction(const QPixmap &pix)
         if (m_shotWithPath == true) {
             savePath = m_shotSavePath;
         } else if (m_saveIndex == SaveToImage) {
-            savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first() + QDir::separator() + "Screenshots" + QDir::separator();
+            savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first() + QDir::separator() + "Screenshots";
         } else {
             savePath = QStandardPaths::writableLocation(saveOption);
         }
 
         // 判断目录是否存在
-        if (!QDir(savePath).exists() && QDir().mkdir(savePath) == false) {
-            savePath = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first();
+        if((!QDir(savePath).exists() && QDir().mkdir(savePath) == false) ||   // 文件不存在，且创建失败
+                (QDir(savePath).exists() && !QFileInfo(savePath).isWritable())) {  // 文件存在，且不能写
+            savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first();
         }
 
         QString t_formatStr;

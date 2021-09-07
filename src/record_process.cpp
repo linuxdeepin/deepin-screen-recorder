@@ -57,7 +57,8 @@ RecordProcess::RecordProcess(QObject *parent) : QObject(parent)
     saveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first() + QDir::separator() + "Screen Recordings" + QDir::separator();
     displayNumber = QString(std::getenv("DISPLAY"));
 
-    if(!QDir(saveDir).exists() && QDir().mkdir(saveDir) == false) {
+    if((!QDir(saveDir).exists() && QDir().mkdir(saveDir) == false) ||   // 文件不存在，且创建失败
+            (QDir(saveDir).exists() && !QFileInfo(saveDir).isWritable())) {  // 文件存在，且不能写
         saveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first();
     }
     qDebug() << saveDir;
