@@ -60,7 +60,7 @@ signals:
      * @param 鼠标移动的x坐标
      * @param 鼠标移动的y坐标
     */
-    void mouseScroll(int direction, int x, int y);
+    void mouseScroll(int mouseTime, int direction, int x, int y);
 
 protected:
     void run();

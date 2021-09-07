@@ -55,6 +55,7 @@ public:
     QRect getInvalidArea();//获取调整区域
     bool getPixMerageThreadStatus(); //获取拼接线状态
     void setPixMerageThreadStatus(bool status); //设置拼接线状态
+    void setTimeAndCalculateTimeDiff(int time); //设置时间并计算时间差
 signals:
     void getOneImg();
     void updatePreviewImg(QImage img);

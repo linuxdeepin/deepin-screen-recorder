@@ -92,7 +92,7 @@ void ScreenShotEvent::handleRecordEvent(XRecordInterceptData *data)
             if (event->u.u.detail == Button1) {
                 emit mouseClick(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             } else if (event->u.u.detail == Button4 || event->u.u.detail == Button5) {
-                emit mouseScroll(event->u.u.detail, event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+                emit mouseScroll(event->u.enterLeave.time, event->u.u.detail, event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             }
         }
         break;

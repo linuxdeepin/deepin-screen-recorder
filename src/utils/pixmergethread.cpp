@@ -20,13 +20,13 @@
 #include "pixmergethread.h"
 
 #include <QMutexLocker>
-
+#include <QDateTime>
 const int PixMergeThread::LONG_IMG_MAX_HEIGHT = 10000;
 const int PixMergeThread::TEMPLATE_HEIGHT = 50;
 
 PixMergeThread::PixMergeThread(QObject *parent) : QThread(parent)
 {
-
+    m_lastTime = QDateTime::currentDateTime().toTime_t();
 }
 
 PixMergeThread::~PixMergeThread()
@@ -143,6 +143,14 @@ void PixMergeThread::clearCurImg()
     m_curImg.release();
 }
 
+//计算时间差
+void PixMergeThread::calculateTimeDiff(int time)
+{
+    m_curTimeDiff = time - m_lastTime;
+    qDebug() << "time:" << time << "m_lastTime" << m_lastTime << "m_curTimeDiff" << m_curTimeDiff;
+    m_lastTime = time;
+}
+
 cv::Mat PixMergeThread::qPixmapToCvMat(const QPixmap &inPixmap)
 {
     //qDebug() << inPixmap.toImage().format();
@@ -205,9 +213,13 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
         emit merageError(MaxHeight);
         return false;
     }
+    if (image.rows <= TEMPLATE_HEIGHT) {
+        emit merageError(Failed);
+        return false;
+    }
 
     ++m_MeragerCount;
-    //qDebug() << "********m_MeragerCount******: " << m_MeragerCount;
+    qDebug() << "********m_MeragerCount******: " << m_MeragerCount;
     /*转灰度图像*/
     cv::Mat image1_gray, image2_gray;
     cvtColor(image, image1_gray, CV_BGR2GRAY);
@@ -239,40 +251,37 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
             if (m_MeragerCount == 1) {
                 QRect rect = getScrollChangeRectArea(m_curImg, image);
                 if (rect.width() < 0 || rect.height() < 0) {
+                    qDebug() << "1 拼接失败了";
                     emit merageError(Failed);
                 } else {
-                    m_headHeight = -1;
+                    m_bottomHeight = -1;
+                    m_MeragerCount = 0;
                     qDebug() << "1 无效区域，点击调整捕捉区域";
                     emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
                 }
             }
             if (m_isManualScrollModel == false && m_MeragerCount > 1) {
+                qDebug() << "1 拼接到重复图片，拼接到低了";
                 emit merageError(ReachBottom); // 拼接到重复图片，拼接到低了
             }
-            m_MeragerCount = 0;
             return false;
         } else if (result.rows < m_curImg.rows) {
             return false;
         }
+        qDebug() << "拼接成功了";
         m_curImg = result;
-        m_successfullySplicedUp = true;
         return true;
     } else {
         if (m_MeragerCount == 1) {
-            QRect rect = getScrollChangeRectArea(m_curImg, image);
-            if (rect.width() < 0 || rect.height() < 0) {
-                emit merageError(Failed);
-            } else {
-                qDebug() << "2 无效区域，点击调整捕捉区域";
-                emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
-            }
-            m_MeragerCount = 0;
-        } else {
-            if (m_successfullySplicedDwon == false && m_isManualScrollModel == false) {
-                emit merageError(Failed);
-            } else if (m_successfullySplicedDwon == false && m_isManualScrollModel == true) {
+            qDebug() << "2 拼接到低了";
+            emit merageError(ReachBottom);
+        } else if (m_isManualScrollModel == true) {
+            if (m_curTimeDiff < 200) {
                 qDebug() << "========滚动速度过快";
                 emit merageError(RoollingTooFast);
+            } else {
+                qDebug() << "3 拼接失败了";
+                emit merageError(Failed);
             }
         }
     }
@@ -287,9 +296,12 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
         emit merageError(MaxHeight);
         return false;
     }
-
+    if (image.rows <= TEMPLATE_HEIGHT) {
+        emit merageError(Failed);
+        return false;
+    }
     ++m_MeragerCount;
-    //qDebug() << "**************m_MeragerCount: " << m_MeragerCount;
+    qDebug() << "**************m_MeragerCount: " << m_MeragerCount;
     /*转灰度图像*/
     cv::Mat image1_gray, image2_gray;
     cvtColor(m_curImg, image1_gray, CV_BGR2GRAY);
@@ -323,42 +335,46 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
             if (m_MeragerCount == 1) {//第一次拼接相同时
                 QRect rect = getScrollChangeRectArea(m_curImg, image);
                 if (rect.width() < 0 || rect.height() < 0) {
+                    qDebug() << "1 拼接失败了";
                     emit merageError(Failed);
                 } else {
                     m_headHeight = -1;
+                    m_MeragerCount = 0;
+                    qDebug() << "1 无效区域，点击调整捕捉区域";
                     emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
                 }
             }
             if (m_isManualScrollModel == false && m_MeragerCount > 1) {
-                qDebug() << "========拼接到重复图片，拼接到低了=====";
+                qDebug() << "======1==拼接到重复图片，拼接到低了=====";
                 emit merageError(ReachBottom);
             }
-            m_MeragerCount = 0;
             return false;
         } else if (result.rows < m_curImg.rows) {
             return false;
         }
+        qDebug() << "拼接成功了";
         m_curImg = result;
-        m_successfullySplicedDwon = true;
         return true;
     } else {
-        if (m_MeragerCount == 1) {
-            QRect rect = getScrollChangeRectArea(m_curImg, image);
-            if (rect.width() < 0 || rect.height() < 0) {
-                emit merageError(Failed);
-            } else {
-                m_headHeight = -1;
-                emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
-            }
-            m_MeragerCount = 0;
+        if (m_MeragerCount == 1 && m_isManualScrollModel == false) {
+            qDebug() << "======2==拼接到重复图片，拼接到低了=====";
+            emit merageError(ReachBottom);
+        }else if (m_MeragerCount == 1 && m_isManualScrollModel == true) {
+            qDebug() << "======3==拼接到重复图片，拼接到低了=====";
+            emit merageError(ReachBottom);
         } else {
-            if (m_successfullySplicedUp == false && m_isManualScrollModel == false) {
+            if (m_isManualScrollModel == false) {
+                qDebug() << "2 拼接失败了";
                 emit merageError(Failed);
-            } else if (m_successfullySplicedUp == false && m_isManualScrollModel == true) {
-                qDebug() << "========滚动速度过快";
-                emit merageError(RoollingTooFast);
+            } else if (m_isManualScrollModel == true) {
+                if (m_curTimeDiff < 200) {
+                    qDebug() << "========滚动速度过快";
+                    emit merageError(RoollingTooFast);
+                } else {
+                    qDebug() << "3 拼接失败了";
+                    emit merageError(Failed);
+                }
             }
-            m_MeragerCount = 0;
         }
         return false;
     }

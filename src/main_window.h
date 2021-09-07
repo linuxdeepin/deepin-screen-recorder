@@ -396,7 +396,7 @@ public slots:
      * @param x 当前的x坐标
      * @param y 当前的y坐标
      */
-    void onScrollShotMouseScrollEvent(int direction, int x, int y);
+    void onScrollShotMouseScrollEvent(int mouseTime, int direction, int x, int y);
 
     /**
      * @brief 监听是否正在进行自动滚动
@@ -473,7 +473,7 @@ protected:
      * @brief 处理手动滚动截图逻辑
      * @param 鼠标滚动的方向
      */
-    void handleManualScrollShot(int direction);
+    void handleManualScrollShot(int mouseTime, int direction);
 
     /**
      * @brief 显示可调整的捕捉区域大小及位置
@@ -485,7 +485,7 @@ protected:
      * @param previewPostion 预览框相对于捕捉区域的位置
      * @param direction 滚动的方向
      */
-    void scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostion, int direction);
+    void scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostion, int direction, int mosueTime = 0);
 
 
 private:

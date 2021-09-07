@@ -835,7 +835,7 @@ void MainWindow::initScrollShot()
     //滚动截图中自动滚动截图激活鼠标移动事件
     connect(m_pScreenShotEvent, SIGNAL(mouseMove(int, int)), this, SLOT(onScrollShotMouseMoveEvent(int, int)), Qt::QueuedConnection);
     //滚动截图中激活鼠标滚轮事件
-    connect(m_pScreenShotEvent, SIGNAL(mouseScroll(int, int, int)), this, SLOT(onScrollShotMouseScrollEvent(int, int, int)), Qt::QueuedConnection);
+    connect(m_pScreenShotEvent, SIGNAL(mouseScroll(int, int, int, int)), this, SLOT(onScrollShotMouseScrollEvent(int, int, int, int)), Qt::QueuedConnection);
     //定时器，滚动截图模式下每0.5秒减少一次鼠标点击次数
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, [ = ]() {
@@ -1053,7 +1053,7 @@ void MainWindow::showScrollShot()
 }
 
 //处理手动滚动截图逻辑
-void MainWindow::handleManualScrollShot(int direction)
+void MainWindow::handleManualScrollShot(int mouseTime, int direction)
 {
     qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
     if (m_tipShowtimer != nullptr) {
@@ -1066,7 +1066,7 @@ void MainWindow::handleManualScrollShot(int direction)
     ++num;
     if (num % 3 == 0) {
         //滚动截图模式，抓取当前捕捉区域的图片，传递给滚动截图处理类进行图片的拼接
-        scrollShotGrabPixmap(m_previewPostion, direction);
+        scrollShotGrabPixmap(m_previewPostion, direction, mouseTime);
         num = 0;
     }
 
@@ -1089,13 +1089,14 @@ void MainWindow::showAdjustArea()
 }
 
 //滚动截图模式，抓取当前捕捉区域的图片，传递给滚动截图处理类进行图片的拼接
-void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostion, int direction)
+void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostion, int direction, int mouseTime)
 {
     int delayTime = 30;
     //滚动截图处理类：设置滚动截图的模式
     if (ScrollShotType::AutoScroll == m_scrollShotType) {
         m_scrollShot->setScrollModel(false);
     } else if (ScrollShotType::ManualScroll == m_scrollShotType) {
+        m_scrollShot->setTimeAndCalculateTimeDiff(mouseTime);
         m_scrollShot->setScrollModel(true);
         delayTime = 50;
     }
@@ -1105,7 +1106,7 @@ void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostio
             m_previewWidget->hide();
         }
         QTimer::singleShot(delayTime, this, [ = ] {
-            //只要是自动滚动模式都会进入此处来处理图片
+            //只要是滚动模式都会进入此处来处理图片
             bool ok;
             QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
             //抓取捕捉区域图片
@@ -3687,7 +3688,7 @@ void MainWindow::onScrollShotMouseMoveEvent(int x, int y)
  * @param x 当前的x坐标
  * @param y 当前的y坐标
  */
-void MainWindow::onScrollShotMouseScrollEvent(int direction, int x, int y)
+void MainWindow::onScrollShotMouseScrollEvent(int mouseTime, int direction, int x, int y)
 {
     QRect recordRect {
         static_cast<int>(recordX * m_pixelRatio),
@@ -3727,7 +3728,7 @@ void MainWindow::onScrollShotMouseScrollEvent(int direction, int x, int y)
                 //qDebug() << "function: " << __func__ << " ,line: " << __LINE__ << " ,m_scrollShotStatus: " << m_scrollShotStatus;
                 //处理手动滚动截图
                 setInputEvent();
-                handleManualScrollShot(direction);
+                handleManualScrollShot(mouseTime, direction);
             }
         }
     }
@@ -4086,19 +4087,21 @@ void MainWindow::startRecord()
  */
 void MainWindow::startAutoScrollShot()
 {
+    int delayTime = 30;
     m_isAutoScrollShotStart = true;
     qDebug() << "开始自动滚动截图！";
     //设置捕捉区域穿透
     setInputEvent();
     //设置拼接线程为自动滚动模式
     m_scrollShot->setScrollModel(false);
-    //通过自动滚动开始进行滚动截图
-    bool ok;
-    QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
-    QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
-    //滚动截图添加第一张图片并启动
-    m_scrollShot->addPixmap(img);
-
+    QTimer::singleShot(delayTime, this, [ = ] {
+        //通过自动滚动开始进行滚动截图
+        bool ok;
+        QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
+        QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
+        //滚动截图添加第一张图片并启动
+        m_scrollShot->addPixmap(img);
+    });
 }
 
 //暂停滚动截图

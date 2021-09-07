@@ -165,6 +165,11 @@ void ScrollScreenshot::setPixMerageThreadStatus(bool status)
 {
     m_startPixMerageThread = status;
 }
+//设置时间并计算时间差
+void ScrollScreenshot::setTimeAndCalculateTimeDiff(int time)
+{
+    m_PixMerageThread->calculateTimeDiff(time);
+}
 
 
 void ScrollScreenshot::merageImgState(PixMergeThread::MergeErrorValue state)
