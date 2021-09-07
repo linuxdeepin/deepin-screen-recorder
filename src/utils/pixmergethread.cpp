@@ -136,6 +136,7 @@ void PixMergeThread::run()
 void PixMergeThread::setScrollModel(bool isManualScrollMode)
 {
     m_isManualScrollModel = isManualScrollMode;
+    m_lastTime = QDateTime::currentDateTime().toTime_t();
 }
 
 void PixMergeThread::clearCurImg()
@@ -273,9 +274,17 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
         return true;
     } else {
         if (m_MeragerCount == 1) {
-            qDebug() << "2 拼接到低了";
-            emit merageError(ReachBottom);
-        } else if (m_isManualScrollModel == true) {
+            QRect rect = getScrollChangeRectArea(m_curImg, image);
+            if (rect.width() < 0 || rect.height() < 0) {
+                qDebug() << "2 拼接到重复图片，拼接到低了";
+                emit merageError(ReachBottom);
+            } else {
+                m_headHeight = -1;
+                m_MeragerCount = 0;
+                qDebug() << "2 无效区域，点击调整捕捉区域";
+                emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
+            }
+        } else {
             if (m_curTimeDiff < 200) {
                 qDebug() << "========滚动速度过快";
                 emit merageError(RoollingTooFast);
@@ -356,12 +365,17 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
         m_curImg = result;
         return true;
     } else {
-        if (m_MeragerCount == 1 && m_isManualScrollModel == false) {
-            qDebug() << "======2==拼接到重复图片，拼接到低了=====";
-            emit merageError(ReachBottom);
-        }else if (m_MeragerCount == 1 && m_isManualScrollModel == true) {
-            qDebug() << "======3==拼接到重复图片，拼接到低了=====";
-            emit merageError(ReachBottom);
+        if (m_MeragerCount == 1) {
+            QRect rect = getScrollChangeRectArea(m_curImg, image);
+            if (rect.width() < 0 || rect.height() < 0) {
+                qDebug() << "2 拼接到重复图片，拼接到低了";
+                emit merageError(ReachBottom);
+            } else {
+                m_headHeight = -1;
+                m_MeragerCount = 0;
+                qDebug() << "2 无效区域，点击调整捕捉区域";
+                emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
+            }
         } else {
             if (m_isManualScrollModel == false) {
                 qDebug() << "2 拼接失败了";
