@@ -163,19 +163,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>འཛིན་བཟུང་ཁུལ་སྙོམས་སྒྲིག་བྱེད།</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>ཙི་གུའི་འགྲིལ་འཁོར་སྒྲིལ་བའམ་འཛིན་བཟུང་ཁུལ་ལ་གཅིག་རྡེབ་བྱེད།</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>འགྲིལ་འཁོར་སྒྲིལ་ཚད་དལ་རུ་གཏོང་དང་།</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>ནུས་མེད་ཁུལ། __གནོན་རོགས།</translation>
     </message>
 </context>
 <context>

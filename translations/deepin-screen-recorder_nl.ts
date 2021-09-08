@@ -163,19 +163,19 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>het vastleggebied aan te passen</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Scroll met je muis of klik om een scrollende schermfoto te maken</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>Verlaag de scrollsnelheid</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>Ongeldig gebied; klik om het</translation>
     </message>
 </context>
 <context>

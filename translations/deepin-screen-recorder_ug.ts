@@ -162,19 +162,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>تۇتۇش رايونىنى تەڭشەش</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>مائۇسنىڭ غالتىكىنى سىيرىڭ ياكى تۇتىدىغان رايوننى بىرنى چېكىڭ</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>سىيرىشنى ئاستىلىتىڭ</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>ئۈنۈمسىز، چېكىڭ</translation>
     </message>
 </context>
 <context>
