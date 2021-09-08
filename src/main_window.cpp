@@ -98,7 +98,8 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const int TOOLBAR_X_SPACING = 85;
-const int TOOLBAR_Y_SPACING = 3;
+//const int TOOLBAR_Y_SPACING = 3;
+const int TOOLBAR_Y_SPACING = 5;
 const int SIDEBAR_X_SPACING = 8;
 const int CURSOR_WIDTH = 8;
 const int CURSOR_HEIGHT = 18;
@@ -1080,7 +1081,7 @@ void MainWindow::handleManualScrollShot(int mouseTime, int direction)
     update();
     static int num = 1;
     ++num;
-    if (num % 2 == 0) {
+    if (num % 3 == 0) {
         //滚动截图模式，抓取当前捕捉区域的图片，传递给滚动截图处理类进行图片的拼接
         scrollShotGrabPixmap(m_previewPostion, direction, mouseTime);
         num = 0;
@@ -1428,7 +1429,7 @@ void MainWindow::setInputEvent()
             recordRect.contains(toolbarX + toolbarWidth, toolbarY) ||
             recordRect.contains(toolbarX, toolbarY + toolbarHeight) ||
             recordRect.contains(toolbarX + toolbarWidth, toolbarY + toolbarHeight)) {
-        qDebug() << "function:" << __func__ << " ,line: " << __LINE__ << " 工具栏位置在捕捉区域内部!";
+//        qDebug() << "function:" << __func__ << " ,line: " << __LINE__ << " 工具栏位置在捕捉区域内部!";
         //工具栏位置在捕捉区域内部，穿透的位置下移一断距离
         Utils::getInputEvent(
             static_cast<int>(this->winId()),
@@ -2525,7 +2526,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         }
 
         // 判断目录是否存在
-        if((!QDir(savePath).exists() && QDir().mkdir(savePath) == false) ||   // 文件不存在，且创建失败
+        if ((!QDir(savePath).exists() && QDir().mkdir(savePath) == false) ||  // 文件不存在，且创建失败
                 (QDir(savePath).exists() && !QFileInfo(savePath).isWritable())) {  // 文件存在，且不能写
             savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first();
         }
@@ -2776,8 +2777,9 @@ void MainWindow::paintEvent(QPaintEvent *event)
         }
 
         // Draw drag pint.
+        //画虚线框上的骨架点一共8个
         if (recordButtonStatus == RECORD_BUTTON_NORMAL && drawDragPoint) {
-//            qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
+            qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
             painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS), resizeHandleBigImg);
             painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth - 1, recordY - DRAG_POINT_RADIUS), resizeHandleBigImg);
             painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBigImg);
@@ -3373,9 +3375,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
     } else if (event->type() == QEvent::MouseMove) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+        //没打开截图的编辑模式
         if (!m_isShapesWidgetExist) {
-
-
             if (m_toolBar->isVisible()) {
                 updateToolBarPos();
                 m_zoomIndicator->hide();
@@ -3383,9 +3384,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
             if (!isFirstMove) {
                 isFirstMove = true;
-            }
-
-            else {
+            } else {
                 if (status::shot == m_functionType) {
                     if (!m_toolBar->isVisible() && !isFirstReleaseButton) {
                         //QPoint curPos = this->cursor().pos(); 采用全局坐标，替换局部坐标
@@ -3413,15 +3412,12 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                 }
             }
-
             if (isPressButton && isFirstPressButton) {
                 if (!isFirstDrag) {
                     isFirstDrag = true;
                     selectAreaName = tr("select-area");
                 }
             }
-
-
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             if (isFirstPressButton) {
                 if (!isFirstReleaseButton) {
@@ -3466,12 +3462,14 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                 updateCursor(event);
 
+                //获取鼠标放到捕捉区边框的动作
                 int action = getAction(event);
                 bool drawPoint = action != ACTION_MOVE;
                 if (drawPoint != drawDragPoint) {
                     drawDragPoint = drawPoint;
                     needRepaint = true;
                 }
+
             } else {
                 // Select the first window where the mouse is located
                 if (!Utils::isTabletEnvironment) {
@@ -3503,8 +3501,24 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
                 }
             }
+
+            //将当前捕捉区域画为一个矩形
+            QRect rect {
+                static_cast<int>(recordX * m_pixelRatio),
+                static_cast<int>(recordY * m_pixelRatio),
+                static_cast<int>(recordWidth * m_pixelRatio),
+                static_cast<int>(recordHeight + 1 * m_pixelRatio)
+            };
+
+            //如果鼠标位置移出捕捉区域则不显示捕捉区域的骨架节点
+            if (!rect.contains(QPoint(static_cast<int>(mouseEvent->x()*m_pixelRatio), static_cast<int>(mouseEvent->y()*m_pixelRatio)))) {
+                drawDragPoint = false;
+                needRepaint = true;
+            }
+
         }
 
+        //打开了截图的编辑模式
         else {
             QRect t_rect;
             t_rect.setX(recordX);
@@ -3816,7 +3830,7 @@ void MainWindow::onScrollShotMouseScrollEvent(int mouseTime, int direction, int 
     } else {
         m_scrollShotType = ScrollShotType::ManualScroll;
     }
-    //qDebug() << "function: " << __func__ << " ,line: " << __LINE__ << " ,m_scrollShotType: " << m_scrollShotType;
+    qDebug() << "function: " << __func__ << " ,line: " << __LINE__ << " ,m_scrollShotType: " << m_scrollShotType;
     //当前状态为手动滚动模式时,会先暂停自动滚动
     if (m_scrollShotType == ScrollShotType::ManualScroll) {
         //qDebug() << "function: " << __func__ << " ,line: " << __LINE__ << " ,m_scrollShotStatus: " << m_scrollShotStatus;

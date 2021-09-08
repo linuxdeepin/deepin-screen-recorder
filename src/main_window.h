@@ -703,6 +703,9 @@ private:
     int m_screenHeight = 0; //屏幕高度
     SideBar *m_sideBar = nullptr; //截图功能侧边栏功能
     ZoomIndicator *m_zoomIndicator = nullptr;
+    /**
+     * @brief 是否打开截图工具中的形状编辑
+     */
     bool m_isShapesWidgetExist = false;
     bool m_isSideBarInside = false;
     bool m_isToolBarInside = false;
