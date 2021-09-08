@@ -268,7 +268,7 @@ void Utils::cancelInputEvent1(const int wid, const short x, const short y, const
 bool Utils::isSysHighVersion1040()
 {
     const int version1040 = 1040;
-    if(DSysInfo::isDeepin()) {
+    if (DSysInfo::isDeepin()) {
         bool correct = false;
         int version = DSysInfo::minorVersion().toInt(&correct);
         if (correct && (version >= version1040)) {
@@ -276,4 +276,32 @@ bool Utils::isSysHighVersion1040()
         }
     }
     return false;
+}
+
+void Utils::enableXGrabButton()
+{
+    //extern int XGrabButton(
+    //    Display *      /* display */,
+    //    unsigned int  /* button */,
+    //    unsigned int  /* modifiers */,
+    //    Window        /* grab_window */,
+    //    Bool      /* owner_events */,
+    //    unsigned int  /* event_mask */,
+    //    int           /* pointer_mode */,
+    //    int           /* keyboard_mode */,
+    //    Window        /* confine_to */,
+    //    Cursor        /* cursor */
+    //);
+    XGrabButton(QX11Info::display(), Button1, AnyModifier, DefaultRootWindow(QX11Info::display())
+                , true, ButtonPressMask | ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
+    XGrabButton(QX11Info::display(), Button2, AnyModifier, DefaultRootWindow(QX11Info::display())
+                , true, ButtonPressMask | ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
+    XGrabButton(QX11Info::display(),  Button3, AnyModifier, DefaultRootWindow(QX11Info::display())
+                , true, ButtonPressMask | ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
+}
+
+void Utils::disableXGrabButton()
+{
+    XUngrabButton(QX11Info::display(), true, AnyModifier, DefaultRootWindow(QX11Info::display()));
+
 }

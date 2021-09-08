@@ -48,8 +48,8 @@ public:
 //    static void warnNoComposite();
 //    static void notSupportWarn();
 //    static QString getRecordingSaveDirectory();
-    static void setAccessibility(DPushButton *button,const QString name);
-    static void setAccessibility(DImageButton *button,const QString name);
+    static void setAccessibility(DPushButton *button, const QString name);
+    static void setAccessibility(DImageButton *button, const QString name);
     static void setAccessibility(QAction *action, const QString name);
     static bool is3rdInterfaceStart;
     static bool isTabletEnvironment;
@@ -85,6 +85,15 @@ public:
 
     static bool isSysHighVersion1040();
 
+    /**
+     * @brief 使能XGrabButton抓取所有的鼠标点击事件
+     */
+    static void enableXGrabButton();
+
+    /**
+     * @brief 失能XGrabButton抓取所有的鼠标点击事件
+     */
+    static void disableXGrabButton();
 };
 
 #endif //UTILS_H

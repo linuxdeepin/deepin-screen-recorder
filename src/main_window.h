@@ -278,12 +278,6 @@ public:
     void initScrollShot();
 
     /**
-     * @brief 根据工具栏获取滚动截图提示框的坐标
-     * @return  提示框的位置
-     */
-    QPoint getScrollShotTipPosition();
-
-    /**
      * @brief 初始化应用内快捷键
      */
     void initShortcut();
@@ -298,20 +292,7 @@ public:
     void sendSavingNotify();
     // 强制录屏保存退出通知,3D->2D模式
     void forciblySavingNotify();
-    /**
-     * @brief 开始滚动截图
-     */
-    void startAutoScrollShot();
 
-    /**
-     * @brief 暂停滚动截图
-     */
-    void pauseAutoScrollShot();
-
-    /**
-     * @brief 继续滚动截图
-     */
-    void continueAutoScrollShot();
 signals:
     void releaseEvent();
     void hideScreenshotUI();
@@ -413,13 +394,12 @@ public slots:
     /**
      * @brief 打开截图录屏帮助文档并定位到滚动截图
      */
-    void openScrollShotHelp();
+    void onOpenScrollShotHelp();
 
     /**
      * @brief 自动调整捕捉区域的大小及位置
      */
     void onAdjustCaptureArea();
-
 
     /**
      * @brief 获取滚动截图拼接的状态
@@ -429,7 +409,6 @@ public slots:
      * 3：拼接截图到截图最大限度
      */
     void onScrollShotMerageImgState(PixMergeThread::MergeErrorValue state);
-
 
     /**
      * @brief initPadShot:初始化平板截图
@@ -458,22 +437,57 @@ protected:
     void initBackground();
     QPixmap getPixmapofRect(const QRect &rect);
     bool saveImg(const QPixmap &pix, const QString &fileName, const char *format = nullptr);
-    /**
-     * @brief 滚动截图时鼠标穿透设置
-     * 之所以需要单独用来设置，因为有些时候捕捉区域太大，
-     * 工具栏在捕捉区域内部，需要将工具栏这片区域给排除掉
-     */
-    void setInputEvent();
+
     /**
      * @brief 初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小
      */
     void showScrollShot();
 
     /**
+     * @brief 根据工具栏获取滚动截图提示框的坐标
+     * @return  提示框的位置
+     */
+    QPoint getScrollShotTipPosition();
+
+    /**
+     * @brief 开始自动滚动截图，只进入一次
+     */
+    void startAutoScrollShot();
+
+    /**
+     * @brief 暂停自动滚动截图
+     */
+    void pauseAutoScrollShot();
+
+    /**
+     * @brief 继续自动滚动截图
+     */
+    void continueAutoScrollShot();
+
+    /**
+     * @brief 开始手动滚动截图，只进入一次
+     */
+    void startManualScrollShot();
+
+    /**
      * @brief 处理手动滚动截图逻辑
      * @param 鼠标滚动的方向
      */
     void handleManualScrollShot(int mouseTime, int direction);
+
+    /**
+     * @brief 滚动截图时鼠标穿透设置
+     * 之所以需要单独用来设置，因为有些时候捕捉区域太大，
+     * 工具栏在捕捉区域内部，需要将工具栏这片区域给排除掉
+     */
+    void setInputEvent();
+
+    /**
+     * @brief 滚动截图时取消捕捉区域的鼠标穿透
+     * 当工具栏、保存按钮或者滚动截图提示按钮在 捕捉区域内部时，
+     * 并且需要点击时，捕捉区域必须取消穿透状态才可以进行点击
+     */
+    void setCancelInputEvent();
 
     /**
      * @brief 显示可调整的捕捉区域大小及位置
@@ -551,6 +565,11 @@ private:
     ScrollShotTip *m_scrollShotTip = nullptr;
 
     /**
+     * @brief 初始化滚动截图时的第一张图
+     */
+    QPixmap m_firstScrollShotImg;
+
+    /**
      * @brief 获取预览框相对于捕捉区域的位置
      */
     PreviewWidget::PostionStatus m_previewPostion = PreviewWidget::PostionStatus::RIGHT;
@@ -611,6 +630,7 @@ private:
      * scrollShotCDB
      */
     int m_scrollShotMouseClick = 0;
+
     /**
      * @brief 滚动截图是否出现错误，当出现错误时暂停继续滚动流程，直到错误被解决或者2s后错误消失
      * 默认为 false

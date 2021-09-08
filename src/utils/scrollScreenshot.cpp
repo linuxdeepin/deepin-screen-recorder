@@ -92,7 +92,7 @@ void ScrollScreenshot::clearPixmap()
 
 void ScrollScreenshot::changeState(const bool isStop)
 {
-    qDebug() << __FUNCTION__ << "====" << isStop;
+    //qDebug() << __FUNCTION__ << "====" << isStop;
     // 暂停
     if (isStop && m_curStatus == Merging) {
         m_curStatus = Stop;
