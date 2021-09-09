@@ -1097,13 +1097,18 @@ void MainWindow::showAdjustArea()
     //获取可调整的捕捉区域大小及位置
     QRect adjustArea = m_scrollShot->getInvalidArea();
     //根据返回的可调整区域计算出在屏幕中的可调整区域位置
+//    m_adjustArea = QRect(
+//                       adjustArea.x() + recordX,
+//                       adjustArea.y() + recordY,
+//                       adjustArea.width(),
+//                       adjustArea.height()
+//                   );
     m_adjustArea = QRect(
-                       adjustArea.x() + recordX,
-                       adjustArea.y() + recordY,
-                       adjustArea.width(),
-                       adjustArea.height()
+                       static_cast<int>((adjustArea.x() / m_pixelRatio  + recordX)),
+                       static_cast<int>((adjustArea.y() / m_pixelRatio + recordY)),
+                       static_cast<int>(adjustArea.width() / m_pixelRatio),
+                       static_cast<int>(adjustArea.height() / m_pixelRatio)
                    );
-
     update();
 }
 
@@ -1126,6 +1131,7 @@ void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostio
         m_scrollShot->setTimeAndCalculateTimeDiff(mouseTime);
         m_scrollShot->setScrollModel(true);
     }
+    //qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
     //判断预览框是否在捕捉区域内部，如果是在捕捉区域内部，则每次截图前先隐藏预览框，并延时30ms，在进行截图
     if (PreviewWidget::PostionStatus::INSIDE == previewPostion) {
         if (m_previewWidget) {
@@ -2743,10 +2749,10 @@ void MainWindow::paintEvent(QPaintEvent *event)
             painter.setBrush(QBrush());  // clear brush
             painter.setPen(framePen);
             painter.drawRect(QRect(
-                                 std::max(m_adjustArea.x(), 1),
-                                 std::max(m_adjustArea.y() + 3, 1),
-                                 std::min(m_adjustArea.width() - 1, rootWindowRect.width() - 2),
-                                 std::min(m_adjustArea.height() - 1, rootWindowRect.height() - 2)));
+                                 std::max(static_cast<int>(m_adjustArea.x()), 1),
+                                 std::max(static_cast<int>(m_adjustArea.y()) + 3, 1),
+                                 std::min(static_cast<int>(m_adjustArea.width()) - 1, rootWindowRect.width() - 2),
+                                 std::min(static_cast<int>(m_adjustArea.height()) - 1, rootWindowRect.height() - 2)));
             painter.setRenderHint(QPainter::Antialiasing, true);
         }
 
@@ -3702,11 +3708,13 @@ void MainWindow::onScrollShotMouseClickEvent(int x, int y)
         else if (3 == m_scrollShotStatus || 4 == m_scrollShotStatus || 6 == m_scrollShotStatus) {
             //此处用来处理,当一开始使用手动滚动截图时出现错误的情况下切换自动滚动,自动滚动不会被启动
             if (!m_isAutoScrollShotStart) {
-                m_scrollShotStatus = 1;
                 startAutoScrollShot();
+                m_scrollShotStatus = 1;
             } else {
-                m_scrollShotStatus = 2;
+                //设置穿透
+                setInputEvent();
                 continueAutoScrollShot();
+                m_scrollShotStatus = 2;
             }
 
         }
@@ -3985,20 +3993,28 @@ void MainWindow::onAdjustCaptureArea()
         m_previewWidget->updatePreviewSize(previewRecordRect);
         m_firstScrollShotImg = m_screenGrabber.grabEntireDesktop(ok, previewRecordRect, m_pixelRatio);
         m_previewWidget->updateImage(m_firstScrollShotImg.toImage());
-    });
-    m_previewWidget->show();
-    //打开工具栏显示
-    m_toolBar->show();
-    //打开截图保存按钮显示
-    m_shotButton->show();
-    //打开滚动截图左上角当前图片的大小显示
-    m_scrollShotSizeTips->show();
+        m_previewWidget->show();
+        //打开工具栏显示
+        m_toolBar->show();
+        //打开截图保存按钮显示
+        m_shotButton->show();
+        //打开滚动截图左上角当前图片的大小显示
+        m_scrollShotSizeTips->show();
 
+        //获取预览框相对于捕捉区域的位置
+        m_previewPostion = m_previewWidget->getPreviewPostion();
+    });
     //清除滚动截图已经保存的图片数据
     m_scrollShot->clearPixmap();
 
-    //滚动截图状态恢复为初始状态
-    m_scrollShotType = 0;
+    //自动滚动截图模式是否曾经被启动过
+    if (m_isAutoScrollShotStart) {
+        //启动过：滚动截图状态为3
+        m_scrollShotStatus = 3;
+    } else {
+        //没有启动过：滚动截图状态恢复为初始状态
+        m_scrollShotStatus = 0;
+    }
 
     //滚动截图：自动调整捕捉区域错误已经解决，此方法就是用来解决这个错误
     m_isErrorWithScrollShot = false;
