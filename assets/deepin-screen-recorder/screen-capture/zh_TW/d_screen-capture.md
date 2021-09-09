@@ -109,27 +109,28 @@
     <caption>工具列說明</caption>
     <tbody>
         <tr>
+            <td><img src="../common/scrollshot.svg" alt="滾動截圖" class="inline" /></td>
+            <td>滾動截圖</td>
             <td><img src="../common/ocr.svg" alt="识别文字" class="inline" /></td>
             <td>識別文字</td>
             <td><img src="../common/rectangle_normal.svg" alt="矩形工具" class="inline" /></td>
             <td>矩形工具</td>
             <td><img src="../common/oval_normal.svg" alt="橢圓工具" class="inline" /></td>
             <td>橢圓工具</td>
+            </tr>
+          <tr>
             <td><img src="../common/line_normal.svg" alt="箭頭工具" class="inline" /></td>
             <td>直線工具</td>
-        </tr>
-          <tr>
-            <td><img src="../common/Combined_Shape.svg" alt="畫筆工具" class="inline" /></td>
+                 <td><img src="../common/Combined_Shape.svg" alt="畫筆工具" class="inline" /></td>
             <td>畫筆工具</td>
             <td><img src="../common/text_normal.svg" alt="文字工具" class="inline" /></td>
             <td>文字工具</td>
             <td><img src="../common/close.svg" alt="關閉" class="inline" /></td>
             <td>退出截圖</td>
-            <td></td>
-            <td></td>
-        </tr>
+              </tr>
     </tbody>
 </table>
+
 
 
 
@@ -240,6 +241,34 @@
    - 在文字框內，修改文字訊息。
 3. 在文字框外單擊滑鼠左鍵，退出編輯模式。
 
+### 滾動截圖
+
+滾動截圖功能不僅可以截取螢幕內可見的內容，還能截取超過螢幕外的內容，滿足一次性截取長圖的需求。
+
+請在 **控制中心 > 個性化** 中開啟特效視窗。
+
+1. 選擇截圖區域後，單擊工具列上的滾動截圖按鈕 ![icon](../common/scrollshot.svg)。
+
+2. 請將滑鼠游標保持在滾動區域內，您可以使用自動滾動或手動滾動截圖，也可以交替使用兩種方式：
+
+  - **自動滾動**：在截圖區域中單擊滑鼠左鍵，游標所在的截圖區域自動向上滾動，此時截取的圖片會拼接為一張完整的長圖。自動滾動過程中，在截圖區域內單擊滑鼠左鍵，或者將游標移出截圖區域，暫停截圖；再次單擊截圖區域，繼續截圖。
+
+  - **手動滾動**：將滑鼠游標置於截圖區域中，向上或者向下滾動滑鼠滾輪截取圖片。停止滾動滑鼠滾輪，暫停截圖；再次滾動滑鼠滾輪，繼續截圖。
+
+3. 單擊工具列中的截圖按鈕 ![icon](../common/screenshot_button.svg) 儲存長圖。
+
+> ![notes](../common/notes.svg)說明：有以下幾種情況會導致拼接異常。
+> - 截圖區域超出滾動範圍，如框選整個視窗、全螢幕等；
+> - 截圖區域過小，如高度小於50px；
+> - 截圖區域中有多個滾動區域；
+> - 滾動區域中包含大量重複內容，如空白區域、相同顏色、大段相同文字等；
+> - 滾動區域中包含動圖、影片、浮水印等，或者有非純色背景的內容；
+> - 滾動時有水平方向的偏移，如滑動滾動條；
+> - 滾動速度過快；
+> - 滾動時切換視窗。
+
+![長圖](fig/scrollshot.png)
+
 ### 識別文字
 
 對於截圖區域中無法複製的內容，可以使用識別文字功能提取文字。
@@ -269,7 +298,7 @@
 開啟熒幕錄影，選定截圖區域後，透過執行以下操作之一來儲存截取的圖片：
 
 - 雙擊滑鼠左鍵儲存。
-- 單擊截圖工具列中的![icon](../common/screenshot_button.svg)按鈕。
+- 單擊截圖工具列中的 ![icon](../common/screenshot_button.svg) 按鈕。
 - 使用快捷鍵 **Ctrl + S** 儲存。
 - 單擊滑鼠右鍵，選擇 **儲存** 完成儲存操作。
 
@@ -327,7 +356,7 @@
 
 ### 錄屏設定
 
-在錄屏工具列中，您可以設定：
+在錄屏工具列中，您可以：
 
 - 錄製聲音：在錄製聲音下拉選項中選擇開啟 **麥克風** 或 **系統音訊**，也可以全部選擇。
 - 顯示按鍵：單擊按鈕![icon](../common/key_normal.svg)，錄屏時顯示鍵盤按鍵操作，最多同時顯示5個按鍵操作。
@@ -347,7 +376,7 @@
 1. 使用快捷鍵 **Ctrl + Alt + R** 啟動錄屏。
 2. 選擇錄屏區域。
 3. 在錄屏工具列中，對錄屏進行相關的設定。
-4. 單擊錄屏按鈕 ![icon](../common/recorder_button.svg) ，3秒倒數計時結束後開始錄製，此時工具列區域出現錄製圖示並閃爍。
+4. 單擊錄屏按鈕 ![icon](../common/recorder_button.svg)，3秒倒數計時結束後開始錄製，此時工具列區域出現錄製圖示並閃爍。
 5. 您可以使用以下方法結束錄製。
    - 使用快捷鍵 **Ctrl + Alt + R**。
    - 單擊任務欄上的熒幕錄影圖示。

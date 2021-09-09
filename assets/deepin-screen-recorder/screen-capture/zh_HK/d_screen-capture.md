@@ -26,7 +26,7 @@
 ### 關閉螢幕錄影
 
 - 螢幕錄影會在截圖或錄影結束後自動退出。
-- 在螢幕錄影界面，單擊![close](../common/close.svg)，關閉應用。
+- 在螢幕錄影界面，單擊 ![close](../common/close.svg)，關閉應用。
 - 在截圖界面，單擊鼠標右鍵，選擇 **保存** 或 **退出**。
 
 
@@ -61,8 +61,8 @@
 
 您也可以直接操作以下步驟來進行全螢幕截圖：
 
-- 如果您已經將截圖錄屏固定到任務欄，右鍵單擊任務欄上的圖標![deepin_screenshot](../common/deepin_screenshot.svg)，選擇 **全屏截圖** 。
-- 按下鍵盤上的 ![print](../common/Print.svg)鍵，實現全螢幕截圖。
+- 如果您已經將截圖錄屏固定到任務欄，右鍵單擊任務欄上的圖標 ![deepin_screenshot](../common/deepin_screenshot.svg)，選擇 **全屏截圖** 。
+- 按下鍵盤上的 ![print](../common/Print.svg) 鍵，實現全螢幕截圖。
 
 #### 選擇窗口
 
@@ -104,7 +104,7 @@
 
 將鼠標指針置於螢幕錄影區域上，鼠標指針為 ![手指](../common/hand.svg)，您可以：
 - 按住鼠標左鍵不放，拖動鼠標來移動區域的位置。
-- 按下鍵盤上的 ![向上](../common/Up.svg)或 ![向下](../common/Down.svg)來上下移動區域，按下鍵盤上的 ![向左](../common/Left.svg)或 ![向右](../common/Right.svg)來左右移動區域。
+- 按下鍵盤上的 ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 來上下移動區域，按下鍵盤上的 ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 來左右移動區域。
 
 ## 截圖
 
@@ -116,27 +116,29 @@
     <caption>工具欄說明</caption>
     <tbody>
         <tr>
+            <td><img src="../common/scrollshot.svg" alt="滾動截圖" class="inline" /></td>
+            <td>滾動截圖</td>
             <td><img src="../common/ocr.svg" alt="識別文字" class="inline" /></td>
             <td>識別文字</td>
             <td><img src="../common/rectangle_normal.svg" alt="矩形工具" class="inline" /></td>
             <td>矩形工具</td>
             <td><img src="../common/oval_normal.svg" alt="橢圓工具" class="inline" /></td>
             <td>橢圓工具</td>
-            <td><img src="../common/line_normal.svg" alt="箭頭工具" class="inline" /></td>
-            <td>直線工具</td>
         </tr>
           <tr>
+            <td><img src="../common/line_normal.svg" alt="箭頭工具" class="inline" /></td>
+            <td>直線工具</td>
             <td><img src="../common/Combined_Shape.svg" alt="畫筆工具" class="inline" /></td>
             <td>畫筆工具</td>
             <td><img src="../common/text_normal.svg" alt="文本工具" class="inline" /></td>
             <td>文本工具</td>
             <td><img src="../common/close.svg" alt="關閉" class="inline" /></td>
             <td>退出截圖</td>
-            <td></td>
-            <td></td>
         </tr>
     </tbody>
 </table>
+
+
 
 
 
@@ -202,18 +204,21 @@
 
 
 ### 修改圖形
+
 如果您在截圖中繪製了其他的圖形，可以對繪製的圖形進行修改和移動。
 
 ![1|修改圖形](fig/d_changetool.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #### 移動圖形
+
 1. 將鼠標指針置於圖形的邊線上，此時鼠標指針變為 ![手指](fig/fingers.png)。
 2. 按住鼠標左鍵不放，將圖形移動到截圖區域的任何位置。
 3. 按下鍵盤上的 ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 來上下移動圖形，按下鍵盤上的 ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 來左右移動圖形。
 
 
 #### 編輯圖形
+
 1. 將鼠標指針置於圖形的邊線上，此時鼠標指針變為 ![手指](fig/fingers.png)。
 2. 單擊鼠標左鍵，進入圖形的編輯模式，您可以：
    - 按下鍵盤上的 **Delete** 鍵，刪除圖形。
@@ -248,11 +253,42 @@
 2. 按住鼠標左鍵不放，可以將文字移動到截圖區域的任何位置。
 
 #### 編輯文字批註
+
 1. 將鼠標指針置於文字上，此時鼠標指針變為 ![手指](fig/fingers.png)。
 2. 雙擊鼠標左鍵，進入文字編輯模式，您可以：
    - 按下鍵盤上的 **Delete** 鍵，刪除文字批註。
    - 在文本框內，修改文字訊息。
 3. 在文本框外單擊鼠標左鍵，退出編輯模式。
+
+
+### 滾動截圖
+
+滾動截圖功能不僅可以截取螢幕內可見的內容，還能截取超過螢幕外的內容，滿足一次性截取長圖的需求。
+
+請在 **控制中心 > 個性化** 中開啟特效窗口。
+
+1. 選擇截圖區域後，單擊工具欄上的滾動截圖按鈕 ![icon](../common/scrollshot.svg)。
+
+2. 請將鼠標光標保持在滾動區域內，您可以使用自動滾動或手動滾動截圖，也可以交替使用兩種方式：
+
+   - **自動滾動**：在截圖區域中單擊鼠標左鍵，光標所在的截圖區域自動向上滾動，此時截取的圖片會拼接為一張完整的長圖。自動滾動過程中，在截圖區域內單擊鼠標左鍵，或者將光標移出截圖區域，暫停截圖；再次單擊截圖區域，繼續截圖。
+
+   - **手動滾動**：將鼠標光標置於截圖區域中，向上或者向下滾動鼠標滾輪截取圖片。停止滾動鼠標滾輪，暫停截圖；再次滾動鼠標滾輪，繼續截圖。
+
+3. 單擊工具欄中的截圖按鈕 ![icon](../common/screenshot_button.svg) 保存長圖。
+
+  > ![notes](../common/notes.svg)說明：有以下幾種情況會導致拼接異常。
+  > - 截圖區域超出滾動範圍，如框選整個窗口、全螢幕等；
+  > - 截圖區域過小，如高度小於50px；
+  > - 截圖區域中有多個滾動區域；
+  > - 滾動區域中包含大量重複內容，如空白區域、相同顏色、大段相同文字等；
+  > - 滾動區域中包含動圖、影片、水印等，或者有非純色背景的內容；
+  > - 滾動時有水平方向的偏移，如滑動滾動條；
+  > - 滾動速度過快；
+  > - 滾動時切換窗口。
+
+![長圖](fig/scrollshot.png)
+
 
 
 ### 識別文字

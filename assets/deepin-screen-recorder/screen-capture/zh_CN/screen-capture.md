@@ -27,7 +27,7 @@
 ### 关闭截图录屏
 
 - 截图录屏会在截图或录屏结束后自动退出。
-- 在截图录屏界面，单击![close](../common/close.svg)，关闭应用。
+- 在截图录屏界面，单击 ![close](../common/close.svg)，关闭应用。
 - 在截图界面，单击鼠标右键，选择 **保存** 或 **退出**。
 
 
@@ -61,7 +61,7 @@
 
 您也可以直接通过以下步骤来截取全屏：
 
-- 如果您已经将截图录屏固定到任务栏，右键单击任务栏上的图标![deepin_screenshot](../common/deepin_screenshot.svg)，选择 **全屏截图** 。
+- 如果您已经将截图录屏固定到任务栏，右键单击任务栏上的图标 ![deepin_screenshot](../common/deepin_screenshot.svg)，选择 **全屏截图** 。
 - 按下键盘上的 ![print](../common/Print.svg)键，实现全屏截图。
 
 #### 选择窗口
@@ -104,7 +104,7 @@
 
 将鼠标指针置于截图录屏区域上，鼠标指针为 ![手指](../common/hand.svg)，您可以：
 - 按住鼠标左键不放，拖动鼠标来移动区域的位置。
-- 按下键盘上的 ![向上](../common/Up.svg)或 ![向下](../common/Down.svg)来上下移动区域，按下键盘上的 ![向左](../common/Left.svg)或 ![向右](../common/Right.svg)来左右移动区域。
+- 按下键盘上的 ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 来上下移动区域，按下键盘上的 ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 来左右移动区域。
 
 
 
@@ -187,7 +187,7 @@
 1. 在截图工具栏中，单击 ![直线](../common/line_normal.svg)。
 2. 在工具栏展开的面板中，选择线条的粗细和颜色，有四种颜色可供选择。
 3. 单击 ![直线](../common/line_normal.svg)或 ![箭头](../common/Arrow_normal.svg)，在直线和箭头之间切换。
-4. 将鼠标指针置于截图区域上，鼠标指针变为 ![线条指针](../common/line_mouse.svg)或 ![箭头指针](../common/arrow_mouse.svg)。
+4. 将鼠标指针置于截图区域上，鼠标指针变为 ![线条指针](../common/line_mouse.svg) 或 ![箭头指针](../common/arrow_mouse.svg)。
 5. 按住鼠标左键不放，拖动鼠标完成图形区域的绘制。
 
 #### 画笔工具

@@ -107,28 +107,27 @@ Under the screenshot mode, click the corresponding icons on the toolbar and you 
     <caption>Icon Description</caption>
     <tbody>
         <tr>
+            <td><img src="../common/scrollshot.svg" alt="Scrollshot" class="inline" /></td>
+            <td>Scrollshot</td>
             <td><img src="../common/ocr.svg" alt="Extract Text" class="inline" /></td>
             <td>Extract Text</td>
             <td><img src="../common/rectangle_normal.svg" alt="Rectangle" class="inline" /></td>
             <td>Rectangle</td>
             <td><img src="../common/oval_normal.svg" alt="Elipse" class="inline" /></td>
             <td>Elipse</td>
+                    </tr>
+          <tr>
             <td><img src="../common/line_normal.svg" alt="Arrow" class="inline" /></td>
             <td>Line</td>
-        </tr>
-          <tr>
             <td><img src="../common/Combined_Shape.svg" alt="Pencil" class="inline" /></td>
             <td>Pencil</td>
             <td><img src="../common/text_normal.svg" alt="文本工具" class="inline" /></td>
             <td>Text</td>
             <td><img src="../common/close.svg" alt="关闭" class="inline" /></td>
             <td>Exit</td>
-                          <td></td>
-            <td></td>
         </tr>
     </tbody>
 </table>
-
 
 
 
@@ -239,6 +238,32 @@ You can modify and move the text annotations after they're entered.
    - Modify the text in the text box.
 3. Click outside the text box to exit editing mode.
 
+### Take Screen Scrollshots
+
+You are able to take long screen scrollshots both in and out of the screen with the **Scrollshot** feature.
+
+Please enable the **Window Effect** feature in **Control Center > Personalization > General** before taking screen scrollshots.
+
+1. Select the screenshot area and click the ![scrollshot](../common/scrollshot.svg) icon on the toolbar.
+2. Place the cursor in the scrollshot area and you can start taking your scrollshots automatically, manually or alternatively.
+
+   - Automatic scrolling: Click in the screenshot area and the cursor will scroll upwards automatically. The captured screenshots will be spliced into a complete long picture.  During the automatic scrolling process, click in the screenshot area or move the cursor out of the screenshot area to suspend the screenshot. Click in the screenshot area once again to resume.
+   - Manual scrolling: Place the cursor in the screenshot area and scroll the mouse wheel upwards or downwards to take screenshot manually. Stop scrolling the mouse wheel to suspend the screenshot. Scroll it again to resume. 
+3.   Click the  ![icon](../common/screenshot_button.svg) icon on the toolbar to save the screenshot.
+
+> ![notes](../common/notes.svg) Notes: The following conditions will lead to abnormal splicing:
+>
+> - The screenshot area is beyond the scrolling area, such as selecting the whole window or fullscreen; 
+> - The screenshot area is too small. For example, the height is less than 50px. 
+> - Multiple scrolling areas are contained in the scrolling area.
+> - A great number of repetitive contents, such as blank areas, same colors or same sections of texts are contained in the scrolling area.
+> - Animations, video, watermarks, etc. or contents with non-solid background are contained in the screenshot area.
+> - There is a horizontal offset in the scrolling process, such as sliding the scrollbar.
+> - The rolling is too fast.
+> - Switch windows during the scrolling process.
+
+![scrollshot](fig/scrollshot.png)
+
 ### Extract Texts
 
 You are able to recognize the texts in the screenshot area with the **Extract Text** feature.
@@ -247,8 +272,6 @@ You are able to recognize the texts in the screenshot area with the **Extract Te
 2. You are able to edit the recognized texts by clicking the text area in the right column. Click the ![copy](../common/copy.svg) icon on the lower right corner to copy the texts recognized to the clipboard and click the ![copy](../common/download.svg) icon to save the texts recognized in TXT .
 
 ![ocr](fig/ocr.png)
-
-
 
 ### Delay Screenshot
 

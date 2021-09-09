@@ -26,7 +26,7 @@
 ### 關閉螢幕錄影
 
 - 螢幕錄影會在截圖或錄影結束後自動退出。
-- 在螢幕錄影界面，單擊![close](../common/close.svg)，關閉應用。
+- 在螢幕錄影界面，單擊 ![close](../common/close.svg)，關閉應用。
 - 在截圖界面，單擊鼠標右鍵，選擇 **保存** 或 **退出**。
 
 
@@ -61,8 +61,8 @@
 
 您也可以直接操作以下步驟來進行全螢幕截圖：
 
-- 如果您已經將截圖錄屏固定到任務欄，右鍵單擊任務欄上的圖標![deepin_screenshot](../common/deepin_screenshot.svg)，選擇 **全屏截圖** 。
-- 按下鍵盤上的 ![print](../common/Print.svg)鍵，實現全螢幕截圖。
+- 如果您已經將截圖錄屏固定到任務欄，右鍵單擊任務欄上的圖標 ![deepin_screenshot](../common/deepin_screenshot.svg)，選擇 **全屏截圖** 。
+- 按下鍵盤上的 ![print](../common/Print.svg) 鍵，實現全螢幕截圖。
 
 #### 選擇窗口
 
@@ -104,7 +104,7 @@
 
 將鼠標指針置於螢幕錄影區域上，鼠標指針為 ![手指](../common/hand.svg)，您可以：
 - 按住鼠標左鍵不放，拖動鼠標來移動區域的位置。
-- 按下鍵盤上的 ![向上](../common/Up.svg)或 ![向下](../common/Down.svg)來上下移動區域，按下鍵盤上的 ![向左](../common/Left.svg)或 ![向右](../common/Right.svg)來左右移動區域。
+- 按下鍵盤上的 ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 來上下移動區域，按下鍵盤上的 ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 來左右移動區域。
 
 ## 截圖
 
@@ -161,6 +161,7 @@
 
 
 #### 橢圓工具
+
 ![1|橢圓工具](fig/ellipsetool.png)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -198,18 +199,21 @@
 
 
 ### 修改圖形
+
 如果您在截圖中繪製了其他的圖形，可以對繪製的圖形進行修改和移動。
 
 ![1|修改圖形](fig/changetool.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #### 移動圖形
+
 1. 將鼠標指針置於圖形的邊線上，此時鼠標指針變為 ![手指](fig/fingers.png)。
 2. 按住鼠標左鍵不放，將圖形移動到截圖區域的任何位置。
 3. 按下鍵盤上的 ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 來上下移動圖形，按下鍵盤上的 ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 來左右移動圖形。
 
 
 #### 編輯圖形
+
 1. 將鼠標指針置於圖形的邊線上，此時鼠標指針變為 ![手指](fig/fingers.png)。
 2. 單擊鼠標左鍵，進入圖形的編輯模式，您可以：
    - 按下鍵盤上的 **Delete** 鍵，刪除圖形。
@@ -266,7 +270,7 @@
 開啟螢幕錄影，選定截圖區域後，通過執行以下操作之一來保存圖片：
 
 - 雙擊鼠標左鍵來保存。
-- 單擊截圖工具欄中的 ![icon](../common/screenshot_button.svg)按鈕。
+- 單擊截圖工具欄中的 ![icon](../common/screenshot_button.svg) 按鈕。
 - 按下鍵盤上的 **Ctrl + S** 組合鍵來保存。
 - 在截取的圖片中，單擊鼠標右鍵，選擇 **保存**。
 
