@@ -890,6 +890,8 @@ void MainWindow::initScrollShot()
         m_previewWidget->initPreviewWidget();
         //此处只是显示预览框的位置及大小，预览框里面还未添加第一张预览图
         m_previewWidget->show();
+        //防止预览区域在捕捉区域内部时，遮挡工具栏及保存按钮
+        m_previewWidget->lower();
     }
     //获取预览框相对于捕捉区域的位置
     m_previewPostion = m_previewWidget->getPreviewPostion();
@@ -2193,8 +2195,14 @@ void MainWindow::changeShotToolEvent(const QString &func)
         saveScreenShot();
 
     } else if (func == "scrollShot") { //点击滚动截图
-        //初始化滚动截图
-        initScrollShot();
+        //捕捉区域的固件不显示
+        drawDragPoint = false;
+        repaint();
+        //延时100ms防止预览款将捕捉区域的骨架截取到图片中
+        QTimer::singleShot(100, this, [ = ] {
+            //初始化滚动截图
+            initScrollShot();
+        });
 
     } else {
         if (!m_sideBar->isVisible()) {
@@ -4113,7 +4121,7 @@ void MainWindow::onViewShortcut()
     shortcutString << "-b" << param1 << param2;
 
     QProcess *shortcutViewProc = new QProcess(this);
-    shortcutViewProc->startDetached("killall deepin-shortcut-viewer");
+    //shortcutViewProc->startDetached("killall deepin-shortcut-viewer");
     shortcutViewProc->startDetached("deepin-shortcut-viewer", shortcutString);
 
     connect(shortcutViewProc, SIGNAL(finished(int)), shortcutViewProc, SLOT(deleteLater()));
