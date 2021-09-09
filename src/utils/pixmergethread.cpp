@@ -256,7 +256,6 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
                     emit merageError(Failed);
                 } else {
                     m_bottomHeight = -1;
-                    m_MeragerCount = 0;
                     qDebug() << "1 无效区域，点击调整捕捉区域";
                     emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
                 }
@@ -280,7 +279,6 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
                 emit merageError(ReachBottom);
             } else {
                 m_headHeight = -1;
-                m_MeragerCount = 0;
                 qDebug() << "2 无效区域，点击调整捕捉区域";
                 emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
             }
@@ -348,7 +346,6 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
                     emit merageError(Failed);
                 } else {
                     m_headHeight = -1;
-                    m_MeragerCount = 0;
                     qDebug() << "1 无效区域，点击调整捕捉区域";
                     emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
                 }
@@ -372,7 +369,6 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
                 emit merageError(ReachBottom);
             } else {
                 m_headHeight = -1;
-                m_MeragerCount = 0;
                 qDebug() << "2 无效区域，点击调整捕捉区域";
                 emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
             }
@@ -404,7 +400,6 @@ QRect PixMergeThread::getScrollChangeRectArea(cv::Mat &img1, const cv::Mat &img2
     if (m_bottomHeight > 0) {
         tempImg = tempImg.copy(0, 0, tempImg.width(), m_bottomHeight);
     }
-
     img1 = qPixmapToCvMat(QPixmap::fromImage(tempImg));
 
     int minI = img1.rows;
@@ -415,7 +410,7 @@ QRect PixMergeThread::getScrollChangeRectArea(cv::Mat &img1, const cv::Mat &img2
     for (int i = 0; i < img1.rows; ++i) {
         for (int j = 0; j < img1.cols; ++j) {
             //if(img1.at<Vec3b>(i, j)[0] != img2.at<Vec3b>(i, j)[0] || img1.at<Vec3b>(i, j)[1] != img2.at<Vec3b>(i, j)[1] || img1.at<Vec3b>(i, j)[2] != img2.at<Vec3b>(i, j)[2]) {
-            if (img1.at<cv::Vec3b>(i, j) != img2.at<cv::Vec3b>(i, j)) {
+            if (img1.at<cv::Vec4b>(i, j) != img2.at<cv::Vec4b>(i, j)) {
                 if (i < minI) minI = i;
                 if (j < minJ) minJ = j;
                 if (i > maxI) maxI = i;
@@ -423,7 +418,8 @@ QRect PixMergeThread::getScrollChangeRectArea(cv::Mat &img1, const cv::Mat &img2
             }
         }
     }
-    return  QRect(minJ, minI, maxJ - minJ, maxI - minI);
+    qDebug() << "minJ: " << minJ << "minI:" << minI << "maxJ - minJ:" << maxJ - minJ << "maxI - minI" << maxI - minI;
+    return  QRect(minJ, minI + m_headHeight, maxJ - minJ, maxI - minI);
 }
 
 
