@@ -938,17 +938,7 @@ void MainWindow::initScrollShot()
                                           this,
                                           SLOT(onLockScreenEvent(QDBusMessage))
                                          );
-    const QPoint topLeft = geometry().topLeft();
-    QRect recordRect {
-        static_cast<int>(recordX * m_pixelRatio + topLeft.x()),
-        static_cast<int>(recordY * m_pixelRatio + topLeft.y()),
-        static_cast<int>(recordWidth * m_pixelRatio),
-        static_cast<int>(recordHeight * m_pixelRatio)
-    };
-    int toolbarX = static_cast<int>(m_toolBar->x() * m_pixelRatio);
-    int toolbarY = static_cast<int>(m_toolBar->y() * m_pixelRatio);
-    int toolbarWidth = static_cast<int>(m_toolBar->width() * m_pixelRatio);
-    int toolbarHeight = static_cast<int>(m_toolBar->height() * m_pixelRatio);
+
     //延时时间
     int delayTime = 100;
     //不同的平台延时时间不同
@@ -960,10 +950,7 @@ void MainWindow::initScrollShot()
         delayTime = 220;
     }
     //工具栏、保存按钮、预览框在捕捉区域内部需对工具栏、保存按钮、预览框及提示延时显示
-    if (recordRect.contains(toolbarX, toolbarY) ||
-            recordRect.contains(toolbarX + toolbarWidth, toolbarY) ||
-            recordRect.contains(toolbarX, toolbarY + toolbarHeight) ||
-            recordRect.contains(toolbarX + toolbarWidth, toolbarY + toolbarHeight)) {
+    if (isToolBarInShotArea()) {
         //延时100ms之后使预览窗口显示第一张预览图，此时为了保证第一张预览图中不包含工具栏、保存按钮及提示
         QTimer::singleShot(delayTime, this, [ = ] {
             showScrollShot();
@@ -1002,9 +989,9 @@ QPoint MainWindow::getScrollShotTipPosition()
     };
     int leftTopX = 0, leftTopY = 0;
     int screenWidth = 0, screenHeight = 0;
-    int toolbarX = static_cast<int>(m_toolBar->x() * m_pixelRatio);
+//    int toolbarX = static_cast<int>(m_toolBar->x() * m_pixelRatio);
     int toolbarY = static_cast<int>(m_toolBar->y() * m_pixelRatio);
-    int toolbarWidth = static_cast<int>(m_toolBar->width() * m_pixelRatio);
+//    int toolbarWidth = static_cast<int>(m_toolBar->width() * m_pixelRatio);
     int toolbarHeight = static_cast<int>(m_toolBar->height() * m_pixelRatio);
     //qDebug() << "toolbarX: " << toolbarX << ",toolbarY: " <<toolbarY << "toolbarWidth: " << toolbarWidth << ",toolbarHeight: " << toolbarHeight;
     //qDebug() << "recordRect.x(): " << recordRect.x() << ",recordRect.y(): " << recordRect.y() << "recordRect.width(): " << recordRect.width() << ",recordRect.height(): " << recordRect.height();
@@ -1020,10 +1007,7 @@ QPoint MainWindow::getScrollShotTipPosition()
     } else {
         leftTopX = static_cast<int>((recordRect.x()  + (recordRect.width()  - m_scrollShotTip->width() * m_pixelRatio) / 2));
         //工具栏在捕捉区域内部 ,判断工具栏的四个点是否在内部
-        if (recordRect.contains(toolbarX, toolbarY) ||
-                recordRect.contains(toolbarX + toolbarWidth, toolbarY) ||
-                recordRect.contains(toolbarX, toolbarY + toolbarHeight) ||
-                recordRect.contains(toolbarX + toolbarWidth, toolbarY + toolbarHeight)) {
+        if (isToolBarInShotArea()) {
             //leftTopY = static_cast<int>((recordRect.y() * m_pixelRatio + (recordRect.height() * m_pixelRatio - m_scrollShotTip->height()) / 100 * 97));
             leftTopY = static_cast<int>(toolbarY + toolbarHeight + 15 * m_pixelRatio);
         } else {
@@ -1131,6 +1115,13 @@ void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostio
         m_scrollShot->setTimeAndCalculateTimeDiff(mouseTime);
         m_scrollShot->setScrollModel(true);
     }
+    //判断工具栏是否在捕捉区域内部
+    if (isToolBarInShotArea()) {
+        //工具栏、保存截图按钮先隐藏在显示，防止出现的预览图中包含工具栏
+        m_toolBar->hide();
+        m_shotButton->hide();
+        m_scrollShotSizeTips->hide();
+    }
     //qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
     //判断预览框是否在捕捉区域内部，如果是在捕捉区域内部，则每次截图前先隐藏预览框，并延时30ms，在进行截图
     if (PreviewWidget::PostionStatus::INSIDE == previewPostion) {
@@ -1151,6 +1142,13 @@ void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostio
             }
         });
     } else {
+        //之所以此延时需要单独放在这里是由于前面预览图已经做了一个延时，此时在进行延时，会导致，预览图延时的时间太长
+        //判断工具栏是否在捕捉区域内部,在捕捉区域内部时需延时，才能保证截图时不将它们截如图像中
+        if (isToolBarInShotArea()) {
+            QEventLoop eventloop1;
+            QTimer::singleShot(delayTime, &eventloop1, SLOT(quit()));
+            eventloop1.exec();
+        }
         bool ok;
         QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
         //抓取捕捉区域图片
@@ -1158,6 +1156,37 @@ void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostio
         //滚动截图处理类进行图片的拼接
         m_scrollShot->addPixmap(img, direction);
     }
+    //判断工具栏是否在捕捉区域内部
+    if (isToolBarInShotArea()) {
+        //工具栏、保存截图按钮显示，防止出现的预览图中包含工具栏
+        m_toolBar->show();
+        m_shotButton->show();
+        m_scrollShotSizeTips->show();
+    }
+}
+
+//判断工具栏是否在在捕捉区域内部
+bool MainWindow::isToolBarInShotArea()
+{
+    const QPoint topLeft = geometry().topLeft();
+    QRect recordRect {
+        static_cast<int>(recordX * m_pixelRatio + topLeft.x()),
+        static_cast<int>(recordY * m_pixelRatio + topLeft.y()),
+        static_cast<int>(recordWidth * m_pixelRatio),
+        static_cast<int>(recordHeight * m_pixelRatio)
+    };
+    int toolbarX = static_cast<int>(m_toolBar->x() * m_pixelRatio);
+    int toolbarY = static_cast<int>(m_toolBar->y() * m_pixelRatio);
+    int toolbarWidth = static_cast<int>(m_toolBar->width() * m_pixelRatio);
+    int toolbarHeight = static_cast<int>(m_toolBar->height() * m_pixelRatio);
+    //工具栏、保存按钮、预览框在捕捉区域内部需对工具栏、保存按钮、预览框及提示延时显示
+    if (recordRect.contains(toolbarX, toolbarY) ||
+            recordRect.contains(toolbarX + toolbarWidth, toolbarY) ||
+            recordRect.contains(toolbarX, toolbarY + toolbarHeight) ||
+            recordRect.contains(toolbarX + toolbarWidth, toolbarY + toolbarHeight)) {
+        return true;
+    }
+    return false;
 }
 
 
@@ -1427,16 +1456,9 @@ void MainWindow::setInputEvent()
         static_cast<int>(recordWidth * m_pixelRatio),
         static_cast<int>(recordHeight * m_pixelRatio)
     };
-    //当前工具栏位置
-    int toolbarX = static_cast<int>(m_toolBar->x() * m_pixelRatio);
-    int toolbarY = static_cast<int>(m_toolBar->y() * m_pixelRatio);
-    int toolbarWidth = static_cast<int>(m_toolBar->width() * m_pixelRatio);
-    int toolbarHeight = static_cast<int>(m_toolBar->height() * m_pixelRatio);
+
     //判断工具栏位置是否在捕捉区域内部
-    if (recordRect.contains(toolbarX, toolbarY) ||
-            recordRect.contains(toolbarX + toolbarWidth, toolbarY) ||
-            recordRect.contains(toolbarX, toolbarY + toolbarHeight) ||
-            recordRect.contains(toolbarX + toolbarWidth, toolbarY + toolbarHeight)) {
+    if (isToolBarInShotArea()) {
 //        qDebug() << "function:" << __func__ << " ,line: " << __LINE__ << " 工具栏位置在捕捉区域内部!";
         //工具栏位置在捕捉区域内部，穿透的位置下移一断距离
         Utils::getInputEvent(
@@ -2249,6 +2271,9 @@ void MainWindow::saveScreenShot()
         m_scrollShotTip->setVisible(false);
         m_scrollShotTip->hide();
     }
+    if (m_scrollShotSizeTips) {
+        m_scrollShotSizeTips->hide();
+    }
     update();
 
 
@@ -2256,6 +2281,10 @@ void MainWindow::saveScreenShot()
     if (status::scrollshot == m_functionType && m_scrollShotStatus != 0) {
         m_resultPixmap = QPixmap::fromImage(m_scrollShot->savePixmap());
         m_previewWidget->hide();
+        if (m_resultPixmap.isNull()) {
+            //普通截图保存图片
+            shotCurrentImg();
+        }
     } else {
         //普通截图保存图片
         shotCurrentImg();
@@ -4136,11 +4165,11 @@ void MainWindow::onViewShortcut()
     QString param2 = "-p=" + QString::number(pos.x()) + "," + QString::number(pos.y());
     shortcutString << "-b" << param1 << param2;
 
-    QProcess *shortcutViewProc = new QProcess(this);
+//    QProcess *shortcutViewProc = new QProcess(this);
     //shortcutViewProc->startDetached("killall deepin-shortcut-viewer");
-    shortcutViewProc->startDetached("deepin-shortcut-viewer", shortcutString);
+    QProcess::startDetached("deepin-shortcut-viewer", shortcutString);
 
-    connect(shortcutViewProc, SIGNAL(finished(int)), shortcutViewProc, SLOT(deleteLater()));
+//    connect(shortcutViewProc, SIGNAL(finished(int)), shortcutViewProc, SLOT(deleteLater()));
 
     if (m_isShapesWidgetExist) {
         m_isShiftPressed =  false;

@@ -501,7 +501,11 @@ protected:
      */
     void scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostion, int direction, int mosueTime = 0);
 
-
+    /**
+     * @brief 判断工具栏是否在在捕捉区域内部
+     * @return false: 不在  ； true: 在
+     */
+    bool isToolBarInShotArea();
 private:
 //    QList<WindowRect> windowRects;
     QList<QRect> windowRects;
