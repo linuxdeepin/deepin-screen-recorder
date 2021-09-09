@@ -260,13 +260,13 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
                     emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
                 }
             } else {
-                if (m_curTimeDiff < 200) {
+                if (0 < m_curTimeDiff && m_curTimeDiff < 200) {
                     qDebug() << "=======1=滚动速度过快";
                     emit merageError(RoollingTooFast);
-                } else {
+                } /*else {
                     qDebug() << "2 拼接失败了";
                     emit merageError(Failed);
-                }
+                }*/
             }
             return false;
         } else if (result.rows < m_curImg.rows) {
@@ -279,7 +279,7 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
         if (m_MeragerCount == 1) {
             QRect rect = getScrollChangeRectArea(m_curImg, image);
             if (rect.width() < 0 || rect.height() < 0) {
-                qDebug() << "2 拼接失败了";
+                qDebug() << "3 拼接失败了";
                 emit merageError(Failed);
             } else {
                 m_bottomHeight = -1;
@@ -287,11 +287,11 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
                 emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
             }
         } else {
-            if (m_curTimeDiff < 200) {
+            if (0 < m_curTimeDiff && m_curTimeDiff < 200) {
                 qDebug() << "=======2=滚动速度过快";
                 emit merageError(RoollingTooFast);
             } else {
-                qDebug() << "3 拼接失败了";
+                qDebug() << "4 拼接失败了";
                 emit merageError(Failed);
             }
         }
@@ -369,13 +369,13 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
                         emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
                     }
                 } else {
-                    if (m_curTimeDiff < 200) {
+                    if (0 < m_curTimeDiff && m_curTimeDiff < 200) {
                         qDebug() << "====1====滚动速度过快";
                         emit merageError(RoollingTooFast);
-                    } else {
-                        qDebug() << "1 拼接失败了";
+                    } /*else {
+                        qDebug() << "2 拼接失败了";
                         emit merageError(Failed);
-                    }
+                    }*/
                 }
             }
             return false;
@@ -404,7 +404,7 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
         } else { //手动滚动
             if (m_MeragerCount == 1) {
                 if (rect.width() < 0 || rect.height() < 0) {
-                    qDebug() << "2 拼接失败了";
+                    qDebug() << "3 拼接失败了";
                     emit merageError(Failed);
                 } else {
                     m_headHeight = -1;
@@ -412,11 +412,11 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
                     emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
                 }
             } else {
-                if (m_curTimeDiff < 200) {
+                if (0 < m_curTimeDiff && m_curTimeDiff < 200) {
                     qDebug() << "=====2===滚动速度过快";
                     emit merageError(RoollingTooFast);
                 } else {
-                    qDebug() << "3 拼接失败了";
+                    qDebug() << "4 拼接失败了";
                     emit merageError(Failed);
                 }
             }
