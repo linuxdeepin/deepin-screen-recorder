@@ -163,7 +163,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>無效區域，點擊</translation>
+        <translation>調整捕捉區域</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
@@ -175,7 +175,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>調整捕捉區域</translation>
+        <translation>無效區域，點擊</translation>
     </message>
 </context>
 <context>
