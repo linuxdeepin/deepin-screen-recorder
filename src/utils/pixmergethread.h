@@ -63,6 +63,7 @@ public:
 
     void clearCurImg();
     void calculateTimeDiff(int time); //计算时间差
+    bool isOneWay(); //是否单向
 protected:
     cv::Mat qPixmapToCvMat(const QPixmap &inPixmap);
     bool mergeImageWork(const cv::Mat &image, int imageStatus = ScrollDown);
@@ -98,6 +99,8 @@ private:
     int m_bottomHeight = -1;// 长图底部固定区域高度
     int m_curTimeDiff = 0; //当前时间差
     int m_lastTime = 0;    //上一次的时间
+    int m_upCount = 0;
+    int m_downCount = 0;
 };
 
 Q_DECLARE_METATYPE(PixMergeThread::MergeErrorValue);

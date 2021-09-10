@@ -26,7 +26,7 @@ const int PixMergeThread::TEMPLATE_HEIGHT = 50;
 
 PixMergeThread::PixMergeThread(QObject *parent) : QThread(parent)
 {
-    m_lastTime = QDateTime::currentDateTime().toTime_t();
+    m_lastTime = int(QDateTime::currentDateTime().toTime_t());
 }
 
 PixMergeThread::~PixMergeThread()
@@ -152,6 +152,13 @@ void PixMergeThread::calculateTimeDiff(int time)
     m_lastTime = time;
 }
 
+bool PixMergeThread::isOneWay()
+{
+    if (m_upCount > 0 && m_downCount > 0)
+        return false;
+    return true;
+}
+
 cv::Mat PixMergeThread::qPixmapToCvMat(const QPixmap &inPixmap)
 {
     //qDebug() << inPixmap.toImage().format();
@@ -214,6 +221,7 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
         emit merageError(MaxHeight);
         return false;
     }
+
     if (image.rows <= TEMPLATE_HEIGHT) {
         emit merageError(Failed);
         return false;
@@ -221,6 +229,7 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
 
     ++m_MeragerCount;
     qDebug() << "********m_MeragerCount******: " << m_MeragerCount;
+    m_upCount++;
     /*转灰度图像*/
     cv::Mat image1_gray, image2_gray;
     cvtColor(image, image1_gray, CV_BGR2GRAY);
@@ -231,7 +240,7 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
      */
     cv::Mat temp = image1_gray(cv::Range(image.rows - TEMPLATE_HEIGHT, image.rows), cv::Range::all());
     /*结果矩阵图像,大小，数据类型*/
-    cv::Mat res(image2_gray.rows - temp.rows + 1 - TEMPLATE_HEIGHT, image2_gray.cols - temp.cols + 1, CV_32FC1);
+    cv::Mat res(image2_gray.rows - temp.rows + 1, image2_gray.cols - temp.cols + 1, CV_32FC1);
     /*模板匹配，采用归一化相关系数匹配*/
     matchTemplate(image2_gray, temp, res, CV_TM_CCOEFF_NORMED);
     /*结果矩阵阈值化处理*/
@@ -250,7 +259,8 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
         temp1.copyTo(cv::Mat(result, cv::Rect(0, image.rows, temp1.cols, temp1.rows)));
         if (result.rows == m_curImg.rows) {// 拼接前后图片高度不变
             if (m_MeragerCount == 1) {
-                QRect rect = getScrollChangeRectArea(m_curImg, image);
+                cv::Mat curImg = m_curImg;//拷贝不影响m_curImg
+                QRect rect = getScrollChangeRectArea(curImg, image);
                 if (rect.width() < 0 || rect.height() < 0) {
                     qDebug() << "1 拼接失败了";
                     emit merageError(Failed);
@@ -273,11 +283,13 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
             return false;
         }
         qDebug() << "拼接成功了";
+        m_downCount = 0;
         m_curImg = result;
         return true;
     } else {
         if (m_MeragerCount == 1) {
-            QRect rect = getScrollChangeRectArea(m_curImg, image);
+            cv::Mat curImg = m_curImg;
+            QRect rect = getScrollChangeRectArea(curImg, image);
             if (rect.width() < 0 || rect.height() < 0) {
                 qDebug() << "3 拼接失败了";
                 emit merageError(Failed);
@@ -291,8 +303,11 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
                 qDebug() << "=======2=滚动速度过快";
                 emit merageError(RoollingTooFast);
             } else {
-                qDebug() << "4 拼接失败了";
-                emit merageError(Failed);
+                if (isOneWay() == true) {
+                    qDebug() << "1-------m_upCount: " << m_upCount << " m_downCount: " << m_downCount;
+                    qDebug() << "4 拼接失败了";
+                    emit merageError(Failed);
+                }
             }
         }
         return false;
@@ -313,6 +328,7 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
     }
     ++m_MeragerCount;
     qDebug() << "**************m_MeragerCount: " << m_MeragerCount;
+    m_downCount++;
     /*转灰度图像*/
     cv::Mat image1_gray, image2_gray;
     cvtColor(m_curImg, image1_gray, CV_BGR2GRAY);
@@ -340,10 +356,10 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
         temp1 = m_curImg(cv::Rect(0, 0, m_curImg.cols, maxLoc.y));
         /*将图1的非模板部分和图2拷贝到result*/
         temp1.copyTo(cv::Mat(result, cv::Rect(0, 0, m_curImg.cols, maxLoc.y)));
-        //image.copyTo(cv::Mat(result, cv::Rect(0, maxLoc.y - 1, image.cols, image.rows)));
         image.copyTo(cv::Mat(result, cv::Rect(0, maxLoc.y, image.cols, image.rows)));
         if (result.rows == m_curImg.rows) {// 拼接前后图片高度不变
-            QRect rect = getScrollChangeRectArea(m_curImg, image);
+            cv::Mat curImg = m_curImg;
+            QRect rect = getScrollChangeRectArea(curImg, image);
             if (m_isManualScrollModel == false) { //自动滚动时异常处理
                 if (m_MeragerCount == 1) {
                     if (rect.width() < 0 || rect.height() < 0) {
@@ -380,13 +396,16 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
             }
             return false;
         } else if (result.rows < m_curImg.rows) {
+            qDebug() << "===result.rows < m_curImg.rows";
             return false;
         }
         qDebug() << "拼接成功了";
+        m_upCount = 0;
         m_curImg = result;
         return true;
     } else {
-        QRect rect = getScrollChangeRectArea(m_curImg, image);
+        cv::Mat curImg = m_curImg;//拷贝不影响m_curImg
+        QRect rect = getScrollChangeRectArea(curImg, image);
         if (m_isManualScrollModel == false) { //自动滚动异常处理
             if (m_MeragerCount == 1) {
                 if (rect.width() < 0 || rect.height() < 0) {
@@ -416,8 +435,11 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
                     qDebug() << "=====2===滚动速度过快";
                     emit merageError(RoollingTooFast);
                 } else {
-                    qDebug() << "4 拼接失败了";
-                    emit merageError(Failed);
+                    if (isOneWay() == true) {
+                        qDebug() << "1-------m_upCount: " << m_upCount << " m_downCount: " << m_downCount;
+                        qDebug() << "4 拼接失败了";
+                        emit merageError(Failed);
+                    }
                 }
             }
         }
