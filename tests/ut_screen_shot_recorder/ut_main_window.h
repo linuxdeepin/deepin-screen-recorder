@@ -824,3 +824,251 @@ TEST_F(MainWindowTest, onHelp)
     stub.reset(ADDR(QSysInfo, currentCpuArchitecture));
 
 }
+
+
+ACCESS_PRIVATE_FIELD(MainWindow, int, m_autoScrollFlagNext);
+
+TEST_F(MainWindowTest, onScrollShotCheckScrollType)
+{
+    m_window->onScrollShotCheckScrollType(10);
+
+    int &MainWindow_m_autoScrollFlagNext =  access_private_field::MainWindowm_autoScrollFlagNext(*m_window);
+
+    EXPECT_EQ(10, MainWindow_m_autoScrollFlagNext);
+}
+
+ACCESS_PRIVATE_FIELD(MainWindow, int, recordX);
+ACCESS_PRIVATE_FIELD(MainWindow, int, recordY);
+ACCESS_PRIVATE_FIELD(MainWindow, int, recordWidth);
+ACCESS_PRIVATE_FIELD(MainWindow, int, recordHeight);
+ACCESS_PRIVATE_FIELD(MainWindow, int, m_screenWidth);
+ACCESS_PRIVATE_FIELD(MainWindow, int, m_screenHeight);
+ACCESS_PRIVATE_FIELD(MainWindow, qreal, m_pixelRatio);
+ACCESS_PRIVATE_FIELD(MainWindow, ScrollShotTip *, m_scrollShotTip);
+ACCESS_PRIVATE_FUN(MainWindow, bool(), isToolBarInShotArea);
+ACCESS_PRIVATE_FUN(MainWindow, QPoint(), getScrollShotTipPosition);
+static bool isToolBarInShotArea_stub(void *obj)
+{
+    return true;
+}
+TEST_F(MainWindowTest, getScrollShotTipPosition)
+{
+    int &MainWindow_recordX =  access_private_field::MainWindowrecordX(*m_window);
+    MainWindow_recordX = 0;
+    int &MainWindow_recordY =  access_private_field::MainWindowrecordY(*m_window);
+    MainWindow_recordY = 0;
+    int &MainWindow_recordWidth =  access_private_field::MainWindowrecordWidth(*m_window);
+    MainWindow_recordWidth = 1920;
+    int &MainWindow_recordHeight =  access_private_field::MainWindowrecordHeight(*m_window);
+    MainWindow_recordHeight = 1080;
+    int &MainWindow_m_screenWidth =  access_private_field::MainWindowm_screenWidth(*m_window);
+    MainWindow_m_screenWidth = 1920;
+    int &MainWindow_m_screenHeight =  access_private_field::MainWindowm_screenHeight(*m_window);
+    MainWindow_m_screenHeight = 1080;
+    int &MainWindow_m_screenCount =  access_private_field::MainWindowm_screenCount(*m_window);
+    MainWindow_m_screenCount = 1;
+    qreal &MainWindow_m_pixelRatio =  access_private_field::MainWindowm_pixelRatio(*m_window);
+    MainWindow_m_pixelRatio = 1.0;
+    ToolBar *&MainWindow_toolBar = access_private_field::MainWindowm_toolBar(*m_window);
+    MainWindow_toolBar = new ToolBar();
+    MainWindow_toolBar->resize(500, 100);
+    MainWindow_toolBar->move(0, 0);
+
+    ScrollShotTip *&MainWindow_m_scrollShotTip = access_private_field::MainWindowm_scrollShotTip(*m_window);
+    MainWindow_m_scrollShotTip = new ScrollShotTip();
+    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
+
+    auto MainWindow_isToolBarInShotArea = get_private_fun::MainWindowisToolBarInShotArea();
+    stub.set(MainWindow_isToolBarInShotArea, isToolBarInShotArea_stub);
+
+    auto point = call_private_fun::MainWindowgetScrollShotTipPosition(*m_window);
+    qDebug() << "point: " << point;
+    qDebug() << "ppppppp: " << QPoint(static_cast<int>((1920  - MainWindow_m_scrollShotTip->width() * MainWindow_m_pixelRatio) / 2),
+                                      static_cast<int>(100 + 15 * MainWindow_m_pixelRatio));
+    EXPECT_EQ(QPoint(static_cast<int>((1920  - MainWindow_m_scrollShotTip->width() * MainWindow_m_pixelRatio) / 2),
+                     static_cast<int>(100 + 15 * MainWindow_m_pixelRatio)), point);
+
+}
+
+ACCESS_PRIVATE_FIELD(MainWindow, int, m_scrollShotStatus);
+ACCESS_PRIVATE_FIELD(MainWindow, ScrollScreenshot *, m_scrollShot);
+ACCESS_PRIVATE_FUN(MainWindow, void(), startAutoScrollShot);
+
+//替换ScrollScreenshot的setScrollModel函数
+static bool setScrollModel_stub(void *obj, bool)
+{
+    return true;
+}
+
+//替换ScrollScreenshot的addPixmap函数
+static bool addPixmap_stub(void *obj, const QPixmap &piximg, int wheelDirection)
+{
+    return true;
+}
+//开始自动滚动截图测试用例
+TEST_F(MainWindowTest, startAutoScrollShot)
+{
+    int &MainWindow_m_scrollShotStatus =  access_private_field::MainWindowm_scrollShotStatus(*m_window);
+    MainWindow_m_scrollShotStatus = 1;
+    ScrollScreenshot *&MainWindow_m_scrollShot =  access_private_field::MainWindowm_scrollShot(*m_window);
+    MainWindow_m_scrollShot = new ScrollScreenshot;
+    stub.set(ADDR(ScrollScreenshot, setScrollModel), setScrollModel_stub);
+    stub.set(ADDR(ScrollScreenshot, addPixmap), addPixmap_stub);
+    call_private_fun::MainWindowstartAutoScrollShot(*m_window);
+
+}
+
+
+ACCESS_PRIVATE_FUN(MainWindow, void(), pauseAutoScrollShot);
+static bool changeState_stub(void *obj, bool wheelDirection)
+{
+    return true;
+}
+//暂停自动滚动截图测试用例
+TEST_F(MainWindowTest, pauseAutoScrollShot)
+{
+    ScrollScreenshot *&MainWindow_m_scrollShot =  access_private_field::MainWindowm_scrollShot(*m_window);
+    MainWindow_m_scrollShot = new ScrollScreenshot;
+    stub.set(ADDR(ScrollScreenshot, changeState), changeState_stub);
+    call_private_fun::MainWindowpauseAutoScrollShot(*m_window);
+}
+
+ACCESS_PRIVATE_FUN(MainWindow, void(), continueAutoScrollShot);
+//继续自动滚动截图测试用例
+TEST_F(MainWindowTest, continueAutoScrollShot)
+{
+    ScrollShotTip *&MainWindow_m_scrollShotTip = access_private_field::MainWindowm_scrollShotTip(*m_window);
+    MainWindow_m_scrollShotTip = new ScrollShotTip();
+    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
+
+    ScrollScreenshot *&MainWindow_m_scrollShot =  access_private_field::MainWindowm_scrollShot(*m_window);
+    MainWindow_m_scrollShot = new ScrollScreenshot;
+    stub.set(ADDR(ScrollScreenshot, setScrollModel), setScrollModel_stub);
+    stub.set(ADDR(ScrollScreenshot, changeState), changeState_stub);
+
+    call_private_fun::MainWindowcontinueAutoScrollShot(*m_window);
+}
+
+ACCESS_PRIVATE_FUN(MainWindow, void(), startManualScrollShot);
+//开始手动滚动截图测试用例
+TEST_F(MainWindowTest, startManualScrollShot)
+{
+    ScrollScreenshot *&MainWindow_m_scrollShot =  access_private_field::MainWindowm_scrollShot(*m_window);
+    MainWindow_m_scrollShot = new ScrollScreenshot;
+    stub.set(ADDR(ScrollScreenshot, setScrollModel), setScrollModel_stub);
+    stub.set(ADDR(ScrollScreenshot, addPixmap), addPixmap_stub);
+    call_private_fun::MainWindowstartManualScrollShot(*m_window);
+}
+
+ACCESS_PRIVATE_FUN(MainWindow, void(int mouseTime, int direction), handleManualScrollShot);
+ACCESS_PRIVATE_FUN(MainWindow, void(PreviewWidget::PostionStatus previewPostion, int direction, int mouseTime), scrollShotGrabPixmap);
+
+static bool scrollShotGrabPixmap_stub(void *obj, PreviewWidget::PostionStatus previewPostion, int direction, int mouseTime)
+{
+    return true;
+}
+//处理手动滚动截图逻辑测试用例
+TEST_F(MainWindowTest, handleManualScrollShot)
+{
+    ScrollShotTip *&MainWindow_m_scrollShotTip = access_private_field::MainWindowm_scrollShotTip(*m_window);
+    MainWindow_m_scrollShotTip = new ScrollShotTip();
+    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
+
+    auto MainWindow_scrollShotGrabPixmap = get_private_fun::MainWindowscrollShotGrabPixmap();
+    stub.set(MainWindow_scrollShotGrabPixmap, scrollShotGrabPixmap_stub);
+
+    call_private_fun::MainWindowhandleManualScrollShot(*m_window, 1, 4);
+}
+
+ACCESS_PRIVATE_FUN(MainWindow, void(), setInputEvent);
+//滚动截图设置区域穿透测试用例
+TEST_F(MainWindowTest, setInputEvent)
+{
+    int &MainWindow_recordX =  access_private_field::MainWindowrecordX(*m_window);
+    MainWindow_recordX = 0;
+    int &MainWindow_recordY =  access_private_field::MainWindowrecordY(*m_window);
+    MainWindow_recordY = 0;
+    int &MainWindow_recordWidth =  access_private_field::MainWindowrecordWidth(*m_window);
+    MainWindow_recordWidth = 1920;
+    int &MainWindow_recordHeight =  access_private_field::MainWindowrecordHeight(*m_window);
+    MainWindow_recordHeight = 1080;
+    qreal &MainWindow_m_pixelRatio =  access_private_field::MainWindowm_pixelRatio(*m_window);
+    MainWindow_m_pixelRatio = 1.0;
+    ToolBar *&MainWindow_toolBar = access_private_field::MainWindowm_toolBar(*m_window);
+    MainWindow_toolBar = new ToolBar();
+    MainWindow_toolBar->resize(500, 100);
+    MainWindow_toolBar->move(0, 0);
+
+    auto MainWindow_isToolBarInShotArea = get_private_fun::MainWindowisToolBarInShotArea();
+    stub.set(MainWindow_isToolBarInShotArea, isToolBarInShotArea_stub);
+
+    call_private_fun::MainWindowsetInputEvent(*m_window);
+
+}
+
+ACCESS_PRIVATE_FUN(MainWindow, void(), setCancelInputEvent);
+
+//滚动截图时取消捕捉区域的鼠标穿透测试用例
+TEST_F(MainWindowTest, setCancelInputEvent)
+{
+    int &MainWindow_recordX =  access_private_field::MainWindowrecordX(*m_window);
+    MainWindow_recordX = 0;
+    int &MainWindow_recordY =  access_private_field::MainWindowrecordY(*m_window);
+    MainWindow_recordY = 0;
+    int &MainWindow_recordWidth =  access_private_field::MainWindowrecordWidth(*m_window);
+    MainWindow_recordWidth = 1920;
+    int &MainWindow_recordHeight =  access_private_field::MainWindowrecordHeight(*m_window);
+    MainWindow_recordHeight = 1080;
+    qreal &MainWindow_m_pixelRatio =  access_private_field::MainWindowm_pixelRatio(*m_window);
+    MainWindow_m_pixelRatio = 1.0;
+    call_private_fun::MainWindowsetCancelInputEvent(*m_window);
+}
+
+ACCESS_PRIVATE_FUN(MainWindow, void(), showAdjustArea);
+
+static QRect getInvalidArea_stub(void *obj)
+{
+    return QRect(0, 0, 500, 500);
+}
+//显示可调整的捕捉区域大小及位置测试用例
+TEST_F(MainWindowTest, showAdjustArea)
+{
+    ScrollScreenshot *&MainWindow_m_scrollShot =  access_private_field::MainWindowm_scrollShot(*m_window);
+    MainWindow_m_scrollShot = new ScrollScreenshot;
+    stub.set(ADDR(ScrollScreenshot, getInvalidArea), getInvalidArea_stub);
+
+
+    int &MainWindow_recordX =  access_private_field::MainWindowrecordX(*m_window);
+    MainWindow_recordX = 0;
+    int &MainWindow_recordY =  access_private_field::MainWindowrecordY(*m_window);
+    MainWindow_recordY = 0;
+
+    qreal &MainWindow_m_pixelRatio =  access_private_field::MainWindowm_pixelRatio(*m_window);
+    MainWindow_m_pixelRatio = 1.0;
+
+    call_private_fun::MainWindowshowAdjustArea(*m_window);
+}
+
+//判断工具栏是否在在捕捉区域内部测试用例
+TEST_F(MainWindowTest, isToolBarInShotArea)
+{
+    int &MainWindow_recordX =  access_private_field::MainWindowrecordX(*m_window);
+    MainWindow_recordX = 0;
+    int &MainWindow_recordY =  access_private_field::MainWindowrecordY(*m_window);
+    MainWindow_recordY = 0;
+    int &MainWindow_recordWidth =  access_private_field::MainWindowrecordWidth(*m_window);
+    MainWindow_recordWidth = 1920;
+    int &MainWindow_recordHeight =  access_private_field::MainWindowrecordHeight(*m_window);
+    MainWindow_recordHeight = 1080;
+    qreal &MainWindow_m_pixelRatio =  access_private_field::MainWindowm_pixelRatio(*m_window);
+    MainWindow_m_pixelRatio = 1.0;
+    ToolBar *&MainWindow_toolBar = access_private_field::MainWindowm_toolBar(*m_window);
+    MainWindow_toolBar = new ToolBar();
+    MainWindow_toolBar->resize(500, 100);
+    MainWindow_toolBar->move(0, 0);
+    bool flag = call_private_fun::MainWindowisToolBarInShotArea(*m_window);
+
+    EXPECT_EQ(flag, true);
+
+
+}
