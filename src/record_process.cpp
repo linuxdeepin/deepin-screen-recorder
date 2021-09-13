@@ -69,6 +69,7 @@ RecordProcess::RecordProcess(QObject *parent) : QObject(parent)
 
 RecordProcess::~RecordProcess()
 {
+    /*
     if (m_pTranscodeProcess) {
         delete m_pTranscodeProcess;
         m_pTranscodeProcess = nullptr;
@@ -78,6 +79,7 @@ RecordProcess::~RecordProcess()
         delete m_recorderProcess;
         m_recorderProcess = nullptr;
     }
+    */
 }
 
 void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filename)
@@ -103,7 +105,7 @@ void RecordProcess::setRecordAudioInputType(int inputType)
 
 void RecordProcess::onStartTranscode()
 {
-    m_pTranscodeProcess = new QProcess();
+    m_pTranscodeProcess = new QProcess(this);
     connect(m_pTranscodeProcess, SIGNAL(finished(int)), this, SLOT(onTranscodeFinish()));
     connect(m_pTranscodeProcess, SIGNAL(finished(int)), m_pTranscodeProcess, SLOT(deleteLater()));
     QString path = savePath;
@@ -386,7 +388,7 @@ void RecordProcess::recordVideo()
 void RecordProcess::initProcess()
 {
     // Create process and handle finish signal.
-    m_recorderProcess = new QProcess();
+    m_recorderProcess = new QProcess(this);
 
     // Disable scaling of byzanz-record (GTK3 based) here, because we pass subprocesses
     // absolute device geometry information, byzanz-record should not scale the information
