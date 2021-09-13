@@ -37,13 +37,15 @@ QString toString_false_stub()
     return QString("false");
 }
 
-class SubToolWidgetTest:public testing::Test{
+class SubToolWidgetTest: public testing::Test
+{
 
 public:
     Stub stub;
     SubToolWidget *m_subToolWidget;
     MainWindow *m_mainWindow;
-    virtual void SetUp() override{
+    virtual void SetUp() override
+    {
         m_mainWindow = new MainWindow;
         m_subToolWidget = new SubToolWidget(m_mainWindow);
         m_subToolWidget->initWidget();
@@ -51,10 +53,11 @@ public:
 //        m_subToolWidget->initShotLabel();
     }
 
-    virtual void TearDown() override{
-        if(nullptr != m_subToolWidget)
+    virtual void TearDown() override
+    {
+        if (nullptr != m_subToolWidget)
             delete m_subToolWidget;
-        if(nullptr != m_mainWindow)
+        if (nullptr != m_mainWindow)
             delete m_mainWindow;
     }
 };
@@ -62,17 +65,17 @@ public:
 TEST_F(SubToolWidgetTest, installTipHint)
 {
     QWidget *w1 = new QWidget();
-    m_subToolWidget->installTipHint(w1,QString("矩形"));
+    m_subToolWidget->installTipHint(w1, QString("矩形"));
 
     QWidget *w2 = new QWidget(w1);
     QWidget *w3 = new QWidget(w2);
-    m_subToolWidget->installTipHint(w3,QString("画笔"));
-    if(nullptr != w3)
-        w1->deleteLater();
-    if(nullptr != w2)
-        w2->deleteLater();
-    if(nullptr != w1)
-        w3->deleteLater();
+    m_subToolWidget->installTipHint(w3, QString("画笔"));
+    if (nullptr != w3)
+        delete w3;
+    if (nullptr != w2)
+        delete w2;
+    if (nullptr != w1)
+        delete w1;
 }
 
 /*
@@ -137,9 +140,9 @@ TEST_F(SubToolWidgetTest, shapeClickedFromWidget)
     m_subToolWidget->shapeClickedFromWidget(QString("mouse"));
     m_subToolWidget->shapeClickedFromWidget(QString("camera"));
     m_subToolWidget->shapeClickedFromWidget(QString("audio"));
-    stub.set(ADDR(QAbstractButton,click),click_stub);
+    stub.set(ADDR(QAbstractButton, click), click_stub);
     m_subToolWidget->shapeClickedFromWidget(QString("option"));
-    stub.reset(ADDR(QAbstractButton,click));
+    stub.reset(ADDR(QAbstractButton, click));
 }
 
 TEST_F(SubToolWidgetTest, setMicroPhoneEnable)

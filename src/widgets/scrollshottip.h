@@ -180,7 +180,7 @@ private:
      * @brief 提示的类型
      * 参见 TipType 定义
      */
-    TipType m_tipType;
+    TipType m_tipType = TipType::StartScrollShotTip;
 
     /**
      * @brief 帮助文字按钮

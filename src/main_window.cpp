@@ -910,7 +910,7 @@ void MainWindow::initScrollShot()
     //提示信息移动到指定位置
     m_scrollShotTip->move(tipPosition);
     //滚动截图的处理类
-    m_scrollShot = new ScrollScreenshot();
+    m_scrollShot = new ScrollScreenshot(this);
     qRegisterMetaType<PixMergeThread::MergeErrorValue>("MergeErrorValue");
     //链接滚动拼接过程显示预览窗口和图片
     connect(m_scrollShot, &ScrollScreenshot::updatePreviewImg, this, &MainWindow::showPreviewWidgetImage);

@@ -41,6 +41,7 @@
 //#include "widgets/ut_toolbar.h"
 #include "widgets/ut_sidebar.h"
 #include "widgets/ut_sidebarwidget.h"
+#include "widgets/ut_scrollshottip.h"
 
 
 

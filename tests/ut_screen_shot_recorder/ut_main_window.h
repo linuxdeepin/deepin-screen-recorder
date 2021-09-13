@@ -15,13 +15,13 @@
 using namespace testing;
 
 
-ACCESS_PRIVATE_FIELD(MainWindow, ToolBar*, m_toolBar);
+ACCESS_PRIVATE_FIELD(MainWindow, ToolBar *, m_toolBar);
 ACCESS_PRIVATE_FIELD(MainWindow, int,  m_screenCount);
-ACCESS_PRIVATE_FIELD(MainWindow, ShapesWidget*, m_shapesWidget);
+ACCESS_PRIVATE_FIELD(MainWindow, ShapesWidget *, m_shapesWidget);
 
 QRect geometry_stub()
 {
-    return QRect(0,0,1920,1080);
+    return QRect(0, 0, 1920, 1080);
 }
 
 void passInputEvent_stub(int wid)
@@ -49,18 +49,21 @@ int screenCount_stub()
     return 1;
 }
 
-class MainWindowTest:public testing::Test{
+class MainWindowTest: public testing::Test
+{
 
 public:
     Stub stub;
     MainWindow *m_window = nullptr;
-    virtual void SetUp() override{
+    virtual void SetUp() override
+    {
         m_window = new MainWindow;
         std::cout << "start MainWindowTest" << std::endl;
         ConfigSettings::instance()->setValue("save", "saveCursor", true);
     }
 
-    virtual void TearDown() override{
+    virtual void TearDown() override
+    {
         if (m_window) {
             //m_window->deleteLater();
             delete  m_window;
@@ -102,15 +105,16 @@ TEST_F(MainWindowTest, initLaunchMode)
     m_window->initLaunchMode("screenShot");
 }
 */
+
 TEST_F(MainWindowTest, screenShotShapes)
 {
-    stub.set(ADDR(QScreen,geometry),geometry_stub);
+    stub.set(ADDR(QScreen, geometry), geometry_stub);
     m_window->initAttributes();
-    stub.reset(ADDR(QScreen,geometry));
+    stub.reset(ADDR(QScreen, geometry));
 
-    stub.set(ADDR(Utils,passInputEvent),passInputEvent_stub);
+    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub);
     m_window->initResource();
-    stub.reset(ADDR(Utils,passInputEvent));
+    stub.reset(ADDR(Utils, passInputEvent));
 
     m_window->initLaunchMode("screenShot");
 
@@ -120,99 +124,99 @@ TEST_F(MainWindowTest, screenShotShapes)
 
     QEventLoop loop;
 
-    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(10,10));
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(10, 10));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_window, QPoint(800,600));
+    QTest::mouseMove(m_window, QPoint(800, 600));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(800,600));
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
-    loop.exec();
-
-
-
-    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(800,600));
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
-    loop.exec();
-
-    QTest::mouseMove(m_window, QPoint(900,700));
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
-    loop.exec();
-
-    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(900,700));
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(800, 600));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
 
 
-    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(900,10));
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(800, 600));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_window, QPoint(800,20));
+    QTest::mouseMove(m_window, QPoint(900, 700));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(800,20));
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
-    loop.exec();
-
-
-
-    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(800,300));
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
-    loop.exec();
-
-    QTest::mouseMove(m_window, QPoint(900,300));
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
-    loop.exec();
-
-    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(900,300));
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
-    loop.exec();
-
-
-    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400,700));
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
-    loop.exec();
-
-    QTest::mouseMove(m_window, QPoint(400,900));
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
-    loop.exec();
-
-    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400,900));
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(900, 700));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
 
 
-
-    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(10,10));
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(900, 10));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_window, QPoint(20,30));
+    QTest::mouseMove(m_window, QPoint(800, 20));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(20,30));
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(800, 20));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
 
 
-    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(20,50));
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(800, 300));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_window, QPoint(30,50));
+    QTest::mouseMove(m_window, QPoint(900, 300));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(30,50));
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(900, 300));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400, 700));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseMove(m_window, QPoint(400, 900));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400, 900));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+
+
+
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(10, 10));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseMove(m_window, QPoint(20, 30));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(20, 30));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+
+
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(20, 50));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseMove(m_window, QPoint(30, 50));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(30, 50));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -224,19 +228,19 @@ TEST_F(MainWindowTest, screenShotShapes)
     ShapesWidget *m_shapesWidget = access_private_field::MainWindowm_shapesWidget(*m_window);
 
 
-    QTest::mousePress(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400,200));
+    QTest::mousePress(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400, 200));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_shapesWidget, QPoint(600,280));
+    QTest::mouseMove(m_shapesWidget, QPoint(600, 280));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(600,280));
+    QTest::mouseRelease(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(600, 280));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseClick(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(600,280));
+    QTest::mouseClick(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(600, 280));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -298,15 +302,15 @@ TEST_F(MainWindowTest, screenShotShapes)
     ConfigSettings::instance()->setValue("rectangle", "is_blur", true);
     ConfigSettings::instance()->setValue("rectangle", "is_mosaic", false);
 
-    QTest::mousePress(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400,200));
+    QTest::mousePress(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400, 200));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_shapesWidget, QPoint(600,280));
+    QTest::mouseMove(m_shapesWidget, QPoint(600, 280));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(600,280));
+    QTest::mouseRelease(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(600, 280));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -319,15 +323,15 @@ TEST_F(MainWindowTest, screenShotShapes)
     ConfigSettings::instance()->setValue("oval", "is_blur", false);
     ConfigSettings::instance()->setValue("oval", "is_mosaic", true);
 
-    QTest::mousePress(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(300,200));
+    QTest::mousePress(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(300, 200));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_shapesWidget, QPoint(500,280));
+    QTest::mouseMove(m_shapesWidget, QPoint(500, 280));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(500,180));
+    QTest::mouseRelease(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(500, 180));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -340,15 +344,15 @@ TEST_F(MainWindowTest, screenShotShapes)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mousePress(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(100,200));
+    QTest::mousePress(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(100, 200));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_shapesWidget, QPoint(200,280));
+    QTest::mouseMove(m_shapesWidget, QPoint(200, 280));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(200,280));
+    QTest::mouseRelease(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(200, 280));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -357,15 +361,15 @@ TEST_F(MainWindowTest, screenShotShapes)
     loop.exec();
 
 
-    QTest::mousePress(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(120,210));
+    QTest::mousePress(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(120, 210));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_shapesWidget, QPoint(250,360));
+    QTest::mouseMove(m_shapesWidget, QPoint(250, 360));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(250,360));
+    QTest::mouseRelease(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(250, 360));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -374,19 +378,19 @@ TEST_F(MainWindowTest, screenShotShapes)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mousePress(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(50,200));
+    QTest::mousePress(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(50, 200));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_shapesWidget, QPoint(320,280));
+    QTest::mouseMove(m_shapesWidget, QPoint(320, 280));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_shapesWidget, QPoint(120,180));
+    QTest::mouseMove(m_shapesWidget, QPoint(120, 180));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(280,280));
+    QTest::mouseRelease(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(280, 280));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -394,7 +398,7 @@ TEST_F(MainWindowTest, screenShotShapes)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseClick(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(60,60));
+    QTest::mouseClick(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(60, 60));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -407,16 +411,15 @@ TEST_F(MainWindowTest, screenShotShapes)
     loop.exec();
 }
 
-
 TEST_F(MainWindowTest, screenShot)
 {
-    stub.set(ADDR(QScreen,geometry),geometry_stub);
+    stub.set(ADDR(QScreen, geometry), geometry_stub);
     m_window->initAttributes();
-    stub.reset(ADDR(QScreen,geometry));
+    stub.reset(ADDR(QScreen, geometry));
 
-    stub.set(ADDR(Utils,passInputEvent),passInputEvent_stub);
+    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub);
     m_window->initResource();
-    stub.reset(ADDR(Utils,passInputEvent));
+    stub.reset(ADDR(Utils, passInputEvent));
 
     m_window->initLaunchMode("screenShot");
 
@@ -428,23 +431,23 @@ TEST_F(MainWindowTest, screenShot)
     loop.exec();
 
 
-    QTest::mouseMove(m_window, QPoint(960,480));
+    QTest::mouseMove(m_window, QPoint(960, 480));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_window, QPoint(100,100));
+    QTest::mouseMove(m_window, QPoint(100, 100));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(100,100));
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(100, 100));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_window, QPoint(250,200));
+    QTest::mouseMove(m_window, QPoint(250, 200));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(250,200));
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(250, 200));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -509,15 +512,15 @@ TEST_F(MainWindowTest, screenShot)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(200,200));
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(200, 200));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_window, QPoint(300,300));
+    QTest::mouseMove(m_window, QPoint(300, 300));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(300,300));
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(300, 300));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -530,15 +533,15 @@ TEST_F(MainWindowTest, screenShot)
     loop.exec();
 
 
-    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(350,300));
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(350, 300));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_window, QPoint(400,400));
+    QTest::mouseMove(m_window, QPoint(400, 400));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400,400));
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400, 400));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -546,15 +549,15 @@ TEST_F(MainWindowTest, screenShot)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(355,300));
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(355, 300));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_window, QPoint(400,400));
+    QTest::mouseMove(m_window, QPoint(400, 400));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400,400));
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400, 400));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -562,8 +565,8 @@ TEST_F(MainWindowTest, screenShot)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_window, QPoint(350,300));
-    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(360,300));
+    QTest::mouseMove(m_window, QPoint(350, 300));
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(360, 300));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -571,7 +574,7 @@ TEST_F(MainWindowTest, screenShot)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400,400));
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400, 400));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -581,15 +584,15 @@ TEST_F(MainWindowTest, screenShot)
     loop.exec();
 
 
-    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(365,300));
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(365, 300));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseMove(m_window, QPoint(400,400));
+    QTest::mouseMove(m_window, QPoint(400, 400));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400,400));
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400, 400));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -597,7 +600,7 @@ TEST_F(MainWindowTest, screenShot)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseClick(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(370,300));
+    QTest::mouseClick(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(370, 300));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -617,30 +620,34 @@ TEST_F(MainWindowTest, screenShot)
 
     m_window->responseEsc();
 
-    m_window->saveScreenShot();
+//    m_window->saveScreenShot();
 
 
-    QTest::mouseClick(m_window, Qt::MouseButton::RightButton, Qt::KeyboardModifier::NoModifier, QPoint(400,200));
+    QTest::mouseClick(m_window, Qt::MouseButton::RightButton, Qt::KeyboardModifier::NoModifier, QPoint(400, 200));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    QTest::mouseClick(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400,250));
+    QTest::mouseClick(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(400, 250));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
     QTimer::singleShot(3000, &loop, SLOT(quit()));
     loop.exec();
-}
 
+    //退出截图
+    QTest::keyClick(m_window, Qt::Key_Escape, Qt::NoModifier);
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+}
 
 TEST_F(MainWindowTest, screenRecord)
 {
-    stub.set(ADDR(QScreen,devicePixelRatio),devicePixelRatio_stub_2);
-    stub.set(ADDR(QWidget,width),width_stub_2);
-    stub.set(ADDR(QWidget,height),height_stub_2);
-    stub.set(ADDR(QScreen,geometry),geometry_stub);
-    stub.set(ADDR(Utils,passInputEvent),passInputEvent_stub);
-    stub.set(ADDR(QDesktopWidget,screenCount),screenCount_stub);
+    stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_2);
+    stub.set(ADDR(QWidget, width), width_stub_2);
+    stub.set(ADDR(QWidget, height), height_stub_2);
+    stub.set(ADDR(QScreen, geometry), geometry_stub);
+    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub);
+    stub.set(ADDR(QDesktopWidget, screenCount), screenCount_stub);
 
     m_window->initAttributes();
     m_window->initResource();
@@ -656,7 +663,7 @@ TEST_F(MainWindowTest, screenRecord)
 //    QTimer::singleShot(1000, &loop, SLOT(quit()));
 //    loop.exec();
 
-    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(0,0));
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(0, 0));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -664,7 +671,7 @@ TEST_F(MainWindowTest, screenRecord)
 //    QTimer::singleShot(1000, &loop, SLOT(quit()));
 //    loop.exec();
 
-    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(1400,1050));
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(1400, 1050));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
@@ -735,22 +742,74 @@ TEST_F(MainWindowTest, screenRecord)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
 
 
-    stub.reset(ADDR(QScreen,devicePixelRatio));
-    stub.reset(ADDR(QWidget,width));
-    stub.reset(ADDR(QWidget,height));
-    stub.reset(ADDR(QScreen,geometry));
-    stub.reset(ADDR(Utils,passInputEvent));
-    stub.reset(ADDR(QDesktopWidget,screenCount));
+    stub.reset(ADDR(QScreen, devicePixelRatio));
+    stub.reset(ADDR(QWidget, width));
+    stub.reset(ADDR(QWidget, height));
+    stub.reset(ADDR(QScreen, geometry));
+    stub.reset(ADDR(Utils, passInputEvent));
+    stub.reset(ADDR(QDesktopWidget, screenCount));
 
     loop.exec();
 }
 
-static bool hasComposite_stub(void * obj) {
+TEST_F(MainWindowTest, scrollShot)
+{
+    stub.set(ADDR(QScreen, geometry), geometry_stub);
+    m_window->initAttributes();
+    stub.reset(ADDR(QScreen, geometry));
+
+    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub);
+    m_window->initResource();
+    stub.reset(ADDR(Utils, passInputEvent));
+
+    m_window->initLaunchMode("screenShot");
+
+    m_window->showFullScreen();
+
+    QEventLoop loop;
+    QTest::mouseMove(m_window, QPoint(700, 100));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mousePress(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(700, 100));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseMove(m_window, QPoint(1400, 800));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseRelease(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(1400, 800));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    //启动滚动截图
+    QTest::keyClick(m_window, Qt::Key_I, Qt::AltModifier);
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseMove(m_window, QPoint(1000, 400));
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    QTest::mouseClick(m_window, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(1000, 400));
+
+    QTimer::singleShot(10000, &loop, SLOT(quit()));
+    loop.exec();
+    //退出滚动截图
+    QTest::keyClick(m_window, Qt::Key_Escape, Qt::NoModifier);
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+}
+
+
+static bool hasComposite_stub(void *obj)
+{
     return false;
 }
 
 
-static QString CpuArchitecture_stub(void* obj)
+static QString CpuArchitecture_stub(void *obj)
 {
     return  "mips";
 }

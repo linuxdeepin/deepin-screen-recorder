@@ -161,7 +161,8 @@ HEADERS += test_all_interfaces.h \
         widgets/ut_hintfilterprivate.h \
         widgets/ut_sidebar.h \
         widgets/ut_sidebarwidget.h \
-    dbusinterface/ut_ocrinterface.h
+    dbusinterface/ut_ocrinterface.h \
+    widgets/ut_scrollshottip.h
 
 
 SOURCES += main.cpp \
