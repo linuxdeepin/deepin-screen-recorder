@@ -33,7 +33,7 @@
 #define AC_SUBTOOLWIDGET_MOUSE_BUTTON "mouse_button"//录屏 显示鼠标按钮
 #define AC_SUBTOOLWIDGET_RECORD_OPTION_BUT "record_option_but" //录屏选项按钮
 
-
+#define AC_SUBTOOLWIDGET_SCROLLSHOT_BUTTON "scrollshot_button"// 截图 文字识别工具按钮
 #define AC_SUBTOOLWIDGET_OCR_BUTTON "orc_button"// 截图 文字识别工具按钮
 #define AC_SUBTOOLWIDGET_RECT_BUTTON "rect_button"// 截图 矩形工具按钮
 #define AC_SUBTOOLWIDGET_CIRCL_BUTTON "circl_button"//截图 椭圆工具按钮

@@ -54,15 +54,15 @@
 DWIDGET_USE_NAMESPACE
 
 namespace {
-    const int BUTTON_SPACING = 4;
-    const int SHOT_BUTTON_SPACING = 4;
-    const QSize TOOL_ICON_SIZE = QSize(25, 25);
-    const QSize MAX_TOOL_ICON_SIZE = QSize(40, 40);
-    const QSize MEDIUM_TOOL_BUTTON_SIZE = QSize(52, 40);
-    const QSize MIN_TOOL_BUTTON_SIZE = QSize(42, 40);
+const int BUTTON_SPACING = 4;
+const int SHOT_BUTTON_SPACING = 4;
+const QSize TOOL_ICON_SIZE = QSize(25, 25);
+const QSize MAX_TOOL_ICON_SIZE = QSize(40, 40);
+const QSize MEDIUM_TOOL_BUTTON_SIZE = QSize(52, 40);
+const QSize MIN_TOOL_BUTTON_SIZE = QSize(42, 40);
 }
 
-SubToolWidget::SubToolWidget(MainWindow* pmainwindow ,DWidget *parent) : DStackedWidget(parent)
+SubToolWidget::SubToolWidget(MainWindow *pmainwindow, DWidget *parent) : DStackedWidget(parent)
 {
     m_pMainWindow = pmainwindow;
     initWidget();
@@ -72,31 +72,31 @@ SubToolWidget::SubToolWidget(MainWindow* pmainwindow ,DWidget *parent) : DStacke
 
 SubToolWidget::~SubToolWidget()
 {
-    if(nullptr != hintFilter){
+    if (nullptr != hintFilter) {
         delete hintFilter;
         hintFilter = nullptr;
     }
-    if(nullptr != m_recordOptionMenu){
+    if (nullptr != m_recordOptionMenu) {
         delete m_recordOptionMenu;
         m_recordOptionMenu = nullptr;
     }
-    if(nullptr != m_cursorMenu){
+    if (nullptr != m_cursorMenu) {
         delete m_cursorMenu;
         m_cursorMenu = nullptr;
     }
-    if(nullptr != m_audioButton){
+    if (nullptr != m_audioButton) {
         delete m_audioButton;
         m_audioButton = nullptr;
     }
-    if(nullptr != m_audioMenu){
+    if (nullptr != m_audioMenu) {
         delete m_audioMenu;
         m_audioMenu = nullptr;
     }
-    if(nullptr != m_recordBtnGroup){
+    if (nullptr != m_recordBtnGroup) {
         delete m_recordBtnGroup;
         m_recordBtnGroup = nullptr;
     }
-    if(nullptr != m_shotBtnGroup){
+    if (nullptr != m_shotBtnGroup) {
         delete m_shotBtnGroup;
         m_shotBtnGroup = nullptr;
     }
@@ -147,7 +147,7 @@ void SubToolWidget::initRecordLabel()
     }
 
     // mips 不支持GIF录制
-    if(QSysInfo::currentCpuArchitecture().startsWith("mips")){
+    if (QSysInfo::currentCpuArchitecture().startsWith("mips")) {
         t_settings->setValue("recordConfig", "save_as_gif", false);
         t_saveGif = false;
     }
@@ -192,21 +192,25 @@ void SubToolWidget::initRecordLabel()
 
 
     connect(m_microphoneAction, &QAction::triggered, this, [ = ] {
-        if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked()){
+        if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
+        {
             installTipHint(m_audioButton, tr("Sound On"));
             m_audioButton->setIcon(QIcon::fromTheme("volume_normal"));
         }
 
-        if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked()){
+        if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
+        {
             m_audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
         }
 
-        if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked()){
+        if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
+        {
 
             m_audioButton->setIcon(QIcon::fromTheme("audio frequency_normal"));
         }
 
-        if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked()){
+        if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
+        {
 
             installTipHint(m_audioButton, tr("Sound Off"));
             m_audioButton->setIcon(QIcon::fromTheme("mute_normal"));
@@ -214,20 +218,24 @@ void SubToolWidget::initRecordLabel()
     });
 
     connect(m_systemAudioAction, &QAction::triggered, this, [ = ] {
-        if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked()){
+        if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
+        {
             installTipHint(m_audioButton, tr("Sound On"));
             m_audioButton->setIcon(QIcon::fromTheme("volume_normal"));
         }
 
-        if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked()){
+        if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
+        {
             m_audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
         }
 
-        if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked()){
+        if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
+        {
             m_audioButton->setIcon(QIcon::fromTheme("audio frequency_normal"));
         }
 
-        if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked()){
+        if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
+        {
             installTipHint(m_audioButton, tr("Sound Off"));
             m_audioButton->setIcon(QIcon::fromTheme("mute_normal"));
         }
@@ -266,9 +274,11 @@ void SubToolWidget::initRecordLabel()
             this, SIGNAL(keyBoardButtonClicked(bool)));
 
     connect(m_keyBoardButton, &DPushButton::clicked, this, [ = ] {
-        if (m_keyBoardButton->isChecked()){
+        if (m_keyBoardButton->isChecked())
+        {
             installTipHint(m_keyBoardButton, tr("Hide Keystroke"));
-        } else {
+        } else
+        {
             installTipHint(m_keyBoardButton, tr("Show Keystroke"));
         }
     });
@@ -287,11 +297,13 @@ void SubToolWidget::initRecordLabel()
     btnList.append(m_cameraButton);
 
     connect(m_cameraButton, &DPushButton::clicked, this, [ = ] {
-        if (m_cameraButton->isChecked()){
+        if (m_cameraButton->isChecked())
+        {
             installTipHint(m_cameraButton, tr("Webcam Off"));
         }
 
-        if (!m_cameraButton->isChecked()){
+        if (!m_cameraButton->isChecked())
+        {
             installTipHint(m_cameraButton, tr("Webcam On"));
         }
         emit cameraActionChecked(m_cameraButton->isChecked());
@@ -362,32 +374,40 @@ void SubToolWidget::initRecordLabel()
 
     connect(m_recorderMouse, &QAction::triggered, this, [ = ] {
         emit mouseShowButtonClicked(m_recorderMouse->isChecked());
-        if(m_recorderCheck->isChecked() && m_recorderMouse->isChecked()) {
+        if (m_recorderCheck->isChecked() && m_recorderMouse->isChecked())
+        {
             m_mouseButton->setIcon(QIcon::fromTheme("mouseandtouch"));
         }
-        if(!m_recorderCheck->isChecked() && !m_recorderMouse->isChecked()) {
+        if (!m_recorderCheck->isChecked() && !m_recorderMouse->isChecked())
+        {
             m_mouseButton->setIcon(QIcon::fromTheme("hide"));
         }
-        if(!m_recorderCheck->isChecked() && m_recorderMouse->isChecked()) {
+        if (!m_recorderCheck->isChecked() && m_recorderMouse->isChecked())
+        {
             m_mouseButton->setIcon(QIcon::fromTheme("mouse2"));
         }
-        if(m_recorderCheck->isChecked() && !m_recorderMouse->isChecked()) {
+        if (m_recorderCheck->isChecked() && !m_recorderMouse->isChecked())
+        {
             m_mouseButton->setIcon(QIcon::fromTheme("touch"));
         }
     });
 
     connect(m_recorderCheck, &QAction::triggered, this, [ = ] {
         emit mouseBoardButtonClicked(m_recorderCheck->isChecked());
-        if(m_recorderCheck->isChecked() && m_recorderMouse->isChecked()) {
+        if (m_recorderCheck->isChecked() && m_recorderMouse->isChecked())
+        {
             m_mouseButton->setIcon(QIcon::fromTheme("mouseandtouch"));
         }
-        if(!m_recorderCheck->isChecked() && !m_recorderMouse->isChecked()) {
+        if (!m_recorderCheck->isChecked() && !m_recorderMouse->isChecked())
+        {
             m_mouseButton->setIcon(QIcon::fromTheme("hide"));
         }
-        if(!m_recorderCheck->isChecked() && m_recorderMouse->isChecked()) {
+        if (!m_recorderCheck->isChecked() && m_recorderMouse->isChecked())
+        {
             m_mouseButton->setIcon(QIcon::fromTheme("mouse2"));
         }
-        if(m_recorderCheck->isChecked() && !m_recorderMouse->isChecked()) {
+        if (m_recorderCheck->isChecked() && !m_recorderMouse->isChecked())
+        {
             m_mouseButton->setIcon(QIcon::fromTheme("touch"));
         }
     });
@@ -467,7 +487,7 @@ void SubToolWidget::initRecordLabel()
     t_fpsGroup->addAction(fps30Action);
 
     m_recordOptionMenu->addAction(formatTitleAction);
-    if(!QSysInfo::currentCpuArchitecture().startsWith("mips")){
+    if (!QSysInfo::currentCpuArchitecture().startsWith("mips")) {
         m_recordOptionMenu->addAction(gifAction);
     }
     m_recordOptionMenu->addAction(mp4Action);
@@ -540,7 +560,7 @@ void SubToolWidget::initRecordLabel()
     }
 
 
-    connect(gifAction, &QAction::triggered, this, [ = ] (bool checked) {
+    connect(gifAction, &QAction::triggered, this, [ = ](bool checked) {
         t_settings->setValue("recordConfig", "lossless_recording", false);
         t_settings->setValue("recordConfig", "save_as_gif", true);
         fps5Action->setEnabled(false);
@@ -557,7 +577,7 @@ void SubToolWidget::initRecordLabel()
         emit gifActionChecked(checked);
     });
 
-    connect(mp4Action, &QAction::triggered, this, [ = ] (bool checked) {
+    connect(mp4Action, &QAction::triggered, this, [ = ](bool checked) {
         t_settings->setValue("recordConfig", "lossless_recording", false);
         t_settings->setValue("recordConfig", "save_as_gif", false);
         fps5Action->setEnabled(true);
@@ -576,7 +596,7 @@ void SubToolWidget::initRecordLabel()
         emit mp4ActionChecked(checked);
     });
 
-    connect(mkvAction, &QAction::triggered, this, [ = ] (bool checked) {
+    connect(mkvAction, &QAction::triggered, this, [ = ](bool checked) {
         t_settings->setValue("recordConfig", "lossless_recording", true);
         t_settings->setValue("recordConfig", "save_as_gif", false);
         fps5Action->setEnabled(true);
@@ -596,7 +616,7 @@ void SubToolWidget::initRecordLabel()
     });
 
     connect(t_fpsGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
-            [ = ](QAction * t_act) {
+    [ = ](QAction * t_act) {
         int t_frameRateSelected = 0;
         if (t_act == fps5Action) {
             t_frameRateSelected = 5;
@@ -673,7 +693,7 @@ void SubToolWidget::initShotLabel()
     m_scrollShotButton = new ToolButton();
     m_scrollShotButton->setIconSize(QSize(35, 35));
     m_scrollShotButton->setIcon(QIcon::fromTheme("scrollShot"));
-    Utils::setAccessibility(m_scrollShotButton, AC_SUBTOOLWIDGET_OCR_BUTTON);
+    Utils::setAccessibility(m_scrollShotButton, AC_SUBTOOLWIDGET_SCROLLSHOT_BUTTON);
     m_shotBtnGroup->addButton(m_scrollShotButton);
     m_scrollShotButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     installTipHint(m_scrollShotButton, tr("Scrollshot"));
@@ -767,7 +787,7 @@ void SubToolWidget::initShotLabel()
     m_shotOptionButton->setMinimumSize(QSize(73, 40));
     installTipHint(m_shotOptionButton, tr("Options"));
     m_shotBtnGroup->addButton(m_shotOptionButton);
-    if(Utils::is3rdInterfaceStart){
+    if (Utils::is3rdInterfaceStart) {
         m_shotOptionButton->hide();
     }
     btnList.append(m_shotOptionButton);
@@ -884,7 +904,7 @@ void SubToolWidget::initShotLabel()
     }
 
     connect(t_saveGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
-            [ = ](QAction * t_act) {
+    [ = ](QAction * t_act) {
         if (t_act == saveToDesktopAction) {
             qDebug() << "save to desktop";
             ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToDesktop);
@@ -898,7 +918,7 @@ void SubToolWidget::initShotLabel()
         } else if (t_act == saveToSpecialPath) {
             qDebug() << "save to path";
             ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToSpecificDir);
-        } else if(t_act == saveToClipAction) {
+        } else if (t_act == saveToClipAction) {
             qDebug() << "save to clip";
             ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
         }
@@ -921,7 +941,7 @@ void SubToolWidget::initShotLabel()
     }
 
     connect(t_formatGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
-            [ = ](QAction * t_act) {
+    [ = ](QAction * t_act) {
         if (t_act == pngAction) {
             ConfigSettings::instance()->setValue("save", "format", 0);
         } else if (t_act == jpgAction) {
@@ -948,33 +968,33 @@ void SubToolWidget::initShotLabel()
     connect(m_saveCursorAction, &QAction::triggered, [ = ] {
         ConfigSettings::instance()->setValue("save", "saveCursor", m_saveCursorAction->isChecked() ? 1 : 0);
     });
-/*
-    int t_openWithDraw = ConfigSettings::instance()->value("open", "draw").toInt();
+    /*
+        int t_openWithDraw = ConfigSettings::instance()->value("open", "draw").toInt();
 
-    switch (t_openWithDraw) {
-    case 0:
-        openWithDraw->setChecked(false);
-        break;
-    case 1:
-        openWithDraw->setChecked(true);
-        break;
-    default:
-        openWithDraw->setChecked(false);
-        break;
-    }
-
-    connect(openWithDraw, &QAction::triggered, [ = ] {
-        if (openWithDraw->isChecked())
-        {
-            ConfigSettings::instance()->setValue("open", "draw", 1);
+        switch (t_openWithDraw) {
+        case 0:
+            openWithDraw->setChecked(false);
+            break;
+        case 1:
+            openWithDraw->setChecked(true);
+            break;
+        default:
+            openWithDraw->setChecked(false);
+            break;
         }
 
-        else
-        {
-            ConfigSettings::instance()->setValue("open", "draw", 0);
-        }
-    });
-*/
+        connect(openWithDraw, &QAction::triggered, [ = ] {
+            if (openWithDraw->isChecked())
+            {
+                ConfigSettings::instance()->setValue("open", "draw", 1);
+            }
+
+            else
+            {
+                ConfigSettings::instance()->setValue("open", "draw", 0);
+            }
+        });
+    */
 
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
@@ -996,14 +1016,12 @@ void SubToolWidget::initShotLabel()
     addWidget(m_shotSubTool);
 
     connect(m_shotBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
-            [ = ](int status) {
+    [ = ](int status) {
         Q_UNUSED(status);
-        if(m_scrollShotButton->isChecked())
-        {
+        if (m_scrollShotButton->isChecked()) {
             emit changeShotToolFunc("scrollShot");
         }
-        if(m_ocrButton->isChecked())
-        {
+        if (m_ocrButton->isChecked()) {
             emit changeShotToolFunc("ocr");
         }
         //DPalette pa;
@@ -1068,14 +1086,12 @@ void SubToolWidget::hideSomeToolBtn()
     m_optionMenu->removeAction(m_clipTitleAction);
     m_optionMenu->removeAction(m_saveCursorAction);
     //获取原水平布局，进行重新布局
-    QHBoxLayout *rectLayout = static_cast<QHBoxLayout*>(m_shotSubTool->layout());
+    QHBoxLayout *rectLayout = static_cast<QHBoxLayout *>(m_shotSubTool->layout());
     //清楚原水平布局中的所有元素
     QLayoutItem *child;
-    while ((child = rectLayout->takeAt(0)) != 0)
-    {
+    while ((child = rectLayout->takeAt(0)) != 0) {
         //setParent为NULL，防止删除之后界面不消失
-        if(child->widget())
-        {
+        if (child->widget()) {
             child->widget()->setParent(NULL);
         }
         delete child;
@@ -1110,7 +1126,7 @@ void SubToolWidget::switchContent(QString shapeType)
         this->removeWidget(m_recordSubTool);
         setCurrentWidget(m_shotSubTool);
         m_currentType = shapeType;
-   }
+    }
 }
 /*
 void SubToolWidget::systemAudioActionCheckedSlot(bool checked)
@@ -1134,14 +1150,14 @@ void SubToolWidget::changeArrowAndLineFromSideBar(int line)
             } else if (m_themeType == 2) {
                 m_lineButton->setIcon(QIcon(":/newUI/dark/checked/line-checked.svg"));
             }
-        }else {
+        } else {
             if (m_themeType == 1) {
                 m_lineButton->setIcon(QIcon(":/newUI/normal/line-normal.svg"));
             } else if (m_themeType == 2) {
                 m_lineButton->setIcon(QIcon(":/newUI/dark/normal/line-normal_dark.svg"));
             }
         }
-    }else if (line == 1) {
+    } else if (line == 1) {
         m_lineflag = 1;
         installTipHint(m_lineButton, tr("Arrow"));
         if (m_lineButton->isChecked()) {
@@ -1187,19 +1203,17 @@ void SubToolWidget::setVideoButtonInitFromSub()
 void SubToolWidget::shapeClickedFromWidget(QString shape)
 {
     if (!shape.isEmpty()) {
-        if(shape == "scrollShot"){
-            if(!m_scrollShotButton->isChecked())
+        if (shape == "scrollShot") {
+            if (!m_scrollShotButton->isChecked())
                 m_scrollShotButton->click();
-        }
-        else if(shape == "ocr"){
-            if(!m_ocrButton->isChecked())
+        } else if (shape == "ocr") {
+            if (!m_ocrButton->isChecked())
                 m_ocrButton->click();
-        }
-        else if (shape == "rect") {
-            if(!m_rectButton->isChecked())
+        } else if (shape == "rect") {
+            if (!m_rectButton->isChecked())
                 m_rectButton->click();
         } else if (shape == "circ") {
-            if(!m_circleButton->isChecked())
+            if (!m_circleButton->isChecked())
                 m_circleButton->click();
         } else if (shape == "line") {
             m_lineButton->click();
@@ -1230,7 +1244,7 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
             m_keyBoardButton->click();
         } else if (shape == "mouse") {
             //m_mouseButton->click();
-            if(m_cursorMenu->isHidden()) {
+            if (m_cursorMenu->isHidden()) {
                 m_mouseButton->showMenu();
 //                QPoint point = QWidget::mapToGlobal(m_mouseButton->pos());
 //                m_cursorMenu->move(point.x(),point.y() + m_mouseButton->size().height());
@@ -1246,8 +1260,7 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
 //                QPoint point = QWidget::mapToGlobal(m_audioButton->pos());
 //                m_audioMenu->move(point.x(),point.y()+m_audioButton->size().height());
 //                m_audioMenu->show();
-            }
-            else
+            } else
                 m_audioMenu->hide();
         }
     }
