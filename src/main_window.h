@@ -154,17 +154,15 @@ public:
                 m_pCameraWatcher = nullptr;
             }
         }
-#ifdef __x86_64__
+#ifndef __mips__
         if (m_pScreenRecordEvent && m_isZhaoxin == false) {
             m_pScreenRecordEvent->terminate();
             m_pScreenRecordEvent->wait();
-            delete m_pScreenRecordEvent;
             m_pScreenRecordEvent = nullptr;
         }
         if (m_pScreenShotEvent && m_isZhaoxin == false) {
             m_pScreenShotEvent->terminate();
             m_pScreenShotEvent->wait();
-            delete m_pScreenShotEvent;
             m_pScreenShotEvent = nullptr;
         }
 #endif
