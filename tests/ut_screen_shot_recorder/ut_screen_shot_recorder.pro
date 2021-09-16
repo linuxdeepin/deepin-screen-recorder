@@ -27,7 +27,8 @@ PKGCONFIG += dtkgui dtkwidget xcb xcb-util dframeworkdbus
 
 RESOURCES = ../../assets/image/deepin-screen-recorder.qrc \
     ../../assets/resources/resources.qrc \
-    ../../assets/icons/icons.qrc
+    ../../assets/icons/icons.qrc \
+    testImg.qrc
 
 QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations
@@ -162,7 +163,8 @@ HEADERS += test_all_interfaces.h \
         widgets/ut_sidebar.h \
         widgets/ut_sidebarwidget.h \
     dbusinterface/ut_ocrinterface.h \
-    widgets/ut_scrollshottip.h
+    widgets/ut_scrollshottip.h \
+    utils/ut_pixmergethread.h
 
 
 SOURCES += main.cpp \
