@@ -32,19 +32,26 @@ const int MIN_PADDING = 3;
 const qreal SLOPE = 0.5522848;
 
 /* judge whether the point1 is on the point2 or not */
+/**
+ * @brief pointClickIn: 鼠标点击的位置point1是否在point2上
+ * @param point2: 图形上的某个点
+ * @param point1: 鼠标点击的位置
+ * @param padding:
+ * @return
+ */
 bool pointClickIn(QPointF point2, QPointF point1, int padding)
 {
     //参数padding不再使用，pointClickIn函数有多处调用，以最小修改量为原则不改变原函数参数个数
     Q_UNUSED(padding);
     int pointPadding = 0;
-  
+
     if (Utils::isTabletEnvironment) {
         //平板需求暂定20，根据测试反馈可调
         pointPadding = 20;
     } else {
         pointPadding = 4;
     }
-  
+
     if (point2.x() >= point1.x() - pointPadding && point2.x() <= point1.x() + pointPadding &&
             point2.y() >= point1.y() - pointPadding && point2.y() <= point1.y() + pointPadding) {
         return true;
@@ -54,6 +61,13 @@ bool pointClickIn(QPointF point2, QPointF point1, int padding)
 }
 
 /* judge whether the point3 is on the segment*/
+/**
+ * @brief pointOnLine: 鼠标点击的位置point3是否在point1和point2这两个点所在的直线上
+ * @param point1: 直线上的一个点
+ * @param point2: 直线上的另一个点
+ * @param point3: 鼠标点击的位置
+ * @return
+ */
 bool pointOnLine(QPointF point1, QPointF point2, QPointF point3)
 {
     if (static_cast<int>(point1.x()) == static_cast<int>(point2.x())) {
@@ -192,7 +206,7 @@ FourPoints getAnotherFPoints(FourPoints mainPoints)
     otherFPoints[2] = QPoint(static_cast<int>((mainPoints[2].x() + mainPoints[3].x()) / 2),
                              static_cast<int>((mainPoints[2].y() + mainPoints[3].y()) / 2));
     otherFPoints[3] = QPoint(static_cast<int>((mainPoints[1].x() + mainPoints[3].x()) / 2),
-                              static_cast<int>((mainPoints[1].y() + mainPoints[3].y()) / 2));
+                             static_cast<int>((mainPoints[1].y() + mainPoints[3].y()) / 2));
     return otherFPoints;
 }
 /*
@@ -209,7 +223,7 @@ qreal calculateAngle(QPointF point1, QPointF point2, QPointF point3)
     qreal b = std::pow(point2.x() - point3.x(), 2) + std::pow(point2.y() - point3.y(), 2);
     qreal c = std::pow(point1.x() - point2.x(), 2) + std::pow(point1.y() - point2.y(), 2);
 
-    qreal angle = std::cos(( a + b - c) / (2 * std::sqrt(a) * std::sqrt(b)));
+    qreal angle = std::cos((a + b - c) / (2 * std::sqrt(a) * std::sqrt(b)));
     if (point1.x() <= point3.x() && point1.y() < point3.y()) {
         if (point2.x() < point1.x() || point2.y() > point1.y()) {
             angle = - angle;
@@ -370,12 +384,12 @@ QList<QPointF> pointOfArrow(QPointF startPoint, QPointF endPoint, qreal arrowLen
         yMultiplier = (startPoint.y() - endPoint.y()) / std::abs(startPoint.y() - endPoint.y());
     }
 
-    QPointF add = pointSplid(startPoint, endPoint, arrowLength );
+    QPointF add = pointSplid(startPoint, endPoint, arrowLength);
     QPointF pointA = QPointF(endPoint.x() + xMultiplier * add.x(), endPoint.y() + yMultiplier * add.y());
     qreal angle = qreal(M_PI / 6);
     QPointF pointB = pointRotate(endPoint, pointA, angle);
     QPointF pointD = pointRotate(endPoint, pointA,  angle * 5 + M_PI);
-    add = pointSplid(startPoint, endPoint, arrowLength );
+    add = pointSplid(startPoint, endPoint, arrowLength);
     QPointF pointE = QPointF(endPoint.x() - xMultiplier * add.x(), endPoint.y() - yMultiplier * add.y());
 
     QList<QPointF> arrowPoints;
@@ -714,7 +728,7 @@ FourPoints resizePointPosition(QPointF point1, QPointF point2, QPointF point3, Q
         }
     }
     if (point1.x() < point2.x() && static_cast<int>(point1.y()) == static_cast<int>(point2.y()) &&
-            static_cast<int>(point1.x()) == static_cast<int>(point3.x()) && point1.y() > point3.y()){
+            static_cast<int>(point1.x()) == static_cast<int>(point3.x()) && point1.y() > point3.y()) {
         switch (key) {
         case 0: {
             resizeFPoints = point1Resize7(point1, point2, point3, point4, pos, isShift);

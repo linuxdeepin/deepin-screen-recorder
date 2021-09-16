@@ -71,6 +71,12 @@ signals:
     void setShapesUndo(bool status);
 
 public slots:
+    /**
+     * @brief updateSelectedShape: 更新选中的形状
+     * @param group:
+     * @param key:
+     * @param index:
+     */
     void updateSelectedShape(const QString &group, const QString &key, int index);
     void setCurrentShape(QString shapeType);
     //void updatePenColor();
@@ -85,16 +91,53 @@ public slots:
     void handleResize(QPointF pos, int key);
 
     /**
-     * @brief clickedOnShapes 图形是否被点击
+     * @brief clickedOnShapes 图形是否被点击，发射点击信号
      * @param pos
      * @return 被点击：true 未被点击：false
      */
     bool clickedOnShapes(QPointF pos);
 
+    /**
+     * @brief clickedOnRect: 矩形是否被点击
+     * @param rectPoints: 矩形的四个点
+     * @param pos: 当前鼠标的位置
+     * @param isBlurMosaic: 是否有模糊效果或者马赛克效果
+     * @return
+     */
     bool clickedOnRect(FourPoints rectPoints, QPointF pos, bool isBlurMosaic = false);
+
+    /**
+     * @brief clickedOnEllipse: 圆形是否被点击
+     * @param mainPoints: 圆形的主要点
+     * @param pos: 当前鼠标的位置
+     * @param isBlurMosaic: 是否有模糊效果或者马赛克效果
+     * @return
+     */
     bool clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isBlurMosaic = false);
+
+    /**
+     * @brief clickedOnArrow: 箭头是否被点击
+     * @param points: 箭头的主要点
+     * @param pos: 当前鼠标的位置
+     * @return
+     */
     bool clickedOnArrow(QList<QPointF> points, QPointF pos);
+
+    /**
+     * @brief clickedOnLine: 画出的线是否被点击
+     * @param mainPoints: 画笔线的主要点
+     * @param points:
+     * @param pos: 当前鼠标的位置
+     * @return
+     */
     bool clickedOnLine(FourPoints mainPoints, QList<QPointF> points, QPointF pos);
+
+    /**
+     * @brief clickedOnText: 文本框是否被点击
+     * @param mainPoints: 文本框的主要点
+     * @param pos: 当前鼠标的位置
+     * @return
+     */
     bool clickedOnText(FourPoints mainPoints, QPointF pos);
     bool rotateOnPoint(FourPoints mainPoints, QPointF pos);
 
@@ -122,6 +165,10 @@ public slots:
 
 protected:
     bool event(QEvent *event);
+    /**
+     * @brief mousePressEvent: 重写鼠标按压事件
+     * @param e
+     */
     void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
@@ -129,7 +176,7 @@ protected:
     void enterEvent(QEvent *e);
 
     /**
-     * @brief clickeShapes:判断是否选中图形
+     * @brief clickeShapes:只是用来判断是否选中图形,不是真实鼠标事件会触发（触摸屏）
      * @param pos:坐标
      * @return
      */
@@ -149,6 +196,10 @@ private:
     QPointF m_pos1 = QPointF(0, 0);
     QPointF m_pos2 = QPointF(0, 0);
     QPointF m_pos3, m_pos4;
+
+    /**
+     * @brief m_pressedPoint: 当前鼠标按下的位置
+     */
     QPointF m_pressedPoint;
     QPointF m_movingPoint;
     qreal   m_lastAngle;
@@ -163,7 +214,11 @@ private:
     bool m_isResize;
     bool m_isShiftPressed;
     bool m_editing;
-    bool m_isSlectedText;
+
+    /**
+     * @brief m_isSelectedText: 是否选中文本框
+     */
+    bool m_isSelectedText;
     ResizeDirection m_resizeDirection;
     ClickedKey m_clickedKey;
 
@@ -177,11 +232,23 @@ private:
     int m_selectedOrder;
     bool m_blurEffectExist = false;
     bool m_mosaicEffectExist = false;
+    /**
+     * @brief m_currentType: 当前的图形类型
+     * 现阶段存在5种图形：
+     * line: 通过画笔画出的线条
+     * arrow: 箭头
+     * rectangle: 矩形
+     * oval: 圆形
+     * text: 文本
+     */
     QString m_currentType = "rectangle";
     QColor m_penColor;
     bool m_clearAllTextBorder = false;
     bool m_sideBarInit = false;
 
+    /**
+     * @brief m_currentShape:当前正在绘制的图形
+     */
     Toolshape m_currentShape;
     Toolshape m_selectedShape;
     Toolshape m_hoveredShape;
