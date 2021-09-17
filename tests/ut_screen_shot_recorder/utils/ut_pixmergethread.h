@@ -96,7 +96,7 @@ TEST_F(PixMergeThreadTest, startPixMergeThreadScrollDown)
     m_pixMergeThread->start();
     QTest::qWait(500);
     m_pixMergeThread->stopTask();
-    QTest::qWait(500);
+    m_pixMergeThread->wait();
 }
 
 //向上拼接
@@ -115,7 +115,7 @@ TEST_F(PixMergeThreadTest, startPixMergeThreadScrollUp)
     m_pixMergeThread->start();
     QTest::qWait(500);
     m_pixMergeThread->stopTask();
-    QTest::qWait(500);
+    m_pixMergeThread->wait();
 }
 
 
