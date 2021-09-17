@@ -164,7 +164,8 @@ HEADERS += test_all_interfaces.h \
         widgets/ut_sidebarwidget.h \
     dbusinterface/ut_ocrinterface.h \
     widgets/ut_scrollshottip.h \
-    utils/ut_pixmergethread.h
+    utils/ut_pixmergethread.h \
+    utils/ut_scrollScreenshot.h
 
 
 SOURCES += main.cpp \

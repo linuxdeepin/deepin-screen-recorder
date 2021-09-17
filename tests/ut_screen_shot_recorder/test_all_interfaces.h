@@ -43,6 +43,7 @@
 #include "widgets/ut_sidebarwidget.h"
 #include "widgets/ut_scrollshottip.h"
 #include "utils/ut_pixmergethread.h"
+#include "utils/ut_scrollScreenshot.h"
 
 
 
