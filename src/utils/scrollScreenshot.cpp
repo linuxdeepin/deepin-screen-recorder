@@ -119,32 +119,8 @@ QImage ScrollScreenshot::savePixmap()
     //(m_PicMerageThread->getMerageResult()).save(saveFileName);
     return m_PixMerageThread->getMerageResult();
 }
-// 获取两张图片变化区域
-QRect ScrollScreenshot::getChangeArea(cv::Mat &img1, cv::Mat &img2)
-{
-    int minI = img1.rows;
-    int minJ = img1.cols;
-    int maxI = 0;
-    int maxJ = 0;
-    // 计算变化部分
-    for (int i = 0; i < img1.rows; ++i) {
-        for (int j = 0; j < img1.cols; ++j) {
-            //if(img1.at<Vec3b>(i, j)[0] != img2.at<Vec3b>(i, j)[0] || img1.at<Vec3b>(i, j)[1] != img2.at<Vec3b>(i, j)[1] || img1.at<Vec3b>(i, j)[2] != img2.at<Vec3b>(i, j)[2]) {
-            if (img1.at<cv::Vec3b>(i, j) != img2.at<cv::Vec3b>(i, j)) {
-                if (i < minI) minI = i;
-                if (j < minJ) minJ = j;
-                if (i > maxI) maxI = i;
-                if (j > maxJ) maxJ = j;
-            }
-        }
-    }
-    return  QRect(minJ, minI, maxJ - minJ, maxI - minI);
-}
 
-void ScrollScreenshot::calcHeadHeight()
-{
 
-}
 //设置滚动模式，先设置滚动模式，再添加图片
 void ScrollScreenshot::setScrollModel(bool model)
 {
@@ -154,16 +130,6 @@ void ScrollScreenshot::setScrollModel(bool model)
 QRect ScrollScreenshot::getInvalidArea()
 {
     return m_rect;
-}
-//获取拼接线状态
-bool ScrollScreenshot::getPixMerageThreadStatus()
-{
-    return m_startPixMerageThread;
-}
-//设置拼接线状态
-void ScrollScreenshot::setPixMerageThreadStatus(bool status)
-{
-    m_startPixMerageThread = status;
 }
 //设置时间并计算时间差
 void ScrollScreenshot::setTimeAndCalculateTimeDiff(int time)
@@ -190,6 +156,5 @@ void ScrollScreenshot::merageInvalidArea(PixMergeThread::MergeErrorValue state, 
     if (state == PixMergeThread::MaxHeight) {
         m_curStatus = ScrollStatus::Mistake;
     }
-
     emit merageError(state);
 }

@@ -31,13 +31,14 @@ class ScrollScreenshot: public QObject
 {
     Q_OBJECT
 
+public:
     enum ScrollStatus {
         Wait = 0,  // 初始状态
         Merging,   // 拼接过程中
         Stop,      // 停止拼接
         Mistake    // 拼接失败
     };
-public:
+
     explicit ScrollScreenshot(QObject *parent = nullptr);
     void addPixmap(const QPixmap &piximg, int wheelDirection = WheelDown); //添加图片到拼接线程
 
@@ -47,14 +48,10 @@ public:
     void clearPixmap();
     void changeState(const bool isStop);
     QImage savePixmap();
-    QRect getChangeArea(cv::Mat &img1, cv::Mat &img2);
-    void calcHeadHeight();
 
     //手动滚动时的函数处理
     void setScrollModel(bool model); //设置滚动模式，先设置滚动模式，再添加图片
     QRect getInvalidArea();//获取调整区域
-    bool getPixMerageThreadStatus(); //获取拼接线状态
-    void setPixMerageThreadStatus(bool status); //设置拼接线状态
     void setTimeAndCalculateTimeDiff(int time); //设置时间并计算时间差
 signals:
     void getOneImg();

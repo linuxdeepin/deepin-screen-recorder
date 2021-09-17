@@ -81,7 +81,10 @@ void PreviewWidget::updateImage(const QImage &image)
     int previewY = m_previewRect.y() - hightDiff_t;
     if (previewY <= 0) {
         previewY = 0;
-        previewHeight = m_recordY + m_recordHeight;//设置此时的预览高度=捕捉区域的高度+y轴坐标
+        if (m_StatusPos == INSIDE)
+            previewHeight = m_recordY + m_recordHeight - 20; //设置此时的预览高度=捕捉区域的高度+y轴坐标
+        else
+            previewHeight = m_recordY + m_recordHeight;//设置此时的预览高度=捕捉区域的高度+y轴坐标
     }
     m_previewRect.setY(previewY); //重新设置y坐标
     m_previewRect.setHeight(previewHeight);//重新设置预览高度
