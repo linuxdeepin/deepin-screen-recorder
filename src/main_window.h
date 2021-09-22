@@ -191,14 +191,6 @@ public:
             delete m_toolBar;
             m_toolBar = nullptr;
         }
-        if (m_recordButton) {
-            delete m_recordButton;
-            m_recordButton = nullptr;
-        }
-        if (m_shotButton) {
-            delete m_shotButton;
-            m_shotButton = nullptr;
-        }
         if (m_zoomIndicator) {
             delete m_zoomIndicator;
             m_zoomIndicator = nullptr;
@@ -320,8 +312,8 @@ public slots:
     void compositeChanged();
     void updateToolBarPos();
     void updateSideBarPos();
-    void updateRecordButtonPos();
-    void updateShotButtonPos();
+    //void updateRecordButtonPos();
+    //void updateShotButtonPos();
     void updateCameraWidgetPos();
     /**
      * @brief 切换截图功能或者录屏功能
@@ -667,11 +659,11 @@ private:
     /**
      * @brief 录屏开始按钮
      */
-    DPushButton *m_recordButton = nullptr;
+    //DPushButton *m_recordButton = nullptr;
     /**
      * @brief 截图保存按钮
      */
-    DPushButton *m_shotButton = nullptr;
+    //DPushButton *m_shotButton = nullptr;
     QList<KeyButtonWidget *> m_keyButtonList;
 
     /**

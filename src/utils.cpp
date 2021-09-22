@@ -23,6 +23,9 @@
 #include "constant.h"
 #include <DDialog>
 #include <DSysInfo>
+#include <DWindowManagerHelper>
+#include <DForeignWindow>
+
 
 #include <QString>
 #include <QDir>
@@ -38,9 +41,8 @@
 #include <X11/extensions/shape.h>
 #include <dlfcn.h>
 
-//DWM_USE_NAMESPACE
-DWIDGET_USE_NAMESPACE
 DCORE_USE_NAMESPACE
+DWIDGET_USE_NAMESPACE
 
 static const QString WarningDialogService = "com.deepin.dde.WarningDialog";
 static const QString WarningDialogPath = "/com/deepin/dde/WarningDialog";
@@ -304,4 +306,133 @@ void Utils::disableXGrabButton()
 {
     XUngrabButton(QX11Info::display(), true, AnyModifier, DefaultRootWindow(QX11Info::display()));
 
+}
+
+void Utils::getAllWindowInfo(const int winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames)
+{
+    Dtk::Gui::DForeignWindow *prewindow = nullptr;
+    for (auto wid : Dtk::Gui::DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
+        if (wid == winId) continue;
+        if (prewindow) {
+            delete prewindow;
+            prewindow = nullptr;
+        }
+
+        Dtk::Gui::DForeignWindow *window = Dtk::Gui::DForeignWindow::fromWinId(wid);//sanitizer dtk
+
+        prewindow = window;
+
+        //判断窗口是否被最小化
+        if (window->windowState() == Qt::WindowState::WindowMinimized) {
+            continue;
+        }
+
+        if (window) {
+            int t_tempWidth = 0;
+            int t_tempHeight = 0;
+            //window:后面代码有使用
+            //window->deleteLater();
+            //修改部分窗口显示不全，截图框识别问题
+            //x坐标小于0时
+            if (window->frameGeometry().x() < 0) {
+                if (window->frameGeometry().y() < 0) {
+
+                    //x,y为负坐标情况
+                    t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
+                    t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
+
+                    //windowRects << Dtk::Wm::WindowRect {0, 0, t_tempWidth, t_tempHeight};
+                    windowRects << QRect(0, 0, t_tempWidth, t_tempHeight);
+                    windowNames << window->wmClass();
+                    continue;
+                } else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= height - window->frameGeometry().height()) {
+                    //x为负坐标，y在正常屏幕区间内
+                    t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
+                    t_tempHeight = window->frameGeometry().height();
+
+                    //windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                    windowRects << QRect(0, window->frameGeometry().y(), t_tempWidth, t_tempHeight);
+                    windowNames << window->wmClass();
+                    continue;
+                } else if (window->frameGeometry().y() > height - window->frameGeometry().height()) {
+                    //x为负坐标，y方向窗口超出屏幕底部
+                    t_tempWidth = window->frameGeometry().width() + window->frameGeometry().x();
+                    t_tempHeight = height - window->frameGeometry().y();
+
+                    //                        windowRects << Dtk::Wm::WindowRect {0, window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                    windowRects << QRect(0, window->frameGeometry().y(), t_tempWidth, t_tempHeight);
+                    windowNames << window->wmClass();
+                    continue;
+                }
+            }
+
+            //x坐标位于正常屏幕区间时
+            else if (window->frameGeometry().x() >= 0 && window->frameGeometry().x() <= width - window->frameGeometry().width()) {
+                if (window->frameGeometry().y() < 0) {
+                    //y为负坐标情况
+                    t_tempWidth = window->frameGeometry().width();
+                    t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
+
+                    //                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight};
+                    windowRects << QRect(window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight);
+                    windowNames << window->wmClass();
+                    continue;
+                } else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= height - window->frameGeometry().height()) {
+                    //y在正常屏幕区间内
+                    t_tempWidth = window->frameGeometry().width();
+                    t_tempHeight = window->frameGeometry().height();
+
+                    //                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                    windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
+                    windowNames << window->wmClass();
+                    continue;
+                } else if (window->frameGeometry().y() > height - window->frameGeometry().height()) {
+                    //y方向窗口超出屏幕底部
+                    t_tempWidth = window->frameGeometry().width();
+                    t_tempHeight = height - window->frameGeometry().y();
+
+                    //                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                    windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
+                    windowNames << window->wmClass();
+                    continue;
+                }
+            }
+
+            //x方向窗口超出屏幕右侧区域
+            else if (window->frameGeometry().x() > width - window->frameGeometry().width()) {
+                if (window->frameGeometry().y() < 0) {
+                    //y为负坐标情况
+                    t_tempWidth = width - window->frameGeometry().x();
+                    t_tempHeight = window->frameGeometry().height() + window->frameGeometry().y();
+
+                    //                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight};
+                    windowRects << QRect(window->frameGeometry().x(), 0, t_tempWidth, t_tempHeight);
+                    windowNames << window->wmClass();
+                    continue;
+                } else if (window->frameGeometry().y() >= 0 && window->frameGeometry().y() <= height - window->frameGeometry().height()) {
+                    //y在正常屏幕区间内
+                    t_tempWidth = width - window->frameGeometry().x();
+                    t_tempHeight = window->frameGeometry().height();
+
+                    //                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                    windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
+                    windowNames << window->wmClass();
+                    continue;
+                } else if (window->frameGeometry().y() > height - window->frameGeometry().height()) {
+                    //y方向窗口超出屏幕底部
+                    t_tempWidth = width - window->frameGeometry().x();
+                    t_tempHeight = height - window->frameGeometry().y();
+
+                    //                        windowRects << Dtk::Wm::WindowRect {window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight};
+                    windowRects << QRect(window->frameGeometry().x(), window->frameGeometry().y(), t_tempWidth, t_tempHeight);
+                    windowNames << window->wmClass();
+                    continue;
+                }
+            }
+        }
+    }
+    if (prewindow) {
+        delete prewindow;
+        prewindow = nullptr;
+    }
 }

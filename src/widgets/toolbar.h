@@ -194,7 +194,7 @@ protected:
 
 private:
     ToolBarWidget *m_toolbarWidget;
-
+    DPushButton *m_confirmButton;
     //bool m_expanded;
 };
 #endif // TOOLBAR_H

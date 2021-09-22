@@ -56,9 +56,6 @@ ToolBarWidget::ToolBarWidget(MainWindow* pMainwindow,DWidget *parent)
 {
     int t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     setBlurBackgroundEnabled(true);
-
-//    blurBackground()->setBlurRectXRadius(18);
-//    blurBackground()->setBlurRectYRadius(18);
     blurBackground()->setRadius(30);
     blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
     blurBackground()->setBlurEnabled(true);
@@ -66,30 +63,18 @@ ToolBarWidget::ToolBarWidget(MainWindow* pMainwindow,DWidget *parent)
 
     if (t_themeType == 1) {
         blurBackground()->setMaskColor(QColor(255, 255, 255, 76));
-//        setMaskColor(QColor(170, 170, 170, 140));
-    }
-
-    else if (t_themeType == 2) {
+    } else if (t_themeType == 2) {
         blurBackground()->setMaskColor(QColor(0, 0, 0, 76));
     }
-//    setMaskColor(QColor(255, 255, 255, 76.5));
-    //设置透明效果
-//    setMaskAlpha(0);
-//    setMaskColor(DBlurEffectWidget::LightColor);
-//    setFixedSize(TOOLBAR_WIDGET_SIZE);
+
     setFixedHeight(TOOLBAR_HEIGHT);
     if(Utils::is3rdInterfaceStart){
         setFixedWidth(TOOLBAR_WIDTH);
     }
-//    setMinimumSize(TOOLBAR_WIDGET_SIZE);
-//    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-//    qDebug() << "~~~~~~" << this->size();
+
     m_hSeparatorLine = new DLabel(this);
     m_hSeparatorLine->setObjectName("HorSeparatorLine");
     m_hSeparatorLine->setFixedHeight(1);
-
-//    m_majToolbar = new MajToolBar(this);
-//    m_subToolbar = new SubToolBar(this);
 
     m_mainTool = new MainToolWidget(this);
     //分配pMainwindow主窗口指针给SubToolWidget（ToolTips需要该指针）
@@ -101,27 +86,17 @@ ToolBarWidget::ToolBarWidget(MainWindow* pMainwindow,DWidget *parent)
     //DIconButton
     m_closeButton = new DImageButton(this);
     Utils::setAccessibility(m_closeButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_TOOL);
-//    m_closeButton->setIconSize(QSize(40, 40));
-//    m_closeButton->setIcon(QIcon(":/image/newUI/normal/close-normal.svg"));
-//    m_closeButton->resize(pixmap.size());
-//    m_closeButton->setHoverPic(":/image/newUI/hover/close-hover.svg");
-//    m_closeButton->setNormalPic(":/image/newUI/normal/close-normal.svg");
+
     if (t_themeType == 1) {
         m_closeButton->setHoverPic(":/newUI/hover/close-hover.svg");
         m_closeButton->setNormalPic(":/newUI/normal/close-normal.svg");
-    }
-
-    else if (t_themeType == 2) {
+    } else if (t_themeType == 2) {
         m_closeButton->setHoverPic(":/newUI/dark/hover/close-hover_dark.svg");
         m_closeButton->setNormalPic(":/newUI/dark/normal/close-normal_dark.svg");
     }
-    /* 设置按钮的有效区域 */
-//    m_closeButton->setMask(QBitmap(pixmap.mask()));
-//    m_closeButton->setStyleSheet(button_style);
+
 
     QHBoxLayout *hLayout = new QHBoxLayout();
-//    hLayout->setSizeConstraint(QLayout::SetFixedSize);
-//    hLayout->setContentsMargins(2, 3, 0, 0);
     hLayout->setMargin(0);
     hLayout->setSpacing(2);
 
@@ -129,15 +104,11 @@ ToolBarWidget::ToolBarWidget(MainWindow* pMainwindow,DWidget *parent)
         hLayout->addSpacing(10);
         m_mainTool->hide();
         hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
-    }
-
-    else {
+    } else {
         hLayout->addWidget(m_mainTool, 0,  Qt::AlignCenter);
         hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
     }
 
-
-//    hLayout->addSpacing(10);
     hLayout->addWidget(m_closeButton, 0,  Qt::AlignCenter);
     setLayout(hLayout);
 
@@ -284,24 +255,11 @@ void ToolBar::setExpand(bool expand, QString shapeType)
 {
     Q_UNUSED(expand);
     emit buttonChecked(shapeType);
-//    if (expand) {
-//        m_expanded = true;
-//        setFixedSize(TOOLBAR_WIDTH,
-//                     TOOLBAR_WIDGET_SIZE.height() * 2 + 3);
-//        emit heightChanged();
-//    }
-
     update();
 }
 
 void ToolBar::paintEvent(QPaintEvent *e)
 {
-//    QPainter painter(this);
-//    painter.setPen(QColor(0, 0, 0, 25));
-//    painter.setRenderHint(QPainter::Antialiasing);
-//    QRectF rect(0, 0, this->width() - 1, this->height() - 1);
-//    painter.drawRoundedRect(rect.translated(0.5, 0.5), 3, 3, Qt::AbsoluteSize);
-
     DLabel::paintEvent(e);
 }
 
@@ -346,6 +304,29 @@ void ToolBar::specificedSavePath()
 */
 void ToolBar::currentFunctionMode(QString shapeType)
 {
+    DPalette pa;
+    pa = m_confirmButton->palette();
+    if (shapeType == "shot") {
+        pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+        pa.setColor(DPalette::Dark, QColor(0, 129, 255, 204));
+        pa.setColor(DPalette::Light, QColor(0, 129, 255, 204));
+        m_confirmButton->setPalette(pa);
+        m_confirmButton->setIcon(QIcon(":/newUI/checked/screenshot-checked.svg"));
+        Utils::setAccessibility(m_confirmButton, AC_MAINWINDOW_MAINSHOTBTN);
+        m_confirmButton->setProperty("isShotState", true);
+
+    } else if (shapeType == "record") {
+        pa = m_confirmButton->palette();
+        pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+        pa.setColor(DPalette::Dark, QColor(229, 70, 61, 204));
+        pa.setColor(DPalette::Light, QColor(229, 70, 61, 204));
+        m_confirmButton->setPalette(pa);
+        m_confirmButton->setIcon(QIcon(":/newUI/checked/screencap-checked.svg"));
+        Utils::setAccessibility(m_confirmButton, AC_MAINWINDOW_MAINRECORDBTN);
+        m_confirmButton->setProperty("isShotState", false);
+
+    }
+    update();
     emit currentFunctionToMain(shapeType);
 }
 
@@ -373,12 +354,40 @@ void ToolBar::initToolBar(MainWindow* pmainWindow)
 //    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     setFixedHeight(TOOLBAR_HEIGHT);
     m_toolbarWidget = new ToolBarWidget(pmainWindow,this);
-    QVBoxLayout *vLayout = new QVBoxLayout();
+
+    //构建截屏录屏功能触发
+    m_confirmButton = new DPushButton(this);
+    m_confirmButton->setFocusPolicy(Qt::NoFocus);
+    m_confirmButton->setIconSize(QSize(38, 38));
+    m_confirmButton->setFixedSize(76, 58);
+
+    DPalette pa;
+    pa = m_confirmButton->palette();
+    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+    pa.setColor(DPalette::Dark, QColor(0, 129, 255, 204));
+    pa.setColor(DPalette::Light, QColor(0, 129, 255, 204));
+    m_confirmButton->setPalette(pa);
+    m_confirmButton->setIcon(QIcon(":/newUI/checked/screenshot-checked.svg"));
+    Utils::setAccessibility(m_confirmButton, AC_MAINWINDOW_MAINSHOTBTN);
+    m_confirmButton->setProperty("isShotState", true);
+
+    connect(m_confirmButton, &DPushButton::clicked, this, [ = ] {
+        if(m_confirmButton->property("isShotState").toBool()) {
+            pmainWindow->saveScreenShot();
+        } else {
+            pmainWindow->startCountdown();
+        }
+    });
+
+
+
+    QHBoxLayout *vLayout = new QHBoxLayout();
     vLayout->setSizeConstraint(QLayout::SetFixedSize);
     vLayout->setContentsMargins(0, 0, 0, 0);
     vLayout->addStretch();
     vLayout->addWidget(m_toolbarWidget);
     vLayout->addStretch();
+    vLayout->addWidget(m_confirmButton);
     setLayout(vLayout);
     update();
 

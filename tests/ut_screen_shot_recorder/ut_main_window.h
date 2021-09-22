@@ -1104,12 +1104,12 @@ TEST_F(MainWindowTest, initScrollShot)
 }
 
 ACCESS_PRIVATE_FIELD(MainWindow, QPixmap, m_firstScrollShotImg);
-ACCESS_PRIVATE_FIELD(MainWindow, DPushButton *, m_shotButton);
+//ACCESS_PRIVATE_FIELD(MainWindow, DPushButton *, m_shotButton);
 ACCESS_PRIVATE_FIELD(MainWindow, TopTips *, m_scrollShotSizeTips);
 ACCESS_PRIVATE_FIELD(MainWindow, PreviewWidget *, m_previewWidget);
 ACCESS_PRIVATE_FUN(MainWindow, void(), showScrollShot);
 ACCESS_PRIVATE_FUN(MainWindow, void(), updateToolBarPos);
-ACCESS_PRIVATE_FUN(MainWindow, void(), updateShotButtonPos);
+//ACCESS_PRIVATE_FUN(MainWindow, void(), updateShotButtonPos);
 static void updateToolBarPos_stub(void *obj)
 {
     qDebug() << "调整工具栏位置";
@@ -1151,8 +1151,8 @@ TEST_F(MainWindowTest, showScrollShot)
     MainWindow_previewWidget->setScreenInfo(MainWindow_screenWidth, MainWindow_m_pixelRatio);
     MainWindow_previewWidget->initPreviewWidget();
 
-    DPushButton *&MainWindow_shotButton = access_private_field::MainWindowm_shotButton(*m_window);
-    MainWindow_shotButton = new DPushButton();
+    //DPushButton *&MainWindow_shotButton = access_private_field::MainWindowm_shotButton(*m_window);
+    //MainWindow_shotButton = new DPushButton();
 
     TopTips *&MainWindow_scrollShotSizeTips = access_private_field::MainWindowm_scrollShotSizeTips(*m_window);
     MainWindow_scrollShotSizeTips = new TopTips();
@@ -1163,14 +1163,14 @@ TEST_F(MainWindowTest, showScrollShot)
     auto MainWindow_updateToolBarPos = get_private_fun::MainWindowupdateToolBarPos();
     stub.set(MainWindow_updateToolBarPos, updateToolBarPos_stub);
 
-    auto MainWindow_updateShotButtonPos = get_private_fun::MainWindowupdateShotButtonPos();
-    stub.set(MainWindow_updateShotButtonPos, updateShotButtonPos_stub);
+    //auto MainWindow_updateShotButtonPos = get_private_fun::MainWindowupdateShotButtonPos();
+    //stub.set(MainWindow_updateShotButtonPos, updateShotButtonPos_stub);
 
     //调用滚动
     call_private_fun::MainWindowshowScrollShot(*m_window);
 
     stub.reset(MainWindow_updateToolBarPos);
-    stub.reset(MainWindow_updateShotButtonPos);
+    //stub.reset(MainWindow_updateShotButtonPos);
 
 
 //    delete MainWindow_toolBar;
@@ -1200,8 +1200,8 @@ TEST_F(MainWindowTest, scrollShotGrabPixmap)
     auto MainWindow_isToolBarInShotArea = get_private_fun::MainWindowisToolBarInShotArea();
     stub.set(MainWindow_isToolBarInShotArea, isToolBarInShotArea_stub);
 
-    DPushButton *&MainWindow_shotButton = access_private_field::MainWindowm_shotButton(*m_window);
-    MainWindow_shotButton = new DPushButton();
+    //DPushButton *&MainWindow_shotButton = access_private_field::MainWindowm_shotButton(*m_window);
+    //MainWindow_shotButton = new DPushButton();
 
     TopTips *&MainWindow_scrollShotSizeTips = access_private_field::MainWindowm_scrollShotSizeTips(*m_window);
     MainWindow_scrollShotSizeTips = new TopTips();
@@ -1345,8 +1345,8 @@ TEST_F(MainWindowTest, onScrollShotMouseClickEvent)
     MainWindow_toolBar->resize(500, 100);
     MainWindow_toolBar->move(0, 0);
 
-    DPushButton *&MainWindow_shotButton = access_private_field::MainWindowm_shotButton(*m_window);
-    MainWindow_shotButton = new DPushButton();
+    //DPushButton *&MainWindow_shotButton = access_private_field::MainWindowm_shotButton(*m_window);
+    //MainWindow_shotButton = new DPushButton();
 
     bool &MainWindow_m_isErrorWithScrollShot = access_private_field::MainWindowm_isErrorWithScrollShot(*m_window);
     MainWindow_m_isErrorWithScrollShot = false;
@@ -1419,8 +1419,8 @@ TEST_F(MainWindowTest, onScrollShotMouseMoveEvent)
     MainWindow_toolBar->resize(500, 100);
     MainWindow_toolBar->move(0, 0);
 
-    DPushButton *&MainWindow_shotButton = access_private_field::MainWindowm_shotButton(*m_window);
-    MainWindow_shotButton = new DPushButton();
+    //DPushButton *&MainWindow_shotButton = access_private_field::MainWindowm_shotButton(*m_window);
+    //MainWindow_shotButton = new DPushButton();
 
     int &MainWindow_m_scrollShotStatus =  access_private_field::MainWindowm_scrollShotStatus(*m_window);
     MainWindow_m_scrollShotStatus = 1;
@@ -1489,8 +1489,8 @@ TEST_F(MainWindowTest, onScrollShotMouseScrollEvent)
     MainWindow_toolBar->resize(500, 100);
     MainWindow_toolBar->move(0, 0);
 
-    DPushButton *&MainWindow_shotButton = access_private_field::MainWindowm_shotButton(*m_window);
-    MainWindow_shotButton = new DPushButton();
+    //DPushButton *&MainWindow_shotButton = access_private_field::MainWindowm_shotButton(*m_window);
+    //MainWindow_shotButton = new DPushButton();
 
     auto MainWindow_pauseAutoScrollShot = get_private_fun::MainWindowpauseAutoScrollShot();
     stub.set(MainWindow_pauseAutoScrollShot, pauseAutoScrollShot_stub);
@@ -1646,8 +1646,8 @@ TEST_F(MainWindowTest, onAdjustCaptureArea)
     MainWindow_toolBar->resize(500, 100);
     MainWindow_toolBar->move(0, 0);
 
-    DPushButton *&MainWindow_shotButton = access_private_field::MainWindowm_shotButton(*m_window);
-    MainWindow_shotButton = new DPushButton();
+    //DPushButton *&MainWindow_shotButton = access_private_field::MainWindowm_shotButton(*m_window);
+    //MainWindow_shotButton = new DPushButton();
 
     QRect previewRecordRect {
         static_cast<int>(0),
@@ -1669,8 +1669,8 @@ TEST_F(MainWindowTest, onAdjustCaptureArea)
     auto MainWindow_updateToolBarPos = get_private_fun::MainWindowupdateToolBarPos();
     stub.set(MainWindow_updateToolBarPos, updateToolBarPos_stub);
 
-    auto MainWindow_updateShotButtonPos = get_private_fun::MainWindowupdateShotButtonPos();
-    stub.set(MainWindow_updateShotButtonPos, updateShotButtonPos_stub);
+    //auto MainWindow_updateShotButtonPos = get_private_fun::MainWindowupdateShotButtonPos();
+    //stub.set(MainWindow_updateShotButtonPos, updateShotButtonPos_stub);
 
     ScrollScreenshot *&MainWindow_m_scrollShot =  access_private_field::MainWindowm_scrollShot(*m_window);
     MainWindow_m_scrollShot = new ScrollScreenshot;
@@ -1679,7 +1679,7 @@ TEST_F(MainWindowTest, onAdjustCaptureArea)
     call_private_fun::MainWindowonAdjustCaptureArea(*m_window);
 
     stub.reset(MainWindow_updateToolBarPos);
-    stub.reset(MainWindow_updateShotButtonPos);
+    //stub.reset(MainWindow_updateShotButtonPos);
     stub.reset(ADDR(ScrollScreenshot, clearPixmap));
 
     //delete MainWindow_m_scrollShotTip;

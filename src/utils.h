@@ -94,6 +94,8 @@ public:
      * @brief 失能XGrabButton抓取所有的鼠标点击事件
      */
     static void disableXGrabButton();
+
+    static void getAllWindowInfo(const int winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames);
 };
 
 #endif //UTILS_H
