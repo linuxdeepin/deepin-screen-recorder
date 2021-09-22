@@ -338,13 +338,12 @@ public slots:
     void sendNotify(SaveAction saveAction, QString saveFilePath, const bool succeed);
     void reloadImage(QString effect);
     void shotImgWidthEffect();
-    void changeArrowAndLineEvent(int line);
+    //void changeArrowAndLineEvent(int line);
     void exitApp();
     void onViewShortcut();
     void shapeClickedSlot(QString shape);
     void on_CheckRecodeCouldUse(bool canUse);
     void on_CheckVideoCouldUse(bool canUse);
-    void checkCpuIsZhaoxin();
     void onShotKeyPressEvent(const unsigned char &keyCode);
     void onRecordKeyPressEvent(const unsigned char &keyCode);
     void tableRecordSet();

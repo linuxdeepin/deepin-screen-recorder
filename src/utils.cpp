@@ -37,6 +37,7 @@
 #include <QDBusInterface>
 #include <QtX11Extras/QX11Info>
 #include <QStandardPaths>
+#include <QProcess>
 
 #include <X11/extensions/shape.h>
 #include <dlfcn.h>
@@ -308,10 +309,10 @@ void Utils::disableXGrabButton()
 
 }
 
-void Utils::getAllWindowInfo(const int winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames)
+void Utils::getAllWindowInfo(const quint32 winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames)
 {
     Dtk::Gui::DForeignWindow *prewindow = nullptr;
-    for (auto wid : Dtk::Gui::DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
+    for (quint32 wid : Dtk::Gui::DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
         if (wid == winId) continue;
         if (prewindow) {
             delete prewindow;
@@ -435,4 +436,22 @@ void Utils::getAllWindowInfo(const int winId, const int width, const int height,
         delete prewindow;
         prewindow = nullptr;
     }
+}
+
+
+bool Utils::checkCpuIsZhaoxin()
+{
+    QStringList options;
+    options << "-c";
+    options << "lscpu | grep 'CentaurHauls'";
+    QProcess process;
+    process.start("bash", options);
+    process.waitForFinished();
+    process.waitForReadyRead();
+    QString str_output = process.readAllStandardOutput();
+    process.close();
+    if (str_output.length() == 0) {
+       return false;
+    }
+    return true;
 }

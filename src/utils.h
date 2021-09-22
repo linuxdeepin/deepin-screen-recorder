@@ -95,7 +95,8 @@ public:
      */
     static void disableXGrabButton();
 
-    static void getAllWindowInfo(const int winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames);
+    static void getAllWindowInfo(const quint32 winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames);
+    static bool checkCpuIsZhaoxin();
 };
 
 #endif //UTILS_H

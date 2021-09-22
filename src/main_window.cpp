@@ -173,7 +173,7 @@ void MainWindow::initAttributes()
     qDebug() << "FunctionName: " << __func__;
     setWindowTitle(tr("Screen Capture"));
     m_keyButtonList.clear();
-    checkCpuIsZhaoxin();
+    m_isZhaoxin = Utils::checkCpuIsZhaoxin();
 
 
     rootWindowRect = QRect(0, 0, static_cast<int>(m_screenSize.width() / m_pixelRatio), static_cast<int>(m_screenSize.height() / m_pixelRatio));
@@ -189,28 +189,20 @@ void MainWindow::initAttributes()
 
 
 
-
-
-
     m_screenHeight = m_screenSize.height();
     m_screenWidth = m_screenSize.width();
 
-    Utils::getAllWindowInfo(winId(), m_screenWidth, m_screenHeight, windowRects, windowNames);
+    Utils::getAllWindowInfo(static_cast<quint32>(this->winId()), m_screenWidth, m_screenHeight, windowRects, windowNames);
     //构建截屏工具栏按钮 by zyg
     m_toolBar = new ToolBar(this);
     m_toolBar->hide();
 
     m_sideBar = new SideBar(this);
     m_sideBar->hide();
-    connect(m_sideBar, &SideBar::closeSideBarToMain, this, [ = ] {
-        if (m_sideBar->isVisible())
-        {
-            m_sideBar->hide();
-        }
-    });
 
     m_sizeTips = new TopTips(this);
     m_sizeTips->hide();
+
     m_zoomIndicator = new ZoomIndicator(this);
     m_zoomIndicator->hide();
 
@@ -223,7 +215,7 @@ void MainWindow::initAttributes()
     connect(m_toolBar, &ToolBar::cameraActionCheckedToMain, this, &MainWindow::changeCameraSelectEvent);
     connect(m_toolBar, &ToolBar::shotToolChangedToMain, this, &MainWindow::changeShotToolEvent);
     connect(m_toolBar, &ToolBar::closeButtonToMain, this, &MainWindow::exitApp);
-    connect(m_sideBar, &SideBar::changeArrowAndLineToMain, this, &MainWindow::changeArrowAndLineEvent);
+    connect(m_sideBar, &SideBar::changeArrowAndLineToMain, m_toolBar, &ToolBar::changeArrowAndLineFromMain);
 
 
     m_backgroundRect = rootWindowRect;
@@ -4005,25 +3997,7 @@ void MainWindow::on_CheckVideoCouldUse(bool canUse)
     }
 }
 
-void MainWindow::checkCpuIsZhaoxin()
-{
-    QStringList options;
-    options << "-c";
-    options << "lscpu | grep 'CentaurHauls'";
-    QProcess process;
-    process.start("bash", options);
-    process.waitForFinished();
-    process.waitForReadyRead();
-    QString str_output = process.readAllStandardOutput();
-    // 安全问题， 日志隐私，暴露cpu类型
-    //qDebug() << "is zhao xin:" << str_output;
-    if (str_output.length() == 0) {
-        m_isZhaoxin = false;
-    } else {
-        m_isZhaoxin = true;
-    }
-    process.close();
-}
+
 
 //截图模式及滚动截图模式键盘按下执行的操作
 void MainWindow::onShotKeyPressEvent(const unsigned char &keyCode)
@@ -4693,8 +4667,8 @@ void MainWindow::shotImgWidthEffect()
     update();
 }
 
-void MainWindow::changeArrowAndLineEvent(int line)
-{
-    qDebug() << "line :" << line;
-    m_toolBar->changeArrowAndLineFromMain(line);
-}
+//void MainWindow::changeArrowAndLineEvent(int line)
+//{
+//    qDebug() << "line :" << line;
+//    m_toolBar->changeArrowAndLineFromMain(line);
+//}

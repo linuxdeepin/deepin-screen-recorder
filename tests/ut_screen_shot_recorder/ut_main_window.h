@@ -340,9 +340,9 @@ TEST_F(MainWindowTest, screenShotShapes)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    m_window->changeArrowAndLineEvent(0);
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
-    loop.exec();
+    //m_window->changeArrowAndLineEvent(0);
+    //QTimer::singleShot(1000, &loop, SLOT(quit()));
+    //loop.exec();
 
     QTest::mousePress(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(100, 200));
     QTimer::singleShot(1000, &loop, SLOT(quit()));
@@ -356,9 +356,9 @@ TEST_F(MainWindowTest, screenShotShapes)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
-    m_window->changeArrowAndLineEvent(1);
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
-    loop.exec();
+    //m_window->changeArrowAndLineEvent(1);
+    //QTimer::singleShot(1000, &loop, SLOT(quit()));
+    //loop.exec();
 
 
     QTest::mousePress(m_shapesWidget, Qt::MouseButton::LeftButton, Qt::KeyboardModifier::NoModifier, QPoint(120, 210));

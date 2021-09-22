@@ -51,6 +51,7 @@ signals:
 protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+
 private:
     DLabel *m_hSeparatorLine;
     ColorToolWidget *m_colorTool;
@@ -75,7 +76,6 @@ signals:
     void shapePressed(QString tool);
     void closed();
     void changeArrowAndLineToMain(int line);
-    void closeSideBarToMain();
 public slots:
     //bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
