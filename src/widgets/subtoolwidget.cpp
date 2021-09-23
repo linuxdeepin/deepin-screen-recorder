@@ -105,8 +105,6 @@ SubToolWidget::~SubToolWidget()
 void SubToolWidget::initWidget()
 {
     hintFilter = new HintFilter(this);
-    m_themeType = 0;
-    m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     initRecordLabel();
     initShotLabel();
     setCurrentWidget(m_shotSubTool);
@@ -173,22 +171,18 @@ void SubToolWidget::initRecordLabel()
     DFontSizeManager::instance()->bind(m_audioMenu, DFontSizeManager::T8);
     m_microphoneAction = new QAction(m_audioMenu);
     m_systemAudioAction = new QAction(m_audioMenu);
-    //    m_m_systemAudioAction = m_systemAudioAction;
     m_microphoneAction->setText(tr("Microphone"));
     m_microphoneAction->setCheckable(true);
-    if (m_themeType == 1) {
-        m_microphoneAction->setIcon(QIcon(":/newUI/normal/microphone.svg"));
-    } else if (m_themeType == 2) {
-        m_microphoneAction->setIcon(QIcon(":/newUI/dark/normal/microphone.svg"));
-    }
-
     m_systemAudioAction->setText(tr("System Audio"));
-    //    m_systemAudioAction->setIcon(QIcon(":/image/newUI/normal/audio frequency.svg"));
-    if (m_themeType == 1) {
+
+    if (Utils::themeType == 1) {
+        m_microphoneAction->setIcon(QIcon(":/newUI/normal/microphone.svg"));
         m_systemAudioAction->setIcon(QIcon(":/newUI/normal/audio frequency.svg"));
-    } else if (m_themeType == 2) {
+    } else {
+        m_microphoneAction->setIcon(QIcon(":/newUI/dark/normal/microphone.svg"));
         m_systemAudioAction->setIcon(QIcon(":/newUI/dark/normal/audio frequency.svg"));
     }
+
 
 
     connect(m_microphoneAction, &QAction::triggered, this, [ = ] {
@@ -358,10 +352,10 @@ void SubToolWidget::initRecordLabel()
     m_recorderCheck->setText(tr("Show Click"));
     m_recorderCheck->setCheckable(true);
 
-    if (m_themeType == 1) {
+    if (Utils::themeType == 1) {
         m_recorderMouse->setIcon(QIcon(":/newUI/normal/mouse2.svg"));
         m_recorderCheck->setIcon(QIcon(":/newUI/normal/touch.svg"));
-    } else if (m_themeType == 2) {
+    } else {
         m_recorderMouse->setIcon(QIcon(":/newUI/dark/normal/mouse2.svg"));
         m_recorderCheck->setIcon(QIcon(":/newUI/dark/normal/touch.svg"));
     }
@@ -1055,10 +1049,6 @@ void SubToolWidget::initShotLabel()
 
 void SubToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 {
-//    if(nullptr == this->parentWidget()
-//            || nullptr == this->parentWidget()->parentWidget()
-//            || nullptr == this->parentWidget()->parentWidget()->parentWidget())
-//        return;
     // TODO: parent must be mainframe
     auto hintWidget = new ToolTips("", m_pMainWindow);
     hintWidget->hide();
@@ -1089,10 +1079,10 @@ void SubToolWidget::hideSomeToolBtn()
     QHBoxLayout *rectLayout = static_cast<QHBoxLayout *>(m_shotSubTool->layout());
     //清楚原水平布局中的所有元素
     QLayoutItem *child;
-    while ((child = rectLayout->takeAt(0)) != 0) {
+    while ((child = rectLayout->takeAt(0)) != nullptr) {
         //setParent为NULL，防止删除之后界面不消失
         if (child->widget()) {
-            child->widget()->setParent(NULL);
+            child->widget()->setParent(nullptr);
         }
         delete child;
     }
@@ -1145,15 +1135,15 @@ void SubToolWidget::changeArrowAndLineFromSideBar(int line)
         m_lineflag = 0;
         installTipHint(m_lineButton, tr("Line"));
         if (m_lineButton->isChecked()) {
-            if (m_themeType == 1) {
+            if (Utils::themeType == 1) {
                 m_lineButton->setIcon(QIcon(":/newUI/checked/line-checked.svg"));
-            } else if (m_themeType == 2) {
+            } else  {
                 m_lineButton->setIcon(QIcon(":/newUI/dark/checked/line-checked.svg"));
             }
         } else {
-            if (m_themeType == 1) {
+            if (Utils::themeType == 1) {
                 m_lineButton->setIcon(QIcon(":/newUI/normal/line-normal.svg"));
-            } else if (m_themeType == 2) {
+            } else {
                 m_lineButton->setIcon(QIcon(":/newUI/dark/normal/line-normal_dark.svg"));
             }
         }
@@ -1161,15 +1151,15 @@ void SubToolWidget::changeArrowAndLineFromSideBar(int line)
         m_lineflag = 1;
         installTipHint(m_lineButton, tr("Arrow"));
         if (m_lineButton->isChecked()) {
-            if (m_themeType == 1) {
+            if (Utils::themeType == 1) {
                 m_lineButton->setIcon(QIcon(":/newUI/checked/Arrow-checked.svg"));
-            } else if (m_themeType == 2) {
+            } else {
                 m_lineButton->setIcon(QIcon(":/newUI/dark/checked/Arrow-checked.svg"));
             }
         } else {
-            if (m_themeType == 1) {
+            if (Utils::themeType == 1) {
                 m_lineButton->setIcon(QIcon(":/newUI/normal/Arrow-normal.svg"));
-            } else if (m_themeType == 2) {
+            } else {
                 m_lineButton->setIcon(QIcon(":/newUI/dark/normal/Arrow-normal_dark.svg"));
             }
         }

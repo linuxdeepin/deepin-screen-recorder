@@ -53,6 +53,9 @@ public:
     static void setAccessibility(QAction *action, const QString name);
     static bool is3rdInterfaceStart;
     static bool isTabletEnvironment;
+    static bool isWaylandMode;
+    static int themeType;
+
 
     /**
      * @brief 对目标区域做穿透处理

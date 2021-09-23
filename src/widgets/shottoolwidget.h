@@ -78,7 +78,6 @@ private:
 
     QString m_currentType;
     bool m_arrowFlag;
-    int m_themeType;
     QButtonGroup *m_buttonGroup;
     QButtonGroup *m_thicknessBtnGroup;
     QButtonGroup *m_funcBtnGroup;

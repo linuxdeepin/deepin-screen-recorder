@@ -35,8 +35,6 @@ class Screenshot : public QObject
 public:
     explicit Screenshot(QObject *parent = nullptr);
     ~Screenshot();
-
-    void setConfigThemeType(int themeType);
 public slots:
     void startScreenshot();
     void delayScreenshot(double num);

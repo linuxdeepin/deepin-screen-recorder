@@ -51,6 +51,9 @@ static const QString WarningDialogInterface = "com.deepin.dde.WarningDialog";
 
 bool Utils::is3rdInterfaceStart = false;
 bool Utils::isTabletEnvironment = false;
+bool Utils::isWaylandMode = false;
+int Utils::themeType = 0;
+
 QString Utils::getQrcPath(QString imageName)
 {
     return QString(":/%1").arg(imageName);
@@ -83,51 +86,7 @@ void Utils::setFontSize(QPainter &painter, int textSize)
     font.setPointSize(textSize);
     painter.setFont(font);
 }
-/*
-void Utils::warnNoComposite()
-{
-    QDBusInterface iface(WarningDialogService,
-                         WarningDialogPath,
-                         WarningDialogService);
-    iface.call("RaiseWindow");
-}
 
-
-void Utils::notSupportWarn()
-{
-   DDialog warnDlg;
-   warnDlg.setIcon(QIcon::fromTheme("deepin-screen-recorder"));
-   warnDlg.setMessage(tr("Screen recording is not supported at present"));
-   warnDlg.addSpacing(20);
-   warnDlg.addButton(tr("Exit"));
-   warnDlg.exec();
-}
-*/
-//void Utils::blurRect(DWindowManager *windowManager, int widgetId, QRectF rect)
-//{
-//    QVector<uint32_t> data;
-
-//    qreal devicePixelRatio = qApp->devicePixelRatio();
-//    data << rect.x() * devicePixelRatio << rect.y() * devicePixelRatio << rect.width() * devicePixelRatio << rect.height() * devicePixelRatio << Constant::RECTANGLE_RADIUS << Constant::RECTANGLE_RADIUS;
-//    windowManager->setWindowBlur(widgetId, data);
-//}
-
-//void Utils::blurRects(DWindowManager *windowManager, int widgetId, QList<QRectF> rects)
-//{
-//    QVector<uint32_t> data;
-//    qreal devicePixelRatio = qApp->devicePixelRatio();
-//    foreach (auto rect, rects) {
-//        data << rect.x() * devicePixelRatio << rect.y() * devicePixelRatio << rect.width() * devicePixelRatio << rect.height() * devicePixelRatio << Constant::RECTANGLE_RADIUS << Constant::RECTANGLE_RADIUS;
-//    }
-//    windowManager->setWindowBlur(widgetId, data);
-//}
-
-//void Utils::clearBlur(DWindowManager *windowManager, int widgetId)
-//{
-//    QVector<uint32_t> data;
-//    data << 0 << 0 << 0 << 0 << 0 << 0;
-//    windowManager->setWindowBlur(widgetId, data);
-//}
 
 void Utils::drawTooltipBackground(QPainter &painter, QRect rect, QString textColor, qreal opacity)
 {
@@ -155,6 +114,16 @@ void Utils::drawTooltipText(QPainter &painter, QString text, QString textColor, 
 
 void Utils::passInputEvent(int wid)
 {
+    // Wayland 事件穿透
+    if (Utils::isWaylandMode) {
+        QWidget *widget = QWidget::find(static_cast<WId>(wid));
+        if(widget && widget->windowHandle()) {
+            widget->windowHandle()->setMask(QRegion(0, 0, 1, 1));
+        }
+        return;
+    }
+
+
     XRectangle *reponseArea = new XRectangle;
     reponseArea->x = 0;
     reponseArea->y = 0;
@@ -163,41 +132,9 @@ void Utils::passInputEvent(int wid)
 
     XShapeCombineRectangles(QX11Info::display(), static_cast<unsigned long>(wid), ShapeInput, 0, 0, reponseArea, 1, ShapeSet, YXBanded);
     delete reponseArea;
-    // dlopen 加载库
-    /*
-    void *handle = dlopen("libXtst.so", RTLD_LAZY);
-    if(!handle){
-        qDebug() << "open libXtst.so failure";
-        delete reponseArea;
-        return;
-    }
 
-    void (*XShapeCombineRectangles_handle) (Display*, Window, int, int, int, XRectangle*, int, int, int);
-    char *error;
-
-    XShapeCombineRectangles_handle = (void (*) (Display*, Window, int, int, int, XRectangle*, int, int, int))dlsym(handle, "XShapeCombineRectangles");
-
-    if((error = dlerror()) != nullptr){
-        qDebug() <<"get libXtst.so function  XShapeCombineRectangles failure";
-        delete reponseArea;
-        return;
-    }
-    XShapeCombineRectangles_handle(QX11Info::display(), static_cast<unsigned long>(wid), ShapeInput, 0, 0, reponseArea, 1, ShapeSet, YXBanded);
-    dlclose(handle);
-
-
-    delete reponseArea;
-    */
 }
-/*
-QString Utils::getRecordingSaveDirectory()
-{
-    QDir musicDirectory = QDir(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
-    QString subDirectory = tr("Recordings");
-    musicDirectory.mkdir(subDirectory);
-    return musicDirectory.filePath(subDirectory);
-}
-*/
+
 void Utils::setAccessibility(DPushButton *button, const QString name)
 {
     button->setObjectName(name);

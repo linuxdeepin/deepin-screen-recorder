@@ -38,12 +38,6 @@ const int _BUTTON_WIDTH = 45;
 
 KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
 {
-//    setAttribute(Qt::WA_ShowWithoutActivating);
-//    setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
-
-    int t_themeType = 0;
-    t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
-
     if(DWindowManagerHelper::instance()->hasComposite()){
         setBlurRectXRadius(15);
         setBlurRectYRadius(15);
@@ -57,11 +51,9 @@ KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
 //    setBlendMode(DBlurEffectWidget::InWindowBlend);
 //    setMaskColor(QColor(255, 255, 255, 140));
 
-    if (t_themeType == 1) {
+    if (Utils::themeType == 1) {
         setMaskColor(QColor(255, 255, 255, 140));
-    }
-
-    else if (t_themeType == 2) {
+    } else {
         setMaskColor(QColor(0, 0, 0, 76));
     }
     //设置透明效果

@@ -61,11 +61,6 @@ TEST_F(SideBarTest, eventFilter)
     delete paletteEvent;
 }
 
-TEST_F(SideBarTest, setExpand)
-{
-    m_sideBar->setExpand(true,QString("rect"));
-}
-
 TEST_F(SideBarTest, showAt)
 {
     m_sideBar->showAt(QPoint(10,10));

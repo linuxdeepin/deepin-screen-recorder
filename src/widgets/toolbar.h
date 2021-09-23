@@ -26,7 +26,6 @@
 #include "subtoolbar.h"
 #include "maintoolwidget.h"
 #include "subtoolwidget.h"
-#include "../utils/desktopinfo.h"
 
 #include <DLabel>
 #include <DBlurEffectWidget>
@@ -116,9 +115,6 @@ private:
     MainToolWidget *m_mainTool;
     SubToolWidget *m_subTool;
     DImageButton *m_closeButton;
-    DesktopInfo m_deskinfo;
-
-    //bool  m_expanded;
 };
 
 class ToolBar : public DLabel

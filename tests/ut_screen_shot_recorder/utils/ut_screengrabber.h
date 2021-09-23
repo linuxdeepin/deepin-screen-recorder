@@ -4,6 +4,7 @@
 #include <QPixmap>
 #include <QDebug>
 #include "../../src/utils/screengrabber.h"
+#include "../../src/utils.h"
 #include "stub.h"
 
 
@@ -20,6 +21,7 @@ public:
 
     virtual void TearDown() override{
         std::cout << "end ScreenGrabberTest" << std::endl;
+        Utils::isWaylandMode = false;
     }
 };
 
@@ -38,7 +40,7 @@ TEST_F(ScreenGrabberTest, grabEntireDesktop)
 }
 TEST_F(ScreenGrabberTest, grabEntireDesktop_wayland)
 {
-    stub.set(ADDR( DesktopInfo, waylandDectected), waylandDectected_stub);
+    Utils::isWaylandMode = true;
     bool ok = true;
     QRect rect;
     QPixmap pix = screenGrabber.grabEntireDesktop(ok, rect, 0);

@@ -21,7 +21,7 @@
 
 #include "screengrabber.h"
 
-#include "../utils/desktopinfo.h"
+#include "../utils.h"
 
 #include <QDBusInterface>
 #include <QDBusReply>
@@ -42,7 +42,7 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
 {
     Q_UNUSED(devicePixelRatio);
     ok = true;
-    if (m_info.waylandDectected()) {
+    if (Utils::isWaylandMode) {
         QPixmap res;
         QDBusInterface kwinInterface(QStringLiteral("org.kde.KWin"),
                                      QStringLiteral("/Screenshot"),
@@ -57,23 +57,8 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
         }
         return res;
     }
-/*
-    QRect r(rect.topLeft() * devicePixelRatio, rect.size());
 
-    int t_screenNum = QApplication::desktop()->screenCount();
-
-    if (t_screenNum == 1) {
-        QList<QScreen *> screenList = qApp->screens();
-        for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
-            if ((*it)->geometry().contains(r)) {
-                return (*it)->grabWindow(0, rect.x(), rect.y(), rect.width(), rect.height());
-            }
-        }
-    } else {
-    */
-        QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
-        // 在多屏模式下, winId 不是0 
-        return t_primaryScreen->grabWindow(QApplication::desktop()->winId(), rect.x(), rect.y(), rect.width(), rect.height());
-    //}
-    //return QPixmap();
+    QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
+    // 在多屏模式下, winId 不是0
+    return t_primaryScreen->grabWindow(QApplication::desktop()->winId(), rect.x(), rect.y(), rect.width(), rect.height());
 }

@@ -53,16 +53,13 @@ SideBarWidget::SideBarWidget(DWidget *parent)
     : DFloatingWidget(parent)
     ,m_expanded(false)
 {
-    int t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     setBlurBackgroundEnabled(true);
     blurBackground()->setRadius(30);
     blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
     blurBackground()->setBlurEnabled(true);
-    if (t_themeType == 1) {
+    if (Utils::themeType == 1) {
         blurBackground()->setMaskColor(QColor(255, 255, 255, 76));
-    }
-
-    else if (t_themeType == 2) {
+    } else {
         blurBackground()->setMaskColor(QColor(0, 0, 0, 76));
     }
     //设置透明效果
@@ -83,12 +80,10 @@ SideBarWidget::SideBarWidget(DWidget *parent)
     QPixmap pixmap(":/newUI/normal/close-normal.svg");
     m_closeButton = new DImageButton(this);
     Utils::setAccessibility(m_closeButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_SIDE);
-    if (t_themeType == 1) {
+    if (Utils::themeType == 1) {
         m_closeButton->setHoverPic(":/newUI/hover/close-hover.svg");
         m_closeButton->setNormalPic(":/newUI/normal/close-normal.svg");
-    }
-
-    else if (t_themeType == 2) {
+    } else {
         m_closeButton->setHoverPic(":/newUI/dark/hover/close-hover_dark.svg");
         m_closeButton->setNormalPic(":/newUI/dark/normal/close-normal_dark.svg");
     }
@@ -151,7 +146,7 @@ bool SideBar::isButtonChecked()
 {
     return m_expanded;
 }
-*/
+
 void SideBar::setExpand(bool expand, QString shapeType)
 {
     emit buttonChecked(shapeType);
@@ -164,7 +159,7 @@ void SideBar::setExpand(bool expand, QString shapeType)
 
     update();
 }
-
+*/
 void SideBar::showAt(QPoint pos)
 {
     if (!isVisible())

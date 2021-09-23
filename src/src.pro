@@ -27,7 +27,6 @@ RESOURCES = ../assets/image/deepin-screen-recorder.qrc \
     ../assets/resources/resources.qrc \
     ../assets/icons/icons.qrc
 
-# Input
 HEADERS += main_window.h \
     record_process.h \
     utils.h \
@@ -35,7 +34,6 @@ HEADERS += main_window.h \
     constant.h \
     event_monitor.h \
     button_feedback.h \
-    #process_tree.h \
     show_buttons.h \
     keydefine.h   \
     utils/audioutils.h \
@@ -47,12 +45,10 @@ HEADERS += main_window.h \
     utils/calculaterect.h \
     utils/saveutils.h \
     utils/shapesutils.h \
-    #widgets/colorbutton.h \
     widgets/zoomIndicator.h \
     widgets/textedit.h \
     widgets/toptips.h \
     widgets/toolbar.h \
-    #widgets/textbutton.h \
     widgets/shapeswidget.h \
     widgets/toolbutton.h \
     widgets/maintoolwidget.h \
@@ -63,16 +59,13 @@ HEADERS += main_window.h \
     widgets/colortoolwidget.h \
     dbusinterface/dbusnotify.h \
     dbusservice/dbusscreenshotservice.h \
-    #dbusservice/dbusscreenshot.h \
     widgets/camerawidget.h \
     screenshot.h \
     utils/voicevolumewatcher.h \
     utils/camerawatcher.h \
     widgets/tooltips.h \
     widgets/filter.h \
-    utils/desktopinfo.h \
     utils/screengrabber.h \
-    #dbusinterface/drawinterface.h \
     screen_shot_event.h\
     RecorderRegionShow.h \
     recordertablet.h \
@@ -91,7 +84,6 @@ SOURCES += main.cpp \
     constant.cpp \
     event_monitor.cpp \
     button_feedback.cpp \
-    #process_tree.cpp \
     show_buttons.cpp  \
     utils/audioutils.cpp \
     menucontroller/menucontroller.cpp \
@@ -103,8 +95,6 @@ SOURCES += main.cpp \
     utils/baseutils.cpp \
     widgets/toptips.cpp \
     widgets/shapeswidget.cpp \
-    #widgets/textbutton.cpp \
-    #widgets/colorbutton.cpp \
     widgets/textedit.cpp \
     widgets/zoomIndicator.cpp \
     widgets/toolbar.cpp \
@@ -116,16 +106,13 @@ SOURCES += main.cpp \
     widgets/colortoolwidget.cpp \
     dbusinterface/dbusnotify.cpp \
     dbusservice/dbusscreenshotservice.cpp \
-    #dbusservice/dbusscreenshot.cpp \
     widgets/camerawidget.cpp \
     screenshot.cpp \
     utils/voicevolumewatcher.cpp \
     utils/camerawatcher.cpp \
     widgets/tooltips.cpp \
     widgets/filter.cpp \
-    utils/desktopinfo.cpp \
     utils/screengrabber.cpp \
-    #dbusinterface/drawinterface.cpp \
     screen_shot_event.cpp\
     RecorderRegionShow.cpp \
     recordertablet.cpp \

@@ -78,7 +78,7 @@ signals:
     void changeArrowAndLineToMain(int line);
 public slots:
     //bool isButtonChecked();
-    void setExpand(bool expand, QString shapeType);
+    //void setExpand(bool expand, QString shapeType);
     void showAt(QPoint pos);
     void initSideBar();
     //void setColorFunc(const QString &func);

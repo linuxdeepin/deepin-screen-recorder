@@ -54,16 +54,15 @@ const int TOOLBAR_WIDTH = 425;
 ToolBarWidget::ToolBarWidget(MainWindow* pMainwindow,DWidget *parent)
     : DFloatingWidget(parent)
 {
-    int t_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     setBlurBackgroundEnabled(true);
     blurBackground()->setRadius(30);
     blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
     blurBackground()->setBlurEnabled(true);
     blurBackground()->setBlendMode(DBlurEffectWidget::InWindowBlend);
 
-    if (t_themeType == 1) {
+    if (Utils::themeType == 1) {
         blurBackground()->setMaskColor(QColor(255, 255, 255, 76));
-    } else if (t_themeType == 2) {
+    } else {
         blurBackground()->setMaskColor(QColor(0, 0, 0, 76));
     }
 
@@ -87,10 +86,10 @@ ToolBarWidget::ToolBarWidget(MainWindow* pMainwindow,DWidget *parent)
     m_closeButton = new DImageButton(this);
     Utils::setAccessibility(m_closeButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_TOOL);
 
-    if (t_themeType == 1) {
+    if (Utils::themeType == 1) {
         m_closeButton->setHoverPic(":/newUI/hover/close-hover.svg");
         m_closeButton->setNormalPic(":/newUI/normal/close-normal.svg");
-    } else if (t_themeType == 2) {
+    } else {
         m_closeButton->setHoverPic(":/newUI/dark/hover/close-hover_dark.svg");
         m_closeButton->setNormalPic(":/newUI/dark/normal/close-normal_dark.svg");
     }
@@ -100,15 +99,8 @@ ToolBarWidget::ToolBarWidget(MainWindow* pMainwindow,DWidget *parent)
     hLayout->setMargin(0);
     hLayout->setSpacing(2);
 
-    if (m_deskinfo.waylandDectected()) {
-        hLayout->addSpacing(10);
-        m_mainTool->hide();
-        hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
-    } else {
-        hLayout->addWidget(m_mainTool, 0,  Qt::AlignCenter);
-        hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
-    }
-
+    hLayout->addWidget(m_mainTool, 0,  Qt::AlignCenter);
+    hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
     hLayout->addWidget(m_closeButton, 0,  Qt::AlignCenter);
     setLayout(hLayout);
 

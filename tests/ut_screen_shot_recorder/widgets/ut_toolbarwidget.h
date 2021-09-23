@@ -73,12 +73,12 @@ public:
     virtual void SetUp() override{
         m_mainWindow = new MainWindow;
         m_toolBar = new ToolBar(m_mainWindow);
-        stub.set(ADDR(DesktopInfo,waylandDectected),waylandDectected_true_stub);
+        //stub.set(ADDR(DesktopInfo,waylandDectected),waylandDectected_true_stub);
         stub.set(ADDR(QVariant,toInt),toInt_one_stub);
         m_toolBarWidget = new ToolBarWidget(m_mainWindow,m_toolBar);
-        stub.reset(ADDR(DesktopInfo,waylandDectected));
+        //stub.reset(ADDR(DesktopInfo,waylandDectected));
         stub.reset(ADDR(QVariant,toInt));
-        stub.set(ADDR(DesktopInfo,waylandDectected),waylandDectected_false_stub);
+        //stub.set(ADDR(DesktopInfo,waylandDectected),waylandDectected_false_stub);
         stub.set(ADDR(QVariant,toInt),toInt_two_stub);
         Utils::is3rdInterfaceStart = true;
         m_toolBarWidget_test = new ToolBarWidget(m_mainWindow,m_toolBar);
@@ -93,7 +93,7 @@ public:
             m_toolBar->deleteLater();
         if(nullptr != m_mainWindow)
             m_mainWindow->deleteLater();
-        stub.reset(ADDR(DesktopInfo,waylandDectected));
+        //stub.reset(ADDR(DesktopInfo,waylandDectected));
         stub.reset(ADDR(QVariant,toInt));
     }
 };

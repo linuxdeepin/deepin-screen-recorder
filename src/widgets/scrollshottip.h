@@ -164,8 +164,6 @@ protected:
 private:
     //警告图片
     DIconButton *m_warmingIconButton;
-    //系统主题
-    int m_themeType = 0;
     //提示的内容
     QString m_tipText;
 

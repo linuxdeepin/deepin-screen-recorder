@@ -178,8 +178,6 @@ private:
     bool m_haveMicroPhone = false;
     bool m_haveSystemAudio = false;
     int m_lineflag;
-    int m_themeType;
-    //bool m_isZhaoxinInSub = false;
     HintFilter *hintFilter = nullptr;
     DMenu *m_optionMenu = nullptr;
     DMenu *m_audioMenu = nullptr;

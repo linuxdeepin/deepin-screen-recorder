@@ -45,8 +45,7 @@ CountdownTooltip::CountdownTooltip(DWidget *parent) : DWidget(parent),
     installEventFilter(this);
 
 
-    m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
-    if(m_themeType == 1) {
+    if(Utils::themeType == 1) {
         countdown1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_1.svg"));
         countdown2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_2.svg"));
         countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_3.svg"));
@@ -107,7 +106,7 @@ void CountdownTooltip::paintEvent(QPaintEvent *)
         //获取模糊背景的像素图
         QPixmap blurPixmap = getTooltipBackground();
 
-        if(m_themeType == 1) {
+        if(Utils::themeType == 1) {
             //判断是否获取到当前的模糊背景未获取到直接画一个矩形
             if (!blurPixmap.isNull()) {
                 paintRect(painter,blurPixmap);

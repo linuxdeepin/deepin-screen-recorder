@@ -62,17 +62,9 @@ MainToolWidget::~MainToolWidget()
 
 void MainToolWidget::initWidget()
 {
-    //    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
-    //    setFixedHeight(43);
-    //    setMinimumSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
-    //    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     if(nullptr == hintFilter){
         hintFilter = new HintFilter(this);
     }
-    m_themeType = 0;
-    m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
-    //    setMouseTracking(true);
-    //    setAcceptDrops(true);
     initMainLabel();
     setCurrentWidget(m_mainTool);
 }

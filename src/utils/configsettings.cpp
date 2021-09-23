@@ -35,37 +35,6 @@ ConfigSettings::ConfigSettings(QObject *parent)
     : QObject(parent)
 {
     m_settings = new QSettings("deepin", "deepin-screen-recorder");
-    /*
-    if (m_settings->allKeys().isEmpty()) {
-        setValue("common", "color_index", 0);
-        setValue ("common", "default_savepath", "");
-        setValue("common", "themeType", 0);
-
-        setValue("arrow", "color_index", 0);
-        setValue("arrow", "arrow_linewidth_index", 1);
-        setValue("arrow", "straightline_linewidth_index", 1);
-        setValue("arrow", "is_straight", false);
-        setValue("oval", "is_blur", false);
-        setValue("oval", "is_mosaic", false);
-        setValue("oval", "color_index", 0);
-        setValue("oval", "linewidth_index", 1);
-        setValue("line", "color_index", 0);
-        setValue("line", "linewidth_index", 1);
-        setValue("rectangle", "is_blur", false);
-        setValue("rectangle", "is_mosaic", false);
-        setValue("rectangle", "color_index", 0);
-        setValue("rectangle", "linewidth_index", 1);
-        setValue("text", "color_index", 0);
-        setValue("text", "fontsize", 12);
-        setValue("text", "prev_color", 0);
-
-        setValue("save", "save_op", SaveAction::SaveToClipboard);
-        setValue("save", "save_quality", 100);
-        setValue("save", "format", 0);
-        setValue("save", "saveClip", 1);
-        setValue("save", "saveCursor", 0);
-    }
-*/
     setValue("effect", "is_blur", false);
     setValue("effect", "is_mosaic", false);
     // 日志隐私，配置文件路径会打印用户名，安全问题。

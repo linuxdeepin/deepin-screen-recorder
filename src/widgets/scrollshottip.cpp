@@ -61,10 +61,9 @@ DWIDGET_USE_NAMESPACE
 ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
 {
     installEventFilter(this);
-    m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     QPixmap warmingImg ;
     //警告图片
-    if (m_themeType == 1) {
+    if (Utils::themeType == 1) {
         warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
     } else {
         warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
@@ -181,7 +180,7 @@ void ScrollShotTip::paintEvent(QPaintEvent *)
     }
     //获取模糊背景的像素图
     QPixmap blurPixmap = getTooltipBackground();
-    if (m_themeType == 1) {
+    if (Utils::themeType == 1) {
         //判断是否获取到当前的模糊背景未获取到直接画一个矩形
         if (!blurPixmap.isNull()) {
             paintRect(painter, blurPixmap, radius);

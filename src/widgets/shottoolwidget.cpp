@@ -84,8 +84,6 @@ ShotToolWidget::~ShotToolWidget()
 
 void ShotToolWidget::initWidget()
 {
-    m_themeType = 0;
-    m_themeType = ConfigSettings::instance()->value("common", "themeType").toInt();
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     m_arrowFlag = false;
 
@@ -196,7 +194,7 @@ void ShotToolWidget::initRectLabel()
     rectLayout->addSpacing(2);
     //分割线
     ToolButton *t_seperator = new ToolButton(this);
-    if(m_themeType == 1) {
+    if(Utils::themeType == 1) {
         //t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
         t_seperator->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
@@ -272,7 +270,7 @@ void ShotToolWidget::initRectLabel()
 
     rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton(this);
-    if(m_themeType == 1) {
+    if(Utils::themeType == 1) {
         //t_seperator1->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
         t_seperator1->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
@@ -389,7 +387,7 @@ void ShotToolWidget::initCircLabel()
 
     m_rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton(this);
-    if(m_themeType == 1) {
+    if(Utils::themeType == 1) {
         //t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
         t_seperator->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
@@ -470,7 +468,7 @@ void ShotToolWidget::initCircLabel()
 
     m_rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton(this);
-    if(m_themeType == 1) {
+    if(Utils::themeType == 1) {
         //t_seperator1->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
         t_seperator1->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
@@ -576,7 +574,7 @@ void ShotToolWidget::initLineLabel()
 
     rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton(this);
-    if(m_themeType == 1) {
+    if(Utils::themeType == 1) {
         //t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
         t_seperator->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
@@ -648,7 +646,7 @@ void ShotToolWidget::initLineLabel()
 
     rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton(this);
-    if(m_themeType == 1) {
+    if(Utils::themeType == 1) {
         //t_seperator1->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
         t_seperator1->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
@@ -753,7 +751,7 @@ void ShotToolWidget::initPenLabel()
     //rectLayout->addSpacing(70);
     rectLayout->addSpacing(40);
     ToolButton *t_seperator = new ToolButton(this);
-    if(m_themeType == 1) {
+    if(Utils::themeType == 1) {
         //t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
         t_seperator->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
@@ -805,46 +803,6 @@ void ShotToolWidget::initTextLabel()
             break;
         }
     }
-
-    /*
-    switch (t_fontSize) {
-    case 9:
-        t_textFontSize->setValue(0);
-        break;
-    case 10:
-        t_textFontSize->setValue(1);
-        break;
-    case 12:
-        t_textFontSize->setValue(2);
-        break;
-    case 14:
-        t_textFontSize->setValue(3);
-        break;
-    case 18:
-        t_textFontSize->setValue(4);
-        break;
-    case 24:
-        t_textFontSize->setValue(5);
-        break;
-    case 36:
-        t_textFontSize->setValue(6);
-        break;
-    case 48:
-        t_textFontSize->setValue(7);
-        break;
-    case 64:
-        t_textFontSize->setValue(8);
-        break;
-    case 72:
-        t_textFontSize->setValue(9);
-        break;
-    case 96:
-        t_textFontSize->setValue(10);
-        break;
-    default:
-        break;
-    }
-    */
     t_blurAreaLayout->setContentsMargins(0, 0, 0, 0);
     t_blurAreaLayout->addWidget(t_textFontSize, Qt::AlignVCenter);
     t_blurArea->setLayout(t_blurAreaLayout);
@@ -852,46 +810,6 @@ void ShotToolWidget::initTextLabel()
     connect(t_textFontSize, &DSlider::valueChanged, this, [ = ] {
         int t_value = t_textFontSize->value();
         ConfigSettings::instance()->setValue("text", "fontsize", indexTofontsize[t_value]);
-        /*
-        switch (t_value)
-        {
-        case 0:
-            ConfigSettings::instance()->setValue("text", "fontsize", 9);
-            break;
-        case 1:
-            ConfigSettings::instance()->setValue("text", "fontsize", 10);
-            break;
-        case 2:
-            ConfigSettings::instance()->setValue("text", "fontsize", 12);
-            break;
-        case 3:
-            ConfigSettings::instance()->setValue("text", "fontsize", 14);
-            break;
-        case 4:
-            ConfigSettings::instance()->setValue("text", "fontsize", 18);
-            break;
-        case 5:
-            ConfigSettings::instance()->setValue("text", "fontsize", 24);
-            break;
-        case 6:
-            ConfigSettings::instance()->setValue("text", "fontsize", 36);
-            break;
-        case 7:
-            ConfigSettings::instance()->setValue("text", "fontsize", 48);
-            break;
-        case 8:
-            ConfigSettings::instance()->setValue("text", "fontsize", 64);
-            break;
-        case 9:
-            ConfigSettings::instance()->setValue("text", "fontsize", 72);
-            break;
-        case 10:
-            ConfigSettings::instance()->setValue("text", "fontsize", 96);
-            break;
-        default:
-            break;
-        }
-        */
     });
 
     QVBoxLayout *rectLayout = new QVBoxLayout(this);

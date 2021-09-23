@@ -22,7 +22,6 @@
 #ifndef RECORDPROCESS_H
 #define RECORDPROCESS_H
 
-#include "utils/desktopinfo.h"
 #include "utils/configsettings.h"
 
 #include <QProcess>
@@ -105,9 +104,6 @@ private:
     int byzanzProcessId = 0;
     int m_framerate;
 
-    //QString lastAudioSink;
-    //bool m_isZhaoxin = false;
-    DesktopInfo m_info;
     QProcess *m_pTranscodeProcess = nullptr;
 };
 
