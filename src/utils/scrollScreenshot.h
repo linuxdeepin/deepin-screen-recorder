@@ -40,6 +40,7 @@ public:
     };
 
     explicit ScrollScreenshot(QObject *parent = nullptr);
+    ~ScrollScreenshot();
     void addPixmap(const QPixmap &piximg, int wheelDirection = WheelDown); //添加图片到拼接线程
 
     /**

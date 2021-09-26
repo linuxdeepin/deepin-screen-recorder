@@ -66,7 +66,6 @@ HEADERS += main_window.h \
     widgets/tooltips.h \
     widgets/filter.h \
     utils/screengrabber.h \
-    screen_shot_event.h\
     RecorderRegionShow.h \
     recordertablet.h \
     dbusinterface/ocrinterface.h \
@@ -113,7 +112,6 @@ SOURCES += main.cpp \
     widgets/tooltips.cpp \
     widgets/filter.cpp \
     utils/screengrabber.cpp \
-    screen_shot_event.cpp\
     RecorderRegionShow.cpp \
     recordertablet.cpp \
     dbusinterface/ocrinterface.cpp \

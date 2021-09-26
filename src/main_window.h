@@ -45,7 +45,6 @@
 #include "dbusinterface/dbuszone.h"
 #include "RecorderRegionShow.h"
 #include "event_monitor.h"
-#include "screen_shot_event.h"
 #include "recordertablet.h"
 #include "dbusinterface/ocrinterface.h"
 
@@ -155,17 +154,15 @@ public:
             }
         }
 #ifndef __mips__
-        if (m_pScreenRecordEvent && m_isZhaoxin == false) {
-            m_pScreenRecordEvent->terminate();
-            m_pScreenRecordEvent->wait();
-            m_pScreenRecordEvent = nullptr;
-        }
-        if (m_pScreenShotEvent && m_isZhaoxin == false) {
-            m_pScreenShotEvent->terminate();
-            m_pScreenShotEvent->wait();
-            m_pScreenShotEvent = nullptr;
+
+        if (m_pScreenCaptureEvent && m_isZhaoxin == false) {
+            m_pScreenCaptureEvent->terminate();
+            m_pScreenCaptureEvent->wait();
+            delete m_pScreenCaptureEvent;
+            m_pScreenCaptureEvent = nullptr;
         }
 #endif
+
         if (m_showButtons) {
             //退出进程，最好不用deleteLater，因为有可能等不到下一次事件循环，导致资源不能释放
             delete m_showButtons;
@@ -308,7 +305,6 @@ public slots:
     void showDragFeedback(int x, int y);
     void showReleaseFeedback(int x, int y);
     void responseEsc();
-    void onActivateWindow();
     void compositeChanged();
     void updateToolBarPos();
     void updateSideBarPos();
@@ -347,26 +343,80 @@ public slots:
     void onShotKeyPressEvent(const unsigned char &keyCode);
     void onRecordKeyPressEvent(const unsigned char &keyCode);
     void tableRecordSet();
+
+    /**
+     * @brief 切换活动窗口
+     */
+    void onActivateWindow();
+
+    /**
+     * @brief 通过x11从底层获取鼠标拖动事件
+     * @param 鼠标按下的x坐标
+     * @param 鼠标按下的y坐标
+     */
+    void onMouseDrag(int x, int y);
+
+    /**
+     * @brief 通过x11从底层获取鼠标按压事件
+     * @param 鼠标按下的x坐标
+     * @param 鼠标按下的y坐标
+     */
+    void onMousePress(int x, int y);
+
+    /**
+     * @brief 通过x11从底层获取鼠标释放事件
+     * @param x
+     * @param y
+     */
+    void onMouseRelease(int x, int y);
+
+    /**
+     * @brief 通过x11从底层获取鼠标移动事件
+     * @param 鼠标移动的x坐标
+     * @param 鼠标移动的y坐标
+     */
+    void onMouseMove(int x, int y);
+
+    /**
+     * @brief 通过x11从底层滚动鼠标滚轮
+     * @param direction 鼠标滚动的方向： 1：向上滚动； 0：向下滚动
+     * @param 鼠标移动的x坐标
+     * @param 鼠标移动的y坐标
+    */
+    void onMouseScroll(int mouseTime, int direction, int x, int y);
+
+    /**
+     * @brief 通过x11从底层获取键盘按下事件
+     * @param keyCode: 按下的键盘按键代号
+     */
+    void onKeyboardPress(unsigned char keyCode);
+
+    /**
+     * @brief 通过x11从底层获取键盘释放事件
+     * @param keyCode: 释放的键盘按键代号
+     */
+    void onKeyboardRelease(unsigned char keyCode);
+
     /**
      * @brief 滚动截图时通过x11获取鼠标按键操作
      * @param x
      * @param y
      */
-    void onScrollShotMouseClickEvent(int x, int y);
+    void scrollShotMouseClickEvent(int x, int y);
 
     /**
      * @brief 滚动截图时通过x11获取鼠标移动操作
      * @param x
      * @param y
      */
-    void onScrollShotMouseMoveEvent(int x, int y);
+    void scrollShotMouseMoveEvent(int x, int y);
     /**
      * @brief 滚动截图时处理鼠标滚轮滚动
      * @param direction 鼠标滚动的方向： 1：向上滚动； 0：向下滚动
      * @param x 当前的x坐标
      * @param y 当前的y坐标
      */
-    void onScrollShotMouseScrollEvent(int mouseTime, int direction, int x, int y);
+    void scrollShotMouseScrollEvent(int mouseTime, int direction, int x, int y);
 
     /**
      * @brief 监听是否正在进行自动滚动
@@ -404,8 +454,10 @@ public slots:
      */
     void initPadShot();
 
-    void exitScreenRecordEvent();
-    void exitScreenShotEvent();
+    /**
+     * @brief 退出截图录屏事件监控线程
+     */
+    void exitScreenCuptureEvent();
     void showPreviewWidgetImage(QImage img);//显示预览窗口和图片
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -639,8 +691,10 @@ private:
     QTimer *m_tipShowtimer = nullptr;
 
     ButtonFeedback *buttonFeedback = nullptr;
-    EventMonitor *m_pScreenRecordEvent = nullptr;
-    ScreenShotEvent *m_pScreenShotEvent = nullptr;
+    /**
+     * @brief 截图与录屏共用一个底层监听事件线程
+     */
+    EventMonitor *m_pScreenCaptureEvent = nullptr;
 
     DWindowManagerHelper *m_wmHelper;
     ShapesWidget *m_shapesWidget = nullptr;

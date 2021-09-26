@@ -1187,7 +1187,7 @@ ACCESS_PRIVATE_FIELD(MainWindow, int, m_scrollShotType);
 TEST_F(MainWindowTest, scrollShotGrabPixmap)
 {
     bool &MainWindow_isZhaoxin =  access_private_field::MainWindowm_isZhaoxin(*m_window);
-    MainWindow_isZhaoxin = true;
+    MainWindow_isZhaoxin = false;
 
     int &MainWindow_scrollShotType =  access_private_field::MainWindowm_scrollShotType(*m_window);
     MainWindow_scrollShotType = 0;
@@ -1223,7 +1223,6 @@ TEST_F(MainWindowTest, scrollShotGrabPixmap)
     MainWindow_screenWidth = 1920;
     qreal &MainWindow_m_pixelRatio =  access_private_field::MainWindowm_pixelRatio(*m_window);
     MainWindow_m_pixelRatio = 1.0;
-
     QRect previewRecordRect {
         static_cast<int>(0),
         static_cast<int>(0),
@@ -1299,7 +1298,7 @@ TEST_F(MainWindowTest, showPreviewWidgetImage)
 ACCESS_PRIVATE_FIELD(MainWindow, int, m_scrollShotMouseClick);
 ACCESS_PRIVATE_FIELD(MainWindow, bool, m_isErrorWithScrollShot);
 ACCESS_PRIVATE_FIELD(MainWindow, bool, m_isAutoScrollShotStart);
-ACCESS_PRIVATE_FUN(MainWindow, void(int x, int y), onScrollShotMouseClickEvent);
+ACCESS_PRIVATE_FUN(MainWindow, void(int x, int y), scrollShotMouseClickEvent);
 bool startAutoScrollShot_stub(void *obj)
 {
     return true;
@@ -1321,7 +1320,7 @@ bool continueAutoScrollShot_stub(void *obj)
     return true;
 }
 //滚动截图鼠标按钮事件单元测试用例
-TEST_F(MainWindowTest, onScrollShotMouseClickEvent)
+TEST_F(MainWindowTest, scrollShotMouseClickEvent)
 {
     int &MainWindow_recordX =  access_private_field::MainWindowrecordX(*m_window);
     MainWindow_recordX = 0;
@@ -1378,9 +1377,9 @@ TEST_F(MainWindowTest, onScrollShotMouseClickEvent)
     auto MainWindow_continueAutoScrollShot = get_private_fun::MainWindowcontinueAutoScrollShot();
     stub.set(MainWindow_continueAutoScrollShot, continueAutoScrollShot_stub);
 
-    call_private_fun::MainWindowonScrollShotMouseClickEvent(*m_window, 500, 500);
+    call_private_fun::MainWindowscrollShotMouseClickEvent(*m_window, 500, 500);
 
-    call_private_fun::MainWindowonScrollShotMouseClickEvent(*m_window, 500, 500);
+    call_private_fun::MainWindowscrollShotMouseClickEvent(*m_window, 500, 500);
 
     stub.reset(MainWindow_startAutoScrollShot);
     stub.reset(MainWindow_pauseAutoScrollShot);
@@ -1393,9 +1392,9 @@ TEST_F(MainWindowTest, onScrollShotMouseClickEvent)
 //    delete MainWindow_toolBar;
 }
 
-ACCESS_PRIVATE_FUN(MainWindow, void(int x, int y), onScrollShotMouseMoveEvent);
+ACCESS_PRIVATE_FUN(MainWindow, void(int x, int y), scrollShotMouseMoveEvent);
 //滚动截图鼠标移动事件处理,单元测试用例
-TEST_F(MainWindowTest, onScrollShotMouseMoveEvent)
+TEST_F(MainWindowTest, scrollShotMouseMoveEvent)
 {
     int &MainWindow_recordX =  access_private_field::MainWindowrecordX(*m_window);
     MainWindow_recordX = 0;
@@ -1434,7 +1433,7 @@ TEST_F(MainWindowTest, onScrollShotMouseMoveEvent)
     auto MainWindow_setCancelInputEvent = get_private_fun::MainWindowsetCancelInputEvent();
     stub.set(MainWindow_setCancelInputEvent, setCancelInputEvent_stub);
 
-    call_private_fun::MainWindowonScrollShotMouseMoveEvent(*m_window, 500, 500);
+    call_private_fun::MainWindowscrollShotMouseMoveEvent(*m_window, 500, 500);
 
     stub.reset(MainWindow_pauseAutoScrollShot);
     stub.reset(MainWindow_setCancelInputEvent);
@@ -1444,7 +1443,7 @@ TEST_F(MainWindowTest, onScrollShotMouseMoveEvent)
 //    delete MainWindow_toolBar;
 }
 
-ACCESS_PRIVATE_FUN(MainWindow, void(int mouseTime, int direction, int x, int y), onScrollShotMouseScrollEvent);
+ACCESS_PRIVATE_FUN(MainWindow, void(int mouseTime, int direction, int x, int y), scrollShotMouseScrollEvent);
 ACCESS_PRIVATE_FIELD(MainWindow, int, m_autoScrollFlagLast);
 bool handleManualScrollShot_stub(void *obj)
 {
@@ -1455,7 +1454,7 @@ bool startManualScrollShot_stub(void *obj)
     return true;
 }
 //滚动截图时处理鼠标滚轮滚动,单元测试用例
-TEST_F(MainWindowTest, onScrollShotMouseScrollEvent)
+TEST_F(MainWindowTest, scrollShotMouseScrollEvent)
 {
 
     int &MainWindow_recordX =  access_private_field::MainWindowrecordX(*m_window);
@@ -1504,7 +1503,7 @@ TEST_F(MainWindowTest, onScrollShotMouseScrollEvent)
     auto MainWindow_handleManualScrollShot = get_private_fun::MainWindowhandleManualScrollShot();
     stub.set(MainWindow_handleManualScrollShot, handleManualScrollShot_stub);
 
-    call_private_fun::MainWindowonScrollShotMouseScrollEvent(*m_window, 1, 5, 500, 500);
+    call_private_fun::MainWindowscrollShotMouseScrollEvent(*m_window, 1, 5, 500, 500);
 
     stub.reset(MainWindow_pauseAutoScrollShot);
     stub.reset(MainWindow_startManualScrollShot);
@@ -1664,7 +1663,7 @@ TEST_F(MainWindowTest, onAdjustCaptureArea)
     MainWindow_m_isAutoScrollShotStart = false;
 
     bool &MainWindow_isZhaoxin =  access_private_field::MainWindowm_isZhaoxin(*m_window);
-    MainWindow_isZhaoxin = true;
+    MainWindow_isZhaoxin = false;
 
     auto MainWindow_updateToolBarPos = get_private_fun::MainWindowupdateToolBarPos();
     stub.set(MainWindow_updateToolBarPos, updateToolBarPos_stub);

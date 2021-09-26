@@ -127,8 +127,19 @@ MainWindow::MainWindow(DWidget *parent) :
 
     connect(qApp, &QGuiApplication::screenAdded, this, &MainWindow::onExit);
     connect(qApp, &QGuiApplication::screenRemoved, this, &MainWindow::onExit);
-    m_pScreenShotEvent =  new ScreenShotEvent(this);
-    m_pScreenRecordEvent = new EventMonitor(this);
+
+    m_pScreenCaptureEvent = new EventMonitor(this);
+    connect(m_pScreenCaptureEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(mouseDrag(int, int)), this, SLOT(onMouseDrag(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(mousePress(int, int)), this, SLOT(onMousePress(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(mouseRelease(int, int)), this, SLOT(onMouseRelease(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(mouseMove(int, int)), this, SLOT(onMouseMove(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(mouseScroll(int, int, int, int)), this, SLOT(onMouseScroll(int, int, int, int)), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(keyboardPress(unsigned char)), this, SLOT(onKeyboardPress(unsigned char)), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(keyboardRelease(unsigned char)), this, SLOT(onKeyboardRelease(unsigned char)), Qt::QueuedConnection);
+    qDebug() << "截图录屏事件监听线程已启动！！！";
+    m_pScreenCaptureEvent->start();
+
 
     m_screenCount = QApplication::desktop()->screenCount();
     QList<QScreen *> screenList = qApp->screens();
@@ -410,7 +421,7 @@ void MainWindow::onHelp()
 void MainWindow::initResource()
 {
     m_showButtons = new ShowButtons(this);
-    if (!m_pScreenShotEvent || !m_showButtons)
+    if (!m_pScreenCaptureEvent || !m_showButtons)
         return;
 
     connect(m_showButtons, SIGNAL(keyShowSignal(const QString &)),
@@ -429,10 +440,6 @@ void MainWindow::initResource()
 
     buttonFeedback = new ButtonFeedback();
 
-    connect(m_pScreenShotEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
-    connect(m_pScreenShotEvent, SIGNAL(shotKeyPressEvent(const unsigned char &)), this, SLOT(onShotKeyPressEvent(const unsigned char &)), Qt::QueuedConnection);
-    qDebug() << "截图事件监控线程启动！";
-    m_pScreenShotEvent->start();
 }
 
 void MainWindow::initScreenShot()
@@ -445,6 +452,7 @@ void MainWindow::initScreenShot()
     connect(this, &MainWindow::releaseEvent, this, [ = ] {
         qDebug() << "release event !!!";
         removeEventFilter(this);
+        exitScreenCuptureEvent();
     });
     m_functionType = 1;
     m_keyBoardStatus = false;
@@ -521,7 +529,7 @@ void MainWindow::initScreenShot()
 //初始化录屏窗口
 void MainWindow::initScreenRecorder()
 {
-    if (!m_pScreenRecordEvent)
+    if (!m_pScreenCaptureEvent)
         return;
 
     m_functionType = status::record;
@@ -607,17 +615,6 @@ void MainWindow::initScreenRecorder()
     } else {
         return;
     }
-    connect(m_pScreenRecordEvent, SIGNAL(buttonedPress(int, int)), this, SLOT(showPressFeedback(int, int)), Qt::QueuedConnection);
-    connect(m_pScreenRecordEvent, SIGNAL(buttonedDrag(int, int)), this, SLOT(showDragFeedback(int, int)), Qt::QueuedConnection);
-    connect(m_pScreenRecordEvent, SIGNAL(buttonedRelease(int, int)), this, SLOT(showReleaseFeedback(int, int)), Qt::QueuedConnection);
-    connect(m_pScreenRecordEvent, SIGNAL(pressEsc()), this, SLOT(responseEsc()), Qt::QueuedConnection);
-    connect(m_pScreenRecordEvent, SIGNAL(pressKeyButton(unsigned char)), m_showButtons,
-            SLOT(showContentButtons(unsigned char)), Qt::QueuedConnection);
-    connect(m_pScreenRecordEvent, SIGNAL(pressKeyButton(unsigned char)), this,
-            SLOT(onRecordKeyPressEvent(const unsigned char &)), Qt::QueuedConnection);
-    connect(m_pScreenRecordEvent, SIGNAL(releaseKeyButton(unsigned char)), m_showButtons,
-            SLOT(releaseContentButtons(unsigned char)), Qt::QueuedConnection);
-    m_pScreenRecordEvent->start();
 
     m_toolBar->setFocus();
 }
@@ -625,12 +622,6 @@ void MainWindow::initScreenRecorder()
 //滚动截图的初始化函数
 void MainWindow::initScrollShot()
 {
-    //滚动截图中自动滚动截图激活鼠标点击事件
-    connect(m_pScreenShotEvent, SIGNAL(mouseClick(int, int)), this, SLOT(onScrollShotMouseClickEvent(int, int)), Qt::QueuedConnection);
-    //滚动截图中自动滚动截图激活鼠标移动事件
-    connect(m_pScreenShotEvent, SIGNAL(mouseMove(int, int)), this, SLOT(onScrollShotMouseMoveEvent(int, int)), Qt::QueuedConnection);
-    //滚动截图中激活鼠标滚轮事件
-    connect(m_pScreenShotEvent, SIGNAL(mouseScroll(int, int, int, int)), this, SLOT(onScrollShotMouseScrollEvent(int, int, int, int)), Qt::QueuedConnection);
     //定时器，滚动截图模式下每0.5秒减少一次鼠标点击次数
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, [ = ]() {
@@ -1058,9 +1049,9 @@ void MainWindow::fullScreenshot()
 //        m_backgroundRect = QApplication::desktop()->screen()->geometry();
 //        m_backgroundRect = QRect(m_backgroundRect.topLeft(), m_backgroundRect.size());
 //    } else if (m_screenCount > 1) {
-        QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
-        m_backgroundRect = t_primaryScreen->virtualGeometry();;
-        m_backgroundRect = QRect(m_backgroundRect.topLeft(), m_backgroundRect.size());
+    QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
+    m_backgroundRect = t_primaryScreen->virtualGeometry();;
+    m_backgroundRect = QRect(m_backgroundRect.topLeft(), m_backgroundRect.size());
 //    }
     //
     this->move(m_backgroundRect.x(), m_backgroundRect.y());
@@ -1315,16 +1306,11 @@ void MainWindow::responseEsc()
 {
     if (0 == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus) {
         emit releaseEvent();
-        exitScreenRecordEvent();
-        exitScreenShotEvent();
+        //exitScreenCuptureEvent();
         QApplication::quit();
     }
 }
 
-void MainWindow::onActivateWindow()
-{
-    activateWindow();
-}
 
 void MainWindow::compositeChanged()
 {
@@ -1348,7 +1334,7 @@ void MainWindow::compositeChanged()
         } else {
             // 倒计时3s内， 从3D切换回2D直接退出。
             emit releaseEvent();
-            exitScreenRecordEvent();
+            //exitScreenCuptureEvent();
             QApplication::quit();
         }
 
@@ -2048,8 +2034,9 @@ void MainWindow::changeShotToolEvent(const QString &func)
 
 void MainWindow::saveScreenShot()
 {
-    if (m_pScreenShotEvent) {
-        m_CursorImage = m_pScreenShotEvent->getCursorImage();
+
+    if (m_pScreenCaptureEvent) {
+        m_CursorImage = m_pScreenCaptureEvent->getCursorImage();
     }
 
     emit releaseEvent();
@@ -2168,8 +2155,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
 
     QTimer::singleShot(2, [ = ] {
         emit releaseEvent();
-        exitScreenRecordEvent();
-        exitScreenShotEvent();
+        //exitScreenCuptureEvent();
         qApp->quit();
     });
 }
@@ -2618,7 +2604,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
         // Draw drag pint.
         //画虚线框上的骨架点一共8个
         if (recordButtonStatus == RECORD_BUTTON_NORMAL && drawDragPoint) {
-            qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
+            //qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
             painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS), resizeHandleBigImg);
             painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth - 1, recordY - DRAG_POINT_RADIUS), resizeHandleBigImg);
             painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS + recordHeight), resizeHandleBigImg);
@@ -2646,8 +2632,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             if (keyEvent->key() == Qt::Key_Escape) {
                 qDebug() << "Key_Escape pressed: app quit!";
                 emit releaseEvent();
-                exitScreenRecordEvent();
-                exitScreenShotEvent();
+                //exitScreenCuptureEvent();
                 qApp->quit();
             } else if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
                 if (keyEvent->key() == Qt::Key_Question) {
@@ -2671,8 +2656,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
                 qDebug() << "Key_Escape pressed: app quit!";
                 emit releaseEvent();
-                exitScreenRecordEvent();
-                exitScreenShotEvent();
+                //exitScreenCuptureEvent();
                 qApp->quit();
             } else if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
                 if (keyEvent->key() == Qt::Key_Question) {
@@ -2698,8 +2682,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             if (m_isShapesWidgetExist) {
                 if (keyEvent->key() == Qt::Key_Escape) {
                     emit releaseEvent();
-                    exitScreenRecordEvent();
-                    exitScreenShotEvent();
+                    //exitScreenCuptureEvent();
                     qApp->quit();
                 }
 
@@ -2864,7 +2847,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         updateToolBarPos();
                     }
                     //if (m_recordButton->isVisible()) {
-                        //updateRecordButtonPos();
+                    //updateRecordButtonPos();
                     //}
 
                     if (m_sideBar->isVisible()) {
@@ -2872,7 +2855,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     }
 
                     //if (m_shotButton->isVisible()) {
-                        //updateShotButtonPos();
+                    //updateShotButtonPos();
                     //}
 
                     if (m_cameraWidget && m_cameraWidget->isVisible()) {
@@ -2980,7 +2963,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     updateToolBarPos();
                 }
                 //if (m_recordButton->isVisible()) {
-                    //updateRecordButtonPos();
+                //updateRecordButtonPos();
                 //}
 
                 if (m_sideBar->isVisible()) {
@@ -2988,7 +2971,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 }
 
                 //if (m_shotButton->isVisible()) {
-                    //updateShotButtonPos();
+                //updateShotButtonPos();
                 //}
 
                 if (m_cameraWidget && m_cameraWidget->isVisible()) {
@@ -3437,8 +3420,82 @@ void MainWindow::tableRecordSet()
     startCountdown();
 }
 
+//切换为活动窗口
+void MainWindow::onActivateWindow()
+{
+    if (status::shot == m_functionType || status::scrollshot == m_functionType) {
+        activateWindow();
+    }
+}
+
+//通过x11从底层获取鼠标拖动事件
+void MainWindow::onMouseDrag(int x, int y)
+{
+    if (status::record == m_functionType) {
+        showDragFeedback(x, y);
+    }
+}
+
+//通过x11从底层获取鼠标按压事件
+void MainWindow::onMousePress(int x, int y)
+{
+    if (status::record == m_functionType) {
+        showPressFeedback(x, y);
+    }  else if (status::scrollshot == m_functionType) {
+        scrollShotMouseClickEvent(x, y);
+    }
+}
+
+//通过x11从底层获取鼠标释放事件
+void MainWindow::onMouseRelease(int x, int y)
+{
+    if (status::record == m_functionType) {
+        showReleaseFeedback(x, y);
+    }
+}
+
+//通过x11从底层获取鼠标移动事件
+void MainWindow::onMouseMove(int x, int y)
+{
+    if (status::scrollshot == m_functionType) {
+        scrollShotMouseMoveEvent(x, y);
+    }
+}
+
+//通过x11从底层滚动鼠标滚轮
+void MainWindow::onMouseScroll(int mouseTime, int direction, int x, int y)
+{
+    if (status::scrollshot == m_functionType) {
+        scrollShotMouseScrollEvent(mouseTime, direction, x, y);
+    }
+
+}
+
+//通过x11从底层获取键盘按下事件
+void MainWindow::onKeyboardPress(unsigned char keyCode)
+{
+    if (status::record == m_functionType) {
+        if (keyCode == KEY_ESCAPE) {
+            responseEsc();
+        } else {
+            m_showButtons->showContentButtons(keyCode);
+            onRecordKeyPressEvent(keyCode);
+        }
+    } else if (status::shot == m_functionType || status::scrollshot == m_functionType) {
+        onShotKeyPressEvent(keyCode);
+    }
+}
+
+//键盘按键释放
+void MainWindow::onKeyboardRelease(unsigned char keyCode)
+{
+    if (status::record == m_functionType) {
+        m_showButtons->releaseContentButtons(keyCode);
+    }
+}
+
 //滚动截图鼠标按钮事件
-void MainWindow::onScrollShotMouseClickEvent(int x, int y)
+void MainWindow::scrollShotMouseClickEvent(int x, int y)
 {
 
     //将当前捕捉区域画为一个矩形
@@ -3547,7 +3604,7 @@ void MainWindow::onScrollShotMouseClickEvent(int x, int y)
 }
 
 //滚动截图鼠标移动事件处理
-void MainWindow::onScrollShotMouseMoveEvent(int x, int y)
+void MainWindow::scrollShotMouseMoveEvent(int x, int y)
 {
     //滚动截图出现异常时屏蔽鼠标移动事件
     //if (m_isErrorWithScrollShot) return;
@@ -3638,7 +3695,7 @@ void MainWindow::onScrollShotMouseMoveEvent(int x, int y)
  * @param x 当前的x坐标
  * @param y 当前的y坐标
  */
-void MainWindow::onScrollShotMouseScrollEvent(int mouseTime, int direction, int x, int y)
+void MainWindow::scrollShotMouseScrollEvent(int mouseTime, int direction, int x, int y)
 {
     QRect recordRect {
         static_cast<int>(recordX * m_pixelRatio),
@@ -3912,27 +3969,16 @@ void MainWindow::initPadShot()
     m_toolBar->showAt(toolbarPoint);
 }
 
-void MainWindow::exitScreenRecordEvent()
+void MainWindow::exitScreenCuptureEvent()
 {
+    qDebug() << "line: " << __LINE__ << " >>> function: " << __func__;
     if (QSysInfo::currentCpuArchitecture().startsWith("x86")
             && !m_isZhaoxin
-            && m_pScreenRecordEvent) {
-        m_pScreenRecordEvent->terminate();
-        m_pScreenRecordEvent->wait();
-        delete m_pScreenRecordEvent;
-        m_pScreenRecordEvent = nullptr;
-    }
-}
-
-void MainWindow::exitScreenShotEvent()
-{
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86")
-            && !m_isZhaoxin
-            && m_pScreenShotEvent) {
-        m_pScreenShotEvent->terminate();
-        m_pScreenShotEvent->wait();
-        delete m_pScreenShotEvent;
-        m_pScreenShotEvent = nullptr;
+            && (nullptr != m_pScreenCaptureEvent)) {
+        m_pScreenCaptureEvent->terminate();
+        m_pScreenCaptureEvent->wait();
+        delete m_pScreenCaptureEvent;
+        m_pScreenCaptureEvent = nullptr;
     }
 }
 
@@ -4403,9 +4449,9 @@ void MainWindow::updateCursor(QEvent *event)
             // Bottom.
             QApplication::setOverrideCursor(Qt::SizeVerCursor);
 
-        //}
+            //}
 
-        //else if (t_rectbuttonRect.contains(cursorX, cursorY)) {
+            //else if (t_rectbuttonRect.contains(cursorX, cursorY)) {
             // Record button.
             //QApplication::setOverrideCursor(Qt::ArrowCursor);
         } else {
@@ -4438,7 +4484,8 @@ void MainWindow::stopRecord()
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
         hide();
         emit releaseEvent();
-        exitScreenRecordEvent();
+//        exitScreenRecordEvent();
+        //exitScreenCuptureEvent();
         //正在保存录屏文件通知
         sendSavingNotify();
         // 停止闪烁
@@ -4455,12 +4502,13 @@ void MainWindow::stopRecord()
 void MainWindow::startCountdown()
 {
     qDebug() << "function: " << __func__ ;
-    if (nullptr != m_pScreenShotEvent) {
-        m_pScreenShotEvent->terminate();
+
+    if (nullptr != m_pScreenCaptureEvent) {
+        m_pScreenCaptureEvent->terminate();
         if (!QSysInfo::currentCpuArchitecture().startsWith("mips")) {
-            m_pScreenShotEvent->wait();
-            delete  m_pScreenShotEvent;
-            m_pScreenShotEvent = nullptr;
+            m_pScreenCaptureEvent->wait();
+            delete  m_pScreenCaptureEvent;
+            m_pScreenCaptureEvent = nullptr;
         }
     }
 
@@ -4613,8 +4661,7 @@ void MainWindow::initShapeWidget(QString type)
 void MainWindow::exitApp()
 {
     emit releaseEvent();
-    exitScreenShotEvent();
-    exitScreenRecordEvent();
+    //exitScreenCuptureEvent();
     qApp->quit();
 }
 int MainWindow::getRecordInputType(bool selectedMic, bool selectedSystemAudio)

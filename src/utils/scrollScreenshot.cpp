@@ -54,6 +54,16 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
     connect(m_PixMerageThread, &PixMergeThread::invalidAreaError, this, &ScrollScreenshot::merageInvalidArea);
 }
 
+ScrollScreenshot::~ScrollScreenshot()
+{
+    if (nullptr != m_PixMerageThread) {
+
+        m_PixMerageThread->terminate();
+        m_PixMerageThread->wait();
+        delete m_PixMerageThread;
+        m_PixMerageThread = nullptr;
+    }
+}
 
 void ScrollScreenshot::addPixmap(const QPixmap &piximg, int wheelDirection)
 {

@@ -59,7 +59,7 @@ void EventMonitor::run()
     range->device_events.last  = MotionNotify;
 
     // And create the XRECORD context.
-    XRecordContext context = XRecordCreateContext (display, 0, &clients, 1, &range, 1);
+    XRecordContext context = XRecordCreateContext(display, 0, &clients, 1, &range, 1);
     if (context == 0) {
         fprintf(stderr, "XRecordCreateContext failed\n");
         return;
@@ -82,15 +82,15 @@ void EventMonitor::run()
 
 void EventMonitor::callback(XPointer ptr, XRecordInterceptData *data)
 {
-    (reinterpret_cast<EventMonitor *>(ptr))->handleRecordEvent(data);
+    (reinterpret_cast<EventMonitor *>(ptr))->handleEvent(data);
 }
 
-void EventMonitor::handleRecordEvent(XRecordInterceptData *data)
+void EventMonitor::handleEvent(XRecordInterceptData *data)
 {
     if (data->category == XRecordFromServer) {
+        emit activateWindow();
 
         xEvent *event = reinterpret_cast<xEvent *>(data->data);
-//        XKeyPressedEvent *t_keyEvent;
         switch (event->u.u.type) {
         case ButtonPress:
             if (event->u.u.detail != WheelUp &&
@@ -98,19 +98,20 @@ void EventMonitor::handleRecordEvent(XRecordInterceptData *data)
                     event->u.u.detail != WheelLeft &&
                     event->u.u.detail != WheelRight) {
                 isPress = true;
-                emit buttonedPress(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+                //鼠标按压
+                emit mousePress(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+            } else if (event->u.u.detail == WheelUp || event->u.u.detail == WheelDown) {
+                //鼠标滚动
+                emit mouseScroll(static_cast<int>(event->u.enterLeave.time), event->u.u.detail, event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             }
             break;
         case MotionNotify:
             if (isPress) {
-                emit buttonedDrag(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+                emit mouseDrag(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+            } else {
+                //鼠标移动
+                emit mouseMove(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             }
-            /*
-             *
-            else{
-                emit buttonedPress(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
-            }
-            */
             break;
         case ButtonRelease:
             if (event->u.u.detail != WheelUp &&
@@ -118,19 +119,23 @@ void EventMonitor::handleRecordEvent(XRecordInterceptData *data)
                     event->u.u.detail != WheelLeft &&
                     event->u.u.detail != WheelRight) {
                 isPress = false;
-                emit buttonedRelease(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+                emit mouseRelease(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             }
             break;
         case KeyPress:
             // If key is equal to esc, emit pressEsc signal.
-            if ((reinterpret_cast<unsigned char *>(data->data))[1] == KEY_ESCAPE) {
-                emit pressEsc();
-            } else {
-                emit pressKeyButton((reinterpret_cast<unsigned char *>(data->data))[1]);
-            }
+//            if ((reinterpret_cast<unsigned char *>(data->data))[1] == KEY_ESCAPE) {
+//                emit pressEsc();
+//            } else {
+//                emit pressKeyButton((reinterpret_cast<unsigned char *>(data->data))[1]);
+//            }
+
+            //键盘按键按下
+            emit keyboardPress((reinterpret_cast<unsigned char *>(data->data))[1]);
             break;
         case KeyRelease:
-            emit releaseKeyButton((reinterpret_cast<unsigned char *>(data->data))[1]);
+            //键盘按键释放
+            emit keyboardRelease((reinterpret_cast<unsigned char *>(data->data))[1]);
             break;
         default:
             break;
@@ -141,31 +146,12 @@ void EventMonitor::handleRecordEvent(XRecordInterceptData *data)
     XRecordFreeData(data);
 }
 
-//XFixesCursorImage* EventMonitor::GetCursorImage()
-//{
-//    Display *m_x11_display = XOpenDisplay(nullptr);
-//    if(m_x11_display == nullptr){
-//        fprintf(stderr, "unable to open display\n");
-//        return nullptr;
-//    }
-//    /*
-//    // dlopen
-//    void *handle = dlopen("libXfixes.so", RTLD_LAZY);
-//    if(!handle){
-//        fprintf(stderr, "open libXfixes.so failure\n");
-//        return nullptr;
-//    }
-
-//    XFixesCursorImage *(*XFixesGetCursorImage_hand) (Display *);
-//    char *error;
-//    XFixesGetCursorImage_hand = (XFixesCursorImage *(*)(Display *))dlsym(handle, "XFixesGetCursorImage");
-//    if((error = dlerror()) != nullptr){
-//        fprintf(stderr, "get libXfixes.so function  XFixesGetCursorImage failure\n");
-//        return nullptr;
-//    }
-//    dlclose(handle);
-//    //end
-//    return XFixesGetCursorImage_hand(m_x11_display);
-//    */
-//    return XFixesGetCursorImage(m_x11_display);
-//}
+XFixesCursorImage *EventMonitor::getCursorImage()
+{
+    Display *x11Display = XOpenDisplay(nullptr);
+    if (!x11Display) {
+        fprintf(stderr, "unable to open display\n");
+        return nullptr;
+    }
+    return XFixesGetCursorImage(x11Display);
+}
