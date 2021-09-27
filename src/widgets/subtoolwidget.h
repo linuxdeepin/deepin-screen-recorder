@@ -72,11 +72,11 @@ signals:
     void mouseShowButtonClicked(bool checked);
     void microphoneActionChecked(bool checked);
     void systemAudioActionChecked(bool checked);
-    void gifActionChecked(bool checked);
-    void mp4ActionChecked(bool checked);
-    void mkvActionChecked(bool checked);
+    //void gifActionChecked(bool checked);
+    //void mp4ActionChecked(bool checked);
+    //void mkvActionChecked(bool checked);
     void cameraActionChecked(bool checked);
-    void videoFrameRateChanged(int frameRate);
+    //void videoFrameRateChanged(int frameRate);
     /**
      * @brief 截图功能选择的工具被改变
      * @param 工具的名称

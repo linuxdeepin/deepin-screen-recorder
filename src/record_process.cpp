@@ -32,7 +32,6 @@
 #include <QtDBus>
 #include <QScreen>
 
-#include <proc/sysinfo.h>
 #include <dlfcn.h>
 #include <signal.h>
 

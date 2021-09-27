@@ -77,9 +77,9 @@ signals:
     void cameraActionCheckedSignal(bool checked);
     void mouseCheckedSignalToToolBar(bool checked);
     void mouseShowCheckedSignalToToolBar(bool checked);
-    void gifActionCheckedSignal(bool checked);
-    void mp4ActionCheckedSignal(bool checked);
-    void frameRateChangedSignal(int frameRate);
+    //void gifActionCheckedSignal(bool checked);
+    //void mp4ActionCheckedSignal(bool checked);
+    //void frameRateChangedSignal(int frameRate);
     void shotToolChangedSignal(const QString &func);
     void closeButtonSignal();
 public slots:
@@ -102,9 +102,9 @@ public slots:
     void setSystemAudioEnable(bool status);
     void setCameraDeviceEnable(bool status);
 
-protected:
-    void paintEvent(QPaintEvent *e)Q_DECL_OVERRIDE;
-    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+//protected:
+//    void paintEvent(QPaintEvent *e)Q_DECL_OVERRIDE;
+//    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
 
 private:
@@ -156,9 +156,9 @@ signals:
     void cameraActionCheckedToMain(bool checked);
     void mouseCheckedToMain(bool checked);
     void mouseShowCheckedToMain(bool checked);
-    void gifActionCheckedToMain(bool checked);
-    void mp4ActionCheckedToMain(bool checked);
-    void frameRateChangedToMain(int frameRate);
+    //void gifActionCheckedToMain(bool checked);
+    //void mp4ActionCheckedToMain(bool checked);
+    //void frameRateChangedToMain(int frameRate);
     void shotToolChangedToMain(const QString &func);
     void closeButtonToMain();
 public slots:

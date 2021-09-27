@@ -144,12 +144,10 @@ QPixmap CountdownTooltip::getTooltipBackground()
 {
     TempFile *tempFile = TempFile::instance();
     const int radius = 50;
-    int imgWidth = 0;
-    int imgHeight = 0;
-    qDebug() << "rect().x(),rect().y()" << rect().x() << "," << rect().y();
-    qDebug() << "rect().width(),rect().height()" << rect().width() << "," << rect().height();
-    qDebug() << "this->x(),this->y()" << this->x() << "," << this->y();
-    qDebug() << "this->width(),this->height()" << this->width() << "," << this->height();
+    //qDebug() << "rect().x(),rect().y()" << rect().x() << "," << rect().y();
+    //qDebug() << "rect().width(),rect().height()" << rect().width() << "," << rect().height();
+    //qDebug() << "this->x(),this->y()" << this->x() << "," << this->y();
+    //qDebug() << "this->width(),this->height()" << this->width() << "," << this->height();
     //用当前提示窗口的位置和提示框的大小构建一个矩形框
     QRect target( static_cast<int>(this->x()),
                       static_cast<int>(this->y()),
@@ -157,11 +155,11 @@ QPixmap CountdownTooltip::getTooltipBackground()
                       static_cast<int>(this->height()));
     QPixmap tmpImg = tempFile->getFullscreenPixmap().copy(target);
     if (!tmpImg.isNull()) {
-        imgWidth = tmpImg.width();
-        imgHeight = tmpImg.height();
+        int imgWidth = tmpImg.width();
+        int imgHeight = tmpImg.height();
         tmpImg = tmpImg.scaled(imgWidth / radius, imgHeight / radius, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         tmpImg = tmpImg.scaled(imgWidth, imgHeight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        qDebug() << "tmpImg.width(),tmpImg.height()" << tmpImg.width() << "," << tmpImg.height();
+        //qDebug() << "tmpImg.width(),tmpImg.height()" << tmpImg.width() << "," << tmpImg.height();
     }
     return  tmpImg;
 }

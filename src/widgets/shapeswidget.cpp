@@ -103,10 +103,10 @@ ShapesWidget::~ShapesWidget()
 void ShapesWidget::updateSelectedShape(const QString &group,
                                        const QString &key, int index)
 {
-    qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
-             << ", group: " << group
-             << ", key: " << key
-             << ", index: " << index;
+//    qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
+//             << ", group: " << group
+//             << ", key: " << key
+//             << ", index: " << index;
     if (m_isSelectedText) { //修复在截图区域，选中的文本框，字体会自动变颜色
         m_isSelectedText = false;
         return;
@@ -185,7 +185,7 @@ void ShapesWidget::clearSelected()
         m_hoveredShape.mainPoints[j] = QPointF(0, 0);
     }
 
-    qDebug() << "clear selected!!!";
+    //qDebug() << "clear selected!!!";
     m_isSelected = false;
     m_selectedShape.points.clear();
     m_hoveredShape.points.clear();
@@ -250,9 +250,9 @@ bool ShapesWidget::clickedOnShapes(QPointF pos)
 {
     bool onShapes = false;
     m_selectedOrder = -1;
-    qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
-             << ", pos: " << pos
-             << ", m_shapes.length(): " << m_shapes.length();
+//    qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
+//             << ", pos: " << pos
+//             << ", m_shapes.length(): " << m_shapes.length();
     for (int i = 0; i < m_shapes.length(); i++) {
         //当前是否有形状被选中
         bool currentOnShape = false;
@@ -968,7 +968,7 @@ bool ShapesWidget::textEditIsReadOnly()
 
 void ShapesWidget::handleDrag(QPointF oldPoint, QPointF newPoint)
 {
-    qDebug() << "handleDrag:" << m_selectedIndex << m_shapes.length();
+    //qDebug() << "handleDrag:" << m_selectedIndex << m_shapes.length();
 
     if (m_selectedIndex == -1) {
         return;
@@ -1235,7 +1235,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
     if (!clickedOnShapes(m_pressedPoint)) {
 
         m_isRecording = true;
-        qDebug() << "no one shape be clicked!" << m_selectedIndex << m_shapes.length();
+        //qDebug() << "no one shape be clicked!" << m_selectedIndex << m_shapes.length();
 
         m_currentShape.type = m_currentType;
         m_currentShape.colorIndex = ConfigSettings::instance()->value(
@@ -1425,7 +1425,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
         }
     } else {
         m_isRecording = false;
-        qDebug() << "some on shape be clicked!";
+        //qDebug() << "some on shape be clicked!";
         if (m_editing && m_editMap.contains(m_shapes[m_selectedOrder].index)) {
             m_editMap.value(m_shapes[m_selectedOrder].index)->setReadOnly(true);
             m_editMap.value(m_shapes[m_selectedOrder].index)->setCursorVisible(false);
@@ -1459,7 +1459,7 @@ void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)
         DFrame::mousePressEvent(e);
     }
 
-    qDebug() << m_isRecording << m_isSelected << m_pos2;
+    //qDebug() << m_isRecording << m_isSelected << m_pos2;
     if (m_isRecording && !m_isSelected && m_pos2 != QPointF(0, 0)) {
         if (m_currentType == "arrow") {
             if (m_currentShape.points.length() == 2) {
@@ -1487,7 +1487,7 @@ void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)
             m_shapes.append(m_currentShape);
         }
 
-        qDebug() << "ShapesWidget num:" << m_shapes.length();
+        //qDebug() << "ShapesWidget num:" << m_shapes.length();
         clearSelected();
     }
 
@@ -1571,7 +1571,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
 
         if (m_isSelected && m_isPressed && m_selectedIndex != -1) {
             handleDrag(m_pressedPoint, m_movingPoint);
-            qDebug() << "move m_selectedOrder:" << m_selectedOrder;
+            //qDebug() << "move m_selectedOrder:" << m_selectedOrder;
             m_selectedShape = m_shapes[m_selectedOrder];
             m_hoveredShape = m_shapes[m_selectedOrder];
 
@@ -1898,7 +1898,7 @@ void ShapesWidget::paintEvent(QPaintEvent *)
                     }
                     break;
                 }
-                m++;
+                ++m;
             }
         }
     }
@@ -1908,9 +1908,9 @@ void ShapesWidget::paintEvent(QPaintEvent *)
         pen.setColor(colorIndexOf(m_currentShape.colorIndex));
         pen.setWidthF(m_currentShape.lineWidth - 0.5);
 
-        qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
-                 << ", m_currentShape.type: " << m_currentShape.type
-                 << ", m_currentType: " << m_currentType;
+//        qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
+//                 << ", m_currentShape.type: " << m_currentShape.type
+//                 << ", m_currentType: " << m_currentType;
 
         if (m_currentType == "rectangle" && m_currentShape.type != "text") {
             pen.setJoinStyle(Qt::MiterJoin);

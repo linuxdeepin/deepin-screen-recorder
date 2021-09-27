@@ -28,15 +28,10 @@
 #include <QObject>
 #include <QRect>
 
-#include <proc/readproc.h>
-#include <proc/sysinfo.h>
-
 //不需要开启线程，用信号槽代替 process->waitForFinished(-1); 避免线程等待浪费系统资源
 class RecordProcess  : public QObject
 {
     Q_OBJECT
-
-    typedef std::map<int, proc_t> StoredProcType;
 
 public:
     static const int RECORD_TYPE_VIDEO;

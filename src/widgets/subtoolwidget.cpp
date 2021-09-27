@@ -555,6 +555,7 @@ void SubToolWidget::initRecordLabel()
 
 
     connect(gifAction, &QAction::triggered, this, [ = ](bool checked) {
+        Q_UNUSED(checked);
         t_settings->setValue("recordConfig", "lossless_recording", false);
         t_settings->setValue("recordConfig", "save_as_gif", true);
         fps5Action->setEnabled(false);
@@ -568,10 +569,11 @@ void SubToolWidget::initRecordLabel()
         }
         m_microphoneAction->setEnabled(false);
         m_systemAudioAction->setEnabled(false);
-        emit gifActionChecked(checked);
+        //emit gifActionChecked(checked);
     });
 
     connect(mp4Action, &QAction::triggered, this, [ = ](bool checked) {
+        Q_UNUSED(checked);
         t_settings->setValue("recordConfig", "lossless_recording", false);
         t_settings->setValue("recordConfig", "save_as_gif", false);
         fps5Action->setEnabled(true);
@@ -587,10 +589,11 @@ void SubToolWidget::initRecordLabel()
         if (m_haveSystemAudio) {
             m_systemAudioAction->setEnabled(true);
         }
-        emit mp4ActionChecked(checked);
+        //emit mp4ActionChecked(checked);
     });
 
     connect(mkvAction, &QAction::triggered, this, [ = ](bool checked) {
+        Q_UNUSED(checked);
         t_settings->setValue("recordConfig", "lossless_recording", true);
         t_settings->setValue("recordConfig", "save_as_gif", false);
         fps5Action->setEnabled(true);
@@ -606,30 +609,30 @@ void SubToolWidget::initRecordLabel()
         if (m_haveSystemAudio) {
             m_systemAudioAction->setEnabled(true);
         }
-        emit mkvActionChecked(checked);
+        //emit mkvActionChecked(checked);
     });
 
     connect(t_fpsGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
     [ = ](QAction * t_act) {
-        int t_frameRateSelected = 0;
+        //int t_frameRateSelected = 0;
         if (t_act == fps5Action) {
-            t_frameRateSelected = 5;
+            //t_frameRateSelected = 5;
             t_settings->setValue("recordConfig", "mkv_framerate", "5");
         } else if (t_act == fps10Action) {
-            t_frameRateSelected = 10;
+            //t_frameRateSelected = 10;
             t_settings->setValue("recordConfig", "mkv_framerate", "10");
         } else if (t_act == fps20Action) {
-            t_frameRateSelected = 20;
+            //t_frameRateSelected = 20;
             t_settings->setValue("recordConfig", "mkv_framerate", "20");
         } else if (t_act == fps24Action) {
-            t_frameRateSelected = 24;
+            //t_frameRateSelected = 24;
             t_settings->setValue("recordConfig", "mkv_framerate", "24");
         } else if (t_act == fps30Action) {
-            t_frameRateSelected = 30;
+            //t_frameRateSelected = 30;
             t_settings->setValue("recordConfig", "mkv_framerate", "30");
         }
 
-        emit videoFrameRateChanged(t_frameRateSelected);
+        //emit videoFrameRateChanged(t_frameRateSelected);
     });
     switch (t_frameRate) {
     case 5:

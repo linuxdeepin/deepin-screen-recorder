@@ -16,7 +16,7 @@ using namespace testing;
 //ACCESS_PRIVATE_FUN(ToolButton, void(QEvent *e), leaveEvent);
 //ACCESS_PRIVATE_FUN(ToolButton, void(QMouseEvent *e), mousePressEvent);
 //ACCESS_PRIVATE_FUN(ToolBarWidget, void(QPaintEvent *), paintEvent);
-ACCESS_PRIVATE_FUN(ToolBarWidget, void(QShowEvent *), showEvent);
+//ACCESS_PRIVATE_FUN(ToolBarWidget, void(QShowEvent *), showEvent);
 //DGuiApplicationHelper::ColorType themeType_default_stub()
 //{
 //    return DGuiApplicationHelper::ColorType::UnknownType;
@@ -108,14 +108,14 @@ public:
 //    eventloop.exec();
 //}
 
-TEST_F(ToolBarWidgetTest, showEvent)
-{
-    stub.set(ADDR(QVariant,toBool),toolBar_toBool_stub);
-    QShowEvent *showEvent = new QShowEvent();
-    call_private_fun::ToolBarWidgetshowEvent(*m_toolBarWidget,showEvent);
+//TEST_F(ToolBarWidgetTest, showEvent)
+//{
+//    stub.set(ADDR(QVariant,toBool),toolBar_toBool_stub);
+//    QShowEvent *showEvent = new QShowEvent();
+//    call_private_fun::ToolBarWidgetshowEvent(*m_toolBarWidget,showEvent);
 
-    delete showEvent;
-}
+//    delete showEvent;
+//}
 
 TEST_F(ToolBarWidgetTest, setExpand)
 {

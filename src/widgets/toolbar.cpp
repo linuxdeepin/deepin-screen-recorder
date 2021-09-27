@@ -117,7 +117,7 @@ ToolBarWidget::ToolBarWidget(MainWindow* pMainwindow,DWidget *parent)
     connect(m_subTool, SIGNAL(videoFrameRateChanged(int)), this, SIGNAL(frameRateChangedSignal(int)));
     connect(m_subTool, SIGNAL(changeShotToolFunc(const QString &)), this, SIGNAL(shotToolChangedSignal(const QString &)));
 }
-
+/*
 void ToolBarWidget::paintEvent(QPaintEvent *e)
 {
     DFloatingWidget::paintEvent(e);
@@ -142,7 +142,7 @@ void ToolBarWidget::showEvent(QShowEvent *event)
 
     DFloatingWidget::showEvent(event);
 }
-
+*/
 void ToolBarWidget::hideSomeToolBtn()
 {
     m_subTool->hideSomeToolBtn();
@@ -241,6 +241,7 @@ ToolBar::ToolBar(DWidget *parent)
     : DLabel(parent)
 {
     m_toolbarWidget = nullptr;
+    m_confirmButton = nullptr;
 }
 
 void ToolBar::setExpand(bool expand, QString shapeType)
@@ -399,9 +400,9 @@ void ToolBar::initToolBar(MainWindow* pmainWindow)
     connect(m_toolbarWidget, &ToolBarWidget::cameraActionCheckedSignal, this, &ToolBar::cameraActionCheckedToMain);
     connect(m_toolbarWidget, &ToolBarWidget::mouseCheckedSignalToToolBar, this, &ToolBar::mouseCheckedToMain);
     connect(m_toolbarWidget, &ToolBarWidget::mouseShowCheckedSignalToToolBar, this, &ToolBar::mouseShowCheckedToMain);
-    connect(m_toolbarWidget, &ToolBarWidget::gifActionCheckedSignal, this, &ToolBar::gifActionCheckedToMain);
-    connect(m_toolbarWidget, &ToolBarWidget::mp4ActionCheckedSignal, this, &ToolBar::mp4ActionCheckedToMain);
-    connect(m_toolbarWidget, &ToolBarWidget::frameRateChangedSignal, this, &ToolBar::frameRateChangedToMain);
+    //connect(m_toolbarWidget, &ToolBarWidget::gifActionCheckedSignal, this, &ToolBar::gifActionCheckedToMain);
+    //connect(m_toolbarWidget, &ToolBarWidget::mp4ActionCheckedSignal, this, &ToolBar::mp4ActionCheckedToMain);
+    //connect(m_toolbarWidget, &ToolBarWidget::frameRateChangedSignal, this, &ToolBar::frameRateChangedToMain);
     connect(m_toolbarWidget, &ToolBarWidget::shotToolChangedSignal, this, &ToolBar::shotToolChangedToMain);
 }
 
