@@ -287,6 +287,8 @@ signals:
     void unDo();
     void unDoAll();
     void deleteShapes();
+    void changeMicrophoneSelectEvent(bool checked);
+    void changeSystemAudioSelectEvent(bool checked);
 
 public slots:
     void onExit();
@@ -319,9 +321,6 @@ public slots:
     void showKeyBoardButtons(const QString &key);
     void changeKeyBoardShowEvent(bool checked);
     void changeMouseShowEvent(bool checked);
-    void changeShowMouseShowEvent(bool checked);
-    void changeMicrophoneSelectEvent(bool checked);
-    void changeSystemAudioSelectEvent(bool checked);
     void changeCameraSelectEvent(bool checked);
     void updateMultiKeyBoardPos();
     /**
@@ -338,7 +337,7 @@ public slots:
     void exitApp();
     void onViewShortcut();
     void shapeClickedSlot(QString shape);
-    void on_CheckRecodeCouldUse(bool canUse);
+    //void on_CheckRecodeCouldUse(bool canUse);
     void on_CheckVideoCouldUse(bool canUse);
     void onShotKeyPressEvent(const unsigned char &keyCode);
     void onRecordKeyPressEvent(const unsigned char &keyCode);
@@ -730,11 +729,7 @@ private:
     /**
      * @brief 鼠标开关状态
      */
-    int m_mouseStatus = 0; //0: mouse check off, 1:mouse check On
-    /**
-     * @brief 鼠标显示开关状态
-     */
-    bool m_mouseShowStatus = true; //0: show mouse off, 1:show mouse On
+    bool m_mouseStatus = false; //false: mouse check off, true:mouse check On
     /**
      * @brief 是否重绘录屏或截图按钮
      */
@@ -743,9 +738,6 @@ private:
      * @brief 是否重绘侧工具栏
      */
     bool m_repaintSideBar = false;   //false: no need to repaint sidebar, true:...
-
-    bool m_selectedMic = true;
-    bool m_selectedSystemAudio = true;
     int m_screenWidth = 0;  //屏幕宽度
     int m_screenHeight = 0; //屏幕高度
     SideBar *m_sideBar = nullptr; //截图功能侧边栏功能

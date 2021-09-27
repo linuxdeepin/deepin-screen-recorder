@@ -41,20 +41,14 @@
 #include <DWidget>
 #include <DWindowManagerHelper>
 #include <DForeignWindow>
-#include <DLineEdit>
-#include <DInputDialog>
-#include <DDesktopServices>
-#include <DDialog>
 #include <DHiDPIHelper>
 
-#include <QBitmap>
 #include <QApplication>
 #include <QTimer>
 #include <QKeyEvent>
 #include <QObject>
 #include <QPainter>
 #include <QDebug>
-#include <QVBoxLayout>
 #include <QProcess>
 #include <QMouseEvent>
 #include <QClipboard>
@@ -62,8 +56,6 @@
 #include <QShortcut>
 #include <QDesktopWidget>
 #include <QScreen>
-#include <QMessageBox>
-#include <QGestureEvent>
 
 #include <X11/Xcursor/Xcursor.h>
 
@@ -217,15 +209,12 @@ void MainWindow::initAttributes()
     m_zoomIndicator = new ZoomIndicator(this);
     m_zoomIndicator->hide();
 
+
+    connect(m_toolBar, &ToolBar::mouseShowCheckedToMain, &recordProcess, &RecordProcess::onRecordMouse);// 鼠标显示
+    connect(this, SIGNAL(changeMicrophoneSelectEvent(bool)), &recordProcess, SLOT(setMicrophone(bool)));// 麦克风音频
+    connect(this, SIGNAL(changeSystemAudioSelectEvent(bool)), &recordProcess, SLOT(setSystemAudio(bool)));// 系统音频
+
     connect(m_toolBar, &ToolBar::currentFunctionToMain, this, &MainWindow::changeFunctionButton);
-    connect(m_toolBar, &ToolBar::keyBoardCheckedToMain, this, &MainWindow::changeKeyBoardShowEvent);
-    connect(m_toolBar, &ToolBar::mouseCheckedToMain, this, &MainWindow::changeMouseShowEvent);
-    connect(m_toolBar, &ToolBar::mouseShowCheckedToMain, this, &MainWindow::changeShowMouseShowEvent);
-    connect(m_toolBar, &ToolBar::microphoneActionCheckedToMain, this, &MainWindow::changeMicrophoneSelectEvent);
-    connect(m_toolBar, &ToolBar::systemAudioActionCheckedToMain, this, &MainWindow::changeSystemAudioSelectEvent);
-    connect(m_toolBar, &ToolBar::cameraActionCheckedToMain, this, &MainWindow::changeCameraSelectEvent);
-    connect(m_toolBar, &ToolBar::shotToolChangedToMain, this, &MainWindow::changeShotToolEvent);
-    connect(m_toolBar, &ToolBar::closeButtonToMain, this, &MainWindow::exitApp);
     connect(m_sideBar, &SideBar::changeArrowAndLineToMain, m_toolBar, &ToolBar::changeArrowAndLineFromMain);
 
 
@@ -423,23 +412,9 @@ void MainWindow::initResource()
     m_showButtons = new ShowButtons(this);
     if (!m_pScreenCaptureEvent || !m_showButtons)
         return;
-
-    connect(m_showButtons, SIGNAL(keyShowSignal(const QString &)),
-            this, SLOT(showKeyBoardButtons(const QString &)));
-    //    resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_big.svg"));
+    connect(m_showButtons, SIGNAL(keyShowSignal(const QString &)),this, SLOT(showKeyBoardButtons(const QString &)));
     resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(":/newUI/normal/node.svg");
-    //resizeHandleSmallImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("resize_handle_small.svg"));
-
-//　　　dde-dock显示时长插件代替系统托盘
-//    trayIcon = new QSystemTrayIcon(this);
-//    trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
-//    trayIcon->setToolTip(tr("Screen Capture"));
-//    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-
-    //    setDragCursor();
-
     buttonFeedback = new ButtonFeedback();
-
 }
 
 void MainWindow::initScreenShot()
@@ -456,7 +431,7 @@ void MainWindow::initScreenShot()
     });
     m_functionType = 1;
     m_keyBoardStatus = false;
-    m_mouseStatus = 0;
+    m_mouseStatus = false;
     //m_multiKeyButtonsInOnSec = false;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
@@ -506,19 +481,6 @@ void MainWindow::initScreenShot()
         m_sizeTips->setRecorderTipsInfo(false);
         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
     }
-
-    //recordButton->hide();
-    //recordOptionPanel->hide();
-
-
-    if (m_firstShot == 0) {
-        m_selectedMic = true;
-        m_selectedSystemAudio = true;
-    }
-    //    eventMonitor.quit();
-    //    emit releaseEvent();
-    //初始化截图，不退出录屏全局事件监控
-    //exitScreenRecordEvent();
     connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
 
     //初始化ocr
@@ -534,7 +496,7 @@ void MainWindow::initScreenRecorder()
 
     m_functionType = status::record;
     m_keyBoardStatus = false;
-    m_mouseStatus = 0;
+    m_mouseStatus = false;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
     m_screenWidth = m_backgroundRect.width();
@@ -604,11 +566,6 @@ void MainWindow::initScreenRecorder()
 
 
     m_zoomIndicator->hide();
-
-    if (m_firstShot == 0) {
-        m_selectedMic = true;
-        m_selectedSystemAudio = true;
-    }
     //录屏初次进来此字段为false，后面进来此字段为ture故不会改变默认框选区域大小
     if (!m_initScreenRecorder) {
         m_initScreenRecorder = true;
@@ -636,7 +593,7 @@ void MainWindow::initScrollShot()
     //设置当前功能类型
     m_functionType = status::scrollshot;
     m_keyBoardStatus = false;
-    m_mouseStatus = 0;
+    m_mouseStatus = false;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
     m_screenWidth = m_backgroundRect.width();
@@ -1035,7 +992,6 @@ void MainWindow::fullScreenshot()
     this->initLaunchMode("screenShot");
     this->showFullScreen();
     this->initResource();
-    m_mouseStatus = ShotMouseStatus::Shoting;
     repaint();
     qApp->setOverrideCursor(setCursorShape("start"));
     //    initDBusInterface();
@@ -1283,21 +1239,21 @@ void MainWindow::setCancelInputEvent()
 
 void MainWindow::showPressFeedback(int x, int y)
 {
-    if (recordButtonStatus == RECORD_BUTTON_RECORDING && m_mouseStatus == 1) {
+    if (recordButtonStatus == RECORD_BUTTON_RECORDING && m_mouseStatus) {
         buttonFeedback->showPressFeedback(x, y);
     }
 }
 
 void MainWindow::showDragFeedback(int x, int y)
 {
-    if (recordButtonStatus == RECORD_BUTTON_RECORDING && m_mouseStatus == 1) {
+    if (recordButtonStatus == RECORD_BUTTON_RECORDING && m_mouseStatus) {
         buttonFeedback->showDragFeedback(x, y);
     }
 }
 
 void MainWindow::showReleaseFeedback(int x, int y)
 {
-    if (recordButtonStatus == RECORD_BUTTON_RECORDING && m_mouseStatus == 1) {
+    if (recordButtonStatus == RECORD_BUTTON_RECORDING && m_mouseStatus) {
         buttonFeedback->showReleaseFeedback(x, y);
     }
 }
@@ -1368,7 +1324,7 @@ void MainWindow::updateToolBarPos()
 
         m_pVoiceVolumeWatcher = new voiceVolumeWatcher(this);
         m_pVoiceVolumeWatcher->start();
-        connect(m_pVoiceVolumeWatcher, SIGNAL(sigRecodeState(bool)), this, SLOT(on_CheckRecodeCouldUse(bool)));
+        connect(m_pVoiceVolumeWatcher, SIGNAL(sigRecodeState(bool)), m_toolBar, SLOT(setMicroPhoneEnable(bool)));
         m_toolBarInit = true;
 
         m_pCameraWatcher = new CameraWatcher(this);
@@ -1791,30 +1747,10 @@ void MainWindow::changeKeyBoardShowEvent(bool checked)
 void MainWindow::changeMouseShowEvent(bool checked)
 {
     qDebug() << "mouse" << checked;
-    if (checked == false) {
-        m_mouseStatus = 0;
-    }
-
-    else {
-        m_mouseStatus = 1;
-    }
-    return;
+    m_mouseStatus = checked;
 }
 
-void MainWindow::changeShowMouseShowEvent(bool checked)
-{
-    qDebug() << "show mouse" << checked;
-    m_mouseShowStatus = checked;
-    return;
-}
-void MainWindow::changeMicrophoneSelectEvent(bool checked)
-{
-    m_selectedMic = checked;
-}
-void MainWindow::changeSystemAudioSelectEvent(bool checked)
-{
-    m_selectedSystemAudio = checked;
-}
+
 void MainWindow::changeCameraSelectEvent(bool checked)
 {
     //m_recordButton->setEnabled(false);
@@ -3409,14 +3345,8 @@ void MainWindow::tableRecordSet()
     recordY = 0;
     recordWidth = m_screenSize.width();
     recordHeight = m_screenSize.height();
-
     // 鼠标点击状态录制
-    m_mouseStatus = 1;
-
-    // 录制系统音频
-    m_selectedMic = false;
-    m_selectedSystemAudio = true;
-
+    m_mouseStatus = true;
     startCountdown();
 }
 
@@ -4013,14 +3943,8 @@ void MainWindow::shapeClickedSlot(QString shape)
     m_toolBar->shapeClickedFromMain(shape);
 }
 
-void MainWindow::on_CheckRecodeCouldUse(bool canUse)
-{
-    m_toolBar->setMicroPhoneEnable(canUse);
-}
-
 void MainWindow::on_CheckVideoCouldUse(bool canUse)
 {
-    //
     if (!canUse) {
         if (m_cameraWidget && !m_cameraOffFlag) {
             if (m_cameraWidget->getcameraStatus() == false) {
@@ -4095,9 +4019,6 @@ void MainWindow::startRecord()
     if (Utils::isTabletEnvironment && m_tabletRecorderHandle) {
         m_tabletRecorderHandle->startStatusBar();
     }
-
-    recordProcess.setRecordAudioInputType(getRecordInputType(m_selectedMic, m_selectedSystemAudio));
-    recordProcess.setRecordMouse(m_mouseShowStatus);
     recordProcess.startRecord();
     // 录屏开始后，隐藏窗口。（2D窗管下支持录屏, 但是会导致摄像头录制不到）
     if (m_hasComposite == false) {
@@ -4502,20 +4423,7 @@ void MainWindow::stopRecord()
 void MainWindow::startCountdown()
 {
     qDebug() << "function: " << __func__ ;
-
-    if (nullptr != m_pScreenCaptureEvent) {
-        m_pScreenCaptureEvent->terminate();
-        if (!QSysInfo::currentCpuArchitecture().startsWith("mips")) {
-            m_pScreenCaptureEvent->wait();
-            delete  m_pScreenCaptureEvent;
-            m_pScreenCaptureEvent = nullptr;
-        }
-    }
-
     recordButtonStatus = RECORD_BUTTON_WAIT;
-
-    //disconnect(m_recordButton, SIGNAL(clicked()), this, SLOT(startCountdown()));
-    //disconnect(m_shotButton, SIGNAL(clicked()), this, SLOT(saveScreenShot()));
     const QPoint topLeft = geometry().topLeft();
     QRect recordRect {
         static_cast<int>(recordX * m_pixelRatio + topLeft.x()),
@@ -4664,6 +4572,7 @@ void MainWindow::exitApp()
     //exitScreenCuptureEvent();
     qApp->quit();
 }
+/*
 int MainWindow::getRecordInputType(bool selectedMic, bool selectedSystemAudio)
 {
     if (selectedMic && selectedSystemAudio) {
@@ -4676,7 +4585,7 @@ int MainWindow::getRecordInputType(bool selectedMic, bool selectedSystemAudio)
     return 0;
 
 }
-
+*/
 void MainWindow::reloadImage(QString effect)
 {
     //*save tmp image file

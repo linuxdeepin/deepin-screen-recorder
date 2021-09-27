@@ -60,58 +60,33 @@ public:
 signals:
     void buttonChecked(QString shapeType);
     void expandChanged(bool expand,  QString shapeType);
-    void colorChanged(QColor color);
-    void saveImage();
-    void shapePressed(QString tool);
-    void saveBtnPressed(SaveAction index);
-    void saveSpecifiedPath();
     void closed();
     /**
      * @brief 切换截图功能或者录屏功能的信号
      * @param shapeType : "record" or "shot"
      */
-    void changeFunctionSignal(QString shapeType);
-    void keyBoardCheckedSignal(bool checked);
-    void microphoneActionCheckedSignal(bool checked);
-    void systemAudioActionCheckedSignal(bool checked);
-    void cameraActionCheckedSignal(bool checked);
-    void mouseCheckedSignalToToolBar(bool checked);
-    void mouseShowCheckedSignalToToolBar(bool checked);
-    //void gifActionCheckedSignal(bool checked);
-    //void mp4ActionCheckedSignal(bool checked);
-    //void frameRateChangedSignal(int frameRate);
-    void shotToolChangedSignal(const QString &func);
-    void closeButtonSignal();
+      void changeFunctionSignal(QString shapeType);
+      void keyBoardCheckedSignal(bool checked);
+      void mouseShowCheckedSignalToToolBar(bool checked);
 public slots:
-    //bool isButtonChecked();
     /**
      * @brief 切换截图功能或者录屏功能
      * @param expand :
      * @param shapeType : "record" or "shot"
      */
     void setExpand(bool expand, QString shapeType);
-    //void specifiedSavePath();
-    void keyBoardCheckedSlot(bool checked);
+    //void keyBoardCheckedSlot(bool checked);
     void changeArrowAndLineFromBar(int line);
     void setRecordButtonDisableFromMain();
     void setRecordLaunchFromMain(bool recordLaunch);
-    //void setIsZhaoxinPlatform(bool isZhaoxin);
     void setVideoInitFromMain();
     void shapeClickedFromBar(QString shape);
     void setMicroPhoneEnable(bool status);
     void setSystemAudioEnable(bool status);
     void setCameraDeviceEnable(bool status);
 
-//protected:
-//    void paintEvent(QPaintEvent *e)Q_DECL_OVERRIDE;
-//    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
-
-
 private:
-    //MajToolBar *m_majToolbar;
     DLabel *m_hSeparatorLine;
-    //SubToolBar *m_subToolbar;
-
     MainToolWidget *m_mainTool;
     SubToolWidget *m_subTool;
     DImageButton *m_closeButton;
@@ -137,32 +112,11 @@ public:
     void setScrollShotDisabled();
 
 signals:
-    void heightChanged();
     void buttonChecked(QString shape);
-    void updateColor(QColor color);
-    void requestSaveScreenshot();
-    void shapePressed(QString tool);
-    void saveBtnPressed(SaveAction index);
-    void saveSpecifiedPath();
-    void closed();
-    /**
-     * @brief 通知主窗口切换截图功能或者录屏功能的信号
-     * @param shapeType : "record" or "shot"
-     */
     void currentFunctionToMain(QString shapeType);
-    void keyBoardCheckedToMain(bool checked);
-    void microphoneActionCheckedToMain(bool checked);
-    void systemAudioActionCheckedToMain(bool checked);
-    void cameraActionCheckedToMain(bool checked);
-    void mouseCheckedToMain(bool checked);
     void mouseShowCheckedToMain(bool checked);
-    //void gifActionCheckedToMain(bool checked);
-    //void mp4ActionCheckedToMain(bool checked);
-    //void frameRateChangedToMain(int frameRate);
     void shotToolChangedToMain(const QString &func);
-    void closeButtonToMain();
 public slots:
-    //bool isButtonChecked();
     void setExpand(bool expand, QString shapeType);
     void showAt(QPoint pos);
 //    void specificedSavePath();
@@ -171,13 +125,9 @@ public slots:
      * @param shapeType : "record" or "shot"
      */
     void currentFunctionMode(QString shapeType);
-    void keyBoardCheckedToMainSlot(bool checked);
-    void microphoneActionCheckedToMainSlot(bool checked);
-    void systemAudioActionCheckedToMainSlot(bool checked);
     void changeArrowAndLineFromMain(int line);
     void setRecordButtonDisable();
     void setRecordLaunchMode(bool recordLaunch);
-    //void setIsZhaoxinPlatform(bool isZhaoxin);
     void setVideoButtonInit();
     void shapeClickedFromMain(QString shape);
     void setMicroPhoneEnable(bool status);
@@ -191,6 +141,5 @@ protected:
 private:
     ToolBarWidget *m_toolbarWidget;
     DPushButton *m_confirmButton;
-    //bool m_expanded;
 };
 #endif // TOOLBAR_H

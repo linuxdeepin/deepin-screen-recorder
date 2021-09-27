@@ -105,17 +105,14 @@ ToolBarWidget::ToolBarWidget(MainWindow* pMainwindow,DWidget *parent)
     setLayout(hLayout);
 
     connect(m_mainTool, &MainToolWidget::buttonChecked, this, &ToolBarWidget::setExpand);
-    connect(m_closeButton, &DImageButton::clicked, this, &ToolBarWidget::closeButtonSignal);
-    connect(m_subTool, &SubToolWidget::keyBoardButtonClicked, this, &ToolBarWidget::keyBoardCheckedSlot);
-    connect(m_subTool, &SubToolWidget::mouseBoardButtonClicked, this, &ToolBarWidget::mouseCheckedSignalToToolBar);
+    connect(m_closeButton, &DImageButton::clicked, pMainwindow, &MainWindow::exitApp);
+    connect(m_subTool, &SubToolWidget::keyBoardButtonClicked, pMainwindow, &MainWindow::changeKeyBoardShowEvent);
+    connect(m_subTool, &SubToolWidget::mouseBoardButtonClicked, pMainwindow, &MainWindow::changeMouseShowEvent);
     connect(m_subTool, &SubToolWidget::mouseShowButtonClicked, this, &ToolBarWidget::mouseShowCheckedSignalToToolBar);
-    connect(m_subTool, SIGNAL(microphoneActionChecked(bool)), this, SIGNAL(microphoneActionCheckedSignal(bool)));
-    connect(m_subTool, SIGNAL(systemAudioActionChecked(bool)), this, SIGNAL(systemAudioActionCheckedSignal(bool)));
-    connect(m_subTool, SIGNAL(cameraActionChecked(bool)), this, SIGNAL(cameraActionCheckedSignal(bool)));
-    connect(m_subTool, SIGNAL(gifActionChecked(bool)), this, SIGNAL(gifActionCheckedSignal(bool)));
-    connect(m_subTool, SIGNAL(mp4ActionChecked(bool)), this, SIGNAL(mp4ActionCheckedSignal(bool)));
-    connect(m_subTool, SIGNAL(videoFrameRateChanged(int)), this, SIGNAL(frameRateChangedSignal(int)));
-    connect(m_subTool, SIGNAL(changeShotToolFunc(const QString &)), this, SIGNAL(shotToolChangedSignal(const QString &)));
+    connect(m_subTool, SIGNAL(microphoneActionChecked(bool)), pMainwindow, SIGNAL(changeMicrophoneSelectEvent(bool)));
+    connect(m_subTool, SIGNAL(systemAudioActionChecked(bool)), pMainwindow, SIGNAL(changeSystemAudioSelectEvent(bool)));
+    connect(m_subTool, SIGNAL(cameraActionChecked(bool)), pMainwindow, SLOT(changeCameraSelectEvent(bool)));
+    connect(m_subTool, SIGNAL(changeShotToolFunc(const QString &)), pMainwindow, SLOT(changeShotToolEvent(const QString &)));
 }
 /*
 void ToolBarWidget::paintEvent(QPaintEvent *e)
@@ -163,12 +160,12 @@ void ToolBarWidget::specifiedSavePath()
 {
     m_majToolbar->specificedSavePath();
 }
-*/
+
 void ToolBarWidget::keyBoardCheckedSlot(bool checked)
 {
     emit keyBoardCheckedSignal(checked);
 }
-
+*/
 void ToolBarWidget::changeArrowAndLineFromBar(int line)
 {
     m_subTool->changeArrowAndLineFromSideBar(line);
@@ -289,12 +286,6 @@ void ToolBar::showAt(QPoint pos)
 
     move(pos.x(), pos.y());
 }
-/*
-void ToolBar::specificedSavePath()
-{
-    m_toolbarWidget->specifiedSavePath();
-}
-*/
 void ToolBar::currentFunctionMode(QString shapeType)
 {
     DPalette pa;
@@ -321,20 +312,6 @@ void ToolBar::currentFunctionMode(QString shapeType)
     }
     update();
     emit currentFunctionToMain(shapeType);
-}
-
-void ToolBar::keyBoardCheckedToMainSlot(bool checked)
-{
-    emit keyBoardCheckedToMain(checked);
-}
-
-void ToolBar::microphoneActionCheckedToMainSlot(bool checked)
-{
-    emit microphoneActionCheckedToMain(checked);
-}
-void ToolBar::systemAudioActionCheckedToMainSlot(bool checked)
-{
-    emit systemAudioActionCheckedToMain(checked);
 }
 
 void ToolBar::changeArrowAndLineFromMain(int line)
@@ -385,25 +362,9 @@ void ToolBar::initToolBar(MainWindow* pmainWindow)
     update();
 
     connect(m_toolbarWidget, &ToolBarWidget::expandChanged, this, &ToolBar::setExpand);
-    connect(m_toolbarWidget, &ToolBarWidget::saveImage, this, &ToolBar::requestSaveScreenshot);
-    connect(m_toolbarWidget, &ToolBarWidget::closeButtonSignal, this, &ToolBar::closeButtonToMain);
-    connect(m_toolbarWidget, &ToolBarWidget::colorChanged, this, &ToolBar::updateColor);
-    connect(this, &ToolBar::shapePressed, m_toolbarWidget, &ToolBarWidget::shapePressed);
-    connect(this, &ToolBar::saveBtnPressed, m_toolbarWidget, &ToolBarWidget::saveBtnPressed);
-    connect(m_toolbarWidget, &ToolBarWidget::saveSpecifiedPath, this, &ToolBar::saveSpecifiedPath);
-    connect(m_toolbarWidget, &ToolBarWidget::closed, this, &ToolBar::closed);
-
     connect(m_toolbarWidget, &ToolBarWidget::changeFunctionSignal, this, &ToolBar::currentFunctionMode);
-    connect(m_toolbarWidget, &ToolBarWidget::keyBoardCheckedSignal, this, &ToolBar::keyBoardCheckedToMainSlot);
-    connect(m_toolbarWidget, &ToolBarWidget::microphoneActionCheckedSignal, this, &ToolBar::microphoneActionCheckedToMainSlot);
-    connect(m_toolbarWidget, &ToolBarWidget::systemAudioActionCheckedSignal, this, &ToolBar::systemAudioActionCheckedToMainSlot);
-    connect(m_toolbarWidget, &ToolBarWidget::cameraActionCheckedSignal, this, &ToolBar::cameraActionCheckedToMain);
-    connect(m_toolbarWidget, &ToolBarWidget::mouseCheckedSignalToToolBar, this, &ToolBar::mouseCheckedToMain);
     connect(m_toolbarWidget, &ToolBarWidget::mouseShowCheckedSignalToToolBar, this, &ToolBar::mouseShowCheckedToMain);
-    //connect(m_toolbarWidget, &ToolBarWidget::gifActionCheckedSignal, this, &ToolBar::gifActionCheckedToMain);
-    //connect(m_toolbarWidget, &ToolBarWidget::mp4ActionCheckedSignal, this, &ToolBar::mp4ActionCheckedToMain);
-    //connect(m_toolbarWidget, &ToolBarWidget::frameRateChangedSignal, this, &ToolBar::frameRateChangedToMain);
-    connect(m_toolbarWidget, &ToolBarWidget::shotToolChangedSignal, this, &ToolBar::shotToolChangedToMain);
+
 }
 
 void ToolBar::setRecordButtonDisable()
@@ -413,15 +374,9 @@ void ToolBar::setRecordButtonDisable()
 
 void ToolBar::setRecordLaunchMode(bool recordLaunch)
 {
-//    qDebug() << "main record mode1";
     m_toolbarWidget->setRecordLaunchFromMain(recordLaunch);
 }
-/*
-void ToolBar::setIsZhaoxinPlatform(bool isZhaoxin)
-{
-    m_toolbarWidget->setIsZhaoxinPlatform(isZhaoxin);
-}
-*/
+
 void ToolBar::setVideoButtonInit()
 {
     m_toolbarWidget->setVideoInitFromMain();
@@ -451,12 +406,6 @@ void ToolBar::setCameraDeviceEnable(bool status)
 {
     m_toolbarWidget->setCameraDeviceEnable(status);
 }
-/*
-bool ToolBar::isButtonChecked()
-{
-    return m_expanded;
-}
-*/
 ToolBar::~ToolBar()
 {
 }

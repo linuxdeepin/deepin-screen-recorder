@@ -53,14 +53,20 @@ public:
     void setRecordInfo(const QRect &recordRect, const QString &filename);
     //void setRecordType(int recordType);
     //void setFrameRate(int framerate);
-    void setRecordAudioInputType(int inputType);
+    //void setRecordAudioInputType(int inputType);
     void startRecord();
     //void setIsZhaoXinPlatform(bool status);
     void stopRecord();
     void recordVideo();
     void initProcess();
-    void setRecordMouse(const bool status);
-    //int readSleepProcessPid();
+    int getRecordMouse();
+public slots:
+    /**
+     * @brief onRecordFinish:是否录制光标
+     */
+    void onRecordMouse(const bool status);
+    void setMicrophone(const bool status);
+    void setSystemAudio(const bool status);
 
 private slots:
     /**
@@ -98,6 +104,9 @@ private:
 
     int byzanzProcessId = 0;
     int m_framerate;
+
+    bool m_selectedMic = false;
+    bool m_selectedSystemAudio = true;
 
     QProcess *m_pTranscodeProcess = nullptr;
 };

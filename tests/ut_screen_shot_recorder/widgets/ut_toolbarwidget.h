@@ -122,11 +122,6 @@ TEST_F(ToolBarWidgetTest, setExpand)
     m_toolBarWidget->setExpand(true,QString("circ"));
 }
 
-TEST_F(ToolBarWidgetTest, keyBoardCheckedSlot)
-{
-    m_toolBarWidget->keyBoardCheckedSlot(true);
-}
-
 TEST_F(ToolBarWidgetTest, changeArrowAndLineFromBar)
 {
     m_toolBarWidget->changeArrowAndLineFromBar(1);
@@ -139,7 +134,7 @@ TEST_F(ToolBarWidgetTest, setRecordButtonDisableFromMain)
 
 TEST_F(ToolBarWidgetTest, shapeClickedFromBar)
 {
-    m_toolBarWidget->shapeClickedFromBar(QString("circ"));
+    //m_toolBarWidget->shapeClickedFromBar(QString("circ"));
 }
 
 TEST_F(ToolBarWidgetTest, setRecordLaunchFromMain)

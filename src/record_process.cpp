@@ -91,17 +91,15 @@ void RecordProcess::setRecordType(int type)
 {
     recordType = type;
 }
-
 void RecordProcess::setFrameRate(int framerate)
 {
     m_framerate = framerate;
 }
-*/
 void RecordProcess::setRecordAudioInputType(int inputType)
 {
     recordAudioInputType = inputType;
 }
-
+*/
 void RecordProcess::onStartTranscode()
 {
     m_pTranscodeProcess = new QProcess(this);
@@ -420,11 +418,23 @@ void RecordProcess::initProcess()
     // Remove same cache file first.
     QFile file(savePath);
     file.remove();
+
+
 }
 
-void RecordProcess::setRecordMouse(const bool status)
+void RecordProcess::onRecordMouse(const bool status)
 {
     m_isRecordMouse = status;
+}
+
+void RecordProcess::setMicrophone(const bool status)
+{
+    m_selectedMic = status;
+}
+
+void RecordProcess::setSystemAudio(const bool status)
+{
+    m_selectedSystemAudio = status;
 }
 
 void RecordProcess::startRecord()
@@ -432,9 +442,16 @@ void RecordProcess::startRecord()
     m_framerate = settings->value("recordConfig", "mkv_framerate").toString().toInt();
     if (settings->value("recordConfig", "save_as_gif").toBool()) {
         recordType = RECORD_TYPE_GIF;
-        setRecordAudioInputType(RECORD_TYPE_GIF);
+        recordAudioInputType = RECORD_TYPE_GIF;
     } else {
         recordType = RECORD_TYPE_VIDEO;
+        if (m_selectedMic && m_selectedSystemAudio) {
+            recordAudioInputType = RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO;
+        } else if (m_selectedMic) {
+            recordAudioInputType = RECORD_AUDIO_INPUT_MIC;
+        } else if (m_selectedSystemAudio) {
+            recordAudioInputType = RECORD_AUDIO_INPUT_SYSTEMAUDIO;
+        }
     }
     recordVideo();
     if(Utils::isTabletEnvironment) {
