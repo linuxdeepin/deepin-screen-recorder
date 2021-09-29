@@ -11,3 +11,4 @@ cppcheck --enable=all --output-file=../build-ut/cppcheck_dde-dock-plugins.xml --
 ./ut_dde_dock_plugins/build_run_ut.sh
 ./ut_screen_shot_recorder/build_run_ut.sh
 
+exit 0

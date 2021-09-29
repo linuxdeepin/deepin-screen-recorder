@@ -49,3 +49,4 @@ cp $build_dir/asan_ut_screen_shot_recorder.log.* ../../../build-ut/asan_ut_scree
 #nohup x-www-browser $result_report_dir &
  
 #lcov -d $build_dir –z
+exit 0
