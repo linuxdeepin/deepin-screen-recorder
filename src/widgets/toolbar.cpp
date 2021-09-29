@@ -146,9 +146,9 @@ void ToolBarWidget::hideSomeToolBtn()
     m_mainTool->hide();
 }
 
-void ToolBarWidget::setScrollShotDisabled()
+void ToolBarWidget::setScrollShotDisabled(const bool state)
 {
-    m_subTool->setScrollShotDisabled();
+    m_subTool->setScrollShotDisabled(state);
 }
 /*
 bool ToolBarWidget::isButtonChecked()
@@ -274,9 +274,9 @@ void ToolBar::hideSomeToolBtn()
     m_toolbarWidget->hideSomeToolBtn();
 }
 
-void ToolBar::setScrollShotDisabled()
+void ToolBar::setScrollShotDisabled(const bool state)
 {
-    m_toolbarWidget->setScrollShotDisabled();
+    m_toolbarWidget->setScrollShotDisabled(state);
 }
 
 void ToolBar::showAt(QPoint pos)

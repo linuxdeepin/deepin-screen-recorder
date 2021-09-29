@@ -55,7 +55,7 @@ public:
     /**
      * @brief 设置禁止滚动截图
      */
-    void setScrollShotDisabled();
+    void setScrollShotDisabled(const bool state);
 
 signals:
     void buttonChecked(QString shapeType);
@@ -109,7 +109,7 @@ public:
     /**
      * @brief 设置禁止滚动截图
      */
-    void setScrollShotDisabled();
+    void setScrollShotDisabled(const bool state);
 
 signals:
     void buttonChecked(QString shape);

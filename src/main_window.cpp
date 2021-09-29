@@ -1271,6 +1271,16 @@ void MainWindow::responseEsc()
 void MainWindow::compositeChanged()
 {
 
+    // 滚动截图过程中动态切换为2D模式，直接结束
+    if (m_functionType == status::shot) {
+        m_toolBar->setScrollShotDisabled(!m_wmHelper->hasComposite());
+        return;
+    }
+    if (!m_wmHelper->hasComposite() && m_functionType == status::scrollshot) {
+        saveScreenShot();
+        return;
+    }
+
     // 在非录屏状态下，通过快捷键关闭特效模式
     if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
         m_hasComposite = m_wmHelper->hasComposite();
@@ -1321,6 +1331,7 @@ void MainWindow::updateToolBarPos()
         m_toolBar->initToolBar(this);
         m_toolBar->setRecordLaunchMode(m_launchWithRecordFunc);
         //m_toolBar->setIsZhaoxinPlatform(m_isZhaoxin);
+        m_toolBar->setScrollShotDisabled(!m_wmHelper->hasComposite());
 
         m_pVoiceVolumeWatcher = new voiceVolumeWatcher(this);
         m_pVoiceVolumeWatcher->start();
@@ -1963,7 +1974,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
         m_sideBar->changeShotToolFunc(func);
 
         //禁用滚动截图按钮
-        m_toolBar->setScrollShotDisabled();
+        m_toolBar->setScrollShotDisabled(true);
 
     }
 }
