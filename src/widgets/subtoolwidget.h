@@ -65,7 +65,7 @@ public:
     /**
      * @brief 设置禁止滚动截图
      */
-    void setScrollShotDisabled();
+    void setScrollShotDisabled(const bool state);
 signals:
     void keyBoardButtonClicked(bool checked);
     void mouseBoardButtonClicked(bool checked);

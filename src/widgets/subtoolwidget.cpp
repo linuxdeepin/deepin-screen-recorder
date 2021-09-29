@@ -1091,9 +1091,9 @@ void SubToolWidget::hideSomeToolBtn()
 
 }
 
-void SubToolWidget::setScrollShotDisabled()
+void SubToolWidget::setScrollShotDisabled(const bool state)
 {
-    m_scrollShotButton->setEnabled(false);
+    m_scrollShotButton->setDisabled(state);
 }
 
 void SubToolWidget::switchContent(QString shapeType)
