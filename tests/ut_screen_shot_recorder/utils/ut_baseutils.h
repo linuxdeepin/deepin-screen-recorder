@@ -21,7 +21,7 @@ public:
 
 TEST_F(Baseutils_Test, colorIndexOf)
 {
-    QColor color = colorIndexOf(0); // QColor("#fflc49")
+    QColor color = BaseUtils::colorIndexOf(0); // QColor("#fflc49")
     int a, r, g, b;
 
     color.getRgb(&r, &g, &b, &a);
@@ -29,26 +29,26 @@ TEST_F(Baseutils_Test, colorIndexOf)
     EXPECT_EQ(0x1c, g);
     EXPECT_EQ(0x49, b);
 
-    color = colorIndexOf(1); //  QColor("#ffd903")
+    color = BaseUtils::colorIndexOf(1); //  QColor("#ffd903")
     color.getRgb(&r, &g, &b, &a);
     EXPECT_EQ(0xff, r);
     EXPECT_EQ(0xd9, g);
     EXPECT_EQ(0x03, b);
 
-    color = colorIndexOf(2); //  QColor("#ffd903")
+    color = BaseUtils::colorIndexOf(2); //  QColor("#ffd903")
     color.getRgb(&r, &g, &b, &a);
     EXPECT_EQ(0x00, r);
     EXPECT_EQ(0x89, g);
     EXPECT_EQ(0xF7, b);
 
 
-    color = colorIndexOf(3); //  QColor("#ffd903")
+    color = BaseUtils::colorIndexOf(3); //  QColor("#ffd903")
     color.getRgb(&r, &g, &b, &a);
     EXPECT_EQ(0x08, r);
     EXPECT_EQ(0xff, g);
     EXPECT_EQ(0x77, b);
 
-    color = colorIndexOf(4); //  QColor("#ffd903")
+    color = BaseUtils::colorIndexOf(4); //  QColor("#ffd903")
     color.getRgb(&r, &g, &b, &a);
     EXPECT_EQ(0xff, r);
     EXPECT_EQ(0x1c, g);
@@ -57,18 +57,18 @@ TEST_F(Baseutils_Test, colorIndexOf)
 
 TEST_F(Baseutils_Test, colorIndex)
 {
-    int index = colorIndex(QColor("#ff1c49"));
+    int index = BaseUtils::colorIndex(QColor("#ff1c49"));
     EXPECT_EQ(0, index);
 
-    index = colorIndex(QColor("#ff3305"));
+    index = BaseUtils::colorIndex(QColor("#ff3305"));
     EXPECT_EQ(5, index);
 }
 TEST_F(Baseutils_Test, isValidFormat)
 {
-    bool valid = isValidFormat("bmp");
+    bool valid = BaseUtils::isValidFormat("bmp");
     EXPECT_TRUE(valid);
 
-    valid = isValidFormat("mp4");
+    valid = BaseUtils::isValidFormat("mp4");
     EXPECT_FALSE(valid);
 }
 /*
@@ -89,7 +89,7 @@ TEST_F(Baseutils_Test, stringWidth)
     const QString testValue = "0123456789abcdefg";
     const QString testValueCn = "统信UOS";
     QFont font("Arial");
-    qDebug() << stringWidth(font, testValue);
+    qDebug() << BaseUtils::stringWidth(font, testValue);
     //qDebug() << stringWidth(font, testValueCn);
     //EXPECT_EQ(17, stringWidth(font, testValue));
     //EXPECT_EQ(10, stringWidth(font, testValueCn));
@@ -98,35 +98,35 @@ TEST_F(Baseutils_Test, setCursorShape)
 {
     QString cursorName = "start";
     int colorIndex = 0;
-    setCursorShape(cursorName, colorIndex);
+    BaseUtils::setCursorShape(cursorName, colorIndex);
 
     cursorName = "rotate";
     colorIndex = 0;
-    setCursorShape(cursorName, colorIndex);
+    BaseUtils::setCursorShape(cursorName, colorIndex);
 
 
     cursorName = "rectangle";
     colorIndex = 0;
-    setCursorShape(cursorName, colorIndex);
+    BaseUtils::setCursorShape(cursorName, colorIndex);
 
     cursorName = "oval";
     colorIndex = 0;
-    setCursorShape(cursorName, colorIndex);
+    BaseUtils::setCursorShape(cursorName, colorIndex);
 
 
     cursorName = "arrow";
     colorIndex = 0;
-    setCursorShape(cursorName, colorIndex);
+    BaseUtils::setCursorShape(cursorName, colorIndex);
 
     cursorName = "text";
     colorIndex = 0;
-    setCursorShape(cursorName, colorIndex);
+    BaseUtils::setCursorShape(cursorName, colorIndex);
 
     cursorName = "line";
     colorIndex = 0;
-    setCursorShape(cursorName, colorIndex);
+    BaseUtils::setCursorShape(cursorName, colorIndex);
 
     cursorName = "straightLine";
     colorIndex = 0;
-    setCursorShape(cursorName, colorIndex);
+    BaseUtils::setCursorShape(cursorName, colorIndex);
 }

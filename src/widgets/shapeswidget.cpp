@@ -69,7 +69,7 @@ ShapesWidget::ShapesWidget(DWidget *parent)
     setMouseTracking(true);
     setAcceptDrops(true);
 
-    m_penColor = colorIndexOf(ConfigSettings::instance()->value(
+    m_penColor = BaseUtils::colorIndexOf(ConfigSettings::instance()->value(
                                   "common", "color_index").toInt());
 
     connect(m_menuController, &MenuController::shapePressed,
@@ -112,7 +112,7 @@ void ShapesWidget::updateSelectedShape(const QString &group,
         return;
     }
     if ((group == m_currentShape.type || "common" == group) && key == "color_index") {
-        m_penColor = colorIndexOf(index);
+        m_penColor = BaseUtils::colorIndexOf(index);
     }
 
     if (m_selectedIndex != -1 && m_selectedOrder != -1 && m_selectedOrder < m_shapes.length()) {
@@ -127,7 +127,7 @@ void ShapesWidget::updateSelectedShape(const QString &group,
         } else if (group == "text" && m_selectedShape.type == group && key == "color_index") {
             int tmpIndex = m_shapes[m_selectedOrder].index;
             if (m_editMap.contains(tmpIndex)) {
-                m_editMap.value(tmpIndex)->setColor(colorIndexOf(index));
+                m_editMap.value(tmpIndex)->setColor(BaseUtils::colorIndexOf(index));
                 m_editMap.value(tmpIndex)->update();
             }
 
@@ -1644,7 +1644,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
                             qApp->setOverrideCursor(Qt::ClosedHandCursor);
                         }
                     } else if (m_resizeDirection == Rotate) {
-                        qApp->setOverrideCursor(setCursorShape("rotate"));
+                        qApp->setOverrideCursor(BaseUtils::setCursorShape("rotate"));
                     } else if (m_resizeDirection == Moving) {
                         qApp->setOverrideCursor(Qt::ClosedHandCursor);
                     } else {
@@ -1855,7 +1855,7 @@ void ShapesWidget::paintEvent(QPaintEvent *)
     painter.setRenderHints(QPainter::Antialiasing);
     QPen pen;
     for (int i = 0; i < m_shapes.length(); i++) {
-        pen.setColor(colorIndexOf(m_shapes[i].colorIndex));
+        pen.setColor(BaseUtils::colorIndexOf(m_shapes[i].colorIndex));
         pen.setWidthF(m_shapes[i].lineWidth - 0.5);
 
         if (m_shapes[i].type == "rectangle") {
@@ -1905,7 +1905,7 @@ void ShapesWidget::paintEvent(QPaintEvent *)
 
     if ((m_pos1 != QPointF(0, 0) && m_pos2 != QPointF(0, 0)) || m_currentShape.type == "text") {
         FourPoints currentFPoint =  getMainPoints(m_pos1, m_pos2, m_isShiftPressed);
-        pen.setColor(colorIndexOf(m_currentShape.colorIndex));
+        pen.setColor(BaseUtils::colorIndexOf(m_currentShape.colorIndex));
         pen.setWidthF(m_currentShape.lineWidth - 0.5);
 
 //        qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
@@ -2046,11 +2046,10 @@ void ShapesWidget::enterEvent(QEvent *e)
 {
     Q_UNUSED(e);
     if (m_currentType != "line") {
-        qApp->setOverrideCursor(setCursorShape(m_currentType));
+        qApp->setOverrideCursor(BaseUtils::setCursorShape(m_currentType));
     } else {
         int colIndex = ConfigSettings::instance()->value(m_currentType, "color_index").toInt();
-        qDebug() << "enterEvent:" << colIndex << colorIndex(m_penColor);
-        qApp->setOverrideCursor(setCursorShape("line",  colIndex));
+        qApp->setOverrideCursor(BaseUtils::setCursorShape("line",  colIndex));
     }
 }
 
@@ -2260,12 +2259,17 @@ void ShapesWidget::setShiftKeyPressed(bool isShift)
 
 void ShapesWidget::updateCursorShape()
 {
+    QCursor setCursorValue;
     if (m_currentType == "line") {
-        qApp->setOverrideCursor(setCursorShape(m_currentType, colorIndex(m_penColor)));
+        setCursorValue = BaseUtils::setCursorShape(m_currentType, BaseUtils::colorIndex(m_penColor));
     } else if (m_currentType == "arrow" && ConfigSettings::instance()->value("arrow", "is_straight").toBool()) {
-        qApp->setOverrideCursor(setCursorShape("straightLine"));
+        setCursorValue = BaseUtils::setCursorShape("straightLine");
     } else {
-        qApp->setOverrideCursor(setCursorShape(m_currentType));
+        setCursorValue = BaseUtils::setCursorShape(m_currentType);
+    }
+    // 避免相同的光标样式重复设置
+    if(*qApp->overrideCursor() != setCursorValue) {
+        qApp->changeOverrideCursor(setCursorValue);
     }
 }
 

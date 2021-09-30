@@ -35,8 +35,24 @@ const QSize ARROW_SIZE = QSize(24, 24);
 const QSize TEXT_SIZE = QSize(11, 23);
 const QSize COLORPEN_SIZE = QSize(25, 25);
 
-QCursor setCursorShape(QString cursorName, int colorIndex)
+QMap<QString, QCursor> BaseUtils::m_shapesCursor = QMap<QString, QCursor>();
+
+QCursor BaseUtils::setCursorShape(QString cursorName, int colorIndex)
 {
+
+    QString cursorNameString = cursorName;
+    if(cursorName == "line") {
+        cursorNameString = QString("%1%2").arg(cursorName).arg(colorIndex);
+    }
+
+    if(BaseUtils::m_shapesCursor.find(cursorNameString) != BaseUtils::m_shapesCursor.end()) {
+        return BaseUtils::m_shapesCursor.value(cursorNameString);
+    }
+
+
+
+
+
     QCursor customShape = QCursor();
     qreal ration = qApp->devicePixelRatio();
 
@@ -76,8 +92,8 @@ QCursor setCursorShape(QString cursorName, int colorIndex)
 
         customShape = QCursor(textCursor, int(5 * ration), int(5 * ration));
     } else if  (cursorName == "line") {
-//        QPixmap colorPic = QIcon(QString(":/image/mouse_style/"
-//                                         "color_pen/color%1.svg").arg(colorIndex)).pixmap(COLORPEN_SIZE);
+        //        QPixmap colorPic = QIcon(QString(":/image/mouse_style/"
+        //                                         "color_pen/color%1.svg").arg(colorIndex)).pixmap(COLORPEN_SIZE);
         QPixmap colorPic = QIcon(QString(":/"
                                          "color_pen/color%1.svg").arg(colorIndex)).pixmap(COLORPEN_SIZE);
         colorPic.setDevicePixelRatio(ration);
@@ -90,82 +106,18 @@ QCursor setCursorShape(QString cursorName, int colorIndex)
         customShape = QCursor(lineCursor, int(2 * ration), int(9 * ration));
     }
 
+    BaseUtils::m_shapesCursor.insert(cursorNameString, customShape);
     return customShape;
 }
 
-int stringWidth(const QFont &f, const QString &str)
+int BaseUtils::stringWidth(const QFont &f, const QString &str)
 {
     QFontMetrics fm(f);
     return fm.boundingRect(str).width();
 }
-/*
- * never used
-QString getFileContent(const QString &file)
+
+QColor BaseUtils::colorIndexOf(int index)
 {
-    QFile f(file);
-    QString fileContent = "";
-    if (f.open(QFile::ReadOnly)) {
-        fileContent = QLatin1String(f.readAll());
-        f.close();
-    }
-    return fileContent;
-}
-*/
-QColor colorIndexOf(int index)
-{
-//    switch (index) {
-//    case 0: {
-//        return QColor("#ffd903");
-//    }
-//    case 1: {
-//        return QColor("#ff5e1a");
-//    }
-//    case 2: {
-//        return QColor("#ff3305");
-//    }
-//    case 3: {
-//        return QColor("#ff1c49");
-//    }
-//    case 4: {
-//        return QColor("#fb00ff");
-//    }
-//    case 5: {
-//        return QColor("#7700ed");
-//    }
-//    case 6: {
-//        return QColor("#3d08ff");
-//    }
-//    case 7: {
-//        return QColor("#3467ff");
-//    }
-//    case 8: {
-//        return QColor("#00aaff");
-//    }
-//    case 9: {
-//        return QColor("#08ff77");
-//    }
-//    case 10: {
-//        return QColor("#03a60e");
-//    }
-//    case 11: {
-//        return QColor("#3c7d00");
-//    }
-//    case 12: {
-//        return QColor("#ffffff");
-//    }
-//    case 13: {
-//        return QColor("#666666");
-//    }
-//    case 14: {
-//        return QColor("#2b2b2b");
-//    }
-//    case 15: {
-//        return QColor("#000000");
-//    }
-//    default:  {
-//        return QColor("#ffd903");
-//    }
-//    }
     switch (index) {
     case 0: {
         return QColor("#ff1c49");
@@ -174,7 +126,7 @@ QColor colorIndexOf(int index)
         return QColor("#ffd903");
     }
     case 2: {
-//        return QColor("#3d08ff");
+        //        return QColor("#3d08ff");
         return QColor("#0089F7");
     }
     case 3: {
@@ -185,7 +137,7 @@ QColor colorIndexOf(int index)
     return QColor("#ff1c49");
 }
 
-int colorIndex(QColor color)
+int BaseUtils::colorIndex(QColor color)
 {
     QList<QColor> colorList;
     colorList.append(QColor("#ff1c49"));
@@ -196,7 +148,7 @@ int colorIndex(QColor color)
     colorList.append(QColor("#ff3305"));
     colorList.append(QColor("#fb00ff"));
     colorList.append(QColor("#7700ed"));
-//    colorList.append(QColor("#3d08ff"));
+    //    colorList.append(QColor("#3d08ff"));
     colorList.append(QColor("#3467ff"));
     colorList.append(QColor("#00aaff"));
     colorList.append(QColor("#03a60e"));
@@ -208,7 +160,7 @@ int colorIndex(QColor color)
     return colorList.indexOf(color);
 }
 
-bool isValidFormat(QString suffix)
+bool BaseUtils::isValidFormat(QString suffix)
 {
     QStringList validFormat;
     validFormat << "bmp" << "jpg" << "jpeg" << "png" << "pbm" << "pgm" << "xbm" << "xpm";
@@ -219,7 +171,7 @@ bool isValidFormat(QString suffix)
     }
 }
 
-bool isCommandExist(QString command)
+bool BaseUtils::isCommandExist(QString command)
 {
     QProcess *proc = new QProcess;
     if (!proc) {
@@ -232,10 +184,3 @@ bool isCommandExist(QString command)
     delete proc;
     return ret;
 }
-/*
- * never used
-void   paintSelectedPoint(QPainter &painter, QPointF pos, QPixmap pointImg)
-{
-    painter.drawPixmap(pos, pointImg);
-}
-*/

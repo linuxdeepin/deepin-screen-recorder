@@ -48,7 +48,7 @@ TextEdit::TextEdit(int index, DWidget *parent)
 
     int defaultColorIndex = ConfigSettings::instance()->value(
                                 "text", "color_index").toInt();
-    QColor defaultColor = colorIndexOf(defaultColorIndex);
+    QColor defaultColor = BaseUtils::colorIndexOf(defaultColorIndex);
     setColor(defaultColor);
     QFont textFont;
     int defaultFontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();

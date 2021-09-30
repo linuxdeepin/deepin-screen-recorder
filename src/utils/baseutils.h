@@ -42,12 +42,16 @@ enum ResizeDirection {
     Outting,
 };
 
-QCursor setCursorShape(QString cursorName, int colorIndex = 0);
-int stringWidth(const QFont &f, const QString &str);
-//QString     getFileContent(const QString &file);
-QColor       colorIndexOf(int index);
-int                colorIndex(QColor color);
-bool          isValidFormat(QString suffix);
-bool          isCommandExist(QString command);
-//void  paintSelectedPoint(QPainter &painter, QPointF pos, QPixmap pointImg);
+class BaseUtils : public QObject
+{
+    Q_OBJECT
+public:
+    static QCursor setCursorShape(QString cursorName, int colorIndex = 0);
+    static int stringWidth(const QFont &f, const QString &str);
+    static QColor       colorIndexOf(int index);
+    static int                colorIndex(QColor color);
+    static bool          isValidFormat(QString suffix);
+    static bool          isCommandExist(QString command);
+    static QMap<QString, QCursor> m_shapesCursor;
+};
 #endif // BASEUTILS_H

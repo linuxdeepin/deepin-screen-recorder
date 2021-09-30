@@ -384,7 +384,7 @@ void MainWindow::initShortcut()
 //            emit m_toolBar->shapeClickedFromMain("audio");
 //    });
 
-    if (isCommandExist("dman")) {
+    if (BaseUtils::isCommandExist("dman")) {
         QShortcut *helpSC = new QShortcut(QKeySequence("F1"), this);
         helpSC->setAutoRepeat(false);
         connect(helpSC,  SIGNAL(activated()), this, SLOT(onHelp()));
@@ -446,10 +446,6 @@ void MainWindow::initScreenShot()
 
 
     recordButtonStatus = RECORD_BUTTON_NORMAL;
-
-    flashTrayIconCounter = 0;
-
-    //    selectAreaName = "";
 
     //隐藏键盘按钮控件
     if (m_keyButtonList.count() > 0) {
@@ -524,10 +520,6 @@ void MainWindow::initScreenRecorder()
     }
 
     recordButtonStatus = RECORD_BUTTON_NORMAL;
-
-    flashTrayIconCounter = 0;
-
-    //    selectAreaName = "";
 
     if (m_isShapesWidgetExist) {
         m_shapesWidget->hide();
@@ -993,7 +985,7 @@ void MainWindow::fullScreenshot()
     this->showFullScreen();
     this->initResource();
     repaint();
-    qApp->setOverrideCursor(setCursorShape("start"));
+    qApp->setOverrideCursor(BaseUtils::setCursorShape("start"));
     //    initDBusInterface();
     this->setFocus();
     //    m_configSettings =  ConfigSettings::instance();
@@ -2229,7 +2221,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
                 m_saveFileName = m_saveFileName + ".png";
                 break;
             }
-        } else if (!isValidFormat(fileSuffix)) {
+        } else if (!BaseUtils::isValidFormat(fileSuffix)) {
             qWarning() << "The fileName has invalid suffix!" << fileSuffix << m_saveFileName;
 
             switch (t_pictureFormat) {
@@ -3306,9 +3298,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
         }
 
-    }
-
-    else if (event->type() == QEvent::Wheel) {
+    } else if (event->type() == QEvent::Wheel) {
         //qDebug() << "event->type():" << event->type();
         //未进行区域穿透的效果可以由此方式获取相应的鼠标滚轮事件。
         if (status::scrollshot == m_functionType) {

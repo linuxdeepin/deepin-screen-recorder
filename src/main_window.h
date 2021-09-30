@@ -593,7 +593,6 @@ private:
     int recordX = 0;
     int recordY = 0;
 
-    int flashTrayIconCounter = 0;
     QPixmap m_backgroundPixmap;
     QPixmap m_resultPixmap;
     QPixmap resizeHandleBigImg;
