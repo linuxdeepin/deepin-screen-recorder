@@ -21,7 +21,6 @@
 
 #include "event_monitor.h"
 #include "keydefine.h"
-
 #include <X11/Xlibint.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
@@ -29,12 +28,12 @@
 #include <X11/keysym.h>
 #include <X11/extensions/XTest.h>
 
-#include <iostream>
-#include <dlfcn.h>
-
 EventMonitor::EventMonitor(QObject *parent) : QThread(parent)
 {
     isPress = false;
+    if(Utils::isWaylandMode) {
+        initWaylandEventMonitor();
+    }
 }
 
 void EventMonitor::run()
@@ -148,10 +147,73 @@ void EventMonitor::handleEvent(XRecordInterceptData *data)
 
 XFixesCursorImage *EventMonitor::getCursorImage()
 {
+/*
+    if(Utils::isWaylandMode) {
+        return nullptr;
+    }
+*/
     Display *x11Display = XOpenDisplay(nullptr);
     if (!x11Display) {
         fprintf(stderr, "unable to open display\n");
         return nullptr;
     }
     return XFixesGetCursorImage(x11Display);
+}
+
+void EventMonitor::initWaylandEventMonitor()
+{
+    QDBusConnection sessionBus = QDBusConnection::sessionBus();
+    if(!sessionBus.interface()->isServiceRegistered("com.deepin.daemon.InputDevices")) {
+        qDebug() << "DBusError" << "com.deepin.daemon.InputDevices";
+        return;
+    }
+
+    // 监控全局鼠标，键盘按键信号。
+    sessionBus.connect("com.deepin.daemon.InputDevices",
+                       "/com/deepin/api/XEventMonitor","com.deepin.api.XEventMonitor","KeyRelease",
+                       this, SLOT(KeyReleaseEvent(QString, int, int, QString)));
+
+    sessionBus.connect("com.deepin.daemon.InputDevices",
+                       "/com/deepin/api/XEventMonitor","com.deepin.api.XEventMonitor", "KeyPress",
+                        this, SLOT(KeyPressEvent(QString, int, int, QString)));
+
+
+    sessionBus.connect("com.deepin.daemon.InputDevices",
+                       "/com/deepin/api/XEventMonitor","com.deepin.api.XEventMonitor","ButtonPress",
+                        this, SLOT(ButtonPressEvent(int, int, int, QString)));
+
+    sessionBus.connect("com.deepin.daemon.InputDevices",
+                       "/com/deepin/api/XEventMonitor", "com.deepin.api.XEventMonitor","ButtonRelease",
+                       this, SLOT(ButtonReleaseEvent(int, int, int, QString)));
+}
+
+void EventMonitor::ButtonPressEvent(int type, int x, int y, QString str)
+{
+    Q_UNUSED(type);
+    Q_UNUSED(str);
+    emit mousePress(x, y);
+}
+
+void EventMonitor::ButtonReleaseEvent(int type, int x, int y, QString str)
+{
+    Q_UNUSED(type);
+    Q_UNUSED(str);
+    emit mouseRelease(x, y);
+}
+
+// 全局键盘事件暂时还不可用
+void EventMonitor::KeyPressEvent(QString x, int y, int z, QString str)
+{
+    Q_UNUSED(x);
+    Q_UNUSED(y);
+    Q_UNUSED(str);
+    emit keyboardPress(static_cast<unsigned char>(z));
+}
+
+void EventMonitor::KeyReleaseEvent(QString x, int y, int z, QString str)
+{
+    Q_UNUSED(x);
+    Q_UNUSED(y);
+    Q_UNUSED(str);
+    emit keyboardRelease(static_cast<unsigned char>(z));
 }

@@ -130,7 +130,10 @@ MainWindow::MainWindow(DWidget *parent) :
     connect(m_pScreenCaptureEvent, SIGNAL(keyboardPress(unsigned char)), this, SLOT(onKeyboardPress(unsigned char)), Qt::QueuedConnection);
     connect(m_pScreenCaptureEvent, SIGNAL(keyboardRelease(unsigned char)), this, SLOT(onKeyboardRelease(unsigned char)), Qt::QueuedConnection);
     qDebug() << "截图录屏事件监听线程已启动！！！";
-    m_pScreenCaptureEvent->start();
+
+    if (!Utils::isWaylandMode) {
+        m_pScreenCaptureEvent->start();
+    }
 
 
     m_screenCount = QApplication::desktop()->screenCount();

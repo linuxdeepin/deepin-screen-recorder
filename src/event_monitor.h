@@ -22,7 +22,12 @@
 #ifndef EVENTMONITOR_H
 #define EVENTMONITOR_H
 
+#include "utils.h"
+
 #include <QThread>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QDebug>
 #include <X11/Xlib.h>
 #include <X11/extensions/record.h>
 #include <X11/extensions/Xfixes.h>
@@ -40,6 +45,12 @@ public:
     static void callback(XPointer trash, XRecordInterceptData *data);
     void handleEvent(XRecordInterceptData *);
     XFixesCursorImage *getCursorImage();
+    void initWaylandEventMonitor();
+public slots:
+    void ButtonPressEvent(int type, int x, int y, QString str);
+    void ButtonReleaseEvent(int type, int x, int y, QString str);
+    void KeyPressEvent(QString x, int y, int z, QString str);
+    void KeyReleaseEvent(QString x, int y, int z, QString str);
 
 signals:
     /**
