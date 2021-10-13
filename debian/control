@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 9), pkg-config (>= 0.29), qt5-qmake (>= 5.11.3.28),
  libxcb-util0-dev (>= 0.3.8.1), libqt5x11extras5-dev (>= 5.11.3), qttools5-dev-tools (>= 5.11.3),
  libdtkgui-dev,libdtkwidget-dev, libxtst-dev (>= 2:1.2.3), libprocps-dev (>= 2:3.3.15),
  libdframeworkdbus-dev (>= 5.3.0.24),libxcursor-dev (>= 1:1.1.15),libxfixes-dev (>= 1:5.0.3),libqt5multimediawidgets5 (>= 5.11.3),
- qtmultimedia5-dev (>= 5.11.3),dde-dock-dev (>= 5.3.0.54),qtbase5-dev-tools (>= 5.11.3.28), libopencv-core-dev,libopencv-imgproc-dev,libopencv-calib3d-dev,libopencv-dev
+ qtmultimedia5-dev (>= 5.11.3),dde-dock-dev (>= 5.3.0.54),qtbase5-dev-tools (>= 5.11.3.28), libopencv-core-dev,libopencv-imgproc-dev,libopencv-calib3d-dev,libopencv-dev,gstreamer1.0-clutter-3.0,gstreamer1.0-x
 Standards-Version: 3.9.8
 Homepage: https://github.com/linuxdeepin/deepin-screen-recorder
 
