@@ -3743,7 +3743,7 @@ void MainWindow::onOpenScrollShotHelp()
                              QDBusConnection::sessionBus());
     QList<QVariant> arg;
     arg << (QCoreApplication::applicationName())                  // 应用名称
-        << QString(tr("Scrollshot"));                         // 帮助文案中的标题名称
+        << QString(tr("Take Screen Scrollshots"));                         // 帮助文案中的标题名称
     interFace.callWithArgumentList(QDBus::AutoDetect, "OpenTitle", arg);
 
     exitApp();
