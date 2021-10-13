@@ -26,18 +26,19 @@
 #include <QThread>
 
 voiceVolumeWatcher::voiceVolumeWatcher(QObject *parent)
-    : QThread(parent)
-    , m_loopwatch(true)
+    : QObject(parent)
     , m_coulduse(true)
 {
     //m_isRecoding = false;
 
     // 初始化Dus接口
 
-    if(QDBusConnection::sessionBus().interface()->isServiceRegistered("com.deepin.daemon.Audio").value()) {
+    if (QDBusConnection::sessionBus().interface()->isServiceRegistered("com.deepin.daemon.Audio").value()) {
         initDeviceWatcher();
         initConnections();
     }
+    m_watchTimer = new QTimer(this);
+    connect(m_watchTimer, &QTimer::timeout, this, &voiceVolumeWatcher::slotvoiceVolumeWatcher); //新增定时器检测麦克风
 }
 
 voiceVolumeWatcher::~voiceVolumeWatcher()
@@ -46,57 +47,43 @@ voiceVolumeWatcher::~voiceVolumeWatcher()
 }
 
 //停止log循环读取
-void voiceVolumeWatcher::setWatch(const bool &is)
+void voiceVolumeWatcher::setWatch(const bool isWatcher)
 {
-    QMutexLocker locker(&m_mutex);
-    m_loopwatch = is;
+    if (isWatcher) {
+        m_watchTimer->start(1000);
+    } else {
+        m_watchTimer->stop();
+    }
 }
 
-bool voiceVolumeWatcher::isWatch()
+// 将原有的run方法替换为slotvoiceVolumeWatcher，解决截图录屏退出时缓慢的问题
+void voiceVolumeWatcher::slotvoiceVolumeWatcher()
 {
-    QMutexLocker locker(&m_mutex);
-    return m_loopwatch;
-}
-/*
-void voiceVolumeWatcher::setIsRecoding(bool value)
-{
-    m_isRecoding = value;
-}
-*/
-void voiceVolumeWatcher::run()
-{
-    setWatch(true);
-    //QThread::currentThread()->msleep(200);
     static const double DBL_EPSILON = 0.000001;
-    //static const double volumeLowMark = 0.2; //20% volume
-    //防止反复申请和释放内存，减少内存碎片
     bool couldUse = false;
     double currentMicrophoneVolume = 0.0;
-    while (isWatch()) {
-        if(nullptr != m_defaultSource){
-            //https://pms.uniontech.com/zentao/bug-view-52019.html
-            AudioPort activePort = m_defaultSource->activePort();
-            //qDebug() << "=========" << activePort.name << activePort.description << activePort.availability << "--------";
-            couldUse = false;
-            if (isMicrophoneAvail(activePort.name)) {
-                currentMicrophoneVolume = m_defaultSource->volume();
-                if (currentMicrophoneVolume > DBL_EPSILON) {
-                    couldUse = true;
-                }
-            }
-            if (couldUse != m_coulduse) {
-                //发送log信息到UI
-                m_coulduse = couldUse;
-                emit sigRecodeState(couldUse);
-            }
-        } else {
-            if (couldUse != m_coulduse) {
-                //发送log信息到UI
-                m_coulduse = couldUse;
-                emit sigRecodeState(couldUse);
+    if (nullptr != m_defaultSource) {
+        //https://pms.uniontech.com/zentao/bug-view-52019.html
+        AudioPort activePort = m_defaultSource->activePort();
+        //qDebug() << "=========" << activePort.name << activePort.description << activePort.availability << "--------";
+        couldUse = false;
+        if (isMicrophoneAvail(activePort.name)) {
+            currentMicrophoneVolume = m_defaultSource->volume();
+            if (currentMicrophoneVolume > DBL_EPSILON) {
+                couldUse = true;
             }
         }
-        QThread::currentThread()->msleep(1000);
+        if (couldUse != m_coulduse) {
+            //发送log信息到UI
+            m_coulduse = couldUse;
+            emit sigRecodeState(couldUse);
+        }
+    } else {
+        if (couldUse != m_coulduse) {
+            //发送log信息到UI
+            m_coulduse = couldUse;
+            emit sigRecodeState(couldUse);
+        }
     }
 }
 
@@ -115,27 +102,27 @@ bool voiceVolumeWatcher::isMicrophoneAvail(const QString &activePort) const
 void voiceVolumeWatcher::initDeviceWatcher()
 {
     m_audioInterface.reset(
-                new com::deepin::daemon::Audio(
-                    m_serviceName,
-                    "/com/deepin/daemon/Audio",
-                    QDBusConnection::sessionBus(),
-                    this )
-                );
+        new com::deepin::daemon::Audio(
+            m_serviceName,
+            "/com/deepin/daemon/Audio",
+            QDBusConnection::sessionBus(),
+            this)
+    );
 
     m_defaultSource.reset(
-                new com::deepin::daemon::audio::Source (
-                    m_serviceName,
-                    m_audioInterface->defaultSource().path(),
-                    QDBusConnection::sessionBus(),
-                    this )
-                );
+        new com::deepin::daemon::audio::Source(
+            m_serviceName,
+            m_audioInterface->defaultSource().path(),
+            QDBusConnection::sessionBus(),
+            this)
+    );
     onCardsChanged(m_audioInterface->cards());
 }
 
 void voiceVolumeWatcher::onCardsChanged(const QString &value)
 {
     //qDebug() << "Cards changed:" << value;
-    if(value.isEmpty()){
+    if (value.isEmpty()) {
         return;
     }
     initAvailInputPorts(value);
@@ -200,7 +187,7 @@ void voiceVolumeWatcher::initConnections()
             this, &voiceVolumeWatcher::onDefaultSourceChanaged);
 
     connect(m_audioInterface.get(), &com::deepin::daemon::Audio::CardsChanged
-            ,this, &voiceVolumeWatcher::onCardsChanged);
+            , this, &voiceVolumeWatcher::onCardsChanged);
 }
 
 void voiceVolumeWatcher::onDefaultSourceChanaged(const QDBusObjectPath &value)
@@ -212,12 +199,12 @@ void voiceVolumeWatcher::onDefaultSourceChanaged(const QDBusObjectPath &value)
              << " name:" << m_defaultSource->name();
 
     m_defaultSource.reset(
-                new com::deepin::daemon::audio::Source (
-                    m_serviceName,
-                    value.path(),
-                    QDBusConnection::sessionBus(),
-                    this )
-                );
+        new com::deepin::daemon::audio::Source(
+            m_serviceName,
+            value.path(),
+            QDBusConnection::sessionBus(),
+            this)
+    );
 
     /*
     AudioPort activePort = m_defaultSource->activePort();
@@ -230,7 +217,7 @@ void voiceVolumeWatcher::onDefaultSourceChanaged(const QDBusObjectPath &value)
     */
 }
 
-QDebug & operator <<(QDebug &out, const voiceVolumeWatcher::Port &port)
+QDebug &operator <<(QDebug &out, const voiceVolumeWatcher::Port &port)
 {
     out << "\n Port { "
         << "portId=" << port.portId << ","

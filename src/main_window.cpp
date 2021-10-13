@@ -415,7 +415,7 @@ void MainWindow::initResource()
     m_showButtons = new ShowButtons(this);
     if (!m_pScreenCaptureEvent || !m_showButtons)
         return;
-    connect(m_showButtons, SIGNAL(keyShowSignal(const QString &)),this, SLOT(showKeyBoardButtons(const QString &)));
+    connect(m_showButtons, SIGNAL(keyShowSignal(const QString &)), this, SLOT(showKeyBoardButtons(const QString &)));
     resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(":/newUI/normal/node.svg");
     buttonFeedback = new ButtonFeedback();
 }
@@ -1329,12 +1329,12 @@ void MainWindow::updateToolBarPos()
         m_toolBar->setScrollShotDisabled(!m_wmHelper->hasComposite());
 
         m_pVoiceVolumeWatcher = new voiceVolumeWatcher(this);
-        m_pVoiceVolumeWatcher->start();
+        m_pVoiceVolumeWatcher->setWatch(true); //取消之前的线程方式，采用定时器监测
         connect(m_pVoiceVolumeWatcher, SIGNAL(sigRecodeState(bool)), m_toolBar, SLOT(setMicroPhoneEnable(bool)));
         m_toolBarInit = true;
 
         m_pCameraWatcher = new CameraWatcher(this);
-        m_pCameraWatcher->start();
+        m_pCameraWatcher->setWatch(true); //取消之前的线程方式，采用定时器监测
         connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
     }
 
@@ -3909,8 +3909,7 @@ void MainWindow::exitScreenCuptureEvent()
     if (QSysInfo::currentCpuArchitecture().startsWith("x86")
             && !m_isZhaoxin
             && (nullptr != m_pScreenCaptureEvent)) {
-        m_pScreenCaptureEvent->terminate();
-        m_pScreenCaptureEvent->wait();
+        //m_pScreenCaptureEvent->releaseEventMonitor();
         delete m_pScreenCaptureEvent;
         m_pScreenCaptureEvent = nullptr;
     }

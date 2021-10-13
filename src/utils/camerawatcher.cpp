@@ -27,11 +27,12 @@
 #include <QDebug>
 
 CameraWatcher::CameraWatcher(QObject *parent)
-    : QThread(parent)
-    , m_loopwatch(true)
+    : QObject(parent)
     , m_coulduse(true)
 {
     //m_isRecoding = false;
+    m_watchTimer = new QTimer(this);
+    connect(m_watchTimer, &QTimer::timeout, this, &CameraWatcher::slotCameraWatcher); //新增定时器检测摄像头
 }
 
 CameraWatcher::~CameraWatcher()
@@ -39,46 +40,28 @@ CameraWatcher::~CameraWatcher()
 
 }
 
-void CameraWatcher::setWatch(const bool &is)
+void CameraWatcher::setWatch(const bool isWatcher)
 {
-    QMutexLocker locker(&m_mutex);
-    m_loopwatch = is;
+    if (isWatcher) {
+        m_watchTimer->start(1000);
+    } else {
+        m_watchTimer->stop();
+    }
 }
 
-bool CameraWatcher::isWatch()
+// 将原有的run方法替换为slotCameraWatcher，解决截图录屏退出时缓慢的问题
+void CameraWatcher::slotCameraWatcher()
 {
-    QMutexLocker locker(&m_mutex);
-    return m_loopwatch;
-}
-
-/*
- * never used
-void CameraWatcher::setIsRecoding(bool value)
-{
-    m_isRecoding = value;
-}
-*/
-
-void CameraWatcher::run()
-{
-    setWatch(true);
-    //    QThread::currentThread()->msleep(1000);
-    //防止反复申请和释放内存，减少内存碎片
     bool couldUse = false;
-    while (isWatch()) {
-        couldUse = false;
-        //qDebug() << "QCameraInfo::availableCameras()" << QCameraInfo::defaultCamera().deviceName();
-        if (QCameraInfo::availableCameras().count() > 0) {
-            couldUse = true;
-        }
+    //qDebug() << "QCameraInfo::availableCameras()" << QCameraInfo::defaultCamera().deviceName();
+    if (QCameraInfo::availableCameras().count() > 0) {
+        couldUse = true;
+    }
 
-        if (couldUse != m_coulduse) {
-            //发送log信息到UI
-            m_coulduse = couldUse;
-            emit sigCameraState(couldUse);
-        }
-
-        QThread::currentThread()->msleep(1000);
+    if (couldUse != m_coulduse) {
+        //发送log信息到UI
+        m_coulduse = couldUse;
+        emit sigCameraState(couldUse);
     }
 }
 

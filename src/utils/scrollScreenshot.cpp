@@ -57,8 +57,7 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
 ScrollScreenshot::~ScrollScreenshot()
 {
     if (nullptr != m_PixMerageThread) {
-
-        m_PixMerageThread->terminate();
+        m_PixMerageThread->stopTask(); //避免使用terminate
         m_PixMerageThread->wait();
         delete m_PixMerageThread;
         m_PixMerageThread = nullptr;

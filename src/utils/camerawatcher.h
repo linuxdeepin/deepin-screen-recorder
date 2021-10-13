@@ -23,30 +23,28 @@
 #define CAMERAWATCHER_H
 
 #include <QObject>
-#include <QThread>
+#include <QTimer>
 #include <QMutex>
 
-class CameraWatcher : public QThread
+class CameraWatcher : public QObject
 {
     Q_OBJECT
 public:
     explicit CameraWatcher(QObject *parent = nullptr);
     ~CameraWatcher();
-    void setWatch(const bool &is);
-    bool isWatch();
-    //void setIsRecoding(bool value);
-    void run();
+    void setWatch(const bool isWatcher);
+public slots:
+    // 将原来的run()方法改为定时器的槽函数，便于截图快速退出
+    // 取消之前的线程方式，采用定时器监测
+    void slotCameraWatcher();
 
 signals:
     void sigCameraState(bool couldUse);
 
 
 private:
-    bool m_loopwatch;
-    //bool m_isRecoding;
     bool m_coulduse;
-    //多线程加锁
-    QMutex m_mutex;
+    QTimer *m_watchTimer = nullptr; //新增摄像头监视
 };
 
 #endif // CAMERAWATCHER_H

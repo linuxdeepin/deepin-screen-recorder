@@ -26,18 +26,19 @@
 #include <com_deepin_daemon_audio_source.h>
 
 #include <QObject>
-#include <QThread>
+#include <QTimer>
 
-class voiceVolumeWatcher : public QThread
+class voiceVolumeWatcher : public QObject
 {
     Q_OBJECT
 public:
     explicit voiceVolumeWatcher(QObject *parent = nullptr);
     ~voiceVolumeWatcher();
-    void setWatch(const bool &is);
-    bool isWatch();
+    void setWatch(const bool isWatcher);
     void setIsRecoding(bool value);
-    void run();
+    // 将原来的run()方法改为定时器的槽函数，便于截图快速退出
+    // 取消之前的线程方式，采用定时器监测
+    void slotvoiceVolumeWatcher();
 protected:
     void initDeviceWatcher();
     void onCardsChanged(const QString &value);
@@ -67,16 +68,13 @@ private:
         bool isInputPort() const;
         bool isLoopback() const;
     };
-    friend QDebug& operator << (QDebug& out, const Port &port);
+    friend QDebug &operator << (QDebug &out, const Port &port);
 
     //All available input ports.except loopback port.
     QMap<QString, Port> m_availableInputPorts;
-
-    bool m_loopwatch;
     //bool m_isRecoding;
     bool m_coulduse;
-    //多线程加锁
-    QMutex m_mutex;
+    QTimer *m_watchTimer = nullptr; //新增麦克风定时检测
 };
 
 

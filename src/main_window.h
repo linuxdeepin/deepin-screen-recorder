@@ -130,28 +130,15 @@ public:
     {
         if (m_pVoiceVolumeWatcher) {
             m_pVoiceVolumeWatcher->setWatch(false);
-            //run函数里面有sleep,所以此处加terminate
-#ifdef __x86_64__
-            m_pVoiceVolumeWatcher->terminate();
-#else
-            m_pVoiceVolumeWatcher->exit();
-#endif
-            if (!QSysInfo::currentCpuArchitecture().startsWith("mips")) {
-                m_pVoiceVolumeWatcher->wait();
-                m_pVoiceVolumeWatcher = nullptr;
-            }
+            // 之前run函数里面有sleep,所以此处加terminate，现在采用定时器检测摄像头，就不考虑各个平台下线程退出的方式
+            delete m_pVoiceVolumeWatcher;
+            m_pVoiceVolumeWatcher = nullptr;
         }
+        // 因为采用定时器检测摄像头，就不考虑各个平台下线程退出的方式
         if (m_pCameraWatcher) {
             m_pCameraWatcher->setWatch(false);
-#ifdef __x86_64__
-            m_pCameraWatcher->terminate();
-#else
-            m_pCameraWatcher->exit();
-#endif
-            if (!QSysInfo::currentCpuArchitecture().startsWith("mips")) {
-                m_pCameraWatcher->wait();
-                m_pCameraWatcher = nullptr;
-            }
+            delete m_pCameraWatcher;
+            m_pCameraWatcher = nullptr;
         }
 #ifndef __mips__
 
@@ -216,10 +203,11 @@ public:
             delete m_scrollShotTip;
             m_scrollShotTip = nullptr;
         }
-//        if (m_scrollShot) {
-//            delete m_scrollShot;
-//            m_scrollShot = nullptr;
-//        }
+        //放开m_scrollShot的delete操作
+        if (m_scrollShot) {
+            delete m_scrollShot;
+            m_scrollShot = nullptr;
+        }
         if (m_previewWidget) {
             delete m_previewWidget;
             m_previewWidget = nullptr;
@@ -792,7 +780,7 @@ private:
     /**
      * @brief 滚动截图图像拼接
      */
-    ScrollScreenshot *m_scrollShot;
+    ScrollScreenshot *m_scrollShot = nullptr;
 
 
 };

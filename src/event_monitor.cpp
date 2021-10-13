@@ -31,15 +31,26 @@
 EventMonitor::EventMonitor(QObject *parent) : QThread(parent)
 {
     isPress = false;
-    if(Utils::isWaylandMode) {
+    if (Utils::isWaylandMode) {
         initWaylandEventMonitor();
+    }
+}
+
+EventMonitor::~EventMonitor()
+{
+    if(m_display_datalink && m_display) {
+        XRecordDisableContext(m_display_datalink, m_context);
+        XRecordFreeContext(m_display, m_context);
+        XSync(m_display, False);
+        m_display_datalink = nullptr;
+        m_display = nullptr;
     }
 }
 
 void EventMonitor::run()
 {
-    Display *display = XOpenDisplay(nullptr);
-    if (display == nullptr) {
+    m_display = XOpenDisplay(nullptr);
+    if (m_display == nullptr) {
         fprintf(stderr, "unable to open display\n");
         return;
     }
@@ -58,22 +69,22 @@ void EventMonitor::run()
     range->device_events.last  = MotionNotify;
 
     // And create the XRECORD context.
-    XRecordContext context = XRecordCreateContext(display, 0, &clients, 1, &range, 1);
-    if (context == 0) {
+    m_context = XRecordCreateContext(m_display, 0, &clients, 1, &range, 1);
+    if (m_context == 0) {
         fprintf(stderr, "XRecordCreateContext failed\n");
         return;
     }
     XFree(range);
 
-    XSync(display, True);
+    XSync(m_display, True);
 
-    Display *display_datalink = XOpenDisplay(nullptr);
-    if (display_datalink == nullptr) {
+    m_display_datalink = XOpenDisplay(nullptr);
+    if (m_display_datalink == nullptr) {
         fprintf(stderr, "unable to open second display\n");
         return;
     }
 
-    if (!XRecordEnableContext(display_datalink, context,  callback, reinterpret_cast<XPointer>(this))) {
+    if (!XRecordEnableContext(m_display_datalink, m_context,  callback, reinterpret_cast<XPointer>(this))) {
         fprintf(stderr, "XRecordEnableContext() failed\n");
         return;
     }
@@ -147,11 +158,11 @@ void EventMonitor::handleEvent(XRecordInterceptData *data)
 
 XFixesCursorImage *EventMonitor::getCursorImage()
 {
-/*
-    if(Utils::isWaylandMode) {
-        return nullptr;
-    }
-*/
+    /*
+        if(Utils::isWaylandMode) {
+            return nullptr;
+        }
+    */
     Display *x11Display = XOpenDisplay(nullptr);
     if (!x11Display) {
         fprintf(stderr, "unable to open display\n");
@@ -163,27 +174,27 @@ XFixesCursorImage *EventMonitor::getCursorImage()
 void EventMonitor::initWaylandEventMonitor()
 {
     QDBusConnection sessionBus = QDBusConnection::sessionBus();
-    if(!sessionBus.interface()->isServiceRegistered("com.deepin.daemon.InputDevices")) {
+    if (!sessionBus.interface()->isServiceRegistered("com.deepin.daemon.InputDevices")) {
         qDebug() << "DBusError" << "com.deepin.daemon.InputDevices";
         return;
     }
 
     // 监控全局鼠标，键盘按键信号。
     sessionBus.connect("com.deepin.daemon.InputDevices",
-                       "/com/deepin/api/XEventMonitor","com.deepin.api.XEventMonitor","KeyRelease",
+                       "/com/deepin/api/XEventMonitor", "com.deepin.api.XEventMonitor", "KeyRelease",
                        this, SLOT(KeyReleaseEvent(QString, int, int, QString)));
 
     sessionBus.connect("com.deepin.daemon.InputDevices",
-                       "/com/deepin/api/XEventMonitor","com.deepin.api.XEventMonitor", "KeyPress",
-                        this, SLOT(KeyPressEvent(QString, int, int, QString)));
+                       "/com/deepin/api/XEventMonitor", "com.deepin.api.XEventMonitor", "KeyPress",
+                       this, SLOT(KeyPressEvent(QString, int, int, QString)));
 
 
     sessionBus.connect("com.deepin.daemon.InputDevices",
-                       "/com/deepin/api/XEventMonitor","com.deepin.api.XEventMonitor","ButtonPress",
-                        this, SLOT(ButtonPressEvent(int, int, int, QString)));
+                       "/com/deepin/api/XEventMonitor", "com.deepin.api.XEventMonitor", "ButtonPress",
+                       this, SLOT(ButtonPressEvent(int, int, int, QString)));
 
     sessionBus.connect("com.deepin.daemon.InputDevices",
-                       "/com/deepin/api/XEventMonitor", "com.deepin.api.XEventMonitor","ButtonRelease",
+                       "/com/deepin/api/XEventMonitor", "com.deepin.api.XEventMonitor", "ButtonRelease",
                        this, SLOT(ButtonReleaseEvent(int, int, int, QString)));
 }
 

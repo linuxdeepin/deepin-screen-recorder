@@ -42,6 +42,7 @@ class EventMonitor : public QThread
 
 public:
     explicit EventMonitor(QObject *parent = nullptr);
+    ~EventMonitor();
     static void callback(XPointer trash, XRecordInterceptData *data);
     void handleEvent(XRecordInterceptData *);
     XFixesCursorImage *getCursorImage();
@@ -111,6 +112,9 @@ protected:
 
 private:
     bool isPress;
+    Display *m_display = nullptr;
+    Display *m_display_datalink = nullptr;
+    XRecordContext m_context;
 };
 
 #endif
