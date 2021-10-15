@@ -203,11 +203,10 @@ public:
             delete m_scrollShotTip;
             m_scrollShotTip = nullptr;
         }
-        //放开m_scrollShot的delete操作
-        if (m_scrollShot) {
-            delete m_scrollShot;
-            m_scrollShot = nullptr;
-        }
+//        if (m_scrollShot) {
+//            delete m_scrollShot;
+//            m_scrollShot = nullptr;
+//        }
         if (m_previewWidget) {
             delete m_previewWidget;
             m_previewWidget = nullptr;
