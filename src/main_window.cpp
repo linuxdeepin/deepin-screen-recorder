@@ -1980,8 +1980,6 @@ void MainWindow::saveScreenShot()
     if (m_pScreenCaptureEvent) {
         m_CursorImage = m_pScreenCaptureEvent->getCursorImage();
     }
-
-    emit releaseEvent();
     m_shotflag = 1;
     emit saveActionTriggered();
     hideAllWidget();
@@ -2104,9 +2102,6 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
 
 bool MainWindow::saveAction(const QPixmap &pix)
 {
-    emit releaseEvent();
-
-    //    using namespace utils;
     //不必要的拷贝，浪费时间
     //QPixmap screenShotPix = pix;
     QDateTime currentDate;
@@ -2124,16 +2119,6 @@ bool MainWindow::saveAction(const QPixmap &pix)
     //    bool copyToClipboard = true;
 
     int t_pictureFormat = ConfigSettings::instance()->value("save", "format").toInt();
-
-    /*
-    std::pair<bool, SaveAction> temporarySaveAction = ConfigSettings::instance()->getTemporarySaveAction();
-    if (temporarySaveAction.first) {
-        m_saveIndex = temporarySaveAction.second;
-    } else {
-        m_saveIndex = ConfigSettings::instance()->value("save", "save_op").value<SaveAction>();
-    }
-    */
-
     m_saveIndex = ConfigSettings::instance()->value("save", "save_op").value<SaveAction>();
     if (m_shotWithPath == true) {
         m_saveIndex = AutoSave;
@@ -3906,13 +3891,14 @@ void MainWindow::initPadShot()
 void MainWindow::exitScreenCuptureEvent()
 {
     qDebug() << "line: " << __LINE__ << " >>> function: " << __func__;
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86")
-            && !m_isZhaoxin
-            && (nullptr != m_pScreenCaptureEvent)) {
-        //m_pScreenCaptureEvent->releaseEventMonitor();
+#ifndef __mips__
+    if (!m_isZhaoxin && m_pScreenCaptureEvent) {
+        m_pScreenCaptureEvent->terminate();
+        m_pScreenCaptureEvent->wait();
         delete m_pScreenCaptureEvent;
         m_pScreenCaptureEvent = nullptr;
     }
+#endif
 }
 
 void MainWindow::onViewShortcut()
@@ -4572,23 +4558,9 @@ void MainWindow::initShapeWidget(QString type)
 void MainWindow::exitApp()
 {
     emit releaseEvent();
-    //exitScreenCuptureEvent();
     qApp->quit();
 }
-/*
-int MainWindow::getRecordInputType(bool selectedMic, bool selectedSystemAudio)
-{
-    if (selectedMic && selectedSystemAudio) {
-        return RecordProcess::RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO;
-    } else if (selectedMic) {
-        return RecordProcess::RECORD_AUDIO_INPUT_MIC;
-    } else if (selectedSystemAudio) {
-        return RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO;
-    }
-    return 0;
 
-}
-*/
 void MainWindow::reloadImage(QString effect)
 {
     //*save tmp image file
@@ -4622,12 +4594,5 @@ void MainWindow::shotImgWidthEffect()
                  static_cast<int>(m_shapesWidget->geometry().height() * m_pixelRatio));
 
     m_resultPixmap = m_backgroundPixmap.copy(target);
-    //m_drawNothing = false;
     update();
 }
-
-//void MainWindow::changeArrowAndLineEvent(int line)
-//{
-//    qDebug() << "line :" << line;
-//    m_toolBar->changeArrowAndLineFromMain(line);
-//}

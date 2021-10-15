@@ -127,5 +127,4 @@ QString Screenshot::getRecorderNormalIcon()
 
 Screenshot::~Screenshot() 
 {
-    m_window.onExit();
 }
