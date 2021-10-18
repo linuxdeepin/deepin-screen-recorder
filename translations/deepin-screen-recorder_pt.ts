@@ -97,6 +97,10 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <source>Scrollshot</source>
         <translation>Scrollshot</translation>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -144,10 +148,6 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Get help.</source>
         <translation>Obter ajuda.</translation>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="vanished">Clique para tirar um screenshot que permite deslizar</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>

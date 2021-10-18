@@ -95,6 +95,10 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Scrollshot</source>
+        <translation>Capturar desplazamiento</translation>
+    </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -143,39 +147,35 @@ o haga clic en el icono de la bandeja</translation>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Busca ayuda.</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>No se ha podido realizar una captura de pantalla continua.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>Fondo del área de desplazamiento alcanzado</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation type="unfinished"/>
+        <translation>Ha alcanzado la longitud máxima</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>ajustar el área de captura</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Desplaza la rueda del ratón o haz clic para hacer una captura de pantalla con desplazamiento</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>Reducir la velocidad de desplazamiento</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>Invalid area, click to </translation>
     </message>
 </context>
 <context>
@@ -333,7 +333,7 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Capturar desplazamiento</translation>
     </message>
 </context>
 <context>
@@ -507,7 +507,7 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Capturar desplazamiento</translation>
     </message>
 </context>
 <context>

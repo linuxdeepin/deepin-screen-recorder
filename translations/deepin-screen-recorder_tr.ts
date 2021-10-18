@@ -97,6 +97,10 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -146,10 +150,6 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation>Yardım al.</translation>
     </message>
     <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <source>Failed to take a continuous screenshot.</source>
         <translation>Sürekli ekran görüntüsü alınamadı.</translation>
     </message>
@@ -163,7 +163,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>yakalama alanını ayarla</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
@@ -171,11 +171,11 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>Kaydırma hızını yavaşlat</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>Geçersiz alan, tıklayın</translation>
     </message>
 </context>
 <context>

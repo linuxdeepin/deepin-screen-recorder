@@ -97,6 +97,10 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -144,10 +148,6 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <message>
         <source>Get help.</source>
         <translation>Hilfe holen.</translation>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
@@ -407,23 +407,23 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>5 fps</source>
-        <translation>5 fps</translation>
+        <translation>5 BpS</translation>
     </message>
     <message>
         <source>10 fps</source>
-        <translation>10 fps</translation>
+        <translation>10 BpS</translation>
     </message>
     <message>
         <source>20 fps</source>
-        <translation>20 fps</translation>
+        <translation>20 BpS</translation>
     </message>
     <message>
         <source>24 fps</source>
-        <translation>24 fps</translation>
+        <translation>24 BpS</translation>
     </message>
     <message>
         <source>30 fps</source>
-        <translation>30 fps</translation>
+        <translation>30 BpS</translation>
     </message>
     <message>
         <source>Rectangle</source>

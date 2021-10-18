@@ -97,6 +97,10 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
         <source>Scrollshot</source>
         <translation>Sürüşdürmə</translation>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation>Ekranın şəkillərini çəkin</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -146,10 +150,6 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
         <translation>Kömək alın.</translation>
     </message>
     <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="vanished">Sürüşmənin görüntüşünü çəkmək üçün vurun</translation>
-    </message>
-    <message>
         <source>Failed to take a continuous screenshot.</source>
         <translation>Kəsintisiz ekran şəklini saxlamaq baş tutmadı.</translation>
     </message>
@@ -163,19 +163,19 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>Çəkim sahəsini təyin edin</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Siçan çarxını sürüşdürün və ya sürüşdürülənən ekran görüntüsü çəkmək üçün vurun</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>Sürüşdürmə sürətini zəiflədin</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>Səhv sahə, buraya vurun:</translation>
     </message>
 </context>
 <context>

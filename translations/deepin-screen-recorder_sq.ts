@@ -97,6 +97,10 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
         <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -144,10 +148,6 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     <message>
         <source>Get help.</source>
         <translation>Merrni ndihmë.</translation>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>

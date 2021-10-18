@@ -97,6 +97,10 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
         <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -143,10 +147,6 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
         <translation type="unfinished"/>
     </message>
     <message>

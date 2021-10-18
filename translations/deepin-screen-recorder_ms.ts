@@ -97,6 +97,10 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <source>Scrollshot</source>
         <translation>Tangkap tatal</translation>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -144,10 +148,6 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>Get help.</source>
         <translation>Dapatkan bantuan.</translation>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="vanished">Klik untuk ambil tangkap layar bertatal</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>

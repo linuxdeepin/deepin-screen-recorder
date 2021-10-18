@@ -99,6 +99,10 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <source>Scrollshot</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

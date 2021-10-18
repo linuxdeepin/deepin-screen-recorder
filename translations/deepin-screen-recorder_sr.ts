@@ -97,6 +97,10 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation>Слика клизањa</translation>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -146,10 +150,6 @@ or press the shortcut again to stop recording</source>
         <translation>Потражи помоћ.</translation>
     </message>
     <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="vanished">Кликните да направите слику клизањем</translation>
-    </message>
-    <message>
         <source>Failed to take a continuous screenshot.</source>
         <translation>Неуспешно прављење непрекидне слике екрана.</translation>
     </message>
@@ -163,19 +163,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>подеси поље снимања</translation>
+        <translation>подесите поље снимања</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Окрећите точкић миша или кликните да направите слику клизања</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>Смањите брзину клизања</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>Неправилна површина, кликните да </translation>
     </message>
 </context>
 <context>

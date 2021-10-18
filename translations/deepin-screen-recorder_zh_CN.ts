@@ -97,6 +97,10 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation>滚动截图</translation>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation>滚动截图</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -144,10 +148,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Get help.</source>
         <translation>查看帮助</translation>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="vanished">单击捕捉区域</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>

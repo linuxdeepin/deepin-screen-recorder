@@ -97,6 +97,10 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <source>Scrollshot</source>
         <translation>Vierittävä kaappaus</translation>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -144,10 +148,6 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Get help.</source>
         <translation>Hae apua.</translation>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="vanished">Ota vierittävä kaappaus napsauttamalla</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>

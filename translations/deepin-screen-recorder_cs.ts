@@ -9,7 +9,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>V průběhu nahrávání neotáčejte obrazovku</translation>
     </message>
 </context>
 <context>
@@ -83,18 +83,22 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Pořídit snímek obrazovky</translation>
+        <translation>Snímek obrazovky</translation>
     </message>
     <message>
         <source>The screenshot has been saved in the album</source>
-        <translation type="unfinished"/>
+        <translation>Snímek obrazovky byl uložen do alba</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation type="unfinished"/>
+        <translation>Pořízení snímku obrazovky se nezdařilo.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
+        <translation>Snímek z celého posuvníku</translation>
+    </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -143,39 +147,35 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Získat nápovědu.</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>Nepodařilo se pořídit pokračující snímek obrazovky.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>Dosaženo spodního okraje oblasti posouvání</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation type="unfinished"/>
+        <translation>Dosaženo nejvyšší možné délky</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>upravit oblast zachytávání</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Pokud chcete pořídit snímek posouvaného obsahu, otáčejte kolečkem myši nebo klikněte</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>Snižte rychlost posouvání</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>Neplatná oblast, klikněte na </translation>
     </message>
 </context>
 <context>
@@ -317,23 +317,23 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Spustit/Zaznamenávání</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Myš</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"/>
+        <translation>Nástroje</translation>
     </message>
     <message>
         <source>Extract text</source>
-        <translation type="unfinished"/>
+        <translation>Rozpoznat text</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Snímek z celého posuvníku</translation>
     </message>
 </context>
 <context>
@@ -383,7 +383,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Show Click</source>
-        <translation>Ukázat klepnutí</translation>
+        <translation>Ukázat kliknutí</translation>
     </message>
     <message>
         <source>Options</source>
@@ -495,19 +495,19 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Myš</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation type="unfinished"/>
+        <translation>Zobrazit ukazatel</translation>
     </message>
     <message>
         <source>Extract Text</source>
-        <translation type="unfinished"/>
+        <translation>Rozpoznat text</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Snímek z celého posuvníku</translation>
     </message>
 </context>
 <context>

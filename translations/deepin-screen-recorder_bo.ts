@@ -97,6 +97,10 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation>འགུལ་ནས་ཡོལ་པར་བླངས།</translation>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -144,10 +148,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Get help.</source>
         <translation>རོགས་རམ་འཚོལ་བ།</translation>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="vanished">གཅིག་རྡེབ་ཀྱིས་ཡོལ་པར་བླངས་པ།</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>

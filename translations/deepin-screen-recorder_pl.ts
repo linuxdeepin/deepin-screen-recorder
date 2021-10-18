@@ -97,6 +97,10 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <source>Scrollshot</source>
         <translation>Pionowy zrzut ekranu</translation>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -144,10 +148,6 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <message>
         <source>Get help.</source>
         <translation>Pomoc</translation>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="vanished">Kliknij aby wykonać pionowy zrzut ekranu</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>

@@ -96,6 +96,10 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation>سىيرىلما سۈرەت تۇتۇش</translation>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -143,10 +147,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Get help.</source>
         <translation>ياردەم</translation>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="vanished">تاق چېكىپ رايوننى تۇتۇش</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>

@@ -251,7 +251,7 @@ void Utils::getAllWindowInfo(const quint32 winId, const int width, const int hei
     Dtk::Gui::DForeignWindow *prewindow = nullptr;
     for (quint32 wid : Dtk::Gui::DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
         if (wid == winId) continue;
-        if (prewindow) {
+        if (prewindow && isSysHighVersion1040()) {
             delete prewindow;
             prewindow = nullptr;
         }
@@ -369,7 +369,7 @@ void Utils::getAllWindowInfo(const quint32 winId, const int width, const int hei
             }
         }
     }
-    if (prewindow) {
+    if (prewindow && isSysHighVersion1040()) {
         delete prewindow;
         prewindow = nullptr;
     }

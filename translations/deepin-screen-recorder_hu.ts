@@ -97,6 +97,10 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <source>Scrollshot</source>
         <translation>Görgethető képernyőkép</translation>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation>Görgethető képernyőkép készítése</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -144,10 +148,6 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>Get help.</source>
         <translation>Segítséget kaphat</translation>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="vanished">Görgethető képernyőkép készítéséhez kattintson ide</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>

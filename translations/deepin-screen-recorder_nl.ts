@@ -97,6 +97,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <source>Scrollshot</source>
         <translation>Scrollende schermfoto</translation>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation>Scrollende schermfoto&apos;s maken</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -144,10 +148,6 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Get help.</source>
         <translation>Verkrijg hulp.</translation>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="vanished">Klik hier om een scrollende schermfoto te maken</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>

@@ -97,6 +97,10 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation>Знімок із гортанням</translation>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation>Створення знімків із гортанням</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -144,10 +148,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Get help.</source>
         <translation>Довідка.</translation>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="vanished">Клацніть, щоб зробити знімок із гортанням</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>

@@ -95,6 +95,10 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Scrollshot</source>
+        <translation>Captura de tela completa</translation>
+    </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -146,12 +150,8 @@ clique no ícone da bandeja ou use o atalho</translation>
         <translation>Obter ajuda.</translation>
     </message>
     <message>
-        <source>Click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>Falha ao fazer uma captura de tela completa.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
@@ -163,19 +163,19 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>ajustar a área de captura</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Role a roda do mouse ou clique para fazer uma captura de tela completa</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>Diminuir a velocidade de rolagem</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>Área inválida. Clique para </translation>
     </message>
 </context>
 <context>
@@ -333,7 +333,7 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Captura de tela completa</translation>
     </message>
 </context>
 <context>
@@ -507,7 +507,7 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Captura de tela completa</translation>
     </message>
 </context>
 <context>

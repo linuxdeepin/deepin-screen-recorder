@@ -97,6 +97,10 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Take Screen Scrollshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -143,10 +147,6 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Click to take a scrolling screenshot</source>
         <translation type="unfinished"/>
     </message>
     <message>
