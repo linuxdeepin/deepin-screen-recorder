@@ -103,7 +103,7 @@ void Screenshot::OcrScreenshot()
 {
     m_window.initAttributes();
     m_window.initResource();
-    m_window.initLaunchMode("screensOcr");
+    m_window.initLaunchMode("screenOcr");
     m_window.showFullScreen();
 }
 

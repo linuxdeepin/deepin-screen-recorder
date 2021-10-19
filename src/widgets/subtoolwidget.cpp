@@ -1176,7 +1176,7 @@ void SubToolWidget::setRecordLaunchMode(const unsigned int funType)
     } else if (funType == MainWindow::ocr) {
         m_ocrButton->click();
     } else if (funType == MainWindow::scrollshot) {
-        //m_scrollShotButton->click();
+        m_scrollShotButton->click();
     }
 }
 

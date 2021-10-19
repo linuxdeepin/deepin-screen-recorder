@@ -376,6 +376,9 @@ void ToolBar::setRecordButtonDisable()
 void ToolBar::setRecordLaunchMode(const unsigned int funType)
 {
     m_toolbarWidget->setRecordLaunchFromMain(funType);
+    if (funType == MainWindow::scrollshot) {
+        hideSomeToolBtn();
+    }
 }
 
 void ToolBar::setVideoButtonInit()

@@ -104,7 +104,8 @@ MainWindow::MainWindow(DWidget *parent) :
     m_wmHelper(DWindowManagerHelper::instance()),
     m_hasComposite(DWindowManagerHelper::instance()->hasComposite()),
     m_initScreenShot(false),
-    m_initScreenRecorder(false)
+    m_initScreenRecorder(false),
+    m_initScroll(false)
 {
     if (Utils::isTabletEnvironment) {
         m_cursorBound = 20;
@@ -112,7 +113,6 @@ MainWindow::MainWindow(DWidget *parent) :
         m_cursorBound = 5;
     }
     setDragCursor();
-    //QScreen *screen = qApp->primaryScreen();
     m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
     // 监控录屏过程中， 特效窗口的变化。
     connect(m_wmHelper, &DWindowManagerHelper::hasCompositeChanged, this, &MainWindow::compositeChanged);
@@ -130,11 +130,9 @@ MainWindow::MainWindow(DWidget *parent) :
     connect(m_pScreenCaptureEvent, SIGNAL(keyboardPress(unsigned char)), this, SLOT(onKeyboardPress(unsigned char)), Qt::QueuedConnection);
     connect(m_pScreenCaptureEvent, SIGNAL(keyboardRelease(unsigned char)), this, SLOT(onKeyboardRelease(unsigned char)), Qt::QueuedConnection);
     qDebug() << "截图录屏事件监听线程已启动！！！";
-
     if (!Utils::isWaylandMode) {
         m_pScreenCaptureEvent->start();
     }
-
 
     m_screenCount = QApplication::desktop()->screenCount();
     QList<QScreen *> screenList = qApp->screens();
@@ -169,9 +167,6 @@ MainWindow::MainWindow(DWidget *parent) :
             return info1.x < info2.x;
         });
     }
-
-
-    m_screenCount = QApplication::desktop()->screenCount();
 }
 
 void MainWindow::initAttributes()
@@ -413,8 +408,6 @@ void MainWindow::onHelp()
 void MainWindow::initResource()
 {
     m_showButtons = new ShowButtons(this);
-    if (!m_pScreenCaptureEvent || !m_showButtons)
-        return;
     connect(m_showButtons, SIGNAL(keyShowSignal(const QString &)), this, SLOT(showKeyBoardButtons(const QString &)));
     resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(":/newUI/normal/node.svg");
     buttonFeedback = new ButtonFeedback();
@@ -574,6 +567,8 @@ void MainWindow::initScreenRecorder()
 //滚动截图的初始化函数
 void MainWindow::initScrollShot()
 {
+    if (m_initScroll)
+        return;
     //定时器，滚动截图模式下每0.5秒减少一次鼠标点击次数
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, [ = ]() {
@@ -711,6 +706,7 @@ void MainWindow::initScrollShot()
 
     });
     m_tipShowtimer->setInterval(2000);
+    m_initScroll = true;
 
 }
 
@@ -936,6 +932,7 @@ void MainWindow::showPreviewWidgetImage(QImage img)
 
 void MainWindow::initLaunchMode(const QString &launchMode)
 {
+    m_functionType = status::shot;
     if (launchMode == "screenRecord") {
         m_sizeTips->setRecorderTipsInfo(true);
         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
@@ -944,13 +941,13 @@ void MainWindow::initLaunchMode(const QString &launchMode)
         if (m_sideBar->isVisible()) {
             m_sideBar->hide();
         }
-    } else if(launchMode == "screenShot"){
-        m_functionType = status::shot;
-        initScreenShot();
+    } else if(launchMode == "screenOcr"){
+        m_functionType = status::ocr;
     } else if(launchMode == "screenScroll") {
         m_functionType = status::scrollshot;
     } else {
-        m_functionType = status::ocr;
+        m_functionType = status::shot;
+        initScreenShot();
     }
 }
 /*
@@ -1334,10 +1331,6 @@ void MainWindow::updateToolBarPos()
         m_pCameraWatcher = new CameraWatcher(this);
         m_pCameraWatcher->setWatch(true); //取消之前的线程方式，采用定时器监测
         connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
-        //OCR 识别快捷键
-        //m_ocrInterface = new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
-        //saveScreenShot();
-        //return;
     }
 
     QPoint toolbarPoint;
@@ -3359,7 +3352,7 @@ void MainWindow::onMousePress(int x, int y)
 {
     if (status::record == m_functionType) {
         showPressFeedback(x, y);
-    }  else if (status::scrollshot == m_functionType) {
+    }  else if (m_initScroll && status::scrollshot == m_functionType) {
         scrollShotMouseClickEvent(x, y);
     }
 }
@@ -3375,7 +3368,7 @@ void MainWindow::onMouseRelease(int x, int y)
 //通过x11从底层获取鼠标移动事件
 void MainWindow::onMouseMove(int x, int y)
 {
-    if (status::scrollshot == m_functionType) {
+    if (m_initScroll && status::scrollshot == m_functionType) {
         scrollShotMouseMoveEvent(x, y);
     }
 }
@@ -3383,7 +3376,7 @@ void MainWindow::onMouseMove(int x, int y)
 //通过x11从底层滚动鼠标滚轮
 void MainWindow::onMouseScroll(int mouseTime, int direction, int x, int y)
 {
-    if (status::scrollshot == m_functionType) {
+    if (m_initScroll && status::scrollshot == m_functionType) {
         scrollShotMouseScrollEvent(mouseTime, direction, x, y);
     }
 
