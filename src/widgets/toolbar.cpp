@@ -176,11 +176,12 @@ void ToolBarWidget::setRecordButtonDisableFromMain()
     m_mainTool->setRecordButtonOut();
 }
 
-void ToolBarWidget::setRecordLaunchFromMain(bool recordLaunch)
+void ToolBarWidget::setRecordLaunchFromMain(const unsigned int funType)
 {
 //    qDebug() << "main record mode2";
-    m_mainTool->setRecordLauchMode(recordLaunch);
-    m_subTool->setRecordLaunchMode(recordLaunch);
+    m_mainTool->setRecordLauchMode(funType);
+    m_subTool->setRecordLaunchMode(funType);
+
 }
 /*
 void ToolBarWidget::setIsZhaoxinPlatform(bool isZhaoxin)
@@ -372,9 +373,9 @@ void ToolBar::setRecordButtonDisable()
     m_toolbarWidget->setRecordButtonDisableFromMain();
 }
 
-void ToolBar::setRecordLaunchMode(bool recordLaunch)
+void ToolBar::setRecordLaunchMode(const unsigned int funType)
 {
-    m_toolbarWidget->setRecordLaunchFromMain(recordLaunch);
+    m_toolbarWidget->setRecordLaunchFromMain(funType);
 }
 
 void ToolBar::setVideoButtonInit()

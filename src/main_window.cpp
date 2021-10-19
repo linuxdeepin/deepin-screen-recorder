@@ -939,20 +939,18 @@ void MainWindow::initLaunchMode(const QString &launchMode)
     if (launchMode == "screenRecord") {
         m_sizeTips->setRecorderTipsInfo(true);
         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
-        m_launchWithRecordFunc = true;
-        //m_shotButton->hide();
-        //m_recordButton->show();
         m_functionType = status::record;
         initScreenRecorder();
         if (m_sideBar->isVisible()) {
             m_sideBar->hide();
         }
-    } else {
-        m_launchWithRecordFunc = false;
-        //m_recordButton->hide();
-        //m_shotButton->show();
-        m_functionType = 1;
+    } else if(launchMode == "screenShot"){
+        m_functionType = status::shot;
         initScreenShot();
+    } else if(launchMode == "screenScroll") {
+        m_functionType = status::scrollshot;
+    } else {
+        m_functionType = status::ocr;
     }
 }
 /*
@@ -1324,7 +1322,7 @@ void MainWindow::updateToolBarPos()
     m_isToolBarInside = false;
     if (m_toolBarInit == false) {
         m_toolBar->initToolBar(this);
-        m_toolBar->setRecordLaunchMode(m_launchWithRecordFunc);
+        m_toolBar->setRecordLaunchMode(m_functionType);
         //m_toolBar->setIsZhaoxinPlatform(m_isZhaoxin);
         m_toolBar->setScrollShotDisabled(!m_wmHelper->hasComposite());
 
@@ -1336,6 +1334,10 @@ void MainWindow::updateToolBarPos()
         m_pCameraWatcher = new CameraWatcher(this);
         m_pCameraWatcher->setWatch(true); //取消之前的线程方式，采用定时器监测
         connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
+        //OCR 识别快捷键
+        //m_ocrInterface = new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
+        //saveScreenShot();
+        //return;
     }
 
     QPoint toolbarPoint;
@@ -2039,14 +2041,11 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         return;
     }
 
-    QDBusInterface remote_dde_notify_obj("com.deepin.dde.Notification", "/com/deepin/dde/Notification",
-                                         "com.deepin.dde.Notification");
+    QDBusInterface remote_dde_notify_obj("com.deepin.dde.Notification", "/com/deepin/dde/Notification","com.deepin.dde.Notification");
 
     const bool remote_dde_notify_obj_exist = remote_dde_notify_obj.isValid();
 
-    QDBusInterface notification("org.freedesktop.Notifications",
-                                "/org/freedesktop/Notifications",
-                                "org.freedesktop.Notifications",
+    QDBusInterface notification("org.freedesktop.Notifications","/org/freedesktop/Notifications","org.freedesktop.Notifications",
                                 QDBusConnection::sessionBus());
 
 

@@ -56,7 +56,7 @@ signals:
 public slots:
 //    void switchContent(QString shapeType);
     void setRecordButtonOut();
-    void setRecordLauchMode(bool recordLaunch);
+    void setRecordLauchMode(const unsigned int funType);
 
 
 private:

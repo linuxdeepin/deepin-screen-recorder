@@ -54,6 +54,8 @@ class DBusScreenshotService: public QDBusAbstractAdaptor
                 "    <method name=\"NoNotifyScreenshot\"/>\n"
                 "    <method name=\"TopWindowScreenshot\"/>\n"
                 "    <method name=\"FullscreenScreenshot\"/>\n"
+                "    <method name=\"OcrScreenshot\"/>\n"
+                "    <method name=\"ScrollScreenshot\"/>\n"
                 "    <method name=\"SavePathScreenshot\">\n"
                 "      <arg direction=\"in\" type=\"s\"/>\n"
                 "    </method>\n"
@@ -81,6 +83,8 @@ public Q_SLOTS: // METHODS
     void StartScreenshot();
     void DelayScreenshot(qlonglong in0);
     void NoNotifyScreenshot();
+    void OcrScreenshot();
+    void ScrollScreenshot();
     void TopWindowScreenshot();
     void FullscreenScreenshot();
     void SavePathScreenshot(const QString &in0);

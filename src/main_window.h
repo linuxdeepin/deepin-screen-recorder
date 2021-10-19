@@ -112,10 +112,12 @@ class MainWindow : public DWidget
     static const int CAMERA_WIDGET_MIN_WIDTH;
     static const int CAMERA_WIDGET_MIN_HEIGHT;
 
+public:
     enum status {
         record = 0,
         shot,
-        scrollshot
+        scrollshot,
+        ocr
     };
     //滚动截图的滚动模式
     enum ScrollShotType {
@@ -124,7 +126,7 @@ class MainWindow : public DWidget
         Unknow
     };
 
-public:
+
     explicit MainWindow(DWidget *parent = nullptr);
     ~MainWindow()
     {
@@ -746,7 +748,6 @@ private:
     CameraWidget *m_cameraWidget = nullptr;
     bool m_selectedCamera = false;
     bool m_cameraOffFlag = false;
-    bool m_launchWithRecordFunc = false;
     bool m_shotWithPath = false;
     int m_screenCount;
     QString m_shotSavePath;

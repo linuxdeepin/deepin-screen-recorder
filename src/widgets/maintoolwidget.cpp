@@ -24,6 +24,7 @@
 #include "tooltips.h"
 #include "../utils.h"
 #include "../accessibility/acTextDefine.h"
+#include "../main_window.h"
 
 #include <DSlider>
 #include <DLineEdit>
@@ -187,10 +188,10 @@ void MainToolWidget::setRecordButtonOut()
     m_recordBtn->setDisabled(true);
 }
 
-void MainToolWidget::setRecordLauchMode(bool recordLaunch)
+void MainToolWidget::setRecordLauchMode(const unsigned int funType)
 {
     //qDebug() << "main record mode";
-    if (recordLaunch == true) {
+    if (funType == MainWindow::record) {
         m_recordBtn->click();
     }
 }

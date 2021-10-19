@@ -92,7 +92,7 @@ public slots:
     void switchContent(QString shapeType);
     //void systemAudioActionCheckedSlot(bool checked);
     void changeArrowAndLineFromSideBar(int line);
-    void setRecordLaunchMode(bool recordLaunch);
+    void setRecordLaunchMode(const unsigned int funType);
     void setVideoButtonInitFromSub();
     void shapeClickedFromWidget(QString shape);
     void setMicroPhoneEnable(bool status);

@@ -1169,12 +1169,15 @@ void SubToolWidget::changeArrowAndLineFromSideBar(int line)
     }
 }
 
-void SubToolWidget::setRecordLaunchMode(bool recordLaunch)
+void SubToolWidget::setRecordLaunchMode(const unsigned int funType)
 {
-    if (recordLaunch == true) {
+    if (funType == MainWindow::record) {
         setCurrentWidget(m_recordSubTool);
+    } else if (funType == MainWindow::ocr) {
+        m_ocrButton->click();
+    } else if (funType == MainWindow::scrollshot) {
+        //m_scrollShotButton->click();
     }
-    //    qDebug() << "sub record mode";
 }
 
 void SubToolWidget::setVideoButtonInitFromSub()

@@ -79,6 +79,24 @@ void DBusScreenshotService::NoNotifyScreenshot()
     m_singleInstance = true;
 }
 
+void DBusScreenshotService::OcrScreenshot()
+{
+    qDebug() << "DBus screenshot service! OcrScreenshot";
+    // handle method call com.deepin.Screenshot.NoNotify
+    if (!m_singleInstance)
+        parent()->OcrScreenshot();
+    m_singleInstance = true;
+}
+
+void DBusScreenshotService::ScrollScreenshot()
+{
+    qDebug() << "DBus screenshot service! ScrollScreenshot";
+    // handle method call com.deepin.Screenshot.NoNotify
+    if (!m_singleInstance)
+        parent()->ScrollScreenshot();
+    m_singleInstance = true;
+}
+
 void DBusScreenshotService::TopWindowScreenshot()
 {
     qDebug() << "DBus screenshot service! topWindow screenshot";

@@ -99,6 +99,23 @@ void Screenshot::noNotifyScreenshot()
     m_window.noNotify();
 }
 
+void Screenshot::OcrScreenshot()
+{
+    m_window.initAttributes();
+    m_window.initResource();
+    m_window.initLaunchMode("screensOcr");
+    m_window.showFullScreen();
+}
+
+void Screenshot::ScrollScreenshot()
+{
+    m_window.initAttributes();
+    m_window.initResource();
+    m_window.initLaunchMode("screenScroll");
+    m_window.showFullScreen();
+
+}
+
 void Screenshot::savePathScreenshot(const QString &path)
 {
     m_window.savePath(path);

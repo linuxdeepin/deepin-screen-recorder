@@ -78,7 +78,7 @@ public slots:
     //void keyBoardCheckedSlot(bool checked);
     void changeArrowAndLineFromBar(int line);
     void setRecordButtonDisableFromMain();
-    void setRecordLaunchFromMain(bool recordLaunch);
+    void setRecordLaunchFromMain(const unsigned int funType);
     void setVideoInitFromMain();
     void shapeClickedFromBar(QString shape);
     void setMicroPhoneEnable(bool status);
@@ -127,7 +127,7 @@ public slots:
     void currentFunctionMode(QString shapeType);
     void changeArrowAndLineFromMain(int line);
     void setRecordButtonDisable();
-    void setRecordLaunchMode(bool recordLaunch);
+    void setRecordLaunchMode(const unsigned int funType);
     void setVideoButtonInit();
     void shapeClickedFromMain(QString shape);
     void setMicroPhoneEnable(bool status);

@@ -117,6 +117,8 @@ int main(int argc, char *argv[])
         QCommandLineOption dbusOption(QStringList() << "u" << "dbus", "Start  from dbus.");
         QCommandLineOption screenRecordOption(QStringList() << "record" << "screenRecord" << "start screen record");
         QCommandLineOption screenShotOption(QStringList() << "shot" << "screenShot" << "start screen shot");
+        QCommandLineOption screenOcrOption(QStringList() << "ocr" << "screenOcr" << "start screen ocr");
+        QCommandLineOption screenScrollOption(QStringList() << "scroll" << "screenScroll" << "start screen scroll");
 
 
         QCommandLineParser cmdParser;
@@ -131,6 +133,8 @@ int main(int argc, char *argv[])
         cmdParser.addOption(dbusOption);
         cmdParser.addOption(screenRecordOption);
         cmdParser.addOption(screenShotOption);
+        cmdParser.addOption(screenOcrOption);
+        cmdParser.addOption(screenScrollOption);
         cmdParser.process(*app);
 
         // Load translator.
@@ -143,7 +147,14 @@ int main(int argc, char *argv[])
         Utils::themeType = t_type;
 
 
-        const QString& t_launchMode = cmdParser.isSet(screenRecordOption) ? "screenRecord" : "screenShot";
+        QString t_launchMode = "screenShot";
+        if(cmdParser.isSet(screenRecordOption)) {
+            t_launchMode = "screenRecord";
+        } else if (cmdParser.isSet(screenOcrOption)) {
+            t_launchMode = "screenOcr";
+        } else if (cmdParser.isSet(screenScrollOption)) {
+            t_launchMode = "screenScroll";
+        }
         window.initLaunchMode(t_launchMode);
         DBusScreenshotService dbusService (&window);
 
