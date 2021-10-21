@@ -38,6 +38,7 @@ public:
         Q_UNUSED(parent);
         setCheckable(true);
         m_tips = "";
+        this->setFocusPolicy(Qt::NoFocus);
 //        this->setFocusPolicy(Qt::NoFocus);
 //        DPalette pa = this->palette();
 //        pa.setColor(DPalette::Highlight, Qt::transparent);

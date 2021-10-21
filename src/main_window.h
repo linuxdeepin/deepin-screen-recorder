@@ -227,7 +227,7 @@ public:
         m_keyButtonList.clear();
 
         //以前的流程没执行到此处，没暴露延迟500ms的问题，以前的无用代码
-        //QThread::currentThread()->msleep(500);
+        QThread::currentThread()->msleep(500);
     }
 
     enum ShotMouseStatus {

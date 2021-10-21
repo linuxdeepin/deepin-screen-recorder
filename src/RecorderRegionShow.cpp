@@ -67,13 +67,7 @@ RecorderRegionShow::~RecorderRegionShow()
 
 void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, const QSize size)
 {
-    if(nullptr == m_cameraWidget){
-        m_cameraWidget = new CameraWidget();
-    }
-
-    if(nullptr == m_cameraWidget){
-        return;
-    }
+    m_cameraWidget = new CameraWidget();
 
     QRect r = this->geometry();
     m_cameraWidget->setFixedSize(size);
@@ -99,12 +93,12 @@ void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, c
     }
 
     m_cameraWidget->cameraStart();
-    Utils::passInputEvent(static_cast<int>(m_cameraWidget->winId()));
+    //Utils::passInputEvent(static_cast<int>(m_cameraWidget->winId()));
 }
 
 void RecorderRegionShow::showKeyBoardButtons(const QString &key)
 {
-    KeyButtonWidget *t_keyWidget = new KeyButtonWidget();
+    KeyButtonWidget *t_keyWidget = new KeyButtonWidget(this);
     t_keyWidget->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::ToolTip);
     t_keyWidget->setKeyLabelWord(key);
     m_keyButtonList.append(t_keyWidget);
@@ -116,7 +110,6 @@ void RecorderRegionShow::showKeyBoardButtons(const QString &key)
     //更新多按钮的位置
     updateMultiKeyBoardPos();
     repaint();
-    delete  t_keyWidget;
 }
 
 void RecorderRegionShow::updateKeyBoardButtonStyle()

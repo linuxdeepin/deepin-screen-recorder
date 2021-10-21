@@ -81,51 +81,34 @@ void MainToolWidget::initMainLabel()
     //    QString record_button_style = "DPushButton:press{QIcon(:/image/newUI/press/screencap-press.svg)}";
 
     m_recordBtn = new ToolButton();
-    if (Utils::isTabletEnvironment && nullptr != m_recordBtn) {
+    if (Utils::isTabletEnvironment || Utils::is3rdInterfaceStart) {
         m_recordBtn->hide();
     }
     DFontSizeManager::instance()->bind(m_recordBtn, DFontSizeManager::T8);
-
     m_recordBtn->setCheckable(true);
     m_recordBtn->setText(tr("Record"));
-    //m_recordBtn->setObjectName("RecordBtn");
     Utils::setAccessibility(m_recordBtn, AC_MAINTOOLWIDGET_RECORD_BUT);
-    //    m_recordBtn->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    //    m_recordBtn->setMinimumSize(TOOL_BUTTON_SIZE);
     m_recordBtn->setMinimumHeight(40);
     m_recordBtn->setIconSize(QSize(20, 20));
     m_recordBtn->setIcon(QIcon::fromTheme("screencap-normal"));
-
-    // 2D 窗管下，隐藏录屏功能
-    if(Utils::is3rdInterfaceStart) {
-        m_recordBtn->hide();
-    }
-
     toolBtnList.append(m_recordBtn);
 
 
     m_shotBtn = new ToolButton();
-    if (Utils::isTabletEnvironment && nullptr != m_shotBtn) {
+    if (Utils::isTabletEnvironment) {
         m_shotBtn->hide();
     }
     DFontSizeManager::instance()->bind(m_shotBtn, DFontSizeManager::T8);
-
     m_shotBtn->setText(tr("Screenshot"));
-    //m_shotBtn->setObjectName("ShotBtn");
     Utils::setAccessibility(m_shotBtn, AC_MAINTOOLWIDGET_SHOT_BUT);
-    //    m_shotBtn->setMinimumSize(TOOL_BUTTON_SIZE);
     m_shotBtn->setMinimumHeight(40);
-
     m_shotBtn->setIconSize(QSize(20, 20));
     m_shotBtn->setIcon(QIcon::fromTheme("screenshot-normal"));
-
-
     toolBtnList.append(m_shotBtn);
 
     m_baseLayout = new QHBoxLayout();
     m_baseLayout->setSizeConstraint(QLayout::SetFixedSize);
     m_baseLayout->setContentsMargins(4, 0, 0, 0);
-    //    m_baseLayout->setMargin(1);
     m_baseLayout->setSpacing(0);
     m_baseLayout->addSpacing(5);
 
@@ -135,7 +118,6 @@ void MainToolWidget::initMainLabel()
 
         buttonGroup->addButton(toolBtnList[k]);
     }
-    //    setLayout(m_baseLayout);
     m_mainTool->setLayout(m_baseLayout);
     addWidget(m_mainTool);
 
@@ -190,7 +172,6 @@ void MainToolWidget::setRecordButtonOut()
 
 void MainToolWidget::setRecordLauchMode(const unsigned int funType)
 {
-    //qDebug() << "main record mode";
     if (funType == MainWindow::record) {
         m_recordBtn->click();
     }
