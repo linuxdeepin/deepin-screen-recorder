@@ -59,12 +59,18 @@
 #include <QSystemTrayIcon>
 #include <QVBoxLayout>
 #include <QTimer>
+#include <unistd.h>
 
+#include <KF5/KWayland/Client/connection_thread.h>
+#include <KF5/KWayland/Client/clientmanagement.h>
+#include <KF5/KWayland/Client/event_queue.h>
+#include <KF5/KWayland/Client/registry.h>
 #undef Bool
 
 DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 //DWM_USE_NAMESPACE
+using namespace KWayland::Client;
 
 class MainWindow : public DWidget
 {
@@ -261,7 +267,15 @@ public:
     //void delayScreenshot(double num);
     void fullScreenshot();
 
+    /**
+     * @brief 截取顶层窗口
+     */
     void topWindow();
+
+    /**
+     * @brief wayland 模式下用来获取顶层窗口的方法
+     */
+    void saveTopWindow();
     void savePath(const QString &path);
     void startScreenshotFor3rd(const QString &path);
     void noNotify();
@@ -281,6 +295,9 @@ signals:
 
 public slots:
     void onExit();
+    /**
+     * @brief 启动录屏
+     */
     void startRecord();
 
     //void flashTrayIcon();
@@ -291,6 +308,9 @@ public slots:
     void onHelp();
 
     Q_SCRIPTABLE void stopRecord();
+    /**
+     * @brief 启动录屏倒计时
+     */
     void startCountdown();
     void showPressFeedback(int x, int y);
     void showDragFeedback(int x, int y);
@@ -535,9 +555,28 @@ protected:
      * @return false: 不在  ； true: 在
      */
     bool isToolBarInShotArea();
+
+    /**
+     * @brief wayland获取屏幕窗口信息的安装注册函数
+     * @param registry
+     */
+    void setupRegistry(Registry *registry);
+
+    /**
+     * @brief wayland获取屏幕窗口信息
+     * @param m_windowStates
+     */
+    void waylandwindowinfo(const QVector<ClientManagement::WindowState> &m_windowStates);
+
 private:
 //    QList<WindowRect> windowRects;
+    /**
+     * @brief 所有的窗口，与windowNames一一对应
+     */
     QList<QRect> windowRects;
+    /**
+     * @brief 所有窗口的名称，与windowRects一一对应
+     */
     QList<QString> windowNames;
     ShowButtons *m_showButtons = nullptr;
     //QTimer *flashTrayIconTimer = nullptr;
@@ -577,9 +616,21 @@ private:
 
     int m_shotStatus = ShotMouseStatus::Normal; //
     int recordButtonStatus = RECORD_BUTTON_NORMAL;
+    /**
+     * @brief 捕捉区域的高
+     */
     int recordHeight = 0;
+    /**
+     * @brief 捕捉区域的宽
+     */
     int recordWidth = 0;
+    /**
+     * @brief 捕捉区域起始点的x坐标
+     */
     int recordX = 0;
+    /**
+     * @brief 捕捉区域起始点的y坐标
+     */
     int recordY = 0;
 
     QPixmap m_backgroundPixmap;
@@ -783,7 +834,21 @@ private:
      */
     ScrollScreenshot *m_scrollShot = nullptr;
 
+    /**
+     * @brief wayland录屏是否在停止录屏状态中
+     */
+    bool m_isStopWaylandRecord = false;
 
+    // 获取wayland窗口信息相关。 wayland获取窗口的方法对于x11有很大的区别
+    QThread *m_connectionThread;
+    EventQueue *m_eventQueue = nullptr;
+    ConnectionThread *m_connectionThreadObject;
+    Compositor *m_compositor = nullptr;
+    PlasmaWindowManagement *m_windowManagement = nullptr;
+    ClientManagement *m_clientManagement = nullptr;
+    QVector<ClientManagement::WindowState> m_windowStates;
+    bool m_isFullScreenShot = false;
+    bool m_isVertical = false;
 };
 
 #endif //MAINWINDOW_H

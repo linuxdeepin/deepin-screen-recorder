@@ -46,12 +46,44 @@ public:
     static void callback(XPointer trash, XRecordInterceptData *data);
     void handleEvent(XRecordInterceptData *);
     XFixesCursorImage *getCursorImage();
+    /**
+     * @brief 初始化wayland录屏事件监听
+     */
     void initWaylandEventMonitor();
 public slots:
+    /**
+     * @brief wayland通过dbus接口接收鼠标按钮按下事件
+     * @param type
+     * @param x
+     * @param y
+     * @param str
+     */
     void ButtonPressEvent(int type, int x, int y, QString str);
+    /**
+     * @brief wayland通过dbus接口接收鼠标按钮释放事件
+     * @param type
+     * @param x
+     * @param y
+     * @param str
+     */
     void ButtonReleaseEvent(int type, int x, int y, QString str);
+    /**
+     * @brief wayland通过dbus接口接收键盘按下事件
+     * @param x
+     * @param y
+     * @param z
+     * @param str
+     */
     void KeyPressEvent(QString x, int y, int z, QString str);
+    /**
+     * @brief wayland通过dbus接口接收键盘按下释放事件
+     * @param x
+     * @param y
+     * @param z
+     * @param str
+     */
     void KeyReleaseEvent(QString x, int y, int z, QString str);
+
 
 signals:
     /**

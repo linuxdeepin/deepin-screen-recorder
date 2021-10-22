@@ -37,6 +37,9 @@
 
 const int RecordProcess::RECORD_TYPE_VIDEO = 0;
 const int RecordProcess::RECORD_TYPE_GIF = 1;
+const int RecordProcess::RECORD_TYPE_MP4 = 2;
+const int RecordProcess::RECORD_TYPE_MKV = 3;
+
 const int RecordProcess::RECORD_AUDIO_INPUT_MIC = 2;
 const int RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO = 3;
 const int RecordProcess::RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO = 4;
@@ -56,7 +59,7 @@ RecordProcess::RecordProcess(QObject *parent) : QObject(parent)
     saveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first() + QDir::separator() + "Screen Recordings" + QDir::separator();
     displayNumber = QString(std::getenv("DISPLAY"));
 
-    if((!QDir(saveDir).exists() && QDir().mkdir(saveDir) == false) ||   // 文件不存在，且创建失败
+    if ((!QDir(saveDir).exists() && QDir().mkdir(saveDir) == false) ||  // 文件不存在，且创建失败
             (QDir(saveDir).exists() && !QFileInfo(saveDir).isWritable())) {  // 文件存在，且不能写
         saveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first();
     }
@@ -80,26 +83,14 @@ RecordProcess::~RecordProcess()
     }
     */
 }
-
+//设置录屏的基础信息
 void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filename)
 {
     m_recordRect = recordRect;
     saveAreaName = filename;
 }
-/*
-void RecordProcess::setRecordType(int type)
-{
-    recordType = type;
-}
-void RecordProcess::setFrameRate(int framerate)
-{
-    m_framerate = framerate;
-}
-void RecordProcess::setRecordAudioInputType(int inputType)
-{
-    recordAudioInputType = inputType;
-}
-*/
+
+//开始将mp4视频转码成gif
 void RecordProcess::onStartTranscode()
 {
     m_pTranscodeProcess = new QProcess(this);
@@ -111,15 +102,16 @@ void RecordProcess::onStartTranscode()
     arg << savePath;
     arg << "-r";
     arg << "24";
-    arg << path.replace("mp4","gif");
-    m_pTranscodeProcess->start("ffmpeg",arg);
+    arg << path.replace("mp4", "gif");
+    m_pTranscodeProcess->start("ffmpeg", arg);
 }
 
+//转码完成后通知栏弹出提示
 void RecordProcess::onTranscodeFinish()
 {
     QString path = savePath;
-    QString gifOldPath = path.replace("mp4","gif");
-    QString gifNewPath = QDir(saveDir).filePath(saveBaseName).replace(QString("mp4"),QString("gif"));
+    QString gifOldPath = path.replace("mp4", "gif");
+    QString gifNewPath = QDir(saveDir).filePath(saveBaseName).replace(QString("mp4"), QString("gif"));
     qDebug() << "" << savePath << gifOldPath << gifNewPath;
     QFile::rename(gifOldPath, gifNewPath);
     QDBusInterface notification("org.freedesktop.Notifications",
@@ -146,15 +138,19 @@ void RecordProcess::onTranscodeFinish()
     QApplication::quit();
 }
 
+//录屏结束后弹出通知
 void RecordProcess::onRecordFinish()
 {
-    if (QProcess::ProcessState::NotRunning != m_recorderProcess->exitCode()) {
-        qDebug() << "Error";
-        foreach (auto line, (m_recorderProcess->readAllStandardError().split('\n'))) {
-            qDebug() << line;
+    //x11录屏结束
+    if (!Utils::isWaylandMode) {
+        if (QProcess::ProcessState::NotRunning != m_recorderProcess->exitCode()) {
+            qDebug() << "Error";
+            foreach (auto line, (m_recorderProcess->readAllStandardError().split('\n'))) {
+                qDebug() << line;
+            }
+        } else {
+            qDebug() << "OK" << m_recorderProcess->readAllStandardOutput() << m_recorderProcess->readAllStandardError();
         }
-    } else {
-        qDebug() << "OK" << m_recorderProcess->readAllStandardOutput() << m_recorderProcess->readAllStandardError();
     }
 
     // Move file to save directory.
@@ -190,8 +186,10 @@ void RecordProcess::onRecordFinish()
     QApplication::quit();
 }
 
+//x11录制视频
 void RecordProcess::recordVideo()
 {
+    qDebug() << "x11 录屏！";
     initProcess();
     //取系统音频的通道号
     AudioUtils audioUtils;
@@ -224,7 +222,7 @@ void RecordProcess::recordVideo()
     arguments << QString("%1").arg(m_framerate);
     arguments << QString("-video_size"); // 视频分辨率
     arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height()); // 录制区域宽高
-    if(!m_isRecordMouse) { // 不录制光标
+    if (!m_isRecordMouse) { // 不录制光标
         arguments << QString("-draw_mouse");
         arguments << QString("0");
     }
@@ -232,7 +230,7 @@ void RecordProcess::recordVideo()
     arguments << QString("128");
     arguments << QString("-i");
     arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y()); // 录制区域左上角坐标
-    if(recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO || recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO){
+    if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO || recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
         arguments << QString("-thread_queue_size");
         arguments << QString("2048");
         arguments << QString("-fragment_size");
@@ -246,7 +244,7 @@ void RecordProcess::recordVideo()
         arguments << QString("-i"); // 系统音频id
         arguments << QString("%1").arg(t_currentAudioChannel);
     }
-    if(recordAudioInputType == RECORD_AUDIO_INPUT_MIC || recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO){
+    if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC || recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
         arguments << QString("-thread_queue_size");
         arguments << QString("2048");
         arguments << QString("-fragment_size");
@@ -260,7 +258,7 @@ void RecordProcess::recordVideo()
         arguments << QString("-i"); // 麦克风音频id，值为固定"default"
         arguments << QString("default");
     }
-    if(recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO){
+    if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
         arguments << QString("-filter_complex");
         arguments << QString("amerge");
     }
@@ -283,10 +281,10 @@ void RecordProcess::recordVideo()
     arguments << QString("ultrafast");
     arguments << QString("-vsync");
     arguments << QString("passthrough");
-    if(settings->value("recordConfig", "lossless_recording").toBool()){
+    if (settings->value("recordConfig", "lossless_recording").toBool()) {
         arguments << QString("-f");
         arguments << QString("matroska"); // mkv视频
-    }else {
+    } else {
         arguments << QString("-f");
         arguments << QString("mp4"); // mp4视频
     }
@@ -295,7 +293,7 @@ void RecordProcess::recordVideo()
 #else
     arguments << QString("-video_size");
     arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
-    if(!m_isRecordMouse) {
+    if (!m_isRecordMouse) {
         arguments << QString("-draw_mouse");
         arguments << QString("0");
     }
@@ -325,8 +323,8 @@ void RecordProcess::recordVideo()
         arguments << QString("44100");
         arguments << QString("-i");
         arguments << QString("%1").arg(t_currentAudioChannel);
-        if(recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO){
-            if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+        if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
+            if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
                 arguments << QString("-af");
                 arguments << QString("volume=20dB");
             }
@@ -346,15 +344,15 @@ void RecordProcess::recordVideo()
         arguments << QString("-i");
         arguments << QString("default");
     }
-    if(recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO){
+    if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
         arguments << QString("-filter_complex");
-        if((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+        if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
             arguments << QString("[1:a]volume=30dB[a1];[a1][2:a]amix=inputs=2:duration=first:dropout_transition=0[out]");
             arguments << QString("-map");
             arguments << QString("0:v");
             arguments << QString("-map");
             arguments << QString("[out]");
-        }else {
+        } else {
             arguments << QString("amerge");
         }
     }
@@ -368,7 +366,7 @@ void RecordProcess::recordVideo()
     if (settings->value("recordConfig", "lossless_recording").toBool()) {
         arguments << QString("-qp");
         arguments << QString("23");
-    }else {
+    } else {
         arguments << QString("-crf");
         arguments << QString("23");
     }
@@ -382,6 +380,7 @@ void RecordProcess::recordVideo()
     m_recorderProcess->start("ffmpeg", arguments);
 }
 
+//初始化录屏进程
 void RecordProcess::initProcess()
 {
     // Create process and handle finish signal.
@@ -422,6 +421,25 @@ void RecordProcess::initProcess()
 
 }
 
+//wayland录制视频
+void RecordProcess::waylandRecord()
+{
+    qDebug() << "wayland 录屏！";
+    // 启动wayland录屏
+    initProcess();
+    QStringList arguments;
+    arguments << QString("%1").arg(recordType);
+    arguments << QString("%1").arg(m_recordRect.width()) << QString("%1").arg(m_recordRect.height());
+    arguments << QString("%1").arg(m_recordRect.x()) << QString("%1").arg(m_recordRect.y());
+    arguments << QString("%1").arg(m_framerate);
+    arguments << QString("%1").arg(savePath);
+    arguments << QString("%1").arg(recordAudioInputType);
+    qDebug() << arguments;
+    WaylandIntegration::init(arguments);
+
+    return;
+}
+
 void RecordProcess::onRecordMouse(const bool status)
 {
     m_isRecordMouse = status;
@@ -437,6 +455,7 @@ void RecordProcess::setSystemAudio(const bool status)
     m_selectedSystemAudio = status;
 }
 
+//开始录屏
 void RecordProcess::startRecord()
 {
     m_framerate = settings->value("recordConfig", "mkv_framerate").toString().toInt();
@@ -453,119 +472,67 @@ void RecordProcess::startRecord()
             recordAudioInputType = RECORD_AUDIO_INPUT_SYSTEMAUDIO;
         }
     }
-    recordVideo();
-    if(Utils::isTabletEnvironment) {
-        return;
+    //x11下的录屏
+    if (!Utils::isWaylandMode) {
+        recordVideo();
+        if (Utils::isTabletEnvironment) {
+            return;
+        }
+    }
+    //wayland下的录屏
+    else {
+        if (recordType != RECORD_TYPE_GIF) {
+            if (settings->value("recordConfig", "lossless_recording").toBool()) {
+                recordType = RECORD_TYPE_MKV;
+            } else {
+                recordType = RECORD_TYPE_MP4;
+            }
+        }
+        waylandRecord();
     }
     if (Utils::isSysHighVersion1040() == false) {
         return;
     }
+    //1040及以上的版本可通过此方式启动状态栏图标闪烁
     QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
                                                                                              "/com/deepin/ScreenRecorder/time",
                                                                                              "com.deepin.ScreenRecorder.time",
                                                                                              "onStart"));
-    if (QDBusMessage::ReplyMessage == message.type()){
-        if(!message.arguments().takeFirst().toBool())
+    if (QDBusMessage::ReplyMessage == message.type()) {
+        if (!message.arguments().takeFirst().toBool())
             qDebug() << "dde dock screen-recorder-plugin did not receive start message!";
     }
 }
 
-/*
-void RecordProcess::setIsZhaoXinPlatform(bool status)
-{
-    if (status) {
-        m_isZhaoxin = true;
-    } else {
-        m_isZhaoxin = false;
-    }
-}
-*/
-/*
-int RecordProcess::readSleepProcessPid()
-{
-    // Read the list of open processes information.
-
-    PROCTAB *proc = openproc(
-                PROC_FILLMEM |          // memory status: read information from /proc/#pid/statm
-                PROC_FILLSTAT |         // cpu status: read information from /proc/#pid/stat
-                PROC_FILLUSR            // user status: resolve user ids to names via /etc/passwd
-                );
-    static proc_t proc_info;
-    memset(&proc_info, 0, sizeof(proc_t));
-
-    StoredProcType processes;
-    while (readproc(proc, &proc_info) != nullptr) {
-        processes[proc_info.tid] = proc_info;
-    }
-    closeproc(proc);
-
-    ProcessTree *processTree = new ProcessTree();
-    processTree->scanProcesses(processes);
-//
-//    char *error;
-//    void *handle = dlopen("libprocps.so", RTLD_LAZY);
-//    if(!handle){
-//        qDebug() << "open libprocps.so failure";
-//        return 0;
-//    }
-
-//    PROCTAB*(*openproc_handle)(int, ...);
-//    openproc_handle = (PROCTAB*(*)(int, ...))dlsym(handle, "openproc");
-//    if((error = dlerror()) != nullptr){
-//        qDebug() << "get libprocps.so function openproc failure";
-//        return 0;
-//    }
-
-//    PROCTAB *proc = openproc_handle(
-//                PROC_FILLMEM |          // memory status: read information from /proc/#pid/statm
-//                PROC_FILLSTAT |         // cpu status: read information from /proc/#pid/stat
-//                PROC_FILLUSR            // user status: resolve user ids to names via /etc/passwd
-//                );
-//    static proc_t proc_info;
-//    memset(&proc_info, 0, sizeof(proc_t));
-
-//    proc_t* (*readproc_handle)(PROCTAB *__restrict const, proc_t *__restrict );
-//    readproc_handle = (proc_t* (*)(PROCTAB *__restrict const, proc_t *__restrict ))dlsym(handle, "readproc");
-//    if((error = dlerror()) != nullptr){
-//        qDebug() << "get libprocps.so function readproc failure";
-//        return 0;
-//    }
-//    StoredProcType processes;
-//    while (readproc_handle(proc, &proc_info) != nullptr) {
-//        processes[proc_info.tid] = proc_info;
-//    }
-
-//    void(*closeproc_handle)(PROCTAB*);
-//    closeproc_handle = (void(*)(PROCTAB*))dlsym(handle, "closeproc");
-//    if((error = dlerror()) != nullptr){
-//        qDebug() << "get libprocps.so function closeproc failure";
-//        return 0;
-//    }
-//    closeproc_handle(proc);
-
-//    ProcessTree *processTree = new ProcessTree();
-//    processTree->scanProcesses(processes);
-
-//    dlclose(handle);
-//
-    return processTree->getAllChildPids(byzanzProcessId)[0];
-}
-*/
-
 void RecordProcess::stopRecord()
 {
-    if (RECORD_TYPE_GIF == recordType) {
-        connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onStartTranscode()));
-    } else {
-        connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onRecordFinish()));
+    //停止wayland录屏
+    if (Utils::isWaylandMode) {
+        WaylandIntegration::stopStreaming();
+        if (RECORD_TYPE_GIF == recordType) {
+            onStartTranscode();
+        } else {
+            onRecordFinish();
+        }
     }
-    m_recorderProcess->write("q");
+    //停止x11录屏
+    else {
+        //录制的视频类型是否是gif格式，是gif的话需要进行转码
+        if (RECORD_TYPE_GIF == recordType) {
+            connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onStartTranscode()));
+        } else {
+            connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onRecordFinish()));
+        }
+        m_recorderProcess->write("q");
+    }
+
+    //系统托盘图标停止闪烁
     QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
                                                                                              "/com/deepin/ScreenRecorder/time",
                                                                                              "com.deepin.ScreenRecorder.time",
                                                                                              "onStop"));
     if (QDBusMessage::ReplyMessage == message.type()) {
-        if(!message.arguments().takeFirst().toBool())
+        if (!message.arguments().takeFirst().toBool())
             qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
     }
 }
