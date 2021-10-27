@@ -49,6 +49,12 @@ void CameraWatcher::setWatch(const bool isWatcher)
     }
 }
 
+// 设置Coulduse的值
+void CameraWatcher::setCoulduseValue(bool value)
+{
+    m_coulduse = value;
+}
+
 // 将原有的run方法替换为slotCameraWatcher，解决截图录屏退出时缓慢的问题
 void CameraWatcher::slotCameraWatcher()
 {

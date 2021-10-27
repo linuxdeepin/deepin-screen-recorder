@@ -4109,7 +4109,8 @@ void MainWindow::shapeClickedSlot(QString shape)
 void MainWindow::on_CheckVideoCouldUse(bool canUse)
 {
     if (!canUse) {
-        if (m_cameraWidget && !m_cameraOffFlag) {
+        if (m_cameraWidget) {
+            // 监测设备文件是否存在
             if (m_cameraWidget->getcameraStatus() == false) {
                 qDebug() << "camera canuse" << canUse;
                 m_cameraWidget->cameraStop();
@@ -4117,6 +4118,10 @@ void MainWindow::on_CheckVideoCouldUse(bool canUse)
                 m_cameraOffFlag = true;
                 m_cameraWidget->hide();
                 m_toolBar->setCameraDeviceEnable(canUse);
+            } else {
+                // 设置Coulduse的值，使m_watchTimer每次都能监测设备文件是否存在
+                if (m_pCameraWatcher)
+                    m_pCameraWatcher->setCoulduseValue(true);
             }
         } else {
             m_toolBar->setCameraDeviceEnable(canUse);
@@ -4124,8 +4129,8 @@ void MainWindow::on_CheckVideoCouldUse(bool canUse)
     } else if (canUse) {
         m_toolBar->setCameraDeviceEnable(canUse);
         if (m_cameraOffFlag) {
+            // 重新加载设备
             m_cameraWidget->cameraResume();
-            m_cameraOffFlag = false;
         }
     }
 }

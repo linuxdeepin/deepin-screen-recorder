@@ -33,6 +33,8 @@ public:
     explicit CameraWatcher(QObject *parent = nullptr);
     ~CameraWatcher();
     void setWatch(const bool isWatcher);
+    // 设置Coulduse的值
+    void setCoulduseValue(bool value);
 public slots:
     // 将原来的run()方法改为定时器的槽函数，便于截图快速退出
     // 取消之前的线程方式，采用定时器监测
