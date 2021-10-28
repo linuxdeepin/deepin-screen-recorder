@@ -49,18 +49,18 @@ RecorderRegionShow::RecorderRegionShow():
 }
 RecorderRegionShow::~RecorderRegionShow()
 {
-    if(nullptr != m_painter){
+    if (nullptr != m_painter) {
         delete m_painter;
         m_painter = nullptr;
     }
-    if(m_cameraWidget) {
-      	if(m_cameraWidget->getcameraStatus()) {
-        	m_cameraWidget->cameraStop();
+    if (m_cameraWidget) {
+        if (m_cameraWidget->getcameraStatus()) {
+            m_cameraWidget->cameraStop();
         }
         delete m_cameraWidget;
         m_cameraWidget = nullptr;
     }
-    for(int i = 0; i < m_keyButtonList.count(); ++i) {
+    for (int i = 0; i < m_keyButtonList.count(); ++i) {
         delete m_keyButtonList[i];
     }
 }
@@ -74,25 +74,26 @@ void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, c
     m_cameraWidget->initCamera();
     m_cameraWidget->setRecordRect(r.x(), r.y(), r.width(), r.height());
     switch (position) {
-    case CameraWidget::Position::rightBottom:{
+    case CameraWidget::Position::rightBottom: {
         m_cameraWidget->showAt(QPoint(r.x() + r.width() - m_cameraWidget->width(), r.y() + r.height() - m_cameraWidget->height() + CAMERA_Y_OFFSET));
         break;
     }
-    case CameraWidget::Position::rightTop:{
+    case CameraWidget::Position::rightTop: {
         m_cameraWidget->showAt(QPoint(r.x() + r.width() - m_cameraWidget->width(), r.y() + CAMERA_Y_OFFSET));
         break;
     }
-    case CameraWidget::Position::leftBottom:{
+    case CameraWidget::Position::leftBottom: {
         m_cameraWidget->showAt(QPoint(r.x(), r.y() + r.height() - m_cameraWidget->height() + CAMERA_Y_OFFSET));
         break;
     }
-    case CameraWidget::Position::leftTop:{
+    case CameraWidget::Position::leftTop: {
         m_cameraWidget->showAt(QPoint(r.x(), r.y() + CAMERA_Y_OFFSET));
         break;
     }
     }
 
     m_cameraWidget->cameraStart();
+    m_cameraWidget->setCameraWidgetImmovable(true); //固定窗口
     //Utils::passInputEvent(static_cast<int>(m_cameraWidget->winId()));
 }
 
@@ -115,11 +116,11 @@ void RecorderRegionShow::showKeyBoardButtons(const QString &key)
 void RecorderRegionShow::updateKeyBoardButtonStyle()
 {
     int count = m_keyButtonList.count();
-    for(int j = 0; j < count; ++j){
-        if(DWindowManagerHelper::instance()->hasComposite()){
+    for (int j = 0; j < count; ++j) {
+        if (DWindowManagerHelper::instance()->hasComposite()) {
             m_keyButtonList.at(j)->setBlurRectXRadius(15);
             m_keyButtonList.at(j)->setBlurRectYRadius(15);
-        }else {
+        } else {
             m_keyButtonList.at(j)->setBlurRectXRadius(0);
             m_keyButtonList.at(j)->setBlurRectYRadius(0);
         }
@@ -128,12 +129,12 @@ void RecorderRegionShow::updateKeyBoardButtonStyle()
 
 void RecorderRegionShow::paintEvent(QPaintEvent *event)
 {
-    if(nullptr == m_painter)
+    if (nullptr == m_painter)
         return;
     QPixmap pixmap(width(), height());
     pixmap.fill(Qt::transparent);
-    m_painter->begin( &pixmap );
-    m_painter->setRenderHints( QPainter::Antialiasing, true);
+    m_painter->begin(&pixmap);
+    m_painter->setRenderHints(QPainter::Antialiasing, true);
 
     QPen pen(Qt::white, 2.0);
     pen.setStyle(Qt::DashLine);
@@ -156,7 +157,7 @@ void RecorderRegionShow::paintEvent(QPaintEvent *event)
 void RecorderRegionShow::updateMultiKeyBoardPos()
 {
     QPoint t_keyPoint[5];
-    static float posfix[5][5] = {{-0.5f, 0}, {-(0.5f + 1 / 1.5f), (1 / 1.5f - 0.5f), 0}, {-1.8f, -0.5f, 0.8f, 0},{-2.5f, -(0.5f + 1 / 1.5f), (1 / 1.5f - 0.5f), 1.5, 0},{-3.1f, -1.8f, -0.5, 0.8f, 2.1f}};
+    static float posfix[5][5] = {{-0.5f, 0}, {-(0.5f + 1 / 1.5f), (1 / 1.5f - 0.5f), 0}, {-1.8f, -0.5f, 0.8f, 0}, {-2.5f, -(0.5f + 1 / 1.5f), (1 / 1.5f - 0.5f), 1.5, 0}, {-3.1f, -1.8f, -0.5, 0.8f, 2.1f}};
     QRect r = this->geometry();
     int recordX = r.x();
     int recordY = r.y();
@@ -165,12 +166,12 @@ void RecorderRegionShow::updateMultiKeyBoardPos()
 
 
     int count = m_keyButtonList.count();
-        for(int j = 0; j < count; ++j){
-            m_keyButtonList.at(j)->hide();
-            t_keyPoint[j] = QPoint(static_cast<int>(recordX + recordWidth / 2 + m_keyButtonList.at(j)->width() * posfix[count-1][j]), std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
-            m_keyButtonList.at(j)->move(t_keyPoint[j].x(), t_keyPoint[j].y());
-            m_keyButtonList.at(j)->show();
-        }
+    for (int j = 0; j < count; ++j) {
+        m_keyButtonList.at(j)->hide();
+        t_keyPoint[j] = QPoint(static_cast<int>(recordX + recordWidth / 2 + m_keyButtonList.at(j)->width() * posfix[count - 1][j]), std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+        m_keyButtonList.at(j)->move(t_keyPoint[j].x(), t_keyPoint[j].y());
+        m_keyButtonList.at(j)->show();
+    }
 
     /*
 

@@ -248,7 +248,7 @@ bool CameraWidget::setCameraStop(bool status)
 
 bool CameraWidget::getcameraStatus()
 {
-    if ( camera->state() != QCamera::ActiveState || !m_deviceFile->exists()) {
+    if (camera->state() != QCamera::ActiveState || !m_deviceFile->exists()) {
         return false;
     }
 
@@ -319,7 +319,7 @@ void CameraWidget::mousePressEvent(QMouseEvent *event)
 
 void CameraWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    if (event->buttons() & Qt::LeftButton) {
+    if ((event->buttons() & Qt::LeftButton) && m_Immovable == false) {
 //        //移动中的鼠标位置相对于初始位置的相对位置.
 //        QPoint relativePos = event->globalPos() - m_startPoint;
 //        QRect recordRect = QRect(recordX, recordY, recordWidth, recordHeight);
@@ -346,10 +346,10 @@ void CameraWidget::mouseMoveEvent(QMouseEvent *event)
         if (curPos.y() < recordY) //top
             curPos.setY(recordY);
 
-        if ( (curPos.x() + size.width()) > (recordX + parentSize.width())) //right
+        if ((curPos.x() + size.width()) > (recordX + parentSize.width()))  //right
             curPos.setX(recordX + parentSize.width() - size.width());
 
-        if ( (curPos.y() + size.height()) > (recordY + parentSize.height())) //bottom
+        if ((curPos.y() + size.height()) > (recordY + parentSize.height()))  //bottom
             curPos.setY(recordY + parentSize.height() - size.height());
 
 //        QPoint resultPos = QPoint(curPos.x() - size.width() / 2,
@@ -397,4 +397,10 @@ CameraWidget::Position CameraWidget::postion()
             return rightBottom;
         }
     }
+}
+
+// 设置CameraWidget是否可以拖动
+void CameraWidget::setCameraWidgetImmovable(bool immovable)
+{
+    m_Immovable = immovable;
 }

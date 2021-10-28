@@ -63,6 +63,9 @@ public:
     //bool getScreenResolution();
     Position postion();
     QPixmap scaledPixmap(const QPixmap &src, int width, int height);
+    // 设置CameraWidget是否可以拖动
+    void setCameraWidgetImmovable(bool immovable);
+
 signals:
 
 public slots:
@@ -101,6 +104,7 @@ private:
     QFile *m_deviceFile = nullptr;
 
     bool m_wildScreen = false;
+    bool m_Immovable = false; // 窗口不固定
 };
 
 #endif // CAMERAWIDGET_H
