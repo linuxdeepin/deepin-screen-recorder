@@ -394,6 +394,17 @@ public slots:
     void onMouseScroll(int mouseTime, int direction, int x, int y);
 
     /**
+    * @brief Wayland 键盘按键按下槽函数
+    * @param keyCode: 释放的键盘按键代号
+    */
+   void onKeyboardPressWayland(QString keyStr);
+   /**
+   * @brief Wayland 键盘按键释放槽函数
+   * @param keyCode: 释放的键盘按键代号
+   */
+   void onKeyboardReleaseWayland(QString keyStr);
+
+    /**
      * @brief 通过x11从底层获取键盘按下事件
      * @param keyCode: 按下的键盘按键代号
      */

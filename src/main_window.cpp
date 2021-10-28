@@ -127,10 +127,14 @@ MainWindow::MainWindow(DWidget *parent) :
     connect(m_pScreenCaptureEvent, SIGNAL(mouseRelease(int, int)), this, SLOT(onMouseRelease(int, int)), Qt::QueuedConnection);
     connect(m_pScreenCaptureEvent, SIGNAL(mouseMove(int, int)), this, SLOT(onMouseMove(int, int)), Qt::QueuedConnection);
     connect(m_pScreenCaptureEvent, SIGNAL(mouseScroll(int, int, int, int)), this, SLOT(onMouseScroll(int, int, int, int)), Qt::QueuedConnection);
-    connect(m_pScreenCaptureEvent, SIGNAL(keyboardPress(unsigned char)), this, SLOT(onKeyboardPress(unsigned char)), Qt::QueuedConnection);
-    connect(m_pScreenCaptureEvent, SIGNAL(keyboardRelease(unsigned char)), this, SLOT(onKeyboardRelease(unsigned char)), Qt::QueuedConnection);
-    qDebug() << "截图录屏事件监听线程已启动！！！";
-    if (!Utils::isWaylandMode) {
+
+    if (Utils::isWaylandMode) {
+        connect(m_pScreenCaptureEvent, SIGNAL(keyboardPressWayland(QString)), this, SLOT(onKeyboardPressWayland(QString)), Qt::QueuedConnection);
+        connect(m_pScreenCaptureEvent, SIGNAL(keyboardReleaseWayland(QString)), this, SLOT(onKeyboardReleaseWayland(QString)), Qt::QueuedConnection);
+    } else {
+        // X11 开启监控全局事件线程
+        connect(m_pScreenCaptureEvent, SIGNAL(keyboardPress(unsigned char)), this, SLOT(onKeyboardPress(unsigned char)), Qt::QueuedConnection);
+        connect(m_pScreenCaptureEvent, SIGNAL(keyboardRelease(unsigned char)), this, SLOT(onKeyboardRelease(unsigned char)), Qt::QueuedConnection);
         m_pScreenCaptureEvent->start();
     }
 
@@ -3562,6 +3566,24 @@ void MainWindow::onMouseScroll(int mouseTime, int direction, int x, int y)
         scrollShotMouseScrollEvent(mouseTime, direction, x, y);
     }
 
+}
+
+// Wayland接收键盘按键事件
+void MainWindow::onKeyboardPressWayland(QString keyStr)
+{
+     if (status::record == m_functionType) {
+         if (keyStr == "Escape") {
+             responseEsc();
+         } else {
+             m_showButtons->showContentButtons(keyStr);
+         }
+     }
+}
+void MainWindow::onKeyboardReleaseWayland(QString keyStr)
+{
+    if (status::record == m_functionType) {
+        m_showButtons->releaseContentButtons(keyStr);
+    }
 }
 
 //通过x11从底层获取键盘按下事件

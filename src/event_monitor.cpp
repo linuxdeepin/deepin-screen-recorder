@@ -212,19 +212,19 @@ void EventMonitor::ButtonReleaseEvent(int type, int x, int y, QString str)
     emit mouseRelease(x, y);
 }
 
-// 全局键盘事件暂时还不可用
+// Wayland下全局键盘事件通过Dbus信号接收
 void EventMonitor::KeyPressEvent(QString x, int y, int z, QString str)
 {
-    Q_UNUSED(x);
+    Q_UNUSED(z);
     Q_UNUSED(y);
     Q_UNUSED(str);
-    emit keyboardPress(static_cast<unsigned char>(z));
+    emit keyboardPressWayland(x);
 }
 
 void EventMonitor::KeyReleaseEvent(QString x, int y, int z, QString str)
 {
-    Q_UNUSED(x);
+    Q_UNUSED(z);
     Q_UNUSED(y);
     Q_UNUSED(str);
-    emit keyboardRelease(static_cast<unsigned char>(z));
+    emit keyboardReleaseWayland(x);
 }

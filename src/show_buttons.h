@@ -167,8 +167,14 @@ signals:
     void keyShowSignal(const QString &key);
 
 public slots:
+     // x11 下按键按下
     void showContentButtons(unsigned char keyCode);
+     // x11 下按键释放
     void releaseContentButtons(unsigned char keyCode);
+    // Wayland 下按键按下
+    void showContentButtons(QString keyCode);
+    // Wayland 下按键释放
+    void releaseContentButtons(QString keyCode);
     QString getKeyCodeFromEvent(unsigned char keyCode);
 
 private:

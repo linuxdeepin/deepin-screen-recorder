@@ -155,7 +155,29 @@ ShowButtons::ShowButtons(DWidget *parent) : DWidget(parent)
 {
 }
 
-
+void ShowButtons::showContentButtons(QString keyCode)
+{
+    if (keyCode != "") {
+        // 记录已经按下的按键信息，防止按键长按
+        if (m_keyCodeVec.contains(keyCode)) {
+            return;
+        } else {
+            m_keyCodeVec.append(keyCode);
+            qDebug() << keyCode << " key press";
+            emit keyShowSignal(keyCode);
+        }
+    }
+}
+void ShowButtons::releaseContentButtons(QString keyCode)
+{
+   // 释放时，从记录中移除按键信息，防止按键长按
+    if (keyCode != "") {
+        if (m_keyCodeVec.contains(keyCode)) {
+            m_keyCodeVec.removeOne(keyCode);
+            return;
+        }
+    }
+}
 void ShowButtons::showContentButtons(unsigned char keyCode)
 {
     QString t_keyCode = "";

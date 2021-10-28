@@ -127,12 +127,22 @@ signals:
      * @param keyCode: 按下的键盘按键代号
      */
     void keyboardPress(unsigned char keyCode);
+    /**
+    * @brief Wayland下按键按下信号
+    * @param keyCode: 按下的键盘按键代号
+    */
+   void keyboardPressWayland(QString keyStr);
 
     /**
      * @brief 通过x11从底层获取键盘释放事件
      * @param keyCode: 释放的键盘按键代号
      */
     void keyboardRelease(unsigned char keyCode);
+    /**
+    * @brief Wayland下按键释放信号
+    * @param keyCode: 按下的键盘按键代号
+    */
+   void keyboardReleaseWayland(QString keyCode);
 
     /**
      * @brief 进行操作后发射活动窗口
