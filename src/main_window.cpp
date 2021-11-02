@@ -2159,7 +2159,12 @@ void MainWindow::saveScreenShot()
 {
 
     if (m_pScreenCaptureEvent) {
-        m_CursorImage = m_pScreenCaptureEvent->getCursorImage();
+
+        if (Utils::isWaylandMode) {
+            m_CuresorImageWayland = m_pScreenCaptureEvent->getCursorImageWayland();
+        } else {
+            m_CursorImage = m_pScreenCaptureEvent->getCursorImage();
+        }
     }
     m_shotflag = 1;
     emit saveActionTriggered();
@@ -3571,13 +3576,13 @@ void MainWindow::onMouseScroll(int mouseTime, int direction, int x, int y)
 // Wayland接收键盘按键事件
 void MainWindow::onKeyboardPressWayland(QString keyStr)
 {
-     if (status::record == m_functionType) {
-         if (keyStr == "Escape") {
-             responseEsc();
-         } else {
-             m_showButtons->showContentButtons(keyStr);
-         }
-     }
+    if (status::record == m_functionType) {
+        if (keyStr == "Escape") {
+            responseEsc();
+        } else {
+            m_showButtons->showContentButtons(keyStr);
+        }
+    }
 }
 void MainWindow::onKeyboardReleaseWayland(QString keyStr)
 {
@@ -4352,23 +4357,31 @@ void MainWindow::addCursorToImage()
     if (isUnderRect == false) {
         return;
     }
-    if (m_CursorImage == nullptr)
-        return;
-    const int dataSize = m_CursorImage->width * m_CursorImage->height * 4;
-    uchar *pixels = new uchar[dataSize];
-    int index = 0;
-    for (int j = 0; j < m_CursorImage->width * m_CursorImage->height; ++j) {
-        unsigned long curValue = m_CursorImage->pixels[j];
-        pixels[index++] = static_cast<uchar>(curValue >> 0);
-        pixels[index++] = static_cast<uchar>(curValue >> 8);
-        pixels[index++] = static_cast<uchar>(curValue >> 16);
-        pixels[index++] = static_cast<uchar>(curValue >> 24);
-    }
-    QImage cursorImage = QImage(pixels, m_CursorImage->width, m_CursorImage->height, QImage::Format_ARGB32_Premultiplied);
     QPainter painter(&m_resultPixmap);
-    painter.drawImage(QRect(x - recordX - m_CursorImage->width / 2, y - recordY - m_CursorImage->height / 2, m_CursorImage->width, m_CursorImage->height), cursorImage);
-    delete[] pixels;
-    XFree(m_CursorImage);
+
+    //wayland模式下截取光标
+    if (Utils::isWaylandMode) {
+        painter.drawImage(QRect(x - recordX - m_CuresorImageWayland.width() / 2, y - recordY - m_CuresorImageWayland.height() / 2, m_CuresorImageWayland.width(), m_CuresorImageWayland.height()), m_CuresorImageWayland);
+    }
+    //x11模式下截取光标
+    else {
+        if (m_CursorImage == nullptr)
+            return;
+        const int dataSize = m_CursorImage->width * m_CursorImage->height * 4;
+        uchar *pixels = new uchar[dataSize];
+        int index = 0;
+        for (int j = 0; j < m_CursorImage->width * m_CursorImage->height; ++j) {
+            unsigned long curValue = m_CursorImage->pixels[j];
+            pixels[index++] = static_cast<uchar>(curValue >> 0);
+            pixels[index++] = static_cast<uchar>(curValue >> 8);
+            pixels[index++] = static_cast<uchar>(curValue >> 16);
+            pixels[index++] = static_cast<uchar>(curValue >> 24);
+        }
+        QImage cursorImage = QImage(pixels, m_CursorImage->width, m_CursorImage->height, QImage::Format_ARGB32_Premultiplied);
+        painter.drawImage(QRect(x - recordX - m_CursorImage->width / 2, y - recordY - m_CursorImage->height / 2, m_CursorImage->width, m_CursorImage->height), cursorImage);
+        delete[] pixels;
+        XFree(m_CursorImage);
+    }
     return;
 }
 

@@ -38,7 +38,7 @@ EventMonitor::EventMonitor(QObject *parent) : QThread(parent)
 
 EventMonitor::~EventMonitor()
 {
-    if(m_display_datalink && m_display) {
+    if (m_display_datalink && m_display) {
         XRecordDisableContext(m_display_datalink, m_context);
         XRecordFreeContext(m_display, m_context);
         XSync(m_display, False);
@@ -169,6 +169,27 @@ XFixesCursorImage *EventMonitor::getCursorImage()
         return nullptr;
     }
     return XFixesGetCursorImage(x11Display);
+}
+
+//wayland截屏下获取光标的图片
+QImage EventMonitor::getCursorImageWayland()
+{
+    QDBusInterface kwinInterface(QStringLiteral("org.kde.KWin"),
+                                 QStringLiteral("/KWin"),
+                                 QStringLiteral("org.kde.KWin"));
+
+    QPixmap res;
+    QDBusReply<QByteArray> reply = kwinInterface.call(QStringLiteral("cursorImage"));
+    qDebug() << "reply: " << reply.isValid();
+    qDebug() << "reply.value().isNull(): " << reply.value().isNull();
+    qDebug() << "reply.value().isNull(): " << reply.value().isEmpty();
+    res.loadFromData(reply.value());
+    if (!res.isNull()) {
+        QFile dbusResult(reply.value());
+        dbusResult.remove();
+    }
+    return res.toImage();
+
 }
 
 void EventMonitor::initWaylandEventMonitor()

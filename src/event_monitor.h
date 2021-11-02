@@ -28,6 +28,13 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QDebug>
+#include <QtDBus/QtDBus>
+#include <QDBusObjectPath>
+#include <QDBusReply>
+#include <QDBusInterface>
+#include <QDBusError>
+#include <QDBusMessage>
+
 #include <X11/Xlib.h>
 #include <X11/extensions/record.h>
 #include <X11/extensions/Xfixes.h>
@@ -45,7 +52,18 @@ public:
     ~EventMonitor();
     static void callback(XPointer trash, XRecordInterceptData *data);
     void handleEvent(XRecordInterceptData *);
+
+    /**
+     * @brief x11截屏下获取光标的图片
+     * @return
+     */
     XFixesCursorImage *getCursorImage();
+
+    /**
+     * @brief wayland截屏下获取光标的图片
+     * @return
+     */
+    QImage getCursorImageWayland();
     /**
      * @brief 初始化wayland录屏事件监听
      */
@@ -131,7 +149,7 @@ signals:
     * @brief Wayland下按键按下信号
     * @param keyCode: 按下的键盘按键代号
     */
-   void keyboardPressWayland(QString keyStr);
+    void keyboardPressWayland(QString keyStr);
 
     /**
      * @brief 通过x11从底层获取键盘释放事件
@@ -142,7 +160,7 @@ signals:
     * @brief Wayland下按键释放信号
     * @param keyCode: 按下的键盘按键代号
     */
-   void keyboardReleaseWayland(QString keyCode);
+    void keyboardReleaseWayland(QString keyCode);
 
     /**
      * @brief 进行操作后发射活动窗口

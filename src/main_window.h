@@ -302,7 +302,13 @@ public slots:
 
     //void flashTrayIcon();
     //void iconActivated(QSystemTrayIcon::ActivationReason reason);
+    /**
+     * @brief 截取当前的图片
+     */
     void shotCurrentImg();
+    /**
+     * @brief 将光标绘制到当前的图片中
+     */
     void addCursorToImage();
     void shotFullScreen(bool isFull = false);
     void onHelp();
@@ -397,12 +403,12 @@ public slots:
     * @brief Wayland 键盘按键按下槽函数
     * @param keyCode: 释放的键盘按键代号
     */
-   void onKeyboardPressWayland(QString keyStr);
-   /**
-   * @brief Wayland 键盘按键释放槽函数
-   * @param keyCode: 释放的键盘按键代号
-   */
-   void onKeyboardReleaseWayland(QString keyStr);
+    void onKeyboardPressWayland(QString keyStr);
+    /**
+    * @brief Wayland 键盘按键释放槽函数
+    * @param keyCode: 释放的键盘按键代号
+    */
+    void onKeyboardReleaseWayland(QString keyStr);
 
     /**
      * @brief 通过x11从底层获取键盘按下事件
@@ -820,7 +826,14 @@ private:
     int m_firstShot = 0;
     bool m_isZhaoxin = false;
     QList<ScreenInfo> m_screenInfo;
+    /**
+     * @brief 截图时保存鼠标光标的位置 x11协议下
+     */
     XFixesCursorImage *m_CursorImage = nullptr;
+    /**
+     * @brief 截图时保存鼠标光标的位置 wayland协议下
+     */
+    QImage m_CuresorImageWayland;
     QSize m_screenSize;
     RecorderRegionShow *m_pRecorderRegion = nullptr;
     /**
