@@ -4,7 +4,7 @@
 
 截图录屏是一款集截图、录屏于一体的小巧工具，不仅支持多种方式来选择截图录屏区域，还支持对图片进行编辑，对屏幕活动进行设置等功能。
 
-![part_area](fig/part_area.png)
+![part_area](fig/partarea.png)
 
 
 
@@ -62,7 +62,7 @@
 您也可以直接通过以下步骤来截取全屏：
 
 - 如果您已经将截图录屏固定到任务栏，右键单击任务栏上的图标 ![deepin_screenshot](../common/deepin_screenshot.svg)，选择 **全屏截图** 。
-- 按下键盘上的 ![print](../common/Print.svg)键，实现全屏截图。
+- 按下键盘上的 ![print](../common/Print.svg) 键，实现全屏截图。
 
 #### 选择窗口
 
@@ -80,7 +80,7 @@
 
 您还可以自由选择截图录屏的范围。
 
-![1|区域截图](fig/part_area.png)
+![1|区域截图](fig/partarea.png)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -104,29 +104,33 @@
 
 将鼠标指针置于截图录屏区域上，鼠标指针为 ![手指](../common/hand.svg)，您可以：
 - 按住鼠标左键不放，拖动鼠标来移动区域的位置。
-- 按下键盘上的 ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 来上下移动区域，按下键盘上的 ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 来左右移动区域。
+- 按下键盘上的 ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 来上下移动区域，按下键盘上的 ![向左](../common/Left.svg)或 ![向右](../common/Right.svg) 来左右移动区域。
 
 
 
 ## 截图
 
-在截图模式下，单击工具栏上的按钮，您可以在截图区域绘制图形、编辑图形、添加文字批注等。
+在截图模式下，单击工具栏上的按钮，您可以在截图区域绘制图形、编辑图形、添加文字批注、识别图片中的文字等。
 
 
-![0|截图工具栏](fig/capture_bar.png)
+![0|截图工具栏](fig/capturebar.png)
 
 <table class="block1">
     <caption>工具栏说明</caption>
     <tbody>
         <tr>
+            <td><img src="../common/scrollshot.svg" alt="滚动截图" class="inline" /></td>
+            <td>滚动截图</td>
+            <td><img src="../common/ocr.svg" alt="识别文字" class="inline" /></td>
+            <td>识别文字</td>
             <td><img src="../common/rectangle_normal.svg" alt="矩形工具" class="inline" /></td>
             <td>矩形工具</td>
             <td><img src="../common/oval_normal.svg" alt="椭圆工具" class="inline" /></td>
             <td>椭圆工具</td>
-            <td><img src="../common/line_normal.svg" alt="箭头工具" class="inline" /></td>
-            <td>直线工具</td>
         </tr>
           <tr>
+            <td><img src="../common/line_normal.svg" alt="箭头工具" class="inline" /></td>
+            <td>直线工具</td>
             <td><img src="../common/Combined_Shape.svg" alt="画笔工具" class="inline" /></td>
             <td>画笔工具</td>
             <td><img src="../common/text_normal.svg" alt="文本工具" class="inline" /></td>
@@ -139,13 +143,11 @@
 
 
 
-
-
 > ![notes](../common/notes.svg)说明：如果您已经对工具栏和属性栏中如线条粗细、字体大小等进行了选择，截图录屏会保存设置，再次启动截图录屏，将默认使用该设置，您也可以重新进行选择。
 
 ### 绘制图形
 
-通过截图工具栏上的按钮可绘制简单的图形，选择图形工具后，按住键盘上 **Shift** 键，拖动鼠标绘制正方形、圆形或水平/垂直方向的直线。
+通过截图工具栏上的按钮可以绘制简单的图形。选择图形工具后，按住键盘上 **Shift** 键，拖动鼠标绘制正方形、圆形或水平/垂直方向的直线。
 
 #### 矩形工具
 
@@ -159,7 +161,6 @@
 4. 按住鼠标左键不放，拖动鼠标完成图形区域的绘制。
 5. 如果截图中包含了个人隐私信息，可单击工具栏展开面板中的 ![模糊](../common/vague_normal.svg) 或 ![马赛克](../common/Mosaic_normal.svg) 来涂抹。
 
-
 ![2|blurtool](fig/blurtool.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ![2|mosaictool](fig/mosaictool.png)
@@ -167,6 +168,7 @@
 
 
 #### 椭圆工具
+
 ![1|椭圆工具](fig/ellipsetool.png)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -175,7 +177,7 @@
 2. 在工具栏展开的面板中，选择椭圆边线的粗细和颜色，有四种颜色可供选择。
 3. 将鼠标指针置于截图区域上，鼠标指针变为 ![椭圆指针](../common/ellipse_mouse.svg)。
 4. 按住鼠标左键不放，拖动鼠标完成图形区域的绘制。
-5. 如果截图中包含了个人隐私信息，可单击工具栏展开面板中的 ![模糊](../common/vague_normal.svg) 或 ![马赛克](../common/Mosaic_normal.svg)来涂抹。
+5. 如果截图中包含了个人隐私信息，可单击工具栏展开面板中的 ![模糊](../common/vague_normal.svg) 或 ![马赛克](../common/Mosaic_normal.svg) 来涂抹。
 
 
 #### 直线和箭头工具
@@ -186,7 +188,7 @@
 
 1. 在截图工具栏中，单击 ![直线](../common/line_normal.svg)。
 2. 在工具栏展开的面板中，选择线条的粗细和颜色，有四种颜色可供选择。
-3. 单击 ![直线](../common/line_normal.svg)或 ![箭头](../common/Arrow_normal.svg)，在直线和箭头之间切换。
+3. 单击 ![直线](../common/line_normal.svg) 或 ![箭头](../common/Arrow_normal.svg)，在直线和箭头之间切换。
 4. 将鼠标指针置于截图区域上，鼠标指针变为 ![线条指针](../common/line_mouse.svg) 或 ![箭头指针](../common/arrow_mouse.svg)。
 5. 按住鼠标左键不放，拖动鼠标完成图形区域的绘制。
 
@@ -203,18 +205,21 @@
 
 
 ### 修改图形
+
 如果您在截图中绘制了其他的图形，可以对图形进行修改和移动。
 
 ![1|修改图形](fig/changetool.png)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 #### 移动图形
+
 1. 将鼠标指针置于图形的边线上，此时鼠标指针变为 ![手指](fig/fingers.png)。
 2. 按住鼠标左键不放，将图形移动到截图区域的任何位置。
 3. 按下键盘上的 ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 来上下移动图形，按下键盘上的 ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 来左右移动图形。
 
 
 #### 编辑图形
+
 1. 将鼠标指针置于图形的边线上，此时鼠标指针变为 ![手指](fig/fingers.png)。
 2. 单击鼠标左键，进入图形的编辑模式，您可以：
    - 按下键盘上的 **Delete** 键，删除图形。
@@ -249,6 +254,7 @@
 2. 按住鼠标左键不放，将文字移到截图区域的任何位置。
 
 #### 编辑文字批注
+
 1. 将鼠标指针置于文字上，此时鼠标指针变为 ![手指](fig/fingers.png)。
 2. 双击鼠标左键，进入文字编辑模式，您可以：
    - 按下键盘上的 **Delete** 键，删除文字批注。
@@ -256,6 +262,45 @@
 3. 在文本框外单击鼠标左键，退出编辑模式。
 
 
+
+### 滚动截图
+
+滚动截图功能不仅可以截取屏幕内可见的内容，还能截取超过屏幕外的内容，满足一次性截取长图的需求。
+
+请在 **控制中心 > 个性化** 中开启特效窗口。
+
+1. 选择截图区域后，单击工具栏上的滚动截图按钮 ![icon](../common/scrollshot.svg)。
+
+2. 请将鼠标光标保持在滚动区域内，您可以使用自动滚动或手动滚动截图，也可以交替使用两种方式：
+
+   - **自动滚动**：在截图区域中单击鼠标左键，光标所在的截图区域自动向上滚动，此时截取的图片会拼接为一张完整的长图。自动滚动过程中，在截图区域内单击鼠标左键，或者将光标移出截图区域，暂停截图；再次单击截图区域，继续截图。
+
+   - **手动滚动**：将鼠标光标置于截图区域中，向上或者向下滚动鼠标滚轮截取图片。停止滚动鼠标滚轮，暂停截图；再次滚动鼠标滚轮，继续截图。
+
+3. 单击工具栏中的截图按钮 ![icon](../common/screenshot_button.svg) 保存长图。
+
+  > ![notes](../common/notes.svg)说明：有以下几种情况会导致拼接异常。
+  > - 截图区域超出滚动范围，如框选整个窗口、全屏等；
+  > - 截图区域过小，如高度小于50px；
+  > - 截图区域中有多个滚动区域；
+  > - 滚动区域中包含大量重复内容，如空白区域、相同颜色、大段相同文字等；
+  > - 滚动区域中包含动图、视频、水印等，或者有非纯色背景的内容；
+  > - 滚动时有水平方向的偏移，如滑动滚动条；
+  > - 滚动速度过快；
+  > - 滚动时切换窗口。
+
+![长图](fig/scrollshot.png)
+
+
+
+### 识别文字
+
+对于截图区域中无法复制的内容，可以使用识别文字功能提取文字。
+
+1. 在截图工具栏中，单击工具栏上的文字识别按钮 ![ocr](../common/ocr.svg)，弹出图文识别窗口，识别图片中的文字。
+3. 单击右侧文本区域可以编辑文字内容；在图文识别窗口右下角，单击复制按钮 ![copy](../common/copy.svg) 将文字内容复制到剪贴板；单击下载按钮 ![copy](../common/download.svg) 将文字内容保存为TXT文件。
+
+![ocr](fig/ocr.png)
 
 ### 延时截图
 

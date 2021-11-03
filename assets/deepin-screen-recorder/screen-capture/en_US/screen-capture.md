@@ -4,7 +4,7 @@
 
 Screen Capture is a tool which integrates the screen capture and recorder functions into one. You are free to select windows or areas automatically or manually during screen capturing or recording. 
 
-![partarea](fig/partarea.png)
+![partarea](fig/d_partarea.png)
 
 ## Guide
 
@@ -30,7 +30,7 @@ You can run, close, and create shortcuts for Screen Capture in the following ope
 
 In the Screenshot mode on the Screen Capture interface, press **Ctrl + Shift + ?** to view shortcuts. Proficiency in shortcuts will greatly improve your efficiency.
 
-![1|hotkey](fig/hotkey.png)
+![1|hotkey](fig/d_hotkey.png)
 
 ## Select and Adjust Screen Capture Area
 
@@ -44,7 +44,7 @@ There are three kinds of common screen capture areas, namely the full screen, pr
 
 Full screen selection is used to identify the entire screen of the current monitor.
 
-![1|fullscreen](fig/fullscreen.png)
+![1|fullscreen](fig/d_fullscreen.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 You can select the full screen in the following ways:
@@ -62,7 +62,7 @@ You can also take a full screen screenshot directly in the following ways:
 
 Program window selection is used to identify the current application window automatically.
 
-![1|window](fig/window.png)
+![1|window](fig/d_window.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Press **Ctrl + Alt + A**  or  **Ctrl + Alt + R** on the keyboard to enter the screen capture mode.
@@ -73,7 +73,7 @@ Program window selection is used to identify the current application window auto
 
 Customized area selection is used to select the screen capture area freely by dragging the mouse.
 
-![1|partarea](fig/partarea.png)
+![1|partarea](fig/d_partarea.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Press **Ctrl + Alt + A** or **Ctrl + Alt + R** on the keyboard to enter the screen capture mode.
@@ -101,20 +101,24 @@ Place the pointer over the screen capture area and it will be changed to ![finge
 
 Under the screenshot mode, click the corresponding icons on the toolbar and you can perform operations such as drawing and editing graphics, adding text annotations, etc. in the screenshot  area.
 
-![0|caputure_bar](fig/capture_bar.png)
+![0|caputure_bar](fig/d_capture_bar.png)
 
 <table class="block1">
     <caption>Icon Description</caption>
     <tbody>
         <tr>
+            <td><img src="../common/scrollshot.svg" alt="Scrollshot" class="inline" /></td>
+            <td>Scrollshot</td>
+            <td><img src="../common/ocr.svg" alt="Extract Text" class="inline" /></td>
+            <td>Extract Text</td>
             <td><img src="../common/rectangle_normal.svg" alt="Rectangle" class="inline" /></td>
             <td>Rectangle</td>
             <td><img src="../common/oval_normal.svg" alt="Elipse" class="inline" /></td>
             <td>Elipse</td>
+                    </tr>
+          <tr>
             <td><img src="../common/line_normal.svg" alt="Arrow" class="inline" /></td>
             <td>Line</td>
-        </tr>
-          <tr>
             <td><img src="../common/Combined_Shape.svg" alt="Pencil" class="inline" /></td>
             <td>Pencil</td>
             <td><img src="../common/text_normal.svg" alt="文本工具" class="inline" /></td>
@@ -125,6 +129,8 @@ Under the screenshot mode, click the corresponding icons on the toolbar and you 
     </tbody>
 </table>
 
+
+
 > ![notes](../common/notes.svg) Notes: Your settings in the toolbar and attribute column, such as the line weight and font size, are remembered and applied by default and will be resumed the next time when you launch Screen Capture. You are able to reset it as well. 
 
 ### Draw
@@ -133,7 +139,7 @@ You can draw some simple graphics in the screenshots. Click the icon on the tool
 
 #### Rectangle
 
-![1|rectool](fig/rectool.png)
+![1|rectool](fig/d_rectool.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Click ![rectangle](../common/rectangle_normal.svg) on the toolbar which appears beside the screenshot area.
@@ -142,14 +148,14 @@ You can draw some simple graphics in the screenshots. Click the icon on the tool
 4. Hold down the left mouse button, and drag the mouse to complete drawing.
 5. Click ![vague](../common/vague_normal.svg) or ![mosaic](../common/Mosaic_normal.svg) in the toolbar extension panel to mosaic the private information in the screenshot (if any).
 
-![2|blurtool](fig/blurtool.png)
+![2|blurtool](fig/d_blurtool.png)
 
-![2|mosaictool](fig/mosaictool.png)
+![2|mosaictool](fig/d_mosaictool.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #### Ellipse
 
-![1|ellipse](fig/ellipse.png)
+![1|ellipse](fig/d_ellipse.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Click ![oval](../common/oval_normal.svg) on the toolbar which appears beside the screenshot area.
@@ -160,7 +166,7 @@ You can draw some simple graphics in the screenshots. Click the icon on the tool
 
 #### Straight Line and Arrow
 
-![1|line](fig/line.png)
+![1|line](fig/d_line.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Click ![line_normal](../common/line_normal.svg) on the toolbar which appears beside the screenshot area.
@@ -171,7 +177,7 @@ You can draw some simple graphics in the screenshots. Click the icon on the tool
 
 #### Pencil
 
-![1|pencil](fig/pencil.png)
+![1|pencil](fig/d_pencil.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Click ![combined_shape](../common/Combined_Shape.svg) on the toolbar which appears beside the screenshot area.
@@ -183,7 +189,7 @@ You can draw some simple graphics in the screenshots. Click the icon on the tool
 
 You can modify and move the drawn graphics in the screenshot.
 
-![1|changetool](fig/changetool.png)
+![1|changetool](fig/d_changetool.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #### Move Graphics
@@ -206,7 +212,7 @@ You can modify and move the drawn graphics in the screenshot.
 
 Add text annotations to the screenshot in order to help others better understand.
 
-![0|text](fig/text.png)
+![0|text](fig/d_text.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Click ![text_normal](../common/text_normal.svg) on the toolbar which appears beside the screenshot area.
@@ -231,6 +237,41 @@ You can modify and move the text annotations after they're entered.
    - Press **Delete** on the keyboard to delete text annotations.
    - Modify the text in the text box.
 3. Click outside the text box to exit editing mode.
+
+### Take Screen Scrollshots
+
+You are able to take long screen scrollshots both in and out of the screen with the **Scrollshot** feature.
+
+Please enable the **Window Effect** feature in **Control Center > Personalization > General** before taking screen scrollshots.
+
+1. Select the screenshot area and click the ![scrollshot](../common/scrollshot.svg) icon on the toolbar.
+2. Place the cursor in the scrollshot area and you can start taking your scrollshots automatically, manually or alternatively.
+
+   - Automatic scrolling: Click in the screenshot area and the cursor will scroll upwards automatically. The captured screenshots will be spliced into a complete long picture.  During the automatic scrolling process, click in the screenshot area or move the cursor out of the screenshot area to suspend the screenshot. Click in the screenshot area once again to resume.
+   - Manual scrolling: Place the cursor in the screenshot area and scroll the mouse wheel upwards or downwards to take screenshot manually. Stop scrolling the mouse wheel to suspend the screenshot. Scroll it again to resume. 
+3.   Click the  ![icon](../common/screenshot_button.svg) icon on the toolbar to save the screenshot.
+
+> ![notes](../common/notes.svg) Notes: The following conditions will lead to abnormal splicing:
+>
+> - The screenshot area is beyond the scrolling area, such as selecting the whole window or fullscreen; 
+> - The screenshot area is too small. For example, the height is less than 50px. 
+> - Multiple scrolling areas are contained in the scrolling area.
+> - A great number of repetitive contents, such as blank areas, same colors or same sections of texts are contained in the scrolling area.
+> - Animations, video, watermarks, etc. or contents with non-solid background are contained in the screenshot area.
+> - There is a horizontal offset in the scrolling process, such as sliding the scrollbar.
+> - The rolling is too fast.
+> - Switch windows during the scrolling process.
+
+![scrollshot](fig/scrollshot.png)
+
+### Extract Texts
+
+You are able to recognize the texts in the screenshot area with the **Extract Text** feature.
+
+1. Select the screenshot area and click the ![ocr](../common/ocr.svg) icon on the toolbar to enter the text extraction area.
+2. You are able to edit the recognized texts by clicking the text area in the right column. Click the ![copy](../common/copy.svg) icon on the lower right corner to copy the texts recognized to the clipboard and click the ![copy](../common/download.svg) icon to save the texts recognized in TXT .
+
+![ocr](fig/ocr.png)
 
 ### Delay Screenshot
 

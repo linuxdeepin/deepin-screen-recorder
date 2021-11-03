@@ -4,7 +4,7 @@
 
 熒幕錄影是一款集截圖和錄屏於一體的小巧工具，不僅支援多種方式來選擇截圖錄屏區域，還支援對圖片進行編輯，對螢幕活動進行設定等功能。
 
-![part_area](fig/part_area.png)
+![part_area](fig/d_part_area.png)
 
 
 ## 使用入門
@@ -31,21 +31,21 @@
 
 使用快捷鍵 **Ctrl + Shift + ?** 打開快捷鍵預覽介面。熟練地使用快捷鍵，將大大提升您的操作效率。
 
-![1|快捷鍵](fig/hotkey.png)
+![1|快捷鍵](fig/d_hotkey.png)
 ## 選擇和調整區域
 
 ### 選擇截圖錄屏區域
 
 熒幕錄影支援全螢幕、程式視窗和自選區域的選擇。在截圖錄屏時選中對應的區域，該區域會突顯顯示，且周圍會出現白色虛線邊框。
 
-> ![notes](../common/notes.svg) 說明：當電腦多屏顯示時，您也可以使用熒幕錄影截取不同螢幕上的區域。
+> ![notes](../common/notes.svg) 說明：當電腦多屏顯示時，您也可以使用熒幕錄影來截取不同螢幕上的區域。
 
 
 #### 選擇全螢幕
 
 熒幕錄影會自動識別目前顯示器的整個螢幕。
 
-![1|全螢幕截圖](fig/fullscreen.png)
+![1|全螢幕截圖](fig/d_fullscreen.png)
 
 
 您可以透過操作以下步驟來選擇全螢幕：
@@ -63,7 +63,7 @@
 
 熒幕錄影會自動識別目前的應用視窗。
 
-![1|視窗截圖](fig/window.png)
+![1|視窗截圖](fig/d_window.png)
 
 
 
@@ -75,7 +75,7 @@
 
 您還可以自由選擇截圖錄屏的範圍。
 
-![1|區域截圖](fig/part_area.png)
+![1|區域截圖](fig/d_part_area.png)
 
 
 1.  使用快捷鍵 **Ctrl + Alt + A** 進入截圖模式，或 **Ctrl + Alt + R** 進入錄屏模式。
@@ -88,11 +88,9 @@
 
 #### 放大/ 縮小區域
 
-- 將滑鼠游標置於截圖錄屏區域的白色邊框上，滑鼠游標變為 ![雙箭頭](../common/Mouse_Arrow.svg)
+- 將滑鼠游標置於截圖錄屏區域的白色邊框上，滑鼠游標變為 ![雙箭頭](../common/Mouse_Arrow.svg)，按住滑鼠左鍵不放，拖動滑鼠放大或縮小區域。
 
-  ，按住滑鼠左鍵不放，拖動滑鼠放大或縮小區域。
-
-- 按下鍵盤上的 ![ctrl](../common/Ctrl.svg) + ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 上下擴展區域，按下鍵盤上的 ![ctrl](../common/Ctrl.svg) + ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 左右擴展區域。
+- 按下鍵盤上的 **Ctrl** + ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 上下擴展區域，按下鍵盤上的 **Ctrl** + ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 左右擴展區域。
 
 
 #### 移動區域位置
@@ -105,29 +103,35 @@
 
 在截圖模式下，單擊工具列上的按鈕，您可以在截圖區域繪製圖形、編輯圖形、添加文字批註等。
 
-![0|截圖工具列](fig/capture_bar.png)
+![0|截圖工具列](fig/d_capturebar.png)
 
 <table class="block1">
     <caption>工具列說明</caption>
     <tbody>
         <tr>
+            <td><img src="../common/scrollshot.svg" alt="滾動截圖" class="inline" /></td>
+            <td>滾動截圖</td>
+            <td><img src="../common/ocr.svg" alt="识别文字" class="inline" /></td>
+            <td>識別文字</td>
             <td><img src="../common/rectangle_normal.svg" alt="矩形工具" class="inline" /></td>
             <td>矩形工具</td>
             <td><img src="../common/oval_normal.svg" alt="橢圓工具" class="inline" /></td>
             <td>橢圓工具</td>
+            </tr>
+          <tr>
             <td><img src="../common/line_normal.svg" alt="箭頭工具" class="inline" /></td>
             <td>直線工具</td>
-        </tr>
-          <tr>
-            <td><img src="../common/Combined_Shape.svg" alt="畫筆工具" class="inline" /></td>
+                 <td><img src="../common/Combined_Shape.svg" alt="畫筆工具" class="inline" /></td>
             <td>畫筆工具</td>
             <td><img src="../common/text_normal.svg" alt="文字工具" class="inline" /></td>
             <td>文字工具</td>
             <td><img src="../common/close.svg" alt="關閉" class="inline" /></td>
             <td>退出截圖</td>
-        </tr>
+              </tr>
     </tbody>
 </table>
+
+
 
 
 > ![notes](../common/notes.svg) 說明：如果您已經對工具列和屬性欄中如線條粗細、字體大小等進行了選擇，熒幕錄影會儲存設定，再次啟動熒幕錄影，將預設使用該設定，您也可以重新進行選擇。
@@ -138,7 +142,7 @@
 
 #### 矩形工具
 
-![1|矩形工具](fig/recttool.png)
+![1|矩形工具](fig/d_rectool.png)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -148,14 +152,14 @@
 4. 按住滑鼠左鍵不放，拖動滑鼠以完成圖形區域的繪製。
 5. 如果截圖中包含了個人隱私訊息，請單擊工具列展開面板中的 ![模糊](../common/vague_normal.svg) 或 ![馬賽克](../common/Mosaic_normal.svg)塗抹。
 
-![2|blurtool](fig/blurtool.png)
+![2|blurtool](fig/d_blurtool.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-![2|mosaictool](fig/mosaictool.png)
+![2|mosaictool](fig/d_mosaictool.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 #### 橢圓工具
-![1|橢圓工具](fig/ellipsetool.png)
+![1|橢圓工具](fig/d_ellipsetool.png)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -168,7 +172,7 @@
 
 #### 直線和箭頭工具
 
-![1|線條工具](fig/line.png)
+![1|線條工具](fig/d_line.png)
 
 1. 在截圖工具列中，單擊 ![直線](../common/line_normal.svg)。
 2. 在工具列展開的面板中，選擇線條的粗細和顏色，有四種顏色可供選擇。
@@ -179,7 +183,7 @@
 
 #### 畫筆工具
 
-![1|pencil](fig/pencil.png)
+![1|pencil](fig/d_pencil.png)
 
 1. 在截圖工具列中，單擊 ![畫筆](../common/Combined_Shape.svg)。
 2. 在工具列展開的面板中，選擇畫筆的粗細和顏色，有四種顏色可供選擇。
@@ -190,7 +194,7 @@
 ### 修改圖形
 如果您在截圖中繪製了其他的圖形，您可以對繪製的圖形進行修改和移動。
 
-![1|修改圖形](fig/changetool.png)
+![1|修改圖形](fig/d_changetool.png)
 
 #### 移動圖形
 1. 將滑鼠游標置於圖形的邊線上，此時滑鼠游標變為 ![手指](fig/fingers.png)。
@@ -203,7 +207,7 @@
 2. 單擊滑鼠左鍵，進入圖形編輯模式，您可以：
    - 按下鍵盤上的 **Delete** 鍵，刪除圖形。
    - 將滑鼠游標置於編輯框上，此時滑鼠游標變成 ![雙箭頭](../common/Mouse_Arrow.svg)，透過拖動滑鼠游標，放大或縮小圖形區域。
-   - 按下鍵盤上的**Ctrl**  + ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 上下擴展圖形區域，按下鍵盤上的**Ctrl** + ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 左右擴展圖形區域。
+   - 按下鍵盤上的 **Ctrl**  + ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 上下擴展圖形區域，按下鍵盤上的 **Ctrl** + ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 左右擴展圖形區域。
    - 將滑鼠游標置於編輯框的 ![旋轉](../common/icon_rotate.svg) 上，此時滑鼠游標變成 ![旋轉](../common/rotate_mouse.svg)，透過拖動滑鼠游標，旋轉圖形。
 3. 在編輯框外單擊滑鼠左鍵，退出編輯模式。
 
@@ -212,7 +216,7 @@
 
 對截取的圖片進行文字補充和說明，幫助他人更清楚地了解截取的圖片。
 
-![0|文字框](fig/text.png)
+![0|文字框](fig/d_text.png)
 
 1. 在截圖工具列中，單擊 ![文字](../common/text_normal.svg)。
 2. 在工具列展開面板中，選擇字號和顏色，有四種顏色可供選擇。
@@ -237,6 +241,44 @@
    - 在文字框內，修改文字訊息。
 3. 在文字框外單擊滑鼠左鍵，退出編輯模式。
 
+### 滾動截圖
+
+滾動截圖功能不僅可以截取螢幕內可見的內容，還能截取超過螢幕外的內容，滿足一次性截取長圖的需求。
+
+請在 **控制中心 > 個性化** 中開啟特效視窗。
+
+1. 選擇截圖區域後，單擊工具列上的滾動截圖按鈕 ![icon](../common/scrollshot.svg)。
+
+2. 請將滑鼠游標保持在滾動區域內，您可以使用自動滾動或手動滾動截圖，也可以交替使用兩種方式：
+
+  - **自動滾動**：在截圖區域中單擊滑鼠左鍵，游標所在的截圖區域自動向上滾動，此時截取的圖片會拼接為一張完整的長圖。自動滾動過程中，在截圖區域內單擊滑鼠左鍵，或者將游標移出截圖區域，暫停截圖；再次單擊截圖區域，繼續截圖。
+
+  - **手動滾動**：將滑鼠游標置於截圖區域中，向上或者向下滾動滑鼠滾輪截取圖片。停止滾動滑鼠滾輪，暫停截圖；再次滾動滑鼠滾輪，繼續截圖。
+
+3. 單擊工具列中的截圖按鈕 ![icon](../common/screenshot_button.svg) 儲存長圖。
+
+> ![notes](../common/notes.svg)說明：有以下幾種情況會導致拼接異常。
+> - 截圖區域超出滾動範圍，如框選整個視窗、全螢幕等；
+> - 截圖區域過小，如高度小於50px；
+> - 截圖區域中有多個滾動區域；
+> - 滾動區域中包含大量重複內容，如空白區域、相同顏色、大段相同文字等；
+> - 滾動區域中包含動圖、影片、浮水印等，或者有非純色背景的內容；
+> - 滾動時有水平方向的偏移，如滑動滾動條；
+> - 滾動速度過快；
+> - 滾動時切換視窗。
+
+![長圖](fig/scrollshot.png)
+
+### 識別文字
+
+對於截圖區域中無法複製的內容，可以使用識別文字功能提取文字。
+
+1. 在截圖工具列中，單擊工具列上的按鈕 ![ocr](../common/ocr.svg)，系統自動截取圖片並進入圖文識別視窗，識別圖片中的文字。
+
+2. 單擊文字區域可以編輯文字內容；在圖文識別視窗右下角，單擊複製按鈕 ![copy](../common/copy.svg) 將文字內容複製到剪貼簿；單擊下載按鈕 ![copy](../common/download.svg) 將文字內容儲存為TXT文件。
+
+   ![ocr](fig/ocr.png)
+
 ### 延時截圖
 
 您可以透過延時截圖功能，捕捉特定狀態或時間下的螢幕內容。
@@ -245,7 +287,7 @@
 
 - 使用快捷鍵 **Ctrl** + ![icon](../common/Print.svg)，啟動延時截圖。
 
-- 在終端中執行指令 “deepin-screen-recorder -d n”，其中n表示以秒為單位的延時時長。
+- 在終端中執行指令  「deepin-screen-recorder -d n」，其中n表示以秒為單位的延時時長。
 
 ### 儲存截圖
 
