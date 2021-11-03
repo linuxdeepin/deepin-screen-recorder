@@ -589,6 +589,10 @@ void SubToolWidget::initRecordLabel()
         if (m_haveSystemAudio) {
             m_systemAudioAction->setEnabled(true);
         }
+        // 切换视频格式时，音频图标刷新
+        if (m_haveMicroPhone && m_haveSystemAudio) {
+            m_audioButton->setIcon(QIcon::fromTheme("volume_normal"));
+        }
         //emit mp4ActionChecked(checked);
     });
 
@@ -608,6 +612,10 @@ void SubToolWidget::initRecordLabel()
         }
         if (m_haveSystemAudio) {
             m_systemAudioAction->setEnabled(true);
+        }
+        // 切换视频格式时，音频图标刷新
+        if (m_haveMicroPhone && m_haveSystemAudio) {
+            m_audioButton->setIcon(QIcon::fromTheme("volume_normal"));
         }
         //emit mkvActionChecked(checked);
     });
