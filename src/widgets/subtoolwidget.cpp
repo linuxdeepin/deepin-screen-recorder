@@ -794,6 +794,8 @@ void SubToolWidget::initShotLabel()
     m_shotBtnGroup->addButton(m_shotOptionButton);
     if (Utils::is3rdInterfaceStart) {
         m_shotOptionButton->hide();
+        m_scrollShotButton->hide(); //隐藏滚动截图按钮
+        m_ocrButton->hide(); //隐藏ocr按钮
     }
     btnList.append(m_shotOptionButton);
 

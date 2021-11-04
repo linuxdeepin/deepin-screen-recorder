@@ -457,7 +457,8 @@ void MainWindow::initShortcut()
     //    QShortcut *colorSC = new QShortcut(QKeySequence("Alt+6"), this);
 
     connect(scrollShotSC, &QShortcut::activated, this, [ = ] {
-        if (status::shot == m_functionType)
+        // 当第三方接口启动时，不触发快捷键
+        if (status::shot == m_functionType && Utils::is3rdInterfaceStart == false)
         {
             m_toolBar->shapeClickedFromMain("scrollShot");
         }
@@ -466,7 +467,7 @@ void MainWindow::initShortcut()
 
     connect(ocrSC, &QShortcut::activated, this, [ = ] {
         //滚动截图及普通截图都可以通过快捷键触发ocr
-        if (status::shot == m_functionType || status::scrollshot == m_functionType)
+        if ((status::shot == m_functionType || status::scrollshot == m_functionType) && Utils::is3rdInterfaceStart == false)
         {
             m_toolBar->shapeClickedFromMain("ocr");
         }

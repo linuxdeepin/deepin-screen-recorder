@@ -51,7 +51,7 @@ const int TOOLBAR_WIDTH = 425;
 //const int BTN_RADIUS = 3;
 }
 
-ToolBarWidget::ToolBarWidget(MainWindow* pMainwindow,DWidget *parent)
+ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
     : DFloatingWidget(parent)
 {
     setBlurBackgroundEnabled(true);
@@ -67,8 +67,8 @@ ToolBarWidget::ToolBarWidget(MainWindow* pMainwindow,DWidget *parent)
     }
 
     setFixedHeight(TOOLBAR_HEIGHT);
-    if(Utils::is3rdInterfaceStart){
-        setFixedWidth(TOOLBAR_WIDTH);
+    if (Utils::is3rdInterfaceStart) {
+        setFixedWidth(TOOLBAR_WIDTH - 35); //减去一个按钮的宽度
     }
 
     m_hSeparatorLine = new DLabel(this);
@@ -77,7 +77,7 @@ ToolBarWidget::ToolBarWidget(MainWindow* pMainwindow,DWidget *parent)
 
     m_mainTool = new MainToolWidget(this);
     //分配pMainwindow主窗口指针给SubToolWidget（ToolTips需要该指针）
-    m_subTool = new SubToolWidget(pMainwindow,this);
+    m_subTool = new SubToolWidget(pMainwindow, this);
     QString button_style = "DPushButton{border-radius:30px;} "
                            "DPushButton::hover{border-image: url(:/image/newUI/hover/close-hover.svg)}";
 
@@ -320,11 +320,11 @@ void ToolBar::changeArrowAndLineFromMain(int line)
     m_toolbarWidget->changeArrowAndLineFromBar(line);
 }
 
-void ToolBar::initToolBar(MainWindow* pmainWindow)
+void ToolBar::initToolBar(MainWindow *pmainWindow)
 {
 //    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     setFixedHeight(TOOLBAR_HEIGHT);
-    m_toolbarWidget = new ToolBarWidget(pmainWindow,this);
+    m_toolbarWidget = new ToolBarWidget(pmainWindow, this);
 
     //构建截屏录屏功能触发
     m_confirmButton = new DPushButton(this);
@@ -343,9 +343,11 @@ void ToolBar::initToolBar(MainWindow* pmainWindow)
     m_confirmButton->setProperty("isShotState", true);
 
     connect(m_confirmButton, &DPushButton::clicked, this, [ = ] {
-        if(m_confirmButton->property("isShotState").toBool()) {
+        if (m_confirmButton->property("isShotState").toBool())
+        {
             pmainWindow->saveScreenShot();
-        } else {
+        } else
+        {
             pmainWindow->startCountdown();
         }
     });
@@ -391,7 +393,7 @@ void ToolBar::shapeClickedFromMain(QString shape)
     // 在工具栏显示之前，触发MainWindow::initShortcut()中的快捷键
     // R O L P T
     // 导致button没有初始化就执行click，导致崩溃。
-    if(m_toolbarWidget){
+    if (m_toolbarWidget) {
         m_toolbarWidget->shapeClickedFromBar(shape);
     }
 }
