@@ -4593,12 +4593,12 @@ void MainWindow::updateCursor(QEvent *event)
 
 void MainWindow::setDragCursor()
 {
-    QApplication::setOverrideCursor(Qt::CrossCursor);
+    this->setCursor(Qt::CrossCursor);
 }
 
 void MainWindow::resetCursor()
 {
-    QApplication::setOverrideCursor(Qt::ArrowCursor);
+    this->setCursor(Qt::ArrowCursor);
 }
 /*
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)

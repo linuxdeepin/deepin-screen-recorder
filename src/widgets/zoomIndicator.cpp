@@ -75,7 +75,6 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
 
     zoomPix = zoomPix.scaled(QSize(INDICATOR_WIDTH,  INDICATOR_WIDTH),
                              Qt::KeepAspectRatio);
-    m_lastPic = zoomPix;
 
     painter.drawPixmap(QRect(5, 5, INDICATOR_WIDTH, INDICATOR_WIDTH), zoomPix);
 

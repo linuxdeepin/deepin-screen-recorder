@@ -108,7 +108,7 @@ void PixMergeThread::addShotImg(const QPixmap &picture, PictureDirection directi
 
 QImage PixMergeThread::getMerageResult() const
 {
-    return  QImage(m_curImg.data, m_curImg.cols, m_curImg.rows, static_cast<int>(m_curImg.step), QImage::Format_ARGB32);
+    return  QImage(m_curImg.data, m_curImg.cols, m_curImg.rows, static_cast<int>(m_curImg.step), QImage::Format_ARGB32).copy();
 }
 
 void PixMergeThread::run()

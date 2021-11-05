@@ -95,7 +95,6 @@ private:
     QPoint m_windowTopRightPoint;
     QPoint m_windowBottomLeftPoint;
     QCamera *camera = nullptr;//摄像头
-    QCameraViewfinder *viewfinder = nullptr; //摄像头取景器部件
     QCameraImageCapture *imageCapture = nullptr; //截图部件
     QTimer *timer_image_capture = nullptr;
     DLabel *m_cameraUI = nullptr;
