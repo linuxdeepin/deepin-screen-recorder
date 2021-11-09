@@ -9,7 +9,6 @@
 
 #include "stub.h"
 #include "addr_pri.h"
-
 #include <gtest/gtest.h>
 
 using namespace testing;
@@ -65,6 +64,7 @@ public:
     virtual void TearDown() override
     {
         if (m_window) {
+            std::cout << "delete  m_window" << std::endl;
             //m_window->deleteLater();
             delete  m_window;
             m_window = nullptr;
@@ -876,17 +876,16 @@ TEST_F(MainWindowTest, getScrollShotTipPosition)
 
     ScrollShotTip *&MainWindow_m_scrollShotTip = access_private_field::MainWindowm_scrollShotTip(*m_window);
     MainWindow_m_scrollShotTip = new ScrollShotTip();
-    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
+    MainWindow_m_scrollShotTip->resize(100, 40);
+    //MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
 
     auto MainWindow_isToolBarInShotArea = get_private_fun::MainWindowisToolBarInShotArea();
     stub.set(MainWindow_isToolBarInShotArea, isToolBarInShotArea_stub);
 
     auto point = call_private_fun::MainWindowgetScrollShotTipPosition(*m_window);
-    qDebug() << "point: " << point;
-    qDebug() << "ppppppp: " << QPoint(static_cast<int>((1920  - MainWindow_m_scrollShotTip->width() * MainWindow_m_pixelRatio) / 2),
-                                      static_cast<int>(100 + 15 * MainWindow_m_pixelRatio));
-    EXPECT_EQ(QPoint(static_cast<int>((1920  - MainWindow_m_scrollShotTip->width() * MainWindow_m_pixelRatio) / 2),
-                     static_cast<int>(100 + 15 * MainWindow_m_pixelRatio)), point);
+    QPoint tempPoint = QPoint(static_cast<int>((1920  - MainWindow_m_scrollShotTip->width() * MainWindow_m_pixelRatio) / 2),
+                              static_cast<int>(100 + 15 * MainWindow_m_pixelRatio));
+    EXPECT_EQ(tempPoint, point);
 
     stub.reset(MainWindow_isToolBarInShotArea);
 
@@ -945,7 +944,7 @@ TEST_F(MainWindowTest, continueAutoScrollShot)
 {
     ScrollShotTip *&MainWindow_m_scrollShotTip = access_private_field::MainWindowm_scrollShotTip(*m_window);
     MainWindow_m_scrollShotTip = new ScrollShotTip();
-    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
+    //MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
 
     ScrollScreenshot *&MainWindow_m_scrollShot =  access_private_field::MainWindowm_scrollShot(*m_window);
     MainWindow_m_scrollShot = new ScrollScreenshot;
@@ -988,7 +987,7 @@ TEST_F(MainWindowTest, handleManualScrollShot)
 {
     ScrollShotTip *&MainWindow_m_scrollShotTip = access_private_field::MainWindowm_scrollShotTip(*m_window);
     MainWindow_m_scrollShotTip = new ScrollShotTip();
-    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
+//    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
 
     auto MainWindow_scrollShotGrabPixmap = get_private_fun::MainWindowscrollShotGrabPixmap();
     stub.set(MainWindow_scrollShotGrabPixmap, scrollShotGrabPixmap_stub);
@@ -999,6 +998,10 @@ TEST_F(MainWindowTest, handleManualScrollShot)
 
 }
 
+void getInputEvent_stub(const int wid, const short x, const short y, const unsigned short width, const unsigned short height)
+{
+
+}
 ACCESS_PRIVATE_FUN(MainWindow, void(), setInputEvent);
 //滚动截图设置区域穿透测试用例
 TEST_F(MainWindowTest, setInputEvent)
@@ -1020,10 +1023,12 @@ TEST_F(MainWindowTest, setInputEvent)
 
     auto MainWindow_isToolBarInShotArea = get_private_fun::MainWindowisToolBarInShotArea();
     stub.set(MainWindow_isToolBarInShotArea, isToolBarInShotArea_stub);
+    stub.set(ADDR(Utils, getInputEvent), getInputEvent_stub);
 
     call_private_fun::MainWindowsetInputEvent(*m_window);
 
     stub.reset(MainWindow_isToolBarInShotArea);
+    stub.reset(ADDR(Utils, getInputEvent));
 
 }
 
@@ -1319,6 +1324,10 @@ bool continueAutoScrollShot_stub(void *obj)
 {
     return true;
 }
+void showTip_stub(TipType tipType)
+{
+
+}
 //滚动截图鼠标按钮事件单元测试用例
 TEST_F(MainWindowTest, scrollShotMouseClickEvent)
 {
@@ -1337,6 +1346,9 @@ TEST_F(MainWindowTest, scrollShotMouseClickEvent)
 
     ScrollShotTip *&MainWindow_m_scrollShotTip = access_private_field::MainWindowm_scrollShotTip(*m_window);
     MainWindow_m_scrollShotTip = new ScrollShotTip();
+    MainWindow_m_scrollShotTip->move(100, 100);
+    MainWindow_m_scrollShotTip->resize(100, 40);
+    stub.set(ADDR(ScrollShotTip, showTip), showTip_stub);
     MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
 
     ToolBar *&MainWindow_toolBar = access_private_field::MainWindowm_toolBar(*m_window);
@@ -1393,6 +1405,14 @@ TEST_F(MainWindowTest, scrollShotMouseClickEvent)
 }
 
 ACCESS_PRIVATE_FUN(MainWindow, void(int x, int y), scrollShotMouseMoveEvent);
+void disableXGrabButton_stub()
+{
+
+}
+void enableXGrabButton_stub()
+{
+
+}
 //滚动截图鼠标移动事件处理,单元测试用例
 TEST_F(MainWindowTest, scrollShotMouseMoveEvent)
 {
@@ -1411,8 +1431,9 @@ TEST_F(MainWindowTest, scrollShotMouseMoveEvent)
 
     ScrollShotTip *&MainWindow_m_scrollShotTip = access_private_field::MainWindowm_scrollShotTip(*m_window);
     MainWindow_m_scrollShotTip = new ScrollShotTip();
-    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
-
+//    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
+    MainWindow_m_scrollShotTip->move(100, 100);
+    MainWindow_m_scrollShotTip->resize(100, 40);
     ToolBar *&MainWindow_toolBar = access_private_field::MainWindowm_toolBar(*m_window);
     MainWindow_toolBar = new ToolBar();
     MainWindow_toolBar->resize(500, 100);
@@ -1433,10 +1454,16 @@ TEST_F(MainWindowTest, scrollShotMouseMoveEvent)
     auto MainWindow_setCancelInputEvent = get_private_fun::MainWindowsetCancelInputEvent();
     stub.set(MainWindow_setCancelInputEvent, setCancelInputEvent_stub);
 
+    stub.set(ADDR(Utils, disableXGrabButton), disableXGrabButton_stub);
+    stub.set(ADDR(Utils, enableXGrabButton), enableXGrabButton_stub);
+
+
     call_private_fun::MainWindowscrollShotMouseMoveEvent(*m_window, 500, 500);
 
     stub.reset(MainWindow_pauseAutoScrollShot);
     stub.reset(MainWindow_setCancelInputEvent);
+    stub.reset(ADDR(Utils, disableXGrabButton));
+    stub.reset(ADDR(Utils, enableXGrabButton));
 
     //delete MainWindow_m_scrollShotTip;
     //delete MainWindow_shotButton;
@@ -1481,7 +1508,7 @@ TEST_F(MainWindowTest, scrollShotMouseScrollEvent)
 
     ScrollShotTip *&MainWindow_m_scrollShotTip = access_private_field::MainWindowm_scrollShotTip(*m_window);
     MainWindow_m_scrollShotTip = new ScrollShotTip();
-    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
+//    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
 
     ToolBar *&MainWindow_toolBar = access_private_field::MainWindowm_toolBar(*m_window);
     MainWindow_toolBar = new ToolBar();
@@ -1561,6 +1588,8 @@ bool setBackgroundPixmap_stub(void *obj)
 {
     return true;
 }
+
+
 //滚动截图时，获取拼接时的状态  单元测试用例
 TEST_F(MainWindowTest, onScrollShotMerageImgState)
 {
@@ -1572,7 +1601,8 @@ TEST_F(MainWindowTest, onScrollShotMerageImgState)
 
     ScrollShotTip *&MainWindow_m_scrollShotTip = access_private_field::MainWindowm_scrollShotTip(*m_window);
     MainWindow_m_scrollShotTip = new ScrollShotTip();
-    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
+//    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
+    stub.set(ADDR(ScrollShotTip, showTip), showTip_stub);
     stub.set(ADDR(ScrollShotTip, setBackgroundPixmap), setBackgroundPixmap_stub);
 
     auto MainWindow_setCancelInputEvent = get_private_fun::MainWindowsetCancelInputEvent();
@@ -1594,6 +1624,7 @@ TEST_F(MainWindowTest, onScrollShotMerageImgState)
     call_private_fun::MainWindowonScrollShotMerageImgState(*m_window, PixMergeThread::MergeErrorValue::Failed);
 
     stub.reset(MainWindow_pauseAutoScrollShot);
+    stub.reset(ADDR(ScrollShotTip, showTip));
     stub.reset(ADDR(ScrollShotTip, setBackgroundPixmap));
     stub.reset(MainWindow_setCancelInputEvent);
     stub.reset(MainWindow_showAdjustArea);
@@ -1629,7 +1660,7 @@ TEST_F(MainWindowTest, onAdjustCaptureArea)
 
     ScrollShotTip *&MainWindow_m_scrollShotTip = access_private_field::MainWindowm_scrollShotTip(*m_window);
     MainWindow_m_scrollShotTip = new ScrollShotTip();
-    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
+//    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
 
     QRect &MainWindow_m_adjustArea = access_private_field::MainWindowm_adjustArea(*m_window);
     MainWindow_m_adjustArea = QRect(0, 0, 1920, 1080);
