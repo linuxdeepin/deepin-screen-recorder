@@ -45,10 +45,6 @@
 DCORE_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
-static const QString WarningDialogService = "com.deepin.dde.WarningDialog";
-static const QString WarningDialogPath = "/com/deepin/dde/WarningDialog";
-static const QString WarningDialogInterface = "com.deepin.dde.WarningDialog";
-
 bool Utils::is3rdInterfaceStart = false;
 bool Utils::isTabletEnvironment = false;
 bool Utils::isWaylandMode = false;

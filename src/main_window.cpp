@@ -193,7 +193,6 @@ void MainWindow::initAttributes()
     } else {
         setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
     }
-    setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
     setMouseTracking(true);   // make MouseMove can response
     installEventFilter(this);  // add event filter

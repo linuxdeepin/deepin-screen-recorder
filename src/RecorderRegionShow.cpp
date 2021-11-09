@@ -28,7 +28,7 @@
 #include <QVector>
 
 const int INDICATOR_WIDTH = 110;
-const int CAMERA_Y_OFFSET = 40;
+const int CAMERA_Y_OFFSET = 0;
 
 RecorderRegionShow::RecorderRegionShow():
     m_painter(nullptr),
@@ -94,7 +94,7 @@ void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, c
 
     m_cameraWidget->cameraStart();
     m_cameraWidget->setCameraWidgetImmovable(true); //固定窗口
-    //Utils::passInputEvent(static_cast<int>(m_cameraWidget->winId()));
+    Utils::passInputEvent(static_cast<int>(m_cameraWidget->winId()));
 }
 
 void RecorderRegionShow::showKeyBoardButtons(const QString &key)

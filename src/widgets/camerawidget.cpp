@@ -82,7 +82,7 @@ int CameraWidget::getRecordHeight()
 }
 void CameraWidget::initCamera()
 {
-    setWindowFlags(Qt::WindowStaysOnTopHint);
+    setWindowFlags(Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
