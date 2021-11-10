@@ -1393,6 +1393,7 @@ TEST_F(MainWindowTest, scrollShotMouseClickEvent)
 
     call_private_fun::MainWindowscrollShotMouseClickEvent(*m_window, 500, 500);
 
+    stub.reset(ADDR(ScrollShotTip, showTip));
     stub.reset(MainWindow_startAutoScrollShot);
     stub.reset(MainWindow_pauseAutoScrollShot);
     stub.reset(MainWindow_setCancelInputEvent);

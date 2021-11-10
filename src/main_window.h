@@ -261,6 +261,33 @@ public:
 
     /**
      * @brief 初始化应用内快捷键
+     * 截图快捷键：
+     *  R:矩形
+     *  O:圆形
+     *  L:直线/箭头
+     *  P:画笔
+     *  T:文字
+     *  Enter:保存
+     *  Alt+O:文字识别
+     *  Alt+I:滚动截图
+     *  Delete:删除选中图形
+     *  Ctrl+Z:撤销
+     *  Ctrl+S:保存
+     *  Ctrl+Shift+Z:全部撤销
+     * 录屏快捷键：
+     *  S:录音（下拉列表）
+     *  M:鼠标（下拉列表）
+     *  K:键盘
+     *  W:摄像头
+     * 滚动截图快捷键：
+     *  Enter:保存
+     *  Ctrl+S:保存
+     *  Alt+O:文字识别
+     * 公共快捷键：
+     *  Esc:退出
+     *  F3:选项（下拉列表）
+     *  Ctrl+Shift+?:帮助快捷面板
+     * 注意：如果快捷键会打开下拉列表，则不能使用全局快捷键处理
      */
     void initShortcut();
     void initLaunchMode(const QString &launchMode);
@@ -354,8 +381,20 @@ public slots:
     void shapeClickedSlot(QString shape);
     //void on_CheckRecodeCouldUse(bool canUse);
     void on_CheckVideoCouldUse(bool canUse);
-    void onShotKeyPressEvent(const unsigned char &keyCode);
-    void onRecordKeyPressEvent(const unsigned char &keyCode);
+
+    /**
+     * @brief 截图模式及滚动截图模式键盘按下执行的操作
+     * 如果快捷键需要打开下拉列表，则不能使用全局快捷键处理，需使用此方法处理
+     * @param 按键码
+     */
+    void shotKeyPressEvent(const unsigned char &keyCode);
+
+    /**
+     * @brief x11穿透 录屏模式下键盘按下执行的操作
+     * 如果快捷键需要打开下拉列表，则不能使用全局快捷键处理，需使用此方法处理
+     * @param 按键码
+     */
+    void recordKeyPressEvent(const unsigned char &keyCode);
     void tableRecordSet();
 
     /**

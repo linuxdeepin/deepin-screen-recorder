@@ -434,99 +434,170 @@ void MainWindow::onExit()
     }
 }
 
+//初始化应用能快捷键 如果快捷键需要打开下拉列表，则不能使用全局快捷键处理，需使用此方法处理
+//下拉列表会影响快捷键
 void MainWindow::initShortcut()
 {
-    //滚动截图应用内快捷键
+    //截图模式 滚动截图应用内快捷键
     QShortcut *scrollShotSC = new QShortcut(QKeySequence("Alt+I"), this);
-    //ocr应用内快捷键
+    //截图模式/滚动模式 ocr应用内快捷键
     QShortcut *ocrSC = new QShortcut(QKeySequence("Alt+O"), this);
-
+    //截图模式 矩形
     QShortcut *rectSC = new QShortcut(QKeySequence("R"), this);
+    //截图模式 圆形
     QShortcut *ovalSC = new QShortcut(QKeySequence("O"), this);
+    //截图模式 箭头
     QShortcut *arrowSC = new QShortcut(QKeySequence("L"), this);
+    //截图模式 画笔
     QShortcut *lineSC = new QShortcut(QKeySequence("P"), this);
+    //截图模式 文本
     QShortcut *textSC = new QShortcut(QKeySequence("T"), this);
-    //转全局事件，此处未使用
-    //QShortcut *optionSC = new QShortcut(QKeySequence("F3"), this);
+    //截图模式 撤销
+    QShortcut *undoSC = new QShortcut(QKeySequence("Ctrl+Z"), this);
+    //截图模式 全部撤销
+    QShortcut *undoAllSC = new QShortcut(QKeySequence("Ctrl+Shift+Z"), this);
+    //录屏模式（未做穿透） 监控键盘
     QShortcut *keyBoardSC = new QShortcut(QKeySequence("K"), this);
-    //QShortcut *mouseSC = new QShortcut(QKeySequence("C"), this);
+    //录屏模式（未做穿透） 摄像头
     QShortcut *cameraSC = new QShortcut(QKeySequence("W"), this);
-    //转全局事件，此处未使用
-    //QShortcut *audioSC = new QShortcut(QKeySequence("S"), this);
-    //    QShortcut *colorSC = new QShortcut(QKeySequence("Alt+6"), this);
-
+    //截图模式/滚动模式 保存截图 大键盘的enter
+    QShortcut *returnSC = new QShortcut(QKeySequence(Qt::Key_Return), this);
+    //截图模式/滚动模式 保存截图 小键盘的enter
+    QShortcut *enterSC = new QShortcut(QKeySequence(Qt::Key_Enter), this);
+    //截图模式/滚动模式 保存截图
+    QShortcut *saveShotSC = new QShortcut(QKeySequence("Ctrl+S"), this);
+    //截图模式/录屏模式（未做穿透）/滚动模式 退出
+    QShortcut *escSC = new QShortcut(QKeySequence("Escape"), this);
+    //截图模式/录屏模式（未做穿透）/滚动模式 帮助快捷面板
+    QShortcut *helpSC = new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Slash), this);
+    //截图模式 滚动截图应用内快捷键
     connect(scrollShotSC, &QShortcut::activated, this, [ = ] {
         // 当第三方接口启动时，不触发快捷键
         if (status::shot == m_functionType && Utils::is3rdInterfaceStart == false)
         {
+            qDebug() << "shortcut : scrollShotSC (key: alt+i)";
             m_toolBar->shapeClickedFromMain("scrollShot");
         }
-
     });
-
+    //截图模式/滚动模式 ocr应用内快捷键
     connect(ocrSC, &QShortcut::activated, this, [ = ] {
         //滚动截图及普通截图都可以通过快捷键触发ocr
         if ((status::shot == m_functionType || status::scrollshot == m_functionType) && Utils::is3rdInterfaceStart == false)
         {
+            qDebug() << "shortcut : ocrSC (key: alt+o)";
             m_toolBar->shapeClickedFromMain("ocr");
         }
-
     });
-
+    //截图模式 矩形
     connect(rectSC, &QShortcut::activated, this, [ = ] {
         if (status::shot == m_functionType)
         {
+            qDebug() << "shortcut : rectSC (key: r)";
             m_toolBar->shapeClickedFromMain("rect");
         }
-
     });
+    //截图模式 圆形
     connect(ovalSC, &QShortcut::activated, this, [ = ] {
         if (status::shot == m_functionType)
         {
+            qDebug() << "shortcut : ovalSC (key: o)";
             m_toolBar->shapeClickedFromMain("circ");
         }
     });
+    //截图模式 箭头
     connect(arrowSC, &QShortcut::activated, this, [ = ] {
         if (status::shot == m_functionType)
         {
+            qDebug() << "shortcut : arrowSC (key: l)";
             m_toolBar->shapeClickedFromMain("line");
         }
     });
+    //截图模式 画笔
     connect(lineSC, &QShortcut::activated, this, [ = ] {
         if (status::shot == m_functionType)
         {
+            qDebug() << "shortcut : lineSC (key: p)";
             m_toolBar->shapeClickedFromMain("pen");
         }
     });
+    //截图模式 文本
     connect(textSC, &QShortcut::activated, this, [ = ] {
         if (status::shot == m_functionType)
         {
+            qDebug() << "shortcut : textSC (key: t)";
             m_toolBar->shapeClickedFromMain("text");
         }
     });
-//    connect(optionSC, &QShortcut::activated, this, [ = ] {
-//        if (status::shot == m_functionType)
-//            emit m_toolBar->shapeClickedFromMain("option");
-//    });
+    //截图模式 撤销
+    connect(undoSC, &QShortcut::activated, this, [ = ] {
+        if (status::shot == m_functionType)
+        {
+            qDebug() << "shortcut : undoSC (key: ctrl+z)";
+            emit unDo();
+        }
+    });
+    //截图模式 全部撤销
+    connect(undoAllSC, &QShortcut::activated, this, [ = ] {
+        if (status::shot == m_functionType)
+        {
+            qDebug() << "shortcut : undoAllSC (key: ctrl+shift+z)";
+            emit unDoAll();
+        }
+    });
+    //录屏模式（未做穿透） 监控键盘
     connect(keyBoardSC, &QShortcut::activated, this, [ = ] {
         if (status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus)
+        {
+            qDebug() << "shortcut : keyBoardSC (key: k)";
             m_toolBar->shapeClickedFromMain("keyBoard");
+        }
     });
-    /*
-    connect(mouseSC, &QShortcut::activated, this, [ = ] {
-        if (status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus)
-            emit m_toolBar->shapeClickedFromMain("mouse");
-    });
-    */
+    //录屏模式（未做穿透） 摄像头
     connect(cameraSC, &QShortcut::activated, this, [ = ] {
         if (status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus)
+        {
+            qDebug() << "shortcut : cameraSC (key: w)";
             m_toolBar->shapeClickedFromMain("camera");
+        }
     });
-//    connect(audioSC, &QShortcut::activated, this, [ = ] {
-//        if (status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus)
-//            emit m_toolBar->shapeClickedFromMain("audio");
-//    });
-
+    //截图模式/滚动模式 保存截图 大键盘
+    connect(returnSC, &QShortcut::activated, this, [ = ] {
+        if (status::shot == m_functionType || status::scrollshot == m_functionType)
+        {
+            qDebug() << "shortcut : returnSC (key: enter)";
+            saveScreenShot();
+        }
+    });
+    //截图模式/滚动模式 保存截图 小键盘
+    connect(enterSC, &QShortcut::activated, this, [ = ] {
+        if (status::shot == m_functionType || status::scrollshot == m_functionType)
+        {
+            qDebug() << "shortcut : enterSC (key: enter)";
+            saveScreenShot();
+        }
+    });
+    //截图模式/滚动模式 保存截图
+    connect(saveShotSC, &QShortcut::activated, this, [ = ] {
+        if (status::shot == m_functionType || status::scrollshot == m_functionType)
+        {
+            qDebug() << "shortcut : saveShotSC (key: ctrl+s)";
+            saveScreenShot();
+        }
+    });
+    //截图模式/录屏模式（未做穿透）/滚动模式 退出
+    connect(escSC, &QShortcut::activated, this, [ = ] {
+        //只有正在录屏时，此快捷键无法退出程序
+        if (RECORD_BUTTON_RECORDING != recordButtonStatus)
+        {
+            qDebug() << "shortcut : escSC (key: esc)";
+            exitApp();
+        }
+    });
+    //截图模式/录屏模式（未做穿透）/滚动模式）帮助面板
+    connect(helpSC, &QShortcut::activated, this, [ = ] {
+        qDebug() << "shortcut : helpSC (key: ctrl+shift+?)";
+        onViewShortcut();
+    });
     if (BaseUtils::isCommandExist("dman")) {
         QShortcut *helpSC = new QShortcut(QKeySequence("F1"), this);
         helpSC->setAutoRepeat(false);
@@ -1436,10 +1507,8 @@ void MainWindow::showReleaseFeedback(int x, int y)
 
 void MainWindow::responseEsc()
 {
-    if (0 == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus) {
-        emit releaseEvent();
-        //exitScreenCuptureEvent();
-        QApplication::quit();
+    if (status::record == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus) {
+        exitApp();
     }
 }
 
@@ -1475,9 +1544,7 @@ void MainWindow::compositeChanged()
             return;
         } else {
             // 倒计时3s内， 从3D切换回2D直接退出。
-            emit releaseEvent();
-            //exitScreenCuptureEvent();
-            QApplication::quit();
+            exitApp();
         }
 
         /*
@@ -2277,9 +2344,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     //    }
 
     QTimer::singleShot(2, [ = ] {
-        emit releaseEvent();
-        //exitScreenCuptureEvent();
-        qApp->quit();
+        exitApp();
     });
 }
 
@@ -2737,64 +2802,13 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         qDebug() << "key press:" << keyEvent->key();
-        //滚动截图情况下键盘按键操作
-        if (status::scrollshot == m_functionType) {
-            if (keyEvent->key() == Qt::Key_Escape) {
-                qDebug() << "Key_Escape pressed: app quit!";
-                emit releaseEvent();
-                //exitScreenCuptureEvent();
-                qApp->quit();
-            } else if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
-                if (keyEvent->key() == Qt::Key_Question) {
-                    onViewShortcut();
-                }
-            } else if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {//滚动截图模式下，按下enter按键进行保存截图
-                saveScreenShot();
-            } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {//滚动截图模式下，按下ctrl按键进行保存截图
-                if (keyEvent->key() == Qt::Key_S) {
-                    saveScreenShot();
-                }
-            }
-        }
 
+        //截图模式下键盘按键操作
         if (status::shot == m_functionType) {
-            if (keyEvent->key() == Qt::Key_Escape) {
-                if (m_isShapesWidgetExist) {
-                    if (m_shapesWidget->textEditIsReadOnly()) {
-                        return false;
-                    }
-                }
-                qDebug() << "Key_Escape pressed: app quit!";
-                emit releaseEvent();
-                //exitScreenCuptureEvent();
-                qApp->quit();
-            } else if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
-                if (keyEvent->key() == Qt::Key_Question) {
-                    onViewShortcut();
-                } else if (keyEvent->key() == Qt::Key_Z) {
-                    qDebug() << "SDGF: ctrl+shift+z !!!";
-                    emit unDoAll();
-                }
-            } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {
-                if (keyEvent->key() == Qt::Key_C) {
-                    //                    ConfigSettings::instance()->setValue("save", "save_op", SaveAction::SaveToClipboard);
-                    //m_copyToClipboard = true;
-                    //saveScreenShot();
-                } else if (keyEvent->key() == Qt::Key_Z) {
-                    qDebug() << "SDGF: ctrl+z !!!";
-                    emit unDo();
-                }
-            } else if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {
-                saveScreenShot();
-            }
-
             bool needRepaint = false;
+
+            //截图编辑界面存在时
             if (m_isShapesWidgetExist) {
-                if (keyEvent->key() == Qt::Key_Escape) {
-                    emit releaseEvent();
-                    //exitScreenCuptureEvent();
-                    qApp->quit();
-                }
 
                 if (keyEvent->key() == Qt::Key_Shift) {
                     m_isShiftPressed =  true;
@@ -2979,18 +2993,20 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
             DWidget::keyPressEvent(keyEvent);
         }
-
-        //        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-
+        //录屏模式下键盘按键操作
         else {
             if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-
-                if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
-                    if (keyEvent->key() == Qt::Key_Question) {
-                        onViewShortcut();
-                    }
+                //wayland录屏暂时需要通过eventfilter来处理，后期可能会移至onKeyboardPressWayland进行处理
+                if (Utils::isWaylandMode) {
+//                    if (keyEvent->key() == Qt::Key_S && RECORD_BUTTON_NORMAL == recordButtonStatus) {
+//                        m_toolBar->shapeClickedFromMain("audio");
+//                    } else if (keyEvent->key() == Qt::Key_M && RECORD_BUTTON_NORMAL == recordButtonStatus) {
+//                        m_toolBar->shapeClickedFromMain("mouse");
+//                    } else if (keyEvent->key() == Qt::Key_F3 && RECORD_BUTTON_NORMAL == recordButtonStatus) {
+//                        m_toolBar->shapeClickedFromMain("record_option");
+//                    }
                 }
-
+                //调整捕捉区域快捷键 shift+ctrl+up/down/left/right
                 if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
 
                     if (keyEvent->key() == Qt::Key_Left) {
@@ -3022,7 +3038,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             needRepaint = true;
                         }
                     }
-                } else if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
+                }
+                //ctrl+up/down/left/right
+                else if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
                     if (keyEvent->key() == Qt::Key_Left) {
                         recordX = std::max(0, recordX - 1);
                         recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
@@ -3048,7 +3066,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                         needRepaint = true;
                     }
-                } else {
+                }
+                //快捷键 up/down/left/right
+                else {
                     if (keyEvent->key() == Qt::Key_Left) {
                         recordX = std::max(0, recordX - 1);
 
@@ -3102,6 +3122,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         if (status::shot == m_functionType) {
             bool isNeedRepaint = false;
 
+            //截图编辑界面存在时，按住shift可以对相应的图形进行等比放大或缩小
             if (m_isShapesWidgetExist) {
                 if (keyEvent->key() == Qt::Key_Shift) {
                     m_isShiftPressed =  false;
@@ -3595,14 +3616,10 @@ void MainWindow::onKeyboardReleaseWayland(QString keyStr)
 void MainWindow::onKeyboardPress(unsigned char keyCode)
 {
     if (status::record == m_functionType) {
-        if (keyCode == KEY_ESCAPE) {
-            responseEsc();
-        } else {
-            m_showButtons->showContentButtons(keyCode);
-            onRecordKeyPressEvent(keyCode);
-        }
+        m_showButtons->showContentButtons(keyCode);
+        recordKeyPressEvent(keyCode);
     } else if (status::shot == m_functionType || status::scrollshot == m_functionType) {
-        onShotKeyPressEvent(keyCode);
+        shotKeyPressEvent(keyCode);
     }
 }
 
@@ -4164,25 +4181,29 @@ void MainWindow::on_CheckVideoCouldUse(bool canUse)
 
 
 
-//截图模式及滚动截图模式键盘按下执行的操作
-void MainWindow::onShotKeyPressEvent(const unsigned char &keyCode)
+//截图模式及滚动截图模式键盘按下执行的操作 如果快捷键需要打开下拉列表，则不能使用全局快捷键处理，需使用此方法处理
+void MainWindow::shotKeyPressEvent(const unsigned char &keyCode)
 {
     //滚动截图及普通截图都可以通过快捷键触发F3
-    if (KEY_F3 == keyCode && (status::shot == m_functionType || status::scrollshot == m_functionType)) {
+    if (KEY_F3 == keyCode) {
         m_toolBar->shapeClickedFromMain("option");
     }
 
 }
 
-//录屏模式下键盘按下执行的操作
-void MainWindow::onRecordKeyPressEvent(const unsigned char &keyCode)
+//x11 录屏模式下键盘按下执行的操作 如果快捷键需要打开下拉列表，则不能使用全局快捷键处理，需使用此方法处理
+void MainWindow::recordKeyPressEvent(const unsigned char &keyCode)
 {
-    if (KEY_S == keyCode && status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus) {
+    //录屏快捷键 录音 s
+    if (KEY_S == keyCode && RECORD_BUTTON_NORMAL == recordButtonStatus) {
         m_toolBar->shapeClickedFromMain("audio");
     }
-    if (KEY_M == keyCode && status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus) {
+    //录屏快捷键 鼠标 m
+    else if (KEY_M == keyCode && RECORD_BUTTON_NORMAL == recordButtonStatus) {
         m_toolBar->shapeClickedFromMain("mouse");
-    } else if (KEY_F3 == keyCode && status::record == m_functionType && RECORD_BUTTON_NORMAL == recordButtonStatus) {
+    }
+    //录屏快捷键 选项 f3
+    else if (KEY_F3 == keyCode  && RECORD_BUTTON_NORMAL == recordButtonStatus) {
         m_toolBar->shapeClickedFromMain("record_option");
     }
 }
@@ -4616,8 +4637,6 @@ void MainWindow::stopRecord()
         }
         hide();
         emit releaseEvent();
-//        exitScreenRecordEvent();
-        //exitScreenCuptureEvent();
         //正在保存录屏文件通知
         sendSavingNotify();
         // 状态栏闪烁停止
