@@ -543,6 +543,8 @@ protected:
     QPixmap getPixmapofRect(const QRect &rect);
     bool saveImg(const QPixmap &pix, const QString &fileName, const char *format = nullptr);
 
+    virtual void wheelEvent(QWheelEvent *event) override;  // waland手动滚动处理逻辑
+
     /**
      * @brief 初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小
      */

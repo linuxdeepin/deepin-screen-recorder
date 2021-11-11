@@ -17,25 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "scrollScreenshot.h"
+#include "utils.h"
 
 #include <QDebug>
 #include <QDateTime>
 #include <X11/Xlibint.h>
 #include <X11/extensions/XTest.h>
 
+
 ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
 {
     Q_UNUSED(parent);
     qRegisterMetaType<PixMergeThread::MergeErrorValue>("MergeErrorValue");
 
+    m_WaylandScrollMonitor = new WaylandScrollMonitor(this); // 开始wayland模拟滚动
+
     m_mouseWheelTimer = new QTimer(this);
     connect(m_mouseWheelTimer, &QTimer::timeout, this, [ = ] {
-        // 发送滚轮事件， 自动滚动
-        static Display *m_display = XOpenDisplay(nullptr);
-        XTestFakeButtonEvent(m_display, 5, 1, CurrentTime);
-        XFlush(m_display);
-        XTestFakeButtonEvent(m_display, 5, 0, CurrentTime);
-        XFlush(m_display);
+        if (Utils::isWaylandMode == false)
+        {
+            // 发送滚轮事件， 自动滚动
+            static Display *m_display = XOpenDisplay(nullptr);
+            XTestFakeButtonEvent(m_display, 5, 1, CurrentTime);
+            XFlush(m_display);
+            XTestFakeButtonEvent(m_display, 5, 0, CurrentTime);
+            XFlush(m_display);
+        } else
+        {
+            m_WaylandScrollMonitor->doWaylandAutoScroll(); //waland滚动
+        }
+
         //当模拟鼠标进行自动滚动时，会发射此信号
         emit autoScroll(m_autoScrollFlag++);
         // 滚动区域高度 200-300 取值2
@@ -52,6 +63,8 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
     connect(m_PixMerageThread, SIGNAL(updatePreviewImg(QImage)), this, SIGNAL(updatePreviewImg(QImage)));
     connect(m_PixMerageThread, SIGNAL(merageError(PixMergeThread::MergeErrorValue)), this, SLOT(merageImgState(PixMergeThread::MergeErrorValue)));
     connect(m_PixMerageThread, &PixMergeThread::invalidAreaError, this, &ScrollScreenshot::merageInvalidArea);
+
+    connect(this, &ScrollScreenshot::sigalWheelScrolling, m_WaylandScrollMonitor, &WaylandScrollMonitor::slotManualScroll);
 }
 
 ScrollScreenshot::~ScrollScreenshot()

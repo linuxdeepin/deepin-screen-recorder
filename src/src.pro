@@ -79,6 +79,7 @@ HEADERS += main_window.h \
     waylandrecord/recordadmin.h \
     waylandrecord/avoutputstream.h \
     waylandrecord/avinputstream.h \
+    utils/waylandscrollmonitor.h
 
 SOURCES += main.cpp \
     main_window.cpp \
@@ -129,6 +130,7 @@ SOURCES += main.cpp \
     waylandrecord/recordadmin.cpp \
     waylandrecord/avinputstream.cpp \
     waylandrecord/avoutputstream.cpp \
+    utils/waylandscrollmonitor.cpp
 
 QT += core
 QT += widgets

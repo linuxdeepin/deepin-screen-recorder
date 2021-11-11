@@ -55,7 +55,7 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
         } else {
             ok = false;
         }
-        return res;
+        return res.copy(rect);
     }
 
     QScreen *t_primaryScreen = QGuiApplication::primaryScreen();

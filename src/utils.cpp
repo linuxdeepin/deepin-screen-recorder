@@ -149,6 +149,8 @@ void Utils::setAccessibility(QAction *action, const QString name)
 
 void Utils::getInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height)
 {
+    if(Utils::isWaylandMode == true)
+        return;
     XRectangle *reponseArea = new XRectangle;
     reponseArea->x = x;
     reponseArea->y = y;
@@ -174,6 +176,8 @@ void Utils::getInputEvent(const int wid, const short x, const short y, const uns
 
 void Utils::cancelInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height)
 {
+    if(Utils::isWaylandMode == true)
+        return;
     XRectangle *reponseArea = new XRectangle;
     reponseArea->x = x;
     reponseArea->y = y;
@@ -216,6 +220,8 @@ bool Utils::isSysHighVersion1040()
 
 void Utils::enableXGrabButton()
 {
+    if(Utils::isWaylandMode == true)
+        return;
     //extern int XGrabButton(
     //    Display *      /* display */,
     //    unsigned int  /* button */,
@@ -238,6 +244,8 @@ void Utils::enableXGrabButton()
 
 void Utils::disableXGrabButton()
 {
+    if(Utils::isWaylandMode == true)
+        return;
     XUngrabButton(QX11Info::display(), true, AnyModifier, DefaultRootWindow(QX11Info::display()));
 
 }

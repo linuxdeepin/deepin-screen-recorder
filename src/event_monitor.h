@@ -101,7 +101,13 @@ public slots:
      * @param str
      */
     void KeyReleaseEvent(QString x, int y, int z, QString str);
-
+    /**
+     * @brief wayland通过dbus接口接收鼠标移动事件
+     * @param x
+     * @param y
+     * @param str
+     */
+    void CursorMoveEvent(int x, int y, QString str);
 
 signals:
     /**

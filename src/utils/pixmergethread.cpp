@@ -147,7 +147,7 @@ void PixMergeThread::clearCurImg()
 //计算时间差
 void PixMergeThread::calculateTimeDiff(int time)
 {
-    m_curTimeDiff = time - m_lastTime;
+    m_curTimeDiff = (time - m_lastTime)*100;
     qDebug() << "time:" << time << "m_lastTime" << m_lastTime << "m_curTimeDiff" << m_curTimeDiff;
     m_lastTime = time;
 }
@@ -333,6 +333,8 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
     cv::Mat image1_gray, image2_gray;
     cvtColor(m_curImg, image1_gray, CV_BGR2GRAY);
     cvtColor(image, image2_gray, CV_BGR2GRAY);
+    //imwrite("m_curImg.png",m_curImg);
+    //imwrite("image.png",image);
     /*
      * 取图像2的全部行，1到35列作为模板
      * 这样image1作为原图，temp作为模板图像

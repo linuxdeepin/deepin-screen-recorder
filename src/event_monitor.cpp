@@ -111,8 +111,10 @@ void EventMonitor::handleEvent(XRecordInterceptData *data)
                 //鼠标按压
                 emit mousePress(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             } else if (event->u.u.detail == WheelUp || event->u.u.detail == WheelDown) {
+                int time = int (QDateTime::currentDateTime().toTime_t());
                 //鼠标滚动
-                emit mouseScroll(static_cast<int>(event->u.enterLeave.time), event->u.u.detail, event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+                //emit mouseScroll(static_cast<int>(event->u.enterLeave.time), event->u.u.detail, event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
+                emit mouseScroll(time, event->u.u.detail, event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             }
             break;
         case MotionNotify:
@@ -217,20 +219,26 @@ void EventMonitor::initWaylandEventMonitor()
     sessionBus.connect("com.deepin.daemon.InputDevices",
                        "/com/deepin/api/XEventMonitor", "com.deepin.api.XEventMonitor", "ButtonRelease",
                        this, SLOT(ButtonReleaseEvent(int, int, int, QString)));
+
+    sessionBus.connect("com.deepin.daemon.InputDevices",
+                       "/com/deepin/api/XEventMonitor", "com.deepin.api.XEventMonitor", "CursorMove",
+                       this, SLOT(CursorMoveEvent(int, int, QString)));
 }
 
 void EventMonitor::ButtonPressEvent(int type, int x, int y, QString str)
 {
-    Q_UNUSED(type);
     Q_UNUSED(str);
-    emit mousePress(x, y);
+    if (type == 3 || type == 1)
+        emit mousePress(x, y);
+    //Debug()<<"=====ButtonPressEvent=====";
 }
 
 void EventMonitor::ButtonReleaseEvent(int type, int x, int y, QString str)
 {
-    Q_UNUSED(type);
     Q_UNUSED(str);
-    emit mouseRelease(x, y);
+    if (type == 1 || type == 3)
+        emit mouseRelease(x, y);
+    //qDebug()<<"=====ButtonReleaseEvent=====";
 }
 
 // Wayland下全局键盘事件通过Dbus信号接收
@@ -248,4 +256,11 @@ void EventMonitor::KeyReleaseEvent(QString x, int y, int z, QString str)
     Q_UNUSED(y);
     Q_UNUSED(str);
     emit keyboardReleaseWayland(x);
+}
+
+//  Wayland下全局鼠标移动事件通过Dbus信号接收
+void EventMonitor::CursorMoveEvent(int x, int y, QString str)
+{
+    Q_UNUSED(str);
+    emit mouseMove(x, y);
 }

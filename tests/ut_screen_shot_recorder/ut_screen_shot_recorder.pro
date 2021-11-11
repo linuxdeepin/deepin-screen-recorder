@@ -111,6 +111,7 @@ HEADERS += test_all_interfaces.h \
         ../../src/utils/voicevolumewatcher.h \
         ../../src/utils/pixmergethread.h \
         ../../src/utils/scrollScreenshot.h \
+        ../../src/utils/waylandscrollmonitor.h \
         ../../src/widgets/scrollshottip.h \
         ../../src/widgets/colortoolwidget.h \
         ../../src/widgets/keybuttonwidget.h \
@@ -188,6 +189,7 @@ SOURCES += main.cpp \
     ../../src/utils/voicevolumewatcher.cpp \
     ../../src/utils/pixmergethread.cpp \
     ../../src/utils/scrollScreenshot.cpp \
+    ../../src/utils/waylandscrollmonitor.cpp \
     ../../src/widgets/scrollshottip.cpp \
     ../../src/widgets/colortoolwidget.cpp \
     ../../src/widgets/keybuttonwidget.cpp \

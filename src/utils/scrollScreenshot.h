@@ -21,6 +21,8 @@
 #define SCROLLSCREENSHOT_H
 
 #include "pixmergethread.h"
+#include "waylandscrollmonitor.h"
+
 #include <QPixmap>
 #include <QTimer>
 #include <QRect>
@@ -63,6 +65,7 @@ signals:
      * @brief 当模拟鼠标进行自动滚动时，会发射此信号
      */
     void autoScroll(int autoScrollFlag);
+    void sigalWheelScrolling(float direction);
 public slots:
     void merageImgState(PixMergeThread::MergeErrorValue state);
     void merageInvalidArea(PixMergeThread::MergeErrorValue state, QRect rect); //调整捕捉区域
@@ -92,6 +95,7 @@ private:
     bool m_isManualScrollModel = false;//是否手动模式
     QRect m_rect;//调整区域
     bool m_startPixMerageThread = false;
+    WaylandScrollMonitor *m_WaylandScrollMonitor = nullptr;
 };
 
 #endif // AUDIOUTILS_H

@@ -906,6 +906,7 @@ void MainWindow::initScrollShot()
     }
     //工具栏、保存按钮、预览框不在捕捉区域内部
     else {
+        qDebug() << "isToolBarInShotArea false";
         showScrollShot();
     }
     //定时2s后滚动截图的提示消失
@@ -982,6 +983,7 @@ void MainWindow::showScrollShot()
     QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
     //滚动截图截取指定区域的第一张图片
     m_firstScrollShotImg = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
+    //m_firstScrollShotImg.save("m_firstScrollShotImg1.png");
     //预览区域显示当前指定区域的第一张图片
     m_previewWidget->updateImage(m_firstScrollShotImg.toImage());
     m_previewWidget->show();
@@ -1066,6 +1068,7 @@ void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostio
     }
     //判断工具栏是否在捕捉区域内部
     if (isToolBarInShotArea()) {
+        qDebug() << __FUNCTION__ << __LINE__;
         //工具栏、保存截图按钮先隐藏在显示，防止出现的预览图中包含工具栏
         m_toolBar->hide();
         //m_shotButton->hide();
@@ -1124,17 +1127,10 @@ bool MainWindow::isToolBarInShotArea()
         static_cast<int>(recordWidth * m_pixelRatio),
         static_cast<int>(recordHeight * m_pixelRatio)
     };
-    int toolbarX = static_cast<int>(m_toolBar->x() * m_pixelRatio);
     int toolbarY = static_cast<int>(m_toolBar->y() * m_pixelRatio);
-    int toolbarWidth = static_cast<int>(m_toolBar->width() * m_pixelRatio);
     int toolbarHeight = static_cast<int>(m_toolBar->height() * m_pixelRatio);
-    //工具栏、保存按钮、预览框在捕捉区域内部需对工具栏、保存按钮、预览框及提示延时显示
-    if (recordRect.contains(toolbarX, toolbarY) ||
-            recordRect.contains(toolbarX + toolbarWidth, toolbarY) ||
-            recordRect.contains(toolbarX, toolbarY + toolbarHeight) ||
-            recordRect.contains(toolbarX + toolbarWidth, toolbarY + toolbarHeight)) {
+    if (recordRect.y() <= toolbarY && ((recordRect.y() + recordRect.height()) >= (toolbarY + toolbarHeight)))
         return true;
-    }
     return false;
 }
 
@@ -1432,6 +1428,39 @@ bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char
         }
     }
     return pix.save(fileName, format, quality);
+}
+
+// waland手动滚动处理逻辑
+void MainWindow::wheelEvent(QWheelEvent *event)
+{
+    qDebug() << __FUNCTION__ << __LINE__ << "m_functionType " << m_functionType;
+    if (Utils::isWaylandMode == false || (m_initScroll && status::scrollshot != m_functionType))
+        return;
+    int x = this->cursor().pos().x();
+    int y = this->cursor().pos().y();
+
+    //将当前捕捉区域画为一个矩形
+    QRect recordRect {
+        static_cast<int>(recordX * m_pixelRatio),
+        static_cast<int>(recordY * m_pixelRatio),
+        static_cast<int>(recordWidth * m_pixelRatio),
+        static_cast<int>(recordHeight * m_pixelRatio)
+    };
+    //当前鼠标的点
+    QPoint mouseMovePoint(x, y);
+    //判断当鼠标位置是否在捕捉区域内部,不在捕捉区域内则暂停自动滚动
+    if (!recordRect.contains(mouseMovePoint))
+        return;
+    if (m_scrollShot) {
+        int time = int (QDateTime::currentDateTime().toTime_t());
+        float len = (event->delta() > 15.0) ? -15.0 : 15.0;
+        int direction = (len == 15.0) ? 5 : 4;
+//        if(m_scrollShotStatus == 1 || m_scrollShotStatus == 2)
+//           m_scrollShotStatus = 6;
+        scrollShotMouseScrollEvent(time, direction, x, y);
+        m_scrollShot->sigalWheelScrolling(len);
+        qDebug() << __FUNCTION__ << __LINE__;
+    }
 }
 
 //滚动截图时鼠标穿透设置之所以需要单独用来设置，因为有些时候捕捉区域太大，工具栏在捕捉区域内部，需要将工具栏这片区域给排除掉
@@ -3680,8 +3709,7 @@ void MainWindow::scrollShotMouseClickEvent(int x, int y)
         m_scrollShotMouseClick = 2;
     }
 
-
-    //qDebug() << "鼠标按键 x,y :  " << x << " , " << y;
+    qDebug() << "==============================鼠标按键 m_scrollShotMouseClick :  " << m_scrollShotMouseClick ;
     //qDebug() << "mouseClickPoint x,y :  " << mouseClickPoint.x() << " , " << mouseClickPoint.y();
     //判断当前点击的点是否在捕捉区域内部,不在捕捉区域内则不响应点击事件
     if (!scrollShotRect.contains(mouseClickPoint)) {
@@ -3878,6 +3906,7 @@ void MainWindow::scrollShotMouseScrollEvent(int mouseTime, int direction, int x,
             if (m_scrollShotStatus == 5) {
                 m_scrollShotStatus = 5;
             } else {
+                qDebug() << "function: " << __func__ << " ,line: " << __LINE__ << " ,m_scrollShotStatus: " << m_scrollShotStatus;
                 //更改滚动状态为6,暂停自动滚动
                 m_scrollShotStatus = 6;
                 //暂停自动滚动截图
@@ -3887,7 +3916,6 @@ void MainWindow::scrollShotMouseScrollEvent(int mouseTime, int direction, int x,
             //处理手动滚动截图
             setInputEvent();
             handleManualScrollShot(mouseTime, direction);
-
         }
     }
 }
@@ -4268,7 +4296,7 @@ void MainWindow::startAutoScrollShot()
         //滚动截图处理类进行图片的拼接
         m_scrollShot->addPixmap(img);
     } else {
-        qDebug() << "function: " << __func__ << " ,line: " << __LINE__ << " ,m_scrollShotStatus: " << m_scrollShotStatus;
+        //qDebug() << "function: " << __func__ << " ,line: " << __LINE__ << " ,m_scrollShotStatus: " << m_scrollShotStatus;
         //滚动截图从未启动过，滚动截图添加第一张图片并启动
         m_scrollShot->addPixmap(m_firstScrollShotImg);
     }
@@ -4278,7 +4306,7 @@ void MainWindow::startAutoScrollShot()
 //暂停滚动截图
 void MainWindow::pauseAutoScrollShot()
 {
-    //qDebug() << "function:" << __func__ << " ,line: " << __LINE__ << " 暂停自动滚动截图!";
+    qDebug() << "function:" << __func__ << " ,line: " << __LINE__ << " 暂停自动滚动截图!";
     //自动滚动截图改变状态，暂停自动滚动
     m_scrollShot->changeState(true);
 }
