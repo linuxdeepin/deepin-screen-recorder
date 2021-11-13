@@ -1403,7 +1403,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     edit->moveCursor(QTextCursor::Start);
                     cs.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, t_editText.length());
                     edit->setTextCursor(cs);
-
+                    edit->selectAll();
                     m_shapes.append(m_currentShape);
 
 
