@@ -147,7 +147,7 @@ void PixMergeThread::clearCurImg()
 //计算时间差
 void PixMergeThread::calculateTimeDiff(int time)
 {
-    m_curTimeDiff = (time - m_lastTime)*100;
+    m_curTimeDiff = (time - m_lastTime) * 100;
     qDebug() << "time:" << time << "m_lastTime" << m_lastTime << "m_curTimeDiff" << m_curTimeDiff;
     m_lastTime = time;
 }
@@ -270,7 +270,7 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
                     emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
                 }
             } else {
-                if (0 < m_curTimeDiff && m_curTimeDiff < 200) {
+                if (0 <= m_curTimeDiff && m_curTimeDiff < 200) {
                     qDebug() << "=======1=滚动速度过快";
                     emit merageError(RoollingTooFast);
                 } /*else {
@@ -299,7 +299,7 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
                 emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
             }
         } else {
-            if (0 < m_curTimeDiff && m_curTimeDiff < 200) {
+            if (0 <= m_curTimeDiff && m_curTimeDiff < 200) {
                 qDebug() << "=======2=滚动速度过快";
                 emit merageError(RoollingTooFast);
             } else {
@@ -387,7 +387,7 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
                         emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
                     }
                 } else {
-                    if (0 < m_curTimeDiff && m_curTimeDiff < 200) {
+                    if (0 <= m_curTimeDiff && m_curTimeDiff < 200) {
                         qDebug() << "====1====滚动速度过快";
                         emit merageError(RoollingTooFast);
                     } /*else {
@@ -433,7 +433,7 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
                     emit invalidAreaError(InvalidArea, rect); //无效区域，点击调整捕捉区域
                 }
             } else {
-                if (0 < m_curTimeDiff && m_curTimeDiff < 200) {
+                if (0 <= m_curTimeDiff && m_curTimeDiff < 200) {
                     qDebug() << "=====2===滚动速度过快";
                     emit merageError(RoollingTooFast);
                 } else {
