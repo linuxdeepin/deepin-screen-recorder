@@ -4269,7 +4269,8 @@ void MainWindow::startRecord()
     // 录屏开始后，隐藏窗口。（2D窗管下支持录屏, 但是会导致摄像头录制不到）
     if (m_hasComposite == false) {
         hide();
-        // 显示录屏框区域。
+        // 显示录屏框区域 和 摄像头。
+        m_pRecorderRegion->setCameraShow();
         m_pRecorderRegion->show();
     }
 }
@@ -4739,7 +4740,6 @@ void MainWindow::startCountdown()
     //目的是解决触控操作无法选中部份应用程序的 QLineEdit 控件的问题
     hide();
     show();
-
     Utils::passInputEvent(static_cast<int>(this->winId()));
 
     repaint();

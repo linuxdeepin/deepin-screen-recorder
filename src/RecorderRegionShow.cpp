@@ -91,7 +91,7 @@ void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, c
         break;
     }
     }
-
+    m_cameraWidget->hide();
     m_cameraWidget->cameraStart();
     m_cameraWidget->setCameraWidgetImmovable(true); //固定窗口
     Utils::passInputEvent(static_cast<int>(m_cameraWidget->winId()));
@@ -125,6 +125,13 @@ void RecorderRegionShow::updateKeyBoardButtonStyle()
             m_keyButtonList.at(j)->setBlurRectYRadius(0);
         }
     }
+}
+
+// 设置Camera窗口显示
+void RecorderRegionShow::setCameraShow()
+{
+    if (m_cameraWidget)
+        m_cameraWidget->show();
 }
 
 void RecorderRegionShow::paintEvent(QPaintEvent *event)
