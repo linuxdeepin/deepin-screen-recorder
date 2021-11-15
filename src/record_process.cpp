@@ -114,26 +114,28 @@ void RecordProcess::onTranscodeFinish()
     QString gifNewPath = QDir(saveDir).filePath(saveBaseName).replace(QString("mp4"), QString("gif"));
     qDebug() << "" << savePath << gifOldPath << gifNewPath;
     QFile::rename(gifOldPath, gifNewPath);
-    QDBusInterface notification("org.freedesktop.Notifications",
-                                "/org/freedesktop/Notifications",
-                                "org.freedesktop.Notifications",
-                                QDBusConnection::sessionBus());
-    QStringList actions;
-    actions << "_open" << tr("View");
-    QVariantMap hints;
-    hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(gifNewPath);
-    int timeout = -1;
-    unsigned int id = 0;
-    QList<QVariant> arg;
-    arg << (QCoreApplication::applicationName())                 // appname
-        << id                                                    // id
-        << QString("deepin-screen-recorder")                     // icon
-        << tr("Recording finished")                              // summary
-        << QString(tr("Saved to %1")).arg(gifNewPath)            // body
-        << actions                                               // actions
-        << hints                                                 // hints
-        << timeout;                                              // timeout
-    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+    if (!Utils::isRootUser) {
+        QDBusInterface notification("org.freedesktop.Notifications",
+                                    "/org/freedesktop/Notifications",
+                                    "org.freedesktop.Notifications",
+                                    QDBusConnection::sessionBus());
+        QStringList actions;
+        actions << "_open" << tr("View");
+        QVariantMap hints;
+        hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(gifNewPath);
+        int timeout = -1;
+        unsigned int id = 0;
+        QList<QVariant> arg;
+        arg << (QCoreApplication::applicationName())                 // appname
+            << id                                                    // id
+            << QString("deepin-screen-recorder")                     // icon
+            << tr("Recording finished")                              // summary
+            << QString(tr("Saved to %1")).arg(gifNewPath)            // body
+            << actions                                               // actions
+            << hints                                                 // hints
+            << timeout;                                              // timeout
+        notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+    }
     QFile::remove(savePath);
     QApplication::quit();
 }
@@ -157,32 +159,32 @@ void RecordProcess::onRecordFinish()
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
     QFile::rename(savePath, newSavePath);
 
+    if (!Utils::isRootUser) {
+        // Popup notify.
+        QDBusInterface notification("org.freedesktop.Notifications",
+                                    "/org/freedesktop/Notifications",
+                                    "org.freedesktop.Notifications",
+                                    QDBusConnection::sessionBus());
 
-    // Popup notify.
-    QDBusInterface notification("org.freedesktop.Notifications",
-                                "/org/freedesktop/Notifications",
-                                "org.freedesktop.Notifications",
-                                QDBusConnection::sessionBus());
+        QStringList actions;
+        actions << "_open" << tr("View");
 
-    QStringList actions;
-    actions << "_open" << tr("View");
+        QVariantMap hints;
+        hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
+        int timeout = -1;
+        unsigned int id = 0;
 
-    QVariantMap hints;
-    hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
-    int timeout = -1;
-    unsigned int id = 0;
-
-    QList<QVariant> arg;
-    arg << (QCoreApplication::applicationName())                 // appname
-        << id                                                    // id
-        << QString("deepin-screen-recorder")                     // icon
-        << tr("Recording finished")                              // summary
-        << QString(tr("Saved to %1")).arg(newSavePath)           // body
-        << actions                                               // actions
-        << hints                                                 // hints
-        << timeout;                                              // timeout
-    notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
-
+        QList<QVariant> arg;
+        arg << (QCoreApplication::applicationName())                 // appname
+            << id                                                    // id
+            << QString("deepin-screen-recorder")                     // icon
+            << tr("Recording finished")                              // summary
+            << QString(tr("Saved to %1")).arg(newSavePath)           // body
+            << actions                                               // actions
+            << hints                                                 // hints
+            << timeout;                                              // timeout
+        notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+    }
     QApplication::quit();
 }
 

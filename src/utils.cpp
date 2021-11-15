@@ -48,6 +48,7 @@ DWIDGET_USE_NAMESPACE
 bool Utils::is3rdInterfaceStart = false;
 bool Utils::isTabletEnvironment = false;
 bool Utils::isWaylandMode = false;
+bool Utils::isRootUser = false;
 int Utils::themeType = 0;
 
 QString Utils::getQrcPath(QString imageName)

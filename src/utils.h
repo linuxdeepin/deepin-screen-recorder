@@ -54,6 +54,7 @@ public:
     static bool is3rdInterfaceStart;
     static bool isTabletEnvironment;
     static bool isWaylandMode;
+    static bool isRootUser;
     static int themeType;
 
 

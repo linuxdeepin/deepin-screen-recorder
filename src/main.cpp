@@ -70,6 +70,9 @@ int main(int argc, char *argv[])
     Utils::isWaylandMode = isWaylandProtocol();
     qDebug() << "Is Wayland:" << Utils::isWaylandMode;
 
+    Utils::isRootUser = (getuid() == 0);
+    qDebug() << "Is Root User:" << Utils::isRootUser;
+
     if(Utils::isWaylandMode) {
        qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
     }

@@ -379,6 +379,9 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
 
 void MainWindow::sendSavingNotify()
 {
+    if (Utils::isRootUser) {
+        return;
+    }
     // Popup notify.
     QDBusInterface notification("org.freedesktop.Notifications",
                                 "/org/freedesktop/Notifications",
@@ -404,6 +407,9 @@ void MainWindow::sendSavingNotify()
 void MainWindow::forciblySavingNotify()
 {
     // Popup notify.
+    if (Utils::isRootUser) {
+        return;
+    }
     QDBusInterface notification("org.freedesktop.Notifications",
                                 "/org/freedesktop/Notifications",
                                 "org.freedesktop.Notifications",
@@ -2308,7 +2314,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         qApp->quit();
         return;
     }
-    if (m_noNotify) {
+    if (m_noNotify || Utils::isRootUser) {
         qApp->quit();
         return;
     }
