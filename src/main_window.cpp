@@ -4704,7 +4704,18 @@ void MainWindow::startCountdown()
         delete m_keyButtonList.at(t_index);
     }
     m_keyButtonList.clear();
-
+    if (m_hasComposite == false) {
+        // 设置录屏框区域。
+        m_pRecorderRegion =  new RecorderRegionShow();
+        m_pRecorderRegion->resize(recordWidth + 2, recordHeight + 2);
+        m_pRecorderRegion->move(std::max(recordX - 1, 0), std::max(recordY - 1, 0));
+        if (m_cameraWidget && m_selectedCamera) {
+            m_cameraWidget->hide();
+            m_cameraWidget->cameraStop();
+            m_cameraWidget->setCameraStop(true);
+            m_pRecorderRegion->initCameraInfo(m_cameraWidget->postion(), m_cameraWidget->geometry().size());
+        }
+    }
     //平板模式
     if (Utils::isTabletEnvironment && m_tabletRecorderHandle) {
         connect(m_tabletRecorderHandle, SIGNAL(finished()), this, SLOT(startRecord()));
@@ -4728,18 +4739,6 @@ void MainWindow::startCountdown()
         countdownTooltip->show();
         m_pVoiceVolumeWatcher->setWatch(false);
         m_pCameraWatcher->setWatch(false);
-    }
-
-    if (m_hasComposite == false) {
-        // 设置录屏框区域。
-        m_pRecorderRegion =  new RecorderRegionShow();
-        m_pRecorderRegion->resize(recordWidth + 2, recordHeight + 2);
-        m_pRecorderRegion->move(std::max(recordX - 1, 0), std::max(recordY - 1, 0));
-        if (m_cameraWidget && m_selectedCamera) {
-            m_cameraWidget->cameraStop();
-            m_cameraWidget->setCameraStop(true);
-            m_pRecorderRegion->initCameraInfo(m_cameraWidget->postion(), m_cameraWidget->geometry().size());
-        }
     }
 
     //先隐藏，再显示
