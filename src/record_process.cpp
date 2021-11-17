@@ -510,6 +510,15 @@ void RecordProcess::startRecord()
 
 void RecordProcess::stopRecord()
 {
+    //系统托盘图标停止闪烁
+    QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
+                                                                                             "/com/deepin/ScreenRecorder/time",
+                                                                                             "com.deepin.ScreenRecorder.time",
+                                                                                             "onStop"));
+    if (QDBusMessage::ReplyMessage == message.type()) {
+        if (!message.arguments().takeFirst().toBool())
+            qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
+    }
     //停止wayland录屏
     if (Utils::isWaylandMode) {
         WaylandIntegration::stopStreaming();
@@ -529,15 +538,5 @@ void RecordProcess::stopRecord()
             connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onRecordFinish()));
         }
         m_recorderProcess->write("q");
-    }
-
-    //系统托盘图标停止闪烁
-    QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
-                                                                                             "/com/deepin/ScreenRecorder/time",
-                                                                                             "com.deepin.ScreenRecorder.time",
-                                                                                             "onStop"));
-    if (QDBusMessage::ReplyMessage == message.type()) {
-        if (!message.arguments().takeFirst().toBool())
-            qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
     }
 }
