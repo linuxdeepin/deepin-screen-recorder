@@ -4,28 +4,8 @@
 #include <string>
 #include <assert.h>
 #include <QMutex>
-//#include "waylandintegration.h"
+#include "avlibinterface.h"
 #include "waylandintegration_p.h"
-
-extern "C"
-{
-#include <libavcodec/avcodec.h>
-#include <libavformat/avformat.h>
-#include <libavfilter/avfilter.h>
-#include <libavcodec/avcodec.h>
-#include <libavfilter/buffersink.h>
-#include <libavfilter/buffersrc.h>
-#include <libavutil/opt.h>
-#include <libavutil/pixdesc.h>
-#include <libavutil/audio_fifo.h>
-#include <libswresample/swresample.h>
-#include <libswscale/swscale.h>
-#include <libavutil/time.h>
-#include "libavdevice/avdevice.h"
-#include "libavfilter/buffersink.h"
-#include "libavutil/avutil.h"
-#include "libavutil/fifo.h"
-}
 
 using namespace std;
 

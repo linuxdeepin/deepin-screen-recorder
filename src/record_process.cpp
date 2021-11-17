@@ -23,6 +23,7 @@
 #include "utils/configsettings.h"
 #include "utils.h"
 #include "utils/audioutils.h"
+#include "waylandrecord/avlibinterface.h"
 
 #include <QApplication>
 #include <QDate>
@@ -426,6 +427,7 @@ void RecordProcess::initProcess()
 //wayland录制视频
 void RecordProcess::waylandRecord()
 {
+    avlibInterface::initFunctions();
     qDebug() << "wayland 录屏！";
     // 启动wayland录屏
     initProcess();
@@ -516,6 +518,7 @@ void RecordProcess::stopRecord()
         } else {
             onRecordFinish();
         }
+        avlibInterface::unloadFunctions();
     }
     //停止x11录屏
     else {

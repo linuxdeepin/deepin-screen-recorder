@@ -17,7 +17,7 @@ QT += dbus
 QT += multimedia
 QT += multimediawidgets
 QT += concurrent
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_core -lopencv_imgproc -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample -lKF5WaylandClient -lKF5ConfigCore
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_core -lopencv_imgproc -lKF5WaylandClient -lKF5ConfigCore
 LIBS += -L"libprocps" -lprocps
 
 CONFIG += link_pkgconfig
@@ -152,6 +152,7 @@ HEADERS += test_all_interfaces.h \
      ../../src/waylandrecord/recordadmin.h \
      ../../src/waylandrecord/avoutputstream.h \
      ../../src/waylandrecord/avinputstream.h \
+     ../../src/waylandrecord/avlibinterface.h \
         widgets/ut_shapeswidget.h \
         widgets/ut_toptips.h \
         widgets/ut_camerawidget.h \
@@ -211,6 +212,7 @@ SOURCES += main.cpp \
     ../../src/waylandrecord/recordadmin.cpp \
     ../../src/waylandrecord/avinputstream.cpp \
     ../../src/waylandrecord/avoutputstream.cpp \
+    ../../src/waylandrecord/avlibinterface.cpp \
     ../../src/menucontroller/menucontroller.cpp \
     ../../src/dbusinterface/dbusnotify.cpp \
     ../../src/dbusinterface/ocrinterface.cpp \

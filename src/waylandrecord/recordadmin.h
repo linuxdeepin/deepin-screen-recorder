@@ -5,6 +5,7 @@
 #include "avinputstream.h"
 #include "avoutputstream.h"
 #include "writeframethread.h"
+#include "avlibinterface.h"
 #include <sys/time.h>
 #include <map>
 #include <qimage.h>
@@ -14,10 +15,6 @@
 #define VIDEO_INPUT_DEVICE    "/dev/video0"
 #include <QThread>
 
-extern "C"
-{
-#include <libavdevice/avdevice.h>
-}
 
 using namespace std;
 class RecordAdmin : public QObject
@@ -27,6 +24,7 @@ class RecordAdmin : public QObject
 public:
     RecordAdmin(QStringList list, WaylandIntegration::WaylandIntegrationPrivate *context, QObject *parent = nullptr);
     virtual ~RecordAdmin();
+
 
 public:
     /**

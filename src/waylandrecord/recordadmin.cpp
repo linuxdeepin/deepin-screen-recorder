@@ -35,9 +35,9 @@ RecordAdmin::RecordAdmin(QStringList list, WaylandIntegration::WaylandIntegratio
     }
     m_pInputStream  = new CAVInputStream(context);
     m_pOutputStream = new CAVOutputStream(context);
-    avcodec_register_all();
-    av_register_all();
-    avdevice_register_all();
+    avlibInterface::m_avcodec_register_all();
+    avlibInterface::m_av_register_all();
+    avlibInterface::m_avdevice_register_all();
     m_writeFrameThread = new WriteFrameThread(context);
 }
 

@@ -6,22 +6,8 @@
 #include <qimage.h>
 #include <qqueue.h>
 #include <QMutex>
-//#include "waylandintegration.h"
+#include "avlibinterface.h"
 #include "waylandintegration_p.h"
-extern "C"
-{
-#include <libavcodec/avcodec.h>
-#include <libavformat/avformat.h>
-#include <libavfilter/avfilter.h>
-#include <libavcodec/avcodec.h>
-#include <libavfilter/buffersink.h>
-#include <libavfilter/buffersrc.h>
-#include <libavutil/opt.h>
-#include <libavutil/pixdesc.h>
-#include <libavutil/audio_fifo.h>
-#include <libswresample/swresample.h>
-#include <libavutil/time.h>
-}
 
 using namespace std;
 

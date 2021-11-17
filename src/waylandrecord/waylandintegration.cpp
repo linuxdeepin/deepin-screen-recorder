@@ -336,13 +336,13 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     if (m_bInitRecordAdmin) {
         m_bInitRecordAdmin = false;
         m_recordAdmin->init(static_cast<int>(width), static_cast<int>(height));
-        frameStartTime = av_gettime();
+        frameStartTime = avlibInterface::m_av_gettime();
     }
     unsigned char *mapData = static_cast<unsigned char *>(mmap(nullptr, stride * height, PROT_READ, MAP_SHARED, dma_fd, 0));
     if (MAP_FAILED == mapData) {
         qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "dma fd " << dma_fd << " mmap failed - ";
     }
-    appendBuffer(mapData, static_cast<int>(width), static_cast<int>(height), static_cast<int>(stride), av_gettime() - frameStartTime);
+    appendBuffer(mapData, static_cast<int>(width), static_cast<int>(height), static_cast<int>(stride), avlibInterface::m_av_gettime() - frameStartTime);
     munmap(mapData, stride * height);
     close(dma_fd);
 }

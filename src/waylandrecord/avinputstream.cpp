@@ -59,7 +59,7 @@ bool CAVInputStream::openInputStream()
 {
     AVDictionary *device_param = nullptr;
     int i;
-    m_pAudioInputFormat = av_find_input_format("pulse"); //alsa
+    m_pAudioInputFormat = avlibInterface::m_av_find_input_format("pulse"); //alsa
     assert(m_pAudioInputFormat != nullptr);
     if (m_pAudioInputFormat == nullptr) {
         printf("did not find this audio input devices\n");
@@ -67,13 +67,13 @@ bool CAVInputStream::openInputStream()
     if (m_bMicAudio) {
         string device_name = "default";
         //Set own audio device's name
-        if (avformat_open_input(&m_pMicAudioFormatContext, device_name.c_str(), m_pAudioInputFormat, &device_param) != 0) {
+        if (avlibInterface::m_avformat_open_input(&m_pMicAudioFormatContext, device_name.c_str(), m_pAudioInputFormat, &device_param) != 0) {
             printf("Couldn't open input audio stream.（无法打开输入流）\n");
             return false;
         }
         //qDebug() << "test:mic:" << device_name.c_str();
         //input audio initialize
-        if (avformat_find_stream_info(m_pMicAudioFormatContext, nullptr) < 0) {
+        if (avlibInterface::m_avformat_find_stream_info(m_pMicAudioFormatContext, nullptr) < 0) {
             printf("Couldn't find audio stream information.（无法获取流信息）\n");
             return false;
         }
@@ -88,14 +88,14 @@ bool CAVInputStream::openInputStream()
             printf("Couldn't find a audio stream.（没有找到音频流）\n");
             return false;
         }
-        if (avcodec_open2(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec, avcodec_find_decoder(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec->codec_id), nullptr) < 0) {
+        if (avlibInterface::m_avcodec_open2(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec, avlibInterface::m_avcodec_find_decoder(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec->codec_id), nullptr) < 0) {
             printf("Could not open audio codec.（无法打开解码器）\n");
             return false;
         }
         /* print Video device information*/
-        av_dump_format(m_pMicAudioFormatContext, 0, "default", 0);
+        avlibInterface::m_av_dump_format(m_pMicAudioFormatContext, 0, "default", 0);
     }
-    m_pAudioCardInputFormat = av_find_input_format("pulse"); //alsa
+    m_pAudioCardInputFormat = avlibInterface::m_av_find_input_format("pulse"); //alsa
     assert(m_pAudioCardInputFormat != nullptr);
     if (m_pAudioCardInputFormat == nullptr) {
         printf("did not find this card audio input devices\n");
@@ -108,12 +108,12 @@ bool CAVInputStream::openInputStream()
         } else {
             printf("did not find this card AudioChannel \n");
         }
-        if (avformat_open_input(&m_pSysAudioFormatContext, device_name.c_str(), m_pAudioCardInputFormat, &device_param) != 0) {
+        if (avlibInterface::m_avformat_open_input(&m_pSysAudioFormatContext, device_name.c_str(), m_pAudioCardInputFormat, &device_param) != 0) {
             printf("Couldn't open input audio stream.（无法打开输入流）\n");
             return false;
         }
         //qDebug() << "test:sys:" << device_name.c_str();
-        if (avformat_find_stream_info(m_pSysAudioFormatContext, nullptr) < 0) {
+        if (avlibInterface::m_avformat_find_stream_info(m_pSysAudioFormatContext, nullptr) < 0) {
             printf("Couldn't find audio stream information.（无法获取流信息）\n");
             return false;
         }
@@ -130,12 +130,12 @@ bool CAVInputStream::openInputStream()
             return false;
         }
         ///Caution, m_pAudFmtCtx->streams[m_audioindex]->codec->codec_id =14, AV_CODEC_ID_RAWVIDEO
-        if (avcodec_open2(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec, avcodec_find_decoder(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec->codec_id), nullptr) < 0) {
+        if (avlibInterface::m_avcodec_open2(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec, avlibInterface::m_avcodec_find_decoder(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec->codec_id), nullptr) < 0) {
             printf("Could not open audio codec.（无法打开解码器）\n");
             return false;
         }
         /* print Video device information*/
-        av_dump_format(m_pSysAudioFormatContext, 0, device_name.c_str(), 0);
+        avlibInterface::m_av_dump_format(m_pSysAudioFormatContext, 0, device_name.c_str(), 0);
     } else {
         device_name = "default";
     }
@@ -147,7 +147,7 @@ bool CAVInputStream::openInputStream()
 
 bool CAVInputStream::audioCapture()
 {
-    m_start_time = av_gettime();
+    m_start_time = avlibInterface::m_av_gettime();
     if (m_bMix) {
         pthread_create(&m_hMicAudioThread, nullptr, captureMicToMixAudioThreadFunc, static_cast<void *>(this));
         pthread_create(&m_hSysAudioThread, nullptr, captureSysToMixAudioThreadFunc, static_cast<void *>(this));
@@ -327,17 +327,17 @@ int CAVInputStream::readMicAudioPacket()
     //start decode and encode
     while (bRunThread()) {
         int ret;
-        AVFrame *inputFrame = av_frame_alloc();
+        AVFrame *inputFrame = avlibInterface::m_av_frame_alloc();
         if (!inputFrame)
             return AVERROR(ENOMEM);
         /** Decode one frame worth of audio samples. */
         /** Packet used for temporary storage. */
         AVPacket inputPacket;
-        av_init_packet(&inputPacket);
+        avlibInterface::m_av_init_packet(&inputPacket);
         inputPacket.data = nullptr;
         inputPacket.size = 0;
         /** Read one audio frame from the input file into a temporary packet. */
-        if ((ret = av_read_frame(m_pMicAudioFormatContext, &inputPacket)) < 0) {
+        if ((ret = avlibInterface::m_av_read_frame(m_pMicAudioFormatContext, &inputPacket)) < 0) {
             /** If we are at the end of the file, flush the decoder below. */
             if (ret == AVERROR_EOF) {
                 setbRunThread(false);
@@ -346,23 +346,23 @@ int CAVInputStream::readMicAudioPacket()
             }
         }
         //AVPacket -> AVFrame
-        if ((ret = avcodec_decode_audio4(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec, inputFrame, &got_frame_ptr, &inputPacket)) < 0) {
+        if ((ret = avlibInterface::m_avcodec_decode_audio4(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec, inputFrame, &got_frame_ptr, &inputPacket)) < 0) {
             printf("Could not decode audio frame\n");
             return ret;
         }
-        av_packet_unref(&inputPacket);
+        avlibInterface::m_av_packet_unref(&inputPacket);
         /** If there is decoded data, convert and store it */
         if (got_frame_ptr) {
-            m_context->m_recordAdmin->m_pOutputStream->writeMicAudioFrame(m_pMicAudioFormatContext->streams[m_micAudioindex], inputFrame, av_gettime() - m_start_time);
+            m_context->m_recordAdmin->m_pOutputStream->writeMicAudioFrame(m_pMicAudioFormatContext->streams[m_micAudioindex], inputFrame, avlibInterface::m_av_gettime() - m_start_time);
         }
-        av_frame_free(&inputFrame);
+        avlibInterface::m_av_frame_free(&inputFrame);
         fflush(stdout);
     }// -- while end
     if (nullptr != m_pMicAudioFormatContext) {
-        avformat_close_input(&m_pMicAudioFormatContext);
+        avlibInterface::m_avformat_close_input(&m_pMicAudioFormatContext);
     }
     if (nullptr != m_pMicAudioFormatContext) {
-        avformat_free_context(m_pMicAudioFormatContext);
+        avlibInterface::m_avformat_free_context(m_pMicAudioFormatContext);
         m_pMicAudioFormatContext = nullptr;
     }
     m_micAudioindex = -1;
@@ -375,17 +375,17 @@ int CAVInputStream::readMicToMixAudioPacket()
     //start decode and encode
     while (bRunThread()) {
         int ret;
-        AVFrame *inputFrame = av_frame_alloc();
+        AVFrame *inputFrame = avlibInterface::m_av_frame_alloc();
         if (!inputFrame)
             return AVERROR(ENOMEM);
         /** Decode one frame worth of audio samples.解码一帧值的音频样本。 */
         /** Packet used for temporary storage. 临时存储用的小包。*/
         AVPacket inputPacket;
-        av_init_packet(&inputPacket);
+        avlibInterface::m_av_init_packet(&inputPacket);
         inputPacket.data = nullptr;
         inputPacket.size = 0;
         /** Read one audio frame from the input file into a temporary packet. 从输入文件中读取一个音频帧到一个临时包中。*/
-        if ((ret = av_read_frame(m_pMicAudioFormatContext, &inputPacket)) < 0) {
+        if ((ret = avlibInterface::m_av_read_frame(m_pMicAudioFormatContext, &inputPacket)) < 0) {
             /** If we are at the end of the file, flush the decoder below. 如果我们在文件的末尾，刷新下面的解码器。*/
             if (ret == AVERROR_EOF) {
                 setbRunThread(false);
@@ -394,23 +394,23 @@ int CAVInputStream::readMicToMixAudioPacket()
             }
         }
         //AVPacket -> AVFrame
-        if ((ret = avcodec_decode_audio4(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec, inputFrame, &got_frame_ptr, &inputPacket)) < 0) {
+        if ((ret = avlibInterface::m_avcodec_decode_audio4(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec, inputFrame, &got_frame_ptr, &inputPacket)) < 0) {
             printf("Could not decode audio frame\n");
             return ret;
         }
-        av_packet_unref(&inputPacket);
+        avlibInterface::m_av_packet_unref(&inputPacket);
         /** If there is decoded data, convert and store it 如果有解码的数据，转换并存储它*/
         if (got_frame_ptr) {
-            m_context->m_recordAdmin->m_pOutputStream->writeMicToMixAudioFrame(m_pMicAudioFormatContext->streams[m_micAudioindex], inputFrame, av_gettime() - m_start_time);
+            m_context->m_recordAdmin->m_pOutputStream->writeMicToMixAudioFrame(m_pMicAudioFormatContext->streams[m_micAudioindex], inputFrame, avlibInterface::m_av_gettime() - m_start_time);
         }
-        av_frame_free(&inputFrame);
+        avlibInterface::m_av_frame_free(&inputFrame);
         fflush(stdout);
     }// -- while end
     if (nullptr != m_pMicAudioFormatContext) {
-        avformat_close_input(&m_pMicAudioFormatContext);
+        avlibInterface::m_avformat_close_input(&m_pMicAudioFormatContext);
     }
     if (nullptr != m_pMicAudioFormatContext) {
-        avformat_free_context(m_pMicAudioFormatContext);
+        avlibInterface::m_avformat_free_context(m_pMicAudioFormatContext);
         m_pMicAudioFormatContext = nullptr;
     }
     m_micAudioindex = -1;
@@ -440,16 +440,16 @@ int CAVInputStream::readSysAudioPacket()
     //start decode and encode
     while (bRunThread()) {
         int ret;
-        AVFrame *input_frame = av_frame_alloc();
+        AVFrame *input_frame = avlibInterface::m_av_frame_alloc();
         if (!input_frame) {
             return AVERROR(ENOMEM);
         }
         AVPacket inputPacket;
-        av_init_packet(&inputPacket);
+        avlibInterface::m_av_init_packet(&inputPacket);
         inputPacket.data = nullptr;
         inputPacket.size = 0;
         /** Read one audio frame from the input file into a temporary packet. */
-        if ((ret = av_read_frame(m_pSysAudioFormatContext, &inputPacket)) < 0) {
+        if ((ret = avlibInterface::m_av_read_frame(m_pSysAudioFormatContext, &inputPacket)) < 0) {
             /** If we are at the end of the file, flush the decoder below. */
             if (ret == AVERROR_EOF) {
                 setbRunThread(false);
@@ -457,22 +457,22 @@ int CAVInputStream::readSysAudioPacket()
                 continue;
             }
         }
-        if ((ret = avcodec_decode_audio4(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec, input_frame, &got_frame_ptr, &inputPacket)) < 0) {
+        if ((ret = avlibInterface::m_avcodec_decode_audio4(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec, input_frame, &got_frame_ptr, &inputPacket)) < 0) {
             printf("Could not decode audio frame\n");
             return ret;
         }
-        av_packet_unref(&inputPacket);
+        avlibInterface::m_av_packet_unref(&inputPacket);
         /** If there is decoded data, convert and store it */
         if (got_frame_ptr) {
-            m_context->m_recordAdmin->m_pOutputStream->writeSysAudioFrame(m_pSysAudioFormatContext->streams[m_sysAudioindex], input_frame, av_gettime() - m_start_time);
+            m_context->m_recordAdmin->m_pOutputStream->writeSysAudioFrame(m_pSysAudioFormatContext->streams[m_sysAudioindex], input_frame, avlibInterface::m_av_gettime() - m_start_time);
         }
-        av_frame_free(&input_frame);
+        avlibInterface::m_av_frame_free(&input_frame);
     }// -- while end
     if (nullptr != m_pSysAudioFormatContext) {
-        avformat_close_input(&m_pSysAudioFormatContext);
+        avlibInterface::m_avformat_close_input(&m_pSysAudioFormatContext);
     }
     if (nullptr != m_pSysAudioFormatContext) {
-        avformat_free_context(m_pSysAudioFormatContext);
+        avlibInterface::m_avformat_free_context(m_pSysAudioFormatContext);
         m_pSysAudioFormatContext = nullptr;
     }
     m_sysAudioindex = -1;
@@ -484,16 +484,16 @@ int CAVInputStream::readSysToMixAudioPacket()
     int got_frame_ptr = 0;
     while (bRunThread()) {
         int ret;
-        AVFrame *inputFrame = av_frame_alloc();
+        AVFrame *inputFrame = avlibInterface::m_av_frame_alloc();
         if (!inputFrame) {
             return AVERROR(ENOMEM);
         }
         AVPacket inputPacket;
-        av_init_packet(&inputPacket);
+        avlibInterface::m_av_init_packet(&inputPacket);
         inputPacket.data = nullptr;
         inputPacket.size = 0;
         /** Read one audio frame from the input file into a temporary packet.将一个音频帧从输入文件插入一个临时包 */
-        if ((ret = av_read_frame(m_pSysAudioFormatContext, &inputPacket)) < 0) {
+        if ((ret = avlibInterface::m_av_read_frame(m_pSysAudioFormatContext, &inputPacket)) < 0) {
             /** If we are at the end of the file, flush the decoder below. */
             if (ret == AVERROR_EOF) {
                 setbRunThread(false);
@@ -501,21 +501,21 @@ int CAVInputStream::readSysToMixAudioPacket()
                 continue;
             }
         }
-        if ((ret = avcodec_decode_audio4(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec, inputFrame, &got_frame_ptr, &inputPacket)) < 0) {
+        if ((ret = avlibInterface::m_avcodec_decode_audio4(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec, inputFrame, &got_frame_ptr, &inputPacket)) < 0) {
             printf("Could not decode audio frame\n");
             return ret;
         }
-        av_packet_unref(&inputPacket);
+        avlibInterface::m_av_packet_unref(&inputPacket);
         if (got_frame_ptr) {
-            m_context->m_recordAdmin->m_pOutputStream->writeSysToMixAudioFrame(m_pSysAudioFormatContext->streams[m_sysAudioindex], inputFrame, av_gettime() - m_start_time);
+            m_context->m_recordAdmin->m_pOutputStream->writeSysToMixAudioFrame(m_pSysAudioFormatContext->streams[m_sysAudioindex], inputFrame, avlibInterface::m_av_gettime() - m_start_time);
         }
-        av_frame_free(&inputFrame);
+        avlibInterface::m_av_frame_free(&inputFrame);
     }// -- while end
     if (nullptr != m_pSysAudioFormatContext) {
-        avformat_close_input(&m_pSysAudioFormatContext);
+        avlibInterface::m_avformat_close_input(&m_pSysAudioFormatContext);
     }
     if (nullptr != m_pSysAudioFormatContext) {
-        avformat_free_context(m_pSysAudioFormatContext);
+        avlibInterface::m_avformat_free_context(m_pSysAudioFormatContext);
         m_pSysAudioFormatContext = nullptr;
     }
     m_sysAudioindex = -1;

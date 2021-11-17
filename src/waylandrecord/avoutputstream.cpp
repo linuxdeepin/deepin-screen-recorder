@@ -89,8 +89,8 @@ CAVOutputStream::CAVOutputStream(WaylandIntegration::WaylandIntegrationPrivate *
     m_gopsize = 0;
     m_channels_layout = 0;
     m_channels_card_layout = 0;
-    avcodec_register_all();
-    av_register_all();
+    avlibInterface::m_avcodec_register_all();
+    avlibInterface::m_av_register_all();
 }
 
 CAVOutputStream::~CAVOutputStream(void)
@@ -148,24 +148,24 @@ int CAVOutputStream::init_filters()
     string formatStr = "time_base=%d/%d:sample_rate=%d:sample_fmt=%s:channel_layout=0x%";
     formatStr.append(PRIx64);
     AVFilterInOut *filter_outputs[2];
-    const AVFilter *abuffersrc1  = avfilter_get_by_name("abuffer");
-    const AVFilter *abuffersrc2  = avfilter_get_by_name("abuffer");
-    const AVFilter *abuffersink = avfilter_get_by_name("abuffersink");
-    AVFilterInOut *outputs1 = avfilter_inout_alloc();
-    AVFilterInOut *outputs2 = avfilter_inout_alloc();
-    AVFilterInOut *inputs  = avfilter_inout_alloc();
+    const AVFilter *abuffersrc1  = avlibInterface::m_avfilter_get_by_name("abuffer");
+    const AVFilter *abuffersrc2  = avlibInterface::m_avfilter_get_by_name("abuffer");
+    const AVFilter *abuffersink = avlibInterface::m_avfilter_get_by_name("abuffersink");
+    AVFilterInOut *outputs1 = avlibInterface::m_avfilter_inout_alloc();
+    AVFilterInOut *outputs2 = avlibInterface::m_avfilter_inout_alloc();
+    AVFilterInOut *inputs  = avlibInterface::m_avfilter_inout_alloc();
     static  enum AVSampleFormat out_sample_fmts[] = { pCodecCtx_amix->sample_fmt, AV_SAMPLE_FMT_NONE }; //{ AV_SAMPLE_FMT_S16, AV_SAMPLE_FMT_NONE };
     static const int64_t out_channel_layouts[] = {static_cast<int64_t>(pCodecCtx_amix->channel_layout), -1};
     static const int out_sample_rates[] = { pCodecCtx_amix->sample_rate, -1 };
     const AVFilterLink *outlink;
     AVRational time_base_1 = m_pMicCodecContext->time_base;
     AVRational time_base_2 = m_pSysCodecContext->time_base;
-    filter_graph = avfilter_graph_alloc();
+    filter_graph = avlibInterface::m_avfilter_graph_alloc();
     if (!outputs1 || !inputs || !filter_graph) {
         ret = AVERROR(ENOMEM);
-        avfilter_inout_free(&inputs);
+        avlibInterface::m_avfilter_inout_free(&inputs);
 
-        avfilter_inout_free(&outputs1);
+        avlibInterface::m_avfilter_inout_free(&outputs1);
         return 1;
     }
     AVCodecContext *dec_ctx1;
@@ -173,24 +173,24 @@ int CAVOutputStream::init_filters()
     /* buffer audio source: the decoded frames from the decoder will be inserted here. */
     dec_ctx1 = m_pMicCodecContext;
     if (!dec_ctx1->channel_layout)
-        dec_ctx1->channel_layout = static_cast<uint64_t>(av_get_default_channel_layout(dec_ctx1->channels));
+        dec_ctx1->channel_layout = static_cast<uint64_t>(avlibInterface::m_av_get_default_channel_layout(dec_ctx1->channels));
     snprintf(args1,
              sizeof(args1),
              formatStr.c_str(),
              time_base_1.num,
              time_base_1.den,
              dec_ctx1->sample_rate,
-             av_get_sample_fmt_name(dec_ctx1->sample_fmt),
+             avlibInterface::m_av_get_sample_fmt_name(dec_ctx1->sample_fmt),
              dec_ctx1->channel_layout);
-    ret = avfilter_graph_create_filter(&buffersrc_ctx1, abuffersrc1, "in0",
+    ret = avlibInterface::m_avfilter_graph_create_filter(&buffersrc_ctx1, abuffersrc1, "in0",
                                        args1, nullptr, filter_graph);
 
     if (ret < 0) {
 
-        av_log(nullptr, AV_LOG_ERROR, "Cannot create audio buffer source\n");
-        avfilter_inout_free(&inputs);
+        //av_log(nullptr, AV_LOG_ERROR, "Cannot create audio buffer source\n");
+        avlibInterface::m_avfilter_inout_free(&inputs);
 
-        avfilter_inout_free(&outputs1);
+        avlibInterface::m_avfilter_inout_free(&outputs1);
         return 1;
     }
     /* buffer audio source: the decoded frames from the decoder will be inserted here. */
@@ -198,79 +198,79 @@ int CAVOutputStream::init_filters()
     snprintf(args2, sizeof(args2),
              formatStr.c_str(),
              time_base_2.num, time_base_2.den, dec_ctx2->sample_rate,
-             av_get_sample_fmt_name(dec_ctx2->sample_fmt), dec_ctx2->channel_layout);
-    ret = avfilter_graph_create_filter(&buffersrc_ctx2, abuffersrc2, "in1",
+             avlibInterface::m_av_get_sample_fmt_name(dec_ctx2->sample_fmt), dec_ctx2->channel_layout);
+    ret = avlibInterface::m_avfilter_graph_create_filter(&buffersrc_ctx2, abuffersrc2, "in1",
                                        args2, nullptr, filter_graph);
     if (ret < 0) {
-        av_log(nullptr, AV_LOG_ERROR, "Cannot create audio buffer source\n");
+        //av_log(nullptr, AV_LOG_ERROR, "Cannot create audio buffer source\n");
 
-        avfilter_inout_free(&inputs);
+        avlibInterface::m_avfilter_inout_free(&inputs);
 
-        avfilter_inout_free(&outputs1);
+        avlibInterface::m_avfilter_inout_free(&outputs1);
         return 1;
     }
 
     /* buffer audio sink: to terminate the filter chain. */
 
-    ret = avfilter_graph_create_filter(&buffersink_ctx, abuffersink, "out",
+    ret = avlibInterface::m_avfilter_graph_create_filter(&buffersink_ctx, abuffersink, "out",
 
                                        nullptr, nullptr, filter_graph);
 
     if (ret < 0) {
 
-        av_log(nullptr, AV_LOG_ERROR, "Cannot create audio buffer sink\n");
+        //av_log(nullptr, AV_LOG_ERROR, "Cannot create audio buffer sink\n");
 
-        avfilter_inout_free(&inputs);
+        avlibInterface::m_avfilter_inout_free(&inputs);
 
-        avfilter_inout_free(&outputs1);
+        avlibInterface::m_avfilter_inout_free(&outputs1);
+        return 1;
+
+    }
+
+    //ret = av_opt_set_int_list(buffersink_ctx, "sample_fmts", out_sample_fmts, -1, AV_OPT_SEARCH_CHILDREN);
+    ret = avlibInterface::m_av_opt_set_bin(buffersink_ctx, "sample_fmts", (const uint8_t *)(out_sample_fmts),
+                   avlibInterface::m_av_int_list_length_for_size(sizeof(*(out_sample_fmts)), out_sample_fmts, -1) * sizeof (*(out_sample_fmts)), AV_OPT_SEARCH_CHILDREN);
+
+
+    if (ret < 0) {
+
+        //av_log(nullptr, AV_LOG_ERROR, "Cannot set output sample format\n");
+
+        avlibInterface::m_avfilter_inout_free(&inputs);
+
+        avlibInterface::m_avfilter_inout_free(&outputs1);
         return 1;
 
     }
 
 
+    //ret = av_opt_set_int_list(buffersink_ctx, "channel_layouts", out_channel_layouts, -1, AV_OPT_SEARCH_CHILDREN);
+    ret = avlibInterface::m_av_opt_set_bin(buffersink_ctx, "channel_layouts", (const uint8_t *)(out_channel_layouts),
+                   avlibInterface::m_av_int_list_length_for_size(sizeof(*(out_channel_layouts)), out_channel_layouts, -1) * sizeof (*(out_channel_layouts)), AV_OPT_SEARCH_CHILDREN);
 
-    ret = av_opt_set_int_list(buffersink_ctx, "sample_fmts", out_sample_fmts, -1,
-
-                              AV_OPT_SEARCH_CHILDREN);
 
     if (ret < 0) {
 
-        av_log(nullptr, AV_LOG_ERROR, "Cannot set output sample format\n");
+        //av_log(nullptr, AV_LOG_ERROR, "Cannot set output channel layout\n");
 
-        avfilter_inout_free(&inputs);
+        avlibInterface::m_avfilter_inout_free(&inputs);
 
-        avfilter_inout_free(&outputs1);
+        avlibInterface::m_avfilter_inout_free(&outputs1);
         return 1;
 
     }
 
-
-    ret = av_opt_set_int_list(buffersink_ctx, "channel_layouts", out_channel_layouts, -1,
-
-                              AV_OPT_SEARCH_CHILDREN);
-
-    if (ret < 0) {
-
-        av_log(nullptr, AV_LOG_ERROR, "Cannot set output channel layout\n");
-
-        avfilter_inout_free(&inputs);
-
-        avfilter_inout_free(&outputs1);
-        return 1;
-
-    }
-
-    ret = av_opt_set_int_list(buffersink_ctx, "sample_rates", out_sample_rates, -1,
-
-                              AV_OPT_SEARCH_CHILDREN);
+    //ret = av_opt_set_int_list(buffersink_ctx, "sample_rates", out_sample_rates, -1,AV_OPT_SEARCH_CHILDREN);
+    ret = avlibInterface::m_av_opt_set_bin(buffersink_ctx, "sample_rates", (const uint8_t *)(out_sample_rates),
+                   avlibInterface::m_av_int_list_length_for_size(sizeof(*(out_sample_rates)), out_sample_rates, -1) * sizeof (*(out_sample_rates)), AV_OPT_SEARCH_CHILDREN);
 
     if (ret < 0) {
 
-        av_log(nullptr, AV_LOG_ERROR, "Cannot set output sample rate\n");
+        //av_log(nullptr, AV_LOG_ERROR, "Cannot set output sample rate\n");
 
-        avfilter_inout_free(&inputs);
+        avlibInterface::m_avfilter_inout_free(&inputs);
 
-        avfilter_inout_free(&outputs1);
+        avlibInterface::m_avfilter_inout_free(&outputs1);
         return 1;
 
     }
@@ -297,11 +297,11 @@ int CAVOutputStream::init_filters()
 
      */
 
-    outputs1->name       = av_strdup("in0");
+    outputs1->name       = avlibInterface::m_av_strdup("in0");
     outputs1->filter_ctx = buffersrc_ctx1;
     outputs1->pad_idx    = 0;
     outputs1->next       = outputs2;
-    outputs2->name       = av_strdup("in1");
+    outputs2->name       = avlibInterface::m_av_strdup("in1");
     outputs2->filter_ctx = buffersrc_ctx2;
     outputs2->pad_idx    = 0;
     outputs2->next       = nullptr;
@@ -317,7 +317,7 @@ int CAVOutputStream::init_filters()
      * default.
 
      */
-    inputs->name       = av_strdup("out");
+    inputs->name       = avlibInterface::m_av_strdup("out");
     inputs->filter_ctx = buffersink_ctx;
     inputs->pad_idx    = 0;
     inputs->next       = nullptr;
@@ -330,32 +330,32 @@ int CAVOutputStream::init_filters()
 
 
 
-    if ((ret = avfilter_graph_parse_ptr(filter_graph, filter_descr,
+    if ((ret = avlibInterface::m_avfilter_graph_parse_ptr(filter_graph, filter_descr,
 
                                         &inputs, filter_outputs, nullptr)) < 0)//filter_outputs
 
     {
 
-        av_log(nullptr, AV_LOG_ERROR, "parse ptr fail, ret: %d\n", ret);
+        //av_log(nullptr, AV_LOG_ERROR, "parse ptr fail, ret: %d\n", ret);
 
-        avfilter_inout_free(&inputs);
+        avlibInterface::m_avfilter_inout_free(&inputs);
 
-        avfilter_inout_free(&outputs1);
+        avlibInterface::m_avfilter_inout_free(&outputs1);
         return 1;
 
     }
 
 
 
-    if ((ret = avfilter_graph_config(filter_graph, nullptr)) < 0)
+    if ((ret = avlibInterface::m_avfilter_graph_config(filter_graph, nullptr)) < 0)
 
     {
 
-        av_log(nullptr, AV_LOG_ERROR, "config graph fail, ret: %d\n", ret);
+        //av_log(nullptr, AV_LOG_ERROR, "config graph fail, ret: %d\n", ret);
 
-        avfilter_inout_free(&inputs);
+        avlibInterface::m_avfilter_inout_free(&inputs);
 
-        avfilter_inout_free(&outputs1);
+        avlibInterface::m_avfilter_inout_free(&outputs1);
         return 1;
     }
     /* Print summary of the sink buffer
@@ -363,17 +363,18 @@ int CAVOutputStream::init_filters()
      * Note: args buffer is reused to store channel layout string */
     outlink = buffersink_ctx->inputs[0];
 
-    av_get_channel_layout_string(args1, sizeof(args1), -1, outlink->channel_layout);
+    avlibInterface::m_av_get_channel_layout_string(args1, sizeof(args1), -1, outlink->channel_layout);
 
-
+    /*
     av_log(nullptr, AV_LOG_INFO, "Output: srate:%dHz fmt:%s chlayout:%s\n",
            outlink->sample_rate,
-           static_cast<char *>(av_x_if_null(av_get_sample_fmt_name(static_cast<AVSampleFormat>(outlink->format)), "?")),
+           static_cast<char *>(av_x_if_null(avlibInterface::m_av_get_sample_fmt_name(static_cast<AVSampleFormat>(outlink->format)), "?")),
            args1);
-    mMic_frame = av_frame_alloc();
-    mSpeaker_frame = av_frame_alloc();
-    avfilter_inout_free(&inputs);
-    avfilter_inout_free(filter_outputs);
+           */
+    mMic_frame = avlibInterface::m_av_frame_alloc();
+    mSpeaker_frame = avlibInterface::m_av_frame_alloc();
+    avlibInterface::m_avfilter_inout_free(&inputs);
+    avlibInterface::m_avfilter_inout_free(filter_outputs);
 
     return ret;
 
@@ -384,19 +385,19 @@ int CAVOutputStream::init_context_amix(int channel, uint64_t channel_layout, int
     Q_UNUSED(channel_layout)
     Q_UNUSED(sample_rate)
     Q_UNUSED(bit_rate)
-    pCodec_amix = avcodec_find_encoder(m_sysAudioCodecID);
+    pCodec_amix = avlibInterface::m_avcodec_find_encoder(m_sysAudioCodecID);
     if (!pCodec_amix) {
         printf("Can not find output audio encoder! (没有找到合适的编码器！)\n");
         return false;
     }
 
-    pCodecCtx_amix = avcodec_alloc_context3(pCodec_amix);
-    pCodecCtx_amix = avcodec_alloc_context3(pCodec_a);
+    pCodecCtx_amix = avlibInterface::m_avcodec_alloc_context3(pCodec_amix);
+    pCodecCtx_amix = avlibInterface::m_avcodec_alloc_context3(pCodec_a);
     pCodecCtx_amix->channels = m_channels;
     pCodecCtx_amix->channel_layout = static_cast<uint64_t>(m_channels_layout);
     if (pCodecCtx_amix->channel_layout == 0) {
         pCodecCtx_amix->channel_layout = AV_CH_LAYOUT_STEREO;
-        pCodecCtx_amix->channels = av_get_channel_layout_nb_channels(pCodecCtx_amix->channel_layout);
+        pCodecCtx_amix->channels = avlibInterface::m_av_get_channel_layout_nb_channels(pCodecCtx_amix->channel_layout);
     }
 
     pCodecCtx_amix->sample_rate = m_samplerate;
@@ -414,11 +415,11 @@ int CAVOutputStream::init_context_amix(int channel, uint64_t channel_layout, int
     if (m_videoFormatContext->oformat->flags & AVFMT_GLOBALHEADER)
         pCodecCtx_amix->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
-    if (avcodec_open2(pCodecCtx_amix, pCodec_amix, nullptr) < 0) {
+    if (avlibInterface::m_avcodec_open2(pCodecCtx_amix, pCodec_amix, nullptr) < 0) {
         printf("Failed to open ouput audio encoder! (编码器打开失败！)\n");
         return false;
     }
-    audio_amix_st = avformat_new_stream(m_videoFormatContext, pCodec_amix);
+    audio_amix_st = avlibInterface::m_avformat_new_stream(m_videoFormatContext, pCodec_amix);
     //Add a new stream to output,should be called by the user before avformat_write_header() for muxing
     if (audio_amix_st) {
         //                audio_amix_st->index = 1;
@@ -438,18 +439,18 @@ bool CAVOutputStream::open(QString path)
     m_path = new char[strlen(pathArry.data()) + 1];
     strcpy(m_path, pathArry.data());
 
-    avformat_alloc_output_context2(&m_videoFormatContext, nullptr, nullptr, m_path);
+    avlibInterface::m_avformat_alloc_output_context2(&m_videoFormatContext, nullptr, nullptr, m_path);
 
     if (m_videoCodecID  != 0) {
         printf("FLQQ,video encoder initialize\n\n");
-        pCodec = avcodec_find_encoder(m_videoCodecID);
+        pCodec = avlibInterface::m_avcodec_find_encoder(m_videoCodecID);
 
         if (!pCodec) {
             printf("Can not find output video encoder! (没有找到合适的编码器！)\n");
             return false;
         }
 
-        pCodecCtx = avcodec_alloc_context3(pCodec);
+        pCodecCtx = avlibInterface::m_avcodec_alloc_context3(pCodec);
         pCodecCtx->pix_fmt = AV_PIX_FMT_YUV420P;
 #ifdef VIDEO_RESCALE
         pCodecCtx->width = m_width / 2;
@@ -481,18 +482,18 @@ bool CAVOutputStream::open(QString path)
             pCodecCtx->max_b_frames = 0;
 
             // Set H264 preset and tune
-            av_dict_set(&param, "preset", "ultrafast", 0);
+            avlibInterface::m_av_dict_set(&param, "preset", "ultrafast", 0);
             //                av_dict_set(&param, "tune", "zerolatency", 0);
 
         }
 
-        if (avcodec_open2(pCodecCtx, pCodec, &param) < 0) {
+        if (avlibInterface::m_avcodec_open2(pCodecCtx, pCodec, &param) < 0) {
             printf("Failed to open output video encoder! (编码器打开失败！)\n");
             return false;
         }
 
         //Add a new stream to output,should be called by the user before avformat_write_header() for muxing
-        m_videoStream = avformat_new_stream(m_videoFormatContext, pCodec);
+        m_videoStream = avlibInterface::m_avformat_new_stream(m_videoFormatContext, pCodec);
         if (m_videoStream == nullptr) {
             return false;
         }
@@ -501,9 +502,9 @@ bool CAVOutputStream::open(QString path)
         m_videoStream->codec = pCodecCtx;
         //Initialize the buffer to store YUV frames to be encoded.
         //
-        pFrameYUV = av_frame_alloc();
-        m_out_buffer = static_cast<uint8_t *>(av_malloc(static_cast<size_t>(avpicture_get_size(AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height))));
-        avpicture_fill((AVPicture *)pFrameYUV, m_out_buffer, AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height);
+        pFrameYUV = avlibInterface::m_av_frame_alloc();
+        m_out_buffer = static_cast<uint8_t *>(avlibInterface::m_av_malloc(static_cast<size_t>(avlibInterface::m_avpicture_get_size(AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height))));
+        avlibInterface::m_avpicture_fill((AVPicture *)pFrameYUV, m_out_buffer, AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height);
 
     }
     if (m_sysAudioCodecID && m_micAudioCodecID) {
@@ -518,19 +519,19 @@ bool CAVOutputStream::open(QString path)
     if (m_micAudioCodecID != 0) {
         printf("FLQQ,mic audio encoder initialize\n\n");
         //output audio encoder initialize
-        pCodec_a = avcodec_find_encoder(m_micAudioCodecID);
+        pCodec_a = avlibInterface::m_avcodec_find_encoder(m_micAudioCodecID);
         if (!pCodec_a) {
             printf("Can not find output audio encoder! (没有找到合适的编码器！)\n");
             return false;
         }
-        m_pMicCodecContext = avcodec_alloc_context3(pCodec_a);
+        m_pMicCodecContext = avlibInterface::m_avcodec_alloc_context3(pCodec_a);
         m_pMicCodecContext->channels = m_channels;
         //        pCodecCtx_a->channel_layout = av_get_default_channel_layout(m_channels);
         m_pMicCodecContext->channel_layout = static_cast<uint64_t>(m_channels_layout);
         //      pCodecCtx_a->channels = av_get_channel_layout_nb_channels(pAudioStream->codec->channel_layout);
         if (m_pMicCodecContext->channel_layout == 0) {
             m_pMicCodecContext->channel_layout = AV_CH_LAYOUT_STEREO;
-            m_pMicCodecContext->channels = av_get_channel_layout_nb_channels(m_pMicCodecContext->channel_layout);
+            m_pMicCodecContext->channels = avlibInterface::m_av_get_channel_layout_nb_channels(m_pMicCodecContext->channel_layout);
         }
 
         m_pMicCodecContext->sample_rate = m_samplerate;
@@ -548,14 +549,14 @@ bool CAVOutputStream::open(QString path)
         if (m_videoFormatContext->oformat->flags & AVFMT_GLOBALHEADER)
             m_pMicCodecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
-        if (avcodec_open2(m_pMicCodecContext, pCodec_a, nullptr) < 0) {
+        if (avlibInterface::m_avcodec_open2(m_pMicCodecContext, pCodec_a, nullptr) < 0) {
             printf("Failed to open ouput audio encoder! (编码器打开失败！)\n");
             return false;
         }
 
         //Add a new stream to output,should be called by the user before avformat_write_header() for muxing
         if (!m_bMix) {
-            m_micAudioStream = avformat_new_stream(m_videoFormatContext, pCodec_a);
+            m_micAudioStream = avlibInterface::m_avformat_new_stream(m_videoFormatContext, pCodec_a);
             if (nullptr == m_micAudioStream)
                 return false;
             m_micAudioStream->time_base.num = 1;
@@ -584,19 +585,19 @@ bool CAVOutputStream::open(QString path)
     if (m_sysAudioCodecID != 0) {
         printf("FLQQ,system audio encoder initialize\n\n");
         //output audio encoder initialize
-        pCodec_aCard = avcodec_find_encoder(m_sysAudioCodecID);
+        pCodec_aCard = avlibInterface::m_avcodec_find_encoder(m_sysAudioCodecID);
         if (!pCodec_aCard) {
             printf("Can not find output audio encoder! (没有找到合适的编码器！)\n");
             return false;
         }
-        m_pSysCodecContext = avcodec_alloc_context3(pCodec_aCard);
+        m_pSysCodecContext = avlibInterface::m_avcodec_alloc_context3(pCodec_aCard);
         m_pSysCodecContext->channels = m_channels_card;
         //        pCodecCtx_aCard->channel_layout = av_get_default_channel_layout(m_channels_card);
         m_pSysCodecContext->channel_layout = static_cast<uint64_t>(m_channels_card_layout);
         //                pCodecCtx_aCard->channels = av_get_channel_layout_nb_channels(pAudioStream->codec->channel_layout);
         if (m_pSysCodecContext->channel_layout == 0) {
             m_pSysCodecContext->channel_layout = AV_CH_LAYOUT_STEREO;
-            m_pSysCodecContext->channels = av_get_channel_layout_nb_channels(m_pSysCodecContext->channel_layout);
+            m_pSysCodecContext->channels = avlibInterface::m_av_get_channel_layout_nb_channels(m_pSysCodecContext->channel_layout);
         }
         m_pSysCodecContext->sample_rate = m_samplerate_card;
         m_pSysCodecContext->sample_fmt = pCodec_aCard->sample_fmts[0];
@@ -613,14 +614,14 @@ bool CAVOutputStream::open(QString path)
         if (m_videoFormatContext->oformat->flags & AVFMT_GLOBALHEADER)
             m_pSysCodecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
-        if (avcodec_open2(m_pSysCodecContext, pCodec_aCard, nullptr) < 0) {
+        if (avlibInterface::m_avcodec_open2(m_pSysCodecContext, pCodec_aCard, nullptr) < 0) {
             printf("Failed to open ouput audio encoder! (编码器打开失败！)\n");
             return false;
         }
 
         //Add a new stream to output,should be called by the user before avformat_write_header() for muxing
         if (!m_bMix) {
-            m_sysAudioStream = avformat_new_stream(m_videoFormatContext, pCodec_aCard);
+            m_sysAudioStream = avlibInterface::m_avformat_new_stream(m_videoFormatContext, pCodec_aCard);
             if (m_sysAudioStream == nullptr) {
                 return false;
             }
@@ -642,15 +643,15 @@ bool CAVOutputStream::open(QString path)
     }
 
     //Open output URL,set before avformat_write_header() for muxing 打开输出URL，在avformat_write_header()之前设置muxing
-    if (avio_open(&m_videoFormatContext->pb, m_path, AVIO_FLAG_READ_WRITE) < 0) {
+    if (avlibInterface::m_avio_open(&m_videoFormatContext->pb, m_path, AVIO_FLAG_READ_WRITE) < 0) {
         printf("Failed to open output file! (输出文件打开失败！)\n");
         return false;
     }
     //Show some Information
-    av_dump_format(m_videoFormatContext, 0, m_path, 1);
+    avlibInterface::m_av_dump_format(m_videoFormatContext, 0, m_path, 1);
 
     //Write File Header 写文件头
-    avformat_write_header(m_videoFormatContext, nullptr);
+    avlibInterface::m_avformat_write_header(m_videoFormatContext, nullptr);
 
     //m_vid_framecnt = 0;
     m_micAudioFrame = 0;
@@ -675,11 +676,11 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
     if (nullptr == frame._frame || frame._width <= 0 || frame._height <= 0) {
         return -1;
     }
-    AVFrame *pRgbFrame = av_frame_alloc();
+    AVFrame *pRgbFrame = avlibInterface::m_av_frame_alloc();
     pRgbFrame->width = frame._width;
     pRgbFrame->height = frame._height;
     pRgbFrame->format = AV_PIX_FMT_RGB32;
-    if (0 == av_frame_get_buffer(pRgbFrame, 32)) {
+    if (0 == avlibInterface::m_av_frame_get_buffer(pRgbFrame, 32)) {
         pRgbFrame->width  = frame._width;
         pRgbFrame->height = frame._height;
         //pRgbFrame->format = AV_PIX_FMT_RGB32;
@@ -691,7 +692,7 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
         pRgbFrame->data[0]     = frame._frame;
     }
     if (nullptr == m_pVideoSwsContext) {
-        m_pVideoSwsContext = sws_getContext(m_width, m_height,
+        m_pVideoSwsContext = avlibInterface::m_sws_getContext(m_width, m_height,
                                             AV_PIX_FMT_RGB32,
                                             pCodecCtx->width,
                                             pCodecCtx->height,
@@ -701,33 +702,33 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
                                             nullptr,
                                             nullptr);
     }
-    if (av_frame_apply_cropping(pRgbFrame, AV_FRAME_CROP_UNALIGNED) < 0) {
+    if (avlibInterface::m_av_frame_apply_cropping(pRgbFrame, AV_FRAME_CROP_UNALIGNED) < 0) {
         AVERROR(ERANGE);
         return 2;
     }
-    sws_scale(m_pVideoSwsContext, pRgbFrame->data, pRgbFrame->linesize, 0, pCodecCtx->height, pFrameYUV->data, pFrameYUV->linesize);
+    avlibInterface::m_sws_scale(m_pVideoSwsContext, pRgbFrame->data, pRgbFrame->linesize, 0, pCodecCtx->height, pFrameYUV->data, pFrameYUV->linesize);
     pFrameYUV->width  = pRgbFrame->width;//test
     pFrameYUV->height = pRgbFrame->height;
     pFrameYUV->format = AV_PIX_FMT_YUV420P;
     AVPacket packet;
     packet.data = nullptr;
     packet.size = 0;
-    av_init_packet(&packet);
+    avlibInterface::m_av_init_packet(&packet);
     int enc_got_frame = 0;
-    avcodec_encode_video2(pCodecCtx, &packet, pFrameYUV, &enc_got_frame);
+    avlibInterface::m_avcodec_encode_video2(pCodecCtx, &packet, pFrameYUV, &enc_got_frame);
     if (1 == enc_got_frame) {
         packet.stream_index = m_videoStream->index;
         packet.pts = static_cast<int64_t>(m_videoStream->time_base.den) * frame._time / AV_TIME_BASE;
         int ret = writeFrame(m_videoFormatContext, &packet);
         if (ret < 0) {
-            char tmpErrString[128] = {0};
-            printf("Could not write video frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
-            av_packet_unref(&packet);
+            //char tmpErrString[128] = {0};
+            //printf("Could not write video frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
+            avlibInterface::m_av_packet_unref(&packet);
             return ret;
         }
     }
-    av_free_packet(&packet);
-    av_frame_free(&pRgbFrame);
+    avlibInterface::m_av_free_packet(&packet);
+    avlibInterface::m_av_frame_free(&pRgbFrame);
     fflush(stdout);
     return 0;
 }
@@ -745,11 +746,11 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
     int ret;
     if (nullptr == m_pMicAudioSwrContext) {
         // Initialize the resampler to be able to convert audio sample formats
-        m_pMicAudioSwrContext = swr_alloc_set_opts(nullptr,
-                                                   av_get_default_channel_layout(m_pMicCodecContext->channels),
+        m_pMicAudioSwrContext = avlibInterface::m_swr_alloc_set_opts(nullptr,
+                                                   avlibInterface::m_av_get_default_channel_layout(m_pMicCodecContext->channels),
                                                    m_pMicCodecContext->sample_fmt,
                                                    m_pMicCodecContext->sample_rate,
-                                                   av_get_default_channel_layout(stream->codec->channels),
+                                                   avlibInterface::m_av_get_default_channel_layout(stream->codec->channels),
                                                    stream->codec->sample_fmt,
                                                    stream->codec->sample_rate,
                                                    0,
@@ -760,7 +761,7 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
         * If the sample rates differ, this case has to be handled differently
         */
         assert(m_pMicCodecContext->sample_rate == stream->codec->sample_rate);
-        swr_init(m_pMicAudioSwrContext);
+        avlibInterface::m_swr_init(m_pMicAudioSwrContext);
         if (nullptr == m_micAudioFifo) {
             m_micAudioFifo = audioFifoAlloc(m_pMicCodecContext->sample_fmt, m_pMicCodecContext->channels, 20 * inputFrame->nb_samples);
         }
@@ -772,9 +773,9 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
     * block for convenience.
     */
 
-    if ((ret = av_samples_alloc(m_convertedMicSamples, nullptr, m_pMicCodecContext->channels, inputFrame->nb_samples, m_pMicCodecContext->sample_fmt, 0)) < 0) {
+    if ((ret = avlibInterface::m_av_samples_alloc(m_convertedMicSamples, nullptr, m_pMicCodecContext->channels, inputFrame->nb_samples, m_pMicCodecContext->sample_fmt, 0)) < 0) {
         printf("Could not allocate converted input samples\n");
-        av_freep(&(*m_convertedMicSamples)[0]);
+        avlibInterface::m_av_freep(&(*m_convertedMicSamples)[0]);
         free(*m_convertedMicSamples);
         return ret;
     }
@@ -785,7 +786,7 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
     */
     /** Convert the samples using the resampler. */
     //extended_data -> m_convertedMicSamples
-    if ((ret = swr_convert(m_pMicAudioSwrContext, m_convertedMicSamples, inputFrame->nb_samples, const_cast<const uint8_t **>(inputFrame->extended_data), inputFrame->nb_samples)) < 0) {
+    if ((ret = avlibInterface::m_swr_convert(m_pMicAudioSwrContext, m_convertedMicSamples, inputFrame->nb_samples, const_cast<const uint8_t **>(inputFrame->extended_data), inputFrame->nb_samples)) < 0) {
         printf("Could not convert input samples\n");
         return ret;
     }
@@ -823,7 +824,7 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
     */
     while (audioFifoSize(m_micAudioFifo) >= frameSize) {
         /** Temporary storage of the output samples of the frame written to the file. */
-        AVFrame *outputFrame = av_frame_alloc();
+        AVFrame *outputFrame = avlibInterface::m_av_frame_alloc();
         if (!outputFrame) {
             return AVERROR(ENOMEM);
         }
@@ -845,14 +846,14 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
         outputFrame->channel_layout = m_pMicCodecContext->channel_layout;
         outputFrame->format = m_pMicCodecContext->sample_fmt;
         outputFrame->sample_rate = m_pMicCodecContext->sample_rate;
-        outputFrame->pts = av_rescale_q(m_nLastAudioPresentationTime, rational, m_micAudioStream->time_base);
+        outputFrame->pts = avlibInterface::m_av_rescale_q(m_nLastAudioPresentationTime, rational, m_micAudioStream->time_base);
         /**
         * Allocate the samples of the created frame. This call will make
         * sure that the audio frame can hold as many samples as specified.
         */
-        if ((ret = av_frame_get_buffer(outputFrame, 0)) < 0) {
+        if ((ret = avlibInterface::m_av_frame_get_buffer(outputFrame, 0)) < 0) {
             printf("Could not allocate output frame samples\n");
-            av_frame_free(&outputFrame);
+            avlibInterface::m_av_frame_free(&outputFrame);
             return ret;
         }
 
@@ -869,7 +870,7 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
         /** Encode one frame worth of audio samples. */
         /** Packet used for temporary storage. */
         AVPacket outputPacket;
-        av_init_packet(&outputPacket);
+        avlibInterface::m_av_init_packet(&outputPacket);
         outputPacket.data = nullptr;
         outputPacket.size = 0;
         int enc_got_frame_a = 0;
@@ -878,28 +879,28 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
             * The output audio stream encoder is used to do this.
             */
         //outputFrame -> outputPacket
-        if ((ret = avcodec_encode_audio2(m_pMicCodecContext, &outputPacket, outputFrame, &enc_got_frame_a)) < 0) {
+        if ((ret = avlibInterface::m_avcodec_encode_audio2(m_pMicCodecContext, &outputPacket, outputFrame, &enc_got_frame_a)) < 0) {
             printf("Could not encode frame\n");
-            av_packet_unref(&outputPacket);
+            avlibInterface::m_av_packet_unref(&outputPacket);
             return ret;
         }
         /** Write one audio frame from the temporary packet to the output file. */
         if (enc_got_frame_a) {
             outputPacket.stream_index = m_micAudioStream->index;
             printf("output_packet.stream_index1  audio_st =%d\n", outputPacket.stream_index);
-            outputPacket.pts = av_rescale_q(m_nLastAudioPresentationTime, rational, m_micAudioStream->time_base);
+            outputPacket.pts = avlibInterface::m_av_rescale_q(m_nLastAudioPresentationTime, rational, m_micAudioStream->time_base);
             //write -> outputPacket
             if ((ret = writeFrame(m_videoFormatContext, &outputPacket)) < 0) {
-                char tmpErrString[128] = {0};
-                printf("Could not write audio frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
-                av_packet_unref(&outputPacket);
+                //char tmpErrString[128] = {0};
+                //printf("Could not write audio frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
+                avlibInterface::m_av_packet_unref(&outputPacket);
                 return ret;
             }
-            av_packet_unref(&outputPacket);
+            avlibInterface::m_av_packet_unref(&outputPacket);
         }
         m_nb_samples += outputFrame->nb_samples;
         m_nLastAudioPresentationTime += timeinc;
-        av_frame_free(&outputFrame);
+        avlibInterface::m_av_frame_free(&outputFrame);
     }// -- while end
     return 0;
 }
@@ -910,35 +911,35 @@ int CAVOutputStream::writeMicToMixAudioFrame(AVStream *stream, AVFrame *inputFra
     int ret;
     if (nullptr == m_pMicAudioSwrContext) {
         // Initialize the resampler to be able to convert audio sample formats
-        m_pMicAudioSwrContext = swr_alloc_set_opts(nullptr,
-                                                   av_get_default_channel_layout(m_pMicCodecContext->channels),
+        m_pMicAudioSwrContext = avlibInterface::m_swr_alloc_set_opts(nullptr,
+                                                   avlibInterface::m_av_get_default_channel_layout(m_pMicCodecContext->channels),
                                                    m_pMicCodecContext->sample_fmt,
                                                    m_pMicCodecContext->sample_rate,
-                                                   av_get_default_channel_layout(stream->codec->channels),
+                                                   avlibInterface::m_av_get_default_channel_layout(stream->codec->channels),
                                                    stream->codec->sample_fmt,
                                                    stream->codec->sample_rate,
                                                    0,
                                                    nullptr);
         assert(m_pMicCodecContext->sample_rate == stream->codec->sample_rate);
-        swr_init(m_pMicAudioSwrContext);
+        avlibInterface::m_swr_init(m_pMicAudioSwrContext);
         if (nullptr == m_micAudioFifo) {
             m_micAudioFifo = audioFifoAlloc(m_pMicCodecContext->sample_fmt, m_pMicCodecContext->channels, 20 * inputFrame->nb_samples);
         }
         is_fifo_scardinit++;
     }
-    if ((ret = av_samples_alloc(m_convertedMicSamples, nullptr, m_pMicCodecContext->channels, inputFrame->nb_samples, m_pMicCodecContext->sample_fmt, 0)) < 0) {
+    if ((ret = avlibInterface::m_av_samples_alloc(m_convertedMicSamples, nullptr, m_pMicCodecContext->channels, inputFrame->nb_samples, m_pMicCodecContext->sample_fmt, 0)) < 0) {
         printf("Could not allocate converted input samples\n");
-        av_freep(&(*m_convertedMicSamples)[0]);
+        avlibInterface::m_av_freep(&(*m_convertedMicSamples)[0]);
         free(*m_convertedMicSamples);
         return ret;
     }
-    if ((ret = swr_convert(m_pMicAudioSwrContext, m_convertedMicSamples, inputFrame->nb_samples, const_cast<const uint8_t **>(inputFrame->extended_data), inputFrame->nb_samples)) < 0) {
+    if ((ret = avlibInterface::m_swr_convert(m_pMicAudioSwrContext, m_convertedMicSamples, inputFrame->nb_samples, const_cast<const uint8_t **>(inputFrame->extended_data), inputFrame->nb_samples)) < 0) {
         printf("Could not convert input samples\n");
         return ret;
     }
     int fifoSpace = audioFifoSpace(m_micAudioFifo);
     if (fifoSpace < inputFrame->nb_samples) {
-        fifoSpace = av_audio_fifo_size(m_micAudioFifo);
+        fifoSpace = avlibInterface::m_av_audio_fifo_size(m_micAudioFifo);
         if (INT_MAX / 2 - fifoSpace < inputFrame->nb_samples) {
             qDebug() << "麦克风音频缓存空间不对称!";
             return AVERROR(EINVAL);
@@ -975,7 +976,7 @@ int CAVOutputStream::write_filter_audio_frame(AVStream *&outst, AVCodecContext *
     /** Encode one frame worth of audio samples. */
     /** Packet used for temporary storage. */
     AVPacket output_packet;
-    av_init_packet(&output_packet);
+    avlibInterface::m_av_init_packet(&output_packet);
     output_packet.data = nullptr;
     output_packet.size = 0;
 
@@ -985,9 +986,9 @@ int CAVOutputStream::write_filter_audio_frame(AVStream *&outst, AVCodecContext *
      * Encode the audio frame and store it in the temporary packet.
      * The output audio stream encoder is used to do this.
      */
-    if ((ret = avcodec_encode_audio2(codecCtx_audio, &output_packet, output_frame, &enc_got_frame_a)) < 0) {
+    if ((ret = avlibInterface::m_avcodec_encode_audio2(codecCtx_audio, &output_packet, output_frame, &enc_got_frame_a)) < 0) {
         printf("Could not encode frame\n");
-        av_packet_unref(&output_packet);
+        avlibInterface::m_av_packet_unref(&output_packet);
         return ret;
     }
 
@@ -1014,19 +1015,19 @@ int CAVOutputStream::write_filter_audio_frame(AVStream *&outst, AVCodecContext *
 
 
         if ((ret = writeFrame(m_videoFormatContext, &output_packet)) < 0) {
-            char tmpErrString[128] = {0};
-            printf("Could not write audio frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
-            av_packet_unref(&output_packet);
+            //char tmpErrString[128] = {0};
+            //printf("Could not write audio frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
+            avlibInterface::m_av_packet_unref(&output_packet);
             return ret;
         }
 
-        av_packet_unref(&output_packet);
+        avlibInterface::m_av_packet_unref(&output_packet);
     }//if (enc_got_frame_a)
 
 
     //     m_nb_samples += output_frame->nb_samples;
 
-    av_frame_unref(output_frame);
+    avlibInterface::m_av_frame_unref(output_frame);
     //     av_frame_free(&output_frame);
     return ret;
 }
@@ -1035,8 +1036,8 @@ void CAVOutputStream::writeMixAudio()
 {
     if (is_fifo_scardinit < 2 || nullptr == m_sysAudioFifo || nullptr == m_micAudioFifo)
         return;
-    AVFrame *pFrame_scard = av_frame_alloc();
-    AVFrame *pFrame_temp = av_frame_alloc();
+    AVFrame *pFrame_scard = avlibInterface::m_av_frame_alloc();
+    AVFrame *pFrame_temp = avlibInterface::m_av_frame_alloc();
     int sysFifosize = audioFifoSize(m_sysAudioFifo);
     int micFifoSize = audioFifoSize(m_micAudioFifo);
     int minMicFrameSize = m_pMicCodecContext->frame_size;
@@ -1049,44 +1050,44 @@ void CAVOutputStream::writeMixAudio()
         pFrame_scard->channel_layout = m_pSysCodecContext->channel_layout;
         pFrame_scard->format = m_pSysCodecContext->sample_fmt;
         pFrame_scard->sample_rate = m_pSysCodecContext->sample_rate;
-        av_frame_get_buffer(pFrame_scard, 0);
+        avlibInterface::m_av_frame_get_buffer(pFrame_scard, 0);
         pFrame_temp->nb_samples = minMicFrameSize;
         pFrame_temp->channel_layout = m_pMicCodecContext->channel_layout;
         pFrame_temp->format = m_pMicCodecContext->sample_fmt;
         pFrame_temp->sample_rate = m_pMicCodecContext->sample_rate;
-        av_frame_get_buffer(pFrame_temp, 0);
+        avlibInterface::m_av_frame_get_buffer(pFrame_temp, 0);
         //从缓冲区读取系统音频帧数据
         audioRead(m_sysAudioFifo, reinterpret_cast<void **>(pFrame_scard->data), minSysFrameSize);
         //从缓冲区读取麦克风音频帧数据
         audioRead(m_micAudioFifo, reinterpret_cast<void **>(pFrame_temp->data), minMicFrameSize);
         int nFifoSamples = pFrame_scard->nb_samples;
         if (m_start_mix_time == -1) {
-            printf("First Audio timestamp: %ld \n", av_gettime());
-            m_start_mix_time = av_gettime();
+            //printf("First Audio timestamp: %ld \n", av_gettime());
+            m_start_mix_time = avlibInterface::m_av_gettime();
         }
-        int64_t lTimeStamp = av_gettime() - m_start_mix_time;
+        int64_t lTimeStamp = avlibInterface::m_av_gettime() - m_start_mix_time;
         int64_t timeshift = (int64_t)nFifoSamples * AV_TIME_BASE / (int64_t)(audio_amix_st->codec->sample_rate);
         if (lTimeStamp - timeshift > m_nLastAudioMixPresentationTime) {
             m_nLastAudioMixPresentationTime = lTimeStamp - timeshift;
         }
-        pFrame_scard->pts = av_rescale_q(m_nLastAudioMixPresentationTime, time_base_q, audio_amix_st->time_base);
+        pFrame_scard->pts = avlibInterface::m_av_rescale_q(m_nLastAudioMixPresentationTime, time_base_q, audio_amix_st->time_base);
         pFrame_temp->pts = pFrame_scard->pts;
         int64_t timeinc = (int64_t)pCodecCtx_amix->frame_size * AV_TIME_BASE / (int64_t)(audio_amix_st->codec->sample_rate);
         m_nLastAudioMixPresentationTime += timeinc;
-        ret = av_buffersrc_add_frame_flags(buffersrc_ctx1, pFrame_temp, 0);
+        ret = avlibInterface::m_av_buffersrc_add_frame_flags(buffersrc_ctx1, pFrame_temp, 0);
         if (ret < 0) {
             printf("Mixer: failed to call av_buffersrc_add_frame (speaker)\n");
             return;
         }
-        ret = av_buffersrc_add_frame_flags(buffersrc_ctx2, pFrame_scard, 0);
+        ret = avlibInterface::m_av_buffersrc_add_frame_flags(buffersrc_ctx2, pFrame_scard, 0);
         if (ret < 0) {
             printf("Mixer: failed to call av_buffersrc_add_frame (microphone)\n");
             return;
         }
         while (isWriteFrame()) {
-            AVFrame *pFrame_out = av_frame_alloc();
+            AVFrame *pFrame_out = avlibInterface::m_av_frame_alloc();
             //AVERROR(EAGAIN) 返回这个表示还没转换完成既 不存在帧，则返回AVERROR（EAGAIN）
-            ret = av_buffersink_get_frame(buffersink_ctx, pFrame_out);
+            ret = avlibInterface::m_av_buffersink_get_frame(buffersink_ctx, pFrame_out);
             if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
                 //printf("%d %d \n", AVERROR(EAGAIN), AVERROR_EOF);
             }
@@ -1103,11 +1104,11 @@ void CAVOutputStream::writeMixAudio()
             fflush(stdout);
             if (pFrame_out->data[0] != nullptr) {
                 AVPacket packet_out;
-                av_init_packet(&packet_out);
+                avlibInterface::m_av_init_packet(&packet_out);
                 packet_out.data = nullptr;
                 packet_out.size = 0;
                 int got_packet_ptr;
-                ret = avcodec_encode_audio2(pCodecCtx_amix, &packet_out, pFrame_out, &got_packet_ptr);
+                ret = avlibInterface::m_avcodec_encode_audio2(pCodecCtx_amix, &packet_out, pFrame_out, &got_packet_ptr);
                 if (ret < 0) {
                     printf("Mixer: failed to call avcodec_decode_audio4\n");
                     break;
@@ -1117,12 +1118,12 @@ void CAVOutputStream::writeMixAudio()
                     packet_out.pts = m_mixCount * pCodecCtx_amix->frame_size;
                     packet_out.dts = packet_out.pts;
                     packet_out.duration = pCodecCtx_amix->frame_size;
-                    packet_out.pts = av_rescale_q_rnd(packet_out.pts,
+                    packet_out.pts = avlibInterface::m_av_rescale_q_rnd(packet_out.pts,
                                                       pCodecCtx_amix->time_base,
                                                       pCodecCtx_amix->time_base,
                                                       (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
                     packet_out.dts = packet_out.pts;
-                    packet_out.duration = av_rescale_q_rnd(packet_out.duration,
+                    packet_out.duration = avlibInterface::m_av_rescale_q_rnd(packet_out.duration,
                                                            pCodecCtx_amix->time_base,
                                                            audio_amix_st->time_base,
                                                            (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
@@ -1134,9 +1135,9 @@ void CAVOutputStream::writeMixAudio()
                     }
                     printf("-------Mixer: write frame to file got_packet_ptr =%d\n", got_packet_ptr);
                 }
-                av_free_packet(&packet_out);
+                avlibInterface::m_av_free_packet(&packet_out);
             }
-            av_frame_free(&pFrame_out);
+            avlibInterface::m_av_frame_free(&pFrame_out);
         }
     } else {
         tmpFifoFailed++;
@@ -1146,8 +1147,8 @@ void CAVOutputStream::writeMixAudio()
             return;
         }
     }
-    av_frame_free(&pFrame_scard);
-    av_frame_free(&pFrame_temp);
+    avlibInterface::m_av_frame_free(&pFrame_scard);
+    avlibInterface::m_av_frame_free(&pFrame_temp);
 }
 
 int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, int64_t lTimeStamp)
@@ -1159,11 +1160,11 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
     //因为Fifo里有之前未读完的数据，所以从Fifo队列里面取出的第一个音频包的时间戳等于当前时间减掉缓冲部分的时长
     if (nullptr == m_pSysAudioSwrContext) {
         // Initialize the resampler to be able to convert audio sample formats
-        m_pSysAudioSwrContext = swr_alloc_set_opts(nullptr,
-                                                   av_get_default_channel_layout(m_pSysCodecContext->channels),
+        m_pSysAudioSwrContext = avlibInterface::m_swr_alloc_set_opts(nullptr,
+                                                   avlibInterface::m_av_get_default_channel_layout(m_pSysCodecContext->channels),
                                                    m_pSysCodecContext->sample_fmt,
                                                    m_pSysCodecContext->sample_rate,
-                                                   av_get_default_channel_layout(stream->codec->channels),
+                                                   avlibInterface::m_av_get_default_channel_layout(stream->codec->channels),
                                                    stream->codec->sample_fmt,
                                                    stream->codec->sample_rate,
                                                    0,
@@ -1175,7 +1176,7 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
         * If the sample rates differ, this case has to be handled differently
         */
         assert(m_pSysCodecContext->sample_rate == stream->codec->sample_rate);
-        swr_init(m_pSysAudioSwrContext);
+        avlibInterface::m_swr_init(m_pSysAudioSwrContext);
         if (nullptr == m_sysAudioFifo) {
             m_sysAudioFifo = audioFifoAlloc(m_pSysCodecContext->sample_fmt, m_pSysCodecContext->channels, 20 * inputFrame->nb_samples);
         }
@@ -1186,8 +1187,8 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
     * block for convenience.为方便起见，在一个连续块中为所有通道的样本分配内存。
     */
 
-    if ((ret = av_samples_alloc(m_convertedSysSamples, nullptr, m_pSysCodecContext->channels, inputFrame->nb_samples, m_pSysCodecContext->sample_fmt, 0)) < 0) {
-        av_freep(&(*m_convertedSysSamples)[0]);
+    if ((ret = avlibInterface::m_av_samples_alloc(m_convertedSysSamples, nullptr, m_pSysCodecContext->channels, inputFrame->nb_samples, m_pSysCodecContext->sample_fmt, 0)) < 0) {
+        avlibInterface::m_av_freep(&(*m_convertedSysSamples)[0]);
         free(*m_convertedSysSamples);
         return ret;
     }
@@ -1197,7 +1198,7 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
     * This requires a temporary storage provided by converted_input_samples.这需要converted_input_samples提供的临时存储。
     */
     /** Convert the samples using the resampler. */
-    if ((ret = swr_convert(m_pSysAudioSwrContext, m_convertedSysSamples, inputFrame->nb_samples, const_cast<const uint8_t **>(inputFrame->extended_data), inputFrame->nb_samples)) < 0) {
+    if ((ret = avlibInterface::m_swr_convert(m_pSysAudioSwrContext, m_convertedSysSamples, inputFrame->nb_samples, const_cast<const uint8_t **>(inputFrame->extended_data), inputFrame->nb_samples)) < 0) {
         return ret;
     }
     AVRational rational = {1, AV_TIME_BASE };
@@ -1231,7 +1232,7 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
         */
     while (audioFifoSize(m_sysAudioFifo) >= output_frame_size) {
         /** Temporary storage of the output samples of the frame written to the file. */
-        AVFrame *output_frame = av_frame_alloc();
+        AVFrame *output_frame = avlibInterface::m_av_frame_alloc();
         if (!output_frame) {
             return AVERROR(ENOMEM);
         }
@@ -1253,14 +1254,14 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
         output_frame->channel_layout = m_pSysCodecContext->channel_layout;
         output_frame->format = m_pSysCodecContext->sample_fmt;
         output_frame->sample_rate = m_pSysCodecContext->sample_rate;
-        output_frame->pts = av_rescale_q(m_nLastAudioCardPresentationTime, rational, m_sysAudioStream->time_base);
+        output_frame->pts = avlibInterface::m_av_rescale_q(m_nLastAudioCardPresentationTime, rational, m_sysAudioStream->time_base);
         /**
             * Allocate the samples of the created frame. This call will make
             * sure that the audio frame can hold as many samples as specified.
             */
-        if ((ret = av_frame_get_buffer(output_frame, 0)) < 0) {
+        if ((ret = avlibInterface::m_av_frame_get_buffer(output_frame, 0)) < 0) {
             printf("Could not allocate output frame samples\n");
-            av_frame_free(&output_frame);
+            avlibInterface::m_av_frame_free(&output_frame);
             return ret;
         }
 
@@ -1275,7 +1276,7 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
         /** Encode one frame worth of audio samples. */
         /** Packet used for temporary storage. */
         AVPacket outputPacket;
-        av_init_packet(&outputPacket);
+        avlibInterface::m_av_init_packet(&outputPacket);
         outputPacket.data = nullptr;
         outputPacket.size = 0;
         int enc_got_frame_a = 0;
@@ -1283,26 +1284,26 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
                 * Encode the audio frame and store it in the temporary packet.
                 * The output audio stream encoder is used to do this.
                 */
-        if ((ret = avcodec_encode_audio2(m_pSysCodecContext, &outputPacket, output_frame, &enc_got_frame_a)) < 0) {
+        if ((ret = avlibInterface::m_avcodec_encode_audio2(m_pSysCodecContext, &outputPacket, output_frame, &enc_got_frame_a)) < 0) {
             printf("Could not encode frame\n");
-            av_packet_unref(&outputPacket);
+            avlibInterface::m_av_packet_unref(&outputPacket);
             return ret;
         }
         /** Write one audio frame from the temporary packet to the output file. */
         if (enc_got_frame_a) {
             outputPacket.stream_index = m_sysAudioStream->index;
-            outputPacket.pts = av_rescale_q(m_nLastAudioCardPresentationTime, rational, m_sysAudioStream->time_base);
+            outputPacket.pts = avlibInterface::m_av_rescale_q(m_nLastAudioCardPresentationTime, rational, m_sysAudioStream->time_base);
             if ((ret = writeFrame(m_videoFormatContext, &outputPacket)) < 0) {
-                char tmpErrString[128] = {0};
-                printf("Could not write audio frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
-                av_packet_unref(&outputPacket);
+                //char tmpErrString[128] = {0};
+                //printf("Could not write audio frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
+                avlibInterface::m_av_packet_unref(&outputPacket);
                 return ret;
             }
-            av_packet_unref(&outputPacket);
+            avlibInterface::m_av_packet_unref(&outputPacket);
         }//if (enc_got_frame_a)
         m_nb_samples += output_frame->nb_samples;
         m_nLastAudioCardPresentationTime += timeinc;
-        av_frame_free(&output_frame);
+        avlibInterface::m_av_frame_free(&output_frame);
     }// -- while end
     return 0;
 }
@@ -1312,17 +1313,17 @@ int CAVOutputStream::writeSysToMixAudioFrame(AVStream *stream, AVFrame *inputFra
     Q_UNUSED(lTimeStamp)
     int ret;
     if (nullptr == m_pSysAudioSwrContext) {
-        m_pSysAudioSwrContext = swr_alloc_set_opts(nullptr,
-                                                   av_get_default_channel_layout(m_pSysCodecContext->channels),
+        m_pSysAudioSwrContext = avlibInterface::m_swr_alloc_set_opts(nullptr,
+                                                   avlibInterface::m_av_get_default_channel_layout(m_pSysCodecContext->channels),
                                                    m_pSysCodecContext->sample_fmt,
                                                    m_pSysCodecContext->sample_rate,
-                                                   av_get_default_channel_layout(stream->codec->channels),
+                                                   avlibInterface::m_av_get_default_channel_layout(stream->codec->channels),
                                                    stream->codec->sample_fmt,
                                                    stream->codec->sample_rate,
                                                    0,
                                                    nullptr);
         assert(m_pSysCodecContext->sample_rate == stream->codec->sample_rate);
-        swr_init(m_pSysAudioSwrContext);
+        avlibInterface::m_swr_init(m_pSysAudioSwrContext);
         if (nullptr == m_sysAudioFifo) {
             //根据采样格式，通道数，样本个数 划分系统音频fifo缓存空间的大小
             m_sysAudioFifo = audioFifoAlloc(m_pSysCodecContext->sample_fmt, m_pSysCodecContext->channels, 20 * inputFrame->nb_samples);
@@ -1331,8 +1332,8 @@ int CAVOutputStream::writeSysToMixAudioFrame(AVStream *stream, AVFrame *inputFra
     }
 
     //为nb_samples样本分配一个样本缓冲区，并相应地填充数据指针和行大小。已分配的样本缓冲区可以通过使用av_freep(&audio_data[0])来释放。已分配的数据将被初始化为静默。
-    if ((ret = av_samples_alloc(m_convertedSysSamples, nullptr, m_pSysCodecContext->channels, inputFrame->nb_samples, m_pSysCodecContext->sample_fmt, 0)) < 0) {
-        av_freep(&(*m_convertedSysSamples)[0]);
+    if ((ret = avlibInterface::m_av_samples_alloc(m_convertedSysSamples, nullptr, m_pSysCodecContext->channels, inputFrame->nb_samples, m_pSysCodecContext->sample_fmt, 0)) < 0) {
+        avlibInterface::m_av_freep(&(*m_convertedSysSamples)[0]);
         free(*m_convertedSysSamples);
         return ret;
     }
@@ -1342,13 +1343,13 @@ int CAVOutputStream::writeSysToMixAudioFrame(AVStream *stream, AVFrame *inputFra
      * 如果提供的输入大于输出空间，则输入将被缓冲。
      * 可以通过使用swr_get_out_samples()检索给定输入样本数量所需输出样本数量的上限来避免这种缓冲。只要有可能，转换将直接运行而不进行复制。
      */
-    if ((ret = swr_convert(m_pSysAudioSwrContext, m_convertedSysSamples, inputFrame->nb_samples, const_cast<const uint8_t **>(inputFrame->extended_data), inputFrame->nb_samples)) < 0) {
+    if ((ret = avlibInterface::m_swr_convert(m_pSysAudioSwrContext, m_convertedSysSamples, inputFrame->nb_samples, const_cast<const uint8_t **>(inputFrame->extended_data), inputFrame->nb_samples)) < 0) {
         return ret;
     }
 
     int fifoSpace = audioFifoSpace(m_sysAudioFifo);
     if (fifoSpace < inputFrame->nb_samples) {
-        fifoSpace = av_audio_fifo_size(m_sysAudioFifo);
+        fifoSpace = avlibInterface::m_av_audio_fifo_size(m_sysAudioFifo);
         if (INT_MAX / 2 - fifoSpace < inputFrame->nb_samples) {
             qDebug() << "系统音频缓存空间不对称!";
             return AVERROR(EINVAL);
@@ -1394,11 +1395,11 @@ void  CAVOutputStream::close()
     }
 
     if (m_videoStream) {
-        avcodec_close(m_videoStream->codec);
+        avlibInterface::m_avcodec_close(m_videoStream->codec);
         m_videoStream = nullptr;
     }
     if (m_micAudioStream) {
-        avcodec_close(m_micAudioStream->codec);
+        avlibInterface::m_avcodec_close(m_micAudioStream->codec);
         m_micAudioStream = nullptr;
     }
     //    if (audio_scard_st)
@@ -1407,35 +1408,35 @@ void  CAVOutputStream::close()
     //        audio_scard_st = nullptr;
     //    }
     if (audio_amix_st) {
-        avcodec_close(audio_amix_st->codec);
+        avlibInterface::m_avcodec_close(audio_amix_st->codec);
         audio_amix_st = nullptr;
     }
 
     if (m_out_buffer) {
-        av_free(m_out_buffer);
+        avlibInterface::m_av_free(m_out_buffer);
         m_out_buffer = nullptr;
     }
     if (m_convertedMicSamples) {
-        av_freep(&m_convertedMicSamples[0]);
+        avlibInterface::m_av_freep(&m_convertedMicSamples[0]);
         m_convertedMicSamples = nullptr;
     }
     if (m_convertedSysSamples) {
-        av_freep(&m_convertedSysSamples[0]);
+        avlibInterface::m_av_freep(&m_convertedSysSamples[0]);
         m_convertedSysSamples = nullptr;
     }
     is_fifo_scardinit = 0;
     if (m_videoFormatContext) {
-        avio_close(m_videoFormatContext->pb);
+        avlibInterface::m_avio_close(m_videoFormatContext->pb);
     }
-    avformat_free_context(m_videoFormatContext);
+    avlibInterface::m_avformat_free_context(m_videoFormatContext);
     m_videoFormatContext = nullptr;
     m_videoCodecID  = AV_CODEC_ID_NONE;
     m_micAudioCodecID = AV_CODEC_ID_NONE;
     m_sysAudioCodecID = AV_CODEC_ID_NONE;
     if (m_bMix) {
-        av_frame_free(&mMic_frame);
-        av_frame_free(&mSpeaker_frame);
-        avfilter_graph_free(&filter_graph);
+        avlibInterface::m_av_frame_free(&mMic_frame);
+        avlibInterface::m_av_frame_free(&mSpeaker_frame);
+        avlibInterface::m_avfilter_graph_free(&filter_graph);
     }
 }
 void CAVOutputStream::setIsOverWrite(bool isCOntinue)
@@ -1447,28 +1448,28 @@ int CAVOutputStream::audioRead(AVAudioFifo *af, void **data, int nb_samples)
 {
     QMutexLocker locker(&m_audioReadWriteMutex);
     //qDebug() << "+++++++++++++++++++++++ 读音频帧 +++++++++++++++++++++++";
-    return av_audio_fifo_read(af, data, nb_samples);
+    return avlibInterface::m_av_audio_fifo_read(af, data, nb_samples);
 }
 
 int CAVOutputStream::audioWrite(AVAudioFifo *af, void **data, int nb_samples)
 {
     QMutexLocker locker(&m_audioReadWriteMutex);
     //qDebug() << "----------------------- 写音频帧";
-    return av_audio_fifo_write(af, data, nb_samples);
+    return avlibInterface::m_av_audio_fifo_write(af, data, nb_samples);
 }
 
 int CAVOutputStream::writeFrame(AVFormatContext *s, AVPacket *pkt)
 {
     QMutexLocker locker(&m_writeFrameMutex);
     //qDebug() << "+++++++++++++++++++++++ 写视频帧";
-    return av_interleaved_write_frame(s, pkt);
+    return avlibInterface::m_av_interleaved_write_frame(s, pkt);
 }
 
 int CAVOutputStream::writeTrailer(AVFormatContext *s)
 {
     //qDebug() << "+++++++++++++++++++++++ 写视频尾";
     QMutexLocker locker(&m_writeFrameMutex);
-    return av_write_trailer(s);
+    return avlibInterface::m_av_write_trailer(s);
 }
 
 /**
@@ -1480,35 +1481,35 @@ int CAVOutputStream::audioFifoSpace(AVAudioFifo *af)
 {
     //qDebug() << "+++++++++++++++++++++++ 1";
     QMutexLocker locker(&m_audioReadWriteMutex);
-    return av_audio_fifo_space(af);
+    return avlibInterface::m_av_audio_fifo_space(af);
 }
 
 int CAVOutputStream::audioFifoSize(AVAudioFifo *af)
 {
     //qDebug() << "+++++++++++++++++++++++ 2";
     QMutexLocker locker(&m_audioReadWriteMutex);
-    return av_audio_fifo_size(af);
+    return avlibInterface::m_av_audio_fifo_size(af);
 }
 
 int CAVOutputStream::audioFifoRealloc(AVAudioFifo *af, int nb_samples)
 {
     //qDebug() << "+++++++++++++++++++++++ 3";
     QMutexLocker locker(&m_audioReadWriteMutex);
-    return av_audio_fifo_realloc(af, nb_samples);
+    return avlibInterface::m_av_audio_fifo_realloc(af, nb_samples);
 }
 
 AVAudioFifo *CAVOutputStream::audioFifoAlloc(AVSampleFormat sample_fmt, int channels, int nb_samples)
 {
     //qDebug() << "+++++++++++++++++++++++ 4";
     QMutexLocker locker(&m_audioReadWriteMutex);
-    return av_audio_fifo_alloc(sample_fmt, channels, nb_samples);
+    return avlibInterface::m_av_audio_fifo_alloc(sample_fmt, channels, nb_samples);
 }
 
 void CAVOutputStream::audioFifoFree(AVAudioFifo *af)
 {
     //qDebug() << "+++++++++++++++++++++++ 5";
     QMutexLocker locker(&m_audioReadWriteMutex);
-    av_audio_fifo_free(af);
+    avlibInterface::m_av_audio_fifo_free(af);
 }
 
 bool CAVOutputStream::isWriteFrame()
