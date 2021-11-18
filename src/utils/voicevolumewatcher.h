@@ -39,6 +39,11 @@ public:
     // 将原来的run()方法改为定时器的槽函数，便于截图快速退出
     // 取消之前的线程方式，采用定时器监测
     void slotvoiceVolumeWatcher();
+    /**
+     * @brief 返回当前是否有系统声卡
+     * @return
+     */
+    bool getystemAudioState();
 protected:
     void initDeviceWatcher();
     void onCardsChanged(const QString &value);
@@ -75,6 +80,11 @@ private:
     //bool m_isRecoding;
     bool m_coulduse;
     QTimer *m_watchTimer = nullptr; //新增麦克风定时检测
+
+    /**
+     * @brief 是否存在系统声卡
+     */
+    bool m_isExistSystemAudio ;
 };
 
 

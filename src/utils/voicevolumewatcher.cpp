@@ -27,7 +27,8 @@
 
 voiceVolumeWatcher::voiceVolumeWatcher(QObject *parent)
     : QObject(parent)
-    , m_coulduse(true)
+    , m_coulduse(false)
+    , m_isExistSystemAudio(false)
 {
     //m_isRecoding = false;
 
@@ -36,6 +37,7 @@ voiceVolumeWatcher::voiceVolumeWatcher(QObject *parent)
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered("com.deepin.daemon.Audio").value()) {
         initDeviceWatcher();
         initConnections();
+        m_isExistSystemAudio = true;
     }
     m_watchTimer = new QTimer(this);
     connect(m_watchTimer, &QTimer::timeout, this, &voiceVolumeWatcher::slotvoiceVolumeWatcher); //新增定时器检测麦克风
@@ -85,6 +87,11 @@ void voiceVolumeWatcher::slotvoiceVolumeWatcher()
             emit sigRecodeState(couldUse);
         }
     }
+}
+
+bool voiceVolumeWatcher::getystemAudioState()
+{
+    return m_isExistSystemAudio;
 }
 
 // 麦克风声音检测

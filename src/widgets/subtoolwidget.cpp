@@ -104,6 +104,8 @@ SubToolWidget::~SubToolWidget()
 
 void SubToolWidget::initWidget()
 {
+    t_saveGif = false;
+    t_saveMkv = false;
     hintFilter = new HintFilter(this);
     initRecordLabel();
     initShotLabel();
@@ -119,8 +121,6 @@ void SubToolWidget::initRecordLabel()
     QList<ToolButton *> btnList;
     DPalette pa;
 
-    bool t_saveGif = false;
-    bool t_saveMkv = false;
     int t_frameRate = 0;
 
     ConfigSettings *t_settings = ConfigSettings::instance();
@@ -174,7 +174,13 @@ void SubToolWidget::initRecordLabel()
     m_microphoneAction->setText(tr("Microphone"));
     m_microphoneAction->setCheckable(true);
     m_systemAudioAction->setText(tr("System Audio"));
+    m_systemAudioAction->setCheckable(true);
 
+    //麦克风和系统声卡初始状态默认为失能
+    m_microphoneAction->setEnabled(false);
+    m_haveMicroPhone = false;
+    m_systemAudioAction->setEnabled(false);
+    m_haveSystemAudio = false;
     if (Utils::themeType == 1) {
         m_microphoneAction->setIcon(QIcon(":/newUI/normal/microphone.svg"));
         m_systemAudioAction->setIcon(QIcon(":/newUI/normal/audio frequency.svg"));
@@ -185,55 +191,12 @@ void SubToolWidget::initRecordLabel()
 
 
 
-    connect(m_microphoneAction, &QAction::triggered, this, [ = ] {
-        if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
-        {
-            installTipHint(m_audioButton, tr("Sound On"));
-            m_audioButton->setIcon(QIcon::fromTheme("volume_normal"));
-        }
+    //当m_microphoneAction被点击或者程序主动调用trigg()时，信号会发送
+    connect(m_microphoneAction, &QAction::triggered, this, &SubToolWidget::onChangeAudioType);
 
-        if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
-        {
-            m_audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
-        }
+    //当m_systemAudioAction被点击或者程序主动调用trigg()时，信号会发送
+    connect(m_systemAudioAction, &QAction::triggered, this, &SubToolWidget::onChangeAudioType);
 
-        if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
-        {
-
-            m_audioButton->setIcon(QIcon::fromTheme("audio frequency_normal"));
-        }
-
-        if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
-        {
-
-            installTipHint(m_audioButton, tr("Sound Off"));
-            m_audioButton->setIcon(QIcon::fromTheme("mute_normal"));
-        }
-    });
-
-    connect(m_systemAudioAction, &QAction::triggered, this, [ = ] {
-        if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
-        {
-            installTipHint(m_audioButton, tr("Sound On"));
-            m_audioButton->setIcon(QIcon::fromTheme("volume_normal"));
-        }
-
-        if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
-        {
-            m_audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
-        }
-
-        if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked())
-        {
-            m_audioButton->setIcon(QIcon::fromTheme("audio frequency_normal"));
-        }
-
-        if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked())
-        {
-            installTipHint(m_audioButton, tr("Sound Off"));
-            m_audioButton->setIcon(QIcon::fromTheme("mute_normal"));
-        }
-    });
     m_haveMicroPhone = true;
     m_microphoneAction->setCheckable(true);
     m_microphoneAction->trigger();
@@ -246,9 +209,6 @@ void SubToolWidget::initRecordLabel()
     m_audioMenu->addSeparator();
     m_audioMenu->addAction(m_systemAudioAction);
     m_audioButton->setMenu(m_audioMenu);
-
-    connect(m_microphoneAction, SIGNAL(triggered(bool)), this, SIGNAL(microphoneActionChecked(bool)));
-    connect(m_systemAudioAction, SIGNAL(triggered(bool)), this, SIGNAL(systemAudioActionChecked(bool)));
 
     m_keyBoardButton = new ToolButton();
 
@@ -508,12 +468,13 @@ void SubToolWidget::initRecordLabel()
         fps20Action->setEnabled(false);
         fps24Action->setEnabled(false);
         fps30Action->setEnabled(false);
-        m_audioButton->setEnabled(false);
-        if (m_microphoneAction->isChecked()) {
-            m_microphoneAction->trigger();
-        }
         m_microphoneAction->setEnabled(false);
+        m_microphoneAction->setChecked(true);
+        m_microphoneAction->trigger();
         m_systemAudioAction->setEnabled(false);
+        m_systemAudioAction->setChecked(false);
+        m_systemAudioAction->trigger();
+        m_audioButton->setEnabled(false);
 
     } else if (t_saveMkv == true) {
         mkvAction->setChecked(true);
@@ -526,11 +487,14 @@ void SubToolWidget::initRecordLabel()
         m_audioButton->setEnabled(true);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
-            m_microphoneAction->setChecked(true);
+            m_microphoneAction->setChecked(false);
+            m_microphoneAction->trigger();
         }
 
         if (m_haveSystemAudio) {
             m_systemAudioAction->setEnabled(true);
+            m_systemAudioAction->setChecked(false);
+            m_systemAudioAction->trigger();
         }
 
     } else {
@@ -544,11 +508,16 @@ void SubToolWidget::initRecordLabel()
         m_audioButton->setEnabled(true);
         if (m_haveMicroPhone) {
             m_microphoneAction->setEnabled(true);
-            m_microphoneAction->setChecked(true);
+            m_microphoneAction->setChecked(false);
+            //trigger()函数会改变当前的checked状态
+            m_microphoneAction->trigger();
         }
 
         if (m_haveSystemAudio) {
             m_systemAudioAction->setEnabled(true);
+            m_microphoneAction->setChecked(false);
+            //trigger()函数会改变当前的checked状态
+            m_microphoneAction->trigger();
         }
 
     }
@@ -556,6 +525,8 @@ void SubToolWidget::initRecordLabel()
 
     connect(gifAction, &QAction::triggered, this, [ = ](bool checked) {
         Q_UNUSED(checked);
+        t_saveGif = true;
+        t_saveMkv = false;
         t_settings->setValue("recordConfig", "lossless_recording", false);
         t_settings->setValue("recordConfig", "save_as_gif", true);
         fps5Action->setEnabled(false);
@@ -564,16 +535,13 @@ void SubToolWidget::initRecordLabel()
         fps24Action->setEnabled(false);
         fps30Action->setEnabled(false);
         m_audioButton->setEnabled(false);
-        if (m_microphoneAction->isChecked()) {
-            m_microphoneAction->trigger();
-        }
-        m_microphoneAction->setEnabled(false);
-        m_systemAudioAction->setEnabled(false);
-        //emit gifActionChecked(checked);
+        changeRecordLaunchMode();
     });
 
     connect(mp4Action, &QAction::triggered, this, [ = ](bool checked) {
         Q_UNUSED(checked);
+        t_saveGif = false;
+        t_saveMkv = false;
         t_settings->setValue("recordConfig", "lossless_recording", false);
         t_settings->setValue("recordConfig", "save_as_gif", false);
         fps5Action->setEnabled(true);
@@ -582,22 +550,13 @@ void SubToolWidget::initRecordLabel()
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
         m_audioButton->setEnabled(true);
-        if (m_haveMicroPhone) {
-            m_microphoneAction->setEnabled(true);
-            m_microphoneAction->setChecked(true);
-        }
-        if (m_haveSystemAudio) {
-            m_systemAudioAction->setEnabled(true);
-        }
-        // 切换视频格式时，音频图标刷新
-        if (m_haveMicroPhone && m_haveSystemAudio) {
-            m_audioButton->setIcon(QIcon::fromTheme("volume_normal"));
-        }
-        //emit mp4ActionChecked(checked);
+        changeRecordLaunchMode();
     });
 
     connect(mkvAction, &QAction::triggered, this, [ = ](bool checked) {
         Q_UNUSED(checked);
+        t_saveGif = false;
+        t_saveMkv = true;
         t_settings->setValue("recordConfig", "lossless_recording", true);
         t_settings->setValue("recordConfig", "save_as_gif", false);
         fps5Action->setEnabled(true);
@@ -606,18 +565,7 @@ void SubToolWidget::initRecordLabel()
         fps24Action->setEnabled(true);
         fps30Action->setEnabled(true);
         m_audioButton->setEnabled(true);
-        if (m_haveMicroPhone) {
-            m_microphoneAction->setEnabled(true);
-            m_microphoneAction->setChecked(true);
-        }
-        if (m_haveSystemAudio) {
-            m_systemAudioAction->setEnabled(true);
-        }
-        // 切换视频格式时，音频图标刷新
-        if (m_haveMicroPhone && m_haveSystemAudio) {
-            m_audioButton->setIcon(QIcon::fromTheme("volume_normal"));
-        }
-        //emit mkvActionChecked(checked);
+        changeRecordLaunchMode();
     });
 
     connect(t_fpsGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
@@ -1275,34 +1223,11 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
 void SubToolWidget::setMicroPhoneEnable(bool status)
 {
     qDebug() << "mic status" << status;
-    if (status) {
-        m_haveMicroPhone = true;
-
-        if (m_microphoneAction->isEnabled()) {
-            return;
-        } else {
-            m_microphoneAction->setEnabled(true);
-            if (m_microphoneAction->isChecked()) {
-                return;
-            } else {
-                m_microphoneAction->trigger();
-            }
-        }
-    } else {
-        m_haveMicroPhone = false;
-        if (!m_microphoneAction->isEnabled()) {
-            return;
-        } else {
-            if (!m_microphoneAction->isChecked()) {
-                m_microphoneAction->setEnabled(false);
-                return;
-            } else {
-                m_microphoneAction->trigger();
-                m_microphoneAction->setEnabled(false);
-            }
-        }
-    }
-    update();
+    m_haveMicroPhone = status;
+    m_microphoneAction->setEnabled(status);
+    m_microphoneAction->setChecked(!status);
+    //trigger()函数会改变当前的checked状态
+    m_microphoneAction->trigger();
 }
 
 void SubToolWidget::setCameraDeviceEnable(bool status)
@@ -1334,13 +1259,78 @@ void SubToolWidget::setCameraDeviceEnable(bool status)
 
 void SubToolWidget::setSystemAudioEnable(bool status)
 {
-    if (status) {
-        m_systemAudioAction->setEnabled(true);
-        m_systemAudioAction->setCheckable(true);
-        m_systemAudioAction->trigger();
-        m_haveSystemAudio = true;
+    m_haveSystemAudio = status;
+    m_systemAudioAction->setEnabled(status);
+    m_systemAudioAction->setCheckable(status);
+    m_systemAudioAction->setChecked(!status);
+    m_systemAudioAction->trigger();
+}
+// 当m_microphoneAction或m_systemAudioAction被点击或者程序主动调用trigg()时，会触发工具栏音频采集图标的改变及发射实际需要录制的音频
+void SubToolWidget::onChangeAudioType(bool checked)
+{
+    Q_UNUSED(checked);
+    if (m_microphoneAction->isChecked() && m_systemAudioAction->isChecked()) {
+        installTipHint(m_audioButton, tr("Sound On"));
+        m_audioButton->setIcon(QIcon::fromTheme("volume_normal"));
+        setRecordAudioType(true, true);
     }
 
+    if (m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked()) {
+        m_audioButton->setIcon(QIcon::fromTheme("microphone_normal"));
+        setRecordAudioType(true, false);
+    }
+
+    if (!m_microphoneAction->isChecked() && m_systemAudioAction->isChecked()) {
+        m_audioButton->setIcon(QIcon::fromTheme("audio frequency_normal"));
+        setRecordAudioType(false, true);
+    }
+
+    if (!m_microphoneAction->isChecked() && !m_systemAudioAction->isChecked()) {
+        installTipHint(m_audioButton, tr("Sound Off"));
+        m_audioButton->setIcon(QIcon::fromTheme("mute_normal"));
+        setRecordAudioType(false, false);
+    }
+}
+//此方法为保持切换录屏保存类型时,不改变音频已经设置的选项
+//原理：只要是gif就不会录制麦克风和系统音频，如果不是gif会保持之前的情况
+void SubToolWidget::changeRecordLaunchMode()
+{
+    bool isEnabled = false;
+    if (t_saveGif) {
+        isEnabled = false;
+    } else {
+        isEnabled = true;
+    }
+    if (m_haveMicroPhone) {
+        m_microphoneAction->setEnabled(isEnabled);
+        if (m_microphoneAction->isChecked()) {
+            m_microphoneAction->setChecked(false);
+        } else {
+            m_microphoneAction->setChecked(true);
+        }
+        m_microphoneAction->trigger();
+    }
+    if (m_haveSystemAudio) {
+        m_systemAudioAction->setEnabled(isEnabled);
+        if (m_systemAudioAction->isChecked()) {
+            m_systemAudioAction->setChecked(false);
+        } else {
+            m_systemAudioAction->setChecked(true);
+        }
+        m_systemAudioAction->trigger();
+    }
+}
+
+//设置录屏需要采集的声音
+void SubToolWidget::setRecordAudioType(bool setMicAudio, bool setSysAudio)
+{
+    if (t_saveGif == true) {
+        emit microphoneActionChecked(false);
+        emit systemAudioActionChecked(false);
+    } else {
+        emit microphoneActionChecked(setMicAudio);
+        emit systemAudioActionChecked(setSysAudio);
+    }
 }
 /*
 void SubToolWidget::setIsZhaoxinPlatform(bool isZhaoxin)

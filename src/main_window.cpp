@@ -1614,6 +1614,7 @@ void MainWindow::updateToolBarPos()
         m_pVoiceVolumeWatcher = new voiceVolumeWatcher(this);
         m_pVoiceVolumeWatcher->setWatch(true); //取消之前的线程方式，采用定时器监测
         connect(m_pVoiceVolumeWatcher, SIGNAL(sigRecodeState(bool)), m_toolBar, SLOT(setMicroPhoneEnable(bool)));
+        m_toolBar->setSystemAudioEnable(m_pVoiceVolumeWatcher->getystemAudioState());
         m_toolBarInit = true;
 
         m_pCameraWatcher = new CameraWatcher(this);

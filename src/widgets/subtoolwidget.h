@@ -37,7 +37,7 @@ class SubToolWidget : public DStackedWidget
 {
     Q_OBJECT
 public:
-    explicit SubToolWidget(MainWindow* pmainwindow,DWidget *parent = nullptr);
+    explicit SubToolWidget(MainWindow *pmainwindow, DWidget *parent = nullptr);
     ~SubToolWidget();
 
     void initWidget();
@@ -99,6 +99,23 @@ public slots:
     void setCameraDeviceEnable(bool status);
     void setSystemAudioEnable(bool status);
     //void setIsZhaoxinPlatform(bool isZhaoxin);
+    /**
+     * @brief 当m_microphoneAction或m_systemAudioAction被点击或者程序主动调用trigg()时，会触发工具栏音频
+     * 采集图标的改变及发射实际需要录制的音频
+     * @param checked
+     */
+    void onChangeAudioType(bool checked);
+
+protected:
+    /**
+     * @brief 此方法为保持切换录屏保存类型时不改变音频已经设置的选项
+     */
+    void changeRecordLaunchMode();
+
+    /**
+     * @brief 用来设置 当前录制制视频所采集的音频信息
+     */
+    void setRecordAudioType(bool setMicAudio, bool setSysAudio);
 private:
     /**
      * @brief 录屏功能工具栏
@@ -109,7 +126,6 @@ private:
      */
     DLabel *m_shotSubTool = nullptr;
     QString m_currentType;
-    QAction *m_systemAudioAction = nullptr;
     /**
      * @brief 滚动截图工具栏按钮
      */
@@ -158,7 +174,16 @@ private:
      * @brief 截图功能中选项按钮
      */
     ToolButton *m_shotOptionButton = nullptr;
+    /**
+     * @brief 采集麦克风音频功能
+     *  注意： QAction 的trigger()函数会改变当前的checked状态
+     */
     QAction *m_microphoneAction = nullptr;
+    /**
+     * @brief 采集系统音频功能
+     *  注意： QAction 的trigger()函数会改变当前的checked状态
+     */
+    QAction *m_systemAudioAction = nullptr;
     /**
      * @brief 录屏功能中音频工具按钮
      */
@@ -188,7 +213,8 @@ private:
     QButtonGroup *m_shotBtnGroup = nullptr;
 
     MainWindow *m_pMainWindow = nullptr;
-
+    bool t_saveGif;
+    bool t_saveMkv;
 };
 
 #endif // SUBTOOLWIDGET_H

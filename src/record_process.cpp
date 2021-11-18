@@ -463,6 +463,8 @@ void RecordProcess::setSystemAudio(const bool status)
 void RecordProcess::startRecord()
 {
     m_framerate = settings->value("recordConfig", "mkv_framerate").toString().toInt();
+    qDebug() << "m_selectedMic: " << m_selectedMic;
+    qDebug() << "m_selectedSystemAudio: " << m_selectedSystemAudio;
     if (settings->value("recordConfig", "save_as_gif").toBool()) {
         recordType = RECORD_TYPE_GIF;
         recordAudioInputType = RECORD_TYPE_GIF;
