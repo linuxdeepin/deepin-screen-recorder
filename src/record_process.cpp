@@ -102,7 +102,7 @@ void RecordProcess::onStartTranscode()
     arg << "-i";
     arg << savePath;
     arg << "-r";
-    arg << "24";
+    arg << "12";
     arg << path.replace("mp4", "gif");
     m_pTranscodeProcess->start("ffmpeg", arg);
 }
@@ -375,6 +375,8 @@ void RecordProcess::recordVideo()
     }
     arguments << QString("-preset");
     arguments << QString("ultrafast");
+    arguments << QString("-vsync");
+    arguments << QString("passthrough");
     arguments << QString("-vf");
     arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
 #endif

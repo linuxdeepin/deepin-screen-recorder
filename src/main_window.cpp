@@ -600,6 +600,7 @@ void MainWindow::initShortcut()
         }
     });
     //截图模式/录屏模式（未做穿透）/滚动模式）帮助面板
+    helpSC->setAutoRepeat(false);
     connect(helpSC, &QShortcut::activated, this, [ = ] {
         qDebug() << "shortcut : helpSC (key: ctrl+shift+?)";
         onViewShortcut();
@@ -4166,11 +4167,10 @@ void MainWindow::onViewShortcut()
     QString param2 = "-p=" + QString::number(pos.x()) + "," + QString::number(pos.y());
     shortcutString << "-b" << param1 << param2;
 
-//    QProcess *shortcutViewProc = new QProcess(this);
-    //shortcutViewProc->startDetached("killall deepin-shortcut-viewer");
-    QProcess::startDetached("deepin-shortcut-viewer", shortcutString);
-
-//    connect(shortcutViewProc, SIGNAL(finished(int)), shortcutViewProc, SLOT(deleteLater()));
+    QProcess *shortcutViewProc = new QProcess(this);
+    shortcutViewProc->startDetached("deepin-shortcut-viewer", shortcutString);
+    //QProcess::startDetached();
+    connect(shortcutViewProc, SIGNAL(finished(int)), shortcutViewProc, SLOT(deleteLater()));
 
     if (m_isShapesWidgetExist) {
         m_isShiftPressed =  false;
