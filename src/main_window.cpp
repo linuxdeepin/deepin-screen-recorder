@@ -4170,7 +4170,11 @@ void MainWindow::onViewShortcut()
     QStringList shortcutString;
     QString param1 = "-j=" + sc.toStr();
     QString param2 = "-p=" + QString::number(pos.x()) + "," + QString::number(pos.y());
-    shortcutString << "-b" << param1 << param2;
+    if (Utils::isWaylandMode) {
+        shortcutString << param1 << param2;
+    } else {
+        shortcutString << "-b" << param1 << param2;
+    }
 
     QProcess *shortcutViewProc = new QProcess(this);
     shortcutViewProc->startDetached("deepin-shortcut-viewer", shortcutString);
