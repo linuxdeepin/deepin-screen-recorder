@@ -250,6 +250,10 @@ public:
         ~ScreenInfo() {}
     };
     // Split attributes and resource for speed up start.
+    /**
+     * @brief 初始化MainWindow
+     */
+    void initMainWindow();
     void initAttributes();
     void initResource();
     void initScreenShot();

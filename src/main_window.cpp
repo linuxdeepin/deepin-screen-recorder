@@ -107,6 +107,11 @@ MainWindow::MainWindow(DWidget *parent) :
     m_initScreenRecorder(false),
     m_initScroll(false)
 {
+    initMainWindow();
+}
+
+void MainWindow::initMainWindow()
+{
     if (Utils::isTabletEnvironment) {
         m_cursorBound = 20;
     } else {
