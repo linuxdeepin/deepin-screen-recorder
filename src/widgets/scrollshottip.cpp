@@ -63,11 +63,11 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
     installEventFilter(this);
     QPixmap warmingImg ;
     //警告图片
-    if (Utils::themeType == 1) {
-        warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
-    } else {
-        warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
-    }
+//    if (Utils::themeType == 1) {
+    warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
+//    } else {
+//        warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
+//    }
     this->setMinimumSize(100, TIP_HEIGHT);
 
     m_warmingIconButton = new DIconButton(this);
@@ -156,9 +156,9 @@ void ScrollShotTip::showTip(TipType tipType)
 void ScrollShotTip::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
-    int radius = 0;
+    int radius = 20;
     //不同的提示类型其背景的圆角矩形半径不同
-    switch (m_tipType) {
+    /*switch (m_tipType) {
     case TipType::StartScrollShotTip:
         radius = 20;
         break;
@@ -177,7 +177,7 @@ void ScrollShotTip::paintEvent(QPaintEvent *)
     case TipType::InvalidAreaShotTip:
         radius = 20;
         break;
-    }
+    }*/
     //获取模糊背景的像素图
     QPixmap blurPixmap = getTooltipBackground();
     if (Utils::themeType == 1) {

@@ -173,8 +173,10 @@ void SubToolWidget::initRecordLabel()
     m_systemAudioAction = new QAction(m_audioMenu);
     m_microphoneAction->setText(tr("Microphone"));
     m_microphoneAction->setCheckable(true);
+    m_microphoneAction->setChecked(false);
     m_systemAudioAction->setText(tr("System Audio"));
     m_systemAudioAction->setCheckable(true);
+    m_systemAudioAction->setChecked(false);
 
     //麦克风和系统声卡初始状态默认为失能
     m_microphoneAction->setEnabled(false);
@@ -197,12 +199,12 @@ void SubToolWidget::initRecordLabel()
     //当m_systemAudioAction被点击或者程序主动调用trigg()时，信号会发送
     connect(m_systemAudioAction, &QAction::triggered, this, &SubToolWidget::onChangeAudioType);
 
-    m_haveMicroPhone = true;
-    m_microphoneAction->setCheckable(true);
-    m_microphoneAction->trigger();
-    m_systemAudioAction->setCheckable(true);
-    m_systemAudioAction->trigger();
-    m_haveSystemAudio = true;
+//    m_haveMicroPhone = true;
+//    m_microphoneAction->setCheckable(true);
+//    m_microphoneAction->trigger();
+//    m_systemAudioAction->setCheckable(true);
+//    m_systemAudioAction->trigger();
+//    m_haveSystemAudio = true;
 
     //    m_systemAudioAction->setDisabled(!AudioUtils().canVirtualCardOutput());
     m_audioMenu->addAction(m_microphoneAction);
