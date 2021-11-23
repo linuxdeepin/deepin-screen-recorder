@@ -99,7 +99,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Take Screen Scrollshots</source>
-        <translation type="unfinished"/>
+        <translation>Ota näytön vierityskuvia</translation>
     </message>
 </context>
 <context>

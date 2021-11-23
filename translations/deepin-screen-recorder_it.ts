@@ -99,7 +99,7 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
     <message>
         <source>Take Screen Scrollshots</source>
-        <translation type="unfinished"/>
+        <translation>Acquisisci uno screenshot a scorrimento</translation>
     </message>
 </context>
 <context>

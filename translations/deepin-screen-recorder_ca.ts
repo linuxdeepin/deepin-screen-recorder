@@ -99,7 +99,7 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Take Screen Scrollshots</source>
-        <translation type="unfinished"/>
+        <translation>Fes captures amb desplaçament</translation>
     </message>
 </context>
 <context>

@@ -98,7 +98,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Take Screen Scrollshots</source>
-        <translation type="unfinished"/>
+        <translation>دومىلىما سۈرەت تۇتۇش</translation>
     </message>
 </context>
 <context>

@@ -99,7 +99,7 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Take Screen Scrollshots</source>
-        <translation type="unfinished"/>
+        <translation>Captura de desplazamiento</translation>
     </message>
 </context>
 <context>

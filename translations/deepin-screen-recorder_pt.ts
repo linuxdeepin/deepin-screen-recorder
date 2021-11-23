@@ -99,7 +99,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Take Screen Scrollshots</source>
-        <translation type="unfinished"/>
+        <translation>Tirar scrollshots do ecrã</translation>
     </message>
 </context>
 <context>

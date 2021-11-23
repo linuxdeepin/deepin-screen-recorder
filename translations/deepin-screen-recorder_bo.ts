@@ -99,7 +99,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Take Screen Scrollshots</source>
-        <translation type="unfinished"/>
+        <translation>དྲས་རིས་བསྒྲིལ་བ།</translation>
     </message>
 </context>
 <context>

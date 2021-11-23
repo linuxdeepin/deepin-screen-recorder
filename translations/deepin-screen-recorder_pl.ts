@@ -35,7 +35,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>View</source>
-        <translation>Widok</translation>
+        <translation>Podgląd</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
@@ -99,7 +99,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Take Screen Scrollshots</source>
-        <translation type="unfinished"/>
+        <translation>Zrób pionowe zrzuty ekranu</translation>
     </message>
 </context>
 <context>
@@ -313,7 +313,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation>Opcję</translation>
+        <translation>Opcje</translation>
     </message>
     <message>
         <source>Start/Recording</source>
@@ -359,7 +359,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>System Audio</source>
-        <translation>System audio</translation>
+        <translation>Audio systemowe</translation>
     </message>
     <message>
         <source>Sound Off</source>
@@ -387,7 +387,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation>Opcję</translation>
+        <translation>Opcje</translation>
     </message>
     <message>
         <source>Format:</source>
