@@ -446,12 +446,12 @@ public slots:
     * @brief Wayland 键盘按键按下槽函数
     * @param keyCode: 释放的键盘按键代号
     */
-    void onKeyboardPressWayland(QString keyStr);
+    void onKeyboardPressWayland(const int key);
     /**
     * @brief Wayland 键盘按键释放槽函数
     * @param keyCode: 释放的键盘按键代号
     */
-    void onKeyboardReleaseWayland(QString keyStr);
+    void onKeyboardReleaseWayland(const int key);
 
     /**
      * @brief 通过x11从底层获取键盘按下事件
@@ -528,9 +528,11 @@ public slots:
     void exitScreenCuptureEvent();
     void showPreviewWidgetImage(QImage img);//显示预览窗口和图片
 protected:
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
     int getAction(QEvent *event);
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) override;
     void resizeBottom(QMouseEvent *event);
     void resizeLeft(QMouseEvent *event);
     void resizeRight(QMouseEvent *event);
@@ -822,7 +824,7 @@ private:
     /**
      * @brief 功能类型
      */
-    int m_functionType = status::record;  //0: record, 1: shot , 2: scrollshot
+    unsigned int m_functionType = status::record;  //0: record, 1: shot , 2: scrollshot
     /**
      * @brief 键盘开关状态
      */

@@ -25,159 +25,166 @@
 
 
 const ShowButtons::KeyDescription ShowButtons::keyDescriptions[] = {
-    { "ESC", BUTTON_KEY_ESCAPE},
-    { "F1", BUTTON_KEY_F1},
-    { "F2", BUTTON_KEY_F2},
-    { "F3", BUTTON_KEY_F3},
+    { "ESC", KEY_ESCAPE, Qt::Key_Escape},
+    { "F1", KEY_F1, Qt::Key_F1},
+    { "F2", KEY_F2, Qt::Key_F2},
+    { "F3", KEY_F3, Qt::Key_F3},
 
-    { "F4", BUTTON_KEY_F4},
-    { "F5", BUTTON_KEY_F5},
-    { "F6", BUTTON_KEY_F6},
-    { "F7", BUTTON_KEY_F7},
+    { "F4", KEY_F4, Qt::Key_F4},
+    { "F5", KEY_F5, Qt::Key_F5},
+    { "F6", KEY_F6, Qt::Key_F6},
+    { "F7", KEY_F7, Qt::Key_F7},
 
-    { "F8", BUTTON_KEY_F8},
-    { "F9", BUTTON_KEY_F9},
-    { "F10", BUTTON_KEY_F10},
-    { "F11", BUTTON_KEY_F11},
+    { "F8", KEY_F8, Qt::Key_F8},
+    { "F9", KEY_F9, Qt::Key_F9},
+    { "F10", KEY_F10, Qt::Key_F10},
+    { "F11", KEY_F11, Qt::Key_F11},
 
-    { "F12", BUTTON_KEY_F12},
-    { "1", BUTTON_KEY_1},
-    { "2", BUTTON_KEY_2},
-    { "3", BUTTON_KEY_3},
+    { "F12", KEY_F12, Qt::Key_F12},
+    { "1", KEY_1, Qt::Key_1},
+    { "2", KEY_2, Qt::Key_2},
+    { "3", KEY_3, Qt::Key_3},
 
-    { "4", BUTTON_KEY_4},
-    { "5", BUTTON_KEY_5},
-    { "6", BUTTON_KEY_6},
-    { "7", BUTTON_KEY_7},
-    { "8", BUTTON_KEY_8},
-    { "9", BUTTON_KEY_9},
-    { "0", BUTTON_KEY_0},
-    { "-", BUTTON_KEY_MINUS},
+    { "4", KEY_4, Qt::Key_4},
+    { "5", KEY_5, Qt::Key_5},
+    { "6", KEY_6, Qt::Key_6},
+    { "7", KEY_7, Qt::Key_7},
+    { "8", KEY_8, Qt::Key_8},
+    { "9", KEY_9, Qt::Key_9},
+    { "0", KEY_0, Qt::Key_0},
+    { "-", KEY_MINUS, Qt::Key_Minus},
 
-    { "+", BUTTON_KEY_PLUS},
-    { "=", BUTTON_KEY_EQUAL},
-    { "A", BUTTON_KEY_A},
-    { "B", BUTTON_KEY_B},
+    { "+", KEY_PLUS, Qt::Key_Plus},
+    { "=", KEY_EQUAL, Qt::Key_Equal},
+    { "A", KEY_A, Qt::Key_A},
+    { "B", KEY_B, Qt::Key_B},
 
-    { "C", BUTTON_KEY_C},
-    { "D", BUTTON_KEY_D},
-    { "E", BUTTON_KEY_E},
-    { "F", BUTTON_KEY_F},
+    { "C", KEY_C, Qt::Key_C},
+    { "D", KEY_D, Qt::Key_D},
+    { "E", KEY_E, Qt::Key_E},
+    { "F", KEY_F, Qt::Key_F},
 
-    { "G", BUTTON_KEY_G},
-    { "H", BUTTON_KEY_H},
-    { "I", BUTTON_KEY_I},
-    { "J", BUTTON_KEY_J},
+    { "G", KEY_G, Qt::Key_G},
+    { "H", KEY_H, Qt::Key_H},
+    { "I", KEY_I, Qt::Key_I},
+    { "J", KEY_J, Qt::Key_J},
 
-    { "K", BUTTON_KEY_K},
-    { "L", BUTTON_KEY_L},
-    { "M", BUTTON_KEY_M},
-    { "N", BUTTON_KEY_N},
-    { "O", BUTTON_KEY_O},
-    { "P", BUTTON_KEY_P},
-    { "Q", BUTTON_KEY_Q},
-    { "R", BUTTON_KEY_R},
+    { "K", KEY_K, Qt::Key_K},
+    { "L", KEY_L, Qt::Key_L},
+    { "M", KEY_M, Qt::Key_M},
+    { "N", KEY_N, Qt::Key_N},
+    { "O", KEY_O, Qt::Key_O},
+    { "P", KEY_P, Qt::Key_P},
+    { "Q", KEY_Q, Qt::Key_Q},
+    { "R", KEY_R, Qt::Key_R},
 
-    { "S", BUTTON_KEY_S},
-    { "T", BUTTON_KEY_T},
-    { "U", BUTTON_KEY_U},
-    { "V", BUTTON_KEY_V},
+    { "S", KEY_S, Qt::Key_S},
+    { "T", KEY_T, Qt::Key_T},
+    { "U", KEY_U, Qt::Key_U},
+    { "V", KEY_V, Qt::Key_V},
 
-    { "W", BUTTON_KEY_W},
-    { "X", BUTTON_KEY_X},
-    { "Y", BUTTON_KEY_Y},
-    { "Z", BUTTON_KEY_Z},
+    { "W", KEY_W, Qt::Key_W},
+    { "X", KEY_X, Qt::Key_X},
+    { "Y", KEY_Y, Qt::Key_Y},
+    { "Z", KEY_Z, Qt::Key_Z},
 
-    { "[", BUTTON_KEY_BRACKET_OPEN},
-    { "]", BUTTON_KEY_BRACKET_CLOSE},
-    { ";", BUTTON_KEY_SEMICOLON},
-    { "'", BUTTON_KEY_QUOTE},
+    { "[", KEY_BRACKET_OPEN, Qt::Key_BracketLeft},
+    { "]", KEY_BRACKET_CLOSE, Qt::Key_BracketRight},
+    { ";", KEY_SEMICOLON, Qt::Key_Semicolon},
+    { "'", KEY_QUOTE, Qt::Key_QuoteDbl},
 
-    { "\\", BUTTON_KEY_BACKSLASH},
-    { "|", BUTTON_KEY_VBAR},
-    { ",", BUTTON_KEY_COMMA},
-    { ".", BUTTON_KEY_PERIOD},
-    { "/", BUTTON_KEY_SLASH},
-    { "?", BUTTON_KEY_QUESTION},
-    { "TAB", BUTTON_KEY_TAB},
-    { "Aa", BUTTON_KEY_CAPSLOCK},
+    { "\\", KEY_BACKSLASH, Qt::Key_Backslash},
+    { "|", KEY_VBAR,Qt::Key_Backslash },
+    { ",", KEY_COMMA, Qt::Key_Comma},
+    { ".", KEY_PERIOD, Qt::Key_Period},
+    { "/", KEY_SLASH,  Qt::Key_Question},
+    { "?", KEY_QUESTION, Qt::Key_Question},
+    { "TAB", KEY_TAB, Qt::Key_Tab},
+    { "Aa", KEY_CAPSLOCK, Qt::Key_CapsLock},
 
-    { "LSHIFT", BUTTON_KEY_LSHIFT},
-    { "LCTRL", BUTTON_KEY_LCONTROL},
-    { "LALT", BUTTON_KEY_LALT},
-    { "SPACE", BUTTON_KEY_SPACE},
+    { "LSHIFT", KEY_LSHIFT, Qt::Key_Shift},
+    { "LCTRL", KEY_LCONTROL, Qt::Key_Control},
+    { "LALT", KEY_LALT, Qt::Key_Alt},
+    { "SPACE", KEY_SPACE, Qt::Key_Space},
 
-    { "RALT", BUTTON_KEY_RALT},
-    { "WIN", BUTTON_KEY_LWIN},
-    { "MENU", BUTTON_KEY_MENU},
-    { "RCTRL", BUTTON_KEY_RCTRL},
+    { "RALT", KEY_RALT, Qt::Key_Alt},
+//    { "WIN", KEY_RWIN, Qt::Key_Menu},
+//    { "MENU", KEY_MENU, Qt::Key_Menu},
+    { "RCTRL", KEY_RCTRL, Qt::Key_Control},
 
-    { "RSHIFT", BUTTON_KEY_RSHIFT},
-    { "ENTER", BUTTON_KEY_ENTER},
-    { "BACKSPACE", BUTTON_KEY_BACKSPACE},
-    { "SCRLOCK", BUTTON_KEY_SCROLLLOCK},
-    { "PAUSE", BUTTON_KEY_PAUSE},
+    { "RSHIFT", KEY_RSHIFT, Qt::Key_Shift},
+    { "ENTER", KEY_ENTER, Qt::Key_Enter},
+    { "BACKSPACE", KEY_BACKSPACE, Qt::Key_Backspace},
+    { "SCRLOCK", KEY_SCROLLLOCK, Qt::Key_ScrollLock},
+    { "PAUSE", KEY_PAUSE, Qt::Key_Pause},
 
-    { "INSERT", BUTTON_KEY_INSERT},
-    { "HOME", BUTTON_KEY_HOME},
-    { "PAGEUP", BUTTON_KEY_PAGEUP},
-    { "DELETE", BUTTON_KEY_DELETE},
+    { "INSERT", KEY_INSERT, Qt::Key_Insert},
+    { "HOME", KEY_HOME, Qt::Key_Home},
+    { "PAGEUP", KEY_PAGEUP, Qt::Key_PageUp},
+    { "DELETE", KEY_DELETE, Qt::Key_Delete},
 
-    { "END", BUTTON_KEY_END},
-    { "PAGEDOWN", BUTTON_KEY_PAGEDOWN},
-    { "LEFT", BUTTON_KEY_LEFT},
-    { "UP", BUTTON_KEY_UP},
+    { "END", KEY_END, Qt::Key_End},
+    { "PAGEDOWN", KEY_PAGEDOWN, Qt::Key_PageDown},
+    { "LEFT", KEY_LEFT, Qt::Key_Left},
+    { "UP", KEY_UP, Qt::Key_Up},
 
-    { "RIGHT", BUTTON_KEY_RIGHT},
-    { "DOWN", BUTTON_KEY_DOWN},
-    { "NUM", BUTTON_KEY_NUMLOCK},
-    { "NUM /", BUTTON_KEY_DIVIDE},
-    { "NUM *", BUTTON_KEY_MULTIPLY},
-    { "NUM 7", BUTTON_KEY_NUM7},
-    { "NUM 8", BUTTON_KEY_NUM8},
+    { "RIGHT", KEY_RIGHT, Qt::Key_Right},
+    { "DOWN", KEY_DOWN, Qt::Key_Down},
+    { "NUM", KEY_NUMLOCK, Qt::Key_NumLock},
+    { "NUM /", KEY_DIVIDE, Qt::Key_Slash},
+    { "NUM *", KEY_MULTIPLY, Qt::Key_0},
+    { "NUM 7", KEY_NUM7, Qt::Key_7},
+    { "NUM 8", KEY_NUM8, Qt::Key_8},
 
-    { "NUM 9", BUTTON_KEY_NUM9},
-    { "NUM -", BUTTON_KEY_NUMMINUS},
-    { "NUM 4", BUTTON_KEY_NUM4},
-    { "NUM 5", BUTTON_KEY_NUM5},
+    { "NUM 9", KEY_NUM9, Qt::Key_9},
+    { "NUM -", KEY_NUMMINUS, Qt::Key_Minus},
+    { "NUM 4", KEY_NUM4, Qt::Key_4},
+    { "NUM 5", KEY_NUM5, Qt::Key_5},
 
-    { "NUM 6", BUTTON_KEY_NUM6},
-    { "NUM +", BUTTON_KEY_NUMPLUS},
-    { "NUM 1", BUTTON_KEY_NUM1},
-    { "NUM 2", BUTTON_KEY_NUM2},
-    { "NUM 3", BUTTON_KEY_NUM3},
-    { "NUM 0", BUTTON_KEY_NUM0},
-    { "NUM DEL", BUTTON_KEY_NUMDELETE},
-    { "NUM =", BUTTON_KEY_NUMENTER}
+    { "NUM 6", KEY_NUM6, Qt::Key_6},
+    { "NUM +", KEY_NUMPLUS, Qt::Key_Plus},
+    { "NUM 1", KEY_NUM1, Qt::Key_1},
+    { "NUM 2", KEY_NUM2, Qt::Key_2},
+    { "NUM 3", KEY_NUM3, Qt::Key_3},
+    { "NUM 0", KEY_NUM0, Qt::Key_0},
+    { "NUM DEL", KEY_NUMDELETE, Qt::Key_Delete},
+    { "NUM =", KEY_NUMENTER, Qt::Key_Enter}
 };
 
 ShowButtons::ShowButtons(DWidget *parent) : DWidget(parent)
 {
 }
 
-void ShowButtons::showContentButtons(QString keyCode)
+void ShowButtons::showContentButtons(const int key)
 {
-    if (keyCode != "") {
-        // 记录已经按下的按键信息，防止按键长按
-        if (m_keyCodeVec.contains(keyCode)) {
+    QString t_keyCode = "";
+    t_keyCode = getKeyCodeFromEventWayland(key);
+
+    if (t_keyCode != "") {
+        if (m_keyCodeVec.contains(t_keyCode)) {
             return;
         } else {
-            m_keyCodeVec.append(keyCode);
-            qDebug() << keyCode << " key press";
-            emit keyShowSignal(keyCode);
+            m_keyCodeVec.append(t_keyCode);
+            qDebug() << t_keyCode << " key press";
+            emit keyShowSignal(t_keyCode);
         }
     }
+
 }
-void ShowButtons::releaseContentButtons(QString keyCode)
+
+void ShowButtons::releaseContentButtons(const int key)
 {
-   // 释放时，从记录中移除按键信息，防止按键长按
-    if (keyCode != "") {
-        if (m_keyCodeVec.contains(keyCode)) {
-            m_keyCodeVec.removeOne(keyCode);
+    QString t_keyCode = "";
+    t_keyCode = getKeyCodeFromEventWayland(key);
+
+    if (t_keyCode != "") {
+        if (m_keyCodeVec.contains(t_keyCode)) {
+            m_keyCodeVec.removeOne(t_keyCode);
             return;
         }
     }
 }
+
 void ShowButtons::showContentButtons(unsigned char keyCode)
 {
     QString t_keyCode = "";
@@ -212,425 +219,23 @@ void ShowButtons::releaseContentButtons(unsigned char keyCode)
 QString ShowButtons::getKeyCodeFromEvent(unsigned char keyCode)
 {
     QString t_keyCode = "";
-    if (keyCode == KEY_F1) {
-        t_keyCode = "F1";
+    for (unsigned long var = 0; var < sizeof(ShowButtons::keyDescriptions) / sizeof(ShowButtons::keyDescriptions[0]); ++var) {
+        if(ShowButtons::keyDescriptions[var].x11Key == keyCode) {
+            t_keyCode = ShowButtons::keyDescriptions[var].text;
+            break;
+        }
+    }
+    return t_keyCode;
+}
+
+QString ShowButtons::getKeyCodeFromEventWayland(const int keyCode)
+{
+    QString t_keyCode = "";
+    for (unsigned long var = 0; var < sizeof(ShowButtons::keyDescriptions) / sizeof(ShowButtons::keyDescriptions[0]); ++var) {
+        if(ShowButtons::keyDescriptions[var].Qtkey == keyCode) {
+            t_keyCode = ShowButtons::keyDescriptions[var].text;
+            break;
+        }
     }
-
-    else if (keyCode == KEY_F2) {
-        t_keyCode = "F2";
-    }
-
-    else if (keyCode == KEY_F3) {
-        t_keyCode = "F3";
-    }
-
-    else if (keyCode == KEY_F4) {
-        t_keyCode = "F4";
-    }
-
-    else if (keyCode == KEY_F5) {
-        t_keyCode = "F5";
-    }
-
-    else if (keyCode == KEY_F6) {
-        t_keyCode = "F6";
-    }
-
-    else if (keyCode == KEY_F7) {
-        t_keyCode = "F7";
-    }
-
-    else if (keyCode == KEY_F8) {
-        t_keyCode = "F8";
-    }
-
-    else if (keyCode == KEY_F9) {
-        t_keyCode = "F9";
-    }
-
-    else if (keyCode == KEY_F10) {
-        t_keyCode = "F10";
-    }
-
-    else if (keyCode == KEY_F11) {
-        t_keyCode = "F11";
-    }
-
-    else if (keyCode == KEY_F12) {
-        t_keyCode = "F12";
-    }
-
-    else if (keyCode == KEY_1) {
-        t_keyCode = "1";
-    }
-
-    else if (keyCode == KEY_2) {
-        t_keyCode = "2";
-    }
-
-    else if (keyCode == KEY_3) {
-        t_keyCode = "3";
-    }
-
-    else if (keyCode == KEY_4) {
-        t_keyCode = "4";
-    }
-
-    else if (keyCode == KEY_5) {
-        t_keyCode = "5";
-    }
-
-    else if (keyCode == KEY_6) {
-        t_keyCode = "6";
-    }
-
-    else if (keyCode == KEY_7) {
-        t_keyCode = "7";
-    }
-
-    else if (keyCode == KEY_8) {
-        t_keyCode = "8";
-    }
-
-    else if (keyCode == KEY_9) {
-        t_keyCode = "9";
-    }
-
-    else if (keyCode == KEY_0) {
-        t_keyCode = "0";
-    }
-
-    if (keyCode == KEY_MINUS) {
-        t_keyCode = "-";
-    }
-
-    else if (keyCode == KEY_PLUS) {
-        t_keyCode = "+";
-    }
-
-    else if (keyCode == KEY_EQUAL) {
-        t_keyCode = "=";
-    }
-
-    else if (keyCode == KEY_A) {
-        t_keyCode = "A";
-    }
-
-    else if (keyCode == KEY_B) {
-        t_keyCode = "B";
-    }
-
-    else if (keyCode == KEY_C) {
-        t_keyCode = "C";
-    }
-
-    else if (keyCode == KEY_D) {
-        t_keyCode = "D";
-    }
-
-    else if (keyCode == KEY_E) {
-        t_keyCode = "E";
-    }
-
-    else if (keyCode == KEY_F) {
-        t_keyCode = "F";
-    }
-
-    else if (keyCode == KEY_G) {
-        t_keyCode = "G";
-    }
-
-    else if (keyCode == KEY_H) {
-        t_keyCode = "H";
-    }
-
-    else if (keyCode == KEY_I) {
-        t_keyCode = "I";
-    }
-
-    else if (keyCode == KEY_J) {
-        t_keyCode = "J";
-    }
-
-    else if (keyCode == KEY_K) {
-        t_keyCode = "K";
-    }
-
-    else if (keyCode == KEY_L) {
-        t_keyCode = "L";
-    }
-
-    else if (keyCode == KEY_M) {
-        t_keyCode = "M";
-    }
-
-    else if (keyCode == KEY_N) {
-        t_keyCode = "N";
-    }
-
-    else if (keyCode == KEY_O) {
-        t_keyCode = "O";
-    }
-
-    else if (keyCode == KEY_P) {
-        t_keyCode = "P";
-    }
-
-    else if (keyCode == KEY_Q) {
-        t_keyCode = "Q";
-    }
-
-    else if (keyCode == KEY_R) {
-        t_keyCode = "R";
-    }
-
-    else if (keyCode == KEY_S) {
-        t_keyCode = "S";
-    }
-
-    else if (keyCode == KEY_T) {
-        t_keyCode = "T";
-    }
-
-    else if (keyCode == KEY_U) {
-        t_keyCode = "U";
-    }
-
-    else if (keyCode == KEY_V) {
-        t_keyCode = "V";
-    }
-
-    else if (keyCode == KEY_W) {
-        t_keyCode = "W";
-    }
-
-    else if (keyCode == KEY_X) {
-        t_keyCode = "X";
-    }
-
-    else if (keyCode == KEY_Y) {
-        t_keyCode = "Y";
-    }
-
-    else if (keyCode == KEY_Z) {
-        t_keyCode = "Z";
-    }
-
-    else if (keyCode == KEY_BRACKET_OPEN) {
-        t_keyCode = "[";
-    }
-
-    else if (keyCode == KEY_BRACKET_CLOSE) {
-        t_keyCode = "]";
-    }
-
-    else if (keyCode == KEY_SEMICOLON) {
-        t_keyCode = ";";
-    }
-
-    else if (keyCode == KEY_QUOTE) {
-        t_keyCode = "\'";
-    }
-
-    else if (keyCode == KEY_BACKSLASH) {
-        t_keyCode = "\\";
-    }
-
-    else if (keyCode == KEY_VBAR) {
-        t_keyCode = "|";
-    }
-
-    else if (keyCode == KEY_COMMA) {
-        t_keyCode = ",";
-    }
-
-    else if (keyCode == KEY_PERIOD) {
-        t_keyCode = ".";
-    }
-
-    else if (keyCode == KEY_SLASH) {
-        t_keyCode = "/";
-    }
-
-    else if (keyCode == KEY_QUESTION) {
-        t_keyCode = "?";
-    }
-
-    else if (keyCode == KEY_TAB) {
-        t_keyCode = "TAB";
-    }
-
-    else if (keyCode == KEY_CAPSLOCK) {
-        t_keyCode = "CAPS";
-    }
-
-    else if (keyCode == KEY_LSHIFT) {
-        t_keyCode = "L SHIFT";
-    }
-
-    else if (keyCode == KEY_LCONTROL) {
-        t_keyCode = "L CTRL";
-    }
-
-    else if (keyCode == KEY_LALT) {
-        t_keyCode = "L ALT";
-    }
-
-    else if (keyCode == KEY_SPACE) {
-        t_keyCode = "SPACE";
-    }
-
-    else if (keyCode == KEY_RALT) {
-        t_keyCode = "R ALT";
-    }
-
-    else if (keyCode == KEY_RWIN) {
-        t_keyCode = "WIN";
-    }
-
-    else if (keyCode == KEY_RSUPER) {
-        t_keyCode = "SUPER";
-    }
-
-    else if (keyCode == KEY_APPS) {
-        t_keyCode = "APPS";
-    }
-
-    else if (keyCode == KEY_MENU) {
-        t_keyCode = "MENU";
-    }
-
-    else if (keyCode == KEY_RCTRL) {
-        t_keyCode = "R CTRL";
-    }
-
-    else if (keyCode == KEY_RSHIFT) {
-        t_keyCode = "R SHIFT";
-    }
-
-    else if (keyCode == KEY_ENTER) {
-        t_keyCode = "ENTER";
-    }
-
-    else if (keyCode == KEY_BACKSPACE) {
-        t_keyCode = "BKSP";
-    }
-
-    else if (keyCode == KEY_SCROLLLOCK) {
-        t_keyCode = "SCR";
-    }
-
-    else if (keyCode == KEY_PAUSE) {
-        t_keyCode = "PAUSE";
-    }
-
-    else if (keyCode == KEY_INSERT) {
-        t_keyCode = "INS";
-    }
-
-    else if (keyCode == KEY_HOME) {
-        t_keyCode = "HOME";
-    }
-
-    else if (keyCode == KEY_PAGEUP) {
-        t_keyCode = "PGUP";
-    }
-
-    else if (keyCode == KEY_DELETE) {
-        t_keyCode = "DELETE";
-    }
-
-    else if (keyCode == KEY_END) {
-        t_keyCode = "END";
-    }
-
-    else if (keyCode == KEY_PAGEDOWN) {
-        t_keyCode = "PGDN";
-    }
-
-    else if (keyCode == KEY_LEFT) {
-        t_keyCode = "LEFT";
-    }
-
-    else if (keyCode == KEY_UP) {
-        t_keyCode = "UP";
-    }
-
-    else if (keyCode == KEY_RIGHT) {
-        t_keyCode = "RIGHT";
-    }
-
-    else if (keyCode == KEY_DOWN) {
-        t_keyCode = "DOWN";
-    }
-
-    else if (keyCode == KEY_NUMLOCK) {
-        t_keyCode = "NUM";
-    }
-
-    else if (keyCode == KEY_DIVIDE) {
-        t_keyCode = "NUM /";
-    }
-
-    else if (keyCode == KEY_MULTIPLY) {
-        t_keyCode = "NUM *";
-    }
-
-    else if (keyCode == KEY_NUM7) {
-        t_keyCode = "NUM 7";
-    }
-
-    else if (keyCode == KEY_NUM8) {
-        t_keyCode = "NUM 8";
-    }
-
-    else if (keyCode == KEY_NUM9) {
-        t_keyCode = "NUM 9";
-    }
-
-    else if (keyCode == KEY_NUMMINUS) {
-        t_keyCode = "NUM -";
-    }
-
-    else if (keyCode == KEY_NUM4) {
-        t_keyCode = "NUM 4";
-    }
-
-    else if (keyCode == KEY_NUM5) {
-        t_keyCode = "NUM 5";
-    }
-
-    else if (keyCode == KEY_NUM6) {
-        t_keyCode = "NUM 6";
-    }
-
-    else if (keyCode == KEY_NUMPLUS) {
-        t_keyCode = "NUM +";
-    }
-
-    else if (keyCode == KEY_NUM1) {
-        t_keyCode = "NUM 1";
-    }
-
-    else if (keyCode == KEY_NUM2) {
-        t_keyCode = "NUM 2";
-    }
-
-    else if (keyCode == KEY_NUM3) {
-        t_keyCode = "NUM 3";
-    }
-
-    else if (keyCode == KEY_NUM0) {
-        t_keyCode = "NUM 0";
-    }
-
-    else if (keyCode == KEY_NUMDELETE) {
-        t_keyCode = "NUM DEL";
-    }
-
-    else if (keyCode == KEY_NUMENTER) {
-        t_keyCode = "NUM =";
-    }
-
     return t_keyCode;
 }

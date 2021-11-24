@@ -133,11 +133,7 @@ void MainWindow::initMainWindow()
     connect(m_pScreenCaptureEvent, SIGNAL(mouseMove(int, int)), this, SLOT(onMouseMove(int, int)), Qt::QueuedConnection);
     connect(m_pScreenCaptureEvent, SIGNAL(mouseScroll(int, int, int, int)), this, SLOT(onMouseScroll(int, int, int, int)), Qt::QueuedConnection);
 
-    if (Utils::isWaylandMode) {
-        connect(m_pScreenCaptureEvent, SIGNAL(keyboardPressWayland(QString)), this, SLOT(onKeyboardPressWayland(QString)), Qt::QueuedConnection);
-        connect(m_pScreenCaptureEvent, SIGNAL(keyboardReleaseWayland(QString)), this, SLOT(onKeyboardReleaseWayland(QString)), Qt::QueuedConnection);
-    } else {
-        // X11 开启监控全局事件线程
+    if (!Utils::isWaylandMode) {
         connect(m_pScreenCaptureEvent, SIGNAL(keyboardPress(unsigned char)), this, SLOT(onKeyboardPress(unsigned char)), Qt::QueuedConnection);
         connect(m_pScreenCaptureEvent, SIGNAL(keyboardRelease(unsigned char)), this, SLOT(onKeyboardRelease(unsigned char)), Qt::QueuedConnection);
         m_pScreenCaptureEvent->start();
@@ -313,7 +309,7 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
     }
     const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     for (int i = 0; i < windowStates.count(); ++i) {
-        if (windowStates.at(i).isMinimized == false && windowStates.at(i).pid != getpid() && windowStates.at(i).resourceName != "") {
+        if (windowStates.at(i).isMinimized == false && windowStates.at(i).pid != getpid() && windowStates.at(i).resourceName[0] != '\0') {
             if (m_screenInfo.size() > 1) {
                 if (m_isVertical == false) {
                     if (windowStates.at(i).geometry.x < m_screenInfo[1].x)
@@ -3572,6 +3568,20 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
     return false;
 }
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if(Utils::isWaylandMode) {
+       onKeyboardPressWayland(event->key());
+    }
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *event)
+{
+    if(Utils::isWaylandMode) {
+        onKeyboardReleaseWayland(event->key());
+    }
+}
 void MainWindow::tableRecordSet()
 {
     m_tabletRecorderHandle = new RecorderTablet(nullptr);
@@ -3637,20 +3647,31 @@ void MainWindow::onMouseScroll(int mouseTime, int direction, int x, int y)
 }
 
 // Wayland接收键盘按键事件
-void MainWindow::onKeyboardPressWayland(QString keyStr)
+void MainWindow::onKeyboardPressWayland(const int key)
 {
     if (status::record == m_functionType) {
-        if (keyStr == "Escape") {
-            responseEsc();
-        } else {
-            m_showButtons->showContentButtons(keyStr);
+        if (RECORD_BUTTON_NORMAL == recordButtonStatus) {
+            if (Qt::Key_Escape == key) {
+                responseEsc();
+            } else if (Qt::Key_S == key) {
+                m_toolBar->shapeClickedFromMain("audio");
+            } else if (Qt::Key_M == key) {//录屏快捷键 鼠标 m
+                m_toolBar->shapeClickedFromMain("mouse");
+            } else if (Qt::Key_F3 == key) { //录屏快捷键 选项 f3
+                m_toolBar->shapeClickedFromMain("record_option");
+            }
+        }
+        m_showButtons->showContentButtons(key);
+    } else {
+        if((Qt::Key_F3 == key)) {
+            m_toolBar->shapeClickedFromMain("option");
         }
     }
 }
-void MainWindow::onKeyboardReleaseWayland(QString keyStr)
+void MainWindow::onKeyboardReleaseWayland(const int key)
 {
     if (status::record == m_functionType) {
-        m_showButtons->releaseContentButtons(keyStr);
+        m_showButtons->releaseContentButtons(key);
     }
 }
 

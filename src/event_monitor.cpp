@@ -202,16 +202,7 @@ void EventMonitor::initWaylandEventMonitor()
         return;
     }
 
-    // 监控全局鼠标，键盘按键信号。
-    sessionBus.connect("com.deepin.daemon.InputDevices",
-                       "/com/deepin/api/XEventMonitor", "com.deepin.api.XEventMonitor", "KeyRelease",
-                       this, SLOT(KeyReleaseEvent(QString, int, int, QString)));
-
-    sessionBus.connect("com.deepin.daemon.InputDevices",
-                       "/com/deepin/api/XEventMonitor", "com.deepin.api.XEventMonitor", "KeyPress",
-                       this, SLOT(KeyPressEvent(QString, int, int, QString)));
-
-
+    // 监控全局鼠标信号。
     sessionBus.connect("com.deepin.daemon.InputDevices",
                        "/com/deepin/api/XEventMonitor", "com.deepin.api.XEventMonitor", "ButtonPress",
                        this, SLOT(ButtonPressEvent(int, int, int, QString)));
@@ -240,24 +231,6 @@ void EventMonitor::ButtonReleaseEvent(int type, int x, int y, QString str)
         emit mouseRelease(x, y);
     //qDebug()<<"=====ButtonReleaseEvent=====";
 }
-
-// Wayland下全局键盘事件通过Dbus信号接收
-void EventMonitor::KeyPressEvent(QString x, int y, int z, QString str)
-{
-    Q_UNUSED(z);
-    Q_UNUSED(y);
-    Q_UNUSED(str);
-    emit keyboardPressWayland(x);
-}
-
-void EventMonitor::KeyReleaseEvent(QString x, int y, int z, QString str)
-{
-    Q_UNUSED(z);
-    Q_UNUSED(y);
-    Q_UNUSED(str);
-    emit keyboardReleaseWayland(x);
-}
-
 //  Wayland下全局鼠标移动事件通过Dbus信号接收
 void EventMonitor::CursorMoveEvent(int x, int y, QString str)
 {
