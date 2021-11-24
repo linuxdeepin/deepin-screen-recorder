@@ -233,6 +233,11 @@ private:
     bool m_blurEffectExist = false;
     bool m_mosaicEffectExist = false;
     /**
+        * @brief m_lastEditMapKey 记录最后一个textedit在Map中的key值
+        */
+    int m_lastEditMapKey = -1;
+
+    /**
      * @brief m_currentType: 当前的图形类型
      * 现阶段存在5种图形：
      * line: 通过画笔画出的线条

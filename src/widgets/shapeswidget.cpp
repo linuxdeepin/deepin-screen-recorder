@@ -1179,15 +1179,18 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
     //选中图形后，重新按下真实鼠标左键
     if (Qt::MouseEventSource::MouseEventSynthesizedByQt != e->source()
             && m_selectedIndex != -1) {
-        clearSelected();
-        setAllTextEditReadOnly();
-        m_editing = false;
-        m_selectedIndex = -1;
-        m_selectedOrder = -1;
-        m_selectedShape.type = "";
-        update();
-        DFrame::mousePressEvent(e);
-
+        // 点击鼠标左键时，去掉未更改的textEdit文本框
+        if (m_editMap.value(m_lastEditMapKey)->toPlainText() == QString(tr("Input text here")) ||
+                m_editMap.value(m_lastEditMapKey)->toPlainText().isEmpty()) {
+            clearSelected();
+            setAllTextEditReadOnly();
+            m_editing = false;
+            m_selectedIndex = -1;
+            m_selectedOrder = -1;
+            m_selectedShape.type = "";
+            update();
+            DFrame::mousePressEvent(e);
+        }
     }
 
     //选中图形后，重新按下触摸屏左键
@@ -1304,6 +1307,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     QString t_editText = QString(tr("Input text here"));
                     edit->setPlainText(t_editText);
                     m_editing = true;
+                    edit->setEditing(true);
                     int defaultFontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();
                     m_currentShape.fontSize = defaultFontSize;
 
@@ -1316,7 +1320,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     m_editMap.insert(m_currentIndex, edit);
                     m_selectedIndex = m_currentIndex;
                     m_selectedShape = m_currentShape;
-
+                    m_lastEditMapKey = m_currentIndex;
 //                    m_selectedOrder = m_currentIndex;
 //                    updateTextRect();
 
