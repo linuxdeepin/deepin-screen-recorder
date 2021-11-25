@@ -1179,17 +1179,20 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
     //选中图形后，重新按下真实鼠标左键
     if (Qt::MouseEventSource::MouseEventSynthesizedByQt != e->source()
             && m_selectedIndex != -1) {
-        // 点击鼠标左键时，去掉未更改的textEdit文本框
-        if (m_editMap.value(m_lastEditMapKey)->toPlainText() == QString(tr("Input text here")) ||
-                m_editMap.value(m_lastEditMapKey)->toPlainText().isEmpty()) {
-            clearSelected();
-            setAllTextEditReadOnly();
-            m_editing = false;
-            m_selectedIndex = -1;
-            m_selectedOrder = -1;
-            m_selectedShape.type = "";
-            update();
-            DFrame::mousePressEvent(e);
+        // 判空
+        if(nullptr != m_editMap.value(m_lastEditMapKey)){
+            // 点击鼠标左键时，去掉未更改的textEdit文本框
+            if (m_editMap.value(m_lastEditMapKey)->toPlainText() == QString(tr("Input text here")) ||
+                    m_editMap.value(m_lastEditMapKey)->toPlainText().isEmpty()) {
+                clearSelected();
+                setAllTextEditReadOnly();
+                m_editing = false;
+                m_selectedIndex = -1;
+                m_selectedOrder = -1;
+                m_selectedShape.type = "";
+                update();
+                DFrame::mousePressEvent(e);
+            }
         }
     }
 
