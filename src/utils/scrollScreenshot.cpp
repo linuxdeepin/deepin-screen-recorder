@@ -29,21 +29,19 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
 {
     Q_UNUSED(parent);
     qRegisterMetaType<PixMergeThread::MergeErrorValue>("MergeErrorValue");
-
-    m_WaylandScrollMonitor = new WaylandScrollMonitor(this); // 开始wayland模拟滚动
+    if (Utils::isWaylandMode)
+        m_WaylandScrollMonitor = new WaylandScrollMonitor(this); // 初始化wayland模拟滚动
 
     m_mouseWheelTimer = new QTimer(this);
     connect(m_mouseWheelTimer, &QTimer::timeout, this, [ = ] {
-        if (Utils::isWaylandMode == false)
-        {
+        if (!Utils::isWaylandMode) {
             // 发送滚轮事件， 自动滚动
             static Display *m_display = XOpenDisplay(nullptr);
-            XTestFakeButtonEvent(m_display, 5, 1, CurrentTime);
+            XTestFakeButtonEvent(m_display, Button5, 1, CurrentTime);
             XFlush(m_display);
-            XTestFakeButtonEvent(m_display, 5, 0, CurrentTime);
+            XTestFakeButtonEvent(m_display, Button5, 0, CurrentTime);
             XFlush(m_display);
-        } else
-        {
+        } else {
             m_WaylandScrollMonitor->doWaylandAutoScroll(); //waland滚动
         }
 

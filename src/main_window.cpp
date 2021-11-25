@@ -59,6 +59,7 @@
 
 #include <X11/Xcursor/Xcursor.h>
 
+#define EPSILON 1e-10
 //const int MainWindow::CURSOR_BOUND = 5;
 const int MainWindow::RECORD_MIN_SIZE = 580;
 const int MainWindow::RECORD_MIN_HEIGHT = 280;
@@ -1461,10 +1462,8 @@ void MainWindow::wheelEvent(QWheelEvent *event)
         return;
     if (m_scrollShot) {
         int time = int (QDateTime::currentDateTime().toTime_t());
-        float len = (event->delta() > 15.0) ? -15.0 : 15.0;
-        int direction = (len == 15.0) ? 5 : 4;
-//        if(m_scrollShotStatus == 1 || m_scrollShotStatus == 2)
-//           m_scrollShotStatus = 6;
+        float len = (event->delta() > 15.0) ? -15.0 : 15.0; // 获取滚轮方向
+        int direction = (fabs(double(len) - 15.0) <= EPSILON) ? 5 : 4; // 获取滚轮方向
         scrollShotMouseScrollEvent(time, direction, x, y);
         m_scrollShot->sigalWheelScrolling(len);
         qDebug() << __FUNCTION__ << __LINE__;

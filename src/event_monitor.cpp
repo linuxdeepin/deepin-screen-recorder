@@ -219,7 +219,8 @@ void EventMonitor::initWaylandEventMonitor()
 void EventMonitor::ButtonPressEvent(int type, int x, int y, QString str)
 {
     Q_UNUSED(str);
-    if (type == 3 || type == 1)
+    // Button1为鼠标左键，Button3为鼠标右键
+    if (type == Button1 || type == Button3)
         emit mousePress(x, y);
     //Debug()<<"=====ButtonPressEvent=====";
 }
@@ -227,7 +228,8 @@ void EventMonitor::ButtonPressEvent(int type, int x, int y, QString str)
 void EventMonitor::ButtonReleaseEvent(int type, int x, int y, QString str)
 {
     Q_UNUSED(str);
-    if (type == 1 || type == 3)
+    // Button1为鼠标左键，Button3为鼠标右键
+    if (type == Button1 || type == Button3)
         emit mouseRelease(x, y);
     //qDebug()<<"=====ButtonReleaseEvent=====";
 }

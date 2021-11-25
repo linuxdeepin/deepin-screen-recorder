@@ -1,5 +1,28 @@
+/*
+ * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
+ *
+ * Author:     zhangwenchao <zhangwenchao@uniontech.com>
+ *
+ * Maintainer: hemingyang <hemingyang@uniontech.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
 #include "waylandscrollmonitor.h"
 
+#define SCROLL_DOWN 15.0
 
 WaylandScrollMonitor::WaylandScrollMonitor(QObject *parent) : QObject(parent)
     , m_connection(nullptr)
@@ -14,13 +37,16 @@ WaylandScrollMonitor::~WaylandScrollMonitor()
 {
     releaseWaylandScrollThread();
 }
+
+// 手动滚动模拟
 void WaylandScrollMonitor::slotManualScroll(float direction)
 {
     if (m_fakeinput != nullptr) {
-        m_fakeinput->requestPointerAxisForCapture(Qt::Vertical, direction);
+        // direction 滚动方向
+        m_fakeinput->requestPointerAxisForCapture(Qt::Vertical, static_cast<double>(direction));
     }
 }
-
+// 初始化队列、开启注册器
 void WaylandScrollMonitor::setupRegistry()
 {
     m_queue = new KWayland::Client::EventQueue(this);
@@ -39,6 +65,7 @@ void WaylandScrollMonitor::setupRegistry()
     m_registry->setup();
 }
 
+// 初始化Fakeinput
 void WaylandScrollMonitor::setupFakeinput(quint32 name, quint32 version)
 {
     if (m_fakeinput == nullptr) {
@@ -48,10 +75,12 @@ void WaylandScrollMonitor::setupFakeinput(quint32 name, quint32 version)
     }
 }
 
+// 滚动模拟初始化流程
 void WaylandScrollMonitor::initWaylandScrollThread()
 {
-
+    // 初始化ConnectionThread
     m_connection = new KWayland::Client::ConnectionThread(this);
+    // 注册器
     connect(m_connection, &KWayland::Client::ConnectionThread::connected, this, &WaylandScrollMonitor::setupRegistry, Qt::QueuedConnection);
     connect(m_connection, &KWayland::Client::ConnectionThread::connectionDied, this, [this] {
         if (m_queue)
@@ -70,6 +99,7 @@ void WaylandScrollMonitor::initWaylandScrollThread()
     m_connection->initConnection();
 }
 
+// 释放注册资源
 void WaylandScrollMonitor::releaseWaylandScrollThread()
 {
 
@@ -97,9 +127,11 @@ void WaylandScrollMonitor::releaseWaylandScrollThread()
     }
 }
 
+// 自动滚动执行
 void WaylandScrollMonitor::doWaylandAutoScroll()
 {
     if (m_fakeinput != nullptr) {
-        m_fakeinput->requestPointerAxisForCapture(Qt::Vertical, 15.0);
+        // Qt::Vertical 垂直滚动，15.0 代表向下滚动
+        m_fakeinput->requestPointerAxisForCapture(Qt::Vertical, SCROLL_DOWN);
     }
 }
