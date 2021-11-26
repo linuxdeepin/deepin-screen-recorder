@@ -66,11 +66,6 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
         blurBackground()->setMaskColor(QColor(0, 0, 0, 76));
     }
 
-    setFixedHeight(TOOLBAR_HEIGHT);
-    if (Utils::is3rdInterfaceStart) {
-        setFixedWidth(TOOLBAR_WIDTH - 35); //减去一个按钮的宽度
-    }
-
     m_hSeparatorLine = new DLabel(this);
     m_hSeparatorLine->setObjectName("HorSeparatorLine");
     m_hSeparatorLine->setFixedHeight(1);
@@ -94,6 +89,10 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
         m_closeButton->setNormalPic(":/newUI/dark/normal/close-normal_dark.svg");
     }
 
+    setFixedHeight(TOOLBAR_HEIGHT);
+    if (Utils::is3rdInterfaceStart) {
+        m_subTool->setMinimumWidth(TOOLBAR_WIDTH - 178); //减去隐藏按钮的最小宽度和
+    }
 
     QHBoxLayout *hLayout = new QHBoxLayout();
     hLayout->setMargin(0);
