@@ -2289,11 +2289,15 @@ void MainWindow::saveScreenShot()
     }
     update();
 
-
+    m_initScroll = false; // 保存时关闭滚动截图
     //滚动截图模式下保存图片
     if (status::scrollshot == m_functionType && m_scrollShotStatus != 0) {
-        m_resultPixmap = QPixmap::fromImage(m_scrollShot->savePixmap());
+        bool ok;
+        QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
+        QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio); // 抓取当前捕捉区域图片
+        m_scrollShot->addLastPixmap(img);
         m_previewWidget->hide();
+        m_resultPixmap = QPixmap::fromImage(m_scrollShot->savePixmap());
         if (m_resultPixmap.isNull()) {
             //普通截图保存图片
             shotCurrentImg();

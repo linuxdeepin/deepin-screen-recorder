@@ -44,7 +44,10 @@ public:
     explicit ScrollScreenshot(QObject *parent = nullptr);
     ~ScrollScreenshot();
     void addPixmap(const QPixmap &piximg, int wheelDirection = WheelDown); //添加图片到拼接线程
-
+    /**
+     * @brief 保存时，添加最后一张图片到拼接线程
+     */
+    void addLastPixmap(const QPixmap &piximg);
     /**
      * @brief 清除内存中用来存储图片的矩阵数据
      */
@@ -96,6 +99,10 @@ private:
     QRect m_rect;//调整区域
     bool m_startPixMerageThread = false;
     WaylandScrollMonitor *m_WaylandScrollMonitor = nullptr;
+    /**
+     * @brief 用来记录当前滚动方向
+     */
+    PixMergeThread::PictureDirection m_lastDirection = PixMergeThread::PictureDirection::ScrollDown;
 };
 
 #endif // AUDIOUTILS_H

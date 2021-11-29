@@ -88,21 +88,24 @@ void ScrollScreenshot::addPixmap(const QPixmap &piximg, int wheelDirection)
             m_curStatus = Merging;
         }
         if (m_curStatus == Merging) {
+            m_lastDirection = PixMergeThread::PictureDirection::ScrollDown; // 记录滚动方向
             m_PixMerageThread->addShotImg(piximg, PixMergeThread::PictureDirection::ScrollDown);
         }
     } else if (m_isManualScrollModel == true) {//手动
-        //if (piximg.isNull() == true)
         //qDebug() << "function piximg is null: " << __func__ << " ,line: " << __LINE__;
-        //if (m_curStatus == Wait) {
         m_PixMerageThread->setScrollModel(true);
         m_mouseWheelTimer->stop();
-        // m_curStatus = Merging;
-        // }
-        //if (m_curStatus == Merging) {
         PixMergeThread::PictureDirection  status = (wheelDirection == WheelDown) ? (PixMergeThread::PictureDirection::ScrollDown) : (PixMergeThread::PictureDirection::ScrollUp);
+        m_lastDirection = status; // 记录滚动方向
         m_PixMerageThread->addShotImg(piximg, status);
-        // }
     }
+}
+
+void ScrollScreenshot::addLastPixmap(const QPixmap &piximg)
+{
+    setTimeAndCalculateTimeDiff(static_cast<int>( QDateTime::currentDateTime().toTime_t()));
+    if(nullptr != m_PixMerageThread)
+        m_PixMerageThread->addShotImg(piximg, m_lastDirection);
 }
 
 void ScrollScreenshot::clearPixmap()
@@ -127,16 +130,14 @@ void ScrollScreenshot::changeState(const bool isStop)
 }
 QImage ScrollScreenshot::savePixmap()
 {
-    if (m_curStatus == ScrollStatus::Merging) {
-        m_mouseWheelTimer->stop();
-        emit getOneImg();
-        m_PixMerageThread->stopTask();
-        m_PixMerageThread->wait();
-    }
-    //QDateTime currentDate;
-    //QString currentTime =  currentDate.currentDateTime().toString("yyyyMMddHHmmss");
-    //QString saveFileName = QString("%1_%2_%3.%4").arg("S", "Long IMG", currentTime, "png");
-    //(m_PicMerageThread->getMerageResult()).save(saveFileName);
+    m_mouseWheelTimer->stop();
+
+    QEventLoop eventloop1; // 延迟500毫秒
+    QTimer::singleShot(500, &eventloop1, SLOT(quit()));
+    eventloop1.exec();
+
+    m_PixMerageThread->stopTask();
+    m_PixMerageThread->wait();
     return m_PixMerageThread->getMerageResult();
 }
 
