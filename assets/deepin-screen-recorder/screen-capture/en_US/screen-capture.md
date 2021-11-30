@@ -4,7 +4,7 @@
 
 Screen Capture is a tool which integrates the screen capture and recorder functions into one. You are free to select windows or areas automatically or manually during screen capturing or recording. 
 
-![partarea](fig/d_partarea.png)
+![partarea](fig/d_partarea.jpg)
 
 ## Guide
 
@@ -62,7 +62,7 @@ You can also take a full screen screenshot directly in the following ways:
 
 Program window selection is used to identify the current application window automatically.
 
-![1|window](fig/d_window.png)
+![1|window](fig/d_window.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Press **Ctrl + Alt + A**  or  **Ctrl + Alt + R** on the keyboard to enter the screen capture mode.
@@ -73,7 +73,7 @@ Program window selection is used to identify the current application window auto
 
 Customized area selection is used to select the screen capture area freely by dragging the mouse.
 
-![1|partarea](fig/d_partarea.png)
+![1|partarea](fig/d_partarea.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Press **Ctrl + Alt + A** or **Ctrl + Alt + R** on the keyboard to enter the screen capture mode.
@@ -139,7 +139,7 @@ You can draw some simple graphics in the screenshots. Click the icon on the tool
 
 #### Rectangle
 
-![1|rectool](fig/d_rectool.png)
+![1|rectool](fig/d_rectool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Click ![rectangle](../common/rectangle_normal.svg) on the toolbar which appears beside the screenshot area.
@@ -148,14 +148,14 @@ You can draw some simple graphics in the screenshots. Click the icon on the tool
 4. Hold down the left mouse button, and drag the mouse to complete drawing.
 5. Click ![vague](../common/vague_normal.svg) or ![mosaic](../common/Mosaic_normal.svg) in the toolbar extension panel to mosaic the private information in the screenshot (if any).
 
-![2|blurtool](fig/d_blurtool.png)
+![2|blurtool](fig/d_blurtool.jpg)
 
-![2|mosaictool](fig/d_mosaictool.png)
+![2|mosaictool](fig/d_mosaictool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #### Ellipse
 
-![1|ellipse](fig/d_ellipse.png)
+![1|ellipse](fig/d_ellipse.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Click ![oval](../common/oval_normal.svg) on the toolbar which appears beside the screenshot area.
@@ -166,7 +166,7 @@ You can draw some simple graphics in the screenshots. Click the icon on the tool
 
 #### Straight Line and Arrow
 
-![1|line](fig/d_line.png)
+![1|line](fig/d_line.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Click ![line_normal](../common/line_normal.svg) on the toolbar which appears beside the screenshot area.
@@ -177,7 +177,7 @@ You can draw some simple graphics in the screenshots. Click the icon on the tool
 
 #### Pencil
 
-![1|pencil](fig/d_pencil.png)
+![1|pencil](fig/d_pencil.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Click ![combined_shape](../common/Combined_Shape.svg) on the toolbar which appears beside the screenshot area.
@@ -189,7 +189,7 @@ You can draw some simple graphics in the screenshots. Click the icon on the tool
 
 You can modify and move the drawn graphics in the screenshot.
 
-![1|changetool](fig/d_changetool.png)
+![1|changetool](fig/d_changetool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #### Move Graphics
@@ -212,7 +212,7 @@ You can modify and move the drawn graphics in the screenshot.
 
 Add text annotations to the screenshot in order to help others better understand.
 
-![0|text](fig/d_text.png)
+![0|text](fig/d_text.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Click ![text_normal](../common/text_normal.svg) on the toolbar which appears beside the screenshot area.
@@ -262,7 +262,7 @@ Please enable the **Window Effect** feature in **Control Center > Personalizatio
 > - The rolling is too fast.
 > - Switch windows during the scrolling process.
 
-![scrollshot](fig/scrollshot.png)
+![scrollshot](fig/scrollshot.jpg)
 
 ### Extract Texts
 
@@ -294,7 +294,7 @@ You can save the screenshot in the following ways after launching Screen Capture
 - Press **Ctrl + S** on the keyboard to save the screenshot.
 - Right-click the screenshot, and select **Save** to save it.
 
-   > ![notes](../common/notes.svg) Notes: The screenshot is saved to the clipboard by default.
+   > ![notes](../common/notes.svg) Notes: The screenshot is saved to **Pictures > Screenshots** by default.
 
 Click **Options** on the toolbar of the Screen Capture interface, and expand the drop-down list:
 

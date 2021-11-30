@@ -4,7 +4,7 @@
 
 熒幕錄影是一款集截圖和錄屏於一體的小巧工具，不僅支援多種方式來選擇截圖錄屏區域，還支援對圖片進行編輯，對螢幕活動進行設定等功能。
 
-![part_area](fig/d_part_area.png)
+![part_area](fig/d_part_area.jpg)
 
 
 ## 使用入門
@@ -63,7 +63,7 @@
 
 熒幕錄影會自動識別目前的應用視窗。
 
-![1|視窗截圖](fig/d_window.png)
+![1|視窗截圖](fig/d_window.jpg)
 
 
 
@@ -75,7 +75,7 @@
 
 您還可以自由選擇截圖錄屏的範圍。
 
-![1|區域截圖](fig/d_part_area.png)
+![1|區域截圖](fig/d_part_area.jpg)
 
 
 1.  使用快捷鍵 **Ctrl + Alt + A** 進入截圖模式，或 **Ctrl + Alt + R** 進入錄屏模式。
@@ -142,7 +142,7 @@
 
 #### 矩形工具
 
-![1|矩形工具](fig/d_rectool.png)
+![1|矩形工具](fig/d_rectool.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -152,14 +152,14 @@
 4. 按住滑鼠左鍵不放，拖動滑鼠以完成圖形區域的繪製。
 5. 如果截圖中包含了個人隱私訊息，請單擊工具列展開面板中的 ![模糊](../common/vague_normal.svg) 或 ![馬賽克](../common/Mosaic_normal.svg)塗抹。
 
-![2|blurtool](fig/d_blurtool.png)
+![2|blurtool](fig/d_blurtool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-![2|mosaictool](fig/d_mosaictool.png)
+![2|mosaictool](fig/d_mosaictool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 #### 橢圓工具
-![1|橢圓工具](fig/d_ellipsetool.png)
+![1|橢圓工具](fig/d_ellipsetool.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -172,7 +172,7 @@
 
 #### 直線和箭頭工具
 
-![1|線條工具](fig/d_line.png)
+![1|線條工具](fig/d_line.jpg)
 
 1. 在截圖工具列中，單擊 ![直線](../common/line_normal.svg)。
 2. 在工具列展開的面板中，選擇線條的粗細和顏色，有四種顏色可供選擇。
@@ -183,7 +183,7 @@
 
 #### 畫筆工具
 
-![1|pencil](fig/d_pencil.png)
+![1|pencil](fig/d_pencil.jpg)
 
 1. 在截圖工具列中，單擊 ![畫筆](../common/Combined_Shape.svg)。
 2. 在工具列展開的面板中，選擇畫筆的粗細和顏色，有四種顏色可供選擇。
@@ -194,7 +194,7 @@
 ### 修改圖形
 如果您在截圖中繪製了其他的圖形，您可以對繪製的圖形進行修改和移動。
 
-![1|修改圖形](fig/d_changetool.png)
+![1|修改圖形](fig/d_changetool.jpg)
 
 #### 移動圖形
 1. 將滑鼠游標置於圖形的邊線上，此時滑鼠游標變為 ![手指](fig/fingers.png)。
@@ -216,7 +216,7 @@
 
 對截取的圖片進行文字補充和說明，幫助他人更清楚地了解截取的圖片。
 
-![0|文字框](fig/d_text.png)
+![0|文字框](fig/d_text.jpg)
 
 1. 在截圖工具列中，單擊 ![文字](../common/text_normal.svg)。
 2. 在工具列展開面板中，選擇字號和顏色，有四種顏色可供選擇。
@@ -267,7 +267,7 @@
 > - 滾動速度過快；
 > - 滾動時切換視窗。
 
-![長圖](fig/scrollshot.png)
+![長圖](fig/scrollshot.jpg)
 
 ### 識別文字
 
@@ -302,7 +302,7 @@
 - 使用快捷鍵 **Ctrl + S** 儲存。
 - 單擊滑鼠右鍵，選擇 **儲存** 完成儲存操作。
 
-   > ![notes](../common/notes.svg) 說明：在以上操作中，截取的圖片預設存放到剪貼簿。
+   > ![notes](../common/notes.svg) 說明：在以上操作中，截取的圖片預設存放到 **圖片 > Screenshots** 資料夾中 。
 
 您還可以在截圖工具列中，單擊 **選項** 的下拉選項：
 

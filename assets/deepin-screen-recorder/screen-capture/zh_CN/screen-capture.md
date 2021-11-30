@@ -4,7 +4,7 @@
 
 截图录屏是一款集截图、录屏于一体的小巧工具，不仅支持多种方式来选择截图录屏区域，还支持对图片进行编辑，对屏幕活动进行设置等功能。
 
-![part_area](fig/partarea.png)
+![part_area](fig/partarea.jpg)
 
 
 
@@ -49,7 +49,7 @@
 
 截图录屏会自动识别当前显示器的整个屏幕。
 
-![1|全屏截图](fig/fullscreen.png)
+![1|全屏截图](fig/fullscreen.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -68,7 +68,7 @@
 
 截图录屏会自动识别当前的应用窗口。
 
-![1|窗口截图](fig/window.png)
+![1|窗口截图](fig/window.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -80,7 +80,7 @@
 
 您还可以自由选择截图录屏的范围。
 
-![1|区域截图](fig/partarea.png)
+![1|区域截图](fig/partarea.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -151,7 +151,7 @@
 
 #### 矩形工具
 
-![1|矩形工具](fig/recttool.png)
+![1|矩形工具](fig/recttool.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -161,15 +161,15 @@
 4. 按住鼠标左键不放，拖动鼠标完成图形区域的绘制。
 5. 如果截图中包含了个人隐私信息，可单击工具栏展开面板中的 ![模糊](../common/vague_normal.svg) 或 ![马赛克](../common/Mosaic_normal.svg) 来涂抹。
 
-![2|blurtool](fig/blurtool.png)
+![2|blurtool](fig/blurtool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-![2|mosaictool](fig/mosaictool.png)
+![2|mosaictool](fig/mosaictool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 #### 椭圆工具
 
-![1|椭圆工具](fig/ellipsetool.png)
+![1|椭圆工具](fig/ellipsetool.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -182,7 +182,7 @@
 
 #### 直线和箭头工具
 
-![1|线条工具](fig/line.png)
+![1|线条工具](fig/line.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -194,7 +194,7 @@
 
 #### 画笔工具
 
-![1|pencil](fig/pencil.png)
+![1|pencil](fig/pencil.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -208,7 +208,7 @@
 
 如果您在截图中绘制了其他的图形，可以对图形进行修改和移动。
 
-![1|修改图形](fig/changetool.png)
+![1|修改图形](fig/changetool.jpg)
 
 
 #### 移动图形
@@ -233,7 +233,7 @@
 
 对截取的图片进行文字补充和说明，帮助他人更清楚地了解截取的图片。
 
-![0|文本框](fig/text.png)
+![0|文本框](fig/text.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -289,7 +289,7 @@
   > - 滚动速度过快；
   > - 滚动时切换窗口。
 
-![长图](fig/scrollshot.png)
+![长图](fig/scrollshot.jpg)
 
 
 
@@ -325,7 +325,7 @@
 - 使用快捷键 **Ctrl + S** 来保存。
 - 单击鼠标右键，选择 **保存**。
 
-   > ![notes](../common/notes.svg)说明：在以上操作中，截取的图片默认存放到剪贴板。
+   > ![notes](../common/notes.svg)说明：在以上操作中，截取的图片默认存放到 **图片 > Screenshots** 文件夹中。
 
 您还可以在截图工具栏中，单击 **选项** 的下拉菜单：
 

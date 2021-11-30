@@ -4,7 +4,7 @@
 
 螢幕錄影是一款集截圖、錄屏於一體的小巧工具，不僅支持多種方式來選擇截圖錄屏區域，還支持對圖片進行編輯，對螢幕活動進行設置等功能。
 
-![partarea](fig/partarea.png)
+![partarea](fig/partarea.jpg)
 
 
 ## 使用入門
@@ -49,7 +49,7 @@
 
 螢幕錄影會自動識別當前顯示器的整個螢幕。
 
-![1|全螢幕截圖](fig/fullscreen.png)
+![1|全螢幕截圖](fig/fullscreen.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -68,7 +68,7 @@
 
 螢幕錄影會自動識別當前的應用窗口。
 
-![1|窗口截圖](fig/windows.png)
+![1|窗口截圖](fig/windows.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -80,7 +80,7 @@
 
 您還可以自由選擇螢幕錄影的範圍。
 
-![1|區域截圖](fig/partarea.png)
+![1|區域截圖](fig/partarea.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -150,7 +150,7 @@
 
 #### 矩形工具
 
-![1|矩形工具](fig/recttool.png)
+![1|矩形工具](fig/recttool.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -160,14 +160,14 @@
 4. 按住鼠標左鍵不放，拖動鼠標完成圖形區域的繪製。
 5. 如果截圖中包含了個人私隱訊息，請單擊工具欄展開面板中的 ![模糊](../common/vague_normal.svg) 或 ![馬賽克](../common/Mosaic_normal.svg) 來塗抹。
 
-![2|blurtool](fig/blurtool.png)
+![2|blurtool](fig/blurtool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-![2|mosaictool](fig/mosaictool.png)
+![2|mosaictool](fig/mosaictool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 #### 橢圓工具
-![1|橢圓工具](fig/ellipsetool.png)
+![1|橢圓工具](fig/ellipsetool.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -180,7 +180,7 @@
 
 #### 直線和箭頭工具
 
-![1|線條工具](fig/line.png)
+![1|線條工具](fig/line.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -193,7 +193,7 @@
 
 #### 畫筆工具
 
-![1|pencil](fig/pencil.png)
+![1|pencil](fig/pencil.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -207,7 +207,7 @@
 
 如果您在截圖中繪製了其他的圖形，可以對繪製的圖形進行修改和移動。
 
-![1|修改圖形](fig/changetool.png)
+![1|修改圖形](fig/changetool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #### 移動圖形
@@ -232,7 +232,7 @@
 
 對截取的圖片進行文字補充和說明，幫助他人更清楚地了解截取的圖片。
 
-![0|文本框](fig/text.png)
+![0|文本框](fig/text.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -306,7 +306,7 @@
 
 - 將螢幕錄影圖標固定在任務欄，右鍵單擊圖標，選擇 **延時截圖**。
 - 使用快捷鍵 **Ctrl** + ![icon](../common/Print.svg)，啟動延時截圖。
-- 在終端中執行命令 “deepin-screen-recorder -d n”，其中n表示以秒為單位的延時時長。
+- 在終端中執行命令「deepin-screen-recorder -d n」，其中n表示以秒為單位的延時時長。
 
 ### 保存截圖
 將截取的圖片保存下來，為後續的使用儲存素材！
@@ -320,7 +320,7 @@
 - 按下鍵盤上的 **Ctrl + S** 組合鍵來保存。
 - 在截取的圖片中，單擊鼠標右鍵，選擇 **保存**。
 
-   > ![notes](../common/notes.svg)說明：在以上操作中，截取的圖片默認存放到剪貼板。
+   > ![notes](../common/notes.svg)說明：在以上操作中，截取的圖片默認存放到 **圖片 > Screenshots** 文件夾中。
 
 您還可以在截圖工具欄中，單擊 **選項** 的下拉選項：
 
