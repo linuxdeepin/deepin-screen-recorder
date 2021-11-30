@@ -44,6 +44,11 @@
 #include "widgets/ut_scrollshottip.h"
 #include "utils/ut_pixmergethread.h"
 #include "utils/ut_scrollScreenshot.h"
-
+#include "waylandrecord/ut_avinputstream.h"
+#include "waylandrecord/ut_avoutputstream.h"
+#include "waylandrecord/ut_recordadmin.h"
+#include "waylandrecord/ut_waylandintegration.h"
+#include "waylandrecord/ut_waylandintegration_p.h"
+#include "waylandrecord/ut_writeframethread.h"
 
 

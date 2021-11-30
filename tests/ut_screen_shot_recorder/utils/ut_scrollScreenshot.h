@@ -32,7 +32,7 @@ using namespace testing;
 
 ACCESS_PRIVATE_FIELD(ScrollScreenshot, PixMergeThread *, m_PixMerageThread);
 ACCESS_PRIVATE_FIELD(ScrollScreenshot, ScrollScreenshot::ScrollStatus, m_curStatus);
-
+ACCESS_PRIVATE_FIELD(ScrollScreenshot, QTimer *, m_mouseWheelTimer);
 class ScrollScreenshotTest: public testing::Test
 {
 public:
@@ -69,15 +69,32 @@ TEST_F(ScrollScreenshotTest, startAddPixmap)
     m_PixMerageThread->stopTask();
     m_PixMerageThread->wait();
 }
+void start_stub(int msec)
+{
 
+    qDebug() << "模拟定时器启动！";
+}
+void stop_stub()
+{
+    qDebug() << "模拟定时器停止！";
+
+}
 TEST_F(ScrollScreenshotTest, changeState)
 {
     ScrollScreenshot::ScrollStatus &m_curStatus = access_private_field::ScrollScreenshotm_curStatus(*m_ScrollScreenshot);
     m_curStatus = ScrollScreenshot::ScrollStatus::Merging;
+//    QTimer *&m_mouseWheelTimer = access_private_field::ScrollScreenshotm_mouseWheelTimer(*m_ScrollScreenshot);
+    stub.set((void(QTimer::*)(int))ADDR(QTimer, start), start_stub);
+    stub.set(ADDR(QTimer, stop), stop_stub);
     m_ScrollScreenshot->changeState(true);
+
     QTest::qWait(50);
+
     m_curStatus = ScrollScreenshot::ScrollStatus::Stop;
     m_ScrollScreenshot->changeState(false);
+
+    stub.reset(ADDR(QTimer, stop));
+    stub.reset((void(QTimer::*)(int))ADDR(QTimer, start));
 }
 
 TEST_F(ScrollScreenshotTest, savePixmap)
@@ -85,6 +102,7 @@ TEST_F(ScrollScreenshotTest, savePixmap)
     ScrollScreenshot::ScrollStatus &m_curStatus = access_private_field::ScrollScreenshotm_curStatus(*m_ScrollScreenshot);
     m_curStatus = ScrollScreenshot::ScrollStatus::Merging;
     m_ScrollScreenshot->savePixmap();
+    QTest::qWait(800);
 }
 
 TEST_F(ScrollScreenshotTest, merageImgState)

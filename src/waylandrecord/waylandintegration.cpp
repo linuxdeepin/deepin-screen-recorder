@@ -180,7 +180,9 @@ WaylandIntegration::WaylandIntegrationPrivate::~WaylandIntegrationPrivate()
 {
     QMutexLocker locker(&m_mutex);
     for (int i = 0; i < m_freeList.size(); i++) {
-        delete m_freeList[i];
+        if (m_freeList[i]) {
+            delete m_freeList[i];
+        }
     }
     m_freeList.clear();
     for (int i = 0; i < m_waylandList.size(); i++) {
@@ -188,7 +190,7 @@ WaylandIntegration::WaylandIntegrationPrivate::~WaylandIntegrationPrivate()
     }
     m_waylandList.clear();
     if (nullptr != m_ffmFrame) {
-        delete m_ffmFrame;
+        delete []m_ffmFrame;
         m_ffmFrame = nullptr;
     }
     if (nullptr != m_recordAdmin) {
@@ -359,7 +361,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 
     connect(m_registry, &KWayland::Client::Registry::interfacesAnnounced, this, [this] {
         m_registryInitialized = true;
-        qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Registry initialized";
+        //qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Registry initialized";
     });
 
     m_registry->create(m_connection);

@@ -157,7 +157,11 @@ public:
             m_pScreenCaptureEvent = nullptr;
         }
 #endif
+        if (Utils::isWaylandMode && m_connectionThread) {
 
+            m_connectionThread->terminate();
+            m_connectionThread->wait();
+        }
         if (m_showButtons) {
             //退出进程，最好不用deleteLater，因为有可能等不到下一次事件循环，导致资源不能释放
             delete m_showButtons;

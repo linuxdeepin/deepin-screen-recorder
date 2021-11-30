@@ -64,7 +64,6 @@ class Output;
 }
 
 namespace WaylandIntegration {
-class WriteFrameThread;
 class WaylandIntegrationPrivate : public WaylandIntegration::WaylandIntegration
 {
     Q_OBJECT

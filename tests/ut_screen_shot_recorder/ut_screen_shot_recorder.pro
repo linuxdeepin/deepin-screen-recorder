@@ -17,7 +17,7 @@ QT += dbus
 QT += multimedia
 QT += multimediawidgets
 QT += concurrent
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_core -lopencv_imgproc -lKF5WaylandClient -lKF5ConfigCore
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_core -lopencv_imgproc -lKF5WaylandClient -lKF5ConfigCore -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample
 LIBS += -L"libprocps" -lprocps
 
 CONFIG += link_pkgconfig
@@ -172,7 +172,13 @@ HEADERS += test_all_interfaces.h \
     dbusinterface/ut_ocrinterface.h \
     widgets/ut_scrollshottip.h \
     utils/ut_pixmergethread.h \
-    utils/ut_scrollScreenshot.h
+    utils/ut_scrollScreenshot.h \
+    waylandrecord/ut_avinputstream.h \
+    waylandrecord/ut_avoutputstream.h \
+    waylandrecord/ut_recordadmin.h \
+    waylandrecord/ut_waylandintegration_p.h \
+    waylandrecord/ut_waylandintegration.h \
+    waylandrecord/ut_writeframethread.h
 
 
 SOURCES += main.cpp \

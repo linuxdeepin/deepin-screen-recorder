@@ -94,7 +94,7 @@ TEST_F(PixMergeThreadTest, startPixMergeThreadScrollDown)
     QTest::qWait(50);
     m_pixMergeThread->addShotImg(img3);
     m_pixMergeThread->start();
-    QTest::qWait(500);
+    QTest::qWait(100);
     m_pixMergeThread->stopTask();
     m_pixMergeThread->wait();
 }
@@ -113,7 +113,7 @@ TEST_F(PixMergeThreadTest, startPixMergeThreadScrollUp)
     QTest::qWait(50);
     m_pixMergeThread->addShotImg(img1, PixMergeThread::PictureDirection::ScrollUp);
     m_pixMergeThread->start();
-    QTest::qWait(500);
+    QTest::qWait(100);
     m_pixMergeThread->stopTask();
     m_pixMergeThread->wait();
 }
