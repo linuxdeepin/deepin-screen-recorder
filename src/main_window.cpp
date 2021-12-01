@@ -4009,9 +4009,10 @@ void MainWindow::onOpenScrollShotHelp()
                              "/com/deepin/Manual/Open",
                              "com.deepin.Manual.Open",
                              QDBusConnection::sessionBus());
+    // 帮助手册跳转到子标题，传入子标题标签(标签文档内唯一，固定为英文，与翻译无关)
     QList<QVariant> arg;
     arg << (QCoreApplication::applicationName())                  // 应用名称
-        << QString(tr("Take Screen Scrollshots"));                         // 帮助文案中的标题名称
+        << QString("scrollshot");                         // 帮助文案中的标题名称
     interFace.callWithArgumentList(QDBus::AutoDetect, "OpenTitle", arg);
 
     exitApp();
