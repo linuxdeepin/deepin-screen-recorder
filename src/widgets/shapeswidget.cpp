@@ -1230,6 +1230,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
 
     //鼠标右键点击
     if (Qt::MouseEventSource::MouseEventSynthesizedByQt != e->source() && e->button() == Qt::RightButton) {
+        m_pos1 = QPointF(0,0); // 修复触控屏绘制矩形后，长按屏幕会出现多余矩形的问题
         qDebug() << "RightButton clicked!" << e->source();
         m_menuController->showMenu(QPoint(mapToGlobal(e->pos())));
         DFrame::mousePressEvent(e);
