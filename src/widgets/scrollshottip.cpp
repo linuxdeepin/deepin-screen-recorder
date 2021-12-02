@@ -112,18 +112,6 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
 
 }
 
-ScrollShotTip::~ScrollShotTip()
-{
-    if (m_scrollShotHelp) {
-        delete  m_scrollShotHelp;
-        m_scrollShotHelp = nullptr;
-    }
-    if (m_scrollShotAdjust) {
-        delete  m_scrollShotAdjust;
-        m_scrollShotAdjust = nullptr;
-    }
-}
-
 //根据提示的类型选取相应的提示方法
 void ScrollShotTip::showTip(TipType tipType)
 {
@@ -378,4 +366,14 @@ void ScrollShotTip::showInvalidAreaShotTip()
     //qDebug() << "1111 >> this->width(): " << this->width() <<"this->height(): " << this->height() ;
 }
 
-
+ScrollShotTip::~ScrollShotTip()
+{
+    if (m_scrollShotHelp) {
+        delete  m_scrollShotHelp;
+        m_scrollShotHelp = nullptr;
+    }
+    if (m_scrollShotAdjust) {
+        delete  m_scrollShotAdjust;
+        m_scrollShotAdjust = nullptr;
+    }
+}

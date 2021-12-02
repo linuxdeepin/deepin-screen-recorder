@@ -25,6 +25,8 @@
 #include "ut_button_feedback.h"
 #include "ut_record_process.h"
 #include "ut_screenshot.h"
+#include "utils/ut_voiceVolumeWatcher.h"
+#include "utils/ut_WaylandScrollMonitor.h"
 //#include "widgets/ut_shapeswidget.h"
 #include "widgets/ut_toptips.h"
 #include "widgets/ut_camerawidget.h"
@@ -50,5 +52,4 @@
 #include "waylandrecord/ut_waylandintegration.h"
 #include "waylandrecord/ut_waylandintegration_p.h"
 #include "waylandrecord/ut_writeframethread.h"
-
 

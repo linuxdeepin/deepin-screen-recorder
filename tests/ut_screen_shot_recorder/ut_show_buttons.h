@@ -2,21 +2,27 @@
 #include <gtest/gtest.h>
 #include <QTest>
 #include <QPoint>
+#include "stub.h"
+#include "addr_pri.h"
 #include "../../src/screenshot.h"
 #include "../../src/keydefine.h"
 
 
 using namespace testing;
 
-class ShowButtonsTest:public testing::Test{
+class ShowButtonsTest: public testing::Test
+{
 
 public:
+    Stub stub;
     ShowButtons showButtons;
-    virtual void SetUp() override{
+    virtual void SetUp() override
+    {
         std::cout << "start ShowButtonsTest" << std::endl;
     }
 
-    virtual void TearDown() override{
+    virtual void TearDown() override
+    {
         std::cout << "end ShowButtonsTest" << std::endl;
     }
 };
@@ -48,4 +54,18 @@ TEST_F(ShowButtonsTest, getKeyCodeFromEventWayland)
 {
     EXPECT_TRUE(showButtons.getKeyCodeFromEventWayland(Qt::Key_Enter).compare(QString("ENTER")) == 0);
 
+}
+
+TEST_F(ShowButtonsTest, showContentButtons1)
+{
+    showButtons.showContentButtons('K');
+}
+TEST_F(ShowButtonsTest, showContentButtons2)
+{
+    showButtons.showContentButtons(' ');
+}
+
+TEST_F(ShowButtonsTest, releaseContentButtons1)
+{
+    showButtons.releaseContentButtons('K');
 }

@@ -41,14 +41,14 @@ DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
 namespace {
-    const int TOOLBAR_HEIGHT = 223;
-    const int TOOLBAR_WIDTH = 40;
-    const int BUTTON_SPACING = 3;
-    const QSize TOOL_ICON_SIZE = QSize(30, 30);
-    const QSize TOOL_BUTTON_SIZE = QSize(38, 38);
-    const QSize TOOL_SLIDERBlUR_SIZE = QSize(35, 190);
-    const QSize TOOL_SLIDER_SIZE = QSize(40, 180);
-    const QSize SPLITTER_SIZE = QSize(30, 1);
+const int TOOLBAR_HEIGHT = 223;
+const int TOOLBAR_WIDTH = 40;
+const int BUTTON_SPACING = 3;
+const QSize TOOL_ICON_SIZE = QSize(30, 30);
+const QSize TOOL_BUTTON_SIZE = QSize(38, 38);
+const QSize TOOL_SLIDERBlUR_SIZE = QSize(35, 190);
+const QSize TOOL_SLIDER_SIZE = QSize(40, 180);
+const QSize SPLITTER_SIZE = QSize(30, 1);
 }
 
 ShotToolWidget::ShotToolWidget(DWidget *parent) :
@@ -61,26 +61,7 @@ ShotToolWidget::ShotToolWidget(DWidget *parent) :
     initWidget();
 }
 
-ShotToolWidget::~ShotToolWidget()
-{
-//指定父指针，利用qt对象树自动析构机制释放资源
-//    if(nullptr != m_buttonGroup){
-//        m_buttonGroup->deleteLater();
-//        m_buttonGroup = nullptr;
-//    }
-//    if(nullptr != m_thicknessBtnGroup){
-//        m_thicknessBtnGroup->deleteLater();
-//        m_thicknessBtnGroup = nullptr;
-//    }
-//    if(nullptr != m_funcBtnGroup){
-//        m_funcBtnGroup->deleteLater();
-//        m_funcBtnGroup = nullptr;
-//    }
-//    if(nullptr != m_rectLayout){
-//        m_rectLayout->deleteLater();
-//        m_rectLayout = nullptr;
-//    }
-}
+
 
 void ShotToolWidget::initWidget()
 {
@@ -150,40 +131,40 @@ void ShotToolWidget::initRectLabel()
     }
 
     connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
-            [ = ](int status) {
+    [ = ](int status) {
         Q_UNUSED(status);
         //DPalette pa;
         if (thickOneBtn->isChecked()) {
             thickOneBtn->update();
             ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 0);
-            if(m_blurRectButton && m_blurRectButton->isChecked())
+            if (m_blurRectButton && m_blurRectButton->isChecked())
                 m_blurRectButton->click();
-            if(m_mosaicRectButton && m_mosaicRectButton->isChecked())
+            if (m_mosaicRectButton && m_mosaicRectButton->isChecked())
                 m_mosaicRectButton->click();
         }
 
         if (thickTwoBtn->isChecked()) {
             thickTwoBtn->update();
             ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 1);
-            if(m_blurRectButton && m_blurRectButton->isChecked())
+            if (m_blurRectButton && m_blurRectButton->isChecked())
                 m_blurRectButton->click();
-            if(m_mosaicRectButton && m_mosaicRectButton->isChecked())
+            if (m_mosaicRectButton && m_mosaicRectButton->isChecked())
                 m_mosaicRectButton->click();
         }
 
         if (thickThreeBtn->isChecked()) {
             thickThreeBtn->update();
             ConfigSettings::instance()->setValue("rectangle", "linewidth_index", 2);
-            if(m_blurRectButton && m_blurRectButton->isChecked())
+            if (m_blurRectButton && m_blurRectButton->isChecked())
                 m_blurRectButton->click();
-            if(m_mosaicRectButton && m_mosaicRectButton->isChecked())
+            if (m_mosaicRectButton && m_mosaicRectButton->isChecked())
                 m_mosaicRectButton->click();
         }
     });
 
 
     int linewidth_index = ConfigSettings::instance()->value("rectangle", "linewidth_index").toInt();
-    if(linewidth_index == 0) {
+    if (linewidth_index == 0) {
         thickOneBtn->click();
     } else if (linewidth_index == 1) {
         thickTwoBtn->click();
@@ -194,7 +175,7 @@ void ShotToolWidget::initRectLabel()
     rectLayout->addSpacing(2);
     //分割线
     ToolButton *t_seperator = new ToolButton(this);
-    if(Utils::themeType == 1) {
+    if (Utils::themeType == 1) {
         //t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
         t_seperator->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
@@ -234,13 +215,15 @@ void ShotToolWidget::initRectLabel()
 
     connect(m_blurRectButton, &ToolButton::clicked, this, [ = ] {
         bool t_status = m_blurRectButton->isChecked();
-        if (t_status == true){
+        if (t_status == true)
+        {
             ConfigSettings::instance()->setValue("rectangle", "is_blur", m_blurRectButton->isChecked());
 
             m_mosaicRectButton->setChecked(false);
             m_mosaicRectButton->update();
             ConfigSettings::instance()->setValue("rectangle", "is_mosaic", m_mosaicRectButton->isChecked());
-        } else {
+        } else
+        {
             m_blurRectButton->setChecked(false);
             m_blurRectButton->update();
             ConfigSettings::instance()->setValue("rectangle", "is_blur", m_blurRectButton->isChecked());
@@ -249,13 +232,15 @@ void ShotToolWidget::initRectLabel()
 
     connect(m_mosaicRectButton, &ToolButton::clicked, this, [ = ] {
         bool t_status = m_mosaicRectButton->isChecked();
-        if (t_status == true){
+        if (t_status == true)
+        {
             ConfigSettings::instance()->setValue("rectangle", "is_mosaic", m_mosaicRectButton->isChecked());
             m_arrowFlag = true;
             m_blurRectButton->setChecked(false);
             m_blurRectButton->update();
             ConfigSettings::instance()->setValue("rectangle", "is_blur", m_blurRectButton->isChecked());
-        } else {
+        } else
+        {
             m_mosaicRectButton->setChecked(false);
             m_mosaicRectButton->update();
             ConfigSettings::instance()->setValue("rectangle", "is_mosaic", m_mosaicRectButton->isChecked());
@@ -270,14 +255,14 @@ void ShotToolWidget::initRectLabel()
 
     rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton(this);
-    if(Utils::themeType == 1) {
+    if (Utils::themeType == 1) {
         //t_seperator1->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
         t_seperator1->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
         //t_seperator1->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
         t_seperator1->setStyleSheet("border:0px solid rgba(255, 255, 255, 26);border-radius:0px;background-color:rgba(255, 255, 255, 26)");
     }
-    qDebug()<<"test";
+    qDebug() << "test";
     t_seperator1->setDisabled(true);
     t_seperator1->setFixedSize(SPLITTER_SIZE);
     rectLayout->addWidget(t_seperator1, 0, Qt::AlignHCenter);
@@ -338,15 +323,15 @@ void ShotToolWidget::initCircLabel()
     }
 
     connect(m_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
-            [ = ](int status) {
+    [ = ](int status) {
         Q_UNUSED(status);
         //DPalette pa;
         if (thickOneBtn->isChecked()) {
             thickOneBtn->update();
             ConfigSettings::instance()->setValue("oval", "linewidth_index", 0);
-            if(m_blurCircButton && m_blurCircButton->isChecked())
+            if (m_blurCircButton && m_blurCircButton->isChecked())
                 m_blurCircButton->click();
-            if(m_mosaicCircButton && m_mosaicCircButton->isChecked())
+            if (m_mosaicCircButton && m_mosaicCircButton->isChecked())
                 m_mosaicCircButton->click();
         } else {
             thickOneBtn->update();
@@ -355,9 +340,9 @@ void ShotToolWidget::initCircLabel()
         if (thickTwoBtn->isChecked()) {
             thickTwoBtn->update();
             ConfigSettings::instance()->setValue("oval", "linewidth_index", 1);
-            if(m_blurCircButton && m_blurCircButton->isChecked())
+            if (m_blurCircButton && m_blurCircButton->isChecked())
                 m_blurCircButton->click();
-            if(m_mosaicCircButton && m_mosaicCircButton->isChecked())
+            if (m_mosaicCircButton && m_mosaicCircButton->isChecked())
                 m_mosaicCircButton->click();
         } else {
             thickTwoBtn->update();
@@ -366,9 +351,9 @@ void ShotToolWidget::initCircLabel()
         if (thickThreeBtn->isChecked()) {
             thickThreeBtn->update();
             ConfigSettings::instance()->setValue("oval", "linewidth_index", 2);
-            if(m_blurCircButton && m_blurCircButton->isChecked())
+            if (m_blurCircButton && m_blurCircButton->isChecked())
                 m_blurCircButton->click();
-            if(m_mosaicCircButton && m_mosaicCircButton->isChecked())
+            if (m_mosaicCircButton && m_mosaicCircButton->isChecked())
                 m_mosaicCircButton->click();
         } else {
             thickThreeBtn->update();
@@ -376,7 +361,7 @@ void ShotToolWidget::initCircLabel()
     });
 
     int linewidth_index = ConfigSettings::instance()->value("oval", "linewidth_index").toInt();
-    if(linewidth_index == 0) {
+    if (linewidth_index == 0) {
         thickOneBtn->click();
     } else if (linewidth_index == 1) {
         thickTwoBtn->click();
@@ -387,7 +372,7 @@ void ShotToolWidget::initCircLabel()
 
     m_rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton(this);
-    if(Utils::themeType == 1) {
+    if (Utils::themeType == 1) {
         //t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
         t_seperator->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
@@ -427,7 +412,8 @@ void ShotToolWidget::initCircLabel()
     connect(m_blurCircButton, &ToolButton::clicked, this, [ = ] {
         bool t_status = m_blurCircButton->isChecked();
 
-        if (t_status == true){
+        if (t_status == true)
+        {
 
             ConfigSettings::instance()->setValue("oval", "is_blur", m_blurCircButton->isChecked());
 
@@ -435,7 +421,8 @@ void ShotToolWidget::initCircLabel()
             m_mosaicCircButton->update();
             ConfigSettings::instance()->setValue("oval", "is_mosaic", m_mosaicCircButton->isChecked());
 
-        } else {
+        } else
+        {
             m_blurCircButton->setChecked(false);
             m_blurCircButton->update();
             ConfigSettings::instance()->setValue("oval", "is_blur", m_blurCircButton->isChecked());
@@ -445,13 +432,15 @@ void ShotToolWidget::initCircLabel()
     connect(m_mosaicCircButton, &ToolButton::clicked, this, [ = ] {
         bool t_status = m_mosaicCircButton->isChecked();
 
-        if (t_status == true){
+        if (t_status == true)
+        {
             ConfigSettings::instance()->setValue("oval", "is_mosaic", m_mosaicCircButton->isChecked());
             m_arrowFlag = true;
             m_blurCircButton->setChecked(false);
             m_blurCircButton->update();
             ConfigSettings::instance()->setValue("oval", "is_blur", m_blurCircButton->isChecked());
-        } else {
+        } else
+        {
             m_mosaicCircButton->setChecked(false);
             m_mosaicCircButton->update();
             ConfigSettings::instance()->setValue("oval", "is_mosaic", m_mosaicCircButton->isChecked());
@@ -468,7 +457,7 @@ void ShotToolWidget::initCircLabel()
 
     m_rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton(this);
-    if(Utils::themeType == 1) {
+    if (Utils::themeType == 1) {
         //t_seperator1->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
         t_seperator1->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
@@ -479,7 +468,7 @@ void ShotToolWidget::initCircLabel()
     t_seperator1->setFixedSize(SPLITTER_SIZE);
     m_rectLayout->addWidget(t_seperator1, 0, Qt::AlignHCenter);
 
-    m_rectLayout->addSpacing(2);  
+    m_rectLayout->addSpacing(2);
     m_circSubTool->setLayout(m_rectLayout);
     addWidget(m_circSubTool);
 }
@@ -536,7 +525,7 @@ void ShotToolWidget::initLineLabel()
     }
 
     connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
-            [ = ](int status) {
+    [ = ](int status) {
         Q_UNUSED(status);
         if (thickOneBtn->isChecked()) {
             thickOneBtn->update();
@@ -564,7 +553,7 @@ void ShotToolWidget::initLineLabel()
     });
 
     int linewidth_index = ConfigSettings::instance()->value("arrow", "arrow_linewidth_index").toInt();
-    if(linewidth_index == 0) {
+    if (linewidth_index == 0) {
         thickOneBtn->click();
     } else if (linewidth_index == 1) {
         thickTwoBtn->click();
@@ -574,7 +563,7 @@ void ShotToolWidget::initLineLabel()
 
     rectLayout->addSpacing(2);
     ToolButton *t_seperator = new ToolButton(this);
-    if(Utils::themeType == 1) {
+    if (Utils::themeType == 1) {
         //t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
         t_seperator->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
@@ -612,7 +601,8 @@ void ShotToolWidget::initLineLabel()
         emit changeArrowAndLine(0);
         ConfigSettings::instance()->setValue("arrow", "is_straight", true);
         m_arrowFlag = false;
-        if (blurButton->isChecked()){
+        if (blurButton->isChecked())
+        {
             mosaicBtn->setChecked(false);
             mosaicBtn->setIcon(QIcon::fromTheme("Arrow-normal"));
             mosaicBtn->update();
@@ -623,7 +613,8 @@ void ShotToolWidget::initLineLabel()
         emit changeArrowAndLine(1);
         ConfigSettings::instance()->setValue("arrow", "is_straight", false);
         m_arrowFlag = true;
-        if (mosaicBtn->isChecked()){
+        if (mosaicBtn->isChecked())
+        {
             blurButton->setChecked(false);
             blurButton->update();
         }
@@ -633,7 +624,7 @@ void ShotToolWidget::initLineLabel()
     if (t_arrowStatus) {
         blurButton->click();
         m_arrowFlag = true;
-    }else {
+    } else {
         mosaicBtn->click();
         m_arrowFlag = false;
     }
@@ -646,7 +637,7 @@ void ShotToolWidget::initLineLabel()
 
     rectLayout->addSpacing(2);
     ToolButton *t_seperator1 = new ToolButton(this);
-    if(Utils::themeType == 1) {
+    if (Utils::themeType == 1) {
         //t_seperator1->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
         t_seperator1->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
@@ -713,7 +704,7 @@ void ShotToolWidget::initPenLabel()
     }
 
     connect(t_thicknessBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
-            [ = ](int status) {
+    [ = ](int status) {
         Q_UNUSED(status);
         //DPalette pa;
         if (thickOneBtn->isChecked()) {
@@ -733,13 +724,13 @@ void ShotToolWidget::initPenLabel()
         if (thickThreeBtn->isChecked()) {
             thickThreeBtn->update();
             ConfigSettings::instance()->setValue("line", "linewidth_index", 2);
-        }else {
+        } else {
             thickThreeBtn->update();
         }
     });
 
     int linewidth_index = ConfigSettings::instance()->value("line", "linewidth_index").toInt();
-    if(linewidth_index == 0) {
+    if (linewidth_index == 0) {
         thickOneBtn->click();
     } else if (linewidth_index == 1) {
         thickTwoBtn->click();
@@ -751,7 +742,7 @@ void ShotToolWidget::initPenLabel()
     //rectLayout->addSpacing(70);
     rectLayout->addSpacing(40);
     ToolButton *t_seperator = new ToolButton(this);
-    if(Utils::themeType == 1) {
+    if (Utils::themeType == 1) {
         //t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
         t_seperator->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
     } else {
@@ -785,7 +776,7 @@ void ShotToolWidget::initTextLabel()
 
     QVBoxLayout *t_blurAreaLayout = new QVBoxLayout(this);
 
-    DSlider *t_textFontSize = new DSlider(Qt::Vertical,this);
+    DSlider *t_textFontSize = new DSlider(Qt::Vertical, this);
 
     t_textFontSize->slider()->setTickInterval(1);
     t_textFontSize->setFixedSize(TOOL_SLIDER_SIZE);
@@ -797,8 +788,8 @@ void ShotToolWidget::initTextLabel()
 
     static const int indexTofontsize[11] = {9, 10, 12, 14, 18, 24, 36, 48, 64, 72, 96};
     int t_fontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();
-    for(int i = 0; i < 11; ++i) {
-        if(indexTofontsize[i] == t_fontSize){
+    for (int i = 0; i < 11; ++i) {
+        if (indexTofontsize[i] == t_fontSize) {
             t_textFontSize->setValue(i);
             break;
         }
@@ -844,7 +835,7 @@ void ShotToolWidget::switchContent(QString shapeType)
                 initCircLabel();
                 setCurrentWidget(m_circSubTool);
                 m_circInitFlag = true;
-            }else {
+            } else {
                 setCurrentWidget(m_circSubTool);
             }
         }
@@ -855,7 +846,7 @@ void ShotToolWidget::switchContent(QString shapeType)
                 initLineLabel();
                 setCurrentWidget(m_lineSubTool);
                 m_lineInitFlag = true;
-            }else {
+            } else {
                 setCurrentWidget(m_lineSubTool);
             }
         }
@@ -877,7 +868,7 @@ void ShotToolWidget::switchContent(QString shapeType)
                 initTextLabel();
                 setCurrentWidget(m_textSubTool);
                 m_textInitFlag = true;
-            }else {
+            } else {
                 setCurrentWidget(m_textSubTool);
             }
         }
@@ -887,14 +878,34 @@ void ShotToolWidget::colorChecked(QString colorType)
 {
     Q_UNUSED(colorType);
     //if(m_currentType == "rectangle"){
-    if(m_blurRectButton && m_blurRectButton->isChecked())
+    if (m_blurRectButton && m_blurRectButton->isChecked())
         m_blurRectButton->click();
-    if(m_mosaicRectButton && m_mosaicRectButton->isChecked())
+    if (m_mosaicRectButton && m_mosaicRectButton->isChecked())
         m_mosaicRectButton->click();
     //}else if(m_currentType == "oval"){
-    if(m_blurCircButton && m_blurCircButton->isChecked())
+    if (m_blurCircButton && m_blurCircButton->isChecked())
         m_blurCircButton->click();
-    if(m_mosaicCircButton && m_mosaicCircButton->isChecked())
+    if (m_mosaicCircButton && m_mosaicCircButton->isChecked())
         m_mosaicCircButton->click();
     // }
+}
+ShotToolWidget::~ShotToolWidget()
+{
+//指定父指针，利用qt对象树自动析构机制释放资源
+//    if(nullptr != m_buttonGroup){
+//        m_buttonGroup->deleteLater();
+//        m_buttonGroup = nullptr;
+//    }
+//    if(nullptr != m_thicknessBtnGroup){
+//        m_thicknessBtnGroup->deleteLater();
+//        m_thicknessBtnGroup = nullptr;
+//    }
+//    if(nullptr != m_funcBtnGroup){
+//        m_funcBtnGroup->deleteLater();
+//        m_funcBtnGroup = nullptr;
+//    }
+//    if(nullptr != m_rectLayout){
+//        m_rectLayout->deleteLater();
+//        m_rectLayout = nullptr;
+//    }
 }

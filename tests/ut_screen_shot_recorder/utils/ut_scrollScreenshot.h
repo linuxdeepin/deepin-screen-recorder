@@ -69,7 +69,7 @@ TEST_F(ScrollScreenshotTest, startAddPixmap)
     m_PixMerageThread->stopTask();
     m_PixMerageThread->wait();
 }
-void start_stub(int msec)
+void start_stub2(int msec)
 {
 
     qDebug() << "模拟定时器启动！";
@@ -84,7 +84,7 @@ TEST_F(ScrollScreenshotTest, changeState)
     ScrollScreenshot::ScrollStatus &m_curStatus = access_private_field::ScrollScreenshotm_curStatus(*m_ScrollScreenshot);
     m_curStatus = ScrollScreenshot::ScrollStatus::Merging;
 //    QTimer *&m_mouseWheelTimer = access_private_field::ScrollScreenshotm_mouseWheelTimer(*m_ScrollScreenshot);
-    stub.set((void(QTimer::*)(int))ADDR(QTimer, start), start_stub);
+    stub.set((void(QTimer::*)(int))ADDR(QTimer, start), start_stub2);
     stub.set(ADDR(QTimer, stop), stop_stub);
     m_ScrollScreenshot->changeState(true);
 

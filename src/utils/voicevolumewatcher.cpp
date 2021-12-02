@@ -138,7 +138,6 @@ void voiceVolumeWatcher::onCardsChanged(const QString &value)
 void voiceVolumeWatcher::initAvailInputPorts(const QString &cards)
 {
     m_availableInputPorts.clear();
-
     QJsonDocument doc = QJsonDocument::fromJson(cards.toUtf8());
     QJsonArray jCards = doc.array();
 

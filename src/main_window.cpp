@@ -3574,14 +3574,14 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if(Utils::isWaylandMode) {
-       onKeyboardPressWayland(event->key());
+    if (Utils::isWaylandMode) {
+        onKeyboardPressWayland(event->key());
     }
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
-    if(Utils::isWaylandMode) {
+    if (Utils::isWaylandMode) {
         onKeyboardReleaseWayland(event->key());
     }
 }
@@ -3666,7 +3666,7 @@ void MainWindow::onKeyboardPressWayland(const int key)
         }
         m_showButtons->showContentButtons(key);
     } else {
-        if((Qt::Key_F3 == key)) {
+        if ((Qt::Key_F3 == key)) {
             m_toolBar->shapeClickedFromMain("option");
         }
     }

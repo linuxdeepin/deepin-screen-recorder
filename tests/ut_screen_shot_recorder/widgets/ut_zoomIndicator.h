@@ -12,31 +12,34 @@
 using namespace testing;
 ACCESS_PRIVATE_FUN(ZoomIndicator, void(QPaintEvent *), paintEvent);
 
-class ZoomIndicatorTest:public testing::Test, public QObject{
+class ZoomIndicatorTest: public testing::Test, public QObject
+{
 
 public:
     ZoomIndicator *zoomindicator;
-    virtual void SetUp() override{
+    virtual void SetUp() override
+    {
         std::cout << "start ZoomIndicatorTest" << std::endl;
         zoomindicator = new ZoomIndicator(nullptr);
 
     }
 
-    virtual void TearDown() override{
+    virtual void TearDown() override
+    {
         delete zoomindicator;
         std::cout << "end ZoomIndicatorTest" << std::endl;
     }
 };
 
-TEST_F(ZoomIndicatorTest, ButtonClicked)
-{
-    zoomindicator->showMagnifier(QPoint(100, 100));
-}
+//TEST_F(ZoomIndicatorTest, ButtonClicked)
+//{
+//    zoomindicator->showMagnifier(QPoint(100, 100));
+//}
 
 TEST_F(ZoomIndicatorTest, paintEvent)
 {
     QPaintEvent *paintEvent = new QPaintEvent(QRect());
-    call_private_fun::ZoomIndicatorpaintEvent(*zoomindicator,paintEvent);
+    call_private_fun::ZoomIndicatorpaintEvent(*zoomindicator, paintEvent);
 
     delete paintEvent;
 }

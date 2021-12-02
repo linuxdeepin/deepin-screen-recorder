@@ -70,37 +70,7 @@ SubToolWidget::SubToolWidget(MainWindow *pmainwindow, DWidget *parent) : DStacke
 //    this->setStyleSheet("background-color: rgb(255,122, 255)");
 }
 
-SubToolWidget::~SubToolWidget()
-{
-    if (nullptr != hintFilter) {
-        delete hintFilter;
-        hintFilter = nullptr;
-    }
-    if (nullptr != m_recordOptionMenu) {
-        delete m_recordOptionMenu;
-        m_recordOptionMenu = nullptr;
-    }
-    if (nullptr != m_cursorMenu) {
-        delete m_cursorMenu;
-        m_cursorMenu = nullptr;
-    }
-    if (nullptr != m_audioButton) {
-        delete m_audioButton;
-        m_audioButton = nullptr;
-    }
-    if (nullptr != m_audioMenu) {
-        delete m_audioMenu;
-        m_audioMenu = nullptr;
-    }
-    if (nullptr != m_recordBtnGroup) {
-        delete m_recordBtnGroup;
-        m_recordBtnGroup = nullptr;
-    }
-    if (nullptr != m_shotBtnGroup) {
-        delete m_shotBtnGroup;
-        m_shotBtnGroup = nullptr;
-    }
-}
+
 
 void SubToolWidget::initWidget()
 {
@@ -1340,3 +1310,34 @@ void SubToolWidget::setIsZhaoxinPlatform(bool isZhaoxin)
     m_isZhaoxinInSub = isZhaoxin;
 }
 */
+SubToolWidget::~SubToolWidget()
+{
+    if (nullptr != hintFilter) {
+        delete hintFilter;
+        hintFilter = nullptr;
+    }
+    if (nullptr != m_recordOptionMenu) {
+        delete m_recordOptionMenu;
+        m_recordOptionMenu = nullptr;
+    }
+    if (nullptr != m_cursorMenu) {
+        delete m_cursorMenu;
+        m_cursorMenu = nullptr;
+    }
+    if (nullptr != m_audioButton) {
+        delete m_audioButton;
+        m_audioButton = nullptr;
+    }
+    if (nullptr != m_audioMenu) {
+        delete m_audioMenu;
+        m_audioMenu = nullptr;
+    }
+    if (nullptr != m_recordBtnGroup) {
+        delete m_recordBtnGroup;
+        m_recordBtnGroup = nullptr;
+    }
+    if (nullptr != m_shotBtnGroup) {
+        delete m_shotBtnGroup;
+        m_shotBtnGroup = nullptr;
+    }
+}

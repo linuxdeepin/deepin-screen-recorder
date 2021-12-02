@@ -450,6 +450,8 @@ TEST_F(CAVInputStreamTest, readSysAudioPacket)
 ACCESS_PRIVATE_FUN(CAVInputStream, int(), readSysToMixAudioPacket);
 TEST_F(CAVInputStreamTest, readSysToMixAudioPacket)
 {
+    if (QSysInfo::currentCpuArchitecture().startsWith("arm"))
+        return;
     stub.set(ADDR(CAVInputStream, bRunThread), bRunThread_stub);
     stub.set(av_frame_alloc, av_frame_alloc_stub);
 //    stub.set(av_init_packet, av_init_packet_stub);

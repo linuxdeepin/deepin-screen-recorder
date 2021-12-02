@@ -154,15 +154,15 @@ void removeOutput_stub(quint32 name)
     Q_UNUSED(name);
 
 }
-void create_stub(KWayland::Client::ConnectionThread connection)
+void create_stub1(KWayland::Client::ConnectionThread connection)
 {
     Q_UNUSED(connection);
 }
-void setEventQueue_stub(KWayland::Client::EventQueue *queue)
+void setEventQueue_stub1(KWayland::Client::EventQueue *queue)
 {
     Q_UNUSED(queue);
 }
-void setup_stub()
+void setup_stub1()
 {
 
 }
@@ -173,7 +173,7 @@ TEST_F(WaylandIntegrationPrivateTest, setupRegistry)
 {
     if (QSysInfo::currentCpuArchitecture().startsWith("arm"))
         return;
-    stub.set((void(KWayland::Client::EventQueue::*)(KWayland::Client::ConnectionThread *))ADDR(KWayland::Client::EventQueue, setup), setup_stub);
+    stub.set((void(KWayland::Client::EventQueue::*)(KWayland::Client::ConnectionThread *))ADDR(KWayland::Client::EventQueue, setup), setup_stub1);
 
     auto WaylandIntegrationPrivate_addOutput = get_private_fun::WaylandIntegrationPrivateaddOutput();
     stub.set(WaylandIntegrationPrivate_addOutput, addOutput_stub);
@@ -181,9 +181,9 @@ TEST_F(WaylandIntegrationPrivateTest, setupRegistry)
     auto WaylandIntegrationPrivate_removeOutput = get_private_fun::WaylandIntegrationPrivateremoveOutput();
     stub.set(WaylandIntegrationPrivate_removeOutput, removeOutput_stub);
 
-    stub.set((void(KWayland::Client::Registry::*)(KWayland::Client::ConnectionThread *))ADDR(KWayland::Client::Registry, create), create_stub);
-    stub.set((void(KWayland::Client::Registry::*)(KWayland::Client::EventQueue *))ADDR(KWayland::Client::Registry, setEventQueue), setEventQueue_stub);
-    stub.set(ADDR(KWayland::Client::Registry, setup), setup_stub);
+    stub.set((void(KWayland::Client::Registry::*)(KWayland::Client::ConnectionThread *))ADDR(KWayland::Client::Registry, create), create_stub1);
+    stub.set((void(KWayland::Client::Registry::*)(KWayland::Client::EventQueue *))ADDR(KWayland::Client::Registry, setEventQueue), setEventQueue_stub1);
+    stub.set(ADDR(KWayland::Client::Registry, setup), setup_stub1);
 
 
     access_private_field::WaylandIntegrationPrivatem_connection(*m_waylandIntegrationPrivate) = new KWayland::Client::ConnectionThread;

@@ -6,7 +6,7 @@
 #include <QTest>
 #include <QPoint>
 #include <QScreen>
-
+#include <QDir>
 #include "stub.h"
 #include "addr_pri.h"
 #include <gtest/gtest.h>
@@ -668,7 +668,7 @@ TEST_F(MainWindowTest, screenRecord)
     window->initLaunchMode("screenShot");
     window->showFullScreen();
 
-    ToolBar *m_toolBar = access_private_field::MainWindowm_toolBar(*window);
+    //ToolBar *m_toolBar = access_private_field::MainWindowm_toolBar(*window);
 
     QEventLoop loop;
 
@@ -829,12 +829,14 @@ TEST_F(MainWindowTest, scrollShot)
 
 static bool hasComposite_stub(void *obj)
 {
+    Q_UNUSED(obj);
     return false;
 }
 
 
 static QString CpuArchitecture_stub(void *obj)
 {
+    Q_UNUSED(obj);
     return  "mips";
 }
 
@@ -887,6 +889,7 @@ ACCESS_PRIVATE_FUN(MainWindow, bool(), isToolBarInShotArea);
 ACCESS_PRIVATE_FUN(MainWindow, QPoint(), getScrollShotTipPosition);
 static bool isToolBarInShotArea_stub(void *obj)
 {
+    Q_UNUSED(obj);
     return true;
 }
 
@@ -943,11 +946,15 @@ ACCESS_PRIVATE_FUN(MainWindow, void(), startAutoScrollShot);
 //替换ScrollScreenshot的setScrollModel函数
 static bool setScrollModel_stub(void *obj, bool)
 {
+    Q_UNUSED(obj);
     return true;
 }
 //替换ScrollScreenshot的addPixmap函数
 static bool addPixmap_stub(void *obj, const QPixmap &piximg, int wheelDirection)
 {
+    Q_UNUSED(obj);
+    Q_UNUSED(piximg);
+    Q_UNUSED(wheelDirection);
     return true;
 }
 //开始自动滚动截图测试用例
@@ -974,6 +981,8 @@ TEST_F(MainWindowTest, startAutoScrollShot)
 ACCESS_PRIVATE_FUN(MainWindow, void(), pauseAutoScrollShot);
 static bool changeState_stub(void *obj, bool wheelDirection)
 {
+    Q_UNUSED(obj);
+    Q_UNUSED(wheelDirection);
     return true;
 }
 //暂停自动滚动截图测试用例
@@ -1044,6 +1053,10 @@ ACCESS_PRIVATE_FUN(MainWindow, void(PreviewWidget::PostionStatus previewPostion,
 
 static bool scrollShotGrabPixmap_stub(void *obj, PreviewWidget::PostionStatus previewPostion, int direction, int mouseTime)
 {
+    Q_UNUSED(obj);
+    Q_UNUSED(previewPostion);
+    Q_UNUSED(direction);
+    Q_UNUSED(mouseTime);
     return true;
 }
 //处理手动滚动截图逻辑测试用例
@@ -1068,8 +1081,17 @@ TEST_F(MainWindowTest, handleManualScrollShot)
 
 void getInputEvent_stub(const int wid, const short x, const short y, const unsigned short width, const unsigned short height)
 {
-
+    Q_UNUSED(wid);
+    Q_UNUSED(x);
+    Q_UNUSED(y);
+    Q_UNUSED(width);
+    Q_UNUSED(height);
     qDebug() << "getInputEvent_stub!";
+}
+
+void setInputEvent_stub()
+{
+    qDebug() << "setInputEvent_stub!";
 }
 ACCESS_PRIVATE_FUN(MainWindow, void(), setInputEvent);
 //滚动截图设置区域穿透测试用例
@@ -1134,6 +1156,7 @@ TEST_F(MainWindowTest, setCancelInputEvent)
 ACCESS_PRIVATE_FUN(MainWindow, void(), showAdjustArea);
 static QRect getInvalidArea_stub(void *obj)
 {
+    Q_UNUSED(obj);
     return QRect(0, 0, 500, 500);
 }
 //显示可调整的捕捉区域大小及位置测试用例
@@ -1193,9 +1216,96 @@ TEST_F(MainWindowTest, isToolBarInShotArea)
 
 }
 
+void hideSomeToolBtn_stub()
+{
 
+}
+
+void resetCursor_stub()
+{
+
+}
+
+void showTip_stub(TipType tipType)
+{
+    Q_UNUSED(tipType);
+    qDebug() << "showTip_stub!!!";
+}
+
+bool setBackgroundPixmap_stub(void *obj)
+{
+    Q_UNUSED(obj);
+    return true;
+}
+QPoint getScrollShotTipPosition_stub(void *obj)
+{
+    Q_UNUSED(obj);
+    return QPoint(500, 500);
+}
+void showScrollShot_stub()
+{
+
+}
+ACCESS_PRIVATE_FIELD(MainWindow, bool, m_initScroll);
+ACCESS_PRIVATE_FIELD(MainWindow, TopTips *, m_sizeTips);
+ACCESS_PRIVATE_FUN(MainWindow, void(), initScrollShot);
+ACCESS_PRIVATE_FUN(MainWindow, void(), resetCursor);
+ACCESS_PRIVATE_FUN(MainWindow, void(), showScrollShot);
 TEST_F(MainWindowTest, initScrollShot)
 {
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_initScroll(*window) = false;
+
+    access_private_field::MainWindowm_toolBar(*window) = new ToolBar();
+    access_private_field::MainWindowm_sizeTips(*window) = new TopTips() ;
+    stub.set(ADDR(ToolBar, hideSomeToolBtn), hideSomeToolBtn_stub);
+
+    auto MainWindow_resetCursor = get_private_fun::MainWindowresetCursor();
+    stub.set(MainWindow_resetCursor, resetCursor_stub);
+
+    auto MainWindow_setInputEvent = get_private_fun::MainWindowsetInputEvent();
+    stub.set(MainWindow_setInputEvent, setInputEvent_stub);
+
+    int &MainWindow_recordX =  access_private_field::MainWindowrecordX(*window);
+    MainWindow_recordX = 0;
+    int &MainWindow_recordY =  access_private_field::MainWindowrecordY(*window);
+    MainWindow_recordY = 0;
+    int &MainWindow_recordWidth =  access_private_field::MainWindowrecordWidth(*window);
+    MainWindow_recordWidth = 1920;
+    int &MainWindow_recordHeight =  access_private_field::MainWindowrecordHeight(*window);
+    MainWindow_recordHeight = 1080;
+    qreal &MainWindow_m_pixelRatio =  access_private_field::MainWindowm_pixelRatio(*window);
+    MainWindow_m_pixelRatio = 1.0;
+
+    ScrollShotTip *&MainWindow_m_scrollShotTip = access_private_field::MainWindowm_scrollShotTip(*window);
+    MainWindow_m_scrollShotTip = new ScrollShotTip();
+    MainWindow_m_scrollShotTip->move(100, 100);
+    MainWindow_m_scrollShotTip->resize(100, 40);
+    stub.set(ADDR(ScrollShotTip, showTip), showTip_stub);
+    MainWindow_m_scrollShotTip->showTip(TipType::StartScrollShotTip);
+    stub.set(ADDR(ScrollShotTip, setBackgroundPixmap), setBackgroundPixmap_stub);
+
+    auto MainWindow_getScrollShotTipPosition = get_private_fun::MainWindowgetScrollShotTipPosition();
+    stub.set(MainWindow_getScrollShotTipPosition, getScrollShotTipPosition_stub);
+
+    auto MainWindow_isToolBarInShotArea = get_private_fun::MainWindowisToolBarInShotArea();
+    stub.set(MainWindow_isToolBarInShotArea, isToolBarInShotArea_stub);
+
+
+    auto MainWindow_showScrollShot = get_private_fun::MainWindowshowScrollShot();
+    stub.set(MainWindow_showScrollShot, showScrollShot_stub);
+
+
+    call_private_fun::MainWindowinitScrollShot(*window);
+
+    stub.reset(MainWindow_showScrollShot);
+    stub.reset(MainWindow_isToolBarInShotArea);
+    stub.reset(MainWindow_getScrollShotTipPosition);
+    stub.reset(ADDR(ScrollShotTip, setBackgroundPixmap));
+    stub.reset(ADDR(ScrollShotTip, showTip));
+    stub.reset(MainWindow_resetCursor);
+    stub.reset(ADDR(ToolBar, hideSomeToolBtn));
+    delete window;
 
 }
 
@@ -1203,16 +1313,17 @@ ACCESS_PRIVATE_FIELD(MainWindow, QPixmap, m_firstScrollShotImg);
 //ACCESS_PRIVATE_FIELD(MainWindow, DPushButton *, m_shotButton);
 ACCESS_PRIVATE_FIELD(MainWindow, TopTips *, m_scrollShotSizeTips);
 ACCESS_PRIVATE_FIELD(MainWindow, PreviewWidget *, m_previewWidget);
-ACCESS_PRIVATE_FUN(MainWindow, void(), showScrollShot);
 ACCESS_PRIVATE_FUN(MainWindow, void(), updateToolBarPos);
 //ACCESS_PRIVATE_FUN(MainWindow, void(), updateShotButtonPos);
 static void updateToolBarPos_stub(void *obj)
 {
+    Q_UNUSED(obj);
     qDebug() << "调整工具栏位置";
 
 }
 static void updateShotButtonPos_stub(void *obj)
 {
+    Q_UNUSED(obj);
     qDebug() << "调整截图保存按钮位置";
 }
 //初始化滚动截图，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小、第一张预览图，单元测试用例
@@ -1355,6 +1466,8 @@ TEST_F(MainWindowTest, scrollShotGrabPixmap)
 
 static void updateImage_stub(void *obj, QImage img)
 {
+    Q_UNUSED(obj);
+    Q_UNUSED(img);
     qDebug() << "预览窗口更新图片";
 }
 ACCESS_PRIVATE_FIELD(MainWindow, ScreenGrabber, m_screenGrabber);
@@ -1410,27 +1523,23 @@ ACCESS_PRIVATE_FIELD(MainWindow, bool, m_isAutoScrollShotStart);
 ACCESS_PRIVATE_FUN(MainWindow, void(int x, int y), scrollShotMouseClickEvent);
 bool startAutoScrollShot_stub(void *obj)
 {
+    Q_UNUSED(obj);
     return true;
 }
 bool pauseAutoScrollShot_stub(void *obj)
 {
+    Q_UNUSED(obj);
     return true;
 }
 bool setCancelInputEvent_stub(void *obj)
 {
-    return true;
-}
-bool setInputEvent_stub(void *obj)
-{
+    Q_UNUSED(obj);
     return true;
 }
 bool continueAutoScrollShot_stub(void *obj)
 {
+    Q_UNUSED(obj);
     return true;
-}
-void showTip_stub(TipType tipType)
-{
-    qDebug() << "showTip_stub!!!";
 }
 //滚动截图鼠标按钮事件单元测试用例
 TEST_F(MainWindowTest, scrollShotMouseClickEvent)
@@ -1589,10 +1698,12 @@ ACCESS_PRIVATE_FUN(MainWindow, void(int mouseTime, int direction, int x, int y),
 ACCESS_PRIVATE_FIELD(MainWindow, int, m_autoScrollFlagLast);
 bool handleManualScrollShot_stub(void *obj)
 {
+    Q_UNUSED(obj);
     return true;
 }
 bool startManualScrollShot_stub(void *obj)
 {
+    Q_UNUSED(obj);
     return true;
 }
 //滚动截图时处理鼠标滚轮滚动,单元测试用例
@@ -1703,21 +1814,18 @@ ACCESS_PRIVATE_FUN(MainWindow, QPixmap(const QRect &rect), getPixmapofRect);
 ACCESS_PRIVATE_FIELD(MainWindow, QTimer *, m_tipShowtimer);
 bool showAdjustArea_stub(void *obj)
 {
+    Q_UNUSED(obj);
     return true;
 }
-QPoint getScrollShotTipPosition_stub(void *obj)
-{
-    return QPoint(500, 500);
-}
+
 QPixmap getPixmapofRect_stub(void *obj, const QRect &rect)
 {
+    Q_UNUSED(obj);
+    Q_UNUSED(rect);
     QPixmap pixmap;
     return pixmap;
 }
-bool setBackgroundPixmap_stub(void *obj)
-{
-    return true;
-}
+
 
 
 //滚动截图时，获取拼接时的状态  单元测试用例
@@ -1775,6 +1883,7 @@ ACCESS_PRIVATE_FIELD(MainWindow, bool, m_isAdjustArea);
 ACCESS_PRIVATE_FUN(MainWindow, void(), onAdjustCaptureArea);
 bool clearPixmap_stub(void *obj)
 {
+    Q_UNUSED(obj);
     return true;
 }
 //自动调整捕捉区域的大小及位置 单元测试用例
@@ -1859,5 +1968,633 @@ TEST_F(MainWindowTest, onAdjustCaptureArea)
 
     delete window;
 
+
+}
+
+void initAttributes_stub()
+{
+
+}
+void initLaunchMode_stub(const QString &launchMode)
+{
+    Q_UNUSED(launchMode);
+}
+void showFullScreen_stub()
+{
+
+}
+void initResource_stub()
+{
+
+}
+void shotFullScreen_stub(bool flag)
+{
+    Q_UNUSED(flag);
+}
+bool saveAction_stub(const QPixmap &pix)
+{
+    Q_UNUSED(pix);
+    return true;
+}
+void sendNotify_stub(SaveAction saveAction, QString saveFilePath, const bool succeed)
+{
+    Q_UNUSED(saveAction);
+    Q_UNUSED(saveFilePath);
+    Q_UNUSED(succeed);
+
+}
+TEST_F(MainWindowTest, fullScreenshot)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(MainWindow, initAttributes), initAttributes_stub);
+    stub.set(ADDR(MainWindow, initLaunchMode), initLaunchMode_stub);
+    stub.set(ADDR(MainWindow, showFullScreen), showFullScreen_stub);
+    stub.set(ADDR(MainWindow, initResource), initResource_stub);
+    stub.set(ADDR(MainWindow, shotFullScreen), shotFullScreen_stub);
+    stub.set(ADDR(MainWindow, saveAction), saveAction_stub);
+    stub.set(ADDR(MainWindow, sendNotify), sendNotify_stub);
+    MainWindow *window = new MainWindow();
+
+    window->fullScreenshot();
+
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(MainWindow, initAttributes));
+    stub.reset(ADDR(MainWindow, initLaunchMode));
+    stub.reset(ADDR(MainWindow, showFullScreen));
+    stub.reset(ADDR(MainWindow, initResource));
+    stub.reset(ADDR(MainWindow, shotFullScreen));
+    stub.reset(ADDR(MainWindow, saveAction));
+    stub.reset(ADDR(MainWindow, sendNotify));
+    delete window;
+
+}
+
+ACCESS_PRIVATE_FIELD(MainWindow, QPixmap, m_backgroundPixmap);
+TEST_F(MainWindowTest, topWindow)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(MainWindow, initAttributes), initAttributes_stub);
+    stub.set(ADDR(MainWindow, initLaunchMode), initLaunchMode_stub);
+    stub.set(ADDR(MainWindow, showFullScreen), showFullScreen_stub);
+    stub.set(ADDR(MainWindow, initResource), initResource_stub);
+    stub.set(ADDR(MainWindow, saveAction), saveAction_stub);
+    stub.set(ADDR(MainWindow, sendNotify), sendNotify_stub);
+    MainWindow *window = new MainWindow();
+    qreal &MainWindow_m_pixelRatio =  access_private_field::MainWindowm_pixelRatio(*window);
+    MainWindow_m_pixelRatio = 1.0;
+
+    int &MainWindow_m_screenCount =  access_private_field::MainWindowm_screenCount(*window);
+    MainWindow_m_screenCount = 1;
+
+    QPixmap MainWindow_m_backgroundPixmap = access_private_field::MainWindowm_backgroundPixmap(*window);
+
+    QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
+    // 在多屏模式下, winId 不是0
+    MainWindow_m_backgroundPixmap = t_primaryScreen->grabWindow(QApplication::desktop()->winId(), 0, 0, 1920, 1080);
+
+    window->topWindow();
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(MainWindow, initAttributes));
+    stub.reset(ADDR(MainWindow, initLaunchMode));
+    stub.reset(ADDR(MainWindow, showFullScreen));
+    stub.reset(ADDR(MainWindow, initResource));
+    stub.reset(ADDR(MainWindow, saveAction));
+    stub.reset(ADDR(MainWindow, sendNotify));
+    delete window;
+
+}
+
+ACCESS_PRIVATE_FIELD(MainWindow, QList<QRect>, windowRects);
+ACCESS_PRIVATE_FIELD(MainWindow, QList<QString>, windowNames);
+TEST_F(MainWindowTest, saveTopWindow)
+{
+
+    //stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(MainWindow, initAttributes), initAttributes_stub);
+    stub.set(ADDR(MainWindow, initLaunchMode), initLaunchMode_stub);
+    stub.set(ADDR(MainWindow, showFullScreen), showFullScreen_stub);
+    stub.set(ADDR(MainWindow, initResource), initResource_stub);
+    stub.set(ADDR(MainWindow, saveAction), saveAction_stub);
+    stub.set(ADDR(MainWindow, sendNotify), sendNotify_stub);
+    MainWindow *window = new MainWindow();
+    qreal &MainWindow_m_pixelRatio =  access_private_field::MainWindowm_pixelRatio(*window);
+    MainWindow_m_pixelRatio = 1.0;
+
+    int &MainWindow_m_screenCount =  access_private_field::MainWindowm_screenCount(*window);
+    MainWindow_m_screenCount = 1;
+
+    QPixmap MainWindow_m_backgroundPixmap = access_private_field::MainWindowm_backgroundPixmap(*window);
+
+    QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
+    // 在多屏模式下, winId 不是0
+    MainWindow_m_backgroundPixmap = t_primaryScreen->grabWindow(QApplication::desktop()->winId(), 0, 0, 1920, 1080);
+
+    access_private_field::MainWindowwindowRects(*window).append(QRect(0, 0, 1000, 1000));
+    access_private_field::MainWindowwindowRects(*window).append(QRect(0, 0, 500, 500));
+    access_private_field::MainWindowwindowNames(*window).append("111");
+    access_private_field::MainWindowwindowNames(*window).append("222");
+
+    window->saveTopWindow();
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(MainWindow, initAttributes));
+    stub.reset(ADDR(MainWindow, initLaunchMode));
+    stub.reset(ADDR(MainWindow, showFullScreen));
+    stub.reset(ADDR(MainWindow, initResource));
+    stub.reset(ADDR(MainWindow, saveAction));
+    stub.reset(ADDR(MainWindow, sendNotify));
+    delete window;
+
+}
+//TEST_F(MainWindowTest, noNotify)
+//{
+
+//    MainWindow *window = new MainWindow();
+//    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+//    stub.set(ADDR(MainWindow, initAttributes), initAttributes_stub);
+//    stub.set(ADDR(MainWindow, initLaunchMode), initLaunchMode_stub);
+//    stub.set(ADDR(MainWindow, showFullScreen), showFullScreen_stub);
+//    stub.set(ADDR(MainWindow, initResource), initResource_stub);
+
+//    window->noNotify();
+
+//    stub.reset(ADDR(MainWindow, initMainWindow));
+//    stub.reset(ADDR(MainWindow, initAttributes));
+//    stub.reset(ADDR(MainWindow, initLaunchMode));
+//    stub.reset(ADDR(MainWindow, showFullScreen));
+//    stub.reset(ADDR(MainWindow, initResource));
+//    delete window;
+
+//}
+bool isWaylandMode_stub()
+{
+    return true;
+}
+ACCESS_PRIVATE_FUN(MainWindow, void(QWheelEvent *), wheelEvent);
+TEST_F(MainWindowTest, wheelEvent)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_scrollShot(*window) = nullptr;
+    QWheelEvent *event ;
+    Utils::isWaylandMode = true;
+    int &MainWindow_recordX =  access_private_field::MainWindowrecordX(*window);
+    MainWindow_recordX = 0;
+    int &MainWindow_recordY =  access_private_field::MainWindowrecordY(*window);
+    MainWindow_recordY = 0;
+    int &MainWindow_recordWidth =  access_private_field::MainWindowrecordWidth(*window);
+    MainWindow_recordWidth = 1920;
+    int &MainWindow_recordHeight =  access_private_field::MainWindowrecordHeight(*window);
+    MainWindow_recordHeight = 1080;
+    int &MainWindow_m_screenWidth =  access_private_field::MainWindowm_screenWidth(*window);
+    MainWindow_m_screenWidth = 1920;
+    int &MainWindow_m_screenHeight =  access_private_field::MainWindowm_screenHeight(*window);
+    MainWindow_m_screenHeight = 1080;
+
+    qreal &MainWindow_m_pixelRatio =  access_private_field::MainWindowm_pixelRatio(*window);
+    MainWindow_m_pixelRatio = 1.0;
+
+    call_private_fun::MainWindowwheelEvent(*window, event);
+
+    Utils::isWaylandMode = false;
+    delete window;
+    stub.reset(ADDR(MainWindow, initMainWindow));
+
+}
+
+ACCESS_PRIVATE_FIELD(MainWindow, CameraWidget *, m_cameraWidget);
+ACCESS_PRIVATE_FIELD(MainWindow, bool, m_selectedCamera);
+ACCESS_PRIVATE_FIELD(MainWindow, int, m_shotflag);
+int getRecordWidth_stub()
+{
+    return 500;
+}
+int getRecordHeight_stub()
+{
+    return 500;
+}
+CameraWidget::Position postion_stub()
+{
+    return CameraWidget::Position::leftBottom;
+}
+TEST_F(MainWindowTest, updateCameraWidgetPos)
+{
+    //stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(MainWindow, initAttributes), initAttributes_stub);
+    stub.set(ADDR(MainWindow, initLaunchMode), initLaunchMode_stub);
+    stub.set(ADDR(MainWindow, showFullScreen), showFullScreen_stub);
+    stub.set(ADDR(MainWindow, initResource), initResource_stub);
+
+    stub.set(ADDR(CameraWidget, getRecordWidth), getRecordWidth_stub);
+    stub.set(ADDR(CameraWidget, getRecordHeight), getRecordHeight_stub);
+    stub.set(ADDR(CameraWidget, postion), postion_stub);
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_cameraWidget(*window) = new CameraWidget();
+    access_private_field::MainWindowm_selectedCamera(*window) = true;
+    access_private_field::MainWindowm_shotflag(*window) = 1;
+    int &MainWindow_recordX =  access_private_field::MainWindowrecordX(*window);
+    MainWindow_recordX = 0;
+    int &MainWindow_recordY =  access_private_field::MainWindowrecordY(*window);
+    MainWindow_recordY = 0;
+    int &MainWindow_recordWidth =  access_private_field::MainWindowrecordWidth(*window);
+    MainWindow_recordWidth = 1920;
+    int &MainWindow_recordHeight =  access_private_field::MainWindowrecordHeight(*window);
+    MainWindow_recordHeight = 1080;
+    window->updateCameraWidgetPos();
+    stub.reset(ADDR(CameraWidget, getRecordWidth));
+    stub.reset(ADDR(CameraWidget, getRecordHeight));
+    stub.reset(ADDR(CameraWidget, postion));
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(MainWindow, initAttributes));
+    stub.reset(ADDR(MainWindow, initLaunchMode));
+    stub.reset(ADDR(MainWindow, showFullScreen));
+    stub.reset(ADDR(MainWindow, initResource));
+    delete window;
+
+}
+
+void startCountdown_stub()
+{
+
+}
+ACCESS_PRIVATE_FIELD(MainWindow, QSize, m_screenSize);
+TEST_F(MainWindowTest, tableRecordSet)
+{
+    //stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(MainWindow, initAttributes), initAttributes_stub);
+    stub.set(ADDR(MainWindow, initLaunchMode), initLaunchMode_stub);
+    stub.set(ADDR(MainWindow, showFullScreen), showFullScreen_stub);
+    stub.set(ADDR(MainWindow, initResource), initResource_stub);
+    stub.set(ADDR(MainWindow, startCountdown), startCountdown_stub);
+
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_screenSize(*window) = QSize(1920, 1080);
+
+    window->tableRecordSet();
+
+    stub.reset(ADDR(MainWindow, startCountdown));
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(MainWindow, initAttributes));
+    stub.reset(ADDR(MainWindow, initLaunchMode));
+    stub.reset(ADDR(MainWindow, showFullScreen));
+    stub.reset(ADDR(MainWindow, initResource));
+    delete window;
+
+}
+void showDragFeedback_stub(int x, int y)
+{
+    Q_UNUSED(x);
+    Q_UNUSED(y);
+}
+ACCESS_PRIVATE_FIELD(MainWindow, unsigned int, m_functionType);
+TEST_F(MainWindowTest, onMouseDrag)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(MainWindow, showDragFeedback), showDragFeedback_stub);
+
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_functionType(*window) = MainWindow::status::record  ;
+
+    window->onMouseDrag(10, 10);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(MainWindow, showDragFeedback));
+    delete window;
+
+}
+void showPressFeedback_stub(int x, int y)
+{
+    Q_UNUSED(x);
+    Q_UNUSED(y);
+}
+TEST_F(MainWindowTest, onMousePress1)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(MainWindow, showPressFeedback), showPressFeedback_stub);
+
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_functionType(*window) = MainWindow::status::record  ;
+
+    window->onMousePress(10, 10);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(MainWindow, showPressFeedback));
+    delete window;
+
+}
+void scrollShotMouseClickEvent_stub(int x, int y)
+{
+    Q_UNUSED(x);
+    Q_UNUSED(y);
+}
+TEST_F(MainWindowTest, onMousePress2)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(MainWindow, scrollShotMouseClickEvent), scrollShotMouseClickEvent_stub);
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_initScroll(*window) = true;
+    access_private_field::MainWindowm_functionType(*window) = MainWindow::status::scrollshot  ;
+
+    window->onMousePress(10, 10);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(MainWindow, scrollShotMouseClickEvent));
+    delete window;
+
+}
+void showReleaseFeedback_stub(int x, int y)
+{
+    Q_UNUSED(x);
+    Q_UNUSED(y);
+}
+void showContentButtons_stub(int s)
+{
+}
+TEST_F(MainWindowTest, onMouseRelease)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(MainWindow, showReleaseFeedback), showReleaseFeedback_stub);
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_functionType(*window) = MainWindow::status::record  ;
+
+    window->onMousePress(10, 10);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(MainWindow, showReleaseFeedback));
+    delete window;
+
+}
+void responseEsc_stub()
+{
+}
+ACCESS_PRIVATE_FIELD(MainWindow, int, recordButtonStatus);
+ACCESS_PRIVATE_FIELD(MainWindow, ShowButtons *, m_showButtons);
+TEST_F(MainWindowTest, onKeyboardPressWayland1)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(MainWindow, responseEsc), responseEsc_stub);
+    stub.set((void(ShowButtons::*)(const int))ADDR(ShowButtons, showContentButtons), showContentButtons_stub);
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_functionType(*window) = MainWindow::status::record;
+    access_private_field::MainWindowm_showButtons(*window) = new ShowButtons();
+    access_private_field::MainWindowm_toolBar(*window) = new ToolBar();
+    access_private_field::MainWindowrecordButtonStatus(*window) = 0;
+
+    window->onKeyboardPressWayland(Qt::Key_Escape);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(MainWindow, responseEsc));
+    stub.reset((void(ShowButtons::*)(const int))ADDR(ShowButtons, showContentButtons));
+    delete window;
+
+}
+
+void shapeClickedFromMain_stub(QString s)
+{
+}
+TEST_F(MainWindowTest, onKeyboardPressWayland2)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(ToolBar, shapeClickedFromMain), shapeClickedFromMain_stub);
+    stub.set((void(ShowButtons::*)(const int))ADDR(ShowButtons, showContentButtons), showContentButtons_stub);
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_functionType(*window) = MainWindow::status::record;
+    access_private_field::MainWindowrecordButtonStatus(*window) = 0;
+    access_private_field::MainWindowm_showButtons(*window) = new ShowButtons();
+    access_private_field::MainWindowm_toolBar(*window) = new ToolBar();
+    window->onKeyboardPressWayland(Qt::Key_S);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(ToolBar, shapeClickedFromMain));
+    stub.reset((void(ShowButtons::*)(const int))ADDR(ShowButtons, showContentButtons));
+    delete window;
+
+}
+
+TEST_F(MainWindowTest, onKeyboardPressWayland3)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(ToolBar, shapeClickedFromMain), shapeClickedFromMain_stub);
+    stub.set((void(ShowButtons::*)(const int))ADDR(ShowButtons, showContentButtons), showContentButtons_stub);
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_functionType(*window) = MainWindow::status::record;
+    access_private_field::MainWindowrecordButtonStatus(*window) = 0;
+    access_private_field::MainWindowm_showButtons(*window) = new ShowButtons();
+    access_private_field::MainWindowm_toolBar(*window) = new ToolBar();
+    window->onKeyboardPressWayland(Qt::Key_M);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(ToolBar, shapeClickedFromMain));
+    stub.reset((void(ShowButtons::*)(const int))ADDR(ShowButtons, showContentButtons));
+    delete window;
+
+}
+
+TEST_F(MainWindowTest, onKeyboardPressWayland4)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(ToolBar, shapeClickedFromMain), shapeClickedFromMain_stub);
+    stub.set((void(ShowButtons::*)(const int))ADDR(ShowButtons, showContentButtons), showContentButtons_stub);
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_functionType(*window) = MainWindow::status::record;
+    access_private_field::MainWindowrecordButtonStatus(*window) = 0;
+    access_private_field::MainWindowm_showButtons(*window) = new ShowButtons();
+    access_private_field::MainWindowm_toolBar(*window) = new ToolBar();
+    window->onKeyboardPressWayland(Qt::Key_F3);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(ToolBar, shapeClickedFromMain));
+    stub.reset((void(ShowButtons::*)(const int))ADDR(ShowButtons, showContentButtons));
+    delete window;
+
+}
+TEST_F(MainWindowTest, initPadShot)
+{
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(MainWindow, initAttributes), initAttributes_stub);
+    stub.set(ADDR(MainWindow, initLaunchMode), initLaunchMode_stub);
+    stub.set(ADDR(MainWindow, showFullScreen), showFullScreen_stub);
+    stub.set(ADDR(MainWindow, initResource), initResource_stub);
+    stub.set(ADDR(MainWindow, updateToolBarPos), updateToolBarPos_stub);
+
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_toolBar(*window) = new ToolBar();
+
+    int &MainWindow_recordX =  access_private_field::MainWindowrecordX(*window);
+    MainWindow_recordX = 0;
+    int &MainWindow_recordY =  access_private_field::MainWindowrecordY(*window);
+    MainWindow_recordY = 0;
+    int &MainWindow_recordWidth =  access_private_field::MainWindowrecordWidth(*window);
+    MainWindow_recordWidth = 1920;
+    int &MainWindow_recordHeight =  access_private_field::MainWindowrecordHeight(*window);
+    MainWindow_recordHeight = 1080;
+
+    window->initPadShot();
+
+    stub.reset(ADDR(MainWindow, updateToolBarPos));
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(MainWindow, initAttributes));
+    stub.reset(ADDR(MainWindow, initLaunchMode));
+    stub.reset(ADDR(MainWindow, showFullScreen));
+    stub.reset(ADDR(MainWindow, initResource));
+    delete window;
+
+}
+
+
+ACCESS_PRIVATE_FIELD(MainWindow, bool, m_isShapesWidgetExist);
+TEST_F(MainWindowTest, onViewShortcut)
+{
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(MainWindow, initAttributes), initAttributes_stub);
+    stub.set(ADDR(MainWindow, initLaunchMode), initLaunchMode_stub);
+    stub.set(ADDR(MainWindow, showFullScreen), showFullScreen_stub);
+    stub.set(ADDR(MainWindow, initResource), initResource_stub);
+
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_toolBar(*window) = new ToolBar();
+
+    int &MainWindow_recordX =  access_private_field::MainWindowrecordX(*window);
+    MainWindow_recordX = 0;
+    int &MainWindow_recordY =  access_private_field::MainWindowrecordY(*window);
+    MainWindow_recordY = 0;
+    int &MainWindow_recordWidth =  access_private_field::MainWindowrecordWidth(*window);
+    MainWindow_recordWidth = 1920;
+    int &MainWindow_recordHeight =  access_private_field::MainWindowrecordHeight(*window);
+    MainWindow_recordHeight = 1080;
+
+    access_private_field::MainWindowm_isShapesWidgetExist(*window) = true;
+    access_private_field::MainWindowm_shapesWidget(*window) = new ShapesWidget();
+
+    window->onViewShortcut();
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(MainWindow, initAttributes));
+    stub.reset(ADDR(MainWindow, initLaunchMode));
+    stub.reset(ADDR(MainWindow, showFullScreen));
+    stub.reset(ADDR(MainWindow, initResource));
+    delete window;
+}
+
+TEST_F(MainWindowTest, shotKeyPressEvent)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(ToolBar, shapeClickedFromMain), shapeClickedFromMain_stub);
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_toolBar(*window) = new ToolBar();
+
+    window->shotKeyPressEvent(KEY_F3);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(ToolBar, shapeClickedFromMain));
+    delete window;
+
+}
+
+
+TEST_F(MainWindowTest, recordKeyPressEvent_Key_s)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(ToolBar, shapeClickedFromMain), shapeClickedFromMain_stub);
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_toolBar(*window) = new ToolBar();
+    access_private_field::MainWindowrecordButtonStatus(*window) = 0;
+
+    window->recordKeyPressEvent(KEY_S);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(ToolBar, shapeClickedFromMain));
+    delete window;
+
+}
+
+TEST_F(MainWindowTest, recordKeyPressEvent_Key_m)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(ToolBar, shapeClickedFromMain), shapeClickedFromMain_stub);
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_toolBar(*window) = new ToolBar();
+    access_private_field::MainWindowrecordButtonStatus(*window) = 0;
+
+    window->recordKeyPressEvent(KEY_M);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(ToolBar, shapeClickedFromMain));
+    delete window;
+
+}
+
+TEST_F(MainWindowTest, recordKeyPressEvent_Key_f3)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(ToolBar, shapeClickedFromMain), shapeClickedFromMain_stub);
+    MainWindow *window = new MainWindow();
+    access_private_field::MainWindowm_toolBar(*window) = new ToolBar();
+    access_private_field::MainWindowrecordButtonStatus(*window) = 0;
+
+    window->recordKeyPressEvent(KEY_F3);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(ToolBar, shapeClickedFromMain));
+    delete window;
+
+}
+
+bool isSysHighVersion1040_stub()
+{
+
+    return true;
+}
+void startRecord_stub()
+{
+}
+void m_pRecorderRegion_stub()
+{
+}
+ACCESS_PRIVATE_FIELD(MainWindow, RecorderRegionShow *, m_pRecorderRegion);
+TEST_F(MainWindowTest, startRecord)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    stub.set(ADDR(ToolBar, shapeClickedFromMain), shapeClickedFromMain_stub);
+    stub.set(ADDR(Utils, isSysHighVersion1040), isSysHighVersion1040_stub);
+    stub.set(ADDR(RecordProcess, startRecord), startRecord_stub);
+    stub.set(ADDR(RecorderRegionShow, setCameraShow), m_pRecorderRegion_stub);
+    MainWindow *window = new MainWindow();
+
+    Utils::isTabletEnvironment = false;
+
+    access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
+    access_private_field::MainWindowrecordButtonStatus(*window) = 0;
+
+    window->startRecord();
+
+    stub.reset(ADDR(RecorderRegionShow, setCameraShow));
+    stub.reset(ADDR(RecordProcess, startRecord));
+    stub.reset(ADDR(Utils, isSysHighVersion1040));
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    stub.reset(ADDR(ToolBar, shapeClickedFromMain));
+    delete window;
 
 }
