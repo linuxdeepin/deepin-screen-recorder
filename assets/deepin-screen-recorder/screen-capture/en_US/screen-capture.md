@@ -238,7 +238,7 @@ You can modify and move the text annotations after they're entered.
    - Modify the text in the text box.
 3. Click outside the text box to exit editing mode.
 
-### Take Screen Scrollshots
+### Take Screen Scrollshots|scrollshot
 
 You are able to take long screen scrollshots both in and out of the screen with the **Scrollshot** feature.
 
