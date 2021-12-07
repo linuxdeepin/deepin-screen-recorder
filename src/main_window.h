@@ -151,7 +151,8 @@ public:
 #ifndef __mips__
 
         if (m_pScreenCaptureEvent && m_isZhaoxin == false) {
-            m_pScreenCaptureEvent->terminate();
+            m_pScreenCaptureEvent->releaseRes();
+            //m_pScreenCaptureEvent->terminate();
             m_pScreenCaptureEvent->wait();
             delete m_pScreenCaptureEvent;
             m_pScreenCaptureEvent = nullptr;

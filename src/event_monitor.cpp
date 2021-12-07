@@ -38,6 +38,11 @@ EventMonitor::EventMonitor(QObject *parent) : QThread(parent)
 
 EventMonitor::~EventMonitor()
 {
+
+}
+
+void EventMonitor::releaseRes()
+{
     if (m_display_datalink && m_display) {
         XRecordDisableContext(m_display_datalink, m_context);
         XRecordFreeContext(m_display, m_context);

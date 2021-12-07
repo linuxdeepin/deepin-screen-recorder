@@ -4177,7 +4177,8 @@ void MainWindow::exitScreenCuptureEvent()
     qDebug() << "line: " << __LINE__ << " >>> function: " << __func__;
 #ifndef __mips__
     if (!m_isZhaoxin && m_pScreenCaptureEvent) {
-        m_pScreenCaptureEvent->terminate();
+        m_pScreenCaptureEvent->releaseRes();
+        //m_pScreenCaptureEvent->terminate();
         m_pScreenCaptureEvent->wait();
         delete m_pScreenCaptureEvent;
         m_pScreenCaptureEvent = nullptr;
@@ -4712,6 +4713,9 @@ void MainWindow::stopRecord()
         // 状态栏闪烁停止
         if (Utils::isTabletEnvironment && m_tabletRecorderHandle) {
             m_tabletRecorderHandle->stop();
+        }
+        if (m_pRecorderRegion) {
+            m_pRecorderRegion->hide();
         }
         recordButtonStatus = RECORD_BUTTON_SAVEING;
         recordProcess.stopRecord();

@@ -68,6 +68,12 @@ public:
      * @brief 初始化wayland录屏事件监听
      */
     void initWaylandEventMonitor();
+
+    /**
+     * @brief 释放X11相关资源
+     */
+    void releaseRes();
+
 public slots:
     /**
      * @brief wayland通过dbus接口接收鼠标按钮按下事件
