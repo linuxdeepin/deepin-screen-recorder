@@ -160,7 +160,17 @@ int main(int argc, char *argv[])
         }
         window.initLaunchMode(t_launchMode);
         DBusScreenshotService dbusService (&window);
-
+        if (Utils::isWaylandMode) {
+            //Wayland下不支持多屏状态下的录屏操作
+            if (QApplication::desktop()->screenCount() != 1) {
+                if (t_launchMode == "screenRecord") {
+                    Utils::notSupportWarn();
+                    _Exit(0);
+                    qApp->quit();
+                    return 0;
+                }
+            }
+        }
         // Register debus service.
         dbus.registerObject("/com/deepin/ScreenRecorder", &window, QDBusConnection::ExportScriptableSignals | QDBusConnection::ExportScriptableSlots);
         QDBusConnection conn = QDBusConnection::sessionBus();

@@ -56,6 +56,11 @@ public:
     static bool isWaylandMode;
     static bool isRootUser;
     static int themeType;
+    /**
+     * @brief 不支持截图录屏时的警告
+     */
+    static void notSupportWarn();
+
 
 
     /**
