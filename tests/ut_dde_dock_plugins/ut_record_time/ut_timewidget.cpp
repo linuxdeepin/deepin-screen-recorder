@@ -10,6 +10,9 @@
 DGUI_USE_NAMESPACE
 ACCESS_PRIVATE_FUN(TimeWidget, void(QMouseEvent *e), mousePressEvent);
 ACCESS_PRIVATE_FUN(TimeWidget, void(QPaintEvent *e), paintEvent);
+ACCESS_PRIVATE_FUN(TimeWidget, void(QMouseEvent *e), mouseReleaseEvent);
+ACCESS_PRIVATE_FUN(TimeWidget, void(QMouseEvent *e), mouseMoveEvent);
+ACCESS_PRIVATE_FUN(TimeWidget, void(QEvent *e), leaveEvent);
 ACCESS_PRIVATE_FUN(TimeWidget, void(), onTimeout);
 ACCESS_PRIVATE_FUN(TimeWidget, void(int), onPositionChanged);
 
@@ -87,5 +90,27 @@ TEST_F(TestTimeWidget,mousePressEvent)
 {
     QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10,10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     call_private_fun::TimeWidgetmousePressEvent(*m_timeWidget,ev);
+    delete  ev;
+}
+
+TEST_F(TestTimeWidget, mouseReleaseEvent)
+{
+    QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonRelease, QPoint(10, 10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    call_private_fun::TimeWidgetmouseReleaseEvent(*m_timeWidget, ev);
+    delete  ev;
+}
+
+TEST_F(TestTimeWidget, mouseMoveEvent)
+{
+    QMouseEvent *ev = new QMouseEvent(QEvent::MouseMove, QPoint(10, 10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    call_private_fun::TimeWidgetmouseMoveEvent(*m_timeWidget, ev);
+    delete  ev;
+}
+
+
+TEST_F(TestTimeWidget, leaveEvent)
+{
+    QEvent *ev = new QMouseEvent(QEvent::MouseMove, QPoint(10, 10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    call_private_fun::TimeWidgetleaveEvent(*m_timeWidget, ev);
     delete  ev;
 }

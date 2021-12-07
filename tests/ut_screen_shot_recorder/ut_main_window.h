@@ -2185,7 +2185,6 @@ CameraWidget::Position postion_stub()
 }
 TEST_F(MainWindowTest, updateCameraWidgetPos)
 {
-    //stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
     stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
     stub.set(ADDR(MainWindow, initAttributes), initAttributes_stub);
     stub.set(ADDR(MainWindow, initLaunchMode), initLaunchMode_stub);
@@ -2198,7 +2197,7 @@ TEST_F(MainWindowTest, updateCameraWidgetPos)
     MainWindow *window = new MainWindow();
     access_private_field::MainWindowm_cameraWidget(*window) = new CameraWidget();
     access_private_field::MainWindowm_selectedCamera(*window) = true;
-    access_private_field::MainWindowm_shotflag(*window) = 1;
+    access_private_field::MainWindowm_shotflag(*window) = 2;
     int &MainWindow_recordX =  access_private_field::MainWindowrecordX(*window);
     MainWindow_recordX = 0;
     int &MainWindow_recordY =  access_private_field::MainWindowrecordY(*window);
@@ -2573,6 +2572,7 @@ void m_pRecorderRegion_stub()
 {
 }
 ACCESS_PRIVATE_FIELD(MainWindow, RecorderRegionShow *, m_pRecorderRegion);
+ACCESS_PRIVATE_FIELD(MainWindow, QThread *, m_connectionThread);
 TEST_F(MainWindowTest, startRecord)
 {
 
@@ -2595,6 +2595,259 @@ TEST_F(MainWindowTest, startRecord)
     stub.reset(ADDR(Utils, isSysHighVersion1040));
     stub.reset(ADDR(MainWindow, initMainWindow));
     stub.reset(ADDR(ToolBar, shapeClickedFromMain));
+    delete window;
+
+}
+
+ACCESS_PRIVATE_FIELD(MainWindow, ConnectionThread *, m_connectionThreadObject);
+ACCESS_PRIVATE_FIELD(MainWindow, QList<MainWindow::ScreenInfo>, m_screenInfo);
+ACCESS_PRIVATE_FIELD(MainWindow, bool, m_isVertical);
+ACCESS_PRIVATE_FUN(MainWindow, void(const QVector<ClientManagement::WindowState> &), waylandwindowinfo);
+TEST_F(MainWindowTest, waylandwindowinfo1)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    MainWindow *window = new MainWindow();
+
+    Utils::isTabletEnvironment = false;
+
+    access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
+    access_private_field::MainWindowrecordButtonStatus(*window) = 0;
+
+    access_private_field::MainWindowm_isVertical(*window) = false;
+    MainWindow::ScreenInfo screenInfo1, screenInfo2;
+    screenInfo1.x = 0;
+    screenInfo1.y = 0;
+    screenInfo1.width = 1920;
+    screenInfo1.height = 1080;
+    screenInfo1.name = "test1";
+    screenInfo2.x = 10;
+    screenInfo2.y = 0;
+    screenInfo2.width = 1920;
+    screenInfo2.height = 1080;
+    screenInfo2.name = "test2";
+    access_private_field::MainWindowm_screenInfo(*window).append(screenInfo1) ;
+    access_private_field::MainWindowm_screenInfo(*window).append(screenInfo2) ;
+    QVector<ClientManagement::WindowState> windowStates;
+    ClientManagement::WindowState windowState1;
+    windowState1.pid = 1;
+    windowState1.windowId = 1;
+    windowState1.resourceName[0] = 't';
+    windowState1.resourceName[1] = 'e';
+    windowState1.resourceName[2] = 's';
+    windowState1.resourceName[3] = 't';
+    windowState1.geometry.x = 0;
+    windowState1.geometry.y = 0;
+    windowState1.geometry.width = 500;
+    windowState1.geometry.height = 600;
+    windowState1.isMinimized = false;
+    windowState1.isFullScreen = false;
+    windowState1.isActive = false;
+    windowStates.push_back(windowState1);
+    access_private_field::MainWindowm_connectionThread(*window) = new QThread();
+    access_private_field::MainWindowm_connectionThreadObject(*window) = new ConnectionThread();
+    access_private_field::MainWindowm_screenSize(*window) = QSize(1920, 1080);
+    call_private_fun::MainWindowwaylandwindowinfo(*window, windowStates);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    delete access_private_field::MainWindowm_connectionThread(*window);
+    delete window;
+
+}
+
+TEST_F(MainWindowTest, waylandwindowinfo2)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    MainWindow *window = new MainWindow();
+
+    access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
+    access_private_field::MainWindowrecordButtonStatus(*window) = 0;
+
+    access_private_field::MainWindowm_isVertical(*window) = false;
+    MainWindow::ScreenInfo screenInfo1, screenInfo2;
+    screenInfo1.x = 0;
+    screenInfo1.y = 0;
+    screenInfo1.width = 1920;
+    screenInfo1.height = 1080;
+    screenInfo1.name = "test1";
+    screenInfo2.x = 0;
+    screenInfo2.y = 0;
+    screenInfo2.width = 1920;
+    screenInfo2.height = 1080;
+    screenInfo2.name = "test2";
+    access_private_field::MainWindowm_screenInfo(*window).append(screenInfo1) ;
+    access_private_field::MainWindowm_screenInfo(*window).append(screenInfo2) ;
+    QVector<ClientManagement::WindowState> windowStates;
+    ClientManagement::WindowState windowState1;
+    windowState1.pid = 1;
+    windowState1.windowId = 1;
+    windowState1.resourceName[0] = 't';
+    windowState1.resourceName[1] = 'e';
+    windowState1.resourceName[2] = 's';
+    windowState1.resourceName[3] = 't';
+    windowState1.geometry.x = 0;
+    windowState1.geometry.y = 0;
+    windowState1.geometry.width = 500;
+    windowState1.geometry.height = 600;
+    windowState1.isMinimized = false;
+    windowState1.isFullScreen = false;
+    windowState1.isActive = false;
+    windowStates.push_back(windowState1);
+    access_private_field::MainWindowm_connectionThread(*window) = new QThread();
+    access_private_field::MainWindowm_connectionThreadObject(*window) = new ConnectionThread();
+    access_private_field::MainWindowm_screenSize(*window) = QSize(1920, 1080);
+    call_private_fun::MainWindowwaylandwindowinfo(*window, windowStates);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    delete access_private_field::MainWindowm_connectionThread(*window);
+    delete window;
+
+}
+
+
+TEST_F(MainWindowTest, waylandwindowinfo3)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    MainWindow *window = new MainWindow();
+
+    access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
+    access_private_field::MainWindowrecordButtonStatus(*window) = 0;
+
+    access_private_field::MainWindowm_isVertical(*window) = true;
+    MainWindow::ScreenInfo screenInfo1, screenInfo2;
+    screenInfo1.x = 0;
+    screenInfo1.y = 0;
+    screenInfo1.width = 1920;
+    screenInfo1.height = 1080;
+    screenInfo1.name = "test1";
+    screenInfo2.x = 10;
+    screenInfo2.y = 0;
+    screenInfo2.width = 1920;
+    screenInfo2.height = 1080;
+    screenInfo2.name = "test2";
+    access_private_field::MainWindowm_screenInfo(*window).append(screenInfo1) ;
+    access_private_field::MainWindowm_screenInfo(*window).append(screenInfo2) ;
+    QVector<ClientManagement::WindowState> windowStates;
+    ClientManagement::WindowState windowState1;
+    windowState1.pid = 1;
+    windowState1.windowId = 1;
+    windowState1.resourceName[0] = 't';
+    windowState1.resourceName[1] = 'e';
+    windowState1.resourceName[2] = 's';
+    windowState1.resourceName[3] = 't';
+    windowState1.geometry.x = 0;
+    windowState1.geometry.y = 0;
+    windowState1.geometry.width = 500;
+    windowState1.geometry.height = 600;
+    windowState1.isMinimized = false;
+    windowState1.isFullScreen = false;
+    windowState1.isActive = false;
+    windowStates.push_back(windowState1);
+    access_private_field::MainWindowm_connectionThread(*window) = new QThread();
+    access_private_field::MainWindowm_connectionThreadObject(*window) = new ConnectionThread();
+    access_private_field::MainWindowm_screenSize(*window) = QSize(1920, 1080);
+    call_private_fun::MainWindowwaylandwindowinfo(*window, windowStates);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    delete access_private_field::MainWindowm_connectionThread(*window);
+    delete window;
+
+}
+
+TEST_F(MainWindowTest, waylandwindowinfo4)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    MainWindow *window = new MainWindow();
+
+
+    access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
+    access_private_field::MainWindowrecordButtonStatus(*window) = 0;
+
+    access_private_field::MainWindowm_isVertical(*window) = true;
+    MainWindow::ScreenInfo screenInfo1, screenInfo2;
+    screenInfo1.x = 0;
+    screenInfo1.y = 10;
+    screenInfo1.width = 1920;
+    screenInfo1.height = 1080;
+    screenInfo1.name = "test1";
+    screenInfo2.x = 10;
+    screenInfo2.y = 0;
+    screenInfo2.width = 1920;
+    screenInfo2.height = 1080;
+    screenInfo2.name = "test2";
+    access_private_field::MainWindowm_screenInfo(*window).append(screenInfo1) ;
+    access_private_field::MainWindowm_screenInfo(*window).append(screenInfo2) ;
+    QVector<ClientManagement::WindowState> windowStates;
+    ClientManagement::WindowState windowState1;
+    windowState1.pid = 1;
+    windowState1.windowId = 1;
+    windowState1.resourceName[0] = 't';
+    windowState1.resourceName[1] = 'e';
+    windowState1.resourceName[2] = 's';
+    windowState1.resourceName[3] = 't';
+    windowState1.geometry.x = 0;
+    windowState1.geometry.y = 0;
+    windowState1.geometry.width = 500;
+    windowState1.geometry.height = 600;
+    windowState1.isMinimized = false;
+    windowState1.isFullScreen = false;
+    windowState1.isActive = false;
+    windowStates.push_back(windowState1);
+    access_private_field::MainWindowm_connectionThread(*window) = new QThread();
+    access_private_field::MainWindowm_connectionThreadObject(*window) = new ConnectionThread();
+    access_private_field::MainWindowm_screenSize(*window) = QSize(1920, 1080);
+    call_private_fun::MainWindowwaylandwindowinfo(*window, windowStates);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    delete access_private_field::MainWindowm_connectionThread(*window);
+    delete window;
+
+}
+
+TEST_F(MainWindowTest, waylandwindowinfo5)
+{
+
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    MainWindow *window = new MainWindow();
+
+
+    access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
+    access_private_field::MainWindowrecordButtonStatus(*window) = 0;
+
+    access_private_field::MainWindowm_isVertical(*window) = true;
+    MainWindow::ScreenInfo screenInfo1, screenInfo2;
+    screenInfo1.x = 0;
+    screenInfo1.y = 10;
+    screenInfo1.width = 1920;
+    screenInfo1.height = 1080;
+    screenInfo1.name = "test1";
+    access_private_field::MainWindowm_screenInfo(*window).append(screenInfo1) ;
+    QVector<ClientManagement::WindowState> windowStates;
+    ClientManagement::WindowState windowState1;
+    windowState1.pid = 1;
+    windowState1.windowId = 1;
+    windowState1.resourceName[0] = 't';
+    windowState1.resourceName[1] = 'e';
+    windowState1.resourceName[2] = 's';
+    windowState1.resourceName[3] = 't';
+    windowState1.geometry.x = 0;
+    windowState1.geometry.y = 0;
+    windowState1.geometry.width = 500;
+    windowState1.geometry.height = 600;
+    windowState1.isMinimized = false;
+    windowState1.isFullScreen = false;
+    windowState1.isActive = false;
+    windowStates.push_back(windowState1);
+    access_private_field::MainWindowm_connectionThread(*window) = new QThread();
+    access_private_field::MainWindowm_connectionThreadObject(*window) = new ConnectionThread();
+    access_private_field::MainWindowm_screenSize(*window) = QSize(1920, 1080);
+    call_private_fun::MainWindowwaylandwindowinfo(*window, windowStates);
+
+    stub.reset(ADDR(MainWindow, initMainWindow));
+    delete access_private_field::MainWindowm_connectionThread(*window);
     delete window;
 
 }
