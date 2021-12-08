@@ -761,7 +761,7 @@ TEST_F(CAVOutputStreamTest, init_context_amix)
     //正式执行需测试的方法
     m_avOutputStream->init_context_amix(channel, channel_layout, sample_rate, bit_rate);
 
-    stub.reset(avcodec_alloc_context3);
+    //stub.reset(avcodec_alloc_context3);
     stub.reset(avcodec_open2);
     stub.reset(avformat_new_stream);
 

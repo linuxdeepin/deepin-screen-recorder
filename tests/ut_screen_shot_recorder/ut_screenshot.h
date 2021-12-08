@@ -139,6 +139,7 @@ TEST_F(ScreenshotTest, fullscreenScreenshot)
     stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
     stub.set(ADDR(QScreen, geometry), geometry_stub_);
     shot->fullscreenScreenshot();
+    stub.reset(ADDR(ConfigSettings, value));
     stub.reset(ADDR(QScreen, devicePixelRatio));
     stub.reset(ADDR(QScreen, geometry));
     stub.reset(ADDR(Utils, passInputEvent));
@@ -170,6 +171,7 @@ TEST_F(ScreenshotTest, noNotifyScreenshot)
     stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
     stub.set(ADDR(QScreen, geometry), geometry_stub_);
     shot->fullscreenScreenshot();
+    stub.reset(ADDR(ConfigSettings, value));
     stub.reset(ADDR(QScreen, devicePixelRatio));
     stub.reset(ADDR(QScreen, geometry));
     stub.reset(ADDR(Utils, passInputEvent));
@@ -187,6 +189,7 @@ TEST_F(ScreenshotTest, clipboard_topWindowScreenshot)
     stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
     stub.set(ADDR(QScreen, geometry), geometry_stub_);
     shot->topWindowScreenshot();
+    stub.reset(ADDR(ConfigSettings, value));
     stub.reset(ADDR(QScreen, devicePixelRatio));
     stub.reset(ADDR(QScreen, geometry));
     stub.reset(ADDR(Utils, passInputEvent));
@@ -205,6 +208,7 @@ TEST_F(ScreenshotTest, fullscreenScreenshot_)
     stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
     stub.set(ADDR(QScreen, geometry), geometry_stub_);
     shot->fullscreenScreenshot();
+    stub.reset(ADDR(ConfigSettings, value));
     stub.reset(ADDR(QScreen, devicePixelRatio));
     stub.reset(ADDR(QScreen, geometry));
     stub.reset(ADDR(Utils, passInputEvent));
@@ -222,6 +226,7 @@ TEST_F(ScreenshotTest, topWindowScreenshot_)
     stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
     stub.set(ADDR(QScreen, geometry), geometry_stub_);
     shot->topWindowScreenshot();
+    stub.reset(ADDR(ConfigSettings, value));
     stub.reset(ADDR(QScreen, devicePixelRatio));
     stub.reset(ADDR(QScreen, geometry));
     stub.reset(ADDR(Utils, passInputEvent));
@@ -239,6 +244,7 @@ TEST_F(ScreenshotTest, desktop_fullscreenScreenshot_)
     stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
     stub.set(ADDR(QScreen, geometry), geometry_stub_);
     shot->fullscreenScreenshot();
+    stub.reset(ADDR(ConfigSettings, value));
     stub.reset(ADDR(QScreen, devicePixelRatio));
     stub.reset(ADDR(QScreen, geometry));
     stub.reset(ADDR(Utils, passInputEvent));
@@ -256,6 +262,7 @@ TEST_F(ScreenshotTest, clipboard_topWindowScreenshot_)
     stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
     stub.set(ADDR(QScreen, geometry), geometry_stub_);
     shot->topWindowScreenshot();
+    stub.reset(ADDR(ConfigSettings, value));
     stub.reset(ADDR(QScreen, devicePixelRatio));
     stub.reset(ADDR(QScreen, geometry));
     stub.reset(ADDR(Utils, passInputEvent));
