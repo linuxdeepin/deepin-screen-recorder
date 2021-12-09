@@ -955,14 +955,35 @@ QPoint MainWindow::getScrollShotTipPosition()
     //qDebug() << "toolbarX: " << toolbarX << ",toolbarY: " <<toolbarY << "toolbarWidth: " << toolbarWidth << ",toolbarHeight: " << toolbarHeight;
     //qDebug() << "recordRect.x(): " << recordRect.x() << ",recordRect.y(): " << recordRect.y() << "recordRect.width(): " << recordRect.width() << ",recordRect.height(): " << recordRect.height();
 
-    //单个屏幕的长宽
-    screenWidth = static_cast<int>(m_screenWidth * m_pixelRatio) / m_screenCount;
+    //获取捕捉区域所在的屏幕
+//    screenWidth = static_cast<int>(m_screenWidth * m_pixelRatio) / m_screenCount; //此方法对于复制屏幕的计算会出现问题
+    screenWidth = static_cast<int>(m_screenWidth * m_pixelRatio);
     screenHeight = static_cast<int>(m_screenHeight * m_pixelRatio);
+    QRect currnetScreenRect;
+    if (m_screenCount == 1) {
+        screenWidth = static_cast<int>(m_screenWidth * m_pixelRatio);
+        screenHeight = static_cast<int>(m_screenHeight * m_pixelRatio);
+    } else if (m_screenCount > 1) {
+        qDebug() << "m_screenInfo.size(): " << m_screenInfo.size();
+        for (int i = 0; i < m_screenInfo.size(); ++i) {
+            currnetScreenRect = {
+                static_cast<int>(m_screenInfo[i].x),
+                static_cast<int>(m_screenInfo[i].y),
+                static_cast<int>(m_screenInfo[i].width),
+                static_cast<int>(m_screenInfo[i].height)
+            };
+            if (currnetScreenRect.contains(QPoint(recordRect.x(), recordRect.y()))) {
+                screenWidth = static_cast<int>(m_screenInfo[i].width);
+                screenHeight = static_cast<int>(m_screenInfo[i].height);
+                break;
+            }
+        }
+    }
 
     //捕捉区域的宽小于300或者高小于100 则提示内容在屏幕中间且与捕捉区域左上角在一个屏幕
     if (recordRect.width() < 300 || recordRect.height() < 100) {
-        leftTopX = static_cast<int>((recordRect.x() / screenWidth) * screenWidth + (screenWidth - m_scrollShotTip->width() * m_pixelRatio) / 2);
-        leftTopY = static_cast<int>((screenHeight - m_scrollShotTip->height() * m_pixelRatio) / 2);
+        leftTopX = static_cast<int>(currnetScreenRect.x() + (screenWidth - m_scrollShotTip->width() * m_pixelRatio) / 2);
+        leftTopY = static_cast<int>(currnetScreenRect.y() + (screenHeight - m_scrollShotTip->height() * m_pixelRatio) / 2);
     } else {
         leftTopX = static_cast<int>((recordRect.x()  + (recordRect.width()  - m_scrollShotTip->width() * m_pixelRatio) / 2));
         //工具栏在捕捉区域内部 ,判断工具栏的四个点是否在内部
