@@ -128,10 +128,11 @@ void RecorderRegionShow::updateKeyBoardButtonStyle()
 }
 
 // 设置Camera窗口显示
-void RecorderRegionShow::setCameraShow()
+void RecorderRegionShow::setCameraShow(const bool isVisible)
 {
-    if (m_cameraWidget)
-        m_cameraWidget->show();
+    if (m_cameraWidget) {
+        m_cameraWidget->setVisible(isVisible);
+    }
 }
 
 void RecorderRegionShow::paintEvent(QPaintEvent *event)

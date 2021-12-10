@@ -39,7 +39,7 @@ public:
     void initCameraInfo(const CameraWidget::Position position, const QSize size);
     void showKeyBoardButtons(const QString &key);
     void updateKeyBoardButtonStyle();
-    void setCameraShow(); //设置Camera窗口显示
+    void setCameraShow(const bool isVisible = true); //设置Camera窗口显示
 protected:
     void paintEvent(QPaintEvent *event);
     void updateMultiKeyBoardPos();

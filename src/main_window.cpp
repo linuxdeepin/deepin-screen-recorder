@@ -4737,6 +4737,7 @@ void MainWindow::stopRecord()
         }
         if (m_pRecorderRegion) {
             m_pRecorderRegion->hide();
+            m_pRecorderRegion->setCameraShow(false);
         }
         recordButtonStatus = RECORD_BUTTON_SAVEING;
         recordProcess.stopRecord();
