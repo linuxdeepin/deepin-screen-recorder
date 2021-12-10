@@ -896,16 +896,12 @@ void MainWindow::initScrollShot()
                                           SLOT(onLockScreenEvent(QDBusMessage))
                                          );
 
-    //延时时间
-    int delayTime = 100;
-    //不同的平台延时时间不同
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin) {
-        delayTime = 100;
-    } else if (QSysInfo::currentCpuArchitecture().startsWith("mips")) {
-        delayTime = 260;
-    } else if (QSysInfo::currentCpuArchitecture().startsWith("arm")) {
-        delayTime = 220;
-    }
+#if defined (__mips__) || defined (__sw_64__) || defined (__aarch64__)
+    static int delayTime = 260;
+#else
+    static int delayTime = 100;
+#endif
+
     //工具栏、保存按钮、预览框在捕捉区域内部需对工具栏、保存按钮、预览框及提示延时显示
     if (isToolBarInShotArea()) {
         //延时100ms之后使预览窗口显示第一张预览图，此时为了保证第一张预览图中不包含工具栏、保存按钮及提示
@@ -1080,15 +1076,14 @@ void MainWindow::showAdjustArea()
 //滚动截图模式，抓取当前捕捉区域的图片，传递给滚动截图处理类进行图片的拼接
 void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostion, int direction, int mouseTime)
 {
-    int delayTime = 50;
-    //不同的平台延时时间不同
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin) {
-        delayTime = 50;
-    } else if (QSysInfo::currentCpuArchitecture().startsWith("mips")) {
-        delayTime = 100;
-    } else if (QSysInfo::currentCpuArchitecture().startsWith("arm")) {
-        delayTime = 100;
-    }
+
+//不同的平台延时时间不同
+#if defined (__mips__) || defined (__sw_64__) || defined (__aarch64__)
+    static int delayTime = 100;
+#else
+    static int delayTime = 50;
+#endif
+    qDebug() << QSysInfo::currentCpuArchitecture() << delayTime;
     //滚动截图处理类：设置滚动截图的模式
     if (ScrollShotType::AutoScroll == m_scrollShotType) {
         m_scrollShot->setScrollModel(false);
@@ -4073,15 +4068,12 @@ void MainWindow::onAdjustCaptureArea()
     m_previewWidget->hide();
 
     //延时时间
-    int delayTime = 100;
-    //不同的平台延时时间不同
-    if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin) {
-        delayTime = 100;
-    } else if (QSysInfo::currentCpuArchitecture().startsWith("mips")) {
-        delayTime = 260;
-    } else if (QSysInfo::currentCpuArchitecture().startsWith("arm")) {
-        delayTime = 220;
-    }
+
+#if defined (__mips__) || defined (__sw_64__) || defined (__aarch64__)
+    static int delayTime = 260;
+#else
+    static int delayTime = 100;
+#endif
     QTimer::singleShot(delayTime, this, [ = ] {
         //更新预览图的位置及大小
         bool ok;
