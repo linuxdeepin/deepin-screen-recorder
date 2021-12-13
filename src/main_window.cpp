@@ -622,7 +622,7 @@ void MainWindow::onHelp()
     if (iface.isValid()) {
         iface.call("ShowManual", "deepin-screen-recorder");
         // 录屏的时候，如果焦点还在录屏应用上，会导致录屏退出。添加条件判断，修复。
-        if ((status::shot == m_functionType) || (status::record == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus)) {
+        if ((status::scrollshot == m_functionType) || (status::shot == m_functionType) || (status::record == m_functionType && RECORD_BUTTON_RECORDING != recordButtonStatus)) {
             exitApp();
         }
     } else {
