@@ -503,6 +503,8 @@ void MainWindow::initShortcut()
             qDebug() << "shortcut : rectSC (key: r)";
             m_toolBar->shapeClickedFromMain("rect");
         }
+        if (status::record == m_functionType && Utils::isWaylandMode)
+            m_showButtons->showContentButtons(Qt::Key_R);
     });
     //截图模式 圆形
     connect(ovalSC, &QShortcut::activated, this, [ = ] {
@@ -511,6 +513,8 @@ void MainWindow::initShortcut()
             qDebug() << "shortcut : ovalSC (key: o)";
             m_toolBar->shapeClickedFromMain("circ");
         }
+        if (status::record == m_functionType && Utils::isWaylandMode)
+            m_showButtons->showContentButtons(Qt::Key_O);
     });
     //截图模式 箭头
     connect(arrowSC, &QShortcut::activated, this, [ = ] {
@@ -519,6 +523,8 @@ void MainWindow::initShortcut()
             qDebug() << "shortcut : arrowSC (key: l)";
             m_toolBar->shapeClickedFromMain("line");
         }
+        if (status::record == m_functionType && Utils::isWaylandMode)
+            m_showButtons->showContentButtons(Qt::Key_L);
     });
     //截图模式 画笔
     connect(lineSC, &QShortcut::activated, this, [ = ] {
@@ -527,6 +533,8 @@ void MainWindow::initShortcut()
             qDebug() << "shortcut : lineSC (key: p)";
             m_toolBar->shapeClickedFromMain("pen");
         }
+        if (status::record == m_functionType && Utils::isWaylandMode)
+            m_showButtons->showContentButtons(Qt::Key_P);
     });
     //截图模式 文本
     connect(textSC, &QShortcut::activated, this, [ = ] {
@@ -535,6 +543,8 @@ void MainWindow::initShortcut()
             qDebug() << "shortcut : textSC (key: t)";
             m_toolBar->shapeClickedFromMain("text");
         }
+        if (status::record == m_functionType && Utils::isWaylandMode)
+            m_showButtons->showContentButtons(Qt::Key_T);
     });
     //截图模式 撤销
     connect(undoSC, &QShortcut::activated, this, [ = ] {
@@ -559,6 +569,8 @@ void MainWindow::initShortcut()
             qDebug() << "shortcut : keyBoardSC (key: k)";
             m_toolBar->shapeClickedFromMain("keyBoard");
         }
+        if (status::record == m_functionType && Utils::isWaylandMode)
+            m_showButtons->showContentButtons(Qt::Key_K);
     });
     //录屏模式（未做穿透） 摄像头
     connect(cameraSC, &QShortcut::activated, this, [ = ] {
@@ -567,6 +579,8 @@ void MainWindow::initShortcut()
             qDebug() << "shortcut : cameraSC (key: w)";
             m_toolBar->shapeClickedFromMain("camera");
         }
+        if (status::record == m_functionType && Utils::isWaylandMode)
+            m_showButtons->showContentButtons(Qt::Key_W);
     });
     //截图模式/滚动模式 保存截图 大键盘
     connect(returnSC, &QShortcut::activated, this, [ = ] {
@@ -583,6 +597,8 @@ void MainWindow::initShortcut()
             qDebug() << "shortcut : enterSC (key: enter)";
             saveScreenShot();
         }
+        if (status::record == m_functionType && Utils::isWaylandMode)
+            m_showButtons->showContentButtons(Qt::Key_Enter);
     });
     //截图模式/滚动模式 保存截图
     connect(saveShotSC, &QShortcut::activated, this, [ = ] {
@@ -600,6 +616,8 @@ void MainWindow::initShortcut()
             qDebug() << "shortcut : escSC (key: esc)";
             exitApp();
         }
+        if (status::record == m_functionType && Utils::isWaylandMode)
+            m_showButtons->showContentButtons(Qt::Key_Escape);
     });
     //截图模式/录屏模式（未做穿透）/滚动模式）帮助面板
     helpSC->setAutoRepeat(false);
