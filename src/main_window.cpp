@@ -127,19 +127,6 @@ void MainWindow::initMainWindow()
     connect(qApp, &QGuiApplication::screenRemoved, this, &MainWindow::onExit);
 
     m_pScreenCaptureEvent = new EventMonitor(this);
-    connect(m_pScreenCaptureEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
-    connect(m_pScreenCaptureEvent, SIGNAL(mouseDrag(int, int)), this, SLOT(onMouseDrag(int, int)), Qt::QueuedConnection);
-    connect(m_pScreenCaptureEvent, SIGNAL(mousePress(int, int)), this, SLOT(onMousePress(int, int)), Qt::QueuedConnection);
-    connect(m_pScreenCaptureEvent, SIGNAL(mouseRelease(int, int)), this, SLOT(onMouseRelease(int, int)), Qt::QueuedConnection);
-    connect(m_pScreenCaptureEvent, SIGNAL(mouseMove(int, int)), this, SLOT(onMouseMove(int, int)), Qt::QueuedConnection);
-    connect(m_pScreenCaptureEvent, SIGNAL(mouseScroll(int, int, int, int)), this, SLOT(onMouseScroll(int, int, int, int)), Qt::QueuedConnection);
-
-    if (!Utils::isWaylandMode) {
-        connect(m_pScreenCaptureEvent, SIGNAL(keyboardPress(unsigned char)), this, SLOT(onKeyboardPress(unsigned char)), Qt::QueuedConnection);
-        connect(m_pScreenCaptureEvent, SIGNAL(keyboardRelease(unsigned char)), this, SLOT(onKeyboardRelease(unsigned char)), Qt::QueuedConnection);
-        m_pScreenCaptureEvent->start();
-    }
-
     m_screenCount = QApplication::desktop()->screenCount();
     QList<QScreen *> screenList = qApp->screens();
     for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
@@ -654,6 +641,19 @@ void MainWindow::initResource()
     connect(m_showButtons, SIGNAL(keyShowSignal(const QString &)), this, SLOT(showKeyBoardButtons(const QString &)));
     resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(":/newUI/normal/node.svg");
     buttonFeedback = new ButtonFeedback();
+
+    connect(m_pScreenCaptureEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(mouseDrag(int, int)), this, SLOT(onMouseDrag(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(mousePress(int, int)), this, SLOT(onMousePress(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(mouseRelease(int, int)), this, SLOT(onMouseRelease(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(mouseMove(int, int)), this, SLOT(onMouseMove(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(mouseScroll(int, int, int, int)), this, SLOT(onMouseScroll(int, int, int, int)), Qt::QueuedConnection);
+
+    if (!Utils::isWaylandMode) {
+        connect(m_pScreenCaptureEvent, SIGNAL(keyboardPress(unsigned char)), this, SLOT(onKeyboardPress(unsigned char)), Qt::QueuedConnection);
+        connect(m_pScreenCaptureEvent, SIGNAL(keyboardRelease(unsigned char)), this, SLOT(onKeyboardRelease(unsigned char)), Qt::QueuedConnection);
+        m_pScreenCaptureEvent->start();
+    }
 }
 
 void MainWindow::initScreenShot()
