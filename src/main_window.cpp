@@ -914,8 +914,10 @@ void MainWindow::initScrollShot()
                                           SLOT(onLockScreenEvent(QDBusMessage))
                                          );
 
-#if defined (__mips__) || defined (__sw_64__) || defined (__aarch64__)
+#if defined (__mips__) || defined (__sw_64__)
     static int delayTime = 260;
+#elif defined (__aarch64__)
+    static int delayTime = 220;
 #else
     static int delayTime = 100;
 #endif
@@ -1096,7 +1098,9 @@ void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostio
 {
 
 //不同的平台延时时间不同
-#if defined (__mips__) || defined (__sw_64__) || defined (__aarch64__)
+#if defined (__mips__) || defined (__sw_64__)
+    static int delayTime = 130;
+#elif defined (__aarch64__)
     static int delayTime = 100;
 #else
     static int delayTime = 50;
@@ -4087,8 +4091,10 @@ void MainWindow::onAdjustCaptureArea()
 
     //延时时间
 
-#if defined (__mips__) || defined (__sw_64__) || defined (__aarch64__)
+#if defined (__mips__) || defined (__sw_64__)
     static int delayTime = 260;
+#elif defined (__aarch64__)
+    static int delayTime = 220;
 #else
     static int delayTime = 100;
 #endif
