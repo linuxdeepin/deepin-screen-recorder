@@ -321,7 +321,6 @@ public:
 
 signals:
     void releaseEvent();
-    void hideScreenshotUI();
     void saveActionTriggered();
     void unDo();
     void unDoAll();
@@ -553,6 +552,7 @@ protected:
     void initBackground();
     QPixmap getPixmapofRect(const QRect &rect);
     bool saveImg(const QPixmap &pix, const QString &fileName, const char *format = nullptr);
+    void save2Clipboard(const QPixmap &pix);
 
     virtual void wheelEvent(QWheelEvent *event) override;  // waland手动滚动处理逻辑
 

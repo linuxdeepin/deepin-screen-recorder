@@ -716,7 +716,6 @@ void MainWindow::initScreenShot()
         m_sizeTips->setRecorderTipsInfo(false);
         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
     }
-    connect(this, &MainWindow::hideScreenshotUI, this, &MainWindow::hide);
 
     //初始化ocr
     m_ocrInterface = nullptr;
@@ -1209,31 +1208,7 @@ void MainWindow::initLaunchMode(const QString &launchMode)
         initScreenShot();
     }
 }
-/*
-void MainWindow::delayScreenshot(double num)
-{
-    QString summary = QString(tr("Screen Capture will start in %1 seconds").arg(num));
-    QStringList actions = QStringList();
-    QVariantMap hints;
-    DBusNotify *notifyDBus = new DBusNotify(this);
-    if (num >= 2) {
-        notifyDBus->Notify("Deepin Screenshot", 0,  "deepin-screen-recorder", "",
-                           summary, actions, hints, 0);
-    }
 
-    QTimer *timer = new QTimer;
-    timer->setSingleShot(true);
-    timer->start(int(1000 * num));
-    connect(timer, &QTimer::timeout, this, [ = ] {
-        notifyDBus->CloseNotification(0);
-        //        startScreenshot();
-        this->initAttributes();
-        this->initLaunchMode("screenShot");
-        this->showFullScreen();
-        this->initResource();
-    });
-}
-*/
 void MainWindow::fullScreenshot()
 {
     //DDesktopServices::playSystemSoundEffect(DDesktopServices::SEE_Screenshot);
@@ -1263,12 +1238,11 @@ void MainWindow::fullScreenshot()
     this->setFixedSize(m_backgroundRect.size());
     m_needSaveScreenshot = true;
 
-    m_toolBar = new ToolBar(this);
-    m_toolBar->hide();
+//    m_toolBar = new ToolBar(this);
+//    m_toolBar->hide();
 
     shotFullScreen(true);
-
-
+    save2Clipboard(m_resultPixmap);
     TempFile::instance()->setFullScreenPixmap(m_resultPixmap);
     const auto r = saveAction(m_resultPixmap);
     sendNotify(m_saveIndex, m_saveFileName, r);
@@ -1340,8 +1314,7 @@ void MainWindow::topWindow()
         recordY = recordY - static_cast<int>(screenRect.y() * m_pixelRatio);
     }
 
-    this->hide();
-    emit this->hideScreenshotUI();
+    //this->hide();
     QRect target(static_cast<int>(recordX * m_pixelRatio),
                  static_cast<int>(recordY * m_pixelRatio),
                  static_cast<int>(recordWidth * m_pixelRatio),
@@ -1355,7 +1328,7 @@ void MainWindow::topWindow()
              << "screenShot is null:" << screenShotPix.isNull();
     m_needSaveScreenshot = true;
     //    DDesktopServices::playSystemSoundEffect(DDesktopServices::SSE_Screenshot);
-
+    save2Clipboard(screenShotPix);
     const auto r = saveAction(screenShotPix);
     sendNotify(m_saveIndex, m_saveFileName, r);
 }
@@ -1372,8 +1345,7 @@ void MainWindow::saveTopWindow()
     recordWidth = windowRects[topWindowIndex].width();
     recordHeight = windowRects[topWindowIndex].height();
 
-    this->hide();
-    emit this->hideScreenshotUI();
+    //this->hide();
     const qreal ratio = qApp->primaryScreen()->devicePixelRatio();
     qDebug() << ratio << recordX << recordY << recordWidth << recordHeight;
     QRect target(static_cast<int>(recordX * ratio),
@@ -1388,6 +1360,7 @@ void MainWindow::saveTopWindow()
              << "screenShot is null:" << screenShotPix.isNull();
     m_needSaveScreenshot = true;
     //    DDesktopServices::playSystemSoundEffect(DDesktopServices::SSE_Screenshot);
+    save2Clipboard(screenShotPix);
     const auto r = saveAction(screenShotPix);
     sendNotify(m_saveIndex, m_saveFileName, r);
 
@@ -1475,6 +1448,17 @@ bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char
         }
     }
     return pix.save(fileName, format, quality);
+}
+
+void MainWindow::save2Clipboard(const QPixmap &pix)
+{
+    if (Utils::is3rdInterfaceStart == false) {
+        QMimeData *t_imageData = new QMimeData;
+        t_imageData->setImageData(pix);
+        Q_ASSERT(!pix.isNull());
+        QClipboard *cb = qApp->clipboard();
+        cb->setMimeData(t_imageData, QClipboard::Clipboard);
+    }
 }
 
 // waland手动滚动处理逻辑
@@ -2344,6 +2328,8 @@ void MainWindow::saveScreenShot()
         //普通截图保存图片
         shotCurrentImg();
     }
+    save2Clipboard(m_resultPixmap);
+    this->hide();
     const bool r = saveAction(m_resultPixmap);
     sendNotify(m_saveIndex, m_saveFileName, r);
 }
@@ -2722,25 +2708,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         qDebug() << "m_saveFileName: " << m_saveFileName;
         m_saveFileName = QString(tr("Clipboard"));
     }
-    // 保存到剪贴板
-    if (Utils::is3rdInterfaceStart == false) {
-        QMimeData *t_imageData = new QMimeData;
-        t_imageData->setImageData(pix);
-        Q_ASSERT(!pix.isNull());
-        QClipboard *cb = qApp->clipboard();
-        cb->setMimeData(t_imageData, QClipboard::Clipboard);
-        /*
-        // 调起画板， 传入截图路径
-        int t_openWithDraw = ConfigSettings::instance()->value("open", "draw").toInt();
-        if (t_openWithDraw == 1) {
-            DrawInterface *m_draw = new DrawInterface("com.deepin.Draw", "/com/deepin/Draw", QDBusConnection::sessionBus(), this);
-            QList<QImage> list;
-            list.append(screenShotPix.toImage());
-            m_draw->openImages(list);
-            delete m_draw;
-        }
-        */
-    }
+
     if (m_ocrInterface != nullptr) {
         if (m_saveIndex == SaveToClipboard) {
             m_ocrInterface->openImageAndName(pix.toImage(), tempFileName);
@@ -4458,12 +4426,7 @@ void MainWindow::shotCurrentImg()
         m_shapesWidget->hide();
     }
     m_sizeTips->hide();
-
     shotFullScreen();
-
-
-    this->hide();
-    emit hideScreenshotUI();
     //qDebug() << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect() << m_pixelRatio;
     QRect target(static_cast<int>(recordX * m_pixelRatio),
                  static_cast<int>(recordY * m_pixelRatio),
