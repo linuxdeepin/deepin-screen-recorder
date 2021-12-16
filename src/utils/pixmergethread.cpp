@@ -159,6 +159,12 @@ bool PixMergeThread::isOneWay()
     return true;
 }
 
+// 设置最后一张图片标记
+void PixMergeThread::setIsLastImg(bool isLastImg)
+{
+    m_isLastPixmap = isLastImg;
+}
+
 cv::Mat PixMergeThread::qPixmapToCvMat(const QPixmap &inPixmap)
 {
     //qDebug() << inPixmap.toImage().format();
@@ -216,7 +222,8 @@ int PixMergeThread::getBottomFixedHigh(cv::Mat &img1, cv::Mat &img2)
 //向上拼接图片
 bool PixMergeThread::splicePictureUp(const cv::Mat &image)
 {
-    if (m_curImg.rows > LONG_IMG_MAX_HEIGHT) {
+    // 保存后的最后一张图片不做长度检查
+    if (!m_isLastPixmap && m_curImg.rows > LONG_IMG_MAX_HEIGHT) {
         // 拼接超过了最大限度
         emit merageError(MaxHeight);
         return false;
@@ -317,7 +324,8 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
 //向下拼接图片
 bool PixMergeThread::splicePictureDown(const cv::Mat &image)
 {
-    if (m_curImg.rows > LONG_IMG_MAX_HEIGHT) {
+    // 保存后的最后一张图片不做长度检查
+    if (!m_isLastPixmap && m_curImg.rows > LONG_IMG_MAX_HEIGHT) {
         // 拼接超过了最大限度
         emit merageError(MaxHeight);
         return false;

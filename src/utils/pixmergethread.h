@@ -64,6 +64,7 @@ public:
     void clearCurImg();
     void calculateTimeDiff(int time); //计算时间差
     bool isOneWay(); //是否单向
+    void setIsLastImg(bool isLastImg); //设置最后一张图片标记
 protected:
     cv::Mat qPixmapToCvMat(const QPixmap &inPixmap);
     bool mergeImageWork(const cv::Mat &image, int imageStatus = ScrollDown);
@@ -101,6 +102,7 @@ private:
     int m_lastTime = 0;    //上一次的时间
     int m_upCount = 0;
     int m_downCount = 0;
+    bool m_isLastPixmap = false; // 是否是最后一张
 };
 
 Q_DECLARE_METATYPE(PixMergeThread::MergeErrorValue);

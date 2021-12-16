@@ -4908,6 +4908,7 @@ void MainWindow::initShapeWidget(QString type)
 
 void MainWindow::exitApp()
 {
+    m_initScroll = false; // 保存时关闭滚动截图
     emit releaseEvent();
     qApp->quit();
 }
