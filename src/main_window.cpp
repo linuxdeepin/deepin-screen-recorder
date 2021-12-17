@@ -913,7 +913,7 @@ void MainWindow::initScrollShot()
                                           SLOT(onLockScreenEvent(QDBusMessage))
                                          );
 
-#if defined (__mips__) || defined (__sw_64__)
+#if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__)
     static int delayTime = 260;
 #elif defined (__aarch64__)
     static int delayTime = 220;
@@ -1097,7 +1097,7 @@ void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostio
 {
 
 //不同的平台延时时间不同
-#if defined (__mips__) || defined (__sw_64__)
+#if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__)
     static int delayTime = 130;
 #elif defined (__aarch64__)
     static int delayTime = 100;
@@ -4059,7 +4059,7 @@ void MainWindow::onAdjustCaptureArea()
 
     //延时时间
 
-#if defined (__mips__) || defined (__sw_64__)
+#if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__)
     static int delayTime = 260;
 #elif defined (__aarch64__)
     static int delayTime = 220;
@@ -4183,7 +4183,7 @@ void MainWindow::initPadShot()
 void MainWindow::exitScreenCuptureEvent()
 {
     qDebug() << "line: " << __LINE__ << " >>> function: " << __func__;
-#ifndef __mips__
+#if !(defined (__mips__) || defined (__loongarch_64__))
     if (!m_isZhaoxin && m_pScreenCaptureEvent) {
         m_pScreenCaptureEvent->releaseRes();
         //m_pScreenCaptureEvent->terminate();

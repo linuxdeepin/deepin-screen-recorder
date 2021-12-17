@@ -115,7 +115,7 @@ void SubToolWidget::initRecordLabel()
     }
 
     // mips sw不支持GIF录制
-#if defined (__mips__) || defined (__sw_64__)
+#if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__)
         t_settings->setValue("recordConfig", "save_as_gif", false);
         t_saveGif = false;
 #endif
@@ -413,7 +413,7 @@ void SubToolWidget::initRecordLabel()
     t_fpsGroup->addAction(fps30Action);
 
     m_recordOptionMenu->addAction(formatTitleAction);
-#if !(defined (__mips__) || defined (__sw_64__))
+#if !(defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__))
     m_recordOptionMenu->addAction(gifAction);
 #endif
     m_recordOptionMenu->addAction(mp4Action);

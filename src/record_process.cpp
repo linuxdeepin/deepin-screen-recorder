@@ -207,7 +207,7 @@ void RecordProcess::recordVideo()
 
     QString arch = QSysInfo::currentCpuArchitecture();
 
-#if defined (__mips__) || defined (__sw_64__)
+#if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__)
     // mips sw 视频编码 mpeg4 音频编码 mp3
     /*
          * mkv
