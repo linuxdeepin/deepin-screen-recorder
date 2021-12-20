@@ -1413,7 +1413,15 @@ void MainWindow::noNotify()
 void MainWindow::initBackground()
 {
     //    QTimer::singleShot(200, this, [ = ] {
-    m_backgroundPixmap = getPixmapofRect(m_backgroundRect);
+    QRect target = m_backgroundRect;
+    if (Utils::isWaylandMode) {
+        target = QRect(m_backgroundRect.x(),
+                       m_backgroundRect.y(),
+                       static_cast<int>(m_backgroundRect.width() * m_pixelRatio),
+                       static_cast<int>(m_backgroundRect.height() *  m_pixelRatio));
+    }
+
+    m_backgroundPixmap = getPixmapofRect(target);
     qDebug() << "screen rect:" << m_backgroundPixmap.rect();
     if (m_backgroundPixmap.isNull()) {
         DBusNotify shotFailedNotify;
@@ -4482,11 +4490,14 @@ void MainWindow::addCursorToImage()
 
 void MainWindow::shotFullScreen(bool isFull)
 {
-    QRect target(m_backgroundRect.x(),
-                 m_backgroundRect.y(),
-                 m_backgroundRect.width(),
-                 m_backgroundRect.height());
+    QRect target = m_backgroundRect;
     qDebug() << "m_backgroundRect" << m_backgroundRect;
+    if(Utils::isWaylandMode) {
+       target = QRect(m_backgroundRect.x(),
+                      m_backgroundRect.y(),
+                      static_cast<int>(m_backgroundRect.width() * m_pixelRatio),
+                      static_cast<int>(m_backgroundRect.height() * m_pixelRatio));
+    }
 
     //    m_resultPixmap = getPixmapofRect(m_backgroundRect);
     if (isFull) {
