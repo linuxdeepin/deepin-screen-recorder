@@ -147,10 +147,10 @@ public:
 private:
     //缓存帧容量
     int m_bufferSize;
-    int m_width;
-    int m_height;
+    int m_width = 0;
+    int m_height = 0;
     //通道数
-    int m_stride;
+    int m_stride = 0;
     bool m_bInit;
     QMutex m_mutex;
     //wayland缓冲区
@@ -160,21 +160,21 @@ private:
     //ffmpeg视频帧
     unsigned char *m_ffmFrame;
     //起始时间戳
-    int64_t frameStartTime;
+    int64_t frameStartTime = 0;
     //是否获取视频帧
     bool m_bGetFrame;
     QMutex m_bGetFrameMutex;
     static int frameIndex;
 
     bool m_eglInitialized;
-    bool m_streamingEnabled;
+    bool m_streamingEnabled = false;
     bool m_registryInitialized;
 
-    quint32 m_output;
+    quint32 m_output = 0;
     QDateTime m_lastFrameTime;
     //ScreenCastStream *m_stream;
 
-    QThread *m_thread;
+    QThread *m_thread = nullptr;
 
     QMap<quint32, WaylandOutput> m_outputMap;
     QList<KWayland::Client::Output *> m_bindOutputs;
@@ -192,11 +192,11 @@ private:
         QList<QByteArray> extensions;
         EGLDisplay display = EGL_NO_DISPLAY;
         EGLContext context = EGL_NO_CONTEXT;
-        gbm_device *gbm;
+        gbm_device *gbm = nullptr;
 
-        PFNEGLCREATEIMAGEKHRPROC create_image;
-        PFNEGLDESTROYIMAGEKHRPROC destroy_image;
-        PFNGLEGLIMAGETARGETTEXTURE2DOESPROC image_target_texture_2d;
+        PFNEGLCREATEIMAGEKHRPROC create_image = nullptr;
+        PFNEGLDESTROYIMAGEKHRPROC destroy_image = nullptr;
+        PFNGLEGLIMAGETARGETTEXTURE2DOESPROC image_target_texture_2d = nullptr;
     } m_egl;
 };
 

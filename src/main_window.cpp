@@ -464,7 +464,7 @@ void MainWindow::initShortcut()
     //截图模式/录屏模式（未做穿透）/滚动模式 退出
     QShortcut *escSC = new QShortcut(QKeySequence("Escape"), this);
     //截图模式/录屏模式（未做穿透）/滚动模式 帮助快捷面板
-    QShortcut *helpSC = new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Slash), this);
+    QShortcut *shortCutSC = new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Slash), this);
     //截图模式 滚动截图应用内快捷键
     connect(scrollShotSC, &QShortcut::activated, this, [ = ] {
         // 当第三方接口启动时，不触发快捷键
@@ -607,8 +607,8 @@ void MainWindow::initShortcut()
             m_showButtons->showContentButtons(Qt::Key_Escape);
     });
     //截图模式/录屏模式（未做穿透）/滚动模式）帮助面板
-    helpSC->setAutoRepeat(false);
-    connect(helpSC, &QShortcut::activated, this, [ = ] {
+    shortCutSC->setAutoRepeat(false);
+    connect(shortCutSC, &QShortcut::activated, this, [ = ] {
         qDebug() << "shortcut : helpSC (key: ctrl+shift+?)";
         onViewShortcut();
     });
