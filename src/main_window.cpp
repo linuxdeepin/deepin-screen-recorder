@@ -834,7 +834,9 @@ void MainWindow::initScrollShot()
     isReleaseButton = false;
 
     //隐藏工具栏矩形、圆形、箭头、笔画、选项中裁切选项-显示光标
-    m_toolBar->hideSomeToolBtn();
+    if(!m_isDirectStartScrollShot){
+        m_toolBar->hideSomeToolBtn();
+    }
     update();
 
     //捕捉区域不能进行拖动
@@ -1203,6 +1205,7 @@ void MainWindow::initLaunchMode(const QString &launchMode)
         m_functionType = status::ocr;
     } else if (launchMode == "screenScroll") {
         m_functionType = status::scrollshot;
+        m_isDirectStartScrollShot = true;
     } else {
         m_functionType = status::shot;
         initScreenShot();

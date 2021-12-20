@@ -43,6 +43,10 @@ public:
     void initWidget();
     void initRecordLabel();
     void initShotLabel();
+    /**
+     * @brief 快捷键或命令行启动滚动截图时，初始化滚动截图工具栏
+     */
+    void initScrollLabel();
 //    void initVirtualCard();
     /**
      * @brief 安装工具栏的提示
@@ -125,6 +129,10 @@ private:
      * @brief 截屏功能工具栏
      */
     DLabel *m_shotSubTool = nullptr;
+    /**
+     * @brief 滚动截图功能工具栏
+     */
+    DLabel *m_scrollShotSubTool = nullptr;
     QString m_currentType;
     /**
      * @brief 滚动截图工具栏按钮

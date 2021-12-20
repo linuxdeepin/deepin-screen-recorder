@@ -51,6 +51,10 @@ public:
      * @brief 隐藏工具栏矩形、圆形、箭头、笔画、选项中裁切选项-显示光标
      */
     void hideSomeToolBtn();
+    /**
+     * @brief 快捷键或命令行启动滚动截图时，初始化滚动截图工具栏
+     */
+    void initScrollShotSubTool();
 
     /**
      * @brief 设置禁止滚动截图
@@ -105,6 +109,11 @@ public:
      * @brief 点击滚动截图时，工具栏隐藏一些按钮
      */
     void hideSomeToolBtn();
+
+    /**
+     * @brief 快捷键或命令行启动滚动截图时，初始化滚动截图工具栏
+     */
+    void initScrollShotSubTool();
 
     /**
      * @brief 设置禁止滚动截图

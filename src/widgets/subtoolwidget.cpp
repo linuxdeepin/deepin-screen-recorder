@@ -979,6 +979,24 @@ void SubToolWidget::initShotLabel()
         }
     });
 }
+//快捷键或命令行启动滚动截图时，初始化滚动截图工具栏
+void SubToolWidget::initScrollLabel()
+{
+    //分配布局
+    QHBoxLayout *rectLayout = new QHBoxLayout ();
+    rectLayout->setMargin(0);
+    rectLayout->setSpacing(0);
+    rectLayout->addSpacing(7);
+    rectLayout->setSizeConstraint(QLayout::SetFixedSize);
+    rectLayout->addWidget(m_ocrButton);
+    rectLayout->addSpacing(SHOT_BUTTON_SPACING);
+    rectLayout->addWidget(m_shotOptionButton);
+    this->removeWidget(m_recordSubTool);
+    this->removeWidget(m_shotSubTool);
+    m_scrollShotSubTool= new DLabel(this);
+    m_scrollShotSubTool->setLayout(rectLayout);
+    addWidget(m_scrollShotSubTool);
+}
 
 void SubToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 {

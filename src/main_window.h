@@ -813,6 +813,10 @@ private:
      * @brief 滚动截图时图片的大小
      */
     TopTips *m_scrollShotSizeTips = nullptr;
+    /**
+     * @brief 直接通过快捷键或命令行启动滚动截图
+     */
+    bool m_isDirectStartScrollShot = false;
     ToolBar *m_toolBar = nullptr;
     QRect m_backgroundRect;
     //添加截屏和录屏的按钮

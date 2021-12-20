@@ -145,6 +145,13 @@ void ToolBarWidget::hideSomeToolBtn()
     m_mainTool->hide();
 }
 
+//快捷键或命令行启动滚动截图时，初始化滚动截图工具栏
+void ToolBarWidget::initScrollShotSubTool()
+{
+    m_subTool->initScrollLabel();
+    m_mainTool->hide();
+}
+
 void ToolBarWidget::setScrollShotDisabled(const bool state)
 {
     m_subTool->setScrollShotDisabled(state);
@@ -274,6 +281,12 @@ void ToolBar::hideSomeToolBtn()
     m_toolbarWidget->hideSomeToolBtn();
 }
 
+//快捷键或命令行启动滚动截图时，初始化滚动截图工具栏
+void ToolBar::initScrollShotSubTool()
+{
+    m_toolbarWidget->initScrollShotSubTool();
+}
+
 void ToolBar::setScrollShotDisabled(const bool state)
 {
     m_toolbarWidget->setScrollShotDisabled(state);
@@ -378,7 +391,8 @@ void ToolBar::setRecordLaunchMode(const unsigned int funType)
 {
     m_toolbarWidget->setRecordLaunchFromMain(funType);
     if (funType == MainWindow::scrollshot) {
-        hideSomeToolBtn();
+        //hideSomeToolBtn();
+        initScrollShotSubTool();
     }
 }
 
