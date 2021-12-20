@@ -109,11 +109,18 @@ void Screenshot::OcrScreenshot()
 
 void Screenshot::ScrollScreenshot()
 {
-    m_window.initAttributes();
-    m_window.initResource();
-    m_window.initLaunchMode("screenScroll");
-    m_window.showFullScreen();
-
+    //2d模式不支持滚动截图
+    qDebug() << "whether to trun on window effects? " << (DWindowManagerHelper::instance()->hasComposite()? "yes" : "no");
+    if(DWindowManagerHelper::instance()->hasComposite()){
+        qDebug() << "start scroll shot !";
+        m_window.initAttributes();
+        m_window.initResource();
+        m_window.initLaunchMode("screenScroll");
+        m_window.showFullScreen();
+    }else{
+        qDebug() << "scroll shot exit !";
+        qApp->quit();
+    }
 }
 
 void Screenshot::savePathScreenshot(const QString &path)
