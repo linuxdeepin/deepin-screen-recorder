@@ -1,6 +1,8 @@
 #pragma once
 #include "widgets/ut_shapeswidget.h" //放前面
 #include "ut_main_window.h"
+#include "utils/ut_pixmergethread.h"
+#include "utils/ut_scrollScreenshot.h"
 #include "utils/ut_audioutils.h"
 #include "utils/ut_baseutils.h"
 #include "utils/ut_configsettings.h"
@@ -44,8 +46,6 @@
 #include "widgets/ut_sidebar.h"
 #include "widgets/ut_sidebarwidget.h"
 #include "widgets/ut_scrollshottip.h"
-#include "utils/ut_pixmergethread.h"
-#include "utils/ut_scrollScreenshot.h"
 #include "waylandrecord/ut_avinputstream.h"
 #include "waylandrecord/ut_avoutputstream.h"
 #include "waylandrecord/ut_recordadmin.h"

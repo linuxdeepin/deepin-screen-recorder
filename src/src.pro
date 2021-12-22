@@ -80,7 +80,8 @@ HEADERS += main_window.h \
     waylandrecord/avoutputstream.h \
     waylandrecord/avinputstream.h \
     utils/waylandscrollmonitor.h \
-    waylandrecord/avlibinterface.h
+    waylandrecord/avlibinterface.h \
+    dbusinterface/pinscreenshotsinterface.h
 
 SOURCES += main.cpp \
     main_window.cpp \
@@ -132,7 +133,8 @@ SOURCES += main.cpp \
     waylandrecord/avinputstream.cpp \
     waylandrecord/avoutputstream.cpp \
     utils/waylandscrollmonitor.cpp \
-    waylandrecord/avlibinterface.cpp
+    waylandrecord/avlibinterface.cpp \
+    dbusinterface/pinscreenshotsinterface.cpp
 
 QT += core
 QT += widgets

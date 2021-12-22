@@ -66,14 +66,14 @@ void Screenshot::delayScreenshot(double num)
                            summary, actions, hints, 3000);
     }
 
-    QTimer *timerNoti = new QTimer;
+    QTimer *timerNoti = new QTimer(this);
     timerNoti->setSingleShot(true);
     timerNoti->start(int(500 * num));
     connect(timerNoti, &QTimer::timeout, this, [ = ] {
         notifyDBus->CloseNotification(0);
     });
 
-    QTimer *timer = new QTimer;
+    QTimer *timer = new QTimer(this);
     timer->setSingleShot(true);
     timer->start(int(1000 * num));
     connect(timer, &QTimer::timeout, this, [ = ] {
@@ -149,6 +149,6 @@ QString Screenshot::getRecorderNormalIcon()
     return RecorderTablet::getRecorderNormalIcon();
 }
 
-Screenshot::~Screenshot() 
+Screenshot::~Screenshot()
 {
 }

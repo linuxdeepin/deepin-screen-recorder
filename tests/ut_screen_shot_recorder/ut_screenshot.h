@@ -12,7 +12,6 @@
 
 using namespace testing;
 //ACCESS_PRIVATE_FIELD(Screenshot, MainWindow*, m_window);
-static int state = 0;
 
 QRect geometry_stub_()
 {
@@ -39,34 +38,27 @@ int height_stub()
     return 1080;
 }
 
-QVariant getShotCfg_stub(void *obj, const QString &group, const QString &key)
-{
-    if (group == "save") {
-        if (key == "format") {
-            return state % 3;
-        } else if (key == "save_op") {
-            return (state + 1) % 3; // 0 desktop 1 image 2autoSave 3 SaveToSpecificDir
-        }
-    }
-    return true;
-}
+
 
 class ScreenshotTest: public testing::Test
 {
 
 public:
-    Screenshot *shot = new Screenshot;
+    Screenshot *shot;
     MainWindow *mwindow;
     QEventLoop loop;
     Stub stub;
     virtual void SetUp() override
     {
+        shot = new Screenshot;
         qDebug() << "++++++" << __FUNCTION__ << __LINE__;
     }
 
     virtual void TearDown() override
     {
         stub.reset(ADDR(ConfigSettings, value));
+        delete shot;
+        shot = nullptr;
         qDebug() << "++++++" << __FUNCTION__ << __LINE__;
     }
 };
@@ -131,145 +123,226 @@ TEST_F(ScreenshotTest, delayScreenshot)
 
 }
 
-TEST_F(ScreenshotTest, fullscreenScreenshot)
+QVariant getShotCfg_stub_0(void *obj, const QString &group, const QString &key)
 {
-    state = 0;
-    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub);
-    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub_);
-    stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
-    stub.set(ADDR(QScreen, geometry), geometry_stub_);
-    shot->fullscreenScreenshot();
-    stub.reset(ADDR(ConfigSettings, value));
-    stub.reset(ADDR(QScreen, devicePixelRatio));
-    stub.reset(ADDR(QScreen, geometry));
-    stub.reset(ADDR(Utils, passInputEvent));
-    QTimer::singleShot(2000, &loop, SLOT(quit()));
-    loop.exec();
+    if (group == "save") {
+        if (key == "format") {
+            return 0;
+        } else if (key == "save_op") {
+            return 1; // 0 desktop 1 image 2autoSave 3 SaveToSpecificDir
+        }
+    }
+    return 0;
 }
+//TEST_F(ScreenshotTest, fullscreenScreenshot)
+//{
+//    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub_0);
+//    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub_);
+//    stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
+//    stub.set(ADDR(QScreen, geometry), geometry_stub_);
+//    shot->fullscreenScreenshot();
+//    stub.reset(ADDR(ConfigSettings, value));
+//    stub.reset(ADDR(QScreen, devicePixelRatio));
+//    stub.reset(ADDR(QScreen, geometry));
+//    stub.reset(ADDR(Utils, passInputEvent));
+//    QTimer::singleShot(2000, &loop, SLOT(quit()));
+//    loop.exec();
+//}
 
-void noNotify_stub()
-{
+//void noNotify_stub()
+//{
 
-}
-TEST_F(ScreenshotTest, noNotifyScreenshot_)
-{
-    state = 1;
-    stub.set(ADDR(MainWindow, noNotify), noNotify_stub);
+//}
 
-    shot->noNotifyScreenshot();
+//TEST_F(ScreenshotTest, noNotifyScreenshot_)
+//{
+//    stub.set(ADDR(MainWindow, noNotify), noNotify_stub);
 
-    stub.reset(ADDR(MainWindow, noNotify));
+//    shot->noNotifyScreenshot();
 
-}
+//    stub.reset(ADDR(MainWindow, noNotify));
 
-TEST_F(ScreenshotTest, noNotifyScreenshot)
-{
-    state = 2;
-    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub);
+//}
 
-    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub_);
-    stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
-    stub.set(ADDR(QScreen, geometry), geometry_stub_);
-    shot->fullscreenScreenshot();
-    stub.reset(ADDR(ConfigSettings, value));
-    stub.reset(ADDR(QScreen, devicePixelRatio));
-    stub.reset(ADDR(QScreen, geometry));
-    stub.reset(ADDR(Utils, passInputEvent));
+//QVariant getShotCfg_stub_2(void *obj, const QString &group, const QString &key)
+//{
+//    if (group == "save") {
+//        if (key == "format") {
+//            return 2;
+//        } else if (key == "save_op") {
+//            return 0; // 0 desktop 1 image 2autoSave 3 SaveToSpecificDir
+//        }
+//    }
+//    return 0;
+//}
+//TEST_F(ScreenshotTest, noNotifyScreenshot)
+//{
+//    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub_2);
 
-    QTimer::singleShot(2000, &loop, SLOT(quit()));
-    loop.exec();
-}
+//    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub_);
+//    stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
+//    stub.set(ADDR(QScreen, geometry), geometry_stub_);
+//    shot->fullscreenScreenshot();
+//    stub.reset(ADDR(ConfigSettings, value));
+//    stub.reset(ADDR(QScreen, devicePixelRatio));
+//    stub.reset(ADDR(QScreen, geometry));
+//    stub.reset(ADDR(Utils, passInputEvent));
 
-TEST_F(ScreenshotTest, clipboard_topWindowScreenshot)
-{
-    state = 3;
-    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub);
+//    QTimer::singleShot(2000, &loop, SLOT(quit()));
+//    loop.exec();
+//}
 
-    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub_);
-    stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
-    stub.set(ADDR(QScreen, geometry), geometry_stub_);
-    shot->topWindowScreenshot();
-    stub.reset(ADDR(ConfigSettings, value));
-    stub.reset(ADDR(QScreen, devicePixelRatio));
-    stub.reset(ADDR(QScreen, geometry));
-    stub.reset(ADDR(Utils, passInputEvent));
+//QVariant getShotCfg_stub_3(void *obj, const QString &group, const QString &key)
+//{
+//    if (group == "save") {
+//        if (key == "format") {
+//            return 0;
+//        } else if (key == "save_op") {
+//            return 1; // 0 desktop 1 image 2autoSave 3 SaveToSpecificDir
+//        }
+//    }
+//    return 0;
+//}
+//TEST_F(ScreenshotTest, clipboard_topWindowScreenshot)
+//{
+//    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub_3);
 
-    QTimer::singleShot(2000, &loop, SLOT(quit()));
-    loop.exec();
-}
+//    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub_);
+//    stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
+//    stub.set(ADDR(QScreen, geometry), geometry_stub_);
+//    shot->topWindowScreenshot();
+//    stub.reset(ADDR(ConfigSettings, value));
+//    stub.reset(ADDR(QScreen, devicePixelRatio));
+//    stub.reset(ADDR(QScreen, geometry));
+//    stub.reset(ADDR(Utils, passInputEvent));
 
+//    QTimer::singleShot(2000, &loop, SLOT(quit()));
+//    loop.exec();
+//}
 
-TEST_F(ScreenshotTest, fullscreenScreenshot_)
-{
-    state = 4;
-    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub);
+//QVariant getShotCfg_stub_4(void *obj, const QString &group, const QString &key)
+//{
+//    if (group == "save") {
+//        if (key == "format") {
+//            return 1;
+//        } else if (key == "save_op") {
+//            return 2; // 0 desktop 1 image 2autoSave 3 SaveToSpecificDir
+//        }
+//    }
+//    return 0;
+//}
+//bool saveAction_stub1(const QPixmap &pix)
+//{
+//    return true;
+//}
+//void sendNotify_stub1(SaveAction saveAction, QString saveFilePath, const bool succeed)
+//{
 
-    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub_);
-    stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
-    stub.set(ADDR(QScreen, geometry), geometry_stub_);
-    shot->fullscreenScreenshot();
-    stub.reset(ADDR(ConfigSettings, value));
-    stub.reset(ADDR(QScreen, devicePixelRatio));
-    stub.reset(ADDR(QScreen, geometry));
-    stub.reset(ADDR(Utils, passInputEvent));
+//}
+//TEST_F(ScreenshotTest, fullscreenScreenshot_)
+//{
+//    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub_4);
 
-    QTimer::singleShot(2000, &loop, SLOT(quit()));
-    loop.exec();
-}
+//    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub_);
+//    stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
+//    stub.set(ADDR(QScreen, geometry), geometry_stub_);
+//    stub.set(ADDR(MainWindow, saveAction), saveAction_stub1);
+//    stub.set(ADDR(MainWindow, sendNotify), sendNotify_stub1);
 
-TEST_F(ScreenshotTest, topWindowScreenshot_)
-{
-    state = 5;
-    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub);
+//    shot->fullscreenScreenshot();
+//    stub.reset(ADDR(MainWindow, saveAction));
+//    stub.reset(ADDR(MainWindow, sendNotify));
+//    stub.reset(ADDR(ConfigSettings, value));
+//    stub.reset(ADDR(QScreen, devicePixelRatio));
+//    stub.reset(ADDR(QScreen, geometry));
+//    stub.reset(ADDR(Utils, passInputEvent));
 
-    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub_);
-    stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
-    stub.set(ADDR(QScreen, geometry), geometry_stub_);
-    shot->topWindowScreenshot();
-    stub.reset(ADDR(ConfigSettings, value));
-    stub.reset(ADDR(QScreen, devicePixelRatio));
-    stub.reset(ADDR(QScreen, geometry));
-    stub.reset(ADDR(Utils, passInputEvent));
+//    QTimer::singleShot(2000, &loop, SLOT(quit()));
+//    loop.exec();
+//}
 
-    QTimer::singleShot(2000, &loop, SLOT(quit()));
-    loop.exec();
-}
+//QVariant getShotCfg_stub_5(void *obj, const QString &group, const QString &key)
+//{
+//    if (group == "save") {
+//        if (key == "format") {
+//            return 2;
+//        } else if (key == "save_op") {
+//            return 0; // 0 desktop 1 image 2autoSave 3 SaveToSpecificDir
+//        }
+//    }
+//    return 0;
+//}
+//TEST_F(ScreenshotTest, topWindowScreenshot_)
+//{
+//    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub_5);
 
-TEST_F(ScreenshotTest, desktop_fullscreenScreenshot_)
-{
-    state = 6;
-    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub);
+//    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub_);
+//    stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
+//    stub.set(ADDR(QScreen, geometry), geometry_stub_);
+//    shot->topWindowScreenshot();
+//    stub.reset(ADDR(ConfigSettings, value));
+//    stub.reset(ADDR(QScreen, devicePixelRatio));
+//    stub.reset(ADDR(QScreen, geometry));
+//    stub.reset(ADDR(Utils, passInputEvent));
 
-    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub_);
-    stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
-    stub.set(ADDR(QScreen, geometry), geometry_stub_);
-    shot->fullscreenScreenshot();
-    stub.reset(ADDR(ConfigSettings, value));
-    stub.reset(ADDR(QScreen, devicePixelRatio));
-    stub.reset(ADDR(QScreen, geometry));
-    stub.reset(ADDR(Utils, passInputEvent));
+//    QTimer::singleShot(2000, &loop, SLOT(quit()));
+//    loop.exec();
+//}
 
-    QTimer::singleShot(2000, &loop, SLOT(quit()));
-    loop.exec();
-}
+//QVariant getShotCfg_stub_6(void *obj, const QString &group, const QString &key)
+//{
+//    if (group == "save") {
+//        if (key == "format") {
+//            return 0;
+//        } else if (key == "save_op") {
+//            return 1; // 0 desktop 1 image 2autoSave 3 SaveToSpecificDir
+//        }
+//    }
+//    return 0;
+//}
+//TEST_F(ScreenshotTest, desktop_fullscreenScreenshot_)
+//{
+//    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub_6);
 
-TEST_F(ScreenshotTest, clipboard_topWindowScreenshot_)
-{
-    state = 7;
-    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub);
+//    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub_);
+//    stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
+//    stub.set(ADDR(QScreen, geometry), geometry_stub_);
+//    shot->fullscreenScreenshot();
+//    stub.reset(ADDR(ConfigSettings, value));
+//    stub.reset(ADDR(QScreen, devicePixelRatio));
+//    stub.reset(ADDR(QScreen, geometry));
+//    stub.reset(ADDR(Utils, passInputEvent));
 
-    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub_);
-    stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
-    stub.set(ADDR(QScreen, geometry), geometry_stub_);
-    shot->topWindowScreenshot();
-    stub.reset(ADDR(ConfigSettings, value));
-    stub.reset(ADDR(QScreen, devicePixelRatio));
-    stub.reset(ADDR(QScreen, geometry));
-    stub.reset(ADDR(Utils, passInputEvent));
+//    QTimer::singleShot(2000, &loop, SLOT(quit()));
+//    loop.exec();
+//}
+//QVariant getShotCfg_stub_7(void *obj, const QString &group, const QString &key)
+//{
+//    if (group == "save") {
+//        if (key == "format") {
+//            return 1;
+//        } else if (key == "save_op") {
+//            return 2; // 0 desktop 1 image 2autoSave 3 SaveToSpecificDir
+//        }
+//    }
+//    return 0;
+//}
+//TEST_F(ScreenshotTest, clipboard_topWindowScreenshot_)
+//{
+//    stub.set(ADDR(ConfigSettings, value), getShotCfg_stub_7);
 
-    QTimer::singleShot(2000, &loop, SLOT(quit()));
-    loop.exec();
-}
+//    stub.set(ADDR(Utils, passInputEvent), passInputEvent_stub_);
+//    stub.set(ADDR(QScreen, devicePixelRatio), devicePixelRatio_stub_1);
+//    stub.set(ADDR(QScreen, geometry), geometry_stub_);
+//    shot->topWindowScreenshot();
+//    stub.reset(ADDR(ConfigSettings, value));
+//    stub.reset(ADDR(QScreen, devicePixelRatio));
+//    stub.reset(ADDR(QScreen, geometry));
+//    stub.reset(ADDR(Utils, passInputEvent));
+
+//    QTimer::singleShot(2000, &loop, SLOT(quit()));
+//    loop.exec();
+//}
 
 //TEST_F(ScreenshotTest, noNotifyScreenshot)
 //{
@@ -459,7 +532,7 @@ void stopRecord_stub()
 TEST_F(ScreenshotTest, stopRecord)
 {
     stub.set(ADDR(MainWindow, stopRecord), stopRecord_stub);
-    shot->startScreenshotFor3rd("test");
+    shot->stopRecord();
     stub.reset(ADDR(MainWindow, stopRecord));
 }
 QString getRecorderNormalIcon_stub()
