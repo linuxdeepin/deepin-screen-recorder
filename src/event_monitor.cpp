@@ -44,9 +44,11 @@ EventMonitor::~EventMonitor()
 void EventMonitor::releaseRes()
 {
     if (m_display_datalink && m_display) {
-        XRecordDisableContext(m_display_datalink, m_context);
+        XRecordDisableContext(m_display, m_context);
         XRecordFreeContext(m_display, m_context);
         XSync(m_display, False);
+        XCloseDisplay(m_display_datalink);
+        XCloseDisplay(m_display);
         m_display_datalink = nullptr;
         m_display = nullptr;
     }
@@ -103,7 +105,6 @@ void EventMonitor::callback(XPointer ptr, XRecordInterceptData *data)
 void EventMonitor::handleEvent(XRecordInterceptData *data)
 {
     if (data->category == XRecordFromServer) {
-        emit activateWindow();
 
         xEvent *event = reinterpret_cast<xEvent *>(data->data);
         switch (event->u.u.type) {
@@ -136,6 +137,7 @@ void EventMonitor::handleEvent(XRecordInterceptData *data)
                     event->u.u.detail != WheelLeft &&
                     event->u.u.detail != WheelRight) {
                 isPress = false;
+                emit activateWindow();
                 emit mouseRelease(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             }
             break;
