@@ -80,12 +80,12 @@ void PinScreenShots::openImage(QImage image)
     }
 }
 
-void PinScreenShots::openImageAndName(QImage image, QString imageName)
+void PinScreenShots::openImageAndName(QImage image, QString imageName, QPoint point)
 {
     //增加判断，空图片不会启动
     if (!image.isNull() && image.width() >= 1) {
         MainWindow *win = new MainWindow();
-        win->openImageAndName(image, imageName);
+        win->openImageAndName(image, imageName, point);
         win->show();
         //第一次启动才居中
         if (m_loadingCount == 0) {

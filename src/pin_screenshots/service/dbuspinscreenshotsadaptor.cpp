@@ -21,7 +21,7 @@ bool DbusPinScreenShotsAdaptor::openFile(QString filePath)
 }
 
 
-void DbusPinScreenShotsAdaptor::openImageAndName(QByteArray images, QString imageName)
+void DbusPinScreenShotsAdaptor::openImageAndName(QByteArray images, QString imageName, QPoint point)
 {
     qDebug() << __FUNCTION__ << __LINE__;
     QByteArray data = images;
@@ -30,7 +30,7 @@ void DbusPinScreenShotsAdaptor::openImageAndName(QByteArray images, QString imag
     data = qUncompress(srcData);
     QImage image;
     image.loadFromData(data);
-    QMetaObject::invokeMethod(parent(), "openImageAndName", Q_ARG(QImage, image), Q_ARG(QString, imageName));
+    QMetaObject::invokeMethod(parent(), "openImageAndName", Q_ARG(QImage, image), Q_ARG(QString, imageName), Q_ARG(QPoint, point));
 }
 
 void DbusPinScreenShotsAdaptor::openImage(QByteArray images)

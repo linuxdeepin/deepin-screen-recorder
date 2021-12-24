@@ -61,6 +61,7 @@ MainWindow::~MainWindow()
 
 bool MainWindow::openFile(const QString &filePaths)
 {
+    qDebug() << "func: " << __func__ ;
     //测试
     m_image.load(filePaths);
     update();
@@ -69,11 +70,21 @@ bool MainWindow::openFile(const QString &filePaths)
 
 bool MainWindow::openImage(const QImage &image)
 {
+    qDebug() << "func: " << __func__ ;
+    m_image = image;
+    resize(m_image.width(), m_image.height());
+
+    update();
     return true;
 }
 
-bool MainWindow::openImageAndName(const QImage &image, const QString &name)
+bool MainWindow::openImageAndName(const QImage &image, const QString &name, const QPoint &point)
 {
+    qDebug() << "func: " << __func__ ;
+    m_image = image;
+    resize(m_image.width(), m_image.height());
+    move(point);
+    update();
 
     return true;
 }

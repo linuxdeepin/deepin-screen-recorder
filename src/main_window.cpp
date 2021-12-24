@@ -834,7 +834,7 @@ void MainWindow::initScrollShot()
     isReleaseButton = false;
 
     //隐藏工具栏矩形、圆形、箭头、笔画、选项中裁切选项-显示光标
-    if(!m_isDirectStartScrollShot){
+    if (!m_isDirectStartScrollShot) {
         m_toolBar->hideSomeToolBtn();
     }
     update();
@@ -2264,6 +2264,17 @@ void MainWindow::changeShotToolEvent(const QString &func)
         m_ocrInterface = new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
         saveScreenShot();
 
+    } else if (func == "pinScreenshots") {
+        m_pinInterface = new PinScreenShotsInterface("com.deepin.PinScreenShots", "/com/deepin/PinScreenShots", QDBusConnection::sessionBus(), this);
+        shotCurrentImg();
+        QRect target(static_cast<int>((recordX - 2) * m_pixelRatio),
+                     static_cast<int>((recordY - 2) * m_pixelRatio),
+                     static_cast<int>((recordWidth - 4) * m_pixelRatio),
+                     static_cast<int>((recordHeight - 4) * m_pixelRatio));
+        //消除蚂蚁线
+        m_resultPixmap = m_resultPixmap.copy(target);
+        m_pinInterface->openImageAndName(m_resultPixmap.toImage(), m_saveFileName, QPoint(recordX, recordY));
+        exitApp();
     } else if (func == "scrollShot") { //点击滚动截图
         //捕捉区域的固件不显示
         drawDragPoint = false;
@@ -4495,11 +4506,11 @@ void MainWindow::shotFullScreen(bool isFull)
 {
     QRect target = m_backgroundRect;
     qDebug() << "m_backgroundRect" << m_backgroundRect;
-    if(Utils::isWaylandMode) {
-       target = QRect(m_backgroundRect.x(),
-                      m_backgroundRect.y(),
-                      static_cast<int>(m_backgroundRect.width() * m_pixelRatio),
-                      static_cast<int>(m_backgroundRect.height() * m_pixelRatio));
+    if (Utils::isWaylandMode) {
+        target = QRect(m_backgroundRect.x(),
+                       m_backgroundRect.y(),
+                       static_cast<int>(m_backgroundRect.width() * m_pixelRatio),
+                       static_cast<int>(m_backgroundRect.height() * m_pixelRatio));
     }
 
     //    m_resultPixmap = getPixmapofRect(m_backgroundRect);

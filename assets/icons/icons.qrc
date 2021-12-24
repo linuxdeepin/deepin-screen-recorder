@@ -37,5 +37,6 @@
         <file>texts/touch_32px.svg</file>
         <file>texts/ocr-normal_32px.svg</file>
         <file>texts/scrollShot_32px.svg</file>
+        <file>texts/pinscreenshots_32px.svg</file>
     </qresource>
 </RCC>

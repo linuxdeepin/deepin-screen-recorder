@@ -45,6 +45,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include <QMouseEvent>
+#include <QDebug>
 DWIDGET_USE_NAMESPACE
 
 #define PADDING 2
@@ -79,7 +80,7 @@ public:
      * @param 图片名称
      * @return
      */
-    bool openImageAndName(const QImage &image, const QString &name = "");
+    bool openImageAndName(const QImage &image, const QString &name = "", const QPoint &point = QPoint(0, 0));
 protected:
     /**
      * @brief 根据鼠标的位置，改变光标的形状

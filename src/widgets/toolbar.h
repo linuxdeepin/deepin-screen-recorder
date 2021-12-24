@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
  *
  * Author:     Hou Lei <houlei@uniontech.com>
@@ -45,7 +45,7 @@ class ToolBarWidget : public DFloatingWidget
 {
     Q_OBJECT
 public:
-    explicit ToolBarWidget(MainWindow* pMainwindow,DWidget *parent = nullptr);
+    explicit ToolBarWidget(MainWindow *pMainwindow, DWidget *parent = nullptr);
     ~ToolBarWidget() Q_DECL_OVERRIDE;
     /**
      * @brief 隐藏工具栏矩形、圆形、箭头、笔画、选项中裁切选项-显示光标
@@ -60,7 +60,10 @@ public:
      * @brief 设置禁止滚动截图
      */
     void setScrollShotDisabled(const bool state);
-
+    /**
+     * @brief 设置贴图的激活状态
+     */
+    void setPinScreenshotsEnable(const bool &state);
 signals:
     void buttonChecked(QString shapeType);
     void expandChanged(bool expand,  QString shapeType);
@@ -69,9 +72,9 @@ signals:
      * @brief 切换截图功能或者录屏功能的信号
      * @param shapeType : "record" or "shot"
      */
-      void changeFunctionSignal(QString shapeType);
-      void keyBoardCheckedSignal(bool checked);
-      void mouseShowCheckedSignalToToolBar(bool checked);
+    void changeFunctionSignal(QString shapeType);
+    void keyBoardCheckedSignal(bool checked);
+    void mouseShowCheckedSignalToToolBar(bool checked);
 public slots:
     /**
      * @brief 切换截图功能或者录屏功能
@@ -103,7 +106,7 @@ public:
     explicit ToolBar(DWidget *parent = nullptr);
     ~ToolBar() Q_DECL_OVERRIDE;
     //public接口非slots
-    void initToolBar(MainWindow* pmainWindow);
+    void initToolBar(MainWindow *pmainWindow);
 
     /**
      * @brief 点击滚动截图时，工具栏隐藏一些按钮
@@ -119,6 +122,11 @@ public:
      * @brief 设置禁止滚动截图
      */
     void setScrollShotDisabled(const bool state);
+
+    /**
+     * @brief 设置贴图的激活状态
+     */
+    void setPinScreenshotsEnable(const bool &state);
 
 signals:
     void buttonChecked(QString shape);

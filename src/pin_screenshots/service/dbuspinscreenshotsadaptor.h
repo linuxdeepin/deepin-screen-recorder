@@ -83,7 +83,7 @@ public:
 
 public Q_SLOTS: // METHODS
     void openImage(QByteArray images);
-    void openImageAndName(QByteArray images, QString imageName);
+    void openImageAndName(QByteArray images, QString imageName, QPoint point);
     bool openFile(QString filePath);
 
 Q_SIGNALS: // SIGNALS

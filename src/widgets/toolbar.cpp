@@ -156,6 +156,12 @@ void ToolBarWidget::setScrollShotDisabled(const bool state)
 {
     m_subTool->setScrollShotDisabled(state);
 }
+
+void ToolBarWidget::setPinScreenshotsEnable(const bool &state)
+{
+    m_subTool->setPinScreenshotsEnable(state);
+
+}
 /*
 bool ToolBarWidget::isButtonChecked()
 {
@@ -290,6 +296,11 @@ void ToolBar::initScrollShotSubTool()
 void ToolBar::setScrollShotDisabled(const bool state)
 {
     m_toolbarWidget->setScrollShotDisabled(state);
+}
+
+void ToolBar::setPinScreenshotsEnable(const bool &state)
+{
+    m_toolbarWidget->setPinScreenshotsEnable(state);
 }
 
 void ToolBar::showAt(QPoint pos)

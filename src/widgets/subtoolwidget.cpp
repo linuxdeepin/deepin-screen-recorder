@@ -116,8 +116,8 @@ void SubToolWidget::initRecordLabel()
 
     // mips sw不支持GIF录制
 #if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__)
-        t_settings->setValue("recordConfig", "save_as_gif", false);
-        t_saveGif = false;
+    t_settings->setValue("recordConfig", "save_as_gif", false);
+    t_saveGif = false;
 #endif
 
     //保持帧数的配置文件判断
@@ -614,6 +614,29 @@ void SubToolWidget::initShotLabel()
     QList<ToolButton *> btnList;
     DPalette pa;
 
+    //分割线
+    ToolButton *seperator1 = new ToolButton(this);
+    qDebug() << "Utils::themeType: " << Utils::themeType;
+    if (Utils::themeType != 1) {
+        seperator1->setStyleSheet("border:0px solid rgba(0, 0, 0, 0);border-radius:0px;background-color:rgba(0, 0, 0, 0)");
+    } else {
+        seperator1->setStyleSheet("border:0px solid rgba(255, 255, 255, 0);border-radius:0px;background-color:rgba(255, 255, 255, 0)");
+    }
+    seperator1->setDisabled(true);
+    seperator1->setFixedSize(QSize(1, 30));
+    //添加分割线
+    btnList.append(seperator1);
+
+    //添加贴图按钮
+    m_pinButton = new ToolButton();
+    m_pinButton->setIconSize(QSize(35, 35));
+    m_pinButton->setIcon(QIcon::fromTheme("pinscreenshots"));
+    Utils::setAccessibility(m_pinButton, AC_SUBTOOLWIDGET_SCROLLSHOT_BUTTON);
+    m_shotBtnGroup->addButton(m_pinButton);
+    m_pinButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
+    installTipHint(m_pinButton, tr("Pin screenshots"));
+    btnList.append(m_pinButton);
+
     //添加滚动截图按钮
     m_scrollShotButton = new ToolButton();
     m_scrollShotButton->setIconSize(QSize(35, 35));
@@ -633,6 +656,18 @@ void SubToolWidget::initShotLabel()
     m_ocrButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     installTipHint(m_ocrButton, tr("Extract Text"));
     btnList.append(m_ocrButton);
+
+    ToolButton *seperator2 = new ToolButton(this);
+    if (Utils::themeType != 1) {
+        seperator2->setStyleSheet("border:0px solid rgba(0, 0, 0, 0);border-radius:0px;background-color:rgba(0, 0, 0, 0)");
+    } else {
+        seperator2->setStyleSheet("border:0px solid rgba(255, 255, 255, 0);border-radius:0px;background-color:rgba(255, 255, 255, 0)");
+    }
+    seperator2->setDisabled(true);
+    seperator2->setFixedSize(QSize(3, 30));
+    //添加分割线
+    btnList.append(seperator2);
+
     //添加矩形按钮
     m_rectButton = new ToolButton();
     m_rectButton->setIconSize(QSize(35, 35));
@@ -700,6 +735,17 @@ void SubToolWidget::initShotLabel()
     m_shotBtnGroup->addButton(m_textButton);
     m_textButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     btnList.append(m_textButton);
+
+    ToolButton *seperator3 = new ToolButton(this);
+    if (Utils::themeType != 1) {
+        seperator3->setStyleSheet("border:0px solid rgba(0, 0, 0, 0);border-radius:0px;background-color:rgba(0, 0, 0, 0)");
+    } else {
+        seperator3->setStyleSheet("border:0px solid rgba(255, 255, 255, 0);border-radius:0px;background-color:rgba(255, 255, 255, 0)");
+    }
+    seperator3->setDisabled(true);
+    seperator3->setFixedSize(QSize(3, 30));
+    //添加分割线
+    btnList.append(seperator3);
 
     //2019-10-15：添加截图选项按钮
     m_shotOptionButton = new ToolButton();
@@ -945,6 +991,9 @@ void SubToolWidget::initShotLabel()
     connect(m_shotBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
     [ = ](int status) {
         Q_UNUSED(status);
+        if (m_pinButton->isChecked()) {
+            emit changeShotToolFunc("pinScreenshots");
+        }
         if (m_scrollShotButton->isChecked()) {
             emit changeShotToolFunc("scrollShot");
         }
@@ -983,7 +1032,7 @@ void SubToolWidget::initShotLabel()
 void SubToolWidget::initScrollLabel()
 {
     //分配布局
-    QHBoxLayout *rectLayout = new QHBoxLayout ();
+    QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setMargin(0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(7);
@@ -993,7 +1042,7 @@ void SubToolWidget::initScrollLabel()
     rectLayout->addWidget(m_shotOptionButton);
     this->removeWidget(m_recordSubTool);
     this->removeWidget(m_shotSubTool);
-    m_scrollShotSubTool= new DLabel(this);
+    m_scrollShotSubTool = new DLabel(this);
     m_scrollShotSubTool->setLayout(rectLayout);
     addWidget(m_scrollShotSubTool);
 }
@@ -1017,6 +1066,7 @@ void SubToolWidget::installHint(QWidget *w, QWidget *hint)
 void SubToolWidget::hideSomeToolBtn()
 {
     //隐藏原工具栏中的不相关按钮
+    m_pinButton->hide();
     m_scrollShotButton->hide();
     m_rectButton->hide();
     m_circleButton->hide();
@@ -1051,6 +1101,11 @@ void SubToolWidget::hideSomeToolBtn()
 void SubToolWidget::setScrollShotDisabled(const bool state)
 {
     m_scrollShotButton->setDisabled(state);
+}
+
+void SubToolWidget::setPinScreenshotsEnable(const bool &state)
+{
+    m_pinButton->setEnabled(state);
 }
 
 void SubToolWidget::switchContent(QString shapeType)
@@ -1147,7 +1202,10 @@ void SubToolWidget::setVideoButtonInitFromSub()
 void SubToolWidget::shapeClickedFromWidget(QString shape)
 {
     if (!shape.isEmpty()) {
-        if (shape == "scrollShot") {
+        if (shape == "pinScreenshots") {
+            if (!m_pinButton->isChecked())
+                m_pinButton->click();
+        } else if (shape == "scrollShot") {
             if (!m_scrollShotButton->isChecked())
                 m_scrollShotButton->click();
         } else if (shape == "ocr") {

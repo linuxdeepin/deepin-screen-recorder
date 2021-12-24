@@ -264,5 +264,7 @@
         <file>newUI/normal/scrollShot.svg</file>
         <file>newUI/dark/normal/scrollShot.svg</file>
         <file>warming.svg</file>
+        <file>newUI/normal/pinscreenshots.svg</file>
+        <file>newUI/dark/normal/pinscreenshots.svg</file>
     </qresource>
 </RCC>

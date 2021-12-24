@@ -47,6 +47,7 @@
 #include "event_monitor.h"
 #include "recordertablet.h"
 #include "dbusinterface/ocrinterface.h"
+#include "dbusinterface/pinscreenshotsinterface.h"
 
 #include <DWindowManagerHelper>
 #include <DDialog>
@@ -907,6 +908,10 @@ private:
     int m_cursorBound;
     //ocr接口
     OcrInterface *m_ocrInterface;
+    /**
+     * @brief 贴图接口
+     */
+    PinScreenShotsInterface *m_pinInterface;
     //预览窗口
     PreviewWidget *m_previewWidget = nullptr;
     /**

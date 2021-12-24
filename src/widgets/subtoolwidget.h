@@ -70,6 +70,11 @@ public:
      * @brief 设置禁止滚动截图
      */
     void setScrollShotDisabled(const bool state);
+
+    /**
+     * @brief 设置贴图的激活状态
+     */
+    void setPinScreenshotsEnable(const bool &state);
 signals:
     void keyBoardButtonClicked(bool checked);
     void mouseBoardButtonClicked(bool checked);
@@ -142,6 +147,10 @@ private:
      * @brief ocr识别工具栏按钮
      */
     ToolButton *m_ocrButton = nullptr;
+    /**
+     * @brief 贴图工具栏按钮
+     */
+    ToolButton *m_pinButton = nullptr;
     /**
      * @brief 截图功能中矩形工具按钮
      */
