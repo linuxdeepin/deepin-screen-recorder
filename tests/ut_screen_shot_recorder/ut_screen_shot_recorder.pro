@@ -132,6 +132,7 @@ HEADERS += test_all_interfaces.h \
         ../../src/menucontroller/menucontroller.h \
         ../../src/dbusinterface/dbusnotify.h \
         ../../src/dbusinterface/ocrinterface.h \
+        ../../src/dbusinterface/pinscreenshotsinterface.h \
         ../../src/constant.h \
         ../../src/utils.h \
         ../../src/button_feedback.h \
@@ -224,6 +225,7 @@ SOURCES += main.cpp \
     ../../src/menucontroller/menucontroller.cpp \
     ../../src/dbusinterface/dbusnotify.cpp \
     ../../src/dbusinterface/ocrinterface.cpp \
+    ../../src/dbusinterface/pinscreenshotsinterface.cpp \
     ../../src/constant.cpp \
     ../../src/utils.cpp \
     ../../src/button_feedback.cpp \

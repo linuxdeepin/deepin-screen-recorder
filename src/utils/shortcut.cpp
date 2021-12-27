@@ -46,15 +46,16 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
                          << ShortcutItem(tr("Save"), "Ctrl+S");
 
     toolsGroup.groupItems << ShortcutItem(tr("Scrollshot"), "Alt+I")
-                         << ShortcutItem(tr("Rectangle"), "R")
-                         << ShortcutItem(tr("Ellipse"), "O")
-                         << ShortcutItem(tr("Line"), "L")
-                         << ShortcutItem(tr("Pencil"), "P")
-                         << ShortcutItem(tr("Text"), "T")
-                         << ShortcutItem(tr("Extract text"), "Alt+O")
-                         << ShortcutItem(tr("Delete"), "Delete")
-                         << ShortcutItem(tr("Undo"), "Ctrl+Z")
-                         << ShortcutItem(tr("Options"), "F3");
+                          << ShortcutItem(tr("Pin screenshots"), "Alt+P")
+                          << ShortcutItem(tr("Rectangle"), "R")
+                          << ShortcutItem(tr("Ellipse"), "O")
+                          << ShortcutItem(tr("Line"), "L")
+                          << ShortcutItem(tr("Pencil"), "P")
+                          << ShortcutItem(tr("Text"), "T")
+                          << ShortcutItem(tr("Extract text"), "Alt+O")
+                          << ShortcutItem(tr("Delete"), "Delete")
+                          << ShortcutItem(tr("Undo"), "Ctrl+Z")
+                          << ShortcutItem(tr("Options"), "F3");
 
     recordGroup.groupItems << ShortcutItem(tr("Start recording"), "Ctr+Alt+R")
                            << ShortcutItem(tr("Sound"), "S")
@@ -76,7 +77,7 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
     setGroup.groupItems << ShortcutItem(tr("Help"), "F1")
                         << ShortcutItem(tr("Display shortcuts"), "Ctrl+Shift+?");
 
-    m_shortcutGroups << screenshotGroup <<  recordGroup<< toolsGroup <<  exitGroup << sizeGroup << setGroup;
+    m_shortcutGroups << screenshotGroup <<  recordGroup << toolsGroup <<  exitGroup << sizeGroup << setGroup;
 
     //convert to json object
     QJsonArray jsonGroups;

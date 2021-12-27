@@ -458,6 +458,8 @@ void MainWindow::onExit()
 //下拉列表会影响快捷键
 void MainWindow::initShortcut()
 {
+    //截图模式 贴图 截图应用内快捷键
+    QShortcut *pinScreenshotsSC = new QShortcut(QKeySequence("Alt+P"), this);
     //截图模式 滚动截图应用内快捷键
     QShortcut *scrollShotSC = new QShortcut(QKeySequence("Alt+I"), this);
     //截图模式/滚动模式 ocr应用内快捷键
@@ -490,6 +492,15 @@ void MainWindow::initShortcut()
     QShortcut *escSC = new QShortcut(QKeySequence("Escape"), this);
     //截图模式/录屏模式（未做穿透）/滚动模式 帮助快捷面板
     QShortcut *shortCutSC = new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Slash), this);
+    //截图模式/滚动模式 贴图应用内快捷键
+    connect(pinScreenshotsSC, &QShortcut::activated, this, [ = ] {
+        //滚动截图及普通截图都可以通过快捷键触发贴图
+        if (status::shot == m_functionType && Utils::is3rdInterfaceStart == false)
+        {
+            qDebug() << "shortcut : pinScreenshotsSC (key: alt+p)";
+            m_toolBar->shapeClickedFromMain("pinScreenshots");
+        }
+    });
     //截图模式 滚动截图应用内快捷键
     connect(scrollShotSC, &QShortcut::activated, this, [ = ] {
         // 当第三方接口启动时，不触发快捷键
@@ -2313,6 +2324,11 @@ void MainWindow::changeShotToolEvent(const QString &func)
         //消除蚂蚁线
         m_resultPixmap = m_resultPixmap.copy(target);
         m_pinInterface->openImageAndName(m_resultPixmap.toImage(), m_saveFileName, QPoint(recordX, recordY));
+        if (!m_resultPixmap.isNull()) {
+            save2Clipboard(m_resultPixmap);
+        } else {
+            qDebug() << "贴图画面为空！不能保存到剪贴板。";
+        }
         exitApp();
     } else if (func == "scrollShot") { //点击滚动截图
         //捕捉区域的固件不显示
