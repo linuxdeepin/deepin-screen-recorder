@@ -251,6 +251,15 @@ void MainWindow::initAttributes()
             // 多屏放缩情况下，小屏在前，整体需要偏移一定距离
             this->move(m_screenInfo[0].width - static_cast<int>(m_screenInfo[0].width / m_pixelRatio), 0);
     }
+    //检测锁屏的属性是否发生改变
+    QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
+                                          "/com/deepin/SessionManager",
+                                          "org.freedesktop.DBus.Properties",
+                                          "PropertiesChanged",
+                                          "sa{sv}as",
+                                          this,
+                                          SLOT(onLockScreenEvent(QDBusMessage))
+                                         );
 }
 
 void MainWindow::setupRegistry(Registry *registry)
@@ -363,6 +372,22 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
         if (m_isFullScreenShot) {
             saveTopWindow();
         }
+    }
+}
+
+void MainWindow::checkIsLockScreen()
+{
+    QDBusInterface sessionManagerIntert("com.deepin.SessionManager",
+                                        "/com/deepin/SessionManager",
+                                        "com.deepin.SessionManager",
+                                        QDBusConnection::sessionBus());
+    if (!sessionManagerIntert.isValid()) {
+        return;
+    }
+    bool isLockScreen = sessionManagerIntert.property("Locked").toBool();
+
+    if (isLockScreen) {
+        pinScreenshotsLockScreen(isLockScreen);
     }
 }
 
@@ -905,15 +930,7 @@ void MainWindow::initScrollShot()
     m_scrollShotSizeTips = new TopTips(this);
     m_scrollShotSizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
     m_scrollShotSizeTips->hide();
-    //检测锁屏的属性是否发生改变
-    QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
-                                          "/com/deepin/SessionManager",
-                                          "org.freedesktop.DBus.Properties",
-                                          "PropertiesChanged",
-                                          "sa{sv}as",
-                                          this,
-                                          SLOT(onLockScreenEvent(QDBusMessage))
-                                         );
+
 
 #if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__)
     static int delayTime = 260;
@@ -1503,6 +1520,25 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     }
 }
 
+void MainWindow::pinScreenshotsLockScreen(bool isLocked)
+{
+    m_toolBar->setPinScreenshotsEnable(!isLocked);
+}
+
+void MainWindow::scrollShotLockScreen(bool isLocked)
+{
+    //锁屏时暂停自动滚动
+    if (isLocked) {
+        m_scrollShotStatus = 3;
+        //暂停自动滚动截图
+        pauseAutoScrollShot();
+    }
+    //解锁时恢复滚动
+    //else {
+    //continueScrollShot();
+    //}
+}
+
 //滚动截图时鼠标穿透设置之所以需要单独用来设置，因为有些时候捕捉区域太大，工具栏在捕捉区域内部，需要将工具栏这片区域给排除掉
 void MainWindow::setInputEvent()
 {
@@ -1654,6 +1690,9 @@ void MainWindow::updateToolBarPos()
         m_pCameraWatcher = new CameraWatcher(this);
         m_pCameraWatcher->setWatch(true); //取消之前的线程方式，采用定时器监测
         connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
+
+        //检测是否是锁频状态下再打开截图
+        checkIsLockScreen();
     }
 
     QPoint toolbarPoint;
@@ -4018,17 +4057,12 @@ void MainWindow::onLockScreenEvent(QDBusMessage msg)
             }
         }
     }
-    //锁屏时暂停自动滚动
-    if (isLocked) {
-        m_scrollShotStatus = 3;
-        //暂停自动滚动截图
-        pauseAutoScrollShot();
+    qDebug() << ">>>>>>>>> isLocked: " << isLocked;
+    if (status::scrollshot == m_functionType) {
+        scrollShotLockScreen(isLocked);
+    } else if (status::shot == m_functionType) {
+        pinScreenshotsLockScreen(isLocked);
     }
-    //解锁时恢复滚动
-    //else {
-    //continueScrollShot();
-    //}
-
 }
 
 //打开截图录屏帮助文档并定位到滚动截图

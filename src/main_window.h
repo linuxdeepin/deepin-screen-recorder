@@ -498,7 +498,7 @@ public slots:
     void onScrollShotCheckScrollType(int autoScrollFlag);
 
     /**
-     * @brief 监听锁屏信号，滚动截图时锁屏进行暂停处理
+     * @brief 监听锁屏信号，滚动截图和贴图需要使用
      * @param msg
      */
     void onLockScreenEvent(QDBusMessage msg);
@@ -557,6 +557,16 @@ protected:
 
     virtual void wheelEvent(QWheelEvent *event) override;  // waland手动滚动处理逻辑
 
+    /**
+     * @brief 贴图锁屏处理
+     * @param isLocked
+     */
+    void pinScreenshotsLockScreen(bool isLocked);
+
+    /**
+     * @brief 滚动截图锁屏处理，滚动截图进入锁屏，暂停滚动截图
+     */
+    void scrollShotLockScreen(bool isLocked);
     /**
      * @brief 初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小
      */
@@ -638,6 +648,10 @@ protected:
      */
     void waylandwindowinfo(const QVector<ClientManagement::WindowState> &m_windowStates);
 
+    /**
+     * @brief 启动截图录屏时检测是否是锁屏状态
+     */
+    void checkIsLockScreen();
 private:
 //    QList<WindowRect> windowRects;
     /**
