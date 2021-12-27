@@ -18,13 +18,15 @@ SOURCES += \
     service/pinscreenshotsinterface.cpp \
     mainwindow.cpp \
     main.cpp \
-    pinscreenshots.cpp
+    pinscreenshots.cpp \
+    service/ocrinterface.cpp
 
 HEADERS += \
     service/dbuspinscreenshotsadaptor.h \
     service/pinscreenshotsinterface.h \
     mainwindow.h \
-    pinscreenshots.h
+    pinscreenshots.h \
+    service/ocrinterface.h
 
 ##安装路径
 target.path=/usr/bin

@@ -40,12 +40,17 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "service/ocrinterface.h"
+
 #include <DWidget>
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include <QMouseEvent>
 #include <QDebug>
+#include <QApplication>
+#include <QShortcut>
+
 DWIDGET_USE_NAMESPACE
 
 #define PADDING 2
@@ -81,6 +86,14 @@ public:
      * @return
      */
     bool openImageAndName(const QImage &image, const QString &name = "", const QPoint &point = QPoint(0, 0));
+    /**
+     * @brief 开启ocr
+     */
+    void openOCR();
+    /**
+     * @brief 保存图片
+     */
+    void saveImg();
 protected:
     /**
      * @brief 根据鼠标的位置，改变光标的形状
@@ -92,7 +105,16 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void paintEvent(QPaintEvent *e) override;
-
+    void keyPressEvent(QKeyEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
+    /**
+     * @brief 快捷键初始化
+     */
+    void initShortcut();
+    /**
+     * @brief 边界计算
+     */
+    bool boundaryCalculation(QRect &rect);
 private:
     /**
      * @brief 按下鼠标的位置
@@ -106,9 +128,11 @@ private:
      * @brief 窗口大小改变时，记录改变方向
      */
     Direction dir;
-
     QImage m_image;
-
+    /**
+     * @brief OCR接口
+     */
+    OcrInterface * m_ocrInterface;
 };
 
 #endif // MAINWINDOW_H
