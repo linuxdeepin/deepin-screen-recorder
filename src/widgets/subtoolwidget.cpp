@@ -631,7 +631,7 @@ void SubToolWidget::initShotLabel()
     m_pinButton = new ToolButton();
     m_pinButton->setIconSize(QSize(35, 35));
     m_pinButton->setIcon(QIcon::fromTheme("pinscreenshots"));
-    Utils::setAccessibility(m_pinButton, AC_SUBTOOLWIDGET_SCROLLSHOT_BUTTON);
+    Utils::setAccessibility(m_pinButton, AC_SUBTOOLWIDGET_PINSCREENSHOTS_BUTTON);
     m_shotBtnGroup->addButton(m_pinButton);
     m_pinButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     installTipHint(m_pinButton, tr("Pin screenshots"));

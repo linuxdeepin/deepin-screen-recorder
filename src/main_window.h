@@ -124,7 +124,8 @@ public:
         record = 0,
         shot,
         scrollshot,
-        ocr
+        ocr,
+        pinscreenshots
     };
     //滚动截图的滚动模式
     enum ScrollShotType {
