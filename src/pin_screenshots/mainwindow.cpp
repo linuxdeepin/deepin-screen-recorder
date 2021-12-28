@@ -313,15 +313,13 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     if(event->delta() < 0 && (width < this->minimumWidth() || height < this->minimumHeight()))
         return;
     if(event->delta() > 0){
-        rect.setTopLeft(QPoint(x - WHEELNUM, y - WHEELNUM));
-        rect.setTopRight(QPoint(x + width + WHEELNUM, y - WHEELNUM));
-        rect.setBottomLeft(QPoint(x - WHEELNUM, y + height + WHEELNUM));
-        rect.setBottomRight(QPoint(x + width + WHEELNUM, y + height + WHEELNUM));
+        QPoint newPoint = QPointF(width+WHEELNUM, static_cast<int>((width+WHEELNUM) / proportion)).toPoint();
+        rect.setWidth(newPoint.x());
+        rect.setHeight(newPoint.y());
     }else {
-        rect.setTopLeft(QPoint(x + WHEELNUM, y + WHEELNUM));
-        rect.setTopRight(QPoint(x + width - WHEELNUM, y + WHEELNUM));
-        rect.setBottomLeft(QPoint(x + WHEELNUM, y + height - WHEELNUM));
-        rect.setBottomRight(QPoint(x + width - WHEELNUM, y + height - WHEELNUM));
+        QPoint newPoint = QPointF(width-WHEELNUM, static_cast<int>((width-WHEELNUM) / proportion)).toPoint();
+        rect.setWidth(newPoint.x());
+        rect.setHeight(newPoint.y());
     }
     QPointF globalPos = event->globalPos(); // 鼠标在屏幕中的坐标
     //qDebug()<<"globalPos"<<globalPos;
