@@ -1253,6 +1253,7 @@ ACCESS_PRIVATE_FUN(MainWindow, void(), resetCursor);
 ACCESS_PRIVATE_FUN(MainWindow, void(), showScrollShot);
 TEST_F(MainWindowTest, initScrollShot)
 {
+    /*
     MainWindow *window = new MainWindow();
     access_private_field::MainWindowm_initScroll(*window) = false;
 
@@ -1306,7 +1307,7 @@ TEST_F(MainWindowTest, initScrollShot)
     stub.reset(MainWindow_resetCursor);
     stub.reset(ADDR(ToolBar, hideSomeToolBtn));
     delete window;
-
+    */
 }
 
 ACCESS_PRIVATE_FIELD(MainWindow, QPixmap, m_firstScrollShotImg);

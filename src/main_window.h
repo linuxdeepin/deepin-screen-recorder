@@ -918,6 +918,7 @@ private:
     bool m_hasComposite = true;
     bool m_initScreenShot;
     bool m_initScreenRecorder;
+    bool m_initResource = false;
     bool m_initScroll;
     RecorderTablet *m_tabletRecorderHandle = nullptr;
     int m_cursorBound;

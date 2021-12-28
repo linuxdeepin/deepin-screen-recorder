@@ -127,6 +127,19 @@ void MainWindow::initMainWindow()
     connect(qApp, &QGuiApplication::screenRemoved, this, &MainWindow::onExit);
 
     m_pScreenCaptureEvent = new EventMonitor(this);
+    connect(m_pScreenCaptureEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(mouseDrag(int, int)), this, SLOT(onMouseDrag(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(mousePress(int, int)), this, SLOT(onMousePress(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(mouseRelease(int, int)), this, SLOT(onMouseRelease(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(mouseMove(int, int)), this, SLOT(onMouseMove(int, int)), Qt::QueuedConnection);
+    connect(m_pScreenCaptureEvent, SIGNAL(mouseScroll(int, int, int, int)), this, SLOT(onMouseScroll(int, int, int, int)), Qt::QueuedConnection);
+
+    if (!Utils::isWaylandMode) {
+        connect(m_pScreenCaptureEvent, SIGNAL(keyboardPress(unsigned char)), this, SLOT(onKeyboardPress(unsigned char)), Qt::QueuedConnection);
+        connect(m_pScreenCaptureEvent, SIGNAL(keyboardRelease(unsigned char)), this, SLOT(onKeyboardRelease(unsigned char)), Qt::QueuedConnection);
+        m_pScreenCaptureEvent->start();
+    }
+
     m_screenCount = QApplication::desktop()->screenCount();
     QList<QScreen *> screenList = qApp->screens();
     for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
@@ -678,18 +691,7 @@ void MainWindow::initResource()
     resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(":/newUI/normal/node.svg");
     buttonFeedback = new ButtonFeedback();
 
-    connect(m_pScreenCaptureEvent, SIGNAL(activateWindow()), this, SLOT(onActivateWindow()), Qt::QueuedConnection);
-    connect(m_pScreenCaptureEvent, SIGNAL(mouseDrag(int, int)), this, SLOT(onMouseDrag(int, int)), Qt::QueuedConnection);
-    connect(m_pScreenCaptureEvent, SIGNAL(mousePress(int, int)), this, SLOT(onMousePress(int, int)), Qt::QueuedConnection);
-    connect(m_pScreenCaptureEvent, SIGNAL(mouseRelease(int, int)), this, SLOT(onMouseRelease(int, int)), Qt::QueuedConnection);
-    connect(m_pScreenCaptureEvent, SIGNAL(mouseMove(int, int)), this, SLOT(onMouseMove(int, int)), Qt::QueuedConnection);
-    connect(m_pScreenCaptureEvent, SIGNAL(mouseScroll(int, int, int, int)), this, SLOT(onMouseScroll(int, int, int, int)), Qt::QueuedConnection);
-
-    if (!Utils::isWaylandMode) {
-        connect(m_pScreenCaptureEvent, SIGNAL(keyboardPress(unsigned char)), this, SLOT(onKeyboardPress(unsigned char)), Qt::QueuedConnection);
-        connect(m_pScreenCaptureEvent, SIGNAL(keyboardRelease(unsigned char)), this, SLOT(onKeyboardRelease(unsigned char)), Qt::QueuedConnection);
-        m_pScreenCaptureEvent->start();
-    }
+    m_initResource = true;
 }
 
 void MainWindow::initScreenShot()
@@ -3687,6 +3689,9 @@ void MainWindow::tableRecordSet()
 //切换为活动窗口
 void MainWindow::onActivateWindow()
 {
+    if (!m_initResource) {
+        return;
+    }
     if (status::shot == m_functionType || status::scrollshot == m_functionType) {
         activateWindow();
     }
@@ -3695,6 +3700,9 @@ void MainWindow::onActivateWindow()
 //通过x11从底层获取鼠标拖动事件
 void MainWindow::onMouseDrag(int x, int y)
 {
+    if (!m_initResource) {
+        return;
+    }
     if (status::record == m_functionType) {
         showDragFeedback(x, y);
     }
@@ -3703,6 +3711,9 @@ void MainWindow::onMouseDrag(int x, int y)
 //通过x11从底层获取鼠标按压事件
 void MainWindow::onMousePress(int x, int y)
 {
+    if (!m_initResource) {
+        return;
+    }
     if (status::record == m_functionType) {
         showPressFeedback(x, y);
     }  else if (m_initScroll && status::scrollshot == m_functionType) {
@@ -3713,6 +3724,9 @@ void MainWindow::onMousePress(int x, int y)
 //通过x11从底层获取鼠标释放事件
 void MainWindow::onMouseRelease(int x, int y)
 {
+    if (!m_initResource) {
+        return;
+    }
     if (status::record == m_functionType) {
         showReleaseFeedback(x, y);
     }
@@ -3721,6 +3735,9 @@ void MainWindow::onMouseRelease(int x, int y)
 //通过x11从底层获取鼠标移动事件
 void MainWindow::onMouseMove(int x, int y)
 {
+    if (!m_initResource) {
+        return;
+    }
     if (m_initScroll && status::scrollshot == m_functionType) {
         scrollShotMouseMoveEvent(x, y);
     }
@@ -3729,6 +3746,9 @@ void MainWindow::onMouseMove(int x, int y)
 //通过x11从底层滚动鼠标滚轮
 void MainWindow::onMouseScroll(int mouseTime, int direction, int x, int y)
 {
+    if (!m_initResource) {
+        return;
+    }
     if (m_initScroll && status::scrollshot == m_functionType) {
         scrollShotMouseScrollEvent(mouseTime, direction, x, y);
     }
@@ -3767,6 +3787,9 @@ void MainWindow::onKeyboardReleaseWayland(const int key)
 //通过x11从底层获取键盘按下事件
 void MainWindow::onKeyboardPress(unsigned char keyCode)
 {
+    if (!m_initResource) {
+        return;
+    }
     if (status::record == m_functionType) {
         m_showButtons->showContentButtons(keyCode);
         recordKeyPressEvent(keyCode);
@@ -3781,6 +3804,9 @@ void MainWindow::onKeyboardPress(unsigned char keyCode)
 //键盘按键释放
 void MainWindow::onKeyboardRelease(unsigned char keyCode)
 {
+    if (!m_initResource) {
+        return;
+    }
     if (status::record == m_functionType) {
         m_showButtons->releaseContentButtons(keyCode);
     }
