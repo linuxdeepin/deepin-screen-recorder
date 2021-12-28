@@ -56,11 +56,10 @@ MainWindow::MainWindow(QWidget *parent)
 //    setAttribute(Qt::WA_TranslucentBackground, true); //设置透明
     //设置可以进行鼠标操作
     setMouseTracking(true);
-    resize(500, 500);
-
     isLeftPressDown = false;
     dir = UP;
-    this->setMinimumSize(10,10);
+    CalculateScreenSize();
+    this->setMinimumSize(WHEELNUM,WHEELNUM);
     initShortcut(); // 初始化快捷键
 }
 
@@ -83,8 +82,8 @@ bool MainWindow::openImage(const QImage &image)
     qDebug() << "func: " << __func__ ;
     m_image = image;
     resize(m_image.width(), m_image.height());
-
     update();
+    proportion = static_cast<double>(this->width())  / this->height();
     return true;
 }
 
@@ -96,7 +95,7 @@ bool MainWindow::openImageAndName(const QImage &image, const QString &name, cons
     resize(m_image.width(), m_image.height());
     move(point);
     update();
-
+    proportion = static_cast<double>(this->width())  / this->height();
     return true;
 }
 // 开启OCR
@@ -196,10 +195,8 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
     if (!isLeftPressDown) {
         this->region(gloPoint);
     } else {
-
         if (dir != NONE) {
             QRect rMove(tl, br);
-            double proportion = rMove.width() / rMove.height();
             QPoint newPoint;
             switch (dir) {
  #if 0
@@ -223,20 +220,32 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
                 break;
  #endif
             case LEFTTOP:
-                newPoint = QPointF(br.x() - gloPoint.x(), (br.x() - gloPoint.x()) / proportion).toPoint();
+                newPoint = QPointF(br.x() - gloPoint.x(), static_cast<int>((br.x() - gloPoint.x()) / proportion)).toPoint();
                 rMove.setX(br.x() - newPoint.x());
                 rMove.setY(br.y() - newPoint.y());
+                if(rMove.x() +  WHEELNUM >= br.x() || rMove.y() + WHEELNUM >= br.y()){
+                    rMove.setX(br.x() - WHEELNUM);
+                    rMove.setY(br.y() - WHEELNUM);
+                }
                 break;
             case RIGHTTOP:
-                newPoint = QPointF(tl.x() + (bl.y() - gloPoint.y())*proportion, gloPoint.y()).toPoint();
-                rMove.setTopRight(newPoint);
+                newPoint = QPointF(tl.x() + static_cast<int>((bl.y() - gloPoint.y())*proportion), gloPoint.y()).toPoint();
+                if(newPoint.x() -  WHEELNUM <= bl.x() || newPoint.y() + WHEELNUM >= bl.y()){
+                    rMove.setTopRight(QPoint(bl.x() + WHEELNUM, bl.y() - WHEELNUM));
+                }else {
+                    rMove.setTopRight(newPoint);
+                }
                 break;
             case LEFTBOTTOM:
-                newPoint = QPointF(gloPoint.x(), tr.y()+ ((tr.x() - gloPoint.x()) / proportion)).toPoint();
-                rMove.setBottomLeft(newPoint);
+                newPoint = QPointF(gloPoint.x(), static_cast<int>(tr.y()+ ((tr.x() - gloPoint.x())) / proportion)).toPoint();
+                if(newPoint.x() + WHEELNUM >= tr.x() || newPoint.y() - WHEELNUM <= tr.y()){
+                    rMove.setBottomLeft(QPoint(tr.x() - WHEELNUM, tr.y() + WHEELNUM));
+                }else {
+                    rMove.setBottomLeft(newPoint);
+                }
                 break;
             case RIGHTBOTTOM:
-                newPoint = QPointF(gloPoint.x() - tl.x(), (gloPoint.x() - tl.x()) / proportion).toPoint();
+                newPoint = QPointF(gloPoint.x() - tl.x(), static_cast<int>((gloPoint.x() - tl.x()) / proportion)).toPoint();
                 rMove.setWidth(gloPoint.x() - tl.x());
                 rMove.setHeight(newPoint.y());
                 break;
@@ -315,6 +324,7 @@ void MainWindow::wheelEvent(QWheelEvent *event)
         rect.setBottomRight(QPoint(x + width - WHEELNUM, y + height - WHEELNUM));
     }
     QPointF globalPos = event->globalPos(); // 鼠标在屏幕中的坐标
+    //qDebug()<<"globalPos"<<globalPos;
     QPointF newPoint(rect.width()*unionPoint.x(), rect.height()*unionPoint.y()); //扩大后，鼠标在贴图中的坐标
     QPointF topLeft(globalPos.x() - newPoint.x(), globalPos.y() - newPoint.y()); // 贴图左上角的点在屏幕中的坐标
     rect = QRect(topLeft.toPoint(), rect.size());
@@ -323,6 +333,7 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     if(boundaryCalculation(rect))
         return;
     this->setGeometry(rect.x(),rect.y(),rect.width(),rect.height());
+    proportion = static_cast<double>(this->width())  / this->height();
 }
 
 // 初始化快捷键
@@ -369,26 +380,26 @@ void MainWindow::initShortcut()
 // 贴图窗口边界计算
 bool MainWindow::boundaryCalculation(QRect &rect)
 {
-    //qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
-    QRect mainRect = QApplication::desktop()->screen()->geometry();
+    //QRect mainRect = QApplication::desktop()->screen()->geometry();
+    //qDebug()<<"mainRect"<<mainRect;
     int width = rect.width();
     int height = rect.height();
     int x = rect.x();
     int y = rect.y();
     qDebug()<<"2 rect === "<<rect<<"width"<<width<<"height"<<height;
     bool isOver = false;
-    if((x + width >= mainRect.width())){
-        int tmpWidth = x + width - mainRect.width();
+    if((x + width >= m_screenSize.width())){
+        int tmpWidth = x + width - m_screenSize.width();
         x = x - tmpWidth;
-        qDebug()<<" ====== x > 0 === ";
+        qDebug()<<" ====== x > 0 === "<<x<<y;
         if (x <= 0){
             x = 0;
             isOver = true;
         }
     }
 
-    if((y + height >= mainRect.height())){
-       int tmpHeight = y + height - mainRect.height();
+    if((y + height >= m_screenSize.height())){
+       int tmpHeight = y + height - m_screenSize.height();
        y = y - tmpHeight;
        if(y <= 0){
             y = 0;
@@ -401,4 +412,41 @@ bool MainWindow::boundaryCalculation(QRect &rect)
     rect.setWidth(width);
     rect.setHeight(height);
     return isOver;
+}
+// 计算屏幕大小
+void MainWindow::CalculateScreenSize()
+{
+    //qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
+    QList<QScreen *> screenList = qApp->screens();
+    for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
+        QRect rect = (*it)->geometry();
+        qDebug() << (*it)->name() << rect;
+        ScreenInfo screenInfo;
+        screenInfo.x = rect.x();
+        screenInfo.y = rect.y();
+        screenInfo.height =  static_cast<int>(rect.height());
+        screenInfo.width = static_cast<int>(rect.width());
+        screenInfo.name = (*it)->name();
+        m_screenInfo.append(screenInfo);
+    }
+
+    m_screenSize.setWidth(m_screenInfo[0].x + m_screenInfo[0].width);
+    m_screenSize.setHeight(m_screenInfo[0].y + m_screenInfo[0].height);
+
+    // 通过每个屏幕， 右下角的坐标来计算屏幕总大小。
+    for (int i = 1; i < m_screenInfo.size(); ++i) {
+        if ((m_screenInfo[i].height + m_screenInfo[i].y) > m_screenSize.height())
+            m_screenSize.setHeight(m_screenInfo[i].height + m_screenInfo[i].y);
+
+        if ((m_screenInfo[i].width + m_screenInfo[i].x) > m_screenSize.width())
+            m_screenSize.setWidth(m_screenInfo[i].width + m_screenInfo[i].x);
+    }
+
+    qDebug() << m_screenSize;
+    if (m_screenInfo.size() > 1) {
+        // 排序
+        qSort(m_screenInfo.begin(), m_screenInfo.end(), [ = ](const ScreenInfo info1, const ScreenInfo info2) {
+            return info1.x < info2.x;
+        });
+    }
 }

@@ -61,6 +61,14 @@ class MainWindow : public DWidget
 {
     Q_OBJECT
     enum Direction { UP = 0, DOWN = 1, LEFT, RIGHT, LEFTTOP, LEFTBOTTOM, RIGHTBOTTOM, RIGHTTOP, NONE };
+    struct ScreenInfo {
+        int x;
+        int y;
+        int width;
+        int height;
+        QString name;
+        ~ScreenInfo() {}
+    };
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
@@ -115,6 +123,10 @@ protected:
      * @brief 边界计算
      */
     bool boundaryCalculation(QRect &rect);
+    /**
+     * @brief 计算屏幕
+     */
+    void CalculateScreenSize();
 private:
     /**
      * @brief 按下鼠标的位置
@@ -133,6 +145,9 @@ private:
      * @brief OCR接口
      */
     OcrInterface * m_ocrInterface;
+    double proportion = 0.0; //宽高比
+    QList<ScreenInfo> m_screenInfo; //所有屏幕信息
+    QSize m_screenSize; // 屏幕大小
 };
 
 #endif // MAINWINDOW_H
