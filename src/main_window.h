@@ -150,16 +150,15 @@ public:
             delete m_pCameraWatcher;
             m_pCameraWatcher = nullptr;
         }
-#ifndef __mips__
 
-        if (m_pScreenCaptureEvent && m_isZhaoxin == false) {
+        if (m_pScreenCaptureEvent) {
             m_pScreenCaptureEvent->releaseRes();
             //m_pScreenCaptureEvent->terminate();
             m_pScreenCaptureEvent->wait();
             delete m_pScreenCaptureEvent;
             m_pScreenCaptureEvent = nullptr;
         }
-#endif
+
         if (Utils::isWaylandMode && m_connectionThread) {
 
             m_connectionThread->terminate();
