@@ -1301,7 +1301,7 @@ void MainWindow::topWindow()
     for (int i = t_windowCount - 1; i >= 0; i--) {
         auto wid = DWindowManagerHelper::instance()->allWindowIdList().at(i);
         if (wid == winId()) continue;
-        if (prewindow) {
+        if (prewindow && Utils::isSysHighVersion1040()) {
             delete prewindow;
             prewindow = nullptr;
         }
@@ -1328,7 +1328,7 @@ void MainWindow::topWindow()
             continue;
         }
     }
-    if (prewindow) {
+    if (prewindow && Utils::isSysHighVersion1040()) {
         delete prewindow;
         prewindow = nullptr;
     }
