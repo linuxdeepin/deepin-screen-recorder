@@ -57,7 +57,6 @@ bool PinScreenShots::openFile(QString filePath)
         win->show();
         //第一次启动才居中
         if (m_loadingCount == 0) {
-            Dtk::Widget::moveToCenter(win);
             m_loadingCount++;
         }
     }
@@ -74,7 +73,6 @@ void PinScreenShots::openImage(QImage image)
         win->show();
         //第一次启动才居中
         if (m_loadingCount == 0) {
-            Dtk::Widget::moveToCenter(win);
             m_loadingCount++;
         }
     }
@@ -89,7 +87,6 @@ void PinScreenShots::openImageAndName(QImage image, QString imageName, QPoint po
         win->show();
         //第一次启动才居中
         if (m_loadingCount == 0) {
-            Dtk::Widget::moveToCenter(win);
             m_loadingCount++;
         }
 
