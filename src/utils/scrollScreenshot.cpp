@@ -34,14 +34,16 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
 
     m_mouseWheelTimer = new QTimer(this);
     connect(m_mouseWheelTimer, &QTimer::timeout, this, [ = ] {
-        if (!Utils::isWaylandMode) {
+        if (!Utils::isWaylandMode)
+        {
             // 发送滚轮事件， 自动滚动
             static Display *m_display = XOpenDisplay(nullptr);
             XTestFakeButtonEvent(m_display, Button5, 1, CurrentTime);
             XFlush(m_display);
             XTestFakeButtonEvent(m_display, Button5, 0, CurrentTime);
             XFlush(m_display);
-        } else {
+        } else
+        {
             m_WaylandScrollMonitor->doWaylandAutoScroll(); //waland滚动
         }
 
@@ -81,9 +83,9 @@ void ScrollScreenshot::addPixmap(const QPixmap &piximg, int wheelDirection)
         m_PixMerageThread->start();
         m_startPixMerageThread = true;
     }
+    m_PixMerageThread->setScrollModel(m_isManualScrollModel);
     if (m_isManualScrollModel == false) {//自动
         if (m_curStatus == Wait) {
-            m_PixMerageThread->setScrollModel(false);
             m_mouseWheelTimer->start(300);
             m_curStatus = Merging;
         }
@@ -93,7 +95,6 @@ void ScrollScreenshot::addPixmap(const QPixmap &piximg, int wheelDirection)
         }
     } else if (m_isManualScrollModel == true) {//手动
         //qDebug() << "function piximg is null: " << __func__ << " ,line: " << __LINE__;
-        m_PixMerageThread->setScrollModel(true);
         m_mouseWheelTimer->stop();
         PixMergeThread::PictureDirection  status = (wheelDirection == WheelDown) ? (PixMergeThread::PictureDirection::ScrollDown) : (PixMergeThread::PictureDirection::ScrollUp);
         m_lastDirection = status; // 记录滚动方向
@@ -103,9 +104,9 @@ void ScrollScreenshot::addPixmap(const QPixmap &piximg, int wheelDirection)
 
 void ScrollScreenshot::addLastPixmap(const QPixmap &piximg)
 {
-    setTimeAndCalculateTimeDiff(static_cast<int>( QDateTime::currentDateTime().toTime_t()));
+    setTimeAndCalculateTimeDiff(static_cast<int>(QDateTime::currentDateTime().toTime_t()));
     m_PixMerageThread->setIsLastImg(true); //添加最后一张图片标记
-    if(nullptr != m_PixMerageThread)
+    if (nullptr != m_PixMerageThread)
         m_PixMerageThread->addShotImg(piximg, m_lastDirection);
 }
 
