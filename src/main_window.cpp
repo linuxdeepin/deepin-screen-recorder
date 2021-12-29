@@ -1233,6 +1233,7 @@ void MainWindow::initLaunchMode(const QString &launchMode)
         }
     } else if (launchMode == "screenOcr") {
         m_functionType = status::ocr;
+        m_isDirectStartOcr = true;
     } else if (launchMode == "screenScroll") {
         m_functionType = status::scrollshot;
         m_isDirectStartScrollShot = true;
@@ -2315,7 +2316,14 @@ void MainWindow::changeShotToolEvent(const QString &func)
         // 调起OCR识别界面， 传入截图路径
         m_ocrInterface = new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
         saveScreenShot();
-
+        int delayTime = 0;
+        //直接通过快捷键启动时需要延时100ms再进行保存，防止未获取到选择区域的名称
+        if (m_isDirectStartOcr) {
+            delayTime = 100;
+        }
+        QTimer::singleShot(delayTime, this, [ = ] {
+            saveScreenShot();
+        });
     } else if (func == "pinScreenshots") {
         m_functionType = status::pinscreenshots;
         m_pinInterface = new PinScreenShotsInterface("com.deepin.PinScreenShots", "/com/deepin/PinScreenShots", QDBusConnection::sessionBus(), this);
