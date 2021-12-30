@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 
     if (argc < 2) {
         qDebug() << "Cant open a null file";
-        //return 0;
+        return 0;
     }
 
 
@@ -96,12 +96,6 @@ int main(int argc, char *argv[])
     PinScreenShots instance;
     QDBusConnection dbus = QDBusConnection::sessionBus();
 
-
-    QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
-    // 在多屏模式下, winId 不是0
-    QPixmap pixmap = t_primaryScreen->grabWindow(QApplication::desktop()->winId(), 0, 0, 500, 500);
-    pixmap.save("test.png");
-    argv[1] = "test.png";
 
     if (dbus.registerService("com.deepin.PinScreenShots")) {
         // 第一次启动

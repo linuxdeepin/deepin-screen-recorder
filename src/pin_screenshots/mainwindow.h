@@ -140,7 +140,8 @@ private:
      * @brief 窗口大小改变时，记录改变方向
      */
     Direction dir;
-    QImage m_image;
+    QImage m_image; //图片
+    QString m_imageName; //图片名称
     /**
      * @brief OCR接口
      */

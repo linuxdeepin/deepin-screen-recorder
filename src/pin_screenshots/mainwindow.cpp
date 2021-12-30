@@ -89,9 +89,14 @@ bool MainWindow::openImage(const QImage &image)
 
 bool MainWindow::openImageAndName(const QImage &image, const QString &name, const QPoint &point)
 {
-    Q_UNUSED(name);
     qDebug() << "func: " << __func__ ;
     m_image = image;
+    if (name.isEmpty()){
+        m_imageName = QString("test.png");
+    }else {
+        m_imageName = name;
+    }
+
     resize(m_image.width(), m_image.height());
     move(point);
     update();
@@ -102,17 +107,18 @@ bool MainWindow::openImageAndName(const QImage &image, const QString &name, cons
 void MainWindow::openOCR()
 {
     // 测试
-    if(m_ocrInterface == nullptr)
+    if (m_ocrInterface == nullptr)
         m_ocrInterface = new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
-    m_ocrInterface->openImageAndName(m_image, "/home/uos/Pictures/screenMapping/ocr.jpg");
+    m_ocrInterface->openImageAndName(m_image, m_imageName);
 }
 
 // 贴图保存
 void MainWindow::saveImg()
 {
     // 测试
-    m_image.save("/home/zhangwc/uos/screenMapping/test.png");
-    qApp->quit();
+    QString savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first();
+    m_image.save(QString("%1/%2.png").arg(savePath).arg(m_imageName));
+    this->close();
 }
 
 void MainWindow::region(const QPoint &cursorGlobalPoint)
@@ -141,22 +147,6 @@ void MainWindow::region(const QPoint &cursorGlobalPoint)
         // 右上角
         dir = RIGHTTOP;
         this->setCursor(QCursor(Qt::SizeBDiagCursor));
-    } else if (x <= tl.x() + PADDING && x >= tl.x()) {
-        // 左边
-//        dir = LEFT;
-//        this->setCursor(QCursor(Qt::SizeHorCursor));
-    } else if (x <= rb.x() && x >= rb.x() - PADDING) {
-        // 右边
-//        dir = RIGHT;
-//        this->setCursor(QCursor(Qt::SizeHorCursor));
-    } else if (y >= tl.y() && y <= tl.y() + PADDING) {
-        // 上边
-//        dir = UP;
-//        this->setCursor(QCursor(Qt::SizeVerCursor));
-    } else if (y <= rb.y() && y >= rb.y() - PADDING) {
-        // 下边
-//        dir = DOWN;
-//        this->setCursor(QCursor(Qt::SizeVerCursor));
     } else {
         // 默认
         dir = NONE;
@@ -174,9 +164,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         } else {
             dragPosition = event->globalPos() - this->frameGeometry().topLeft();
         }
-        break;
-    case Qt::RightButton:
-        this->close();
         break;
     default:
         QWidget::mousePressEvent(event);
@@ -199,26 +186,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
             QRect rMove(tl, br);
             QPoint newPoint;
             switch (dir) {
- #if 0
-            case LEFT:
-                if (rb.x() - gloPoint.x() <= this->minimumWidth())
-                    rMove.setX(tl.x());
-                else
-                    rMove.setX(gloPoint.x());
-                break;
-            case RIGHT:
-                rMove.setWidth(gloPoint.x() - tl.x());
-                break;
-            case UP:
-                if (rb.y() - gloPoint.y() <= this->minimumHeight())
-                    rMove.setY(tl.y());
-                else
-                    rMove.setY(gloPoint.y());
-                break;
-            case DOWN:
-                rMove.setHeight(gloPoint.y() - tl.y());
-                break;
- #endif
             case LEFTTOP:
                 newPoint = QPointF(br.x() - gloPoint.x(), static_cast<int>((br.x() - gloPoint.x()) / proportion)).toPoint();
                 rMove.setX(br.x() - newPoint.x());
@@ -229,7 +196,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
                 }
                 break;
             case RIGHTTOP:
-                newPoint = QPointF(tl.x() + static_cast<int>((bl.y() - gloPoint.y())*proportion), gloPoint.y()).toPoint();
+                newPoint = QPointF(tl.x() + static_cast<int>((bl.y() - gloPoint.y()) * proportion), gloPoint.y()).toPoint();
                 if(newPoint.x() -  WHEELNUM <= bl.x() || newPoint.y() + WHEELNUM >= bl.y()){
                     rMove.setTopRight(QPoint(bl.x() + WHEELNUM, bl.y() - WHEELNUM));
                 }else {
@@ -237,7 +204,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
                 }
                 break;
             case LEFTBOTTOM:
-                newPoint = QPointF(gloPoint.x(), static_cast<int>(tr.y()+ ((tr.x() - gloPoint.x())) / proportion)).toPoint();
+                newPoint = QPointF(gloPoint.x(), static_cast<int>(tr.y() + ((tr.x() - gloPoint.x())) / proportion)).toPoint();
                 if(newPoint.x() + WHEELNUM >= tr.x() || newPoint.y() - WHEELNUM <= tr.y()){
                     rMove.setBottomLeft(QPoint(tr.x() - WHEELNUM, tr.y() + WHEELNUM));
                 }else {
@@ -308,29 +275,27 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     int height = this->rect().height();
     QPointF unionPoint(event->posF().x() / width, event->posF().y() / height);
     //qDebug() << unionPoint;
-    int x = this->pos().x();
-    int y = this->pos().y();
     if(event->delta() < 0 && (width < this->minimumWidth() || height < this->minimumHeight()))
         return;
     if(event->delta() > 0){
-        QPoint newPoint = QPointF(width+WHEELNUM, static_cast<int>((width+WHEELNUM) / proportion)).toPoint();
+        QPoint newPoint = QPointF(width + WHEELNUM, static_cast<int>((width + WHEELNUM) / proportion)).toPoint();
         rect.setWidth(newPoint.x());
         rect.setHeight(newPoint.y());
     }else {
-        QPoint newPoint = QPointF(width-WHEELNUM, static_cast<int>((width-WHEELNUM) / proportion)).toPoint();
+        QPoint newPoint = QPointF(width - WHEELNUM, static_cast<int>((width - WHEELNUM) / proportion)).toPoint();
         rect.setWidth(newPoint.x());
         rect.setHeight(newPoint.y());
     }
     QPointF globalPos = event->globalPos(); // 鼠标在屏幕中的坐标
     //qDebug()<<"globalPos"<<globalPos;
-    QPointF newPoint(rect.width()*unionPoint.x(), rect.height()*unionPoint.y()); //扩大后，鼠标在贴图中的坐标
+    QPointF newPoint(rect.width() * unionPoint.x(), rect.height() * unionPoint.y()); //扩大后，鼠标在贴图中的坐标
     QPointF topLeft(globalPos.x() - newPoint.x(), globalPos.y() - newPoint.y()); // 贴图左上角的点在屏幕中的坐标
     rect = QRect(topLeft.toPoint(), rect.size());
 
-    qDebug()<<"=====rect : "<<rect;
+    //qDebug()<<"=====rect : "<<rect;
     if(boundaryCalculation(rect))
         return;
-    this->setGeometry(rect.x(),rect.y(),rect.width(),rect.height());
+    this->setGeometry(rect.x(), rect.y(), rect.width(), rect.height());
     proportion = static_cast<double>(this->width())  / this->height();
 }
 
@@ -341,7 +306,7 @@ void MainWindow::initShortcut()
     QShortcut *Keyesc = new QShortcut(QKeySequence("Escape"), this);
     connect(Keyesc, &QShortcut::activated, this, [ = ] {
         qDebug() << "shortcut : Keyesc (key: esc)";
-        qApp->quit();
+        this->close();
     });
 
     // Ctrl+S —— 保存
@@ -372,7 +337,6 @@ void MainWindow::initShortcut()
         arg << (QString("deepin-screen-recorder"))                  // 应用名称
             << QString("scrollshot");                         // 帮助文案中的标题名称
         interFace.callWithArgumentList(QDBus::AutoDetect, "OpenTitle", arg);
-        qApp->quit();
     });
 }
 // 贴图窗口边界计算
@@ -384,29 +348,29 @@ bool MainWindow::boundaryCalculation(QRect &rect)
     int height = rect.height();
     int x = rect.x();
     int y = rect.y();
-    qDebug()<<"2 rect === "<<rect<<"width"<<width<<"height"<<height;
+    //qDebug()<<"2 rect === "<<rect<<"width"<<width<<"height"<<height;
     bool isOver = false;
-    if((x + width >= m_screenSize.width())){
+    if ((x + width >= m_screenSize.width())){
         int tmpWidth = x + width - m_screenSize.width();
         x = x - tmpWidth;
-        qDebug()<<" ====== x > 0 === "<<x<<y;
+        //qDebug()<<" ====== x > 0 === "<<x<<y;
         if (x <= 0){
             x = 0;
             isOver = true;
         }
     }
 
-    if((y + height >= m_screenSize.height())){
+    if ((y + height >= m_screenSize.height())){
        int tmpHeight = y + height - m_screenSize.height();
        y = y - tmpHeight;
-       if(y <= 0){
+       if (y <= 0){
             y = 0;
             isOver = true;
-            qDebug()<<" ====== y <= 0 === ";
+            //qDebug()<<" ====== y <= 0 === ";
         }
     }
 
-    rect.moveTo(x,y);
+    rect.moveTo(x, y);
     rect.setWidth(width);
     rect.setHeight(height);
     return isOver;
