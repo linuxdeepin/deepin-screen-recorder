@@ -2327,20 +2327,9 @@ void MainWindow::changeShotToolEvent(const QString &func)
     } else if (func == "pinScreenshots") {
         m_functionType = status::pinscreenshots;
         m_pinInterface = new PinScreenShotsInterface("com.deepin.PinScreenShots", "/com/deepin/PinScreenShots", QDBusConnection::sessionBus(), this);
+        //保存贴图到剪贴板
         saveScreenShot();
-//        shotCurrentImg();
-//        QRect target(static_cast<int>((recordX - 2) * m_pixelRatio),
-//                     static_cast<int>((recordY - 2) * m_pixelRatio),
-//                     static_cast<int>((recordWidth - 4) * m_pixelRatio),
-//                     static_cast<int>((recordHeight - 4) * m_pixelRatio));
-//        //消除蚂蚁线
-//        m_resultPixmap = m_resultPixmap.copy(target);
         m_pinInterface->openImageAndName(m_resultPixmap.toImage(), m_saveFileName, QPoint(recordX, recordY));
-//        if (!m_resultPixmap.isNull()) {
-//            save2Clipboard(m_resultPixmap);
-//        } else {
-//            qDebug() << "贴图画面为空！不能保存到剪贴板。";
-//        }
         exitApp();
     } else if (func == "scrollShot") { //点击滚动截图
         //捕捉区域的固件不显示

@@ -104,6 +104,11 @@ public:
     void saveImg();
 protected:
     /**
+     * @brief 贴图主窗口的初始化函数
+     */
+    void initMainWindow();
+
+    /**
      * @brief 根据鼠标的位置，改变光标的形状
      * @param currentGlobalPoint
      */
@@ -145,10 +150,17 @@ private:
     /**
      * @brief OCR接口
      */
-    OcrInterface * m_ocrInterface;
+    OcrInterface *m_ocrInterface;
     double proportion = 0.0; //宽高比
     QList<ScreenInfo> m_screenInfo; //所有屏幕信息
     QSize m_screenSize; // 屏幕大小
+    /**
+     * @brief 屏幕的缩放比例
+     * 当屏幕缩放比例为1.25时，此时的屏幕实际大小为1536*864
+     *   1.1.如果需将当前屏幕的点换算到1920*1080上需乘上m_pixelRatio
+     *   1.2.如果需将1920*1080上的点换算到此屏幕应该除以m_pixelRatio
+     */
+    qreal m_pixelRatio = 1.0;
 };
 
 #endif // MAINWINDOW_H

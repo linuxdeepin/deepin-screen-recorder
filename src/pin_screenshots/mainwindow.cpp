@@ -50,6 +50,21 @@
 MainWindow::MainWindow(QWidget *parent)
     : DWidget(parent)
 {
+    //初始化主窗口
+    initMainWindow();
+    //计算屏幕大小
+    CalculateScreenSize();
+    this->setMinimumSize(WHEELNUM, WHEELNUM);
+    initShortcut(); // 初始化快捷键
+}
+
+MainWindow::~MainWindow()
+{
+
+}
+
+void MainWindow::initMainWindow()
+{
     m_ocrInterface = nullptr;
     //去菜单栏，置顶窗口
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
@@ -58,14 +73,8 @@ MainWindow::MainWindow(QWidget *parent)
     setMouseTracking(true);
     isLeftPressDown = false;
     dir = UP;
-    CalculateScreenSize();
-    this->setMinimumSize(WHEELNUM,WHEELNUM);
-    initShortcut(); // 初始化快捷键
-}
-
-MainWindow::~MainWindow()
-{
-
+    //获取屏幕的锁房比例
+    m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
 }
 
 bool MainWindow::openFile(const QString &filePaths)
@@ -91,14 +100,36 @@ bool MainWindow::openImageAndName(const QImage &image, const QString &name, cons
 {
     qDebug() << "func: " << __func__ ;
     m_image = image;
-    if (name.isEmpty()){
+    if (name.isEmpty()) {
         m_imageName = QString("test.png");
-    }else {
+    } else {
         m_imageName = name;
     }
-
-    resize(m_image.width(), m_image.height());
-    move(point);
+    int width = static_cast<int>(m_image.width() / m_pixelRatio);
+    int height = static_cast<int>(m_image.height() / m_pixelRatio);
+    //将窗口的大小重置为图片的大小
+    resize(width, height);
+    //将坐标点转换为m_pixelRatio屏幕缩放比下的点
+    QPoint temp(static_cast<int>(point.x() * m_pixelRatio), static_cast<int>(point.y() * m_pixelRatio));
+    QRect currnetScreenRect;
+    //查找当前截图贴图区域所在的屏幕
+    for (int i = 0; i < m_screenInfo.size(); ++i) {
+        currnetScreenRect = {
+            static_cast<int>(m_screenInfo[i].x),
+            static_cast<int>(m_screenInfo[i].y),
+            static_cast<int>(m_screenInfo[i].width),
+            static_cast<int>(m_screenInfo[i].height)
+        };
+        if (currnetScreenRect.contains(temp)) {
+            int x = static_cast<int>((temp.x() - currnetScreenRect.x()) / m_pixelRatio + currnetScreenRect.x());
+            temp.setX(x);
+            int y = static_cast<int>((temp.y() - currnetScreenRect.y()) / m_pixelRatio + currnetScreenRect.y());
+            temp.setY(y);
+            break;
+        }
+    }
+    //移动到指定位置
+    move(temp);
     update();
     proportion = static_cast<double>(this->width())  / this->height();
     return true;
@@ -190,24 +221,24 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
                 newPoint = QPointF(br.x() - gloPoint.x(), static_cast<int>((br.x() - gloPoint.x()) / proportion)).toPoint();
                 rMove.setX(br.x() - newPoint.x());
                 rMove.setY(br.y() - newPoint.y());
-                if(rMove.x() +  WHEELNUM >= br.x() || rMove.y() + WHEELNUM >= br.y()){
+                if (rMove.x() +  WHEELNUM >= br.x() || rMove.y() + WHEELNUM >= br.y()) {
                     rMove.setX(br.x() - WHEELNUM);
                     rMove.setY(br.y() - WHEELNUM);
                 }
                 break;
             case RIGHTTOP:
                 newPoint = QPointF(tl.x() + static_cast<int>((bl.y() - gloPoint.y()) * proportion), gloPoint.y()).toPoint();
-                if(newPoint.x() -  WHEELNUM <= bl.x() || newPoint.y() + WHEELNUM >= bl.y()){
+                if (newPoint.x() -  WHEELNUM <= bl.x() || newPoint.y() + WHEELNUM >= bl.y()) {
                     rMove.setTopRight(QPoint(bl.x() + WHEELNUM, bl.y() - WHEELNUM));
-                }else {
+                } else {
                     rMove.setTopRight(newPoint);
                 }
                 break;
             case LEFTBOTTOM:
                 newPoint = QPointF(gloPoint.x(), static_cast<int>(tr.y() + ((tr.x() - gloPoint.x())) / proportion)).toPoint();
-                if(newPoint.x() + WHEELNUM >= tr.x() || newPoint.y() - WHEELNUM <= tr.y()){
+                if (newPoint.x() + WHEELNUM >= tr.x() || newPoint.y() - WHEELNUM <= tr.y()) {
                     rMove.setBottomLeft(QPoint(tr.x() - WHEELNUM, tr.y() + WHEELNUM));
-                }else {
+                } else {
                     rMove.setBottomLeft(newPoint);
                 }
                 break;
@@ -257,13 +288,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     int x = this->pos().x();
     int y = this->pos().y();
-    if (event->key() == Qt::Key_Left){
+    if (event->key() == Qt::Key_Left) {
         this->move(x - MOVENUM, y);
-    }else if (event->key() == Qt::Key_Right) {
+    } else if (event->key() == Qt::Key_Right) {
         this->move(x + MOVENUM, y);
-    }else if (event->key() == Qt::Key_Up) {
+    } else if (event->key() == Qt::Key_Up) {
         this->move(x, y - MOVENUM);
-    }else if (event->key() == Qt::Key_Down) {
+    } else if (event->key() == Qt::Key_Down) {
         this->move(x, y + MOVENUM);
     }
 }
@@ -275,13 +306,13 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     int height = this->rect().height();
     QPointF unionPoint(event->posF().x() / width, event->posF().y() / height);
     //qDebug() << unionPoint;
-    if(event->delta() < 0 && (width < this->minimumWidth() || height < this->minimumHeight()))
+    if (event->delta() < 0 && (width < this->minimumWidth() || height < this->minimumHeight()))
         return;
-    if(event->delta() > 0){
+    if (event->delta() > 0) {
         QPoint newPoint = QPointF(width + WHEELNUM, static_cast<int>((width + WHEELNUM) / proportion)).toPoint();
         rect.setWidth(newPoint.x());
         rect.setHeight(newPoint.y());
-    }else {
+    } else {
         QPoint newPoint = QPointF(width - WHEELNUM, static_cast<int>((width - WHEELNUM) / proportion)).toPoint();
         rect.setWidth(newPoint.x());
         rect.setHeight(newPoint.y());
@@ -293,7 +324,7 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     rect = QRect(topLeft.toPoint(), rect.size());
 
     //qDebug()<<"=====rect : "<<rect;
-    if(boundaryCalculation(rect))
+    if (boundaryCalculation(rect))
         return;
     this->setGeometry(rect.x(), rect.y(), rect.width(), rect.height());
     proportion = static_cast<double>(this->width())  / this->height();
@@ -350,20 +381,20 @@ bool MainWindow::boundaryCalculation(QRect &rect)
     int y = rect.y();
     //qDebug()<<"2 rect === "<<rect<<"width"<<width<<"height"<<height;
     bool isOver = false;
-    if ((x + width >= m_screenSize.width())){
+    if ((x + width >= m_screenSize.width())) {
         int tmpWidth = x + width - m_screenSize.width();
         x = x - tmpWidth;
         //qDebug()<<" ====== x > 0 === "<<x<<y;
-        if (x <= 0){
+        if (x <= 0) {
             x = 0;
             isOver = true;
         }
     }
 
-    if ((y + height >= m_screenSize.height())){
-       int tmpHeight = y + height - m_screenSize.height();
-       y = y - tmpHeight;
-       if (y <= 0){
+    if ((y + height >= m_screenSize.height())) {
+        int tmpHeight = y + height - m_screenSize.height();
+        y = y - tmpHeight;
+        if (y <= 0) {
             y = 0;
             isOver = true;
             //qDebug()<<" ====== y <= 0 === ";
