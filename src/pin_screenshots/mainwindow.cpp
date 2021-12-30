@@ -327,7 +327,6 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     if (boundaryCalculation(rect))
         return;
     this->setGeometry(rect.x(), rect.y(), rect.width(), rect.height());
-    proportion = static_cast<double>(this->width())  / this->height();
 }
 
 // 初始化快捷键
