@@ -2408,8 +2408,8 @@ void MainWindow::saveScreenShot()
     }
     save2Clipboard(m_resultPixmap);
     this->hide();
-    if (status::pinscreenshots == m_functionType) return;
     const bool r = saveAction(m_resultPixmap);
+    if (status::pinscreenshots == m_functionType) return;
     sendNotify(m_saveIndex, m_saveFileName, r);
 }
 
