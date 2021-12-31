@@ -442,6 +442,7 @@ TEST_F(CAVOutputStreamTest, writeVideoFrame)
     stub.reset(avcodec_encode_video2);
 
     delete access_private_field::CAVOutputStreampCodecCtx(*m_avOutputStream);
+    sws_freeContext(access_private_field::CAVOutputStreamm_pVideoSwsContext(*m_avOutputStream));
 }
 
 int audioWrite_stub(AVAudioFifo *af, void **data, int nb_samples)
@@ -579,6 +580,7 @@ TEST_F(CAVOutputStreamTest, writeMicToMixAudioFrame)
     delete stream;
     delete access_private_field::CAVOutputStreamm_pMicCodecContext(*m_avOutputStream);
     delete access_private_field::CAVOutputStreamm_micAudioStream(*m_avOutputStream);
+    swr_close(access_private_field::CAVOutputStreamm_pMicAudioSwrContext(*m_avOutputStream));
 }
 
 
@@ -627,6 +629,7 @@ TEST_F(CAVOutputStreamTest, writeSysAudioFrame)
     delete stream;
     delete access_private_field::CAVOutputStreamm_pSysCodecContext(*m_avOutputStream);
     delete access_private_field::CAVOutputStreamm_sysAudioStream(*m_avOutputStream);
+    swr_close(access_private_field::CAVOutputStreamm_pSysAudioSwrContext(*m_avOutputStream));
 }
 TEST_F(CAVOutputStreamTest, writeSysToMixAudioFrame)
 {
@@ -669,6 +672,7 @@ TEST_F(CAVOutputStreamTest, writeSysToMixAudioFrame)
     delete stream;
     delete access_private_field::CAVOutputStreamm_pSysCodecContext(*m_avOutputStream);
     delete access_private_field::CAVOutputStreamm_sysAudioStream(*m_avOutputStream);
+    swr_close(access_private_field::CAVOutputStreamm_pSysAudioSwrContext(*m_avOutputStream));
 }
 
 TEST_F(CAVOutputStreamTest, write_filter_audio_frame)
@@ -938,6 +942,7 @@ TEST_F(CAVOutputStreamTest, audioFifoRealloc)
     AVAudioFifo *fifo = av_audio_fifo_alloc(AVSampleFormat::AV_SAMPLE_FMT_S16, 2, 20 * 1152);
     int index = m_avOutputStream->audioFifoRealloc(fifo, 48000);
     EXPECT_GT(index, -1);
+    av_audio_fifo_free(fifo);
 }
 
 TEST_F(CAVOutputStreamTest, audioFifoAlloc)
