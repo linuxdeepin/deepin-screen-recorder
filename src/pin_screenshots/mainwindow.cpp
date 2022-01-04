@@ -225,6 +225,12 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
                     rMove.setX(br.x() - WHEELNUM);
                     rMove.setY(br.y() - WHEELNUM);
                 }
+                if (br.y() - rMove.height() <= 0) {
+                    int heigt = br.y();
+                    int width = static_cast<int>(heigt * proportion);
+                    rMove.setX(br.x() - width);
+                    rMove.setY(br.y() - heigt);
+                }
                 break;
             case RIGHTTOP:
                 newPoint = QPointF(tl.x() + static_cast<int>((bl.y() - gloPoint.y()) * proportion), gloPoint.y()).toPoint();
@@ -239,17 +245,31 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
                 if (newPoint.x() + WHEELNUM >= tr.x() || newPoint.y() - WHEELNUM <= tr.y()) {
                     rMove.setBottomLeft(QPoint(tr.x() - WHEELNUM, tr.y() + WHEELNUM));
                 } else {
+                    if (newPoint.y() >= m_screenSize.height()) {
+                        int height = m_screenSize.height() - tr.y();
+                        int width = static_cast<int>(height * proportion);
+                        newPoint.setY(m_screenSize.height());
+                        newPoint.setX(tr.x() - width);
+                    }
                     rMove.setBottomLeft(newPoint);
+
                 }
                 break;
             case RIGHTBOTTOM:
                 newPoint = QPointF(gloPoint.x() - tl.x(), static_cast<int>((gloPoint.x() - tl.x()) / proportion)).toPoint();
                 rMove.setWidth(gloPoint.x() - tl.x());
                 rMove.setHeight(newPoint.y());
+                if (rMove.y() + rMove.height() >= m_screenSize.height()) {
+                    int heigt = m_screenSize.height() - rMove.y();
+                    int width = static_cast<int>(heigt * proportion);
+                    rMove.setWidth(width);
+                    rMove.setHeight(heigt);
+                }
                 break;
             default:
                 break;
             }
+
             this->setGeometry(rMove);
         } else {
             this->setCursor(QCursor(Qt::ClosedHandCursor));
