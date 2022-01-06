@@ -144,7 +144,7 @@ QT += dbus
 QT += multimedia
 QT += multimediawidgets
 QT += concurrent
-LIBS += -lX11 -lXext -lXtst -lXfixes -lopencv_core -lopencv_imgproc -lXcursor
+LIBS += -lX11 -lXext -lXtst -lXfixes -lopencv_core -lopencv_imgproc -lXcursor -lepoxy
 QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations
 

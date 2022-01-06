@@ -77,6 +77,7 @@ bool WaylandIntegration::isEGLInitialized()
 
 void WaylandIntegration::stopStreaming()
 {
+    qDebug() << "stop recording!";
     globalWaylandIntegration->stopVideoRecord();
     globalWaylandIntegration->stopStreaming();
 }
@@ -305,7 +306,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::addOutput(quint32 name, quin
             connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
                 Q_UNUSED(output);
                 connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf] {
-                    processBuffer(rbuf);
+                    //processBuffer(rbuf);
+                    processBufferX86(rbuf);
                 });
             });
             //            m_output = output.waylandOutputName();
@@ -348,9 +350,79 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     munmap(mapData, stride * height);
     close(dma_fd);
 }
+void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayland::Client::RemoteBuffer *rbuf)
+{
+    QScopedPointer<const KWayland::Client::RemoteBuffer> guard(rbuf);
+    auto dma_fd = rbuf->fd();
+    quint32 width = rbuf->width();
+    quint32 height = rbuf->height();
+    quint32 stride = rbuf->stride();
+    if (m_bInitRecordAdmin) {
+        m_bInitRecordAdmin = false;
+        m_recordAdmin->init(static_cast<int>(width), static_cast<int>(height));
+        frameStartTime = avlibInterface::m_av_gettime();
+    }
+    unsigned char *imageData = getImageData(dma_fd, width, height, stride, rbuf->format());
+    if (imageData == nullptr) {
+        qDebug() << "获取图片失败！";
+        return ;
+    }
 
+    appendBuffer(imageData, static_cast<int>(width), static_cast<int>(height), static_cast<int>(stride), avlibInterface::m_av_gettime() - frameStartTime);
+    close(dma_fd);
+}
+
+unsigned char *WaylandIntegration::WaylandIntegrationPrivate::getImageData(int32_t fd, uint32_t width, uint32_t height, uint32_t stride, uint32_t format)
+{
+    QImage tempImage;
+    tempImage = QImage(static_cast<int>(width), static_cast<int>(height), QImage::Format_RGBA8888);
+    eglMakeCurrent(m_eglstruct.dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, m_eglstruct.ctx);
+    EGLint importAttributes[] = {EGL_WIDTH,
+                                 static_cast<int>(width),
+                                 EGL_HEIGHT,
+                                 static_cast<int>(height),
+                                 EGL_LINUX_DRM_FOURCC_EXT,
+                                 static_cast<int>(format),
+                                 EGL_DMA_BUF_PLANE0_FD_EXT,
+                                 fd,
+                                 EGL_DMA_BUF_PLANE0_OFFSET_EXT,
+                                 0,
+                                 EGL_DMA_BUF_PLANE0_PITCH_EXT,
+                                 static_cast<int>(stride),
+                                 EGL_NONE
+                                };
+    EGLImageKHR image = eglCreateImageKHR(m_eglstruct.dpy, EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, importAttributes);
+    if (image == EGL_NO_IMAGE_KHR) {
+        qDebug() << "未获取到图片！！！";
+        return nullptr;
+    }
+
+    // create GL 2D texture for framebuffer
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image);
+
+    GLuint fbo;
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, tempImage.bits());
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    glDeleteFramebuffers(1, &fbo);
+    glDeleteTextures(1, &texture);
+    eglDestroyImageKHR(m_eglstruct.dpy, image);
+
+    return tempImage.bits();
+}
 void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 {
+    initEgl();
     m_queue = new KWayland::Client::EventQueue(this);
     m_queue->setup(m_connection);
 
@@ -368,7 +440,47 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
     m_registry->setEventQueue(m_queue);
     m_registry->setup();
 }
+void WaylandIntegration::WaylandIntegrationPrivate::initEgl()
+{
+    static const EGLint context_attribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2,
+                                             EGL_NONE
+                                            };
 
+    EGLint config_attribs[] = {EGL_SURFACE_TYPE,
+                               EGL_WINDOW_BIT,
+                               EGL_RED_SIZE,
+                               1,
+                               EGL_GREEN_SIZE,
+                               1,
+                               EGL_BLUE_SIZE,
+                               1,
+                               EGL_ALPHA_SIZE,
+                               1,
+                               EGL_RENDERABLE_TYPE,
+                               EGL_OPENGL_ES2_BIT,
+                               EGL_NONE
+                              };
+
+    EGLint major, minor, n;
+    EGLBoolean ret;
+    m_eglstruct.dpy = eglGetDisplay(reinterpret_cast<EGLNativeDisplayType>(m_connection->display()));
+    assert(m_eglstruct.dpy);
+
+    ret = eglInitialize(m_eglstruct.dpy, &major, &minor);
+    assert(ret == EGL_TRUE);
+    ret = eglBindAPI(EGL_OPENGL_ES_API);
+    assert(ret == EGL_TRUE);
+
+    ret =
+        eglChooseConfig(m_eglstruct.dpy, config_attribs, &m_eglstruct.conf, 1, &n);
+    assert(ret && n == 1);
+
+    m_eglstruct.ctx = eglCreateContext(m_eglstruct.dpy, m_eglstruct.conf,
+                                       EGL_NO_CONTEXT, context_attribs);
+    assert(m_eglstruct.ctx);
+
+    printf("egl init success!\n");
+}
 void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *frame, int width, int height, int stride, int64_t time)
 {
     if (!bGetFrame() || nullptr == frame || width <= 0 || height <= 0) {

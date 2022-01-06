@@ -166,14 +166,22 @@ void setup_stub1()
 {
 
 }
+void initEgl_stub()
+{
+
+}
 ACCESS_PRIVATE_FUN(WaylandIntegrationPrivate, void(quint32 name, quint32 version), addOutput);
 ACCESS_PRIVATE_FUN(WaylandIntegrationPrivate, void(quint32 name), removeOutput);
+ACCESS_PRIVATE_FUN(WaylandIntegrationPrivate, void(), initEgl);
 ACCESS_PRIVATE_FIELD(WaylandIntegrationPrivate, KWayland::Client::ConnectionThread *, m_connection);
 TEST_F(WaylandIntegrationPrivateTest, setupRegistry)
 {
     if (QSysInfo::currentCpuArchitecture().startsWith("arm"))
         return;
     stub.set((void(KWayland::Client::EventQueue::*)(KWayland::Client::ConnectionThread *))ADDR(KWayland::Client::EventQueue, setup), setup_stub1);
+
+    auto WaylandIntegrationPrivate_initEgl = get_private_fun::WaylandIntegrationPrivateinitEgl();
+    stub.set(WaylandIntegrationPrivate_initEgl, initEgl_stub);
 
     auto WaylandIntegrationPrivate_addOutput = get_private_fun::WaylandIntegrationPrivateaddOutput();
     stub.set(WaylandIntegrationPrivate_addOutput, addOutput_stub);
@@ -200,6 +208,7 @@ TEST_F(WaylandIntegrationPrivateTest, setupRegistry)
 //    m_waylandIntegrationPrivate->initWayland(arguments);
     call_private_fun::WaylandIntegrationPrivatesetupRegistry(*m_waylandIntegrationPrivate);
 
+    stub.reset(WaylandIntegrationPrivate_initEgl);
     stub.reset(WaylandIntegrationPrivate_addOutput);
     stub.reset(WaylandIntegrationPrivate_removeOutput);
     stub.reset((void(KWayland::Client::Registry::*)(KWayland::Client::ConnectionThread *))ADDR(KWayland::Client::Registry, create));

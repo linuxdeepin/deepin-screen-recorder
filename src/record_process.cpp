@@ -138,6 +138,9 @@ void RecordProcess::onTranscodeFinish()
         notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
     }
     QFile::remove(savePath);
+    if (Utils::isWaylandMode) {
+        avlibInterface::unloadFunctions();
+    }
     QApplication::quit();
 }
 
@@ -185,6 +188,9 @@ void RecordProcess::onRecordFinish()
             << hints                                                 // hints
             << timeout;                                              // timeout
         notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+    }
+    if (Utils::isWaylandMode) {
+        avlibInterface::unloadFunctions();
     }
     QApplication::quit();
 }
@@ -531,7 +537,6 @@ void RecordProcess::stopRecord()
         } else {
             onRecordFinish();
         }
-        avlibInterface::unloadFunctions();
     }
     //停止x11录屏
     else {

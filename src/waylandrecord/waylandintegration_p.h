@@ -25,11 +25,12 @@
 #include <QDateTime>
 #include <QObject>
 #include <QMap>
+#include <QImage>
 #include <gbm.h>
 #include <epoxy/egl.h>
 #include <epoxy/gl.h>
 #include <QMutex>
-
+#include <EGL/egl.h>
 
 enum audioType {
     //麦克风
@@ -69,6 +70,11 @@ class WaylandIntegrationPrivate : public WaylandIntegration::WaylandIntegration
     Q_OBJECT
 
 public:
+    struct EglStruct {
+        EGLDisplay dpy;
+        EGLContext ctx;
+        EGLConfig conf;
+    };
     //缓存帧
     struct waylandFrame {
         //时间戳
@@ -116,8 +122,37 @@ public:
 protected Q_SLOTS:
     void addOutput(quint32 name, quint32 version);
     void removeOutput(quint32 name);
+    /**
+     * @brief 通过mmap的方式获取视频画面帧
+     * @param rbuf
+     */
     void processBuffer(const KWayland::Client::RemoteBuffer *rbuf);
+    /**
+     * @brief 此接口为了解决x86架构录屏mmap失败及花屏问题
+     * @param rbuf
+     */
+    void processBufferX86(const KWayland::Client::RemoteBuffer *rbuf);
+
+    /**
+     * @brief 从wayland客户端获取当前屏幕的截图
+     * @param fd
+     * @param width
+     * @param height
+     * @param stride
+     * @param format
+     * @return
+     */
+    unsigned char *getImageData(int32_t fd, uint32_t width, uint32_t height, uint32_t stride,
+                                uint32_t format);
+    /**
+     * @brief 安装注册wayland客户服务
+     */
     void setupRegistry();
+
+    /**
+     * @brief 初始化EGL
+     */
+    void initEgl();
 
 private:
     /**
@@ -187,17 +222,12 @@ private:
     qint32 m_drmFd = 0; // for GBM buffer mmap
     gbm_device *m_gbmDevice = nullptr; // for passed GBM buffer retrieval
     pthread_t  m_initRecordThread;
-    //pthread_t m_stopRecordstreamThread2;
-    struct {
-        QList<QByteArray> extensions;
-        EGLDisplay display = EGL_NO_DISPLAY;
-        EGLContext context = EGL_NO_CONTEXT;
-        gbm_device *gbm = nullptr;
 
-        PFNEGLCREATEIMAGEKHRPROC create_image = nullptr;
-        PFNEGLDESTROYIMAGEKHRPROC destroy_image = nullptr;
-        PFNGLEGLIMAGETARGETTEXTURE2DOESPROC image_target_texture_2d = nullptr;
-    } m_egl;
+    /**
+     * @brief 自定义egl的结构体
+     */
+    struct EglStruct m_eglstruct;
+
 };
 
 }

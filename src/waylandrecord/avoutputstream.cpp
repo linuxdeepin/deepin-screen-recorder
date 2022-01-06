@@ -702,7 +702,7 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
     }
     if (nullptr == m_pVideoSwsContext) {
         m_pVideoSwsContext = avlibInterface::m_sws_getContext(m_width, m_height,
-                                                              AV_PIX_FMT_RGB32,
+                                                              AV_PIX_FMT_RGBA,
                                                               pCodecCtx->width,
                                                               pCodecCtx->height,
                                                               AV_PIX_FMT_YUV420P,
@@ -725,9 +725,11 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
     avlibInterface::m_av_init_packet(&packet);
     int enc_got_frame = 0;
     avlibInterface::m_avcodec_encode_video2(pCodecCtx, &packet, pFrameYUV, &enc_got_frame);
+    pFrameYUV->pts++;
     if (1 == enc_got_frame) {
         packet.stream_index = m_videoStream->index;
         packet.pts = static_cast<int64_t>(m_videoStream->time_base.den) * frame._time / AV_TIME_BASE;
+        packet.dts =  packet.pts;
         int ret = writeFrame(m_videoFormatContext, &packet);
         if (ret < 0) {
             //char tmpErrString[128] = {0};
