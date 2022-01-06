@@ -18,7 +18,6 @@ QT += multimedia
 QT += multimediawidgets
 QT += concurrent
 LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_core -lopencv_imgproc -lKF5WaylandClient -lKF5ConfigCore -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample
-LIBS += -L"libprocps" -lprocps
 
 CONFIG += link_pkgconfig
 CONFIG += c++11
