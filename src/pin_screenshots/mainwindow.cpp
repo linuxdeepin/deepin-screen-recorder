@@ -75,6 +75,10 @@ void MainWindow::initMainWindow()
     dir = UP;
     //获取屏幕的锁房比例
     m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
+
+    m_menuController = new MenuController();
+    connect(m_menuController, &MenuController::saveAction, this, &MainWindow::onSave);
+    connect(m_menuController, &MenuController::closeAction, this, &MainWindow::onExit);
 }
 
 bool MainWindow::openFile(const QString &filePaths)
@@ -152,6 +156,16 @@ void MainWindow::saveImg()
     this->close();
 }
 
+void MainWindow::onSave()
+{
+    qDebug() << "func: " << __func__ ;
+    saveImg();
+}
+void MainWindow::onExit()
+{
+    qDebug() << "func: " << __func__ ;
+    this->close();
+}
 void MainWindow::region(const QPoint &cursorGlobalPoint)
 {
     // 获取窗体在屏幕上的位置区域，tl为topleft点，rb为rightbottom点
@@ -195,6 +209,9 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         } else {
             dragPosition = event->globalPos() - this->frameGeometry().topLeft();
         }
+        break;
+    case Qt::RightButton:
+        handleMouseRightBtn(event);
         break;
     default:
         QWidget::mousePressEvent(event);
@@ -460,5 +477,16 @@ void MainWindow::CalculateScreenSize()
         qSort(m_screenInfo.begin(), m_screenInfo.end(), [ = ](const ScreenInfo info1, const ScreenInfo info2) {
             return info1.x < info2.x;
         });
+    }
+}
+
+//处理鼠标右键
+void MainWindow::handleMouseRightBtn(QMouseEvent *mouseEvent)
+{
+    qDebug() << "func: " << __func__ ;
+    if (m_menuController != nullptr) {
+        m_menuController->showMenu(QPoint(mapToGlobal(mouseEvent->pos())));
+    } else {
+        qDebug() << "the m_menuController is nullptr!!!";
     }
 }

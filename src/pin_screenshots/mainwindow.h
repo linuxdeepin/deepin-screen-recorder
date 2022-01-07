@@ -41,6 +41,7 @@
 #define MAINWINDOW_H
 
 #include "service/ocrinterface.h"
+#include "ui/menucontroller.h"
 
 #include <DWidget>
 #include <QGraphicsView>
@@ -102,6 +103,16 @@ public:
      * @brief 保存图片
      */
     void saveImg();
+
+public slots:
+    /**
+     * @brief 贴图保存实现
+     */
+    void onSave();
+    /**
+     * @brief 贴图退出实现
+     */
+    void onExit();
 protected:
     /**
      * @brief 贴图主窗口的初始化函数
@@ -132,6 +143,11 @@ protected:
      * @brief 计算屏幕
      */
     void CalculateScreenSize();
+
+    /**
+     * @brief 处理鼠标右键的操作的函数接口
+     */
+    void handleMouseRightBtn(QMouseEvent *event);
 private:
     /**
      * @brief 按下鼠标的位置
@@ -161,6 +177,12 @@ private:
      *   1.2.如果需将1920*1080上的点换算到此屏幕应该除以m_pixelRatio
      */
     qreal m_pixelRatio = 1.0;
+
+    /**
+     * @brief 贴图的右键菜单
+     */
+    MenuController *m_menuController;
+
 };
 
 #endif // MAINWINDOW_H

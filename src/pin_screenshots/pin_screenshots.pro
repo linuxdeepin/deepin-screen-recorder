@@ -19,14 +19,16 @@ SOURCES += \
     mainwindow.cpp \
     main.cpp \
     pinscreenshots.cpp \
-    service/ocrinterface.cpp
+    service/ocrinterface.cpp \
+    ui/menucontroller.cpp
 
 HEADERS += \
     service/dbuspinscreenshotsadaptor.h \
     service/pinscreenshotsinterface.h \
     mainwindow.h \
     pinscreenshots.h \
-    service/ocrinterface.h
+    service/ocrinterface.h \
+    ui/menucontroller.h
 
 ##安装路径
 target.path=/usr/bin

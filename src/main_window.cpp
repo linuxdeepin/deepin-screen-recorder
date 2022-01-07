@@ -1489,6 +1489,7 @@ bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char
             quality = 80;
         }
     }
+    if (status::pinscreenshots == m_functionType) return false;
     return pix.save(fileName, format, quality);
 }
 
