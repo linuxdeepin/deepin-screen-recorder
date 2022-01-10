@@ -419,13 +419,15 @@ void MainWindow::wheelEvent(QWheelEvent *event)
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched == this || watched == m_toolBar) {
+    if (watched == this) {
         //窗口停用，变为不活动的窗口
         if (QEvent::WindowActivate == event->type()) {
             updateToolBarPosition();
             qDebug() << __FUNCTION__ << __LINE__;
             return false;
         } else if (QEvent::WindowDeactivate == event->type()) {
+            if (m_toolBar->isActiveWindow())
+                return false;
             m_toolBar->hide();
             qDebug() << __FUNCTION__ << __LINE__;
             return false;

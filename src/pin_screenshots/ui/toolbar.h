@@ -39,7 +39,7 @@ signals:
     void sendCloseButtonClicked();//关闭按钮被点击
 protected:
     void initToolBar(); // 初始化工具栏
-    //bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) override;
 private:
     /**
      * @brief 工具栏

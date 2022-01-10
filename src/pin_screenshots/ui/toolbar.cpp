@@ -30,6 +30,7 @@ ToolBar::ToolBar(DWidget *parent): DLabel(parent)
     m_toolbarWidget = nullptr;
     m_saveButton = nullptr;
     initToolBar(); // 初始化工具栏
+    QWidget::installEventFilter(this);
 }
 
 void ToolBar::initToolBar()
@@ -62,6 +63,23 @@ void ToolBar::initToolBar()
     hLayout->addWidget(m_saveButton, 0, Qt::AlignCenter);
     setLayout(hLayout);
     setMaximumSize(MIN_ToolBar_SIZE);
+}
+
+bool ToolBar::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == this) {
+        //窗口停用，变为不活动的窗口
+        if (QEvent::WindowActivate == event->type()) {
+            show();
+            qDebug() << __FUNCTION__ << __LINE__;
+            return false;
+        } else if (QEvent::WindowDeactivate == event->type()) {
+            this->hide();
+            qDebug() << __FUNCTION__ << __LINE__;
+            return false;
+        }
+    }
+    return false;
 }
 
 //显示在点pos
