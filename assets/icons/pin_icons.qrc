@@ -1,0 +1,42 @@
+<RCC>
+    <qresource prefix="/icons/deepin/builtin">
+        <file>icons/audio frequency_normal_32px.svg</file>
+        <file>icons/microphone_normal_32px.svg</file>
+        <file>icons/mute_normal_32px.svg</file>
+        <file>icons/volume_normal_32px.svg</file>
+        <file>texts/screenshot-normal_32px.svg</file>
+        <file>texts/screencap-normal_32px.svg</file>
+        <file>texts/Aa big_normal_32px.svg</file>
+        <file>texts/Aa small_normal_32px.svg</file>
+        <file>texts/Arrow-normal_32px.svg</file>
+        <file>texts/audio frequency_32px.svg</file>
+        <file>texts/brush big_normal_32px.svg</file>
+        <file>texts/brush medium_normal_32px.svg</file>
+        <file>texts/brush small_normal_32px.svg</file>
+        <file>texts/Combined Shape-normal_32px.svg</file>
+        <file>texts/format_normal_32px.svg</file>
+        <file>texts/key_mormal_32px.svg</file>
+        <file>texts/line-normal_32px.svg</file>
+        <file>texts/Mosaic_normal_32px.svg</file>
+        <file>texts/mouse_mormal_32px.svg</file>
+        <file>texts/node.svg</file>
+        <file>texts/oval-normal_32px.svg</file>
+        <file>texts/rectangle-normal_32px.svg</file>
+        <file>texts/text_32px.svg</file>
+        <file>texts/vague_normal_32px.svg</file>
+        <file>texts/video-x-mkv.svg</file>
+        <file>texts/video-x-mp4.svg</file>
+        <file>texts/webcam_normal_32px.svg</file>
+        <file>icons/hide_32px.svg</file>
+        <file>icons/mouse2_32px.svg</file>
+        <file>icons/mouseandtouch_32px.svg</file>
+        <file>icons/touch_32px.svg</file>
+        <file>texts/hide_32px.svg</file>
+        <file>texts/mouse2_32px.svg</file>
+        <file>texts/mouseandtouch_32px.svg</file>
+        <file>texts/touch_32px.svg</file>
+        <file>texts/ocr-normal_32px.svg</file>
+        <file>texts/scrollShot_32px.svg</file>
+        <file>texts/pinscreenshots_32px.svg</file>
+    </qresource>
+</RCC>

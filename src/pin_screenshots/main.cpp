@@ -41,7 +41,6 @@
 #include "service/pinscreenshotsinterface.h"
 #include "service/dbuspinscreenshotsadaptor.h"
 
-
 #include <DWidget>
 #include <DLog>
 #include <DWindowManagerHelper>
@@ -95,7 +94,6 @@ int main(int argc, char *argv[])
 
     PinScreenShots instance;
     QDBusConnection dbus = QDBusConnection::sessionBus();
-
 
     if (dbus.registerService("com.deepin.PinScreenShots")) {
         // 第一次启动

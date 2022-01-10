@@ -20,7 +20,9 @@ SOURCES += \
     main.cpp \
     pinscreenshots.cpp \
     service/ocrinterface.cpp \
-    ui/menucontroller.cpp
+    ui/menucontroller.cpp \
+    ui/toolbarwidget.cpp \
+    ui/toolbar.cpp
 
 HEADERS += \
     service/dbuspinscreenshotsadaptor.h \
@@ -28,7 +30,9 @@ HEADERS += \
     mainwindow.h \
     pinscreenshots.h \
     service/ocrinterface.h \
-    ui/menucontroller.h
+    ui/menucontroller.h \
+    ui/toolbarwidget.h \
+    ui/toolbar.h
 
 ##安装路径
 target.path=/usr/bin
@@ -65,5 +69,6 @@ CONFIG(release_translations) {
 DSR_LANG_PATH += $$DSRDIR/translations
 DEFINES += "DSR_LANG_PATH=\\\"$$DSR_LANG_PATH\\\""
 
-#RESOURCES += \
-#    resource.qrc
+RESOURCES += \
+    ../../assets/icons/pin_icons.qrc\
+    ../../assets/image/pin_screenshots.qrc

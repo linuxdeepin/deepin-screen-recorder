@@ -42,6 +42,7 @@
 
 #include "service/ocrinterface.h"
 #include "ui/menucontroller.h"
+#include "ui/toolbar.h"
 
 #include <DWidget>
 #include <QGraphicsView>
@@ -54,7 +55,7 @@
 
 DWIDGET_USE_NAMESPACE
 
-#define PADDING 2
+#define PADDING 10
 /**
  * @brief 贴图的主界面
  */
@@ -96,10 +97,6 @@ public:
      */
     bool openImageAndName(const QImage &image, const QString &name = "", const QPoint &point = QPoint(0, 0));
     /**
-     * @brief 开启ocr
-     */
-    void openOCR();
-    /**
      * @brief 保存图片
      */
     void saveImg();
@@ -113,6 +110,10 @@ public slots:
      * @brief 贴图退出实现
      */
     void onExit();
+    /**
+     * @brief 开启ocr
+     */
+    void onOpenOCR();
 protected:
     /**
      * @brief 贴图主窗口的初始化函数
@@ -131,6 +132,7 @@ protected:
     void paintEvent(QPaintEvent *e) override;
     void keyPressEvent(QKeyEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
     /**
      * @brief 快捷键初始化
      */
@@ -148,6 +150,15 @@ protected:
      * @brief 处理鼠标右键的操作的函数接口
      */
     void handleMouseRightBtn(QMouseEvent *event);
+    /**
+     * @brief 发送通知
+     */
+    void sendNotify(QString savePath);
+    /**
+     * @brief 更新工具栏显示位置
+     */
+    void updateToolBarPosition(); // 工具栏显示位置
+
 private:
     /**
      * @brief 按下鼠标的位置
@@ -163,6 +174,7 @@ private:
     Direction dir;
     QImage m_image; //图片
     QString m_imageName; //图片名称
+    QString m_lastImagePath; // 上一次图片的保存路径
     /**
      * @brief OCR接口
      */
@@ -182,7 +194,14 @@ private:
      * @brief 贴图的右键菜单
      */
     MenuController *m_menuController;
-
+    /**
+     * @brief 工具栏
+     */
+    ToolBar *m_toolBar;
+    /**
+     * @brief 保存信息
+     */
+    QPair<QString, QString> m_saveInfo;
 };
 
 #endif // MAINWINDOW_H
