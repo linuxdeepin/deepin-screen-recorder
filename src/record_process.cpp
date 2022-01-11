@@ -23,8 +23,9 @@
 #include "utils/configsettings.h"
 #include "utils.h"
 #include "utils/audioutils.h"
+#ifdef KF5_WAYLAND_FLAGE_ON
 #include "waylandrecord/avlibinterface.h"
-
+#endif
 #include <QApplication>
 #include <QDate>
 #include <QDebug>
@@ -139,7 +140,9 @@ void RecordProcess::onTranscodeFinish()
     }
     QFile::remove(savePath);
     if (Utils::isWaylandMode) {
+#ifdef KF5_WAYLAND_FLAGE_ON
         avlibInterface::unloadFunctions();
+#endif
     }
     QApplication::quit();
 }
@@ -190,7 +193,9 @@ void RecordProcess::onRecordFinish()
         notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
     }
     if (Utils::isWaylandMode) {
+#ifdef KF5_WAYLAND_FLAGE_ON
         avlibInterface::unloadFunctions();
+#endif
     }
     QApplication::quit();
 }
@@ -435,6 +440,7 @@ void RecordProcess::initProcess()
 //wayland录制视频
 void RecordProcess::waylandRecord()
 {
+#ifdef KF5_WAYLAND_FLAGE_ON
     avlibInterface::initFunctions();
     qDebug() << "wayland 录屏！";
     // 启动wayland录屏
@@ -448,7 +454,7 @@ void RecordProcess::waylandRecord()
     arguments << QString("%1").arg(recordAudioInputType);
     qDebug() << arguments;
     WaylandIntegration::init(arguments);
-
+#endif
     return;
 }
 
@@ -531,12 +537,14 @@ void RecordProcess::stopRecord()
     }
     //停止wayland录屏
     if (Utils::isWaylandMode) {
+#ifdef KF5_WAYLAND_FLAGE_ON
         WaylandIntegration::stopStreaming();
         if (RECORD_TYPE_GIF == recordType) {
             onStartTranscode();
         } else {
             onRecordFinish();
         }
+#endif
     }
     //停止x11录屏
     else {

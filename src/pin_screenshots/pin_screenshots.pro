@@ -34,6 +34,7 @@ HEADERS += \
     ui/toolbarwidget.h \
     ui/toolbar.h
 
+QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations
 ##安装路径
 target.path=/usr/bin
 isEmpty(DSRDIR):DSRDIR=/usr/share/deepin-pin-screenshots

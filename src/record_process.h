@@ -23,8 +23,9 @@
 #define RECORDPROCESS_H
 
 #include "utils/configsettings.h"
+#ifdef KF5_WAYLAND_FLAGE_ON
 #include "waylandrecord/waylandintegration.h"
-
+#endif
 #include <QProcess>
 #include <QObject>
 #include <QRect>

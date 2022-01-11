@@ -21,8 +21,9 @@
 #define SCROLLSCREENSHOT_H
 
 #include "pixmergethread.h"
+#ifdef KF5_WAYLAND_FLAGE_ON
 #include "waylandscrollmonitor.h"
-
+#endif
 #include <QPixmap>
 #include <QTimer>
 #include <QRect>
@@ -98,7 +99,9 @@ private:
     bool m_isManualScrollModel = false;//是否手动模式
     QRect m_rect;//调整区域
     bool m_startPixMerageThread = false;
+#ifdef KF5_WAYLAND_FLAGE_ON
     WaylandScrollMonitor *m_WaylandScrollMonitor = nullptr;
+#endif
     /**
      * @brief 用来记录当前滚动方向
      */

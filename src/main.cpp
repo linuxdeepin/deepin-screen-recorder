@@ -77,6 +77,11 @@ int main(int argc, char *argv[])
        qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
     }
 
+#ifdef KF5_WAYLAND_FLAGE_ON
+    qDebug() << "KF5_WAYLAND_FLAGE_ON is open!!";
+#else
+    qDebug() << "KF5_WAYLAND_FLAGE_ON is close!!";
+#endif
     // 适配deepin-turbo 启动加速
 #if(DTK_VERSION < DTK_VERSION_CHECK(5,4,0,0))
     DApplication::loadDXcbPlugin();

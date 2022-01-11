@@ -207,6 +207,7 @@ void MainWindow::initAttributes()
 
     //获取自动识别的窗口
     if (Utils::isWaylandMode) {
+#ifdef KF5_WAYLAND_FLAGE_ON
         //wayland自动识别窗口
         m_connectionThread = new QThread(this);
         m_connectionThreadObject = new ConnectionThread();
@@ -223,6 +224,7 @@ void MainWindow::initAttributes()
         m_connectionThreadObject->moveToThread(m_connectionThread);
         m_connectionThread->start();
         m_connectionThreadObject->initConnection();
+#endif
     } else {
         //x11自动识别窗口
         Utils::getAllWindowInfo(static_cast<quint32>(this->winId()), m_screenWidth, m_screenHeight, windowRects, windowNames);
@@ -274,7 +276,7 @@ void MainWindow::initAttributes()
                                           SLOT(onLockScreenEvent(QDBusMessage))
                                          );
 }
-
+#ifdef KF5_WAYLAND_FLAGE_ON
 void MainWindow::setupRegistry(Registry *registry)
 {
     connect(registry, &Registry::compositorAnnounced, this,
@@ -387,7 +389,7 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
         }
     }
 }
-
+#endif
 void MainWindow::checkIsLockScreen()
 {
     QDBusInterface sessionManagerIntert("com.deepin.SessionManager",

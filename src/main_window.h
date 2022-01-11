@@ -21,7 +21,11 @@
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+#ifdef OCR_SCROLL_FLAGE_ON
 #include "utils/scrollScreenshot.h"
+#include "widgets/scrollshottip.h"
+#include "widgets/previewwidget.h"
+#endif
 #include "record_process.h"
 #include "countdown_tooltip.h"
 #include "button_feedback.h"
@@ -34,8 +38,6 @@
 #include "widgets/zoomIndicator.h"
 #include "widgets/camerawidget.h"
 #include "widgets/filter.h"
-#include "widgets/scrollshottip.h"
-#include "widgets/previewwidget.h"
 #include "utils/saveutils.h"
 #include "utils/voicevolumewatcher.h"
 #include "utils/camerawatcher.h"
@@ -61,18 +63,20 @@
 #include <QVBoxLayout>
 #include <QTimer>
 #include <unistd.h>
-
+#ifdef KF5_WAYLAND_FLAGE_ON
 #include <KF5/KWayland/Client/connection_thread.h>
 #include <KF5/KWayland/Client/clientmanagement.h>
 #include <KF5/KWayland/Client/event_queue.h>
 #include <KF5/KWayland/Client/registry.h>
+#endif
 #undef Bool
 
 DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 //DWM_USE_NAMESPACE
+#ifdef KF5_WAYLAND_FLAGE_ON
 using namespace KWayland::Client;
-
+#endif
 class MainWindow : public DWidget
 {
     Q_OBJECT
@@ -158,12 +162,13 @@ public:
             delete m_pScreenCaptureEvent;
             m_pScreenCaptureEvent = nullptr;
         }
-
+#ifdef KF5_WAYLAND_FLAGE_ON
         if (Utils::isWaylandMode && m_connectionThread) {
 
             m_connectionThread->terminate();
             m_connectionThread->wait();
         }
+#endif
         if (m_showButtons) {
             //退出进程，最好不用deleteLater，因为有可能等不到下一次事件循环，导致资源不能释放
             delete m_showButtons;
@@ -635,7 +640,7 @@ protected:
      * @return false: 不在  ； true: 在
      */
     bool isToolBarInShotArea();
-
+#ifdef KF5_WAYLAND_FLAGE_ON
     /**
      * @brief wayland获取屏幕窗口信息的安装注册函数
      * @param registry
@@ -647,7 +652,7 @@ protected:
      * @param m_windowStates
      */
     void waylandwindowinfo(const QVector<ClientManagement::WindowState> &m_windowStates);
-
+#endif
     /**
      * @brief 启动截图录屏时检测是否是锁屏状态
      */
@@ -932,17 +937,18 @@ private:
      */
     PinScreenShotsInterface *m_pinInterface;
     //预览窗口
+#ifdef OCR_SCROLL_FLAGE_ON
     PreviewWidget *m_previewWidget = nullptr;
     /**
      * @brief 滚动截图图像拼接
      */
     ScrollScreenshot *m_scrollShot = nullptr;
-
+#endif
     /**
      * @brief wayland录屏是否在停止录屏状态中
      */
     bool m_isStopWaylandRecord = false;
-
+#ifdef KF5_WAYLAND_FLAGE_ON
     // 获取wayland窗口信息相关。 wayland获取窗口的方法对于x11有很大的区别
     QThread *m_connectionThread;
     EventQueue *m_eventQueue = nullptr;
@@ -951,6 +957,7 @@ private:
     PlasmaWindowManagement *m_windowManagement = nullptr;
     ClientManagement *m_clientManagement = nullptr;
     QVector<ClientManagement::WindowState> m_windowStates;
+#endif
     bool m_isFullScreenShot = false;
     bool m_isVertical = false;
 };

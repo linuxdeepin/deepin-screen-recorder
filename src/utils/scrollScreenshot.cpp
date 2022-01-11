@@ -21,6 +21,7 @@
 
 #include <QDebug>
 #include <QDateTime>
+#include <QEventLoop>
 #include <X11/Xlibint.h>
 #include <X11/extensions/XTest.h>
 
@@ -29,9 +30,11 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
 {
     Q_UNUSED(parent);
     qRegisterMetaType<PixMergeThread::MergeErrorValue>("MergeErrorValue");
-    if (Utils::isWaylandMode)
-        m_WaylandScrollMonitor = new WaylandScrollMonitor(this); // 初始化wayland模拟滚动
-
+    if (Utils::isWaylandMode) {
+#ifdef KF5_WAYLAND_FLAGE_ON
+    m_WaylandScrollMonitor = new WaylandScrollMonitor(this); // 初始化wayland模拟滚动
+#endif
+}
     m_mouseWheelTimer = new QTimer(this);
     connect(m_mouseWheelTimer, &QTimer::timeout, this, [ = ] {
         if (!Utils::isWaylandMode)
@@ -42,9 +45,10 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
             XFlush(m_display);
             XTestFakeButtonEvent(m_display, Button5, 0, CurrentTime);
             XFlush(m_display);
-        } else
-        {
+        } else {
+#ifdef KF5_WAYLAND_FLAGE_ON
             m_WaylandScrollMonitor->doWaylandAutoScroll(); //waland滚动
+#endif
         }
 
         //当模拟鼠标进行自动滚动时，会发射此信号
@@ -63,8 +67,9 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
     connect(m_PixMerageThread, SIGNAL(updatePreviewImg(QImage)), this, SIGNAL(updatePreviewImg(QImage)));
     connect(m_PixMerageThread, SIGNAL(merageError(PixMergeThread::MergeErrorValue)), this, SLOT(merageImgState(PixMergeThread::MergeErrorValue)));
     connect(m_PixMerageThread, &PixMergeThread::invalidAreaError, this, &ScrollScreenshot::merageInvalidArea);
-
+#ifdef KF5_WAYLAND_FLAGE_ON
     connect(this, &ScrollScreenshot::sigalWheelScrolling, m_WaylandScrollMonitor, &WaylandScrollMonitor::slotManualScroll);
+#endif
 }
 
 ScrollScreenshot::~ScrollScreenshot()

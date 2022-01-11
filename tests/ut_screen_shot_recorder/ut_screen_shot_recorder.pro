@@ -6,6 +6,10 @@ TEMPLATE = app
 TARGET = ut_screen_shot_recorder
 INCLUDEPATH += . ../../src/
 
+DEFINES += DDE_START_FLAGE_ON
+DEFINES += OCR_SCROLL_FLAGE_ON
+DEFINES += KF5_WAYLAND_FLAGE_ON
+
 QT += core gui testlib KWindowSystem KWaylandClient KI18n KConfigCore
 
 QT += core
