@@ -57,6 +57,15 @@
 
 DWIDGET_USE_NAMESPACE
 
+bool isWaylandProtocol()
+{
+    QProcessEnvironment e = QProcessEnvironment::systemEnvironment();
+    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
+    return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
+}
+
+
 int main(int argc, char *argv[])
 {
 
@@ -65,6 +74,10 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+
+    if(isWaylandProtocol()) {
+       qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
+    }
 
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
 #if(DTK_VERSION < DTK_VERSION_CHECK(5,4,0,0))

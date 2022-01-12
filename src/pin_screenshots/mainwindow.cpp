@@ -581,7 +581,12 @@ void MainWindow::sendNotify(QString savePath)
     // 如果保存路径为剪切板，不做打开view操作
     if (!savePath.isEmpty()) {
         actions << "_open" << tr("View");
-        hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(savePath);
+        if (QFile("/usr/bin/dde-file-manager").exists()) {
+            qDebug() << QFileInfo(savePath).path();
+            hints["x-deepin-action-_open"] = QString("dde-file-manager,--show-item,%1").arg(savePath);
+        } else {
+            hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(savePath);
+        }
         body = QString(tr("Saved to %1")).arg(savePath);
     }
     int timeout = -1;
@@ -590,7 +595,7 @@ void MainWindow::sendNotify(QString savePath)
     arg << (QCoreApplication::applicationName())                 // appname
         << id                                                    // id
         << QString("deepin-screen-recorder")                     // icon
-        << tr("Pin screenshots finished")                              // summary
+        << tr("Screenshot finished")                              // summary
         << body              // body
         << actions                                               // actions
         << hints                                                 // hints

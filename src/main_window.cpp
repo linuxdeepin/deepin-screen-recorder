@@ -2810,8 +2810,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
     // qDebug() << repaintCounter;
 
 //    qDebug() << "====== function: " << __func__ << " start ======";
-    if (m_shotflag == 1) {
-//        qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
+    if (m_shotflag == 1 && status::scrollshot != m_functionType) {
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setRenderHint(QPainter::Antialiasing, true);
