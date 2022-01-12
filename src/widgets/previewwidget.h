@@ -48,7 +48,7 @@ signals:
 public slots:
 
 private:
-    QImage m_currentPix = QImage("/home/hjlt/Desktop/t.png");
+    QImage m_currentPix;
     QRect m_previewRect; //预览区域
     int m_maxHeight = 0; //预览最大高度
     int m_maxWidth = 0;//预览最大宽度

@@ -40,9 +40,14 @@ ScreenGrabber::ScreenGrabber(QObject *parent) : QObject(parent)
 
 QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qreal devicePixelRatio)
 {
-    Q_UNUSED(devicePixelRatio);
     ok = true;
     if (Utils::isWaylandMode) {
+        QRect recordRect{
+            static_cast<int>(rect.x() * devicePixelRatio),
+            static_cast<int>(rect.x() * devicePixelRatio),
+            static_cast<int>(rect.x() * devicePixelRatio),
+            static_cast<int>(rect.x() * devicePixelRatio)
+        };
         QPixmap res;
         QDBusInterface kwinInterface(QStringLiteral("org.kde.KWin"),
                                      QStringLiteral("/Screenshot"),
@@ -55,7 +60,7 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
         } else {
             ok = false;
         }
-        return res.copy(rect);
+        return res.copy(recordRect);
     }
 
     QScreen *t_primaryScreen = QGuiApplication::primaryScreen();

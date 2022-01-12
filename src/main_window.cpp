@@ -4028,12 +4028,14 @@ void MainWindow::scrollShotMouseScrollEvent(int mouseTime, int direction, int x,
     //判断鼠标滚动的位置是否是在捕捉区域内部，不在捕捉区域内部不进行处理
     if (!recordRect.contains(mouseScrollPoint)) return;
 
-    //对比监听自动滚动事件是否正在进行触发
-    if (m_autoScrollFlagNext > m_autoScrollFlagLast) {
-        m_scrollShotType = ScrollShotType::AutoScroll;
-        m_autoScrollFlagLast = m_autoScrollFlagNext;
-    } else {
-        m_scrollShotType = ScrollShotType::ManualScroll;
+    if (!Utils::isWaylandMode) {
+        //对比监听自动滚动事件是否正在进行触发, wayland模式下不做此判断
+        if (m_autoScrollFlagNext > m_autoScrollFlagLast) {
+            m_scrollShotType = ScrollShotType::AutoScroll;
+            m_autoScrollFlagLast = m_autoScrollFlagNext;
+        } else {
+            m_scrollShotType = ScrollShotType::ManualScroll;
+        }
     }
     qDebug() << "function: " << __func__ << " ,line: " << __LINE__ << " ,m_scrollShotType: " << m_scrollShotType;
     //当前状态为手动滚动模式时,会先暂停自动滚动
