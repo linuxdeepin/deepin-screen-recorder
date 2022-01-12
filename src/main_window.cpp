@@ -1787,7 +1787,17 @@ void MainWindow::updateSideBarPos()
                 sidebarPoint.setX(recordX + recordWidth - m_sideBar->width() - SIDEBAR_X_SPACING);
                 sidebarPoint.setY(recordY + recordHeight + m_toolBar->height() + TOOLBAR_Y_SPACING * 2);
 
-                if (sidebarPoint.y() + m_sideBar->height() > m_screenHeight) {
+                int curCurScreenH = m_screenHeight;
+                if (m_screenCount > 1) {
+                    int i = 0;
+                    for (; i < m_screenCount; ++i) {
+                        if (m_screenInfo[i].x <= sidebarPoint.x() && m_screenInfo[i].x + m_screenInfo[i].width >= sidebarPoint.x()) {
+                            break;
+                        }
+                    }
+                    curCurScreenH = m_screenInfo[i].height;
+                }
+                if (sidebarPoint.y() + m_sideBar->height() > curCurScreenH) {
                     sidebarPoint.setX(recordX - m_sideBar->width() - SIDEBAR_X_SPACING);
                     sidebarPoint.setY(recordY + recordHeight - m_sideBar->height() - TOOLBAR_Y_SPACING);
 
@@ -1828,7 +1838,7 @@ void MainWindow::updateSideBarPos()
                 sidebarPoint.setX(recordX + recordWidth - m_sideBar->width() - SIDEBAR_X_SPACING);
 
                 if (m_repaintSideBar == false) {
-                    sidebarPoint.setY(recordY - m_sideBar->height() - TOOLBAR_Y_SPACING);
+                    sidebarPoint.setY(recordY - m_sideBar->height() - TOOLBAR_Y_SPACING - m_toolBar->height());
                 }
 
                 else {
