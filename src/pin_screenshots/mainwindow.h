@@ -153,7 +153,7 @@ protected:
     /**
      * @brief 发送通知
      */
-    void sendNotify(QString savePath);
+    void sendNotify(QString savePath, bool bSaveState);
     /**
      * @brief 更新工具栏显示位置
      */

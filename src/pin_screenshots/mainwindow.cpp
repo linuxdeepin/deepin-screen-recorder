@@ -93,19 +93,15 @@ void MainWindow::initMainWindow()
 bool MainWindow::openFile(const QString &filePaths)
 {
     qDebug() << "func: " << __func__ ;
-    //测试
-    m_image.load(filePaths);
-    update();
+    QImage image(filePaths);
+    openImageAndName(image, "", QPoint(0,0));
     return true;
 }
 
 bool MainWindow::openImage(const QImage &image)
 {
     qDebug() << "func: " << __func__ ;
-    m_image = image;
-    resize(m_image.width(), m_image.height());
-    update();
-    proportion = static_cast<double>(this->width())  / this->height();
+    openImageAndName(image, "", QPoint(0,0));
     return true;
 }
 
@@ -160,20 +156,20 @@ void MainWindow::onOpenOCR()
 void MainWindow::saveImg()
 {
     m_saveInfo = m_toolBar->getSaveInfo(); // 获取保存信息
+
     if (m_saveInfo.first.contains(tr("Desktop"))) {
         QString savePath = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
         QString formatStr = m_saveInfo.second.toLower();
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
-        m_image.save(m_lastImagePath);
-        sendNotify(m_lastImagePath);
-        //qDebug() << "path" << savePath << "m_imageName" << m_imageName << " " << QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
     } else if (m_saveInfo.first.contains(tr("Pictures"))) {
         qDebug() << "save to picture";
-        QString savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first();
+        QString savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first() + QDir::separator() + "Screenshots";
+        if ((!QDir(savePath).exists() && QDir().mkdir(savePath) == false) ||  // 文件不存在，且创建失败
+                (QDir(savePath).exists() && !QFileInfo(savePath).isWritable())) {  // 文件存在，且不能写
+            savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first();
+        }
         QString formatStr = m_saveInfo.second.toLower();
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
-        m_image.save(m_lastImagePath);
-        sendNotify(m_lastImagePath);
     } else if (m_saveInfo.first.contains(tr("Folder"))) {
         m_toolBar->hide();
         qDebug() << "save to path";
@@ -184,18 +180,24 @@ void MainWindow::saveImg()
             return;
         qDebug() << "saveFileName" << saveFileName;
         m_lastImagePath = saveFileName;
-        m_image.save(m_lastImagePath);
-        sendNotify(m_lastImagePath);
-
     } else if (m_saveInfo.first.contains(tr("Clipboard"))) {
         qDebug() << "save to clip";
-        m_lastImagePath = QString(tr("Clipboard"));
-        QMimeData *t_imageData = new QMimeData;
-        t_imageData->setImageData(m_image);
-        QClipboard *cb = qApp->clipboard();
-        cb->setMimeData(t_imageData, QClipboard::Clipboard);
-        sendNotify("");
+        m_lastImagePath = "";
     }
+
+    bool isSaveState = true;
+    if (!m_saveInfo.first.contains(tr("Clipboard"))) {
+        isSaveState = m_image.save(m_lastImagePath);
+    }
+
+    // 保存到剪贴板
+    QMimeData *t_imageData = new QMimeData;
+    t_imageData->setImageData(m_image);
+    QClipboard *cb = qApp->clipboard();
+    cb->setMimeData(t_imageData, QClipboard::Clipboard);
+
+    // 发送通知
+    sendNotify(m_lastImagePath, isSaveState);
 }
 // 保存
 void MainWindow::onSave()
@@ -375,14 +377,23 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     int x = this->pos().x();
     int y = this->pos().y();
+    bool isNeedUpdateToolBar = false;
     if (event->key() == Qt::Key_Left) {
         this->move(x - MOVENUM, y);
+        isNeedUpdateToolBar = true;
     } else if (event->key() == Qt::Key_Right) {
         this->move(x + MOVENUM, y);
+        isNeedUpdateToolBar = true;
     } else if (event->key() == Qt::Key_Up) {
         this->move(x, y - MOVENUM);
+        isNeedUpdateToolBar = true;
     } else if (event->key() == Qt::Key_Down) {
         this->move(x, y + MOVENUM);
+        isNeedUpdateToolBar = true;
+    }
+
+    if(isNeedUpdateToolBar) {
+        updateToolBarPosition();
     }
 }
 
@@ -568,12 +579,24 @@ void MainWindow::handleMouseRightBtn(QMouseEvent *mouseEvent)
 }
 
 // 发送通知
-void MainWindow::sendNotify(QString savePath)
+void MainWindow::sendNotify(QString savePath, bool bSaveState)
 {
     QDBusInterface notification("org.freedesktop.Notifications",
                                 "/org/freedesktop/Notifications",
                                 "org.freedesktop.Notifications",
                                 QDBusConnection::sessionBus());
+
+    if (!bSaveState) {
+        qDebug() << __FUNCTION__;
+        QString tips = QString(tr("Save failed. Please save it in your home directory."));
+        QList<QVariant> arg;
+        unsigned int id = 0;
+        int timeout = -1;
+        arg << QCoreApplication::applicationName() << id << "deepin-screen-recorder" << QString() << tips << QStringList() << QVariantMap() << timeout;
+        notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+        onExit();
+        return;
+    }
 
     QStringList actions;
     QVariantMap hints;
