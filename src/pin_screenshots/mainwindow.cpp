@@ -111,7 +111,7 @@ bool MainWindow::openImageAndName(const QImage &image, const QString &name, cons
     m_image = image;
     m_lastImagePath = name;
     QFileInfo fileInfo(name);
-    m_imageName = fileInfo.fileName().split(".").at(0);
+    m_imageName = fileInfo.completeBaseName();
     int width = static_cast<int>(m_image.width() / m_pixelRatio);
     int height = static_cast<int>(m_image.height() / m_pixelRatio);
     //将窗口的大小重置为图片的大小
