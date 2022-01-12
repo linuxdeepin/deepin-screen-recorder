@@ -2535,6 +2535,10 @@ bool MainWindow::saveAction(const QPixmap &pix)
         break;
     }
     case SaveToSpecificDir: {
+        // 贴图不用保存
+        if (status::pinscreenshots == m_functionType) {
+            break;
+        }
         this->hide();
         this->releaseKeyboard();
 
