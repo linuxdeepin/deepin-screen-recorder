@@ -14,3 +14,9 @@ file_filter = translations/desktop/desktop_<lang>.ts
 source_file = translations/desktop/desktop.ts
 source_lang = en
 type = QT
+
+[deepin-screen-recorder.deepin-pin-screenshots]
+file_filter = src/pin_screenshots/translations/deepin-pin-screenshots_<lang>.ts
+source_file = src/pin_screenshots/translations/deepin-pin-screenshots_en_US.ts
+source_lang = en
+type = QT

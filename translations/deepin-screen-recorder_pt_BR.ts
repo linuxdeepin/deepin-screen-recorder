@@ -95,11 +95,11 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>Captura de tela completa</translation>
+        <translation>Tela de rolagem</translation>
     </message>
     <message>
         <source>Take Screen Scrollshots</source>
-        <translation type="unfinished"/>
+        <translation>Capturar a tela de rolagem</translation>
     </message>
 </context>
 <context>
@@ -175,7 +175,7 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>Área inválida. Clique para </translation>
+        <translation>Área inválida, clique para </translation>
     </message>
 </context>
 <context>
@@ -333,7 +333,7 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>Captura de tela completa</translation>
+        <translation>Tela de rolagem</translation>
     </message>
 </context>
 <context>
@@ -507,7 +507,7 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>Captura de tela completa</translation>
+        <translation>Tela de rolagem</translation>
     </message>
 </context>
 <context>

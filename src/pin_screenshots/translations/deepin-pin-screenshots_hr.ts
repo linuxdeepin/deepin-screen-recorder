@@ -1,21 +1,21 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sq">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="hr">
 <context>
     <name>MainWindow</name>
     <message>
         <source>Desktop</source>
-        <translation>Desktop</translation>
+        <translation>Radna površina</translation>
     </message>
     <message>
         <source>Pictures</source>
-        <translation>Foto</translation>
+        <translation>Slike</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation>Dosje</translation>
+        <translation>Mapa</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Ruaje</translation>
+        <translation>Spremi</translation>
     </message>
     <message>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
@@ -23,30 +23,30 @@
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>E papastër</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>View</source>
-        <translation>Shihni</translation>
+        <translation>Pogled</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>U ruajt te %1</translation>
+        <translation>Spremljeno u %1</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Fotoja e ekranit u bë</translation>
+        <translation>Slika zaslona završena</translation>
     </message>
 </context>
 <context>
     <name>MenuController</name>
     <message>
         <source>Save</source>
-        <translation>Ruaje</translation>
+        <translation>Spremi</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Dil</translation>
+        <translation>Izađi</translation>
     </message>
 </context>
 <context>
@@ -60,31 +60,31 @@
     <name>ToolBarWidget</name>
     <message>
         <source>Extract Text</source>
-        <translation>Përfto Tekst</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Options</source>
-        <translation>Mundësi</translation>
+        <translation>Opcije</translation>
     </message>
     <message>
         <source>Save to</source>
-        <translation>Ruaje te</translation>
+        <translation>Spremi u</translation>
     </message>
     <message>
         <source>Desktop</source>
-        <translation>Desktop</translation>
+        <translation>Radna površina</translation>
     </message>
     <message>
         <source>Pictures</source>
-        <translation>Foto</translation>
+        <translation>Slike</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation>Dosje</translation>
+        <translation>Mapa</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>E papastër</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Format</source>

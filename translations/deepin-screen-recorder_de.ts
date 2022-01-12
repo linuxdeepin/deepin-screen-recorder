@@ -95,11 +95,11 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Bildlaufaufnahme</translation>
     </message>
     <message>
         <source>Take Screen Scrollshots</source>
-        <translation type="unfinished"/>
+        <translation>Bildschirm-Bildlaufaufnahme aufnehmen</translation>
     </message>
 </context>
 <context>
@@ -155,7 +155,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>Das Ende des Bildlaufbereichs erreicht</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
@@ -167,11 +167,11 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Drehen Sie Ihr Mausrad oder klicken Sie, um eine rollende Bildschirmaufnahme zu machen</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>Verlangsamen Sie die Bildlaufgeschwindigkeit</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
@@ -333,7 +333,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Bildlaufaufnahme</translation>
     </message>
 </context>
 <context>
@@ -507,7 +507,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Bildlaufaufnahme</translation>
     </message>
 </context>
 <context>

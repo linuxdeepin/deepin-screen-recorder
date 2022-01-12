@@ -1,21 +1,21 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sq">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="az">
 <context>
     <name>MainWindow</name>
     <message>
         <source>Desktop</source>
-        <translation>Desktop</translation>
+        <translation>İş Masası</translation>
     </message>
     <message>
         <source>Pictures</source>
-        <translation>Foto</translation>
+        <translation>Şəkillər</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation>Dosje</translation>
+        <translation>Qovluq</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Ruaje</translation>
+        <translation>Saxlamaq</translation>
     </message>
     <message>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
@@ -23,68 +23,68 @@
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>E papastër</translation>
+        <translation>Mübadilə yaddaşı</translation>
     </message>
     <message>
         <source>View</source>
-        <translation>Shihni</translation>
+        <translation>Görünüş</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>U ruajt te %1</translation>
+        <translation>%1 qovluğunda saxlamaq</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Fotoja e ekranit u bë</translation>
+        <translation>Ekran şəkli çəkildi</translation>
     </message>
 </context>
 <context>
     <name>MenuController</name>
     <message>
         <source>Save</source>
-        <translation>Ruaje</translation>
+        <translation>Saxlamaq</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Dil</translation>
+        <translation>Çıxış</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Ekran şəkllərini sancaqlayın</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Extract Text</source>
-        <translation>Përfto Tekst</translation>
+        <translation>Mətni çıxarın</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation>Mundësi</translation>
+        <translation>Seçimlər</translation>
     </message>
     <message>
         <source>Save to</source>
-        <translation>Ruaje te</translation>
+        <translation>Belə saxlayın</translation>
     </message>
     <message>
         <source>Desktop</source>
-        <translation>Desktop</translation>
+        <translation>İş Masası</translation>
     </message>
     <message>
         <source>Pictures</source>
-        <translation>Foto</translation>
+        <translation>Şəkillər</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation>Dosje</translation>
+        <translation>Qovluq</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>E papastër</translation>
+        <translation>Mübadilə yaddaşı</translation>
     </message>
     <message>
         <source>Format</source>

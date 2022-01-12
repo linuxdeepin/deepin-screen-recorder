@@ -27,7 +27,12 @@ TRANSLATIONS += \
     $$PWD/translations/deepin-pin-screenshots_tr.ts \
     $$PWD/translations/deepin-pin-screenshots_uk.ts \
     $$PWD/translations/deepin-pin-screenshots_ug.ts \
-    $$PWD/translations/deepin-pin-screenshots_bo.ts
+    $$PWD/translations/deepin-pin-screenshots_bo.ts \
+    $$PWD/translations/deepin-pin-screenshots_am_ET.ts \
+    $$PWD/translations/deepin-pin-screenshots_az.ts \
+    $$PWD/translations/deepin-pin-screenshots_hr.ts \
+    $$PWD/translations/deepin-pin-screenshots_lv.ts
+
 
 
 

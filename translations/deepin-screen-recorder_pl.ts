@@ -16,7 +16,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation>Nagraj</translation>
+        <translation>Nagrywanie</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -55,7 +55,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation>wybierz obszar</translation>
+        <translation>wybierz-obszar</translation>
     </message>
     <message>
         <source>Save</source>
@@ -133,7 +133,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Nagraj</translation>
+        <translation>Nagrywanie</translation>
     </message>
 </context>
 <context>
@@ -167,7 +167,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>Skroluj kółkiem myszki lub kliknij aby zrobić pionowy zrzut ekranu</translation>
+        <translation>Przewijaj kółkiem myszki lub kliknij aby zrobić pionowy zrzut ekranu</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
@@ -367,7 +367,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Show Keystroke</source>
-        <translation>Pokaż naciśnięcie klawisza</translation>
+        <translation>Pokazuj naciśnięcie klawisza</translation>
     </message>
     <message>
         <source>Hide Keystroke</source>
@@ -383,7 +383,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Show Click</source>
-        <translation>Pokaż kliknięcie</translation>
+        <translation>Pokazuj kliknięcie</translation>
     </message>
     <message>
         <source>Options</source>
@@ -491,7 +491,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation>Pokaż wskaźnik</translation>
+        <translation>Pokazuj wskaźnik</translation>
     </message>
     <message>
         <source>Mouse</source>
@@ -499,7 +499,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation>Pokaż wskaźnik</translation>
+        <translation>Pokazuj wskaźnik</translation>
     </message>
     <message>
         <source>Extract Text</source>

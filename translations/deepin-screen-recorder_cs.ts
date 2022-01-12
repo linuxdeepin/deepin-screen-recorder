@@ -4,7 +4,7 @@
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Pro zastavení záznamu klepněte na ikonu
+        <translation>Pro zastavení záznamu klikněte na ikonu
 v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
@@ -99,7 +99,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Take Screen Scrollshots</source>
-        <translation type="unfinished"/>
+        <translation>Pořizujte snímky obrazovky</translation>
     </message>
 </context>
 <context>
@@ -121,7 +121,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <name>RecordProcess</name>
     <message>
         <source>View</source>
-        <translation>Pohled</translation>
+        <translation>Zobrazit</translation>
     </message>
     <message>
         <source>Recording finished</source>
