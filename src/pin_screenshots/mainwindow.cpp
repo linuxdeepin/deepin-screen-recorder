@@ -110,8 +110,8 @@ bool MainWindow::openImageAndName(const QImage &image, const QString &name, cons
     qDebug() << "func: " << __func__ << name;
     m_image = image;
     m_lastImagePath = name;
-    QFileInfo fileInfo(name);
-    m_imageName = fileInfo.completeBaseName();
+    m_imageName = QString(tr("Screenshot") + "_%1").arg(QDateTime::currentDateTime().
+                                                        toString("yyyyMMddHHmmss"));
     int width = static_cast<int>(m_image.width() / m_pixelRatio);
     int height = static_cast<int>(m_image.height() / m_pixelRatio);
     //将窗口的大小重置为图片的大小
@@ -149,7 +149,7 @@ void MainWindow::onOpenOCR()
     // 测试
     if (m_ocrInterface == nullptr)
         m_ocrInterface = new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
-    m_ocrInterface->openImageAndName(m_image, m_lastImagePath);
+    m_ocrInterface->openImageAndName(m_image, m_imageName);
 }
 
 // 贴图保存
