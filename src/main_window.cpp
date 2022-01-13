@@ -1278,9 +1278,9 @@ void MainWindow::fullScreenshot()
 //    m_toolBar->hide();
 
     shotFullScreen(true);
-    save2Clipboard(m_resultPixmap);
     TempFile::instance()->setFullScreenPixmap(m_resultPixmap);
     const auto r = saveAction(m_resultPixmap);
+    save2Clipboard(m_resultPixmap);
     sendNotify(m_saveIndex, m_saveFileName, r);
 }
 void MainWindow::topWindow()
@@ -1364,8 +1364,8 @@ void MainWindow::topWindow()
              << "screenShot is null:" << screenShotPix.isNull();
     m_needSaveScreenshot = true;
     //    DDesktopServices::playSystemSoundEffect(DDesktopServices::SSE_Screenshot);
-    save2Clipboard(screenShotPix);
     const auto r = saveAction(screenShotPix);
+    save2Clipboard(screenShotPix);
     sendNotify(m_saveIndex, m_saveFileName, r);
 }
 
@@ -2419,9 +2419,9 @@ void MainWindow::saveScreenShot()
         //普通截图保存图片
         shotCurrentImg();
     }
+    const bool r = saveAction(m_resultPixmap);
     save2Clipboard(m_resultPixmap);
     this->hide();
-    const bool r = saveAction(m_resultPixmap);
     if (status::pinscreenshots == m_functionType) return;
     sendNotify(m_saveIndex, m_saveFileName, r);
 }
