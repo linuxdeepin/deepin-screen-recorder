@@ -117,7 +117,7 @@ bool MainWindow::openImageAndName(const QImage &image, const QString &name, cons
     //将窗口的大小重置为图片的大小
     resize(width, height);
     //将坐标点转换为m_pixelRatio屏幕缩放比下的点
-    QPoint temp(static_cast<int>(point.x() * m_pixelRatio), static_cast<int>(point.y() * m_pixelRatio));
+    m_showPosition = QPoint(static_cast<int>(point.x() * m_pixelRatio), static_cast<int>(point.y() * m_pixelRatio));
     QRect currnetScreenRect;
     //查找当前截图贴图区域所在的屏幕
     for (int i = 0; i < m_screenInfo.size(); ++i) {
@@ -127,16 +127,16 @@ bool MainWindow::openImageAndName(const QImage &image, const QString &name, cons
             static_cast<int>(m_screenInfo[i].width),
             static_cast<int>(m_screenInfo[i].height)
         };
-        if (currnetScreenRect.contains(temp)) {
-            int x = static_cast<int>((temp.x() - currnetScreenRect.x()) / m_pixelRatio + currnetScreenRect.x());
-            temp.setX(x);
-            int y = static_cast<int>((temp.y() - currnetScreenRect.y()) / m_pixelRatio + currnetScreenRect.y());
-            temp.setY(y);
+        if (currnetScreenRect.contains(m_showPosition)) {
+            int x = static_cast<int>((m_showPosition.x() - currnetScreenRect.x()) / m_pixelRatio + currnetScreenRect.x());
+            m_showPosition.setX(x);
+            int y = static_cast<int>((m_showPosition.y() - currnetScreenRect.y()) / m_pixelRatio + currnetScreenRect.y());
+            m_showPosition.setY(y);
             break;
         }
     }
     //移动到指定位置
-    move(temp);
+    move(m_showPosition);
     update();
     proportion = static_cast<double>(this->width())  / this->height();
     updateToolBarPosition();// 更新位置
@@ -199,6 +199,12 @@ void MainWindow::saveImg()
     // 发送通知
     sendNotify(m_lastImagePath, isSaveState);
 }
+// 获取贴图窗口的显示位置
+QPoint MainWindow::getShowPosition()
+{
+    return m_showPosition;
+}
+
 // 保存
 void MainWindow::onSave()
 {

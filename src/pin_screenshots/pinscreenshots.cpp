@@ -85,10 +85,12 @@ void PinScreenShots::openImageAndName(QImage image, QString imageName, QPoint po
         MainWindow *win = new MainWindow();
         win->openImageAndName(image, imageName, point);
         win->show();
+        // 防止双屏模式下，贴图尺寸被改变
+        Dtk::Widget::moveToCenter(win);
+        win->move(win->getShowPosition());
         //第一次启动才居中
         if (m_loadingCount == 0) {
             m_loadingCount++;
         }
-
     }
 }

@@ -100,6 +100,10 @@ public:
      * @brief 保存图片
      */
     void saveImg();
+    /**
+     * @brief 获取贴图窗口的显示位置
+     */
+    QPoint getShowPosition();
 
 public slots:
     /**
@@ -198,6 +202,10 @@ private:
      * @brief 保存信息
      */
     QPair<QString, QString> m_saveInfo;
+    /**
+     * @brief 保存贴图窗口的显示位置
+     */
+    QPoint m_showPosition;
 };
 
 #endif // MAINWINDOW_H
