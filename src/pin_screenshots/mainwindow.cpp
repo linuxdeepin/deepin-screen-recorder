@@ -176,8 +176,10 @@ void MainWindow::saveImg()
         QString imgName = QString("%1.%2").arg(m_imageName).arg(m_saveInfo.second.toLower());
         QString saveFileName =  QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
                                                              tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)"));
-        if (saveFileName.isEmpty())
+        if (saveFileName.isEmpty()) {
+            onExit();
             return;
+        }
         qDebug() << "saveFileName" << saveFileName;
         m_lastImagePath = saveFileName;
     } else if (m_saveInfo.first.contains(tr("Clipboard"))) {
