@@ -75,8 +75,8 @@ int main(int argc, char *argv[])
     }
 
 
-    if(isWaylandProtocol()) {
-       qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
+    if (isWaylandProtocol()) {
+        qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
     }
 
     DGuiApplicationHelper::setUseInactiveColorGroup(false);

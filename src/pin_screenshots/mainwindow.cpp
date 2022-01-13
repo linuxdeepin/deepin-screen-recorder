@@ -94,14 +94,14 @@ bool MainWindow::openFile(const QString &filePaths)
 {
     qDebug() << "func: " << __func__ ;
     QImage image(filePaths);
-    openImageAndName(image, "", QPoint(0,0));
+    openImageAndName(image, "", QPoint(0, 0));
     return true;
 }
 
 bool MainWindow::openImage(const QImage &image)
 {
     qDebug() << "func: " << __func__ ;
-    openImageAndName(image, "", QPoint(0,0));
+    openImageAndName(image, "", QPoint(0, 0));
     return true;
 }
 
@@ -392,7 +392,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         isNeedUpdateToolBar = true;
     }
 
-    if(isNeedUpdateToolBar) {
+    if (isNeedUpdateToolBar) {
         updateToolBarPosition();
     }
 }
@@ -421,9 +421,6 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     QPointF topLeft(globalPos.x() - newPoint.x(), globalPos.y() - newPoint.y()); // 贴图左上角的点在屏幕中的坐标
     rect = QRect(topLeft.toPoint(), rect.size());
 
-    //qDebug()<<"=====rect : "<<rect;
-    if (boundaryCalculation(rect))
-        return;
     this->setGeometry(rect.x(), rect.y(), rect.width(), rect.height());
     updateToolBarPosition(); //更新位置
 }
@@ -493,42 +490,7 @@ void MainWindow::initShortcut()
         m_toolBar->shortcutOpoints();
     });
 }
-// 贴图窗口边界计算
-bool MainWindow::boundaryCalculation(QRect &rect)
-{
-    //QRect mainRect = QApplication::desktop()->screen()->geometry();
-    //qDebug()<<"mainRect"<<mainRect;
-    int width = rect.width();
-    int height = rect.height();
-    int x = rect.x();
-    int y = rect.y();
-    //qDebug()<<"2 rect === "<<rect<<"width"<<width<<"height"<<height;
-    bool isOver = false;
-    if ((x + width >= m_screenSize.width())) {
-        int tmpWidth = x + width - m_screenSize.width();
-        x = x - tmpWidth;
-        //qDebug()<<" ====== x > 0 === "<<x<<y;
-        if (x <= 0) {
-            x = 0;
-            isOver = true;
-        }
-    }
 
-    if ((y + height >= m_screenSize.height())) {
-        int tmpHeight = y + height - m_screenSize.height();
-        y = y - tmpHeight;
-        if (y <= 0) {
-            y = 0;
-            isOver = true;
-            //qDebug()<<" ====== y <= 0 === ";
-        }
-    }
-
-    rect.moveTo(x, y);
-    rect.setWidth(width);
-    rect.setHeight(height);
-    return isOver;
-}
 // 计算屏幕大小
 void MainWindow::CalculateScreenSize()
 {

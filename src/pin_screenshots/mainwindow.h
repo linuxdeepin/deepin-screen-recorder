@@ -138,10 +138,6 @@ protected:
      */
     void initShortcut();
     /**
-     * @brief 边界计算
-     */
-    bool boundaryCalculation(QRect &rect);
-    /**
      * @brief 计算屏幕
      */
     void CalculateScreenSize();
