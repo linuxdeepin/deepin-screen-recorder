@@ -44,9 +44,9 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
     if (Utils::isWaylandMode) {
         QRect recordRect{
             static_cast<int>(rect.x() * devicePixelRatio),
-            static_cast<int>(rect.x() * devicePixelRatio),
-            static_cast<int>(rect.x() * devicePixelRatio),
-            static_cast<int>(rect.x() * devicePixelRatio)
+            static_cast<int>(rect.y() * devicePixelRatio),
+            static_cast<int>(rect.width() * devicePixelRatio),
+            static_cast<int>(rect.height() * devicePixelRatio)
         };
         QPixmap res;
         QDBusInterface kwinInterface(QStringLiteral("org.kde.KWin"),
