@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="fr" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="fr">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -95,10 +95,6 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -335,6 +331,10 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Ajustez la zone d&apos;enregistrement dans %1*%2 pour obtenir un meilleur effet vidéo</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>L&apos;enregistrement de l&apos;écran n&apos;est pas pris en charge actuellement</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Quitter</translation>
     </message>
 </context>
 </TS>

@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="cs" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="cs">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -96,10 +96,6 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Scrollshot</source>
         <translation>Snímek z celého posuvníku</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation>Pořizujte snímky obrazovky</translation>
     </message>
 </context>
 <context>
@@ -335,6 +331,10 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <source>Scrollshot</source>
         <translation>Snímek z celého posuvníku</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Připnout snímky obrazovky</translation>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <source>Scrollshot</source>
         <translation>Snímek z celého posuvníku</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Připnout snímky obrazovky</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Upravte oblast nahrávání v %1*%2 a získejte tak lepší video efekt</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>V současnosti není zaznamenávání obrazovky podporováno</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Ukončit</translation>
     </message>
 </context>
 </TS>

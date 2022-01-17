@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>Kaappaus valmiina</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ruudunkaappaus</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Tallennus epäonnistui. Tallenna se kotihakemistoon.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -53,7 +61,7 @@
     <name>QObject</name>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Kiinnitä kuvakaappaukset</translation>
     </message>
 </context>
 <context>

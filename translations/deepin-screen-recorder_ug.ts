@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ug" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ug">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -95,10 +95,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Scrollshot</source>
         <translation>سىيرىلما سۈرەت تۇتۇش</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation>دومىلىما سۈرەت تۇتۇش</translation>
     </message>
 </context>
 <context>
@@ -334,6 +330,10 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation>سىيرىلما سۈرەت تۇتۇش</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>چاپلاق</translation>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -508,12 +508,27 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation>سىيرىلما سۈرەت تۇتۇش</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>چاپلاق</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation>سىنغا ئېلىش دائىرىسى %1*%2 ئىچىدە تەڭشەلسە، سىن ئۈنۈمى تېخىمۇ ياخشى بولىدۇ</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>سىنغا ئېلىش ئىقتىدارى ۋاقتىنچە ئىشلىمەيدۇ</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>چېكىنىش</translation>
     </message>
 </context>
 </TS>

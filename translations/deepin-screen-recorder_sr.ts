@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="sr" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sr">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -96,10 +96,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Scrollshot</source>
         <translation>Слика клизањa</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -335,6 +331,10 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation>Слика клизањa</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation>Слика клизањa</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> подесите површину снимања у оквиру %1*%2 да добијете бољи видео ефекат</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>Снимање екрана тренутно није подржано</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Изађи</translation>
     </message>
 </context>
 </TS>

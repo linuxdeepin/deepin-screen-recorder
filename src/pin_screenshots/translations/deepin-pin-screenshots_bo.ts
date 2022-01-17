@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>བརྙན་བཤུས་ཚར་བ།</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>བརྙན་བཤུས།</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>ཉར་མི་ཐུབ་པས། མིག་སྔའི་སྤྱོད་མཁན་གྱི་དཀར་ཆག་འོག་ཏུ་ཉར་རོགས།</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

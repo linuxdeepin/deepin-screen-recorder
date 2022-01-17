@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="fi" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="fi">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -96,10 +96,6 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Scrollshot</source>
         <translation>Vierittävä kaappaus</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation>Ota näytön vierityskuvia</translation>
     </message>
 </context>
 <context>
@@ -335,6 +331,10 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <source>Scrollshot</source>
         <translation>Vierittävä kaappaus</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Kiinnitä kuvakaappaukset</translation>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <source>Scrollshot</source>
         <translation>Vierittävä kaappaus</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Kiinnitä kuvakaappaukset</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Säädä tallennuksen aluetta %1*%2 saadaksesi paremman videotehosteen</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>Näytön tallennusta ei tueta tällä hetkellä</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Poistu</translation>
     </message>
 </context>
 </TS>

@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>Усликавање завршено</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Усликавање</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Није сачувано. Молимо сачувајте у личном директоријуму.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

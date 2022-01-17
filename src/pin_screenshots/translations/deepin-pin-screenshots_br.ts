@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>Tapadenn-skramm echuet</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Tapadenn-skramm</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Chomet eo sac&apos;het an enrollañ. Enrollit e-barzh ur c&apos;havlec&apos;h personel eta.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>스크린샷 완료</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>스크린샷</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>저장하지 못했습니다. 홈 디렉토리에 저장하십시오.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

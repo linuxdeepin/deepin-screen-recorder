@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>Tangkap layar selesai</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Tangkap Layar</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Gagal simpan. Sila simpan ia dalam direktori rumah anda.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

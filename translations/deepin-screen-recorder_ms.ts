@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ms" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ms">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -96,10 +96,6 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>Scrollshot</source>
         <translation>Tangkap tatal</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -335,6 +331,10 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <source>Scrollshot</source>
         <translation>Tangkap tatal</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <source>Scrollshot</source>
         <translation>Tangkap tatal</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Laras kawasan rakaman dalam lingkungan %1*%2 untuk mendapatkan kesan video lebih baik</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Keluar</translation>
     </message>
 </context>
 </TS>

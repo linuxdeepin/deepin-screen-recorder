@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>መቅረጽ ጨርሷል</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

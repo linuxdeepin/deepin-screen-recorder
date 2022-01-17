@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="uk" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="uk">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -96,10 +96,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Scrollshot</source>
         <translation>Знімок із гортанням</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation>Створення знімків із гортанням</translation>
     </message>
 </context>
 <context>
@@ -335,6 +331,10 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation>Знімок із гортанням</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Пришпилити знімки</translation>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation>Знімок із гортанням</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Пришпилити знімки</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Скоригуйте ділянку запису до %1*%2, щоб отримати краще відео</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>Зараз підтримки запису з екрана не передбачено</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Вийти</translation>
     </message>
 </context>
 </TS>

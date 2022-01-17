@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="pt" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="pt">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -96,10 +96,6 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Scrollshot</source>
         <translation>Scrollshot</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation>Tirar scrollshots do ecrã</translation>
     </message>
 </context>
 <context>
@@ -335,6 +331,10 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <source>Scrollshot</source>
         <translation>Scrollshot</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Afixar capturas de ecrã</translation>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <source>Scrollshot</source>
         <translation>Scrollshot</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Afixar capturas de ecrã</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Ajustar a área de gravação dentro de %1*%2 para obter um melhor efeito de vídeo</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>A gravação do ecrã não é atualmente suportada</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Sair</translation>
     </message>
 </context>
 </TS>

@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="es" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="es">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -96,10 +96,6 @@ o haga clic en el icono de la bandeja</translation>
     <message>
         <source>Scrollshot</source>
         <translation>Capturar desplazamiento</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation>Captura de desplazamiento</translation>
     </message>
 </context>
 <context>
@@ -335,6 +331,10 @@ o haga clic en el icono de la bandeja</translation>
         <source>Scrollshot</source>
         <translation>Capturar desplazamiento</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ o haga clic en el icono de la bandeja</translation>
         <source>Scrollshot</source>
         <translation>Capturar desplazamiento</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Ajustar el área de grabación dentro de %1*%2 para obtener un mejor efecto de vídeo</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>No es posible grabar la pantalla en este momento</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Salir</translation>
     </message>
 </context>
 </TS>

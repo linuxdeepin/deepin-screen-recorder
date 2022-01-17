@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="tr" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="tr">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -95,10 +95,6 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -335,6 +331,10 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation>Daha iyi video efekti elde etmek için kayıt alanını %1*%2 içinde ayarlayın</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>Ekran kaydı şu anda desteklenmiyor</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Çıkış</translation>
     </message>
 </context>
 </TS>

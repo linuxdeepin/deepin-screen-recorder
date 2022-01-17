@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="sq" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sq">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -95,10 +95,6 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -335,6 +331,10 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
         <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Fiksoje foton e ekranit</translation>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
         <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Fiksoje foton e ekranit</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Që të keni efekt video më të mirë, përshtatni zonën e regjistrimit brenda %1*%2</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>Regjistrimet e ekranit hëpërhë nuk mbulohen</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Dil</translation>
     </message>
 </context>
 </TS>

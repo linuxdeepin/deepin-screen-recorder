@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>Fotoja e ekranit u bë</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Foto ekrani</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Ruajtja dështoi. Ju lutemi, ruajeni te drejtoria juaj shtëpi.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -53,7 +61,7 @@
     <name>QObject</name>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Fiksoje foton e ekranit</translation>
     </message>
 </context>
 <context>

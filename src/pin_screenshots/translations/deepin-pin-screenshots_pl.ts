@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>Zrzut ekranu zakończony</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Zrzut ekranu</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Zapisywanie nie powiodło się. Proszę zapisać go w swoim katalogu domowym.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -53,7 +61,7 @@
     <name>QObject</name>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Przypnij zrzuty ekranu</translation>
     </message>
 </context>
 <context>

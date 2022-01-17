@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>Знімок створено</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Знімок</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Не вдалося зберегти. Будь ласка, збережіть дані до вашого домашнього каталогу.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -53,7 +61,7 @@
     <name>QObject</name>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Пришпилити знімки</translation>
     </message>
 </context>
 <context>

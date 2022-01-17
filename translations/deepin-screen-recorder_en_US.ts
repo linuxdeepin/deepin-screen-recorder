@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="en" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="en">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -96,10 +96,6 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Scrollshot</source>
         <translation>Scrollshot</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation>Take Screen Scrollshots</translation>
     </message>
 </context>
 <context>
@@ -335,6 +331,10 @@ or press the shortcut again to stop recording</translation>
         <source>Scrollshot</source>
         <translation>Scrollshot</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Pin screenshots</translation>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ or press the shortcut again to stop recording</translation>
         <source>Scrollshot</source>
         <translation>Scrollshot</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Pin screenshots</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Adjust the recording area within %1*%2 to get better video effect</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>Screen recording is not supported at present</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Exit</translation>
     </message>
 </context>
 </TS>

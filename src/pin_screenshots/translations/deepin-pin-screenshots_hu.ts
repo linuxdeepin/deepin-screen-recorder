@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>A képernyőkép készítése befejeződött</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Képernyőkép</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>A mentés nem sikerült. Kérjük mentse el a saját mappájába.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -53,7 +61,7 @@
     <name>QObject</name>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Képernyőképek rögzítése</translation>
     </message>
 </context>
 <context>

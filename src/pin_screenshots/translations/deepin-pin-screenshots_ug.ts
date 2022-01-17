@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>رەسىم تۇتۇلدى</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>رەسىم تۇتۇش</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>ساقلانمىدى. نۆۋەتتىكى ئىشلەتكۈچى مۇندەرىجىسىگە ساقلاڭ.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -53,7 +61,7 @@
     <name>QObject</name>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>چاپلاق</translation>
     </message>
 </context>
 <context>

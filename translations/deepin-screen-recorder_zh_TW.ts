@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_TW" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="zh_TW">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -95,10 +95,6 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>滾動截圖</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
         <translation>滾動截圖</translation>
     </message>
 </context>
@@ -335,6 +331,10 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation>滾動截圖</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>貼圖</translation>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation>滾動截圖</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>貼圖</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> 調整錄製區域範圍在%1*%2以內，視頻效果更佳</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>錄屏功能暫不可用</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>退出</translation>
     </message>
 </context>
 </TS>

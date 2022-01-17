@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="az" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="az">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -96,10 +96,6 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
     <message>
         <source>Scrollshot</source>
         <translation>Sürüşdürmə</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation>Ekranın şəkillərini çəkin</translation>
     </message>
 </context>
 <context>
@@ -335,6 +331,10 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
         <source>Scrollshot</source>
         <translation>Sürüşdürmə</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Ekran şəkllərini sancaqlayın</translation>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
         <source>Scrollshot</source>
         <translation>Sürüşdürmə</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Ekran şəkllərini sancaqlayın</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation>Daha yaxşı video effekti üçün %1*%2 daxilində yazılma sahəsini təyin edin</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>Hal-hazırda ekranın video qeydi dəstəklənmir</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Çıxış</translation>
     </message>
 </context>
 </TS>

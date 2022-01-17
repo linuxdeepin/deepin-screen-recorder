@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>Pořizování snímku dokončeno</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Snímek obrazovky</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Ukládání se nezdařilo. Uložte ho do své domovské složky.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -53,7 +61,7 @@
     <name>QObject</name>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Připnout snímky obrazovky</translation>
     </message>
 </context>
 <context>

@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>Captura concluída</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Capturar</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Falha ao salvar. Salve-o no diretório pessoal.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>Slika zaslona završena</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Slika zaslona</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

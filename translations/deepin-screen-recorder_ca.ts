@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ca" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ca">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -96,10 +96,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Scrollshot</source>
         <translation>Captura de desplaçament</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation>Fes captures amb desplaçament</translation>
     </message>
 </context>
 <context>
@@ -335,6 +331,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <source>Scrollshot</source>
         <translation>Captura de desplaçament</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Fixa les captures</translation>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <source>Scrollshot</source>
         <translation>Captura de desplaçament</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Fixa les captures</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Ajusteu l&apos;àrea de gravació dins %1*%2 per obtenir un efecte de vídeo millor.</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>Actualment no s&apos;admet la gravació de pantalla</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Surt</translation>
     </message>
 </context>
 </TS>

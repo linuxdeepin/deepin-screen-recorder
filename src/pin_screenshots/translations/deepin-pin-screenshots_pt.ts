@@ -35,7 +35,15 @@
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Captura de ecrã concluída</translation>
+        <translation>Captura de ecrã efetuada</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Captura de ecrã</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Falha ao guardar. Guarde-a no diretório pessoal.</translation>
     </message>
 </context>
 <context>
@@ -53,7 +61,7 @@
     <name>QObject</name>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Afixar capturas de ecrã</translation>
     </message>
 </context>
 <context>

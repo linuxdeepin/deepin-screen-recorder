@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>انتهى التقاط الشاشة</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>لقطة شاشة</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>فشلت عملية الحفظ، نرجوا إجراء الحفظ في المجلد الرئيسي</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

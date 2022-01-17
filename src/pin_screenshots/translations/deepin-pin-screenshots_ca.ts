@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>Captura acabada</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>No s&apos;ha pogut desar. Deseu-ho al directori personal.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -53,7 +61,7 @@
     <name>QObject</name>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Fixa les captures</translation>
     </message>
 </context>
 <context>

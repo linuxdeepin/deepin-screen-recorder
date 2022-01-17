@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>Ekran şəkli çəkildi</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ekran şəkli</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Saxlanıla bilmədi. Lütfən onu ev qovluğunda saxlayın</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

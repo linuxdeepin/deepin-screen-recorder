@@ -99,10 +99,6 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -337,6 +333,10 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -511,12 +511,27 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished">خروج</translation>
     </message>
 </context>
 </TS>

@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>截圖完成</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>截圖</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>保存失敗。請保存在當前用戶目錄下。</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

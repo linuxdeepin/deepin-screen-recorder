@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="nl" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="nl">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -96,10 +96,6 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Scrollshot</source>
         <translation>Scrollende schermfoto</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation>Scrollende schermfoto&apos;s maken</translation>
     </message>
 </context>
 <context>
@@ -335,6 +331,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <source>Scrollshot</source>
         <translation>Scrollende schermfoto</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Schermfoto&apos;s vastmaken</translation>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <source>Scrollshot</source>
         <translation>Scrollende schermfoto</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Schermfoto&apos;s vastmaken</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Verhoog de resolutie van het opnamegebied naar %1*%2 voor een betere opname</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>Schermopname wordt momenteel niet ondersteund</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Afsluiten</translation>
     </message>
 </context>
 </TS>

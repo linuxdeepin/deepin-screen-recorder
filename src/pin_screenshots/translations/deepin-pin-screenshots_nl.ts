@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>De schermfoto is genomen</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Schermfoto</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Het opslaan is mislukt. Sla het op in je persoonlijke map.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -53,7 +61,7 @@
     <name>QObject</name>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Schermfoto&apos;s vastmaken</translation>
     </message>
 </context>
 <context>

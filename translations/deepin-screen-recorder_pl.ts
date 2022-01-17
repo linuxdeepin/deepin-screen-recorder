@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="pl" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="pl">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -96,10 +96,6 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <message>
         <source>Scrollshot</source>
         <translation>Pionowy zrzut ekranu</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation>Zrób pionowe zrzuty ekranu</translation>
     </message>
 </context>
 <context>
@@ -335,6 +331,10 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <source>Scrollshot</source>
         <translation>Pionowy zrzut ekranu</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Przypnij zrzuty ekranu</translation>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <source>Scrollshot</source>
         <translation>Pionowy zrzut ekranu</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Przypnij zrzuty ekranu</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Dostosuj pole nagrywania w zakresie %1*%2 aby uzyskać lepszy efekt</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>Nagrywanie ekranu nie jest obecnie obsługiwane</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Wyjście</translation>
     </message>
 </context>
 </TS>

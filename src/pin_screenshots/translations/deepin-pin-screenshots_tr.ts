@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>Ekran görüntüsü tamamlandı</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ekran Görüntüsü</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Kayıt başarısız. Lütfen ana dizine kaydedin.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

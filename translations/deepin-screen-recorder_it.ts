@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="it" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="it">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -96,10 +96,6 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Scrollshot</source>
         <translation>Screenshot a scorrimento</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation>Acquisisci uno screenshot a scorrimento</translation>
     </message>
 </context>
 <context>
@@ -335,6 +331,10 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <source>Scrollshot</source>
         <translation>Screenshot a scorrimento</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <source>Scrollshot</source>
         <translation>Screenshot a scorrimento</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation> Sistema l&apos;area di registrazione tra %1*%2 per i migliori effetti video</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>La registrazione dello schermo non è supportata al momento</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Esci</translation>
     </message>
 </context>
 </TS>

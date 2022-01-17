@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>Skærmbilledet er færdigt</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Skærmbillede</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Gem mislykkedes. Gem den venligst i din hjemmemappe.</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

@@ -37,6 +37,14 @@
         <source>Screenshot finished</source>
         <translation>Ekrāna uzņēmums izveidots</translation>
     </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ekrānuzņēmums</translation>
+    </message>
+    <message>
+        <source>Save failed. Please save it in your home directory.</source>
+        <translation>Saglabāšana neizdevās. Lūzu saglabājiet mājas mapē</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

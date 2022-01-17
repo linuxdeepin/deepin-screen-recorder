@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="hu" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="hu">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -96,10 +96,6 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>Scrollshot</source>
         <translation>Görgethető képernyőkép</translation>
-    </message>
-    <message>
-        <source>Take Screen Scrollshots</source>
-        <translation>Görgethető képernyőkép készítése</translation>
     </message>
 </context>
 <context>
@@ -335,6 +331,10 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <source>Scrollshot</source>
         <translation>Görgethető képernyőkép</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Képernyőképek rögzítése</translation>
+    </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
@@ -509,12 +509,27 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <source>Scrollshot</source>
         <translation>Görgethető képernyőkép</translation>
     </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>Képernyőképek rögzítése</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation>A jobb videoeffektus elérése érdekében állítsa be a felvételi területet %1*%2</translation>
+    </message>
+</context>
+<context>
+    <name>Utils</name>
+    <message>
+        <source>Screen recording is not supported at present</source>
+        <translation>A képernyőfelvétel jelenleg nem támogatott</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Kilépés</translation>
     </message>
 </context>
 </TS>
