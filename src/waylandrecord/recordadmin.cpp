@@ -104,6 +104,7 @@ void RecordAdmin::init(int screenWidth, int screenHeight)
     m_pOutputStream->m_top = m_pInputStream->m_top = m_y;
     m_pOutputStream->m_right = m_pInputStream->m_right = screenWidth - m_x - m_selectWidth;
     m_pOutputStream->m_bottom = m_pInputStream->m_bottom = screenHeight - m_y - m_selectHeight;
+    m_pOutputStream->m_videoType = m_videoType;
     if (m_pInputStream->m_right < 0) {
         m_selectWidth += m_pInputStream->m_right;
         m_pInputStream->m_selectWidth = m_selectWidth;
@@ -165,16 +166,17 @@ void *RecordAdmin::stream(void *param)
 
 int RecordAdmin::stopStream()
 {
+    //设置是否运行线程，用来关闭采集音频数据的线程
+    m_pInputStream->setbRunThread(false);
+    //设置关闭视频数据采集，将视频数据采集到队列中
     m_context->setBGetFrame(false);
-    //设置是否写MP4/MKV视频帧
+    //设置是否写MP4/MKV视频帧，将数据从队列中取出
     m_writeFrameThread->setBWriteFrame(false);
     m_cacheMutex.lock();
-    //设置是否写混音
+    //设置是否写混音,此时采集音频流并将音频流写入音频fifo缓冲区
     m_pInputStream->setbWriteAmix(false);
-    //设置是否写音频帧
+    //设置是否写音频帧，此时将音频缓冲区的数据写入到输出媒体文件
     m_pOutputStream->setIsWriteFrame(false);
-    //设置是否运行线程
-    m_pInputStream->setbRunThread(false);
     //关闭输出
     m_pOutputStream->close();
     m_cacheMutex.unlock();

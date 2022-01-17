@@ -64,6 +64,7 @@ Q_LOGGING_CATEGORY(XdgDesktopPortalKdeWaylandIntegration, "xdp-kde-wayland-integ
 //取消自动析构机制，此处后续还需优化
 //Q_GLOBAL_STATIC(WaylandIntegration::WaylandIntegrationPrivate, globalWaylandIntegration)
 static WaylandIntegration::WaylandIntegrationPrivate *globalWaylandIntegration = new  WaylandIntegration::WaylandIntegrationPrivate();
+static int globalImageCount = 0;
 
 void WaylandIntegration::init(QStringList list)
 {
@@ -166,7 +167,13 @@ WaylandIntegration::WaylandIntegrationPrivate::WaylandIntegrationPrivate()
     , m_remoteAccessManager(nullptr)
 {
     m_bInit = true;
+#if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__)
     m_bufferSize = 60;
+#elif defined (__aarch64__)
+    m_bufferSize = 60;
+#else
+    m_bufferSize = 200;
+#endif
     m_ffmFrame = nullptr;
     qDBusRegisterMetaType<WaylandIntegrationPrivate::Stream>();
     qDBusRegisterMetaType<WaylandIntegrationPrivate::Streams>();
@@ -238,6 +245,7 @@ QMap<quint32, WaylandIntegration::WaylandOutput> WaylandIntegration::WaylandInte
 
 void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list)
 {
+    m_fps = list[5].toInt();
     m_recordAdmin = new RecordAdmin(list, this);
     //设置获取视频帧
     setBGetFrame(true);
@@ -362,13 +370,36 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
         m_recordAdmin->init(static_cast<int>(width), static_cast<int>(height));
         frameStartTime = avlibInterface::m_av_gettime();
     }
-    unsigned char *imageData = getImageData(dma_fd, width, height, stride, rbuf->format());
-    if (imageData == nullptr) {
+    // unsigned char *imageData = getImageData(dma_fd, width, height, stride, rbuf->format());
+    QImage img = getImage(dma_fd, width, height, stride, rbuf->format());
+    if (img.isNull()) {
         qDebug() << "获取图片失败！";
         return ;
     }
 
-    appendBuffer(imageData, static_cast<int>(width), static_cast<int>(height), static_cast<int>(stride), avlibInterface::m_av_gettime() - frameStartTime);
+    int step = 0;
+    switch (m_fps) {
+    case 5:
+        step = 6;
+        break;
+    case 10:
+        step = 3;
+        break;
+    case 20:
+        step = 2;
+        break;
+    default:
+        step = 0;
+    }
+    if (step != 0) {
+        if (globalImageCount % step != 0) {
+            appendBuffer(img.bits(), static_cast<int>(width), static_cast<int>(height), static_cast<int>(stride), avlibInterface::m_av_gettime() - frameStartTime);
+        }
+    } else {
+        appendBuffer(img.bits(), static_cast<int>(width), static_cast<int>(height), static_cast<int>(stride), avlibInterface::m_av_gettime() - frameStartTime);
+    }
+
+    globalImageCount++;
     close(dma_fd);
 }
 
@@ -419,6 +450,54 @@ unsigned char *WaylandIntegration::WaylandIntegrationPrivate::getImageData(int32
     eglDestroyImageKHR(m_eglstruct.dpy, image);
 
     return tempImage.bits();
+}
+QImage WaylandIntegration::WaylandIntegrationPrivate::getImage(int32_t fd, uint32_t width, uint32_t height, uint32_t stride, uint32_t format)
+{
+    QImage tempImage;
+    tempImage = QImage(static_cast<int>(width), static_cast<int>(height), QImage::Format_RGBA8888);
+    eglMakeCurrent(m_eglstruct.dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, m_eglstruct.ctx);
+    EGLint importAttributes[] = {EGL_WIDTH,
+                                 static_cast<int>(width),
+                                 EGL_HEIGHT,
+                                 static_cast<int>(height),
+                                 EGL_LINUX_DRM_FOURCC_EXT,
+                                 static_cast<int>(format),
+                                 EGL_DMA_BUF_PLANE0_FD_EXT,
+                                 fd,
+                                 EGL_DMA_BUF_PLANE0_OFFSET_EXT,
+                                 0,
+                                 EGL_DMA_BUF_PLANE0_PITCH_EXT,
+                                 static_cast<int>(stride),
+                                 EGL_NONE
+                                };
+    EGLImageKHR image = eglCreateImageKHR(m_eglstruct.dpy, EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, importAttributes);
+    if (image == EGL_NO_IMAGE_KHR) {
+        qDebug() << "未获取到图片！！！";
+        return tempImage;
+    }
+
+    // create GL 2D texture for framebuffer
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image);
+
+    GLuint fbo;
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, tempImage.bits());
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    glDeleteFramebuffers(1, &fbo);
+    glDeleteTextures(1, &texture);
+    eglDestroyImageKHR(m_eglstruct.dpy, image);
+
+    return tempImage;
 }
 void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 {

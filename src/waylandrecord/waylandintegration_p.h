@@ -145,6 +145,17 @@ protected Q_SLOTS:
     unsigned char *getImageData(int32_t fd, uint32_t width, uint32_t height, uint32_t stride,
                                 uint32_t format);
     /**
+        * @brief 从wayland客户端获取当前屏幕的截图
+        * @param fd
+        * @param width
+        * @param height
+        * @param stride
+        * @param format
+        * @return
+        */
+    QImage getImage(int32_t fd, uint32_t width, uint32_t height, uint32_t stride, uint32_t format);
+
+    /**
      * @brief 安装注册wayland客户服务
      */
     void setupRegistry();
@@ -179,6 +190,7 @@ public:
     bool bGetFrame();
     void setBGetFrame(bool bGetFrame);
 
+    int m_fps = 0;
 private:
     //缓存帧容量
     int m_bufferSize;

@@ -96,7 +96,10 @@ public:
     int m_top;
     int m_right;
     int m_bottom;
-
+    /**
+       * @brief 视频类型
+       */
+    int m_videoType;
 private:
     char *m_path;
     QMutex m_audioReadWriteMutex;
@@ -105,27 +108,66 @@ private:
     QMutex m_isWriteFrameMutex;
     WaylandIntegration::WaylandIntegrationPrivate *m_context;
     AVStream *m_videoStream;
+    /**
+     * @brief 麦克风音频流
+     */
     AVStream *m_micAudioStream;
+    /**
+     * @brief 系统音频流
+     */
     AVStream *m_sysAudioStream;
+    /**
+     * @brief 音频混合流
+     */
     AVStream *audio_amix_st;
     AVFormatContext *m_videoFormatContext;
+    /**
+     * @brief 视频上下文
+     */
     AVCodecContext *pCodecCtx;  //video
+    /**
+     * @brief 麦克风音频编码上下文
+     */
     AVCodecContext *m_pMicCodecContext;  //audio
+    /**
+     * @brief 系统音频编码上下文
+     */
     AVCodecContext *m_pSysCodecContext;
+
+    /**
+     * @brief 混合音频编码上下文
+     */
     AVCodecContext *pCodecCtx_amix;
+    /**
+     * @brief 视频编码器
+     */
     AVCodec *pCodec;  //videos
+    /**
+     * @brief 麦克风音频编码器
+     */
     AVCodec *pCodec_a;  //audio
+    /**
+     * @brief 系统音频编码器
+     */
     AVCodec *pCodec_aCard;
+    /**
+     * @brief 混合音频编码器
+     */
     AVCodec *pCodec_amix;
     AVFrame *pFrameYUV;   ///转换为YUV420P保存的图像
     struct SwsContext *m_pVideoSwsContext;
     struct SwrContext *m_pMicAudioSwrContext;
     struct SwrContext *m_pSysAudioSwrContext;
+    /**
+     * @brief 麦克风音频缓冲区
+     */
     AVAudioFifo *m_micAudioFifo;
+    /**
+     * @brief 系统音频缓冲区
+     */
     AVAudioFifo *m_sysAudioFifo;
+    int m_initFifoSpace = 0;
     int is_fifo_scardinit;
-    int  m_micAudioFrame;
-    int  m_sysAudioFrame;
     int  m_nb_samples;
     //int64_t m_first_vid_time1, m_first_vid_time2; //前者是采集视频的第一帧的时间，后者是编码器输出的第一帧的时间
     int64_t m_start_mix_time; //第一个音频帧的时间
@@ -134,14 +176,46 @@ private:
     int64_t  m_nLastAudioPresentationTime; //记录上一帧的音频时间戳
     int64_t  m_nLastAudioCardPresentationTime;
     int64_t  m_nLastAudioMixPresentationTime;
+    /**
+     * @brief 混合音频帧的数量
+     */
     int64_t  m_mixCount;
+    /**
+     * @brief 单音音频帧编码数量
+     */
+    int64_t m_singleCount = 0;
+    /**
+     * @brief 写入视频帧的数量
+     */
+    int m_videoFrameCount = 0;
+
+    /**
+     * @brief 写入第一帧视频的时间戳
+     */
+    int64_t m_fristVideoFramePts = 0;
+
     uint8_t **m_convertedMicSamples;
     uint8_t **m_convertedSysSamples;
     uint8_t *m_out_buffer;
     AVFilterGraph *filter_graph;
+    /**
+     * @brief 过滤器上下文
+     */
     AVFilterContext *buffersink_ctx;
+    /**
+     * @brief 麦克风音频过滤器上下文
+     */
     AVFilterContext *buffersrc_ctx1;
+    /**
+     * @brief 系统音频过滤器上下文
+     */
     AVFilterContext *buffersrc_ctx2;
+    /**
+     * @brief 写混合音频时，用来计数是否可以读取缓冲区的次数
+     * 每当写混合音频时，会比较fifo缓冲区中的可读取帧数是否大于编码可用来编码的最小帧数，
+     * 当fifo缓冲区中的可读取帧数是大于编码可用来编码的最小帧数，可进行写操作
+     * 否则执行等待tmpFifoFailed开始计数，当连续300次不能进行写操作
+     */
     int tmpFifoFailed;
     bool m_isOverWrite;
     AVCodecID  m_videoCodecID;

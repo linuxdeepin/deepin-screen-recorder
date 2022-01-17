@@ -62,8 +62,6 @@ CAVOutputStream::CAVOutputStream(WaylandIntegration::WaylandIntegrationPrivate *
     m_nb_samples = 0;
     m_convertedMicSamples = nullptr;
     m_convertedSysSamples = nullptr;
-    m_micAudioFrame = 0;
-    m_sysAudioFrame = 0;
     m_start_mix_time = 0;
     m_next_vid_time = 0;
     m_next_aud_time = 0;
@@ -663,8 +661,6 @@ bool CAVOutputStream::open(QString path)
     avlibInterface::m_avformat_write_header(m_videoFormatContext, nullptr);
 
     //m_vid_framecnt = 0;
-    m_micAudioFrame = 0;
-    m_sysAudioFrame = 0;
     m_nb_samples = 0;
     m_nLastAudioPresentationTime = 0;
     m_nLastAudioMixPresentationTime = 0;
@@ -728,8 +724,13 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
     pFrameYUV->pts++;
     if (1 == enc_got_frame) {
         packet.stream_index = m_videoStream->index;
-        packet.pts = static_cast<int64_t>(m_videoStream->time_base.den) * frame._time / AV_TIME_BASE;
-        packet.dts =  packet.pts;
+        //packet.pts = static_cast<int64_t>(m_videoStream->time_base.den) * frame._time / AV_TIME_BASE;
+        m_videoFrameCount++;
+        if (m_videoFrameCount == 1) {
+            m_fristVideoFramePts = frame._time;
+        }
+        packet.pts = static_cast<int64_t>(m_videoStream->time_base.den) * (frame._time - m_fristVideoFramePts) / AV_TIME_BASE;
+        //qDebug() << "video packet.pts: " << packet.pts;        packet.dts =  packet.pts;
         int ret = writeFrame(m_videoFormatContext, &packet);
         if (ret < 0) {
             //char tmpErrString[128] = {0};
@@ -805,7 +806,6 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
     int audioSize = audioFifoSize(m_micAudioFifo);
     //因为Fifo里有之前未读完的数据，所以从Fifo队列里面取出的第一个音频包的时间戳等于当前时间减掉缓冲部分的时长
     int64_t timeshift = static_cast<int64_t>(audioSize * AV_TIME_BASE) / static_cast<int64_t>(stream->codec->sample_rate);
-    m_micAudioFrame += inputFrame->nb_samples;
     /** Add the converted input samples to the FIFO buffer for later processing. */
 
     /**
@@ -900,7 +900,11 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
         if (enc_got_frame_a) {
             outputPacket.stream_index = m_micAudioStream->index;
             printf("output_packet.stream_index1  audio_st =%d\n", outputPacket.stream_index);
-            outputPacket.pts = avlibInterface::m_av_rescale_q(m_nLastAudioPresentationTime, rational, m_micAudioStream->time_base);
+            //outputPacket.pts = avlibInterface::m_av_rescale_q(m_nLastAudioPresentationTime, rational, m_micAudioStream->time_base);
+            outputPacket.pts = m_singleCount * m_pMicCodecContext->frame_size * 1000 / m_pMicCodecContext->sample_rate;
+            outputPacket.dts = outputPacket.pts;
+            //qDebug() << m_singleCount << " mic audio outputPacket.pts: " << outputPacket.pts;
+            m_singleCount++;
             //write -> outputPacket
             if ((ret = writeFrame(m_videoFormatContext, &outputPacket)) < 0) {
                 //char tmpErrString[128] = {0};
@@ -1048,8 +1052,8 @@ void CAVOutputStream::writeMixAudio()
 {
     if (is_fifo_scardinit < 2 || nullptr == m_sysAudioFifo || nullptr == m_micAudioFifo)
         return;
-    AVFrame *pFrame_scard = avlibInterface::m_av_frame_alloc();
-    AVFrame *pFrame_temp = avlibInterface::m_av_frame_alloc();
+    AVFrame *pFrame_sys = avlibInterface::m_av_frame_alloc();
+    AVFrame *pFrame_mic = avlibInterface::m_av_frame_alloc();
     int sysFifosize = audioFifoSize(m_sysAudioFifo);
     int micFifoSize = audioFifoSize(m_micAudioFifo);
     int minMicFrameSize = m_pMicCodecContext->frame_size;
@@ -1058,21 +1062,25 @@ void CAVOutputStream::writeMixAudio()
         int ret;
         tmpFifoFailed = 0;
         AVRational time_base_q;
-        pFrame_scard->nb_samples = minSysFrameSize;
-        pFrame_scard->channel_layout = m_pSysCodecContext->channel_layout;
-        pFrame_scard->format = m_pSysCodecContext->sample_fmt;
-        pFrame_scard->sample_rate = m_pSysCodecContext->sample_rate;
-        avlibInterface::m_av_frame_get_buffer(pFrame_scard, 0);
-        pFrame_temp->nb_samples = minMicFrameSize;
-        pFrame_temp->channel_layout = m_pMicCodecContext->channel_layout;
-        pFrame_temp->format = m_pMicCodecContext->sample_fmt;
-        pFrame_temp->sample_rate = m_pMicCodecContext->sample_rate;
-        avlibInterface::m_av_frame_get_buffer(pFrame_temp, 0);
-        //从缓冲区读取系统音频帧数据
-        audioRead(m_sysAudioFifo, reinterpret_cast<void **>(pFrame_scard->data), minSysFrameSize);
-        //从缓冲区读取麦克风音频帧数据
-        audioRead(m_micAudioFifo, reinterpret_cast<void **>(pFrame_temp->data), minMicFrameSize);
-        int nFifoSamples = pFrame_scard->nb_samples;
+        // 样本数量 1152
+        pFrame_sys->nb_samples = minSysFrameSize;
+        //通道布局
+        pFrame_sys->channel_layout = m_pSysCodecContext->channel_layout;
+        //样本格式
+        pFrame_sys->format = m_pSysCodecContext->sample_fmt;
+        //采样率
+        pFrame_sys->sample_rate = m_pSysCodecContext->sample_rate;
+        avlibInterface::m_av_frame_get_buffer(pFrame_sys, 0);
+        pFrame_mic->nb_samples = minMicFrameSize;
+        pFrame_mic->channel_layout = m_pMicCodecContext->channel_layout;
+        pFrame_mic->format = m_pMicCodecContext->sample_fmt;
+        pFrame_mic->sample_rate = m_pMicCodecContext->sample_rate;
+        avlibInterface::m_av_frame_get_buffer(pFrame_mic, 0);
+        //从fifo缓存区中将数据读取到pFrame_sys->datap
+        audioRead(m_sysAudioFifo, reinterpret_cast<void **>(pFrame_sys->data), minSysFrameSize);
+        //从fifo缓存区中将数据读取到pFrame_mic->datap
+        audioRead(m_micAudioFifo, reinterpret_cast<void **>(pFrame_mic->data), minMicFrameSize);
+        int nFifoSamples = pFrame_sys->nb_samples;
         if (m_start_mix_time == -1) {
             //printf("First Audio timestamp: %ld \n", av_gettime());
             m_start_mix_time = avlibInterface::m_av_gettime();
@@ -1082,23 +1090,25 @@ void CAVOutputStream::writeMixAudio()
         if (lTimeStamp - timeshift > m_nLastAudioMixPresentationTime) {
             m_nLastAudioMixPresentationTime = lTimeStamp - timeshift;
         }
-        pFrame_scard->pts = avlibInterface::m_av_rescale_q(m_nLastAudioMixPresentationTime, time_base_q, audio_amix_st->time_base);
-        pFrame_temp->pts = pFrame_scard->pts;
+        pFrame_sys->pts = avlibInterface::m_av_rescale_q(m_nLastAudioMixPresentationTime, time_base_q, audio_amix_st->time_base);
+        pFrame_mic->pts = pFrame_sys->pts;
         int64_t timeinc = (int64_t)pCodecCtx_amix->frame_size * AV_TIME_BASE / (int64_t)(audio_amix_st->codec->sample_rate);
         m_nLastAudioMixPresentationTime += timeinc;
-        ret = avlibInterface::m_av_buffersrc_add_frame_flags(buffersrc_ctx1, pFrame_temp, 0);
+        ret = avlibInterface::m_av_buffersrc_add_frame_flags(buffersrc_ctx1, pFrame_mic, 0);
         if (ret < 0) {
             printf("Mixer: failed to call av_buffersrc_add_frame (speaker)\n");
             return;
         }
-        ret = avlibInterface::m_av_buffersrc_add_frame_flags(buffersrc_ctx2, pFrame_scard, 0);
+        ret = avlibInterface::m_av_buffersrc_add_frame_flags(buffersrc_ctx2, pFrame_sys, 0);
         if (ret < 0) {
             printf("Mixer: failed to call av_buffersrc_add_frame (microphone)\n");
             return;
         }
         while (isWriteFrame()) {
+            //两种音频混合后输出的帧
             AVFrame *pFrame_out = avlibInterface::m_av_frame_alloc();
             //AVERROR(EAGAIN) 返回这个表示还没转换完成既 不存在帧，则返回AVERROR（EAGAIN）
+            //从缓冲源中获取一个带有过滤数据的帧并将其放入pFrame_out中
             ret = avlibInterface::m_av_buffersink_get_frame(buffersink_ctx, pFrame_out);
             if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
                 //printf("%d %d \n", AVERROR(EAGAIN), AVERROR_EOF);
@@ -1107,12 +1117,6 @@ void CAVOutputStream::writeMixAudio()
                 printf("Mixer: failed to call av_buffersink_get_frame_flags ret : %d \n", ret);
                 break;
             }
-            //            printf("-------audio pFrame_out->channel_layout=%d\n",pFrame_out->channel_layout);
-            //            printf("-------audio pFrame_out->nb_samples=%d\n",pFrame_out->nb_samples);
-            //            printf("-------audio pFrame_out.format=%d\n",pFrame_out->format);
-            //            printf("-------audio pFrame_out.sample_rate=%d\n",pFrame_out->sample_rate);
-            //            printf("-------audio pFrame_out.pts=%d\n",pFrame_out->pts);
-            //            printf("-------audio pFrame_out.size=%d\n",pFrame_out->pkt_size);
             fflush(stdout);
             if (pFrame_out->data[0] != nullptr) {
                 AVPacket packet_out;
@@ -1127,14 +1131,17 @@ void CAVOutputStream::writeMixAudio()
                 }
                 if (got_packet_ptr) {
                     packet_out.stream_index = audio_amix_st->index;
-                    packet_out.pts = m_mixCount * pCodecCtx_amix->frame_size;
+                    if (m_videoType == videoType::MKV) {
+                        //显示时间戳，应大于或等于解码时间戳
+                        packet_out.pts = m_mixCount * pCodecCtx_amix->frame_size * 1000 / pFrame_out->sample_rate;
+                    } else {
+                        //显示时间戳，应大于或等于解码时间戳
+                        packet_out.pts = m_mixCount * pCodecCtx_amix->frame_size;
+                    }
+                    //qDebug() << m_mixCount << " mix audio packet_out.pts: " << packet_out.pts;
+
                     packet_out.dts = packet_out.pts;
                     packet_out.duration = pCodecCtx_amix->frame_size;
-                    packet_out.pts = avlibInterface::m_av_rescale_q_rnd(packet_out.pts,
-                                                                        pCodecCtx_amix->time_base,
-                                                                        pCodecCtx_amix->time_base,
-                                                                        (AVRounding)(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
-                    packet_out.dts = packet_out.pts;
                     packet_out.duration = avlibInterface::m_av_rescale_q_rnd(packet_out.duration,
                                                                              pCodecCtx_amix->time_base,
                                                                              audio_amix_st->time_base,
@@ -1159,8 +1166,8 @@ void CAVOutputStream::writeMixAudio()
             return;
         }
     }
-    avlibInterface::m_av_frame_free(&pFrame_scard);
-    avlibInterface::m_av_frame_free(&pFrame_temp);
+    avlibInterface::m_av_frame_free(&pFrame_sys);
+    avlibInterface::m_av_frame_free(&pFrame_mic);
 }
 
 int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, int64_t lTimeStamp)
@@ -1190,9 +1197,16 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
         assert(m_pSysCodecContext->sample_rate == stream->codec->sample_rate);
         avlibInterface::m_swr_init(m_pSysAudioSwrContext);
         if (nullptr == m_sysAudioFifo) {
-            m_sysAudioFifo = audioFifoAlloc(m_pSysCodecContext->sample_fmt, m_pSysCodecContext->channels, 20 * inputFrame->nb_samples);
+            if (m_videoType == videoType::MKV) {
+                m_sysAudioFifo = audioFifoAlloc(m_pSysCodecContext->sample_fmt, m_pSysCodecContext->channels,  inputFrame->nb_samples);
+                m_initFifoSpace = audioFifoSpace(m_sysAudioFifo);
+            } else {
+                m_sysAudioFifo = audioFifoAlloc(m_pSysCodecContext->sample_fmt, m_pSysCodecContext->channels,  40 * inputFrame->nb_samples);
+            }
+            //qDebug() << "init m_sysAudioFifo audioFifoSize: " << audioFifoSize(m_sysAudioFifo);
+            //qDebug() << "init m_sysAudioFifo audioFifoSpace: " << audioFifoSpace(m_sysAudioFifo);        }
+            is_fifo_scardinit ++;
         }
-        is_fifo_scardinit ++;
     }
     /**
     * Allocate memory for the samples of all channels in one consecutive
@@ -1216,17 +1230,29 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
     AVRational rational = {1, AV_TIME_BASE };
     int audioSize = audioFifoSize(m_sysAudioFifo);
     int64_t timeshift = (int64_t)audioSize * AV_TIME_BASE / (int64_t)(stream->codec->sample_rate);
-    m_sysAudioFrame += inputFrame->nb_samples;
     /** Add the converted input samples to the FIFO buffer for later processing. 将转换后的输入样本添加到FIFO缓冲器中以供后续处理。*/
     /**
     * Make the FIFO as large as it needs to be to hold both,
     * the old and the new samples.使FIFO尽可能大，因为它需要容纳旧的和新的样品。
     */
-    if ((ret = audioFifoRealloc(m_sysAudioFifo, audioFifoSize(m_sysAudioFifo) + inputFrame->nb_samples)) < 0) {
-        printf("Could not reallocate FIFO\n");
-        return ret;
+    if (m_videoType == videoType::MKV) {
+        //对比某个时间段缓冲区大小是否比初始化缓冲区大小大，大：需要减小当前的缓冲区，小不做操作
+        if (m_initFifoSpace < audioFifoSpace(m_sysAudioFifo)) {
+            if ((ret = audioFifoRealloc(m_sysAudioFifo, m_initFifoSpace + inputFrame->nb_samples)) < 0) {
+                printf("Could not reallocate FIFO\n");
+                return ret;
+            }
+        }
+        //对比某个时间段缓冲区是否有可用空间，没有直接丢帧处理
+        if (audioFifoSpace(m_sysAudioFifo) < inputFrame->nb_samples) {
+            return 0;
+        }
+    } else {
+        if ((ret = audioFifoRealloc(m_sysAudioFifo, audioFifoSize(m_sysAudioFifo) + inputFrame->nb_samples)) < 0) {
+            printf("Could not reallocate FIFO\n");
+            return ret;
+        }
     }
-
     /** Store the new samples in the FIFO buffer. 将新样品存储在FIFO缓冲区中。*/
     if (audioWrite(m_sysAudioFifo, reinterpret_cast<void **>(m_convertedSysSamples), inputFrame->nb_samples) < inputFrame->nb_samples) {
         printf("Could not write data to FIFO\n");
@@ -1304,8 +1330,13 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
         /** Write one audio frame from the temporary packet to the output file. */
         if (enc_got_frame_a) {
             outputPacket.stream_index = m_sysAudioStream->index;
-            outputPacket.pts = avlibInterface::m_av_rescale_q(m_nLastAudioCardPresentationTime, rational, m_sysAudioStream->time_base);
-            if ((ret = writeFrame(m_videoFormatContext, &outputPacket)) < 0) {
+            outputPacket.pts = m_singleCount * m_pSysCodecContext->frame_size * 1000 / m_pSysCodecContext->sample_rate;
+            if (m_videoType == videoType::MP4) {
+                outputPacket.dts = outputPacket.pts;
+            }
+            outputPacket.duration = m_pSysCodecContext->frame_size;
+            //qDebug() << m_singleCount << " sys audio outputPacket.pts: " << outputPacket.pts;
+            m_singleCount++;                if ((ret = writeFrame(m_videoFormatContext, &outputPacket)) < 0) {
                 //char tmpErrString[128] = {0};
                 //printf("Could not write audio frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
                 avlibInterface::m_av_packet_unref(&outputPacket);
