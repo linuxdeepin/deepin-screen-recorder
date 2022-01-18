@@ -26,8 +26,7 @@
 #include <dde-dock/pluginsiteminterface.h>
 #include "timewidget.h"
 #include "dbusservice.h"
-
-class RecordTimePlugin : public QObject,PluginsItemInterface
+class RecordTimePlugin : public QObject, PluginsItemInterface
 {
     Q_OBJECT
     Q_INTERFACES(PluginsItemInterface)
@@ -77,6 +76,15 @@ public slots:
      */
     void onStop();
 
+    /**
+     * @brief onRecording:正在录屏
+     */
+    void onRecording();
+
+    /**
+     * @brief onPause:暂停
+     */
+    void onPause();
 private:
     /**
      * @brief refresh:绕过dde-dock 2020.12版本对插件的控件大小的限制
@@ -88,6 +96,14 @@ private:
     QPointer<TimeWidget> m_timeWidget;
     QPointer<DBusService> m_dBusService;
     bool m_bshow;
+
+    int m_nextCount = 0;
+    int m_count = 0;
+    /**
+     * @brief 此定时器的作用为每隔1秒检查下截图录屏是否还在运行中。
+     * 避免截图录屏崩溃后导致本插件还在执行
+     */
+    QTimer *m_checkTimer;
 };
 
 #endif // RECORDTIME_H

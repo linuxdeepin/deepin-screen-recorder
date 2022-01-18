@@ -60,20 +60,20 @@ TimeWidget::TimeWidget(DWidget *parent):
 
 TimeWidget::~TimeWidget()
 {
-    if(nullptr != m_lightIcon){
+    if (nullptr != m_lightIcon) {
         delete m_lightIcon;
         m_lightIcon = nullptr;
     }
-    if(nullptr != m_shadeIcon){
+    if (nullptr != m_shadeIcon) {
         delete m_shadeIcon;
         m_shadeIcon = nullptr;
     }
-    if(nullptr != m_timer){
+    if (nullptr != m_timer) {
         m_timer->deleteLater();
         m_timer = nullptr;
     }
-    if(nullptr != m_dockInter){
-        m_dockInter->deleteLater(); 
+    if (nullptr != m_dockInter) {
+        m_dockInter->deleteLater();
         m_dockInter = nullptr;
     }
 }
@@ -88,27 +88,26 @@ QSize TimeWidget::sizeHint() const
     QFontMetrics fm(RECORDER_TIME_FONT);
     int width = -1;
     int height = -1;
-    if(0 == m_position || 2 == m_position){
+    if (0 == m_position || 2 == m_position) {
         width = fm.boundingRect(RECORDER_TIME_LEVEL_SIZE).size().width();
         height = RECORDER_TIME_LEVEL_ICON_SIZE;
-    }
-    else if(1 == m_position || 3 == m_position){
+    } else if (1 == m_position || 3 == m_position) {
         width = fm.boundingRect(RECORDER_TIME_VERTICAL_SIZE).size().width();
         height = RECORDER_TIME_VERTICAL_ICON_SIZE;
     }
-    return QSize(width,height);
+    return QSize(width, height);
 }
 
 void TimeWidget::onTimeout()
 {
-    if(m_bRefresh){
-        if(m_currentIcon == m_lightIcon)
+    if (m_bRefresh) {
+        if (m_currentIcon == m_lightIcon)
             m_currentIcon = m_shadeIcon;
         else
             m_currentIcon = m_lightIcon;
     }
     m_bRefresh = !m_bRefresh;
-    QTime showTime(0,0,0);
+    QTime showTime(0, 0, 0);
     int time = m_baseTime.secsTo(QTime::currentTime());
     showTime = showTime.addSecs(time);
     m_showTimeStr = showTime.toString("hh:mm:ss");
@@ -169,7 +168,7 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         painter.setPen(Qt::black);
     }
     painter.setOpacity(1);
-    painter.setRenderHints(QPainter::Antialiasing|QPainter::SmoothPixmapTransform,true);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
     const auto ratio = devicePixelRatioF();
     if (position::top == m_position || position::bottom == m_position) {
         m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_LEVEL_ICON_SIZE, RECORDER_TIME_LEVEL_ICON_SIZE) * ratio);
@@ -177,11 +176,11 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         const QRectF &rf = QRectF(rect());
         const QRectF &prf = QRectF(m_pixmap.rect());
         QPointF pf = rf.center() - prf.center() / m_pixmap.devicePixelRatioF();
-        painter.drawPixmap(RECORDER_ICON_TOP_BOTTOM_X,static_cast<int>(pf.y()), m_pixmap);
+        painter.drawPixmap(RECORDER_ICON_TOP_BOTTOM_X, static_cast<int>(pf.y()), m_pixmap);
         QFont font = RECORDER_TIME_FONT;
         painter.setFont(font);
         QFontMetrics fm(font);
-        painter.drawText(m_pixmap.width() * static_cast<int>(devicePixelRatioF()) + RECORDER_TEXT_TOP_BOTTOM_X + RECORDER_ICON_TOP_BOTTOM_X, rect().y(), rect().width(), rect().height(), Qt::AlignLeft|Qt::AlignVCenter, m_showTimeStr);
+        painter.drawText(m_pixmap.width() * static_cast<int>(devicePixelRatioF()) + RECORDER_TEXT_TOP_BOTTOM_X + RECORDER_ICON_TOP_BOTTOM_X, rect().y(), rect().width(), rect().height(), Qt::AlignLeft | Qt::AlignVCenter, m_showTimeStr);
     } else if (position::right == m_position || position::left == m_position) {
         m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_VERTICAL_ICON_SIZE, RECORDER_TIME_VERTICAL_ICON_SIZE) * ratio);
         m_pixmap.setDevicePixelRatio(ratio);
@@ -193,9 +192,9 @@ void TimeWidget::paintEvent(QPaintEvent *e)
 }
 
 void TimeWidget::mousePressEvent(QMouseEvent *e)
-{ 
+{
     m_pressed = true;
-    if(e->pos().x() > 0 && e->pos().x() < m_pixmap.width()){
+    if (e->pos().x() > 0 && e->pos().x() < m_pixmap.width()) {
         QDBusInterface notification(QString::fromUtf8("com.deepin.ScreenRecorder"),
                                     QString::fromUtf8("/com/deepin/ScreenRecorder"),
                                     QString::fromUtf8("com.deepin.ScreenRecorder"),
@@ -232,12 +231,12 @@ void TimeWidget::leaveEvent(QEvent *e)
 void TimeWidget::start()
 {
     m_showTimeStr = QString("00:00:00");
-    connect(m_timer,SIGNAL(timeout()),this,SLOT(onTimeout()));
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
     m_baseTime = QTime::currentTime();
     m_timer->start(400);
 }
 
 void TimeWidget::stop()
 {
-    disconnect(m_timer,SIGNAL(timeout()),this,SLOT(onTimeout()));
+    disconnect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
 }

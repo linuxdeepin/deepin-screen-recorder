@@ -32,9 +32,9 @@ RecordTimePlugin::RecordTimePlugin(QObject *parent)
 
 RecordTimePlugin::~RecordTimePlugin()
 {
-    if(nullptr != m_timer)
+    if (nullptr != m_timer)
         m_timer->deleteLater();
-    if(nullptr != m_timeWidget)
+    if (nullptr != m_timeWidget)
         m_timeWidget->deleteLater();
 }
 
@@ -52,11 +52,13 @@ void RecordTimePlugin::init(PluginProxyInterface *proxyInter)
 {
     m_proxyInter = proxyInter;
     m_dBusService = new DBusService(this);
-    connect(m_dBusService,SIGNAL(start()),this,SLOT(onStart()));
-    connect(m_dBusService,SIGNAL(stop()),this,SLOT(onStop()));
+    connect(m_dBusService, SIGNAL(start()), this, SLOT(onStart()));
+    connect(m_dBusService, SIGNAL(stop()), this, SLOT(onStop()));
+    connect(m_dBusService, SIGNAL(recording()), this, SLOT(onRecording()));
+    connect(m_dBusService, SIGNAL(pause()), this, SLOT(onPause()));
     QDBusConnection sessionBus = QDBusConnection::sessionBus();
     if (sessionBus.registerService("com.deepin.ScreenRecorder.time")
-            && sessionBus.registerObject("/com/deepin/ScreenRecorder/time",this, QDBusConnection::ExportAdaptors)){
+            && sessionBus.registerObject("/com/deepin/ScreenRecorder/time", this, QDBusConnection::ExportAdaptors)) {
         qDebug() << "dbus service registration failed!";
     }
 
@@ -74,7 +76,7 @@ QWidget *RecordTimePlugin::itemWidget(const QString &itemKey)
 
 void RecordTimePlugin::onStart()
 {
-    if (m_timeWidget->enabled()){
+    if (m_timeWidget->enabled()) {
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
         m_bshow = true;
@@ -84,9 +86,47 @@ void RecordTimePlugin::onStart()
 
 void RecordTimePlugin::onStop()
 {
-    if (m_timeWidget->enabled()){
+    if (m_timeWidget->enabled()) {
+        m_checkTimer->stop();
         m_proxyInter->itemRemoved(this, pluginName());
         m_bshow = false;
+        if (nullptr != m_checkTimer) {
+            m_checkTimer->deleteLater();
+            m_checkTimer = nullptr;
+        }
+        m_count = 0;
+        m_nextCount = 0;
+        //m_timeWidget->stop();
+    }
+}
+
+//当托盘插件开始闪烁计数时才会执行
+void RecordTimePlugin::onRecording()
+{
+    if (m_timeWidget->enabled() && m_bshow) {
+        m_nextCount++;
+        if (1 == m_nextCount) {
+            m_checkTimer = new QTimer();
+            connect(m_checkTimer, &QTimer::timeout, this, [ = ] {
+                //说明录屏还在进行中
+                if (m_count < m_nextCount)
+                {
+                    m_count = m_nextCount;
+                }
+                //说明录屏已经停止了
+                else
+                {
+                    onStop();
+                }
+            });
+            m_checkTimer->start(2000);
+        }
+    }
+}
+
+void RecordTimePlugin::onPause()
+{
+    if (m_timeWidget->enabled() && m_bshow) {
         m_timeWidget->stop();
     }
 }
@@ -94,10 +134,10 @@ void RecordTimePlugin::onStop()
 void RecordTimePlugin::refresh()
 {
     QSize size = m_timeWidget->sizeHint();
-    if(size.width() > m_timeWidget->width()
+    if (size.width() > m_timeWidget->width()
             && 1 != position()
             && 3 != position()
-            && m_bshow){
+            && m_bshow) {
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
     }

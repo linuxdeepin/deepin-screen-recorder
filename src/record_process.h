@@ -29,6 +29,7 @@
 #include <QProcess>
 #include <QObject>
 #include <QRect>
+#include <QTimer>
 
 //不需要开启线程，用信号槽代替 process->waitForFinished(-1); 避免线程等待浪费系统资源
 /**
@@ -177,6 +178,10 @@ private:
      * @brief mp4转码成gif的进程
      */
     QProcess *m_pTranscodeProcess = nullptr;
+    /**
+     * @brief 定时发送录屏正在运行的信号
+     */
+    QTimer *m_timer ;
 };
 
 #endif //RECORDPROCESS_H

@@ -69,6 +69,7 @@ RecordProcess::RecordProcess(QObject *parent) : QObject(parent)
     if (settings->value("recordConfig", "lossless_recording").toString() == "") {
         settings->setValue("recordConfig", "lossless_recording", false);
     }
+    m_timer = nullptr;
 }
 
 RecordProcess::~RecordProcess()
@@ -84,6 +85,11 @@ RecordProcess::~RecordProcess()
         m_recorderProcess = nullptr;
     }
     */
+    if (m_timer) {
+        m_timer->stop();
+        delete m_timer;
+        m_timer = nullptr;
+    }
 }
 //设置录屏的基础信息
 void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filename)
@@ -144,6 +150,14 @@ void RecordProcess::onTranscodeFinish()
         avlibInterface::unloadFunctions();
 #endif
     }
+    if (Utils::isSysHighVersion1040() == true) {
+        qDebug() << __LINE__ << ": Stop the screen recording timer!";
+        //系统托盘图标结束并退出
+        QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
+                                                                                                 "/com/deepin/ScreenRecorder/time",
+                                                                                                 "com.deepin.ScreenRecorder.time",
+                                                                                                 "onStop"));
+    }
     QApplication::quit();
 }
 
@@ -196,6 +210,14 @@ void RecordProcess::onRecordFinish()
 #ifdef KF5_WAYLAND_FLAGE_ON
         avlibInterface::unloadFunctions();
 #endif
+    }
+    if (Utils::isSysHighVersion1040() == true) {
+        qDebug() << __LINE__ << ": Stop the screen recording timer!";
+        //系统托盘图标结束并退出
+        QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
+                                                                                                 "/com/deepin/ScreenRecorder/time",
+                                                                                                 "com.deepin.ScreenRecorder.time",
+                                                                                                 "onStop"));
     }
     QApplication::quit();
 }
@@ -518,6 +540,15 @@ void RecordProcess::startRecord()
                                                                                              "/com/deepin/ScreenRecorder/time",
                                                                                              "com.deepin.ScreenRecorder.time",
                                                                                              "onStart"));
+    //定时发送录屏还在执行,每秒发送一次录屏正在进行中
+    m_timer = new QTimer();
+    connect(m_timer, &QTimer::timeout, this, [ = ] {
+        QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
+                                                                                                 "/com/deepin/ScreenRecorder/time",
+                                                                                                 "com.deepin.ScreenRecorder.time",
+                                                                                                 "onRecording"));
+    });
+    m_timer->start(1000);
     if (QDBusMessage::ReplyMessage == message.type()) {
         if (!message.arguments().takeFirst().toBool())
             qDebug() << "dde dock screen-recorder-plugin did not receive start message!";
@@ -526,14 +557,19 @@ void RecordProcess::startRecord()
 
 void RecordProcess::stopRecord()
 {
-    //系统托盘图标停止闪烁
-    QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
-                                                                                             "/com/deepin/ScreenRecorder/time",
-                                                                                             "com.deepin.ScreenRecorder.time",
-                                                                                             "onStop"));
-    if (QDBusMessage::ReplyMessage == message.type()) {
-        if (!message.arguments().takeFirst().toBool())
-            qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
+    m_timer->stop();
+    if (Utils::isSysHighVersion1040() == true) {
+        qDebug() << "Pause the screen recording timer!";
+
+        //系统托盘图标停止闪烁，时间暂停，但还没有结束
+        QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
+                                                                                                 "/com/deepin/ScreenRecorder/time",
+                                                                                                 "com.deepin.ScreenRecorder.time",
+                                                                                                 "onPause"));
+        if (QDBusMessage::ReplyMessage == message.type()) {
+            if (!message.arguments().takeFirst().toBool())
+                qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
+        }
     }
     //停止wayland录屏
     if (Utils::isWaylandMode) {

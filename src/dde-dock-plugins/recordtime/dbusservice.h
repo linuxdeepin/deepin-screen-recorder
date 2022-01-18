@@ -29,7 +29,7 @@
 class DBusService : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface","com.deepin.ScreenRecorder.time")
+    Q_CLASSINFO("D-Bus Interface", "com.deepin.ScreenRecorder.time")
 
 public:
     explicit DBusService(QObject *parent = nullptr);
@@ -47,9 +47,22 @@ public slots:
      */
     Q_SCRIPTABLE bool onStop();
 
+    /**
+     * @brief onRecording:主程序通知插件正在进行录屏
+     * @return
+     */
+    Q_SCRIPTABLE bool onRecording();
+
+    /**
+     * @brief onRecording:主程序通知插件暂停录屏
+     * @return
+     */
+    Q_SCRIPTABLE bool onPause();
 signals:
     void start();
     void stop();
+    void recording();
+    void pause();
 };
 
 #endif // DBUSSERVICE_H

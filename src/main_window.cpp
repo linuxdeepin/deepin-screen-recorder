@@ -4413,10 +4413,12 @@ void MainWindow::startRecord()
         QSystemTrayIcon *trayIcon = new QSystemTrayIcon(this);
         trayIcon->setIcon(QIcon((Utils::getQrcPath("trayicon1.svg"))));
         trayIcon->setToolTip(tr("Screen Capture"));
+        QTimer *flashTrayIconTimer = new QTimer(this);
         connect(trayIcon, &QSystemTrayIcon::activated, this, [ = ] {
+            //先停止系统托盘图标的闪烁
+            flashTrayIconTimer->stop();
             stopRecord();
         });
-        QTimer *flashTrayIconTimer = new QTimer(this);
         connect(flashTrayIconTimer, &QTimer::timeout, this, [ = ] {
             static int flashTrayIconCounter = 0;
             QString iconIndex = QString("trayicon%1.svg").arg(flashTrayIconCounter % 2 + 1);
@@ -4822,6 +4824,7 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)
 void MainWindow::stopRecord()
 {
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
+        qDebug() << "MainWindow::stopRecord()!";
         if (Utils::isWaylandMode) {
             if (m_isStopWaylandRecord) {
                 return;

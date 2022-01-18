@@ -7,7 +7,8 @@
 //void stub_start(){}
 
 namespace  {
-class TestDBusService : public testing::Test {
+class TestDBusService : public testing::Test
+{
 
 public:
     Stub stub;
@@ -18,7 +19,7 @@ public:
     }
     void TearDown() override
     {
-        if(m_dBusService){
+        if (m_dBusService) {
             delete  m_dBusService;
             m_dBusService = nullptr;
         }
@@ -29,12 +30,22 @@ public:
 };
 }
 
-TEST_F(TestDBusService,onStart)
+TEST_F(TestDBusService, onStart)
 {
     m_dBusService->onStart();
 }
 
-TEST_F(TestDBusService,onStop)
+TEST_F(TestDBusService, onStop)
 {
     m_dBusService->onStop();
+}
+
+TEST_F(TestDBusService, onRecording)
+{
+    m_dBusService->onRecording();
+}
+
+TEST_F(TestDBusService, onPause)
+{
+    m_dBusService->onPause();
 }

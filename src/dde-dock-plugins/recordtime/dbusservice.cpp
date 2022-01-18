@@ -37,3 +37,15 @@ bool DBusService::onStop()
     emit stop();
     return true;
 }
+
+bool DBusService::onRecording()
+{
+    emit recording();
+    return true;
+}
+
+bool DBusService::onPause()
+{
+    emit pause();
+    return true;
+}
