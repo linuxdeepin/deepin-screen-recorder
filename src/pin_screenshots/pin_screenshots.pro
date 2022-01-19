@@ -22,7 +22,8 @@ SOURCES += \
     service/ocrinterface.cpp \
     ui/menucontroller.cpp \
     ui/toolbarwidget.cpp \
-    ui/toolbar.cpp
+    ui/toolbar.cpp \
+    ui/subtoolwidget.cpp
 
 HEADERS += \
     service/dbuspinscreenshotsadaptor.h \
@@ -32,7 +33,8 @@ HEADERS += \
     service/ocrinterface.h \
     ui/menucontroller.h \
     ui/toolbarwidget.h \
-    ui/toolbar.h
+    ui/toolbar.h \
+    ui/subtoolwidget.h
 
 QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations
 ##安装路径

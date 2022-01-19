@@ -70,7 +70,7 @@ void MainWindow::initMainWindow()
     m_ocrInterface = nullptr;
     //去菜单栏，置顶窗口
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-//    setAttribute(Qt::WA_TranslucentBackground, true); //设置透明
+
     //设置可以进行鼠标操作
     setMouseTracking(true);
     isLeftPressDown = false;
@@ -374,8 +374,8 @@ void MainWindow::paintEvent(QPaintEvent *e)
     if (!m_image.isNull()) {
         QPainter pp(this);
         QRect Temp(0, 0, this->width(), this->height());
-
-        pp.drawImage(Temp, m_image);
+        QImage tempImage = m_image.scaled(this->width(), this->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        pp.drawImage(Temp, tempImage);
     }
 
 

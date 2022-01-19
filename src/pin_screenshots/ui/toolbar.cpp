@@ -19,9 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "toolbar.h"
+#include <QBitmap>
 
-#define AC_MAINWINDOW_MAINSHOTBTN "main_shot_but" // 截图按钮
-const QSize MIN_ToolBar_SIZE = QSize(344, 60);
+const int FIXHEIGHT = 70;
 
 ToolBar::ToolBar(DWidget *parent): DLabel(parent)
 {
@@ -42,11 +42,10 @@ void ToolBar::initToolBar()
     //初始化保存按钮
     m_saveButton = new DPushButton(this);
     m_saveButton->setFocusPolicy(Qt::NoFocus);
-    m_saveButton->setIconSize(QSize(30, 30));
-    m_saveButton->setFixedSize(80, 50);
+    m_saveButton->setIconSize(QSize(38, 38));
+    m_saveButton->setFixedSize(76, 58);
     m_saveButton->setIcon(QIcon(":/newUI/checked/screenshot-checked.svg"));
     connect(m_saveButton, SIGNAL(clicked()), this, SIGNAL(sendSaveButtonClicked())); // 保存按钮被点击
-    m_saveButton->setProperty("isShotState", true);
 
     DPalette pa;
     pa = m_saveButton->palette();
@@ -54,15 +53,18 @@ void ToolBar::initToolBar()
     pa.setColor(DPalette::Dark, QColor(0, 129, 255, 204));
     pa.setColor(DPalette::Light, QColor(0, 129, 255, 204));
     m_saveButton->setPalette(pa);
+    m_saveButton->setProperty("isShotState", true);
+
+    setFixedHeight(FIXHEIGHT);
 
     QHBoxLayout *hLayout = new QHBoxLayout();
     hLayout->setSizeConstraint(QLayout::SetFixedSize);
     hLayout->setContentsMargins(0, 0, 0, 0);
+    hLayout->addStretch();
     hLayout->addWidget(m_toolbarWidget, 0, Qt::AlignCenter);
-    hLayout->addSpacing(30);
+    hLayout->addStretch();
     hLayout->addWidget(m_saveButton, 0, Qt::AlignCenter);
     setLayout(hLayout);
-    setMaximumSize(MIN_ToolBar_SIZE);
 }
 
 bool ToolBar::eventFilter(QObject *watched, QEvent *event)
@@ -85,9 +87,10 @@ bool ToolBar::eventFilter(QObject *watched, QEvent *event)
 //显示在点pos
 void ToolBar::showAt(QPoint pos)
 {
-    if (!isVisible())
+    if (!isVisible()) {
         this->show();
-    //qDebug() << "pos" << pos;
+    }
+    qDebug() << "pos" << pos;
     move(pos);
 }
 

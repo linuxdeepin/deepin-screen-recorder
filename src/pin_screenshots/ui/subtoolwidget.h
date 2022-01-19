@@ -18,38 +18,54 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef TOOLBARWIDGET_H
-#define TOOLBARWIDGET_H
-#include "subtoolwidget.h"
+#ifndef SUBTOOLWIDGET_H
+#define SUBTOOLWIDGET_H
+#include <QObject>
 #include <QHBoxLayout>
 
 #include <DGuiApplicationHelper>
-#include <DWidget>
 #include <DLabel>
-#include <DBlurEffectWidget>
+#include <DStackedWidget>
 #include <DImageButton>
-#include <DFloatingWidget>
-
-
+#include <DIconButton>
+#include <DPushButton>
+#include <DMenu>
 
 DWIDGET_USE_NAMESPACE
-class ToolBarWidget : public DFloatingWidget
+class SubToolWidget : public DStackedWidget
 {
     Q_OBJECT
 public:
-    explicit ToolBarWidget(DWidget *parent = nullptr);
-    QPair<QString, QString> getSaveInfo(); //获取保存信息
+    explicit SubToolWidget(DWidget *parent = nullptr);
+    QPair<QString, QString> getSaveInfo();
 public slots:
     void onOptionButtonClicked(); // 选项按钮被点击
-    void onThemeTypeChange(DGuiApplicationHelper::ColorType themeType); //主题变化槽
 signals:
     void signalOcrButtonClicked(); // ocr被点击
     void signalCloseButtonClicked();// 关闭按钮被点击
 protected:
-    void initToolBarWidget(); //初始化工具栏
+    void initShotLable();
 private:
-    SubToolWidget *m_subTool;
-    DImageButton *m_closeButton;
+    /**
+     * @brief 贴图功能工具栏
+     */
+    DLabel *m_shotSubTool;
+    /**
+     * @brief OCR按钮
+     */
+    DPushButton *m_ocrButton;
+    /**
+     * @brief 选项按钮
+     */
+    DPushButton *m_pinOptionButton;
+    /**
+     * @brief 菜单选项
+     */
+    DMenu *m_optionMenu;
+    /**
+     * @brief 当前保存信息
+     */
+    QPair<QString, QString> m_SaveInfo;
 };
 
-#endif // TOOLBARWIDGET_H
+#endif // SUBTOOLWIDGET_H
