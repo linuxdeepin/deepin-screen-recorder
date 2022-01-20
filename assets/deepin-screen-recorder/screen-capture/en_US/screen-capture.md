@@ -4,11 +4,11 @@
 
 Screen Capture is a tool which integrates the screen capture and recorder functions into one. You are free to select windows or areas automatically or manually during screen capturing or recording. 
 
-![partarea](fig/d_partarea.jpg)
+![partarea](fig/partarea.jpg)
 
 ## Guide
 
-You can run, close, and create shortcuts for Screen Capture in the following operations.
+You can run, close, and create a desktop shortcut for Screen Capture in the following operations.
 
 ### Run Screen Capture
 
@@ -30,7 +30,7 @@ You can run, close, and create shortcuts for Screen Capture in the following ope
 
 In the Screenshot mode on the Screen Capture interface, press **Ctrl + Shift + ?** to view shortcuts. Proficiency in shortcuts will greatly improve your efficiency.
 
-![1|hotkey](fig/d_hotkey.png)
+![1|hotkey](fig/hotkey.png)
 
 ## Select and Adjust Screen Capture Area
 
@@ -44,7 +44,7 @@ There are three kinds of common screen capture areas, namely the full screen, pr
 
 Full screen selection is used to identify the entire screen of the current monitor.
 
-![1|fullscreen](fig/d_fullscreen.png)
+![1|fullscreen](fig/fullscreen.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 You can select the full screen in the following ways:
@@ -62,7 +62,7 @@ You can also take a full screen screenshot directly in the following ways:
 
 Program window selection is used to identify the current application window automatically.
 
-![1|window](fig/d_window.jpg)
+![1|window](fig/window.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Press **Ctrl + Alt + A**  or  **Ctrl + Alt + R** on the keyboard to enter the screen capture mode.
@@ -73,7 +73,7 @@ Program window selection is used to identify the current application window auto
 
 Customized area selection is used to select the screen capture area freely by dragging the mouse.
 
-![1|partarea](fig/d_partarea.jpg)
+![1|partarea](fig/partarea.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Press **Ctrl + Alt + A** or **Ctrl + Alt + R** on the keyboard to enter the screen capture mode.
@@ -101,7 +101,7 @@ Place the pointer over the screen capture area and it will be changed to ![finge
 
 Under the screenshot mode, click the corresponding icons on the toolbar and you can perform operations such as drawing and editing graphics, adding text annotations, etc. in the screenshot  area.
 
-![0|caputure_bar](fig/d_capture_bar.png)
+![0|caputure_bar](fig/capture_bar.png)
 
 <table class="block1">
     <caption>Icon Description</caption>
@@ -139,7 +139,7 @@ You can draw some simple graphics in the screenshots. Click the icon on the tool
 
 #### Rectangle
 
-![1|rectool](fig/d_rectool.jpg)
+![1|rectool](fig/rectool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Click ![rectangle](../common/rectangle_normal.svg) on the toolbar which appears beside the screenshot area.
@@ -148,14 +148,14 @@ You can draw some simple graphics in the screenshots. Click the icon on the tool
 4. Hold down the left mouse button, and drag the mouse to complete drawing.
 5. Click ![vague](../common/vague_normal.svg) or ![mosaic](../common/Mosaic_normal.svg) in the toolbar extension panel to mosaic the private information in the screenshot (if any).
 
-![2|blurtool](fig/d_blurtool.jpg)
+![2|blurtool](fig/blurtool.jpg)
 
-![2|mosaictool](fig/d_mosaictool.jpg)
+![2|mosaictool](fig/mosaictool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #### Ellipse
 
-![1|ellipse](fig/d_ellipse.jpg)
+![1|ellipse](fig/ellipse.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Click ![oval](../common/oval_normal.svg) on the toolbar which appears beside the screenshot area.
@@ -166,7 +166,7 @@ You can draw some simple graphics in the screenshots. Click the icon on the tool
 
 #### Straight Line and Arrow
 
-![1|line](fig/d_line.jpg)
+![1|line](fig/line.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Click ![line_normal](../common/line_normal.svg) on the toolbar which appears beside the screenshot area.
@@ -177,10 +177,10 @@ You can draw some simple graphics in the screenshots. Click the icon on the tool
 
 #### Pencil
 
-![1|pencil](fig/d_pencil.jpg)
+![1|pencil](fig/pencil.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-1. Click ![combined_shape](../common/Combined_Shape.svg) on the toolbar which appears beside the screenshot area.
+1. Click ![combineshape](../common/Combined_Shape.svg) on the toolbar which appears beside the screenshot area.
 2. In the toolbar extension panel, select the weight and color of pencil. 
 3. Place the pointer on the screenshot area, and the pointer will be changed to ![brush_red](../common/brush_red.svg).
 4. Hold down the left mouse button, and drag the mouse to complete drawing.
@@ -189,7 +189,7 @@ You can draw some simple graphics in the screenshots. Click the icon on the tool
 
 You can modify and move the drawn graphics in the screenshot.
 
-![1|changetool](fig/d_changetool.jpg)
+![1|changetool](fig/changetool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #### Move Graphics
@@ -208,11 +208,11 @@ You can modify and move the drawn graphics in the screenshot.
    - Place the pointer over ![rotate](../common/icon_rotate.svg) in the edit box, and the pointer will be changed to ![rotate](../common/rotate_mouse.svg). Rotate the graphics by dragging the pointer.
 3. Left-click outside the edit box to exit the editing mode.
 
-### Add Text Annotation
+### Add Text Annotations
 
 Add text annotations to the screenshot in order to help others better understand.
 
-![0|text](fig/d_text.jpg)
+![0|text](fig/text.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 1. Click ![text_normal](../common/text_normal.svg) on the toolbar which appears beside the screenshot area.
@@ -273,7 +273,7 @@ You are able to recognize the texts in the screenshot area with the **Extract Te
 
 ![ocr](fig/ocr.png)
 
-### Delay Screenshot
+### Delay Screenshots
 
 You are able to capture the screenshot in a specific state or at specific time with the delay screenshot feature.
 

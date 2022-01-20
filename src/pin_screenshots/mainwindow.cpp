@@ -488,7 +488,7 @@ void MainWindow::initShortcut()
         // 帮助手册跳转到子标题，传入子标题标签(标签文档内唯一，固定为英文，与翻译无关)
         QList<QVariant> arg;
         arg << (QString("deepin-screen-recorder"))                  // 应用名称
-            << QString("scrollshot");                         // 帮助文案中的标题名称
+            << QString("Pin Screenshots");                         // 帮助文案中的标题名称
         interFace.callWithArgumentList(QDBus::AutoDetect, "OpenTitle", arg);
     });
 

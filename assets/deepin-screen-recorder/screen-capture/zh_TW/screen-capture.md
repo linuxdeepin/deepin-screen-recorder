@@ -4,7 +4,7 @@
 
 熒幕錄影是一款集截圖和錄屏於一體的小巧工具，不僅支援多種方式來選擇截圖錄屏區域，還支援對圖片進行編輯，對螢幕活動進行設定等功能。
 
-![part_area](fig/d_part_area.jpg)
+![part_area](fig/part_area.jpg)
 
 
 ## 使用入門
@@ -14,7 +14,7 @@
 ### 執行熒幕錄影
 
 1. 單擊任務欄上的啟動器圖示 ![deepin_launcher](../common/deepin_launcher.svg)，進入啟動器介面。
-2. 上下滾動滑鼠滾輪瀏覽或透過搜尋，找到熒幕錄影 ![deepin_screenshot](../common/deepin_screenshot.svg)單擊執行。
+2. 上下滾動滑鼠滾輪瀏覽或透過搜尋，找到熒幕錄影 ![deepin_screenshot](../common/deepin_screenshot.svg) 單擊執行。
 3. 右鍵單擊 ![deepin_screenshot](../common/deepin_screenshot.svg)，您可以：
 
    - 單擊 **建立桌面捷徑**，在桌面建立捷徑。
@@ -31,7 +31,7 @@
 
 使用快捷鍵 **Ctrl + Shift + ?** 打開快捷鍵預覽介面。熟練地使用快捷鍵，將大大提升您的操作效率。
 
-![1|快捷鍵](fig/d_hotkey.png)
+![1|快捷鍵](fig/hotkey.png)
 ## 選擇和調整區域
 
 ### 選擇截圖錄屏區域
@@ -45,7 +45,7 @@
 
 熒幕錄影會自動識別目前顯示器的整個螢幕。
 
-![1|全螢幕截圖](fig/d_fullscreen.png)
+![1|全螢幕截圖](fig/fullscreen.png)
 
 
 您可以透過操作以下步驟來選擇全螢幕：
@@ -63,7 +63,7 @@
 
 熒幕錄影會自動識別目前的應用視窗。
 
-![1|視窗截圖](fig/d_window.jpg)
+![1|視窗截圖](fig/window.jpg)
 
 
 
@@ -75,7 +75,7 @@
 
 您還可以自由選擇截圖錄屏的範圍。
 
-![1|區域截圖](fig/d_part_area.jpg)
+![1|區域截圖](fig/part_area.jpg)
 
 
 1.  使用快捷鍵 **Ctrl + Alt + A** 進入截圖模式，或 **Ctrl + Alt + R** 進入錄屏模式。
@@ -103,7 +103,7 @@
 
 在截圖模式下，單擊工具列上的按鈕，您可以在截圖區域繪製圖形、編輯圖形、添加文字批註等。
 
-![0|截圖工具列](fig/d_capturebar.png)
+![0|截圖工具列](fig/capturebar.png)
 
 <table class="block1">
     <caption>工具列說明</caption>
@@ -142,7 +142,7 @@
 
 #### 矩形工具
 
-![1|矩形工具](fig/d_rectool.jpg)
+![1|矩形工具](fig/rectool.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -152,14 +152,14 @@
 4. 按住滑鼠左鍵不放，拖動滑鼠以完成圖形區域的繪製。
 5. 如果截圖中包含了個人隱私訊息，請單擊工具列展開面板中的 ![模糊](../common/vague_normal.svg) 或 ![馬賽克](../common/Mosaic_normal.svg)塗抹。
 
-![2|blurtool](fig/d_blurtool.jpg)
+![2|blurtool](fig/blurtool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-![2|mosaictool](fig/d_mosaictool.jpg)
+![2|mosaictool](fig/mosaictool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 #### 橢圓工具
-![1|橢圓工具](fig/d_ellipsetool.jpg)
+![1|橢圓工具](fig/ellipsetool.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -172,7 +172,7 @@
 
 #### 直線和箭頭工具
 
-![1|線條工具](fig/d_line.jpg)
+![1|線條工具](fig/line.jpg)
 
 1. 在截圖工具列中，單擊 ![直線](../common/line_normal.svg)。
 2. 在工具列展開的面板中，選擇線條的粗細和顏色，有四種顏色可供選擇。
@@ -183,7 +183,7 @@
 
 #### 畫筆工具
 
-![1|pencil](fig/d_pencil.jpg)
+![1|pencil](fig/pencil.jpg)
 
 1. 在截圖工具列中，單擊 ![畫筆](../common/Combined_Shape.svg)。
 2. 在工具列展開的面板中，選擇畫筆的粗細和顏色，有四種顏色可供選擇。
@@ -194,7 +194,7 @@
 ### 修改圖形
 如果您在截圖中繪製了其他的圖形，您可以對繪製的圖形進行修改和移動。
 
-![1|修改圖形](fig/d_changetool.jpg)
+![1|修改圖形](fig/changetool.jpg)
 
 #### 移動圖形
 1. 將滑鼠游標置於圖形的邊線上，此時滑鼠游標變為 ![手指](fig/fingers.png)。
@@ -216,7 +216,7 @@
 
 對截取的圖片進行文字補充和說明，幫助他人更清楚地了解截取的圖片。
 
-![0|文字框](fig/d_text.jpg)
+![0|文字框](fig/text.jpg)
 
 1. 在截圖工具列中，單擊 ![文字](../common/text_normal.svg)。
 2. 在工具列展開面板中，選擇字號和顏色，有四種顏色可供選擇。
