@@ -52,7 +52,7 @@ TEST_F(ShowButtonsTest, getKeyCodeFromEvent)
 
 TEST_F(ShowButtonsTest, getKeyCodeFromEventWayland)
 {
-    EXPECT_TRUE(showButtons.getKeyCodeFromEventWayland(Qt::Key_Enter).compare(QString("ENTER")) == 0);
+    EXPECT_TRUE(showButtons.getKeyCodeFromEventWayland(KEY_ENTER).compare(QString("ENTER")) == 0);
 
 }
 

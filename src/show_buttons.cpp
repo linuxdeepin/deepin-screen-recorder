@@ -232,7 +232,7 @@ QString ShowButtons::getKeyCodeFromEventWayland(const int keyCode)
 {
     QString t_keyCode = "";
     for (unsigned long var = 0; var < sizeof(ShowButtons::keyDescriptions) / sizeof(ShowButtons::keyDescriptions[0]); ++var) {
-        if(ShowButtons::keyDescriptions[var].Qtkey == keyCode) {
+        if(ShowButtons::keyDescriptions[var].x11Key == keyCode) {
             t_keyCode = ShowButtons::keyDescriptions[var].text;
             break;
         }

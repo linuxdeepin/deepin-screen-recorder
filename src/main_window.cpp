@@ -542,7 +542,7 @@ void MainWindow::initShortcut()
             m_toolBar->shapeClickedFromMain("rect");
         }
         if (status::record == m_functionType && Utils::isWaylandMode)
-            m_showButtons->showContentButtons(Qt::Key_R);
+            m_showButtons->showContentButtons(KEY_R);
     });
     //截图模式 圆形
     connect(ovalSC, &QShortcut::activated, this, [ = ] {
@@ -552,7 +552,7 @@ void MainWindow::initShortcut()
             m_toolBar->shapeClickedFromMain("circ");
         }
         if (status::record == m_functionType && Utils::isWaylandMode)
-            m_showButtons->showContentButtons(Qt::Key_O);
+            m_showButtons->showContentButtons(KEY_O);
     });
     //截图模式 箭头
     connect(arrowSC, &QShortcut::activated, this, [ = ] {
@@ -562,7 +562,7 @@ void MainWindow::initShortcut()
             m_toolBar->shapeClickedFromMain("line");
         }
         if (status::record == m_functionType && Utils::isWaylandMode)
-            m_showButtons->showContentButtons(Qt::Key_L);
+            m_showButtons->showContentButtons(KEY_L);
     });
     //截图模式 画笔
     connect(lineSC, &QShortcut::activated, this, [ = ] {
@@ -572,7 +572,7 @@ void MainWindow::initShortcut()
             m_toolBar->shapeClickedFromMain("pen");
         }
         if (status::record == m_functionType && Utils::isWaylandMode)
-            m_showButtons->showContentButtons(Qt::Key_P);
+            m_showButtons->showContentButtons(KEY_P);
     });
     //截图模式 文本
     connect(textSC, &QShortcut::activated, this, [ = ] {
@@ -582,7 +582,7 @@ void MainWindow::initShortcut()
             m_toolBar->shapeClickedFromMain("text");
         }
         if (status::record == m_functionType && Utils::isWaylandMode)
-            m_showButtons->showContentButtons(Qt::Key_T);
+            m_showButtons->showContentButtons(KEY_T);
     });
     //截图模式 撤销
     connect(undoSC, &QShortcut::activated, this, [ = ] {
@@ -608,7 +608,7 @@ void MainWindow::initShortcut()
             m_toolBar->shapeClickedFromMain("keyBoard");
         }
         if (status::record == m_functionType && Utils::isWaylandMode)
-            m_showButtons->showContentButtons(Qt::Key_K);
+            m_showButtons->showContentButtons(KEY_K);
     });
     //录屏模式（未做穿透） 摄像头
     connect(cameraSC, &QShortcut::activated, this, [ = ] {
@@ -618,7 +618,7 @@ void MainWindow::initShortcut()
             m_toolBar->shapeClickedFromMain("camera");
         }
         if (status::record == m_functionType && Utils::isWaylandMode)
-            m_showButtons->showContentButtons(Qt::Key_W);
+            m_showButtons->showContentButtons(KEY_W);
     });
     //截图模式/滚动模式 保存截图 大键盘
     connect(returnSC, &QShortcut::activated, this, [ = ] {
@@ -636,7 +636,7 @@ void MainWindow::initShortcut()
             saveScreenShot();
         }
         if (status::record == m_functionType && Utils::isWaylandMode)
-            m_showButtons->showContentButtons(Qt::Key_Enter);
+            m_showButtons->showContentButtons(KEY_ENTER);
     });
     //截图模式/滚动模式 保存截图
     connect(saveShotSC, &QShortcut::activated, this, [ = ] {
@@ -655,7 +655,7 @@ void MainWindow::initShortcut()
             exitApp();
         }
         if (status::record == m_functionType && Utils::isWaylandMode)
-            m_showButtons->showContentButtons(Qt::Key_Escape);
+            m_showButtons->showContentButtons(KEY_ESCAPE);
     });
     //截图模式/录屏模式（未做穿透）/滚动模式）帮助面板
     shortCutSC->setAutoRepeat(false);
@@ -3676,14 +3676,14 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     if (Utils::isWaylandMode) {
-        onKeyboardPressWayland(event->key());
+        onKeyboardPressWayland(static_cast<int>(event->nativeScanCode()));
     }
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
     if (Utils::isWaylandMode) {
-        onKeyboardReleaseWayland(event->key());
+        onKeyboardReleaseWayland(static_cast<int>(event->nativeScanCode()));
     }
 }
 void MainWindow::tableRecordSet()
@@ -3773,19 +3773,19 @@ void MainWindow::onKeyboardPressWayland(const int key)
 {
     if (status::record == m_functionType) {
         if (RECORD_BUTTON_NORMAL == recordButtonStatus) {
-            if (Qt::Key_Escape == key) {
+            if (KEY_ESCAPE == key) {
                 responseEsc();
-            } else if (Qt::Key_S == key) {
+            } else if (KEY_S == key) {
                 m_toolBar->shapeClickedFromMain("audio");
-            } else if (Qt::Key_M == key) {//录屏快捷键 鼠标 m
+            } else if (KEY_M == key) {//录屏快捷键 鼠标 m
                 m_toolBar->shapeClickedFromMain("mouse");
-            } else if (Qt::Key_F3 == key) { //录屏快捷键 选项 f3
+            } else if (KEY_F3 == key) { //录屏快捷键 选项 f3
                 m_toolBar->shapeClickedFromMain("record_option");
             }
         }
         m_showButtons->showContentButtons(key);
     } else {
-        if ((Qt::Key_F3 == key)) {
+        if ((KEY_F3 == key)) {
             m_toolBar->shapeClickedFromMain("option");
         }
     }
