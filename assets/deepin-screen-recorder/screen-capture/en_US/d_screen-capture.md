@@ -243,7 +243,7 @@ You can modify and move the text annotations after they're entered.
    - Modify the text in the text box.
 3. Click outside the text box to exit editing mode.
 
-### Pin Screenshots
+### Pin Screenshots|pinscreenshots
 
 With this feature, you are able to pin multiple screenshots on the system desktop for later comparison, integration, etc. conveniently.
 
