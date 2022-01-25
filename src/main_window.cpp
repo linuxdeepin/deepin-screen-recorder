@@ -849,6 +849,7 @@ void MainWindow::initScreenRecorder()
 //滚动截图的初始化函数
 void MainWindow::initScrollShot()
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     if (m_initScroll)
         return;
     //定时器，滚动截图模式下每0.5秒减少一次鼠标点击次数
@@ -982,12 +983,13 @@ void MainWindow::initScrollShot()
     });
     m_tipShowtimer->setInterval(2000);
     m_initScroll = true;
-
+#endif
 }
 
 //根据工具栏获取滚动截图提示框的坐标
 QPoint MainWindow::getScrollShotTipPosition()
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     //const QPoint topLeft = geometry().topLeft();
     QRect recordRect {
         static_cast<int>(recordX * m_pixelRatio),
@@ -1053,11 +1055,15 @@ QPoint MainWindow::getScrollShotTipPosition()
     }
 
     return QPoint(static_cast<int>(leftTopX / m_pixelRatio), static_cast<int>(leftTopY / m_pixelRatio));
+#else
+    return QPoint(0, 0);
+#endif
 }
 
 //初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小、第一张预览图
 void MainWindow::showScrollShot()
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     bool ok;
     QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
     //滚动截图截取指定区域的第一张图片
@@ -1083,11 +1089,13 @@ void MainWindow::showScrollShot()
             //updateShotButtonPos();
         }
     });
+#endif
 }
 
 //处理手动滚动截图逻辑
 void MainWindow::handleManualScrollShot(int mouseTime, int direction)
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
     if (m_tipShowtimer != nullptr) {
         m_tipShowtimer->stop();
@@ -1102,12 +1110,13 @@ void MainWindow::handleManualScrollShot(int mouseTime, int direction)
         scrollShotGrabPixmap(m_previewPostion, direction, mouseTime);
         num = 0;
     }
-
+#endif
 }
 
 //显示可调整的捕捉区域大小及位置
 void MainWindow::showAdjustArea()
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     //获取可调整的捕捉区域大小及位置
     QRect adjustArea = m_scrollShot->getInvalidArea();
     //根据返回的可调整区域计算出在屏幕中的可调整区域位置
@@ -1124,8 +1133,9 @@ void MainWindow::showAdjustArea()
                        static_cast<int>(adjustArea.height() / m_pixelRatio)
                    );
     update();
+#endif
 }
-
+#ifdef OCR_SCROLL_FLAGE_ON
 //滚动截图模式，抓取当前捕捉区域的图片，传递给滚动截图处理类进行图片的拼接
 void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostion, int direction, int mouseTime)
 {
@@ -1196,7 +1206,7 @@ void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostio
         m_scrollShotSizeTips->show();
     }
 }
-
+#endif
 //判断工具栏是否在在捕捉区域内部
 bool MainWindow::isToolBarInShotArea()
 {
@@ -1218,8 +1228,10 @@ bool MainWindow::isToolBarInShotArea()
 //显示预览窗口和图片
 void MainWindow::showPreviewWidgetImage(QImage img)
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     m_scrollShotSizeTips ->updateTips(QPoint(recordX, recordY), QSize(int(img.width() / m_pixelRatio + 2), int(img.height() / m_pixelRatio + 2)));
     m_previewWidget->updateImage(img);
+#endif
 }
 
 void MainWindow::initLaunchMode(const QString &launchMode)
@@ -1509,6 +1521,7 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
 // waland手动滚动处理逻辑
 void MainWindow::wheelEvent(QWheelEvent *event)
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     qDebug() << __FUNCTION__ << __LINE__ << "m_functionType " << m_functionType;
     if (Utils::isWaylandMode == false || (m_initScroll && status::scrollshot != m_functionType))
         return;
@@ -1535,6 +1548,7 @@ void MainWindow::wheelEvent(QWheelEvent *event)
         m_scrollShot->sigalWheelScrolling(len);
         qDebug() << __FUNCTION__ << __LINE__;
     }
+#endif
 }
 
 void MainWindow::pinScreenshotsLockScreen(bool isLocked)
@@ -2393,10 +2407,12 @@ void MainWindow::saveScreenShot()
     //m_shotButton->setVisible(false);
     //m_recordButton->setVisible(false);
     m_sizeTips->setVisible(false);
+#ifdef OCR_SCROLL_FLAGE_ON
     if (m_scrollShotTip) {
         m_scrollShotTip->setVisible(false);
         m_scrollShotTip->hide();
     }
+#endif
     if (m_scrollShotSizeTips) {
         m_scrollShotSizeTips->hide();
     }
@@ -2405,6 +2421,7 @@ void MainWindow::saveScreenShot()
     m_initScroll = false; // 保存时关闭滚动截图
     //滚动截图模式下保存图片
     if (status::scrollshot == m_functionType && m_scrollShotStatus != 0) {
+#ifdef OCR_SCROLL_FLAGE_ON
         bool ok;
         QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
         QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio); // 抓取当前捕捉区域图片
@@ -2415,6 +2432,7 @@ void MainWindow::saveScreenShot()
             //普通截图保存图片
             shotCurrentImg();
         }
+#endif
     } else {
         //普通截图保存图片
         shotCurrentImg();
@@ -3828,7 +3846,7 @@ void MainWindow::onKeyboardRelease(unsigned char keyCode)
 //滚动截图鼠标按钮事件
 void MainWindow::scrollShotMouseClickEvent(int x, int y)
 {
-
+#ifdef OCR_SCROLL_FLAGE_ON
     //将当前捕捉区域画为一个矩形
     QRect scrollShotRect {
         static_cast<int>(recordX * m_pixelRatio),
@@ -3931,11 +3949,13 @@ void MainWindow::scrollShotMouseClickEvent(int x, int y)
         //saveScreenShot();
 
     }
+#endif
 }
 
 //滚动截图鼠标移动事件处理
 void MainWindow::scrollShotMouseMoveEvent(int x, int y)
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     //滚动截图出现异常时屏蔽鼠标移动事件
     //if (m_isErrorWithScrollShot) return;
 
@@ -4016,7 +4036,7 @@ void MainWindow::scrollShotMouseMoveEvent(int x, int y)
     //        continueScrollShot();
     //    }
     //}
-
+#endif
 }
 
 /**
@@ -4027,6 +4047,7 @@ void MainWindow::scrollShotMouseMoveEvent(int x, int y)
  */
 void MainWindow::scrollShotMouseScrollEvent(int mouseTime, int direction, int x, int y)
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     QRect recordRect {
         static_cast<int>(recordX * m_pixelRatio),
         static_cast<int>(recordY * m_pixelRatio),
@@ -4085,6 +4106,7 @@ void MainWindow::scrollShotMouseScrollEvent(int mouseTime, int direction, int x,
             handleManualScrollShot(mouseTime, direction);
         }
     }
+#endif
 }
 
 /**
@@ -4146,6 +4168,7 @@ void MainWindow::onOpenScrollShotHelp()
 //自动调整捕捉区域的大小及位置
 void MainWindow::onAdjustCaptureArea()
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
     //隐藏提示
     m_scrollShotTip->hide();
@@ -4215,10 +4238,11 @@ void MainWindow::onAdjustCaptureArea()
     //滚动截图：自动调整捕捉区域错误已经解决，此方法就是用来解决这个错误
     m_isErrorWithScrollShot = false;
     update();
+#endif
 }
 
 
-
+#ifdef OCR_SCROLL_FLAGE_ON
 //滚动截图时，获取拼接时的状态
 void MainWindow::onScrollShotMerageImgState(PixMergeThread::MergeErrorValue state)
 {
@@ -4281,7 +4305,7 @@ void MainWindow::onScrollShotMerageImgState(PixMergeThread::MergeErrorValue stat
     //滚动截图异常提示的定时器开始计时
     m_tipShowtimer->start();
 }
-
+#endif
 void MainWindow::initPadShot()
 {
     recordX = 0;
@@ -4448,6 +4472,7 @@ void MainWindow::startRecord()
  */
 void MainWindow::startAutoScrollShot()
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     //自动滚动模式已启动
     m_isAutoScrollShotStart = true;
     //自动调整捕捉区域不显示
@@ -4469,20 +4494,23 @@ void MainWindow::startAutoScrollShot()
         //滚动截图从未启动过，滚动截图添加第一张图片并启动
         m_scrollShot->addPixmap(m_firstScrollShotImg);
     }
-
+#endif
 }
 
 //暂停滚动截图
 void MainWindow::pauseAutoScrollShot()
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     qDebug() << "function:" << __func__ << " ,line: " << __LINE__ << " 暂停自动滚动截图!";
     //自动滚动截图改变状态，暂停自动滚动
     m_scrollShot->changeState(true);
+#endif
 }
 
 //继续自动滚动截图
 void MainWindow::continueAutoScrollShot()
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     qDebug() << "function:" << __func__ << " ,line: " << __LINE__ << " 继续自动滚动截图!";
     if (m_tipShowtimer != nullptr) {
         m_tipShowtimer->stop();
@@ -4494,11 +4522,13 @@ void MainWindow::continueAutoScrollShot()
     m_scrollShot->setScrollModel(false);
     //滚动截图改变状态，继续滚动
     m_scrollShot->changeState(false);
+#endif
 }
 
 //开始手动滚动截图，只进入一次
 void MainWindow::startManualScrollShot()
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     //自动调整捕捉区域不显示
     m_isAdjustArea = false;
     qDebug() << "开始手动滚动截图！";
@@ -4506,6 +4536,7 @@ void MainWindow::startManualScrollShot()
     m_scrollShot->setScrollModel(true);
     //滚动截图添加第一张图片并启动
     m_scrollShot->addPixmap(m_firstScrollShotImg);
+#endif
 }
 
 void MainWindow::shotCurrentImg()

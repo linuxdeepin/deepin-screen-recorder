@@ -218,6 +218,7 @@ public:
             delete m_pRecorderRegion;
             m_pRecorderRegion = nullptr;
         }
+#ifdef OCR_SCROLL_FLAGE_ON
         if (m_scrollShotTip) {
             delete m_scrollShotTip;
             m_scrollShotTip = nullptr;
@@ -230,6 +231,7 @@ public:
             delete m_previewWidget;
             m_previewWidget = nullptr;
         }
+#endif
 //        if (m_ocrInterface) {
 //            delete m_ocrInterface;
 //            m_ocrInterface = nullptr;
@@ -525,7 +527,9 @@ public slots:
      * 2：滚动到底部
      * 3：拼接截图到截图最大限度
      */
+#ifdef OCR_SCROLL_FLAGE_ON
     void onScrollShotMerageImgState(PixMergeThread::MergeErrorValue state);
+#endif
 
     /**
      * @brief initPadShot:初始化平板截图
@@ -633,8 +637,9 @@ protected:
      * @param previewPostion 预览框相对于捕捉区域的位置
      * @param direction 滚动的方向
      */
+#ifdef OCR_SCROLL_FLAGE_ON
     void scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostion, int direction, int mosueTime = 0);
-
+#endif
     /**
      * @brief 判断工具栏是否在在捕捉区域内部
      * @return false: 不在  ； true: 在
@@ -734,7 +739,9 @@ private:
     /**
      * @brief 滚动截图的提示
      */
+#ifdef OCR_SCROLL_FLAGE_ON
     ScrollShotTip *m_scrollShotTip = nullptr;
+#endif
 
     /**
      * @brief 初始化滚动截图时的第一张图
@@ -744,8 +751,9 @@ private:
     /**
      * @brief 获取预览框相对于捕捉区域的位置
      */
+#ifdef OCR_SCROLL_FLAGE_ON
     PreviewWidget::PostionStatus m_previewPostion = PreviewWidget::PostionStatus::RIGHT;
-
+#endif
     /**
      * @brief 滚动截图状态
      * 0：停止(第一次进入)；

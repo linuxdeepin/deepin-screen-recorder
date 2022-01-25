@@ -44,16 +44,19 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
 
     exitGroup.groupItems << ShortcutItem(tr("Exit"), "Esc")
                          << ShortcutItem(tr("Save"), "Ctrl+S");
-
-    toolsGroup.groupItems << ShortcutItem(tr("Scrollshot"), "Alt+I")
-                          << ShortcutItem(tr("Pin screenshots"), "Alt+P")
+#ifdef OCR_SCROLL_FLAGE_ON
+    toolsGroup.groupItems << ShortcutItem(tr("Scrollshot"), "Alt+I");
+#endif
+    toolsGroup.groupItems << ShortcutItem(tr("Pin screenshots"), "Alt+P")
                           << ShortcutItem(tr("Rectangle"), "R")
                           << ShortcutItem(tr("Ellipse"), "O")
                           << ShortcutItem(tr("Line"), "L")
                           << ShortcutItem(tr("Pencil"), "P")
-                          << ShortcutItem(tr("Text"), "T")
-                          << ShortcutItem(tr("Extract text"), "Alt+O")
-                          << ShortcutItem(tr("Delete"), "Delete")
+                          << ShortcutItem(tr("Text"), "T");
+#ifdef OCR_SCROLL_FLAGE_ON
+    toolsGroup.groupItems << ShortcutItem(tr("Extract text"), "Alt+O");
+#endif
+    toolsGroup.groupItems << ShortcutItem(tr("Delete"), "Delete")
                           << ShortcutItem(tr("Undo"), "Ctrl+Z")
                           << ShortcutItem(tr("Options"), "F3");
 

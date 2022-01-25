@@ -645,8 +645,9 @@ void SubToolWidget::initShotLabel()
     m_shotBtnGroup->addButton(m_scrollShotButton);
     m_scrollShotButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     installTipHint(m_scrollShotButton, tr("Scrollshot"));
+#ifdef  OCR_SCROLL_FLAGE_ON
     btnList.append(m_scrollShotButton);
-
+#endif
     //添加ocr图文识别按钮
     m_ocrButton = new ToolButton();
     m_ocrButton->setIconSize(QSize(35, 35));
@@ -655,7 +656,9 @@ void SubToolWidget::initShotLabel()
     m_shotBtnGroup->addButton(m_ocrButton);
     m_ocrButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     installTipHint(m_ocrButton, tr("Extract Text"));
+#ifdef  OCR_SCROLL_FLAGE_ON
     btnList.append(m_ocrButton);
+#endif
 
     ToolButton *seperator2 = new ToolButton(this);
     if (Utils::themeType != 1) {

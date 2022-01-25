@@ -101,14 +101,17 @@ void Screenshot::noNotifyScreenshot()
 
 void Screenshot::OcrScreenshot()
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     m_window.initAttributes();
     m_window.initResource();
     m_window.initLaunchMode("screenOcr");
     m_window.showFullScreen();
+#endif
 }
 
 void Screenshot::ScrollScreenshot()
 {
+#ifdef OCR_SCROLL_FLAGE_ON
     //2d模式不支持滚动截图
     qDebug() << "whether to trun on window effects? " << (DWindowManagerHelper::instance()->hasComposite()? "yes" : "no");
     if(DWindowManagerHelper::instance()->hasComposite()){
@@ -121,6 +124,9 @@ void Screenshot::ScrollScreenshot()
         qDebug() << "scroll shot exit !";
         qApp->quit();
     }
+#else
+    qApp->quit();
+#endif
 }
 
 void Screenshot::savePathScreenshot(const QString &path)
