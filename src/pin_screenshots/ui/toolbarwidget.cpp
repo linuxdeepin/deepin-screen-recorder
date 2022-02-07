@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "toolbarwidget.h"
+#include "accessibility/acTextDefine.h"
 
 #include <QActionGroup>
 #include <DFontSizeManager>
@@ -81,6 +82,8 @@ void ToolBarWidget::initToolBarWidget()
     connect(m_subTool, SIGNAL(signalOcrButtonClicked()), this, SIGNAL(signalOcrButtonClicked()));
 
     m_closeButton = new DImageButton(this);
+    m_closeButton->setObjectName(AC_TOOLBARWIDGET_CLOSE_PIN_BUT);
+    m_closeButton->setAccessibleName(AC_TOOLBARWIDGET_CLOSE_PIN_BUT);
     // 初始化关闭按钮样式
     if (DGuiApplicationHelper::instance()->themeType() == THEMETYPE) {
         m_closeButton->setHoverPic(":/newUI/hover/close-hover.svg");

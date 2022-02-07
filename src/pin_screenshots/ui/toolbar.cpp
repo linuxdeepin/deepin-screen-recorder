@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "toolbar.h"
+#include "accessibility/acTextDefine.h"
 #include <QBitmap>
 
 const int FIXHEIGHT = 70;
@@ -41,6 +42,8 @@ void ToolBar::initToolBar()
 
     //初始化保存按钮
     m_saveButton = new DPushButton(this);
+    m_saveButton->setObjectName(AC_MAINWINDOW_PIN_SAVE_BUT);
+    m_saveButton->setAccessibleName(AC_MAINWINDOW_PIN_SAVE_BUT);
     m_saveButton->setFocusPolicy(Qt::NoFocus);
     m_saveButton->setIconSize(QSize(38, 38));
     m_saveButton->setFixedSize(76, 58);

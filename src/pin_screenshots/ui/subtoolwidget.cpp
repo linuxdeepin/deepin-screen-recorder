@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "subtoolwidget.h"
+#include "accessibility/acTextDefine.h"
 
 #include <QActionGroup>
 #include <DFontSizeManager>
@@ -40,6 +41,8 @@ void SubToolWidget::initShotLable()
     m_shotSubTool = new DLabel(this);
     // ocr按钮
     m_ocrButton = new DPushButton(this);
+    m_ocrButton->setObjectName(AC_SUBTOOLWIDGET_PIN_OCR_BUT);
+    m_ocrButton->setAccessibleName(AC_SUBTOOLWIDGET_PIN_OCR_BUT);
     m_ocrButton->setIconSize(QSize(36, 36));
     m_ocrButton->setMaximumSize(42, 40);
     m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
@@ -49,6 +52,8 @@ void SubToolWidget::initShotLable()
 
     // 选项按钮
     m_pinOptionButton = new DPushButton(this);
+    m_pinOptionButton->setObjectName(AC_SUBTOOLWIDGET_PIN_OPTION_BUT);
+    m_pinOptionButton->setAccessibleName(AC_SUBTOOLWIDGET_PIN_OPTION_BUT);
     DFontSizeManager::instance()->bind(m_pinOptionButton, DFontSizeManager::T8);
     m_pinOptionButton->setText(tr("Options"));
     m_pinOptionButton->setMinimumSize(QSize(60, 40));

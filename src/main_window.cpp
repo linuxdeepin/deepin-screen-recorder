@@ -2397,7 +2397,8 @@ void MainWindow::saveScreenShot()
             m_CursorImage = m_pScreenCaptureEvent->getCursorImage();
         }
     }
-    m_shotflag = 1;
+    if (status::scrollshot != m_functionType)
+    	m_shotflag = 1;
     emit saveActionTriggered();
     hideAllWidget();
 

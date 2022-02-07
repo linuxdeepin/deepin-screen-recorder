@@ -52,7 +52,7 @@ translations.files = $$TRANSLATIONS_COMPILED
 #Dbus文件
 dbus_service.path=/usr/share/dbus-1/services
 dbus_service.files=./com.deepin.PinScreenShots.service
-
+include(accessibility/accessible.pri)
 #安装
 INSTALLS += target dbus_service translations
 
