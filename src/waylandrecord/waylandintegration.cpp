@@ -28,7 +28,7 @@
 #include <QLoggingCategory>
 #include <QThread>
 #include <QTimer>
-
+#include <QPainter>
 #include <QImage>
 
 // KWayland
@@ -37,6 +37,7 @@
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/remote_access.h>
+#include <KWayland/Client/outputdevice.h>
 
 // system
 #include <fcntl.h>
@@ -310,6 +311,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::addOutput(quint32 name, quin
                 qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Failed to start streaming: remote access manager interface is not initialized yet";
                 return ;
             }
+            /*
             m_remoteAccessManager = m_registry->createRemoteAccessManager(interface.name, interface.version);
             connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
                 Q_UNUSED(output);
@@ -318,6 +320,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::addOutput(quint32 name, quin
                     processBufferX86(rbuf);
                 });
             });
+            */
             //            m_output = output.waylandOutputName();
             return ;
         }
@@ -333,6 +336,33 @@ void WaylandIntegration::WaylandIntegrationPrivate::removeOutput(quint32 name)
     qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Removing output:";
     qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "    manufacturer: " << output.manufacturer();
     qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "    model: " << output.model();
+}
+
+void WaylandIntegration::WaylandIntegrationPrivate::onDeviceChanged(quint32 name, quint32 version)
+{
+    qDebug() << name;
+    KWayland::Client::OutputDevice* devT = m_registry->createOutputDevice(name, version);
+    if (devT && devT->isValid()) {
+        connect(devT, &KWayland::Client::OutputDevice::changed, this, [=](){
+            qDebug() << devT->uuid() << devT->geometry();
+            // 保存屏幕id和对应位置大小
+            m_screenId2Point.insert(devT->uuid(), devT->geometry());
+            m_screenCount = m_screenId2Point.size();
+
+            // 更新屏幕大小
+            m_screenSize.setWidth(0);
+            m_screenSize.setHeight(0);
+            for (auto p = m_screenId2Point.begin(); p != m_screenId2Point.end(); ++p) {
+                if (p.value().x() + p.value().width() > m_screenSize.width()) {
+                    m_screenSize.setWidth(p.value().x() + p.value().width());
+                }
+                if (p.value().y() + p.value().height() > m_screenSize.height()) {
+                    m_screenSize.setHeight(p.value().y() + p.value().height());
+                }
+            }
+            qDebug() << "屏幕大小:" << m_screenSize;
+        });
+    }
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland::Client::RemoteBuffer *rbuf)
@@ -358,7 +388,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     munmap(mapData, stride * height);
     close(dma_fd);
 }
-void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayland::Client::RemoteBuffer *rbuf)
+void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect)
 {
     QScopedPointer<const KWayland::Client::RemoteBuffer> guard(rbuf);
     auto dma_fd = rbuf->fd();
@@ -367,11 +397,28 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
     quint32 stride = rbuf->stride();
     if (m_bInitRecordAdmin) {
         m_bInitRecordAdmin = false;
-        m_recordAdmin->init(static_cast<int>(width), static_cast<int>(height));
+        m_recordAdmin->init(static_cast<int>(m_screenSize.width()), static_cast<int>(m_screenSize.height()));
         frameStartTime = avlibInterface::m_av_gettime();
     }
-    // unsigned char *imageData = getImageData(dma_fd, width, height, stride, rbuf->format());
-    QImage img = getImage(dma_fd, width, height, stride, rbuf->format());
+    QImage img0 = getImage(dma_fd, width, height, stride, rbuf->format());
+    QImage img(m_screenSize, QImage::Format_RGBA8888);
+    if (m_curScreenDate.size() + 1 < m_screenCount) {
+        //        if (m_curScreenDate.contains(rect)) {
+        //            qDebug() << "screen error!!!!";
+        //            m_curScreenDate.clear();
+        //        }else {
+        m_curScreenDate.append(QPair<QRect, QImage>(rect, img0));
+        //        }
+        return;
+    } else {
+        QPainter painter(&img);
+        for (auto itr = m_curScreenDate.begin(); itr != m_curScreenDate.end(); ++itr) {
+            painter.drawImage(itr->first.topLeft(), itr->second);
+        }
+        painter.drawImage(rect.topLeft(), img0);
+        m_curScreenDate.clear();
+    }
+
     if (img.isNull()) {
         qDebug() << "获取图片失败！";
         return ;
@@ -393,10 +440,10 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
     }
     if (step != 0) {
         if (globalImageCount % step != 0) {
-            appendBuffer(img.bits(), static_cast<int>(width), static_cast<int>(height), static_cast<int>(stride), avlibInterface::m_av_gettime() - frameStartTime);
+            appendBuffer(img.bits(), static_cast<int>(img.width()), static_cast<int>(img.height()), static_cast<int>(4 * img.width()), avlibInterface::m_av_gettime() - frameStartTime);
         }
     } else {
-        appendBuffer(img.bits(), static_cast<int>(width), static_cast<int>(height), static_cast<int>(stride), avlibInterface::m_av_gettime() - frameStartTime);
+        appendBuffer(img.bits(), static_cast<int>(img.width()), static_cast<int>(img.height()), static_cast<int>(4 * img.width()), avlibInterface::m_av_gettime() - frameStartTime);
     }
 
     globalImageCount++;
@@ -509,11 +556,26 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 
     connect(m_registry, &KWayland::Client::Registry::outputAnnounced, this, &WaylandIntegrationPrivate::addOutput);
     connect(m_registry, &KWayland::Client::Registry::outputRemoved, this, &WaylandIntegrationPrivate::removeOutput);
-
+    connect(m_registry, &KWayland::Client::Registry::outputDeviceAnnounced, this, &WaylandIntegrationPrivate::onDeviceChanged);
     connect(m_registry, &KWayland::Client::Registry::interfacesAnnounced, this, [this] {
         m_registryInitialized = true;
         //qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Registry initialized";
     });
+
+
+    connect(m_registry, &KWayland::Client::Registry::remoteAccessManagerAnnounced, this,
+            [this](quint32 name, quint32 version) {
+        Q_UNUSED(name);
+        Q_UNUSED(version);
+        m_remoteAccessManager = m_registry->createRemoteAccessManager(m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).name, m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).version);
+        connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
+            QRect screenGeometry = (KWayland::Client::Output::get(reinterpret_cast<wl_output*>(const_cast<void*>(output))))->geometry();
+            connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf, screenGeometry] {
+                processBufferX86(rbuf, screenGeometry);
+            });
+        });
+    }
+    );
 
     m_registry->create(m_connection);
     m_registry->setEventQueue(m_queue);
@@ -565,7 +627,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
     if (!bGetFrame() || nullptr == frame || width <= 0 || height <= 0) {
         return;
     }
-
     int size = height * stride;
     unsigned char *ch = nullptr;
     if (m_bInit) {

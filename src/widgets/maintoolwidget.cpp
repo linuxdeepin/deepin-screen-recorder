@@ -81,9 +81,7 @@ void MainToolWidget::initMainLabel()
     //    QString record_button_style = "DPushButton:press{QIcon(:/image/newUI/press/screencap-press.svg)}";
 
     m_recordBtn = new ToolButton();
-    if (Utils::isTabletEnvironment
-            || Utils::is3rdInterfaceStart
-            || (1 != QApplication::desktop()->screenCount() && Utils::isWaylandMode)) {
+    if (Utils::isTabletEnvironment || Utils::is3rdInterfaceStart) {
         m_recordBtn->hide();
     }
     DFontSizeManager::instance()->bind(m_recordBtn, DFontSizeManager::T8);

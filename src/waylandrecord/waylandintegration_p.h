@@ -122,6 +122,7 @@ public:
 protected Q_SLOTS:
     void addOutput(quint32 name, quint32 version);
     void removeOutput(quint32 name);
+    void onDeviceChanged(quint32 name, quint32 version);
     /**
      * @brief 通过mmap的方式获取视频画面帧
      * @param rbuf
@@ -131,7 +132,7 @@ protected Q_SLOTS:
      * @brief 此接口为了解决x86架构录屏mmap失败及花屏问题
      * @param rbuf
      */
-    void processBufferX86(const KWayland::Client::RemoteBuffer *rbuf);
+    void processBufferX86(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect);
 
     /**
      * @brief 从wayland客户端获取当前屏幕的截图
@@ -240,6 +241,10 @@ private:
      */
     struct EglStruct m_eglstruct;
 
+    QMap<QString, QRect> m_screenId2Point;
+    QVector<QPair<QRect, QImage>> m_curScreenDate;
+    QSize m_screenSize;
+    int m_screenCount;
 };
 
 }
