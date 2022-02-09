@@ -127,15 +127,33 @@ void SubToolWidget::initShotLable()
 
     saveToClipAction->setChecked(true); //默认
     pngAction->setChecked(true); //默认
-    m_SaveInfo.first = saveToClipAction->text(); // 默认保存路径
-    m_SaveInfo.second = pngAction->text(); // 默认保存格式
+    m_SaveInfo.first = CLIPBOARD; // 默认保存路径
+    m_SaveInfo.second = PNG; // 默认保存格式
     connect(t_saveGroup, QOverload<QAction *>::of(&QActionGroup::triggered), [ = ](QAction * t_act) {
-        m_SaveInfo.first = t_act->text();
+        if (t_act == saveToDesktopAction) {
+            qDebug() << "save to desktop";
+            m_SaveInfo.first = DESKTOP;
+        } else if (t_act == saveToPictureAction) {
+            qDebug() << "save to picture";
+            m_SaveInfo.first = PICTURES;
+        } else if (t_act == saveToSpecialPath) {
+            qDebug() << "save to path";
+            m_SaveInfo.first = FOLDER;
+        } else if (t_act == saveToClipAction) {
+            qDebug() << "save to clip";
+            m_SaveInfo.first = CLIPBOARD;
+        }
     });
 
     connect(t_formatGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
     [ = ](QAction * t_act) {
-        m_SaveInfo.second = t_act->text();
+        if (t_act == pngAction) {
+            m_SaveInfo.second = PNG;
+        } else if (t_act == jpgAction) {
+            m_SaveInfo.second = JPG;
+        } else if (t_act == bmpAction) {
+            m_SaveInfo.second = BMP;
+        }
     });
 
     //工具栏布局
@@ -153,7 +171,7 @@ void SubToolWidget::initShotLable()
 }
 
 // 获取保存信息
-QPair<QString, QString> SubToolWidget::getSaveInfo()
+QPair<int, int> SubToolWidget::getSaveInfo()
 {
     return m_SaveInfo;
 }

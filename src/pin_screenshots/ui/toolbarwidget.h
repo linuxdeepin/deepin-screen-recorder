@@ -38,7 +38,7 @@ class ToolBarWidget : public DFloatingWidget
     Q_OBJECT
 public:
     explicit ToolBarWidget(DWidget *parent = nullptr);
-    QPair<QString, QString> getSaveInfo(); //获取保存信息
+    QPair<int, int> getSaveInfo(); //获取保存信息
 public slots:
     void onOptionButtonClicked(); // 选项按钮被点击
     void onThemeTypeChange(DGuiApplicationHelper::ColorType themeType); //主题变化槽

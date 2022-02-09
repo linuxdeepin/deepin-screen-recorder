@@ -32,7 +32,7 @@ public:
     explicit ToolBar(DWidget *parent = nullptr);
     void showAt(QPoint pos); //显示在点pos
     void shortcutOpoints(); //快捷键显示选项菜单
-    QPair<QString, QString> getSaveInfo(); // 获取保存信息
+    QPair<int, int> getSaveInfo(); // 获取保存信息
 signals:
     void sendOcrButtonClicked(); //ocr被点击
     void sendSaveButtonClicked(); // 保存按钮被点击

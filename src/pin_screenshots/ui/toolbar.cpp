@@ -105,7 +105,7 @@ void ToolBar::shortcutOpoints()
 }
 
 // 获取保存信息
-QPair<QString, QString> ToolBar::getSaveInfo()
+QPair<int, int> ToolBar::getSaveInfo()
 {
     return m_toolbarWidget->getSaveInfo();
 }

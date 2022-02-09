@@ -50,7 +50,7 @@ ToolBarWidget::ToolBarWidget(DWidget *parent): DFloatingWidget(parent)
 }
 
 // 获取保存信息
-QPair<QString, QString> ToolBarWidget::getSaveInfo()
+QPair<int, int> ToolBarWidget::getSaveInfo()
 {
     return m_subTool->getSaveInfo();
 }

@@ -157,38 +157,63 @@ void MainWindow::saveImg()
 {
     m_saveInfo = m_toolBar->getSaveInfo(); // 获取保存信息
 
-    if (m_saveInfo.first.contains(tr("Desktop"))) {
+    if (m_saveInfo.first == SubToolWidget::DESKTOP) {
         QString savePath = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
-        QString formatStr = m_saveInfo.second.toLower();
+        QString formatStr;
+        if (m_saveInfo.second == SubToolWidget::PNG) {
+            formatStr = QString("png");
+        } else if (m_saveInfo.second == SubToolWidget::JPG) {
+            formatStr = QString("jpg");
+        } else if (m_saveInfo.second == SubToolWidget::BMP) {
+            formatStr = QString("bmp");
+        }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
-    } else if (m_saveInfo.first.contains(tr("Pictures"))) {
+    } else if (m_saveInfo.first == SubToolWidget::PICTURES) {
         qDebug() << "save to picture";
         QString savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first() + QDir::separator() + "Screenshots";
         if ((!QDir(savePath).exists() && QDir().mkdir(savePath) == false) ||  // 文件不存在，且创建失败
                 (QDir(savePath).exists() && !QFileInfo(savePath).isWritable())) {  // 文件存在，且不能写
             savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first();
         }
-        QString formatStr = m_saveInfo.second.toLower();
+        QString formatStr;
+        if (m_saveInfo.second == SubToolWidget::PNG) {
+            formatStr = QString("png");
+        } else if (m_saveInfo.second == SubToolWidget::JPG) {
+            formatStr = QString("jpg");
+        } else if (m_saveInfo.second == SubToolWidget::BMP) {
+            formatStr = QString("bmp");
+        }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
-    } else if (m_saveInfo.first.contains(tr("Folder"))) {
+    } else if (m_saveInfo.first == SubToolWidget::FOLDER) {
         m_toolBar->hide();
         qDebug() << "save to path";
-        QString imgName = QString("%1.%2").arg(m_imageName).arg(m_saveInfo.second.toLower());
-        QString saveFileName =  QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
-                                                             tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)"));
+        QString imgName, saveFileName;
+        if (m_saveInfo.second == SubToolWidget::PNG) {
+            imgName = QString("%1.png").arg(m_imageName);
+            saveFileName = QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
+                                                        tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
+        } else if (m_saveInfo.second == SubToolWidget::JPG) {
+            imgName = QString("%1.jpg").arg(m_imageName);
+            saveFileName = QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
+                                                        tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)"));
+        } else if (m_saveInfo.second == SubToolWidget::BMP) {
+            imgName = QString("%1.bmp").arg(m_imageName);
+            saveFileName = QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
+                                                        tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)"));
+        }
         if (saveFileName.isEmpty()) {
             onExit();
             return;
         }
         qDebug() << "saveFileName" << saveFileName;
         m_lastImagePath = saveFileName;
-    } else if (m_saveInfo.first.contains(tr("Clipboard"))) {
+    } else if (m_saveInfo.first == SubToolWidget::CLIPBOARD) {
         qDebug() << "save to clip";
         m_lastImagePath = "";
     }
 
     bool isSaveState = true;
-    if (!m_saveInfo.first.contains(tr("Clipboard"))) {
+    if (m_saveInfo.first != SubToolWidget::CLIPBOARD) {
         isSaveState = m_image.save(m_lastImagePath);
     }
 

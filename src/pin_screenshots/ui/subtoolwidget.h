@@ -36,8 +36,17 @@ class SubToolWidget : public DStackedWidget
 {
     Q_OBJECT
 public:
+    enum SAVEINFO {
+        DESKTOP = 1, //桌面
+        PICTURES, //图片
+        FOLDER, //指定位置
+        CLIPBOARD, //剪切板
+        PNG,
+        JPG,
+        BMP
+    };
     explicit SubToolWidget(DWidget *parent = nullptr);
-    QPair<QString, QString> getSaveInfo();
+    QPair<int, int> getSaveInfo();
 public slots:
     void onOptionButtonClicked(); // 选项按钮被点击
 signals:
@@ -65,7 +74,7 @@ private:
     /**
      * @brief 当前保存信息
      */
-    QPair<QString, QString> m_SaveInfo;
+    QPair<int, int> m_SaveInfo;
 };
 
 #endif // SUBTOOLWIDGET_H
