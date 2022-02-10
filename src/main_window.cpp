@@ -173,6 +173,11 @@ void MainWindow::initMainWindow()
             return info1.x < info2.x;
         });
     }
+    if (Utils::isWaylandMode) {
+        // Wayland 下窗口接收全局键盘
+        create();
+        windowHandle()->setProperty("_d_dwayland_global_keyevent", true);
+    }
 }
 
 void MainWindow::initAttributes()
