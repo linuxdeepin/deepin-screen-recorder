@@ -564,6 +564,12 @@ protected:
     bool saveImg(const QPixmap &pix, const QString &fileName, const char *format = nullptr);
     void save2Clipboard(const QPixmap &pix);
 
+    /**
+     * @brief 检查传入的字符串是否包含.png | .jpg | .bmp | .jepg
+     * @param 传入的字符串
+     * @return false: 不包含 true:包含
+     */
+    bool checkSuffix(const QString &str);
     virtual void wheelEvent(QWheelEvent *event) override;  // waland手动滚动处理逻辑
 
     /**

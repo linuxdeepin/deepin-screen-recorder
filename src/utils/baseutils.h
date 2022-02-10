@@ -50,6 +50,11 @@ public:
     static int stringWidth(const QFont &f, const QString &str);
     static QColor       colorIndexOf(int index);
     static int                colorIndex(QColor color);
+    /**
+     * @brief 判断后缀是否是"bmp" "jpg" "jpeg" "png" "pbm" "pgm" "xbm" "xpm"
+     * @param suffix:后缀
+     * @return true:是 false:否
+     */
     static bool          isValidFormat(QString suffix);
     static bool          isCommandExist(QString command);
     static QMap<QString, QCursor> m_shapesCursor;

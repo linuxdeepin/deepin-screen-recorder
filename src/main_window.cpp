@@ -1518,6 +1518,21 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
     }
 }
 
+bool MainWindow::checkSuffix(const QString &str)
+{
+    int index = str.lastIndexOf(".");
+    qDebug() << "index: " << index;
+    if (-1 == index) {
+        return false;
+    }
+    QString rightStr = str.right(str.length() - index);
+    if (rightStr == ".png" || rightStr == ".jpg" || rightStr == ".bmp" || rightStr == ".jpeg") {
+        return true;
+    }
+    qDebug() << "The rightStr : " << rightStr;
+    return false;
+}
+
 // waland手动滚动处理逻辑
 void MainWindow::wheelEvent(QWheelEvent *event)
 {
@@ -2398,7 +2413,7 @@ void MainWindow::saveScreenShot()
         }
     }
     if (status::scrollshot != m_functionType)
-    	m_shotflag = 1;
+        m_shotflag = 1;
     emit saveActionTriggered();
     hideAllWidget();
 
@@ -2638,26 +2653,31 @@ bool MainWindow::saveAction(const QPixmap &pix)
                 break;
             }
         } else if (!BaseUtils::isValidFormat(fileSuffix)) {
-            qWarning() << "The fileName has invalid suffix!" << fileSuffix << m_saveFileName;
 
-            switch (t_pictureFormat) {
-            case 0:
-                m_saveFileName = m_saveFileName + ".png";
-                break;
-            case 1:
-                m_saveFileName = m_saveFileName + ".jpg";
-                break;
-            case 2:
-                m_saveFileName = m_saveFileName + ".bmp";
-                break;
-            default:
-                m_saveFileName = m_saveFileName + ".png";
-                break;
+            //检查后缀是以.png|.jpg|.jpeg|.bmp中的一种进行结尾。false:否 true：是
+            bool flag = checkSuffix(fileSuffix);
+            if (!flag) {
+                qWarning() << "The fileName has invalid suffix! fileSuffix: " << fileSuffix;
+                switch (t_pictureFormat) {
+                case 0:
+                    m_saveFileName = m_saveFileName + ".png";
+                    break;
+                case 1:
+                    m_saveFileName = m_saveFileName + ".jpg";
+                    break;
+                case 2:
+                    m_saveFileName = m_saveFileName + ".bmp";
+                    break;
+                default:
+                    m_saveFileName = m_saveFileName + ".png";
+                    break;
+                }
             }
-
-            //            return false;
+        } else {
+            qDebug() << "The fileSuffix is right!  " << fileSuffix;
         }
 
+        qDebug() << "The fileName is: " << m_saveFileName;
         ConfigSettings::instance()->setValue("common", "default_savepath",
                                              QFileInfo(m_saveFileName).dir().absolutePath());
         break;
