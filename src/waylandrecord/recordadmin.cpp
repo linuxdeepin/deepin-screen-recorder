@@ -105,6 +105,7 @@ void RecordAdmin::init(int screenWidth, int screenHeight)
     m_pOutputStream->m_right = m_pInputStream->m_right = screenWidth - m_x - m_selectWidth;
     m_pOutputStream->m_bottom = m_pInputStream->m_bottom = screenHeight - m_y - m_selectHeight;
     m_pOutputStream->m_videoType = m_videoType;
+    m_pOutputStream->setBoardVendor(m_boardVendorType);
     if (m_pInputStream->m_right < 0) {
         m_selectWidth += m_pInputStream->m_right;
         m_pInputStream->m_selectWidth = m_selectWidth;
@@ -155,6 +156,11 @@ int RecordAdmin::startStream()
     //采集音频
     m_pInputStream->audioCapture();
     return 0;
+}
+
+void RecordAdmin::setBoardVendor(int boardVendorType)
+{
+    m_boardVendorType = boardVendorType;
 }
 
 void *RecordAdmin::stream(void *param)

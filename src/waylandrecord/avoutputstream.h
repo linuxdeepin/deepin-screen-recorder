@@ -89,7 +89,11 @@ public:
     void audioFifoFree(AVAudioFifo *af);
     bool isWriteFrame();
     void setIsWriteFrame(bool isWriteFrame);
-
+    /**
+     * @brief 设置电脑类型
+     * @param boardVendorType
+     */
+    void setBoardVendor(int boardVendorType);
 public:
     //截图区域
     int m_left;
@@ -97,10 +101,14 @@ public:
     int m_right;
     int m_bottom;
     /**
-       * @brief 视频类型
-       */
+     * @brief 视频类型
+     */
     int m_videoType;
 private:
+    /**
+     * @brief 电脑类型
+     */
+    int m_boardVendorType = 0;
     char *m_path;
     QMutex m_audioReadWriteMutex;
     QMutex m_writeFrameMutex;

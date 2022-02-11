@@ -53,7 +53,7 @@ public:
      */
 //    void insertOldFrame(GifFrame frame);
 //    GifFrame getOldFrame(int index);
-
+    void setBoardVendor(int boardVendorType);
 protected:
     void  setRecordAudioType(int audioType);
     void  setMicAudioRecord(bool bRecord);
@@ -68,6 +68,10 @@ public:
     QMutex m_cacheMutex;
 
 private:
+    /**
+     * @brief 电脑厂商类型
+     */
+    int m_boardVendorType = 0;
     WaylandIntegration::WaylandIntegrationPrivate *m_context;
     //参数列表：程序名称，视频类型，视频宽，视频高，视频x坐标，视频y坐标，视频帧率，视频保存路径，音频类型
     QList<QString> argvList;

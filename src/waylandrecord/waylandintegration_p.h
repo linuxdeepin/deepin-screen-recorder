@@ -100,6 +100,12 @@ public:
     //void initEGL();
     void initWayland(QStringList list);
 
+    /**
+     * @brief 从电脑/sys/class/dmi/id/board_vendor文件获取，电脑的厂商
+     * @return 0:非hw电脑 1:hw电脑
+     */
+    int getBoardVendorType();
+
     bool isEGLInitialized() const;
 
     void bindOutput(int outputName, int outputVersion);
@@ -193,6 +199,10 @@ public:
 
     int m_fps = 0;
 private:
+    /**
+     * @brief 是否是hw电脑
+     */
+    int m_boardVendorType = 0;
     //缓存帧容量
     int m_bufferSize;
     int m_width = 0;

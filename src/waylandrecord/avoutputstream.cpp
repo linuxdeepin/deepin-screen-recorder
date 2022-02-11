@@ -697,8 +697,12 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
         pRgbFrame->data[0]     = frame._frame;
     }
     if (nullptr == m_pVideoSwsContext) {
+        AVPixelFormat fmt = AV_PIX_FMT_RGBA;
+        if (m_boardVendorType) {
+            fmt = AV_PIX_FMT_RGB32;
+        }
         m_pVideoSwsContext = avlibInterface::m_sws_getContext(m_width, m_height,
-                                                              AV_PIX_FMT_RGBA,
+                                                              fmt,
                                                               pCodecCtx->width,
                                                               pCodecCtx->height,
                                                               AV_PIX_FMT_YUV420P,
@@ -730,7 +734,8 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
             m_fristVideoFramePts = frame._time;
         }
         packet.pts = static_cast<int64_t>(m_videoStream->time_base.den) * (frame._time - m_fristVideoFramePts) / AV_TIME_BASE;
-        //qDebug() << "video packet.pts: " << packet.pts;        packet.dts =  packet.pts;
+        //qDebug() << "video packet.pts: " << packet.pts;
+        packet.dts =  packet.pts;
         int ret = writeFrame(m_videoFormatContext, &packet);
         if (ret < 0) {
             //char tmpErrString[128] = {0};
@@ -1204,9 +1209,9 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
                 m_sysAudioFifo = audioFifoAlloc(m_pSysCodecContext->sample_fmt, m_pSysCodecContext->channels,  40 * inputFrame->nb_samples);
             }
             //qDebug() << "init m_sysAudioFifo audioFifoSize: " << audioFifoSize(m_sysAudioFifo);
-            //qDebug() << "init m_sysAudioFifo audioFifoSpace: " << audioFifoSpace(m_sysAudioFifo);        }
-            is_fifo_scardinit ++;
+            //qDebug() << "init m_sysAudioFifo audioFifoSpace: " << audioFifoSpace(m_sysAudioFifo);
         }
+        is_fifo_scardinit ++;
     }
     /**
     * Allocate memory for the samples of all channels in one consecutive
@@ -1235,6 +1240,7 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
     * Make the FIFO as large as it needs to be to hold both,
     * the old and the new samples.使FIFO尽可能大，因为它需要容纳旧的和新的样品。
     */
+    //qDebug() << "m_videoType: " << m_videoType;
     if (m_videoType == videoType::MKV) {
         //对比某个时间段缓冲区大小是否比初始化缓冲区大小大，大：需要减小当前的缓冲区，小不做操作
         if (m_initFifoSpace < audioFifoSpace(m_sysAudioFifo)) {
@@ -1336,7 +1342,8 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
             }
             outputPacket.duration = m_pSysCodecContext->frame_size;
             //qDebug() << m_singleCount << " sys audio outputPacket.pts: " << outputPacket.pts;
-            m_singleCount++;                if ((ret = writeFrame(m_videoFormatContext, &outputPacket)) < 0) {
+            m_singleCount++;
+            if ((ret = writeFrame(m_videoFormatContext, &outputPacket)) < 0) {
                 //char tmpErrString[128] = {0};
                 //printf("Could not write audio frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
                 avlibInterface::m_av_packet_unref(&outputPacket);
@@ -1565,5 +1572,10 @@ void CAVOutputStream::setIsWriteFrame(bool isWriteFrame)
 {
     QMutexLocker locker(&m_isWriteFrameMutex);
     m_isWriteFrame = isWriteFrame;
+}
+
+void CAVOutputStream::setBoardVendor(int boardVendorType)
+{
+    m_boardVendorType = boardVendorType;
 }
 

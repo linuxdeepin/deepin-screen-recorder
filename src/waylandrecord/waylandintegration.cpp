@@ -28,6 +28,7 @@
 #include <QLoggingCategory>
 #include <QThread>
 #include <QTimer>
+#include <QFile>
 #include <QPainter>
 #include <QImage>
 
@@ -246,8 +247,12 @@ QMap<quint32, WaylandIntegration::WaylandOutput> WaylandIntegration::WaylandInte
 
 void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list)
 {
+    //通过wayland底层接口获取图片的方式不相同，需要获取电脑的厂商，hw的需要特殊处理
+    m_boardVendorType = getBoardVendorType();
+    qDebug() << "m_boardVendorType: " << m_boardVendorType;
     m_fps = list[5].toInt();
     m_recordAdmin = new RecordAdmin(list, this);
+    m_recordAdmin->setBoardVendor(m_boardVendorType);
     //设置获取视频帧
     setBGetFrame(true);
 
@@ -284,6 +289,26 @@ void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list
     m_thread->start();
     m_connection->moveToThread(m_thread);
     m_connection->initConnection();
+}
+
+int WaylandIntegration::WaylandIntegrationPrivate::getBoardVendorType()
+{
+    QFile file("/sys/class/dmi/id/board_vendor");
+    bool flag = file.open(QIODevice::ReadOnly | QIODevice::Text);
+    if (!flag) {
+        return 0;
+    }
+    QByteArray t = file.readAll();
+    QString result = QString(t);
+    if (result.isEmpty()) {
+        return 0;
+    }
+    file.close();
+    qDebug() << "/sys/class/dmi/id/board_vendor: " << result;
+    if (result.contains("HUAWEI")) {
+        return 1;
+    }
+    return 0;
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::addOutput(quint32 name, quint32 version)
@@ -341,9 +366,9 @@ void WaylandIntegration::WaylandIntegrationPrivate::removeOutput(quint32 name)
 void WaylandIntegration::WaylandIntegrationPrivate::onDeviceChanged(quint32 name, quint32 version)
 {
     qDebug() << name;
-    KWayland::Client::OutputDevice* devT = m_registry->createOutputDevice(name, version);
+    KWayland::Client::OutputDevice *devT = m_registry->createOutputDevice(name, version);
     if (devT && devT->isValid()) {
-        connect(devT, &KWayland::Client::OutputDevice::changed, this, [=](){
+        connect(devT, &KWayland::Client::OutputDevice::changed, this, [ = ]() {
             qDebug() << devT->uuid() << devT->geometry();
             // 保存屏幕id和对应位置大小
             m_screenId2Point.insert(devT->uuid(), devT->geometry());
@@ -564,18 +589,24 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 
 
     connect(m_registry, &KWayland::Client::Registry::remoteAccessManagerAnnounced, this,
-            [this](quint32 name, quint32 version) {
+    [this](quint32 name, quint32 version) {
         Q_UNUSED(name);
         Q_UNUSED(version);
         m_remoteAccessManager = m_registry->createRemoteAccessManager(m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).name, m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).version);
         connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
-            QRect screenGeometry = (KWayland::Client::Output::get(reinterpret_cast<wl_output*>(const_cast<void*>(output))))->geometry();
+            QRect screenGeometry = (KWayland::Client::Output::get(reinterpret_cast<wl_output *>(const_cast<void *>(output))))->geometry();
             connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf, screenGeometry] {
-                processBufferX86(rbuf, screenGeometry);
+                if (m_boardVendorType)
+                {
+                    processBuffer(rbuf);
+                } else
+                {
+                    processBufferX86(rbuf, screenGeometry);
+                }
             });
         });
     }
-    );
+           );
 
     m_registry->create(m_connection);
     m_registry->setEventQueue(m_queue);
