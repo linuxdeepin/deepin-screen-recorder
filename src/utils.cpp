@@ -114,7 +114,7 @@ void Utils::passInputEvent(int wid)
     // Wayland 事件穿透
     if (Utils::isWaylandMode) {
         QWidget *widget = QWidget::find(static_cast<WId>(wid));
-        if(widget && widget->windowHandle()) {
+        if (widget && widget->windowHandle()) {
             widget->windowHandle()->setMask(QRegion(0, 0, 1, 1));
         }
         return;
@@ -150,7 +150,7 @@ void Utils::setAccessibility(QAction *action, const QString name)
 
 void Utils::getInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height)
 {
-    if(Utils::isWaylandMode == true)
+    if (Utils::isWaylandMode == true)
         return;
     XRectangle *reponseArea = new XRectangle;
     reponseArea->x = x;
@@ -177,7 +177,7 @@ void Utils::getInputEvent(const int wid, const short x, const short y, const uns
 
 void Utils::cancelInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height)
 {
-    if(Utils::isWaylandMode == true)
+    if (Utils::isWaylandMode == true)
         return;
     XRectangle *reponseArea = new XRectangle;
     reponseArea->x = x;
@@ -221,7 +221,7 @@ bool Utils::isSysHighVersion1040()
 
 void Utils::enableXGrabButton()
 {
-    if(Utils::isWaylandMode == true)
+    if (Utils::isWaylandMode == true)
         return;
     //extern int XGrabButton(
     //    Display *      /* display */,
@@ -245,7 +245,7 @@ void Utils::enableXGrabButton()
 
 void Utils::disableXGrabButton()
 {
-    if(Utils::isWaylandMode == true)
+    if (Utils::isWaylandMode == true)
         return;
     XUngrabButton(QX11Info::display(), true, AnyModifier, DefaultRootWindow(QX11Info::display()));
 
@@ -393,9 +393,18 @@ bool Utils::checkCpuIsZhaoxin()
     QString str_output = process.readAllStandardOutput();
     process.close();
     if (str_output.length() == 0) {
-       return false;
+        return false;
     }
     return true;
+}
+
+//获取处理器名称
+QString Utils::getCpuModelName()
+{
+    if (DSysInfo::cpuModelName().isNull()) {
+        return "";
+    }
+    return DSysInfo::cpuModelName();
 }
 
 void Utils::notSupportWarn()

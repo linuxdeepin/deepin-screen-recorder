@@ -20,7 +20,7 @@
 
 #include "waylandintegration.h"
 #include "waylandintegration_p.h"
-
+#include "utils.h"
 #include <QDBusArgument>
 #include <QDBusMetaType>
 
@@ -309,8 +309,11 @@ int WaylandIntegration::WaylandIntegrationPrivate::getBoardVendorType()
     }
     file.close();
     qDebug() << "/sys/class/dmi/id/board_vendor: " << result;
+    qDebug() << "cpu: " << Utils::getCpuModelName();
     if (result.contains("HUAWEI")) {
-        return 1;
+        if (!Utils::getCpuModelName().contains("Kunpeng", Qt::CaseSensitivity::CaseInsensitive)) {
+            return 1;
+        }
     }
     return 0;
 }

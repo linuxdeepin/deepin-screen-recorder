@@ -31,6 +31,7 @@
 #include <QString>
 
 DWIDGET_USE_NAMESPACE
+DCORE_USE_NAMESPACE
 
 class Utils : public QObject
 {
@@ -106,6 +107,12 @@ public:
 
     static void getAllWindowInfo(const quint32 winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames);
     static bool checkCpuIsZhaoxin();
+
+    /**
+     * @brief 获取处理器名称
+     * @return 处理器名称
+     */
+    static QString getCpuModelName();
 };
 
 #endif //UTILS_H
