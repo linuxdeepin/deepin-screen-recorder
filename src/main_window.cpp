@@ -266,7 +266,12 @@ void MainWindow::initAttributes()
 
 
     if (m_screenCount > 1 && m_pixelRatio  > 1) {
-        if (m_screenInfo[0].width < m_screenInfo[1].width)
+
+        int widthAfterFirst = 0;
+        for (int index = 1; index < m_screenCount; ++index) {
+            widthAfterFirst += m_screenInfo[index].width;
+        }
+        if (m_screenInfo[0].width < widthAfterFirst)
             // QT bug，这里暂时做特殊处理
             // 多屏放缩情况下，小屏在前，整体需要偏移一定距离
             this->move(m_screenInfo[0].width - static_cast<int>(m_screenInfo[0].width / m_pixelRatio), 0);
@@ -3543,7 +3548,16 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         } else {
                             tmpPos.setY(curPos.y() + CURSOR_HEIGHT);
                         }
-
+                        if (!qFuzzyCompare(1.0, m_pixelRatio) && m_screenCount > 1) {
+                            int beforeWidth = 0;
+                            for(int index = 0; index < m_screenCount; ++index) {
+                                if (tmpPos.x() >= m_screenInfo[index].x && tmpPos.x() < (m_screenInfo[index].x + m_screenInfo[index].width)) {
+                                    tmpPos.setX(static_cast<int>((tmpPos.x() - m_screenInfo[index].x) + beforeWidth / m_pixelRatio));
+                                    break;
+                                }
+                                beforeWidth += m_screenInfo[index].width;
+                            }
+                        }
                         m_zoomIndicator->showMagnifier(QPoint(
                                                            std::max(tmpPos.x() - topLeft.x(), 0),
                                                            std::max(tmpPos.y() - topLeft.y(), 0)));
@@ -3618,16 +3632,23 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             if (!qFuzzyCompare(1.0, m_pixelRatio) && m_screenCount > 1) {
                                 int x = it->x();
                                 int y = it->y();
-                                if (x < m_screenInfo[1].x) {
-                                    recordX = x;
-                                } else {
-                                    recordX = static_cast<int>(m_screenInfo[1].x / m_pixelRatio + (x - m_screenInfo[1].x));
+                                int beforeWidth = 0;
+                                for(int index = 0; index < m_screenCount; ++index) {
+                                    if (x >= m_screenInfo[index].x && x < (m_screenInfo[index].x + m_screenInfo[index].width)) {
+                                        recordX = static_cast<int>((x - m_screenInfo[index].x) + beforeWidth / m_pixelRatio);
+                                        break;
+                                    }
+                                    beforeWidth += m_screenInfo[index].width;
                                 }
-                                if (y < m_screenInfo[1].y) {
-                                    recordY = y;
-                                } else {
-                                    recordY = static_cast<int>(m_screenInfo[1].y / m_pixelRatio + (y - m_screenInfo[1].y));
+                                int beforeHeight = 0;
+                                for(int index = 0; index < m_screenCount; ++index) {
+                                    if (y >= m_screenInfo[index].y && y < (m_screenInfo[index].y + m_screenInfo[index].height)) {
+                                        recordY = static_cast<int>((y - m_screenInfo[index].y) + beforeHeight / m_pixelRatio);
+                                        break;
+                                    }
+                                    beforeHeight += m_screenInfo[index].height;
                                 }
+
                             } else {
                                 recordX = it->x() - static_cast<int>(screenRect.x() * m_pixelRatio);
                                 recordY = it->y() - static_cast<int>(screenRect.y() * m_pixelRatio);
