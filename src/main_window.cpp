@@ -3818,6 +3818,7 @@ void MainWindow::onMouseMove(int x, int y)
     }
     if (m_initScroll && status::scrollshot == m_functionType) {
         scrollShotMouseMoveEvent(x, y);
+        this->activateWindow();
     }
 }
 

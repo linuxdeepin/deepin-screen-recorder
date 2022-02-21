@@ -87,10 +87,10 @@ void RecordTimePlugin::onStart()
 void RecordTimePlugin::onStop()
 {
     if (m_timeWidget->enabled()) {
-        m_checkTimer->stop();
         m_proxyInter->itemRemoved(this, pluginName());
         m_bshow = false;
         if (nullptr != m_checkTimer) {
+            m_checkTimer->stop();
             m_checkTimer->deleteLater();
             m_checkTimer = nullptr;
         }
