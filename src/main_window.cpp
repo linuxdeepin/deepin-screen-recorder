@@ -2448,11 +2448,23 @@ void MainWindow::saveScreenShot()
     //滚动截图模式下保存图片
     if (status::scrollshot == m_functionType && m_scrollShotStatus != 0) {
 #ifdef OCR_SCROLL_FLAGE_ON
+        // 隐藏预览窗口
+        m_previewWidget->hide();
+        // 延时
+#if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__)
+    static int delayTime = 260;
+#elif defined (__aarch64__)
+    static int delayTime = 220;
+#else
+    static int delayTime = 100;
+#endif
+        QEventLoop eventloop;
+        QTimer::singleShot(delayTime, &eventloop, SLOT(quit()));
+        eventloop.exec();
         bool ok;
         QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
         QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio); // 抓取当前捕捉区域图片
         m_scrollShot->addLastPixmap(img);
-        m_previewWidget->hide();
         m_resultPixmap = QPixmap::fromImage(m_scrollShot->savePixmap());
         if (m_resultPixmap.isNull()) {
             //普通截图保存图片
