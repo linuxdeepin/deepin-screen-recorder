@@ -4308,6 +4308,9 @@ void MainWindow::onAdjustCaptureArea()
 {
 #ifdef OCR_SCROLL_FLAGE_ON
     qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
+    if (m_tipShowtimer != nullptr) {
+        m_tipShowtimer->stop();
+    }
     //隐藏提示
     m_scrollShotTip->hide();
 
@@ -4388,7 +4391,9 @@ void MainWindow::onScrollShotMerageImgState(PixMergeThread::MergeErrorValue stat
     m_scrollShotStatus = 3;
     //暂停自动滚动截图
     pauseAutoScrollShot();
-
+    if(m_tipShowtimer->isActive()){
+        return;
+    }
     qDebug() << "function:" << __func__ << " ,line: " << __LINE__ << " , 拼接时的状态: " << state;
     //state = 1：拼接失败
     if (state == PixMergeThread::MergeErrorValue::Failed) {
