@@ -634,7 +634,7 @@ void SubToolWidget::initShotLabel()
     Utils::setAccessibility(m_pinButton, AC_SUBTOOLWIDGET_PINSCREENSHOTS_BUTTON);
     m_shotBtnGroup->addButton(m_pinButton);
     m_pinButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
-    installTipHint(m_pinButton, tr("Pin screenshots"));
+    installTipHint(m_pinButton, tr("Pin Screenshots"));
     btnList.append(m_pinButton);
 
     //添加滚动截图按钮
