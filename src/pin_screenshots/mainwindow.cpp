@@ -87,6 +87,7 @@ void MainWindow::initMainWindow()
     connect(m_toolBar, SIGNAL(sendOcrButtonClicked()), this, SLOT(onOpenOCR()));
     connect(m_toolBar, SIGNAL(sendSaveButtonClicked()), this, SLOT(onSave()));
     connect(m_toolBar, SIGNAL(sendCloseButtonClicked()), this, SLOT(onExit()));
+
     QWidget::installEventFilter(this);
 }
 
@@ -185,7 +186,7 @@ void MainWindow::saveImg()
         }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
     } else if (m_saveInfo.first == SubToolWidget::FOLDER) {
-        m_toolBar->hide();
+        m_toolBar->setHiden();
         qDebug() << "save to path";
         QString imgName, saveFileName;
         if (m_saveInfo.second == SubToolWidget::PNG) {
@@ -291,7 +292,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             dragPosition = event->globalPos() - this->frameGeometry().topLeft();
         }
         if (!m_toolBar->isHidden())
-            m_toolBar->hide(); //隐藏工具栏
+            m_toolBar->setHiden(); //隐藏工具栏
         break;
     case Qt::RightButton:
         handleMouseRightBtn(event);
@@ -369,10 +370,10 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
             default:
                 break;
             }
-
             this->setGeometry(rMove);
         } else {
             this->setCursor(QCursor(Qt::ClosedHandCursor));
+            //qDebug() << "=============event->globalPos()" << event->globalPos() << "dragPosition" << dragPosition;
             move(event->globalPos() - dragPosition);
             event->accept();
         }
@@ -469,7 +470,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         } else if (QEvent::WindowDeactivate == event->type()) {
             if (m_toolBar->isActiveWindow())
                 return false;
-            m_toolBar->hide();
+            m_toolBar->setHiden();
             qDebug() << __FUNCTION__ << __LINE__;
             return false;
         }
@@ -626,16 +627,17 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
 void MainWindow::updateToolBarPosition()
 {
     QPoint brPoint = mapToGlobal(this->rect().bottomRight());
-    if ((brPoint.y() + 15 + m_toolBar->height()) >= m_screenSize.height()) {
+    //qDebug() << "updateToolBarPosition brPoint is" << brPoint << "this->rect().bottomRight()" << mapToGlobal(QPoint(this->width(), this->height()));
+    if ((brPoint.y() + 15 + m_toolBar->toolBarHeight()) >= m_screenSize.height()) {
         QPoint trPoint = mapToGlobal(this->rect().topRight());
-        if (trPoint.y() - 15 - m_toolBar->height() <= 0) {
-            m_toolBar->showAt(QPoint(trPoint.x() - m_toolBar->width(), trPoint.y() + 15));
+        if (trPoint.y() - 15 - m_toolBar->toolBarHeight() <= 0) {
+            m_toolBar->showAt(QPoint(trPoint.x() - m_toolBar->toolBarWidth(), trPoint.y() + 15));
         } else {
-            m_toolBar->showAt(QPoint(trPoint.x() - m_toolBar->width(), trPoint.y() - 15 - m_toolBar->height()));
+            m_toolBar->showAt(QPoint(trPoint.x() - m_toolBar->toolBarWidth(), trPoint.y() - 15 - m_toolBar->toolBarHeight()));
         }
     } else {
-        //qDebug() << "m_toolBar->width()" << m_toolBar->width();
-        m_toolBar->showAt(QPoint(brPoint.x() - m_toolBar->width(), brPoint.y() + 15));
+        qDebug() << "m_toolBar->width()" << m_toolBar->toolBarWidth();
+        m_toolBar->showAt(QPoint(brPoint.x() - m_toolBar->toolBarWidth(), brPoint.y() + 15));
     }
 }
 

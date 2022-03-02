@@ -21,32 +21,40 @@
 #include "toolbar.h"
 #include "accessibility/acTextDefine.h"
 #include <QBitmap>
+#include <DBlurEffectWidget>
+#include <DWindowManagerHelper>
+#include <DPlatformWindowHandle>
 
-const int FIXHEIGHT = 70;
+const int SPACING  = 30; //工具栏与保存按钮之间的间隔
 
-ToolBar::ToolBar(DWidget *parent): DLabel(parent)
+ToolBar::ToolBar(DWidget *parent): QObject(parent)
 {
-    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool); // 设置窗口样式
-    setAttribute(Qt::WA_TranslucentBackground, true); //设置透明
     m_toolbarWidget = nullptr;
     m_saveButton = nullptr;
-    initToolBar(); // 初始化工具栏
-    QWidget::installEventFilter(this);
+    m_btWidget = nullptr;
+    initToolBar(parent); // 初始化工具栏
 }
 
-void ToolBar::initToolBar()
+void ToolBar::initToolBar(DWidget *parent)
 {
-    m_toolbarWidget = new ToolBarWidget(this); // 初始化工具栏
+    m_toolbarWidget = new ToolBarWidget(parent); // 初始化工具栏
     connect(m_toolbarWidget, SIGNAL(signalOcrButtonClicked()), this, SIGNAL(sendOcrButtonClicked())); //发送OCR点击信号
     connect(m_toolbarWidget, SIGNAL(signalCloseButtonClicked()), this, SIGNAL(sendCloseButtonClicked()));// 发送关闭按钮点击信号
 
+    m_btWidget = new QWidget(parent);
+    m_btWidget->setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip);
+    DPlatformWindowHandle handle(m_btWidget);
+    handle.setEnableBlurWindow(true);
     //初始化保存按钮
-    m_saveButton = new DPushButton(this);
+    m_saveButton = new DPushButton(m_btWidget);
+    m_saveButton->setAttribute(Qt::WA_TranslucentBackground, true);
+
+
     m_saveButton->setObjectName(AC_MAINWINDOW_PIN_SAVE_BUT);
     m_saveButton->setAccessibleName(AC_MAINWINDOW_PIN_SAVE_BUT);
     m_saveButton->setFocusPolicy(Qt::NoFocus);
     m_saveButton->setIconSize(QSize(38, 38));
-    m_saveButton->setFixedSize(76, 58);
+    m_saveButton->setFixedSize(76, 60);
     m_saveButton->setIcon(QIcon(":/newUI/checked/screenshot-checked.svg"));
     connect(m_saveButton, SIGNAL(clicked()), this, SIGNAL(sendSaveButtonClicked())); // 保存按钮被点击
 
@@ -58,49 +66,46 @@ void ToolBar::initToolBar()
     m_saveButton->setPalette(pa);
     m_saveButton->setProperty("isShotState", true);
 
-    setFixedHeight(FIXHEIGHT);
+    // 为m_btWidget设置背景色，不然在2D模式下是黑色边框
+    DPalette pa2;
+    pa2 = m_btWidget->palette();
+    pa2.setColor(DPalette::Background, QColor(0, 129, 255, 243));
+    m_btWidget->setPalette(pa2);
 
-    QHBoxLayout *hLayout = new QHBoxLayout();
-    hLayout->setSizeConstraint(QLayout::SetFixedSize);
+    QHBoxLayout *hLayout = new QHBoxLayout(m_btWidget);
     hLayout->setContentsMargins(0, 0, 0, 0);
-    hLayout->addStretch();
-    hLayout->addWidget(m_toolbarWidget, 0, Qt::AlignCenter);
-    hLayout->addStretch();
     hLayout->addWidget(m_saveButton, 0, Qt::AlignCenter);
-    setLayout(hLayout);
-}
-
-bool ToolBar::eventFilter(QObject *watched, QEvent *event)
-{
-    if (watched == this) {
-        //窗口停用，变为不活动的窗口
-        if (QEvent::WindowActivate == event->type()) {
-            show();
-            qDebug() << __FUNCTION__ << __LINE__;
-            return false;
-        } else if (QEvent::WindowDeactivate == event->type()) {
-            this->hide();
-            qDebug() << __FUNCTION__ << __LINE__;
-            return false;
-        }
-    }
-    return false;
+    m_btWidget->setLayout(hLayout);
 }
 
 //显示在点pos
 void ToolBar::showAt(QPoint pos)
 {
-    if (!isVisible()) {
-        this->show();
+    if (!m_saveButton->isVisible() || (!m_toolbarWidget->isVisible())) {
+        m_btWidget->show();
+        m_toolbarWidget->show();
     }
     qDebug() << "pos" << pos;
-    move(pos);
+    this->moveAt(pos);
+}
+
+// 设置隐藏
+void ToolBar::setHiden(bool value)
+{
+    if (value) {
+        m_btWidget->hide();
+        m_toolbarWidget->hide();
+    } else {
+        m_btWidget->show();
+        m_toolbarWidget->show();
+    }
 }
 
 //快捷键显示选项菜单
 void ToolBar::shortcutOpoints()
 {
-    this->show();
+    m_btWidget->show();
+    m_toolbarWidget->show();
     m_toolbarWidget->onOptionButtonClicked();
 }
 
@@ -108,4 +113,36 @@ void ToolBar::shortcutOpoints()
 QPair<int, int> ToolBar::getSaveInfo()
 {
     return m_toolbarWidget->getSaveInfo();
+}
+//宽
+int ToolBar::toolBarWidth()
+{
+    return  m_toolbarWidget->width() + SPACING + m_btWidget->width();
+}
+//高
+int ToolBar::toolBarHeight()
+{
+    return qMax(m_toolbarWidget->height(), m_btWidget->height());
+}
+//移动位置
+void ToolBar::moveAt(QPoint pos)
+{
+    m_toolbarWidget->move(pos);
+    m_btWidget->move(pos.x() + m_toolbarWidget->width() + SPACING, pos.y());
+}
+//关闭工具栏与保存按钮
+void ToolBar::close()
+{
+    m_toolbarWidget->close();
+    m_btWidget->close();
+}
+//是否为隐藏状态
+bool ToolBar::isHidden()
+{
+    return m_toolbarWidget->isHidden() &&  m_btWidget->isHidden();
+}
+//是否为活动窗口
+bool ToolBar::isActiveWindow()
+{
+    return m_toolbarWidget->isHidden() ||  m_btWidget->isHidden();
 }

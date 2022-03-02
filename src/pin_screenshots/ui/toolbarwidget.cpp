@@ -26,22 +26,21 @@
 
 #define THEMETYPE 1 // 主题颜色为浅色
 
-const QSize MIN_TOOLBAR_WIDGET_SIZE = QSize(205, 70);
+const QSize MIN_TOOLBAR_WIDGET_SIZE = QSize(194, 60);
 
-ToolBarWidget::ToolBarWidget(DWidget *parent): DFloatingWidget(parent)
+ToolBarWidget::ToolBarWidget(DWidget *parent): DBlurEffectWidget(parent)
 {
 
-    setBlurBackgroundEnabled(true);
-    blurBackground()->setRadius(30);
-    blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
-    blurBackground()->setBlurEnabled(true);
-    blurBackground()->setBlendMode(DBlurEffectWidget::InWindowBlend);
-    setAttribute(Qt::WA_TranslucentBackground, false); //取消透明
+    setWindowFlags(Qt::ToolTip);
+    this->setRadius(30);
+    this->setBlurEnabled(true);
+    this->setMode(DBlurEffectWidget::GaussianBlur);
+    this->setBlendMode(DBlurEffectWidget::InWindowBlend);
     // 初始化主题样式
     if (DGuiApplicationHelper::instance()->themeType() == THEMETYPE) {
-        blurBackground()->setMaskColor(QColor(255, 255, 255, 76));
+        this->setMaskColor(QColor(255, 255, 255, 76));
     } else {
-        blurBackground()->setMaskColor(QColor(0, 0, 0, 76));
+        this->setMaskColor(QColor(0, 0, 0, 76));
     }
 
     initToolBarWidget(); // 初始化按钮菜单
@@ -65,12 +64,12 @@ void ToolBarWidget::onOptionButtonClicked()
 void ToolBarWidget::onThemeTypeChange(DGuiApplicationHelper::ColorType themeType)
 {
     if (themeType == THEMETYPE) {
-        blurBackground()->setMaskColor(QColor(255, 255, 255, 76));
+        this->setMaskColor(QColor(255, 255, 255, 76));
         m_closeButton->setHoverPic(":/newUI/hover/close-hover.svg");
         m_closeButton->setNormalPic(":/newUI/normal/close-normal.svg");
 
     } else {
-        blurBackground()->setMaskColor(QColor(0, 0, 0, 76));
+        this->setMaskColor(QColor(0, 0, 0, 76));
         m_closeButton->setHoverPic(":/newUI/dark/hover/close-hover_dark.svg");
         m_closeButton->setNormalPic(":/newUI/dark/normal/close-normal_dark.svg");
     }
@@ -97,7 +96,6 @@ void ToolBarWidget::initToolBarWidget()
     setMinimumSize(MIN_TOOLBAR_WIDGET_SIZE);
     QHBoxLayout *hLayout = new QHBoxLayout(this);
     hLayout->setMargin(0);
-    hLayout->setSpacing(2);
     hLayout->addStretch();
     hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
     hLayout->addWidget(m_closeButton, 0,  Qt::AlignCenter);

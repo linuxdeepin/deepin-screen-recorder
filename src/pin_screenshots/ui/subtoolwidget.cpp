@@ -159,7 +159,7 @@ void SubToolWidget::initShotLable()
     //工具栏布局
     QHBoxLayout *hLayout = new QHBoxLayout(this);
     hLayout->setSizeConstraint(QLayout::SetFixedSize);
-    //hLayout->setContentsMargins(0, 0, 0, 0);
+    hLayout->setContentsMargins(0, 0, 0, 0);
     hLayout->setSpacing(0);
     hLayout->setMargin(0);
     hLayout->setSpacing(3);
