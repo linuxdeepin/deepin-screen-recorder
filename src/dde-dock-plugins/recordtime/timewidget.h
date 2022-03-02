@@ -38,7 +38,7 @@
 #define RECORDER_TIME_VERTICAL_SIZE "0000"
 #define RECORDER_TIME_FONT DFontSizeManager::instance()->t8()
 #define RECORDER_ICON_TOP_BOTTOM_X 8
-#define RECORDER_TEXT_TOP_BOTTOM_X 3
+#define RECORDER_TEXT_TOP_BOTTOM_X 8
 
 DWIDGET_USE_NAMESPACE
 using DBusDock = com::deepin::dde::daemon::Dock;
