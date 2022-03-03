@@ -2572,8 +2572,12 @@ void startRecord_stub()
 void m_pRecorderRegion_stub()
 {
 }
+void whileCheckTempFileArm_stub()
+{
+}
 ACCESS_PRIVATE_FIELD(MainWindow, RecorderRegionShow *, m_pRecorderRegion);
 ACCESS_PRIVATE_FIELD(MainWindow, QThread *, m_connectionThread);
+ACCESS_PRIVATE_FUN(MainWindow, void(), whileCheckTempFileArm);
 TEST_F(MainWindowTest, startRecord)
 {
 
@@ -2582,6 +2586,8 @@ TEST_F(MainWindowTest, startRecord)
     stub.set(ADDR(Utils, isSysHighVersion1040), isSysHighVersion1040_stub);
     stub.set(ADDR(RecordProcess, startRecord), startRecord_stub);
     stub.set(ADDR(RecorderRegionShow, setCameraShow), m_pRecorderRegion_stub);
+    auto MainWindow_whileCheckTempFileArm = get_private_fun::MainWindowwhileCheckTempFileArm();
+    stub.set(MainWindow_whileCheckTempFileArm, whileCheckTempFileArm_stub);
     MainWindow *window = new MainWindow();
 
     Utils::isTabletEnvironment = false;
@@ -2591,6 +2597,7 @@ TEST_F(MainWindowTest, startRecord)
 
     window->startRecord();
 
+    stub.reset(MainWindow_whileCheckTempFileArm);
     stub.reset(ADDR(RecorderRegionShow, setCameraShow));
     stub.reset(ADDR(RecordProcess, startRecord));
     stub.reset(ADDR(Utils, isSysHighVersion1040));

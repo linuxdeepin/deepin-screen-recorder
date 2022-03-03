@@ -56,9 +56,11 @@
 #include <QShortcut>
 #include <QDesktopWidget>
 #include <QScreen>
-
+#include <QtConcurrent>
 #include <X11/Xcursor/Xcursor.h>
-
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
 #define EPSILON 1e-10
 //const int MainWindow::CURSOR_BOUND = 5;
 const int MainWindow::RECORD_MIN_SIZE = 580;
@@ -396,6 +398,78 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
         }
         if (m_isFullScreenShot) {
             saveTopWindow();
+        }
+    }
+}
+//1050wayland平台上，部分性能差的机型，采用线程循环监听文件（"/home/" + userName + "/.cache/deepin/deepin-screen-recorder/stopRecord.txt"）是否存在且内容是否为1
+void MainWindow::checkTempFileArm()
+{
+    qDebug() << __LINE__ << __func__ ;
+    QString userName = QDir::homePath().section("/", -1, -1);
+    m_tempPath = ("/home/" + userName + "/.cache/deepin/deepin-screen-recorder/").toStdString();
+    //判断文件是否存在，若存在则先删除文件，启动录屏时不应该存在该文件
+    std::string tempFile = m_tempPath + "stopRecord.txt";
+    QFile mFile(tempFile.c_str());
+    if (mFile.exists()) {
+        remove(tempFile.c_str());
+    }
+    qDebug() << __func__;
+    QtConcurrent::run(this, &MainWindow::whileCheckTempFileArm);
+}
+void MainWindow::whileCheckTempFileArm()
+{
+    bool tempFlag = true;
+
+    while (tempFlag) {
+        QDir tdir(m_tempPath.c_str());
+        //判断文件夹路径是否存在
+        if (tdir.exists()) {
+            std::string tempFile = m_tempPath + "stopRecord.txt";
+            //打开文件
+            int fd = open(tempFile.c_str(), O_RDWR, 0644);
+            if (fd == -1) {
+                //qDebug() << "open file fail!" << strerror(errno);
+                ::close(fd);
+                if (tempFlag) {
+                    QThread::msleep(500);
+                }
+                continue;
+            }
+            //文件加锁
+            int flock = lockf(fd, F_TLOCK, 0);
+            if (flock == -1) {
+                qDebug() << "lock file fail!" << strerror(errno);
+                ::close(fd);
+                if (tempFlag) {
+                    QThread::msleep(500);
+                }
+                continue;
+            }
+            ssize_t ret = -1;
+            char rBuffer[2];
+            memset(rBuffer, 0, 2);
+            //读文件
+            ret = read(fd, rBuffer, 2);
+            if (ret < 0) {
+                qDebug() << "read file fail!";
+            } else {
+                //文件内容为1时会停止录屏
+                if (QString(rBuffer).toInt() == 1) {
+                    qDebug() << "read file to stop Record!" ;
+                    stopRecord();
+                    //emit stopRecordArm();
+                    tempFlag = false;
+                } else {
+                    qDebug() << "file: " << rBuffer;
+                }
+            }
+            //文件解锁
+            flock = lockf(fd, F_ULOCK, 0);
+            ::close(fd);
+            qDebug() << "close file!";
+            //移除文件
+            remove(tempFile.c_str());
+            qDebug() << "remove file!";
         }
     }
 }
@@ -1519,6 +1593,10 @@ bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char
 
 void MainWindow::save2Clipboard(const QPixmap &pix)
 {
+    if (pix.isNull()) {
+        qDebug() << __FUNCTION__ << "Copy Null Pix To Clipboard!";
+        return;
+    }
     if (Utils::is3rdInterfaceStart == false) {
         QMimeData *t_imageData = new QMimeData;
         t_imageData->setImageData(pix);
@@ -2452,11 +2530,11 @@ void MainWindow::saveScreenShot()
         m_previewWidget->hide();
         // 延时
 #if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__)
-    static int delayTime = 260;
+        static int delayTime = 260;
 #elif defined (__aarch64__)
-    static int delayTime = 220;
+        static int delayTime = 220;
 #else
-    static int delayTime = 100;
+        static int delayTime = 100;
 #endif
         QEventLoop eventloop;
         QTimer::singleShot(delayTime, &eventloop, SLOT(quit()));
@@ -3562,7 +3640,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                         }
                         if (!qFuzzyCompare(1.0, m_pixelRatio) && m_screenCount > 1) {
                             int beforeWidth = 0;
-                            for(int index = 0; index < m_screenCount; ++index) {
+                            for (int index = 0; index < m_screenCount; ++index) {
                                 if (tmpPos.x() >= m_screenInfo[index].x && tmpPos.x() < (m_screenInfo[index].x + m_screenInfo[index].width)) {
                                     tmpPos.setX(static_cast<int>((tmpPos.x() - m_screenInfo[index].x) + beforeWidth / m_pixelRatio));
                                     break;
@@ -3645,7 +3723,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                                 int x = it->x();
                                 int y = it->y();
                                 int beforeWidth = 0;
-                                for(int index = 0; index < m_screenCount; ++index) {
+                                for (int index = 0; index < m_screenCount; ++index) {
                                     if (x >= m_screenInfo[index].x && x < (m_screenInfo[index].x + m_screenInfo[index].width)) {
                                         recordX = static_cast<int>((x - m_screenInfo[index].x) + beforeWidth / m_pixelRatio);
                                         break;
@@ -3653,7 +3731,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                                     beforeWidth += m_screenInfo[index].width;
                                 }
                                 int beforeHeight = 0;
-                                for(int index = 0; index < m_screenCount; ++index) {
+                                for (int index = 0; index < m_screenCount; ++index) {
                                     if (y >= m_screenInfo[index].y && y < (m_screenInfo[index].y + m_screenInfo[index].height)) {
                                         recordY = static_cast<int>((y - m_screenInfo[index].y) + beforeHeight / m_pixelRatio);
                                         break;
@@ -4516,6 +4594,14 @@ void MainWindow::startRecord()
     if (Utils::isTabletEnvironment && m_tabletRecorderHandle) {
         m_tabletRecorderHandle->startStatusBar();
     }
+#ifdef KF5_WAYLAND_FLAGE_ON
+#if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__) ||  defined (__aarch64__)
+    //wayland下走此方法
+    connect(this, &MainWindow::stopRecordArm, this, &MainWindow::stopRecord);
+    checkTempFileArm();
+#endif
+#endif
+
     qDebug() << "录屏！";
     recordProcess.startRecord();
     // 录屏开始后，隐藏窗口。（2D窗管下支持录屏, 但是会导致摄像头录制不到）

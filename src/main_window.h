@@ -335,7 +335,7 @@ signals:
     void deleteShapes();
     void changeMicrophoneSelectEvent(bool checked);
     void changeSystemAudioSelectEvent(bool checked);
-
+    void stopRecordArm();
 public slots:
     void onExit();
     /**
@@ -663,6 +663,19 @@ protected:
      * @param m_windowStates
      */
     void waylandwindowinfo(const QVector<ClientManagement::WindowState> &m_windowStates);
+    /**
+      * @brief checkTempFileArm
+      * 1050wayland平台上，部分性能差的机型
+      * 采用线程循环监听文件（"/home/" + userName + "/.cache/deepin/deepin-screen-recorder/stopRecord.txt"）是否存在且内容是否为1
+      * 存在且内容是1：停止录屏
+      * 不存在或不为1：不处理
+      */
+    void checkTempFileArm();
+
+    /**
+     * @brief 采用线程循环监听文件（"/home/" + userName + "/.cache/deepin/deepin-screen-recorder/stopRecord.txt"）是否存在且内容是否为1
+     */
+    void whileCheckTempFileArm();
 #endif
     /**
      * @brief 启动截图录屏时检测是否是锁屏状态
@@ -971,6 +984,10 @@ private:
     PlasmaWindowManagement *m_windowManagement = nullptr;
     ClientManagement *m_clientManagement = nullptr;
     QVector<ClientManagement::WindowState> m_windowStates;
+    /**
+      * @brief mips平台创建缓存文件的路径
+      */
+    std::string m_tempPath;
 #endif
     bool m_isFullScreenShot = false;
     bool m_isVertical = false;

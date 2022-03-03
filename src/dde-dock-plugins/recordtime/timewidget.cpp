@@ -34,6 +34,12 @@
 #include <QDBusInterface>
 #include <QDBusPendingCall>
 #include <QPainterPath>
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <iostream>
+
 TimeWidget::TimeWidget(DWidget *parent):
     DWidget(parent),
     m_timer(nullptr),
@@ -193,16 +199,79 @@ void TimeWidget::paintEvent(QPaintEvent *e)
 
 void TimeWidget::mousePressEvent(QMouseEvent *e)
 {
+    qDebug() << "Click the taskbar plugin! To start!";
     m_pressed = true;
-    if (e->pos().x() > 0 && e->pos().x() < m_pixmap.width()) {
-        QDBusInterface notification(QString::fromUtf8("com.deepin.ScreenRecorder"),
-                                    QString::fromUtf8("/com/deepin/ScreenRecorder"),
-                                    QString::fromUtf8("com.deepin.ScreenRecorder"),
-                                    QDBusConnection::sessionBus());
-        notification.asyncCall("stopRecord");
+    int width = 0;
+    //任务栏的位置在桌面顶部和底部时才会显示录屏时间
+    if (position::top == m_position || position::bottom == m_position) {
+        width = rect().width();
+    } else {
+        width = m_pixmap.width();
+    }
+    bool flag = true;
+    if (e->pos().x() > 0 && e->pos().x() < width) {
+#if  defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__) || defined (__aarch64__)
+        if (isWaylandProtocol()) {
+            flag = false;
+            createCacheFile();
+        }
+#endif
+        if (flag) {
+            qDebug() << "Click the taskbar plugin! Dbus call stop recording screen!";
+            QDBusInterface notification(QString::fromUtf8("com.deepin.ScreenRecorder"),
+                                        QString::fromUtf8("/com/deepin/ScreenRecorder"),
+                                        QString::fromUtf8("com.deepin.ScreenRecorder"),
+                                        QDBusConnection::sessionBus());
+            notification.asyncCall("stopRecord");
+            //        QDBusMessage message = notification.call("stopRecord"); //会阻塞任务其他按钮的执行
+        }
     }
     update();
     QWidget::mousePressEvent(e);
+    qDebug() << "Click the taskbar plugin! The end!";
+}
+//创建缓存文件，只有wayland模式下的mips或部分arm架构适用
+void TimeWidget::createCacheFile()
+{
+    qDebug() << "createCacheFile start!";
+    QString userName = QDir::homePath().section("/", -1, -1);
+    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-screen-recorder/").toStdString();
+    QDir tdir(path.c_str());
+    //判断文件夹路径是否存在
+    if (!tdir.exists()) {
+        tdir.mkpath(path.c_str());
+    }
+    path += "stopRecord.txt";
+    //判断文件是否存在，若存在则先删除文件
+    QFile mFile(path.c_str());
+    if (mFile.exists()) {
+        remove(path.c_str());
+    }
+    //打开文件
+    int fd = open(path.c_str(), O_RDWR | O_CREAT, 0644);
+    if (fd == -1) {
+        qDebug() << "open file fail!" << strerror(errno);
+        return;
+    }
+    //文件加锁
+    int flock = lockf(fd, F_TLOCK, 0);
+    if (flock == -1) {
+        qDebug() << "lock file fail!" << strerror(errno);
+        return;
+    }
+    ssize_t ret = -1;
+    //文件内容为1，读取文件时会停止录屏
+    char wBuffer[2] = {"1"};
+    //写文件
+    ret = write(fd, wBuffer, 2);
+    if (ret < 0) {
+        qDebug() << "write file fail!";
+        return ;
+    }
+    flock = lockf(fd, F_ULOCK, 0);
+    ::close(fd);
+    qDebug() << "createCacheFile end!";
+
 }
 
 void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
@@ -239,4 +308,12 @@ void TimeWidget::start()
 void TimeWidget::stop()
 {
     disconnect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
+}
+//判断是否是wayland协议
+bool TimeWidget::isWaylandProtocol()
+{
+    QProcessEnvironment e = QProcessEnvironment::systemEnvironment();
+    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
+    return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
 }

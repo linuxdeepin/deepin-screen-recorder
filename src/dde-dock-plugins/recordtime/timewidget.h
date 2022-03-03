@@ -75,13 +75,21 @@ public:
      */
     QSize sizeHint() const override;
 
+    /**
+     * @brief 是否是wayland协议
+     * @return
+     */
+    bool isWaylandProtocol();
 protected:
     void paintEvent(QPaintEvent *e) override;
     void mousePressEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;
     void mouseMoveEvent(QMouseEvent *e) override;
     void leaveEvent(QEvent *e) override;
-
+    /**
+     * @brief 创建缓存文件，只有wayland模式下的mips或部分arm架构适用
+     */
+    void createCacheFile();
 private slots:
     /**
      * @brief onTimeout:更新数据
