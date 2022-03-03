@@ -33,6 +33,7 @@
 #include <QStandardPaths>
 #include <QtDBus>
 #include <QScreen>
+#include <QMetaType>
 
 #include <dlfcn.h>
 #include <signal.h>
@@ -69,7 +70,8 @@ RecordProcess::RecordProcess(QObject *parent) : QObject(parent)
     if (settings->value("recordConfig", "lossless_recording").toString() == "") {
         settings->setValue("recordConfig", "lossless_recording", false);
     }
-    m_timer = nullptr;
+    qRegisterMetaType<QProcess::ProcessState>("ProcessState");
+    m_recordingFlag = false;
 }
 
 RecordProcess::~RecordProcess()
@@ -85,11 +87,6 @@ RecordProcess::~RecordProcess()
         m_recorderProcess = nullptr;
     }
     */
-    if (m_timer) {
-        m_timer->stop();
-        delete m_timer;
-        m_timer = nullptr;
-    }
 }
 //设置录屏的基础信息
 void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filename)
@@ -101,9 +98,24 @@ void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filena
 //开始将mp4视频转码成gif
 void RecordProcess::onStartTranscode()
 {
-    m_pTranscodeProcess = new QProcess(this);
-    connect(m_pTranscodeProcess, SIGNAL(finished(int)), this, SLOT(onTranscodeFinish()));
-    connect(m_pTranscodeProcess, SIGNAL(finished(int)), m_pTranscodeProcess, SLOT(deleteLater()));
+    qDebug() << __LINE__ << __func__ ;
+    QProcess *transcodeProcess = new QProcess(this);
+    connect(transcodeProcess, QOverload<QProcess::ProcessError>::of(&QProcess::error),
+    [ = ](QProcess::ProcessError processError) {
+        qDebug() << "processError: " << processError;
+    });
+    connect(transcodeProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+    [ = ](int exitCode, QProcess::ExitStatus exitStatus) {
+        qDebug() << "exitCode: " << exitCode << "  exitStatus: " << exitStatus;
+        //转换进程是否正常退出
+        if (exitStatus == QProcess::ExitStatus::NormalExit) {
+            onTranscodeFinish();
+        } else {
+            qDebug() << "m_pTranscodeProcess is CrashExit:!" ;
+        }
+    });
+    //connect(m_pTranscodeProcess, SIGNAL(finished(int)), this, SLOT(onTranscodeFinish()));
+    //connect(m_pTranscodeProcess, SIGNAL(finished(int)), m_pTranscodeProcess, SLOT(deleteLater()));
     QString path = savePath;
     QStringList arg;
     arg << "-i";
@@ -111,12 +123,20 @@ void RecordProcess::onStartTranscode()
     arg << "-r";
     arg << "12";
     arg << path.replace("mp4", "gif");
-    m_pTranscodeProcess->start("ffmpeg", arg);
+    transcodeProcess->start("ffmpeg", arg);
+    //部分hw arm架构的机型需要这样设置
+#if defined (__aarch64__)
+    if (Utils::isWaylandMode) {
+        qDebug() << "watting transcode gif end!";
+        transcodeProcess->waitForFinished();
+    }
+#endif
 }
 
 //转码完成后通知栏弹出提示
 void RecordProcess::onTranscodeFinish()
 {
+    qDebug() << __LINE__ << __func__ ;
     QString path = savePath;
     QString gifOldPath = path.replace("mp4", "gif");
     QString gifNewPath = QDir(saveDir).filePath(saveBaseName).replace(QString("mp4"), QString("gif"));
@@ -150,6 +170,7 @@ void RecordProcess::onTranscodeFinish()
         avlibInterface::unloadFunctions();
 #endif
     }
+    m_recordingFlag = false;
     if (Utils::isSysHighVersion1040() == true) {
         qDebug() << __LINE__ << ": Stop the screen recording timer!";
         //系统托盘图标结束并退出
@@ -158,6 +179,13 @@ void RecordProcess::onTranscodeFinish()
                                                                                                  "com.deepin.ScreenRecorder.time",
                                                                                                  "onStop"));
     }
+#if defined (__aarch64__)
+    //hw的机型需要使用此方式才可以退出
+    if (Utils::isWaylandMode) {
+        qDebug() << ">>>>>>>>> Exit " ;
+        _Exit(0);
+    }
+#endif
     QApplication::quit();
 }
 
@@ -211,6 +239,7 @@ void RecordProcess::onRecordFinish()
         avlibInterface::unloadFunctions();
 #endif
     }
+    m_recordingFlag = false;
     if (Utils::isSysHighVersion1040() == true) {
         qDebug() << __LINE__ << ": Stop the screen recording timer!";
         //系统托盘图标结束并退出
@@ -219,6 +248,13 @@ void RecordProcess::onRecordFinish()
                                                                                                  "com.deepin.ScreenRecorder.time",
                                                                                                  "onStop"));
     }
+#if defined (__aarch64__)
+    //hw的机型需要使用此方式才可以退出
+    if (Utils::isWaylandMode) {
+        qDebug() << ">>>>>>>>> Exit " ;
+        _Exit(0);
+    }
+#endif
     QApplication::quit();
 }
 
@@ -540,24 +576,26 @@ void RecordProcess::startRecord()
                                                                                              "/com/deepin/ScreenRecorder/time",
                                                                                              "com.deepin.ScreenRecorder.time",
                                                                                              "onStart"));
-    //定时发送录屏还在执行,每秒发送一次录屏正在进行中
-    m_timer = new QTimer();
-    connect(m_timer, &QTimer::timeout, this, [ = ] {
-        QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
-                                                                                                 "/com/deepin/ScreenRecorder/time",
-                                                                                                 "com.deepin.ScreenRecorder.time",
-                                                                                                 "onRecording"));
-    });
-    m_timer->start(1000);
+    m_recordingFlag = true;
+    QtConcurrent::run(this, &RecordProcess::emitRecording);
     if (QDBusMessage::ReplyMessage == message.type()) {
         if (!message.arguments().takeFirst().toBool())
             qDebug() << "dde dock screen-recorder-plugin did not receive start message!";
     }
 }
-
+void RecordProcess::emitRecording()
+{
+    while (m_recordingFlag) {
+        //qDebug() << "录屏正在进行中! currentTime: " << QTime::currentTime();
+        QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
+                                                                                                 "/com/deepin/ScreenRecorder/time",
+                                                                                                 "com.deepin.ScreenRecorder.time",
+                                                                                                 "onRecording"));
+        QThread::msleep(1000);
+    }
+}
 void RecordProcess::stopRecord()
 {
-    m_timer->stop();
     if (Utils::isSysHighVersion1040() == true) {
         qDebug() << "Pause the screen recording timer!";
 

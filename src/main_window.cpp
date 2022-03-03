@@ -456,8 +456,8 @@ void MainWindow::whileCheckTempFileArm()
                 //文件内容为1时会停止录屏
                 if (QString(rBuffer).toInt() == 1) {
                     qDebug() << "read file to stop Record!" ;
-                    stopRecord();
-                    //emit stopRecordArm();
+                    //stopRecord();
+                    emit stopRecordArm();
                     tempFlag = false;
                 } else {
                     qDebug() << "file: " << rBuffer;
