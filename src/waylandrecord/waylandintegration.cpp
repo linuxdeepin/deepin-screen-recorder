@@ -250,6 +250,10 @@ void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list
     //通过wayland底层接口获取图片的方式不相同，需要获取电脑的厂商，hw的需要特殊处理
     m_boardVendorType = getBoardVendorType();
     qDebug() << "m_boardVendorType: " << m_boardVendorType;
+    //由于性能问题部分非hw的arm机器编码效率低，适当调大视频帧的缓存空间（防止调整的过大导致保存时间延长），且在下面添加视频到缓冲区时进行了降低帧率的处理。
+    if (QSysInfo::currentCpuArchitecture().startsWith("ARM", Qt::CaseInsensitive) && !m_boardVendorType) {
+        m_bufferSize = 500;
+    }
     m_fps = list[5].toInt();
     m_recordAdmin = new RecordAdmin(list, this);
     m_recordAdmin->setBoardVendor(m_boardVendorType);
@@ -450,6 +454,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
     }
 
     int step = 0;
+    //此处根据选择的帧数进行对应的跳帧处理，由于kwayland每秒传来的画面帧几乎固定为30，因此做对应的跳帧就可以得到对应的帧
     switch (m_fps) {
     case 5:
         step = 6;
@@ -463,14 +468,24 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
     default:
         step = 0;
     }
-    if (step != 0) {
-        if (globalImageCount % step != 0) {
-            appendBuffer(img.bits(), static_cast<int>(img.width()), static_cast<int>(img.height()), static_cast<int>(4 * img.width()), avlibInterface::m_av_gettime() - frameStartTime);
-        }
-    } else {
-        appendBuffer(img.bits(), static_cast<int>(img.width()), static_cast<int>(img.height()), static_cast<int>(4 * img.width()), avlibInterface::m_av_gettime() - frameStartTime);
+    //由于性能问题部分非hw的arm机器编码效率低，适当调大视频帧的缓存空间，且在添加视频到缓冲区时进行了降低帧率的处理。
+    if (QSysInfo::currentCpuArchitecture().startsWith("ARM", Qt::CaseInsensitive) && !m_boardVendorType) {
+        step = 6;
+        //必要打印，方便查看日志
+        qDebug() << "m_waylandList.size(): " <<  m_waylandList.size() << " m_freeList.size(): " << m_freeList.size();
     }
 
+    //必要打印，方便查看日志
+    if (globalImageCount == 0) {
+        qDebug() << "step: " << step;
+    }
+    if (step != 0 && globalImageCount % step != 0) {
+        //qDebug() << "未编码的帧索引glovbalImageCount: " << globalImageCount;
+        globalImageCount++;
+        close(dma_fd);
+        return;
+    }
+    appendBuffer(img.bits(), static_cast<int>(width), static_cast<int>(height), static_cast<int>(stride), avlibInterface::m_av_gettime() - frameStartTime);
     globalImageCount++;
     close(dma_fd);
 }

@@ -1136,13 +1136,13 @@ void CAVOutputStream::writeMixAudio()
                 }
                 if (got_packet_ptr) {
                     packet_out.stream_index = audio_amix_st->index;
-                    if (m_videoType == videoType::MKV) {
-                        //显示时间戳，应大于或等于解码时间戳
-                        packet_out.pts = m_mixCount * pCodecCtx_amix->frame_size * 1000 / pFrame_out->sample_rate;
-                    } else {
-                        //显示时间戳，应大于或等于解码时间戳
-                        packet_out.pts = m_mixCount * pCodecCtx_amix->frame_size;
-                    }
+//                    if (m_videoType == videoType::MKV) {
+                    //显示时间戳，应大于或等于解码时间戳
+                    packet_out.pts = m_mixCount * pCodecCtx_amix->frame_size * 1000 / pFrame_out->sample_rate;
+//                    } else {
+//                        //显示时间戳，应大于或等于解码时间戳
+//                        packet_out.pts = m_mixCount * pCodecCtx_amix->frame_size;
+//                    }
                     //qDebug() << m_mixCount << " mix audio packet_out.pts: " << packet_out.pts;
 
                     packet_out.dts = packet_out.pts;
