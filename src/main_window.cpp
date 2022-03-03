@@ -2516,8 +2516,10 @@ void MainWindow::saveScreenShot()
         m_scrollShotTip->setVisible(false);
         m_scrollShotTip->hide();
     }
-    // 隐藏预览窗口
-    m_previewWidget->hide();
+    if(m_previewWidget){
+        // 隐藏预览窗口
+        m_previewWidget->hide();
+    }
     // 延时
 #if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__)
     static int delayTime = 260;

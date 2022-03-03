@@ -5,7 +5,7 @@
 #include <QTimer>
 #include "../../src/record_process.h"
 #include "stub.h"
-
+#include "addr_pri.h"
 
 using namespace testing;
 
@@ -82,10 +82,13 @@ static QString currentCpuArchitecture_stub(void* obj)
 //    m_process->stopRecord();
 //    delete  m_process;
 //}
+void emitRecording_stub(){
 
+}
 TEST_F(RecordProcessTest, recordVideoMp4)
 {
     stub.set(ADDR(ConfigSettings, value), getOption_mp4_stub);
+    stub.set(ADDR(RecordProcess,emitRecording),emitRecording_stub);
     RecordProcess *m_process;
     m_process = new RecordProcess;
     //m_process->setRecordAudioInputType(RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO);
@@ -96,11 +99,13 @@ TEST_F(RecordProcessTest, recordVideoMp4)
     loop.exec();
     m_process->stopRecord();
     delete  m_process;
+    stub.reset(ADDR(RecordProcess,emitRecording));
 }
 
 TEST_F(RecordProcessTest, recordVideoMKV)
 {
     stub.set(ADDR(ConfigSettings, value), getOption_mkv_stub);
+    stub.set(ADDR(RecordProcess,emitRecording),emitRecording_stub);
     RecordProcess *m_process;
     m_process = new RecordProcess;
     //m_process->setRecordAudioInputType(RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO);
@@ -112,12 +117,14 @@ TEST_F(RecordProcessTest, recordVideoMKV)
     m_process->stopRecord();
     delete  m_process;
     sleep(1);
+    stub.reset(ADDR(RecordProcess,emitRecording));
 }
 
 TEST_F(RecordProcessTest, mpisRecordVideoMp4)
 {
     stub.set(ADDR(QSysInfo, currentCpuArchitecture), currentCpuArchitecture_stub);
     stub.set(ADDR(ConfigSettings, value), getOption_mp4_stub);
+    stub.set(ADDR(RecordProcess,emitRecording),emitRecording_stub);
     RecordProcess *m_process;
     m_process = new RecordProcess;
     //m_process->setRecordAudioInputType(RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO);
@@ -128,12 +135,14 @@ TEST_F(RecordProcessTest, mpisRecordVideoMp4)
     loop.exec();
     m_process->stopRecord();
     delete  m_process;
+    stub.reset(ADDR(RecordProcess,emitRecording));
 }
 
 TEST_F(RecordProcessTest, mpisRecordVideoMKV)
 {
     stub.set(ADDR(ConfigSettings, value), getOption_mkv_stub);
     stub.set(ADDR(QSysInfo, currentCpuArchitecture), currentCpuArchitecture_stub);
+    stub.set(ADDR(RecordProcess,emitRecording),emitRecording_stub);
     RecordProcess *m_process;
     m_process = new RecordProcess;
     //m_process->setRecordAudioInputType(RecordProcess::RECORD_AUDIO_INPUT_SYSTEMAUDIO);
@@ -145,6 +154,7 @@ TEST_F(RecordProcessTest, mpisRecordVideoMKV)
     m_process->stopRecord();
     delete  m_process;
     sleep(1);
+    stub.reset(ADDR(RecordProcess,emitRecording));
 }
 
 
