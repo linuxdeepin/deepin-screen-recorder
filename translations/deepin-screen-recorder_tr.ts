@@ -333,7 +333,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Ekran görüntülerini sabitle</translation>
     </message>
 </context>
 <context>
@@ -510,7 +510,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Pin screenshots</source>
+        <source>Pin Screenshots</source>
         <translation type="unfinished"/>
     </message>
 </context>

@@ -510,8 +510,8 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <translation>Görgethető képernyőkép</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
-        <translation>Képernyőképek rögzítése</translation>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

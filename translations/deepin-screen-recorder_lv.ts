@@ -510,7 +510,7 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Pin screenshots</source>
+        <source>Pin Screenshots</source>
         <translation type="unfinished"/>
     </message>
 </context>

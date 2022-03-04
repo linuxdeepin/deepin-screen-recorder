@@ -510,7 +510,7 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <translation>Tangkap tatal</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
+        <source>Pin Screenshots</source>
         <translation type="unfinished"/>
     </message>
 </context>

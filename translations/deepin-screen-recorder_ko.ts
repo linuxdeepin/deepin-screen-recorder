@@ -512,7 +512,7 @@ or press the shortcut again to stop recording</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
+        <source>Pin Screenshots</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

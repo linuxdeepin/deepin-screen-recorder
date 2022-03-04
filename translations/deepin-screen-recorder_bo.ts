@@ -333,7 +333,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>སྦྱར་རིས།</translation>
     </message>
 </context>
 <context>
@@ -510,8 +510,8 @@ or press the shortcut again to stop recording</source>
         <translation>འགུལ་ནས་ཡོལ་པར་བླངས།</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <source>Pin Screenshots</source>
+        <translation>སྦྱར་རིས།</translation>
     </message>
 </context>
 <context>

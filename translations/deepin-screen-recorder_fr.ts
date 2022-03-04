@@ -510,7 +510,7 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Pin screenshots</source>
+        <source>Pin Screenshots</source>
         <translation type="unfinished"/>
     </message>
 </context>

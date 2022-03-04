@@ -512,7 +512,7 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
+        <source>Pin Screenshots</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

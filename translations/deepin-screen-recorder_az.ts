@@ -510,8 +510,8 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
         <translation>Sürüşdürmə</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
-        <translation>Ekran şəkllərini sancaqlayın</translation>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

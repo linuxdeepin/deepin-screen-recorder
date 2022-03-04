@@ -510,8 +510,8 @@ or press the shortcut again to stop recording</source>
         <translation>Знімок із гортанням</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
-        <translation>Пришпилити знімки</translation>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

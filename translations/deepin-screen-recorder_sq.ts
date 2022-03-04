@@ -510,8 +510,8 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Pin screenshots</source>
-        <translation>Fiksoje foton e ekranit</translation>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

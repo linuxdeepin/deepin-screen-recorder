@@ -512,7 +512,7 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
+        <source>Pin Screenshots</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

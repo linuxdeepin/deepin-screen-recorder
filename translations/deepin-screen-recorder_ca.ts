@@ -510,8 +510,8 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Captura de desplaçament</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
-        <translation>Fixa les captures</translation>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

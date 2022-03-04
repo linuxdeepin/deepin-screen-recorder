@@ -510,7 +510,7 @@ or press the shortcut again to stop recording</source>
         <translation>滾動截圖</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
+        <source>Pin Screenshots</source>
         <translation>貼圖</translation>
     </message>
 </context>

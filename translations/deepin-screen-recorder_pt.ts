@@ -510,8 +510,8 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <translation>Scrollshot</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
-        <translation>Afixar capturas de ecrã</translation>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

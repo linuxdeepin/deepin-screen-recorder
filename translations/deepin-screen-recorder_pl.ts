@@ -178,7 +178,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>Wpisz tekst tutaj</translation>
+        <translation>Wprowadź tutaj tekst</translation>
     </message>
 </context>
 <context>
@@ -463,7 +463,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation>Folder</translation>
+        <translation>Katalog</translation>
     </message>
     <message>
         <source>Format</source>
@@ -510,8 +510,8 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <translation>Pionowy zrzut ekranu</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
-        <translation>Przypnij zrzuty ekranu</translation>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

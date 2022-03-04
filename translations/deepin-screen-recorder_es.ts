@@ -333,7 +333,7 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Anclar captura de pantalla</translation>
     </message>
 </context>
 <context>
@@ -510,7 +510,7 @@ o haga clic en el icono de la bandeja</translation>
         <translation>Capturar desplazamiento</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
+        <source>Pin Screenshots</source>
         <translation type="unfinished"/>
     </message>
 </context>

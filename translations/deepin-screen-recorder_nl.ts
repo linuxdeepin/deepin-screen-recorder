@@ -510,8 +510,8 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <translation>Scrollende schermfoto</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
-        <translation>Schermfoto&apos;s vastmaken</translation>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

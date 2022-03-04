@@ -509,7 +509,7 @@ or press the shortcut again to stop recording</source>
         <translation>سىيرىلما سۈرەت تۇتۇش</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
+        <source>Pin Screenshots</source>
         <translation>چاپلاق</translation>
     </message>
 </context>

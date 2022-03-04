@@ -510,8 +510,8 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <translation>Vierittävä kaappaus</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
-        <translation>Kiinnitä kuvakaappaukset</translation>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

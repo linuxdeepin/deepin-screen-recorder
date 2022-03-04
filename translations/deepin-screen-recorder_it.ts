@@ -510,7 +510,7 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <translation>Screenshot a scorrimento</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
+        <source>Pin Screenshots</source>
         <translation type="unfinished"/>
     </message>
 </context>

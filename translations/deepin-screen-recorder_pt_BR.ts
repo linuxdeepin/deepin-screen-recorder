@@ -333,7 +333,7 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Fixar capturas de tela</translation>
     </message>
 </context>
 <context>
@@ -510,7 +510,7 @@ clique no ícone da bandeja ou use o atalho</translation>
         <translation>Tela de rolagem</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
+        <source>Pin Screenshots</source>
         <translation type="unfinished"/>
     </message>
 </context>

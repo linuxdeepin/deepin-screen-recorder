@@ -510,8 +510,8 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <translation>Snímek z celého posuvníku</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
-        <translation>Připnout snímky obrazovky</translation>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -525,7 +525,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation>V současnosti není zaznamenávání obrazovky podporováno</translation>
+        <translation>V tuto chvíli není zaznamenávání obrazovky podporováno</translation>
     </message>
     <message>
         <source>Exit</source>

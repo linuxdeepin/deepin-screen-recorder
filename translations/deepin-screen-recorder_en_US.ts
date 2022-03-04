@@ -510,8 +510,8 @@ or press the shortcut again to stop recording</translation>
         <translation>Scrollshot</translation>
     </message>
     <message>
-        <source>Pin screenshots</source>
-        <translation>Pin screenshots</translation>
+        <source>Pin Screenshots</source>
+        <translation>Pin Screenshots</translation>
     </message>
 </context>
 <context>
