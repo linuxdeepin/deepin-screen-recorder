@@ -90,7 +90,7 @@ TEST_F(TestTimeWidget, paintEvent)
 
 TEST_F(TestTimeWidget, mousePressEvent)
 {
-    QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(10, 10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    QMouseEvent *ev = new QMouseEvent(QEvent::MouseButtonPress, QPoint(-10, 10), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     access_private_field::TimeWidgetm_position(*m_timeWidget) = 0;
     call_private_fun::TimeWidgetmousePressEvent(*m_timeWidget, ev);
     delete  ev;

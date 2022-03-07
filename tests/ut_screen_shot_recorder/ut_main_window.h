@@ -226,6 +226,10 @@ TEST_F(MainWindowTest, screenShotShapes)
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
 
+    window->changeShotToolEvent("rectangle");
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
     ShapesWidget *m_shapesWidget = access_private_field::MainWindowm_shapesWidget(*window);
 
 
