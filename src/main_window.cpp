@@ -199,6 +199,9 @@ void MainWindow::initAttributes()
     //Qt::X11BypassWindowManagerHint : 完全绕过窗口管理器。
     if (Utils::isWaylandMode) {
         setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+        if (this->windowHandle()) {
+            this->windowHandle()->setProperty("_d_dwayland_window-type", "onScreenDisplay");
+        }
     } else {
         setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
     }
@@ -2516,7 +2519,7 @@ void MainWindow::saveScreenShot()
         m_scrollShotTip->setVisible(false);
         m_scrollShotTip->hide();
     }
-    if(m_previewWidget){
+    if (m_previewWidget) {
         // 隐藏预览窗口
         m_previewWidget->hide();
     }
@@ -4393,7 +4396,7 @@ void MainWindow::onScrollShotMerageImgState(PixMergeThread::MergeErrorValue stat
     m_scrollShotStatus = 3;
     //暂停自动滚动截图
     pauseAutoScrollShot();
-    if(m_tipShowtimer->isActive()){
+    if (m_tipShowtimer->isActive()) {
         return;
     }
     qDebug() << "function:" << __func__ << " ,line: " << __LINE__ << " , 拼接时的状态: " << state;
