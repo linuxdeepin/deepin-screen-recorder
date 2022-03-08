@@ -190,7 +190,7 @@ void MainWindow::initAttributes()
     m_isZhaoxin = Utils::checkCpuIsZhaoxin();
 
 
-    rootWindowRect = QRect(0, 0, static_cast<int>(m_screenSize.width() / m_pixelRatio), static_cast<int>(m_screenSize.height() / m_pixelRatio));
+    rootWindowRect = QRect(0, 0, static_cast<int>(qRound(m_screenSize.width() / m_pixelRatio)), static_cast<int>(qRound(m_screenSize.height() / m_pixelRatio)));
     screenRect = QRect(screenRect.topLeft() / m_pixelRatio, screenRect.size());
     qDebug() << "screen size" << rootWindowRect;
 
@@ -5040,8 +5040,8 @@ void MainWindow::startCountdown()
     recordButtonStatus = RECORD_BUTTON_WAIT;
     const QPoint topLeft = geometry().topLeft();
     QRect recordRect {
-        static_cast<int>(recordX * m_pixelRatio + topLeft.x()),
-        static_cast<int>(recordY * m_pixelRatio + topLeft.y()),
+        static_cast<int>(recordX *m_pixelRatio/* + topLeft.x()*/),
+        static_cast<int>(recordY *m_pixelRatio/* + topLeft.y()*/),
         static_cast<int>(recordWidth * m_pixelRatio),
         static_cast<int>(recordHeight * m_pixelRatio)
     };
