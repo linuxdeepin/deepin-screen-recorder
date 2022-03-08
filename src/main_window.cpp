@@ -2514,6 +2514,9 @@ void MainWindow::saveScreenShot()
     //m_shotButton->setVisible(false);
     //m_recordButton->setVisible(false);
     m_sizeTips->setVisible(false);
+
+    m_initScroll = false; // 保存时关闭滚动截图
+    update();
 #ifdef OCR_SCROLL_FLAGE_ON
     if (m_scrollShotTip) {
         m_scrollShotTip->setVisible(false);
@@ -2538,9 +2541,6 @@ void MainWindow::saveScreenShot()
     if (m_scrollShotSizeTips) {
         m_scrollShotSizeTips->hide();
     }
-    update();
-
-    m_initScroll = false; // 保存时关闭滚动截图
     //滚动截图模式下保存图片
     if (status::scrollshot == m_functionType && m_scrollShotStatus != 0) {
 #ifdef OCR_SCROLL_FLAGE_ON
@@ -2996,7 +2996,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
     }
 
     if (recordWidth > 0 && recordHeight > 0) {
-//        qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
+        //qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
         if (Utils::isTabletEnvironment && (status::record == m_functionType || status::scrollshot == m_functionType)) {
             // 平板环境屏蔽录屏和滚动截图， 不绘制线框
             return;
@@ -3042,9 +3042,9 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
         //捕捉区域
         frameRect = QRect(recordX, recordY, recordWidth, recordHeight);
-        // Draw frame. 画捕捉区域的虚线框
-        if (recordButtonStatus != RECORD_BUTTON_RECORDING) {
-//            qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
+        // Draw frame. 画捕捉区域的虚线框 滚动截图保存时不画虚线框
+        if (recordButtonStatus != RECORD_BUTTON_RECORDING && !(status::scrollshot == m_functionType && !m_initScroll)) {
+            //qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
             painter.setRenderHint(QPainter::Antialiasing, false);
             //QPen framePen(QColor("#01bdff"));
             QPen framePen(Qt::white);
@@ -3064,7 +3064,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
         // Draw drag pint.
         //画虚线框上的骨架点一共8个
-        if (recordButtonStatus == RECORD_BUTTON_NORMAL && drawDragPoint) {
+        if (recordButtonStatus == RECORD_BUTTON_NORMAL && drawDragPoint && status::scrollshot != m_functionType) {
             //qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
             painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS, recordY - DRAG_POINT_RADIUS), resizeHandleBigImg);
             painter.drawPixmap(QPoint(recordX - DRAG_POINT_RADIUS + recordWidth - 1, recordY - DRAG_POINT_RADIUS), resizeHandleBigImg);
