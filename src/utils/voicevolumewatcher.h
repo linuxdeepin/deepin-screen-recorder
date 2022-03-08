@@ -57,9 +57,18 @@ signals:
     /* void inputSourceChanged(const QString &name); */
 
 private:
+
+    //音频服务名
     const QString m_serviceName {"com.deepin.daemon.Audio"};
 
+    /**
+     * @brief 音频接口对象
+     * 对应为com.deepin.daemon.Audio
+     */
     QScopedPointer<com::deepin::daemon::Audio> m_audioInterface;
+    /**
+     * @brief 音频源
+     */
     QScopedPointer<com::deepin::daemon::audio::Source> m_defaultSource;
 
     struct Port {

@@ -32,8 +32,7 @@ voiceVolumeWatcher::voiceVolumeWatcher(QObject *parent)
 {
     //m_isRecoding = false;
 
-    // 初始化Dus接口
-
+    // 初始化Dus接口 检查是否存在音频接口com.deepin.daemon.Audio
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered("com.deepin.daemon.Audio").value()) {
         initDeviceWatcher();
         initConnections();
@@ -106,6 +105,7 @@ bool voiceVolumeWatcher::isMicrophoneAvail(const QString &activePort) const
     }
     return available;
 }
+//初始化设备监听
 void voiceVolumeWatcher::initDeviceWatcher()
 {
     m_audioInterface.reset(
@@ -169,12 +169,13 @@ void voiceVolumeWatcher::initAvailInputPorts(const QString &cards)
         }
     }
 }
-
+//只要端口名不含有output字段，那该端口都归于输入端口
 bool voiceVolumeWatcher::Port::isInputPort() const
 {
-    const QString inputPortFingerprint("input");
-
-    return portId.contains(inputPortFingerprint, Qt::CaseInsensitive);
+//    const QString inputPortFingerprint("input");
+//    return portId.contains(inputPortFingerprint, Qt::CaseInsensitive);
+    const QString inputPortFingerprint("output");
+    return !portId.contains(inputPortFingerprint, Qt::CaseInsensitive);
 }
 
 bool voiceVolumeWatcher::Port::isLoopback() const
