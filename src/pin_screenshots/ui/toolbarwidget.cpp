@@ -95,8 +95,8 @@ void ToolBarWidget::initToolBarWidget()
     connect(m_closeButton, SIGNAL(clicked()), this, SIGNAL(signalCloseButtonClicked()));
     setMinimumSize(MIN_TOOLBAR_WIDGET_SIZE);
     QHBoxLayout *hLayout = new QHBoxLayout(this);
-    hLayout->setMargin(0);
-    hLayout->addStretch();
+    hLayout->setContentsMargins(0, 0, 0, 0);
+    hLayout->addSpacing(10);
     hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
     hLayout->addWidget(m_closeButton, 0,  Qt::AlignCenter);
     setLayout(hLayout);

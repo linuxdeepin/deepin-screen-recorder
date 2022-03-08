@@ -81,12 +81,12 @@ void ToolBar::initToolBar(DWidget *parent)
 //显示在点pos
 void ToolBar::showAt(QPoint pos)
 {
+    qDebug() << "pos" << pos;
+    this->moveAt(pos);
     if (!m_saveButton->isVisible() || (!m_toolbarWidget->isVisible())) {
         m_btWidget->show();
         m_toolbarWidget->show();
     }
-    qDebug() << "pos" << pos;
-    this->moveAt(pos);
 }
 
 // 设置隐藏
