@@ -123,6 +123,14 @@ public:
     RecordAdmin *m_recordAdmin;
     //是否初始化录屏管理
     bool m_bInitRecordAdmin;
+
+    /**
+     * @brief m_stopAppendImageMapFlag
+     * 当触发停止录屏时该属性会改变,停止:true;未停止:false
+     * 该属性主要是用来控制数据池中是否需要保持1帧画面
+     */
+    bool m_stopAppendImageMapFlag =false;
+
     //WriteFrameThread *m_writeFrameThread;
     //     pthread_t m_writeFrameThread;
 protected Q_SLOTS:
@@ -141,16 +149,27 @@ protected Q_SLOTS:
     void processBufferX86(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect);
 
     /**
-     * @brief 从wayland客户端获取当前屏幕的截图
-     * @param fd
-     * @param width
-     * @param height
-     * @param stride
-     * @param format
-     * @return
+     * @brief 为数据池中添加数据
+     * @param time: 当前的time
+     * @param image: 当前的图片数据
      */
-    unsigned char *getImageData(int32_t fd, uint32_t width, uint32_t height, uint32_t stride,
-                                uint32_t format);
+    void appendImageMap(qint64 time,QImage image);
+    /**
+     * @brief 从数据池中移除指定时间的的图片数据
+     * @param time:指定时间
+     */
+    void removeImageMap(qint64 time);
+    /**
+     * @brief 从数据池中获取图片
+     * @param image: 图片
+     * @return 当前图片对应的时间
+     */
+    qint64 getImageMap(QImage &image);
+    /**
+     * @brief 通过线程每30ms钟向数据池中取出一张图片添加到环形缓冲区，以便后续视频编码
+     */
+    void appendFrameToList();
+
     /**
         * @brief 从wayland客户端获取当前屏幕的截图
         * @param fd
@@ -215,6 +234,26 @@ private:
     QList<waylandFrame> m_waylandList;
     //空闲内存
     QList<unsigned char *> m_freeList;
+
+    /**
+     * @brief 图片数据池的keys，对应数据池中所有的keys
+     */
+    QList<qint64> m_ImageKey;
+    /**
+     * @brief 图片数据池，用来存放从窗管获取的图片数据。
+     * 可能存在这种情况，一段时间内窗管给过来的图片数据减少，导致数据池的数据取到只剩一张。此时会将这张图片数据重新打个时间继续放在数据池
+     */
+    QMap<qint64,QImage> m_ImageMap;
+    /**
+     * @brief 从数据池取取数据的线程的开关。当数据池有数据时被启动
+     */
+    bool m_appendFrameToListFlag = false;
+    /**
+     * @brief 窗管传过来的图片的某个属性
+     */
+    quint32 m_checkStride = 0;
+
+
     //ffmpeg视频帧
     unsigned char *m_ffmFrame;
     //起始时间戳
