@@ -167,7 +167,8 @@ bool CameraWidget::cameraStart()
 void CameraWidget::cameraStop()
 {
     timer_image_capture->stop();
-    camera->stop();
+    //camera->stop();
+    camera->unload();
     m_cameraUI->clear();
 }
 
