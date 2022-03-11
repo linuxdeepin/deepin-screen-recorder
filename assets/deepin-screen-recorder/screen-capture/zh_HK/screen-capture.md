@@ -2,7 +2,7 @@
 
 ## 概述
 
-螢幕錄影是一款集截圖、錄屏於一體的小巧工具，不僅支持多種方式來選擇截圖錄屏區域，還支持對圖片進行編輯，對螢幕活動進行設置等功能。
+截圖錄屏是一款集截圖、錄屏於一體的小工具，支持圖片編輯、貼圖、滾動截圖、文字識別、錄屏等功能。
 
 ![partarea](fig/partarea.jpg)
 
@@ -68,7 +68,7 @@
 
 螢幕錄影會自動識別當前的應用窗口。
 
-![1|窗口截圖](fig/windows.jpg)
+![1|窗口截圖](fig/window.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -116,19 +116,23 @@
     <caption>工具欄說明</caption>
     <tbody>
         <tr>
+            <td><img src="../common/pin.svg" alt="貼圖" class="inline" /></td>
+            <td>貼圖</td>
             <td><img src="../common/scrollshot.svg" alt="滾動截圖" class="inline" /></td>
             <td>滾動截圖</td>
             <td><img src="../common/ocr.svg" alt="識別文字" class="inline" /></td>
             <td>識別文字</td>
+        </tr>
+        <tr>
             <td><img src="../common/rectangle_normal.svg" alt="矩形工具" class="inline" /></td>
             <td>矩形工具</td>
             <td><img src="../common/oval_normal.svg" alt="橢圓工具" class="inline" /></td>
             <td>橢圓工具</td>
-        </tr>
-          <tr>
             <td><img src="../common/line_normal.svg" alt="箭頭工具" class="inline" /></td>
             <td>直線工具</td>
-            <td><img src="../common/Combined_Shape.svg" alt="畫筆工具" class="inline" /></td>
+        </tr>
+        <tr>
+             <td><img src="../common/Combined_Shape.svg" alt="畫筆工具" class="inline" /></td>
             <td>畫筆工具</td>
             <td><img src="../common/text_normal.svg" alt="文本工具" class="inline" /></td>
             <td>文本工具</td>
@@ -262,11 +266,24 @@
 3. 在文本框外單擊鼠標左鍵，退出編輯模式。
 
 
+
+### 貼圖|pinscreenshots
+
+通過貼圖功能將截圖變為桌面浮窗，方便您快速查閱、對比和梳理訊息。
+
+選擇需要截取的區域後，單擊工具欄上的貼圖按鈕 ![icon](../common/pin.svg)，截圖浮於桌面上即為貼圖，您可以對貼圖進行如下操作：
+
+- 通過鼠標或鍵盤移動圖片的位置。
+- 將鼠標指針置於圖片上，向上或向下滾動鼠標滾輪等比縮放圖片。
+- 單擊按鈕 ![icon](../common/screenshot_button.svg) 保存圖片。
+
+![0|option](fig/pin_pic.jpg)
+
 ### 滾動截圖|scrollshot
 
 滾動截圖功能不僅可以截取螢幕內可見的內容，還能截取超過螢幕外的內容，滿足一次性截取長圖的需求。
 
-請在 **控制中心 > 個性化** 中開啟特效窗口。
+前提條件： **控制中心 > 個性化** 中的窗口特效功能已開啟。
 
 1. 選擇截圖區域後，單擊工具欄上的滾動截圖按鈕 ![icon](../common/scrollshot.svg)。
 
@@ -296,8 +313,8 @@
 
 對於截圖區域中無法複製的內容，可以使用識別文字功能提取文字。
 
-1. 在截圖工具欄中，單擊工具欄上的按鈕 ![ocr](../common/ocr.svg)，彈出圖文識別窗口，識別圖片中的文字。
-3. 單擊右側文本區域可以編輯文字內容；在圖文識別窗口右下角，單擊複製按鈕 ![copy](../common/copy.svg) 將文字內容複製到剪貼板；單擊下載按鈕 ![copy](../common/download.svg) 將文字內容保存為TXT文件。
+1. 選擇截圖區域後，單擊工具欄上的按鈕 ![ocr](../common/ocr.svg)，彈出圖文識別窗口，識別圖片中的文字。
+2. 您可以對識別出的文字進行編輯、複製或保存為TXT等操作。
 
 ![ocr](fig/ocr.png)
 

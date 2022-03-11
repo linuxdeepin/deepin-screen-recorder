@@ -2,7 +2,7 @@
 
 ## 概述
 
-截图录屏是一款集截图、录屏于一体的小巧工具，不仅支持多种方式来选择截图录屏区域，还支持对图片进行编辑，对屏幕活动进行设置等功能。
+截图录屏是一款集截图、录屏于一体的小工具，支持图片编辑、贴图、滚动截图、文字识别、录屏等功能。
 
 ![part_area](fig/partarea.jpg)
 
@@ -104,7 +104,7 @@
 
 将鼠标指针置于截图录屏区域上，鼠标指针为 ![手指](../common/hand.svg)，您可以：
 - 按住鼠标左键不放，拖动鼠标来移动区域的位置。
-- 按下键盘上的 ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 来上下移动区域，按下键盘上的 ![向左](../common/Left.svg)或 ![向右](../common/Right.svg) 来左右移动区域。
+- 按下键盘上的 ![向上](../common/Up.svg) 或 ![向下](../common/Down.svg) 来上下移动区域，按下键盘上的 ![向左](../common/Left.svg) 或 ![向右](../common/Right.svg) 来左右移动区域。
 
 
 
@@ -119,19 +119,23 @@
     <caption>工具栏说明</caption>
     <tbody>
         <tr>
+            <td><img src="../common/pin.svg" alt="贴图" class="inline" /></td>
+            <td>贴图</td>
             <td><img src="../common/scrollshot.svg" alt="滚动截图" class="inline" /></td>
             <td>滚动截图</td>
             <td><img src="../common/ocr.svg" alt="识别文字" class="inline" /></td>
             <td>识别文字</td>
+        </tr>
+        <tr>
             <td><img src="../common/rectangle_normal.svg" alt="矩形工具" class="inline" /></td>
             <td>矩形工具</td>
             <td><img src="../common/oval_normal.svg" alt="椭圆工具" class="inline" /></td>
             <td>椭圆工具</td>
-        </tr>
-          <tr>
             <td><img src="../common/line_normal.svg" alt="箭头工具" class="inline" /></td>
             <td>直线工具</td>
-            <td><img src="../common/Combined_Shape.svg" alt="画笔工具" class="inline" /></td>
+        </tr>
+        <tr>
+             <td><img src="../common/Combined_Shape.svg" alt="画笔工具" class="inline" /></td>
             <td>画笔工具</td>
             <td><img src="../common/text_normal.svg" alt="文本工具" class="inline" /></td>
             <td>文本工具</td>
@@ -140,6 +144,8 @@
         </tr>
     </tbody>
 </table>
+
+
 
 
 
@@ -262,15 +268,25 @@
 3. 在文本框外单击鼠标左键，退出编辑模式。
 
 
+### 贴图|pinscreenshots
+
+通过贴图功能将截图变为桌面浮窗，方便您快速查阅、对比和梳理信息。
+
+选择需要截取的区域后，单击工具栏上的贴图按钮 ![icon](../common/pin.svg)，截图浮于桌面上即为贴图，您可以对贴图进行如下操作：
+
+- 通过鼠标或键盘移动图片的位置。
+- 将鼠标指针置于图片上，向上或向下滚动鼠标滚轮等比缩放图片。
+- 单击按钮 ![icon](../common/screenshot_button.svg) 保存图片。
+
+![0|option](fig/pin_pic.jpg)
 
 ### 滚动截图|scrollshot
 
 滚动截图功能不仅可以截取屏幕内可见的内容，还能截取超过屏幕外的内容，满足一次性截取长图的需求。
 
-请在 **控制中心 > 个性化** 中开启特效窗口。
+前提条件： **控制中心 > 个性化** 中的窗口特效功能已开启。
 
 1. 选择截图区域后，单击工具栏上的滚动截图按钮 ![icon](../common/scrollshot.svg)。
-
 2. 请将鼠标光标保持在滚动区域内，您可以使用自动滚动或手动滚动截图，也可以交替使用两种方式：
 
    - **自动滚动**：在截图区域中单击鼠标左键，光标所在的截图区域自动向上滚动，此时截取的图片会拼接为一张完整的长图。自动滚动过程中，在截图区域内单击鼠标左键，或者将光标移出截图区域，暂停截图；再次单击截图区域，继续截图。
@@ -297,10 +313,12 @@
 
 对于截图区域中无法复制的内容，可以使用识别文字功能提取文字。
 
-1. 在截图工具栏中，单击工具栏上的文字识别按钮 ![ocr](../common/ocr.svg)，弹出图文识别窗口，识别图片中的文字。
-3. 单击右侧文本区域可以编辑文字内容；在图文识别窗口右下角，单击复制按钮 ![copy](../common/copy.svg) 将文字内容复制到剪贴板；单击下载按钮 ![copy](../common/download.svg) 将文字内容保存为TXT文件。
+1. 选择截图区域后，单击工具栏上的文字识别按钮 ![ocr](../common/ocr.svg)，弹出图文识别窗口，识别图片中的文字。
+2. 您可以对识别出的文字进行编辑、复制或保存为TXT等操作。
 
 ![ocr](fig/ocr.png)
+
+
 
 ### 延时截图
 

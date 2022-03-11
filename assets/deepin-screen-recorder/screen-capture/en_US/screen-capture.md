@@ -30,7 +30,7 @@ You can run, close, and create a desktop shortcut for Screen Capture in the foll
 
 In the Screenshot mode on the Screen Capture interface, press **Ctrl + Shift + ?** to view shortcuts. Proficiency in shortcuts will greatly improve your efficiency.
 
-![1|hotkey](fig/hotkey.png)
+![1|hotkey](fig/hotkey.jpg)
 
 ## Select and Adjust Screen Capture Area
 
@@ -44,7 +44,7 @@ There are three kinds of common screen capture areas, namely the full screen, pr
 
 Full screen selection is used to identify the entire screen of the current monitor.
 
-![1|fullscreen](fig/fullscreen.png)
+![1|fullscreen](fig/fullscreen.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 You can select the full screen in the following ways:
@@ -101,33 +101,38 @@ Place the pointer over the screen capture area and it will be changed to ![finge
 
 Under the screenshot mode, click the corresponding icons on the toolbar and you can perform operations such as drawing and editing graphics, adding text annotations, etc. in the screenshot  area.
 
-![0|caputure_bar](fig/capture_bar.png)
+![0|caputure_bar](fig/capture_bar.jpg)
 
 <table class="block1">
     <caption>Icon Description</caption>
     <tbody>
         <tr>
+            <td><img src="../common/pin.svg" alt="Pin Screenshot" class="inline" /></td>
+            <td>Pin Screenshot</td>
             <td><img src="../common/scrollshot.svg" alt="Scrollshot" class="inline" /></td>
             <td>Scrollshot</td>
             <td><img src="../common/ocr.svg" alt="Extract Text" class="inline" /></td>
             <td>Extract Text</td>
+            </tr>
+        <tr>            
             <td><img src="../common/rectangle_normal.svg" alt="Rectangle" class="inline" /></td>
             <td>Rectangle</td>
             <td><img src="../common/oval_normal.svg" alt="Elipse" class="inline" /></td>
-            <td>Elipse</td>
-                    </tr>
-          <tr>
+            <td>Elipse</td>               
             <td><img src="../common/line_normal.svg" alt="Arrow" class="inline" /></td>
             <td>Line</td>
+            </tr>
+        <tr>
             <td><img src="../common/Combined_Shape.svg" alt="Pencil" class="inline" /></td>
             <td>Pencil</td>
-            <td><img src="../common/text_normal.svg" alt="文本工具" class="inline" /></td>
+            <td><img src="../common/text_normal.svg" alt="text" class="inline" /></td>
             <td>Text</td>
-            <td><img src="../common/close.svg" alt="关闭" class="inline" /></td>
+            <td><img src="../common/close.svg" alt="exit" class="inline" /></td>
             <td>Exit</td>
         </tr>
     </tbody>
 </table>
+
 
 
 
@@ -237,6 +242,20 @@ You can modify and move the text annotations after they're entered.
    - Press **Delete** on the keyboard to delete text annotations.
    - Modify the text in the text box.
 3. Click outside the text box to exit editing mode.
+
+### Pin Screenshots|pinscreenshots
+
+With this feature, you are able to pin multiple screenshots on the system desktop for later comparison, integration, etc. conveniently.
+
+Select the screenshot area and click the  ![icon](../common/pin.svg) icon on the toolbar to pin the screenshot on your desktop. You can perform the following operations:
+
+- Move the screenshot by clicking and dragging it or pressing the ![icon](../common/Up.svg), ![icon](../common/Down.svg), ![icon](../common/Left.svg) or ![icon](../common/Right.svg) key on the keyboard.
+- Scale up or down the screenshot by placing the mouse pointer on the screenshot and scrolling up or down the mouse wheel.    
+- Click the ![icon](../common/screenshot_button.svg) icon on the toolbar to save it.
+
+
+
+![0|option](fig/pin_pic.jpg)
 
 ### Take Screen Scrollshots|scrollshot
 

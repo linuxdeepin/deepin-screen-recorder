@@ -4,7 +4,7 @@
 
 熒幕錄影是一款集截圖和錄屏於一體的小巧工具，不僅支援多種方式來選擇截圖錄屏區域，還支援對圖片進行編輯，對螢幕活動進行設定等功能。
 
-![part_area](fig/part_area.jpg)
+![part_area](fig/partarea.jpg)
 
 
 ## 使用入門
@@ -31,7 +31,7 @@
 
 使用快捷鍵 **Ctrl + Shift + ?** 打開快捷鍵預覽介面。熟練地使用快捷鍵，將大大提升您的操作效率。
 
-![1|快捷鍵](fig/hotkey.png)
+![1|快捷鍵](fig/hotkey.jpg)
 ## 選擇和調整區域
 
 ### 選擇截圖錄屏區域
@@ -45,7 +45,7 @@
 
 熒幕錄影會自動識別目前顯示器的整個螢幕。
 
-![1|全螢幕截圖](fig/fullscreen.png)
+![1|全螢幕截圖](fig/fullscreen.jpg)
 
 
 您可以透過操作以下步驟來選擇全螢幕：
@@ -56,7 +56,7 @@
 
 您也可以直接操作以下步驟來進行全屏截圖：
 
-- 如果您已經將熒幕錄影固定到任務欄，右鍵單擊任務欄上的![deepin_screenshot](../common/deepin_screenshot.svg)，然後選擇截取全螢幕 。
+- 如果您已經將熒幕錄影固定到任務欄，右鍵單擊任務欄上的 ![deepin_screenshot](../common/deepin_screenshot.svg)，然後選擇截取全螢幕 。
 - 按下鍵盤上的 ![print](../common/Print.svg) 鍵，實現全螢幕截圖。
 
 #### 選擇視窗
@@ -75,7 +75,7 @@
 
 您還可以自由選擇截圖錄屏的範圍。
 
-![1|區域截圖](fig/part_area.jpg)
+![1|區域截圖](fig/partarea.jpg)
 
 
 1.  使用快捷鍵 **Ctrl + Alt + A** 進入截圖模式，或 **Ctrl + Alt + R** 進入錄屏模式。
@@ -103,24 +103,28 @@
 
 在截圖模式下，單擊工具列上的按鈕，您可以在截圖區域繪製圖形、編輯圖形、添加文字批註等。
 
-![0|截圖工具列](fig/capturebar.png)
+![0|截圖工具列](fig/capturebar.jpg)
 
 <table class="block1">
     <caption>工具列說明</caption>
     <tbody>
         <tr>
-            <td><img src="../common/scrollshot.svg" alt="滾動截圖" class="inline" /></td>
+            <td><img src="../common/pin.svg" alt="貼圖" class="inline" /></td>
             <td>滾動截圖</td>
+            <td><img src="../common/scrollshot.svg" alt="滾動截圖" class="inline" /></td>
+            <td>貼圖</td>
             <td><img src="../common/ocr.svg" alt="识别文字" class="inline" /></td>
             <td>識別文字</td>
+            </tr>
+        <tr>
             <td><img src="../common/rectangle_normal.svg" alt="矩形工具" class="inline" /></td>
             <td>矩形工具</td>
             <td><img src="../common/oval_normal.svg" alt="橢圓工具" class="inline" /></td>
-            <td>橢圓工具</td>
-            </tr>
-          <tr>
+            <td>橢圓工具</td>            
             <td><img src="../common/line_normal.svg" alt="箭頭工具" class="inline" /></td>
             <td>直線工具</td>
+            </tr>
+        <tr>
                  <td><img src="../common/Combined_Shape.svg" alt="畫筆工具" class="inline" /></td>
             <td>畫筆工具</td>
             <td><img src="../common/text_normal.svg" alt="文字工具" class="inline" /></td>
@@ -130,6 +134,7 @@
               </tr>
     </tbody>
 </table>
+
 
 
 
@@ -241,11 +246,23 @@
    - 在文字框內，修改文字訊息。
 3. 在文字框外單擊滑鼠左鍵，退出編輯模式。
 
+### 貼圖|pinscreenshots
+
+透過貼圖功能將截圖變為桌面浮窗，方便您快速查閱、對比和梳理訊息。
+
+選擇截圖區域後，單擊工具列上的貼圖按鈕 ![icon](../common/pin.svg)，截圖浮於桌面上即為貼圖，您可以對貼圖進行如下操作：
+
+- 透過滑鼠或鍵盤移動圖片的位置。
+- 將滑鼠指標置於圖片上，向上或向下滾動滑鼠滾輪等比縮放圖片。
+- 單擊按鈕 ![icon](../common/screenshot_button.svg) 儲存圖片。
+
+![0|option](fig/pin_pic.jpg)
+
 ### 滾動截圖|scrollshot
 
 滾動截圖功能不僅可以截取螢幕內可見的內容，還能截取超過螢幕外的內容，滿足一次性截取長圖的需求。
 
-請在 **控制中心 > 個性化** 中開啟特效視窗。
+前提條件： 請在 **控制中心 > 個性化** 中開啟視窗特效。
 
 1. 選擇截圖區域後，單擊工具列上的滾動截圖按鈕 ![icon](../common/scrollshot.svg)。
 
@@ -273,11 +290,10 @@
 
 對於截圖區域中無法複製的內容，可以使用識別文字功能提取文字。
 
-1. 在截圖工具列中，單擊工具列上的按鈕 ![ocr](../common/ocr.svg)，系統自動截取圖片並進入圖文識別視窗，識別圖片中的文字。
+1. 選擇截圖區域後，單擊工具列上的文字識別按鈕 ![ocr](../common/ocr.svg)，彈出圖文識別視窗，識別圖片中的文字。
+2. 您可以對識別出的文字進行編輯、複製或儲存為TXT等操作。
 
-2. 單擊文字區域可以編輯文字內容；在圖文識別視窗右下角，單擊複製按鈕 ![copy](../common/copy.svg) 將文字內容複製到剪貼簿；單擊下載按鈕 ![copy](../common/download.svg) 將文字內容儲存為TXT文件。
-
-   ![ocr](fig/ocr.png)
+![ocr](fig/ocr.png)
 
 ### 延時截圖
 
