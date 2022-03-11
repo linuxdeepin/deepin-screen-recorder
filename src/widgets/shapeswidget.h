@@ -81,8 +81,17 @@ public slots:
     void setCurrentShape(QString shapeType);
     //void updatePenColor();
     //void setPenColor(QColor color);
+    /**
+     * @brief 清除选择
+     */
     void clearSelected();
+    /**
+     * @brief 设置所有的文本编辑框为只读状态
+     */
     void setAllTextEditReadOnly();
+    /**
+     * @brief 设置移除没有输入的文本框
+     */
     void setNoChangedTextEditRemove();
     void saveActionTriggered();
 

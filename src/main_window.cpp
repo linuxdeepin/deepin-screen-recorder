@@ -2448,7 +2448,6 @@ void MainWindow::changeShotToolEvent(const QString &func)
         //qDebug() << "m_saveFileName: " << m_saveFileName;
         // 调起OCR识别界面， 传入截图路径
         m_ocrInterface = new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
-        saveScreenShot();
         int delayTime = 0;
         //直接通过快捷键启动时需要延时100ms再进行保存，防止未获取到选择区域的名称
         if (m_isDirectStartOcr) {
@@ -2525,18 +2524,18 @@ void MainWindow::saveScreenShot()
     if (m_previewWidget) {
         // 隐藏预览窗口
         m_previewWidget->hide();
-    }
-    // 延时
+        // 延时
 #if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__)
-    static int delayTime = 260;
+        static int delayTime = 260;
 #elif defined (__aarch64__)
-    static int delayTime = 220;
+        static int delayTime = 220;
 #else
-    static int delayTime = 100;
+        static int delayTime = 100;
 #endif
-    QEventLoop eventloop;
-    QTimer::singleShot(delayTime, &eventloop, SLOT(quit()));
-    eventloop.exec();
+        QEventLoop eventloop;
+        QTimer::singleShot(delayTime, &eventloop, SLOT(quit()));
+        eventloop.exec();
+    }
 #endif
     if (m_scrollShotSizeTips) {
         m_scrollShotSizeTips->hide();
