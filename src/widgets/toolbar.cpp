@@ -91,7 +91,7 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
 
     setFixedHeight(TOOLBAR_HEIGHT);
     if (Utils::is3rdInterfaceStart) {
-        m_subTool->setMinimumWidth(TOOLBAR_WIDTH - 178); //减去隐藏按钮的最小宽度和
+        m_subTool->setMinimumWidth(TOOLBAR_WIDTH - 160); //减去隐藏按钮的最小宽度和
     }
 
     QHBoxLayout *hLayout = new QHBoxLayout();

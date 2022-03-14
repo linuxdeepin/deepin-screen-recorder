@@ -765,6 +765,7 @@ void SubToolWidget::initShotLabel()
         m_shotOptionButton->hide();
         m_scrollShotButton->hide(); //隐藏滚动截图按钮
         m_ocrButton->hide(); //隐藏ocr按钮
+        m_pinButton->hide(); //隐藏pin按钮
     }
     btnList.append(m_shotOptionButton);
 
