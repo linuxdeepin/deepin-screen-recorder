@@ -94,6 +94,8 @@ public:
      * @param boardVendorType
      */
     void setBoardVendor(int boardVendorType);
+protected:
+    void freeSwrContext(struct SwrContext *swrContext);
 public:
     //截图区域
     int m_left;

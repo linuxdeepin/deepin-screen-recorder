@@ -81,7 +81,7 @@ avlibInterface::p_sws_getContext avlibInterface::m_sws_getContext = nullptr;
 avlibInterface::p_swr_convert avlibInterface::m_swr_convert = nullptr;
 avlibInterface::p_swr_alloc_set_opts avlibInterface::m_swr_alloc_set_opts = nullptr;
 avlibInterface::p_swr_init avlibInterface::m_swr_init = nullptr;
-
+avlibInterface::p_swr_free avlibInterface::m_swr_free = nullptr; //新增，解决内存泄露
 
 QLibrary avlibInterface::m_libavutil;
 QLibrary avlibInterface::m_libavcodec;
@@ -217,7 +217,7 @@ void avlibInterface::initFunctions()
     m_swr_convert = reinterpret_cast<p_swr_convert>(m_libswresample.resolve("swr_convert"));
     m_swr_alloc_set_opts = reinterpret_cast<p_swr_alloc_set_opts>(m_libswresample.resolve("swr_alloc_set_opts"));;
     m_swr_init = reinterpret_cast<p_swr_init>(m_libswresample.resolve("swr_init"));
-
+    m_swr_free = reinterpret_cast<p_swr_free>(m_libswresample.resolve("swr_free")); //新增，解决内存泄露
 
     m_isInitFunction = true;
 }

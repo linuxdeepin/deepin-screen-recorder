@@ -398,7 +398,7 @@ int CAVOutputStream::init_context_amix(int channel, uint64_t channel_layout, int
         return false;
     }
 
-    pCodecCtx_amix = avlibInterface::m_avcodec_alloc_context3(pCodec_amix);
+    //pCodecCtx_amix = avlibInterface::m_avcodec_alloc_context3(pCodec_amix); //注释此行无效代码，同时解决内存泄露
     pCodecCtx_amix = avlibInterface::m_avcodec_alloc_context3(pCodec_a);
     pCodecCtx_amix->channels = m_channels;
     pCodecCtx_amix->channel_layout = static_cast<uint64_t>(m_channels_layout);
@@ -794,6 +794,7 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
         printf("Could not allocate converted input samples\n");
         avlibInterface::m_av_freep(&(*m_convertedMicSamples)[0]);
         free(*m_convertedMicSamples);
+        freeSwrContext(m_pMicAudioSwrContext);
         return ret;
     }
 
@@ -805,8 +806,10 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
     //extended_data -> m_convertedMicSamples
     if ((ret = avlibInterface::m_swr_convert(m_pMicAudioSwrContext, m_convertedMicSamples, inputFrame->nb_samples, const_cast<const uint8_t **>(inputFrame->extended_data), inputFrame->nb_samples)) < 0) {
         printf("Could not convert input samples\n");
+        freeSwrContext(m_pMicAudioSwrContext);
         return ret;
     }
+    freeSwrContext(m_pMicAudioSwrContext);
     AVRational rational;
     int audioSize = audioFifoSize(m_micAudioFifo);
     //因为Fifo里有之前未读完的数据，所以从Fifo队列里面取出的第一个音频包的时间戳等于当前时间减掉缓冲部分的时长
@@ -952,12 +955,15 @@ int CAVOutputStream::writeMicToMixAudioFrame(AVStream *stream, AVFrame *inputFra
         printf("Could not allocate converted input samples\n");
         avlibInterface::m_av_freep(&(*m_convertedMicSamples)[0]);
         free(*m_convertedMicSamples);
+        freeSwrContext(m_pMicAudioSwrContext);
         return ret;
     }
     if ((ret = avlibInterface::m_swr_convert(m_pMicAudioSwrContext, m_convertedMicSamples, inputFrame->nb_samples, const_cast<const uint8_t **>(inputFrame->extended_data), inputFrame->nb_samples)) < 0) {
         printf("Could not convert input samples\n");
+        freeSwrContext(m_pMicAudioSwrContext);
         return ret;
     }
+    freeSwrContext(m_pMicAudioSwrContext);
     int fifoSpace = audioFifoSpace(m_micAudioFifo);
     if (fifoSpace < inputFrame->nb_samples) {
         fifoSpace = avlibInterface::m_av_audio_fifo_size(m_micAudioFifo);
@@ -1221,6 +1227,7 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
     if ((ret = avlibInterface::m_av_samples_alloc(m_convertedSysSamples, nullptr, m_pSysCodecContext->channels, inputFrame->nb_samples, m_pSysCodecContext->sample_fmt, 0)) < 0) {
         avlibInterface::m_av_freep(&(*m_convertedSysSamples)[0]);
         free(*m_convertedSysSamples);
+        freeSwrContext(m_pSysAudioSwrContext);
         return ret;
     }
 
@@ -1230,8 +1237,10 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
     */
     /** Convert the samples using the resampler. */
     if ((ret = avlibInterface::m_swr_convert(m_pSysAudioSwrContext, m_convertedSysSamples, inputFrame->nb_samples, const_cast<const uint8_t **>(inputFrame->extended_data), inputFrame->nb_samples)) < 0) {
+        freeSwrContext(m_pSysAudioSwrContext);
         return ret;
     }
+    freeSwrContext(m_pSysAudioSwrContext);
     AVRational rational = {1, AV_TIME_BASE };
     int audioSize = audioFifoSize(m_sysAudioFifo);
     int64_t timeshift = (int64_t)audioSize * AV_TIME_BASE / (int64_t)(stream->codec->sample_rate);
@@ -1385,6 +1394,7 @@ int CAVOutputStream::writeSysToMixAudioFrame(AVStream *stream, AVFrame *inputFra
     if ((ret = avlibInterface::m_av_samples_alloc(m_convertedSysSamples, nullptr, m_pSysCodecContext->channels, inputFrame->nb_samples, m_pSysCodecContext->sample_fmt, 0)) < 0) {
         avlibInterface::m_av_freep(&(*m_convertedSysSamples)[0]);
         free(*m_convertedSysSamples);
+        freeSwrContext(m_pSysAudioSwrContext);
         return ret;
     }
     /*
@@ -1394,8 +1404,11 @@ int CAVOutputStream::writeSysToMixAudioFrame(AVStream *stream, AVFrame *inputFra
      * 可以通过使用swr_get_out_samples()检索给定输入样本数量所需输出样本数量的上限来避免这种缓冲。只要有可能，转换将直接运行而不进行复制。
      */
     if ((ret = avlibInterface::m_swr_convert(m_pSysAudioSwrContext, m_convertedSysSamples, inputFrame->nb_samples, const_cast<const uint8_t **>(inputFrame->extended_data), inputFrame->nb_samples)) < 0) {
+        freeSwrContext(m_pSysAudioSwrContext);
         return ret;
     }
+
+    freeSwrContext(m_pSysAudioSwrContext);
 
     int fifoSpace = audioFifoSpace(m_sysAudioFifo);
     if (fifoSpace < inputFrame->nb_samples) {
@@ -1577,5 +1590,14 @@ void CAVOutputStream::setIsWriteFrame(bool isWriteFrame)
 void CAVOutputStream::setBoardVendor(int boardVendorType)
 {
     m_boardVendorType = boardVendorType;
+}
+
+//释放swrContext
+void CAVOutputStream::freeSwrContext(SwrContext *swrContext)
+{
+    if (swrContext != nullptr) {
+        avlibInterface::m_swr_free(&swrContext);
+        swrContext = nullptr;
+    }
 }
 

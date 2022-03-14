@@ -525,7 +525,7 @@ TEST_F(CAVOutputStreamTest, writeMicAudioFrame)
     delete inputFrame;
     delete stream->codec;
     delete stream;
-    swr_free(&access_private_field::CAVOutputStreamm_pMicAudioSwrContext(*m_avOutputStream));
+//    swr_free(&access_private_field::CAVOutputStreamm_pMicAudioSwrContext(*m_avOutputStream));
     av_audio_fifo_free(access_private_field::CAVOutputStreamm_micAudioFifo(*m_avOutputStream));
     delete access_private_field::CAVOutputStreamm_convertedMicSamples(*m_avOutputStream);
     delete access_private_field::CAVOutputStreamm_pMicCodecContext(*m_avOutputStream);
@@ -580,7 +580,7 @@ TEST_F(CAVOutputStreamTest, writeMicToMixAudioFrame)
     delete stream;
     delete access_private_field::CAVOutputStreamm_pMicCodecContext(*m_avOutputStream);
     delete access_private_field::CAVOutputStreamm_micAudioStream(*m_avOutputStream);
-    swr_close(access_private_field::CAVOutputStreamm_pMicAudioSwrContext(*m_avOutputStream));
+//    swr_free(&access_private_field::CAVOutputStreamm_pMicAudioSwrContext(*m_avOutputStream)); //不应该在单元测试中释放
 }
 
 
@@ -629,7 +629,7 @@ TEST_F(CAVOutputStreamTest, writeSysAudioFrame)
     delete stream;
     delete access_private_field::CAVOutputStreamm_pSysCodecContext(*m_avOutputStream);
     delete access_private_field::CAVOutputStreamm_sysAudioStream(*m_avOutputStream);
-    swr_close(access_private_field::CAVOutputStreamm_pSysAudioSwrContext(*m_avOutputStream));
+//    swr_free(&access_private_field::CAVOutputStreamm_pSysAudioSwrContext(*m_avOutputStream));
 }
 TEST_F(CAVOutputStreamTest, writeSysToMixAudioFrame)
 {
@@ -672,7 +672,7 @@ TEST_F(CAVOutputStreamTest, writeSysToMixAudioFrame)
     delete stream;
     delete access_private_field::CAVOutputStreamm_pSysCodecContext(*m_avOutputStream);
     delete access_private_field::CAVOutputStreamm_sysAudioStream(*m_avOutputStream);
-    swr_close(access_private_field::CAVOutputStreamm_pSysAudioSwrContext(*m_avOutputStream));
+//    swr_free(&access_private_field::CAVOutputStreamm_pSysAudioSwrContext(*m_avOutputStream));
 }
 
 TEST_F(CAVOutputStreamTest, write_filter_audio_frame)

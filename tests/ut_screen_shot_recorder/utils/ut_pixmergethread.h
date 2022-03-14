@@ -20,6 +20,7 @@
  */
 #pragma once
 #include <gtest/gtest.h>
+#include <QTimer>
 #include <QTest>
 #include "stub.h"
 #include "addr_pri.h"
@@ -88,13 +89,14 @@ TEST_F(PixMergeThreadTest, startPixMergeThreadScrollDown)
     QPixmap img2(":/testImg/addImg2.png");
     QPixmap img3(":/testImg/addImg3.png");
     m_pixMergeThread->setScrollModel(true);
-    m_pixMergeThread->addShotImg(img1);
-    QTest::qWait(50);
-    m_pixMergeThread->addShotImg(img2);
-    QTest::qWait(50);
-    m_pixMergeThread->addShotImg(img3);
     m_pixMergeThread->start();
-    QTest::qWait(100);
+    m_pixMergeThread->addShotImg(img1);
+    m_pixMergeThread->addShotImg(img2);
+    m_pixMergeThread->addShotImg(img3);
+
+    QEventLoop loop;
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
     m_pixMergeThread->stopTask();
     m_pixMergeThread->wait();
 }
@@ -107,13 +109,14 @@ TEST_F(PixMergeThreadTest, startPixMergeThreadScrollUp)
     QPixmap img2(":/testImg/addImg2.png");
     QPixmap img3(":/testImg/addImg3.png");
     m_pixMergeThread->setScrollModel(true);
-    m_pixMergeThread->addShotImg(img3, PixMergeThread::PictureDirection::ScrollUp);
-    QTest::qWait(50);
-    m_pixMergeThread->addShotImg(img2, PixMergeThread::PictureDirection::ScrollUp);
-    QTest::qWait(50);
-    m_pixMergeThread->addShotImg(img1, PixMergeThread::PictureDirection::ScrollUp);
     m_pixMergeThread->start();
-    QTest::qWait(100);
+    m_pixMergeThread->addShotImg(img3, PixMergeThread::PictureDirection::ScrollUp);
+    m_pixMergeThread->addShotImg(img2, PixMergeThread::PictureDirection::ScrollUp);
+    m_pixMergeThread->addShotImg(img1, PixMergeThread::PictureDirection::ScrollUp);
+
+    QEventLoop loop;
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
     m_pixMergeThread->stopTask();
     m_pixMergeThread->wait();
 }

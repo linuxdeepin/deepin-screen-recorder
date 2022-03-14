@@ -103,7 +103,7 @@ public:
     typedef int (*p_swr_convert)(struct SwrContext *, uint8_t **, int , const uint8_t ** , int);// libswresample
     typedef struct SwrContext *(*p_swr_alloc_set_opts)(struct SwrContext *, int64_t, enum AVSampleFormat, int, int64_t, enum AVSampleFormat, int, int, void *);
     typedef int (*p_swr_init)(struct SwrContext *);
-
+    typedef void (*p_swr_free)(SwrContext **); //新增,解决内存泄露
 
     static p_av_gettime m_av_gettime; // libavutil
     static p_av_frame_alloc m_av_frame_alloc;
@@ -184,6 +184,7 @@ public:
     static p_swr_convert m_swr_convert;
     static p_swr_alloc_set_opts m_swr_alloc_set_opts;
     static p_swr_init m_swr_init;
+    static p_swr_free m_swr_free; //新增，解决内存泄露
 
     static bool m_isInitFunction;
 
