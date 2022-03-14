@@ -4470,7 +4470,7 @@ void MainWindow::initPadShot()
 void MainWindow::exitScreenCuptureEvent()
 {
     qDebug() << "line: " << __LINE__ << " >>> function: " << __func__;
-#if !(defined (__mips__) || defined (__loongarch_64__))
+#if !(defined (__mips__) || defined (__loongarch_64__) || defined (__loongarch__))
     if (!m_isZhaoxin && m_pScreenCaptureEvent) {
         m_pScreenCaptureEvent->releaseRes();
         //m_pScreenCaptureEvent->terminate();
@@ -4604,7 +4604,7 @@ void MainWindow::startRecord()
         m_tabletRecorderHandle->startStatusBar();
     }
 #ifdef KF5_WAYLAND_FLAGE_ON
-#if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__) ||  defined (__aarch64__)
+#if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__) ||  defined (__aarch64__) || defined (__loongarch__)
     //wayland下走此方法
     connect(this, &MainWindow::stopRecordArm, this, &MainWindow::stopRecord);
     checkTempFileArm();

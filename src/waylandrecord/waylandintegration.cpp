@@ -170,7 +170,7 @@ WaylandIntegration::WaylandIntegrationPrivate::WaylandIntegrationPrivate()
     , m_remoteAccessManager(nullptr)
 {
     m_bInit = true;
-#if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__)
+#if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__) || defined (__loongarch__)
     m_bufferSize = 60;
 #elif defined (__aarch64__)
     m_bufferSize = 60;
@@ -529,24 +529,24 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
         return ;
     }
 
-    appendImageMap(avlibInterface::m_av_gettime() - frameStartTime,img);
+    appendImageMap(avlibInterface::m_av_gettime() - frameStartTime, img);
     close(dma_fd);
 }
 
 //为数据池中添加数据
 void WaylandIntegration::WaylandIntegrationPrivate::appendImageMap(qint64 time, QImage image)
 {
-    if(m_ImageKey.size() == 0){
+    if (m_ImageKey.size() == 0) {
         m_appendFrameToListFlag = true;
         //启动循环检查线程
         QtConcurrent::run(this, &WaylandIntegrationPrivate::appendFrameToList);
     }
-    if (m_ImageMap.contains(time)){
+    if (m_ImageMap.contains(time)) {
         qDebug() << "m_ImageMap 中已有相同时间的画面帧";
         return;
     }
     m_ImageKey.append(time);
-    m_ImageMap.insert(time,image);
+    m_ImageMap.insert(time, image);
 }
 
 //从数据池中移除指定时间的的图片数据
@@ -554,18 +554,18 @@ void WaylandIntegration::WaylandIntegrationPrivate::removeImageMap(qint64 time)
 {
 
     qint64 tmp_time = 0;
-    if (m_ImageMap.contains(time)){
+    if (m_ImageMap.contains(time)) {
         //当数据池的数据只剩1张画面时需要将当前画面重新打个时间戳， 当点击录屏结束后，数据池中将不再保留1张数据
-        if(m_ImageKey.size() == 1 && !m_stopAppendImageMapFlag){
+        if (m_ImageKey.size() == 1 && !m_stopAppendImageMapFlag) {
             tmp_time = avlibInterface::m_av_gettime() - frameStartTime;
-            appendImageMap(tmp_time,m_ImageMap.value(time));
+            appendImageMap(tmp_time, m_ImageMap.value(time));
         }
         //qDebug() << "已取出 m_ImageMap 中" << time << "时刻的画面帧";
         m_ImageMap.remove(time);
         //qDebug() << "已移除 m_ImageKey 中" << time << "时刻";
         m_ImageKey.removeOne(time);
     }
-    if(m_ImageKey.size() == 0){
+    if (m_ImageKey.size() == 0) {
         //qDebug() << "数据池中的数据为0";
         m_appendFrameToListFlag = false;
     }
@@ -575,7 +575,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::removeImageMap(qint64 time)
 qint64 WaylandIntegration::WaylandIntegrationPrivate::getImageMap(QImage &image)
 {
     qint64 tmp_time = m_ImageKey.first();
-    if(m_ImageMap.contains(tmp_time)){
+    if (m_ImageMap.contains(tmp_time)) {
         image = m_ImageMap.value(tmp_time);
     }
     return tmp_time;
@@ -614,7 +614,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
     while (m_appendFrameToListFlag) {
         QImage tmp_img;
         qint64 tmp_time = getImageMap(tmp_img);
-        if(!tmp_img.isNull()){
+        if (!tmp_img.isNull()) {
             globalImageCount++;
             //qDebug() << "1 >>>> m_ImageKey.size(): "  << m_ImageKey.size() << "  m_waylandList.size(): " << m_waylandList.size() << " globalImageCount: " << globalImageCount;
             //抽帧 两种使用情况:1.录屏选择不同的帧; 2.再性能差的机器上需要抽帧
