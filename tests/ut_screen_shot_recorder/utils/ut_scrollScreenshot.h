@@ -61,10 +61,14 @@ TEST_F(ScrollScreenshotTest, startAddPixmap)
     QPixmap img(":/testImg/addImg1.png");
     m_ScrollScreenshot->setScrollModel(false);
     m_ScrollScreenshot->addPixmap(img);
-    QTest::qWait(500);
+    QEventLoop loop;
+    QTimer::singleShot(500, &loop, SLOT(quit()));
+    loop.exec();
     m_ScrollScreenshot->setScrollModel(true);
     m_ScrollScreenshot->addPixmap(img);
-    QTest::qWait(50);
+    QEventLoop loop2;
+    QTimer::singleShot(1000, &loop2, SLOT(quit()));
+    loop2.exec();
     PixMergeThread *m_PixMerageThread = access_private_field::ScrollScreenshotm_PixMerageThread(*m_ScrollScreenshot);
     m_PixMerageThread->stopTask();
     m_PixMerageThread->wait();
@@ -88,7 +92,9 @@ TEST_F(ScrollScreenshotTest, changeState)
     stub.set(ADDR(QTimer, stop), stop_stub);
     m_ScrollScreenshot->changeState(true);
 
-    QTest::qWait(50);
+    QEventLoop loop2;
+    QTimer::singleShot(50, &loop2, SLOT(quit()));
+    loop2.exec();;
 
     m_curStatus = ScrollScreenshot::ScrollStatus::Stop;
     m_ScrollScreenshot->changeState(false);
@@ -102,7 +108,9 @@ TEST_F(ScrollScreenshotTest, savePixmap)
     ScrollScreenshot::ScrollStatus &m_curStatus = access_private_field::ScrollScreenshotm_curStatus(*m_ScrollScreenshot);
     m_curStatus = ScrollScreenshot::ScrollStatus::Merging;
     m_ScrollScreenshot->savePixmap();
-    QTest::qWait(800);
+    QEventLoop loop;
+    QTimer::singleShot(800, &loop, SLOT(quit()));
+    loop.exec();
 }
 
 TEST_F(ScrollScreenshotTest, merageImgState)
@@ -110,7 +118,9 @@ TEST_F(ScrollScreenshotTest, merageImgState)
     PixMergeThread::MergeErrorValue state = PixMergeThread::MergeErrorValue::Failed;
     PixMergeThread *m_PixMerageThread = access_private_field::ScrollScreenshotm_PixMerageThread(*m_ScrollScreenshot);
     emit m_PixMerageThread->merageError(state);
-    QTest::qWait(50);
+    QEventLoop loop;
+    QTimer::singleShot(50, &loop, SLOT(quit()));
+    loop.exec();
 
     state = PixMergeThread::MergeErrorValue::MaxHeight;
     emit m_PixMerageThread->merageError(state);
@@ -122,8 +132,9 @@ TEST_F(ScrollScreenshotTest, merageInvalidArea)
     PixMergeThread::MergeErrorValue state = PixMergeThread::MergeErrorValue::InvalidArea;
     PixMergeThread *m_PixMerageThread = access_private_field::ScrollScreenshotm_PixMerageThread(*m_ScrollScreenshot);
     emit m_PixMerageThread->invalidAreaError(state, rect);
-    QTest::qWait(50);
-
+    QEventLoop loop;
+    QTimer::singleShot(50, &loop, SLOT(quit()));
+    loop.exec();
     state = PixMergeThread::MergeErrorValue::MaxHeight;
     emit m_PixMerageThread->invalidAreaError(state, rect);
 }
