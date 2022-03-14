@@ -3914,6 +3914,13 @@ void MainWindow::onMouseMove(int x, int y)
         scrollShotMouseMoveEvent(x, y);
         this->activateWindow();
     }
+
+    //启动截图或者录屏后第一次鼠标移动时需要通过此方法，后面都不会在进入此方法
+    if (!isFirstMove) {
+        QMouseEvent *mouseMove;
+        mouseMove = new QMouseEvent(QEvent::MouseMove, QPoint(x, y), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        QApplication::sendEvent(QWidget::focusWidget(), mouseMove);
+    }
 }
 
 //通过x11从底层滚动鼠标滚轮
