@@ -71,6 +71,10 @@ class MainWindow : public DWidget
         QString name;
         ~ScreenInfo() {}
     };
+
+public:
+    static bool isWaylandProtocol();
+
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;

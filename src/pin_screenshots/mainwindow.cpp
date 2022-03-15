@@ -49,6 +49,16 @@
 #define MOVENUM 1
 #define WHEELNUM 10
 
+bool MainWindow::isWaylandProtocol()
+{
+
+    QProcessEnvironment e = QProcessEnvironment::systemEnvironment();
+    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
+    return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
+
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : DWidget(parent)
 {
@@ -282,7 +292,7 @@ void MainWindow::region(const QPoint &cursorGlobalPoint)
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << __FUNCTION__ << __LINE__;
+    qDebug() << this << __FUNCTION__ << __LINE__ ;
     switch (event->button()) {
     case Qt::LeftButton:
         isLeftPressDown = true;
@@ -293,6 +303,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         }
         if (!m_toolBar->isHidden())
             m_toolBar->setHiden(); //隐藏工具栏
+        qDebug() << this << __FUNCTION__ << __LINE__ ;
         break;
     case Qt::RightButton:
         handleMouseRightBtn(event);
@@ -383,6 +394,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
+    qDebug() << this << __FUNCTION__ << __LINE__ ;
     if (event->button() == Qt::LeftButton) {
         isLeftPressDown = false;
         if (dir != NONE) {
@@ -462,16 +474,21 @@ void MainWindow::wheelEvent(QWheelEvent *event)
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == this) {
-        //窗口停用，变为不活动的窗口
+        //QEvent::WindowActivate:窗口被激活;QEvent::WindowDeactivate:窗口已停用
         if (QEvent::WindowActivate == event->type()) {
+            //qDebug() <<this<< m_toolBar << __FUNCTION__ << __LINE__ << event->type();
             updateToolBarPosition();
-            qDebug() << __FUNCTION__ << __LINE__;
+            if(MainWindow::isWaylandProtocol() && isLeftPressDown){
+                this->m_toolBar->setHiden();
+            }
+            //qDebug() <<this<< m_toolBar << __FUNCTION__ << __LINE__ << event->type();
             return false;
         } else if (QEvent::WindowDeactivate == event->type()) {
+            //qDebug() << this << m_toolBar <<__FUNCTION__ << __LINE__ << event->type();
             if (m_toolBar->isActiveWindow())
                 return false;
             m_toolBar->setHiden();
-            qDebug() << __FUNCTION__ << __LINE__;
+            //qDebug() << this << m_toolBar <<__FUNCTION__ << __LINE__ << event->type();
             return false;
         }
     }
@@ -636,7 +653,7 @@ void MainWindow::updateToolBarPosition()
             m_toolBar->showAt(QPoint(trPoint.x() - m_toolBar->toolBarWidth(), trPoint.y() - 15 - m_toolBar->toolBarHeight()));
         }
     } else {
-        qDebug() << "m_toolBar->width()" << m_toolBar->toolBarWidth();
+        //qDebug() << "m_toolBar->width()" << m_toolBar->toolBarWidth();
         m_toolBar->showAt(QPoint(brPoint.x() - m_toolBar->toolBarWidth(), brPoint.y() + 15));
     }
 }

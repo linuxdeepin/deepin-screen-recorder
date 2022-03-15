@@ -81,7 +81,7 @@ void ToolBar::initToolBar(DWidget *parent)
 //显示在点pos
 void ToolBar::showAt(QPoint pos)
 {
-    qDebug() << "pos" << pos;
+    //qDebug() << "pos" << pos;
     this->moveAt(pos);
     if (!m_saveButton->isVisible() || (!m_toolbarWidget->isVisible())) {
         m_btWidget->show();
@@ -144,5 +144,5 @@ bool ToolBar::isHidden()
 //是否为活动窗口
 bool ToolBar::isActiveWindow()
 {
-    return m_toolbarWidget->isHidden() ||  m_btWidget->isHidden();
+    return m_toolbarWidget->isActiveWindow() ||  m_btWidget->isActiveWindow();
 }
