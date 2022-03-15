@@ -37,7 +37,7 @@ const int CENTER_RECT_WIDTH = 12;
 const int BOTTOM_RECT_HEIGHT = 14;
 }
 ZoomIndicator::ZoomIndicator(DWidget *parent)
-    : DLabel(parent)
+    : QOpenGLWidget(parent)
 {
     setFixedSize(BACKGROUND_SIZE);
 //    setStyleSheet(getFileContent(":/resources/qss/zoomindicator.qss"));
@@ -55,7 +55,7 @@ ZoomIndicator::ZoomIndicator(DWidget *parent)
 ZoomIndicator::~ZoomIndicator() {}
 
 
-void ZoomIndicator::paintEvent(QPaintEvent *)
+void ZoomIndicator::paintGL()
 {
 //    using namespace utils;
     QPoint centerPos =  this->cursor().pos();
@@ -76,7 +76,7 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
     zoomPix = zoomPix.scaled(QSize(INDICATOR_WIDTH,  INDICATOR_WIDTH),
                              Qt::KeepAspectRatio);
 
-    painter.drawPixmap(QRect(5, 5, INDICATOR_WIDTH, INDICATOR_WIDTH), zoomPix);
+    painter.drawPixmap(QRect(0, 0, INDICATOR_WIDTH + 10, INDICATOR_WIDTH + 10), zoomPix);
 
 
     painter.drawPixmap(m_centerRect, QPixmap(":/images/action/center_rect.png"));
@@ -102,6 +102,6 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
 void ZoomIndicator::showMagnifier(QPoint pos)
 {
     this->show();
-
     this->move(pos);
+    update();
 }

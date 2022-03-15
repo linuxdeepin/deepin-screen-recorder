@@ -26,10 +26,11 @@
 #include <DWidget>
 #include <QPainter>
 #include <QPaintEvent>
+#include <QOpenGLWidget>
 
 DWIDGET_USE_NAMESPACE
 
-class ZoomIndicator : public DLabel
+class ZoomIndicator : public QOpenGLWidget
 {
     Q_OBJECT
 public:
@@ -39,7 +40,7 @@ public:
     void showMagnifier(QPoint pos);
 
 protected:
-    void paintEvent(QPaintEvent *);
+    void paintGL() override;
 
 private:
     QRect m_globalRect;

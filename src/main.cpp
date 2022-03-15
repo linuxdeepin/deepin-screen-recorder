@@ -77,6 +77,10 @@ int main(int argc, char *argv[])
        qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
     }
 
+    QSurfaceFormat format;
+    format.setRenderableType(QSurfaceFormat::OpenGLES);
+    format.setDefaultFormat(format);
+
 #ifdef KF5_WAYLAND_FLAGE_ON
     qDebug() << "KF5_WAYLAND_FLAGE_ON is open!!";
 #else
@@ -91,7 +95,9 @@ int main(int argc, char *argv[])
 #endif
 
 
-
+#ifdef __mips__
+    app->setAttribute(Qt::AA_ForceRasterWidgets, false);
+#endif
     // 集成测试标签
 #ifdef ENABLE_ACCESSIBILITY
     QAccessible::installFactory(accessibleFactory);
