@@ -178,6 +178,9 @@ int main(int argc, char *argv[])
         if (!conn.registerService("com.deepin.Screenshot") || !conn.registerObject("/com/deepin/Screenshot", &window)) {
             qDebug() << "deepin-screenshot is running!";
             qApp->quit();
+            if (Utils::isWaylandMode) {
+                _Exit(0);
+            }
             return 0;
         }
 

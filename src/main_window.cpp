@@ -2573,10 +2573,16 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         msg << saveFilePath;
         QDBusConnection::sessionBus().send(msg);
         qApp->quit();
+        if (Utils::isWaylandMode) {
+            _Exit(0);
+        }
         return;
     }
     if (m_noNotify || Utils::isRootUser) {
         qApp->quit();
+        if (Utils::isWaylandMode) {
+            _Exit(0);
+        }
         return;
     }
     // failed notify
@@ -2585,6 +2591,9 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         QString tips = QString(tr("Save failed. Please save it in your home directory."));
         saveFailedNotify.Notify(QCoreApplication::applicationName(), 0, "deepin-screen-recorder", QString(), tips, QStringList(), QVariantMap(), 5000);
         qApp->quit();
+        if (Utils::isWaylandMode) {
+            _Exit(0);
+        }
         return;
     }
 
@@ -5190,6 +5199,9 @@ void MainWindow::exitApp()
     m_initScroll = false; // 保存时关闭滚动截图
     emit releaseEvent();
     qApp->quit();
+    if (Utils::isWaylandMode) {
+        _Exit(0);
+    }
 }
 
 void MainWindow::reloadImage(QString effect)

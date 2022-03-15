@@ -179,14 +179,12 @@ void RecordProcess::onTranscodeFinish()
                                                                                                  "com.deepin.ScreenRecorder.time",
                                                                                                  "onStop"));
     }
-#if defined (__aarch64__) || defined (__loongarch__)
-    //hw的机型需要使用此方式才可以退出
+
+
+    QApplication::quit();
     if (Utils::isWaylandMode) {
-        qDebug() << ">>>>>>>>> Exit " ;
         _Exit(0);
     }
-#endif
-    QApplication::quit();
 }
 
 //录屏结束后弹出通知
@@ -248,14 +246,11 @@ void RecordProcess::onRecordFinish()
                                                                                                  "com.deepin.ScreenRecorder.time",
                                                                                                  "onStop"));
     }
-#if defined (__aarch64__) || defined (__loongarch__)
-    //hw的机型需要使用此方式才可以退出
+
+    QApplication::quit();
     if (Utils::isWaylandMode) {
-        qDebug() << ">>>>>>>>> Exit " ;
         _Exit(0);
     }
-#endif
-    QApplication::quit();
 }
 
 //x11录制视频

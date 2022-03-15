@@ -123,9 +123,15 @@ void Screenshot::ScrollScreenshot()
     }else{
         qDebug() << "scroll shot exit !";
         qApp->quit();
+        if (Utils::isWaylandMode) {
+            _Exit(0);
+        }
     }
 #else
     qApp->quit();
+    if (Utils::isWaylandMode) {
+        _Exit(0);
+    }
 #endif
 }
 
