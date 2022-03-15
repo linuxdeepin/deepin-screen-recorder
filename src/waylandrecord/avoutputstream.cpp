@@ -1595,9 +1595,10 @@ void CAVOutputStream::setBoardVendor(int boardVendorType)
 //释放swrContext
 void CAVOutputStream::freeSwrContext(SwrContext *swrContext)
 {
-    if (swrContext != nullptr) {
-        avlibInterface::m_swr_free(&swrContext);
-        swrContext = nullptr;
-    }
+    Q_UNUSED(swrContext);
+//    if (swrContext != nullptr) {
+//        avlibInterface::m_swr_free(&swrContext);
+//        swrContext = nullptr;
+//    }
 }
 
