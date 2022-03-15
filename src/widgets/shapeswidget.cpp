@@ -164,6 +164,8 @@ void ShapesWidget::setCurrentShape(QString shapeType)
 //    clearSelected();
     if (shapeType != "saveList")
         m_currentType = shapeType;
+    if (shapeType != "text")
+        setAllTextEditReadOnly();
 }
 /*
 void ShapesWidget::setPenColor(QColor color)
