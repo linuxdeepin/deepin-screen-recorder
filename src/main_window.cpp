@@ -5044,7 +5044,7 @@ void MainWindow::stopRecord()
 void MainWindow::startCountdown()
 {
     recordButtonStatus = RECORD_BUTTON_WAIT;
-    const QPoint topLeft = geometry().topLeft();
+    //const QPoint topLeft = geometry().topLeft();
     QRect recordRect {
         static_cast<int>(recordX *m_pixelRatio/* + topLeft.x()*/),
         static_cast<int>(recordY *m_pixelRatio/* + topLeft.y()*/),

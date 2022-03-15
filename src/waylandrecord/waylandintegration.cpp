@@ -66,7 +66,6 @@ Q_LOGGING_CATEGORY(XdgDesktopPortalKdeWaylandIntegration, "xdp-kde-wayland-integ
 //取消自动析构机制，此处后续还需优化
 //Q_GLOBAL_STATIC(WaylandIntegration::WaylandIntegrationPrivate, globalWaylandIntegration)
 static WaylandIntegration::WaylandIntegrationPrivate *globalWaylandIntegration = new  WaylandIntegration::WaylandIntegrationPrivate();
-static int globalImageCount = 0;
 
 void WaylandIntegration::init(QStringList list)
 {
@@ -81,7 +80,6 @@ bool WaylandIntegration::isEGLInitialized()
 void WaylandIntegration::stopStreaming()
 {
     qDebug() << "stop recording!";
-    globalWaylandIntegration->m_stopAppendImageMapFlag = true;
     globalWaylandIntegration->stopVideoRecord();
     globalWaylandIntegration->stopStreaming();
 }
@@ -225,6 +223,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::bindOutput(int outputName, i
 void WaylandIntegration::WaylandIntegrationPrivate::stopStreaming()
 {
     if (m_streamingEnabled) {
+        m_appendFrameToListFlag = false;
         m_streamingEnabled = false;
 
         // First unbound outputs and destroy remote access manager so we no longer receive buffers
@@ -370,7 +369,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::removeOutput(quint32 name)
 
 void WaylandIntegration::WaylandIntegrationPrivate::onDeviceChanged(quint32 name, quint32 version)
 {
-    qDebug() << name;
     KWayland::Client::OutputDevice *devT = m_registry->createOutputDevice(name, version);
     if (devT && devT->isValid()) {
         connect(devT, &KWayland::Client::OutputDevice::changed, this, [ = ]() {
@@ -502,132 +500,71 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
         m_bInitRecordAdmin = false;
         m_recordAdmin->init(static_cast<int>(m_screenSize.width()), static_cast<int>(m_screenSize.height()));
         frameStartTime = avlibInterface::m_av_gettime();
-    }
-    QImage img0 = getImage(dma_fd, width, height, stride, rbuf->format());
-    QImage img(m_screenSize, QImage::Format_RGBA8888);
-    m_checkStride = stride;
-    if (m_curScreenDate.size() + 1 < m_screenCount) {
-        //        if (m_curScreenDate.contains(rect)) {
-        //            qDebug() << "screen error!!!!";
-        //            m_curScreenDate.clear();
-        //        }else {
-        m_curScreenDate.append(QPair<QRect, QImage>(rect, img0));
-        //        }
-        return;
-    } else {
-        QPainter painter(&img);
-        for (auto itr = m_curScreenDate.begin(); itr != m_curScreenDate.end(); ++itr) {
-            painter.drawImage(itr->first.topLeft(), itr->second);
-        }
-        painter.drawImage(rect.topLeft(), img0);
-        m_curScreenDate.clear();
-    }
-
-    if (img.isNull()) {
-        qDebug() << "获取图片失败！";
-        close(dma_fd);
-        return ;
-    }
-
-    appendImageMap(avlibInterface::m_av_gettime() - frameStartTime, img);
-    close(dma_fd);
-}
-
-//为数据池中添加数据
-void WaylandIntegration::WaylandIntegrationPrivate::appendImageMap(qint64 time, QImage image)
-{
-    if (m_ImageKey.size() == 0) {
         m_appendFrameToListFlag = true;
-        //启动循环检查线程
         QtConcurrent::run(this, &WaylandIntegrationPrivate::appendFrameToList);
     }
-    if (m_ImageMap.contains(time)) {
-        qDebug() << "m_ImageMap 中已有相同时间的画面帧";
-        return;
-    }
-    m_ImageKey.append(time);
-    m_ImageMap.insert(time, image);
-}
-
-//从数据池中移除指定时间的的图片数据
-void WaylandIntegration::WaylandIntegrationPrivate::removeImageMap(qint64 time)
-{
-
-    qint64 tmp_time = 0;
-    if (m_ImageMap.contains(time)) {
-        //当数据池的数据只剩1张画面时需要将当前画面重新打个时间戳， 当点击录屏结束后，数据池中将不再保留1张数据
-        if (m_ImageKey.size() == 1 && !m_stopAppendImageMapFlag) {
-            tmp_time = avlibInterface::m_av_gettime() - frameStartTime;
-            appendImageMap(tmp_time, m_ImageMap.value(time));
+    QImage img(m_screenSize, QImage::Format_RGBA8888);
+    if(m_screenCount == 1) {
+        m_curNewImage.first = avlibInterface::m_av_gettime() - frameStartTime;
+        m_curNewImage.second = getImage(dma_fd, width, height, stride, rbuf->format());
+    } else {
+        m_ScreenDateBuf.append(QPair<QRect, QImage>(rect, getImage(dma_fd, width, height, stride, rbuf->format())));
+        if (m_ScreenDateBuf.size() ==  m_screenCount) {
+            if(m_curNewImageScreen.isEmpty()) {
+                for (auto itr = m_ScreenDateBuf.begin(); itr != m_ScreenDateBuf.end(); ++itr) {
+                    m_curNewImageScreen.append(*itr);
+                }
+            }
+            m_ScreenDateBuf.clear();
         }
-        //qDebug() << "已取出 m_ImageMap 中" << time << "时刻的画面帧";
-        m_ImageMap.remove(time);
-        //qDebug() << "已移除 m_ImageKey 中" << time << "时刻";
-        m_ImageKey.removeOne(time);
     }
-    if (m_ImageKey.size() == 0) {
-        //qDebug() << "数据池中的数据为0";
-        m_appendFrameToListFlag = false;
-    }
+    close(dma_fd);
 }
-
-//从数据池中获取图片
-qint64 WaylandIntegration::WaylandIntegrationPrivate::getImageMap(QImage &image)
-{
-    qint64 tmp_time = m_ImageKey.first();
-    if (m_ImageMap.contains(tmp_time)) {
-        image = m_ImageMap.value(tmp_time);
-    }
-    return tmp_time;
-}
-
 //通过线程每30ms钟向数据池中取出一张图片添加到环形缓冲区，以便后续视频编码
 void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
 {
-    int step = 1;
-    //此处根据选择的帧数进行对应的跳帧处理，由于kwayland每秒传来的画面帧几乎固定为30，因此做对应的跳帧就可以得到对应的帧
-    switch (m_fps) {
-    case 5:
-        step = 6;
-        break;
-    case 10:
-        step = 3;
-        break;
-    case 20:
-        step = 2;
-        break;
-    default:
-        step = 1;
-    }
-    //由于性能问题部分非hw的arm机器编码效率低，适当调大视频帧的缓存空间，且在添加视频到缓冲区时进行了降低帧率的处理。
-    if (QSysInfo::currentCpuArchitecture().startsWith("ARM", Qt::CaseInsensitive) && !m_boardVendorType) {
-        step = 3;
-        //必要打印，方便查看日志
-        //qDebug() << "m_waylandList.size(): " <<  m_waylandList.size() << " m_freeList.size(): " << m_freeList.size();
-    }
-
-    //必要打印，方便查看日志
-    if (globalImageCount == 0) {
-        qDebug() << "step: " << step;
-    }
+    int64_t delayTime = 1000 / m_fps + 1;
+#ifdef __mips__
+    //delayTime = 150;
+#endif
 
     while (m_appendFrameToListFlag) {
-        QImage tmp_img;
-        qint64 tmp_time = getImageMap(tmp_img);
-        if (!tmp_img.isNull()) {
-            globalImageCount++;
-            //qDebug() << "1 >>>> m_ImageKey.size(): "  << m_ImageKey.size() << "  m_waylandList.size(): " << m_waylandList.size() << " globalImageCount: " << globalImageCount;
-            //抽帧 两种使用情况:1.录屏选择不同的帧; 2.再性能差的机器上需要抽帧
-            if (globalImageCount % step == 0) {
-                //qDebug() << "未编码的帧索引glovbalImageCount: " << globalImageCount;
-                appendBuffer(tmp_img.bits(), static_cast<int>(tmp_img.width()), static_cast<int>(tmp_img.height()), static_cast<int>(m_checkStride), tmp_time);
+        if (m_screenCount == 1) {
+            if(!m_curNewImage.second.isNull()){
+                appendBuffer(m_curNewImage.second.bits(), static_cast<int>(m_curNewImage.second.width()), static_cast<int>(m_curNewImage.second.height()),
+                             static_cast<int>(m_curNewImage.second.width() * 4), avlibInterface::m_av_gettime() - frameStartTime);
             }
-            removeImageMap(tmp_time);
-            //qDebug() << "2 >>>> m_ImageKey.size(): "  << m_ImageKey.size() << "  m_waylandList.size(): " << m_waylandList.size()<< " globalImageCount: " << globalImageCount;
-
+            QThread::msleep(static_cast<unsigned long>(delayTime));
+        } else {
+            //多屏录制
+            int64_t curFramTime = avlibInterface::m_av_gettime();
+#if 0
+            cv::Mat res;
+            res.create(cv::Size(m_screenSize.width(), m_screenSize.height()), CV_8UC4);
+            res = cv::Scalar::all(0);
+            for (auto itr = m_curNewImageScreen.begin(); itr != m_curNewImageScreen.end(); ++itr) {
+                cv::Mat temp = cv::Mat(itr->second.height(), itr->second.width(), CV_8UC4,
+                                       const_cast<uchar *>(itr->second.bits()), static_cast<size_t>(itr->second.bytesPerLine()));
+                temp.copyTo(res(cv::Rect(itr->first.x(), itr->first.y(), itr->first.width(), itr->first.height())));
+            }
+            m_curNewImageScreen.clear();
+            QImage img = QImage(res.data, res.cols, res.rows, static_cast<int>(res.step), QImage::Format_RGBA8888);
+#else
+            QImage img(m_screenSize, QImage::Format_RGBA8888);
+            QPainter painter(&img);
+            for (auto itr = m_curNewImageScreen.begin(); itr != m_curNewImageScreen.end(); ++itr) {
+                painter.drawImage(itr->first.topLeft(), itr->second);
+            }
+            m_curNewImageScreen.clear();
+#endif
+            appendBuffer(img.bits(), img.width(), img.height(), img.width() * 4, curFramTime - frameStartTime);
+            // 计算拼接的时的耗时
+            int64_t t = (avlibInterface::m_av_gettime() - curFramTime) / 1000;
+            qDebug() << delayTime - t;
+            if (t < delayTime) {
+                QThread::msleep(static_cast<unsigned long>(delayTime - t));
+            }
         }
-        //每30ms从数据池中取一张画面添加到环形队列
-        QThread::msleep(30);
     }
 }
 
