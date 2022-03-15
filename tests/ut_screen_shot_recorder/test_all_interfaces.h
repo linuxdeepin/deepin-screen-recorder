@@ -1,4 +1,10 @@
 #pragma once
+#include "waylandrecord/ut_avinputstream.h"
+#include "waylandrecord/ut_avoutputstream.h"
+#include "waylandrecord/ut_recordadmin.h"
+#include "waylandrecord/ut_waylandintegration.h"
+#include "waylandrecord/ut_waylandintegration_p.h"
+#include "waylandrecord/ut_writeframethread.h"
 #include "widgets/ut_shapeswidget.h" //放前面
 #include "ut_main_window.h"
 #include "utils/ut_pixmergethread.h"
@@ -46,10 +52,4 @@
 #include "widgets/ut_sidebar.h"
 #include "widgets/ut_sidebarwidget.h"
 #include "widgets/ut_scrollshottip.h"
-#include "waylandrecord/ut_avinputstream.h"
-#include "waylandrecord/ut_avoutputstream.h"
-#include "waylandrecord/ut_recordadmin.h"
-#include "waylandrecord/ut_waylandintegration.h"
-#include "waylandrecord/ut_waylandintegration_p.h"
-#include "waylandrecord/ut_writeframethread.h"
 
