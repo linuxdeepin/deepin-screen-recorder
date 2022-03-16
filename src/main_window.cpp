@@ -291,6 +291,11 @@ void MainWindow::initAttributes()
                                           this,
                                           SLOT(onLockScreenEvent(QDBusMessage))
                                          );
+    if (!isFirstMove && !Utils::isWaylandMode) {
+        QMouseEvent *mouseMove = new QMouseEvent(QEvent::MouseMove, this->cursor().pos(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        QApplication::sendEvent(this, mouseMove);
+        delete mouseMove;
+    }
 }
 #ifdef KF5_WAYLAND_FLAGE_ON
 void MainWindow::setupRegistry(Registry *registry)
@@ -404,6 +409,10 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
             saveTopWindow();
         }
     }
+    //模拟发送鼠标事件，触发自动识别窗口
+    QMouseEvent *mouseMove = new QMouseEvent(QEvent::MouseMove, this->cursor().pos(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    QApplication::sendEvent(this, mouseMove);
+    delete mouseMove;
 }
 //1050wayland平台上，部分性能差的机型，采用线程循环监听文件（"/home/" + userName + "/.cache/deepin/deepin-screen-recorder/stopRecord.txt"）是否存在且内容是否为1
 void MainWindow::checkTempFileArm()
