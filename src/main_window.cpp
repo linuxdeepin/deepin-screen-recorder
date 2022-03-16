@@ -3470,7 +3470,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     if (event->type() == QEvent::MouseButtonDblClick) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         if (mouseEvent->button() == Qt::LeftButton) {
-            if (status::shot == m_functionType || status::scrollshot == m_functionType) {
+            if (status::shot == m_functionType) {
                 qDebug() << "双击鼠标按钮！进行截图保存！";
                 saveScreenShot();
             }

@@ -252,7 +252,7 @@ private:
      * @brief 自定义egl的结构体
      */
     struct EglStruct m_eglstruct;
-
+    QMutex m_bGetScreenImageMutex;
     QMap<QString, QRect> m_screenId2Point;
     QVector<QPair<QRect, QImage>> m_ScreenDateBuf;
     QVector<QPair<QRect, QImage>> m_curNewImageScreen;

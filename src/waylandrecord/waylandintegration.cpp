@@ -505,15 +505,18 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
     }
     QImage img(m_screenSize, QImage::Format_RGBA8888);
     if(m_screenCount == 1) {
-        m_curNewImage.first = avlibInterface::m_av_gettime() - frameStartTime;
-        m_curNewImage.second = getImage(dma_fd, width, height, stride, rbuf->format());
+        m_curNewImage.first = 0;//avlibInterface::m_av_gettime() - frameStartTime;
+        {
+            QMutexLocker locker(&m_bGetScreenImageMutex);
+            m_curNewImage.second = getImage(dma_fd, width, height, stride, rbuf->format());
+        }
     } else {
         m_ScreenDateBuf.append(QPair<QRect, QImage>(rect, getImage(dma_fd, width, height, stride, rbuf->format())));
         if (m_ScreenDateBuf.size() ==  m_screenCount) {
-            if(m_curNewImageScreen.isEmpty()) {
-                for (auto itr = m_ScreenDateBuf.begin(); itr != m_ScreenDateBuf.end(); ++itr) {
-                    m_curNewImageScreen.append(*itr);
-                }
+            QMutexLocker locker(&m_bGetScreenImageMutex);
+            m_curNewImageScreen.clear();
+            for (auto itr = m_ScreenDateBuf.begin(); itr != m_ScreenDateBuf.end(); ++itr) {
+                m_curNewImageScreen.append(*itr);
             }
             m_ScreenDateBuf.clear();
         }
@@ -530,9 +533,15 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
 
     while (m_appendFrameToListFlag) {
         if (m_screenCount == 1) {
-            if(!m_curNewImage.second.isNull()){
-                appendBuffer(m_curNewImage.second.bits(), static_cast<int>(m_curNewImage.second.width()), static_cast<int>(m_curNewImage.second.height()),
-                             static_cast<int>(m_curNewImage.second.width() * 4), avlibInterface::m_av_gettime() - frameStartTime);
+            QImage tempImage;
+            {
+                QMutexLocker locker(&m_bGetScreenImageMutex);
+                tempImage = m_curNewImage.second.copy();
+            }
+            if(!tempImage.isNull()){
+                appendBuffer(tempImage.bits(), static_cast<int>(tempImage.width()), static_cast<int>(tempImage.height()),
+                             static_cast<int>(tempImage.width() * 4), avlibInterface::m_av_gettime() - frameStartTime);
+
             }
             QThread::msleep(static_cast<unsigned long>(delayTime));
         } else {
@@ -550,12 +559,21 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
             m_curNewImageScreen.clear();
             QImage img = QImage(res.data, res.cols, res.rows, static_cast<int>(res.step), QImage::Format_RGBA8888);
 #else
+
+            QVector<QPair<QRect, QImage>> tempImageVec;
+            {
+                QMutexLocker locker(&m_bGetScreenImageMutex);
+                if (m_curNewImageScreen.size() != m_screenCount) continue;
+                for (auto itr = m_curNewImageScreen.begin(); itr != m_curNewImageScreen.end(); ++itr) {
+                    tempImageVec.append(*itr);
+                }
+            }
             QImage img(m_screenSize, QImage::Format_RGBA8888);
             QPainter painter(&img);
-            for (auto itr = m_curNewImageScreen.begin(); itr != m_curNewImageScreen.end(); ++itr) {
+            for (auto itr = tempImageVec.begin(); itr != tempImageVec.end(); ++itr) {
                 painter.drawImage(itr->first.topLeft(), itr->second);
             }
-            m_curNewImageScreen.clear();
+            tempImageVec.clear();
 #endif
             appendBuffer(img.bits(), img.width(), img.height(), img.width() * 4, curFramTime - frameStartTime);
             // 计算拼接的时的耗时
