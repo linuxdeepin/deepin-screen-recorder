@@ -477,8 +477,13 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         //QEvent::WindowActivate:窗口被激活;QEvent::WindowDeactivate:窗口已停用
         if (QEvent::WindowActivate == event->type()) {
             //qDebug() <<this<< m_toolBar << __FUNCTION__ << __LINE__ << event->type();
+            //规避wayland下打开贴图1，并在贴图1上重新生成贴图2时，贴图2激活状态不对(工具栏已经设置显示，但实际上未显示。)。
+            if (MainWindow::isWaylandProtocol() && !isLeftPressDown) {
+                this->m_toolBar->setHiden();
+            }
             updateToolBarPosition();
-            if(MainWindow::isWaylandProtocol() && isLeftPressDown){
+            //规避wayland下打开多个贴图，通过鼠标连续切换贴图时，贴图激活状态不对(工具栏已经设置显示，但实际上未显示。)。
+            if (MainWindow::isWaylandProtocol() && isLeftPressDown) {
                 this->m_toolBar->setHiden();
             }
             //qDebug() <<this<< m_toolBar << __FUNCTION__ << __LINE__ << event->type();
