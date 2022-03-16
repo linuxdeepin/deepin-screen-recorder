@@ -443,9 +443,7 @@ void MainWindow::whileCheckTempFileArm()
             if (fd == -1) {
                 //qDebug() << "open file fail!" << strerror(errno);
                 ::close(fd);
-                if (tempFlag) {
-                    QThread::msleep(500);
-                }
+                QThread::msleep(500);
                 continue;
             }
             //文件加锁
@@ -453,9 +451,7 @@ void MainWindow::whileCheckTempFileArm()
             if (flock == -1) {
                 qDebug() << "lock file fail!" << strerror(errno);
                 ::close(fd);
-                if (tempFlag) {
-                    QThread::msleep(500);
-                }
+                QThread::msleep(500);
                 continue;
             }
             ssize_t ret = -1;
@@ -1572,7 +1568,9 @@ void MainWindow::initBackground()
         DBusNotify shotFailedNotify;
         QString tips = QString(tr("Screenshot failed."));
         shotFailedNotify.Notify(QCoreApplication::applicationName(), 0, "deepin-screen-recorder", QString(), tips, QStringList(), QVariantMap(), 5000);
-        exit(0);
+        if (Utils::isWaylandMode) {
+            _Exit(0);
+        }
     }
     m_resultPixmap = m_backgroundPixmap;
     TempFile::instance()->setFullScreenPixmap(m_backgroundPixmap);

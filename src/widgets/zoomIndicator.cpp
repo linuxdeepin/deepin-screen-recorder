@@ -49,7 +49,7 @@ ZoomIndicator::ZoomIndicator(DWidget *parent)
                          (BACKGROUND_SIZE.width() - CENTER_RECT_WIDTH) / 2 + 1,
                          CENTER_RECT_WIDTH, CENTER_RECT_WIDTH);
 
-    m_globalRect = QRect(0, 0, BACKGROUND_SIZE.width(), BACKGROUND_SIZE.height());
+    m_globalRect = QRect(-4, -4, BACKGROUND_SIZE.width() + 8, BACKGROUND_SIZE.height() + 8);
 }
 
 ZoomIndicator::~ZoomIndicator() {}
@@ -87,7 +87,7 @@ void ZoomIndicator::paintGL()
     painter.fillRect(QRect(INDICATOR_WIDTH / 2 + 2, INDICATOR_WIDTH / 2 + 2,
                            CENTER_RECT_WIDTH - 4, CENTER_RECT_WIDTH - 4), m_lastCenterPosBrush);
 
-    painter.fillRect(QRect(5, INDICATOR_WIDTH - 9, INDICATOR_WIDTH, BOTTOM_RECT_HEIGHT),
+    painter.fillRect(QRect(2, INDICATOR_WIDTH - 8, INDICATOR_WIDTH + 6, BOTTOM_RECT_HEIGHT),
                      QBrush(QColor(0, 0, 0, 125)));
     QFont posFont;
     posFont.setPixelSize(9);
@@ -95,7 +95,7 @@ void ZoomIndicator::paintGL()
     painter.setPen(QColor(Qt::white));
     QTextOption posTextOption;
     posTextOption.setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    painter.drawText(QRectF(5, INDICATOR_WIDTH - 10, INDICATOR_WIDTH, INDICATOR_WIDTH),
+    painter.drawText(QRectF(5, INDICATOR_WIDTH - 9, INDICATOR_WIDTH, INDICATOR_WIDTH),
                      QString("%1, %2").arg(centerPos.x()).arg(centerPos.y()), posTextOption);
 }
 
