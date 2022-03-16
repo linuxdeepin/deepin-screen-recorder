@@ -431,7 +431,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         this->move(x + MOVENUM, y);
         isNeedUpdateToolBar = true;
     } else if (event->key() == Qt::Key_Up) {
-        this->move(x, y - MOVENUM);
+        // 适配wayland
+        if (y - MOVENUM < 0) {
+            this->move(x, 0);
+        } else {
+            this->move(x, y - MOVENUM);
+        }
+
         isNeedUpdateToolBar = true;
     } else if (event->key() == Qt::Key_Down) {
         this->move(x, y + MOVENUM);
