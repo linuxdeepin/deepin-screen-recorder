@@ -4419,7 +4419,7 @@ void MainWindow::onScrollShotMerageImgState(PixMergeThread::MergeErrorValue stat
     m_scrollShotStatus = 3;
     //暂停自动滚动截图
     pauseAutoScrollShot();
-    if (m_tipShowtimer->isActive()) {
+    if (m_tipShowtimer->isActive() || !m_initScroll) {
         return;
     }
     qDebug() << "function:" << __func__ << " ,line: " << __LINE__ << " , 拼接时的状态: " << state;
