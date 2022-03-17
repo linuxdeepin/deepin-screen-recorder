@@ -191,7 +191,7 @@ void TextEdit::mouseMoveEvent(QMouseEvent *e)
 {
 //    if (!this->isReadOnly()) {
     if (m_editing == true) {
-        DPlainTextEdit::mouseMoveEvent(e);
+        //DPlainTextEdit::mouseMoveEvent(e);
         return;
     }
 
