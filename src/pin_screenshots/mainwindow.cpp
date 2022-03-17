@@ -130,13 +130,13 @@ bool MainWindow::openImageAndName(const QImage &image, const QString &name, cons
     //将坐标点转换为m_pixelRatio屏幕缩放比下的点
     m_showPosition = QPoint(static_cast<int>(point.x() * m_pixelRatio), static_cast<int>(point.y() * m_pixelRatio));
     QRect currnetScreenRect;
-    //查找当前截图贴图区域所在的屏幕
+    //查找当前截图贴图区域所在的屏幕(m_screenInfo中存储已缩放的数据）
     for (int i = 0; i < m_screenInfo.size(); ++i) {
         currnetScreenRect = {
-            static_cast<int>(m_screenInfo[i].x),
+            static_cast<int>(m_screenInfo[i].x ),
             static_cast<int>(m_screenInfo[i].y),
-            static_cast<int>(m_screenInfo[i].width),
-            static_cast<int>(m_screenInfo[i].height)
+            static_cast<int>(m_screenInfo[i].width *  m_pixelRatio),
+            static_cast<int>(m_screenInfo[i].height * m_pixelRatio)
         };
         if (currnetScreenRect.contains(m_showPosition)) {
             int x = static_cast<int>((m_showPosition.x() - currnetScreenRect.x()) / m_pixelRatio + currnetScreenRect.x());
@@ -655,18 +655,23 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
 void MainWindow::updateToolBarPosition()
 {
     QPoint brPoint = mapToGlobal(this->rect().bottomRight());
+    int x = 0,y = 0;
     //qDebug() << "updateToolBarPosition brPoint is" << brPoint << "this->rect().bottomRight()" << mapToGlobal(QPoint(this->width(), this->height()));
     if ((brPoint.y() + 15 + m_toolBar->toolBarHeight()) >= m_screenSize.height()) {
         QPoint trPoint = mapToGlobal(this->rect().topRight());
         if (trPoint.y() - 15 - m_toolBar->toolBarHeight() <= 0) {
-            m_toolBar->showAt(QPoint(trPoint.x() - m_toolBar->toolBarWidth(), trPoint.y() + 15));
+            x = trPoint.x() - m_toolBar->toolBarWidth();
+            y = trPoint.y() + 15;
         } else {
-            m_toolBar->showAt(QPoint(trPoint.x() - m_toolBar->toolBarWidth(), trPoint.y() - 15 - m_toolBar->toolBarHeight()));
+            x= trPoint.x() - m_toolBar->toolBarWidth();
+            y = trPoint.y() - 15 - m_toolBar->toolBarHeight();
         }
     } else {
+        x = brPoint.x() - m_toolBar->toolBarWidth();
+        y = brPoint.y() + 15;
         //qDebug() << "m_toolBar->width()" << m_toolBar->toolBarWidth();
-        m_toolBar->showAt(QPoint(brPoint.x() - m_toolBar->toolBarWidth(), brPoint.y() + 15));
     }
+    m_toolBar->showAt(QPoint(static_cast<int>(x),static_cast<int>(y)));
 }
 
 
