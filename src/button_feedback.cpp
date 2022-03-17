@@ -40,7 +40,7 @@ ButtonFeedback::ButtonFeedback(DWidget *parent) : DWidget(parent)
 {
     installEventFilter(this);  // add event filter
     setAttribute(Qt::WA_ShowWithoutActivating);
-    setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
+    setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     for(int i = 0; i < 10; ++i){
