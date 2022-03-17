@@ -396,7 +396,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::onDeviceChanged(quint32 name
     }
 }
 
-void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland::Client::RemoteBuffer *rbuf)
+void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect)
 {
     //qDebug() << Q_FUNC_INFO;
     QScopedPointer<const KWayland::Client::RemoteBuffer> guard(rbuf);
@@ -408,14 +408,35 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     //        return;
     if (m_bInitRecordAdmin) {
         m_bInitRecordAdmin = false;
-        m_recordAdmin->init(static_cast<int>(width), static_cast<int>(height));
+        m_recordAdmin->init(static_cast<int>(m_screenSize.width()), static_cast<int>(m_screenSize.height()));
         frameStartTime = avlibInterface::m_av_gettime();
+        m_appendFrameToListFlag = true;
+        QtConcurrent::run(this, &WaylandIntegrationPrivate::appendFrameToList);
     }
     unsigned char *mapData = static_cast<unsigned char *>(mmap(nullptr, stride * height, PROT_READ, MAP_SHARED, dma_fd, 0));
     if (MAP_FAILED == mapData) {
         qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "dma fd " << dma_fd << " mmap failed - ";
     }
-    appendBuffer(mapData, static_cast<int>(width), static_cast<int>(height), static_cast<int>(stride), avlibInterface::m_av_gettime() - frameStartTime);
+    //appendBuffer(mapData, static_cast<int>(width), static_cast<int>(height), static_cast<int>(stride), avlibInterface::m_av_gettime() - frameStartTime);
+    if(m_screenCount == 1) {
+        m_curNewImage.first = 0;//avlibInterface::m_av_gettime() - frameStartTime;
+        {
+            QMutexLocker locker(&m_bGetScreenImageMutex);
+            m_curNewImage.second = QImage(mapData, width, height, QImage::Format_RGBA8888).copy();
+        }
+    } else {
+        //QString pngName = QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ") + QString("%1_").arg(rect.x()));
+        //QImage(mapData, width, height, QImage::Format_RGBA8888).copy().save(pngName + ".png");
+        m_ScreenDateBuf.append(QPair<QRect, QImage>(rect, QImage(mapData, width, height, QImage::Format_RGBA8888).copy()));
+        if (m_ScreenDateBuf.size() ==  m_screenCount) {
+            QMutexLocker locker(&m_bGetScreenImageMutex);
+            m_curNewImageScreen.clear();
+            for (auto itr = m_ScreenDateBuf.begin(); itr != m_ScreenDateBuf.end(); ++itr) {
+                m_curNewImageScreen.append(*itr);
+            }
+            m_ScreenDateBuf.clear();
+        }
+    }
     munmap(mapData, stride * height);
     close(dma_fd);
 }
@@ -664,7 +685,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
             connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf, screenGeometry] {
                 if (m_boardVendorType)
                 {
-                    processBuffer(rbuf);
+                    processBuffer(rbuf, screenGeometry);
                 } else
                 {
                     processBufferX86(rbuf, screenGeometry);

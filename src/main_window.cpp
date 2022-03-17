@@ -5118,8 +5118,11 @@ void MainWindow::startCountdown()
 
     //先隐藏，再显示
     //目的是解决触控操作无法选中部份应用程序的 QLineEdit 控件的问题
-    hide();
-    show();
+    //Wayland 上panguV机型，采用GPU后会崩溃
+    if(!Utils::isWaylandMode) {
+        hide();
+        show();
+    }
     Utils::passInputEvent(static_cast<int>(this->winId()));
 
     repaint();

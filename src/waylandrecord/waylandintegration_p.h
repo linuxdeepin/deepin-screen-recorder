@@ -134,7 +134,7 @@ protected Q_SLOTS:
      * @brief 通过mmap的方式获取视频画面帧
      * @param rbuf
      */
-    void processBuffer(const KWayland::Client::RemoteBuffer *rbuf);
+    void processBuffer(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect);
     /**
      * @brief 此接口为了解决x86架构录屏mmap失败及花屏问题
      * @param rbuf
