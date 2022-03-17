@@ -3546,8 +3546,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     updateToolBarPos();
                     if (status::shot == m_functionType && m_sideBar->isVisible()) {
                         updateSideBarPos();
-                        m_zoomIndicator->hide();
                     }
+                    m_zoomIndicator->hide();
                     //updateRecordButtonPos();
                     //updateShotButtonPos();
                     // Record select area name with window name if just click (no drag).
