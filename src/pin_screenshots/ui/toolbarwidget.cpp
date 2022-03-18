@@ -82,6 +82,7 @@ void ToolBarWidget::onThemeTypeChange(DGuiApplicationHelper::ColorType themeType
 
 void ToolBarWidget::initToolBarWidget()
 {
+    setMinimumWidth(196);
     m_subTool = new SubToolWidget(this);
     connect(m_subTool, SIGNAL(signalOcrButtonClicked()), this, SIGNAL(signalOcrButtonClicked()));
 

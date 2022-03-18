@@ -79,6 +79,7 @@ void ToolBar::initToolBar(DWidget *parent)
     hLayout->setContentsMargins(0, 0, 0, 0);
     hLayout->addWidget(m_saveButton, 0, Qt::AlignCenter);
     m_btWidget->setLayout(hLayout);
+    m_btWidget->setFixedWidth(76);
 }
 
 //显示在点pos
