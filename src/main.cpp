@@ -75,11 +75,10 @@ int main(int argc, char *argv[])
 
     if(Utils::isWaylandMode) {
        qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
+       QSurfaceFormat format;
+       format.setRenderableType(QSurfaceFormat::OpenGLES);
+       format.setDefaultFormat(format);
     }
-
-    QSurfaceFormat format;
-    format.setRenderableType(QSurfaceFormat::OpenGLES);
-    format.setDefaultFormat(format);
 
 #ifdef KF5_WAYLAND_FLAGE_ON
     qDebug() << "KF5_WAYLAND_FLAGE_ON is open!!";
@@ -94,10 +93,11 @@ int main(int argc, char *argv[])
     QScopedPointer<DApplication> app(DApplication::globalApplication(argc,argv));
 #endif
 
-
+    if(Utils::isWaylandMode) {
 #ifdef __mips__
     app->setAttribute(Qt::AA_ForceRasterWidgets, false);
 #endif
+    }
     // 集成测试标签
 #ifdef ENABLE_ACCESSIBILITY
     QAccessible::installFactory(accessibleFactory);
