@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "toolbar.h"
+#include "utils.h"
 #include "accessibility/acTextDefine.h"
 #include <QBitmap>
 #include <DBlurEffectWidget>
@@ -37,18 +38,20 @@ ToolBar::ToolBar(DWidget *parent): QObject(parent)
 
 void ToolBar::initToolBar(DWidget *parent)
 {
-    m_toolbarWidget = new ToolBarWidget(parent); // 初始化工具栏
+    m_toolbarWidget = new ToolBarWidget(); // 初始化工具栏
     connect(m_toolbarWidget, SIGNAL(signalOcrButtonClicked()), this, SIGNAL(sendOcrButtonClicked())); //发送OCR点击信号
     connect(m_toolbarWidget, SIGNAL(signalCloseButtonClicked()), this, SIGNAL(sendCloseButtonClicked()));// 发送关闭按钮点击信号
 
-    m_btWidget = new QWidget(parent);
-    m_btWidget->setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip);
+    m_btWidget = new QWidget();
+    if(Utils::isWaylandMode){
+        m_btWidget->setWindowFlags(Qt::Sheet |Qt::WindowStaysOnTopHint| Qt::WindowDoesNotAcceptFocus);
+    }else {
+        m_btWidget->setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip);
+    }
     DPlatformWindowHandle handle(m_btWidget);
     handle.setEnableBlurWindow(true);
     //初始化保存按钮
     m_saveButton = new DPushButton(m_btWidget);
-    m_saveButton->setAttribute(Qt::WA_TranslucentBackground, true);
-
 
     m_saveButton->setObjectName(AC_MAINWINDOW_PIN_SAVE_BUT);
     m_saveButton->setAccessibleName(AC_MAINWINDOW_PIN_SAVE_BUT);
@@ -81,7 +84,7 @@ void ToolBar::initToolBar(DWidget *parent)
 //显示在点pos
 void ToolBar::showAt(QPoint pos)
 {
-    //qDebug() << "pos" << pos;
+    qDebug() << "pos" << pos;
     this->moveAt(pos);
     if (!m_saveButton->isVisible() || (!m_toolbarWidget->isVisible())) {
         m_btWidget->show();

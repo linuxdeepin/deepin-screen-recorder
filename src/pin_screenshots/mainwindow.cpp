@@ -38,6 +38,7 @@
 
 */
 #include "mainwindow.h"
+#include "utils.h"
 
 #include <QDebug>
 #include <QDBusInterface>
@@ -49,15 +50,15 @@
 #define MOVENUM 1
 #define WHEELNUM 10
 
-bool MainWindow::isWaylandProtocol()
-{
+//bool MainWindow::isWaylandProtocol()
+//{
 
-    QProcessEnvironment e = QProcessEnvironment::systemEnvironment();
-    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
-    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
-    return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
+//    QProcessEnvironment e = QProcessEnvironment::systemEnvironment();
+//    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+//    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
+//    return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
 
-}
+//}
 
 MainWindow::MainWindow(QWidget *parent)
     : DWidget(parent)
@@ -292,7 +293,7 @@ void MainWindow::region(const QPoint &cursorGlobalPoint)
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << this << __FUNCTION__ << __LINE__ ;
+    //qDebug() << this << __FUNCTION__ << __LINE__ ;
     switch (event->button()) {
     case Qt::LeftButton:
         isLeftPressDown = true;
@@ -303,7 +304,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         }
         if (!m_toolBar->isHidden())
             m_toolBar->setHiden(); //隐藏工具栏
-        qDebug() << this << __FUNCTION__ << __LINE__ ;
+        //qDebug() << this << __FUNCTION__ << __LINE__ ;
         break;
     case Qt::RightButton:
         handleMouseRightBtn(event);
@@ -484,12 +485,12 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         if (QEvent::WindowActivate == event->type()) {
             //qDebug() <<this<< m_toolBar << __FUNCTION__ << __LINE__ << event->type();
             //规避wayland下打开贴图1，并在贴图1上重新生成贴图2时，贴图2激活状态不对(工具栏已经设置显示，但实际上未显示。)。
-            if (MainWindow::isWaylandProtocol() && !isLeftPressDown) {
+            if (Utils::isWaylandMode && !isLeftPressDown) {
                 this->m_toolBar->setHiden();
             }
             updateToolBarPosition();
             //规避wayland下打开多个贴图，通过鼠标连续切换贴图时，贴图激活状态不对(工具栏已经设置显示，但实际上未显示。)。
-            if (MainWindow::isWaylandProtocol() && isLeftPressDown) {
+            if (Utils::isWaylandMode && isLeftPressDown) {
                 this->m_toolBar->setHiden();
             }
             //qDebug() <<this<< m_toolBar << __FUNCTION__ << __LINE__ << event->type();
@@ -656,7 +657,7 @@ void MainWindow::updateToolBarPosition()
 {
     QPoint brPoint = mapToGlobal(this->rect().bottomRight());
     int x = 0,y = 0;
-    //qDebug() << "updateToolBarPosition brPoint is" << brPoint << "this->rect().bottomRight()" << mapToGlobal(QPoint(this->width(), this->height()));
+    qDebug() << "updateToolBarPosition brPoint is" << brPoint;
     if ((brPoint.y() + 15 + m_toolBar->toolBarHeight()) >= m_screenSize.height()) {
         QPoint trPoint = mapToGlobal(this->rect().topRight());
         if (trPoint.y() - 15 - m_toolBar->toolBarHeight() <= 0) {

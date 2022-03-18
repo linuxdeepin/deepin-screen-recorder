@@ -23,7 +23,8 @@ SOURCES += \
     ui/menucontroller.cpp \
     ui/toolbarwidget.cpp \
     ui/toolbar.cpp \
-    ui/subtoolwidget.cpp
+    ui/subtoolwidget.cpp \
+    utils.cpp
 
 HEADERS += \
     service/dbuspinscreenshotsadaptor.h \
@@ -34,7 +35,8 @@ HEADERS += \
     ui/menucontroller.h \
     ui/toolbarwidget.h \
     ui/toolbar.h \
-    ui/subtoolwidget.h
+    ui/subtoolwidget.h \
+    utils.h
 
 QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations
 ##安装路径

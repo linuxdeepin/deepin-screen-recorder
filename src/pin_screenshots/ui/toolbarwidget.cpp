@@ -20,6 +20,7 @@
  */
 #include "toolbarwidget.h"
 #include "accessibility/acTextDefine.h"
+#include "utils.h"
 
 #include <QActionGroup>
 #include <DFontSizeManager>
@@ -30,8 +31,12 @@ const QSize MIN_TOOLBAR_WIDGET_SIZE = QSize(194, 60);
 
 ToolBarWidget::ToolBarWidget(DWidget *parent): DBlurEffectWidget(parent)
 {
+    if(Utils::isWaylandMode){
+        setWindowFlags(Qt::Sheet |Qt::WindowStaysOnTopHint| Qt::WindowDoesNotAcceptFocus);
+    }else {
+        setWindowFlags(Qt::ToolTip);
+    }
 
-    setWindowFlags(Qt::ToolTip);
     this->setRadius(30);
     this->setBlurEnabled(true);
     this->setMode(DBlurEffectWidget::GaussianBlur);

@@ -40,6 +40,7 @@
 #include "pinscreenshots.h"
 #include "service/pinscreenshotsinterface.h"
 #include "service/dbuspinscreenshotsadaptor.h"
+#include "utils.h"
 
 #include <DWidget>
 #include <DLog>
@@ -73,9 +74,8 @@ int main(int argc, char *argv[])
         qDebug() << "Cant open a null file";
         return 0;
     }
-
-
-    if (isWaylandProtocol()) {
+    Utils::isWaylandMode = isWaylandProtocol();
+    if (Utils::isWaylandMode) {
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
     }
 
