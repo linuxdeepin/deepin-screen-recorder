@@ -4629,9 +4629,11 @@ void MainWindow::startRecord()
     }
 #ifdef KF5_WAYLAND_FLAGE_ON
 #if defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__) ||  defined (__aarch64__) || defined (__loongarch__)
-    //wayland下走此方法
-    connect(this, &MainWindow::stopRecordArm, this, &MainWindow::stopRecord);
-    checkTempFileArm();
+    if (Utils::isWaylandMode) {
+        //wayland下走此方法
+        connect(this, &MainWindow::stopRecordArm, this, &MainWindow::stopRecord);
+        checkTempFileArm();
+    }
 #endif
 #endif
 
