@@ -43,9 +43,9 @@ void ToolBar::initToolBar(DWidget *parent)
     connect(m_toolbarWidget, SIGNAL(signalCloseButtonClicked()), this, SIGNAL(sendCloseButtonClicked()));// 发送关闭按钮点击信号
 
     m_btWidget = new QWidget();
-    if(Utils::isWaylandMode){
-        m_btWidget->setWindowFlags(Qt::Sheet |Qt::WindowStaysOnTopHint| Qt::WindowDoesNotAcceptFocus);
-    }else {
+    if (Utils::isWaylandMode) {
+        m_btWidget->setWindowFlags(Qt::Sheet | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
+    } else {
         m_btWidget->setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip);
     }
     DPlatformWindowHandle handle(m_btWidget);
@@ -83,13 +83,18 @@ void ToolBar::initToolBar(DWidget *parent)
 }
 
 //显示在点pos
-void ToolBar::showAt(QPoint pos)
+void ToolBar::showAt(QPoint pos, bool isfirstTime)
 {
     qDebug() << "pos" << pos;
     this->moveAt(pos);
     if (!m_saveButton->isVisible() || (!m_toolbarWidget->isVisible())) {
         m_btWidget->show();
         m_toolbarWidget->show();
+    }
+    //隐藏第一次工具栏的显示
+    if (isfirstTime) {
+        m_btWidget->hide();
+        m_toolbarWidget->hide();
     }
 }
 

@@ -186,6 +186,7 @@ private:
     double proportion = 0.0; //宽高比
     QList<ScreenInfo> m_screenInfo; //所有屏幕信息
     QSize m_screenSize; // 屏幕大小
+    bool m_isfirstTime = false;
     /**
      * @brief 屏幕的缩放比例
      * 当屏幕缩放比例为1.25时，此时的屏幕实际大小为1536*864

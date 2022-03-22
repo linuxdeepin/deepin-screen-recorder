@@ -151,6 +151,7 @@ bool MainWindow::openImageAndName(const QImage &image, const QString &name, cons
     move(m_showPosition);
     update();
     proportion = static_cast<double>(this->width())  / this->height();
+    m_isfirstTime = true; //解决119157Bug采用的标识
     updateToolBarPosition();// 更新位置
     return true;
 }
@@ -676,7 +677,8 @@ void MainWindow::updateToolBarPosition()
         y = brPoint.y() + 15;
         //qDebug() << "m_toolBar->width()" << m_toolBar->toolBarWidth();
     }
-    m_toolBar->showAt(QPoint(static_cast<int>(x), static_cast<int>(y)));
+    m_toolBar->showAt(QPoint(x, y), m_isfirstTime);
+    m_isfirstTime = false;
 }
 
 
