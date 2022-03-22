@@ -189,13 +189,13 @@ void TextEdit::wheelEvent(QWheelEvent *e)
 */
 void TextEdit::mouseMoveEvent(QMouseEvent *e)
 {
-//    if (!this->isReadOnly()) {
+    if (!(e->x() > 0 && e->x() < this->geometry().width() && e->y() > 0 && e->y() < this->geometry().height())) {
+        return;
+    }
     if (m_editing == true) {
         DPlainTextEdit::mouseMoveEvent(e);
         return;
     }
-
-//    }
     qApp->setOverrideCursor(Qt::ClosedHandCursor);
     QPointF posOrigin = QPointF(mapToGlobal(e->pos()));
     QPointF movePos = QPointF(posOrigin.x(), posOrigin.y());
