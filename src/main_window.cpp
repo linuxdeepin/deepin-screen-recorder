@@ -1614,6 +1614,11 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
         Q_ASSERT(!pix.isNull());
         QClipboard *cb = qApp->clipboard();
         cb->setMimeData(t_imageData, QClipboard::Clipboard);
+        if(Utils::isWaylandMode) {
+            QEventLoop eventloop;
+            connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
+            eventloop.exec();
+        }
     }
 }
 
@@ -2470,7 +2475,10 @@ void MainWindow::changeShotToolEvent(const QString &func)
         //保存贴图到剪贴板
         saveScreenShot();
         m_pinInterface->openImageAndName(m_resultPixmap.toImage(), m_saveFileName, QPoint(recordX, recordY));
-        exitApp();
+        QTimer::singleShot(2, [ = ] {
+            exitApp();
+        });
+
     } else if (func == "scrollShot") { //点击滚动截图
         //捕捉区域的固件不显示
         drawDragPoint = false;

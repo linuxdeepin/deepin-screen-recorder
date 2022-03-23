@@ -236,6 +236,12 @@ void MainWindow::saveImg()
     QClipboard *cb = qApp->clipboard();
     cb->setMimeData(t_imageData, QClipboard::Clipboard);
 
+    if(Utils::isWaylandMode) {
+        QEventLoop eventloop;
+        connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
+        eventloop.exec();
+    }
+
     // 发送通知
     sendNotify(m_lastImagePath, isSaveState);
 }
