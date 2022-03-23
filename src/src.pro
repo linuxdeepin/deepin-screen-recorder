@@ -69,7 +69,7 @@ isEqual(ARCH, mips64) {
 }
 
 CONFIG += link_pkgconfig c++11
-PKGCONFIG += xcb xcb-util dframeworkdbus
+PKGCONFIG += xcb xcb-util dframeworkdbus opencv4
 
 RESOURCES = ../assets/image/deepin-screen-recorder.qrc \
     ../assets/resources/resources.qrc \
