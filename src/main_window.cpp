@@ -2754,7 +2754,9 @@ bool MainWindow::saveAction(const QPixmap &pix)
             break;
         }
 
-
+        if (Utils::isWaylandMode) {
+            this->show();
+        }
 
 
         if (m_saveFileName.isEmpty() || QFileInfo(m_saveFileName).isDir()) {
