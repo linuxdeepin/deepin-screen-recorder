@@ -752,7 +752,7 @@ TEST_F(CAVOutputStreamTest, init_context_amix)
     access_private_field::CAVOutputStreamm_videoFormatContext(*m_avOutputStream) = new AVFormatContext();
     access_private_field::CAVOutputStreamm_videoFormatContext(*m_avOutputStream)->oformat = new AVOutputFormat();
     access_private_field::CAVOutputStreamm_videoFormatContext(*m_avOutputStream)->oformat->flags = false;
-//    stub.set(avcodec_find_encoder, avcodec_find_encoder_stub);
+    //    stub.set(avcodec_find_encoder, avcodec_find_encoder_stub);
     //stub.set(avcodec_alloc_context3, avcodec_alloc_context3_stub);
     stub.set(avcodec_open2, avcodec_open2_stub1);
     stub.set(avformat_new_stream, avformat_new_stream_stub);
@@ -772,7 +772,7 @@ TEST_F(CAVOutputStreamTest, init_context_amix)
     delete access_private_field::CAVOutputStreamaudio_amix_st(*m_avOutputStream);
     delete access_private_field::CAVOutputStreamm_videoFormatContext(*m_avOutputStream)->oformat;
     delete access_private_field::CAVOutputStreamm_videoFormatContext(*m_avOutputStream);
-//    delete access_private_field::CAVOutputStreampCodecCtx_amix(*m_avOutputStream);
+    //    delete access_private_field::CAVOutputStreampCodecCtx_amix(*m_avOutputStream);
     avcodec_free_context(&access_private_field::CAVOutputStreampCodecCtx_amix(*m_avOutputStream));
 
 }

@@ -182,6 +182,7 @@ WaylandIntegration::WaylandIntegrationPrivate::WaylandIntegrationPrivate()
     //m_writeFrameThread = nullptr;
     m_bInitRecordAdmin = true;
     m_bGetFrame = true;
+    m_screenCount = 1;
     //m_recordTIme = -1;
 }
 
@@ -418,7 +419,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
         qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "dma fd " << dma_fd << " mmap failed - ";
     }
     //appendBuffer(mapData, static_cast<int>(width), static_cast<int>(height), static_cast<int>(stride), avlibInterface::m_av_gettime() - frameStartTime);
-    if(m_screenCount == 1) {
+    if (m_screenCount == 1) {
         m_curNewImage.first = 0;//avlibInterface::m_av_gettime() - frameStartTime;
         {
             QMutexLocker locker(&m_bGetScreenImageMutex);
@@ -528,7 +529,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
         QtConcurrent::run(this, &WaylandIntegrationPrivate::appendFrameToList);
     }
     QImage img(m_screenSize, QImage::Format_RGBA8888);
-    if(m_screenCount == 1) {
+    if (m_screenCount == 1) {
         m_curNewImage.first = 0;//avlibInterface::m_av_gettime() - frameStartTime;
         {
             QMutexLocker locker(&m_bGetScreenImageMutex);
@@ -562,7 +563,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
                 QMutexLocker locker(&m_bGetScreenImageMutex);
                 tempImage = m_curNewImage.second.copy();
             }
-            if(!tempImage.isNull()){
+            if (!tempImage.isNull()) {
                 appendBuffer(tempImage.bits(), static_cast<int>(tempImage.width()), static_cast<int>(tempImage.height()),
                              static_cast<int>(tempImage.width() * 4), avlibInterface::m_av_gettime() - frameStartTime);
 

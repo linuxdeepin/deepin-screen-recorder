@@ -10,7 +10,9 @@
 #include "stub.h"
 #include "addr_pri.h"
 #include <gtest/gtest.h>
-
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
 using namespace testing;
 
 
@@ -2863,3 +2865,54 @@ TEST_F(MainWindowTest, waylandwindowinfo5)
     delete window;
 
 }
+
+ACCESS_PRIVATE_FUN(MainWindow, void(), checkTempFileArm);
+TEST_F(MainWindowTest, checkTempFileArm)
+{
+    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
+    MainWindow *window = new MainWindow();
+
+    call_private_fun::MainWindowcheckTempFileArm(*window);
+
+    QString userName = QDir::homePath().section("/", -1, -1);
+    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-screen-recorder/").toStdString();
+    QDir tdir(path.c_str());
+    //判断文件夹路径是否存在
+    if (!tdir.exists()) {
+        tdir.mkpath(path.c_str());
+    }
+    path += "stopRecord.txt";
+    //判断文件是否存在，若存在则先删除文件
+    QFile mFile(path.c_str());
+    if (mFile.exists()) {
+        remove(path.c_str());
+    }
+    //打开文件
+    int fd = open(path.c_str(), O_RDWR | O_CREAT, 0644);
+    if (fd == -1) {
+        qDebug() << "open file fail!" << strerror(errno);
+        return;
+    }
+    //文件加锁
+    int flock = lockf(fd, F_TLOCK, 0);
+    if (flock == -1) {
+        qDebug() << "lock file fail!" << strerror(errno);
+        return;
+    }
+    ssize_t ret = -1;
+    //文件内容为1，读取文件时会停止录屏
+    char wBuffer[2] = {"1"};
+    //写文件
+    ret = write(fd, wBuffer, 2);
+    if (ret < 0) {
+        qDebug() << "write file fail!";
+        return ;
+    }
+    flock = lockf(fd, F_ULOCK, 0);
+    ::close(fd);
+    qDebug() << "createCacheFile end!";
+
+    delete window;
+
+}
+

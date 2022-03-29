@@ -67,10 +67,12 @@ TEST_F(TestRecordTimePlugin, refresh)
 
 TEST_F(TestRecordTimePlugin, onRecording)
 {
+    m_recordTimePlugin->m_bshow = true;
     m_recordTimePlugin->m_dBusService->recording();
 }
 
 TEST_F(TestRecordTimePlugin, onPause)
 {
+    m_recordTimePlugin->m_bshow = true;
     m_recordTimePlugin->m_dBusService->pause();
 }

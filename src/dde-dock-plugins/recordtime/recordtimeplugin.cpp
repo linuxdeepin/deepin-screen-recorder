@@ -28,6 +28,7 @@ RecordTimePlugin::RecordTimePlugin(QObject *parent)
 {
     m_timer = new QTimer(this);
     m_timeWidget = new TimeWidget();
+    m_checkTimer = nullptr;
 }
 
 RecordTimePlugin::~RecordTimePlugin()
@@ -36,6 +37,11 @@ RecordTimePlugin::~RecordTimePlugin()
         m_timer->deleteLater();
     if (nullptr != m_timeWidget)
         m_timeWidget->deleteLater();
+    if (nullptr != m_checkTimer) {
+        m_checkTimer->stop();
+        m_checkTimer->deleteLater();
+        m_checkTimer = nullptr;
+    }
 }
 
 const QString RecordTimePlugin::pluginName() const
