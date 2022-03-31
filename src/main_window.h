@@ -864,6 +864,11 @@ private:
      * @brief 直接通过快捷键或命令行启动滚动截图
      */
     bool m_isDirectStartScrollShot = false;
+
+    /**
+     * @brief 是否进入保存滚动截图。滚动截图模式中，保存时不需要保存蚂蚁线
+     */
+    bool m_isSaveScrollShot = false;
     /**
      * @brief 直接通过快捷键启动ocr
      */

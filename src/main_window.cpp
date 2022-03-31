@@ -1614,7 +1614,7 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
         Q_ASSERT(!pix.isNull());
         QClipboard *cb = qApp->clipboard();
         cb->setMimeData(t_imageData, QClipboard::Clipboard);
-        if(Utils::isWaylandMode) {
+        if (Utils::isWaylandMode) {
             QEventLoop eventloop;
             connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
             eventloop.exec();
@@ -2531,6 +2531,7 @@ void MainWindow::saveScreenShot()
     m_sizeTips->setVisible(false);
 
     m_initScroll = false; // 保存时关闭滚动截图
+    m_isSaveScrollShot = true; //保存滚动截图时改变
     update();
 #ifdef OCR_SCROLL_FLAGE_ON
     if (m_scrollShotTip) {
@@ -3068,8 +3069,8 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
         //捕捉区域
         frameRect = QRect(recordX, recordY, recordWidth, recordHeight);
-        // Draw frame. 画捕捉区域的虚线框 滚动截图保存时不画虚线框
-        if (recordButtonStatus != RECORD_BUTTON_RECORDING && !(status::scrollshot == m_functionType && !m_initScroll)) {
+        // Draw frame. 画捕捉区域的虚线框；滚动截图模式中，已经开始滚动后，保存时不画虚线框
+        if (recordButtonStatus != RECORD_BUTTON_RECORDING && !(status::scrollshot == m_functionType && m_isSaveScrollShot)) {
             //qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
             painter.setRenderHint(QPainter::Antialiasing, false);
             //QPen framePen(QColor("#01bdff"));
@@ -5131,7 +5132,7 @@ void MainWindow::startCountdown()
     //先隐藏，再显示
     //目的是解决触控操作无法选中部份应用程序的 QLineEdit 控件的问题
     //Wayland 上panguV机型，采用GPU后会崩溃
-    if(!Utils::isWaylandMode) {
+    if (!Utils::isWaylandMode) {
         hide();
         show();
     }
