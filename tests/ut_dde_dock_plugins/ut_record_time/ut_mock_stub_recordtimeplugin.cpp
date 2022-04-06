@@ -76,3 +76,11 @@ TEST_F(TestRecordTimePlugin, onPause)
     m_recordTimePlugin->m_bshow = true;
     m_recordTimePlugin->m_dBusService->pause();
 }
+TEST_F(TestRecordTimePlugin, onStopTimes)
+{
+    m_recordTimePlugin->m_checkTimer = new QTimer();
+    emit m_recordTimePlugin->m_dBusService->stop();
+    //连续点击，触发停止信号
+    emit m_recordTimePlugin->m_dBusService->stop();
+    EXPECT_EQ(nullptr, m_recordTimePlugin->m_checkTimer);
+}

@@ -107,6 +107,30 @@ TEST_F(MainWindowTest, initLaunchMode)
     m_window->initLaunchMode("screenShot");
 }
 */
+QString getSaveFileName_stub(void* obj, QWidget *parent = nullptr,
+                               const QString &caption = QString(),
+                               const QString &dir = QString(),
+                               const QString &filter = QString(),
+                               QString *selectedFilter = nullptr,
+                               QFileDialog::Options options = QFileDialog::Options())
+{
+    return "pngpng.pjb";
+}
+
+ACCESS_PRIVATE_FIELD(MainWindow, QString, m_saveFileName);
+TEST_F(MainWindowTest, fileNameCheck)
+{
+    // 文件名称校验 saveAction
+    Stub stub;
+    MainWindow *window = new MainWindow();
+    stub.set(ADDR(QFileDialog,getSaveFileName), getSaveFileName_stub);
+    ConfigSettings::instance()->setValue("save", "save_op", 3);
+    window->saveAction(QPixmap());
+    QString &file = access_private_field::MainWindowm_saveFileName(*window);
+    stub.reset(ADDR(QFileDialog,getSaveFileName));
+    EXPECT_EQ("pngpng.pjb.png", file);
+    delete window;
+}
 
 TEST_F(MainWindowTest, screenShotShapes)
 {
