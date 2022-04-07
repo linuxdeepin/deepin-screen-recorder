@@ -996,6 +996,7 @@ private:
 #endif
     bool m_isFullScreenShot = false;
     bool m_isVertical = false;
+    bool m_isLockedState = false;
 };
 
 #endif //MAINWINDOW_H

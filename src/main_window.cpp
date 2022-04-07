@@ -3940,7 +3940,10 @@ void MainWindow::onMouseMove(int x, int y)
     }
     if (m_initScroll && status::scrollshot == m_functionType) {
         scrollShotMouseMoveEvent(x, y);
-        this->activateWindow();
+        // wayland 平台上，锁屏界面后，触发激活窗口，会导致界面显示在锁屏界面之上
+        if (m_isLockedState == false) {
+            this->activateWindow();
+        }
     }
 
     //启动截图或者录屏后第一次鼠标移动时需要通过此方法，后面都不会在进入此方法
@@ -4317,6 +4320,7 @@ void MainWindow::onLockScreenEvent(QDBusMessage msg)
         }
     }
     qDebug() << ">>>>>>>>> isLocked: " << isLocked;
+    m_isLockedState = isLocked;
     if (status::scrollshot == m_functionType) {
         scrollShotLockScreen(isLocked);
     } else if (status::shot == m_functionType) {
