@@ -7,6 +7,7 @@
 #include <QPoint>
 #include <QScreen>
 #include <QDir>
+#include <QFileDialog>
 #include "stub.h"
 #include "addr_pri.h"
 #include <gtest/gtest.h>

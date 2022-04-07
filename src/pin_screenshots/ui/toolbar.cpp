@@ -38,6 +38,7 @@ ToolBar::ToolBar(DWidget *parent): QObject(parent)
 
 void ToolBar::initToolBar(DWidget *parent)
 {
+    Q_UNUSED(parent);
     m_toolbarWidget = new ToolBarWidget(); // 初始化工具栏
     connect(m_toolbarWidget, SIGNAL(signalOcrButtonClicked()), this, SIGNAL(sendOcrButtonClicked())); //发送OCR点击信号
     connect(m_toolbarWidget, SIGNAL(signalCloseButtonClicked()), this, SIGNAL(sendCloseButtonClicked()));// 发送关闭按钮点击信号

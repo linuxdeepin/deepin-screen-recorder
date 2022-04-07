@@ -155,7 +155,7 @@ public slots:
     bool hoverOnEllipse(FourPoints mainPoints, QPointF pos);
     bool hoverOnArrow(QList<QPointF> points, QPointF pos);
     bool hoverOnLine(FourPoints mainPoints, QList<QPointF> points, QPointF pos);
-    bool hoverOnText(FourPoints mainPoints, QPointF pos);
+    bool hoverOnText(int textIndex, FourPoints mainPoints, QPointF pos);
 
     bool hoverOnRotatePoint(FourPoints mainPoints, QPointF pos);
     bool textEditIsReadOnly();

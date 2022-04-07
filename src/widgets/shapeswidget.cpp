@@ -888,23 +888,23 @@ bool ShapesWidget::hoverOnLine(FourPoints mainPoints, QList<QPointF> points,
     return false;
 }
 
-bool ShapesWidget::hoverOnText(FourPoints mainPoints, QPointF pos)
+bool ShapesWidget::hoverOnText(int textIndex, FourPoints mainPoints, QPointF pos)
 {
-//    qDebug() << "hoverOnText:" <<  mainPoints << pos;
-
+    //qDebug() << "hoverOnText:" <<  mainPoints << pos;
     if (hoverOnRect(mainPoints, pos, true) ||
             (pos.x() >= mainPoints[0].x() - 5
              && pos.x() <= mainPoints[2].x() + 5
              && pos.y() >= mainPoints[0].y() - 5
              && pos.y() <= mainPoints[2].y() + 5)) {
-//        qDebug() << "hoverOnText Moving";
-        m_resizeDirection = Moving;
-        return true;
-    } else {
-//        qDebug() << "hoverOnText Outting";
-        m_resizeDirection = Outting;
-        return false;
+
+        if (m_editMap.contains(textIndex) && m_editMap[textIndex]->isReadOnly()) {
+            m_resizeDirection = Moving;
+            return true;
+        }
     }
+
+    m_resizeDirection = Outting;
+    return false;
 }
 
 bool ShapesWidget::hoverOnShapes(Toolshape toolShape, QPointF pos)
@@ -918,7 +918,7 @@ bool ShapesWidget::hoverOnShapes(Toolshape toolShape, QPointF pos)
     } else if (toolShape.type == "line") {
         return hoverOnLine(toolShape.mainPoints, toolShape.points, pos);
     } else if (toolShape.type == "text") {
-        return hoverOnText(toolShape.mainPoints, pos);
+        return hoverOnText(toolShape.index, toolShape.mainPoints, pos);
     }
 
     m_hoveredShape.type = "";
@@ -1688,7 +1688,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
 void ShapesWidget::updateTextRect(TextEdit *edit, QRectF newRect)
 {
     int index = edit->getIndex();
-//    qDebug() << "updateTextRect:" << newRect << index;
+    //qDebug() << "updateTextRect:" << newRect << index;
     for (int j = 0; j < m_shapes.length(); j++) {
 //        qDebug() << "updateTextRect  updating:" << j << m_shapes[j].index << index;
         if (m_shapes[j].type == "text" && m_shapes[j].index == index) {
