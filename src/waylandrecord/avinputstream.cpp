@@ -301,7 +301,7 @@ void *CAVInputStream::writeMixThreadFunc(void *param)
 
 void CAVInputStream::writMixAudio()
 {
-    while (bWriteMix() && m_bMix) {
+    while ((bWriteMix() || m_context->m_recordAdmin->m_pOutputStream->isNotAudioFifoEmty()) && m_bMix) {
         m_context->m_recordAdmin->m_pOutputStream->writeMixAudio();
     }
 }

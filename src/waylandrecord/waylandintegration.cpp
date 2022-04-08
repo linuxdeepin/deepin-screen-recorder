@@ -551,11 +551,12 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
 //通过线程每30ms钟向数据池中取出一张图片添加到环形缓冲区，以便后续视频编码
 void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
 {
-    int64_t delayTime = 1000 / m_fps + 1;
+    int64_t delayTime = 1000 / m_fps  + 1;
+    //qDebug() << "delayTime: " << delayTime;
 #ifdef __mips__
     //delayTime = 150;
 #endif
-
+    //qDebug() << "QDateTime::currentMSecsSinceEpoch(): " << QDateTime::currentMSecsSinceEpoch() << " , avlibInterface::m_av_gettime(): " << avlibInterface::m_av_gettime();
     while (m_appendFrameToListFlag) {
         if (m_screenCount == 1) {
             QImage tempImage;
@@ -564,9 +565,10 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
                 tempImage = m_curNewImage.second.copy();
             }
             if (!tempImage.isNull()) {
+                //qDebug() << "用来编码的帧索引glovbalImageCount: " << globalImageCount;
+                int64_t temptime = avlibInterface::m_av_gettime();
                 appendBuffer(tempImage.bits(), static_cast<int>(tempImage.width()), static_cast<int>(tempImage.height()),
-                             static_cast<int>(tempImage.width() * 4), avlibInterface::m_av_gettime() - frameStartTime);
-
+                                 static_cast<int>(tempImage.width() * 4), temptime/*- frameStartTime*/);
             }
             QThread::msleep(static_cast<unsigned long>(delayTime));
         } else {
@@ -797,6 +799,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
             m_freeList.removeFirst();
         }
     }
+    //qDebug() << "存视频帧 m_waylandList.size(): " << m_waylandList.size() << " , m_freeList.size(): " << m_freeList.size();
 }
 
 int WaylandIntegration::WaylandIntegrationPrivate::frameIndex = 0;
@@ -827,6 +830,7 @@ bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &frame
         //回收空闲内存，重复使用
         m_freeList.append(wFrame._frame);
         //qDebug() << "获取视频帧";
+        //qDebug() << "获取视频帧 m_waylandList.size(): " << m_waylandList.size() << " , m_freeList.size(): " << m_freeList.size();
         return true;
     }
 }

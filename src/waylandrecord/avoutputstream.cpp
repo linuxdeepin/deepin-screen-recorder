@@ -681,6 +681,7 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
     if (nullptr == frame._frame || frame._width <= 0 || frame._height <= 0) {
         return -1;
     }
+    //qint64 time1 = QDateTime::currentMSecsSinceEpoch();
     AVFrame *pRgbFrame = avlibInterface::m_av_frame_alloc();
     pRgbFrame->width = frame._width;
     pRgbFrame->height = frame._height;
@@ -715,7 +716,10 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
         AVERROR(ERANGE);
         return 2;
     }
+    //qint64 time2 = QDateTime::currentMSecsSinceEpoch();
     avlibInterface::m_sws_scale(m_pVideoSwsContext, pRgbFrame->data, pRgbFrame->linesize, 0, pCodecCtx->height, pFrameYUV->data, pFrameYUV->linesize);
+    //qint64 time3 = QDateTime::currentMSecsSinceEpoch();
+    //qDebug() << "time3 - time2: sws_scale : " << time3-time2;
     pFrameYUV->width  = pRgbFrame->width;//test
     pFrameYUV->height = pRgbFrame->height;
     pFrameYUV->format = AV_PIX_FMT_YUV420P;
@@ -734,7 +738,7 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
             m_fristVideoFramePts = frame._time;
         }
         packet.pts = static_cast<int64_t>(m_videoStream->time_base.den) * (frame._time - m_fristVideoFramePts) / AV_TIME_BASE;
-        //qDebug() << "video packet.pts: " << packet.pts;
+        //qDebug() << "video packet.pts: " << packet.pts << " , " << static_cast<int64_t>(m_videoStream->time_base.den) << " * " << frame._time - m_fristVideoFramePts << " / " << AV_TIME_BASE;
         packet.dts =  packet.pts;
         int ret = writeFrame(m_videoFormatContext, &packet);
         if (ret < 0) {
@@ -744,6 +748,8 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
             return ret;
         }
     }
+    //qint64 time4 = QDateTime::currentMSecsSinceEpoch();
+    //qDebug() << "time4 - time1: writeVideoFrame : " << time4-time1;
     avlibInterface::m_av_free_packet(&packet);
     avlibInterface::m_av_frame_free(&pRgbFrame);
     fflush(stdout);
@@ -909,7 +915,13 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
             outputPacket.stream_index = m_micAudioStream->index;
             printf("output_packet.stream_index1  audio_st =%d\n", outputPacket.stream_index);
             //outputPacket.pts = avlibInterface::m_av_rescale_q(m_nLastAudioPresentationTime, rational, m_micAudioStream->time_base);
-            outputPacket.pts = m_singleCount * m_pMicCodecContext->frame_size * 1000 / m_pMicCodecContext->sample_rate;
+            if (m_videoType == videoType::MKV) {
+                //显示时间戳，应大于或等于解码时间戳
+                outputPacket.pts = m_singleCount * m_pMicCodecContext->frame_size * 1000 / m_pMicCodecContext->sample_rate;
+            } else {
+                //显示时间戳，应大于或等于解码时间戳
+                outputPacket.pts = m_singleCount * m_pMicCodecContext->frame_size;
+            }
             outputPacket.dts = outputPacket.pts;
             //qDebug() << m_singleCount << " mic audio outputPacket.pts: " << outputPacket.pts;
             m_singleCount++;
@@ -1058,6 +1070,27 @@ int CAVOutputStream::write_filter_audio_frame(AVStream *&outst, AVCodecContext *
     //     av_frame_free(&output_frame);
     return ret;
 }
+/**
+ * @brief 音频缓冲区是否还有数据
+ * @return
+ */
+bool CAVOutputStream::isNotAudioFifoEmty(){
+    bool flag  = false;
+    if(m_bMix){
+        if((m_micAudioFifo != nullptr && audioFifoSize(m_micAudioFifo) >= m_pMicCodecContext->frame_size) ||
+                (m_sysAudioFifo != nullptr && audioFifoSize(m_sysAudioFifo) >= m_pSysCodecContext->frame_size) ){
+            flag = true;
+        }
+    }else{
+        if((m_micAudioFifo != nullptr && audioFifoSize(m_micAudioFifo) >= m_pMicCodecContext->frame_size) ||
+                (m_sysAudioFifo != nullptr && audioFifoSize(m_sysAudioFifo) >= m_pSysCodecContext->frame_size) ){
+            flag = true;
+        }
+    }
+    //qDebug () << "isNotAudioFifoEmty() : " << flag << audioFifoSize(m_sysAudioFifo) << audioFifoSpace(m_sysAudioFifo) << " , " << audioFifoSize(m_micAudioFifo) << audioFifoSpace(m_micAudioFifo);
+
+    return flag;
+}
 
 void CAVOutputStream::writeMixAudio()
 {
@@ -1069,7 +1102,7 @@ void CAVOutputStream::writeMixAudio()
     int micFifoSize = audioFifoSize(m_micAudioFifo);
     int minMicFrameSize = m_pMicCodecContext->frame_size;
     int minSysFrameSize = m_pSysCodecContext->frame_size;
-    if (micFifoSize >= minMicFrameSize && sysFifosize >= minSysFrameSize) {
+    if (micFifoSize >= minMicFrameSize && sysFifosize >= minSysFrameSize){
         int ret;
         tmpFifoFailed = 0;
         AVRational time_base_q;
@@ -1115,7 +1148,7 @@ void CAVOutputStream::writeMixAudio()
             printf("Mixer: failed to call av_buffersrc_add_frame (microphone)\n");
             return;
         }
-        while (isWriteFrame()) {
+        while (isWriteFrame() || isNotAudioFifoEmty()) {
             //两种音频混合后输出的帧
             AVFrame *pFrame_out = avlibInterface::m_av_frame_alloc();
             //AVERROR(EAGAIN) 返回这个表示还没转换完成既 不存在帧，则返回AVERROR（EAGAIN）
@@ -1142,14 +1175,15 @@ void CAVOutputStream::writeMixAudio()
                 }
                 if (got_packet_ptr) {
                     packet_out.stream_index = audio_amix_st->index;
-//                    if (m_videoType == videoType::MKV) {
-                    //显示时间戳，应大于或等于解码时间戳
-                    packet_out.pts = m_mixCount * pCodecCtx_amix->frame_size * 1000 / pFrame_out->sample_rate;
-//                    } else {
-//                        //显示时间戳，应大于或等于解码时间戳
-//                        packet_out.pts = m_mixCount * pCodecCtx_amix->frame_size;
-//                    }
-                    //qDebug() << m_mixCount << " mix audio packet_out.pts: " << packet_out.pts;
+
+                    if (m_videoType == videoType::MKV) {
+                        //显示时间戳，应大于或等于解码时间戳
+                        packet_out.pts = m_mixCount * pCodecCtx_amix->frame_size * 1000 / pFrame_out->sample_rate;
+                    } else {
+                        //显示时间戳，应大于或等于解码时间戳
+                        packet_out.pts = m_mixCount * pCodecCtx_amix->frame_size;
+                    }
+                    qDebug() << m_mixCount << " mix audio packet_out.pts: " << packet_out.pts ;
 
                     packet_out.dts = packet_out.pts;
                     packet_out.duration = pCodecCtx_amix->frame_size;
@@ -1345,8 +1379,13 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
         /** Write one audio frame from the temporary packet to the output file. */
         if (enc_got_frame_a) {
             outputPacket.stream_index = m_sysAudioStream->index;
-            outputPacket.pts = m_singleCount * m_pSysCodecContext->frame_size * 1000 / m_pSysCodecContext->sample_rate;
-            if (m_videoType == videoType::MP4) {
+//            outputPacket.pts = m_singleCount * m_pSysCodecContext->frame_size * 1000 / m_pSysCodecContext->sample_rate;
+            if (m_videoType == videoType::MKV) {
+                //显示时间戳，应大于或等于解码时间戳
+                outputPacket.pts = m_singleCount * m_pSysCodecContext->frame_size * 1000 / m_pSysCodecContext->sample_rate;
+            } else {
+                //显示时间戳，应大于或等于解码时间戳
+                outputPacket.pts = m_singleCount * m_pSysCodecContext->frame_size;
                 outputPacket.dts = outputPacket.pts;
             }
             outputPacket.duration = m_pSysCodecContext->frame_size;
@@ -1536,7 +1575,7 @@ int CAVOutputStream::writeTrailer(AVFormatContext *s)
 }
 
 /**
- * @brief 获取当前af中可供读取的样本数
+ * @brief 获取当前af中可供写入的样本数（剩余空间）
  * @param af
  * @return
  */
@@ -1547,6 +1586,11 @@ int CAVOutputStream::audioFifoSpace(AVAudioFifo *af)
     return avlibInterface::m_av_audio_fifo_space(af);
 }
 
+/**
+ * @brief 获取当前af中可供读取的样本数（已使用空间）
+ * @param af
+ * @return
+ */
 int CAVOutputStream::audioFifoSize(AVAudioFifo *af)
 {
     //qDebug() << "+++++++++++++++++++++++ 2";
@@ -1578,6 +1622,9 @@ void CAVOutputStream::audioFifoFree(AVAudioFifo *af)
 bool CAVOutputStream::isWriteFrame()
 {
     QMutexLocker locker(&m_isWriteFrameMutex);
+    if(isNotAudioFifoEmty()){
+        return true;
+    }
     return m_isWriteFrame;
 }
 

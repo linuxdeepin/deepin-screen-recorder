@@ -106,6 +106,11 @@ public:
      * @brief 视频类型
      */
     int m_videoType;
+    /**
+     * @brief 音频缓冲区是否还有数据
+     * @return
+     */
+    bool isNotAudioFifoEmty();
 private:
     /**
      * @brief 电脑类型
