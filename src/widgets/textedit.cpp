@@ -189,9 +189,9 @@ void TextEdit::wheelEvent(QWheelEvent *e)
 */
 void TextEdit::mouseMoveEvent(QMouseEvent *e)
 {
-    if (!(e->x() > 0 && e->x() < this->geometry().width() && e->y() > 0 && e->y() < this->geometry().height())) {
-        return;
-    }
+//    if (!(e->x() > 0 && e->x() < this->geometry().width() && e->y() > 0 && e->y() < this->geometry().height())) {
+//        return;
+//    }
     if (m_editing == true) {
         DPlainTextEdit::mouseMoveEvent(e);
         return;

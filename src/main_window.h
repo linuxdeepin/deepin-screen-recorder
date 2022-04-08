@@ -995,7 +995,7 @@ private:
     std::string m_tempPath;
 #endif
     bool m_isFullScreenShot = false;
-    bool m_isVertical = false;
+    bool m_isScreenVertical = false; // 判断多屏是否纵向布局
     bool m_isLockedState = false;
 };
 

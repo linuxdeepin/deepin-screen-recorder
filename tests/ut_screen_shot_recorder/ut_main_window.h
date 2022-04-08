@@ -128,8 +128,9 @@ TEST_F(MainWindowTest, fileNameCheck)
     ConfigSettings::instance()->setValue("save", "save_op", 3);
     window->saveAction(QPixmap());
     QString &file = access_private_field::MainWindowm_saveFileName(*window);
-    stub.reset(ADDR(QFileDialog,getSaveFileName));
+    //stub.reset(ADDR(QFileDialog,getSaveFileName));
     EXPECT_EQ("pngpng.pjb.png", file);
+    ConfigSettings::instance()->setValue("save", "save_op", 0);
     delete window;
 }
 
@@ -2640,7 +2641,7 @@ TEST_F(MainWindowTest, startRecord)
 
 ACCESS_PRIVATE_FIELD(MainWindow, ConnectionThread *, m_connectionThreadObject);
 ACCESS_PRIVATE_FIELD(MainWindow, QList<MainWindow::ScreenInfo>, m_screenInfo);
-ACCESS_PRIVATE_FIELD(MainWindow, bool, m_isVertical);
+ACCESS_PRIVATE_FIELD(MainWindow, bool, m_isScreenVertical);
 ACCESS_PRIVATE_FUN(MainWindow, void(const QVector<ClientManagement::WindowState> &), waylandwindowinfo);
 TEST_F(MainWindowTest, waylandwindowinfo1)
 {
@@ -2653,7 +2654,7 @@ TEST_F(MainWindowTest, waylandwindowinfo1)
     access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
     access_private_field::MainWindowrecordButtonStatus(*window) = 0;
 
-    access_private_field::MainWindowm_isVertical(*window) = false;
+    access_private_field::MainWindowm_isScreenVertical(*window) = false;
     MainWindow::ScreenInfo screenInfo1, screenInfo2;
     screenInfo1.x = 0;
     screenInfo1.y = 0;
@@ -2703,7 +2704,7 @@ TEST_F(MainWindowTest, waylandwindowinfo2)
     access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
     access_private_field::MainWindowrecordButtonStatus(*window) = 0;
 
-    access_private_field::MainWindowm_isVertical(*window) = false;
+    access_private_field::MainWindowm_isScreenVertical(*window) = false;
     MainWindow::ScreenInfo screenInfo1, screenInfo2;
     screenInfo1.x = 0;
     screenInfo1.y = 0;
@@ -2754,7 +2755,7 @@ TEST_F(MainWindowTest, waylandwindowinfo3)
     access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
     access_private_field::MainWindowrecordButtonStatus(*window) = 0;
 
-    access_private_field::MainWindowm_isVertical(*window) = true;
+    access_private_field::MainWindowm_isScreenVertical(*window) = true;
     MainWindow::ScreenInfo screenInfo1, screenInfo2;
     screenInfo1.x = 0;
     screenInfo1.y = 0;
@@ -2805,7 +2806,7 @@ TEST_F(MainWindowTest, waylandwindowinfo4)
     access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
     access_private_field::MainWindowrecordButtonStatus(*window) = 0;
 
-    access_private_field::MainWindowm_isVertical(*window) = true;
+    access_private_field::MainWindowm_isScreenVertical(*window) = true;
     MainWindow::ScreenInfo screenInfo1, screenInfo2;
     screenInfo1.x = 0;
     screenInfo1.y = 10;
@@ -2856,7 +2857,7 @@ TEST_F(MainWindowTest, waylandwindowinfo5)
     access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
     access_private_field::MainWindowrecordButtonStatus(*window) = 0;
 
-    access_private_field::MainWindowm_isVertical(*window) = true;
+    access_private_field::MainWindowm_isScreenVertical(*window) = true;
     MainWindow::ScreenInfo screenInfo1, screenInfo2;
     screenInfo1.x = 0;
     screenInfo1.y = 10;

@@ -144,6 +144,7 @@ void MainWindow::initMainWindow()
 
     m_screenCount = QApplication::desktop()->screenCount();
     QList<QScreen *> screenList = qApp->screens();
+    int hTotal = 0;
     for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
         QRect rect = (*it)->geometry();
         qDebug() << (*it)->name() << rect;
@@ -153,6 +154,8 @@ void MainWindow::initMainWindow()
         screenInfo.height =  static_cast<int>(rect.height() * m_pixelRatio);
         screenInfo.width = static_cast<int>(rect.width() * m_pixelRatio);
         screenInfo.name = (*it)->name();
+
+        hTotal += screenInfo.height;
         m_screenInfo.append(screenInfo);
     }
 
@@ -168,13 +171,22 @@ void MainWindow::initMainWindow()
             m_screenSize.setWidth(m_screenInfo[i].width + m_screenInfo[i].x);
     }
 
-    qDebug() << m_screenSize;
     if (m_screenInfo.size() > 1) {
+        // 缩放情况下可能会有一个像素的误差值
+        if ((hTotal - m_screenSize.height()) < 2) {
+            m_isScreenVertical = true;
+        }
+
         // 排序
         qSort(m_screenInfo.begin(), m_screenInfo.end(), [ = ](const ScreenInfo info1, const ScreenInfo info2) {
-            return info1.x < info2.x;
+            if (m_isScreenVertical) {
+                return info1.y < info2.y;
+            } else {
+                return info1.x < info2.x;
+            }
         });
     }
+    qDebug() << m_screenSize << m_isScreenVertical << hTotal;
     if (Utils::isWaylandMode) {
         // Wayland 下窗口接收全局键盘
         create();
@@ -271,16 +283,29 @@ void MainWindow::initAttributes()
     initShortcut();
 
 
+    // 多屏缩放模式下，界面坐标修正
     if (m_screenCount > 1 && m_pixelRatio  > 1) {
+        if (m_isScreenVertical) {
+            int heightAfterFirst = 0;
+            for (int index = 1; index < m_screenCount; ++index) {
+                heightAfterFirst += m_screenInfo[index].height;
+            }
+            if (m_screenInfo[0].height < heightAfterFirst) {
+                // 多屏放缩情况下，小屏在上，整体需要偏移一定距离
+                this->move(0, m_screenInfo[0].height - static_cast<int>(m_screenInfo[0].height / m_pixelRatio));
+            }
 
-        int widthAfterFirst = 0;
-        for (int index = 1; index < m_screenCount; ++index) {
-            widthAfterFirst += m_screenInfo[index].width;
+        } else {
+            int widthAfterFirst = 0;
+            for (int index = 1; index < m_screenCount; ++index) {
+                widthAfterFirst += m_screenInfo[index].width;
+            }
+            if (m_screenInfo[0].width < widthAfterFirst) {
+                // 多屏放缩情况下，小屏在前，整体需要偏移一定距离
+                this->move(m_screenInfo[0].width - static_cast<int>(m_screenInfo[0].width / m_pixelRatio), 0);
+            }
+
         }
-        if (m_screenInfo[0].width < widthAfterFirst)
-            // QT bug，这里暂时做特殊处理
-            // 多屏放缩情况下，小屏在前，整体需要偏移一定距离
-            this->move(m_screenInfo[0].width - static_cast<int>(m_screenInfo[0].width / m_pixelRatio), 0);
     }
     //检测锁屏的属性是否发生改变
     QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
@@ -344,7 +369,7 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
     for (int i = 0; i < windowStates.count(); ++i) {
         if (windowStates.at(i).isMinimized == false && windowStates.at(i).pid != getpid() && windowStates.at(i).resourceName[0] != '\0') {
             if (m_screenInfo.size() > 1) {
-                if (m_isVertical == false) {
+                if (m_isScreenVertical == false) {
                     if (windowStates.at(i).geometry.x < m_screenInfo[1].x)
                         windowRects << QRect(
                                         static_cast<int>(windowStates.at(i).geometry.x / ratio),
@@ -398,10 +423,10 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
                 windowRects[i].setX(0);
                 windowRects[i].setWidth(windowRects[i].width());
             }
-            if (m_isVertical == true && x1 > screenRect.width()) {
+            if (m_isScreenVertical == true && x1 > screenRect.width()) {
                 windowRects[i].setWidth(screenRect.width() - x);
             }
-            if (m_isVertical == false && y1 > screenRect.height()) {
+            if (m_isScreenVertical == false && y1 > screenRect.height()) {
                 windowRects[i].setHeight(screenRect.height() - y);
             }
         }
