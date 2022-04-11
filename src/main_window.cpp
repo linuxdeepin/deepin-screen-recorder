@@ -1347,6 +1347,9 @@ bool MainWindow::isToolBarInShotArea()
 void MainWindow::showPreviewWidgetImage(QImage img)
 {
 #ifdef OCR_SCROLL_FLAGE_ON
+    if (m_isSaveScrollShot) {
+        return;
+    }
     m_scrollShotSizeTips ->updateTips(QPoint(recordX, recordY), QSize(int(img.width() / m_pixelRatio + 2), int(img.height() / m_pixelRatio + 2)));
     m_previewWidget->updateImage(img);
 #endif
@@ -2547,13 +2550,6 @@ void MainWindow::saveScreenShot()
         m_shotflag = 1;
     emit saveActionTriggered();
     hideAllWidget();
-
-    m_toolBar->setVisible(false);
-    m_sizeTips->setVisible(false);
-    m_sideBar->setVisible(false);
-    //m_shotButton->setVisible(false);
-    //m_recordButton->setVisible(false);
-    m_sizeTips->setVisible(false);
 
     m_initScroll = false; // 保存时关闭滚动截图
     m_isSaveScrollShot = true; //保存滚动截图时改变
