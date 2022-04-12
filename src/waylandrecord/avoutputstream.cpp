@@ -1074,18 +1074,12 @@ int CAVOutputStream::write_filter_audio_frame(AVStream *&outst, AVCodecContext *
  * @brief 音频缓冲区是否还有数据
  * @return
  */
-bool CAVOutputStream::isNotAudioFifoEmty(){
+bool CAVOutputStream::isNotAudioFifoEmty()
+{
     bool flag  = false;
-    if(m_bMix){
-        if((m_micAudioFifo != nullptr && audioFifoSize(m_micAudioFifo) >= m_pMicCodecContext->frame_size) ||
-                (m_sysAudioFifo != nullptr && audioFifoSize(m_sysAudioFifo) >= m_pSysCodecContext->frame_size) ){
-            flag = true;
-        }
-    }else{
-        if((m_micAudioFifo != nullptr && audioFifoSize(m_micAudioFifo) >= m_pMicCodecContext->frame_size) ||
-                (m_sysAudioFifo != nullptr && audioFifoSize(m_sysAudioFifo) >= m_pSysCodecContext->frame_size) ){
-            flag = true;
-        }
+    if ((m_micAudioFifo != nullptr && audioFifoSize(m_micAudioFifo) >= m_pMicCodecContext->frame_size) ||
+            (m_sysAudioFifo != nullptr && audioFifoSize(m_sysAudioFifo) >= m_pSysCodecContext->frame_size)) {
+        flag = true;
     }
     //qDebug () << "isNotAudioFifoEmty() : " << flag << audioFifoSize(m_sysAudioFifo) << audioFifoSpace(m_sysAudioFifo) << " , " << audioFifoSize(m_micAudioFifo) << audioFifoSpace(m_micAudioFifo);
 
@@ -1102,7 +1096,7 @@ void CAVOutputStream::writeMixAudio()
     int micFifoSize = audioFifoSize(m_micAudioFifo);
     int minMicFrameSize = m_pMicCodecContext->frame_size;
     int minSysFrameSize = m_pSysCodecContext->frame_size;
-    if (micFifoSize >= minMicFrameSize && sysFifosize >= minSysFrameSize){
+    if (micFifoSize >= minMicFrameSize && sysFifosize >= minSysFrameSize) {
         int ret;
         tmpFifoFailed = 0;
         AVRational time_base_q;
@@ -1622,7 +1616,7 @@ void CAVOutputStream::audioFifoFree(AVAudioFifo *af)
 bool CAVOutputStream::isWriteFrame()
 {
     QMutexLocker locker(&m_isWriteFrameMutex);
-    if(isNotAudioFifoEmty()){
+    if (isNotAudioFifoEmty()) {
         return true;
     }
     return m_isWriteFrame;

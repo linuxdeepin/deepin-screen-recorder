@@ -788,6 +788,16 @@ bool isWriteFrame_stub1()
         return false;
     }
 }
+bool isNotAudioFifoEmty_stub()
+{
+
+    if (g_first3 == 1) {
+        return true;
+    } else {
+        g_first3 = 0;
+        return false;
+    }
+}
 int writeFrame_stub(AVFormatContext *s, AVPacket *pkt)
 {
     return 1;
@@ -843,6 +853,7 @@ TEST_F(CAVOutputStreamTest, writeMixAudio)
     stub.set(av_rescale_q, av_rescale_q_stub);
     stub.set(av_buffersrc_add_frame_flags, av_buffersrc_add_frame_flags_stub);
     stub.set(ADDR(CAVOutputStream, isWriteFrame), isWriteFrame_stub1);
+    stub.set(ADDR(CAVOutputStream, isNotAudioFifoEmty), isNotAudioFifoEmty_stub);
     stub.set(avcodec_encode_audio2, avcodec_encode_audio2_stub);
     stub.set(ADDR(CAVOutputStream, writeFrame), writeFrame_stub);
     stub.set(av_buffersink_get_frame, av_buffersink_get_frame_stub);
@@ -855,6 +866,7 @@ TEST_F(CAVOutputStreamTest, writeMixAudio)
     stub.reset(av_rescale_q);
     stub.reset(av_buffersrc_add_frame_flags);
     stub.reset(ADDR(CAVOutputStream, isWriteFrame));
+    stub.reset(ADDR(CAVOutputStream, isNotAudioFifoEmty));
     stub.reset(avcodec_encode_audio2);
     stub.reset(ADDR(CAVOutputStream, writeFrame));
     stub.reset(av_buffersink_get_frame);
