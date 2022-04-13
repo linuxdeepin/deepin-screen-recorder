@@ -874,9 +874,6 @@ void MainWindow::initScreenShot()
         m_sizeTips->setRecorderTipsInfo(false);
         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
     }
-
-    //初始化ocr
-    m_ocrInterface = nullptr;
     m_toolBar->setFocus();
 }
 
@@ -1707,9 +1704,10 @@ void MainWindow::scrollShotLockScreen(bool isLocked)
 {
     //锁屏时暂停自动滚动
     if (isLocked) {
-        m_scrollShotStatus = 3;
+        saveScreenShot();
+        //m_scrollShotStatus = 3;
         //暂停自动滚动截图
-        pauseAutoScrollShot();
+        //pauseAutoScrollShot();
     }
     //解锁时恢复滚动
     //else {
