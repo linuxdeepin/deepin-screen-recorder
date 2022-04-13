@@ -963,11 +963,11 @@ private:
     RecorderTablet *m_tabletRecorderHandle = nullptr;
     int m_cursorBound;
     //ocr接口
-    OcrInterface *m_ocrInterface;
+    OcrInterface *m_ocrInterface = nullptr;
     /**
      * @brief 贴图接口
      */
-    PinScreenShotsInterface *m_pinInterface;
+    PinScreenShotsInterface *m_pinInterface = nullptr;
     //预览窗口
 #ifdef OCR_SCROLL_FLAGE_ON
     PreviewWidget *m_previewWidget = nullptr;
