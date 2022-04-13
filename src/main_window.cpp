@@ -1901,20 +1901,22 @@ void MainWindow::updateToolBarPos()
         }
     }
     // 根据屏幕的具体实际坐标修正Y值
-    // 多屏情况下， 右下角有可能在屏幕外面。
-    for (int i = 0; i < m_screenInfo.size(); ++i) {
-        if (toolbarPoint.x() + m_toolBar->width() >= m_screenInfo[i].x && toolbarPoint.x() + m_toolBar->width() <= m_screenInfo[i].x + m_screenInfo[i].width) {
-            if (toolbarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING) {
-                // 屏幕上超出
-                toolbarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
-            } else if (toolbarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
-                // 屏幕下超出
-                int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
-                if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING)
-                    y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_toolBar->height() - TOOLBAR_Y_SPACING;
-                toolbarPoint.setY(y);
+    // 多屏情况下，横向，有可能在屏幕外面。
+    if (m_isScreenVertical == false) {
+        for (int i = 0; i < m_screenInfo.size(); ++i) {
+            if (toolbarPoint.x() + m_toolBar->width() >= m_screenInfo[i].x && toolbarPoint.x() + m_toolBar->width() <= m_screenInfo[i].x + m_screenInfo[i].width) {
+                if (toolbarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING) {
+                    // 屏幕上超出
+                    toolbarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
+                } else if (toolbarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
+                    // 屏幕下超出
+                    int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
+                    if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING)
+                        y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_toolBar->height() - TOOLBAR_Y_SPACING;
+                    toolbarPoint.setY(y);
+                }
+                break;
             }
-            break;
         }
     }
     m_toolBar->showAt(toolbarPoint);
