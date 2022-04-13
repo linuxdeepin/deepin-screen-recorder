@@ -221,7 +221,6 @@ void MainWindow::initAttributes()
     setAttribute(Qt::WA_TranslucentBackground, true);
     setMouseTracking(true);   // make MouseMove can response
     installEventFilter(this);  // add event filter
-    createWinId();
 
 
 
@@ -1381,6 +1380,7 @@ void MainWindow::fullScreenshot()
     this->initAttributes();
     this->initLaunchMode("screenShot");
     this->showFullScreen();
+    this->createWinId();
     this->initResource();
     repaint();
     qApp->setOverrideCursor(BaseUtils::setCursorShape("start"));
@@ -1423,6 +1423,7 @@ void MainWindow::topWindow()
     this->initAttributes();
     this->initLaunchMode("screenShot");
     this->showFullScreen();
+    this->createWinId();
     this->initResource();
 
     //wayland 模式下不进入以下步骤
@@ -1543,6 +1544,7 @@ void MainWindow::savePath(const QString &path)
     this->initAttributes();
     this->initLaunchMode("screenShot");
     this->showFullScreen();
+    this->createWinId();
     this->initResource();
 
     m_shotWithPath = true;
@@ -1560,6 +1562,7 @@ void MainWindow::startScreenshotFor3rd(const QString &path)
     this->initAttributes();
     this->initLaunchMode("screenShot");
     this->showFullScreen();
+    this->createWinId();
     this->initResource();
     m_shotWithPath = true; // 自带路径
     m_noNotify = true; // 关闭通知
@@ -1573,6 +1576,7 @@ void MainWindow::noNotify()
     this->initAttributes();
     this->initLaunchMode("screenShot");
     this->showFullScreen();
+    this->createWinId();
     this->initResource();
 }
 

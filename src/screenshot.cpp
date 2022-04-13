@@ -44,6 +44,7 @@ void Screenshot::startScreenshot()
     m_window.initResource();
     m_window.initLaunchMode(m_launchMode);
     m_window.showFullScreen();
+    m_window.createWinId();
     //平板模式截图录屏
     if (Utils::isTabletEnvironment) {
         if (QString("screenRecord") == m_launchMode) {
@@ -81,6 +82,7 @@ void Screenshot::delayScreenshot(double num)
         m_window.initLaunchMode("screenShot");
         m_window.showFullScreen();
         m_window.initResource();
+        m_window.createWinId();
     });
 }
 
@@ -106,6 +108,7 @@ void Screenshot::OcrScreenshot()
     m_window.initResource();
     m_window.initLaunchMode("screenOcr");
     m_window.showFullScreen();
+    m_window.createWinId();
 #endif
 }
 
@@ -120,6 +123,7 @@ void Screenshot::ScrollScreenshot()
         m_window.initResource();
         m_window.initLaunchMode("screenScroll");
         m_window.showFullScreen();
+        m_window.createWinId();
     }else{
         qDebug() << "scroll shot exit !";
         qApp->quit();
