@@ -36,6 +36,19 @@ ToolBar::ToolBar(DWidget *parent): QObject(parent)
     initToolBar(parent); // 初始化工具栏
 }
 
+ToolBar::~ToolBar()
+{
+    if (m_toolbarWidget) {
+        delete m_toolbarWidget;
+        m_toolbarWidget = nullptr;
+    }
+
+    if (m_btWidget) {
+        delete m_btWidget;
+        m_btWidget = nullptr;
+    }
+}
+
 void ToolBar::initToolBar(DWidget *parent)
 {
     Q_UNUSED(parent);

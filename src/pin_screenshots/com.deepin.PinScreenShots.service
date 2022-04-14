@@ -1,3 +1,4 @@
 [D-BUS Service]
 Name=com.deepin.PinScreenShots
-Exec=/usr/bin/deepin-pin-screenshots --dbus
+#Exec=/usr/bin/deepin-pin-screenshots --dbus
+Exec=/usr/bin/dbus-send --session --type=method_call --print-reply --dest=com.deepin.SessionManager /com/deepin/StartManager com.deepin.StartManager.RunCommand string:"/usr/bin/deepin-pin-screenshots" array:string:"--dbus"

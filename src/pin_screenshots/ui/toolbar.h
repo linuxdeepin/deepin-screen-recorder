@@ -31,6 +31,7 @@ class ToolBar : public QObject
     Q_OBJECT
 public:
     explicit ToolBar(DWidget *parent = nullptr);
+    ~ToolBar();
     void showAt(QPoint pos, bool isfirstTime); //显示在点pos
     void setHiden(bool value  = true); //设置隐藏
     void shortcutOpoints(); //快捷键显示选项菜单
