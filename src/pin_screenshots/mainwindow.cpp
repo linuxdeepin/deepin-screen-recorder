@@ -236,7 +236,7 @@ void MainWindow::saveImg()
     QClipboard *cb = qApp->clipboard();
     cb->setMimeData(t_imageData, QClipboard::Clipboard);
 
-    if(Utils::isWaylandMode) {
+    if (Utils::isWaylandMode) {
         QEventLoop eventloop;
         connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
         eventloop.exec();
@@ -424,8 +424,9 @@ void MainWindow::paintEvent(QPaintEvent *e)
     if (!m_image.isNull()) {
         QPainter pp(this);
         QRect Temp(0, 0, this->width(), this->height());
-        QImage tempImage = m_image.scaled(this->width(), this->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        pp.drawImage(Temp, tempImage);
+        // 用rect获取到的图片不容易失帧
+        //QImage tempImage = m_image.scaled(this->width(), this->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        pp.drawImage(Temp, m_image);
     }
 
 
