@@ -596,6 +596,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
                 }
             }
             QImage img(m_screenSize, QImage::Format_RGBA8888);
+            img.fill(Qt::GlobalColor::black);
             QPainter painter(&img);
             for (auto itr = tempImageVec.begin(); itr != tempImageVec.end(); ++itr) {
                 painter.drawImage(itr->first.topLeft(), itr->second);
