@@ -94,6 +94,7 @@ HEADERS += main_window.h \
     utils/saveutils.h \
     utils/shapesutils.h \
     widgets/zoomIndicator.h \
+    widgets/zoomIndicatorGL.h \
     widgets/textedit.h \
     widgets/toptips.h \
     widgets/toolbar.h \
@@ -157,6 +158,7 @@ SOURCES += main.cpp \
     widgets/shapeswidget.cpp \
     widgets/textedit.cpp \
     widgets/zoomIndicator.cpp \
+    widgets/zoomIndicatorGL.cpp \
     widgets/toolbar.cpp \
     widgets/maintoolwidget.cpp \
     widgets/subtoolwidget.cpp \

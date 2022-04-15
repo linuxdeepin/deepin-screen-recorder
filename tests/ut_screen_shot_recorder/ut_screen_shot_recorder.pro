@@ -120,6 +120,7 @@ HEADERS += test_all_interfaces.h \
         ../../src/widgets/keybuttonwidget.h \
         ../../src/widgets/maintoolwidget.h \
         ../../src/widgets/zoomIndicator.h \
+        ../../src/widgets/zoomIndicatorGL.h \
         ../../src/widgets/filter.h \
         ../../src/widgets/tooltips.h \
         ../../src/widgets/sidebar.h \
@@ -208,6 +209,7 @@ SOURCES += main.cpp \
     ../../src/widgets/keybuttonwidget.cpp \
     ../../src/widgets/maintoolwidget.cpp \
     ../../src/widgets/zoomIndicator.cpp \
+    ../../src/widgets/zoomIndicatorGL.cpp \
     ../../src/widgets/filter.cpp \
     ../../src/widgets/tooltips.cpp \
     ../../src/widgets/sidebar.cpp \

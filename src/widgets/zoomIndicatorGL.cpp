@@ -19,10 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "zoomIndicator.h"
+#include "zoomIndicatorGL.h"
 #include "../utils/baseutils.h"
 #include "../utils/tempfile.h"
-#include "../utils.h"
 
 #include <QCursor>
 #include <QTextOption>
@@ -37,16 +36,9 @@ const int INDICATOR_WIDTH = 49;
 const int CENTER_RECT_WIDTH = 12;
 const int BOTTOM_RECT_HEIGHT = 14;
 }
-ZoomIndicator::ZoomIndicator(DWidget *parent)
-    : DLabel(parent)
+ZoomIndicatorGL::ZoomIndicatorGL(DWidget *parent)
+    : QOpenGLWidget(parent)
 {
-
-    if (Utils::isWaylandMode) {
-        m_zoomIndicatorGL = new ZoomIndicatorGL(parent);
-        this->hide();
-        return;
-    }
-
     setFixedSize(BACKGROUND_SIZE);
 //    setStyleSheet(getFileContent(":/resources/qss/zoomindicator.qss"));
     setAttribute(Qt::WA_TransparentForMouseEvents);
@@ -57,17 +49,13 @@ ZoomIndicator::ZoomIndicator(DWidget *parent)
                          (BACKGROUND_SIZE.width() - CENTER_RECT_WIDTH) / 2 + 1,
                          CENTER_RECT_WIDTH, CENTER_RECT_WIDTH);
 
-    m_globalRect = QRect(0, 0, BACKGROUND_SIZE.width(), BACKGROUND_SIZE.height());
+    m_globalRect = QRect(-4, -4, BACKGROUND_SIZE.width() + 8, BACKGROUND_SIZE.height() + 8);
 }
 
-ZoomIndicator::~ZoomIndicator() {
-    if (Utils::isWaylandMode && m_zoomIndicatorGL) {
-        delete  m_zoomIndicatorGL;
-    }
-}
+ZoomIndicatorGL::~ZoomIndicatorGL() {}
 
 
-void ZoomIndicator::paintEvent(QPaintEvent *)
+void ZoomIndicatorGL::paintGL()
 {
 //    using namespace utils;
     QPoint centerPos =  this->cursor().pos();
@@ -88,7 +76,7 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
     zoomPix = zoomPix.scaled(QSize(INDICATOR_WIDTH,  INDICATOR_WIDTH),
                              Qt::KeepAspectRatio);
 
-    painter.drawPixmap(QRect(5, 5, INDICATOR_WIDTH, INDICATOR_WIDTH), zoomPix);
+    painter.drawPixmap(QRect(0, 0, INDICATOR_WIDTH + 10, INDICATOR_WIDTH + 10), zoomPix);
 
 
     painter.drawPixmap(m_centerRect, QPixmap(":/images/action/center_rect.png"));
@@ -99,7 +87,7 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
     painter.fillRect(QRect(INDICATOR_WIDTH / 2 + 2, INDICATOR_WIDTH / 2 + 2,
                            CENTER_RECT_WIDTH - 4, CENTER_RECT_WIDTH - 4), m_lastCenterPosBrush);
 
-    painter.fillRect(QRect(5, INDICATOR_WIDTH - 9, INDICATOR_WIDTH, BOTTOM_RECT_HEIGHT),
+    painter.fillRect(QRect(2, INDICATOR_WIDTH - 8, INDICATOR_WIDTH + 6, BOTTOM_RECT_HEIGHT),
                      QBrush(QColor(0, 0, 0, 125)));
     QFont posFont;
     posFont.setPixelSize(9);
@@ -107,27 +95,13 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
     painter.setPen(QColor(Qt::white));
     QTextOption posTextOption;
     posTextOption.setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    painter.drawText(QRectF(5, INDICATOR_WIDTH - 10, INDICATOR_WIDTH, INDICATOR_WIDTH),
+    painter.drawText(QRectF(5, INDICATOR_WIDTH - 9, INDICATOR_WIDTH, INDICATOR_WIDTH),
                      QString("%1, %2").arg(centerPos.x()).arg(centerPos.y()), posTextOption);
 }
 
-void ZoomIndicator::showMagnifier(QPoint pos)
+void ZoomIndicatorGL::showMagnifier(QPoint pos)
 {
-    if (Utils::isWaylandMode) {
-        m_zoomIndicatorGL->showMagnifier(pos);
-        return;
-    }
-
     this->show();
-
     this->move(pos);
-}
-
-void ZoomIndicator::hideMagnifier()
-{
-    if (Utils::isWaylandMode) {
-        m_zoomIndicatorGL->hide();
-        return;
-    }
-    this->hide();
+    update();
 }

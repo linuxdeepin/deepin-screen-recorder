@@ -263,7 +263,7 @@ void MainWindow::initAttributes()
     m_sizeTips->hide();
 
     m_zoomIndicator = new ZoomIndicator(this);
-    m_zoomIndicator->hide();
+    m_zoomIndicator->hideMagnifier();
 
 
     connect(m_toolBar, &ToolBar::mouseShowCheckedToMain, &recordProcess, &RecordProcess::onRecordMouse);// 鼠标显示
@@ -950,7 +950,7 @@ void MainWindow::initScreenRecorder()
     //recordOptionPanel->hide();
 
 
-    m_zoomIndicator->hide();
+    m_zoomIndicator->hideMagnifier();
     //录屏初次进来此字段为false，后面进来此字段为ture故不会改变默认框选区域大小
     if (!m_initScreenRecorder) {
         m_initScreenRecorder = true;
@@ -3579,7 +3579,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                     if (status::shot == m_functionType && m_sideBar->isVisible()) {
                         updateSideBarPos();
                     }
-                    m_zoomIndicator->hide();
+                    m_zoomIndicator->hideMagnifier();
                     //updateRecordButtonPos();
                     //updateShotButtonPos();
                     // Record select area name with window name if just click (no drag).
@@ -3666,7 +3666,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         if (!m_isShapesWidgetExist) {
             if (m_toolBar->isVisible()) {
                 updateToolBarPos();
-                m_zoomIndicator->hide();
+                m_zoomIndicator->hideMagnifier();
             }
 
             if (!isFirstMove) {
@@ -5172,7 +5172,7 @@ void MainWindow::hideAllWidget()
     //m_recordButton->hide();
     //m_shotButton->hide();
     m_sizeTips->hide();
-    m_zoomIndicator->hide();
+    m_zoomIndicator->hideMagnifier();
 
     //隐藏键盘按钮控件
     if (m_keyButtonList.count() > 0) {

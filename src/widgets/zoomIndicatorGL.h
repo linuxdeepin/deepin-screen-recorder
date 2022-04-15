@@ -19,35 +19,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ZOOMINDICATOR_H
-#define ZOOMINDICATOR_H
+#ifndef ZOOMINDICATORGL_H
+#define ZOOMINDICATORGL_H
 
-#include "zoomIndicatorGL.h"
 #include <DLabel>
 #include <DWidget>
 #include <QPainter>
 #include <QPaintEvent>
+#include <QOpenGLWidget>
 
 DWIDGET_USE_NAMESPACE
 
-class ZoomIndicator : public DLabel
+class ZoomIndicatorGL : public QOpenGLWidget
 {
     Q_OBJECT
 public:
-    explicit ZoomIndicator(DWidget *parent = 0);
-    ~ZoomIndicator();
+    explicit ZoomIndicatorGL(DWidget *parent = 0);
+    ~ZoomIndicatorGL();
 
     void showMagnifier(QPoint pos);
-    void hideMagnifier();
 
 protected:
-    void paintEvent(QPaintEvent *);
+    void paintGL() override;
 
 private:
     QRect m_globalRect;
     QRect m_centerRect;
     QBrush m_lastCenterPosBrush;
-    ZoomIndicatorGL *m_zoomIndicatorGL = nullptr;
 };
 
 #endif // MAGNIFIER_H
