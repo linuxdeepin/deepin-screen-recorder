@@ -122,6 +122,7 @@ ACCESS_PRIVATE_FIELD(MainWindow, QString, m_saveFileName);
 TEST_F(MainWindowTest, fileNameCheck)
 {
     // 文件名称校验 saveAction
+ #ifdef __amd64__
     Stub stub;
     MainWindow *window = new MainWindow();
     stub.set(ADDR(QFileDialog,getSaveFileName), getSaveFileName_stub);
@@ -132,6 +133,7 @@ TEST_F(MainWindowTest, fileNameCheck)
     EXPECT_EQ("pngpng.pjb.png", file);
     ConfigSettings::instance()->setValue("save", "save_op", 0);
     delete window;
+ #endif
 }
 
 TEST_F(MainWindowTest, screenShotShapes)
