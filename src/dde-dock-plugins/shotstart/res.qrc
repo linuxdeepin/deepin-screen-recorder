@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/startshot.svg</file>
+    </qresource>
+</RCC>
