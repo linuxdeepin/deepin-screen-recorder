@@ -28,6 +28,7 @@
 #include <QHBoxLayout>
 #include <QDir>
 #include <QBitmap>
+#include <QtConcurrent>
 
 
 CameraWidget::CameraWidget(DWidget *parent) : DWidget(parent)
@@ -111,8 +112,8 @@ void CameraWidget::initCamera()
     connect(camera, SIGNAL(error(QCamera::Error)), this, SLOT(cameraInitError(QCamera::Error)));
     imageCapture = new QCameraImageCapture(camera, this);
 
-    timer_image_capture = new QTimer(this);
-    connect(timer_image_capture, &QTimer::timeout, this, &CameraWidget::captureImage);
+    //timer_image_capture = new QTimer(this);
+    //connect(timer_image_capture, &QTimer::timeout, this, &CameraWidget::captureImage);
 }
 
 bool CameraWidget::cameraStart()
@@ -155,7 +156,8 @@ bool CameraWidget::cameraStart()
         imageCapture->setEncodingSettings(iamge_setting);
         connect(imageCapture, &QCameraImageCapture::imageCaptured, this, &CameraWidget::processCapturedImage);
         connect(imageCapture, &QCameraImageCapture::imageSaved, this, &CameraWidget::deleteCapturedImage);
-        timer_image_capture->start(50);
+        //timer_image_capture->start(50);
+        QtConcurrent::run(this, &CameraWidget::captureImage);
         return true;
     }
 
@@ -166,7 +168,7 @@ bool CameraWidget::cameraStart()
 
 void CameraWidget::cameraStop()
 {
-    timer_image_capture->stop();
+    //timer_image_capture->stop();
     //camera->stop();
     camera->unload();
     m_cameraUI->clear();
@@ -191,7 +193,12 @@ bool CameraWidget::getScreenResolution()
 */
 void CameraWidget::captureImage()
 {
-    imageCapture->capture(m_capturePath);
+    while (true) {
+        if (imageCapture == nullptr)
+            break;
+        imageCapture->capture(m_capturePath);
+        QThread::msleep(100);
+    }
 }
 
 void CameraWidget::processCapturedImage(int request_id, const QImage &img)
