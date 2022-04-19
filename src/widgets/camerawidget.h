@@ -96,7 +96,6 @@ private:
     QPoint m_windowBottomLeftPoint;
     QCamera *camera = nullptr;//摄像头
     QCameraImageCapture *imageCapture = nullptr; //截图部件
-    QTimer *timer_image_capture = nullptr;
     DLabel *m_cameraUI = nullptr;
     QString m_capturePath;
     QString m_deviceName;

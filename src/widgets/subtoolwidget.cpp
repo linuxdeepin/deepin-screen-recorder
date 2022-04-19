@@ -104,8 +104,8 @@ void SubToolWidget::initRecordLabel()
     } else if (t_saveGifVar.toString() == "false") {
         t_saveGif = false;
     } else {
-        t_settings->setValue("recordConfig", "save_as_gif", true);
-        t_saveGif = true;
+        t_settings->setValue("recordConfig", "save_as_gif", false);
+        t_saveGif = false;
     }
 
     if (t_saveMkvVar.toString() == "true") {
