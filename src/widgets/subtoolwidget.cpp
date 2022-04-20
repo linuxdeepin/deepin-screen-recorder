@@ -385,10 +385,20 @@ void SubToolWidget::initRecordLabel()
     formatTitleAction->setText(tr("Format:"));
     gifAction->setText(tr("GIF"));
     gifAction->setCheckable(true);
-    mp4Action->setText(tr("MP4"));
+    if(Utils::isFFmpegEnv) {
+        mp4Action->setText(tr("MP4"));
+    } else {
+        mp4Action->setText(tr("webm"));
+    }
     mp4Action->setCheckable(true);
-    mkvAction->setText(tr("MKV"));
+
+    if (Utils::isFFmpegEnv) {
+        mkvAction->setText(tr("MKV"));
+    } else {
+        mkvAction->setText(tr("ogg"));
+    }
     mkvAction->setCheckable(true);
+
     t_formatGroup->addAction(gifAction);
     t_formatGroup->addAction(mp4Action);
     t_formatGroup->addAction(mkvAction);
@@ -414,7 +424,9 @@ void SubToolWidget::initRecordLabel()
 
     m_recordOptionMenu->addAction(formatTitleAction);
 #if !(defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__))
-    m_recordOptionMenu->addAction(gifAction);
+    if (Utils::isFFmpegEnv) {
+        m_recordOptionMenu->addAction(gifAction);
+    }
 #endif
     m_recordOptionMenu->addAction(mp4Action);
 

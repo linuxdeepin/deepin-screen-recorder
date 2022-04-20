@@ -49,6 +49,7 @@ bool Utils::is3rdInterfaceStart = false;
 bool Utils::isTabletEnvironment = false;
 bool Utils::isWaylandMode = false;
 bool Utils::isRootUser = false;
+bool Utils::isFFmpegEnv = true;
 int Utils::themeType = 0;
 
 QString Utils::getQrcPath(QString imageName)

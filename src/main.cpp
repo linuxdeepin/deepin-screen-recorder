@@ -45,7 +45,7 @@
 
 DWIDGET_USE_NAMESPACE
 
-bool isWaylandProtocol()
+static bool isWaylandProtocol()
 {
     QProcessEnvironment e = QProcessEnvironment::systemEnvironment();
     QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
@@ -53,6 +53,19 @@ bool isWaylandProtocol()
     return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
 }
 
+
+static bool CheckFFmpegEnv()
+{
+    QDir dir;
+    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+    dir.setPath(path);
+    QStringList list = dir.entryList(QStringList() << (QString("libavcodec") + "*"), QDir::NoDotAndDotDot | QDir::Files);
+    qDebug() << list;
+    if (list.contains("libavcodec.so.58")) {
+        return true;
+    }
+    return false;
+}
 
 int main(int argc, char *argv[])
 {
@@ -80,6 +93,7 @@ int main(int argc, char *argv[])
        format.setDefaultFormat(format);
     }
 
+    Utils::isFFmpegEnv =  CheckFFmpegEnv();
 
 #ifdef KF5_WAYLAND_FLAGE_ON
     qDebug() << "KF5_WAYLAND_FLAGE_ON is open!!";
