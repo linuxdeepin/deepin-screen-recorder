@@ -96,6 +96,7 @@ private:
     QPoint m_windowBottomLeftPoint;
     QCamera *camera = nullptr;//摄像头
     QCameraImageCapture *imageCapture = nullptr; //截图部件
+    QTimer *timer_image_capture = nullptr;
     DLabel *m_cameraUI = nullptr;
     QString m_capturePath;
     QString m_deviceName;
@@ -103,6 +104,7 @@ private:
 
     bool m_wildScreen = false;
     bool m_Immovable = false; // 窗口不固定
+    bool m_isInitCamera = false;
 };
 
 #endif // CAMERAWIDGET_H
