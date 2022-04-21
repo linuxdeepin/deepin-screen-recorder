@@ -112,13 +112,18 @@ void CameraWidget::initCamera()
     connect(camera, SIGNAL(error(QCamera::Error)), this, SLOT(cameraInitError(QCamera::Error)));
     imageCapture = new QCameraImageCapture(camera, this);
 
-    //timer_image_capture = new QTimer(this);
-    //connect(timer_image_capture, &QTimer::timeout, this, &CameraWidget::captureImage);
+    timer_image_capture = new QTimer(this);
+    connect(timer_image_capture, &QTimer::timeout, this, &CameraWidget::captureImage);
 }
 
 bool CameraWidget::cameraStart()
 {
-    camera->start();
+    if (m_isInitCamera) {
+        timer_image_capture->start(100);
+        return true;
+    }else {
+        camera->start();
+    }
 
     if (imageCapture->isCaptureDestinationSupported(QCameraImageCapture::CaptureToFile)) {
         imageCapture->setCaptureDestination(QCameraImageCapture::CaptureToFile);
@@ -156,22 +161,21 @@ bool CameraWidget::cameraStart()
         imageCapture->setEncodingSettings(iamge_setting);
         connect(imageCapture, &QCameraImageCapture::imageCaptured, this, &CameraWidget::processCapturedImage);
         connect(imageCapture, &QCameraImageCapture::imageSaved, this, &CameraWidget::deleteCapturedImage);
-        //timer_image_capture->start(50);
-        QtConcurrent::run(this, &CameraWidget::captureImage);
+        timer_image_capture->start(200);
+        m_isInitCamera = true;
         return true;
     }
 
-    else {
-        return false;
-    }
+
+    return false;
 }
 
 void CameraWidget::cameraStop()
 {
-    //timer_image_capture->stop();
+    timer_image_capture->stop();
     //camera->stop();
-    camera->unload();
-    m_cameraUI->clear();
+    //camera->unload();
+    //m_cameraUI->clear();
 }
 
 void CameraWidget::cameraResume()
@@ -183,6 +187,8 @@ void CameraWidget::cameraResume()
 //    camera->load();
     camera->setCaptureMode(QCamera::CaptureStillImage);
     imageCapture = new QCameraImageCapture(camera, this);
+
+    m_isInitCamera = false;
 }
 /*
  * never used
@@ -193,12 +199,7 @@ bool CameraWidget::getScreenResolution()
 */
 void CameraWidget::captureImage()
 {
-    while (true) {
-        if (imageCapture == nullptr)
-            break;
-        imageCapture->capture(m_capturePath);
-        QThread::msleep(100);
-    }
+   imageCapture->capture(m_capturePath);
 }
 
 void CameraWidget::processCapturedImage(int request_id, const QImage &img)
