@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>res/startshot.svg</file>
+        <file>res/Combined Shape.svg</file>
+        <file>res/task.svg</file>
     </qresource>
 </RCC>

@@ -40,10 +40,14 @@
 #include <unistd.h>
 #include <iostream>
 
-IconWidget::IconWidget(DWidget *parent):
-    DWidget(parent)
+IconWidget::IconWidget(QWidget *parent):
+    QWidget(parent)
 {
-    m_blgPixmap = new QPixmap(":/res/startshot.svg");
+    setMouseTracking(true);
+    setMinimumSize(PLUGIN_BACKGROUND_MIN_SIZE, PLUGIN_BACKGROUND_MIN_SIZE);
+
+    QString iconName("Combined Shape");
+    m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
 }
 
 IconWidget::~IconWidget()
@@ -56,25 +60,20 @@ bool IconWidget::enabled()
     return isEnabled();
 }
 
-QSize IconWidget::sizeHint() const
-{
-    return QSize(36, 36);
-}
-
 const QString IconWidget::itemContextMenu()
 {
     QList<QVariant> items;
     items.reserve(2);
     QMap<QString, QVariant> shot;
     shot["itemId"] = "shot";
-    shot["itemText"] = tr("shot");
+    shot["itemText"] = tr("Screenshot Ctrl + Alt + A");
     shot["isActive"] = true;
     items.push_back(shot);
 
 
     QMap<QString, QVariant> recorder;
     recorder["itemId"] = "recorder";
-    recorder["itemText"] = tr("recorder");
+    recorder["itemText"] = tr("Recording Ctrl + Alt + R");
     recorder["isActive"] = true;
     items.push_back(recorder);
 
@@ -111,6 +110,104 @@ void IconWidget::invokedMenuItem(const QString &menuId)
 void IconWidget::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
-    painter.drawPixmap(QPoint(0, 0), *m_blgPixmap);
+//    painter.drawPixmap(QPoint(0, 0), *m_blgPixmap);
+
+    QPixmap pixmap;
+    QString iconName = "Combined Shape";
+    int iconSize = PLUGIN_ICON_MAX_SIZE;
+
+    if (rect().height() > PLUGIN_BACKGROUND_MIN_SIZE) {
+
+        QColor color;
+        if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
+            color = Qt::black;
+            painter.setOpacity(0.5);
+
+            if (m_hover) {
+                painter.setOpacity(0.6);
+            }
+
+            if (m_pressed) {
+                painter.setOpacity(0.3);
+            }
+        } else {
+            color = Qt::white;
+            painter.setOpacity(0.1);
+
+            if (m_hover) {
+                painter.setOpacity(0.2);
+            }
+
+            if (m_pressed) {
+                painter.setOpacity(0.05);
+            }
+        }
+
+        painter.setRenderHint(QPainter::Antialiasing, true);
+
+        DStyleHelper dstyle(style());
+        const int radius = dstyle.pixelMetric(DStyle::PM_FrameRadius);
+
+        QPainterPath path;
+
+        int minSize = std::min(width(), height());
+        QRect rc(0, 0, minSize, minSize);
+        rc.moveTo(rect().center() - rc.center());
+
+        path.addRoundedRect(rc, radius, radius);
+        painter.fillPath(path, color);
+    }
+
+    painter.setOpacity(1);
+
+    pixmap = loadSvg(iconName, QSize(iconSize, iconSize));
+
+    const QRectF &rf = QRectF(rect());
+    const QRectF &rfp = QRectF(pixmap.rect());
+    painter.drawPixmap(rf.center() - rfp.center() / pixmap.devicePixelRatioF(), pixmap);
+
     QWidget::paintEvent(e);
+}
+
+void IconWidget::mousePressEvent(QMouseEvent *event)
+{
+    m_pressed = true;
+    update();
+
+    QWidget::mousePressEvent(event);
+}
+
+void IconWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    m_pressed = false;
+    m_hover = false;
+    update();
+
+    QWidget::mouseReleaseEvent(event);
+}
+
+void IconWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    m_hover = true;
+    QWidget::mouseMoveEvent(event);
+}
+
+void IconWidget::leaveEvent(QEvent *event)
+{
+    m_hover = false;
+    m_pressed = false;
+    update();
+
+    QWidget::leaveEvent(event);
+}
+
+const QPixmap IconWidget::loadSvg(const QString &fileName, const QSize &size) const
+{
+    const auto ratio = devicePixelRatioF();
+
+    QPixmap pixmap;
+    pixmap = QIcon::fromTheme(fileName, m_icon).pixmap(size * ratio);
+    pixmap.setDevicePixelRatio(ratio);
+
+    return pixmap;
 }

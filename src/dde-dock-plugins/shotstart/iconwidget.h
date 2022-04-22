@@ -35,14 +35,13 @@
 DWIDGET_USE_NAMESPACE
 using DBusDock = com::deepin::dde::daemon::Dock;
 
-class IconWidget : public DWidget
+class IconWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit IconWidget(DWidget *parent = nullptr);
+    explicit IconWidget(QWidget *parent = nullptr);
     ~IconWidget() override;
     bool enabled();
-    QSize sizeHint() const override;
 
     const QString itemContextMenu();
     void invokedMenuItem(const QString &menuId);
@@ -50,8 +49,19 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *e) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void leaveEvent(QEvent *event) override;
 
 private:
+    const QPixmap loadSvg(const QString &fileName, const QSize &size) const;
+
+
+private:
+    bool m_hover = false;       // 鼠标是否悬浮
+    bool m_pressed = false;     // 鼠标是否按下
+    QIcon m_icon;
     QPixmap *m_blgPixmap;
     QBoxLayout *centralLayout;
 };

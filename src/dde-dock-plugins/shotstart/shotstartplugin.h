@@ -74,6 +74,7 @@ public:
     // 右键菜单
     const QString itemContextMenu(const QString &itemKey) override;
     void invokedMenuItem(const QString &itemKey, const QString &menuId, const bool checked) override;
+
 private:
     QScopedPointer<IconWidget> m_iconWidget;
     QScopedPointer<TipsWidget> m_tipsWidget;

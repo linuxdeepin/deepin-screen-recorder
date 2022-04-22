@@ -25,7 +25,7 @@
 #include <QDesktopWidget>
 
 
-#define ShotShartPlugin "shot-shart-plugin"
+#define ShotShartPlugin "shot-start-plugin"
 #define ShotShartApp "dde-shot-start"
 
 ShotStartPlugin::ShotStartPlugin(QObject *parent)
@@ -50,7 +50,7 @@ const QString ShotStartPlugin::pluginName() const
 
 const QString ShotStartPlugin::pluginDisplayName() const
 {
-    return tr("deepin-screen-recorder");
+    return tr("Screen Capture");
 }
 
 void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
@@ -102,7 +102,7 @@ QWidget *ShotStartPlugin::itemTipsWidget(const QString &itemKey)
 {
     if (itemKey != ShotShartPlugin) return nullptr;
 
-    m_tipsWidget->setText("deepin-screen-recorder Ctrl+Alt+A");
+    m_tipsWidget->setText(tr("Screenshot Ctrl+Alt+A"));
     return m_tipsWidget.data();
 }
 
@@ -115,10 +115,10 @@ const QString ShotStartPlugin::itemCommand(const QString &itemKey)
 
 const QString ShotStartPlugin::itemContextMenu(const QString &itemKey)
 {
-    if (itemKey != ShotShartPlugin) return QString();
+    if (itemKey != ShotShartPlugin)
+        return QString();
 
     return  m_iconWidget->itemContextMenu();
-
 }
 
 void ShotStartPlugin::invokedMenuItem(const QString &itemKey, const QString &menuId, const bool checked)
@@ -129,3 +129,4 @@ void ShotStartPlugin::invokedMenuItem(const QString &itemKey, const QString &men
 
     m_iconWidget->invokedMenuItem(menuId);
 }
+
