@@ -69,7 +69,7 @@ isEqual(ARCH, mips64) {
 }
 
 CONFIG += link_pkgconfig c++11
-PKGCONFIG += xcb xcb-util dframeworkdbus
+PKGCONFIG += xcb xcb-util dframeworkdbus gstreamer-app-1.0
 
 RESOURCES = ../assets/image/deepin-screen-recorder.qrc \
     ../assets/resources/resources.qrc \
@@ -118,7 +118,8 @@ HEADERS += main_window.h \
     RecorderRegionShow.h \
     recordertablet.h \
     dbusinterface/ocrinterface.h \
-    dbusinterface/pinscreenshotsinterface.h
+    dbusinterface/pinscreenshotsinterface.h \
+    gstrecord/gstrecordx.h
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
     HEADERS += widgets/scrollshottip.h \
     utils/pixmergethread.h \
@@ -178,7 +179,8 @@ SOURCES += main.cpp \
     RecorderRegionShow.cpp \
     recordertablet.cpp \
     dbusinterface/ocrinterface.cpp \
-    dbusinterface/pinscreenshotsinterface.cpp
+    dbusinterface/pinscreenshotsinterface.cpp \
+    gstrecord/gstrecordx.cpp
 
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
     SOURCES += widgets/scrollshottip.cpp \

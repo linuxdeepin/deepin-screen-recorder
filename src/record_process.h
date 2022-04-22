@@ -23,6 +23,8 @@
 #define RECORDPROCESS_H
 
 #include "utils/configsettings.h"
+#include "utils/voicevolumewatcher.h"
+#include "gstrecord/gstrecordx.h"
 #ifdef KF5_WAYLAND_FLAGE_ON
 #include "waylandrecord/waylandintegration.h"
 #endif
@@ -77,25 +79,45 @@ public:
      */
     void stopRecord();
     /**
+     * @brief 退出录屏（先停止插件计时，再弹录屏提示，最后退出计时插件）
+     */
+    void exitRecord(QString newSavePath);
+    /**
      * @brief 定时给任务栏插件发送正在录屏的信号
      */
     void emitRecording();
 private:
     /**
-     * @brief x11协议下录制视频
+     * @brief x11协议下ffmpeg录制视频
      */
     void recordVideo();
 
     /**
-     * @brief 开始录制wayland视频
+     * @brief 开始ffmpeg录制wayland视频
      */
     void waylandRecord();
+
+    /**
+     * @brief gstreamer录制视频
+     */
+    void GstStartRecord();
+
+    /**
+     * @brief gstreamer停止录制视频
+     */
+    void GstStopRecord();
 
     /**
      * @brief 初始化进程
      */
     void initProcess();
 public slots:
+    /**
+     * @brief 退出gstreamer录屏
+     * wayland下录屏，需要Gstreamer录屏类触发，以保证Gstreamer管道中的数据已写完
+     * x11下可以直接调用此函数
+     */
+    void onExitGstRecord();
     /**
      * @brief onRecordFinish:是否录制光标
      */
@@ -186,6 +208,11 @@ private:
       * @brief 定时发送录屏正在运行的标志
       */
     bool m_recordingFlag;
+    /**
+     * @brief gstreamer录屏处理类
+     */
+    GstRecordX *m_gstRecordX;
+
 };
 
 #endif //RECORDPROCESS_H

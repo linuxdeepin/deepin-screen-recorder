@@ -70,7 +70,7 @@ static bool CheckFFmpegEnv()
 int main(int argc, char *argv[])
 {
 
-    if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")){
+    if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
     }
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
@@ -86,14 +86,17 @@ int main(int argc, char *argv[])
     Utils::isRootUser = (getuid() == 0);
     qDebug() << "Is Root User:" << Utils::isRootUser;
 
-    if(Utils::isWaylandMode) {
-       qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
-       QSurfaceFormat format;
-       format.setRenderableType(QSurfaceFormat::OpenGLES);
-       format.setDefaultFormat(format);
+    if (Utils::isWaylandMode) {
+        qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
+        QSurfaceFormat format;
+        format.setRenderableType(QSurfaceFormat::OpenGLES);
+        format.setDefaultFormat(format);
     }
 
+    //检查是否包含ffmpeg相关库true：包含 false：不包含
     Utils::isFFmpegEnv =  CheckFFmpegEnv();
+//    Utils::isFFmpegEnv = false;
+    qDebug() << "Is Exists FFmpeg Lib:" << Utils::isFFmpegEnv;
 
 #ifdef KF5_WAYLAND_FLAGE_ON
     qDebug() << "KF5_WAYLAND_FLAGE_ON is open!!";
@@ -105,10 +108,10 @@ int main(int argc, char *argv[])
     DApplication::loadDXcbPlugin();
     QScopedPointer<DApplication> app(new DApplication(argc, argv));
 #else
-    QScopedPointer<DApplication> app(DApplication::globalApplication(argc,argv));
+    QScopedPointer<DApplication> app(DApplication::globalApplication(argc, argv));
 #endif
 
-    if(Utils::isWaylandMode) {
+    if (Utils::isWaylandMode) {
 #ifdef __mips__
         app->setAttribute(Qt::AA_ForceRasterWidgets, false);
 #endif
@@ -127,8 +130,8 @@ int main(int argc, char *argv[])
         app->setApplicationVersion("1.0");
         app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-        static const QDate buildDate = QLocale( QLocale::English ).
-                toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
+        static const QDate buildDate = QLocale(QLocale::English).
+                                       toDate(QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
         QString t_date = buildDate.toString("MMdd");
 
         // Version Time
@@ -141,8 +144,8 @@ int main(int argc, char *argv[])
         QCommandLineOption  delayOption(QStringList() << "d" << "delay", "Take a screenshot after NUM seconds.", "NUM");
         QCommandLineOption fullscreenOption(QStringList() << "f" << "fullscreen", "Take a screenshot the whole screen.");
         QCommandLineOption topWindowOption(QStringList() << "w" << "top-window", "Take a screenshot of the most top window.");
-        QCommandLineOption savePathOption(QStringList() << "s" << "save-path","Specify a path to save the screenshot.", "PATH");
-        QCommandLineOption prohibitNotifyOption(QStringList() << "n" << "no-notification","Don't send notifications.");
+        QCommandLineOption savePathOption(QStringList() << "s" << "save-path", "Specify a path to save the screenshot.", "PATH");
+        QCommandLineOption prohibitNotifyOption(QStringList() << "n" << "no-notification", "Don't send notifications.");
         QCommandLineOption dbusOption(QStringList() << "u" << "dbus", "Start  from dbus.");
         QCommandLineOption screenRecordOption(QStringList() << "record" << "screenRecord" << "start screen record");
         QCommandLineOption screenShotOption(QStringList() << "shot" << "screenShot" << "start screen shot");
@@ -177,7 +180,7 @@ int main(int argc, char *argv[])
 
 
         QString t_launchMode = "screenShot";
-        if(cmdParser.isSet(screenRecordOption)) {
+        if (cmdParser.isSet(screenRecordOption)) {
             t_launchMode = "screenRecord";
         } else if (cmdParser.isSet(screenOcrOption)) {
             t_launchMode = "screenOcr";
@@ -185,7 +188,7 @@ int main(int argc, char *argv[])
             t_launchMode = "screenScroll";
         }
         window.initLaunchMode(t_launchMode);
-        DBusScreenshotService dbusService (&window);
+        DBusScreenshotService dbusService(&window);
         // Register debus service.
         dbus.registerObject("/com/deepin/ScreenRecorder", &window, QDBusConnection::ExportScriptableSignals | QDBusConnection::ExportScriptableSlots);
         QDBusConnection conn = QDBusConnection::sessionBus();

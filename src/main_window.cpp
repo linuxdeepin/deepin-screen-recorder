@@ -5109,6 +5109,7 @@ void MainWindow::startCountdown()
     qDebug() << "record rect:" << recordRect;
 
     recordProcess.setRecordInfo(recordRect, selectAreaName);
+
     resetCursor();
     hideAllWidget();
 

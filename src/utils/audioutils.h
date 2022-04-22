@@ -27,6 +27,12 @@ class AudioUtils: public QObject
 {
     Q_OBJECT
 public:
+    enum DefaultAudioType {
+        Source = 0,     //输入音频
+        Sink,        //输出音频
+        NoneType  //无声音
+    };
+public:
     explicit AudioUtils(QObject *parent = nullptr);
     //bool isSystemAudioOutput();
     //bool isMicrophoneOutput();
@@ -38,6 +44,15 @@ public:
     //QString currentAudioSink();
     //QString currentAudioSource();
     QString currentAudioChannel();
+
+    /**
+     * @brief 获取默认输出或输入设备名称
+     * @param mode: 0:获取输出音频设备 1:获取输入音频设备
+     * @return 设备名称
+     */
+    QString getDefaultDeviceName(DefaultAudioType mode);
+
+
 private:
     //void initProcess();
 

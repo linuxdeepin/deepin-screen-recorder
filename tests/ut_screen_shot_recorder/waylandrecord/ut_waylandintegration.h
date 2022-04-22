@@ -159,9 +159,9 @@ TEST_F(WaylandIntegrationTest, init)
     arguments << QString("%1").arg(4);
     qDebug() << arguments;
 
-    stub.set(ADDR(WaylandIntegrationPrivate, initWayland), initWayland_stub);
+    stub.set((void(WaylandIntegrationPrivate::*)(QStringList))ADDR(WaylandIntegrationPrivate, initWayland), initWayland_stub);
     init(arguments);
-    stub.reset(ADDR(WaylandIntegrationPrivate, initWayland));
+    stub.reset((void(WaylandIntegrationPrivate::*)(QStringList))ADDR(WaylandIntegrationPrivate, initWayland));
 }
 
 bool isEGLInitialized_stub()

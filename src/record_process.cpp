@@ -72,6 +72,7 @@ RecordProcess::RecordProcess(QObject *parent) : QObject(parent)
     }
     qRegisterMetaType<QProcess::ProcessState>("ProcessState");
     m_recordingFlag = false;
+    m_gstRecordX = nullptr;
 }
 
 RecordProcess::~RecordProcess()
@@ -87,6 +88,10 @@ RecordProcess::~RecordProcess()
         m_recorderProcess = nullptr;
     }
     */
+    if (m_gstRecordX) {
+        m_gstRecordX = nullptr;
+        delete m_gstRecordX;
+    }
 }
 //设置录屏的基础信息
 void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filename)
@@ -142,49 +147,7 @@ void RecordProcess::onTranscodeFinish()
     QString gifNewPath = QDir(saveDir).filePath(saveBaseName).replace(QString("mp4"), QString("gif"));
     qDebug() << "" << savePath << gifOldPath << gifNewPath;
     QFile::rename(gifOldPath, gifNewPath);
-    if (!Utils::isRootUser) {
-        QDBusInterface notification("org.freedesktop.Notifications",
-                                    "/org/freedesktop/Notifications",
-                                    "org.freedesktop.Notifications",
-                                    QDBusConnection::sessionBus());
-        QStringList actions;
-        actions << "_open" << tr("View");
-        QVariantMap hints;
-        hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(gifNewPath);
-        int timeout = -1;
-        unsigned int id = 0;
-        QList<QVariant> arg;
-        arg << (QCoreApplication::applicationName())                 // appname
-            << id                                                    // id
-            << QString("deepin-screen-recorder")                     // icon
-            << tr("Recording finished")                              // summary
-            << QString(tr("Saved to %1")).arg(gifNewPath)            // body
-            << actions                                               // actions
-            << hints                                                 // hints
-            << timeout;                                              // timeout
-        notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
-    }
-    QFile::remove(savePath);
-    if (Utils::isWaylandMode) {
-#ifdef KF5_WAYLAND_FLAGE_ON
-        avlibInterface::unloadFunctions();
-#endif
-    }
-    m_recordingFlag = false;
-    if (Utils::isSysHighVersion1040() == true) {
-        qDebug() << __LINE__ << ": Stop the screen recording timer!";
-        //系统托盘图标结束并退出
-        QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
-                                                                                                 "/com/deepin/ScreenRecorder/time",
-                                                                                                 "com.deepin.ScreenRecorder.time",
-                                                                                                 "onStop"));
-    }
-
-
-    QApplication::quit();
-    if (Utils::isWaylandMode) {
-        _Exit(0);
-    }
+    exitRecord(gifNewPath);
 }
 
 //录屏结束后弹出通知
@@ -205,58 +168,13 @@ void RecordProcess::onRecordFinish()
     // Move file to save directory.
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
     QFile::rename(savePath, newSavePath);
-
-    if (!Utils::isRootUser) {
-        // Popup notify.
-        QDBusInterface notification("org.freedesktop.Notifications",
-                                    "/org/freedesktop/Notifications",
-                                    "org.freedesktop.Notifications",
-                                    QDBusConnection::sessionBus());
-
-        QStringList actions;
-        actions << "_open" << tr("View");
-
-        QVariantMap hints;
-        hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
-        int timeout = -1;
-        unsigned int id = 0;
-
-        QList<QVariant> arg;
-        arg << (QCoreApplication::applicationName())                 // appname
-            << id                                                    // id
-            << QString("deepin-screen-recorder")                     // icon
-            << tr("Recording finished")                              // summary
-            << QString(tr("Saved to %1")).arg(newSavePath)           // body
-            << actions                                               // actions
-            << hints                                                 // hints
-            << timeout;                                              // timeout
-        notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
-    }
-    if (Utils::isWaylandMode) {
-#ifdef KF5_WAYLAND_FLAGE_ON
-        avlibInterface::unloadFunctions();
-#endif
-    }
-    m_recordingFlag = false;
-    if (Utils::isSysHighVersion1040() == true) {
-        qDebug() << __LINE__ << ": Stop the screen recording timer!";
-        //系统托盘图标结束并退出
-        QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
-                                                                                                 "/com/deepin/ScreenRecorder/time",
-                                                                                                 "com.deepin.ScreenRecorder.time",
-                                                                                                 "onStop"));
-    }
-
-    QApplication::quit();
-    if (Utils::isWaylandMode) {
-        _Exit(0);
-    }
+    exitRecord(newSavePath);
 }
 
 //x11录制视频
 void RecordProcess::recordVideo()
 {
-    qDebug() << "x11 录屏！";
+    qDebug() << "x11 FFmpeg 录屏！";
     initProcess();
     //取系统音频的通道号
     AudioUtils audioUtils;
@@ -449,7 +367,7 @@ void RecordProcess::recordVideo()
     m_recorderProcess->start("ffmpeg", arguments);
 }
 
-//初始化录屏进程
+//初始化x11 FFmpeg录屏进程
 void RecordProcess::initProcess()
 {
     // Create process and handle finish signal.
@@ -510,6 +428,99 @@ void RecordProcess::waylandRecord()
 #endif
     return;
 }
+//gstreamer录制视频
+void RecordProcess::GstStartRecord()
+{
+    int argc = 1;
+    char *mock[1] = {QString("empty").toLatin1().data()};
+    char **argv[1];
+    *argv = mock;
+    //gstreamer接口初始化
+    gst_init(&argc, argv);
+    qDebug() << "Gstreamer 录屏开始！";
+    GstRecordX::VideoType videoType = GstRecordX::VideoType::webm;
+    GstRecordX::AudioType audioType = GstRecordX::AudioType::None;
+    m_gstRecordX = new GstRecordX();
+    //设置参数
+    m_gstRecordX->setFramerate(m_framerate);
+    m_gstRecordX->setRecordArea(m_recordRect);
+    //这里设置音频设备名称（输入和输出），即使名称为空也不影响。
+    AudioUtils audioUtils;
+    m_gstRecordX->setInputDeviceName(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Source));
+    m_gstRecordX->setOutputDeviceName(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Sink));
+    //这里才会设置究竟采集哪些音频设备的音频数据
+    if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
+        audioType =  GstRecordX::AudioType::Mix;
+    } else if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC) {
+        audioType =  GstRecordX::AudioType::Mic;
+    } else if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
+        audioType =  GstRecordX::AudioType::Sys;
+    }
+    m_gstRecordX->setAudioType(audioType);
+    QDateTime date = QDateTime::currentDateTime();
+    QString fileExtension = "webm";
+    if (recordType == RECORD_TYPE_VIDEO) {
+        if (settings->value("recordConfig", "lossless_recording").toBool()) {
+            videoType =  GstRecordX::VideoType::ogg;
+            fileExtension = "ogg";
+        } else {
+            videoType =  GstRecordX::VideoType::webm;
+            fileExtension = "webm";
+        }
+    }
+    saveBaseName = QString("%1_%2_%3.%4").arg(tr("Record")).arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
+    savePath = QDir(saveTempDir).filePath(saveBaseName);
+    // Remove same cache file first.
+    QFile file(savePath);
+    file.remove();
+    m_gstRecordX->setVidoeType(videoType);
+    m_gstRecordX->setSavePath(savePath);
+    m_gstRecordX->setX11RecordMouse(m_isRecordMouse);
+    //开始录制
+    if (Utils::isWaylandMode) {
+#ifdef KF5_WAYLAND_FLAGE_ON
+        //wayland下停止录屏需要通过信号槽控制，避免Gstreamer管道数据未写完程序就被退出了
+        connect(m_gstRecordX, &GstRecordX::waylandGstRecrodFinish, this, &RecordProcess::onExitGstRecord);
+        //wayland模式需打开视频画面采集
+        QStringList arguments;
+        arguments << QString("%1").arg(videoType);
+        arguments << QString("%1").arg(m_recordRect.width()) << QString("%1").arg(m_recordRect.height());
+        arguments << QString("%1").arg(m_recordRect.x()) << QString("%1").arg(m_recordRect.y());
+        arguments << QString("%1").arg(m_framerate);
+        arguments << QString("%1").arg(savePath);
+        arguments << QString("%1").arg(recordAudioInputType);
+        qDebug() << arguments;
+        WaylandIntegration::init(arguments, m_gstRecordX);
+#endif
+    } else {
+        m_gstRecordX->x11GstStartRecord();
+
+    }
+}
+
+//gstreamer停止录制视频
+void RecordProcess::GstStopRecord()
+{
+    if (Utils::isWaylandMode) {
+#ifdef KF5_WAYLAND_FLAGE_ON
+        WaylandIntegration::stopStreaming();
+#endif
+    } else {
+        //x11 gstreamer录屏
+        m_gstRecordX->x11GstStopRecord();
+        onExitGstRecord();
+    }
+}
+
+//退出gstreamer wayland录屏，需要Gstreamer录屏类触发
+void RecordProcess::onExitGstRecord()
+{
+    QString newSavePath = QDir(saveDir).filePath(saveBaseName);
+    QFile::rename(savePath, newSavePath);
+    qDebug() << "Gstreamer 录屏结束！";
+    exitRecord(newSavePath);
+}
+
 
 void RecordProcess::onRecordMouse(const bool status)
 {
@@ -545,23 +556,27 @@ void RecordProcess::startRecord()
             recordAudioInputType = RECORD_AUDIO_INPUT_SYSTEMAUDIO;
         }
     }
-    //x11下的录屏
-    if (!Utils::isWaylandMode) {
-        recordVideo();
-        if (Utils::isTabletEnvironment) {
-            return;
-        }
-    }
-    //wayland下的录屏
-    else {
-        if (recordType != RECORD_TYPE_GIF) {
-            if (settings->value("recordConfig", "lossless_recording").toBool()) {
-                recordType = RECORD_TYPE_MKV;
-            } else {
-                recordType = RECORD_TYPE_MP4;
+    if (!Utils::isFFmpegEnv) {
+        GstStartRecord();
+    } else {
+        //x11下的录屏
+        if (!Utils::isWaylandMode) {
+            recordVideo();
+            if (Utils::isTabletEnvironment) {
+                return;
             }
         }
-        waylandRecord();
+        //wayland下的录屏
+        else {
+            if (recordType != RECORD_TYPE_GIF) {
+                if (settings->value("recordConfig", "lossless_recording").toBool()) {
+                    recordType = RECORD_TYPE_MKV;
+                } else {
+                    recordType = RECORD_TYPE_MP4;
+                }
+            }
+            waylandRecord();
+        }
     }
     if (Utils::isSysHighVersion1040() == false) {
         return;
@@ -589,6 +604,7 @@ void RecordProcess::emitRecording()
         QThread::msleep(1000);
     }
 }
+
 void RecordProcess::stopRecord()
 {
     if (Utils::isSysHighVersion1040() == true) {
@@ -604,25 +620,83 @@ void RecordProcess::stopRecord()
                 qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
         }
     }
-    //停止wayland录屏
+    if (Utils::isFFmpegEnv) {
+        //停止wayland录屏
+        if (Utils::isWaylandMode) {
+#ifdef KF5_WAYLAND_FLAGE_ON
+            WaylandIntegration::stopStreaming();
+            if (RECORD_TYPE_GIF == recordType) {
+                onStartTranscode();
+            } else {
+                onRecordFinish();
+            }
+#endif
+        }
+        //停止x11录屏
+        else {
+            //录制的视频类型是否是gif格式，是gif的话需要进行转码
+            if (RECORD_TYPE_GIF == recordType) {
+                connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onStartTranscode()));
+            } else {
+                connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onRecordFinish()));
+            }
+            m_recorderProcess->write("q");
+        }
+    } else {
+        GstStopRecord();
+    }
+}
+//退出录屏（先停止，再弹提示，最后退出）
+void RecordProcess::exitRecord(QString newSavePath)
+{
+    if (!Utils::isRootUser) {
+        // Popup notify.
+        QDBusInterface notification("org.freedesktop.Notifications",
+                                    "/org/freedesktop/Notifications",
+                                    "org.freedesktop.Notifications",
+                                    QDBusConnection::sessionBus());
+
+        QStringList actions;
+        actions << "_open" << tr("View");
+
+        QVariantMap hints;
+        hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
+        int timeout = -1;
+        unsigned int id = 0;
+
+        QList<QVariant> arg;
+        arg << (QCoreApplication::applicationName())                 // appname
+            << id                                                    // id
+            << QString("deepin-screen-recorder")                     // icon
+            << tr("Recording finished")                              // summary
+            << QString(tr("Saved to %1")).arg(newSavePath)           // body
+            << actions                                               // actions
+            << hints                                                 // hints
+            << timeout;                                              // timeout
+        notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+    }
+    if (recordType == RECORD_TYPE_GIF) {
+        QFile::remove(savePath);
+    }
+    qDebug() << "savePath: " << newSavePath;
     if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
-        WaylandIntegration::stopStreaming();
-        if (RECORD_TYPE_GIF == recordType) {
-            onStartTranscode();
-        } else {
-            onRecordFinish();
-        }
+        avlibInterface::unloadFunctions();
 #endif
     }
-    //停止x11录屏
-    else {
-        //录制的视频类型是否是gif格式，是gif的话需要进行转码
-        if (RECORD_TYPE_GIF == recordType) {
-            connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onStartTranscode()));
-        } else {
-            connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onRecordFinish()));
-        }
-        m_recorderProcess->write("q");
+
+    m_recordingFlag = false;
+    if (Utils::isSysHighVersion1040() == true) {
+        qDebug() << __LINE__ << ": Stop the screen recording timer!";
+        //系统托盘图标结束并退出
+        QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
+                                                                                                 "/com/deepin/ScreenRecorder/time",
+                                                                                                 "com.deepin.ScreenRecorder.time",
+                                                                                                 "onStop"));
+    }
+
+    QApplication::quit();
+    if (Utils::isWaylandMode) {
+        _Exit(0);
     }
 }

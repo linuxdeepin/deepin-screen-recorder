@@ -202,8 +202,9 @@ void voiceVolumeWatcher::onDefaultSourceChanaged(const QDBusObjectPath &value)
     //TODO:
     //    When default source changed, need recreate
     // the source Object
-    qDebug() << "Source change-->from:" << m_defaultSource->path()
-             << " name:" << m_defaultSource->name();
+    qInfo() << "Input device change from:"
+            << "\nactive port:" << m_defaultSource->activePort().name
+            << "\ndevice name:" << m_defaultSource->name();
 
     m_defaultSource.reset(
         new com::deepin::daemon::audio::Source(
@@ -213,6 +214,9 @@ void voiceVolumeWatcher::onDefaultSourceChanaged(const QDBusObjectPath &value)
             this)
     );
 
+    qInfo() << "\nTo:"
+            << "\nactive port:" << m_defaultSource->activePort().name
+            << "\ndevice name:" << m_defaultSource->name();
     /*
     AudioPort activePort = m_defaultSource->activePort();
 
@@ -237,3 +241,4 @@ QDebug &operator <<(QDebug &out, const voiceVolumeWatcher::Port &port)
 
     return out;
 }
+

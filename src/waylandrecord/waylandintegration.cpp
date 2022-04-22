@@ -72,6 +72,11 @@ void WaylandIntegration::init(QStringList list)
     globalWaylandIntegration->initWayland(list);
 }
 
+void WaylandIntegration::init(QStringList list, GstRecordX *gstRecord)
+{
+    globalWaylandIntegration->initWayland(list, gstRecord);
+}
+
 bool WaylandIntegration::isEGLInitialized()
 {
     return globalWaylandIntegration->isEGLInitialized();
@@ -86,7 +91,18 @@ void WaylandIntegration::stopStreaming()
 
 bool WaylandIntegration::WaylandIntegrationPrivate::stopVideoRecord()
 {
-    return  m_recordAdmin->stopStream();
+    if (Utils::isFFmpegEnv) {
+        if (m_recordAdmin) {
+            return  m_recordAdmin->stopStream();
+        } else {
+            qWarning() << "m_recordAdmin is not init!";
+            return false;
+        }
+    } else {
+        setBGetFrame(false);
+        isGstWriteVideoFrame = false;
+        return true;
+    }
 }
 
 QMap<quint32, WaylandIntegration::WaylandOutput> WaylandIntegration::screens()
@@ -179,6 +195,7 @@ WaylandIntegration::WaylandIntegrationPrivate::WaylandIntegrationPrivate()
     qDBusRegisterMetaType<WaylandIntegrationPrivate::Stream>();
     qDBusRegisterMetaType<WaylandIntegrationPrivate::Streams>();
     m_recordAdmin = nullptr;
+    m_gstRecordX = nullptr;
     //m_writeFrameThread = nullptr;
     m_bInitRecordAdmin = true;
     m_bGetFrame = true;
@@ -258,6 +275,25 @@ void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list
     m_fps = list[5].toInt();
     m_recordAdmin = new RecordAdmin(list, this);
     m_recordAdmin->setBoardVendor(m_boardVendorType);
+    //初始化wayland服务链接
+    initConnectWayland();
+}
+void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list, GstRecordX *gstRecord)
+{
+    //通过wayland底层接口获取图片的方式不相同，需要获取电脑的厂商，hw的需要特殊处理
+    m_boardVendorType = getBoardVendorType();
+    qDebug() << "m_boardVendorType: " << m_boardVendorType;
+    //由于性能问题部分非hw的arm机器编码效率低，适当调大视频帧的缓存空间（防止调整的过大导致保存时间延长），且在下面添加视频到缓冲区时进行了降低帧率的处理。
+    if (QSysInfo::currentCpuArchitecture().startsWith("ARM", Qt::CaseInsensitive) && !m_boardVendorType) {
+        m_bufferSize = 200;
+    }
+    m_fps = list[5].toInt();
+    m_gstRecordX = gstRecord;
+    //初始化wayland服务链接
+    initConnectWayland();
+}
+void WaylandIntegration::WaylandIntegrationPrivate::initConnectWayland()
+{
     //设置获取视频帧
     setBGetFrame(true);
 
@@ -295,7 +331,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list
     m_connection->moveToThread(m_thread);
     m_connection->initConnection();
 }
-
 int WaylandIntegration::WaylandIntegrationPrivate::getBoardVendorType()
 {
     QFile file("/sys/class/dmi/id/board_vendor");
@@ -344,17 +379,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::addOutput(quint32 name, quin
                 qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "Failed to start streaming: remote access manager interface is not initialized yet";
                 return ;
             }
-            /*
-            m_remoteAccessManager = m_registry->createRemoteAccessManager(interface.name, interface.version);
-            connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
-                Q_UNUSED(output);
-                connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf] {
-                    //processBuffer(rbuf);
-                    processBufferX86(rbuf);
-                });
-            });
-            */
-            //            m_output = output.waylandOutputName();
             return ;
         }
         m_outputMap.insert(name, portalOutput);
@@ -409,8 +433,19 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     //        return;
     if (m_bInitRecordAdmin) {
         m_bInitRecordAdmin = false;
-        m_recordAdmin->init(static_cast<int>(m_screenSize.width()), static_cast<int>(m_screenSize.height()));
-        frameStartTime = avlibInterface::m_av_gettime();
+        if (Utils::isFFmpegEnv) {
+            m_recordAdmin->init(static_cast<int>(m_screenSize.width()), static_cast<int>(m_screenSize.height()));
+            frameStartTime = avlibInterface::m_av_gettime();
+        } else {
+            frameStartTime = QDateTime::currentMSecsSinceEpoch();
+            isGstWriteVideoFrame = true;
+            if (m_gstRecordX) {
+                m_gstRecordX->waylandGstStartRecord();
+            } else {
+                qWarning() << "m_gstRecordX is nullptr!";
+            }
+            QtConcurrent::run(this, &WaylandIntegrationPrivate::gstWriteVideoFrame);
+        }
         m_appendFrameToListFlag = true;
         QtConcurrent::run(this, &WaylandIntegrationPrivate::appendFrameToList);
     }
@@ -441,78 +476,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     munmap(mapData, stride * height);
     close(dma_fd);
 }
-//void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect)
-//{
-//    QScopedPointer<const KWayland::Client::RemoteBuffer> guard(rbuf);
-//    auto dma_fd = rbuf->fd();
-//    quint32 width = rbuf->width();
-//    quint32 height = rbuf->height();
-//    quint32 stride = rbuf->stride();
-//    if (m_bInitRecordAdmin) {
-//        m_bInitRecordAdmin = false;
-//        m_recordAdmin->init(static_cast<int>(m_screenSize.width()), static_cast<int>(m_screenSize.height()));
-//        frameStartTime = avlibInterface::m_av_gettime();
-//    }
-//    QImage img0 = getImage(dma_fd, width, height, stride, rbuf->format());
-//    QImage img(m_screenSize, QImage::Format_RGBA8888);
-//    if (m_curScreenDate.size() + 1 < m_screenCount) {
-//        //        if (m_curScreenDate.contains(rect)) {
-//        //            qDebug() << "screen error!!!!";
-//        //            m_curScreenDate.clear();
-//        //        }else {
-//        m_curScreenDate.append(QPair<QRect, QImage>(rect, img0));
-//        //        }
-//        return;
-//    } else {
-//        QPainter painter(&img);
-//        for (auto itr = m_curScreenDate.begin(); itr != m_curScreenDate.end(); ++itr) {
-//            painter.drawImage(itr->first.topLeft(), itr->second);
-//        }
-//        painter.drawImage(rect.topLeft(), img0);
-//        m_curScreenDate.clear();
-//    }
-
-//    if (img.isNull()) {
-//        qDebug() << "获取图片失败！";
-//        return ;
-//    }
-
-//    int step = 0;
-//    //此处根据选择的帧数进行对应的跳帧处理，由于kwayland每秒传来的画面帧几乎固定为30，因此做对应的跳帧就可以得到对应的帧
-//    switch (m_fps) {
-//    case 5:
-//        step = 6;
-//        break;
-//    case 10:
-//        step = 3;
-//        break;
-//    case 20:
-//        step = 2;
-//        break;
-//    default:
-//        step = 0;
-//    }
-//    //由于性能问题部分非hw的arm机器编码效率低，适当调大视频帧的缓存空间，且在添加视频到缓冲区时进行了降低帧率的处理。
-//    if (QSysInfo::currentCpuArchitecture().startsWith("ARM", Qt::CaseInsensitive) && !m_boardVendorType) {
-//        step = 6;
-//        //必要打印，方便查看日志
-//        qDebug() << "m_waylandList.size(): " <<  m_waylandList.size() << " m_freeList.size(): " << m_freeList.size();
-//    }
-
-//    //必要打印，方便查看日志
-//    if (globalImageCount == 0) {
-//        qDebug() << "step: " << step;
-//    }
-//    if (step != 0 && globalImageCount % step != 0) {
-//        //qDebug() << "未编码的帧索引glovbalImageCount: " << globalImageCount;
-//        globalImageCount++;
-//        close(dma_fd);
-//        return;
-//    }
-//    appendBuffer(img.bits(), static_cast<int>(width), static_cast<int>(height), static_cast<int>(stride), avlibInterface::m_av_gettime() - frameStartTime);
-//    globalImageCount++;
-//    close(dma_fd);
-//}
 
 void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect)
 {
@@ -523,8 +486,19 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
     quint32 stride = rbuf->stride();
     if (m_bInitRecordAdmin) {
         m_bInitRecordAdmin = false;
-        m_recordAdmin->init(static_cast<int>(m_screenSize.width()), static_cast<int>(m_screenSize.height()));
-        frameStartTime = avlibInterface::m_av_gettime();
+        if (Utils::isFFmpegEnv) {
+            m_recordAdmin->init(static_cast<int>(m_screenSize.width()), static_cast<int>(m_screenSize.height()));
+            frameStartTime = avlibInterface::m_av_gettime();
+        } else {
+            frameStartTime = QDateTime::currentMSecsSinceEpoch();
+            isGstWriteVideoFrame = true;
+            if (m_gstRecordX) {
+                m_gstRecordX->waylandGstStartRecord();
+            } else {
+                qWarning() << "m_gstRecordX is nullptr!";
+            }
+            QtConcurrent::run(this, &WaylandIntegrationPrivate::gstWriteVideoFrame);
+        }
         m_appendFrameToListFlag = true;
         QtConcurrent::run(this, &WaylandIntegrationPrivate::appendFrameToList);
     }
@@ -566,14 +540,28 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
             }
             if (!tempImage.isNull()) {
                 //qDebug() << "用来编码的帧索引glovbalImageCount: " << globalImageCount;
-                int64_t temptime = avlibInterface::m_av_gettime();
+                int64_t temptime = 0;
+                if (Utils::isFFmpegEnv) {
+                    temptime = avlibInterface::m_av_gettime();
+
+                } else {
+                    temptime = QDateTime::currentMSecsSinceEpoch();
+
+                }
                 appendBuffer(tempImage.bits(), static_cast<int>(tempImage.width()), static_cast<int>(tempImage.height()),
-                                 static_cast<int>(tempImage.width() * 4), temptime/*- frameStartTime*/);
+                             static_cast<int>(tempImage.width() * 4), temptime/*- frameStartTime*/);
             }
             QThread::msleep(static_cast<unsigned long>(delayTime));
         } else {
             //多屏录制
-            int64_t curFramTime = avlibInterface::m_av_gettime();
+            int64_t curFramTime = 0;
+            if (Utils::isFFmpegEnv) {
+                curFramTime = avlibInterface::m_av_gettime();
+
+            } else {
+                curFramTime = QDateTime::currentMSecsSinceEpoch();
+
+            }
 #if 0
             cv::Mat res;
             res.create(cv::Size(m_screenSize.width(), m_screenSize.height()), CV_8UC4);
@@ -605,7 +593,14 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
 #endif
             appendBuffer(img.bits(), img.width(), img.height(), img.width() * 4, curFramTime - frameStartTime);
             // 计算拼接的时的耗时
-            int64_t t = (avlibInterface::m_av_gettime() - curFramTime) / 1000;
+            int64_t t = 0;
+            if (Utils::isFFmpegEnv) {
+                t = (avlibInterface::m_av_gettime() - curFramTime) / 1000;
+
+            } else {
+                t = (QDateTime::currentMSecsSinceEpoch() - curFramTime) / 1000;
+
+            }
             qDebug() << delayTime - t;
             if (t < delayTime) {
                 QThread::msleep(static_cast<unsigned long>(delayTime - t));
@@ -613,7 +608,28 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
         }
     }
 }
-
+//通过线程循环向gstreamer管道写入视频帧数据
+void WaylandIntegration::WaylandIntegrationPrivate::gstWriteVideoFrame()
+{
+    waylandFrame frame;
+    while (isWriteVideo()) {
+        if (getFrame(frame)) {
+            if (m_gstRecordX) {
+                m_gstRecordX->waylandWriteVideoFrame(frame._frame, frame._width, frame._height);
+            } else {
+                qWarning() << "m_gstRecordX is nullptr!";
+            }
+        } else {
+            //qDebug() << "视频缓冲区无数据！";
+        }
+    }
+    //等待wayland视频环形队列中的视频帧，全部写入管道
+    if (m_gstRecordX) {
+        m_gstRecordX->waylandGstStopRecord();
+    } else {
+        qWarning() << "m_gstRecordX is nullptr!";
+    }
+}
 QImage WaylandIntegration::WaylandIntegrationPrivate::getImage(int32_t fd, uint32_t width, uint32_t height, uint32_t stride, uint32_t format)
 {
     QImage tempImage;
@@ -839,11 +855,16 @@ bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &frame
 bool WaylandIntegration::WaylandIntegrationPrivate::isWriteVideo()
 {
     QMutexLocker locker(&m_mutex);
-    if (m_recordAdmin->m_writeFrameThread->bWriteFrame()) {
-        return true;
+    if (Utils::isFFmpegEnv) {
+        if (m_recordAdmin->m_writeFrameThread->bWriteFrame()) {
+            return true;
+        }
     } else {
-        return !m_waylandList.isEmpty();
+        if (isGstWriteVideoFrame) {
+            return true;
+        }
     }
+    return !m_waylandList.isEmpty();
 }
 
 bool WaylandIntegration::WaylandIntegrationPrivate::bGetFrame()

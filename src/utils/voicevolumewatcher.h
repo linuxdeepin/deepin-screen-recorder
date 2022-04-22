@@ -24,6 +24,7 @@
 
 #include <com_deepin_daemon_audio.h>
 #include <com_deepin_daemon_audio_source.h>
+#include <com_deepin_daemon_audio_sink.h>
 
 #include <QObject>
 #include <QTimer>
@@ -67,10 +68,9 @@ private:
      */
     QScopedPointer<com::deepin::daemon::Audio> m_audioInterface;
     /**
-     * @brief 音频源
+     * @brief 音频源(输入源)
      */
     QScopedPointer<com::deepin::daemon::audio::Source> m_defaultSource;
-
     struct Port {
         QString  portId;
         QString portName;

@@ -20,15 +20,14 @@
 
 #ifndef XDG_DESKTOP_PORTAL_KDE_WAYLAND_INTEGRATION_H
 #define XDG_DESKTOP_PORTAL_KDE_WAYLAND_INTEGRATION_H
-
+#include "gstrecord/gstrecordx.h"
 #include <QObject>
 #include <QSize>
 #include <QVariant>
 
 #include <QtGlobal>
 
-namespace WaylandIntegration
-{
+namespace WaylandIntegration {
 
 class WaylandOutput
 {
@@ -74,17 +73,18 @@ Q_SIGNALS:
     void newBuffer(uint8_t *screenData);
 };
 
-    void init(QStringList list);
+void init(QStringList list);
+void init(QStringList list, GstRecordX *gstRecord);
 
-    bool isEGLInitialized();
+bool isEGLInitialized();
 
-    //bool startStreaming(const WaylandOutput &output);
-    void stopStreaming();
+//bool startStreaming(const WaylandOutput &output);
+void stopStreaming();
 
-    QMap<quint32, WaylandOutput> screens();
-    QVariant streams();
+QMap<quint32, WaylandOutput> screens();
+QVariant streams();
 
-    WaylandIntegration *waylandIntegration();
+WaylandIntegration *waylandIntegration();
 
 }
 

@@ -99,7 +99,12 @@ public:
     //void initDrm();
     //void initEGL();
     void initWayland(QStringList list);
+    void initWayland(QStringList list, GstRecordX *gstRecord);
 
+    /**
+     * @brief 初始化wayland链接
+     */
+    void initConnectWayland();
     /**
      * @brief 从电脑/sys/class/dmi/id/board_vendor文件获取，电脑的厂商
      * @return 0:非hw电脑 1:hw电脑
@@ -145,6 +150,10 @@ protected Q_SLOTS:
      */
     void appendFrameToList();
 
+    /**
+     * @brief 通过线程循环向gstreamer管道写入视频帧数据
+     */
+    void gstWriteVideoFrame();
     /**
         * @brief 从wayland客户端获取当前屏幕的截图
         * @param fd
@@ -258,6 +267,13 @@ private:
     QVector<QPair<QRect, QImage>> m_curNewImageScreen;
     QSize m_screenSize;
     int m_screenCount;
+
+    /**
+     * @brief 是否写入Gstreamer视频帧画面
+     */
+    bool isGstWriteVideoFrame = false;
+
+    GstRecordX *m_gstRecordX;
 };
 
 }

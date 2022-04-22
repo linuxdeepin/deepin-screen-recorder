@@ -25,7 +25,7 @@ LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_core -lopencv_im
 
 CONFIG += link_pkgconfig
 CONFIG += c++11
-PKGCONFIG += dtkgui dtkwidget xcb xcb-util dframeworkdbus
+PKGCONFIG += dtkgui dtkwidget xcb xcb-util dframeworkdbus gstreamer-app-1.0
 
 
 RESOURCES = ../../assets/image/deepin-screen-recorder.qrc \
@@ -151,6 +151,7 @@ HEADERS += test_all_interfaces.h \
         #../../src/lib/GifH/gif.h \
         #../../src/xgifrecord.h \
         ../../src/recordertablet.h \
+        ../../src/gstrecord/gstrecordx.h
      ../../src/waylandrecord/writeframethread.h \
      ../../src/waylandrecord/waylandintegration.h \
      ../../src/waylandrecord/waylandintegration_p.h \
@@ -243,4 +244,5 @@ SOURCES += main.cpp \
     ../../src/show_buttons.cpp \
     ../../src/event_monitor.cpp \
     #../../src/xgifrecord.cpp \
-    ../../src/recordertablet.cpp
+    ../../src/recordertablet.cpp \
+    ../../src/gstrecord/gstrecordx.cpp
