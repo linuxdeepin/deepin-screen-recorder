@@ -151,7 +151,7 @@ HEADERS += test_all_interfaces.h \
         #../../src/lib/GifH/gif.h \
         #../../src/xgifrecord.h \
         ../../src/recordertablet.h \
-        ../../src/gstrecord/gstrecordx.h
+        ../../src/gstrecord/gstrecordx.h \
      ../../src/waylandrecord/writeframethread.h \
      ../../src/waylandrecord/waylandintegration.h \
      ../../src/waylandrecord/waylandintegration_p.h \

@@ -429,8 +429,9 @@ void SubToolWidget::initRecordLabel()
     }
 #endif
     m_recordOptionMenu->addAction(mp4Action);
-
-    m_recordOptionMenu->addAction(mkvAction);
+    if (Utils::isFFmpegEnv) {
+        m_recordOptionMenu->addAction(mkvAction);
+    }
     m_recordOptionMenu->addSeparator();
 
     m_recordOptionMenu->addAction(fpsTitleAction);
