@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
     QScopedPointer<DApplication> app(DApplication::globalApplication(argc, argv));
 #endif
     app->setOrganizationName("deepin");
-    app->setApplicationName("deepin-pin-screenshots");
+    app->setApplicationName("deepin-screen-recorder");
     app->setProductName(QObject::tr("Pin screenshots"));
     app->setApplicationVersion("1.0");
 

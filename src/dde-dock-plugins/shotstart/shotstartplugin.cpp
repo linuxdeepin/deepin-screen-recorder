@@ -26,7 +26,7 @@
 
 
 #define ShotShartPlugin "shot-start-plugin"
-#define ShotShartApp "dde-shot-start"
+#define ShotShartApp "deepin-screen-recorder" // 使用截图录屏的翻译
 
 ShotStartPlugin::ShotStartPlugin(QObject *parent)
     : QObject(parent), m_iconWidget(nullptr), m_tipsWidget(nullptr)
@@ -102,7 +102,7 @@ QWidget *ShotStartPlugin::itemTipsWidget(const QString &itemKey)
 {
     if (itemKey != ShotShartPlugin) return nullptr;
 
-    m_tipsWidget->setText(tr("Screenshot Ctrl+Alt+A"));
+    m_tipsWidget->setText(tr("Screenshot") + "(Ctrl+Alt+A)");
     return m_tipsWidget.data();
 }
 

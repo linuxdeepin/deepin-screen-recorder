@@ -66,14 +66,14 @@ const QString IconWidget::itemContextMenu()
     items.reserve(2);
     QMap<QString, QVariant> shot;
     shot["itemId"] = "shot";
-    shot["itemText"] = tr("Screenshot Ctrl + Alt + A");
+    shot["itemText"] = tr("Screenshot") + "(Ctrl + Alt + A)";
     shot["isActive"] = true;
     items.push_back(shot);
 
 
     QMap<QString, QVariant> recorder;
     recorder["itemId"] = "recorder";
-    recorder["itemText"] = tr("Recording Ctrl + Alt + R");
+    recorder["itemText"] = tr("Recording") + "(Ctrl + Alt + R)";
     recorder["isActive"] = true;
     items.push_back(recorder);
 

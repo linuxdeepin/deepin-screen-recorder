@@ -227,12 +227,10 @@ isEmpty(APPDIR):APPDIR=/usr/share/applications
 isEmpty(DSRDIR):DSRDIR=/usr/share/deepin-screen-recorder
 isEmpty(DOCDIR):DOCDIR=/usr/share/dman/deepin-screen-recorder
 isEmpty(ETCDIR):ETCDIR=/etc
-isEmpty(TABCONDIR):TABCONDIR=/etc/due-shell/json
 
 target.path = $$INSTROOT$$BINDIR
 icon.path = $$INSTROOT$$ICONDIR
 desktop.path = $$INSTROOT$$APPDIR
-translations.path = $$INSTROOT$$DSRDIR/translations
 
 icon.files = ../assets/image/deepin-screen-recorder.svg ../assets/image/deepin-screenshot.svg
 desktop.files = ../deepin-screen-recorder.desktop
@@ -245,46 +243,13 @@ contains(DEFINES, DDE_START_FLAGE_ON ) {
 }
 dbus_service.path = $$PREFIX/share/dbus-1/services
 
-#平板图标资源
-tablet_resources.path = $$INSTROOT$$DSRDIR/tablet_resources
-tablet_resources.files = ../assets/tabletUI/fast-icon_recording_active.svg ../assets/tabletUI/fast-icon_recording_normal.svg \
-            ../assets/tabletUI/counting1.svg ../assets/tabletUI/counting2.svg ../assets/tabletUI/counting3.svg \
-            ../assets/tabletUI/recording0.svg ../assets/tabletUI/recording1.svg
-#平板配置资源
-tablet_config.path = $$TABCONDIR
-tablet_config.files = ../assets/screenRecorder.json
-
-
-isEmpty(TRANSLATIONS) {
-     include(../translations.pri)
-}
-
-TRANSLATIONS_COMPILED = $$TRANSLATIONS
-TRANSLATIONS_COMPILED ~= s/\.ts/.qm/g
-
-translations.files = $$TRANSLATIONS_COMPILED
-
 
 manual_dir.files = $$PWD/../assets/deepin-screen-recorder
 manual_dir.path= /usr/share/deepin-manual/manual-assets/application/
-INSTALLS += target icon desktop dbus_service translations manual_dir
 
-CONFIG *= update_translations release_translations
 
-CONFIG(update_translations) {
-    isEmpty(lupdate):lupdate=lupdate
-    system($$lupdate -no-obsolete -locations none $$_PRO_FILE_)
-}
-CONFIG(release_translations) {
-    isEmpty(lrelease):lrelease=lrelease
-    system($$lrelease $$_PRO_FILE_)
-}
 
-DSR_LANG_PATH += $$DSRDIR/translations
-DEFINES += "DSR_LANG_PATH=\\\"$$DSR_LANG_PATH\\\""
-
-DISTFILES += \
-    ../assets/image/newUI/focus/close-focus.svg
+INSTALLS += target icon desktop dbus_service manual_dir
 
 
 
