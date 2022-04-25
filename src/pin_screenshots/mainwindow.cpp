@@ -629,7 +629,7 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
         QList<QVariant> arg;
         unsigned int id = 0;
         int timeout = -1;
-        arg << tr("Pin screenshots") << id << "deepin-screen-recorder" << QString() << tips << QStringList() << QVariantMap() << timeout;
+        arg << tr("Pin Screenshots") << id << "deepin-screen-recorder" << QString() << tips << QStringList() << QVariantMap() << timeout;
         notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
         onExit();
         return;
@@ -652,7 +652,7 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
     int timeout = -1;
     unsigned int id = 0;
     QList<QVariant> arg;
-    arg << tr("Pin screenshots")                 // appname
+    arg << tr("Pin Screenshots")                 // appname
         << id                                                    // id
         << QString("deepin-screen-recorder")                     // icon
         << tr("Screenshot finished")                              // summary

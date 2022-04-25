@@ -15,6 +15,17 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>IconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">لقطة شاشة</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
@@ -99,6 +110,10 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -113,6 +128,13 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Exit</source>
         <translation>خروج</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -339,6 +361,17 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>ShotStartPlugin</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">إلتقاط الشاشة</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">لقطة شاشة</translation>
+    </message>
+</context>
+<context>
     <name>ShotToolWidget</name>
     <message>
         <source>Blur</source>
@@ -513,6 +546,14 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pin Screenshots</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ogg</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

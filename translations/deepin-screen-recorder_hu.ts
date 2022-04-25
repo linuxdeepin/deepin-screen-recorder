@@ -13,6 +13,17 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     </message>
 </context>
 <context>
+    <name>IconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation>Képernyőkép</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
@@ -97,6 +108,10 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <source>Scrollshot</source>
         <translation>Görgethető képernyőkép</translation>
     </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Képernyőképek kitűzése</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -111,6 +126,13 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>Exit</source>
         <translation>Kilépés</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Képernyőképek kitűzése</translation>
     </message>
 </context>
 <context>
@@ -333,7 +355,18 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation>Képernyőképek rögzítése</translation>
+        <translation>Képernyőképek kitűzése</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartPlugin</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation>Képernyőrögzítő</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Képernyőkép</translation>
     </message>
 </context>
 <context>
@@ -511,7 +544,15 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Képernyőképek kitűzése</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
+    </message>
+    <message>
+        <source>ogg</source>
+        <translation>ogg</translation>
     </message>
 </context>
 <context>

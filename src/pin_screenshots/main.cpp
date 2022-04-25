@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
 #endif
     app->setOrganizationName("deepin");
     app->setApplicationName("deepin-screen-recorder");
-    app->setProductName(QObject::tr("Pin screenshots"));
+    app->setProductName(QObject::tr("Pin Screenshots"));
     app->setApplicationVersion("1.0");
 
     Dtk::Core::DLogManager::registerConsoleAppender();

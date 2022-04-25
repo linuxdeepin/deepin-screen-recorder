@@ -13,6 +13,17 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     </message>
 </context>
 <context>
+    <name>IconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ekrānuzņēmums</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
@@ -97,6 +108,10 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
         <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -111,6 +126,13 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     <message>
         <source>Exit</source>
         <translation>Iziet</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -337,6 +359,17 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     </message>
 </context>
 <context>
+    <name>ShotStartPlugin</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation>Ekrāna ierakstīšana</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ekrānuzņēmums</translation>
+    </message>
+</context>
+<context>
     <name>ShotToolWidget</name>
     <message>
         <source>Blur</source>
@@ -511,6 +544,14 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>ogg</source>
         <translation type="unfinished"/>
     </message>
 </context>

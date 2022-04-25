@@ -13,6 +13,17 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
 </context>
 <context>
+    <name>IconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation>Snímek obrazovky</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
@@ -97,6 +108,10 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <source>Scrollshot</source>
         <translation>Snímek z celého posuvníku</translation>
     </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Připnout snímky obrazovky</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -111,6 +126,13 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Exit</source>
         <translation>Ukončit</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Připnout snímky obrazovky</translation>
     </message>
 </context>
 <context>
@@ -337,6 +359,17 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
 </context>
 <context>
+    <name>ShotStartPlugin</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation>Zachytávání obrazovky</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Snímek obrazovky</translation>
+    </message>
+</context>
+<context>
     <name>ShotToolWidget</name>
     <message>
         <source>Blur</source>
@@ -511,6 +544,14 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
+        <translation>Připnout snímky obrazovky</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>ogg</source>
         <translation type="unfinished"/>
     </message>
 </context>

@@ -12,6 +12,17 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>IconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation>رەسىم تۇتۇش</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
@@ -96,6 +107,10 @@ or press the shortcut again to stop recording</source>
         <source>Scrollshot</source>
         <translation>سىيرىلما سۈرەت تۇتۇش</translation>
     </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>چاپلاق</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -110,6 +125,13 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Exit</source>
         <translation>چېكىنىش</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>چاپلاق</translation>
     </message>
 </context>
 <context>
@@ -336,6 +358,17 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>ShotStartPlugin</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation>ئېكراننى رەسىم تۇتۇش، سىنغا ئېلىش</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>رەسىم تۇتۇش</translation>
+    </message>
+</context>
+<context>
     <name>ShotToolWidget</name>
     <message>
         <source>Blur</source>
@@ -511,6 +544,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Pin Screenshots</source>
         <translation>چاپلاق</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>ogg</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

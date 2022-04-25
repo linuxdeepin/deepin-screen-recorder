@@ -13,6 +13,17 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
 </context>
 <context>
+    <name>IconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation>Zrzut ekranu</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
@@ -97,6 +108,10 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <source>Scrollshot</source>
         <translation>Pionowy zrzut ekranu</translation>
     </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Przypnij zrzuty ekranu</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -111,6 +126,13 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <message>
         <source>Exit</source>
         <translation>Wyjście</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Przypnij zrzuty ekranu</translation>
     </message>
 </context>
 <context>
@@ -163,7 +185,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>Przewijaj kółkiem myszki lub kliknij aby zrobić pionowy zrzut ekranu</translation>
+        <translation>Przewijaj kółkiem myszki lub klikaj, aby zrobić pionowy zrzut ekranu</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
@@ -334,6 +356,17 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <message>
         <source>Pin screenshots</source>
         <translation>Przypnij zrzuty ekranu</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartPlugin</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation>Zrzut ekranu</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Zrzut ekranu</translation>
     </message>
 </context>
 <context>
@@ -511,14 +544,22 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Przypnij zrzuty ekranu</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
+    </message>
+    <message>
+        <source>ogg</source>
+        <translation>ogg</translation>
     </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation> Dostosuj pole nagrywania w zakresie %1*%2 aby uzyskać lepszy efekt</translation>
+        <translation> Dostosuj pole nagrywania w zakresie %1*%2, aby uzyskać lepszy efekt</translation>
     </message>
 </context>
 <context>

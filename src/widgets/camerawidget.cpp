@@ -119,7 +119,7 @@ void CameraWidget::initCamera()
 bool CameraWidget::cameraStart()
 {
     if (m_isInitCamera) {
-        timer_image_capture->start(100);
+        timer_image_capture->start(50);
         return true;
     }else {
         camera->start();

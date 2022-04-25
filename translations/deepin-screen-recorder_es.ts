@@ -13,6 +13,17 @@ o haga clic en el icono de la bandeja</translation>
     </message>
 </context>
 <context>
+    <name>IconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
@@ -97,6 +108,10 @@ o haga clic en el icono de la bandeja</translation>
         <source>Scrollshot</source>
         <translation>Capturar desplazamiento</translation>
     </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Anclar captura de pantalla</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -111,6 +126,13 @@ o haga clic en el icono de la bandeja</translation>
     <message>
         <source>Exit</source>
         <translation>Salir</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Anclar captura de pantalla</translation>
     </message>
 </context>
 <context>
@@ -337,6 +359,17 @@ o haga clic en el icono de la bandeja</translation>
     </message>
 </context>
 <context>
+    <name>ShotStartPlugin</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation>Captura de pantalla</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
+    </message>
+</context>
+<context>
     <name>ShotToolWidget</name>
     <message>
         <source>Blur</source>
@@ -511,6 +544,14 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
+        <translation>Anclar captura de pantalla</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>ogg</source>
         <translation type="unfinished"/>
     </message>
 </context>

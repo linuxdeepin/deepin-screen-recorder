@@ -13,6 +13,17 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
 </context>
 <context>
+    <name>IconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ekran Görüntüsü</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
@@ -97,6 +108,10 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -111,6 +126,13 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Exit</source>
         <translation>Çıkış</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -155,7 +177,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation>Maksimum uzunluğa ulaştı</translation>
+        <translation>Azami uzunluğa ulaştı</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
@@ -337,6 +359,17 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
 </context>
 <context>
+    <name>ShotStartPlugin</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation>Ekran Alıntısı</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ekran Görüntüsü</translation>
+    </message>
+</context>
+<context>
     <name>ShotToolWidget</name>
     <message>
         <source>Blur</source>
@@ -511,6 +544,14 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>ogg</source>
         <translation type="unfinished"/>
     </message>
 </context>

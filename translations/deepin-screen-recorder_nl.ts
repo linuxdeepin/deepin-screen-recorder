@@ -13,6 +13,17 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
 </context>
 <context>
+    <name>IconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation>Schermfoto</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
@@ -97,6 +108,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <source>Scrollshot</source>
         <translation>Scrollende schermfoto</translation>
     </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Schermfoto&apos;s vastmaken</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -111,6 +126,13 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Exit</source>
         <translation>Afsluiten</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Schermfoto&apos;s vastmaken</translation>
     </message>
 </context>
 <context>
@@ -337,6 +359,17 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
 </context>
 <context>
+    <name>ShotStartPlugin</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation>Schermfoto</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Schermfoto</translation>
+    </message>
+</context>
+<context>
     <name>ShotToolWidget</name>
     <message>
         <source>Blur</source>
@@ -511,7 +544,15 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Schermfoto&apos;s vastmaken</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
+    </message>
+    <message>
+        <source>ogg</source>
+        <translation>ogg</translation>
     </message>
 </context>
 <context>

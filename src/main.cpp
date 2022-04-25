@@ -146,6 +146,7 @@ int main(int argc, char *argv[])
         QCommandLineOption topWindowOption(QStringList() << "w" << "top-window", "Take a screenshot of the most top window.");
         QCommandLineOption savePathOption(QStringList() << "s" << "save-path", "Specify a path to save the screenshot.", "PATH");
         QCommandLineOption prohibitNotifyOption(QStringList() << "n" << "no-notification", "Don't send notifications.");
+        QCommandLineOption useGStreamer(QStringList() << "g" << "gstreamer", "Use GStreamer.");
         QCommandLineOption dbusOption(QStringList() << "u" << "dbus", "Start  from dbus.");
         QCommandLineOption screenRecordOption(QStringList() << "record" << "screenRecord" << "start screen record");
         QCommandLineOption screenShotOption(QStringList() << "shot" << "screenShot" << "start screen shot");
@@ -162,6 +163,7 @@ int main(int argc, char *argv[])
         cmdParser.addOption(topWindowOption);
         cmdParser.addOption(savePathOption);
         cmdParser.addOption(prohibitNotifyOption);
+        cmdParser.addOption(useGStreamer);
         cmdParser.addOption(dbusOption);
         cmdParser.addOption(screenRecordOption);
         cmdParser.addOption(screenShotOption);
@@ -177,6 +179,10 @@ int main(int argc, char *argv[])
         DGuiApplicationHelper::ColorType t_type = DGuiApplicationHelper::instance()->themeType();
         DGuiApplicationHelper::instance()->setPaletteType(t_type);
         Utils::themeType = t_type;
+
+        if (cmdParser.isSet(useGStreamer)) {
+            Utils::isFFmpegEnv = false;
+        }
 
 
         QString t_launchMode = "screenShot";

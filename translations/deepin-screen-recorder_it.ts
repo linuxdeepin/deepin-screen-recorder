@@ -13,6 +13,17 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
 </context>
 <context>
+    <name>IconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation>Screenshot</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
@@ -97,6 +108,10 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <source>Scrollshot</source>
         <translation>Screenshot a scorrimento</translation>
     </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -111,6 +126,13 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Exit</source>
         <translation>Esci</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -337,6 +359,17 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
 </context>
 <context>
+    <name>ShotStartPlugin</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation>Cattura schermo</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Screenshot</translation>
+    </message>
+</context>
+<context>
     <name>ShotToolWidget</name>
     <message>
         <source>Blur</source>
@@ -511,6 +544,14 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
     <message>
         <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>ogg</source>
         <translation type="unfinished"/>
     </message>
 </context>

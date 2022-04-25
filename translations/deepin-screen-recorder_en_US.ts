@@ -13,6 +13,17 @@ or press the shortcut again to stop recording</translation>
     </message>
 </context>
 <context>
+    <name>IconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation>Screenshot</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation>Recording</translation>
+    </message>
+</context>
+<context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
@@ -97,6 +108,10 @@ or press the shortcut again to stop recording</translation>
         <source>Scrollshot</source>
         <translation>Scrollshot</translation>
     </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Pin Screenshots</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -111,6 +126,13 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Exit</source>
         <translation>Exit</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Pin Screenshots</translation>
     </message>
 </context>
 <context>
@@ -337,6 +359,17 @@ or press the shortcut again to stop recording</translation>
     </message>
 </context>
 <context>
+    <name>ShotStartPlugin</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation>Screen Capture</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Screenshot</translation>
+    </message>
+</context>
+<context>
     <name>ShotToolWidget</name>
     <message>
         <source>Blur</source>
@@ -512,6 +545,14 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Pin Screenshots</source>
         <translation>Pin Screenshots</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
+    </message>
+    <message>
+        <source>ogg</source>
+        <translation>ogg</translation>
     </message>
 </context>
 <context>
