@@ -47,6 +47,12 @@ signals:
     void signalCloseButtonClicked();// 关闭按钮被点击
 protected:
     void initToolBarWidget(); //初始化工具栏
+    /**
+     * @brief 重写鼠标移动事件：解决工具栏可以被拖动的问题
+     * 工具栏暂无鼠标移动事件
+     * @param event
+     */
+    void mouseMoveEvent(QMouseEvent *event) override;
 private:
     SubToolWidget *m_subTool;
     DImageButton *m_closeButton;
