@@ -23,6 +23,7 @@
 #include "utils.h"
 
 #include <QActionGroup>
+#include <QMouseEvent>
 #include <DFontSizeManager>
 
 #define THEMETYPE 1 // 主题颜色为浅色
@@ -108,4 +109,10 @@ void ToolBarWidget::initToolBarWidget()
     setLayout(hLayout);
 }
 
+//重写鼠标移动事件：解决工具栏可以被拖动的问题
+void ToolBarWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    //qDebug() << event->button() << event->x() << event->y();
+    //QWidget::mouseMoveEvent(event);
+}
 
