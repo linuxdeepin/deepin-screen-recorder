@@ -50,11 +50,6 @@ IconWidget::IconWidget(QWidget *parent):
     m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
 }
 
-IconWidget::~IconWidget()
-{
-
-}
-
 bool IconWidget::enabled()
 {
     return isEnabled();
@@ -210,4 +205,9 @@ const QPixmap IconWidget::loadSvg(const QString &fileName, const QSize &size) co
     pixmap.setDevicePixelRatio(ratio);
 
     return pixmap;
+}
+
+IconWidget::~IconWidget()
+{
+
 }

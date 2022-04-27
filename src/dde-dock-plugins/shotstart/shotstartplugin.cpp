@@ -34,15 +34,6 @@ ShotStartPlugin::ShotStartPlugin(QObject *parent)
 {
 }
 
-ShotStartPlugin::~ShotStartPlugin()
-{
-    if (nullptr != m_iconWidget)
-        m_iconWidget->deleteLater();
-
-    if (nullptr != m_tipsWidget)
-        m_tipsWidget->deleteLater();
-}
-
 const QString ShotStartPlugin::pluginName() const
 {
     return ShotShartPlugin;
@@ -55,11 +46,13 @@ const QString ShotStartPlugin::pluginDisplayName() const
 
 void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
 {
+#ifndef UNIT_TEST
     // 加载翻译
     QString appName = qApp->applicationName();
     qApp->setApplicationName(ShotShartApp);
     qApp->loadTranslator();
     qApp->setApplicationName(appName);
+#endif
 
     m_proxyInter = proxyInter;
 
@@ -130,3 +123,11 @@ void ShotStartPlugin::invokedMenuItem(const QString &itemKey, const QString &men
     m_iconWidget->invokedMenuItem(menuId);
 }
 
+ShotStartPlugin::~ShotStartPlugin()
+{
+    if (nullptr != m_iconWidget)
+        m_iconWidget->deleteLater();
+
+    if (nullptr != m_tipsWidget)
+        m_tipsWidget->deleteLater();
+}
