@@ -3,10 +3,10 @@
 export DISPLAY=":0"
 export QT_QPA_PLATFORM=
 
-rm -rf ./ut_dde_dock_plugins/ut_record_time/build-ut
-mkdir ./ut_dde_dock_plugins/ut_record_time/build-ut
+rm -rf ./ut_dde_dock_plugins/ut_shot_start/build-ut
+mkdir ./ut_dde_dock_plugins/ut_shot_start/build-ut
 
-cd ./ut_dde_dock_plugins/ut_record_time/build-ut
+cd ./ut_dde_dock_plugins/ut_shot_start/build-ut
 
 mkdir -p html
 mkdir -p report
@@ -15,7 +15,7 @@ export QT_SELECT=qt5
 qmake ../
 make -j4
 
-executable=ut_record_time #可执行程序的文件名
+executable=ut_shot_start #可执行程序的文件名
 
 #下面是覆盖率目录操作，一种正向操作，一种逆向操作
 extract_info="*/dde-dock-plugins/*" #针对当前目录进行覆盖率操作
