@@ -505,7 +505,7 @@ public slots:
     void onScrollShotCheckScrollType(int autoScrollFlag);
 
     /**
-     * @brief 监听锁屏信号，滚动截图和贴图需要使用
+     * @brief 监听锁屏信号，滚动截图和贴图需要使用,贴图或滚动截图时突然锁频会触发此信号槽
      * @param msg
      */
     void onLockScreenEvent(QDBusMessage msg);
