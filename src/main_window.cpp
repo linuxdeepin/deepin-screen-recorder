@@ -508,6 +508,7 @@ void MainWindow::whileCheckTempFileArm()
     }
 }
 #endif
+//启动截图录屏时检测是否是锁屏状态
 void MainWindow::checkIsLockScreen()
 {
     QDBusInterface sessionManagerIntert("com.deepin.SessionManager",
@@ -2592,8 +2593,12 @@ void MainWindow::saveScreenShot()
         }
 #endif
     } else {
-        //普通截图保存图片
-        shotCurrentImg();
+        //除了滚动截图时，突然进入锁屏界面不会执行shotCurrentImg()函数，其他情况都会执行shotCurrentImg()
+        if (!(status::scrollshot == m_functionType && m_isLockedState)) {
+            qInfo() << "Shot currnet image!";
+            //普通截图保存图片
+            shotCurrentImg();
+        }
     }
     const bool r = saveAction(m_resultPixmap);
     save2Clipboard(m_resultPixmap);
