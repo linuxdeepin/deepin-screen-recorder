@@ -112,6 +112,7 @@ void ToolBarWidget::initToolBarWidget()
 //重写鼠标移动事件：解决工具栏可以被拖动的问题
 void ToolBarWidget::mouseMoveEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
     //qDebug() << event->button() << event->x() << event->y();
     //QWidget::mouseMoveEvent(event);
 }
