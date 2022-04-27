@@ -92,14 +92,15 @@ void GstRecordX::x11GstStartRecord()
     QStringList areaList;
 
     //设置录制区域的大小及位置 show-pointer:是否录制光标
+    //这里录制区域有个ximagesrc的bug，endx或者endy只要有一个的大小为显示屏的大小。录制的视频最终结果都是全屏。因此需要减一个像素
     areaList << "ximagesrc"
              << "display-name=" + qgetenv("DISPLAY")
              << "use-damage=false"
              << "show-pointer=" + m_isRecordMouse //是否录制光标
              << "startx=" + QString::number(m_recordArea.x())
              << "starty=" + QString::number(m_recordArea.y())
-             << "endx=" + QString::number(m_recordArea.x() + m_recordArea.width())
-             << "endy=" + QString::number(m_recordArea.y() + m_recordArea.height());
+             << "endx=" + QString::number(m_recordArea.x() + m_recordArea.width() - 1)
+             << "endy=" + QString::number(m_recordArea.y() + m_recordArea.height() - 1);
     arguments << areaList.join(" ");
 
     //设置录屏的帧率
