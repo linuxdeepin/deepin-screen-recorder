@@ -432,11 +432,11 @@ void RecordProcess::waylandRecord()
 void RecordProcess::GstStartRecord()
 {
     int argc = 1;
-    char *mock[1] = {QString("empty").toLatin1().data()};
-    char **argv[1];
-    *argv = mock;
+//    char *mock[1] = {QString("empty").toLatin1().data()};
+//    char **argv[1];
+//    *argv = mock;
     //gstreamer接口初始化
-    gst_init(&argc, argv);
+    gst_init(&argc, nullptr);
     qDebug() << "Gstreamer 录屏开始！";
     GstRecordX::VideoType videoType = GstRecordX::VideoType::webm;
     GstRecordX::AudioType audioType = GstRecordX::AudioType::None;
@@ -541,7 +541,7 @@ void RecordProcess::setSystemAudio(const bool status)
 void RecordProcess::startRecord()
 {
     //使用QtConcurrent::run受cpu核心线程数的影响，线程池默认大小为CPU核心线程数大小，由于程序中通过此方法启动的线程数超出4个，故再次设置线程池大小
-    QThreadPool::globalInstance()->setMaxThreadCount(QThreadPool::globalInstance()->maxThreadCount() > 6 ? QThreadPool::globalInstance()->maxThreadCount():6);
+    QThreadPool::globalInstance()->setMaxThreadCount(QThreadPool::globalInstance()->maxThreadCount() > 6 ? QThreadPool::globalInstance()->maxThreadCount() : 6);
     m_framerate = settings->value("recordConfig", "mkv_framerate").toString().toInt();
     qDebug() << "m_selectedMic: " << m_selectedMic;
     qDebug() << "m_selectedSystemAudio: " << m_selectedSystemAudio;
