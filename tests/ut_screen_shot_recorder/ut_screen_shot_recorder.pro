@@ -186,7 +186,8 @@ HEADERS += test_all_interfaces.h \
     waylandrecord/ut_waylandintegration.h \
     waylandrecord/ut_writeframethread.h \
     utils/ut_voiceVolumeWatcher.h \
-    utils/ut_WaylandScrollMonitor.h
+    utils/ut_WaylandScrollMonitor.h \
+    gstrecord/ut_gstrecordx.h
 
 
 SOURCES += main.cpp \

@@ -32,9 +32,9 @@ const QSize MIN_TOOLBAR_WIDGET_SIZE = QSize(194, 60);
 
 ToolBarWidget::ToolBarWidget(DWidget *parent): DBlurEffectWidget(parent)
 {
-    if(Utils::isWaylandMode){
-        setWindowFlags(Qt::Sheet |Qt::WindowStaysOnTopHint| Qt::WindowDoesNotAcceptFocus);
-    }else {
+    if (Utils::isWaylandMode) {
+        setWindowFlags(Qt::Sheet | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
+    } else {
         setWindowFlags(Qt::ToolTip);
     }
 
@@ -112,6 +112,7 @@ void ToolBarWidget::initToolBarWidget()
 //重写鼠标移动事件：解决工具栏可以被拖动的问题
 void ToolBarWidget::mouseMoveEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
     //qDebug() << event->button() << event->x() << event->y();
     //QWidget::mouseMoveEvent(event);
 }
