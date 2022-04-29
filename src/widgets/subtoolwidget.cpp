@@ -385,10 +385,12 @@ void SubToolWidget::initRecordLabel()
     formatTitleAction->setText(tr("Format:"));
     gifAction->setText(tr("GIF"));
     gifAction->setCheckable(true);
-    if(Utils::isFFmpegEnv) {
+    if (Utils::isFFmpegEnv) {
         mp4Action->setText(tr("MP4"));
     } else {
         mp4Action->setText(tr("webm"));
+        //Gstreamer录屏时，不存在gif，避免此开关被打开
+        t_saveGif = false;
     }
     mp4Action->setCheckable(true);
 
