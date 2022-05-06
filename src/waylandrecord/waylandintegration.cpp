@@ -289,6 +289,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list
     }
     m_fps = list[5].toInt();
     m_gstRecordX = gstRecord;
+    m_gstRecordX->setBoardVendorType(m_boardVendorType);
     //初始化wayland服务链接
     initConnectWayland();
 }
