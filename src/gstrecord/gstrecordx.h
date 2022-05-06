@@ -52,7 +52,7 @@ public:
         ogg
     };
 public:
-    GstRecordX();
+    GstRecordX(QObject *parent = nullptr);
     ~GstRecordX();
 
     /**
