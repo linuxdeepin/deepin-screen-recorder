@@ -162,6 +162,16 @@ void ToolBarWidget::setPinScreenshotsEnable(const bool &state)
     m_subTool->setPinScreenshotsEnable(state);
 
 }
+
+void ToolBarWidget::setOcrScreenshotsEnable(const bool &state)
+{
+    m_subTool->setOcrScreenshotEnable(state);
+}
+
+void ToolBarWidget::setButEnableOnLockScreen(const bool &state)
+{
+    m_subTool->setButEnableOnLockScreen(state);
+}
 /*
 bool ToolBarWidget::isButtonChecked()
 {
@@ -301,6 +311,16 @@ void ToolBar::setScrollShotDisabled(const bool state)
 void ToolBar::setPinScreenshotsEnable(const bool &state)
 {
     m_toolbarWidget->setPinScreenshotsEnable(state);
+}
+
+void ToolBar::setOcrScreenshotsEnable(const bool &state)
+{
+    m_toolbarWidget->setOcrScreenshotsEnable(state);
+}
+
+void ToolBar::setButEnableOnLockScreen(const bool &state)
+{
+    m_toolbarWidget->setButEnableOnLockScreen(state);
 }
 
 void ToolBar::showAt(QPoint pos)

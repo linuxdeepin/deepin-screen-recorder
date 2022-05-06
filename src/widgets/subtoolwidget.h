@@ -75,6 +75,10 @@ public:
      * @brief 设置贴图的激活状态
      */
     void setPinScreenshotsEnable(const bool &state);
+
+    void setOcrScreenshotEnable(const bool &state);
+
+    void setButEnableOnLockScreen(const bool &state);
 signals:
     void keyBoardButtonClicked(bool checked);
     void mouseBoardButtonClicked(bool checked);
