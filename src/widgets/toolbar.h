@@ -64,6 +64,10 @@ public:
      * @brief 设置贴图的激活状态
      */
     void setPinScreenshotsEnable(const bool &state);
+
+    void setOcrScreenshotsEnable(const bool &state);
+
+    void setButEnableOnLockScreen(const bool &state);
 signals:
     void buttonChecked(QString shapeType);
     void expandChanged(bool expand,  QString shapeType);
@@ -128,6 +132,9 @@ public:
      */
     void setPinScreenshotsEnable(const bool &state);
 
+    void setOcrScreenshotsEnable(const bool &state);
+
+    void setButEnableOnLockScreen(const bool &state);
 signals:
     void buttonChecked(QString shape);
     void currentFunctionToMain(QString shapeType);

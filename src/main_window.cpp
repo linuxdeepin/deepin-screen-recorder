@@ -522,6 +522,9 @@ void MainWindow::checkIsLockScreen()
 
     if (isLockScreen) {
         pinScreenshotsLockScreen(isLockScreen);
+        m_toolBar->setScrollShotDisabled(true);
+        m_toolBar->setOcrScreenshotsEnable(false);
+        m_toolBar->setButEnableOnLockScreen(false);
     }
 }
 
