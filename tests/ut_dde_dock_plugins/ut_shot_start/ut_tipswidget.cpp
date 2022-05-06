@@ -18,6 +18,10 @@ public:
     }
     void TearDown() override
     {
+        if (tips) {
+            delete tips;
+            tips = nullptr;
+        }
     }
 
 public:

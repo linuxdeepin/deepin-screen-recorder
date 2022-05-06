@@ -440,7 +440,7 @@ void RecordProcess::GstStartRecord()
     qDebug() << "Gstreamer 录屏开始！";
     GstRecordX::VideoType videoType = GstRecordX::VideoType::webm;
     GstRecordX::AudioType audioType = GstRecordX::AudioType::None;
-    m_gstRecordX = new GstRecordX();
+    m_gstRecordX = new GstRecordX(this);
     //设置参数
     m_gstRecordX->setFramerate(m_framerate);
     m_gstRecordX->setRecordArea(m_recordRect);

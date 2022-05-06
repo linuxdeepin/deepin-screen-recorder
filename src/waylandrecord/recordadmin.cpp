@@ -7,7 +7,6 @@
 #include <math.h>
 #include <unistd.h>
 #include <qtimer.h>
-#include <QDebug>
 
 RecordAdmin::RecordAdmin(QStringList list, WaylandIntegration::WaylandIntegrationPrivate *context, QObject *parent): QObject(parent),
     m_pInputStream(nullptr),
@@ -188,28 +187,3 @@ int RecordAdmin::stopStream()
     m_cacheMutex.unlock();
     return 0;
 }
-
-//void RecordAdmin::insertOldFrame(GifFrame frame)
-//{
-//    QMutexLocker locker(&m_oldFrameMutex);
-//    if(m_oldFrameMap.size() >= m_gifBuffersize)
-//    {
-//        m_oldFrameMap.remove(m_oldFrameMap.firstKey());
-//    }
-//    m_oldFrameMap.insert(frame.index,frame);
-//}
-
-//GifFrame RecordAdmin::getOldFrame(int index)
-//{
-//    QMutexLocker locker(&m_oldFrameMutex);
-//    if(m_oldFrameMap.contains(index))
-//    {
-//        return m_oldFrameMap.value(index);
-//    }
-//    else
-//    {
-//        GifFrame frame;
-//        frame.data = nullptr;
-//        return frame;
-//    }
-//}

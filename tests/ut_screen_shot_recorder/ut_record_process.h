@@ -159,7 +159,9 @@ TEST_F(RecordProcessTest, mpisRecordVideoMKV)
     m_process->stopRecord();
     delete  m_process;
     sleep(1);
+    stub.reset(ADDR(QSysInfo, currentCpuArchitecture));
     stub.reset(ADDR(RecordProcess, emitRecording));
+    stub.reset(ADDR(ConfigSettings, value));
 }
 
 TEST_F(RecordProcessTest, GstStartRecord)
@@ -177,5 +179,6 @@ TEST_F(RecordProcessTest, GstStartRecord)
     loop.exec();
     m_process->stopRecord();
     delete  m_process;
-
+    stub.reset(ADDR(RecordProcess, emitRecording));
+    stub.reset(ADDR(ConfigSettings, value));
 }

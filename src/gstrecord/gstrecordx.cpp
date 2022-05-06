@@ -65,7 +65,7 @@ static gboolean gstBusMessageCb(GstBus *bus, GstMessage *message, GstRecordX *gs
     return true;
 }
 
-GstRecordX::GstRecordX()
+GstRecordX::GstRecordX(QObject *parent) : QObject(parent)
 {
     initMemberVariables();
 }
