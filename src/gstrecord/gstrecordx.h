@@ -133,6 +133,12 @@ public:
      */
     void setX11RecordMouse(const bool recordMouse);
 
+    /**
+     * @brief 设置主板供应商类型
+     * @param boardVendorType: 1:hw主板 0:非hw主板和kunpeng(hw主板)
+     */
+    void setBoardVendorType(int boardVendorType);
+
     GMainLoop *getGloop() {return m_gloop;}
 
 signals:
@@ -206,6 +212,11 @@ private:
      * @brief 保存路径
      */
     QString m_savePath;
+
+    /**
+     * @brief 主板供应商类型:1:hw主板 0:非hw主板和kunpeng(hw主板)
+     */
+    int m_boardVendorType;
 
     /********录制的视频参数********/
     /**

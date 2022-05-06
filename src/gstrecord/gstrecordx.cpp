@@ -83,6 +83,7 @@ void GstRecordX::initMemberVariables()
     m_recordArea = QRect(0, 0, 0, 0);
     m_channels = 2;
     m_rate = 44100;
+    m_boardVendorType = 0;
 }
 
 //x11协议下gstreamer录制视频
@@ -143,7 +144,11 @@ void GstRecordX::waylandGstStartRecord()
     QStringList wlarguments;
     wlarguments << "appsrc name=videoSrc";
     //此处需特别注意视频帧的格式，由于在wayland协议上，采集的画面，hw机和普通机器的像素格式有差异
-    wlarguments << QString("video/x-raw, format=RGBA, framerate=%1/1, width=%2, height=%3").arg(m_framerate).arg(m_recordArea.width()).arg(m_recordArea.height());
+    if (m_boardVendorType) {
+        wlarguments << QString("video/x-raw, format=RGB, framerate=%1/1, width=%2, height=%3").arg(m_framerate).arg(m_recordArea.width()).arg(m_recordArea.height());
+    } else {
+        wlarguments << QString("video/x-raw, format=RGBA, framerate=%1/1, width=%2, height=%3").arg(m_framerate).arg(m_recordArea.width()).arg(m_recordArea.height());
+    }
     wlarguments << "queue ! videoconvert primaries-mode=2 name=convert ! queue";
 
     //创建管道
@@ -292,6 +297,12 @@ void GstRecordX::setSavePath(const QString &savePath)
 void GstRecordX::setX11RecordMouse(const bool recordMouse)
 {
     m_isRecordMouse =  recordMouse ? "true" : "false";
+}
+
+//设置主板供应商类型
+void GstRecordX::setBoardVendorType(int boardVendorType)
+{
+    m_boardVendorType = boardVendorType;
 }
 
 //创建Gstreamer录屏管道，这部分x11和wayland可共用
