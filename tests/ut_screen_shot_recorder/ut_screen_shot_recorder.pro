@@ -25,7 +25,7 @@ LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_core -lopencv_im
 
 CONFIG += link_pkgconfig
 CONFIG += c++11
-PKGCONFIG += dtkgui dtkwidget xcb xcb-util dframeworkdbus gstreamer-app-1.0
+PKGCONFIG += gstreamer-1.0 dtkgui dtkwidget xcb xcb-util dframeworkdbus
 
 
 RESOURCES = ../../assets/image/deepin-screen-recorder.qrc \
