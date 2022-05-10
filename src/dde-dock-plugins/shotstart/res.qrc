@@ -1,6 +1,8 @@
 <RCC>
     <qresource prefix="/">
-        <file>res/Combined Shape.svg</file>
-        <file>res/task.svg</file>
+        <file>res/shot-start-light.svg</file>
+        <file>res/shot-start-plugin.svg</file>
+        <file>res/screen-capture.svg</file>
+        <file>res/screen-capture-dark.svg</file>
     </qresource>
 </RCC>

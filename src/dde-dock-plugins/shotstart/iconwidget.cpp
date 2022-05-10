@@ -46,7 +46,7 @@ IconWidget::IconWidget(QWidget *parent):
     setMouseTracking(true);
     setMinimumSize(PLUGIN_BACKGROUND_MIN_SIZE, PLUGIN_BACKGROUND_MIN_SIZE);
 
-    QString iconName("Combined Shape");
+    QString iconName("screen-capture");
     m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
 }
 
@@ -105,10 +105,9 @@ void IconWidget::invokedMenuItem(const QString &menuId)
 void IconWidget::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
-//    painter.drawPixmap(QPoint(0, 0), *m_blgPixmap);
 
     QPixmap pixmap;
-    QString iconName = "Combined Shape";
+    QString iconName = "screen-capture";
     int iconSize = PLUGIN_ICON_MAX_SIZE;
 
     if (rect().height() > PLUGIN_BACKGROUND_MIN_SIZE) {
@@ -151,6 +150,9 @@ void IconWidget::paintEvent(QPaintEvent *e)
 
         path.addRoundedRect(rc, radius, radius);
         painter.fillPath(path, color);
+    } else if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
+        // 最小尺寸时，不画背景，采用深色图标
+        iconName.append(PLUGIN_MIN_ICON_NAME);
     }
 
     painter.setOpacity(1);
