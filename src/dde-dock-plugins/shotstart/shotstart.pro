@@ -21,5 +21,26 @@ SOURCES += \
 
 target.path = /usr/lib/dde-dock/plugins/
 
-INSTALLS += target
+SYS_EDITION=$$system("cat /etc/os-version | grep 'Community'")
+message("SYS_EDITION: " $$SYS_EDITION)
+
+SYS_VERSION=$$system("cat /etc/os-version | grep 'MinorVersion' | grep -o '\-\?[0-9]\+'")
+message("SYS_VERSION: " $$SYS_VERSION)
+
+if (!equals(SYS_EDITION, "")) {
+# 社区版
+    message("Community")
+    DEFINES += DDE_START_PLUGIN_ON
+} else {
+# 专业版
+    message("not Community")
+    #1050支持Wayland
+    greaterThan(SYS_VERSION, 1052) {
+        DEFINES += DDE_START_PLUGIN_ON
+        message("wayland support: OK!!!")
+    }
+}
+contains(DEFINES, DDE_START_PLUGIN_ON) {
+    INSTALLS += target
+}
 RESOURCES += res.qrc
