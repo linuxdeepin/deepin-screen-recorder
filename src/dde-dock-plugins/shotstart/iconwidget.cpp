@@ -157,6 +157,7 @@ void IconWidget::paintEvent(QPaintEvent *e)
 
     painter.setOpacity(1);
 
+    m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
     pixmap = loadSvg(iconName, QSize(iconSize, iconSize));
 
     const QRectF &rf = QRectF(rect());
