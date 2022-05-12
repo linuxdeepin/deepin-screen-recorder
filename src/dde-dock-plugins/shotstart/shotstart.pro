@@ -20,6 +20,8 @@ SOURCES += \
 
 
 target.path = /usr/lib/dde-dock/plugins/
+file.files += $$PWD/com.deepin.dde.dock.module.shot-start-plugin.gschema.xml
+file.path += /usr/share/glib-2.0/schemas/
 
-INSTALLS += target
+INSTALLS += target file
 RESOURCES += res.qrc
