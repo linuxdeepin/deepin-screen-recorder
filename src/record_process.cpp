@@ -92,6 +92,11 @@ RecordProcess::~RecordProcess()
         m_gstRecordX = nullptr;
         delete m_gstRecordX;
     }
+    if (Utils::isWaylandMode) {
+#ifdef KF5_WAYLAND_FLAGE_ON
+        avlibInterface::unloadFunctions();
+#endif
+    }
 }
 //设置录屏的基础信息
 void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filename)
@@ -416,6 +421,7 @@ void RecordProcess::waylandRecord()
     qDebug() << "wayland 录屏！";
     // 启动wayland录屏
     initProcess();
+    AudioUtils audioUtils;
     QStringList arguments;
     arguments << QString("%1").arg(recordType);
     arguments << QString("%1").arg(m_recordRect.width()) << QString("%1").arg(m_recordRect.height());
@@ -423,6 +429,8 @@ void RecordProcess::waylandRecord()
     arguments << QString("%1").arg(m_framerate);
     arguments << QString("%1").arg(savePath);
     arguments << QString("%1").arg(recordAudioInputType);
+    arguments << QString(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Source));
+    arguments << QString(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Sink));
     qDebug() << arguments;
     WaylandIntegration::init(arguments);
 #endif
@@ -681,11 +689,7 @@ void RecordProcess::exitRecord(QString newSavePath)
         QFile::remove(savePath);
     }
     qDebug() << "savePath: " << newSavePath;
-    if (Utils::isWaylandMode) {
-#ifdef KF5_WAYLAND_FLAGE_ON
-        avlibInterface::unloadFunctions();
-#endif
-    }
+
 
     m_recordingFlag = false;
     if (Utils::isSysHighVersion1040() == true) {
@@ -699,6 +703,7 @@ void RecordProcess::exitRecord(QString newSavePath)
 
     QApplication::quit();
     if (Utils::isWaylandMode) {
+        qInfo() << "wayland record exit! (_Exit(0))";
         _Exit(0);
     }
 }

@@ -26,6 +26,8 @@ RecordAdmin::RecordAdmin(QStringList list, WaylandIntegration::WaylandIntegratio
         m_fps = list[5].toInt();
         m_filePath = list[6];
         m_audioType = list[7].toInt();
+        m_inputDeviceName = list[8];
+        m_outputDeviceName = list[9];
     }
     if (videoType::GIF == m_videoType) {
         m_fps = 24;
@@ -99,6 +101,8 @@ void RecordAdmin::init(int screenWidth, int screenHeight)
     m_pInputStream->m_screenDH = screenHeight;
     m_pInputStream->m_ipix_fmt = AV_PIX_FMT_RGB32;
     m_pInputStream->m_fps = m_fps;
+    m_pInputStream->m_sysDeviceName = m_outputDeviceName;
+    m_pInputStream->m_micDeviceName = m_inputDeviceName;
     m_pOutputStream->m_left = m_pInputStream->m_left = m_x;
     m_pOutputStream->m_top = m_pInputStream->m_top = m_y;
     m_pOutputStream->m_right = m_pInputStream->m_right = screenWidth - m_x - m_selectWidth;

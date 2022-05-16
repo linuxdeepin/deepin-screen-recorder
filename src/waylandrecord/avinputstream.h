@@ -20,6 +20,10 @@ public:
 public:
     void  setMicAudioRecord(bool bRecord);
     void  setSysAudioRecord(bool bRecord);
+    /**
+     * @brief 打开输入流
+     * @return 是否打成功
+     */
     bool  openInputStream();
     void  onsFinisheStream();
     bool  audioCapture();
@@ -31,6 +35,14 @@ public:
 public:
     bool m_bMicAudio;
     bool m_bSysAudio;
+    /**
+     * @brief 输入设备名称
+     */
+    QString m_micDeviceName;
+    /**
+     * @brief 输出设备名称
+     */
+    QString m_sysDeviceName;
     //OUTPUT_TYPE m_outPutType;
     int     m_micAudioindex;
     int     m_sysAudioindex;
@@ -82,6 +94,17 @@ protected:
     int  readSysAudioPacket();
     int  readSysToMixAudioPacket();
     void initScreenData();
+
+    /**
+     * @brief 打开麦克风音频输入流 注：录屏时不要求录制麦克风时，则此方法默认返回false
+     * @return 是否打开成功
+     */
+    bool openMicStream();
+    /**
+     * @brief 打开系统音频输入流 注：录屏时不要求录制系统音时，则此方法默认返回false
+     * @return 是否打开成功
+     */
+    bool openSysStream();
 
 private:
     bool m_bWriteMix;
