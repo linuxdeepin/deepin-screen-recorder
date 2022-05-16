@@ -16,7 +16,7 @@ RecordAdmin::RecordAdmin(QStringList list, WaylandIntegration::WaylandIntegratio
 {
     m_delay = 0;
     m_gifBuffersize = 0;
-    if (list.size() > 7) {
+    if (list.size() > 9) {
         m_videoType = list[0].toInt();
         //录屏不支持奇数，转偶数
         m_selectWidth = list[1].toInt() / 2 * 2;
@@ -26,6 +26,8 @@ RecordAdmin::RecordAdmin(QStringList list, WaylandIntegration::WaylandIntegratio
         m_fps = list[5].toInt();
         m_filePath = list[6];
         m_audioType = list[7].toInt();
+        m_inputDeviceName = list[8];
+        m_outputDeviceName = list[9];
     }
     if (videoType::GIF == m_videoType) {
         m_fps = 24;
@@ -97,6 +99,8 @@ void RecordAdmin::init(int screenWidth, int screenHeight)
 {
     m_pInputStream->m_screenDW = screenWidth;
     m_pInputStream->m_screenDH = screenHeight;
+    m_pInputStream->m_sysDeviceName = m_outputDeviceName;
+    m_pInputStream->m_micDeviceName = m_inputDeviceName;
     m_pInputStream->m_ipix_fmt = AV_PIX_FMT_RGB32;
     m_pInputStream->m_fps = m_fps;
     m_pOutputStream->m_left = m_pInputStream->m_left = m_x;
