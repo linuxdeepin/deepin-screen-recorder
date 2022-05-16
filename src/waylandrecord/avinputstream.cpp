@@ -57,28 +57,49 @@ void CAVInputStream::setSysAudioRecord(bool bRecord)
 
 bool CAVInputStream::openInputStream()
 {
+    //打开系统音频输入流，
+    bool bSysAudio = openSysStream();
+    //此处的逻辑：当外部选择需要录制系统音（即m_bSysAudio为false），但是系统音频的输出流打开失败时，内部会将可以录制改为不可录制
+    if (bSysAudio != m_bSysAudio) {
+        qWarning() << "sys audio stream open failure! " << "m_bSysAudio : " << m_bSysAudio << " to m_bSysAudio: " << bSysAudio;
+        m_bSysAudio = bSysAudio;
+    }
+    //开麦克风音频输入流 注：录屏时不要求录制麦克风时（即m_bMicAudio为false），则此方法默认返回false
+    bool bMicAudio = openMicStream();
+    //此处的逻辑：录制视频时选择需要录制麦克风音频，但是麦克风音频的输入流打开失败时，内部会将可以录制改为不可录制
+    if (bMicAudio != m_bMicAudio) {
+        qWarning() << "sys audio stream open failure! " << "m_bMicAudio : " << m_bMicAudio << " to m_bMicAudio: " << bMicAudio;
+        m_bMicAudio = bMicAudio;
+    }
+    //只有外部选择了系统音频、麦克风音频及打开系统音频输出流成功、打开麦克风音频输入流成功的情况下才录制混音
+    if (bSysAudio && bMicAudio) {
+        m_bMix = true;
+    }
+    return true;
+}
+//开麦克风音频输入流 注：录屏时不要求录制麦克风时，则此方法默认返回false
+bool CAVInputStream::openMicStream()
+{
     AVDictionary *device_param = nullptr;
-    int i;
     m_pAudioInputFormat = avlibInterface::m_av_find_input_format("pulse"); //alsa
     assert(m_pAudioInputFormat != nullptr);
     if (m_pAudioInputFormat == nullptr) {
         printf("did not find this audio input devices\n");
     }
     if (m_bMicAudio) {
-        string device_name = "default";
         //Set own audio device's name
-        if (avlibInterface::m_avformat_open_input(&m_pMicAudioFormatContext, device_name.c_str(), m_pAudioInputFormat, &device_param) != 0) {
+        if (avlibInterface::m_avformat_open_input(&m_pMicAudioFormatContext, m_micDeviceName.toLatin1(), m_pAudioInputFormat, &device_param) != 0) {
             printf("Couldn't open input audio stream.（无法打开输入流）\n");
             return false;
         }
-        //qDebug() << "test:mic:" << device_name.c_str();
+        qInfo() << "mic device's name is:" << m_micDeviceName;
         //input audio initialize
         if (avlibInterface::m_avformat_find_stream_info(m_pMicAudioFormatContext, nullptr) < 0) {
             printf("Couldn't find audio stream information.（无法获取流信息）\n");
             return false;
         }
         m_micAudioindex = -1;
-        for (i = 0; i < static_cast<int>(m_pMicAudioFormatContext->nb_streams); i++) {
+        for (int i = 0; i < static_cast<int>(m_pMicAudioFormatContext->nb_streams); i++) {
             if (m_pMicAudioFormatContext->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO) {
                 m_micAudioindex = i;
                 break;
@@ -94,32 +115,33 @@ bool CAVInputStream::openInputStream()
         }
         /* print Video device information*/
         avlibInterface::m_av_dump_format(m_pMicAudioFormatContext, 0, "default", 0);
+        return true;
+    } else {
+        return false;
     }
+}
+//打开系统音频输入流 注：录屏时不要求录制系统音时，则此方法默认返回false
+bool CAVInputStream::openSysStream()
+{
+    AVDictionary *device_param = nullptr;
     m_pAudioCardInputFormat = avlibInterface::m_av_find_input_format("pulse"); //alsa
     assert(m_pAudioCardInputFormat != nullptr);
     if (m_pAudioCardInputFormat == nullptr) {
         printf("did not find this card audio input devices\n");
     }
-    string device_name;
     if (m_bSysAudio) {
-        QString device = currentAudioChannel();
-        if (device.length() > 0) {
-            device_name = device.toLatin1().data()[0];
-        } else {
-            printf("did not find this card AudioChannel \n");
-        }
-        if (avlibInterface::m_avformat_open_input(&m_pSysAudioFormatContext, device_name.c_str(), m_pAudioCardInputFormat, &device_param) != 0) {
+        if (avlibInterface::m_avformat_open_input(&m_pSysAudioFormatContext, m_sysDeviceName.toLatin1(), m_pAudioCardInputFormat, &device_param) != 0) {
             printf("Couldn't open input audio stream.（无法打开输入流）\n");
             return false;
         }
-        //qDebug() << "test:sys:" << device_name.c_str();
+        qInfo() << "sys device's name is:" << m_sysDeviceName;
         if (avlibInterface::m_avformat_find_stream_info(m_pSysAudioFormatContext, nullptr) < 0) {
             printf("Couldn't find audio stream information.（无法获取流信息）\n");
             return false;
         }
         fflush(stdout);
         m_sysAudioindex = -1;
-        for (i = 0; i < static_cast<int>(m_pSysAudioFormatContext->nb_streams); i++) {
+        for (int i = 0; i < static_cast<int>(m_pSysAudioFormatContext->nb_streams); i++) {
             if (m_pSysAudioFormatContext->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO) {
                 m_sysAudioindex = i;
                 break;
@@ -135,16 +157,12 @@ bool CAVInputStream::openInputStream()
             return false;
         }
         /* print Video device information*/
-        avlibInterface::m_av_dump_format(m_pSysAudioFormatContext, 0, device_name.c_str(), 0);
+        avlibInterface::m_av_dump_format(m_pSysAudioFormatContext, 0, m_sysDeviceName.toLatin1(), 0);
+        return true;
     } else {
-        device_name = "default";
+        return false;
     }
-    if (m_bSysAudio && m_bMicAudio) {
-        m_bMix = true;
-    }
-    return true;
 }
-
 bool CAVInputStream::audioCapture()
 {
     m_start_time = avlibInterface::m_av_gettime();
@@ -301,7 +319,8 @@ void *CAVInputStream::writeMixThreadFunc(void *param)
 
 void CAVInputStream::writMixAudio()
 {
-    while ((bWriteMix() || m_context->m_recordAdmin->m_pOutputStream->isNotAudioFifoEmty()) && m_bMix) {
+//    while ((bWriteMix() || m_context->m_recordAdmin->m_pOutputStream->isNotAudioFifoEmty()) && m_bMix) {
+    while (bWriteMix() && m_bMix) {
         m_context->m_recordAdmin->m_pOutputStream->writeMixAudio();
     }
 }

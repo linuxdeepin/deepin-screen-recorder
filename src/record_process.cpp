@@ -416,6 +416,7 @@ void RecordProcess::waylandRecord()
     qDebug() << "wayland 录屏！";
     // 启动wayland录屏
     initProcess();
+    AudioUtils audioUtils;
     QStringList arguments;
     arguments << QString("%1").arg(recordType);
     arguments << QString("%1").arg(m_recordRect.width()) << QString("%1").arg(m_recordRect.height());
@@ -423,6 +424,8 @@ void RecordProcess::waylandRecord()
     arguments << QString("%1").arg(m_framerate);
     arguments << QString("%1").arg(savePath);
     arguments << QString("%1").arg(recordAudioInputType);
+    arguments << QString(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Source));
+    arguments << QString(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Sink));
     qDebug() << arguments;
     WaylandIntegration::init(arguments);
 #endif
@@ -699,6 +702,7 @@ void RecordProcess::exitRecord(QString newSavePath)
 
     QApplication::quit();
     if (Utils::isWaylandMode) {
+        qInfo() << "wayland record exit! (_Exit(0))";
         _Exit(0);
     }
 }
