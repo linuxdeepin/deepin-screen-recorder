@@ -13,12 +13,16 @@ You can run, close, and create a desktop shortcut for Screen Capture in the foll
 ### Run Screen Capture
 
 1. Click the Launcher icon ![deepin_launcher](../common/deepin_launcher.svg) in the Dock to enter the launcher interface.
+
 2. Locate Screen Capture ![deepin_screenshot](../common/deepin_screenshot.svg) by scrolling the mouse wheel or searching "screen capture" in the Launcher interface and click it to run. 
+
 3. Right-click ![deepin_screenshot](../common/deepin_screenshot.svg) and you can:
 
     - Click **Send to desktop** to create a desktop shortcut.
     - Click **Send to dock** to fix it in the Dock.
     - Click **Add to startup** to add it to startup and it will automatically run when the system starts up.
+    
+    > ![tips](../common/tips.svg) Tips: You can also run Screen Capture by clicking the ![1](../common/capture.svg) icon in the system plug-in area in the Dock or right-clicking it to select **Screenshot** or **Record**.
 
 ### Close Screen Capture
 
@@ -270,16 +274,16 @@ Please enable the **Window Effect** feature in **Control Center > Personalizatio
    - Manual scrolling: Place the cursor in the screenshot area and scroll the mouse wheel upwards or downwards to take screenshot manually. Stop scrolling the mouse wheel to suspend the screenshot. Scroll it again to resume. 
 3.   Click the  ![icon](../common/screenshot_button.svg) icon on the toolbar to save the screenshot.
 
-> ![notes](../common/notes.svg) Notes: The following conditions will lead to abnormal splicing:
->
-> - The screenshot area is beyond the scrolling area, such as selecting the whole window or fullscreen; 
-> - The screenshot area is too small. For example, the height is less than 50px. 
-> - Multiple scrolling areas are contained in the scrolling area.
-> - A great number of repetitive contents, such as blank areas, same colors or same sections of texts are contained in the scrolling area.
-> - Animations, video, watermarks, etc. or contents with non-solid background are contained in the screenshot area.
-> - There is a horizontal offset in the scrolling process, such as sliding the scrollbar.
-> - The rolling is too fast.
-> - Switch windows during the scrolling process.
+**Attention**: Please pay attention to the the following conditions in the process of taking screen scrollshots:
+
+- Make sure the screenshot area is not out of the scrolling area and try to avoid selecting the whole window, fullscreen, etc. 
+- Make sure the screenshot area is not too small. The height suggested is no less than 50px. 
+- Try to avoid multiple scrolling areas contained in the scrolling area.
+- Try to avoid a great number of repetitive contents, such as blank areas, same colors or same sections of texts contained in the scrolling area.
+- Try to avoid animations, video, watermarks, etc. or contents with non-solid background contained in the screenshot area.
+- Try to avoid a horizontal offset in the scrolling process, such as sliding the scrollbar.
+- Make sure the rolling speed is not too fast.
+- Try to avoid switching windows during the scrolling process.
 
 ![scrollshot](fig/scrollshot.jpg)
 
@@ -329,7 +333,8 @@ Click **Options** on the toolbar of the Screen Capture interface, and expand the
 
 ## Record Screen
 
-Under the recording mode, click the icons on the toolbar and you can perform recording with audio, video, keystroke and mouse clicks. 
+Under the recording mode, click the icons on the toolbar and you can perform recording with audio, video, keystroke, mouse clicks, etc. 
+> ![notes](../common/notes.svg) Notes: The actual functions supported may differ according to the decoding method adopted.  Please refer to the interface.
 
 ![0|recorder_bar](fig/recorder_bar.png)
 
@@ -360,7 +365,6 @@ Under the recording mode, click the icons on the toolbar and you can perform rec
 </table>
 
 
-> ![notes](../common/notes.svg) Notes: Screen recording is not available on the SW platform.
 
 ### Set Recording Settings
 
