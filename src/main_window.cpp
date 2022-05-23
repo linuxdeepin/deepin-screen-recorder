@@ -1701,7 +1701,9 @@ void MainWindow::wheelEvent(QWheelEvent *event)
 
 void MainWindow::pinScreenshotsLockScreen(bool isLocked)
 {
-    m_toolBar->setPinScreenshotsEnable(!isLocked);
+    if (m_toolBarInit) {
+        m_toolBar->setPinScreenshotsEnable(!isLocked);
+    }
 }
 
 void MainWindow::scrollShotLockScreen(bool isLocked)
