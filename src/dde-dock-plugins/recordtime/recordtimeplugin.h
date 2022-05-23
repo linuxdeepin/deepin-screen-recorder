@@ -58,6 +58,8 @@ public:
      * @return
      */
     bool pluginIsAllowDisable() override { return true; }
+    bool pluginIsDisable() override;
+    void pluginStateSwitched() override;
     /**
      * @brief itemWidget:返回插件主控件，用于dde-dock面板上显示
      * @param itemKey:控件名称
@@ -65,6 +67,7 @@ public:
      */
     QWidget *itemWidget(const QString &itemKey) override;
 
+    void clear();
 public slots:
     /**
      * @brief onStart:启动计时服务

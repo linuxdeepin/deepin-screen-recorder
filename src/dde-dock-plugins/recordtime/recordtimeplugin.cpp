@@ -26,25 +26,12 @@ RecordTimePlugin::RecordTimePlugin(QObject *parent)
     : QObject(parent)
     , m_bshow(false)
 {
-    m_timer = new QTimer(this);
-    m_timeWidget = new TimeWidget();
-    m_checkTimer = nullptr;
+
 }
 
 RecordTimePlugin::~RecordTimePlugin()
 {
-    if (nullptr != m_timer)
-        m_timer->deleteLater();
-    if (nullptr != m_timeWidget) {
-        //m_timeWidget->deleteLater();
-        delete m_timeWidget;
-        m_timeWidget = nullptr;
-    }
-    if (nullptr != m_checkTimer) {
-        m_checkTimer->stop();
-        m_checkTimer->deleteLater();
-        m_checkTimer = nullptr;
-    }
+
 }
 
 const QString RecordTimePlugin::pluginName() const
@@ -70,11 +57,24 @@ void RecordTimePlugin::init(PluginProxyInterface *proxyInter)
             && sessionBus.registerObject("/com/deepin/ScreenRecorder/time", this, QDBusConnection::ExportAdaptors)) {
         qDebug() << "dbus service registration failed!";
     }
-
-    m_timer->start(600);
-    connect(m_timer, &QTimer::timeout, this, &RecordTimePlugin::refresh);
     //test
     //onStart();
+}
+
+bool RecordTimePlugin::pluginIsDisable()
+{
+    return m_proxyInter->getValue(this, "disabled", false).toBool();
+}
+
+void RecordTimePlugin::pluginStateSwitched()
+{
+    const bool disabledNew = !pluginIsDisable();
+    m_proxyInter->saveValue(this, "disabled", disabledNew);
+    if (disabledNew) {
+        m_proxyInter->itemRemoved(this, pluginName());
+    } else {
+        m_proxyInter->itemAdded(this, pluginName());
+    }
 }
 
 QWidget *RecordTimePlugin::itemWidget(const QString &itemKey)
@@ -83,8 +83,30 @@ QWidget *RecordTimePlugin::itemWidget(const QString &itemKey)
     return m_timeWidget;
 }
 
+void RecordTimePlugin::clear()
+{
+    if (nullptr != m_timer)
+        m_timer->deleteLater();
+    if (nullptr != m_timeWidget) {
+        m_timeWidget->deleteLater();
+//        delete m_timeWidget;
+        m_timeWidget = nullptr;
+    }
+    if (nullptr != m_checkTimer) {
+        m_checkTimer->stop();
+        m_checkTimer->deleteLater();
+        m_checkTimer = nullptr;
+    }
+}
+
 void RecordTimePlugin::onStart()
 {
+    m_timer = new QTimer(this);
+    m_timeWidget = new TimeWidget();
+    m_checkTimer = nullptr;
+    m_timer->start(600);
+    connect(m_timer, &QTimer::timeout, this, &RecordTimePlugin::refresh);
+
     if (m_timeWidget->enabled()) {
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
@@ -106,6 +128,7 @@ void RecordTimePlugin::onStop()
         m_count = 0;
         m_nextCount = 0;
         //m_timeWidget->stop();
+        clear();
     }
 }
 
