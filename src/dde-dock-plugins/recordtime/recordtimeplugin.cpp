@@ -29,11 +29,6 @@ RecordTimePlugin::RecordTimePlugin(QObject *parent)
 
 }
 
-RecordTimePlugin::~RecordTimePlugin()
-{
-
-}
-
 const QString RecordTimePlugin::pluginName() const
 {
     return QString("deepin-screen-recorder-plugin");
@@ -86,7 +81,11 @@ QWidget *RecordTimePlugin::itemWidget(const QString &itemKey)
 void RecordTimePlugin::clear()
 {
     if (nullptr != m_timer)
+    {
+        m_timer->stop();
         m_timer->deleteLater();
+        m_timer = nullptr;
+    }
     if (nullptr != m_timeWidget) {
         m_timeWidget->deleteLater();
 //        delete m_timeWidget;
@@ -175,7 +174,10 @@ void RecordTimePlugin::refresh()
     }
 }
 
+RecordTimePlugin::~RecordTimePlugin()
+{
 
+}
 
 
 
