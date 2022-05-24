@@ -3641,6 +3641,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
                     needRepaint = true;
                 } else {
+                    //wayland模式下，第一次释放鼠标时需要重设光标的形状
+                    if (Utils::isWaylandMode) {
+                        resetCursor();
+                    }
                     if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
                         //showRecordButton();
                         updateToolBarPos();
