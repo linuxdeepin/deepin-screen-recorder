@@ -684,6 +684,12 @@ void MainWindow::updateToolBarPosition()
         y = brPoint.y() + 15;
         //qDebug() << "m_toolBar->width()" << m_toolBar->toolBarWidth();
     }
+
+    if (x < 0) {
+        x = 0;
+    } else if(x + m_toolBar->toolBarWidth() > m_screenSize.width()) {
+        x = m_screenSize.width() - m_toolBar->toolBarWidth();
+    }
     m_toolBar->showAt(QPoint(x, y), m_isfirstTime);
     m_isfirstTime = false;
 }

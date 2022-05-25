@@ -212,9 +212,19 @@ void MainWindow::initAttributes()
     if (Utils::isWaylandMode) {
         setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
         //取消onScreenDisplay，解决wayland截长图无法滚动的问题
-//        if (this->windowHandle()) {
-//            this->windowHandle()->setProperty("_d_dwayland_window-type", "onScreenDisplay");
-//        }
+        QDBusInterface sessionManagerIntert("com.deepin.SessionManager",
+                                            "/com/deepin/SessionManager",
+                                            "com.deepin.SessionManager",
+                                            QDBusConnection::sessionBus());
+
+        bool isLockScreen = false;
+        if (sessionManagerIntert.isValid()) {
+            isLockScreen = sessionManagerIntert.property("Locked").toBool();
+        }
+
+        if (this->windowHandle() && isLockScreen) {
+            this->windowHandle()->setProperty("_d_dwayland_window-type", "override");
+        }
     } else {
         setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
     }
@@ -1701,7 +1711,9 @@ void MainWindow::wheelEvent(QWheelEvent *event)
 
 void MainWindow::pinScreenshotsLockScreen(bool isLocked)
 {
-    m_toolBar->setPinScreenshotsEnable(!isLocked);
+    if (m_toolBarInit) {
+        m_toolBar->setPinScreenshotsEnable(!isLocked);
+    }
 }
 
 void MainWindow::scrollShotLockScreen(bool isLocked)
