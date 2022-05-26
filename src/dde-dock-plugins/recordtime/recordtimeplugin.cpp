@@ -26,7 +26,8 @@ RecordTimePlugin::RecordTimePlugin(QObject *parent)
     : QObject(parent)
     , m_bshow(false)
 {
-
+    m_timer = nullptr;
+    m_checkTimer = nullptr;
 }
 
 const QString RecordTimePlugin::pluginName() const
