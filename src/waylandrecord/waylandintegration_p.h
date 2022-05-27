@@ -110,6 +110,11 @@ public:
      * @return 0:非hw电脑 1:hw电脑
      */
     int getBoardVendorType();
+    /**
+     * @brief 根据命令行 dmidecode -s system-product-name|awk '{print SNF}' 返回的结果判断是否是华为电脑
+     * @return 0:非hw电脑 1:hw电脑
+     */
+    int getProductType();
 
     bool isEGLInitialized() const;
 
