@@ -266,7 +266,8 @@ QMap<quint32, WaylandIntegration::WaylandOutput> WaylandIntegration::WaylandInte
 void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list)
 {
     //通过wayland底层接口获取图片的方式不相同，需要获取电脑的厂商，hw的需要特殊处理
-    m_boardVendorType = getBoardVendorType();
+    //m_boardVendorType = getBoardVendorType();
+    m_boardVendorType = getProductType();
     qDebug() << "m_boardVendorType: " << m_boardVendorType;
     //由于性能问题部分非hw的arm机器编码效率低，适当调大视频帧的缓存空间（防止调整的过大导致保存时间延长），且在下面添加视频到缓冲区时进行了降低帧率的处理。
     if (QSysInfo::currentCpuArchitecture().startsWith("ARM", Qt::CaseInsensitive) && !m_boardVendorType) {
@@ -281,7 +282,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list
 void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list, GstRecordX *gstRecord)
 {
     //通过wayland底层接口获取图片的方式不相同，需要获取电脑的厂商，hw的需要特殊处理
-    m_boardVendorType = getBoardVendorType();
+    //m_boardVendorType = getBoardVendorType();
+    m_boardVendorType = getProductType();
     qDebug() << "m_boardVendorType: " << m_boardVendorType;
     //由于性能问题部分非hw的arm机器编码效率低，适当调大视频帧的缓存空间（防止调整的过大导致保存时间延长），且在下面添加视频到缓冲区时进行了降低帧率的处理。
     if (QSysInfo::currentCpuArchitecture().startsWith("ARM", Qt::CaseInsensitive) && !m_boardVendorType) {
@@ -352,6 +354,28 @@ int WaylandIntegration::WaylandIntegrationPrivate::getBoardVendorType()
             return 1;
         }
     }
+    return 0;
+}
+//根据命令行 dmidecode -s system-product-name|awk '{print SNF}' 返回的结果判断是否是华为电脑
+int WaylandIntegration::WaylandIntegrationPrivate::getProductType()
+{
+    QStringList options;
+    options << QString(QStringLiteral("-c"));
+    options << QString(QStringLiteral("dmidecode -s system-product-name|awk '{print $NF}'"));
+    QProcess process;
+    process.start(QString(QStringLiteral("bash")), options);
+    process.waitForFinished();
+    process.waitForReadyRead();
+    QByteArray tempArray =  process.readAllStandardOutput();
+    char *charTemp = tempArray.data();
+    QString str_output = QString(QLatin1String(charTemp));
+    process.close();
+    qInfo() << "system-product-name: " << str_output;
+    if (str_output.contains("KLVV", Qt::CaseInsensitive) ||
+            str_output.contains("KLVU", Qt::CaseInsensitive) ||
+            str_output.contains("PGUV", Qt::CaseInsensitive) ||
+            str_output.contains("PGUW", Qt::CaseInsensitive))
+        return 1;
     return 0;
 }
 
