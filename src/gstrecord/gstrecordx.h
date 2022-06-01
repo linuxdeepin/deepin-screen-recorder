@@ -20,6 +20,7 @@
  */
 #ifndef GSTRECORDX_H
 #define GSTRECORDX_H
+#include "gstinterface.h"
 
 #include <QDebug>
 
@@ -30,7 +31,6 @@
 #include <QtConcurrent>
 #include <QObject>
 
-#include <gst/gst.h>
 
 class Utils;
 /**
@@ -179,6 +179,12 @@ private:
      * @param pipeline：管道命令
      */
     void pipelineStructuredOutput(QString pipeline);
+
+    /**
+     * @brief getGstBin
+     * @return
+     */
+    GstBin *getGstBin(GstElement *element);
 
 private:
     /**

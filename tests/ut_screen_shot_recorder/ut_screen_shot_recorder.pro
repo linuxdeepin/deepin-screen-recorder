@@ -4,8 +4,8 @@
 include($$PWD/../../3rdparty/stub_linux/stub.pri)
 TEMPLATE = app
 TARGET = ut_screen_shot_recorder
-INCLUDEPATH += . ../../src/
-
+INCLUDEPATH += . ../../src/ \
+            /usr/include/gstreamer-1.0
 DEFINES += DDE_START_FLAGE_ON
 DEFINES += OCR_SCROLL_FLAGE_ON
 DEFINES += KF5_WAYLAND_FLAGE_ON
@@ -25,7 +25,7 @@ LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_core -lopencv_im
 
 CONFIG += link_pkgconfig
 CONFIG += c++11
-PKGCONFIG += gstreamer-1.0 dtkgui dtkwidget xcb xcb-util dframeworkdbus
+PKGCONFIG += gobject-2.0 dtkgui dtkwidget xcb xcb-util dframeworkdbus
 
 
 RESOURCES = ../../assets/image/deepin-screen-recorder.qrc \
@@ -152,6 +152,7 @@ HEADERS += test_all_interfaces.h \
         #../../src/xgifrecord.h \
         ../../src/recordertablet.h \
         ../../src/gstrecord/gstrecordx.h \
+        ../../src/gstrecord/gstinterface.h \
      ../../src/waylandrecord/writeframethread.h \
      ../../src/waylandrecord/waylandintegration.h \
      ../../src/waylandrecord/waylandintegration_p.h \
@@ -246,4 +247,5 @@ SOURCES += main.cpp \
     ../../src/event_monitor.cpp \
     #../../src/xgifrecord.cpp \
     ../../src/recordertablet.cpp \
-    ../../src/gstrecord/gstrecordx.cpp
+    ../../src/gstrecord/gstrecordx.cpp \
+        ../../src/gstrecord/gstinterface.cpp

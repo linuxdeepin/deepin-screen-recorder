@@ -23,6 +23,7 @@
 #include "utils/configsettings.h"
 #include "utils.h"
 #include "utils/audioutils.h"
+#include "gstrecord/gstinterface.h"
 #ifdef KF5_WAYLAND_FLAGE_ON
 #include "waylandrecord/avlibinterface.h"
 #endif
@@ -439,7 +440,8 @@ void RecordProcess::GstStartRecord()
 //    char **argv[1];
 //    *argv = mock;
     //gstreamer接口初始化
-    gst_init(&argc, nullptr);
+    gstInterface::initFunctions();
+    gstInterface::m_gst_init(&argc, nullptr);
     qDebug() << "Gstreamer 录屏开始！";
     GstRecordX::VideoType videoType = GstRecordX::VideoType::webm;
     GstRecordX::AudioType audioType = GstRecordX::AudioType::None;
@@ -520,6 +522,8 @@ void RecordProcess::onExitGstRecord()
 {
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
     QFile::rename(savePath, newSavePath);
+    //注销gstreamer相关库加载
+    gstInterface::unloadFunctions();
     qDebug() << "Gstreamer 录屏结束！";
     exitRecord(newSavePath);
 }

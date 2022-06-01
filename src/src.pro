@@ -54,8 +54,8 @@ contains( DEFINES, KF5_WAYLAND_FLAGE_ON ) {
 }
 TEMPLATE = app
 TARGET = deepin-screen-recorder
-INCLUDEPATH += .
-
+INCLUDEPATH += . \
+            /usr/include/gstreamer-1.0
 include(accessibility/accessible.pri)
 
 QMAKE_CXX += -Wl,--as-need -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
@@ -69,7 +69,7 @@ isEqual(ARCH, mips64) {
 }
 
 CONFIG += link_pkgconfig c++11
-PKGCONFIG +=gstreamer-1.0 xcb xcb-util dframeworkdbus
+PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0
 
 RESOURCES = ../assets/image/deepin-screen-recorder.qrc \
     ../assets/resources/resources.qrc \
@@ -119,7 +119,8 @@ HEADERS += main_window.h \
     recordertablet.h \
     dbusinterface/ocrinterface.h \
     dbusinterface/pinscreenshotsinterface.h \
-    gstrecord/gstrecordx.h
+    gstrecord/gstrecordx.h \
+    gstrecord/gstinterface.h
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
     HEADERS += widgets/scrollshottip.h \
     utils/pixmergethread.h \
@@ -180,7 +181,8 @@ SOURCES += main.cpp \
     recordertablet.cpp \
     dbusinterface/ocrinterface.cpp \
     dbusinterface/pinscreenshotsinterface.cpp \
-    gstrecord/gstrecordx.cpp
+    gstrecord/gstrecordx.cpp \
+    gstrecord/gstinterface.cpp
 
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
     SOURCES += widgets/scrollshottip.cpp \
