@@ -22,9 +22,6 @@
 #include "gstrecordx.h"
 #include "utils.h"
 
-extern "C" {
-#include <gst/app/gstappsrc.h>
-}
 
 /**
  * @brief gstBusMessageCb
@@ -44,19 +41,19 @@ static gboolean gstBusMessageCb(GstBus *bus, GstMessage *message, GstRecordX *gs
 
         GError *error = nullptr;
         gchar *dbg = nullptr;
-        gst_message_parse_error(message, &error, &dbg);
+        gstInterface::m_gst_message_parse_error(message, &error, &dbg);
         if (dbg) {
-            g_free(dbg);
+            gstInterface::m_g_free(dbg);
         }
         if (error) {
             QString errMsg = error->message;
             qCritical() << "Gstreamer pipeline error: " << errMsg;
-            g_error_copy(error);
+            gstInterface::m_g_error_copy(error);
         }
         break;
     }
     case GST_MESSAGE_EOS: {
-        g_main_loop_quit(gstRecord->getGloop());
+        gstInterface::m_g_main_loop_quit(gstRecord->getGloop());
         break;
     }
     default:
@@ -113,12 +110,16 @@ void GstRecordX::x11GstStartRecord()
 
     //创建管道
     if (createPipeline(arguments)) {
+        if (nullptr == m_pipeline) {
+            qCritical() << "Error: Gstreamer's Pipeline create failure!";
+            return;
+        }
         qInfo() << "Gstreamer's Pipeline create successfully!";
         //启动Gstreamer录屏管道
-        GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
+        GstStateChangeReturn ret = gstInterface::m_gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
         if (ret == GST_STATE_CHANGE_FAILURE) {
             qWarning() << "Unable to set the pipeline to the playing state. Recording is failure";
-            gst_object_unref(m_pipeline);
+            gstInterface::m_gst_object_unref(m_pipeline);
             return;
         }
         qInfo() << "(x11) Gstreamer's Pipeline starup successfully!";
@@ -153,25 +154,29 @@ void GstRecordX::waylandGstStartRecord()
 
     //创建管道
     if (createPipeline(wlarguments)) {
-        qInfo() << "Gstreamer's Pipeline create successfully!";
-        //添加视频相关流信息
-        GstElement *videoSrc = gst_bin_get_by_name(GST_BIN(m_pipeline), "videoSrc");
-        g_object_set(videoSrc, "format", GST_FORMAT_TIME, NULL);
-        g_object_set(videoSrc, "is-live", TRUE, NULL);
-        m_gloop = g_main_loop_new(NULL, TRUE);
-
-        GstBus *bus = gst_pipeline_get_bus(reinterpret_cast<GstPipeline *>(m_pipeline));
-        gst_bus_add_watch(bus, reinterpret_cast<GstBusFunc>(gstBusMessageCb), this);
-        gst_object_unref(bus);
-
-        //启动Gstreamer录屏管道
-        GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
-        if (ret == GST_STATE_CHANGE_FAILURE) {
-            qWarning() << "Unable to set the pipeline to the playing state. Recording is failure";
-            gst_object_unref(m_pipeline);
+        if (nullptr == m_pipeline) {
+            qCritical() << "Error: Gstreamer's Pipeline create failure!";
             return;
         }
-        QtConcurrent::run(g_main_loop_run, m_gloop);
+        qInfo() << "Gstreamer's Pipeline create successfully!";
+        //添加视频相关流信息
+        GstElement *videoSrc = gstInterface::m_gst_bin_get_by_name(getGstBin(m_pipeline), "videoSrc");
+        gstInterface::m_g_object_set(videoSrc, "format", GST_FORMAT_TIME, NULL);
+        gstInterface::m_g_object_set(videoSrc, "is-live", TRUE, NULL);
+        m_gloop = gstInterface::m_g_main_loop_new(NULL, TRUE);
+
+        GstBus *bus = gstInterface::m_gst_pipeline_get_bus(reinterpret_cast<GstPipeline *>(m_pipeline));
+        gstInterface::m_gst_bus_add_watch(bus, reinterpret_cast<GstBusFunc>(gstBusMessageCb), this);
+        gstInterface::m_gst_object_unref(bus);
+
+        //启动Gstreamer录屏管道
+        GstStateChangeReturn ret = gstInterface::m_gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
+        if (ret == GST_STATE_CHANGE_FAILURE) {
+            qWarning() << "Unable to set the pipeline to the playing state. Recording is failure";
+            gstInterface::m_gst_object_unref(m_pipeline);
+            return;
+        }
+        QtConcurrent::run(gstInterface::m_g_main_loop_run, m_gloop);
         qInfo() << "(Wayland) Gstreamer's Pipeline starup successfully!";
     } else {
         qCritical() << "Error: Gstreamer's Pipeline create failure!";
@@ -186,10 +191,10 @@ void GstRecordX::waylandGstStopRecord()
         return;
     }
 
-    GstElement *videoSrc = gst_bin_get_by_name(GST_BIN(m_pipeline), "videoSrc");
+    GstElement *videoSrc = gstInterface::m_gst_bin_get_by_name(getGstBin(m_pipeline), "videoSrc");
     GstFlowReturn ret = GST_FLOW_NOT_LINKED;
     if (videoSrc) {
-        g_signal_emit_by_name(videoSrc, "end-of-stream", &ret);
+        gstInterface::m_g_signal_emit_by_name(videoSrc, "end-of-stream", &ret);
     }
     if (GST_FLOW_OK == ret) {
         qInfo() << "(wayland Gstreamer) Stop writing video data";
@@ -215,7 +220,7 @@ bool GstRecordX::waylandWriteVideoFrame(const unsigned char *frame, const int fr
     GstFlowReturn ret;
     guint8 *ptr;
     int size = m_recordArea.width() * m_recordArea.height() * 4;
-    ptr = (guint8 *)g_malloc(size * sizeof(uchar));
+    ptr = (guint8 *)gstInterface::m_g_malloc(size * sizeof(uchar));
     if (nullptr == ptr) {
         qWarning("GStreamerRecorder::writeFrame malloc failed!");
         return false;
@@ -224,20 +229,20 @@ bool GstRecordX::waylandWriteVideoFrame(const unsigned char *frame, const int fr
         QImage img(frame, framewidth, frameheight, QImage::Format::Format_RGBA8888);
         img = img.copy(m_recordArea);
         memcpy(ptr, img.bits(), size);
-        buffer = gst_buffer_new_wrapped((void *)ptr, size);
-
+        buffer = gstInterface::m_gst_buffer_new_wrapped((void *)ptr, size);
 //        QImage *img = new QImage(frame, m_recordArea.width(), m_recordArea.height(), QImage::Format::Format_RGBA8888);
 //        img->save(QString("/home/uos/Desktop/test/image/test_%1.png").arg(globalCount));
 //        globalCount++;
 
         //设置时间戳
-        GST_BUFFER_PTS(buffer) = gst_clock_get_time(m_pipeline->clock) - m_pipeline->base_time;
+        GST_BUFFER_PTS(buffer) = gstInterface::m_gst_clock_get_time(m_pipeline->clock) - m_pipeline->base_time;
         //获取视频源
-        GstElement *videoSrc = gst_bin_get_by_name(GST_BIN(m_pipeline), "videoSrc");
+        GstElement *videoSrc = gstInterface::m_gst_bin_get_by_name(getGstBin(m_pipeline), "videoSrc");
         //注入视频帧数据
-        g_signal_emit_by_name(videoSrc, "push-buffer", buffer, &ret);
+        gstInterface::m_g_signal_emit_by_name(videoSrc, "push-buffer", buffer, &ret);
         //释放buffer
-        gst_buffer_unref(buffer);
+//        gstInterface::m_gst_buffer_unref(buffer);
+        gstInterface::m_gst_mini_object_unref(GST_MINI_OBJECT_CAST(buffer));
     }
 
     return ret == GST_FLOW_OK;
@@ -368,7 +373,7 @@ bool GstRecordX::createPipeline(QStringList arguments)
     GError *error = Q_NULLPTR;
 
     //解析gstreamer管道命令
-    m_pipeline = gst_parse_launch(line, &error);
+    m_pipeline = gstInterface::m_gst_parse_launch(line, &error);
     if (error != Q_NULLPTR) {
         qCritical() << "gstreamer pares error: " << error->code << " , " << error->message;
         return false;
@@ -404,22 +409,22 @@ QString GstRecordX::getAudioPipeline(const QString &audioDevName, const QString 
 //停止管道，x11和wayland可共用
 void GstRecordX::stopPipeline()
 {
-    bool a = gst_element_send_event(m_pipeline, gst_event_new_eos());
+    bool a = gstInterface::m_gst_element_send_event(m_pipeline, gstInterface::m_gst_event_new_eos());
     Q_UNUSED(a);
 
     GstClockTime timeout = 5 * GST_SECOND;
-    GstMessage *msg = gst_bus_timed_pop_filtered(GST_ELEMENT_BUS(m_pipeline), timeout, GST_MESSAGE_EOS);
+    GstMessage *msg = gstInterface::m_gst_bus_timed_pop_filtered(GST_ELEMENT_BUS(m_pipeline), timeout, GST_MESSAGE_EOS);
     Q_UNUSED(msg);
 
     GstStateChangeReturn ret ;
     Q_UNUSED(ret);
-    ret = gst_element_set_state(m_pipeline, GST_STATE_PAUSED);
+    ret = gstInterface::m_gst_element_set_state(m_pipeline, GST_STATE_PAUSED);
     Q_UNUSED(ret);
-    ret = gst_element_set_state(m_pipeline, GST_STATE_READY);
+    ret = gstInterface::m_gst_element_set_state(m_pipeline, GST_STATE_READY);
     Q_UNUSED(ret);
-    ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
+    ret = gstInterface::m_gst_element_set_state(m_pipeline, GST_STATE_NULL);
     Q_UNUSED(ret);
-    gst_object_unref(m_pipeline);
+    gstInterface::m_gst_object_unref(m_pipeline);
 }
 
 
@@ -434,7 +439,13 @@ void GstRecordX::pipelineStructuredOutput(QString pipeline)
     pipeline.replace("mix.", "mix. " + nl + "\n   ");
     string = pipeline.replace("!", nl + "\n        !");
     string.append("\n");
-    printf("%s\n", string.toLocal8Bit().data());
+//    printf("%s\n", string.toLocal8Bit().data());
+    qInfo() << "\n" << string.toLocal8Bit().data();
+}
+
+GstBin *GstRecordX::getGstBin(GstElement *element)
+{
+    return (GstBin *)gstInterface::m_g_type_check_instance_cast((GTypeInstance *)element, gstInterface::m_gst_bin_get_type());
 }
 
 GstRecordX::~GstRecordX()

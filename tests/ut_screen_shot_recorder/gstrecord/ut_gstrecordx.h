@@ -19,12 +19,14 @@ public:
     virtual void SetUp() override
     {
         std::cout << "start GstRecordXTest" << std::endl;
+        gstInterface::initFunctions();
 
 
     }
 
     virtual void TearDown() override
     {
+        gstInterface::unloadFunctions();
 
         std::cout << "end GstRecordXTest" << std::endl;
     }
@@ -34,7 +36,7 @@ public:
 TEST_F(GstRecordXTest, x11GstRecord)
 {
     int argc = 1;
-    gst_init(&argc, nullptr);
+    gstInterface::m_gst_init(&argc, nullptr);
     //gstreamer接口初始化
     GstRecordX *m_gstRecordx = new GstRecordX();
 
@@ -60,10 +62,18 @@ TEST_F(GstRecordXTest, x11GstRecord)
     }
 
 }
+void g_object_set_stub(gpointer object, const gchar *first_property_name, ...)
+{
+    Q_UNUSED(object);
+    Q_UNUSED(first_property_name);
+}
+
 TEST_F(GstRecordXTest, waylandGstRecord)
 {
+    Stub stub;
+    stub.set(g_object_set, g_object_set_stub);
     int argc = 1;
-    gst_init(&argc, nullptr);
+    gstInterface::m_gst_init(&argc, nullptr);
     //gstreamer接口初始化
     GstRecordX *m_gstRecordx = new GstRecordX();
 
@@ -73,7 +83,7 @@ TEST_F(GstRecordXTest, waylandGstRecord)
     AudioUtils audioUtils;
     m_gstRecordx->setInputDeviceName(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Source));
     m_gstRecordx->setOutputDeviceName(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Sink));
-    GstRecordX::AudioType audioType = GstRecordX::AudioType::Sys;
+    GstRecordX::AudioType audioType = GstRecordX::AudioType::None;
     m_gstRecordx->setAudioType(audioType);
     GstRecordX::VideoType videoType = GstRecordX::VideoType::webm;
     m_gstRecordx->setVidoeType(videoType);
@@ -82,18 +92,20 @@ TEST_F(GstRecordXTest, waylandGstRecord)
 
     m_gstRecordx->waylandGstStartRecord();
     m_gstRecordx->waylandGstStopRecord();
-    g_main_loop_quit(m_gstRecordx->getGloop());
+    stub.reset(g_object_set);
+    gstInterface::m_g_main_loop_quit(m_gstRecordx->getGloop());
     if (m_gstRecordx) {
         delete m_gstRecordx;
         m_gstRecordx = nullptr;
     }
-
 }
 
 TEST_F(GstRecordXTest, waylandWriteVideoFrame)
 {
     int argc = 1;
-    gst_init(&argc, nullptr);
+    Stub stub;
+    stub.set(g_object_set, g_object_set_stub);
+    gstInterface::m_gst_init(&argc, nullptr);
     //gstreamer接口初始化
     GstRecordX *m_gstRecordx = new GstRecordX();
     QImage img1(":/testImg/addImg1.png");
@@ -104,7 +116,7 @@ TEST_F(GstRecordXTest, waylandWriteVideoFrame)
     AudioUtils audioUtils;
     m_gstRecordx->setInputDeviceName(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Source));
     m_gstRecordx->setOutputDeviceName(audioUtils.getDefaultDeviceName(AudioUtils::DefaultAudioType::Sink));
-    GstRecordX::AudioType audioType = GstRecordX::AudioType::Mix;
+    GstRecordX::AudioType audioType = GstRecordX::AudioType::None;
     m_gstRecordx->setAudioType(audioType);
     GstRecordX::VideoType videoType = GstRecordX::VideoType::webm;
     m_gstRecordx->setVidoeType(videoType);
@@ -116,7 +128,8 @@ TEST_F(GstRecordXTest, waylandWriteVideoFrame)
     m_gstRecordx->waylandWriteVideoFrame(img1.bits(), img1.width(), img1.height());
 
     m_gstRecordx->waylandGstStopRecord();
-    g_main_loop_quit(m_gstRecordx->getGloop());
+    stub.reset(g_object_set);
+    gstInterface::m_g_main_loop_quit(m_gstRecordx->getGloop());
     if (m_gstRecordx) {
         delete m_gstRecordx;
         m_gstRecordx = nullptr;
