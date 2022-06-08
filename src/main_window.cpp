@@ -2553,6 +2553,10 @@ void MainWindow::changeShotToolEvent(const QString &func)
 
 void MainWindow::saveScreenShot()
 {
+    //双击截图保存按钮会触发重复进入
+    static bool isSaving = false;
+    if (isSaving) return ;
+    isSaving = true;
 
     if (m_pScreenCaptureEvent) {
 
