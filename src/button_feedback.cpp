@@ -43,7 +43,7 @@ ButtonFeedback::ButtonFeedback(DWidget *parent) : DWidget(parent)
     setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
-    for(int i = 0; i < 10; ++i){
+    for (int i = 0; i < 10; ++i) {
         QString svgName = QString("button_feedback_%1.svg").arg(i);
         buttonFeedbackImg[i] = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath(svgName));
     }
@@ -73,7 +73,7 @@ ButtonFeedback::ButtonFeedback(DWidget *parent) : DWidget(parent)
 ButtonFeedback::~ButtonFeedback()
 {
     delete m_painter;
-    if(nullptr != timer){
+    if (nullptr != timer) {
         delete  timer;
         timer = nullptr;
     }
@@ -120,8 +120,8 @@ void ButtonFeedback::paintEvent(QPaintEvent *event)
 
     QPixmap pixmap(width() + 6, height() + 6);
     pixmap.fill(Qt::transparent);
-    m_painter->begin( &pixmap );
-    m_painter->setRenderHints( QPainter::Antialiasing, true);
+    m_painter->begin(&pixmap);
+    m_painter->setRenderHints(QPainter::Antialiasing, true);
 
     m_painter->setOpacity(1);
     m_painter->drawPixmap(QPoint(0, 0), buttonFeedbackImg[frameIndex]);
@@ -140,8 +140,11 @@ void ButtonFeedback::showPressFeedback(int x, int y)
 
     show();
     repaint();
+    QPoint dpos = Utils::getPosWithScreen(QPoint(x, y));
     qreal devicePixelRatio = qApp->devicePixelRatio();
-    move(static_cast<int>(x / devicePixelRatio - rect().width() / devicePixelRatio / 2), static_cast<int>(y / devicePixelRatio - rect().height() / devicePixelRatio / 2));
+    int dx = static_cast<int>(dpos.x() - rect().width() / devicePixelRatio / 2);
+    int dy = static_cast<int>(dpos.y() - rect().height() / devicePixelRatio / 2);
+    move(dx, dy);
     timer->start(FRAME_RATE);
 }
 
@@ -151,9 +154,11 @@ void ButtonFeedback::showDragFeedback(int x, int y)
 
     show();
     repaint();
+    QPoint dpos = Utils::getPosWithScreen(QPoint(x, y));
     qreal devicePixelRatio = qApp->devicePixelRatio();
-    move(static_cast<int>(x / devicePixelRatio - rect().width() / devicePixelRatio / 2), static_cast<int>(y / devicePixelRatio - rect().height() / devicePixelRatio / 2));
-
+    int dx = static_cast<int>(dpos.x() - rect().width() / devicePixelRatio / 2);
+    int dy = static_cast<int>(dpos.y() - rect().height() / devicePixelRatio / 2);
+    move(dx, dy);
     if (timer->isActive()) {
         timer->stop();
     }
@@ -162,10 +167,12 @@ void ButtonFeedback::showDragFeedback(int x, int y)
 void ButtonFeedback::showReleaseFeedback(int x, int y)
 {
     frameIndex = 3;
-
     show();
     repaint();
+    QPoint dpos = Utils::getPosWithScreen(QPoint(x, y));
     qreal devicePixelRatio = qApp->devicePixelRatio();
-    move(static_cast<int>(x / devicePixelRatio - rect().width() / devicePixelRatio / 2), static_cast<int>(y / devicePixelRatio - rect().height() / devicePixelRatio / 2));
+    int dx = static_cast<int>(dpos.x() - rect().width() / devicePixelRatio / 2);
+    int dy = static_cast<int>(dpos.y() - rect().height() / devicePixelRatio / 2);
+    move(dx, dy);
     timer->start(FRAME_RATE);
 }

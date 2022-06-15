@@ -417,3 +417,85 @@ void Utils::notSupportWarn()
     warnDlg.addButton(tr("Exit"));
     warnDlg.exec();
 }
+
+//传入屏幕上理论未经缩放的点，获取缩放后实际的点
+QPoint Utils::getPosWithScreen(QPoint pos)
+{
+    QPoint dpos;
+    //获取所有实际屏幕的信息
+    QList<QScreen *> screenList = qApp->screens();
+    qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
+    QList<ScreenInfo> screensInfo;
+
+    /**
+     * 例如：显示器实际屏幕参数为1920*1080记为 t1，调整缩放比例为1.25记为 p,那么此时显示器显示的屏幕大小将变为1536*864记为 t2，
+     * 那么此时在 t2的点要变成t1上的点，需要 t2*p = t1,在多屏的情况且需要考虑究竟在那个屏幕上
+     */
+    //将实际屏幕信息根据缩放比列转化为理论上屏幕信息
+    int hTotal = 0;
+    for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
+        QRect rect = (*it)->geometry();
+        qDebug() << (*it)->name() << rect;
+        ScreenInfo screenInfo;
+        screenInfo.x = rect.x();
+        screenInfo.y = rect.y();
+        screenInfo.height =  static_cast<int>(rect.height() * pixelRatio);
+        screenInfo.width = static_cast<int>(rect.width() * pixelRatio);
+        screenInfo.name = (*it)->name();
+        hTotal += screenInfo.height;
+        screensInfo.append(screenInfo);
+    }
+
+    for (int i = 0; i < screensInfo.size(); i++) {
+        //判断当前点在哪块屏幕上
+        if (pos.x() > screensInfo[i].x && pos.x() < screensInfo[i].x + screensInfo[i].width &&
+                pos.y() > screensInfo[i].y && pos.y() < screensInfo[i].y + screensInfo[i].height) {
+
+            qInfo() << "screenInfo: " << screensInfo[i].toString();
+            dpos.setX(static_cast<int>((pos.x() - screensInfo[i].x) / pixelRatio + screensInfo[i].x));
+            dpos.setY(static_cast<int>((pos.y() - screensInfo[i].y) / pixelRatio) + + screensInfo[i].y);
+        }
+    }
+    return dpos;
+}
+
+//传入屏幕上已经缩放后的点，获取理论上实际的点
+QPoint Utils::getPosWithScreenP(QPoint pos)
+{
+    QPoint dpos;
+    //获取所有实际屏幕的信息
+    QList<QScreen *> screenList = qApp->screens();
+    qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
+    QList<ScreenInfo> screensInfo;
+
+    /**
+     * 例如：显示器实际屏幕参数为1920*1080记为 t1，调整缩放比例为1.25记为 p,那么此时显示器显示的屏幕大小将变为1536*864记为 t2，
+     * 那么此时在 t2的点要变成t1上的点，需要 t2*p = t1,在多屏的情况且需要考虑究竟在那个屏幕上
+     */
+    //将实际屏幕信息根据缩放比列转化为理论上屏幕信息
+    int hTotal = 0;
+    for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
+        QRect rect = (*it)->geometry();
+        qDebug() << (*it)->name() << rect;
+        ScreenInfo screenInfo;
+        screenInfo.x = rect.x(); //屏幕的起始x坐标始终是正确的，不管是否经过缩放
+        screenInfo.y = rect.y(); //屏幕的起始y坐标始终是正确的，不管是否经过缩放
+        screenInfo.height =  static_cast<int>(rect.height() * pixelRatio);
+        screenInfo.width = static_cast<int>(rect.width() * pixelRatio);
+        screenInfo.name = (*it)->name();
+        hTotal += screenInfo.height;
+        screensInfo.append(screenInfo);
+    }
+
+    for (int i = 0; i < screensInfo.size(); i++) {
+        //判断当前点在哪块屏幕上
+        if (pos.x() > screensInfo[i].x && pos.x() < screensInfo[i].x + screensInfo[i].width &&
+                pos.y() > screensInfo[i].y && pos.y() < screensInfo[i].y + screensInfo[i].height) {
+
+            dpos.setX(static_cast<int>((pos.x() - screensInfo[i].x)*pixelRatio + screensInfo[i].x));
+            dpos.setY(static_cast<int>((pos.y() - screensInfo[i].y)*pixelRatio + screensInfo[i].y));
+        }
+    }
+
+    return dpos;
+}
