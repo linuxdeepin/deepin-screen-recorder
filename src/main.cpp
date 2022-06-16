@@ -67,11 +67,9 @@ static bool CheckFFmpegEnv()
         flag = true;
     }
 
-//    QString usrbinPath  = QStandardPaths::displayName(QStandardPaths::ApplicationsLocation);
-    qDebug()  <<     QStandardPaths::standardLocations(QStandardPaths::ApplicationsLocation);
     //x11下需要检测ffmpeg应用是否存在
     if (!isWaylandProtocol()) {
-        qDebug() << "QFile(/usr/bin/ffmpeg).exists(): " << QFile("/usr/bin/ffmpeg").exists();
+        qInfo() << "Is exists ffmpeg in path(/usr/bin/): " << QFile("/usr/bin/ffmpeg").exists();
         if (QFile("/usr/bin/ffmpeg").exists()) {
             flag = true;
         } else {
@@ -84,6 +82,8 @@ static bool CheckFFmpegEnv()
 int main(int argc, char *argv[])
 {
 
+    //wayland调试输出
+    //qputenv("WAYLAND_DEBUG", "1");
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
     }
