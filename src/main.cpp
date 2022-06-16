@@ -56,15 +56,29 @@ static bool isWaylandProtocol()
 
 static bool CheckFFmpegEnv()
 {
+    bool flag = false;
     QDir dir;
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
     QStringList list = dir.entryList(QStringList() << (QString("libavcodec") + "*"), QDir::NoDotAndDotDot | QDir::Files);
     qDebug() << list;
+
     if (list.contains("libavcodec.so.58")) {
-        return true;
+        flag = true;
     }
-    return false;
+
+//    QString usrbinPath  = QStandardPaths::displayName(QStandardPaths::ApplicationsLocation);
+    qDebug()  <<     QStandardPaths::standardLocations(QStandardPaths::ApplicationsLocation);
+    //x11下需要检测ffmpeg应用是否存在
+    if (!isWaylandProtocol()) {
+        qDebug() << "QFile(/usr/bin/ffmpeg).exists(): " << QFile("/usr/bin/ffmpeg").exists();
+        if (QFile("/usr/bin/ffmpeg").exists()) {
+            flag = true;
+        } else {
+            flag = false;
+        }
+    }
+    return flag;
 }
 
 int main(int argc, char *argv[])
