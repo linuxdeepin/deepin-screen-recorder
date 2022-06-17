@@ -548,7 +548,7 @@ void RecordProcess::setSystemAudio(const bool status)
 void RecordProcess::startRecord()
 {
     //使用QtConcurrent::run受cpu核心线程数的影响，线程池默认大小为CPU核心线程数大小，由于程序中通过此方法启动的线程数超出4个，故再次设置线程池大小
-    QThreadPool::globalInstance()->setMaxThreadCount(QThreadPool::globalInstance()->maxThreadCount() > 6 ? QThreadPool::globalInstance()->maxThreadCount() : 6);
+    QThreadPool::globalInstance()->setMaxThreadCount(QThreadPool::globalInstance()->maxThreadCount() > 6 ? QThreadPool::globalInstance()->maxThreadCount() : 8);
     m_framerate = settings->value("recordConfig", "mkv_framerate").toString().toInt();
     qDebug() << "m_selectedMic: " << m_selectedMic;
     qDebug() << "m_selectedSystemAudio: " << m_selectedSystemAudio;
