@@ -84,18 +84,18 @@ bool CAVInputStream::openMicStream()
     m_pAudioInputFormat = avlibInterface::m_av_find_input_format("pulse"); //alsa
     assert(m_pAudioInputFormat != nullptr);
     if (m_pAudioInputFormat == nullptr) {
-        printf("did not find this audio input devices\n");
+        qWarning() << "did not find this audio input devices\n";
     }
     if (m_bMicAudio) {
         //Set own audio device's name
         if (avlibInterface::m_avformat_open_input(&m_pMicAudioFormatContext, m_micDeviceName.toLatin1(), m_pAudioInputFormat, &device_param) != 0) {
-            printf("Couldn't open input audio stream.（无法打开输入流）\n");
+            qWarning() << "Couldn't open input audio stream.（无法打开输入流）\n";
             return false;
         }
         qInfo() << "mic device's name is:" << m_micDeviceName;
         //input audio initialize
         if (avlibInterface::m_avformat_find_stream_info(m_pMicAudioFormatContext, nullptr) < 0) {
-            printf("Couldn't find audio stream information.（无法获取流信息）\n");
+            qWarning() << "Couldn't find audio stream information.（无法获取流信息）\n";
             return false;
         }
         m_micAudioindex = -1;
@@ -106,11 +106,11 @@ bool CAVInputStream::openMicStream()
             }
         }
         if (m_micAudioindex == -1) {
-            printf("Couldn't find a audio stream.（没有找到音频流）\n");
+            qWarning() << "Couldn't find a audio stream.（没有找到音频流）\n";
             return false;
         }
         if (avlibInterface::m_avcodec_open2(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec, avlibInterface::m_avcodec_find_decoder(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec->codec_id), nullptr) < 0) {
-            printf("Could not open audio codec.（无法打开解码器）\n");
+            qWarning() << "Could not open audio codec.（无法打开解码器）\n";
             return false;
         }
         /* print Video device information*/
@@ -136,7 +136,8 @@ bool CAVInputStream::openSysStream()
         }
         qInfo() << "sys device's name is:" << m_sysDeviceName;
         if (avlibInterface::m_avformat_find_stream_info(m_pSysAudioFormatContext, nullptr) < 0) {
-            printf("Couldn't find audio stream information.（无法获取流信息）\n");
+            qWarning() << "Couldn't find audio stream information.（无法获取流信息";
+//            printf("Couldn't find audio stream information.（无法获取流信息）\n");
             return false;
         }
         fflush(stdout);
@@ -148,12 +149,12 @@ bool CAVInputStream::openSysStream()
             }
         }
         if (m_sysAudioindex == -1) {
-            printf("Couldn't find a audio stream.（没有找到音频流）\n");
+            qWarning() << "Couldn't find a audio stream.（没有找到音频流）\n";
             return false;
         }
         ///Caution, m_pAudFmtCtx->streams[m_audioindex]->codec->codec_id =14, AV_CODEC_ID_RAWVIDEO
         if (avlibInterface::m_avcodec_open2(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec, avlibInterface::m_avcodec_find_decoder(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec->codec_id), nullptr) < 0) {
-            printf("Could not open audio codec.（无法打开解码器）\n");
+            qWarning() << "Could not open audio codec.（无法打开解码器）\n";
             return false;
         }
         /* print Video device information*/
