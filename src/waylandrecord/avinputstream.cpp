@@ -87,6 +87,10 @@ bool CAVInputStream::openMicStream()
         qWarning() << "did not find this audio input devices\n";
     }
     if (m_bMicAudio) {
+        if (m_micDeviceName.isEmpty()) {
+            qWarning() << "Error: The mic audio device name is empty!";
+            return false;
+        }
         //Set own audio device's name
         if (avlibInterface::m_avformat_open_input(&m_pMicAudioFormatContext, m_micDeviceName.toLatin1(), m_pAudioInputFormat, &device_param) != 0) {
             qWarning() << "Couldn't open input audio stream.（无法打开输入流）\n";
@@ -127,11 +131,15 @@ bool CAVInputStream::openSysStream()
     m_pAudioCardInputFormat = avlibInterface::m_av_find_input_format("pulse"); //alsa
     assert(m_pAudioCardInputFormat != nullptr);
     if (m_pAudioCardInputFormat == nullptr) {
-        printf("did not find this card audio input devices\n");
+        qWarning() << "did not find this card audio input devices\n";
     }
     if (m_bSysAudio) {
+        if (m_sysDeviceName.isEmpty()) {
+            qWarning() << "Error: The system audio device name is empty!";
+            return false;
+        }
         if (avlibInterface::m_avformat_open_input(&m_pSysAudioFormatContext, m_sysDeviceName.toLatin1(), m_pAudioCardInputFormat, &device_param) != 0) {
-            printf("Couldn't open input audio stream.（无法打开输入流）\n");
+            qWarning() << "Couldn't open input audio stream.（无法打开输入流）\n";
             return false;
         }
         qInfo() << "sys device's name is:" << m_sysDeviceName;
