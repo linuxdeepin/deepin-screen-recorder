@@ -39,6 +39,19 @@ class Utils : public QObject
 {
     Q_OBJECT
 public:
+    struct ScreenInfo {
+        int x;
+        int y;
+        int width;
+        int height;
+        QString name;
+        ~ScreenInfo() {}
+        QString toString()
+        {
+            return QString("ScreenName: %1 ,width: %2 ,height: %3 ,x: %4 ,y: %5").arg(name).arg(width).arg(height).arg(x).arg(y);
+        }
+    };
+public:
     static QSize getRenderSize(int fontSize, QString string);
     static QString getQrcPath(QString imageName);
 //    static void blurRect(DWindowManager *windowManager, int widgetId, QRectF rect);
@@ -83,6 +96,12 @@ public:
      */
     static QPoint getPosWithScreenP(QPoint pos);
 
+    /**
+     * @brief 传入屏幕上已经缩放后的点，获取理论上实际的点
+     * @param 缩放后实际的点
+     * @return 理论未经缩放的点
+     */
+    static QList<ScreenInfo> getScreensInfo();
     /**
      * @brief 对目标区域做穿透处理
      * @param 窗口id
@@ -133,19 +152,7 @@ public:
      */
     static QString getCpuModelName();
 
-private:
-    struct ScreenInfo {
-        int x;
-        int y;
-        int width;
-        int height;
-        QString name;
-        ~ScreenInfo() {}
-        QString toString()
-        {
-            return QString("ScreenName: %1 ,width: %2 ,height: %3 ,x: %4 ,y: %5").arg(name).arg(width).arg(height).arg(x).arg(y);
-        }
-    };
+
 };
 
 #endif //UTILS_H
