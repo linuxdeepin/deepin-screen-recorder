@@ -70,7 +70,7 @@ ShapesWidget::ShapesWidget(DWidget *parent)
     setAcceptDrops(true);
 
     m_penColor = BaseUtils::colorIndexOf(ConfigSettings::instance()->value(
-                                  "common", "color_index").toInt());
+                                             "common", "color_index").toInt());
 
     connect(m_menuController, &MenuController::shapePressed,
             this, &ShapesWidget::shapePressed);
@@ -241,10 +241,11 @@ void ShapesWidget::setNoChangedTextEditRemove()
 
 void ShapesWidget::saveActionTriggered()
 {
-    qDebug() << "ShapesWidget saveActionTriggered!";
+    qInfo() << __FUNCTION__ << __LINE__ << "正在执行清除图形编辑界面...";
     setAllTextEditReadOnly();
     clearSelected();
     m_clearAllTextBorder = true;
+    qInfo() << __FUNCTION__ << __LINE__ << "已清楚图形编辑界面";
 }
 
 //点击某个形状
@@ -1182,7 +1183,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
     if (Qt::MouseEventSource::MouseEventSynthesizedByQt != e->source()
             && m_selectedIndex != -1) {
         // 判空
-        if(nullptr != m_editMap.value(m_lastEditMapKey)){
+        if (nullptr != m_editMap.value(m_lastEditMapKey)) {
             // 点击鼠标左键时，去掉未更改的textEdit文本框
             if (m_editMap.value(m_lastEditMapKey)->toPlainText() == QString(tr("Input text here")) ||
                     m_editMap.value(m_lastEditMapKey)->toPlainText().isEmpty()) {
@@ -1232,7 +1233,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
 
     //鼠标右键点击
     if (Qt::MouseEventSource::MouseEventSynthesizedByQt != e->source() && e->button() == Qt::RightButton) {
-        m_pos1 = QPointF(0,0); // 修复触控屏绘制矩形后，长按屏幕会出现多余矩形的问题
+        m_pos1 = QPointF(0, 0); // 修复触控屏绘制矩形后，长按屏幕会出现多余矩形的问题
         qDebug() << "RightButton clicked!" << e->source();
         m_menuController->showMenu(QPoint(mapToGlobal(e->pos())));
         DFrame::mousePressEvent(e);
@@ -2278,7 +2279,7 @@ void ShapesWidget::updateCursorShape()
         setCursorValue = BaseUtils::setCursorShape(m_currentType);
     }
     // 避免相同的光标样式重复设置
-    if(*qApp->overrideCursor() != setCursorValue) {
+    if (*qApp->overrideCursor() != setCursorValue) {
         qApp->changeOverrideCursor(setCursorValue);
     }
 }
