@@ -40,6 +40,7 @@ public:
     void showMagnifier(QPoint pos);
     void hideMagnifier();
 
+    void setCursorPos(QPoint pos);
 protected:
     void paintEvent(QPaintEvent *);
 
@@ -48,6 +49,7 @@ private:
     QRect m_centerRect;
     QBrush m_lastCenterPosBrush;
     ZoomIndicatorGL *m_zoomIndicatorGL = nullptr;
+    QPoint m_cursorPos;
 };
 
 #endif // MAGNIFIER_H
