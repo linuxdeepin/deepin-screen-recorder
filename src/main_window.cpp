@@ -3735,11 +3735,11 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                             //判断在哪块屏幕上
                             if (curPos.x() >= m_screenInfo[index].x &&
                                     curPos.x() < (m_screenInfo[index].x + m_screenInfo[index].width) &&
-                                                  curPos.y() >= m_screenInfo[index].y &&
-                                                  curPos.y() < (m_screenInfo[index].y + m_screenInfo[index].height)) {
+                                    curPos.y() >= m_screenInfo[index].y &&
+                                    curPos.y() < (m_screenInfo[index].y + m_screenInfo[index].height)) {
                                 //qDebug() << "m_screenInfo[index]" << m_screenInfo[index].x << m_screenInfo[index].y << m_screenInfo[index].width<< m_screenInfo[index].height;
-                                curPos.setX(static_cast<int>((curPos.x() - m_screenInfo[index].x) * m_pixelRatio + m_screenInfo[index].x ));
-                                curPos.setY(static_cast<int>((curPos.y() - m_screenInfo[index].y) * m_pixelRatio + m_screenInfo[index].y ));
+                                curPos.setX(static_cast<int>((curPos.x() - m_screenInfo[index].x) * m_pixelRatio + m_screenInfo[index].x));
+                                curPos.setY(static_cast<int>((curPos.y() - m_screenInfo[index].y) * m_pixelRatio + m_screenInfo[index].y));
                                 break;
                             }
                         }
@@ -3781,10 +3781,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 //                        }
 
 
-                        QPoint tempPoint =  QPoint( std::max(tmpPos.x() - topLeft.x(), 0), std::max(tmpPos.y() - topLeft.y(), 0));
+                        QPoint tempPoint =  QPoint(std::max(tmpPos.x() - topLeft.x(), 0), std::max(tmpPos.y() - topLeft.y(), 0));
                         //由于move接口，移动的坐标点都是直接将未经缩放的点直接缩放后得到，即point / m_pixelRatio
                         m_zoomIndicator->setCursorPos(curPos);
-                        m_zoomIndicator->showMagnifier(tempPoint/m_pixelRatio);
+                        m_zoomIndicator->showMagnifier(tempPoint / m_pixelRatio);
                     }
 
                 }
@@ -4620,9 +4620,12 @@ void MainWindow::exitScreenCuptureEvent()
 #if !(defined (__mips__) || defined (__loongarch_64__) || defined (__loongarch__))
     qInfo() << __FUNCTION__ << __LINE__ << "正在退出截图录屏全局事件监听线程...";
     if (!m_isZhaoxin && m_pScreenCaptureEvent) {
+        qInfo() << __FUNCTION__ << __LINE__ << "正在释放截图录屏全局事件X11相关资源...";
         m_pScreenCaptureEvent->releaseRes();
         //m_pScreenCaptureEvent->terminate();
+        qInfo() << __FUNCTION__ << __LINE__ << "全局事件监听线程正在等待释放x11相关资源...";
         m_pScreenCaptureEvent->wait();
+        qInfo() << __FUNCTION__ << __LINE__ << "已释放X11相关资源";
         delete m_pScreenCaptureEvent;
         m_pScreenCaptureEvent = nullptr;
     }
