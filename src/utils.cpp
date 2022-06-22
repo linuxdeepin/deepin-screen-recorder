@@ -476,7 +476,7 @@ QList<Utils::ScreenInfo> Utils::getScreensInfo()
     int hTotal = 0;
     for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
         QRect rect = (*it)->geometry();
-        qDebug() << (*it)->name() << rect;
+        //qDebug() << (*it)->name() << rect;
         ScreenInfo screenInfo;
         screenInfo.x = rect.x(); //屏幕的起始x坐标始终是正确的，不管是否经过缩放
         screenInfo.y = rect.y(); //屏幕的起始y坐标始终是正确的，不管是否经过缩放

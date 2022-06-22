@@ -3727,13 +3727,29 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             } else {
                 if (status::shot == m_functionType) {
                     if (!m_toolBar->isVisible() && !isFirstReleaseButton) {
-                        //QPoint curPos = this->cursor().pos(); 采用全局坐标，替换局部坐标
+                        QPoint curPos = this->cursor().pos(); //采用全局坐标，替换局部坐标
+                        //qDebug()  << "1 >>>> curPos: " << curPos << " , mouseEvent->globalPos(): "<< mouseEvent->globalPos();
                         //mouseEvent->globalPos()此接口获取的光标坐标是已经缩放后的坐标，需还原
-                        QPoint curPos = mouseEvent->globalPos() * m_pixelRatio;
+//                        QPoint curPos = mouseEvent->globalPos();
+                        for (int index = 0; index < m_screenCount; ++index) {
+                            //判断在哪块屏幕上
+                            if (curPos.x() >= m_screenInfo[index].x &&
+                                    curPos.x() < (m_screenInfo[index].x + m_screenInfo[index].width) &&
+                                                  curPos.y() >= m_screenInfo[index].y &&
+                                                  curPos.y() < (m_screenInfo[index].y + m_screenInfo[index].height)) {
+                                //qDebug() << "m_screenInfo[index]" << m_screenInfo[index].x << m_screenInfo[index].y << m_screenInfo[index].width<< m_screenInfo[index].height;
+                                curPos.setX(static_cast<int>((curPos.x() - m_screenInfo[index].x) * m_pixelRatio + m_screenInfo[index].x ));
+                                curPos.setY(static_cast<int>((curPos.y() - m_screenInfo[index].y) * m_pixelRatio + m_screenInfo[index].y ));
+                                break;
+                            }
+                        }
+
+                        //qDebug()  << "2 >>>> curPos: " << curPos << " , mouseEvent->globalPos(): "<< mouseEvent->globalPos();
                         QPoint tmpPos;
                         //m_backgroundRect中的所有参数都是已经缩放后的
                         QPoint topLeft = m_backgroundRect.topLeft() * m_pixelRatio;
 
+                        //qDebug() << "m_backgroundRect: " <<m_backgroundRect;
                         //光标x坐标+110+8 > 截图背景左上角x坐标+截图背景宽度 判断光标横向是否超出屏幕
                         if (curPos.x() + INDICATOR_WIDTH + CURSOR_WIDTH > topLeft.x() + m_backgroundRect.width() * m_pixelRatio) {
                             tmpPos.setX(curPos.x() - INDICATOR_WIDTH);
@@ -3752,20 +3768,23 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 //                            int beforeWidth = 0;
 //                            for (int index = 0; index < m_screenCount; ++index) {
 //                                //判断在哪块屏幕上
-//                                if (tmpPos.x() >= m_screenInfo[index].x && tmpPos.x() < (m_screenInfo[index].x + m_screenInfo[index].width)) {
-//                                    tmpPos.setX(static_cast<int>((tmpPos.x() - m_screenInfo[index].x) + beforeWidth / m_pixelRatio));
+//                                if (tmpPos.x() >= m_screenInfo[index].x &&
+//                                        tmpPos.x() < (m_screenInfo[index].x + m_screenInfo[index].width) &&
+//                                                      tmpPos.y() >= m_screenInfo[index].y &&
+//                                                      tmpPos.y() < (m_screenInfo[index].y + m_screenInfo[index].height)) {
+//                                    qDebug() << "m_screenInfo[index]" << m_screenInfo[index].x << m_screenInfo[index].y << m_screenInfo[index].width<< m_screenInfo[index].height;
+//                                    tmpPos.setX(static_cast<int>((tmpPos.x() - m_screenInfo[index].x) / m_pixelRatio + m_screenInfo[index].x/m_pixelRatio ));
 //                                    break;
 //                                }
 //                                beforeWidth += m_screenInfo[index].width;
 //                            }
 //                        }
 
-                        QPoint tempPoint =  QPoint(
-                                                std::max(tmpPos.x() - topLeft.x(), 0),
-                                                std::max(tmpPos.y() - topLeft.y(), 0));
 
+                        QPoint tempPoint =  QPoint( std::max(tmpPos.x() - topLeft.x(), 0), std::max(tmpPos.y() - topLeft.y(), 0));
                         //由于move接口，移动的坐标点都是直接将未经缩放的点直接缩放后得到，即point / m_pixelRatio
-                        m_zoomIndicator->showMagnifier(tempPoint / m_pixelRatio);
+                        m_zoomIndicator->setCursorPos(curPos);
+                        m_zoomIndicator->showMagnifier(tempPoint/m_pixelRatio);
                     }
 
                 }
