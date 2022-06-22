@@ -62,6 +62,8 @@ TimeWidget::TimeWidget(DWidget *parent):
     m_lightIcon = new QIcon(":/res/light.svg");
     m_shadeIcon = new QIcon(":/res/shade.svg");
     m_currentIcon = m_lightIcon;
+    //this->setAttribute(Qt::WA_StyledBackground,true);
+    //this->setStyleSheet("background-color: rgb(255,255, 0)");
 }
 
 TimeWidget::~TimeWidget()
@@ -176,21 +178,24 @@ void TimeWidget::paintEvent(QPaintEvent *e)
     painter.setOpacity(1);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
     const auto ratio = devicePixelRatioF();
+    //判断任务栏在屏幕上的位置,上下左右
     if (position::top == m_position || position::bottom == m_position) {
-        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_LEVEL_ICON_SIZE, RECORDER_TIME_LEVEL_ICON_SIZE) * ratio);
-        m_pixmap.setDevicePixelRatio(ratio);
+        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_LEVEL_ICON_SIZE, RECORDER_TIME_LEVEL_ICON_SIZE));
+        //m_pixmap.setDevicePixelRatio(ratio);
         const QRectF &rf = QRectF(rect());
         const QRectF &prf = QRectF(m_pixmap.rect());
-        QPointF pf = rf.center() - prf.center() / m_pixmap.devicePixelRatioF();
-        painter.drawPixmap(RECORDER_ICON_TOP_BOTTOM_X, static_cast<int>(pf.y()), m_pixmap);
+        QPointF pf = rf.center() - prf.center();
+        //绘制录像小图标
+        painter.drawPixmap(0, static_cast<int>(pf.y()), m_pixmap);
         QFont font = RECORDER_TIME_FONT;
         painter.setFont(font);
         QFontMetrics fm(font);
 //        painter.drawText(m_pixmap.width() * static_cast<int>(ratio) + RECORDER_TEXT_TOP_BOTTOM_X + RECORDER_ICON_TOP_BOTTOM_X, rect().y(), rect().width(), rect().height(), Qt::AlignLeft | Qt::AlignVCenter, m_showTimeStr);
-        int tx = static_cast<int>(m_pixmap.width()  / ratio) + RECORDER_TEXT_TOP_BOTTOM_X + RECORDER_ICON_TOP_BOTTOM_X;
+        int tx = static_cast<int>(m_pixmap.width()) + RECORDER_TEXT_TOP_BOTTOM_X;
         int ty = rect().y();
         int twidth = rect().width();
         int theight = rect().height();
+        //绘制时间
         painter.drawText(tx, ty, twidth, theight, Qt::AlignLeft | Qt::AlignVCenter, m_showTimeStr);
     } else if (position::right == m_position || position::left == m_position) {
         m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_VERTICAL_ICON_SIZE, RECORDER_TIME_VERTICAL_ICON_SIZE) * ratio);
