@@ -254,6 +254,7 @@ QString AudioUtils::getDefaultDeviceName(DefaultAudioType mode)
             this)
     );
     if (mode == DefaultAudioType::Sink) {
+        //1.首先取出默认系统声卡
         QScopedPointer<com::deepin::daemon::audio::Sink> defaultSink;
         defaultSink.reset(
             new com::deepin::daemon::audio::Sink(
@@ -270,6 +271,33 @@ QString AudioUtils::getDefaultDeviceName(DefaultAudioType mode)
             device = defaultSink->name();
             if (!device.isEmpty() && !device.endsWith(".monitor")) {
                 device += ".monitor";
+            }
+        }
+        //2.如果默认系统声卡不是物理声卡和蓝牙声卡，需找出真实的物理声卡
+        if (!device.startsWith("alsa", Qt::CaseInsensitive) && !device.startsWith("blue", Qt::CaseInsensitive)) {
+            QList<QScopedPointer<com::deepin::daemon::audio::Sink>> sinks;
+            QScopedPointer<com::deepin::daemon::audio::Sink> realSink;
+            for (int i = 0; i < audioInterface->sinks().size(); i++) {
+                realSink.reset(
+                    new com::deepin::daemon::audio::Sink(
+                        serviceName,
+                        audioInterface->sinks()[i].path(),
+                        QDBusConnection::sessionBus(),
+                        this)
+                );
+                if (realSink->isValid()) {
+                    qInfo() << "realSink name is : " << realSink->name();
+                    qInfo() << "realSink activePort name : " << realSink->activePort().name;
+                    qInfo() << "             activePort description : " << realSink->activePort().description;
+                    qInfo() << "             activePort availability : " << realSink->activePort().availability;
+                    device = realSink->name();
+                    if (device.startsWith("alsa", Qt::CaseInsensitive)) {
+                        device += ".monitor";
+                        break;
+                    } else {
+                        device = "";
+                    }
+                }
             }
         }
     } else if (mode == DefaultAudioType::Source) {

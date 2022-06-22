@@ -106,6 +106,7 @@ void CameraWidget::initCamera()
     }
     camera = new QCamera(QCameraInfo::defaultCamera(), this);
     m_deviceName = QCameraInfo::defaultCamera().deviceName();
+    qDebug() << "当前摄像头的设备名称: " << m_deviceName;
     m_deviceFile = new QFile(this);
     m_deviceFile->setFileName(m_deviceName);
     camera->setCaptureMode(QCamera::CaptureStillImage);
@@ -121,16 +122,15 @@ bool CameraWidget::cameraStart()
     if (m_isInitCamera) {
         timer_image_capture->start(50);
         return true;
-    }else {
+    } else {
         camera->start();
     }
 
     if (imageCapture->isCaptureDestinationSupported(QCameraImageCapture::CaptureToFile)) {
         imageCapture->setCaptureDestination(QCameraImageCapture::CaptureToFile);
-        qDebug() << imageCapture->supportedBufferFormats();
+        qInfo() << "摄像头支持的缓存图片格式： " << imageCapture->supportedBufferFormats();
         imageCapture->setBufferFormat(QVideoFrame::PixelFormat::Format_Jpeg);
-        qDebug() << imageCapture->supportedResolutions(imageCapture->encodingSettings());
-
+        qInfo()  << "图像支持的可以用来编码的分辨率列表： " << imageCapture->supportedResolutions(imageCapture->encodingSettings());
         QList<QSize> t_capSizeLst = imageCapture->supportedResolutions(imageCapture->encodingSettings());
 
         QSize t_resolutionSize;
@@ -154,10 +154,10 @@ bool CameraWidget::cameraStart()
             m_wildScreen = false;
         }
 
+        //图片编码器设置
         QImageEncoderSettings iamge_setting;
         iamge_setting.setResolution(t_resolutionSize.width(), t_resolutionSize.height());
-
-        qDebug() << iamge_setting.resolution();
+        qInfo() << "返回编码图像的分辨率: " <<  iamge_setting.resolution();
         imageCapture->setEncodingSettings(iamge_setting);
         connect(imageCapture, &QCameraImageCapture::imageCaptured, this, &CameraWidget::processCapturedImage);
         connect(imageCapture, &QCameraImageCapture::imageSaved, this, &CameraWidget::deleteCapturedImage);
@@ -199,7 +199,7 @@ bool CameraWidget::getScreenResolution()
 */
 void CameraWidget::captureImage()
 {
-   imageCapture->capture(m_capturePath);
+    imageCapture->capture(m_capturePath);
 }
 
 void CameraWidget::processCapturedImage(int request_id, const QImage &img)

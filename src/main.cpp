@@ -56,20 +56,34 @@ static bool isWaylandProtocol()
 
 static bool CheckFFmpegEnv()
 {
+    bool flag = false;
     QDir dir;
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
     QStringList list = dir.entryList(QStringList() << (QString("libavcodec") + "*"), QDir::NoDotAndDotDot | QDir::Files);
     qDebug() << list;
+
     if (list.contains("libavcodec.so.58")) {
-        return true;
+        flag = true;
     }
-    return false;
+
+    //x11下需要检测ffmpeg应用是否存在
+    if (!isWaylandProtocol()) {
+        qInfo() << "Is exists ffmpeg in path(/usr/bin/): " << QFile("/usr/bin/ffmpeg").exists();
+        if (QFile("/usr/bin/ffmpeg").exists()) {
+            flag = true;
+        } else {
+            flag = false;
+        }
+    }
+    return flag;
 }
 
 int main(int argc, char *argv[])
 {
 
+    //wayland调试输出
+    //qputenv("WAYLAND_DEBUG", "1");
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
     }

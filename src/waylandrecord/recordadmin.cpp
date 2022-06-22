@@ -1,4 +1,5 @@
 #include "recordadmin.h"
+#include <QtConcurrent>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -120,17 +121,21 @@ void RecordAdmin::init(int screenWidth, int screenHeight)
         m_pInputStream->m_bottom = 0;
     }
     setRecordAudioType(m_audioType);
-    pthread_create(&m_mainThread, nullptr, stream, static_cast<void *>(this));
-    pthread_detach(m_mainThread);
+    QtConcurrent::run(this, &RecordAdmin::startStream);
+
+//    pthread_create(&m_mainThread, nullptr, stream, static_cast<void *>(this));
+//    pthread_detach(m_mainThread);
 }
 
 int RecordAdmin::startStream()
 {
     bool bRet;
+    qInfo() << "打开音频采集设备!";
     bRet = m_pInputStream->openInputStream(); //初始化采集设备
     if (!bRet) {
+        qCritical() << "打开采集设备失败";
         printf("打开采集设备失败\n");
-        return 1;
+        //return 1;
     }
     int cx, cy, fps;
     AVPixelFormat pixel_fmt;
@@ -148,14 +153,17 @@ int RecordAdmin::startStream()
     if (m_pInputStream->GetAudioSCardInputInfo(sample_fmt, sample_rate, channels, layout)) { //获取音频采集源的信息
         m_pOutputStream->SetAudioCardCodecProp(AV_CODEC_ID_MP3, sample_rate, channels, layout, 32000); //设置音频编码器属性
     }
+    qInfo() << "打开输出!";
     bRet = m_pOutputStream->open(m_filePath);
     if (!bRet) {
         printf("初始化输出失败\n");
         return 1;
     }
+    qInfo() << "采集画面!";
     //设置写mp4/mkv视频帧
     m_writeFrameThread->setBWriteFrame(true);
     m_writeFrameThread->start();
+    qInfo() << "采集音频!";
     //采集音频
     m_pInputStream->audioCapture();
     return 0;
