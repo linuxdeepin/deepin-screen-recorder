@@ -68,6 +68,9 @@ public:
     QWidget *itemWidget(const QString &itemKey) override;
     QWidget *itemTipsWidget(const QString &itemKey) override;
 
+    int itemSortKey(const QString &itemKey) override;
+    void setSortKey(const QString &itemKey, const int order) override;
+
     // 鼠标单击执行命令
     const QString itemCommand(const QString &itemKey) override;
 
