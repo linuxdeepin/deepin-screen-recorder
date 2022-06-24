@@ -62,14 +62,14 @@ TEST_F(TestTimeWidget, stop)
 
 TEST_F(TestTimeWidget, sizeHint)
 {
-    qDebug() << m_timeWidget->sizeHint();
+    qDebug() << "sizeHint >>>>> " << m_timeWidget->sizeHint();
     EXPECT_LT(0, m_timeWidget->sizeHint().width());
-    EXPECT_EQ(22, m_timeWidget->sizeHint().height());
+    EXPECT_EQ(23, m_timeWidget->sizeHint().height());
 }
 
 TEST_F(TestTimeWidget, sizeHint1)
 {
-    qDebug() << m_timeWidget->sizeHint();
+    qDebug() << "sizeHint1 >>>>> " << m_timeWidget->sizeHint();
     access_private_field::TimeWidgetm_position(*m_timeWidget) = 1;
     EXPECT_LT(0, m_timeWidget->sizeHint().width());
     EXPECT_EQ(22, m_timeWidget->sizeHint().height());
