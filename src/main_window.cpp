@@ -5196,7 +5196,16 @@ void MainWindow::stopRecord()
 void MainWindow::startCountdown()
 {
     recordButtonStatus = RECORD_BUTTON_WAIT;
+//    qDebug() << "recordX:" << recordX << " , recordY: " << recordY
+//             << " , recordWidth: " << recordWidth << " , recordHeight: " << recordHeight;
     //const QPoint topLeft = geometry().topLeft();
+    //避免某些分辨率下,再进行屏幕缩放时,导致录制区域位置变成负数.例如1280*1024的1.25倍缩放
+    if(recordX < 0){
+        recordX = 0;
+    }
+    if(recordY < 0){
+        recordY = 0;
+    }
     QRect recordRect {
         static_cast<int>(recordX *m_pixelRatio/* + topLeft.x()*/),
         static_cast<int>(recordY *m_pixelRatio/* + topLeft.y()*/),
