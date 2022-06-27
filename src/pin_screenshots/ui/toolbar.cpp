@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "toolbar.h"
-#include "utils.h"
+#include "putils.h"
 #include "accessibility/acTextDefine.h"
 #include <QBitmap>
 #include <DBlurEffectWidget>
@@ -57,7 +57,7 @@ void ToolBar::initToolBar(DWidget *parent)
     connect(m_toolbarWidget, SIGNAL(signalCloseButtonClicked()), this, SIGNAL(sendCloseButtonClicked()));// 发送关闭按钮点击信号
 
     m_btWidget = new QWidget();
-    if (Utils::isWaylandMode) {
+    if (PUtils::isWaylandMode) {
         m_btWidget->setWindowFlags(Qt::Sheet | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
     } else {
         m_btWidget->setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip);
