@@ -76,22 +76,22 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
 //    QPoint centerPos =   this->cursor().pos(); //不清楚为啥有些时候此接口获取的值是两个屏幕都缩放了，有些时候只有一个屏幕缩放
     qreal ration = this->devicePixelRatioF();
     QPoint centerPos = m_cursorPos/ration;
-    qDebug() << "0 centerPos: " << centerPos << "m_cursorPos: " <<m_cursorPos;
+//    qDebug() << "0 centerPos: " << centerPos << "m_cursorPos: " <<m_cursorPos;
 //    centerPos = QPoint(std::max(centerPos.x() - this->window()->x(), 0),
 //                       std::max(centerPos.y() - this->window()->y(), 0));
-    qDebug() << "1 centerPos: " <<centerPos;
+//    qDebug() << "1 centerPos: " <<centerPos;
     QPainter painter(this);
     //获取背景图片
     const QPixmap &fullscreenImgFile = TempFile::instance()->getFullscreenPixmap();
-    qDebug() << "fullscreenImgFile.size(): " <<fullscreenImgFile.size();
+//    qDebug() << "fullscreenImgFile.size(): " <<fullscreenImgFile.size();
     QImage fullscreenImg = fullscreenImgFile.toImage();
-    qDebug() << "1 fullscreenImg.size(): " <<fullscreenImg.size();
+//    qDebug() << "1 fullscreenImg.size(): " <<fullscreenImg.size();
 
     //将背景图片按屏幕缩放比进行缩放
     fullscreenImg =  fullscreenImg.scaled(static_cast<int>(fullscreenImg.width() / ration),
                                           static_cast<int>(fullscreenImg.height() / ration), Qt::KeepAspectRatio);
 
-    qDebug() << "2 fullscreenImg.size(): " <<fullscreenImg.size();
+//    qDebug() << "2 fullscreenImg.size(): " <<fullscreenImg.size();
     //获取所有屏幕的信息
 //    QList<Utils::ScreenInfo> screensInfo = Utils::getScreensInfo();
 //    for (int i = 0; i < screensInfo.size(); i++) {
@@ -103,9 +103,9 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
 //            break;
 //        }
 //    }
-    qDebug() << "2 centerPos: " <<centerPos;
+//    qDebug() << "2 centerPos: " <<centerPos;
 //    centerPos = centerPos*ration;
-    qDebug() << "3 centerPos: " <<centerPos;
+//    qDebug() << "3 centerPos: " <<centerPos;
     //返回centerPos位置的像素颜色
     const QRgb centerRectRgb = fullscreenImg.pixel(centerPos);
     QRect tempRec = QRect(centerPos.x() - IMG_WIDTH / 2, centerPos.y() - IMG_WIDTH / 2, IMG_WIDTH, IMG_WIDTH) ;
@@ -149,7 +149,7 @@ void ZoomIndicator::showMagnifier(QPoint pos)
     this->show();
 
     this->move(pos);
-    qDebug() << "this->pos(): " << this->pos();
+//    qDebug() << "this->pos(): " << this->pos();
 }
 
 void ZoomIndicator::hideMagnifier()
@@ -164,6 +164,6 @@ void ZoomIndicator::hideMagnifier()
 void ZoomIndicator::setCursorPos(QPoint pos)
 {
     m_cursorPos = pos;
-    qDebug() << "0 pos: " << pos << "m_cursorPos: " <<m_cursorPos;
+//    qDebug() << "0 pos: " << pos << "m_cursorPos: " <<m_cursorPos;
 }
 
