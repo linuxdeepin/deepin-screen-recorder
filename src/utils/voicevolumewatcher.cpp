@@ -160,6 +160,7 @@ void voiceVolumeWatcher::initAvailInputPorts(const QString &cards)
                 port.portName = jPort["Description"].toString();
                 port.cardId   = cardId;
                 port.cardName = cardName;
+                port.isActive = true;
                 // 只添加输入port
                 if (port.isInputPort()) {
                     m_availableInputPorts.insert(port.portId, port);

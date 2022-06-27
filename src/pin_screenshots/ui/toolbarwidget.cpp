@@ -20,7 +20,7 @@
  */
 #include "toolbarwidget.h"
 #include "accessibility/acTextDefine.h"
-#include "utils.h"
+#include "putils.h"
 
 #include <QActionGroup>
 #include <QMouseEvent>
@@ -32,7 +32,7 @@ const QSize MIN_TOOLBAR_WIDGET_SIZE = QSize(194, 60);
 
 ToolBarWidget::ToolBarWidget(DWidget *parent): DBlurEffectWidget(parent)
 {
-    if (Utils::isWaylandMode) {
+    if (PUtils::isWaylandMode) {
         setWindowFlags(Qt::Sheet | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
     } else {
         setWindowFlags(Qt::ToolTip);
