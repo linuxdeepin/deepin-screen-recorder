@@ -38,7 +38,7 @@
 
 */
 #include "mainwindow.h"
-#include "utils.h"
+#include "putils.h"
 
 #include <QDebug>
 #include <QDBusInterface>
@@ -236,7 +236,7 @@ void MainWindow::saveImg()
     QClipboard *cb = qApp->clipboard();
     cb->setMimeData(t_imageData, QClipboard::Clipboard);
 
-    if (Utils::isWaylandMode) {
+    if (PUtils::isWaylandMode) {
         QEventLoop eventloop;
         connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
         eventloop.exec();
@@ -394,7 +394,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
             this->setCursor(QCursor(Qt::ClosedHandCursor));
             //qDebug() << "=============event->globalPos()" << event->globalPos() << "dragPosition" << dragPosition;
             QPoint globalPoint = event->globalPos() - dragPosition;
-            if (Utils::isWaylandMode && globalPoint.y() < 0) {
+            if (PUtils::isWaylandMode && globalPoint.y() < 0) {
                 globalPoint.setY(0);
             }
             move(globalPoint);
@@ -497,12 +497,12 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         if (QEvent::WindowActivate == event->type()) {
             //qDebug() <<this<< m_toolBar << __FUNCTION__ << __LINE__ << event->type();
             //规避wayland下打开贴图1，并在贴图1上重新生成贴图2时，贴图2激活状态不对(工具栏已经设置显示，但实际上未显示。)。
-            if (Utils::isWaylandMode && !isLeftPressDown) {
+            if (PUtils::isWaylandMode && !isLeftPressDown) {
                 this->m_toolBar->setHiden();
             }
             updateToolBarPosition();
             //规避wayland下打开多个贴图，通过鼠标连续切换贴图时，贴图激活状态不对(工具栏已经设置显示，但实际上未显示。)。
-            if (Utils::isWaylandMode && isLeftPressDown) {
+            if (PUtils::isWaylandMode && isLeftPressDown) {
                 this->m_toolBar->setHiden();
             }
             //qDebug() <<this<< m_toolBar << __FUNCTION__ << __LINE__ << event->type();
