@@ -21,6 +21,7 @@
 
 #ifndef CAMERAWIDGET_H
 #define CAMERAWIDGET_H
+#include "../camera/majorimageprocessingthread.h"
 
 #include <QObject>
 #include <QCamera>
@@ -50,40 +51,71 @@ public:
 public:
     explicit CameraWidget(DWidget *parent = nullptr);
     ~CameraWidget();
+    /**
+     * @brief 设置录屏区域范围
+     * @param x: 录屏区域起点x坐标
+     * @param y: 录屏区域起点y坐标
+     * @param width: 录屏区域宽度
+     * @param height: 录屏区域高度
+     */
     void setRecordRect(int x, int y, int width, int height);
+    /**
+     * @brief 在指定位置显示摄像头界面
+     * @param pos: 指定位置
+     */
     void showAt(QPoint pos);
     int getRecordX();
     int getRecordY();
     int getRecordWidth();
     int getRecordHeight();
-    void initCamera();
-    bool cameraStart();
+
+    /**
+     * @brief 初始化UI界面
+     */
+    void initUI();
+
+    /**
+     * @brief 初始化camera，使用v4l2流程
+     */
+    void cameraStart();
+
+    /**
+     * @brief 停止采集摄像头画面
+     */
     void cameraStop();
-    void cameraResume();
-    //bool getScreenResolution();
+
     Position postion();
     QPixmap scaledPixmap(const QPixmap &src, int width, int height);
     // 设置CameraWidget是否可以拖动
     void setCameraWidgetImmovable(bool immovable);
 
-signals:
+    /**
+     * @brief getcameraStatus
+     */
+    int getCameraStatus();
 
-public slots:
-    void captureImage();
-    void processCapturedImage(int request_id, const QImage &img);
-    void deleteCapturedImage(int id, const QString &fileName);
-    bool setCameraStop(bool status);
-    bool getcameraStatus();
-    //void cameraStatus();
-    void cameraInitError(QCamera::Error error);
 protected:
     void enterEvent(QEvent *e);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *e);
-private:
-    //QPixmap round(const QPixmap &img_in, int radius);
+
+    /**
+     * @brief 重启摄像头设备
+     */
+    void restartDevices();
+
+    /**
+     * @brief 开始采集摄像头画面
+     * @param device
+     * @return
+     */
+    int startCameraV4l2(const char *device);
+
+public slots:
+    void onReceiveMajorImage(QImage image);
+
 private:
     int recordX = 0;
     int recordY = 0;
@@ -94,17 +126,12 @@ private:
     QPoint m_windowTopLeftPoint;
     QPoint m_windowTopRightPoint;
     QPoint m_windowBottomLeftPoint;
-    QCamera *camera = nullptr;//摄像头
-    QCameraImageCapture *imageCapture = nullptr; //截图部件
-    QTimer *timer_image_capture = nullptr;
     DLabel *m_cameraUI = nullptr;
-    QString m_capturePath;
     QString m_deviceName;
-    QFile *m_deviceFile = nullptr;
 
-    bool m_wildScreen = false;
     bool m_Immovable = false; // 窗口不固定
     bool m_isInitCamera = false;
+    MajorImageProcessingThread *m_imgPrcThread = nullptr;
 };
 
 #endif // CAMERAWIDGET_H

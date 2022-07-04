@@ -55,8 +55,18 @@ contains( DEFINES, KF5_WAYLAND_FLAGE_ON ) {
 TEMPLATE = app
 TARGET = deepin-screen-recorder
 INCLUDEPATH += . \
-            /usr/include/gstreamer-1.0
+            /usr/include/gstreamer-1.0 \
+
+INCLUDEPATH += ../libcam/libcam/ \
+               ../libcam/libcam_v4l2core/ \
+               ../libcam/libcam_render/ \
+               ../libcam/libcam_encoder/ \
+               ../libcam/libcam_audio/ \
+               ../libcam/load_libs.h
+message("PWD: " $$PWD)
+
 include(accessibility/accessible.pri)
+include(../libcam/libcam.pri)
 
 QMAKE_CXX += -Wl,--as-need -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
 QMAKE_CXXFLAGS += -Wl,--as-need -fPIE -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
@@ -69,7 +79,7 @@ isEqual(ARCH, mips64) {
 }
 
 CONFIG += link_pkgconfig c++11
-PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0
+PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0 libusb-1.0
 
 RESOURCES = ../assets/image/deepin-screen-recorder.qrc \
     ../assets/resources/resources.qrc \
@@ -120,7 +130,10 @@ HEADERS += main_window.h \
     dbusinterface/ocrinterface.h \
     dbusinterface/pinscreenshotsinterface.h \
     gstrecord/gstrecordx.h \
-    gstrecord/gstinterface.h
+    gstrecord/gstinterface.h \
+    camera/majorimageprocessingthread.h \
+    camera/LPF_V4L2.h \
+    camera/devnummonitor.h
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
     HEADERS += widgets/scrollshottip.h \
     utils/pixmergethread.h \
@@ -182,7 +195,10 @@ SOURCES += main.cpp \
     dbusinterface/ocrinterface.cpp \
     dbusinterface/pinscreenshotsinterface.cpp \
     gstrecord/gstrecordx.cpp \
-    gstrecord/gstinterface.cpp
+    gstrecord/gstinterface.cpp \
+    camera/majorimageprocessingthread.cpp \
+    camera/LPF_V4L2.c \
+    camera/devnummonitor.cpp
 
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
     SOURCES += widgets/scrollshottip.cpp \
@@ -210,7 +226,7 @@ QT += dbus
 QT += multimedia
 QT += multimediawidgets
 QT += concurrent
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -ldl -limagevisualresult
 
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
     LIBS += -lopencv_core -lopencv_imgproc
