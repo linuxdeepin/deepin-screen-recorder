@@ -54,7 +54,7 @@ RecorderRegionShow::~RecorderRegionShow()
         m_painter = nullptr;
     }
     if (m_cameraWidget) {
-        if (m_cameraWidget->getcameraStatus()) {
+        if (m_cameraWidget->getCameraStatus()) {
             m_cameraWidget->cameraStop();
         }
         delete m_cameraWidget;
@@ -71,7 +71,7 @@ void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, c
 
     QRect r = this->geometry();
     m_cameraWidget->setFixedSize(size);
-    m_cameraWidget->initCamera();
+    m_cameraWidget->initUI();
     m_cameraWidget->setRecordRect(r.x(), r.y(), r.width(), r.height());
     switch (position) {
     case CameraWidget::Position::rightBottom: {
