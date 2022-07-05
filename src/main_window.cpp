@@ -37,7 +37,13 @@
 #include "dbusinterface/drawinterface.h"
 #include "accessibility/acTextDefine.h"
 #include "keydefine.h"
-
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "load_libs.h"
+#ifdef __cplusplus
+}
+#endif
 #include <DWidget>
 #include <DWindowManagerHelper>
 #include <DForeignWindow>
@@ -221,7 +227,6 @@ void MainWindow::initAttributes()
         if (sessionManagerIntert.isValid()) {
             isLockScreen = sessionManagerIntert.property("Locked").toBool();
         }
-
         if (this->windowHandle() && isLockScreen) {
             this->windowHandle()->setProperty("_d_dwayland_window-type", "override");
         }
@@ -331,6 +336,8 @@ void MainWindow::initAttributes()
         QApplication::sendEvent(this, mouseMove);
         delete mouseMove;
     }
+
+
 }
 #ifdef KF5_WAYLAND_FLAGE_ON
 void MainWindow::setupRegistry(Registry *registry)
@@ -537,6 +544,48 @@ void MainWindow::checkIsLockScreen()
         m_toolBar->setButEnableOnLockScreen(false);
     }
 }
+void MainWindow::initDynamicLibPath()
+{
+    LoadLibNames tmp;
+    QByteArray avcodec = libPath("libavcodec.so").toLatin1();
+    tmp.chAvcodec = avcodec.data();
+    QByteArray avformat = libPath("libavformat.so").toLatin1();
+    tmp.chAvformat = avformat.data();
+    QByteArray avutil = libPath("libavutil.so").toLatin1();
+    tmp.chAvutil = avutil.data();
+    QByteArray udev = libPath("libudev.so").toLatin1();
+    tmp.chUdev = udev.data();
+    QByteArray usb = libPath("libusb-1.0.so").toLatin1();
+    tmp.chUsb = usb.data();
+    QByteArray portaudio = libPath("libportaudio.so").toLatin1();
+    tmp.chPortaudio = portaudio.data();
+    QByteArray v4l2 = libPath("libv4l2.so").toLatin1();
+    tmp.chV4l2 = v4l2.data();
+    QByteArray ffmpegthumbnailer = libPath("libffmpegthumbnailer.so").toLatin1();
+    tmp.chFfmpegthumbnailer = ffmpegthumbnailer.data();
+    QByteArray swscale = libPath("libswscale.so").toLatin1();
+    tmp.chSwscale = swscale.data();
+    QByteArray swresample = libPath("libswresample.so").toLatin1();
+    tmp.chSwresample = swresample.data();
+    setLibNames(tmp);
+}
+QString MainWindow::libPath(const QString &strlib)
+{
+    QDir  dir;
+    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+    dir.setPath(path);
+    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+
+    if (list.contains(strlib))
+        return strlib;
+
+    list.sort();
+    if (list.size() > 0)
+        return list.last();
+
+    return "";
+}
+
 
 void MainWindow::sendSavingNotify()
 {
@@ -1894,7 +1943,18 @@ void MainWindow::updateToolBarPos()
 
         m_pCameraWatcher = new CameraWatcher(this);
         m_pCameraWatcher->setWatch(true); //取消之前的线程方式，采用定时器监测
-        connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
+//        connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
+
+        initDynamicLibPath();
+        qInfo() << "正在初始化v4l2core...";
+        v4l2core_init();
+        qInfo() << "初始化v4l2core已完成";
+
+        m_devnumMonitor = new DevNumMonitor();
+        m_devnumMonitor->setParent(this);
+        m_devnumMonitor->setObjectName("DevMonitorThread");
+        m_devnumMonitor->setWatch(true); //取消之前的线程方式，采用定时器监测
+        connect(m_devnumMonitor, SIGNAL(existDevice(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
 
         //检测是否是锁频状态下再打开截图
         checkIsLockScreen();
@@ -2339,7 +2399,7 @@ void MainWindow::changeCameraSelectEvent(bool checked)
         m_cameraWidget->hide();
         // 摄像头界面层级下调,防止遮住工具栏
         m_cameraWidget->lower();
-        m_cameraWidget->initCamera();
+        m_cameraWidget->initUI();
     }
 
     m_selectedCamera = checked;
@@ -2364,14 +2424,13 @@ void MainWindow::changeCameraSelectEvent(bool checked)
         m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
         m_cameraWidget->resize(cameraWidgetWidth, cameraWidgetHeight);
         m_cameraWidget->showAt(QPoint(x, y));
-        if (!m_cameraWidget->cameraStart()) {
-            m_cameraWidget->cameraStart();
-        }
+        m_cameraWidget->cameraStart();
+        m_devnumMonitor->setCanUse(false);
     } else {
         m_cameraWidget->cameraStop();
         m_cameraWidget->hide();
+        m_devnumMonitor->setCanUse(true);
     }
-    //m_recordButton->setEnabled(true);
 }
 /*
  * never used
@@ -4669,34 +4728,19 @@ void MainWindow::shapeClickedSlot(QString shape)
 
 void MainWindow::on_CheckVideoCouldUse(bool canUse)
 {
+    qDebug() << "camera canuse" << canUse;
     if (!canUse) {
         if (m_cameraWidget) {
             // 监测设备文件是否存在
-            if (m_cameraWidget->getcameraStatus() == false) {
-                qDebug() << "camera canuse" << canUse;
-                m_cameraWidget->cameraStop();
-                m_cameraWidget->setCameraStop(canUse);
-                m_cameraOffFlag = true;
-                m_cameraWidget->hide();
-                m_toolBar->setCameraDeviceEnable(canUse);
-            } else {
-                // 设置Coulduse的值，使m_watchTimer每次都能监测设备文件是否存在
-                if (m_pCameraWatcher)
-                    m_pCameraWatcher->setCoulduseValue(true);
-            }
-        } else {
-            m_toolBar->setCameraDeviceEnable(canUse);
+            m_cameraOffFlag = true;
+            m_cameraWidget->cameraStop();
+            m_cameraWidget->hide();
         }
-    } else if (canUse) {
         m_toolBar->setCameraDeviceEnable(canUse);
-        if (m_cameraOffFlag) {
-            // 重新加载设备
-            m_cameraWidget->cameraResume();
-        }
+    } else {
+        m_toolBar->setCameraDeviceEnable(canUse);
     }
 }
-
-
 
 //截图模式及滚动截图模式键盘按下执行的操作 如果快捷键需要打开下拉列表，则不能使用全局快捷键处理，需使用此方法处理
 void MainWindow::shotKeyPressEvent(const unsigned char &keyCode)
@@ -5200,10 +5244,10 @@ void MainWindow::startCountdown()
 //             << " , recordWidth: " << recordWidth << " , recordHeight: " << recordHeight;
     //const QPoint topLeft = geometry().topLeft();
     //避免某些分辨率下,再进行屏幕缩放时,导致录制区域位置变成负数.例如1280*1024的1.25倍缩放
-    if(recordX < 0){
+    if (recordX < 0) {
         recordX = 0;
     }
-    if(recordY < 0){
+    if (recordY < 0) {
         recordY = 0;
     }
     QRect recordRect {
@@ -5232,7 +5276,6 @@ void MainWindow::startCountdown()
         if (m_cameraWidget && m_selectedCamera) {
             m_cameraWidget->hide();
             m_cameraWidget->cameraStop();
-            m_cameraWidget->setCameraStop(true);
             m_pRecorderRegion->initCameraInfo(m_cameraWidget->postion(), m_cameraWidget->geometry().size());
         }
     }
@@ -5259,6 +5302,7 @@ void MainWindow::startCountdown()
         countdownTooltip->show();
         m_pVoiceVolumeWatcher->setWatch(false);
         m_pCameraWatcher->setWatch(false);
+        m_devnumMonitor->setWatch(false); //取消之前的线程方式，采用定时器监测
     }
 
     //先隐藏，再显示
@@ -5353,8 +5397,8 @@ void MainWindow::exitApp()
 {
     m_initScroll = false; // 保存时关闭滚动截图
     emit releaseEvent();
-    qInfo() << __FUNCTION__ << __LINE__ << "退出截图录屏！";
     qApp->quit();
+    qInfo() << __FUNCTION__ << __LINE__ << "退出截图录屏！";
     if (Utils::isWaylandMode) {
         _Exit(0);
     }
