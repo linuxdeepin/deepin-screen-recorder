@@ -41,6 +41,7 @@
 #include "utils/saveutils.h"
 #include "utils/voicevolumewatcher.h"
 #include "utils/camerawatcher.h"
+#include "camera/devnummonitor.h"
 #include "utils/screengrabber.h"
 #include "dbusinterface/dbuscontrolcenter.h"
 #include "dbusinterface/dbusnotify.h"
@@ -154,7 +155,11 @@ public:
             delete m_pCameraWatcher;
             m_pCameraWatcher = nullptr;
         }
-
+        if (m_devnumMonitor) {
+            m_devnumMonitor->setWatch(false);
+            delete m_devnumMonitor;
+            m_devnumMonitor = nullptr;
+        }
         if (m_pScreenCaptureEvent) {
             m_pScreenCaptureEvent->releaseRes();
             //m_pScreenCaptureEvent->terminate();
@@ -681,6 +686,10 @@ protected:
      * @brief 启动截图录屏时检测是否是锁屏状态
      */
     void checkIsLockScreen();
+
+    void initDynamicLibPath();
+    QString libPath(const QString &strlib);
+
 private:
 //    QList<WindowRect> windowRects;
     /**
@@ -697,6 +706,10 @@ private:
     RecordProcess recordProcess;
     voiceVolumeWatcher *m_pVoiceVolumeWatcher = nullptr;
     CameraWatcher *m_pCameraWatcher = nullptr;
+    /**
+     * @brief 摄像头设备监听器
+     */
+    DevNumMonitor *m_devnumMonitor = nullptr;
     ScreenGrabber m_screenGrabber;
 //    VoiceRecordProcess voiceRecordProcess;
 //    WindowRect rootWindowRect;
