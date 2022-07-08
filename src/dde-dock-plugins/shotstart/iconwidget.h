@@ -45,7 +45,8 @@ public:
 
     const QString itemContextMenu();
     void invokedMenuItem(const QString &menuId);
-
+    QString getSysShortcuts(const QString type);
+    QString getDefaultValue(const QString type);
 
 protected:
     void paintEvent(QPaintEvent *e) override;

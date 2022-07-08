@@ -44,7 +44,8 @@ class Shortcut : public QObject
 public:
     explicit Shortcut(QObject *parent = 0);
     QString toStr();
-
+    QString getSysShortcuts(const QString type);
+    QString getDefaultValue(const QString type);
 private:
     QJsonObject m_shortcutObj;
     QList<ShortcutGroup> m_shortcutGroups;

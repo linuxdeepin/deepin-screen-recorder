@@ -20,7 +20,9 @@
  */
 
 #include "shortcut.h"
-
+#include <QDBusReply>
+#include <QDBusInterface>
+#include <QDebug>
 Shortcut::Shortcut(QObject *parent) : QObject(parent)
 {
     ShortcutGroup screenshotGroup;
@@ -37,10 +39,10 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
     sizeGroup.groupName = tr("Size Adjustment");
     setGroup.groupName = tr("Settings");
 
-    screenshotGroup.groupItems << ShortcutItem(tr("Quick start"), "Ctrl+Alt+A")
-                               << ShortcutItem(tr("Window screenshot"), "Alt+PrintScreen")
-                               << ShortcutItem(tr("Delay screenshot"),  "Ctrl+PrintScreen")
-                               << ShortcutItem(tr("Full screenshot"),  "PrintScreen");
+    screenshotGroup.groupItems << ShortcutItem(tr("Quick start"), getSysShortcuts("screenshot"))
+                               << ShortcutItem(tr("Window screenshot"), getSysShortcuts("screenshot-window"))
+                               << ShortcutItem(tr("Delay screenshot"),  getSysShortcuts("screenshot-delayed"))
+                               << ShortcutItem(tr("Full screenshot"),  getSysShortcuts("screenshot-fullscreen"));
 
     exitGroup.groupItems << ShortcutItem(tr("Exit"), "Esc")
                          << ShortcutItem(tr("Save"), "Ctrl+S");
@@ -60,7 +62,7 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
                           << ShortcutItem(tr("Undo"), "Ctrl+Z")
                           << ShortcutItem(tr("Options"), "F3");
 
-    recordGroup.groupItems << ShortcutItem(tr("Start recording"), "Ctr+Alt+R")
+    recordGroup.groupItems << ShortcutItem(tr("Start recording"), getSysShortcuts("deepin-screen-recorder"))
                            << ShortcutItem(tr("Sound"), "S")
                            << ShortcutItem(tr("Keystroke"), "K")
                            << ShortcutItem(tr("Webcam"), "W")
@@ -103,4 +105,50 @@ QString Shortcut::toStr()
 {
     QJsonDocument doc(m_shortcutObj);
     return doc.toJson().data();
+}
+QString Shortcut::getSysShortcuts(const QString type)
+{
+    QDBusInterface shortcuts("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding", "com.deepin.daemon.Keybinding");
+    if (!shortcuts.isValid()) {
+        return getDefaultValue(type);
+    }
+
+    QDBusReply<QString> shortLists = shortcuts.call(QStringLiteral("ListAllShortcuts"));
+    QJsonDocument doc = QJsonDocument::fromJson(shortLists.value().toUtf8());
+    QJsonArray shorts = doc.array();
+    QMap<QString, QString> shortcutsMap;
+
+    for (QJsonValue shortcut : shorts) {
+        const QString Id = shortcut["Id"].toString();
+        if (Id == type) {
+            QJsonArray Accels = shortcut["Accels"].toArray();
+            QString AccelsString;
+            for (QJsonValue accel : Accels)  {
+                AccelsString += accel.toString();
+            }
+            AccelsString.remove('<');
+            AccelsString.replace('>', '+');
+            return AccelsString;
+        }
+    }
+    return getDefaultValue(type);
+}
+
+QString Shortcut::getDefaultValue(const QString type)
+{
+    QString retShortcut;
+    if (type == "screenshot") {
+        retShortcut = "Ctrl+Alt+A";
+    } else if (type == "deepin-screen-recorder") {
+        retShortcut = "Ctrl+Alt+R";
+    } else if (type == "screenshot-window") {
+         retShortcut = "Alt+PrintScreen";
+    } else if (type == "screenshot-delayed") {
+         retShortcut = "Ctrl+PrintScreen";
+    } else if (type == "screenshot-fullscreen") {
+         retShortcut = "PrintScreen";
+    } else {
+        qDebug() << __FUNCTION__ << __LINE__ << "Shortcut Error !!!!!!!!!" << type;
+    }
+    return retShortcut;
 }
