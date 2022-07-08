@@ -41,6 +41,7 @@
 extern "C" {
 #endif
 #include "load_libs.h"
+#include "main_window.h"
 #ifdef __cplusplus
 }
 #endif
@@ -1414,6 +1415,12 @@ void MainWindow::showPreviewWidgetImage(QImage img)
     m_scrollShotSizeTips ->updateTips(QPoint(recordX, recordY), QSize(int(img.width() / m_pixelRatio + 2), int(img.height() / m_pixelRatio + 2)));
     m_previewWidget->updateImage(img);
 #endif
+}
+
+void MainWindow::onExitScreenCapture()
+{
+    qInfo() << __FUNCTION__ << __LINE__ << "已超时(3s) 强制退出截图录屏...";
+    _Exit(0);
 }
 
 void MainWindow::initLaunchMode(const QString &launchMode)
@@ -4677,18 +4684,19 @@ void MainWindow::exitScreenCuptureEvent()
 {
     qDebug() << "line: " << __LINE__ << " >>> function: " << __func__;
 #if !(defined (__mips__) || defined (__loongarch_64__) || defined (__loongarch__))
-    qInfo() << __FUNCTION__ << __LINE__ << "正在退出截图录屏全局事件监听线程...";
+//    qInfo() << __FUNCTION__ << __LINE__ << "正在退出截图录屏全局事件监听线程...";
     if (!m_isZhaoxin && m_pScreenCaptureEvent) {
-        qInfo() << __FUNCTION__ << __LINE__ << "正在释放截图录屏全局事件X11相关资源...";
-        m_pScreenCaptureEvent->releaseRes();
-        //m_pScreenCaptureEvent->terminate();
-        qInfo() << __FUNCTION__ << __LINE__ << "全局事件监听线程正在等待释放x11相关资源...";
-        m_pScreenCaptureEvent->wait();
-        qInfo() << __FUNCTION__ << __LINE__ << "已释放X11相关资源";
-        delete m_pScreenCaptureEvent;
-        m_pScreenCaptureEvent = nullptr;
+//            qInfo() << __FUNCTION__ << __LINE__ << "正在释放截图录屏全局事件X11相关资源...";
+//            m_pScreenCaptureEvent->releaseRes();
+//            //m_pScreenCaptureEvent->terminate();
+//            qInfo() << __FUNCTION__ << __LINE__ << "全局事件监听线程正在等待释放x11相关资源...";
+//            m_pScreenCaptureEvent->wait();
+//            qInfo() << __FUNCTION__ << __LINE__ << "已释放X11相关资源";
+//            delete m_pScreenCaptureEvent;
+//            m_pScreenCaptureEvent = nullptr;
+
     }
-    qInfo() << __FUNCTION__ << __LINE__ << "截图录屏全局事件监听线程已退出！";
+//    qInfo() << __FUNCTION__ << __LINE__ << "截图录屏全局事件监听线程已退出！";
 #endif
 }
 
