@@ -95,7 +95,7 @@ QWidget *ShotStartPlugin::itemTipsWidget(const QString &itemKey)
 {
     if (itemKey != ShotShartPlugin) return nullptr;
 
-    m_tipsWidget->setText(tr("Screenshot") + "(Ctrl+Alt+A)");
+    m_tipsWidget->setText(tr("Screenshot") + m_iconWidget->getSysShortcuts("screenshot"));
     return m_tipsWidget.data();
 }
 
