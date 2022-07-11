@@ -167,7 +167,7 @@ void CameraWidget::restartDevices()
     if (devlist->num_devices == 2) {
         for (int i = 0 ; i < devlist->num_devices; i++) {
             QString str1 = QString(devlist->list_devices[i].device);
-            if (str == str1) {
+            if (str != str1) {
                 if (E_OK == startCameraV4l2(devlist->list_devices[i].device)) {
                     break;
                 }

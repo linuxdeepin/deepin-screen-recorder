@@ -54,7 +54,7 @@
 #include "v4l2_formats.h"
 #include "v4l2_controls.h"
 #include "v4l2_devices.h"
-#include "../libcam/cameraconfig.h"
+#include "cameraconfig.h"
 #include "load_libs.h"
 
 #ifndef GETTEXT_PACKAGE_V4L2CORE
@@ -1336,14 +1336,14 @@ int v4l2core_release_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 v4l2_frame_buff_t *v4l2core_get_decoded_frame(v4l2_dev_t *vd)
 {
 	v4l2_frame_buff_t *frame = v4l2core_get_frame(vd);
-//    if(frame != NULL && 0 == encodeenv)
-//	{
-//		/*decode the raw frame*/
-//		if(decode_v4l2_frame(vd, frame) != E_OK)
-//		{
-//			fprintf(stderr, "V4L2_CORE: Error - Couldn't decode frame\n");
-//		}
-//	}
+    if(frame != NULL)
+    {
+        /*decode the raw frame*/
+        if(decode_v4l2_frame(vd, frame) != E_OK)
+        {
+            fprintf(stderr, "V4L2_CORE: Error - Couldn't decode frame\n");
+        }
+    }
 	
 	return frame;
 }
