@@ -20,7 +20,7 @@
 */
 
 #include "majorimageprocessingthread.h"
-
+#include "../utils.h"
 
 extern "C" {
 #include <libimagevisualresult/visualresult.h>
@@ -76,18 +76,54 @@ void MajorImageProcessingThread::run()
         if (m_frame == nullptr) {
             continue;
         }
-        QImage jpgImage;
-        QByteArray temp;
-        temp.append(reinterpret_cast<const char *>(m_frame->raw_frame), static_cast<int>(m_frame->raw_frame_max_size));
-        jpgImage.loadFromData(temp);
-        jpgImage = jpgImage.convertToFormat(QImage::Format_RGB888);
-        if (jpgImage.isNull()) {
-            qWarning() << "未采集到摄像头画面！" ;
+        //某些摄像头无法通过此方法获取图像数据
+//            QImage jpgImage;
+//            QByteArray temp;
+//            temp.append(reinterpret_cast<const char *>(m_frame->raw_frame), static_cast<int>(m_frame->raw_frame_max_size));
+//            jpgImage.loadFromData(temp);
+//            jpgImage = jpgImage.convertToFormat(QImage::Format_RGB888);
+//            if (jpgImage.isNull()) {
+//                qWarning() << "未采集到摄像头画面！" ;
+//            } else {
+//                //jpgImage.save(QString("/home/wangcong/Desktop/test/test_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
+//                emit SendMajorImageProcessing(jpgImage);
+//                //qInfo() << "已采集摄像头画面，正在传递摄像头画面";
+//            }
+        uint rgbsize = 0;
+        uint yuvsize = 0;
+        unsigned int nVdWidth = static_cast<unsigned int>(m_frame->width);
+        unsigned int nVdHeight = static_cast<unsigned int>(m_frame->height);
+        uint8_t  * rgbPtr = nullptr;
+        uint8_t  * yuvPtr = nullptr;
+        QImage tempImg;
+
+        // wayland环境下，解码后的帧数据为yu12格式
+        yuvsize = nVdWidth * nVdHeight * 3 / 2;
+        yuvPtr = new uchar[yuvsize];
+        memcpy(yuvPtr, m_frame->yuv_frame, yuvsize);
+
+        rgbsize = nVdWidth * nVdHeight * 3;
+        rgbPtr = static_cast<uint8_t *>(calloc(rgbsize, sizeof(uint8_t)));
+        // yu12到rgb数据高性能转换
+        yu12_to_rgb24_higheffic(rgbPtr,yuvPtr, m_frame->width, m_frame->height);
+
+        tempImg = QImage(rgbPtr, m_frame->width, m_frame->height, QImage::Format_RGB888);
+        if (tempImg.isNull()) {
+            qWarning() << "(wayland) 未采集到摄像头画面！" ;
         } else {
-            //jpgImage.save(QString("/home/wangcong/Desktop/test/test_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
-            emit SendMajorImageProcessing(jpgImage);
-            //qInfo() << "已采集摄像头画面，正在传递摄像头画面";
+            //tempImg.save(QString("/home/uos/Desktop/test/test_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
+            emit SendMajorImageProcessing(tempImg);
+            //qInfo() << "(wayland) 已采集摄像头画面，正在传递摄像头画面";
         }
+        if (yuvPtr != nullptr) {
+            delete [] yuvPtr;
+            yuvPtr = nullptr;
+        }
+        if (rgbPtr != nullptr) {
+            free(rgbPtr);
+            rgbPtr = nullptr;
+        }
+
         v4l2core_release_frame(vd, m_frame);
     }
     v4l2core_stop_stream(vd);
