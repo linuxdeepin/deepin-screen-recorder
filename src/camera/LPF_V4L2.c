@@ -37,6 +37,8 @@ extern "C" {
 
 int camInit(const char *devicename)
 {
+    // 初始化yuv转rgb浮点值查找表 wayland下需要使用
+    init_yuv2rgb_num_table();
 
     bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
     options_t *my_options = options_get();
