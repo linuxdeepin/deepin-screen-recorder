@@ -128,6 +128,8 @@ QString Shortcut::getSysShortcuts(const QString type)
             }
             AccelsString.remove('<');
             AccelsString.replace('>', '+');
+            AccelsString.replace("Control", "Ctrl");
+            AccelsString.replace("Print", "PrintScreen");
             return AccelsString;
         }
     }
