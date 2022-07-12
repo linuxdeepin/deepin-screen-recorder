@@ -123,6 +123,7 @@ QString IconWidget::getSysShortcuts(const QString type)
             }
             AccelsString.remove('<');
             AccelsString.replace('>', '+');
+            AccelsString.replace("Control", "Ctrl");
             AccelsString = "(" + AccelsString + ")";
             return AccelsString;
         }
