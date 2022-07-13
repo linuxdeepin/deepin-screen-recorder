@@ -946,6 +946,13 @@ void MainWindow::initScreenShot()
 //初始化录屏窗口
 void MainWindow::initScreenRecorder()
 {
+    QJsonObject obj{
+        {"tid", EventLogUtils::Start},
+        {"mode", 1},
+        {"startup_mode", "B7"}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
     if (!m_pScreenCaptureEvent)
         return;
 
