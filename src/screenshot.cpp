@@ -41,6 +41,13 @@ Screenshot::Screenshot(QObject *parent)
 
 void Screenshot::startScreenshot()
 {
+    QJsonObject startObj{
+        {"tid", EventLogUtils::Start},
+        {"mode", 1},
+        {"startup_mode", "A"}
+    };
+    EventLogUtils::get().writeLogs(startObj);
+
     QJsonObject obj{
         {"tid", EventLogUtils::StartScreenShot}
     };
@@ -63,6 +70,14 @@ void Screenshot::startScreenshot()
 void Screenshot::delayScreenshot(double num)
 {
     qDebug() << "init with delay";
+
+    QJsonObject obj{
+        {"tid", EventLogUtils::Start},
+        {"mode", 1},
+        {"startup_mode", "B2"}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
     QString summary = QString(tr("Screen Capture will start in %1 seconds").arg(num));
     QStringList actions = QStringList();
     QVariantMap hints;
@@ -92,11 +107,25 @@ void Screenshot::delayScreenshot(double num)
 
 void Screenshot::fullscreenScreenshot()
 {
+    QJsonObject obj{
+        {"tid", EventLogUtils::Start},
+        {"mode", 1},
+        {"startup_mode", "B1"}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
     m_window.fullScreenshot();
 }
 
 void Screenshot::topWindowScreenshot()
 {
+    QJsonObject obj{
+        {"tid", EventLogUtils::Start},
+        {"mode", 1},
+        {"startup_mode", "B3"}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
     m_window.topWindow();
 }
 
@@ -107,6 +136,13 @@ void Screenshot::noNotifyScreenshot()
 
 void Screenshot::OcrScreenshot()
 {
+    QJsonObject obj{
+        {"tid", EventLogUtils::Start},
+        {"mode", 1},
+        {"startup_mode", "B4"}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
 #ifdef OCR_SCROLL_FLAGE_ON
     m_window.initAttributes();
     m_window.initResource();
@@ -117,6 +153,13 @@ void Screenshot::OcrScreenshot()
 
 void Screenshot::ScrollScreenshot()
 {
+    QJsonObject obj{
+        {"tid", EventLogUtils::Start},
+        {"mode", 1},
+        {"startup_mode", "B5"}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
 #ifdef OCR_SCROLL_FLAGE_ON
     //2d模式不支持滚动截图
     qDebug() << "whether to trun on window effects? " << (DWindowManagerHelper::instance()->hasComposite()? "yes" : "no");

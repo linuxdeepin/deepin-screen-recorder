@@ -20,6 +20,7 @@
  */
 
 #include "dbusscreenshotservice.h"
+#include "utils/eventlogutils.h"
 
 #include <QtCore/QMetaObject>
 #include <QtCore/QByteArray>
@@ -55,7 +56,13 @@ void DBusScreenshotService::setSingleInstance(bool instance)
 
 void DBusScreenshotService::StartScreenshot()
 {
-    qDebug() << "DBus screenshot service! start screenshot";
+    QJsonObject obj{
+        {"tid", EventLogUtils::Start},
+        {"mode", 1},
+        {"startup_mode", "B6"}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
     if (!m_singleInstance)
         parent()->startScreenshot();
     m_singleInstance = true;

@@ -226,23 +226,8 @@ int main(int argc, char *argv[])
 
         if (cmdParser.isSet(dbusOption)) {
             qDebug() << "dbus register waiting!";
-            QJsonObject obj{
-                {"tid", EventLogUtils::Start},
-                {"mode", 1},
-                {"startup_mode", "dbus"}
-            };
-            EventLogUtils::get().writeLogs(obj);
-
             return app->exec();
-
         } else {
-            QJsonObject obj{
-                {"tid", EventLogUtils::Start},
-                {"mode", 1},
-                {"startup_mode", "cmd"}
-            };
-            EventLogUtils::get().writeLogs(obj);
-
             dbusService.setSingleInstance(true);
             if (cmdParser.isSet(delayOption)) {
                 qDebug() << "cmd delay screenshot";
