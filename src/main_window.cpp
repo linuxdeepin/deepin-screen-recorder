@@ -37,6 +37,7 @@
 #include "dbusinterface/drawinterface.h"
 #include "accessibility/acTextDefine.h"
 #include "keydefine.h"
+#include "utils/eventlogutils.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -2582,6 +2583,12 @@ void MainWindow::changeShotToolEvent(const QString &func)
     //调用ocr功能时先截图后，退出截图录屏，将刚截图的图片串递到ocr识别界面；
     if (func == "ocr") {
         //qDebug() << "m_saveFileName: " << m_saveFileName;
+
+        QJsonObject obj{
+            {"tid", EventLogUtils::StartOcr},
+        };
+        EventLogUtils::get().writeLogs(obj);
+
         // 调起OCR识别界面， 传入截图路径
         m_ocrInterface = new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
         int delayTime = 0;
@@ -2976,6 +2983,17 @@ bool MainWindow::saveAction(const QPixmap &pix)
     default:
         break;
     }
+
+    QString savePath = m_saveIndex == SaveToDesktop ? "desktop" :
+                       (m_saveIndex == SaveToImage ? "image" : (m_saveIndex == SaveToSpecificDir ? "specified directory" : "clipboard"));
+    QString type = t_pictureFormat == 1 ? "jpg" : (t_pictureFormat == 2 ? "bmp" : "png");
+    QJsonObject obj{
+        {"tid", EventLogUtils::EndScreenShot},
+        {"type", type},
+        {"save_path", savePath}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
     if (m_saveIndex == SaveToSpecificDir && m_saveFileName.isEmpty()) {
         qWarning() << __FUNCTION__ << __LINE__ << "（保存到指定文件夹）文件名称为空！";
         return false;
@@ -4833,6 +4851,11 @@ void MainWindow::startRecord()
  */
 void MainWindow::startAutoScrollShot()
 {
+    QJsonObject obj{
+        {"tid", EventLogUtils::StartScrollShot},
+    };
+    EventLogUtils::get().writeLogs(obj);
+
 #ifdef OCR_SCROLL_FLAGE_ON
     //自动滚动模式已启动
     m_isAutoScrollShotStart = true;

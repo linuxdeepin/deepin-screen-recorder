@@ -24,6 +24,7 @@
 #include "utils.h"
 #include "utils/audioutils.h"
 #include "gstrecord/gstinterface.h"
+#include "utils/eventlogutils.h"
 #ifdef KF5_WAYLAND_FLAGE_ON
 #include "waylandrecord/avlibinterface.h"
 #endif
@@ -587,6 +588,13 @@ void RecordProcess::startRecord()
             waylandRecord();
         }
     }
+
+    QJsonObject obj{
+        {"tid", EventLogUtils::StartRecording},
+        {"type", recordType == RECORD_TYPE_GIF ? "gif" : (recordType == RECORD_TYPE_MKV ? "mkv" : "mp4")}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
     if (Utils::isSysHighVersion1040() == false) {
         return;
     }
@@ -616,6 +624,12 @@ void RecordProcess::emitRecording()
 
 void RecordProcess::stopRecord()
 {
+    QJsonObject obj{
+        {"tid", EventLogUtils::EndRecording},
+        {"type", recordType == RECORD_TYPE_GIF ? "gif" : (recordType == RECORD_TYPE_MKV ? "mkv" : "mp4")}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
     if (Utils::isSysHighVersion1040() == true) {
         qDebug() << "Pause the screen recording timer!";
 

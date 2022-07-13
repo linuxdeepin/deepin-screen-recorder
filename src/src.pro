@@ -103,6 +103,7 @@ HEADERS += main_window.h \
     utils/calculaterect.h \
     utils/saveutils.h \
     utils/shapesutils.h \
+    utils/eventlogutils.h \
     widgets/zoomIndicator.h \
     widgets/zoomIndicatorGL.h \
     widgets/textedit.h \
@@ -169,6 +170,7 @@ SOURCES += main.cpp \
     utils/shortcut.cpp \
     utils/configsettings.cpp \
     utils/baseutils.cpp \
+    utils/eventlogutils.cpp \
     widgets/toptips.cpp \
     widgets/shapeswidget.cpp \
     widgets/textedit.cpp \
