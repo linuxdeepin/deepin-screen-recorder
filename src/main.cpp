@@ -228,6 +228,13 @@ int main(int argc, char *argv[])
             qDebug() << "dbus register waiting!";
             return app->exec();
         } else {
+            QJsonObject obj{
+                {"tid", EventLogUtils::Start},
+                {"mode", 1},
+                {"startup_mode", "A"}
+            };
+            EventLogUtils::get().writeLogs(obj);
+
             dbusService.setSingleInstance(true);
             if (cmdParser.isSet(delayOption)) {
                 qDebug() << "cmd delay screenshot";
