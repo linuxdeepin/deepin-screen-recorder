@@ -21,7 +21,7 @@ Homepage: https://github.com/linuxdeepin/deepin-screen-recorder
 
 Package: deepin-screen-recorder
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libgstreamer1.0-0 (>= 1.0.0)
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgstreamer1.0-0 (>= 1.0.0), ffmpeg
 Recommends: dde-session-ui,deepin-ocr, gstreamer1.0-plugins-bad
 Conflicts: deepin-screenshot
 Replaces: deepin-screenshot

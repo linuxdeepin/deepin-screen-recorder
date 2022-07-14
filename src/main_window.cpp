@@ -3160,7 +3160,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
     if (recordWidth > 0 && recordHeight > 0) {
         //qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
-        if (Utils::isTabletEnvironment && (status::record == m_functionType || status::scrollshot == m_functionType)) {
+        if (m_needSaveScreenshot || (Utils::isTabletEnvironment && (status::record == m_functionType || status::scrollshot == m_functionType))) {
             // 平板环境屏蔽录屏和滚动截图， 不绘制线框
             return;
         }
