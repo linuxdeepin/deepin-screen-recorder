@@ -145,12 +145,12 @@ int main(int argc, char *argv[])
         app->setApplicationVersion("1.0");
         app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-        static const QDate buildDate = QLocale(QLocale::English).
-                                       toDate(QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
-        QString t_date = buildDate.toString("MMdd");
+//        static const QDate buildDate = QLocale(QLocale::English).
+//                                       toDate(QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
+//        QString t_date = buildDate.toString("MMdd");
 
         // Version Time
-        app->setApplicationVersion(DApplication::buildVersion(t_date));
+        app->setApplicationVersion(DApplication::buildVersion(QMAKE_VERSION));
 
         using namespace Dtk::Core;
         Dtk::Core::DLogManager::registerConsoleAppender();
@@ -230,6 +230,7 @@ int main(int argc, char *argv[])
         } else {
             QJsonObject obj{
                 {"tid", EventLogUtils::Start},
+                {"version", QCoreApplication::applicationVersion()},
                 {"mode", 1},
                 {"startup_mode", "A"}
             };

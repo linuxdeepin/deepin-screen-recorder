@@ -58,6 +58,7 @@ void DBusScreenshotService::StartScreenshot()
 {
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
+        {"version", QCoreApplication::applicationVersion()},
         {"mode", 1},
         {"startup_mode", "B6"}
     };
@@ -75,6 +76,7 @@ void DBusScreenshotService::DelayScreenshot(qlonglong in0)
 
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
+        {"version", QCoreApplication::applicationVersion()},
         {"mode", 1},
         {"startup_mode", "B2"}
     };
@@ -101,6 +103,7 @@ void DBusScreenshotService::OcrScreenshot()
 
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
+        {"version", QCoreApplication::applicationVersion()},
         {"mode", 1},
         {"startup_mode", "B4"}
     };
@@ -118,6 +121,7 @@ void DBusScreenshotService::ScrollScreenshot()
 
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
+        {"version", QCoreApplication::applicationVersion()},
         {"mode", 1},
         {"startup_mode", "B5"}
     };
@@ -135,6 +139,7 @@ void DBusScreenshotService::TopWindowScreenshot()
 
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
+        {"version", QCoreApplication::applicationVersion()},
         {"mode", 1},
         {"startup_mode", "B3"}
     };
@@ -152,6 +157,7 @@ void DBusScreenshotService::FullscreenScreenshot()
 
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
+        {"version", QCoreApplication::applicationVersion()},
         {"mode", 1},
         {"startup_mode", "B1"}
     };
