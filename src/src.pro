@@ -13,6 +13,7 @@ message("SYS_EDITION: " $$SYS_EDITION)
 SYS_VERSION=$$system("cat /etc/os-version | grep 'MinorVersion' | grep -o '\-\?[0-9]\+'")
 message("SYS_VERSION: " $$SYS_VERSION)
 
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 if (!equals(SYS_EDITION, "")) {
 # 社区版
