@@ -948,6 +948,7 @@ void MainWindow::initScreenRecorder()
 {
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
+        {"version", QCoreApplication::applicationVersion()},
         {"mode", 1},
         {"startup_mode", "B7"}
     };
@@ -2593,6 +2594,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
 
         QJsonObject obj{
             {"tid", EventLogUtils::StartOcr},
+            {"version", QCoreApplication::applicationVersion()}
         };
         EventLogUtils::get().writeLogs(obj);
 
@@ -2996,6 +2998,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
     QString type = t_pictureFormat == 1 ? "jpg" : (t_pictureFormat == 2 ? "bmp" : "png");
     QJsonObject obj{
         {"tid", EventLogUtils::EndScreenShot},
+        {"version", QCoreApplication::applicationVersion()},
         {"type", type},
         {"save_path", savePath}
     };
@@ -4860,6 +4863,7 @@ void MainWindow::startAutoScrollShot()
 {
     QJsonObject obj{
         {"tid", EventLogUtils::StartScrollShot},
+        {"version", QCoreApplication::applicationVersion()}
     };
     EventLogUtils::get().writeLogs(obj);
 

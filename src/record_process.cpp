@@ -591,6 +591,7 @@ void RecordProcess::startRecord()
 
     QJsonObject obj{
         {"tid", EventLogUtils::StartRecording},
+        {"version", QCoreApplication::applicationVersion()},
         {"type", recordType == RECORD_TYPE_GIF ? "gif" : (recordType == RECORD_TYPE_MKV ? "mkv" : "mp4")}
     };
     EventLogUtils::get().writeLogs(obj);
@@ -626,6 +627,7 @@ void RecordProcess::stopRecord()
 {
     QJsonObject obj{
         {"tid", EventLogUtils::EndRecording},
+        {"version", QCoreApplication::applicationVersion()},
         {"type", recordType == RECORD_TYPE_GIF ? "gif" : (recordType == RECORD_TYPE_MKV ? "mkv" : "mp4")}
     };
     EventLogUtils::get().writeLogs(obj);

@@ -42,7 +42,8 @@ Screenshot::Screenshot(QObject *parent)
 void Screenshot::startScreenshot()
 {
     QJsonObject obj{
-        {"tid", EventLogUtils::StartScreenShot}
+        {"tid", EventLogUtils::StartScreenShot},
+        {"version", QCoreApplication::applicationVersion()}
     };
     EventLogUtils::get().writeLogs(obj);
 
