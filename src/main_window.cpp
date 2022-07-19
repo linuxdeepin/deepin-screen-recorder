@@ -1721,9 +1721,16 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
         qInfo() << __FUNCTION__ << __LINE__ << "将数据传递到剪贴板！";
         cb->setMimeData(t_imageData, QClipboard::Clipboard);
         if (Utils::isWaylandMode) {
+            //wayland下添加超时机制，1s后退出事件循环
+            QTimer* tempTimer = new QTimer();
+            tempTimer->setSingleShot(true);
             QEventLoop eventloop;
             connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
+            connect(tempTimer, SIGNAL(timeout()), &eventloop, SLOT(quit()));
+            tempTimer->start(1000);
             eventloop.exec();
+            tempTimer->stop();
+            delete tempTimer;
         }
     }
     qInfo() << __FUNCTION__ << __LINE__ << "已保存到剪贴板！";
