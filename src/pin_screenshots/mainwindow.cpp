@@ -652,7 +652,7 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
     int timeout = -1;
     unsigned int id = 0;
     QList<QVariant> arg;
-    arg << tr("Pin Screenshots")                 // appname
+    arg << (QCoreApplication::applicationName()) //tr("Pin Screenshots")                 // appname
         << id                                                    // id
         << QString("deepin-screen-recorder")                     // icon
         << tr("Screenshot finished")                              // summary
