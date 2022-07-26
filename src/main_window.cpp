@@ -3953,25 +3953,22 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (!Utils::isTabletEnvironment) {
                     const QPoint mousePoint = QCursor::pos();
                     for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
-                        if (QRect(it->x(), it->y(), it->width(), it->height()).contains(mousePoint)) {
+                        bool flag =  QRect(it->x(), it->y(), it->width(),it->height()).contains(mousePoint);//QRect(it->x(), it->y(), it->width(), it->height()).contains(mousePoint);
+                        if (flag) {
                             if (!qFuzzyCompare(1.0, m_pixelRatio) && m_screenCount > 1) {
                                 int x = it->x();
                                 int y = it->y();
-                                int beforeWidth = 0;
                                 for (int index = 0; index < m_screenCount; ++index) {
                                     if (x >= m_screenInfo[index].x && x < (m_screenInfo[index].x + m_screenInfo[index].width)) {
-                                        recordX = static_cast<int>((x - m_screenInfo[index].x) + beforeWidth / m_pixelRatio);
+                                        recordX = static_cast<int>((x - m_screenInfo[index].x) + m_screenInfo[index].x / m_pixelRatio);
                                         break;
                                     }
-                                    beforeWidth += m_screenInfo[index].width;
                                 }
-                                int beforeHeight = 0;
                                 for (int index = 0; index < m_screenCount; ++index) {
                                     if (y >= m_screenInfo[index].y && y < (m_screenInfo[index].y + m_screenInfo[index].height)) {
-                                        recordY = static_cast<int>((y - m_screenInfo[index].y) + beforeHeight / m_pixelRatio);
+                                        recordY = static_cast<int>((y - m_screenInfo[index].y) + m_screenInfo[index].y / m_pixelRatio);
                                         break;
                                     }
-                                    beforeHeight += m_screenInfo[index].height;
                                 }
 
                             } else {
