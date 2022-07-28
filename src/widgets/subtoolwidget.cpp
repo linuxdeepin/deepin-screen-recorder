@@ -354,11 +354,18 @@ void SubToolWidget::initRecordLabel()
 
     QActionGroup *t_formatGroup = new QActionGroup(this);
     QActionGroup *t_fpsGroup = new QActionGroup(this);
+    //录屏保存位置的组
+    QActionGroup *t_saveGroup = new QActionGroup(this);
     t_formatGroup->setExclusive(true);
     t_fpsGroup->setExclusive(true);
+    t_saveGroup->setExclusive(true);
 
     m_recordOptionMenu = new DMenu(this);
     DFontSizeManager::instance()->bind(m_recordOptionMenu, DFontSizeManager::T8);
+
+    QAction *saveTitleAction = new QAction(m_recordOptionMenu);
+    QAction *saveToDesktopAction = new QAction(m_recordOptionMenu);
+    QAction *saveToVideoAction = new QAction(m_recordOptionMenu);
     //for test
     QAction *formatTitleAction = new QAction(m_recordOptionMenu);
     QAction *gifAction = new QAction(m_recordOptionMenu);
@@ -405,6 +412,15 @@ void SubToolWidget::initRecordLabel()
     t_formatGroup->addAction(mp4Action);
     t_formatGroup->addAction(mkvAction);
 
+    saveTitleAction->setDisabled(true);
+    saveTitleAction->setText(tr("Save to"));
+    saveToDesktopAction->setText(tr("Desktop"));
+    saveToDesktopAction->setCheckable(true);
+    saveToVideoAction->setText(tr("Video"));
+    saveToVideoAction->setCheckable(true);
+    t_saveGroup->addAction(saveToDesktopAction);
+    t_saveGroup->addAction(saveToVideoAction);
+
     fpsTitleAction->setDisabled(true);
     fpsTitleAction->setText(tr("FPS:"));
     fps5Action->setText(tr("5 fps"));
@@ -423,6 +439,12 @@ void SubToolWidget::initRecordLabel()
     t_fpsGroup->addAction(fps20Action);
     t_fpsGroup->addAction(fps24Action);
     t_fpsGroup->addAction(fps30Action);
+
+    m_recordOptionMenu->addAction(saveTitleAction);
+    m_recordOptionMenu->addAction(saveToDesktopAction);
+    m_recordOptionMenu->addAction(saveToVideoAction);
+
+    m_recordOptionMenu->addSeparator();
 
     m_recordOptionMenu->addAction(formatTitleAction);
 #if !(defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__))
@@ -445,6 +467,40 @@ void SubToolWidget::initRecordLabel()
     m_recordOptionMenu->hide();
     m_optionButton->setMenu(m_recordOptionMenu);
 
+    qDebug() << "t_saveIndex: " << ConfigSettings::instance()->value("recordConfig", "save_op_record");
+    SaveAction t_saveIndex = ConfigSettings::instance()->value("recordConfig", "save_op_record").value<SaveAction>();
+    qDebug() << "t_saveIndex: " << t_saveIndex;
+    switch (t_saveIndex) {
+    case SaveToDesktop: {
+        saveToDesktopAction->setChecked(true);
+        ConfigSettings::instance()->setValue("recordConfig", "save_op_record", SaveAction::SaveToDesktop);
+        ConfigSettings::instance()->setValue("recordConfig", "savepath", QStandardPaths::writableLocation(
+                                                 QStandardPaths::DesktopLocation));
+        break;
+    }
+    default:
+        saveToVideoAction->setChecked(true);
+        ConfigSettings::instance()->setValue("recordConfig", "save_op_record", SaveAction::SaveToVideo);
+        ConfigSettings::instance()->setValue("recordConfig", "savepath", QStandardPaths::writableLocation(
+                                                 QStandardPaths::MoviesLocation));
+
+        break;
+    }
+
+    connect(t_saveGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
+    [ = ](QAction * t_act) {
+        if (t_act == saveToDesktopAction) {
+            qDebug() << "save to desktop";
+            ConfigSettings::instance()->setValue("recordConfig", "save_op_record", SaveAction::SaveToDesktop);
+            ConfigSettings::instance()->setValue("recordConfig", "savepath", QStandardPaths::writableLocation(
+                                                     QStandardPaths::DesktopLocation));
+        } else {
+            qDebug() << "save to video";
+            ConfigSettings::instance()->setValue("recordConfig", "save_op_record", SaveAction::SaveToVideo);
+            ConfigSettings::instance()->setValue("recordConfig", "savepath", QStandardPaths::writableLocation(
+                                                     QStandardPaths::MoviesLocation));
+        }
+    });
     // change by hmy
 
     if (t_saveGif == true) {

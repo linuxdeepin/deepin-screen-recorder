@@ -111,6 +111,16 @@ private:
      * @brief 初始化进程
      */
     void initProcess();
+
+    /**
+     * @brief 从配置文件获取录屏文件的保存目录
+     */
+    void getScreenRecordSavePath();
+
+    /**
+     * @brief 保存到剪切板
+     */
+    void save2Clipboard(QString file);
 public slots:
     /**
      * @brief 退出gstreamer录屏
