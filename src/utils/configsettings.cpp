@@ -103,20 +103,22 @@ QVariant ConfigSettings::getDefaultValue(const QString &group, const QString &ke
     QVariant value;
     // QVariant 初始化默认值
     // toInt() == 0, toString() == "", toBool() == false
-    if(Utils::isTabletEnvironment && group == "recordConfig") {
+    if (Utils::isTabletEnvironment && group == "recordConfig") {
         // 平板默认录屏参数，MP4,24帧
-        if(key == "save_as_gif") {
+        if (key == "save_as_gif") {
             return QVariant(false);
-        } else if(key == "lossless_recording") {
+        } else if (key == "lossless_recording") {
             return QVariant(false);
         } else if (key == "mkv_framerate") {
             return QVariant(24);
         }
     }
-
-    if(key == "fontsize"){
+    if (key == "save_op_record") {
+        value.setValue(SaveAction::SaveToVideo);
+    }
+    if (key == "fontsize") {
         value.setValue(12);
-    }else if (key == "saveClip") {
+    } else if (key == "saveClip") {
         value.setValue(1);
     } else if (key == "save_op") {
         if (Utils::isTabletEnvironment) {

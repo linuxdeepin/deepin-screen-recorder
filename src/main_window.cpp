@@ -1731,7 +1731,7 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
         cb->setMimeData(t_imageData, QClipboard::Clipboard);
         if (Utils::isWaylandMode) {
             //wayland下添加超时机制，1s后退出事件循环
-            QTimer* tempTimer = new QTimer();
+            QTimer *tempTimer = new QTimer();
             tempTimer->setSingleShot(true);
             QEventLoop eventloop;
             connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
@@ -2778,25 +2778,22 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     QString tips;
     if (remote_dde_notify_obj_exist && saveFilePath.compare(QString(tr("Clipboard")))) {
         actions << "_open" << tr("View");
+        actions << "_open1" << tr("savepath");
 
         //QString fileDir  = QUrl::fromLocalFile(QFileInfo(saveFilePath).absoluteDir().absolutePath()).toString();
         //QString filePath = QUrl::fromLocalFile(saveFilePath).toString();
 
-        QString command;
+        QString command, savepathcommand;
 
         tips = QString(tr("Saved to %1")).arg(saveFilePath);
-        if (Utils::isTabletEnvironment && QFile("/usr/bin/deepin-album").exists()) {
-            command = QString("deepin-album,%1").arg(saveFilePath);
-            tips = tr("The screenshot has been saved in the album");
-        } else if (Utils::isTabletEnvironment && !QFile("/usr/bin/deepin-album").exists() && QFile("/usr/bin/deepin-image-viewer").exists()) {
-            command = QString("deepin-image-viewer,%1").arg(saveFilePath);
-        } else if (!Utils::isTabletEnvironment && QFile("/usr/bin/dde-file-manager").exists()) {
-            command = QString("dde-file-manager,--show-item,%1").arg(saveFilePath);
-        } else {
-            command = QString("xdg-open,%1").arg(saveFilePath);
+        if (QFile("/usr/bin/dde-file-manager").exists()) {
+            savepathcommand = QString("dde-file-manager,--show-item,%1").arg(saveFilePath);
         }
+        command = QString("xdg-open,%1").arg(saveFilePath);
+        qDebug() << "command:" << command;
 
         hints["x-deepin-action-_open"] = command;
+        hints["x-deepin-action-_open1"] = savepathcommand;
     }
 
     qDebug() << "saveFilePath:" << saveFilePath;
@@ -3953,7 +3950,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (!Utils::isTabletEnvironment) {
                     const QPoint mousePoint = QCursor::pos();
                     for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
-                        bool flag =  QRect(it->x(), it->y(), it->width(),it->height()).contains(mousePoint);//QRect(it->x(), it->y(), it->width(), it->height()).contains(mousePoint);
+                        bool flag =  QRect(it->x(), it->y(), it->width(), it->height()).contains(mousePoint); //QRect(it->x(), it->y(), it->width(), it->height()).contains(mousePoint);
                         if (flag) {
                             if (!qFuzzyCompare(1.0, m_pixelRatio) && m_screenCount > 1) {
                                 int x = it->x();
