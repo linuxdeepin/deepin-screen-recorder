@@ -20,14 +20,14 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Grabaciones</translation>
     </message>
 </context>
 <context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation>Grabar</translation>
+        <translation>Grabación</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -97,10 +97,6 @@ o haga clic en el icono de la bandeja</translation>
         <translation>Captura de pantalla</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>La captura de pantalla se ha guardado en el álbum.</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>Captura de pantalla fallida</translation>
     </message>
@@ -111,6 +107,10 @@ o haga clic en el icono de la bandeja</translation>
     <message>
         <source>Pin Screenshots</source>
         <translation>Anclar captura de pantalla</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -152,6 +152,10 @@ o haga clic en el icono de la bandeja</translation>
     <message>
         <source>Record</source>
         <translation>Grabación</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -357,6 +361,14 @@ o haga clic en el icono de la bandeja</translation>
         <source>Pin screenshots</source>
         <translation>Anclar captura de pantalla</translation>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -552,6 +564,10 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>ogg</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Videos</source>
         <translation type="unfinished"/>
     </message>
 </context>

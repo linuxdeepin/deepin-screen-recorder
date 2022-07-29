@@ -20,7 +20,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Записування</translation>
     </message>
 </context>
 <context>
@@ -97,10 +97,6 @@ or press the shortcut again to stop recording</source>
         <translation>Знімок</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>Знімок вікна було збережено до альбому</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>Не вдалося створити знімок.</translation>
     </message>
@@ -111,6 +107,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Pin Screenshots</source>
         <translation>Пришпилити знімки</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Відкрити теку</translation>
     </message>
 </context>
 <context>
@@ -152,6 +152,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Record</source>
         <translation>Записати</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Відкрити теку</translation>
     </message>
 </context>
 <context>
@@ -357,6 +361,14 @@ or press the shortcut again to stop recording</source>
         <source>Pin screenshots</source>
         <translation>Пришпилити знімки</translation>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation>Почати розпізнавання</translation>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -553,6 +565,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>ogg</source>
         <translation>ogg</translation>
+    </message>
+    <message>
+        <source>Videos</source>
+        <translation>Відео</translation>
     </message>
 </context>
 <context>

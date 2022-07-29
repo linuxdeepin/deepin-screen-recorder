@@ -20,7 +20,7 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Gavació</translation>
     </message>
 </context>
 <context>
@@ -97,10 +97,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Captura de pantalla</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>La captura s&apos;ha desat a l&apos;àlbum.</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>Ha fallat la captura</translation>
     </message>
@@ -111,6 +107,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Pin Screenshots</source>
         <translation>Fixa les captures</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Obre la carpeta</translation>
     </message>
 </context>
 <context>
@@ -152,6 +152,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Record</source>
         <translation>Grava</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Obre la carpeta</translation>
     </message>
 </context>
 <context>
@@ -357,6 +361,14 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <source>Pin screenshots</source>
         <translation>Fixa les captures</translation>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation>Inicia el ROC</translation>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -553,6 +565,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>ogg</source>
         <translation>ogg</translation>
+    </message>
+    <message>
+        <source>Videos</source>
+        <translation>Vídeos</translation>
     </message>
 </context>
 <context>

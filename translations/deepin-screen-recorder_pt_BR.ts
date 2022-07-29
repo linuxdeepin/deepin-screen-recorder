@@ -97,10 +97,6 @@ clique no ícone da bandeja ou use o atalho</translation>
         <translation>Capturar</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>A captura de tela foi salva no álbum</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>A captura de tela falhou.</translation>
     </message>
@@ -110,6 +106,10 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Open Folder</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -152,6 +152,10 @@ clique no ícone da bandeja ou use o atalho</translation>
     <message>
         <source>Record</source>
         <translation>Gravar</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -357,6 +361,14 @@ clique no ícone da bandeja ou use o atalho</translation>
         <source>Pin screenshots</source>
         <translation>Fixar capturas de tela</translation>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -552,6 +564,10 @@ clique no ícone da bandeja ou use o atalho</translation>
     </message>
     <message>
         <source>ogg</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Videos</source>
         <translation type="unfinished"/>
     </message>
 </context>

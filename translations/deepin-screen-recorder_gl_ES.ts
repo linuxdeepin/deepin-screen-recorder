@@ -99,10 +99,6 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <translation>Captura de pantalla</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -112,6 +108,10 @@ ou prema de novo o atallo para deixar de gravar</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -154,6 +154,10 @@ ou prema de novo o atallo para deixar de gravar</translation>
     <message>
         <source>Record</source>
         <translation>Gravar</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -359,6 +363,14 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <source>Pin screenshots</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -554,6 +566,10 @@ ou prema de novo o atallo para deixar de gravar</translation>
     </message>
     <message>
         <source>ogg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Videos</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

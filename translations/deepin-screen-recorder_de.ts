@@ -20,7 +20,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Wird aufgenommen</translation>
     </message>
 </context>
 <context>
@@ -97,10 +97,6 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <translation>Bildschirmaufnahme</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>Die Bildschirmaufnahme wurde im Album gespeichert</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>Bildschirmaufnahme fehlgeschlagen.</translation>
     </message>
@@ -110,6 +106,10 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Pin Screenshots</source>
+        <translation>Bildschirmfotos anheften</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -132,7 +132,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Bildschirmfotos anheften</translation>
     </message>
 </context>
 <context>
@@ -153,6 +153,10 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <source>Record</source>
         <translation>Aufnehmen</translation>
     </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>Screenshot</name>
@@ -169,7 +173,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>Die Aufnahme eines kontinuierlichen Bildschirmfotos ist fehlgeschlagen.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
@@ -193,7 +197,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>Ungültiger Bereich, klicken Sie</translation>
     </message>
 </context>
 <context>
@@ -355,6 +359,14 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Pin screenshots</source>
+        <translation>Bildschirmfotos anheften</translation>
+    </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -544,14 +556,18 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Bildschirmfotos anheften</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>ogg</source>
+        <translation>ogg</translation>
+    </message>
+    <message>
+        <source>Videos</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -566,7 +582,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"/>
+        <translation>Bildschirmaufzeichnung wird derzeit nicht unterstützt</translation>
     </message>
     <message>
         <source>Exit</source>

@@ -416,7 +416,7 @@ void SubToolWidget::initRecordLabel()
     saveTitleAction->setText(tr("Save to"));
     saveToDesktopAction->setText(tr("Desktop"));
     saveToDesktopAction->setCheckable(true);
-    saveToVideoAction->setText(tr("Video"));
+    saveToVideoAction->setText(tr("Videos"));
     saveToVideoAction->setCheckable(true);
     t_saveGroup->addAction(saveToDesktopAction);
     t_saveGroup->addAction(saveToVideoAction);

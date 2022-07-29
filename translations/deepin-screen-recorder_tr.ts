@@ -20,7 +20,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Kaydediyor</translation>
     </message>
 </context>
 <context>
@@ -97,19 +97,19 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation>Ekran Görüntüsü</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>Ekran görüntüsü albüme kaydedildi</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>Ekran görüntüsü başarısız oldu.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Kaydırma Görüntüsü</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
+        <translation>Ekran Görüntülerini Sabitle</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -132,7 +132,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Ekran Görüntülerini Sabitle</translation>
     </message>
 </context>
 <context>
@@ -152,6 +152,10 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Record</source>
         <translation>Kayıt</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -185,7 +189,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Fare tekerleğini kaydırın veya kayan bir ekran görüntüsü almak için tıklayın</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
@@ -351,11 +355,19 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Kaydırma Görüntüsü</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
         <translation>Ekran görüntülerini sabitle</translation>
+    </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -540,18 +552,22 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Kaydırma Görüntüsü</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Ekran Görüntülerini Sabitle</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>ogg</source>
+        <translation>ogg</translation>
+    </message>
+    <message>
+        <source>Videos</source>
         <translation type="unfinished"/>
     </message>
 </context>

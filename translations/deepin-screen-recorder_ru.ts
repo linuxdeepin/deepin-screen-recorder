@@ -20,7 +20,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Запись</translation>
     </message>
 </context>
 <context>
@@ -97,19 +97,19 @@ or press the shortcut again to stop recording</source>
         <translation>Скриншот</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>Снимок экрана был сохранен в альбоме</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>Не удалось создать Снимок экрана</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Скриншот с прокруткой</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Open Folder</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -153,6 +153,10 @@ or press the shortcut again to stop recording</source>
         <source>Record</source>
         <translation>Запись</translation>
     </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>Screenshot</name>
@@ -165,7 +169,7 @@ or press the shortcut again to stop recording</source>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>Получить справку.</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
@@ -173,15 +177,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>Достигнут низ области прокрутки</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation type="unfinished"/>
+        <translation>Достигнута максимальная длина</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>для изменения области захвата</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
@@ -189,11 +193,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>Замедлить прокрутку</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>Неверная область, щелкните</translation>
     </message>
 </context>
 <context>
@@ -347,14 +351,22 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Extract text</source>
-        <translation>Извлечь Текст</translation>
+        <translation>Извлечь текст</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Скриншот с прокруткой</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -540,7 +552,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Скриншот с прокруткой</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
@@ -552,6 +564,10 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>ogg</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Videos</source>
         <translation type="unfinished"/>
     </message>
 </context>

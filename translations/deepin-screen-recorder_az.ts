@@ -20,7 +20,7 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Qeyd aparılır</translation>
     </message>
 </context>
 <context>
@@ -97,10 +97,6 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
         <translation>Ekran şəkli</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>Ekran şəkli albomda saxlanıldı</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>Ekran şəkli çəkilə bilmədi.</translation>
     </message>
@@ -111,6 +107,10 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
     <message>
         <source>Pin Screenshots</source>
         <translation>Ekran şəkllərini sancaqlayın</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Qovluğu açın</translation>
     </message>
 </context>
 <context>
@@ -152,6 +152,10 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
     <message>
         <source>Record</source>
         <translation>Yazmaq</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Qovluğu açın</translation>
     </message>
 </context>
 <context>
@@ -357,6 +361,14 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
         <source>Pin screenshots</source>
         <translation>Ekran şəkllərini sancaqlayın</translation>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation>OCR-i başladın</translation>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -553,6 +565,10 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
     <message>
         <source>ogg</source>
         <translation>ogg</translation>
+    </message>
+    <message>
+        <source>Videos</source>
+        <translation>Videolar</translation>
     </message>
 </context>
 <context>

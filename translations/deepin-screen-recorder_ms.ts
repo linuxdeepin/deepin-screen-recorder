@@ -20,7 +20,7 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Rakaman</translation>
     </message>
 </context>
 <context>
@@ -97,10 +97,6 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <translation>Tangkap Layar</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>Tangkap layar telah disimpan di dalam album</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>Gagal ditangkap layar.</translation>
     </message>
@@ -110,6 +106,10 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
+        <translation>Cemat Tangkap Layar</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -132,7 +132,7 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Cemat Tangkap Layar</translation>
     </message>
 </context>
 <context>
@@ -152,6 +152,10 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>Record</source>
         <translation>Rakam</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -355,6 +359,14 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
+        <translation>Cemat tangkap layar</translation>
+    </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -544,7 +556,7 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Cemat Tangkap Layar</translation>
     </message>
     <message>
         <source>webm</source>
@@ -552,6 +564,10 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>ogg</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Videos</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -566,7 +582,7 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"/>
+        <translation>Rakaman skrin masih tidak disokong buat masa ini</translation>
     </message>
     <message>
         <source>Exit</source>

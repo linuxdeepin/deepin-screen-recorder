@@ -97,10 +97,6 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <translation>Snímek obrazovky</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>Snímek obrazovky byl uložen do alba</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>Pořízení snímku obrazovky se nezdařilo.</translation>
     </message>
@@ -111,6 +107,10 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Pin Screenshots</source>
         <translation>Připnout snímky obrazovky</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -152,6 +152,10 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Record</source>
         <translation>Pořídit záznam</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -357,6 +361,14 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <source>Pin screenshots</source>
         <translation>Připnout snímky obrazovky</translation>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -552,6 +564,10 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>ogg</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Videos</source>
         <translation type="unfinished"/>
     </message>
 </context>

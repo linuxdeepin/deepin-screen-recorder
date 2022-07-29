@@ -20,7 +20,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Nagrywanie</translation>
     </message>
 </context>
 <context>
@@ -38,7 +38,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Zrzut ekranu</translation>
+        <translation>Przechwytywanie ekranu</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -86,23 +86,19 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation>Zapisywanie pliku nagrania ekranu, proszę czekać...</translation>
+        <translation>Zapisywanie nagrania, proszę czekać...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>Jako że efekt okna jest wyłączony podczas operacji, nagrywanie musi zostać zatrzymane</translation>
+        <translation>Z powodu wyłączenia efektów okna podczas nagrywania, zostanie ono zatrzymane</translation>
     </message>
     <message>
         <source>Screenshot</source>
         <translation>Zrzut ekranu</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>Zrzut ekranu został zapisany w albumie</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
-        <translation>Błąd zrzutu ekranu</translation>
+        <translation>Niepowodzenie zrzutu ekranu</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -111,6 +107,10 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <message>
         <source>Pin Screenshots</source>
         <translation>Przypnij zrzuty ekranu</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Otwórz katalog</translation>
     </message>
 </context>
 <context>
@@ -153,6 +153,10 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <source>Record</source>
         <translation>Nagrywanie</translation>
     </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Otwórz katalog</translation>
+    </message>
 </context>
 <context>
     <name>Screenshot</name>
@@ -169,7 +173,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>Błąd ciągłego zrzutu ekranu</translation>
+        <translation>Niepowodzenie ciągłego zrzutu ekranu</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
@@ -181,7 +185,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>dostosuj pole zrzutu ekranu</translation>
+        <translation>dostosuj pole przechwytywania ekranu</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
@@ -189,7 +193,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation>Zwolnij tempo skrolowania</translation>
+        <translation>Zwolnij tempo przewijania</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
@@ -215,7 +219,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation>Regulacja rozmiaru</translation>
+        <translation>Dostosowanie rozmiaru</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -227,11 +231,11 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>Zrzut ekranu okna</translation>
+        <translation>Zrzut okna</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>Opóźnij zrzut ekranu</translation>
+        <translation>Opóźniony zrzut ekranu</translation>
     </message>
     <message>
         <source>Full screenshot</source>
@@ -347,7 +351,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Extract text</source>
-        <translation>Eksportuj tekst</translation>
+        <translation>Wydobądź tekst</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -357,12 +361,20 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <source>Pin screenshots</source>
         <translation>Przypnij zrzuty ekranu</translation>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation>Rozpocznij OCR</translation>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Zrzut ekranu</translation>
+        <translation>Przechwytywanie ekranu</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -373,7 +385,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <name>ShotToolWidget</name>
     <message>
         <source>Blur</source>
-        <translation>Rozmaż</translation>
+        <translation>Rozmycie</translation>
     </message>
     <message>
         <source>Mosaic</source>
@@ -404,7 +416,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Hide Keystroke</source>
-        <translation>Ukryj naciśnięcie klawisza</translation>
+        <translation>Ukrywaj naciśnięcie klawisza</translation>
     </message>
     <message>
         <source>Webcam On</source>
@@ -536,7 +548,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Extract Text</source>
-        <translation>Eksportuj tekst</translation>
+        <translation>Wydobądź tekst</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -553,6 +565,10 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <message>
         <source>ogg</source>
         <translation>ogg</translation>
+    </message>
+    <message>
+        <source>Videos</source>
+        <translation>Filmy</translation>
     </message>
 </context>
 <context>
