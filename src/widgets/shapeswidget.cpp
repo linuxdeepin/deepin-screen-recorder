@@ -1863,191 +1863,7 @@ void ShapesWidget::paintText(QPainter &painter, FourPoints rectFPoints)
 void ShapesWidget::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
-    painter.setRenderHints(QPainter::Antialiasing);
-    QPen pen;
-    for (int i = 0; i < m_shapes.length(); i++) {
-        pen.setColor(BaseUtils::colorIndexOf(m_shapes[i].colorIndex));
-        pen.setWidthF(m_shapes[i].lineWidth - 0.5);
-
-        if (m_shapes[i].type == "rectangle") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            if ((m_shapes[i].isBlur || m_shapes[i].isMosaic) && m_selectedOrder == i) {
-                //画出具有模糊和马赛克效果的矩形框
-                paintRect(painter, m_shapes[i].mainPoints, i, Drawing,
-                          m_shapes[i].isBlur, m_shapes[i].isMosaic);
-            } else {
-                //画出普通的矩形框
-                paintRect(painter, m_shapes[i].mainPoints, m_shapes.length(), Normal,
-                          m_shapes[i].isBlur, m_shapes[i].isMosaic);
-            }
-        } else if (m_shapes[i].type == "oval") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            if ((m_shapes[i].isBlur || m_shapes[i].isMosaic) && m_selectedOrder == i) {
-                paintEllipse(painter, m_shapes[i].mainPoints, i, Drawing,
-                             m_shapes[i].isBlur, m_shapes[i].isMosaic);
-            } else {
-                paintEllipse(painter, m_shapes[i].mainPoints, m_shapes.length(), Normal,
-                             m_shapes[i].isBlur, m_shapes[i].isMosaic);
-            }
-        } else if (m_shapes[i].type == "arrow") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            paintArrow(painter, m_shapes[i].points, pen.width(), m_shapes[i].isStraight);
-        } else if (m_shapes[i].type == "line") {
-            pen.setJoinStyle(Qt::RoundJoin);
-            painter.setPen(pen);
-            paintLine(painter, m_shapes[i].points);
-        } else if (m_shapes[i].type == "text" && !m_clearAllTextBorder) {
-//            qDebug() << "*&^" << m_shapes[i].type << m_shapes[i].index << m_selectedIndex << i;
-            QMap<int, TextEdit *>::iterator m = m_editMap.begin();
-            while (m != m_editMap.end()) {
-                if (m.key() == m_shapes[i].index) {
-                    if (!(m.value()->isReadOnly() && m_selectedIndex != i)) {
-                        paintText(painter, m_shapes[i].mainPoints);
-                    }
-                    break;
-                }
-                ++m;
-            }
-        }
-    }
-
-    if ((m_pos1 != QPointF(0, 0) && m_pos2 != QPointF(0, 0)) || m_currentShape.type == "text") {
-        FourPoints currentFPoint =  getMainPoints(m_pos1, m_pos2, m_isShiftPressed);
-        pen.setColor(BaseUtils::colorIndexOf(m_currentShape.colorIndex));
-        pen.setWidthF(m_currentShape.lineWidth - 0.5);
-
-//        qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
-//                 << ", m_currentShape.type: " << m_currentShape.type
-//                 << ", m_currentType: " << m_currentType;
-
-        if (m_currentType == "rectangle" && m_currentShape.type != "text") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            if (m_currentShape.isBlur || m_currentShape.isMosaic) {
-                paintRect(painter, currentFPoint, m_shapes.length(), Drawing,
-                          m_currentShape.isBlur, m_currentShape.isMosaic);
-            } else {
-                paintRect(painter, currentFPoint, m_shapes.length(), Normal,
-                          m_currentShape.isBlur, m_currentShape.isMosaic);
-            }
-        } else if (m_currentType == "oval" && m_currentShape.type != "text") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            if (m_currentShape.isBlur || m_currentShape.isMosaic) {
-                paintEllipse(painter, currentFPoint, m_shapes.length(), Drawing,
-                             m_currentShape.isBlur, m_currentShape.isMosaic);
-            } else {
-                paintEllipse(painter, currentFPoint, m_shapes.length(), Normal,
-                             m_currentShape.isBlur, m_currentShape.isMosaic);
-            }
-        } else if (m_currentType == "arrow" && m_currentShape.type != "text") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            paintArrow(painter, m_currentShape.points, pen.width(), m_currentShape.isStraight);
-        } else if (m_currentType == "line" && m_currentShape.type != "text") {
-            pen.setJoinStyle(Qt::RoundJoin);
-            painter.setPen(pen);
-            paintLine(painter, m_currentShape.points);
-        } else if (m_currentType == "text" && !m_clearAllTextBorder) {
-            if (m_editing) {
-                paintText(painter, m_currentShape.mainPoints);
-            }
-        }
-    }
-
-    if ((m_hoveredShape.mainPoints[0] != QPointF(0, 0) ||  m_hoveredShape.points.length() != 0)
-            && m_hoveredIndex != -1) {
-        pen.setWidthF(0.5);
-        pen.setColor("#01bdff");
-        if (m_hoveredShape.type == "rectangle") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            paintRect(painter, m_hoveredShape.mainPoints, m_hoveredIndex,  Hovered,
-                      false, false);
-        } else if (m_hoveredShape.type == "oval") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            pen.setCapStyle(Qt::SquareCap);
-            painter.setPen(pen);
-            paintEllipse(painter, m_hoveredShape.mainPoints, m_hoveredIndex, Hovered,
-                         false, false);
-        } else if (m_hoveredShape.type == "arrow") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            paintArrow(painter, m_hoveredShape.points, pen.width(), true);
-        } else if (m_hoveredShape.type == "line") {
-            pen.setJoinStyle(Qt::RoundJoin);
-            painter.setPen(pen);
-            paintLine(painter, m_hoveredShape.points);
-        }
-    } else {
-//        qDebug() << "hoveredShape type:" << m_hoveredShape.type;
-    }
-
-    qreal ration =  this->devicePixelRatioF();
-    QIcon icon(":/images/size/resize_handle_big.svg");
-    QPixmap resizePointImg = icon.pixmap(QSize(RESIZEPOINT_WIDTH,
-                                               RESIZEPOINT_WIDTH));
-    resizePointImg.setDevicePixelRatio(ration);
-
-    //只有当选中图形时m_selectedShape才会有内容
-    if (m_selectedShape.type == "arrow" && m_selectedShape.points.length() == 2) {
-
-//        qreal t_minx = qMin(m_selectedShape.points[1].x(), m_selectedShape.points[0].x());
-//        qreal t_miny = qMin(m_selectedShape.points[1].y(), m_selectedShape.points[0].y());
-//        int t_height = qAbs(m_selectedShape.points[1].y() - m_selectedShape.points[0].y());
-//        int t_width = qAbs(m_selectedShape.points[1].x() - m_selectedShape.points[0].x());
-
-//        QPointF t_midpos;
-//        t_midpos.setX(t_minx + t_width / 2);
-//        t_midpos.setY(t_miny + t_height / 2);
-//        m_selectedShape.arrowRotatePos = t_midpos;
-        paintImgPoint(painter, m_selectedShape.points[0], resizePointImg);
-        paintImgPoint(painter, m_selectedShape.points[1], resizePointImg);
-//        paintImgPoint(painter, t_midpos, resizePointImg);
-
-//        QPixmap rotatePointImg;
-//        rotatePointImg = QIcon(":/image/newUI/normal/icon_rotate.svg").pixmap(ROTATE_ICON_SIZE);
-//        rotatePointImg.setDevicePixelRatio(this->devicePixelRatioF());
-//        paintImgPointArrow(painter, t_midpos, rotatePointImg);
-
-    } else if (m_selectedShape.type != "" && m_selectedShape.type != "text") {
-        if (m_selectedShape.mainPoints[0] != QPointF(0, 0) || m_selectedShape.type == "arrow") {
-
-            QPointF rotatePoint = getRotatePoint(m_selectedShape.mainPoints[0],
-                                                 m_selectedShape.mainPoints[1],
-                                                 m_selectedShape.mainPoints[2],
-                                                 m_selectedShape.mainPoints[3]);
-
-            if (m_selectedShape.type == "oval" || m_selectedShape.type == "line") {
-                pen.setJoinStyle(Qt::MiterJoin);
-                pen.setWidth(1);
-                pen.setColor(QColor("#01bdff"));
-                painter.setPen(pen);
-                paintRect(painter,  m_selectedShape.mainPoints, -1);
-            }
-
-            QPixmap rotatePointImg;
-//            rotatePointImg = QIcon(":/resources/images/size/rotate.svg").pixmap(ROTATE_ICON_SIZE);
-            rotatePointImg = QIcon(":/newUI/normal/icon_rotate.svg").pixmap(ROTATE_ICON_SIZE);
-            rotatePointImg.setDevicePixelRatio(this->devicePixelRatioF());
-            paintImgPoint(painter, rotatePoint, rotatePointImg, false);
-
-            //画出形状的主要骨架点
-            for (int i = 0; i < m_selectedShape.mainPoints.length(); i ++) {
-
-                paintImgPoint(painter, m_selectedShape.mainPoints[i], resizePointImg);
-            }
-
-            //画出形状的其他骨架点
-            FourPoints anotherFPoints = getAnotherFPoints(m_selectedShape.mainPoints);
-            for (int j = 0; j < anotherFPoints.length(); j++) {
-                paintImgPoint(painter, anotherFPoints[j], resizePointImg);
-            }
-        }
-    }
+    handlePaint(painter);
     if (m_shapes.length() > 0) {
         emit setShapesUndo(true);
     }
@@ -2318,4 +2134,201 @@ void ShapesWidget::setGlobalRect(QRect rect)
     m_globalRect = rect;
 }
 
+//将编辑的内容绘制到图片上
+void ShapesWidget::paintImage(QImage &image)
+{
+    QPainter painter(&image);
+    handlePaint(painter);
+    //    backgroundImage.save("/home/uos/Desktop/temp1.png");
+}
+
+//执行绘制操作
+void ShapesWidget::handlePaint(QPainter &painter)
+{
+    painter.setRenderHints(QPainter::Antialiasing);
+    QPen pen;
+    for (int i = 0; i < m_shapes.length(); i++) {
+        pen.setColor(BaseUtils::colorIndexOf(m_shapes[i].colorIndex));
+        pen.setWidthF(m_shapes[i].lineWidth - 0.5);
+
+        if (m_shapes[i].type == "rectangle") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            if ((m_shapes[i].isBlur || m_shapes[i].isMosaic) && m_selectedOrder == i) {
+                //画出具有模糊和马赛克效果的矩形框
+                paintRect(painter, m_shapes[i].mainPoints, i, Drawing,
+                          m_shapes[i].isBlur, m_shapes[i].isMosaic);
+            } else {
+                //画出普通的矩形框
+                paintRect(painter, m_shapes[i].mainPoints, m_shapes.length(), Normal,
+                          m_shapes[i].isBlur, m_shapes[i].isMosaic);
+            }
+        } else if (m_shapes[i].type == "oval") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            if ((m_shapes[i].isBlur || m_shapes[i].isMosaic) && m_selectedOrder == i) {
+                paintEllipse(painter, m_shapes[i].mainPoints, i, Drawing,
+                             m_shapes[i].isBlur, m_shapes[i].isMosaic);
+            } else {
+                paintEllipse(painter, m_shapes[i].mainPoints, m_shapes.length(), Normal,
+                             m_shapes[i].isBlur, m_shapes[i].isMosaic);
+            }
+        } else if (m_shapes[i].type == "arrow") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            paintArrow(painter, m_shapes[i].points, pen.width(), m_shapes[i].isStraight);
+        } else if (m_shapes[i].type == "line") {
+            pen.setJoinStyle(Qt::RoundJoin);
+            painter.setPen(pen);
+            paintLine(painter, m_shapes[i].points);
+        } else if (m_shapes[i].type == "text" && !m_clearAllTextBorder) {
+//            qDebug() << "*&^" << m_shapes[i].type << m_shapes[i].index << m_selectedIndex << i;
+            QMap<int, TextEdit *>::iterator m = m_editMap.begin();
+            while (m != m_editMap.end()) {
+                if (m.key() == m_shapes[i].index) {
+                    if (!(m.value()->isReadOnly() && m_selectedIndex != i)) {
+                        paintText(painter, m_shapes[i].mainPoints);
+                    }
+                    break;
+                }
+                ++m;
+            }
+        }
+    }
+
+    if ((m_pos1 != QPointF(0, 0) && m_pos2 != QPointF(0, 0)) || m_currentShape.type == "text") {
+        FourPoints currentFPoint =  getMainPoints(m_pos1, m_pos2, m_isShiftPressed);
+        pen.setColor(BaseUtils::colorIndexOf(m_currentShape.colorIndex));
+        pen.setWidthF(m_currentShape.lineWidth - 0.5);
+
+//        qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
+//                 << ", m_currentShape.type: " << m_currentShape.type
+//                 << ", m_currentType: " << m_currentType;
+
+        if (m_currentType == "rectangle" && m_currentShape.type != "text") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            if (m_currentShape.isBlur || m_currentShape.isMosaic) {
+                paintRect(painter, currentFPoint, m_shapes.length(), Drawing,
+                          m_currentShape.isBlur, m_currentShape.isMosaic);
+            } else {
+                paintRect(painter, currentFPoint, m_shapes.length(), Normal,
+                          m_currentShape.isBlur, m_currentShape.isMosaic);
+            }
+        } else if (m_currentType == "oval" && m_currentShape.type != "text") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            if (m_currentShape.isBlur || m_currentShape.isMosaic) {
+                paintEllipse(painter, currentFPoint, m_shapes.length(), Drawing,
+                             m_currentShape.isBlur, m_currentShape.isMosaic);
+            } else {
+                paintEllipse(painter, currentFPoint, m_shapes.length(), Normal,
+                             m_currentShape.isBlur, m_currentShape.isMosaic);
+            }
+        } else if (m_currentType == "arrow" && m_currentShape.type != "text") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            paintArrow(painter, m_currentShape.points, pen.width(), m_currentShape.isStraight);
+        } else if (m_currentType == "line" && m_currentShape.type != "text") {
+            pen.setJoinStyle(Qt::RoundJoin);
+            painter.setPen(pen);
+            paintLine(painter, m_currentShape.points);
+        } else if (m_currentType == "text" && !m_clearAllTextBorder) {
+            if (m_editing) {
+                paintText(painter, m_currentShape.mainPoints);
+            }
+        }
+    }
+
+    if ((m_hoveredShape.mainPoints[0] != QPointF(0, 0) ||  m_hoveredShape.points.length() != 0)
+            && m_hoveredIndex != -1) {
+        pen.setWidthF(0.5);
+        pen.setColor("#01bdff");
+        if (m_hoveredShape.type == "rectangle") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            paintRect(painter, m_hoveredShape.mainPoints, m_hoveredIndex,  Hovered,
+                      false, false);
+        } else if (m_hoveredShape.type == "oval") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            pen.setCapStyle(Qt::SquareCap);
+            painter.setPen(pen);
+            paintEllipse(painter, m_hoveredShape.mainPoints, m_hoveredIndex, Hovered,
+                         false, false);
+        } else if (m_hoveredShape.type == "arrow") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            paintArrow(painter, m_hoveredShape.points, pen.width(), true);
+        } else if (m_hoveredShape.type == "line") {
+            pen.setJoinStyle(Qt::RoundJoin);
+            painter.setPen(pen);
+            paintLine(painter, m_hoveredShape.points);
+        }
+    } else {
+//        qDebug() << "hoveredShape type:" << m_hoveredShape.type;
+    }
+
+    qreal ration =  this->devicePixelRatioF();
+    QIcon icon(":/images/size/resize_handle_big.svg");
+    QPixmap resizePointImg = icon.pixmap(QSize(RESIZEPOINT_WIDTH,
+                                               RESIZEPOINT_WIDTH));
+    resizePointImg.setDevicePixelRatio(ration);
+
+    //只有当选中图形时m_selectedShape才会有内容
+    if (m_selectedShape.type == "arrow" && m_selectedShape.points.length() == 2) {
+
+//        qreal t_minx = qMin(m_selectedShape.points[1].x(), m_selectedShape.points[0].x());
+//        qreal t_miny = qMin(m_selectedShape.points[1].y(), m_selectedShape.points[0].y());
+//        int t_height = qAbs(m_selectedShape.points[1].y() - m_selectedShape.points[0].y());
+//        int t_width = qAbs(m_selectedShape.points[1].x() - m_selectedShape.points[0].x());
+
+//        QPointF t_midpos;
+//        t_midpos.setX(t_minx + t_width / 2);
+//        t_midpos.setY(t_miny + t_height / 2);
+//        m_selectedShape.arrowRotatePos = t_midpos;
+        paintImgPoint(painter, m_selectedShape.points[0], resizePointImg);
+        paintImgPoint(painter, m_selectedShape.points[1], resizePointImg);
+//        paintImgPoint(painter, t_midpos, resizePointImg);
+
+//        QPixmap rotatePointImg;
+//        rotatePointImg = QIcon(":/image/newUI/normal/icon_rotate.svg").pixmap(ROTATE_ICON_SIZE);
+//        rotatePointImg.setDevicePixelRatio(this->devicePixelRatioF());
+//        paintImgPointArrow(painter, t_midpos, rotatePointImg);
+
+    } else if (m_selectedShape.type != "" && m_selectedShape.type != "text") {
+        if (m_selectedShape.mainPoints[0] != QPointF(0, 0) || m_selectedShape.type == "arrow") {
+
+            QPointF rotatePoint = getRotatePoint(m_selectedShape.mainPoints[0],
+                                                 m_selectedShape.mainPoints[1],
+                                                 m_selectedShape.mainPoints[2],
+                                                 m_selectedShape.mainPoints[3]);
+
+            if (m_selectedShape.type == "oval" || m_selectedShape.type == "line") {
+                pen.setJoinStyle(Qt::MiterJoin);
+                pen.setWidth(1);
+                pen.setColor(QColor("#01bdff"));
+                painter.setPen(pen);
+                paintRect(painter,  m_selectedShape.mainPoints, -1);
+            }
+
+            QPixmap rotatePointImg;
+//            rotatePointImg = QIcon(":/resources/images/size/rotate.svg").pixmap(ROTATE_ICON_SIZE);
+            rotatePointImg = QIcon(":/newUI/normal/icon_rotate.svg").pixmap(ROTATE_ICON_SIZE);
+            rotatePointImg.setDevicePixelRatio(this->devicePixelRatioF());
+            paintImgPoint(painter, rotatePoint, rotatePointImg, false);
+
+            //画出形状的主要骨架点
+            for (int i = 0; i < m_selectedShape.mainPoints.length(); i ++) {
+
+                paintImgPoint(painter, m_selectedShape.mainPoints[i], resizePointImg);
+            }
+
+            //画出形状的其他骨架点
+            FourPoints anotherFPoints = getAnotherFPoints(m_selectedShape.mainPoints);
+            for (int j = 0; j < anotherFPoints.length(); j++) {
+                paintImgPoint(painter, anotherFPoints[j], resizePointImg);
+            }
+        }
+    }
+}
 
