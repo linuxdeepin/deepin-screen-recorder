@@ -2,7 +2,7 @@
 #define UTILS_H
 #include <QObject>
 
-class Utils :public QObject
+class PUtils :public QObject
 {
 public:
     static bool isWaylandMode;

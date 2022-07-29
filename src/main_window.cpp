@@ -37,7 +37,15 @@
 #include "dbusinterface/drawinterface.h"
 #include "accessibility/acTextDefine.h"
 #include "keydefine.h"
-
+#include "utils/eventlogutils.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "load_libs.h"
+#include "main_window.h"
+#ifdef __cplusplus
+}
+#endif
 #include <DWidget>
 #include <DWindowManagerHelper>
 #include <DForeignWindow>
@@ -221,7 +229,6 @@ void MainWindow::initAttributes()
         if (sessionManagerIntert.isValid()) {
             isLockScreen = sessionManagerIntert.property("Locked").toBool();
         }
-
         if (this->windowHandle() && isLockScreen) {
             this->windowHandle()->setProperty("_d_dwayland_window-type", "override");
         }
@@ -331,6 +338,8 @@ void MainWindow::initAttributes()
         QApplication::sendEvent(this, mouseMove);
         delete mouseMove;
     }
+
+
 }
 #ifdef KF5_WAYLAND_FLAGE_ON
 void MainWindow::setupRegistry(Registry *registry)
@@ -537,6 +546,48 @@ void MainWindow::checkIsLockScreen()
         m_toolBar->setButEnableOnLockScreen(false);
     }
 }
+void MainWindow::initDynamicLibPath()
+{
+    LoadLibNames tmp;
+    QByteArray avcodec = libPath("libavcodec.so").toLatin1();
+    tmp.chAvcodec = avcodec.data();
+    QByteArray avformat = libPath("libavformat.so").toLatin1();
+    tmp.chAvformat = avformat.data();
+    QByteArray avutil = libPath("libavutil.so").toLatin1();
+    tmp.chAvutil = avutil.data();
+    QByteArray udev = libPath("libudev.so").toLatin1();
+    tmp.chUdev = udev.data();
+    QByteArray usb = libPath("libusb-1.0.so").toLatin1();
+    tmp.chUsb = usb.data();
+    QByteArray portaudio = libPath("libportaudio.so").toLatin1();
+    tmp.chPortaudio = portaudio.data();
+    QByteArray v4l2 = libPath("libv4l2.so").toLatin1();
+    tmp.chV4l2 = v4l2.data();
+    QByteArray ffmpegthumbnailer = libPath("libffmpegthumbnailer.so").toLatin1();
+    tmp.chFfmpegthumbnailer = ffmpegthumbnailer.data();
+    QByteArray swscale = libPath("libswscale.so").toLatin1();
+    tmp.chSwscale = swscale.data();
+    QByteArray swresample = libPath("libswresample.so").toLatin1();
+    tmp.chSwresample = swresample.data();
+    setLibNames(tmp);
+}
+QString MainWindow::libPath(const QString &strlib)
+{
+    QDir  dir;
+    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+    dir.setPath(path);
+    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+
+    if (list.contains(strlib))
+        return strlib;
+
+    list.sort();
+    if (list.size() > 0)
+        return list.last();
+
+    return "";
+}
+
 
 void MainWindow::sendSavingNotify()
 {
@@ -837,6 +888,7 @@ void MainWindow::initScreenShot()
     }
     connect(this, &MainWindow::releaseEvent, this, [ = ] {
         qDebug() << "release event !!!";
+        qInfo() << __FUNCTION__ << __LINE__ << "移除事件过滤器！";
         removeEventFilter(this);
         exitScreenCuptureEvent();
     });
@@ -894,6 +946,14 @@ void MainWindow::initScreenShot()
 //初始化录屏窗口
 void MainWindow::initScreenRecorder()
 {
+    QJsonObject obj{
+        {"tid", EventLogUtils::Start},
+        {"version", QCoreApplication::applicationVersion()},
+        {"mode", 1},
+        {"startup_mode", "B7"}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
     if (!m_pScreenCaptureEvent)
         return;
 
@@ -1366,6 +1426,12 @@ void MainWindow::showPreviewWidgetImage(QImage img)
 #endif
 }
 
+void MainWindow::onExitScreenCapture()
+{
+    qInfo() << __FUNCTION__ << __LINE__ << "已超时(3s) 强制退出截图录屏...";
+    _Exit(0);
+}
+
 void MainWindow::initLaunchMode(const QString &launchMode)
 {
     m_functionType = status::shot;
@@ -1624,6 +1690,7 @@ QPixmap MainWindow::getPixmapofRect(const QRect &rect)
 
 bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char *format)
 {
+    qInfo() << __FUNCTION__ << __LINE__ << "保存图片到目录：" << fileName;
     int quality = -1;
     //qt5环境，经测试quality值对png效果明显，对jpg和bmp不明显
     if (pix.width() * pix.height() > 1920 * 1080 && QString("PNG") == QString(format).toUpper()) {
@@ -1638,13 +1705,21 @@ bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char
         }
     }
     if (status::pinscreenshots == m_functionType) return false;
-    return pix.save(fileName, format, quality);
+    if (pix.save(fileName, format, quality)) {
+        qInfo() << __FUNCTION__ << __LINE__ << "保存图片成功！";
+        return true;
+    } else {
+        qWarning() << __FUNCTION__ << __LINE__ << "保存图片失败！";
+        return false;
+    }
+
 }
 
 void MainWindow::save2Clipboard(const QPixmap &pix)
 {
+    qInfo() << __FUNCTION__ << __LINE__ << "正在执行保存到剪贴板...";
     if (pix.isNull()) {
-        qDebug() << __FUNCTION__ << "Copy Null Pix To Clipboard!";
+        qWarning() << __FUNCTION__ << "Copy Null Pix To Clipboard!";
         return;
     }
     if (Utils::is3rdInterfaceStart == false) {
@@ -1652,17 +1727,27 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
         t_imageData->setImageData(pix);
         Q_ASSERT(!pix.isNull());
         QClipboard *cb = qApp->clipboard();
+        qInfo() << __FUNCTION__ << __LINE__ << "将数据传递到剪贴板！";
         cb->setMimeData(t_imageData, QClipboard::Clipboard);
         if (Utils::isWaylandMode) {
+            //wayland下添加超时机制，1s后退出事件循环
+            QTimer *tempTimer = new QTimer();
+            tempTimer->setSingleShot(true);
             QEventLoop eventloop;
             connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
+            connect(tempTimer, SIGNAL(timeout()), &eventloop, SLOT(quit()));
+            tempTimer->start(1000);
             eventloop.exec();
+            tempTimer->stop();
+            delete tempTimer;
         }
     }
+    qInfo() << __FUNCTION__ << __LINE__ << "已保存到剪贴板！";
 }
 
 bool MainWindow::checkSuffix(const QString &str)
 {
+    qInfo() << __FUNCTION__ << __LINE__ << "正在检查文件名称是否合法...";
     int index = str.lastIndexOf(".");
     qDebug() << "index: " << index;
     if (-1 == index) {
@@ -1881,7 +1966,18 @@ void MainWindow::updateToolBarPos()
 
         m_pCameraWatcher = new CameraWatcher(this);
         m_pCameraWatcher->setWatch(true); //取消之前的线程方式，采用定时器监测
-        connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
+//        connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
+
+        initDynamicLibPath();
+        qInfo() << "正在初始化v4l2core...";
+        v4l2core_init();
+        qInfo() << "初始化v4l2core已完成";
+
+        m_devnumMonitor = new DevNumMonitor();
+        m_devnumMonitor->setParent(this);
+        m_devnumMonitor->setObjectName("DevMonitorThread");
+        m_devnumMonitor->setWatch(true); //取消之前的线程方式，采用定时器监测
+        connect(m_devnumMonitor, SIGNAL(existDevice(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
 
         //检测是否是锁频状态下再打开截图
         checkIsLockScreen();
@@ -2326,7 +2422,7 @@ void MainWindow::changeCameraSelectEvent(bool checked)
         m_cameraWidget->hide();
         // 摄像头界面层级下调,防止遮住工具栏
         m_cameraWidget->lower();
-        m_cameraWidget->initCamera();
+        m_cameraWidget->initUI();
     }
 
     m_selectedCamera = checked;
@@ -2351,14 +2447,13 @@ void MainWindow::changeCameraSelectEvent(bool checked)
         m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
         m_cameraWidget->resize(cameraWidgetWidth, cameraWidgetHeight);
         m_cameraWidget->showAt(QPoint(x, y));
-        if (!m_cameraWidget->cameraStart()) {
-            m_cameraWidget->cameraStart();
-        }
+        m_cameraWidget->cameraStart();
+        m_devnumMonitor->setCanUse(false);
     } else {
         m_cameraWidget->cameraStop();
         m_cameraWidget->hide();
+        m_devnumMonitor->setCanUse(true);
     }
-    //m_recordButton->setEnabled(true);
 }
 /*
  * never used
@@ -2503,6 +2598,13 @@ void MainWindow::changeShotToolEvent(const QString &func)
     //调用ocr功能时先截图后，退出截图录屏，将刚截图的图片串递到ocr识别界面；
     if (func == "ocr") {
         //qDebug() << "m_saveFileName: " << m_saveFileName;
+
+        QJsonObject obj{
+            {"tid", EventLogUtils::StartOcr},
+            {"version", QCoreApplication::applicationVersion()}
+        };
+        EventLogUtils::get().writeLogs(obj);
+
         // 调起OCR识别界面， 传入截图路径
         m_ocrInterface = new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
         int delayTime = 0;
@@ -2553,6 +2655,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
 
 void MainWindow::saveScreenShot()
 {
+    qInfo() << __FUNCTION__ << __LINE__ << "正在执行截图保存流程...";
     //双击截图保存按钮会触发重复进入
     static bool isSaving = false;
     if (isSaving) return ;
@@ -2624,11 +2727,13 @@ void MainWindow::saveScreenShot()
     if (status::pinscreenshots == m_functionType) return;
     this->hide();
     sendNotify(m_saveIndex, m_saveFileName, r);
+    qInfo() << __FUNCTION__ << __LINE__ << "截图保存流程已完成！";
 }
 
 void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const bool succeed)
 {
     Q_UNUSED(saveAction);
+    qInfo() << __FUNCTION__ << __LINE__ << "正在发送通知消息...";
     if (Utils::is3rdInterfaceStart) {
         QDBusMessage msg = QDBusMessage::createSignal("/com/deepin/Screenshot", "com.deepin.Screenshot", "Done");
         msg << saveFilePath;
@@ -2673,25 +2778,22 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     QString tips;
     if (remote_dde_notify_obj_exist && saveFilePath.compare(QString(tr("Clipboard")))) {
         actions << "_open" << tr("View");
+        actions << "_open1" << tr("savepath");
 
         //QString fileDir  = QUrl::fromLocalFile(QFileInfo(saveFilePath).absoluteDir().absolutePath()).toString();
         //QString filePath = QUrl::fromLocalFile(saveFilePath).toString();
 
-        QString command;
+        QString command, savepathcommand;
 
         tips = QString(tr("Saved to %1")).arg(saveFilePath);
-        if (Utils::isTabletEnvironment && QFile("/usr/bin/deepin-album").exists()) {
-            command = QString("deepin-album,%1").arg(saveFilePath);
-            tips = tr("The screenshot has been saved in the album");
-        } else if (Utils::isTabletEnvironment && !QFile("/usr/bin/deepin-album").exists() && QFile("/usr/bin/deepin-image-viewer").exists()) {
-            command = QString("deepin-image-viewer,%1").arg(saveFilePath);
-        } else if (!Utils::isTabletEnvironment && QFile("/usr/bin/dde-file-manager").exists()) {
-            command = QString("dde-file-manager,--show-item,%1").arg(saveFilePath);
-        } else {
-            command = QString("xdg-open,%1").arg(saveFilePath);
+        if (QFile("/usr/bin/dde-file-manager").exists()) {
+            savepathcommand = QString("dde-file-manager,--show-item,%1").arg(saveFilePath);
         }
+        command = QString("xdg-open,%1").arg(saveFilePath);
+        qDebug() << "command:" << command;
 
         hints["x-deepin-action-_open"] = command;
+        hints["x-deepin-action-_open1"] = savepathcommand;
     }
 
     qDebug() << "saveFilePath:" << saveFilePath;
@@ -2708,7 +2810,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         << timeout;
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);// timeout
     //    }
-
+    qInfo() << __FUNCTION__ << __LINE__ << "通知消息已发送！";
     QTimer::singleShot(2, [ = ] {
         exitApp();
     });
@@ -2716,6 +2818,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
 
 bool MainWindow::saveAction(const QPixmap &pix)
 {
+    qInfo() << __FUNCTION__ << __LINE__ << "正在执行保存动作...";
     //不必要的拷贝，浪费时间
     //QPixmap screenShotPix = pix;
     QDateTime currentDate;
@@ -2742,12 +2845,14 @@ bool MainWindow::saveAction(const QPixmap &pix)
     //    m_saveIndex = SaveToImage;
     switch (m_saveIndex) {
     case SaveToDesktop: {
+        qInfo() << __FUNCTION__ << __LINE__ << "保存到桌面！";
         saveOption = QStandardPaths::DesktopLocation;
         ConfigSettings::instance()->setValue("common", "default_savepath", QStandardPaths::writableLocation(
                                                  QStandardPaths::DesktopLocation));
         break;
     }
     case SaveToImage: {
+        qInfo() << __FUNCTION__ << __LINE__ << "保存到图片！";
         saveOption = QStandardPaths::PicturesLocation;
         ConfigSettings::instance()->setValue("common", "default_savepath", QStandardPaths::writableLocation(
                                                  QStandardPaths::PicturesLocation));
@@ -2808,6 +2913,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
         if (m_saveFileName.isEmpty() || QFileInfo(m_saveFileName).isDir()) {
             // 保存到指定位置, 用户在选择保存目录时，点击取消。保存失败，且不显示通知信息
             m_noNotify = true;
+            qInfo() << __FUNCTION__ << __LINE__ << "取消保存到指定位置！";
             return false;
         }
 
@@ -2854,18 +2960,22 @@ bool MainWindow::saveAction(const QPixmap &pix)
             qDebug() << "The fileSuffix is right!  " << fileSuffix;
         }
 
+        qInfo() << __FUNCTION__ << __LINE__ << "保存到指定文件夹！";
         qDebug() << "The fileName is: " << m_saveFileName;
         ConfigSettings::instance()->setValue("common", "default_savepath",
                                              QFileInfo(m_saveFileName).dir().absolutePath());
         break;
     }
     case AutoSave:
+        qInfo() << __FUNCTION__ << __LINE__ << "自动保存！";
         break;
     case SaveToClipboard: {
+        qInfo() << __FUNCTION__ << __LINE__ << "保存到剪切板！";
         qDebug() << SaveToClipboard << "SaveToClipboard";
         break;
     }
     case PadDefaultPath: {
+        qInfo() << __FUNCTION__ << __LINE__ << "平板模式保存到默认目录！";
         QDir dir;
         QString padImgPath = QString("%1%2%3")
                              .arg(QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first())
@@ -2886,7 +2996,20 @@ bool MainWindow::saveAction(const QPixmap &pix)
     default:
         break;
     }
+
+    QString savePath = m_saveIndex == SaveToDesktop ? "desktop" :
+                       (m_saveIndex == SaveToImage ? "image" : (m_saveIndex == SaveToSpecificDir ? "specified directory" : "clipboard"));
+    QString type = t_pictureFormat == 1 ? "jpg" : (t_pictureFormat == 2 ? "bmp" : "png");
+    QJsonObject obj{
+        {"tid", EventLogUtils::EndScreenShot},
+        {"version", QCoreApplication::applicationVersion()},
+        {"type", type},
+        {"save_path", savePath}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
     if (m_saveIndex == SaveToSpecificDir && m_saveFileName.isEmpty()) {
+        qWarning() << __FUNCTION__ << __LINE__ << "（保存到指定文件夹）文件名称为空！";
         return false;
     } else if (m_saveIndex == SaveToSpecificDir || !m_saveFileName.isEmpty()) {
         if (!saveImg(pix, m_saveFileName, QFileInfo(m_saveFileName).suffix().toLocal8Bit()))
@@ -3702,13 +3825,29 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             } else {
                 if (status::shot == m_functionType) {
                     if (!m_toolBar->isVisible() && !isFirstReleaseButton) {
-                        //QPoint curPos = this->cursor().pos(); 采用全局坐标，替换局部坐标
+                        QPoint curPos = this->cursor().pos(); //采用全局坐标，替换局部坐标
+                        //qDebug()  << "1 >>>> curPos: " << curPos << " , mouseEvent->globalPos(): "<< mouseEvent->globalPos();
                         //mouseEvent->globalPos()此接口获取的光标坐标是已经缩放后的坐标，需还原
-                        QPoint curPos = mouseEvent->globalPos() * m_pixelRatio;
+//                        QPoint curPos = mouseEvent->globalPos();
+                        for (int index = 0; index < m_screenCount; ++index) {
+                            //判断在哪块屏幕上
+                            if (curPos.x() >= m_screenInfo[index].x &&
+                                    curPos.x() < (m_screenInfo[index].x + m_screenInfo[index].width) &&
+                                    curPos.y() >= m_screenInfo[index].y &&
+                                    curPos.y() < (m_screenInfo[index].y + m_screenInfo[index].height)) {
+                                //qDebug() << "m_screenInfo[index]" << m_screenInfo[index].x << m_screenInfo[index].y << m_screenInfo[index].width<< m_screenInfo[index].height;
+                                curPos.setX(static_cast<int>((curPos.x() - m_screenInfo[index].x) * m_pixelRatio + m_screenInfo[index].x));
+                                curPos.setY(static_cast<int>((curPos.y() - m_screenInfo[index].y) * m_pixelRatio + m_screenInfo[index].y));
+                                break;
+                            }
+                        }
+
+                        //qDebug()  << "2 >>>> curPos: " << curPos << " , mouseEvent->globalPos(): "<< mouseEvent->globalPos();
                         QPoint tmpPos;
                         //m_backgroundRect中的所有参数都是已经缩放后的
                         QPoint topLeft = m_backgroundRect.topLeft() * m_pixelRatio;
 
+                        //qDebug() << "m_backgroundRect: " <<m_backgroundRect;
                         //光标x坐标+110+8 > 截图背景左上角x坐标+截图背景宽度 判断光标横向是否超出屏幕
                         if (curPos.x() + INDICATOR_WIDTH + CURSOR_WIDTH > topLeft.x() + m_backgroundRect.width() * m_pixelRatio) {
                             tmpPos.setX(curPos.x() - INDICATOR_WIDTH);
@@ -3727,19 +3866,22 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 //                            int beforeWidth = 0;
 //                            for (int index = 0; index < m_screenCount; ++index) {
 //                                //判断在哪块屏幕上
-//                                if (tmpPos.x() >= m_screenInfo[index].x && tmpPos.x() < (m_screenInfo[index].x + m_screenInfo[index].width)) {
-//                                    tmpPos.setX(static_cast<int>((tmpPos.x() - m_screenInfo[index].x) + beforeWidth / m_pixelRatio));
+//                                if (tmpPos.x() >= m_screenInfo[index].x &&
+//                                        tmpPos.x() < (m_screenInfo[index].x + m_screenInfo[index].width) &&
+//                                                      tmpPos.y() >= m_screenInfo[index].y &&
+//                                                      tmpPos.y() < (m_screenInfo[index].y + m_screenInfo[index].height)) {
+//                                    qDebug() << "m_screenInfo[index]" << m_screenInfo[index].x << m_screenInfo[index].y << m_screenInfo[index].width<< m_screenInfo[index].height;
+//                                    tmpPos.setX(static_cast<int>((tmpPos.x() - m_screenInfo[index].x) / m_pixelRatio + m_screenInfo[index].x/m_pixelRatio ));
 //                                    break;
 //                                }
 //                                beforeWidth += m_screenInfo[index].width;
 //                            }
 //                        }
 
-                        QPoint tempPoint =  QPoint(
-                                                std::max(tmpPos.x() - topLeft.x(), 0),
-                                                std::max(tmpPos.y() - topLeft.y(), 0));
 
+                        QPoint tempPoint =  QPoint(std::max(tmpPos.x() - topLeft.x(), 0), std::max(tmpPos.y() - topLeft.y(), 0));
                         //由于move接口，移动的坐标点都是直接将未经缩放的点直接缩放后得到，即point / m_pixelRatio
+                        m_zoomIndicator->setCursorPos(curPos);
                         m_zoomIndicator->showMagnifier(tempPoint / m_pixelRatio);
                     }
 
@@ -3808,25 +3950,22 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 if (!Utils::isTabletEnvironment) {
                     const QPoint mousePoint = QCursor::pos();
                     for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
-                        if (QRect(it->x(), it->y(), it->width(), it->height()).contains(mousePoint)) {
+                        bool flag =  QRect(it->x(), it->y(), it->width(), it->height()).contains(mousePoint); //QRect(it->x(), it->y(), it->width(), it->height()).contains(mousePoint);
+                        if (flag) {
                             if (!qFuzzyCompare(1.0, m_pixelRatio) && m_screenCount > 1) {
                                 int x = it->x();
                                 int y = it->y();
-                                int beforeWidth = 0;
                                 for (int index = 0; index < m_screenCount; ++index) {
                                     if (x >= m_screenInfo[index].x && x < (m_screenInfo[index].x + m_screenInfo[index].width)) {
-                                        recordX = static_cast<int>((x - m_screenInfo[index].x) + beforeWidth / m_pixelRatio);
+                                        recordX = static_cast<int>((x - m_screenInfo[index].x) + m_screenInfo[index].x / m_pixelRatio);
                                         break;
                                     }
-                                    beforeWidth += m_screenInfo[index].width;
                                 }
-                                int beforeHeight = 0;
                                 for (int index = 0; index < m_screenCount; ++index) {
                                     if (y >= m_screenInfo[index].y && y < (m_screenInfo[index].y + m_screenInfo[index].height)) {
-                                        recordY = static_cast<int>((y - m_screenInfo[index].y) + beforeHeight / m_pixelRatio);
+                                        recordY = static_cast<int>((y - m_screenInfo[index].y) + m_screenInfo[index].y / m_pixelRatio);
                                         break;
                                     }
-                                    beforeHeight += m_screenInfo[index].height;
                                 }
 
                             } else {
@@ -4574,13 +4713,19 @@ void MainWindow::exitScreenCuptureEvent()
 {
     qDebug() << "line: " << __LINE__ << " >>> function: " << __func__;
 #if !(defined (__mips__) || defined (__loongarch_64__) || defined (__loongarch__))
+//    qInfo() << __FUNCTION__ << __LINE__ << "正在退出截图录屏全局事件监听线程...";
     if (!m_isZhaoxin && m_pScreenCaptureEvent) {
-        m_pScreenCaptureEvent->releaseRes();
-        //m_pScreenCaptureEvent->terminate();
-        m_pScreenCaptureEvent->wait();
-        delete m_pScreenCaptureEvent;
-        m_pScreenCaptureEvent = nullptr;
+//            qInfo() << __FUNCTION__ << __LINE__ << "正在释放截图录屏全局事件X11相关资源...";
+//            m_pScreenCaptureEvent->releaseRes();
+//            //m_pScreenCaptureEvent->terminate();
+//            qInfo() << __FUNCTION__ << __LINE__ << "全局事件监听线程正在等待释放x11相关资源...";
+//            m_pScreenCaptureEvent->wait();
+//            qInfo() << __FUNCTION__ << __LINE__ << "已释放X11相关资源";
+//            delete m_pScreenCaptureEvent;
+//            m_pScreenCaptureEvent = nullptr;
+
     }
+//    qInfo() << __FUNCTION__ << __LINE__ << "截图录屏全局事件监听线程已退出！";
 #endif
 }
 
@@ -4620,34 +4765,19 @@ void MainWindow::shapeClickedSlot(QString shape)
 
 void MainWindow::on_CheckVideoCouldUse(bool canUse)
 {
+    qDebug() << "camera canuse" << canUse;
     if (!canUse) {
         if (m_cameraWidget) {
             // 监测设备文件是否存在
-            if (m_cameraWidget->getcameraStatus() == false) {
-                qDebug() << "camera canuse" << canUse;
-                m_cameraWidget->cameraStop();
-                m_cameraWidget->setCameraStop(canUse);
-                m_cameraOffFlag = true;
-                m_cameraWidget->hide();
-                m_toolBar->setCameraDeviceEnable(canUse);
-            } else {
-                // 设置Coulduse的值，使m_watchTimer每次都能监测设备文件是否存在
-                if (m_pCameraWatcher)
-                    m_pCameraWatcher->setCoulduseValue(true);
-            }
-        } else {
-            m_toolBar->setCameraDeviceEnable(canUse);
+            m_cameraOffFlag = true;
+            m_cameraWidget->cameraStop();
+            m_cameraWidget->hide();
         }
-    } else if (canUse) {
         m_toolBar->setCameraDeviceEnable(canUse);
-        if (m_cameraOffFlag) {
-            // 重新加载设备
-            m_cameraWidget->cameraResume();
-        }
+    } else {
+        m_toolBar->setCameraDeviceEnable(canUse);
     }
 }
-
-
 
 //截图模式及滚动截图模式键盘按下执行的操作 如果快捷键需要打开下拉列表，则不能使用全局快捷键处理，需使用此方法处理
 void MainWindow::shotKeyPressEvent(const unsigned char &keyCode)
@@ -4732,6 +4862,12 @@ void MainWindow::startRecord()
  */
 void MainWindow::startAutoScrollShot()
 {
+    QJsonObject obj{
+        {"tid", EventLogUtils::StartScrollShot},
+        {"version", QCoreApplication::applicationVersion()}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
 #ifdef OCR_SCROLL_FLAGE_ON
     //自动滚动模式已启动
     m_isAutoScrollShotStart = true;
@@ -4801,6 +4937,7 @@ void MainWindow::startManualScrollShot()
 
 void MainWindow::shotCurrentImg()
 {
+    qInfo() << __FUNCTION__ << __LINE__ << "正在截取当前图片...";
     if (recordWidth == 0 || recordHeight == 0)
         return;
 
@@ -4829,9 +4966,8 @@ void MainWindow::shotCurrentImg()
     QTimer::singleShot(eventTime, &eventloop1, SLOT(quit()));
     eventloop1.exec();
 
-    qDebug() << "shotCurrentImg shotFullScreen";
     if (m_isShapesWidgetExist) {
-        qDebug() << "hide shotFullScreen";
+        qInfo() << __FUNCTION__ << __LINE__ << "隐藏截图编辑界面！";
         m_shapesWidget->hide();
     }
     m_sizeTips->hide();
@@ -4844,10 +4980,12 @@ void MainWindow::shotCurrentImg()
 
     m_resultPixmap = m_resultPixmap.copy(target);
     addCursorToImage();
+    qInfo() << __FUNCTION__ << __LINE__ << "已截取当前图片！";
 }
 
 void MainWindow::addCursorToImage()
 {
+    qInfo() << __FUNCTION__ << __LINE__ << "正在往图片中添加光标...";
     //获取配置是否截取光标
     int t_saveCursor = ConfigSettings::instance()->value("save", "saveCursor").toInt();
     if (t_saveCursor == 0) {
@@ -4886,11 +5024,13 @@ void MainWindow::addCursorToImage()
         delete[] pixels;
         XFree(m_CursorImage);
     }
+    qInfo() << __FUNCTION__ << __LINE__ << "已在图片中添加光标！";
     return;
 }
 
 void MainWindow::shotFullScreen(bool isFull)
 {
+    qInfo() << __FUNCTION__ << __LINE__ << "正在截取全屏...";
     QRect target = m_backgroundRect;
     qDebug() << "m_backgroundRect" << m_backgroundRect;
     if (Utils::isWaylandMode) {
@@ -4907,6 +5047,7 @@ void MainWindow::shotFullScreen(bool isFull)
         m_resultPixmap = getPixmapofRect(target);
     }
     qDebug() << "m_resultPixmap" << m_resultPixmap.rect();
+    qInfo() << __FUNCTION__ << __LINE__ << "已截取全屏！";
 }
 
 //void MainWindow::flashTrayIcon()
@@ -5142,7 +5283,16 @@ void MainWindow::stopRecord()
 void MainWindow::startCountdown()
 {
     recordButtonStatus = RECORD_BUTTON_WAIT;
+//    qDebug() << "recordX:" << recordX << " , recordY: " << recordY
+//             << " , recordWidth: " << recordWidth << " , recordHeight: " << recordHeight;
     //const QPoint topLeft = geometry().topLeft();
+    //避免某些分辨率下,再进行屏幕缩放时,导致录制区域位置变成负数.例如1280*1024的1.25倍缩放
+    if (recordX < 0) {
+        recordX = 0;
+    }
+    if (recordY < 0) {
+        recordY = 0;
+    }
     QRect recordRect {
         static_cast<int>(recordX *m_pixelRatio/* + topLeft.x()*/),
         static_cast<int>(recordY *m_pixelRatio/* + topLeft.y()*/),
@@ -5169,7 +5319,6 @@ void MainWindow::startCountdown()
         if (m_cameraWidget && m_selectedCamera) {
             m_cameraWidget->hide();
             m_cameraWidget->cameraStop();
-            m_cameraWidget->setCameraStop(true);
             m_pRecorderRegion->initCameraInfo(m_cameraWidget->postion(), m_cameraWidget->geometry().size());
         }
     }
@@ -5196,6 +5345,7 @@ void MainWindow::startCountdown()
         countdownTooltip->show();
         m_pVoiceVolumeWatcher->setWatch(false);
         m_pCameraWatcher->setWatch(false);
+        m_devnumMonitor->setWatch(false); //取消之前的线程方式，采用定时器监测
     }
 
     //先隐藏，再显示
@@ -5291,6 +5441,7 @@ void MainWindow::exitApp()
     m_initScroll = false; // 保存时关闭滚动截图
     emit releaseEvent();
     qApp->quit();
+    qInfo() << __FUNCTION__ << __LINE__ << "退出截图录屏！";
     if (Utils::isWaylandMode) {
         _Exit(0);
     }

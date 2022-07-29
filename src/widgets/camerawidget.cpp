@@ -20,6 +20,8 @@
  */
 
 #include "camerawidget.h"
+#include "v4l2_core.h"
+
 
 #include <QMouseEvent>
 #include <QDebug>
@@ -30,6 +32,8 @@
 #include <QBitmap>
 #include <QtConcurrent>
 
+#include "../camera/LPF_V4L2.h"
+#include "../camera/majorimageprocessingthread.h"
 
 CameraWidget::CameraWidget(DWidget *parent) : DWidget(parent)
 {
@@ -37,16 +41,13 @@ CameraWidget::CameraWidget(DWidget *parent) : DWidget(parent)
 
 CameraWidget::~CameraWidget()
 {
-//    camera->stop();
-//    timer_image_capture->stop();
-//    delete camera;
-//    delete viewfinder;
-//    if(nullptr != imageCapture){
-//        delete imageCapture;
-//        imageCapture = nullptr;
-//    }
-//    delete timer_image_capture;
-//    delete m_cameraUI;
+
+    if (m_imgPrcThread) {
+        m_imgPrcThread->stop();
+        m_imgPrcThread->deleteLater();
+        m_imgPrcThread = nullptr;
+    }
+    qDebug() << "~CameraWidget()";
 }
 
 
@@ -81,7 +82,8 @@ int CameraWidget::getRecordHeight()
 {
     return recordHeight;
 }
-void CameraWidget::initCamera()
+
+void CameraWidget::initUI()
 {
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
@@ -89,193 +91,124 @@ void CameraWidget::initCamera()
     setMouseTracking(true);
     setAcceptDrops(true);
     m_cameraUI = new DLabel(this);
-    m_wildScreen = false;
-
-    m_capturePath = QDir::homePath() + QDir::separator() + "." + qApp->applicationName();
-    QDir t_appDir;
-    t_appDir.mkpath(m_capturePath);
 
     QHBoxLayout *t_hlayout = new QHBoxLayout(this);
     t_hlayout->addWidget(m_cameraUI);
     this->setLayout(t_hlayout);
 
+    //第一次打开摄像头界面通过QCamera获取摄像头名称
     while (QCameraInfo::defaultCamera().isNull()) {
         QEventLoop loop;
         QTimer::singleShot(200, &loop, SLOT(quit()));
         loop.exec();
     }
-    camera = new QCamera(QCameraInfo::defaultCamera(), this);
     m_deviceName = QCameraInfo::defaultCamera().deviceName();
-    m_deviceFile = new QFile(this);
-    m_deviceFile->setFileName(m_deviceName);
-    camera->setCaptureMode(QCamera::CaptureStillImage);
-    connect(camera, SIGNAL(error(QCamera::Error)), this, SLOT(cameraInitError(QCamera::Error)));
-    imageCapture = new QCameraImageCapture(camera, this);
 
-    timer_image_capture = new QTimer(this);
-    connect(timer_image_capture, &QTimer::timeout, this, &CameraWidget::captureImage);
 }
 
-bool CameraWidget::cameraStart()
+void CameraWidget::cameraStart()
 {
-    if (m_isInitCamera) {
-        timer_image_capture->start(50);
-        return true;
-    }else {
-        camera->start();
-    }
-
-    if (imageCapture->isCaptureDestinationSupported(QCameraImageCapture::CaptureToFile)) {
-        imageCapture->setCaptureDestination(QCameraImageCapture::CaptureToFile);
-        qDebug() << imageCapture->supportedBufferFormats();
-        imageCapture->setBufferFormat(QVideoFrame::PixelFormat::Format_Jpeg);
-        qDebug() << imageCapture->supportedResolutions(imageCapture->encodingSettings());
-
-        QList<QSize> t_capSizeLst = imageCapture->supportedResolutions(imageCapture->encodingSettings());
-
-        QSize t_resolutionSize;
-        if (t_capSizeLst.isEmpty()) {
-            qDebug() << "no resolution";
-            return false;
+    if (!m_isInitCamera) {
+        qInfo() << "第一次初始化摄像头...";
+        if (m_imgPrcThread == nullptr) {
+            m_imgPrcThread = new MajorImageProcessingThread;
+            m_imgPrcThread->setParent(this);
+            m_imgPrcThread->setObjectName("MajorThread");
+            connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage)),
+                    this, SLOT(onReceiveMajorImage(QImage)));
         }
-
-        if (t_capSizeLst.contains(QSize(640, 360))) {
-            t_resolutionSize = QSize(640, 360);
-            m_wildScreen = false;
-        }
-
-        else if (t_capSizeLst.contains(QSize(640, 480))) {
-            t_resolutionSize = QSize(640, 480);
-            m_wildScreen = true;
-        }
-
-        else {
-            t_resolutionSize = t_capSizeLst.last();
-            m_wildScreen = false;
-        }
-
-        QImageEncoderSettings iamge_setting;
-        iamge_setting.setResolution(t_resolutionSize.width(), t_resolutionSize.height());
-
-        qDebug() << iamge_setting.resolution();
-        imageCapture->setEncodingSettings(iamge_setting);
-        connect(imageCapture, &QCameraImageCapture::imageCaptured, this, &CameraWidget::processCapturedImage);
-        connect(imageCapture, &QCameraImageCapture::imageSaved, this, &CameraWidget::deleteCapturedImage);
-        timer_image_capture->start(200);
         m_isInitCamera = true;
-        return true;
+        startCameraV4l2(m_deviceName.toLatin1());
+        qInfo() << "第一次初始化摄像头已完成！";
+    } else {
+        qInfo() << "重新初始化摄像头...";
+        restartDevices();
+        qInfo() << "重新初始化摄像头已完成！";
+    }
+}
+int CameraWidget::startCameraV4l2(const char *device)
+{
+    qInfo() << "正在初始化摄像头(" << device << ")...";
+    int ret = camInit(device);
+    v4l2_dev_t *vd =  get_v4l2_device_handler();
+
+    if (vd == nullptr) {
+        qWarning() << "camInit failed! not found camera device!";
+        return -1;
+    }
+    qDebug() << "videoDevice->videodevice: " << vd->videodevice;
+    if (ret == E_OK) {
+        //m_imgPrcThread->setCameraDevice(vd);
+        m_imgPrcThread->start();
+    } else {
+        qWarning() << "camInit failed";
+    }
+    qInfo() << "摄像头已初始化(" << device << ")";
+    return ret;
+}
+
+void CameraWidget::restartDevices()
+{
+    //获取当前的摄像头设备
+    v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
+
+    if (m_imgPrcThread != nullptr && m_imgPrcThread->isRunning())
+        m_imgPrcThread->stop();
+
+    while (m_imgPrcThread->isRunning());
+    QString str;
+
+    if (devicehandler != nullptr) {
+        str = QString(devicehandler->videodevice);
+        close_v4l2_device_handler();
     }
 
-
-    return false;
+    v4l2_device_list_t *devlist = get_device_list();
+    if (devlist->num_devices == 2) {
+        for (int i = 0 ; i < devlist->num_devices; i++) {
+            QString str1 = QString(devlist->list_devices[i].device);
+            if (str != str1) {
+                if (E_OK == startCameraV4l2(devlist->list_devices[i].device)) {
+                    break;
+                }
+            }
+        }
+    } else {
+        for (int i = 0 ; i < devlist->num_devices; i++) {
+            QString str1 = QString(devlist->list_devices[i].device);
+            if (str == str1) {
+                if (i == devlist->num_devices - 1) {
+                    startCameraV4l2(devlist->list_devices[0].device);
+                } else {
+                    startCameraV4l2(devlist->list_devices[i + 1].device);
+                }
+                break;
+            }
+            if (str.isEmpty()) {
+                startCameraV4l2(devlist->list_devices[0].device);
+                break;
+            }
+        }
+    }
 }
 
 void CameraWidget::cameraStop()
 {
-    timer_image_capture->stop();
-    //camera->stop();
-    //camera->unload();
-    //m_cameraUI->clear();
+    m_cameraUI->clear();
+
+    if (m_imgPrcThread != nullptr) {
+        m_imgPrcThread->stop();
+    }
 }
 
-void CameraWidget::cameraResume()
+void CameraWidget::onReceiveMajorImage(QImage image)
 {
-    qDebug() << "QCameraInfo::availableCameras" << QCameraInfo::defaultCamera();
-    camera = new QCamera(QCameraInfo::defaultCamera(), this);
-    m_deviceName = QCameraInfo::defaultCamera().deviceName();
-    m_deviceFile->setFileName(m_deviceName);
-//    camera->load();
-    camera->setCaptureMode(QCamera::CaptureStillImage);
-    imageCapture = new QCameraImageCapture(camera, this);
-
-    m_isInitCamera = false;
-}
-/*
- * never used
-bool CameraWidget::getScreenResolution()
-{
-    return m_wildScreen;
-}
-*/
-void CameraWidget::captureImage()
-{
-   imageCapture->capture(m_capturePath);
-}
-
-void CameraWidget::processCapturedImage(int request_id, const QImage &img)
-{
-    Q_UNUSED(request_id);
-    QImage t_image = img.scaled(this->width(), this->height(), Qt::IgnoreAspectRatio, Qt::FastTransformation);
-//    QPixmap pixmap = round(QPixmap::fromImage(t_image), 35);
+    QImage t_image = image.scaled(this->width(), this->height(), Qt::IgnoreAspectRatio, Qt::FastTransformation);
     QPixmap pixmap = QPixmap::fromImage(t_image);
-    m_cameraUI->setPixmap(pixmap);
-}
-/*
- * never used
-QPixmap CameraWidget::round(const QPixmap &img_in, int radius)
-{
-    if (img_in.isNull()) {
-        return QPixmap();
-    }
-    QSize size(img_in.size());
-    QBitmap mask(size);
-    QPainter painter(&mask);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform);
-    painter.fillRect(mask.rect(), Qt::transparent);
-    painter.setBrush(Qt::transparent);
-    painter.drawRoundedRect(mask.rect(), radius, radius);
-    QPixmap image = img_in;// .scaled(size);
-    image.setMask(mask);
-    return image;
-}
-*/
-void CameraWidget::deleteCapturedImage(int id, const QString &fileName)
-{
-    Q_UNUSED(id);
-    QFile::remove(fileName);
-}
-
-bool CameraWidget::setCameraStop(bool status)
-{
-    Q_UNUSED(status);
-
-    camera->unload();
-//    delete camera;
-
-    if (camera) {
-        delete camera;
-    }
-
-    if (imageCapture) {
-        delete imageCapture;
-        imageCapture = nullptr;
-    }
-    return true;
-
-}
-
-bool CameraWidget::getcameraStatus()
-{
-    if (camera->state() != QCamera::ActiveState || !m_deviceFile->exists()) {
-        return false;
-    }
-
-    else {
-        return true;
-    }
-}
-/*
- * never used
-void CameraWidget::cameraStatus()
-{
-    qDebug() << "camera->status()" << camera->status();
-}
-*/
-void CameraWidget::cameraInitError(QCamera::Error error)
-{
-    qDebug() << "camera->error()" << error;
-//    camera = new QCamera(QCameraInfo::defaultCamera(), this);
+//    pixmap.save(QString("/home/wangcong/Desktop/test/test_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
+    if (m_cameraUI)
+        m_cameraUI->setPixmap(pixmap);
+    //qInfo() << "接收当前摄像头画面！";
 }
 
 void CameraWidget::enterEvent(QEvent *e)
@@ -412,4 +345,11 @@ CameraWidget::Position CameraWidget::postion()
 void CameraWidget::setCameraWidgetImmovable(bool immovable)
 {
     m_Immovable = immovable;
+}
+
+int CameraWidget::getCameraStatus()
+{
+    if (m_imgPrcThread)
+        return m_imgPrcThread->getStatus();
+    return 0;
 }

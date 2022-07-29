@@ -41,6 +41,7 @@
 #include "utils/saveutils.h"
 #include "utils/voicevolumewatcher.h"
 #include "utils/camerawatcher.h"
+#include "camera/devnummonitor.h"
 #include "utils/screengrabber.h"
 #include "dbusinterface/dbuscontrolcenter.h"
 #include "dbusinterface/dbusnotify.h"
@@ -154,13 +155,10 @@ public:
             delete m_pCameraWatcher;
             m_pCameraWatcher = nullptr;
         }
-
-        if (m_pScreenCaptureEvent) {
-            m_pScreenCaptureEvent->releaseRes();
-            //m_pScreenCaptureEvent->terminate();
-            m_pScreenCaptureEvent->wait();
-            delete m_pScreenCaptureEvent;
-            m_pScreenCaptureEvent = nullptr;
+        if (m_devnumMonitor) {
+            m_devnumMonitor->setWatch(false);
+            delete m_devnumMonitor;
+            m_devnumMonitor = nullptr;
         }
 #ifdef KF5_WAYLAND_FLAGE_ON
         if (Utils::isWaylandMode && m_connectionThread) {
@@ -244,7 +242,26 @@ public:
             delete m_keyButtonList.at(i);
         }
         m_keyButtonList.clear();
-
+        if (m_pScreenCaptureEvent) {
+            qInfo() << __FUNCTION__ << __LINE__ << "正在退出截图录屏全局事件监听线程...";
+            QTimer *delayTimer = new QTimer();
+            connect(delayTimer, &QTimer::timeout, this, &MainWindow::onExitScreenCapture);
+            qInfo() << __FUNCTION__ << __LINE__ << "启动3s超时监听";
+            delayTimer->start(3000);
+            qInfo() << __FUNCTION__ << __LINE__ << "正在释放截图录屏全局事件X11相关资源...";
+            m_pScreenCaptureEvent->releaseRes();
+            //m_pScreenCaptureEvent->terminate();
+            qInfo() << __FUNCTION__ << __LINE__ << "全局事件监听线程正在等待释放x11相关资源...";
+            m_pScreenCaptureEvent->wait();
+            qInfo() << __FUNCTION__ << __LINE__ << "已释放X11相关资源";
+            delete m_pScreenCaptureEvent;
+            m_pScreenCaptureEvent = nullptr;
+            qInfo() << __FUNCTION__ << __LINE__ << "截图录屏全局事件监听线程已退出！";
+            if (delayTimer) {
+                delayTimer->stop();
+                delete delayTimer;
+            }
+        }
         //以前的流程没执行到此处，没暴露延迟500ms的问题，以前的无用代码
         QThread::currentThread()->msleep(500);
     }
@@ -541,6 +558,11 @@ public slots:
      */
     void exitScreenCuptureEvent();
     void showPreviewWidgetImage(QImage img);//显示预览窗口和图片
+
+    /**
+     * @brief 有些时候退出全局事件监听线程会卡住，此时强退截图录屏
+     */
+    void onExitScreenCapture();
 protected:
     bool eventFilter(QObject *object, QEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
@@ -681,6 +703,10 @@ protected:
      * @brief 启动截图录屏时检测是否是锁屏状态
      */
     void checkIsLockScreen();
+
+    void initDynamicLibPath();
+    QString libPath(const QString &strlib);
+
 private:
 //    QList<WindowRect> windowRects;
     /**
@@ -697,6 +723,10 @@ private:
     RecordProcess recordProcess;
     voiceVolumeWatcher *m_pVoiceVolumeWatcher = nullptr;
     CameraWatcher *m_pCameraWatcher = nullptr;
+    /**
+     * @brief 摄像头设备监听器
+     */
+    DevNumMonitor *m_devnumMonitor = nullptr;
     ScreenGrabber m_screenGrabber;
 //    VoiceRecordProcess voiceRecordProcess;
 //    WindowRect rootWindowRect;

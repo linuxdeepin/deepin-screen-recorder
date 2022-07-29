@@ -61,14 +61,14 @@ const QString IconWidget::itemContextMenu()
     items.reserve(2);
     QMap<QString, QVariant> shot;
     shot["itemId"] = "shot";
-    shot["itemText"] = tr("Screenshot") + "(Ctrl+Alt+A)";
+    shot["itemText"] = tr("Screenshot") + getSysShortcuts("screenshot");
     shot["isActive"] = true;
     items.push_back(shot);
 
 
     QMap<QString, QVariant> recorder;
     recorder["itemId"] = "recorder";
-    recorder["itemText"] = tr("Recording") + "(Ctrl+Alt+R)";
+    recorder["itemText"] = tr("Recording") + getSysShortcuts("deepin-screen-recorder");
     recorder["isActive"] = true;
     items.push_back(recorder);
 
@@ -99,6 +99,49 @@ void IconWidget::invokedMenuItem(const QString &menuId)
 
         shotDBusInterface.asyncCall("stopRecord");
     }
+}
+
+QString IconWidget::getSysShortcuts(const QString type)
+{
+    QDBusInterface shortcuts("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding", "com.deepin.daemon.Keybinding");
+    if (!shortcuts.isValid()) {
+        return getDefaultValue(type);
+    }
+
+    QDBusReply<QString> shortLists = shortcuts.call(QStringLiteral("ListAllShortcuts"));
+    QJsonDocument doc = QJsonDocument::fromJson(shortLists.value().toUtf8());
+    QJsonArray shorts = doc.array();
+    QMap<QString, QString> shortcutsMap;
+
+    for (QJsonValue shortcut : shorts) {
+        const QString Id = shortcut["Id"].toString();
+        if (Id == type) {
+            QJsonArray Accels = shortcut["Accels"].toArray();
+            QString AccelsString;
+            for (QJsonValue accel : Accels)  {
+                AccelsString += accel.toString();
+            }
+            AccelsString.remove('<');
+            AccelsString.replace('>', '+');
+            AccelsString.replace("Control", "Ctrl");
+            AccelsString = "(" + AccelsString + ")";
+            return AccelsString;
+        }
+    }
+    return getDefaultValue(type);
+}
+
+QString IconWidget::getDefaultValue(const QString type)
+{
+    QString retShortcut;
+    if (type == "screenshot") {
+        retShortcut = "Ctrl+Alt+A";
+    } else if (type == "deepin-screen-recorder") {
+        retShortcut = "Ctrl+Alt+R";
+    } else {
+        qDebug() << __FUNCTION__ << __LINE__ << "Shortcut Error !!!!!!!!!" << type;
+    }
+    return retShortcut;
 }
 
 

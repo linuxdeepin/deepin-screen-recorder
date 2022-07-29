@@ -13,6 +13,7 @@ message("SYS_EDITION: " $$SYS_EDITION)
 SYS_VERSION=$$system("cat /etc/os-version | grep 'MinorVersion' | grep -o '\-\?[0-9]\+'")
 message("SYS_VERSION: " $$SYS_VERSION)
 
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 if (!equals(SYS_EDITION, "")) {
 # 社区版
@@ -55,8 +56,18 @@ contains( DEFINES, KF5_WAYLAND_FLAGE_ON ) {
 TEMPLATE = app
 TARGET = deepin-screen-recorder
 INCLUDEPATH += . \
-            /usr/include/gstreamer-1.0
+            /usr/include/gstreamer-1.0 \
+
+INCLUDEPATH += ../3rdparty/libcam/libcam/ \
+               ../3rdparty/libcam/libcam_v4l2core/ \
+               ../3rdparty/libcam/libcam_render/ \
+               ../3rdparty/libcam/libcam_encoder/ \
+               ../3rdparty/libcam/libcam_audio/ \
+               ../3rdparty/libcam/load_libs.h
+message("PWD: " $$PWD)
+
 include(accessibility/accessible.pri)
+include(../3rdparty/libcam/libcam.pri)
 
 QMAKE_CXX += -Wl,--as-need -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
 QMAKE_CXXFLAGS += -Wl,--as-need -fPIE -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,-O1
@@ -69,7 +80,8 @@ isEqual(ARCH, mips64) {
 }
 
 CONFIG += link_pkgconfig c++11
-PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0 gstreamer-app-1.0
+
+PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0 libusb-1.0 gstreamer-app-1.0
 
 RESOURCES = ../assets/image/deepin-screen-recorder.qrc \
     ../assets/resources/resources.qrc \
@@ -93,6 +105,7 @@ HEADERS += main_window.h \
     utils/calculaterect.h \
     utils/saveutils.h \
     utils/shapesutils.h \
+    utils/eventlogutils.h \
     widgets/zoomIndicator.h \
     widgets/zoomIndicatorGL.h \
     widgets/textedit.h \
@@ -120,7 +133,10 @@ HEADERS += main_window.h \
     dbusinterface/ocrinterface.h \
     dbusinterface/pinscreenshotsinterface.h \
     gstrecord/gstrecordx.h \
-    gstrecord/gstinterface.h
+    gstrecord/gstinterface.h \
+    camera/majorimageprocessingthread.h \
+    camera/LPF_V4L2.h \
+    camera/devnummonitor.h
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
     HEADERS += widgets/scrollshottip.h \
     utils/pixmergethread.h \
@@ -156,6 +172,7 @@ SOURCES += main.cpp \
     utils/shortcut.cpp \
     utils/configsettings.cpp \
     utils/baseutils.cpp \
+    utils/eventlogutils.cpp \
     widgets/toptips.cpp \
     widgets/shapeswidget.cpp \
     widgets/textedit.cpp \
@@ -182,7 +199,10 @@ SOURCES += main.cpp \
     dbusinterface/ocrinterface.cpp \
     dbusinterface/pinscreenshotsinterface.cpp \
     gstrecord/gstrecordx.cpp \
-    gstrecord/gstinterface.cpp
+    gstrecord/gstinterface.cpp \
+    camera/majorimageprocessingthread.cpp \
+    camera/LPF_V4L2.c \
+    camera/devnummonitor.cpp
 
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
     SOURCES += widgets/scrollshottip.cpp \
@@ -210,7 +230,7 @@ QT += dbus
 QT += multimedia
 QT += multimediawidgets
 QT += concurrent
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -ldl -limagevisualresult
 
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
     LIBS += -lopencv_core -lopencv_imgproc

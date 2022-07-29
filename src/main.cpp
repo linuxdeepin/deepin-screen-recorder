@@ -27,6 +27,7 @@
 #include "widgets/toolbutton.h"
 #include "dbusservice/dbusscreenshotservice.h"
 #include "accessibility/acObjectList.h"
+#include "utils/eventlogutils.h"
 
 #include <DWidget>
 #include <DLog>
@@ -144,12 +145,12 @@ int main(int argc, char *argv[])
         app->setApplicationVersion("1.0");
         app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-        static const QDate buildDate = QLocale(QLocale::English).
-                                       toDate(QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
-        QString t_date = buildDate.toString("MMdd");
+//        static const QDate buildDate = QLocale(QLocale::English).
+//                                       toDate(QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
+//        QString t_date = buildDate.toString("MMdd");
 
         // Version Time
-        app->setApplicationVersion(DApplication::buildVersion(t_date));
+        app->setApplicationVersion(DApplication::buildVersion(APP_VERSION));
 
         using namespace Dtk::Core;
         Dtk::Core::DLogManager::registerConsoleAppender();
@@ -226,8 +227,15 @@ int main(int argc, char *argv[])
         if (cmdParser.isSet(dbusOption)) {
             qDebug() << "dbus register waiting!";
             return app->exec();
-
         } else {
+            QJsonObject obj{
+                {"tid", EventLogUtils::Start},
+                {"version", QCoreApplication::applicationVersion()},
+                {"mode", 1},
+                {"startup_mode", "A"}
+            };
+            EventLogUtils::get().writeLogs(obj);
+
             dbusService.setSingleInstance(true);
             if (cmdParser.isSet(delayOption)) {
                 qDebug() << "cmd delay screenshot";

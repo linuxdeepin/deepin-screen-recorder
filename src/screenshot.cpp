@@ -23,6 +23,7 @@
 #include "dbusinterface/dbusnotify.h"
 #include "utils/configsettings.h"
 #include "utils.h"
+#include "utils/eventlogutils.h"
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -40,6 +41,12 @@ Screenshot::Screenshot(QObject *parent)
 
 void Screenshot::startScreenshot()
 {
+    QJsonObject obj{
+        {"tid", EventLogUtils::StartScreenShot},
+        {"version", QCoreApplication::applicationVersion()}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
     m_window.initAttributes();
     m_window.initResource();
     m_window.initLaunchMode(m_launchMode);
@@ -57,6 +64,7 @@ void Screenshot::startScreenshot()
 void Screenshot::delayScreenshot(double num)
 {
     qDebug() << "init with delay";
+
     QString summary = QString(tr("Screen Capture will start in %1 seconds").arg(num));
     QStringList actions = QStringList();
     QVariantMap hints;
