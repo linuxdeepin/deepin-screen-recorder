@@ -1986,6 +1986,7 @@ void MainWindow::updateToolBarPos()
     QPoint toolbarPoint;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
+    //初始坐标在捕捉区域左下角，工具栏右对齐捕捉区域
     toolbarPoint = QPoint(recordX + recordWidth - m_toolBar->width(),
                           std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
 
@@ -1997,8 +1998,7 @@ void MainWindow::updateToolBarPos()
             toolbarPoint.setX(0);
         }
     }
-    if (toolbarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height()
-            - m_toolBar->height() - 28) {
+    if (toolbarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height() - m_toolBar->height() - 28) {
         m_repaintSideBar = true;
         if (recordY > 28 * 2 + 10) {
             toolbarPoint.setY(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING);
@@ -2012,16 +2012,20 @@ void MainWindow::updateToolBarPos()
     // 多屏情况下，横向，有可能在屏幕外面。
     if (m_isScreenVertical == false) {
         for (int i = 0; i < m_screenInfo.size(); ++i) {
+            //判断工具栏左上角在哪块屏幕上
             if (toolbarPoint.x() + m_toolBar->width() >= m_screenInfo[i].x && toolbarPoint.x() + m_toolBar->width() <= m_screenInfo[i].x + m_screenInfo[i].width) {
                 if (toolbarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING) {
                     // 屏幕上超出
-                    toolbarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
+                    toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
+                    //toolbarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
+                    qDebug() << "工具栏位置超出屏幕上边缘，已矫正 >>> toolbarPoint: " << toolbarPoint;
                 } else if (toolbarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
                     // 屏幕下超出
                     int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
                     if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING)
                         y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_toolBar->height() - TOOLBAR_Y_SPACING;
                     toolbarPoint.setY(y);
+                    qDebug() << "工具栏位置超出屏幕下边缘，已矫正 >>> toolbarPoint: " << toolbarPoint;
                 }
                 break;
             }
@@ -2672,6 +2676,7 @@ void MainWindow::saveScreenShot()
     if (status::scrollshot != m_functionType)
         m_shotflag = 1;
     emit saveActionTriggered();
+    qInfo() << "隐藏所有widget!";
     hideAllWidget();
 
     m_initScroll = false; // 保存时关闭滚动截图
@@ -2717,7 +2722,6 @@ void MainWindow::saveScreenShot()
     } else {
         //除了滚动截图时，突然进入锁屏界面不会执行shotCurrentImg()函数，其他情况都会执行shotCurrentImg()
         if (!(status::scrollshot == m_functionType && m_isLockedState)) {
-            qInfo() << "Shot currnet image!";
             //普通截图保存图片
             shotCurrentImg();
         }
@@ -4948,42 +4952,62 @@ void MainWindow::shotCurrentImg()
     //m_drawNothing = true;
     update();
 
-    int eventTime = 60;
-    QRect rect = QApplication::desktop()->screenGeometry();
-    if (rect.width()*rect.height() > 1920 * 1080) {
-        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin) {
-            eventTime = 120;
-        } else if (QSysInfo::currentCpuArchitecture().startsWith("mips")) {
-            eventTime = 260;
-        } else if (QSysInfo::currentCpuArchitecture().startsWith("arm")) {
-            eventTime = 220;
-        }
-    } else {
-        if (QSysInfo::currentCpuArchitecture().startsWith("mips")) {
-            eventTime = 160;
-        } else if (QSysInfo::currentCpuArchitecture().startsWith("arm")) {
-            eventTime = 120;
-        }
-    }
-    QEventLoop eventloop1;
-    QTimer::singleShot(eventTime, &eventloop1, SLOT(quit()));
-    eventloop1.exec();
+//    int eventTime = 60;
+//    QRect rect = QApplication::desktop()->screenGeometry();
+//    if (rect.width()*rect.height() > 1920 * 1080) {
+//        if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin) {
+//            eventTime = 120;
+//        } else if (QSysInfo::currentCpuArchitecture().startsWith("mips")) {
+//            eventTime = 260;
+//        } else if (QSysInfo::currentCpuArchitecture().startsWith("arm")) {
+//            eventTime = 220;
+//        }
+//    } else {
+//        if (QSysInfo::currentCpuArchitecture().startsWith("mips")) {
+//            eventTime = 160;
+//        } else if (QSysInfo::currentCpuArchitecture().startsWith("arm")) {
+//            eventTime = 120;
+//        }
+//    }
+//    QEventLoop eventloop1;
+//    QTimer::singleShot(eventTime, &eventloop1, SLOT(quit()));
+//    eventloop1.exec();
 
-    if (m_isShapesWidgetExist) {
-        qInfo() << __FUNCTION__ << __LINE__ << "隐藏截图编辑界面！";
-        m_shapesWidget->hide();
-    }
-    m_sizeTips->hide();
-    shotFullScreen();
-    //qDebug() << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect() << m_pixelRatio;
+//    if (m_isShapesWidgetExist) {
+//        qInfo() << __FUNCTION__ << __LINE__ << "隐藏截图编辑界面！";
+//        m_shapesWidget->hide();
+//    }
+//    m_sizeTips->hide();
+//    shotFullScreen();
+//    //qDebug() << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect() << m_pixelRatio;
+//    QRect target(static_cast<int>(recordX * m_pixelRatio),
+//                 static_cast<int>(recordY * m_pixelRatio),
+//                 static_cast<int>(recordWidth * m_pixelRatio),
+//                 static_cast<int>(recordHeight * m_pixelRatio));
+
+//    m_resultPixmap = m_resultPixmap.copy(target);
+
+    m_resultPixmap =  paintImage();
+    addCursorToImage();
+    qInfo() << __FUNCTION__ << __LINE__ << "已截取当前图片！";
+}
+
+//将背景图进行裁剪，并将编辑的内容绘制到图片上
+QPixmap MainWindow::paintImage()
+{
+    QImage backgroundImage = m_backgroundPixmap.toImage();
+    QImage saveImage;
     QRect target(static_cast<int>(recordX * m_pixelRatio),
                  static_cast<int>(recordY * m_pixelRatio),
                  static_cast<int>(recordWidth * m_pixelRatio),
                  static_cast<int>(recordHeight * m_pixelRatio));
 
-    m_resultPixmap = m_resultPixmap.copy(target);
-    addCursorToImage();
-    qInfo() << __FUNCTION__ << __LINE__ << "已截取当前图片！";
+    //从背景图中裁剪出截图区域
+    saveImage = backgroundImage.copy(target);
+    if(m_shapesWidget)
+        //在图片上绘制编辑的内容
+        m_shapesWidget->paintImage(saveImage);
+    return QPixmap::fromImage(saveImage);
 }
 
 void MainWindow::addCursorToImage()
