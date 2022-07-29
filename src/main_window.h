@@ -143,6 +143,7 @@ public:
     explicit MainWindow(DWidget *parent = nullptr);
     ~MainWindow()
     {
+        qInfo() << __FUNCTION__ << __LINE__ << "正在释放截图录屏相关资源...";
         if (m_pVoiceVolumeWatcher) {
             m_pVoiceVolumeWatcher->setWatch(false);
             // 之前run函数里面有sleep,所以此处加terminate，现在采用定时器检测摄像头，就不考虑各个平台下线程退出的方式
@@ -264,6 +265,7 @@ public:
         }
         //以前的流程没执行到此处，没暴露延迟500ms的问题，以前的无用代码
         QThread::currentThread()->msleep(500);
+        qInfo() << __FUNCTION__ << __LINE__ << "截图录屏相关资源已释放";
     }
 
     enum ShotMouseStatus {
@@ -568,6 +570,14 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
     int getAction(QEvent *event);
+
+    /**
+     * @brief paintImage: 绘制图片
+     * @return 结果
+     * 将背景图进行裁剪，并将编辑的内容绘制到图片上
+     */
+    QPixmap paintImage();
+
     void paintEvent(QPaintEvent *event) override;
     void resizeBottom(QMouseEvent *event);
     void resizeLeft(QMouseEvent *event);
@@ -985,6 +995,9 @@ private:
      *   1.2.如果需将1920*1080上的点换算到此屏幕应该除以m_pixelRatio
      */
     qreal m_pixelRatio = 1.0;
+    /**
+     * @brief 是否打开窗口特效；true:3d模式 false:2d模式
+     */
     bool m_hasComposite = true;
     bool m_initScreenShot;
     bool m_initScreenRecorder;
