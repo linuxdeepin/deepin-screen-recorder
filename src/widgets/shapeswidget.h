@@ -171,6 +171,11 @@ public slots:
     void menuCloseSlot();
     //void updateSideBarPosition();
     void setGlobalRect(QRect rect);
+    /**
+     * @brief paintImage: 绘制图片
+     * 将编辑的内容绘制到图片上
+     */
+    void paintImage(QImage &image);
 
 protected:
     bool event(QEvent *event);
@@ -183,7 +188,11 @@ protected:
     void mouseMoveEvent(QMouseEvent *e);
     void paintEvent(QPaintEvent *);
     void enterEvent(QEvent *e);
-
+    /**
+     * @brief handlePaint:执行绘制操作
+     * @param painter:画笔
+     */
+    void handlePaint(QPainter &painter);
     /**
      * @brief clickeShapes:只是用来判断是否选中图形,不是真实鼠标事件会触发（触摸屏）
      * @param pos:坐标
