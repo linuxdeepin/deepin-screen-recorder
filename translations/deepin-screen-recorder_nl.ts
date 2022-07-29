@@ -20,7 +20,7 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Opname</translation>
     </message>
 </context>
 <context>
@@ -97,10 +97,6 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <translation>Schermfoto</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>De schermfoto is opgeslagen in het album</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>De schermfoto kan niet worden gemaakt.</translation>
     </message>
@@ -111,6 +107,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Pin Screenshots</source>
         <translation>Schermfoto&apos;s vastmaken</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Map openen</translation>
     </message>
 </context>
 <context>
@@ -152,6 +152,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Record</source>
         <translation>Opnemen</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Map openen</translation>
     </message>
 </context>
 <context>
@@ -357,6 +361,14 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <source>Pin screenshots</source>
         <translation>Schermfoto&apos;s vastmaken</translation>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation>Ocr maken</translation>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -553,6 +565,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>ogg</source>
         <translation>ogg</translation>
+    </message>
+    <message>
+        <source>Videos</source>
+        <translation>Video&apos;s</translation>
     </message>
 </context>
 <context>

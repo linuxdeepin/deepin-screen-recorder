@@ -20,7 +20,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Tallennus</translation>
     </message>
 </context>
 <context>
@@ -97,10 +97,6 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <translation>Ruudunkaappaus</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>Ruudunkaappaus on tallennettu albumiin</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>Kaappaus epäonnistui.</translation>
     </message>
@@ -111,6 +107,10 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Pin Screenshots</source>
         <translation>Kiinnitä kaappaukset</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -152,6 +152,10 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Record</source>
         <translation>Tallenna</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -357,6 +361,14 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <source>Pin screenshots</source>
         <translation>Kiinnitä kuvakaappaukset</translation>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -552,6 +564,10 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>ogg</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Videos</source>
         <translation type="unfinished"/>
     </message>
 </context>

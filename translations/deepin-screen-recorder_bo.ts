@@ -97,10 +97,6 @@ or press the shortcut again to stop recording</source>
         <translation>བརྙན་བཤུས།</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>ཡིག་ཆ་བཅད་ནས་པར་དེབ་ནང་ཉར་བ།</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>པར་དྲས་མ་ཐུབ།</translation>
     </message>
@@ -111,6 +107,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Pin Screenshots</source>
         <translation>སྦྱར་རིས།</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -152,6 +152,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Record</source>
         <translation>བརྙན་ཕབ།</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -357,6 +361,14 @@ or press the shortcut again to stop recording</source>
         <source>Pin screenshots</source>
         <translation>སྦྱར་རིས།</translation>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -552,6 +564,10 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>ogg</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Videos</source>
         <translation type="unfinished"/>
     </message>
 </context>

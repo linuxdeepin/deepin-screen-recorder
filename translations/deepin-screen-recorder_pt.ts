@@ -20,7 +20,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Gravação</translation>
     </message>
 </context>
 <context>
@@ -97,10 +97,6 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <translation>Captura de ecrã</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>A captura de ecrã foi guardada no álbum</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>A captura de ecrã falhou.</translation>
     </message>
@@ -111,6 +107,10 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Pin Screenshots</source>
         <translation>Afixar capturas de ecrã</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -152,6 +152,10 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Record</source>
         <translation>Gravar</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -357,6 +361,14 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <source>Pin screenshots</source>
         <translation>Afixar capturas de ecrã</translation>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -548,10 +560,14 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>ogg</source>
+        <translation>ogg</translation>
+    </message>
+    <message>
+        <source>Videos</source>
         <translation type="unfinished"/>
     </message>
 </context>

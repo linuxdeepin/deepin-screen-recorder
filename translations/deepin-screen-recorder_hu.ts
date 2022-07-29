@@ -20,14 +20,14 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Rögzítés</translation>
     </message>
 </context>
 <context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation>Rögzítés</translation>
+        <translation>Felvétel</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -38,7 +38,7 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Képernyőrögzítő</translation>
+        <translation>Képernyő Rögzítő</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -97,10 +97,6 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <translation>Képernyőkép</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>A képernyőkép mentve az albumba</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>A képernyőkép készítése sikertelen</translation>
     </message>
@@ -111,6 +107,10 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>Pin Screenshots</source>
         <translation>Képernyőképek kitűzése</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Mappa megnyitása</translation>
     </message>
 </context>
 <context>
@@ -152,6 +152,10 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>Record</source>
         <translation>Felvétel</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Mappa megnyitása</translation>
     </message>
 </context>
 <context>
@@ -357,12 +361,20 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <source>Pin screenshots</source>
         <translation>Képernyőképek kitűzése</translation>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation>Optikai karakterfelismerés indítása</translation>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Képernyőrögzítő</translation>
+        <translation>Képernyő Rögzítő</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -553,6 +565,10 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>ogg</source>
         <translation>ogg</translation>
+    </message>
+    <message>
+        <source>Videos</source>
+        <translation>Videók</translation>
     </message>
 </context>
 <context>

@@ -42,7 +42,9 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
     screenshotGroup.groupItems << ShortcutItem(tr("Quick start"), getSysShortcuts("screenshot"))
                                << ShortcutItem(tr("Window screenshot"), getSysShortcuts("screenshot-window"))
                                << ShortcutItem(tr("Delay screenshot"),  getSysShortcuts("screenshot-delayed"))
-                               << ShortcutItem(tr("Full screenshot"),  getSysShortcuts("screenshot-fullscreen"));
+                               << ShortcutItem(tr("Full screenshot"),  getSysShortcuts("screenshot-fullscreen"))
+                               << ShortcutItem(tr("Start scrollshot"),  getSysShortcuts("screenshot-scroll"))
+                               << ShortcutItem(tr("Start OCR"),  getSysShortcuts("screenshot-ocr"));
 
     exitGroup.groupItems << ShortcutItem(tr("Exit"), "Esc")
                          << ShortcutItem(tr("Save"), "Ctrl+S");
@@ -144,11 +146,11 @@ QString Shortcut::getDefaultValue(const QString type)
     } else if (type == "deepin-screen-recorder") {
         retShortcut = "Ctrl+Alt+R";
     } else if (type == "screenshot-window") {
-         retShortcut = "Alt+PrintScreen";
+        retShortcut = "Alt+PrintScreen";
     } else if (type == "screenshot-delayed") {
-         retShortcut = "Ctrl+PrintScreen";
+        retShortcut = "Ctrl+PrintScreen";
     } else if (type == "screenshot-fullscreen") {
-         retShortcut = "PrintScreen";
+        retShortcut = "PrintScreen";
     } else {
         qDebug() << __FUNCTION__ << __LINE__ << "Shortcut Error !!!!!!!!!" << type;
     }

@@ -5,7 +5,7 @@
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
         <translation>Cliquer sur l&apos;icône de la barre d&apos;état 
-ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</translation>
+ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
@@ -20,7 +20,7 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Enregistrement</translation>
     </message>
 </context>
 <context>
@@ -97,19 +97,19 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <translation>Capture d&apos;écran</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>La capture d&apos;écran a été enregistrée dans l&apos;album</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>Échec de la capture d&apos;écran.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Parchemin</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
+        <translation>Captures d&apos;écran de l&apos;épingle</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -132,7 +132,7 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Captures d&apos;écran de l&apos;épingle</translation>
     </message>
 </context>
 <context>
@@ -153,6 +153,10 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <source>Record</source>
         <translation>Enregistrer</translation>
     </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>Screenshot</name>
@@ -165,42 +169,42 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>Obtenir de l&apos;aide.</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>Impossible de prendre une capture d&apos;écran continue.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>Atteint le bas de la zone de défilement</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation type="unfinished"/>
+        <translation>Atteint la longueur maximale</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>ajuster la zone de capture</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Faire défiler la molette de votre souris ou cliquer pour prendre une capture d&apos;écran défilante</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>Ralentir la vitesse de défilement</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>Zone invalide, cliquer pour</translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>Saisissez du texte ici</translation>
+        <translation>Saisir du texte ici</translation>
     </message>
 </context>
 <context>
@@ -351,10 +355,18 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Parchemin</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
+        <translation>Épingler les captures d&apos;écran</translation>
+    </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -540,11 +552,11 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Parchemin</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Captures d&apos;écran de l&apos;épingle</translation>
     </message>
     <message>
         <source>webm</source>
@@ -554,12 +566,16 @@ ou appuyez à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <source>ogg</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Videos</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation> Ajustez la zone d&apos;enregistrement dans %1*%2 pour obtenir un meilleur effet vidéo</translation>
+        <translation> Ajuster la zone d&apos;enregistrement dans %1*%2 pour obtenir un meilleur effet vidéo</translation>
     </message>
 </context>
 <context>

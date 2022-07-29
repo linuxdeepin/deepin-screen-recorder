@@ -96,10 +96,6 @@ or press the shortcut again to stop recording</source>
         <translation>رەسىم تۇتۇش</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>ئېكران كەسمە سۈرىتى ئالبۇمغا ساقلاندى</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>رەسىم تۇتۇلمىدى</translation>
     </message>
@@ -110,6 +106,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Pin Screenshots</source>
         <translation>چاپلاق</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -151,6 +151,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Record</source>
         <translation>سىنغا ئېلىش</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -356,6 +360,14 @@ or press the shortcut again to stop recording</source>
         <source>Pin screenshots</source>
         <translation>چاپلاق</translation>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -551,6 +563,10 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>ogg</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Videos</source>
         <translation type="unfinished"/>
     </message>
 </context>

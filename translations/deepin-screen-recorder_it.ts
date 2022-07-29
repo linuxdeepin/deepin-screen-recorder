@@ -20,7 +20,7 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Registrazione in corso</translation>
     </message>
 </context>
 <context>
@@ -97,10 +97,6 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <translation>Screenshot</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>Lo screenshot è stato salvato nell&apos;album</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>Screenshot fallito.</translation>
     </message>
@@ -110,7 +106,11 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Blocca screenshot</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Apri cartella</translation>
     </message>
 </context>
 <context>
@@ -132,7 +132,7 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Blocca screenshot</translation>
     </message>
 </context>
 <context>
@@ -152,6 +152,10 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Record</source>
         <translation>Registrazione</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Apri cartella</translation>
     </message>
 </context>
 <context>
@@ -355,6 +359,14 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
     <message>
         <source>Pin screenshots</source>
+        <translation>Blocca screenshot</translation>
+    </message>
+    <message>
+        <source>Start OCR</source>
+        <translation>Avvia OCR</translation>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -544,15 +556,19 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Blocca screenshot</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>ogg</source>
-        <translation type="unfinished"/>
+        <translation>ogg</translation>
+    </message>
+    <message>
+        <source>Videos</source>
+        <translation>Video</translation>
     </message>
 </context>
 <context>

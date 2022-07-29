@@ -5,7 +5,7 @@
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
         <translation>Që të ndalet regjistrimi, 
-klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
+klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
@@ -20,7 +20,7 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Regjistrim</translation>
     </message>
 </context>
 <context>
@@ -97,10 +97,6 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
         <translation>Foto ekrani</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>Fotoja e ekranit është ruajtur te albumi</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>Fotografimi i ekranit dështoi.</translation>
     </message>
@@ -110,6 +106,10 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
+        <translation>Fiksoni Foto Ekrani</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -132,7 +132,7 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Fiksoni Foto Ekrani</translation>
     </message>
 </context>
 <context>
@@ -152,6 +152,10 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     <message>
         <source>Record</source>
         <translation>Regjistroje</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -355,7 +359,15 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation>Fiksoje foton e ekranit</translation>
+        <translation>Fiksoni foto ekrani</translation>
+    </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -544,14 +556,18 @@ klikoni ikonën e panelit ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Fiksoni Foto Ekrani</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>ogg</source>
+        <translation>ogg</translation>
+    </message>
+    <message>
+        <source>Videos</source>
         <translation type="unfinished"/>
     </message>
 </context>

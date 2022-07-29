@@ -728,7 +728,7 @@ void RecordProcess::exitRecord(QString newSavePath)
 
         QStringList actions;
         actions << "_open" << tr("View");
-        actions << "_open1" << tr("savePath");
+        actions << "_open1" << tr("Open Folder");
         QVariantMap hints;
         hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
         QString savepathcommand = QString("dde-file-manager,--show-item,%1").arg(newSavePath);

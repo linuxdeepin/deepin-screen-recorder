@@ -97,10 +97,6 @@ or press the shortcut again to stop recording</source>
         <translation>截圖</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>截圖文件已保存到相冊</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation>截圖失敗。</translation>
     </message>
@@ -111,6 +107,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Pin Screenshots</source>
         <translation>貼圖</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>打開文件夾</translation>
     </message>
 </context>
 <context>
@@ -152,6 +152,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Record</source>
         <translation>錄屏</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>打開文件夾</translation>
     </message>
 </context>
 <context>
@@ -357,6 +361,14 @@ or press the shortcut again to stop recording</source>
         <source>Pin screenshots</source>
         <translation>貼圖</translation>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation>快速啟動圖文識別</translation>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation>啟動滾動截圖</translation>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -553,6 +565,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>ogg</source>
         <translation>ogg</translation>
+    </message>
+    <message>
+        <source>Videos</source>
+        <translation>影片</translation>
     </message>
 </context>
 <context>
