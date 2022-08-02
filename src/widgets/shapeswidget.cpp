@@ -2142,6 +2142,16 @@ void ShapesWidget::paintImage(QImage &image)
     //    backgroundImage.save("/home/uos/Desktop/temp1.png");
 }
 
+bool ShapesWidget::isExistsText()
+{
+    for (int i = 0; i < m_shapes.length(); i++) {
+        if (m_shapes[i].type == "text") {
+            return true;
+        }
+    }
+    return  false;
+}
+
 //执行绘制操作
 void ShapesWidget::handlePaint(QPainter &painter)
 {
@@ -2188,6 +2198,7 @@ void ShapesWidget::handlePaint(QPainter &painter)
                 if (m.key() == m_shapes[i].index) {
                     if (!(m.value()->isReadOnly() && m_selectedIndex != i)) {
                         paintText(painter, m_shapes[i].mainPoints);
+                        //qDebug() << "text: " << m.value()->font() << m.value()->document()->toRawText() << m.value()->document()->toPlainText();
                     }
                     break;
                 }
