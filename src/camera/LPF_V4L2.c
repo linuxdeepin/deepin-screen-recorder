@@ -67,7 +67,7 @@ int camInit(const char *devicename)
     else{
         my_vd = create_v4l2_device_handler(devicename);
     }
-    fprintf(stderr, " %s: my_vd->videodevice: %s\n",__FUNCTION__,my_vd->videodevice);
+    //fprintf(stderr, " %s: my_vd->videodevice: %s\n",__FUNCTION__,my_vd->videodevice);
 
     if (my_vd == NULL) {
         int i;
@@ -131,6 +131,8 @@ int camUnInit()
 
     if (vd)
         close_v4l2_device_handler();
+
+    return 0;
 }
 
 #ifdef __cplusplus
