@@ -176,6 +176,11 @@ public slots:
      * 将编辑的内容绘制到图片上
      */
     void paintImage(QImage &image);
+    /**
+     * @brief isExistsText: 是否存在文字图形，
+     * @return
+     */
+    bool isExistsText();
 
 protected:
     bool event(QEvent *event);
