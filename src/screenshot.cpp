@@ -41,11 +41,11 @@ Screenshot::Screenshot(QObject *parent)
 
 void Screenshot::startScreenshot()
 {
-//    QJsonObject obj{
-//        {"tid", EventLogUtils::StartScreenShot},
-//        {"version", QCoreApplication::applicationVersion()}
-//    };
-//    EventLogUtils::get().writeLogs(obj);
+    QJsonObject obj{
+        {"tid", EventLogUtils::StartScreenShot},
+        {"version", QCoreApplication::applicationVersion()}
+    };
+    EventLogUtils::get().writeLogs(obj);
 
     m_window.initAttributes();
     m_window.initResource();
