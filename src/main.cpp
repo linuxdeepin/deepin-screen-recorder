@@ -234,7 +234,8 @@ int main(int argc, char *argv[])
                 {"mode", 1},
                 {"startup_mode", "A"}
             };
-            EventLogUtils::get().writeLogs(obj);
+            if (!cmdParser.isSet(screenRecordOption))
+                EventLogUtils::get().writeLogs(obj);
 
             dbusService.setSingleInstance(true);
             if (cmdParser.isSet(delayOption)) {
