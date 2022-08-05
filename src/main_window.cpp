@@ -1038,6 +1038,12 @@ void MainWindow::initScreenRecorder()
 //滚动截图的初始化函数
 void MainWindow::initScrollShot()
 {
+    QJsonObject obj{
+        {"tid", EventLogUtils::StartScrollShot},
+        {"version", QCoreApplication::applicationVersion()}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
 #ifdef OCR_SCROLL_FLAGE_ON
     if (m_initScroll)
         return;
@@ -1452,6 +1458,12 @@ void MainWindow::initLaunchMode(const QString &launchMode)
     } else {
         m_functionType = status::shot;
         initScreenShot();
+
+        QJsonObject obj{
+            {"tid", EventLogUtils::StartScreenShot},
+            {"version", QCoreApplication::applicationVersion()}
+        };
+        EventLogUtils::get().writeLogs(obj);
     }
 }
 
@@ -2597,7 +2609,6 @@ void MainWindow::updateMultiKeyBoardPos()
 
 void MainWindow::changeShotToolEvent(const QString &func)
 {
-
     qDebug() << "MainWindow::changeShotToolEvent >> func: " << func;
     //调用ocr功能时先截图后，退出截图录屏，将刚截图的图片串递到ocr识别界面；
     if (func == "ocr") {
@@ -3007,13 +3018,13 @@ bool MainWindow::saveAction(const QPixmap &pix)
     QString savePath = m_saveIndex == SaveToDesktop ? "desktop" :
                        (m_saveIndex == SaveToImage ? "image" : (m_saveIndex == SaveToSpecificDir ? "specified directory" : "clipboard"));
     QString type = t_pictureFormat == 1 ? "jpg" : (t_pictureFormat == 2 ? "bmp" : "png");
-    QJsonObject obj{
-        {"tid", EventLogUtils::EndScreenShot},
-        {"version", QCoreApplication::applicationVersion()},
-        {"type", type},
-        {"save_path", savePath}
-    };
-    EventLogUtils::get().writeLogs(obj);
+//    QJsonObject obj{
+//        {"tid", EventLogUtils::EndScreenShot},
+//        {"version", QCoreApplication::applicationVersion()},
+//        {"type", type},
+//        {"save_path", savePath}
+//    };
+//    EventLogUtils::get().writeLogs(obj);
 
     if (m_saveIndex == SaveToSpecificDir && m_saveFileName.isEmpty()) {
         qWarning() << __FUNCTION__ << __LINE__ << "（保存到指定文件夹）文件名称为空！";
@@ -4868,12 +4879,6 @@ void MainWindow::startRecord()
  */
 void MainWindow::startAutoScrollShot()
 {
-    QJsonObject obj{
-        {"tid", EventLogUtils::StartScrollShot},
-        {"version", QCoreApplication::applicationVersion()}
-    };
-    EventLogUtils::get().writeLogs(obj);
-
 #ifdef OCR_SCROLL_FLAGE_ON
     //自动滚动模式已启动
     m_isAutoScrollShotStart = true;
