@@ -924,9 +924,7 @@ void MainWindow::initScreenShot()
         //m_recordButton->hide();
         //m_shotButton->hide();
         m_sizeTips->hide();
-    }
-
-    else {
+    } else {
         m_toolBar->show();
         m_sideBar->hide();
 
@@ -946,14 +944,6 @@ void MainWindow::initScreenShot()
 //初始化录屏窗口
 void MainWindow::initScreenRecorder()
 {
-    QJsonObject obj{
-        {"tid", EventLogUtils::Start},
-        {"version", QCoreApplication::applicationVersion()},
-        {"mode", 1},
-        {"startup_mode", "B7"}
-    };
-    EventLogUtils::get().writeLogs(obj);
-
     if (!m_pScreenCaptureEvent)
         return;
 
@@ -1449,6 +1439,14 @@ void MainWindow::initLaunchMode(const QString &launchMode)
         if (m_sideBar->isVisible()) {
             m_sideBar->hide();
         }
+
+        QJsonObject obj{
+            {"tid", EventLogUtils::Start},
+            {"version", QCoreApplication::applicationVersion()},
+            {"mode", 1},
+            {"startup_mode", "B7"}
+        };
+        EventLogUtils::get().writeLogs(obj);
     } else if (launchMode == "screenOcr") {
         m_functionType = status::ocr;
         m_isDirectStartOcr = true;
@@ -1458,12 +1456,6 @@ void MainWindow::initLaunchMode(const QString &launchMode)
     } else {
         m_functionType = status::shot;
         initScreenShot();
-
-        QJsonObject obj{
-            {"tid", EventLogUtils::StartScreenShot},
-            {"version", QCoreApplication::applicationVersion()}
-        };
-        EventLogUtils::get().writeLogs(obj);
     }
 }
 
@@ -1521,6 +1513,13 @@ void MainWindow::topWindow()
     if (Utils::isWaylandMode) {
         return;
     }
+
+    QJsonObject obj{
+        {"tid", EventLogUtils::StartScreenShot},
+        {"version", QCoreApplication::applicationVersion()}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
     int t_windowCount = DWindowManagerHelper::instance()->allWindowIdList().size();
     DForeignWindow *prewindow = nullptr;
     for (int i = t_windowCount - 1; i >= 0; i--) {
@@ -2672,6 +2671,14 @@ void MainWindow::saveScreenShot()
 {
     qInfo() << __FUNCTION__ << __LINE__ << "正在执行截图保存流程...";
     //双击截图保存按钮会触发重复进入
+
+    QJsonObject obj{
+        {"tid", EventLogUtils::StartScreenShot},
+        {"version", QCoreApplication::applicationVersion()}
+    };
+    if (m_functionType == status::shot)
+        EventLogUtils::get().writeLogs(obj);
+
     static bool isSaving = false;
     if (isSaving) return ;
     isSaving = true;
@@ -5064,6 +5071,13 @@ void MainWindow::addCursorToImage()
 void MainWindow::shotFullScreen(bool isFull)
 {
     qInfo() << __FUNCTION__ << __LINE__ << "正在截取全屏...";
+
+    QJsonObject obj{
+        {"tid", EventLogUtils::StartScreenShot},
+        {"version", QCoreApplication::applicationVersion()}
+    };
+    EventLogUtils::get().writeLogs(obj);
+
     QRect target = m_backgroundRect;
     qDebug() << "m_backgroundRect" << m_backgroundRect;
     if (Utils::isWaylandMode) {
