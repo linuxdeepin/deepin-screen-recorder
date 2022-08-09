@@ -588,7 +588,6 @@ void RecordProcess::startRecord()
         }
     }
 
-    ;
     QJsonObject obj{
         {"tid", EventLogUtils::StartRecording},
         {"version", QCoreApplication::applicationVersion()},
