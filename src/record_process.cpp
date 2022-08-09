@@ -620,9 +620,8 @@ void RecordProcess::startRecord()
             if (Utils::isTabletEnvironment) {
                 return;
             }
-        }
-        //wayland下的录屏
-        else {
+        } else {
+            //wayland下的录屏
             if (recordType != RECORD_TYPE_GIF) {
                 if (settings->value("recordConfig", "lossless_recording").toBool()) {
                     recordType = RECORD_TYPE_MKV;
@@ -634,10 +633,12 @@ void RecordProcess::startRecord()
         }
     }
 
+    ;
     QJsonObject obj{
         {"tid", EventLogUtils::StartRecording},
         {"version", QCoreApplication::applicationVersion()},
-        {"type", recordType == RECORD_TYPE_GIF ? "gif" : (recordType == RECORD_TYPE_MKV ? "mkv" : "mp4")}
+        {"type", recordType == RECORD_TYPE_GIF ? "gif" :
+                                                 (settings->value("recordConfig", "lossless_recording").toBool() || recordType == RECORD_TYPE_MKV ? "mkv" : "mp4")}
     };
     EventLogUtils::get().writeLogs(obj);
 
