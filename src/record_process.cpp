@@ -632,8 +632,6 @@ void RecordProcess::startRecord()
             waylandRecord();
         }
     }
-
-    ;
     QJsonObject obj{
         {"tid", EventLogUtils::StartRecording},
         {"version", QCoreApplication::applicationVersion()},
