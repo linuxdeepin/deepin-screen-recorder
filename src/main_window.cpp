@@ -2613,6 +2613,7 @@ void MainWindow::changeShotToolEvent(const QString &func)
     if (func == "ocr") {
         //qDebug() << "m_saveFileName: " << m_saveFileName;
 
+        m_functionType = status::ocr;
         QJsonObject obj{
             {"tid", EventLogUtils::StartOcr},
             {"version", QCoreApplication::applicationVersion()}
