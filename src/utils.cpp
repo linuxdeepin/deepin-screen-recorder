@@ -277,6 +277,11 @@ void Utils::getAllWindowInfo(const quint32 winId, const int width, const int hei
             //window:后面代码有使用
             //window->deleteLater();
             //修改部分窗口显示不全，截图框识别问题
+            qDebug()  << "\n窗口名称: >>>> " <<window->wmClass()
+                      << "\nx: " <<  window->frameGeometry().x()
+                      << "\ny: " <<  window->frameGeometry().y()
+                      << "\nwidth: " <<  window->frameGeometry().width()
+                      << "\nheight: " <<  window->frameGeometry().height()   ;
             //x坐标小于0时
             if (window->frameGeometry().x() < 0) {
                 if (window->frameGeometry().y() < 0) {
