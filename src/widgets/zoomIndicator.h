@@ -50,6 +50,13 @@ private:
     QBrush m_lastCenterPosBrush;
     ZoomIndicatorGL *m_zoomIndicatorGL = nullptr;
     QPoint m_cursorPos;
+
+    /**
+     * @brief 是否打开多任务视图界面。
+     * 在某些hw机型上，打开多任务视图界面后，
+     * 通过opengl绘制的widget，在执行move函数卡顿，因此做了规避。
+     */
+    bool m_isOpenWM = false;
 };
 
 #endif // MAGNIFIER_H

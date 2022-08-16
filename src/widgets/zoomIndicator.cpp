@@ -28,7 +28,8 @@
 #include <QTextOption>
 #include <QDebug>
 #include <QRgb>
-
+#include <QDBusInterface>
+#include <QDBusReply>
 namespace {
 const QSize BACKGROUND_SIZE = QSize(59, 59);
 //const int SCALE_VALUE = 4;
@@ -40,8 +41,25 @@ const int BOTTOM_RECT_HEIGHT = 14;
 ZoomIndicator::ZoomIndicator(DWidget *parent)
     : DLabel(parent)
 {
+    QDBusInterface wmInterface("com.deepin.wm",
+                                "/com/deepin/wm",
+                                "com.deepin.wm",
+                                QDBusConnection::sessionBus());
+    if (!wmInterface.isValid()) {
+        qWarning() << "无法获取多任务视图dbus接口！";
+        m_isOpenWM = false;
+    }else {
+        QDBusReply<bool> reply = wmInterface.call("GetMultiTaskingStatus");
+        if (!reply.isValid()) {
+            qWarning() << "无法调用获取多任务视图状态的dbus方法！";
+            m_isOpenWM = false;
+        }else {
+            m_isOpenWM = reply.value();
+        }
+    }
+    qInfo() << "多任务视图是否打开: " << (m_isOpenWM? "是":"否");
 
-    if (Utils::isWaylandMode) {
+    if (Utils::isWaylandMode && !m_isOpenWM) {
         m_zoomIndicatorGL = new ZoomIndicatorGL(parent);
         this->hide();
         return;
@@ -62,7 +80,7 @@ ZoomIndicator::ZoomIndicator(DWidget *parent)
 
 ZoomIndicator::~ZoomIndicator()
 {
-    if (Utils::isWaylandMode && m_zoomIndicatorGL) {
+    if (Utils::isWaylandMode && !m_isOpenWM && m_zoomIndicatorGL ) {
         delete  m_zoomIndicatorGL;
     }
 }
@@ -141,7 +159,7 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
 
 void ZoomIndicator::showMagnifier(QPoint pos)
 {
-    if (Utils::isWaylandMode) {
+    if (Utils::isWaylandMode && !m_isOpenWM) {
         m_zoomIndicatorGL->showMagnifier(pos);
         return;
     }
@@ -154,7 +172,7 @@ void ZoomIndicator::showMagnifier(QPoint pos)
 
 void ZoomIndicator::hideMagnifier()
 {
-    if (Utils::isWaylandMode) {
+    if (Utils::isWaylandMode && !m_isOpenWM) {
         m_zoomIndicatorGL->hide();
         return;
     }
