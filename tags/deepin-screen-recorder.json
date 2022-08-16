@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "deepin-screen-recorder",
+    "data": {
+        "tagger": {
+            "name": "zhaozedong",
+            "email": "zhaozedong@uniontech.com"
+        },
+        "message": "1050U3第二轮集成",
+        "object": "9726a767edd9a52107919c9603fd5a3f56a5486e",
+        "tag": "5.11.6"
+    }
+}
