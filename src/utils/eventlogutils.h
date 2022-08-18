@@ -10,8 +10,7 @@ public:
     enum EventTID {
         OpeningTime         = 1000000000,
         ClosingTime         = 1000000001,
-        Start               = 1000000003,
-        Quit                = 1000000004,
+        Start               = 1000200000,
         StartRecording      = 1000200001,
         StartScreenShot     = 1000200002,
         StartOcr            = 1000200003,
