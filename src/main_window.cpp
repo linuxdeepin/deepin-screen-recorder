@@ -1997,18 +1997,22 @@ void MainWindow::updateToolBarPos()
     QPoint toolbarPoint;
     m_repaintMainButton = false;
     m_repaintSideBar = false;
-    //初始坐标在捕捉区域左下角，工具栏右对齐捕捉区域
+    //工具栏初始位置在捕捉区域下方，且右对齐捕捉区域，此时的工具栏坐标已经经过缩放
     toolbarPoint = QPoint(recordX + recordWidth - m_toolBar->width(),
                           std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
 
+    qDebug() << "工具栏初始坐标: " << toolbarPoint.x() << toolbarPoint.y() ;
+    //防止工具栏超出左侧屏幕
     if (toolbarPoint.x() <= 0) {
         m_repaintMainButton = true;
+        //工具栏的左对齐捕捉区域
         toolbarPoint.setX(recordX);
+        //如果此时工具栏的右端超过截图背景，则工具左对齐左侧屏幕
         if (recordX + m_toolBar->width() > m_backgroundRect.width()) {
-
             toolbarPoint.setX(0);
         }
     }
+    //防止工具栏向下超出截图背景
     if (toolbarPoint.y() >= m_backgroundRect.y() + m_backgroundRect.height() - m_toolBar->height() - 28) {
         m_repaintSideBar = true;
         if (recordY > 28 * 2 + 10) {
@@ -2019,12 +2023,34 @@ void MainWindow::updateToolBarPos()
             m_isToolBarInside = true;
         }
     }
+    qDebug() << "工具栏坐标: " << toolbarPoint.x() << toolbarPoint.y() ;
+
+    bool toolIsInScreen = false; //
+    QRect tempScreen ;//捕捉区域所在的屏幕，以捕捉区域左上角为准
     // 根据屏幕的具体实际坐标修正Y值
     // 多屏情况下，横向，有可能在屏幕外面。
     if (m_isScreenVertical == false) {
         for (int i = 0; i < m_screenInfo.size(); ++i) {
+            toolIsInScreen = toolbarPoint.x() >= m_screenInfo[i].x &&
+                    toolbarPoint.x() < (m_screenInfo[i].x + m_screenInfo[i].width) &&
+                    (toolbarPoint.y()-m_screenInfo[i].height)*m_pixelRatio+m_screenInfo[i].height >= m_screenInfo[i].y &&
+                    (toolbarPoint.y()-m_screenInfo[i].height)*m_pixelRatio+m_screenInfo[i].height< (m_screenInfo[i].y + m_screenInfo[i].height);
+            bool recordIsInScreen =  recordX >= m_screenInfo[i].x &&
+                    recordX < (m_screenInfo[i].x + m_screenInfo[i].width) &&
+                    recordY >= m_screenInfo[i].y &&
+                    recordY < (m_screenInfo[i].y + m_screenInfo[i].height);
+            //取出捕捉区域所在的屏幕
+            if(recordIsInScreen){
+                tempScreen.setX(m_screenInfo[i].x);
+                tempScreen.setY(m_screenInfo[i].y);
+                tempScreen.setWidth(m_screenInfo[i].width);
+                tempScreen.setHeight(m_screenInfo[i].height);
+            }
             //判断工具栏左上角在哪块屏幕上
-            if (toolbarPoint.x() + m_toolBar->width() >= m_screenInfo[i].x && toolbarPoint.x() + m_toolBar->width() <= m_screenInfo[i].x + m_screenInfo[i].width) {
+            if (toolIsInScreen) {
+                //qDebug() << "工具栏是否在屏幕（"<< m_screenInfo[i].name<<"）内 ? " << toolIsInScreen;
+                //qDebug() << "屏幕: " << m_screenInfo[i].name <<  m_screenInfo[i].x << m_screenInfo[i].y << m_screenInfo[i].width<<m_screenInfo[i].height;
+
                 if (toolbarPoint.y() < m_screenInfo[i].y + TOOLBAR_Y_SPACING) {
                     // 屏幕上超出
                     toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
@@ -2033,12 +2059,31 @@ void MainWindow::updateToolBarPos()
                 } else if (toolbarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
                     // 屏幕下超出
                     int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
+                    //qDebug() << ">>> y: " << y;
                     if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING)
                         y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_toolBar->height() - TOOLBAR_Y_SPACING;
+
+                    //已经调整工具栏位置之后，发现工具栏位置超出屏幕上边缘
+                    if(y < m_screenInfo[i].y){
+                        y = recordY + TOOLBAR_Y_SPACING;
+                    }
                     toolbarPoint.setY(y);
                     qDebug() << "工具栏位置超出屏幕下边缘，已矫正 >>> toolbarPoint: " << toolbarPoint;
                 }
                 break;
+            }
+        }
+        if(!toolIsInScreen){
+            if(!tempScreen.isNull() || tempScreen.isEmpty()){
+                qDebug() << "当前屏幕：" <<  tempScreen;
+                if(recordY - tempScreen.y() >  m_toolBar->height() + 28 ){
+                    qDebug() << "工具栏位置未在任一屏幕内，需要矫正 >>> 放捕捉区域上边 toolbarPoint: " << toolbarPoint;
+                    toolbarPoint.setY(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING);
+                }else{
+                    qDebug() << "工具栏位置未在任一屏幕内，需要矫正 >>> 放捕捉区域里面 toolbarPoint: " << toolbarPoint;
+                    toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
+                }
+                qDebug() << "工具栏位置未在任一屏幕内，已矫正 >>> toolbarPoint: " << toolbarPoint;
             }
         }
     }
@@ -3969,14 +4014,14 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 // Select the first window where the mouse is located
                 if (!Utils::isTabletEnvironment) {
                     const QPoint mousePoint = QCursor::pos();
-                    int i = windowRects.size()-1;
+                    int i = windowRects.size() - 1;
                     //qDebug()  << "1 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                     for (auto it = windowRects.rbegin(); it != windowRects.rend(); ++it) {
                         bool flag =  QRect(it->x(), it->y(), it->width(), it->height()).contains(mousePoint); //QRect(it->x(), it->y(), it->width(), it->height()).contains(mousePoint);
                         if (flag) {
                             //屏幕缩放及屏幕数量大于1时需要进行调整
                             if (!qFuzzyCompare(1.0, m_pixelRatio) && m_screenCount > 1) {
-                                qDebug()  << "窗口信息 >>>> " <<windowNames[i]<< ": " <<  QRect(it->x(), it->y(), it->width(), it->height());
+                                qDebug()  << "窗口信息 >>>> " << windowNames[i] << ": " <<  QRect(it->x(), it->y(), it->width(), it->height());
                                 int x = it->x();
                                 int y = it->y();
                                 //qDebug()  << "1.1 >>>> recordX: " << recordX << " , recordY: "<< recordY;
@@ -3989,25 +4034,25 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                                     bool yIndex = y >= m_screenInfo[index].y && y < (m_screenInfo[index].y + m_screenInfo[index].height);
                                     //判断窗口在哪个屏幕上
                                     if (xIndex && yIndex) {
-                                        qDebug()  << "窗口 " << windowNames[i] << "("<< x <<","<< y << ") 在屏幕" << m_screenInfo[index].name
-                                                  << " ("<< m_screenInfo[index].x << m_screenInfo[index].y << m_screenInfo[index].width << m_screenInfo[index].height<< ") 上";
+                                        qDebug()  << "窗口 " << windowNames[i] << "(" << x << "," << y << ") 在屏幕" << m_screenInfo[index].name
+                                                  << " (" << m_screenInfo[index].x << m_screenInfo[index].y << m_screenInfo[index].width << m_screenInfo[index].height << ") 上";
                                         //可以准确的定位到在哪块屏幕上
-                                        if(m_screenInfo[index].x == 0 && m_screenInfo[index].y == 0){
+                                        if (m_screenInfo[index].x == 0 && m_screenInfo[index].y == 0) {
                                             recordX = static_cast<int>(x);
                                             recordY = static_cast<int>(y);
-                                            qDebug()  << "1.1.1 >>>> recordX: " << recordX << " , recordY: "<< recordY;
-                                        }else if(m_screenInfo[index].x == 0 && m_screenInfo[index].y != 0){
+                                            qDebug()  << "1.1.1 >>>> recordX: " << recordX << " , recordY: " << recordY;
+                                        } else if (m_screenInfo[index].x == 0 && m_screenInfo[index].y != 0) {
                                             recordX = static_cast<int>(x);
                                             recordY = static_cast<int>((y - m_screenInfo[index].y) + m_screenInfo[index].y / m_pixelRatio);
-                                            qDebug()  << "1.1.2 >>>> recordX: " << recordX << " , recordY: "<< recordY;
-                                        }else if(m_screenInfo[index].x != 0 && m_screenInfo[index].y == 0){
+                                            qDebug()  << "1.1.2 >>>> recordX: " << recordX << " , recordY: " << recordY;
+                                        } else if (m_screenInfo[index].x != 0 && m_screenInfo[index].y == 0) {
                                             recordX = static_cast<int>((x - m_screenInfo[index].x) + m_screenInfo[index].x / m_pixelRatio);
                                             recordY = static_cast<int>(y);
-                                            qDebug()  << "1.1.3 >>>> recordX: " << recordX << " , recordY: "<< recordY;
-                                        }else {
+                                            qDebug()  << "1.1.3 >>>> recordX: " << recordX << " , recordY: " << recordY;
+                                        } else {
                                             recordX = static_cast<int>((x - m_screenInfo[index].x) + m_screenInfo[index].x / m_pixelRatio);
                                             recordY = static_cast<int>((y - m_screenInfo[index].y) + m_screenInfo[index].y / m_pixelRatio);
-                                            qDebug()  << "1.1.4 >>>> recordX: " << recordX << " , recordY: "<< recordY;
+                                            qDebug()  << "1.1.4 >>>> recordX: " << recordX << " , recordY: " << recordY;
                                         }
 
                                         isInScreen = true;
@@ -4016,50 +4061,48 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                                 }
                                 //qDebug()  << "1.2 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                                 //2.窗口左上角不在屏幕上时，左上角的坐标投影可能在某些屏幕内部，此时窗口的x坐标及y坐标需要分开考虑
-                                if(!isInScreen){
-                                    qDebug()  << "窗口 " << windowNames[i] << "("<< x <<","<< y << ") 不在任意屏幕上";
+                                if (!isInScreen) {
+                                    qDebug()  << "窗口 " << windowNames[i] << "(" << x << "," << y << ") 不在任意屏幕上";
                                     bool xIsInScreen = false;
                                     bool yIsInScreen = false;
                                     for (int index = 0; index < m_screenCount; ++index) {
                                         //x坐标及其投影是否在某块屏幕内部
                                         bool xIndex = x >= m_screenInfo[index].x && x < (m_screenInfo[index].x + m_screenInfo[index].width);
-                                        if(xIndex){
-                                            qDebug()  << "窗口 " << windowNames[i] << "("<< x <<","<< y << ") x坐标或投影在屏幕" << m_screenInfo[index].name
-                                                      << " ("<< m_screenInfo[index].x << m_screenInfo[index].y << m_screenInfo[index].width << m_screenInfo[index].height<< ") 上";
+                                        if (xIndex) {
+                                            qDebug()  << "窗口 " << windowNames[i] << "(" << x << "," << y << ") x坐标或投影在屏幕" << m_screenInfo[index].name
+                                                      << " (" << m_screenInfo[index].x << m_screenInfo[index].y << m_screenInfo[index].width << m_screenInfo[index].height << ") 上";
                                             //判读当前屏幕是否从（0,0）开始，如果是则不需要进行屏幕之间的缩放计算
-                                            if(m_screenInfo[index].x == 0){
+                                            if (m_screenInfo[index].x == 0) {
                                                 recordX = static_cast<int>(x / m_pixelRatio);
                                                 //qDebug()  << "1.2.1 >>>> recordX: " << recordX << " , recordY: "<< recordY;
-                                            }else{
+                                            } else {
                                                 recordX = static_cast<int>((x - m_screenInfo[index].x) + m_screenInfo[index].x / m_pixelRatio);
                                                 //qDebug()  << "1.2.2 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                                             }
                                             xIsInScreen = true;
                                         }
                                     }
-                                    if(!xIsInScreen)
-                                    {
+                                    if (!xIsInScreen) {
                                         qWarning()  << "窗口左上角的x坐标及其投影均不在屏幕上！";
                                     }
                                     for (int index = 0; index < m_screenCount; ++index) {
                                         //y坐标及其投影是否在某块屏幕内部
                                         bool yIndex = y >= m_screenInfo[index].y && y < (m_screenInfo[index].y + m_screenInfo[index].height);
-                                        if(yIndex){
-                                            qDebug()  << "窗口 " << windowNames[i] << "("<< x <<","<< y << ") y坐标或投影在屏幕" << m_screenInfo[index].name
-                                                      << " ("<< m_screenInfo[index].x << m_screenInfo[index].y << m_screenInfo[index].width << m_screenInfo[index].height<< ") 上";
+                                        if (yIndex) {
+                                            qDebug()  << "窗口 " << windowNames[i] << "(" << x << "," << y << ") y坐标或投影在屏幕" << m_screenInfo[index].name
+                                                      << " (" << m_screenInfo[index].x << m_screenInfo[index].y << m_screenInfo[index].width << m_screenInfo[index].height << ") 上";
                                             //判读当前屏幕是否从（0,0）开始，如果是则不需要进行屏幕之间的缩放计算
-                                            if( m_screenInfo[index].y == 0){
+                                            if (m_screenInfo[index].y == 0) {
                                                 recordY = static_cast<int>(y / m_pixelRatio);
                                                 //qDebug()  << "1.2.3 >>>> recordX: " << recordX << " , recordY: "<< recordY;
-                                            }else{
+                                            } else {
                                                 recordY = static_cast<int>((y - m_screenInfo[index].y) + m_screenInfo[index].y / m_pixelRatio);
                                                 //qDebug()  << "1.2.4 >>>> recordX: " << recordX << " , recordY: "<< recordY;
                                             }
                                             yIsInScreen = true;
                                         }
                                     }
-                                    if(!yIsInScreen)
-                                    {
+                                    if (!yIsInScreen) {
                                         qWarning()  << "窗口左上角的y坐标及其投影均不在屏幕上！";
                                     }
                                 }
