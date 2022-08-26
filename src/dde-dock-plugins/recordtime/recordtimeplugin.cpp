@@ -135,6 +135,10 @@ void RecordTimePlugin::onStop()
 //当托盘插件开始闪烁计数时才会执行
 void RecordTimePlugin::onRecording()
 {
+    // 录屏过程中，killall dde-dock，恢复时重新初始化
+    if (m_timeWidget == nullptr) {
+        onStart();
+    }
     if (m_timeWidget->enabled() && m_bshow) {
         m_nextCount++;
         if (1 == m_nextCount) {
