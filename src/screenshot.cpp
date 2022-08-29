@@ -104,10 +104,12 @@ void Screenshot::noNotifyScreenshot()
 void Screenshot::OcrScreenshot()
 {
 #ifdef OCR_SCROLL_FLAGE_ON
+    qDebug() << "快捷键启动 Ocr ...";
     m_window.initAttributes();
     m_window.initResource();
     m_window.initLaunchMode("screenOcr");
     m_window.showFullScreen();
+    qDebug() << "Ocr 已启动";
 #endif
 }
 
