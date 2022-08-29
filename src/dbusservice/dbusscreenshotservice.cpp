@@ -56,6 +56,7 @@ void DBusScreenshotService::setSingleInstance(bool instance)
 
 void DBusScreenshotService::StartScreenshot()
 {
+    qDebug() << "DBus screenshot service! screenshot";
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
         {"version", QCoreApplication::applicationVersion()},
