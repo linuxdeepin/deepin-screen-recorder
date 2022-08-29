@@ -257,6 +257,7 @@ void MainWindow::initAttributes()
             m_eventQueue->setup(m_connectionThreadObject);
 
             Registry *registry = new Registry(this);
+            qDebug() << "开始安装注册wayland服务...";
             setupRegistry(registry);
         },
         Qt::QueuedConnection
@@ -334,6 +335,7 @@ void MainWindow::initAttributes()
                                           SLOT(onLockScreenEvent(QDBusMessage))
                                          );
     if (!isFirstMove && !Utils::isWaylandMode) {
+        qDebug() << "发送鼠标事件!";
         QMouseEvent *mouseMove = new QMouseEvent(QEvent::MouseMove, this->cursor().pos(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
         QApplication::sendEvent(this, mouseMove);
         delete mouseMove;
@@ -346,13 +348,17 @@ void MainWindow::setupRegistry(Registry *registry)
 {
     connect(registry, &Registry::compositorAnnounced, this,
     [this, registry](quint32 name, quint32 version) {
+                qDebug() << "开始创建wayland合成器...";
         m_compositor = registry->createCompositor(name, version, this);
+        qDebug() << "wayland合成器已创建";
     }
            );
 
     connect(registry, &Registry::clientManagementAnnounced, this,
     [this, registry](quint32 name, quint32 version) {
+        qDebug() << "开始创建wayland客户端管理...";
         m_clientManagement = registry->createClientManagement(name, version, this);
+        qDebug() << "wayland客户端管理已创建";
         qDebug() << QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ")) << "createClientManagement";
         connect(m_clientManagement, &ClientManagement::windowStatesChanged, this,
         [this] {
@@ -374,9 +380,13 @@ void MainWindow::setupRegistry(Registry *registry)
     }
            );
 
+    qDebug() << "设置wayland注册的事件队列...";
     registry->setEventQueue(m_eventQueue);
+    qDebug() << "设置wayland注册的链接线程...";
     registry->create(m_connectionThreadObject);
+    qDebug() << "开始执行wayland注册...";
     registry->setup();
+    qDebug() << "wayland注册完成";
 }
 
 void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> &windowStates)
@@ -892,7 +902,9 @@ void MainWindow::initScreenShot()
         removeEventFilter(this);
         exitScreenCuptureEvent();
     });
-    m_functionType = 1;
+    if(status::ocr != m_functionType && status::scrollshot != m_functionType){
+        m_functionType = 1;
+    }
     m_keyBoardStatus = false;
     m_mouseStatus = false;
     //m_multiKeyButtonsInOnSec = false;
@@ -1450,9 +1462,11 @@ void MainWindow::initLaunchMode(const QString &launchMode)
     } else if (launchMode == "screenOcr") {
         m_functionType = status::ocr;
         m_isDirectStartOcr = true;
+        initScreenShot();
     } else if (launchMode == "screenScroll") {
         m_functionType = status::scrollshot;
         m_isDirectStartScrollShot = true;
+        initScreenShot();
     } else {
         m_functionType = status::shot;
         initScreenShot();
@@ -1685,6 +1699,7 @@ void MainWindow::initBackground()
         QString tips = QString(tr("Screenshot failed."));
         shotFailedNotify.Notify(QCoreApplication::applicationName(), 0, "deepin-screen-recorder", QString(), tips, QStringList(), QVariantMap(), 5000);
         if (Utils::isWaylandMode) {
+            qWarning() << "wayland 无法获取截图背景，应用退出！";
             _Exit(0);
         }
     }
