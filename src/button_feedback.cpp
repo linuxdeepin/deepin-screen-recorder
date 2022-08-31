@@ -130,7 +130,7 @@ void ButtonFeedback::paintEvent(QPaintEvent *event)
     m_painter->begin(this);
     m_painter->drawPixmap(QPoint(0, 0), pixmap);
     m_painter->end();
-    setMask(pixmap.mask());
+    //setMask(pixmap.mask());
     event->accept();
 }
 
