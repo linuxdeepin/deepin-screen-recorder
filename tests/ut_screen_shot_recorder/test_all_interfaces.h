@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #pragma once
 #include "waylandrecord/ut_avinputstream.h"
 #include "waylandrecord/ut_avoutputstream.h"

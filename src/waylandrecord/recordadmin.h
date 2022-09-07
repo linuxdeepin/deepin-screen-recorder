@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //pts: （int64_t）显示时间，结合AVStream->time_base转换成时间戳
 //dts: （int64_t）解码时间，结合AVStream->time_base转换成时间戳
 #ifndef RECORDADMIN_H

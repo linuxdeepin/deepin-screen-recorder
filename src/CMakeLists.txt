@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 cmake_minimum_required( VERSION 3.1.0 )
 set (PROJECT_NAME deepin-screen-recorder)
 set(CMAKE_CXX_STANDARD 14)

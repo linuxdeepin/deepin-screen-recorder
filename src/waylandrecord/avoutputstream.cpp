@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 /*
 时间戳，DTS(decoding time stamp)，PTS(presention time stamp)，CTS（current time stamp）。
 ---

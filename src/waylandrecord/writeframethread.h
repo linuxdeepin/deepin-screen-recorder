@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #ifndef WRITEFRAMETHREAD_H
 #define WRITEFRAMETHREAD_H
 #include <QMutex>
