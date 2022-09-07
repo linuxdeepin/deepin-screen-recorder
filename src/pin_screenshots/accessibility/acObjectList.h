@@ -1,8 +1,7 @@
-/**
- * Copyright (C) 2020 UOS Technology Co., Ltd.
- *
- * to mark the desktop UI
- **/
+// Copyright (C) 2020 UOS Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 #ifndef SHOT_RECORDER_ACCESSIBLE_OBJECT_LIST_H
 #define SHOT_RECORDER_ACCESSIBLE_OBJECT_LIST_H
