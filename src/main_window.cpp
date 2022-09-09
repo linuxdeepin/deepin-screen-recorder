@@ -2529,7 +2529,7 @@ void MainWindow::updateMultiKeyBoardPos()
         int count = m_keyButtonList.count();
         for (int j = 0; j < count; ++j) {
             m_keyButtonList.at(j)->hide();
-            t_keyPoint[j] = QPoint(static_cast<int>(recordX + recordWidth / 2 + m_keyButtonList.at(j)->width() * posfix[count - 1][j]), std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
+            t_keyPoint[j] = QPoint(static_cast<int>(recordX + recordWidth / 2 + m_keyButtonList.at(j)->width() * posfix[count - 1][j]), std::max(recordY + recordHeight - 90, 0));
             m_keyButtonList.at(j)->move(t_keyPoint[j].x(), t_keyPoint[j].y());
             m_keyButtonList.at(j)->show();
         }

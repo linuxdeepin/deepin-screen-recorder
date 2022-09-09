@@ -754,7 +754,7 @@ void ShotToolWidget::initTextLabel()
     t_blurArea->setRadius(15);
     t_blurArea->setMode(DBlurEffectWidget::GaussianBlur);
     t_blurArea->setBlurEnabled(true);
-    t_blurArea->setBlendMode(DBlurEffectWidget::InWindowBlend);
+    t_blurArea->setBlendMode(DBlurEffectWidget::BehindWindowBlend);
     t_blurArea->setMaskColor(QColor(255, 255, 255, 0));
     t_blurArea->setFixedSize(TOOL_SLIDERBlUR_SIZE);
 
@@ -787,12 +787,25 @@ void ShotToolWidget::initTextLabel()
         ConfigSettings::instance()->setValue("text", "fontsize", indexTofontsize[t_value]);
     });
 
+    ToolButton *t_seperator = new ToolButton(this);
+    if (Utils::themeType == 1) {
+        //t_seperator->setStyleSheet("border:1px groove rgba(0, 0, 0, 77);border-radius:0px");
+        t_seperator->setStyleSheet("border:0px solid rgba(0, 0, 0, 77);border-radius:0px;background-color:rgba(0, 0, 0, 77)");
+    } else {
+        //t_seperator->setStyleSheet("border:1px groove rgba(255, 255, 255, 26);border-radius:0px");
+        t_seperator->setStyleSheet("border:0px solid rgba(255, 255, 255, 26);border-radius:0px;background-color:rgba(255, 255, 255, 26)");
+    }
+    t_seperator->setDisabled(true);
+    t_seperator->setFixedSize(SPLITTER_SIZE);
+
     QVBoxLayout *rectLayout = new QVBoxLayout(this);
-    rectLayout->setMargin(3);
+    rectLayout->setMargin(2);
     rectLayout->setSpacing(0);
-    rectLayout->addSpacing(3);
+    rectLayout->addSpacing(0);
 
     rectLayout->addWidget(t_blurArea, Qt::AlignTop);
+    rectLayout->addSpacing(10);
+    rectLayout->addWidget(t_seperator, 0, Qt::AlignHCenter);
 
     m_textSubTool->setLayout(rectLayout);
     addWidget(m_textSubTool);
