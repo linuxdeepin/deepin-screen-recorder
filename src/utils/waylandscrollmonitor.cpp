@@ -26,7 +26,9 @@ void WaylandScrollMonitor::slotManualScroll(float direction)
 {
     if (m_fakeinput != nullptr) {
         // direction 滚动方向
+#if QT_VERSION_CHECK(KWAYLAND_VERSION_MAJOR, KWAYLAND_VERSION_MINOR, KWAYLAND_VERSION_PATCH) < QT_VERSION_CHECK(5,96,0)
         m_fakeinput->requestPointerAxisForCapture(Qt::Vertical, static_cast<double>(direction));
+#endif
     }
 }
 // 初始化队列、开启注册器
@@ -115,6 +117,8 @@ void WaylandScrollMonitor::doWaylandAutoScroll()
 {
     if (m_fakeinput != nullptr) {
         // Qt::Vertical 垂直滚动，15.0 代表向下滚动
+#if QT_VERSION_CHECK(KWAYLAND_VERSION_MAJOR, KWAYLAND_VERSION_MINOR, KWAYLAND_VERSION_PATCH) < QT_VERSION_CHECK(5,96,0)
         m_fakeinput->requestPointerAxisForCapture(Qt::Vertical, SCROLL_DOWN);
+#endif
     }
 }

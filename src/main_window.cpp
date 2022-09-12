@@ -341,31 +341,32 @@ void MainWindow::setupRegistry(Registry *registry)
     }
            );
 
+#if QT_VERSION_CHECK(KWAYLAND_VERSION_MAJOR, KWAYLAND_VERSION_MINOR, KWAYLAND_VERSION_PATCH) < QT_VERSION_CHECK(5,96,0)
     connect(registry, &Registry::clientManagementAnnounced, this,
-    [this, registry](quint32 name, quint32 version) {
-        qDebug() << "开始创建wayland客户端管理...";
-        m_clientManagement = registry->createClientManagement(name, version, this);
-        qDebug() << "wayland客户端管理已创建";
-        qDebug() << QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ")) << "createClientManagement";
-        connect(m_clientManagement, &ClientManagement::windowStatesChanged, this,
-        [this] {
-            m_windowStates = m_clientManagement->getWindowStates();
-            qDebug() << "Get new window states";
-            this->waylandwindowinfo(m_windowStates);
+        [this, registry](quint32 name, quint32 version) {
+            qDebug() << "开始创建wayland客户端管理...";
+            m_clientManagement = registry->createClientManagement(name, version, this);
+            qDebug() << "wayland客户端管理已创建";
+            qDebug() << QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ")) << "createClientManagement";
+            connect(m_clientManagement, &ClientManagement::windowStatesChanged, this,
+            [this] {
+                m_windowStates = m_clientManagement->getWindowStates();
+                qDebug() << "Get new window states";
+                this->waylandwindowinfo(m_windowStates);
+            });
         }
-               );
-    }
-           );
+    );
 
     connect(registry, &Registry::interfacesAnnounced, this,
-    [this] {
-        Q_ASSERT(m_compositor);
-        Q_ASSERT(m_clientManagement);
-        qDebug() << "request getWindowStates";
-        m_windowStates = m_clientManagement->getWindowStates();
-        this->waylandwindowinfo(m_windowStates);
-    }
-           );
+        [this] {
+            Q_ASSERT(m_compositor);
+            Q_ASSERT(m_clientManagement);
+            qDebug() << "request getWindowStates";
+            m_windowStates = m_clientManagement->getWindowStates();
+            this->waylandwindowinfo(m_windowStates);
+        }
+    );
+#endif
 
     qDebug() << "设置wayland注册的事件队列...";
     registry->setEventQueue(m_eventQueue);
@@ -375,7 +376,7 @@ void MainWindow::setupRegistry(Registry *registry)
     registry->setup();
     qDebug() << "wayland注册完成";
 }
-
+#if QT_VERSION_CHECK(KWAYLAND_VERSION_MAJOR, KWAYLAND_VERSION_MINOR, KWAYLAND_VERSION_PATCH) < QT_VERSION_CHECK(5,96,0)
 void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> &windowStates)
 {
     if (windowStates.count() == 0) {
@@ -455,6 +456,7 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
     QApplication::sendEvent(this, mouseMove);
     delete mouseMove;
 }
+#endif
 //1050wayland平台上，部分性能差的机型，采用线程循环监听文件（"/home/" + userName + "/.cache/deepin/deepin-screen-recorder/stopRecord.txt"）是否存在且内容是否为1
 void MainWindow::checkTempFileArm()
 {

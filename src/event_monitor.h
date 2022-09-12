@@ -23,6 +23,9 @@
 #ifdef OCR_SCROLL_FLAGE_ON
 #include <opencv2/stitching.hpp>
 #endif
+#ifdef KF5_WAYLAND_FLAGE_ON 
+#include <KWayland/KWayland/Client/output.h>
+#endif
 #include "gstrecord/gstrecordx.h"
 #include <X11/Xlib.h>
 #include <X11/extensions/record.h>

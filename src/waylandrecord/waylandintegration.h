@@ -5,6 +5,8 @@
 
 #ifndef XDG_DESKTOP_PORTAL_KDE_WAYLAND_INTEGRATION_H
 #define XDG_DESKTOP_PORTAL_KDE_WAYLAND_INTEGRATION_H
+#include <epoxy/gl.h>
+#include <epoxy/egl.h>
 #include "gstrecord/gstrecordx.h"
 #include <QObject>
 #include <QSize>

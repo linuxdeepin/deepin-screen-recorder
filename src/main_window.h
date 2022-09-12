@@ -51,7 +51,9 @@
 #include <unistd.h>
 #ifdef KF5_WAYLAND_FLAGE_ON
 #include <KWayland/Client/connection_thread.h>
+#if QT_VERSION_CHECK(KWAYLAND_VERSION_MAJOR, KWAYLAND_VERSION_MINOR, KWAYLAND_VERSION_PATCH) < QT_VERSION_CHECK(5,96,0)
 #include <KWayland/Client/clientmanagement.h>
+#endif
 #include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/registry.h>
 #endif
@@ -681,7 +683,9 @@ protected:
      * @brief wayland获取屏幕窗口信息
      * @param m_windowStates
      */
+#if QT_VERSION_CHECK(KWAYLAND_VERSION_MAJOR, KWAYLAND_VERSION_MINOR, KWAYLAND_VERSION_PATCH) < QT_VERSION_CHECK(5,96,0)
     void waylandwindowinfo(const QVector<ClientManagement::WindowState> &m_windowStates);
+#endif
     /**
       * @brief checkTempFileArm
       * 1050wayland平台上，部分性能差的机型
@@ -1017,8 +1021,10 @@ private:
     ConnectionThread *m_connectionThreadObject;
     Compositor *m_compositor = nullptr;
     PlasmaWindowManagement *m_windowManagement = nullptr;
+#if QT_VERSION_CHECK(KWAYLAND_VERSION_MAJOR, KWAYLAND_VERSION_MINOR, KWAYLAND_VERSION_PATCH) < QT_VERSION_CHECK(5,96,0)
     ClientManagement *m_clientManagement = nullptr;
     QVector<ClientManagement::WindowState> m_windowStates;
+#endif
     /**
       * @brief mips平台创建缓存文件的路径
       */

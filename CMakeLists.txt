@@ -9,6 +9,8 @@ project(deepin-screen-recorder
 # Not Finished
 # FIXME KWayland/Client/clientmanagement.h not exist
 set(USE_DEEPIN_WAYLAND OFF CACHE BOOL "Wayland Support")
+set(UNUSE_DEFAULT_FFMPEG OFF CACHE BOOL "Not Use default ffmpeg")
+set(FFMPEG_PATH "/usr/lib/ffmpeg4.4/pkgconfig" CACHE STRING "define project version")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # FINISHED
 set (OCR_SCROLL_FLAGE_ON OFF CACHE BOOL "Opencv Support")

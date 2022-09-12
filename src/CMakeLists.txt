@@ -47,6 +47,7 @@ pkg_check_modules(XFIXES REQUIRED xfixes)
 pkg_check_modules(libimagevisualresult REQUIRED libimagevisualresult)
 pkg_check_modules(Xtst REQUIRED xtst)
 add_definitions(-DAPP_VERSION="${PROJECT_VERSION}")
+pkg_check_modules(libprocps REQUIRED libprocps)
 
 set(deepin-screen-recorder_HDRS
   ${glob_HEAD}
@@ -95,6 +96,7 @@ set(include_DIRS
   ${XFIXES_INCLUDE_DIRS}
   ${Xtst_INCLUDE_DIRS}
   ${libimagevisualresult_INCLUDE_DIRS}
+  ${libprocps_INCLUDE_DIRS}
 )
 set(link_TARGETS
   Qt5::Core
@@ -117,6 +119,7 @@ set(link_TARGETS
   ${Xtst_LIBRARIES}
   ${XFIXES_LIBRARIES}
   ${libimagevisualresult_LIBRARIES}
+  ${libprocps_LIBRARIES}
 )
 if(OCR_SCROLL_FLAGE_ON)
   find_package(OpenCV REQUIRED)
@@ -140,8 +143,18 @@ if(USE_DEEPIN_WAYLAND)
   find_package(KF5I18n)
   find_package(KF5Wayland CONFIG)
   set_package_properties(KF5Wayland PROPERTIES TYPE OPTIONAL)
+  message(${KF5Wayland_VERSION_MAJOR}) 
+  add_definitions(-DKWAYLAND_VERSION_MAJOR=${KF5Wayland_VERSION_MAJOR})
+  add_definitions(-DKWAYLAND_VERSION_MINOR=${KF5Wayland_VERSION_MINOR})
+  add_definitions(-DKWAYLAND_VERSION_PATCH=${KF5Wayland_VERSION_PATCH})
+  message("KWayland Version = ${KF5Wayland_VERSION}")
   add_feature_info("KF5Wayland" KF5Wayland_FOUND "Required for the awesome Wayland on Qt demo")
   pkg_check_modules(epoxy REQUIRED epoxy)
+  if(UNUSE_DEFAULT_FFMPEG)
+    set(ENV{PKG_CONFIG_PATH} "${FFMPEG_PATH}:$ENV{PKG_CONFIG_PATH}")
+  endif()
+  pkg_check_modules(libavutil REQUIRED libavutil)
+  pkg_check_modules(libavcodec REQUIRED libavcodec)
   add_definitions(-DKF5_WAYLAND_FLAGE_ON)
   list(APPEND COMPILE_SRC 
     ${utils_WAYLAND}
@@ -150,11 +163,15 @@ if(USE_DEEPIN_WAYLAND)
   )
   list(APPEND include_DIRS 
     ${epoxy_INCLUDE_DIRS}
+    ${libavutil_INCLUDE_DIRS}
+    ${libavcodec_INCLUDE_DIRS}
   )
   list(APPEND link_TARGETS
     KF5::I18n
     KF5::WaylandClient
     ${epoxy_LIBRARIES}
+    ${libavutil_LIBRARIES}
+    ${libavcodec_LIBRARIES}
   )
 endif()
 

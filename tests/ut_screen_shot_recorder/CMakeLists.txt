@@ -1,6 +1,7 @@
 # 这个单元测试写的是什么鬼？怎么一堆h文件，这单元测试了个锤子
 # 覆盖率东西搞不上去，不加test了
 #cmake_minimum_required(VERSION 3.10)
+#project(ut_screen_shot)
 set(BIN ut_screen_shot)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -97,19 +98,7 @@ set(COMPILE_SRC
   ../../assets/icons/icons.qrc
 
 )
-file(GLOB WAYLAND_SRC
-  waylandrecord/*.h
-)
-if(USE_DEEPIN_WAYLAND)
-  add_definitions(-DKF5_WAYLAND_FLAGE_ON})
-  list(APPEND COMPILE_SRC
-    ${WAYLAND_SRC}
-  )
-endif()
-add_executable(${BIN}
-  ${COMPILE_SRC}
-)
-target_link_libraries(${BIN}
+set(link_TARGETS
   Qt5::Core
   Qt5::Gui
   Qt5::Widgets
@@ -137,7 +126,7 @@ target_link_libraries(${BIN}
   ${Xtst_LIBRARIES}
   ${XFIXES_LIBRARIES}
 )
-target_include_directories(${BIN} PUBLIC
+set(include_DIRS 
   ${CMAKE_CURRENT_LIST_DIR}/../../src
   ${gobject_INCLUDE_DIRS}
   ${xcb_util_INCLUDE_DIRS}
@@ -153,6 +142,56 @@ target_include_directories(${BIN} PUBLIC
   -lpthread
   -lm 
   -lgcov
+)
+file(GLOB WAYLAND_SRC
+  waylandrecord/*.h
+)
+if(USE_DEEPIN_WAYLAND)
+  include(FeatureSummary)
+  include(../../src/waylandrecord/waylandrecord.cmake)
+  find_package(KF5I18n)
+  find_package(KF5Wayland CONFIG)
+  set_package_properties(KF5Wayland PROPERTIES TYPE OPTIONAL)
+  
+  add_definitions(-DKWAYLAND_VERSION_MAJOR=${KF5Wayland_VERSION_MAJOR})
+  add_definitions(-DKWAYLAND_VERSION_MINOR=${KF5Wayland_VERSION_MINOR})
+  add_definitions(-DKWAYLAND_VERSION_PATCH=${KF5Wayland_VERSION_PATCH})
+  message("KWayland Version = ${KF5Wayland_VERSION}")
+  add_feature_info("KF5Wayland" KF5Wayland_FOUND "Required for the awesome Wayland on Qt demo")
+  if(UNUSE_DEFAULT_FFMPEG)
+    set(ENV{PKG_CONFIG_PATH} "${FFMPEG_PATH}:$ENV{PKG_CONFIG_PATH}")
+  endif()
+  pkg_check_modules(epoxy REQUIRED epoxy)
+  pkg_check_modules(libavutil REQUIRED libavutil)
+  pkg_check_modules(libavcodec REQUIRED libavcodec)
+  add_definitions(-DKF5_WAYLAND_FLAGE_ON)
+  list(APPEND COMPILE_SRC
+    ${WAYLAND_SRC}
+    ${utils_WAYLAND}
+    ${waylandrecord_HEAD}
+    ${waylandrecord_SRC}
+  )
+  list(APPEND include_DIRS 
+    ${epoxy_INCLUDE_DIRS}
+    ${libavutil_INCLUDE_DIRS}
+    ${libavcodec_INCLUDE_DIRS}
+  )
+  list(APPEND link_TARGETS
+    KF5::I18n
+    KF5::WaylandClient
+    ${epoxy_LIBRARIES}
+    ${libavutil_LIBRARIES}
+    ${libavcodec_LIBRARIES}
+  )
+endif()
+add_executable(${BIN}
+  ${COMPILE_SRC}
+)
+target_link_libraries(${BIN}
+  ${link_TARGETS}
+)
+target_include_directories(${BIN} PUBLIC
+  ${include_DIRS}
 )
 #if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 #  target_compile_options(${BIN} PRIVATE -fprofile-instr-generate -ftest-coverage)
