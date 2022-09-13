@@ -1246,7 +1246,7 @@ void MainWindow::showScrollShot()
 {
 #ifdef OCR_SCROLL_FLAGE_ON
     bool ok;
-    QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
+    QRect rect(recordX + 1, ((recordY == 0) ? 2 :  (recordY + 1)), recordWidth - 2, recordHeight - 2);
     //滚动截图截取指定区域的第一张图片
     m_firstScrollShotImg = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
     //m_firstScrollShotImg.save("m_firstScrollShotImg1.png");
