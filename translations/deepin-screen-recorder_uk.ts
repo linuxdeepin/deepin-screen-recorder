@@ -367,7 +367,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Почати знімок із гортанням</translation>
     </message>
 </context>
 <context>

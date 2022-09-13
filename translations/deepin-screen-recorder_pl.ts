@@ -177,7 +177,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation>Dotarto do samego dołu pola zrzutu ekranu</translation>
+        <translation>Dotarto do samego końca obszaru przewijania</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
@@ -185,7 +185,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>dostosuj pole przechwytywania ekranu</translation>
+        <translation>dostosować obszar przechwytywania ekranu</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
@@ -197,7 +197,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>Błędne pole, kliknij aby </translation>
+        <translation>Obszar nieprawidłowy, kliknij aby </translation>
     </message>
 </context>
 <context>
@@ -367,7 +367,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Rozpocznij pionowy zrzut ekranu</translation>
     </message>
 </context>
 <context>
@@ -412,11 +412,11 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Show Keystroke</source>
-        <translation>Pokazuj naciśnięcie klawisza</translation>
+        <translation>Pokaż naciśnięcie klawisza</translation>
     </message>
     <message>
         <source>Hide Keystroke</source>
-        <translation>Ukrywaj naciśnięcie klawisza</translation>
+        <translation>Ukryj naciśnięcie klawisza</translation>
     </message>
     <message>
         <source>Webcam On</source>
@@ -428,7 +428,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Show Click</source>
-        <translation>Pokazuj kliknięcie</translation>
+        <translation>Pokaż kliknięcie</translation>
     </message>
     <message>
         <source>Options</source>
@@ -536,7 +536,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation>Pokazuj wskaźnik</translation>
+        <translation>Pokaż wskaźnik</translation>
     </message>
     <message>
         <source>Mouse</source>
@@ -544,7 +544,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Show Pointer</source>
-        <translation>Pokazuj wskaźnik</translation>
+        <translation>Pokaż wskaźnik</translation>
     </message>
     <message>
         <source>Extract Text</source>
@@ -575,7 +575,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation> Dostosuj pole nagrywania w zakresie %1*%2, aby uzyskać lepszy efekt</translation>
+        <translation> Dostosuj obszar nagrywania w zakresie %1*%2, aby uzyskać lepszy efekt</translation>
     </message>
 </context>
 <context>

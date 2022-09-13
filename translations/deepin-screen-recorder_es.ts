@@ -110,7 +110,7 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Abrir carpeta</translation>
     </message>
 </context>
 <context>
@@ -155,7 +155,7 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Abrir carpeta</translation>
     </message>
 </context>
 <context>
@@ -363,11 +363,11 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>Iniciar OCR</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Iniciar captura de desplazamiento</translation>
     </message>
 </context>
 <context>
@@ -560,15 +560,15 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>ogg</source>
-        <translation type="unfinished"/>
+        <translation>ogg</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>Videos</translation>
     </message>
 </context>
 <context>

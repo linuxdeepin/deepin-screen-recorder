@@ -367,7 +367,7 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Avvia screenshot continuo</translation>
     </message>
 </context>
 <context>
