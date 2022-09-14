@@ -110,7 +110,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Abrir pasta</translation>
     </message>
 </context>
 <context>
@@ -155,7 +155,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Abrir pasta</translation>
     </message>
 </context>
 <context>
@@ -363,11 +363,11 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>Iniciar OCR</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Iniciar scrollshot</translation>
     </message>
 </context>
 <context>
@@ -568,7 +568,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>Vídeos</translation>
     </message>
 </context>
 <context>

@@ -367,7 +367,7 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Scrollende schermfoto maken</translation>
     </message>
 </context>
 <context>

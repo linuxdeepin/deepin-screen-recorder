@@ -367,7 +367,7 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Görgethető képernyőkép indítása</translation>
     </message>
 </context>
 <context>

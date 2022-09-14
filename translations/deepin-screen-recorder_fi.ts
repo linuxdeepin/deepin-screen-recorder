@@ -110,7 +110,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Avaa kansio</translation>
     </message>
 </context>
 <context>
@@ -155,7 +155,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Avaa kansio</translation>
     </message>
 </context>
 <context>
@@ -363,11 +363,11 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>Aloita OCR</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Aloita vierivä kaappaus</translation>
     </message>
 </context>
 <context>
@@ -560,15 +560,15 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>ogg</source>
-        <translation type="unfinished"/>
+        <translation>ogg</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>Videot</translation>
     </message>
 </context>
 <context>

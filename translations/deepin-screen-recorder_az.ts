@@ -367,7 +367,7 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Sürüşdürməni başladın</translation>
     </message>
 </context>
 <context>

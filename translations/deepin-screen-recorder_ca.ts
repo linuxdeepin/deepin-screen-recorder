@@ -367,7 +367,7 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Inicia la captura de desplaçament</translation>
     </message>
 </context>
 <context>

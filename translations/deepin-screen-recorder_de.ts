@@ -110,7 +110,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Ordner öffnen</translation>
     </message>
 </context>
 <context>
@@ -155,7 +155,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Ordner öffnen</translation>
     </message>
 </context>
 <context>
@@ -185,7 +185,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>den Aufnahmebereich anpassen</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
@@ -363,11 +363,11 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>OCR starten</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Bildlaufaufnahme starten</translation>
     </message>
 </context>
 <context>
@@ -568,7 +568,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>Videos</translation>
     </message>
 </context>
 <context>

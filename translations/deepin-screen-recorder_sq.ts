@@ -110,7 +110,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Hapni Dosje</translation>
     </message>
 </context>
 <context>
@@ -155,7 +155,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Hapni Dosje</translation>
     </message>
 </context>
 <context>
@@ -363,7 +363,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>Nis OCR</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
@@ -412,11 +412,11 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Show Keystroke</source>
-        <translation>Shfaq kombinim tastesh</translation>
+        <translation>Shfaq Kombinim Tastesh</translation>
     </message>
     <message>
         <source>Hide Keystroke</source>
-        <translation>Fshih kombinim tastesh</translation>
+        <translation>Fshih Kombinim Tastesh</translation>
     </message>
     <message>
         <source>Webcam On</source>
@@ -568,7 +568,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>Video</translation>
     </message>
 </context>
 <context>
