@@ -52,12 +52,8 @@ static bool CheckFFmpegEnv()
 
     //x11下需要检测ffmpeg应用是否存在
     if (!isWaylandProtocol()) {
-        qInfo() << "Is exists ffmpeg in path(/usr/bin/): " << QFile("/usr/bin/ffmpeg").exists();
-        if (QFile("/usr/bin/ffmpeg").exists()) {
-            flag = true;
-        } else {
-            flag = false;
-        }
+        flag = !QStandardPaths::findExecutable("ffmpeg").isEmpty();
+        qInfo() << "Is exists ffmpeg in PATH(" << qgetenv("PATH") << "):" << flag;
     }
     return flag;
 }
