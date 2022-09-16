@@ -145,6 +145,13 @@ protected Q_SLOTS:
      * @param rbuf
      */
     void processBuffer(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect);
+
+    /**
+     * @brief getImageFormat 根据wayland客户端bufferReady给过来的像素格式，转成QImage的格式
+     * @param format
+     * @return QImage的格式
+     */
+    QImage::Format getImageFormat(quint32 format);
     /**
      * @brief 此接口为了解决x86架构录屏mmap失败及花屏问题
      * @param rbuf

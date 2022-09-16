@@ -2016,7 +2016,7 @@ void MainWindow::updateToolBarPos()
     toolbarPoint = QPoint(recordX + recordWidth - m_toolBar->width(),
                           std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
 
-    qDebug() << "工具栏初始坐标: " << toolbarPoint.x() << toolbarPoint.y() ;
+//    qDebug() << "工具栏初始坐标: " << toolbarPoint.x() << toolbarPoint.y() ;
     //防止工具栏超出左侧屏幕
     if (toolbarPoint.x() <= 0) {
         m_repaintMainButton = true;
@@ -2038,7 +2038,7 @@ void MainWindow::updateToolBarPos()
             m_isToolBarInside = true;
         }
     }
-    qDebug() << "工具栏坐标: " << toolbarPoint.x() << toolbarPoint.y() ;
+//    qDebug() << "工具栏坐标: " << toolbarPoint.x() << toolbarPoint.y() ;
 
     bool toolIsInScreen = false; //
     QRect tempScreen ;//捕捉区域所在的屏幕，以捕捉区域左上角为准
