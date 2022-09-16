@@ -463,17 +463,18 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     if (MAP_FAILED == mapData) {
         qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "dma fd " << dma_fd << " mmap failed - ";
     }
-    //appendBuffer(mapData, static_cast<int>(width), static_cast<int>(height), static_cast<int>(stride), avlibInterface::m_av_gettime() - frameStartTime);
+    //QString pngName = "/home/uos/Desktop/test/"+QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ") + QString("%1_").arg(rect.x()));
+    //QImage(mapData, width, height, QImage::Format_RGB32).copy().save(pngName + ".png");
     if (m_screenCount == 1) {
+        //单屏
         m_curNewImage.first = 0;//avlibInterface::m_av_gettime() - frameStartTime;
         {
             QMutexLocker locker(&m_bGetScreenImageMutex);
             m_curNewImage.second = QImage(mapData, width, height, QImage::Format_RGBA8888).copy();
         }
     } else {
-        //QString pngName = QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ") + QString("%1_").arg(rect.x()));
-        //QImage(mapData, width, height, QImage::Format_RGBA8888).copy().save(pngName + ".png");
-        m_ScreenDateBuf.append(QPair<QRect, QImage>(rect, QImage(mapData, width, height, QImage::Format_RGBA8888).copy()));
+        //多屏
+        m_ScreenDateBuf.append(QPair<QRect, QImage>(rect, QImage(mapData, width, height, getImageFormat(rbuf->format())).copy()));
         if (m_ScreenDateBuf.size() ==  m_screenCount) {
             QMutexLocker locker(&m_bGetScreenImageMutex);
             m_curNewImageScreen.clear();
@@ -485,6 +486,40 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     }
     munmap(mapData, stride * height);
     close(dma_fd);
+}
+
+//根据wayland客户端bufferReady给过来的像素格式，转成QImage的格式
+QImage::Format WaylandIntegration::WaylandIntegrationPrivate::getImageFormat(quint32 format)
+{
+    switch(format){
+    case GBM_FORMAT_XRGB8888: //GBM_FORMAT_XRGB8888 = 875713112
+        qDebug() << "fd 图片格式: XRGB"<< GBM_FORMAT_XRGB8888 << " -> " << "QImage::Format_RGB32";
+        return QImage::Format_RGB32;
+    case GBM_FORMAT_XBGR8888: //GBM_FORMAT_XBGR8888 = 875709016
+        qDebug() << "fd 图片格式: XBGR"<< GBM_FORMAT_XBGR8888 << " -> " << "QImage::Format_RGB32";
+        return QImage::Format_RGB32;
+    case GBM_FORMAT_RGBX8888: //GBM_FORMAT_RGBX8888 = 875714642
+        qDebug() << "fd 图片格式: RGBX" << GBM_FORMAT_RGBX8888 << " -> " << "QImage::Format_RGBX8888";
+        return QImage::Format_RGBX8888;
+    case GBM_FORMAT_BGRX8888: //GBM_FORMAT_BGRX8888 = 875714626
+        qDebug() << "fd 图片格式: BGRX" << GBM_FORMAT_BGRX8888 << " -> " << "QImage::Format_BGR30";
+        return QImage::Format_BGR30;
+    case GBM_FORMAT_ARGB8888: //GBM_FORMAT_ARGB8888 = 875713089
+        qDebug() << "fd 图片格式: ARGB"<< GBM_FORMAT_ARGB8888 << " -> " << "QImage::Format_ARGB32";
+        return QImage::Format_ARGB32;
+    case GBM_FORMAT_ABGR8888: //GBM_FORMAT_ABGR8888 = 875708993
+        qDebug() << "fd 图片格式: ABGR"<< GBM_FORMAT_ABGR8888 << " -> " << "QImage::Format_ARGB32";
+        return QImage::Format_ARGB32;
+    case GBM_FORMAT_RGBA8888: //GBM_FORMAT_RGBA8888 = 875708754
+        qDebug() << "fd 图片格式: RGBA"<< GBM_FORMAT_RGBA8888 << " -> " << "QImage::Format_RGBA8888";
+        return QImage::Format_RGBA8888;
+    case GBM_FORMAT_BGRA8888: //GBM_FORMAT_BGRA8888 = 875708738
+        qDebug() << "fd 图片格式: BGRA"<< GBM_FORMAT_BGRA8888 << " -> " << "QImage::Format_BGR30";
+        return QImage::Format_BGR30;
+    default:
+        qDebug() << "fd 图片格式未知: "<<format << " -> " << "QImage::Format_RGB32";
+        return QImage::Format_RGB32;
+    }
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect)
@@ -594,6 +629,11 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
                 }
             }
             QImage img(m_screenSize, QImage::Format_RGBA8888);
+            if(m_boardVendorType){
+                 //qDebug() << "1 img.format: " << img.format();
+                 img = img.convertToFormat(QImage::Format_RGB32);
+                 //qDebug() << "2 img.format: " << img.format();
+            }
             img.fill(Qt::GlobalColor::black);
             QPainter painter(&img);
             for (auto itr = tempImageVec.begin(); itr != tempImageVec.end(); ++itr) {
@@ -611,7 +651,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
                 t = (QDateTime::currentMSecsSinceEpoch() - curFramTime) / 1000;
 
             }
-            qDebug() << delayTime - t;
+            //qDebug() << delayTime - t;
             if (t < delayTime) {
                 QThread::msleep(static_cast<unsigned long>(delayTime - t));
             }
@@ -715,9 +755,11 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
             connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf, screenGeometry] {
                 if (m_boardVendorType)
                 {
+                    //arm hw
                     processBuffer(rbuf, screenGeometry);
                 } else
                 {
+                    //other
                     processBufferX86(rbuf, screenGeometry);
                 }
             });
