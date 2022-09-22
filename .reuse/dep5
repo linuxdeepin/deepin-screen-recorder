@@ -80,15 +80,20 @@ License: CC-BY-4.0
 
 # 3rdparty/googletest
 Files: 3rdparty/googletest/*
-Copyright: 2008, Google Inc.
-License: Apache-2.0
+Copyright: None
+License: BSD-3-Clause
 
 # 3rdparty/libcam
 Files: 3rdparty/libcam/*
-Copyright: 2007 Free Software Foundation, Inc.
+Copyright: 2007, Google Inc.
+License: GPL-2.0-or-later
+
+# 3rdparty/googletest
+Files: 3rdparty/googletest/*
+Copyright: 2008, Google Inc.
 License: BSD-3-Clause
 
 # 3rdparty/stub_linux
 Files: 3rdparty/stub_linux/*
-Copyright: 2019 coolxv
-License: MIT
+Copyright: None
+License: GPL-2.0-or-later
