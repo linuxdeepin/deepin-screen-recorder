@@ -1682,10 +1682,8 @@ void MainWindow::initBackground()
         DBusNotify shotFailedNotify;
         QString tips = QString(tr("Screenshot failed."));
         shotFailedNotify.Notify(QCoreApplication::applicationName(), 0, "deepin-screen-recorder", QString(), tips, QStringList(), QVariantMap(), 5000);
-        if (Utils::isWaylandMode) {
-            qWarning() << "wayland 无法获取截图背景，应用退出！";
-            _Exit(0);
-        }
+        qWarning() << "截图失败（防截图）,无法获取截图背景，应用退出！";
+        _exit(0);
     }
     m_resultPixmap = m_backgroundPixmap;
     TempFile::instance()->setFullScreenPixmap(m_backgroundPixmap);
