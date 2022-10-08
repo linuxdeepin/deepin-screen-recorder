@@ -203,6 +203,9 @@ void MainWindow::initAttributes()
     //Qt::X11BypassWindowManagerHint : 完全绕过窗口管理器。
     if (Utils::isWaylandMode) {
         setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+        if (this->windowHandle()) {
+            this->windowHandle()->setProperty("_d_dwayland_window-type", "onScreenDisplay");
+        }
         //取消onScreenDisplay，解决wayland截长图无法滚动的问题
         QDBusInterface sessionManagerIntert("com.deepin.SessionManager",
                                             "/com/deepin/SessionManager",
