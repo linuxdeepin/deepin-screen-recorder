@@ -93,7 +93,7 @@ extern int verbosity;
 #define CSTR_PAN_RESET		N_("Pan, Reset")
 #define CSTR_TILT_RESET		N_("Tilt, Reset")
 #define CSTR_PAN_ABS		N_("Pan, Absolute")
-#define CSTR_TILT_ABS		N_"Tilt, Absolute")
+#define CSTR_TILT_ABS		N_("Tilt, Absolute")
 #define CSTR_FOCUS_ABS		N_("Focus, Absolute")
 #define CSTR_FOCUS_REL		N_("Focus, Relative")
 #define CSTR_FOCUS_AUTO		N_("Focus, Automatic")
