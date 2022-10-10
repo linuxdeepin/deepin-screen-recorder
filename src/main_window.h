@@ -51,6 +51,7 @@
 #include "recordertablet.h"
 #include "dbusinterface/ocrinterface.h"
 #include "dbusinterface/pinscreenshotsinterface.h"
+#include "utils/delaytime.h"
 
 #include <DWindowManagerHelper>
 #include <DDialog>
@@ -245,10 +246,10 @@ public:
         m_keyButtonList.clear();
         if (m_pScreenCaptureEvent) {
             qInfo() << __FUNCTION__ << __LINE__ << "正在退出截图录屏全局事件监听线程...";
-            QTimer *delayTimer = new QTimer();
-            connect(delayTimer, &QTimer::timeout, this, &MainWindow::onExitScreenCapture);
+            DelayTime *delayTime = new DelayTime(3000);
+            delayTime->setForceToExitApp(true);
             qInfo() << __FUNCTION__ << __LINE__ << "启动3s超时监听";
-            delayTimer->start(3000);
+            delayTime->start(QThread::HighestPriority);
             qInfo() << __FUNCTION__ << __LINE__ << "正在释放截图录屏全局事件X11相关资源...";
             m_pScreenCaptureEvent->releaseRes();
             //m_pScreenCaptureEvent->terminate();
@@ -258,9 +259,11 @@ public:
             delete m_pScreenCaptureEvent;
             m_pScreenCaptureEvent = nullptr;
             qInfo() << __FUNCTION__ << __LINE__ << "截图录屏全局事件监听线程已退出！";
-            if (delayTimer) {
-                delayTimer->stop();
-                delete delayTimer;
+            delayTime->setForceToExitApp(false);
+            delayTime->stop();
+            if (delayTime) {
+                delete delayTime;
+                delayTime = nullptr;
             }
         }
         //以前的流程没执行到此处，没暴露延迟500ms的问题，以前的无用代码
