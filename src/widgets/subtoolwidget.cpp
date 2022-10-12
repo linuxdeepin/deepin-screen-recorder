@@ -712,7 +712,9 @@ void SubToolWidget::initShotLabel()
     m_ocrButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     installTipHint(m_ocrButton, tr("Extract Text"));
 #ifdef  OCR_SCROLL_FLAGE_ON
-    btnList.append(m_ocrButton);
+     if (QFile("/usr/bin/deepin-ocr").exists()) {
+        btnList.append(m_ocrButton);
+     }
 #endif
 
     ToolButton *seperator2 = new ToolButton(this);
