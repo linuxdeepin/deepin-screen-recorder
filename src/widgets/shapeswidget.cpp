@@ -87,10 +87,10 @@ ShapesWidget::~ShapesWidget()
 void ShapesWidget::updateSelectedShape(const QString &group,
                                        const QString &key, int index)
 {
-//    qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
-//             << ", group: " << group
-//             << ", key: " << key
-//             << ", index: " << index;
+    qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
+             << ", group: " << group
+             << ", key: " << key
+             << ", index: " << index;
     if (m_isSelectedText) { //修复在截图区域，选中的文本框，字体会自动变颜色
         m_isSelectedText = false;
         return;

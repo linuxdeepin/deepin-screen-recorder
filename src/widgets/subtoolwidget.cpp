@@ -324,6 +324,17 @@ void SubToolWidget::initRecordLabel()
 
     m_mouseButton->setMenu(m_cursorMenu);
 
+    ToolButton *seperator3 = new ToolButton(this);
+    if (Utils::themeType != 1) {
+        seperator3->setStyleSheet("border:0px solid rgba(0, 0, 0, 0);border-radius:0px;background-color:rgba(0, 0, 0, 0)");
+    } else {
+        seperator3->setStyleSheet("border:0px solid rgba(255, 255, 255, 0);border-radius:0px;background-color:rgba(255, 255, 255, 0)");
+    }
+    seperator3->setDisabled(true);
+    seperator3->setFixedSize(QSize(5, 30));
+    //添加分割线
+    btnList.append(seperator3);
+
 
     //2019-10-14：新增选项按钮
     m_optionButton = new ToolButton();
@@ -712,9 +723,9 @@ void SubToolWidget::initShotLabel()
     m_ocrButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     installTipHint(m_ocrButton, tr("Extract Text"));
 #ifdef  OCR_SCROLL_FLAGE_ON
-     if (QFile("/usr/bin/deepin-ocr").exists()) {
+    if (QFile("/usr/bin/deepin-ocr").exists()) {
         btnList.append(m_ocrButton);
-     }
+    }
 #endif
 
     ToolButton *seperator2 = new ToolButton(this);
@@ -803,7 +814,7 @@ void SubToolWidget::initShotLabel()
         seperator3->setStyleSheet("border:0px solid rgba(255, 255, 255, 0);border-radius:0px;background-color:rgba(255, 255, 255, 0)");
     }
     seperator3->setDisabled(true);
-    seperator3->setFixedSize(QSize(3, 30));
+    seperator3->setFixedSize(QSize(5, 30));
     //添加分割线
     btnList.append(seperator3);
 
