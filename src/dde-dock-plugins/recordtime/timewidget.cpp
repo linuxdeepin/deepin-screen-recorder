@@ -48,6 +48,7 @@ TimeWidget::TimeWidget(DWidget *parent):
     m_currentIcon = m_lightIcon;
     //this->setAttribute(Qt::WA_StyledBackground,true);
     //this->setStyleSheet("background-color: rgb(255,255, 0)");
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
 }
 
 TimeWidget::~TimeWidget()
@@ -87,7 +88,7 @@ QSize TimeWidget::sizeHint() const
         width = fm.boundingRect(RECORDER_TIME_VERTICAL_SIZE).size().width();
         height = RECORDER_TIME_VERTICAL_ICON_SIZE;
     }
-    return QSize(width, height);
+    return QSize(width - 10, this->geometry().height());
 }
 
 void TimeWidget::onTimeout()
@@ -170,7 +171,7 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         const QRectF &prf = QRectF(m_pixmap.rect());
         QPointF pf = rf.center() - prf.center();
         //绘制录像小图标
-        painter.drawPixmap(0, static_cast<int>(pf.y()), m_pixmap);
+        painter.drawPixmap(5, static_cast<int>(pf.y() + 1), m_pixmap);
         QFont font = RECORDER_TIME_FONT;
         painter.setFont(font);
         QFontMetrics fm(font);
