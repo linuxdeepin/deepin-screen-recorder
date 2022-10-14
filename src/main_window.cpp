@@ -335,7 +335,7 @@ void MainWindow::setupRegistry(Registry *registry)
 {
     connect(registry, &Registry::compositorAnnounced, this,
     [this, registry](quint32 name, quint32 version) {
-                qDebug() << "开始创建wayland合成器...";
+        qDebug() << "开始创建wayland合成器...";
         m_compositor = registry->createCompositor(name, version, this);
         qDebug() << "wayland合成器已创建";
     }
@@ -889,7 +889,7 @@ void MainWindow::initScreenShot()
         removeEventFilter(this);
         exitScreenCuptureEvent();
     });
-    if(status::ocr != m_functionType && status::scrollshot != m_functionType){
+    if (status::ocr != m_functionType && status::scrollshot != m_functionType) {
         m_functionType = 1;
     }
     m_keyBoardStatus = false;
@@ -1249,7 +1249,7 @@ void MainWindow::showScrollShot()
 {
 #ifdef OCR_SCROLL_FLAGE_ON
     bool ok;
-    QRect rect(recordX + 1, ((recordY == 0) ? 2 :  (recordY + 1)), recordWidth - 2, recordHeight - 2);
+    QRect rect(recordX + 1, ((recordY == 0) ? 2 : (recordY + 1)), recordWidth - 2, recordHeight - 2);
     //滚动截图截取指定区域的第一张图片
     m_firstScrollShotImg = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
     //m_firstScrollShotImg.save("m_firstScrollShotImg1.png");
@@ -2032,15 +2032,15 @@ void MainWindow::updateToolBarPos()
     if (m_isScreenVertical == false) {
         for (int i = 0; i < m_screenInfo.size(); ++i) {
             toolIsInScreen = toolbarPoint.x() >= m_screenInfo[i].x &&
-                    toolbarPoint.x() < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                    (toolbarPoint.y()-m_screenInfo[i].height)*m_pixelRatio+m_screenInfo[i].height >= m_screenInfo[i].y &&
-                    (toolbarPoint.y()-m_screenInfo[i].height)*m_pixelRatio+m_screenInfo[i].height< (m_screenInfo[i].y + m_screenInfo[i].height);
+                             toolbarPoint.x() < (m_screenInfo[i].x + m_screenInfo[i].width) &&
+                             (toolbarPoint.y() - m_screenInfo[i].height) * m_pixelRatio + m_screenInfo[i].height >= m_screenInfo[i].y &&
+                             (toolbarPoint.y() - m_screenInfo[i].height) * m_pixelRatio + m_screenInfo[i].height < (m_screenInfo[i].y + m_screenInfo[i].height);
             bool recordIsInScreen =  recordX >= m_screenInfo[i].x &&
-                    recordX < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                    recordY >= m_screenInfo[i].y &&
-                    recordY < (m_screenInfo[i].y + m_screenInfo[i].height);
+                                     recordX < (m_screenInfo[i].x + m_screenInfo[i].width) &&
+                                     recordY >= m_screenInfo[i].y &&
+                                     recordY < (m_screenInfo[i].y + m_screenInfo[i].height);
             //取出捕捉区域所在的屏幕
-            if(recordIsInScreen){
+            if (recordIsInScreen) {
                 tempScreen.setX(m_screenInfo[i].x);
                 tempScreen.setY(m_screenInfo[i].y);
                 tempScreen.setWidth(m_screenInfo[i].width);
@@ -2064,7 +2064,7 @@ void MainWindow::updateToolBarPos()
                         y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_toolBar->height() - TOOLBAR_Y_SPACING;
 
                     //已经调整工具栏位置之后，发现工具栏位置超出屏幕上边缘
-                    if(y < m_screenInfo[i].y){
+                    if (y < m_screenInfo[i].y) {
                         y = recordY + TOOLBAR_Y_SPACING;
                     }
                     toolbarPoint.setY(y);
@@ -2073,13 +2073,13 @@ void MainWindow::updateToolBarPos()
                 break;
             }
         }
-        if(!toolIsInScreen){
-            if(!tempScreen.isNull() || tempScreen.isEmpty()){
+        if (!toolIsInScreen) {
+            if (!tempScreen.isNull() || tempScreen.isEmpty()) {
                 qDebug() << "当前屏幕：" <<  tempScreen;
-                if(recordY - tempScreen.y() >  m_toolBar->height() + 28 ){
+                if (recordY - tempScreen.y() >  m_toolBar->height() + 28) {
                     qDebug() << "工具栏位置未在任一屏幕内，需要矫正 >>> 放捕捉区域上边 toolbarPoint: " << toolbarPoint;
                     toolbarPoint.setY(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING);
-                }else{
+                } else {
                     qDebug() << "工具栏位置未在任一屏幕内，需要矫正 >>> 放捕捉区域里面 toolbarPoint: " << toolbarPoint;
                     toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
                 }
@@ -2771,8 +2771,9 @@ void MainWindow::saveScreenShot()
         m_scrollShotSizeTips->hide();
     }
     //滚动截图模式下保存图片
-    if (status::scrollshot == m_functionType && m_scrollShotStatus != 0) {
+    if ((status::scrollshot == m_functionType || (m_isSaveScrollShot && status::ocr == m_functionType)) && m_scrollShotStatus != 0) {
 #ifdef OCR_SCROLL_FLAGE_ON
+        qDebug() << "滚动截图模式下保存图片";
         bool ok;
         QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
         QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio); // 抓取当前捕捉区域图片
@@ -2784,6 +2785,7 @@ void MainWindow::saveScreenShot()
         }
 #endif
     } else {
+        qDebug() << "普通截图模式下保存图片";
         //除了滚动截图时，突然进入锁屏界面不会执行shotCurrentImg()函数，其他情况都会执行shotCurrentImg()
         if (!(status::scrollshot == m_functionType && m_isLockedState)) {
             //普通截图保存图片
