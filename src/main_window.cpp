@@ -4423,6 +4423,11 @@ void MainWindow::scrollShotMouseClickEvent(int x, int y)
     //qDebug() << "mouseClickPoint x,y :  " << mouseClickPoint.x() << " , " << mouseClickPoint.y();
     //判断当前点击的点是否在捕捉区域内部,不在捕捉区域内则不响应点击事件
     if (!scrollShotRect.contains(mouseClickPoint)) {
+        if (m_scrollShotMouseClick == 2) {
+            qDebug() << "鼠标双击保存当前滚动截图!";
+            //不是第一次进入滚动截图，则保存当前滚动截图
+            saveScreenShot();
+        }
         return;
     }
 
