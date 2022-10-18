@@ -81,14 +81,14 @@ QSize TimeWidget::sizeHint() const
     QFontMetrics fm(RECORDER_TIME_FONT);
     int width = -1;
     int height = -1;
-    if (0 == m_position || 2 == m_position) {
-        width = fm.boundingRect(RECORDER_TIME_LEVEL_SIZE).size().width();
+    if (position::top == m_position || position::bottom == m_position) {
+        width = fm.boundingRect(RECORDER_TIME_LEVEL_SIZE).size().width() + 5 + RECORDER_TIME_LEVEL_ICON_SIZE + RECORDER_TEXT_TOP_BOTTOM_X;
         height = RECORDER_TIME_LEVEL_ICON_SIZE;
-    } else if (1 == m_position || 3 == m_position) {
-        width = fm.boundingRect(RECORDER_TIME_VERTICAL_SIZE).size().width();
+    } else if (position::left == m_position || position::right == m_position) {
+        width = RECORDER_TIME_LEVEL_ICON_SIZE + RECORDER_TEXT_TOP_BOTTOM_X;
         height = RECORDER_TIME_VERTICAL_ICON_SIZE;
     }
-    return QSize(width - 10, this->geometry().height());
+    return QSize(width, this->geometry().height());
 }
 
 void TimeWidget::onTimeout()
@@ -151,10 +151,14 @@ void TimeWidget::paintEvent(QPaintEvent *e)
             path.addRoundedRect(rc, radius, radius);
 
         } else if (position::right == m_position || position::left == m_position) {
-            int minSize = std::min(width(), height());
-            QRect rc(0, 0, minSize, minSize);
-            rc.moveTo(rect().center() - rc.center());
-            path.addRoundedRect(rc, radius, radius);
+            if (rect().width() > RECORDER_TIME_LEVEL_ICON_SIZE) {
+                int minSize = std::min(width(), height());
+                QRect rc(0, 0, minSize, minSize);
+                rc.moveTo(rect().center() - rc.center());
+                path.addRoundedRect(rc, radius, radius);
+            } else {
+                painter.setPen(Qt::black);
+            }
         }
         painter.fillPath(path, color);
     } else {
