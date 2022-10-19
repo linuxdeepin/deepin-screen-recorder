@@ -193,12 +193,26 @@ void Utils::cancelInputEvent1(const int wid, const short x, const short y, const
 // 判断系统是否是大于1040, 大于1040才显示录制时长功能。
 bool Utils::isSysHighVersion1040()
 {
-    const int version1040 = 1040;
     if (DSysInfo::isDeepin()) {
         bool correct = false;
-        int version = DSysInfo::minorVersion().toInt(&correct);
-        if (correct && (version >= version1040)) {
-            return true;
+        QString sysVersion = DSysInfo::minorVersion();
+        float version = sysVersion.toFloat(&correct);
+        qDebug() << "System Version:" << sysVersion << correct;
+        if(DSysInfo::UosProfessional == DSysInfo::uosEditionType() || DSysInfo::UosEducation == DSysInfo::uosEditionType()) {
+            const float versionProfessional = 1040;
+            if (correct && (version >= versionProfessional)) {
+                return true;
+            }
+        } else if(DSysInfo::UosHome == DSysInfo::uosEditionType()) {
+            const float versionHome = 21.3f;
+            if (correct && (version >= versionHome)) {
+                return true;
+            }
+        } else if(DSysInfo::UosCommunity == DSysInfo::uosEditionType()) {
+            const float versionCommunity = 20.6f;
+            if (correct && (version >= versionCommunity)) {
+                return true;
+            }
         }
     }
     return false;
