@@ -1742,12 +1742,12 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
         cb->setMimeData(t_imageData, QClipboard::Clipboard);
         if (Utils::isWaylandMode) {
             //wayland下添加超时机制，1s后退出事件循环
-            QTimer *tempTimer = new QTimer();
-            tempTimer->setSingleShot(true);
+            DelayTime *tempTimer = new DelayTime();
+            tempTimer->setForceToExitApp(false);
             QEventLoop eventloop;
             connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
-            connect(tempTimer, SIGNAL(timeout()), &eventloop, SLOT(quit()));
-            tempTimer->start(1000);
+            connect(tempTimer, SIGNAL(doWork()), &eventloop, SLOT(quit()));
+            tempTimer->start(QThread::HighestPriority);
             eventloop.exec();
             tempTimer->stop();
             delete tempTimer;
