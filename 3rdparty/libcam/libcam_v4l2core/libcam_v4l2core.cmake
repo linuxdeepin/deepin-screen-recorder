@@ -1,0 +1,41 @@
+set(libcam_v4l2core_HEAD
+  ${CMAKE_CURRENT_LIST_DIR}/colorspaces.h
+  ${CMAKE_CURRENT_LIST_DIR}/control_profile.h
+  ${CMAKE_CURRENT_LIST_DIR}/core_io.h
+  ${CMAKE_CURRENT_LIST_DIR}/core_time.h
+  ${CMAKE_CURRENT_LIST_DIR}/dct.h
+  ${CMAKE_CURRENT_LIST_DIR}/frame_decoder.h
+  ${CMAKE_CURRENT_LIST_DIR}/gui.h
+  ${CMAKE_CURRENT_LIST_DIR}/gview.h
+  ${CMAKE_CURRENT_LIST_DIR}/gviewv4l2core.h
+  ${CMAKE_CURRENT_LIST_DIR}/jpeg_decoder.h
+  ${CMAKE_CURRENT_LIST_DIR}/save_image.h
+  ${CMAKE_CURRENT_LIST_DIR}/soft_autofocus.h
+  ${CMAKE_CURRENT_LIST_DIR}/uvc_h264.h
+  ${CMAKE_CURRENT_LIST_DIR}/v4l2_controls.h
+  ${CMAKE_CURRENT_LIST_DIR}/v4l2_core.h
+  ${CMAKE_CURRENT_LIST_DIR}/v4l2_devices.h
+  ${CMAKE_CURRENT_LIST_DIR}/v4l2_formats.h
+  ${CMAKE_CURRENT_LIST_DIR}/v4l2_xu_ctrls.h
+)
+set(libcam_v4l2core_SRC
+  ${CMAKE_CURRENT_LIST_DIR}/colorspaces.c
+  ${CMAKE_CURRENT_LIST_DIR}/control_profile.c
+  ${CMAKE_CURRENT_LIST_DIR}/core_io.c
+  ${CMAKE_CURRENT_LIST_DIR}/core_time.c
+  ${CMAKE_CURRENT_LIST_DIR}/dct.c
+  ${CMAKE_CURRENT_LIST_DIR}/frame_decoder.c
+  ${CMAKE_CURRENT_LIST_DIR}/gui.c
+  ${CMAKE_CURRENT_LIST_DIR}/jpeg_decoder.c
+  ${CMAKE_CURRENT_LIST_DIR}/save_image_bmp.c
+  ${CMAKE_CURRENT_LIST_DIR}/save_image.c
+  ${CMAKE_CURRENT_LIST_DIR}/save_image_jpeg.c
+  ${CMAKE_CURRENT_LIST_DIR}/soft_autofocus.c
+  ${CMAKE_CURRENT_LIST_DIR}/uvc_h264.c
+  ${CMAKE_CURRENT_LIST_DIR}/v4l2_controls.c
+  ${CMAKE_CURRENT_LIST_DIR}/v4l2_core.c
+  ${CMAKE_CURRENT_LIST_DIR}/v4l2_devices.c
+  ${CMAKE_CURRENT_LIST_DIR}/v4l2_formats.c
+  ${CMAKE_CURRENT_LIST_DIR}/v4l2_xu_ctrls.c
+)
+include_directories(${CMAKE_CURRENT_LIST_DIR})

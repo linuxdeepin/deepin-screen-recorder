@@ -50,10 +50,10 @@
 #include <QTimer>
 #include <unistd.h>
 #ifdef KF5_WAYLAND_FLAGE_ON
-#include <KF5/KWayland/Client/connection_thread.h>
-#include <KF5/KWayland/Client/clientmanagement.h>
-#include <KF5/KWayland/Client/event_queue.h>
-#include <KF5/KWayland/Client/registry.h>
+#include <KWayland/Client/connection_thread.h>
+#include <KWayland/Client/clientmanagement.h>
+#include <KWayland/Client/event_queue.h>
+#include <KWayland/Client/registry.h>
 #endif
 #undef Bool
 

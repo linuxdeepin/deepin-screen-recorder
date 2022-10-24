@@ -1,0 +1,38 @@
+set(glob_HEAD
+  ${CMAKE_CURRENT_LIST_DIR}/constant.h
+  ${CMAKE_CURRENT_LIST_DIR}/keydefine.h
+  ${CMAKE_CURRENT_LIST_DIR}/RecorderRegionShow.h
+  ${CMAKE_CURRENT_LIST_DIR}/main_window.h
+  ${CMAKE_CURRENT_LIST_DIR}/record_process.h
+  ${CMAKE_CURRENT_LIST_DIR}/settings.h
+  ${CMAKE_CURRENT_LIST_DIR}/utils.h
+  ${CMAKE_CURRENT_LIST_DIR}/record_button.h
+  ${CMAKE_CURRENT_LIST_DIR}/record_option_panel.h
+  ${CMAKE_CURRENT_LIST_DIR}/countdown_tooltip.h
+  ${CMAKE_CURRENT_LIST_DIR}/event_monitor.h
+  ${CMAKE_CURRENT_LIST_DIR}/button_feedback.h
+  ${CMAKE_CURRENT_LIST_DIR}/process_tree.h
+  ${CMAKE_CURRENT_LIST_DIR}/camera_process.h
+  ${CMAKE_CURRENT_LIST_DIR}/show_buttons.h
+  ${CMAKE_CURRENT_LIST_DIR}/screenshot.h
+  ${CMAKE_CURRENT_LIST_DIR}/recordertablet.h
+)
+set(glob_SRC
+  #${CMAKE_CURRENT_LIST_DIR}/main.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/main_window.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/record_process.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/settings.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/utils.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/record_button.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/record_option_panel.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/countdown_tooltip.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/constant.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/event_monitor.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/button_feedback.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/process_tree.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/camera_process.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/show_buttons.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/screenshot.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/RecorderRegionShow.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/recordertablet.cpp
+)

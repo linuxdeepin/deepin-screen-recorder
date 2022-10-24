@@ -1,0 +1,11 @@
+set(libcam_HEAD
+  ${CMAKE_CURRENT_LIST_DIR}/camview.h
+  ${CMAKE_CURRENT_LIST_DIR}/cameraconfig.h
+  ${CMAKE_CURRENT_LIST_DIR}/options.h
+)
+set(libcam_SRC
+  ${CMAKE_CURRENT_LIST_DIR}/camview.c
+  ${CMAKE_CURRENT_LIST_DIR}/cameraconfig.c
+  ${CMAKE_CURRENT_LIST_DIR}/options.c
+)
+include_directories(${CMAKE_CURRENT_LIST_DIR})

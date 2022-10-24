@@ -1,0 +1,9 @@
+set(stub_HEAD
+  ${CMAKE_CURRENT_LIST_DIR}/stub.h
+  ${CMAKE_CURRENT_LIST_DIR}/addr_any.h
+  ${CMAKE_CURRENT_LIST_DIR}/addr_pri.h
+)
+set(stub_SRC
+  ${CMAKE_CURRENT_LIST_DIR}/elfio.hpp
+)
+include_directories(${CMAKE_CURRENT_LIST_DIR})

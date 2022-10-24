@@ -19,6 +19,11 @@
 #include <QDBusError>
 #include <QDBusMessage>
 
+// X11 引入了None和Status,所以需要引入头文件
+#ifdef OCR_SCROLL_FLAGE_ON
+#include <opencv2/stitching.hpp>
+#endif
+#include "gstrecord/gstrecordx.h"
 #include <X11/Xlib.h>
 #include <X11/extensions/record.h>
 #include <X11/extensions/Xfixes.h>

@@ -5,3 +5,4 @@ moc_*.cpp
 build/
 *.qm
 *.pro.user*
+.cache

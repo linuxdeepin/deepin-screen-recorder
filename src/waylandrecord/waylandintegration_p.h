@@ -12,8 +12,8 @@
 #include <QMap>
 #include <QImage>
 #include <gbm.h>
-#include <epoxy/egl.h>
 #include <epoxy/gl.h>
+#include <epoxy/egl.h>
 #include <QMutex>
 #include <EGL/egl.h>
 

@@ -8,7 +8,7 @@
 #include <QDebug>
 #include <QTest>
 
-#include "../../../src/dde-dock-plugins/shotstart/iconwidget.h"
+#include "../../../dde-dock-plugins/shotstart/iconwidget.h"
 
 namespace  {
 class TesticonWidget : public testing::Test

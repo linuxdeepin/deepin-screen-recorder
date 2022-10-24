@@ -1,0 +1,57 @@
+set(widgets_HEAD
+
+  ${CMAKE_CURRENT_LIST_DIR}/savetips.h
+  ${CMAKE_CURRENT_LIST_DIR}/fontsizewidget.h
+  ${CMAKE_CURRENT_LIST_DIR}/colorbutton.h
+  ${CMAKE_CURRENT_LIST_DIR}/zoomIndicator.h
+  ${CMAKE_CURRENT_LIST_DIR}/zoomIndicatorGL.h
+  ${CMAKE_CURRENT_LIST_DIR}/majtoolbar.h
+  ${CMAKE_CURRENT_LIST_DIR}/textedit.h
+  ${CMAKE_CURRENT_LIST_DIR}/bigcolorbutton.h
+  ${CMAKE_CURRENT_LIST_DIR}/toptips.h
+  ${CMAKE_CURRENT_LIST_DIR}/toolbar.h
+  ${CMAKE_CURRENT_LIST_DIR}/savebutton.h
+  ${CMAKE_CURRENT_LIST_DIR}/textbutton.h
+  ${CMAKE_CURRENT_LIST_DIR}/shapeswidget.h
+  ${CMAKE_CURRENT_LIST_DIR}/toolbutton.h
+  ${CMAKE_CURRENT_LIST_DIR}/maintoolwidget.h
+  ${CMAKE_CURRENT_LIST_DIR}/subtoolwidget.h
+  ${CMAKE_CURRENT_LIST_DIR}/keybuttonwidget.h
+  ${CMAKE_CURRENT_LIST_DIR}/sidebar.h
+  ${CMAKE_CURRENT_LIST_DIR}/shottoolwidget.h
+  ${CMAKE_CURRENT_LIST_DIR}/colortoolwidget.h
+  ${CMAKE_CURRENT_LIST_DIR}/camerawidget.h
+  ${CMAKE_CURRENT_LIST_DIR}/tooltips.h
+  ${CMAKE_CURRENT_LIST_DIR}/filter.h
+)
+set(widgets_SRC
+  ${CMAKE_CURRENT_LIST_DIR}/savebutton.cpp
+
+  ${CMAKE_CURRENT_LIST_DIR}/toptips.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/shapeswidget.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/textbutton.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/colorbutton.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/fontsizewidget.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/textedit.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/bigcolorbutton.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/zoomIndicator.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/zoomIndicatorGL.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/majtoolbar.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/savetips.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/toolbar.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/maintoolwidget.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/subtoolwidget.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/keybuttonwidget.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/sidebar.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/shottoolwidget.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/colortoolwidget.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/camerawidget.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/tooltips.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/filter.cpp
+)
+set(widgets_OPENCV
+  ${CMAKE_CURRENT_LIST_DIR}/scrollshottip.h
+  ${CMAKE_CURRENT_LIST_DIR}/scrollshottip.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/previewwidget.h
+  ${CMAKE_CURRENT_LIST_DIR}/previewwidget.cpp
+)

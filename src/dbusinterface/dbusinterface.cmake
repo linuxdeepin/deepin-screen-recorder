@@ -1,0 +1,18 @@
+set(dbusinterface_HEAD
+  ${CMAKE_CURRENT_LIST_DIR}/dbuszone.h
+  ${CMAKE_CURRENT_LIST_DIR}/dbuscontrolcenter.h
+  ${CMAKE_CURRENT_LIST_DIR}/dbusnotify.h
+  ${CMAKE_CURRENT_LIST_DIR}/dbussoundeffect.h
+  ${CMAKE_CURRENT_LIST_DIR}/ocrinterface.h
+  ${CMAKE_CURRENT_LIST_DIR}/drawinterface.h
+  ${CMAKE_CURRENT_LIST_DIR}/pinscreenshotsinterface.h
+)
+set(dbusinterface_SRC
+  ${CMAKE_CURRENT_LIST_DIR}/dbusnotify.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/dbuszone.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/dbuscontrolcenter.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/dbussoundeffect.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/ocrinterface.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/pinscreenshotsinterface.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/drawinterface.cpp
+)

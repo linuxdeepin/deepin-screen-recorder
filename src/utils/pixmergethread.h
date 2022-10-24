@@ -14,9 +14,11 @@
 #include <QQueue>
 #include <QDebug>
 
-#include<opencv2/opencv.hpp>
-
-
+#include <opencv2/opencv.hpp>
+#if OPENCV_VERSION_MAR >= 4 
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/imgproc/types_c.h>
+#endif
 class PixMergeThread : public QThread
 {
     Q_OBJECT

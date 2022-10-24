@@ -6,7 +6,7 @@
 #include "stub.h"
 #include "addr_pri.h"
 #include <QDebug>
-#include "../../../src/dde-dock-plugins/recordtime/dbusservice.h"
+#include "../../../dde-dock-plugins/recordtime/dbusservice.h"
 
 //void stub_start(){}
 

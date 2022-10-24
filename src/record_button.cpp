@@ -63,7 +63,7 @@ void RecordButton::paintEvent(QPaintEvent *)
         backgroundOpacity = 0.7;
     }
 
-    Utils::drawTooltipBackground(painter, rect(), backgroundOpacity);
+    Utils::drawTooltipBackground(painter, rect(), "",backgroundOpacity);
 
     // Draw icon.
     qreal devicePixelRatio = qApp->devicePixelRatio();

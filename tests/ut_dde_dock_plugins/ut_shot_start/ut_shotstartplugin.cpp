@@ -7,7 +7,7 @@
 #include "addr_pri.h"
 #include <QDebug>
 
-#include "../../../src/dde-dock-plugins/shotstart/shotstartplugin.h"
+#include "../../../dde-dock-plugins/shotstart/shotstartplugin.h"
 #include "ut_mock_pluginproxyinterface.h"
 
 namespace  {

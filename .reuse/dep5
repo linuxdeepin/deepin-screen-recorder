@@ -4,7 +4,7 @@ Upstream-Contact: UnionTech Software Technology Co., Ltd. <>
 Source: https://github.com/linuxdeepin/deepin-screen-recorder
 
 # ci
-Files: .github/*
+Files: .github/* output/results.txt
 Copyright: None
 License: CC0-1.0
 
@@ -27,6 +27,11 @@ License: CC0-1.0
 Files: rpm/*
 Copyright: None
 License: CC0-1.0
+
+# resources
+Files: *.svg *.png *.ts *.jpg
+Copyright: None
+License: CC-BY-4.0
 
 # Project file
 Files: *.pro *.prf *.pri *.qrc *CMakeLists.txt .tx/*
@@ -69,7 +74,7 @@ Copyright: UnionTech Software Technology Co., Ltd.
 License: GPL-3.0-or-later
 
 # service
-Files: com.deepin.ScreenRecorder.service com.deepin.Screenshot.service
+Files: *.service
 Copyright: UnionTech Software Technology Co., Ltd.
 License: CC-BY-4.0
 

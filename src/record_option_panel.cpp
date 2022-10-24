@@ -53,7 +53,7 @@ void RecordOptionPanel::paintEvent(QPaintEvent *)
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     // Draw background.
-    Utils::drawTooltipBackground(painter, rect());
+    Utils::drawTooltipBackground(painter, rect(),"");
 
     // Draw icon.
     qreal devicePixelRatio = qApp->devicePixelRatio();

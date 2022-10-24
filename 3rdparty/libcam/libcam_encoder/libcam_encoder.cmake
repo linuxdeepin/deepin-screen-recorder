@@ -1,0 +1,23 @@
+set(libcam_encoder_HEAD
+  ${CMAKE_CURRENT_LIST_DIR}/avi.h 
+  ${CMAKE_CURRENT_LIST_DIR}/encoder.h 
+  ${CMAKE_CURRENT_LIST_DIR}/file_io.h 
+  ${CMAKE_CURRENT_LIST_DIR}/gviewencoder.h
+  ${CMAKE_CURRENT_LIST_DIR}/gview.h
+  ${CMAKE_CURRENT_LIST_DIR}/matroska.h
+  ${CMAKE_CURRENT_LIST_DIR}/mp4.h
+  ${CMAKE_CURRENT_LIST_DIR}/stream_io.h
+)
+set(libcam_encoder_SRC
+  ${CMAKE_CURRENT_LIST_DIR}/audio_codecs.c
+  ${CMAKE_CURRENT_LIST_DIR}/avi.c
+  ${CMAKE_CURRENT_LIST_DIR}/encoder.c
+  ${CMAKE_CURRENT_LIST_DIR}/file_io.c
+  ${CMAKE_CURRENT_LIST_DIR}/libav_encoder.c
+  ${CMAKE_CURRENT_LIST_DIR}/matroska.c
+  ${CMAKE_CURRENT_LIST_DIR}/mp4.c
+  ${CMAKE_CURRENT_LIST_DIR}/muxer.c
+  ${CMAKE_CURRENT_LIST_DIR}/stream_io.c
+  ${CMAKE_CURRENT_LIST_DIR}/video_codecs.c
+)
+include_directories(${CMAKE_CURRENT_LIST_DIR})

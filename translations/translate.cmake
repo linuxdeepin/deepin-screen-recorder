@@ -1,0 +1,32 @@
+set(TRANSLATIONS
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_zh_CN.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_en_US.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_zh_HK.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_zh_TW.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_ar.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_br.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_ca.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_cs.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_da.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_de.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_es.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_fi.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_fr.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_gl_ES.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_hu.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_it.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_ko.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_ms.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_nl.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_pl.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_pt.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_pt_BR.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_ru.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_sq.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_sr.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_tr.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_uk.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_ug.ts 
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_bo.ts
+  ${CMAKE_CURRENT_LIST_DIR}/deepin-screen-recorder_en_US.ts
+)

@@ -8,8 +8,8 @@
 #include <QDebug>
 #include <QTest>
 
-#include "../../../src/dde-dock-plugins/shotstart/shotstartplugin.h"
-#include "../../../src/dde-dock-plugins/shotstart/tipswidget.h"
+#include "../../../dde-dock-plugins/shotstart/shotstartplugin.h"
+#include "../../../dde-dock-plugins/shotstart/tipswidget.h"
 
 namespace  {
 class TestTipsWidget : public testing::Test

@@ -9,7 +9,6 @@
 #include <QObject>
 #include <QSize>
 #include <QVariant>
-
 #include <QtGlobal>
 
 namespace WaylandIntegration {

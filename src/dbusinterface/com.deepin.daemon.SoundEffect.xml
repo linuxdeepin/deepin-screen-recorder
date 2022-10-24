@@ -3,12 +3,11 @@ SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
-
-<node>\n
-     <interface name="com.deepin.daemon.SoundEffect">\n
-          <method name="PlaySystemSound">\n
-               <arg type="s" direction="in"></arg>\n
-          </method>\n
-          <property name="Enabled" type="b" access="readwrite"></property>\n
-     </interface>\n
+<node>
+  <interface name="com.deepin.daemon.SoundEffect">
+    <method name="PlaySystemSound">
+      <arg type="s" direction="in"></arg>
+    </method>
+    <property name="Enabled" type="b" access="readwrite"></property>
+  </interface>
 </node>

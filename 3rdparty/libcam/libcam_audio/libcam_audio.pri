@@ -10,6 +10,4 @@ SOURCES += \
     $$PWD/audio.c \
     $$PWD/audio_fx.c \
     $$PWD/audio_portaudio.c \
-#    $$PWD/audio_pulseaudio.c \
-#    $$PWD/core_time.c
 

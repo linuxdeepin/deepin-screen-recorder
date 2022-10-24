@@ -24,7 +24,7 @@ BigColorButton::BigColorButton(DWidget *parent)
     setCheckable(true);
     int colIndex = ConfigSettings::instance()->value(
                        "common", "color_index").toInt();
-    m_color = colorIndexOf(colIndex);
+    m_color = BaseUtils::colorIndexOf(colIndex);
 
     connect(this, &DPushButton::clicked, this,
             &BigColorButton::setCheckedStatus);
@@ -35,7 +35,7 @@ BigColorButton::BigColorButton(DWidget *parent)
 void BigColorButton::updateConfigColor(const QString &shape, const QString &key, int index)
 {
     if (shape == "common" && key == "color_index") {
-        setColor(colorIndexOf(index));
+        setColor(BaseUtils::colorIndexOf(index));
     }
 }
 

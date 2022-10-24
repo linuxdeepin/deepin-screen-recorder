@@ -1,0 +1,3 @@
+add_subdirectory(ut_pin_screenshots)
+add_subdirectory(ut_dde_dock_plugins)
+add_subdirectory(ut_screen_shot_recorder)

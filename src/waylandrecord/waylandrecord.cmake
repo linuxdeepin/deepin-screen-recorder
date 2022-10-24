@@ -1,0 +1,17 @@
+set(waylandrecord_HEAD
+  ${CMAKE_CURRENT_LIST_DIR}/writeframethread.h
+  ${CMAKE_CURRENT_LIST_DIR}/waylandintegration.h
+  ${CMAKE_CURRENT_LIST_DIR}/waylandintegration_p.h
+  ${CMAKE_CURRENT_LIST_DIR}/recordadmin.h
+  ${CMAKE_CURRENT_LIST_DIR}/avoutputstream.h
+  ${CMAKE_CURRENT_LIST_DIR}/avinputstream.h
+  ${CMAKE_CURRENT_LIST_DIR}/avlibinterface.h
+)
+set(waylandrecord_SRC
+  ${CMAKE_CURRENT_LIST_DIR}/writeframethread.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/waylandintegration.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/recordadmin.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/avinputstream.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/avoutputstream.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/avlibinterface.cpp
+)

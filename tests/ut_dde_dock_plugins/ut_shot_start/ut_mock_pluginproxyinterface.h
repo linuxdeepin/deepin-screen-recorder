@@ -6,7 +6,7 @@
 
 #include <gmock/gmock.h>
 
-#include "pluginproxyinterface.h"
+#include <dde-dock/pluginproxyinterface.h>
 
 class MockPluginProxyInterface:public PluginProxyInterface
 {

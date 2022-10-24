@@ -6,7 +6,6 @@
 #include <QDebug>
 #include <QApplication>
 #include <sanitizer/asan_interface.h>
-#include "test_all_interfaces.h"
 
 int main(int argc, char *argv[])
 {

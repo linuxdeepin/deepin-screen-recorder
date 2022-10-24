@@ -1,0 +1,12 @@
+set(libcam_audio_HEAD
+  ${CMAKE_CURRENT_LIST_DIR}/audio.h
+  ${CMAKE_CURRENT_LIST_DIR}/audio_portaudio.h
+  ${CMAKE_CURRENT_LIST_DIR}/gviewaudio.h
+  ${CMAKE_CURRENT_LIST_DIR}/gview.h
+)
+set(libcam_audio_SRC
+  ${CMAKE_CURRENT_LIST_DIR}/audio.c
+  ${CMAKE_CURRENT_LIST_DIR}/audio_fx.c
+  ${CMAKE_CURRENT_LIST_DIR}/audio_portaudio.c
+)
+include_directories(${CMAKE_CURRENT_LIST_DIR})

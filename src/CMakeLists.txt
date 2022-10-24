@@ -1,171 +1,174 @@
-# SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
-#
-# SPDX-License-Identifier: GPL-3.0-or-later
-
-cmake_minimum_required( VERSION 3.1.0 )
-set (PROJECT_NAME deepin-screen-recorder)
+#cmake_minimum_required( VERSION 3.1.0 )
+set(BIN_NAME deepin-screen-recorder)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-set(QtModule Core Gui Test Widgets Network DBus Sql PrintSupport Svg Concurrent LinguistTools Multimedia MultimediaWidgets X11Extras)
+#set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project( ${PROJECT_NAME} )
+find_package(Qt5 REQUIRED COMPONENTS
+  Core Gui Widgets DBus Sql Svg
+  Concurrent LinguistTools Multimedia MultimediaWidgets X11Extras)
 
-set(LINK_DIR X11 Xext Xtst Xfixes Xcursor procps)
 
-if(CMAKE_VERSION VERSION_LESS "3.7.0")
-    set(CMAKE_INCLUDE_CURRENT_DIR ON)
+include(../3rdparty/libcam/libcam.cmake)
+include(../3rdparty/stub_linux/stub.cmake)
+
+include(accessibility/accessible.cmake)
+include(gstrecord/gstrecord.cmake)
+include(widgets/widgets.cmake)
+include(utils/utils.cmake)
+include(dbusservice/dbusserver.cmake)
+include(dbusinterface/dbusinterface.cmake)
+include(camera/camera.cmake)
+include(menucontroller/menucontroller.cmake)
+include(waylandrecord/waylandrecord.cmake)
+include(glob.cmake)
+#find_package(Qt5 CONFIG REQUIRED ${QtModule})
+
+include(../translations/translate.cmake)
+qt5_add_translation(TRANSLATEDFILES ${TRANSLATIONS})
+
+find_package(DFrameworkdbus REQUIRED)
+find_package(PkgConfig REQUIRED)
+#find_package(Qt5Widgets REQUIRED)
+find_package(DtkWidget REQUIRED)
+find_package(DtkCore REQUIRED)
+find_package(DtkGui REQUIRED)
+find_package(DdeDock REQUIRED)
+#find_package(DtkCMake REQUIRED)
+pkg_check_modules(gstreamer-audio REQUIRED gstreamer-audio-1.0)
+pkg_check_modules(libffmpegthumbnailer REQUIRED libffmpegthumbnailer)
+pkg_check_modules(libusb REQUIRED libusb-1.0)
+pkg_check_modules(X11 REQUIRED x11)
+pkg_check_modules(XEXT REQUIRED xext)
+pkg_check_modules(XFIXES REQUIRED xfixes)
+pkg_check_modules(libimagevisualresult REQUIRED libimagevisualresult)
+pkg_check_modules(Xtst REQUIRED xtst)
+add_definitions(-DAPP_VERSION="${PROJECT_VERSION}")
+
+set(deepin-screen-recorder_HDRS
+  ${glob_HEAD}
+  ${accessibility_HEAD}
+  ${menucontroller_HEAD}
+  ${camera_HEAD}
+  ${dbusinterface_HEAD}
+  ${dbusserver_HEAD}
+  ${utils_HEAD}
+  ${widgets_HEAD}
+  ${gstrecord_HEAD}
+)
+
+set(deepin-screen-recorder_SRCS
+  main.cpp
+  ${glob_SRC}
+  ${menucontroller_SRC}
+  ${camera_SRC}
+  ${dbusinterface_SRC}
+  ${dbusserver_SRC}
+  ${utils_SRC}
+  ${widgets_SRC}
+  ${gstrecord_SRC}
+)
+
+set (deepin-screen-recorder_RSCS
+  ../assets/image/deepin-screen-recorder.qrc
+  ../assets/resources/resources.qrc
+  ../assets/icons/icons.qrc
+)
+set(COMPILE_SRC
+  ${libcam_TOP_SRC}
+  ${deepin-screen-recorder_HDRS}
+  ${deepin-screen-recorder_SRCS}
+  ${libcam_TOP_HEAD}
+  ${deepin-screen-recorder_RSCS}
+  ${TRANSLATEDFILES}
+)
+set(include_DIRS 
+  #../../interfaces/
+  ${libffmpegthumbnailer_INCLUDE_DIRS}
+  ${gstreamer-audio_INCLUDE_DIRS}
+  ${libusb_INCLUDE_DIRS}
+  ${X11_INCLUDE_DIRS}
+  ${XEXT_INCLUDE_DIRS}
+  ${XFIXES_INCLUDE_DIRS}
+  ${Xtst_INCLUDE_DIRS}
+  ${libimagevisualresult_INCLUDE_DIRS}
+)
+set(link_TARGETS
+  Qt5::Core
+  Qt5::Gui
+  Qt5::Widgets
+  Qt5::DBus
+  Qt5::Sql
+  Qt5::Svg
+  Qt5::Concurrent
+  Qt5::Multimedia
+  Qt5::MultimediaWidgets
+  Qt5::X11Extras
+  ${DFrameworkdbus_LIBRARIES}
+  ${libffmpegthumbnailer_LIBRARIES}
+  ${gstreamer-audio_LIBRARIES}
+  ${libusb_LIBRARIES}
+  ${X11_LIBRARIES}
+  ${XEXT_LIBRARIES}
+  ${DtkWidget_LIBRARIES}
+  ${Xtst_LIBRARIES}
+  ${XFIXES_LIBRARIES}
+  ${libimagevisualresult_LIBRARIES}
+)
+if(OCR_SCROLL_FLAGE_ON)
+  find_package(OpenCV REQUIRED)
+  add_definitions(-DOPENCV_VERSION_MAR=${OpenCV_VERSION_MAJOR})
+  add_definitions(-DOCR_SCROLL_FLAGE_ON)
+
+  list(APPEND COMPILE_SRC
+    ${utils_OPENCV}
+    ${widgets_OPENCV}
+  )
+  list(APPEND include_DIRS
+    ${OpenCV_INCLUDE_DIRS}
+  )
+  list(APPEND link_TARGETS
+    ${OpenCV_LIBS}
+  )
+endif()
+# TODO have not finished
+if(USE_DEEPIN_WAYLAND)
+  include(FeatureSummary)
+  find_package(KF5I18n)
+  find_package(KF5Wayland CONFIG)
+  set_package_properties(KF5Wayland PROPERTIES TYPE OPTIONAL)
+  add_feature_info("KF5Wayland" KF5Wayland_FOUND "Required for the awesome Wayland on Qt demo")
+  pkg_check_modules(epoxy REQUIRED epoxy)
+  add_definitions(-DKF5_WAYLAND_FLAGE_ON)
+  list(APPEND COMPILE_SRC 
+    ${utils_WAYLAND}
+    ${waylandrecord_HEAD}
+    ${waylandrecord_SRC}
+  )
+  list(APPEND include_DIRS 
+    ${epoxy_INCLUDE_DIRS}
+  )
+  list(APPEND link_TARGETS
+    KF5::I18n
+    KF5::WaylandClient
+    ${epoxy_LIBRARIES}
+  )
 endif()
 
-find_package(Qt5 CONFIG REQUIRED ${QtModule})
+add_executable(${BIN_NAME}
+  ${COMPILE_SRC}
+)
 
-set ( deepin-screen-recorder_HDRS
-    constant.h
-    keydefine.h
-    utils/baseutils.h
-    utils/calculaterect.h
-    utils/saveutils.h
-    utils/shapesutils.h
-    utils/dbusutils.h
-    utils/desktopinfo.h
-    RecorderRegionShow.h
-    main_window.h
-    record_process.h
-    settings.h
-    utils.h
-    record_button.h
-    record_option_panel.h
-    countdown_tooltip.h
-    event_monitor.h
-    button_feedback.h
-    process_tree.h
-    camera_process.h
-    show_buttons.h
-    utils/audioutils.h
-    menucontroller/menucontroller.h
-    utils/configsettings.h
-    utils/shortcut.h
-    utils/tempfile.h
-    widgets/savetips.h
-    widgets/fontsizewidget.h
-    widgets/colorbutton.h
-    widgets/zoomIndicator.h
-    widgets/majtoolbar.h
-    widgets/textedit.h
-    widgets/bigcolorbutton.h
-    widgets/toptips.h
-    widgets/toolbar.h
-    widgets/savebutton.h
-    widgets/textbutton.h
-    widgets/shapeswidget.h
-    widgets/toolbutton.h
-    widgets/maintoolwidget.h
-    widgets/subtoolwidget.h
-    widgets/keybuttonwidget.h
-    widgets/sidebar.h
-    widgets/shottoolwidget.h
-    widgets/colortoolwidget.h
-    dbusinterface/dbuszone.h
-    dbusinterface/dbuscontrolcenter.h
-    dbusinterface/dbusnotify.h
-    dbusinterface/dbussoundeffect.h
-    dbusservice/dbusscreenshotservice.h
-    dbusservice/dbusscreenshot.h
-    widgets/camerawidget.h
-    screenshot.h
-    utils/voicevolumewatcher.h
-    utils/camerawatcher.h
-    widgets/tooltips.h
-    widgets/filter.h
-    utils/screengrabber.h
-    dbusinterface/drawinterface.h
-    screen_shot_event.h
-    lib/GifH/gif.h
-    xgifrecord.h
-    recordertablet.h
-    )
-
-set ( deepin-screen-recorder_SRCS
-    main.cpp
-    main_window.cpp
-    record_process.cpp
-    settings.cpp
-    utils.cpp
-    record_button.cpp
-    record_option_panel.cpp
-    countdown_tooltip.cpp
-    constant.cpp
-    event_monitor.cpp
-    button_feedback.cpp
-    process_tree.cpp
-    camera_process.cpp
-    show_buttons.cpp
-    utils/audioutils.cpp
-    menucontroller/menucontroller.cpp
-    utils/shapesutils.cpp
-    utils/tempfile.cpp
-    utils/calculaterect.cpp
-    utils/shortcut.cpp
-    utils/configsettings.cpp
-    utils/baseutils.cpp
-    widgets/savebutton.cpp
-    widgets/toptips.cpp
-    widgets/shapeswidget.cpp
-    widgets/textbutton.cpp
-    widgets/colorbutton.cpp
-    widgets/fontsizewidget.cpp
-    widgets/textedit.cpp
-    widgets/bigcolorbutton.cpp
-    widgets/zoomIndicator.cpp
-    widgets/majtoolbar.cpp
-    widgets/savetips.cpp
-    widgets/toolbar.cpp
-    widgets/maintoolwidget.cpp
-    widgets/subtoolwidget.cpp
-    widgets/keybuttonwidget.cpp
-    widgets/sidebar.cpp
-    widgets/shottoolwidget.cpp
-    widgets/colortoolwidget.cpp
-    dbusinterface/dbusnotify.cpp
-    dbusinterface/dbuszone.cpp
-    dbusinterface/dbuscontrolcenter.cpp
-    dbusinterface/dbussoundeffect.cpp
-    dbusservice/dbusscreenshotservice.cpp
-    dbusservice/dbusscreenshot.cpp
-    widgets/camerawidget.cpp
-    utils/dbusutils.cpp
-    screenshot.cpp
-    utils/voicevolumewatcher.cpp
-    utils/camerawatcher.cpp
-    widgets/tooltips.cpp
-    widgets/filter.cpp
-    utils/desktopinfo.cpp
-    utils/screengrabber.cpp
-    dbusinterface/drawinterface.cpp
-    screen_shot_event.cpp
-    RecorderRegionShow.cpp
-    xgifrecord.cpp
-    recordertablet.cpp
-    )
-
-set ( deepin-screen-recorder_RSCS
-    ../assets/image/deepin-screen-recorder.qrc
-    ../assets/resources/resources.qrc
-    ../assets/icons/icons.qrc
-    )
-
-add_executable(${PROJECT_NAME}
-    ${deepin-screen-recorder_HDRS} ${deepin-screen-recorder_SRCS} ${deepin-screen-recorder_RSCS}
-    )
-
-qt5_use_modules(${PROJECT_NAME} ${QtModule})
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(3rd_lib REQUIRED
-    dtkwidget dtkgui dframeworkdbus xcb xcb-util
-    )
-target_include_directories(${PROJECT_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} )
-target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES} ${LINK_DIR} )
-
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets/deepin-screen-recorder DESTINATION /usr/share/deepin-manual/manual-assets/application)
+target_include_directories(${BIN_NAME} PUBLIC 
+  ${include_DIRS}
+)
+target_link_libraries(${BIN_NAME}
+  ${link_TARGETS}
+)
+install(TARGETS ${BIN_NAME} DESTINATION "${CMAKE_INSTALL_BINDIR}")
+#qt5_use_modules(${PROJECT_NAME} ${QtModule})
+install(FILES ${TRANSLATEDFILES} DESTINATION "${CMAKE_INSTALL_DATADIR}/deepin-screen-recorder/translations")
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets/deepin-screen-recorder DESTINATION "${CMAKE_INSTALL_DATADIR}/deepin-manual/manual-assets/application")

@@ -9,7 +9,7 @@
 
 #include "stub.h"
 #include "addr_pri.h"
-#include "../../../src/dde-dock-plugins/recordtime/timewidget.h"
+#include "../../../dde-dock-plugins/recordtime/timewidget.h"
 
 DGUI_USE_NAMESPACE
 ACCESS_PRIVATE_FUN(TimeWidget, void(QMouseEvent *e), mousePressEvent);

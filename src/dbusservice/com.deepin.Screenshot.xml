@@ -3,16 +3,17 @@ SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
-
-<interface name="com.deepin.Screenshot">\n
-    <method name="StartScreenshot"/>\n
-    <method name="DelayScreenshot">\n
-        <arg direction="in" type="x"/>\n
-    </method>\n
-    <method name="NoNotifyScreenshot"/>\n
-    <method name="TopWindowScreenshot"/>\n
-    <method name="FullscreenScreenshot"/>\n
-    <method name="SavePathScreenshot">\n
-        <arg direction="in" type="s"/>\n
-    </method>\n
-</interface>\n
+<node>
+  <interface name="com.deepin.Screenshot">
+    <method name="StartScreenshot" />
+    <method name="DelayScreenshot">
+      <arg direction="in" type="x" />
+    </method>
+    <method name="NoNotifyScreenshot" />
+    <method name="TopWindowScreenshot" />
+    <method name="FullscreenScreenshot" />
+    <method name="SavePathScreenshot">
+      <arg direction="in" type="s" />
+    </method>
+  </interface>
+</node>

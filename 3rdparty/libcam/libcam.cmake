@@ -1,0 +1,22 @@
+include(${CMAKE_CURRENT_LIST_DIR}/libcam/libcam.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/libcam_audio/libcam_audio.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/libcam_encoder/libcam_encoder.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/libcam_render/libcam_render.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/libcam_v4l2core/libcam_v4l2core.cmake)
+set(libcam_TOP_HEAD
+  ${libcam_HEAD}
+  ${libcam_audio_HEAD}
+  ${libcam_encoder_HEAD}
+  ${libcam_render_HEAD}
+  ${libcam_v4l2core_HEAD}
+  ${CMAKE_CURRENT_LIST_DIR}/load_libs.h
+)
+set(libcam_TOP_SRC
+  ${libcam_SRC}
+  ${libcam_audio_SRC}
+  ${libcam_encoder_SRC}
+  ${libcam_render_SRC}
+  ${libcam_v4l2core_SRC}
+  ${CMAKE_CURRENT_LIST_DIR}/load_libs.c
+)
+include_directories(${CMAKE_CURRENT_LIST_DIR})

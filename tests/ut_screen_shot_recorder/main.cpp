@@ -12,7 +12,7 @@
 #ifdef ENABLE_TSAN_TOOL
 #include <sanitizer/asan_interface.h>
 #endif
-#include "test_all_interfaces.h"
+//#include "test_all_interfaces.h"
 #include "stub.h"
 #include "../../src/main_window.h"
 
@@ -43,15 +43,17 @@ bool MainWindow_saveImg_stub(void *obj, const QPixmap &pix, const QString& fileN
     return true;
 }
 
-ACCESS_PRIVATE_FUN(MainWindow, bool(const QPixmap&, const QString&, const char*), saveImg);
+//ACCESS_PRIVATE_FUN(MainWindow, bool(const QPixmap&, const QString&, const char*), saveImg);
 
 int main(int argc, char *argv[])
 {
+    if (!qEnvironmentVariableIsSet("DISPLAY"))
+        qputenv("QT_QPA_PLATFORM", "offscreen");
     QApplication app(argc, argv);
     qDebug() << "start test cases ..............";
     globalStub.set(ADDR(QCameraInfo, availableCameras), availableCameras_stub);
     globalStub.set(ADDR(QCameraInfo, isNull), isNull_stub);
-    globalStub.set(get_private_fun::MainWindowsaveImg(), MainWindow_saveImg_stub);
+    //globalStub.set(get_private_fun::MainWindowsaveImg(), MainWindow_saveImg_stub);
     globalStub.set(ADDR(QDBusInterface, callWithArgumentList), callWithArgumentList_stub);
     //testing::GTEST_FLAG(output) = "xml:./report/report.xml";
     testing::InitGoogleTest(&argc, argv);

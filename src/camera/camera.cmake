@@ -1,0 +1,10 @@
+set(camera_HEAD
+  ${CMAKE_CURRENT_LIST_DIR}/LPF_V4L2.h
+  ${CMAKE_CURRENT_LIST_DIR}/devnummonitor.h
+  ${CMAKE_CURRENT_LIST_DIR}/majorimageprocessingthread.h
+)
+set(camera_SRC
+  ${CMAKE_CURRENT_LIST_DIR}/LPF_V4L2.c
+  ${CMAKE_CURRENT_LIST_DIR}/devnummonitor.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/majorimageprocessingthread.cpp
+)
