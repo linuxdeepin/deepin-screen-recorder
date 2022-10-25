@@ -883,12 +883,6 @@ void MainWindow::initScreenShot()
     } else {
         return;
     }
-    connect(this, &MainWindow::releaseEvent, this, [ = ] {
-        qDebug() << "release event !!!";
-        qInfo() << __FUNCTION__ << __LINE__ << "移除事件过滤器！";
-        removeEventFilter(this);
-        exitScreenCuptureEvent();
-    });
     if (status::ocr != m_functionType && status::scrollshot != m_functionType) {
         m_functionType = 1;
     }
@@ -1430,6 +1424,10 @@ void MainWindow::onExitScreenCapture()
 void MainWindow::initLaunchMode(const QString &launchMode)
 {
     m_functionType = status::shot;
+    connect(this, &MainWindow::releaseEvent, this, [ = ] {
+        removeEventFilter(this);
+        exitScreenCuptureEvent();
+    });
     if (launchMode == "screenRecord") {
         m_sizeTips->setRecorderTipsInfo(true);
         m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
