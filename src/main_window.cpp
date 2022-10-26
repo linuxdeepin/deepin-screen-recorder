@@ -1999,7 +1999,8 @@ void MainWindow::updateToolBarPos()
     toolbarPoint = QPoint(recordX + recordWidth - m_toolBar->width(),
                           std::max(recordY + recordHeight + TOOLBAR_Y_SPACING, 0));
 
-//    qDebug() << "工具栏初始坐标: " << toolbarPoint.x() << toolbarPoint.y() ;
+    //qDebug() << "捕捉区域: " << recordX<< recordY << recordWidth <<  recordHeight;
+    //qDebug() << "工具栏初始坐标: " << toolbarPoint.x() << toolbarPoint.y() ;
     //防止工具栏超出左侧屏幕
     if (toolbarPoint.x() <= 0) {
         m_repaintMainButton = true;
@@ -2021,14 +2022,15 @@ void MainWindow::updateToolBarPos()
             m_isToolBarInside = true;
         }
     }
-//    qDebug() << "工具栏坐标: " << toolbarPoint.x() << toolbarPoint.y() ;
+    //qDebug() << "工具栏坐标: " << toolbarPoint.x() << toolbarPoint.y() ;
 
     bool toolIsInScreen = false; //
     QRect tempScreen ;//捕捉区域所在的屏幕，以捕捉区域左上角为准
     // 根据屏幕的具体实际坐标修正Y值
     // 多屏情况下，横向，有可能在屏幕外面。
-    if (m_isScreenVertical == false) {
+    if (m_isScreenVertical == false && m_screenInfo.size() >= 2) {
         for (int i = 0; i < m_screenInfo.size(); ++i) {
+            //工具栏是否在屏幕内
             toolIsInScreen = toolbarPoint.x() >= m_screenInfo[i].x &&
                              toolbarPoint.x() < (m_screenInfo[i].x + m_screenInfo[i].width) &&
                              (toolbarPoint.y() - m_screenInfo[i].height) * m_pixelRatio + m_screenInfo[i].height >= m_screenInfo[i].y &&
@@ -2053,7 +2055,7 @@ void MainWindow::updateToolBarPos()
                     // 屏幕上超出
                     toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
                     //toolbarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
-                    qDebug() << "工具栏位置超出屏幕上边缘，已矫正 >>> toolbarPoint: " << toolbarPoint;
+                    //qDebug() << "工具栏位置超出屏幕上边缘，已矫正 >>> toolbarPoint: " << toolbarPoint;
                 } else if (toolbarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
                     // 屏幕下超出
                     int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
@@ -2066,7 +2068,7 @@ void MainWindow::updateToolBarPos()
                         y = recordY + TOOLBAR_Y_SPACING;
                     }
                     toolbarPoint.setY(y);
-                    qDebug() << "工具栏位置超出屏幕下边缘，已矫正 >>> toolbarPoint: " << toolbarPoint;
+                    //qDebug() << "工具栏位置超出屏幕下边缘，已矫正 >>> toolbarPoint: " << toolbarPoint;
                 }
                 break;
             }
@@ -2075,13 +2077,13 @@ void MainWindow::updateToolBarPos()
             if (!tempScreen.isNull() || tempScreen.isEmpty()) {
                 qDebug() << "当前屏幕：" <<  tempScreen;
                 if (recordY - tempScreen.y() >  m_toolBar->height() + 28) {
-                    qDebug() << "工具栏位置未在任一屏幕内，需要矫正 >>> 放捕捉区域上边 toolbarPoint: " << toolbarPoint;
+                    //qDebug() << "工具栏位置未在任一屏幕内，需要矫正 >>> 放捕捉区域上边 toolbarPoint: " << toolbarPoint;
                     toolbarPoint.setY(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING);
                 } else {
-                    qDebug() << "工具栏位置未在任一屏幕内，需要矫正 >>> 放捕捉区域里面 toolbarPoint: " << toolbarPoint;
+                    //qDebug() << "工具栏位置未在任一屏幕内，需要矫正 >>> 放捕捉区域里面 toolbarPoint: " << toolbarPoint;
                     toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
                 }
-                qDebug() << "工具栏位置未在任一屏幕内，已矫正 >>> toolbarPoint: " << toolbarPoint;
+                //qDebug() << "工具栏位置未在任一屏幕内，已矫正 >>> toolbarPoint: " << toolbarPoint;
             }
         }
     }

@@ -757,19 +757,19 @@ private:
     int m_shotStatus = ShotMouseStatus::Normal; //
     int recordButtonStatus = RECORD_BUTTON_NORMAL;
     /**
-     * @brief 捕捉区域的高
+     * @brief 捕捉区域的高（已缩放）（如果调整了屏幕缩放比，该值也会变化）
      */
     int recordHeight = 0;
     /**
-     * @brief 捕捉区域的宽
+     * @brief 捕捉区域的宽（已缩放）（如果调整了屏幕缩放比，该值也会变化）
      */
     int recordWidth = 0;
     /**
-     * @brief 捕捉区域起始点的x坐标
+     * @brief 捕捉区域起始点的x坐标（已缩放）（如果调整了屏幕缩放比，该值也会变化）
      */
     int recordX = 0;
     /**
-     * @brief 捕捉区域起始点的y坐标
+     * @brief 捕捉区域起始点的y坐标（已缩放）（如果调整了屏幕缩放比，该值也会变化）
      */
     int recordY = 0;
 
