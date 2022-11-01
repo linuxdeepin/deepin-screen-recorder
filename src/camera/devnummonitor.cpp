@@ -53,7 +53,7 @@ void DevNumMonitor::timeOutSlot()
             emit existDevice(false);
             m_noDevice = true;
         }
-        qDebug() << "There is no camera connected!";
+        //qDebug() << "There is no camera connected!";
     } else {
         if (m_canUse && QCameraInfo::availableCameras().count() <= 0) {
             emit existDevice(false);
