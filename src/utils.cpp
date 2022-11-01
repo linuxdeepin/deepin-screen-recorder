@@ -197,7 +197,7 @@ bool Utils::isSysHighVersion1040()
         bool correct = false;
         QString sysVersion = DSysInfo::minorVersion();
         float version = sysVersion.toFloat(&correct);
-        qDebug() << "System Version:" << sysVersion << correct;
+        qDebug() << "System Version:" << sysVersion << correct << sysVersion.split('.');
         if(DSysInfo::UosProfessional == DSysInfo::uosEditionType() || DSysInfo::UosEducation == DSysInfo::uosEditionType()) {
             const float versionProfessional = 1040;
             if (correct && (version >= versionProfessional)) {
@@ -210,6 +210,12 @@ bool Utils::isSysHighVersion1040()
             }
         } else if(DSysInfo::UosCommunity == DSysInfo::uosEditionType()) {
             const float versionCommunity = 20.6f;
+            QStringList v = sysVersion.split('.');
+            if (!correct && v.size() > 2) {
+                // 社区版，版本号可能有20.6.1，只取前面的两位大版本号
+                version =  (QString("%1.%2").arg(v[0]).arg(v[1])).toFloat(&correct);
+                qDebug() << "Fix System Version:" << version << correct;
+            }
             if (correct && (version >= versionCommunity)) {
                 return true;
             }
@@ -253,9 +259,10 @@ void Utils::disableXGrabButton()
 void Utils::getAllWindowInfo(const quint32 winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames)
 {
     Dtk::Gui::DForeignWindow *prewindow = nullptr;
+    const bool canRelease = isSysHighVersion1040();
     for (quint32 wid : Dtk::Gui::DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
         if (wid == winId) continue;
-        if (prewindow && isSysHighVersion1040()) {
+        if (prewindow && canRelease) {
             delete prewindow;
             prewindow = nullptr;
         }
