@@ -1413,7 +1413,8 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                 } else {
                     m_editing = false;
                     setAllTextEditReadOnly();
-
+                    m_shapesIndex -= 1;
+                    m_currentIndex = m_shapesIndex;
                 }
             }
             update();
