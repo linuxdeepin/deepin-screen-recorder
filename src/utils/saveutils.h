@@ -15,7 +15,6 @@ enum SaveAction : unsigned int {
     SaveToSpecificDir,
     SaveToClipboard,
     SaveToAutoClipboard,
-    SaveToVideo,    //保存到视频目录
     PadDefaultPath //平板适配采用扩展的思维，尽量可能少的修改桌面代码
 };
 

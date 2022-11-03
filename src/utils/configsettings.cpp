@@ -97,9 +97,6 @@ QVariant ConfigSettings::getDefaultValue(const QString &group, const QString &ke
             return QVariant(24);
         }
     }
-    if (key == "save_op_record") {
-        value.setValue(SaveAction::SaveToVideo);
-    }
     if (key == "fontsize") {
         value.setValue(12);
     } else if (key == "saveClip") {

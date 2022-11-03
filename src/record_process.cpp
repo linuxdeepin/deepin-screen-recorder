@@ -20,8 +20,6 @@
 #include <QtDBus>
 #include <QScreen>
 #include <QMetaType>
-#include <QClipboard>
-#include <QUrl>
 #include <dlfcn.h>
 #include <signal.h>
 
@@ -47,8 +45,14 @@ RecordProcess::RecordProcess(QObject *parent) : QObject(parent)
     m_framerate = RECORD_FRAMERATE_24;
 
     saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
+    saveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first() + QDir::separator() + "Screen Recordings" + QDir::separator();
     displayNumber = QString(std::getenv("DISPLAY"));
 
+    if ((!QDir(saveDir).exists() && QDir().mkdir(saveDir) == false) ||  // 文件不存在，且创建失败
+            (QDir(saveDir).exists() && !QFileInfo(saveDir).isWritable())) {  // 文件存在，且不能写
+        saveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first();
+    }
+    qInfo() << "录屏保存目录: " << saveDir;
     if (settings->value("recordConfig", "lossless_recording").toString() == "") {
         settings->setValue("recordConfig", "lossless_recording", false);
     }
@@ -389,55 +393,7 @@ void RecordProcess::initProcess()
 
 
 }
-void RecordProcess::getScreenRecordSavePath()
-{
-    if (settings->value("recordConfig", "savepath").toString() == "") {
-        qWarning() << "配置文件中录屏保存路径为空,采用默认路径";
-        saveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first() + QDir::separator() + "Screen Recordings" + QDir::separator();
-    } else {
-        int t_saveIndex = ConfigSettings::instance()->value("recordConfig", "save_op_record").toInt();
-        switch (t_saveIndex) {
-        case 0: {
-            //保存到桌面
-            saveDir = settings->value("recordConfig", "savepath").toString() + QDir::separator();
-            break;
-        }
-        default:
-            //保存到视频目录中的Screen Recordings目录
-            saveDir = settings->value("recordConfig", "savepath").toString() + QDir::separator() + "Screen Recordings" + QDir::separator();
-            break;
-        }
-    }
-    if ((!QDir(saveDir).exists() && QDir().mkdir(saveDir) == false) ||  // 文件不存在，且创建失败
-            (QDir(saveDir).exists() && !QFileInfo(saveDir).isWritable())) {  // 文件存在，且不能写
-        saveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first();
-    }
-    qInfo() << "录屏保存目录: " << saveDir;
-}
 
-void RecordProcess::save2Clipboard(QString file)
-{
-    //录屏文件保存到剪切板
-    QClipboard *cb = qApp->clipboard();
-    // Ownership of the new data is transferred to the clipboard.
-    QMimeData *newMimeData = new QMimeData();
-
-    QByteArray gnomeFormat = QByteArray("copy\n");
-    QString text;
-    QList<QUrl> dataUrls;
-
-    dataUrls << QUrl::fromLocalFile(file);
-    gnomeFormat.append(QUrl::fromLocalFile(file).toEncoded()).append("\n");
-
-    newMimeData->setText(text.endsWith('\n') ? text.left(text.length() - 1) : text);
-    newMimeData->setUrls(dataUrls);
-
-    gnomeFormat.remove(gnomeFormat.length() - 1, 1);
-
-    newMimeData->setData("x-special/gnome-copied-files", gnomeFormat);
-
-    cb->setMimeData(newMimeData, QClipboard::Clipboard);
-}
 //wayland录制视频
 void RecordProcess::waylandRecord()
 {
@@ -576,7 +532,6 @@ void RecordProcess::setSystemAudio(const bool status)
 //开始录屏
 void RecordProcess::startRecord()
 {
-    getScreenRecordSavePath();
     //使用QtConcurrent::run受cpu核心线程数的影响，线程池默认大小为CPU核心线程数大小，由于程序中通过此方法启动的线程数超出4个，故再次设置线程池大小
     QThreadPool::globalInstance()->setMaxThreadCount(QThreadPool::globalInstance()->maxThreadCount() > 6 ? QThreadPool::globalInstance()->maxThreadCount() : 8);
     m_framerate = settings->value("recordConfig", "mkv_framerate").toString().toInt();
@@ -620,8 +575,10 @@ void RecordProcess::startRecord()
     QJsonObject obj{
         {"tid", EventLogUtils::StartRecording},
         {"version", QCoreApplication::applicationVersion()},
-        {"type", recordType == RECORD_TYPE_GIF ? "gif" :
-                                                 (settings->value("recordConfig", "lossless_recording").toBool() || recordType == RECORD_TYPE_MKV ? "mkv" : "mp4")}
+        {
+            "type", recordType == RECORD_TYPE_GIF ? "gif" :
+            (settings->value("recordConfig", "lossless_recording").toBool() || recordType == RECORD_TYPE_MKV ? "mkv" : "mp4")
+        }
     };
     EventLogUtils::get().writeLogs(obj);
 
@@ -712,11 +669,9 @@ void RecordProcess::exitRecord(QString newSavePath)
 
         QStringList actions;
         actions << "_open" << tr("View");
-        actions << "_open1" << tr("Open Folder");
         QVariantMap hints;
         hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(newSavePath);
-        QString savepathcommand = QString("dde-file-manager,--show-item,%1").arg(newSavePath);
-        hints["x-deepin-action-_open1"] = savepathcommand;
+
         int timeout = -1;
         unsigned int id = 0;
 
@@ -734,8 +689,6 @@ void RecordProcess::exitRecord(QString newSavePath)
     if (recordType == RECORD_TYPE_GIF) {
         QFile::remove(savePath);
     }
-    //保存到剪切板
-    save2Clipboard(newSavePath);
     if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
         avlibInterface::unloadFunctions();
