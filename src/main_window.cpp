@@ -1738,6 +1738,7 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
         QClipboard *cb = qApp->clipboard();
         qInfo() << __FUNCTION__ << __LINE__ << "将数据传递到剪贴板！";
         cb->setMimeData(t_imageData, QClipboard::Clipboard);
+        /* Wayland 等待剪贴板dataChanged信号不可靠，出问题会导致整改系统不可用，评估去掉信号等待
         if (Utils::isWaylandMode) {
             //wayland下添加超时机制，1s后退出事件循环
             DelayTime *tempTimer = new DelayTime();
@@ -1750,6 +1751,7 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             tempTimer->stop();
             delete tempTimer;
         }
+        */
     }
     qInfo() << __FUNCTION__ << __LINE__ << "已保存到剪贴板！";
 }
