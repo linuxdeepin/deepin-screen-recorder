@@ -2032,15 +2032,16 @@ void MainWindow::updateToolBarPos()
     // 多屏情况下，横向，有可能在屏幕外面。
     if (m_isScreenVertical == false && m_screenInfo.size() >= 2) {
         for (int i = 0; i < m_screenInfo.size(); ++i) {
+            //qDebug() << "屏幕: " << m_screenInfo[i].name <<  m_screenInfo[i].x << m_screenInfo[i].y << m_screenInfo[i].width << m_screenInfo[i].height;
             //工具栏是否在屏幕内
             toolIsInScreen = toolbarPoint.x() >= m_screenInfo[i].x &&
                              toolbarPoint.x() < (m_screenInfo[i].x + m_screenInfo[i].width) &&
                              (toolbarPoint.y() - m_screenInfo[i].height) * m_pixelRatio + m_screenInfo[i].height >= m_screenInfo[i].y &&
                              (toolbarPoint.y() - m_screenInfo[i].height) * m_pixelRatio + m_screenInfo[i].height < (m_screenInfo[i].y + m_screenInfo[i].height);
-            bool recordIsInScreen =  recordX >= m_screenInfo[i].x &&
-                                     recordX < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                                     recordY >= m_screenInfo[i].y &&
-                                     recordY < (m_screenInfo[i].y + m_screenInfo[i].height);
+            bool recordIsInScreen =  recordX * m_pixelRatio >= m_screenInfo[i].x &&
+                                     recordX * m_pixelRatio < (m_screenInfo[i].x + m_screenInfo[i].width) &&
+                                     recordY * m_pixelRatio >= m_screenInfo[i].y &&
+                                     recordY * m_pixelRatio < (m_screenInfo[i].y + m_screenInfo[i].height);
             //取出捕捉区域所在的屏幕
             if (recordIsInScreen) {
                 tempScreen.setX(m_screenInfo[i].x);
