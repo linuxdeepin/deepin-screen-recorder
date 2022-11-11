@@ -5089,44 +5089,44 @@ void MainWindow::shotCurrentImg()
     //m_drawNothing = true;
     update();
     //当存在编辑模式且编辑的内容有文本时，需要再截图一次
-    if (m_shapesWidget && m_shapesWidget->isExistsText()) {
-        int eventTime = 60;
-        QRect rect = QApplication::desktop()->screenGeometry();
-        if (rect.width()*rect.height() > 1920 * 1080) {
-            if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin) {
-                eventTime = 120;
-            } else if (QSysInfo::currentCpuArchitecture().startsWith("mips")) {
-                eventTime = 260;
-            } else if (QSysInfo::currentCpuArchitecture().startsWith("arm")) {
-                eventTime = 220;
-            }
-        } else {
-            if (QSysInfo::currentCpuArchitecture().startsWith("mips")) {
-                eventTime = 160;
-            } else if (QSysInfo::currentCpuArchitecture().startsWith("arm")) {
-                eventTime = 120;
-            }
-        }
-        QEventLoop eventloop1;
-        QTimer::singleShot(eventTime, &eventloop1, SLOT(quit()));
-        eventloop1.exec();
+//    if (m_shapesWidget && m_shapesWidget->isExistsText()) {
+//        int eventTime = 0;
+//        QRect rect = QApplication::desktop()->screenGeometry();
+//        if (rect.width()*rect.height() > 1920 * 1080) {
+//            if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin) {
+//                eventTime = 120;
+//            } else if (QSysInfo::currentCpuArchitecture().startsWith("mips")) {
+//                eventTime = 260;
+//            } else if (QSysInfo::currentCpuArchitecture().startsWith("arm")) {
+//                eventTime = 220;
+//            }
+//        } else {
+//            if (QSysInfo::currentCpuArchitecture().startsWith("mips")) {
+//                eventTime = 160;
+//            } else if (QSysInfo::currentCpuArchitecture().startsWith("arm")) {
+//                eventTime = 120;
+//            }
+//        }
+//        QEventLoop eventloop1;
+//        QTimer::singleShot(eventTime, &eventloop1, SLOT(quit()));
+//        eventloop1.exec();
 
-        if (m_isShapesWidgetExist) {
-            qInfo() << __FUNCTION__ << __LINE__ << "隐藏截图编辑界面！";
-            m_shapesWidget->hide();
-        }
-        m_sizeTips->hide();
-        shotFullScreen();
-        //qDebug() << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect() << m_pixelRatio;
-        QRect target(static_cast<int>(recordX * m_pixelRatio),
-                     static_cast<int>(recordY * m_pixelRatio),
-                     static_cast<int>(recordWidth * m_pixelRatio),
-                     static_cast<int>(recordHeight * m_pixelRatio));
+//        if (m_isShapesWidgetExist) {
+//            qInfo() << __FUNCTION__ << __LINE__ << "隐藏截图编辑界面！";
+//            m_shapesWidget->hide();
+//        }
+//        m_sizeTips->hide();
+//        shotFullScreen();
+//        //qDebug() << recordX << "," << recordY << "," << recordWidth << "," << recordHeight << m_resultPixmap.rect() << m_pixelRatio;
+//        QRect target(static_cast<int>(recordX * m_pixelRatio),
+//                     static_cast<int>(recordY * m_pixelRatio),
+//                     static_cast<int>(recordWidth * m_pixelRatio),
+//                     static_cast<int>(recordHeight * m_pixelRatio));
 
-        m_resultPixmap = m_resultPixmap.copy(target);
-    } else {
-        m_resultPixmap =  paintImage();
-    }
+//        m_resultPixmap = m_resultPixmap.copy(target);
+//    } else {
+    m_resultPixmap =  paintImage();
+//    }
     addCursorToImage();
     qInfo() << __FUNCTION__ << __LINE__ << "已截取当前图片！";
 }

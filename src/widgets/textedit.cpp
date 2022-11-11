@@ -107,10 +107,10 @@ void TextEdit::updateContentSize(QString content)
 {
     QFontMetricsF fontMetric = QFontMetricsF(this->document()->defaultFont());
     QSizeF docSize =  fontMetric.size(0,  content);
-    this->setMinimumSize(static_cast<int>(docSize.width() + TEXT_MARGIN), static_cast<int>(docSize.height() + TEXT_MARGIN));
-    this->resize(static_cast<int>(docSize.width() + TEXT_MARGIN), static_cast<int>(docSize.height() + TEXT_MARGIN));
-    emit  repaintTextRect(this,  QRectF(this->x(), this->y(),
-                                        docSize.width() + TEXT_MARGIN, docSize.height() + TEXT_MARGIN));
+    QRectF rectf(this->x(), this->y(), docSize.width() + TEXT_MARGIN, docSize.height() + TEXT_MARGIN);
+    this->setMinimumSize(static_cast<int>(rectf.width()), static_cast<int>(rectf.height()));
+    this->resize(static_cast<int>(rectf.width()), static_cast<int>(rectf.height()));
+    emit  repaintTextRect(this, rectf, this->toPlainText(), this->document()->defaultFont().pixelSize());
 }
 
 void TextEdit::setEditing(bool edit)
@@ -188,8 +188,10 @@ void TextEdit::mouseMoveEvent(QMouseEvent *e)
         this->move(static_cast<int>(this->x() + movePos.x() - m_pressPoint.x()),
                    static_cast<int>(this->y() + movePos.y() - m_pressPoint.y()));
 
-        emit  repaintTextRect(this,  QRectF(qreal(this->x()), qreal(this->y()),
-                                            this->width(),  this->height()));
+        emit  repaintTextRect(this,
+                              QRectF(qreal(this->x()), qreal(this->y()), this->width(),  this->height()),
+                              this->toPlainText(),
+                              this->document()->defaultFont().pixelSize());
         m_pressPoint = movePos;
     }
 

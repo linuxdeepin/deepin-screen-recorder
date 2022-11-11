@@ -30,6 +30,8 @@ public:
     QList<QPointF> points;
     QList<QList<qreal>> portion;
     QPointF arrowRotatePos;
+
+    QString text; //当图形形状是文字时，此属性才会有值
     Toolshape();
     //~Toolshape();
 

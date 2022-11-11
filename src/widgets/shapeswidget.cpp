@@ -229,7 +229,7 @@ void ShapesWidget::saveActionTriggered()
     setAllTextEditReadOnly();
     clearSelected();
     m_clearAllTextBorder = true;
-    qInfo() << __FUNCTION__ << __LINE__ << "已清楚图形编辑界面";
+    qInfo() << __FUNCTION__ << __LINE__ << "已清除图形编辑界面";
 }
 
 //点击某个形状
@@ -1671,7 +1671,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
     DFrame::mouseMoveEvent(e);
 }
 
-void ShapesWidget::updateTextRect(TextEdit *edit, QRectF newRect)
+void ShapesWidget::updateTextRect(TextEdit *edit, QRectF newRect, QString text, int fontsize)
 {
     int index = edit->getIndex();
     //qDebug() << "updateTextRect:" << newRect << index;
@@ -1683,6 +1683,8 @@ void ShapesWidget::updateTextRect(TextEdit *edit, QRectF newRect)
             m_shapes[j].mainPoints[2] = QPointF(newRect.x() + newRect.width(), newRect.y());
             m_shapes[j].mainPoints[3] = QPointF(newRect.x() + newRect.width(),
                                                 newRect.y() + newRect.height());
+            m_shapes[j].text = text;
+            m_shapes[j].fontSize = fontsize;
             m_currentShape = m_shapes[j];
             m_selectedShape = m_shapes[j];
             m_selectedIndex = m_shapes[j].index;
@@ -1844,7 +1846,18 @@ void ShapesWidget::paintText(QPainter &painter, FourPoints rectFPoints)
         painter.drawLine(rectFPoints[2], rectFPoints[0]);
     }
 }
-
+void ShapesWidget::paintText(QPainter &painter, FourPoints rectFPoints, QString text, int fontsize)
+{
+    qDebug() << "fontsize: " << fontsize;
+    QFont font = painter.font() ;
+    font.setPixelSize(fontsize);
+    painter.setFont(font);
+    QRect rect(static_cast<int>(rectFPoints[0].x()),
+               static_cast<int>(rectFPoints[0].y()),
+               static_cast<int>(rectFPoints[3].x() - rectFPoints[0].x()),
+               static_cast<int>(rectFPoints[3].y() - rectFPoints[0].y()));
+    painter.drawText(rect, Qt::AlignCenter, text);
+}
 void ShapesWidget::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
@@ -2122,8 +2135,10 @@ void ShapesWidget::setGlobalRect(QRect rect)
 //将编辑的内容绘制到图片上
 void ShapesWidget::paintImage(QImage &image)
 {
+    qInfo() << __FUNCTION__ << __LINE__ << "正在往图片中绘制图形...";
     QPainter painter(&image);
     handlePaint(painter);
+    qInfo() << __FUNCTION__ << __LINE__ << "图片图形已绘制";
     //    backgroundImage.save("/home/uos/Desktop/temp1.png");
 }
 
@@ -2189,6 +2204,9 @@ void ShapesWidget::handlePaint(QPainter &painter)
                 }
                 ++m;
             }
+        } else if (m_shapes[i].type == "text" && m_clearAllTextBorder) {
+            painter.setPen(pen);
+            paintText(painter, m_shapes[i].mainPoints, m_shapes[i].text, m_shapes[i].fontSize);
         }
     }
 

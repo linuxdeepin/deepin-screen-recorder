@@ -266,7 +266,7 @@ private:
     Toolshape m_hoveredShape;
 
     QMap<int, TextEdit *> m_editMap;
-    void updateTextRect(TextEdit *edit, QRectF newRect);
+    void updateTextRect(TextEdit *edit, QRectF newRect, QString text, int fontsize);
     Toolshapes m_shapes;
     MenuController *m_menuController;
     //SideBar *m_sideBar;
@@ -283,5 +283,13 @@ private:
                     int lineWidth, bool isStraight = false);
     void paintLine(QPainter &painter, QList<QPointF> lineFPoints);
     void paintText(QPainter &painter, FourPoints rectFPoints);
+    /**
+     * @brief paintText 绘制文字工具的具体文字内容
+     * @param painter
+     * @param rectFPoints
+     * @param text
+     * @param fontsize
+     */
+    void paintText(QPainter &painter, FourPoints rectFPoints, QString text, int fontsize);
 };
 #endif // SHAPESWIDGET_H
