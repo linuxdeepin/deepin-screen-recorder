@@ -33,7 +33,7 @@ public slots:
     void setSelecting(bool select);
 
 signals:
-    void repaintTextRect(TextEdit *edit,  QRectF newPositiRect);
+    void repaintTextRect(TextEdit *edit,  QRectF newPositiRect, QString text, int fontsize);
     void backToEditing();
     void clickToEditing(int index);
     void textEditSelected(int index);
