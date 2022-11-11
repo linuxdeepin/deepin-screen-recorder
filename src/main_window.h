@@ -942,6 +942,9 @@ private:
      */
     bool m_isShapesWidgetExist = false;
     bool m_isSideBarInside = false;
+    /**
+     * @brief m_isToolBarInside 工具栏在捕捉区域内部
+     */
     bool m_isToolBarInside = false;
 
 
