@@ -2884,11 +2884,13 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);// timeout
     //    }
     qInfo() << __FUNCTION__ << __LINE__ << "通知消息已发送！";
-    QTimer::singleShot(100, [ = ] {
-        qInfo() << __FUNCTION__ << __LINE__ << "退出应用！";
+    if (Utils::isWaylandMode) {
         exitApp();
-        qInfo() << __FUNCTION__ << __LINE__ << "退出应用！";
-    });
+    } else {
+        QTimer::singleShot(10, [ = ] {
+            exitApp();
+        });
+    }
 }
 
 bool MainWindow::saveAction(const QPixmap &pix)
@@ -5618,7 +5620,6 @@ void MainWindow::exitApp()
     m_initScroll = false; // 保存时关闭滚动截图
     emit releaseEvent();
     qApp->quit();
-    qInfo() << __FUNCTION__ << __LINE__ << "退出截图录屏！";
     if (Utils::isWaylandMode) {
         qInfo() << __FUNCTION__ << __LINE__ << "退出截图录屏！";
         _Exit(0);
