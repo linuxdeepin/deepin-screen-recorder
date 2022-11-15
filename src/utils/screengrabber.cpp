@@ -34,16 +34,11 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
             static_cast<int>(rect.height() * devicePixelRatio)
         };
         QPixmap res;
-        qDebug() << __FUNCTION__ << __LINE__ << "Init DBus shot interface";
         QDBusInterface kwinInterface(QStringLiteral("org.kde.KWin"),
                                      QStringLiteral("/Screenshot"),
                                      QStringLiteral("org.kde.kwin.Screenshot"));
-        if (!kwinInterface.isValid()) {
-            qDebug() << __FUNCTION__ << __LINE__ << "DBus Interface Not Valid";
-        }
-        qDebug() << __FUNCTION__ << __LINE__ << "Start call DBus:screenshotFullscreen";
+
         QDBusReply<QString> reply = kwinInterface.call(QStringLiteral("screenshotFullscreen"));
-        qDebug() << __FUNCTION__ << __LINE__ << "End call DBus:screenshotFullscreen";
         res = QPixmap(reply.value());
         qDebug() << __FUNCTION__ << __LINE__ << "Get Pixmap:" << res.size();
         if (!res.isNull()) {
