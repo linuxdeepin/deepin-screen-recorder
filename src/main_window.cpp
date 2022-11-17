@@ -2708,6 +2708,9 @@ void MainWindow::changeShotToolEvent(const QString &func)
             initShapeWidget(func);
             m_isShapesWidgetExist = true;
         }
+        //确保每次切换编辑形状时，shift是未激活的状态
+        m_isShiftPressed =  false;
+        m_shapesWidget->setShiftKeyPressed(m_isShiftPressed);
         m_sideBar->changeShotToolFunc(func);
 
         //禁用滚动截图按钮
@@ -3369,6 +3372,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             if (m_isShapesWidgetExist) {
 
                 if (keyEvent->key() == Qt::Key_Shift) {
+                    qDebug() << "shift 已按下！";
                     m_isShiftPressed =  true;
                     m_shapesWidget->setShiftKeyPressed(m_isShiftPressed);
                 }
@@ -3683,6 +3687,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             //截图编辑界面存在时，按住shift可以对相应的图形进行等比放大或缩小
             if (m_isShapesWidgetExist) {
                 if (keyEvent->key() == Qt::Key_Shift) {
+                    qDebug() << "shift 已释放！";
                     m_isShiftPressed =  false;
                     m_shapesWidget->setShiftKeyPressed(m_isShiftPressed);
                 }
