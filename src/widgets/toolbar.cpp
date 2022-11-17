@@ -323,6 +323,7 @@ void ToolBar::currentFunctionMode(QString shapeType)
         pa.setColor(DPalette::Dark, QColor(0, 129, 255, 204));
         pa.setColor(DPalette::Light, QColor(0, 129, 255, 204));
         m_confirmButton->setPalette(pa);
+        m_confirmButton->setStyleSheet("border-radius:18px;padding:2px 4px;background-color: rgba(0, 129, 255,204);");
         m_confirmButton->setIcon(QIcon(":/newUI/checked/screenshot-checked.svg"));
         Utils::setAccessibility(m_confirmButton, AC_MAINWINDOW_MAINSHOTBTN);
         m_confirmButton->setProperty("isShotState", true);
@@ -332,6 +333,7 @@ void ToolBar::currentFunctionMode(QString shapeType)
         pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
         pa.setColor(DPalette::Dark, QColor(229, 70, 61, 204));
         pa.setColor(DPalette::Light, QColor(229, 70, 61, 204));
+        m_confirmButton->setStyleSheet("border-radius:18px;padding:2px 4px;background-color: rgba(229, 70, 61, 204);");
         m_confirmButton->setPalette(pa);
         m_confirmButton->setIcon(QIcon(":/newUI/checked/screencap-checked.svg"));
         Utils::setAccessibility(m_confirmButton, AC_MAINWINDOW_MAINRECORDBTN);
@@ -358,6 +360,7 @@ void ToolBar::initToolBar(MainWindow *pmainWindow)
     m_confirmButton->setFocusPolicy(Qt::NoFocus);
     m_confirmButton->setIconSize(QSize(38, 38));
     m_confirmButton->setFixedSize(76, 58);
+    m_confirmButton->setStyleSheet("border-radius:18px;padding:2px 4px;background-color: rgba(0, 129, 255,204);");
 
     DPalette pa;
     pa = m_confirmButton->palette();
