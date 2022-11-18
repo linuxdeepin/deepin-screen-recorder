@@ -99,6 +99,7 @@ protected:
 
 public slots:
     void onReceiveMajorImage(QImage image);
+    void onReceiveMajorImage(QPixmap pixmap);
 
 private:
     int recordX = 0;

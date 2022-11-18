@@ -77,8 +77,8 @@ void MajorImageProcessingThread::run()
         uint yuvsize = 0;
         unsigned int nVdWidth = static_cast<unsigned int>(m_frame->width);
         unsigned int nVdHeight = static_cast<unsigned int>(m_frame->height);
-        uint8_t  * rgbPtr = nullptr;
-        uint8_t  * yuvPtr = nullptr;
+        uint8_t   *rgbPtr = nullptr;
+        uint8_t   *yuvPtr = nullptr;
         QImage tempImg;
 
         // wayland环境下，解码后的帧数据为yu12格式
@@ -89,14 +89,16 @@ void MajorImageProcessingThread::run()
         rgbsize = nVdWidth * nVdHeight * 3;
         rgbPtr = static_cast<uint8_t *>(calloc(rgbsize, sizeof(uint8_t)));
         // yu12到rgb数据高性能转换
-        yu12_to_rgb24_higheffic(rgbPtr,yuvPtr, m_frame->width, m_frame->height);
+        yu12_to_rgb24_higheffic(rgbPtr, yuvPtr, m_frame->width, m_frame->height);
 
         tempImg = QImage(rgbPtr, m_frame->width, m_frame->height, QImage::Format_RGB888);
         if (tempImg.isNull()) {
             qWarning() << "(wayland) 未采集到摄像头画面！" ;
         } else {
-            //tempImg.save(QString("/home/uos/Desktop/test/test_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
-            emit SendMajorImageProcessing(tempImg);
+            //tempImg.save(QString("/home/wangcong/Desktop/test/test_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
+            QPixmap pixmap = QPixmap::fromImage(tempImg);
+            emit SendMajorImageProcessing(pixmap);
+            //emit SendMajorImageProcessing(tempImg);
             //qInfo() << "(wayland) 已采集摄像头画面，正在传递摄像头画面";
         }
         if (yuvPtr != nullptr) {
