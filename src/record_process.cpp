@@ -274,12 +274,7 @@ void RecordProcess::recordVideo()
         arguments << QString("44100");
         arguments << QString("-i");
         arguments << QString("%1").arg(t_currentAudioChannel);
-        if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
-            if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
-                arguments << QString("-af");
-                arguments << QString("volume=20dB");
-            }
-        }
+
     }
     if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC || recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
         arguments << QString("-thread_queue_size");
@@ -295,18 +290,7 @@ void RecordProcess::recordVideo()
         arguments << QString("-i");
         arguments << QString("default");
     }
-    if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
-        arguments << QString("-filter_complex");
-        if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
-            arguments << QString("[1:a]volume=30dB[a1];[a1][2:a]amix=inputs=2:duration=first:dropout_transition=0[out]");
-            arguments << QString("-map");
-            arguments << QString("0:v");
-            arguments << QString("-map");
-            arguments << QString("[out]");
-        } else {
-            arguments << QString("amerge");
-        }
-    }
+
 
     arguments << QString("-video_size");
     arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
@@ -345,9 +329,29 @@ void RecordProcess::recordVideo()
     arguments << QString("passthrough");
     arguments << QString("-vf");
     arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
+
+    if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO) {
+        if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+            arguments << QString("-af");
+            arguments << QString("volume=20dB");
+        }
+    }
+    if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
+        arguments << QString("-filter_complex");
+        if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+            arguments << QString("[0:a]volume=30dB[a1];[a1][1:a]amix=inputs=2:duration=first:dropout_transition=0[out]");
+            arguments << QString("-map");
+            arguments << QString("2:v");
+            arguments << QString("-map");
+            arguments << QString("[out]");
+        } else {
+            arguments << QString("amerge");
+        }
+    }
 #endif
 
     arguments << savePath;
+    qDebug() << " ffmpeg "  << arguments;
     m_recorderProcess->start("ffmpeg", arguments);
 }
 
