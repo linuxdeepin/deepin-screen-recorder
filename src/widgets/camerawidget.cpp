@@ -98,8 +98,10 @@ void CameraWidget::cameraStart()
             m_imgPrcThread = new MajorImageProcessingThread;
             m_imgPrcThread->setParent(this);
             m_imgPrcThread->setObjectName("MajorThread");
-            connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage)),
-                    this, SLOT(onReceiveMajorImage(QImage)));
+//            connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage)),
+//                    this, SLOT(onReceiveMajorImage(QImage)));
+            connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QPixmap)),
+                    this, SLOT(onReceiveMajorImage(QPixmap)));
         }
         m_isInitCamera = true;
         startCameraV4l2(m_deviceName.toLatin1());
@@ -188,13 +190,21 @@ void CameraWidget::cameraStop()
 void CameraWidget::onReceiveMajorImage(QImage image)
 {
     QImage t_image = image.scaled(this->width(), this->height(), Qt::IgnoreAspectRatio, Qt::FastTransformation);
-    QPixmap pixmap = QPixmap::fromImage(t_image);
-//    pixmap.save(QString("/home/wangcong/Desktop/test/test_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
+    //t_image.save(QString("/home/wangcong/Desktop/test/t_image_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
+    QPixmap pixmap = QPixmap::fromImage(image);
+    //pixmap.save(QString("/home/wangcong/Desktop/test/pixmap_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
     if (m_cameraUI)
         m_cameraUI->setPixmap(pixmap);
     //qInfo() << "接收当前摄像头画面！";
 }
 
+void CameraWidget::onReceiveMajorImage(QPixmap pixmap)
+{
+    pixmap =  pixmap.scaled(this->width(), this->height());
+    if (m_cameraUI)
+        m_cameraUI->setPixmap(pixmap);
+    //qInfo() << "接收当前摄像头画面！";
+}
 void CameraWidget::enterEvent(QEvent *e)
 {
     Q_UNUSED(e);
