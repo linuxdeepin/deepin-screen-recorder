@@ -282,6 +282,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list
 }
 void WaylandIntegration::WaylandIntegrationPrivate::initConnectWayland()
 {
+    qDebug() << "正在初始化wayland服务链接... ";
     //设置获取视频帧
     setBGetFrame(true);
 
@@ -290,6 +291,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::initConnectWayland()
 
     connect(m_connection, &KWayland::Client::ConnectionThread::connected, this, &WaylandIntegrationPrivate::setupRegistry, Qt::QueuedConnection);
     connect(m_connection, &KWayland::Client::ConnectionThread::connectionDied, this, [this] {
+        qDebug() << "wayland服务链接失败";
+
         if (m_queue)
         {
             delete m_queue;
@@ -311,6 +314,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::initConnectWayland()
         }
     });
     connect(m_connection, &KWayland::Client::ConnectionThread::failed, this, [this] {
+        qDebug() << "wayland服务链接失败";
         m_thread->quit();
         m_thread->wait();
     });
@@ -366,10 +370,12 @@ int WaylandIntegration::WaylandIntegrationPrivate::getProductType()
 
 void WaylandIntegration::WaylandIntegrationPrivate::addOutput(quint32 name, quint32 version)
 {
+    qDebug() << "正在安装wayland输出...";
     KWayland::Client::Output *output = new KWayland::Client::Output(this);
     output->setup(m_registry->bindOutput(name, version));
 
     connect(output, &KWayland::Client::Output::changed, this, [this, name, version, output]() {
+        qDebug() << "wayland输出改变";
         qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Adding output:";
         qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "    manufacturer: " << output->manufacturer();
         qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "    model: " << output->model();
@@ -395,18 +401,23 @@ void WaylandIntegration::WaylandIntegrationPrivate::addOutput(quint32 name, quin
 
         //        delete output;
     });
+    qDebug() << "wayland输出已安装";
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::removeOutput(quint32 name)
 {
+    qDebug() << "正在移除wayland输出...";
     WaylandOutput output = m_outputMap.take(name);
     qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Removing output:";
     qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "    manufacturer: " << output.manufacturer();
     qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "    model: " << output.model();
+    qDebug() << "wayland输出已移除";
+
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::onDeviceChanged(quint32 name, quint32 version)
 {
+    qDebug() << "正在创建设备...";
     KWayland::Client::OutputDevice *devT = m_registry->createOutputDevice(name, version);
     if (devT && devT->isValid()) {
         connect(devT, &KWayland::Client::OutputDevice::changed, this, [ = ]() {
@@ -429,6 +440,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::onDeviceChanged(quint32 name
             qDebug() << "屏幕大小:" << m_screenSize;
         });
     }
+    qDebug() << "设备已创建";
+
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect)
@@ -730,6 +743,8 @@ QImage WaylandIntegration::WaylandIntegrationPrivate::getImage(int32_t fd, uint3
 }
 void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 {
+    qDebug() << "初始化wayland服务链接已完成";
+    qDebug() << "正在安装注册wayland服务...";
     initEgl();
     m_queue = new KWayland::Client::EventQueue(this);
     m_queue->setup(m_connection);
@@ -749,10 +764,16 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
     [this](quint32 name, quint32 version) {
         Q_UNUSED(name);
         Q_UNUSED(version);
+        qDebug() << "正在创建wayland远程管理...";
         m_remoteAccessManager = m_registry->createRemoteAccessManager(m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).name, m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).version);
+        qDebug() << "wayland远程管理已创建";
         connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
+            qDebug() << "正在接收buffer...";
             QRect screenGeometry = (KWayland::Client::Output::get(reinterpret_cast<wl_output *>(const_cast<void *>(output))))->geometry();
+            qDebug() << "screenGeometry: " << screenGeometry;
+            qDebug() << "rbuf->isValid(): " << rbuf->isValid();
             connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf, screenGeometry] {
+                qDebug() << "正在处理buffer...";
                 if (m_boardVendorType)
                 {
                     //arm hw
@@ -762,7 +783,9 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                     //other
                     processBufferX86(rbuf, screenGeometry);
                 }
+                qDebug() << "buffer已处理";
             });
+            qDebug() << "buffer已接收";
         });
     }
            );
@@ -770,9 +793,12 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
     m_registry->create(m_connection);
     m_registry->setEventQueue(m_queue);
     m_registry->setup();
+    qDebug() << "安装注册wayland服务已完成";
 }
 void WaylandIntegration::WaylandIntegrationPrivate::initEgl()
 {
+    qDebug() << "正在初始化EGL";
+
     static const EGLint context_attribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2,
                                              EGL_NONE
                                             };
@@ -811,6 +837,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::initEgl()
     assert(m_eglstruct.ctx);
 
     printf("egl init success!\n");
+    qDebug() << "EGL已初始化";
+
 }
 void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *frame, int width, int height, int stride, int64_t time)
 {
