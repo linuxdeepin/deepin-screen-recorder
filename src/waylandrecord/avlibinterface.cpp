@@ -105,7 +105,7 @@ avlibInterface::avlibInterface()
 
 QString avlibInterface::libPath(const QString &sLib)
 {
-    qDebug() << sLib;
+    //qDebug() << sLib;
     QDir dir;
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
@@ -133,13 +133,13 @@ void avlibInterface::initFunctions()
     m_libavutil.setFileName(libPath("libavutil.so"));
     m_libavcodec.setFileName(libPath("libavcodec.so"));
 
-    qDebug() << m_libavutil.load();
-    qDebug() << m_libavcodec.load();
-    qDebug() << m_libavformat.load();
-    qDebug() << m_libavfilter.load();
-    qDebug() << m_libswscale.load();
-    qDebug() << m_libswresample.load();
-    qDebug() << m_libavdevice.load();
+    qDebug() << " m_libavutil.load(): " << m_libavutil.load();
+    qDebug() << "m_libavcodec.load(): "<< m_libavcodec.load();
+    qDebug() << "m_libavformat.load(): " << m_libavformat.load();
+    qDebug() << "m_libavfilter.load(): " << m_libavfilter.load();
+    qDebug() << "m_libswscale.load(): " << m_libswscale.load();
+    qDebug() << "m_libswresample.load(): " << m_libswresample.load();
+    qDebug() << "m_libavdevice.load(): " << m_libavdevice.load();
 
     m_av_gettime = reinterpret_cast<p_av_gettime>(m_libavutil.resolve("av_gettime")); // libavutil
     m_av_frame_alloc = reinterpret_cast<p_av_frame_alloc>(m_libavutil.resolve("av_frame_alloc"));
