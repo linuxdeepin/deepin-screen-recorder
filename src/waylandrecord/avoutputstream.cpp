@@ -1181,7 +1181,7 @@ void CAVOutputStream::writeMixAudio()
                         //显示时间戳，应大于或等于解码时间戳
                         packet_out.pts = m_mixCount * pCodecCtx_amix->frame_size;
                     }
-                    qDebug() << m_mixCount << " mix audio packet_out.pts: " << packet_out.pts ;
+                    //qDebug() << m_mixCount << " mix audio packet_out.pts: " << packet_out.pts ;
 
                     packet_out.dts = packet_out.pts;
                     packet_out.duration = pCodecCtx_amix->frame_size;

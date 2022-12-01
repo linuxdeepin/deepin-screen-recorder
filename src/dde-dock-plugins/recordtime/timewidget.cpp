@@ -167,9 +167,12 @@ void TimeWidget::paintEvent(QPaintEvent *e)
     painter.setOpacity(1);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
     const auto ratio = devicePixelRatioF();
+    QSize size = QSize(RECORDER_TIME_VERTICAL_ICON_SIZE, RECORDER_TIME_VERTICAL_ICON_SIZE);
+    auto pixmapSize = QCoreApplication::testAttribute(Qt::AA_UseHighDpiPixmaps) ? size : (size * ratio);
+
     //判断任务栏在屏幕上的位置,上下左右
     if (position::top == m_position || position::bottom == m_position) {
-        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_LEVEL_ICON_SIZE, RECORDER_TIME_LEVEL_ICON_SIZE));
+        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(size);
         //m_pixmap.setDevicePixelRatio(ratio);
         const QRectF &rf = QRectF(rect());
         const QRectF &prf = QRectF(m_pixmap.rect());
@@ -187,8 +190,8 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         //绘制时间
         painter.drawText(tx, ty, twidth, theight, Qt::AlignLeft | Qt::AlignVCenter, m_showTimeStr);
     } else if (position::right == m_position || position::left == m_position) {
-        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_VERTICAL_ICON_SIZE, RECORDER_TIME_VERTICAL_ICON_SIZE) * ratio);
-        m_pixmap.setDevicePixelRatio(ratio);
+        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(pixmapSize);
+        //m_pixmap.setDevicePixelRatio(ratio);
         const QRectF &rf = QRectF(rect());
         const QRectF &rfp = QRectF(m_pixmap.rect());
         painter.drawPixmap(rf.center() - rfp.center() / m_pixmap.devicePixelRatioF(), m_pixmap);
