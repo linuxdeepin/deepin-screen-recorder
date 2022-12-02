@@ -175,10 +175,15 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(size);
         //m_pixmap.setDevicePixelRatio(ratio);
         const QRectF &rf = QRectF(rect());
-        const QRectF &prf = QRectF(m_pixmap.rect());
+        qDebug() << ">>>>>>> rf: " << rf << rf.center();
+        const QRectF &prf = QRectF(m_pixmap.rect().x(), m_pixmap.rect().y(), m_pixmap.rect().width() / ratio, m_pixmap.rect().height() / ratio);
+        qDebug() << ">>>>>>> prf: " << prf << prf.center();
         QPointF pf = rf.center() - prf.center();
+        //qDebug() << ">>>>>>> pf: " << pf ;
         //绘制录像小图标
-        painter.drawPixmap(5, static_cast<int>(pf.y() + 1), m_pixmap);
+        QPointF pff = QPointF(5, pf.y() + 1);
+        //qDebug() << ">>>>>>> pff: " << pff ;
+        painter.drawPixmap(pff, m_pixmap);
         QFont font = RECORDER_TIME_FONT;
         painter.setFont(font);
         QFontMetrics fm(font);
