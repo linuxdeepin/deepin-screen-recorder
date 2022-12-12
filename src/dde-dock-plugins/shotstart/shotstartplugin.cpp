@@ -53,7 +53,7 @@ void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
 
 bool ShotStartPlugin::pluginIsDisable()
 {
-    return m_proxyInter->getValue(this, "disabled", false).toBool();
+    return m_proxyInter->getValue(this, "disabled", true).toBool();
 }
 
 void ShotStartPlugin::pluginStateSwitched()
