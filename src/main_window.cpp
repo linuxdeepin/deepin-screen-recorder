@@ -1741,10 +1741,10 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
         // Wayland 等待剪贴板dataChanged信号不可靠，出问题会导致整改系统不可用，评估去掉信号等待 受概率不能保存到剪切板影响，暂时需要还原
         if (Utils::isWaylandMode) {
             //wayland下添加超时机制，1s后退出事件循环
-            DelayTime *tempTimer = new DelayTime(5000);
+            DelayTime *tempTimer = new DelayTime(3000);
             tempTimer->setForceToExitApp(false);
             QEventLoop eventloop;
-            connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
+            //connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
             connect(tempTimer, SIGNAL(doWork()), &eventloop, SLOT(quit()), Qt::QueuedConnection);
             tempTimer->start(QThread::HighestPriority);
             eventloop.exec();
