@@ -225,6 +225,8 @@ void RecordProcess::recordVideo()
         arguments << QString("44100");
         arguments << QString("-i");   // 麦克风音频id，值为固定"default"
         arguments << QString("default");
+        arguments << QString("-ac");
+        arguments << QString("2");
     }
     if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
         arguments << QString("-filter_complex");
@@ -289,6 +291,8 @@ void RecordProcess::recordVideo()
         arguments << QString("44100");
         arguments << QString("-i");
         arguments << QString("default");
+        arguments << QString("-ac");
+        arguments << QString("2");
     }
 
 
