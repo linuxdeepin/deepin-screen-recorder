@@ -2444,7 +2444,6 @@ void MainWindow::changeFunctionButton(QString type)
 void MainWindow::showKeyBoardButtons(const QString &key)
 {
     //键盘按钮启用状态下创建按键控件
-    qDebug() << this->geometry();
     if (m_keyBoardStatus) {
         if (m_hasComposite == false && RECORD_BUTTON_RECORDING == recordButtonStatus) {
             // 2D 录屏下将按键发送至m_pRecorderRegion区域。
@@ -4370,7 +4369,8 @@ void MainWindow::onKeyboardPress(unsigned char keyCode)
     if (status::record == m_functionType) {
         m_showButtons->showContentButtons(keyCode);
         recordKeyPressEvent(keyCode);
-        if (RECORD_BUTTON_RECORDING != recordButtonStatus && keyCode == KEY_ESCAPE) {
+        if (RECORD_BUTTON_RECORDING != recordButtonStatus && RECORD_BUTTON_SAVEING != recordButtonStatus && keyCode == KEY_ESCAPE) {
+            qDebug() << "录屏模式退出应用" << recordButtonStatus;
             exitApp();
         }
     } else if (status::shot == m_functionType || status::scrollshot == m_functionType) {
