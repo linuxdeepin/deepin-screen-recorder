@@ -1961,8 +1961,10 @@ void MainWindow::updateToolBarPos()
     if (m_shotflag == 1) {
         return;
     }
+    //qDebug() << "==================1=================";
     m_isToolBarInside = false;
     if (m_toolBarInit == false) {
+        m_toolBarInit = true;
         m_toolBar->initToolBar(this);
         m_toolBar->setRecordLaunchMode(m_functionType);
         //m_toolBar->setIsZhaoxinPlatform(m_isZhaoxin);
@@ -1972,7 +1974,6 @@ void MainWindow::updateToolBarPos()
         m_pVoiceVolumeWatcher->setWatch(true); //取消之前的线程方式，采用定时器监测
         connect(m_pVoiceVolumeWatcher, SIGNAL(sigRecodeState(bool)), m_toolBar, SLOT(setMicroPhoneEnable(bool)));
         m_toolBar->setSystemAudioEnable(m_pVoiceVolumeWatcher->getystemAudioState());
-        m_toolBarInit = true;
 
         m_pCameraWatcher = new CameraWatcher(this);
         m_pCameraWatcher->setWatch(true); //取消之前的线程方式，采用定时器监测
@@ -2033,14 +2034,16 @@ void MainWindow::updateToolBarPos()
         for (int i = 0; i < m_screenInfo.size(); ++i) {
             //qDebug() << "屏幕: " << m_screenInfo[i].name <<  m_screenInfo[i].x << m_screenInfo[i].y << m_screenInfo[i].width << m_screenInfo[i].height;
             //工具栏是否在屏幕内
-            toolIsInScreen = toolbarPoint.x() >= m_screenInfo[i].x &&
-                             toolbarPoint.x() < (m_screenInfo[i].x + m_screenInfo[i].width) &&
+            toolIsInScreen = toolbarPoint.x() * m_pixelRatio >= m_screenInfo[i].x &&
+                             toolbarPoint.x() * m_pixelRatio  < (m_screenInfo[i].x + m_screenInfo[i].width) &&
                              (toolbarPoint.y() - m_screenInfo[i].height) * m_pixelRatio + m_screenInfo[i].height >= m_screenInfo[i].y &&
                              (toolbarPoint.y() - m_screenInfo[i].height) * m_pixelRatio + m_screenInfo[i].height < (m_screenInfo[i].y + m_screenInfo[i].height);
             bool recordIsInScreen =  recordX * m_pixelRatio >= m_screenInfo[i].x &&
                                      recordX * m_pixelRatio < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                                     recordY * m_pixelRatio >= m_screenInfo[i].y &&
+                                     recordY * m_pixelRatio >= m_screenInfo[i].y -1 &&
                                      recordY * m_pixelRatio < (m_screenInfo[i].y + m_screenInfo[i].height);
+            //qDebug() << "工具栏是否在屏幕（"<< m_screenInfo[i].name<<"）内 ? " << toolIsInScreen;
+            //qDebug() << "捕捉区域是否在屏幕（"<< m_screenInfo[i].name<<"）内 ? " << recordIsInScreen;
             //取出捕捉区域所在的屏幕
             if (recordIsInScreen) {
                 tempScreen.setX(m_screenInfo[i].x);
@@ -2058,7 +2061,7 @@ void MainWindow::updateToolBarPos()
                     toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
                     //toolbarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
                     //qDebug() << "工具栏位置超出屏幕上边缘，已矫正 >>> toolbarPoint: " << toolbarPoint;
-                } else if (toolbarPoint.y() > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
+                } else if (toolbarPoint.y() > m_screenInfo[i].y / m_pixelRatio+ m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
                     // 屏幕下超出
                     int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
                     //qDebug() << ">>> y: " << y;
@@ -2067,6 +2070,9 @@ void MainWindow::updateToolBarPos()
 
                     //已经调整工具栏位置之后，发现工具栏位置超出屏幕上边缘
                     if (y < m_screenInfo[i].y) {
+                        y = recordY + TOOLBAR_Y_SPACING;
+                    }
+                    if(recordY-m_screenInfo[i].y < m_toolBar->height() + TOOLBAR_Y_SPACING){
                         y = recordY + TOOLBAR_Y_SPACING;
                     }
                     toolbarPoint.setY(y);
@@ -2089,7 +2095,9 @@ void MainWindow::updateToolBarPos()
             }
         }
     }
+    //qDebug() << "工具栏最新坐标 >>> toolbarPoint: " << toolbarPoint;
     m_toolBar->showAt(toolbarPoint);
+    //qDebug() << "==================2=================";
 }
 
 void MainWindow::updateSideBarPos()
