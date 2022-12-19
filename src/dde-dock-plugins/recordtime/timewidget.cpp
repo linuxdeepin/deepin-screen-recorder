@@ -188,7 +188,7 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         painter.setFont(font);
         QFontMetrics fm(font);
 //        painter.drawText(m_pixmap.width() * static_cast<int>(ratio) + RECORDER_TEXT_TOP_BOTTOM_X + RECORDER_ICON_TOP_BOTTOM_X, rect().y(), rect().width(), rect().height(), Qt::AlignLeft | Qt::AlignVCenter, m_showTimeStr);
-        int tx = static_cast<int>(m_pixmap.width()) + RECORDER_TEXT_TOP_BOTTOM_X;
+        int tx = static_cast<int>(m_pixmap.width() / ratio) + RECORDER_TEXT_TOP_BOTTOM_X;
         int ty = rect().y();
         int twidth = rect().width();
         int theight = rect().height();
