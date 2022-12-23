@@ -205,6 +205,7 @@ void MainWindow::initAttributes()
         setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
         if (this->windowHandle()) {
             this->windowHandle()->setProperty("_d_dwayland_window-type", "onScreenDisplay");
+            qDebug() << "设置窗口属性 _d_dwayland_window-type: " << this->windowHandle()->property("_d_dwayland_window-type");
         }
         //取消onScreenDisplay，解决wayland截长图无法滚动的问题
         QDBusInterface sessionManagerIntert("com.deepin.SessionManager",
@@ -1028,6 +1029,12 @@ void MainWindow::initScrollShot()
     EventLogUtils::get().writeLogs(obj);
 
 #ifdef OCR_SCROLL_FLAGE_ON
+    if (Utils::isWaylandMode) {
+        if (this->windowHandle()) {
+            this->windowHandle()->setProperty("_d_dwayland_window-type", "");
+            qDebug() << "重设窗口属性 _d_dwayland_window-type: " << this->windowHandle()->property("_d_dwayland_window-type");
+        }
+    }
     if (m_initScroll)
         return;
     //定时器，滚动截图模式下每0.5秒减少一次鼠标点击次数
