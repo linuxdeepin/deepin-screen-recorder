@@ -1031,8 +1031,10 @@ void MainWindow::initScrollShot()
 #ifdef OCR_SCROLL_FLAGE_ON
     if (Utils::isWaylandMode) {
         if (this->windowHandle()) {
+            this->hide();
             this->windowHandle()->setProperty("_d_dwayland_window-type", "");
             qDebug() << "重设窗口属性 _d_dwayland_window-type: " << this->windowHandle()->property("_d_dwayland_window-type");
+            this->show();
         }
     }
     if (m_initScroll)
