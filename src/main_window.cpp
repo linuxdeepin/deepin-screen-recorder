@@ -1754,7 +1754,7 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             tempTimer->setForceToExitApp(false);
             QEventLoop eventloop;
             //connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
-            connect(tempTimer, SIGNAL(doWork()), &eventloop, SLOT(quit()), Qt::QueuedConnection);
+            connect(tempTimer, SIGNAL(doWork()), &eventloop, SLOT(quit()), Qt::DirectConnection);
             tempTimer->start(QThread::HighestPriority);
             eventloop.exec();
             tempTimer->stop();
