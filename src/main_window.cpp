@@ -233,6 +233,7 @@ void MainWindow::initAttributes()
     m_screenHeight = m_screenSize.height();
     m_screenWidth = m_screenSize.width();
 
+    qDebug() << "获取自动识别的窗口...";
     //获取自动识别的窗口
     if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
@@ -258,6 +259,7 @@ void MainWindow::initAttributes()
         //x11自动识别窗口
         Utils::getAllWindowInfo(static_cast<quint32>(this->winId()), m_screenWidth, m_screenHeight, windowRects, windowNames);
     }
+    qDebug() << "获取自动识别窗口已完成";
     //构建截屏工具栏按钮 by zyg
     m_toolBar = new ToolBar(this);
     m_toolBar->hide();
@@ -351,6 +353,7 @@ void MainWindow::setupRegistry(Registry *registry)
         connect(m_clientManagement, &ClientManagement::windowStatesChanged, this,
         [this] {
             m_windowStates = m_clientManagement->getWindowStates();
+            qDebug() << "当前窗口的数量(ClientManagement::windowStatesChanged):" << m_windowStates.count();
             qDebug() << "Get new window states";
             this->waylandwindowinfo(m_windowStates);
         }
@@ -364,6 +367,7 @@ void MainWindow::setupRegistry(Registry *registry)
         Q_ASSERT(m_clientManagement);
         qDebug() << "request getWindowStates";
         m_windowStates = m_clientManagement->getWindowStates();
+        qDebug() << "当前窗口的数量(Registry::interfacesAnnounced):" << m_windowStates.count();
         this->waylandwindowinfo(m_windowStates);
     }
            );
@@ -453,6 +457,7 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
     }
     //模拟发送鼠标事件，触发自动识别窗口
     QMouseEvent *mouseMove = new QMouseEvent(QEvent::MouseMove, this->cursor().pos(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    qDebug() << "模拟发送鼠标事件，触发自动识别窗口";
     QApplication::sendEvent(this, mouseMove);
     delete mouseMove;
 }
@@ -1750,15 +1755,21 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
         // Wayland 等待剪贴板dataChanged信号不可靠，出问题会导致整改系统不可用，评估去掉信号等待 受概率不能保存到剪切板影响，暂时需要还原
         if (Utils::isWaylandMode) {
             //wayland下添加超时机制，1s后退出事件循环
-            DelayTime *tempTimer = new DelayTime(3000);
-            tempTimer->setForceToExitApp(false);
-            QEventLoop eventloop;
-            //connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
-            connect(tempTimer, SIGNAL(doWork()), &eventloop, SLOT(quit()), Qt::DirectConnection);
-            tempTimer->start(QThread::HighestPriority);
-            eventloop.exec();
-            tempTimer->stop();
-            delete tempTimer;
+            //DelayTime *tempTimer = new DelayTime(3000);
+            //tempTimer->setForceToExitApp(false);
+            //QEventLoop eventloop;
+            ////connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
+            //connect(tempTimer, SIGNAL(doWork()), &eventloop, SLOT(quit()), Qt::DirectConnection);
+            //tempTimer->start(QThread::HighestPriority);
+            //eventloop.exec();
+            //tempTimer->stop();
+            //delete tempTimer;
+            qInfo() << __FUNCTION__ << __LINE__ << "开始延时3s等待数据保存到剪切板...";
+            QTime dieTime = QTime::currentTime().addMSecs(3000);
+            while (QTime::currentTime() < dieTime) {
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+            }
+            qInfo() << __FUNCTION__ << __LINE__ << "3s延时完成";
         }
     }
     qInfo() << __FUNCTION__ << __LINE__ << "已保存到剪贴板！";
@@ -2049,7 +2060,7 @@ void MainWindow::updateToolBarPos()
                              (toolbarPoint.y() - m_screenInfo[i].height) * m_pixelRatio + m_screenInfo[i].height < (m_screenInfo[i].y + m_screenInfo[i].height);
             bool recordIsInScreen =  recordX * m_pixelRatio >= m_screenInfo[i].x &&
                                      recordX * m_pixelRatio < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                                     recordY * m_pixelRatio >= m_screenInfo[i].y -1 &&
+                                     recordY * m_pixelRatio >= m_screenInfo[i].y - 1 &&
                                      recordY * m_pixelRatio < (m_screenInfo[i].y + m_screenInfo[i].height);
             //qDebug() << "工具栏是否在屏幕（"<< m_screenInfo[i].name<<"）内 ? " << toolIsInScreen;
             //qDebug() << "捕捉区域是否在屏幕（"<< m_screenInfo[i].name<<"）内 ? " << recordIsInScreen;
@@ -2070,7 +2081,7 @@ void MainWindow::updateToolBarPos()
                     toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
                     //toolbarPoint.setY(m_screenInfo[i].y + TOOLBAR_Y_SPACING);
                     //qDebug() << "工具栏位置超出屏幕上边缘，已矫正 >>> toolbarPoint: " << toolbarPoint;
-                } else if (toolbarPoint.y() > m_screenInfo[i].y / m_pixelRatio+ m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
+                } else if (toolbarPoint.y() > m_screenInfo[i].y / m_pixelRatio + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING) {
                     // 屏幕下超出
                     int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
                     //qDebug() << ">>> y: " << y;
@@ -2081,7 +2092,7 @@ void MainWindow::updateToolBarPos()
                     if (y < m_screenInfo[i].y) {
                         y = recordY + TOOLBAR_Y_SPACING;
                     }
-                    if(recordY-m_screenInfo[i].y < m_toolBar->height() + TOOLBAR_Y_SPACING){
+                    if (recordY - m_screenInfo[i].y < m_toolBar->height() + TOOLBAR_Y_SPACING) {
                         y = recordY + TOOLBAR_Y_SPACING;
                     }
                     toolbarPoint.setY(y);
