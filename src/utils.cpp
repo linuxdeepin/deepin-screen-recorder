@@ -198,22 +198,22 @@ bool Utils::isSysHighVersion1040()
         QString sysVersion = DSysInfo::minorVersion();
         float version = sysVersion.toFloat(&correct);
         qDebug() << "System Version:" << sysVersion << correct << sysVersion.split('.');
-        if(DSysInfo::UosProfessional == DSysInfo::uosEditionType() || DSysInfo::UosEducation == DSysInfo::uosEditionType()) {
+        if (DSysInfo::UosProfessional == DSysInfo::uosEditionType() || DSysInfo::UosEducation == DSysInfo::uosEditionType()) {
             const float versionProfessional = 1040;
             if (correct && (version >= versionProfessional)) {
                 return true;
             }
-        } else if(DSysInfo::UosHome == DSysInfo::uosEditionType()) {
+        } else if (DSysInfo::UosHome == DSysInfo::uosEditionType()) {
             const float versionHome = 21.3f;
             if (correct && (version >= versionHome)) {
                 return true;
             }
-        } else if(DSysInfo::UosCommunity == DSysInfo::uosEditionType()) {
+        } else if (DSysInfo::UosCommunity == DSysInfo::uosEditionType()) {
             const float versionCommunity = 20.6f;
             QStringList v = sysVersion.split('.');
             if (!correct && v.size() > 2) {
                 // 社区版，版本号可能有20.6.1，只取前面的两位大版本号
-                version =  (QString("%1.%2").arg(v[0]).arg(v[1])).toFloat(&correct);
+                version = (QString("%1.%2").arg(v[0]).arg(v[1])).toFloat(&correct);
                 qDebug() << "Fix System Version:" << version << correct;
             }
             if (correct && (version >= versionCommunity)) {
@@ -224,6 +224,19 @@ bool Utils::isSysHighVersion1040()
     return false;
 }
 
+void Utils::showCurrentSys()
+{
+    qInfo() << "isDeepin: " << DSysInfo::isDeepin();
+    qInfo() << "isDDE: " << DSysInfo::isDDE();
+    qInfo() << "SystemName: " << DSysInfo::uosSystemName();
+    qInfo() << "EditionName: " << DSysInfo::uosEditionName();
+    qInfo() << "ProductTypeName: " << DSysInfo::uosProductTypeName();
+    qInfo() << "SystemVersion: " << DSysInfo::minorVersion();
+    //qDebug() << "spVersion: " << DSysInfo::spVersion();
+    //qDebug() << "udpateVersion: " << DSysInfo::udpateVersion();
+    //qDebug() << "majorVersion: " << DSysInfo::majorVersion();
+    //qDebug() << "majorVersion: " << DSysInfo::majorVersion();
+}
 void Utils::enableXGrabButton()
 {
     if (Utils::isWaylandMode == true)
@@ -282,7 +295,7 @@ void Utils::getAllWindowInfo(const quint32 winId, const int width, const int hei
             //window:后面代码有使用
             //window->deleteLater();
             //修改部分窗口显示不全，截图框识别问题
-            qDebug()  << "\n窗口名称: >>>> " <<window->wmClass()
+            qDebug()  << "\n窗口名称: >>>> " << window->wmClass()
                       << "\nx: " <<  window->frameGeometry().x()
                       << "\ny: " <<  window->frameGeometry().y()
                       << "\nwidth: " <<  window->frameGeometry().width()

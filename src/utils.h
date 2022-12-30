@@ -115,7 +115,16 @@ public:
      */
     static void cancelInputEvent1(const int wid, const short x, const short y, const unsigned short width, const unsigned short height);
 
+    /**
+     * @brief isSysHighVersion1040 判断当前系统版本是否高于1040
+     * @return
+     */
     static bool isSysHighVersion1040();
+
+    /**
+     * @brief showCurrentSys 显示
+     */
+    static void showCurrentSys();
 
     /**
      * @brief 使能XGrabButton抓取所有的鼠标点击事件
