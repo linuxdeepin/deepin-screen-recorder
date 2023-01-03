@@ -53,6 +53,7 @@ extern "C" {
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <time.h>
 #define EPSILON 1e-10
 //const int MainWindow::CURSOR_BOUND = 5;
 const int MainWindow::RECORD_MIN_SIZE = 580;
@@ -1764,12 +1765,21 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             //eventloop.exec();
             //tempTimer->stop();
             //delete tempTimer;
-            qInfo() << __FUNCTION__ << __LINE__ << "开始延时3s等待数据保存到剪切板...";
-            QTime dieTime = QTime::currentTime().addMSecs(3000);
-            while (QTime::currentTime() < dieTime) {
+            time_t endTime = time(nullptr) + 3;
+            qInfo() << __FUNCTION__ << __LINE__ << "开始延时3s等待数据保存到剪切板..." << endTime;
+            time_t lastTime = 0;
+            while (1) {
+                time_t curTime = time(nullptr);
+                if (curTime != lastTime) {
+                    qInfo() << lastTime << "==" << curTime;
+                    lastTime = curTime;
+                }
+                if (curTime >= endTime) {
+                    break;
+                }
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
             }
-            qInfo() << __FUNCTION__ << __LINE__ << "3s延时完成";
+            qInfo() << __FUNCTION__ << __LINE__ << "3s延时完成" << time(nullptr);
         }
     }
     qInfo() << __FUNCTION__ << __LINE__ << "已保存到剪贴板！";
