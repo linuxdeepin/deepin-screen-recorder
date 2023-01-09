@@ -222,7 +222,7 @@ int main(int argc, char *argv[])
         DGuiApplicationHelper::instance()->setPaletteType(t_type);
         Utils::themeType = t_type;
 
-        qDebug() << "截图录屏日志路径: " << Dtk::Core::DLogManager::getlogFilePath();
+        //qDebug() << "截图录屏日志路径: " << Dtk::Core::DLogManager::getlogFilePath();
         qDebug() << "截图录屏版本: " << DApplication::buildVersion(APP_VERSION);
 
         //显示系统信息
