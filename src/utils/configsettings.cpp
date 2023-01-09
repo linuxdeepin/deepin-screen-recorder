@@ -32,7 +32,7 @@ ConfigSettings::ConfigSettings(QObject *parent)
     : QObject(parent)
 {
     m_settings = new QSettings("deepin/deepin-screen-recorder", "deepin-screen-recorder");
-    qDebug() << "config file path: " << m_settings->fileName();
+    //qDebug() << "config file path: " << m_settings->fileName();
 }
 
 ConfigSettings *ConfigSettings::m_configSettings = nullptr;
