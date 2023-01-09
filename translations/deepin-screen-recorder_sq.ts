@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sq">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sq">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     <message>
         <source>Recording</source>
         <translation>Regjistrim</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Regjistroje</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Foto ekrani</translation>
     </message>
 </context>
 <context>
@@ -102,15 +93,15 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation>Fiksoni Foto Ekrani</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open Folder</source>
         <translation>Hapni Dosje</translation>
+    </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Fiksoni Foto Ekrani</translation>
     </message>
 </context>
 <context>
@@ -189,11 +180,11 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
@@ -318,10 +309,6 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
         <translation>Shfaq shkurtore</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Tingull</translation>
-    </message>
-    <message>
         <source>Keystroke</source>
         <translation>Shtypje tastesh</translation>
     </message>
@@ -342,10 +329,6 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
         <translation>Fillo/Regjistrim</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Mi</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>Mjete</translation>
     </message>
@@ -355,19 +338,31 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Pin screenshots</source>
         <translation>Fiksoni foto ekrani</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Start OCR</source>
         <translation>Nis OCR</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <source>Arrow</source>
+        <translation>Shigjetë</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>Tingull</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Mi</translation>
     </message>
 </context>
 <context>
@@ -384,51 +379,41 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Turbulloje</translation>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation>Drejtkëndësh
+Shtypni dhe mbani të shtypur tastin Shift që të vizatohet një kuadrat</translation>
     </message>
     <message>
-        <source>Mosaic</source>
-        <translation>Mozaik</translation>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation>Elips
+Shtypni dhe mbani të shtypur tastin Shift që të vizatohet një rreth</translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation>Penel
+Shtypni dhe mbani të shtypur tastin Shift që të vizatohet një vijë e drejtë</translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation>Rregulloni fortësi turbullimi (Për ta rregulluar, rrëshqitni)</translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation>Rregulloni madhësi peneli (Për ta rregulluar, rrëshqitni)</translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation>Rregulloni madhësi teksti (Për ta rregulluar, rrëshqitni)</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Sound On</source>
-        <translation>Tingujt ON</translation>
-    </message>
-    <message>
         <source>Microphone</source>
         <translation>Mikrofon</translation>
-    </message>
-    <message>
-        <source>System Audio</source>
-        <translation>Audio Sistemi</translation>
-    </message>
-    <message>
-        <source>Sound Off</source>
-        <translation>Tingujt OFF</translation>
-    </message>
-    <message>
-        <source>Show Keystroke</source>
-        <translation>Shfaq Kombinim Tastesh</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke</source>
-        <translation>Fshih Kombinim Tastesh</translation>
-    </message>
-    <message>
-        <source>Webcam On</source>
-        <translation>Kamera ON</translation>
-    </message>
-    <message>
-        <source>Webcam Off</source>
-        <translation>Kamera OFF</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>Shfaq Klikim</translation>
     </message>
     <message>
         <source>Options</source>
@@ -469,30 +454,6 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     <message>
         <source>30 fps</source>
         <translation>30 kps</translation>
-    </message>
-    <message>
-        <source>Rectangle</source>
-        <translation>Drejtkëndësh</translation>
-    </message>
-    <message>
-        <source>Ellipse</source>
-        <translation>Elips</translation>
-    </message>
-    <message>
-        <source>Line</source>
-        <translation>Vijë</translation>
-    </message>
-    <message>
-        <source>Arrow</source>
-        <translation>Shigjetë</translation>
-    </message>
-    <message>
-        <source>Pencil</source>
-        <translation>Laps</translation>
-    </message>
-    <message>
-        <source>Text</source>
-        <translation>Tekst</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -539,36 +500,147 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
         <translation>Shfaq treguesin</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Mi</translation>
-    </message>
-    <message>
-        <source>Show Pointer</source>
-        <translation>Shfaq Treguesin</translation>
-    </message>
-    <message>
         <source>Extract Text</source>
         <translation>Përfto Tekst</translation>
     </message>
     <message>
-        <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <source>Show keystroke (K)</source>
+        <translation>Shfaq varg tastesh për shtypje (K)</translation>
     </message>
     <message>
-        <source>Pin Screenshots</source>
-        <translation>Fiksoni Foto Ekrani</translation>
+        <source>Settings</source>
+        <translation>Rregullime</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Rregullime (F3)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Turbulloje (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Tekst (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Përfto tekstin (Alt+O）</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Zhbëje (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Foto ekrani</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Fiksoni foto ekrani (Alt+P）</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Regjistro</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Laps (P)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Hapni kamerën (C)</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Efekte Anësh</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Asnjë</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Mbyllni kamerën (C)</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation>Fshih Varg Tastesh Për Shtypje (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Shfaq Varg Tastesh Për Shtypje (K)</translation>
     </message>
     <message>
         <source>webm</source>
         <translation>webm</translation>
     </message>
     <message>
-        <source>ogg</source>
-        <translation>ogg</translation>
-    </message>
-    <message>
         <source>Videos</source>
         <translation>Video</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Drejtkëndësh (R)
+Shtypni dhe mbani të shtypur tastin Shift që të vizatoni një katror</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Elips (O)
+Shtypni dhe mbani të shtypur tastin Shift që të vizatoni një rreth</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Vijë (L)
+Shtypni dhe mbani të shtypur tastin Shift që të vizatoni një vijë vertikale ose horizontale</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Shigjetë (X)
+Shtypni dhe mbani të shtypur tastin Shift, që të vizatoni një shigjetë vertikale ose horizontale</translation>
+    </message>
+    <message>
+        <source>Shadow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Border</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>Tingull</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
+    <message>
+        <source>Close (Esc)</source>
+        <translation>Mbylle (Esc)</translation>
+    </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
     </message>
 </context>
 <context>

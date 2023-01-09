@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -163,9 +163,9 @@ TEST_F(WaylandIntegrationTest, init)
     arguments << QString("%1").arg(4);
     qDebug() << arguments;
 
-    stub.set((void(WaylandIntegrationPrivate::*)(QStringList))ADDR(WaylandIntegrationPrivate, initWayland), initWayland_stub);
+    stub.set(ADDR(WaylandIntegrationPrivate, initWayland), initWayland_stub);
     init(arguments);
-    stub.reset((void(WaylandIntegrationPrivate::*)(QStringList))ADDR(WaylandIntegrationPrivate, initWayland));
+    stub.reset(ADDR(WaylandIntegrationPrivate, initWayland));
 }
 
 bool isEGLInitialized_stub()

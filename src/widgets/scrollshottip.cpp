@@ -1,5 +1,5 @@
 // Copyright (C) 2019 ~ 2019 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -30,7 +30,8 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
     QPixmap warmingImg ;
     //警告图片
 //    if (Utils::themeType == 1) {
-    warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
+    QString svgName = QString("other/warming.svg");
+    warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath(svgName));
 //    } else {
 //        warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
 //    }

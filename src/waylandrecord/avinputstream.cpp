@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -81,6 +81,7 @@ bool CAVInputStream::openInputStream()
     }
     return true;
 }
+
 //开麦克风音频输入流 注：录屏时不要求录制麦克风时，则此方法默认返回false
 bool CAVInputStream::openMicStream()
 {
@@ -128,6 +129,7 @@ bool CAVInputStream::openMicStream()
         return false;
     }
 }
+
 //打开系统音频输入流 注：录屏时不要求录制系统音时，则此方法默认返回false
 bool CAVInputStream::openSysStream()
 {
@@ -138,18 +140,13 @@ bool CAVInputStream::openSysStream()
         qWarning() << "did not find this card audio input devices\n";
     }
     if (m_bSysAudio) {
-        if (m_sysDeviceName.isEmpty()) {
-            qWarning() << "Error: The system audio device name is empty!";
-            return false;
-        }
         if (avlibInterface::m_avformat_open_input(&m_pSysAudioFormatContext, m_sysDeviceName.toLatin1(), m_pAudioCardInputFormat, &device_param) != 0) {
             qWarning() << "Couldn't open input audio stream.（无法打开输入流）\n";
             return false;
         }
         qInfo() << "sys device's name is:" << m_sysDeviceName;
         if (avlibInterface::m_avformat_find_stream_info(m_pSysAudioFormatContext, nullptr) < 0) {
-            qWarning() << "Couldn't find audio stream information.（无法获取流信息";
-//            printf("Couldn't find audio stream information.（无法获取流信息）\n");
+            qWarning() << "Couldn't find audio stream information.（无法获取流信息）";
             return false;
         }
         fflush(stdout);
@@ -176,6 +173,7 @@ bool CAVInputStream::openSysStream()
         return false;
     }
 }
+
 bool CAVInputStream::audioCapture()
 {
     m_start_time = avlibInterface::m_av_gettime();
@@ -332,7 +330,7 @@ void *CAVInputStream::writeMixThreadFunc(void *param)
 
 void CAVInputStream::writMixAudio()
 {
-//    while ((bWriteMix() || m_context->m_recordAdmin->m_pOutputStream->isNotAudioFifoEmty()) && m_bMix) {
+    //    while ((bWriteMix() || m_context->m_recordAdmin->m_pOutputStream->isNotAudioFifoEmty()) && m_bMix) {
     while (bWriteMix() && m_bMix) {
         m_context->m_recordAdmin->m_pOutputStream->writeMixAudio();
     }

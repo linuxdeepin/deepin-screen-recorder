@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -27,12 +27,8 @@
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int TOOLBAR_HEIGHT = 70;
+const int TOOLBAR_HEIGHT = 68;
 const int TOOLBAR_WIDTH = 425;
-
-//const QSize TOOLBAR_WIDGET_SIZE = QSize(530, 70);
-//const int BUTTON_SPACING = 3;
-//const int BTN_RADIUS = 3;
 }
 
 ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
@@ -42,10 +38,10 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
     blurBackground()->setRadius(30);
     blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
     blurBackground()->setBlurEnabled(true);
-    blurBackground()->setBlendMode(DBlurEffectWidget::InWindowBlend);
+    blurBackground()->setBlendMode(DBlurEffectWidget::InWidgetBlend);
 
     if (Utils::themeType == 1) {
-        blurBackground()->setMaskColor(QColor(255, 255, 255, 76));
+        blurBackground()->setMaskColor(QColor(0xF7, 0xF7, 0xF7, 153));
     } else {
         blurBackground()->setMaskColor(QColor(0, 0, 0, 76));
     }
@@ -53,26 +49,24 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
     m_hSeparatorLine = new DLabel(this);
     m_hSeparatorLine->setObjectName("HorSeparatorLine");
     m_hSeparatorLine->setFixedHeight(1);
-
-    m_mainTool = new MainToolWidget(this);
     //分配pMainwindow主窗口指针给SubToolWidget（ToolTips需要该指针）
     m_subTool = new SubToolWidget(pMainwindow, this);
-    QString button_style = "DPushButton{border-radius:30px;} "
-                           "DPushButton::hover{border-image: url(:/image/newUI/hover/close-hover.svg)}";
 
-    QPixmap pixmap(":/newUI/normal/close-normal.svg");
-    //DIconButton
-    m_closeButton = new DImageButton(this);
+    //关闭按钮
+    m_closeButton = new ToolButton(this);
+    m_closeButton->setCheckable(false);
+    m_confirmButton = new ToolButton(this);
+    m_confirmButton->setCheckable(false);
+    m_closeButton->setIconSize(QSize(36, 36));
+    m_confirmButton->setIconSize(QSize(36, 36));
+    m_closeButton->setFixedSize(QSize(36, 36));
+    m_confirmButton->setFixedSize(QSize(36, 36));
+    m_closeButton->setIcon(QIcon::fromTheme("close"));
+    m_confirmButton->setIcon(QIcon::fromTheme("confirm"));
+    m_subTool->installTipHint(m_closeButton, tr("Close (Esc)"));
+    m_subTool->installTipHint(m_confirmButton, tr("OK (Enter)"));
     Utils::setAccessibility(m_closeButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_TOOL);
-
-    if (Utils::themeType == 1) {
-        m_closeButton->setHoverPic(":/newUI/hover/close-hover.svg");
-        m_closeButton->setNormalPic(":/newUI/normal/close-normal.svg");
-    } else {
-        m_closeButton->setHoverPic(":/newUI/dark/hover/close-hover_dark.svg");
-        m_closeButton->setNormalPic(":/newUI/dark/normal/close-normal_dark.svg");
-    }
-
+    Utils::setAccessibility(m_confirmButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_TOOL);
     setFixedHeight(TOOLBAR_HEIGHT);
     if (Utils::is3rdInterfaceStart) {
         m_subTool->setMinimumWidth(TOOLBAR_WIDTH - 160); //减去隐藏按钮的最小宽度和
@@ -80,60 +74,23 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
 
     QHBoxLayout *hLayout = new QHBoxLayout();
     hLayout->setMargin(0);
-    hLayout->setSpacing(2);
-
-    hLayout->addWidget(m_mainTool, 0,  Qt::AlignCenter);
+    hLayout->setSpacing(0);
     hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
+    hLayout->addSpacing(10);
     hLayout->addWidget(m_closeButton, 0,  Qt::AlignCenter);
+    hLayout->addWidget(m_confirmButton, 0,  Qt::AlignCenter);
+    hLayout->addSpacing(10);
     setLayout(hLayout);
 
-    connect(m_mainTool, &MainToolWidget::buttonChecked, this, &ToolBarWidget::setExpand);
-    connect(m_closeButton, &DImageButton::clicked, pMainwindow, &MainWindow::exitApp);
+    connect(m_confirmButton, &ToolButton::clicked, pMainwindow, &MainWindow::confirm);
+    connect(m_closeButton, &ToolButton::clicked, pMainwindow, &MainWindow::exitApp);
     connect(m_subTool, &SubToolWidget::keyBoardButtonClicked, pMainwindow, &MainWindow::changeKeyBoardShowEvent);
     connect(m_subTool, &SubToolWidget::mouseBoardButtonClicked, pMainwindow, &MainWindow::changeMouseShowEvent);
-    connect(m_subTool, &SubToolWidget::mouseShowButtonClicked, this, &ToolBarWidget::mouseShowCheckedSignalToToolBar);
-    connect(m_subTool, SIGNAL(microphoneActionChecked(bool)), pMainwindow, SIGNAL(changeMicrophoneSelectEvent(bool)));
-    connect(m_subTool, SIGNAL(systemAudioActionChecked(bool)), pMainwindow, SIGNAL(changeSystemAudioSelectEvent(bool)));
-    connect(m_subTool, SIGNAL(cameraActionChecked(bool)), pMainwindow, SLOT(changeCameraSelectEvent(bool)));
+    QMetaObject::Connection connectHandle =  connect(m_subTool, SIGNAL(cameraActionChecked(bool)), pMainwindow, SLOT(changeCameraSelectEvent(bool)));
+    if (!connectHandle) {
+        qDebug() <<__FUNCTION__ << __LINE__ <<  "Connect failed!";
+    }
     connect(m_subTool, SIGNAL(changeShotToolFunc(const QString &)), pMainwindow, SLOT(changeShotToolEvent(const QString &)));
-}
-/*
-void ToolBarWidget::paintEvent(QPaintEvent *e)
-{
-    DFloatingWidget::paintEvent(e);
-
-//    QPainter painter(this);
-//    painter.setPen(QColor(255, 255, 255, 76.5));
-//    painter.setRenderHint(QPainter::Antialiasing);
-//    painter.drawLine(QPointF(BTN_RADIUS, 0), QPointF(this->width() - 1, 0));
-}
-
-void ToolBarWidget::showEvent(QShowEvent *event)
-{
-    Q_UNUSED(event)
-
-    QSettings settings(this);
-    settings.beginGroup("common");
-    bool expand = settings.value("expand_savelist", false).toBool();
-    settings.endGroup();
-
-    if (expand)
-        QTimer::singleShot(0, this, [ = ] { setExpand(expand, "saveList"); });
-
-    DFloatingWidget::showEvent(event);
-}
-*/
-void ToolBarWidget::hideSomeToolBtn()
-{
-    m_subTool->hideSomeToolBtn();
-    m_mainTool->hide();
-}
-
-//快捷键或命令行启动滚动截图时，初始化滚动截图工具栏
-void ToolBarWidget::initScrollShotSubTool()
-{
-    m_subTool->initScrollLabel();
-    m_mainTool->hide();
 }
 
 void ToolBarWidget::setScrollShotDisabled(const bool state)
@@ -156,45 +113,23 @@ void ToolBarWidget::setButEnableOnLockScreen(const bool &state)
 {
     m_subTool->setButEnableOnLockScreen(state);
 }
-/*
-bool ToolBarWidget::isButtonChecked()
-{
-    return m_expanded;
-}
 
-void ToolBarWidget::specifiedSavePath()
+int ToolBarWidget::getFuncSubToolX(QString &func)
 {
-    m_majToolbar->specificedSavePath();
-}
-
-void ToolBarWidget::keyBoardCheckedSlot(bool checked)
-{
-    emit keyBoardCheckedSignal(checked);
-}
-*/
-void ToolBarWidget::changeArrowAndLineFromBar(int line)
-{
-    m_subTool->changeArrowAndLineFromSideBar(line);
-}
-
-void ToolBarWidget::setRecordButtonDisableFromMain()
-{
-    m_mainTool->setRecordButtonOut();
+    return m_subTool->getFuncSubToolX(func);
 }
 
 void ToolBarWidget::setRecordLaunchFromMain(const unsigned int funType)
 {
-//    qDebug() << "main record mode2";
-    m_mainTool->setRecordLauchMode(funType);
     m_subTool->setRecordLaunchMode(funType);
 
 }
-/*
-void ToolBarWidget::setIsZhaoxinPlatform(bool isZhaoxin)
+
+void ToolBarWidget::setRecordButtonDisable()
 {
-    m_subTool->setIsZhaoxinPlatform(isZhaoxin);
+    m_subTool->setRecordButtonDisable();
 }
-*/
+
 void ToolBarWidget::setVideoInitFromMain()
 {
     m_subTool->setVideoButtonInitFromSub();
@@ -205,21 +140,11 @@ void ToolBarWidget::shapeClickedFromBar(QString shape)
     m_subTool->shapeClickedFromWidget(shape);
 }
 
-void ToolBarWidget::setMicroPhoneEnable(bool status)
-{
-    m_subTool->setMicroPhoneEnable(status);
-}
-
-void ToolBarWidget::setSystemAudioEnable(bool status)
-{
-    m_subTool->setSystemAudioEnable(status);
-}
-
 void ToolBarWidget::setCameraDeviceEnable(bool status)
 {
     m_subTool->setCameraDeviceEnable(status);
 }
-
+/*
 void ToolBarWidget::setExpand(bool expand, QString shapeType)
 {
     Q_UNUSED(expand);
@@ -237,7 +162,7 @@ void ToolBarWidget::setExpand(bool expand, QString shapeType)
     emit changeFunctionSignal(shapeType);
     update();
 }
-
+*/
 ToolBarWidget::~ToolBarWidget() {}
 
 
@@ -245,14 +170,6 @@ ToolBar::ToolBar(DWidget *parent)
     : DLabel(parent)
 {
     m_toolbarWidget = nullptr;
-    m_confirmButton = nullptr;
-}
-
-void ToolBar::setExpand(bool expand, QString shapeType)
-{
-    Q_UNUSED(expand);
-    emit buttonChecked(shapeType);
-    update();
 }
 
 void ToolBar::paintEvent(QPaintEvent *e)
@@ -262,7 +179,8 @@ void ToolBar::paintEvent(QPaintEvent *e)
 
 void ToolBar::enterEvent(QEvent *e)
 {
-    qApp->setOverrideCursor(Qt::ArrowCursor);
+//    qApp->setOverrideCursor(Qt::ArrowCursor);
+    QApplication::setOverrideCursor(Qt::OpenHandCursor);
     DLabel::enterEvent(e);
 }
 
@@ -276,15 +194,43 @@ bool ToolBar::eventFilter(QObject *obj, QEvent *event)
     return DLabel::eventFilter(obj, event);
 }
 
-void ToolBar::hideSomeToolBtn()
+void ToolBar::mousePressEvent(QMouseEvent *event)
 {
-    m_toolbarWidget->hideSomeToolBtn();
+    if (event->button() == Qt::LeftButton) {
+        QApplication::setOverrideCursor(Qt::ClosedHandCursor);
+        m_isPress = true;
+        //获得鼠标的初始位置
+        m_mouseStartPoint = event->globalPos();
+        //获得窗口的初始位置
+        m_windowStartPoint = this->frameGeometry().topLeft();
+        m_pMainWindow->getSideBarStartPressPoint();
+    }
+
 }
 
-//快捷键或命令行启动滚动截图时，初始化滚动截图工具栏
-void ToolBar::initScrollShotSubTool()
+void ToolBar::mouseMoveEvent(QMouseEvent *event)
 {
-    m_toolbarWidget->initScrollShotSubTool();
+    //判断是否在拖拽移动
+    if (m_isPress) {
+        m_isDrag = true;
+        //获得鼠标移动的距离
+        QPoint move_distance = event->globalPos() - m_mouseStartPoint;
+        //改变窗口的位置
+//        this->move(m_windowStartPoint + move_distance);
+        if (m_pMainWindow) {
+            m_pMainWindow->moveToolBars(m_windowStartPoint, move_distance);
+        }
+    }
+}
+
+void ToolBar::mouseReleaseEvent(QMouseEvent *event)
+{
+    //放下左键即停止移动
+    if (event->button() == Qt::LeftButton) {
+        m_isPress = false;
+        m_isDrag = false;
+        QApplication::setOverrideCursor(Qt::OpenHandCursor);
+    }
 }
 
 void ToolBar::setScrollShotDisabled(const bool state)
@@ -307,6 +253,21 @@ void ToolBar::setButEnableOnLockScreen(const bool &state)
     m_toolbarWidget->setButEnableOnLockScreen(state);
 }
 
+int ToolBar::getFuncSubToolX(QString &func)
+{
+    return m_toolbarWidget->getFuncSubToolX(func);
+}
+
+bool ToolBar::isDraged()
+{
+    return m_isDrag;
+}
+
+bool ToolBar::isPressed()
+{
+    return m_isPress;
+}
+
 void ToolBar::showAt(QPoint pos)
 {
     if (!isVisible())
@@ -317,72 +278,15 @@ void ToolBar::showAt(QPoint pos)
 void ToolBar::currentFunctionMode(QString shapeType)
 {
     DPalette pa;
-    pa = m_confirmButton->palette();
-    if (shapeType == "shot") {
-        pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-        pa.setColor(DPalette::Dark, QColor(0, 129, 255, 204));
-        pa.setColor(DPalette::Light, QColor(0, 129, 255, 204));
-        m_confirmButton->setPalette(pa);
-        m_confirmButton->setStyleSheet("border-radius:18px;padding:2px 4px;background-color: rgba(0, 129, 255,204);");
-        m_confirmButton->setIcon(QIcon(":/newUI/checked/screenshot-checked.svg"));
-        Utils::setAccessibility(m_confirmButton, AC_MAINWINDOW_MAINSHOTBTN);
-        m_confirmButton->setProperty("isShotState", true);
-
-    } else if (shapeType == "record") {
-        pa = m_confirmButton->palette();
-        pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-        pa.setColor(DPalette::Dark, QColor(229, 70, 61, 204));
-        pa.setColor(DPalette::Light, QColor(229, 70, 61, 204));
-        m_confirmButton->setStyleSheet("border-radius:18px;padding:2px 4px;background-color: rgba(229, 70, 61, 204);");
-        m_confirmButton->setPalette(pa);
-        m_confirmButton->setIcon(QIcon(":/newUI/checked/screencap-checked.svg"));
-        Utils::setAccessibility(m_confirmButton, AC_MAINWINDOW_MAINRECORDBTN);
-        m_confirmButton->setProperty("isShotState", false);
-
-    }
     update();
     emit currentFunctionToMain(shapeType);
 }
 
-void ToolBar::changeArrowAndLineFromMain(int line)
-{
-    m_toolbarWidget->changeArrowAndLineFromBar(line);
-}
-
 void ToolBar::initToolBar(MainWindow *pmainWindow)
 {
-//    setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+    m_pMainWindow = pmainWindow;
     setFixedHeight(TOOLBAR_HEIGHT);
     m_toolbarWidget = new ToolBarWidget(pmainWindow, this);
-
-    //构建截屏录屏功能触发
-    m_confirmButton = new DPushButton(this);
-    m_confirmButton->setFocusPolicy(Qt::NoFocus);
-    m_confirmButton->setIconSize(QSize(38, 38));
-    m_confirmButton->setFixedSize(76, 58);
-    m_confirmButton->setStyleSheet("border-radius:18px;padding:2px 4px;background-color: rgba(0, 129, 255,204);");
-
-    DPalette pa;
-    pa = m_confirmButton->palette();
-    pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
-    pa.setColor(DPalette::Dark, QColor(0, 129, 255, 204));
-    pa.setColor(DPalette::Light, QColor(0, 129, 255, 204));
-    m_confirmButton->setPalette(pa);
-    m_confirmButton->setIcon(QIcon(":/newUI/checked/screenshot-checked.svg"));
-    Utils::setAccessibility(m_confirmButton, AC_MAINWINDOW_MAINSHOTBTN);
-    m_confirmButton->setProperty("isShotState", true);
-
-    connect(m_confirmButton, &DPushButton::clicked, this, [ = ] {
-        if (m_confirmButton->property("isShotState").toBool())
-        {
-            pmainWindow->saveScreenShot();
-        } else
-        {
-            pmainWindow->startCountdown();
-        }
-    });
-
-
 
     QHBoxLayout *vLayout = new QHBoxLayout();
     vLayout->setSizeConstraint(QLayout::SetFixedSize);
@@ -390,28 +294,20 @@ void ToolBar::initToolBar(MainWindow *pmainWindow)
     vLayout->addStretch();
     vLayout->addWidget(m_toolbarWidget);
     vLayout->addStretch();
-    vLayout->addWidget(m_confirmButton);
     setLayout(vLayout);
     update();
 
-    connect(m_toolbarWidget, &ToolBarWidget::expandChanged, this, &ToolBar::setExpand);
     connect(m_toolbarWidget, &ToolBarWidget::changeFunctionSignal, this, &ToolBar::currentFunctionMode);
-    connect(m_toolbarWidget, &ToolBarWidget::mouseShowCheckedSignalToToolBar, this, &ToolBar::mouseShowCheckedToMain);
-
 }
 
 void ToolBar::setRecordButtonDisable()
 {
-    m_toolbarWidget->setRecordButtonDisableFromMain();
+    m_toolbarWidget->setRecordButtonDisable();
 }
 
 void ToolBar::setRecordLaunchMode(const unsigned int funType)
 {
     m_toolbarWidget->setRecordLaunchFromMain(funType);
-    if (funType == MainWindow::scrollshot) {
-        //hideSomeToolBtn();
-        initScrollShotSubTool();
-    }
 }
 
 void ToolBar::setVideoButtonInit()
@@ -429,15 +325,6 @@ void ToolBar::shapeClickedFromMain(QString shape)
     }
 }
 
-void ToolBar::setMicroPhoneEnable(bool status)
-{
-    m_toolbarWidget->setMicroPhoneEnable(status);
-}
-
-void ToolBar::setSystemAudioEnable(bool status)
-{
-    m_toolbarWidget->setSystemAudioEnable(status);
-}
 
 void ToolBar::setCameraDeviceEnable(bool status)
 {

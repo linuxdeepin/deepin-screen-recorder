@@ -1,5 +1,5 @@
 // Copyright © 2018 Red Hat, Inc
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -18,24 +18,20 @@
 #include <QImage>
 #include <QtConcurrent>
 // KWayland
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/event_queue.h>
-#include <KWayland/Client/registry.h>
-#include <KWayland/Client/output.h>
-#include <KWayland/Client/remote_access.h>
-#include <KWayland/Client/outputdevice.h>
+#include <DWayland/Client/connection_thread.h>
+#include <DWayland/Client/event_queue.h>
+#include <DWayland/Client/registry.h>
+#include <DWayland/Client/output.h>
+#include <DWayland/Client/remote_access.h>
+#include <DWayland/Client/fakeinput.h>
+#include <DWayland/Client/outputdevice_v2.h>
 
 // system
 #include <fcntl.h>
 #include <unistd.h>
 
-
-//=============
-
 #include <KLocalizedString>
 
-// KWayland
-#include <KWayland/Client/fakeinput.h>
 
 // system
 #include <sys/mman.h>
@@ -184,8 +180,8 @@ WaylandIntegration::WaylandIntegrationPrivate::WaylandIntegrationPrivate()
     //m_writeFrameThread = nullptr;
     m_bInitRecordAdmin = true;
     m_bGetFrame = true;
-    m_screenCount = 1;
     //m_recordTIme = -1;
+    m_screenCount = 1;
 }
 
 WaylandIntegration::WaylandIntegrationPrivate::~WaylandIntegrationPrivate()
@@ -210,6 +206,7 @@ WaylandIntegration::WaylandIntegrationPrivate::~WaylandIntegrationPrivate()
         m_recordAdmin = nullptr;
     }
 }
+
 
 bool WaylandIntegration::WaylandIntegrationPrivate::isEGLInitialized() const
 {
@@ -264,6 +261,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list
     //初始化wayland服务链接
     initConnectWayland();
 }
+
 void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list, GstRecordX *gstRecord)
 {
     //通过wayland底层接口获取图片的方式不相同，需要获取电脑的厂商，hw的需要特殊处理
@@ -280,28 +278,23 @@ void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list
     //初始化wayland服务链接
     initConnectWayland();
 }
+
 void WaylandIntegration::WaylandIntegrationPrivate::initConnectWayland()
 {
-    qDebug() << "正在初始化wayland服务链接... ";
     //设置获取视频帧
     setBGetFrame(true);
 
     m_thread = new QThread(this);
     m_connection = new KWayland::Client::ConnectionThread;
-
     connect(m_connection, &KWayland::Client::ConnectionThread::connected, this, &WaylandIntegrationPrivate::setupRegistry, Qt::QueuedConnection);
     connect(m_connection, &KWayland::Client::ConnectionThread::connectionDied, this, [this] {
-        qDebug() << "wayland服务链接失败";
-
         if (m_queue)
         {
             delete m_queue;
             m_queue = nullptr;
         }
-
         m_connection->deleteLater();
         m_connection = nullptr;
-
         if (m_thread)
         {
             m_thread->quit();
@@ -314,15 +307,14 @@ void WaylandIntegration::WaylandIntegrationPrivate::initConnectWayland()
         }
     });
     connect(m_connection, &KWayland::Client::ConnectionThread::failed, this, [this] {
-        qDebug() << "wayland服务链接失败";
         m_thread->quit();
         m_thread->wait();
     });
-
     m_thread->start();
     m_connection->moveToThread(m_thread);
     m_connection->initConnection();
 }
+
 int WaylandIntegration::WaylandIntegrationPrivate::getBoardVendorType()
 {
     QFile file("/sys/class/dmi/id/board_vendor");
@@ -367,15 +359,12 @@ int WaylandIntegration::WaylandIntegrationPrivate::getProductType()
         return 1;
     return 0;
 }
-
 void WaylandIntegration::WaylandIntegrationPrivate::addOutput(quint32 name, quint32 version)
 {
-    qDebug() << "正在安装wayland输出...";
     KWayland::Client::Output *output = new KWayland::Client::Output(this);
     output->setup(m_registry->bindOutput(name, version));
 
     connect(output, &KWayland::Client::Output::changed, this, [this, name, version, output]() {
-        qDebug() << "wayland输出改变";
         qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Adding output:";
         qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "    manufacturer: " << output->manufacturer();
         qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "    model: " << output->model();
@@ -401,26 +390,21 @@ void WaylandIntegration::WaylandIntegrationPrivate::addOutput(quint32 name, quin
 
         //        delete output;
     });
-    qDebug() << "wayland输出已安装";
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::removeOutput(quint32 name)
 {
-    qDebug() << "正在移除wayland输出...";
     WaylandOutput output = m_outputMap.take(name);
     qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Removing output:";
     qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "    manufacturer: " << output.manufacturer();
     qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "    model: " << output.model();
-    qDebug() << "wayland输出已移除";
-
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::onDeviceChanged(quint32 name, quint32 version)
 {
-    qDebug() << "正在创建设备...";
-    KWayland::Client::OutputDevice *devT = m_registry->createOutputDevice(name, version);
+    KWayland::Client::OutputDeviceV2 *devT = m_registry->createOutputDeviceV2(name, version);
     if (devT && devT->isValid()) {
-        connect(devT, &KWayland::Client::OutputDevice::changed, this, [ = ]() {
+        connect(devT, &KWayland::Client::OutputDeviceV2::changed, this, [ = ]() {
             qDebug() << devT->uuid() << devT->geometry();
             // 保存屏幕id和对应位置大小
             m_screenId2Point.insert(devT->uuid(), devT->geometry());
@@ -440,8 +424,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::onDeviceChanged(quint32 name
             qDebug() << "屏幕大小:" << m_screenSize;
         });
     }
-    qDebug() << "设备已创建";
-
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect)
@@ -476,18 +458,17 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     if (MAP_FAILED == mapData) {
         qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "dma fd " << dma_fd << " mmap failed - ";
     }
-    //QString pngName = "/home/uos/Desktop/test/"+QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ") + QString("%1_").arg(rect.x()));
-    //QImage(mapData, width, height, QImage::Format_RGB32).copy().save(pngName + ".png");
+//appendBuffer(mapData, static_cast<int>(width), static_cast<int>(height), static_cast<int>(stride), avlibInterface::m_av_gettime() - frameStartTime);
     if (m_screenCount == 1) {
-        //单屏
         m_curNewImage.first = 0;//avlibInterface::m_av_gettime() - frameStartTime;
         {
             QMutexLocker locker(&m_bGetScreenImageMutex);
             m_curNewImage.second = QImage(mapData, width, height, QImage::Format_RGBA8888).copy();
         }
     } else {
-        //多屏
-        m_ScreenDateBuf.append(QPair<QRect, QImage>(rect, QImage(mapData, width, height, getImageFormat(rbuf->format())).copy()));
+        //QString pngName = QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ") + QString("%1_").arg(rect.x()));
+        //QImage(mapData, width, height, QImage::Format_RGBA8888).copy().save(pngName + ".png");
+        m_ScreenDateBuf.append(QPair<QRect, QImage>(rect, QImage(mapData, width, height, QImage::Format_RGBA8888).copy()));
         if (m_ScreenDateBuf.size() ==  m_screenCount) {
             QMutexLocker locker(&m_bGetScreenImageMutex);
             m_curNewImageScreen.clear();
@@ -499,40 +480,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     }
     munmap(mapData, stride * height);
     close(dma_fd);
-}
-
-//根据wayland客户端bufferReady给过来的像素格式，转成QImage的格式
-QImage::Format WaylandIntegration::WaylandIntegrationPrivate::getImageFormat(quint32 format)
-{
-    switch(format){
-    case GBM_FORMAT_XRGB8888: //GBM_FORMAT_XRGB8888 = 875713112
-        qDebug() << "fd 图片格式: XRGB"<< GBM_FORMAT_XRGB8888 << " -> " << "QImage::Format_RGB32";
-        return QImage::Format_RGB32;
-    case GBM_FORMAT_XBGR8888: //GBM_FORMAT_XBGR8888 = 875709016
-        qDebug() << "fd 图片格式: XBGR"<< GBM_FORMAT_XBGR8888 << " -> " << "QImage::Format_RGB32";
-        return QImage::Format_RGB32;
-    case GBM_FORMAT_RGBX8888: //GBM_FORMAT_RGBX8888 = 875714642
-        qDebug() << "fd 图片格式: RGBX" << GBM_FORMAT_RGBX8888 << " -> " << "QImage::Format_RGBX8888";
-        return QImage::Format_RGBX8888;
-    case GBM_FORMAT_BGRX8888: //GBM_FORMAT_BGRX8888 = 875714626
-        qDebug() << "fd 图片格式: BGRX" << GBM_FORMAT_BGRX8888 << " -> " << "QImage::Format_BGR30";
-        return QImage::Format_BGR30;
-    case GBM_FORMAT_ARGB8888: //GBM_FORMAT_ARGB8888 = 875713089
-        qDebug() << "fd 图片格式: ARGB"<< GBM_FORMAT_ARGB8888 << " -> " << "QImage::Format_ARGB32";
-        return QImage::Format_ARGB32;
-    case GBM_FORMAT_ABGR8888: //GBM_FORMAT_ABGR8888 = 875708993
-        qDebug() << "fd 图片格式: ABGR"<< GBM_FORMAT_ABGR8888 << " -> " << "QImage::Format_ARGB32";
-        return QImage::Format_ARGB32;
-    case GBM_FORMAT_RGBA8888: //GBM_FORMAT_RGBA8888 = 875708754
-        qDebug() << "fd 图片格式: RGBA"<< GBM_FORMAT_RGBA8888 << " -> " << "QImage::Format_RGBA8888";
-        return QImage::Format_RGBA8888;
-    case GBM_FORMAT_BGRA8888: //GBM_FORMAT_BGRA8888 = 875708738
-        qDebug() << "fd 图片格式: BGRA"<< GBM_FORMAT_BGRA8888 << " -> " << "QImage::Format_BGR30";
-        return QImage::Format_BGR30;
-    default:
-        qDebug() << "fd 图片格式未知: "<<format << " -> " << "QImage::Format_RGB32";
-        return QImage::Format_RGB32;
-    }
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect)
@@ -583,12 +530,11 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
 //通过线程每30ms钟向数据池中取出一张图片添加到环形缓冲区，以便后续视频编码
 void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
 {
-    int64_t delayTime = 1000 / m_fps  + 1;
-    //qDebug() << "delayTime: " << delayTime;
+    int64_t delayTime = 1000 / m_fps + 1;
 #ifdef __mips__
     //delayTime = 150;
 #endif
-    //qDebug() << "QDateTime::currentMSecsSinceEpoch(): " << QDateTime::currentMSecsSinceEpoch() << " , avlibInterface::m_av_gettime(): " << avlibInterface::m_av_gettime();
+
     while (m_appendFrameToListFlag) {
         if (m_screenCount == 1) {
             QImage tempImage;
@@ -597,7 +543,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
                 tempImage = m_curNewImage.second.copy();
             }
             if (!tempImage.isNull()) {
-                //qDebug() << "用来编码的帧索引glovbalImageCount: " << globalImageCount;
                 int64_t temptime = 0;
                 if (Utils::isFFmpegEnv) {
                     temptime = avlibInterface::m_av_gettime();
@@ -607,7 +552,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
 
                 }
                 appendBuffer(tempImage.bits(), static_cast<int>(tempImage.width()), static_cast<int>(tempImage.height()),
-                             static_cast<int>(tempImage.width() * 4), temptime/*- frameStartTime*/);
+                             static_cast<int>(tempImage.width() * 4), temptime);
+
             }
             QThread::msleep(static_cast<unsigned long>(delayTime));
         } else {
@@ -642,11 +588,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
                 }
             }
             QImage img(m_screenSize, QImage::Format_RGBA8888);
-            if(m_boardVendorType){
-                 //qDebug() << "1 img.format: " << img.format();
-                 img = img.convertToFormat(QImage::Format_RGB32);
-                 //qDebug() << "2 img.format: " << img.format();
-            }
             img.fill(Qt::GlobalColor::black);
             QPainter painter(&img);
             for (auto itr = tempImageVec.begin(); itr != tempImageVec.end(); ++itr) {
@@ -664,13 +605,14 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
                 t = (QDateTime::currentMSecsSinceEpoch() - curFramTime) / 1000;
 
             }
-            //qDebug() << delayTime - t;
+            qDebug() << delayTime - t;
             if (t < delayTime) {
                 QThread::msleep(static_cast<unsigned long>(delayTime - t));
             }
         }
     }
 }
+
 //通过线程循环向gstreamer管道写入视频帧数据
 void WaylandIntegration::WaylandIntegrationPrivate::gstWriteVideoFrame()
 {
@@ -693,6 +635,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::gstWriteVideoFrame()
         qWarning() << "m_gstRecordX is nullptr!";
     }
 }
+
 QImage WaylandIntegration::WaylandIntegrationPrivate::getImage(int32_t fd, uint32_t width, uint32_t height, uint32_t stride, uint32_t format)
 {
     QImage tempImage;
@@ -743,8 +686,6 @@ QImage WaylandIntegration::WaylandIntegrationPrivate::getImage(int32_t fd, uint3
 }
 void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 {
-    qDebug() << "初始化wayland服务链接已完成";
-    qDebug() << "正在安装注册wayland服务...";
     initEgl();
     m_queue = new KWayland::Client::EventQueue(this);
     m_queue->setup(m_connection);
@@ -753,7 +694,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 
     connect(m_registry, &KWayland::Client::Registry::outputAnnounced, this, &WaylandIntegrationPrivate::addOutput);
     connect(m_registry, &KWayland::Client::Registry::outputRemoved, this, &WaylandIntegrationPrivate::removeOutput);
-    connect(m_registry, &KWayland::Client::Registry::outputDeviceAnnounced, this, &WaylandIntegrationPrivate::onDeviceChanged);
+    connect(m_registry, &KWayland::Client::Registry::outputDeviceV2Announced, this, &WaylandIntegrationPrivate::onDeviceChanged);
     connect(m_registry, &KWayland::Client::Registry::interfacesAnnounced, this, [this] {
         m_registryInitialized = true;
         //qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Registry initialized";
@@ -764,28 +705,18 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
     [this](quint32 name, quint32 version) {
         Q_UNUSED(name);
         Q_UNUSED(version);
-        qDebug() << "正在创建wayland远程管理...";
         m_remoteAccessManager = m_registry->createRemoteAccessManager(m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).name, m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).version);
-        qDebug() << "wayland远程管理已创建";
         connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
-            qDebug() << "正在接收buffer...";
             QRect screenGeometry = (KWayland::Client::Output::get(reinterpret_cast<wl_output *>(const_cast<void *>(output))))->geometry();
-            qDebug() << "screenGeometry: " << screenGeometry;
-            qDebug() << "rbuf->isValid(): " << rbuf->isValid();
             connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf, screenGeometry] {
-                qDebug() << "正在处理buffer...";
                 if (m_boardVendorType)
                 {
-                    //arm hw
                     processBuffer(rbuf, screenGeometry);
                 } else
                 {
-                    //other
                     processBufferX86(rbuf, screenGeometry);
                 }
-                qDebug() << "buffer已处理";
             });
-            qDebug() << "buffer已接收";
         });
     }
            );
@@ -793,12 +724,9 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
     m_registry->create(m_connection);
     m_registry->setEventQueue(m_queue);
     m_registry->setup();
-    qDebug() << "安装注册wayland服务已完成";
 }
 void WaylandIntegration::WaylandIntegrationPrivate::initEgl()
 {
-    qDebug() << "正在初始化EGL";
-
     static const EGLint context_attribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2,
                                              EGL_NONE
                                             };
@@ -837,8 +765,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::initEgl()
     assert(m_eglstruct.ctx);
 
     printf("egl init success!\n");
-    qDebug() << "EGL已初始化";
-
 }
 void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *frame, int width, int height, int stride, int64_t time)
 {
@@ -896,7 +822,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
             m_freeList.removeFirst();
         }
     }
-    //qDebug() << "存视频帧 m_waylandList.size(): " << m_waylandList.size() << " , m_freeList.size(): " << m_freeList.size();
 }
 
 int WaylandIntegration::WaylandIntegrationPrivate::frameIndex = 0;
@@ -927,7 +852,6 @@ bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &frame
         //回收空闲内存，重复使用
         m_freeList.append(wFrame._frame);
         //qDebug() << "获取视频帧";
-        //qDebug() << "获取视频帧 m_waylandList.size(): " << m_waylandList.size() << " , m_freeList.size(): " << m_freeList.size();
         return true;
     }
 }

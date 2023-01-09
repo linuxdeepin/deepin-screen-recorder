@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -283,4 +283,8 @@ FourPoints point8ResizeMicro(FourPoints fourPoints,  bool isBig);
 /***********************  special process   ***************************/
 bool pointInRect(FourPoints fourPoints, QPointF pos);
 FourPoints getMainPoints(QPointF point1, QPointF point2, bool isShift = false);
+
+
+QList<QPointF> getInterpolationPoints(QPointF point1, QPointF point2, double dis);
+FourPoints getRectPoints(QPointF point1, QPointF point2, double dis);
 #endif // CALCULATERECT_H

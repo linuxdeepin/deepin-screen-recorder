@@ -347,7 +347,8 @@ int init_xu_ctrls(v4l2_dev_t *vd)
 		{
 			if ((errno!=EEXIST) || (errno != EACCES))
 			{
-				fprintf(stderr, "V4L2_CORE: (UVCIOC_CTRL_MAP) Error: %s\n", strerror(errno));
+                if(verbosity > 0)
+                    fprintf(stderr, "V4L2_CORE: (UVCIOC_CTRL_MAP) Error: %s\n", strerror(errno));
 			}
 			else if (errno == EACCES)
 			{

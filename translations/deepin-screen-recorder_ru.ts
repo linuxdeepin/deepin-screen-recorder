@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ru">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ru">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recording</source>
         <translation>Запись</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Запись</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Скриншот</translation>
     </message>
 </context>
 <context>
@@ -105,12 +96,12 @@ or press the shortcut again to stop recording</source>
         <translation>Скриншот с прокруткой</translation>
     </message>
     <message>
-        <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <source>Open Folder</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -132,7 +123,7 @@ or press the shortcut again to stop recording</source>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -155,7 +146,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -173,7 +164,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
@@ -189,7 +180,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
@@ -318,12 +309,8 @@ or press the shortcut again to stop recording</source>
         <translation>Показать комбинации клавиш</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Звук</translation>
-    </message>
-    <message>
         <source>Keystroke</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Webcam</source>
@@ -342,10 +329,6 @@ or press the shortcut again to stop recording</source>
         <translation>Старт/Запись</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Мышь</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>Инструменты</translation>
     </message>
@@ -359,15 +342,27 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arrow</source>
+        <translation>Стрелка</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>Звук</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Мышь</translation>
     </message>
 </context>
 <context>
@@ -384,51 +379,38 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Размытие</translation>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Mosaic</source>
-        <translation>Мозаика</translation>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Sound On</source>
-        <translation>Звук Включен</translation>
-    </message>
-    <message>
         <source>Microphone</source>
         <translation>Микрофон</translation>
-    </message>
-    <message>
-        <source>System Audio</source>
-        <translation>Аудиосистема</translation>
-    </message>
-    <message>
-        <source>Sound Off</source>
-        <translation>Звук Выключен</translation>
-    </message>
-    <message>
-        <source>Show Keystroke</source>
-        <translation>Показать Нажатие Клавиши</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke</source>
-        <translation>Скрыть нажатие клавиши.</translation>
-    </message>
-    <message>
-        <source>Webcam On</source>
-        <translation>Веб-камера включена</translation>
-    </message>
-    <message>
-        <source>Webcam Off</source>
-        <translation>Веб-камера выключена</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>Показывать щелчки мыши в процессе записи</translation>
     </message>
     <message>
         <source>Options</source>
@@ -469,30 +451,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>30 fps</source>
         <translation>30 fps</translation>
-    </message>
-    <message>
-        <source>Rectangle</source>
-        <translation>Прямоугольник</translation>
-    </message>
-    <message>
-        <source>Ellipse</source>
-        <translation>Эллипс</translation>
-    </message>
-    <message>
-        <source>Line</source>
-        <translation>Линия</translation>
-    </message>
-    <message>
-        <source>Arrow</source>
-        <translation>Стрелка</translation>
-    </message>
-    <message>
-        <source>Pencil</source>
-        <translation>Карандаш</translation>
-    </message>
-    <message>
-        <source>Text</source>
-        <translation>Текст</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -539,36 +497,143 @@ or press the shortcut again to stop recording</source>
         <translation>Показать указатель</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Мышь</translation>
-    </message>
-    <message>
-        <source>Show Pointer</source>
-        <translation>Показать Указатель</translation>
-    </message>
-    <message>
         <source>Extract Text</source>
         <translation>Извлечь Текст</translation>
     </message>
     <message>
-        <source>Scrollshot</source>
-        <translation>Скриншот с прокруткой</translation>
+        <source>Show keystroke (K)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <source>Settings</source>
+        <translation>Настройки</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Настройки (F3)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Размытие (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Текст (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Скриншот с прокруткой (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Извлечь текст (Alt+O）</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Отмена (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Скриншот</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Запись</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Карандаш (P)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Включить камеру (C)</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Эффект краев</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Нет</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Выключить камеру (C)</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>ogg</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shadow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Border</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation type="unfinished">Звук</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
+    <message>
+        <source>Close (Esc)</source>
+        <translation>Закрыть (Esc)</translation>
+    </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>ОК (Enter)</translation>
     </message>
 </context>
 <context>

@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -17,11 +17,11 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
 {
     Q_UNUSED(parent);
     qRegisterMetaType<PixMergeThread::MergeErrorValue>("MergeErrorValue");
-    if (Utils::isWaylandMode) {
-#ifdef KF5_WAYLAND_FLAGE_ON
-    m_WaylandScrollMonitor = new WaylandScrollMonitor(this); // 初始化wayland模拟滚动
-#endif
-}
+//    if (Utils::isWaylandMode) {
+//#ifdef KF5_WAYLAND_FLAGE_ON
+//    m_WaylandScrollMonitor = new WaylandMouseSimulator(this); // 初始化wayland模拟滚动
+//#endif
+//}
     m_mouseWheelTimer = new QTimer(this);
     connect(m_mouseWheelTimer, &QTimer::timeout, this, [ = ] {
         if (!Utils::isWaylandMode)
@@ -32,9 +32,10 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
             XFlush(m_display);
             XTestFakeButtonEvent(m_display, Button5, 0, CurrentTime);
             XFlush(m_display);
-        } else {
+        } else
+        {
 #ifdef KF5_WAYLAND_FLAGE_ON
-            m_WaylandScrollMonitor->doWaylandAutoScroll(); //waland滚动
+            WaylandMouseSimulator::instance()->doWaylandAutoScroll(); //waland滚动
 #endif
         }
 
@@ -55,7 +56,7 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
     connect(m_PixMerageThread, SIGNAL(merageError(PixMergeThread::MergeErrorValue)), this, SLOT(merageImgState(PixMergeThread::MergeErrorValue)));
     connect(m_PixMerageThread, &PixMergeThread::invalidAreaError, this, &ScrollScreenshot::merageInvalidArea);
 #ifdef KF5_WAYLAND_FLAGE_ON
-    connect(this, &ScrollScreenshot::sigalWheelScrolling, m_WaylandScrollMonitor, &WaylandScrollMonitor::slotManualScroll);
+    connect(this, &ScrollScreenshot::sigalWheelScrolling, WaylandMouseSimulator::instance(), &WaylandMouseSimulator::slotManualScroll);
 #endif
 }
 

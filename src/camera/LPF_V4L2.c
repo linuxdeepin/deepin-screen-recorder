@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -30,6 +30,7 @@ int camInit(const char *devicename)
     config_update(my_options);
     /*获取配置项数据*/
     config_t *my_config = config_get();
+    //v4l2的调试级别 0最低
      my_options->verbosity = 0;
     debug_level = my_options->verbosity;
     if (debug_level > 1)
@@ -115,7 +116,6 @@ int camUnInit()
 
     if (vd)
         close_v4l2_device_handler();
-
     return 0;
 }
 

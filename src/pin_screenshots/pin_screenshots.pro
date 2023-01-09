@@ -22,9 +22,11 @@ SOURCES += \
     service/ocrinterface.cpp \
     ui/menucontroller.cpp \
     ui/toolbarwidget.cpp \
-    ui/toolbar.cpp \
+#    ui/toolbar.cpp \
     ui/subtoolwidget.cpp \
-    putils.cpp
+    utils.cpp \
+    ui/mainToolWidget.cpp \
+    settings.cpp
 
 HEADERS += \
     service/dbuspinscreenshotsadaptor.h \
@@ -34,10 +36,14 @@ HEADERS += \
     service/ocrinterface.h \
     ui/menucontroller.h \
     ui/toolbarwidget.h \
-    ui/toolbar.h \
+#    ui/toolbar.h \
     ui/subtoolwidget.h \
-    putils.h
+    ui/toolbutton.h \
+    utils.h \
+    ui/mainToolWidget.h \
+    settings.h
 
+QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations
 ##安装路径
 target.path=/usr/bin
@@ -50,6 +56,10 @@ include(accessibility/accessible.pri)
 #安装
 INSTALLS += target dbus_service
 
+#RESOURCES += \
+#    ../../assets/icons/pin_icons.qrc\
+#    ../../assets/image/pin_screenshots.qrc
+
 RESOURCES += \
-    ../../assets/icons/pin_icons.qrc\
-    ../../assets/image/pin_screenshots.qrc
+    ./icons/icons.qrc
+

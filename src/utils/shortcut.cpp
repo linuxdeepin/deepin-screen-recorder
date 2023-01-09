@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -39,6 +39,7 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
                           << ShortcutItem(tr("Rectangle"), "R")
                           << ShortcutItem(tr("Ellipse"), "O")
                           << ShortcutItem(tr("Line"), "L")
+                          << ShortcutItem(tr("Arrow"), "X")
                           << ShortcutItem(tr("Pencil"), "P")
                           << ShortcutItem(tr("Text"), "T");
 #ifdef OCR_SCROLL_FLAGE_ON
@@ -51,7 +52,7 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
     recordGroup.groupItems << ShortcutItem(tr("Start recording"), getSysShortcuts("deepin-screen-recorder"))
                            << ShortcutItem(tr("Sound"), "S")
                            << ShortcutItem(tr("Keystroke"), "K")
-                           << ShortcutItem(tr("Webcam"), "W")
+                           << ShortcutItem(tr("Webcam"), "C")
                            << ShortcutItem(tr("Mouse"), "M")
                            << ShortcutItem(tr("Options"), "F3")
                            << ShortcutItem(" ", " ");
@@ -94,7 +95,7 @@ QString Shortcut::toStr()
 }
 QString Shortcut::getSysShortcuts(const QString type)
 {
-    QDBusInterface shortcuts("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding", "com.deepin.daemon.Keybinding");
+    QDBusInterface shortcuts("org.deepin.dde.Keybinding1", "/org/deepin/dde/Keybinding1", "org.deepin.dde.Keybinding1");
     if (!shortcuts.isValid()) {
         return getDefaultValue(type);
     }

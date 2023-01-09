@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -42,7 +42,7 @@ public:
 
 
 signals:
-    void reloadEffectImg(QString effect);
+    void reloadEffectImg(QString effect, int radius);
     void requestScreenshot();
     void shapePressed(QString shape);
     void saveBtnPressed(SaveAction action);
@@ -146,6 +146,10 @@ public slots:
 
     void undoDrawShapes();
     void undoAllDrawShapes();
+    /**
+     * @brief isInUndoBtn 光标是否在撤销按钮内？在离开撤销按钮之后，再更新光标样式
+     */
+    void isInUndoBtn(bool isUndo);
     void deleteCurrentShape();
     //QString  getCurrentType();
     void microAdjust(QString direction);
@@ -155,6 +159,7 @@ public slots:
     void menuCloseSlot();
     //void updateSideBarPosition();
     void setGlobalRect(QRect rect);
+
     /**
      * @brief paintImage: 绘制图片
      * 将编辑的内容绘制到图片上
@@ -165,7 +170,6 @@ public slots:
      * @return
      */
     bool isExistsText();
-
 protected:
     bool event(QEvent *event);
     /**
@@ -175,13 +179,19 @@ protected:
     void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
+    /**
+     * @brief 可通过w/a/s/d及方向键改变标注内容位置及大小
+     * @param e
+     */
+    void keyPressEvent(QKeyEvent *e);
     void paintEvent(QPaintEvent *);
-    void enterEvent(QEvent *e);
     /**
      * @brief handlePaint:执行绘制操作
      * @param painter:画笔
      */
     void handlePaint(QPainter &painter);
+    void enterEvent(QEvent *e);
+
     /**
      * @brief clickeShapes:只是用来判断是否选中图形,不是真实鼠标事件会触发（触摸屏）
      * @param pos:坐标
@@ -237,8 +247,8 @@ private:
     int m_currentIndex;
     int m_hoveredIndex;
     int m_selectedOrder;
-    bool m_blurEffectExist = false;
-    bool m_mosaicEffectExist = false;
+    //bool m_blurEffectExist = false;
+    //bool m_mosaicEffectExist = false;
     /**
         * @brief m_lastEditMapKey 记录最后一个textedit在Map中的key值
         */
@@ -262,34 +272,42 @@ private:
      * @brief m_currentShape:当前正在绘制的图形
      */
     Toolshape m_currentShape;
+    /**
+     * @brief m_selectedShape:当前选中的图形
+     */
     Toolshape m_selectedShape;
+    /**
+     * @brief m_hoveredShape:当前悬停的图形
+     */
     Toolshape m_hoveredShape;
 
     QMap<int, TextEdit *> m_editMap;
-    void updateTextRect(TextEdit *edit, QRectF newRect, QString text, int fontsize);
+    void updateTextRect(TextEdit *edit, QRectF newRect);
+    /**
+     * @brief m_shapes:所有形状
+     */
     Toolshapes m_shapes;
     MenuController *m_menuController;
     //SideBar *m_sideBar;
 
     QRect m_globalRect;
+    /**
+     * @brief 当前光标的位置
+     */
+    QPoint m_currentCursor;
 
     void paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bool isResize = true);
     //void paintImgPointArrow(QPainter &painter, QPointF pos, QPixmap img);
     void paintRect(QPainter &painter, FourPoints rectFPoints, int index,
-                   ShapeBlurStatus  rectStatus = Normal, bool isBlur = false, bool isMosaic = false);
+                   ShapeBlurStatus  rectStatus = Normal, bool isBlur = false, bool isMosaic = false, int radius = 10);
     void paintEllipse(QPainter &painter, FourPoints ellipseFPoints, int index,
-                      ShapeBlurStatus  ovalStatus = Normal, bool isBlur = false, bool isMosaic = false);
+                      ShapeBlurStatus  ovalStatus = Normal, bool isBlur = false, bool isMosaic = false, int radius = 10);
     void paintArrow(QPainter &painter, QList<QPointF> lineFPoints,
                     int lineWidth, bool isStraight = false);
     void paintLine(QPainter &painter, QList<QPointF> lineFPoints);
+    void paintEffectLine(QPainter &painter, QList<QPointF> lineFPoints, bool isMosaic, int radius, int lineWidth);
     void paintText(QPainter &painter, FourPoints rectFPoints);
-    /**
-     * @brief paintText 绘制文字工具的具体文字内容
-     * @param painter
-     * @param rectFPoints
-     * @param text
-     * @param fontsize
-     */
-    void paintText(QPainter &painter, FourPoints rectFPoints, QString text, int fontsize);
+
+    bool m_isUnDo = false;
 };
 #endif // SHAPESWIDGET_H

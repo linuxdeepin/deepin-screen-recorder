@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -31,11 +31,9 @@
 #include "dbusinterface/dbusnotify.h"
 #include "dbusinterface/dbuszone.h"
 #include "RecorderRegionShow.h"
-#include "event_monitor.h"
 #include "recordertablet.h"
 #include "dbusinterface/ocrinterface.h"
 #include "dbusinterface/pinscreenshotsinterface.h"
-#include "utils/delaytime.h"
 
 #include <DWindowManagerHelper>
 #include <DDialog>
@@ -50,11 +48,12 @@
 #include <QTimer>
 #include <unistd.h>
 #ifdef KF5_WAYLAND_FLAGE_ON
-#include <KF5/KWayland/Client/connection_thread.h>
-#include <KF5/KWayland/Client/clientmanagement.h>
-#include <KF5/KWayland/Client/event_queue.h>
-#include <KF5/KWayland/Client/registry.h>
+#include <DWayland/Client/connection_thread.h>
+#include <DWayland/Client/clientmanagement.h>
+#include <DWayland/Client/event_queue.h>
+#include <DWayland/Client/registry.h>
 #endif
+#include "event_monitor.h"
 #undef Bool
 
 DGUI_USE_NAMESPACE
@@ -110,6 +109,9 @@ class MainWindow : public DWidget
     static const int CAMERA_WIDGET_MIN_HEIGHT;
 
 public:
+    /**
+     * @brief 截图录屏工具存在的功能类型(0: record, 1: shot , 2: scrollshot , 3: ocr , 4: pinscreenshots)
+     */
     enum status {
         record = 0,
         shot,
@@ -118,6 +120,9 @@ public:
         pinscreenshots
     };
     //滚动截图的滚动模式
+    /**
+     * @brief 滚动截图的滚动模式 (0: AutoScroll, 1: ManualScroll, 2: Unknow)
+     */
     enum ScrollShotType {
         AutoScroll = 0, //自动滚动
         ManualScroll,  //手动滚动
@@ -128,7 +133,7 @@ public:
     explicit MainWindow(DWidget *parent = nullptr);
     ~MainWindow()
     {
-        qInfo() << __FUNCTION__ << __LINE__ << "正在释放截图录屏相关资源...";
+        qInfo() << __FUNCTION__ << __LINE__ << "===正在释放截图录屏相关资源===";
         if (m_pVoiceVolumeWatcher) {
             m_pVoiceVolumeWatcher->setWatch(false);
             // 之前run函数里面有sleep,所以此处加terminate，现在采用定时器检测摄像头，就不考虑各个平台下线程退出的方式
@@ -146,6 +151,15 @@ public:
             delete m_devnumMonitor;
             m_devnumMonitor = nullptr;
         }
+        qInfo() << __FUNCTION__ << __LINE__ << "正在释放截图录屏全局事件监听线程...";
+        if (m_pScreenCaptureEvent) {
+            m_pScreenCaptureEvent->releaseRes();
+            //m_pScreenCaptureEvent->terminate();
+            m_pScreenCaptureEvent->wait();
+            delete m_pScreenCaptureEvent;
+            m_pScreenCaptureEvent = nullptr;
+        }
+        qInfo() << __FUNCTION__ << __LINE__ << "截图录屏全局事件监听线程已释放！";
 #ifdef KF5_WAYLAND_FLAGE_ON
         if (Utils::isWaylandMode && m_connectionThread) {
 
@@ -228,31 +242,11 @@ public:
             delete m_keyButtonList.at(i);
         }
         m_keyButtonList.clear();
-        if (m_pScreenCaptureEvent) {
-            qInfo() << __FUNCTION__ << __LINE__ << "正在退出截图录屏全局事件监听线程...";
-            DelayTime *delayTime = new DelayTime(3000);
-            delayTime->setForceToExitApp(true);
-            qInfo() << __FUNCTION__ << __LINE__ << "启动3s超时监听";
-            delayTime->start(QThread::HighestPriority);
-            qInfo() << __FUNCTION__ << __LINE__ << "正在释放截图录屏全局事件X11相关资源...";
-            m_pScreenCaptureEvent->releaseRes();
-            //m_pScreenCaptureEvent->terminate();
-            qInfo() << __FUNCTION__ << __LINE__ << "全局事件监听线程正在等待释放x11相关资源...";
-            m_pScreenCaptureEvent->wait();
-            qInfo() << __FUNCTION__ << __LINE__ << "已释放X11相关资源";
-            delete m_pScreenCaptureEvent;
-            m_pScreenCaptureEvent = nullptr;
-            qInfo() << __FUNCTION__ << __LINE__ << "截图录屏全局事件监听线程已退出！";
-            delayTime->setForceToExitApp(false);
-            delayTime->stop();
-            if (delayTime) {
-                delete delayTime;
-                delayTime = nullptr;
-            }
-        }
+
         //以前的流程没执行到此处，没暴露延迟500ms的问题，以前的无用代码
         QThread::currentThread()->msleep(500);
-        qInfo() << __FUNCTION__ << __LINE__ << "截图录屏相关资源已释放";
+        qInfo() << __FUNCTION__ << __LINE__ << "===截图录屏相关资源已释放===";
+        qInfo() << __FUNCTION__ << __LINE__ << "截图录屏已退出";
     }
 
     enum ShotMouseStatus {
@@ -281,6 +275,20 @@ public:
      * @brief 初始化滚动截图
      */
     void initScrollShot();
+
+    /**
+     * @brief moveToolBars 此方法是用来移动两个工具栏
+     * @param startPoint 工具栏开始的位置
+     * @param moveDistance 移动的距离
+     */
+    void moveToolBars(QPoint startPoint, QPoint moveDistance);
+
+    /**
+     * @brief limitToolbarScope 限定一二级工具栏拖动的范围，不能超出屏幕之外
+     * @param movePoint 移动的距离
+     * @param type 0:一级工具栏 1:二级工具栏
+     */
+    QPoint limitToolbarScope(QPoint movePoint, int type);
 
     /**
      * @brief 初始化应用内快捷键
@@ -333,15 +341,30 @@ public:
     // 强制录屏保存退出通知,3D->2D模式
     void forciblySavingNotify();
 
+    /**
+     * @brief 在二级工具栏按下鼠标左键的时，此时记录下一级菜单的位置
+     */
+    void getToolBarStartPressPoint();
+    /**
+     * @brief 在一级工具栏按下鼠标左键的时，此时记录下二级菜单的位置
+     */
+    void getSideBarStartPressPoint();
+
+    /**
+     * @brief 切换截图和录屏时记录下一级工具栏右上角坐标
+     * 确保切换功能后一级工具栏能够右对齐
+     */
+    void getToolBarPoint();
 signals:
     void releaseEvent();
     void saveActionTriggered();
     void unDo();
+    void isInUndoBtn(bool isInUndo); //鼠标进入/离开撤销按钮时发出
     void unDoAll();
     void deleteShapes();
-    void changeMicrophoneSelectEvent(bool checked);
-    void changeSystemAudioSelectEvent(bool checked);
     void stopRecordArm();
+    void setUndoEnable(bool status);
+    void microPhoneEnable(bool);
 public slots:
     void onExit();
     /**
@@ -373,9 +396,11 @@ public slots:
     void responseEsc();
     void compositeChanged();
     void updateToolBarPos();
+    /**
+     * @brief 更新二级工具栏的位置信息
+     */
     void updateSideBarPos();
-    //void updateRecordButtonPos();
-    //void updateShotButtonPos();
+
     void updateCameraWidgetPos();
     /**
      * @brief 切换截图功能或者录屏功能
@@ -386,6 +411,10 @@ public slots:
     void changeKeyBoardShowEvent(bool checked);
     void changeMouseShowEvent(bool checked);
     void changeCameraSelectEvent(bool checked);
+    /**
+     * @brief updateMultiKeyBoardPos: 更新显示按键的位置
+     * 录屏模式时，打开显示按键，用来更新显示按键的界面位置
+     */
     void updateMultiKeyBoardPos();
     /**
      * @brief 改变截图工具栏操作入口
@@ -395,15 +424,19 @@ public slots:
     void saveScreenShot();
     bool saveAction(const QPixmap &pix);
     void sendNotify(SaveAction saveAction, QString saveFilePath, const bool succeed);
-    void reloadImage(QString effect);
+    void reloadImage(QString effect, int radius);
     void shotImgWidthEffect();
-    //void changeArrowAndLineEvent(int line);
-    void exitApp();
+
     void onViewShortcut();
     void shapeClickedSlot(QString shape);
-    //void on_CheckRecodeCouldUse(bool canUse);
     void on_CheckVideoCouldUse(bool canUse);
 
+    /**
+     * @brief stopRecordResource 停止录屏的一些监听、摄像头监听、声卡监听
+     */
+    void stopRecordResource();
+    void exitApp();
+    void confirm();
     /**
      * @brief 截图模式及滚动截图模式键盘按下执行的操作
      * 如果快捷键需要打开下拉列表，则不能使用全局快捷键处理，需使用此方法处理
@@ -511,7 +544,7 @@ public slots:
     void onScrollShotCheckScrollType(int autoScrollFlag);
 
     /**
-     * @brief 监听锁屏信号，滚动截图和贴图需要使用,贴图或滚动截图时突然锁频会触发此信号槽
+     * @brief 监听锁屏信号，滚动截图和贴图需要使用,贴图或滚动截图时突然锁频会触发此信号槽k
      * @param msg
      */
     void onLockScreenEvent(QDBusMessage msg);
@@ -546,6 +579,10 @@ public slots:
      * @brief 退出截图录屏事件监控线程
      */
     void exitScreenCuptureEvent();
+    /**
+     * @brief 显示预览窗口和图片
+     * @param img: 预览图片
+     */
     void showPreviewWidgetImage(QImage img);//显示预览窗口和图片
 
     /**
@@ -553,10 +590,92 @@ public slots:
      */
     void onExitScreenCapture();
 protected:
+    /**
+     * @brief eventFilter
+     * @param object
+     * @param event
+     * @return true:其他事件处理器将不再进行处理 false:其他事件会继续处理
+     * 事件过滤器的优先级高于不同的事件处理器的优先级
+     * 先执行过滤器再执行不同的事件处理器
+     */
     bool eventFilter(QObject *object, QEvent *event) override;
+    /**
+     * @brief 事件过滤器过滤的鼠标双击事件在此方法处理
+     * 返回值：0:要求事件过滤器不过虑此事件 1:保持现状 2:要求事件过滤器过滤此事件
+     * @param mouseEvent:鼠标事件
+     * @param needRepaint:是否触发重绘事件
+     * @return 0 or 1 or 2
+     */
+    int mouseDblClickEF(QMouseEvent *mouseEvent, bool &needRepaint);
+
+    /**
+     * @brief 事件过滤器过滤的鼠标按下事件在此方法处理
+     * 返回值：0:要求事件过滤器不过虑此事件 1:保持现状 2:要求事件过滤器过滤此事件
+     * @param mouseEvent:鼠标事件
+     * @param needRepaint:是否触发重绘事件
+     * @return 0 or 1 or 2
+     */
+    int mousePressEF(QMouseEvent *mouseEvent, bool &needRepaint);
+
+    /**
+     * @brief 事件过滤器过滤的鼠标释放事件在此方法处理
+     * 返回值：0:要求事件过滤器不过虑此事件 1:保持现状 2:要求事件过滤器过滤此事件
+     * @param mouseEvent:鼠标事件
+     * @param needRepaint:是否触发重绘事件
+     * @return 0 or 1 or 2
+     */
+    int mouseReleaseEF(QMouseEvent *mouseEvent, bool &needRepaint);
+
+    /**
+     * @brief 事件过滤器过滤的鼠标移动事件在此方法处理
+     * 返回值：0:要求事件过滤器不过虑此事件 1:保持现状 2:要求事件过滤器过滤此事件
+     * @param mouseEvent:鼠标事件
+     * @param needRepaint:是否触发重绘事件
+     * @return 0 or 1 or 2
+     */
+    int mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint);
+
+    /**
+     * @brief 事件过滤器过滤的键盘按下事件在此方法处理
+     * 返回值：0:要求事件过滤器不过虑此事件 1:保持现状 2:要求事件过滤器过滤此事件
+     * @param keyEvent:键盘事件
+     * @param needRepaint:是否触发重绘事件
+     * @return 0 or 1 or 2
+     */
+    int keyPressEF(QKeyEvent *keyEvent, bool &needRepaint);
+
+    /**
+     * @brief 事件过滤器过滤的键盘释放事件在此方法处理
+     * 返回值：0:要求事件过滤器不过虑此事件 1:保持现状 2:要求事件过滤器过滤此事件
+     * @param keyEvent:键盘事件
+     * @param needRepaint:是否触发重绘事件
+     * @return 0 or 1 or 2
+     */
+    int keyReleaseEF(QKeyEvent *keyEvent, bool &needRepaint);
+
+    /**
+     * @brief 事件过滤器过滤的滚轮事件在此方法处理
+     * 返回值：0:要求事件过滤器不过虑此事件 1:保持现状 2:要求事件过滤器过滤此事件
+     * @param wheelEvent:滚轮事件
+     * @param needRepaint:是否触发重绘事件
+     * @return 0 or 1 or 2
+     */
+    int wheelEF(QWheelEvent *wheelEvent, bool &needRepaint);
+
+    /**
+     * @brief 重写键盘按下事件处理器
+     * @param event
+     */
     void keyPressEvent(QKeyEvent *event) override;
+
+    /**
+     * @brief 重写键盘释放事件处理器
+     * @param event
+     */
     void keyReleaseEvent(QKeyEvent *event) override;
+
     int getAction(QEvent *event);
+
 
     /**
      * @brief paintImage: 绘制图片
@@ -564,20 +683,32 @@ protected:
      * 将背景图进行裁剪，并将编辑的内容绘制到图片上
      */
     QPixmap paintImage();
-
     void paintEvent(QPaintEvent *event) override;
     void resizeBottom(QMouseEvent *event);
     void resizeLeft(QMouseEvent *event);
     void resizeRight(QMouseEvent *event);
     void resizeTop(QMouseEvent *event);
+    /**
+     * @brief 更新光标样式
+     * @param event
+     */
     void updateCursor(QEvent *event);
+    /**
+     * @brief setDragCursor 设置拖动时光标样式
+     */
     void setDragCursor();
+    /**
+     * @brief resetCursor 重设光标样式
+     */
     void resetCursor();
     void setFontSize(QPainter &painter, int textSize);
     void hideAllWidget();
     //void adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight);
     void initShapeWidget(QString type);
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
+    /**
+     * @brief initBackground 初始化截图背景，启动截图时调用
+     */
     void initBackground();
     QPixmap getPixmapofRect(const QRect &rect);
     bool saveImg(const QPixmap &pix, const QString &fileName, const char *format = nullptr);
@@ -700,10 +831,8 @@ protected:
      * @brief 启动截图录屏时检测是否是锁屏状态
      */
     void checkIsLockScreen();
-
     void initDynamicLibPath();
     QString libPath(const QString &strlib);
-
 private:
 //    QList<WindowRect> windowRects;
     /**
@@ -717,8 +846,17 @@ private:
     ShowButtons *m_showButtons = nullptr;
     //QTimer *flashTrayIconTimer = nullptr;
     QRect screenRect;
+    /**
+     * @brief 录屏进程
+     */
     RecordProcess recordProcess;
+    /**
+     * @brief 监听是否存在系统声卡或麦克风声卡
+     */
     voiceVolumeWatcher *m_pVoiceVolumeWatcher = nullptr;
+    /**
+     * @brief 监听是否存在摄像头
+     */
     CameraWatcher *m_pCameraWatcher = nullptr;
     /**
      * @brief 摄像头设备监听器
@@ -732,19 +870,34 @@ private:
     //m_saveFileName is the storage path of the screenshot image.
     QString m_saveFileName;
 
+    /**
+     * @brief 是否画骨架点
+     */
     bool drawDragPoint = false;
+    /**
+     * @brief 是否第一次拖动鼠标
+     */
     bool isFirstDrag = false;
+    /**
+     * @brief 是否第一次移动鼠标
+     */
     bool isFirstMove = false;
+    /**
+     * @brief 是否是第一次按下鼠标左键,当状态改变后，不会再次被改变
+     */
     bool isFirstPressButton = false;
+    /**
+     * @brief 是否是第一次释放鼠标左键
+     */
     bool isFirstReleaseButton = false;
     /**
-     * @brief 是否按压按钮
+     * @brief 鼠标左键是否按压下
      */
-    bool isPressButton = false;
+    bool isPressMouseLeftButton = false;
     /**
-     * @brief 是否释放按钮
+     * @brief 鼠标左键是否释放
      */
-    bool isReleaseButton = false;
+    bool isReleaseMouseLeftButton = false;
 
     int dragAction = 0;
     int dragRecordHeight = 0;
@@ -757,19 +910,19 @@ private:
     int m_shotStatus = ShotMouseStatus::Normal; //
     int recordButtonStatus = RECORD_BUTTON_NORMAL;
     /**
-     * @brief 捕捉区域的高（已缩放）（如果调整了屏幕缩放比，该值也会变化）
+     * @brief 捕捉区域的高
      */
     int recordHeight = 0;
     /**
-     * @brief 捕捉区域的宽（已缩放）（如果调整了屏幕缩放比，该值也会变化）
+     * @brief 捕捉区域的宽
      */
     int recordWidth = 0;
     /**
-     * @brief 捕捉区域起始点的x坐标（已缩放）（如果调整了屏幕缩放比，该值也会变化）
+     * @brief 捕捉区域起始点的x坐标
      */
     int recordX = 0;
     /**
-     * @brief 捕捉区域起始点的y坐标（已缩放）（如果调整了屏幕缩放比，该值也会变化）
+     * @brief 捕捉区域起始点的y坐标
      */
     int recordY = 0;
 
@@ -781,6 +934,9 @@ private:
     QString selectAreaName = "";
     //dde-dock显示时长插件代替系统托盘
     //QSystemTrayIcon *trayIcon = nullptr;
+    /**
+     * @brief 录屏倒计时提示界面
+     */
     CountdownTooltip *countdownTooltip = nullptr;
     /**
      * @brief 滚动截图的提示
@@ -878,6 +1034,9 @@ private:
     EventMonitor *m_pScreenCaptureEvent = nullptr;
 
     DWindowManagerHelper *m_wmHelper;
+    /**
+     * @brief 截图编辑界面
+     */
     ShapesWidget *m_shapesWidget = nullptr;
     /**
      * @brief 左上角图片大小提示
@@ -891,16 +1050,36 @@ private:
      * @brief 直接通过快捷键或命令行启动滚动截图
      */
     bool m_isDirectStartScrollShot = false;
-
-    /**
-     * @brief 是否进入保存滚动截图。滚动截图模式中，保存时不需要保存蚂蚁线
-     */
-    bool m_isSaveScrollShot = false;
     /**
      * @brief 直接通过快捷键启动ocr
      */
     bool m_isDirectStartOcr = false;
+
+    /**
+     * @brief 是否进入保存滚动截图。滚动截图模式中，保存时不需要保存蚂蚁线
+     */
+    bool m_isSaveScrollShot;
     ToolBar *m_toolBar = nullptr;
+    /**
+     * @brief 在二级工具栏按下鼠标左键的时，此时记录下一级菜单的位置
+     */
+    QPoint m_toolBarStartPressPoint;
+    /**
+     * @brief 一级工具栏是否已经被拖动了
+     */
+    bool m_isDragToolBar = false;
+    /**
+     * @brief 二级工具栏是否已经被拖动了
+     */
+    bool m_isDragSideBar = false;
+
+    /**
+     * @brief 二级工具栏与一级工具栏的位置关系
+     * 0:二级工具栏在一级工具栏下方
+     * 1:二级工具栏在一级工具栏上方
+     */
+    int m_sidebarDir = 1;
+
     QRect m_backgroundRect;
     //添加截屏和录屏的按钮
     /**
@@ -914,39 +1093,59 @@ private:
     QList<KeyButtonWidget *> m_keyButtonList;
 
     /**
-     * @brief 功能类型
+     * @brief 功能类型  0: record, 1: shot , 2: scrollshot , 3: ocr , 4: pinscreenshots
      */
     unsigned int m_functionType = status::record;  //0: record, 1: shot , 2: scrollshot
     /**
-     * @brief 键盘开关状态
+     * @brief 此坐标用来记录截图和录屏切换时一级工具栏右上角的坐标
+     *  确保切换功能后一级工具栏能够右对齐
+     */
+    QPoint m_toolBarPoint = QPoint(0, 0);
+    /**
+     * @brief 键盘开关状态 false: keyBoard off, true:keyBoard On
      */
     bool m_keyBoardStatus = false; //false: keyBoard off, true:keyBoard On
     /**
-     * @brief 鼠标开关状态
+     * @brief 鼠标开关状态 false: mouse check off, true:mouse check On
      */
     bool m_mouseStatus = false; //false: mouse check off, true:mouse check On
     /**
-     * @brief 是否重绘录屏或截图按钮
+     * @brief 是否重绘录屏或截图按钮 false: no need to repaint record button or shot button, true:...
      */
     bool m_repaintMainButton = false;//false: no need to repaint record button or shot button, true:...
     /**
-     * @brief 是否重绘侧工具栏
+     * @brief 是否重绘侧工具栏 false: no need to repaint sidebar, true:...
      */
     bool m_repaintSideBar = false;   //false: no need to repaint sidebar, true:...
     int m_screenWidth = 0;  //屏幕宽度
     int m_screenHeight = 0; //屏幕高度
     SideBar *m_sideBar = nullptr; //截图功能侧边栏功能
+    /**
+     * @brief 在一级工具栏按下鼠标左键的时，此时记录下二级菜单的位置
+     */
+    QPoint m_sideBarStartPressPoint;
+    /**
+     * @brief 框选区域时，光标右下角的放大镜窗口
+     */
     ZoomIndicator *m_zoomIndicator = nullptr;
     /**
-     * @brief 是否打开截图工具中的形状编辑
+     * @brief 是否打开截图编辑界面，在截图界面绘制了图形，就会打开编辑界面
      */
     bool m_isShapesWidgetExist = false;
+    /**
+     * @brief 二级工具栏是否在捕捉区域内部
+     */
     bool m_isSideBarInside = false;
     /**
-     * @brief m_isToolBarInside 工具栏在捕捉区域内部
+     * @brief 一级工具栏是否在捕捉区域内部
      */
     bool m_isToolBarInside = false;
-
+    /**
+     * @brief 当前一级工具栏选择的形状（矩形、圆、直线、箭头、画笔、文本、模糊）
+     * 由于二级工具栏位置和选择的形状位置挂钩
+     * 要求：矩形、圆形、直线、箭头、画笔时，二级工具栏与当前选中的图形对齐；马赛克、文本时，二级工具栏直接与一级工具栏右对齐
+     */
+    QString m_currentToolShape = "rectangle";
 
     //截图功能使用的变量初始化
     MenuController *m_menuController = nullptr;
@@ -954,6 +1153,9 @@ private:
     bool m_isShiftPressed = false;
     bool m_needSaveScreenshot = false;
     bool m_toolBarInit = false;
+    /**
+     * @brief 二级工具栏是否初始化
+     */
     bool m_sideBarInit = false;
     CameraWidget *m_cameraWidget = nullptr;
     bool m_selectedCamera = false;
@@ -991,6 +1193,9 @@ private:
     bool m_hasComposite = true;
     bool m_initScreenShot;
     bool m_initScreenRecorder;
+    /**
+     * @brief 资源是否已经初始化
+     */
     bool m_initResource = false;
     bool m_initScroll;
     RecorderTablet *m_tabletRecorderHandle = nullptr;
@@ -1028,8 +1233,15 @@ private:
     std::string m_tempPath;
 #endif
     bool m_isFullScreenShot = false;
-    bool m_isScreenVertical = false; // 判断多屏是否纵向布局
+    bool m_isVertical = false;// 判断多屏是否纵向布局
+    /**
+     * @brief 是否是锁屏状态
+     */
     bool m_isLockedState = false;
+    /**
+     * @brief 当前光标的位置
+     */
+    QPoint m_currentCursor;
 };
 
 #endif //MAINWINDOW_H

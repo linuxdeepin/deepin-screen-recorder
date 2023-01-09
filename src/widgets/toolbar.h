@@ -1,14 +1,12 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #ifndef TOOLBAR_H
 #define TOOLBAR_H
 
-#include "majtoolbar.h"
 #include "subtoolbar.h"
-#include "maintoolwidget.h"
 #include "subtoolwidget.h"
 
 #include <DLabel>
@@ -31,14 +29,6 @@ class ToolBarWidget : public DFloatingWidget
 public:
     explicit ToolBarWidget(MainWindow *pMainwindow, DWidget *parent = nullptr);
     ~ToolBarWidget() Q_DECL_OVERRIDE;
-    /**
-     * @brief 隐藏工具栏矩形、圆形、箭头、笔画、选项中裁切选项-显示光标
-     */
-    void hideSomeToolBtn();
-    /**
-     * @brief 快捷键或命令行启动滚动截图时，初始化滚动截图工具栏
-     */
-    void initScrollShotSubTool();
 
     /**
      * @brief 设置禁止滚动截图
@@ -52,9 +42,14 @@ public:
     void setOcrScreenshotsEnable(const bool &state);
 
     void setButEnableOnLockScreen(const bool &state);
+    /**
+     * @brief 根据当前传入的按钮形状获取当前按钮坐标的x值
+     * @param func:当前按钮的形状（目前：矩形、圆形、直线等）
+     * @return 当前按钮坐标的x值
+     */
+    int getFuncSubToolX(QString &func);
 signals:
     void buttonChecked(QString shapeType);
-    void expandChanged(bool expand,  QString shapeType);
     void closed();
     /**
      * @brief 切换截图功能或者录屏功能的信号
@@ -62,29 +57,27 @@ signals:
      */
     void changeFunctionSignal(QString shapeType);
     void keyBoardCheckedSignal(bool checked);
-    void mouseShowCheckedSignalToToolBar(bool checked);
 public slots:
-    /**
-     * @brief 切换截图功能或者录屏功能
-     * @param expand :
-     * @param shapeType : "record" or "shot"
-     */
-    void setExpand(bool expand, QString shapeType);
-    //void keyBoardCheckedSlot(bool checked);
-    void changeArrowAndLineFromBar(int line);
-    void setRecordButtonDisableFromMain();
     void setRecordLaunchFromMain(const unsigned int funType);
+    void setRecordButtonDisable();
     void setVideoInitFromMain();
     void shapeClickedFromBar(QString shape);
-    void setMicroPhoneEnable(bool status);
-    void setSystemAudioEnable(bool status);
     void setCameraDeviceEnable(bool status);
 
 private:
     DLabel *m_hSeparatorLine;
-    MainToolWidget *m_mainTool;
+    /**
+     * @brief 截图录屏工具栏子工具栏
+     */
     SubToolWidget *m_subTool;
-    DImageButton *m_closeButton;
+    /**
+     * @brief 截图录屏工具栏关闭按钮
+     */
+    ToolButton *m_closeButton;
+    /**
+     * @brief 截图录屏工具栏确认按钮
+     */
+    ToolButton *m_confirmButton;
 };
 
 class ToolBar : public DLabel
@@ -97,16 +90,6 @@ public:
     void initToolBar(MainWindow *pmainWindow);
 
     /**
-     * @brief 点击滚动截图时，工具栏隐藏一些按钮
-     */
-    void hideSomeToolBtn();
-
-    /**
-     * @brief 快捷键或命令行启动滚动截图时，初始化滚动截图工具栏
-     */
-    void initScrollShotSubTool();
-
-    /**
      * @brief 设置禁止滚动截图
      */
     void setScrollShotDisabled(const bool state);
@@ -119,35 +102,66 @@ public:
     void setOcrScreenshotsEnable(const bool &state);
 
     void setButEnableOnLockScreen(const bool &state);
+
+    /**
+     * @brief 根据当前传入的按钮形状获取当前按钮坐标的x值
+     * @param func:当前按钮的形状（目前：矩形、圆形、直线等）
+     * @return 当前按钮坐标的x值
+     */
+    int getFuncSubToolX(QString &func);
+
+    /**
+     * @brief isDraged 工具栏是否已经被拖动
+     * @return
+     */
+    bool isDraged();
+
+    /**
+     * @brief isPressed 是否在此工具栏按下鼠标左键
+     * @return
+     */
+    bool isPressed();
+
 signals:
     void buttonChecked(QString shape);
     void currentFunctionToMain(QString shapeType);
-    void mouseShowCheckedToMain(bool checked);
     void shotToolChangedToMain(const QString &func);
 public slots:
-    void setExpand(bool expand, QString shapeType);
     void showAt(QPoint pos);
-//    void specificedSavePath();
     /**
      * @brief 切换截图功能或者录屏功能
      * @param shapeType : "record" or "shot"
      */
     void currentFunctionMode(QString shapeType);
-    void changeArrowAndLineFromMain(int line);
     void setRecordButtonDisable();
     void setRecordLaunchMode(const unsigned int funType);
     void setVideoButtonInit();
     void shapeClickedFromMain(QString shape);
-    void setMicroPhoneEnable(bool status);
-    void setSystemAudioEnable(bool status);
     void setCameraDeviceEnable(bool status);
 protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
     void enterEvent(QEvent *e) Q_DECL_OVERRIDE;
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+    void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+    void mouseReleaseEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
 
 private:
     ToolBarWidget *m_toolbarWidget;
-    DPushButton *m_confirmButton;
+
+    /**
+     * @brief 工具栏是否已经被拖动
+     */
+    bool m_isDrag = false;
+
+    /**
+     * @brief 鼠标左键是否按下
+     */
+    bool m_isPress = false;
+
+    QPoint m_mouseStartPoint;
+    QPoint m_windowStartPoint;
+    MainWindow *m_pMainWindow = nullptr;
+
 };
 #endif // TOOLBAR_H

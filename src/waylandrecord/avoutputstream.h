@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -98,6 +98,11 @@ public:
      * @param boardVendorType
      */
     void setBoardVendor(int boardVendorType);
+    /**
+     * @brief 音频缓冲区是否还有数据
+     * @return
+     */
+    bool isNotAudioFifoEmty();
 protected:
     void freeSwrContext(struct SwrContext *swrContext);
 public:
@@ -110,11 +115,6 @@ public:
      * @brief 视频类型
      */
     int m_videoType;
-    /**
-     * @brief 音频缓冲区是否还有数据
-     * @return
-     */
-    bool isNotAudioFifoEmty();
 private:
     /**
      * @brief 电脑类型

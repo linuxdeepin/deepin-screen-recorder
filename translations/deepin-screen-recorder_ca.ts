@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ca">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ca">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Recording</source>
         <translation>Gavació</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Grava</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Captura de pantalla</translation>
     </message>
 </context>
 <context>
@@ -105,12 +96,12 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Captura de desplaçament</translation>
     </message>
     <message>
-        <source>Pin Screenshots</source>
-        <translation>Fixa les captures</translation>
-    </message>
-    <message>
         <source>Open Folder</source>
         <translation>Obre la carpeta</translation>
+    </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Fixa les captures</translation>
     </message>
 </context>
 <context>
@@ -235,11 +226,11 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>Captura de pantalla amb retard</translation>
+        <translation>Retarda la captura</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>Captura de pantalla completa</translation>
+        <translation>Captura completa</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -318,10 +309,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Mostra les dreceres</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>So</translation>
-    </message>
-    <message>
         <source>Keystroke</source>
         <translation>Pulsació</translation>
     </message>
@@ -342,10 +329,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Inici / gravació</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Ratolí</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>Eines</translation>
     </message>
@@ -362,12 +345,24 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Fixa les captures</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Inicia la captura de desplaçament</translation>
+    </message>
+    <message>
         <source>Start OCR</source>
         <translation>Inicia el ROC</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Inicia la captura de desplaçament</translation>
+        <source>Arrow</source>
+        <translation>Fletxa</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>So</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Ratolí</translation>
     </message>
 </context>
 <context>
@@ -384,51 +379,41 @@ o premeu la drecera de nou per aturar la gravació.</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Difumina</translation>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation>Rectangle
+Manteniu premuda la tecla Maj per dibuixar un quadrat.</translation>
     </message>
     <message>
-        <source>Mosaic</source>
-        <translation>Mosaic</translation>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation>El·lipse
+Manteniu premuda la tecla Maj per dibuixar un cercle.</translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation>Pinzell
+Manteniu premuda la tecla Maj per dibuixar una línia recta.</translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation>Ajusta la força del desenfocament (desplaçament per ajustar-lo)</translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation>Ajusta la mida del pinzell (desplaçament per ajustar-lo)</translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation>Ajusta la mida del text (desplaçament per ajustar-lo)</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Sound On</source>
-        <translation>So activat</translation>
-    </message>
-    <message>
         <source>Microphone</source>
         <translation>Micròfon</translation>
-    </message>
-    <message>
-        <source>System Audio</source>
-        <translation>Àudio del sistema</translation>
-    </message>
-    <message>
-        <source>Sound Off</source>
-        <translation>So desactivat</translation>
-    </message>
-    <message>
-        <source>Show Keystroke</source>
-        <translation>Mostra la pulsació de tecles</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke</source>
-        <translation>Oculta la pulsació de tecles</translation>
-    </message>
-    <message>
-        <source>Webcam On</source>
-        <translation>Càmera web activada</translation>
-    </message>
-    <message>
-        <source>Webcam Off</source>
-        <translation>Càmera web desactivada</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>Mostra els clics</translation>
     </message>
     <message>
         <source>Options</source>
@@ -469,30 +454,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>30 fps</source>
         <translation>30 fps</translation>
-    </message>
-    <message>
-        <source>Rectangle</source>
-        <translation>Rectangle</translation>
-    </message>
-    <message>
-        <source>Ellipse</source>
-        <translation>El·lipse</translation>
-    </message>
-    <message>
-        <source>Line</source>
-        <translation>Línia</translation>
-    </message>
-    <message>
-        <source>Arrow</source>
-        <translation>Fletxa</translation>
-    </message>
-    <message>
-        <source>Pencil</source>
-        <translation>Llapis</translation>
-    </message>
-    <message>
-        <source>Text</source>
-        <translation>Text</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -539,36 +500,147 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Mostra el punter</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Ratolí</translation>
-    </message>
-    <message>
-        <source>Show Pointer</source>
-        <translation>Mostra&apos;n el punter</translation>
-    </message>
-    <message>
         <source>Extract Text</source>
         <translation>Extreu-ne el text</translation>
     </message>
     <message>
-        <source>Scrollshot</source>
-        <translation>Captura de desplaçament</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Mostra la pulsació de la tecla (K)</translation>
     </message>
     <message>
-        <source>Pin Screenshots</source>
-        <translation>Fixa les captures</translation>
+        <source>Settings</source>
+        <translation>Configuració</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Configuració (F3)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Desenfocament (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Text (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Captura de desplaçament (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Extreu text (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Desfés (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Fixa les captures de pantalla (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Grava</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Llapis (P)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Activa la càmera (C)</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Efectes de la vora</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Cap</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Apaga la càmera (C)</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation>Amaga la pulsació de tecles (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Mostra la pulsació de tecles (K)</translation>
     </message>
     <message>
         <source>webm</source>
         <translation>webm</translation>
     </message>
     <message>
-        <source>ogg</source>
-        <translation>ogg</translation>
-    </message>
-    <message>
         <source>Videos</source>
         <translation>Vídeos</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Rectangle (R) 
+Manteniu premuda la tecla Maj per dibuixar un quadrat.</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>El·lipse (O)
+Manteniu premuda la tecla Maj per dibuixar un cercle.</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Línia (L)
+Manteniu premuda la tecla Maj per dibuixar una línia vertical o horitzontal.</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Fletxa (X)
+Manteniu premuda la tecla Maj per dibuixar una fletxa vertical o horitzontal.</translation>
+    </message>
+    <message>
+        <source>Shadow</source>
+        <translation>Ombra</translation>
+    </message>
+    <message>
+        <source>Border</source>
+        <translation>Vora</translation>
+    </message>
+    <message>
+        <source>Device</source>
+        <translation>Dispositiu</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>So</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
+    <message>
+        <source>Close (Esc)</source>
+        <translation>Tanca (Esc)</translation>
+    </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>D&apos;acord (Retorn)</translation>
     </message>
 </context>
 <context>

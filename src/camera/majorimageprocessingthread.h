@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -75,15 +75,11 @@ protected:
 
 signals:
     /**
-     * @brief SendMajorImageProcessing 向预览界面发送帧数据
+     * @brief SendMajorImageProcessing 向预览界面发送帧数据  mips平台、wayland下使用该接口
      * @param image 图像
+     * @param result 结果
      */
     void SendMajorImageProcessing(QImage image);
-    /**
-     * @brief SendMajorImageProcessing
-     * @param pixmap
-     */
-    void SendMajorImageProcessing(QPixmap pixmap);
 
     void isEnd();
 

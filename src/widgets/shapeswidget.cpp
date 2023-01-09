@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,6 +7,10 @@
 #include "../utils/configsettings.h"
 #include "../utils/tempfile.h"
 #include "shapeswidget.h"
+#include "../utils.h"
+#ifdef KF5_WAYLAND_FLAGE_ON
+#include "../utils/waylandmousesimulator.h"
+#endif
 
 #include <QApplication>
 #include <QPainter>
@@ -37,14 +41,14 @@ ShapesWidget::ShapesWidget(DWidget *parent)
 {
     //订阅手势事件
     QList<Qt::GestureType> gestures;
-//    gestures << Qt::PanGesture;
+    //    gestures << Qt::PanGesture;
     gestures << Qt::PinchGesture;
-//    gestures << Qt::SwipeGesture;
+    //    gestures << Qt::SwipeGesture;
     gestures << Qt::TapGesture;
-//    gestures << Qt::TapGesture;
-//    gestures << Qt::TapAndHoldGesture;
-//    gestures << Qt::CustomGesture;
-//    gestures << Qt::LastGestureType;
+    //    gestures << Qt::TapGesture;
+    //    gestures << Qt::TapAndHoldGesture;
+    //    gestures << Qt::CustomGesture;
+    //    gestures << Qt::LastGestureType;
     foreach (Qt::GestureType gesture, gestures)
         grabGesture(gesture);
 
@@ -53,13 +57,12 @@ ShapesWidget::ShapesWidget(DWidget *parent)
     setMouseTracking(true);
     setAcceptDrops(true);
 
-    m_penColor = BaseUtils::colorIndexOf(ConfigSettings::instance()->value(
-                                             "common", "color_index").toInt());
+    m_penColor = BaseUtils::colorIndexOf(ConfigSettings::instance()->getValue("pen", "color_index").toInt());
 
     connect(m_menuController, &MenuController::shapePressed,
             this, &ShapesWidget::shapePressed);
-//    connect(m_menuController, &MenuController::saveBtnPressed,
-//            this, &ShapesWidget::saveBtnPressed);
+    //    connect(m_menuController, &MenuController::saveBtnPressed,
+    //            this, &ShapesWidget::saveBtnPressed);
     connect(m_menuController, &MenuController::saveAction,
             this, &ShapesWidget::menuSaveSlot);
     connect(m_menuController, &MenuController::closeAction,
@@ -70,10 +73,10 @@ ShapesWidget::ShapesWidget(DWidget *parent)
             this, &ShapesWidget::menuNoFocus);
     connect(this, &ShapesWidget::setShapesUndo,
             m_menuController, &MenuController::setUndoEnable);
-    connect(ConfigSettings::instance(), &ConfigSettings::shapeConfigChanged,
-            this, &ShapesWidget::updateSelectedShape);
+    connect(ConfigSettings::instance(), &ConfigSettings::shapeConfigChanged, this, &ShapesWidget::updateSelectedShape);
     //m_sideBar = new SideBar(this);
     //m_sideBar->hide();
+    m_currentCursor = QCursor().pos();
 }
 
 ShapesWidget::~ShapesWidget()
@@ -87,26 +90,23 @@ ShapesWidget::~ShapesWidget()
 void ShapesWidget::updateSelectedShape(const QString &group,
                                        const QString &key, int index)
 {
-    qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
-             << ", group: " << group
-             << ", key: " << key
-             << ", index: " << index;
+//        qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
+//                 << ", group: " << group
+//                 << ", key: " << key
+//                 << ", index: " << index
+//                 << ", m_selectedIndex" << m_selectedIndex;
     if (m_isSelectedText) { //修复在截图区域，选中的文本框，字体会自动变颜色
         m_isSelectedText = false;
         return;
     }
-    if ((group == m_currentShape.type || "common" == group) && key == "color_index") {
+    if (group == m_currentShape.type && key == "color_index") {
         m_penColor = BaseUtils::colorIndexOf(index);
     }
 
     if (m_selectedIndex != -1 && m_selectedOrder != -1 && m_selectedOrder < m_shapes.length()) {
-        if (m_selectedShape.type == "arrow" && key != "color_index") {
-            if (key == "arrow_linewidth_index" && !m_selectedShape.isStraight) {
-                m_selectedShape.lineWidth = LINEWIDTH(index);
-            } else if (key == "straightline_linewidth_index" && m_selectedShape.isStraight) {
-                m_selectedShape.lineWidth = LINEWIDTH(index);
-            }
-        } else if (m_selectedShape.type == group && key == "linewidth_index") {
+        if ((m_selectedShape.type == "arrow" || m_selectedShape.type == "line") && key != "color_index") {
+            m_selectedShape.lineWidth = LINEWIDTH(index);
+        } else if (m_selectedShape.type == group && key == "line_width") {
             m_selectedShape.lineWidth = LINEWIDTH(index);
         } else if (group == "text" && m_selectedShape.type == group && key == "color_index") {
             int tmpIndex = m_shapes[m_selectedOrder].index;
@@ -124,6 +124,15 @@ void ShapesWidget::updateSelectedShape(const QString &group,
             }
         } else if (group != "text" && m_selectedShape.type == group && key == "color_index") {
             m_selectedShape.colorIndex = index;
+        } else if (group == "effect" && m_selectedShape.type == group &&
+                   key == "radius" && (m_selectedShape.isOval == 0 || m_selectedShape.isOval == 1)) {
+
+            m_selectedShape.radius = index * 3 + 10;
+            if (m_selectedShape.isBlur) {
+                emit reloadEffectImg("blur", m_selectedShape.radius);
+            } else {
+                emit reloadEffectImg("mosaic", m_selectedShape.radius);
+            }
         }
 
         if (m_selectedOrder < m_shapes.length()) {
@@ -131,8 +140,7 @@ void ShapesWidget::updateSelectedShape(const QString &group,
         }
         update();
     }
-    qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__ <<
-             ", m_selectedShape.type: " << m_selectedShape.type;
+    //qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__ << ", m_selectedShape.type: " << m_selectedShape.type;
 }
 /*
  * never used
@@ -144,26 +152,12 @@ void ShapesWidget::updatePenColor()
 */
 void ShapesWidget::setCurrentShape(QString shapeType)
 {
-    qDebug() << "type: " << shapeType;
-//    clearSelected();
-    if (shapeType != "saveList")
-        m_currentType = shapeType;
+    qDebug() << __FUNCTION__ << __LINE__ << "type: " << shapeType;
+    m_currentType = shapeType;
     if (shapeType != "text")
         setAllTextEditReadOnly();
 }
-/*
-void ShapesWidget::setPenColor(QColor color)
-{
-    int colorNum = colorIndex(color);
-    m_penColor = color;
-    if ( !m_currentType.isEmpty()) {
-        qDebug() << "ShapesWidget setPenColor:" << m_currentType;
-        ConfigSettings::instance()->setValue(m_currentType, "color_index", colorNum);
-    }
 
-    update();
-}
-*/
 void ShapesWidget::clearSelected()
 {
     for (int j = 0; j < m_selectedShape.mainPoints.length(); j++) {
@@ -229,7 +223,7 @@ void ShapesWidget::saveActionTriggered()
     setAllTextEditReadOnly();
     clearSelected();
     m_clearAllTextBorder = true;
-    qInfo() << __FUNCTION__ << __LINE__ << "已清除图形编辑界面";
+    qInfo() << __FUNCTION__ << __LINE__ << "已清楚图形编辑界面";
 }
 
 //点击某个形状
@@ -237,33 +231,55 @@ bool ShapesWidget::clickedOnShapes(QPointF pos)
 {
     bool onShapes = false;
     m_selectedOrder = -1;
-//    qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
-//             << ", pos: " << pos
-//             << ", m_shapes.length(): " << m_shapes.length();
+    //    qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
+    //             << ", pos: " << pos
+    //             << ", m_shapes.length(): " << m_shapes.length();
     for (int i = 0; i < m_shapes.length(); i++) {
         //当前是否有形状被选中
         bool currentOnShape = false;
         if (m_shapes[i].type == "rectangle") {
-            if (clickedOnRect(m_shapes[i].mainPoints, pos,
-                              m_shapes[i].isBlur || m_shapes[i].isMosaic)) {
+            if (clickedOnRect(m_shapes[i].mainPoints, pos, false)) {
                 currentOnShape = true;
                 emit shapeClicked("rect");
             }
         }
         if (m_shapes[i].type == "oval") {
-            if (clickedOnEllipse(m_shapes[i].mainPoints, pos,
-                                 m_shapes[i].isBlur || m_shapes[i].isMosaic)) {
+            if (clickedOnEllipse(m_shapes[i].mainPoints, pos, false)) {
                 currentOnShape = true;
                 emit shapeClicked("circ");
             }
         }
+        if (m_shapes[i].type == "effect") {
+            if (m_shapes[i].isOval == 0) {
+                if (clickedOnEllipse(m_shapes[i].mainPoints, pos, true)) {
+                    currentOnShape = true;
+                    emit shapeClicked("effect");
+                }
+            } else if (m_shapes[i].isOval == 1) {
+                if (clickedOnRect(m_shapes[i].mainPoints, pos, true)) {
+                    currentOnShape = true;
+                    emit shapeClicked("effect");
+                }
+            } else {
+                if (clickedOnLine(m_shapes[i].mainPoints, m_shapes[i].points, pos)) {
+                    continue;
+                }
+            }
+
+        }
         if (m_shapes[i].type == "arrow") {
+            if (clickedOnArrow(m_shapes[i].points, pos)) {
+                currentOnShape = true;
+                emit shapeClicked("arrow");
+            }
+        }
+        if (m_shapes[i].type == "line") {
             if (clickedOnArrow(m_shapes[i].points, pos)) {
                 currentOnShape = true;
                 emit shapeClicked("line");
             }
         }
-        if (m_shapes[i].type == "line") {
+        if (m_shapes[i].type == "pen") {
             if (clickedOnLine(m_shapes[i].mainPoints, m_shapes[i].points, pos)) {
                 currentOnShape = true;
                 emit shapeClicked("pen");
@@ -272,14 +288,6 @@ bool ShapesWidget::clickedOnShapes(QPointF pos)
 
         if (m_shapes[i].type == "text") {
             if (clickedOnText(m_shapes[i].mainPoints, pos)) {
-
-//                int tmpIndex = m_shapes[m_selectedOrder].index;
-//                if (m_editMap.contains(tmpIndex)) {
-//                    QColor t_color = m_editMap.value(tmpIndex)->getColor();
-////                    int colorNum = colorIndex(t_color);
-////                    ConfigSettings::instance()->setValue("text", "prev_color", colorNum);
-//                }
-
                 currentOnShape = true;
                 emit shapeClicked("text");
             }
@@ -306,23 +314,38 @@ bool ShapesWidget::clickedShapes(QPointF pos)
 {
     for (int i = 0; i < m_shapes.length(); i++) {
         if (m_shapes[i].type == "rectangle") {
-            if (clickedOnRect(m_shapes[i].mainPoints, pos,
-                              m_shapes[i].isBlur || m_shapes[i].isMosaic)) {
+            if (clickedOnRect(m_shapes[i].mainPoints, pos, false)) {
                 return true;
             }
         }
         if (m_shapes[i].type == "oval") {
-            if (clickedOnEllipse(m_shapes[i].mainPoints, pos,
-                                 m_shapes[i].isBlur || m_shapes[i].isMosaic)) {
+            if (clickedOnEllipse(m_shapes[i].mainPoints, pos, false)) {
                 return true;
             }
         }
-        if (m_shapes[i].type == "arrow") {
+
+        if (m_shapes[i].type == "effect") {
+            if (m_shapes[i].isOval == 0) {
+                if (clickedOnEllipse(m_shapes[i].mainPoints, pos, true)) {
+                    return true;
+                }
+            } else if (m_shapes[i].isOval == 1) {
+                if (clickedOnRect(m_shapes[i].mainPoints, pos, true)) {
+                    return true;
+                }
+            } else {
+                if (clickedOnLine(m_shapes[i].mainPoints, m_shapes[i].points, pos)) {
+                    return true;
+                }
+            }
+        }
+
+        if (m_shapes[i].type == "arrow" || m_shapes[i].type == "line") {
             if (clickedOnArrow(m_shapes[i].points, pos)) {
                 return true;
             }
         }
-        if (m_shapes[i].type == "line") {
+        if (m_shapes[i].type == "pen") {
             if (clickedOnLine(m_shapes[i].mainPoints, m_shapes[i].points, pos)) {
                 return true;
             }
@@ -543,15 +566,6 @@ bool ShapesWidget::clickedOnArrow(QList<QPointF> points, QPointF pos)
     m_isRotated = false;
     m_isArrowRotated = false;
 
-//    QPointF t_rotatepos;
-
-//    qreal t_minx = qMin(points[1].x(), points[0].x());
-//    qreal t_miny = qMin(points[1].y(), points[0].y());
-//    int t_height = qAbs(points[1].y() - points[0].y());
-//    int t_width = qAbs(points[1].x() - points[0].x());
-
-//    t_rotatepos.setX(t_minx + t_width / 2 - 5);
-//    t_rotatepos.setY(t_miny + t_height / 2 - 35);
 
     if (pointClickIn(points[0], pos)) {
         m_isSelected = true;
@@ -567,15 +581,7 @@ bool ShapesWidget::clickedOnArrow(QList<QPointF> points, QPointF pos)
         m_resizeDirection = Right;
         m_pressedPoint = pos;
         return true;
-    } /*else if (pointClickIn(t_rotatepos, pos)) {
-        m_isSelected = true;
-        m_isRotated = true;
-        m_isArrowRotated = true;
-        m_resizeDirection = Rotate;
-        m_pressedPoint = pos;
-        return true;*/
-//    }
-    else if (pointOnLine(points[0], points[1], pos)) {
+    } else if (pointOnLine(points[0], points[1], pos)) {
         m_isSelected = true;
         m_isRotated = false;
         m_resizeDirection = Moving;
@@ -792,16 +798,6 @@ bool ShapesWidget::hoverOnArrow(QList<QPointF> points, QPointF pos)
     if (points.length() != 2)
         return false;
 
-//    QPointF t_rotatepos;
-
-//    qreal t_minx = qMin(points[1].x(), points[0].x());
-//    qreal t_miny = qMin(points[1].y(), points[0].y());
-//    int t_height = qAbs(points[1].y() - points[0].y());
-//    int t_width = qAbs(points[1].x() - points[0].x());
-
-//    t_rotatepos.setX(t_minx + t_width / 2 - 5);
-//    t_rotatepos.setY(t_miny + t_height / 2 - 35);
-
     if (pointOnLine(points[0], points[1], pos)) {
         m_resizeDirection = Moving;
         return true;
@@ -815,13 +811,7 @@ bool ShapesWidget::hoverOnArrow(QList<QPointF> points, QPointF pos)
         m_clickedKey =   Second;
         m_resizeDirection = Rotate;
         return true;
-    } /*else if ( m_selectedIndex != -1 && m_selectedIndex == m_hoveredIndex
-                && pointClickIn(t_rotatepos, pos)) {
-        m_clickedKey =  Third;
-        m_resizeDirection = Rotate;
-        return true;*/
-//    }
-    else {
+    } else {
         m_resizeDirection = Outting;
         return false;
     }
@@ -898,12 +888,16 @@ bool ShapesWidget::hoverOnShapes(Toolshape toolShape, QPointF pos)
         return hoverOnRect(toolShape.mainPoints, pos);
     } else if (toolShape.type == "oval") {
         return hoverOnEllipse(toolShape.mainPoints, pos);
-    } else if (toolShape.type == "arrow") {
+    } else if (toolShape.type == "arrow" || toolShape.type == "line") {
         return hoverOnArrow(toolShape.points, pos);
-    } else if (toolShape.type == "line") {
+    } else if (toolShape.type == "pen") {
         return hoverOnLine(toolShape.mainPoints, toolShape.points, pos);
     } else if (toolShape.type == "text") {
         return hoverOnText(toolShape.index, toolShape.mainPoints, pos);
+    } else if (toolShape.type == "effect" && toolShape.isOval == 0) {
+        return hoverOnEllipse(toolShape.mainPoints, pos);
+    } else if (toolShape.type == "effect" && toolShape.isOval == 1) {
+        return hoverOnRect(toolShape.mainPoints, pos);
     }
 
     m_hoveredShape.type = "";
@@ -961,7 +955,7 @@ void ShapesWidget::handleDrag(QPointF oldPoint, QPointF newPoint)
         return;
     }
 
-    if (m_shapes[m_selectedOrder].type == "arrow") {
+    if (m_shapes[m_selectedOrder].type == "arrow" || m_shapes[m_selectedOrder].type == "line") {
         for (int i = 0; i < m_shapes[m_selectedOrder].points.length(); i++) {
             m_shapes[m_selectedOrder].points[i] = QPointF(
                                                       m_shapes[m_selectedOrder].points[i].x() + (newPoint.x() - oldPoint.x()),
@@ -990,13 +984,13 @@ void ShapesWidget::handleDrag(QPointF oldPoint, QPointF newPoint)
 ////////////////////TODO: perfect handleRotate..
 void ShapesWidget::handleRotate(QPointF pos)
 {
-    qDebug() << "handleRotate:" << m_selectedIndex << m_shapes.length();
+    //qDebug() << "handleRotate:" << m_selectedIndex << m_shapes.length();
 
     if (m_selectedIndex == -1 || m_selectedShape.type == "text") {
         return;
     }
 
-    if (m_selectedShape.type == "arrow") {
+    if (m_selectedShape.type == "arrow" || m_selectedShape.type == "line") {
         if (m_isArrowRotated == false) {
             if (m_shapes[m_selectedOrder].isShiftPressed) {
                 if (static_cast<int>(m_shapes[m_selectedOrder].points[0].x()) == static_cast<int>(m_shapes[m_selectedOrder].points[1].x())) {
@@ -1033,12 +1027,6 @@ void ShapesWidget::handleRotate(QPointF pos)
             t_rotatepos.setY(t_miny + t_height / 2);
 
             qreal angle = calculateAngle(m_pressedPoint, pos, t_rotatepos) / 35;
-
-//            for (int i = 0; i < 2; i++) {
-//                m_shapes[m_selectedOrder].mainPoints[i] = pointRotate(t_rotatepos,
-//                                                                      m_selectedShape.mainPoints[i], angle);
-//            }
-
             for (int k = 0; k < m_selectedShape.points.length(); k++) {
                 m_shapes[m_selectedOrder].points[k] = pointRotate(t_rotatepos,
                                                                   m_selectedShape.points[k], angle);
@@ -1099,8 +1087,6 @@ void ShapesWidget::handleRotate(QPointF pos)
 
 void ShapesWidget::handleResize(QPointF pos, int key)
 {
-    qDebug() << "handleResize:" << m_selectedIndex << m_shapes.length();
-
     if (m_isResize && m_selectedIndex != -1) {
         if (m_shapes[m_selectedOrder].portion.isEmpty()) {
             for (int k = 0; k < m_shapes[m_selectedOrder].points.length(); k++) {
@@ -1116,7 +1102,6 @@ void ShapesWidget::handleResize(QPointF pos, int key)
                                           m_shapes[m_selectedOrder].mainPoints[3], pos, key,
                                           m_isShiftPressed);
 
-        qDebug() << "handleResize:" << m_selectedIndex <<  m_isShiftPressed;
         m_shapes[m_selectedOrder].mainPoints = newResizeFPoints;
         m_selectedShape.mainPoints = newResizeFPoints;
         m_hoveredShape.mainPoints = newResizeFPoints;
@@ -1142,20 +1127,8 @@ bool ShapesWidget::event(QEvent *event)
         if (QGesture *pinch = static_cast<QGestureEvent *>(event)->gesture(Qt::PinchGesture)) {
             pinchTriggered(static_cast<QPinchGesture *>(pinch));
         }
-//        if (QGesture *pan = static_cast<QGestureEvent *>(event)->gesture(Qt::PanGesture)){
-//            if(static_cast<QPanGesture *>(pan)->state() == Qt::GestureState::GestureFinished){
-//            }
-//        }
-//        if (QGesture *tap = static_cast<QGestureEvent *>(event)->gesture(Qt::TapAndHoldGesture)){
-//            if(static_cast<QTapAndHoldGesture *>(tap)->state() == Qt::GestureState::GestureFinished){
-//            }
-//        }
-//        if (QGesture *tap = static_cast<QGestureEvent *>(event)->gesture(Qt::SwipeGesture)){
-//        }
-//        if (QGesture *tap = static_cast<QGestureEvent *>(event)->gesture(Qt::CustomGesture)){
-//        }
+        update();
     }
-    update();
     return QWidget::event(event);
 }
 
@@ -1163,6 +1136,7 @@ bool ShapesWidget::event(QEvent *event)
 void ShapesWidget::mousePressEvent(QMouseEvent *e)
 {
     m_lastAngle = 0;
+    m_currentCursor = QCursor().pos();
     //选中图形后，重新按下真实鼠标左键
     if (Qt::MouseEventSource::MouseEventSynthesizedByQt != e->source()
             && m_selectedIndex != -1) {
@@ -1232,10 +1206,8 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
         //qDebug() << "no one shape be clicked!" << m_selectedIndex << m_shapes.length();
 
         m_currentShape.type = m_currentType;
-        m_currentShape.colorIndex = ConfigSettings::instance()->value(
-                                        m_currentType, "color_index").toInt();
-        m_currentShape.lineWidth = LINEWIDTH(ConfigSettings::instance()->value(
-                                                 m_currentType, "linewidth_index").toInt());
+        m_currentShape.colorIndex = ConfigSettings::instance()->getValue(m_currentType, "color_index").toInt();
+        m_currentShape.lineWidth = LINEWIDTH(ConfigSettings::instance()->getValue(m_currentType, "line_width").toInt());
 
         m_selectedIndex = -1;
         m_shapesIndex += 1;
@@ -1243,50 +1215,40 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
 
         if (m_pos1 == QPointF(0, 0)) {
             m_pos1 = e->pos();
-            if (m_currentType == "line") {
+            if (m_currentType == "pen") {
                 m_currentShape.index = m_currentIndex;
                 m_currentShape.points.append(m_pos1);
             } else if (m_currentType == "arrow") {
                 m_currentShape.index = m_currentIndex;
                 m_currentShape.isShiftPressed = m_isShiftPressed;
                 m_currentShape.points.append(m_pos1);
-                m_currentShape.isStraight = ConfigSettings::instance()->value(
-                                                "arrow", "is_straight").toBool();
-                if (m_currentShape.isStraight) {
-                    m_currentShape.lineWidth = LINEWIDTH(ConfigSettings::instance()->value(
-                                                             "arrow", "straightline_linewidth_index").toInt());
+                m_currentShape.lineWidth = LINEWIDTH(ConfigSettings::instance()->getValue("arrow", "line_width").toInt());
+            } else if (m_currentType == "line") {
+                m_currentShape.index = m_currentIndex;
+                m_currentShape.isShiftPressed = m_isShiftPressed;
+                m_currentShape.points.append(m_pos1);
+                m_currentShape.lineWidth = LINEWIDTH(ConfigSettings::instance()->getValue("line", "line_width").toInt());
+            } else if (m_currentType == "effect") {
+                m_currentShape.isShiftPressed = m_isShiftPressed;
+                m_currentShape.index = m_currentIndex;
+                m_currentShape.isBlur = ConfigSettings::instance()->getValue("effect", "isBlur").toBool();
+                m_currentShape.isOval = ConfigSettings::instance()->getValue("effect", "isOval").toInt();
+                m_currentShape.radius = ConfigSettings::instance()->getValue("effect", "radius").toInt() * 3 + 10;
+                m_currentShape.lineWidth = LINEWIDTH(ConfigSettings::instance()->getValue("effect", "line_width").toInt());
+                if (m_currentShape.isBlur) {
+                    emit reloadEffectImg("blur", m_currentShape.radius);
                 } else {
-                    m_currentShape.lineWidth = LINEWIDTH(ConfigSettings::instance()->value(
-                                                             "arrow", "arrow_linewidth_index").toInt());
+                    emit reloadEffectImg("mosaic", m_currentShape.radius);
+                }
+                if (m_currentShape.isOval == 2) {
+                    m_currentShape.points.append(m_pos1);
                 }
             } else if (m_currentType == "rectangle") {
-                m_currentShape.isBlur = ConfigSettings::instance()->value(
-                                            "rectangle", "is_blur").toBool();
-                m_currentShape.isMosaic = ConfigSettings::instance()->value(
-                                              "rectangle", "is_mosaic").toBool();
                 m_currentShape.isShiftPressed = m_isShiftPressed;
                 m_currentShape.index = m_currentIndex;
-                if (m_currentShape.isBlur && !m_blurEffectExist) {
-                    emit reloadEffectImg("blur");
-                    m_blurEffectExist = true;
-                } else if (m_currentShape.isMosaic &&  !m_mosaicEffectExist) {
-                    emit reloadEffectImg("mosaic");
-                    m_mosaicEffectExist = true;
-                }
             } else if (m_currentType == "oval") {
-                m_currentShape.isBlur = ConfigSettings::instance()->value(
-                                            "oval", "is_blur").toBool();
-                m_currentShape.isMosaic = ConfigSettings::instance()->value(
-                                              "oval", "is_mosaic").toBool();
                 m_currentShape.isShiftPressed = m_isShiftPressed;
                 m_currentShape.index = m_currentIndex;
-                if (m_currentShape.isBlur && !m_blurEffectExist) {
-                    emit reloadEffectImg("blur");
-                    m_blurEffectExist = true;
-                } else if (m_currentShape.isMosaic &&  !m_mosaicEffectExist) {
-                    emit reloadEffectImg("mosaic");
-                    m_mosaicEffectExist = true;
-                }
             } else if (m_currentType == "text") {
                 if (!m_editing) {
                     setAllTextEditReadOnly();
@@ -1296,10 +1258,11 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     qDebug() << "new textedit:" << m_currentIndex;
                     TextEdit *edit = new TextEdit(m_currentIndex, this);
                     QString t_editText = QString(tr("Input text here"));
-                    edit->setPlainText(t_editText);
+                    edit->appendPlainText(t_editText);
+//                    edit->setPlainText(t_editText);
                     m_editing = true;
                     edit->setEditing(true);
-                    int defaultFontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();
+                    int defaultFontSize = ConfigSettings::instance()->getValue("text", "fontsize").toInt();
                     m_currentShape.fontSize = defaultFontSize;
 
 
@@ -1312,17 +1275,11 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     m_selectedIndex = m_currentIndex;
                     m_selectedShape = m_currentShape;
                     m_lastEditMapKey = m_currentIndex;
-//                    m_selectedOrder = m_currentIndex;
-//                    updateTextRect();
 
-//
 
                     connect(edit, &TextEdit::repaintTextRect, this, &ShapesWidget::updateTextRect);
-//                    connect(edit, &TextEdit::backToEditing, this, [ = ] {
-//                        m_editing = true;
-//                    });
                     connect(edit, &TextEdit::clickToEditing, this, [ = ](int index) {
-//                        setAllTextEditReadOnly();
+                        //                        setAllTextEditReadOnly();
                         for (int k = 0; k < m_shapes.length(); k++) {
                             if (m_shapes[k].type == "text" && m_shapes[k].index == index) {
                                 m_selectedIndex = index;
@@ -1352,7 +1309,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     });
 
                     connect(edit, &TextEdit::textEditSelected, this, [ = ](int index) {
-//                        setAllTextEditReadOnly();
+                        //                        setAllTextEditReadOnly();
                         if (m_selectedIndex != index) {
                             m_editing = false;
                             m_currentShape.type = "";
@@ -1385,7 +1342,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                     });
 
                     connect(edit, &TextEdit::textEditFinish, this, [ = ](int index) {
-//                        setAllTextEditReadOnly();
+                        //                        setAllTextEditReadOnly();
                         Q_UNUSED(index);
                         setAllTextEditReadOnly();
                     });
@@ -1413,8 +1370,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
                 } else {
                     m_editing = false;
                     setAllTextEditReadOnly();
-                    m_shapesIndex -= 1;
-                    m_currentIndex = m_shapesIndex;
+
                 }
             }
             update();
@@ -1457,7 +1413,7 @@ void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)
 
     //qDebug() << m_isRecording << m_isSelected << m_pos2;
     if (m_isRecording && !m_isSelected && m_pos2 != QPointF(0, 0)) {
-        if (m_currentType == "arrow") {
+        if (m_currentType == "arrow" || m_currentType == "line") {
             if (m_currentShape.points.length() == 2) {
                 if (m_isShiftPressed) {
                     if (std::atan2(std::abs(m_pos2.y() - m_pos1.y()), std::abs(m_pos2.x() - m_pos1.x()))
@@ -1473,7 +1429,7 @@ void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)
 
                 m_shapes.append(m_currentShape);
             }
-        } else if (m_currentType == "line") {
+        } else if (m_currentType == "pen") {
             FourPoints lineFPoints = fourPointsOfLine(m_currentShape.points);
             m_currentShape.mainPoints = lineFPoints;
             m_shapes.append(m_currentShape);
@@ -1485,6 +1441,13 @@ void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)
 
         //qDebug() << "ShapesWidget num:" << m_shapes.length();
         clearSelected();
+        //选中当前绘制的图形
+        if (m_currentShape.type != "effect" || m_currentShape.isOval != 2) {
+            m_selectedIndex = m_currentIndex;
+            m_selectedShape = m_currentShape;
+            m_selectedOrder = m_shapes.length() - 1;
+            m_isSelected = true;
+        }
     }
 
     m_isRecording = false;
@@ -1506,20 +1469,13 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
 {
     m_isMoving = true;
     m_movingPoint = e->pos();
-
-//    if (!m_globalRect.contains(t_currentPos.x(), t_currentPos.y())) {
-//        qDebug() << "m_globalRect:" << e->globalPos();
-//        qApp->setOverrideCursor(Qt::ArrowCursor);
-//        return;
-//    }
-
-//    qDebug() << "m_movingPoint" << e->g
+    m_currentCursor = QCursor().pos();
 
     if (m_isRecording && m_isPressed) {
         m_pos2 = e->pos();
         updateCursorShape();
 
-        if (m_currentShape.type == "arrow") {
+        if (m_currentShape.type == "arrow" || m_currentShape.type == "line") {
             if (m_currentShape.points.length() <= 1) {
                 if (m_isShiftPressed) {
                     if (std::atan2(std::abs(m_pos2.y() - m_pos1.y()),
@@ -1544,10 +1500,24 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
                 }
             }
         }
-        if (m_currentShape.type == "line") {
+        if (m_currentShape.type == "pen") {
             if (getDistance(m_currentShape.points[m_currentShape.points.length() - 1], m_pos2) > 3) {
                 m_currentShape.points.append(m_pos2);
 
+            }
+        }
+        // 模糊笔
+        if (m_currentShape.type == "effect" && m_currentShape.isOval == 2) {
+            double distance = getDistance(m_currentShape.points[m_currentShape.points.length() - 1], m_pos2);
+            if (distance > 14) {
+                QList<QPointF> interpolationPoints = getInterpolationPoints(m_currentShape.points[m_currentShape.points.length() - 1], m_pos2,
+                                                                            (distance / 7));
+                for (int i = 0; i < interpolationPoints.size(); ++i) {
+                    m_currentShape.points.append(interpolationPoints[i]);
+                }
+                m_currentShape.points.append(m_pos2);
+            } else if (distance > 7) {
+                m_currentShape.points.append(m_pos2);
             }
         }
         update();
@@ -1591,6 +1561,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
                 if (hoverOnShapes(m_shapes[i],  e->pos())) {
                     m_isHovered = true;
                     m_hoveredShape = m_shapes[i];
+                    //悬停状态时，根据悬停的位置不同，光标的形状也不同
                     if (m_resizeDirection == Left) {
                         if (m_isSelected || m_isRotated) {
                             qApp->setOverrideCursor(Qt::SizeHorCursor);
@@ -1615,7 +1586,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
                         } else {
                             qApp->setOverrideCursor(Qt::ClosedHandCursor);
                         }
-                    }  else if (m_resizeDirection == TopLeft) {
+                    } else if (m_resizeDirection == TopLeft) {
                         if (m_isSelected || m_isRotated) {
                             qApp->setOverrideCursor(Qt::SizeFDiagCursor);
                         } else {
@@ -1646,11 +1617,11 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
                     } else {
                         updateCursorShape();
                     }
-                    update();
+                    //update();
                     break;
                 } else {
                     updateCursorShape();
-                    update();
+                    //update();
                 }
             }
             if (!m_isHovered) {
@@ -1658,7 +1629,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
                     m_hoveredShape.mainPoints[j] = QPointF(0, 0);
                 }
                 m_hoveredShape.type = "";
-                update();
+                //update();
             }
             if (m_shapes.length() == 0) {
                 updateCursorShape();
@@ -1667,24 +1638,35 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
             //TODO text
         }
     }
-
+    update();
     DFrame::mouseMoveEvent(e);
 }
 
-void ShapesWidget::updateTextRect(TextEdit *edit, QRectF newRect, QString text, int fontsize)
+//鼠标选中图形时，可以通过w/a/s/d及小键盘方向键控制光标移动
+void ShapesWidget::keyPressEvent(QKeyEvent *keyEvent)
+{
+    if (m_isPressed) {
+        Utils::cursorMove(m_currentCursor, keyEvent);
+    }
+    if (keyEvent->key() == Qt::Key_Delete || keyEvent->key() == Qt::Key_Backspace) {
+        deleteCurrentShape();
+    } else {
+        qDebug() << "ShapeWidget Exist keyEvent:" << keyEvent->text();
+    }
+}
+
+void ShapesWidget::updateTextRect(TextEdit *edit, QRectF newRect)
 {
     int index = edit->getIndex();
-    //qDebug() << "updateTextRect:" << newRect << index;
+    //    qDebug() << "updateTextRect:" << newRect << index;
     for (int j = 0; j < m_shapes.length(); j++) {
-//        qDebug() << "updateTextRect  updating:" << j << m_shapes[j].index << index;
+        //        qDebug() << "updateTextRect  updating:" << j << m_shapes[j].index << index;
         if (m_shapes[j].type == "text" && m_shapes[j].index == index) {
             m_shapes[j].mainPoints[0] = QPointF(newRect.x(), newRect.y());
             m_shapes[j].mainPoints[1] = QPointF(newRect.x(), newRect.y() + newRect.height());
             m_shapes[j].mainPoints[2] = QPointF(newRect.x() + newRect.width(), newRect.y());
             m_shapes[j].mainPoints[3] = QPointF(newRect.x() + newRect.width(),
                                                 newRect.y() + newRect.height());
-            m_shapes[j].text = text;
-            m_shapes[j].fontSize = fontsize;
             m_currentShape = m_shapes[j];
             m_selectedShape = m_shapes[j];
             m_selectedIndex = m_shapes[j].index;
@@ -1704,16 +1686,9 @@ void ShapesWidget::paintImgPoint(QPainter &painter, QPointF pos, QPixmap img, bo
                                    pos.y() - 10), img);
     }
 }
-/*
- * never used
-void ShapesWidget::paintImgPointArrow(QPainter &painter, QPointF pos, QPixmap img)
-{
-    painter.drawPixmap(QPointF(pos.x() - 18,
-                               pos.y() - 45), img);
-}
-*/
+
 void ShapesWidget::paintRect(QPainter &painter, FourPoints rectFPoints, int index,
-                             ShapeBlurStatus rectStatus, bool isBlur, bool isMosaic)
+                             ShapeBlurStatus rectStatus, bool isBlur, bool isMosaic, int radius)
 {
     QPainterPath rectPath;
     if (rectStatus  == Hovered || ((isBlur || isMosaic) && index == m_selectedIndex)) {
@@ -1729,22 +1704,22 @@ void ShapesWidget::paintRect(QPainter &painter, FourPoints rectFPoints, int inde
     rectPath.lineTo(rectFPoints[0].x(), rectFPoints[0].y());
     painter.drawPath(rectPath);
 
-//    using namespace utils;
+    //    using namespace utils;
     if (isBlur) {
         painter.setClipPath(rectPath);
-        painter.drawPixmap(0, 0,  width(), height(),  TempFile::instance()->getBlurPixmap());
+        painter.drawPixmap(0, 0,  width(), height(),  TempFile::instance()->getBlurPixmap(radius));
         painter.drawPath(rectPath);
     }
     if (isMosaic) {
         painter.setClipPath(rectPath);
-        painter.drawPixmap(0, 0,  width(), height(),  TempFile::instance()->getMosaicPixmap());
+        painter.drawPixmap(0, 0,  width(), height(),  TempFile::instance()->getMosaicPixmap(radius));
         painter.drawPath(rectPath);
     }
     painter.setClipping(false);
 }
 
 void ShapesWidget::paintEllipse(QPainter &painter, FourPoints ellipseFPoints, int index,
-                                ShapeBlurStatus  ovalStatus, bool isBlur, bool isMosaic)
+                                ShapeBlurStatus  ovalStatus, bool isBlur, bool isMosaic, int radius)
 {
     if (ovalStatus  == Hovered || ((isBlur || isMosaic) && index == m_selectedIndex)) {
         painter.setPen(QColor("#01bdff"));
@@ -1756,7 +1731,7 @@ void ShapesWidget::paintEllipse(QPainter &painter, FourPoints ellipseFPoints, in
     QList<QPointF> eightControlPoints = getEightControlPoint(ellipseFPoints);
     QPainterPath ellipsePath;
     QPainterPath rectPath;
-//    qDebug() << "here" << ellipseFPoints[0].y() - ellipseFPoints[2].y();
+    //    qDebug() << "here" << ellipseFPoints[0].y() - ellipseFPoints[2].y();
 
     if (qAbs(ellipseFPoints[0].y() - ellipseFPoints[2].y()) <= 0.1
             && qAbs(ellipseFPoints[1].y() - ellipseFPoints[3].y()) <= 0.1) {
@@ -1780,15 +1755,15 @@ void ShapesWidget::paintEllipse(QPainter &painter, FourPoints ellipseFPoints, in
     }
 
 
-//    using namespace utils;
+    //    using namespace utils;
     if (isBlur) {
         painter.setClipPath(ellipsePath);
-        painter.drawPixmap(0, 0,  width(), height(),  TempFile::instance()->getBlurPixmap());
+        painter.drawPixmap(0, 0,  width(), height(),  TempFile::instance()->getBlurPixmap(radius));
         painter.drawPath(ellipsePath);
     }
     if (isMosaic) {
         painter.setClipPath(ellipsePath);
-        painter.drawPixmap(0, 0,  width(), height(),  TempFile::instance()->getMosaicPixmap());
+        painter.drawPixmap(0, 0,  width(), height(),  TempFile::instance()->getMosaicPixmap(radius));
         painter.drawPath(ellipsePath);
     }
     painter.setClipping(false);
@@ -1832,6 +1807,21 @@ void ShapesWidget::paintLine(QPainter &painter, QList<QPointF> lineFPoints)
     painter.drawPath(linePaths);
 }
 
+void ShapesWidget::paintEffectLine(QPainter &painter, QList<QPointF> lineFPoints, bool isMosaic, int radius, int lineWidth)
+{
+    QPainterPath linePaths;
+    if (lineFPoints.length() >= 1)
+        linePaths.moveTo(lineFPoints[0]);
+    else
+        return;
+
+    for (int k = 1; k < lineFPoints.length() - 2; k++) {
+        FourPoints rectFoints = getRectPoints(lineFPoints[k - 1], lineFPoints[k + 1], lineWidth);
+        paintRect(painter, rectFoints, 0, Drawing, isMosaic, !isMosaic, radius);
+        //paintRect(painter, rectFoints, 0, Hovered, false, false, radius);
+    }
+}
+
 void ShapesWidget::paintText(QPainter &painter, FourPoints rectFPoints)
 {
     QPen textPen;
@@ -1846,18 +1836,7 @@ void ShapesWidget::paintText(QPainter &painter, FourPoints rectFPoints)
         painter.drawLine(rectFPoints[2], rectFPoints[0]);
     }
 }
-void ShapesWidget::paintText(QPainter &painter, FourPoints rectFPoints, QString text, int fontsize)
-{
-    qDebug() << "fontsize: " << fontsize;
-    QFont font = painter.font() ;
-    font.setPixelSize(fontsize);
-    painter.setFont(font);
-    QRect rect(static_cast<int>(rectFPoints[0].x()),
-               static_cast<int>(rectFPoints[0].y()),
-               static_cast<int>(rectFPoints[3].x() - rectFPoints[0].x()),
-               static_cast<int>(rectFPoints[3].y() - rectFPoints[0].y()));
-    painter.drawText(rect, Qt::AlignCenter, text);
-}
+
 void ShapesWidget::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
@@ -1867,14 +1846,225 @@ void ShapesWidget::paintEvent(QPaintEvent *)
     }
 }
 
+void ShapesWidget::handlePaint(QPainter &painter)
+{
+    painter.setRenderHints(QPainter::Antialiasing);
+    QPen pen;
+    //绘制所有图形
+    for (int i = 0; i < m_shapes.length(); i++) {
+        pen.setColor(BaseUtils::colorIndexOf(m_shapes[i].colorIndex));
+        pen.setWidthF(m_shapes[i].lineWidth - 0.5);
+
+        if (m_shapes[i].type == "rectangle") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            paintRect(painter, m_shapes[i].mainPoints, m_shapes.length(), Normal, false, false);
+        } else if (m_shapes[i].type == "oval") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            paintEllipse(painter, m_shapes[i].mainPoints, m_shapes.length(), Normal, false, false);
+        } else if (m_shapes[i].type == "effect") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            if (m_shapes[i].isOval == 0) {
+                paintEllipse(painter, m_shapes[i].mainPoints, i, Drawing, m_shapes[i].isBlur, !m_shapes[i].isBlur, m_shapes[i].radius);
+            } else if (m_shapes[i].isOval == 1) {
+                paintRect(painter, m_shapes[i].mainPoints, i, Drawing, m_shapes[i].isBlur, !m_shapes[i].isBlur, m_shapes[i].radius);
+            } else {
+                pen.setJoinStyle(Qt::RoundJoin);
+                painter.setPen(pen);
+                paintEffectLine(painter, m_shapes[i].points, m_shapes[i].isBlur, m_shapes[i].radius, m_shapes[i].lineWidth);
+            }
+        } else if (m_shapes[i].type == "arrow") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            paintArrow(painter, m_shapes[i].points, pen.width(), false);
+        } else if (m_shapes[i].type == "line") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            paintArrow(painter, m_shapes[i].points, pen.width(), true);
+        } else if (m_shapes[i].type == "pen") {
+            pen.setJoinStyle(Qt::RoundJoin);
+            painter.setPen(pen);
+            paintLine(painter, m_shapes[i].points);
+        } else if (m_shapes[i].type == "text" && !m_clearAllTextBorder) {
+            //            qDebug() << "*&^" << m_shapes[i].type << m_shapes[i].index << m_selectedIndex << i;
+            QMap<int, TextEdit *>::iterator m = m_editMap.begin();
+            while (m != m_editMap.end()) {
+                if (m.key() == m_shapes[i].index) {
+                    if (!(m.value()->isReadOnly() && m_selectedIndex != i)) {
+                        paintText(painter, m_shapes[i].mainPoints);
+                    }
+                    break;
+                }
+                ++m;
+            }
+        }
+    }
+
+    //绘制选中的图形
+    if ((m_pos1 != QPointF(0, 0) && m_pos2 != QPointF(0, 0)) || m_currentShape.type == "text") {
+        FourPoints currentFPoint =  getMainPoints(m_pos1, m_pos2, m_isShiftPressed);
+        pen.setColor(BaseUtils::colorIndexOf(m_currentShape.colorIndex));
+        pen.setWidthF(m_currentShape.lineWidth - 0.5);
+
+        if (m_currentType == "rectangle" && m_currentShape.type != "text") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            paintRect(painter, currentFPoint, m_shapes.length(), Normal, false, false);
+        } else if (m_currentType == "oval" && m_currentShape.type != "text") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            paintEllipse(painter, currentFPoint, m_shapes.length(), Normal, false, false);
+
+        } else if (m_currentType == "effect") {
+            if (m_currentShape.isOval == 0) {
+                paintEllipse(painter, currentFPoint, m_shapes.length(), Drawing, m_currentShape.isBlur, !m_currentShape.isBlur, m_currentShape.radius);
+            } else if (m_currentShape.isOval == 1) {
+                paintRect(painter, currentFPoint, m_shapes.length(), Drawing, m_currentShape.isBlur, !m_currentShape.isBlur, m_currentShape.radius);
+            } else {
+                //qDebug() << m_selectedIndex << m_currentShape.isOval << m_currentShape.points.size() << m_currentShape.radius << m_currentShape.lineWidth;
+                pen.setJoinStyle(Qt::RoundJoin);
+                painter.setPen(pen);
+                paintEffectLine(painter, m_currentShape.points, m_currentShape.isBlur, m_currentShape.radius, m_currentShape.lineWidth);
+            }
+        } else if (m_currentType == "arrow" && m_currentShape.type != "text") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            paintArrow(painter, m_currentShape.points, pen.width(), false);
+        } else if (m_currentType == "line" && m_currentShape.type != "text") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            paintArrow(painter, m_currentShape.points, pen.width(), true);
+        } else if (m_currentType == "pen" && m_currentShape.type != "text") {
+            pen.setJoinStyle(Qt::RoundJoin);
+            painter.setPen(pen);
+            paintLine(painter, m_currentShape.points);
+        } else if (m_currentType == "text" && !m_clearAllTextBorder) {
+            if (m_editing) {
+                paintText(painter, m_currentShape.mainPoints);
+            }
+        }
+
+    }
+    //绘制悬停状态的图形
+    if ((m_hoveredShape.mainPoints[0] != QPointF(0, 0) ||  m_hoveredShape.points.length() != 0)
+            && m_hoveredIndex != -1) {
+        pen.setWidthF(0.5);
+        pen.setColor("#01bdff");
+        if (m_hoveredShape.type == "rectangle") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            paintRect(painter, m_hoveredShape.mainPoints, m_hoveredIndex,  Hovered, false, false);
+        } else if (m_hoveredShape.type == "oval") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            pen.setCapStyle(Qt::SquareCap);
+            painter.setPen(pen);
+            paintEllipse(painter, m_hoveredShape.mainPoints, m_hoveredIndex, Hovered, false, false);
+        } else if (m_hoveredShape.type == "arrow") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            paintArrow(painter, m_hoveredShape.points, pen.width(), false);
+        } else if (m_hoveredShape.type == "line") {
+            pen.setJoinStyle(Qt::MiterJoin);
+            painter.setPen(pen);
+            paintArrow(painter, m_hoveredShape.points, pen.width(), true);
+        } else if (m_hoveredShape.type == "pen") {
+            pen.setJoinStyle(Qt::RoundJoin);
+            painter.setPen(pen);
+            paintLine(painter, m_hoveredShape.points);
+        } else if (m_hoveredShape.type == "effect" && m_hoveredShape.isOval == 2) {
+            pen.setJoinStyle(Qt::RoundJoin);
+            painter.setPen(pen);
+            paintLine(painter, m_hoveredShape.points);
+        } else {
+            //        qDebug() << "hoveredShape type:" << m_hoveredShape.type;
+        }
+    }
+
+    qreal ration =  this->devicePixelRatioF();
+    QIcon icon(":/other/resize_handle_big.svg");
+    QPixmap resizePointImg = icon.pixmap(QSize(RESIZEPOINT_WIDTH,
+                                               RESIZEPOINT_WIDTH));
+    resizePointImg.setDevicePixelRatio(ration);
+
+    //只有当选中图形时m_selectedShape才会有内容
+    if ((m_selectedShape.type == "arrow" ||  m_selectedShape.type == "line") && m_selectedShape.points.length() == 2) {
+        paintImgPoint(painter, m_selectedShape.points[0], resizePointImg);
+        paintImgPoint(painter, m_selectedShape.points[1], resizePointImg);
+    } else if (m_selectedShape.type != "" && m_selectedShape.type != "text") {
+        if (m_selectedShape.mainPoints[0] != QPointF(0, 0) || m_selectedShape.type == "arrow") {
+
+            QPointF rotatePoint = getRotatePoint(m_selectedShape.mainPoints[0],
+                                                 m_selectedShape.mainPoints[1],
+                                                 m_selectedShape.mainPoints[2],
+                                                 m_selectedShape.mainPoints[3]);
+
+            if (m_selectedShape.type == "oval" || m_selectedShape.type == "pen" || (m_selectedShape.type == "effect" && m_selectedShape.isOval == 2)) {
+                pen.setJoinStyle(Qt::MiterJoin);
+                pen.setWidth(1);
+                pen.setColor(QColor("#01bdff"));
+                painter.setPen(pen);
+                paintRect(painter,  m_selectedShape.mainPoints, -1);
+            }
+
+            QPixmap rotatePointImg;
+            //            rotatePointImg = QIcon(":/resources/images/size/rotate.svg").pixmap(ROTATE_ICON_SIZE);
+            rotatePointImg = QIcon(":/other/icon_rotate.svg").pixmap(ROTATE_ICON_SIZE);
+            rotatePointImg.setDevicePixelRatio(this->devicePixelRatioF());
+            paintImgPoint(painter, rotatePoint, rotatePointImg, false);
+
+            //画出形状的主要骨架点
+            for (int i = 0; i < m_selectedShape.mainPoints.length(); i ++) {
+
+                paintImgPoint(painter, m_selectedShape.mainPoints[i], resizePointImg);
+            }
+
+            //画出形状的其他骨架点
+            FourPoints anotherFPoints = getAnotherFPoints(m_selectedShape.mainPoints);
+            for (int j = 0; j < anotherFPoints.length(); j++) {
+                paintImgPoint(painter, anotherFPoints[j], resizePointImg);
+            }
+        }
+    }
+}
+
+//将编辑的内容绘制到图片上
+void ShapesWidget::paintImage(QImage &image)
+{
+    QPainter painter(&image);
+    handlePaint(painter);
+    //    backgroundImage.save("/home/uos/Desktop/temp1.png");
+}
+
+bool ShapesWidget::isExistsText()
+{
+    for (int i = 0; i < m_shapes.length(); i++) {
+        if (m_shapes[i].type == "text") {
+            return true;
+        }
+    }
+    return  false;
+}
+
 void ShapesWidget::enterEvent(QEvent *e)
 {
     Q_UNUSED(e);
-    if (m_currentType != "line") {
-        qApp->setOverrideCursor(BaseUtils::setCursorShape(m_currentType));
+    if (m_currentType == "pen") {
+        qApp->setOverrideCursor(BaseUtils::setCursorShape("pen",  BaseUtils::colorIndex(m_penColor)));
+    } else if (m_currentType == "effect") {
+        int isOval = ConfigSettings::instance()->getValue("effect", "isOval").toInt();
+        QCursor setCursorValue;
+        if (isOval == 0) {
+            setCursorValue = BaseUtils::setCursorShape("oval");
+        } else if (isOval == 1) {
+            setCursorValue = BaseUtils::setCursorShape("rectangle");
+        } else {
+            setCursorValue = BaseUtils::setCursorShape("pen", 0);
+        }
+        qApp->setOverrideCursor(setCursorValue);
     } else {
-        int colIndex = ConfigSettings::instance()->value(m_currentType, "color_index").toInt();
-        qApp->setOverrideCursor(BaseUtils::setCursorShape("line",  colIndex));
+        qApp->setOverrideCursor(BaseUtils::setCursorShape(m_currentType));
     }
 }
 
@@ -2034,13 +2224,13 @@ void ShapesWidget::undoAllDrawShapes()
     clearSelected();
     update();
 }
-/*
- * never used
-QString ShapesWidget::getCurrentType()
+
+void ShapesWidget::isInUndoBtn(bool isUndo)
 {
-    return m_currentShape.type;
+    //qDebug() << ">>>>>> isInUndoBtn"  << isUndo;
+    m_isUnDo = isUndo;
 }
-*/
+
 void ShapesWidget::microAdjust(QString direction)
 {
     if (m_selectedIndex != -1 && m_selectedOrder < m_shapes.length()) {
@@ -2084,17 +2274,28 @@ void ShapesWidget::setShiftKeyPressed(bool isShift)
 
 void ShapesWidget::updateCursorShape()
 {
-    QCursor setCursorValue;
-    if (m_currentType == "line") {
-        setCursorValue = BaseUtils::setCursorShape(m_currentType, BaseUtils::colorIndex(m_penColor));
-    } else if (m_currentType == "arrow" && ConfigSettings::instance()->value("arrow", "is_straight").toBool()) {
-        setCursorValue = BaseUtils::setCursorShape("straightLine");
-    } else {
-        setCursorValue = BaseUtils::setCursorShape(m_currentType);
-    }
-    // 避免相同的光标样式重复设置
-    if (*qApp->overrideCursor() != setCursorValue) {
-        qApp->changeOverrideCursor(setCursorValue);
+//    qDebug() << "func" << __FUNCTION__ << "line" << __LINE__;
+    if (!m_isUnDo) {
+        QCursor setCursorValue;
+        if (m_currentType == "pen") {
+            m_penColor = BaseUtils::colorIndexOf(ConfigSettings::instance()->getValue("pen", "color_index").toInt());
+            setCursorValue = BaseUtils::setCursorShape(m_currentType, BaseUtils::colorIndex(m_penColor));
+        } else if (m_currentType == "effect") {
+            int isOval = ConfigSettings::instance()->getValue("effect", "isOval").toInt();
+            if (isOval == 0) {
+                setCursorValue = BaseUtils::setCursorShape("oval");
+            } else if (isOval == 1) {
+                setCursorValue = BaseUtils::setCursorShape("rectangle");
+            } else {
+                setCursorValue = BaseUtils::setCursorShape("pen", 0);
+            }
+        } else {
+            setCursorValue = BaseUtils::setCursorShape(m_currentType);
+        }
+        // 避免相同的光标样式重复设置
+        if (*qApp->overrideCursor() != setCursorValue) {
+            qApp->changeOverrideCursor(setCursorValue);
+        }
     }
 }
 
@@ -2107,242 +2308,9 @@ void ShapesWidget::menuCloseSlot()
 {
     emit closeFromMenu();
 }
-/*
- * never used
-void ShapesWidget::updateSideBarPosition()
-{
-    //QPoint sidebarPoint;
-    if (m_sideBarInit == false) {
-        m_sideBar->initSideBar();
-        m_sideBarInit = true;
-    }
-    qDebug() << this->pos();
-
-//    int t_posX = this->x();
-//    int t_posY = this->y();
-//    int t_width = this->width();
-//    int t_height = this->height();
-//    sidebarPoint = QPoint(t_posX + t_width - m_sideBar->width() - 3, t_posY + t_height / 2 - m_sideBar->height() / 2);
-//    qDebug() << "sidebar pos" << QPoint(mapToGlobal(sidebarPoint));
-    m_sideBar->showAt(QPoint(this->pos()));
-}
-*/
 void ShapesWidget::setGlobalRect(QRect rect)
 {
     m_globalRect = rect;
 }
 
-//将编辑的内容绘制到图片上
-void ShapesWidget::paintImage(QImage &image)
-{
-    qInfo() << __FUNCTION__ << __LINE__ << "正在往图片中绘制图形...";
-    QPainter painter(&image);
-    handlePaint(painter);
-    qInfo() << __FUNCTION__ << __LINE__ << "图片图形已绘制";
-    //    backgroundImage.save("/home/uos/Desktop/temp1.png");
-}
-
-bool ShapesWidget::isExistsText()
-{
-    for (int i = 0; i < m_shapes.length(); i++) {
-        if (m_shapes[i].type == "text") {
-            return true;
-        }
-    }
-    return  false;
-}
-
-//执行绘制操作
-void ShapesWidget::handlePaint(QPainter &painter)
-{
-    painter.setRenderHints(QPainter::Antialiasing);
-    QPen pen;
-    for (int i = 0; i < m_shapes.length(); i++) {
-        pen.setColor(BaseUtils::colorIndexOf(m_shapes[i].colorIndex));
-        pen.setWidthF(m_shapes[i].lineWidth - 0.5);
-
-        if (m_shapes[i].type == "rectangle") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            if ((m_shapes[i].isBlur || m_shapes[i].isMosaic) && m_selectedOrder == i) {
-                //画出具有模糊和马赛克效果的矩形框
-                paintRect(painter, m_shapes[i].mainPoints, i, Drawing,
-                          m_shapes[i].isBlur, m_shapes[i].isMosaic);
-            } else {
-                //画出普通的矩形框
-                paintRect(painter, m_shapes[i].mainPoints, m_shapes.length(), Normal,
-                          m_shapes[i].isBlur, m_shapes[i].isMosaic);
-            }
-        } else if (m_shapes[i].type == "oval") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            if ((m_shapes[i].isBlur || m_shapes[i].isMosaic) && m_selectedOrder == i) {
-                paintEllipse(painter, m_shapes[i].mainPoints, i, Drawing,
-                             m_shapes[i].isBlur, m_shapes[i].isMosaic);
-            } else {
-                paintEllipse(painter, m_shapes[i].mainPoints, m_shapes.length(), Normal,
-                             m_shapes[i].isBlur, m_shapes[i].isMosaic);
-            }
-        } else if (m_shapes[i].type == "arrow") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            paintArrow(painter, m_shapes[i].points, pen.width(), m_shapes[i].isStraight);
-        } else if (m_shapes[i].type == "line") {
-            pen.setJoinStyle(Qt::RoundJoin);
-            painter.setPen(pen);
-            paintLine(painter, m_shapes[i].points);
-        } else if (m_shapes[i].type == "text" && !m_clearAllTextBorder) {
-//            qDebug() << "*&^" << m_shapes[i].type << m_shapes[i].index << m_selectedIndex << i;
-            QMap<int, TextEdit *>::iterator m = m_editMap.begin();
-            while (m != m_editMap.end()) {
-                if (m.key() == m_shapes[i].index) {
-                    if (!(m.value()->isReadOnly() && m_selectedIndex != i)) {
-                        paintText(painter, m_shapes[i].mainPoints);
-                        //qDebug() << "text: " << m.value()->font() << m.value()->document()->toRawText() << m.value()->document()->toPlainText();
-                    }
-                    break;
-                }
-                ++m;
-            }
-        } else if (m_shapes[i].type == "text" && m_clearAllTextBorder) {
-            painter.setPen(pen);
-            paintText(painter, m_shapes[i].mainPoints, m_shapes[i].text, m_shapes[i].fontSize);
-        }
-    }
-
-    if ((m_pos1 != QPointF(0, 0) && m_pos2 != QPointF(0, 0)) || m_currentShape.type == "text") {
-        FourPoints currentFPoint =  getMainPoints(m_pos1, m_pos2, m_isShiftPressed);
-        pen.setColor(BaseUtils::colorIndexOf(m_currentShape.colorIndex));
-        pen.setWidthF(m_currentShape.lineWidth - 0.5);
-
-//        qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
-//                 << ", m_currentShape.type: " << m_currentShape.type
-//                 << ", m_currentType: " << m_currentType;
-
-        if (m_currentType == "rectangle" && m_currentShape.type != "text") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            if (m_currentShape.isBlur || m_currentShape.isMosaic) {
-                paintRect(painter, currentFPoint, m_shapes.length(), Drawing,
-                          m_currentShape.isBlur, m_currentShape.isMosaic);
-            } else {
-                paintRect(painter, currentFPoint, m_shapes.length(), Normal,
-                          m_currentShape.isBlur, m_currentShape.isMosaic);
-            }
-        } else if (m_currentType == "oval" && m_currentShape.type != "text") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            if (m_currentShape.isBlur || m_currentShape.isMosaic) {
-                paintEllipse(painter, currentFPoint, m_shapes.length(), Drawing,
-                             m_currentShape.isBlur, m_currentShape.isMosaic);
-            } else {
-                paintEllipse(painter, currentFPoint, m_shapes.length(), Normal,
-                             m_currentShape.isBlur, m_currentShape.isMosaic);
-            }
-        } else if (m_currentType == "arrow" && m_currentShape.type != "text") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            paintArrow(painter, m_currentShape.points, pen.width(), m_currentShape.isStraight);
-        } else if (m_currentType == "line" && m_currentShape.type != "text") {
-            pen.setJoinStyle(Qt::RoundJoin);
-            painter.setPen(pen);
-            paintLine(painter, m_currentShape.points);
-        } else if (m_currentType == "text" && !m_clearAllTextBorder) {
-            if (m_editing) {
-                paintText(painter, m_currentShape.mainPoints);
-            }
-        }
-    }
-
-    if ((m_hoveredShape.mainPoints[0] != QPointF(0, 0) ||  m_hoveredShape.points.length() != 0)
-            && m_hoveredIndex != -1) {
-        pen.setWidthF(0.5);
-        pen.setColor("#01bdff");
-        if (m_hoveredShape.type == "rectangle") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            paintRect(painter, m_hoveredShape.mainPoints, m_hoveredIndex,  Hovered,
-                      false, false);
-        } else if (m_hoveredShape.type == "oval") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            pen.setCapStyle(Qt::SquareCap);
-            painter.setPen(pen);
-            paintEllipse(painter, m_hoveredShape.mainPoints, m_hoveredIndex, Hovered,
-                         false, false);
-        } else if (m_hoveredShape.type == "arrow") {
-            pen.setJoinStyle(Qt::MiterJoin);
-            painter.setPen(pen);
-            paintArrow(painter, m_hoveredShape.points, pen.width(), true);
-        } else if (m_hoveredShape.type == "line") {
-            pen.setJoinStyle(Qt::RoundJoin);
-            painter.setPen(pen);
-            paintLine(painter, m_hoveredShape.points);
-        }
-    } else {
-//        qDebug() << "hoveredShape type:" << m_hoveredShape.type;
-    }
-
-    qreal ration =  this->devicePixelRatioF();
-    QIcon icon(":/images/size/resize_handle_big.svg");
-    QPixmap resizePointImg = icon.pixmap(QSize(RESIZEPOINT_WIDTH,
-                                               RESIZEPOINT_WIDTH));
-    resizePointImg.setDevicePixelRatio(ration);
-
-    //只有当选中图形时m_selectedShape才会有内容
-    if (m_selectedShape.type == "arrow" && m_selectedShape.points.length() == 2) {
-
-//        qreal t_minx = qMin(m_selectedShape.points[1].x(), m_selectedShape.points[0].x());
-//        qreal t_miny = qMin(m_selectedShape.points[1].y(), m_selectedShape.points[0].y());
-//        int t_height = qAbs(m_selectedShape.points[1].y() - m_selectedShape.points[0].y());
-//        int t_width = qAbs(m_selectedShape.points[1].x() - m_selectedShape.points[0].x());
-
-//        QPointF t_midpos;
-//        t_midpos.setX(t_minx + t_width / 2);
-//        t_midpos.setY(t_miny + t_height / 2);
-//        m_selectedShape.arrowRotatePos = t_midpos;
-        paintImgPoint(painter, m_selectedShape.points[0], resizePointImg);
-        paintImgPoint(painter, m_selectedShape.points[1], resizePointImg);
-//        paintImgPoint(painter, t_midpos, resizePointImg);
-
-//        QPixmap rotatePointImg;
-//        rotatePointImg = QIcon(":/image/newUI/normal/icon_rotate.svg").pixmap(ROTATE_ICON_SIZE);
-//        rotatePointImg.setDevicePixelRatio(this->devicePixelRatioF());
-//        paintImgPointArrow(painter, t_midpos, rotatePointImg);
-
-    } else if (m_selectedShape.type != "" && m_selectedShape.type != "text") {
-        if (m_selectedShape.mainPoints[0] != QPointF(0, 0) || m_selectedShape.type == "arrow") {
-
-            QPointF rotatePoint = getRotatePoint(m_selectedShape.mainPoints[0],
-                                                 m_selectedShape.mainPoints[1],
-                                                 m_selectedShape.mainPoints[2],
-                                                 m_selectedShape.mainPoints[3]);
-
-            if (m_selectedShape.type == "oval" || m_selectedShape.type == "line") {
-                pen.setJoinStyle(Qt::MiterJoin);
-                pen.setWidth(1);
-                pen.setColor(QColor("#01bdff"));
-                painter.setPen(pen);
-                paintRect(painter,  m_selectedShape.mainPoints, -1);
-            }
-
-            QPixmap rotatePointImg;
-//            rotatePointImg = QIcon(":/resources/images/size/rotate.svg").pixmap(ROTATE_ICON_SIZE);
-            rotatePointImg = QIcon(":/newUI/normal/icon_rotate.svg").pixmap(ROTATE_ICON_SIZE);
-            rotatePointImg.setDevicePixelRatio(this->devicePixelRatioF());
-            paintImgPoint(painter, rotatePoint, rotatePointImg, false);
-
-            //画出形状的主要骨架点
-            for (int i = 0; i < m_selectedShape.mainPoints.length(); i ++) {
-
-                paintImgPoint(painter, m_selectedShape.mainPoints[i], resizePointImg);
-            }
-
-            //画出形状的其他骨架点
-            FourPoints anotherFPoints = getAnotherFPoints(m_selectedShape.mainPoints);
-            for (int j = 0; j < anotherFPoints.length(); j++) {
-                paintImgPoint(painter, anotherFPoints[j], resizePointImg);
-            }
-        }
-    }
-}
 

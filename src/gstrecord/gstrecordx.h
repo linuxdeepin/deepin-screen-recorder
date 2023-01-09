@@ -1,12 +1,11 @@
 // Copyright (C) 2020 ~ now Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #ifndef GSTRECORDX_H
 #define GSTRECORDX_H
 #include "gstinterface.h"
-
 #include <QDebug>
 
 #include <QString>
@@ -16,6 +15,7 @@
 #include <QtConcurrent>
 #include <QObject>
 
+#include <gst/gst.h>
 
 class Utils;
 /**
@@ -170,7 +170,6 @@ private:
      * @return
      */
     GstBin *getGstBin(GstElement *element);
-
 private:
     /**
      * @brief gstreamer的管道元素

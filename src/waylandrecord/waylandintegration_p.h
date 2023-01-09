@@ -1,5 +1,5 @@
 // Copyright © 2018 Red Hat, Inc
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -81,8 +81,6 @@ public:
     WaylandIntegrationPrivate();
     ~WaylandIntegrationPrivate();
 
-    //void initDrm();
-    //void initEGL();
     void initWayland(QStringList list);
     void initWayland(QStringList list, GstRecordX *gstRecord);
 
@@ -100,7 +98,6 @@ public:
      * @return 0:非hw电脑 1:hw电脑
      */
     int getProductType();
-
     bool isEGLInitialized() const;
 
     void bindOutput(int outputName, int outputVersion);
@@ -130,13 +127,6 @@ protected Q_SLOTS:
      * @param rbuf
      */
     void processBuffer(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect);
-
-    /**
-     * @brief getImageFormat 根据wayland客户端bufferReady给过来的像素格式，转成QImage的格式
-     * @param format
-     * @return QImage的格式
-     */
-    QImage::Format getImageFormat(quint32 format);
     /**
      * @brief 此接口为了解决x86架构录屏mmap失败及花屏问题
      * @param rbuf
@@ -151,6 +141,7 @@ protected Q_SLOTS:
      * @brief 通过线程循环向gstreamer管道写入视频帧数据
      */
     void gstWriteVideoFrame();
+
     /**
         * @brief 从wayland客户端获取当前屏幕的截图
         * @param fd

@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 56.2 (81672) - https://sketch.com -->
-    <title>line-normal</title>
-    <desc>Created with Sketch.</desc>
-    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="按钮规范" transform="translate(-466.000000, -101.000000)" stroke="#000000" stroke-width="2">
-            <g id="截图工具栏" transform="translate(137.000000, 89.000000)">
-                <g id="主工具栏" transform="translate(222.000000, 10.000000)">
-                    <g id="Group-6" transform="translate(104.000000, 0.000000)">
-                        <g id="arrow" transform="translate(3.000000, 2.000000)">
-                            <g id="line-normal">
-                                <path d="M10.5,25.5 L24.5,11.5" id="Line"></path>
-                            </g>
-                        </g>
-                    </g>
-                </g>
+    <title>线</title>
+    <g id="icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-175.000000, -91.000000)">
+            <g id="线" transform="translate(175.000000, 91.000000)">
+                <rect id="占位" fill="#D8D8D8" opacity="0" x="0" y="0" width="36" height="36" rx="8"></rect>
+                <rect id="矩形" fill="#000000" fill-rule="nonzero" transform="translate(18.000000, 18.000000) rotate(45.000000) translate(-18.000000, -18.000000) " x="17" y="8" width="2" height="20" rx="0.5"></rect>
             </g>
         </g>
     </g>

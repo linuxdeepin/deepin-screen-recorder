@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -14,7 +14,7 @@
 
 
 using namespace testing;
-ACCESS_PRIVATE_FUN(ZoomIndicator, void(QPaintEvent *), paintEvent);
+ACCESS_PRIVATE_FUN(ZoomIndicator, void(), paintGL);
 
 class ZoomIndicatorTest: public testing::Test, public QObject
 {
@@ -42,8 +42,8 @@ public:
 
 TEST_F(ZoomIndicatorTest, paintEvent)
 {
-    QPaintEvent *paintEvent = new QPaintEvent(QRect());
-    call_private_fun::ZoomIndicatorpaintEvent(*zoomindicator, paintEvent);
+    //QPaintEvent *paintEvent = new QPaintEvent(QRect());
+    call_private_fun::ZoomIndicatorpaintGL(*zoomindicator);
 
-    delete paintEvent;
+    //delete paintEvent;
 }

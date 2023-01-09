@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="zh_HK">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="zh_HK">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -24,17 +26,6 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>錄屏</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>截圖</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
@@ -46,7 +37,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>View</source>
-        <translation>檢視</translation>
+        <translation>查看</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
@@ -66,7 +57,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>select-area</source>
-        <translation>選取範圍</translation>
+        <translation>選擇區域</translation>
     </message>
     <message>
         <source>Save</source>
@@ -105,12 +96,12 @@ or press the shortcut again to stop recording</source>
         <translation>滾動截圖</translation>
     </message>
     <message>
-        <source>Pin Screenshots</source>
-        <translation>貼圖</translation>
-    </message>
-    <message>
         <source>Open Folder</source>
         <translation>打開文件夾</translation>
+    </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>貼圖</translation>
     </message>
 </context>
 <context>
@@ -139,7 +130,7 @@ or press the shortcut again to stop recording</source>
     <name>RecordProcess</name>
     <message>
         <source>View</source>
-        <translation>檢視</translation>
+        <translation>查看</translation>
     </message>
     <message>
         <source>Recording finished</source>
@@ -147,7 +138,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>圖片已保存到%1</translation>
+        <translation>文件已保存到%1</translation>
     </message>
     <message>
         <source>Record</source>
@@ -211,7 +202,7 @@ or press the shortcut again to stop recording</source>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>啟動/截圖</translation>
+        <translation>啟動/截圖 </translation>
     </message>
     <message>
         <source>Exit/Save</source>
@@ -235,11 +226,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>延時5秒截屏</translation>
+        <translation>延時截圖</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>截取全屏</translation>
+        <translation>截取全螢幕</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -318,10 +309,6 @@ or press the shortcut again to stop recording</source>
         <translation>顯示快捷鍵</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>錄音</translation>
-    </message>
-    <message>
         <source>Keystroke</source>
         <translation>按鍵</translation>
     </message>
@@ -342,10 +329,6 @@ or press the shortcut again to stop recording</source>
         <translation>啟動/錄屏</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>錄製鼠標</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>工具</translation>
     </message>
@@ -362,12 +345,24 @@ or press the shortcut again to stop recording</source>
         <translation>貼圖</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>啟動滾動截圖</translation>
+    </message>
+    <message>
         <source>Start OCR</source>
         <translation>快速啟動圖文識別</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>啟動滾動截圖</translation>
+        <source>Arrow</source>
+        <translation>箭頭</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>聲音</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>錄製鼠標</translation>
     </message>
 </context>
 <context>
@@ -384,51 +379,41 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>模糊</translation>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation>矩形
+按住Shift可畫正方形</translation>
     </message>
     <message>
-        <source>Mosaic</source>
-        <translation>馬賽克</translation>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation>橢圓
+按住Shift可畫圓形</translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation>筆刷
+按住Shift可畫直線</translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation>調整模糊強度（鼠標滾輪）</translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation>調整筆刷大小（鼠標滾輪）</translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation>調整文字大小（鼠標滾輪）</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Sound On</source>
-        <translation>錄音開啟</translation>
-    </message>
-    <message>
         <source>Microphone</source>
         <translation>麥克風</translation>
-    </message>
-    <message>
-        <source>System Audio</source>
-        <translation>系統音頻</translation>
-    </message>
-    <message>
-        <source>Sound Off</source>
-        <translation>錄音關閉</translation>
-    </message>
-    <message>
-        <source>Show Keystroke</source>
-        <translation>顯示按鍵</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke</source>
-        <translation>隱藏按鍵</translation>
-    </message>
-    <message>
-        <source>Webcam On</source>
-        <translation>開啟鏡頭</translation>
-    </message>
-    <message>
-        <source>Webcam Off</source>
-        <translation>關閉鏡頭</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>顯示點擊</translation>
     </message>
     <message>
         <source>Options</source>
@@ -469,30 +454,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>30 fps</source>
         <translation>30 fps</translation>
-    </message>
-    <message>
-        <source>Rectangle</source>
-        <translation>矩形</translation>
-    </message>
-    <message>
-        <source>Ellipse</source>
-        <translation>橢圓</translation>
-    </message>
-    <message>
-        <source>Line</source>
-        <translation>直線</translation>
-    </message>
-    <message>
-        <source>Arrow</source>
-        <translation>箭頭</translation>
-    </message>
-    <message>
-        <source>Pencil</source>
-        <translation>畫筆</translation>
-    </message>
-    <message>
-        <source>Text</source>
-        <translation>文字</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -536,46 +497,157 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation>顯示光標</translation>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation>錄製鼠標</translation>
-    </message>
-    <message>
-        <source>Show Pointer</source>
-        <translation>顯示光標</translation>
+        <translation>顯示鼠標光標</translation>
     </message>
     <message>
         <source>Extract Text</source>
         <translation>識別文字</translation>
     </message>
     <message>
-        <source>Scrollshot</source>
-        <translation>滾動截圖</translation>
+        <source>Show keystroke (K)</source>
+        <translation>顯示按鍵 K</translation>
     </message>
     <message>
-        <source>Pin Screenshots</source>
-        <translation>貼圖</translation>
+        <source>Settings</source>
+        <translation>設置</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>設置 F3</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>模糊 B</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>文字 T</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>滾動截圖 Alt+I</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>識別文字 Alt+O</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>撤銷 Ctrl+Z</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>截圖</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>貼圖 Alt+P</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>錄屏</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>畫筆 P</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>開啟鏡頭 C</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>邊框效果</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>無邊框</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>關閉鏡頭 C</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation>隱藏按鍵 K</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>顯示按鍵 K</translation>
     </message>
     <message>
         <source>webm</source>
         <translation>webm</translation>
     </message>
     <message>
-        <source>ogg</source>
-        <translation>ogg</translation>
-    </message>
-    <message>
         <source>Videos</source>
         <translation>影片</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>矩形（R）
+按住Shift可畫正方形</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>橢圓（O）
+按住Shift可畫圓形</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>直線（L）
+按住Shift可畫垂直線和水平線</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>箭頭（X）
+按住Shift可畫垂直和水平箭頭</translation>
+    </message>
+    <message>
+        <source>Shadow</source>
+        <translation>投影</translation>
+    </message>
+    <message>
+        <source>Border</source>
+        <translation>外邊框</translation>
+    </message>
+    <message>
+        <source>Device</source>
+        <translation>樣機</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>聲音</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>系統音頻</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>顯示鼠標點擊</translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
+    <message>
+        <source>Close (Esc)</source>
+        <translation>關閉 Esc</translation>
+    </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>確認 Enter</translation>
     </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation> 調整錄製區域範圍在%1*%2以內，視頻效果更佳</translation>
+        <translation> 調整錄製區域範圍在%1*%2以內，影片效果更佳</translation>
     </message>
 </context>
 <context>
