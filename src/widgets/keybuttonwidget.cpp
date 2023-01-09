@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,7 +12,7 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const int _BUTTON_HEIGHT = 35;
-const int _BUTTON_WIDTH = 45;
+const int _BUTTON_WIDTH = 65;
 
 //const int LONG_BUTTON_HEIGHT = 40;
 //const int LONG_BUTTON_WIDTH = 80;

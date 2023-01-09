@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -51,9 +51,24 @@ void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
     }
 }
 
+QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::ColorType themeType)
+{
+//    if(DockPart::DCCSetting == dockPart){
+//        static QIcon icon(":/res/shot-start-plugin.svg");
+//        qDebug() << "截图录屏的图标位置: " << icon.name();
+//        return icon;
+//    }else{
+//        qDebug() << "DockPart::DCCSetting != dockPart: true";
+//        return QIcon();
+//    }
+    static QIcon icon(":/res/shot-start-plugin.svg");
+    qDebug() << "截图录屏的图标位置: " << icon.name();
+    return icon;
+}
+
 bool ShotStartPlugin::pluginIsDisable()
 {
-    return m_proxyInter->getValue(this, "disabled", true).toBool();
+    return m_proxyInter->getValue(this, "disabled", false).toBool();
 }
 
 void ShotStartPlugin::pluginStateSwitched()

@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -9,16 +9,11 @@
 #include <QObject>
 
 enum SaveAction : unsigned int {
+    SaveToClipboard,
     SaveToDesktop,
     SaveToImage,
-    AutoSave,
     SaveToSpecificDir,
-    SaveToClipboard,
-    SaveToAutoClipboard,
-    SaveToVideo,    //保存到视频目录
-    PadDefaultPath //平板适配采用扩展的思维，尽量可能少的修改桌面代码
+    AutoSave, // 自定义保存目录
 };
-
 Q_DECLARE_METATYPE(SaveAction);
-
 #endif // SAVEUTILS_H

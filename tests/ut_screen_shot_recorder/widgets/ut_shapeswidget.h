@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -988,7 +988,7 @@ TEST_F(ShapesWidgetTest, hoverOnText)
     rectPoints << QPointF(265, 235);
     rectPoints << QPointF(265, 335);
     QPointF pos = QPointF(220, 233);
-    //EXPECT_TRUE(shapesWidget->hoverOnText(rectPoints, pos));
+    EXPECT_TRUE(shapesWidget->hoverOnText(rectPoints, pos));
 }
 
 TEST_F(ShapesWidgetTest, hoverOnRotatePoint)

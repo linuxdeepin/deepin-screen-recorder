@@ -1,10 +1,11 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #ifndef TOOLBARWIDGET_H
 #define TOOLBARWIDGET_H
+#include "mainToolWidget.h"
 #include "subtoolwidget.h"
 #include <QHBoxLayout>
 
@@ -24,12 +25,14 @@ class ToolBarWidget : public DBlurEffectWidget
 public:
     explicit ToolBarWidget(DWidget *parent = nullptr);
     QPair<int, int> getSaveInfo(); //获取保存信息
+    void showAt(QPoint pos, bool isfirstTime);
 public slots:
     void onOptionButtonClicked(); // 选项按钮被点击
     void onThemeTypeChange(DGuiApplicationHelper::ColorType themeType); //主题变化槽
 signals:
-    void signalOcrButtonClicked(); // ocr被点击
-    void signalCloseButtonClicked();// 关闭按钮被点击
+    void sendOcrButtonClicked(); // ocr被点击
+    void sendCloseButtonClicked();// 关闭按钮被点击
+    void sendSaveButtonClicked();
 protected:
     void initToolBarWidget(); //初始化工具栏
     /**
@@ -39,8 +42,8 @@ protected:
      */
     void mouseMoveEvent(QMouseEvent *event) override;
 private:
+    MainToolWidget *m_mainTool;
     SubToolWidget *m_subTool;
-    DImageButton *m_closeButton;
 };
 
 #endif // TOOLBARWIDGET_H

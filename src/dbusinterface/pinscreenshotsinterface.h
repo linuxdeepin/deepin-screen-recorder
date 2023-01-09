@@ -1,5 +1,5 @@
 // Copyright (C) 2019 ~ 2019 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -73,7 +73,7 @@ public Q_SLOTS: // METHODS
             data = qCompress(data, 9);
             data = data.toBase64();
         }
-        return call(QStringLiteral("openImageAndName"), QVariant::fromValue(data), imageName, point);
+        return asyncCall(QStringLiteral("openImageAndName"), QVariant::fromValue(data), imageName, point);
     }
 
 Q_SIGNALS: // SIGNALS

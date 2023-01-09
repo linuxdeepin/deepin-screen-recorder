@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -30,13 +30,13 @@ CountdownTooltip::CountdownTooltip(DWidget *parent) : DWidget(parent),
 
 
     if(Utils::themeType == 1) {
-        countdown1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_1.svg"));
-        countdown2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_2.svg"));
-        countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_3.svg"));
+        countdown1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_1.svg"));
+        countdown2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_2.svg"));
+        countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_3.svg"));
     } else {
-        countdown1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_1-01.svg"));
-        countdown2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_2-01.svg"));
-        countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_3-01.svg"));
+        countdown1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_1-01.svg"));
+        countdown2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_2-01.svg"));
+        countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_3-01.svg"));
     }
 
     showCountdownCounter = 0;

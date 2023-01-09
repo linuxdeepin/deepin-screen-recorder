@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="es">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="es">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ o haga clic en el icono de la bandeja</translation>
     <message>
         <source>Recording</source>
         <translation>Grabaciones</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Grabación</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Captura de pantalla</translation>
     </message>
 </context>
 <context>
@@ -105,12 +96,12 @@ o haga clic en el icono de la bandeja</translation>
         <translation>Capturar desplazamiento</translation>
     </message>
     <message>
-        <source>Pin Screenshots</source>
-        <translation>Anclar captura de pantalla</translation>
-    </message>
-    <message>
         <source>Open Folder</source>
         <translation>Abrir carpeta</translation>
+    </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Anclar captura de pantalla</translation>
     </message>
 </context>
 <context>
@@ -318,10 +309,6 @@ o haga clic en el icono de la bandeja</translation>
         <translation>Mostrar atajos</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Sonido</translation>
-    </message>
-    <message>
         <source>Keystroke</source>
         <translation>Tecla</translation>
     </message>
@@ -342,10 +329,6 @@ o haga clic en el icono de la bandeja</translation>
         <translation>Iniciar/Detener</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Ratón</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>Herramientas</translation>
     </message>
@@ -362,12 +345,24 @@ o haga clic en el icono de la bandeja</translation>
         <translation>Anclar captura de pantalla</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Iniciar captura de desplazamiento</translation>
+    </message>
+    <message>
         <source>Start OCR</source>
         <translation>Iniciar OCR</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Iniciar captura de desplazamiento</translation>
+        <source>Arrow</source>
+        <translation>Flecha</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>Sonido</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Ratón</translation>
     </message>
 </context>
 <context>
@@ -384,51 +379,38 @@ o haga clic en el icono de la bandeja</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Difuminar</translation>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Mosaic</source>
-        <translation>Pixelar</translation>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Sound On</source>
-        <translation>Sonido activado</translation>
-    </message>
-    <message>
         <source>Microphone</source>
         <translation>Micrófono</translation>
-    </message>
-    <message>
-        <source>System Audio</source>
-        <translation>Audio del sistema</translation>
-    </message>
-    <message>
-        <source>Sound Off</source>
-        <translation>Sonido apagado</translation>
-    </message>
-    <message>
-        <source>Show Keystroke</source>
-        <translation>Mostrar pulsación de tecla</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke</source>
-        <translation>Ocultar pulsación de tecla</translation>
-    </message>
-    <message>
-        <source>Webcam On</source>
-        <translation>Encender cámara web</translation>
-    </message>
-    <message>
-        <source>Webcam Off</source>
-        <translation>Apagar cámara web</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>Mostrar clic</translation>
     </message>
     <message>
         <source>Options</source>
@@ -469,30 +451,6 @@ o haga clic en el icono de la bandeja</translation>
     <message>
         <source>30 fps</source>
         <translation>30 fps</translation>
-    </message>
-    <message>
-        <source>Rectangle</source>
-        <translation>Rectángulo</translation>
-    </message>
-    <message>
-        <source>Ellipse</source>
-        <translation>Elipse</translation>
-    </message>
-    <message>
-        <source>Line</source>
-        <translation>Línea</translation>
-    </message>
-    <message>
-        <source>Arrow</source>
-        <translation>Flecha</translation>
-    </message>
-    <message>
-        <source>Pencil</source>
-        <translation>Lápiz</translation>
-    </message>
-    <message>
-        <source>Text</source>
-        <translation>Texto</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -539,36 +497,143 @@ o haga clic en el icono de la bandeja</translation>
         <translation>Mostrar puntero</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Ratón</translation>
-    </message>
-    <message>
-        <source>Show Pointer</source>
-        <translation>Mostrar puntero</translation>
-    </message>
-    <message>
         <source>Extract Text</source>
         <translation>Extraer texto</translation>
     </message>
     <message>
-        <source>Scrollshot</source>
-        <translation>Capturar desplazamiento</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Mostrar pulsación de tecla (K)</translation>
     </message>
     <message>
-        <source>Pin Screenshots</source>
-        <translation>Anclar captura de pantalla</translation>
+        <source>Settings</source>
+        <translation>Ajustes</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Configuración (F3)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Desenfoque (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Texto (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Activar desplazamiento (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Extraer texto (Alt+O）</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Deshacer (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Anclar capturas de pantalla (Alt+P）</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Grabación</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Lápiz (P)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Encender cámara (C)</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Efectos del borde</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Ninguno</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>webm</source>
         <translation>webm</translation>
     </message>
     <message>
-        <source>ogg</source>
-        <translation>ogg</translation>
-    </message>
-    <message>
         <source>Videos</source>
         <translation>Videos</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shadow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Border</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>Sonido</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
+    <message>
+        <source>Close (Esc)</source>
+        <translation>Cerrar (Esc)</translation>
+    </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>Aceptar (Entrar)</translation>
     </message>
 </context>
 <context>

@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,7 +12,6 @@
 #include <DLineEdit>
 #include <DPalette>
 #include <QButtonGroup>
-#include <QHBoxLayout>
 #include <QStyleFactory>
 #include <QDebug>
 
@@ -21,14 +20,10 @@ DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
 namespace {
-const int TOOLBAR_HEIGHT = 175;
-const int TOOLBAR_WIDTH = 40;
-const int BUTTON_SPACING = 3;
-//const int COLOR_NUM = 16;
-const QSize TOOL_BUTTON_SIZE = QSize(38, 38);
-const QSize TOOL_ICON_SIZE = QSize(30, 30);
-//const QSize SPLITTER_SIZE = QSize(30, 1);
-//const QSize MIN_TOOL_BUTTON_SIZE = QSize(35, 30);
+const int TOOLBAR_HEIGHT = 50;
+const int TOOLBAR_WIDTH = 120;
+const QSize TOOL_BUTTON_SIZE = QSize(18, 18);
+const QSize TOOL_ICON_SIZE = QSize(14, 14);
 }
 
 ColorToolWidget::ColorToolWidget(DWidget *parent) : DLabel(parent)
@@ -47,128 +42,98 @@ void ColorToolWidget::initWidget()
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     setMouseTracking(true);
     setAcceptDrops(true);
+//    this->setAttribute(Qt::WA_StyledBackground,true);
+//    this->setStyleSheet("background-color:rgb(120,120,120)");
     initColorLabel();
 }
 
+
 void ColorToolWidget::initColorLabel()
 {
-    QList<ToolButton *> toolBtnList;
-    QButtonGroup *buttonGroup = new QButtonGroup(this);
-    buttonGroup->setExclusive(true);
-    //DPalette pa;
+    //颜色按钮租
+    m_colorButtonGroup = new QButtonGroup(this);
+    m_colorButtonGroup->setExclusive(true);
 
-    m_redBtn = new ToolButton();
-    m_redBtn->setCheckable(true);
-    //m_redBtn->setObjectName("redBtn");
-    Utils::setAccessibility(m_redBtn, AC_COLORTOOLWIDGET_RED_BUT);
-    m_redBtn->setFixedSize(TOOL_BUTTON_SIZE);
-    m_redBtn->setIconSize(TOOL_ICON_SIZE);
-    m_redBtn->setIcon(QIcon(":/newUI/normal/red.svg"));
-//    m_redBtn->setToolTip(tr("Select Red"));
-    toolBtnList.append(m_redBtn);
+    //主布局
+    m_baseLayout = new QGridLayout();
+    //获取颜色枚举对象
+    m_buttonColors = QMetaEnum::fromType<BaseUtils::ButtonColors>();
+    qDebug() << "Utils::pixelRatio: " << Utils::pixelRatio;
+    for (int i = 0; i < m_buttonColors.keyCount(); i++) {
+        //qDebug() << "==========colorButton" << i << "===========";
 
-    m_yellowBtn = new ToolButton();
-    //m_yellowBtn->setObjectName("yellowBtn");
-    Utils::setAccessibility(m_yellowBtn, AC_COLORTOOLWIDGET_YELLOW_BUT);
-    m_yellowBtn->setFixedSize(TOOL_BUTTON_SIZE);
-    m_yellowBtn->setIconSize(TOOL_ICON_SIZE);
-    m_yellowBtn->setIcon(QIcon(":/newUI/normal/yellow.svg"));
-//    m_yellowBtn->setToolTip(tr("Select Yellow"));
-    toolBtnList.append(m_yellowBtn);
-
-    m_blueBtn = new ToolButton();
-    //m_blueBtn->setObjectName("blueBtn");
-    Utils::setAccessibility(m_blueBtn, AC_COLORTOOLWIDGET_BLUE_BUT);
-    m_blueBtn->setFixedSize(TOOL_BUTTON_SIZE);
-    m_blueBtn->setIconSize(TOOL_ICON_SIZE);
-    m_blueBtn->setIcon(QIcon(":/newUI/normal/blue.svg"));
-//    m_blueBtn->setToolTip(tr("Select Blue"));
-    toolBtnList.append(m_blueBtn);
-
-    m_greenBtn = new ToolButton();
-    //m_greenBtn->setObjectName("greenBtn");
-    Utils::setAccessibility(m_greenBtn, AC_COLORTOOLWIDGET_GREEN_BUT);
-    m_greenBtn->setFixedSize(TOOL_BUTTON_SIZE);
-    m_greenBtn->setIconSize(TOOL_ICON_SIZE);
-    m_greenBtn->setIcon(QIcon(":/newUI/normal/green.svg"));
-//    m_greenBtn->setToolTip(tr("Select Green"));
-    toolBtnList.append(m_greenBtn);
-
-    m_baseLayout = new QVBoxLayout();
-    m_baseLayout->setContentsMargins(1, 0, 0, 0);
-//    m_baseLayout->setMargin(0);
-    m_baseLayout->setSpacing(0);
-
-    for (int k = 0; k < toolBtnList.length(); k++) {
-        m_baseLayout->addWidget(toolBtnList[k]);
-        m_baseLayout->addSpacing(BUTTON_SPACING);
-
-        buttonGroup->addButton(toolBtnList[k]);
+        //颜色按钮
+        ToolButton *colorButton = new ToolButton();
+//        colorButton->setAttribute(Qt::WA_StyledBackground,true);
+//        colorButton->setStyleSheet("background-color:rgb(0,120,120)");
+        //设置自定义属性
+        colorButton->setProperty("name", m_buttonColors.key(i));
+        colorButton->setCheckable(true);
+        //设置自动化名称
+        Utils::setAccessibility(colorButton, QString("%1_button").arg(m_buttonColors.key(i)));
+        //是固定按钮的高度
+        colorButton->setFixedSize(TOOL_BUTTON_SIZE);
+        //设置按钮为圆形20
+//        colorButton->setStyleSheet(QString("QPushButton#{border-radius:%1px}").arg(TOOL_BUTTON_SIZE.width() / 2));
+        //设置按钮图标
+        QString iconPath = QString(":/color_pen/%1.svg").arg(m_buttonColors.key(i));
+        QIcon icon(iconPath);
+        icon.actualSize(TOOL_ICON_SIZE);
+        if(Utils::pixelRatio != 1){
+            //缩放情况下需要通过此方式进行图标加载，否则出现图标被遮挡的情况
+            colorButton->setStyleSheet(QString("QPushButton{image:url(%1);"
+                                               "image-position:center;"
+                                               "padding-left:2.2px;padding-top:2.2px;padding-right:2.2px;padding-bottom:2.2px;}").arg(iconPath));
+        }else{
+            colorButton->setIcon(icon);
+            colorButton->setIconSize(TOOL_ICON_SIZE-QSize(2,2));
+        }
+        m_colorButtonGroup->addButton(colorButton);
+        m_colorButtonGroup->setId(colorButton, m_buttonColors.value(i));
+        if (i < m_buttonColors.keyCount() / 2) {
+            //第一排
+            m_baseLayout->addWidget(colorButton,0,i);
+        } else {
+            //第二排
+            m_baseLayout->addWidget(colorButton,1,i-m_buttonColors.keyCount() / 2);
+        }
+        //qDebug() << "==========colorButton" << i << "===========";
     }
-    m_baseLayout->addSpacing(5);
+
+//    m_baseLayout->addLayout(upHBox);
+//    m_baseLayout->addSpacing(2);
+//    m_baseLayout->addLayout(downHBox);
+//    m_baseLayout->addSpacing(2);
     setLayout(m_baseLayout);
 
-    connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
-    [ = ](int status) {
-        Q_UNUSED(status);
-        //DPalette pa;
-        if (m_redBtn->isChecked()) {
+    //响应点击颜色按钮事件
+    connect(m_colorButtonGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
+    [ = ](QAbstractButton * button) {
+        //获取当前点击的按钮
+        ToolButton *tempColorBtn = static_cast<ToolButton *>(button) ;
+        if (tempColorBtn->isChecked()) {
             m_isChecked = true;
-            m_redBtn->update();
-            emit colorChecked("red");
-
-            ConfigSettings::instance()->setValue(m_function, "color_index", 0);
-            ConfigSettings::instance()->setValue("common", "color_index", 0);
-        }
-
-        if (m_yellowBtn->isChecked()) {
-            m_isChecked = true;
-            m_yellowBtn->update();
-            emit colorChecked("yellow");
-            ConfigSettings::instance()->setValue(m_function, "color_index", 1);
-            ConfigSettings::instance()->setValue("common", "color_index", 1);
-        }
-        if (m_blueBtn->isChecked()) {
-            m_isChecked = true;
-            m_blueBtn->update();
-            emit colorChecked("blue");
-
-            ConfigSettings::instance()->setValue(m_function, "color_index", 2);
-            ConfigSettings::instance()->setValue("common", "color_index", 2);
-        }
-
-        if (m_greenBtn->isChecked()) {
-            m_isChecked = true;
-            m_greenBtn->update();
-            emit colorChecked("green");
-
-            ConfigSettings::instance()->setValue(m_function, "color_index", 3);
-            ConfigSettings::instance()->setValue("common", "color_index", 3);
+            tempColorBtn->update();
+            //发射当前点击按钮的名称
+            emit colorChecked(tempColorBtn->property("name").toString());
+            //将当前点击的颜色按钮写入到配置文件
+            ConfigSettings::instance()->setValue(m_function, "color_index", m_buttonColors.keyToValue(tempColorBtn->property("name").toString().toLatin1()));
         }
     });
 }
 
 void ColorToolWidget::setFunction(const QString &func)
 {
+    if (func == "effect") {
+        this->hide();
+        return;
+    } else {
+        this->show();
+    }
     m_function = func;
     int t_color = 0;
-    t_color = ConfigSettings::instance()->value(m_function, "color_index").toInt();
-//    ConfigSettings::instance()->setValue(m_function, "color_index", 0);
+    t_color = ConfigSettings::instance()->getValue(m_function, "color_index").toInt();
 
-    switch (t_color) {
-    case 0:
-        m_redBtn->click();
-        break;
-    case 1:
-        m_yellowBtn->click();
-        break;
-    case 2:
-        m_blueBtn->click();
-        break;
-    case 3:
-        m_greenBtn->click();
-        break;
-    default:
-        break;
-    }
+    m_colorButtonGroup->button(t_color)->click();
+
 }

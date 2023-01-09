@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -15,7 +15,7 @@ class ShotStartPlugin : public QObject, PluginsItemInterface
 {
     Q_OBJECT
     Q_INTERFACES(PluginsItemInterface)
-    Q_PLUGIN_METADATA(IID "com.deepin.dock.shotstart" FILE "shotstart.json")
+    Q_PLUGIN_METADATA(IID "com.deepin.dock.PluginsItemInterface" FILE "shotstart.json")
 
 public:
     explicit ShotStartPlugin(QObject *parent = nullptr);
@@ -35,6 +35,7 @@ public:
      * @param proxyInter:主程序进程，上下文指针
      */
     void init(PluginProxyInterface *proxyInter) override;
+    QIcon icon(const DockPart &dockPart, DGuiApplicationHelper::ColorType themeType = DGuiApplicationHelper::instance()->themeType()) override;
     /**
      * @brief pluginIsAllowDisable:返回插件是否允许被禁用
      * @return

@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="hu">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="hu">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,17 +23,6 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>Recording</source>
         <translation>Rögzítés</translation>
-    </message>
-</context>
-<context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Felvétel</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Képernyőkép</translation>
     </message>
 </context>
 <context>
@@ -105,12 +96,12 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <translation>Görgethető képernyőkép</translation>
     </message>
     <message>
-        <source>Pin Screenshots</source>
-        <translation>Képernyőképek kitűzése</translation>
-    </message>
-    <message>
         <source>Open Folder</source>
         <translation>Mappa megnyitása</translation>
+    </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Képernyőképek kitűzése</translation>
     </message>
 </context>
 <context>
@@ -318,10 +309,6 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <translation>Gyorsbillentyűk megjelenítése</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Hang</translation>
-    </message>
-    <message>
         <source>Keystroke</source>
         <translation>Billentyűleütés</translation>
     </message>
@@ -342,10 +329,6 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <translation>Indítás/Felvétel</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Egér</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>Eszközök</translation>
     </message>
@@ -362,12 +345,24 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <translation>Képernyőképek kitűzése</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Görgethető képernyőkép indítása</translation>
+    </message>
+    <message>
         <source>Start OCR</source>
         <translation>Optikai karakterfelismerés indítása</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Görgethető képernyőkép indítása</translation>
+        <source>Arrow</source>
+        <translation>Nyíl</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>Hang</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Egér</translation>
     </message>
 </context>
 <context>
@@ -384,51 +379,41 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Elmosás</translation>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation>Téglalap
+Négyzet rajzolásához tartsa lenyomva a Shift billentyűt</translation>
     </message>
     <message>
-        <source>Mosaic</source>
-        <translation>Mozaik</translation>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation>Ellipszis
+Kör rajzolásához tartsa lenyomva a Shift billentyűt</translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation>Ecset
+Egyenes vonal rajzolásához tartsa lenyomva a Shift billentyűt</translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation>Állítsa be az elmosódás erősségét (görgessen a beállításához)</translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation>Állítsa be az ecset méretét (görgessen a beállításához)</translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation>Állítsa be a szöveg méretét (görgessen a beállításához)</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Sound On</source>
-        <translation>Hang bekapcsolása</translation>
-    </message>
-    <message>
         <source>Microphone</source>
         <translation>Mikrofon</translation>
-    </message>
-    <message>
-        <source>System Audio</source>
-        <translation>Rendszer hangok</translation>
-    </message>
-    <message>
-        <source>Sound Off</source>
-        <translation>Hang kikapcsolása</translation>
-    </message>
-    <message>
-        <source>Show Keystroke</source>
-        <translation>A billentyűleütés megjelenítése</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke</source>
-        <translation>A billentyűleütés elrejtése</translation>
-    </message>
-    <message>
-        <source>Webcam On</source>
-        <translation>Webkamera bekapcsolása</translation>
-    </message>
-    <message>
-        <source>Webcam Off</source>
-        <translation>Webkamera kikapcsolása</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>Kattintás megjelenítése</translation>
     </message>
     <message>
         <source>Options</source>
@@ -469,30 +454,6 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>30 fps</source>
         <translation>30 fps</translation>
-    </message>
-    <message>
-        <source>Rectangle</source>
-        <translation>Négyszög</translation>
-    </message>
-    <message>
-        <source>Ellipse</source>
-        <translation>Ellipszis</translation>
-    </message>
-    <message>
-        <source>Line</source>
-        <translation>Vonal</translation>
-    </message>
-    <message>
-        <source>Arrow</source>
-        <translation>Nyíl</translation>
-    </message>
-    <message>
-        <source>Pencil</source>
-        <translation>Ceruza</translation>
-    </message>
-    <message>
-        <source>Text</source>
-        <translation>Szöveg</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -539,36 +500,147 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <translation>Mutató megjelenítése</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Egér</translation>
-    </message>
-    <message>
-        <source>Show Pointer</source>
-        <translation>Mutató megjelenítése</translation>
-    </message>
-    <message>
         <source>Extract Text</source>
         <translation>Szöveg kivonat</translation>
     </message>
     <message>
-        <source>Scrollshot</source>
-        <translation>Görgethető képernyőkép</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Billentyűleütés megjelenítése (K)</translation>
     </message>
     <message>
-        <source>Pin Screenshots</source>
-        <translation>Képernyőképek kitűzése</translation>
+        <source>Settings</source>
+        <translation>Beállítások</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Beállítások (F3)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Elmosás (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Szöveg (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Görgethető képernyőkép (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Szöveg kibontása (Alt+O）</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Visszavonás (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Képernyőkép</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Képernyőképek rögzítése (Alt+P）</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Felvétel</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Ceruza (P)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Kamera bekapcsolása (C)</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Szegély Effektjei</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Nincs</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Kamera kikapcsolása (C)</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation>Billentyűleütés elrejtése (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Billentyűleütés megjelenítése (K)</translation>
     </message>
     <message>
         <source>webm</source>
         <translation>webm</translation>
     </message>
     <message>
-        <source>ogg</source>
-        <translation>ogg</translation>
-    </message>
-    <message>
         <source>Videos</source>
         <translation>Videók</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Téglalap (R)
+Négyzet rajzolásához tartsa lenyomva a Shift billentyűt</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Ellipszis (O)
+Kör rajzolásához tartsa lenyomva a Shift billentyűt</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Vonal (L)
+Függőleges vagy vízszintes vonal rajzolásához tartsa lenyomva a Shift billentyűt</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Nyíl (X)
+Függőleges vagy vízszintes nyíl rajzolásához tartsa lenyomva a Shift billentyűt</translation>
+    </message>
+    <message>
+        <source>Shadow</source>
+        <translation>Árnyék</translation>
+    </message>
+    <message>
+        <source>Border</source>
+        <translation>Szegély</translation>
+    </message>
+    <message>
+        <source>Device</source>
+        <translation>Eszköz</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>Hang</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
+    <message>
+        <source>Close (Esc)</source>
+        <translation>Bezárás (Esc)</translation>
+    </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
     </message>
 </context>
 <context>

@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -75,7 +75,7 @@ void IconWidget::invokedMenuItem(const QString &menuId)
                                          QDBusConnection::sessionBus());
 
         shotDBusInterface.asyncCall("StartScreenshot");
-    } else if(menuId == "recorder") {
+    } else if (menuId == "recorder") {
         QDBusInterface shotDBusInterface("com.deepin.ScreenRecorder",
                                          "/com/deepin/ScreenRecorder",
                                          "com.deepin.ScreenRecorder",
@@ -87,7 +87,7 @@ void IconWidget::invokedMenuItem(const QString &menuId)
 
 QString IconWidget::getSysShortcuts(const QString type)
 {
-    QDBusInterface shortcuts("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding", "com.deepin.daemon.Keybinding");
+    QDBusInterface shortcuts("org.deepin.dde.Keybinding1", "/org/deepin/dde/Keybinding1", "org.deepin.dde.Keybinding1");
     if (!shortcuts.isValid()) {
         return getDefaultValue(type);
     }
@@ -230,9 +230,9 @@ const QPixmap IconWidget::loadSvg(const QString &fileName, const QSize &size) co
 {
     const auto ratio = devicePixelRatioF();
 
-    auto pixmapSize = QCoreApplication::testAttribute(Qt::AA_UseHighDpiPixmaps) ? size : (size * ratio);
-
-    QPixmap pixmap = QIcon::fromTheme(fileName, m_icon).pixmap(pixmapSize);
+    QPixmap pixmap;
+    pixmap = QIcon::fromTheme(fileName, m_icon).pixmap(size * ratio);
+    pixmap.setDevicePixelRatio(ratio);
 
     return pixmap;
 }

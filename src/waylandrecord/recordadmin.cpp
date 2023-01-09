@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,6 +12,7 @@
 #include <math.h>
 #include <unistd.h>
 #include <qtimer.h>
+#include <QDebug>
 
 RecordAdmin::RecordAdmin(QStringList list, WaylandIntegration::WaylandIntegrationPrivate *context, QObject *parent): QObject(parent),
     m_pInputStream(nullptr),
@@ -138,8 +139,8 @@ int RecordAdmin::startStream()
     bRet = m_pInputStream->openInputStream(); //初始化采集设备
     if (!bRet) {
         qCritical() << "打开采集设备失败";
-        printf("打开采集设备失败\n");
-        //return 1;
+//        printf("打开采集设备失败\n");
+//        return 1;
     }
     int cx, cy, fps;
     AVPixelFormat pixel_fmt;

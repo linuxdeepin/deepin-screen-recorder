@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -25,7 +25,7 @@
 
 /**
  * @brief The EventMonitor class
- * 录屏与截屏的事件监听类
+ * 录屏与截屏的事件监听类（偏底层，从x11直接获取事件或从wayland Dbus接口获取事件）
  */
 class EventMonitor : public QThread
 {

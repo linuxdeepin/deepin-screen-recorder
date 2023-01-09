@@ -1,10 +1,13 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "utils.h"
 #include "constant.h"
+#ifdef KF5_WAYLAND_FLAGE_ON
+#include "utils/waylandmousesimulator.h"
+#endif
 #include <DDialog>
 #include <DSysInfo>
 #include <DWindowManagerHelper>
@@ -22,6 +25,9 @@
 #include <QtX11Extras/QX11Info>
 #include <QStandardPaths>
 #include <QProcess>
+#include <QKeyEvent>
+#include <com_deepin_daemon_audio.h>
+#include <com_deepin_daemon_audio_sink.h>
 
 #include <X11/extensions/shape.h>
 #include <dlfcn.h>
@@ -33,6 +39,7 @@ bool Utils::is3rdInterfaceStart = false;
 bool Utils::isTabletEnvironment = false;
 bool Utils::isWaylandMode = false;
 bool Utils::isRootUser = false;
+qreal Utils::pixelRatio = 0.0;
 bool Utils::isFFmpegEnv = true;
 int Utils::themeType = 0;
 
@@ -197,7 +204,7 @@ bool Utils::isSysHighVersion1040()
         bool correct = false;
         QString sysVersion = DSysInfo::minorVersion();
         float version = sysVersion.toFloat(&correct);
-        qDebug() << "System Version:" << sysVersion << correct << sysVersion.split('.');
+        qDebug() << DSysInfo::uosEditionName() << DSysInfo::uosEditionType() << " System Version:" << sysVersion << correct << sysVersion.split('.');
         if (DSysInfo::UosProfessional == DSysInfo::uosEditionType() || DSysInfo::UosEducation == DSysInfo::uosEditionType()) {
             const float versionProfessional = 1040;
             if (correct && (version >= versionProfessional)) {
@@ -237,6 +244,7 @@ void Utils::showCurrentSys()
     //qDebug() << "majorVersion: " << DSysInfo::majorVersion();
     //qDebug() << "majorVersion: " << DSysInfo::majorVersion();
 }
+
 void Utils::enableXGrabButton()
 {
     if (Utils::isWaylandMode == true)
@@ -272,10 +280,9 @@ void Utils::disableXGrabButton()
 void Utils::getAllWindowInfo(const quint32 winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames)
 {
     Dtk::Gui::DForeignWindow *prewindow = nullptr;
-    const bool canRelease = isSysHighVersion1040();
     for (quint32 wid : Dtk::Gui::DWindowManagerHelper::instance()->currentWorkspaceWindowIdList()) {
         if (wid == winId) continue;
-        if (prewindow && canRelease) {
+        if (prewindow && isSysHighVersion1040()) {
             delete prewindow;
             prewindow = nullptr;
         }
@@ -295,11 +302,11 @@ void Utils::getAllWindowInfo(const quint32 winId, const int width, const int hei
             //window:后面代码有使用
             //window->deleteLater();
             //修改部分窗口显示不全，截图框识别问题
-            qDebug()  << "\n窗口名称: >>>> " << window->wmClass()
-                      << "\nx: " <<  window->frameGeometry().x()
-                      << "\ny: " <<  window->frameGeometry().y()
-                      << "\nwidth: " <<  window->frameGeometry().width()
-                      << "\nheight: " <<  window->frameGeometry().height()   ;
+//            qDebug()  << "\n窗口名称: >>>> " << window->wmClass()
+//                      << "\nx: " <<  window->frameGeometry().x()
+//                      << "\ny: " <<  window->frameGeometry().y()
+//                      << "\nwidth: " <<  window->frameGeometry().width()
+//                      << "\nheight: " <<  window->frameGeometry().height()   ;
             //x坐标小于0时
             if (window->frameGeometry().x() < 0) {
                 if (window->frameGeometry().y() < 0) {
@@ -441,15 +448,14 @@ void Utils::notSupportWarn()
     warnDlg.exec();
 }
 
+
 //传入屏幕上理论未经缩放的点，获取缩放后实际的点
 QPoint Utils::getPosWithScreen(QPoint pos)
 {
     QPoint dpos;
     QList<ScreenInfo> screensInfo;
     //获取所有实际屏幕的信息
-    screensInfo = getScreensInfo();
-    qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
-
+    screensInfo = getScreensInfo();    qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
     for (int i = 0; i < screensInfo.size(); i++) {
         //判断当前点在哪块屏幕上
         if (pos.x() > screensInfo[i].x && pos.x() < screensInfo[i].x + screensInfo[i].width &&
@@ -490,7 +496,6 @@ QList<Utils::ScreenInfo> Utils::getScreensInfo()
     QList<QScreen *> screenList = qApp->screens();
     qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
     QList<ScreenInfo> screensInfo;
-
     /**
      * 例如：显示器实际屏幕参数为1920*1080记为 t1，调整缩放比例为1.25记为 p,那么此时显示器显示的屏幕大小将变为1536*864记为 t2，
      * 那么此时在 t2的点要变成t1上的点，需要 t2*p = t1,在多屏的情况且需要考虑究竟在那个屏幕上
@@ -510,4 +515,79 @@ QList<Utils::ScreenInfo> Utils::getScreensInfo()
         screensInfo.append(screenInfo);
     }
     return screensInfo;
+}
+
+QString Utils::getCurrentAudioChannel()
+{
+    const QString serviceName {"com.deepin.daemon.Audio"};
+
+    QScopedPointer<com::deepin::daemon::Audio> audioInterface;
+    QScopedPointer<com::deepin::daemon::audio::Sink> defaultSink;
+
+    audioInterface.reset(
+        new com::deepin::daemon::Audio(
+            serviceName,
+            "/com/deepin/daemon/Audio",
+            QDBusConnection::sessionBus(),
+            nullptr)
+    );
+
+    defaultSink.reset(
+        new com::deepin::daemon::audio::Sink(
+            serviceName,
+            audioInterface->defaultSink().path(),
+            QDBusConnection::sessionBus(),
+            nullptr)
+    );
+    QString str_output = "";
+    if (defaultSink->isValid()) {
+        QString sinkName = defaultSink->name();
+        qDebug() << "系统声卡名称: " << sinkName;
+        QStringList options;
+        options << "-c";
+        options << QString("pacmd list-sources | grep -PB 1 %1 | head -n 1 | perl -pe 's/.* //g'").arg(sinkName);
+
+        QProcess process;
+        process.start("bash", options);
+        process.waitForFinished();
+        process.waitForReadyRead();
+        str_output = process.readAllStandardOutput();
+        qDebug() << "pacmd命令: " << options;
+        qDebug() << "通过pacmd命令获取的系统音频通道号: " << str_output;
+        if (str_output.isEmpty()) {
+            str_output = audioInterface->defaultSink().path().right(1);
+            qDebug() << "通过pacmd命令获取的系统音频通道号失败！自动分配通道号:" << str_output;
+        }
+        return str_output;
+    } else {
+        str_output = "1";
+        qDebug() << "获取系统音频通道号失败！自动分配通道号" << str_output;
+    }
+    return str_output;
+}
+
+//通过键盘控制光标移动
+void Utils::cursorMove(QPoint currentCursor, QKeyEvent *keyEvent)
+{
+    QPoint pos(currentCursor);
+    //qDebug() << "pos() >>>> 1 " << pos;
+    if (keyEvent->key() == Qt::Key_Left || keyEvent->key() == Qt::Key_A) {
+        pos.setX(std::max(pos.x() - 1, 0));
+    } else if (keyEvent->key() == Qt::Key_Right || keyEvent->key() == Qt::Key_D) {
+        pos.setX(pos.x() + 1);
+    } else if (keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_W) {
+        pos.setY(std::max(pos.y() - 1, 0));
+    } else if (keyEvent->key() == Qt::Key_Down || keyEvent->key() == Qt::Key_S) {
+        pos.setY(pos.y() + 1);
+    } else {
+        qInfo() << "the key is " << keyEvent->key() << " (" << keyEvent->text() << ")";
+    }
+    //qDebug() << "pos() >>>> 2 " << pos;
+    if (Utils::isWaylandMode) {
+#ifdef KF5_WAYLAND_FLAGE_ON
+        WaylandMouseSimulator::instance()->setCursorPoint(QPointF(pos.x() * Utils::pixelRatio, pos.y()*Utils::pixelRatio));
+#endif
+    } else {
+        QCursor::setPos(pos);
+    }
 }

@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -55,14 +55,27 @@ void DevNumMonitor::timeOutSlot()
         }
         //qDebug() << "There is no camera connected!";
     } else {
-        if (m_canUse && QCameraInfo::availableCameras().count() <= 0) {
+        //v23特有处理，由于QCameraInfo::availableCameras().count()在v23上无法获取正确结果故更换为此方式
+        int isExistAvailableCameras = 0;
+        //qDebug() << "m_canUse: " << m_canUse;
+        if (m_canUse) {
+            for (int i = 0; i < get_device_list()->num_devices; i++) {
+                int ret = camInit(get_device_list()->list_devices[i].device);
+                camUnInit();
+                if (ret == 0) {
+                    isExistAvailableCameras++;
+                    m_availableCamera = get_device_list()->list_devices[i].device;
+                }
+            }
+        }
+        if (m_canUse && isExistAvailableCameras == 0) {
             emit existDevice(false);
             m_noDevice = true;
             qDebug() << "There is no camera free!";
         } else {
             m_noDevice = false;
             emit existDevice(true);
-            qDebug() << "There are " << get_device_list()->num_devices << " camera connected and free!";
+            //qDebug() << "There are " << isExistAvailableCameras << " camera connected and free!";
         }
     }
 }
@@ -78,6 +91,11 @@ void DevNumMonitor::setWatch(const bool isWatcher)
 void DevNumMonitor::setCanUse(bool canUse)
 {
     m_canUse = canUse;
+}
+
+QString DevNumMonitor::availableCamera()
+{
+    return m_availableCamera;
 }
 DevNumMonitor::~DevNumMonitor()
 {

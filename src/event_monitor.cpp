@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -33,8 +33,7 @@ void EventMonitor::releaseRes()
         qInfo() << __FUNCTION__ << __LINE__ << "执行 XRecordFreeContext ...";
         XRecordFreeContext(m_display, m_context);
         qInfo() << __FUNCTION__ << __LINE__ << "执行 XSync ...";
-        XSync(m_display, True);
-        XSync(m_display_datalink, True);
+        XSync(m_display, False);
         qInfo() << __FUNCTION__ << __LINE__ << "执行 XCloseDisplay m_display_datalink...";
         XCloseDisplay(m_display_datalink);
         qInfo() << __FUNCTION__ << __LINE__ << "执行 XCloseDisplay m_display...";

@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ now Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -74,7 +74,6 @@ void GstRecordX::x11GstStartRecord()
     QStringList areaList;
 
     //设置录制区域的大小及位置 show-pointer:是否录制光标
-    //这里录制区域有个ximagesrc的bug，endx或者endy只要有一个的大小为显示屏的大小。录制的视频最终结果都是全屏。因此需要减一个像素
     areaList << "ximagesrc"
              << "display-name=" + qgetenv("DISPLAY")
              << "use-damage=false"
@@ -130,7 +129,7 @@ void GstRecordX::waylandGstStartRecord()
     wlarguments << "appsrc name=videoSrc";
     //此处需特别注意视频帧的格式，由于在wayland协议上，采集的画面，hw机和普通机器的像素格式有差异
     if (m_boardVendorType) {
-        wlarguments << QString("video/x-raw, format=BGRA, framerate=%1/1, width=%2, height=%3").arg(m_framerate).arg(m_recordArea.width()).arg(m_recordArea.height());
+        wlarguments << QString("video/x-raw, format=RGB, framerate=%1/1, width=%2, height=%3").arg(m_framerate).arg(m_recordArea.width()).arg(m_recordArea.height());
     } else {
         wlarguments << QString("video/x-raw, format=RGBA, framerate=%1/1, width=%2, height=%3").arg(m_framerate).arg(m_recordArea.width()).arg(m_recordArea.height());
     }
@@ -214,6 +213,7 @@ bool GstRecordX::waylandWriteVideoFrame(const unsigned char *frame, const int fr
         img = img.copy(m_recordArea);
         memcpy(ptr, img.bits(), size);
         buffer = gstInterface::m_gst_buffer_new_wrapped((void *)ptr, size);
+
 //        QImage *img = new QImage(frame, m_recordArea.width(), m_recordArea.height(), QImage::Format::Format_RGBA8888);
 //        img->save(QString("/home/uos/Desktop/test/image/test_%1.png").arg(globalCount));
 //        globalCount++;
@@ -225,7 +225,7 @@ bool GstRecordX::waylandWriteVideoFrame(const unsigned char *frame, const int fr
         //注入视频帧数据
         gstInterface::m_g_signal_emit_by_name(videoSrc, "push-buffer", buffer, &ret);
         //释放buffer
-//        gstInterface::m_gst_buffer_unref(buffer);
+        //        gstInterface::m_gst_buffer_unref(buffer);
         gstInterface::m_gst_mini_object_unref(GST_MINI_OBJECT_CAST(buffer));
     }
 
@@ -423,7 +423,7 @@ void GstRecordX::pipelineStructuredOutput(QString pipeline)
     pipeline.replace("mix.", "mix. " + nl + "\n   ");
     string = pipeline.replace("!", nl + "\n        !");
     string.append("\n");
-//    printf("%s\n", string.toLocal8Bit().data());
+    //    printf("%s\n", string.toLocal8Bit().data());
     qInfo() << "\n" << string.toLocal8Bit().data();
 }
 
@@ -431,7 +431,6 @@ GstBin *GstRecordX::getGstBin(GstElement *element)
 {
     return (GstBin *)gstInterface::m_g_type_check_instance_cast((GTypeInstance *)element, gstInterface::m_gst_bin_get_type());
 }
-
 GstRecordX::~GstRecordX()
 {
     if (m_pipeline) {
@@ -440,5 +439,3 @@ GstRecordX::~GstRecordX()
     }
 
 }
-
-

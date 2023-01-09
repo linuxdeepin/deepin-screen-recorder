@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -56,4 +56,4 @@
 #include "widgets/ut_sidebar.h"
 #include "widgets/ut_sidebarwidget.h"
 #include "widgets/ut_scrollshottip.h"
-#include "gstrecord/ut_gstrecordx.h"
+

@@ -584,7 +584,7 @@ static int check_frame_available(v4l2_dev_t *vd)
 		if(stream_state == STRM_REQ_STOP)
 			v4l2core_stop_stream(vd);
 
-		fprintf(stderr, "V4L2_CORE: (get_v4l2_frame) video stream must be started first\n");
+        if(verbosity > 0) fprintf(stderr, "V4L2_CORE: (get_v4l2_frame) video stream must be started first\n");
 		return E_NO_STREAM_ERR;
 	}
 

@@ -10,10 +10,12 @@
 SYS_EDITION=$$system("cat /etc/os-version | grep 'Community'")
 message("SYS_EDITION: " $$SYS_EDITION)
 
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+message("APP_VERSION: " $$APP_VERSION)
+
 SYS_VERSION=$$system("cat /etc/os-version | grep 'MinorVersion' | grep -o '\-\?[0-9]\+'")
 message("SYS_VERSION: " $$SYS_VERSION)
 
-DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 if (!equals(SYS_EDITION, "")) {
 # 社区版
@@ -48,24 +50,21 @@ if (!equals(SYS_EDITION, "")) {
 
 
 
-QT += dtkgui dtkwidget
+QT += dtkgui dtkwidget svg
 contains( DEFINES, KF5_WAYLAND_FLAGE_ON ) {
-    QT += KWaylandClient KI18n
+    QT += DWaylandClient KI18n
     LIBS += -lepoxy
 }
 TEMPLATE = app
 TARGET = deepin-screen-recorder
-INCLUDEPATH += . \
-            /usr/include/gstreamer-1.0 \
-
+INCLUDEPATH += .
+INCLUDEPATH += /usr/include/opencv4
 INCLUDEPATH += ../3rdparty/libcam/libcam/ \
                ../3rdparty/libcam/libcam_v4l2core/ \
                ../3rdparty/libcam/libcam_render/ \
                ../3rdparty/libcam/libcam_encoder/ \
                ../3rdparty/libcam/libcam_audio/ \
                ../3rdparty/libcam/load_libs.h
-message("PWD: " $$PWD)
-
 include(accessibility/accessible.pri)
 include(../3rdparty/libcam/libcam.pri)
 
@@ -80,11 +79,9 @@ isEqual(ARCH, mips64) {
 }
 
 CONFIG += link_pkgconfig c++11
-
-PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0 libusb-1.0 gstreamer-app-1.0
+PKGCONFIG += xcb xcb-util dframeworkdbus gstreamer-app-1.0 libusb-1.0
 
 RESOURCES = ../assets/image/deepin-screen-recorder.qrc \
-    ../assets/resources/resources.qrc \
     ../assets/icons/icons.qrc
 
 HEADERS += main_window.h \
@@ -96,7 +93,6 @@ HEADERS += main_window.h \
     button_feedback.h \
     show_buttons.h \
     keydefine.h   \
-    utils/audioutils.h \
     menucontroller/menucontroller.h \
     utils/baseutils.h \
     utils/configsettings.h \
@@ -105,15 +101,12 @@ HEADERS += main_window.h \
     utils/calculaterect.h \
     utils/saveutils.h \
     utils/shapesutils.h \
-    utils/eventlogutils.h \
     widgets/zoomIndicator.h \
-    widgets/zoomIndicatorGL.h \
     widgets/textedit.h \
     widgets/toptips.h \
     widgets/toolbar.h \
     widgets/shapeswidget.h \
     widgets/toolbutton.h \
-    widgets/maintoolwidget.h \
     widgets/subtoolwidget.h \
     widgets/keybuttonwidget.h \
     widgets/sidebar.h \
@@ -132,12 +125,17 @@ HEADERS += main_window.h \
     recordertablet.h \
     dbusinterface/ocrinterface.h \
     dbusinterface/pinscreenshotsinterface.h \
+    widgets/imagemenu.h \
+    utils/borderprocessinterface.h \
+    widgets/zoomIndicatorGL.h \
     gstrecord/gstrecordx.h \
+    utils/audioutils.h \
     gstrecord/gstinterface.h \
-    camera/majorimageprocessingthread.h \
-    camera/LPF_V4L2.h \
     camera/devnummonitor.h \
-    utils/delaytime.h
+    camera/LPF_V4L2.h \
+    camera/majorimageprocessingthread.h \
+    utils/eventlogutils.h \
+    widgets/slider.h
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
     HEADERS += widgets/scrollshottip.h \
     utils/pixmergethread.h \
@@ -147,12 +145,12 @@ contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
 
 contains( DEFINES, KF5_WAYLAND_FLAGE_ON ) {
     HEADERS += waylandrecord/writeframethread.h \
+    utils/waylandmousesimulator.h \
     waylandrecord/waylandintegration.h \
     waylandrecord/waylandintegration_p.h \
     waylandrecord/recordadmin.h \
     waylandrecord/avoutputstream.h \
     waylandrecord/avinputstream.h \
-    utils/waylandscrollmonitor.h \
     waylandrecord/avlibinterface.h \
 }
 
@@ -165,7 +163,6 @@ SOURCES += main.cpp \
     event_monitor.cpp \
     button_feedback.cpp \
     show_buttons.cpp  \
-    utils/audioutils.cpp \
     menucontroller/menucontroller.cpp \
     utils/shapesutils.cpp \
     utils/tempfile.cpp \
@@ -173,14 +170,11 @@ SOURCES += main.cpp \
     utils/shortcut.cpp \
     utils/configsettings.cpp \
     utils/baseutils.cpp \
-    utils/eventlogutils.cpp \
     widgets/toptips.cpp \
     widgets/shapeswidget.cpp \
     widgets/textedit.cpp \
     widgets/zoomIndicator.cpp \
-    widgets/zoomIndicatorGL.cpp \
     widgets/toolbar.cpp \
-    widgets/maintoolwidget.cpp \
     widgets/subtoolwidget.cpp \
     widgets/keybuttonwidget.cpp \
     widgets/sidebar.cpp \
@@ -199,12 +193,16 @@ SOURCES += main.cpp \
     recordertablet.cpp \
     dbusinterface/ocrinterface.cpp \
     dbusinterface/pinscreenshotsinterface.cpp \
+    widgets/imagemenu.cpp \
+    utils/borderprocessinterface.cpp \
+    widgets/zoomIndicatorGL.cpp \
     gstrecord/gstrecordx.cpp \
+    utils/audioutils.cpp \
     gstrecord/gstinterface.cpp \
+    camera/devnummonitor.cpp \
     camera/majorimageprocessingthread.cpp \
     camera/LPF_V4L2.c \
-    camera/devnummonitor.cpp \
-    utils/delaytime.cpp
+    utils/eventlogutils.cpp
 
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
     SOURCES += widgets/scrollshottip.cpp \
@@ -215,11 +213,11 @@ contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
 
 contains( DEFINES, KF5_WAYLAND_FLAGE_ON ) {
     SOURCES += waylandrecord/writeframethread.cpp \
+    utils/waylandmousesimulator.cpp \
     waylandrecord/waylandintegration.cpp \
     waylandrecord/recordadmin.cpp \
     waylandrecord/avinputstream.cpp \
     waylandrecord/avoutputstream.cpp \
-    utils/waylandscrollmonitor.cpp \
     waylandrecord/avlibinterface.cpp
 }
 
@@ -251,14 +249,15 @@ isEmpty(APPDIR):APPDIR=/usr/share/applications
 isEmpty(DSRDIR):DSRDIR=/usr/share/deepin-screen-recorder
 isEmpty(DOCDIR):DOCDIR=/usr/share/dman/deepin-screen-recorder
 isEmpty(ETCDIR):ETCDIR=/etc
+isEmpty(TABCONDIR):TABCONDIR=/etc/due-shell/json
 
 target.path = $$INSTROOT$$BINDIR
 icon.path = $$INSTROOT$$ICONDIR
 desktop.path = $$INSTROOT$$APPDIR
+translations.path = $$INSTROOT$$DSRDIR/translations
 
 icon.files = ../assets/image/deepin-screen-recorder.svg ../assets/image/deepin-screenshot.svg
 desktop.files = ../deepin-screen-recorder.desktop
-
 
 
 dbus_service.files = $$PWD/../assets/com.deepin.ScreenRecorder.service $$PWD/../assets/com.deepin.Screenshot.service
@@ -267,11 +266,8 @@ contains(DEFINES, DDE_START_FLAGE_ON ) {
 }
 dbus_service.path = $$PREFIX/share/dbus-1/services
 
-
 manual_dir.files = $$PWD/../assets/deepin-screen-recorder
 manual_dir.path= /usr/share/deepin-manual/manual-assets/application/
-
-
 
 INSTALLS += target icon desktop dbus_service manual_dir
 
@@ -285,3 +281,6 @@ equals(AC_FUNC_ENABLE, true ){
     DEFINES += ENABLE_ACCESSIBILITY
     message("deepin-screen-recorder enabled accessibility function with set: " $$AC_FUNC_ENABLE)
 }
+
+DISTFILES += \
+    ../3rdparty/libcam/libcam.pri

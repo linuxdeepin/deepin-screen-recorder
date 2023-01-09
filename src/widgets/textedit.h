@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -33,7 +33,7 @@ public slots:
     void setSelecting(bool select);
 
 signals:
-    void repaintTextRect(TextEdit *edit,  QRectF newPositiRect, QString text, int fontsize);
+    void repaintTextRect(TextEdit *edit,  QRectF newPositiRect);
     void backToEditing();
     void clickToEditing(int index);
     void textEditSelected(int index);
@@ -49,7 +49,6 @@ protected:
     void keyPressEvent(QKeyEvent *e);
     void focusInEvent(QFocusEvent *e);
 //    void focusOutEvent(QFocusEvent *e);
-
 private:
     int m_index;
     QColor m_textColor;
@@ -58,6 +57,17 @@ private:
 
     QPointF m_pressPoint;
     bool m_isPressed;
+    /**
+     * @brief 当前光标的位置
+     */
+    QPoint m_currentCursor;
+    /**
+     * @brief 当前光标的大小
+     */
+    int m_cursorHeight = 0;
+
+//    int m_count = 0;
+
 };
 
 #endif // TEXTEDIT_H

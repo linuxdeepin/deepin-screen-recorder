@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -78,6 +78,7 @@ public:
      */
     int getCameraStatus();
 
+    void setDevcieName(const QString &devcieName);
 protected:
     void enterEvent(QEvent *e);
     void mousePressEvent(QMouseEvent *event);
@@ -99,7 +100,6 @@ protected:
 
 public slots:
     void onReceiveMajorImage(QImage image);
-    void onReceiveMajorImage(QPixmap pixmap);
 
 private:
     int recordX = 0;

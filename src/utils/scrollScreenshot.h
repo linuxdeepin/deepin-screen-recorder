@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -8,7 +8,7 @@
 
 #include "pixmergethread.h"
 #ifdef KF5_WAYLAND_FLAGE_ON
-#include "waylandscrollmonitor.h"
+#include "waylandmousesimulator.h"
 #endif
 #include <QPixmap>
 #include <QTimer>
@@ -85,13 +85,13 @@ private:
     bool m_isManualScrollModel = false;//是否手动模式
     QRect m_rect;//调整区域
     bool m_startPixMerageThread = false;
-#ifdef KF5_WAYLAND_FLAGE_ON
-    WaylandScrollMonitor *m_WaylandScrollMonitor = nullptr;
-#endif
+//#ifdef KF5_WAYLAND_FLAGE_ON
+//    WaylandMouseSimulator *m_WaylandScrollMonitor = nullptr;
+//#endif
     /**
      * @brief 用来记录当前滚动方向
      */
     PixMergeThread::PictureDirection m_lastDirection = PixMergeThread::PictureDirection::ScrollDown;
 };
 
-#endif // AUDIOUTILS_H
+#endif // SCROLLSCREENSHOT_H

@@ -1,12 +1,12 @@
 // Copyright (C) 2019 ~ 2019 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "pinscreenshots.h"
 #include "service/pinscreenshotsinterface.h"
 #include "service/dbuspinscreenshotsadaptor.h"
-#include "putils.h"
+#include "utils.h"
 
 #include <DWidget>
 #include <DLog>
@@ -40,8 +40,8 @@ int main(int argc, char *argv[])
         qDebug() << "Cant open a null file";
         return 0;
     }
-    PUtils::isWaylandMode = isWaylandProtocol();
-    if (PUtils::isWaylandMode) {
+    Utils::isWaylandMode = isWaylandProtocol();
+    if (Utils::isWaylandMode) {
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
     }
 
@@ -57,6 +57,14 @@ int main(int argc, char *argv[])
     app->setProductName(QObject::tr("Pin Screenshots"));
     app->setApplicationVersion("1.0");
 
+    QString logFilePath = Dtk::Core::DLogManager::getlogFilePath();
+    QStringList list = logFilePath.split("/");
+    if (!list.isEmpty()) {
+        list[list.count() - 1] = "deepin-pin-screen.log";
+        logFilePath = list.join("/");
+        Dtk::Core::DLogManager::setlogFilePath(logFilePath);
+    }
+
     Dtk::Core::DLogManager::registerConsoleAppender();
     Dtk::Core::DLogManager::registerFileAppender();
 
@@ -70,6 +78,7 @@ int main(int argc, char *argv[])
 
     app->loadTranslator();
 
+    qDebug() << "贴图日志路径: " << Dtk::Core::DLogManager::getlogFilePath();
 
     PinScreenShots instance;
     QDBusConnection dbus = QDBusConnection::sessionBus();

@@ -1,24 +1,27 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #ifndef VOICEVOLUMEWATCHER_H
 #define VOICEVOLUMEWATCHER_H
+#include "audioutils.h"
 
-#include <com_deepin_daemon_audio.h>
-#include <com_deepin_daemon_audio_source.h>
-#include <com_deepin_daemon_audio_sink.h>
-
-#include <QObject>
 #include <QTimer>
 
+/**
+ * @brief The voiceVolumeWatcher class 音频监听类
+ */
 class voiceVolumeWatcher : public QObject
 {
     Q_OBJECT
 public:
     explicit voiceVolumeWatcher(QObject *parent = nullptr);
     ~voiceVolumeWatcher();
+    /**
+     * @brief setWatch  设置是否打开音频监听
+     * @param isWatcher
+     */
     void setWatch(const bool isWatcher);
     void setIsRecoding(bool value);
     // 将原来的run()方法改为定时器的槽函数，便于截图快速退出
@@ -30,11 +33,8 @@ public:
      */
     bool getystemAudioState();
 protected:
-    void initDeviceWatcher();
     void onCardsChanged(const QString &value);
     void initAvailInputPorts(const QString &cards);
-    void initConnections();
-    void onDefaultSourceChanaged(const QDBusObjectPath &value);
     bool isMicrophoneAvail(const QString &activePort) const;
 
 signals:
@@ -43,18 +43,8 @@ signals:
 
 private:
 
-    //音频服务名
-    const QString m_serviceName {"com.deepin.daemon.Audio"};
+    AudioUtils *m_audioUtils;
 
-    /**
-     * @brief 音频接口对象
-     * 对应为com.deepin.daemon.Audio
-     */
-    QScopedPointer<com::deepin::daemon::Audio> m_audioInterface;
-    /**
-     * @brief 音频源(输入源)
-     */
-    QScopedPointer<com::deepin::daemon::audio::Source> m_defaultSource;
     struct Port {
         QString  portId;
         QString portName;
@@ -72,10 +62,13 @@ private:
     QMap<QString, Port> m_availableInputPorts;
     //bool m_isRecoding;
     bool m_coulduse;
-    QTimer *m_watchTimer = nullptr; //新增麦克风定时检测
 
     /**
-     * @brief 是否存在系统声卡
+     * @brief m_watchTimer 麦克风定时检测器
+     */
+    QTimer *m_watchTimer = nullptr;
+    /**
+     * @brief 是否存在系统声卡 默认存在
      */
     bool m_isExistSystemAudio ;
 };

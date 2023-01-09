@@ -1,10 +1,10 @@
 // Copyright (C) 2019 ~ 2019 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "mainwindow.h"
-#include "putils.h"
+#include "utils.h"
 
 #include <QDebug>
 #include <QDBusInterface>
@@ -14,17 +14,11 @@
 #include <QFileDialog>
 
 #define MOVENUM 1
+
 #define WHEELNUM 10
-
-//bool MainWindow::isWaylandProtocol()
-//{
-
-//    QProcessEnvironment e = QProcessEnvironment::systemEnvironment();
-//    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
-//    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
-//    return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
-
-//}
+namespace {
+const int TOOLBAR_Y_SPACING = 12;
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : DWidget(parent)
@@ -39,12 +33,16 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-
+    if (m_toolBar != nullptr) {
+        delete m_toolBar;
+        m_toolBar = nullptr;
+    }
 }
 
 void MainWindow::initMainWindow()
 {
     m_ocrInterface = nullptr;
+    m_toolBar = nullptr;
     //去菜单栏，置顶窗口
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 
@@ -52,7 +50,7 @@ void MainWindow::initMainWindow()
     setMouseTracking(true);
     isLeftPressDown = false;
     dir = UP;
-    //获取屏幕的锁房比例
+    //获取屏幕的缩放比例
     m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
 
     m_menuController = new MenuController();
@@ -60,7 +58,7 @@ void MainWindow::initMainWindow()
     connect(m_menuController, &MenuController::closeAction, this, &MainWindow::onExit);
 
     // 工具栏设置
-    m_toolBar = new ToolBar(this); //初始化
+    m_toolBar = new ToolBarWidget(); //初始化
     connect(m_toolBar, SIGNAL(sendOcrButtonClicked()), this, SLOT(onOpenOCR()));
     connect(m_toolBar, SIGNAL(sendSaveButtonClicked()), this, SLOT(onSave()));
     connect(m_toolBar, SIGNAL(sendCloseButtonClicked()), this, SLOT(onExit()));
@@ -164,7 +162,8 @@ void MainWindow::saveImg()
         }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
     } else if (m_saveInfo.first == SubToolWidget::FOLDER) {
-        m_toolBar->setHiden();
+        m_toolBar->hide();
+        this->hide();
         qDebug() << "save to path";
         QString imgName, saveFileName;
         if (m_saveInfo.second == SubToolWidget::PNG) {
@@ -202,7 +201,7 @@ void MainWindow::saveImg()
     QClipboard *cb = qApp->clipboard();
     cb->setMimeData(t_imageData, QClipboard::Clipboard);
 
-    if (PUtils::isWaylandMode) {
+    if (Utils::isWaylandMode) {
         QEventLoop eventloop;
         connect(cb, SIGNAL(dataChanged()), &eventloop, SLOT(quit()));
         eventloop.exec();
@@ -276,7 +275,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             dragPosition = event->globalPos() - this->frameGeometry().topLeft();
         }
         if (!m_toolBar->isHidden())
-            m_toolBar->setHiden(); //隐藏工具栏
+            m_toolBar->hide(); //隐藏工具栏
         //qDebug() << this << __FUNCTION__ << __LINE__ ;
         break;
     case Qt::RightButton:
@@ -360,7 +359,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
             this->setCursor(QCursor(Qt::ClosedHandCursor));
             //qDebug() << "=============event->globalPos()" << event->globalPos() << "dragPosition" << dragPosition;
             QPoint globalPoint = event->globalPos() - dragPosition;
-            if (PUtils::isWaylandMode && globalPoint.y() < 0) {
+            if (Utils::isWaylandMode && globalPoint.y() < 0) {
                 globalPoint.setY(0);
             }
             move(globalPoint);
@@ -372,7 +371,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
-    qDebug() << this << __FUNCTION__ << __LINE__ ;
+//    qDebug() << this << __FUNCTION__ << __LINE__ ;
     if (event->button() == Qt::LeftButton) {
         isLeftPressDown = false;
         if (dir != NONE) {
@@ -463,13 +462,13 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         if (QEvent::WindowActivate == event->type()) {
             //qDebug() <<this<< m_toolBar << __FUNCTION__ << __LINE__ << event->type();
             //规避wayland下打开贴图1，并在贴图1上重新生成贴图2时，贴图2激活状态不对(工具栏已经设置显示，但实际上未显示。)。
-            if (PUtils::isWaylandMode && !isLeftPressDown) {
-                this->m_toolBar->setHiden();
+            if (Utils::isWaylandMode && !isLeftPressDown) {
+                this->m_toolBar->hide();
             }
             updateToolBarPosition();
             //规避wayland下打开多个贴图，通过鼠标连续切换贴图时，贴图激活状态不对(工具栏已经设置显示，但实际上未显示。)。
-            if (PUtils::isWaylandMode && isLeftPressDown) {
-                this->m_toolBar->setHiden();
+            if (Utils::isWaylandMode && isLeftPressDown) {
+                this->m_toolBar->hide();
             }
             //qDebug() <<this<< m_toolBar << __FUNCTION__ << __LINE__ << event->type();
             return false;
@@ -477,7 +476,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
             //qDebug() << this << m_toolBar <<__FUNCTION__ << __LINE__ << event->type();
             if (m_toolBar->isActiveWindow())
                 return false;
-            m_toolBar->setHiden();
+            m_toolBar->hide();
             //qDebug() << this << m_toolBar <<__FUNCTION__ << __LINE__ << event->type();
             return false;
         }
@@ -528,7 +527,7 @@ void MainWindow::initShortcut()
     QShortcut *KeyF3 = new QShortcut(QKeySequence("F3"), this);
     connect(KeyF3, &QShortcut::activated, this, [ = ] {
         qDebug() << "shortcut : Keyocr (key: F3)";
-        m_toolBar->shortcutOpoints();
+        m_toolBar->onOptionButtonClicked();
     });
 }
 
@@ -618,7 +617,7 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
     int timeout = -1;
     unsigned int id = 0;
     QList<QVariant> arg;
-    arg << (QCoreApplication::applicationName()) //tr("Pin Screenshots")                 // appname
+    arg << tr("Pin Screenshots")                 // appname
         << id                                                    // id
         << QString("deepin-screen-recorder")                     // icon
         << tr("Screenshot finished")                              // summary
@@ -633,28 +632,34 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
 // 更新工具栏显示位置
 void MainWindow::updateToolBarPosition()
 {
+    //获取贴图界面右下角的点
     QPoint brPoint = mapToGlobal(this->rect().bottomRight());
     int x = 0, y = 0;
-    qDebug() << "updateToolBarPosition brPoint is" << brPoint;
-    if ((brPoint.y() + 15 + m_toolBar->toolBarHeight()) >= m_screenSize.height()) {
+//    qDebug() << "updateToolBarPosition brPoint is" << brPoint;
+    //判断工具栏放贴图界面下方时是否会超出屏幕下方
+    if ((brPoint.y() + TOOLBAR_Y_SPACING + m_toolBar->height()) >= m_screenSize.height()) {
+        //此时工具栏放贴图界面下方会超出屏幕，只能放贴图界面上方
+        //获取贴图界面右上角的点
         QPoint trPoint = mapToGlobal(this->rect().topRight());
-        if (trPoint.y() - 15 - m_toolBar->toolBarHeight() <= 0) {
-            x = trPoint.x() - m_toolBar->toolBarWidth();
-            y = trPoint.y() + 15;
+        //判断工具栏是否超出屏幕上方
+        if (trPoint.y() - TOOLBAR_Y_SPACING - m_toolBar->height() <= 0) {
+            //工具栏放贴图界面上下方都会超出屏幕，此时就工具栏放屏幕上方
+            x = trPoint.x() - m_toolBar->width();
+            y = 0;
         } else {
-            x = trPoint.x() - m_toolBar->toolBarWidth();
-            y = trPoint.y() - 15 - m_toolBar->toolBarHeight();
+            x = trPoint.x() - m_toolBar->width();
+            y = trPoint.y() - TOOLBAR_Y_SPACING - m_toolBar->height();
         }
     } else {
-        x = brPoint.x() - m_toolBar->toolBarWidth();
-        y = brPoint.y() + 15;
+        //此时工具栏放贴图界面下方不会超出屏幕可以放界面下方
+        x = brPoint.x() - m_toolBar->width();
+        y = brPoint.y() + TOOLBAR_Y_SPACING;
         //qDebug() << "m_toolBar->width()" << m_toolBar->toolBarWidth();
     }
-
     if (x < 0) {
         x = 0;
-    } else if(x + m_toolBar->toolBarWidth() > m_screenSize.width()) {
-        x = m_screenSize.width() - m_toolBar->toolBarWidth();
+    } else if (x + m_toolBar->width() > m_screenSize.width()) {
+        x = m_screenSize.width() - m_toolBar->width();
     }
     m_toolBar->showAt(QPoint(x, y), m_isfirstTime);
     m_isfirstTime = false;

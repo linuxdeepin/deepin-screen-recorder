@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -59,12 +59,15 @@ public:
      */
     static bool isFFmpegEnv;
     static bool isRootUser;
+    /**
+     * @brief 当前屏幕缩放比列
+     */
+    static qreal pixelRatio;
     static int themeType;
     /**
      * @brief 不支持截图录屏时的警告
      */
     static void notSupportWarn();
-
 
     /**
      * @brief 传入屏幕上理论未经缩放的点，获取缩放后实际的点
@@ -86,6 +89,7 @@ public:
      * @return 理论未经缩放的点
      */
     static QList<ScreenInfo> getScreensInfo();
+
     /**
      * @brief 对目标区域做穿透处理
      * @param 窗口id
@@ -145,6 +149,14 @@ public:
      */
     static QString getCpuModelName();
 
+    static QString getCurrentAudioChannel();
+
+    /**
+     * @brief 通过键盘移动光标
+     * @param currentCursor:当前光标的位置
+     * @param keyEvent:键盘事件
+     */
+    static void cursorMove(QPoint currentCursor, QKeyEvent *keyEvent);
 
 };
 

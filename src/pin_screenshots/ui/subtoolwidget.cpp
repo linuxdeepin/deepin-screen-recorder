@@ -1,10 +1,11 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "subtoolwidget.h"
 #include "accessibility/acTextDefine.h"
+#include "settings.h"
 
 #include <QActionGroup>
 #include <DFontSizeManager>
@@ -25,23 +26,41 @@ void SubToolWidget::initShotLable()
 {
     m_shotSubTool = new DLabel(this);
     // ocr按钮
-    m_ocrButton = new DPushButton(this);
+    m_ocrButton = new ToolButton(this);
+//    m_ocrButton->setCheckable(false);
+//    m_ocrButton->setFlat(true);
+//    m_ocrButton->setFocusPolicy(Qt::NoFocus);
     m_ocrButton->setObjectName(AC_SUBTOOLWIDGET_PIN_OCR_BUT);
     m_ocrButton->setAccessibleName(AC_SUBTOOLWIDGET_PIN_OCR_BUT);
-    m_ocrButton->setIconSize(QSize(36, 36));
-    m_ocrButton->setMaximumSize(42, 40);
+    m_ocrButton->setIconSize(QSize(32, 32));
+    m_ocrButton->setFixedSize(32, 32);
     m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
-    m_ocrButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     m_ocrButton->setToolTip(tr("Extract Text"));
     connect(m_ocrButton, SIGNAL(clicked()), this, SIGNAL(signalOcrButtonClicked()));
 
     // 选项按钮
-    m_pinOptionButton = new DPushButton(this);
+    m_pinOptionButton = new ToolButton(this);
+    m_pinOptionButton->setCheckable(false);
+    m_pinOptionButton->setFlat(false);
+    m_pinOptionButton->setHoverState(false);
+    DPalette pa = m_pinOptionButton->palette();
+    DGuiApplicationHelper::ColorType t_type = DGuiApplicationHelper::instance()->themeType();
+    if (t_type == DGuiApplicationHelper::ColorType::LightType) {
+        pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+        pa.setColor(DPalette::Dark, QColor(192, 192, 192, 255));
+        pa.setColor(DPalette::Light, QColor(192, 192, 192, 255));
+    } else {
+        pa.setColor(DPalette::ButtonText, QColor(228, 228, 228, 255));
+        pa.setColor(DPalette::Dark, QColor(64, 64, 64, 255));
+        pa.setColor(DPalette::Light, QColor(64, 64, 64, 255));
+    }
+    m_pinOptionButton->setPalette(pa);
+    m_pinOptionButton->setFocusPolicy(Qt::NoFocus);
     m_pinOptionButton->setObjectName(AC_SUBTOOLWIDGET_PIN_OPTION_BUT);
     m_pinOptionButton->setAccessibleName(AC_SUBTOOLWIDGET_PIN_OPTION_BUT);
-    DFontSizeManager::instance()->bind(m_pinOptionButton, DFontSizeManager::T8);
+    DFontSizeManager::instance()->bind(m_pinOptionButton, DFontSizeManager::T6);
     m_pinOptionButton->setText(tr("Options"));
-    m_pinOptionButton->setMinimumSize(QSize(60, 40));
+    m_pinOptionButton->setMinimumSize(QSize(60, 36));
     m_pinOptionButton->setToolTip(tr("Options"));
     QActionGroup *t_saveGroup = new QActionGroup(this);
     QActionGroup *t_formatGroup = new QActionGroup(this);
@@ -50,7 +69,8 @@ void SubToolWidget::initShotLable()
 
     // 选项菜单
     m_optionMenu = new DMenu(this);
-    DFontSizeManager::instance()->bind(m_optionMenu, DFontSizeManager::T8);
+    DFontSizeManager::instance()->bind(m_optionMenu, DFontSizeManager::T6);
+    connect(m_optionMenu, &DMenu::aboutToShow, this, &SubToolWidget::updateOptionChecked);
 
     QAction *saveTitleAction = new QAction(m_optionMenu);
     QAction *saveToClipAction = new QAction(m_optionMenu);
@@ -83,6 +103,11 @@ void SubToolWidget::initShotLable()
     t_saveGroup->addAction(saveToPictureAction);
     t_saveGroup->addAction(saveToSpecialPath);
 
+    m_SavePathActions.insert(CLIPBOARD, saveToClipAction);
+    m_SavePathActions.insert(DESKTOP, saveToDesktopAction);
+    m_SavePathActions.insert(PICTURES, saveToPictureAction);
+    m_SavePathActions.insert(FOLDER, saveToSpecialPath);
+
     formatTitleAction->setDisabled(true);
     formatTitleAction->setText(tr("Format"));
     pngAction->setText(tr("PNG"));
@@ -95,6 +120,10 @@ void SubToolWidget::initShotLable()
     t_formatGroup->addAction(pngAction);
     t_formatGroup->addAction(jpgAction);
     t_formatGroup->addAction(bmpAction);
+
+    m_SaveFormatActions.insert(PNG, pngAction);
+    m_SaveFormatActions.insert(JPG, jpgAction);
+    m_SaveFormatActions.insert(BMP, bmpAction);
 
     //保存方式
     m_optionMenu->addAction(saveTitleAction);
@@ -110,10 +139,8 @@ void SubToolWidget::initShotLable()
     m_optionMenu->addAction(bmpAction);
     m_pinOptionButton->setMenu(m_optionMenu);
 
-    saveToClipAction->setChecked(true); //默认
-    pngAction->setChecked(true); //默认
-    m_SaveInfo.first = CLIPBOARD; // 默认保存路径
-    m_SaveInfo.second = PNG; // 默认保存格式
+    updateOptionChecked();
+
     connect(t_saveGroup, QOverload<QAction *>::of(&QActionGroup::triggered), [ = ](QAction * t_act) {
         if (t_act == saveToDesktopAction) {
             qDebug() << "save to desktop";
@@ -128,6 +155,7 @@ void SubToolWidget::initShotLable()
             qDebug() << "save to clip";
             m_SaveInfo.first = CLIPBOARD;
         }
+        Settings::instance()->setSaveOption(m_SaveInfo);
     });
 
     connect(t_formatGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
@@ -139,17 +167,14 @@ void SubToolWidget::initShotLable()
         } else if (t_act == bmpAction) {
             m_SaveInfo.second = BMP;
         }
+        Settings::instance()->setSaveOption(m_SaveInfo);
     });
 
     //工具栏布局
     QHBoxLayout *hLayout = new QHBoxLayout(this);
     hLayout->setSizeConstraint(QLayout::SetFixedSize);
     hLayout->setContentsMargins(0, 0, 0, 0);
-    hLayout->setSpacing(0);
-    hLayout->setMargin(0);
-    hLayout->setSpacing(3);
     hLayout->addWidget(m_ocrButton, 0,  Qt::AlignCenter);
-    hLayout->addSpacing(4);
     hLayout->addWidget(m_pinOptionButton, 0, Qt::AlignCenter);
     m_shotSubTool->setLayout(hLayout);
     addWidget(m_shotSubTool);
@@ -168,4 +193,18 @@ void SubToolWidget::onOptionButtonClicked()
         m_pinOptionButton->showMenu();
     else
         m_optionMenu->hide();
+}
+
+void SubToolWidget::updateOptionChecked()
+{
+    QPair<int, int> saveInfo = Settings::instance()->getSaveOption();
+    //没有配置文件时，给定一个默认值
+    if (saveInfo.first == 0 && saveInfo.second == 0) {
+        m_SaveInfo.first = CLIPBOARD; // 默认保存路径
+        m_SaveInfo.second = PNG; // 默认保存格式
+    } else {
+        m_SaveInfo = saveInfo;
+    }
+    m_SavePathActions.value(m_SaveInfo.first)->setChecked(true);
+    m_SaveFormatActions.value(m_SaveInfo.second)->setChecked(true);
 }

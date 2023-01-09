@@ -26,17 +26,6 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     </message>
 </context>
 <context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Enrollañ</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Tapadenn-skramm</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
@@ -107,11 +96,11 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pin Screenshots</source>
+        <source>Open Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Open Folder</source>
+        <source>Pin Screenshots</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -320,10 +309,6 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <translation>Diskouez ar berradurioù</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Keystroke</source>
         <translation type="unfinished"></translation>
     </message>
@@ -344,10 +329,6 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation type="unfinished"></translation>
     </message>
@@ -364,11 +345,23 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Start OCR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
+        <source>Arrow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mouse</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -386,51 +379,38 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Dispis</translation>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Mosaic</source>
-        <translation>Mozaik</translation>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Sound On</source>
-        <translation>Son enaouet</translation>
-    </message>
-    <message>
         <source>Microphone</source>
         <translation>Mikrofon</translation>
-    </message>
-    <message>
-        <source>System Audio</source>
-        <translation>Sistem aodio</translation>
-    </message>
-    <message>
-        <source>Sound Off</source>
-        <translation>Son lazhet</translation>
-    </message>
-    <message>
-        <source>Show Keystroke</source>
-        <translation>Diskouez pa vizskriver</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke</source>
-        <translation>Kuzhat pa vizskriver</translation>
-    </message>
-    <message>
-        <source>Webcam On</source>
-        <translation>Webkam enaouet</translation>
-    </message>
-    <message>
-        <source>Webcam Off</source>
-        <translation>Webkam lazhet</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>Diskouez ar c&apos;hlik</translation>
     </message>
     <message>
         <source>Options</source>
@@ -471,30 +451,6 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     <message>
         <source>30 fps</source>
         <translation>30 fps</translation>
-    </message>
-    <message>
-        <source>Rectangle</source>
-        <translation>Skouergornek</translation>
-    </message>
-    <message>
-        <source>Ellipse</source>
-        <translation>Elipsenn</translation>
-    </message>
-    <message>
-        <source>Line</source>
-        <translation>Linenn</translation>
-    </message>
-    <message>
-        <source>Arrow</source>
-        <translation>Bir</translation>
-    </message>
-    <message>
-        <source>Pencil</source>
-        <translation>Kreion</translation>
-    </message>
-    <message>
-        <source>Text</source>
-        <translation>Testenn</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -541,23 +497,79 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show Pointer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Extract Text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Scrollshot</source>
+        <source>Settings</source>
+        <translation type="unfinished">Arventennoù</translation>
+    </message>
+    <message>
+        <source>Show keystroke (K)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pin Screenshots</source>
+        <source>Settings (F3)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Tapadenn-skramm</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Enrollañ</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -565,11 +577,62 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>ogg</source>
+        <source>Videos</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Videos</source>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shadow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Border</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
+    <message>
+        <source>Close (Esc)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK (Enter)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

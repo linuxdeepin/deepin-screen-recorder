@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="uk">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="uk">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -24,21 +26,10 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
-    <name>MainToolWidget</name>
-    <message>
-        <source>Record</source>
-        <translation>Записати</translation>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>Знімок</translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Захоплення екрана</translation>
+        <translation>Захоплення зображення на екрані</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -105,12 +96,12 @@ or press the shortcut again to stop recording</source>
         <translation>Знімок із гортанням</translation>
     </message>
     <message>
-        <source>Pin Screenshots</source>
-        <translation>Пришпилити знімки</translation>
-    </message>
-    <message>
         <source>Open Folder</source>
         <translation>Відкрити теку</translation>
+    </message>
+    <message>
+        <source>Pin Screenshots</source>
+        <translation>Пришпилити знімки</translation>
     </message>
 </context>
 <context>
@@ -139,7 +130,7 @@ or press the shortcut again to stop recording</source>
     <name>RecordProcess</name>
     <message>
         <source>View</source>
-        <translation>Вид</translation>
+        <translation>Перегляд</translation>
     </message>
     <message>
         <source>Recording finished</source>
@@ -275,7 +266,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Undo</source>
-        <translation>Вернути</translation>
+        <translation>Скасувати</translation>
     </message>
     <message>
         <source>Increase height up</source>
@@ -318,10 +309,6 @@ or press the shortcut again to stop recording</source>
         <translation>Показати клавіатурні скорочення</translation>
     </message>
     <message>
-        <source>Sound</source>
-        <translation>Звук</translation>
-    </message>
-    <message>
         <source>Keystroke</source>
         <translation>Натискання клавіш</translation>
     </message>
@@ -342,10 +329,6 @@ or press the shortcut again to stop recording</source>
         <translation>Почати/Запис</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Миша</translation>
-    </message>
-    <message>
         <source>Tools</source>
         <translation>Інструменти</translation>
     </message>
@@ -362,12 +345,24 @@ or press the shortcut again to stop recording</source>
         <translation>Пришпилити знімки</translation>
     </message>
     <message>
+        <source>Start scrollshot</source>
+        <translation>Почати знімок із гортанням</translation>
+    </message>
+    <message>
         <source>Start OCR</source>
         <translation>Почати розпізнавання</translation>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation>Почати знімок із гортанням</translation>
+        <source>Arrow</source>
+        <translation>Стрілка</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>Звук</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>Миша</translation>
     </message>
 </context>
 <context>
@@ -384,51 +379,41 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Розмивання</translation>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation>Прямокутник
+Натисніть і утримуйте клавішу Shift, щоб намалювати квадрат</translation>
     </message>
     <message>
-        <source>Mosaic</source>
-        <translation>Мозаїка</translation>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation>Еліпс
+Натисніть і утримуйте клавішу Shift, щоб намалювати коло</translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation>Пензель
+Натисніть і утримуйте клавішу Shift, щоб намалювати пряму лінію</translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation>Скоригувати потужність розмивання (крутіть коліщатко для зміни)</translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation>Скоригувати розмір пензля (крутіть коліщатко для зміни)</translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation>Скоригувати розмір символів (крутіть коліщатко для зміни)</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Sound On</source>
-        <translation>Увімкнути звук</translation>
-    </message>
-    <message>
         <source>Microphone</source>
         <translation>Мікрофон</translation>
-    </message>
-    <message>
-        <source>System Audio</source>
-        <translation>Загальносистемний звук</translation>
-    </message>
-    <message>
-        <source>Sound Off</source>
-        <translation>Вимкнути звук</translation>
-    </message>
-    <message>
-        <source>Show Keystroke</source>
-        <translation>Показати натискання клавіш</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke</source>
-        <translation>Приховати натискання клавіш</translation>
-    </message>
-    <message>
-        <source>Webcam On</source>
-        <translation>Вебкамеру увімкнено</translation>
-    </message>
-    <message>
-        <source>Webcam Off</source>
-        <translation>Вебкамеру вимкнено</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>Показати клацання</translation>
     </message>
     <message>
         <source>Options</source>
@@ -469,30 +454,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>30 fps</source>
         <translation>30 кд/с</translation>
-    </message>
-    <message>
-        <source>Rectangle</source>
-        <translation>Прямокутник</translation>
-    </message>
-    <message>
-        <source>Ellipse</source>
-        <translation>Еліпс</translation>
-    </message>
-    <message>
-        <source>Line</source>
-        <translation>Пряма</translation>
-    </message>
-    <message>
-        <source>Arrow</source>
-        <translation>Стрілка</translation>
-    </message>
-    <message>
-        <source>Pencil</source>
-        <translation>Олівець</translation>
-    </message>
-    <message>
-        <source>Text</source>
-        <translation>Текст</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -539,36 +500,147 @@ or press the shortcut again to stop recording</source>
         <translation>Показати вказівник</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Миша</translation>
-    </message>
-    <message>
-        <source>Show Pointer</source>
-        <translation>Показати вказівник</translation>
-    </message>
-    <message>
         <source>Extract Text</source>
         <translation>Видобути текст</translation>
     </message>
     <message>
-        <source>Scrollshot</source>
-        <translation>Знімок із гортанням</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Показати натискання клавіш (K)</translation>
     </message>
     <message>
-        <source>Pin Screenshots</source>
-        <translation>Пришпилити знімки</translation>
+        <source>Settings</source>
+        <translation>Параметри</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>Параметри (F3)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Розмивання (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Текст (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Знімок з гортанням (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Видобути текст (Alt+O）</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Скасувати (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Знімок</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Пришпилити знімки (Alt+P）</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Записати</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Олівець (P)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Увімкнути камеру (C)</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>Ефекти рамки</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Немає</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Вимкнути камеру (C)</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation>Приховати натискання клавіш (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Показати натискання клавіш (K)</translation>
     </message>
     <message>
         <source>webm</source>
         <translation>webm</translation>
     </message>
     <message>
-        <source>ogg</source>
-        <translation>ogg</translation>
-    </message>
-    <message>
         <source>Videos</source>
         <translation>Відео</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Прямокутник (R)
+Натисніть і утримуйте клавішу Shift, щоб намалювати квадрат</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Еліпс (O)
+Натисніть і утримуйте клавішу Shift, щоб намалювати коло</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Пряма (L)
+Натисніть і утримуйте клавішу Shift, щоб намалювати вертикальну або горизонтальну пряму</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Стрілка (X)
+Натисніть і утримуйте клавішу Shift, щоб намалювати вертикальну або горизонтальну стрілку</translation>
+    </message>
+    <message>
+        <source>Shadow</source>
+        <translation>Тінь</translation>
+    </message>
+    <message>
+        <source>Border</source>
+        <translation>Рамка</translation>
+    </message>
+    <message>
+        <source>Device</source>
+        <translation>Пристрій</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>Звук</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
+    <message>
+        <source>Close (Esc)</source>
+        <translation>Закрити (Esc)</translation>
+    </message>
+    <message>
+        <source>OK (Enter)</source>
+        <translation>Гаразд (Enter)</translation>
     </message>
 </context>
 <context>

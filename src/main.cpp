@@ -1,5 +1,5 @@
 // Copyright (C) 2011 ~ 2018 Deepin, Inc.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -36,23 +36,24 @@ static bool isWaylandProtocol()
     return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
 }
 
-
 static bool CheckFFmpegEnv()
 {
     bool flag = false;
     QDir dir;
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
+    qDebug() <<  "where is libs? where is " << dir ;
     QStringList list = dir.entryList(QStringList() << (QString("libavcodec") + "*"), QDir::NoDotAndDotDot | QDir::Files);
-    qDebug() << list;
+    qDebug()  << "Is libavcodec in there?  there is :" << list ;
 
     if (list.contains("libavcodec.so.58")) {
+        qInfo()  << "list contains libavcodec.so.58" ;
         flag = true;
     }
 
     //x11下需要检测ffmpeg应用是否存在
     if (!isWaylandProtocol()) {
-        qInfo() << "Is exists ffmpeg in path(/usr/bin/): " << QFile("/usr/bin/ffmpeg").exists();
+        qDebug() << "QFile(/usr/bin/ffmpeg).exists(): " << QFile("/usr/bin/ffmpeg").exists();
         if (QFile("/usr/bin/ffmpeg").exists()) {
             flag = true;
         } else {
@@ -64,7 +65,6 @@ static bool CheckFFmpegEnv()
 
 int main(int argc, char *argv[])
 {
-
     //wayland调试输出
     //qputenv("WAYLAND_DEBUG", "1");
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
@@ -91,10 +91,8 @@ int main(int argc, char *argv[])
         format.setDefaultFormat(format);
     }
 
-    //检查是否包含ffmpeg相关库true：包含 false：不包含
-    Utils::isFFmpegEnv =  CheckFFmpegEnv();
-//    Utils::isFFmpegEnv = false;
-    qDebug() << "Is Exists FFmpeg Lib:" << Utils::isFFmpegEnv;
+    Utils::isFFmpegEnv = CheckFFmpegEnv();
+    qDebug() << "Is FFmpeg Environment:" << Utils::isFFmpegEnv;
 
 #ifdef KF5_WAYLAND_FLAGE_ON
     qDebug() << "KF5_WAYLAND_FLAGE_ON is open!!";
@@ -128,9 +126,9 @@ int main(int argc, char *argv[])
         app->setApplicationVersion("1.0");
         app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-//        static const QDate buildDate = QLocale(QLocale::English).
-//                                       toDate(QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
-//        QString t_date = buildDate.toString("MMdd");
+        //        static const QDate buildDate = QLocale(QLocale::English).
+        //                                       toDate(QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
+        //        QString t_date = buildDate.toString("MMdd");
 
         // Version Time
         app->setApplicationVersion(DApplication::buildVersion(APP_VERSION));
@@ -178,10 +176,12 @@ int main(int argc, char *argv[])
         DGuiApplicationHelper::instance()->setPaletteType(t_type);
         Utils::themeType = t_type;
 
+        qDebug() << "截图录屏日志路径: " << Dtk::Core::DLogManager::getlogFilePath();
+        qDebug() << "截图录屏版本: " << DApplication::buildVersion(APP_VERSION);
+
         if (cmdParser.isSet(useGStreamer)) {
             Utils::isFFmpegEnv = false;
         }
-
 
         QString t_launchMode = "screenShot";
         if (cmdParser.isSet(screenRecordOption)) {
@@ -210,6 +210,7 @@ int main(int argc, char *argv[])
         if (cmdParser.isSet(dbusOption)) {
             qDebug() << "dbus register waiting!";
             return app->exec();
+
         } else {
             QJsonObject obj{
                 {"tid", EventLogUtils::Start},
@@ -219,7 +220,6 @@ int main(int argc, char *argv[])
             };
             if (!cmdParser.isSet(screenRecordOption))
                 EventLogUtils::get().writeLogs(obj);
-
             dbusService.setSingleInstance(true);
             if (cmdParser.isSet(delayOption)) {
                 qDebug() << "cmd delay screenshot";
