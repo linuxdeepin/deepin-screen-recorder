@@ -42,12 +42,31 @@ static bool CheckFFmpegEnv()
     bool flag = false;
     QDir dir;
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+    qDebug() <<"QLibraryInfo::LibrariesPath: " << path;
     dir.setPath(path);
     QStringList list = dir.entryList(QStringList() << (QString("libavcodec") + "*"), QDir::NoDotAndDotDot | QDir::Files);
-    qDebug() << list;
+    qDebug() << list <<" exists in the " << path;
 
-    if (list.contains("libavcodec.so.58")) {
-        flag = true;
+    QString libName = "libavcodec.so";
+    //是否存在编码库,存在编码库需要继续判断是否存在对应的编码器
+    if (list.contains(libName)) {
+        qDebug() << "目录(" << path << ")中存在编码库(" << libName << ")";
+        QLibrary libavcodec;
+        libavcodec.setFileName(libName);
+        qDebug() << "编码库是否加载成功: "<< libavcodec.load();
+        typedef AVCodec *(*p_avcodec_find_encoder)(enum AVCodecID id);
+        p_avcodec_find_encoder m_avcodec_find_encoder = nullptr;
+        m_avcodec_find_encoder = reinterpret_cast<p_avcodec_find_encoder>(libavcodec.resolve("avcodec_find_encoder"));
+        AVCodec *pCodec = m_avcodec_find_encoder(AV_CODEC_ID_H264);
+        if (pCodec) {
+            qDebug() << "编码器存在 AVCodecID:" << AV_CODEC_ID_H264;
+            flag = true;
+        }else{
+            qWarning() << "Can not find output video encoder! (没有找到合适的编码器！) AVCodecID:" << AV_CODEC_ID_H264;
+            flag = false;
+        }
+    }else{
+        qWarning() << "目录(" << path << ")中不存在编码库(" << libName << ")";
     }
 
     //x11下需要检测ffmpeg应用是否存在
@@ -59,6 +78,7 @@ static bool CheckFFmpegEnv()
             flag = false;
         }
     }
+
     return flag;
 }
 
@@ -75,14 +95,14 @@ int main(int argc, char *argv[])
 
     // 平板模式
     Utils::isTabletEnvironment = false; // DGuiApplicationHelper::isTabletEnvironment();
-    qDebug() << "Is Table:" << Utils::isTabletEnvironment;
+    qInfo() << "Is Table:" << Utils::isTabletEnvironment;
 
     // wayland 协议
     Utils::isWaylandMode = isWaylandProtocol();
-    qDebug() << "Is Wayland:" << Utils::isWaylandMode;
+    qInfo() << "Is Wayland:" << Utils::isWaylandMode;
 
     Utils::isRootUser = (getuid() == 0);
-    qDebug() << "Is Root User:" << Utils::isRootUser;
+    qInfo() << "Is Root User:" << Utils::isRootUser;
 
     if (Utils::isWaylandMode) {
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
@@ -94,12 +114,12 @@ int main(int argc, char *argv[])
     //检查是否包含ffmpeg相关库true：包含 false：不包含
     Utils::isFFmpegEnv =  CheckFFmpegEnv();
 //    Utils::isFFmpegEnv = false;
-    qDebug() << "Is Exists FFmpeg Lib:" << Utils::isFFmpegEnv;
+    qInfo() << "Is Exists FFmpeg Lib:" << Utils::isFFmpegEnv;
 
 #ifdef KF5_WAYLAND_FLAGE_ON
-    qDebug() << "KF5_WAYLAND_FLAGE_ON is open!!";
+    qInfo() << "KF5_WAYLAND_FLAGE_ON is open!!";
 #else
-    qDebug() << "KF5_WAYLAND_FLAGE_ON is close!!";
+    qInfo() << "KF5_WAYLAND_FLAGE_ON is close!!";
 #endif
     // 适配deepin-turbo 启动加速
 #if(DTK_VERSION < DTK_VERSION_CHECK(5,4,0,0))
