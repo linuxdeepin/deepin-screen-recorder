@@ -59,7 +59,7 @@ void ConfigSettings::setValue(const QString &group, const QString &key,
         emit straightLineConfigChanged(val.toBool());
     }
 
-    qDebug() << "ConfigSettings:" << group << key << val;
+    //qDebug() << "ConfigSettings:" << group << key << val;
 }
 
 QVariant ConfigSettings::value(const QString &group, const QString &key,
