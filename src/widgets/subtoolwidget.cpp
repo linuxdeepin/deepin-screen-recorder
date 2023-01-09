@@ -1268,10 +1268,16 @@ int SubToolWidget::getFuncSubToolX(QString &shape)
 bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == m_recordOptionMenu || watched == m_optionMenu || watched == m_scrollOptionMenu) {
-        if (event->type() == QEvent::MouseButtonRelease) {
+        if (event->type() == QEvent::MouseButtonPress) {
             QAction *action = static_cast<DMenu *>(watched)->actionAt(static_cast<QMouseEvent *>(event)->pos());
             if (action) {
                 action->activate(QAction::Trigger);
+                return true;
+            }
+        }
+        if (event->type() == QEvent::MouseButtonRelease) {
+            QAction *action = static_cast<DMenu *>(watched)->actionAt(static_cast<QMouseEvent *>(event)->pos());
+            if (action) {
                 return true;
             }
         }
