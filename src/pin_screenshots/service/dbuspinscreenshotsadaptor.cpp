@@ -19,7 +19,7 @@ DbusPinScreenShotsAdaptor::~DbusPinScreenShotsAdaptor()
 
 bool DbusPinScreenShotsAdaptor::openFile(QString filePath)
 {
-    qDebug() << __FUNCTION__ << __LINE__;
+    qDebug() << "启动贴图" << __FUNCTION__ << __LINE__;
     QMetaObject::invokeMethod(parent(), "openFile", Q_ARG(QString, filePath));
     return true;
 }
@@ -27,7 +27,7 @@ bool DbusPinScreenShotsAdaptor::openFile(QString filePath)
 
 void DbusPinScreenShotsAdaptor::openImageAndName(QByteArray images, QString imageName, QPoint point)
 {
-    qDebug() << __FUNCTION__ << __LINE__;
+    qDebug() << "启动贴图" <<  __FUNCTION__ << __LINE__;
     QByteArray data = images;
     QString tmp_data = QString::fromLatin1(data.data(), data.size());
     QByteArray srcData = QByteArray::fromBase64(tmp_data.toLatin1());
@@ -39,7 +39,7 @@ void DbusPinScreenShotsAdaptor::openImageAndName(QByteArray images, QString imag
 
 void DbusPinScreenShotsAdaptor::openImage(QByteArray images)
 {
-    qDebug() << __FUNCTION__ << __LINE__;
+    qDebug() << "启动贴图" << __FUNCTION__ << __LINE__;
     QByteArray data = images;
     QString tmp_data = QString::fromLatin1(data.data(), data.size());
     QByteArray srcData = QByteArray::fromBase64(tmp_data.toLatin1());

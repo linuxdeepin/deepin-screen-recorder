@@ -42,7 +42,6 @@ static bool isWaylandProtocol()
     return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
 }
 
-
 static bool CheckFFmpegEnv()
 {
     bool flag = false;
@@ -50,6 +49,7 @@ static bool CheckFFmpegEnv()
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     qDebug() << "QLibraryInfo::LibrariesPath: " << path;
     dir.setPath(path);
+    qDebug() <<  "where is libs? where is " << dir ;
     QStringList list = dir.entryList(QStringList() << (QString("libavcodec") + "*"), QDir::NoDotAndDotDot | QDir::Files);
     qDebug() << list << " exists in the " << path;
 
@@ -102,7 +102,6 @@ static bool CheckFFmpegEnv()
 
 int main(int argc, char *argv[])
 {
-
     //wayland调试输出
     //qputenv("WAYLAND_DEBUG", "1");
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
@@ -141,10 +140,8 @@ int main(int argc, char *argv[])
         format.setDefaultFormat(format);
     }
 
-    //检查是否包含ffmpeg相关库true：包含 false：不包含
-    Utils::isFFmpegEnv =  CheckFFmpegEnv();
-//    Utils::isFFmpegEnv = false;
-    //qInfo() << "Is Exists FFmpeg Lib:" << Utils::isFFmpegEnv;
+    Utils::isFFmpegEnv = CheckFFmpegEnv();
+    qDebug() << "Is FFmpeg Environment:" << Utils::isFFmpegEnv;
 
     // 适配deepin-turbo 启动加速
 #if(DTK_VERSION < DTK_VERSION_CHECK(5,4,0,0))
@@ -172,9 +169,10 @@ int main(int argc, char *argv[])
         app->setApplicationName("deepin-screen-recorder");
         app->setApplicationVersion("1.0");
         app->setAttribute(Qt::AA_UseHighDpiPixmaps);
-//        static const QDate buildDate = QLocale(QLocale::English).
-//                                       toDate(QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
-//        QString t_date = buildDate.toString("MMdd");
+
+        //        static const QDate buildDate = QLocale(QLocale::English).
+        //                                       toDate(QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
+        //        QString t_date = buildDate.toString("MMdd");
 
         // Version Time
         app->setApplicationVersion(DApplication::buildVersion(APP_VERSION));
@@ -224,6 +222,9 @@ int main(int argc, char *argv[])
         DGuiApplicationHelper::instance()->setPaletteType(t_type);
         Utils::themeType = t_type;
 
+        qDebug() << "截图录屏日志路径: " << Dtk::Core::DLogManager::getlogFilePath();
+        qDebug() << "截图录屏版本: " << DApplication::buildVersion(APP_VERSION);
+
         //显示系统信息
         Utils::showCurrentSys();
 
@@ -270,6 +271,7 @@ int main(int argc, char *argv[])
         if (cmdParser.isSet(dbusOption)) {
             qDebug() << "dbus register waiting!";
             return app->exec();
+
         } else {
             QJsonObject obj{
                 {"tid", EventLogUtils::Start},
@@ -279,7 +281,6 @@ int main(int argc, char *argv[])
             };
             if (!cmdParser.isSet(screenRecordOption))
                 EventLogUtils::get().writeLogs(obj);
-
             dbusService.setSingleInstance(true);
             if (cmdParser.isSet(delayOption)) {
                 qDebug() << "cmd delay screenshot";

@@ -644,7 +644,8 @@ int get_frame_format_index(v4l2_dev_t *vd, int format)
 	int i=0;
 	for(i=0; i<vd->numb_formats; i++)
 	{
-        printf("V4L2_CORE: requested format(%x)  [%i] -> %x\n",
+        if(verbosity > 0)
+            printf("V4L2_CORE: requested format(%x)  [%i] -> %x\n",
             format, i, vd->list_stream_formats[i].format);
 		if(format == vd->list_stream_formats[i].format)
 			return (i);

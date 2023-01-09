@@ -2,7 +2,7 @@
 Categories=AudioVideo;Recorder;
 Keywords=screen;capture;recorder;screenshot;deepin;dde;
 Comment=Record screen
-Exec=/usr/bin/deepin-screen-recorder %F
+Exec=deepin-screen-recorder %F
 #Exec=/usr/bin/deepin-turbo-invoker --type=dtkwidget /usr/bin/deepin-screen-recorder
 GenericName=Screen Capture
 Icon=deepin-screen-recorder
@@ -87,8 +87,8 @@ GenericName[tr]=Ekran Kaydedici
 GenericName[ug]=ئېكراننى رەسىم تۇتۇش، سىنغا ئېلىش
 GenericName[uk]=Записувач з екрана
 GenericName[zh_CN]=截图录屏
-GenericName[zh_HK]=螢幕錄影
-GenericName[zh_TW]=螢幕錄影
+GenericName[zh_HK]=截圖錄屏
+GenericName[zh_TW]=截圖錄屏
 Name[ar]=مسجل الشاشة ديبين
 Name[ast]=Screen Capture
 Name[bg]=Deepin запис на екрана

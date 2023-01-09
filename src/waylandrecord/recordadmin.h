@@ -85,6 +85,8 @@ private:
     int m_fps;
     //音频类型
     int m_audioType;
+    //视频类型
+    int  m_videoType;
     /**
      * @brief 输入设备名称
      */
@@ -93,8 +95,6 @@ private:
      * @brief 输出设备名称
      */
     QString m_outputDeviceName;
-    //视频类型
-    int  m_videoType;
     //x坐标
     int m_x;
     //y坐标

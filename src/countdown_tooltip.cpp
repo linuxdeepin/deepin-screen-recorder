@@ -30,13 +30,13 @@ CountdownTooltip::CountdownTooltip(DWidget *parent) : DWidget(parent),
 
 
     if(Utils::themeType == 1) {
-        countdown1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_1.svg"));
-        countdown2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_2.svg"));
-        countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_3.svg"));
+        countdown1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_1.svg"));
+        countdown2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_2.svg"));
+        countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_3.svg"));
     } else {
-        countdown1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_1-01.svg"));
-        countdown2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_2-01.svg"));
-        countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("countdown_3-01.svg"));
+        countdown1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_1-01.svg"));
+        countdown2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_2-01.svg"));
+        countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_3-01.svg"));
     }
 
     showCountdownCounter = 0;

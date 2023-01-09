@@ -37,6 +37,7 @@ void RecordTimePlugin::init(PluginProxyInterface *proxyInter)
             && sessionBus.registerObject("/com/deepin/ScreenRecorder/time", this, QDBusConnection::ExportAdaptors)) {
         qDebug() << "dbus service registration failed!";
     }
+
     //test
     //onStart();
 }
@@ -85,15 +86,35 @@ void RecordTimePlugin::clear()
     }
 }
 
+Dock::PluginFlags RecordTimePlugin::flags() const
+{
+    return  Dock::Type_System | Dock::Attribute_ForceDock | Dock::Attribute_CanInsert;
+}
+
+PluginsItemInterface::PluginSizePolicy RecordTimePlugin::pluginSizePolicy() const
+{
+    return PluginSizePolicy::Custom;
+}
+
+void RecordTimePlugin::positionChanged(const Dock::Position position)
+{
+    qInfo() << "dock position changed" << position;
+    positionChange(position);
+}
+
 void RecordTimePlugin::onStart()
 {
+    qInfo() << "start record time";
     m_timer = new QTimer(this);
     m_timeWidget = new TimeWidget();
+    m_timeWidget->onPositionChanged(position());
+    connect(this, SIGNAL(positionChange(int)), m_timeWidget, SLOT(onPositionChanged(int)));
     m_checkTimer = nullptr;
     m_timer->start(600);
     connect(m_timer, &QTimer::timeout, this, &RecordTimePlugin::refresh);
 
     if (m_timeWidget->enabled()) {
+        qInfo() << "load plugin";
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
         m_bshow = true;
@@ -104,6 +125,7 @@ void RecordTimePlugin::onStart()
 void RecordTimePlugin::onStop()
 {
     if (m_timeWidget->enabled()) {
+        qInfo() << "unload plugin";
         m_proxyInter->itemRemoved(this, pluginName());
         m_bshow = false;
         if (nullptr != m_checkTimer) {
@@ -116,6 +138,7 @@ void RecordTimePlugin::onStop()
         //m_timeWidget->stop();
         clear();
     }
+    qInfo() << "stop record time";
 }
 
 //当托盘插件开始闪烁计数时才会执行

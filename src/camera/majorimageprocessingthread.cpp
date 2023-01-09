@@ -47,16 +47,23 @@ void MajorImageProcessingThread::setCameraDevice(v4l2_dev_t *camDevice)
 
 void MajorImageProcessingThread::run()
 {
+    qDebug() << "正在启动采集摄像头画面线程...";
     m_stopped = 1;
     v4l2_dev_t *vd =  get_v4l2_device_handler();
     if (vd == nullptr) {
         qWarning() << "启动采集摄像头画面线程失败！摄像头设备不存在！";
         return;
     }
-    qDebug() << __FUNCTION__ << __LINE__ << "启动采集摄像头(" << vd->videodevice << ")画面线程...";
+    qDebug() << "已启动采集摄像头画面线程，开始采集画面";
     v4l2core_start_stream(vd);
     while (m_stopped) {
-        m_frame = v4l2core_get_decoded_frame(vd);
+//        qDebug() << __FUNCTION__ << __LINE__ << "正在采集摄像头(" << vd->videodevice << ")画面 >>> 1";
+        if (vd) {
+            m_frame = v4l2core_get_decoded_frame(vd);
+        } else {
+            continue;
+        }
+//        qDebug() << __FUNCTION__ << __LINE__ << "正在采集摄像头(" << vd->videodevice << ")画面 >>> 2";
         if (m_frame == nullptr) {
             continue;
         }
@@ -93,7 +100,7 @@ void MajorImageProcessingThread::run()
 
         tempImg = QImage(rgbPtr, m_frame->width, m_frame->height, QImage::Format_RGB888);
         if (tempImg.isNull()) {
-            qWarning() << "(wayland) 未采集到摄像头画面！" ;
+            qWarning() << __FUNCTION__ << __LINE__ <<  " 未采集到摄像头画面！" ;
         } else {
             //tempImg.save(QString("/home/uos/Desktop/test1/test_%1.png").arg(QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz "))));
             QPixmap pixmap = QPixmap::fromImage(tempImg);
@@ -110,10 +117,14 @@ void MajorImageProcessingThread::run()
             rgbPtr = nullptr;
         }
 
-        v4l2core_release_frame(vd, m_frame);
+//        qDebug() << __FUNCTION__ << __LINE__ << "正在释放当前画面帧 >>> 3";
+        if (vd != nullptr)
+            v4l2core_release_frame(vd, m_frame);
+//        qDebug() << __FUNCTION__ << __LINE__ << "已释放释放当前画面帧 >>> 3";
     }
     v4l2core_stop_stream(vd);
     close_v4l2_device_handler();
+    qDebug() << "已停止摄像头画面采集线程";
     emit isEnd();
 }
 

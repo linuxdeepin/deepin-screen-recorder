@@ -12,7 +12,7 @@ DWIDGET_USE_NAMESPACE
 
 namespace {
 const int _BUTTON_HEIGHT = 35;
-const int _BUTTON_WIDTH = 45;
+const int _BUTTON_WIDTH = 65;
 
 //const int LONG_BUTTON_HEIGHT = 40;
 //const int LONG_BUTTON_WIDTH = 80;

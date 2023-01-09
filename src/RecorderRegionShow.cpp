@@ -23,7 +23,6 @@ RecorderRegionShow::RecorderRegionShow():
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::ToolTip);
     setAttribute(Qt::WA_TranslucentBackground, true);
     */
-
     installEventFilter(this);  // add event filter
     setAttribute(Qt::WA_ShowWithoutActivating);
     setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint);
@@ -55,6 +54,7 @@ void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, c
 
     QRect r = this->geometry();
     m_cameraWidget->setFixedSize(size);
+    m_cameraWidget->setDevcieName(m_deviceName);
     m_cameraWidget->initUI();
     m_cameraWidget->setRecordRect(r.x(), r.y(), r.width(), r.height());
     switch (position) {
@@ -117,6 +117,11 @@ void RecorderRegionShow::setCameraShow(const bool isVisible)
     if (m_cameraWidget) {
         m_cameraWidget->setVisible(isVisible);
     }
+}
+
+void RecorderRegionShow::setDevcieName(const QString &devcieName)
+{
+    m_deviceName = devcieName;
 }
 
 void RecorderRegionShow::paintEvent(QPaintEvent *event)

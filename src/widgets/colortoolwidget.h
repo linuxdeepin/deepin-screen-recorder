@@ -7,11 +7,13 @@
 #define COLORTOOLWIDGET_H
 
 #include "toolbutton.h"
+#include "utils/baseutils.h"
 
 #include <DStackedWidget>
 #include <DLabel>
-
-#include <QVBoxLayout>
+#include <QMap>
+#include <QGridLayout>
+#include <QMetaEnum>
 
 DWIDGET_USE_NAMESPACE
 
@@ -23,23 +25,39 @@ public:
     ~ColorToolWidget();
 
     void initWidget();
-    //录屏截屏控件按钮初始化
+    //颜色按钮初始化
     void initColorLabel();
 
 signals:
     void colorChecked(QString colorType);
 
 public slots:
+    //切换当前选择的形状时，会触发当前函数
     void setFunction(const QString &func);
 
 private:
-    QVBoxLayout *m_baseLayout;
+    QGridLayout *m_baseLayout;
     bool m_isChecked;
     QString m_function;
     ToolButton *m_redBtn;
     ToolButton *m_yellowBtn;
     ToolButton *m_blueBtn;
     ToolButton *m_greenBtn;
+    /**
+     * @brief 颜色按钮：key:颜色名称 value:按钮对象
+     */
+    QMap<QString, ToolButton> m_colorButtons;
+    /**
+     * @brief 颜色
+     */
+    QStringList m_colors;
+
+    QButtonGroup *m_colorButtonGroup;
+
+    /**
+     * @brief 颜色按钮的颜色枚举对象
+     */
+    QMetaEnum m_buttonColors;
 };
 
 #endif // COLORTOOLWIDGET_H

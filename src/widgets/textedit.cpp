@@ -6,7 +6,7 @@
 #include "textedit.h"
 #include "../utils/configsettings.h"
 #include "../utils/baseutils.h"
-
+#include "../utils.h"
 #include <DPalette>
 
 #include <QDebug>
@@ -27,35 +27,40 @@ TextEdit::TextEdit(int index, DWidget *parent)
       m_textColor(Qt::red)
 {
     m_index = index;
-    setLineWrapMode(DPlainTextEdit::NoWrap);
-    setContextMenuPolicy(Qt::NoContextMenu);
-
-    int defaultColorIndex = ConfigSettings::instance()->value(
-                                "text", "color_index").toInt();
+    setLineWrapMode(DPlainTextEdit::NoWrap); //不自动换行
+    setContextMenuPolicy(Qt::NoContextMenu);//不需要菜单
+    int defaultColorIndex = ConfigSettings::instance()->getValue("text", "color_index").toInt();
     QColor defaultColor = BaseUtils::colorIndexOf(defaultColorIndex);
     setColor(defaultColor);
     QFont textFont;
-    int defaultFontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();
+    //默认字体大小
+    int defaultFontSize = ConfigSettings::instance()->getValue("text", "fontsize").toInt();
     textFont.setPixelSize(defaultFontSize);
+    //设置默认字体
     this->document()->setDefaultFont(textFont);
-    this->setLineWrapMode(QPlainTextEdit::WidgetWidth);
+//    this->setLineWrapMode(QPlainTextEdit::WidgetWidth);
 
+    //设置光标
     QTextCursor cursor = textCursor();
     QTextBlockFormat textBlockFormat = cursor.blockFormat();
     textBlockFormat.setAlignment(Qt::AlignLeft);
     cursor.mergeBlockFormat(textBlockFormat);
 
     QFontMetricsF m_fontMetric = QFontMetricsF(this->document()->defaultFont());
-    QSizeF originSize = QSizeF(m_fontMetric.boundingRect(
-                                   "d").width()  + TEXT_MARGIN,  m_fontMetric.boundingRect(
-                                   "d").height() + TEXT_MARGIN);
+    QSizeF originSize = QSizeF(m_fontMetric.boundingRect("d").width()  + TEXT_MARGIN,  m_fontMetric.boundingRect("d").height());
+    //记录当前光标的高度
+    m_cursorHeight = cursorRect().height();
+    qDebug() << "m_cursorHeight: "  << m_cursorHeight;
+
     this->resize(static_cast<int>(originSize.width()), static_cast<int>(originSize.height()));
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    connect(this->document(), &QTextDocument::contentsChange, this,  [ = ] {
+    //这里有两个信号容易搞混，contentsChanged这个是更改之后才会发信号，contentsChange这个信号更改之前发信号
+    connect(this->document(), &QTextDocument::contentsChanged, this,  [ = ] {
         updateContentSize(this->toPlainText());
     });
+    m_currentCursor = QCursor().pos();
 }
 
 int TextEdit::getIndex()
@@ -91,6 +96,7 @@ void TextEdit::setFontSize(int fontsize)
     font.setPixelSize(fontsize);
     this->document()->setDefaultFont(font);
     this->updateGeometry();
+    m_cursorHeight = cursorRect().height();
 
     updateContentSize(this->toPlainText());
 }
@@ -105,12 +111,34 @@ void TextEdit::inputMethodEvent(QInputMethodEvent *e)
 
 void TextEdit::updateContentSize(QString content)
 {
+//    qDebug() << "=============" << m_count << "===============";
+//    qDebug() << "content: " << content << "content.size(): " << content.size();
+//    qDebug() << "blockCount() : " << blockCount() ;
+//    qDebug() << "this->document()->toPlainText(): " << this->document()->toPlainText() ;
+//    qDebug() << "this->document()->size(): " << this->document()->size() ;
+//    qDebug() << "this->document()->textWidth(): " << this->document()->textWidth();
+//    qDebug() << "this->document()->idealWidth(): " << this->document()->idealWidth();
+//    qDebug() << "this->document()->indentWidth(): " << this->document()->indentWidth();
+//    qDebug() << "this->document()->lineCount(): " << this->document()->lineCount();
+//    qDebug() << "this->document()->defaultFont().pixelSize(): " << this->document()->defaultFont().pixelSize();
     QFontMetricsF fontMetric = QFontMetricsF(this->document()->defaultFont());
-    QSizeF docSize =  fontMetric.size(0,  content);
-    QRectF rectf(this->x(), this->y(), docSize.width() + TEXT_MARGIN, docSize.height() + TEXT_MARGIN);
-    this->setMinimumSize(static_cast<int>(rectf.width()), static_cast<int>(rectf.height()));
-    this->resize(static_cast<int>(rectf.width()), static_cast<int>(rectf.height()));
-    emit  repaintTextRect(this, rectf, this->toPlainText(), this->document()->defaultFont().pixelSize());
+    //当前文本的大小--当前选中的文本
+    QSizeF docSize =  fontMetric.size(Qt::TextDontClip,  content);
+//    qDebug() << "docSize: " << docSize ;
+//    qDebug() << "docSize + TEXT_MARGIN: " << (docSize.width() + TEXT_MARGIN);
+    qreal mwidth = 0;
+    mwidth = this->document()->size().width() + 2;
+
+//    qDebug() << "mwidth: " << mwidth ;
+    //根据当前光标的高度及行数，调整当前编辑框的大小
+    this->setMinimumSize(static_cast<int>(mwidth), static_cast<int>(m_cursorHeight *  blockCount() + TEXT_MARGIN));
+    this->resize(static_cast<int>(mwidth), static_cast<int>(m_cursorHeight *  blockCount() + TEXT_MARGIN));
+    emit  repaintTextRect(this,  QRectF(this->x(), this->y(),
+                                        mwidth, m_cursorHeight *  blockCount() + TEXT_MARGIN));
+
+//    qDebug() << "this->size(): " << this->size();
+//    qDebug() << "=============" << m_count << "===============";
+//    m_count++;
 }
 
 void TextEdit::setEditing(bool edit)
@@ -147,6 +175,7 @@ void TextEdit::mousePressEvent(QMouseEvent *e)
 //        DPlainTextEdit::mousePressEvent(e);
 //        return;
 //    }
+    m_currentCursor = QCursor().pos();
     if (m_editing == true) {
         DPlainTextEdit::mousePressEvent(e);
         return;
@@ -173,6 +202,7 @@ void TextEdit::wheelEvent(QWheelEvent *e)
 */
 void TextEdit::mouseMoveEvent(QMouseEvent *e)
 {
+    m_currentCursor = QCursor().pos();
 //    if (!(e->x() > 0 && e->x() < this->geometry().width() && e->y() > 0 && e->y() < this->geometry().height())) {
 //        return;
 //    }
@@ -188,10 +218,8 @@ void TextEdit::mouseMoveEvent(QMouseEvent *e)
         this->move(static_cast<int>(this->x() + movePos.x() - m_pressPoint.x()),
                    static_cast<int>(this->y() + movePos.y() - m_pressPoint.y()));
 
-        emit  repaintTextRect(this,
-                              QRectF(qreal(this->x()), qreal(this->y()), this->width(),  this->height()),
-                              this->toPlainText(),
-                              this->document()->defaultFont().pixelSize());
+        emit  repaintTextRect(this,  QRectF(qreal(this->x()), qreal(this->y()),
+                                            this->width(),  this->height()));
         m_pressPoint = movePos;
     }
 
@@ -228,6 +256,10 @@ void TextEdit::mouseDoubleClickEvent(QMouseEvent *e)
 void TextEdit::keyPressEvent(QKeyEvent *e)
 {
     DPlainTextEdit::keyPressEvent(e);
+    if (m_isPressed) {
+        qDebug() << "通过键盘移动光标";
+        Utils::cursorMove(m_currentCursor, e);
+    }
     if (e->key() == Qt::Key_Escape && !this->isReadOnly()) {
         this->setReadOnly(true);
     }

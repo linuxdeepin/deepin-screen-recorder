@@ -11,6 +11,7 @@
 #include <DWidget>
 #include <QPainter>
 #include <QPaintEvent>
+#include <QOpenGLWidget>
 
 DWIDGET_USE_NAMESPACE
 
@@ -32,6 +33,7 @@ private:
     QRect m_globalRect;
     QRect m_centerRect;
     QBrush m_lastCenterPosBrush;
+
     ZoomIndicatorGL *m_zoomIndicatorGL = nullptr;
     QPoint m_cursorPos;
 

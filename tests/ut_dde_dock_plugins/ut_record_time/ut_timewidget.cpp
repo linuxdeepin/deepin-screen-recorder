@@ -23,10 +23,6 @@ ACCESS_PRIVATE_FUN(TimeWidget, void(), createCacheFile);
 
 ACCESS_PRIVATE_FIELD(TimeWidget, int, m_position)
 ACCESS_PRIVATE_FIELD(TimeWidget, QPixmap, m_pixmap)
-ACCESS_PRIVATE_FIELD(TimeWidget, QIcon *, m_currentIcon)
-ACCESS_PRIVATE_FIELD(TimeWidget, QIcon *, m_shadeIcon)
-ACCESS_PRIVATE_FIELD(TimeWidget, bool, m_hover)
-ACCESS_PRIVATE_FIELD(TimeWidget, bool, m_pressed)
 namespace  {
 
 class TestTimeWidget : public testing::Test
@@ -66,17 +62,9 @@ TEST_F(TestTimeWidget, stop)
 
 TEST_F(TestTimeWidget, sizeHint)
 {
-    qDebug() << "sizeHint >>>>> " << m_timeWidget->sizeHint();
+    qDebug() << m_timeWidget->sizeHint();
     EXPECT_LT(0, m_timeWidget->sizeHint().width());
-    EXPECT_LT(0, m_timeWidget->sizeHint().height());
-}
-
-TEST_F(TestTimeWidget, sizeHint1)
-{
-    qDebug() << "sizeHint1 >>>>> " << m_timeWidget->sizeHint();
-    access_private_field::TimeWidgetm_position(*m_timeWidget) = 1;
-    EXPECT_LT(0, m_timeWidget->sizeHint().width());
-    EXPECT_LT(0, m_timeWidget->sizeHint().height());
+    EXPECT_EQ(22, m_timeWidget->sizeHint().height());
 }
 
 TEST_F(TestTimeWidget, onTimeout)
@@ -84,42 +72,24 @@ TEST_F(TestTimeWidget, onTimeout)
     call_private_fun::TimeWidgetonTimeout(*m_timeWidget);
 }
 
-TEST_F(TestTimeWidget, onTimeout1)
-{
-    access_private_field::TimeWidgetm_currentIcon(*m_timeWidget) = access_private_field::TimeWidgetm_shadeIcon(*m_timeWidget);
-    call_private_fun::TimeWidgetonTimeout(*m_timeWidget);
-}
-
 TEST_F(TestTimeWidget, onPositionChanged)
 {
     call_private_fun::TimeWidgetonPositionChanged(*m_timeWidget, 1);
-}
-DGuiApplicationHelper::ColorType themeType_stub()
-{
-
-    return DGuiApplicationHelper::DarkType;
 }
 
 TEST_F(TestTimeWidget, paintEvent)
 {
     QPaintEvent *e = new QPaintEvent(QRect());
-    access_private_field::TimeWidgetm_hover(*m_timeWidget) = true;
-    access_private_field::TimeWidgetm_pressed(*m_timeWidget) = true;
-
     access_private_field::TimeWidgetm_position(*m_timeWidget) = 0;
     call_private_fun::TimeWidgetpaintEvent(*m_timeWidget, e);
 
     access_private_field::TimeWidgetm_position(*m_timeWidget) = 1;
     call_private_fun::TimeWidgetpaintEvent(*m_timeWidget, e);
 
-    Stub stub;
-    stub.set(ADDR(DGuiApplicationHelper, themeType), themeType_stub);
-
     access_private_field::TimeWidgetm_position(*m_timeWidget) = 0;
     access_private_field::TimeWidgetm_pixmap(*m_timeWidget) = QPixmap();
     call_private_fun::TimeWidgetpaintEvent(*m_timeWidget, e);
     delete  e;
-    stub.reset(ADDR(DGuiApplicationHelper, themeType));
 }
 
 TEST_F(TestTimeWidget, mousePressEvent)

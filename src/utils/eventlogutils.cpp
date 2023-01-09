@@ -1,3 +1,4 @@
+// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -23,7 +24,7 @@ EventLogUtils::EventLogUtils()
 {
     QLibrary library("libdeepin-event-log.so");
 
-    init =reinterpret_cast<bool (*)(const std::string &, bool)>(library.resolve("Initialize"));
+    init = reinterpret_cast<bool (*)(const std::string &, bool)>(library.resolve("Initialize"));
     writeEventLog = reinterpret_cast<void (*)(const std::string &)>(library.resolve("WriteEventLog"));
 
     if (init == nullptr)

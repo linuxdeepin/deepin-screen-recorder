@@ -10,14 +10,11 @@
 #include <QTimer>
 #include <QString>
 #include <QTest>
-#include <QImage>
-#include <QPair>
 #include <QMainWindow>
 #include <QHBoxLayout>
 #include  <QFont>
 #include <QScreen>
 #include <QDesktopWidget>
-#include <QtConcurrent>
 
 #include "stub.h"
 #include "addr_pri.h"
@@ -353,14 +350,4 @@ TEST_F(WaylandIntegrationPrivateTest, removeOutput)
     call_private_fun::WaylandIntegrationPrivateremoveOutput(*m_waylandIntegrationPrivate, 111);
 }
 
-ACCESS_PRIVATE_FUN(WaylandIntegrationPrivate, void(), appendFrameToList);
-ACCESS_PRIVATE_FIELD(WaylandIntegrationPrivate, bool, m_appendFrameToListFlag);
-ACCESS_PRIVATE_FIELD(WaylandIntegrationPrivate, int, m_screenCount);
-TEST_F(WaylandIntegrationPrivateTest, appendFrameToList)
-{
-    m_waylandIntegrationPrivate->m_fps = 24;
-    access_private_field::WaylandIntegrationPrivatem_screenCount(*m_waylandIntegrationPrivate) = 1;
-    access_private_field::WaylandIntegrationPrivatem_appendFrameToListFlag(*m_waylandIntegrationPrivate) = false;
-    call_private_fun::WaylandIntegrationPrivateappendFrameToList(*m_waylandIntegrationPrivate);
-}
 

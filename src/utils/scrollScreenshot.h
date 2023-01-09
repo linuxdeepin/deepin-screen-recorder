@@ -8,15 +8,19 @@
 
 #include "pixmergethread.h"
 #ifdef KF5_WAYLAND_FLAGE_ON
+#ifdef DWAYLAND_SUPPORT
+#include "waylandmousesimulator.h"
+#else
 #include "waylandscrollmonitor.h"
-#endif
+#endif  // DWAYLAND_SUPPORT
+#endif  // KF5_WAYLAND_FLAGE_ON
 #include <QPixmap>
 #include <QTimer>
 #include <QRect>
-#include<opencv2/opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include "keydefine.h"
 
-class ScrollScreenshot: public QObject
+class ScrollScreenshot : public QObject
 {
     Q_OBJECT
 
@@ -30,7 +34,7 @@ public:
 
     explicit ScrollScreenshot(QObject *parent = nullptr);
     ~ScrollScreenshot();
-    void addPixmap(const QPixmap &piximg, int wheelDirection = WheelDown); //添加图片到拼接线程
+    void addPixmap(const QPixmap &piximg, int wheelDirection = WheelDown);  //添加图片到拼接线程
     /**
      * @brief 保存时，添加最后一张图片到拼接线程
      */
@@ -43,9 +47,9 @@ public:
     QImage savePixmap();
 
     //手动滚动时的函数处理
-    void setScrollModel(bool model); //设置滚动模式，先设置滚动模式，再添加图片
-    QRect getInvalidArea();//获取调整区域
-    void setTimeAndCalculateTimeDiff(int time); //设置时间并计算时间差
+    void setScrollModel(bool model);             //设置滚动模式，先设置滚动模式，再添加图片
+    QRect getInvalidArea();                      //获取调整区域
+    void setTimeAndCalculateTimeDiff(int time);  //设置时间并计算时间差
 signals:
     void getOneImg();
     void updatePreviewImg(QImage img);
@@ -58,7 +62,7 @@ signals:
     void sigalWheelScrolling(float direction);
 public slots:
     void merageImgState(PixMergeThread::MergeErrorValue state);
-    void merageInvalidArea(PixMergeThread::MergeErrorValue state, QRect rect); //调整捕捉区域
+    void merageInvalidArea(PixMergeThread::MergeErrorValue state, QRect rect);  //调整捕捉区域
 private:
     /**
      * @brief 用来监听模拟自动滚动截图的标志,只有当进行自动滚动截图时此属性的值会一直增加
@@ -82,16 +86,17 @@ private:
     ScrollStatus m_curStatus = ScrollStatus::Wait;
 
     //处理手动滚动时新增
-    bool m_isManualScrollModel = false;//是否手动模式
-    QRect m_rect;//调整区域
+    bool m_isManualScrollModel = false;  //是否手动模式
+    QRect m_rect;                        //调整区域
     bool m_startPixMerageThread = false;
-#ifdef KF5_WAYLAND_FLAGE_ON
+#if defined(KF5_WAYLAND_FLAGE_ON) && !defined(DWAYLAND_SUPPORT)
     WaylandScrollMonitor *m_WaylandScrollMonitor = nullptr;
-#endif
+#endif  // defined(KF5_WAYLAND_FLAGE_ON) && !defined(DWAYLAND_SUPPORT)
+
     /**
      * @brief 用来记录当前滚动方向
      */
     PixMergeThread::PictureDirection m_lastDirection = PixMergeThread::PictureDirection::ScrollDown;
 };
 
-#endif // AUDIOUTILS_H
+#endif  // SCROLLSCREENSHOT_H

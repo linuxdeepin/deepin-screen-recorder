@@ -5,9 +5,12 @@
 
 #include "waylandscrollmonitor.h"
 
+#if defined(KF5_WAYLAND_FLAGE_ON) && !defined(DWAYLAND_SUPPORT)
+
 #define SCROLL_DOWN 15.0
 
-WaylandScrollMonitor::WaylandScrollMonitor(QObject *parent) : QObject(parent)
+WaylandScrollMonitor::WaylandScrollMonitor(QObject *parent)
+    : QObject(parent)
     , m_connection(nullptr)
     , m_queue(nullptr)
     , m_registry(nullptr)
@@ -38,10 +41,10 @@ void WaylandScrollMonitor::setupRegistry()
     m_registry = new KWayland::Client::Registry(this);
     qDebug() << "==========setupRegistry=====";
     connect(m_registry, &KWayland::Client::Registry::fakeInputAnnounced, this, &WaylandScrollMonitor::setupFakeinput);
-    //connect(m_registry, &KWayland::Client::Registry::fakeInputRemoved, this, &WaylandMonitor::removeOutput);
-//    connect(m_registry, &KWayland::Client::Registry::interfacesAnnounced, this, [this] {
-//        m_registryInitialized = true;
-//    });
+    // connect(m_registry, &KWayland::Client::Registry::fakeInputRemoved, this, &WaylandMonitor::removeOutput);
+    //    connect(m_registry, &KWayland::Client::Registry::interfacesAnnounced, this, [this] {
+    //        m_registryInitialized = true;
+    //    });
 
     m_registry->create(m_connection);
     m_registry->setEventQueue(m_queue);
@@ -64,10 +67,13 @@ void WaylandScrollMonitor::initWaylandScrollThread()
     // 初始化ConnectionThread
     m_connection = new KWayland::Client::ConnectionThread(this);
     // 注册器
-    connect(m_connection, &KWayland::Client::ConnectionThread::connected, this, &WaylandScrollMonitor::setupRegistry, Qt::QueuedConnection);
+    connect(m_connection,
+            &KWayland::Client::ConnectionThread::connected,
+            this,
+            &WaylandScrollMonitor::setupRegistry,
+            Qt::QueuedConnection);
     connect(m_connection, &KWayland::Client::ConnectionThread::connectionDied, this, [this] {
-        if (m_queue)
-        {
+        if (m_queue) {
             delete m_queue;
             m_queue = nullptr;
         }
@@ -85,7 +91,6 @@ void WaylandScrollMonitor::initWaylandScrollThread()
 // 释放注册资源
 void WaylandScrollMonitor::releaseWaylandScrollThread()
 {
-
     if (m_fakeinput) {
         m_fakeinput->release();
         delete m_fakeinput;
@@ -94,7 +99,7 @@ void WaylandScrollMonitor::releaseWaylandScrollThread()
 
     if (m_registry) {
         m_registry->release();
-        delete  m_registry;
+        delete m_registry;
         m_registry = nullptr;
     }
 
@@ -118,3 +123,5 @@ void WaylandScrollMonitor::doWaylandAutoScroll()
         m_fakeinput->requestPointerAxisForCapture(Qt::Vertical, SCROLL_DOWN);
     }
 }
+
+#endif  // defined(KF5_WAYLAND_FLAGE_ON) && !defined(DWAYLAND_SUPPORT)

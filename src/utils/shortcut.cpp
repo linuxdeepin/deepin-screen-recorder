@@ -4,10 +4,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "shortcut.h"
+
 #include <QDBusReply>
 #include <QDBusInterface>
 #include <QDebug>
-Shortcut::Shortcut(QObject *parent) : QObject(parent)
+
+#include "utils.h"
+
+DCORE_USE_NAMESPACE
+
+Shortcut::Shortcut(QObject *parent)
+    : QObject(parent)
 {
     ShortcutGroup screenshotGroup;
     ShortcutGroup exitGroup;
@@ -25,36 +32,28 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
 
     screenshotGroup.groupItems << ShortcutItem(tr("Quick start"), getSysShortcuts("screenshot"))
                                << ShortcutItem(tr("Window screenshot"), getSysShortcuts("screenshot-window"))
-                               << ShortcutItem(tr("Delay screenshot"),  getSysShortcuts("screenshot-delayed"))
-                               << ShortcutItem(tr("Full screenshot"),  getSysShortcuts("screenshot-fullscreen"))
-                               << ShortcutItem(tr("Start scrollshot"),  getSysShortcuts("screenshot-scroll"))
-                               << ShortcutItem(tr("Start OCR"),  getSysShortcuts("screenshot-ocr"));
+                               << ShortcutItem(tr("Delay screenshot"), getSysShortcuts("screenshot-delayed"))
+                               << ShortcutItem(tr("Full screenshot"), getSysShortcuts("screenshot-fullscreen"))
+                               << ShortcutItem(tr("Start scrollshot"), getSysShortcuts("screenshot-scroll"))
+                               << ShortcutItem(tr("Start OCR"), getSysShortcuts("screenshot-ocr"));
 
-    exitGroup.groupItems << ShortcutItem(tr("Exit"), "Esc")
-                         << ShortcutItem(tr("Save"), "Ctrl+S");
+    exitGroup.groupItems << ShortcutItem(tr("Exit"), "Esc") << ShortcutItem(tr("Save"), "Ctrl+S");
 #ifdef OCR_SCROLL_FLAGE_ON
     toolsGroup.groupItems << ShortcutItem(tr("Scrollshot"), "Alt+I");
 #endif
-    toolsGroup.groupItems << ShortcutItem(tr("Pin screenshots"), "Alt+P")
-                          << ShortcutItem(tr("Rectangle"), "R")
-                          << ShortcutItem(tr("Ellipse"), "O")
-                          << ShortcutItem(tr("Line"), "L")
-                          << ShortcutItem(tr("Pencil"), "P")
-                          << ShortcutItem(tr("Text"), "T");
+    toolsGroup.groupItems << ShortcutItem(tr("Pin screenshots"), "Alt+P") << ShortcutItem(tr("Rectangle"), "R")
+                          << ShortcutItem(tr("Ellipse"), "O") << ShortcutItem(tr("Line"), "L") << ShortcutItem(tr("Arrow"), "X")
+                          << ShortcutItem(tr("Pencil"), "P") << ShortcutItem(tr("Text"), "T");
 #ifdef OCR_SCROLL_FLAGE_ON
     toolsGroup.groupItems << ShortcutItem(tr("Extract text"), "Alt+O");
 #endif
-    toolsGroup.groupItems << ShortcutItem(tr("Delete"), "Delete")
-                          << ShortcutItem(tr("Undo"), "Ctrl+Z")
+    toolsGroup.groupItems << ShortcutItem(tr("Delete"), "Delete") << ShortcutItem(tr("Undo"), "Ctrl+Z")
                           << ShortcutItem(tr("Options"), "F3");
 
     recordGroup.groupItems << ShortcutItem(tr("Start recording"), getSysShortcuts("deepin-screen-recorder"))
-                           << ShortcutItem(tr("Sound"), "S")
-                           << ShortcutItem(tr("Keystroke"), "K")
-                           << ShortcutItem(tr("Webcam"), "W")
-                           << ShortcutItem(tr("Mouse"), "M")
-                           << ShortcutItem(tr("Options"), "F3")
-                           << ShortcutItem(" ", " ");
+                           << ShortcutItem(tr("Sound"), "S") << ShortcutItem(tr("Keystroke"), "K")
+                           << ShortcutItem(tr("Webcam"), "C") << ShortcutItem(tr("Mouse"), "M")
+                           << ShortcutItem(tr("Options"), "F3") << ShortcutItem(" ", " ");
 
     sizeGroup.groupItems << ShortcutItem(tr("Increase height up"), "Ctrl+Up")
                          << ShortcutItem(tr("Increase height down"), "Ctrl+Down")
@@ -65,12 +64,11 @@ Shortcut::Shortcut(QObject *parent) : QObject(parent)
                          << ShortcutItem(tr("Decrease width left"), "Ctrl+Shift+Left")
                          << ShortcutItem(tr("Decrease width right"), "Ctrl+Shift+Right");
 
-    setGroup.groupItems << ShortcutItem(tr("Help"), "F1")
-                        << ShortcutItem(tr("Display shortcuts"), "Ctrl+Shift+?");
+    setGroup.groupItems << ShortcutItem(tr("Help"), "F1") << ShortcutItem(tr("Display shortcuts"), "Ctrl+Shift+?");
 
-    m_shortcutGroups << screenshotGroup <<  recordGroup << toolsGroup <<  exitGroup << sizeGroup << setGroup;
+    m_shortcutGroups << screenshotGroup << recordGroup << toolsGroup << exitGroup << sizeGroup << setGroup;
 
-    //convert to json object
+    // convert to json object
     QJsonArray jsonGroups;
     for (auto scg : m_shortcutGroups) {
         QJsonObject jsonGroup;
@@ -94,12 +92,20 @@ QString Shortcut::toStr()
 }
 QString Shortcut::getSysShortcuts(const QString type)
 {
-    QDBusInterface shortcuts("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding", "com.deepin.daemon.Keybinding");
-    if (!shortcuts.isValid()) {
+    QScopedPointer<QDBusInterface> shortcuts;
+    if (Utils::isSysGreatEqualV23()) {
+        shortcuts.reset(
+            new QDBusInterface("org.deepin.dde.Keybinding1", "/org/deepin/dde/Keybinding1", "org.deepin.dde.Keybinding1"));
+    } else {
+        shortcuts.reset(
+            new QDBusInterface("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding", "com.deepin.daemon.Keybinding"));
+    }
+
+    if (!shortcuts->isValid()) {
         return getDefaultValue(type);
     }
 
-    QDBusReply<QString> shortLists = shortcuts.call(QStringLiteral("ListAllShortcuts"));
+    QDBusReply<QString> shortLists = shortcuts->call(QStringLiteral("ListAllShortcuts"));
     QJsonDocument doc = QJsonDocument::fromJson(shortLists.value().toUtf8());
     QJsonArray shorts = doc.array();
     QMap<QString, QString> shortcutsMap;
@@ -109,7 +115,7 @@ QString Shortcut::getSysShortcuts(const QString type)
         if (Id == type) {
             QJsonArray Accels = shortcut["Accels"].toArray();
             QString AccelsString;
-            for (QJsonValue accel : Accels)  {
+            for (QJsonValue accel : Accels) {
                 AccelsString += accel.toString();
             }
             AccelsString.remove('<');

@@ -16,22 +16,22 @@ typedef QList<QPointF> FourPoints;
 class Toolshape
 {
 public:
-    QString type;
+    QString type; // 图元类型
+    // rectangle, oval, effect, arrow, line, pen, text
+    // 矩形，椭圆，模糊，箭头，直线，画笔，文本
     FourPoints mainPoints;
     int index = -1;
-    int lineWidth = 1;
-    int colorIndex = 0;
-    bool isBlur = false;
-    bool isMosaic = false;
-    bool isStraight = false;
+    int lineWidth = 1; // 线宽
+    int colorIndex = 0; // 颜色编号
+    bool isBlur = false; // 模糊类型
+    int isOval = 0; // 模糊形状 0 椭圆，1 矩形， 2模糊笔
     bool isShiftPressed = false;
-    int fontSize = 1;
+    int fontSize = 1; // 字体大小
+    int radius = 10;// 模糊强度
 
     QList<QPointF> points;
     QList<QList<qreal>> portion;
     QPointF arrowRotatePos;
-
-    QString text; //当图形形状是文字时，此属性才会有值
     Toolshape();
     //~Toolshape();
 

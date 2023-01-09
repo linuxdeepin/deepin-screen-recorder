@@ -25,23 +25,24 @@ const int BOTTOM_RECT_HEIGHT = 14;
 ZoomIndicator::ZoomIndicator(DWidget *parent,bool isRecord)
     : DLabel(parent)
 {
+
     QDBusInterface wmInterface("com.deepin.wm",
-                                "/com/deepin/wm",
-                                "com.deepin.wm",
-                                QDBusConnection::sessionBus());
+                               "/com/deepin/wm",
+                               "com.deepin.wm",
+                               QDBusConnection::sessionBus());
     if (!wmInterface.isValid()) {
         qWarning() << "无法获取多任务视图dbus接口！";
         m_isOpenWM = false;
-    }else {
+    } else {
         QDBusReply<bool> reply = wmInterface.call("GetMultiTaskingStatus");
         if (!reply.isValid()) {
             qWarning() << "无法调用获取多任务视图状态的dbus方法！";
             m_isOpenWM = false;
-        }else {
+        } else {
             m_isOpenWM = reply.value();
         }
     }
-    qInfo() << "多任务视图是否打开: " << (m_isOpenWM? "是":"否");
+    qInfo() << "多任务视图是否打开: " << (m_isOpenWM ? "是" : "否");
     m_isRecord = isRecord;
 
     if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord) {
@@ -65,11 +66,10 @@ ZoomIndicator::ZoomIndicator(DWidget *parent,bool isRecord)
 
 ZoomIndicator::~ZoomIndicator()
 {
-    if (Utils::isWaylandMode && !m_isOpenWM && m_zoomIndicatorGL && !m_isRecord) {
+    if (Utils::isWaylandMode && !m_isOpenWM && m_zoomIndicatorGL&& !m_isRecord) {
         delete  m_zoomIndicatorGL;
     }
 }
-
 
 void ZoomIndicator::paintEvent(QPaintEvent *)
 {
@@ -78,23 +78,23 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
     //例如两个1920的屏幕横连，实际宽度是3840,进行1.25缩放后实际宽度是3072、但是屏幕1上的点的范围是0～1920,屏幕二上的范围是1920～3840
 //    QPoint centerPos =   this->cursor().pos(); //不清楚为啥有些时候此接口获取的值是两个屏幕都缩放了，有些时候只有一个屏幕缩放
     qreal ration = this->devicePixelRatioF();
-    QPoint centerPos = m_cursorPos/ration;
-//    qDebug() << "0 centerPos: " << centerPos << "m_cursorPos: " <<m_cursorPos;
+    QPoint centerPos = m_cursorPos / ration;
+//    qDebug() << "0 centerPos: " << centerPos << "m_cursorPos: " << m_cursorPos;
 //    centerPos = QPoint(std::max(centerPos.x() - this->window()->x(), 0),
 //                       std::max(centerPos.y() - this->window()->y(), 0));
-//    qDebug() << "1 centerPos: " <<centerPos;
+//    qDebug() << "1 centerPos: " << centerPos;
     QPainter painter(this);
     //获取背景图片
     const QPixmap &fullscreenImgFile = TempFile::instance()->getFullscreenPixmap();
-//    qDebug() << "fullscreenImgFile.size(): " <<fullscreenImgFile.size();
+//    qDebug() << "fullscreenImgFile.size(): " << fullscreenImgFile.size();
     QImage fullscreenImg = fullscreenImgFile.toImage();
-//    qDebug() << "1 fullscreenImg.size(): " <<fullscreenImg.size();
+//    qDebug() << "1 fullscreenImg.size(): " << fullscreenImg.size();
 
     //将背景图片按屏幕缩放比进行缩放
     fullscreenImg =  fullscreenImg.scaled(static_cast<int>(fullscreenImg.width() / ration),
                                           static_cast<int>(fullscreenImg.height() / ration), Qt::KeepAspectRatio);
 
-//    qDebug() << "2 fullscreenImg.size(): " <<fullscreenImg.size();
+//    qDebug() << "2 fullscreenImg.size(): " << fullscreenImg.size();
     //获取所有屏幕的信息
 //    QList<Utils::ScreenInfo> screensInfo = Utils::getScreensInfo();
 //    for (int i = 0; i < screensInfo.size(); i++) {
@@ -106,9 +106,9 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
 //            break;
 //        }
 //    }
-//    qDebug() << "2 centerPos: " <<centerPos;
+//    qDebug() << "2 centerPos: " << centerPos;
 //    centerPos = centerPos*ration;
-//    qDebug() << "3 centerPos: " <<centerPos;
+//    qDebug() << "3 centerPos: " << centerPos;
     //返回centerPos位置的像素颜色
     const QRgb centerRectRgb = fullscreenImg.pixel(centerPos);
     QRect tempRec = QRect(centerPos.x() - IMG_WIDTH / 2, centerPos.y() - IMG_WIDTH / 2, IMG_WIDTH, IMG_WIDTH) ;
@@ -118,18 +118,13 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
 
     zoomPix = zoomPix.scaled(QSize(INDICATOR_WIDTH,  INDICATOR_WIDTH),
                              Qt::KeepAspectRatio);
-
     painter.drawPixmap(QRect(5, 5, INDICATOR_WIDTH, INDICATOR_WIDTH), zoomPix);
-
-
     painter.drawPixmap(m_centerRect, QPixmap(":/images/action/center_rect.png"));
     painter.drawPixmap(m_globalRect, QPixmap(":/images/action/magnifier.png"));
-
     m_lastCenterPosBrush = QBrush(QColor(qRed(centerRectRgb),
                                          qGreen(centerRectRgb), qBlue(centerRectRgb)));
     painter.fillRect(QRect(INDICATOR_WIDTH / 2 + 2, INDICATOR_WIDTH / 2 + 2,
                            CENTER_RECT_WIDTH - 4, CENTER_RECT_WIDTH - 4), m_lastCenterPosBrush);
-
     painter.fillRect(QRect(5, INDICATOR_WIDTH - 9, INDICATOR_WIDTH, BOTTOM_RECT_HEIGHT),
                      QBrush(QColor(0, 0, 0, 125)));
     QFont posFont;
@@ -152,7 +147,7 @@ void ZoomIndicator::showMagnifier(QPoint pos)
     this->show();
 
     this->move(pos);
-//    qDebug() << "this->pos(): " << this->pos();
+    //qDebug() << "this->pos(): " << this->pos();
 }
 
 void ZoomIndicator::hideMagnifier()
@@ -168,6 +163,5 @@ void ZoomIndicator::hideMagnifier()
 void ZoomIndicator::setCursorPos(QPoint pos)
 {
     m_cursorPos = pos;
-//    qDebug() << "0 pos: " << pos << "m_cursorPos: " <<m_cursorPos;
+    //qDebug() << "0 pos: " << pos << "m_cursorPos: " << m_cursorPos;
 }
-

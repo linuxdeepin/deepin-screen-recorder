@@ -6,7 +6,6 @@
 #ifndef GSTRECORDX_H
 #define GSTRECORDX_H
 #include "gstinterface.h"
-
 #include <QDebug>
 
 #include <QString>
@@ -16,6 +15,7 @@
 #include <QtConcurrent>
 #include <QObject>
 
+#include <gst/gst.h>
 
 class Utils;
 /**
@@ -170,7 +170,6 @@ private:
      * @return
      */
     GstBin *getGstBin(GstElement *element);
-
 private:
     /**
      * @brief gstreamer的管道元素

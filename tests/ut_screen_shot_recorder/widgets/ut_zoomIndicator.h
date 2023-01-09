@@ -14,7 +14,7 @@
 
 
 using namespace testing;
-ACCESS_PRIVATE_FUN(ZoomIndicator, void(QPaintEvent *), paintEvent);
+ACCESS_PRIVATE_FUN(ZoomIndicator, void(), paintGL);
 
 class ZoomIndicatorTest: public testing::Test, public QObject
 {
@@ -42,8 +42,8 @@ public:
 
 TEST_F(ZoomIndicatorTest, paintEvent)
 {
-    QPaintEvent *paintEvent = new QPaintEvent(QRect());
-    call_private_fun::ZoomIndicatorpaintEvent(*zoomindicator, paintEvent);
+    //QPaintEvent *paintEvent = new QPaintEvent(QRect());
+    call_private_fun::ZoomIndicatorpaintGL(*zoomindicator);
 
-    delete paintEvent;
+    //delete paintEvent;
 }

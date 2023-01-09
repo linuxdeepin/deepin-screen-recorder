@@ -136,7 +136,7 @@ TEST_F(CameraWidgetTest, cameraResume)
 
 TEST_F(CameraWidgetTest, captureImage)
 {
-    //m_cameraWidget->captureImage();
+    m_cameraWidget->captureImage();
 }
 
 TEST_F(CameraWidgetTest, processCapturedImage)

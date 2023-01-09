@@ -74,7 +74,7 @@ CAVOutputStream::CAVOutputStream(WaylandIntegration::WaylandIntegrationPrivate *
     m_nLastAudioCardPresentationTime = 0;
     m_nLastAudioMixPresentationTime = 0;
     m_mixCount = 0;
-
+    m_videoType = videoType::MP4;
     m_left = 0;
     m_top = 0;
     m_right = 0;
@@ -685,7 +685,6 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
     if (nullptr == frame._frame || frame._width <= 0 || frame._height <= 0) {
         return -1;
     }
-    //qint64 time1 = QDateTime::currentMSecsSinceEpoch();
     AVFrame *pRgbFrame = avlibInterface::m_av_frame_alloc();
     pRgbFrame->width = frame._width;
     pRgbFrame->height = frame._height;
@@ -720,10 +719,7 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
         AVERROR(ERANGE);
         return 2;
     }
-    //qint64 time2 = QDateTime::currentMSecsSinceEpoch();
     avlibInterface::m_sws_scale(m_pVideoSwsContext, pRgbFrame->data, pRgbFrame->linesize, 0, pCodecCtx->height, pFrameYUV->data, pFrameYUV->linesize);
-    //qint64 time3 = QDateTime::currentMSecsSinceEpoch();
-    //qDebug() << "time3 - time2: sws_scale : " << time3-time2;
     pFrameYUV->width  = pRgbFrame->width;//test
     pFrameYUV->height = pRgbFrame->height;
     pFrameYUV->format = AV_PIX_FMT_YUV420P;
@@ -742,7 +738,7 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
             m_fristVideoFramePts = frame._time;
         }
         packet.pts = static_cast<int64_t>(m_videoStream->time_base.den) * (frame._time - m_fristVideoFramePts) / AV_TIME_BASE;
-        //qDebug() << "video packet.pts: " << packet.pts << " , " << static_cast<int64_t>(m_videoStream->time_base.den) << " * " << frame._time - m_fristVideoFramePts << " / " << AV_TIME_BASE;
+        //qDebug() << "video packet.pts: " << packet.pts;
         packet.dts =  packet.pts;
         int ret = writeFrame(m_videoFormatContext, &packet);
         if (ret < 0) {
@@ -752,8 +748,6 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
             return ret;
         }
     }
-    //qint64 time4 = QDateTime::currentMSecsSinceEpoch();
-    //qDebug() << "time4 - time1: writeVideoFrame : " << time4-time1;
     avlibInterface::m_av_free_packet(&packet);
     avlibInterface::m_av_frame_free(&pRgbFrame);
     fflush(stdout);
@@ -1074,6 +1068,7 @@ int CAVOutputStream::write_filter_audio_frame(AVStream *&outst, AVCodecContext *
     //     av_frame_free(&output_frame);
     return ret;
 }
+
 /**
  * @brief 音频缓冲区是否还有数据
  * @return
@@ -1181,7 +1176,7 @@ void CAVOutputStream::writeMixAudio()
                         //显示时间戳，应大于或等于解码时间戳
                         packet_out.pts = m_mixCount * pCodecCtx_amix->frame_size;
                     }
-                    //qDebug() << m_mixCount << " mix audio packet_out.pts: " << packet_out.pts ;
+                    qDebug() << m_mixCount << " mix audio packet_out.pts: " << packet_out.pts ;
 
                     packet_out.dts = packet_out.pts;
                     packet_out.duration = pCodecCtx_amix->frame_size;
@@ -1377,7 +1372,7 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
         /** Write one audio frame from the temporary packet to the output file. */
         if (enc_got_frame_a) {
             outputPacket.stream_index = m_sysAudioStream->index;
-//            outputPacket.pts = m_singleCount * m_pSysCodecContext->frame_size * 1000 / m_pSysCodecContext->sample_rate;
+            //            outputPacket.pts = m_singleCount * m_pSysCodecContext->frame_size * 1000 / m_pSysCodecContext->sample_rate;
             if (m_videoType == videoType::MKV) {
                 //显示时间戳，应大于或等于解码时间戳
                 outputPacket.pts = m_singleCount * m_pSysCodecContext->frame_size * 1000 / m_pSysCodecContext->sample_rate;

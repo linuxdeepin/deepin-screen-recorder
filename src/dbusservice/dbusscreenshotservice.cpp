@@ -5,7 +5,6 @@
 
 #include "dbusscreenshotservice.h"
 #include "utils/eventlogutils.h"
-
 #include <QtCore/QMetaObject>
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
@@ -40,7 +39,6 @@ void DBusScreenshotService::setSingleInstance(bool instance)
 
 void DBusScreenshotService::StartScreenshot()
 {
-    qDebug() << "DBus screenshot service! screenshot";
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
         {"version", QCoreApplication::applicationVersion()},
@@ -48,7 +46,7 @@ void DBusScreenshotService::StartScreenshot()
         {"startup_mode", "B6"}
     };
     EventLogUtils::get().writeLogs(obj);
-
+    qDebug() << "DBus screenshot service! start screenshot";
     if (!m_singleInstance)
         parent()->startScreenshot();
     m_singleInstance = true;
@@ -58,7 +56,6 @@ void DBusScreenshotService::DelayScreenshot(qlonglong in0)
 {
     qDebug() << "DBus screenshot service! delay screenshot";
     // handle method call com.deepin.Screenshot.DelayScreenshot
-
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
         {"version", QCoreApplication::applicationVersion()},
@@ -66,7 +63,6 @@ void DBusScreenshotService::DelayScreenshot(qlonglong in0)
         {"startup_mode", "B2"}
     };
     EventLogUtils::get().writeLogs(obj);
-
     if (!m_singleInstance)
         parent()->delayScreenshot(in0);
     m_singleInstance = true;
@@ -84,8 +80,6 @@ void DBusScreenshotService::NoNotifyScreenshot()
 void DBusScreenshotService::OcrScreenshot()
 {
     qDebug() << "DBus screenshot service! OcrScreenshot";
-    // handle method call com.deepin.Screenshot.NoNotify
-
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
         {"version", QCoreApplication::applicationVersion()},
@@ -93,7 +87,6 @@ void DBusScreenshotService::OcrScreenshot()
         {"startup_mode", "B4"}
     };
     EventLogUtils::get().writeLogs(obj);
-
     if (!m_singleInstance)
         parent()->OcrScreenshot();
     m_singleInstance = true;
@@ -102,8 +95,6 @@ void DBusScreenshotService::OcrScreenshot()
 void DBusScreenshotService::ScrollScreenshot()
 {
     qDebug() << "DBus screenshot service! ScrollScreenshot";
-    // handle method call com.deepin.Screenshot.NoNotify
-
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
         {"version", QCoreApplication::applicationVersion()},
@@ -111,7 +102,6 @@ void DBusScreenshotService::ScrollScreenshot()
         {"startup_mode", "B5"}
     };
     EventLogUtils::get().writeLogs(obj);
-
     if (!m_singleInstance)
         parent()->ScrollScreenshot();
     m_singleInstance = true;
@@ -120,8 +110,6 @@ void DBusScreenshotService::ScrollScreenshot()
 void DBusScreenshotService::TopWindowScreenshot()
 {
     qDebug() << "DBus screenshot service! topWindow screenshot";
-    // handle method call com.deepin.Screenshot.TopWindow
-
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
         {"version", QCoreApplication::applicationVersion()},
@@ -129,7 +117,6 @@ void DBusScreenshotService::TopWindowScreenshot()
         {"startup_mode", "B3"}
     };
     EventLogUtils::get().writeLogs(obj);
-
     if (!m_singleInstance)
         parent()->topWindowScreenshot();
     m_singleInstance = true;
@@ -139,7 +126,6 @@ void DBusScreenshotService::FullscreenScreenshot()
 {
     qDebug() << "DBus screenshot service! Fullscreen screenshot";
     // handle method call com.deepin.Screenshot.Fullscreenshot
-
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
         {"version", QCoreApplication::applicationVersion()},
@@ -147,7 +133,6 @@ void DBusScreenshotService::FullscreenScreenshot()
         {"startup_mode", "B1"}
     };
     EventLogUtils::get().writeLogs(obj);
-
     if (!m_singleInstance)
         parent()->fullscreenScreenshot();
     m_singleInstance = true;
