@@ -26,17 +26,17 @@
 #include <iostream>
 DCORE_USE_NAMESPACE
 
-IconWidget::IconWidget(QWidget *parent):
-    QWidget(parent),
-    m_blgPixmap(nullptr),
-    centralLayout(nullptr)
+IconWidget::IconWidget(QWidget *parent)
+    : QWidget(parent)
+    , m_blgPixmap(nullptr)
+    , centralLayout(nullptr)
 {
-    m_systemVersion = DSysInfo::minorVersion().toInt() ;
+    m_systemVersion = DSysInfo::minorVersion().toInt();
     setMouseTracking(true);
     setMinimumSize(PLUGIN_BACKGROUND_MIN_SIZE, PLUGIN_BACKGROUND_MIN_SIZE);
 
     QString iconName("screen-capture");
-    if(m_systemVersion >= 1070){
+    if (m_systemVersion >= 1070) {
         iconName = "screenshot";
     }
     m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
@@ -57,13 +57,11 @@ const QString IconWidget::itemContextMenu()
     shot["isActive"] = true;
     items.push_back(shot);
 
-
     QMap<QString, QVariant> recorder;
     recorder["itemId"] = "recorder";
     recorder["itemText"] = tr("Recording") + getSysShortcuts("deepin-screen-recorder");
     recorder["isActive"] = true;
     items.push_back(recorder);
-
 
     QMap<QString, QVariant> menu;
     menu["items"] = items;
@@ -75,15 +73,12 @@ const QString IconWidget::itemContextMenu()
 
 void IconWidget::invokedMenuItem(const QString &menuId)
 {
-
     if (menuId == "shot") {
-        QDBusInterface shotDBusInterface("com.deepin.Screenshot",
-                                         "/com/deepin/Screenshot",
-                                         "com.deepin.Screenshot",
-                                         QDBusConnection::sessionBus());
+        QDBusInterface shotDBusInterface(
+            "com.deepin.Screenshot", "/com/deepin/Screenshot", "com.deepin.Screenshot", QDBusConnection::sessionBus());
 
         shotDBusInterface.asyncCall("StartScreenshot");
-    } else if(menuId == "recorder") {
+    } else if (menuId == "recorder") {
         QDBusInterface shotDBusInterface("com.deepin.ScreenRecorder",
                                          "/com/deepin/ScreenRecorder",
                                          "com.deepin.ScreenRecorder",
@@ -95,12 +90,21 @@ void IconWidget::invokedMenuItem(const QString &menuId)
 
 QString IconWidget::getSysShortcuts(const QString type)
 {
-    QDBusInterface shortcuts("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding", "com.deepin.daemon.Keybinding");
-    if (!shortcuts.isValid()) {
+    QScopedPointer<QDBusInterface> shortcuts;
+    if (DSysInfo::minorVersion().toInt() >= 23) {
+        shortcuts.reset(
+            new QDBusInterface("org.deepin.dde.Keybinding1", "/org/deepin/dde/Keybinding1", "org.deepin.dde.Keybinding1"));
+    } else {
+        // V20 or older system edition.
+        shortcuts.reset(
+            new QDBusInterface("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding", "com.deepin.daemon.Keybinding"));
+    }
+
+    if (!shortcuts->isValid()) {
         return getDefaultValue(type);
     }
 
-    QDBusReply<QString> shortLists = shortcuts.call(QStringLiteral("ListAllShortcuts"));
+    QDBusReply<QString> shortLists = shortcuts->call(QStringLiteral("ListAllShortcuts"));
     QJsonDocument doc = QJsonDocument::fromJson(shortLists.value().toUtf8());
     QJsonArray shorts = doc.array();
     QMap<QString, QString> shortcutsMap;
@@ -110,7 +114,7 @@ QString IconWidget::getSysShortcuts(const QString type)
         if (Id == type) {
             QJsonArray Accels = shortcut["Accels"].toArray();
             QString AccelsString;
-            for (QJsonValue accel : Accels)  {
+            for (QJsonValue accel : Accels) {
                 AccelsString += accel.toString();
             }
             AccelsString.remove('<');
@@ -136,20 +140,18 @@ QString IconWidget::getDefaultValue(const QString type)
     return retShortcut;
 }
 
-
 void IconWidget::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
 
     QPixmap pixmap;
     QString iconName = "screen-capture";
-    if(m_systemVersion >= 1070){
+    if (m_systemVersion >= 1070) {
         iconName = "screenshot";
     }
     int iconSize = PLUGIN_ICON_MAX_SIZE;
 
     if (rect().height() > PLUGIN_BACKGROUND_MIN_SIZE) {
-
         QColor color;
         if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
             color = Qt::black;
@@ -245,11 +247,9 @@ const QPixmap IconWidget::loadSvg(const QString &fileName, const QSize &size) co
     // 缩放模式 设置为非使能状态时，调整转出的位图风格模式
     // pixmapSize = size* ratio;
     QPixmap pixmap = QIcon::fromTheme(fileName, m_icon).pixmap(pixmapSize, isEnabled() ? QIcon::Normal : QIcon::Disabled);
+    pixmap.setDevicePixelRatio(ratio);
 
     return pixmap;
 }
 
-IconWidget::~IconWidget()
-{
-
-}
+IconWidget::~IconWidget() {}

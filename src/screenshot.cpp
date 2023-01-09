@@ -8,7 +8,6 @@
 #include "utils/configsettings.h"
 #include "utils.h"
 #include "utils/eventlogutils.h"
-
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QScreen>
@@ -29,6 +28,7 @@ void Screenshot::startScreenshot()
     m_window.initResource();
     m_window.initLaunchMode(m_launchMode);
     m_window.showFullScreen();
+    m_window.createWinId();
     //平板模式截图录屏
     if (Utils::isTabletEnvironment) {
         if (QString("screenRecord") == m_launchMode) {
@@ -42,7 +42,6 @@ void Screenshot::startScreenshot()
 void Screenshot::delayScreenshot(double num)
 {
     qDebug() << "init with delay";
-
     QString summary = QString(tr("Screen Capture will start in %1 seconds").arg(num));
     QStringList actions = QStringList();
     QVariantMap hints;
@@ -67,6 +66,7 @@ void Screenshot::delayScreenshot(double num)
         m_window.initLaunchMode("screenShot");
         m_window.showFullScreen();
         m_window.initResource();
+        m_window.createWinId();
     });
 }
 
@@ -88,12 +88,11 @@ void Screenshot::noNotifyScreenshot()
 void Screenshot::OcrScreenshot()
 {
 #ifdef OCR_SCROLL_FLAGE_ON
-    qDebug() << "快捷键启动 Ocr ...";
     m_window.initAttributes();
     m_window.initResource();
     m_window.initLaunchMode("screenOcr");
     m_window.showFullScreen();
-    qDebug() << "Ocr 已启动";
+    m_window.createWinId();
 #endif
 }
 
@@ -101,14 +100,15 @@ void Screenshot::ScrollScreenshot()
 {
 #ifdef OCR_SCROLL_FLAGE_ON
     //2d模式不支持滚动截图
-    qDebug() << "whether to trun on window effects? " << (DWindowManagerHelper::instance()->hasComposite()? "yes" : "no");
-    if(DWindowManagerHelper::instance()->hasComposite()){
+    qDebug() << "whether to trun on window effects? " << (DWindowManagerHelper::instance()->hasComposite() ? "yes" : "no");
+    if (DWindowManagerHelper::instance()->hasComposite()) {
         qDebug() << "start scroll shot !";
         m_window.initAttributes();
         m_window.initResource();
         m_window.initLaunchMode("screenScroll");
         m_window.showFullScreen();
-    }else{
+        m_window.createWinId();
+    } else {
         qDebug() << "scroll shot exit !";
         qApp->quit();
         if (Utils::isWaylandMode) {

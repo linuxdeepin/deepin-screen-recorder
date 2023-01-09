@@ -66,10 +66,18 @@
 #define AC_SHOTTOOLWIDGET_THICK_THREE_PEN "thick_three_pen"// 画笔宽度3
 
 // 颜色按钮
-#define AC_COLORTOOLWIDGET_RED_BUT "red_button" // 红色按钮
-#define AC_COLORTOOLWIDGET_YELLOW_BUT "yello_button"// 黄色按钮
-#define AC_COLORTOOLWIDGET_BLUE_BUT "blue_button"// 蓝色按钮
-#define AC_COLORTOOLWIDGET_GREEN_BUT "green_button"//绿色按钮
+#define AC_COLORTOOLWIDGET_BLACK_BUT "Black_button"//黑色按钮
+#define AC_COLORTOOLWIDGET_GRAY_BUT "Gray_button"//灰色按钮
+#define AC_COLORTOOLWIDGET_WHITE_BUT "White_button"//白色按钮
+#define AC_COLORTOOLWIDGET_RED_BUT "Red_button" // 红色按钮
+#define AC_COLORTOOLWIDGET_ORANGE_BUT "Orange_button"//橙色按钮
+#define AC_COLORTOOLWIDGET_YELLOW_BUT "Yellow_button"// 黄色按钮
+#define AC_COLORTOOLWIDGET_LIGHTLIME_BUT "LightLime_button"//亮柠檬绿按钮
+#define AC_COLORTOOLWIDGET_AQUAMARINE_BUT "Aquamarine_button"//碧蓝色按钮
+#define AC_COLORTOOLWIDGET_GREEN_BUT "Green_button"//绿色按钮
+#define AC_COLORTOOLWIDGET_BLUE_BUT "Blue_button"// 蓝色按钮
+#define AC_COLORTOOLWIDGET_PURPLE_BUT "Purple_button"//紫色按钮
+#define AC_COLORTOOLWIDGET_DARKBLUE_BUT "DarkBlue_button"//深蓝按钮
 
 // 字体大小
 #define AC_SHOTTOOLWIDGET_TEXT_FONT_SIZE "text_font_size"// 字体大小

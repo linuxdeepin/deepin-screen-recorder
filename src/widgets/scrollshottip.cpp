@@ -30,7 +30,8 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
     QPixmap warmingImg ;
     //警告图片
 //    if (Utils::themeType == 1) {
-    warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
+    QString svgName = QString("other/warming.svg");
+    warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath(svgName));
 //    } else {
 //        warmingImg = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("warming.svg"));
 //    }

@@ -8,7 +8,7 @@
 
 #include "service/ocrinterface.h"
 #include "ui/menucontroller.h"
-#include "ui/toolbar.h"
+#include "ui/toolbarwidget.h"
 
 #include <DWidget>
 #include <QGraphicsView>
@@ -37,9 +37,6 @@ class MainWindow : public DWidget
         QString name;
         ~ScreenInfo() {}
     };
-
-//public:
-//    static bool isWaylandProtocol();
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
@@ -168,7 +165,7 @@ private:
     /**
      * @brief 工具栏
      */
-    ToolBar *m_toolBar;
+    ToolBarWidget *m_toolBar;
     /**
      * @brief 保存信息
      */

@@ -28,12 +28,25 @@ void TempFile::setFullScreenPixmap(const QPixmap &pixmap)
     m_fullscreenPixmap = pixmap;
 }
 
-void TempFile::setBlurPixmap(const QPixmap &pixmap)
+void TempFile::setBlurPixmap(const QPixmap &pixmap, const int radius)
 {
-    m_blurPixmap = pixmap;
+    if (m_blurPixmap.contains(radius))
+        return;
+    m_blurPixmap[radius] = pixmap;
 }
 
-void TempFile::setMosaicPixmap(const QPixmap &pixmap)
+void TempFile::setMosaicPixmap(const QPixmap &pixmap, const int radius)
 {
-    m_mosaicPixmap = pixmap;
+    if(m_mosaicPixmap.contains(radius))
+        return;
+    m_mosaicPixmap[radius] = pixmap;
+}
+
+bool TempFile::isContainsPix(const QString effect, const int radius)
+{
+    if (effect == "blur") {
+        return m_blurPixmap.contains(radius);
+    } else {
+        return m_mosaicPixmap.contains(radius);
+    }
 }

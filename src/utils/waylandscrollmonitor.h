@@ -6,6 +6,8 @@
 #ifndef WAYLANDSCROLLMONITOR_H
 #define WAYLANDSCROLLMONITOR_H
 
+#if defined(KF5_WAYLAND_FLAGE_ON) && !defined(DWAYLAND_SUPPORT)
+
 #include <QObject>
 #include <QApplication>
 #include <QTimer>
@@ -41,5 +43,7 @@ private:
     KWayland::Client::Registry *m_registry;
     KWayland::Client::FakeInput *m_fakeinput;
 };
+
+#endif // defined(KF5_WAYLAND_FLAGE_ON) && !defined(DWAYLAND_SUPPORT)
 
 #endif // WAYLANDSCROLLMONITOR_H

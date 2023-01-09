@@ -4420,3 +4420,69 @@ FourPoints getMainPoints(QPointF point1, QPointF point2, bool isShift)
 
     return fourPoints;
 }
+
+QList<QPointF> getInterpolationPoints(QPointF point1, QPointF point2, double dis)
+{
+    QList<QPointF> reValue;
+    if (qFuzzyCompare(point1.x(), point2.x())) {
+        dis = (point1.y() < point2.y() ? 1 : -1) * dis;
+        for (double y = point1.y() + dis; y < point2.y(); y += dis) {
+            reValue.push_back(QPointF(point1.x(), y));
+        }
+    } else {
+        // 直线方程 y = kx + b;
+        qreal k = (point1.y() - point2.y()) / (point1.x() - point2.x());
+        qreal b = point1.y() - point1.x() * k;
+        // x 间距
+        if (point1.x() < point2.x()) {
+            double xDis = (point2.x() - point1.x()) / dis;
+            for (double x = point1.x() +  xDis; x <  point2.x(); x += xDis)  {
+                reValue.push_back(QPointF(x, k * x + b));
+            }
+        } else {
+            double xDis = (point1.x() - point2.x()) / dis;
+            for (double x = point1.x() -  xDis; x >  point2.x(); x -= xDis)  {
+                reValue.push_back(QPointF(x, k * x + b));
+            }
+        }
+    }
+    return reValue;
+}
+
+
+FourPoints getRectPoints(QPointF point1, QPointF point2, double dis)
+{
+    FourPoints reValue;
+    if (qFuzzyCompare(point1.x(), point2.x())) {
+        reValue.push_back(QPointF(point1.x() - dis / 2, point1.y()));
+        reValue.push_back(QPointF(point1.x() + dis / 2, point1.y()));
+        reValue.push_back(QPointF(point2.x() - dis / 2, point2.y()));
+        reValue.push_back(QPointF(point2.x() + dis / 2, point2.y()));
+    } else if(qFuzzyCompare(point1.y(), point2.y())) {
+        reValue.push_back(QPointF(point1.x(), point1.y() + dis / 2));
+        reValue.push_back(QPointF(point2.x(), point2.y() + dis / 2));
+        reValue.push_back(QPointF(point1.x(), point1.y() - dis / 2));
+        reValue.push_back(QPointF(point2.x(), point2.y() - dis / 2));
+    } else {
+        // 直线方程 y = kx + b;
+        qreal k = (point1.y() - point2.y()) / (point1.x() - point2.x());
+        qreal b = point1.y() - point1.x() * k;
+
+        double a = qAtan(1 / -k);
+        double h = qSin(a) * (dis / 2);
+        double w = qCos(a) * (dis / 2);
+
+        if (k < 0) {
+            reValue.push_back(QPointF(point1.x() - w, point1.y() - h));
+            reValue.push_back(QPointF(point1.x() + w, point1.y() + h));
+            reValue.push_back(QPointF(point2.x() - w, point2.y() - h));
+            reValue.push_back(QPointF(point2.x() + w, point2.y() + h));
+        } else {
+            reValue.push_back(QPointF(point1.x() + w, point1.y() + h));
+            reValue.push_back(QPointF(point1.x() - w, point1.y() - h));
+            reValue.push_back(QPointF(point2.x() + w, point2.y() + h));
+            reValue.push_back(QPointF(point2.x() - w, point2.y() - h));
+        }
+    }
+    return reValue;
+}

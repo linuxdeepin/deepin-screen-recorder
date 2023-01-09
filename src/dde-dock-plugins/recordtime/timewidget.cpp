@@ -285,9 +285,11 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(pixmapSize);
         //m_pixmap.setDevicePixelRatio(ratio);
         const QRectF &rf = QRectF(rect());
+        qDebug() << "插件区域大小: " << rect() << "图标大小: " << m_pixmap.size();
         const QRectF &rfp = QRectF(m_pixmap.rect());
-        //qInfo() << __FUNCTION__ <<  " >>>>>>>>>> rfp: " << rfp << " , rf: " << rf;
-        painter.drawPixmap(rf.center() - rfp.center() / m_pixmap.devicePixelRatioF(), m_pixmap);
+        qDebug() << "rf.center() - rfp.center() / m_pixmap.devicePixelRatioF()" << rf.center() - rfp.center() / m_pixmap.devicePixelRatioF();
+        //painter.drawPixmap(rf.center() - rfp.center() / m_pixmap.devicePixelRatioF(), m_pixmap);
+        painter.drawPixmap(2, 0, m_pixmap);
     }
     //qInfo() << __FUNCTION__ <<  " >>>>>>>>>> this->width(): " << this->width() << " , this->height(): " << this->height();
     //qInfo() << __FUNCTION__ << " >>>>>>>>>> this->geometry(): " << this->geometry();

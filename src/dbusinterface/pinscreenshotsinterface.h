@@ -73,7 +73,7 @@ public Q_SLOTS: // METHODS
             data = qCompress(data, 9);
             data = data.toBase64();
         }
-        return call(QStringLiteral("openImageAndName"), QVariant::fromValue(data), imageName, point);
+        return asyncCall(QStringLiteral("openImageAndName"), QVariant::fromValue(data), imageName, point);
     }
 
 Q_SIGNALS: // SIGNALS

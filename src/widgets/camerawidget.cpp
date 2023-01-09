@@ -6,7 +6,6 @@
 #include "camerawidget.h"
 #include "v4l2_core.h"
 
-
 #include <QMouseEvent>
 #include <QDebug>
 #include <QApplication>
@@ -69,7 +68,7 @@ int CameraWidget::getRecordHeight()
 
 void CameraWidget::initUI()
 {
-    setWindowFlags(Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
+    qDebug() << "正在初始化摄像头界面...";
     setAttribute(Qt::WA_TranslucentBackground, true);
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
@@ -80,13 +79,16 @@ void CameraWidget::initUI()
     t_hlayout->addWidget(m_cameraUI);
     this->setLayout(t_hlayout);
 
-    //第一次打开摄像头界面通过QCamera获取摄像头名称
-    while (QCameraInfo::defaultCamera().isNull()) {
-        QEventLoop loop;
-        QTimer::singleShot(200, &loop, SLOT(quit()));
-        loop.exec();
-    }
-    m_deviceName = QCameraInfo::defaultCamera().deviceName();
+//    qDebug() << "第一次打开摄像头界面通过QCamera获取摄像头名称:" << QCameraInfo::defaultCamera().isNull();
+//    //第一次打开摄像头界面通过QCamera获取摄像头名称
+//    while (QCameraInfo::defaultCamera().isNull()) {
+//        qDebug() << "正在通过QCamera获取摄像头名称:" << QCameraInfo::defaultCamera().isNull();
+//        QEventLoop loop;
+//        QTimer::singleShot(200, &loop, SLOT(quit()));
+//        loop.exec();
+//    }
+//    m_deviceName = QCameraInfo::defaultCamera().deviceName();
+    qDebug() << "摄像头界面初始化已完成";
 
 }
 
@@ -98,10 +100,8 @@ void CameraWidget::cameraStart()
             m_imgPrcThread = new MajorImageProcessingThread;
             m_imgPrcThread->setParent(this);
             m_imgPrcThread->setObjectName("MajorThread");
-//            connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage)),
-//                    this, SLOT(onReceiveMajorImage(QImage)));
-            connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QPixmap)),
-                    this, SLOT(onReceiveMajorImage(QPixmap)));
+            connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage)),
+                    this, SLOT(onReceiveMajorImage(QImage)));
         }
         m_isInitCamera = true;
         startCameraV4l2(m_deviceName.toLatin1());
@@ -128,6 +128,7 @@ int CameraWidget::startCameraV4l2(const char *device)
         m_imgPrcThread->start();
     } else {
         qWarning() << "camInit failed";
+        camUnInit();
     }
     qInfo() << "摄像头已初始化(" << device << ")";
     return ret;
@@ -138,6 +139,7 @@ void CameraWidget::restartDevices()
     //获取当前的摄像头设备
     v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
 
+    //停止采集摄像头画面的线程
     if (m_imgPrcThread != nullptr && m_imgPrcThread->isRunning())
         m_imgPrcThread->stop();
 
@@ -185,26 +187,19 @@ void CameraWidget::cameraStop()
     if (m_imgPrcThread != nullptr) {
         m_imgPrcThread->stop();
     }
+    camUnInit();
 }
 
 void CameraWidget::onReceiveMajorImage(QImage image)
 {
     QImage t_image = image.scaled(this->width(), this->height(), Qt::IgnoreAspectRatio, Qt::FastTransformation);
-    //t_image.save(QString("/home/wangcong/Desktop/test/t_image_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
-    QPixmap pixmap = QPixmap::fromImage(image);
-    //pixmap.save(QString("/home/wangcong/Desktop/test/pixmap_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
+    QPixmap pixmap = QPixmap::fromImage(t_image);
+//    pixmap.save(QString("/home/wangcong/Desktop/test/test_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
     if (m_cameraUI)
         m_cameraUI->setPixmap(pixmap);
     //qInfo() << "接收当前摄像头画面！";
 }
 
-void CameraWidget::onReceiveMajorImage(QPixmap pixmap)
-{
-    pixmap =  pixmap.scaled(this->width(), this->height());
-    if (m_cameraUI)
-        m_cameraUI->setPixmap(pixmap);
-    //qInfo() << "接收当前摄像头画面！";
-}
 void CameraWidget::enterEvent(QEvent *e)
 {
     Q_UNUSED(e);
@@ -346,4 +341,9 @@ int CameraWidget::getCameraStatus()
     if (m_imgPrcThread)
         return m_imgPrcThread->getStatus();
     return 0;
+}
+
+void CameraWidget::setDevcieName(const QString &devcieName)
+{
+    m_deviceName = devcieName;
 }

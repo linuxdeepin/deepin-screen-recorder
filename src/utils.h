@@ -23,7 +23,8 @@ class Utils : public QObject
 {
     Q_OBJECT
 public:
-    struct ScreenInfo {
+    struct ScreenInfo
+    {
         int x;
         int y;
         int width;
@@ -35,19 +36,14 @@ public:
             return QString("ScreenName: %1 ,width: %2 ,height: %3 ,x: %4 ,y: %5").arg(name).arg(width).arg(height).arg(x).arg(y);
         }
     };
+
 public:
     static QSize getRenderSize(int fontSize, QString string);
     static QString getQrcPath(QString imageName);
-//    static void blurRect(DWindowManager *windowManager, int widgetId, QRectF rect);
-//    static void blurRects(DWindowManager *windowManager, int widgetId, QList<QRectF> rects);
-//    static void clearBlur(DWindowManager *windowManager, int widgetId);
     static void drawTooltipBackground(QPainter &painter, QRect rect, QString textColor, qreal opacity = 0.4);
     static void drawTooltipText(QPainter &painter, QString text, QString textColor, int textSize, QRectF rect);
     static void passInputEvent(int wid);
     static void setFontSize(QPainter &painter, int textSize);
-//    static void warnNoComposite();
-//    static void notSupportWarn();
-//    static QString getRecordingSaveDirectory();
     static void setAccessibility(DPushButton *button, const QString name);
     static void setAccessibility(DImageButton *button, const QString name);
     static void setAccessibility(QAction *action, const QString name);
@@ -59,6 +55,10 @@ public:
      */
     static bool isFFmpegEnv;
     static bool isRootUser;
+    /**
+     * @brief 当前屏幕缩放比列
+     */
+    static qreal pixelRatio;
     static int themeType;
     /**
      * @brief specialRecordingScreenMode
@@ -71,7 +71,6 @@ public:
      * @brief 不支持截图录屏时的警告
      */
     static void notSupportWarn();
-
 
     /**
      * @brief 传入屏幕上理论未经缩放的点，获取缩放后实际的点
@@ -93,6 +92,7 @@ public:
      * @return 理论未经缩放的点
      */
     static QList<ScreenInfo> getScreensInfo();
+
     /**
      * @brief 对目标区域做穿透处理
      * @param 窗口id
@@ -101,7 +101,8 @@ public:
      * @param 区域宽
      * @param 区域高
      */
-    static void getInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height);
+    static void
+    getInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height);
     /**
      * @brief 取消对目标区域的穿透处理
      * @param wid  窗口id
@@ -110,7 +111,8 @@ public:
      * @param width  区域宽
      * @param height  区域高
      */
-    static void cancelInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height);
+    static void
+    cancelInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height);
 
     /**
      * @brief 取消对目标区域的穿透处理
@@ -120,13 +122,17 @@ public:
      * @param width  区域宽
      * @param height  区域高
      */
-    static void cancelInputEvent1(const int wid, const short x, const short y, const unsigned short width, const unsigned short height);
+    static void
+    cancelInputEvent1(const int wid, const short x, const short y, const unsigned short width, const unsigned short height);
 
     /**
      * @brief isSysHighVersion1040 判断当前系统版本是否高于1040
      * @return
      */
     static bool isSysHighVersion1040();
+
+    // check if system edition greater or equal v23
+    static bool isSysGreatEqualV23();
 
     /**
      * @brief showCurrentSys 显示
@@ -143,7 +149,8 @@ public:
      */
     static void disableXGrabButton();
 
-    static void getAllWindowInfo(const quint32 winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames);
+    static void getAllWindowInfo(
+        const quint32 winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames);
     static bool checkCpuIsZhaoxin();
 
     /**
@@ -152,7 +159,14 @@ public:
      */
     static QString getCpuModelName();
 
+    static QString getCurrentAudioChannel();
 
+    /**
+     * @brief 通过键盘移动光标
+     * @param currentCursor:当前光标的位置
+     * @param keyEvent:键盘事件
+     */
+    static void cursorMove(QPoint currentCursor, QKeyEvent *keyEvent);
 };
 
-#endif //UTILS_H
+#endif  // UTILS_H

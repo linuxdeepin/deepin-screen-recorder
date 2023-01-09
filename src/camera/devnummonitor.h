@@ -46,6 +46,12 @@ public:
      * @param canUse
      */
     void setCanUse(bool canUse);
+
+    /**
+     * @brief getAvailableCamera 获取可用的摄像头名称
+     * @return
+     */
+    QString availableCamera();
 signals:
     /**
      * @brief existDevice 存在摄像头设备信号
@@ -72,6 +78,11 @@ private:
     QTimer             *m_pTimer;
     bool               m_noDevice;
     bool m_canUse;
+
+    /**
+     * @brief m_availableCamera 可用的摄像头名称
+     */
+    QString m_availableCamera = "";
 
 };
 

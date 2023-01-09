@@ -75,8 +75,9 @@ protected:
 
 signals:
     /**
-     * @brief SendMajorImageProcessing 向预览界面发送帧数据
+     * @brief SendMajorImageProcessing 向预览界面发送帧数据  mips平台、wayland下使用该接口
      * @param image 图像
+     * @param result 结果
      */
     void SendMajorImageProcessing(QImage image);
     /**

@@ -78,6 +78,7 @@ public:
      */
     int getCameraStatus();
 
+    void setDevcieName(const QString &devcieName);
 protected:
     void enterEvent(QEvent *e);
     void mousePressEvent(QMouseEvent *event);
@@ -99,7 +100,6 @@ protected:
 
 public slots:
     void onReceiveMajorImage(QImage image);
-    void onReceiveMajorImage(QPixmap pixmap);
 
 private:
     int recordX = 0;

@@ -53,6 +53,9 @@ QString gstInterface::libPath(const QString &sLib)
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
     QStringList list = dir.entryList(QStringList() << (sLib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+    if (list.isEmpty()) {
+        qWarning() << "list is empty!";
+    }
     if (list.contains(sLib)) {
         return sLib;
     } else {

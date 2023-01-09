@@ -64,6 +64,14 @@ int main(int argc, char *argv[])
     app->setApplicationVersion("1.0");
     app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
+    QString logFilePath = Dtk::Core::DLogManager::getlogFilePath();
+    QStringList list = logFilePath.split("/");
+    if (!list.isEmpty()) {
+        list[list.count() - 1] = "deepin-pin-screen.log";
+        logFilePath = list.join("/");
+        Dtk::Core::DLogManager::setlogFilePath(logFilePath);
+    }
+
     Dtk::Core::DLogManager::registerConsoleAppender();
     Dtk::Core::DLogManager::registerFileAppender();
 
@@ -81,6 +89,7 @@ int main(int argc, char *argv[])
 
     app->loadTranslator();
 
+    qDebug() << "贴图日志路径: " << Dtk::Core::DLogManager::getlogFilePath();
 
     PinScreenShots instance;
     QDBusConnection dbus = QDBusConnection::sessionBus();

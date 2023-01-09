@@ -28,7 +28,7 @@ ButtonFeedback::ButtonFeedback(DWidget *parent) : DWidget(parent)
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     for (int i = 0; i < 10; ++i) {
-        QString svgName = QString("button_feedback_%1.svg").arg(i);
+        QString svgName = QString("recorder/button_feedback_%1.svg").arg(i);
         buttonFeedbackImg[i] = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath(svgName));
     }
     /*
@@ -153,6 +153,7 @@ void ButtonFeedback::showDragFeedback(int x, int y)
 void ButtonFeedback::showReleaseFeedback(int x, int y)
 {
     frameIndex = 3;
+
     show();
     repaint();
     QPoint dpos = Utils::getPosWithScreen(QPoint(x, y));

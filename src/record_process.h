@@ -30,14 +30,19 @@ class RecordProcess  : public QObject
     Q_OBJECT
 
 public:
-    static const int RECORD_TYPE_VIDEO;
     static const int RECORD_TYPE_GIF;
     static const int RECORD_TYPE_MP4;
     static const int RECORD_TYPE_MKV;
-    static const int RECORD_GIF_SLEEP_TIME;
-    static const int RECORD_AUDIO_INPUT_MIC;
-    static const int RECORD_AUDIO_INPUT_SYSTEMAUDIO;
-    static const int RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO;
+
+    static const int RECORD_MOUSE_NULL;
+    static const int RECORD_MOUSE_CURSE;
+    static const int RECORD_MOUSE_CHECK;
+    static const int RECORD_MOUSE_CURSE_CHECK;
+
+    static const int RECORD_AUDIO_NULL;
+    static const int RECORD_AUDIO_MIC;
+    static const int RECORD_AUDIO_SYSTEMAUDIO;
+    static const int RECORD_AUDIO_MIC_SYSTEMAUDIO;
 
     static const int RECORD_FRAMERATE_5;
     static const int RECORD_FRAMERATE_10;
@@ -83,7 +88,7 @@ private:
     void recordVideo();
 
     /**
-     * @brief 开始ffmpeg录制wayland视频
+     * @brief wayland协议下ffmpeg录制视频
      */
     void waylandRecord();
 
@@ -102,6 +107,14 @@ private:
      */
     void initProcess();
 
+public slots:
+    /**
+     * @brief 退出gstreamer录屏
+     * wayland下录屏，需要Gstreamer录屏类触发，以保证Gstreamer管道中的数据已写完
+     * x11下可以直接调用此函数
+     */
+    void onExitGstRecord();
+
     /**
      * @brief 从配置文件获取录屏文件的保存目录
      */
@@ -111,28 +124,6 @@ private:
      * @brief 保存到剪切板
      */
     void save2Clipboard(QString file);
-public slots:
-    /**
-     * @brief 退出gstreamer录屏
-     * wayland下录屏，需要Gstreamer录屏类触发，以保证Gstreamer管道中的数据已写完
-     * x11下可以直接调用此函数
-     */
-    void onExitGstRecord();
-    /**
-     * @brief onRecordFinish:是否录制光标
-     */
-    void onRecordMouse(const bool status);
-    /**
-     * @brief 通过工具栏设置是否打开麦克风音频录音
-     * @param status
-     */
-    void setMicrophone(const bool status);
-    /**
-     * @brief 通过工具设置是否打开系统音频录音
-     * @param status
-     */
-    void setSystemAudio(const bool status);
-
 private slots:
     /**
      * @brief onRecordFinish:录屏完成
@@ -158,17 +149,17 @@ private:
     /**
      * @brief 录屏的类型：gif mkv mp4
      */
-    int recordType = 0;
+    int m_recordType = 0;
 
     /**
      * @brief 录制的声音类型： 混音 单麦克风音频 单系统音频
      */
-    int recordAudioInputType = 0;
+    int m_audioType = 0;
 
     /**
      * @brief 是否录制鼠标
      */
-    bool m_isRecordMouse = true;
+    int m_mouseType = true;
 
     /**
      * @brief 录屏的范围
@@ -182,24 +173,12 @@ private:
     QString saveAreaName;
     QString displayNumber;
 
-    ConfigSettings *settings = nullptr;
-
-    int byzanzProcessId = 0;
+    ConfigSettings *m_settings = nullptr;
 
     /**
      * @brief 录屏的帧率
      */
     int m_framerate;
-
-    /**
-     * @brief 是否选择麦克风音频
-     */
-    bool m_selectedMic = false;
-    /**
-     * @brief 是否选择系统音频
-     */
-    bool m_selectedSystemAudio = true;
-
     /**
      * @brief mp4转码成gif的进程
      */
@@ -212,7 +191,6 @@ private:
      * @brief gstreamer录屏处理类
      */
     GstRecordX *m_gstRecordX;
-
     /**
      * @brief m_isFullScreenRecord 是否是快捷全屏录制，默认为false
      */

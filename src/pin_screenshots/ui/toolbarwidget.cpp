@@ -13,20 +13,21 @@
 
 #define THEMETYPE 1 // 主题颜色为浅色
 
-const QSize MIN_TOOLBAR_WIDGET_SIZE = QSize(194, 60);
+const QSize MIN_TOOLBAR_WIDGET_SIZE = QSize(210, 56);
 
 ToolBarWidget::ToolBarWidget(DWidget *parent): DBlurEffectWidget(parent)
 {
     if (PUtils::isWaylandMode) {
         setWindowFlags(Qt::Sheet | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
     } else {
-        setWindowFlags(Qt::ToolTip);
+        //v23上ToolTip会导致工具栏的圆角失效
+        setWindowFlags(Qt::FramelessWindowHint /*| Qt::WindowStaysOnTopHint*/ | Qt::ToolTip);
     }
 
     this->setRadius(30);
     this->setBlurEnabled(true);
     this->setMode(DBlurEffectWidget::GaussianBlur);
-    this->setBlendMode(DBlurEffectWidget::InWindowBlend);
+    this->setBlendMode(DBlurEffectWidget::InWidgetBlend);
     // 初始化主题样式
     if (DGuiApplicationHelper::instance()->themeType() == THEMETYPE) {
         this->setMaskColor(QColor(255, 255, 255, 76));
@@ -45,6 +46,16 @@ QPair<int, int> ToolBarWidget::getSaveInfo()
     return m_subTool->getSaveInfo();
 }
 
+void ToolBarWidget::showAt(QPoint pos, bool isfirstTime)
+{
+    this->move(pos);
+    if (this->isHidden())
+        this->show();
+    if (isfirstTime) {
+        this->hide();
+    }
+}
+
 // 选项按钮被点击
 void ToolBarWidget::onOptionButtonClicked()
 {
@@ -56,41 +67,25 @@ void ToolBarWidget::onThemeTypeChange(DGuiApplicationHelper::ColorType themeType
 {
     if (themeType == THEMETYPE) {
         this->setMaskColor(QColor(255, 255, 255, 76));
-        m_closeButton->setHoverPic(":/newUI/hover/close-hover.svg");
-        m_closeButton->setNormalPic(":/newUI/normal/close-normal.svg");
-
     } else {
         this->setMaskColor(QColor(0, 0, 0, 76));
-        m_closeButton->setHoverPic(":/newUI/dark/hover/close-hover_dark.svg");
-        m_closeButton->setNormalPic(":/newUI/dark/normal/close-normal_dark.svg");
     }
 }
 
 void ToolBarWidget::initToolBarWidget()
 {
-    setMinimumWidth(196);
+    this->setFixedSize(MIN_TOOLBAR_WIDGET_SIZE);
     m_subTool = new SubToolWidget(this);
-    connect(m_subTool, SIGNAL(signalOcrButtonClicked()), this, SIGNAL(signalOcrButtonClicked()));
+    connect(m_subTool, SIGNAL(signalOcrButtonClicked()), this, SIGNAL(sendOcrButtonClicked()));
 
-    m_closeButton = new DImageButton(this);
-    m_closeButton->setObjectName(AC_TOOLBARWIDGET_CLOSE_PIN_BUT);
-    m_closeButton->setAccessibleName(AC_TOOLBARWIDGET_CLOSE_PIN_BUT);
-    // 初始化关闭按钮样式
-    if (DGuiApplicationHelper::instance()->themeType() == THEMETYPE) {
-        m_closeButton->setHoverPic(":/newUI/hover/close-hover.svg");
-        m_closeButton->setNormalPic(":/newUI/normal/close-normal.svg");
-    } else {
-        m_closeButton->setHoverPic(":/newUI/dark/hover/close-hover_dark.svg");
-        m_closeButton->setNormalPic(":/newUI/dark/normal/close-normal_dark.svg");
-    }
-    // 注册按钮点击事件
-    connect(m_closeButton, SIGNAL(clicked()), this, SIGNAL(signalCloseButtonClicked()));
-    setMinimumSize(MIN_TOOLBAR_WIDGET_SIZE);
+    m_mainTool = new MainToolWidget(this);
+    connect(m_mainTool, SIGNAL(signalCloseButtonClicked()), this, SIGNAL(sendCloseButtonClicked()));
+    connect(m_mainTool, SIGNAL(signalSaveButtonClicked()), this, SIGNAL(sendSaveButtonClicked()));
+
     QHBoxLayout *hLayout = new QHBoxLayout(this);
-    hLayout->setContentsMargins(0, 0, 0, 0);
-    hLayout->addSpacing(10);
+    hLayout->setContentsMargins(10, 0, 10, 0);
     hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
-    hLayout->addWidget(m_closeButton, 0,  Qt::AlignCenter);
+    hLayout->addWidget(m_mainTool, 0,  Qt::AlignCenter);
     setLayout(hLayout);
 }
 
@@ -101,4 +96,3 @@ void ToolBarWidget::mouseMoveEvent(QMouseEvent *event)
     //qDebug() << event->button() << event->x() << event->y();
     //QWidget::mouseMoveEvent(event);
 }
-

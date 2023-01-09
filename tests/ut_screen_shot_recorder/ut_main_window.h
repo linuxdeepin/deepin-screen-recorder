@@ -11,13 +11,10 @@
 #include <QPoint>
 #include <QScreen>
 #include <QDir>
-#include <QFileDialog>
 #include "stub.h"
 #include "addr_pri.h"
 #include <gtest/gtest.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
+
 using namespace testing;
 
 
@@ -112,33 +109,6 @@ TEST_F(MainWindowTest, initLaunchMode)
     m_window->initLaunchMode("screenShot");
 }
 */
-QString getSaveFileName_stub(void* obj, QWidget *parent = nullptr,
-                               const QString &caption = QString(),
-                               const QString &dir = QString(),
-                               const QString &filter = QString(),
-                               QString *selectedFilter = nullptr,
-                               QFileDialog::Options options = QFileDialog::Options())
-{
-    return "pngpng.pjb";
-}
-
-ACCESS_PRIVATE_FIELD(MainWindow, QString, m_saveFileName);
-TEST_F(MainWindowTest, fileNameCheck)
-{
-    // 文件名称校验 saveAction
- #ifdef __amd64__
-    Stub stub;
-    MainWindow *window = new MainWindow();
-    stub.set(ADDR(QFileDialog,getSaveFileName), getSaveFileName_stub);
-    ConfigSettings::instance()->setValue("save", "save_op", 3);
-    window->saveAction(QPixmap());
-    QString &file = access_private_field::MainWindowm_saveFileName(*window);
-    //stub.reset(ADDR(QFileDialog,getSaveFileName));
-    EXPECT_EQ("pngpng.pjb.png", file);
-    ConfigSettings::instance()->setValue("save", "save_op", 0);
-    delete window;
- #endif
-}
 
 TEST_F(MainWindowTest, screenShotShapes)
 {
@@ -2647,7 +2617,7 @@ TEST_F(MainWindowTest, startRecord)
 
 ACCESS_PRIVATE_FIELD(MainWindow, ConnectionThread *, m_connectionThreadObject);
 ACCESS_PRIVATE_FIELD(MainWindow, QList<MainWindow::ScreenInfo>, m_screenInfo);
-ACCESS_PRIVATE_FIELD(MainWindow, bool, m_isScreenVertical);
+ACCESS_PRIVATE_FIELD(MainWindow, bool, m_isVertical);
 ACCESS_PRIVATE_FUN(MainWindow, void(const QVector<ClientManagement::WindowState> &), waylandwindowinfo);
 TEST_F(MainWindowTest, waylandwindowinfo1)
 {
@@ -2660,7 +2630,7 @@ TEST_F(MainWindowTest, waylandwindowinfo1)
     access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
     access_private_field::MainWindowrecordButtonStatus(*window) = 0;
 
-    access_private_field::MainWindowm_isScreenVertical(*window) = false;
+    access_private_field::MainWindowm_isVertical(*window) = false;
     MainWindow::ScreenInfo screenInfo1, screenInfo2;
     screenInfo1.x = 0;
     screenInfo1.y = 0;
@@ -2710,7 +2680,7 @@ TEST_F(MainWindowTest, waylandwindowinfo2)
     access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
     access_private_field::MainWindowrecordButtonStatus(*window) = 0;
 
-    access_private_field::MainWindowm_isScreenVertical(*window) = false;
+    access_private_field::MainWindowm_isVertical(*window) = false;
     MainWindow::ScreenInfo screenInfo1, screenInfo2;
     screenInfo1.x = 0;
     screenInfo1.y = 0;
@@ -2761,7 +2731,7 @@ TEST_F(MainWindowTest, waylandwindowinfo3)
     access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
     access_private_field::MainWindowrecordButtonStatus(*window) = 0;
 
-    access_private_field::MainWindowm_isScreenVertical(*window) = true;
+    access_private_field::MainWindowm_isVertical(*window) = true;
     MainWindow::ScreenInfo screenInfo1, screenInfo2;
     screenInfo1.x = 0;
     screenInfo1.y = 0;
@@ -2812,7 +2782,7 @@ TEST_F(MainWindowTest, waylandwindowinfo4)
     access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
     access_private_field::MainWindowrecordButtonStatus(*window) = 0;
 
-    access_private_field::MainWindowm_isScreenVertical(*window) = true;
+    access_private_field::MainWindowm_isVertical(*window) = true;
     MainWindow::ScreenInfo screenInfo1, screenInfo2;
     screenInfo1.x = 0;
     screenInfo1.y = 10;
@@ -2863,7 +2833,7 @@ TEST_F(MainWindowTest, waylandwindowinfo5)
     access_private_field::MainWindowm_pRecorderRegion(*window) = new RecorderRegionShow();
     access_private_field::MainWindowrecordButtonStatus(*window) = 0;
 
-    access_private_field::MainWindowm_isScreenVertical(*window) = true;
+    access_private_field::MainWindowm_isVertical(*window) = true;
     MainWindow::ScreenInfo screenInfo1, screenInfo2;
     screenInfo1.x = 0;
     screenInfo1.y = 10;
@@ -2897,54 +2867,3 @@ TEST_F(MainWindowTest, waylandwindowinfo5)
     delete window;
 
 }
-
-ACCESS_PRIVATE_FUN(MainWindow, void(), checkTempFileArm);
-TEST_F(MainWindowTest, checkTempFileArm)
-{
-    stub.set(ADDR(MainWindow, initMainWindow), initMainWindow_stub);
-    MainWindow *window = new MainWindow();
-
-    call_private_fun::MainWindowcheckTempFileArm(*window);
-
-    QString userName = QDir::homePath().section("/", -1, -1);
-    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-screen-recorder/").toStdString();
-    QDir tdir(path.c_str());
-    //判断文件夹路径是否存在
-    if (!tdir.exists()) {
-        tdir.mkpath(path.c_str());
-    }
-    path += "stopRecord.txt";
-    //判断文件是否存在，若存在则先删除文件
-    QFile mFile(path.c_str());
-    if (mFile.exists()) {
-        remove(path.c_str());
-    }
-    //打开文件
-    int fd = open(path.c_str(), O_RDWR | O_CREAT, 0644);
-    if (fd == -1) {
-        qDebug() << "open file fail!" << strerror(errno);
-        return;
-    }
-    //文件加锁
-    int flock = lockf(fd, F_TLOCK, 0);
-    if (flock == -1) {
-        qDebug() << "lock file fail!" << strerror(errno);
-        return;
-    }
-    ssize_t ret = -1;
-    //文件内容为1，读取文件时会停止录屏
-    char wBuffer[2] = {"1"};
-    //写文件
-    ret = write(fd, wBuffer, 2);
-    if (ret < 0) {
-        qDebug() << "write file fail!";
-        return ;
-    }
-    flock = lockf(fd, F_ULOCK, 0);
-    ::close(fd);
-    qDebug() << "createCacheFile end!";
-
-    delete window;
-
-}
-

@@ -10,13 +10,14 @@
 #include <QTime>
 #include <QIcon>
 #include <DWidget>
-#include <com_deepin_dde_daemon_dock.h>
 #include <DFontSizeManager>
 #include <QBoxLayout>
 #include <QLabel>
 
+#include <com_deepin_dde_daemon_dock.h>
+
 #define RECORDER_TIME_LEVEL_ICON_SIZE 23
-#define RECORDER_TIME_VERTICAL_ICON_SIZE 22
+#define RECORDER_TIME_VERTICAL_ICON_SIZE 16
 #define RECORDER_TIME_VERTICAL_ICON_SIZE_1070 16
 #define RECORDER_TIME_LEVEL_SIZE "00:00:00"
 #define RECORDER_TIME_VERTICAL_SIZE "0000"
@@ -27,7 +28,9 @@
 #define RECORDER_TIME_WIDGET_MAXWIDTH 120
 #define RECORDER_TIME_STARTCONFIG "CurrentStartTime"
 #define RECORDER_TIME_STARTCOUNTCONFIG "CurrentStartCount"
+
 DWIDGET_USE_NAMESPACE
+
 using DBusDock = com::deepin::dde::daemon::Dock;
 
 class TimeWidget : public DWidget
@@ -84,17 +87,17 @@ protected:
      * @brief 创建缓存文件，只有wayland模式下的mips或部分arm架构适用
      */
     bool createCacheFile();
-private slots:
-    /**
-     * @brief onTimeout:更新数据
-     */
-    void onTimeout();
-
+public slots:
     /**
      * @brief onPositionChanged:dde-dock位置变化通知
      * @param value
      */
     void onPositionChanged(int value);
+private slots:
+    /**
+     * @brief onTimeout:更新数据
+     */
+    void onTimeout();
 
 private:
     QTimer *m_timer;

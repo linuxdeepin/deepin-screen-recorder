@@ -26,7 +26,7 @@ LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_small -lKF5Wayla
 
 CONFIG += link_pkgconfig
 CONFIG += c++11
-PKGCONFIG += gobject-2.0 dtkgui dtkwidget xcb xcb-util dframeworkdbus
+PKGCONFIG += dtkgui dtkwidget xcb xcb-util dframeworkdbus
 
 
 RESOURCES = ../../assets/image/deepin-screen-recorder.qrc \
@@ -121,7 +121,6 @@ HEADERS += test_all_interfaces.h \
         ../../src/widgets/keybuttonwidget.h \
         ../../src/widgets/maintoolwidget.h \
         ../../src/widgets/zoomIndicator.h \
-        ../../src/widgets/zoomIndicatorGL.h \
         ../../src/widgets/filter.h \
         ../../src/widgets/tooltips.h \
         ../../src/widgets/sidebar.h \
@@ -152,8 +151,6 @@ HEADERS += test_all_interfaces.h \
         #../../src/lib/GifH/gif.h \
         #../../src/xgifrecord.h \
         ../../src/recordertablet.h \
-        ../../src/gstrecord/gstrecordx.h \
-        ../../src/gstrecord/gstinterface.h \
      ../../src/waylandrecord/writeframethread.h \
      ../../src/waylandrecord/waylandintegration.h \
      ../../src/waylandrecord/waylandintegration_p.h \
@@ -188,8 +185,7 @@ HEADERS += test_all_interfaces.h \
     waylandrecord/ut_waylandintegration.h \
     waylandrecord/ut_writeframethread.h \
     utils/ut_voiceVolumeWatcher.h \
-    utils/ut_WaylandScrollMonitor.h \
-    gstrecord/ut_gstrecordx.h
+    utils/ut_WaylandScrollMonitor.h
 
 
 SOURCES += main.cpp \
@@ -213,7 +209,6 @@ SOURCES += main.cpp \
     ../../src/widgets/keybuttonwidget.cpp \
     ../../src/widgets/maintoolwidget.cpp \
     ../../src/widgets/zoomIndicator.cpp \
-    ../../src/widgets/zoomIndicatorGL.cpp \
     ../../src/widgets/filter.cpp \
     ../../src/widgets/tooltips.cpp \
     ../../src/widgets/sidebar.cpp \
@@ -247,6 +242,4 @@ SOURCES += main.cpp \
     ../../src/show_buttons.cpp \
     ../../src/event_monitor.cpp \
     #../../src/xgifrecord.cpp \
-    ../../src/recordertablet.cpp \
-    ../../src/gstrecord/gstrecordx.cpp \
-        ../../src/gstrecord/gstinterface.cpp
+    ../../src/recordertablet.cpp

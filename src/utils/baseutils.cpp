@@ -25,11 +25,11 @@ QCursor BaseUtils::setCursorShape(QString cursorName, int colorIndex)
 {
 
     QString cursorNameString = cursorName;
-    if(cursorName == "line") {
+    if (cursorName == "pen") {
         cursorNameString = QString("%1%2").arg(cursorName).arg(colorIndex);
     }
 
-    if(BaseUtils::m_shapesCursor.find(cursorNameString) != BaseUtils::m_shapesCursor.end()) {
+    if (BaseUtils::m_shapesCursor.find(cursorNameString) != BaseUtils::m_shapesCursor.end()) {
         return BaseUtils::m_shapesCursor.value(cursorNameString);
     }
 
@@ -75,15 +75,12 @@ QCursor BaseUtils::setCursorShape(QString cursorName, int colorIndex)
         textCursor.setDevicePixelRatio(ration);
 
         customShape = QCursor(textCursor, int(5 * ration), int(5 * ration));
-    } else if  (cursorName == "line") {
-        //        QPixmap colorPic = QIcon(QString(":/image/mouse_style/"
-        //                                         "color_pen/color%1.svg").arg(colorIndex)).pixmap(COLORPEN_SIZE);
-        QPixmap colorPic = QIcon(QString(":/"
-                                         "color_pen/color%1.svg").arg(colorIndex)).pixmap(COLORPEN_SIZE);
+    } else if (cursorName == "pen") {
+        QPixmap colorPic = QIcon(QString(":/color_pen/color%1.svg").arg(colorIndex)).pixmap(COLORPEN_SIZE);
         colorPic.setDevicePixelRatio(ration);
 
         customShape = QCursor(colorPic,  int(5 * ration), int(22 * ration));
-    } else if (cursorName == "straightLine") {
+    } else if (cursorName == "line") {
         QPixmap lineCursor  = QIcon(":/mouse_style/shape/line_mouse.svg").pixmap(ARROW_SIZE);
         lineCursor.setDevicePixelRatio(ration);
 
@@ -102,45 +99,37 @@ int BaseUtils::stringWidth(const QFont &f, const QString &str)
 
 QColor BaseUtils::colorIndexOf(int index)
 {
-    switch (index) {
-    case 0: {
-        return QColor("#ff1c49");
-    }
-    case 1: {
-        return QColor("#ffd903");
-    }
-    case 2: {
-        //        return QColor("#3d08ff");
-        return QColor("#0089F7");
-    }
-    case 3: {
-        return QColor("#08ff77");
-    }
-    }
-
-    return QColor("#ff1c49");
+    QList<QColor> colorList;
+    colorList.append(QColor("#000000"));
+    colorList.append(QColor("#7D7D7D"));
+    colorList.append(QColor("#FFFFFF"));
+    colorList.append(QColor("#F82A2A"));
+    colorList.append(QColor("#FF8100"));
+    colorList.append(QColor("#FFF100"));
+    colorList.append(QColor("#CDFF00"));
+    colorList.append(QColor("#1EE9A8"));
+    colorList.append(QColor("#006D06"));
+    colorList.append(QColor("#0089F7"));
+    colorList.append(QColor("#7600AC"));
+    colorList.append(QColor("#0C00A0"));
+    return colorList[index];
 }
 
 int BaseUtils::colorIndex(QColor color)
 {
     QList<QColor> colorList;
-    colorList.append(QColor("#ff1c49"));
-    colorList.append(QColor("#ffd903"));
-    colorList.append(QColor("#0089F7"));
-    colorList.append(QColor("#08ff77"));
-    colorList.append(QColor("#ff5e1a"));
-    colorList.append(QColor("#ff3305"));
-    colorList.append(QColor("#fb00ff"));
-    colorList.append(QColor("#7700ed"));
-    //    colorList.append(QColor("#3d08ff"));
-    colorList.append(QColor("#3467ff"));
-    colorList.append(QColor("#00aaff"));
-    colorList.append(QColor("#03a60e"));
-    colorList.append(QColor("#3c7d00"));
-    colorList.append(QColor("#ffffff"));
-    colorList.append(QColor("#666666"));
-    colorList.append(QColor("#2b2b2b"));
     colorList.append(QColor("#000000"));
+    colorList.append(QColor("#7D7D7D"));
+    colorList.append(QColor("#FFFFFF"));
+    colorList.append(QColor("#F82A2A"));
+    colorList.append(QColor("#FF8100"));
+    colorList.append(QColor("#FFF100"));
+    colorList.append(QColor("#CDFF00"));
+    colorList.append(QColor("#1EE9A8"));
+    colorList.append(QColor("#006D06"));
+    colorList.append(QColor("#0089F7"));
+    colorList.append(QColor("#7600AC"));
+    colorList.append(QColor("#0C00A0"));
     return colorList.indexOf(color);
 }
 

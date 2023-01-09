@@ -37,6 +37,7 @@ public:
      * @param proxyInter:主程序进程，上下文指针
      */
     void init(PluginProxyInterface *proxyInter) override;
+
     /**
      * @brief pluginIsAllowDisable:返回插件是否允许被禁用
      * @return

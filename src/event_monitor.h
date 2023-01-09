@@ -25,7 +25,7 @@
 
 /**
  * @brief The EventMonitor class
- * 录屏与截屏的事件监听类
+ * 录屏与截屏的事件监听类（偏底层，从x11直接获取事件或从wayland Dbus接口获取事件）
  */
 class EventMonitor : public QThread
 {

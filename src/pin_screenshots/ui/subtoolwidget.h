@@ -5,6 +5,8 @@
 
 #ifndef SUBTOOLWIDGET_H
 #define SUBTOOLWIDGET_H
+#include "toolbutton.h"
+
 #include <QObject>
 #include <QHBoxLayout>
 
@@ -21,13 +23,15 @@ class SubToolWidget : public DStackedWidget
 {
     Q_OBJECT
 public:
-    enum SAVEINFO {
-        DESKTOP = 1, //桌面
+    enum SAVEPATH {
+        CLIPBOARD = 0, //剪切板
+        DESKTOP, //桌面
         PICTURES, //图片
         FOLDER, //指定位置>历史位置
         FOLDER_CHANGE, //指定位置>设置或更新
-        CLIPBOARD, //剪切板
-        PNG,
+    };
+    enum SAVEFORMAT {
+        PNG = 0,
         JPG,
         BMP
     };
@@ -54,11 +58,11 @@ private:
     /**
      * @brief OCR按钮
      */
-    DPushButton *m_ocrButton;
+    ToolButton *m_ocrButton;
     /**
      * @brief 选项按钮
      */
-    DPushButton *m_pinOptionButton;
+    ToolButton *m_pinOptionButton;
     /**
      * @brief 菜单选项
      */

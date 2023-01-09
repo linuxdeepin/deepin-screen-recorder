@@ -91,8 +91,6 @@ public:
     WaylandIntegrationPrivate();
     ~WaylandIntegrationPrivate();
 
-    //void initDrm();
-    //void initEGL();
     void initWayland(QStringList list);
     void initWayland(QStringList list, GstRecordX *gstRecord);
 
@@ -161,6 +159,7 @@ protected Q_SLOTS:
      * @return QImage的格式
      */
     QImage::Format getImageFormat(quint32 format);
+
     /**
      * @brief 此接口为了解决x86架构录屏mmap失败及花屏问题
      * @param rbuf
@@ -175,6 +174,7 @@ protected Q_SLOTS:
      * @brief 通过线程循环向gstreamer管道写入视频帧数据
      */
     void gstWriteVideoFrame();
+
     /**
         * @brief 从wayland客户端获取当前屏幕的截图
         * @param fd

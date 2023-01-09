@@ -756,7 +756,7 @@ TEST_F(CAVOutputStreamTest, init_context_amix)
     access_private_field::CAVOutputStreamm_videoFormatContext(*m_avOutputStream) = new AVFormatContext();
     access_private_field::CAVOutputStreamm_videoFormatContext(*m_avOutputStream)->oformat = new AVOutputFormat();
     access_private_field::CAVOutputStreamm_videoFormatContext(*m_avOutputStream)->oformat->flags = false;
-    //    stub.set(avcodec_find_encoder, avcodec_find_encoder_stub);
+//    stub.set(avcodec_find_encoder, avcodec_find_encoder_stub);
     //stub.set(avcodec_alloc_context3, avcodec_alloc_context3_stub);
     stub.set(avcodec_open2, avcodec_open2_stub1);
     stub.set(avformat_new_stream, avformat_new_stream_stub);
@@ -776,7 +776,7 @@ TEST_F(CAVOutputStreamTest, init_context_amix)
     delete access_private_field::CAVOutputStreamaudio_amix_st(*m_avOutputStream);
     delete access_private_field::CAVOutputStreamm_videoFormatContext(*m_avOutputStream)->oformat;
     delete access_private_field::CAVOutputStreamm_videoFormatContext(*m_avOutputStream);
-    //    delete access_private_field::CAVOutputStreampCodecCtx_amix(*m_avOutputStream);
+//    delete access_private_field::CAVOutputStreampCodecCtx_amix(*m_avOutputStream);
     avcodec_free_context(&access_private_field::CAVOutputStreampCodecCtx_amix(*m_avOutputStream));
 
 }
@@ -785,16 +785,6 @@ bool isWriteFrame_stub1()
 {
 
     g_first3++;
-    if (g_first3 == 1) {
-        return true;
-    } else {
-        g_first3 = 0;
-        return false;
-    }
-}
-bool isNotAudioFifoEmty_stub()
-{
-
     if (g_first3 == 1) {
         return true;
     } else {
@@ -857,7 +847,6 @@ TEST_F(CAVOutputStreamTest, writeMixAudio)
     stub.set(av_rescale_q, av_rescale_q_stub);
     stub.set(av_buffersrc_add_frame_flags, av_buffersrc_add_frame_flags_stub);
     stub.set(ADDR(CAVOutputStream, isWriteFrame), isWriteFrame_stub1);
-    stub.set(ADDR(CAVOutputStream, isNotAudioFifoEmty), isNotAudioFifoEmty_stub);
     stub.set(avcodec_encode_audio2, avcodec_encode_audio2_stub);
     stub.set(ADDR(CAVOutputStream, writeFrame), writeFrame_stub);
     stub.set(av_buffersink_get_frame, av_buffersink_get_frame_stub);
@@ -870,7 +859,6 @@ TEST_F(CAVOutputStreamTest, writeMixAudio)
     stub.reset(av_rescale_q);
     stub.reset(av_buffersrc_add_frame_flags);
     stub.reset(ADDR(CAVOutputStream, isWriteFrame));
-    stub.reset(ADDR(CAVOutputStream, isNotAudioFifoEmty));
     stub.reset(avcodec_encode_audio2);
     stub.reset(ADDR(CAVOutputStream, writeFrame));
     stub.reset(av_buffersink_get_frame);

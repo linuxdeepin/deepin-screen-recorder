@@ -15,9 +15,6 @@
 
 #define THEMETYPE 1 // 主题颜色为浅色
 
-const QSize MIN_TOOL_BUTTON_SIZE = QSize(42, 40);
-
-
 SubToolWidget::SubToolWidget(DWidget *parent): DStackedWidget(parent)
 {
     initShotLable();
@@ -30,23 +27,41 @@ void SubToolWidget::initShotLable()
     qInfo() << __LINE__ << __FUNCTION__ << "正在初始化贴图工具栏...";
     m_shotSubTool = new DLabel(this);
     // ocr按钮
-    m_ocrButton = new DPushButton(this);
+    m_ocrButton = new ToolButton(this);
+//    m_ocrButton->setCheckable(false);
+//    m_ocrButton->setFlat(true);
+//    m_ocrButton->setFocusPolicy(Qt::NoFocus);
     m_ocrButton->setObjectName(AC_SUBTOOLWIDGET_PIN_OCR_BUT);
     m_ocrButton->setAccessibleName(AC_SUBTOOLWIDGET_PIN_OCR_BUT);
-    m_ocrButton->setIconSize(QSize(36, 36));
-    m_ocrButton->setMaximumSize(42, 40);
+    m_ocrButton->setIconSize(QSize(32, 32));
+    m_ocrButton->setFixedSize(32, 32);
     m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
-    m_ocrButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     m_ocrButton->setToolTip(tr("Extract Text"));
     connect(m_ocrButton, SIGNAL(clicked()), this, SIGNAL(signalOcrButtonClicked()));
 
     // 选项按钮
-    m_pinOptionButton = new DPushButton(this);
+    m_pinOptionButton = new ToolButton(this);
+    m_pinOptionButton->setCheckable(false);
+    m_pinOptionButton->setFlat(false);
+    m_pinOptionButton->setHoverState(false);
+    DPalette pa = m_pinOptionButton->palette();
+    DGuiApplicationHelper::ColorType t_type = DGuiApplicationHelper::instance()->themeType();
+    if (t_type == DGuiApplicationHelper::ColorType::LightType) {
+        pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
+        pa.setColor(DPalette::Dark, QColor(192, 192, 192, 255));
+        pa.setColor(DPalette::Light, QColor(192, 192, 192, 255));
+    } else {
+        pa.setColor(DPalette::ButtonText, QColor(228, 228, 228, 255));
+        pa.setColor(DPalette::Dark, QColor(64, 64, 64, 255));
+        pa.setColor(DPalette::Light, QColor(64, 64, 64, 255));
+    }
+    m_pinOptionButton->setPalette(pa);
+    m_pinOptionButton->setFocusPolicy(Qt::NoFocus);
     m_pinOptionButton->setObjectName(AC_SUBTOOLWIDGET_PIN_OPTION_BUT);
     m_pinOptionButton->setAccessibleName(AC_SUBTOOLWIDGET_PIN_OPTION_BUT);
-    DFontSizeManager::instance()->bind(m_pinOptionButton, DFontSizeManager::T8);
+    DFontSizeManager::instance()->bind(m_pinOptionButton, DFontSizeManager::T6);
     m_pinOptionButton->setText(tr("Options"));
-    m_pinOptionButton->setMinimumSize(QSize(60, 40));
+    m_pinOptionButton->setMinimumSize(QSize(60, 36));
     m_pinOptionButton->setToolTip(tr("Options"));
     m_saveGroup = new QActionGroup(this);
     QActionGroup *t_formatGroup = new QActionGroup(this);
@@ -55,23 +70,19 @@ void SubToolWidget::initShotLable()
 
     // 选项菜单
     m_optionMenu = new DMenu(this);
-    DFontSizeManager::instance()->bind(m_optionMenu, DFontSizeManager::T8);
+    DFontSizeManager::instance()->bind(m_optionMenu, DFontSizeManager::T6);
     connect(m_optionMenu, &DMenu::aboutToShow, this, &SubToolWidget::updateOptionChecked);
 
     QAction *saveTitleAction = new QAction(m_optionMenu);
     QAction *saveToClipAction = new QAction(m_optionMenu);
     QAction *saveToDesktopAction = new QAction(m_optionMenu);
     QAction *saveToPictureAction = new QAction(m_optionMenu);
-    //QAction *saveToSpecialPath = new QAction(m_optionMenu);
-    m_SavePathActions.insert(CLIPBOARD, saveToClipAction);
-    m_SavePathActions.insert(DESKTOP, saveToDesktopAction);
-    m_SavePathActions.insert(PICTURES, saveToPictureAction);
+//    QAction *saveToSpecialPath = new QAction(m_optionMenu);
 
     m_saveToSpecialPathMenu = new DMenu(m_optionMenu);
     m_saveToSpecialPathMenu->setTitle(tr("Folder"));
     m_saveToSpecialPathMenu->setToolTipsVisible(true);
     m_saveToSpecialPathMenu->menuAction()->setCheckable(true);
-    m_saveToSpecialPathMenu->installEventFilter(this);
     DFontSizeManager::instance()->bind(m_saveToSpecialPathMenu, DFontSizeManager::T8);
     QString specialPath = Settings::instance()->getSavePath();
     //设置或更新指定路径的菜单按键
@@ -93,9 +104,7 @@ void SubToolWidget::initShotLable()
     QAction *pngAction = new QAction(m_optionMenu);
     QAction *jpgAction = new QAction(m_optionMenu);
     QAction *bmpAction = new QAction(m_optionMenu);
-    m_SaveFormatActions.insert(PNG, pngAction);
-    m_SaveFormatActions.insert(JPG, jpgAction);
-    m_SaveFormatActions.insert(BMP, bmpAction);
+
     saveTitleAction->setDisabled(true);
     saveTitleAction->setText(tr("Save to"));
 
@@ -117,6 +126,10 @@ void SubToolWidget::initShotLable()
     //m_saveGroup->addAction(saveToSpecialPath);
     m_saveGroup->addAction(m_changeSaveToSpecialPath);
 
+    m_SavePathActions.insert(CLIPBOARD, saveToClipAction);
+    m_SavePathActions.insert(DESKTOP, saveToDesktopAction);
+    m_SavePathActions.insert(PICTURES, saveToPictureAction);
+
     formatTitleAction->setDisabled(true);
     formatTitleAction->setText(tr("Format"));
     pngAction->setText(tr("PNG"));
@@ -129,6 +142,10 @@ void SubToolWidget::initShotLable()
     t_formatGroup->addAction(pngAction);
     t_formatGroup->addAction(jpgAction);
     t_formatGroup->addAction(bmpAction);
+
+    m_SaveFormatActions.insert(PNG, pngAction);
+    m_SaveFormatActions.insert(JPG, jpgAction);
+    m_SaveFormatActions.insert(BMP, bmpAction);
 
     //保存方式
     m_optionMenu->addAction(saveTitleAction);
@@ -144,6 +161,8 @@ void SubToolWidget::initShotLable()
     m_optionMenu->addAction(jpgAction);
     m_optionMenu->addAction(bmpAction);
     m_pinOptionButton->setMenu(m_optionMenu);
+
+    //updateOptionChecked();
 
     connect(m_saveGroup, QOverload<QAction *>::of(&QActionGroup::triggered), [ = ](QAction * t_act) {
         Settings::instance()->setIsChangeSavePath(false);
@@ -186,11 +205,7 @@ void SubToolWidget::initShotLable()
     QHBoxLayout *hLayout = new QHBoxLayout();
     hLayout->setSizeConstraint(QLayout::SetFixedSize);
     hLayout->setContentsMargins(0, 0, 0, 0);
-    hLayout->setSpacing(0);
-    hLayout->setMargin(0);
-    hLayout->setSpacing(3);
     hLayout->addWidget(m_ocrButton, 0,  Qt::AlignCenter);
-    hLayout->addSpacing(4);
     hLayout->addWidget(m_pinOptionButton, 0, Qt::AlignCenter);
     m_shotSubTool->setLayout(hLayout);
     addWidget(m_shotSubTool);

@@ -12,12 +12,14 @@ DBusService::DBusService(QObject *parent)
 
 bool DBusService::onStart()
 {
+    qInfo() << "dbus 开始计时";
     emit start();
     return true;
 }
 
 bool DBusService::onStop()
 {
+    qInfo() << "dbus 停止计时";
     emit stop();
     return true;
 }
