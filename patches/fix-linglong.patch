@@ -92,10 +92,10 @@ index 7ad0cef..cb3c1c9 100644
  INSTALLS += target file
  RESOURCES += res.qrc
 diff --git a/src/gstrecord/gstinterface.cpp b/src/gstrecord/gstinterface.cpp
-index af9bfed..35668d3 100644
+index 165a7ce..c1ee2c3 100644
 --- a/src/gstrecord/gstinterface.cpp
 +++ b/src/gstrecord/gstinterface.cpp
-@@ -24,7 +24,7 @@
+@@ -8,7 +8,7 @@
  #include <QDebug>
  #include <QLibraryInfo>
  #include <QDir>
@@ -104,7 +104,7 @@ index af9bfed..35668d3 100644
  gstInterface::p_gst_message_parse_error gstInterface::m_gst_message_parse_error = nullptr;
  gstInterface::p_g_free gstInterface::m_g_free = nullptr;
  gstInterface::p_g_error_copy gstInterface::m_g_error_copy = nullptr;
-@@ -67,20 +67,32 @@ QString gstInterface::libPath(const QString &sLib)
+@@ -51,20 +51,32 @@ QString gstInterface::libPath(const QString &sLib)
  {
      qInfo() << "gstreamer lib name is " << sLib;
      QDir dir;
@@ -150,10 +150,10 @@ index af9bfed..35668d3 100644
  void gstInterface::initFunctions()
  {
 diff --git a/src/main.cpp b/src/main.cpp
-index a8fb91a..4dbf416 100755
+index b746526..8d2456d 100755
 --- a/src/main.cpp
 +++ b/src/main.cpp
-@@ -58,26 +58,44 @@ static bool CheckFFmpegEnv()
+@@ -40,26 +40,44 @@ static bool CheckFFmpegEnv()
  {
      bool flag = false;
      QDir dir;
@@ -217,10 +217,10 @@ index a8fb91a..4dbf416 100755
 diff --git a/src/main_window.cpp b/src/main_window.cpp
 old mode 100755
 new mode 100644
-index f0eccba..1bc5c9f
+index beb2793..a163fbc
 --- a/src/main_window.cpp
 +++ b/src/main_window.cpp
-@@ -69,6 +69,11 @@ extern "C" {
+@@ -52,6 +52,11 @@ extern "C" {
  #include <fcntl.h>
  #include <unistd.h>
  #define EPSILON 1e-10
@@ -232,7 +232,7 @@ index f0eccba..1bc5c9f
  //const int MainWindow::CURSOR_BOUND = 5;
  const int MainWindow::RECORD_MIN_SIZE = 580;
  const int MainWindow::RECORD_MIN_HEIGHT = 280;
-@@ -574,23 +579,34 @@ void MainWindow::initDynamicLibPath()
+@@ -559,23 +564,34 @@ void MainWindow::initDynamicLibPath()
  }
  QString MainWindow::libPath(const QString &strlib)
  {
@@ -282,7 +282,7 @@ index f0eccba..1bc5c9f
  }
  void MainWindow::sendSavingNotify()
  {
-@@ -2661,9 +2677,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
+@@ -2668,9 +2684,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
          QString command, savepathcommand;
  
          tips = QString(tr("Saved to %1")).arg(saveFilePath);
@@ -305,10 +305,10 @@ index c9e7068..88e0f94 100644
 +Exec=/usr/bin/ll-cli run org.deepin.screen-recorder --exec 'deepin-pin-screenshots --dbus'
 \ No newline at end of file
 diff --git a/src/pin_screenshots/mainwindow.cpp b/src/pin_screenshots/mainwindow.cpp
-index ebc1a6a..0868e0e 100644
+index 404da9b..73bbc58 100755
 --- a/src/pin_screenshots/mainwindow.cpp
 +++ b/src/pin_screenshots/mainwindow.cpp
-@@ -50,6 +50,10 @@
+@@ -16,6 +16,10 @@
  #define MOVENUM 1
  
  #define WHEELNUM 10
@@ -319,7 +319,7 @@ index ebc1a6a..0868e0e 100644
  namespace {
  const int TOOLBAR_Y_SPACING = 12;
  }
-@@ -640,7 +644,7 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
+@@ -606,7 +610,7 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
      // 如果保存路径为剪切板，不做打开view操作
      if (!savePath.isEmpty()) {
          actions << "_open" << tr("View");
@@ -329,10 +329,10 @@ index ebc1a6a..0868e0e 100644
              hints["x-deepin-action-_open"] = QString("dde-file-manager,--show-item,%1").arg(savePath);
          } else {
 diff --git a/src/pin_screenshots/pin_screenshots.pro b/src/pin_screenshots/pin_screenshots.pro
-index 0e03711..7544675 100644
+index 58d2046..04460ca 100755
 --- a/src/pin_screenshots/pin_screenshots.pro
 +++ b/src/pin_screenshots/pin_screenshots.pro
-@@ -45,11 +45,11 @@ HEADERS += \
+@@ -46,11 +46,11 @@ HEADERS += \
  QMAKE_CXXFLAGS += -g
  QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations
  ##安装路径
@@ -348,10 +348,10 @@ index 0e03711..7544675 100644
  include(accessibility/accessible.pri)
  #安装
 diff --git a/src/recordertablet.cpp b/src/recordertablet.cpp
-index 7e6b63a..242e7b5 100644
+index 8024cc9..28f75f9 100644
 --- a/src/recordertablet.cpp
 +++ b/src/recordertablet.cpp
-@@ -29,7 +29,11 @@
+@@ -13,7 +13,11 @@
  #include <QDir>
  #include <QFile>
  
@@ -365,7 +365,7 @@ index 7e6b63a..242e7b5 100644
  RecorderTablet::RecorderTablet(QObject *parent) : QObject(parent)
  {
 diff --git a/src/src.pro b/src/src.pro
-index 022cb55..39cdbf3 100644
+index f2a6b31..b0db2d7 100644
 --- a/src/src.pro
 +++ b/src/src.pro
 @@ -29,25 +29,21 @@ if (!equals(SYS_EDITION, "")) {
@@ -462,47 +462,47 @@ index 022cb55..39cdbf3 100644
  INSTALLS += target icon desktop dbus_service manual_dir
  
 diff --git a/src/utils/waylandmousesimulator.cpp b/src/utils/waylandmousesimulator.cpp
-index 78b5dc8..6fbdb0c 100644
+index a7d8b27..2a1073a 100644
 --- a/src/utils/waylandmousesimulator.cpp
 +++ b/src/utils/waylandmousesimulator.cpp
-@@ -18,7 +18,7 @@
-  * You should have received a copy of the GNU General Public License
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
--
-+#ifdef KF5_WAYLAND_FLAGE_ON
+@@ -3,6 +3,8 @@
+ //
+ // SPDX-License-Identifier: GPL-3.0-or-later
  
++#ifdef KF5_WAYLAND_FLAGE_ON
++
  #include "waylandmousesimulator.h"
  
-@@ -152,4 +152,4 @@ void WaylandMouseSimulator::releaseWaylandScrollThread()
+ #define SCROLL_DOWN 15.0
+@@ -135,4 +137,4 @@ void WaylandMouseSimulator::releaseWaylandScrollThread()
          m_connection = nullptr;
      }
  }
 -
 +#endif
 diff --git a/src/utils/waylandmousesimulator.h b/src/utils/waylandmousesimulator.h
-index 7f04be4..0c5253e 100644
+index 6e8d471..9b98aae 100644
 --- a/src/utils/waylandmousesimulator.h
 +++ b/src/utils/waylandmousesimulator.h
-@@ -19,6 +19,8 @@
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
+@@ -3,6 +3,8 @@
+ //
+ // SPDX-License-Identifier: GPL-3.0-or-later
  
 +#ifdef KF5_WAYLAND_FLAGE_ON
 +
  #ifndef WAYLANDMOUSESIMULATOR_H
  #define WAYLANDMOUSESIMULATOR_H
  
-@@ -98,3 +100,4 @@ private:
+@@ -82,3 +84,4 @@ private:
  };
  
  #endif // WAYLANDMOUSESIMULATOR_H
 +#endif
 diff --git a/src/waylandrecord/avlibinterface.cpp b/src/waylandrecord/avlibinterface.cpp
-index 937c60b..ef7e25d 100644
+index b4145fa..cbd6aff 100644
 --- a/src/waylandrecord/avlibinterface.cpp
 +++ b/src/waylandrecord/avlibinterface.cpp
-@@ -2,7 +2,7 @@
+@@ -6,7 +6,7 @@
  #include <QDebug>
  #include <QLibraryInfo>
  #include <QDir>
@@ -511,7 +511,7 @@ index 937c60b..ef7e25d 100644
  avlibInterface::p_av_gettime avlibInterface::m_av_gettime = nullptr; // libavutil
  avlibInterface::p_av_frame_alloc avlibInterface::m_av_frame_alloc = nullptr;
  avlibInterface::p_av_frame_free avlibInterface::m_av_frame_free = nullptr;
-@@ -101,22 +101,34 @@ avlibInterface::avlibInterface()
+@@ -105,22 +105,34 @@ avlibInterface::avlibInterface()
  
  QString avlibInterface::libPath(const QString &sLib)
  {
