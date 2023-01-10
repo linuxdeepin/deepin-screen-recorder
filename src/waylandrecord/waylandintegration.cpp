@@ -363,7 +363,8 @@ int WaylandIntegration::WaylandIntegrationPrivate::getProductType()
     if (str_output.contains("KLVV", Qt::CaseInsensitive) ||
             str_output.contains("KLVU", Qt::CaseInsensitive) ||
             str_output.contains("PGUV", Qt::CaseInsensitive) ||
-            str_output.contains("PGUW", Qt::CaseInsensitive))
+            str_output.contains("PGUW", Qt::CaseInsensitive) ||
+            str_output.contains("L540", Qt::CaseInsensitive))
         return 1;
     return 0;
 }
@@ -504,12 +505,12 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
 //根据wayland客户端bufferReady给过来的像素格式，转成QImage的格式
 QImage::Format WaylandIntegration::WaylandIntegrationPrivate::getImageFormat(quint32 format)
 {
-    switch(format){
+    switch (format) {
     case GBM_FORMAT_XRGB8888: //GBM_FORMAT_XRGB8888 = 875713112
-        qDebug() << "fd 图片格式: XRGB"<< GBM_FORMAT_XRGB8888 << " -> " << "QImage::Format_RGB32";
+        qDebug() << "fd 图片格式: XRGB" << GBM_FORMAT_XRGB8888 << " -> " << "QImage::Format_RGB32";
         return QImage::Format_RGB32;
     case GBM_FORMAT_XBGR8888: //GBM_FORMAT_XBGR8888 = 875709016
-        qDebug() << "fd 图片格式: XBGR"<< GBM_FORMAT_XBGR8888 << " -> " << "QImage::Format_RGB32";
+        qDebug() << "fd 图片格式: XBGR" << GBM_FORMAT_XBGR8888 << " -> " << "QImage::Format_RGB32";
         return QImage::Format_RGB32;
     case GBM_FORMAT_RGBX8888: //GBM_FORMAT_RGBX8888 = 875714642
         qDebug() << "fd 图片格式: RGBX" << GBM_FORMAT_RGBX8888 << " -> " << "QImage::Format_RGBX8888";
@@ -518,19 +519,19 @@ QImage::Format WaylandIntegration::WaylandIntegrationPrivate::getImageFormat(qui
         qDebug() << "fd 图片格式: BGRX" << GBM_FORMAT_BGRX8888 << " -> " << "QImage::Format_BGR30";
         return QImage::Format_BGR30;
     case GBM_FORMAT_ARGB8888: //GBM_FORMAT_ARGB8888 = 875713089
-        qDebug() << "fd 图片格式: ARGB"<< GBM_FORMAT_ARGB8888 << " -> " << "QImage::Format_ARGB32";
+        qDebug() << "fd 图片格式: ARGB" << GBM_FORMAT_ARGB8888 << " -> " << "QImage::Format_ARGB32";
         return QImage::Format_ARGB32;
     case GBM_FORMAT_ABGR8888: //GBM_FORMAT_ABGR8888 = 875708993
-        qDebug() << "fd 图片格式: ABGR"<< GBM_FORMAT_ABGR8888 << " -> " << "QImage::Format_ARGB32";
+        qDebug() << "fd 图片格式: ABGR" << GBM_FORMAT_ABGR8888 << " -> " << "QImage::Format_ARGB32";
         return QImage::Format_ARGB32;
     case GBM_FORMAT_RGBA8888: //GBM_FORMAT_RGBA8888 = 875708754
-        qDebug() << "fd 图片格式: RGBA"<< GBM_FORMAT_RGBA8888 << " -> " << "QImage::Format_RGBA8888";
+        qDebug() << "fd 图片格式: RGBA" << GBM_FORMAT_RGBA8888 << " -> " << "QImage::Format_RGBA8888";
         return QImage::Format_RGBA8888;
     case GBM_FORMAT_BGRA8888: //GBM_FORMAT_BGRA8888 = 875708738
-        qDebug() << "fd 图片格式: BGRA"<< GBM_FORMAT_BGRA8888 << " -> " << "QImage::Format_BGR30";
+        qDebug() << "fd 图片格式: BGRA" << GBM_FORMAT_BGRA8888 << " -> " << "QImage::Format_BGR30";
         return QImage::Format_BGR30;
     default:
-        qDebug() << "fd 图片格式未知: "<<format << " -> " << "QImage::Format_RGB32";
+        qDebug() << "fd 图片格式未知: " << format << " -> " << "QImage::Format_RGB32";
         return QImage::Format_RGB32;
     }
 }
@@ -642,10 +643,10 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
                 }
             }
             QImage img(m_screenSize, QImage::Format_RGBA8888);
-            if(m_boardVendorType){
-                 //qDebug() << "1 img.format: " << img.format();
-                 img = img.convertToFormat(QImage::Format_RGB32);
-                 //qDebug() << "2 img.format: " << img.format();
+            if (m_boardVendorType) {
+                //qDebug() << "1 img.format: " << img.format();
+                img = img.convertToFormat(QImage::Format_RGB32);
+                //qDebug() << "2 img.format: " << img.format();
             }
             img.fill(Qt::GlobalColor::black);
             QPainter painter(&img);
