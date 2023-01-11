@@ -12,7 +12,7 @@
 #define ShotShartApp "deepin-screen-recorder" // 使用截图录屏的翻译
 
 ShotStartPlugin::ShotStartPlugin(QObject *parent)
-    : QObject(parent), m_iconWidget(nullptr), m_tipsWidget(nullptr)
+    : QObject(parent), m_iconWidget(nullptr), m_tipsWidget(nullptr), m_isRecording(false)
 
 {
 }
@@ -24,6 +24,12 @@ const QString ShotStartPlugin::pluginName() const
 
 const QString ShotStartPlugin::pluginDisplayName() const
 {
+    if (m_isRecording) {
+        QTime showTime(0, 0, 0);
+        int time = m_baseTime.secsTo(QTime::currentTime());
+        showTime = showTime.addSecs(time);
+        return showTime.toString("hh:mm:ss");
+    }
     return tr("Screen Capture");
 }
 
@@ -49,37 +55,34 @@ void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
     if (!pluginIsDisable()) {
         m_proxyInter->itemAdded(this, pluginName());
     }
+
+    QDBusConnection sessionBus = QDBusConnection::sessionBus();
+    if (sessionBus.registerService("com.deepin.ShotRecorder.PanelStatus")
+            && sessionBus.registerObject("/com/deepin/ShotRecorder/PanelStatus", this, QDBusConnection::ExportScriptableSlots)) {
+        qDebug() << "dbus service registration failed!";
+    }
 }
 
 QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::ColorType themeType)
 {
-//    if(DockPart::DCCSetting == dockPart){
-//        static QIcon icon(":/res/shot-start-plugin.svg");
-//        qDebug() << "截图录屏的图标位置: " << icon.name();
-//        return icon;
-//    }else{
-//        qDebug() << "DockPart::DCCSetting != dockPart: true";
-//        return QIcon();
-//    }
-    static QIcon icon(":/res/shot-start-plugin.svg");
-    qDebug() << "截图录屏的图标位置: " << icon.name();
+    static QIcon icon(":/res/screen-capture-dark.svg");
+    static QIcon shot(":/res/icon-shot.svg");
+    static QIcon recorder(":/res/icon-recorder.svg");
+    if (DockPart::QuickShow == dockPart) {
+        return icon;
+    } else if(DockPart::QuickPanel == dockPart) {
+        if (m_isRecording) {
+            return recorder;
+        } else {
+            return shot;
+        }
+    }
     return icon;
 }
 
-bool ShotStartPlugin::pluginIsDisable()
+PluginFlags ShotStartPlugin::flags() const
 {
-    return m_proxyInter->getValue(this, "disabled", false).toBool();
-}
-
-void ShotStartPlugin::pluginStateSwitched()
-{
-    const bool disabledNew = !pluginIsDisable();
-    m_proxyInter->saveValue(this, "disabled", disabledNew);
-    if (disabledNew) {
-        m_proxyInter->itemRemoved(this, pluginName());
-    } else {
-        m_proxyInter->itemAdded(this, pluginName());
-    }
+    return  Type_Common | Quick_Single | Attribute_ForceDock | Attribute_CanSetting;
 }
 
 QWidget *ShotStartPlugin::itemWidget(const QString &itemKey)
@@ -113,6 +116,17 @@ const QString ShotStartPlugin::itemCommand(const QString &itemKey)
 {
     if (itemKey != ShotShartPlugin) return QString();
 
+    if (m_isRecording) {
+        //停止录屏
+        QDBusInterface shotDBusInterface("com.deepin.ScreenRecorder",
+                                         "/com/deepin/ScreenRecorder",
+                                         "com.deepin.ScreenRecorder",
+                                         QDBusConnection::sessionBus());
+
+        shotDBusInterface.asyncCall("stopRecord");
+        return "";
+    }
+
     return "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.StartScreenshot";
 }
 
@@ -131,6 +145,24 @@ void ShotStartPlugin::invokedMenuItem(const QString &itemKey, const QString &men
     if (itemKey != ShotShartPlugin) return;
 
     m_iconWidget->invokedMenuItem(menuId);
+}
+
+bool ShotStartPlugin::onStart()
+{
+    m_isRecording = true;
+    m_baseTime = QTime::currentTime();
+    m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
+}
+
+void ShotStartPlugin::onStop()
+{
+    m_isRecording = false;
+    m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
+}
+
+void ShotStartPlugin::onRecording()
+{
+    m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
 }
 
 ShotStartPlugin::~ShotStartPlugin()

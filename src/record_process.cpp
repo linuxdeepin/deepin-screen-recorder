@@ -594,6 +594,10 @@ void RecordProcess::startRecord()
                                                                                              "/com/deepin/ScreenRecorder/time",
                                                                                              "com.deepin.ScreenRecorder.time",
                                                                                              "onStart"));
+    QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ShotRecorder.PanelStatus",
+                                                                      "/com/deepin/ShotRecorder/PanelStatus",
+                                                                      "com.deepin.ShotRecorder.PanelStatus",
+                                                                      "onStart"));
     qDebug() << "Start the screen recording timer!";
     m_recordingFlag = true;
     QtConcurrent::run(this, &RecordProcess::emitRecording);
@@ -610,6 +614,11 @@ void RecordProcess::emitRecording()
                                                                                                  "/com/deepin/ScreenRecorder/time",
                                                                                                  "com.deepin.ScreenRecorder.time",
                                                                                                  "onRecording"));
+        QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ShotRecorder.PanelStatus",
+                                                                          "/com/deepin/ShotRecorder/PanelStatus",
+                                                                          "com.deepin.ShotRecorder.PanelStatus",
+                                                                          "onRecording"));
+
         QThread::msleep(1000);
     }
 }
@@ -712,6 +721,10 @@ void RecordProcess::exitRecord(QString newSavePath)
                                                                                                  "/com/deepin/ScreenRecorder/time",
                                                                                                  "com.deepin.ScreenRecorder.time",
                                                                                                  "onStop"));
+        QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ShotRecorder.PanelStatus",
+                                                                          "/com/deepin/ShotRecorder/PanelStatus",
+                                                                          "com.deepin.ShotRecorder.PanelStatus",
+                                                                          "onStop"));
     }
 
     QApplication::quit();

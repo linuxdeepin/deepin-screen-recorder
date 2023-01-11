@@ -16,6 +16,7 @@ class ShotStartPlugin : public QObject, PluginsItemInterface
     Q_OBJECT
     Q_INTERFACES(PluginsItemInterface)
     Q_PLUGIN_METADATA(IID "com.deepin.dock.PluginsItemInterface" FILE "shotstart.json")
+    Q_CLASSINFO("D-Bus Interface", "com.deepin.ShotRecorder.PanelStatus")
 
 public:
     explicit ShotStartPlugin(QObject *parent = nullptr);
@@ -40,9 +41,10 @@ public:
      * @brief pluginIsAllowDisable:返回插件是否允许被禁用
      * @return
      */
-    bool pluginIsAllowDisable() override { return true; }
-    bool pluginIsDisable() override;
-    void pluginStateSwitched() override;
+    //bool pluginIsAllowDisable() override { return true; }
+    //bool pluginIsDisable() override;
+    //void pluginStateSwitched() override;
+    PluginFlags flags() const override;
 
     PluginSizePolicy pluginSizePolicy() const override {return  PluginsItemInterface::Custom;}
     /**
@@ -62,10 +64,16 @@ public:
     // 右键菜单
     const QString itemContextMenu(const QString &itemKey) override;
     void invokedMenuItem(const QString &itemKey, const QString &menuId, const bool checked) override;
+public slots:
+    Q_SCRIPTABLE bool onStart();
+    Q_SCRIPTABLE void onStop();
+    Q_SCRIPTABLE void onRecording();
 
 private:
     QScopedPointer<IconWidget> m_iconWidget;
     QScopedPointer<TipsWidget> m_tipsWidget;
+    bool m_isRecording;
+    QTime m_baseTime;
 };
 
 #endif // RECORDTIME_H
