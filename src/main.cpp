@@ -53,18 +53,28 @@ static bool CheckFFmpegEnv()
         qDebug() << "目录(" << path << ")中存在编码库(" << libName << ")";
         QLibrary libavcodec;
         libavcodec.setFileName(libName);
-        qDebug() << "编码库是否加载成功: " << libavcodec.load();
-        typedef AVCodec *(*p_avcodec_find_encoder)(enum AVCodecID id);
-        p_avcodec_find_encoder m_avcodec_find_encoder = nullptr;
-        m_avcodec_find_encoder = reinterpret_cast<p_avcodec_find_encoder>(libavcodec.resolve("avcodec_find_encoder"));
-        AVCodec *pCodec = m_avcodec_find_encoder(AV_CODEC_ID_H264);
-        if (pCodec) {
-            qDebug() << "编码器存在 AVCodecID:" << AV_CODEC_ID_H264;
-            flag = true;
+        if (libavcodec.load()) {
+            qDebug() << "编码库加载成功！";
+            typedef AVCodec *(*p_avcodec_find_encoder)(enum AVCodecID id);
+            p_avcodec_find_encoder m_avcodec_find_encoder = nullptr;
+            m_avcodec_find_encoder = reinterpret_cast<p_avcodec_find_encoder>(libavcodec.resolve("avcodec_find_encoder"));
+            AVCodec *pCodec = nullptr;
+            if (m_avcodec_find_encoder) {
+                pCodec = m_avcodec_find_encoder(AV_CODEC_ID_H264);
+            } else {
+                qWarning() << "编码库中无avcodec_find_encoder接口！";
+            }
+            if (pCodec) {
+                qDebug() << "编码器存在 AVCodecID:" << AV_CODEC_ID_H264;
+                flag = true;
+            } else {
+                flag = false;
+                qWarning() << "Can not find output video encoder! (没有找到合适的编码器！) AVCodecID:" << AV_CODEC_ID_H264;
+            }
         } else {
-            qWarning() << "Can not find output video encoder! (没有找到合适的编码器！) AVCodecID:" << AV_CODEC_ID_H264;
-            flag = false;
+            qWarning() << "编码库加载失败！";
         }
+
     } else {
         qWarning() << "目录(" << path << ")中不存在编码库(" << libName << ")";
     }
