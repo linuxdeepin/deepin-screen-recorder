@@ -67,28 +67,22 @@ static bool CheckFFmpegEnv()
             if (pCodec) {
                 qDebug() << "编码器存在 AVCodecID:" << AV_CODEC_ID_H264;
                 flag = true;
+                //x11下需要检测ffmpeg应用是否存在,wayland不需要检查
+                if (!isWaylandProtocol()) {
+                    qInfo() << "Is exists ffmpeg in path(/usr/bin/): " << QFile("/usr/bin/ffmpeg").exists();
+                    if (!QFile("/usr/bin/ffmpeg").exists()) {
+                        flag = false;
+                    }
+                }
             } else {
-                flag = false;
                 qWarning() << "Can not find output video encoder! (没有找到合适的编码器！) AVCodecID:" << AV_CODEC_ID_H264;
             }
         } else {
             qWarning() << "编码库加载失败！";
         }
-
     } else {
         qWarning() << "目录(" << path << ")中不存在编码库(" << libName << ")";
     }
-
-    //x11下需要检测ffmpeg应用是否存在
-    if (!isWaylandProtocol()) {
-        qInfo() << "Is exists ffmpeg in path(/usr/bin/): " << QFile("/usr/bin/ffmpeg").exists();
-        if (QFile("/usr/bin/ffmpeg").exists()) {
-            flag = true;
-        } else {
-            flag = false;
-        }
-    }
-
     return flag;
 }
 
