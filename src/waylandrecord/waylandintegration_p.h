@@ -121,6 +121,11 @@ public:
 
     //WriteFrameThread *m_writeFrameThread;
     //     pthread_t m_writeFrameThread;
+signals:
+    /**
+     * @brief 是否是像服务器请求的最后一帧画面
+     */
+    void lastFrame();
 protected Q_SLOTS:
     void addOutput(quint32 name, quint32 version);
     void removeOutput(quint32 name);
@@ -198,6 +203,10 @@ public:
     void setBGetFrame(bool bGetFrame);
 
     int m_fps = 0;
+    /**
+     * @brief 从数据池取取数据的线程的开关。当数据池有数据时被启动
+     */
+    bool m_appendFrameToListFlag = false;
 private:
     /**
      * @brief 是否是hw电脑
@@ -217,10 +226,7 @@ private:
     QList<unsigned char *> m_freeList;
 
     QPair<qint64, QImage> m_curNewImage;
-    /**
-     * @brief 从数据池取取数据的线程的开关。当数据池有数据时被启动
-     */
-    bool m_appendFrameToListFlag = false;
+
 
 
     //ffmpeg视频帧
@@ -271,6 +277,8 @@ private:
     bool isGstWriteVideoFrame = false;
 
     GstRecordX *m_gstRecordX;
+
+    qint32 m_lastFrame = -1;
 };
 
 }
