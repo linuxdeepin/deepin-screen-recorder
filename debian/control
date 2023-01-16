@@ -12,7 +12,7 @@ Build-Depends: debhelper, pkg-config, qt5-qmake,
  libxss1,qtbase5-dev,
  libkf5windowsystem-dev,libkf5wayland-dev,libkf5i18n-dev,
  libgbm-dev,libepoxy-dev,
- libavcodec-dev,libavdevice-dev,libavfilter-dev,libavformat-dev,libavutil-dev,libswscale-dev,libavresample-dev,
+ libavcodec-dev,libavdevice-dev,libavfilter-dev,libavformat-dev,libavutil-dev,libswscale-dev,
  libkf5config-dev,libxrandr-dev,libxinerama-dev,libepoxy-dev,deepin-desktop-base,
  libgstreamer1.0-dev,libgstreamer-plugins-base1.0-dev,gstreamer1.0-plugins-good,
  libusb-1.0-0-dev,libimageeditor-dev,libudev-dev,libffmpegthumbnailer-dev,portaudio19-dev,libv4l-dev
