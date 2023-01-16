@@ -166,17 +166,22 @@ void TimeWidget::paintEvent(QPaintEvent *e)
     //判断任务栏在屏幕上的位置,上下左右
     if (position::top == m_position || position::bottom == m_position) {
         m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_LEVEL_ICON_SIZE, RECORDER_TIME_LEVEL_ICON_SIZE));
-        //m_pixmap.setDevicePixelRatio(ratio);
+        m_pixmap.setDevicePixelRatio(ratio);
         const QRectF &rf = QRectF(rect());
         const QRectF &prf = QRectF(m_pixmap.rect());
         QPointF pf = rf.center() - prf.center();
         //绘制录像小图标
-        painter.drawPixmap(5, static_cast<int>(pf.y() + 1), m_pixmap);
+        qInfo() << "ratio: " << ratio;
+        if (ratio >= 1.5) {
+            painter.drawPixmap(5, static_cast<int>(pf.y() / ratio  + 2 * ratio), m_pixmap);
+        } else {
+            painter.drawPixmap(5, static_cast<int>(pf.y() / ratio  + 1), m_pixmap);
+        }
+        qInfo() << "录屏小图标的坐标：" << 5 << static_cast<int>(pf.y() / ratio + 5 / ratio) ;
         QFont font = RECORDER_TIME_FONT;
         painter.setFont(font);
         QFontMetrics fm(font);
-//        painter.drawText(m_pixmap.width() * static_cast<int>(ratio) + RECORDER_TEXT_TOP_BOTTOM_X + RECORDER_ICON_TOP_BOTTOM_X, rect().y(), rect().width(), rect().height(), Qt::AlignLeft | Qt::AlignVCenter, m_showTimeStr);
-        int tx = static_cast<int>(m_pixmap.width()) + RECORDER_TEXT_TOP_BOTTOM_X;
+        int tx = static_cast<int>(m_pixmap.width() / ratio) + RECORDER_TEXT_TOP_BOTTOM_X;
         int ty = rect().y();
         int twidth = rect().width();
         int theight = rect().height();
@@ -189,7 +194,7 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         qDebug() << "插件区域大小: " << rect() << "图标大小: " << m_pixmap.size();
         const QRectF &rfp = QRectF(m_pixmap.rect());
         qDebug() << "rf.center() - rfp.center() / m_pixmap.devicePixelRatioF()" << rf.center() - rfp.center() / m_pixmap.devicePixelRatioF();
-        //painter.drawPixmap(rf.center() - rfp.center() / m_pixmap.devicePixelRatioF(), m_pixmap);
+//        painter.drawPixmap(rf.center() - rfp.center() / m_pixmap.devicePixelRatioF(), m_pixmap);
         painter.drawPixmap(2, 0, m_pixmap);
     }
     QWidget::paintEvent(e);

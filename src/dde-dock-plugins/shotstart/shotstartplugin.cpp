@@ -66,15 +66,27 @@ void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
 QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::ColorType themeType)
 {
     static QIcon icon(":/res/screen-capture-dark.svg");
+    static QIcon icon_dark(":/res/screen-capture-dark.svg");
     static QIcon shot(":/res/icon-shot.svg");
     static QIcon recorder(":/res/icon-recorder.svg");
     if (DockPart::QuickShow == dockPart) {
-        return icon;
-    } else if(DockPart::QuickPanel == dockPart) {
-        if (m_isRecording) {
-            return recorder;
+        if (themeType ==  DGuiApplicationHelper::ColorType::LightType) {
+            //return m_iconWidget->iconPixMap("screen-capture-dark", QSize(24, 24));
+            return icon_dark;
         } else {
-            return shot;
+            //return m_iconWidget->iconPixMap("screen-capture", QSize(24, 24));
+            return icon;
+        }
+    } else if (DockPart::QuickPanel == dockPart) {
+        qInfo() << "是否正在录屏。。。。。。" << m_isRecording;
+        if (m_isRecording) {
+            qInfo() << "当前正在录屏。。。";
+            return m_iconWidget->iconPixMap(recorder, QSize(24, 24));
+            //return recorder;
+        } else {
+            qInfo() << "当前正在截图。。。";
+            return m_iconWidget->iconPixMap(shot, QSize(24, 24));
+            //return shot;
         }
     }
     return icon;
@@ -150,6 +162,7 @@ void ShotStartPlugin::invokedMenuItem(const QString &itemKey, const QString &men
 bool ShotStartPlugin::onStart()
 {
     m_isRecording = true;
+    qInfo() << "开始录屏。。。。。。" << m_isRecording;
     m_baseTime = QTime::currentTime();
     m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
 }
@@ -157,6 +170,7 @@ bool ShotStartPlugin::onStart()
 void ShotStartPlugin::onStop()
 {
     m_isRecording = false;
+    qInfo() << "结束录屏。。。。。。" << m_isRecording;
     m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
 }
 

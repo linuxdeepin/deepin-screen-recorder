@@ -31,6 +31,7 @@ public:
     QString getSysShortcuts(const QString type);
     QString getDefaultValue(const QString type);
 
+    QPixmap iconPixMap(QIcon icon, QSize size);
 protected:
     void paintEvent(QPaintEvent *e) override;
     void mousePressEvent(QMouseEvent *event) override;

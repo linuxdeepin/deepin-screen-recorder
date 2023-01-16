@@ -128,6 +128,18 @@ QString IconWidget::getDefaultValue(const QString type)
     return retShortcut;
 }
 
+QPixmap IconWidget::iconPixMap(QIcon icon, QSize size)
+{
+    QPixmap pixmap;
+    const auto ratio = devicePixelRatioF();
+    QSize pixmapSize = QCoreApplication::testAttribute(Qt::AA_UseHighDpiPixmaps)? size:(size*ratio);
+    pixmap = icon.pixmap(pixmapSize);
+    pixmap.setDevicePixelRatio(ratio);
+    pixmap = pixmap.scaled(size * ratio);
+
+    return  pixmap;
+}
+
 
 void IconWidget::paintEvent(QPaintEvent *e)
 {
