@@ -5574,6 +5574,10 @@ void MainWindow::startCountdown()
     if (!Utils::isWaylandMode) {
         hide();
         show();
+    } else {
+        qDebug() << "wayland开始录屏之后不获取焦点";
+        setWindowFlag(Qt::WindowDoesNotAcceptFocus);
+        this->show();
     }
     Utils::passInputEvent(static_cast<int>(this->winId()));
 
