@@ -85,8 +85,15 @@ QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::Col
                 qDebug() << "录屏图标已显示(icon)";
                 return recorder;
             }else{
-                qDebug() << "录屏图标已显示(pixmap)";
-                return m_iconWidget->iconPixMap(recorder, QSize(24, 24));
+                QPixmap pixmap;
+                pixmap = m_iconWidget->iconPixMap(recorder, QSize(24, 24));
+                if(pixmap.isNull()){
+                    qDebug() << "录屏图标已显示(pixmap is null >> icon)";
+                    return recorder;
+                }else{
+                    qDebug() << "录屏图标已显示(pixmap)";
+                    return pixmap;
+                }
             }
         } else {
             qInfo() << "显示截图图标...";
@@ -94,8 +101,15 @@ QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::Col
                 qDebug() << "截图图标已显示(icon)";
                 return shot;
             }else{
-                qDebug() << "截图图标已显示(pixmap)";
-                return m_iconWidget->iconPixMap(shot, QSize(24, 24));
+                QPixmap pixmap;
+                pixmap = m_iconWidget->iconPixMap(shot, QSize(24, 24));
+                if(pixmap.isNull()){
+                    qDebug() << "截图图标已显示(pixmap is null >> icon)";
+                    return shot;
+                }else{
+                    qDebug() << "截图图标已显示(pixmap)";
+                    return pixmap;
+                }
             }
         }
     }

@@ -132,11 +132,20 @@ QPixmap IconWidget::iconPixMap(QIcon icon, QSize size)
 {
     QPixmap pixmap;
     const auto ratio = devicePixelRatioF();
+    qDebug() << "获取缩放比例：" << ratio;
     QSize pixmapSize = QCoreApplication::testAttribute(Qt::AA_UseHighDpiPixmaps)? size:(size*ratio);
-    pixmap = icon.pixmap(pixmapSize);
-    pixmap.setDevicePixelRatio(ratio);
-    pixmap = pixmap.scaled(size * ratio);
-
+    qDebug() << "获取图标大小：" << pixmapSize;
+    if(!icon.isNull()){
+        pixmap = icon.pixmap(pixmapSize);
+        pixmap.setDevicePixelRatio(ratio);
+        if(!pixmap.isNull()){
+            pixmap = pixmap.scaled(size * ratio);
+        }else{
+            qWarning() << "pixmap is null!";
+        }
+    }else{
+        qWarning() << "icon is null!";
+    }
     return  pixmap;
 }
 
