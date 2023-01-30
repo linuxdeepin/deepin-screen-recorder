@@ -36,7 +36,7 @@ depends:
     version: 4.1.8
     type: runtime
   - id: dde-dock
-    version: 6.0.6.1
+    version: 6.0.8.1
   - id: kwindowsystem
     version: 5.54.0
   - id: libxcursor
