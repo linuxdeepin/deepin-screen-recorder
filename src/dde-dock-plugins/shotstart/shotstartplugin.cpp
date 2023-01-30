@@ -81,32 +81,32 @@ QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::Col
         qInfo() << "是否正在录屏:" << m_isRecording;
         if (m_isRecording) {
             qInfo() << "显示录屏图标..." << m_iconWidget.isNull();
-            if(m_iconWidget.isNull()){
+            if (m_iconWidget.isNull()) {
                 qDebug() << "录屏图标已显示(icon)";
                 return recorder;
-            }else{
+            } else {
                 QPixmap pixmap;
                 pixmap = m_iconWidget->iconPixMap(recorder, QSize(24, 24));
-                if(pixmap.isNull()){
+                if (pixmap.isNull()) {
                     qDebug() << "录屏图标已显示(pixmap is null >> icon)";
                     return recorder;
-                }else{
+                } else {
                     qDebug() << "录屏图标已显示(pixmap)";
                     return pixmap;
                 }
             }
         } else {
             qInfo() << "显示截图图标...";
-            if(m_iconWidget.isNull()){
+            if (m_iconWidget.isNull()) {
                 qDebug() << "截图图标已显示(icon)";
                 return shot;
-            }else{
+            } else {
                 QPixmap pixmap;
                 pixmap = m_iconWidget->iconPixMap(shot, QSize(24, 24));
-                if(pixmap.isNull()){
+                if (pixmap.isNull()) {
                     qDebug() << "截图图标已显示(pixmap is null >> icon)";
                     return shot;
-                }else{
+                } else {
                     qDebug() << "截图图标已显示(pixmap)";
                     return pixmap;
                 }
@@ -189,6 +189,7 @@ bool ShotStartPlugin::onStart()
     qInfo() << "开始录屏。。。。。。" << m_isRecording;
     m_baseTime = QTime::currentTime();
     m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
+    return true;
 }
 
 void ShotStartPlugin::onStop()
