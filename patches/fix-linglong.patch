@@ -34,16 +34,41 @@ index c99ad0a..3ee120b 100644
  isEmpty(TRANSLATIONS) {
       include(./translations.pri)
 diff --git a/src/dde-dock-plugins/dde-dock-plugins.pro b/src/dde-dock-plugins/dde-dock-plugins.pro
-index e2d3c1b..3ca268c 100644
+index e2d3c1b..235b121 100644
 --- a/src/dde-dock-plugins/dde-dock-plugins.pro
 +++ b/src/dde-dock-plugins/dde-dock-plugins.pro
-@@ -1,4 +1,6 @@
+@@ -1,4 +1,31 @@
  TEMPLATE = subdirs
  
 +INCLUDEPATH += /runtime/include
 +
  SUBDIRS += recordtime \
              shotstart
++
++#v23上dock插件无法获取沙箱中截图录屏的翻译，因此沙箱外部需要再安装一次
++translations.path = /usr/share/deepin-screen-recorder/translations
++
++isEmpty(TRANSLATIONS) {
++     include(../../translations.pri)
++}
++CONFIG += update_translations release_translations
++
++CONFIG(update_translations) {
++    isEmpty(lupdate):lupdate=lupdate
++    system($$lupdate -no-obsolete -locations none $$_PRO_FILE_)
++}
++CONFIG(release_translations) {
++    isEmpty(lrelease):lrelease=lrelease
++    system($$lrelease $$_PRO_FILE_)
++}
++
++
++TRANSLATIONS_COMPILED = $$TRANSLATIONS
++TRANSLATIONS_COMPILED ~= s/\.ts/.qm/g
++translations.files = $$TRANSLATIONS_COMPILED
++
++
++INSTALLS += translations
 diff --git a/src/dde-dock-plugins/recordtime/recordtime.pro b/src/dde-dock-plugins/recordtime/recordtime.pro
 index 84ad2ac..0265643 100644
 --- a/src/dde-dock-plugins/recordtime/recordtime.pro
