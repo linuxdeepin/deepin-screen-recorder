@@ -243,11 +243,11 @@ isEmpty(PREFIX){
     PREFIX = /usr
 }
 
-isEmpty(BINDIR):BINDIR=/usr/bin
-isEmpty(ICONDIR):ICONDIR=/usr/share/icons/hicolor/scalable/apps
-isEmpty(APPDIR):APPDIR=/usr/share/applications
-isEmpty(DSRDIR):DSRDIR=/usr/share/deepin-screen-recorder
-isEmpty(DOCDIR):DOCDIR=/usr/share/dman/deepin-screen-recorder
+isEmpty(BINDIR):BINDIR=$$PREFIX/bin
+isEmpty(ICONDIR):ICONDIR=$$PREFIX/share/icons/hicolor/scalable/apps
+isEmpty(APPDIR):APPDIR=$$PREFIX/share/applications
+isEmpty(DSRDIR):DSRDIR=$$PREFIX/share/deepin-screen-recorder
+isEmpty(DOCDIR):DOCDIR=$$PREFIX/share/dman/deepin-screen-recorder
 isEmpty(ETCDIR):ETCDIR=/etc
 isEmpty(TABCONDIR):TABCONDIR=/etc/due-shell/json
 
@@ -267,7 +267,7 @@ contains(DEFINES, DDE_START_FLAGE_ON ) {
 dbus_service.path = $$PREFIX/share/dbus-1/services
 
 manual_dir.files = $$PWD/../assets/deepin-screen-recorder
-manual_dir.path= /usr/share/deepin-manual/manual-assets/application/
+manual_dir.path= $$PREFIX/share/deepin-manual/manual-assets/application/
 
 INSTALLS += target icon desktop dbus_service manual_dir
 
