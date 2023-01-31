@@ -1,12 +1,16 @@
 TEMPLATE  = subdirs
 
+isEmpty(PREFIX){
+    PREFIX = /usr
+}
+
 SUBDIRS  += \
     src \
     src/dde-dock-plugins \
     src/pin_screenshots
 
 
-translations.path = /usr/share/deepin-screen-recorder/translations
+translations.path = $$PREFIX/share/deepin-screen-recorder/translations
 
 isEmpty(TRANSLATIONS) {
      include(./translations.pri)

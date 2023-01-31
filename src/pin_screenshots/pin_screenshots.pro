@@ -44,11 +44,15 @@ HEADERS += \
 QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations
 ##安装路径
-target.path=/usr/bin
-isEmpty(DSRDIR):DSRDIR=/usr/share/deepin-pin-screenshots
+isEmpty(PREFIX){
+    PREFIX = /usr
+}
+
+target.path=$$PREFIX/bin
+isEmpty(DSRDIR):DSRDIR=$$PREFIX/share/deepin-pin-screenshots
 
 #Dbus文件
-dbus_service.path=/usr/share/dbus-1/services
+dbus_service.path=$$PREFIX/share/dbus-1/services
 dbus_service.files=./com.deepin.PinScreenShots.service
 include(accessibility/accessible.pri)
 #安装
