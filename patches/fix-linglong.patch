@@ -34,7 +34,7 @@ index c99ad0a..3ee120b 100644
  isEmpty(TRANSLATIONS) {
       include(./translations.pri)
 diff --git a/src/dde-dock-plugins/dde-dock-plugins.pro b/src/dde-dock-plugins/dde-dock-plugins.pro
-index e2d3c1b..235b121 100644
+index e2d3c1b..b55bda7 100644
 --- a/src/dde-dock-plugins/dde-dock-plugins.pro
 +++ b/src/dde-dock-plugins/dde-dock-plugins.pro
 @@ -1,4 +1,31 @@
@@ -46,7 +46,7 @@ index e2d3c1b..235b121 100644
              shotstart
 +
 +#v23上dock插件无法获取沙箱中截图录屏的翻译，因此沙箱外部需要再安装一次
-+translations.path = /usr/share/deepin-screen-recorder/translations
++translations.path = /usr/share/deepin-screen-recorder-plugin/translations
 +
 +isEmpty(TRANSLATIONS) {
 +     include(../../translations.pri)
@@ -116,6 +116,19 @@ index 7ad0cef..cb3c1c9 100644
  
  INSTALLS += target file
  RESOURCES += res.qrc
+diff --git a/src/dde-dock-plugins/shotstart/shotstartplugin.cpp b/src/dde-dock-plugins/shotstart/shotstartplugin.cpp
+index 799443d..c364b0c 100644
+--- a/src/dde-dock-plugins/shotstart/shotstartplugin.cpp
++++ b/src/dde-dock-plugins/shotstart/shotstartplugin.cpp
+@@ -9,7 +9,7 @@
+ 
+ 
+ #define ShotShartPlugin "shot-start-plugin"
+-#define ShotShartApp "deepin-screen-recorder" // 使用截图录屏的翻译
++#define ShotShartApp "deepin-screen-recorder-plugin" // 使用截图录屏的翻译
+ 
+ ShotStartPlugin::ShotStartPlugin(QObject *parent)
+     : QObject(parent), m_iconWidget(nullptr), m_tipsWidget(nullptr), m_isRecording(false)
 diff --git a/src/gstrecord/gstinterface.cpp b/src/gstrecord/gstinterface.cpp
 index 165a7ce..c1ee2c3 100644
 --- a/src/gstrecord/gstinterface.cpp
