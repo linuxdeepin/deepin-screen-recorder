@@ -2689,7 +2689,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         QString command, savepathcommand;
 
         tips = QString(tr("Saved to %1")).arg(saveFilePath);
-        if (QFile("/usr/bin/dde-file-manager").exists()) {
+        if (!QStandardPaths::findExecutable("dde-file-manager").isEmpty()) {
             savepathcommand = QString("dde-file-manager,--show-item,%1").arg(saveFilePath);
         }
         command = QString("xdg-open,%1").arg(saveFilePath);
