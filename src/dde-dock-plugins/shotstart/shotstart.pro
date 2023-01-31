@@ -23,10 +23,12 @@ SOURCES += \
     quickpanelwidget.cpp \
     commoniconbutton.cpp
 
-
-target.path = /usr/lib/dde-dock/plugins/
+isEmpty(PREFIX) {
+    PREFIX = /usr
+}
+target.path = $$PREFIX/lib/dde-dock/plugins/
 file.files += $$PWD/com.deepin.dde.dock.module.shot-start-plugin.gschema.xml
-file.path += /usr/share/glib-2.0/schemas/
+file.path += $$PREFIX/share/glib-2.0/schemas/
 
 INSTALLS += target file
 RESOURCES += res.qrc
