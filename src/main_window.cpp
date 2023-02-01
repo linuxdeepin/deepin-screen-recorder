@@ -1765,7 +1765,7 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             //eventloop.exec();
             //tempTimer->stop();
             //delete tempTimer;
-            time_t endTime = time(nullptr) + 3;
+            time_t endTime = time(nullptr) + 4;
             qInfo() << __FUNCTION__ << __LINE__ << "开始延时3s等待数据保存到剪切板..." << endTime;
             time_t lastTime = 0;
             while (1) {
