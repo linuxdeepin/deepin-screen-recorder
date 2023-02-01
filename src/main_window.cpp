@@ -1777,10 +1777,9 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
                 if (curTime >= endTime) {
                     break;
                 }
-                //QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
             }
             qInfo() << __FUNCTION__ << __LINE__ << "3s延时完成" << time(nullptr);
-            QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
         }
     }
     qInfo() << __FUNCTION__ << __LINE__ << "已保存到剪贴板！";
