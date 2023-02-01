@@ -30,11 +30,16 @@ const QString ShotStartPlugin::pluginDisplayName() const
 void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
 {
 #ifndef UNIT_TEST
+    qInfo() << "正在加载翻译...";
     // 加载翻译
     QString appName = qApp->applicationName();
+    qDebug() << "1 >>qApp->applicationName(): " << qApp->applicationName();
     qApp->setApplicationName(ShotShartApp);
-    qApp->loadTranslator();
+    qDebug() << "2 >>qApp->applicationName(): " << qApp->applicationName();
+    bool isLoad = qApp->loadTranslator();
     qApp->setApplicationName(appName);
+    qDebug() << "3 >>qApp->applicationName(): " << qApp->applicationName();
+    qInfo() << "翻译加载" << (isLoad ? "成功" : "失败");
 #endif
 
     m_proxyInter = proxyInter;
