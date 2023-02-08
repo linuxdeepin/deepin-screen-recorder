@@ -209,11 +209,26 @@ private:
     bool m_haveSystemAudio = false;
     int m_lineflag;
     HintFilter *hintFilter = nullptr;
+    /**
+     * @brief m_optionMenu 截图的选项菜单
+     */
     DMenu *m_optionMenu = nullptr;
     DMenu *m_audioMenu = nullptr;
     DMenu *m_cursorMenu = nullptr;
     DMenu *m_recordOptionMenu = nullptr;
 
+    /**
+     * @brief m_saveToSpecialPathMenu 保存到指定位置的菜单
+     */
+    DMenu *m_saveToSpecialPathMenu = nullptr;
+    /**
+     * @brief m_saveToSpecialPathAction 历史保存路径
+     */
+    QAction *m_saveToSpecialPathAction = nullptr;
+    /**
+     * @brief m_changeSaveToSpecialPath 设置或更新指定位置
+     */
+    QAction *m_changeSaveToSpecialPath = nullptr;
     QButtonGroup *m_recordBtnGroup = nullptr;
     QButtonGroup *m_shotBtnGroup = nullptr;
 
