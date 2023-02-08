@@ -2982,7 +2982,8 @@ bool MainWindow::saveAction(const QPixmap &pix)
         this->hide();
         this->releaseKeyboard();
 
-        QString path = ConfigSettings::instance()->value("common", "default_savepath").toString();
+//        QString path = ConfigSettings::instance()->value("common", "default_savepath").toString();
+        QString path = ConfigSettings::instance()->value("save", "specifiedSavepath").value<QString>();
         QString fileName = selectAreaName;
 
         if (path.isEmpty() || !QDir(path).exists()) {
@@ -2995,36 +2996,53 @@ bool MainWindow::saveAction(const QPixmap &pix)
             fileName = QString("%1_%2_%3").arg(functionTypeStr).arg(selectAreaName).arg(currentTime);
         }
         QString lastFileName;
+        //是否设置或更新指定目录
+        bool isChangeSpecificDir = ConfigSettings::instance()->value("save", "isChangeSpecificDir").value<bool>();
 
         // 自动化测试反馈, dde-desktop里面有2个computer_window. 修改直接调用QFileDialog类的静态函数. 不用创建其对象
         //QFileDialog fileDialog;
         switch (t_pictureFormat) {
         case 0:
             lastFileName    = QString("%1/%2.png").arg(path).arg(fileName);
-            m_saveFileName =  QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
-                                                           tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
+//            m_saveFileName =  QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
+//                                                           tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
+            m_saveFileName = isChangeSpecificDir ?
+                             QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
+                                                          tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)")) : lastFileName;
             break;
         case 1:
             lastFileName    = QString("%1/%2.jpg").arg(path).arg(fileName);
-            m_saveFileName =  QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
-                                                           tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)"));
+//            m_saveFileName =  QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
+//                                                           tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)"));
+            m_saveFileName = isChangeSpecificDir ?
+                             QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
+                                                          tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)")) : lastFileName;
             break;
         case 2:
             lastFileName    = QString("%1/%2.bmp").arg(path).arg(fileName);
-            m_saveFileName =  QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
-                                                           tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)"));
+//            m_saveFileName =  QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
+//                                                           tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)"));
+            m_saveFileName = isChangeSpecificDir ?
+                             QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
+                                                          tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)")) : lastFileName;
             break;
         default:
             lastFileName    = QString("%1/%2.png").arg(path).arg(fileName);
-            m_saveFileName =  QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
-                                                           tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
+//            m_saveFileName =  QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
+//                                                           tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
+            m_saveFileName = isChangeSpecificDir ?
+                             QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
+                                                          tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)")) : lastFileName;
             break;
+        }
+
+        if (isChangeSpecificDir) {
+            ConfigSettings::instance()->setValue("save", "isChangeSpecificDir", false);
         }
 
         if (Utils::isWaylandMode) {
             this->show();
         }
-
 
         if (m_saveFileName.isEmpty() || QFileInfo(m_saveFileName).isDir()) {
             // 保存到指定位置, 用户在选择保存目录时，点击取消。保存失败，且不显示通知信息
@@ -3078,8 +3096,11 @@ bool MainWindow::saveAction(const QPixmap &pix)
 
         qInfo() << __FUNCTION__ << __LINE__ << "保存到指定文件夹！";
         qDebug() << "The fileName is: " << m_saveFileName;
-        ConfigSettings::instance()->setValue("common", "default_savepath",
+//        ConfigSettings::instance()->setValue("common", "default_savepath",
+//                                             QFileInfo(m_saveFileName).dir().absolutePath());
+        ConfigSettings::instance()->setValue("save", "specifiedSavepath",
                                              QFileInfo(m_saveFileName).dir().absolutePath());
+
         break;
     }
     case AutoSave:
@@ -3113,9 +3134,9 @@ bool MainWindow::saveAction(const QPixmap &pix)
         break;
     }
 
-    QString savePath = m_saveIndex == SaveToDesktop ? "desktop" :
-                       (m_saveIndex == SaveToImage ? "image" : (m_saveIndex == SaveToSpecificDir ? "specified directory" : "clipboard"));
-    QString type = t_pictureFormat == 1 ? "jpg" : (t_pictureFormat == 2 ? "bmp" : "png");
+//    QString savePath = m_saveIndex == SaveToDesktop ? "desktop" :
+//                       (m_saveIndex == SaveToImage ? "image" : (m_saveIndex == SaveToSpecificDir ? "specified directory" : "clipboard"));
+//    QString type = t_pictureFormat == 1 ? "jpg" : (t_pictureFormat == 2 ? "bmp" : "png");
 //    QJsonObject obj{
 //        {"tid", EventLogUtils::EndScreenShot},
 //        {"version", QCoreApplication::applicationVersion()},
