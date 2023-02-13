@@ -1267,10 +1267,16 @@ int SubToolWidget::getFuncSubToolX(QString &shape)
 // 屏蔽DMenu，触发QAction Trigger时，收回菜单
 bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched == m_recordOptionMenu || watched == m_optionMenu || watched == m_scrollOptionMenu) {
+    if (watched == m_recordOptionMenu || watched == m_optionMenu || watched == m_scrollOptionMenu || watched == m_saveToSpecialPathMenu || watched == m_scrollSaveToSpecialPathMenu) {
         if (event->type() == QEvent::MouseButtonPress) {
             QAction *action = static_cast<DMenu *>(watched)->actionAt(static_cast<QMouseEvent *>(event)->pos());
             if (action) {
+                if (nullptr != m_saveToSpecialPathMenu && action == m_saveToSpecialPathMenu->menuAction()) {
+                    return QStackedWidget::eventFilter(watched, event);
+                }
+                if (nullptr != m_scrollSaveToSpecialPathMenu && action == m_saveToSpecialPathMenu->menuAction()) {
+                    return QStackedWidget::eventFilter(watched, event);
+                }
                 action->activate(QAction::Trigger);
                 return true;
             }
