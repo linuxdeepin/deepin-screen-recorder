@@ -741,6 +741,36 @@ void SubToolWidget::initShotOption()
     QAction *saveToDesktopAction = new QAction(tr("Desktop"), m_optionMenu);
     QAction *saveToPictureAction = new QAction(tr("Pictures"), m_optionMenu);
     QAction *saveToSpecialPath = new QAction(tr("Folder"), m_optionMenu);
+    m_saveToSpecialPathMenu = new DMenu(m_optionMenu);
+    m_saveToSpecialPathMenu->installEventFilter(this);
+    m_saveToSpecialPathMenu->setTitle(tr("Folder"));
+    m_saveToSpecialPathMenu->setToolTipsVisible(true);
+    m_saveToSpecialPathMenu->menuAction()->setCheckable(true);
+    DFontSizeManager::instance()->bind(m_saveToSpecialPathMenu, DFontSizeManager::T8);
+    QString specialPath = ConfigSettings::instance()->getValue("shot", "save_dir").value<QString>();
+    //设置或更新指定路径的菜单按键
+    m_changeSaveToSpecialPath = new QAction(m_saveToSpecialPathMenu);
+    m_changeSaveToSpecialPath->setCheckable(true);
+    //历史保存路径
+    m_saveToSpecialPathAction = new QAction(m_saveToSpecialPathMenu);
+    if (specialPath.isEmpty()) {
+        qDebug() << "不存在指定路径";
+        m_changeSaveToSpecialPath->setText(tr("Set a path on save"));
+    } else {
+        qDebug() << "存在指定路径: " /*<< specialPath*/;
+        m_changeSaveToSpecialPath->setText(tr("Change the path on save"));
+        //根据字体大小计算字符串宽度，确定路径省略的长度
+        QFontMetrics tempFont(m_changeSaveToSpecialPath->font());
+        auto changeSaveToSpecialPathFontWidth = tempFont.boundingRect(m_changeSaveToSpecialPath->text()).width();
+        QFontMetrics tmpFont(m_saveToSpecialPathAction->font());
+        QString sFileName = tmpFont.elidedText(specialPath, Qt::TextElideMode::ElideRight, changeSaveToSpecialPathFontWidth);
+        m_saveToSpecialPathAction->setText(sFileName);
+        m_saveToSpecialPathAction->setToolTip(specialPath);
+        m_saveToSpecialPathAction->setCheckable(true);
+        m_saveToSpecialPathMenu->addAction(m_saveToSpecialPathAction);
+        t_saveGroup->addAction(m_saveToSpecialPathAction);
+    }
+    m_saveToSpecialPathMenu->addAction(m_changeSaveToSpecialPath);
 
     // 保存格式
     QAction *formatTitleAction = new QAction(tr("Format"), m_optionMenu);
@@ -776,6 +806,7 @@ void SubToolWidget::initShotOption()
     t_saveGroup->addAction(saveToDesktopAction);
     t_saveGroup->addAction(saveToPictureAction);
     t_saveGroup->addAction(saveToSpecialPath);
+    t_saveGroup->addAction(m_changeSaveToSpecialPath);
     t_saveGroup->addAction(saveToClipAction);
 
     formatTitleAction->setDisabled(true);
@@ -798,7 +829,8 @@ void SubToolWidget::initShotOption()
     m_optionMenu->addAction(saveToClipAction);
     m_optionMenu->addAction(saveToDesktopAction);
     m_optionMenu->addAction(saveToPictureAction);
-    m_optionMenu->addAction(saveToSpecialPath);
+    //m_optionMenu->addAction(saveToSpecialPath);
+    m_optionMenu->addMenu(m_saveToSpecialPathMenu);
     //m_optionMenu->addSeparator();
 
     //边框样式
@@ -835,7 +867,15 @@ void SubToolWidget::initShotOption()
         break;
     }
     case SaveToSpecificDir: {
-        saveToSpecialPath->setChecked(true);
+        //saveToSpecialPath->setChecked(true);
+        m_saveToSpecialPathMenu->menuAction()->setChecked(true);
+        bool isChangeSpecificDir = ConfigSettings::instance()->getValue("shot", "save_dir_change").value<bool>();
+        if (specialPath.isEmpty() || isChangeSpecificDir) {
+            m_changeSaveToSpecialPath->setChecked(true);
+            ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
+        } else {
+            m_saveToSpecialPathAction->setChecked(true);
+        }
         break;
     }
     default:
@@ -847,14 +887,27 @@ void SubToolWidget::initShotOption()
     [ = ](QAction * t_act) {
         if (t_act == saveToDesktopAction) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToDesktop);
-            ConfigSettings::instance()->setValue("shot", "save_dir", QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
+            //ConfigSettings::instance()->setValue("shot", "save_dir", QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
+            m_saveToSpecialPathMenu->menuAction()->setChecked(false);
         } else if (t_act == saveToPictureAction) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToImage);
-            ConfigSettings::instance()->setValue("shot", "save_dir", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation));
-        } else if (t_act == saveToSpecialPath) {
-            ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+            //ConfigSettings::instance()->setValue("shot", "save_dir", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation));
+            m_saveToSpecialPathMenu->menuAction()->setChecked(false);
         } else if (t_act == saveToClipAction) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToClipboard);
+            m_saveToSpecialPathMenu->menuAction()->setChecked(false);
+        } else if (t_act == m_changeSaveToSpecialPath) {
+            qDebug() << ">>>>>>>>>>> 设置或更改保存的指定位置";
+            //此流程应是之前保存到指定目录的流程
+            m_saveToSpecialPathMenu->menuAction()->setChecked(true);
+            ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+            ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
+        } else {
+            qDebug() << ">>>>>>>>>>> 保存指定位置";
+            //此流程不是之前的流程，不会再打开文管
+            m_saveToSpecialPathMenu->menuAction()->setChecked(true);
+            ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+            ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
         }
     });
 
@@ -985,7 +1038,37 @@ void SubToolWidget::initScrollLabel()
     QAction *saveToClipAction = new QAction(tr("Clipboard"), m_scrollOptionMenu);
     QAction *saveToDesktopAction = new QAction(tr("Desktop"), m_scrollOptionMenu);
     QAction *saveToPictureAction = new QAction(tr("Pictures"), m_scrollOptionMenu);
-    QAction *saveToSpecialPath = new QAction(tr("Folder"), m_scrollOptionMenu);
+    //QAction *saveToSpecialPath = new QAction(tr("Folder"), m_scrollOptionMenu);
+    m_scrollSaveToSpecialPathMenu = new DMenu(m_scrollOptionMenu);
+    m_scrollSaveToSpecialPathMenu->installEventFilter(this);
+    m_scrollSaveToSpecialPathMenu->setTitle(tr("Folder"));
+    m_scrollSaveToSpecialPathMenu->setToolTipsVisible(true);
+    m_scrollSaveToSpecialPathMenu->menuAction()->setCheckable(true);
+    DFontSizeManager::instance()->bind(m_scrollSaveToSpecialPathMenu, DFontSizeManager::T8);
+    QString specialPath = ConfigSettings::instance()->getValue("shot", "save_dir").value<QString>();
+    //设置或更新指定路径的菜单按键
+    m_scrollChangeSaveToSpecialPath = new QAction(m_scrollSaveToSpecialPathMenu);
+    m_scrollChangeSaveToSpecialPath->setCheckable(true);
+    //历史保存路径
+    m_scrollSaveToSpecialPathAction = new QAction(m_scrollSaveToSpecialPathMenu);
+    if (specialPath.isEmpty()) {
+        qDebug() << "不存在指定路径";
+        m_scrollChangeSaveToSpecialPath->setText(tr("Set a path on save"));
+    } else {
+        qDebug() << "存在指定路径: " /*<< specialPath*/;
+        m_scrollChangeSaveToSpecialPath->setText(tr("Change the path on save"));
+        //根据字体大小计算字符串宽度，确定路径省略的长度
+        QFontMetrics tempFont(m_scrollChangeSaveToSpecialPath->font());
+        auto changeSaveToSpecialPathFontWidth = tempFont.boundingRect(m_scrollChangeSaveToSpecialPath->text()).width();
+        QFontMetrics tmpFont(m_scrollSaveToSpecialPathAction->font());
+        QString sFileName = tmpFont.elidedText(specialPath, Qt::TextElideMode::ElideRight, changeSaveToSpecialPathFontWidth);
+        m_scrollSaveToSpecialPathAction->setText(sFileName);
+        m_scrollSaveToSpecialPathAction->setToolTip(specialPath);
+        m_scrollSaveToSpecialPathAction->setCheckable(true);
+        m_scrollSaveToSpecialPathMenu->addAction(m_scrollSaveToSpecialPathAction);
+        t_saveGroup->addAction(m_scrollSaveToSpecialPathAction);
+    }
+    m_scrollSaveToSpecialPathMenu->addAction(m_scrollChangeSaveToSpecialPath);
 
     // 保存格式
     QAction *formatTitleAction = new QAction(tr("Format"), m_scrollOptionMenu);
@@ -998,7 +1081,8 @@ void SubToolWidget::initScrollLabel()
     m_scrollOptionMenu->addAction(saveToClipAction);
     m_scrollOptionMenu->addAction(saveToDesktopAction);
     m_scrollOptionMenu->addAction(saveToPictureAction);
-    m_scrollOptionMenu->addAction(saveToSpecialPath);
+    //m_scrollOptionMenu->addAction(saveToSpecialPath);
+    m_scrollOptionMenu->addMenu(m_scrollSaveToSpecialPathMenu);
     m_scrollOptionMenu->addSeparator();
 
     //保存格式
@@ -1010,11 +1094,12 @@ void SubToolWidget::initScrollLabel()
     saveTitleAction->setDisabled(true);
     saveToDesktopAction->setCheckable(true);
     saveToPictureAction->setCheckable(true);
-    saveToSpecialPath->setCheckable(true);
+    //saveToSpecialPath->setCheckable(true);
     saveToClipAction->setCheckable(true);
     t_saveGroup->addAction(saveToDesktopAction);
     t_saveGroup->addAction(saveToPictureAction);
-    t_saveGroup->addAction(saveToSpecialPath);
+    //t_saveGroup->addAction(saveToSpecialPath);
+    t_saveGroup->addAction(m_scrollChangeSaveToSpecialPath);
     t_saveGroup->addAction(saveToClipAction);
 
     formatTitleAction->setDisabled(true);
@@ -1040,7 +1125,15 @@ void SubToolWidget::initScrollLabel()
         break;
     }
     case SaveToSpecificDir: {
-        saveToSpecialPath->setChecked(true);
+        //saveToSpecialPath->setChecked(true);
+        m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(true);
+        bool isChangeSpecificDir = ConfigSettings::instance()->getValue("shot", "save_dir_change").value<bool>();
+        if (specialPath.isEmpty() || isChangeSpecificDir) {
+            m_scrollChangeSaveToSpecialPath->setChecked(true);
+            ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
+        } else {
+            m_scrollSaveToSpecialPathAction->setChecked(true);
+        }
         break;
     }
     default:
@@ -1052,14 +1145,29 @@ void SubToolWidget::initScrollLabel()
     [ = ](QAction * t_act) {
         if (t_act == saveToDesktopAction) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToDesktop);
-            ConfigSettings::instance()->setValue("shot", "save_dir", QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
+            //ConfigSettings::instance()->setValue("shot", "save_dir", QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
+            m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(false);
         } else if (t_act == saveToPictureAction) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToImage);
-            ConfigSettings::instance()->setValue("shot", "save_dir", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation));
-        } else if (t_act == saveToSpecialPath) {
+            //ConfigSettings::instance()->setValue("shot", "save_dir", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation));
+            m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(false);
+        }/* else if (t_act == saveToSpecialPath) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
-        } else if (t_act == saveToClipAction) {
+        }*/ else if (t_act == saveToClipAction) {
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToClipboard);
+            m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(false);
+        } else if (t_act == m_scrollChangeSaveToSpecialPath) {
+            qDebug() << ">>>>>>>>>>> 设置或更改保存的指定位置";
+            //此流程应是之前保存到指定目录的流程
+            m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(true);
+            ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+            ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
+        } else {
+            qDebug() << ">>>>>>>>>>> 保存指定位置";
+            //此流程不是之前的流程，不会再打开文管
+            m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(true);
+            ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
+            ConfigSettings::instance()->setValue("shot", "save_dir_change", false);
         }
     });
 
@@ -1159,10 +1267,16 @@ int SubToolWidget::getFuncSubToolX(QString &shape)
 // 屏蔽DMenu，触发QAction Trigger时，收回菜单
 bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched == m_recordOptionMenu || watched == m_optionMenu || watched == m_scrollOptionMenu) {
+    if (watched == m_recordOptionMenu || watched == m_optionMenu || watched == m_scrollOptionMenu || watched == m_saveToSpecialPathMenu || watched == m_scrollSaveToSpecialPathMenu) {
         if (event->type() == QEvent::MouseButtonPress) {
             QAction *action = static_cast<DMenu *>(watched)->actionAt(static_cast<QMouseEvent *>(event)->pos());
             if (action) {
+                if (nullptr != m_saveToSpecialPathMenu && action == m_saveToSpecialPathMenu->menuAction()) {
+                    return QStackedWidget::eventFilter(watched, event);
+                }
+                if (nullptr != m_scrollSaveToSpecialPathMenu && action == m_saveToSpecialPathMenu->menuAction()) {
+                    return QStackedWidget::eventFilter(watched, event);
+                }
                 action->activate(QAction::Trigger);
                 return true;
             }

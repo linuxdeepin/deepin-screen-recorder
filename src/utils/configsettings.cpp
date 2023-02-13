@@ -46,7 +46,9 @@ const QMap<QString, QMap<QString, QVariant>> ConfigSettings::m_defaultConfig = {
     {"effect", {{"isBlur", false}, {"isOval", 0}, {"radius", 0}, {"line_width", 1}}},
     {"text", {{"color_index", 3}, {"fontsize", 0}}},
     // 截图保存选项，格式，保存位置选项
-    {"shot", {{"format", 0}, {"save_op", 0}, {"save_cursor", 0}, {"save_dir", ""}, {"border_index", 0}}},
+    //save_dir: 普通路径
+    //save_dir_change: 指定路径是否需要改变
+    {"shot", {{"format", 0}, {"save_op", 0}, {"save_cursor", 0}, {"save_dir", ""},  {"save_dir_change", false}, {"border_index", 0}}},
     // 录屏保存选项
     // curor 0 不录制鼠标，及不录制鼠标点击,1 录制鼠标,2 录制鼠标点击,3 录制鼠标，及录制鼠标点击,
     // audio 0 不录制任何音频,1 麦克风音频, 2 录制系统音频,3 录制混音,
@@ -66,8 +68,8 @@ void ConfigSettings::setValue(const QString &group, const QString &key, const QV
 {
     if (!m_defaultConfig.contains(group) || !m_defaultConfig[group].contains(key)) {
         qDebug() << __FUNCTION__ << __LINE__ <<
-                      "default config file is not contains group(" << group <<
-                      ") or group is not contains key(" << key << ")";
+                 "default config file is not contains group(" << group <<
+                 ") or group is not contains key(" << key << ")";
         return;
     }
 
@@ -104,8 +106,8 @@ QVariant ConfigSettings::getDefaultValue(const QString &group, const QString &ke
         value.setValue(m_defaultConfig[group][key]);
     } else {
         qWarning() << __FUNCTION__ << __LINE__ <<
-                      "ERROR! config file is not contains group(" << group <<
-                      ") or group is not contains key(" << key << ")";
+                   "ERROR! config file is not contains group(" << group <<
+                   ") or group is not contains key(" << key << ")";
     }
     return  value;
 }
