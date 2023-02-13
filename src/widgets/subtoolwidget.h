@@ -187,6 +187,31 @@ private:
     QAction *m_microphoneAction = nullptr;
     QButtonGroup *m_shotBtnGroup = nullptr;
 
+    /**
+     * @brief m_saveToSpecialPathMenu 截图选项: 保存到指定位置的菜单
+     */
+    DMenu *m_saveToSpecialPathMenu = nullptr;
+    /**
+     * @brief m_saveToSpecialPathAction 截图选项: 历史保存路径
+     */
+    QAction *m_saveToSpecialPathAction = nullptr;
+    /**
+     * @brief m_changeSaveToSpecialPath 截图选项: 设置或更新指定位置
+     */
+    QAction *m_changeSaveToSpecialPath = nullptr;
+
+    /**
+     * @brief m_scrollSaveToSpecialPathMenu 滚动截图选项: 保存到指定位置的菜单
+     */
+    DMenu *m_scrollSaveToSpecialPathMenu = nullptr;
+    /**
+     * @brief m_scrollSaveToSpecialPathAction 滚动截图选项: 历史保存路径
+     */
+    QAction *m_scrollSaveToSpecialPathAction = nullptr;
+    /**
+     * @brief m_scrollChangeSaveToSpecialPath 滚动截图选项: 设置或更新指定位置
+     */
+    QAction *m_scrollChangeSaveToSpecialPath = nullptr;
     MainWindow *m_pMainWindow = nullptr;
 };
 
