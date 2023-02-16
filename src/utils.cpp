@@ -198,7 +198,7 @@ bool Utils::isSysHighVersion1040()
         QString sysVersion = DSysInfo::minorVersion();
         float version = sysVersion.toFloat(&correct);
         qDebug() << "System Version:" << sysVersion << correct << sysVersion.split('.');
-        if (DSysInfo::UosProfessional == DSysInfo::uosEditionType() || DSysInfo::UosEducation == DSysInfo::uosEditionType()) {
+        if (DSysInfo::UosProfessional == DSysInfo::uosEditionType() || DSysInfo::UosEducation == DSysInfo::uosEditionType() || DSysInfo::UosMilitary == DSysInfo::uosEditionType()) {
             const float versionProfessional = 1040;
             if (correct && (version >= versionProfessional)) {
                 return true;
@@ -232,6 +232,7 @@ void Utils::showCurrentSys()
     qInfo() << "EditionName: " << DSysInfo::uosEditionName();
     qInfo() << "ProductTypeName: " << DSysInfo::uosProductTypeName();
     qInfo() << "SystemVersion: " << DSysInfo::minorVersion();
+    qInfo() << "uosEditionType: " << DSysInfo::uosEditionType();
     //qDebug() << "spVersion: " << DSysInfo::spVersion();
     //qDebug() << "udpateVersion: " << DSysInfo::udpateVersion();
     //qDebug() << "majorVersion: " << DSysInfo::majorVersion();
