@@ -1748,13 +1748,17 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
     }
     if (Utils::is3rdInterfaceStart == false) {
         QMimeData *t_imageData = new QMimeData;
-        t_imageData->setImageData(pix);
-        Q_ASSERT(!pix.isNull());
-        QClipboard *cb = qApp->clipboard();
-        qInfo() << __FUNCTION__ << __LINE__ << "将数据传递到剪贴板！";
-        cb->setMimeData(t_imageData, QClipboard::Clipboard);
         // Wayland 等待剪贴板dataChanged信号不可靠，出问题会导致整改系统不可用，评估去掉信号等待 受概率不能保存到剪切板影响，暂时需要还原
         if (Utils::isWaylandMode) {
+            QByteArray bytes;
+            QBuffer buffer(&bytes);
+            buffer.open(QIODevice::WriteOnly);
+            pix.save(&buffer, "PNG");
+            //wayland下只传输一种图片数据到剪切板
+            t_imageData->setData("image/png", bytes);
+            QClipboard *cb = qApp->clipboard();
+            qInfo() << __FUNCTION__ << __LINE__ << "将数据传递到剪贴板！";
+            cb->setMimeData(t_imageData, QClipboard::Clipboard);
             //wayland下添加超时机制，1s后退出事件循环
             //DelayTime *tempTimer = new DelayTime(3000);
             //tempTimer->setForceToExitApp(false);
@@ -1765,8 +1769,8 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             //eventloop.exec();
             //tempTimer->stop();
             //delete tempTimer;
-            time_t endTime = time(nullptr) + 4;
-            qInfo() << __FUNCTION__ << __LINE__ << "开始延时3s等待数据保存到剪切板..." << endTime;
+            time_t endTime = time(nullptr) + 1;
+            qInfo() << __FUNCTION__ << __LINE__ << "开始延时1s等待数据保存到剪切板..." << endTime;
             time_t lastTime = 0;
             while (1) {
                 time_t curTime = time(nullptr);
@@ -1779,7 +1783,12 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
                 }
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
             }
-            qInfo() << __FUNCTION__ << __LINE__ << "3s延时完成" << time(nullptr);
+            qInfo() << __FUNCTION__ << __LINE__ << "1s延时完成" << time(nullptr);
+        } else {
+            t_imageData->setImageData(pix);
+            QClipboard *cb = qApp->clipboard();
+            qInfo() << __FUNCTION__ << __LINE__ << "将数据传递到剪贴板！";
+            cb->setMimeData(t_imageData, QClipboard::Clipboard);
         }
     }
     qInfo() << __FUNCTION__ << __LINE__ << "已保存到剪贴板！";
