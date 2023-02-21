@@ -204,7 +204,7 @@ bool Utils::isSysHighVersion1040()
         bool correct = false;
         QString sysVersion = DSysInfo::minorVersion();
         float version = sysVersion.toFloat(&correct);
-        qDebug() << DSysInfo::uosEditionName() << DSysInfo::uosEditionType() << " System Version:" << sysVersion << correct << sysVersion.split('.');
+        //qDebug() << DSysInfo::uosEditionName() << DSysInfo::uosEditionType() << " System Version:" << sysVersion << correct << sysVersion.split('.');
         if (DSysInfo::UosProfessional == DSysInfo::uosEditionType() || DSysInfo::UosEducation == DSysInfo::uosEditionType()) {
             const float versionProfessional = 1040;
             if (correct && (version >= versionProfessional)) {
@@ -239,10 +239,10 @@ void Utils::showCurrentSys()
     qInfo() << "EditionName: " << DSysInfo::uosEditionName();
     qInfo() << "ProductTypeName: " << DSysInfo::uosProductTypeName();
     qInfo() << "SystemVersion: " << DSysInfo::minorVersion();
-    //qDebug() << "spVersion: " << DSysInfo::spVersion();
-    //qDebug() << "udpateVersion: " << DSysInfo::udpateVersion();
-    //qDebug() << "majorVersion: " << DSysInfo::majorVersion();
-    //qDebug() << "majorVersion: " << DSysInfo::majorVersion();
+    qDebug() << "spVersion: " << DSysInfo::spVersion();
+    qDebug() << "udpateVersion: " << DSysInfo::udpateVersion();
+    qDebug() << "majorVersion: " << DSysInfo::majorVersion();
+    qDebug() << "buildVersion: " << DSysInfo::buildVersion();
 }
 
 void Utils::enableXGrabButton()
