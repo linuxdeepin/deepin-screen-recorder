@@ -226,24 +226,27 @@ void WaylandIntegration::WaylandIntegrationPrivate::bindOutput(int outputName, i
 
 void WaylandIntegration::WaylandIntegrationPrivate::stopStreaming()
 {
+    qInfo() << "正在停止远程数据流...";
     qDebug() << "m_streamingEnabled: " << m_streamingEnabled;
     if (m_streamingEnabled) {
         m_streamingEnabled = false;
 
         // First unbound outputs and destroy remote access manager so we no longer receive buffers
         if (m_remoteAccessManager) {
+#ifdef KWAYLAND_REMOTE_FLAGE_ON
             qDebug() << "正在释放m_remoteAccessManager...";
             //qDebug() << "m_remoteAccessManager->startRecording(0):" << m_remoteAccessManager->startRecording(0);
             qDebug() << "m_remoteAccessManager->startRecording(1):" << m_remoteAccessManager->startRecording(1);
             //m_remoteAccessManager->startRecording(0);
             qDebug() << "正在等待最后一帧释放...";
             QEventLoop loop;
-            connect(this,SIGNAL(lastFrame()),&loop,SLOT(quit()));
+            connect(this, SIGNAL(lastFrame()), &loop, SLOT(quit()));
             loop.exec();
             qDebug() << "最后一帧已释放";
             m_remoteAccessManager->release();
             m_remoteAccessManager->destroy();
             qDebug() << "m_remoteAccessManager已释放";
+#endif
         }
         qDeleteAll(m_bindOutputs);
         m_bindOutputs.clear();
@@ -252,6 +255,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::stopStreaming()
         //            m_stream = nullptr;
         //        }
     }
+    qInfo() << "远程数据流已停止";
 }
 
 QMap<quint32, WaylandIntegration::WaylandOutput> WaylandIntegration::WaylandIntegrationPrivate::screens()
@@ -466,8 +470,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     quint32 width = rbuf->width();
     quint32 height = rbuf->height();
     quint32 stride = rbuf->stride();
-    m_lastFrame = rbuf->frame();
-    qDebug() << "rbuf->frame(): " << rbuf->frame();
     //    if(!bGetFrame())
     //        return;
     if (m_bInitRecordAdmin) {
@@ -516,10 +518,13 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     munmap(mapData, stride * height);
     close(dma_fd);
     qDebug() << ">>>>>> close fd!" << dma_fd;
-    if(m_lastFrame == 0){
-        qDebug() << "是否是最后一帧: " << m_lastFrame;
+#ifdef KWAYLAND_REMOTE_FLAGE_ON
+    qDebug() << "rbuf->frame(): " << rbuf->frame();
+    if (rbuf->frame() == 0) {
+        qDebug() << "是否是最后一帧: " << rbuf->frame();
         emit lastFrame();
     }
+#endif
 }
 
 //根据wayland客户端bufferReady给过来的像素格式，转成QImage的格式
@@ -564,8 +569,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
     quint32 width = rbuf->width();
     quint32 height = rbuf->height();
     quint32 stride = rbuf->stride();
-    m_lastFrame = rbuf->frame();
-    qDebug() << "rbuf->frame(): " << rbuf->frame();
     if (m_bInitRecordAdmin) {
         m_bInitRecordAdmin = false;
         if (Utils::isFFmpegEnv) {
@@ -604,10 +607,13 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
     }
     close(dma_fd);
     qDebug() << ">>>>>> close fd!" << dma_fd;
-    if(m_lastFrame == 0){
-        qDebug() << "是否是最后一帧: " << m_lastFrame;
+#ifdef KWAYLAND_REMOTE_FLAGE_ON
+    qDebug() << "rbuf->frame(): " << rbuf->frame();
+    if (rbuf->frame() == 0) {
+        qDebug() << "是否是最后一帧: " << rbuf->frame();
         emit lastFrame();
     }
+#endif
 }
 //通过线程每30ms钟向数据池中取出一张图片添加到环形缓冲区，以便后续视频编码
 void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
@@ -802,7 +808,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
             qDebug() << "screenGeometry: " << screenGeometry;
             qDebug() << "rbuf->isValid(): " << rbuf->isValid();
             connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf, screenGeometry] {
-                qDebug() << "正在处理buffer..."<< "fd:" << rbuf->fd() << "frame:" <<rbuf->frame();
+                qDebug() << "正在处理buffer..." << "fd:" << rbuf->fd();
                 if (m_boardVendorType)
                 {
                     //arm hw
@@ -812,7 +818,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                     //other
                     processBufferX86(rbuf, screenGeometry);
                 }
-                qDebug() << "buffer已处理"<< "fd:" << rbuf->fd();
+                qDebug() << "buffer已处理" << "fd:" << rbuf->fd();
             });
             qDebug() << "buffer已接收";
         });
