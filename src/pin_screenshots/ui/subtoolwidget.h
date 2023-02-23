@@ -24,7 +24,8 @@ public:
     enum SAVEINFO {
         DESKTOP = 1, //桌面
         PICTURES, //图片
-        FOLDER, //指定位置
+        FOLDER, //指定位置>历史位置
+        FOLDER_CHANGE, //指定位置>设置或更新
         CLIPBOARD, //剪切板
         PNG,
         JPG,
@@ -34,11 +35,16 @@ public:
     QPair<int, int> getSaveInfo();
 public slots:
     void onOptionButtonClicked(); // 选项按钮被点击
+    /**
+     * @brief updateOptionChecked 根据配置文件更新当前选中的选项
+     */
+    void updateOptionChecked();
 signals:
     void signalOcrButtonClicked(); // ocr被点击
     void signalCloseButtonClicked();// 关闭按钮被点击
 protected:
     void initShotLable();
+    void initChangeSaveToSpecialAction(const QString specialPath);
 private:
     /**
      * @brief 贴图功能工具栏
@@ -57,9 +63,35 @@ private:
      */
     DMenu *m_optionMenu;
     /**
+     * @brief m_saveToSpecialPathMenu 保存到指定位置的菜单
+     */
+    DMenu *m_saveToSpecialPathMenu = nullptr;
+    /**
+     * @brief m_saveToSpecialPathAction 历史保存路径
+     */
+    QAction *m_saveToSpecialPathAction = nullptr;
+    /**
+     * @brief m_changeSaveToSpecialPath 设置或更新指定位置
+     */
+    QAction *m_changeSaveToSpecialPath = nullptr;
+    /**
      * @brief 当前保存信息
      */
     QPair<int, int> m_SaveInfo;
+
+    /**
+     * @brief m_SavePathActions 保存路径的QAction
+     */
+    QMap<int, QAction *> m_SavePathActions;
+    /**
+     * @brief m_SaveFormatActions 保存格式的QAction
+     */
+    QMap<int, QAction *> m_SaveFormatActions;
+
+    /**
+     * @brief m_saveGroup 保存路径的QAction组
+     */
+    QActionGroup *m_saveGroup = nullptr;
 };
 
 #endif // SUBTOOLWIDGET_H

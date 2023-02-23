@@ -18,7 +18,7 @@
 ConfigSettings::ConfigSettings(QObject *parent)
     : QObject(parent)
 {
-    m_settings = new QSettings("deepin", "deepin-screen-recorder");
+    m_settings = new QSettings("deepin/deepin-screen-recorder", "deepin-screen-recorder");
     setValue("effect", "is_blur", false);
     setValue("effect", "is_mosaic", false);
     // 日志隐私，配置文件路径会打印用户名，安全问题。

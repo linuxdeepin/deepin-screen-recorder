@@ -5,6 +5,7 @@
 
 #include "mainwindow.h"
 #include "putils.h"
+#include "settings.h"
 
 #include <QDebug>
 #include <QDBusInterface>
@@ -137,6 +138,7 @@ void MainWindow::saveImg()
     m_saveInfo = m_toolBar->getSaveInfo(); // 获取保存信息
 
     if (m_saveInfo.first == SubToolWidget::DESKTOP) {
+        qDebug() << "保存到桌面";
         QString savePath = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
         QString formatStr;
         if (m_saveInfo.second == SubToolWidget::PNG) {
@@ -148,7 +150,7 @@ void MainWindow::saveImg()
         }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
     } else if (m_saveInfo.first == SubToolWidget::PICTURES) {
-        qDebug() << "save to picture";
+        qDebug() << "保存到图片";
         QString savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first() + QDir::separator() + "Screenshots";
         if ((!QDir(savePath).exists() && QDir().mkdir(savePath) == false) ||  // 文件不存在，且创建失败
                 (QDir(savePath).exists() && !QFileInfo(savePath).isWritable())) {  // 文件存在，且不能写
@@ -163,9 +165,9 @@ void MainWindow::saveImg()
             formatStr = QString("bmp");
         }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
-    } else if (m_saveInfo.first == SubToolWidget::FOLDER) {
+    } else if (m_saveInfo.first == SubToolWidget::FOLDER_CHANGE) {
         m_toolBar->setHiden();
-        qDebug() << "save to path";
+        qDebug() << "保存到指定位置";
         QString imgName, saveFileName;
         if (m_saveInfo.second == SubToolWidget::PNG) {
             imgName = QString("%1.png").arg(m_imageName);
@@ -185,11 +187,27 @@ void MainWindow::saveImg()
             return;
         }
         qDebug() << "saveFileName" << saveFileName;
+        qDebug() << "dir: " << QFileInfo(saveFileName).path();
         m_lastImagePath = saveFileName;
+        Settings::instance()->setSavePath(QFileInfo(saveFileName).path());
+    } else if (m_saveInfo.first == SubToolWidget::FOLDER) {
+        QString savePath = Settings::instance()->getSavePath();
+        qDebug() << "保存到历史路径" << savePath;
+        QString formatStr;
+        if (m_saveInfo.second == SubToolWidget::PNG) {
+            formatStr = QString("png");
+        } else if (m_saveInfo.second == SubToolWidget::JPG) {
+            formatStr = QString("jpg");
+        } else if (m_saveInfo.second == SubToolWidget::BMP) {
+            formatStr = QString("bmp");
+        }
+        m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
     } else if (m_saveInfo.first == SubToolWidget::CLIPBOARD) {
-        qDebug() << "save to clip";
+        qDebug() << "保存到剪切板";
         m_lastImagePath = "";
     }
+    //每次保存时重设isChangeSavePath
+    Settings::instance()->setIsChangeSavePath(false);
 
     bool isSaveState = true;
     if (m_saveInfo.first != SubToolWidget::CLIPBOARD) {
@@ -653,7 +671,7 @@ void MainWindow::updateToolBarPosition()
 
     if (x < 0) {
         x = 0;
-    } else if(x + m_toolBar->toolBarWidth() > m_screenSize.width()) {
+    } else if (x + m_toolBar->toolBarWidth() > m_screenSize.width()) {
         x = m_screenSize.width() - m_toolBar->toolBarWidth();
     }
     m_toolBar->showAt(QPoint(x, y), m_isfirstTime);
