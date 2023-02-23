@@ -42,3 +42,23 @@ QPair<int, int> Settings::getSaveOption()
     pair.second = m_settings->value("saveFormat").toInt();
     return pair;
 }
+
+void Settings::setSavePath(const QString savePathDir)
+{
+    m_settings->setValue("savePathDir", savePathDir);
+}
+
+QString Settings::getSavePath()
+{
+    return m_settings->value("savePathDir").toString();
+}
+
+void Settings::setIsChangeSavePath(const bool isChange)
+{
+    m_settings->setValue("isChangeSavePath", isChange);
+}
+
+bool Settings::getIsChangeSavePath()
+{
+    return m_settings->value("isChangeSavePath").toBool();
+}
