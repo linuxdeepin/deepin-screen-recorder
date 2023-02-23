@@ -252,6 +252,8 @@ void MainWindow::onSave()
 // 退出
 void MainWindow::onExit()
 {
+    //每次关闭贴图时重设isChangeSavePath
+    Settings::instance()->setIsChangeSavePath(false);
     qDebug() << "func: " << __func__ ;
     m_toolBar->close();
     this->close();
