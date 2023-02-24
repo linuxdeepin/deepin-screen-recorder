@@ -168,26 +168,30 @@ void MainWindow::saveImg()
     } else if (m_saveInfo.first == SubToolWidget::FOLDER_CHANGE) {
         m_toolBar->setHiden();
         qDebug() << "保存到指定位置";
-        QString imgName, saveFileName;
+        QString saveFileName;
+        QString imgName = Settings::instance()->getSavePath();
+        if (!imgName.isEmpty()) {
+            imgName += "/";
+        }
         if (m_saveInfo.second == SubToolWidget::PNG) {
-            imgName = QString("%1.png").arg(m_imageName);
+            imgName += QString("%1.png").arg(m_imageName);
             saveFileName = QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
                                                         tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
         } else if (m_saveInfo.second == SubToolWidget::JPG) {
-            imgName = QString("%1.jpg").arg(m_imageName);
+            imgName += QString("%1.jpg").arg(m_imageName);
             saveFileName = QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
                                                         tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)"));
         } else if (m_saveInfo.second == SubToolWidget::BMP) {
-            imgName = QString("%1.bmp").arg(m_imageName);
+            imgName += QString("%1.bmp").arg(m_imageName);
             saveFileName = QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
                                                         tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)"));
         }
         if (saveFileName.isEmpty()) {
+            qWarning() << "指定路径为空！";
             onExit();
             return;
         }
         qDebug() << "saveFileName" << saveFileName;
-        qDebug() << "dir: " << QFileInfo(saveFileName).path();
         m_lastImagePath = saveFileName;
         Settings::instance()->setSavePath(QFileInfo(saveFileName).path());
     } else if (m_saveInfo.first == SubToolWidget::FOLDER) {
