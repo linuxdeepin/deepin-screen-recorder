@@ -32,13 +32,19 @@ public:
     QString getDefaultValue(const QString type);
 
     QPixmap iconPixMap(QIcon icon, QSize size);
+    /**
+     * @brief start:开始计时
+     */
+    void start();
+
+    /**
+     * @brief stop:停止计时
+     */
+    void stop();
 protected:
     void paintEvent(QPaintEvent *e) override;
-    void mousePressEvent(QMouseEvent *event) override;
-    void mouseReleaseEvent(QMouseEvent *event) override;
-    void mouseMoveEvent(QMouseEvent *event) override;
-    void leaveEvent(QEvent *event) override;
-
+protected slots:
+    void onTimeout();
 private:
     const QPixmap loadSvg(const QString &fileName, const QSize &size) const;
 
@@ -49,6 +55,10 @@ private:
     QIcon m_icon;
     QPixmap *m_blgPixmap;
     QBoxLayout *centralLayout;
+
+    QTimer *m_timer;
+    QTime m_baseTime;
+    QString m_showTimeStr;
 };
 
 #endif // TIMEWIDGET_H
