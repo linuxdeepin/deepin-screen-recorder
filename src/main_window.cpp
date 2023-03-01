@@ -2641,6 +2641,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     if (!succeed) {
         DBusNotify saveFailedNotify;
         QString tips = QString(tr("Save failed. Please save it in your home directory."));
+        ConfigSettings::instance()->setValue("shot", "save_dir", "");
         saveFailedNotify.Notify(QCoreApplication::applicationName(), 0, "deepin-screen-recorder", QString(), tips, QStringList(), QVariantMap(), 5000);
         exitApp();
         return;
