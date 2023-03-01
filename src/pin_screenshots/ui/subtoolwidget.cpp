@@ -8,6 +8,7 @@
 #include "settings.h"
 
 #include <QActionGroup>
+#include <QFileInfo>
 #include <DFontSizeManager>
 
 #define THEMETYPE 1 // 主题颜色为浅色
@@ -76,7 +77,7 @@ void SubToolWidget::initShotLable()
     m_saveToSpecialPathMenu->addAction(m_changeSaveToSpecialPath);
     //历史保存路径
     m_saveToSpecialPathAction = new QAction(m_saveToSpecialPathMenu);
-    if (specialPath.isEmpty()) {
+    if (specialPath.isEmpty() || !QFileInfo::exists(specialPath)) {
         qDebug() << "不存在指定路径";
         m_changeSaveToSpecialPath->setText(tr("Set a path on save"));
     } else {
@@ -241,7 +242,7 @@ void SubToolWidget::updateOptionChecked()
         m_saveToSpecialPathMenu->menuAction()->setChecked(true);
         QString specialPath = Settings::instance()->getSavePath();
         //判断是否存在历史路径
-        if (specialPath.isEmpty()) {
+        if (specialPath.isEmpty() || !QFileInfo::exists(specialPath)) {
             m_SaveInfo.first = FOLDER_CHANGE;
         } else {
             m_SaveInfo.first = FOLDER;
