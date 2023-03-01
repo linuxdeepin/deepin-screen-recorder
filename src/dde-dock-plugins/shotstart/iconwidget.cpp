@@ -140,8 +140,31 @@ QString IconWidget::getDefaultValue(const QString type)
     return retShortcut;
 }
 
+QPixmap IconWidget::iconPixMap(QIcon icon, QSize size)
+{
+    QPixmap pixmap;
+    const auto ratio = devicePixelRatioF();
+    qDebug() << "获取缩放比例：" << ratio;
+    QSize pixmapSize = QCoreApplication::testAttribute(Qt::AA_UseHighDpiPixmaps)? size:(size*ratio);
+    qDebug() << "获取图标大小：" << pixmapSize;
+    if(!icon.isNull()){
+        pixmap = icon.pixmap(pixmapSize);
+        pixmap.setDevicePixelRatio(ratio);
+        if(!pixmap.isNull()){
+            pixmap = pixmap.scaled(size * ratio);
+        }else{
+            qWarning() << "pixmap is null!";
+        }
+    }else{
+        qWarning() << "icon is null!";
+    }
+    return  pixmap;
+}
+
+
 void IconWidget::paintEvent(QPaintEvent *e)
 {
+    qInfo() << ">>>>>>>>>>>>>>>>>>>>>>> " << __FUNCTION__ << __LINE__;
     QPainter painter(this);
 
     QPixmap pixmap;
@@ -152,6 +175,7 @@ void IconWidget::paintEvent(QPaintEvent *e)
     int iconSize = PLUGIN_ICON_MAX_SIZE;
 
     if (rect().height() > PLUGIN_BACKGROUND_MIN_SIZE) {
+
         QColor color;
         if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
             color = Qt::black;
