@@ -32,6 +32,9 @@ IconWidget::IconWidget(QWidget *parent):
 
     QString iconName("screen-capture");
     m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
+
+    m_timer = new QTimer(this);
+    m_showTimeStr = tr("Screen Capture");
 }
 
 bool IconWidget::enabled()
@@ -148,103 +151,59 @@ QPixmap IconWidget::iconPixMap(QIcon icon, QSize size)
     }
     return  pixmap;
 }
+void IconWidget::start()
+{
+    m_showTimeStr = QString("00:00:00");
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
+    m_baseTime = QTime::currentTime();
+    m_timer->start(400);
+}
 
-
+void IconWidget::stop()
+{
+    disconnect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
+    m_showTimeStr = tr("Screen Capture");
+}
+void IconWidget::onTimeout()
+{
+    QTime showTime(0, 0, 0);
+    int time = m_baseTime.secsTo(QTime::currentTime());
+    showTime = showTime.addSecs(time);
+    m_showTimeStr = showTime.toString("hh:mm:ss");
+    qInfo() << __FUNCTION__ << __LINE__ << ">>>>>> m_showTimeStr: " << m_showTimeStr;
+    update();
+}
 void IconWidget::paintEvent(QPaintEvent *e)
 {
+    qInfo() << ">>>>>>>>>>>>>>>>>>>>>>> " << __FUNCTION__ << __LINE__;
     QPainter painter(this);
 
     QPixmap pixmap;
-    QString iconName = "screen-capture";
-    int iconSize = PLUGIN_ICON_MAX_SIZE;
-
-    if (rect().height() > PLUGIN_BACKGROUND_MIN_SIZE) {
-
-        QColor color;
-        if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
-            color = Qt::black;
-            painter.setOpacity(0.5);
-
-            if (m_hover) {
-                painter.setOpacity(0.6);
-            }
-
-            if (m_pressed) {
-                painter.setOpacity(0.3);
-            }
-        } else {
-            color = Qt::white;
-            painter.setOpacity(0.1);
-
-            if (m_hover) {
-                painter.setOpacity(0.2);
-            }
-
-            if (m_pressed) {
-                painter.setOpacity(0.05);
-            }
-        }
-
-        painter.setRenderHint(QPainter::Antialiasing, true);
-
-        DStyleHelper dstyle(style());
-        const int radius = dstyle.pixelMetric(DStyle::PM_FrameRadius);
-
-        QPainterPath path;
-
-        int minSize = std::min(width(), height());
-        QRect rc(0, 0, minSize, minSize);
-        rc.moveTo(rect().center() - rc.center());
-
-        path.addRoundedRect(rc, radius, radius);
-        painter.fillPath(path, color);
-    } else if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
-        // 最小尺寸时，不画背景，采用深色图标
-        iconName.append(PLUGIN_MIN_ICON_NAME);
+    QString iconName = "icon-shot";
+    if(m_showTimeStr != tr("Screen Capture")){
+        iconName = "icon-recorder";
     }
+    int iconSize = PLUGIN_ICON_MAX_SIZE + 5;
 
     painter.setOpacity(1);
 
     m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
     pixmap = loadSvg(iconName, QSize(iconSize, iconSize));
+    const QRectF &rf = QRectF(rect().x(),rect().y(),rect().width(),rect().height()*0.75);
+    QPointF point = rf.center()-pixmap.rect().center();
+    //绘制图标
+    painter.drawPixmap(point.x(),point.y(), pixmap);
+    const QRectF &trf = QRectF(rect().x(),rect().y()+rect().height()*0.65,rect().width(),rect().height()*0.25);
+    QFont font = painter.font() ;
+    font.setPointSize(8);
+    painter.setFont(font);
+    painter.setOpacity(0.7);
+    painter.setPen(QPen(QGuiApplication::palette().color(QPalette::BrightText)));
 
-    const QRectF &rf = QRectF(rect());
-    const QRectF &rfp = QRectF(pixmap.rect());
-    painter.drawPixmap(rf.center() - rfp.center() / pixmap.devicePixelRatioF(), pixmap);
+    //绘制文字
+    painter.drawText(trf, Qt::AlignBottom | Qt::AlignCenter, m_showTimeStr);
 
     QWidget::paintEvent(e);
-}
-
-void IconWidget::mousePressEvent(QMouseEvent *event)
-{
-    m_pressed = true;
-    update();
-
-    QWidget::mousePressEvent(event);
-}
-
-void IconWidget::mouseReleaseEvent(QMouseEvent *event)
-{
-    m_pressed = false;
-    m_hover = false;
-    update();
-
-    QWidget::mouseReleaseEvent(event);
-}
-
-void IconWidget::mouseMoveEvent(QMouseEvent *event)
-{
-    m_hover = true;
-    QWidget::mouseMoveEvent(event);
-}
-
-void IconWidget::leaveEvent(QEvent *event)
-{
-    m_hover = false;
-    m_pressed = false;
-    update();
-
-    QWidget::leaveEvent(event);
 }
 
 const QPixmap IconWidget::loadSvg(const QString &fileName, const QSize &size) const

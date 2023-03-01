@@ -24,12 +24,6 @@ const QString ShotStartPlugin::pluginName() const
 
 const QString ShotStartPlugin::pluginDisplayName() const
 {
-    if (m_isRecording) {
-        QTime showTime(0, 0, 0);
-        int time = m_baseTime.secsTo(QTime::currentTime());
-        showTime = showTime.addSecs(time);
-        return showTime.toString("hh:mm:ss");
-    }
     return tr("Screen Capture");
 }
 
@@ -70,14 +64,6 @@ QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::Col
     static QIcon shot(":/res/icon-shot.svg");
     static QIcon recorder(":/res/icon-recorder.svg");
     if (DockPart::QuickShow == dockPart) {
-        if (themeType ==  DGuiApplicationHelper::ColorType::LightType) {
-            //return m_iconWidget->iconPixMap("screen-capture-dark", QSize(24, 24));
-            return icon_dark;
-        } else {
-            //return m_iconWidget->iconPixMap("screen-capture", QSize(24, 24));
-            return icon;
-        }
-    } else if (DockPart::QuickPanel == dockPart) {
         qInfo() << "是否正在录屏:" << m_isRecording;
         if (m_isRecording) {
             qInfo() << "显示录屏图标..." << m_iconWidget.isNull();
@@ -112,6 +98,8 @@ QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::Col
                 }
             }
         }
+    }else if(DockPart::QuickPanel == dockPart){
+        return QIcon();
     }
     return icon;
 }
@@ -123,9 +111,10 @@ PluginFlags ShotStartPlugin::flags() const
 
 QWidget *ShotStartPlugin::itemWidget(const QString &itemKey)
 {
-    if (itemKey != ShotShartPlugin) return nullptr;
-
-    return m_iconWidget.data();
+    if(itemKey == QUICK_ITEM_KEY){
+        return m_iconWidget.data();
+    }
+    return nullptr;
 }
 
 QWidget *ShotStartPlugin::itemTipsWidget(const QString &itemKey)
@@ -189,6 +178,7 @@ bool ShotStartPlugin::onStart()
     qInfo() << "开始录屏。。。。。。" << m_isRecording;
     m_baseTime = QTime::currentTime();
     m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
+    m_iconWidget->start();
     return true;
 }
 
@@ -197,6 +187,7 @@ void ShotStartPlugin::onStop()
     m_isRecording = false;
     qInfo() << "结束录屏。。。。。。" << m_isRecording;
     m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
+    m_iconWidget->stop();
 }
 
 void ShotStartPlugin::onRecording()
