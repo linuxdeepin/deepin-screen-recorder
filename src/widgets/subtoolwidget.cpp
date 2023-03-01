@@ -861,7 +861,7 @@ void SubToolWidget::initShotLabel()
     m_changeSaveToSpecialPath->setCheckable(true);
     //历史保存路径
     m_saveToSpecialPathAction = new QAction(m_saveToSpecialPathMenu);
-    if (specialPath.isEmpty()) {
+    if (specialPath.isEmpty() || !QFileInfo::exists(specialPath)) {
         qDebug() << "不存在指定路径";
         m_changeSaveToSpecialPath->setText(tr("Set a path on save"));
     } else {
@@ -975,7 +975,7 @@ void SubToolWidget::initShotLabel()
         m_saveToSpecialPathMenu->menuAction()->setChecked(true);
         //saveToSpecialPath->setChecked(true);
         bool isChangeSpecificDir = ConfigSettings::instance()->value("save", "isChangeSpecificDir").value<bool>();
-        if (specialPath.isEmpty() || isChangeSpecificDir) {
+        if (specialPath.isEmpty() || isChangeSpecificDir || !QFileInfo::exists(specialPath)) {
             m_changeSaveToSpecialPath->setChecked(true);
             ConfigSettings::instance()->setValue("save", "isChangeSpecificDir", true);
         } else {

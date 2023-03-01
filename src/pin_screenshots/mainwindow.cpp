@@ -614,6 +614,7 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
     if (!bSaveState) {
         qDebug() << __FUNCTION__;
         QString tips = QString(tr("Save failed. Please save it in your home directory."));
+        Settings::instance()->setSavePath("");
         QList<QVariant> arg;
         unsigned int id = 0;
         int timeout = -1;
