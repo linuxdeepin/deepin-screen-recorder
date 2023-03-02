@@ -59,11 +59,13 @@ void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
 
 QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::ColorType themeType)
 {
-    static QIcon icon(":/res/screen-capture-dark.svg");
-    static QIcon icon_dark(":/res/screen-capture-dark.svg");
-    static QIcon shot(":/res/icon-shot.svg");
-    static QIcon recorder(":/res/icon-recorder.svg");
-    if (DockPart::QuickShow == dockPart) {
+    QString shotIconName = "screenshot";
+    if(themeType == DGuiApplicationHelper::ColorType::DarkType){
+        shotIconName = "screenshot_dark";
+    }
+    QIcon shot(QString(":/res/%1.svg").arg(shotIconName));
+    QIcon recorder(":/res/screen-recording.svg");
+    if (DockPart::QuickShow == dockPart || DockPart::DCCSetting == dockPart) {
         qInfo() << "是否正在录屏:" << m_isRecording;
         if (m_isRecording) {
             qInfo() << "显示录屏图标..." << m_iconWidget.isNull();
@@ -88,7 +90,7 @@ QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::Col
                 return shot;
             } else {
                 QPixmap pixmap;
-                pixmap = m_iconWidget->iconPixMap(shot, QSize(24, 24));
+                pixmap = m_iconWidget->iconPixMap(shot, QSize(20, 20));
                 if (pixmap.isNull()) {
                     qDebug() << "截图图标已显示(pixmap is null >> icon)";
                     return shot;
@@ -101,12 +103,12 @@ QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::Col
     }else if(DockPart::QuickPanel == dockPart){
         return QIcon();
     }
-    return icon;
+    return shot;
 }
 
 PluginFlags ShotStartPlugin::flags() const
 {
-    return  Type_Common | Quick_Single | Attribute_ForceDock | Attribute_CanSetting;
+    return  Type_Common | Quick_Single | Attribute_CanSetting | Attribute_CanDrag | Attribute_CanInsert;
 }
 
 QWidget *ShotStartPlugin::itemWidget(const QString &itemKey)
@@ -127,12 +129,14 @@ QWidget *ShotStartPlugin::itemTipsWidget(const QString &itemKey)
 
 int ShotStartPlugin::itemSortKey(const QString &itemKey)
 {
+    qInfo() << "================= itemKey: " << itemKey;
     const QString key = QString("pos_%1_%2").arg(itemKey).arg(Dock::Efficient);
     return m_proxyInter->getValue(this, key, 1).toInt();
 }
 
 void ShotStartPlugin::setSortKey(const QString &itemKey, const int order)
 {
+    qInfo() << "================= order: " << order << "itemKey: " << itemKey;
     const QString key = QString("pos_%1_%2").arg(itemKey).arg(Dock::Efficient);
     m_proxyInter->saveValue(this, key, order);
 }

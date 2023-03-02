@@ -30,7 +30,7 @@ IconWidget::IconWidget(QWidget *parent):
     setMouseTracking(true);
     setMinimumSize(PLUGIN_BACKGROUND_MIN_SIZE, PLUGIN_BACKGROUND_MIN_SIZE);
 
-    QString iconName("screen-capture");
+    QString iconName("screenshot");
     m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
 
     m_timer = new QTimer(this);
@@ -179,27 +179,31 @@ void IconWidget::paintEvent(QPaintEvent *e)
     QPainter painter(this);
 
     QPixmap pixmap;
-    QString iconName = "icon-shot";
+    QString iconName = "screenshot";
     if(m_showTimeStr != tr("Screen Capture")){
-        iconName = "icon-recorder";
+        iconName = "screen-recording";
     }
-    int iconSize = PLUGIN_ICON_MAX_SIZE + 5;
+    if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::DarkType) {
+        iconName = "screenshot_dark";
+    }
+    int iconSize = PLUGIN_ICON_MAX_SIZE + 4;
 
     painter.setOpacity(1);
 
     m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
-    pixmap = loadSvg(iconName, QSize(iconSize, iconSize));
+    pixmap = iconPixMap(m_icon, QSize(iconSize, iconSize));
+    const auto ratio = devicePixelRatioF();
     const QRectF &rf = QRectF(rect().x(),rect().y(),rect().width(),rect().height()*0.75);
     QPointF point = rf.center()-pixmap.rect().center();
     //绘制图标
     painter.drawPixmap(point.x(),point.y(), pixmap);
+
     const QRectF &trf = QRectF(rect().x(),rect().y()+rect().height()*0.65,rect().width(),rect().height()*0.25);
     QFont font = painter.font() ;
     font.setPointSize(8);
     painter.setFont(font);
     painter.setOpacity(0.7);
     painter.setPen(QPen(QGuiApplication::palette().color(QPalette::BrightText)));
-
     //绘制文字
     painter.drawText(trf, Qt::AlignBottom | Qt::AlignCenter, m_showTimeStr);
 
