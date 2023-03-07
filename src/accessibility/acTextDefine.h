@@ -29,6 +29,7 @@
 #define AC_SUBTOOLWIDGET_KEYBOARD_BUTTON "keyboard_button"// 录屏 显示按键按钮
 #define AC_SUBTOOLWIDGET_CAMERA_BUTTON "camera_button"//录屏 摄像头按钮
 #define AC_SUBTOOLWIDGET_MOUSE_BUTTON "mouse_button"//录屏 显示鼠标按钮
+#define AC_SUBTOOLWIDGET_SHOT_BUTTON "shot_button"//录屏 截图按钮
 #define AC_SUBTOOLWIDGET_RECORD_OPTION_BUT "record_option_but" //录屏选项按钮
 
 #define AC_SUBTOOLWIDGET_PINSCREENSHOTS_BUTTON "pinscreenshots_button"// 截图 贴图工具按钮
@@ -38,7 +39,10 @@
 #define AC_SUBTOOLWIDGET_CIRCL_BUTTON "circl_button"//截图 椭圆工具按钮
 #define AC_SUBTOOLWIDGET_LINE_BUTTON "line_button"// 截图 直线按钮
 #define AC_SUBTOOLWIDGET_PEN_BUTTON "pen_button"// 截图 画笔按钮
+#define AC_SUBTOOLWIDGET_MOSAIC_BUTTON "mosaic_button"// 截图 模糊按钮
 #define AC_SUBTOOLWIDGET_TEXT_BUTTON "text_button"// 截图文本按钮
+#define AC_SUBTOOLWIDGET_UNDO_BUTTON "undo_button"// 截图撤销按钮
+#define AC_SUBTOOLWIDGET_RECORDER_BUTTON "recorder_button"// 截图 录屏按钮
 #define AC_SUBTOOLWIDGET_SHOT_OPTION_BUT "shot_option_but" // 截图 选项按钮
 
 
