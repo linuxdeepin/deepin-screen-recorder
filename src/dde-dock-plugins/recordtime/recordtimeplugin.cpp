@@ -85,7 +85,7 @@ void RecordTimePlugin::clear()
 
 PluginFlags RecordTimePlugin::flags() const
 {
-    return  Type_Common | Attribute_ForceDock | Attribute_CanInsert;
+    return  Type_Common | Attribute_CanInsert;
 }
 
 PluginsItemInterface::PluginSizePolicy RecordTimePlugin::pluginSizePolicy() const
