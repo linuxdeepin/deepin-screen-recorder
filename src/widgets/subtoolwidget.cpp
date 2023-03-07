@@ -110,7 +110,7 @@ void SubToolWidget::initRecordLabel()
 
     m_shotButton = new ToolButton();
     m_shotButton->setCheckable(false);
-    Utils::setAccessibility(m_shotButton, AC_SUBTOOLWIDGET_CAMERA_BUTTON);
+    Utils::setAccessibility(m_shotButton, AC_SUBTOOLWIDGET_SHOT_BUTTON);
     m_shotButton->setIconSize(TOOL_ICON_SIZE);
     installTipHint(m_shotButton, tr("Screenshot"));
     m_shotButton->setIcon(QIcon::fromTheme("shot"));
@@ -118,7 +118,9 @@ void SubToolWidget::initRecordLabel()
     btnList.append(m_shotButton);
     connect(m_shotButton, &DPushButton::clicked, this, [ = ] {
         m_pMainWindow->getToolBarPoint();
+        qInfo() << "shotbutton is clicked";
         switchContent("shot");
+        qInfo() << "emit changeShotToolFunc(shot)";
         emit changeShotToolFunc("shot");
     });
 
@@ -546,7 +548,7 @@ void SubToolWidget::initShotLabel()
     m_mosaicButton->setIconSize(TOOL_ICON_SIZE);
     installTipHint(m_mosaicButton, tr("Blur (B)"));
     m_mosaicButton->setIcon(QIcon::fromTheme("Mosaic_normal"));
-    Utils::setAccessibility(m_mosaicButton, AC_SUBTOOLWIDGET_PEN_BUTTON);
+    Utils::setAccessibility(m_mosaicButton, AC_SUBTOOLWIDGET_MOSAIC_BUTTON);
     m_shotBtnGroup->addButton(m_mosaicButton);
     m_mosaicButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(m_mosaicButton);
@@ -604,7 +606,7 @@ void SubToolWidget::initShotLabel()
     m_cancelButton->setCheckable(false);
     m_cancelButton->setIconSize(TOOL_ICON_SIZE);
     m_cancelButton->setIcon(QIcon::fromTheme("cancel"));
-    Utils::setAccessibility(m_cancelButton, AC_SUBTOOLWIDGET_PINSCREENSHOTS_BUTTON);
+    Utils::setAccessibility(m_cancelButton, AC_SUBTOOLWIDGET_UNDO_BUTTON);
     m_cancelButton->setFixedSize(TOOL_BUTTON_SIZE);
     installTipHint(m_cancelButton, tr("Undo (Ctrl+Z)"));
     btnList.append(m_cancelButton);
@@ -620,7 +622,7 @@ void SubToolWidget::initShotLabel()
     m_recorderButton->setCheckable(false);
     m_recorderButton->setIconSize(TOOL_ICON_SIZE);
     m_recorderButton->setIcon(QIcon::fromTheme("recorder"));
-    Utils::setAccessibility(m_recorderButton, AC_SUBTOOLWIDGET_PINSCREENSHOTS_BUTTON);
+    Utils::setAccessibility(m_recorderButton, AC_SUBTOOLWIDGET_RECORDER_BUTTON);
     m_recorderButton->setFixedSize(TOOL_BUTTON_SIZE);
     installTipHint(m_recorderButton, tr("Record"));
     btnList.append(m_recorderButton);
@@ -1293,7 +1295,7 @@ bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
 
 void SubToolWidget::switchContent(QString shapeType)
 {
-    qDebug() << __FUNCTION__ << __LINE__ << "切换截图或者录屏工具栏" ;
+    qDebug() << __FUNCTION__ << __LINE__ << "切换截图或者录屏工具栏" << shapeType << QCursor().pos() << this->count();
     if (shapeType == "record") {
         this->addWidget(m_recordSubTool);
         this->removeWidget(m_shotSubTool);
@@ -1312,6 +1314,7 @@ void SubToolWidget::switchContent(QString shapeType)
         setCurrentWidget(m_scrollSubTool);
         m_currentType = shapeType;
     }
+    qDebug() << __FUNCTION__ << __LINE__ << "已切换工具栏" << shapeType << this->count();
 }
 void SubToolWidget::setRecordButtonDisable()
 {
