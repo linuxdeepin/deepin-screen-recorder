@@ -108,7 +108,13 @@ QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::Col
 
 PluginFlags ShotStartPlugin::flags() const
 {
-    return  Type_Common | Quick_Single | Attribute_CanSetting | Attribute_CanDrag | Attribute_CanInsert;
+    if(m_isRecording){
+        qInfo() << ">>>>>>>>>>>>>>>> flags() 正在录屏" ;
+        return  Type_Common | Quick_Single | Attribute_CanSetting | Attribute_CanDrag | Attribute_CanInsert | Attribute_ForceDock;
+    }else{
+        qInfo() << ">>>>>>>>>>>>>>>> flags() 没有录屏" ;
+        return  Type_Common | Quick_Single | Attribute_CanSetting | Attribute_CanDrag | Attribute_CanInsert;
+    }
 }
 
 QWidget *ShotStartPlugin::itemWidget(const QString &itemKey)
