@@ -2827,7 +2827,7 @@ void MainWindow::getToolBarPoint()
 // 切换截图功能或者录屏功能
 void MainWindow::changeFunctionButton(QString type)
 {
-    qDebug() << "切换截图功能或者录屏功能";
+    qInfo() << "切换截图功能或者录屏功能" << type;
     if (type == "record") {
         if (status::record == m_functionType) {
             return;
@@ -2838,7 +2838,7 @@ void MainWindow::changeFunctionButton(QString type)
         // updateRecordButtonPos();
         // m_recordButton->show();
         m_functionType = status::record;
-        // 切换录屏或截屏时保证工具栏右对齐
+        //切换录屏或截屏时保证工具栏右对齐
         m_toolBar->move(m_toolBarPoint.x() - m_toolBar->width(), m_toolBarPoint.y());
         updateToolBarPos();
         initScreenRecorder();
@@ -2862,6 +2862,7 @@ void MainWindow::changeFunctionButton(QString type)
         // updateShotButtonPos();
         // m_shotButton->show();
         m_functionType = status::shot;
+        m_toolBar->hide();
         if (m_toolBarPoint.x() - m_toolBar->width() < 0) {
             // 由于截图的工具栏比录屏的工具栏更长，因此在屏幕左侧，采用右对齐的方式可能出现切换后截图工具栏出现在屏幕外
             // 此处做了规避处理
