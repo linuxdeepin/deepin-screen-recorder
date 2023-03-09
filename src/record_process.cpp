@@ -86,22 +86,22 @@ void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filena
 //开始将mp4视频转码成gif
 void RecordProcess::onStartTranscode()
 {
-    qDebug() << __LINE__ << __func__;
+    qInfo() << __LINE__ << __func__ << "正在转码视频(mp4 to gif)...";
     QProcess *transcodeProcess = new QProcess(this);
     connect(transcodeProcess, QOverload<QProcess::ProcessError>::of(&QProcess::error),
-            [=](QProcess::ProcessError processError) {
-                qDebug() << "processError: " << processError;
-            });
+    [ = ](QProcess::ProcessError processError) {
+        qDebug() << "processError: " << processError;
+    });
     connect(transcodeProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-            [=](int exitCode, QProcess::ExitStatus exitStatus) {
-                qDebug() << "exitCode: " << exitCode << "  exitStatus: " << exitStatus;
-                //转换进程是否正常退出
-                if (exitStatus == QProcess::ExitStatus::NormalExit) {
-                    onTranscodeFinish();
-                } else {
-                    qDebug() << "m_pTranscodeProcess is CrashExit:!";
-                }
-            });
+    [ = ](int exitCode, QProcess::ExitStatus exitStatus) {
+        qDebug() << "exitCode: " << exitCode << "  exitStatus: " << exitStatus;
+        //转换进程是否正常退出
+        if (exitStatus == QProcess::ExitStatus::NormalExit) {
+            onTranscodeFinish();
+        } else {
+            qDebug() << "m_pTranscodeProcess is CrashExit:!";
+        }
+    });
     //connect(m_pTranscodeProcess, SIGNAL(finished(int)), this, SLOT(onTranscodeFinish()));
     //connect(m_pTranscodeProcess, SIGNAL(finished(int)), m_pTranscodeProcess, SLOT(deleteLater()));
     QString path = savePath;
@@ -124,7 +124,7 @@ void RecordProcess::onStartTranscode()
 //转码完成后通知栏弹出提示
 void RecordProcess::onTranscodeFinish()
 {
-    qDebug() << __LINE__ << __func__;
+    qInfo() << __LINE__ << __func__ << "已完成转码";
     QString path = savePath;
     QString gifOldPath = path.replace("mp4", "gif");
     QString gifNewPath = QDir(saveDir).filePath(saveBaseName).replace(QString("mp4"), QString("gif"));
@@ -417,7 +417,7 @@ void RecordProcess::getScreenRecordSavePath()
         }
     }
     if ((!QDir(saveDir).exists() && QDir().mkdir(saveDir) == false) ||   // 文件不存在，且创建失败
-        (QDir(saveDir).exists() && !QFileInfo(saveDir).isWritable())) {   // 文件存在，且不能写
+            (QDir(saveDir).exists() && !QFileInfo(saveDir).isWritable())) {   // 文件存在，且不能写
         saveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first();
     }
     qInfo() << "录屏保存目录: " << saveDir;
@@ -667,6 +667,7 @@ void RecordProcess::stopRecord()
     //    EventLogUtils::get().writeLogs(obj);
 
     if (Utils::isSysHighVersion1040() == true) {
+        qInfo() << __FUNCTION__ << __LINE__ << "正在暂停录屏计时...";
         qDebug() << "Pause the screen recording timer!";
 
         //系统托盘图标停止闪烁，时间暂停，但还没有结束
@@ -678,6 +679,7 @@ void RecordProcess::stopRecord()
             if (!message.arguments().takeFirst().toBool())
                 qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
         }
+        qInfo() << __FUNCTION__ << __LINE__ << "录屏计时已暂停";
     }
     if (Utils::isFFmpegEnv) {
         //停止wayland录屏
@@ -709,6 +711,7 @@ void RecordProcess::stopRecord()
 void RecordProcess::exitRecord(QString newSavePath)
 {
     if (!Utils::isRootUser) {
+        qInfo() << __LINE__ << __func__ << "正在弹出保存完成的通知...";
         // Popup notify.
         QDBusInterface notification("org.freedesktop.Notifications",
                                     "/org/freedesktop/Notifications",
@@ -735,12 +738,15 @@ void RecordProcess::exitRecord(QString newSavePath)
             << hints   // hints
             << timeout;   // timeout
         notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
+        qInfo() << __LINE__ << __func__ << "已弹出通知消息";
     }
     if (recordType == RECORD_TYPE_GIF) {
         QFile::remove(savePath);
     }
+    qInfo() << __LINE__ << __func__ << "正在保存到剪切板...";
     //保存到剪切板
     save2Clipboard(newSavePath);
+    qInfo() << __LINE__ << __func__ << "已保存到剪切板";
     if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
         avlibInterface::unloadFunctions();
@@ -749,14 +755,16 @@ void RecordProcess::exitRecord(QString newSavePath)
 
     m_recordingFlag = false;
     if (Utils::isSysHighVersion1040() == true) {
+        qInfo() << __LINE__ << __func__ << "正在退出录屏计时图标...";
         qDebug() << __LINE__ << ": Stop the screen recording timer!";
         //系统托盘图标结束并退出
         QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
                                                                                                  "/com/deepin/ScreenRecorder/time",
                                                                                                  "com.deepin.ScreenRecorder.time",
                                                                                                  "onStop"));
+        qInfo() << __LINE__ << __func__ << "录屏计时图标已退出";
     }
-
+    qInfo() << __LINE__ << __func__ << "录屏结束!!!";
     QApplication::quit();
     if (Utils::isWaylandMode) {
         qInfo() << "wayland record exit! (_Exit(0))";

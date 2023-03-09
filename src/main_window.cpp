@@ -108,6 +108,7 @@ MainWindow::MainWindow(DWidget *parent) :
 
 void MainWindow::initMainWindow()
 {
+    qInfo() << "截图录屏主窗口初始化！";
     if (Utils::isTabletEnvironment) {
         m_cursorBound = 20;
     } else {
@@ -238,6 +239,7 @@ void MainWindow::initAttributes()
     //获取自动识别的窗口
     if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
+        qInfo() << __FUNCTION__ << __LINE__  << "KF5_WAYLAND_FLAGE_ON is open!!";
         //wayland自动识别窗口
         m_connectionThread = new QThread(this);
         m_connectionThreadObject = new ConnectionThread();
@@ -5490,6 +5492,7 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason)
 */
 void MainWindow::stopRecord()
 {
+    qInfo() << __FUNCTION__ << __LINE__ << "正在结束录屏...";
     if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
         qDebug() << "MainWindow::stopRecord()!";
         if (Utils::isWaylandMode) {
