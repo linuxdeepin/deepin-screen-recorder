@@ -69,10 +69,11 @@ bool WaylandIntegration::isEGLInitialized()
 
 void WaylandIntegration::stopStreaming()
 {
-    qDebug() << "stop recording!";
+    qInfo() << __FUNCTION__ << __LINE__ << "正在停止wayland录屏流程...";
     globalWaylandIntegration->stopStreaming();
     globalWaylandIntegration->stopVideoRecord();
     globalWaylandIntegration->m_appendFrameToListFlag = false;
+    qInfo() << __FUNCTION__ << __LINE__ << "已停止wayland录屏流程";
 }
 
 bool WaylandIntegration::WaylandIntegrationPrivate::stopVideoRecord()
