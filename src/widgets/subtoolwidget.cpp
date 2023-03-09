@@ -712,6 +712,7 @@ void SubToolWidget::initShotLabel()
     m_scrollShotButton->setFixedSize(MIN_TOOL_BUTTON_SIZE);
     installTipHint(m_scrollShotButton, tr("Scrollshot"));
 #ifdef  OCR_SCROLL_FLAGE_ON
+    qInfo() << __FUNCTION__ << __LINE__ << "OCR_SCROLL_FLAGE_ON is open!!";
     btnList.append(m_scrollShotButton);
 #endif
     //添加ocr图文识别按钮
