@@ -95,7 +95,7 @@ void MajorImageProcessingThread::run()
         if (tempImg.isNull()) {
             qWarning() << "(wayland) 未采集到摄像头画面！" ;
         } else {
-            //tempImg.save(QString("/home/wangcong/Desktop/test/test_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
+            //tempImg.save(QString("/home/uos/Desktop/test1/test_%1.png").arg(QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz "))));
             QPixmap pixmap = QPixmap::fromImage(tempImg);
             emit SendMajorImageProcessing(pixmap);
             //emit SendMajorImageProcessing(tempImg);
