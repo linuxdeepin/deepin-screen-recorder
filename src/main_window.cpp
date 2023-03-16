@@ -1028,11 +1028,13 @@ void MainWindow::initScreenRecorder()
 //滚动截图的初始化函数
 void MainWindow::initScrollShot()
 {
+    qInfo() << "正在初始化滚动截图...";
     QJsonObject obj{
         {"tid", EventLogUtils::StartScrollShot},
         {"version", QCoreApplication::applicationVersion()}
     };
     EventLogUtils::get().writeLogs(obj);
+    m_zoomIndicator->hideMagnifier();
 
 #ifdef OCR_SCROLL_FLAGE_ON
     if (Utils::isWaylandMode) {
@@ -1130,6 +1132,7 @@ void MainWindow::initScrollShot()
     //链接滚动截图抓取当前捕捉区图片进行图片拼接
     connect(m_scrollShot, &ScrollScreenshot::getOneImg, this, [ = ] {
         //自动滚动截图模式，抓取当前捕捉区域的图片，传递给滚动截图处理类进行图片的拼接
+        qInfo() << "自动滚动截图模式，抓取当前捕捉区域的图片，传递给滚动截图处理类进行图片的拼接";
         scrollShotGrabPixmap(m_previewPostion, 5);
     });
 
@@ -1177,6 +1180,7 @@ void MainWindow::initScrollShot()
     m_tipShowtimer->setInterval(2000);
     m_initScroll = true;
 #endif
+    qInfo() << "已初始化滚动截图";
 }
 
 //根据工具栏获取滚动截图提示框的坐标
@@ -1257,6 +1261,7 @@ QPoint MainWindow::getScrollShotTipPosition()
 void MainWindow::showScrollShot()
 {
 #ifdef OCR_SCROLL_FLAGE_ON
+    qInfo() << "初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小、第一张预览图 start";
     bool ok;
     QRect rect(recordX + 1, ((recordY == 0) ? 2 : (recordY + 1)), recordWidth - 2, recordHeight - 2);
     //滚动截图截取指定区域的第一张图片
@@ -1282,6 +1287,7 @@ void MainWindow::showScrollShot()
             //updateShotButtonPos();
         }
     });
+    qInfo() << "初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小、第一张预览图 end";
 #endif
 }
 
