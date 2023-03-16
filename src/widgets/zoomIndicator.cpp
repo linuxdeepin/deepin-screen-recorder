@@ -157,6 +157,7 @@ void ZoomIndicator::showMagnifier(QPoint pos)
 void ZoomIndicator::hideMagnifier()
 {
     if (Utils::isWaylandMode && !m_isOpenWM) {
+        m_zoomIndicatorGL->makeCurrent();
         m_zoomIndicatorGL->hide();
         return;
     }
