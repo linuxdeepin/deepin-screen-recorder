@@ -238,7 +238,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::stopStreaming()
             //m_remoteAccessManager->startRecording(0);
             qDebug() << "正在等待最后一帧释放...";
             QEventLoop loop;
-            connect(this,SIGNAL(lastFrame()),&loop,SLOT(quit()));
+            connect(this, SIGNAL(lastFrame()), &loop, SLOT(quit()));
             loop.exec();
             qDebug() << "最后一帧已释放";
             m_remoteAccessManager->release();
@@ -459,9 +459,9 @@ void WaylandIntegration::WaylandIntegrationPrivate::onDeviceChanged(quint32 name
 
 void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qInfo() << __FUNCTION__ << __LINE__ << "开始处理buffer...";
     qDebug() << ">>>>>> open fd!" << rbuf->fd();
-    QScopedPointer<const KWayland::Client::RemoteBuffer> guard(rbuf);
+//    QScopedPointer<const KWayland::Client::RemoteBuffer> guard(rbuf);
     auto dma_fd = rbuf->fd();
     quint32 width = rbuf->width();
     quint32 height = rbuf->height();
@@ -516,7 +516,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     munmap(mapData, stride * height);
     close(dma_fd);
     qDebug() << ">>>>>> close fd!" << dma_fd;
-    if(m_lastFrame == 0){
+    if (m_lastFrame == 0) {
         qDebug() << "是否是最后一帧: " << m_lastFrame;
         emit lastFrame();
     }
@@ -558,8 +558,9 @@ QImage::Format WaylandIntegration::WaylandIntegrationPrivate::getImageFormat(qui
 
 void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect)
 {
+    qInfo() << __FUNCTION__ << __LINE__ << "开始处理buffer...";
     qDebug() << ">>>>>> open fd!" << rbuf->fd();
-    QScopedPointer<const KWayland::Client::RemoteBuffer> guard(rbuf);
+    //QScopedPointer<const KWayland::Client::RemoteBuffer> guard(rbuf);
     auto dma_fd = rbuf->fd();
     quint32 width = rbuf->width();
     quint32 height = rbuf->height();
@@ -604,7 +605,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
     }
     close(dma_fd);
     qDebug() << ">>>>>> close fd!" << dma_fd;
-    if(m_lastFrame == 0){
+    if (m_lastFrame == 0) {
         qDebug() << "是否是最后一帧: " << m_lastFrame;
         emit lastFrame();
     }
@@ -796,13 +797,13 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
         qDebug() << "正在创建wayland远程管理...";
         m_remoteAccessManager = m_registry->createRemoteAccessManager(m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).name, m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).version);
         qDebug() << "wayland远程管理已创建";
-        connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
+        connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, KWayland::Client::RemoteBuffer * rbuf) {
             qDebug() << "正在接收buffer...";
             QRect screenGeometry = (KWayland::Client::Output::get(reinterpret_cast<wl_output *>(const_cast<void *>(output))))->geometry();
             qDebug() << "screenGeometry: " << screenGeometry;
-            qDebug() << "rbuf->isValid(): " << rbuf->isValid();
+            //qDebug() << "rbuf->isValid(): " << rbuf->isValid();
             connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf, screenGeometry] {
-                qDebug() << "正在处理buffer..."<< "fd:" << rbuf->fd() << "frame:" <<rbuf->frame();
+                qDebug() << "正在处理buffer..." << "fd:" << rbuf->fd() << "frame:" << rbuf->frame();
                 if (m_boardVendorType)
                 {
                     //arm hw
@@ -812,7 +813,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                     //other
                     processBufferX86(rbuf, screenGeometry);
                 }
-                qDebug() << "buffer已处理"<< "fd:" << rbuf->fd();
+                qDebug() << "buffer已处理" << "fd:" << rbuf->fd();
+                rbuf->release();
             });
             qDebug() << "buffer已接收";
         });
