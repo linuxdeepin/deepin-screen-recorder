@@ -101,6 +101,8 @@ public:
      */
     int getProductType();
 
+    bool isPangu();
+
     bool isEGLInitialized() const;
 
     void bindOutput(int outputName, int outputVersion);

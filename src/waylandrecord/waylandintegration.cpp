@@ -17,6 +17,8 @@
 #include <QPainter>
 #include <QImage>
 #include <QtConcurrent>
+#include <QtDBus>
+
 // KWayland
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/event_queue.h>
@@ -381,9 +383,31 @@ int WaylandIntegration::WaylandIntegrationPrivate::getProductType()
             str_output.contains("KLVU", Qt::CaseInsensitive) ||
             str_output.contains("PGUV", Qt::CaseInsensitive) ||
             str_output.contains("PGUW", Qt::CaseInsensitive) ||
-            str_output.contains("L540", Qt::CaseInsensitive))
+            str_output.contains("L540", Qt::CaseInsensitive) ||
+            isPangu())
         return 1;
     return 0;
+}
+bool WaylandIntegration::WaylandIntegrationPrivate::isPangu()
+{
+    QString validFrequency = "CurrentSpeed";
+    QDBusInterface systemInfoInterface("com.deepin.daemon.SystemInfo",
+                             "/com/deepin/daemon/SystemInfo",
+                             "org.freedesktop.DBus.Properties",
+                             QDBusConnection::sessionBus());
+    qDebug() << "systemInfoInterface.isValid: " <<systemInfoInterface.isValid();
+    QDBusMessage replyCpu = systemInfoInterface.call("Get","com.deepin.daemon.SystemInfo","CPUHardware");
+    QList<QVariant> outArgsCPU = replyCpu.arguments();
+    if(outArgsCPU.count())
+    {
+        QString CPUHardware = outArgsCPU.at(0).value<QDBusVariant>().variant().toString();
+        qInfo() << __FUNCTION__ << __LINE__ << "Current CPUHardware: " << CPUHardware;
+
+        if(CPUHardware.contains("PANGU")){
+            return true;
+        }
+    }
+    return false;
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::addOutput(quint32 name, quint32 version)
