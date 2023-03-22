@@ -190,9 +190,9 @@ void CameraWidget::cameraStop()
 void CameraWidget::onReceiveMajorImage(QImage image)
 {
     QImage t_image = image.scaled(this->width(), this->height(), Qt::IgnoreAspectRatio, Qt::FastTransformation);
-    //t_image.save(QString("/home/wangcong/Desktop/test/t_image_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
+    //t_image.save(QString("//tmp/test/t_image_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
     QPixmap pixmap = QPixmap::fromImage(image);
-    //pixmap.save(QString("/home/wangcong/Desktop/test/pixmap_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
+    //pixmap.save(QString("/tmp/test/pixmap_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
     if (m_cameraUI)
         m_cameraUI->setPixmap(pixmap);
     //qInfo() << "接收当前摄像头画面！";

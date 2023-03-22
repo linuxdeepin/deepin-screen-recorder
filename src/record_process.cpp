@@ -701,7 +701,9 @@ void RecordProcess::stopRecord()
             } else {
                 connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onRecordFinish()));
             }
-            m_recorderProcess->write("q");
+            m_recorderProcess->terminate();
+            //m_recorderProcess->write("q");
+            qInfo() << "正在停止x11录屏...";
         }
     } else {
         GstStopRecord();

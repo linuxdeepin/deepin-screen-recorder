@@ -69,7 +69,7 @@ void MajorImageProcessingThread::run()
 //            if (jpgImage.isNull()) {
 //                qWarning() << "未采集到摄像头画面！" ;
 //            } else {
-//                //jpgImage.save(QString("/home/wangcong/Desktop/test/test_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
+//                //jpgImage.save(QString("/tmp/test/test_%1.png").arg(QDateTime::currentMSecsSinceEpoch()));
 //                emit SendMajorImageProcessing(jpgImage);
 //                //qInfo() << "已采集摄像头画面，正在传递摄像头画面";
 //            }
