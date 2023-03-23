@@ -60,6 +60,10 @@ int main(int argc, char *argv[])
     Dtk::Core::DLogManager::registerConsoleAppender();
     Dtk::Core::DLogManager::registerFileAppender();
 
+    QString logPath = Dtk::Core::DLogManager::getlogFilePath();
+    logPath.replace("deepin-screen-recorder.log", "deepin-pin-screen.log");
+    Dtk::Core::DLogManager::setlogFilePath(logPath);
+    //qDebug() << "日志位置: " << Dtk::Core::DLogManager::getlogFilePath();
     QCommandLineOption dbusOption(QStringList() << "u" << "dbus", "Start  from dbus.");
     QCommandLineParser cmdParser;
     cmdParser.setApplicationDescription("deepin-pin-screenshots");
