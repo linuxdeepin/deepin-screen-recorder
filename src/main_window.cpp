@@ -108,7 +108,7 @@ MainWindow::MainWindow(DWidget *parent) :
 
 void MainWindow::initMainWindow()
 {
-    qInfo() << "截图录屏主窗口初始化！";
+    qInfo() << __LINE__ << __FUNCTION__ << "正在初始化截图录屏主窗口...";
     if (Utils::isTabletEnvironment) {
         m_cursorBound = 20;
     } else {
@@ -186,11 +186,13 @@ void MainWindow::initMainWindow()
         create();
         windowHandle()->setProperty("_d_dwayland_global_keyevent", true);
     }
+    qInfo() << __LINE__ << __FUNCTION__ << "截图录屏主窗口已初始化";
 }
 
 void MainWindow::initAttributes()
 {
-    qDebug() << "FunctionName: " << __func__;
+    qInfo() << __LINE__ << __FUNCTION__ << "正在初始化一些属性...";
+    qInfo() << "m_functionType: " << m_functionType;
     setWindowTitle(tr("Screen Capture"));
     m_keyButtonList.clear();
     m_isZhaoxin = Utils::checkCpuIsZhaoxin();
@@ -273,7 +275,11 @@ void MainWindow::initAttributes()
     m_sizeTips = new TopTips(this);
     m_sizeTips->hide();
 
-    m_zoomIndicator = new ZoomIndicator(this);
+    if(m_functionType == status::record){
+        m_zoomIndicator = new ZoomIndicator(this,true);
+    }else{
+        m_zoomIndicator = new ZoomIndicator(this);
+    }
     m_zoomIndicator->hideMagnifier();
 
 
@@ -334,7 +340,7 @@ void MainWindow::initAttributes()
         delete mouseMove;
     }
 
-
+    qInfo() << __LINE__ << __FUNCTION__ << "属性初始化已完成";
 }
 #ifdef KF5_WAYLAND_FLAGE_ON
 void MainWindow::setupRegistry(Registry *registry)
