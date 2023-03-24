@@ -18,7 +18,7 @@ class ZoomIndicator : public DLabel
 {
     Q_OBJECT
 public:
-    explicit ZoomIndicator(DWidget *parent = 0);
+    explicit ZoomIndicator(DWidget *parent = 0,bool isRecord = false);
     ~ZoomIndicator();
 
     void showMagnifier(QPoint pos);
@@ -41,6 +41,7 @@ private:
      * 通过opengl绘制的widget，在执行move函数卡顿，因此做了规避。
      */
     bool m_isOpenWM = false;
+    bool m_isRecord = false;
 };
 
 #endif // MAGNIFIER_H
