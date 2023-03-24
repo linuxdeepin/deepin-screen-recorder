@@ -22,7 +22,7 @@ const int INDICATOR_WIDTH = 49;
 const int CENTER_RECT_WIDTH = 12;
 const int BOTTOM_RECT_HEIGHT = 14;
 }
-ZoomIndicator::ZoomIndicator(DWidget *parent)
+ZoomIndicator::ZoomIndicator(DWidget *parent,bool isRecord)
     : DLabel(parent)
 {
     QDBusInterface wmInterface("com.deepin.wm",
@@ -42,8 +42,9 @@ ZoomIndicator::ZoomIndicator(DWidget *parent)
         }
     }
     qInfo() << "多任务视图是否打开: " << (m_isOpenWM? "是":"否");
+    m_isRecord = isRecord;
 
-    if (Utils::isWaylandMode && !m_isOpenWM) {
+    if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord) {
         m_zoomIndicatorGL = new ZoomIndicatorGL(parent);
         this->hide();
         return;
@@ -64,7 +65,7 @@ ZoomIndicator::ZoomIndicator(DWidget *parent)
 
 ZoomIndicator::~ZoomIndicator()
 {
-    if (Utils::isWaylandMode && !m_isOpenWM && m_zoomIndicatorGL ) {
+    if (Utils::isWaylandMode && !m_isOpenWM && m_zoomIndicatorGL && !m_isRecord) {
         delete  m_zoomIndicatorGL;
     }
 }
@@ -143,7 +144,7 @@ void ZoomIndicator::paintEvent(QPaintEvent *)
 
 void ZoomIndicator::showMagnifier(QPoint pos)
 {
-    if (Utils::isWaylandMode && !m_isOpenWM) {
+    if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord) {
         m_zoomIndicatorGL->showMagnifier(pos);
         return;
     }
@@ -156,7 +157,7 @@ void ZoomIndicator::showMagnifier(QPoint pos)
 
 void ZoomIndicator::hideMagnifier()
 {
-    if (Utils::isWaylandMode && !m_isOpenWM) {
+    if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord) {
         m_zoomIndicatorGL->makeCurrent();
         m_zoomIndicatorGL->hide();
         return;
