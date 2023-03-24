@@ -1488,10 +1488,10 @@ void  CAVOutputStream::close()
             || nullptr != m_micAudioStream
             || nullptr != m_sysAudioStream
             || nullptr != audio_amix_st) {
-        //qDebug() << Q_FUNC_INFO << "开始写文件尾";
+        qDebug() << __LINE__ << __func__ << "正在写文件尾...";
         //Write file trailer
         writeTrailer(m_videoFormatContext);
-        qDebug() << Q_FUNC_INFO << "写文件尾完成";
+        qDebug() << __LINE__ << __func__ << "写文件尾完成";
     }
 
     if (m_videoStream) {

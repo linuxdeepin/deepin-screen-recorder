@@ -187,6 +187,7 @@ void *RecordAdmin::stream(void *param)
 
 int RecordAdmin::stopStream()
 {
+    qInfo() << __LINE__ << __func__ << "正在停止视频数据写入...";
     //设置是否运行线程，用来关闭采集音频数据的线程
     m_pInputStream->setbRunThread(false);
     //设置关闭视频数据采集，将视频数据采集到队列中
@@ -201,5 +202,6 @@ int RecordAdmin::stopStream()
     //关闭输出
     m_pOutputStream->close();
     m_cacheMutex.unlock();
+    qInfo() << __LINE__ << __func__ << "已停止视频数据写入";
     return 0;
 }
