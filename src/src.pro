@@ -15,6 +15,15 @@ message("SYS_VERSION: " $$SYS_VERSION)
 
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
+#cat /etc/os-version 中的OsBuild
+SYS_BUILD=$$system("cat /etc/os-version | grep 'OsBuild' | grep -o '[0-9]\+\.\?[0-9]\+'")
+SYS_BUILD_PREFIX=$$system("cat /etc/os-version | grep 'OsBuild' | grep -o '[0-9]\+\.' | grep -o '[0-9]\+'")
+SYS_BUILD_SUFFIX=$$system("cat /etc/os-version | grep 'OsBuild' | grep -o '\.[0-9]\+' | grep -o '[0-9]\+'")
+message("SYS_BUILD: " $$SYS_BUILD)
+message("SYS_BUILD_PREFIX: " $$SYS_BUILD_PREFIX)
+#SYS_BUILD_SUFFIX 系统镜像批次号
+message("SYS_BUILD_SUFFIX: " $$SYS_BUILD_SUFFIX)
+
 if (!equals(SYS_EDITION, "")) {
 # 社区版
         message("Community")
@@ -43,6 +52,11 @@ if (!equals(SYS_EDITION, "")) {
     greaterThan(SYS_VERSION, 1049) {
         DEFINES += KF5_WAYLAND_FLAGE_ON
         message("wayland support: OK!!!")
+        #1054Wayland remote协议新增接口 109表示1053
+        greaterThan(SYS_BUILD_SUFFIX, 109) {
+            DEFINES += KWAYLAND_REMOTE_FLAGE_ON
+            message("wayland remote support: OK!!!")
+        }
     }
 }
 

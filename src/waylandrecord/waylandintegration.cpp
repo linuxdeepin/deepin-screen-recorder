@@ -230,12 +230,14 @@ void WaylandIntegration::WaylandIntegrationPrivate::bindOutput(int outputName, i
 
 void WaylandIntegration::WaylandIntegrationPrivate::stopStreaming()
 {
+    qInfo() << "正在停止远程数据流...";
     qDebug() << "m_streamingEnabled: " << m_streamingEnabled;
     if (m_streamingEnabled) {
         m_streamingEnabled = false;
 
         // First unbound outputs and destroy remote access manager so we no longer receive buffers
         if (m_remoteAccessManager) {
+#ifdef KWAYLAND_REMOTE_FLAGE_ON
             qDebug() << "正在释放m_remoteAccessManager...";
             //qDebug() << "m_remoteAccessManager->startRecording(0):" << m_remoteAccessManager->startRecording(0);
             qDebug() << "m_remoteAccessManager->startRecording(1):" << m_remoteAccessManager->startRecording(1);
@@ -248,6 +250,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::stopStreaming()
             m_remoteAccessManager->release();
             m_remoteAccessManager->destroy();
             qDebug() << "m_remoteAccessManager已释放";
+#endif
         }
         qDeleteAll(m_bindOutputs);
         m_bindOutputs.clear();
@@ -256,6 +259,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::stopStreaming()
         //            m_stream = nullptr;
         //        }
     }
+    qInfo() << "远程数据流已停止";
 }
 
 QMap<quint32, WaylandIntegration::WaylandOutput> WaylandIntegration::WaylandIntegrationPrivate::screens()
