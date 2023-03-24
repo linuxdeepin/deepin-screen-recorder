@@ -72,6 +72,15 @@ public:
         unsigned char *_frame;
     };
 
+    struct FrameData {
+        quint32 _width;
+        quint32 _height;
+        unsigned char *_frame;
+        QImage::Format _format;
+        QRect _rect ;
+        bool _flag;
+    };
+
     typedef struct {
         uint nodeId;
         QVariantMap map;
@@ -137,6 +146,7 @@ protected Q_SLOTS:
      * @param rbuf
      */
     void processBuffer(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect);
+    void processBufferHw(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect,int screenId = 0);
 
     /**
      * @brief getImageFormat 根据wayland客户端bufferReady给过来的像素格式，转成QImage的格式
@@ -189,6 +199,10 @@ private:
      * @param time:时间戳
      */
     void appendBuffer(unsigned char *frame, int width, int height, int stride, int64_t time);
+    /**
+     * @brief initScreenFrameBuffer 初始化屏幕数据数组
+     */
+    void initScreenFrameBuffer();
 public:
     /**
      * @ 内存由getFrame函数内部申请
@@ -228,6 +242,7 @@ private:
     QList<unsigned char *> m_freeList;
 
     QPair<qint64, QImage> m_curNewImage;
+    FrameData m_curNewImageData;
 
 
 
@@ -268,8 +283,19 @@ private:
     struct EglStruct m_eglstruct;
     QMutex m_bGetScreenImageMutex;
     QMap<QString, QRect> m_screenId2Point;
+    //双屏情况
     QVector<QPair<QRect, QImage>> m_ScreenDateBuf;
     QVector<QPair<QRect, QImage>> m_curNewImageScreen;
+    //hw双屏
+    unsigned char *m_firstScreenData = nullptr;
+    unsigned char *m_secondScreenData = nullptr;
+
+    //第一次拷贝数据的时候需要开辟内存空间
+    bool m_isExistFirstScreenData = false;
+    bool m_isExistSecondScreenData = false;
+    FrameData m_ScreenDateBufFrames[2];
+    FrameData m_curNewImageScreenFrames[2];
+
     QSize m_screenSize;
     int m_screenCount;
 
