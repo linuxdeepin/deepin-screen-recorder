@@ -265,7 +265,11 @@ void RecordProcess::recordVideo()
     if (recordAudioInputType == RECORD_AUDIO_INPUT_SYSTEMAUDIO || recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
         //lastAudioSink = audioUtils->currentAudioSink();
         arguments << QString("-thread_queue_size");
-        arguments << QString("32");
+        if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+            arguments << QString("2048");
+        } else {
+            arguments << QString("32");
+        }
         arguments << QString("-fragment_size");
         arguments << QString("4096");
         arguments << QString("-f");
@@ -280,7 +284,11 @@ void RecordProcess::recordVideo()
     }
     if (recordAudioInputType == RECORD_AUDIO_INPUT_MIC || recordAudioInputType == RECORD_AUDIO_INPUT_MIC_SYSTEMAUDIO) {
         arguments << QString("-thread_queue_size");
-        arguments << QString("32");
+        if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+            arguments << QString("2048");
+        } else {
+            arguments << QString("32");
+        }
         arguments << QString("-fragment_size");
         arguments << QString("4096");
         arguments << QString("-f");
