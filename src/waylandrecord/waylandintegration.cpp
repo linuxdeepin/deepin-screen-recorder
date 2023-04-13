@@ -935,7 +935,12 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
         qDebug() << "正在创建wayland远程管理...";
         m_remoteAccessManager = m_registry->createRemoteAccessManager(m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).name, m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).version);
         qDebug() << "wayland远程管理已创建";
-        connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output,KWayland::Client::RemoteBuffer * rbuf) {
+#ifdef KWAYLAND_REMOTE_FLAGE_ON
+        connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, KWayland::Client::RemoteBuffer * rbuf) {
+#else
+        connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
+
+#endif
             qDebug() << "正在接收buffer...";
             QRect screenGeometry = (KWayland::Client::Output::get(reinterpret_cast<wl_output *>(const_cast<void *>(output))))->geometry();
             qDebug() << "screenGeometry: " << screenGeometry;
@@ -982,15 +987,17 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                 qDebug() << "close(rbuf->fd())";
 #ifdef KWAYLAND_REMOTE_FLAGE_ON
                 qDebug() << "rbuf->frame(): " << rbuf->frame();
-                if (rbuf->frame() == 0) {
+                if (rbuf->frame() == 0)
+                {
                     qDebug() << "是否是最后一帧: " << rbuf->frame();
                     emit lastFrame();
                 }
+                rbuf->release();
+                qDebug() << "rbuf->release()";
 #endif
                 qDebug() << "buffer已处理" << "fd:" << rbuf->fd();
 
-                rbuf->release();
-                qDebug() << "rbuf->release()";
+
             });
             qDebug() << "buffer已接收";
         });
