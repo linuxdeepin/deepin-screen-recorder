@@ -112,12 +112,23 @@ QString AudioUtils::currentAudioChannel()
         qDebug() << "pacmd命令: " << options;
         qDebug() << "通过pacmd命令获取的系统音频通道号: " << str_output;
         if (str_output.isEmpty()) {
-            if (!m_defaultSinkPath.isEmpty()) {
-                str_output = m_defaultSinkPath.right(1);
-                qInfo() << "通过pacmd命令获取的系统音频通道号失败！自动分配通道号:" << str_output;
-            } else {
-                str_output = "-1";
-                qWarning() << "自动分配通道号失败！默认音频输出源服务地址为空！" << m_defaultSinkPath;
+            QStringList options1;
+            options1 << "-c";
+            options1 << QString("pactl list sources | grep -PB 2 %1 | head -n 1 | perl -pe 's/.* #//g'").arg(sinkName);
+            process.start("bash", options1);
+            process.waitForFinished();
+            process.waitForReadyRead();
+            str_output = process.readAllStandardOutput();
+            qDebug() << "pactl命令: " << options;
+            qDebug() << "通过pactl命令获取的系统音频通道号: " << str_output;
+            if (str_output.isEmpty()) {
+                if (!m_defaultSinkPath.isEmpty()) {
+                    str_output = m_defaultSinkPath.right(1);
+                    qInfo() << "通过pacmd命令获取的系统音频通道号失败！自动分配通道号:" << str_output;
+                } else {
+                    str_output = "-1";
+                    qWarning() << "自动分配通道号失败！默认音频输出源服务地址为空！" << m_defaultSinkPath;
+                }
             }
         }
         return str_output;
