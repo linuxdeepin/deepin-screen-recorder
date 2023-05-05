@@ -275,9 +275,9 @@ void MainWindow::initAttributes()
     m_sizeTips = new TopTips(this);
     m_sizeTips->hide();
 
-    if(m_functionType == status::record){
-        m_zoomIndicator = new ZoomIndicator(this,true);
-    }else{
+    if (m_functionType == status::record) {
+        m_zoomIndicator = new ZoomIndicator(this, true);
+    } else {
         m_zoomIndicator = new ZoomIndicator(this);
     }
     m_zoomIndicator->hideMagnifier();
@@ -1036,7 +1036,7 @@ void MainWindow::initScreenRecorder()
 //滚动截图的初始化函数
 void MainWindow::initScrollShot()
 {
-    qInfo() << "正在初始化滚动截图...";
+    qInfo() << __LINE__ << __FUNCTION__ <<  "正在初始化滚动截图...";
     QJsonObject obj{
         {"tid", EventLogUtils::StartScrollShot},
         {"version", QCoreApplication::applicationVersion()}
@@ -1426,6 +1426,7 @@ bool MainWindow::isToolBarInShotArea()
     };
     int toolbarY = static_cast<int>(m_toolBar->y() * m_pixelRatio);
     int toolbarHeight = static_cast<int>(m_toolBar->height() * m_pixelRatio);
+    //因为工具栏只会在捕捉区域上面或者下面，不存在左面或者右面的情况因此，只需要判断工具栏左上的y坐标及左下的y坐标是否在捕捉区域内部就行了
     if (recordRect.y() <= toolbarY && ((recordRect.y() + recordRect.height()) >= (toolbarY + toolbarHeight)))
         return true;
     return false;
