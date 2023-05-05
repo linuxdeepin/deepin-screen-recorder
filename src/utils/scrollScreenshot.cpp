@@ -19,9 +19,9 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
     qRegisterMetaType<PixMergeThread::MergeErrorValue>("MergeErrorValue");
     if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
-    m_WaylandScrollMonitor = new WaylandScrollMonitor(this); // 初始化wayland模拟滚动
+        m_WaylandScrollMonitor = new WaylandScrollMonitor(this); // 初始化wayland模拟滚动
 #endif
-}
+    }
     m_mouseWheelTimer = new QTimer(this);
     connect(m_mouseWheelTimer, &QTimer::timeout, this, [ = ] {
         if (!Utils::isWaylandMode)
@@ -32,7 +32,8 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
             XFlush(m_display);
             XTestFakeButtonEvent(m_display, Button5, 0, CurrentTime);
             XFlush(m_display);
-        } else {
+        } else
+        {
 #ifdef KF5_WAYLAND_FLAGE_ON
             m_WaylandScrollMonitor->doWaylandAutoScroll(); //waland滚动
 #endif
@@ -54,9 +55,12 @@ ScrollScreenshot::ScrollScreenshot(QObject *parent)  : QObject(parent)
     connect(m_PixMerageThread, SIGNAL(updatePreviewImg(QImage)), this, SIGNAL(updatePreviewImg(QImage)));
     connect(m_PixMerageThread, SIGNAL(merageError(PixMergeThread::MergeErrorValue)), this, SLOT(merageImgState(PixMergeThread::MergeErrorValue)));
     connect(m_PixMerageThread, &PixMergeThread::invalidAreaError, this, &ScrollScreenshot::merageInvalidArea);
+    if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
-    connect(this, &ScrollScreenshot::sigalWheelScrolling, m_WaylandScrollMonitor, &WaylandScrollMonitor::slotManualScroll);
+        connect(this, &ScrollScreenshot::sigalWheelScrolling, m_WaylandScrollMonitor, &WaylandScrollMonitor::slotManualScroll);
 #endif
+    }
+
 }
 
 ScrollScreenshot::~ScrollScreenshot()

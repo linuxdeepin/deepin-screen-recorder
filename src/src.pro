@@ -7,6 +7,9 @@
 # 103x 不支持滚动截图和ocr
 # 102x DBus接口Server中不支持startdde相关接口
 # /etc/os-version 依赖包deepin-desktop-base
+SYS_INFO=$$system("cat /etc/os-version")
+message("SYS_INFO: " $$SYS_INFO)
+
 SYS_EDITION=$$system("cat /etc/os-version | grep 'Community'")
 message("SYS_EDITION: " $$SYS_EDITION)
 
@@ -55,6 +58,10 @@ if (!equals(SYS_EDITION, "")) {
         message("wayland support: OK!!!")
         #1054Wayland remote协议新增接口 109表示1053
         greaterThan(SYS_BUILD_SUFFIX, 109) {
+            DEFINES += KWAYLAND_REMOTE_FLAGE_ON
+            message("wayland remote support: OK!!!")
+        }
+        greaterThan(SYS_VERSION, 1059) {
             DEFINES += KWAYLAND_REMOTE_FLAGE_ON
             message("wayland remote support: OK!!!")
         }
