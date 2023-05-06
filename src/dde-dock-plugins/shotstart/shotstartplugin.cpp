@@ -57,6 +57,7 @@ void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
     }
 }
 
+static bool g_iconFlag = false;
 QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::ColorType themeType)
 {
     QString shotIconName = "screenshot";
@@ -65,7 +66,7 @@ QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::Col
     }
     QIcon shot(QString(":/res/%1.svg").arg(shotIconName));
     QIcon recorder(":/res/screen-recording.svg");
-    if (DockPart::QuickShow == dockPart || DockPart::DCCSetting == dockPart) {
+    if (DockPart::QuickShow == dockPart/* || DockPart::DCCSetting == dockPart*/) {
         qInfo() << "是否正在录屏:" << m_isRecording;
         if (m_isRecording) {
             qInfo() << "显示录屏图标..." << m_iconWidget.isNull();
@@ -74,7 +75,15 @@ QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::Col
                 return recorder;
             } else {
                 QPixmap pixmap;
-                pixmap = m_iconWidget->iconPixMap(recorder, QSize(24, 24));
+                if(m_isPauseRecord){
+                    g_iconFlag = true;
+                }
+                if(g_iconFlag){
+                    pixmap = m_iconWidget->iconPixMap(recorder, QSize(24, 24));
+                }else{
+                    pixmap = m_iconWidget->iconPixMap(recorder, QSize(24, 24));
+                }
+                g_iconFlag = !g_iconFlag;
                 if (pixmap.isNull()) {
                     qDebug() << "录屏图标已显示(pixmap is null >> icon)";
                     return recorder;
@@ -194,15 +203,42 @@ bool ShotStartPlugin::onStart()
 
 void ShotStartPlugin::onStop()
 {
-    m_isRecording = false;
+    if(m_isRecording){
+        m_isRecording = false;
+    }
     qInfo() << "结束录屏。。。。。。" << m_isRecording;
     m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
+    m_proxyInter->updateDockInfo(this, ::DockPart::QuickShow);
     m_iconWidget->stop();
 }
 
 void ShotStartPlugin::onRecording()
 {
     m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
+    m_proxyInter->updateDockInfo(this, ::DockPart::QuickShow);
+    m_nextCount++;
+    if (1 == m_nextCount) {
+        m_checkTimer = new QTimer();
+        connect(m_checkTimer, &QTimer::timeout, this, [ = ] {
+            //说明录屏还在进行中
+            if (m_count < m_nextCount)
+            {
+                m_count = m_nextCount;
+            }
+            //说明录屏已经停止了
+            else
+            {
+                onStop();
+                m_checkTimer->stop();
+            }
+        });
+        m_checkTimer->start(2000);
+    }
+}
+
+void ShotStartPlugin::onPause()
+{
+    m_isPauseRecord = true;
 }
 
 ShotStartPlugin::~ShotStartPlugin()

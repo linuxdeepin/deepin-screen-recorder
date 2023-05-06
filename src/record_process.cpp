@@ -638,6 +638,10 @@ void RecordProcess::stopRecord()
                                                                                                  "/com/deepin/ScreenRecorder/time",
                                                                                                  "com.deepin.ScreenRecorder.time",
                                                                                                  "onPause"));
+        QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ShotRecorder.PanelStatus",
+                                                                          "/com/deepin/ShotRecorder/PanelStatus",
+                                                                          "com.deepin.ShotRecorder.PanelStatus",
+                                                                          "onPause"));
         if (QDBusMessage::ReplyMessage == message.type()) {
             if (!message.arguments().takeFirst().toBool())
                 qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";

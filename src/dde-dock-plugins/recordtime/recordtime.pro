@@ -21,6 +21,6 @@ SOURCES += \
 
 target.path = /usr/lib/dde-dock/plugins/
 
-INSTALLS += target
+#INSTALLS += target
 
 RESOURCES += res.qrc

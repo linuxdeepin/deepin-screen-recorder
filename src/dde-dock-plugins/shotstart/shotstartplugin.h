@@ -69,11 +69,25 @@ public slots:
     Q_SCRIPTABLE void onStop();
     Q_SCRIPTABLE void onRecording();
 
+    /**
+     * @brief onRecording:主程序通知插件暂停录屏
+     * @return
+     */
+    Q_SCRIPTABLE void onPause();
+
 private:
     QScopedPointer<IconWidget> m_iconWidget;
     QScopedPointer<TipsWidget> m_tipsWidget;
     bool m_isRecording;
+    bool m_isPauseRecord;
     QTime m_baseTime;
+    int m_nextCount = 0;
+    int m_count = 0;
+    /**
+     * @brief 此定时器的作用为每隔1秒检查下截图录屏是否还在运行中。
+     * 避免截图录屏崩溃后导致本插件还在执行
+     */
+    QTimer *m_checkTimer;
 };
 
 #endif // RECORDTIME_H
