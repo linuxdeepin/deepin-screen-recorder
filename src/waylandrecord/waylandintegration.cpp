@@ -385,6 +385,7 @@ int WaylandIntegration::WaylandIntegrationPrivate::getProductType()
             str_output.contains("PGUV", Qt::CaseInsensitive) ||
             str_output.contains("PGUW", Qt::CaseInsensitive) ||
             str_output.contains("L540", Qt::CaseInsensitive) ||
+            str_output.contains("W585", Qt::CaseInsensitive) ||
             isPangu())
         return 1;
     return 0;
@@ -393,18 +394,17 @@ bool WaylandIntegration::WaylandIntegrationPrivate::isPangu()
 {
     QString validFrequency = "CurrentSpeed";
     QDBusInterface systemInfoInterface("com.deepin.daemon.SystemInfo",
-                             "/com/deepin/daemon/SystemInfo",
-                             "org.freedesktop.DBus.Properties",
-                             QDBusConnection::sessionBus());
-    qDebug() << "systemInfoInterface.isValid: " <<systemInfoInterface.isValid();
-    QDBusMessage replyCpu = systemInfoInterface.call("Get","com.deepin.daemon.SystemInfo","CPUHardware");
+                                       "/com/deepin/daemon/SystemInfo",
+                                       "org.freedesktop.DBus.Properties",
+                                       QDBusConnection::sessionBus());
+    qDebug() << "systemInfoInterface.isValid: " << systemInfoInterface.isValid();
+    QDBusMessage replyCpu = systemInfoInterface.call("Get", "com.deepin.daemon.SystemInfo", "CPUHardware");
     QList<QVariant> outArgsCPU = replyCpu.arguments();
-    if(outArgsCPU.count())
-    {
+    if (outArgsCPU.count()) {
         QString CPUHardware = outArgsCPU.at(0).value<QDBusVariant>().variant().toString();
         qInfo() << __FUNCTION__ << __LINE__ << "Current CPUHardware: " << CPUHardware;
 
-        if(CPUHardware.contains("PANGU")){
+        if (CPUHardware.contains("PANGU")) {
             return true;
         }
     }
@@ -544,7 +544,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     munmap(mapData, stride * height);
 }
 
-void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect,int screenId)
+void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect, int screenId)
 {
     qInfo() << __FUNCTION__ << __LINE__ << "开始处理buffer...";
     qDebug() << ">>>>>> open fd!" << rbuf->fd();
@@ -579,45 +579,45 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
     //QString pngName = "/home/uos/Desktop/test/"+QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ") + QString("%1_").arg(rect.x()));
     //QImage(mapData, width, height, QImage::Format_RGB32).copy().save(pngName + ".png");
     if (m_screenCount == 1) {
-        if(!m_isExistFirstScreenData){
+        if (!m_isExistFirstScreenData) {
             m_firstScreenData = new unsigned char[stride * height];
             m_isExistFirstScreenData = true;
         }
         //单屏
-        qDebug() << ">>>>>> new unsigned char: " << stride * height;
+        qDebug() << ">>>>>> new unsigned char: " << stride *height;
         memcpy(m_firstScreenData, mapData, stride * height);
-        qDebug() << ">>>>>> memcpy: " << stride * height;
+        qDebug() << ">>>>>> memcpy: " << stride *height;
 
         QMutexLocker locker(&m_bGetScreenImageMutex);
         m_curNewImageData._frame = m_firstScreenData;
         m_curNewImageData._width = width;
         m_curNewImageData._height = height;
         m_curNewImageData._format = QImage::Format_RGBA8888;
-        m_curNewImageData._rect = QRect(0,0,0,0);
-    } else if(m_screenCount == 2){
+        m_curNewImageData._rect = QRect(0, 0, 0, 0);
+    } else if (m_screenCount == 2) {
         //避免重复开辟内存空间,采用固定数组减小数据访问复杂度。两个屏幕的数据大小可能不同，所以需要区分开
-        if(screenId == 0){
-            if(!m_isExistFirstScreenData){
+        if (screenId == 0) {
+            if (!m_isExistFirstScreenData) {
                 m_firstScreenData = new unsigned char[stride * height];
                 m_isExistFirstScreenData = true;
             }
-            qDebug() << ">>>>>> memcpy1: " << stride * height;
+            qDebug() << ">>>>>> memcpy1: " << stride *height;
             memcpy(m_firstScreenData, mapData, stride * height);
-            qDebug() << ">>>>>> memcpy2: " << stride * height;
+            qDebug() << ">>>>>> memcpy2: " << stride *height;
             m_ScreenDateBufFrames[0]._frame = m_firstScreenData;
             m_ScreenDateBufFrames[0]._width = width;
             m_ScreenDateBufFrames[0]._height = height;
             m_ScreenDateBufFrames[0]._format = getImageFormat(rbuf->format());
             m_ScreenDateBufFrames[0]._rect = rect;
             m_ScreenDateBufFrames[0]._flag = true;
-        }else {
-            if(!m_isExistSecondScreenData){
+        } else {
+            if (!m_isExistSecondScreenData) {
                 m_secondScreenData = new unsigned char[stride * height];
                 m_isExistSecondScreenData = true;
             }
-            qDebug() << ">>>>>> memcpy1: " << stride * height;
+            qDebug() << ">>>>>> memcpy1: " << stride *height;
             memcpy(m_secondScreenData, mapData, stride * height);
-            qDebug() << ">>>>>> memcpy2: " << stride * height;
+            qDebug() << ">>>>>> memcpy2: " << stride *height;
             m_ScreenDateBufFrames[1]._frame = m_secondScreenData;
             m_ScreenDateBufFrames[1]._width = width;
             m_ScreenDateBufFrames[1]._height = height;
@@ -626,11 +626,10 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
             m_ScreenDateBufFrames[1]._flag = true;
         }
 
-        qDebug() <<"m_ScreenDateBufFrames[0]._flag: " << m_ScreenDateBufFrames[0]._flag <<"m_ScreenDateBufFrames[1]._flag: " << m_ScreenDateBufFrames[1]._flag;
-        if(m_ScreenDateBufFrames[0]._flag  && m_ScreenDateBufFrames[1]._flag)
-        {
+        qDebug() << "m_ScreenDateBufFrames[0]._flag: " << m_ScreenDateBufFrames[0]._flag << "m_ScreenDateBufFrames[1]._flag: " << m_ScreenDateBufFrames[1]._flag;
+        if (m_ScreenDateBufFrames[0]._flag  && m_ScreenDateBufFrames[1]._flag) {
             QMutexLocker locker(&m_bGetScreenImageMutex);
-            for (int i = 0;i < 2; i++) {
+            for (int i = 0; i < 2; i++) {
                 m_curNewImageScreenFrames[i]._frame  = m_ScreenDateBufFrames[i]._frame  ;
                 m_curNewImageScreenFrames[i]._width  = m_ScreenDateBufFrames[i]._width  ;
                 m_curNewImageScreenFrames[i]._height = m_ScreenDateBufFrames[i]._height ;
@@ -640,7 +639,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
                 m_ScreenDateBufFrames[i]._flag = false;
             }
         }
-    }else{
+    } else {
         qWarning() << "screen count > 2!!!";
     }
     munmap(mapData, stride * height);
@@ -747,7 +746,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
                                        m_curNewImageData._width,
                                        m_curNewImageData._height,
                                        m_curNewImageData._format);
-                }else{
+                } else {
                     tempImage = m_curNewImage.second.copy();
                 }
             }
@@ -798,10 +797,10 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
                                                   static_cast<int>(m_curNewImageScreenFrames[i]._width),
                                                   static_cast<int>(m_curNewImageScreenFrames[i]._height),
                                                   m_curNewImageScreenFrames[i]._format).copy();
-                        tempImageVec.append(QPair<QRect, QImage>(m_curNewImageScreenFrames[i]._rect,tempImage));
+                        tempImageVec.append(QPair<QRect, QImage>(m_curNewImageScreenFrames[i]._rect, tempImage));
                         m_curNewImageScreenFrames[i]._flag = false;
                     }
-                }else{
+                } else {
                     if (m_curNewImageScreen.size() != m_screenCount) continue;
                     for (auto itr = m_curNewImageScreen.begin(); itr != m_curNewImageScreen.end(); ++itr) {
                         tempImageVec.append(*itr);
@@ -935,7 +934,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
         qDebug() << "正在创建wayland远程管理...";
         m_remoteAccessManager = m_registry->createRemoteAccessManager(m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).name, m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).version);
         qDebug() << "wayland远程管理已创建";
-        connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output,KWayland::Client::RemoteBuffer * rbuf) {
+        connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, KWayland::Client::RemoteBuffer * rbuf) {
             qDebug() << "正在接收buffer...";
             QRect screenGeometry = (KWayland::Client::Output::get(reinterpret_cast<wl_output *>(const_cast<void *>(output))))->geometry();
             qDebug() << "screenGeometry: " << screenGeometry;
@@ -944,36 +943,37 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                 qDebug() << "正在处理buffer..." << "fd:" << rbuf->fd() << "frameCount: " << frameCount ;
                 bool flag = false;
                 int screenId = 0;
-                if(m_screenCount == 1){
+                if (m_screenCount == 1)
+                {
                     //抽帧（数据过来60帧，取一半，由于memcpy一帧数据需要30ms，无法满足1s60帧的速度，所以需要抽帧）
                     flag = (frameCount++ % 2 == 0);
-                }else{
+                } else
+                {
                     //
-                    if(frameCount == 0){
+                    if (frameCount == 0) {
                         qDebug() << ">>>>>>>>>>>>>>>> fisrt screenGeometry: " << screenGeometry;
                         //第一帧画面的坐标不是从（0,0）开始，从第二帧开始取
-                        if(screenGeometry.x() != 0 || screenGeometry.y() != 0){
-                            frameCount+=1;
+                        if (screenGeometry.x() != 0 || screenGeometry.y() != 0) {
+                            frameCount += 1;
                         }
                     }
                     //抽帧（数据过来60帧，取一半）
-                    if(frameCount % 4 == 0){
+                    if (frameCount % 4 == 0) {
                         screenId = 0;
-                    }else if((frameCount-1) % 4 == 0 ){
+                    } else if ((frameCount - 1) % 4 == 0) {
                         screenId = 1;
                     }
-                    flag = (frameCount % 4 == 0 ) || (((frameCount-1) != 0) && (frameCount-1) % 4 == 0 );
+                    flag = (frameCount % 4 == 0) || (((frameCount - 1) != 0) && (frameCount - 1) % 4 == 0);
                     frameCount++;
                 }
-                if(flag){
+                if (flag)
+                {
                     qDebug() << "frameCount: " << frameCount << "screenGeometry: " << screenGeometry;
-                    if (m_boardVendorType)
-                    {
+                    if (m_boardVendorType) {
                         //arm hw
                         //processBuffer(rbuf, screenGeometry);
-                        processBufferHw(rbuf, screenGeometry,screenId);
-                    } else
-                    {
+                        processBufferHw(rbuf, screenGeometry, screenId);
+                    } else {
                         //other
                         processBufferX86(rbuf, screenGeometry);
                     }
@@ -982,7 +982,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                 qDebug() << "close(rbuf->fd())";
 #ifdef KWAYLAND_REMOTE_FLAGE_ON
                 qDebug() << "rbuf->frame(): " << rbuf->frame();
-                if (rbuf->frame() == 0) {
+                if (rbuf->frame() == 0)
+                {
                     qDebug() << "是否是最后一帧: " << rbuf->frame();
                     emit lastFrame();
                 }
@@ -1112,25 +1113,25 @@ void WaylandIntegration::WaylandIntegrationPrivate::initScreenFrameBuffer()
     m_ScreenDateBufFrames[0]._width = 0;
     m_ScreenDateBufFrames[0]._height = 0;
     m_ScreenDateBufFrames[0]._format =  QImage::Format_RGBA8888;
-    m_ScreenDateBufFrames[0]._rect = QRect(0,0,0,0);
+    m_ScreenDateBufFrames[0]._rect = QRect(0, 0, 0, 0);
     m_ScreenDateBufFrames[0]._flag = false;
     m_ScreenDateBufFrames[1]._frame = nullptr;
     m_ScreenDateBufFrames[1]._width = 0;
     m_ScreenDateBufFrames[1]._height = 0;
     m_ScreenDateBufFrames[1]._format =  QImage::Format_RGBA8888;
-    m_ScreenDateBufFrames[1]._rect = QRect(0,0,0,0);
+    m_ScreenDateBufFrames[1]._rect = QRect(0, 0, 0, 0);
     m_ScreenDateBufFrames[1]._flag = false;
     m_curNewImageScreenFrames[0]._frame = nullptr;
     m_curNewImageScreenFrames[0]._width = 0;
     m_curNewImageScreenFrames[0]._height = 0;
     m_curNewImageScreenFrames[0]._format =  QImage::Format_RGBA8888;
-    m_curNewImageScreenFrames[0]._rect = QRect(0,0,0,0);
+    m_curNewImageScreenFrames[0]._rect = QRect(0, 0, 0, 0);
     m_curNewImageScreenFrames[0]._flag = false;
     m_curNewImageScreenFrames[1]._frame = nullptr;
     m_curNewImageScreenFrames[1]._width = 0;
     m_curNewImageScreenFrames[1]._height = 0;
     m_curNewImageScreenFrames[1]._format =  QImage::Format_RGBA8888;
-    m_curNewImageScreenFrames[1]._rect = QRect(0,0,0,0);
+    m_curNewImageScreenFrames[1]._rect = QRect(0, 0, 0, 0);
     m_curNewImageScreenFrames[1]._flag = false;
 }
 
