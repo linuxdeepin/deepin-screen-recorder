@@ -236,7 +236,7 @@ void SubToolWidget::updateOptionChecked()
         saveInfo.second = PNG; // 默认保存格式
     }
     //没有配置文件时，给定一个默认值
-    if (saveInfo.first == 0 && saveInfo.second == 0) {
+    if (saveInfo.first == 0 || saveInfo.second == 0) {
         m_SaveInfo.first = CLIPBOARD; // 默认保存路径
         m_SaveInfo.second = PNG; // 默认保存格式
     } else {
