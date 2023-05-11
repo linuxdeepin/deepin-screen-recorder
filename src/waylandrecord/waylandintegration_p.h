@@ -306,7 +306,6 @@ private:
 
     GstRecordX *m_gstRecordX;
 
-    qint32 m_lastFrame = -1;
 };
 
 }
