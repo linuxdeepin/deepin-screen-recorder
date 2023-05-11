@@ -385,6 +385,7 @@ int WaylandIntegration::WaylandIntegrationPrivate::getProductType()
             str_output.contains("PGUV", Qt::CaseInsensitive) ||
             str_output.contains("PGUW", Qt::CaseInsensitive) ||
             str_output.contains("L540", Qt::CaseInsensitive) ||
+            str_output.contains("W585", Qt::CaseInsensitive) ||
             isPangu())
         return 1;
     return 0;
