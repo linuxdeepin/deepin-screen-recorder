@@ -57,8 +57,14 @@ if (!equals(SYS_EDITION, "")) {
             DEFINES += KWAYLAND_REMOTE_FLAGE_ON
             message("wayland remote support: OK!!!")
         }
+        #1055Wayland remote协议新增release接口 110表示1054
+        greaterThan(SYS_BUILD_SUFFIX, 110) {
+            DEFINES += KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
+            message("wayland remote buffer release support: OK!!!")
+        }
     }
 }
+        DEFINES += KF5_WAYLAND_FLAGE_ON
 
 
 
