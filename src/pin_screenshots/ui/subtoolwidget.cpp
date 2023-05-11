@@ -210,6 +210,7 @@ void SubToolWidget::initShotLable()
     hLayout->addWidget(m_pinOptionButton, 0, Qt::AlignCenter);
     m_shotSubTool->setLayout(hLayout);
     addWidget(m_shotSubTool);
+    updateOptionChecked();
     qInfo() << __LINE__ << __FUNCTION__ << "贴图工具栏初始化完成";
 }
 
@@ -248,13 +249,18 @@ void SubToolWidget::updateOptionChecked()
 {
     qInfo() << __LINE__ << __FUNCTION__ << "更新菜单选项";
     QPair<int, int> saveInfo = Settings::instance()->getSaveOption();
+
+    if(saveInfo.second != PNG && saveInfo.second != JPG && saveInfo.second != BMP){
+        saveInfo.second = PNG;
+    }
     //没有配置文件时，给定一个默认值
-    if (saveInfo.first == 0 && saveInfo.second == 0) {
+    if (saveInfo.first == 0 || saveInfo.second == 0) {
         m_SaveInfo.first = CLIPBOARD; // 默认保存路径
         m_SaveInfo.second = PNG; // 默认保存格式
     } else {
         m_SaveInfo = saveInfo;
     }
+    qDebug() << "m_SaveInfo: " << m_SaveInfo;
     //当前选中的是指定目录时需要重判断
     if (m_SaveInfo.first == FOLDER || m_SaveInfo.first == FOLDER_CHANGE) {
         m_saveToSpecialPathMenu->menuAction()->setChecked(true);
