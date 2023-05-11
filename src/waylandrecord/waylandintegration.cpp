@@ -934,7 +934,11 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
         qDebug() << "正在创建wayland远程管理...";
         m_remoteAccessManager = m_registry->createRemoteAccessManager(m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).name, m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).version);
         qDebug() << "wayland远程管理已创建";
+#ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
         connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, KWayland::Client::RemoteBuffer * rbuf) {
+#else
+        connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
+#endif
             qDebug() << "正在接收buffer...";
             QRect screenGeometry = (KWayland::Client::Output::get(reinterpret_cast<wl_output *>(const_cast<void *>(output))))->geometry();
             qDebug() << "screenGeometry: " << screenGeometry;
@@ -990,7 +994,10 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 #endif
                 qDebug() << "buffer已处理" << "fd:" << rbuf->fd();
 
+#ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
+
                 rbuf->release();
+#endif
                 qDebug() << "rbuf->release()";
             });
             qDebug() << "buffer已接收";
