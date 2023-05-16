@@ -21,9 +21,15 @@ Homepage: https://github.com/linuxdeepin/deepin-screen-recorder
 
 Package: deepin-screen-recorder
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libgstreamer1.0-0 (>= 1.0.0), ffmpeg
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgstreamer1.0-0 (>= 1.0.0), ffmpeg, deepin-screen-recorder-plugin
 Recommends: dde-session-ui,deepin-ocr, gstreamer1.0-plugins-bad, uos-reporter, deepin-event-log
 Conflicts: deepin-screenshot
 Replaces: deepin-screenshot
 Description: Simple recorder tools for UOS
  A simple screen shot and recorder tools for UOS
+
+Package: deepin-screen-recorder-plugin
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: A dde dock tool.
+ System Monitor Plugin is a dde dock tool.
