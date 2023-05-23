@@ -24,6 +24,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <source>Recording</source>
         <translation>Gavació</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Captura de pantalla</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -629,6 +633,14 @@ Manteniu premuda la tecla Maj per dibuixar una fletxa vertical o horitzontal.</t
     </message>
     <message>
         <source>Show click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

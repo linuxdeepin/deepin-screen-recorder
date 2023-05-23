@@ -24,6 +24,10 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <source>Recording</source>
         <translation>Rögzítés</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Képernyő Rögzítő</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -629,6 +633,14 @@ Függőleges vagy vízszintes nyíl rajzolásához tartsa lenyomva a Shift bille
     </message>
     <message>
         <source>Show click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

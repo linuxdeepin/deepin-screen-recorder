@@ -24,6 +24,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <source>Recording</source>
         <translation>Opname</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Schermfoto</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -629,6 +633,14 @@ Houd Shift ingedrukt om een verticale of horizontale pijl te tekenen</translatio
     </message>
     <message>
         <source>Show click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

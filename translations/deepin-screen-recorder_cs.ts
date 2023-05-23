@@ -24,6 +24,10 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <source>Recording</source>
         <translation>Nahrávání</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Zachytávání obrazovky</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -629,6 +633,14 @@ Stiskněte a podržte klávesu Shift pro kreslení svislé nebo vodorovné šipk
     </message>
     <message>
         <source>Show click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
