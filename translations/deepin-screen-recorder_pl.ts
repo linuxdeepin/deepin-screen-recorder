@@ -24,6 +24,10 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <source>Recording</source>
         <translation>Nagrywanie</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Przechwytywanie ekranu</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -586,6 +590,17 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <source>Videos</source>
         <translation>Filmy</translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
         <source>Set a path on save</source>
         <translation>Ustaw ścieżkę zapisu</translation>

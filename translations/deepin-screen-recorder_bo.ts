@@ -35,6 +35,10 @@ or press the shortcut again to stop recording</source>
         <source>Screenshot</source>
         <translation>བརྙན་བཤུས།</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">བརྙན་བཤུས་བརྙན་ཕབ།</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -597,6 +601,17 @@ or press the shortcut again to stop recording</source>
         <source>Videos</source>
         <translation>བཪྙན་ཟློས།</translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
         <source>Set a path on save</source>
         <translation>ཉར་སྐབས་གནས་ས་སྒྲིག་འགོད་བྱེད་པ།</translation>

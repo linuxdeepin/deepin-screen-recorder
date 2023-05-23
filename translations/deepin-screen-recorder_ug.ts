@@ -34,6 +34,10 @@ or press the shortcut again to stop recording</source>
         <source>Screenshot</source>
         <translation>رەسىم تۇتۇش</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">ئېكراننى رەسىم تۇتۇش، سىنغا ئېلىش</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -596,6 +600,17 @@ or press the shortcut again to stop recording</source>
         <source>Videos</source>
         <translation>ۋىدېئو</translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
         <source>Set a path on save</source>
         <translation>ئورۇننى ساقلىغاندا يېڭىلاش</translation>

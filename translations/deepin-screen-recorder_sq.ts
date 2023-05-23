@@ -24,6 +24,10 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
         <source>Recording</source>
         <translation>Regjistrim</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Regjistrim Ekrani</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -585,6 +589,14 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     <message>
         <source>Videos</source>
         <translation>Video</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Set a path on save</source>

@@ -24,6 +24,10 @@ or press the shortcut again to stop recording</translation>
         <source>Recording</source>
         <translation>Recording</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Screen Capture</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -586,6 +590,17 @@ or press the shortcut again to stop recording</translation>
         <source>Videos</source>
         <translation>Videos</translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
         <source>Set a path on save</source>
         <translation>Set a path on save</translation>

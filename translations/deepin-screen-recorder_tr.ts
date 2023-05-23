@@ -24,6 +24,10 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <source>Recording</source>
         <translation>Kaydediyor</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Ekran Alıntısı</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -586,6 +590,17 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <source>Videos</source>
         <translation>Videoalar</translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
         <source>Set a path on save</source>
         <translation>Kaydet sırasında bir yol ayarla</translation>

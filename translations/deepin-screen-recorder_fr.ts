@@ -24,6 +24,10 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <source>Recording</source>
         <translation>Enregistrement</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Capturer l&apos;écran</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -584,6 +588,14 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>Videos</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
