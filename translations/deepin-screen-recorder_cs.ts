@@ -4,7 +4,7 @@
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Pro zastavení záznamu klikněte na ikonu
+        <translation>Pro zastavení záznamu klepněte na ikonu
 v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
@@ -20,7 +20,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Nahrávání</translation>
     </message>
 </context>
 <context>
@@ -110,7 +110,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Otevřít složku</translation>
     </message>
 </context>
 <context>
@@ -155,7 +155,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Otevřít složku</translation>
     </message>
 </context>
 <context>
@@ -189,7 +189,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>Pokud chcete pořídit snímek posouvaného obsahu, otáčejte kolečkem myši nebo klikněte</translation>
+        <translation>Pokud chcete pořídit snímek posouvaného obsahu, otáčejte kolečkem myši nebo klepněte</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
@@ -197,7 +197,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>Neplatná oblast, klikněte na </translation>
+        <translation>Neplatná oblast, klepněte na </translation>
     </message>
 </context>
 <context>
@@ -363,11 +363,11 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>Spustit rozpoznávání textu</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Spustit pořizování snímků obrazovky</translation>
     </message>
 </context>
 <context>
@@ -428,7 +428,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Show Click</source>
-        <translation>Ukázat kliknutí</translation>
+        <translation>Ukázat klepnutí</translation>
     </message>
     <message>
         <source>Options</source>
@@ -560,7 +560,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>ogg</source>
@@ -568,7 +568,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>Videa</translation>
     </message>
 </context>
 <context>

@@ -110,7 +110,7 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Buka Folder</translation>
     </message>
 </context>
 <context>
@@ -155,7 +155,7 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Buka Folder</translation>
     </message>
 </context>
 <context>
@@ -363,11 +363,11 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>Mula OCR</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Mula tangkap tatal</translation>
     </message>
 </context>
 <context>
@@ -560,7 +560,7 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>ogg</source>
@@ -568,7 +568,7 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>Video</translation>
     </message>
 </context>
 <context>

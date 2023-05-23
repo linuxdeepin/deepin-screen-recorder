@@ -19,7 +19,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>ئېكراننى سىنغا ئېلىش</translation>
     </message>
 </context>
 <context>
@@ -109,7 +109,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>ھۆججەت قىسقۇچنى ئېچىش</translation>
     </message>
 </context>
 <context>
@@ -154,7 +154,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>ھۆججەت قىسقۇچنى ئېچىش</translation>
     </message>
 </context>
 <context>
@@ -362,11 +362,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>سۈرەتتىكى خەتنى تونۇتۇشنى قوزغىتىش</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>سىيرىلما سۈرەت تۇتۇشنى قوزغىتىش</translation>
     </message>
 </context>
 <context>
@@ -559,15 +559,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>ogg</source>
-        <translation type="unfinished"/>
+        <translation>ogg</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>ۋىدېئو</translation>
     </message>
 </context>
 <context>
