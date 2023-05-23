@@ -24,6 +24,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <source>Recording</source>
         <translation>Opname</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Schermfoto</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -586,6 +590,17 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <source>Videos</source>
         <translation>Video&apos;s</translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
         <source>Set a path on save</source>
         <translation>Locatie kiezen na klikken op opslaan</translation>

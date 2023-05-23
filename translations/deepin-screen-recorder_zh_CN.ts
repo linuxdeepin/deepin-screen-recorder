@@ -24,6 +24,10 @@ or press the shortcut again to stop recording</source>
         <source>Recording</source>
         <translation>录屏</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation>截图录屏</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -601,6 +605,17 @@ or press the shortcut again to stop recording</source>
         <source>Videos</source>
         <translation>视频</translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>保存时设置位置</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>保存时更新位置</translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
         <source>Set a path on save</source>
         <translation>保存时设置位置</translation>

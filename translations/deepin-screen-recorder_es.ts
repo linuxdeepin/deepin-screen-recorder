@@ -24,6 +24,10 @@ o haga clic en el icono de la bandeja</translation>
         <source>Recording</source>
         <translation>Grabaciones</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Captura de pantalla</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -586,6 +590,17 @@ o haga clic en el icono de la bandeja</translation>
         <source>Videos</source>
         <translation>Videos</translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
         <source>Set a path on save</source>
         <translation>Establecer ruta para guardar</translation>

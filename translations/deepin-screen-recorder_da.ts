@@ -24,6 +24,10 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Skærmoptagelse</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -586,6 +590,17 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <source>Videos</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
         <source>Set a path on save</source>
         <translation type="unfinished"></translation>

@@ -24,6 +24,10 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <source>Recording</source>
         <translation>Rakaman</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Tangkap Skrin</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -586,6 +590,17 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <source>Videos</source>
         <translation>Video</translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
         <source>Set a path on save</source>
         <translation>Tetapkan laluan ketika simpan</translation>

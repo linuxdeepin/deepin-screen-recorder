@@ -24,6 +24,10 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <source>Recording</source>
         <translation>Gravação</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Captura de ecrã</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -586,6 +590,17 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <source>Videos</source>
         <translation>Vídeos</translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
         <source>Set a path on save</source>
         <translation type="unfinished"></translation>

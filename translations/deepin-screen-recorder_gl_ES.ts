@@ -24,6 +24,10 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Captura de pantalla</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -586,6 +590,17 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <source>Videos</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
         <source>Set a path on save</source>
         <translation type="unfinished"></translation>

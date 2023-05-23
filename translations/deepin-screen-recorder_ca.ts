@@ -24,6 +24,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <source>Recording</source>
         <translation>Gavació</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Captura de pantalla</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -586,6 +590,17 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <source>Videos</source>
         <translation>Vídeos</translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
         <source>Set a path on save</source>
         <translation>Estableix un camí per desar</translation>

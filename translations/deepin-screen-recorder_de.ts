@@ -24,6 +24,10 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <source>Recording</source>
         <translation>Wird aufgenommen</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Bildschirmaufnahme</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -586,6 +590,17 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <source>Videos</source>
         <translation>Videos</translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
         <source>Set a path on save</source>
         <translation>Beim Speichern einen Pfad festlegen</translation>

@@ -24,6 +24,10 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <source>Recording</source>
         <translation>Registrazione in corso</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Cattura schermo</translation>
+    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -586,6 +590,17 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <source>Videos</source>
         <translation>Video</translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
         <source>Set a path on save</source>
         <translation>Seleziona un percorso di salvataggio</translation>
