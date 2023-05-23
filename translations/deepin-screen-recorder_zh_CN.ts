@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="zh_CN">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="zh_CN">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -569,6 +571,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Videos</source>
         <translation>视频</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>保存时设置位置</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>保存时更新位置</translation>
     </message>
 </context>
 <context>

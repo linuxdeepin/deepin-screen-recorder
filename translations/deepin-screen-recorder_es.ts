@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="es">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="es">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -569,6 +571,14 @@ o haga clic en el icono de la bandeja</translation>
     <message>
         <source>Videos</source>
         <translation>Videos</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
