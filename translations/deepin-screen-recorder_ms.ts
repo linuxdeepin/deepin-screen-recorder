@@ -24,6 +24,10 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <source>Recording</source>
         <translation>Rakaman</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Tangkap Skrin</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -622,6 +626,14 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Show click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
