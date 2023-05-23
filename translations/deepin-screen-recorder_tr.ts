@@ -110,7 +110,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Klasör Aç</translation>
     </message>
 </context>
 <context>
@@ -155,7 +155,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Klasör Aç</translation>
     </message>
 </context>
 <context>
@@ -363,11 +363,11 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>OCR&apos;yi başlat</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Kaydırma Görüntüsü başlat</translation>
     </message>
 </context>
 <context>
@@ -568,7 +568,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>Videoalar</translation>
     </message>
 </context>
 <context>

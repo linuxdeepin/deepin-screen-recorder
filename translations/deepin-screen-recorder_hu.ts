@@ -90,7 +90,7 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>Mivel az ablakok effektezése le van tiltva a folyamat során, a felvételt le kell állítani</translation>
+        <translation>Mivel az ablak effekt le van tiltva, a felvételt le kell állítani</translation>
     </message>
     <message>
         <source>Screenshot</source>

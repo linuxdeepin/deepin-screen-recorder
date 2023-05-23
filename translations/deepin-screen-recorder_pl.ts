@@ -42,11 +42,11 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>Zapisywanie nie powiodło się. Proszę zapisać go w swoim katalogu domowym.</translation>
+        <translation>Zapisywanie nie powiodło się. Zapisz w swoim katalogu domowym.</translation>
     </message>
     <message>
         <source>View</source>
-        <translation>Podgląd</translation>
+        <translation>Wyświetl</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
@@ -98,7 +98,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>Niepowodzenie zrzutu ekranu</translation>
+        <translation>Zrzut ekranu nie powiódł się.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -110,7 +110,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation>Otwórz katalog</translation>
+        <translation>Otwórz folder</translation>
     </message>
 </context>
 <context>
@@ -125,7 +125,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Wyjście</translation>
+        <translation>Wyjdź</translation>
     </message>
 </context>
 <context>
@@ -139,7 +139,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <name>RecordProcess</name>
     <message>
         <source>View</source>
-        <translation>Podgląd</translation>
+        <translation>Wyświetl</translation>
     </message>
     <message>
         <source>Recording finished</source>
@@ -155,7 +155,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation>Otwórz katalog</translation>
+        <translation>Otwórz folder</translation>
     </message>
 </context>
 <context>
@@ -173,11 +173,11 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>Niepowodzenie ciągłego zrzutu ekranu</translation>
+        <translation>Nie udało się utworzyć pionowego zrzutu ekranu</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation>Dotarto do samego końca obszaru przewijania</translation>
+        <translation>Dotarto do końca obszaru przewijania</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
@@ -204,7 +204,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>Wprowadź tutaj tekst</translation>
+        <translation>Wprowadź tekst tutaj</translation>
     </message>
 </context>
 <context>
@@ -215,7 +215,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation>Wyjście/Zapisz</translation>
+        <translation>Wyjdź/Zapisz</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -243,7 +243,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Wyjście</translation>
+        <translation>Wyjdź</translation>
     </message>
     <message>
         <source>Save</source>
@@ -508,7 +508,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation>Katalog</translation>
+        <translation>Folder</translation>
     </message>
     <message>
         <source>Format</source>
@@ -586,7 +586,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Wyjście</translation>
+        <translation>Wyjdź</translation>
     </message>
 </context>
 </TS>

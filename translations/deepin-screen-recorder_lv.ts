@@ -97,10 +97,6 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
         <translation>Ekrānuzņēmums</translation>
     </message>
     <message>
-        <source>The screenshot has been saved in the album</source>
-        <translation>Ekrānuzņēmums saglabāts albumā</translation>
-    </message>
-    <message>
         <source>Screenshot failed.</source>
         <translation type="unfinished"/>
     </message>
@@ -110,6 +106,10 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Open Folder</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -152,6 +152,10 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     <message>
         <source>Record</source>
         <translation>Ierakstīt</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -357,6 +361,14 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
         <source>Pin screenshots</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Start OCR</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -552,6 +564,10 @@ vai vēlreiz nospiediet saīsni, lai pārtrauktu ierakstīšanu</translation>
     </message>
     <message>
         <source>ogg</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Videos</source>
         <translation type="unfinished"/>
     </message>
 </context>

@@ -20,7 +20,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>བརྙན་ཕབ།</translation>
     </message>
 </context>
 <context>
@@ -110,7 +110,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>ཡིག་ཁུག་ཁ་ཕྱེ།</translation>
     </message>
 </context>
 <context>
@@ -155,7 +155,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>ཡིག་ཁུག་ཁ་ཕྱེ།</translation>
     </message>
 </context>
 <context>
@@ -363,11 +363,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>པར་རིས་དབྱེ་འབྱེད་མགྱོགས་མྱུར་འགོ་སློང་།</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>འགུལ་ནས་བཪྙན་ལེན་འགོ་སློང་།</translation>
     </message>
 </context>
 <context>
@@ -560,15 +560,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>ogg</source>
-        <translation type="unfinished"/>
+        <translation>ogg</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>བཪྙན་ཟློས།</translation>
     </message>
 </context>
 <context>
