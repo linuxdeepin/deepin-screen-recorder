@@ -36,6 +36,7 @@ TimeWidget::TimeWidget(DWidget *parent):
     m_hover(false),
     m_pressed(false)
 {
+    qInfo() <<  "正在初始化计时显示界面...";
     QFontMetrics fm(RECORDER_TIME_FONT);
     m_showTimeStr = QString("00:00:00");
     m_textSize = fm.boundingRect("00:00:00 ").size();
@@ -48,7 +49,8 @@ TimeWidget::TimeWidget(DWidget *parent):
     m_currentIcon = m_lightIcon;
     //this->setAttribute(Qt::WA_StyledBackground,true);
     //this->setStyleSheet("background-color: rgb(255,255, 0)");
-    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
+    setMaximumSize(RECORDER_TIME_WIDGET_MAXWIDTH,RECORDER_TIME_WIDGET_MAXHEIGHT);
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 }
 
 TimeWidget::~TimeWidget()
@@ -78,17 +80,25 @@ bool TimeWidget::enabled()
 
 QSize TimeWidget::sizeHint() const
 {
+    qInfo() << "================ sizeHint ==start============== ";
+    //qInfo() <<  "sizeHint 1>>>>>>>>>> this->width(): " << this->width() << " , this->height(): " << this->height();
+    //qInfo() <<  "sizeHint 1>>>>>>>>>> this->geometry(): " << this->geometry();
     QFontMetrics fm(RECORDER_TIME_FONT);
     int width = -1;
     int height = -1;
     if (position::top == m_position || position::bottom == m_position) {
         width = fm.boundingRect(RECORDER_TIME_LEVEL_SIZE).size().width() + 5 + RECORDER_TIME_LEVEL_ICON_SIZE + RECORDER_TEXT_TOP_BOTTOM_X;
-        height = RECORDER_TIME_LEVEL_ICON_SIZE;
+        height = this->height();
+        qInfo() << "top or bottom itemWidget width: " << width << " ,itemWidget height: " << height;
     } else if (position::left == m_position || position::right == m_position) {
-        width = RECORDER_TIME_LEVEL_ICON_SIZE + RECORDER_TEXT_TOP_BOTTOM_X;
-        height = RECORDER_TIME_VERTICAL_ICON_SIZE;
+        width = this->width();
+        height = this->width() ;
+        qInfo() << "left or right itemWidget width: " << width << " ,itemWidget height: " << height;
     }
-    return QSize(width, this->geometry().height());
+    //qInfo() <<  "sizeHint 2>>>>>>>>>> this->width(): " << this->width() << " , this->height(): " << this->height();
+    //qInfo() <<  "sizeHint 2>>>>>>>>>> this->geometry(): " << this->geometry();
+    qInfo() << "================ sizeHint ==end============== ";
+    return QSize(width, height);
 }
 
 void TimeWidget::onTimeout()
@@ -109,12 +119,27 @@ void TimeWidget::onTimeout()
 
 void TimeWidget::onPositionChanged(int value)
 {
+    //qInfo() << "====================== onPositionChanged ====start=================";
     m_position = value;
+    if (position::left == m_position || position::right == m_position) {
+        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
+     }else {
+        setGeometry(this->geometry().x(),this->geometry().y(),this->geometry().width(),RECORDER_TIME_WIDGET_MAXHEIGHT);
+        updateGeometry();
+        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    }
+    //qInfo() <<  ">>>>>>>>>> this->width(): " << this->width() << " , this->height(): " << this->height();
+    //qInfo() <<  ">>>>>>>>>> this->geometry(): " << this->geometry();
+    //qInfo() << "====================== onPositionChanged ====end=================";
+
 }
 
 void TimeWidget::paintEvent(QPaintEvent *e)
 {
+    //qInfo() << "====================== paintEvent ====start=================";
     QPainter painter(this);
+    //qInfo() <<  ">>>>>>>>>> rect().width(): " << rect().width() << " , this->height(): " << this->height();
+
     if (rect().height() > PLUGIN_BACKGROUND_MIN_SIZE) {
         QColor color;
         if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
@@ -199,9 +224,13 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         //m_pixmap.setDevicePixelRatio(ratio);
         const QRectF &rf = QRectF(rect());
         const QRectF &rfp = QRectF(m_pixmap.rect());
+        //qInfo() << __FUNCTION__ <<  " >>>>>>>>>> rfp: " << rfp << " , rf: " << rf;
         painter.drawPixmap(rf.center() - rfp.center() / m_pixmap.devicePixelRatioF(), m_pixmap);
     }
+    //qInfo() << __FUNCTION__ <<  " >>>>>>>>>> this->width(): " << this->width() << " , this->height(): " << this->height();
+    //qInfo() << __FUNCTION__ << " >>>>>>>>>> this->geometry(): " << this->geometry();
     QWidget::paintEvent(e);
+    //qInfo() << "====================== paintEvent ====end=================";
 }
 
 void TimeWidget::mousePressEvent(QMouseEvent *e)
