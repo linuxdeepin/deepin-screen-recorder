@@ -1,3 +1,9 @@
+deepin-screen-recorder (5.12.4) unstable; urgency=medium
+
+  * New version 5.12.4
+
+ -- wangcong <wangcong@uniontech.com>  Wed, 24 May 2023 14:24:47 +0800
+
 deepin-screen-recorder (5.12.3) unstable; urgency=medium
 
   * Graded control.
