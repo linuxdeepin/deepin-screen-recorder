@@ -23,6 +23,10 @@ or press the shortcut again to stop recording</source>
         <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">ئېكراننى رەسىم تۇتۇش، سىنغا ئېلىش</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -621,6 +625,14 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Show click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -24,6 +24,10 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
         <source>Recording</source>
         <translation>Regjistrim</translation>
     </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Regjistrim Ekrani</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -629,6 +633,14 @@ Shtypni dhe mbani të shtypur tastin Shift, që të vizatoni një shigjetë vert
     </message>
     <message>
         <source>Show click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
