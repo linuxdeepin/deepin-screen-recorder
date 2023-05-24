@@ -154,10 +154,15 @@ void RecordTimePlugin::onPause()
 void RecordTimePlugin::refresh()
 {
     QSize size = m_timeWidget->sizeHint();
+//    qInfo() << position() <<  " refresh >>>>>>>>>> size: " << size
+//            << " , m_timeWidget->width(): " << m_timeWidget->width()
+//            << " , m_timeWidget->height(): " << m_timeWidget->height()
+//            << " , m_bshow: " << m_bshow;
     if (size.width() > m_timeWidget->width()
             && 1 != position()
             && 3 != position()
             && m_bshow) {
+        qInfo() << "========= 重新加载插件" ;
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
     }
