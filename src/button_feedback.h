@@ -5,6 +5,7 @@
 
 #ifndef BUTTONFEEDBACK_H
 #define BUTTONFEEDBACK_H
+#include <DWindowManagerHelper>
 
 #include <DWidget>
 #include <QTimer>
@@ -36,7 +37,7 @@ private:
     QTimer *timer;
 
     int frameIndex;
-    QPainter* m_painter = nullptr;
+    QPainter *m_painter = nullptr;
 };
 
 #endif

@@ -17,6 +17,7 @@
 
 const int ButtonFeedback::FRAME_RATE = 40; // ms
 
+DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
 ButtonFeedback::ButtonFeedback(DWidget *parent) : DWidget(parent)
@@ -113,7 +114,9 @@ void ButtonFeedback::paintEvent(QPaintEvent *event)
     m_painter->begin(this);
     m_painter->drawPixmap(QPoint(0, 0), pixmap);
     m_painter->end();
-    //setMask(pixmap.mask());
+    if (!DWindowManagerHelper::instance()->hasComposite()) {
+        setMask(pixmap.mask());
+    }
     event->accept();
 }
 
