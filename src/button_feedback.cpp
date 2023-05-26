@@ -7,6 +7,7 @@
 #include "utils.h"
 
 #include <DHiDPIHelper>
+#include <DWindowManagerHelper>
 
 #include <QPainter>
 #include <QTimer>
@@ -19,6 +20,7 @@ const int ButtonFeedback::FRAME_RATE = 40; // ms
 
 DGUI_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
+DGUI_USE_NAMESPACE
 
 ButtonFeedback::ButtonFeedback(DWidget *parent) : DWidget(parent)
 {
