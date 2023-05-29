@@ -1140,6 +1140,11 @@ void MainWindow::initScreenRecorder()
     m_functionType = status::record;
     m_keyBoardStatus = false;
     m_mouseStatus = false;
+    if (ConfigSettings::instance()->getValue("recorder", "cursor").toInt() == ConfigSettings::CursorType::OnlyCursorClick ||
+            ConfigSettings::instance()->getValue("recorder", "cursor").toInt() == ConfigSettings::CursorType::BothCursor) {
+        m_mouseStatus = true;
+    }
+
     m_repaintMainButton = false;
     m_repaintSideBar = false;
     m_screenWidth = m_backgroundRect.width();
