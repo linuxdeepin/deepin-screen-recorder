@@ -552,6 +552,11 @@ public slots:
      * @brief 有些时候退出全局事件监听线程会卡住，此时强退截图录屏
      */
     void onExitScreenCapture();
+
+    /**
+     * @brief 任意屏幕分辨率被改变
+     */
+    void onScreenResolutionChanged();
 protected:
     bool eventFilter(QObject *object, QEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
@@ -1030,6 +1035,7 @@ private:
     bool m_isFullScreenShot = false;
     bool m_isScreenVertical = false; // 判断多屏是否纵向布局
     bool m_isLockedState = false;
+    bool m_isScreenResolutionChanged = false;
 };
 
 #endif //MAINWINDOW_H
