@@ -459,6 +459,9 @@ void SubToolWidget::initRecordOption()
     } else if (cursor == 1) {
         showPointer->setChecked(true);
         showClick->setChecked(false);
+    }else{
+        showPointer->setChecked(false);
+        showClick->setChecked(false);
     }
 
     int save_opt = t_settings->getValue("recorder", "save_op").toInt();

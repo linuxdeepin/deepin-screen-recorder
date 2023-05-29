@@ -16,6 +16,12 @@ class ConfigSettings : public QObject
 {
     Q_OBJECT
 public:
+    enum CursorType{
+        NoCursor = 0,
+        OnlyCursor,
+        OnlyCursorClick,
+        BothCursor
+    };
     static ConfigSettings *instance();
     void setValue(const QString &group, const QString &key, const QVariant &val);
     QVariant getValue(const QString &group, const QString &key);
