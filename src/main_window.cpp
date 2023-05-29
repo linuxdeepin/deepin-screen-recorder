@@ -137,6 +137,9 @@ void MainWindow::initMainWindow()
     }
 
     m_screenCount = QApplication::desktop()->screenCount();
+    QDesktopWidget *desktopwidget = QApplication::desktop();
+    connect(desktopwidget, SIGNAL(resized(int)), this, SLOT(onScreenResolutionChanged()));
+
     QList<QScreen *> screenList = qApp->screens();
     int hTotal = 0;
     for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
@@ -657,6 +660,7 @@ void MainWindow::forciblySavingNotify()
 
 void MainWindow::onExit()
 {
+    qInfo() << "exit screenshot app";
     if (RECORD_BUTTON_RECORDING == recordButtonStatus) {
         stopRecord();
     } else {
@@ -1449,6 +1453,15 @@ void MainWindow::onExitScreenCapture()
 {
     qInfo() << __FUNCTION__ << __LINE__ << "已超时(3s) 强制退出截图录屏...";
     _Exit(0);
+}
+
+void MainWindow::onScreenResolutionChanged()
+{
+    qInfo() << "Screen Resolution has Changed!";
+    if (!m_isScreenResolutionChanged) {
+        m_isScreenResolutionChanged = true;
+        onExit();
+    }
 }
 
 void MainWindow::initLaunchMode(const QString &launchMode)
