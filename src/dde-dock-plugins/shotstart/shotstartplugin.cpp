@@ -24,7 +24,19 @@ const QString ShotStartPlugin::pluginName() const
 
 const QString ShotStartPlugin::pluginDisplayName() const
 {
-    return tr("Screen Capture");
+    QString pluginDisplayName = tr("Screen Capture");
+    qInfo() << "Plugin Display Name is " << pluginDisplayName;
+    return pluginDisplayName;
+}
+
+QString ShotStartPlugin::description() const
+{
+    QString description = ""; //description()返回的结果为空时，快捷面板会使用pluginDisplayName()进行显示
+    if(m_iconWidget && m_isRecording){
+        description = m_iconWidget->getTimeStr();
+    }
+    qInfo() << "Description is " << description;
+    return description;
 }
 
 void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
@@ -65,7 +77,7 @@ QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::Col
     }
     QIcon shot(QString(":/res/%1.svg").arg(shotIconName));
     QIcon recorder(":/res/screen-recording.svg");
-    if (DockPart::QuickShow == dockPart || DockPart::DCCSetting == dockPart) {
+    if (DockPart::QuickShow == dockPart /*|| DockPart::DCCSetting == dockPart*/ || DockPart::QuickPanel == dockPart) {
         qInfo() << "是否正在录屏:" << m_isRecording;
         if (m_isRecording) {
             qInfo() << "显示录屏图标..." << m_iconWidget.isNull();
@@ -90,7 +102,11 @@ QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::Col
                 return shot;
             } else {
                 QPixmap pixmap;
-                pixmap = m_iconWidget->iconPixMap(shot, QSize(20, 20));
+                if(DockPart::QuickPanel == dockPart){
+                    pixmap = m_iconWidget->iconPixMap(shot, QSize(24, 24));
+                }else{
+                    pixmap = m_iconWidget->iconPixMap(shot, QSize(20, 20));
+                }
                 if (pixmap.isNull()) {
                     qDebug() << "截图图标已显示(pixmap is null >> icon)";
                     return shot;
@@ -100,9 +116,9 @@ QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::Col
                 }
             }
         }
-    }else if(DockPart::QuickPanel == dockPart){
+    }/*else if(DockPart::QuickPanel == dockPart){
         return QIcon();
-    }
+    }*/
     return shot;
 }
 
@@ -119,9 +135,10 @@ PluginFlags ShotStartPlugin::flags() const
 
 QWidget *ShotStartPlugin::itemWidget(const QString &itemKey)
 {
-    if(itemKey == QUICK_ITEM_KEY){
-        return m_iconWidget.data();
-    }
+    qInfo() << "itemKey is " << itemKey;
+//    if(itemKey == QUICK_ITEM_KEY){
+//        return m_iconWidget.data();
+//    }
     return nullptr;
 }
 
@@ -185,19 +202,19 @@ void ShotStartPlugin::invokedMenuItem(const QString &itemKey, const QString &men
 bool ShotStartPlugin::onStart()
 {
     m_isRecording = true;
-    qInfo() << "开始录屏。。。。。。" << m_isRecording;
+    qInfo() << "Start The Clock! Is Recording? " << m_isRecording;
     m_baseTime = QTime::currentTime();
-    m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
     m_iconWidget->start();
+    m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
     return true;
 }
 
 void ShotStartPlugin::onStop()
 {
     m_isRecording = false;
-    qInfo() << "结束录屏。。。。。。" << m_isRecording;
-    m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
+    qInfo() << "End The Clock! Is Recording? " << m_isRecording;
     m_iconWidget->stop();
+    m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
 }
 
 void ShotStartPlugin::onRecording()

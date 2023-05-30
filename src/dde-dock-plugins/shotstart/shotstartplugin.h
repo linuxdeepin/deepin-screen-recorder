@@ -31,6 +31,13 @@ public:
      * @return
      */
     const QString pluginDisplayName() const override;
+
+    /**
+     * @brief description()返回的结果为空时，快捷面板会使用pluginDisplayName()进行显示
+     * @return
+     */
+    QString description() const override;
+
     /**
      * @brief init:插件初始化入口函数
      * @param proxyInter:主程序进程，上下文指针

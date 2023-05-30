@@ -164,6 +164,11 @@ void IconWidget::stop()
     disconnect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
     m_showTimeStr = tr("Screen Capture");
 }
+
+QString IconWidget::getTimeStr()
+{
+    return m_showTimeStr;
+}
 void IconWidget::onTimeout()
 {
     QTime showTime(0, 0, 0);
