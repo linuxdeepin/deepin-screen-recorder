@@ -41,6 +41,8 @@ public:
      * @brief stop:停止计时
      */
     void stop();
+
+    QString getTimeStr();
 protected:
     void paintEvent(QPaintEvent *e) override;
 protected slots:
