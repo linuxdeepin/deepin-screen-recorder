@@ -30,6 +30,7 @@ public:
         Normal,
     };
     enum ClickedKey {
+        Unknow = -1,
         First,
         Second,
         Third,

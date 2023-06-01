@@ -791,7 +791,7 @@ bool ShapesWidget::hoverOnArrow(QList<QPointF> points, QPointF pos)
 {
     if (points.length() != 2)
         return false;
-
+    bool result = false;
 //    QPointF t_rotatepos;
 
 //    qreal t_minx = qMin(points[1].x(), points[0].x());
@@ -802,19 +802,30 @@ bool ShapesWidget::hoverOnArrow(QList<QPointF> points, QPointF pos)
 //    t_rotatepos.setX(t_minx + t_width / 2 - 5);
 //    t_rotatepos.setY(t_miny + t_height / 2 - 35);
 
-    if (pointOnLine(points[0], points[1], pos)) {
+    //第一个点的偏移量
+    qreal firstPointPadX = std::abs(pos.x() - points[0].x());
+    qreal firstPointPadY = std::abs(pos.y() - points[0].y());
+    //第二个点的偏移量
+    qreal secondPointPadX = std::abs(pos.x() - points[1].x());
+    qreal secondPointPadY = std::abs(pos.y() - points[1].y());
+    //端点的偏移最大值
+    int pointPadding = 4;
+    if (pointOnLine(points[0], points[1], pos) &&
+            ((firstPointPadX > pointPadding || firstPointPadY > pointPadding)  &&
+             (secondPointPadX > pointPadding  || secondPointPadY > pointPadding))) {
         m_resizeDirection = Moving;
-        return true;
+        m_clickedKey = Unknow;
+        result = true;
     } else if (m_selectedIndex != -1 && m_selectedIndex == m_hoveredIndex
-               && pointClickIn(points[0], pos)) {
+               && pointClickIn(points[0], pos) && firstPointPadX <= pointPadding && firstPointPadY <= pointPadding) {
         m_clickedKey = First;
         m_resizeDirection = Rotate;
-        return true;
+        result = true;
     } else if (m_selectedIndex != -1 && m_selectedIndex == m_hoveredIndex
-               && pointClickIn(points[1], pos)) {
+               && pointClickIn(points[1], pos) && secondPointPadX <= pointPadding && secondPointPadY <= pointPadding) {
         m_clickedKey =   Second;
         m_resizeDirection = Rotate;
-        return true;
+        result = true;
     } /*else if ( m_selectedIndex != -1 && m_selectedIndex == m_hoveredIndex
                 && pointClickIn(t_rotatepos, pos)) {
         m_clickedKey =  Third;
@@ -823,8 +834,9 @@ bool ShapesWidget::hoverOnArrow(QList<QPointF> points, QPointF pos)
 //    }
     else {
         m_resizeDirection = Outting;
-        return false;
+        result = false;
     }
+    return result;
 }
 
 bool ShapesWidget::hoverOnLine(FourPoints mainPoints, QList<QPointF> points,
