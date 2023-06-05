@@ -107,6 +107,10 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <source>Pin Screenshots</source>
         <translation>Připnout snímky obrazovky</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

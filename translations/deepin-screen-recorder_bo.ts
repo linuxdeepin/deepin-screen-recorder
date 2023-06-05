@@ -107,6 +107,10 @@ or press the shortcut again to stop recording</source>
         <source>Pin Screenshots</source>
         <translation type="unfinished">སྦྱར་རིས།</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

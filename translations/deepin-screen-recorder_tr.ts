@@ -107,6 +107,10 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <source>Pin Screenshots</source>
         <translation>Ekran Görüntülerini Sabitle</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

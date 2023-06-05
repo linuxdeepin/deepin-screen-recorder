@@ -107,6 +107,10 @@ o haga clic en el icono de la bandeja</translation>
         <source>Pin Screenshots</source>
         <translation>Anclar captura de pantalla</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

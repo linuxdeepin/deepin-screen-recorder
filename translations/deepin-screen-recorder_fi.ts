@@ -107,6 +107,10 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <source>Pin Screenshots</source>
         <translation>Kiinnitä kaappaukset</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

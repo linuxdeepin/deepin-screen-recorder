@@ -107,6 +107,10 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <source>Pin Screenshots</source>
         <translation>Fixa les captures</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
