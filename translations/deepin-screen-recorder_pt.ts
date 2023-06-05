@@ -115,8 +115,8 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <translation>Afixar capturas de ecrã</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Abrir pasta</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

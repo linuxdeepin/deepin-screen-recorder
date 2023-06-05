@@ -216,6 +216,8 @@ int main(int argc, char *argv[])
 
         // Load translator.
         app->loadTranslator();
+        Utils::appName = MainWindow::tr("deepin-screen-recorder");
+        qInfo() << "Original Application Name is: " << QCoreApplication::applicationName() << ". International Application Name is: " << Utils::appName;
 
         // 主题设置
         DGuiApplicationHelper::ColorType t_type = DGuiApplicationHelper::instance()->themeType();

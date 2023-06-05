@@ -115,8 +115,8 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <translation>Fixa les captures</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Obre la carpeta</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

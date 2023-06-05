@@ -115,8 +115,8 @@ or press the shortcut again to stop recording</translation>
         <translation>Pin Screenshots</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Open Folder</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

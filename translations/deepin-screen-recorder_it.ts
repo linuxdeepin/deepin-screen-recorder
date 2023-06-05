@@ -115,8 +115,8 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <translation>Blocca screenshot</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Apri cartella</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

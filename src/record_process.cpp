@@ -761,7 +761,7 @@ void RecordProcess::exitRecord(QString newSavePath)
         unsigned int id = 0;
 
         QList<QVariant> arg;
-        arg << (QCoreApplication::applicationName())                 // appname
+        arg << Utils::appName  //(QCoreApplication::applicationName())                 // appname
             << id                                                    // id
             << QString("deepin-screen-recorder")                     // icon
             << tr("Recording finished")                              // summary

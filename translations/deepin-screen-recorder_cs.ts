@@ -115,8 +115,8 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <translation>Připnout snímky obrazovky</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Otevřít složku</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

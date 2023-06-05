@@ -118,6 +118,10 @@ or press the shortcut again to stop recording</source>
         <source>Open Folder</source>
         <translation>ཡིག་ཁུག་ཁ་ཕྱེ།</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

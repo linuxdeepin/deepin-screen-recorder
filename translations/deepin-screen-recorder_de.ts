@@ -115,8 +115,8 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <translation>Bildschirmfotos anheften</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Ordner öffnen</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

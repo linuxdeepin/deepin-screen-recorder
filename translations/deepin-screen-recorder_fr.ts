@@ -115,7 +115,7 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <translation>Captures d&apos;écran de l&apos;épingle</translation>
     </message>
     <message>
-        <source>Open Folder</source>
+        <source>deepin-screen-recorder</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

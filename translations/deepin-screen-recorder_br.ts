@@ -118,6 +118,10 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <source>Open Folder</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
