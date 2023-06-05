@@ -107,6 +107,10 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <source>Pin Screenshots</source>
         <translation>Schermfoto&apos;s vastmaken</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

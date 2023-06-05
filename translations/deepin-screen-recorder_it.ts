@@ -107,6 +107,10 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <source>Pin Screenshots</source>
         <translation>Blocca screenshot</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

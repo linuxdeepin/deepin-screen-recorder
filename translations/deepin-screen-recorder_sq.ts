@@ -107,6 +107,10 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
         <source>Pin Screenshots</source>
         <translation>Fiksoni Foto Ekrani</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

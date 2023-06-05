@@ -54,6 +54,7 @@ public:
     static bool is3rdInterfaceStart;
     static bool isTabletEnvironment;
     static bool isWaylandMode;
+    static QString appName;
     /**
      * @brief 本机是否存在ffmpeg相关库 true:存在 false:不存在
      */

@@ -107,6 +107,10 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <source>Pin Screenshots</source>
         <translation>Képernyőképek kitűzése</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

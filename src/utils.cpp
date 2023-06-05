@@ -42,6 +42,7 @@ bool Utils::isRootUser = false;
 qreal Utils::pixelRatio = 0.0;
 bool Utils::isFFmpegEnv = true;
 int Utils::themeType = 0;
+QString Utils::appName = "";
 
 QString Utils::getQrcPath(QString imageName)
 {

@@ -107,6 +107,10 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <source>Pin Screenshots</source>
         <translation>Captures d&apos;écran de l&apos;épingle</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

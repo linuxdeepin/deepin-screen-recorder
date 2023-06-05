@@ -107,6 +107,10 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <source>Pin Screenshots</source>
         <translation>Afixar capturas de ecrã</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

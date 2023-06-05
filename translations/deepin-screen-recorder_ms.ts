@@ -107,6 +107,10 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <source>Pin Screenshots</source>
         <translation>Cemat Tangkap Layar</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

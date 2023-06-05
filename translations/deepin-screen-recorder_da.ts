@@ -107,6 +107,10 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <source>Pin Screenshots</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
