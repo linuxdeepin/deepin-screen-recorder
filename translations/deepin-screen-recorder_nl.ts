@@ -115,8 +115,8 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <translation>Schermfoto&apos;s vastmaken</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Map openen</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

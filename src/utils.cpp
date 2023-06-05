@@ -47,6 +47,7 @@ qreal Utils::pixelRatio = 0.0;
 bool Utils::isFFmpegEnv = true;
 int Utils::themeType = 0;
 int Utils::specialRecordingScreenMode = -1;
+QString Utils::appName = "";
 
 QString Utils::getQrcPath(QString imageName)
 {

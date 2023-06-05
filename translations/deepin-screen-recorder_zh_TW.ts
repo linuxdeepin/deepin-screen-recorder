@@ -115,8 +115,8 @@ or press the shortcut again to stop recording</source>
         <translation>貼圖</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>打開資料夾</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -115,8 +115,8 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <translation>Kiinnitä kaappaukset</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Avaa kansio</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

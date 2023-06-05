@@ -115,8 +115,8 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <translation>Képernyőképek kitűzése</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Mappa megnyitása</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

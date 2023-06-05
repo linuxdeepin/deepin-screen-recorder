@@ -115,8 +115,8 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation>Ekran Görüntülerini Sabitle</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Klasör Aç</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

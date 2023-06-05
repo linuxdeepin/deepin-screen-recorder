@@ -115,8 +115,8 @@ or press the shortcut again to stop recording</source>
         <translation>Пришпилити знімки</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Відкрити теку</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

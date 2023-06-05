@@ -115,8 +115,8 @@ o haga clic en el icono de la bandeja</translation>
         <translation>Anclar captura de pantalla</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Abrir carpeta</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

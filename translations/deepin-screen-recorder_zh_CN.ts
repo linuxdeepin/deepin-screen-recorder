@@ -122,6 +122,10 @@ or press the shortcut again to stop recording</source>
         <source>Screenshot finished and copy to clipboard</source>
         <translation>截图完成，文件已复制到剪贴板</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation>截图录屏</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>

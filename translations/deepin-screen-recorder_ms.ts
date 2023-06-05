@@ -115,8 +115,8 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <translation>Cemat Tangkap Layar</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Buka Folder</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

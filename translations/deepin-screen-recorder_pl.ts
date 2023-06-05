@@ -115,8 +115,8 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
         <translation>Przypnij zrzuty ekranu</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Otwórz folder</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

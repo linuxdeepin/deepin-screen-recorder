@@ -786,7 +786,7 @@ void MainWindow::sendSavingNotify()
     unsigned int id = 0;
 
     QList<QVariant> arg;
-    arg << (QCoreApplication::applicationName())                            // appname
+    arg << Utils::appName // (QCoreApplication::applicationName()) appname
         << id                                                               // id
         << QString("deepin-screen-recorder")                                // icon
         << QString(tr("Screen Capture"))                                    // summary
@@ -813,7 +813,7 @@ void MainWindow::forciblySavingNotify()
     unsigned int id = 0;
 
     QList<QVariant> arg;
-    arg << (QCoreApplication::applicationName())                                                                // appname
+    arg << Utils::appName  //(QCoreApplication::applicationName())                                                                // appname
         << id                                                                                                   // id
         << QString("deepin-screen-recorder")                                                                    // icon
         << QString(tr("Screen Capture"))                                                                        // summary
@@ -2012,7 +2012,7 @@ void MainWindow::initBackground()
     if (m_backgroundPixmap.isNull()) {
         DBusNotify shotFailedNotify;
         QString tips = QString(tr("Screenshot failed."));
-        shotFailedNotify.Notify(QCoreApplication::applicationName(),
+        shotFailedNotify.Notify(Utils::appName /*QCoreApplication::applicationName()*/,
                                 0,
                                 "deepin-screen-recorder",
                                 QString(),
@@ -3168,7 +3168,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     if (!succeed) {
         DBusNotify saveFailedNotify;
         QString tips = QString(tr("Save failed. Please save it in your home directory."));
-        saveFailedNotify.Notify(QCoreApplication::applicationName(), 0, "deepin-screen-recorder", QString(), tips, QStringList(), QVariantMap(), 5000);
+        saveFailedNotify.Notify(Utils::appName /*QCoreApplication::applicationName()*/, 0, "deepin-screen-recorder", QString(), tips, QStringList(), QVariantMap(), 5000);
         ConfigSettings::instance()->setValue("shot", "save_dir", "");
 
         exitApp();
@@ -3222,7 +3222,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         }
     }
 
-    arg << (QCoreApplication::applicationName())  // appname
+    arg << Utils::appName //(QCoreApplication::applicationName())  // appname
         << id                                     // id
         << QString("deepin-screen-recorder")      // icon
         << tr("Screen Capture")                   // summary

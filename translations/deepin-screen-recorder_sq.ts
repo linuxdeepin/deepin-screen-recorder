@@ -115,8 +115,8 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
         <translation>Fiksoni Foto Ekrani</translation>
     </message>
     <message>
-        <source>Open Folder</source>
-        <translation>Hapni Dosje</translation>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
