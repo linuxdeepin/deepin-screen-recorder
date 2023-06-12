@@ -589,6 +589,11 @@ public slots:
      * @brief 有些时候退出全局事件监听线程会卡住，此时强退截图录屏
      */
     void onExitScreenCapture();
+
+    /**
+     * @brief 任意屏幕分辨率被改变
+     */
+    void onScreenResolutionChanged();
 protected:
     /**
      * @brief eventFilter
@@ -1242,6 +1247,11 @@ private:
      * @brief 当前光标的位置
      */
     QPoint m_currentCursor;
+
+    /**
+     * @brief m_isScreenResolutionChanged 屏幕分辨率是否改变
+     */
+    bool m_isScreenResolutionChanged = false;
 };
 
 #endif //MAINWINDOW_H
