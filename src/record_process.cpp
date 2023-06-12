@@ -142,6 +142,7 @@ void RecordProcess::onTranscodeFinish()
 //录屏结束后弹出通知
 void RecordProcess::onRecordFinish()
 {
+    qInfo() << __LINE__ << __func__ <<"正在结束录屏...";
     //x11录屏结束
     if (!Utils::isWaylandMode) {
         if (QProcess::ProcessState::NotRunning != m_recorderProcess->exitCode()) {
@@ -168,21 +169,23 @@ void RecordProcess::recordVideo()
     //取系统音频的通道号
     AudioUtils *audioUtils = new AudioUtils();
     QString t_currentAudioChannel = audioUtils->currentAudioChannel();
-    if (t_currentAudioChannel.size() > 1) {
-        t_currentAudioChannel = t_currentAudioChannel.left(t_currentAudioChannel.size() - 1);
-    }
-    qDebug() << "current system audio channel:" << t_currentAudioChannel;
+    //-1表示系统音频的通道号错误
     if (t_currentAudioChannel == "-1") {
         qWarning() << "current system audio channel error!";
         //系统音频通道获取错误时，要么不录制声音，要么只录制麦克风音频
         if (m_audioType == RECORD_AUDIO_SYSTEMAUDIO) {
             m_audioType = RECORD_AUDIO_NULL;
-            qDebug() << "选择录制的音频发生改变，录制系统音 变更为 不录音！";
+            qWarning() << "选择录制的音频发生改变，录制系统音 变更为 不录系统音！";
         } else if (m_audioType == RECORD_AUDIO_MIC_SYSTEMAUDIO) {
             m_audioType = RECORD_AUDIO_MIC;
-            qDebug() << "选择录制的音频发生改变，录制混音 变更为 只录制麦克风！";
+            qWarning() << "选择录制的音频发生改变，录制混音 变更为 只录制麦克风！";
+        }
+    }else {
+        if (t_currentAudioChannel.size() > 1) {
+            t_currentAudioChannel = t_currentAudioChannel.left(t_currentAudioChannel.size() - 1);
         }
     }
+    qDebug() << "current system audio channel:" << t_currentAudioChannel;
     QStringList arguments;
 
     QString arch = QSysInfo::currentCpuArchitecture();
@@ -727,6 +730,7 @@ void RecordProcess::exitRecord(QString newSavePath)
                                                                           "onStop"));
     }
 
+    qInfo() << __LINE__ << __func__ <<"录屏已退出";
     QApplication::quit();
     if (Utils::isWaylandMode) {
         qInfo() << "wayland record exit! (_Exit(0))";
