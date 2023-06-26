@@ -380,10 +380,21 @@ int WaylandIntegration::WaylandIntegrationPrivate::getProductType()
     QString str_output = QString(QLatin1String(charTemp));
     process.close();
     qInfo() << "system-product-name: " << str_output;
+
+    options.clear();
+    options << QString(QStringLiteral("-c"));
+    options << QString(QStringLiteral("dmidecode | grep -i \"String 4\""));
+    process.start(QString(QStringLiteral("bash")), options);
+    process.waitForFinished();
+    process.waitForReadyRead();
+    QString str_output1 = QString(QLatin1String(process.readAllStandardOutput().data()));
+    qInfo() << "dmidecode | grep -i \"String 4\": " << str_output1;
+
     if (str_output.contains("KLVV", Qt::CaseInsensitive) ||
             str_output.contains("KLVU", Qt::CaseInsensitive) ||
             str_output.contains("PGUV", Qt::CaseInsensitive) ||
             str_output.contains("PGUW", Qt::CaseInsensitive) ||
+            str_output1.contains("PWC30", Qt::CaseInsensitive) ||
             str_output.contains("L540", Qt::CaseInsensitive) ||
             str_output.contains("W585", Qt::CaseInsensitive) ||
             isPangu())
