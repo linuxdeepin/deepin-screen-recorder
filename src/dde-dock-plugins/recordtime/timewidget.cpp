@@ -50,7 +50,11 @@ TimeWidget::TimeWidget(DWidget *parent):
     //this->setAttribute(Qt::WA_StyledBackground,true);
     //this->setStyleSheet("background-color: rgb(255,255, 0)");
     setMaximumSize(RECORDER_TIME_WIDGET_MAXWIDTH,RECORDER_TIME_WIDGET_MAXHEIGHT);
-    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    if (position::left == m_position || position::right == m_position) {
+        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
+     }else {
+        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    }
 }
 
 TimeWidget::~TimeWidget()
@@ -91,8 +95,13 @@ QSize TimeWidget::sizeHint() const
         height = this->height();
         qInfo() << "top or bottom itemWidget width: " << width << " ,itemWidget height: " << height;
     } else if (position::left == m_position || position::right == m_position) {
-        width = this->width();
-        height = this->width() ;
+        if(this->width() > RECORDER_TIME_WIDGET_MAXHEIGHT){
+            width = RECORDER_TIME_WIDGET_MAXHEIGHT;
+            height = width;
+        }else{
+            width = this->width();
+            height =width;
+        }
         qInfo() << "left or right itemWidget width: " << width << " ,itemWidget height: " << height;
     }
     //qInfo() <<  "sizeHint 2>>>>>>>>>> this->width(): " << this->width() << " , this->height(): " << this->height();
@@ -119,7 +128,7 @@ void TimeWidget::onTimeout()
 
 void TimeWidget::onPositionChanged(int value)
 {
-    //qInfo() << "====================== onPositionChanged ====start=================";
+    qInfo() << "====================== onPositionChanged ====start=================";
     m_position = value;
     if (position::left == m_position || position::right == m_position) {
         setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
@@ -130,7 +139,7 @@ void TimeWidget::onPositionChanged(int value)
     }
     //qInfo() <<  ">>>>>>>>>> this->width(): " << this->width() << " , this->height(): " << this->height();
     //qInfo() <<  ">>>>>>>>>> this->geometry(): " << this->geometry();
-    //qInfo() << "====================== onPositionChanged ====end=================";
+    qInfo() << "====================== onPositionChanged ====end=================";
 
 }
 
