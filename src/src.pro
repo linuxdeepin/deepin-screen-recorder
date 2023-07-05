@@ -299,11 +299,18 @@ dbus_service.path = $$PREFIX/share/dbus-1/services
 manual_dir.files = $$PWD/../assets/deepin-screen-recorder
 manual_dir.path= /usr/share/deepin-manual/manual-assets/application/
 
-
-
 INSTALLS += target icon desktop dbus_service manual_dir
 
-
+#使用DConfig需要判断是否存在dtk_install_dconfig.prf文件（/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/dtk_install_dconfig.prf）
+exists($$[QT_INSTALL_LIBS]/qt5/mkspecs/features/dtk_install_dconfig.prf){
+    message("-- DConfig is supported by DTK")
+    meta_file.files = $$PWD/../assets/org.deepin.screen-recorder.record.json
+    meta_file.appid = org.deepin.screen-recorder
+    message("meta_file.appid: " $$meta_file.appid)
+    message("meta_file.files: " $$meta_file.files)
+    DCONFIG_META_FILES += meta_file
+    load(dtk_install_dconfig)
+}
 
 # 检查集成测试标签
 AC_FUNC_ENABLE = true

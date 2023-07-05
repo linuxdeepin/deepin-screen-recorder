@@ -35,6 +35,7 @@ bool Utils::isWaylandMode = false;
 bool Utils::isRootUser = false;
 bool Utils::isFFmpegEnv = true;
 int Utils::themeType = 0;
+int Utils::specialRecordingScreenMode = -1;
 
 QString Utils::getQrcPath(QString imageName)
 {
