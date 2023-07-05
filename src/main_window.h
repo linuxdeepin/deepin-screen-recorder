@@ -40,7 +40,9 @@
 #include <DWindowManagerHelper>
 #include <DDialog>
 #include <DWidget>
-
+#ifdef DTKCORE_CLASS_DConfigFile
+#include <DConfig>
+#endif
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QObject>

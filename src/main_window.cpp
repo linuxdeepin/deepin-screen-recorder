@@ -227,6 +227,14 @@ void MainWindow::initAttributes()
         if (this->windowHandle() && isLockScreen) {
             this->windowHandle()->setProperty("_d_dwayland_window-type", "override");
         }
+#ifdef DTKCORE_CLASS_DConfigFile
+        //wayland下需要查询是否支持特殊录屏模式，例如hw机型
+        DConfig *dconfig = DConfig::create("org.deepin.screen-recorder","org.deepin.screen-recorder.record");
+        if(dconfig && dconfig->isValid() && dconfig->keyList().contains("specialRecordingScreenMode")){
+            Utils::specialRecordingScreenMode = dconfig->value("specialRecordingScreenMode").toInt();
+        }
+#endif
+        qInfo() << "current specialRecordingScreenMode value is :" << Utils::specialRecordingScreenMode;
     } else {
         setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
     }
