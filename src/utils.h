@@ -61,6 +61,13 @@ public:
     static bool isRootUser;
     static int themeType;
     /**
+     * @brief specialRecordingScreenMode
+     * -1:表示dconfig识别出现异常
+     * 0:表示不启用特殊录屏模式
+     * >0:表示启用特殊录屏模式
+     */
+    static int specialRecordingScreenMode;
+    /**
      * @brief 不支持截图录屏时的警告
      */
     static void notSupportWarn();

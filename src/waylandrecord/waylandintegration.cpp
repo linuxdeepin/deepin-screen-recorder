@@ -368,6 +368,11 @@ int WaylandIntegration::WaylandIntegrationPrivate::getBoardVendorType()
 //根据命令行 dmidecode -s system-product-name|awk '{print SNF}' 返回的结果判断是否是华为电脑
 int WaylandIntegration::WaylandIntegrationPrivate::getProductType()
 {
+    if(Utils::specialRecordingScreenMode != -1){
+        qInfo() << "Special screen recording mode is supported!";
+        return Utils::specialRecordingScreenMode;
+    }
+    qInfo() << "Special screen recording mode is not supported!";
     QStringList options;
     options << QString(QStringLiteral("-c"));
     options << QString(QStringLiteral("dmidecode -s system-product-name|awk '{print $NF}'"));
