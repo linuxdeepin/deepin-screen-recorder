@@ -1523,6 +1523,17 @@ void SubToolWidget::setRecordAudioType(bool setMicAudio, bool setSysAudio)
         emit systemAudioActionChecked(setSysAudio);
     }
 }
+QRect SubToolWidget::getShotOptionRect(){
+    if(!m_shotOptionButton->menu()->isVisible())
+        return QRect();
+    QRect shotOptionRect {
+        static_cast<int>(m_shotOptionButton->menu()->x()),
+        static_cast<int>(m_shotOptionButton->menu()->y()),
+        static_cast<int>(m_shotOptionButton->menu()->width()),
+        static_cast<int>(m_shotOptionButton->menu()->height())
+    };
+    return shotOptionRect;
+}
 /*
 void SubToolWidget::setIsZhaoxinPlatform(bool isZhaoxin)
 {

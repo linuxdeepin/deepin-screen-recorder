@@ -63,6 +63,11 @@ public:
     void setOcrScreenshotEnable(const bool &state);
 
     void setButEnableOnLockScreen(const bool &state);
+    /**
+     * @brief getShotOptionRect 获取选项菜单的位置及大小
+     * @return
+     */
+    QRect getShotOptionRect();
 signals:
     void keyBoardButtonClicked(bool checked);
     void mouseBoardButtonClicked(bool checked);

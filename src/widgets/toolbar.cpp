@@ -237,6 +237,9 @@ void ToolBarWidget::setExpand(bool expand, QString shapeType)
     emit changeFunctionSignal(shapeType);
     update();
 }
+QRect ToolBarWidget::getShotOptionRect(){
+   return m_subTool->getShotOptionRect();
+}
 
 ToolBarWidget::~ToolBarWidget() {}
 
@@ -442,6 +445,10 @@ void ToolBar::setSystemAudioEnable(bool status)
 void ToolBar::setCameraDeviceEnable(bool status)
 {
     m_toolbarWidget->setCameraDeviceEnable(status);
+}
+
+QRect ToolBar::getShotOptionRect(){
+   return m_toolbarWidget->getShotOptionRect();
 }
 ToolBar::~ToolBar()
 {
