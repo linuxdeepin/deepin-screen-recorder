@@ -52,6 +52,11 @@ public:
     void setOcrScreenshotsEnable(const bool &state);
 
     void setButEnableOnLockScreen(const bool &state);
+    /**
+     * @brief getShotOptionRect 获取选项菜单的位置及大小
+     * @return
+     */
+    QRect getShotOptionRect();
 signals:
     void buttonChecked(QString shapeType);
     void expandChanged(bool expand,  QString shapeType);
@@ -119,6 +124,11 @@ public:
     void setOcrScreenshotsEnable(const bool &state);
 
     void setButEnableOnLockScreen(const bool &state);
+    /**
+     * @brief getShotOptionRect 获取选项菜单的位置及大小
+     * @return
+     */
+    QRect getShotOptionRect();
 signals:
     void buttonChecked(QString shape);
     void currentFunctionToMain(QString shapeType);

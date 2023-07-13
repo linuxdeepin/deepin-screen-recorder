@@ -562,6 +562,7 @@ void MainWindow::checkIsLockScreen()
     }
     bool isLockScreen = sessionManagerIntert.property("Locked").toBool();
 
+    qInfo() << "Current Screen is LockScreen?" << isLockScreen;
     if (isLockScreen) {
         pinScreenshotsLockScreen(isLockScreen);
         m_toolBar->setScrollShotDisabled(true);
@@ -4525,8 +4526,15 @@ void MainWindow::scrollShotMouseClickEvent(int x, int y)
         static_cast<int>(m_toolBar->width() * m_pixelRatio),
         static_cast<int>(m_toolBar->height() * m_pixelRatio)
     };
+    //选项的下拉菜单画为一个矩形
+    QRect shotOptionRect{
+        static_cast<int>(m_toolBar->getShotOptionRect().x() * m_pixelRatio),
+        static_cast<int>(m_toolBar->getShotOptionRect().y() * m_pixelRatio),
+        static_cast<int>(m_toolBar->getShotOptionRect().width() * m_pixelRatio),
+        static_cast<int>(m_toolBar->getShotOptionRect().height() * m_pixelRatio)
+    };
     //判断当前点击的点是否在工具栏或截图保存按钮上（当工具栏或截图保存按钮在捕捉区域内部时会进入）,滚动截图不响应此时的点击事件
-    if (toolBarRect.contains(mouseClickPoint)) {
+    if (toolBarRect.contains(mouseClickPoint) || shotOptionRect.contains(mouseClickPoint)) {
         return;
     }
 
@@ -4647,8 +4655,16 @@ void MainWindow::scrollShotMouseMoveEvent(int x, int y)
             static_cast<int>(m_scrollShotTip->width() * m_pixelRatio),
             static_cast<int>(m_scrollShotTip->height() * m_pixelRatio)
         };
+
+        //选项的下拉菜单
+        QRect shotOptionRect{
+            static_cast<int>(m_toolBar->getShotOptionRect().x() * m_pixelRatio),
+            static_cast<int>(m_toolBar->getShotOptionRect().y() * m_pixelRatio),
+            static_cast<int>(m_toolBar->getShotOptionRect().width() * m_pixelRatio),
+            static_cast<int>(m_toolBar->getShotOptionRect().height() * m_pixelRatio)
+        };
         //判断当前鼠标是否在工具栏或截图保存按钮或滚动截图提示上（此时工具栏或截图保存按钮或滚动截图的提示框在捕捉区域内部）
-        if (toolBarRect.contains(mouseMovePoint)) {
+        if (toolBarRect.contains(mouseMovePoint) || shotOptionRect.contains(mouseMovePoint)) {
             //滚动截图启动后，鼠标移动到工具栏或保存按钮时，需暂停自动滚动，并取消捕捉区域穿透
             if (0 != m_scrollShotStatus) {
                 m_scrollShotStatus = 4;
