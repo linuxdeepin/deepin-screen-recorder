@@ -118,6 +118,8 @@ protected:
      * @brief 用来设置 当前录制制视频所采集的音频信息
      */
     void setRecordAudioType(bool setMicAudio, bool setSysAudio);
+
+    bool eventFilter(QObject *watched, QEvent *event) override;
 private:
     /**
      * @brief 录屏功能工具栏

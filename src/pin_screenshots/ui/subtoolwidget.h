@@ -45,6 +45,7 @@ signals:
 protected:
     void initShotLable();
     void initChangeSaveToSpecialAction(const QString specialPath);
+    bool eventFilter(QObject *watched, QEvent *event) override;
 private:
     /**
      * @brief 贴图功能工具栏

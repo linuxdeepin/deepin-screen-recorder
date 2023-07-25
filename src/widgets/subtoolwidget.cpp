@@ -31,6 +31,7 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QThread>
+#include <QToolTip>
 
 #include <unistd.h>
 
@@ -854,6 +855,7 @@ void SubToolWidget::initShotLabel()
     m_saveToSpecialPathMenu = new DMenu(m_optionMenu);
     m_saveToSpecialPathMenu->setTitle(tr("Folder"));
     m_saveToSpecialPathMenu->setToolTipsVisible(true);
+    m_saveToSpecialPathMenu->installEventFilter(this);
     m_saveToSpecialPathMenu->menuAction()->setCheckable(true);
     DFontSizeManager::instance()->bind(m_saveToSpecialPathMenu, DFontSizeManager::T8);
     QString specialPath = ConfigSettings::instance()->value("save", "specifiedSavepath").value<QString>();
@@ -1534,6 +1536,26 @@ QRect SubToolWidget::getShotOptionRect(){
     };
     return shotOptionRect;
 }
+
+bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == m_saveToSpecialPathMenu) {
+        if(event->type() == QEvent::ToolTip){
+            QHelpEvent* he = dynamic_cast<QHelpEvent*>(event);
+            QAction *action = static_cast<QMenu *>(watched)->actionAt(he->pos());
+            if (action != nullptr) {
+                if (action == m_saveToSpecialPathAction) {
+                    QToolTip::showText(he->globalPos(), action->toolTip(), this);
+                }
+                if (action == m_changeSaveToSpecialPath) {
+                    QToolTip::hideText();
+                }
+            }
+        }
+    }
+    return false;
+}
+
 /*
 void SubToolWidget::setIsZhaoxinPlatform(bool isZhaoxin)
 {
