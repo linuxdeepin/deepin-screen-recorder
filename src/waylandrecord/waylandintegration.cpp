@@ -944,11 +944,11 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 #else
         connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, const KWayland::Client::RemoteBuffer * rbuf) {
 #endif
-            qDebug() << "正在接收buffer...";
+            qDebug() << "正在接收buffer..." << "fd:" << rbuf->fd();
             QRect screenGeometry = (KWayland::Client::Output::get(reinterpret_cast<wl_output *>(const_cast<void *>(output))))->geometry();
             qDebug() << "screenGeometry: " << screenGeometry;
             //qDebug() << "rbuf->isValid(): " << rbuf->isValid();
-            connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf, screenGeometry] {
+//            connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf, screenGeometry] {
                 qDebug() << "正在处理buffer..." << "fd:" << rbuf->fd() << "frameCount: " << frameCount ;
                 bool flag = false;
                 int screenId = 0;
@@ -1004,7 +1004,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 #endif
 
                 qDebug() << "rbuf->release()";
-            });
+//            });
             qDebug() << "buffer已接收";
         });
     }
