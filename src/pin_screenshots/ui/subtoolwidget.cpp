@@ -9,6 +9,8 @@
 
 #include <QActionGroup>
 #include <QFileInfo>
+#include <QHelpEvent>
+#include <QToolTip>
 #include <DFontSizeManager>
 
 #define THEMETYPE 1 // 主题颜色为浅色
@@ -69,6 +71,7 @@ void SubToolWidget::initShotLable()
     m_saveToSpecialPathMenu->setTitle(tr("Folder"));
     m_saveToSpecialPathMenu->setToolTipsVisible(true);
     m_saveToSpecialPathMenu->menuAction()->setCheckable(true);
+    m_saveToSpecialPathMenu->installEventFilter(this);
     DFontSizeManager::instance()->bind(m_saveToSpecialPathMenu, DFontSizeManager::T8);
     QString specialPath = Settings::instance()->getSavePath();
     //设置或更新指定路径的菜单按键
@@ -274,4 +277,23 @@ void SubToolWidget::updateOptionChecked()
 
     m_SavePathActions.value(m_SaveInfo.first)->setChecked(true);
     m_SaveFormatActions.value(m_SaveInfo.second)->setChecked(true);
+}
+
+bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == m_saveToSpecialPathMenu) {
+        if(event->type() == QEvent::ToolTip){
+            QHelpEvent* he = dynamic_cast<QHelpEvent*>(event);
+            QAction *action = static_cast<QMenu *>(watched)->actionAt(he->pos());
+            if (action != nullptr) {
+                if (action == m_saveToSpecialPathAction) {
+                    QToolTip::showText(he->globalPos(), action->toolTip(), this);
+                }
+                if (action == m_changeSaveToSpecialPath) {
+                    QToolTip::hideText();
+                }
+            }
+        }
+    }
+    return false;
 }
