@@ -1,8 +1,0 @@
-usr/bin/deepin-pin-screenshots
-usr/bin/deepin-screen-recorder
-usr/share/applications/deepin-screen-recorder.desktop
-usr/share/deepin-screen-recorder/translations/*.qm
-usr/share/dbus-1/services/*
-usr/share/icons/*
-usr/share/deepin-manual/manual-assets/application/*
-usr/share/dsg/configs/org.deepin.screen-recorder/*
