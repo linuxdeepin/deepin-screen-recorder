@@ -320,6 +320,10 @@ public:
     void fullScreenshot();
 
     /**
+     * @brief fullScreenRecord 快捷启动全屏录制
+     */
+    void fullScreenRecord(const QString fileName = "");
+    /**
      * @brief 截取顶层窗口
      */
     void topWindow();
@@ -1038,6 +1042,11 @@ private:
     bool m_isScreenVertical = false; // 判断多屏是否纵向布局
     bool m_isLockedState = false;
     bool m_isScreenResolutionChanged = false;
+
+    /**
+     * @brief m_isFullScreenRecord 全屏录制
+     */
+    bool m_isFullScreenRecord = false;
 };
 
 #endif //MAINWINDOW_H

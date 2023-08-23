@@ -150,6 +150,8 @@ void RecordProcess::onRecordFinish()
 
     // Move file to save directory.
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
+    QFile file(newSavePath);
+    file.remove();
     QFile::rename(savePath, newSavePath);
     exitRecord(newSavePath);
 }
@@ -399,7 +401,15 @@ void RecordProcess::initProcess()
             fileExtension = "mp4";
         }
     }
-    saveBaseName = QString("%1_%2_%3.%4").arg(tr("Record")).arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
+    if(saveAreaName.isEmpty()){
+        saveBaseName = QString("%1_%2.%3").arg(tr("Record")).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
+    }else{
+        if(saveAreaName.contains(QString("_rfs"))){
+            saveBaseName = QString("%1.%2").arg(saveAreaName.remove("_rfs")).arg(fileExtension);
+        }else {
+            saveBaseName = QString("%1_%2_%3.%4").arg(tr("Record")).arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
+        }
+    }
     savePath = QDir(saveTempDir).filePath(saveBaseName);
     // Remove same cache file first.
     QFile file(savePath);
@@ -518,7 +528,16 @@ void RecordProcess::GstStartRecord()
             fileExtension = "webm";
         }
     }
-    saveBaseName = QString("%1_%2_%3.%4").arg(tr("Record")).arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
+    if(saveAreaName.isEmpty()){
+        saveBaseName = QString("%1_%2.%3").arg(tr("Record")).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
+    }else{
+        if(saveAreaName.contains(QString("_rfs"))){
+            saveBaseName = QString("%1.%2").arg(saveAreaName.remove("_rfs")).arg(fileExtension);
+        }else {
+            saveBaseName = QString("%1_%2_%3.%4").arg(tr("Record")).arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
+        }
+    }
+
     savePath = QDir(saveTempDir).filePath(saveBaseName);
     // Remove same cache file first.
     QFile file(savePath);
@@ -565,6 +584,8 @@ void RecordProcess::GstStopRecord()
 void RecordProcess::onExitGstRecord()
 {
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
+    QFile file(newSavePath);
+    file.remove();
     QFile::rename(savePath, newSavePath);
     //注销gstreamer相关库加载
     gstInterface::unloadFunctions();

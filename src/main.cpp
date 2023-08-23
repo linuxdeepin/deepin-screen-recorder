@@ -172,6 +172,7 @@ int main(int argc, char *argv[])
         QCommandLineOption prohibitNotifyOption(QStringList() << "n" << "no-notification", "Don't send notifications.");
         QCommandLineOption useGStreamer(QStringList() << "g" << "gstreamer", "Use GStreamer.");
         QCommandLineOption dbusOption(QStringList() << "u" << "dbus", "Start  from dbus.");
+        QCommandLineOption screenRecordFullScreenOption(QStringList() << "rf" << "recordFullScreen","Record full screen","FileNAME","");
         QCommandLineOption screenRecordOption(QStringList() << "record" << "screenRecord" << "start screen record");
         QCommandLineOption screenShotOption(QStringList() << "shot" << "screenShot" << "start screen shot");
         QCommandLineOption screenOcrOption(QStringList() << "ocr" << "screenOcr" << "start screen ocr");
@@ -189,6 +190,7 @@ int main(int argc, char *argv[])
         cmdParser.addOption(prohibitNotifyOption);
         cmdParser.addOption(useGStreamer);
         cmdParser.addOption(dbusOption);
+        cmdParser.addOption(screenRecordFullScreenOption);
         cmdParser.addOption(screenRecordOption);
         cmdParser.addOption(screenShotOption);
         cmdParser.addOption(screenOcrOption);
@@ -274,6 +276,9 @@ int main(int argc, char *argv[])
             } else if (cmdParser.isSet(prohibitNotifyOption)) {
                 qDebug() << "screenshot no notify!";
                 window.noNotifyScreenshot();
+            } else if (cmdParser.isSet(screenRecordFullScreenOption)) {
+                qDebug() << "screenRecordFullScreenOption!!!!"<< cmdParser.value(screenRecordFullScreenOption);
+                window.fullScreenRecord(cmdParser.value(screenRecordFullScreenOption));
             } else {
                 window.startScreenshot();
             }

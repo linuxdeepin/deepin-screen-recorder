@@ -1522,7 +1522,7 @@ void MainWindow::fullScreenshot()
     //    initDBusInterface();
     this->setFocus();
     //    m_configSettings =  ConfigSettings::instance();
-    installEventFilter(this);
+//    installEventFilter(this);
 
     // 多屏截取全屏
 
@@ -1547,6 +1547,33 @@ void MainWindow::fullScreenshot()
     const auto r = saveAction(m_resultPixmap);
     save2Clipboard(m_resultPixmap);
     sendNotify(m_saveIndex, m_saveFileName, r);
+}
+
+void MainWindow::fullScreenRecord(const QString fileName)
+{
+    m_isFullScreenRecord = true;
+    this->initAttributes();
+    this->initResource();
+    this->initLaunchMode("screenRecord");
+    this->showFullScreen();
+    qApp->setOverrideCursor(BaseUtils::setCursorShape("start"));
+
+    QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
+    m_backgroundRect = t_primaryScreen->virtualGeometry();;
+    m_backgroundRect = QRect(m_backgroundRect.topLeft(), m_backgroundRect.size());
+    this->move(m_backgroundRect.x(), m_backgroundRect.y());
+    this->setFixedSize(m_backgroundRect.size());
+    recordX = 0;
+    recordY = 0;
+    recordWidth = m_backgroundRect.width();
+    recordHeight = m_backgroundRect.height();
+    updateToolBarPos();
+    if(fileName.isEmpty()){
+        selectAreaName = fileName;
+    }else{
+        selectAreaName = fileName+"_rfs";
+    }
+    startCountdown();
 }
 void MainWindow::topWindow()
 {
@@ -2172,6 +2199,8 @@ void MainWindow::updateToolBarPos()
         }
     }
     //qDebug() << "工具栏最新坐标 >>> toolbarPoint: " << toolbarPoint;
+    //快捷全屏录制不需要显示工具栏
+    if(m_isFullScreenRecord) return;
     m_toolBar->showAt(toolbarPoint);
     //qDebug() << "==================2=================";
 }

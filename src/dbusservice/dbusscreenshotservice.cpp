@@ -168,3 +168,11 @@ void DBusScreenshotService::StartScreenshotFor3rd(const QString &in0)
         parent()->startScreenshotFor3rd(in0);
     m_singleInstance = true;
 }
+
+void DBusScreenshotService::FullScreenRecord(const QString &in0)
+{
+
+    if (!m_singleInstance)
+        parent()->fullScreenRecord(in0);
+    m_singleInstance = true;
+}

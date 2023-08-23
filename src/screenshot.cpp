@@ -139,6 +139,12 @@ void Screenshot::initLaunchMode(const QString &launchmode)
     m_launchMode = launchmode;
 }
 
+void Screenshot::fullScreenRecord(QString fileName)
+{
+    qInfo() << "Start Full Screen Record!" << fileName;
+     m_window.fullScreenRecord(fileName);
+}
+
 void Screenshot::stopRecord()
 {
     m_window.stopRecord();
