@@ -30,6 +30,12 @@ public slots:
     void savePathScreenshot(const QString &path);
     void startScreenshotFor3rd(const QString &path);
     void initLaunchMode(const QString &launchmode);
+
+    /**
+     * @brief fullScreenRecord 快捷启动全屏录制,文件路径
+     */
+    void fullScreenRecord(QString fileName = "");
+
     Q_SCRIPTABLE void stopRecord();
     Q_SCRIPTABLE QString getRecorderNormalIcon();
 signals:
