@@ -1044,7 +1044,8 @@ private:
     bool m_isScreenResolutionChanged = false;
 
     /**
-     * @brief m_isFullScreenRecord 全屏录制
+     * @brief m_isFullScreenRecord 快捷全屏录制
+     * 通过命令行deepin-screen-recorder --rf <filename>启动的全屏录制，未静默状态，不会显示任何相关提示
      */
     bool m_isFullScreenRecord = false;
 };

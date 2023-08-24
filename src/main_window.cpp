@@ -284,6 +284,7 @@ void MainWindow::initAttributes()
     m_sideBar->hide();
 
     m_sizeTips = new TopTips(this);
+    m_sizeTips->setFullScreenRecord(m_isFullScreenRecord);
     m_sizeTips->hide();
 
     if (m_functionType == status::record) {
@@ -1555,7 +1556,6 @@ void MainWindow::fullScreenRecord(const QString fileName)
     this->initAttributes();
     this->initResource();
     this->initLaunchMode("screenRecord");
-    recordButtonStatus = RECORD_BUTTON_RECORDING;
     this->showFullScreen();
     qApp->setOverrideCursor(BaseUtils::setCursorShape("start"));
 
@@ -3441,15 +3441,17 @@ void MainWindow::paintEvent(QPaintEvent *event)
         painter.setClipping(true);
         //使用指定的剪辑操作将剪辑区域设置为给定区域
         painter.setClipRegion(QRegion(backgroundRect).subtracted(QRegion(frameRect)));
-        //画出当前背景
-        painter.drawRect(backgroundRect);
+        //快捷全屏录制不需要画背景，非快捷全屏录制需要画背景
+        if(!m_isFullScreenRecord)
+            //画出当前背景
+            painter.drawRect(backgroundRect);
         // Reset clip. 重设剪辑区域
         painter.setClipRegion(QRegion(backgroundRect));
 
         //捕捉区域
         frameRect = QRect(recordX, recordY, recordWidth, recordHeight);
         // Draw frame. 画捕捉区域的虚线框；滚动截图模式中，已经开始滚动后，保存时不画虚线框
-        if (recordButtonStatus != RECORD_BUTTON_RECORDING && !(status::scrollshot == m_functionType && m_isSaveScrollShot)) {
+        if (!m_isFullScreenRecord && recordButtonStatus != RECORD_BUTTON_RECORDING && !(status::scrollshot == m_functionType && m_isSaveScrollShot)) {
             //qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
             painter.setRenderHint(QPainter::Antialiasing, false);
             //QPen framePen(QColor("#01bdff"));
