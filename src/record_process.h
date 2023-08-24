@@ -70,6 +70,12 @@ public:
      * @brief 定时给任务栏插件发送正在录屏的信号
      */
     void emitRecording();
+
+    /**
+     * @brief setFullScreenRecord 设置全屏录制模式的开关
+     * @param flag
+     */
+    void setFullScreenRecord(bool flag);
 private:
     /**
      * @brief x11协议下ffmpeg录制视频
@@ -206,6 +212,11 @@ private:
      * @brief gstreamer录屏处理类
      */
     GstRecordX *m_gstRecordX;
+
+    /**
+     * @brief m_isFullScreenRecord 是否是快捷全屏录制，默认为false
+     */
+    bool m_isFullScreenRecord = false;
 
 };
 
