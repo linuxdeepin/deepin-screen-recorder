@@ -55,6 +55,7 @@ void TopTips::setContent(const QSize &size)
 
 void TopTips::updateTips(QPoint pos, const QSize &size)
 {
+    if(m_isFullScreenRecord) return;
     if (!this->isVisible())
         this->show();
 
@@ -89,4 +90,9 @@ void TopTips::setRecorderTipsInfo(const bool showState)
     if(QSysInfo::currentCpuArchitecture().startsWith(QString("mips"))){
         m_showRecorderTips = showState;
     }
+}
+
+void TopTips::setFullScreenRecord(const bool flag)
+{
+    m_isFullScreenRecord = flag;
 }
