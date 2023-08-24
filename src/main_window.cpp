@@ -1555,6 +1555,7 @@ void MainWindow::fullScreenRecord(const QString fileName)
     this->initAttributes();
     this->initResource();
     this->initLaunchMode("screenRecord");
+    recordButtonStatus = RECORD_BUTTON_RECORDING;
     this->showFullScreen();
     qApp->setOverrideCursor(BaseUtils::setCursorShape("start"));
 
@@ -1568,11 +1569,7 @@ void MainWindow::fullScreenRecord(const QString fileName)
     recordWidth = m_backgroundRect.width();
     recordHeight = m_backgroundRect.height();
     updateToolBarPos();
-    if(fileName.isEmpty()){
-        selectAreaName = fileName;
-    }else{
-        selectAreaName = fileName+"_rfs";
-    }
+    selectAreaName = fileName;
     startCountdown();
 }
 void MainWindow::topWindow()
@@ -5599,8 +5596,9 @@ void MainWindow::stopRecord()
         }
         hide();
         emit releaseEvent();
-        //正在保存录屏文件通知
-        sendSavingNotify();
+        //正在保存录屏文件通知,全屏录制时不需进行通知
+        if(!m_isFullScreenRecord)
+            sendSavingNotify();
         // 状态栏闪烁停止
         if (Utils::isTabletEnvironment && m_tabletRecorderHandle) {
             m_tabletRecorderHandle->stop();
@@ -5616,7 +5614,8 @@ void MainWindow::stopRecord()
 
 void MainWindow::startCountdown()
 {
-    recordButtonStatus = RECORD_BUTTON_WAIT;
+    if(!m_isFullScreenRecord)
+        recordButtonStatus = RECORD_BUTTON_WAIT;
 //    qDebug() << "recordX:" << recordX << " , recordY: " << recordY
 //             << " , recordWidth: " << recordWidth << " , recordHeight: " << recordHeight;
     //const QPoint topLeft = geometry().topLeft();
@@ -5636,6 +5635,7 @@ void MainWindow::startCountdown()
     qDebug() << "record rect:" << recordRect;
 
     recordProcess.setRecordInfo(recordRect, selectAreaName);
+    recordProcess.setFullScreenRecord(m_isFullScreenRecord);
 
     resetCursor();
     hideAllWidget();
@@ -5675,8 +5675,14 @@ void MainWindow::startCountdown()
         countdownTooltip->move(static_cast<int>((recordRect.x() / m_pixelRatio + (recordRect.width() / m_pixelRatio  - countdownTooltip->width()) / 2)),
                                static_cast<int>((recordRect.y() / m_pixelRatio + (recordRect.height() / m_pixelRatio - countdownTooltip->height()) / 2)));
 
-        countdownTooltip->start();
-        countdownTooltip->show();
+
+        if(m_isFullScreenRecord){
+            //全屏录制时不需要3s倒计时
+            countdownTooltip->startAtOnce();
+        }else{
+            countdownTooltip->start();
+            countdownTooltip->show();
+        }
         m_pVoiceVolumeWatcher->setWatch(false);
         m_pCameraWatcher->setWatch(false);
         m_devnumMonitor->setWatch(false); //取消之前的线程方式，采用定时器监测

@@ -150,8 +150,7 @@ void RecordProcess::onRecordFinish()
 
     // Move file to save directory.
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
-    QFile file(newSavePath);
-    file.remove();
+    QFile::remove(newSavePath);
     QFile::rename(savePath, newSavePath);
     exitRecord(newSavePath);
 }
@@ -404,16 +403,15 @@ void RecordProcess::initProcess()
     if(saveAreaName.isEmpty()){
         saveBaseName = QString("%1_%2.%3").arg(tr("Record")).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
     }else{
-        if(saveAreaName.contains(QString("_rfs"))){
-            saveBaseName = QString("%1.%2").arg(saveAreaName.remove("_rfs")).arg(fileExtension);
+        if(m_isFullScreenRecord){
+            saveBaseName = QString("%1.%2").arg(saveAreaName).arg(fileExtension);
         }else {
             saveBaseName = QString("%1_%2_%3.%4").arg(tr("Record")).arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
         }
     }
     savePath = QDir(saveTempDir).filePath(saveBaseName);
     // Remove same cache file first.
-    QFile file(savePath);
-    file.remove();
+    QFile::remove(savePath);
 }
 void RecordProcess::getScreenRecordSavePath()
 {
@@ -531,8 +529,8 @@ void RecordProcess::GstStartRecord()
     if(saveAreaName.isEmpty()){
         saveBaseName = QString("%1_%2.%3").arg(tr("Record")).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
     }else{
-        if(saveAreaName.contains(QString("_rfs"))){
-            saveBaseName = QString("%1.%2").arg(saveAreaName.remove("_rfs")).arg(fileExtension);
+        if(m_isFullScreenRecord){
+            saveBaseName = QString("%1.%2").arg(saveAreaName).arg(fileExtension);
         }else {
             saveBaseName = QString("%1_%2_%3.%4").arg(tr("Record")).arg(saveAreaName).arg(date.toString("yyyyMMddhhmmss")).arg(fileExtension);
         }
@@ -540,8 +538,7 @@ void RecordProcess::GstStartRecord()
 
     savePath = QDir(saveTempDir).filePath(saveBaseName);
     // Remove same cache file first.
-    QFile file(savePath);
-    file.remove();
+    QFile::remove(savePath);
     m_gstRecordX->setVidoeType(videoType);
     m_gstRecordX->setSavePath(savePath);
     m_gstRecordX->setX11RecordMouse(m_isRecordMouse);
@@ -584,8 +581,7 @@ void RecordProcess::GstStopRecord()
 void RecordProcess::onExitGstRecord()
 {
     QString newSavePath = QDir(saveDir).filePath(saveBaseName);
-    QFile file(newSavePath);
-    file.remove();
+    QFile::remove(newSavePath);
     QFile::rename(savePath, newSavePath);
     //注销gstreamer相关库加载
     gstInterface::unloadFunctions();
@@ -686,6 +682,11 @@ void RecordProcess::emitRecording()
     }
 }
 
+void RecordProcess::setFullScreenRecord(bool flag)
+{
+    m_isFullScreenRecord = flag;
+}
+
 void RecordProcess::stopRecord()
 {
     //    QJsonObject obj{
@@ -739,7 +740,7 @@ void RecordProcess::stopRecord()
 //退出录屏（先停止，再弹提示，最后退出）
 void RecordProcess::exitRecord(QString newSavePath)
 {
-    if (!Utils::isRootUser) {
+    if (!Utils::isRootUser && !m_isFullScreenRecord) {
         qInfo() << __LINE__ << __func__ << "正在弹出保存完成的通知...";
         // Popup notify.
         QDBusInterface notification("org.freedesktop.Notifications",

@@ -20,6 +20,10 @@ class CountdownTooltip : public DWidget
 public:
     explicit CountdownTooltip(DWidget *parent = 0);
     void start();
+    /**
+     * @brief startAtOnce 立即开始，不需要3s倒计时
+     */
+    void startAtOnce();
 
 signals:
     void finished();

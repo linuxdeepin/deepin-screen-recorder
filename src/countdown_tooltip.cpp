@@ -172,6 +172,11 @@ void CountdownTooltip::start()
     }
 }
 
+void CountdownTooltip::startAtOnce()
+{
+    emit finished();
+}
+
 void CountdownTooltip::update()
 {
     showCountdownCounter--;
