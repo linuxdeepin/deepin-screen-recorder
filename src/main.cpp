@@ -173,6 +173,7 @@ int main(int argc, char *argv[])
         QCommandLineOption useGStreamer(QStringList() << "g" << "gstreamer", "Use GStreamer.");
         QCommandLineOption dbusOption(QStringList() << "u" << "dbus", "Start  from dbus.");
         QCommandLineOption screenRecordFullScreenOption(QStringList() << "rf" << "recordFullScreen","Record full screen","FileNAME","");
+        screenRecordFullScreenOption.setFlags(QCommandLineOption::Flag::HiddenFromHelp);
         QCommandLineOption screenRecordOption(QStringList() << "record" << "screenRecord" << "start screen record");
         QCommandLineOption screenShotOption(QStringList() << "shot" << "screenShot" << "start screen shot");
         QCommandLineOption screenOcrOption(QStringList() << "ocr" << "screenOcr" << "start screen ocr");
