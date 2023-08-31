@@ -3122,6 +3122,7 @@ bool MainWindow::saveAction(const QPixmap &pix)
             // 保存到指定位置, 用户在选择保存目录时，点击取消。保存失败，且不显示通知信息
             m_noNotify = true;
             qInfo() << __FUNCTION__ << __LINE__ << "取消保存到指定位置！";
+            this->hide();
             return false;
         }
 
