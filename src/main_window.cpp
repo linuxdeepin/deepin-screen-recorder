@@ -238,7 +238,12 @@ void MainWindow::initAttributes()
     } else {
         setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
     }
-    setAttribute(Qt::WA_TranslucentBackground, true);
+    if(m_hasComposite){
+        qInfo() << "3d模式支持窗口透明";
+        setAttribute(Qt::WA_TranslucentBackground, true);
+    }else{
+        qInfo() << "2d模式不支持窗口透明！";
+    }
     setMouseTracking(true);   // make MouseMove can response
     installEventFilter(this);  // add event filter
     createWinId();
