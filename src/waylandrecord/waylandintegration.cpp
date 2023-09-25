@@ -1045,7 +1045,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::initEgl()
                                EGL_ALPHA_SIZE,
                                1,
                                EGL_RENDERABLE_TYPE,
-                               EGL_OPENGL_ES2_BIT,
+                               //EGL_OPENGL_ES2_BIT,
+                               EGL_OPENGL_BIT,
                                EGL_NONE
                               };
 
@@ -1056,7 +1057,10 @@ void WaylandIntegration::WaylandIntegrationPrivate::initEgl()
 
     ret = eglInitialize(m_eglstruct.dpy, &major, &minor);
     assert(ret == EGL_TRUE);
-    ret = eglBindAPI(EGL_OPENGL_ES_API);
+
+    //ret = eglBindAPI(EGL_OPENGL_ES_API);
+    ret = eglBindAPI(EGL_OPENGL_API);
+
     assert(ret == EGL_TRUE);
 
     ret =
