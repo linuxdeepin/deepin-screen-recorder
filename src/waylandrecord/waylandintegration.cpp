@@ -928,7 +928,9 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 {
     qDebug() << "初始化wayland服务链接已完成";
     qDebug() << "正在安装注册wayland服务...";
-    initEgl();
+    if(!m_boardVendorType){
+        initEgl();
+    }
     m_queue = new KWayland::Client::EventQueue(this);
     m_queue->setup(m_connection);
 
