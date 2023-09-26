@@ -1835,6 +1835,7 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             //eventloop.exec();
             //tempTimer->stop();
             //delete tempTimer;
+            this->hide(); //wayland下隐藏主界面
             time_t endTime = time(nullptr) + 1;
             qInfo() << __FUNCTION__ << __LINE__ << "开始延时1s等待数据保存到剪切板..." << endTime;
             time_t lastTime = 0;
