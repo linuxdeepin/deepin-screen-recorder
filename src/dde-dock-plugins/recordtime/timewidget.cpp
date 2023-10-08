@@ -246,31 +246,6 @@ void TimeWidget::mousePressEvent(QMouseEvent *e)
 {
     qDebug() << "Click the taskbar plugin! To start!";
     m_pressed = true;
-    int width = 0;
-    //任务栏的位置在桌面顶部和底部时才会显示录屏时间
-    if (position::top == m_position || position::bottom == m_position) {
-        width = rect().width();
-    } else {
-        width = m_pixmap.width();
-    }
-    bool flag = true;
-    if (e->pos().x() > 0 && e->pos().x() < width) {
-#if  defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__) || defined (__aarch64__) || defined (__loongarch__)
-        if (isWaylandProtocol()) {
-            flag = false;
-            createCacheFile();
-        }
-#endif
-        if (flag) {
-            qDebug() << "Click the taskbar plugin! Dbus call stop recording screen!";
-            QDBusInterface notification(QString::fromUtf8("com.deepin.ScreenRecorder"),
-                                        QString::fromUtf8("/com/deepin/ScreenRecorder"),
-                                        QString::fromUtf8("com.deepin.ScreenRecorder"),
-                                        QDBusConnection::sessionBus());
-            notification.asyncCall("stopRecord");
-            //        QDBusMessage message = notification.call("stopRecord"); //会阻塞任务其他按钮的执行
-        }
-    }
     update();
     QWidget::mousePressEvent(e);
     qDebug() << "Click the taskbar plugin! The end!";
@@ -321,6 +296,38 @@ void TimeWidget::createCacheFile()
 
 void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
 {
+    if(e->button() == Qt::LeftButton && m_pressed && m_hover){
+        m_pressed = false;
+        m_hover = false;
+        update();
+        QWidget::mouseReleaseEvent(e);
+        return;
+    }
+    int width = 0;
+    //任务栏的位置在桌面顶部和底部时才会显示录屏时间
+    if (position::top == m_position || position::bottom == m_position) {
+        width = rect().width();
+    } else {
+        width = m_pixmap.width();
+    }
+    bool flag = true;
+    if (e->pos().x() > 0 && e->pos().x() < width) {
+#if  defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__) || defined (__aarch64__) || defined (__loongarch__)
+        if (isWaylandProtocol()) {
+            flag = false;
+            createCacheFile();
+        }
+#endif
+        if (flag) {
+            qDebug() << "Click the taskbar plugin! Dbus call stop recording screen!";
+            QDBusInterface notification(QString::fromUtf8("com.deepin.ScreenRecorder"),
+                                        QString::fromUtf8("/com/deepin/ScreenRecorder"),
+                                        QString::fromUtf8("com.deepin.ScreenRecorder"),
+                                        QDBusConnection::sessionBus());
+            notification.asyncCall("stopRecord");
+            //        QDBusMessage message = notification.call("stopRecord"); //会阻塞任务其他按钮的执行
+        }
+    }
     m_pressed = false;
     m_hover = false;
     update();
