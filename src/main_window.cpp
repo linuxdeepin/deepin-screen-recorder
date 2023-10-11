@@ -342,7 +342,7 @@ void MainWindow::initAttributes()
         }
     }
     //检测锁屏的属性是否发生改变
-    QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
+    bool isSuccess = QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
                                           "/com/deepin/SessionManager",
                                           "org.freedesktop.DBus.Properties",
                                           "PropertiesChanged",
@@ -350,6 +350,17 @@ void MainWindow::initAttributes()
                                           this,
                                           SLOT(onLockScreenEvent(QDBusMessage))
                                          );
+
+    qDebug() << "The lock signal monitors wherther the connection is successfully established?"<< isSuccess;
+    //检测是否进入电源界面
+     isSuccess = QDBusConnection::sessionBus().connect("com.deepin.dde.lockFront",
+                                          "/com/deepin/dde/lockFront",
+                                          "com.deepin.dde.lockFront",
+                                          "Visible",
+                                          this,
+                                          SLOT(onPowersource(bool))
+                                         );
+     qDebug() << "The lockFront signal monitors wherther the connection is successfully established?"<< isSuccess;
     if (!isFirstMove && !Utils::isWaylandMode) {
         qDebug() << "发送鼠标事件!";
         QMouseEvent *mouseMove = new QMouseEvent(QEvent::MouseMove, this->cursor().pos(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
@@ -564,12 +575,36 @@ void MainWindow::checkIsLockScreen()
                                         "com.deepin.SessionManager",
                                         QDBusConnection::sessionBus());
     if (!sessionManagerIntert.isValid()) {
+        qWarning() << "(QDBusInterface) The 'SessionManager' interface does not exist";
         return;
     }
     bool isLockScreen = sessionManagerIntert.property("Locked").toBool();
 
     qInfo() << "Current Screen is LockScreen?" << isLockScreen;
     if (isLockScreen) {
+        pinScreenshotsLockScreen(isLockScreen);
+        m_toolBar->setScrollShotDisabled(true);
+        m_toolBar->setOcrScreenshotsEnable(false);
+        m_toolBar->setButEnableOnLockScreen(false);
+    }
+
+    //电源界面判断接口
+    QDBusInterface ddeLockFront("com.deepin.dde.lockFront",
+                                        "/com/deepin/dde/lockFront",
+                                        "com.deepin.dde.lockFront",
+                                        QDBusConnection::sessionBus());
+    if (!ddeLockFront.isValid()) {
+        qWarning() << "(QDBusInterface) The 'ddeLockFront' interface does not exist";
+        return;
+    }
+    if(ddeLockFront.property("Visible").isNull()){
+        qWarning() << "(QDBusInterface) The 'Visible' property does not exist of lockFront";
+        return;
+    }
+    bool isLockFront = ddeLockFront.property("Visible").toBool();
+
+    qInfo() << "Current Screen is Powersource UI?" << isLockFront;
+    if (isLockFront) {
         pinScreenshotsLockScreen(isLockScreen);
         m_toolBar->setScrollShotDisabled(true);
         m_toolBar->setOcrScreenshotsEnable(false);
@@ -4845,6 +4880,18 @@ void MainWindow::onLockScreenEvent(QDBusMessage msg)
         scrollShotLockScreen(isLocked);
     } else if (status::shot == m_functionType) {
         pinScreenshotsLockScreen(isLocked);
+    }
+}
+
+//电源管理界面
+void MainWindow::onPowersource(bool flag)
+{
+    qDebug() << "The Powersource is show? " << flag;
+    m_isLockedState = flag;
+    if (status::scrollshot == m_functionType) {
+        scrollShotLockScreen(flag);
+    } else if (status::shot == m_functionType) {
+        pinScreenshotsLockScreen(flag);
     }
 }
 
