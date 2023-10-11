@@ -523,6 +523,12 @@ public slots:
     void onLockScreenEvent(QDBusMessage msg);
 
     /**
+     * @brief onPowersource 监听电源管理界面，进入电源管理界面时会触发此信号槽
+     * @param flag
+     */
+    void onPowersource(bool flag);
+
+    /**
      * @brief 打开截图录屏帮助文档并定位到滚动截图
      */
     void onOpenScrollShotHelp();
