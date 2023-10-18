@@ -7,6 +7,7 @@
 #define RECORDTIME_H
 
 #include "iconwidget.h"
+#include "quickpanelwidget.h"
 #include "tipswidget.h"
 #include <QtDBus/QtDBus>
 #include <dde-dock/pluginsiteminterface.h>
@@ -16,6 +17,7 @@ class ShotStartPlugin : public QObject, PluginsItemInterface
     Q_OBJECT
     Q_INTERFACES(PluginsItemInterface)
     Q_PLUGIN_METADATA(IID "com.deepin.dock.shotstart" FILE "shotstart.json")
+    Q_CLASSINFO("D-Bus Interface", "com.deepin.ShotRecorder.PanelStatus")
 
 public:
     explicit ShotStartPlugin(QObject *parent = nullptr);
@@ -43,6 +45,9 @@ public:
     bool pluginIsDisable() override;
     void pluginStateSwitched() override;
 
+
+    Q_PROPERTY(int pluginFlags READ pluginFlags)
+    int pluginFlags() const {return /*Dock::Type_Tray | */Dock::Type_Quick | Dock::Quick_Panel_Single | Dock::Attribute_Normal;}
     PluginSizePolicy pluginSizePolicy() const override {return  PluginsItemInterface::Custom;}
     /**
      * @brief itemWidget:返回插件主控件，用于dde-dock面板上显示
@@ -62,9 +67,40 @@ public:
     const QString itemContextMenu(const QString &itemKey) override;
     void invokedMenuItem(const QString &itemKey, const QString &menuId, const bool checked) override;
 
+public slots:
+    Q_SCRIPTABLE bool onStart();
+    Q_SCRIPTABLE void onStop();
+    Q_SCRIPTABLE void onRecording();
+    /**
+     * @brief onPause:暂停
+     */
+    Q_SCRIPTABLE void onPause();
+private:
+    void onClickQuickPanel();
 private:
     QScopedPointer<IconWidget> m_iconWidget;
+    /**
+     * @brief m_quickPanelWidget 快捷面板
+     */
+    QScopedPointer<QuickPanelWidget> m_quickPanelWidget;
     QScopedPointer<TipsWidget> m_tipsWidget;
+    /**
+     * @brief m_isRecording true:正在录屏 false:未启动录屏
+     */
+    bool m_isRecording;
+    /**
+     * @brief 此定时器的作用为每隔1秒检查下截图录屏是否还在运行中。
+     * 避免截图录屏崩溃后导致本插件还在执行
+     */
+    QTimer *m_checkTimer;
+    /**
+     * @brief m_nextCount 用来判断录屏是否正在进行中
+     */
+    int m_nextCount = 0;
+    /**
+     * @brief m_count 用来判断录屏是否正在进行中
+     */
+    int m_count = 0;
 };
 
 #endif // RECORDTIME_H

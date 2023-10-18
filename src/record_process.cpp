@@ -659,10 +659,16 @@ void RecordProcess::startRecord()
         return;
     }
     //1040及以上的版本可通过此方式启动状态栏图标闪烁
+    qDebug() << "通知录屏插件开始录屏! currentTime: " << QTime::currentTime();
     QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
                                                                                              "/com/deepin/ScreenRecorder/time",
                                                                                              "com.deepin.ScreenRecorder.time",
                                                                                              "onStart"));
+    QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ShotRecorder.PanelStatus",
+                                                                      "/com/deepin/ShotRecorder/PanelStatus",
+                                                                      "com.deepin.ShotRecorder.PanelStatus",
+                                                                      "onStart"));
+    qDebug() << "已通知录屏插件开始录屏! currentTime: " << QTime::currentTime();
     m_recordingFlag = true;
     QtConcurrent::run(this, &RecordProcess::emitRecording);
     if (QDBusMessage::ReplyMessage == message.type()) {
@@ -678,6 +684,10 @@ void RecordProcess::emitRecording()
                                                                                                  "/com/deepin/ScreenRecorder/time",
                                                                                                  "com.deepin.ScreenRecorder.time",
                                                                                                  "onRecording"));
+        QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ShotRecorder.PanelStatus",
+                                                                          "/com/deepin/ShotRecorder/PanelStatus",
+                                                                          "com.deepin.ShotRecorder.PanelStatus",
+                                                                          "onRecording"));
         QThread::msleep(1000);
     }
 }
@@ -709,6 +719,11 @@ void RecordProcess::stopRecord()
             if (!message.arguments().takeFirst().toBool())
                 qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
         }
+        QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ShotRecorder.PanelStatus",
+                                                                                                  "/com/deepin/ShotRecorder/PanelStatus",
+                                                                                                  "com.deepin.ShotRecorder.PanelStatus",
+                                                                                                  "onPause"));
+
         qInfo() << __FUNCTION__ << __LINE__ << "录屏计时已暂停";
     }
     if (Utils::isFFmpegEnv) {
@@ -792,6 +807,10 @@ void RecordProcess::exitRecord(QString newSavePath)
                                                                                                  "/com/deepin/ScreenRecorder/time",
                                                                                                  "com.deepin.ScreenRecorder.time",
                                                                                                  "onStop"));
+        QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ShotRecorder.PanelStatus",
+                                                                          "/com/deepin/ShotRecorder/PanelStatus",
+                                                                          "com.deepin.ShotRecorder.PanelStatus",
+                                                                          "onStop"));
         qInfo() << __LINE__ << __func__ << "录屏计时图标已退出";
     }
     qInfo() << __LINE__ << __func__ << "录屏结束!!!";

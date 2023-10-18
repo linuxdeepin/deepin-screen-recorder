@@ -6,17 +6,22 @@ QT              += dtkwidget
 PKGCONFIG += dframeworkdbus
 
 TARGET          = $$qtLibraryTarget(shot-start-plugin)
-DISTFILES       += shotstart.json
+DISTFILES       += shotstart.json \
+    res/screen-recording.svg
 
 HEADERS += \
     shotstartplugin.h \
     iconwidget.h \
-    tipswidget.h
+    tipswidget.h \
+    quickpanelwidget.h \
+    commoniconbutton.h
 
 SOURCES += \
     shotstartplugin.cpp \
     iconwidget.cpp \
-    tipswidget.cpp
+    tipswidget.cpp \
+    quickpanelwidget.cpp \
+    commoniconbutton.cpp
 
 
 target.path = /usr/lib/dde-dock/plugins/
