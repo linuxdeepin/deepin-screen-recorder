@@ -46,8 +46,13 @@ public:
     void pluginStateSwitched() override;
 
 
+    /**
+      * Dock::Type_Quick=0x02           插件类型-快捷插件区;
+      * Dock::Quick_Panel_Single=0x40   当插件类型为Common时,快捷插件区域只有一列的那种插件;
+      * Dock::Attribute_Normal=0xe00    普通插件;
+      */
     Q_PROPERTY(int pluginFlags READ pluginFlags)
-    int pluginFlags() const {return /*Dock::Type_Tray | */Dock::Type_Quick | Dock::Quick_Panel_Single | Dock::Attribute_Normal;}
+    int pluginFlags() const {return 0x02 | 0x40 | 0xe00;}
     PluginSizePolicy pluginSizePolicy() const override {return  PluginsItemInterface::Custom;}
     /**
      * @brief itemWidget:返回插件主控件，用于dde-dock面板上显示
