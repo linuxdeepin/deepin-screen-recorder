@@ -237,6 +237,10 @@ QString AudioUtils::getDefaultDeviceName(DefaultAudioType mode)
             QDBusConnection::sessionBus(),
             this)
     );
+    if(!audioInterface->isValid()){
+        qWarning() << "DBus Interface(com.deepin.daemon.Auido) is invalid!";
+        return device;
+    }
     if (mode == DefaultAudioType::Sink) {
         //1.首先取出默认系统声卡
         QScopedPointer<com::deepin::daemon::audio::Sink> defaultSink;
@@ -256,6 +260,8 @@ QString AudioUtils::getDefaultDeviceName(DefaultAudioType mode)
             if (!device.isEmpty() && !device.endsWith(".monitor")) {
                 device += ".monitor";
             }
+        }else{
+            qWarning() << "DBus Interface(com.deepin.daemon.Auido.Sink) is invalid!";
         }
         //2.如果默认系统声卡不是物理声卡和蓝牙声卡，需找出真实的物理声卡
         if (!device.startsWith("alsa", Qt::CaseInsensitive) && !device.startsWith("blue", Qt::CaseInsensitive)) {
@@ -302,6 +308,8 @@ QString AudioUtils::getDefaultDeviceName(DefaultAudioType mode)
             if (device.endsWith(".monitor")) {
                 device.clear();
             }
+        }else{
+            qWarning() << "DBus Interface(com.deepin.daemon.Auido.Source) is invalid!";
         }
     } else {
         qCritical() << "The passed parameter is incorrect! Please pass in 1 or 2!";
