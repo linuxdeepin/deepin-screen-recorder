@@ -54,6 +54,7 @@ Q_SIGNALS:
 
 protected slots:
     void onTimeout();
+    void refreshIcon();
 protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
 
@@ -67,6 +68,7 @@ private:
     QTimer *m_timer;
     QTime m_baseTime;
     QString m_showTimeStr;
+    int m_type;
 };
 
 #endif // QUICKPANELWIDGET_H

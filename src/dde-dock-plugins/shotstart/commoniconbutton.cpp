@@ -49,20 +49,15 @@ void CommonIconButton::setState(State state)
 void CommonIconButton::setIcon(const QIcon &icon, QColor lightThemeColor, QColor darkThemeColor)
 {
     m_icon = icon;
-    if (!lightThemeColor.isValid() || !darkThemeColor.isValid()) {
-        m_paintIcon = m_icon;
-    } else {
+    if (lightThemeColor.isValid() && darkThemeColor.isValid()) {
         m_lightThemeColor = lightThemeColor;
         m_darkThemeColor = darkThemeColor;
-        QPixmap pixmap = m_icon.pixmap(width(), height()).copy();
-        QPainter pa(&pixmap);
-        pa.setCompositionMode(QPainter::CompositionMode_SourceIn);
         QColor color = DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType ? m_lightThemeColor : m_darkThemeColor;
         if (m_activeState)
             color = palette().color(QPalette::Highlight);
-        pa.fillRect(pixmap.rect(), color);
-        pa.drawPixmap(pixmap.rect(), pixmap);
-        m_paintIcon = QIcon(pixmap);
+        auto pa = palette();
+        pa.setColor(QPalette::WindowText, color);
+        setPalette(pa);
     }
 
     update();
@@ -99,7 +94,6 @@ void CommonIconButton::setIcon(const QString &icon, const QString &fallback, con
         addDarkMark(tmpFallback);
     }
     m_icon = QIcon::fromTheme(tmp, QIcon::fromTheme(tmpFallback));
-    m_paintIcon = m_icon;
     update();
 }
 
@@ -162,8 +156,6 @@ bool CommonIconButton::event(QEvent *e)
 void CommonIconButton::paintEvent(QPaintEvent *e)
 {
     QWidget::paintEvent(e);
-    if (m_paintIcon.isNull())
-        return;
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
@@ -175,8 +167,8 @@ void CommonIconButton::paintEvent(QPaintEvent *e)
 
     if (m_hover && !m_hoverIcon.isNull()) {
         m_hoverIcon.paint(&painter, rect());
-    } else {
-        m_paintIcon.paint(&painter, rect());
+    } else if (!m_icon.isNull()) {
+        m_icon.paint(&painter, rect());
     }
 }
 

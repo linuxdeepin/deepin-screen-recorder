@@ -2,7 +2,8 @@
 #include <QVBoxLayout>
 
 #include <DFontSizeManager>
-
+#include <DGuiApplicationHelper>
+DGUI_USE_NAMESPACE
 QuickPanelWidget::QuickPanelWidget(QWidget *parent)
     :QWidget(parent)
     , m_icon(new CommonIconButton(this))
@@ -11,6 +12,8 @@ QuickPanelWidget::QuickPanelWidget(QWidget *parent)
     initUI();
     m_timer = new QTimer(this);
     m_showTimeStr = tr("Screen Capture");
+    m_type = SHOT;
+    connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::themeTypeChanged,this,&QuickPanelWidget::refreshIcon);
 }
 
 QuickPanelWidget::~QuickPanelWidget()
@@ -40,7 +43,7 @@ void QuickPanelWidget::initUI()
 
 void QuickPanelWidget::setIcon(const QIcon &icon)
 {
-    m_icon->setIcon(icon, Qt::black, Qt::white);
+    m_icon->setIcon(icon);
 }
 
 void QuickPanelWidget::setDescription(const QString &description)
@@ -58,8 +61,9 @@ void QuickPanelWidget::setWidgetState(WidgetState state)
 void QuickPanelWidget::changeType(int type)
 {
     setDescription(m_showTimeStr);
+    m_type = type;
     if(type == SHOT){
-        QString shotIcon("screen-shot");
+        QString shotIcon = DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType? "screen-shot" : "screen-shot-dark";
         setIcon(QIcon::fromTheme(shotIcon, QIcon(QString(":/res/%1.svg").arg(shotIcon))));
     }else if(type == RECORD){
         QString recordIcon("screen-recording");
@@ -100,6 +104,11 @@ void QuickPanelWidget::onTimeout()
     qInfo() << "Current show time: " << m_showTimeStr;
     setDescription(m_showTimeStr);
     update();
+}
+
+void QuickPanelWidget::refreshIcon()
+{
+    changeType(m_type);
 }
 void QuickPanelWidget::mouseReleaseEvent(QMouseEvent *event)
 {
