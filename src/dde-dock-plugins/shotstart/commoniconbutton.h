@@ -24,6 +24,7 @@ public:
     void setStateIconMapping(QMap<State, QPair<QString, QString>> mapping);
     void setState(State state);
     void setActiveState(bool state);
+    bool activeState() const { return m_activeState; }
 
 public Q_SLOTS:
     void setIcon(const QString &icon, const QString &fallback = "", const QString &suffix = ".svg");
@@ -51,7 +52,6 @@ private:
 private:
     QTimer *m_refreshTimer;
     QIcon m_icon;
-    QIcon m_paintIcon;
     QIcon m_hoverIcon;
     QPoint m_pressPos;
     int m_rotateAngle;

@@ -10,9 +10,10 @@
 
 #define ShotShartPlugin "shot-start-plugin"
 #define ShotShartApp "deepin-screen-recorder" // 使用截图录屏的翻译
+const QString QUICK_ITEM_KEY = QStringLiteral("quick_item_key");
 
 ShotStartPlugin::ShotStartPlugin(QObject *parent)
-    : QObject(parent), m_iconWidget(nullptr), m_tipsWidget(nullptr),m_quickPanelWidget(nullptr)
+    : QObject(parent), m_iconWidget(nullptr),m_quickPanelWidget(nullptr), m_tipsWidget(nullptr)
 
 {
     m_isRecording =false;
@@ -90,7 +91,7 @@ QWidget *ShotStartPlugin::itemWidget(const QString &itemKey)
 //    if (itemKey != ShotShartPlugin) return nullptr;
 
     qInfo() << "Current itemWidget's itemKey: " << itemKey;
-    if(itemKey == Dock::QUICK_ITEM_KEY){
+    if(itemKey == QUICK_ITEM_KEY){
         qInfo() << "Input Quick Panel Widget!";
         return m_quickPanelWidget.data();
     }else if (itemKey == ShotShartPlugin){
@@ -131,8 +132,8 @@ const QString ShotStartPlugin::itemCommand(const QString &itemKey)
             return "dbus-send --print-reply --dest=com.deepin.ScreenRecorder /com/deepin/ScreenRecorder com.deepin.ScreenRecorder.stopRecord";
         }
         return "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.StartScreenshot";
-    }else if(itemKey == Dock::QUICK_ITEM_KEY){
-        qInfo() << "(itemCommand) Input Quick Panel Widget!";
+    }else{
+        qWarning() << "(itemCommand) Input unknow widget!";
     }
     return QString();
 }

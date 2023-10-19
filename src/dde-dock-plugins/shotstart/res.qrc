@@ -5,5 +5,6 @@
         <file>res/screen-capture-dark.svg</file>
         <file>res/screen-recording.svg</file>
         <file>res/screen-shot.svg</file>
+        <file>res/screen-shot-dark.svg</file>
     </qresource>
 </RCC>
