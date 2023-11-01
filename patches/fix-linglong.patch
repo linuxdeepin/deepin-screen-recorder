@@ -150,10 +150,10 @@ index 165a7ce..c1ee2c3 100644
  void gstInterface::initFunctions()
  {
 diff --git a/src/main.cpp b/src/main.cpp
-index b746526..8d2456d 100755
+index 6f6da7a..ab2b272 100755
 --- a/src/main.cpp
 +++ b/src/main.cpp
-@@ -40,26 +40,44 @@ static bool CheckFFmpegEnv()
+@@ -40,22 +40,35 @@ static bool CheckFFmpegEnv()
  {
      bool flag = false;
      QDir dir;
@@ -166,7 +166,7 @@ index b746526..8d2456d 100755
 -    if (list.contains("libavcodec.so.58")) {
 -        qInfo()  << "list contains libavcodec.so.58" ;
 -        flag = true;
-+
+-    }
 +    QStringList environment = QProcess::systemEnvironment();
 +    QString str, t_str, strlib = "libavcodec.so.58";
 +    foreach (str, environment) {
@@ -174,18 +174,15 @@ index b746526..8d2456d 100755
 +            t_str = str;
 +            break;
 +        }
-     }
++     }
  
 -    //x11下需要检测ffmpeg应用是否存在
 -    if (!isWaylandProtocol()) {
--        qDebug() << "QFile(/usr/bin/ffmpeg).exists(): " << QFile("/usr/bin/ffmpeg").exists();
--        if (QFile("/usr/bin/ffmpeg").exists()) {
--            flag = true;
--        } else {
--            flag = false;
+-        flag = !QStandardPaths::findExecutable("ffmpeg").isEmpty();
+-        qInfo() << "Is exists ffmpeg in PATH(" << qgetenv("PATH") << "):" << flag;
 +    if (t_str.isEmpty()) {
 +        return flag;
-+    }
+     }
 +    qDebug() << "lib:" << strlib << ",LD_LIBRARY_PATH:" << t_str;
 +    QStringList liststr = t_str.split("=").at(1).split(":");
 +    QString t_libPath;
@@ -200,24 +197,16 @@ index b746526..8d2456d 100755
 +                flag = true;
 +            }
 +            break;
-         }
-     }
-+    //x11下需要检测ffmpeg应用是否存在 linglong环境一定会存在ffmpeg，故不用在判断ffmpeg是否存在
-+//    if (!isWaylandProtocol()) {
-+//        qDebug() << "QFile(/usr/bin/ffmpeg).exists(): " << QFile("/usr/bin/ffmpeg").exists();
-+//        if (QFile("/usr/bin/ffmpeg").exists()) {
-+//            flag = true;
-+//        } else {
-+//            flag = false;
-+//        }
-+//    }
++         }
++     }
++
      return flag;
  }
  
 diff --git a/src/main_window.cpp b/src/main_window.cpp
 old mode 100755
 new mode 100644
-index beb2793..a163fbc
+index 2a28d36..137539d
 --- a/src/main_window.cpp
 +++ b/src/main_window.cpp
 @@ -52,6 +52,11 @@ extern "C" {
@@ -232,7 +221,7 @@ index beb2793..a163fbc
  //const int MainWindow::CURSOR_BOUND = 5;
  const int MainWindow::RECORD_MIN_SIZE = 580;
  const int MainWindow::RECORD_MIN_HEIGHT = 280;
-@@ -559,23 +564,34 @@ void MainWindow::initDynamicLibPath()
+@@ -561,23 +566,34 @@ void MainWindow::initDynamicLibPath()
  }
  QString MainWindow::libPath(const QString &strlib)
  {
@@ -282,11 +271,11 @@ index beb2793..a163fbc
  }
  void MainWindow::sendSavingNotify()
  {
-@@ -2668,9 +2684,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
+@@ -2689,9 +2705,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
          QString command, savepathcommand;
  
          tips = QString(tr("Saved to %1")).arg(saveFilePath);
--        if (QFile("/usr/bin/dde-file-manager").exists()) {
+-        if (!QStandardPaths::findExecutable("dde-file-manager").isEmpty()) {
 -            savepathcommand = QString("dde-file-manager,--show-item,%1").arg(saveFilePath);
 -        }
 +        savepathcommand = QString("dde-file-manager,--show-item,%1").arg(saveFilePath);
@@ -305,7 +294,7 @@ index c9e7068..88e0f94 100644
 +Exec=/usr/bin/ll-cli run org.deepin.screen-recorder --exec 'deepin-pin-screenshots --dbus'
 \ No newline at end of file
 diff --git a/src/pin_screenshots/mainwindow.cpp b/src/pin_screenshots/mainwindow.cpp
-index 404da9b..73bbc58 100755
+index 86e153d..16d4ae3 100755
 --- a/src/pin_screenshots/mainwindow.cpp
 +++ b/src/pin_screenshots/mainwindow.cpp
 @@ -16,6 +16,10 @@
@@ -319,11 +308,11 @@ index 404da9b..73bbc58 100755
  namespace {
  const int TOOLBAR_Y_SPACING = 12;
  }
-@@ -606,7 +610,7 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
+@@ -632,7 +636,7 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
      // 如果保存路径为剪切板，不做打开view操作
      if (!savePath.isEmpty()) {
          actions << "_open" << tr("View");
--        if (QFile("/usr/bin/dde-file-manager").exists()) {
+-        if (!QStandardPaths::findExecutable("dde-file-manager").isEmpty()) {
 +        if (QFile("${LINGLONG_PREFIX}/bin/dde-file-manager").exists()) {
              qDebug() << QFileInfo(savePath).path();
              hints["x-deepin-action-_open"] = QString("dde-file-manager,--show-item,%1").arg(savePath);
