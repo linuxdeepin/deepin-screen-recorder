@@ -51,50 +51,17 @@ static bool CheckFFmpegEnv()
     dir.setPath(path);
     qDebug() <<  "where is libs? where is " << dir ;
     QStringList list = dir.entryList(QStringList() << (QString("libavcodec") + "*"), QDir::NoDotAndDotDot | QDir::Files);
-    qDebug() << list << " exists in the " << path;
+    qDebug()  << "Is libavcodec in there?  there is :" << list ;
 
-    QString libName = "";
-    QRegExp re("libavcodec.so.*"); //Sometimes libavcodec.so may not exist, so find it through regular expression.
-    for (int i = 0; i < list.count(); i++) {
-        if (re.exactMatch(list[i])) {
-            libName = list[i];
-            break;
-        }
+    if (list.contains("libavcodec.so.58")) {
+        qInfo()  << "list contains libavcodec.so.58" ;
+        flag = true;
     }
-    qDebug() << "目录(" << path << ")中存在编码库(" << libName << ")";
-    //是否存在编码库,存在编码库需要继续判断是否存在对应的编码器
-    if (!libName.isEmpty()) {
-        QLibrary libavcodec;
-        libavcodec.setFileName(libName);
-        if (libavcodec.load()) {
-            qDebug() << "编码库加载成功！";
-            typedef AVCodec *(*p_avcodec_find_encoder)(enum AVCodecID id);
-            p_avcodec_find_encoder m_avcodec_find_encoder = nullptr;
-            m_avcodec_find_encoder = reinterpret_cast<p_avcodec_find_encoder>(libavcodec.resolve("avcodec_find_encoder"));
-            AVCodec *pCodec = nullptr;
-            if (m_avcodec_find_encoder) {
-                pCodec = m_avcodec_find_encoder(AV_CODEC_ID_H264);
-            } else {
-                qWarning() << "编码库中无avcodec_find_encoder接口！";
-            }
-            if (pCodec) {
-                qDebug() << "编码器存在 AVCodecID:" << AV_CODEC_ID_H264;
-                flag = true;
-                //x11下需要检测ffmpeg应用是否存在,wayland不需要检查
-                if (!isWaylandProtocol()) {
-                    qInfo() << "Is exists ffmpeg in path(/usr/bin/): " << QFile("/usr/bin/ffmpeg").exists();
-                    if (!QFile("/usr/bin/ffmpeg").exists()) {
-                        flag = false;
-                    }
-                }
-            } else {
-                qWarning() << "Can not find output video encoder! (没有找到合适的编码器！) AVCodecID:" << AV_CODEC_ID_H264;
-            }
-        } else {
-            qWarning() << "编码库加载失败！";
-        }
-    } else {
-        qWarning() << "目录(" << path << ")中不存在编码库(" << libName << ")";
+
+    //x11下需要检测ffmpeg应用是否存在
+    if (!isWaylandProtocol()) {
+        flag = !QStandardPaths::findExecutable("ffmpeg").isEmpty();
+        qInfo() << "Is exists ffmpeg in PATH(" << qgetenv("PATH") << "):" << flag;
     }
 
     return flag;
