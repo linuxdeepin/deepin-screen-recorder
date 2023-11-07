@@ -18,6 +18,7 @@ ShotStartPlugin::ShotStartPlugin(QObject *parent)
 {
     m_isRecording =false;
     m_checkTimer = nullptr;
+    m_bDockQuickPanel = false;
 }
 
 const QString ShotStartPlugin::pluginName() const
@@ -33,6 +34,12 @@ const QString ShotStartPlugin::pluginDisplayName() const
 void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
 {
 #ifndef UNIT_TEST
+    bool ret;
+    qInfo() << "当前dock版本：" << qApp->property("dock_api_version").toInt(&ret);
+    if(ret && qApp->property("dock_api_version") >= ((2<<16) | (0<<8) | (0))){
+        m_bDockQuickPanel = true;
+        qWarning() << "The current dock version does not support quick panels!!";
+    }
     qInfo() << "正在加载翻译...";
     // 加载翻译
     QString appName = qApp->applicationName();
@@ -57,7 +64,8 @@ void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
     if (m_tipsWidget.isNull())
         m_tipsWidget.reset(new TipsWidget);
 
-    if (!pluginIsDisable()) {
+    if (m_bDockQuickPanel || !pluginIsDisable()) {
+        qInfo() << "the current plugin has been added to the dock";
         m_proxyInter->itemAdded(this, pluginName());
     }
 
@@ -72,6 +80,10 @@ void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
 
 bool ShotStartPlugin::pluginIsDisable()
 {
+    if(m_bDockQuickPanel){
+        qWarning() << "The current dock version does not support quick panels!!";
+        return false;
+    }
     return m_proxyInter->getValue(this, "disabled", true).toBool();
 }
 
