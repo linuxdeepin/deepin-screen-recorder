@@ -106,6 +106,11 @@ private:
      * @brief m_count 用来判断录屏是否正在进行中
      */
     int m_count = 0;
+
+    /**
+     * @brief m_bdockapiversion 兼容性适配，老版的dock不支持快捷面板
+     */
+    bool m_bDockQuickPanel;
 };
 
 #endif // RECORDTIME_H
