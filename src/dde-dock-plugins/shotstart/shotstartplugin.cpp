@@ -10,7 +10,7 @@
 
 #define ShotShartPlugin "shot-start-plugin"
 #define ShotShartApp "deepin-screen-recorder" // 使用截图录屏的翻译
-const QString QUICK_ITEM_KEY = QStringLiteral("quick_item_key");
+const QString QUICK_ITEM = QStringLiteral("quick_item_key");
 
 ShotStartPlugin::ShotStartPlugin(QObject *parent)
     : QObject(parent), m_iconWidget(nullptr),m_quickPanelWidget(nullptr), m_tipsWidget(nullptr)
@@ -103,7 +103,7 @@ QWidget *ShotStartPlugin::itemWidget(const QString &itemKey)
 //    if (itemKey != ShotShartPlugin) return nullptr;
 
     qInfo() << "Current itemWidget's itemKey: " << itemKey;
-    if(itemKey == QUICK_ITEM_KEY){
+    if(itemKey == QUICK_ITEM){
         qInfo() << "Input Quick Panel Widget!";
         return m_quickPanelWidget.data();
     }else if (itemKey == ShotShartPlugin){
