@@ -251,7 +251,7 @@ void TimeWidget::mousePressEvent(QMouseEvent *e)
     qDebug() << "Click the taskbar plugin! The end!";
 }
 //创建缓存文件，只有wayland模式下的mips或部分arm架构适用
-void TimeWidget::createCacheFile()
+bool TimeWidget::createCacheFile()
 {
     qDebug() << "createCacheFile start!";
     QString userName = QDir::homePath().section("/", -1, -1);
@@ -271,13 +271,13 @@ void TimeWidget::createCacheFile()
     int fd = open(path.c_str(), O_RDWR | O_CREAT, 0644);
     if (fd == -1) {
         qDebug() << "open file fail!" << strerror(errno);
-        return;
+        return false;
     }
     //文件加锁
     int flock = lockf(fd, F_TLOCK, 0);
     if (flock == -1) {
         qDebug() << "lock file fail!" << strerror(errno);
-        return;
+        return false;
     }
     ssize_t ret = -1;
     //文件内容为1，读取文件时会停止录屏
@@ -286,11 +286,16 @@ void TimeWidget::createCacheFile()
     ret = write(fd, wBuffer, 2);
     if (ret < 0) {
         qDebug() << "write file fail!";
-        return ;
+        return false;
     }
     flock = lockf(fd, F_ULOCK, 0);
+    if (flock == -1) {
+        qDebug() << "unlock file fail!" << strerror(errno);
+        return false;
+    }
     ::close(fd);
     qDebug() << "createCacheFile end!";
+    return true;
 
 }
 
@@ -315,7 +320,10 @@ void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
 #if  defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__) || defined (__aarch64__) || defined (__loongarch__)
         if (isWaylandProtocol()) {
             flag = false;
-            createCacheFile();
+            if(!createCacheFile()){
+                qInfo() << "Create cache file fail!";
+                flag = true;
+            };
         }
 #endif
         if (flag) {
