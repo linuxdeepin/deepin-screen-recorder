@@ -107,7 +107,7 @@ isEqual(ARCH, mips64) {
     QMAKE_CXXFLAGS+= -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi
 }
 
-CONFIG += link_pkgconfig c++11
+CONFIG += link_pkgconfig c++14
 
 PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0 libusb-1.0 gstreamer-app-1.0
 
