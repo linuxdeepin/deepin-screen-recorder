@@ -246,6 +246,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::stopStreaming()
             QEventLoop loop;
             connect(this, SIGNAL(lastFrame()), &loop, SLOT(quit()));
             loop.exec();
+            m_isAppendRemoteBuffer = false;
             qDebug() << "最后一帧已释放";
             m_remoteAccessManager->release();
             m_remoteAccessManager->destroy();
@@ -590,6 +591,13 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
     unsigned char *mapData = static_cast<unsigned char *>(mmap(nullptr, stride * height, PROT_READ, MAP_SHARED, dma_fd, 0));
     if (MAP_FAILED == mapData) {
         qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "dma fd " << dma_fd << " mmap failed - ";
+    }
+    if(m_currentScreenBuf != nullptr){
+        close(m_currentScreenBuf->fd());
+        m_currentScreenBuf->release();
+        m_currentScreenBuf = nullptr;
+        qDebug() << "m_currentScreenBuf is release!";
+        m_mutex.unlock();
     }
     qDebug() << "mapData: " << mapData;
     //QString pngName = "/home/uos/Desktop/test/"+QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ") + QString("%1_").arg(rect.x()));
@@ -969,39 +977,36 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                 {
                     //抽帧（数据过来60帧，取一半，由于memcpy一帧数据需要30ms，无法满足1s60帧的速度，所以需要抽帧）
                     flag = (frameCount++ % 2 == 0);
-                } else
-                {
-                    //
-                    if (frameCount == 0) {
-                        qDebug() << ">>>>>>>>>>>>>>>> fisrt screenGeometry: " << screenGeometry;
-                        //第一帧画面的坐标不是从（0,0）开始，从第二帧开始取
-                        if (screenGeometry.x() != 0 || screenGeometry.y() != 0) {
-                            frameCount += 1;
+                    if (flag)
+                    {
+                        qDebug() << "frameCount: " << frameCount << "screenGeometry: " << screenGeometry;
+                        if (m_boardVendorType) {
+                            //arm hw
+                            //processBuffer(rbuf, screenGeometry);
+                            processBufferHw(rbuf, screenGeometry, screenId);
+                        } else {
+                            //other
+                            processBufferX86(rbuf, screenGeometry);
                         }
                     }
-                    //抽帧（数据过来60帧，取一半）
-                    if (frameCount % 4 == 0) {
-                        screenId = 0;
-                    } else if ((frameCount - 1) % 4 == 0) {
-                        screenId = 1;
+                }else if(m_screenCount == 2){
+                    if(m_currentScreenBuf == nullptr)
+                    {
+                        m_isReleaseCurrentBuffer = false;
+                        m_currentScreenBuf = rbuf;
+                        m_currentScreenRect = screenGeometry;
+                        qDebug() << "m_currentScreenBuf is save! fd:" << rbuf->fd();
+                    }else{
+                        m_isReleaseCurrentBuffer = true;
                     }
-                    flag = (frameCount % 4 == 0) || (((frameCount - 1) != 0) && (frameCount - 1) % 4 == 0);
                     frameCount++;
-                }
-                if (flag)
-                {
-                    qDebug() << "frameCount: " << frameCount << "screenGeometry: " << screenGeometry;
-                    if (m_boardVendorType) {
-                        //arm hw
-                        //processBuffer(rbuf, screenGeometry);
-                        processBufferHw(rbuf, screenGeometry, screenId);
-                    } else {
-                        //other
-                        processBufferX86(rbuf, screenGeometry);
+                    if(frameCount == 1){
+                        m_isAppendRemoteBuffer = true;
+                        QtConcurrent::run(this, &WaylandIntegrationPrivate::appendRemoteBuffer);
                     }
+                }else{
+                    qWarning() << "Currently,recording with more than two screens is not supported!";
                 }
-                close(rbuf->fd());
-                qDebug() << "close(rbuf->fd())";
 #ifdef KWAYLAND_REMOTE_FLAGE_ON
                 qDebug() << "rbuf->frame(): " << rbuf->frame();
                 if (rbuf->frame() == 0)
@@ -1010,13 +1015,16 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                     emit lastFrame();
                 }
 #endif
-                qDebug() << "buffer已处理" << "fd:" << rbuf->fd();
 
+                if(m_isReleaseCurrentBuffer){
+                    qDebug() << "close(rbuf->fd()): fd=" <<rbuf->fd();
+                    close(rbuf->fd());
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
-
-                rbuf->release();
+                    qDebug() << "rbuf->release()";
+                    rbuf->release();
 #endif
-                qDebug() << "rbuf->release()";
+                }
+                qDebug() << "buffer已处理" << "fd:" << rbuf->fd();
             });
             qDebug() << "buffer已接收";
         });
@@ -1109,6 +1117,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *
         wFrame._height = height;
         wFrame._stride = stride;
         wFrame._index = 0;
+        m_waylandList.first()._frame = nullptr;
         //删队首
         m_waylandList.removeFirst();
         //存队尾
@@ -1164,6 +1173,25 @@ void WaylandIntegration::WaylandIntegrationPrivate::initScreenFrameBuffer()
     m_curNewImageScreenFrames[1]._flag = false;
 }
 
+void WaylandIntegration::WaylandIntegrationPrivate::appendRemoteBuffer()
+{
+    qInfo() << "Start append remote buffer..." ;
+    while(m_isAppendRemoteBuffer){
+        qDebug() << "Appending remote buffer... (m_currentScreenBuf: " << m_currentScreenBuf << ")";
+        if(m_currentScreenBuf != nullptr){
+            m_mutex.lock();
+            if(m_currentScreenRect.x() == 0 && m_currentScreenRect.y() == 0)
+            {
+                processBufferHw(m_currentScreenBuf, m_currentScreenRect,0);
+            }else{
+                processBufferHw(m_currentScreenBuf, m_currentScreenRect,1);
+            }
+            qDebug() << "Appended remote buffer... (m_currentScreenBuf: " << m_currentScreenBuf << ")";
+        }
+    }
+    qInfo() << "Stop append remote buffer" ;
+}
+
 int WaylandIntegration::WaylandIntegrationPrivate::frameIndex = 0;
 
 bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &frame)
@@ -1187,6 +1215,7 @@ bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &frame
         frame._index = frameIndex++;
         //拷贝到 m_ffmFrame 视频帧缓存
         memcpy(frame._frame, wFrame._frame, static_cast<size_t>(size));
+        m_waylandList.first()._frame = nullptr;
         //删队首视频帧 waylandFrame，未删空闲内存 waylandFrame::_frame，只删索引，不删内存空间
         m_waylandList.removeFirst();
         //回收空闲内存，重复使用
