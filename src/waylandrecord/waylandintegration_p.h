@@ -203,6 +203,10 @@ private:
      * @brief initScreenFrameBuffer 初始化屏幕数据数组
      */
     void initScreenFrameBuffer();
+    /**
+     * @brief appendRemoteBuffer 在线程中拷贝远程buffer（remoteaccess传过来的屏幕buffer）的数据
+     */
+    void appendRemoteBuffer();
 public:
     /**
      * @ 内存由getFrame函数内部申请
@@ -305,7 +309,24 @@ private:
     bool isGstWriteVideoFrame = false;
 
     GstRecordX *m_gstRecordX;
+    /**
+     * @brief m_isReleaseCurrentBuffer 当前远程buffer是否释放
+     */
+    bool m_isReleaseCurrentBuffer = true;
 
+    /**
+     * @brief m_isAppendRemoteBuffer 拷贝远程buffer（remoteaccess传过来的屏幕buffer）的线程是否继续执行
+     */
+    bool m_isAppendRemoteBuffer = false;
+    /**
+     * @brief m_currentScreenRect 当前屏幕的大小
+     */
+    QRect m_currentScreenRect;
+
+    /**
+     * @brief m_currentScreenBuf 当前屏幕的远程buffer（remoteaccess传过来的屏幕buffer）
+     */
+    KWayland::Client::RemoteBuffer * m_currentScreenBuf;
 };
 
 }
