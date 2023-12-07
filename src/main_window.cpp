@@ -1325,7 +1325,9 @@ void MainWindow::showScrollShot()
 #ifdef OCR_SCROLL_FLAGE_ON
     qInfo() << "初始化滚动截图时，显示滚动截图中的一些公共部件、例如工具栏、提示、图片大小、第一张预览图 start";
     bool ok;
-    QRect rect(recordX + 1, ((recordY == 0) ? 2 : (recordY + 1)), recordWidth - 2, recordHeight - 2);
+    int scalingOffset =qRound(2 * m_pixelRatio);
+    qDebug() << "scalingOffset(缩放偏移量): " << scalingOffset;
+    QRect rect(recordX + 1, ((recordY == 0) ? 2 : (recordY + 1)), recordWidth - scalingOffset, recordHeight - scalingOffset);
     //滚动截图截取指定区域的第一张图片
     m_firstScrollShotImg = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
     //m_firstScrollShotImg.save("m_firstScrollShotImg1.png");
@@ -1425,6 +1427,9 @@ void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostio
         //m_shotButton->hide();
         m_scrollShotSizeTips->hide();
     }
+    //缩放偏移量
+    int scalingOffset =qRound(2 * m_pixelRatio);
+    qDebug() << "scalingOffset(缩放偏移量): " << scalingOffset;
     //qDebug() << "function: " << __func__ << " ,line: " << __LINE__;
     //判断预览框是否在捕捉区域内部，如果是在捕捉区域内部，则每次截图前先隐藏预览框，并延时30ms，在进行截图
     if (PreviewWidget::PostionStatus::INSIDE == previewPostion) {
@@ -1434,7 +1439,7 @@ void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostio
         QTimer::singleShot(delayTime, this, [ = ] {
             //只要是滚动模式都会进入此处来处理图片
             bool ok;
-            QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
+            QRect rect(recordX + 1, recordY + 1, recordWidth - scalingOffset, recordHeight - scalingOffset);
             //抓取捕捉区域图片
             QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
             //滚动截图处理类进行图片的拼接
@@ -1453,7 +1458,7 @@ void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostio
             eventloop1.exec();
         }
         bool ok;
-        QRect rect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
+        QRect rect(recordX + 1, recordY + 1, recordWidth - scalingOffset, recordHeight - scalingOffset);
         //抓取捕捉区域图片
         QPixmap img = m_screenGrabber.grabEntireDesktop(ok, rect, m_pixelRatio);
         //滚动截图处理类进行图片的拼接
