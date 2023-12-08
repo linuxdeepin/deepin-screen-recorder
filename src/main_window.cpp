@@ -4964,7 +4964,9 @@ void MainWindow::onAdjustCaptureArea()
     QTimer::singleShot(delayTime, this, [ = ] {
         //更新预览图的位置及大小
         bool ok;
-        QRect previewRecordRect(recordX + 1, recordY + 1, recordWidth - 2, recordHeight - 2);
+        int scalingOffset =qRound(2 * m_pixelRatio);
+        qDebug() << "scalingOffset: " << scalingOffset;
+        QRect previewRecordRect(recordX + 1, recordY + 1, recordWidth - scalingOffset, recordHeight - scalingOffset);
         m_previewWidget->updatePreviewSize(previewRecordRect);
         m_firstScrollShotImg = m_screenGrabber.grabEntireDesktop(ok, previewRecordRect, m_pixelRatio);
         m_previewWidget->updateImage(m_firstScrollShotImg.toImage());
