@@ -8,6 +8,7 @@
 
 #include <DGuiApplicationHelper>
 #include <DStyle>
+#include <DSysInfo>
 
 #include <QApplication>
 #include <QPainter>
@@ -23,6 +24,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <iostream>
+DCORE_USE_NAMESPACE
 
 TimeWidget::TimeWidget(DWidget *parent):
     DWidget(parent),
@@ -34,7 +36,8 @@ TimeWidget::TimeWidget(DWidget *parent):
     m_bRefresh(true),
     m_position(-1),
     m_hover(false),
-    m_pressed(false)
+    m_pressed(false),
+    m_systemVersion(0)
 {
     qInfo() <<  "正在初始化计时显示界面...";
     QFontMetrics fm(RECORDER_TIME_FONT);
@@ -55,6 +58,8 @@ TimeWidget::TimeWidget(DWidget *parent):
      }else {
         setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     }
+    m_systemVersion = DSysInfo::minorVersion().toInt() ;
+    qInfo() <<  "Current system version: " << m_systemVersion;
 }
 
 TimeWidget::~TimeWidget()
@@ -179,24 +184,37 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         DStyleHelper dstyle(style());
         const int radius = dstyle.pixelMetric(DStyle::PM_FrameRadius);
         QPainterPath path;
-        if (position::top == m_position || position::bottom == m_position) {
-            QRect rc(0, 0, rect().width(), rect().height());
-            rc.moveTo(rect().center() - rc.center());
-            path.addRoundedRect(rc, radius, radius);
-
-        } else if (position::right == m_position || position::left == m_position) {
-            if (rect().width() > RECORDER_TIME_LEVEL_ICON_SIZE) {
-                int minSize = std::min(width(), height());
-                QRect rc(0, 0, minSize, minSize);
+        if(m_systemVersion < 1070){
+            if (position::top == m_position || position::bottom == m_position) {
+                QRect rc(0, 0, rect().width(), rect().height());
                 rc.moveTo(rect().center() - rc.center());
                 path.addRoundedRect(rc, radius, radius);
-            } else {
+
+            } else if (position::right == m_position || position::left == m_position) {
+                if (rect().width() > RECORDER_TIME_LEVEL_ICON_SIZE) {
+                    int minSize = std::min(width(), height());
+                    QRect rc(0, 0, minSize, minSize);
+                    rc.moveTo(rect().center() - rc.center());
+                    path.addRoundedRect(rc, radius, radius);
+                } else {
+                    painter.setPen(Qt::black);
+                }
+            }
+        }else{
+            if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
                 painter.setPen(Qt::black);
+            } else {
+                painter.setPen(Qt::white);
             }
         }
         painter.fillPath(path, color);
     } else {
-        painter.setPen(Qt::black);
+        if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
+            painter.setPen(Qt::black);
+        } else {
+            painter.setPen(Qt::white);
+        }
+        //painter.setPen(Qt::black);
     }
     painter.setOpacity(1);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);

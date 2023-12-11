@@ -102,6 +102,7 @@ private:
     QBoxLayout *centralLayout;
     bool m_hover;
     bool m_pressed;
+    int m_systemVersion;
 };
 
 #endif // TIMEWIDGET_H
