@@ -1054,6 +1054,15 @@ private:
      * 通过命令行deepin-screen-recorder --rf <filename>启动的全屏录制，未静默状态，不会显示任何相关提示
      */
     bool m_isFullScreenRecord = false;
+
+    /**
+     * @brief m_scrollShotOffsetWH 滚动截图时截图区域的宽高偏移量，防止滚动截图时截到捕捉区域的虚线框
+     */
+    int m_scrollShotOffsetWH =0;
+    /**
+     * @brief m_scrollShotOffsetXY 滚动截图时截图区域的左上角坐标偏移量，防止滚动截图时截到捕捉区域的虚线框
+     */
+    int m_scrollShotOffsetXY =0;
 };
 
 #endif //MAINWINDOW_H
