@@ -118,6 +118,7 @@ int main(int argc, char *argv[])
     if (Utils::isWaylandMode) {
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
         QSurfaceFormat format;
+        format.setAlphaBufferSize(8);
         format.setRenderableType(QSurfaceFormat::OpenGLES);
         format.setDefaultFormat(format);
     }
