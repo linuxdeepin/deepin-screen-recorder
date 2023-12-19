@@ -137,6 +137,13 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">ئېكراننى رەسىم تۇتۇش، سىنغا ئېلىش</translation>
+    </message>
+</context>
+<context>
     <name>RecordProcess</name>
     <message>
         <source>View</source>

@@ -138,6 +138,13 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
 </context>
 <context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Ekran Alıntısı</translation>
+    </message>
+</context>
+<context>
     <name>RecordProcess</name>
     <message>
         <source>View</source>

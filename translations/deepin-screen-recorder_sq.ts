@@ -138,6 +138,13 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
 </context>
 <context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Regjistrim Ekrani</translation>
+    </message>
+</context>
+<context>
     <name>RecordProcess</name>
     <message>
         <source>View</source>

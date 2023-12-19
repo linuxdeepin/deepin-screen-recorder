@@ -138,6 +138,13 @@ ou prema de novo o atallo para deixar de gravar</translation>
     </message>
 </context>
 <context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Captura de pantalla</translation>
+    </message>
+</context>
+<context>
     <name>RecordProcess</name>
     <message>
         <source>View</source>

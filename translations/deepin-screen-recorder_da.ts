@@ -138,6 +138,13 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     </message>
 </context>
 <context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Skærmoptagelse</translation>
+    </message>
+</context>
+<context>
     <name>RecordProcess</name>
     <message>
         <source>View</source>

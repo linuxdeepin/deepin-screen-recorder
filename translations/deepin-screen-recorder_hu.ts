@@ -138,6 +138,13 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     </message>
 </context>
 <context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Képernyő Rögzítő</translation>
+    </message>
+</context>
+<context>
     <name>RecordProcess</name>
     <message>
         <source>View</source>
