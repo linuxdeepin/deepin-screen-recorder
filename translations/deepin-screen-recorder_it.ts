@@ -138,6 +138,13 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
 </context>
 <context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Cattura schermo</translation>
+    </message>
+</context>
+<context>
     <name>RecordProcess</name>
     <message>
         <source>View</source>

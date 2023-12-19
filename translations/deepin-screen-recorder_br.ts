@@ -138,6 +138,13 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     </message>
 </context>
 <context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Tapadenn skramm</translation>
+    </message>
+</context>
+<context>
     <name>RecordProcess</name>
     <message>
         <source>View</source>

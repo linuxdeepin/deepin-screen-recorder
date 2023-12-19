@@ -138,6 +138,13 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
 </context>
 <context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation type="unfinished">Ruudunkaappaus</translation>
+    </message>
+</context>
+<context>
     <name>RecordProcess</name>
     <message>
         <source>View</source>

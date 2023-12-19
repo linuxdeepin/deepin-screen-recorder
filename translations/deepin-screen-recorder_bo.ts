@@ -138,6 +138,13 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screen Capture</source>
+        <translation>བརྙན་བཤུས་བརྙན་ཕབ།</translation>
+    </message>
+</context>
+<context>
     <name>RecordProcess</name>
     <message>
         <source>View</source>
@@ -574,11 +581,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>གཏོང་བ་གནང་མས་འགྱུར་བ་ཐུབ་བས་འགྱུར་བ།</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>གཏོང་བ་གནང་མས་འགྱུར་བ་ཐུབ་བས་འགྱུར་བ།</translation>
     </message>
 </context>
 <context>
