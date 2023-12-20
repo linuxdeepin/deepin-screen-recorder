@@ -24,6 +24,17 @@ eller tryck på genvägsknappen igen för att stoppa inspelningen</translation>
     </message>
 </context>
 <context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
@@ -94,11 +105,11 @@ eller tryck på genvägsknappen igen för att stoppa inspelningen</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Open Folder</source>
+        <source>Pin Screenshots</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Pin Screenshots</source>
+        <source>Open Folder</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -307,6 +318,10 @@ eller tryck på genvägsknappen igen för att stoppa inspelningen</translation>
         <translation type="unfinished"/>
     </message>
     <message>
+        <source>Sound</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation type="unfinished"/>
     </message>
@@ -327,6 +342,10 @@ eller tryck på genvägsknappen igen för att stoppa inspelningen</translation>
         <translation type="unfinished"/>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <source>Tools</source>
         <translation type="unfinished"/>
     </message>
@@ -343,23 +362,11 @@ eller tryck på genvägsknappen igen för att stoppa inspelningen</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Start scrollshot</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <source>Start OCR</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Arrow</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Sound</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Mouse</source>
+        <source>Start scrollshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -377,41 +384,46 @@ eller tryck på genvägsknappen igen för att stoppa inspelningen</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Rectangle
-Press and hold Shift to draw a square</source>
+        <source>Blur</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Ellipse
-Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Brush
-Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Adjust text size (Scroll to adjust it)</source>
+        <source>Mosaic</source>
         <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
+        <source>Sound On</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <source>Microphone</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <source>System Audio</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Sound Off</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Keystroke</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Hide Keystroke</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Webcam On</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Webcam Off</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -456,6 +468,30 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>30 fps</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Ellipse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Arrow</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Pencil</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Text</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -515,75 +551,11 @@ Press and hold Shift to draw a straight line</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Show keystroke (K)</source>
+        <source>Scrollshot</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Settings</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
+        <source>Pin Screenshots</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -591,38 +563,19 @@ Press and hold Shift to draw a straight line</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <source>ogg</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <source>Videos</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Rectangle (R)
-Press and hold Shift to draw a square</source>
+        <source>Set a path on save</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Ellipse (O)
-Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Line (L)
-Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Arrow (X)
-Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"/>
-    </message>
-</context>
-<context>
-    <name>ToolBarWidget</name>
-    <message>
-        <source>Close (Esc)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>OK (Enter)</source>
+        <source>Change the path on save</source>
         <translation type="unfinished"/>
     </message>
 </context>

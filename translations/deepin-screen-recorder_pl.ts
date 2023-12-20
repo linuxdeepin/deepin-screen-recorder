@@ -581,11 +581,11 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustaw ścieżkę zapisu</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Zmień ścieżkę zapisu</translation>
     </message>
 </context>
 <context>

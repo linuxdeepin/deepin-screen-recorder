@@ -581,11 +581,11 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleziona un percorso di salvataggio</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambia il percorso di salvataggio</translation>
     </message>
 </context>
 <context>

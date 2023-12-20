@@ -581,11 +581,11 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Kaydet sırasında bir yol ayarla</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Kaydet sırasında yolu değiştir</translation>
     </message>
 </context>
 <context>

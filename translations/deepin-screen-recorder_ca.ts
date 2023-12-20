@@ -581,11 +581,11 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Estableix un camí per desar</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Canvia el camí per desar</translation>
     </message>
 </context>
 <context>

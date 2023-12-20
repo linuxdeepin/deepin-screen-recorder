@@ -581,11 +581,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>儲存時設定位置</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>儲存時更新位置</translation>
     </message>
 </context>
 <context>

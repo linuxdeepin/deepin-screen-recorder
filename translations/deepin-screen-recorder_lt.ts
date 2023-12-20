@@ -571,6 +571,14 @@ arba dar kartą paspauskite trumpinį</translation>
         <source>Videos</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

@@ -581,11 +581,11 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Establecer ruta para guardar</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambiar ruta de guardado</translation>
     </message>
 </context>
 <context>

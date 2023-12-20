@@ -580,11 +580,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>ئورۇننى ساقلىغاندا يېڭىلاش</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>ئورۇننى ساقلىغاندا تەڭشەش</translation>
     </message>
 </context>
 <context>

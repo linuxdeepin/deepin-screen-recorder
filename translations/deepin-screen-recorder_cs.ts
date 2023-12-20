@@ -573,7 +573,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>ogg</source>
-        <translation type="unfinished"></translation>
+        <translation>ogg</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -581,11 +581,11 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavit popis umístění při ukládání</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Změnit popis umístění pro ukládání</translation>
     </message>
 </context>
 <context>

@@ -581,11 +581,11 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Állítson be egy elérési utat a mentéshez</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Mentéskor módosítsa az elérési utat</translation>
     </message>
 </context>
 <context>

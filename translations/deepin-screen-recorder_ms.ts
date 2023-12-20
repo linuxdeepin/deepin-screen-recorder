@@ -573,7 +573,7 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>ogg</source>
-        <translation type="unfinished"></translation>
+        <translation>ogg</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -581,11 +581,11 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Tetapkan laluan ketika simpan</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Ubah laluan ketika simpan</translation>
     </message>
 </context>
 <context>
