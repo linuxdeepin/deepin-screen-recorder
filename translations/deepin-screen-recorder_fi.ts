@@ -581,11 +581,11 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Aseta tallennuspolku</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Muuta polkua tallentaessa</translation>
     </message>
 </context>
 <context>

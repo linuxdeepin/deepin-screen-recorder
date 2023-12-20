@@ -570,6 +570,14 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
         <source>Videos</source>
         <translation>Videolar</translation>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Saxlamaq üçün bir yol təyin edin</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Saxlamaq üçün yolu dəyişin</translation>
+    </message>
 </context>
 <context>
     <name>TopTips</name>

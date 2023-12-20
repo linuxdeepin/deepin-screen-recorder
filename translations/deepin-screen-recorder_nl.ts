@@ -581,11 +581,11 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Locatie kiezen na klikken op opslaan</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Locatie wijzigen na klikken op opslaan</translation>
     </message>
 </context>
 <context>

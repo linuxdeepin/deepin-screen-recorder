@@ -581,11 +581,11 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Beim Speichern einen Pfad festlegen</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Beim Speichern den Pfad ändern</translation>
     </message>
 </context>
 <context>

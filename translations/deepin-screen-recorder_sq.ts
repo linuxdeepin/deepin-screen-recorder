@@ -565,7 +565,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation>Fiksoni Foto Ekrani</translation>
+        <translation>Fiksoje Foton e Ekranit</translation>
     </message>
     <message>
         <source>webm</source>
