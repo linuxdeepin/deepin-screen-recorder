@@ -374,12 +374,16 @@ int CAVInputStream::readMicAudioPacket()
             if (ret == AVERROR_EOF) {
                 setbRunThread(false);
             } else {
+                avlibInterface::m_av_packet_unref(&inputPacket);
+                avlibInterface::m_av_frame_free(&inputFrame);
                 continue;
             }
         }
         //AVPacket -> AVFrame
         if ((ret = avlibInterface::m_avcodec_decode_audio4(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec, inputFrame, &got_frame_ptr, &inputPacket)) < 0) {
             printf("Could not decode audio frame\n");
+            avlibInterface::m_av_packet_unref(&inputPacket);
+            avlibInterface::m_av_frame_free(&inputFrame);
             return ret;
         }
         avlibInterface::m_av_packet_unref(&inputPacket);
@@ -422,12 +426,16 @@ int CAVInputStream::readMicToMixAudioPacket()
             if (ret == AVERROR_EOF) {
                 setbRunThread(false);
             } else {
+                avlibInterface::m_av_packet_unref(&inputPacket);
+                avlibInterface::m_av_frame_free(&inputFrame);
                 continue;
             }
         }
         //AVPacket -> AVFrame
         if ((ret = avlibInterface::m_avcodec_decode_audio4(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec, inputFrame, &got_frame_ptr, &inputPacket)) < 0) {
             printf("Could not decode audio frame\n");
+            avlibInterface::m_av_packet_unref(&inputPacket);
+            avlibInterface::m_av_frame_free(&inputFrame);
             return ret;
         }
         avlibInterface::m_av_packet_unref(&inputPacket);
@@ -486,11 +494,15 @@ int CAVInputStream::readSysAudioPacket()
             if (ret == AVERROR_EOF) {
                 setbRunThread(false);
             } else {
+                avlibInterface::m_av_packet_unref(&inputPacket);
+                avlibInterface::m_av_frame_free(&input_frame);
                 continue;
             }
         }
         if ((ret = avlibInterface::m_avcodec_decode_audio4(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec, input_frame, &got_frame_ptr, &inputPacket)) < 0) {
             printf("Could not decode audio frame\n");
+            avlibInterface::m_av_packet_unref(&inputPacket);
+            avlibInterface::m_av_frame_free(&input_frame);
             return ret;
         }
         avlibInterface::m_av_packet_unref(&inputPacket);
@@ -530,11 +542,15 @@ int CAVInputStream::readSysToMixAudioPacket()
             if (ret == AVERROR_EOF) {
                 setbRunThread(false);
             } else {
+                avlibInterface::m_av_packet_unref(&inputPacket);
+                avlibInterface::m_av_frame_free(&inputFrame);
                 continue;
             }
         }
         if ((ret = avlibInterface::m_avcodec_decode_audio4(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec, inputFrame, &got_frame_ptr, &inputPacket)) < 0) {
             printf("Could not decode audio frame\n");
+            avlibInterface::m_av_packet_unref(&inputPacket);
+            avlibInterface::m_av_frame_free(&inputFrame);
             return ret;
         }
         avlibInterface::m_av_packet_unref(&inputPacket);
