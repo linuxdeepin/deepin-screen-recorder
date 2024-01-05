@@ -8,6 +8,7 @@
 
 #include <DGuiApplicationHelper>
 #include <DStyle>
+#include <DSysInfo>
 
 #include <QApplication>
 #include <QPainter>
@@ -23,14 +24,21 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <iostream>
+DCORE_USE_NAMESPACE
 
 IconWidget::IconWidget(QWidget *parent):
-    QWidget(parent)
+    QWidget(parent),
+    m_blgPixmap(nullptr),
+    centralLayout(nullptr)
 {
+    m_systemVersion = DSysInfo::minorVersion().toInt() ;
     setMouseTracking(true);
     setMinimumSize(PLUGIN_BACKGROUND_MIN_SIZE, PLUGIN_BACKGROUND_MIN_SIZE);
 
     QString iconName("screen-capture");
+    if(m_systemVersion >= 1070){
+        iconName = "screenshot";
+    }
     m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
 }
 
@@ -135,6 +143,9 @@ void IconWidget::paintEvent(QPaintEvent *e)
 
     QPixmap pixmap;
     QString iconName = "screen-capture";
+    if(m_systemVersion >= 1070){
+        iconName = "screenshot";
+    }
     int iconSize = PLUGIN_ICON_MAX_SIZE;
 
     if (rect().height() > PLUGIN_BACKGROUND_MIN_SIZE) {
@@ -231,6 +242,8 @@ const QPixmap IconWidget::loadSvg(const QString &fileName, const QSize &size) co
     const auto ratio = devicePixelRatioF();
 
     auto pixmapSize = QCoreApplication::testAttribute(Qt::AA_UseHighDpiPixmaps) ? size : (size * ratio);
+    //缩放模式
+    //pixmapSize = size* ratio;
 
     QPixmap pixmap = QIcon::fromTheme(fileName, m_icon).pixmap(pixmapSize);
 

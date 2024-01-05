@@ -63,7 +63,7 @@ void QuickPanelWidget::changeType(int type)
     setDescription(m_showTimeStr);
     m_type = type;
     if(type == SHOT){
-        QString shotIcon = DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType? "screen-shot" : "screen-shot-dark";
+        QString shotIcon = DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType? "screenshot-dark" : "screenshot";
         setIcon(QIcon::fromTheme(shotIcon, QIcon(QString(":/res/%1.svg").arg(shotIcon))));
     }else if(type == RECORD){
         QString recordIcon("screen-recording");
