@@ -3,8 +3,8 @@
         <file>res/shot-start-plugin.svg</file>
         <file>res/screen-capture.svg</file>
         <file>res/screen-capture-dark.svg</file>
+        <file>res/screenshot-dark.svg</file>
+        <file>res/screenshot.svg</file>
         <file>res/screen-recording.svg</file>
-        <file>res/screen-shot.svg</file>
-        <file>res/screen-shot-dark.svg</file>
     </qresource>
 </RCC>

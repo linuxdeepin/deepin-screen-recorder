@@ -48,6 +48,10 @@ private:
     QIcon m_icon;
     QPixmap *m_blgPixmap;
     QBoxLayout *centralLayout;
+    /**
+     * @brief m_systemVersion 获取系统镜像版本
+     */
+    int m_systemVersion;
 };
 
 #endif // TIMEWIDGET_H

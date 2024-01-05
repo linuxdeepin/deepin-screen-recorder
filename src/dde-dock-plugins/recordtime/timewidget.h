@@ -17,6 +17,7 @@
 
 #define RECORDER_TIME_LEVEL_ICON_SIZE 23
 #define RECORDER_TIME_VERTICAL_ICON_SIZE 22
+#define RECORDER_TIME_VERTICAL_ICON_SIZE_1070 16
 #define RECORDER_TIME_LEVEL_SIZE "00:00:00"
 #define RECORDER_TIME_VERTICAL_SIZE "0000"
 #define RECORDER_TIME_FONT DFontSizeManager::instance()->t8()
@@ -103,6 +104,15 @@ private:
     bool m_hover;
     bool m_pressed;
     int m_systemVersion;
+
+    /**
+     * @brief m_lightIcon1070 1070下录屏计时图标icon
+     */
+    QIcon m_lightIcon1070;
+    /**
+     * @brief m_shadeIcon1070 1070下录屏计时图标icon
+     */
+    QIcon m_shadeIcon1070;
 };
 
 #endif // TIMEWIDGET_H
