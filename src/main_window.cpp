@@ -1895,6 +1895,67 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             QClipboard *cb = qApp->clipboard();
             qInfo() << __FUNCTION__ << __LINE__ << "将数据传递到剪贴板！";
             cb->setMimeData(t_imageData, QClipboard::Clipboard);
+            qDebug() << "Whether the data passed to the clipboard is empty? " << t_imageData->imageData().isNull();
+            //临时方案对于多屏跨屏截图保存到剪切板需要进行一个延时
+            if(m_screenCount > 1){
+                //捕捉区域的四个点（左上，左下，右上，右下）
+                QPoint recordPoints[4];
+                //左上
+                recordPoints[0] = QPoint(static_cast<int>(recordX * m_pixelRatio),
+                                         static_cast<int>(recordY * m_pixelRatio));
+                //左下
+                recordPoints[1] = QPoint(static_cast<int>(recordX * m_pixelRatio),
+                                         static_cast<int>((recordY + recordHeight) * m_pixelRatio));
+                //右上
+                recordPoints[2] = QPoint(static_cast<int>((recordX + recordWidth) * m_pixelRatio) ,
+                                         static_cast<int>(recordY * m_pixelRatio));
+                //右下
+                recordPoints[3] = QPoint(static_cast<int>((recordX + recordWidth) * m_pixelRatio),
+                                         static_cast<int>((recordY + recordHeight) * m_pixelRatio));
+                //四个点是否在同一个屏幕
+                bool isSameScreen = true;
+                for (int i = 0; i < m_screenInfo.size(); ++i) {
+                    QRect currnetScreenRect = {
+                        static_cast<int>(m_screenInfo[i].x),
+                        static_cast<int>(m_screenInfo[i].y),
+                        static_cast<int>(m_screenInfo[i].width),
+                        static_cast<int>(m_screenInfo[i].height)
+                    };
+                    //QRect有个问题，处于下边沿和右边沿的点使用contains判断时，会返回false。
+                    if (currnetScreenRect.contains(recordPoints[0]) &&
+                        currnetScreenRect.contains(recordPoints[1]) &&
+                        currnetScreenRect.contains(recordPoints[2]) &&
+                        currnetScreenRect.contains(recordPoints[3])) {
+                        //四个点在同一个屏幕
+                        qInfo() << "Four dots on the same screen(" << m_screenInfo[i].name << currnetScreenRect <<")";
+                        isSameScreen = true;
+                        break;
+                    }else if (!currnetScreenRect.contains(recordPoints[0]) &&
+                              !currnetScreenRect.contains(recordPoints[1]) &&
+                              !currnetScreenRect.contains(recordPoints[2]) &&
+                              !currnetScreenRect.contains(recordPoints[3]) ){
+                        //四个点都不在此屏幕
+                        qInfo() << "None of the four dots are on this screen(" << m_screenInfo[i].name << currnetScreenRect <<")";
+                        isSameScreen = false;
+                    }else{
+                        //四个点不在同一个屏幕
+                        qInfo() << "The four dots are not on the same screen(" << m_screenInfo[i].name << currnetScreenRect <<")";
+                        isSameScreen = false;
+                        break;
+                    }
+                }
+                if(!isSameScreen){
+                    qInfo() << "Wait 3s for data to be saved to the clipboard...";
+                    DelayTime *tempTimer = new DelayTime(3000);
+                    tempTimer->setForceToExitApp(false);
+                    QEventLoop eventloop;
+                    connect(tempTimer, SIGNAL(doWork()), &eventloop, SLOT(quit()), Qt::DirectConnection);
+                    tempTimer->start(QThread::HighestPriority);
+                    eventloop.exec();
+                    tempTimer->stop();
+                    delete tempTimer;
+                }
+            }
         }
     }
     qInfo() << __FUNCTION__ << __LINE__ << "已保存到剪贴板！";
