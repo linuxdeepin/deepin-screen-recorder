@@ -34,6 +34,7 @@ extern "C" {
 #include <DWindowManagerHelper>
 #include <DForeignWindow>
 #include <DHiDPIHelper>
+#include <DSysInfo>
 
 #include <QApplication>
 #include <QTimer>
@@ -1897,7 +1898,8 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             cb->setMimeData(t_imageData, QClipboard::Clipboard);
             qDebug() << "Whether the data passed to the clipboard is empty? " << t_imageData->imageData().isNull();
             //临时方案对于多屏跨屏截图保存到剪切板需要进行一个延时
-            if(m_screenCount > 1){
+            if((DSysInfo::minorVersion().contains("1070") || DSysInfo::minorVersion().toInt() >= 1070) && m_screenCount > 1){
+                this->hide();
                 //捕捉区域的四个点（左上，左下，右上，右下）
                 QPoint recordPoints[4];
                 //左上
