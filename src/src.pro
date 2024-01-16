@@ -91,7 +91,9 @@ INCLUDEPATH += ../3rdparty/libcam/libcam/ \
                ../3rdparty/libcam/libcam_render/ \
                ../3rdparty/libcam/libcam_encoder/ \
                ../3rdparty/libcam/libcam_audio/ \
-               ../3rdparty/libcam/load_libs.h
+               ../3rdparty/libcam/load_libs.h \
+               ../3rdparty/displayjack/wayland_client.h
+
 message("PWD: " $$PWD)
 
 include(accessibility/accessible.pri)
