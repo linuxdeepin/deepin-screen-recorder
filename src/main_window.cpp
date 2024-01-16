@@ -22,6 +22,9 @@
 #include "accessibility/acTextDefine.h"
 #include "keydefine.h"
 #include "utils/eventlogutils.h"
+#ifdef KF5_WAYLAND_FLAGE_ON
+#include "../3rdparty/displayjack/wayland_client.h"
+#endif
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -94,7 +97,31 @@ const int CURSOR_WIDTH = 8;
 const int CURSOR_HEIGHT = 18;
 const int INDICATOR_WIDTH =  110;
 }
+/**
+ * 初始化dtk获取窗口接口
+ */
+typedef int (*InitDtkWmDisplayPtr)();
+/**
+ * 释放DTK获取窗口接口
+ */
+typedef void (*DestoryDtkWmDisplayPtr)();
+/**
+ * 获取当前所有窗口
+ */
+typedef int (*GetAllWindowStatesListPtr)(WindowState **states);
 
+/**
+ * @brief 初始化dtk获取窗口接口
+ */
+static InitDtkWmDisplayPtr initDtkWmDisplay = nullptr;
+/**
+ * @brief 释放DTK获取窗口接口
+ */
+static DestoryDtkWmDisplayPtr destoryDtkWmDisplay = nullptr;
+/**
+ * @brief 获取当前所有窗口
+ */
+static GetAllWindowStatesListPtr getAllWindowStatesList = nullptr;
 //DWM_USE_NAMESPACE
 MainWindow::MainWindow(DWidget *parent) :
     DWidget(parent),
@@ -259,6 +286,16 @@ void MainWindow::initAttributes()
     if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
         qInfo() << __FUNCTION__ << __LINE__  << "KF5_WAYLAND_FLAGE_ON is open!!";
+        QLibrary library("libdtkwmjack.so");
+        initDtkWmDisplay = reinterpret_cast<int (*)()>(library.resolve("InitDtkWmDisplay"));
+        destoryDtkWmDisplay = reinterpret_cast<void (*)()>(library.resolve("DestoryDtkWmDisplay"));
+        getAllWindowStatesList = reinterpret_cast<int (*)(WindowState **)>(library.resolve("GetAllWindowStatesList"));
+
+        if (initDtkWmDisplay && getAllWindowStatesList && destoryDtkWmDisplay){
+            qInfo() << "wayland automatic recognition window(1070 new interface)";
+            //wayland自动识别窗口 1070新接口
+            initDtkWmDisplay();
+        }
         //wayland自动识别窗口
         m_connectionThread = new QThread(this);
         m_connectionThreadObject = new ConnectionThread();
@@ -390,7 +427,8 @@ void MainWindow::setupRegistry(Registry *registry)
         qDebug() << QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ")) << "createClientManagement";
         connect(m_clientManagement, &ClientManagement::windowStatesChanged, this,
         [this] {
-            m_windowStates = m_clientManagement->getWindowStates();
+            //m_windowStates = m_clientManagement->getWindowStates();
+            m_windowStates = getAllWindowStates();
             qDebug() << "当前窗口的数量(ClientManagement::windowStatesChanged):" << m_windowStates.count();
             qDebug() << "Get new window states";
             this->waylandwindowinfo(m_windowStates);
@@ -404,7 +442,8 @@ void MainWindow::setupRegistry(Registry *registry)
         Q_ASSERT(m_compositor);
         Q_ASSERT(m_clientManagement);
         qDebug() << "request getWindowStates";
-        m_windowStates = m_clientManagement->getWindowStates();
+        //m_windowStates = m_clientManagement->getWindowStates();
+        m_windowStates = getAllWindowStates();
         qDebug() << "当前窗口的数量(Registry::interfacesAnnounced):" << m_windowStates.count();
         this->waylandwindowinfo(m_windowStates);
     }
@@ -417,6 +456,46 @@ void MainWindow::setupRegistry(Registry *registry)
     qDebug() << "开始执行wayland注册...";
     registry->setup();
     qDebug() << "wayland注册完成";
+}
+
+//1070获取窗口信息的新接口
+QVector<ClientManagement::WindowState> MainWindow::getAllWindowStates()
+{
+    QVector<ClientManagement::WindowState> vWindowStates;
+
+    if (getAllWindowStatesList) {
+        qInfo() << "wayland automatic recognition window(1070 new interface)";
+        WindowState * pStates = nullptr;
+        int nCount = getAllWindowStatesList(&pStates);
+        qDebug() << "The number of current Windows(GetAllWindowStatesList(&pStates)):" << nCount;
+        if (nCount <= 0){
+            qWarning() << "The current number of Windows is 0! wayland window not found!";
+            return vWindowStates;
+        }
+        for (int i = 0; i < nCount; i++)
+        {
+            WindowState *p = &pStates[i];
+            ClientManagement::WindowState windowState;
+            windowState.pid = p->pid;
+            windowState.windowId = p->windowId;
+            memcpy(windowState.resourceName, p->resourceName, sizeof(p->resourceName));
+            windowState.geometry.x = p->geometry.x;
+            windowState.geometry.y = p->geometry.y;
+            windowState.geometry.width = p->geometry.width;
+            windowState.geometry.height = p->geometry.height;
+            windowState.isMinimized = p->isMinimized;
+            windowState.isFullScreen = p->isFullScreen;
+            windowState.isActive = p->isActive;
+
+            vWindowStates.push_back(windowState);
+        }
+        free(pStates);
+    } else {
+        qInfo() << "wayland Automatic Recognition window (old interface)";
+        return m_clientManagement->getWindowStates();
+    }
+
+    return vWindowStates;
 }
 
 void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> &windowStates)
@@ -469,6 +548,10 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
         m_connectionThread->quit();
         m_connectionThread->wait();
         m_connectionThreadObject->deleteLater();
+        if(destoryDtkWmDisplay) {
+            qInfo() << "Release the interface for DTK to obtain window information.";
+            destoryDtkWmDisplay();
+        }
         QRect screenRect(0, 0, static_cast<int>(m_screenSize.width() / ratio), static_cast<int>(m_screenSize.height() / ratio));
         //qDebug() << screenRect;
         //qDebug() << windowRects;
