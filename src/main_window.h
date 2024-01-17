@@ -712,6 +712,11 @@ protected:
      * @brief 采用线程循环监听文件（"/home/" + userName + "/.cache/deepin/deepin-screen-recorder/stopRecord.txt"）是否存在且内容是否为1
      */
     void whileCheckTempFileArm();
+
+    /**
+     * @brief getAllWindowsInfo 1070获取窗口信息的新接口
+     */
+    QVector<ClientManagement::WindowState> getAllWindowStates();
 #endif
     /**
      * @brief 启动截图录屏时检测是否是锁屏状态
