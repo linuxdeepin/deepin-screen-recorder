@@ -120,6 +120,10 @@ QSize TimeWidget::sizeHint() const
             width = this->width();
             height =width;
         }
+        if(m_systemVersion >= 1070){
+            width = RECORDER_TIME_VERTICAL_ICON_SIZE;
+            height =width;
+        }
         qInfo() << "left or right itemWidget width: " << width << " ,itemWidget height: " << height;
     }
     //qInfo() <<  "sizeHint 2>>>>>>>>>> this->width(): " << this->width() << " , this->height(): " << this->height();
@@ -338,6 +342,7 @@ bool TimeWidget::createCacheFile()
 
 void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
 {
+    qDebug() << "Mouse release start!";
     if(e->button() == Qt::LeftButton && m_pressed && m_hover){
         m_pressed = false;
         m_hover = false;
@@ -346,11 +351,15 @@ void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
         return;
     }
     int width = 0;
-    //任务栏的位置在桌面顶部和底部时才会显示录屏时间
-    if (position::top == m_position || position::bottom == m_position) {
+    if(m_systemVersion >= 1070){
         width = rect().width();
-    } else {
-        width = m_pixmap.width();
+    }else{
+        //任务栏的位置在桌面顶部和底部时才会显示录屏时间
+        if (position::top == m_position || position::bottom == m_position) {
+            width = rect().width();
+        } else {
+            width = m_pixmap.width();
+        }
     }
     bool flag = true;
     if (e->pos().x() > 0 && e->pos().x() < width) {
@@ -377,6 +386,8 @@ void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
     m_hover = false;
     update();
     QWidget::mouseReleaseEvent(e);
+    qDebug() << "Mouse release end!";
+
 }
 
 void TimeWidget::mouseMoveEvent(QMouseEvent *e)
