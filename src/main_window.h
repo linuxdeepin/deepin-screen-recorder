@@ -348,6 +348,10 @@ signals:
     void changeMicrophoneSelectEvent(bool checked);
     void changeSystemAudioSelectEvent(bool checked);
     void stopRecordArm();
+    /**
+     * @brief saveClipboardComing 数据是否已传递到剪切板
+     */
+    void saveClipboardComing();
 public slots:
     void onExit();
     /**
@@ -521,6 +525,11 @@ public slots:
      * @param msg
      */
     void onLockScreenEvent(QDBusMessage msg);
+    /**
+     * @brief onSaveClipboardComing 监听剪切板的信号，确保数据已经传递到剪切板，应用才退出
+     * @param msg
+     */
+    void onSaveClipboardComing(const QByteArray &msg);
 
     /**
      * @brief onPowersource 监听电源管理界面，进入电源管理界面时会触发此信号槽
@@ -1068,6 +1077,12 @@ private:
      * @brief m_scrollShotOffsetXY 滚动截图时截图区域的左上角坐标偏移量，防止滚动截图时截到捕捉区域的虚线框
      */
     int m_scrollShotOffsetXY =0;
+
+    /**
+     * @brief m_isSaveClipboard 是否已经保存到剪切板
+     */
+    bool m_isSaveClipboard = false;
+
 };
 
 #endif //MAINWINDOW_H
