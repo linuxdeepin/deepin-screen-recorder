@@ -86,6 +86,12 @@ const int MainWindow::CAMERA_WIDGET_MAX_WIDTH = 320;
 const int MainWindow::CAMERA_WIDGET_MAX_HEIGHT = 180;
 const int MainWindow::CAMERA_WIDGET_MIN_WIDTH = 80;
 const int MainWindow::CAMERA_WIDGET_MIN_HEIGHT = 45;
+
+const static QString ClipboardService = QStringLiteral("com.deepin.daemon.Clipboard");
+const static QString ClipboardPath = QStringLiteral("/com/deepin/dde/ClipboardLoader");
+const static QString ClipboardInterface = QStringLiteral("com.deepin.dde.ClipboardLoader");
+const static QString ClipboardSignal = QStringLiteral("dataComing");
+
 DWIDGET_USE_NAMESPACE
 
 namespace {
@@ -97,6 +103,7 @@ const int CURSOR_WIDTH = 8;
 const int CURSOR_HEIGHT = 18;
 const int INDICATOR_WIDTH =  110;
 }
+#ifdef KF5_WAYLAND_FLAGE_ON
 /**
  * 初始化dtk获取窗口接口
  */
@@ -122,6 +129,7 @@ static DestoryDtkWmDisplayPtr destoryDtkWmDisplay = nullptr;
  * @brief 获取当前所有窗口
  */
 static GetAllWindowStatesListPtr getAllWindowStatesList = nullptr;
+#endif
 //DWM_USE_NAMESPACE
 MainWindow::MainWindow(DWidget *parent) :
     DWidget(parent),
@@ -1936,6 +1944,27 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
         return;
     }
     if (Utils::is3rdInterfaceStart == false) {
+        if(DSysInfo::minorVersion().toInt() >= 1070){
+            //检测保存到剪切板是否完成
+            qInfo() << "Connecting the clipboard feedback signal..."
+                    << "\nClipboardService: " << ClipboardService
+                    << "\nClipboardPath: " << ClipboardPath
+                    << "\nClipboardInterface: " << ClipboardInterface
+                    << "\nClipboardSignal: " << ClipboardSignal;
+            bool isSuccess = QDBusConnection::sessionBus().connect(ClipboardService,
+                                                                   ClipboardPath,
+                                                                   ClipboardInterface,
+                                                                   ClipboardSignal,
+                                                                   this,
+                                                                   SLOT(onSaveClipboardComing(const QByteArray &))
+                                                                   );
+            if(isSuccess){
+                qInfo() << "The clipper feedback signal connection is successfully established!";
+            }else{
+                qWarning() << "Clipper feedback signal connection failed!";
+            }
+        }
+
         QMimeData *t_imageData = new QMimeData;
         // Wayland 等待剪贴板dataChanged信号不可靠，出问题会导致整改系统不可用，评估去掉信号等待 受概率不能保存到剪切板影响，暂时需要还原
         if (Utils::isWaylandMode) {
@@ -1980,66 +2009,31 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             qInfo() << __FUNCTION__ << __LINE__ << "将数据传递到剪贴板！";
             cb->setMimeData(t_imageData, QClipboard::Clipboard);
             qDebug() << "Whether the data passed to the clipboard is empty? " << t_imageData->imageData().isNull();
-            //临时方案对于多屏跨屏截图保存到剪切板需要进行一个延时
-            if((DSysInfo::minorVersion().contains("1070") || DSysInfo::minorVersion().toInt() >= 1070) && m_screenCount > 1){
-                this->hide();
-                //捕捉区域的四个点（左上，左下，右上，右下）
-                QPoint recordPoints[4];
-                //左上
-                recordPoints[0] = QPoint(static_cast<int>(recordX * m_pixelRatio),
-                                         static_cast<int>(recordY * m_pixelRatio));
-                //左下
-                recordPoints[1] = QPoint(static_cast<int>(recordX * m_pixelRatio),
-                                         static_cast<int>((recordY + recordHeight) * m_pixelRatio));
-                //右上
-                recordPoints[2] = QPoint(static_cast<int>((recordX + recordWidth) * m_pixelRatio) ,
-                                         static_cast<int>(recordY * m_pixelRatio));
-                //右下
-                recordPoints[3] = QPoint(static_cast<int>((recordX + recordWidth) * m_pixelRatio),
-                                         static_cast<int>((recordY + recordHeight) * m_pixelRatio));
-                //四个点是否在同一个屏幕
-                bool isSameScreen = true;
-                for (int i = 0; i < m_screenInfo.size(); ++i) {
-                    QRect currnetScreenRect = {
-                        static_cast<int>(m_screenInfo[i].x),
-                        static_cast<int>(m_screenInfo[i].y),
-                        static_cast<int>(m_screenInfo[i].width),
-                        static_cast<int>(m_screenInfo[i].height)
-                    };
-                    //QRect有个问题，处于下边沿和右边沿的点使用contains判断时，会返回false。
-                    if (currnetScreenRect.contains(recordPoints[0]) &&
-                        currnetScreenRect.contains(recordPoints[1]) &&
-                        currnetScreenRect.contains(recordPoints[2]) &&
-                        currnetScreenRect.contains(recordPoints[3])) {
-                        //四个点在同一个屏幕
-                        qInfo() << "Four dots on the same screen(" << m_screenInfo[i].name << currnetScreenRect <<")";
-                        isSameScreen = true;
-                        break;
-                    }else if (!currnetScreenRect.contains(recordPoints[0]) &&
-                              !currnetScreenRect.contains(recordPoints[1]) &&
-                              !currnetScreenRect.contains(recordPoints[2]) &&
-                              !currnetScreenRect.contains(recordPoints[3]) ){
-                        //四个点都不在此屏幕
-                        qInfo() << "None of the four dots are on this screen(" << m_screenInfo[i].name << currnetScreenRect <<")";
-                        isSameScreen = false;
-                    }else{
-                        //四个点不在同一个屏幕
-                        qInfo() << "The four dots are not on the same screen(" << m_screenInfo[i].name << currnetScreenRect <<")";
-                        isSameScreen = false;
-                        break;
-                    }
+
+        }
+        if(DSysInfo::minorVersion().toInt() >= 1070){
+            if (!Utils::isWaylandMode) {
+                this->hide(); //隐藏主界面
+            }
+            //等待15s如果数据还没有传递到剪切板，则退出程序
+            time_t endTime = time(nullptr) + 15;
+            qInfo() << "Start Wait 15s for data to be saved to the clipboard..." << endTime;
+            time_t lastTime = 0;
+            while (1) {
+                time_t curTime = time(nullptr);
+                if (curTime != lastTime) {
+                    qInfo() << lastTime << "==" << curTime;
+                    lastTime = curTime;
                 }
-                if(!isSameScreen){
-                    qInfo() << "Wait 3s for data to be saved to the clipboard...";
-                    DelayTime *tempTimer = new DelayTime(3000);
-                    tempTimer->setForceToExitApp(false);
-                    QEventLoop eventloop;
-                    connect(tempTimer, SIGNAL(doWork()), &eventloop, SLOT(quit()), Qt::DirectConnection);
-                    tempTimer->start(QThread::HighestPriority);
-                    eventloop.exec();
-                    tempTimer->stop();
-                    delete tempTimer;
+                if (curTime >= endTime) {
+                    qInfo() << "15s delayed completion" << time(nullptr);
+                    break;
                 }
+                if(m_isSaveClipboard){
+                    qInfo() << "Data has been passed to the clipboard";
+                    break;
+                }
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
             }
         }
     }
@@ -5031,6 +5025,15 @@ void MainWindow::onLockScreenEvent(QDBusMessage msg)
     } else if (status::shot == m_functionType) {
         pinScreenshotsLockScreen(isLocked);
     }
+}
+
+//监听剪切板的信号，确保数据已经传递到剪切板，应用才退出1070采用
+void MainWindow::onSaveClipboardComing(const QByteArray &msg)
+{
+    Q_UNUSED(msg);
+    qInfo() << "Received data transfer to the clipboard complete signal!" ;
+    emit saveClipboardComing();
+    m_isSaveClipboard = true;
 }
 
 //电源管理界面
