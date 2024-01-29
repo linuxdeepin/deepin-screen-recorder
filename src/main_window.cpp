@@ -245,7 +245,13 @@ void MainWindow::initAttributes()
     //Qt::WindowStaysOnTopHint： 通知窗口系统该窗口应位于所有其他窗口之上。请注意，在 X11 上的某些窗口管理器上，您还必须传递 Qt::X11BypassWindowManagerHint 以使此标志正常工作。
     //Qt::X11BypassWindowManagerHint : 完全绕过窗口管理器。
     if (Utils::isWaylandMode) {
-        setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
+        //1070焦点策略管理比1060严格，作为全屏窗口的截图录屏设置了无焦点属性后，窗管不会在设置为获取焦点
+        //因此在1070截图录屏截图录屏需要获取焦点，不然应用内快捷键无法响应。
+        if(DSysInfo::minorVersion().toInt() >= 1070){
+            setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+        } else{
+            setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
+        }
         if (this->windowHandle()) {
             this->windowHandle()->setProperty("_d_dwayland_window-type", "onScreenDisplay");
             qDebug() << "设置窗口属性 _d_dwayland_window-type: " << this->windowHandle()->property("_d_dwayland_window-type");
