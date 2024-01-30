@@ -1415,7 +1415,9 @@ int jpeg_init_decoder(int width, int height)
 
 #if LIBAVCODEC_VER_AT_LEAST(53,6)
     codec_data->context = getLoadLibsInstance()->m_avcodec_alloc_context3(codec_data->codec);
-    getLoadLibsInstance()->m_avcodec_get_context_defaults3 (codec_data->context, codec_data->codec);
+    #if !LIBAVCODEC_VER_AT_LEAST(60,0)
+        getLoadLibsInstance()->m_avcodec_get_context_defaults3(codec_data->context, codec_data->codec);
+    #endif
 #else
     codec_data->context = getLoadLibsInstance()->m_avcodec_alloc_context();
     getLoadLibsInstance()->m_avcodec_get_context_defaults(codec_data->context);
