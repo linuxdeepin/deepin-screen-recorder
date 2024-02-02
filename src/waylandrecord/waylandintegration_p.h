@@ -75,6 +75,7 @@ public:
     struct FrameData {
         quint32 _width;
         quint32 _height;
+        quint32 _stride;
         unsigned char *_frame;
         QImage::Format _format;
         QRect _rect ;
@@ -147,6 +148,12 @@ protected Q_SLOTS:
      */
     void processBuffer(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect);
     void processBufferHw(const KWayland::Client::RemoteBuffer *rbuf, const QRect rect,int screenId = 0);
+
+    /**
+     * @brief copyScreenData 拷贝数据，当远程buffer没有数据传过来时，调用此接口，将上一次的屏幕数据做为当前的屏幕数据
+     * @param screenId
+     */
+    void copyScreenData(int screenId);
 
     /**
      * @brief getImageFormat 根据wayland客户端bufferReady给过来的像素格式，转成QImage的格式
@@ -300,6 +307,11 @@ private:
     FrameData m_ScreenDateBufFrames[2];
     FrameData m_curNewImageScreenFrames[2];
 
+    /**
+     * @brief m_lastScreenData 上一帧数据
+     */
+    FrameData m_lastScreenDatas[2];
+
     QSize m_screenSize;
     int m_screenCount;
 
@@ -321,12 +333,17 @@ private:
     /**
      * @brief m_currentScreenRect 当前屏幕的大小
      */
-    QRect m_currentScreenRect;
+    QRect m_currentScreenRects[2];
 
     /**
      * @brief m_currentScreenBuf 当前屏幕的远程buffer（remoteaccess传过来的屏幕buffer）
      */
-    KWayland::Client::RemoteBuffer * m_currentScreenBuf;
+    KWayland::Client::RemoteBuffer * m_currentScreenBufs[2];
+
+    /**
+     * @brief m_isScreenExtension 当前屏幕模式是否是扩展模式
+     */
+    bool m_isScreenExtension = true;
 };
 
 }
