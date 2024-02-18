@@ -4470,8 +4470,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 static_cast<int>(recordHeight + 1 * m_pixelRatio)
             };
 
-            //如果鼠标位置移出捕捉区域则不显示捕捉区域的骨架节点
-            if (!rect.contains(QPoint(static_cast<int>(mouseEvent->x()*m_pixelRatio), static_cast<int>(mouseEvent->y()*m_pixelRatio)))) {
+            //如果鼠标位置移出捕捉区域则不显示捕捉区域的骨架节点（骨架节点是显示状态，鼠标移出捕捉区域）
+            if (drawDragPoint && !rect.contains(QPoint(static_cast<int>(mouseEvent->x()*m_pixelRatio), static_cast<int>(mouseEvent->y()*m_pixelRatio)))) {
                 drawDragPoint = false;
                 needRepaint = true;
             }
