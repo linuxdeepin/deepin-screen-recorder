@@ -1083,6 +1083,10 @@ private:
      */
     bool m_isSaveClipboard = false;
 
+    /**
+     * @brief m_toolbarLastPoint 工具栏位置改变后，上一次工具栏的位置
+     */
+    QPoint m_toolbarLastPoint;
 };
 
 #endif //MAINWINDOW_H

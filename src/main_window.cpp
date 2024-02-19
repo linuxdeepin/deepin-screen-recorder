@@ -2373,8 +2373,8 @@ void MainWindow::updateToolBarPos()
             }
         }
         if (!toolIsInScreen) {
-            if (!tempScreen.isNull() || tempScreen.isEmpty()) {
-                qDebug() << "当前屏幕：" <<  tempScreen;
+            if (!tempScreen.isNull() /*|| tempScreen.isEmpty()*/) {
+                //qDebug() << "当前屏幕：" <<  tempScreen;
                 if (recordY - tempScreen.y() >  m_toolBar->height() + 28) {
                     //qDebug() << "工具栏位置未在任一屏幕内，需要矫正 >>> 放捕捉区域上边 toolbarPoint: " << toolbarPoint;
                     toolbarPoint.setY(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING);
@@ -2382,13 +2382,20 @@ void MainWindow::updateToolBarPos()
                     //qDebug() << "工具栏位置未在任一屏幕内，需要矫正 >>> 放捕捉区域里面 toolbarPoint: " << toolbarPoint;
                     toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
                 }
+                if(recordX + recordWidth - m_toolBar->width() < tempScreen.x()){
+                    toolbarPoint.setX(recordX);
+                }
                 //qDebug() << "工具栏位置未在任一屏幕内，已矫正 >>> toolbarPoint: " << toolbarPoint;
+            }else{
+                toolbarPoint.setX(m_toolbarLastPoint.x());
+                toolbarPoint.setY(m_toolbarLastPoint.y());
             }
         }
     }
     //qDebug() << "工具栏最新坐标 >>> toolbarPoint: " << toolbarPoint;
     //快捷全屏录制不需要显示工具栏
     if(m_isFullScreenRecord) return;
+    m_toolbarLastPoint = toolbarPoint;
     m_toolBar->showAt(toolbarPoint);
     //qDebug() << "==================2=================";
 }
