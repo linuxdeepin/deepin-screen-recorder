@@ -482,7 +482,7 @@ QVector<ClientManagement::WindowState> MainWindow::getAllWindowStates()
         WindowState * pStates = nullptr;
         int nCount = getAllWindowStatesList(&pStates);
         qDebug() << "The number of current Windows(GetAllWindowStatesList(&pStates)):" << nCount;
-        if (nCount <= 0){
+        if (nCount <= 0 || pStates == nullptr){
             qWarning() << "The current number of Windows is 0! wayland window not found!";
             return vWindowStates;
         }
