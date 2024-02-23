@@ -3,6 +3,7 @@
 
 #include <DFontSizeManager>
 #include <DGuiApplicationHelper>
+#include <DToolTip>
 DGUI_USE_NAMESPACE
 QuickPanelWidget::QuickPanelWidget(QWidget *parent)
     :QWidget(parent)
@@ -27,6 +28,7 @@ void QuickPanelWidget::initUI()
     m_icon->setFixedSize(QSize(24, 24));
 
     m_description->setElideMode(Qt::ElideRight);
+    DToolTip::setToolTipShowMode(m_description, DToolTip::ShowWhenElided);
     DFontSizeManager::instance()->bind(m_description, DFontSizeManager::T10);
 
     auto layout = new QVBoxLayout;
@@ -49,7 +51,7 @@ void QuickPanelWidget::setIcon(const QIcon &icon)
 void QuickPanelWidget::setDescription(const QString &description)
 {
     m_description->setText(description);
-    m_description->setToolTip(description);
+    //m_description->setToolTip(description);
 }
 
 void QuickPanelWidget::setWidgetState(WidgetState state)
