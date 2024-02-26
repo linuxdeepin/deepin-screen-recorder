@@ -111,6 +111,7 @@ void ShapesWidget::updateSelectedShape(const QString &group,
         } else if (group == "text" && m_selectedShape.type == group && key == "color_index") {
             int tmpIndex = m_shapes[m_selectedOrder].index;
             if (m_editMap.contains(tmpIndex)) {
+                m_selectedShape.colorIndex = index;
                 m_editMap.value(tmpIndex)->setColor(BaseUtils::colorIndexOf(index));
                 m_editMap.value(tmpIndex)->update();
             }
