@@ -246,7 +246,6 @@ void SubToolWidget::initRecordOption()
     //notAudio->setCheckable(true);
     m_microphoneAction->setCheckable(true);
     sysAudio->setCheckable(true);
-    sysAudio->setChecked(true);
     //t_audioGroup->addAction(notAudio);
     t_audioGroup->addAction(m_microphoneAction);
     t_audioGroup->addAction(sysAudio);
@@ -416,11 +415,6 @@ void SubToolWidget::initRecordOption()
         break;
     }
 
-    t_settings->setValue("recorder", "audio", 0);
-//    t_settings->setValue("recorder", "cursor", 1);
-    //notAudio->setChecked(true);
-    //notMouse->setChecked(true);
-
     connect(t_audioGroup, QOverload<QAction *>::of(&QActionGroup::triggered), [ = ](QAction * t_act) {
         Q_UNUSED(t_act);
         int configValue = 0;
@@ -433,6 +427,22 @@ void SubToolWidget::initRecordOption()
         }
         t_settings->setValue("recorder", "audio", configValue);
     });
+
+    // audio 0 不录制任何音频,1 麦克风音频, 2 录制系统音频,3 录制混音
+    int audioValue = t_settings->getValue("recorder", "audio").toInt();
+    if (audioValue == 3) {
+        sysAudio->setChecked(true);
+        m_microphoneAction->setChecked(true);
+    } else if (audioValue == 2) {
+        sysAudio->setChecked(true);
+        m_microphoneAction->setChecked(false);
+    } else if (audioValue == 1) {
+        sysAudio->setChecked(false);
+        m_microphoneAction->setChecked(true);
+    } else {
+        sysAudio->setChecked(false);
+        m_microphoneAction->setChecked(false);
+    }
 
     connect(t_mouseInfoGroup, QOverload<QAction *>::of(&QActionGroup::triggered), [ = ](QAction * t_act) {
         Q_UNUSED(t_act);
@@ -1413,9 +1423,6 @@ void SubToolWidget::setMicroPhoneEnable(bool status)
 {
     qDebug() << "mic 是否可选？" << status;
     m_microphoneAction->setEnabled(status);
-    m_microphoneAction->setChecked(!status);
-    //trigger()函数会改变当前的checked状态
-    m_microphoneAction->trigger();
 }
 
 void SubToolWidget::setCameraDeviceEnable(bool status)
