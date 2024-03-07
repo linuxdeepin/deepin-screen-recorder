@@ -93,6 +93,10 @@ const int CURSOR_WIDTH = 8;
 const int CURSOR_HEIGHT = 18;
 const int INDICATOR_WIDTH =  110;
 }
+const static QString ClipboardService = QStringLiteral("com.deepin.daemon.Clipboard");
+const static QString ClipboardPath = QStringLiteral("/com/deepin/dde/ClipboardLoader");
+const static QString ClipboardInterface = QStringLiteral("com.deepin.dde.ClipboardLoader");
+const static QString ClipboardSignal = QStringLiteral("dataComing");
 
 //DWM_USE_NAMESPACE
 MainWindow::MainWindow(DWidget *parent) :
@@ -1060,6 +1064,7 @@ void MainWindow::initScrollShot()
     if (Utils::isWaylandMode) {
         if (this->windowHandle()) {
             this->hide();
+            this->setWindowFlag(Qt::WindowDoesNotAcceptFocus,false); //滚动截图需要焦点，才可以将数据传递剪切板
             this->windowHandle()->setProperty("_d_dwayland_window-type", "");
             qDebug() << "重设窗口属性 _d_dwayland_window-type: " << this->windowHandle()->property("_d_dwayland_window-type");
             this->show();
@@ -1782,6 +1787,24 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
         return;
     }
     if (Utils::is3rdInterfaceStart == false) {
+        //检测保存到剪切板是否完成
+        qInfo() << "Connecting the clipboard feedback signal..."
+                << "\nClipboardService: " << ClipboardService
+                << "\nClipboardPath: " << ClipboardPath
+                << "\nClipboardInterface: " << ClipboardInterface
+                << "\nClipboardSignal: " << ClipboardSignal;
+        bool isSuccess = QDBusConnection::sessionBus().connect(ClipboardService,
+                                                               ClipboardPath,
+                                                               ClipboardInterface,
+                                                               ClipboardSignal,
+                                                               this,
+                                                               SLOT(onSaveClipboardComing(const QByteArray &))
+                                                               );
+        if(isSuccess){
+            qInfo() << "The clipper feedback signal connection is successfully established!";
+        }else{
+            qWarning() << "Clipper feedback signal connection failed!";
+        }
         QMimeData *t_imageData = new QMimeData;
         // Wayland 等待剪贴板dataChanged信号不可靠，出问题会导致整改系统不可用，评估去掉信号等待 受概率不能保存到剪切板影响，暂时需要还原
         if (Utils::isWaylandMode) {
@@ -1825,8 +1848,43 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             qInfo() << __FUNCTION__ << __LINE__ << "将数据传递到剪贴板！";
             cb->setMimeData(t_imageData, QClipboard::Clipboard);
         }
+        //剪切板应答信号建立成功时，才会进行等待15s，不然不需要等待15s
+        if(isSuccess){
+            if (!Utils::isWaylandMode) {
+                this->hide(); //隐藏主界面
+            }
+            //等待15s如果数据还没有传递到剪切板，则退出程序
+            time_t endTime = time(nullptr) + 15;
+            qInfo() << "Start Wait 15s for data to be saved to the clipboard..." << endTime;
+            time_t lastTime = 0;
+            while (1) {
+                time_t curTime = time(nullptr);
+                if (curTime != lastTime) {
+                    qInfo() << lastTime << "==" << curTime;
+                    lastTime = curTime;
+                }
+                if (curTime >= endTime) {
+                    qInfo() << "15s delayed completion" << time(nullptr);
+                    break;
+                }
+                if(m_isSaveClipboard){
+                    qInfo() << "Data has been passed to the clipboard";
+                    break;
+                }
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+            }
+        }
     }
     qInfo() << __FUNCTION__ << __LINE__ << "已保存到剪贴板！";
+}
+
+//监听剪切板的信号，确保数据已经传递到剪切板，应用才退出1070采用
+void MainWindow::onSaveClipboardComing(const QByteArray &msg)
+{
+    Q_UNUSED(msg);
+    qInfo() << "Received data transfer to the clipboard complete signal!" ;
+    emit saveClipboardComing();
+    m_isSaveClipboard = true;
 }
 
 bool MainWindow::checkSuffix(const QString &str)

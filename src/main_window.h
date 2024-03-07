@@ -344,6 +344,11 @@ signals:
     void changeMicrophoneSelectEvent(bool checked);
     void changeSystemAudioSelectEvent(bool checked);
     void stopRecordArm();
+    /**
+     * @brief saveClipboardComing 数据是否已传递到剪切板
+     */
+    void saveClipboardComing();
+
 public slots:
     void onExit();
     /**
@@ -517,6 +522,12 @@ public slots:
      * @param msg
      */
     void onLockScreenEvent(QDBusMessage msg);
+
+    /**
+     * @brief onSaveClipboardComing 监听剪切板的信号，确保数据已经传递到剪切板，应用才退出
+     * @param msg
+     */
+    void onSaveClipboardComing(const QByteArray &msg);
 
     /**
      * @brief 打开截图录屏帮助文档并定位到滚动截图
@@ -1038,6 +1049,10 @@ private:
     bool m_isScreenVertical = false; // 判断多屏是否纵向布局
     bool m_isLockedState = false;
     bool m_isScreenResolutionChanged = false;
+    /**
+     * @brief m_isSaveClipboard 是否已经保存到剪切板
+     */
+    bool m_isSaveClipboard = false;
 };
 
 #endif //MAINWINDOW_H
