@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
     app->setApplicationName("deepin-screen-recorder");
     app->setProductName(QObject::tr("Pin Screenshots"));
     app->setApplicationVersion("1.0");
+    app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     QString logFilePath = Dtk::Core::DLogManager::getlogFilePath();
     QStringList list = logFilePath.split("/");

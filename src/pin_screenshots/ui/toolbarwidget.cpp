@@ -74,7 +74,8 @@ void ToolBarWidget::onThemeTypeChange(DGuiApplicationHelper::ColorType themeType
 
 void ToolBarWidget::initToolBarWidget()
 {
-    this->setFixedSize(MIN_TOOLBAR_WIDGET_SIZE);
+//    this->setFixedSize(MIN_TOOLBAR_WIDGET_SIZE);
+    this->setMinimumSize(MIN_TOOLBAR_WIDGET_SIZE);
     m_subTool = new SubToolWidget(this);
     connect(m_subTool, SIGNAL(signalOcrButtonClicked()), this, SIGNAL(sendOcrButtonClicked()));
 
