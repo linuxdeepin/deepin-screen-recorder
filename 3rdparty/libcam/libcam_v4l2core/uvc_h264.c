@@ -1006,7 +1006,9 @@ int h264_init_decoder(int width, int height)
 
 #if LIBAVCODEC_VER_AT_LEAST(53,6)
     h264_ctx->context = getLoadLibsInstance()->m_avcodec_alloc_context3(h264_ctx->codec);
-    getLoadLibsInstance()->m_avcodec_get_context_defaults3 (h264_ctx->context, h264_ctx->codec);
+    #if !LIBAVCODEC_VER_AT_LEAST(60,0)
+     getLoadLibsInstance()->m_avcodec_get_context_defaults3(h264_ctx->context, h264_ctx->codec);
+    #endif
 #else
     h264_ctx->context = getLoadLibsInstance()->m_avcodec_alloc_context();
     getLoadLibsInstance()->m_avcodec_get_context_defaults(h264_ctx->context);
