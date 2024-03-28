@@ -449,11 +449,15 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
 		return (enc_video_ctx);
 	}
 
+#if LIBAVCODEC_VER_AT_LEAST(53,6)
     video_codec_data->codec_context = getLoadLibsInstance()->m_avcodec_alloc_context3(video_codec_data->codec);
-
-    getLoadLibsInstance()->m_avcodec_get_context_defaults3 (
-			video_codec_data->codec_context,
-			video_codec_data->codec);
+    #if !LIBAVCODEC_VER_AT_LEAST(60,0)
+        getLoadLibsInstance()->m_avcodec_get_context_defaults3(video_codec_data->codec_context, video_codec_data->codec);
+    #endif
+#else
+    video_codec_data->codec_context = getLoadLibsInstance()->m_avcodec_alloc_context();
+    getLoadLibsInstance()->m_avcodec_get_context_defaults(video_codec_data->codec_context);
+#endif
 
 	if(video_codec_data->codec_context == NULL)
 	{
@@ -717,9 +721,15 @@ static encoder_audio_context_t *encoder_audio_init(encoder_context_t *encoder_ct
 		return NULL;
 	}
 
+#if LIBAVCODEC_VER_AT_LEAST(53,6)
     audio_codec_data->codec_context = getLoadLibsInstance()->m_avcodec_alloc_context3(audio_codec_data->codec);
-    getLoadLibsInstance()->m_avcodec_get_context_defaults3 (audio_codec_data->codec_context, audio_codec_data->codec);
-
+    #if !LIBAVCODEC_VER_AT_LEAST(60,0)
+        getLoadLibsInstance()->m_avcodec_get_context_defaults3(audio_codec_data->codec_context, audio_codec_data->codec);
+    #endif
+#else
+    audio_codec_data->codec_context = getLoadLibsInstance()->m_avcodec_alloc_context();
+    getLoadLibsInstance()->m_avcodec_get_context_defaults(audio_codec_data->codec_context);
+#endif
 	if(audio_codec_data->codec_context == NULL)
 	{
 		fprintf(stderr, "ENCODER: FATAL memory allocation failure (encoder_audio_init): %s\n", strerror(errno));
