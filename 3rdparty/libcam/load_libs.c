@@ -51,8 +51,10 @@ static LoadLibs *newClass(void)
     PrintError();
     pLibs->m_avcodec_free_context = (uos_avcodec_free_context)dlsym(handle,"avcodec_free_context");
     PrintError();
+    #if !LIBAVCODEC_VER_AT_LEAST(60,0)
     pLibs->m_avcodec_get_context_defaults3 = (uos_avcodec_get_context_defaults3)dlsym(handle, "avcodec_get_context_defaults3");
     PrintError();
+    #endif
 #else
     pLibs->m_avcodec_alloc_context = (uos_avcodec_alloc_context)dlsym(handle, "avcodec_alloc_context");
     PrintError();
