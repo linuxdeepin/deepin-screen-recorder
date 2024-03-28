@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.0.3) unstable; urgency=medium
+
+  * Update tag to 6.0.3.
+
+ -- lvwujun <lvwujun@uniontech.com>  Thur, 28 Mar 2024 16:38:34 +0800
+
 deepin-screen-recorder (5.12.20) unstable; urgency=medium
 
   * fix: The icon scales and deforms after adjusting the
