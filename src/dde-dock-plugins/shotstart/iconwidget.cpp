@@ -205,12 +205,12 @@ void IconWidget::paintEvent(QPaintEvent *e)
 
     const QRectF &trf = QRectF(rect().x(),rect().y()+rect().height()*0.65,rect().width(),rect().height()*0.25);
     QFont font = painter.font() ;
-    font.setPointSize(8);
+    font.setPointSize(6);
     painter.setFont(font);
     painter.setOpacity(0.7);
     painter.setPen(QPen(QGuiApplication::palette().color(QPalette::BrightText)));
     //绘制文字
-    painter.drawText(trf, Qt::AlignBottom | Qt::AlignCenter, m_showTimeStr);
+    painter.drawText(trf, Qt::AlignCenter, m_showTimeStr);
 
     QWidget::paintEvent(e);
 }
