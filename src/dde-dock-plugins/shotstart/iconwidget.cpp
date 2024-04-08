@@ -242,10 +242,9 @@ const QPixmap IconWidget::loadSvg(const QString &fileName, const QSize &size) co
     const auto ratio = devicePixelRatioF();
 
     auto pixmapSize = QCoreApplication::testAttribute(Qt::AA_UseHighDpiPixmaps) ? size : (size * ratio);
-    //缩放模式
-    //pixmapSize = size* ratio;
-
-    QPixmap pixmap = QIcon::fromTheme(fileName, m_icon).pixmap(pixmapSize);
+    // 缩放模式 设置为非使能状态时，调整转出的位图风格模式
+    // pixmapSize = size* ratio;
+    QPixmap pixmap = QIcon::fromTheme(fileName, m_icon).pixmap(pixmapSize, isEnabled() ? QIcon::Normal : QIcon::Disabled);
 
     return pixmap;
 }
