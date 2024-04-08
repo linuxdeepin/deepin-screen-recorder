@@ -36,7 +36,7 @@ static const QString PLUGIN_DISPLAY_NAME = QString("Screen Capture");
 
 TEST_F(TestShotStartPlugin, pluginDisplayName)
 {
-    EXPECT_EQ("Screen Capture", m_shotStartPlugin->pluginDisplayName());
+    EXPECT_EQ("Screenshot", m_shotStartPlugin->pluginDisplayName());
 }
 
 TEST_F(TestShotStartPlugin, pluginName)
@@ -70,8 +70,7 @@ TEST_F(TestShotStartPlugin, itemCommand)
 
 TEST_F(TestShotStartPlugin, itemContextMenu)
 {
-    QString test = m_shotStartPlugin->itemContextMenu(PLUGIN_NAME);
-    EXPECT_TRUE(nullptr != m_shotStartPlugin->itemContextMenu(PLUGIN_NAME));
+    EXPECT_FALSE(nullptr != m_shotStartPlugin->itemContextMenu(PLUGIN_NAME));
     EXPECT_FALSE(nullptr != m_shotStartPlugin->itemContextMenu("test"));
 }
 

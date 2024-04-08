@@ -140,8 +140,12 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
 <context>
     <name>QuickPanelWidget</name>
     <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Képernyő Rögzítő</translation>
+        <source>Screenshot</source>
+        <translation type="unfinished">Képernyőkép</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Felvétel</translation>
     </message>
 </context>
 <context>
@@ -382,12 +386,15 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Képernyő Rögzítő</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Képernyőkép</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Felvétel</translation>
     </message>
 </context>
 <context>

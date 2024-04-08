@@ -140,8 +140,12 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
 <context>
     <name>QuickPanelWidget</name>
     <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished"></translation>
+        <source>Screenshot</source>
+        <translation type="unfinished">Capture d&apos;écran</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Enregistrer</translation>
     </message>
 </context>
 <context>
@@ -382,12 +386,15 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Capturer l&apos;écran</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Capture d&apos;écran</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Enregistrer</translation>
     </message>
 </context>
 <context>

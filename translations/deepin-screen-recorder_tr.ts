@@ -140,8 +140,12 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
 <context>
     <name>QuickPanelWidget</name>
     <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Ekran Alıntısı</translation>
+        <source>Screenshot</source>
+        <translation type="unfinished">Ekran Görüntüsü</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Kayıt</translation>
     </message>
 </context>
 <context>
@@ -382,12 +386,15 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Ekran Alıntısı</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Ekran Görüntüsü</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Kayıt</translation>
     </message>
 </context>
 <context>

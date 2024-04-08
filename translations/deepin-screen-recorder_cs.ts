@@ -140,8 +140,12 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
 <context>
     <name>QuickPanelWidget</name>
     <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Zachytávání obrazovky</translation>
+        <source>Screenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Pořídit záznam</translation>
     </message>
 </context>
 <context>
@@ -382,12 +386,15 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Zachytávání obrazovky</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Snímek obrazovky</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Pořídit záznam</translation>
     </message>
 </context>
 <context>

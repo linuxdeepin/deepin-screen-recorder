@@ -140,8 +140,12 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
 <context>
     <name>QuickPanelWidget</name>
     <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished"></translation>
+        <source>Screenshot</source>
+        <translation type="unfinished">Schermfoto</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Opnemen</translation>
     </message>
 </context>
 <context>
@@ -382,12 +386,15 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Schermfoto</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Schermfoto</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Opnemen</translation>
     </message>
 </context>
 <context>

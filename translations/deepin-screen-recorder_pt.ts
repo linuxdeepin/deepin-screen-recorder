@@ -140,8 +140,12 @@ ou pressione novamente o atalho para parar de gravar</translation>
 <context>
     <name>QuickPanelWidget</name>
     <message>
-        <source>Screen Capture</source>
+        <source>Screenshot</source>
         <translation type="unfinished">Captura de ecrã</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Gravar</translation>
     </message>
 </context>
 <context>
@@ -382,12 +386,15 @@ ou pressione novamente o atalho para parar de gravar</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Captura de ecrã</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Captura de ecrã</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Gravar</translation>
     </message>
 </context>
 <context>

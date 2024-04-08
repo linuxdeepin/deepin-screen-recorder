@@ -140,8 +140,12 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
 <context>
     <name>QuickPanelWidget</name>
     <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Cattura schermo</translation>
+        <source>Screenshot</source>
+        <translation type="unfinished">Screenshot</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Registrazione</translation>
     </message>
 </context>
 <context>
@@ -382,12 +386,15 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Cattura schermo</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Screenshot</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Registrazione</translation>
     </message>
 </context>
 <context>
