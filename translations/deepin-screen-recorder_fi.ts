@@ -140,8 +140,12 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
 <context>
     <name>QuickPanelWidget</name>
     <message>
-        <source>Screen Capture</source>
+        <source>Screenshot</source>
         <translation type="unfinished">Ruudunkaappaus</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Tallenna</translation>
     </message>
 </context>
 <context>
@@ -382,12 +386,15 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Ruudunkaappaus</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Ruudunkaappaus</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Tallenna</translation>
     </message>
 </context>
 <context>

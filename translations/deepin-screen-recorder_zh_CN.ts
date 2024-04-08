@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="zh_CN">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -140,8 +138,12 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>QuickPanelWidget</name>
     <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">截图录屏</translation>
+        <source>Screenshot</source>
+        <translation/>截图</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation/>录屏</translation>
     </message>
 </context>
 <context>
@@ -382,12 +384,15 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>截图录屏</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>截图</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation/></translation>
     </message>
 </context>
 <context>
@@ -399,6 +404,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Mosaic</source>
         <translation>马赛克</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -604,6 +617,13 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Exit</source>
         <translation>退出</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>新录音</translation>
     </message>
 </context>
 </TS>

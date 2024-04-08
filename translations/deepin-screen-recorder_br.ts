@@ -140,8 +140,12 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
 <context>
     <name>QuickPanelWidget</name>
     <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Tapadenn skramm</translation>
+        <source>Screenshot</source>
+        <translation type="unfinished">Tapadenn-skramm</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Enrollañ</translation>
     </message>
 </context>
 <context>
@@ -382,12 +386,15 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Tapadenn skramm</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Tapadenn-skramm</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Enrollañ</translation>
     </message>
 </context>
 <context>

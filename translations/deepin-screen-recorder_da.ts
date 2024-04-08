@@ -140,8 +140,12 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
 <context>
     <name>QuickPanelWidget</name>
     <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Skærmoptagelse</translation>
+        <source>Screenshot</source>
+        <translation type="unfinished">Skærmbillede</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Optag</translation>
     </message>
 </context>
 <context>
@@ -382,12 +386,15 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Skærmoptagelse</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Skærmbillede</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Optag</translation>
     </message>
 </context>
 <context>

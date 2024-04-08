@@ -140,8 +140,12 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
 <context>
     <name>QuickPanelWidget</name>
     <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Regjistrim Ekrani</translation>
+        <source>Screenshot</source>
+        <translation type="unfinished">Foto ekrani</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Regjistroje</translation>
     </message>
 </context>
 <context>
@@ -382,12 +386,15 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Regjistrim Ekrani</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Foto ekrani</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Regjistroje</translation>
     </message>
 </context>
 <context>

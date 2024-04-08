@@ -140,8 +140,12 @@ o haga clic en el icono de la bandeja</translation>
 <context>
     <name>QuickPanelWidget</name>
     <message>
-        <source>Screen Capture</source>
+        <source>Screenshot</source>
         <translation type="unfinished">Captura de pantalla</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Grabación</translation>
     </message>
 </context>
 <context>
@@ -382,12 +386,15 @@ o haga clic en el icono de la bandeja</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Captura de pantalla</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Captura de pantalla</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Grabación</translation>
     </message>
 </context>
 <context>

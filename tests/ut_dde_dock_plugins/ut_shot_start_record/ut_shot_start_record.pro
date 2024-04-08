@@ -5,9 +5,9 @@ DEFINES += UNIT_TEST
 
 include(../../../3rdparty/stub_linux/stub.pri)
 
-TARGET = ut_shot_start
+TARGET = ut_shot_start_record
 
-QMAKE_CXXFLAGS += -g -Wno-error=deprecated-declarations -Wno-deprecated-declarations -Wall -fprofile-arcs -ftest-coverage -O0
+QMAKE_CXXFLAGS += -g -Wno-error=deprecated-declarations -Wno-deprecated-declarations -Wall -fprofile-arcs -ftest-coverage -O0 -fno-access-control
 QMAKE_LFLAGS += -g -Wall -fprofile-arcs -ftest-coverage  -O0
 
 #内存检测标签
@@ -29,24 +29,23 @@ equals(TSAN_TOOL_ENABLE, true ){
 
 HEADERS += \
     ut_mock_pluginproxyinterface.h \
-    ../../../src/dde-dock-plugins/shotstart/iconwidget.h \
-    ../../../src/dde-dock-plugins/shotstart/shotstartplugin.h \
-    ../../../src/dde-dock-plugins/shotstart/tipswidget.h \
-    ../../../src/dde-dock-plugins/shotstart/quickpanelwidget.h \
-    ../../../src/dde-dock-plugins/shotstart/commoniconbutton.h
+    ../../../src/dde-dock-plugins/shotstartrecord/recordiconwidget.h \
+    ../../../src/dde-dock-plugins/shotstartrecord/shotstartrecordplugin.h \
+    ../../../src/dde-dock-plugins/shotstartrecord/tipswidget.h \
+    ../../../src/dde-dock-plugins/shotstartrecord/quickpanelwidget.h \
+    ../../../src/dde-dock-plugins/shotstartrecord/commoniconbutton.h
 
 SOURCES += \
     main.cpp \
-    ../../../src/dde-dock-plugins/shotstart/iconwidget.cpp \
-    ../../../src/dde-dock-plugins/shotstart/shotstartplugin.cpp \
-    ../../../src/dde-dock-plugins/shotstart/tipswidget.cpp \
-    ../../../src/dde-dock-plugins/shotstart/quickpanelwidget.cpp \
-    ../../../src/dde-dock-plugins/shotstart/commoniconbutton.cpp \
-    ut_iconwidget.cpp \
-    ut_shotstartplugin.cpp \
-    ut_tipswidget.cpp
+    ../../../src/dde-dock-plugins/shotstartrecord/recordiconwidget.cpp \
+    ../../../src/dde-dock-plugins/shotstartrecord/shotstartrecordplugin.cpp \
+    ../../../src/dde-dock-plugins/shotstartrecord/tipswidget.cpp \
+    ../../../src/dde-dock-plugins/shotstartrecord/quickpanelwidget.cpp \
+    ../../../src/dde-dock-plugins/shotstartrecord/commoniconbutton.cpp \
+    ut_tipswidget.cpp \
+    ut_shotstartrecordplugin.cpp \
+    ut_recordiconwidget.cpp
 
 INCLUDEPATH += /usr/include/dde-dock
 include(../../../3rdparty/googletest/gtest_dependency.pri)
-#include(../../../src/dde-dock-plugins/shotstart/iconwidget.h)
 
