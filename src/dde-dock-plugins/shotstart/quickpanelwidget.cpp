@@ -12,7 +12,7 @@ QuickPanelWidget::QuickPanelWidget(QWidget *parent)
 {
     initUI();
     m_timer = new QTimer(this);
-    m_showTimeStr = tr("Screen Capture");
+    m_showTimeStr = tr("Screenshot");
     m_type = SHOT;
     connect(DGuiApplicationHelper::instance(),&DGuiApplicationHelper::themeTypeChanged,this,&QuickPanelWidget::refreshIcon);
 }
@@ -88,7 +88,7 @@ void QuickPanelWidget::stop()
     if(m_timer->isActive()){
         m_timer->stop();
     }
-    m_showTimeStr = tr("Screen Capture");
+    m_showTimeStr = tr("Screenshot");
 }
 
 void QuickPanelWidget::pause()

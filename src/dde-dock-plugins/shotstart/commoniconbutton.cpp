@@ -165,10 +165,13 @@ void CommonIconButton::paintEvent(QPaintEvent *e)
         painter.translate(-(this->width() / 2), -(this->height() / 2));
     }
 
+    // 在非使能模式下显示灰度图
+    QIcon::Mode showMode = isEnabled() ? QIcon::Normal : QIcon::Disabled;
+
     if (m_hover && !m_hoverIcon.isNull()) {
-        m_hoverIcon.paint(&painter, rect());
+        m_hoverIcon.paint(&painter, rect(), Qt::AlignCenter, showMode);
     } else if (!m_icon.isNull()) {
-        m_icon.paint(&painter, rect());
+        m_icon.paint(&painter, rect(), Qt::AlignCenter, showMode);
     }
 }
 

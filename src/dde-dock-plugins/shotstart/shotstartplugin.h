@@ -45,15 +45,14 @@ public:
     bool pluginIsDisable() override;
     void pluginStateSwitched() override;
 
-
     /**
-      * Dock::Type_Quick=0x02           插件类型-快捷插件区;
-      * Dock::Quick_Panel_Single=0x40   当插件类型为Common时,快捷插件区域只有一列的那种插件;
-      * Dock::Attribute_Normal=0xe00    普通插件;
-      */
+     * Dock::Type_Quick=0x02           插件类型-快捷插件区;
+     * Dock::Quick_Panel_Single=0x40   当插件类型为Common时,快捷插件区域只有一列的那种插件;
+     * Dock::Attribute_Normal=0xe00    普通插件;
+     */
     Q_PROPERTY(int pluginFlags READ pluginFlags)
-    int pluginFlags() const {return 0x02 | 0x40 | 0xe00;}
-    PluginSizePolicy pluginSizePolicy() const override {return  PluginsItemInterface::Custom;}
+    int pluginFlags() const { return 0x02 | 0x40 | 0xe00; }
+    PluginSizePolicy pluginSizePolicy() const override { return PluginsItemInterface::Custom; }
     /**
      * @brief itemWidget:返回插件主控件，用于dde-dock面板上显示
      * @param itemKey:控件名称
@@ -72,23 +71,19 @@ public:
     const QString itemContextMenu(const QString &itemKey) override;
     void invokedMenuItem(const QString &itemKey, const QString &menuId, const bool checked) override;
 
-public slots:
+public Q_SLOTS:
     Q_SCRIPTABLE bool onStart();
     Q_SCRIPTABLE void onStop();
     Q_SCRIPTABLE void onRecording();
-    /**
-     * @brief onPause:暂停
-     */
     Q_SCRIPTABLE void onPause();
+
 private:
     void onClickQuickPanel();
+
 private:
-    QScopedPointer<IconWidget> m_iconWidget;
-    /**
-     * @brief m_quickPanelWidget 快捷面板
-     */
-    QScopedPointer<QuickPanelWidget> m_quickPanelWidget;
-    QScopedPointer<TipsWidget> m_tipsWidget;
+    QScopedPointer<IconWidget> m_iconWidget;              // 托盘图标
+    QScopedPointer<QuickPanelWidget> m_quickPanelWidget;  // 快捷面板
+    QScopedPointer<TipsWidget> m_tipsWidget;              // 提示信息，快捷键
     /**
      * @brief m_isRecording true:正在录屏 false:未启动录屏
      */
@@ -113,4 +108,4 @@ private:
     bool m_bDockQuickPanel;
 };
 
-#endif // RECORDTIME_H
+#endif  // RECORDTIME_H
