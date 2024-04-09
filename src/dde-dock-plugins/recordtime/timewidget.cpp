@@ -61,8 +61,8 @@ TimeWidget::TimeWidget(DWidget *parent):
    }
 
     m_currentIcon = m_lightIcon;
-    //this->setAttribute(Qt::WA_StyledBackground,true);
-    //this->setStyleSheet("background-color: rgb(255,255, 0)");
+    // 避免任务栏在左/右时出现挤压图标情况，调整最小大小
+    setMinimumSize(PLUGIN_BACKGROUND_MIN_SIZE, PLUGIN_BACKGROUND_MIN_SIZE);
     setMaximumSize(RECORDER_TIME_WIDGET_MAXWIDTH,RECORDER_TIME_WIDGET_MAXHEIGHT);
     if (position::left == m_position || position::right == m_position) {
         setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
