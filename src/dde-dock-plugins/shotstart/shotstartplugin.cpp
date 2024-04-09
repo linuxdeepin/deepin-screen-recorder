@@ -11,6 +11,9 @@
 #define ShotShartPlugin "shot-start-plugin"
 #define ShotShartApp "deepin-screen-recorder"  // 使用截图录屏的翻译
 const QString QUICK_ITEM_KEY = QStringLiteral("quick_item_key");
+const int DETECT_SERV_INTERVAL = 2000;  // 检测服务存在的定时器间隔
+
+Q_LOGGING_CATEGORY(SHOT_LOG, "shot-start-plugin");
 
 ShotStartPlugin::ShotStartPlugin(QObject *parent)
     : QObject(parent)
@@ -38,21 +41,21 @@ void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
 {
 #ifndef UNIT_TEST
     bool ret;
-    qInfo() << "当前dock版本：" << qApp->property("dock_api_version").toInt(&ret) << ret;
+    qCInfo(SHOT_LOG) << "当前dock版本：" << qApp->property("dock_api_version").toInt(&ret) << ret;
     if (ret && qApp->property("dock_api_version") >= ((2 << 16) | (0 << 8) | (0))) {
         m_bDockQuickPanel = true;
-        qWarning() << "The current dock version does not support quick panels!!";
+        qCWarning(SHOT_LOG) << "The current dock version does not support quick panels!!";
     }
-    qInfo() << "正在加载翻译...";
+    qCInfo(SHOT_LOG) << "正在加载翻译...";
     // 加载翻译
     QString appName = qApp->applicationName();
-    qDebug() << "1 >>qApp->applicationName(): " << qApp->applicationName();
+    qCDebug(SHOT_LOG) << "1 >>qApp->applicationName(): " << qApp->applicationName();
     qApp->setApplicationName(ShotShartApp);
-    qDebug() << "2 >>qApp->applicationName(): " << qApp->applicationName();
+    qCDebug(SHOT_LOG) << "2 >>qApp->applicationName(): " << qApp->applicationName();
     bool isLoad = qApp->loadTranslator();
     qApp->setApplicationName(appName);
-    qDebug() << "3 >>qApp->applicationName(): " << qApp->applicationName();
-    qInfo() << "翻译加载" << (isLoad ? "成功" : "失败");
+    qCDebug(SHOT_LOG) << "3 >>qApp->applicationName(): " << qApp->applicationName();
+    qCInfo(SHOT_LOG) << "翻译加载" << (isLoad ? "成功" : "失败");
 #endif
 
     m_proxyInter = proxyInter;
@@ -68,14 +71,14 @@ void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
         m_tipsWidget.reset(new TipsWidget);
 
     if (m_bDockQuickPanel || !pluginIsDisable()) {
-        qInfo() << "the current plugin has been added to the dock";
+        qCInfo(SHOT_LOG) << "the current plugin has been added to the dock";
         m_proxyInter->itemAdded(this, pluginName());
     }
 
     QDBusConnection sessionBus = QDBusConnection::sessionBus();
     if (sessionBus.registerService("com.deepin.ShotRecorder.PanelStatus") &&
         sessionBus.registerObject("/com/deepin/ShotRecorder/PanelStatus", this, QDBusConnection::ExportScriptableSlots)) {
-        qDebug() << "dbus service registration failed!";
+        qCWarning(SHOT_LOG) << "dbus service registration failed!";
     }
 
     connect(m_quickPanelWidget.data(), &QuickPanelWidget::clicked, this, &ShotStartPlugin::onClickQuickPanel);
@@ -84,7 +87,7 @@ void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
 bool ShotStartPlugin::pluginIsDisable()
 {
     if (m_bDockQuickPanel) {
-        qWarning() << "The current dock version does not support quick panels!!";
+        qCWarning(SHOT_LOG) << "The current dock version does not support quick panels!!";
         return false;
     }
     return m_proxyInter->getValue(this, "disabled", true).toBool();
@@ -103,12 +106,12 @@ void ShotStartPlugin::pluginStateSwitched()
 
 QWidget *ShotStartPlugin::itemWidget(const QString &itemKey)
 {
-    qInfo() << "Current itemWidget's itemKey: " << itemKey;
+    qCDebug(SHOT_LOG) << "Current itemWidget's itemKey: " << itemKey;
     if (itemKey == QUICK_ITEM_KEY) {
-        qInfo() << "Input Quick Panel Widget!";
+        qCDebug(SHOT_LOG) << "Input Quick Panel Widget!";
         return m_quickPanelWidget.data();
     } else if (itemKey == ShotShartPlugin) {
-        qInfo() << "Input Common Plugin Widget!";
+        qCDebug(SHOT_LOG) << "Input Common Plugin Widget!";
         return m_iconWidget.data();
     }
     return nullptr;
@@ -116,7 +119,7 @@ QWidget *ShotStartPlugin::itemWidget(const QString &itemKey)
 
 QWidget *ShotStartPlugin::itemTipsWidget(const QString &itemKey)
 {
-    qInfo() << "Current itemWidget's itemKey: " << itemKey;
+    qCDebug(SHOT_LOG) << "Current itemWidget's itemKey: " << itemKey;
     if (itemKey != ShotShartPlugin)
         return nullptr;
     m_tipsWidget->setText(tr("Screenshot") + m_iconWidget->getSysShortcuts("screenshot"));
@@ -137,17 +140,17 @@ void ShotStartPlugin::setSortKey(const QString &itemKey, const int order)
 
 const QString ShotStartPlugin::itemCommand(const QString &itemKey)
 {
-    qInfo() << "Current itemWidget's itemKey: " << itemKey;
+    qCDebug(SHOT_LOG) << "Current itemWidget's itemKey: " << itemKey;
     if (itemKey == ShotShartPlugin) {
-        qInfo() << "(itemCommand) Input Common Plugin Widget!";
+        qCDebug(SHOT_LOG) << "(itemCommand) Input Common Plugin Widget!";
         // 录屏过程不响应点击
         if (!m_isRecording) {
-            qInfo() << "Get DBus Interface";
+            qCDebug(SHOT_LOG) << "Get DBus Interface";
             return "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot "
                    "com.deepin.Screenshot.StartScreenshot";
         }
     } else {
-        qWarning() << "(itemCommand) Input unknow widget!";
+        qCWarning(SHOT_LOG) << "(itemCommand) Input unknow widget!";
     }
     return QString();
 }
@@ -166,30 +169,53 @@ void ShotStartPlugin::invokedMenuItem(const QString &, const QString &, const bo
 
 bool ShotStartPlugin::onStart()
 {
-    qInfo() << "Disable screenshot tray icon";
+    qCDebug(SHOT_LOG) << "Disable screenshot tray icon";
     m_isRecording = true;
     m_iconWidget->setEnabled(false);
     m_iconWidget->update();
 
     m_quickPanelWidget->setEnabled(false);
-    qInfo() << "(onStart) Is Recording? " << m_isRecording;
+    qCDebug(SHOT_LOG) << "(onStart) Is Recording? " << m_isRecording;
     return true;
 }
 
 void ShotStartPlugin::onStop()
 {
-    qInfo() << "(onStop) Is Recording? " << m_isRecording;
+    qCDebug(SHOT_LOG) << "(onStop) Is Recording? " << m_isRecording;
     m_isRecording = false;
     m_iconWidget->setEnabled(true);
     m_iconWidget->update();
 
     m_quickPanelWidget->setEnabled(true);
-    qInfo() << "Enable screenshot tray icon";
+    qCDebug(SHOT_LOG) << "Enable screenshot tray icon";
 }
 
 void ShotStartPlugin::onRecording()
 {
-    // DoNothing
+    qCDebug(SHOT_LOG) << "(onRecording) Is Recording" << m_isRecording;
+    m_nextCount++;
+    if (1 == m_nextCount) {
+        if (!m_checkTimer) {
+            m_checkTimer = new QTimer(this);
+        }
+        connect(m_checkTimer, &QTimer::timeout, this, [=] {
+            //说明录屏还在进行中
+            if (m_count < m_nextCount) {
+                m_count = m_nextCount;
+            }
+            //说明录屏已经停止了
+            else {
+                qCWarning(SHOT_LOG) << qPrintable("Unsafe stop recoding!");
+                onStop();
+                m_checkTimer->stop();
+            }
+        });
+        m_checkTimer->start(DETECT_SERV_INTERVAL);
+    }
+
+    if (m_checkTimer && !m_checkTimer->isActive()) {
+        m_checkTimer->start(DETECT_SERV_INTERVAL);
+    }
 }
 
 void ShotStartPlugin::onPause()
@@ -200,13 +226,13 @@ void ShotStartPlugin::onPause()
 void ShotStartPlugin::onClickQuickPanel()
 {
     // 录制中不再响应快捷面板
-    qInfo() << "(onClickQuickPanel) 点击快捷面板";
+    qCDebug(SHOT_LOG) << "(onClickQuickPanel) 点击快捷面板";
     if (!m_isRecording) {
-        qInfo() << "Get Shot DBus Interface";
+        qCDebug(SHOT_LOG) << "Get Shot DBus Interface";
         QDBusInterface shotDBusInterface(
             "com.deepin.Screenshot", "/com/deepin/Screenshot", "com.deepin.Screenshot", QDBusConnection::sessionBus());
         shotDBusInterface.asyncCall("StartScreenshot");
-        qInfo() << "Shot and Recorder plugin start run!";
+        qCDebug(SHOT_LOG) << "Shot and Recorder plugin start run!";
     }
 }
 
