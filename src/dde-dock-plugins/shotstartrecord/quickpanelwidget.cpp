@@ -64,6 +64,8 @@ void QuickPanelWidget::setIcon(const QIcon &icon)
 void QuickPanelWidget::setDescription(const QString &description)
 {
     m_description->setText(description);
+    // 同样更新提示文案
+    m_description->setToolTip(description);
 }
 
 /**
