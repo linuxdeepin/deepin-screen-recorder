@@ -8,5 +8,7 @@
         <file>res/screen-recording.svg</file>
         <file>res/status-screen-record.svg</file>
         <file>res/status-screen-record-dark.svg</file>
+        <file>res/shot-start-record-plugin.svg</file>
+        <file>res/shot-start-record-plugin-dark.svg</file>
     </qresource>
 </RCC>

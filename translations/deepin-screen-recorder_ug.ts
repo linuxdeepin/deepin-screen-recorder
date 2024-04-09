@@ -140,11 +140,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">رەسىم تۇتۇش</translation>
+        <translation>رەسىم تۇتۇش</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">سىنغا ئېلىش</translation>
+        <translation>سىنغا ئېلىش</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation>رەسىم تۇتۇش</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation>ئېكراننى سىنغا ئېلىش</translation>
     </message>
 </context>
 <context>
@@ -393,7 +404,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">سىنغا ئېلىش</translation>
+        <translation>سىنغا ئېلىش</translation>
     </message>
 </context>
 <context>

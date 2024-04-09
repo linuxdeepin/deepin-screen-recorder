@@ -141,11 +141,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">བརྙན་བཤུས།</translation>
+        <translation>བརྙན་བཤུས།</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">བརྙན་ཕབ།</translation>
+        <translation>བརྙན་ཕབ།</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation>བརྙན་བཤུས།</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation>བརྙན་ཕབ།</translation>
     </message>
 </context>
 <context>
@@ -394,7 +405,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">བརྙན་ཕབ།</translation>
+        <translation>བརྙན་ཕབ།</translation>
     </message>
 </context>
 <context>

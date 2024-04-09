@@ -27,6 +27,9 @@ SOURCES += \
 target.path = /usr/lib/dde-dock/plugins/
 file.files += $$PWD/com.deepin.dde.dock.module.shot-start-record-plugin.gschema.xml
 file.path += /usr/share/glib-2.0/schemas/
+recordicon.files += $$PWD/res/shot-start-record-plugin.svg \
+                    $$PWD/res/shot-start-record-plugin-dark.svg
+recordicon.path += /usr/share/icons/hicolor/scalable/status
 
-INSTALLS += target file
+INSTALLS += target file recordicon
 RESOURCES += res.qrc
