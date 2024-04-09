@@ -51,7 +51,8 @@ void ShotStartRecordPlugin::init(PluginProxyInterface *proxyInter)
 {
 #ifndef UNIT_TEST
     bool ret;
-    qCInfo(RECORD_LOG) << "当前dock版本：" << qApp->property("dock_api_version").toInt(&ret) << ret;
+    bool getVersion = qApp->property("dock_api_version").toInt(&ret);
+    qCInfo(RECORD_LOG) << "当前dock版本：" << getVersion << ret;
     if (ret && qApp->property("dock_api_version") >= ((2 << 16) | (0 << 8) | (0))) {
         m_bDockQuickPanel = true;
         qCWarning(RECORD_LOG) << "The current dock version does not support quick panels!!";
