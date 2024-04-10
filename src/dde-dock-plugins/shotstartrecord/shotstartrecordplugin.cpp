@@ -209,8 +209,11 @@ void ShotStartRecordPlugin::invokedMenuItem(const QString &, const QString &, co
  */
 bool ShotStartRecordPlugin::onStart()
 {
-    // 仅隐藏任务栏图标
-    setTrayIconVisible(false);
+    m_bPreviousIsVisable = getTrayIconVisible();
+    if (m_bPreviousIsVisable) {
+        // 仅隐藏任务栏图标
+        setTrayIconVisible(false);
+    }
 
     qCDebug(RECORD_LOG) << "Start The Clock!";
     m_isRecording = true;
@@ -225,8 +228,10 @@ bool ShotStartRecordPlugin::onStart()
  */
 void ShotStartRecordPlugin::onStop()
 {
-    // 恢复显示任务栏图标
-    setTrayIconVisible(true);
+    if (m_bPreviousIsVisable) {
+        // 恢复显示任务栏图标
+        setTrayIconVisible(true);
+    }
 
     m_isRecording = false;
     m_quickPanelWidget->stop();
@@ -298,6 +303,19 @@ void ShotStartRecordPlugin::setTrayIconVisible(bool visible)
     // 使用DBus接口仅隐藏任务栏图标，快捷面板图标仍显示，参数是插件的 displayName（历史原因）
     QDBusInterface interface("com.deepin.dde.Dock", "/com/deepin/dde/Dock", "com.deepin.dde.Dock", QDBusConnection::sessionBus());
     interface.call("setPluginVisible", pluginDisplayName(), visible);
+}
+
+/**
+   @return 当前图标在任务栏是否可见
+ */
+bool ShotStartRecordPlugin::getTrayIconVisible()
+{
+    QDBusInterface interface("com.deepin.dde.Dock", "/com/deepin/dde/Dock", "com.deepin.dde.Dock", QDBusConnection::sessionBus());
+    auto msg = interface.call("getPluginVisible", pluginDisplayName());
+    if (QDBusMessage::ReplyMessage == msg.type()) {
+        return msg.arguments().takeFirst().toBool();
+    }
+    return false;
 }
 
 ShotStartRecordPlugin::~ShotStartRecordPlugin()

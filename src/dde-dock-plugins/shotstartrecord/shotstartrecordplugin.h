@@ -63,6 +63,7 @@ public Q_SLOTS:
 private:
     void onClickQuickPanel();
     void setTrayIconVisible(bool visible);
+    bool getTrayIconVisible();
 
 private:
     QScopedPointer<RecordIconWidget> m_iconWidget;        // 任务栏图标
@@ -72,7 +73,8 @@ private:
     QTimer *m_checkTimer;  // 此定时器的作用为每隔1秒检查下截图录屏是否还在运行中。避免截图录屏崩溃后导致本插件还在执行
     int m_nextCount = 0;   // 用来判断录屏是否正在进行中
     int m_count = 0;       // 用来判断录屏是否正在进行中
-    bool m_bDockQuickPanel;  // 兼容性适配，老版的dock不支持快捷面板
+    bool m_bDockQuickPanel;              // 兼容性适配，老版的dock不支持快捷面板
+    bool m_bPreviousIsVisable = false;  // 记录前置状态是否为禁止使能状态
 };
 
 #endif  // RECORDTIME_H
