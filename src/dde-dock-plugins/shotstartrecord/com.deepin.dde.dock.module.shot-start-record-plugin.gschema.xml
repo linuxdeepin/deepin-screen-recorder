@@ -24,10 +24,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
       </description>
     </key>
     <key type="b" name="menu-enable">
-      <default>false</default>
-      <summary>Menu Disable</summary>
+      <default>true</default>
+      <summary>Menu Enable</summary>
       <description>
-          Control Menu Disable
+          Control Menu Enable
       </description>
     </key>
     <key type="b" name="visible">
