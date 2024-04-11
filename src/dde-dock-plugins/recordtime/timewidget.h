@@ -66,7 +66,9 @@ public:
      * @return
      */
     bool isWaylandProtocol();
+    
 protected:
+    void showEvent(QShowEvent *) override;
     void paintEvent(QPaintEvent *e) override;
     void mousePressEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;

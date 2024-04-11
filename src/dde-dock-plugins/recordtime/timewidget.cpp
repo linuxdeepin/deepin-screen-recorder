@@ -61,8 +61,6 @@ TimeWidget::TimeWidget(DWidget *parent):
    }
 
     m_currentIcon = m_lightIcon;
-    // 避免任务栏在左/右时出现挤压图标情况，调整最小大小
-    setMinimumSize(PLUGIN_BACKGROUND_MIN_SIZE, PLUGIN_BACKGROUND_MIN_SIZE);
     setMaximumSize(RECORDER_TIME_WIDGET_MAXWIDTH,RECORDER_TIME_WIDGET_MAXHEIGHT);
     if (position::left == m_position || position::right == m_position) {
         setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
@@ -118,11 +116,11 @@ QSize TimeWidget::sizeHint() const
             height = width;
         }else{
             width = this->width();
-            height =width;
+            height = width;
         }
         if(m_systemVersion >= 1070){
-            width = RECORDER_TIME_VERTICAL_ICON_SIZE;
-            height =width;
+            width = RECORDER_TIME_VERTICAL_ICON_SIZE_1070;
+            height = width;
         }
         qInfo() << "left or right itemWidget width: " << width << " ,itemWidget height: " << height;
     }
@@ -153,7 +151,9 @@ void TimeWidget::onPositionChanged(int value)
     qInfo() << "====================== onPositionChanged ====start=================";
     m_position = value;
     if (position::left == m_position || position::right == m_position) {
-        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
+        setGeometry(this->geometry().x(), this->geometry().y(), this->geometry().width(), RECORDER_TIME_VERTICAL_ICON_SIZE);
+        updateGeometry();
+        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
      }else {
         setGeometry(this->geometry().x(),this->geometry().y(),this->geometry().width(),RECORDER_TIME_WIDGET_MAXHEIGHT);
         updateGeometry();
@@ -424,4 +424,11 @@ bool TimeWidget::isWaylandProtocol()
     QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
     QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
     return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
+}
+
+void TimeWidget::showEvent(QShowEvent *e)
+{
+    // 强制重新刷新 sizePolicy 和 size
+    onPositionChanged(m_position);
+    DWidget::showEvent(e);
 }
