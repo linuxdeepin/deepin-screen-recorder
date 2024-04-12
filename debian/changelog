@@ -1,3 +1,15 @@
+deepin-screen-recorder (5.12.20) unstable; urgency=medium
+
+  * fix: The icon scales and deforms after adjusting the
+         display scaling ratio(Bug: 243881)
+  * feat: Add "Recrod" tray icon(Influence: dde-dock-plugin)
+  * feat: The "Screenshot" quick panel removes response
+         recording(Influence: dde-dock-pluin)
+  * fix: Record tray icon no 'Undock' menu(Bug: 250811)
+  * fix: Recording icon display flickering(Bug: 250749)
+
+ -- renbin <renbin@uniontech.com>  Fri, 12 Apr 2024 14:43:50 +0800
+
 deepin-screen-recorder (5.12.19) unstable; urgency=medium
 
   * New version 5.12.19.
