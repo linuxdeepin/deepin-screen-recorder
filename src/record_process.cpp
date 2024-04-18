@@ -709,7 +709,12 @@ void RecordProcess::exitRecord(QString newSavePath)
         QFile::remove(savePath);
     }
     //保存到剪切板
-    save2Clipboard(newSavePath);
+    QtConcurrent::run([=](){
+      sleep(2);
+      if(QFile::exists(newSavePath)){
+           save2Clipboard(newSavePath);
+       }
+    });
     if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
         avlibInterface::unloadFunctions();
