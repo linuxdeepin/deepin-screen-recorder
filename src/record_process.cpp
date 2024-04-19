@@ -708,8 +708,6 @@ void RecordProcess::exitRecord(QString newSavePath)
     if (m_recordType == RECORD_TYPE_GIF) {
         QFile::remove(savePath);
     }
-    //保存到剪切板
-    save2Clipboard(newSavePath);
     if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
         avlibInterface::unloadFunctions();
@@ -730,6 +728,8 @@ void RecordProcess::exitRecord(QString newSavePath)
                                                                           "onStop"));
     }
 
+    //保存到剪切板
+    save2Clipboard(newSavePath);
     qInfo() << __LINE__ << __func__ <<"录屏已退出";
     QApplication::quit();
     if (Utils::isWaylandMode) {
