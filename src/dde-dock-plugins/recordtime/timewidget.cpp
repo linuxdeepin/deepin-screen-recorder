@@ -99,7 +99,7 @@ void TimeWidget::onTimeout()
     int time = m_baseTime.secsTo(QTime::currentTime());
     showTime = showTime.addSecs(time);
     m_showTimeStr = showTime.toString("hh:mm:ss");
-    update();
+    repaint();
 }
 
 void TimeWidget::onPositionChanged(int value)
@@ -229,7 +229,7 @@ void TimeWidget::mousePressEvent(QMouseEvent *e)
             //        QDBusMessage message = notification.call("stopRecord"); //会阻塞任务其他按钮的执行
         }
     }
-    update();
+    repaint();
     QWidget::mousePressEvent(e);
     qDebug() << "Click the taskbar plugin! The end!";
 }
@@ -281,14 +281,14 @@ void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
 {
     m_pressed = false;
     m_hover = false;
-    update();
+    repaint();
     QWidget::mouseReleaseEvent(e);
 }
 
 void TimeWidget::mouseMoveEvent(QMouseEvent *e)
 {
     m_hover = true;
-    update();
+    repaint();
     QWidget::mouseMoveEvent(e);
 }
 
@@ -296,7 +296,7 @@ void TimeWidget::leaveEvent(QEvent *e)
 {
     m_hover = false;
     m_pressed = false;
-    update();
+    repaint();
     QWidget::leaveEvent(e);
 }
 
