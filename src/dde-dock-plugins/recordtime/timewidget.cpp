@@ -150,7 +150,7 @@ void TimeWidget::onTimeout()
     showTime = showTime.addMSecs(m_timerCount * 400);
     m_setting->setValue(RECORDER_TIME_STARTCOUNTCONFIG, m_timerCount);
     m_showTimeStr = showTime.toString("hh:mm:ss");
-    update();
+    repaint();
 }
 
 void TimeWidget::onPositionChanged(int value)
@@ -296,7 +296,7 @@ void TimeWidget::mousePressEvent(QMouseEvent *e)
 {
     qDebug() << "Click the taskbar plugin! To start!";
     m_pressed = true;
-    update();
+    repaint();
     QWidget::mousePressEvent(e);
     qDebug() << "Click the taskbar plugin! The end!";
 }
@@ -393,7 +393,7 @@ void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
     }
     m_pressed = false;
     m_hover = false;
-    update();
+    repaint();
     QWidget::mouseReleaseEvent(e);
     qDebug() << "Mouse release end!";
 
@@ -402,7 +402,7 @@ void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
 void TimeWidget::mouseMoveEvent(QMouseEvent *e)
 {
     m_hover = true;
-    update();
+    repaint();
     QWidget::mouseMoveEvent(e);
 }
 
@@ -410,7 +410,7 @@ void TimeWidget::leaveEvent(QEvent *e)
 {
     m_hover = false;
     m_pressed = false;
-    update();
+    repaint();
     QWidget::leaveEvent(e);
 }
 
