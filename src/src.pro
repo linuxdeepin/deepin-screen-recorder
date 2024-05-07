@@ -102,7 +102,7 @@ TEMPLATE = app
 TARGET = deepin-screen-recorder
 INCLUDEPATH += . \
             /usr/include/gstreamer-1.0 \
-            /usr/include/opencv_mobile \
+            /usr/include/opencv_mobile
 
 INCLUDEPATH += ../3rdparty/libcam/libcam/ \
                ../3rdparty/libcam/libcam_v4l2core/ \

@@ -398,8 +398,8 @@ index f2a6b31..b0db2d7 100644
  TEMPLATE = app
  TARGET = deepin-screen-recorder
  INCLUDEPATH += .
--INCLUDEPATH += /usr/include/opencv4
-+#INCLUDEPATH += ${CMAKE_INSTALL_PREFIX}/include/opencv4
+-INCLUDEPATH += /usr/include/opencv_mobile
++#INCLUDEPATH += ${CMAKE_INSTALL_PREFIX}/include/opencv_mobile
 +INCLUDEPATH += /runtime/include/opencv2
 +INCLUDEPATH += /runtime/include
 +INCLUDEPATH += /runtime/include/KF5
