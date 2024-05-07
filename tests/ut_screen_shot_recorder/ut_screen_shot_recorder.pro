@@ -5,7 +5,8 @@ include($$PWD/../../3rdparty/stub_linux/stub.pri)
 TEMPLATE = app
 TARGET = ut_screen_shot_recorder
 INCLUDEPATH += . ../../src/ \
-            /usr/include/gstreamer-1.0
+            /usr/include/gstreamer-1.0 \
+            /usr/include/opencv_mobile          
 DEFINES += DDE_START_FLAGE_ON
 DEFINES += OCR_SCROLL_FLAGE_ON
 DEFINES += KF5_WAYLAND_FLAGE_ON
@@ -21,7 +22,7 @@ QT += dbus
 QT += multimedia
 QT += multimediawidgets
 QT += concurrent
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_core -lopencv_imgproc -lKF5WaylandClient -lKF5ConfigCore -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample -lepoxy
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_small -lKF5WaylandClient -lKF5ConfigCore -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lswscale -lswresample -lepoxy
 
 CONFIG += link_pkgconfig
 CONFIG += c++11
