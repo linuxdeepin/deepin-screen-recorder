@@ -85,6 +85,7 @@ TEMPLATE = app
 TARGET = deepin-screen-recorder
 INCLUDEPATH += . \
             /usr/include/gstreamer-1.0 \
+            /usr/include/opencv_mobile \
 
 INCLUDEPATH += ../3rdparty/libcam/libcam/ \
                ../3rdparty/libcam/libcam_v4l2core/ \
@@ -265,7 +266,7 @@ QT += concurrent
 LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -ldl -limagevisualresult
 
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
-    LIBS += -lopencv_core -lopencv_imgproc
+    LIBS += -lopencv_small
 }
 
 QMAKE_CXXFLAGS += -g

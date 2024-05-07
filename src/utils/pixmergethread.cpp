@@ -7,6 +7,7 @@
 
 #include <QMutexLocker>
 #include <QDateTime>
+#include <opencv2/imgproc/types_c.h>
 const int PixMergeThread::LONG_IMG_MAX_HEIGHT = 10000;
 const int PixMergeThread::TEMPLATE_HEIGHT = 50;
 
