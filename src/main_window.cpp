@@ -2271,6 +2271,13 @@ void MainWindow::updateToolBarPos()
 //        connect(m_pCameraWatcher, SIGNAL(sigCameraState(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
 
         initDynamicLibPath();
+
+        //检测是否是锁频状态下再打开截图
+        checkIsLockScreen();
+    }
+
+    // 延迟初始化相机，仅在切换到录屏界面时执行初始化
+    if (status::record == m_functionType && !m_devnumMonitor) {
         qInfo() << "正在初始化v4l2core...";
         v4l2core_init();
         qInfo() << "初始化v4l2core已完成";
@@ -2280,9 +2287,6 @@ void MainWindow::updateToolBarPos()
         m_devnumMonitor->setObjectName("DevMonitorThread");
         m_devnumMonitor->setWatch(true); //取消之前的线程方式，采用定时器监测
         connect(m_devnumMonitor, SIGNAL(existDevice(bool)), this, SLOT(on_CheckVideoCouldUse(bool)));
-
-        //检测是否是锁频状态下再打开截图
-        checkIsLockScreen();
     }
 
     QPoint toolbarPoint;
@@ -2817,11 +2821,14 @@ void MainWindow::changeCameraSelectEvent(bool checked)
         m_cameraWidget->resize(cameraWidgetWidth, cameraWidgetHeight);
         m_cameraWidget->showAt(QPoint(x, y));
         m_cameraWidget->cameraStart();
-        m_devnumMonitor->setCanUse(false);
     } else {
         m_cameraWidget->cameraStop();
         m_cameraWidget->hide();
-        m_devnumMonitor->setCanUse(true);
+    }
+
+    if (m_devnumMonitor) {
+        // 使用摄像头时不进行判断
+        m_devnumMonitor->setCanUse(!checked);
     }
 }
 /*
@@ -5907,7 +5914,10 @@ void MainWindow::startCountdown()
         }
         m_pVoiceVolumeWatcher->setWatch(false);
         m_pCameraWatcher->setWatch(false);
-        m_devnumMonitor->setWatch(false); //取消之前的线程方式，采用定时器监测
+
+        if (m_devnumMonitor) {
+            m_devnumMonitor->setWatch(false); //取消之前的线程方式，采用定时器监测
+        }
     }
 
     //先隐藏，再显示
