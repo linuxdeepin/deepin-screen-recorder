@@ -220,7 +220,12 @@ void MainWindow::saveImg()
 
     // 保存到剪贴板
     QMimeData *t_imageData = new QMimeData;
-    t_imageData->setImageData(m_image);
+    // 图片数据过大时，可能影响后端剪贴板处理，调整为保存 PNG 图片
+    QByteArray bytes;
+    QBuffer buffer(&bytes);
+    buffer.open(QIODevice::WriteOnly);
+    m_image.save(&buffer, "PNG");
+    t_imageData->setData("image/png", bytes);
     QClipboard *cb = qApp->clipboard();
     cb->setMimeData(t_imageData, QClipboard::Clipboard);
 

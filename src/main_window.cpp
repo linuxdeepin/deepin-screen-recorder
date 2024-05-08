@@ -2010,13 +2010,19 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             }
             qInfo() << __FUNCTION__ << __LINE__ << "1s延时完成" << time(nullptr);
         } else {
-            t_imageData->setImageData(pix);
+            // 图片数据过大时，可能影响后端剪贴板处理，调整为保存 PNG 图片
+            QByteArray bytes;
+            QBuffer buffer(&bytes);
+            buffer.open(QIODevice::WriteOnly);
+            pix.save(&buffer, "PNG");
+            t_imageData->setData("image/png", bytes);
+
             QClipboard *cb = qApp->clipboard();
             qInfo() << __FUNCTION__ << __LINE__ << "将数据传递到剪贴板！";
             cb->setMimeData(t_imageData, QClipboard::Clipboard);
             qDebug() << "Whether the data passed to the clipboard is empty? " << t_imageData->imageData().isNull();
-
         }
+
         if(DSysInfo::minorVersion().toInt() >= 1070){
             if (!Utils::isWaylandMode) {
                 this->hide(); //隐藏主界面
