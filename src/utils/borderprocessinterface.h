@@ -115,8 +115,9 @@ public:
     virtual void initBorderInfo(const int borderConfig) override;
 
     virtual QPixmap getPixmapAddBorder(const QPixmap &pix) override;
+
 private:
-    int m_borderWidth = 10; //边框宽度
+    void drawShadow(QPainter *p, const QRect &rect, const QColor &color, int radius);
 };
 
 #endif // BORDERPROCESSINTERFACE_H
