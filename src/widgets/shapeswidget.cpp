@@ -1869,7 +1869,7 @@ void ShapesWidget::paintText(QPainter &painter, FourPoints rectFPoints, QString 
                static_cast<int>(rectFPoints[0].y()),
                static_cast<int>(rectFPoints[3].x() - rectFPoints[0].x()),
                static_cast<int>(rectFPoints[3].y() - rectFPoints[0].y()));
-    painter.drawText(rect, Qt::AlignCenter, text);
+    painter.drawText(rect, Qt::AlignLeft, text);
 }
 void ShapesWidget::paintEvent(QPaintEvent *)
 {
