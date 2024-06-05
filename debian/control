@@ -2,20 +2,22 @@ Source: deepin-screen-recorder
 Section: utils
 Priority: optional
 Maintainer: Deepin Packages Builder <packages@deepin.com>
-Build-Depends: debhelper, pkg-config, qt5-qmake,
- libxcb-util0-dev, libqt5x11extras5-dev, qttools5-dev-tools,
- libdtkgui-dev,libdtkwidget-dev, libxtst-dev, libprocps-dev | libproc2-dev,
- libdframeworkdbus-dev,libxcursor-dev,libxfixes-dev,libqt5multimediawidgets5,
- qtmultimedia5-dev,dde-dock-dev,qtbase5-dev-tools,
- libopencv-mobile-dev,
- gstreamer1.0-clutter-3.0,gstreamer1.0-x,
- libxss1,qtbase5-dev,
- libkf5windowsystem-dev,libkf5wayland-dev,libkf5i18n-dev,
- libgbm-dev,libepoxy-dev,
+Build-Depends: debhelper, pkg-config,cmake,
+ libxcb-util0-dev,
+ qt6-base-dev,
+ qt6-base-private-dev,
+ qt6-declarative-dev,
+ qt6-multimedia-dev,
+ qt6-svg-dev,
+ qt6-wayland-dev,
+ libxcursor-dev,
+ libxfixes-dev,
+ gstreamer1.0-clutter-3.0,
+ gstreamer1.0-x,
+ libxss1,
  libavcodec-dev,libavdevice-dev,libavfilter-dev,libavformat-dev,libavutil-dev,libswscale-dev,
- libkf5config-dev,libxrandr-dev,libxinerama-dev,libepoxy-dev,deepin-desktop-base,
  libgstreamer1.0-dev,libgstreamer-plugins-base1.0-dev,gstreamer1.0-plugins-good,
- libusb-1.0-0-dev,libimageeditor-dev,libudev-dev,libffmpegthumbnailer-dev,portaudio19-dev,libv4l-dev
+ libusb-1.0-0-dev,libudev-dev,libffmpegthumbnailer-dev,libv4l-dev
 Standards-Version: 3.9.8
 Homepage: https://github.com/linuxdeepin/deepin-screen-recorder
 

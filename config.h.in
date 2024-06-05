@@ -1,0 +1,16 @@
+#ifndef __CONFIG_H__
+#define __CONFIG_H__
+
+#define VERSION        "@VERSION@"
+
+/* Set the QML module URI from CMake */
+#cmakedefine PIN_SCREENSHOTS_QML_URI "@PIN_SCREENSHOTS_QML_URI@"
+/* Set the QML module URI from CMake */
+static const auto PIN_SCREENSHOTS_QML_PATH = u"@PIN_SCREENSHOTS_QML_PATH@";
+
+/* Set the QML module URI from CMake */
+#cmakedefine SCREENRECORDERCORE_QML_URI "@SCREENRECORDERCORE_QML_URI@"
+/* Set the QML module URI from CMake */
+static const auto SCREENRECORDERCORE_QML_PATH = u"@SCREENRECORDERCORE_QML_PATH@";
+
+#endif  /* __CONFIG_H__ */

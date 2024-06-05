@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=com.deepin.Screenshot
-Exec=/usr/bin/deepin-screen-recorder --dbus

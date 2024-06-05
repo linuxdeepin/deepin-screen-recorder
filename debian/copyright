@@ -3,11 +3,11 @@ Upstream-Name: deepin-screen-recorder
 Source: https://github.com/manateelazycat/deepin-screen-recorder
 
 Files: *
-Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd. 
+Copyright (C) 2020 ~ 2024 Uniontech Software Technology Co.,Ltd. 
 License: GPL-3+
 
 Files: debian/*
-Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd. 
+Copyright (C) 2020 ~ 2024 Uniontech Software Technology Co.,Ltd. 
 License: GPL-3+
 
 Files: 3rdparty/libcam/*

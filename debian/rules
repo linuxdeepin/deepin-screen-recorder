@@ -1,13 +1,14 @@
 #!/usr/bin/make -f
-
-export QT_SELECT=5
 include /usr/share/dpkg/default.mk
+export QT_SELECT=6
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 %:
 	dh $@
 
-
 override_dh_auto_configure:
-	qmake
-	dh_auto_configure -- VERSION=$(VERSION) LIB_INSTALL_DIR=/usr/lib/$(DEB_HOST_MULTIARCH) DEFINES+="VERSION=$(DEB_VERSION_UPSTREAM)"
+	dh_auto_configure -- \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DCMAKE_INSTALL_PREFIX=/usr \
+      -DAPP_VERSION=$(DEB_VERSION_UPSTREAM) -DVERSION=$(DEB_VERSION_UPSTREAM) LIB_INSTALL_DIR=/usr/lib
 
