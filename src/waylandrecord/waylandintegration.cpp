@@ -595,25 +595,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
     if (MAP_FAILED == mapData) {
         qCWarning(XdgDesktopPortalKdeWaylandIntegration) << "dma fd " << dma_fd << " mmap failed - ";
     }
-#ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
-    if (screenId == 0) {
-        if(m_currentScreenBufs[0] != nullptr){
-            close(m_currentScreenBufs[0]->fd());
-            m_currentScreenBufs[0]->release();
-            m_currentScreenBufs[0] = nullptr;
-            //qDebug() << "m_currentScreenBufs[0] is release!";
-            m_mutex.unlock();
-        }
-    }else{
-        if(m_currentScreenBufs[1] != nullptr){
-            close(m_currentScreenBufs[1]->fd());
-            m_currentScreenBufs[1]->release();
-            m_currentScreenBufs[1] = nullptr;
-            //qDebug() << "m_currentScreenBufs[1] is release!";
-            m_mutex.unlock();
-        }
-    }
-#endif
     //QString pngName = "/home/uos/Desktop/test/"+QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ") + QString("%1_").arg(rect.x()));
     //QImage(mapData, width, height, QImage::Format_RGB32).copy().save(pngName + ".png");
     if (m_screenCount == 1 || !m_isScreenExtension) {
@@ -712,6 +693,25 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
     } else {
         qWarning() << "screen count > 2!!!";
     }
+#ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
+    if (screenId == 0) {
+        if(m_currentScreenBufs[0] != nullptr){
+            close(m_currentScreenBufs[0]->fd());
+            m_currentScreenBufs[0]->release();
+            m_currentScreenBufs[0] = nullptr;
+            //qDebug() << "m_currentScreenBufs[0] is release!";
+            m_mutex.unlock();
+        }
+    }else{
+        if(m_currentScreenBufs[1] != nullptr){
+            close(m_currentScreenBufs[1]->fd());
+            m_currentScreenBufs[1]->release();
+            m_currentScreenBufs[1] = nullptr;
+            //qDebug() << "m_currentScreenBufs[1] is release!";
+            m_mutex.unlock();
+        }
+    }
+#endif
     munmap(mapData, stride * height);
     qInfo() << __FUNCTION__ << __LINE__ << "已处理buffer";
 }
