@@ -47,7 +47,7 @@ void MainWindow::initMainWindow()
 {
     m_ocrInterface = nullptr;
     //去菜单栏，置顶窗口
-    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::BypassWindowManagerHint);
 
     //设置可以进行鼠标操作
     setMouseTracking(true);
@@ -387,9 +387,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
             this->setCursor(QCursor(Qt::ClosedHandCursor));
             //qDebug() << "=============event->globalPos()" << event->globalPos() << "dragPosition" << dragPosition;
             QPoint globalPoint = event->globalPos() - dragPosition;
-            if (PUtils::isWaylandMode && globalPoint.y() < 0) {
-                globalPoint.setY(0);
-            }
             move(globalPoint);
             event->accept();
         }
