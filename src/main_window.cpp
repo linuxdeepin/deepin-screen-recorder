@@ -253,7 +253,7 @@ void MainWindow::initAttributes()
             setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
         }
         if (this->windowHandle()) {
-            this->windowHandle()->setProperty("_d_dwayland_window-type", "onScreenDisplay");
+            this->windowHandle()->setProperty("_d_dwayland_window-type", "override");
             qDebug() << "设置窗口属性 _d_dwayland_window-type: " << this->windowHandle()->property("_d_dwayland_window-type");
         }
         //取消onScreenDisplay，解决wayland截长图无法滚动的问题
