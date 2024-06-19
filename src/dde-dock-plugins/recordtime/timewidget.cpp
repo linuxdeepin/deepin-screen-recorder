@@ -253,9 +253,9 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         QPointF pf = rf.center() - prf.center();
         //qDebug() << ">>>>>>> pf: " << pf ;
         //绘制录像小图标
-        QPointF pff = QPointF(5, pf.y() + 1);
+        QPointF pff = QPointF(5, pf.y());
         if(m_systemVersion >= 1070){
-            pff = QPointF(0, pf.y() + 1);
+            pff = QPointF(0, pf.y());
         }
         //qDebug() << ">>>>>>> pff: " << pff ;
         painter.drawPixmap(pff, m_pixmap);
@@ -264,7 +264,7 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         QFontMetrics fm(font);
 //        painter.drawText(m_pixmap.width() * static_cast<int>(ratio) + RECORDER_TEXT_TOP_BOTTOM_X + RECORDER_ICON_TOP_BOTTOM_X, rect().y(), rect().width(), rect().height(), Qt::AlignLeft | Qt::AlignVCenter, m_showTimeStr);
         int tx = static_cast<int>(m_pixmap.width() / ratio) + RECORDER_TEXT_TOP_BOTTOM_X;
-        int ty = rect().y();
+        int ty = rect().y()-1;
         int twidth = rect().width();
         int theight = rect().height();
         //绘制时间
