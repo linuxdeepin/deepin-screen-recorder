@@ -1,5 +1,4 @@
-// Copyright (C) 2021 Uniontech Software Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2021-2024 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -11,10 +10,7 @@
 class TipsWidget : public QFrame
 {
     Q_OBJECT
-    enum ShowType {
-        SingleLine,
-        MultiLine
-    };
+    enum ShowType { SingleLine, MultiLine };
 
 public:
     explicit TipsWidget(QWidget *parent = nullptr);
@@ -34,4 +30,4 @@ private:
     ShowType m_type;
 };
 
-#endif   // TIPSWIDGET_H
+#endif  // TIPSWIDGET_H

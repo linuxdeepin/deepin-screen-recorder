@@ -1,4 +1,5 @@
 TEMPLATE = subdirs
 
 SUBDIRS += recordtime \
-            shotstart
+            shotstart \
+            shotstartrecord

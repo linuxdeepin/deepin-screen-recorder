@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -37,14 +37,13 @@ void RecordTimePlugin::init(PluginProxyInterface *proxyInter)
             && sessionBus.registerObject("/com/deepin/ScreenRecorder/time", this, QDBusConnection::ExportAdaptors)) {
         qDebug() << "dbus service registration failed!";
     }
-
     //test
     //onStart();
 }
 
 bool RecordTimePlugin::pluginIsDisable()
 {
-    return m_proxyInter->getValue(this, "disabled", false).toBool();
+    return m_proxyInter->getValue(this, "disabled", true).toBool();
 }
 
 void RecordTimePlugin::pluginStateSwitched()
@@ -66,7 +65,8 @@ QWidget *RecordTimePlugin::itemWidget(const QString &itemKey)
 
 void RecordTimePlugin::clear()
 {
-    if (nullptr != m_timer) {
+    if (nullptr != m_timer)
+    {
         m_timer->stop();
         m_timer->deleteLater();
         m_timer = nullptr;
@@ -83,35 +83,15 @@ void RecordTimePlugin::clear()
     }
 }
 
-PluginFlags RecordTimePlugin::flags() const
-{
-    return  Type_Common | Attribute_ForceDock | Attribute_CanInsert;
-}
-
-PluginsItemInterface::PluginSizePolicy RecordTimePlugin::pluginSizePolicy() const
-{
-    return PluginSizePolicy::Custom;
-}
-
-void RecordTimePlugin::positionChanged(const Dock::Position position)
-{
-    qInfo() << "dock位置改变！！！！！！！！！！！！！" << position;
-    positionChange(position);
-}
-
 void RecordTimePlugin::onStart()
 {
-    qInfo() << "开始计时";
     m_timer = new QTimer(this);
     m_timeWidget = new TimeWidget();
-    m_timeWidget->onPositionChanged(position());
-    connect(this, SIGNAL(positionChange(int)), m_timeWidget, SLOT(onPositionChanged(int)));
     m_checkTimer = nullptr;
     m_timer->start(600);
     connect(m_timer, &QTimer::timeout, this, &RecordTimePlugin::refresh);
 
     if (m_timeWidget->enabled()) {
-        qInfo() << "加载插件";
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
         m_bshow = true;
@@ -122,7 +102,6 @@ void RecordTimePlugin::onStart()
 void RecordTimePlugin::onStop()
 {
     if (m_timeWidget->enabled()) {
-        qInfo() << "移除插件";
         m_proxyInter->itemRemoved(this, pluginName());
         m_bshow = false;
         if (nullptr != m_checkTimer) {
@@ -135,7 +114,6 @@ void RecordTimePlugin::onStop()
         //m_timeWidget->stop();
         clear();
     }
-    qInfo() << "停止计时";
 }
 
 //当托盘插件开始闪烁计数时才会执行
@@ -176,10 +154,15 @@ void RecordTimePlugin::onPause()
 void RecordTimePlugin::refresh()
 {
     QSize size = m_timeWidget->sizeHint();
+//    qInfo() << position() <<  " refresh >>>>>>>>>> size: " << size
+//            << " , m_timeWidget->width(): " << m_timeWidget->width()
+//            << " , m_timeWidget->height(): " << m_timeWidget->height()
+//            << " , m_bshow: " << m_bshow;
     if (size.width() > m_timeWidget->width()
             && 1 != position()
             && 3 != position()
             && m_bshow) {
+        qInfo() << "========= 重新加载插件" ;
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
     }

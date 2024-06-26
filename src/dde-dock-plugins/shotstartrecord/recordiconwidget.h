@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2021-2024 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -16,20 +16,21 @@
 #include <QLabel>
 
 DWIDGET_USE_NAMESPACE
+
 using DBusDock = com::deepin::dde::daemon::Dock;
 
-class IconWidget : public QWidget
+class RecordIconWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit IconWidget(QWidget *parent = nullptr);
-    ~IconWidget() override;
+    explicit RecordIconWidget(QWidget *parent = nullptr);
+    ~RecordIconWidget() override;
     bool enabled();
 
     const QString itemContextMenu();
     void invokedMenuItem(const QString &menuId);
-    QString getSysShortcuts(const QString type);
-    QString getDefaultValue(const QString type);
+    QString getSysShortcuts(const QString &type);
+    QString getDefaultValue(const QString &type);
 
 protected:
     void paintEvent(QPaintEvent *e) override;
@@ -41,17 +42,12 @@ protected:
 private:
     const QPixmap loadSvg(const QString &fileName, const QSize &size) const;
 
-
 private:
     bool m_hover = false;       // 鼠标是否悬浮
     bool m_pressed = false;     // 鼠标是否按下
     QIcon m_icon;
     QPixmap *m_blgPixmap;
     QBoxLayout *centralLayout;
-    /**
-     * @brief m_systemVersion 获取系统镜像版本
-     */
-    int m_systemVersion;
 };
 
 #endif // TIMEWIDGET_H
