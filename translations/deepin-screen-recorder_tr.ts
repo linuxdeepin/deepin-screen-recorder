@@ -24,10 +24,6 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <source>Recording</source>
         <translation>Kaydediyor</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Ekran Alıntısı</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -150,6 +146,17 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Record</source>
         <translation type="unfinished">Kayıt</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Ekran Görüntüsü</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Kaydediyor</translation>
     </message>
 </context>
 <context>
@@ -404,16 +411,19 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Bulanık</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>Mozaik</translation>
+        <source>Screenshot</source>
+        <translation>Ekran Görüntüsü</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Kayıt</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>Ses Aç</translation>

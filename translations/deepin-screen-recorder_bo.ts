@@ -35,10 +35,6 @@ or press the shortcut again to stop recording</source>
         <source>Screenshot</source>
         <translation>བརྙན་བཤུས།</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">བརྙན་བཤུས་བརྙན་ཕབ།</translation>
-    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -149,22 +145,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>བརྙན་བཤུས།</translation>
+        <translation type="unfinished">བརྙན་བཤུས།</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>བརྙན་ཕབ།</translation>
+        <translation type="unfinished">བརྙན་ཕབ།</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>བརྙན་བཤུས།</translation>
+        <translation type="unfinished">བརྙན་བཤུས།</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>བརྙན་ཕབ།</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -419,16 +415,19 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>རབ་རིབ།</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>མོ་སའེ་ཁེ།</translation>
+        <source>Screenshot</source>
+        <translation>བརྙན་བཤུས།</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">བརྙན་ཕབ།</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>སྒྲ་ཕབ་ཁ་ཕྱེ།</translation>

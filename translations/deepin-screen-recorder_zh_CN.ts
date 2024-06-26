@@ -24,10 +24,6 @@ or press the shortcut again to stop recording</source>
         <source>Recording</source>
         <translation>录屏</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation>截图录屏</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -153,22 +149,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>截图</translation>
+        <translation type="unfinished">截图</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>录屏</translation>
+        <translation type="unfinished">录屏</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>截图</translation>
+        <translation type="unfinished">截图</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>录屏</translation>
+        <translation type="unfinished">录屏</translation>
     </message>
 </context>
 <context>
@@ -423,16 +419,19 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>模糊</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>马赛克</translation>
+        <source>Screenshot</source>
+        <translation>截图</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">录屏</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>录音开启</translation>

@@ -24,10 +24,6 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
         <source>Recording</source>
         <translation>Regjistrim</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Regjistrim Ekrani</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -149,7 +145,18 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Regjistroje</translation>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Foto ekrani</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Regjistrim</translation>
     </message>
 </context>
 <context>
@@ -404,16 +411,19 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Turbulloje</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>Mozaik</translation>
+        <source>Screenshot</source>
+        <translation>Foto ekrani</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>Tingujt ON</translation>

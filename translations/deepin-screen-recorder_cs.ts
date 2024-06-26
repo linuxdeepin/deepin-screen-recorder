@@ -24,10 +24,6 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <source>Recording</source>
         <translation>Nahrávání</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Zachytávání obrazovky</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -145,11 +141,22 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Snímek obrazovky</translation>
     </message>
     <message>
         <source>Record</source>
         <translation type="unfinished">Pořídit záznam</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Snímek obrazovky</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Nahrávání</translation>
     </message>
 </context>
 <context>
@@ -404,16 +411,19 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Rozmazání</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>Mozaika</translation>
+        <source>Screenshot</source>
+        <translation>Snímek obrazovky</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Pořídit záznam</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>Zvuk zapnut</translation>

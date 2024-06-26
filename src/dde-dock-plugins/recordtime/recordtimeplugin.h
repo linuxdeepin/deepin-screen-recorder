@@ -45,7 +45,6 @@ public:
      * @return
      */
     bool pluginIsAllowDisable() override { return true; }
-
     bool pluginIsDisable() override;
     void pluginStateSwitched() override;
     /**
@@ -54,6 +53,7 @@ public:
      * @return
      */
     QWidget *itemWidget(const QString &itemKey) override;
+
     void clear();
 
     Dock::PluginFlags flags() const;
@@ -87,12 +87,6 @@ private:
      * @brief refresh:绕过dde-dock 2020.12版本对插件的控件大小的限制
      */
     void refresh();
-signals:
-    /**
-     * @brief positionChange dock栏位置改变时发出此信号
-     * @param postion
-     */
-    void positionChange(int postion);
 
 private:
     QTimer *m_timer;

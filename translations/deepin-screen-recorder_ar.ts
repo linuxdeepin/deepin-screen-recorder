@@ -24,10 +24,6 @@ or press the shortcut again to stop recording</source>
         <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">إلتقاط الشاشة</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -154,6 +150,17 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Record</source>
         <translation type="unfinished">تسجيل</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">لقطة شاشة</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -408,16 +415,19 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>ضبابي</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>فسيفسائي</translation>
+        <source>Screenshot</source>
+        <translation type="unfinished">لقطة شاشة</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">تسجيل</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>تشغيل الصوت</translation>

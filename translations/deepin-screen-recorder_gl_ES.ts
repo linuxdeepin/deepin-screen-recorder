@@ -24,10 +24,6 @@ ou prema de novo o atallo para deixar de gravar</translation>
         <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Captura de pantalla</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -154,6 +150,17 @@ ou prema de novo o atallo para deixar de gravar</translation>
     <message>
         <source>Record</source>
         <translation type="unfinished">Gravar</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Captura de pantalla</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -408,12 +415,15 @@ ou prema de novo o atallo para deixar de gravar</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Borroso</translation>
+        <source>Screenshot</source>
+        <translation type="unfinished">Captura de pantalla</translation>
     </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
     <message>
-        <source>Mosaic</source>
-        <translation>Mosaico</translation>
+        <source>Record</source>
+        <translation type="unfinished">Gravar</translation>
     </message>
 </context>
 <context>

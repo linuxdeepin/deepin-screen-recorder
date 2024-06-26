@@ -24,10 +24,6 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
         <source>Recording</source>
         <translation>Enregistrement</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Capturer l&apos;écran</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -150,6 +146,17 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source>Record</source>
         <translation type="unfinished">Enregistrer</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Capture d&apos;écran</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Enregistrement</translation>
     </message>
 </context>
 <context>
@@ -404,16 +411,19 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Flou</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>Mosaïque</translation>
+        <source>Screenshot</source>
+        <translation>Capture d&apos;écran</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Enregistrer</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>Son activé</translation>

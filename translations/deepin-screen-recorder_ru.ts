@@ -24,10 +24,6 @@ or press the shortcut again to stop recording</source>
         <source>Recording</source>
         <translation>Запись</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Захват экрана</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -153,6 +149,17 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Record</source>
+        <translation type="unfinished">Запись</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Скриншот</translation>
+    </message>
+    <message>
+        <source>Recording</source>
         <translation type="unfinished">Запись</translation>
     </message>
 </context>
@@ -408,16 +415,19 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Размытие</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>Мозаика</translation>
+        <source>Screenshot</source>
+        <translation>Скриншот</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Запись</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>Звук Включен</translation>

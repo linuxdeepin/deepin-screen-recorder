@@ -37,7 +37,6 @@ void RecordTimePlugin::init(PluginProxyInterface *proxyInter)
             && sessionBus.registerObject("/com/deepin/ScreenRecorder/time", this, QDBusConnection::ExportAdaptors)) {
         qDebug() << "dbus service registration failed!";
     }
-
     //test
     //onStart();
 }
@@ -107,8 +106,6 @@ void RecordTimePlugin::onStart()
     qInfo() << "start record time";
     m_timer = new QTimer(this);
     m_timeWidget = new TimeWidget();
-    m_timeWidget->onPositionChanged(position());
-    connect(this, SIGNAL(positionChange(int)), m_timeWidget, SLOT(onPositionChanged(int)));
     m_checkTimer = nullptr;
     m_timer->start(600);
     connect(m_timer, &QTimer::timeout, this, &RecordTimePlugin::refresh);

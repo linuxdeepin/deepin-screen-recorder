@@ -24,10 +24,6 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <source>Recording</source>
         <translation>Registrazione in corso</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Cattura schermo</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -150,6 +146,17 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Record</source>
         <translation type="unfinished">Registrazione</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Screenshot</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Registrazione in corso</translation>
     </message>
 </context>
 <context>
@@ -404,16 +411,19 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Sfocato</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>Mosaico</translation>
+        <source>Screenshot</source>
+        <translation>Screenshot</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Registrazione</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>Suono attivo</translation>

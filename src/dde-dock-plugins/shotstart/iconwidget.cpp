@@ -140,31 +140,9 @@ QString IconWidget::getDefaultValue(const QString type)
     return retShortcut;
 }
 
-QPixmap IconWidget::iconPixMap(QIcon icon, QSize size)
-{
-    QPixmap pixmap;
-    const auto ratio = devicePixelRatioF();
-    qDebug() << "获取缩放比例：" << ratio;
-    QSize pixmapSize = QCoreApplication::testAttribute(Qt::AA_UseHighDpiPixmaps)? size:(size*ratio);
-    qDebug() << "获取图标大小：" << pixmapSize;
-    if(!icon.isNull()){
-        pixmap = icon.pixmap(pixmapSize);
-        pixmap.setDevicePixelRatio(ratio);
-        if(!pixmap.isNull()){
-            pixmap = pixmap.scaled(size * ratio);
-        }else{
-            qWarning() << "pixmap is null!";
-        }
-    }else{
-        qWarning() << "icon is null!";
-    }
-    return  pixmap;
-}
-
 
 void IconWidget::paintEvent(QPaintEvent *e)
 {
-    qInfo() << ">>>>>>>>>>>>>>>>>>>>>>> " << __FUNCTION__ << __LINE__;
     QPainter painter(this);
 
     QPixmap pixmap;
@@ -271,8 +249,6 @@ const QPixmap IconWidget::loadSvg(const QString &fileName, const QSize &size) co
     // 缩放模式 设置为非使能状态时，调整转出的位图风格模式
     // pixmapSize = size* ratio;
     QPixmap pixmap = QIcon::fromTheme(fileName, m_icon).pixmap(pixmapSize, isEnabled() ? QIcon::Normal : QIcon::Disabled);
-    pixmap.setDevicePixelRatio(ratio);
-
     return pixmap;
 }
 

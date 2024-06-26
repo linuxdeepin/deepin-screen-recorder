@@ -24,10 +24,6 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <source>Recording</source>
         <translation>Rakaman</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Tangkap Skrin</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -150,6 +146,17 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>Record</source>
         <translation type="unfinished">Rakam</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Tangkap Layar</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Rakaman</translation>
     </message>
 </context>
 <context>
@@ -404,16 +411,19 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Kabur</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>Mozek</translation>
+        <source>Screenshot</source>
+        <translation>Tangkap Layar</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Rakam</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>Bunyi Hidup</translation>

@@ -24,10 +24,6 @@ or press the shortcut again to stop recording</source>
         <source>Recording</source>
         <translation>Записування</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Захоплення зображення на екрані</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -150,6 +146,17 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Record</source>
         <translation type="unfinished">Записати</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Знімок</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Записування</translation>
     </message>
 </context>
 <context>
@@ -404,16 +411,19 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Розмивання</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>Мозаїка</translation>
+        <source>Screenshot</source>
+        <translation>Знімок</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Записати</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>Увімкнути звук</translation>
