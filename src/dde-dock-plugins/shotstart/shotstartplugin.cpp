@@ -1,20 +1,30 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "shotstartplugin.h"
 #include <DApplication>
 #include <QDesktopWidget>
-
+#include <QDBusInterface>
 
 #define ShotShartPlugin "shot-start-plugin"
-#define ShotShartApp "deepin-screen-recorder" // 使用截图录屏的翻译
+#define ShotShartApp "deepin-screen-recorder"  // 使用截图录屏的翻译
+const QString QUICK_ITEM_KEY = QStringLiteral("quick_item_key");
+const int DETECT_SERV_INTERVAL = 2000;  // 检测服务存在的定时器间隔
+
+Q_LOGGING_CATEGORY(SHOT_LOG, "shot-start-plugin");
 
 ShotStartPlugin::ShotStartPlugin(QObject *parent)
-    : QObject(parent), m_iconWidget(nullptr), m_tipsWidget(nullptr), m_isRecording(false)
+    : QObject(parent)
+    , m_iconWidget(nullptr)
+    , m_quickPanelWidget(nullptr)
+    , m_tipsWidget(nullptr)
 
 {
+    m_isRecording = false;
+    m_checkTimer = nullptr;
+    m_bDockQuickPanel = false;
 }
 
 const QString ShotStartPlugin::pluginName() const
@@ -24,202 +34,207 @@ const QString ShotStartPlugin::pluginName() const
 
 const QString ShotStartPlugin::pluginDisplayName() const
 {
-    QString pluginDisplayName = tr("Screen Capture");
-    qInfo() << "Plugin Display Name is " << pluginDisplayName;
-    return pluginDisplayName;
-}
-
-QString ShotStartPlugin::description() const
-{
-    QString description = ""; //description()返回的结果为空时，快捷面板会使用pluginDisplayName()进行显示
-    if(m_iconWidget && m_isRecording){
-        description = m_iconWidget->getTimeStr();
-    }
-    qInfo() << "Description is " << description;
-    return description;
+    return tr("Screenshot");
 }
 
 void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
 {
 #ifndef UNIT_TEST
+    bool ret;
+    bool getVersion = qApp->property("dock_api_version").toInt(&ret);
+    qCInfo(SHOT_LOG) << "当前dock版本：" << getVersion << ret;
+    if (ret && qApp->property("dock_api_version") >= ((2 << 16) | (0 << 8) | (0))) {
+        m_bDockQuickPanel = true;
+        qCWarning(SHOT_LOG) << "The current dock version does not support quick panels!!";
+    }
+    qCInfo(SHOT_LOG) << "正在加载翻译...";
     // 加载翻译
     QString appName = qApp->applicationName();
+    qCDebug(SHOT_LOG) << "1 >>qApp->applicationName(): " << qApp->applicationName();
     qApp->setApplicationName(ShotShartApp);
-    qApp->loadTranslator();
+    qCDebug(SHOT_LOG) << "2 >>qApp->applicationName(): " << qApp->applicationName();
+    bool isLoad = qApp->loadTranslator();
     qApp->setApplicationName(appName);
+    qCDebug(SHOT_LOG) << "3 >>qApp->applicationName(): " << qApp->applicationName();
+    qCInfo(SHOT_LOG) << "翻译加载" << (isLoad ? "成功" : "失败");
 #endif
 
     m_proxyInter = proxyInter;
 
-
     if (m_iconWidget.isNull())
         m_iconWidget.reset(new IconWidget);
-
+    if (m_quickPanelWidget.isNull()) {
+        m_quickPanelWidget.reset(new QuickPanelWidget);
+        // "截图"快捷面板不再响应录制中动画效果，固定为截图图标
+        m_quickPanelWidget->changeType(QuickPanelWidget::SHOT);
+    }
     if (m_tipsWidget.isNull())
         m_tipsWidget.reset(new TipsWidget);
 
-    if (!pluginIsDisable()) {
+    if (m_bDockQuickPanel || !pluginIsDisable()) {
+        qCInfo(SHOT_LOG) << "the current plugin has been added to the dock";
         m_proxyInter->itemAdded(this, pluginName());
     }
 
     QDBusConnection sessionBus = QDBusConnection::sessionBus();
-    if (sessionBus.registerService("com.deepin.ShotRecorder.PanelStatus")
-            && sessionBus.registerObject("/com/deepin/ShotRecorder/PanelStatus", this, QDBusConnection::ExportScriptableSlots)) {
-        qDebug() << "dbus service registration failed!";
+    if (sessionBus.registerService("com.deepin.ShotRecorder.PanelStatus") &&
+        sessionBus.registerObject("/com/deepin/ShotRecorder/PanelStatus", this, QDBusConnection::ExportScriptableSlots)) {
+        qCWarning(SHOT_LOG) << "dbus service registration failed!";
     }
+
+    connect(m_quickPanelWidget.data(), &QuickPanelWidget::clicked, this, &ShotStartPlugin::onClickQuickPanel);
 }
 
-QIcon ShotStartPlugin::icon(const DockPart &dockPart, DGuiApplicationHelper::ColorType themeType)
+bool ShotStartPlugin::pluginIsDisable()
 {
-    QString shotIconName = "screenshot";
-    if(themeType == DGuiApplicationHelper::ColorType::DarkType){
-        shotIconName = "screenshot_dark";
+    if (m_bDockQuickPanel) {
+        qCWarning(SHOT_LOG) << "The current dock version does not support quick panels!!";
+        return false;
     }
-    QIcon shot(QString(":/res/%1.svg").arg(shotIconName));
-    QIcon recorder(":/res/screen-recording.svg");
-    if (DockPart::QuickShow == dockPart /*|| DockPart::DCCSetting == dockPart*/ || DockPart::QuickPanel == dockPart) {
-        qInfo() << "是否正在录屏:" << m_isRecording;
-        if (m_isRecording) {
-            qInfo() << "显示录屏图标..." << m_iconWidget.isNull();
-            if (m_iconWidget.isNull()) {
-                qDebug() << "录屏图标已显示(icon)";
-                return recorder;
-            } else {
-                QPixmap pixmap;
-                pixmap = m_iconWidget->iconPixMap(recorder, QSize(24, 24));
-                if (pixmap.isNull()) {
-                    qDebug() << "录屏图标已显示(pixmap is null >> icon)";
-                    return recorder;
-                } else {
-                    qDebug() << "录屏图标已显示(pixmap)";
-                    return pixmap;
-                }
-            }
-        } else {
-            qInfo() << "显示截图图标...";
-            if (m_iconWidget.isNull()) {
-                qDebug() << "截图图标已显示(icon)";
-                return shot;
-            } else {
-                QPixmap pixmap;
-                if(DockPart::QuickPanel == dockPart){
-                    pixmap = m_iconWidget->iconPixMap(shot, QSize(24, 24));
-                }else{
-                    pixmap = m_iconWidget->iconPixMap(shot, QSize(20, 20));
-                }
-                if (pixmap.isNull()) {
-                    qDebug() << "截图图标已显示(pixmap is null >> icon)";
-                    return shot;
-                } else {
-                    qDebug() << "截图图标已显示(pixmap)";
-                    return pixmap;
-                }
-            }
-        }
-    }/*else if(DockPart::QuickPanel == dockPart){
-        return QIcon();
-    }*/
-    return shot;
+    return m_proxyInter->getValue(this, "disabled", false).toBool();
 }
 
-PluginFlags ShotStartPlugin::flags() const
+void ShotStartPlugin::pluginStateSwitched()
 {
-    if(m_isRecording){
-        qInfo() << ">>>>>>>>>>>>>>>> flags() 正在录屏" ;
-        return  Type_Common | Quick_Single | Attribute_CanSetting | Attribute_CanDrag | Attribute_CanInsert | Attribute_ForceDock;
-    }else{
-        qInfo() << ">>>>>>>>>>>>>>>> flags() 没有录屏" ;
-        return  Type_Common | Quick_Single | Attribute_CanSetting | Attribute_CanDrag | Attribute_CanInsert;
+    const bool disabledNew = !pluginIsDisable();
+    m_proxyInter->saveValue(this, "disabled", disabledNew);
+    if (disabledNew) {
+        m_proxyInter->itemRemoved(this, pluginName());
+    } else {
+        m_proxyInter->itemAdded(this, pluginName());
     }
 }
 
 QWidget *ShotStartPlugin::itemWidget(const QString &itemKey)
 {
-    qInfo() << "itemKey is " << itemKey;
-//    if(itemKey == QUICK_ITEM_KEY){
-//        return m_iconWidget.data();
-//    }
+    qCDebug(SHOT_LOG) << "Current itemWidget's itemKey: " << itemKey;
+    if (itemKey == QUICK_ITEM_KEY) {
+        qCDebug(SHOT_LOG) << "Input Quick Panel Widget!";
+        return m_quickPanelWidget.data();
+    } else if (itemKey == ShotShartPlugin) {
+        qCDebug(SHOT_LOG) << "Input Common Plugin Widget!";
+        return m_iconWidget.data();
+    }
     return nullptr;
 }
 
 QWidget *ShotStartPlugin::itemTipsWidget(const QString &itemKey)
 {
-    if (itemKey != ShotShartPlugin) return nullptr;
-
+    qCDebug(SHOT_LOG) << "Current itemWidget's itemKey: " << itemKey;
+    if (itemKey != ShotShartPlugin)
+        return nullptr;
     m_tipsWidget->setText(tr("Screenshot") + m_iconWidget->getSysShortcuts("screenshot"));
     return m_tipsWidget.data();
 }
 
 int ShotStartPlugin::itemSortKey(const QString &itemKey)
 {
-    qInfo() << "================= itemKey: " << itemKey;
     const QString key = QString("pos_%1_%2").arg(itemKey).arg(Dock::Efficient);
     return m_proxyInter->getValue(this, key, 1).toInt();
 }
 
 void ShotStartPlugin::setSortKey(const QString &itemKey, const int order)
 {
-    qInfo() << "================= order: " << order << "itemKey: " << itemKey;
     const QString key = QString("pos_%1_%2").arg(itemKey).arg(Dock::Efficient);
     m_proxyInter->saveValue(this, key, order);
 }
 
 const QString ShotStartPlugin::itemCommand(const QString &itemKey)
 {
-    if (itemKey != ShotShartPlugin) return QString();
-
-    if (m_isRecording) {
-        //停止录屏
-        QDBusInterface shotDBusInterface("com.deepin.ScreenRecorder",
-                                         "/com/deepin/ScreenRecorder",
-                                         "com.deepin.ScreenRecorder",
-                                         QDBusConnection::sessionBus());
-
-        shotDBusInterface.asyncCall("stopRecord");
-        return "";
+    qCDebug(SHOT_LOG) << "Current itemWidget's itemKey: " << itemKey;
+    if (itemKey == ShotShartPlugin) {
+        qCDebug(SHOT_LOG) << "(itemCommand) Input Common Plugin Widget!";
+        // 录屏过程不响应点击
+        if (!m_isRecording) {
+            qCDebug(SHOT_LOG) << "Get DBus Interface";
+            return "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot "
+                   "com.deepin.Screenshot.StartScreenshot";
+        }
+    } else {
+        qCWarning(SHOT_LOG) << "(itemCommand) Input unknow widget!";
     }
-
-    return "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.StartScreenshot";
+    return QString();
 }
 
-const QString ShotStartPlugin::itemContextMenu(const QString &itemKey)
+const QString ShotStartPlugin::itemContextMenu(const QString &)
 {
-    if (itemKey != ShotShartPlugin)
-        return QString();
-
-    return  m_iconWidget->itemContextMenu();
+    // 拆分截图和录屏托盘图标，不再提供右键菜单
+    return QString();
 }
 
-void ShotStartPlugin::invokedMenuItem(const QString &itemKey, const QString &menuId, const bool checked)
+void ShotStartPlugin::invokedMenuItem(const QString &, const QString &, const bool)
 {
-
-    Q_UNUSED(checked);
-    if (itemKey != ShotShartPlugin) return;
-
-    m_iconWidget->invokedMenuItem(menuId);
+    // 拆分截图和录屏托盘图标，不再提供右键菜单
+    return;
 }
 
 bool ShotStartPlugin::onStart()
 {
+    qCDebug(SHOT_LOG) << "Disable screenshot tray icon";
     m_isRecording = true;
-    qInfo() << "Start The Clock! Is Recording? " << m_isRecording;
-    m_baseTime = QTime::currentTime();
-    m_iconWidget->start();
-    m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
+    m_iconWidget->setEnabled(false);
+    m_iconWidget->update();
+
+    m_quickPanelWidget->setEnabled(false);
+    qCDebug(SHOT_LOG) << "(onStart) Is Recording? " << m_isRecording;
     return true;
 }
 
 void ShotStartPlugin::onStop()
 {
+    qCDebug(SHOT_LOG) << "(onStop) Is Recording? " << m_isRecording;
     m_isRecording = false;
-    qInfo() << "End The Clock! Is Recording? " << m_isRecording;
-    m_iconWidget->stop();
-    m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
+    m_iconWidget->setEnabled(true);
+    m_iconWidget->update();
+
+    m_quickPanelWidget->setEnabled(true);
+    qCDebug(SHOT_LOG) << "Enable screenshot tray icon";
 }
 
 void ShotStartPlugin::onRecording()
 {
-    m_proxyInter->updateDockInfo(this, ::DockPart::QuickPanel);
+    qCDebug(SHOT_LOG) << "(onRecording) Is Recording" << m_isRecording;
+    m_nextCount++;
+    if (1 == m_nextCount) {
+        if (!m_checkTimer) {
+            m_checkTimer = new QTimer(this);
+        }
+        connect(m_checkTimer, &QTimer::timeout, this, [=] {
+            //说明录屏还在进行中
+            if (m_count < m_nextCount) {
+                m_count = m_nextCount;
+            }
+            //说明录屏已经停止了
+            else {
+                qCWarning(SHOT_LOG) << qPrintable("Unsafe stop recoding!");
+                onStop();
+                m_checkTimer->stop();
+            }
+        });
+        m_checkTimer->start(DETECT_SERV_INTERVAL);
+    }
+
+    if (m_checkTimer && !m_checkTimer->isActive()) {
+        m_checkTimer->start(DETECT_SERV_INTERVAL);
+    }
+}
+
+void ShotStartPlugin::onPause()
+{
+    // DoNothing
+}
+
+void ShotStartPlugin::onClickQuickPanel()
+{
+    // 录制中不再响应快捷面板
+    qCDebug(SHOT_LOG) << "(onClickQuickPanel) 点击快捷面板";
+    if (!m_isRecording) {
+        qCDebug(SHOT_LOG) << "Get Shot DBus Interface";
+        QDBusInterface shotDBusInterface(
+            "com.deepin.Screenshot", "/com/deepin/Screenshot", "com.deepin.Screenshot", QDBusConnection::sessionBus());
+        shotDBusInterface.asyncCall("StartScreenshot");
+        qCDebug(SHOT_LOG) << "Shot and Recorder plugin start run!";
+    }
 }
 
 ShotStartPlugin::~ShotStartPlugin()
@@ -229,4 +244,7 @@ ShotStartPlugin::~ShotStartPlugin()
 
     if (nullptr != m_tipsWidget)
         m_tipsWidget->deleteLater();
+
+    if (nullptr != m_quickPanelWidget)
+        m_quickPanelWidget->deleteLater();
 }

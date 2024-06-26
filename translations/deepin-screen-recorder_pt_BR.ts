@@ -24,10 +24,6 @@ clique no ícone da bandeja ou use o atalho</translation>
         <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Captura de Tela</translation>
-    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -131,6 +127,28 @@ clique no ícone da bandeja ou use o atalho</translation>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Capturar</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Gravar</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Capturar</translation>
+    </message>
+    <message>
+        <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -376,12 +394,15 @@ clique no ícone da bandeja ou use o atalho</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Captura de Tela</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Capturar</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Gravar</translation>
     </message>
 </context>
 <context>

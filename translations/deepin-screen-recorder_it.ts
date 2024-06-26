@@ -24,10 +24,6 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <source>Recording</source>
         <translation>Registrazione in corso</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Cattura schermo</translation>
-    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -132,6 +128,28 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Pin Screenshots</source>
         <translation>Blocca screenshot</translation>
+    </message>
+</context>
+<context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Screenshot</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Registrazione</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Screenshot</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Registrazione in corso</translation>
     </message>
 </context>
 <context>
@@ -376,12 +394,15 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Cattura schermo</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Screenshot</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Registrazione</translation>
     </message>
 </context>
 <context>

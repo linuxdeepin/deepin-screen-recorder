@@ -24,10 +24,6 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Skærmoptagelse</translation>
-    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -131,6 +127,28 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Skærmbillede</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Optag</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Skærmbillede</translation>
+    </message>
+    <message>
+        <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -376,12 +394,15 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Skærmoptagelse</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation type="unfinished">Skærmbillede</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Optag</translation>
     </message>
 </context>
 <context>

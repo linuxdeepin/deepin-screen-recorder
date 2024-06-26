@@ -19,10 +19,7 @@ SOURCES += \
     timewidget.cpp \
     dbusservice.cpp
 
-isEmpty(PREFIX) {
-    PREFIX = /usr
-}
-target.path = $$PREFIX/lib/dde-dock/plugins/
+target.path = /usr/lib/dde-dock/plugins/
 
 INSTALLS += target
 

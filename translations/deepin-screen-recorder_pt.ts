@@ -24,10 +24,6 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <source>Recording</source>
         <translation>Gravação</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Captura de ecrã</translation>
-    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -132,6 +128,28 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Pin Screenshots</source>
         <translation>Afixar capturas de ecrã</translation>
+    </message>
+</context>
+<context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Captura de ecrã</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Gravar</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Captura de ecrã</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Gravação</translation>
     </message>
 </context>
 <context>
@@ -376,12 +394,15 @@ ou pressione novamente o atalho para parar de gravar</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Captura de ecrã</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Captura de ecrã</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Gravar</translation>
     </message>
 </context>
 <context>

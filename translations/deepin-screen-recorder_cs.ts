@@ -24,10 +24,6 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <source>Recording</source>
         <translation>Nahrávání</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Zachytávání obrazovky</translation>
-    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -132,6 +128,28 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Pin Screenshots</source>
         <translation>Připnout snímky obrazovky</translation>
+    </message>
+</context>
+<context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Snímek obrazovky</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Pořídit záznam</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Snímek obrazovky</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Nahrávání</translation>
     </message>
 </context>
 <context>
@@ -376,12 +394,15 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Zachytávání obrazovky</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Snímek obrazovky</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Pořídit záznam</translation>
     </message>
 </context>
 <context>
