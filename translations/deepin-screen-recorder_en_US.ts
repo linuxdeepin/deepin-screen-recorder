@@ -24,10 +24,6 @@ or press the shortcut again to stop recording</translation>
         <source>Recording</source>
         <translation>Recording</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Screen Capture</translation>
-    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -132,6 +128,28 @@ or press the shortcut again to stop recording</translation>
     <message>
         <source>Pin Screenshots</source>
         <translation>Pin Screenshots</translation>
+    </message>
+</context>
+<context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Screenshot</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Record</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Screenshot</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Recording</translation>
     </message>
 </context>
 <context>
@@ -376,12 +394,15 @@ or press the shortcut again to stop recording</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Screen Capture</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Screenshot</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Record</translation>
     </message>
 </context>
 <context>

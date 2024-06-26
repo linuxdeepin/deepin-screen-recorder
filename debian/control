@@ -6,7 +6,7 @@ Build-Depends: debhelper, pkg-config, qt5-qmake,
  libxcb-util0-dev, libqt5x11extras5-dev, qttools5-dev-tools,
  libdtkgui-dev,libdtkwidget-dev, libxtst-dev, libprocps-dev | libproc2-dev,
  libdframeworkdbus-dev,libxcursor-dev,libxfixes-dev,libqt5multimediawidgets5,
- qtmultimedia5-dev,dde-dock-dev,qtbase5-dev-tools,
+ qtmultimedia5-dev, dde-tray-loader-dev, qtbase5-dev-tools,
  libopencv-mobile-dev,
  gstreamer1.0-clutter-3.0,gstreamer1.0-x,
  libxss1,qtbase5-dev,
@@ -22,8 +22,16 @@ Homepage: https://github.com/linuxdeepin/deepin-screen-recorder
 Package: deepin-screen-recorder
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ffmpeg, libportaudio2
-Recommends: dde-session-ui,deepin-ocr
+Recommends: dde-session-ui,deepin-ocr,deepin-screen-recorder-plugin
 Conflicts: deepin-screenshot
 Replaces: deepin-screenshot
 Description: Simple recorder tools for UOS
- A simple screen shot and recorder tools for UOS
+ Package: deepin-screen-recorder
+
+Package: deepin-screen-recorder-plugin
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: deepin-screenshot
+Replaces: deepin-screenshot
+Description: Simple recorder tools for UOS
+ A simple screen shot and recorder tools for UOSA simple screen shot and recorder tools for UOS

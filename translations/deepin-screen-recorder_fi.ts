@@ -24,10 +24,6 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <source>Recording</source>
         <translation>Tallennus</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Ruudunkaappaus</translation>
-    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -132,6 +128,28 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Pin Screenshots</source>
         <translation>Kiinnitä kaappaukset</translation>
+    </message>
+</context>
+<context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Ruudunkaappaus</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Tallenna</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Ruudunkaappaus</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Tallennus</translation>
     </message>
 </context>
 <context>
@@ -376,12 +394,15 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Ruudunkaappaus</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Ruudunkaappaus</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Tallenna</translation>
     </message>
 </context>
 <context>

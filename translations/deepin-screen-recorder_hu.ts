@@ -24,10 +24,6 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <source>Recording</source>
         <translation>Rögzítés</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Képernyő Rögzítő</translation>
-    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -132,6 +128,28 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>Pin Screenshots</source>
         <translation>Képernyőképek kitűzése</translation>
+    </message>
+</context>
+<context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Képernyőkép</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Felvétel</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Képernyőkép</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Rögzítés</translation>
     </message>
 </context>
 <context>
@@ -376,12 +394,15 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Képernyő Rögzítő</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Képernyőkép</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Felvétel</translation>
     </message>
 </context>
 <context>

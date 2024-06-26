@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -8,6 +8,7 @@
 
 #include <DGuiApplicationHelper>
 #include <DStyle>
+#include <DSysInfo>
 
 #include <QApplication>
 #include <QPainter>
@@ -23,18 +24,22 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <iostream>
+DCORE_USE_NAMESPACE
 
 IconWidget::IconWidget(QWidget *parent):
-    QWidget(parent)
+    QWidget(parent),
+    m_blgPixmap(nullptr),
+    centralLayout(nullptr)
 {
+    m_systemVersion = DSysInfo::minorVersion().toInt() ;
     setMouseTracking(true);
     setMinimumSize(PLUGIN_BACKGROUND_MIN_SIZE, PLUGIN_BACKGROUND_MIN_SIZE);
 
-    QString iconName("screenshot");
+    QString iconName("screen-capture");
+    if(m_systemVersion >= 1070){
+        iconName = "screenshot";
+    }
     m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
-
-    m_timer = new QTimer(this);
-    m_showTimeStr = tr("Screen Capture");
 }
 
 bool IconWidget::enabled()
@@ -78,7 +83,7 @@ void IconWidget::invokedMenuItem(const QString &menuId)
                                          QDBusConnection::sessionBus());
 
         shotDBusInterface.asyncCall("StartScreenshot");
-    } else if (menuId == "recorder") {
+    } else if(menuId == "recorder") {
         QDBusInterface shotDBusInterface("com.deepin.ScreenRecorder",
                                          "/com/deepin/ScreenRecorder",
                                          "com.deepin.ScreenRecorder",
@@ -90,7 +95,7 @@ void IconWidget::invokedMenuItem(const QString &menuId)
 
 QString IconWidget::getSysShortcuts(const QString type)
 {
-    QDBusInterface shortcuts("org.deepin.dde.Keybinding1", "/org/deepin/dde/Keybinding1", "org.deepin.dde.Keybinding1");
+    QDBusInterface shortcuts("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding", "com.deepin.daemon.Keybinding");
     if (!shortcuts.isValid()) {
         return getDefaultValue(type);
     }
@@ -131,97 +136,115 @@ QString IconWidget::getDefaultValue(const QString type)
     return retShortcut;
 }
 
-QPixmap IconWidget::iconPixMap(QIcon icon, QSize size)
-{
-    QPixmap pixmap;
-    const auto ratio = devicePixelRatioF();
-    qDebug() << "获取缩放比例：" << ratio;
-    QSize pixmapSize = QCoreApplication::testAttribute(Qt::AA_UseHighDpiPixmaps)? size:(size*ratio);
-    qDebug() << "获取图标大小：" << pixmapSize;
-    if(!icon.isNull()){
-        pixmap = icon.pixmap(pixmapSize);
-        pixmap.setDevicePixelRatio(ratio);
-        if(!pixmap.isNull()){
-            pixmap = pixmap.scaled(size * ratio);
-        }else{
-            qWarning() << "pixmap is null!";
-        }
-    }else{
-        qWarning() << "icon is null!";
-    }
-    return  pixmap;
-}
-void IconWidget::start()
-{
-    m_showTimeStr = QString("00:00:00");
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
-    m_baseTime = QTime::currentTime();
-    m_timer->start(400);
-}
 
-void IconWidget::stop()
-{
-    disconnect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
-    m_showTimeStr = tr("Screen Capture");
-}
-
-QString IconWidget::getTimeStr()
-{
-    return m_showTimeStr;
-}
-void IconWidget::onTimeout()
-{
-    QTime showTime(0, 0, 0);
-    int time = m_baseTime.secsTo(QTime::currentTime());
-    showTime = showTime.addSecs(time);
-    m_showTimeStr = showTime.toString("hh:mm:ss");
-    qInfo() << __FUNCTION__ << __LINE__ << ">>>>>> m_showTimeStr: " << m_showTimeStr;
-    update();
-}
 void IconWidget::paintEvent(QPaintEvent *e)
 {
-    qInfo() << ">>>>>>>>>>>>>>>>>>>>>>> " << __FUNCTION__ << __LINE__;
     QPainter painter(this);
 
     QPixmap pixmap;
-    QString iconName = "screenshot";
-    if(m_showTimeStr != tr("Screen Capture")){
-        iconName = "screen-recording";
+    QString iconName = "screen-capture";
+    if(m_systemVersion >= 1070){
+        iconName = "screenshot";
     }
-    if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::DarkType) {
-        iconName = "screenshot_dark";
+    int iconSize = PLUGIN_ICON_MAX_SIZE;
+
+    if (rect().height() > PLUGIN_BACKGROUND_MIN_SIZE) {
+
+        QColor color;
+        if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
+            color = Qt::black;
+            painter.setOpacity(0.5);
+
+            if (m_hover) {
+                painter.setOpacity(0.6);
+            }
+
+            if (m_pressed) {
+                painter.setOpacity(0.3);
+            }
+        } else {
+            color = Qt::white;
+            painter.setOpacity(0.1);
+
+            if (m_hover) {
+                painter.setOpacity(0.2);
+            }
+
+            if (m_pressed) {
+                painter.setOpacity(0.05);
+            }
+        }
+
+        painter.setRenderHint(QPainter::Antialiasing, true);
+
+        DStyleHelper dstyle(style());
+        const int radius = dstyle.pixelMetric(DStyle::PM_FrameRadius);
+
+        QPainterPath path;
+
+        int minSize = std::min(width(), height());
+        QRect rc(0, 0, minSize, minSize);
+        rc.moveTo(rect().center() - rc.center());
+
+        path.addRoundedRect(rc, radius, radius);
+        painter.fillPath(path, color);
+    } else if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
+        // 最小尺寸时，不画背景，采用深色图标
+        iconName.append(PLUGIN_MIN_ICON_NAME);
     }
-    int iconSize = PLUGIN_ICON_MAX_SIZE + 4;
 
     painter.setOpacity(1);
 
     m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
-    pixmap = iconPixMap(m_icon, QSize(iconSize, iconSize));
-    const auto ratio = devicePixelRatioF();
-    const QRectF &rf = QRectF(rect().x(),rect().y(),rect().width(),rect().height()*0.75);
-    QPointF point = rf.center()-pixmap.rect().center();
-    //绘制图标
-    painter.drawPixmap(point.x(),point.y(), pixmap);
+    pixmap = loadSvg(iconName, QSize(iconSize, iconSize));
 
-    const QRectF &trf = QRectF(rect().x(),rect().y()+rect().height()*0.65,rect().width(),rect().height()*0.25);
-    QFont font = painter.font() ;
-    font.setPointSize(8);
-    painter.setFont(font);
-    painter.setOpacity(0.7);
-    painter.setPen(QPen(QGuiApplication::palette().color(QPalette::BrightText)));
-    //绘制文字
-    painter.drawText(trf, Qt::AlignBottom | Qt::AlignCenter, m_showTimeStr);
+    const QRectF &rf = QRectF(rect());
+    const QRectF &rfp = QRectF(pixmap.rect());
+    painter.drawPixmap(rf.center() - rfp.center() / pixmap.devicePixelRatioF(), pixmap);
 
     QWidget::paintEvent(e);
+}
+
+void IconWidget::mousePressEvent(QMouseEvent *event)
+{
+    m_pressed = true;
+    update();
+
+    QWidget::mousePressEvent(event);
+}
+
+void IconWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    m_pressed = false;
+    m_hover = false;
+    update();
+
+    QWidget::mouseReleaseEvent(event);
+}
+
+void IconWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    m_hover = true;
+    QWidget::mouseMoveEvent(event);
+}
+
+void IconWidget::leaveEvent(QEvent *event)
+{
+    m_hover = false;
+    m_pressed = false;
+    update();
+
+    QWidget::leaveEvent(event);
 }
 
 const QPixmap IconWidget::loadSvg(const QString &fileName, const QSize &size) const
 {
     const auto ratio = devicePixelRatioF();
 
-    QPixmap pixmap;
-    pixmap = QIcon::fromTheme(fileName, m_icon).pixmap(size * ratio);
-    pixmap.setDevicePixelRatio(ratio);
+    auto pixmapSize = QCoreApplication::testAttribute(Qt::AA_UseHighDpiPixmaps) ? size : (size * ratio);
+    // 缩放模式 设置为非使能状态时，调整转出的位图风格模式
+    // pixmapSize = size* ratio;
+    QPixmap pixmap = QIcon::fromTheme(fileName, m_icon).pixmap(pixmapSize, isEnabled() ? QIcon::Normal : QIcon::Disabled);
 
     return pixmap;
 }

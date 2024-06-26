@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -31,22 +31,13 @@ public:
     QString getSysShortcuts(const QString type);
     QString getDefaultValue(const QString type);
 
-    QPixmap iconPixMap(QIcon icon, QSize size);
-    /**
-     * @brief start:开始计时
-     */
-    void start();
-
-    /**
-     * @brief stop:停止计时
-     */
-    void stop();
-
-    QString getTimeStr();
 protected:
     void paintEvent(QPaintEvent *e) override;
-protected slots:
-    void onTimeout();
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void leaveEvent(QEvent *event) override;
+
 private:
     const QPixmap loadSvg(const QString &fileName, const QSize &size) const;
 
@@ -57,10 +48,10 @@ private:
     QIcon m_icon;
     QPixmap *m_blgPixmap;
     QBoxLayout *centralLayout;
-
-    QTimer *m_timer;
-    QTime m_baseTime;
-    QString m_showTimeStr;
+    /**
+     * @brief m_systemVersion 获取系统镜像版本
+     */
+    int m_systemVersion;
 };
 
 #endif // TIMEWIDGET_H
