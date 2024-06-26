@@ -34,10 +34,6 @@ or press the shortcut again to stop recording</source>
         <source>Screenshot</source>
         <translation>رەسىم تۇتۇش</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">ئېكراننى رەسىم تۇتۇش، سىنغا ئېلىش</translation>
-    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -148,22 +144,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>رەسىم تۇتۇش</translation>
+        <translation type="unfinished">رەسىم تۇتۇش</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>سىنغا ئېلىش</translation>
+        <translation type="unfinished">سىنغا ئېلىش</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>رەسىم تۇتۇش</translation>
+        <translation type="unfinished">رەسىم تۇتۇش</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>ئېكراننى سىنغا ئېلىش</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -418,16 +414,19 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>غۇۋا</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>موزايكا</translation>
+        <source>Screenshot</source>
+        <translation>رەسىم تۇتۇش</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">سىنغا ئېلىش</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>ئۈنئالغۇنى ئېچىش</translation>

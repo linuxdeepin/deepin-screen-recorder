@@ -24,10 +24,6 @@ o haga clic en el icono de la bandeja</translation>
         <source>Recording</source>
         <translation>Grabaciones</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Captura de pantalla</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -150,6 +146,17 @@ o haga clic en el icono de la bandeja</translation>
     <message>
         <source>Record</source>
         <translation type="unfinished">Grabación</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Captura de pantalla</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Grabaciones</translation>
     </message>
 </context>
 <context>
@@ -404,12 +411,15 @@ o haga clic en el icono de la bandeja</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Difuminar</translation>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
     </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
     <message>
-        <source>Mosaic</source>
-        <translation>Pixelar</translation>
+        <source>Record</source>
+        <translation type="unfinished">Grabación</translation>
     </message>
 </context>
 <context>

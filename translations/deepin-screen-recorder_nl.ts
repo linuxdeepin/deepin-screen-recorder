@@ -24,10 +24,6 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
         <source>Recording</source>
         <translation>Opname</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Schermfoto</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -150,6 +146,17 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Record</source>
         <translation type="unfinished">Opnemen</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Schermfoto</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Opname</translation>
     </message>
 </context>
 <context>
@@ -404,12 +411,15 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Vervagen</translation>
+        <source>Screenshot</source>
+        <translation>Schermfoto</translation>
     </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
     <message>
-        <source>Mosaic</source>
-        <translation>Mozaïek</translation>
+        <source>Record</source>
+        <translation type="unfinished">Opnemen</translation>
     </message>
 </context>
 <context>

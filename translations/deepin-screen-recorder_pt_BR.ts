@@ -24,10 +24,6 @@ clique no ícone da bandeja ou use o atalho</translation>
         <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Captura de Tela</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -154,6 +150,17 @@ clique no ícone da bandeja ou use o atalho</translation>
     <message>
         <source>Record</source>
         <translation type="unfinished">Gravar</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Capturar</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -408,16 +415,19 @@ clique no ícone da bandeja ou use o atalho</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Borrar</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>Mosaico</translation>
+        <source>Screenshot</source>
+        <translation>Capturar</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Gravar</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>Som Ligado</translation>

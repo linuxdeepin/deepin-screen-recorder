@@ -256,7 +256,7 @@ void TimeWidget::paintEvent(QPaintEvent *e)
 
     //判断任务栏在屏幕上的位置,上下左右
     if (position::top == m_position || position::bottom == m_position) {
-        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_LEVEL_ICON_SIZE, RECORDER_TIME_LEVEL_ICON_SIZE));
+        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(size);
         //m_pixmap.setDevicePixelRatio(ratio);
         const QRectF &rf = QRectF(rect());
         qDebug() << ">>>>>>> rf: " << rf << rf.center();
@@ -265,13 +265,18 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         QPointF pf = rf.center() - prf.center();
         //qDebug() << ">>>>>>> pf: " << pf ;
         //绘制录像小图标
-        painter.drawPixmap(5, static_cast<int>(pf.y() + 1), m_pixmap);
+        QPointF pff = QPointF(5, pf.y());
+        if(m_systemVersion >= 1070){
+            pff = QPointF(0, pf.y());
+        }
+        //qDebug() << ">>>>>>> pff: " << pff ;
+        painter.drawPixmap(pff, m_pixmap);
         QFont font = RECORDER_TIME_FONT;
         painter.setFont(font);
         QFontMetrics fm(font);
 //        painter.drawText(m_pixmap.width() * static_cast<int>(ratio) + RECORDER_TEXT_TOP_BOTTOM_X + RECORDER_ICON_TOP_BOTTOM_X, rect().y(), rect().width(), rect().height(), Qt::AlignLeft | Qt::AlignVCenter, m_showTimeStr);
-        int tx = static_cast<int>(m_pixmap.width()) + RECORDER_TEXT_TOP_BOTTOM_X;
-        int ty = rect().y();
+        int tx = static_cast<int>(m_pixmap.width() / ratio) + RECORDER_TEXT_TOP_BOTTOM_X;
+        int ty = rect().y()-1;
         int twidth = rect().width();
         int theight = rect().height();
         //绘制时间
@@ -280,11 +285,9 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(pixmapSize);
         //m_pixmap.setDevicePixelRatio(ratio);
         const QRectF &rf = QRectF(rect());
-        qDebug() << "插件区域大小: " << rect() << "图标大小: " << m_pixmap.size();
         const QRectF &rfp = QRectF(m_pixmap.rect());
-        qDebug() << "rf.center() - rfp.center() / m_pixmap.devicePixelRatioF()" << rf.center() - rfp.center() / m_pixmap.devicePixelRatioF();
-//        painter.drawPixmap(rf.center() - rfp.center() / m_pixmap.devicePixelRatioF(), m_pixmap);
-        painter.drawPixmap(2, 0, m_pixmap);
+        //qInfo() << __FUNCTION__ <<  " >>>>>>>>>> rfp: " << rfp << " , rf: " << rf;
+        painter.drawPixmap(rf.center() - rfp.center() / m_pixmap.devicePixelRatioF(), m_pixmap);
     }
     //qInfo() << __FUNCTION__ <<  " >>>>>>>>>> this->width(): " << this->width() << " , this->height(): " << this->height();
     //qInfo() << __FUNCTION__ << " >>>>>>>>>> this->geometry(): " << this->geometry();

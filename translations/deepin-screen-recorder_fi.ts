@@ -24,10 +24,6 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <source>Recording</source>
         <translation>Tallennus</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Ruudunkaappaus</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -150,6 +146,17 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Record</source>
         <translation type="unfinished">Tallenna</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Ruudunkaappaus</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Tallennus</translation>
     </message>
 </context>
 <context>
@@ -404,12 +411,15 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Hämärtää</translation>
+        <source>Screenshot</source>
+        <translation>Ruudunkaappaus</translation>
     </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
     <message>
-        <source>Mosaic</source>
-        <translation>Ruudukkoa</translation>
+        <source>Record</source>
+        <translation type="unfinished">Tallenna</translation>
     </message>
 </context>
 <context>

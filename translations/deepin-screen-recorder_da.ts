@@ -24,10 +24,6 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Skærmoptagelse</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -154,6 +150,17 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <message>
         <source>Record</source>
         <translation type="unfinished">Optag</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Skærmbillede</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -408,16 +415,19 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Sløring</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>Mosaik</translation>
+        <source>Screenshot</source>
+        <translation type="unfinished">Skærmbillede</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Optag</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>Lyd til</translation>

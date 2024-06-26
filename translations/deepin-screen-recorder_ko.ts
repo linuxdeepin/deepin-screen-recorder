@@ -24,10 +24,6 @@ or press the shortcut again to stop recording</source>
         <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">화면 캡처</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -154,6 +150,17 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Record</source>
         <translation type="unfinished">녹화하기</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">스크린샷</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -408,16 +415,19 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>흐림</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>모자이크</translation>
+        <source>Screenshot</source>
+        <translation type="unfinished">스크린샷</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">녹화하기</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>사운드 켜기</translation>

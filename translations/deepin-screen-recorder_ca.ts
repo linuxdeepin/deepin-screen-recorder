@@ -24,10 +24,6 @@ o premeu la drecera de nou per aturar la gravació.</translation>
         <source>Recording</source>
         <translation>Gavació</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Captura de pantalla</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -150,6 +146,17 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Record</source>
         <translation type="unfinished">Grava</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Captura de pantalla</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Gavació</translation>
     </message>
 </context>
 <context>
@@ -404,12 +411,15 @@ o premeu la drecera de nou per aturar la gravació.</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Difumina</translation>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
     </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
     <message>
-        <source>Mosaic</source>
-        <translation>Mosaic</translation>
+        <source>Record</source>
+        <translation type="unfinished">Grava</translation>
     </message>
 </context>
 <context>

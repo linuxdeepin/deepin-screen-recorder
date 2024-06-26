@@ -24,10 +24,6 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
         <source>Recording</source>
         <translation>Rögzítés</translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Képernyő Rögzítő</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -150,6 +146,17 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>Record</source>
         <translation type="unfinished">Felvétel</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Képernyőkép</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished">Rögzítés</translation>
     </message>
 </context>
 <context>
@@ -404,16 +411,19 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Elmosás</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>Mozaik</translation>
+        <source>Screenshot</source>
+        <translation>Képernyőkép</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Felvétel</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>Hang bekapcsolása</translation>

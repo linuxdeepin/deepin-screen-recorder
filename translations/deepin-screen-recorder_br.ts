@@ -24,10 +24,6 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
         <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished">Tapadenn skramm</translation>
-    </message>
 </context>
 <context>
     <name>MainToolWidget</name>
@@ -154,6 +150,17 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     <message>
         <source>Record</source>
         <translation type="unfinished">Enrollañ</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Tapadenn-skramm</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -408,16 +415,19 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
-        <translation>Dispis</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation>Mozaik</translation>
+        <source>Screenshot</source>
+        <translation type="unfinished">Tapadenn-skramm</translation>
     </message>
 </context>
 <context>
-    <name>SubToolWidget</name>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Enrollañ</translation>
+    </message>
+</context>
+<context>
+    <name>ShotToolWidget</name>
     <message>
         <source>Sound On</source>
         <translation>Son enaouet</translation>
