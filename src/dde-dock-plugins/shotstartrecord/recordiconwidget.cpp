@@ -1,9 +1,8 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2021-2024 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "iconwidget.h"
+#include "recordiconwidget.h"
 #include "dde-dock/constants.h"
 
 #include <DGuiApplicationHelper>
@@ -24,30 +23,27 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <iostream>
+
 DCORE_USE_NAMESPACE
 
-IconWidget::IconWidget(QWidget *parent):
-    QWidget(parent),
-    m_blgPixmap(nullptr),
-    centralLayout(nullptr)
+RecordIconWidget::RecordIconWidget(QWidget *parent)
+    : QWidget(parent)
+    , m_blgPixmap(nullptr)
+    , centralLayout(nullptr)
 {
-    m_systemVersion = DSysInfo::minorVersion().toInt() ;
     setMouseTracking(true);
     setMinimumSize(PLUGIN_BACKGROUND_MIN_SIZE, PLUGIN_BACKGROUND_MIN_SIZE);
 
-    QString iconName("screen-capture");
-    if(m_systemVersion >= 1070){
-        iconName = "screenshot";
-    }
+    QString iconName("status-screen-record");
     m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
 }
 
-bool IconWidget::enabled()
+bool RecordIconWidget::enabled()
 {
     return isEnabled();
 }
 
-const QString IconWidget::itemContextMenu()
+const QString RecordIconWidget::itemContextMenu()
 {
     QList<QVariant> items;
     items.reserve(2);
@@ -57,13 +53,11 @@ const QString IconWidget::itemContextMenu()
     shot["isActive"] = true;
     items.push_back(shot);
 
-
     QMap<QString, QVariant> recorder;
     recorder["itemId"] = "recorder";
     recorder["itemText"] = tr("Recording") + getSysShortcuts("deepin-screen-recorder");
     recorder["isActive"] = true;
     items.push_back(recorder);
-
 
     QMap<QString, QVariant> menu;
     menu["items"] = items;
@@ -73,17 +67,14 @@ const QString IconWidget::itemContextMenu()
     return QJsonDocument::fromVariant(menu).toJson();
 }
 
-void IconWidget::invokedMenuItem(const QString &menuId)
+void RecordIconWidget::invokedMenuItem(const QString &menuId)
 {
-
     if (menuId == "shot") {
-        QDBusInterface shotDBusInterface("com.deepin.Screenshot",
-                                         "/com/deepin/Screenshot",
-                                         "com.deepin.Screenshot",
-                                         QDBusConnection::sessionBus());
+        QDBusInterface shotDBusInterface(
+            "com.deepin.Screenshot", "/com/deepin/Screenshot", "com.deepin.Screenshot", QDBusConnection::sessionBus());
 
         shotDBusInterface.asyncCall("StartScreenshot");
-    } else if(menuId == "recorder") {
+    } else if (menuId == "recorder") {
         QDBusInterface shotDBusInterface("com.deepin.ScreenRecorder",
                                          "/com/deepin/ScreenRecorder",
                                          "com.deepin.ScreenRecorder",
@@ -93,7 +84,7 @@ void IconWidget::invokedMenuItem(const QString &menuId)
     }
 }
 
-QString IconWidget::getSysShortcuts(const QString type)
+QString RecordIconWidget::getSysShortcuts(const QString &type)
 {
     QDBusInterface shortcuts("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding", "com.deepin.daemon.Keybinding");
     if (!shortcuts.isValid()) {
@@ -110,7 +101,7 @@ QString IconWidget::getSysShortcuts(const QString type)
         if (Id == type) {
             QJsonArray Accels = shortcut["Accels"].toArray();
             QString AccelsString;
-            for (QJsonValue accel : Accels)  {
+            for (QJsonValue accel : Accels) {
                 AccelsString += accel.toString();
             }
             AccelsString.remove('<');
@@ -123,7 +114,7 @@ QString IconWidget::getSysShortcuts(const QString type)
     return getDefaultValue(type);
 }
 
-QString IconWidget::getDefaultValue(const QString type)
+QString RecordIconWidget::getDefaultValue(const QString &type)
 {
     QString retShortcut;
     if (type == "screenshot") {
@@ -136,20 +127,15 @@ QString IconWidget::getDefaultValue(const QString type)
     return retShortcut;
 }
 
-
-void IconWidget::paintEvent(QPaintEvent *e)
+void RecordIconWidget::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
 
     QPixmap pixmap;
-    QString iconName = "screen-capture";
-    if(m_systemVersion >= 1070){
-        iconName = "screenshot";
-    }
+    QString iconName = "status-screen-record";
     int iconSize = PLUGIN_ICON_MAX_SIZE;
 
     if (rect().height() > PLUGIN_BACKGROUND_MIN_SIZE) {
-
         QColor color;
         if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
             color = Qt::black;
@@ -205,7 +191,7 @@ void IconWidget::paintEvent(QPaintEvent *e)
     QWidget::paintEvent(e);
 }
 
-void IconWidget::mousePressEvent(QMouseEvent *event)
+void RecordIconWidget::mousePressEvent(QMouseEvent *event)
 {
     m_pressed = true;
     update();
@@ -213,7 +199,7 @@ void IconWidget::mousePressEvent(QMouseEvent *event)
     QWidget::mousePressEvent(event);
 }
 
-void IconWidget::mouseReleaseEvent(QMouseEvent *event)
+void RecordIconWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     m_pressed = false;
     m_hover = false;
@@ -222,13 +208,13 @@ void IconWidget::mouseReleaseEvent(QMouseEvent *event)
     QWidget::mouseReleaseEvent(event);
 }
 
-void IconWidget::mouseMoveEvent(QMouseEvent *event)
+void RecordIconWidget::mouseMoveEvent(QMouseEvent *event)
 {
     m_hover = true;
     QWidget::mouseMoveEvent(event);
 }
 
-void IconWidget::leaveEvent(QEvent *event)
+void RecordIconWidget::leaveEvent(QEvent *event)
 {
     m_hover = false;
     m_pressed = false;
@@ -237,7 +223,7 @@ void IconWidget::leaveEvent(QEvent *event)
     QWidget::leaveEvent(event);
 }
 
-const QPixmap IconWidget::loadSvg(const QString &fileName, const QSize &size) const
+const QPixmap RecordIconWidget::loadSvg(const QString &fileName, const QSize &size) const
 {
     const auto ratio = devicePixelRatioF();
 
@@ -249,7 +235,4 @@ const QPixmap IconWidget::loadSvg(const QString &fileName, const QSize &size) co
     return pixmap;
 }
 
-IconWidget::~IconWidget()
-{
-
-}
+RecordIconWidget::~RecordIconWidget() {}

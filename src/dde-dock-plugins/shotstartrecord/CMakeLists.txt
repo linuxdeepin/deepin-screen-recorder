@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 cmake_minimum_required( VERSION 3.1.0 )
-set(PLUGIN_NAME "deepin-screen-recorder-plugin")
+set(PLUGIN_NAME "shot-start-record-plugin")
 
 project(PLUGIN_NAME)
 

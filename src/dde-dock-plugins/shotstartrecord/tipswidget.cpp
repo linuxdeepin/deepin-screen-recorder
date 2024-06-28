@@ -27,7 +27,7 @@ void TipsWidget::setText(const QString &text)
 #if 0   //测试时可以使用下面的语句
     // FIXME:藏语字体绘制会有异常，设置高度时需要使用fontMetrics().boundingRect()去获取整体的边界矩形的高度，
     // 使用fontMetrics().height()去获取时，针对藏语这种字体，其高度和实际显示区域并不等同
-    m_text = "བོད་སྐད་ཡིག་གཟུགས་ཚད་ལེན་ཚོད་ལྟའི་སྐོར་གྱི་རྗོད་ཚིག";
+    // m_text = "བོད་སྐད་ཡིག་གཟུགས་ཚད་ལེན་ཚོད་ལྟའི་སྐོར་གྱི་རྗོད་ཚིག";
 #endif
 
     setFixedSize(fontMetrics().width(m_text) + 20, fontMetrics().boundingRect(m_text).height());
@@ -61,7 +61,6 @@ void TipsWidget::setTextList(const QStringList &textList)
 
 /**
  * @brief TipsWidget::paintEvent 任务栏插件提示信息绘制
- * @param event
  */
 void TipsWidget::paintEvent(QPaintEvent *event)
 {
