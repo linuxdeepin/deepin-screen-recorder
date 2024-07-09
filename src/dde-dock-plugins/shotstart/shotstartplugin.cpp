@@ -10,7 +10,10 @@
 
 #define ShotShartPlugin "shot-start-plugin"
 #define ShotShartApp "deepin-screen-recorder"  // 使用截图录屏的翻译
-const QString QUICK_ITEM_KEY = QStringLiteral("quick_item_key");
+
+#ifndef QUICK_ITEM_KEY
+    const QString QUICK_ITEM_KEY = QStringLiteral("quick_item_key");
+#endif
 const int DETECT_SERV_INTERVAL = 2000;  // 检测服务存在的定时器间隔
 
 Q_LOGGING_CATEGORY(SHOT_LOG, "shot-start-plugin");
