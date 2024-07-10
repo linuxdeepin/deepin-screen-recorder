@@ -819,10 +819,6 @@ void RecordProcess::exitRecord(QString newSavePath)
     if (recordType == RECORD_TYPE_GIF) {
         QFile::remove(savePath);
     }
-    qInfo() << __LINE__ << __func__ << "正在保存到剪切板...";
-    //保存到剪切板
-    save2Clipboard(newSavePath);
-    qInfo() << __LINE__ << __func__ << "已保存到剪切板";
     if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
         avlibInterface::unloadFunctions();
@@ -839,7 +835,10 @@ void RecordProcess::exitRecord(QString newSavePath)
         callTrayRecorderIcon(DBUS_FUNC_ON_STOP);
         qInfo() << __LINE__ << __func__ << "录屏计时图标已退出";
     }
-    qInfo() << __LINE__ << __func__ << "录屏结束!!!";
+
+    //保存到剪切板
+    save2Clipboard(newSavePath);
+    qInfo() << __LINE__ << __func__ <<"录屏已退出";
     QApplication::quit();
     if (Utils::isWaylandMode) {
         qInfo() << "wayland record exit! (_Exit(0))";
