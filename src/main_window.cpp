@@ -3172,7 +3172,6 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     QVariantMap hints;
 
     // 保存到剪贴板， 通知不用open
-    QString tips;
     if (remote_dde_notify_obj_exist && saveFilePath.compare(QString(tr("Clipboard")))) {
         actions << "_open" << tr("View");
         actions << "_open1" << tr("Open Folder");
@@ -3182,7 +3181,6 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
 
         QString command, savepathcommand;
 
-        tips = QString(tr("Saved to %1")).arg(saveFilePath);
         if (!QStandardPaths::findExecutable("dde-file-manager").isEmpty()) {
             savepathcommand = QString("dde-file-manager,--show-item,%1").arg(saveFilePath);
         }
@@ -3200,8 +3198,8 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     arg << (QCoreApplication::applicationName())                 // appname
         << id                                                    // id
         << QString("deepin-screen-recorder")                     // icon
-        << tr("Screenshot finished")                             // summary
-        << tips                                                  // body
+        << tr("")                                                // summary
+        << tr("Screenshot finished")                             // body
         << actions                                               // actions
         << hints                                                 // hints
         << timeout;
