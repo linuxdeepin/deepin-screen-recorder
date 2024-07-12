@@ -388,6 +388,10 @@ public slots:
     //void updateShotButtonPos();
     void updateCameraWidgetPos();
     /**
+     * @brief 多屏幕错位时修正工具栏坐标
+     */
+    QPoint getTwoScreenIntersectPos(QPoint rawPos);
+    /**
      * @brief 切换截图功能或者录屏功能
      * @param shapeType : "record" or "shot"
      */
