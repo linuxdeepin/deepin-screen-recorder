@@ -2406,6 +2406,14 @@ void MainWindow::updateToolBarPos()
     //快捷全屏录制不需要显示工具栏
     if(m_isFullScreenRecord) return;
     m_toolbarLastPoint = toolbarPoint;
+    // handel the screen misaligned
+    if (m_screenInfo.size() == 2 && m_screenInfo.at(0).y != m_screenInfo.at(1).y && m_screenInfo.at(0).x != m_screenInfo.at(1).x) {
+        QPoint correctPoint = getTwoScreenIntersectPos(toolbarPoint);
+        if(toolbarPoint != correctPoint){
+            toolbarPoint = correctPoint;
+        }
+    }
+
     m_toolBar->showAt(toolbarPoint);
     //qDebug() << "==================2=================";
 }
@@ -2707,6 +2715,156 @@ void MainWindow::updateCameraWidgetPos()
         m_cameraWidget->showAt(QPoint(m_cameraWidget->x() + x, m_cameraWidget->y() + y));
         m_cameraWidget->setRecordRect(recordX, recordY, recordWidth, recordHeight);
     }
+}
+
+QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
+{
+    // 1. fix the error screen list
+    QList<ScreenInfo> tmp_screenInfo;
+    QPoint toolbarPoint = rawPos;
+
+    if (m_screenInfo.at(0).x == 0) {
+        tmp_screenInfo.append(m_screenInfo.at(0));
+        tmp_screenInfo.append(m_screenInfo.at(1));
+    } else {
+        tmp_screenInfo.append(m_screenInfo.at(1));
+        tmp_screenInfo.append(m_screenInfo.at(0));
+    }
+
+    // 2. get the cross area
+    double area_1 = 0, area_2 = 0;
+    bool is_inScreen1 = false, is_inScreen2 = false;
+    QRect intersectRect_1, intersectRect_2;
+    QRect screen_1(tmp_screenInfo.at(0).x, tmp_screenInfo.at(0).y, tmp_screenInfo.at(0).width, tmp_screenInfo.at(0).height);
+    QRect screen_2(tmp_screenInfo.at(1).x, tmp_screenInfo.at(1).y, tmp_screenInfo.at(1).width, tmp_screenInfo.at(1).height);
+
+    if (is_inScreen1 = QRect(recordX, recordY, recordWidth, recordHeight).intersects(screen_1)) {
+        intersectRect_1 = QRect(recordX, recordY, recordWidth, recordHeight).intersected(QRect(tmp_screenInfo.at(0).x, tmp_screenInfo.at(0).y,
+                                                                                               tmp_screenInfo.at(0).width, tmp_screenInfo.at(0).height));
+        area_1 = intersectRect_1.width() * intersectRect_1.height();
+    }
+
+    if (is_inScreen2 = QRect(recordX, recordY, recordWidth, recordHeight).intersects(screen_2)) {
+        intersectRect_2 = QRect(recordX, recordY, recordWidth, recordHeight).intersected(QRect(tmp_screenInfo.at(1).x, tmp_screenInfo.at(1).y,
+                                                                                               tmp_screenInfo.at(1).width, tmp_screenInfo.at(1).height));
+        area_2 = intersectRect_2.width() * intersectRect_2.height();
+    }
+
+    // 3. screen-1 intersect screen-2
+    if (area_1 != 0 && area_2 != 0 && is_inScreen1 && is_inScreen2) {
+        int x = toolbarPoint.x(), y = toolbarPoint.y();
+        int type = 0;
+        if (intersectRect_1.x() < intersectRect_2.x() && intersectRect_1.y() < intersectRect_2.y()) {
+            type = 1;
+        } else if (intersectRect_1.x() < intersectRect_2.x() && intersectRect_1.y() > intersectRect_2.y()) {
+            type = 2;
+        } else {
+            type = 0;
+        }
+
+        if (area_1 > area_2) {   // screen1
+            x = tmp_screenInfo.at(0).x + tmp_screenInfo.at(0).width - m_toolBar->width() - SIDEBAR_X_SPACING;
+            if (type == 1) {
+                if (intersectRect_1.y() < m_toolBar->height()) {
+                    y = intersectRect_1.y() + intersectRect_1.height();
+                } else {
+                    y = intersectRect_1.y() - m_toolBar->height();
+                }
+            }
+            if (type == 2) {
+                y = intersectRect_1.y() + intersectRect_1.height();
+            }
+            if (type == 0) {
+                if (intersectRect_1.x() + intersectRect_1.width() == tmp_screenInfo.at(0).x + tmp_screenInfo.at(0).width) {
+                }
+
+                if (intersectRect_1.y() <= tmp_screenInfo.at(0).y) {
+                    y = intersectRect_1.y() + intersectRect_1.height();
+                } else {
+                    if (intersectRect_1.y() - tmp_screenInfo.at(0).y > m_toolBar->height() &&
+                            intersectRect_1.y() + intersectRect_1.height() + m_toolBar->height() > tmp_screenInfo.at(1).y + tmp_screenInfo.at(1).height) {
+                        y = intersectRect_1.y() - m_toolBar->height();
+                    }
+                }
+            }
+        } else {   // screen2
+            x = intersectRect_2.x() + SIDEBAR_X_SPACING;
+            if (type == 1) {
+                y = intersectRect_2.y() + intersectRect_2.height();
+            }
+            if (type == 2) {
+                if (intersectRect_2.y() < m_toolBar->height()) {
+                    y = intersectRect_2.y() + intersectRect_2.height();
+                } else {
+                    y = intersectRect_2.y() - m_toolBar->height();
+                }
+            }
+            if (type == 0) {
+                if (intersectRect_2.y() < m_toolBar->height()) {
+                    y = intersectRect_2.y() + intersectRect_2.height();
+                } else {
+                    if (intersectRect_2.y() + intersectRect_2.height() + m_toolBar->height() > tmp_screenInfo.at(1).y + tmp_screenInfo.at(1).height) {
+                        y = intersectRect_2.y() - m_toolBar->height();
+                    }
+                }
+            }
+        }
+
+        toolbarPoint.setX(x);
+        toolbarPoint.setY(y);
+    }
+
+    // 4. screen-1
+    if (area_1 != 0 && area_2 == 0 && is_inScreen1 && !is_inScreen2 && area_1 != recordWidth * recordHeight) {
+        int x = toolbarPoint.x(), y = toolbarPoint.y();
+
+        if (intersectRect_1.x() == tmp_screenInfo.at(0).x || intersectRect_1.x() < m_toolBar->width()) {
+            x = intersectRect_1.x() + SIDEBAR_X_SPACING;
+        }
+
+        if (intersectRect_1.x() + intersectRect_1.width() == tmp_screenInfo.at(0).x + tmp_screenInfo.at(0).width) {
+            x = tmp_screenInfo.at(0).x + tmp_screenInfo.at(0).width - m_toolBar->width() - SIDEBAR_X_SPACING;
+        }
+
+        if (intersectRect_1.y() == tmp_screenInfo.at(0).y) {
+            y = intersectRect_1.y() + intersectRect_1.height();
+        } else if (intersectRect_1.y() + intersectRect_1.height() == tmp_screenInfo.at(0).y + tmp_screenInfo.at(0).height ||
+                   intersectRect_1.y() + intersectRect_1.height() + m_toolBar->height() >= tmp_screenInfo.at(0).y + tmp_screenInfo.at(0).height) {
+            y = intersectRect_1.y() - m_toolBar->height();
+        } else {
+            y = recordY + recordHeight;
+        }
+
+        toolbarPoint.setX(x);
+        toolbarPoint.setY(y);
+    }
+
+    // 5. screen-2
+    if (area_1 == 0 && area_2 != 0 && !is_inScreen1 && is_inScreen2 && area_2 != recordWidth * recordHeight) {
+        int x = toolbarPoint.x(), y = toolbarPoint.y();
+        if (intersectRect_2.x() == tmp_screenInfo.at(1).x || mapToGlobal(m_toolBar->pos()).x() < tmp_screenInfo.at(1).x) {
+            x = intersectRect_2.x() + SIDEBAR_X_SPACING;
+        }
+
+        if (intersectRect_2.x() + intersectRect_2.width() == tmp_screenInfo.at(1).x + tmp_screenInfo.at(1).width) {
+            x = tmp_screenInfo.at(1).x + tmp_screenInfo.at(1).width - m_toolBar->width() - SIDEBAR_X_SPACING;
+        }
+
+        if (intersectRect_2.y() == tmp_screenInfo.at(1).y) {
+            y = intersectRect_2.y() + intersectRect_2.height();
+        } else if (intersectRect_2.y() + intersectRect_2.height() == tmp_screenInfo.at(1).y + tmp_screenInfo.at(1).height ||
+                   intersectRect_2.y() + intersectRect_2.height() + m_toolBar->height() >= tmp_screenInfo.at(1).y + tmp_screenInfo.at(1).height) {
+            y = intersectRect_2.y() - m_toolBar->height();
+        } else {
+            y = recordY + recordHeight;
+        }
+
+        toolbarPoint.setX(x);
+        toolbarPoint.setY(y);
+    }
+
+    return toolbarPoint;
+
 }
 //切换截图功能或者录屏功能
 void MainWindow::changeFunctionButton(QString type)
