@@ -806,8 +806,8 @@ void RecordProcess::exitRecord(QString newSavePath)
         arg << (QCoreApplication::applicationName())   // appname
             << id   // id
             << QString("deepin-screen-recorder")   // icon
-            << tr("Recording finished")   // summary
-            << QString(tr("Saved to %1")).arg(newSavePath)   // body
+            << tr("Screen Capture")   // summary
+            << QString(tr("Recording finished"))   // body
             << actions   // actions
             << hints   // hints
             << timeout;   // timeout

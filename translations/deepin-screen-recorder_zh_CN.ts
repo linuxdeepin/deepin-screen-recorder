@@ -52,7 +52,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>截图完成</translation>
+        <translation>截图完成，文件已保存</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -114,6 +114,10 @@ or press the shortcut again to stop recording</source>
         <source>Open Folder</source>
         <translation>打开文件夹</translation>
     </message>
+    <message>
+        <source>Screenshot finished and copy to clipboard</source>
+        <translation>截图完成，文件已复制到剪贴板</translation>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -167,11 +171,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>录制完毕</translation>
-    </message>
-    <message>
-        <source>Saved to %1</source>
-        <translation>文件已保存到%1</translation>
+        <translation>录屏文件已保存</translation>
     </message>
     <message>
         <source>Record</source>
@@ -180,6 +180,10 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Open Folder</source>
         <translation>打开文件夹</translation>
+    </message>
+    <message>
+        <source>Screen Capture</source>
+        <translation>截图录屏</translation>
     </message>
 </context>
 <context>

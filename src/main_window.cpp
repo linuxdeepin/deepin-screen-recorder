@@ -3353,13 +3353,17 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     QList<QVariant> arg;
     int timeout = 5000;
     unsigned int id = 0;
-    arg << (QCoreApplication::applicationName())                 // appname
-        << id                                                    // id
-        << QString("deepin-screen-recorder")                     // icon
-        << tr("")                                                // summary
-        << tr("Screenshot finished")                             // body
-        << actions                                               // actions
-        << hints                                                 // hints
+    QString saveBody = tr("Screenshot finished");
+    if (saveFilePath == QString(tr("Clipboard"))) {
+        saveBody = tr("Screenshot finished and copy to clipboard");
+    }
+    arg << (QCoreApplication::applicationName())   // appname
+        << id   // id
+        << QString("deepin-screen-recorder")   // icon
+        << tr("Screen Capture")   // summary
+        << saveBody   // body
+        << actions   // actions
+        << hints   // hints
         << timeout;
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);// timeout
     //    }
