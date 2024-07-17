@@ -106,7 +106,7 @@ private:
     bool m_hover;
     bool m_pressed;
     int m_systemVersion;
-
+    int m_timerCount;
     /**
      * @brief m_lightIcon1070 1070下录屏计时图标icon
      */

@@ -37,7 +37,8 @@ TimeWidget::TimeWidget(DWidget *parent):
     m_position(-1),
     m_hover(false),
     m_pressed(false),
-    m_systemVersion(0)
+    m_systemVersion(0),
+    m_timerCount(0)
 {
     m_systemVersion = DSysInfo::minorVersion().toInt() ;
     qInfo() <<  "Current system version: " << m_systemVersion;
@@ -132,6 +133,7 @@ QSize TimeWidget::sizeHint() const
 
 void TimeWidget::onTimeout()
 {
+    m_timerCount++;
     if (m_bRefresh) {
         if (m_currentIcon == m_lightIcon)
             m_currentIcon = m_shadeIcon;
@@ -140,8 +142,7 @@ void TimeWidget::onTimeout()
     }
     m_bRefresh = !m_bRefresh;
     QTime showTime(0, 0, 0);
-    int time = m_baseTime.secsTo(QTime::currentTime());
-    showTime = showTime.addSecs(time);
+    showTime = showTime.addMSecs(m_timerCount * 400);
     m_showTimeStr = showTime.toString("hh:mm:ss");
     update();
 }
@@ -411,6 +412,7 @@ void TimeWidget::start()
     connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
     m_baseTime = QTime::currentTime();
     m_timer->start(400);
+    m_timerCount = 0;
 }
 
 void TimeWidget::stop()
