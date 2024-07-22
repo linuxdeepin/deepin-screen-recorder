@@ -153,6 +153,8 @@ void RecordProcess::onStartTranscode()
     arg << savePath;
     arg << "-r";
     arg << "12";
+    arg << "-vf";
+    arg << "split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse";
     arg << path.replace("mp4", "gif");
     transcodeProcess->start("ffmpeg", arg);
     //部分hw arm架构的机型需要这样设置
