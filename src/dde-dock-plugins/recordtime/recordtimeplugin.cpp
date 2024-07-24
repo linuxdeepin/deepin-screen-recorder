@@ -65,8 +65,8 @@ QWidget *RecordTimePlugin::itemWidget(const QString &itemKey)
 
 void RecordTimePlugin::clear()
 {
-    m_timeWidget->setting()->setValue(RECORDER_TIME_STARTCONFIG, QTime(0,0,0));
-    m_timeWidget->setting()->setValue(RECORDER_TIME_STARTCOUNTCONFIG, 0);
+    m_timeWidget->clearSetting();
+
     if (nullptr != m_timer)
     {
         m_timer->stop();
@@ -93,12 +93,6 @@ Dock::PluginFlags RecordTimePlugin::flags() const
 PluginsItemInterface::PluginSizePolicy RecordTimePlugin::pluginSizePolicy() const
 {
     return PluginSizePolicy::Custom;
-}
-
-void RecordTimePlugin::positionChanged(const Dock::Position position)
-{
-    qInfo() << "dock position changed" << position;
-    positionChange(position);
 }
 
 void RecordTimePlugin::onStart()
