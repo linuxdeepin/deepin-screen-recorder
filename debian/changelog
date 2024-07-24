@@ -1,3 +1,10 @@
+deepin-screen-recorder (6.0.6) unstable; urgency=medium
+
+  * feat: Update screenshot dropshadow effect(Task: 33231)
+  * fix: 贴图不能移动出屏幕(Bug: 249185)
+
+ -- zyz <zhaoyingzhen@uniontech.com>  Wed, 24 Jul 2024 15:51:34 +0800
+
 deepin-screen-recorder (6.0.5) unstable; urgency=medium
 
   * Update tag to 6.0.5.
