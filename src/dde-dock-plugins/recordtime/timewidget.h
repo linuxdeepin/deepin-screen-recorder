@@ -15,30 +15,12 @@
 #include <QBoxLayout>
 #include <QLabel>
 
-#define RECORDER_TIME_LEVEL_ICON_SIZE 23
-#define RECORDER_TIME_VERTICAL_ICON_SIZE 22
-#define RECORDER_TIME_VERTICAL_ICON_SIZE_1070 16
-#define RECORDER_TIME_LEVEL_SIZE "00:00:00"
-#define RECORDER_TIME_VERTICAL_SIZE "0000"
-#define RECORDER_TIME_FONT DFontSizeManager::instance()->t8()
-#define RECORDER_ICON_TOP_BOTTOM_X 8
-#define RECORDER_TEXT_TOP_BOTTOM_X 10
-#define RECORDER_TIME_WIDGET_MAXHEIGHT 40
-#define RECORDER_TIME_WIDGET_MAXWIDTH 120
-
 DWIDGET_USE_NAMESPACE
 using DBusDock = com::deepin::dde::daemon::Dock;
 
 class TimeWidget : public DWidget
 {
     Q_OBJECT
-
-    enum position {
-        top = 0,
-        right,
-        bottom,
-        left
-    };
 
 public:
     explicit TimeWidget(DWidget *parent = nullptr);
@@ -54,12 +36,6 @@ public:
      * @brief stop:停止计时
      */
     void stop();
-
-    /**
-     * @brief sizeHint:返回控件大小
-     * @return
-     */
-    QSize sizeHint() const override;
 
     /**
      * @brief 是否是wayland协议
@@ -91,18 +67,20 @@ private slots:
     void onPositionChanged(int value);
 
 private:
+    void updateIcon();
+
+private:
     QTimer *m_timer;
     DBusDock *m_dockInter;
     QIcon *m_lightIcon;
     QIcon *m_shadeIcon;
     QIcon *m_currentIcon;
+    QLabel *m_iconLabel;
+    QLabel *m_textLabel;
     QPixmap m_pixmap;
-    QSize m_textSize;
     QTime m_baseTime;
-    QString m_showTimeStr;
     bool m_bRefresh;
     int m_position;
-    QBoxLayout *centralLayout;
     bool m_hover;
     bool m_pressed;
     int m_systemVersion;
