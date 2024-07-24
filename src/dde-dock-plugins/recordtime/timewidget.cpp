@@ -6,6 +6,7 @@
 #include "timewidget.h"
 #include "dde-dock/constants.h"
 
+#include <DFontSizeManager>
 #include <DGuiApplicationHelper>
 #include <DStyle>
 #include <DSysInfo>
@@ -24,7 +25,15 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <iostream>
+
 DCORE_USE_NAMESPACE
+
+#define RECORDER_TIME_LEVEL_ICON_SIZE 23
+#define RECORDER_TIME_VERTICAL_ICON_SIZE 16
+#define RECORDER_TIME_FONT DFontSizeManager::instance()->t8()
+#define RECORDER_PADDING 1
+#define RECORDER_TIME_STARTCONFIG "CurrentStartTime"
+#define RECORDER_TIME_STARTCOUNTCONFIG "CurrentStartCount"
 
 TimeWidget::TimeWidget(DWidget *parent):
     DWidget(parent),
@@ -34,19 +43,31 @@ TimeWidget::TimeWidget(DWidget *parent):
     m_shadeIcon(nullptr),
     m_currentIcon(nullptr),
     m_bRefresh(true),
-    m_position(-1),
+    m_position(Dock::Position::Bottom),
     m_hover(false),
     m_pressed(false),
     m_systemVersion(0),
     m_timerCount(0),
     m_setting(nullptr)
 {
-    m_systemVersion = DSysInfo::minorVersion().toInt() ;
-    qInfo() <<  "Current system version: " << m_systemVersion;
-    qInfo() <<  "正在初始化计时显示界面...";
-    QFontMetrics fm(RECORDER_TIME_FONT);
-    m_showTimeStr = QString("00:00:00");
-    m_textSize = fm.boundingRect("00:00:00 ").size();
+    setContentsMargins(0, 0, 0, 0);
+
+    auto *layout = new QHBoxLayout(this);
+    setLayout(layout);
+    layout->setSizeConstraint(QLayout::SetFixedSize);
+
+    m_iconLabel = new QLabel(this);
+    m_textLabel = new QLabel(this);
+    layout->addWidget(m_iconLabel);
+    layout->addWidget(m_textLabel);
+
+    m_textLabel->setFont(RECORDER_TIME_FONT);
+    m_textLabel->setText("00:00:00");
+    QPalette textPalette = m_textLabel->palette();
+    textPalette.setColor(QPalette::WindowText, Qt::white);
+    m_textLabel->setPalette(textPalette);
+    m_textLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
     m_timer = new QTimer(this);
     m_dockInter = new DBusDock("com.deepin.dde.daemon.Dock", "/com/deepin/dde/daemon/Dock", QDBusConnection::sessionBus(), this);
     connect(m_dockInter, &DBusDock::PositionChanged, this, &TimeWidget::onPositionChanged);
@@ -63,12 +84,10 @@ TimeWidget::TimeWidget(DWidget *parent):
    }
 
     m_currentIcon = m_lightIcon;
-    setMaximumSize(RECORDER_TIME_WIDGET_MAXWIDTH,RECORDER_TIME_WIDGET_MAXHEIGHT);
-    if (position::left == m_position || position::right == m_position) {
-        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
-     }else {
-        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    }
+
+    updateIcon();
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+
     m_setting = new QSettings("deepin/deepin-screen-recorder", "recordtime", this);
 }
 
@@ -101,41 +120,6 @@ bool TimeWidget::enabled()
     return isEnabled();
 }
 
-QSize TimeWidget::sizeHint() const
-{
-    qInfo() << "================ sizeHint ==start============== ";
-    //qInfo() <<  "sizeHint 1>>>>>>>>>> this->width(): " << this->width() << " , this->height(): " << this->height();
-    //qInfo() <<  "sizeHint 1>>>>>>>>>> this->geometry(): " << this->geometry();
-    QFontMetrics fm(RECORDER_TIME_FONT);
-    int width = -1;
-    int height = -1;
-    if (position::top == m_position || position::bottom == m_position) {
-        width = fm.boundingRect(RECORDER_TIME_LEVEL_SIZE).size().width() + 5 + RECORDER_TIME_LEVEL_ICON_SIZE + RECORDER_TEXT_TOP_BOTTOM_X;
-        if(m_systemVersion >= 1070){
-            width = fm.boundingRect(RECORDER_TIME_LEVEL_SIZE).size().width() + 5 + RECORDER_TIME_VERTICAL_ICON_SIZE;
-        }
-        height = this->height();
-        qInfo() << "top or bottom itemWidget width: " << width << " ,itemWidget height: " << height;
-    } else if (position::left == m_position || position::right == m_position) {
-        if(this->width() > RECORDER_TIME_WIDGET_MAXHEIGHT){
-            width = RECORDER_TIME_WIDGET_MAXHEIGHT;
-            height = width;
-        }else{
-            width = this->width();
-            height = width;
-        }
-        if(m_systemVersion >= 1070){
-            width = RECORDER_TIME_VERTICAL_ICON_SIZE_1070;
-            height = width;
-        }
-        qInfo() << "left or right itemWidget width: " << width << " ,itemWidget height: " << height;
-    }
-    //qInfo() <<  "sizeHint 2>>>>>>>>>> this->width(): " << this->width() << " , this->height(): " << this->height();
-    //qInfo() <<  "sizeHint 2>>>>>>>>>> this->geometry(): " << this->geometry();
-    qInfo() << "================ sizeHint ==end============== ";
-    return QSize(width, height);
-}
-
 void TimeWidget::onTimeout()
 {
     m_timerCount++;
@@ -149,32 +133,45 @@ void TimeWidget::onTimeout()
     QTime showTime(0, 0, 0);
     showTime = showTime.addMSecs(m_timerCount * 400);
     m_setting->setValue(RECORDER_TIME_STARTCOUNTCONFIG, m_timerCount);
-    m_showTimeStr = showTime.toString("hh:mm:ss");
-    repaint();
+    m_textLabel->setText(showTime.toString("hh:mm:ss"));
+    updateIcon();
+}
+
+void TimeWidget::updateIcon() {
+    if (Dock::Position::Top == m_position || Dock::Position::Bottom == m_position) {
+        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_LEVEL_ICON_SIZE, RECORDER_TIME_LEVEL_ICON_SIZE));
+    } else {
+        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_VERTICAL_ICON_SIZE, RECORDER_TIME_VERTICAL_ICON_SIZE));
+    }
+
+    m_iconLabel->setPixmap(m_pixmap);
 }
 
 void TimeWidget::onPositionChanged(int value)
 {
     qInfo() << "====================== onPositionChanged ====start=================";
     m_position = value;
-    if (position::left == m_position || position::right == m_position) {
-        setGeometry(this->geometry().x(), this->geometry().y(), this->geometry().width(), RECORDER_TIME_VERTICAL_ICON_SIZE);
-        updateGeometry();
-        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-     }else {
-        setGeometry(this->geometry().x(),this->geometry().y(),this->geometry().width(),RECORDER_TIME_WIDGET_MAXHEIGHT);
-        updateGeometry();
-        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    }
-    //qInfo() <<  ">>>>>>>>>> this->width(): " << this->width() << " , this->height(): " << this->height();
-    //qInfo() <<  ">>>>>>>>>> this->geometry(): " << this->geometry();
-    qInfo() << "====================== onPositionChanged ====end=================";
 
+    if (m_position == Dock::Position::Top || m_position == Dock::Position::Bottom) {
+        m_textLabel->show();
+    } else {
+        m_textLabel->hide();
+    }
+
+    qInfo() << "====================== onPositionChanged ====end=================";
 }
 
 QSettings *TimeWidget::setting() const
 {
     return m_setting;
+}
+
+void TimeWidget::clearSetting()
+{
+    if (m_setting) {
+        m_setting->setValue(RECORDER_TIME_STARTCONFIG, QTime(0,0,0));
+        m_setting->setValue(RECORDER_TIME_STARTCOUNTCONFIG, 0);
+    }
 }
 
 void TimeWidget::paintEvent(QPaintEvent *e)
@@ -208,89 +205,18 @@ void TimeWidget::paintEvent(QPaintEvent *e)
                 painter.setOpacity(0.05);
             }
         }
-        painter.setPen(Qt::white);
         painter.setRenderHint(QPainter::Antialiasing, true);
         DStyleHelper dstyle(style());
         const int radius = dstyle.pixelMetric(DStyle::PM_FrameRadius);
         QPainterPath path;
-        if(m_systemVersion < 1070){
-            if (position::top == m_position || position::bottom == m_position) {
-                QRect rc(0, 0, rect().width(), rect().height());
-                rc.moveTo(rect().center() - rc.center());
-                path.addRoundedRect(rc, radius, radius);
-
-            } else if (position::right == m_position || position::left == m_position) {
-                if (rect().width() > RECORDER_TIME_LEVEL_ICON_SIZE) {
-                    int minSize = std::min(width(), height());
-                    QRect rc(0, 0, minSize, minSize);
-                    rc.moveTo(rect().center() - rc.center());
-                    path.addRoundedRect(rc, radius, radius);
-                } else {
-                    painter.setPen(Qt::black);
-                }
-            }
-        }else{
-            if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
-                painter.setPen(Qt::black);
-            } else {
-                painter.setPen(Qt::white);
-            }
+        if ((Dock::Position::Top == m_position || Dock::Position::Bottom == m_position) ||
+            ((Dock::Position::Right == m_position || Dock::Position::Left == m_position) && rect().width() > RECORDER_TIME_LEVEL_ICON_SIZE)) {
+            QRect rc(RECORDER_PADDING, RECORDER_PADDING, rect().width() - RECORDER_PADDING * 2, rect().height() - RECORDER_PADDING * 2);
+            path.addRoundedRect(rc, radius, radius);
         }
         painter.fillPath(path, color);
-    } else {
-        if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
-            painter.setPen(Qt::black);
-        } else {
-            painter.setPen(Qt::white);
-        }
-        //painter.setPen(Qt::black);
     }
-    painter.setOpacity(1);
-    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
-    const auto ratio = devicePixelRatioF();
-    QSize size = QSize(RECORDER_TIME_VERTICAL_ICON_SIZE, RECORDER_TIME_VERTICAL_ICON_SIZE);
-    if(m_systemVersion >= 1070){
-         size = QSize(RECORDER_TIME_VERTICAL_ICON_SIZE_1070, RECORDER_TIME_VERTICAL_ICON_SIZE_1070);
-    }
-    auto pixmapSize = QCoreApplication::testAttribute(Qt::AA_UseHighDpiPixmaps) ? size : (size * ratio);
 
-    //判断任务栏在屏幕上的位置,上下左右
-    if (position::top == m_position || position::bottom == m_position) {
-        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(size);
-        //m_pixmap.setDevicePixelRatio(ratio);
-        const QRectF &rf = QRectF(rect());
-        qDebug() << ">>>>>>> rf: " << rf << rf.center();
-        const QRectF &prf = QRectF(m_pixmap.rect().x(), m_pixmap.rect().y(), m_pixmap.rect().width() / ratio, m_pixmap.rect().height() / ratio);
-        qDebug() << ">>>>>>> prf: " << prf << prf.center();
-        QPointF pf = rf.center() - prf.center();
-        //qDebug() << ">>>>>>> pf: " << pf ;
-        //绘制录像小图标
-        QPointF pff = QPointF(5, pf.y());
-        if(m_systemVersion >= 1070){
-            pff = QPointF(0, pf.y());
-        }
-        //qDebug() << ">>>>>>> pff: " << pff ;
-        painter.drawPixmap(pff, m_pixmap);
-        QFont font = RECORDER_TIME_FONT;
-        painter.setFont(font);
-        QFontMetrics fm(font);
-//        painter.drawText(m_pixmap.width() * static_cast<int>(ratio) + RECORDER_TEXT_TOP_BOTTOM_X + RECORDER_ICON_TOP_BOTTOM_X, rect().y(), rect().width(), rect().height(), Qt::AlignLeft | Qt::AlignVCenter, m_showTimeStr);
-        int tx = static_cast<int>(m_pixmap.width() / ratio) + RECORDER_TEXT_TOP_BOTTOM_X;
-        int ty = rect().y()-1;
-        int twidth = rect().width();
-        int theight = rect().height();
-        //绘制时间
-        painter.drawText(tx, ty, twidth, theight, Qt::AlignLeft | Qt::AlignVCenter, m_showTimeStr);
-    } else if (position::right == m_position || position::left == m_position) {
-        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(pixmapSize);
-        //m_pixmap.setDevicePixelRatio(ratio);
-        const QRectF &rf = QRectF(rect());
-        const QRectF &rfp = QRectF(m_pixmap.rect());
-        //qInfo() << __FUNCTION__ <<  " >>>>>>>>>> rfp: " << rfp << " , rf: " << rf;
-        painter.drawPixmap(rf.center() - rfp.center() / m_pixmap.devicePixelRatioF(), m_pixmap);
-    }
-    //qInfo() << __FUNCTION__ <<  " >>>>>>>>>> this->width(): " << this->width() << " , this->height(): " << this->height();
-    //qInfo() << __FUNCTION__ << " >>>>>>>>>> this->geometry(): " << this->geometry();
     QWidget::paintEvent(e);
     //qInfo() << "====================== paintEvent ====end=================";
 }
@@ -362,17 +288,7 @@ void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
         QWidget::mouseReleaseEvent(e);
         return;
     }
-    int width = 0;
-    if(m_systemVersion >= 1070){
-        width = rect().width();
-    }else{
-        //任务栏的位置在桌面顶部和底部时才会显示录屏时间
-        if (position::top == m_position || position::bottom == m_position) {
-            width = rect().width();
-        } else {
-            width = m_pixmap.width();
-        }
-    }
+    int width = rect().width();
     bool flag = true;
     if (e->pos().x() > 0 && e->pos().x() < width) {
 #if  defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__) || defined (__aarch64__) || defined (__loongarch__)
@@ -432,7 +348,6 @@ void TimeWidget::start()
     } else {
         m_timerCount = m_setting->value(RECORDER_TIME_STARTCOUNTCONFIG).toInt();
     }
-    m_showTimeStr = QString("00:00:00");
     connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
     m_timer->start(400);
 }
