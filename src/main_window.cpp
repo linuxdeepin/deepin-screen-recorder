@@ -2753,7 +2753,7 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
     // 3. screen-1 intersect screen-2
     if (area_1 != 0 && area_2 != 0 && is_inScreen1 && is_inScreen2) {
         int x = toolbarPoint.x(), y = toolbarPoint.y();
-        int type = 0;
+        int type = 0;   // 1: left-bottom -> right-top  2: left-top -> right-bottom  3: left -> right
         if (intersectRect_1.x() < intersectRect_2.x() && intersectRect_1.y() < intersectRect_2.y()) {
             type = 1;
         } else if (intersectRect_1.x() < intersectRect_2.x() && intersectRect_1.y() > intersectRect_2.y()) {
@@ -2772,7 +2772,11 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
                 }
             }
             if (type == 2) {
-                y = intersectRect_1.y() + intersectRect_1.height();
+                if(intersectRect_1.y() + intersectRect_1.height() + m_toolBar->height() > tmp_screenInfo.at(0).y + tmp_screenInfo.at(0).height){
+                    y = intersectRect_1.y() + intersectRect_1.height() - m_toolBar->height();
+                }else{
+                    y = intersectRect_1.y() + intersectRect_1.height();
+                }
             }
             if (type == 0) {
                 if (intersectRect_1.x() + intersectRect_1.width() == tmp_screenInfo.at(0).x + tmp_screenInfo.at(0).width) {
@@ -2782,7 +2786,7 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
                     y = intersectRect_1.y() + intersectRect_1.height();
                 } else {
                     if (intersectRect_1.y() - tmp_screenInfo.at(0).y > m_toolBar->height() &&
-                            intersectRect_1.y() + intersectRect_1.height() + m_toolBar->height() > tmp_screenInfo.at(1).y + tmp_screenInfo.at(1).height) {
+                            intersectRect_1.y() + intersectRect_1.height() + m_toolBar->height() > tmp_screenInfo.at(0).y + tmp_screenInfo.at(0).height) {
                         y = intersectRect_1.y() - m_toolBar->height();
                     }
                 }
@@ -2793,7 +2797,7 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
                 y = intersectRect_2.y() + intersectRect_2.height();
             }
             if (type == 2) {
-                if (intersectRect_2.y() < m_toolBar->height()) {
+                if (intersectRect_2.y() < m_toolBar->height() && intersectRect_2.y() + intersectRect_2.height() + m_toolBar->height() < screen_2.y()+screen_2.height()) {
                     y = intersectRect_2.y() + intersectRect_2.height();
                 } else {
                     y = intersectRect_2.y() - m_toolBar->height();
@@ -2826,7 +2830,7 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
             x = tmp_screenInfo.at(0).x + tmp_screenInfo.at(0).width - m_toolBar->width() - SIDEBAR_X_SPACING;
         }
 
-        if (intersectRect_1.y() == tmp_screenInfo.at(0).y) {
+        if (intersectRect_1.y() == tmp_screenInfo.at(0).y && intersectRect_1.y() + intersectRect_1.height() + m_toolBar->height() <= tmp_screenInfo.at(0).y + tmp_screenInfo.at(0).height) {
             y = intersectRect_1.y() + intersectRect_1.height();
         } else if (intersectRect_1.y() + intersectRect_1.height() == tmp_screenInfo.at(0).y + tmp_screenInfo.at(0).height ||
                    intersectRect_1.y() + intersectRect_1.height() + m_toolBar->height() >= tmp_screenInfo.at(0).y + tmp_screenInfo.at(0).height) {
@@ -2863,6 +2867,28 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
         toolbarPoint.setY(y);
     }
 
+    qDebug()<<"before pos:"<<toolbarPoint;
+
+    int y = toolbarPoint.y();
+    if(is_inScreen1 && area_1 >= area_2){
+        if(y < screen_1.y()){
+            y = screen_1.y();
+        }
+        if(y + m_toolBar->height() > screen_1.y() + screen_1.height()){
+            y = screen_1.y() + screen_1.height() - m_toolBar->height();
+        }
+    }
+
+    if(is_inScreen2 && area_1 <= area_2){
+        if(y < screen_2.y()){
+            y = screen_2.y();
+        }
+        if(y + m_toolBar->height() > screen_2.y() + screen_2.height()){
+            y = screen_2.y() + screen_2.height() - m_toolBar->height();
+        }
+    }
+
+    toolbarPoint.setY(y);
     return toolbarPoint;
 
 }
