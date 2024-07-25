@@ -103,6 +103,18 @@ int main(int argc, char *argv[])
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
     }
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    QStringList factors = QString(qgetenv("QT_SCREEN_SCALE_FACTORS")).split(";", QString::SkipEmptyParts);
+
+    if(factors.size() > 0){
+        bool ok = false;
+        double factor = factors.at(0).toDouble(&ok);
+
+        if(ok && factor > 0){
+            qputenv("QT_SCALE_FACTOR", QString::number(1 / factor, 'g', 2).toLatin1());
+        }
+    }
 
     // 平板模式
     Utils::isTabletEnvironment = false; // DGuiApplicationHelper::isTabletEnvironment();
@@ -154,7 +166,6 @@ int main(int argc, char *argv[])
         app->setApplicationName("deepin-screen-recorder");
         app->setApplicationVersion("1.0");
         app->setAttribute(Qt::AA_UseHighDpiPixmaps);
-
 //        static const QDate buildDate = QLocale(QLocale::English).
 //                                       toDate(QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
 //        QString t_date = buildDate.toString("MMdd");
