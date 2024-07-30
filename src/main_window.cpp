@@ -4539,7 +4539,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     // to avoid repaint many times in one event function.
 
     if (needRepaint) {
-#if defined __mips__
+#if defined (__mips__) || defined (__aarch64__)
         //在1052U2 mips上碰到问题使用repaint()会导致界面卡死，换成update()才可保证程序正常，为保证其他架构不受影响故做了区分处理。
         //该问题目前只出现在1052U2上，1051的系统使用相同应用程序包无此问题。
         update();
