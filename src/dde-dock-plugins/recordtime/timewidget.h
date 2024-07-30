@@ -74,7 +74,7 @@ protected:
     /**
      * @brief 创建缓存文件，只有wayland模式下的mips或部分arm架构适用
      */
-    void createCacheFile();
+    bool createCacheFile();
 private slots:
     /**
      * @brief onTimeout:更新数据
