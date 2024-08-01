@@ -83,7 +83,6 @@ private:
     int m_position;
     bool m_hover;
     bool m_pressed;
-    int m_systemVersion;
 
     /**
      * @brief m_lightIcon1070 1070下录屏计时图标icon
