@@ -72,16 +72,8 @@ TimeWidget::TimeWidget(DWidget *parent):
     m_dockInter = new DBusDock("com.deepin.dde.daemon.Dock", "/com/deepin/dde/daemon/Dock", QDBusConnection::sessionBus(), this);
     connect(m_dockInter, &DBusDock::PositionChanged, this, &TimeWidget::onPositionChanged);
     m_position = m_dockInter->position();
-    m_lightIcon = new QIcon(":/res/light.svg");
-    m_shadeIcon = new QIcon(":/res/shade.svg");
-    if(m_systemVersion >= 1070){
-        QString ligthIconName = "screen-recording";
-        QString shadeIconName = "screen-recording-2";
-        m_lightIcon1070 = QIcon::fromTheme(ligthIconName, QIcon(QString(":/res/1070/%1.svg").arg(ligthIconName)));
-        m_lightIcon = &m_lightIcon1070;
-        m_shadeIcon1070 = QIcon::fromTheme(shadeIconName, QIcon(QString(":/res/1070/%1.svg").arg(shadeIconName)));
-        m_shadeIcon = &m_shadeIcon1070;
-   }
+    m_lightIcon = new QIcon(":/res/1070/light.svg");
+    m_shadeIcon = new QIcon(":/res/1070/shade.svg");
 
     m_currentIcon = m_lightIcon;
 
@@ -93,11 +85,11 @@ TimeWidget::TimeWidget(DWidget *parent):
 
 TimeWidget::~TimeWidget()
 {
-    if (nullptr != m_lightIcon && m_systemVersion < 1070) {
+    if (nullptr != m_lightIcon) {
         delete m_lightIcon;
         m_lightIcon = nullptr;
     }
-    if (nullptr != m_shadeIcon && m_systemVersion < 1070) {
+    if (nullptr != m_shadeIcon) {
         delete m_shadeIcon;
         m_shadeIcon = nullptr;
     }
