@@ -10,6 +10,7 @@
 #include <dde-dock/pluginsiteminterface.h>
 #include "timewidget.h"
 #include "dbusservice.h"
+
 class RecordTimePlugin : public QObject, PluginsItemInterface
 {
     Q_OBJECT
@@ -30,6 +31,8 @@ public:
      * @return
      */
     const QString pluginDisplayName() const override;
+    PluginSizePolicy pluginSizePolicy() const override { return PluginsItemInterface::Custom; }
+
     //cppcheck误报：此函数从未被使用，其实这个函数由dde-dock框架调用
     /**
      * @brief init:插件初始化入口函数
