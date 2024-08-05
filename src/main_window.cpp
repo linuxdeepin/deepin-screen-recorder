@@ -247,9 +247,9 @@ void MainWindow::initAttributes()
     if (Utils::isWaylandMode) {
         //1070焦点策略管理比1060严格，作为全屏窗口的截图录屏设置了无焦点属性后，窗管不会在设置为获取焦点
         //因此在1070截图录屏截图录屏需要获取焦点，不然应用内快捷键无法响应。
-        if(DSysInfo::minorVersion().toInt() >= 1070){
+        if (DSysInfo::minorVersion().toInt() >= 1070) {
             setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-        } else{
+        } else {
             setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
         }
         if (this->windowHandle()) {
@@ -271,8 +271,8 @@ void MainWindow::initAttributes()
         }
 #ifdef DTKCORE_CLASS_DConfigFile
         //wayland下需要查询是否支持特殊录屏模式，例如hw机型
-        DConfig *dconfig = DConfig::create("org.deepin.screen-recorder","org.deepin.screen-recorder.record");
-        if(dconfig && dconfig->isValid() && dconfig->keyList().contains("specialRecordingScreenMode")){
+        DConfig *dconfig = DConfig::create("org.deepin.screen-recorder", "org.deepin.screen-recorder.record");
+        if (dconfig && dconfig->isValid() && dconfig->keyList().contains("specialRecordingScreenMode")) {
             Utils::specialRecordingScreenMode = dconfig->value("specialRecordingScreenMode").toInt();
         }
 #endif
@@ -280,10 +280,10 @@ void MainWindow::initAttributes()
     } else {
         setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
     }
-    if(m_hasComposite){
+    if (m_hasComposite) {
         qInfo() << "3d模式支持窗口透明";
         setAttribute(Qt::WA_TranslucentBackground, true);
-    }else{
+    } else {
         qInfo() << "2d模式不支持窗口透明！";
     }
     setMouseTracking(true);   // make MouseMove can response
@@ -305,7 +305,7 @@ void MainWindow::initAttributes()
         destoryDtkWmDisplay = reinterpret_cast<void (*)()>(library.resolve("DestoryDtkWmDisplay"));
         getAllWindowStatesList = reinterpret_cast<int (*)(WindowState **)>(library.resolve("GetAllWindowStatesList"));
 
-        if (initDtkWmDisplay && getAllWindowStatesList && destoryDtkWmDisplay){
+        if (initDtkWmDisplay && getAllWindowStatesList && destoryDtkWmDisplay) {
             qInfo() << "wayland automatic recognition window(1070 new interface)";
             //wayland自动识别窗口 1070新接口
             initDtkWmDisplay();
@@ -395,24 +395,24 @@ void MainWindow::initAttributes()
     }
     //检测锁屏的属性是否发生改变
     bool isSuccess = QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
-                                          "/com/deepin/SessionManager",
-                                          "org.freedesktop.DBus.Properties",
-                                          "PropertiesChanged",
-                                          "sa{sv}as",
-                                          this,
-                                          SLOT(onLockScreenEvent(QDBusMessage))
-                                         );
+                                                           "/com/deepin/SessionManager",
+                                                           "org.freedesktop.DBus.Properties",
+                                                           "PropertiesChanged",
+                                                           "sa{sv}as",
+                                                           this,
+                                                           SLOT(onLockScreenEvent(QDBusMessage))
+                                                          );
 
-    qDebug() << "The lock signal monitors wherther the connection is successfully established?"<< isSuccess;
+    qDebug() << "The lock signal monitors wherther the connection is successfully established?" << isSuccess;
     //检测是否进入电源界面
-     isSuccess = QDBusConnection::sessionBus().connect("com.deepin.dde.lockFront",
-                                          "/com/deepin/dde/lockFront",
-                                          "com.deepin.dde.lockFront",
-                                          "Visible",
-                                          this,
-                                          SLOT(onPowersource(bool))
-                                         );
-     qDebug() << "The lockFront signal monitors wherther the connection is successfully established?"<< isSuccess;
+    isSuccess = QDBusConnection::sessionBus().connect("com.deepin.dde.lockFront",
+                                                      "/com/deepin/dde/lockFront",
+                                                      "com.deepin.dde.lockFront",
+                                                      "Visible",
+                                                      this,
+                                                      SLOT(onPowersource(bool))
+                                                     );
+    qDebug() << "The lockFront signal monitors wherther the connection is successfully established?" << isSuccess;
     if (!isFirstMove && !Utils::isWaylandMode) {
         qDebug() << "发送鼠标事件!";
         QMouseEvent *mouseMove = new QMouseEvent(QEvent::MouseMove, this->cursor().pos(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
@@ -479,15 +479,14 @@ QVector<ClientManagement::WindowState> MainWindow::getAllWindowStates()
 
     if (getAllWindowStatesList) {
         qInfo() << "wayland automatic recognition window(1070 new interface)";
-        WindowState * pStates = nullptr;
+        WindowState *pStates = nullptr;
         int nCount = getAllWindowStatesList(&pStates);
         qDebug() << "The number of current Windows(GetAllWindowStatesList(&pStates)):" << nCount;
-        if (nCount <= 0 || pStates == nullptr){
+        if (nCount <= 0 || pStates == nullptr) {
             qWarning() << "The current number of Windows is 0! wayland window not found!";
             return vWindowStates;
         }
-        for (int i = 0; i < nCount; i++)
-        {
+        for (int i = 0; i < nCount; i++) {
             WindowState *p = &pStates[i];
             ClientManagement::WindowState windowState;
             windowState.pid = p->pid;
@@ -562,7 +561,7 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
         m_connectionThread->quit();
         m_connectionThread->wait();
         m_connectionThreadObject->deleteLater();
-        if(destoryDtkWmDisplay) {
+        if (destoryDtkWmDisplay) {
             qInfo() << "Release the interface for DTK to obtain window information.";
             destoryDtkWmDisplay();
         }
@@ -688,14 +687,14 @@ void MainWindow::checkIsLockScreen()
 
     //电源界面判断接口
     QDBusInterface ddeLockFront("com.deepin.dde.lockFront",
-                                        "/com/deepin/dde/lockFront",
-                                        "com.deepin.dde.lockFront",
-                                        QDBusConnection::sessionBus());
+                                "/com/deepin/dde/lockFront",
+                                "com.deepin.dde.lockFront",
+                                QDBusConnection::sessionBus());
     if (!ddeLockFront.isValid()) {
         qWarning() << "(QDBusInterface) The 'ddeLockFront' interface does not exist";
         return;
     }
-    if(ddeLockFront.property("Visible").isNull()){
+    if (ddeLockFront.property("Visible").isNull()) {
         qWarning() << "(QDBusInterface) The 'Visible' property does not exist of lockFront";
         return;
     }
@@ -1250,7 +1249,7 @@ void MainWindow::initScrollShot()
     m_sizeTips->hide();
 
     m_scrollShotOffsetXY = 2;
-    m_scrollShotOffsetWH =qRound((m_scrollShotOffsetXY + 1) * m_pixelRatio);
+    m_scrollShotOffsetWH = qRound((m_scrollShotOffsetXY + 1) * m_pixelRatio);
     qDebug() << "m_scrollShotOffsetXY: " << m_scrollShotOffsetXY << "m_scrollShotOffsetWH: " << m_scrollShotOffsetWH;
     //滚动预览开启初始化
     if (m_previewWidget == nullptr) {
@@ -1688,8 +1687,18 @@ void MainWindow::fullScreenshot()
     shotFullScreen(true);
     TempFile::instance()->setFullScreenPixmap(m_resultPixmap);
     const auto r = saveAction(m_resultPixmap);
-    save2Clipboard(m_resultPixmap);
     sendNotify(m_saveIndex, m_saveFileName, r);
+
+    save2Clipboard(m_resultPixmap);
+
+    if (Utils::isWaylandMode) {
+        exitApp();
+    } else {
+        QTimer::singleShot(10, [ = ] {
+            exitApp();
+        });
+    }
+    qInfo() << __FUNCTION__ << __LINE__ << "截图保存流程已完成！";
 }
 
 void MainWindow::fullScreenRecord(const QString fileName)
@@ -1950,7 +1959,7 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
         return;
     }
     if (Utils::is3rdInterfaceStart == false) {
-        if(DSysInfo::minorVersion().toInt() >= 1070){
+        if (DSysInfo::minorVersion().toInt() >= 1070) {
             //检测保存到剪切板是否完成
             qInfo() << "Connecting the clipboard feedback signal..."
                     << "\nClipboardService: " << ClipboardService
@@ -1963,10 +1972,10 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
                                                                    ClipboardSignal,
                                                                    this,
                                                                    SLOT(onSaveClipboardComing(const QByteArray &))
-                                                                   );
-            if(isSuccess){
+                                                                  );
+            if (isSuccess) {
                 qInfo() << "The clipper feedback signal connection is successfully established!";
-            }else{
+            } else {
                 qWarning() << "Clipper feedback signal connection failed!";
             }
         }
@@ -2023,7 +2032,7 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
             qDebug() << "Whether the data passed to the clipboard is empty? " << t_imageData->imageData().isNull();
         }
 
-        if(DSysInfo::minorVersion().toInt() >= 1070){
+        if (DSysInfo::minorVersion().toInt() >= 1070) {
             if (!Utils::isWaylandMode) {
                 this->hide(); //隐藏主界面
             }
@@ -2041,7 +2050,7 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
                     qInfo() << "15s delayed completion" << time(nullptr);
                     break;
                 }
-                if(m_isSaveClipboard){
+                if (m_isSaveClipboard) {
                     qInfo() << "Data has been passed to the clipboard";
                     break;
                 }
@@ -2392,11 +2401,11 @@ void MainWindow::updateToolBarPos()
                     //qDebug() << "工具栏位置未在任一屏幕内，需要矫正 >>> 放捕捉区域里面 toolbarPoint: " << toolbarPoint;
                     toolbarPoint.setY(recordY + TOOLBAR_Y_SPACING);
                 }
-                if(recordX + recordWidth - m_toolBar->width() < tempScreen.x()){
+                if (recordX + recordWidth - m_toolBar->width() < tempScreen.x()) {
                     toolbarPoint.setX(recordX);
                 }
                 //qDebug() << "工具栏位置未在任一屏幕内，已矫正 >>> toolbarPoint: " << toolbarPoint;
-            }else{
+            } else {
                 toolbarPoint.setX(m_toolbarLastPoint.x());
                 toolbarPoint.setY(m_toolbarLastPoint.y());
             }
@@ -2404,12 +2413,12 @@ void MainWindow::updateToolBarPos()
     }
     //qDebug() << "工具栏最新坐标 >>> toolbarPoint: " << toolbarPoint;
     //快捷全屏录制不需要显示工具栏
-    if(m_isFullScreenRecord) return;
+    if (m_isFullScreenRecord) return;
     m_toolbarLastPoint = toolbarPoint;
     // handel the screen misaligned
     if (m_screenInfo.size() == 2 && m_screenInfo.at(0).y != m_screenInfo.at(1).y && m_screenInfo.at(0).x != m_screenInfo.at(1).x) {
         QPoint correctPoint = getTwoScreenIntersectPos(toolbarPoint);
-        if(toolbarPoint != correctPoint){
+        if (toolbarPoint != correctPoint) {
             toolbarPoint = correctPoint;
         }
     }
@@ -2772,9 +2781,9 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
                 }
             }
             if (type == 2) {
-                if(intersectRect_1.y() + intersectRect_1.height() + m_toolBar->height() > tmp_screenInfo.at(0).y + tmp_screenInfo.at(0).height){
+                if (intersectRect_1.y() + intersectRect_1.height() + m_toolBar->height() > tmp_screenInfo.at(0).y + tmp_screenInfo.at(0).height) {
                     y = intersectRect_1.y() + intersectRect_1.height() - m_toolBar->height();
-                }else{
+                } else {
                     y = intersectRect_1.y() + intersectRect_1.height();
                 }
             }
@@ -2797,7 +2806,7 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
                 y = intersectRect_2.y() + intersectRect_2.height();
             }
             if (type == 2) {
-                if (intersectRect_2.y() < m_toolBar->height() && intersectRect_2.y() + intersectRect_2.height() + m_toolBar->height() < screen_2.y()+screen_2.height()) {
+                if (intersectRect_2.y() < m_toolBar->height() && intersectRect_2.y() + intersectRect_2.height() + m_toolBar->height() < screen_2.y() + screen_2.height()) {
                     y = intersectRect_2.y() + intersectRect_2.height();
                 } else {
                     y = intersectRect_2.y() - m_toolBar->height();
@@ -2867,23 +2876,23 @@ QPoint MainWindow::getTwoScreenIntersectPos(QPoint rawPos)
         toolbarPoint.setY(y);
     }
 
-    qDebug()<<"before pos:"<<toolbarPoint;
+    qDebug() << "before pos:" << toolbarPoint;
 
     int y = toolbarPoint.y();
-    if(is_inScreen1 && area_1 >= area_2){
-        if(y < screen_1.y()){
+    if (is_inScreen1 && area_1 >= area_2) {
+        if (y < screen_1.y()) {
             y = screen_1.y();
         }
-        if(y + m_toolBar->height() > screen_1.y() + screen_1.height()){
+        if (y + m_toolBar->height() > screen_1.y() + screen_1.height()) {
             y = screen_1.y() + screen_1.height() - m_toolBar->height();
         }
     }
 
-    if(is_inScreen2 && area_1 <= area_2){
-        if(y < screen_2.y()){
+    if (is_inScreen2 && area_1 <= area_2) {
+        if (y < screen_2.y()) {
             y = screen_2.y();
         }
-        if(y + m_toolBar->height() > screen_2.y() + screen_2.height()){
+        if (y + m_toolBar->height() > screen_2.y() + screen_2.height()) {
             y = screen_2.y() + screen_2.height() - m_toolBar->height();
         }
     }
@@ -3302,10 +3311,20 @@ void MainWindow::saveScreenShot()
         }
     }
     const bool r = saveAction(m_resultPixmap);
+    sendNotify(m_saveIndex, m_saveFileName, r);
     save2Clipboard(m_resultPixmap);
     if (status::pinscreenshots == m_functionType) return;
     this->hide();
-    sendNotify(m_saveIndex, m_saveFileName, r);
+
+
+    qInfo() << __FUNCTION__ << __LINE__ << "通知消息已发送！";
+    if (Utils::isWaylandMode) {
+        exitApp();
+    } else {
+        QTimer::singleShot(10, [ = ] {
+            exitApp();
+        });
+    }
     qInfo() << __FUNCTION__ << __LINE__ << "截图保存流程已完成！";
 }
 
@@ -3393,14 +3412,6 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         << timeout;
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);// timeout
     //    }
-    qInfo() << __FUNCTION__ << __LINE__ << "通知消息已发送！";
-    if (Utils::isWaylandMode) {
-        exitApp();
-    } else {
-        QTimer::singleShot(10, [ = ] {
-            exitApp();
-        });
-    }
 }
 
 bool MainWindow::saveAction(const QPixmap &pix)
@@ -3840,7 +3851,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
         //使用指定的剪辑操作将剪辑区域设置为给定区域
         painter.setClipRegion(QRegion(backgroundRect).subtracted(QRegion(frameRect)));
         //快捷全屏录制不需要画背景，非快捷全屏录制需要画背景
-        if(!m_isFullScreenRecord)
+        if (!m_isFullScreenRecord)
             //画出当前背景
             painter.drawRect(backgroundRect);
         // Reset clip. 重设剪辑区域
@@ -6018,7 +6029,7 @@ void MainWindow::stopRecord()
         hide();
         emit releaseEvent();
         //正在保存录屏文件通知,全屏录制时不需进行通知
-        if(!m_isFullScreenRecord)
+        if (!m_isFullScreenRecord)
             sendSavingNotify();
         // 状态栏闪烁停止
         if (Utils::isTabletEnvironment && m_tabletRecorderHandle) {
@@ -6035,7 +6046,7 @@ void MainWindow::stopRecord()
 
 void MainWindow::startCountdown()
 {
-    if(!m_isFullScreenRecord)
+    if (!m_isFullScreenRecord)
         recordButtonStatus = RECORD_BUTTON_WAIT;
 //    qDebug() << "recordX:" << recordX << " , recordY: " << recordY
 //             << " , recordWidth: " << recordWidth << " , recordHeight: " << recordHeight;
@@ -6097,10 +6108,10 @@ void MainWindow::startCountdown()
                                static_cast<int>((recordRect.y() / m_pixelRatio + (recordRect.height() / m_pixelRatio - countdownTooltip->height()) / 2)));
 
 
-        if(m_isFullScreenRecord){
+        if (m_isFullScreenRecord) {
             //全屏录制时不需要3s倒计时
             countdownTooltip->startAtOnce();
-        }else{
+        } else {
             countdownTooltip->start();
             countdownTooltip->show();
         }
