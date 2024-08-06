@@ -30,7 +30,7 @@ void TipsWidget::setText(const QString &text)
     m_text = "བོད་སྐད་ཡིག་གཟུགས་ཚད་ལེན་ཚོད་ལྟའི་སྐོར་གྱི་རྗོད་ཚིག";
 #endif
 
-    setFixedSize(fontMetrics().width(m_text) + 20, fontMetrics().boundingRect(m_text).height());
+    setFixedSize(fontMetrics().horizontalAdvance(m_text), fontMetrics().boundingRect(m_text).height());
 
     update();
 
@@ -50,7 +50,7 @@ void TipsWidget::setTextList(const QStringList &textList)
     int width = 0;
     int height = 0;
     for (QString text : m_textList) {
-        width = qMax(width, fontMetrics().width(text) + 20);
+        width = qMax(width, fontMetrics().horizontalAdvance(text));
         height += fontMetrics().boundingRect(text).height();
     }
 
@@ -75,6 +75,7 @@ void TipsWidget::paintEvent(QPaintEvent *event)
 
     switch (m_type) {
     case SingleLine:
+        option.setWrapMode(QTextOption::NoWrap);
         painter.drawText(rect(), m_text, option);
         break;
     case MultiLine:
