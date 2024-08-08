@@ -36,7 +36,7 @@ IconWidget::IconWidget(QWidget *parent):
     setMinimumSize(PLUGIN_BACKGROUND_MIN_SIZE, PLUGIN_BACKGROUND_MIN_SIZE);
 
     QString iconName("screen-capture");
-    if(m_systemVersion >= 1070){
+    if(m_systemVersion >= 1070 || DSysInfo::deepinType() == DSysInfo::DeepinDesktop){
         iconName = "screenshot";
     }
     m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
@@ -143,7 +143,7 @@ void IconWidget::paintEvent(QPaintEvent *e)
 
     QPixmap pixmap;
     QString iconName = "screen-capture";
-    if(m_systemVersion >= 1070){
+    if(m_systemVersion >= 1070 || DSysInfo::deepinType() == DSysInfo::DeepinDesktop){
         iconName = "screenshot";
     }
     int iconSize = PLUGIN_ICON_MAX_SIZE;
