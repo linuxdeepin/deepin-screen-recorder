@@ -3874,7 +3874,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
             painter.drawRect(QRect(
                                  std::max(frameRect.x(), 1),
                                  std::max(frameRect.y(), 1),
-                                 std::min(frameRect.width() - 1, rootWindowRect.width() - 2),
+                                 std::min(frameRect.width() - 2 , rootWindowRect.width() - 2),
                                  std::min(frameRect.height() - 1, rootWindowRect.height() - 2)));
             painter.setRenderHint(QPainter::Antialiasing, true);
         }
