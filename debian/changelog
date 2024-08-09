@@ -1,3 +1,11 @@
+deepin-screen-recorder (6.0.7) unstable; urgency=medium
+
+  * fix: the recorder icon(Bug: 266991)
+  * feat: remove the inner margin of dock plugin tooltips(Issue: 9997)
+  * chore: 录屏时间插件移动到任务栏固定区域(Issue: 10130)
+
+ -- Deepin Packages Builder <packages@deepin.org>  Fri, 09 Aug 2024 15:16:06 +0800
+
 deepin-screen-recorder (6.0.6) unstable; urgency=medium
 
   * feat: Update screenshot dropshadow effect(Task: 33231)
