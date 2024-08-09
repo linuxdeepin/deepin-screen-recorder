@@ -234,6 +234,23 @@ public:
      * @brief 从数据池取取数据的线程的开关。当数据池有数据时被启动
      */
     bool m_appendFrameToListFlag = false;
+
+    /**
+     * @brief getPadStride
+     * @param width: rbuf width
+     * @param depth: color depth
+     * @param pad
+     * @return correct pad
+     */
+    int getPadStride(int width, int depth, int pad);
+
+    /**
+     * @brief copyBuffer
+     * @param tmpDst: app cache
+     * @param tmpSrc: kde cache
+     * @param rbuf
+     */
+    void copyBuffer(unsigned char * tmpDst, unsigned char * tmpSrc, const KWayland::Client::RemoteBuffer *rbuf);
 private:
     /**
      * @brief 是否是hw电脑
