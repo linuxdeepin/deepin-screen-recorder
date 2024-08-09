@@ -612,12 +612,13 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
         }
         //单屏
         //qDebug() << ">>>>>> new unsigned char: " << stride *height;
-        memcpy(m_firstScreenData, mapData, stride * height);
+        //memcpy(m_firstScreenData, mapData, stride * height);
+        copyBuffer(m_firstScreenData, mapData, rbuf);
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
-        memcpy(m_lastScreenDatas[0]._frame, mapData, stride * height);
+        //memcpy(m_lastScreenDatas[0]._frame, mapData, stride * height);
+        copyBuffer(m_lastScreenDatas[0]._frame, mapData, rbuf);
 #endif
         //qDebug() << ">>>>>> memcpy: " << stride *height;
-
         QMutexLocker locker(&m_bGetScreenImageMutex);
         m_curNewImageData._frame = m_firstScreenData;
         m_curNewImageData._width = width;
@@ -640,9 +641,11 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
 #endif
             }
             //qDebug() << ">>>>>> memcpy1: " << stride *height;
-            memcpy(m_firstScreenData, mapData, stride * height);
+            //memcpy(m_firstScreenData, mapData, stride * height);
+            copyBuffer(m_firstScreenData, mapData, rbuf);
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
-            memcpy(m_lastScreenDatas[0]._frame, mapData, stride * height);
+            //memcpy(m_lastScreenDatas[0]._frame, mapData, stride * height);
+            copyBuffer(m_lastScreenDatas[0]._frame, mapData, rbuf);
 #endif
             //qDebug() << ">>>>>> memcpy2: " << stride *height;
             m_ScreenDateBufFrames[0]._frame = m_firstScreenData;
@@ -665,9 +668,11 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
 #endif
             }
             //qDebug() << ">>>>>> memcpy1: " << stride *height;
-            memcpy(m_secondScreenData, mapData, stride * height);
+            //memcpy(m_secondScreenData, mapData, stride * height);
+            copyBuffer(m_secondScreenData, mapData, rbuf);
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
-            memcpy(m_lastScreenDatas[1]._frame, mapData, stride * height);
+            //memcpy(m_lastScreenDatas[1]._frame, mapData, stride * height);
+            copyBuffer(m_lastScreenDatas[1]._frame, mapData, rbuf);
 #endif
             //qDebug() << ">>>>>> memcpy2: " << stride *height;
             m_ScreenDateBufFrames[1]._frame = m_secondScreenData;
@@ -1425,4 +1430,27 @@ void WaylandIntegration::WaylandIntegrationPrivate::setBGetFrame(bool bGetFrame)
 {
     QMutexLocker locker(&m_bGetFrameMutex);
     m_bGetFrame = bGetFrame;
+}
+
+int WaylandIntegration::WaylandIntegrationPrivate::getPadStride(int width, int depth, int pad)
+{
+    int content = width * depth;
+    if (pad == 1 || content % pad == 0) {
+        return content;
+    }
+    return content + pad - content % pad;
+}
+
+void WaylandIntegration::WaylandIntegrationPrivate::copyBuffer(unsigned char *tmpDst, unsigned char * tmpSrc, const KWayland::Client::RemoteBuffer *rbuf)
+{
+    unsigned char *dst = tmpDst;
+    unsigned char *buf = tmpSrc;
+    int srcStride = getPadStride(rbuf->width(),4,32);
+    qDebug()<<"current strade"<<srcStride;
+
+    for (int i = 0; i < rbuf->height(); i++) {
+        memcpy(dst, buf, srcStride);
+        buf += rbuf->stride();
+        dst += srcStride;
+    }
 }
