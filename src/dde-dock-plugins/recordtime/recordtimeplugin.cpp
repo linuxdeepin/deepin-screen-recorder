@@ -85,16 +85,6 @@ void RecordTimePlugin::clear()
     }
 }
 
-Dock::PluginFlags RecordTimePlugin::flags() const
-{
-    return  Dock::Type_System | Dock::Attribute_ForceDock | Dock::Attribute_CanInsert;
-}
-
-PluginsItemInterface::PluginSizePolicy RecordTimePlugin::pluginSizePolicy() const
-{
-    return PluginSizePolicy::Custom;
-}
-
 void RecordTimePlugin::onStart()
 {
     qInfo() << "start record time";
