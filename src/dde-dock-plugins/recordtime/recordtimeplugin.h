@@ -7,11 +7,11 @@
 #define RECORDTIME_H
 
 #include <QtDBus/QtDBus>
-#include <dde-dock/pluginsiteminterface.h>
+#include <dde-dock/pluginsiteminterface_v2.h>
 #include "timewidget.h"
 #include "dbusservice.h"
 
-class RecordTimePlugin : public QObject, PluginsItemInterface
+class RecordTimePlugin : public QObject, PluginsItemInterfaceV2
 {
     Q_OBJECT
     Q_INTERFACES(PluginsItemInterface)
@@ -31,6 +31,7 @@ public:
      * @return
      */
     const QString pluginDisplayName() const override;
+    Dock::PluginFlags flags() const override { return Dock::Type_Tool | Dock::Attribute_ForceDock | Dock::Attribute_Normal; }
     PluginSizePolicy pluginSizePolicy() const override { return PluginsItemInterface::Custom; }
 
     //cppcheck误报：此函数从未被使用，其实这个函数由dde-dock框架调用
