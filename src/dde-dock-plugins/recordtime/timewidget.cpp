@@ -121,7 +121,7 @@ void TimeWidget::onTimeout()
 
 void TimeWidget::updateIcon() {
     if (Dock::Position::Top == m_position || Dock::Position::Bottom == m_position) {
-        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_LEVEL_ICON_SIZE, RECORDER_TIME_LEVEL_ICON_SIZE));
+        m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_VERTICAL_ICON_SIZE, RECORDER_TIME_VERTICAL_ICON_SIZE));
     } else {
         m_pixmap = QIcon::fromTheme(QString("recordertime"), *m_currentIcon).pixmap(QSize(RECORDER_TIME_VERTICAL_ICON_SIZE, RECORDER_TIME_VERTICAL_ICON_SIZE));
     }
@@ -153,8 +153,7 @@ void TimeWidget::paintEvent(QPaintEvent *e)
         QColor color;
         if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
             color = Qt::black;
-            painter.setOpacity(0.5);
-
+            painter.setOpacity(0);
             if (m_hover) {
                 painter.setOpacity(0.6);
             }
@@ -164,8 +163,7 @@ void TimeWidget::paintEvent(QPaintEvent *e)
             }
         } else {
             color = Qt::white;
-            painter.setOpacity(0.1);
-
+            painter.setOpacity(0);
             if (m_hover) {
                 painter.setOpacity(0.2);
             }
