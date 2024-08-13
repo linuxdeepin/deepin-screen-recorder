@@ -28,15 +28,19 @@ message("SYS_BUILD_SUFFIX: " $$SYS_BUILD_SUFFIX)
 
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
-if (!equals(SYS_EDITION, "")) {
-# 社区版
-        message("Community")
+# The latest version use XWayland temporarily.
+# TODO: Adapt to the new version of Wayland interface or use PipeWire in the future
 
-        DEFINES += DDE_START_FLAGE_ON
-        message("startdde support: OK!!!")
+if ( !equals(SYS_EDITION, "") || equals(SYS_VERSION, 2500) || greaterThan(SYS_VERSION, 2500) ) {
+    # Community edition
+    message("Community")
 
-        DEFINES += OCR_SCROLL_FLAGE_ON
-        message("ocr and scroll support: OK!!!")
+    DEFINES += DDE_START_FLAGE_ON
+    message("startdde support: OK!!!")
+
+    DEFINES += OCR_SCROLL_FLAGE_ON
+    message("ocr and scroll support: OK!!!")
+
 } else {
     message("not Community")
 

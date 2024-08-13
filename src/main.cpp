@@ -31,6 +31,12 @@ DWIDGET_USE_NAMESPACE
 static bool isWaylandProtocol()
 {
     QProcessEnvironment e = QProcessEnvironment::systemEnvironment();
+
+    // check is treeland environment.
+    if (e.value(QStringLiteral("DDE_CURRENT_COMPOSITOR")) == QStringLiteral("TreeLand")) {
+        return false;
+    }
+
     QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
     QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
     return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
