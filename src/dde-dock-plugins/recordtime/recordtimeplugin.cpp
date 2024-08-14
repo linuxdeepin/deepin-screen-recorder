@@ -65,6 +65,7 @@ QWidget *RecordTimePlugin::itemWidget(const QString &itemKey)
 
 void RecordTimePlugin::clear()
 {
+    m_timeWidget->setting()->setValue(RECORDER_TIME_STARTCONFIG, QTime(0,0,0));
     if (nullptr != m_timer)
     {
         m_timer->stop();
