@@ -25,6 +25,7 @@
 #include "../3rdparty/displayjack/wayland_client.h"
 #endif
 #include "widgets/imagemenu.h"
+#include <signal.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -4795,7 +4796,7 @@ void MainWindow::onKeyboardPress(unsigned char keyCode)
     if (status::record == m_functionType) {
         m_showButtons->showContentButtons(keyCode);
         recordKeyPressEvent(keyCode);
-        if (RECORD_BUTTON_RECORDING != recordButtonStatus && keyCode == KEY_ESCAPE) {
+        if (RECORD_BUTTON_RECORDING != recordButtonStatus && RECORD_BUTTON_SAVEING != recordButtonStatus && keyCode == KEY_ESCAPE) {
             exitApp();
         }
     } else if (status::shot == m_functionType || status::scrollshot == m_functionType) {
