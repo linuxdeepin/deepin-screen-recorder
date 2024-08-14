@@ -38,7 +38,7 @@ TimeWidget::TimeWidget(DWidget *parent):
     m_hover(false),
     m_pressed(false),
     m_systemVersion(0),
-    m_timerCount(0)
+    m_setting(nullptr)
 {
     m_systemVersion = DSysInfo::minorVersion().toInt() ;
     qInfo() <<  "Current system version: " << m_systemVersion;
@@ -68,7 +68,7 @@ TimeWidget::TimeWidget(DWidget *parent):
      }else {
         setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     }
-
+    m_setting = new QSettings("deepin/deepin-screen-recorder", "recordtime", this);
 }
 
 TimeWidget::~TimeWidget()
@@ -88,6 +88,10 @@ TimeWidget::~TimeWidget()
     if (nullptr != m_dockInter) {
         m_dockInter->deleteLater();
         m_dockInter = nullptr;
+    }
+    if (nullptr != m_setting){
+        m_setting->deleteLater();
+        m_setting = nullptr;
     }
 }
 
@@ -133,7 +137,6 @@ QSize TimeWidget::sizeHint() const
 
 void TimeWidget::onTimeout()
 {
-    m_timerCount++;
     if (m_bRefresh) {
         if (m_currentIcon == m_lightIcon)
             m_currentIcon = m_shadeIcon;
@@ -142,7 +145,7 @@ void TimeWidget::onTimeout()
     }
     m_bRefresh = !m_bRefresh;
     QTime showTime(0, 0, 0);
-    showTime = showTime.addMSecs(m_timerCount * 400);
+    showTime = showTime.addSecs(m_baseTime.secsTo(QTime::currentTime()));
     m_showTimeStr = showTime.toString("hh:mm:ss");
     update();
 }
@@ -164,6 +167,11 @@ void TimeWidget::onPositionChanged(int value)
     //qInfo() <<  ">>>>>>>>>> this->geometry(): " << this->geometry();
     qInfo() << "====================== onPositionChanged ====end=================";
 
+}
+
+QSettings *TimeWidget::setting() const
+{
+    return m_setting;
 }
 
 void TimeWidget::paintEvent(QPaintEvent *e)
@@ -408,11 +416,15 @@ void TimeWidget::leaveEvent(QEvent *e)
 
 void TimeWidget::start()
 {
+    if (m_setting->value(RECORDER_TIME_STARTCONFIG).toTime() == QTime(0, 0, 0)) {
+        m_setting->setValue(RECORDER_TIME_STARTCONFIG, QTime::currentTime());
+        m_baseTime = QTime::currentTime();
+    } else {
+        m_baseTime = m_setting->value(RECORDER_TIME_STARTCONFIG).toTime();
+    }
     m_showTimeStr = QString("00:00:00");
     connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
-    m_baseTime = QTime::currentTime();
     m_timer->start(400);
-    m_timerCount = 0;
 }
 
 void TimeWidget::stop()

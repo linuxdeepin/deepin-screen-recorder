@@ -25,7 +25,7 @@
 #define RECORDER_TEXT_TOP_BOTTOM_X 10
 #define RECORDER_TIME_WIDGET_MAXHEIGHT 40
 #define RECORDER_TIME_WIDGET_MAXWIDTH 120
-
+#define RECORDER_TIME_STARTCONFIG "CurrentStartTime"
 DWIDGET_USE_NAMESPACE
 using DBusDock = com::deepin::dde::daemon::Dock;
 
@@ -66,7 +66,12 @@ public:
      * @return
      */
     bool isWaylandProtocol();
-    
+    /**
+     * @brief setting
+     * @return 含初始时间配置
+     */
+    QSettings *setting() const;
+
 protected:
     void showEvent(QShowEvent *) override;
     void paintEvent(QPaintEvent *e) override;
@@ -106,7 +111,7 @@ private:
     bool m_hover;
     bool m_pressed;
     int m_systemVersion;
-    int m_timerCount;
+    QSettings *m_setting;
     /**
      * @brief m_lightIcon1070 1070下录屏计时图标icon
      */
