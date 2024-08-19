@@ -64,7 +64,11 @@ TimeWidget::TimeWidget(DWidget *parent):
     m_textLabel->setFont(RECORDER_TIME_FONT);
     m_textLabel->setText("00:00:00");
     QPalette textPalette = m_textLabel->palette();
-    textPalette.setColor(QPalette::WindowText, Qt::white);
+    if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
+        textPalette.setColor(QPalette::WindowText, Qt::black);
+    }else{
+        textPalette.setColor(QPalette::WindowText, Qt::white);
+    }
     m_textLabel->setPalette(textPalette);
     m_textLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
