@@ -45,6 +45,48 @@ const int RecordProcess::RECORD_FRAMERATE_20 = 20;
 const int RecordProcess::RECORD_FRAMERATE_24 = 24;
 const int RecordProcess::RECORD_FRAMERATE_30 = 30;
 
+// 用于任务栏图标DBus通信调用的函数
+const QString DBUS_FUNC_ON_START = "onStart";
+const QString DBUS_FUNC_ON_STOP = "onStop";
+const QString DBUS_FUNC_ON_RECORDING = "onRecording";
+const QString DBUS_FUNC_ON_PAUSE = "onPause";
+
+/**
+   @brief 调用托盘图标"录制中"的对应函数，改变显示状态
+ */
+static QDBusMessage callTrayTimeIcon(const QString &function)
+{
+    QDBusInterface timeInterface("com.deepin.ScreenRecorder.time",
+                                 "/com/deepin/ScreenRecorder/time",
+                                 "com.deepin.ScreenRecorder.time",
+                                 QDBusConnection::sessionBus());
+    return timeInterface.call(function);
+}
+
+/**
+   @brief 调用托盘图标"截图"的对应函数，改变显示状态
+ */
+static QDBusMessage callTrayShotIcon(const QString &function)
+{
+    QDBusInterface shotInterface("com.deepin.ShotRecorder.PanelStatus",
+                                 "/com/deepin/ShotRecorder/PanelStatus",
+                                 "com.deepin.ShotRecorder.PanelStatus",
+                                 QDBusConnection::sessionBus());
+    return shotInterface.call(function);
+}
+
+/**
+   @brief 调用托盘图标"录屏"的对应函数，改变显示状态
+ */
+static QDBusMessage callTrayRecorderIcon(const QString &function)
+{
+    QDBusInterface recorderInterface("com.deepin.ShotRecorder.Recorder.PanelStatus",
+                                     "/com/deepin/ShotRecorder/Recorder/PanelStatus",
+                                     "com.deepin.ShotRecorder.Recorder.PanelStatus",
+                                     QDBusConnection::sessionBus());
+    return recorderInterface.call(function);
+}
+
 RecordProcess::RecordProcess(QObject *parent) : QObject(parent)
 {
     qDebug() << "录屏控制类初始化！";
@@ -593,14 +635,10 @@ void RecordProcess::startRecord()
         return;
     }
     //1040及以上的版本可通过此方式启动状态栏图标闪烁
-    QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
-                                                                                             "/com/deepin/ScreenRecorder/time",
-                                                                                             "com.deepin.ScreenRecorder.time",
-                                                                                             "onStart"));
-    QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ShotRecorder.PanelStatus",
-                                                                      "/com/deepin/ShotRecorder/PanelStatus",
-                                                                      "com.deepin.ShotRecorder.PanelStatus",
-                                                                      "onStart"));
+    QDBusMessage message = callTrayTimeIcon(DBUS_FUNC_ON_START);
+    callTrayShotIcon(DBUS_FUNC_ON_START);
+    callTrayRecorderIcon(DBUS_FUNC_ON_START);
+
     qDebug() << "Start the screen recording timer!";
     m_recordingFlag = true;
     QtConcurrent::run(this, &RecordProcess::emitRecording);
@@ -613,14 +651,10 @@ void RecordProcess::emitRecording()
 {
     while (m_recordingFlag) {
         //qDebug() << "录屏正在进行中! currentTime: " << QTime::currentTime();
-        QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
-                                                                                                 "/com/deepin/ScreenRecorder/time",
-                                                                                                 "com.deepin.ScreenRecorder.time",
-                                                                                                 "onRecording"));
-        QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ShotRecorder.PanelStatus",
-                                                                          "/com/deepin/ShotRecorder/PanelStatus",
-                                                                          "com.deepin.ShotRecorder.PanelStatus",
-                                                                          "onRecording"));
+
+        callTrayTimeIcon(DBUS_FUNC_ON_RECORDING);
+        callTrayShotIcon(DBUS_FUNC_ON_RECORDING);
+        callTrayRecorderIcon(DBUS_FUNC_ON_RECORDING);
 
         QThread::msleep(1000);
     }
@@ -637,14 +671,14 @@ void RecordProcess::stopRecord()
         qDebug() << "Pause the screen recording timer!";
 
         //系统托盘图标停止闪烁，时间暂停，但还没有结束
-        QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
-                                                                                                 "/com/deepin/ScreenRecorder/time",
-                                                                                                 "com.deepin.ScreenRecorder.time",
-                                                                                                 "onPause"));
+        QDBusMessage message = callTrayTimeIcon(DBUS_FUNC_ON_PAUSE);
+
         if (QDBusMessage::ReplyMessage == message.type()) {
             if (!message.arguments().takeFirst().toBool())
                 qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
         }
+        callTrayShotIcon(DBUS_FUNC_ON_PAUSE);
+        callTrayRecorderIcon(DBUS_FUNC_ON_PAUSE);
     }
     if (Utils::isFFmpegEnv) {
         //停止wayland录屏
@@ -718,14 +752,9 @@ void RecordProcess::exitRecord(QString newSavePath)
     if (Utils::isSysHighVersion1040() == true) {
         qDebug() << __LINE__ << ": Stop the screen recording timer!";
         //系统托盘图标结束并退出
-        QDBusMessage message = QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ScreenRecorder.time",
-                                                                                                 "/com/deepin/ScreenRecorder/time",
-                                                                                                 "com.deepin.ScreenRecorder.time",
-                                                                                                 "onStop"));
-        QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall("com.deepin.ShotRecorder.PanelStatus",
-                                                                          "/com/deepin/ShotRecorder/PanelStatus",
-                                                                          "com.deepin.ShotRecorder.PanelStatus",
-                                                                          "onStop"));
+        callTrayTimeIcon(DBUS_FUNC_ON_STOP);
+        callTrayShotIcon(DBUS_FUNC_ON_STOP);
+        callTrayRecorderIcon(DBUS_FUNC_ON_STOP);
     }
 
     //保存到剪切板
