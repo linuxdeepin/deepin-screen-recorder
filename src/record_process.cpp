@@ -57,9 +57,9 @@ const QString DBUS_FUNC_ON_PAUSE = "onPause";
 static QDBusMessage callTrayTimeIcon(const QString &function)
 {
     QDBusInterface timeInterface("com.deepin.ScreenRecorder.time",
-                             "/com/deepin/ScreenRecorder/time",
-                             "com.deepin.ScreenRecorder.time",
-                             QDBusConnection::sessionBus());
+                                 "/com/deepin/ScreenRecorder/time",
+                                 "com.deepin.ScreenRecorder.time",
+                                 QDBusConnection::sessionBus());
     return timeInterface.call(function);
 }
 
@@ -69,9 +69,9 @@ static QDBusMessage callTrayTimeIcon(const QString &function)
 static QDBusMessage callTrayShotIcon(const QString &function)
 {
     QDBusInterface shotInterface("com.deepin.ShotRecorder.PanelStatus",
-                             "/com/deepin/ShotRecorder/PanelStatus",
-                             "com.deepin.ShotRecorder.PanelStatus",
-                             QDBusConnection::sessionBus());
+                                 "/com/deepin/ShotRecorder/PanelStatus",
+                                 "com.deepin.ShotRecorder.PanelStatus",
+                                 QDBusConnection::sessionBus());
     return shotInterface.call(function);
 }
 
@@ -81,9 +81,9 @@ static QDBusMessage callTrayShotIcon(const QString &function)
 static QDBusMessage callTrayRecorderIcon(const QString &function)
 {
     QDBusInterface recorderInterface("com.deepin.ShotRecorder.Recorder.PanelStatus",
-                             "/com/deepin/ShotRecorder/Recorder/PanelStatus",
-                             "com.deepin.ShotRecorder.Recorder.PanelStatus",
-                             QDBusConnection::sessionBus());
+                                     "/com/deepin/ShotRecorder/Recorder/PanelStatus",
+                                     "com.deepin.ShotRecorder.Recorder.PanelStatus",
+                                     QDBusConnection::sessionBus());
     return recorderInterface.call(function);
 }
 
@@ -679,9 +679,11 @@ void RecordProcess::emitRecording()
 {
     while (m_recordingFlag) {
         //qDebug() << "录屏正在进行中! currentTime: " << QTime::currentTime();
+
         callTrayTimeIcon(DBUS_FUNC_ON_RECORDING);
         callTrayShotIcon(DBUS_FUNC_ON_RECORDING);
         callTrayRecorderIcon(DBUS_FUNC_ON_RECORDING);
+
         QThread::msleep(1000);
     }
 }
@@ -705,6 +707,7 @@ void RecordProcess::stopRecord()
 
         //系统托盘图标停止闪烁，时间暂停，但还没有结束
         QDBusMessage message = callTrayTimeIcon(DBUS_FUNC_ON_PAUSE);
+
         if (QDBusMessage::ReplyMessage == message.type()) {
             if (!message.arguments().takeFirst().toBool())
                 qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
