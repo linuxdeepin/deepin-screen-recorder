@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.0.9) unstable; urgency=medium
+
+  * changelog 6.0.9.
+
+ -- muyuankai <muyuankai@uniontech.com>  Mon, 02 Sep 2024 17:01:01 +0800
+
 deepin-screen-recorder (6.0.8) unstable; urgency=medium
 
   * chore: add ForceDock flag(Issue: 9619)
