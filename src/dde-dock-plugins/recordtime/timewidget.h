@@ -26,6 +26,7 @@
 #define RECORDER_TIME_WIDGET_MAXHEIGHT 40
 #define RECORDER_TIME_WIDGET_MAXWIDTH 120
 #define RECORDER_TIME_STARTCONFIG "CurrentStartTime"
+#define RECORDER_TIME_STARTCOUNTCONFIG "CurrentStartCount"
 DWIDGET_USE_NAMESPACE
 using DBusDock = com::deepin::dde::daemon::Dock;
 
@@ -111,6 +112,7 @@ private:
     bool m_hover;
     bool m_pressed;
     int m_systemVersion;
+    int m_timerCount;
     QSettings *m_setting;
     /**
      * @brief m_lightIcon1070 1070下录屏计时图标icon
