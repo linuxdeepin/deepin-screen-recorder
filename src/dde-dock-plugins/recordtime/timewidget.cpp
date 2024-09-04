@@ -38,6 +38,7 @@ TimeWidget::TimeWidget(DWidget *parent):
     m_hover(false),
     m_pressed(false),
     m_systemVersion(0),
+    m_timerCount(0),
     m_setting(nullptr)
 {
     m_systemVersion = DSysInfo::minorVersion().toInt() ;
@@ -137,6 +138,7 @@ QSize TimeWidget::sizeHint() const
 
 void TimeWidget::onTimeout()
 {
+    m_timerCount++;
     if (m_bRefresh) {
         if (m_currentIcon == m_lightIcon)
             m_currentIcon = m_shadeIcon;
@@ -145,7 +147,8 @@ void TimeWidget::onTimeout()
     }
     m_bRefresh = !m_bRefresh;
     QTime showTime(0, 0, 0);
-    showTime = showTime.addSecs(m_baseTime.secsTo(QTime::currentTime()));
+    showTime = showTime.addMSecs(m_timerCount * 400);
+    m_setting->setValue(RECORDER_TIME_STARTCOUNTCONFIG, m_timerCount);
     m_showTimeStr = showTime.toString("hh:mm:ss");
     update();
 }
@@ -421,6 +424,13 @@ void TimeWidget::start()
         m_baseTime = QTime::currentTime();
     } else {
         m_baseTime = m_setting->value(RECORDER_TIME_STARTCONFIG).toTime();
+    }
+
+    if (m_setting->value(RECORDER_TIME_STARTCOUNTCONFIG).toInt() == 0) {
+        m_setting->setValue(RECORDER_TIME_STARTCOUNTCONFIG, 0);
+        m_timerCount = 0;
+    } else {
+        m_timerCount = m_setting->value(RECORDER_TIME_STARTCOUNTCONFIG).toInt();
     }
     m_showTimeStr = QString("00:00:00");
     connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
