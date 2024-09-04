@@ -233,6 +233,7 @@ void ShotStartPlugin::onClickQuickPanel()
     qCDebug(SHOT_LOG) << "(onClickQuickPanel) 点击快捷面板";
     if (!m_isRecording) {
         qCDebug(SHOT_LOG) << "Get Shot DBus Interface";
+        m_proxyInter->requestSetAppletVisible(this, pluginName(), false);
         QDBusInterface shotDBusInterface(
             "com.deepin.Screenshot", "/com/deepin/Screenshot", "com.deepin.Screenshot", QDBusConnection::sessionBus());
         shotDBusInterface.asyncCall("StartScreenshot");
