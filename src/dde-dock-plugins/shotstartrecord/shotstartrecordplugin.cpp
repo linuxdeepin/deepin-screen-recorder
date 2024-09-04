@@ -290,7 +290,7 @@ void ShotStartRecordPlugin::onPause()
 void ShotStartRecordPlugin::onClickQuickPanel()
 {
     qCDebug(RECORD_LOG) << "(onClickQuickPanel) 点击快捷面板";
-
+    m_proxyInter->requestSetAppletVisible(this, pluginName(), false);
     qCDebug(RECORD_LOG) << "Get Record DBus Interface";
     QDBusInterface recordDBusInterface(
         "com.deepin.ScreenRecorder", "/com/deepin/ScreenRecorder", "com.deepin.ScreenRecorder", QDBusConnection::sessionBus());
