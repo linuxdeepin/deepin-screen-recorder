@@ -373,18 +373,14 @@ int WaylandIntegration::WaylandIntegrationPrivate::getProductType()
         return Utils::specialRecordingScreenMode;
     }
     qInfo() << "Special screen recording mode is not supported!";
-    QStringList options;
-    options << QString(QStringLiteral("-c"));
-    options << QString(QStringLiteral("dmidecode -s system-product-name|awk '{print $NF}'"));
     QProcess process;
-    process.start(QString(QStringLiteral("bash")), options);
+    process.start("dmidecode", QStringList() << "-s" << "system-product-name");
     process.waitForFinished();
     process.waitForReadyRead();
-    QByteArray tempArray =  process.readAllStandardOutput();
-    char *charTemp = tempArray.data();
-    QString str_output = QString(QLatin1String(charTemp));
-    process.close();
+    QByteArray tempArray = process.readAllStandardOutput();
+    QString str_output = QString(QLatin1String(tempArray.data()));
     qInfo() << "system-product-name: " << str_output;
+    process.close();
     if (str_output.contains("KLVV", Qt::CaseInsensitive) ||
             str_output.contains("KLVU", Qt::CaseInsensitive) ||
             str_output.contains("PGUV", Qt::CaseInsensitive) ||
