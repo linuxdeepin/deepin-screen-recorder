@@ -212,17 +212,31 @@ QString AudioUtils::currentAudioChannelV20Impl()
         serviceName, audioInterface->defaultSink().path(), QDBusConnection::sessionBus(), this));
     if (defaultSink->isValid()) {
         QString sinkName = defaultSink->name();
-        QStringList options;
-        options << "-c";
-        options << QString("pacmd list-sources | grep -PB 1 %1 | head -n 1 | perl -pe 's/.* //g'").arg(sinkName);
+        QString command = QString("pacmd list-sources");
 
         QProcess process;
-        process.start("bash", options);
+        process.start(command);
         process.waitForFinished();
         process.waitForReadyRead();
         QString str_output = process.readAllStandardOutput();
-        qDebug() << options << str_output;
-        return str_output;
+
+        QStringList lines = str_output.split("\n");
+        QString targetLine;
+        for (int i = 0; i < lines.size(); i++) {
+            if (lines[i].contains(sinkName)) {
+                if (i > 0) {
+                    targetLine = lines[i - 1];
+                    break;
+                }
+            }
+        }
+
+        if (!targetLine.isEmpty()) {
+            targetLine.remove(QRegExp(".* "));
+        }
+
+        qDebug() << command << targetLine;
+        return targetLine;
     }
     return "";
 }
