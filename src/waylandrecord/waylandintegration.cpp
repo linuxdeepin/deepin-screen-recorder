@@ -376,27 +376,19 @@ int WaylandIntegration::WaylandIntegrationPrivate::getProductType()
         return Utils::specialRecordingScreenMode;
     }
     qInfo() << "Special screen recording mode is not supported!";
-    QStringList options;
-    options << QString(QStringLiteral("-c"));
-    options << QString(QStringLiteral("dmidecode -s system-product-name|awk '{print $NF}'"));
     QProcess process;
-    process.start(QString(QStringLiteral("bash")), options);
+    process.start("dmidecode", QStringList() << "-s" << "system-product-name");
     process.waitForFinished();
     process.waitForReadyRead();
-    QByteArray tempArray =  process.readAllStandardOutput();
-    char *charTemp = tempArray.data();
-    QString str_output = QString(QLatin1String(charTemp));
-    process.close();
+    QByteArray tempArray = process.readAllStandardOutput();
+    QString str_output = QString(QLatin1String(tempArray.data()));
     qInfo() << "system-product-name: " << str_output;
 
-    options.clear();
-    options << QString(QStringLiteral("-c"));
-    options << QString(QStringLiteral("dmidecode | grep -i \"String 4\""));
-    process.start(QString(QStringLiteral("bash")), options);
+    process.start("dmidecode");
     process.waitForFinished();
     process.waitForReadyRead();
     QString str_output1 = QString(QLatin1String(process.readAllStandardOutput().data()));
-    qInfo() << "dmidecode | grep -i \"String 4\": " << str_output1;
+    qInfo() << "dmidecode: " << str_output1;
 
     if (str_output.contains("KLVV", Qt::CaseInsensitive) ||
             str_output.contains("KLVU", Qt::CaseInsensitive) ||

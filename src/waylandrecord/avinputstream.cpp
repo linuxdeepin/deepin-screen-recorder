@@ -605,16 +605,26 @@ bool  CAVInputStream::GetAudioSCardInputInfo(AVSampleFormat &sample_fmt, int &sa
 
 QString CAVInputStream::currentAudioChannel()
 {
-    QStringList options;
-    options << QString(QStringLiteral("-c"));
-    options << QString(QStringLiteral("pacmd list-sources | grep -PB 1 'analog.*monitor>' | head -n 1 | perl -pe 's/.* //g'"));
+    QString command = QString("pacmd list-sources");
     QProcess process;
-    process.start(QString(QStringLiteral("bash")), options);
+    process.start(command);
     process.waitForFinished();
     process.waitForReadyRead();
-    QByteArray tempArray =  process.readAllStandardOutput();
-    char *charTemp = tempArray.data();
-    QString str_output = QString(QLatin1String(charTemp));
+    QString str_output = process.readAllStandardOutput();
+
+    QStringList lines = str_output.split("\n");
+    QString targetLine;
+    for (int i = 0; i < lines.size(); i++) {
+        if (lines[i].contains("analog") && lines[i].contains("monitor")) {
+            targetLine = lines[i];
+            break;
+        }
+    }
+
+    if (!targetLine.isEmpty()) {
+        targetLine.remove(QRegExp(".* "));
+    }
+
     process.close();
-    return str_output;
+    return targetLine;
 }

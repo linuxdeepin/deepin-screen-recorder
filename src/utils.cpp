@@ -409,16 +409,22 @@ void Utils::getAllWindowInfo(const quint32 winId, const int width, const int hei
 
 bool Utils::checkCpuIsZhaoxin()
 {
-    QStringList options;
-    options << "-c";
-    options << "lscpu | grep 'CentaurHauls'";
     QProcess process;
-    process.start("bash", options);
+    process.start("lscpu");
     process.waitForFinished();
     process.waitForReadyRead();
-    QString str_output = process.readAllStandardOutput();
+    QString comStr = process.readAllStandardOutput();
     process.close();
-    if (str_output.length() == 0) {
+    QStringList lines = comStr.split('\n');
+    QStringList filteredLines;
+
+    // 过滤包含指定关键字的行
+    for (const QString &line : lines) {
+        if (line.contains("CentaurHauls", Qt::CaseInsensitive)) {
+            filteredLines.append(line);
+        }
+    }
+    if (filteredLines.isEmpty()) {
         return false;
     }
     return true;
