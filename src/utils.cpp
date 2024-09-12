@@ -10,7 +10,6 @@
 #include <DWindowManagerHelper>
 #include <DForeignWindow>
 
-
 #include <QString>
 #include <QDir>
 #include <QApplication>
@@ -65,11 +64,10 @@ QSize Utils::getRenderSize(int fontSize, QString string)
 
 void Utils::setFontSize(QPainter &painter, int textSize)
 {
-    QFont font = painter.font() ;
+    QFont font = painter.font();
     font.setPointSize(textSize);
     painter.setFont(font);
 }
-
 
 void Utils::drawTooltipBackground(QPainter &painter, QRect rect, QString textColor, qreal opacity)
 {
@@ -106,7 +104,6 @@ void Utils::passInputEvent(int wid)
         return;
     }
 
-
     XRectangle *reponseArea = new XRectangle;
     reponseArea->x = 0;
     reponseArea->y = 0;
@@ -115,7 +112,6 @@ void Utils::passInputEvent(int wid)
 
     XShapeCombineRectangles(QX11Info::display(), static_cast<unsigned long>(wid), ShapeInput, 0, 0, reponseArea, 1, ShapeSet, YXBanded);
     delete reponseArea;
-
 }
 
 void Utils::setAccessibility(DPushButton *button, const QString name)
@@ -158,7 +154,6 @@ void Utils::getInputEvent(const int wid, const short x, const short y, const uns
      */
     XShapeCombineRectangles(QX11Info::display(), static_cast<unsigned long>(wid), ShapeInput, 0, 0, reponseArea, 1, ShapeSubtract, YXBanded);
     delete reponseArea;
-
 }
 
 void Utils::cancelInputEvent(const int wid, const short x, const short y, const unsigned short width, const unsigned short height)
@@ -173,7 +168,6 @@ void Utils::cancelInputEvent(const int wid, const short x, const short y, const 
 
     XShapeCombineRectangles(QX11Info::display(), static_cast<unsigned long>(wid), ShapeInput, 0, 0, reponseArea, 1, ShapeSet, YXBanded);
     delete reponseArea;
-
 }
 
 void Utils::cancelInputEvent1(const int wid, const short x, const short y, const unsigned short width, const unsigned short height)
@@ -186,9 +180,7 @@ void Utils::cancelInputEvent1(const int wid, const short x, const short y, const
 
     XShapeCombineRectangles(QX11Info::display(), static_cast<unsigned long>(wid), ShapeInput, 0, 0, reponseArea, 0, ShapeSubtract, YXBanded);
     delete reponseArea;
-
 }
-
 
 // 录屏显示录制时长， 依赖dde-dock。
 // 判断系统是否是大于1040, 大于1040才显示录制时长功能。
@@ -255,12 +247,9 @@ void Utils::enableXGrabButton()
     //    Window        /* confine_to */,
     //    Cursor        /* cursor */
     //);
-    XGrabButton(QX11Info::display(), Button1, AnyModifier, DefaultRootWindow(QX11Info::display())
-                , true, ButtonPressMask | ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
-    XGrabButton(QX11Info::display(), Button2, AnyModifier, DefaultRootWindow(QX11Info::display())
-                , true, ButtonPressMask | ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
-    XGrabButton(QX11Info::display(),  Button3, AnyModifier, DefaultRootWindow(QX11Info::display())
-                , true, ButtonPressMask | ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
+    XGrabButton(QX11Info::display(), Button1, AnyModifier, DefaultRootWindow(QX11Info::display()), true, ButtonPressMask | ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
+    XGrabButton(QX11Info::display(), Button2, AnyModifier, DefaultRootWindow(QX11Info::display()), true, ButtonPressMask | ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
+    XGrabButton(QX11Info::display(), Button3, AnyModifier, DefaultRootWindow(QX11Info::display()), true, ButtonPressMask | ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
 }
 
 void Utils::disableXGrabButton()
@@ -268,7 +257,6 @@ void Utils::disableXGrabButton()
     if (Utils::isWaylandMode == true)
         return;
     XUngrabButton(QX11Info::display(), true, AnyModifier, DefaultRootWindow(QX11Info::display()));
-
 }
 
 void Utils::getAllWindowInfo(const quint32 winId, const int width, const int height, QList<QRect> &windowRects, QList<QString> &windowNames)
@@ -282,7 +270,7 @@ void Utils::getAllWindowInfo(const quint32 winId, const int width, const int hei
             prewindow = nullptr;
         }
 
-        Dtk::Gui::DForeignWindow *window = Dtk::Gui::DForeignWindow::fromWinId(wid);//sanitizer dtk
+        Dtk::Gui::DForeignWindow *window = Dtk::Gui::DForeignWindow::fromWinId(wid);   //sanitizer dtk
 
         prewindow = window;
 
@@ -297,11 +285,11 @@ void Utils::getAllWindowInfo(const quint32 winId, const int width, const int hei
             //window:后面代码有使用
             //window->deleteLater();
             //修改部分窗口显示不全，截图框识别问题
-            qDebug()  << "\n窗口名称: >>>> " << window->wmClass()
-                      << "\nx: " <<  window->frameGeometry().x()
-                      << "\ny: " <<  window->frameGeometry().y()
-                      << "\nwidth: " <<  window->frameGeometry().width()
-                      << "\nheight: " <<  window->frameGeometry().height()   ;
+            qDebug() << "\n窗口名称: >>>> " << window->wmClass()
+                     << "\nx: " << window->frameGeometry().x()
+                     << "\ny: " << window->frameGeometry().y()
+                     << "\nwidth: " << window->frameGeometry().width()
+                     << "\nheight: " << window->frameGeometry().height();
             //x坐标小于0时
             if (window->frameGeometry().x() < 0) {
                 if (window->frameGeometry().y() < 0) {
@@ -406,19 +394,24 @@ void Utils::getAllWindowInfo(const quint32 winId, const int width, const int hei
     }
 }
 
-
 bool Utils::checkCpuIsZhaoxin()
 {
-    QStringList options;
-    options << "-c";
-    options << "lscpu | grep 'CentaurHauls'";
     QProcess process;
-    process.start("bash", options);
+    process.start("lscpu");
     process.waitForFinished();
     process.waitForReadyRead();
-    QString str_output = process.readAllStandardOutput();
+    QString comStr = process.readAllStandardOutput();
     process.close();
-    if (str_output.length() == 0) {
+    QStringList lines = comStr.split('\n');
+    QStringList filteredLines;
+
+    // 过滤包含指定关键字的行
+    for (const QString &line : lines) {
+        if (line.contains("CentaurHauls", Qt::CaseInsensitive)) {
+            filteredLines.append(line);
+        }
+    }
+    if (filteredLines.isEmpty()) {
         return false;
     }
     return true;
@@ -454,12 +447,11 @@ QPoint Utils::getPosWithScreen(QPoint pos)
 
     for (int i = 0; i < screensInfo.size(); i++) {
         //判断当前点在哪块屏幕上
-        if (pos.x() > screensInfo[i].x && pos.x() < screensInfo[i].x + screensInfo[i].width &&
-                pos.y() > screensInfo[i].y && pos.y() < screensInfo[i].y + screensInfo[i].height) {
+        if (pos.x() > screensInfo[i].x && pos.x() < screensInfo[i].x + screensInfo[i].width && pos.y() > screensInfo[i].y && pos.y() < screensInfo[i].y + screensInfo[i].height) {
 
             qInfo() << "screenInfo: " << screensInfo[i].toString();
             dpos.setX(static_cast<int>((pos.x() - screensInfo[i].x) / pixelRatio + screensInfo[i].x));
-            dpos.setY(static_cast<int>((pos.y() - screensInfo[i].y) / pixelRatio) + + screensInfo[i].y);
+            dpos.setY(static_cast<int>((pos.y() - screensInfo[i].y) / pixelRatio) + +screensInfo[i].y);
         }
     }
     return dpos;
@@ -475,11 +467,10 @@ QPoint Utils::getPosWithScreenP(QPoint pos)
     qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
     for (int i = 0; i < screensInfo.size(); i++) {
         //判断当前点在哪块屏幕上
-        if (pos.x() > screensInfo[i].x && pos.x() < screensInfo[i].x + screensInfo[i].width &&
-                pos.y() > screensInfo[i].y && pos.y() < screensInfo[i].y + screensInfo[i].height) {
+        if (pos.x() > screensInfo[i].x && pos.x() < screensInfo[i].x + screensInfo[i].width && pos.y() > screensInfo[i].y && pos.y() < screensInfo[i].y + screensInfo[i].height) {
 
-            dpos.setX(static_cast<int>((pos.x() - screensInfo[i].x)*pixelRatio + screensInfo[i].x));
-            dpos.setY(static_cast<int>((pos.y() - screensInfo[i].y)*pixelRatio + screensInfo[i].y));
+            dpos.setX(static_cast<int>((pos.x() - screensInfo[i].x) * pixelRatio + screensInfo[i].x));
+            dpos.setY(static_cast<int>((pos.y() - screensInfo[i].y) * pixelRatio + screensInfo[i].y));
         }
     }
 
@@ -503,9 +494,9 @@ QList<Utils::ScreenInfo> Utils::getScreensInfo()
         QRect rect = (*it)->geometry();
         //qDebug() << (*it)->name() << rect;
         ScreenInfo screenInfo;
-        screenInfo.x = rect.x(); //屏幕的起始x坐标始终是正确的，不管是否经过缩放
-        screenInfo.y = rect.y(); //屏幕的起始y坐标始终是正确的，不管是否经过缩放
-        screenInfo.height =  static_cast<int>(rect.height() * pixelRatio);
+        screenInfo.x = rect.x();   //屏幕的起始x坐标始终是正确的，不管是否经过缩放
+        screenInfo.y = rect.y();   //屏幕的起始y坐标始终是正确的，不管是否经过缩放
+        screenInfo.height = static_cast<int>(rect.height() * pixelRatio);
         screenInfo.width = static_cast<int>(rect.width() * pixelRatio);
         screenInfo.name = (*it)->name();
         hTotal += screenInfo.height;
