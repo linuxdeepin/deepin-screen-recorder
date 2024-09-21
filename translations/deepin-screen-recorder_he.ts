@@ -5,7 +5,8 @@
         <location filename="../src/countdown_tooltip.cpp" line="78"/>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation type="unfinished"/>
+        <translation>יש ללחוץ על הסמל שבמגש
+או ללחוץ שוב על קיצור המקשים בשביל להפסיק את ההסרטה</translation>
     </message>
 </context>
 <context>
@@ -41,7 +42,7 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/record_process.cpp" line="301"/>
         <source>Recording finished</source>
-        <translation type="unfinished"/>
+        <translation>ההסרטה הסתיימה</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="302"/>
