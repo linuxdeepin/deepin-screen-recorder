@@ -534,6 +534,28 @@ void MainWindow::checkIsLockScreen()
         m_toolBar->setOcrScreenshotsEnable(false);
         m_toolBar->setButEnableOnLockScreen(false);
     }
+    //电源界面判断接口
+    QDBusInterface ddeLockFront("com.deepin.dde.lockFront",
+                                "/com/deepin/dde/lockFront",
+                                "com.deepin.dde.lockFront",
+                                QDBusConnection::sessionBus());
+    if (!ddeLockFront.isValid()) {
+        qWarning() << "(QDBusInterface) The 'ddeLockFront' interface does not exist";
+        return;
+    }
+    if (ddeLockFront.property("Visible").isNull()) {
+        qWarning() << "(QDBusInterface) The 'Visible' property does not exist of lockFront";
+        return;
+    }
+    bool isLockFront = ddeLockFront.property("Visible").toBool();
+
+    qInfo() << "Current Screen is Powersource UI?" << isLockFront;
+    if (isLockFront) {
+        pinScreenshotsLockScreen(isLockScreen);
+        m_toolBar->setScrollShotDisabled(true);
+        m_toolBar->setOcrScreenshotsEnable(false);
+        m_toolBar->setButEnableOnLockScreen(false);
+    }
 }
 void MainWindow::initDynamicLibPath()
 {
