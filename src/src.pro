@@ -32,8 +32,8 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 # TODO: Adapt to the new version of Wayland interface or use PipeWire in the future
 
 if ( !equals(SYS_EDITION, "") || equals(SYS_VERSION, 2500) || greaterThan(SYS_VERSION, 2500) ) {
-    # Community edition
-    message("Community")
+    # Community edition or latest edition
+    message("Community / 2500")
 
     DEFINES += DDE_START_FLAGE_ON
     message("startdde support: OK!!!")
