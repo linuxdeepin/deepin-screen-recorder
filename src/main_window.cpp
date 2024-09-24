@@ -703,10 +703,11 @@ void MainWindow::checkIsLockScreen()
         m_toolBar->setOcrScreenshotsEnable(false);
         m_toolBar->setButEnableOnLockScreen(false);
     }
-
     // 电源界面判断接口
-    QDBusInterface ddeLockFront(
-        "com.deepin.dde.lockFront", "/com/deepin/dde/lockFront", "com.deepin.dde.lockFront", QDBusConnection::sessionBus());
+    QDBusInterface ddeLockFront("com.deepin.dde.lockFront",
+                                "/com/deepin/dde/lockFront",
+                                "com.deepin.dde.lockFront",
+                                QDBusConnection::sessionBus());
     if (!ddeLockFront.isValid()) {
         qWarning() << "(QDBusInterface) The 'ddeLockFront' interface does not exist";
         return;
