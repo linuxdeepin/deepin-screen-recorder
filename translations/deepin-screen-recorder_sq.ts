@@ -14,7 +14,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     <message>
         <location filename="../src/main_window.cpp" line="76"/>
         <source>Deepin screen recorder</source>
-        <translation type="unfinished"/>
+        <translation>Regjistrues ekrani Deepin</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="136"/>
@@ -24,7 +24,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     <message>
         <location filename="../src/main_window.cpp" line="454"/>
         <source>Select area</source>
-        <translation type="unfinished"/>
+        <translation>Përzgjidhni zonë</translation>
     </message>
 </context>
 <context>
@@ -32,7 +32,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     <message>
         <location filename="../src/record_process.cpp" line="229"/>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="291"/>
@@ -47,7 +47,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     <message>
         <location filename="../src/record_process.cpp" line="302"/>
         <source>Saved to</source>
-        <translation type="unfinished"/>
+        <translation>U ruajt te</translation>
     </message>
 </context>
 <context>
