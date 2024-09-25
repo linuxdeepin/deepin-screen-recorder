@@ -3153,8 +3153,9 @@ void MainWindow::saveScreenShot()
 void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const bool succeed)
 {
     Q_UNUSED(saveAction);
-    qInfo() << __FUNCTION__ << __LINE__ << "action success:" << succeed << "send notify message...";
-
+    qInfo() << __FUNCTION__ << __LINE__ << "正在发送通知消息...";
+    if (status::pinscreenshots == m_functionType)
+        return;
     if (Utils::is3rdInterfaceStart) {
         QDBusMessage msg = QDBusMessage::createSignal("/com/deepin/Screenshot", "com.deepin.Screenshot", "Done");
         msg << saveFilePath;
