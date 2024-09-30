@@ -924,7 +924,7 @@ void MainWindow::initResource()
     m_showButtons = new ShowButtons(this);
     connect(m_showButtons, SIGNAL(keyShowSignal(const QString &)), this, SLOT(showKeyBoardButtons(const QString &)));
     resizeHandleBigImg = DHiDPIHelper::loadNxPixmap(":/other/node.svg");
-    buttonFeedback = new ButtonFeedback();
+    buttonFeedback = new ButtonFeedback(this);
 
     m_initResource = true;
 }
