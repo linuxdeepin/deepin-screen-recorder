@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="fi">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="fi">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -18,7 +16,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Ruudunkaappaus</translation>
+        <translation>Kaappaus</translation>
     </message>
     <message>
         <source>Recording</source>
@@ -33,14 +31,14 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Ruudunkaappaus</translation>
+        <translation>Kaappaus</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Ruudunkaappaus</translation>
+        <translation>Kaappaus</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -96,7 +94,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Ruudunkaappaus</translation>
+        <translation>Kaappaus</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
@@ -112,7 +110,15 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Avaa kansio</translation>
+    </message>
+    <message>
+        <source>Screenshot finished and copy to clipboard</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -141,22 +147,22 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Ruudunkaappaus</translation>
+        <translation>Kaappaus</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Tallenna</translation>
+        <translation>Tallenna</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Ruudunkaappaus</translation>
+        <translation>Kaappaus</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Tallennus</translation>
+        <translation>Tallentaa</translation>
     </message>
 </context>
 <context>
@@ -186,7 +192,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>Ruudunkaappaus alkaa %1 sekunnissa</translation>
+        <translation>Kaappaus alkaa %1 sekunnissa</translation>
     </message>
 </context>
 <context>
@@ -383,7 +389,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation>Kiinnitä kuvakaappaukset</translation>
+        <translation>Kiinnitä kaappaukset</translation>
     </message>
     <message>
         <source>Start OCR</source>
@@ -393,76 +399,100 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <source>Start scrollshot</source>
         <translation>Aloita vierivä kaappaus</translation>
     </message>
+    <message>
+        <source>Arrow</source>
+        <translation>Nuoli</translation>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
     <message>
         <source>Screenshot</source>
-        <translation>Ruudunkaappaus</translation>
+        <translation>Kaappaus</translation>
     </message>
 </context>
 <context>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Tallenna</translation>
+        <translation>Tallenna</translation>
     </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Screenshot</source>
-        <translation>Ruudunkaappaus</translation>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation>Suorakulmio
+Piirrä neliö pitämällä Shift-painettuna</translation>
+    </message>
+    <message>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation>Ellipsi
+Piirrä ympyrä pitämällä Shift-painettuna</translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation>Sivellin
+Vedä suora viiva pitämällä Shift-painettuna</translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation>Muuta läpikuultavuutta (vieritä säätääksesi)</translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation>Muuta siveltimen kokoa (vieritä säätääksesi)</translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation>Muuta tekstin kokoa (vieritä säätääksesi)</translation>
     </message>
 </context>
 <context>
-    <name>ShotStartRecordPlugin</name>
+    <name>StartTooltip</name>
     <message>
-        <source>Record</source>
-        <translation type="unfinished">Tallenna</translation>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Napsauta tai vedä
+valitse tallennettava alue</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Sound On</source>
-        <translation>Ääni päällä</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Näytä näppäimistö (K)</translation>
     </message>
     <message>
-        <source>Microphone</source>
-        <translation>Mikrofoni</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Piilota näppäimistö (K)</translation>
     </message>
     <message>
-        <source>System Audio</source>
-        <translation>Järjestelmän ääni</translation>
+        <source>Show Keystroke (K)</source>
+        <translation>Näytä näppäimistö (K)</translation>
     </message>
     <message>
-        <source>Sound Off</source>
-        <translation>Ääni pois</translation>
+        <source>Turn on camera (C)</source>
+        <translation>Kytke kamera (C)</translation>
     </message>
     <message>
-        <source>Show Keystroke</source>
-        <translation>Näytä näppäimistö</translation>
+        <source>Turn off camera (C)</source>
+        <translation>Sammuta kamera (C)</translation>
     </message>
     <message>
-        <source>Hide Keystroke</source>
-        <translation>Piilota näppäimistö</translation>
+        <source>Screenshot</source>
+        <translation>Kaappaus</translation>
     </message>
     <message>
-        <source>Webcam On</source>
-        <translation>Kamera päällä</translation>
+        <source>Settings</source>
+        <translation>Asetukset</translation>
     </message>
     <message>
-        <source>Webcam Off</source>
-        <translation>Kamera pois</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>Näytä napsautus</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Valinnat</translation>
+        <source>Settings (F3)</source>
+        <translation>Asetukset (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -475,6 +505,14 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -501,28 +539,28 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Rectangle</source>
-        <translation>Suorakulmio</translation>
+        <source>Sound</source>
+        <translation>Ääni</translation>
     </message>
     <message>
-        <source>Ellipse</source>
-        <translation>Soikio</translation>
+        <source>Microphone</source>
+        <translation>Mikrofoni</translation>
     </message>
     <message>
-        <source>Line</source>
-        <translation>Viiva</translation>
+        <source>System audio</source>
+        <translation>Järjestelmän ääni</translation>
     </message>
     <message>
-        <source>Arrow</source>
-        <translation>Nuoli</translation>
+        <source>Options</source>
+        <translation>Valinnat</translation>
     </message>
     <message>
-        <source>Pencil</source>
-        <translation>Kynä</translation>
+        <source>Show pointer</source>
+        <translation>Näytä osoitin</translation>
     </message>
     <message>
-        <source>Text</source>
-        <translation>Teksti</translation>
+        <source>Show click</source>
+        <translation>Näytä painallus</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -533,12 +571,84 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <translation>Työpöytä</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>Videot</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Suorakulmio (R)
+Piirrä neliö pitämällä Shift-painettuna</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Ellipsi (O).
+Piirrä ympyrä pitämällä Shift-painettuna</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Viiva (L)
+Vedä suora pysty- tai vaakaviiva pitämällä Shift-painettuna</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Nuoli (X)
+Vedä suora pysty- tai vaakanuoli pitämällä Shift-painettuna</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Kynä (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Sumennus (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Teksti (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Vierivä kaappaus (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Poimi tekstiä (Alt+O）</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Kiinnitä kaappaukset (Alt+P）</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Kumoa (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Tallenna</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Leikepöydälle</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>Kuvat</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>Kansio</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Aseta tallennuspolku</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Muuta polkua tallentaessa</translation>
     </message>
     <message>
         <source>Format</source>
@@ -557,67 +667,39 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
+        <source>Border Effects</source>
+        <translation>Reunan tehosteet</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Leikepöydälle</translation>
+        <source>None</source>
+        <translation>Ei mitään</translation>
     </message>
     <message>
-        <source>Show pointer</source>
-        <translation>Näytä osoitin</translation>
+        <source>Shadow</source>
+        <translation>Varjo</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Hiiri</translation>
+        <source>Border</source>
+        <translation>Reunus</translation>
     </message>
     <message>
-        <source>Show Pointer</source>
-        <translation>Näytä osoitin</translation>
+        <source>Device</source>
+        <translation>Laite</translation>
     </message>
     <message>
         <source>Extract Text</source>
         <translation>Poimi tekstiä</translation>
     </message>
-    <message>
-        <source>Scrollshot</source>
-        <translation>Vierittävä kaappaus</translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation>Kiinnitä kaappaukset</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>ogg</source>
-        <translation>ogg</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>Videot</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
-        <source>Set a path on save</source>
-        <translation>Aseta tallennuspolku</translation>
+        <source>Close (Esc)</source>
+        <translation>Sulje (Esc)</translation>
     </message>
     <message>
-        <source>Change the path on save</source>
-        <translation>Muuta polkua tallentaessa</translation>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
     </message>
 </context>
 <context>
@@ -636,6 +718,13 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Exit</source>
         <translation>Poistu</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Uusi äänitys</translation>
     </message>
 </context>
 </TS>

@@ -538,7 +538,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     } else {
         // QString pngName = QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ") + QString("%1_").arg(rect.x()));
         // QImage(mapData, width, height, QImage::Format_RGBA8888).copy().save(pngName + ".png");
-        m_ScreenDateBuf.append(QPair<QRect, QImage>(rect, QImage(mapData, width, height, QImage::Format_RGBA8888).copy()));
+        m_ScreenDateBuf.append(QPair<QRect, QImage>(rect, QImage(mapData, width, height, getImageFormat(rbuf->format())).copy()));
         if (m_ScreenDateBuf.size() == m_screenCount) {
             QMutexLocker locker(&m_bGetScreenImageMutex);
             m_curNewImageScreen.clear();
@@ -549,7 +549,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
         }
     }
     munmap(mapData, stride * height);
-    close(dma_fd);
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayland::Client::RemoteBuffer *rbuf,
@@ -1035,7 +1034,11 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 
     connect(m_registry, &KWayland::Client::Registry::outputAnnounced, this, &WaylandIntegrationPrivate::addOutput);
     connect(m_registry, &KWayland::Client::Registry::outputRemoved, this, &WaylandIntegrationPrivate::removeOutput);
+#ifdef DWAYLAND_SUPPORT
     connect(m_registry, &KWayland::Client::Registry::outputDeviceV2Announced, this, &WaylandIntegrationPrivate::onDeviceChanged);
+#else
+    connect(m_registry, &KWayland::Client::Registry::outputDeviceAnnounced, this, &WaylandIntegrationPrivate::onDeviceChanged);
+#endif // DWAYLAND_SUPPORT
     connect(m_registry, &KWayland::Client::Registry::interfacesAnnounced, this, [this] {
         m_registryInitialized = true;
         // qCDebug(XdgDesktopPortalKdeWaylandIntegration) << "Registry initialized";

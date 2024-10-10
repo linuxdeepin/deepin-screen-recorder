@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="pt">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="pt">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -112,7 +110,15 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Abrir pasta</translation>
+    </message>
+    <message>
+        <source>Screenshot finished and copy to clipboard</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -141,22 +147,22 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Captura de ecrã</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Gravar</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Captura de ecrã</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Gravação</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -393,6 +399,10 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <source>Start scrollshot</source>
         <translation>Iniciar scrollshot</translation>
     </message>
+    <message>
+        <source>Arrow</source>
+        <translation>Seta</translation>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -405,64 +415,84 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Gravar</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Screenshot</source>
-        <translation>Captura de ecrã</translation>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation>Rectângulo
+Pressionar e manter Shift para desenhar um quadrado</translation>
+    </message>
+    <message>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation>Elipse
+Pressionar e manter Shift para desenhar um círculo</translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation>Pincel
+Pressionar e manter Shift para desenhar uma linha reta</translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation>Ajustar a intensidade do desfoque (Scroll para ajustar)</translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation>Ajustar o tamanho do pincel (Scroll para ajustar)</translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation>Ajustar o tamanho do texto (Scroll para ajustar)</translation>
     </message>
 </context>
 <context>
-    <name>ShotStartRecordPlugin</name>
+    <name>StartTooltip</name>
     <message>
-        <source>Record</source>
-        <translation type="unfinished">Gravar</translation>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Clique ou arraste para
+selecionar a área a gravar</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Sound On</source>
-        <translation>Som ligado</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Mostrar pressão da tecla (K)</translation>
     </message>
     <message>
-        <source>Microphone</source>
-        <translation>Microfone</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Ocultar pressão da tecla (K)</translation>
     </message>
     <message>
-        <source>System Audio</source>
-        <translation>Som do sistema</translation>
+        <source>Show Keystroke (K)</source>
+        <translation>Mostrar pressão da tecla (K)</translation>
     </message>
     <message>
-        <source>Sound Off</source>
-        <translation>Som desligado</translation>
+        <source>Turn on camera (C)</source>
+        <translation>Ligar câmara (C)</translation>
     </message>
     <message>
-        <source>Show Keystroke</source>
-        <translation>Mostrar pressão da tecla</translation>
+        <source>Turn off camera (C)</source>
+        <translation>Desligar câmara (C)</translation>
     </message>
     <message>
-        <source>Hide Keystroke</source>
-        <translation>Ocultar pressão da tecla</translation>
+        <source>Screenshot</source>
+        <translation>Captura de ecrã</translation>
     </message>
     <message>
-        <source>Webcam On</source>
-        <translation>Webcam ligada</translation>
+        <source>Settings</source>
+        <translation>Definições</translation>
     </message>
     <message>
-        <source>Webcam Off</source>
-        <translation>Webcam desligada</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>Mostrar clique</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Opções</translation>
+        <source>Settings (F3)</source>
+        <translation>Definições (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -475,6 +505,14 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -501,28 +539,28 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Rectangle</source>
-        <translation>Retângulo</translation>
+        <source>Sound</source>
+        <translation>Som</translation>
     </message>
     <message>
-        <source>Ellipse</source>
-        <translation>Elipse</translation>
+        <source>Microphone</source>
+        <translation>Microfone</translation>
     </message>
     <message>
-        <source>Line</source>
-        <translation>Linha</translation>
+        <source>System audio</source>
+        <translation>Áudio do sistema</translation>
     </message>
     <message>
-        <source>Arrow</source>
-        <translation>Seta</translation>
+        <source>Options</source>
+        <translation>Opções</translation>
     </message>
     <message>
-        <source>Pencil</source>
-        <translation>Lápis</translation>
+        <source>Show pointer</source>
+        <translation>Mostrar cursor</translation>
     </message>
     <message>
-        <source>Text</source>
-        <translation>Texto</translation>
+        <source>Show click</source>
+        <translation>Mostrar clique</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -533,12 +571,84 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <translation>Ambiente de trabalho</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>Vídeos</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Rectângulo (R)
+Pressionar e manter Shift para desenhar um quadrado</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Elipse (O)
+Pressionar e manter Shift para desenhar um círculo</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Linha (L)
+Pressionar e manter Shift para desenhar uma linha vertical ou horizontal</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Seta (X)
+Pressionar e manter Shift para desenhar uma seta vertical ou horizontal</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Lápis (L)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Desfocar (D)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Texto (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Scrollshot (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Extrair texto (Alt+O）</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Afixar capturas de ecrã (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Anular (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Gravar</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Área de transferência</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>Imagens</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>Pasta</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Format</source>
@@ -557,67 +667,39 @@ ou pressione novamente o atalho para parar de gravar</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
+        <source>Border Effects</source>
+        <translation>Efeitos de contorno</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Área de transferência</translation>
+        <source>None</source>
+        <translation>Nenhum</translation>
     </message>
     <message>
-        <source>Show pointer</source>
-        <translation>Mostrar cursor</translation>
+        <source>Shadow</source>
+        <translation>Sombra</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Rato</translation>
+        <source>Border</source>
+        <translation>Contorno</translation>
     </message>
     <message>
-        <source>Show Pointer</source>
-        <translation>Mostrar cursor</translation>
+        <source>Device</source>
+        <translation>Dispositivo</translation>
     </message>
     <message>
         <source>Extract Text</source>
         <translation>Extrair texto</translation>
     </message>
-    <message>
-        <source>Scrollshot</source>
-        <translation>Scrollshot</translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation>Afixar capturas de ecrã</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>ogg</source>
-        <translation>ogg</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>Vídeos</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <source>Close (Esc)</source>
+        <translation>Fechar (Esc)</translation>
     </message>
     <message>
-        <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <source>OK (Enter)</source>
+        <translation>Aceitar (Enter)</translation>
     </message>
 </context>
 <context>
@@ -636,6 +718,13 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <message>
         <source>Exit</source>
         <translation>Sair</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Nova gravação</translation>
     </message>
 </context>
 </TS>

@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ar">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ar">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -11,7 +9,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"></translation>
+        <translation>لا تقم بتدوير الشاشة أثناء التسجيل</translation>
     </message>
 </context>
 <context>
@@ -22,7 +20,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"></translation>
+        <translation>جاري التسجيل</translation>
     </message>
 </context>
 <context>
@@ -80,19 +78,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>تجاهل</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>حافظة</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>جاري حفظ ملف تسجيل الشاشة، الرجاء الانتظار...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>نظراً لتعطيل تأثير النافذة أثناء العملية، تم إيقاف التسجيل</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -100,23 +98,27 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation type="unfinished"></translation>
+        <translation>فشلت عملية التقاط الشاشة</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open Folder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>فتح المجلد</translation>
+    </message>
+    <message>
+        <source>Screenshot finished and copy to clipboard</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -138,29 +140,29 @@ or press the shortcut again to stop recording</source>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">لقطة شاشة</translation>
+        <translation>لقطة شاشة</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">تسجيل</translation>
+        <translation>تسجيل</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">لقطة شاشة</translation>
+        <translation>لقطة شاشة</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"></translation>
+        <translation>جاري التسجيل</translation>
     </message>
 </context>
 <context>
@@ -183,7 +185,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>فتح المجلد</translation>
     </message>
 </context>
 <context>
@@ -197,35 +199,35 @@ or press the shortcut again to stop recording</source>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"></translation>
+        <translation>الحصول على مساعدة</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"></translation>
+        <translation>فشل في التقاط لقطة شاشة مستمرة.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"></translation>
+        <translation>وصلت إلى أسفل منطقة التمرير</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation type="unfinished"></translation>
+        <translation>تم الوصول إلى الحد الأقصى للطول</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"></translation>
+        <translation>ضبط منطقة الالتقاط</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>الرجاء القيام بتمرير عجلة الفأرة أو انقر لالتقاط لقطة شاشة قابلة للتمرير</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"></translation>
+        <translation>إبطاء سرعة التمرير</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -347,19 +349,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>الصوت</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"></translation>
+        <translation>كامير الويب</translation>
     </message>
     <message>
         <source>Start recording</source>
-        <translation>ابدأ التسجيل</translation>
+        <translation>بدء التسجيل</translation>
     </message>
     <message>
         <source>Options</source>
@@ -367,35 +369,39 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"></translation>
+        <translation>بدء التسجيل</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"></translation>
+        <translation>الفأرة</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>أدوات</translation>
     </message>
     <message>
         <source>Extract text</source>
-        <translation type="unfinished"></translation>
+        <translation>استخراج النص</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"></translation>
+        <translation>بدء تشغيل التعرف الضوئي على الحروف</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Arrow</source>
+        <translation>سهم</translation>
     </message>
 </context>
 <context>
@@ -409,64 +415,81 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">تسجيل</translation>
+        <translation>تسجيل</translation>
     </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
+    <message>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation>ضبط قوة التمويه (الرجاء التمرير لضبطها)</translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation>ضبط حجم الفرشاة (الرجاء التمرير لضبطه)</translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation>ضبط حجم النص (الرجاء التمرير لضبطه)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>انقر أو اسحب ل
+اختيار المنطقة للتسجيل</translation>
+    </message>
+</context>
+<context>
+    <name>SubToolWidget</name>
+    <message>
+        <source>Show keystroke (K)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>بدء تشغيل الكاميرا</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>إيقاف تشغيل الكاميرا</translation>
+    </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">لقطة شاشة</translation>
-    </message>
-</context>
-<context>
-    <name>ShotStartRecordPlugin</name>
-    <message>
-        <source>Record</source>
-        <translation type="unfinished">تسجيل</translation>
-    </message>
-</context>
-<context>
-    <name>ShotToolWidget</name>
-    <message>
-        <source>Sound On</source>
-        <translation>تشغيل الصوت</translation>
+        <translation>لقطة شاشة</translation>
     </message>
     <message>
-        <source>Microphone</source>
-        <translation>ميكروفون</translation>
+        <source>Settings</source>
+        <translation>اعدادات</translation>
     </message>
     <message>
-        <source>System Audio</source>
-        <translation>نظام الصوت</translation>
-    </message>
-    <message>
-        <source>Sound Off</source>
-        <translation>اطفاء الصوت</translation>
-    </message>
-    <message>
-        <source>Show Keystroke</source>
-        <translation>إظهار ضغطة المفتاح</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke</source>
-        <translation>إخفاء ضغطة المفتاح</translation>
-    </message>
-    <message>
-        <source>Webcam On</source>
-        <translation>تشغيل كاميرا الويب</translation>
-    </message>
-    <message>
-        <source>Webcam Off</source>
-        <translation>اطفاء كاميرا الويب</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>إظهار النقرات</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>خيارات</translation>
+        <source>Settings (F3)</source>
+        <translation>اعدادات</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -479,6 +502,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>إطار في الثانية</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>كاميرا الويب</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -505,28 +536,28 @@ or press the shortcut again to stop recording</source>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Rectangle</source>
-        <translation>مستطيل</translation>
+        <source>Sound</source>
+        <translation>الصوت</translation>
     </message>
     <message>
-        <source>Ellipse</source>
-        <translation>شكل بيضاوي</translation>
+        <source>Microphone</source>
+        <translation>ميكروفون</translation>
     </message>
     <message>
-        <source>Line</source>
-        <translation>خط</translation>
+        <source>System audio</source>
+        <translation>نظام الصوت</translation>
     </message>
     <message>
-        <source>Arrow</source>
-        <translation>سهم</translation>
+        <source>Options</source>
+        <translation>خيارات</translation>
     </message>
     <message>
-        <source>Pencil</source>
-        <translation>قلم</translation>
+        <source>Show pointer</source>
+        <translation>إظهار المؤشر</translation>
     </message>
     <message>
-        <source>Text</source>
-        <translation>نص</translation>
+        <source>Show click</source>
+        <translation>إظهار النقرات</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -537,12 +568,80 @@ or press the shortcut again to stop recording</source>
         <translation>سطح المكتب</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>مقاطع</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>قلم الرصاص</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>التمويه</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>النص</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>استخراج النص</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>تراجع</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>تسجيل</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>حافظة</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>صور</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>مجلد</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>تعيين مسار عند الحفظ</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>تغيير المسار عند الحفظ</translation>
     </message>
     <message>
         <source>Format</source>
@@ -561,85 +660,64 @@ or press the shortcut again to stop recording</source>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation type="unfinished"></translation>
+        <source>Border Effects</source>
+        <translation>تأثيرات الحدود</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation type="unfinished"></translation>
+        <source>None</source>
+        <translation>لا شيء</translation>
     </message>
     <message>
-        <source>Show pointer</source>
-        <translation type="unfinished"></translation>
+        <source>Shadow</source>
+        <translation>الظل</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation type="unfinished"></translation>
+        <source>Border</source>
+        <translation>الحدود</translation>
     </message>
     <message>
-        <source>Show Pointer</source>
-        <translation type="unfinished"></translation>
+        <source>Device</source>
+        <translation>الجهاز</translation>
     </message>
     <message>
         <source>Extract Text</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Scrollshot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>ogg</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>استخراج النص</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <source>Close (Esc)</source>
+        <translation>إغلاق</translation>
     </message>
     <message>
-        <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <source>OK (Enter)</source>
+        <translation>موافق</translation>
     </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"></translation>
+        <translation>تسجيل الشاشة غير مدعوم في الوقت الحالي</translation>
     </message>
     <message>
         <source>Exit</source>
         <translation>خروج</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>تسجيل جديد</translation>
     </message>
 </context>
 </TS>

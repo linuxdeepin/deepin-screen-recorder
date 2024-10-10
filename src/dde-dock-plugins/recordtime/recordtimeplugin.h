@@ -57,8 +57,6 @@ public:
 
     void clear();
 
-    void positionChanged(const Dock::Position position) override;
-
 public slots:
     /**
      * @brief onStart:启动计时服务

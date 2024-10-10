@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="da">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="da">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -11,7 +9,7 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -22,7 +20,7 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -80,19 +78,19 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Screenshot</source>
@@ -100,23 +98,27 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open Folder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Screenshot finished and copy to clipboard</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -138,29 +140,29 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Skærmbillede</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Optag</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Skærmbillede</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -183,7 +185,7 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -197,35 +199,35 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -347,15 +349,15 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Start recording</source>
@@ -367,35 +369,39 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Extract text</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Arrow</source>
+        <translation>Pil</translation>
     </message>
 </context>
 <context>
@@ -409,64 +415,81 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Optag</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
+    <message>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Klik eller træk for at
+vælge område som skal optages</translation>
+    </message>
+</context>
+<context>
+    <name>SubToolWidget</name>
+    <message>
+        <source>Show keystroke (K)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation type="unfinished"/>
+    </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Skærmbillede</translation>
-    </message>
-</context>
-<context>
-    <name>ShotStartRecordPlugin</name>
-    <message>
-        <source>Record</source>
-        <translation type="unfinished">Optag</translation>
-    </message>
-</context>
-<context>
-    <name>ShotToolWidget</name>
-    <message>
-        <source>Sound On</source>
-        <translation>Lyd til</translation>
+        <translation>Skærmbillede</translation>
     </message>
     <message>
-        <source>Microphone</source>
-        <translation>Mikrofon</translation>
+        <source>Settings</source>
+        <translation>Indstillinger</translation>
     </message>
     <message>
-        <source>System Audio</source>
-        <translation>Systemlyd</translation>
-    </message>
-    <message>
-        <source>Sound Off</source>
-        <translation>Lyd fra</translation>
-    </message>
-    <message>
-        <source>Show Keystroke</source>
-        <translation>Vis tastetryk</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke</source>
-        <translation>Skjul tastetryk</translation>
-    </message>
-    <message>
-        <source>Webcam On</source>
-        <translation>Webcam til</translation>
-    </message>
-    <message>
-        <source>Webcam Off</source>
-        <translation>Webcam fra</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>Vis klik</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Valgmuligheder</translation>
+        <source>Settings (F3)</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Format:</source>
@@ -479,6 +502,14 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>FPS:</source>
@@ -505,28 +536,28 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Rectangle</source>
-        <translation>Rektangel</translation>
+        <source>Sound</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Ellipse</source>
-        <translation>Ellipse</translation>
+        <source>Microphone</source>
+        <translation>Mikrofon</translation>
     </message>
     <message>
-        <source>Line</source>
-        <translation>Linje</translation>
+        <source>System audio</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Arrow</source>
-        <translation>Pil</translation>
+        <source>Options</source>
+        <translation>Valgmuligheder</translation>
     </message>
     <message>
-        <source>Pencil</source>
-        <translation>Blyant</translation>
+        <source>Show pointer</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Text</source>
-        <translation>Tekst</translation>
+        <source>Show click</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Save to</source>
@@ -537,12 +568,80 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <translation>Skrivebord</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Optag</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>Billeder</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>Mappe</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Format</source>
@@ -561,85 +660,64 @@ eller tryk på genvejen igen, for at stoppe optagelse</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation type="unfinished"></translation>
+        <source>Border Effects</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation type="unfinished"></translation>
+        <source>None</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Show pointer</source>
-        <translation type="unfinished"></translation>
+        <source>Shadow</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation type="unfinished"></translation>
+        <source>Border</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Show Pointer</source>
-        <translation type="unfinished"></translation>
+        <source>Device</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Extract Text</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Scrollshot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>ogg</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <source>Close (Esc)</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <source>OK (Enter)</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Exit</source>
         <translation>Afslut</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Ny optagelse</translation>
     </message>
 </context>
 </TS>

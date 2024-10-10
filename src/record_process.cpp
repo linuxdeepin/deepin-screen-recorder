@@ -322,33 +322,11 @@ void RecordProcess::recordVideo()
     arguments << QString("-vf");
     arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
 #else
-    arguments << QString("-video_size");
-    arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
-    if (m_mouseType == RECORD_MOUSE_NULL || m_mouseType == RECORD_MOUSE_CHECK) {
-        qDebug() << "x11 ffmpeg 不录制光标";
-        arguments << QString("-draw_mouse");
-        arguments << QString("0");
-    }
-    arguments << QString("-framerate");
-    arguments << QString("%1").arg(m_framerate);
-    arguments << QString("-probesize");
-    arguments << QString("24M");
-    arguments << QString("-thread_queue_size");
-    arguments << QString("64");
-    arguments << QString("-f");
-    arguments << QString("x11grab");
-    arguments << QString("-i");
-    arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
-
 
     if (m_audioType == RECORD_AUDIO_SYSTEMAUDIO || m_audioType == RECORD_AUDIO_MIC_SYSTEMAUDIO) {
         qDebug() << "x11 ffmpeg 是否录制系统声音？true";
         arguments << QString("-thread_queue_size");
-//        if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
-            arguments << QString("2048");
-//        } else {
-//            arguments << QString("32");
-//        }
+        arguments << QString("2048");
         arguments << QString("-fragment_size");
         arguments << QString("4096");
         arguments << QString("-f");
@@ -369,11 +347,7 @@ void RecordProcess::recordVideo()
     if (m_audioType == RECORD_AUDIO_MIC || m_audioType == RECORD_AUDIO_MIC_SYSTEMAUDIO) {
         qDebug() << "x11 ffmpeg 是否录制麦克风？true";
         arguments << QString("-thread_queue_size");
-//        if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
-            arguments << QString("2048");
-//        } else {
-//            arguments << QString("32");
-//        }
+        arguments << QString("2048");
         arguments << QString("-fragment_size");
         arguments << QString("4096");
         arguments << QString("-f");
@@ -385,6 +359,7 @@ void RecordProcess::recordVideo()
         arguments << QString("-i");
         arguments << QString("default");
     }
+
     if (m_audioType == RECORD_AUDIO_MIC_SYSTEMAUDIO) {
         qDebug() << "x11 ffmpeg 是否录制混音？true";
         arguments << QString("-filter_complex");
@@ -398,6 +373,28 @@ void RecordProcess::recordVideo()
             arguments << QString("amerge");
         }
     }
+
+    // Audio settings need to be in front of.
+    // Otherwise, audio/video desynchronisation may occur during recording.
+    // Link: https://github.com/linuxdeepin/deepin-screen-recorder/pull/256
+    arguments << QString("-video_size");
+    arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
+    if (m_mouseType == RECORD_MOUSE_NULL || m_mouseType == RECORD_MOUSE_CHECK) {
+        qDebug() << "x11 ffmpeg 不录制光标";
+        arguments << QString("-draw_mouse");
+        arguments << QString("0");
+    }
+    arguments << QString("-framerate");
+    arguments << QString("%1").arg(m_framerate);
+    arguments << QString("-probesize");
+    arguments << QString("24M");
+    arguments << QString("-thread_queue_size");
+    arguments << QString("64");
+    arguments << QString("-f");
+    arguments << QString("x11grab");
+    arguments << QString("-i");
+    arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
+
     arguments << QString("-c:v");
     arguments << QString("libx264");
     arguments << QString("-pix_fmt");

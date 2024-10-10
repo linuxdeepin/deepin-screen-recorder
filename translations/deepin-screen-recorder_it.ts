@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="it">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="it">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -112,7 +110,15 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Apri cartella</translation>
+    </message>
+    <message>
+        <source>Screenshot finished and copy to clipboard</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -141,22 +147,22 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Screenshot</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Registrazione</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Screenshot</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Registrazione in corso</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -393,6 +399,10 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <source>Start scrollshot</source>
         <translation>Avvia screenshot continuo</translation>
     </message>
+    <message>
+        <source>Arrow</source>
+        <translation>Freccia</translation>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -405,64 +415,84 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Registrazione</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
+    <message>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation>Rettangolo
+Tieni premuto Maiusc per disegnare un quadrato</translation>
+    </message>
+    <message>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation>Ellisse
+Tieni premuto Maiusc per disegnare un cerchio</translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation>Spazzola
+Tieni premuto Maiusc per tracciare una linea retta</translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation>Regola l&apos;intensità della sfocatura (scorri per regolarla)</translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation>Regola la dimensione del pennello (scorri per regolarla)</translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation>Regola la dimensione testo (scorri per regolarla)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Clicca o trascina
+seleziona l&apos;area da registrare</translation>
+    </message>
+</context>
+<context>
+    <name>SubToolWidget</name>
+    <message>
+        <source>Show keystroke (K)</source>
+        <translation>Mostra sequenza di tasti (K)</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation>Nascondi sequenza di tasti (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Mostra sequenza di tasti (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Attiva camera (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Disattiva camera (C)</translation>
+    </message>
     <message>
         <source>Screenshot</source>
         <translation>Screenshot</translation>
     </message>
-</context>
-<context>
-    <name>ShotStartRecordPlugin</name>
     <message>
-        <source>Record</source>
-        <translation type="unfinished">Registrazione</translation>
-    </message>
-</context>
-<context>
-    <name>ShotToolWidget</name>
-    <message>
-        <source>Sound On</source>
-        <translation>Suono attivo</translation>
+        <source>Settings</source>
+        <translation>Impostazioni</translation>
     </message>
     <message>
-        <source>Microphone</source>
-        <translation>Microfono</translation>
-    </message>
-    <message>
-        <source>System Audio</source>
-        <translation>Audio di Sistema</translation>
-    </message>
-    <message>
-        <source>Sound Off</source>
-        <translation>Suoto disattivato</translation>
-    </message>
-    <message>
-        <source>Show Keystroke</source>
-        <translation>Mostra la sequenza dei tasti</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke</source>
-        <translation>Nascondi sequenza dei tasti</translation>
-    </message>
-    <message>
-        <source>Webcam On</source>
-        <translation>Webcam attiva</translation>
-    </message>
-    <message>
-        <source>Webcam Off</source>
-        <translation>Webcam disattivata</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>Mostra click</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Opzioni</translation>
+        <source>Settings (F3)</source>
+        <translation>Impostazioni (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -475,6 +505,14 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -501,28 +539,28 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Rectangle</source>
-        <translation>Rettangolo</translation>
+        <source>Sound</source>
+        <translation>Suono</translation>
     </message>
     <message>
-        <source>Ellipse</source>
-        <translation>Ellisse</translation>
+        <source>Microphone</source>
+        <translation>Microfono</translation>
     </message>
     <message>
-        <source>Line</source>
-        <translation>Linea</translation>
+        <source>System audio</source>
+        <translation>Audio di sistema</translation>
     </message>
     <message>
-        <source>Arrow</source>
-        <translation>Freccia</translation>
+        <source>Options</source>
+        <translation>Opzioni</translation>
     </message>
     <message>
-        <source>Pencil</source>
-        <translation>Penna</translation>
+        <source>Show pointer</source>
+        <translation>Mostra il puntatore</translation>
     </message>
     <message>
-        <source>Text</source>
-        <translation>Testo</translation>
+        <source>Show click</source>
+        <translation>Mostra click</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -533,12 +571,84 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <translation>Desktop</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>Video</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Rettangolo (R)
+Tieni premuto Maiusc per disegnare un quadrato</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Ellisse (O)
+Tieni premuto Maiusc per disegnare un cerchio</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Linea (L)
+Tieni premuto Maiusc per disegnare una linea verticale o orizzontale</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Freccia (X)
+Tieni premuto Maiusc per disegnare una freccia verticale o orizzontale</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Penna (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Blur (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Testo(T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Pergamena (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Estrai testo (Alt+O）</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Blocca screenshot (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Annulla (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Registrazione</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Appunti</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>Immagini</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>Cartella</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Seleziona un percorso di salvataggio</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Cambia il percorso di salvataggio</translation>
     </message>
     <message>
         <source>Format</source>
@@ -557,67 +667,39 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
+        <source>Border Effects</source>
+        <translation>Effetti del margine</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Appunti</translation>
+        <source>None</source>
+        <translation>Nessuno</translation>
     </message>
     <message>
-        <source>Show pointer</source>
-        <translation>Mostra il puntatore</translation>
+        <source>Shadow</source>
+        <translation>Ombra</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Mouse</translation>
+        <source>Border</source>
+        <translation>Bordo</translation>
     </message>
     <message>
-        <source>Show Pointer</source>
-        <translation>Mostra il puntatore</translation>
+        <source>Device</source>
+        <translation>Dispositivo</translation>
     </message>
     <message>
         <source>Extract Text</source>
         <translation>Estrai testo</translation>
     </message>
-    <message>
-        <source>Scrollshot</source>
-        <translation>Screenshot a scorrimento</translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation>Blocca screenshot</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>ogg</source>
-        <translation>ogg</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>Video</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
-        <source>Set a path on save</source>
-        <translation>Seleziona un percorso di salvataggio</translation>
+        <source>Close (Esc)</source>
+        <translation>Chiudi (Esc)</translation>
     </message>
     <message>
-        <source>Change the path on save</source>
-        <translation>Cambia il percorso di salvataggio</translation>
+        <source>OK (Enter)</source>
+        <translation>OK (Invio)</translation>
     </message>
 </context>
 <context>
@@ -636,6 +718,13 @@ o utilizza nuovamente la scorciatoia da tastiera per terminare la registrazione<
     <message>
         <source>Exit</source>
         <translation>Esci</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Nuova registrazione</translation>
     </message>
 </context>
 </TS>
