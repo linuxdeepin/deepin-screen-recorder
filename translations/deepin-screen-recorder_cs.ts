@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="cs">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="cs">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -112,7 +110,15 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Otevřít složku</translation>
+    </message>
+    <message>
+        <source>Screenshot finished and copy to clipboard</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -141,22 +147,22 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Snímek obrazovky</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Pořídit záznam</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Snímek obrazovky</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Nahrávání</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -393,6 +399,10 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <source>Start scrollshot</source>
         <translation>Spustit pořizování snímků obrazovky</translation>
     </message>
+    <message>
+        <source>Arrow</source>
+        <translation>Šipka</translation>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -405,64 +415,84 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Pořídit záznam</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
+    <message>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation>Obdélník
+Stiskněte a podržte klávesu Shift pro kreslení čtverce</translation>
+    </message>
+    <message>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation>Elipsa
+Stiskněte a podržte klávesu Shift pro kreslení kruhu</translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation>Štětec
+Stiskněte a podržte klávesu Shift pro kreslení přímky</translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation>Nastavení síly rozmazání (posunutím ji nastavíte)</translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation>Nastavení velikosti štětce (posunutím ji nastavíte)</translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation>Nastavení velikosti textu (posunutím ji nastavíte)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Klepněte nebo táhněte
+pro vybrání oblasti k nahrávání</translation>
+    </message>
+</context>
+<context>
+    <name>SubToolWidget</name>
+    <message>
+        <source>Show keystroke (K)</source>
+        <translation>Ukázat stisknutí klávesy (K)</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation>Skrýt stisknutí klávesy (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Ukázat stisknutí klávesy (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Zapnout kameru (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Vypnout kameru (C)</translation>
+    </message>
     <message>
         <source>Screenshot</source>
         <translation>Snímek obrazovky</translation>
     </message>
-</context>
-<context>
-    <name>ShotStartRecordPlugin</name>
     <message>
-        <source>Record</source>
-        <translation type="unfinished">Pořídit záznam</translation>
-    </message>
-</context>
-<context>
-    <name>ShotToolWidget</name>
-    <message>
-        <source>Sound On</source>
-        <translation>Zvuk zapnut</translation>
+        <source>Settings</source>
+        <translation>Nastavení</translation>
     </message>
     <message>
-        <source>Microphone</source>
-        <translation>Mikrofon</translation>
-    </message>
-    <message>
-        <source>System Audio</source>
-        <translation>Zvuk systému</translation>
-    </message>
-    <message>
-        <source>Sound Off</source>
-        <translation>Zvuk vypnut</translation>
-    </message>
-    <message>
-        <source>Show Keystroke</source>
-        <translation>Ukázat stisknutí klávesy</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke</source>
-        <translation>Skrýt stisknutí klávesy</translation>
-    </message>
-    <message>
-        <source>Webcam On</source>
-        <translation>Webová kamera zapnuta</translation>
-    </message>
-    <message>
-        <source>Webcam Off</source>
-        <translation>Webová kamera vypnuta</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>Ukázat klepnutí</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Volby</translation>
+        <source>Settings (F3)</source>
+        <translation>Nastavení (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -475,6 +505,14 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -501,28 +539,28 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <translation>30 snímků/s</translation>
     </message>
     <message>
-        <source>Rectangle</source>
-        <translation>Obdélník</translation>
+        <source>Sound</source>
+        <translation>Zvuk</translation>
     </message>
     <message>
-        <source>Ellipse</source>
-        <translation>Elipsa</translation>
+        <source>Microphone</source>
+        <translation>Mikrofon</translation>
     </message>
     <message>
-        <source>Line</source>
-        <translation>Čára</translation>
+        <source>System audio</source>
+        <translation>Zvuk systému</translation>
     </message>
     <message>
-        <source>Arrow</source>
-        <translation>Šipka</translation>
+        <source>Options</source>
+        <translation>Volby</translation>
     </message>
     <message>
-        <source>Pencil</source>
-        <translation>Tužka</translation>
+        <source>Show pointer</source>
+        <translation>Zobrazit ukazatel</translation>
     </message>
     <message>
-        <source>Text</source>
-        <translation>Text</translation>
+        <source>Show click</source>
+        <translation>Zobrazit kliknutí</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -533,12 +571,84 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <translation>Plocha</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>Videa</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Obdélník (R)
+Stiskněte a podržte klávesu Shift pro kreslení čtverce</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Elipsa (O)
+Stiskněte a podržte klávesu Shift pro kreslení kruhu</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Čára (L)
+Stiskněte a podržte klávesu Shift pro kreslení svislé nebo vodorovné čáry</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Šipka (X)
+Stiskněte a podržte klávesu Shift pro kreslení svislé nebo vodorovné šipky</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Tužka (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Rozmazání (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Text (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Snímek z celého posuvníku (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Vytáhnout text (Alt+O）</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Připnout snímky obrazovky (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Zpět (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Pořídit záznam</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Schránka</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>Obrázky</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>Složka</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Nastavit popis umístění při ukládání</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Změnit popis umístění pro ukládání</translation>
     </message>
     <message>
         <source>Format</source>
@@ -557,67 +667,39 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
+        <source>Border Effects</source>
+        <translation>Efekty orámování</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Schránka</translation>
+        <source>None</source>
+        <translation>Žádné</translation>
     </message>
     <message>
-        <source>Show pointer</source>
-        <translation>Zobrazit ukazatel</translation>
+        <source>Shadow</source>
+        <translation>Stín</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Myš</translation>
+        <source>Border</source>
+        <translation>Okraj</translation>
     </message>
     <message>
-        <source>Show Pointer</source>
-        <translation>Zobrazit ukazatel</translation>
+        <source>Device</source>
+        <translation>Zařízení</translation>
     </message>
     <message>
         <source>Extract Text</source>
         <translation>Rozpoznat text</translation>
     </message>
-    <message>
-        <source>Scrollshot</source>
-        <translation>Snímek z celého posuvníku</translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation>Připnout snímky obrazovky</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>ogg</source>
-        <translation>ogg</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>Videa</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
-        <source>Set a path on save</source>
-        <translation>Nastavit popis umístění při ukládání</translation>
+        <source>Close (Esc)</source>
+        <translation>Zavřít (Esc)</translation>
     </message>
     <message>
-        <source>Change the path on save</source>
-        <translation>Změnit popis umístění pro ukládání</translation>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
     </message>
 </context>
 <context>
@@ -636,6 +718,13 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Exit</source>
         <translation>Ukončit</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Nová nahrávka</translation>
     </message>
 </context>
 </TS>

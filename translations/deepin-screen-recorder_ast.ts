@@ -109,7 +109,15 @@ primir nel atayu pa dexar de grabar</translation>
         <translation type="unfinished"/>
     </message>
     <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <source>Open Folder</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Screenshot finished and copy to clipboard</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -132,6 +140,28 @@ primir nel atayu pa dexar de grabar</translation>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Recording</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -369,70 +399,97 @@ primir nel atayu pa dexar de grabar</translation>
         <source>Start scrollshot</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Arrow</source>
+        <translation>Flecha</translation>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
-    <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished"/>
-    </message>
     <message>
         <source>Screenshot</source>
         <translation type="unfinished"/>
     </message>
 </context>
 <context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Mosaic</source>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
         <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Calca o arrastra pa
+esbillar l&apos;área a grabar</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Sound On</source>
+        <source>Show keystroke (K)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Microphone</source>
+        <source>Hide Keystroke (K)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>System Audio</source>
+        <source>Show Keystroke (K)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Sound Off</source>
+        <source>Turn on camera (C)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Show Keystroke</source>
+        <source>Turn off camera (C)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Hide Keystroke</source>
+        <source>Screenshot</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Webcam On</source>
-        <translation type="unfinished"/>
+        <source>Settings</source>
+        <translation>Axustes</translation>
     </message>
     <message>
-        <source>Webcam Off</source>
+        <source>Settings (F3)</source>
         <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Opciones</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -445,6 +502,14 @@ primir nel atayu pa dexar de grabar</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>FPS:</source>
@@ -471,27 +536,27 @@ primir nel atayu pa dexar de grabar</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Rectangle</source>
-        <translation>Rectángulu</translation>
+        <source>Sound</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Ellipse</source>
-        <translation>Elipse</translation>
+        <source>Microphone</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Line</source>
-        <translation>Llinia</translation>
+        <source>System audio</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Arrow</source>
-        <translation>Flecha</translation>
+        <source>Options</source>
+        <translation>Opciones</translation>
     </message>
     <message>
-        <source>Pencil</source>
-        <translation>Llápiz</translation>
+        <source>Show pointer</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Text</source>
+        <source>Show click</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -503,12 +568,80 @@ primir nel atayu pa dexar de grabar</translation>
         <translation>Escritoriu</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Cartafueyu</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>Semeyes</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>Carpeta</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Format</source>
@@ -527,55 +660,38 @@ primir nel atayu pa dexar de grabar</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <source>Clipboard</source>
-        <translation>Cartafueyu</translation>
-    </message>
-    <message>
-        <source>Show pointer</source>
+        <source>Border Effects</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Mouse</translation>
+        <source>None</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Show Pointer</source>
+        <source>Shadow</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Border</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Device</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <source>Extract Text</source>
         <translation type="unfinished"/>
     </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
-        <source>Scrollshot</source>
+        <source>Close (Esc)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>ogg</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Change the path on save</source>
+        <source>OK (Enter)</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -594,6 +710,13 @@ primir nel atayu pa dexar de grabar</translation>
     </message>
     <message>
         <source>Exit</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
         <translation type="unfinished"/>
     </message>
 </context>

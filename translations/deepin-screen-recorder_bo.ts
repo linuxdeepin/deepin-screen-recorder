@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="bo">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="bo">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -111,12 +109,16 @@ or press the shortcut again to stop recording</source>
         <translation>སྦྱར་རིས།</translation>
     </message>
     <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <source>Open Folder</source>
         <translation>ཡིག་ཁུག་ཁ་ཕྱེ།</translation>
     </message>
     <message>
-        <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <source>Screenshot finished and copy to clipboard</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -145,18 +147,18 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">བརྙན་བཤུས།</translation>
+        <translation>བརྙན་བཤུས།</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">བརྙན་ཕབ།</translation>
+        <translation>བརྙན་ཕབ།</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">བརྙན་བཤུས།</translation>
+        <translation>བརྙན་བཤུས།</translation>
     </message>
     <message>
         <source>Recording</source>
@@ -397,6 +399,10 @@ or press the shortcut again to stop recording</source>
         <source>Start scrollshot</source>
         <translation>འགུལ་ནས་བཪྙན་ལེན་འགོ་སློང་།</translation>
     </message>
+    <message>
+        <source>Arrow</source>
+        <translation>མདའ་རྟགས།</translation>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -415,58 +421,77 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation>གྲུ་བཞི་ནར་མོ།
+Shiftམནན་ནས་གྲུ་བཞི་ཁ་གང་འབྲི་ཐུབ།</translation>
+    </message>
+    <message>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation>འཇོང་དབྱིབས་
+Shiftམནན་ནས་སྒོར་དབྱིབས་འབྲི་ཐུབ། </translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation>ཕག་ཏོ་
+Shiftམནན་ནས་དྲང་ཐིག་འབྲི་ཐུབ།</translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation>རབ་རིབ་ཡོད་ཚད་སྙོམ་སྒྲིག་（ཙི་གུའི་འགྲིལ་འཁོར།）</translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation>ཕག་ཏོ་ཆེ་ཆུང་སྙོམ་སྒྲིག་（ཙི་གུའི་འགྲིལ་འཁོར།）</translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation>ཡི་གེ་ཆེ་ཆུང་སྙོམ་སྒྲིག་（ཙི་གུའི་འགྲིལ་འཁོར།）</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>SubToolWidget</name>
+    <message>
+        <source>Show keystroke (K)</source>
+        <translation>མཐེབ་གཅུས་Kམངོན་པ།</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation>མཐེབ་གཅུས་ཡིབ་པ་ (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>མཐེབ་གཅུས་མངོན་པ་ (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>བཪྙན་མིག་ཁ་ཕྱེ།(C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>བཪྙན་མིག་ཁ་རྒྱོབ་ (C)</translation>
+    </message>
+    <message>
         <source>Screenshot</source>
         <translation>བརྙན་བཤུས།</translation>
     </message>
-</context>
-<context>
-    <name>ShotStartRecordPlugin</name>
     <message>
-        <source>Record</source>
-        <translation type="unfinished">བརྙན་ཕབ།</translation>
-    </message>
-</context>
-<context>
-    <name>ShotToolWidget</name>
-    <message>
-        <source>Sound On</source>
-        <translation>སྒྲ་ཕབ་ཁ་ཕྱེ།</translation>
+        <source>Settings</source>
+        <translation>སྒྲིག་བཀོད།</translation>
     </message>
     <message>
-        <source>Microphone</source>
-        <translation>སྐད་དུང་།</translation>
-    </message>
-    <message>
-        <source>System Audio</source>
-        <translation>མ་ལག་སྒྲ་ཟློས།</translation>
-    </message>
-    <message>
-        <source>Sound Off</source>
-        <translation>སྒྲ་ཕབ་ཁ་རྒྱག</translation>
-    </message>
-    <message>
-        <source>Show Keystroke</source>
-        <translation>མཐེབ་གཅུས་མངོན་པ།</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke</source>
-        <translation>མཐེབ་གཅུས་ཡིབ་པ།</translation>
-    </message>
-    <message>
-        <source>Webcam On</source>
-        <translation>བརྙན་མིག་ཁ་ཕྱེ།</translation>
-    </message>
-    <message>
-        <source>Webcam Off</source>
-        <translation>བརྙན་མིག་ཁ་རྒྱག</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>གནོན་པ་གསལ་བ།</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>གདམ་ག</translation>
+        <source>Settings (F3)</source>
+        <translation>སྒྲིག་བཀོད་(F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -479,6 +504,14 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -505,28 +538,28 @@ or press the shortcut again to stop recording</source>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Rectangle</source>
-        <translation>གྲུ་བཞི་ནར་མོ།</translation>
+        <source>Sound</source>
+        <translation>སྒྲ་འབེབས།</translation>
     </message>
     <message>
-        <source>Ellipse</source>
-        <translation>འཇོང་དབྱིབས།</translation>
+        <source>Microphone</source>
+        <translation>སྐད་དུང་།</translation>
     </message>
     <message>
-        <source>Line</source>
-        <translation>དྲང་ཕིག</translation>
+        <source>System audio</source>
+        <translation>མ་ལག་སྒྲ་ཟློས།</translation>
     </message>
     <message>
-        <source>Arrow</source>
-        <translation>མདའ་རྟགས།</translation>
+        <source>Options</source>
+        <translation>གདམ་ག</translation>
     </message>
     <message>
-        <source>Pencil</source>
-        <translation>པིར་སྨྱུག</translation>
+        <source>Show pointer</source>
+        <translation>འོད་རྟགས་གསལ་བ།</translation>
     </message>
     <message>
-        <source>Text</source>
-        <translation>ཡི་གེ།</translation>
+        <source>Show click</source>
+        <translation>གནོན་པ་གསལ་བ།</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -537,12 +570,84 @@ or press the shortcut again to stop recording</source>
         <translation>ཅོག་ངོས།</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>བཪྙན་ཟློས།</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>གྲུ་བཞི་ནར་མོ། (R)
+Shiftམནན་ནས་གྲུ་བཞི་ཁ་གང་འབྲི་ཐུབ།</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>འཇོང་དབྱིབས་ (O)
+Shiftམནན་ནས་སྒོར་དབྱིབས་འབྲི་ཐུབ། </translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>ཕག་ཏོ་ (L)
+Shiftམནན་ནས་དྲང་ཐིག་འབྲི་ཐུབ།</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>མདའ་རྩེ་ (X)
+Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམས་ཀྱི་དྲང་ཐིག་འབྲི་ཐུབ།</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>པིར་སྨྱུག་ (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>རབ་རིབ། (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>ཡི་གེ། (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>འགྲིལ་ནས་པར་ལེན་ (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>ཡི་གེ་ངོས་འཛིན་ Alt+O</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>སྦྱར་རིས་ (Alt+P）</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>ཕྱིར་འཐེན་ Ctrl+Z</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>བརྙན་ཕབ།</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>དྲས་སྦྱར་པང་།</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>པར་རིས།</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>དམིགས་བཙུགས་ས་གནས།</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>ཉར་སྐབས་གནས་ས་སྒྲིག་འགོད་བྱེད་པ། </translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>ཉར་སྐབས་གནས་ས་གསར་སྒྱུར་བྱེད་པ།</translation>
     </message>
     <message>
         <source>Format</source>
@@ -561,67 +666,39 @@ or press the shortcut again to stop recording</source>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
+        <source>Border Effects</source>
+        <translation>མཐའ་སྒྲོམ་ཕན་ནུས།</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>དྲས་སྦྱར་པང་།</translation>
+        <source>None</source>
+        <translation>མཐའ་སྒྲོམ་མེད་པ།</translation>
     </message>
     <message>
-        <source>Show pointer</source>
-        <translation>འོད་རྟགས་གསལ་བ།</translation>
+        <source>Shadow</source>
+        <translation>བརྙན་སྟོན།</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>ཕབ་བཟོའི་ཙི་གུ།</translation>
+        <source>Border</source>
+        <translation>ཕྱིའི་མཐའ་སྒྲོམ།</translation>
     </message>
     <message>
-        <source>Show Pointer</source>
-        <translation>འོད་རྟགས་གསལ་བ།</translation>
+        <source>Device</source>
+        <translation>བཟོ་ལྟ།</translation>
     </message>
     <message>
         <source>Extract Text</source>
         <translation>ཡི་གེ་ངོས་འཛིན།</translation>
     </message>
-    <message>
-        <source>Scrollshot</source>
-        <translation>འགུལ་ནས་ཡོལ་པར་བླངས།</translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation>སྦྱར་རིས།</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>ogg</source>
-        <translation>ogg</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>བཪྙན་ཟློས།</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
-        <source>Set a path on save</source>
-        <translation>ཉར་སྐབས་གནས་ས་སྒྲིག་འགོད་བྱེད་པ།</translation>
+        <source>Close (Esc)</source>
+        <translation>ཁ་རྒྱག་(Esc)</translation>
     </message>
     <message>
-        <source>Change the path on save</source>
-        <translation>ཉར་སྐབས་གནས་ས་གསར་སྒྱུར་བྱེད་པ།</translation>
+        <source>OK (Enter)</source>
+        <translation>གཏན་འཁེལ་ (Enter)</translation>
     </message>
 </context>
 <context>
@@ -640,6 +717,13 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Exit</source>
         <translation>ཕྱིར་འཐེན།</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 </TS>

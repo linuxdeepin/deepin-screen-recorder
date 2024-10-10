@@ -23,6 +23,17 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>පටිපත කරන්න</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>තිරසේයාව</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
@@ -93,11 +104,19 @@ or press the shortcut again to stop recording</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <source>Open Folder</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Pin Screenshots</source>
+        <source>Screenshot finished and copy to clipboard</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -120,6 +139,28 @@ or press the shortcut again to stop recording</source>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Recording</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -306,6 +347,10 @@ or press the shortcut again to stop recording</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <source>Sound</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <source>Keystroke</source>
         <translation type="unfinished"/>
     </message>
@@ -326,6 +371,10 @@ or press the shortcut again to stop recording</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <source>Mouse</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <source>Tools</source>
         <translation type="unfinished"/>
     </message>
@@ -342,35 +391,30 @@ or press the shortcut again to stop recording</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Start scrollshot</source>
+        <source>Start OCR</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Start OCR</source>
+        <source>Start scrollshot</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <source>Arrow</source>
         <translation type="unfinished"/>
     </message>
-    <message>
-        <source>Sound</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Mouse</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>තිරසේයාව</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -404,13 +448,45 @@ Press and hold Shift to draw a straight line</source>
     </message>
 </context>
 <context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>SubToolWidget</name>
     <message>
-        <source>Microphone</source>
+        <source>Show keystroke (K)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Options</source>
+        <source>Hide Keystroke (K)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>තිරසේයාව</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -423,6 +499,14 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>MP4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>webm</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -450,43 +534,19 @@ Press and hold Shift to draw a straight line</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Save to</source>
+        <source>Sound</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Desktop</source>
+        <source>Microphone</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Pictures</source>
+        <source>System audio</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Folder</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Format</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>PNG</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>JPG</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>BMP</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>MKV</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Clipboard</source>
+        <source>Options</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -494,83 +554,15 @@ Press and hold Shift to draw a straight line</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Extract Text</source>
+        <source>Show click</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Show keystroke (K)</source>
+        <source>Save to</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Settings</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Settings (F3)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Blur (B)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Text (T)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Extract text (Alt+O）</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Undo (Ctrl+Z)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Screenshot</source>
-        <translation>තිරසේයාව</translation>
-    </message>
-    <message>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Record</source>
-        <translation>පටිපත කරන්න</translation>
-    </message>
-    <message>
-        <source>Pencil (P)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Turn on camera (C)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Border Effects</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Turn off camera (C)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Show Keystroke (K)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>webm</source>
+        <source>Desktop</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -598,6 +590,82 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <source>Pencil (P)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>පටිපත කරන්න</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <source>Shadow</source>
         <translation type="unfinished"/>
     </message>
@@ -610,15 +678,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Sound</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>System audio</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Show click</source>
+        <source>Extract Text</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -648,6 +708,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Exit</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
         <translation type="unfinished"/>
     </message>
 </context>

@@ -109,7 +109,15 @@ atau tekan pemintas lagi untuk berhenti merekam</translation>
         <translation type="unfinished"/>
     </message>
     <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <source>Open Folder</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Screenshot finished and copy to clipboard</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -132,6 +140,28 @@ atau tekan pemintas lagi untuk berhenti merekam</translation>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Recording</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -369,69 +399,96 @@ atau tekan pemintas lagi untuk berhenti merekam</translation>
         <source>Start scrollshot</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Arrow</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
-    <message>
-        <source>Screen Capture</source>
-        <translation>Cuplikan layar</translation>
-    </message>
     <message>
         <source>Screenshot</source>
         <translation>Cuplikan layar</translation>
     </message>
 </context>
 <context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Blur</source>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Mosaic</source>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
         <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Klik atau seret ke
+pilih area untuk rekam</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Sound On</source>
+        <source>Show keystroke (K)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Microphone</source>
+        <source>Hide Keystroke (K)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>System Audio</source>
+        <source>Show Keystroke (K)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Sound Off</source>
+        <source>Turn on camera (C)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Show Keystroke</source>
+        <source>Turn off camera (C)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Hide Keystroke</source>
-        <translation type="unfinished"/>
+        <source>Screenshot</source>
+        <translation>Cuplikan layar</translation>
     </message>
     <message>
-        <source>Webcam On</source>
-        <translation type="unfinished"/>
+        <source>Settings</source>
+        <translation>Pengaturan</translation>
     </message>
     <message>
-        <source>Webcam Off</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Options</source>
+        <source>Settings (F3)</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -444,6 +501,14 @@ atau tekan pemintas lagi untuk berhenti merekam</translation>
     </message>
     <message>
         <source>MP4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>webm</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -471,27 +536,27 @@ atau tekan pemintas lagi untuk berhenti merekam</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Rectangle</source>
+        <source>Sound</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Ellipse</source>
+        <source>Microphone</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Line</source>
+        <source>System audio</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Arrow</source>
+        <source>Options</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Pencil</source>
+        <source>Show pointer</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Text</source>
+        <source>Show click</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -503,11 +568,79 @@ atau tekan pemintas lagi untuk berhenti merekam</translation>
         <translation type="unfinished"/>
     </message>
     <message>
+        <source>Videos</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Rekam</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <source>Folder</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Change the path on save</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -527,55 +660,38 @@ atau tekan pemintas lagi untuk berhenti merekam</translation>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>MKV</source>
+        <source>Border Effects</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Clipboard</source>
+        <source>None</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Show pointer</source>
+        <source>Shadow</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Mouse</source>
+        <source>Border</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Show Pointer</source>
+        <source>Device</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <source>Extract Text</source>
         <translation type="unfinished"/>
     </message>
+</context>
+<context>
+    <name>ToolBarWidget</name>
     <message>
-        <source>Scrollshot</source>
+        <source>Close (Esc)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>ogg</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Change the path on save</source>
+        <source>OK (Enter)</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -594,6 +710,13 @@ atau tekan pemintas lagi untuk berhenti merekam</translation>
     </message>
     <message>
         <source>Exit</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
         <translation type="unfinished"/>
     </message>
 </context>

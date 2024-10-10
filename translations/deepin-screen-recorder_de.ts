@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="de">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="de">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -112,7 +110,15 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Ordner öffnen</translation>
+    </message>
+    <message>
+        <source>Screenshot finished and copy to clipboard</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -141,22 +147,22 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Bildschirmaufnahme</translation>
+        <translation>Bildschirmaufnahme</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Aufnehmen</translation>
+        <translation>Aufnehmen</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Bildschirmaufnahme</translation>
+        <translation>Bildschirmaufnahme</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Wird aufgenommen</translation>
+        <translation>Wird aufgenommen</translation>
     </message>
 </context>
 <context>
@@ -393,6 +399,10 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <source>Start scrollshot</source>
         <translation>Bildlaufaufnahme starten</translation>
     </message>
+    <message>
+        <source>Arrow</source>
+        <translation>Pfeil</translation>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -405,64 +415,83 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Aufnehmen</translation>
+        <translation>Aufnehmen</translation>
     </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <source>Screenshot</source>
-        <translation>Bildschirmaufnahme</translation>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation>Rechteck
+Umschalttaste gedrückt halten, um ein Rechteck zu zeichnen</translation>
+    </message>
+    <message>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation>Ellipse
+Umschalttaste gedrückt halten, um eine Ellipse zu zeichnen</translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation>Pinsel
+Umschalttaste gedrückt halten, um eine gerade Linie zu zeichnen</translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation>Verpixel-Größe einstellen (durch Scrollen)</translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation>Pinselgröße einstellen (durch Scrollen)</translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation>Textgröße einstellen (durch Scrollen)</translation>
     </message>
 </context>
 <context>
-    <name>ShotStartRecordPlugin</name>
+    <name>StartTooltip</name>
     <message>
-        <source>Record</source>
-        <translation type="unfinished">Aufnehmen</translation>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Klicken oder ziehen, um den Bildschirmbereich auszuwählen, der aufgenommen wird.</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <source>Sound On</source>
-        <translation>Ton ein</translation>
+        <source>Show keystroke (K)</source>
+        <translation>Tastendruck anzeigen (K)</translation>
     </message>
     <message>
-        <source>Microphone</source>
-        <translation>Mikrofon</translation>
+        <source>Hide Keystroke (K)</source>
+        <translation>Tastendruck ausblenden (K)</translation>
     </message>
     <message>
-        <source>System Audio</source>
-        <translation>Systemklang</translation>
+        <source>Show Keystroke (K)</source>
+        <translation>Tastendruck anzeigen (K)</translation>
     </message>
     <message>
-        <source>Sound Off</source>
-        <translation>Ton aus</translation>
+        <source>Turn on camera (C)</source>
+        <translation>Kamera einschalten (C)</translation>
     </message>
     <message>
-        <source>Show Keystroke</source>
-        <translation>Tastendruck anzeigen</translation>
+        <source>Turn off camera (C)</source>
+        <translation>Kamera ausschalten (C)</translation>
     </message>
     <message>
-        <source>Hide Keystroke</source>
-        <translation>Tastendruck ausblenden</translation>
+        <source>Screenshot</source>
+        <translation>Bildschirmaufnahme</translation>
     </message>
     <message>
-        <source>Webcam On</source>
-        <translation>Webcam an</translation>
+        <source>Settings</source>
+        <translation>Einstellungen</translation>
     </message>
     <message>
-        <source>Webcam Off</source>
-        <translation>Webcam aus</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>Klick anzeigen</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Optionen</translation>
+        <source>Settings (F3)</source>
+        <translation>Einstellungen (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -475,6 +504,14 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -501,28 +538,28 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <translation>30 BpS</translation>
     </message>
     <message>
-        <source>Rectangle</source>
-        <translation>Rechteck</translation>
+        <source>Sound</source>
+        <translation>Ton</translation>
     </message>
     <message>
-        <source>Ellipse</source>
-        <translation>Ellipse</translation>
+        <source>Microphone</source>
+        <translation>Mikrofon</translation>
     </message>
     <message>
-        <source>Line</source>
-        <translation>Linie</translation>
+        <source>System audio</source>
+        <translation>System-Audio</translation>
     </message>
     <message>
-        <source>Arrow</source>
-        <translation>Pfeil</translation>
+        <source>Options</source>
+        <translation>Optionen</translation>
     </message>
     <message>
-        <source>Pencil</source>
-        <translation>Stift</translation>
+        <source>Show pointer</source>
+        <translation>Zeiger anzeigen</translation>
     </message>
     <message>
-        <source>Text</source>
-        <translation>Text</translation>
+        <source>Show click</source>
+        <translation>Klick anzeigen</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -533,12 +570,84 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <translation>Schreibtisch</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>Videos</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Rechteck (R)
+Umschalttaste gedrückt halten, um ein Rechteck zu zeichnen</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Ellipse (O)
+Umschalttaste gedrückt halten, um einen Kreis zu zeichnen</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Linie (L)
+Umschalttaste gedrückt halten, um eine vertikale oder horizontale Linie zu zeichnen</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Pfeil (X)
+Umschalttaste gedrückt halten, um einen vertikalen oder horizontalen Pfeil zu zeichnen</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Stift (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Weichzeichnen (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Text (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Bildlaufaufnahme (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Text extrahieren (Alt+O）</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Bildschirmfotos anheften (Alt+P）</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Rückgängig (Strg+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Aufnehmen</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Zwischenablage</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>Bilder</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>Ordner</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Beim Speichern einen Pfad festlegen</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Beim Speichern den Pfad ändern</translation>
     </message>
     <message>
         <source>Format</source>
@@ -557,67 +666,39 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
+        <source>Border Effects</source>
+        <translation>Randeffekte</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Zwischenablage</translation>
+        <source>None</source>
+        <translation>Keine</translation>
     </message>
     <message>
-        <source>Show pointer</source>
-        <translation>Zeiger anzeigen</translation>
+        <source>Shadow</source>
+        <translation>Schatten</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Maus</translation>
+        <source>Border</source>
+        <translation>Rand</translation>
     </message>
     <message>
-        <source>Show Pointer</source>
-        <translation>Zeiger anzeigen</translation>
+        <source>Device</source>
+        <translation>Gerät</translation>
     </message>
     <message>
         <source>Extract Text</source>
         <translation>Text extrahieren</translation>
     </message>
-    <message>
-        <source>Scrollshot</source>
-        <translation>Bildlaufaufnahme</translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation>Bildschirmfotos anheften</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>ogg</source>
-        <translation>ogg</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>Videos</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
-        <source>Set a path on save</source>
-        <translation>Beim Speichern einen Pfad festlegen</translation>
+        <source>Close (Esc)</source>
+        <translation>Schließen (Esc)</translation>
     </message>
     <message>
-        <source>Change the path on save</source>
-        <translation>Beim Speichern den Pfad ändern</translation>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
     </message>
 </context>
 <context>
@@ -636,6 +717,13 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <message>
         <source>Exit</source>
         <translation>Beenden</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Neue Aufnahme</translation>
     </message>
 </context>
 </TS>

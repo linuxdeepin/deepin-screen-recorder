@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="tr">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="tr">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -112,7 +110,15 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Klasör Aç</translation>
+    </message>
+    <message>
+        <source>Screenshot finished and copy to clipboard</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -141,22 +147,22 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Ekran Görüntüsü</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Kayıt</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Ekran Görüntüsü</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Kaydediyor</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -393,6 +399,10 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <source>Start scrollshot</source>
         <translation>Kaydırma Görüntüsü başlat</translation>
     </message>
+    <message>
+        <source>Arrow</source>
+        <translation>ok</translation>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -405,64 +415,84 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Kayıt</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
+    <message>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation>Dikdörtgen
+Kare çizmek için Shift tuşunu basılı tutun</translation>
+    </message>
+    <message>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation>Elips
+Bir daire çizmek için Shift tuşunu basılı tutun</translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation>Fırça
+Düz bir çizgi çizmek için Shift tuşunu basılı tutun</translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation>Bulanıklaştırma gücünü ayarlayın (Ayarlamak için kaydırın)</translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation>Fırça boyutunu ayarlayın (Ayarlamak için kaydırın)</translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation>Metin boyutunu ayarlayın (Ayarlamak için kaydırın)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Kaydedilecek alanı
+seçmek için tıklayın ya da sürükleyin</translation>
+    </message>
+</context>
+<context>
+    <name>SubToolWidget</name>
+    <message>
+        <source>Show keystroke (K)</source>
+        <translation>Tuş Vuruşunu Göster (K)</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation>Tuş Vuruşunu Gizle (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Tuş Vuruşunu Göster (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Kameraya dön (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Kamerayı kapat (C)</translation>
+    </message>
     <message>
         <source>Screenshot</source>
         <translation>Ekran Görüntüsü</translation>
     </message>
-</context>
-<context>
-    <name>ShotStartRecordPlugin</name>
     <message>
-        <source>Record</source>
-        <translation type="unfinished">Kayıt</translation>
-    </message>
-</context>
-<context>
-    <name>ShotToolWidget</name>
-    <message>
-        <source>Sound On</source>
-        <translation>Ses Aç</translation>
+        <source>Settings</source>
+        <translation>Ayarlar</translation>
     </message>
     <message>
-        <source>Microphone</source>
-        <translation>Mikrofon</translation>
-    </message>
-    <message>
-        <source>System Audio</source>
-        <translation>Sistem Sesi</translation>
-    </message>
-    <message>
-        <source>Sound Off</source>
-        <translation>Ses Kapat</translation>
-    </message>
-    <message>
-        <source>Show Keystroke</source>
-        <translation>Tuş Vuruşunu Göster</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke</source>
-        <translation>Tuş Vuruşunu Gizle</translation>
-    </message>
-    <message>
-        <source>Webcam On</source>
-        <translation>Webcam Açık</translation>
-    </message>
-    <message>
-        <source>Webcam Off</source>
-        <translation>Webcam Kapalı</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>Tıklamayı Göster</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Seçenekler</translation>
+        <source>Settings (F3)</source>
+        <translation>Ayarlar (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -475,6 +505,14 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -501,28 +539,28 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Rectangle</source>
-        <translation>Dikdörtgen</translation>
+        <source>Sound</source>
+        <translation>Ses</translation>
     </message>
     <message>
-        <source>Ellipse</source>
-        <translation>Elips</translation>
+        <source>Microphone</source>
+        <translation>Mikrofon</translation>
     </message>
     <message>
-        <source>Line</source>
-        <translation>Çizgi</translation>
+        <source>System audio</source>
+        <translation>Sistem sesi</translation>
     </message>
     <message>
-        <source>Arrow</source>
-        <translation>ok</translation>
+        <source>Options</source>
+        <translation>Seçenekler</translation>
     </message>
     <message>
-        <source>Pencil</source>
-        <translation>Kalem</translation>
+        <source>Show pointer</source>
+        <translation>İşaretçiyi göster</translation>
     </message>
     <message>
-        <source>Text</source>
-        <translation>Metin</translation>
+        <source>Show click</source>
+        <translation>Tıklamayı göster</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -533,12 +571,84 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation>Masaüstü</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>Videoalar</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Dikdörtgen (R)
+Kare çizmek için Shift tuşunu basılı tutun</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Elips (O)
+Bir daire çizmek için Shift tuşunu basılı tutun</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Çizgi (L)
+Dikey veya yatay çizgi çizmek için Shift tuşunu basılı tutun</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Ok (X)
+Dikey veya yatay ok çizmek için Shift tuşunu basılı tutun</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Kalem (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Blur (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Metin (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Kaydırma Görüntüsü (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Metni ayıkla (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Ekran görüntülerini sabitle (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Geri Al (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Kayıt</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Pano</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>Resimler</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>Klasör</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Kaydet sırasında bir yol ayarla</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Kaydet sırasında yolu değiştir</translation>
     </message>
     <message>
         <source>Format</source>
@@ -557,67 +667,39 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
+        <source>Border Effects</source>
+        <translation>Kenar Efektleri</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Pano</translation>
+        <source>None</source>
+        <translation>Hiçbiri</translation>
     </message>
     <message>
-        <source>Show pointer</source>
-        <translation>İşaretçiyi göster</translation>
+        <source>Shadow</source>
+        <translation>Gölge</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Fare</translation>
+        <source>Border</source>
+        <translation>Sınır</translation>
     </message>
     <message>
-        <source>Show Pointer</source>
-        <translation>İşaretçiyi Göster</translation>
+        <source>Device</source>
+        <translation>Aygıt</translation>
     </message>
     <message>
         <source>Extract Text</source>
         <translation>Metni Çıkar</translation>
     </message>
-    <message>
-        <source>Scrollshot</source>
-        <translation>Kaydırma Görüntüsü</translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation>Ekran Görüntülerini Sabitle</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>ogg</source>
-        <translation>ogg</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>Videoalar</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
-        <source>Set a path on save</source>
-        <translation>Kaydet sırasında bir yol ayarla</translation>
+        <source>Close (Esc)</source>
+        <translation>Kapat (Esc)</translation>
     </message>
     <message>
-        <source>Change the path on save</source>
-        <translation>Kaydet sırasında yolu değiştir</translation>
+        <source>OK (Enter)</source>
+        <translation>Tamam (Enter)</translation>
     </message>
 </context>
 <context>
@@ -636,6 +718,13 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Exit</source>
         <translation>Çıkış</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Yeni kayıt</translation>
     </message>
 </context>
 </TS>

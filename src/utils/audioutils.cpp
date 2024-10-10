@@ -124,7 +124,7 @@ QString AudioUtils::currentAudioChannel()
             process.start("bash", options1);
             process.waitForFinished();
             process.waitForReadyRead();
-            str_output = process.readAllStandardOutput();
+            str_output = process.readAllStandardOutput().trimmed();
             qDebug() << "pactl命令: " << options;
             qDebug() << "通过pactl命令获取的系统音频通道号: " << str_output;
             if (str_output.isEmpty()) {
@@ -148,6 +148,10 @@ QString AudioUtils::currentAudioChannel()
 // 获取默认输出或输入设备名称
 QString AudioUtils::getDefaultDeviceName(DefaultAudioType mode)
 {
+    if (!Utils::isSysGreatEqualV23()) {
+        return getDefaultDeviceNameV20Impl(mode);
+    }
+
     QString device = "";
     if (mode == DefaultAudioType::Sink) {
         // 1.首先取出默认系统声卡

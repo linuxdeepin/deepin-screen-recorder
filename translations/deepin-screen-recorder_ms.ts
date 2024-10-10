@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ms">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ms">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -112,7 +110,15 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Buka Folder</translation>
+    </message>
+    <message>
+        <source>Screenshot finished and copy to clipboard</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -141,22 +147,22 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Tangkap Layar</translation>
+        <translation>Tangkap Layar</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Rakam</translation>
+        <translation>Rakam</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Tangkap Layar</translation>
+        <translation>Tangkap Layar</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Rakaman</translation>
+        <translation>Merakam</translation>
     </message>
 </context>
 <context>
@@ -393,6 +399,10 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <source>Start scrollshot</source>
         <translation>Mula tangkap tatal</translation>
     </message>
+    <message>
+        <source>Arrow</source>
+        <translation>Anak Panah</translation>
+    </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
@@ -405,64 +415,84 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Rakam</translation>
+        <translation>Rakam</translation>
     </message>
 </context>
 <context>
     <name>ShotToolWidget</name>
+    <message>
+        <source>Rectangle
+Press and hold Shift to draw a square</source>
+        <translation>Segi Empat
+Tekan dan tahan kekunci Shift untuk membentuk sebuah petak</translation>
+    </message>
+    <message>
+        <source>Ellipse
+Press and hold Shift to draw a circle</source>
+        <translation>Elips
+Tekan dan tahan kekunci Shift untuk membentuk sebuah bulatan</translation>
+    </message>
+    <message>
+        <source>Brush
+Press and hold Shift to draw a straight line</source>
+        <translation>Berus
+Tekan dan tahan kekunci Shift untuk membentuk satu garisan lurus</translation>
+    </message>
+    <message>
+        <source>Adjust blur strength (Scroll to adjust it)</source>
+        <translation>Laras kekuatan kabur (Tatal untuk melarasnya)</translation>
+    </message>
+    <message>
+        <source>Adjust brush size (Scroll to adjust it)</source>
+        <translation>Laras saiz berus (Tatal untuk melarasnya)</translation>
+    </message>
+    <message>
+        <source>Adjust text size (Scroll to adjust it)</source>
+        <translation>Laras saiz teks (Tatal untuk melarasnya)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Klik atau seret untuk
+pilih kawasan rakaman</translation>
+    </message>
+</context>
+<context>
+    <name>SubToolWidget</name>
+    <message>
+        <source>Show keystroke (K)</source>
+        <translation>Tunjuk ketukan kekunci (K)</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation>Sembunyi Ketukan Kekunci (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>Tunjuk Ketukan Kekunci (K)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>Hidupkan kamera (C)</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>Matikan kamera (C)</translation>
+    </message>
     <message>
         <source>Screenshot</source>
         <translation>Tangkap Layar</translation>
     </message>
-</context>
-<context>
-    <name>ShotStartRecordPlugin</name>
     <message>
-        <source>Record</source>
-        <translation type="unfinished">Rakam</translation>
-    </message>
-</context>
-<context>
-    <name>ShotToolWidget</name>
-    <message>
-        <source>Sound On</source>
-        <translation>Bunyi Hidup</translation>
+        <source>Settings</source>
+        <translation>Tetapan</translation>
     </message>
     <message>
-        <source>Microphone</source>
-        <translation>Mikrofon</translation>
-    </message>
-    <message>
-        <source>System Audio</source>
-        <translation>Audio Sistem</translation>
-    </message>
-    <message>
-        <source>Sound Off</source>
-        <translation>Bunyi Mati</translation>
-    </message>
-    <message>
-        <source>Show Keystroke</source>
-        <translation>Tunjuk Ketukan Kekunci</translation>
-    </message>
-    <message>
-        <source>Hide Keystroke</source>
-        <translation>Sembunyi Ketukan Kekunci</translation>
-    </message>
-    <message>
-        <source>Webcam On</source>
-        <translation>Kamera Sesawang Hidup</translation>
-    </message>
-    <message>
-        <source>Webcam Off</source>
-        <translation>Kamera Sesawang Mati</translation>
-    </message>
-    <message>
-        <source>Show Click</source>
-        <translation>Tunjuk Klik</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Pilihan</translation>
+        <source>Settings (F3)</source>
+        <translation>Tetapan (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -475,6 +505,14 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>MP4</source>
         <translation>MP4</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -501,28 +539,28 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <translation>30 fps</translation>
     </message>
     <message>
-        <source>Rectangle</source>
-        <translation>Petak</translation>
+        <source>Sound</source>
+        <translation>Bunyi</translation>
     </message>
     <message>
-        <source>Ellipse</source>
-        <translation>Elips</translation>
+        <source>Microphone</source>
+        <translation>Mikrofon</translation>
     </message>
     <message>
-        <source>Line</source>
-        <translation>Garisan</translation>
+        <source>System audio</source>
+        <translation>Audio sistem</translation>
     </message>
     <message>
-        <source>Arrow</source>
-        <translation>Anak Panah</translation>
+        <source>Options</source>
+        <translation>Pilihan</translation>
     </message>
     <message>
-        <source>Pencil</source>
-        <translation>Pensel</translation>
+        <source>Show pointer</source>
+        <translation>Tunjuk penuding</translation>
     </message>
     <message>
-        <source>Text</source>
-        <translation>Teks</translation>
+        <source>Show click</source>
+        <translation>Tunjuk klik</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -533,12 +571,84 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <translation>Atas Meja</translation>
     </message>
     <message>
+        <source>Videos</source>
+        <translation>Video</translation>
+    </message>
+    <message>
+        <source>Rectangle (R)
+Press and hold Shift to draw a square</source>
+        <translation>Segiempat (R)
+Tekan dan tahan kekunci Shift untuk melukis sebuah segiempat</translation>
+    </message>
+    <message>
+        <source>Ellipse (O)
+Press and hold Shift to draw a circle</source>
+        <translation>Elips (O)
+Tekan dan tahan kekunci Shift untuk melukis sebuah bulatan</translation>
+    </message>
+    <message>
+        <source>Line (L)
+Press and hold Shift to draw a vertical or horizontal line</source>
+        <translation>Garisan (L)
+Tekan dan tahan kekunci Shift untuk melukis garisan menegak atau mengufuk</translation>
+    </message>
+    <message>
+        <source>Arrow (X)
+Press and hold Shift to draw a vertical or horizontal arrow</source>
+        <translation>Anak panah (X)
+Tekan dan tahan kekunci Shift untuk melukis anak panah menegak atau mengufuk</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>Pensel (P)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>Kabur (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>Teks (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>Tangkapbertatal (Alt+I)</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>Ekstrak teks (Alt+O)</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>Cemat tangkap layar (Alt+P)</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>Buat asal (Ctrl+Z)</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Rakam</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>Papan keratan</translation>
+    </message>
+    <message>
         <source>Pictures</source>
         <translation>Gambar</translation>
     </message>
     <message>
         <source>Folder</source>
         <translation>Folder</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Tetapkan laluan ketika simpan</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Ubah laluan ketika simpan</translation>
     </message>
     <message>
         <source>Format</source>
@@ -557,67 +667,39 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
         <translation>BMP</translation>
     </message>
     <message>
-        <source>MKV</source>
-        <translation>MKV</translation>
+        <source>Border Effects</source>
+        <translation>Kesan Sempadan</translation>
     </message>
     <message>
-        <source>Clipboard</source>
-        <translation>Papan keratan</translation>
+        <source>None</source>
+        <translation>Tiada</translation>
     </message>
     <message>
-        <source>Show pointer</source>
-        <translation>Tunjuk penuding</translation>
+        <source>Shadow</source>
+        <translation>Bayang</translation>
     </message>
     <message>
-        <source>Mouse</source>
-        <translation>Tetikus</translation>
+        <source>Border</source>
+        <translation>Sempadan</translation>
     </message>
     <message>
-        <source>Show Pointer</source>
-        <translation>Tunjuk Penuding</translation>
+        <source>Device</source>
+        <translation>Peranti</translation>
     </message>
     <message>
         <source>Extract Text</source>
         <translation>Ekstrak Teks</translation>
     </message>
-    <message>
-        <source>Scrollshot</source>
-        <translation>Tangkap tatal</translation>
-    </message>
-    <message>
-        <source>Pin Screenshots</source>
-        <translation>Cemat Tangkap Layar</translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <source>ogg</source>
-        <translation>ogg</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation>Video</translation>
-    </message>
-    <message>
-        <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
-        <source>Set a path on save</source>
-        <translation>Tetapkan laluan ketika simpan</translation>
+        <source>Close (Esc)</source>
+        <translation>Tutup (Esc)</translation>
     </message>
     <message>
-        <source>Change the path on save</source>
-        <translation>Ubah laluan ketika simpan</translation>
+        <source>OK (Enter)</source>
+        <translation>OK (Enter)</translation>
     </message>
 </context>
 <context>
@@ -636,6 +718,13 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>Exit</source>
         <translation>Keluar</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Rakaman baharu</translation>
     </message>
 </context>
 </TS>
