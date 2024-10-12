@@ -235,7 +235,7 @@ void SubToolWidget::updateOptionChecked()
     qInfo() << __LINE__ << __FUNCTION__ << "更新菜单选项";
     QPair<int, int> saveInfo = Settings::instance()->getSaveOption();
     qDebug() << "saveInfo: " << saveInfo;
-    if (saveInfo.second != PNG || saveInfo.second != JPG || saveInfo.second != BMP) { //不存在保存格式的情况
+    if (saveInfo.second != PNG && saveInfo.second != JPG && saveInfo.second != BMP) { //不存在保存格式的情况
         saveInfo.second = PNG; // 默认保存格式
     }
     //没有配置文件时，给定一个默认值
