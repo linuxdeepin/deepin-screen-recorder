@@ -28,7 +28,11 @@ void Screenshot::startScreenshot()
     m_window.initAttributes();
     m_window.initResource();
     m_window.initLaunchMode(m_launchMode);
-    m_window.showFullScreen();
+    if (Utils::isWaylandMode){
+        m_window.showNormal();
+    }else {
+        m_window.showFullScreen();
+    }
     //平板模式截图录屏
     if (Utils::isTabletEnvironment) {
         if (QString("screenRecord") == m_launchMode) {
