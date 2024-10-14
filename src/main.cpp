@@ -105,15 +105,17 @@ int main(int argc, char *argv[])
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    QStringList factors = QString(qgetenv("QT_SCREEN_SCALE_FACTORS")).split(";", QString::SkipEmptyParts);
-
-    if(factors.size() > 0){
-        bool ok = false;
-        double factor = factors.at(0).toDouble(&ok);
-
-        if(ok && factor > 0){
+    QDBusInterface scaleFactor("com.deepin.daemon.Display", "/com/deepin/XSettings", "com.deepin.XSettings");
+    if (scaleFactor.isValid()) {
+        qDebug()<< "com.deepin.XSettings is available";
+        QDBusReply<double> replay = scaleFactor.call(QStringLiteral("GetScaleFactor"));
+        double factor = replay.value();
+        if (factor > 0) {
+            qDebug() << "scaleFactor available value: " << factor;
             qputenv("QT_SCALE_FACTOR", QString::number(1 / factor, 'g', 2).toLatin1());
         }
+    } else {
+        qDebug()<< "com.deepin.XSettings is not available";
     }
 
     // 平板模式
