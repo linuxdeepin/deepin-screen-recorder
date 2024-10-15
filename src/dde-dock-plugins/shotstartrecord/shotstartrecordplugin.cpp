@@ -12,7 +12,7 @@
 #define RecordShartApp "deepin-screen-recorder"  // 使用截图录屏的翻译
 
 #ifndef QUICK_ITEM_KEY
-    const QString QUICK_ITEM_KEY = QStringLiteral("quick_item_key");
+const QString QUICK_ITEM_KEY = QStringLiteral("quick_item_key");
 #endif
 const int DETECT_SERV_INTERVAL = 2000;  // 检测服务存在的定时器间隔
 
@@ -53,14 +53,28 @@ const QString ShotStartRecordPlugin::pluginDisplayName() const
 void ShotStartRecordPlugin::init(PluginProxyInterface *proxyInter)
 {
 #ifndef UNIT_TEST
+#ifdef DOCK_API_VERSION
+#if (DOCK_API_VERSION >= DOCK_API_VERSION_CHECK(2, 0, 0))
+    m_bDockQuickPanel = true;
+#else
+    qCDebug(RECORD_LOG) << qPrintable("dock version less than 2.0.0");
+#endif  // (DOCK_API_VERSION >= DOCK_API_VERSION_CHECK(2, 0, 0))
+
+#else
+    // runtime version check
     bool ret;
-    bool getVersion = qApp->property("dock_api_version").toInt(&ret);
-    qCInfo(RECORD_LOG) << "当前dock版本：" << getVersion << ret;
-    if (ret && qApp->property("dock_api_version") >= ((2 << 16) | (0 << 8) | (0))) {
+    int version = qApp->property("dock_api_version").toInt(&ret);
+    qCInfo(RECORD_LOG) << "runtime dock version" << version << ret;
+    if (ret && version >= ((2 << 16) | (0 << 8) | (0))) {
         m_bDockQuickPanel = true;
-        qCWarning(RECORD_LOG) << "The current dock version does not support quick panels!!";
     }
-    qCInfo(RECORD_LOG) << "正在加载翻译...";
+#endif  // DOCK_API_VERSION
+
+    if (m_bDockQuickPanel) {
+        qCInfo(RECORD_LOG) << "The current dock version support quick panels";
+    }
+
+    qCInfo(RECORD_LOG) << "load translation...";
     // 加载翻译
     QString appName = qApp->applicationName();
     qCDebug(RECORD_LOG) << "1 >>qApp->applicationName(): " << qApp->applicationName();
@@ -69,8 +83,9 @@ void ShotStartRecordPlugin::init(PluginProxyInterface *proxyInter)
     bool isLoad = qApp->loadTranslator();
     qApp->setApplicationName(appName);
     qCDebug(RECORD_LOG) << "3 >>qApp->applicationName(): " << qApp->applicationName();
-    qCInfo(RECORD_LOG) << "翻译加载" << (isLoad ? "成功" : "失败");
-#endif
+    qCInfo(RECORD_LOG) << "translation load" << (isLoad ? "success" : "failed");
+
+#endif  // UNIT_TEST
 
     m_proxyInter = proxyInter;
 
@@ -92,6 +107,8 @@ void ShotStartRecordPlugin::init(PluginProxyInterface *proxyInter)
     if (sessionBus.registerService("com.deepin.ShotRecorder.Recorder.PanelStatus") &&
         sessionBus.registerObject(
             "/com/deepin/ShotRecorder/Recorder/PanelStatus", this, QDBusConnection::ExportScriptableSlots)) {
+        qCInfo(RECORD_LOG) << "dbus service registration success!";
+    } else {
         qCWarning(RECORD_LOG) << "dbus service registration failed!";
     }
 
@@ -130,12 +147,9 @@ void ShotStartRecordPlugin::pluginStateSwitched()
  */
 QWidget *ShotStartRecordPlugin::itemWidget(const QString &itemKey)
 {
-    qCDebug(RECORD_LOG) << "Current itemWidget's itemKey: " << itemKey;
     if (itemKey == QUICK_ITEM_KEY) {
-        qCDebug(RECORD_LOG) << "Input Quick Panel Widget!";
         return m_quickPanelWidget.data();
     } else if (itemKey == RecordShartPlugin) {
-        qCDebug(RECORD_LOG) << "Input Common Plugin Widget!";
         return m_iconWidget.data();
     }
     return nullptr;
@@ -255,11 +269,11 @@ void ShotStartRecordPlugin::onRecording()
             m_checkTimer = new QTimer(this);
         }
         connect(m_checkTimer, &QTimer::timeout, this, [=] {
-            //说明录屏还在进行中
+            // 说明录屏还在进行中
             if (m_count < m_nextCount) {
                 m_count = m_nextCount;
             }
-            //说明录屏已经停止了
+            // 说明录屏已经停止了
             else {
                 qCWarning(RECORD_LOG) << qPrintable("Unsafe stop recoding!");
                 onStop();

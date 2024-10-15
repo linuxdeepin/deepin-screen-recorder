@@ -33,12 +33,12 @@ void RecordTimePlugin::init(PluginProxyInterface *proxyInter)
     connect(m_dBusService, SIGNAL(recording()), this, SLOT(onRecording()));
     connect(m_dBusService, SIGNAL(pause()), this, SLOT(onPause()));
     QDBusConnection sessionBus = QDBusConnection::sessionBus();
-    if (sessionBus.registerService("com.deepin.ScreenRecorder.time")
-            && sessionBus.registerObject("/com/deepin/ScreenRecorder/time", this, QDBusConnection::ExportAdaptors)) {
-        qDebug() << "dbus service registration failed!";
+    if (sessionBus.registerService("com.deepin.ScreenRecorder.time") &&
+        sessionBus.registerObject("/com/deepin/ScreenRecorder/time", this, QDBusConnection::ExportAdaptors)) {
+        qInfo() << "dbus service registration success!";
+    } else {
+        qWarning() << "dbus service registration failed!";
     }
-    //test
-    //onStart();
 }
 
 bool RecordTimePlugin::pluginIsDisable()
@@ -67,15 +67,13 @@ void RecordTimePlugin::clear()
 {
     m_timeWidget->clearSetting();
 
-    if (nullptr != m_timer)
-    {
+    if (nullptr != m_timer) {
         m_timer->stop();
         m_timer->deleteLater();
         m_timer = nullptr;
     }
     if (nullptr != m_timeWidget) {
         m_timeWidget->deleteLater();
-//        delete m_timeWidget;
         m_timeWidget = nullptr;
     }
     if (nullptr != m_checkTimer) {
@@ -116,13 +114,12 @@ void RecordTimePlugin::onStop()
         }
         m_count = 0;
         m_nextCount = 0;
-        //m_timeWidget->stop();
         clear();
     }
     qInfo() << "stop record time";
 }
 
-//当托盘插件开始闪烁计数时才会执行
+// 当托盘插件开始闪烁计数时才会执行
 void RecordTimePlugin::onRecording()
 {
     // 录屏过程中，killall dde-dock，恢复时重新初始化
@@ -133,15 +130,13 @@ void RecordTimePlugin::onRecording()
         m_nextCount++;
         if (1 == m_nextCount) {
             m_checkTimer = new QTimer();
-            connect(m_checkTimer, &QTimer::timeout, this, [ = ] {
-                //说明录屏还在进行中
-                if (m_count < m_nextCount)
-                {
+            connect(m_checkTimer, &QTimer::timeout, this, [=] {
+                // 说明录屏还在进行中
+                if (m_count < m_nextCount) {
                     m_count = m_nextCount;
                 }
-                //说明录屏已经停止了
-                else
-                {
+                // 说明录屏已经停止了
+                else {
                     onStop();
                 }
             });
@@ -160,27 +155,11 @@ void RecordTimePlugin::onPause()
 void RecordTimePlugin::refresh()
 {
     QSize size = m_timeWidget->sizeHint();
-//    qInfo() << position() <<  " refresh >>>>>>>>>> size: " << size
-//            << " , m_timeWidget->width(): " << m_timeWidget->width()
-//            << " , m_timeWidget->height(): " << m_timeWidget->height()
-//            << " , m_bshow: " << m_bshow;
-    if (size.width() > m_timeWidget->width()
-            && 1 != position()
-            && 3 != position()
-            && m_bshow) {
-        qInfo() << "========= 重新加载插件" ;
+    if (size.width() > m_timeWidget->width() && 1 != position() && 3 != position() && m_bshow) {
+        qInfo() << "refresh plugin";
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
     }
 }
 
-RecordTimePlugin::~RecordTimePlugin()
-{
-
-}
-
-
-
-
-
-
+RecordTimePlugin::~RecordTimePlugin() {}
