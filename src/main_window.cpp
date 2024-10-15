@@ -86,10 +86,16 @@ const int MainWindow::CAMERA_WIDGET_MAX_HEIGHT = 180;
 const int MainWindow::CAMERA_WIDGET_MIN_WIDTH = 80;
 const int MainWindow::CAMERA_WIDGET_MIN_HEIGHT = 45;
 
+// notify clipboard data update
+// for v20 or older
 const static QString ClipboardService = QStringLiteral("com.deepin.daemon.Clipboard");
 const static QString ClipboardPath = QStringLiteral("/com/deepin/dde/ClipboardLoader");
 const static QString ClipboardInterface = QStringLiteral("com.deepin.dde.ClipboardLoader");
 const static QString ClipboardSignal = QStringLiteral("dataComing");
+// for v23 or later
+const static QString ClipboardService1 = QStringLiteral("org.deepin.dde.ClipboardLoader1");
+const static QString ClipboardPath1 = QStringLiteral("/org/deepin/dde/ClipboardLoader1");
+const static QString ClipboardInterface1 = QStringLiteral("org.deepin.dde.ClipboardLoader1");
 
 DWIDGET_USE_NAMESPACE
 
@@ -704,10 +710,8 @@ void MainWindow::checkIsLockScreen()
         m_toolBar->setButEnableOnLockScreen(false);
     }
     // 电源界面判断接口
-    QDBusInterface ddeLockFront("com.deepin.dde.lockFront",
-                                "/com/deepin/dde/lockFront",
-                                "com.deepin.dde.lockFront",
-                                QDBusConnection::sessionBus());
+    QDBusInterface ddeLockFront(
+        "com.deepin.dde.lockFront", "/com/deepin/dde/lockFront", "com.deepin.dde.lockFront", QDBusConnection::sessionBus());
     if (!ddeLockFront.isValid()) {
         qWarning() << "(QDBusInterface) The 'ddeLockFront' interface does not exist";
         return;
@@ -788,7 +792,7 @@ void MainWindow::sendSavingNotify()
     unsigned int id = 0;
 
     QList<QVariant> arg;
-    arg << Utils::appName // (QCoreApplication::applicationName()) appname
+    arg << Utils::appName                                                   // (QCoreApplication::applicationName()) appname
         << id                                                               // id
         << QString("deepin-screen-recorder")                                // icon
         << QString(tr("Screen Capture"))                                    // summary
@@ -815,10 +819,10 @@ void MainWindow::forciblySavingNotify()
     unsigned int id = 0;
 
     QList<QVariant> arg;
-    arg << Utils::appName  //(QCoreApplication::applicationName())                                                                // appname
-        << id                                                                                                   // id
-        << QString("deepin-screen-recorder")                                                                    // icon
-        << QString(tr("Screen Capture"))                                                                        // summary
+    arg << Utils::appName                     //(QCoreApplication::applicationName()) // appname
+        << id                                 // id
+        << QString("deepin-screen-recorder")  // icon
+        << QString(tr("Screen Capture"))      // summary
         << QString(tr("As the window effect is disabled during the process, the recording has to be stopped"))  // body
         << actions                                                                                              // actions
         << QVariantMap()                                                                                        // hints
@@ -1143,7 +1147,7 @@ void MainWindow::initScreenRecorder()
     m_keyBoardStatus = false;
     m_mouseStatus = false;
     if (ConfigSettings::instance()->getValue("recorder", "cursor").toInt() == ConfigSettings::CursorType::OnlyCursorClick ||
-            ConfigSettings::instance()->getValue("recorder", "cursor").toInt() == ConfigSettings::CursorType::BothCursor) {
+        ConfigSettings::instance()->getValue("recorder", "cursor").toInt() == ConfigSettings::CursorType::BothCursor) {
         m_mouseStatus = true;
     }
 
@@ -2074,16 +2078,30 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
     }
     if (Utils::is3rdInterfaceStart == false) {
         if (DSysInfo::minorVersion().toInt() >= 1070) {
-            // 检测保存到剪切板是否完成
-            qInfo() << "Connecting the clipboard feedback signal..."
-                    << "\nClipboardService: " << ClipboardService << "\nClipboardPath: " << ClipboardPath
-                    << "\nClipboardInterface: " << ClipboardInterface << "\nClipboardSignal: " << ClipboardSignal;
-            bool isSuccess = QDBusConnection::sessionBus().connect(ClipboardService,
-                                                                   ClipboardPath,
-                                                                   ClipboardInterface,
-                                                                   ClipboardSignal,
-                                                                   this,
-                                                                   SLOT(onSaveClipboardComing(const QByteArray &)));
+            bool isSuccess{false};
+            // check if save to clipboard finished
+            if (Utils::isSysGreatEqualV23()) {
+                qInfo() << "Connecting the clipboard feedback signal..."
+                        << "\nClipboardService: " << ClipboardService1 << "\nClipboardPath: " << ClipboardPath1
+                        << "\nClipboardInterface: " << ClipboardInterface1 << "\nClipboardSignal: " << ClipboardSignal;
+                isSuccess = QDBusConnection::sessionBus().connect(ClipboardService1,
+                                                                  ClipboardPath1,
+                                                                  ClipboardInterface1,
+                                                                  ClipboardSignal,
+                                                                  this,
+                                                                  SLOT(onSaveClipboardComing(const QByteArray &)));
+            } else {
+                qInfo() << "Connecting the clipboard feedback signal..."
+                        << "\nClipboardService: " << ClipboardService << "\nClipboardPath: " << ClipboardPath
+                        << "\nClipboardInterface: " << ClipboardInterface << "\nClipboardSignal: " << ClipboardSignal;
+                isSuccess = QDBusConnection::sessionBus().connect(ClipboardService,
+                                                                  ClipboardPath,
+                                                                  ClipboardInterface,
+                                                                  ClipboardSignal,
+                                                                  this,
+                                                                  SLOT(onSaveClipboardComing(const QByteArray &)));
+            }
+
             if (isSuccess) {
                 qInfo() << "The clipper feedback signal connection is successfully established!";
             } else {
@@ -3171,7 +3189,14 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     if (!succeed) {
         DBusNotify saveFailedNotify;
         QString tips = QString(tr("Save failed. Please save it in your home directory."));
-        saveFailedNotify.Notify(Utils::appName /*QCoreApplication::applicationName()*/, 0, "deepin-screen-recorder", QString(), tips, QStringList(), QVariantMap(), 5000);
+        saveFailedNotify.Notify(Utils::appName /*QCoreApplication::applicationName()*/,
+                                0,
+                                "deepin-screen-recorder",
+                                QString(),
+                                tips,
+                                QStringList(),
+                                QVariantMap(),
+                                5000);
         ConfigSettings::instance()->setValue("shot", "save_dir", "");
 
         exitApp();
@@ -3225,13 +3250,13 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         }
     }
 
-    arg << Utils::appName //(QCoreApplication::applicationName())  // appname
-        << id                                     // id
-        << QString("deepin-screen-recorder")      // icon
-        << tr("Screen Capture")                   // summary
-        << tips                                   // body
-        << actions                                // actions
-        << hints                                  // hints
+    arg << Utils::appName                     //(QCoreApplication::applicationName())  // appname
+        << id                                 // id
+        << QString("deepin-screen-recorder")  // icon
+        << tr("Screen Capture")               // summary
+        << tips                               // body
+        << actions                            // actions
+        << hints                              // hints
         << timeout;
     notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);  // timeout
 
@@ -3310,32 +3335,40 @@ bool MainWindow::saveAction(const QPixmap &pix)
             bool isChangeSpecificDir = ConfigSettings::instance()->getValue("shot", "save_dir_change").value<bool>();
             qInfo() << __FUNCTION__ << __LINE__ << "isChangeSpecificDir: " << isChangeSpecificDir;
             // 自动化测试反馈, dde-desktop里面有2个computer_window. 修改直接调用QFileDialog类的静态函数. 不用创建其对象
-            //QFileDialog fileDialog;
+            // QFileDialog fileDialog;
             switch (t_pictureFormat) {
-            case 0:
-                lastFileName    = QString("%1/%2.png").arg(path).arg(fileName);
-                m_saveFileName = isChangeSpecificDir ?
-                                QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
-                                                            tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)")) : lastFileName;
-                break;
-            case 1:
-                lastFileName    = QString("%1/%2.jpg").arg(path).arg(fileName);
-                m_saveFileName = isChangeSpecificDir ?
-                                QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
-                                                            tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)")) : lastFileName;
-                break;
-            case 2:
-                lastFileName    = QString("%1/%2.bmp").arg(path).arg(fileName);
-                m_saveFileName = isChangeSpecificDir ?
-                                QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
-                                                            tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)")) : lastFileName;
-                break;
-            default:
-                lastFileName    = QString("%1/%2.png").arg(path).arg(fileName);
-                m_saveFileName = isChangeSpecificDir ?
-                                QFileDialog::getSaveFileName(this, tr("Save"),  lastFileName,
-                                                            tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)")) : lastFileName;
-                break;
+                case 0:
+                    lastFileName = QString("%1/%2.png").arg(path).arg(fileName);
+                    m_saveFileName =
+                        isChangeSpecificDir ?
+                            QFileDialog::getSaveFileName(
+                                this, tr("Save"), lastFileName, tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)")) :
+                            lastFileName;
+                    break;
+                case 1:
+                    lastFileName = QString("%1/%2.jpg").arg(path).arg(fileName);
+                    m_saveFileName =
+                        isChangeSpecificDir ?
+                            QFileDialog::getSaveFileName(
+                                this, tr("Save"), lastFileName, tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)")) :
+                            lastFileName;
+                    break;
+                case 2:
+                    lastFileName = QString("%1/%2.bmp").arg(path).arg(fileName);
+                    m_saveFileName =
+                        isChangeSpecificDir ?
+                            QFileDialog::getSaveFileName(
+                                this, tr("Save"), lastFileName, tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)")) :
+                            lastFileName;
+                    break;
+                default:
+                    lastFileName = QString("%1/%2.png").arg(path).arg(fileName);
+                    m_saveFileName =
+                        isChangeSpecificDir ?
+                            QFileDialog::getSaveFileName(
+                                this, tr("Save"), lastFileName, tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)")) :
+                            lastFileName;
+                    break;
             }
 
             if (isChangeSpecificDir) {
@@ -4798,7 +4831,8 @@ void MainWindow::onKeyboardPress(unsigned char keyCode)
     if (status::record == m_functionType) {
         m_showButtons->showContentButtons(keyCode);
         recordKeyPressEvent(keyCode);
-        if (RECORD_BUTTON_RECORDING != recordButtonStatus && RECORD_BUTTON_SAVEING != recordButtonStatus && keyCode == KEY_ESCAPE) {
+        if (RECORD_BUTTON_RECORDING != recordButtonStatus && RECORD_BUTTON_SAVEING != recordButtonStatus &&
+            keyCode == KEY_ESCAPE) {
             exitApp();
         }
     } else if (status::shot == m_functionType || status::scrollshot == m_functionType) {
