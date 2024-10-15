@@ -2266,6 +2266,7 @@ void MainWindow::saveTopWindow()
     const auto r = saveAction(screenShotPix);
     sendNotify(m_saveIndex, m_saveFileName, r);
     qCDebug(dsrApp) << "saveTopWindow end";
+    exitApp();
 }
 
 void MainWindow::savePath(const QString &path)
