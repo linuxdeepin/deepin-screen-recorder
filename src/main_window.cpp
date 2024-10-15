@@ -1846,7 +1846,7 @@ void MainWindow::saveTopWindow()
     save2Clipboard(screenShotPix);
     const auto r = saveAction(screenShotPix);
     sendNotify(m_saveIndex, m_saveFileName, r);
-
+    exitApp();
 }
 
 void MainWindow::savePath(const QString &path)
