@@ -24,7 +24,9 @@
 AudioUtils::AudioUtils(QObject *parent)
 {
     Q_UNUSED(parent);
-    initAudioDBusInterface();
+    if (Utils::isSysGreatEqualV23()) {
+        initAudioDBusInterface();
+    }
 }
 
 // 初始化音频dbus服务的接口

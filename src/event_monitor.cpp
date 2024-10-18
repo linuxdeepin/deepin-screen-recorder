@@ -33,7 +33,8 @@ void EventMonitor::releaseRes()
         qInfo() << __FUNCTION__ << __LINE__ << "执行 XRecordFreeContext ...";
         XRecordFreeContext(m_display, m_context);
         qInfo() << __FUNCTION__ << __LINE__ << "执行 XSync ...";
-        XSync(m_display, False);
+        XSync(m_display, True);
+        XSync(m_display_datalink, True);
         qInfo() << __FUNCTION__ << __LINE__ << "执行 XCloseDisplay m_display_datalink...";
         XCloseDisplay(m_display_datalink);
         qInfo() << __FUNCTION__ << __LINE__ << "执行 XCloseDisplay m_display...";

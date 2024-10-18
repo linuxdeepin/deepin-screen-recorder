@@ -30,19 +30,10 @@ class RecordProcess  : public QObject
     Q_OBJECT
 
 public:
-    static const int RECORD_TYPE_GIF;
-    static const int RECORD_TYPE_MP4;
-    static const int RECORD_TYPE_MKV;
-
     static const int RECORD_MOUSE_NULL;
     static const int RECORD_MOUSE_CURSE;
     static const int RECORD_MOUSE_CHECK;
     static const int RECORD_MOUSE_CURSE_CHECK;
-
-    static const int RECORD_AUDIO_NULL;
-    static const int RECORD_AUDIO_MIC;
-    static const int RECORD_AUDIO_SYSTEMAUDIO;
-    static const int RECORD_AUDIO_MIC_SYSTEMAUDIO;
 
     static const int RECORD_FRAMERATE_5;
     static const int RECORD_FRAMERATE_10;

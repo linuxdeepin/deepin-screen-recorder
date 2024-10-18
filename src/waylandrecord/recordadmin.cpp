@@ -14,6 +14,8 @@
 #include <qtimer.h>
 #include <QDebug>
 
+#include "utils.h"
+
 RecordAdmin::RecordAdmin(QStringList list, WaylandIntegration::WaylandIntegrationPrivate *context, QObject *parent): QObject(parent),
     m_pInputStream(nullptr),
     m_pOutputStream(nullptr),
@@ -35,9 +37,9 @@ RecordAdmin::RecordAdmin(QStringList list, WaylandIntegration::WaylandIntegratio
         m_inputDeviceName = list[8];
         m_outputDeviceName = list[9];
     }
-    if (videoType::GIF == m_videoType) {
+    if (Utils::kGIF == m_videoType) {
         m_fps = 24;
-        m_audioType = audioType::NOS;
+        m_audioType = Utils::kNoAudio;
         m_filePath = m_filePath.replace("gif", "mp4");
     }
     m_pInputStream  = new CAVInputStream(context);
@@ -68,19 +70,19 @@ RecordAdmin::~RecordAdmin()
 void RecordAdmin::setRecordAudioType(int audioType)
 {
     switch (audioType) {
-    case audioType::MIC:
+    case Utils::kMic:
         setMicAudioRecord(true);
         setSysAudioRecord(false);
         break;
-    case audioType::SYS:
+    case Utils::kSystemAudio:
         setMicAudioRecord(false);
         setSysAudioRecord(true);
         break;
-    case audioType::MIC_SYS:
+    case Utils::kMicAndSystemAudio:
         setMicAudioRecord(true);
         setSysAudioRecord(true);
         break;
-    case audioType::NOS:
+    case Utils::kNoAudio:
         setMicAudioRecord(false);
         setSysAudioRecord(false);
         break;
