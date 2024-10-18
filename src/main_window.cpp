@@ -1814,6 +1814,10 @@ void MainWindow::topWindow()
     const auto r = saveAction(screenShotPix);
     save2Clipboard(screenShotPix);
     sendNotify(m_saveIndex, m_saveFileName, r);
+
+    QTimer::singleShot(10, [ = ] {
+        exitApp();
+    });
 }
 
 void MainWindow::saveTopWindow()
