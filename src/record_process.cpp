@@ -25,19 +25,10 @@
 #include <dlfcn.h>
 #include <signal.h>
 
-const int RecordProcess::RECORD_TYPE_GIF = 0;
-const int RecordProcess::RECORD_TYPE_MP4 = 1;
-const int RecordProcess::RECORD_TYPE_MKV = 2;
-
 const int RecordProcess::RECORD_MOUSE_NULL = 0;
 const int RecordProcess::RECORD_MOUSE_CURSE = 1;
 const int RecordProcess::RECORD_MOUSE_CHECK = 2;
 const int RecordProcess::RECORD_MOUSE_CURSE_CHECK = 3;
-
-const int RecordProcess::RECORD_AUDIO_NULL = 0;
-const int RecordProcess::RECORD_AUDIO_MIC = 1;
-const int RecordProcess::RECORD_AUDIO_SYSTEMAUDIO = 2;
-const int RecordProcess::RECORD_AUDIO_MIC_SYSTEMAUDIO = 3;
 
 const int RecordProcess::RECORD_FRAMERATE_5 = 5;
 const int RecordProcess::RECORD_FRAMERATE_10 = 10;
@@ -218,11 +209,11 @@ void RecordProcess::recordVideo()
     if (t_currentAudioChannel == "-1") {
         qWarning() << "current system audio channel error!";
         //系统音频通道获取错误时，要么不录制声音，要么只录制麦克风音频
-        if (m_audioType == RECORD_AUDIO_SYSTEMAUDIO) {
-            m_audioType = RECORD_AUDIO_NULL;
+        if (m_audioType == Utils::kSystemAudio) {
+            m_audioType = Utils::kNoAudio;
             qWarning() << "选择录制的音频发生改变，录制系统音 变更为 不录系统音！";
-        } else if (m_audioType == RECORD_AUDIO_MIC_SYSTEMAUDIO) {
-            m_audioType = RECORD_AUDIO_MIC;
+        } else if (m_audioType == Utils::kMicAndSystemAudio) {
+            m_audioType = Utils::kMic;
             qWarning() << "选择录制的音频发生改变，录制混音 变更为 只录制麦克风！";
         }
     }else {
@@ -261,7 +252,7 @@ void RecordProcess::recordVideo()
     arguments << QString("128");
     arguments << QString("-i");
     arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y()); // 录制区域左上角坐标
-    if (m_audioType == RECORD_AUDIO_SYSTEMAUDIO || m_audioType == RECORD_AUDIO_MIC_SYSTEMAUDIO) {
+    if (m_audioType == Utils::kSystemAudio || m_audioType == Utils::kMicAndSystemAudio) {
         arguments << QString("-thread_queue_size");
         arguments << QString("2048");
         arguments << QString("-fragment_size");
@@ -275,7 +266,7 @@ void RecordProcess::recordVideo()
         arguments << QString("-i"); // 系统音频id
         arguments << QString("%1").arg(t_currentAudioChannel);
     }
-    if (m_audioType == RECORD_AUDIO_MIC || m_audioType == RECORD_AUDIO_MIC_SYSTEMAUDIO) {
+    if (m_audioType == Utils::kMic || m_audioType == Utils::kMicAndSystemAudio) {
         arguments << QString("-thread_queue_size");
         arguments << QString("2048");
         arguments << QString("-fragment_size");
@@ -289,7 +280,7 @@ void RecordProcess::recordVideo()
         arguments << QString("-i"); // 麦克风音频id，值为固定"default"
         arguments << QString("default");
     }
-    if (m_audioType == RECORD_AUDIO_MIC_SYSTEMAUDIO) {
+    if (m_audioType == Utils::kMicAndSystemAudio) {
         arguments << QString("-filter_complex");
         arguments << QString("amerge");
     }
@@ -312,7 +303,7 @@ void RecordProcess::recordVideo()
     arguments << QString("ultrafast");
     arguments << QString("-vsync");
     arguments << QString("passthrough");
-    if (m_recordType == RECORD_TYPE_MKV) {
+    if (m_recordType == Utils::kMKV) {
         arguments << QString("-f");
         arguments << QString("matroska"); // mkv视频
     } else {
@@ -323,7 +314,7 @@ void RecordProcess::recordVideo()
     arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
 #else
 
-    if (m_audioType == RECORD_AUDIO_SYSTEMAUDIO || m_audioType == RECORD_AUDIO_MIC_SYSTEMAUDIO) {
+    if (m_audioType == Utils::kSystemAudio || m_audioType == Utils::kMicAndSystemAudio) {
         qDebug() << "x11 ffmpeg 是否录制系统声音？true";
         arguments << QString("-thread_queue_size");
         arguments << QString("2048");
@@ -337,14 +328,14 @@ void RecordProcess::recordVideo()
         arguments << QString("44100");
         arguments << QString("-i");
         arguments << QString("%1").arg(t_currentAudioChannel);
-        if (m_audioType == RECORD_AUDIO_SYSTEMAUDIO) {
+        if (m_audioType == Utils::kSystemAudio) {
             if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
                 arguments << QString("-af");
                 arguments << QString("volume=20dB");
             }
         }
     }
-    if (m_audioType == RECORD_AUDIO_MIC || m_audioType == RECORD_AUDIO_MIC_SYSTEMAUDIO) {
+    if (m_audioType == Utils::kMic || m_audioType == Utils::kMicAndSystemAudio) {
         qDebug() << "x11 ffmpeg 是否录制麦克风？true";
         arguments << QString("-thread_queue_size");
         arguments << QString("2048");
@@ -360,7 +351,7 @@ void RecordProcess::recordVideo()
         arguments << QString("default");
     }
 
-    if (m_audioType == RECORD_AUDIO_MIC_SYSTEMAUDIO) {
+    if (m_audioType == Utils::kMicAndSystemAudio) {
         qDebug() << "x11 ffmpeg 是否录制混音？true";
         arguments << QString("-filter_complex");
         if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
@@ -402,7 +393,7 @@ void RecordProcess::recordVideo()
     // baseline 算法，录制的视频在windos自带播放器不能播放
     //arguments << QString("-profile:v");
     //arguments << QString("baseline");
-    if (m_recordType == RECORD_TYPE_MKV) {
+    if (m_recordType == Utils::kMKV) {
         arguments << QString("-qp");
         arguments << QString("23");
     } else {
@@ -433,7 +424,7 @@ void RecordProcess::initProcess()
     // Build temp save path.
     QString date = QDateTime::currentDateTime().toString("yyyyMMddhhmmss");
     QString fileExtension = "mp4";
-    if (m_recordType == RECORD_TYPE_MKV) {
+    if (m_recordType == Utils::kMKV) {
         fileExtension = "mkv";
     }
     if(saveAreaName.isEmpty()){
@@ -547,17 +538,17 @@ void RecordProcess::GstStartRecord()
     m_gstRecordX->setInputDeviceName(audioUtils->getDefaultDeviceName(AudioUtils::DefaultAudioType::Source));
     m_gstRecordX->setOutputDeviceName(audioUtils->getDefaultDeviceName(AudioUtils::DefaultAudioType::Sink));
     //这里才会设置究竟采集哪些音频设备的音频数据
-    if (m_audioType == RECORD_AUDIO_MIC_SYSTEMAUDIO) {
+    if (m_audioType == Utils::kMicAndSystemAudio) {
         audioType =  GstRecordX::AudioType::Mix;
-    } else if (m_audioType == RECORD_AUDIO_MIC) {
+    } else if (m_audioType == Utils::kMic) {
         audioType =  GstRecordX::AudioType::Mic;
-    } else if (m_audioType == RECORD_AUDIO_SYSTEMAUDIO) {
+    } else if (m_audioType == Utils::kSystemAudio) {
         audioType =  GstRecordX::AudioType::Sys;
     }
     m_gstRecordX->setAudioType(audioType);
     QDateTime date = QDateTime::currentDateTime();
     QString fileExtension = "webm";
-    if (m_recordType == RECORD_TYPE_MKV) {
+    if (m_recordType == Utils::kMKV) {
         videoType =  GstRecordX::VideoType::ogg;
         fileExtension = "ogg";
     } else {
@@ -651,7 +642,7 @@ void RecordProcess::startRecord()
     QJsonObject obj{
         {"tid", EventLogUtils::StartRecording},
         {"version", QCoreApplication::applicationVersion()},
-        {"type", m_recordType == RECORD_TYPE_GIF ? "gif" : (m_recordType == RECORD_TYPE_MKV ? "mkv" : "mp4")}
+        {"type", m_recordType == Utils::kGIF ? "gif" : (m_recordType == Utils::kMKV ? "mkv" : "mp4")}
     };
     EventLogUtils::get().writeLogs(obj);
     if (Utils::isSysHighVersion1040() == false) {
@@ -695,7 +686,7 @@ void RecordProcess::stopRecord()
 //    QJsonObject obj{
 //        {"tid", EventLogUtils::EndRecording},
 //        {"version", QCoreApplication::applicationVersion()},
-//        {"type", m_recordType == RECORD_TYPE_GIF ? "gif" : (m_recordType == RECORD_TYPE_MKV ? "mkv" : "mp4")}
+//        {"type", m_recordType == Utils::kGIF ? "gif" : (m_recordType == Utils::kMKV ? "mkv" : "mp4")}
 //    };
 //    EventLogUtils::get().writeLogs(obj);
     if (Utils::isSysHighVersion1040() == true) {
@@ -719,7 +710,7 @@ void RecordProcess::stopRecord()
         if (Utils::isWaylandMode) {
 #ifdef KF5_WAYLAND_FLAGE_ON
             WaylandIntegration::stopStreaming();
-            if (RECORD_TYPE_GIF == m_recordType) {
+            if (Utils::kGIF == m_recordType) {
                 onStartTranscode();
             } else {
                 onRecordFinish();
@@ -729,7 +720,7 @@ void RecordProcess::stopRecord()
         //停止x11录屏
         else {
             //录制的视频类型是否是gif格式，是gif的话需要进行转码
-            if (RECORD_TYPE_GIF == m_recordType) {
+            if (Utils::kGIF == m_recordType) {
                 connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onStartTranscode()));
             } else {
                 connect(m_recorderProcess, SIGNAL(finished(int)), this, SLOT(onRecordFinish()));
@@ -775,7 +766,7 @@ void RecordProcess::exitRecord(QString newSavePath)
         notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
         qInfo() << __LINE__ << __func__ << "已弹出通知消息";
     }
-    if (m_recordType == RECORD_TYPE_GIF) {
+    if (m_recordType == Utils::kGIF) {
         QFile::remove(savePath);
     }
     if (Utils::isWaylandMode) {

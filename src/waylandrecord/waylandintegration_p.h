@@ -17,23 +17,6 @@
 #include <QMutex>
 #include <EGL/egl.h>
 
-enum audioType {
-    //麦克风
-    MIC = 2,
-    //系统音频
-    SYS,
-    //麦克风+系统音频
-    MIC_SYS,
-    //不录音
-    NOS
-};
-
-enum videoType {
-    GIF = 1,
-    MP4,
-    MKV
-};
-
 class RecordAdmin;
 class ScreenCastStream;
 

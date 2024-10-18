@@ -5,7 +5,7 @@
 
 #ifndef UTILS_H
 #define UTILS_H
-//#include <dwindowmanager.h>
+// #include <dwindowmanager.h>
 #include <DPushButton>
 #include <DImageButton>
 
@@ -22,7 +22,23 @@ DCORE_USE_NAMESPACE
 class Utils : public QObject
 {
     Q_OBJECT
+
 public:
+    // the file format of the recorded video
+    enum RecordVideoType {
+        kGIF = 0,
+        kMP4 = 1,
+        kMKV = 2,
+    };
+
+    // the audio input source at recording
+    enum AudioRecordType {
+        kNoAudio = 0,
+        kMic = 1,          // microphone
+        kSystemAudio = 2,  // system audio
+        kMicAndSystemAudio = 3,
+    };
+
     struct ScreenInfo
     {
         int x;

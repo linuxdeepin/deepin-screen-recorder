@@ -23,6 +23,8 @@ DTS是AVPacket里的一个成员，表示这个压缩包应该什么时候被解
 #include <QDebug>
 #include <QThread>
 
+#include "utils.h"
+
 CAVOutputStream::CAVOutputStream(WaylandIntegration::WaylandIntegrationPrivate *context):
     m_context(context),
     m_pSysAudioSwrContext(nullptr),
@@ -74,7 +76,7 @@ CAVOutputStream::CAVOutputStream(WaylandIntegration::WaylandIntegrationPrivate *
     m_nLastAudioCardPresentationTime = 0;
     m_nLastAudioMixPresentationTime = 0;
     m_mixCount = 0;
-    m_videoType = videoType::MP4;
+    m_videoType = Utils::kMP4;
     m_left = 0;
     m_top = 0;
     m_right = 0;
@@ -913,7 +915,7 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
             outputPacket.stream_index = m_micAudioStream->index;
             printf("output_packet.stream_index1  audio_st =%d\n", outputPacket.stream_index);
             //outputPacket.pts = avlibInterface::m_av_rescale_q(m_nLastAudioPresentationTime, rational, m_micAudioStream->time_base);
-            if (m_videoType == videoType::MKV) {
+            if (m_videoType == Utils::kMKV) {
                 //显示时间戳，应大于或等于解码时间戳
                 outputPacket.pts = m_singleCount * m_pMicCodecContext->frame_size * 1000 / m_pMicCodecContext->sample_rate;
             } else {
@@ -1169,7 +1171,7 @@ void CAVOutputStream::writeMixAudio()
                 if (got_packet_ptr) {
                     packet_out.stream_index = audio_amix_st->index;
 
-                    if (m_videoType == videoType::MKV) {
+                    if (m_videoType == Utils::kMKV) {
                         //显示时间戳，应大于或等于解码时间戳
                         packet_out.pts = m_mixCount * pCodecCtx_amix->frame_size * 1000 / pFrame_out->sample_rate;
                     } else {
@@ -1235,7 +1237,7 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
         assert(m_pSysCodecContext->sample_rate == stream->codec->sample_rate);
         avlibInterface::m_swr_init(m_pSysAudioSwrContext);
         if (nullptr == m_sysAudioFifo) {
-            if (m_videoType == videoType::MKV) {
+            if (m_videoType == Utils::kMKV) {
                 m_sysAudioFifo = audioFifoAlloc(m_pSysCodecContext->sample_fmt, m_pSysCodecContext->channels,  inputFrame->nb_samples);
                 m_initFifoSpace = audioFifoSpace(m_sysAudioFifo);
             } else {
@@ -1277,7 +1279,7 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
     * the old and the new samples.使FIFO尽可能大，因为它需要容纳旧的和新的样品。
     */
     //qDebug() << "m_videoType: " << m_videoType;
-    if (m_videoType == videoType::MKV) {
+    if (m_videoType == Utils::kMKV) {
         //对比某个时间段缓冲区大小是否比初始化缓冲区大小大，大：需要减小当前的缓冲区，小不做操作
         if (m_initFifoSpace < audioFifoSpace(m_sysAudioFifo)) {
             if ((ret = audioFifoRealloc(m_sysAudioFifo, m_initFifoSpace + inputFrame->nb_samples)) < 0) {
@@ -1373,7 +1375,7 @@ int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, 
         if (enc_got_frame_a) {
             outputPacket.stream_index = m_sysAudioStream->index;
             //            outputPacket.pts = m_singleCount * m_pSysCodecContext->frame_size * 1000 / m_pSysCodecContext->sample_rate;
-            if (m_videoType == videoType::MKV) {
+            if (m_videoType == Utils::kMKV) {
                 //显示时间戳，应大于或等于解码时间戳
                 outputPacket.pts = m_singleCount * m_pSysCodecContext->frame_size * 1000 / m_pSysCodecContext->sample_rate;
             } else {

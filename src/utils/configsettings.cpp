@@ -13,21 +13,6 @@
 #include <QTemporaryFile>
 #include <QDebug>
 
-/*
-RECORD_TYPE_GIF = 0;
-RECORD_TYPE_MP4 = 1;
-RECORD_TYPE_MKV = 2;
-
-RECORD_MOUSE_NULL = 0;
-RECORD_MOUSE_CURSE = 1;
-RECORD_MOUSE_CHECK = 2;
-RECORD_MOUSE_CURSE_CHECK = 3;
-
-RECORD_AUDIO_NULL = 0;
-RECORD_AUDIO_MIC = 1;
-RECORD_AUDIO_SYSTEMAUDIO = 2;
-RECORD_AUDIO_MIC_SYSTEMAUDIO = 3;
-*/
 ConfigSettings::ConfigSettings(QObject *parent)
     : QObject(parent)
 {
