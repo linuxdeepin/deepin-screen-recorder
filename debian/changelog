@@ -1,3 +1,21 @@
+deepin-screen-recorder (6.5.0) unstable; urgency=medium
+
+  * feat: [translation]add transifex config(Task: 361363)
+  * fix: the config button status(Bug: 270437)
+  * fix: the mouse click control lose in workspace(Bug: 268293)
+  * fix: Optimize command line acquisition parameters(Task: 362613)
+  * fix: the pinscreenshot tips(Bug: 275657)
+  * fix: the pinscreenshot save format error(Bug: 276833)
+  * fix: the offset problem when dual-screen non-alignment(Bug: 275805)
+  * fix: the dual screen expandsion position when scaled(Bug: 273083)
+  * refactor: merge code and fix bugs
+  * fix: dde-shell not show screen shot icon.
+  * fix: camera not display image
+  * fix: save to clipboard slow
+  * fix: audio record pts error on wayland
+
+ -- renbin <renbin@uniontech.com>  Fri, 18 Oct 2024 14:29:23 +0800
+
 deepin-screen-recorder (6.0.9) unstable; urgency=medium
 
   * changelog 6.0.9.
