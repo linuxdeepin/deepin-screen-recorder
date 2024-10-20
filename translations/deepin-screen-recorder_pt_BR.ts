@@ -5,8 +5,8 @@
         <location filename="../src/countdown_tooltip.cpp" line="78"/>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Para finalizar a gravação
-clique no ícone da bandeja ou use o atalho</translation>
+        <translation>Para interromper a gravação
+clique no ícone da bandeja ou pressione o atalho novamente</translation>
     </message>
 </context>
 <context>
@@ -57,7 +57,7 @@ clique no ícone da bandeja ou use o atalho</translation>
         <source>Click or drag to
 select the area to record</source>
         <translation>Clique ou arraste para
-selecione a área para gravar</translation>
+selecionar a área a ser gravada</translation>
     </message>
 </context>
 </TS>
