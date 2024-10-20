@@ -14,7 +14,7 @@ clique no ícone da bandeja ou use o atalho</translation>
     <message>
         <location filename="../src/main_window.cpp" line="76"/>
         <source>Deepin screen recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin Captura de Tela</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="136"/>
@@ -32,7 +32,7 @@ clique no ícone da bandeja ou use o atalho</translation>
     <message>
         <location filename="../src/record_process.cpp" line="229"/>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="291"/>
