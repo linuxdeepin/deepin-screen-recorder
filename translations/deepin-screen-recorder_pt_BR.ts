@@ -37,7 +37,7 @@ clique no ícone da bandeja ou use o atalho</translation>
     <message>
         <location filename="../src/record_process.cpp" line="291"/>
         <source>View</source>
-        <translation>Visualizar</translation>
+        <translation>Ver</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="301"/>
