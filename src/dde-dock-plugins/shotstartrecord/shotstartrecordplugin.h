@@ -8,10 +8,21 @@
 #include "recordiconwidget.h"
 #include "quickpanelwidget.h"
 #include "tipswidget.h"
-#include <QtDBus/QtDBus>
-#include <dde-dock/pluginsiteminterface.h>
 
+#include <QtDBus/QtDBus>
+
+#include <dde-dock/constants.h>
+#if defined(DOCK_API_VERSION) && (DOCK_API_VERSION >= DOCK_API_VERSION_CHECK(2, 0, 0))
+#include <dde-dock/pluginsiteminterface_v2.h>
+#else
+#include <dde-dock/pluginsiteminterface.h>
+#endif
+
+#if defined(DOCK_API_VERSION) && (DOCK_API_VERSION >= DOCK_API_VERSION_CHECK(2, 0, 0))
+class ShotStartRecordPlugin : public QObject, PluginsItemInterfaceV2
+#else
 class ShotStartRecordPlugin : public QObject, PluginsItemInterface
+#endif
 {
     Q_OBJECT
     Q_INTERFACES(PluginsItemInterface)
@@ -30,6 +41,10 @@ public:
     bool pluginIsAllowDisable() override { return true; }
     bool pluginIsDisable() override;
     void pluginStateSwitched() override;
+
+#if defined(DOCK_API_VERSION) && (DOCK_API_VERSION >= DOCK_API_VERSION_CHECK(2, 0, 0))
+    Dock::PluginFlags flags() const override;
+#endif
 
     /**
      * Dock::Type_Quick=0x02           插件类型-快捷插件区;
@@ -66,15 +81,15 @@ private:
     bool getTrayIconVisible();
 
 private:
-    QScopedPointer<RecordIconWidget> m_iconWidget;        // 任务栏图标
-    QScopedPointer<QuickPanelWidget> m_quickPanelWidget;  // 快捷面板
+    QScopedPointer<RecordIconWidget> m_iconWidget;       // 任务栏图标
+    QScopedPointer<QuickPanelWidget> m_quickPanelWidget; // 快捷面板
     QScopedPointer<TipsWidget> m_tipsWidget;
-    bool m_isRecording;    // true:正在录屏 false:未启动录屏
-    QTimer *m_checkTimer;  // 此定时器的作用为每隔1秒检查下截图录屏是否还在运行中。避免截图录屏崩溃后导致本插件还在执行
-    int m_nextCount = 0;   // 用来判断录屏是否正在进行中
-    int m_count = 0;       // 用来判断录屏是否正在进行中
-    bool m_bDockQuickPanel;              // 兼容性适配，老版的dock不支持快捷面板
-    bool m_bPreviousIsVisable = false;  // 记录前置状态是否为禁止使能状态
+    bool m_isRecording;                // true:正在录屏 false:未启动录屏
+    QTimer *m_checkTimer;              // 此定时器的作用为每隔1秒检查下截图录屏是否还在运行中。避免截图录屏崩溃后导致本插件还在执行
+    int m_nextCount = 0;               // 用来判断录屏是否正在进行中
+    int m_count = 0;                   // 用来判断录屏是否正在进行中
+    bool m_bDockQuickPanel;            // 兼容性适配，老版的dock不支持快捷面板
+    bool m_bPreviousIsVisable = false; // 记录前置状态是否为禁止使能状态
 };
 
-#endif  // RECORDTIME_H
+#endif // RECORDTIME_H

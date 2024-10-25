@@ -126,6 +126,18 @@ void ShotStartPlugin::pluginStateSwitched()
     }
 }
 
+#if defined(DOCK_API_VERSION) && (DOCK_API_VERSION >= DOCK_API_VERSION_CHECK(2, 0, 0))
+
+/**
+ * @return The Tray plugin supports the quick panel type
+ */
+Dock::PluginFlags ShotStartPlugin::flags() const
+{
+    return Dock::Type_Quick | Dock::Quick_Panel_Single | Dock::Attribute_Normal;
+}
+
+#endif
+
 QWidget *ShotStartPlugin::itemWidget(const QString &itemKey)
 {
     if (itemKey == QUICK_ITEM_KEY) {

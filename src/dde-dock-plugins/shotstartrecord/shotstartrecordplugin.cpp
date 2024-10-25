@@ -141,6 +141,18 @@ void ShotStartRecordPlugin::pluginStateSwitched()
     }
 }
 
+#if defined(DOCK_API_VERSION) && (DOCK_API_VERSION >= DOCK_API_VERSION_CHECK(2, 0, 0))
+
+/**
+ * @return The Tray plugin supports the quick panel type
+ */
+Dock::PluginFlags ShotStartRecordPlugin::flags() const
+{
+    return Dock::Type_Quick | Dock::Quick_Panel_Single | Dock::Attribute_Normal;
+}
+
+#endif
+
 /**
  * @brief itemWidget:返回插件主控件，用于dde-dock面板上显示
  * @param itemKey:控件名称
