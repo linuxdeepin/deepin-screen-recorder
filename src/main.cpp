@@ -36,6 +36,35 @@ static bool isWaylandProtocol()
     return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
 }
 
+static float getScreenFactor()
+{
+    float factor = 1;
+    QFile file("/etc/lightdm/deepin/xsettingsd.conf");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug()<< "/etc/lightdm/deepin/xsettingsd.conf is not available";
+        return factor;
+    }
+
+    while (!file.atEnd()) {
+        QString line = file.readLine();
+        if (line.trimmed().contains("Xft/DPI")) {
+
+            QStringList factorCacheList = line.split(" ", QString::SkipEmptyParts);
+            if (factorCacheList.size() == 2) {
+                bool ok = false;
+
+                int dpi = factorCacheList.at(1).trimmed().toInt(&ok);
+                if(!ok)
+                    break;
+
+                factor = 1.0f * dpi / 98304;
+                break;
+            }
+        }
+    }
+    file.close();
+    return factor;
+}
 
 static bool CheckFFmpegEnv()
 {
@@ -105,17 +134,10 @@ int main(int argc, char *argv[])
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    QDBusInterface scaleFactor("com.deepin.daemon.Display", "/com/deepin/XSettings", "com.deepin.XSettings");
-    if (scaleFactor.isValid()) {
-        qDebug()<< "com.deepin.XSettings is available";
-        QDBusReply<double> replay = scaleFactor.call(QStringLiteral("GetScaleFactor"));
-        double factor = replay.value();
-        if (factor > 0) {
-            qDebug() << "scaleFactor available value: " << factor;
-            qputenv("QT_SCALE_FACTOR", QString::number(1 / factor, 'g', 2).toLatin1());
-        }
-    } else {
-        qDebug()<< "com.deepin.XSettings is not available";
+    float factor = getScreenFactor();
+    if (factor > 0) {
+        qDebug() << "scaleFactor available value: " << factor;
+        qputenv("QT_SCALE_FACTOR", QString::number(1.0f / factor, 'g', 2).toLatin1());
     }
 
     // 平板模式
