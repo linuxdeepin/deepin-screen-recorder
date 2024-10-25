@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020 ~ 2024 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -10,9 +10,19 @@
 #include "quickpanelwidget.h"
 #include "tipswidget.h"
 #include <QtDBus/QtDBus>
-#include <dde-dock/pluginsiteminterface.h>
 
+#include <dde-dock/constants.h>
+#if defined(DOCK_API_VERSION) && (DOCK_API_VERSION >= DOCK_API_VERSION_CHECK(2, 0, 0))
+#include <dde-dock/pluginsiteminterface_v2.h>
+#else
+#include <dde-dock/pluginsiteminterface.h>
+#endif
+
+#if defined(DOCK_API_VERSION) && (DOCK_API_VERSION >= DOCK_API_VERSION_CHECK(2, 0, 0))
+class ShotStartPlugin : public QObject, PluginsItemInterfaceV2
+#else
 class ShotStartPlugin : public QObject, PluginsItemInterface
+#endif
 {
     Q_OBJECT
     Q_INTERFACES(PluginsItemInterface)
@@ -45,6 +55,10 @@ public:
     bool pluginIsAllowDisable() override { return true; }
     bool pluginIsDisable() override;
     void pluginStateSwitched() override;
+
+#if defined(DOCK_API_VERSION) && (DOCK_API_VERSION >= DOCK_API_VERSION_CHECK(2, 0, 0))
+    Dock::PluginFlags flags() const override;
+#endif
 
     /**
      * Dock::Type_Quick=0x02           插件类型-快捷插件区;
