@@ -7,7 +7,7 @@
 #include <DApplication>
 #include <QDesktopWidget>
 #include <QDBusInterface>
-
+#include <QtConcurrent>
 #define ShotShartPlugin "shot-start-plugin"
 #define ShotShartApp "deepin-screen-recorder"  // 使用截图录屏的翻译
 
@@ -234,10 +234,14 @@ void ShotStartPlugin::onClickQuickPanel()
     if (!m_isRecording) {
         qCDebug(SHOT_LOG) << "Get Shot DBus Interface";
         m_proxyInter->requestSetAppletVisible(this, pluginName(), false);
-        QDBusInterface shotDBusInterface(
-            "com.deepin.Screenshot", "/com/deepin/Screenshot", "com.deepin.Screenshot", QDBusConnection::sessionBus());
-        shotDBusInterface.asyncCall("StartScreenshot");
-        qCDebug(SHOT_LOG) << "Shot and Recorder plugin start run!";
+        QtConcurrent::run([=]() {
+            QThread::msleep(500);
+            qDebug(SHOT_LOG) << "shot-panel has hiden, will call screen-shot service";
+            QDBusInterface shotDBusInterface(
+                "com.deepin.Screenshot", "/com/deepin/Screenshot", "com.deepin.Screenshot", QDBusConnection::sessionBus());
+            shotDBusInterface.asyncCall("StartScreenshot");
+            qCDebug(SHOT_LOG) << "Shot and Recorder plugin start run!";
+        });
     }
 }
 
