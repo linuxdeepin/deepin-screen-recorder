@@ -14,7 +14,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <location filename="../src/main_window.cpp" line="76"/>
         <source>Deepin screen recorder</source>
-        <translation type="unfinished"/>
+        <translation>Deepin ekran kaydedici</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="136"/>
@@ -24,7 +24,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <location filename="../src/main_window.cpp" line="454"/>
         <source>Select area</source>
-        <translation type="unfinished"/>
+        <translation>Alanı seçin</translation>
     </message>
 </context>
 <context>
@@ -32,7 +32,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <location filename="../src/record_process.cpp" line="229"/>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-ekran-kaydedici</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="291"/>
