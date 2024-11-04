@@ -370,6 +370,13 @@ void MainWindow::initTreelandtAttributes() //initTreelandtAttributes
 
     initBackground();
     initShortcut();
+
+    QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
+                                          "/com/deepin/SessionManager",
+                                          "org.freedesktop.DBus.Properties",
+                                          "PropertiesChanged",
+                                          this,
+                                          SLOT(onLockedStopRecord(QString, QVariantMap, QStringList)));
     qCDebug(dsrApp) << "Attributes initialization completed.";
 }
 
@@ -6111,7 +6118,17 @@ void MainWindow::onPowersource(bool flag)
     }
 }
 
-// 打开截图录屏帮助文档并定位到滚动截图
+//锁屏后结束录屏
+void MainWindow::onLockedStopRecord(const QString &name, QVariantMap map, const QStringList &list)
+{
+    qDebug() << "Locked will quit!"<<"----------------" << name << map << list;
+
+    if (map.value("Locked").value<bool>()) {
+        onExit();
+    }
+}
+
+//打开截图录屏帮助文档并定位到滚动截图
 void MainWindow::onOpenScrollShotHelp()
 {
     QDBusInterface interFace(
