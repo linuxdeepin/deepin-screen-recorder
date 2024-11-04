@@ -420,6 +420,14 @@ void MainWindow::initAttributes()
         delete mouseMove;
     }
 
+    //连拍在锁屏、熄屏情况下都要结束，与平台无关
+    QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
+                                          "/com/deepin/SessionManager",
+                                          "org.freedesktop.DBus.Properties",
+                                          "PropertiesChanged",
+                                          this,
+                                          SLOT(onLockedStopRecord(QString, QVariantMap, QStringList)));
+
     qInfo() << __LINE__ << __FUNCTION__ << "属性初始化已完成";
 }
 #ifdef KF5_WAYLAND_FLAGE_ON
@@ -5274,6 +5282,16 @@ void MainWindow::onPowersource(bool flag)
         scrollShotLockScreen(flag);
     } else if (status::shot == m_functionType) {
         pinScreenshotsLockScreen(flag);
+    }
+}
+
+//锁屏后结束录屏
+void MainWindow::onLockedStopRecord(const QString &name, QVariantMap map, const QStringList &list)
+{
+    qDebug() << "Locked will quit!"<<"----------------" << name << map << list;
+
+    if (map.value("Locked").value<bool>()) {
+        onExit();
     }
 }
 
