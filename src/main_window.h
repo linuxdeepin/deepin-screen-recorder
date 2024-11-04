@@ -542,6 +542,12 @@ public slots:
     void onPowersource(bool flag);
 
     /**
+     * @brief onPowersource 监听锁屏，监听锁屏信号，在锁屏后结束录屏，包括休眠恢复后也会锁屏，也会结束录屏
+     * @param flag
+     */
+    void onLockedStopRecord(const QString &name, QVariantMap map, const QStringList &list);
+
+    /**
      * @brief 打开截图录屏帮助文档并定位到滚动截图
      */
     void onOpenScrollShotHelp();
