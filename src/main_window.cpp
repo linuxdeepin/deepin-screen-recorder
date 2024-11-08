@@ -420,13 +420,17 @@ void MainWindow::initAttributes()
         delete mouseMove;
     }
 
-    //连拍在锁屏、熄屏情况下都要结束，与平台无关
-    QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
-                                          "/com/deepin/SessionManager",
-                                          "org.freedesktop.DBus.Properties",
-                                          "PropertiesChanged",
-                                          this,
-                                          SLOT(onLockedStopRecord(QString, QVariantMap, QStringList)));
+#if defined __sw_64__
+    if (DSysInfo::uosEditionType() == DSysInfo::UosEdition::UosMilitary) {
+        //在sw military上锁屏、熄屏情况下都要结束
+        QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
+                                              "/com/deepin/SessionManager",
+                                              "org.freedesktop.DBus.Properties",
+                                              "PropertiesChanged",
+                                              this,
+                                              SLOT(onLockedStopRecord(QString, QVariantMap, QStringList)));
+    }
+#endif
 
     qInfo() << __LINE__ << __FUNCTION__ << "属性初始化已完成";
 }
