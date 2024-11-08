@@ -371,12 +371,17 @@ void MainWindow::initTreelandtAttributes() //initTreelandtAttributes
     initBackground();
     initShortcut();
 
-    QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
-                                          "/com/deepin/SessionManager",
-                                          "org.freedesktop.DBus.Properties",
-                                          "PropertiesChanged",
-                                          this,
-                                          SLOT(onLockedStopRecord(QString, QVariantMap, QStringList)));
+#if defined __sw_64__
+    if (DSysInfo::uosEditionType() == DSysInfo::UosEdition::UosMilitary) {
+        //在sw military上锁屏、熄屏情况下都要结束
+        QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
+                                              "/com/deepin/SessionManager",
+                                              "org.freedesktop.DBus.Properties",
+                                              "PropertiesChanged",
+                                              this,
+                                              SLOT(onLockedStopRecord(QString, QVariantMap, QStringList)));
+    }
+#endif
     qCDebug(dsrApp) << "Attributes initialization completed.";
 }
 
