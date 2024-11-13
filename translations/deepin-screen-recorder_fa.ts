@@ -1,11 +1,12 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="fa" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="fa">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <location filename="../src/countdown_tooltip.cpp" line="78"/>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation type="unfinished"/>
+        <translation>روی نماد سینی کلیک کنید
+یا دوباره میانبر را فشار دهید تا ضبط متوقف شود</translation>
     </message>
 </context>
 <context>
@@ -13,7 +14,7 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/main_window.cpp" line="76"/>
         <source>Deepin screen recorder</source>
-        <translation type="unfinished"/>
+        <translation>ضبط کننده صفحه نمایش دیپین</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="136"/>
@@ -31,17 +32,17 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/record_process.cpp" line="229"/>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>ضبط کننده-صفحه نمایش-دیپین</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="291"/>
         <source>View</source>
-        <translation type="unfinished"/>
+        <translation>نما</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="301"/>
         <source>Recording finished</source>
-        <translation type="unfinished"/>
+        <translation>ضبط پایان یافت</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="302"/>
@@ -55,7 +56,8 @@ or press the shortcut again to stop recording</source>
         <location filename="../src/start_tooltip.cpp" line="48"/>
         <source>Click or drag to
 select the area to record</source>
-        <translation type="unfinished"/>
+        <translation>کلیک کنید یا بکشید تا
+منطقه را برای ضبط انتخاب کنید</translation>
     </message>
 </context>
 </TS>
