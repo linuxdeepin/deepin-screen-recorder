@@ -328,12 +328,6 @@ void RecordProcess::recordVideo()
         arguments << QString("44100");
         arguments << QString("-i");
         arguments << QString("%1").arg(t_currentAudioChannel);
-        if (m_audioType == Utils::kSystemAudio) {
-            if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
-                arguments << QString("-af");
-                arguments << QString("volume=20dB");
-            }
-        }
     }
     if (m_audioType == Utils::kMic || m_audioType == Utils::kMicAndSystemAudio) {
         qDebug() << "x11 ffmpeg 是否录制麦克风？true";
@@ -349,20 +343,6 @@ void RecordProcess::recordVideo()
         arguments << QString("44100");
         arguments << QString("-i");
         arguments << QString("default");
-    }
-
-    if (m_audioType == Utils::kMicAndSystemAudio) {
-        qDebug() << "x11 ffmpeg 是否录制混音？true";
-        arguments << QString("-filter_complex");
-        if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
-            arguments << QString("[1:a]volume=30dB[a1];[a1][2:a]amix=inputs=2:duration=first:dropout_transition=0[out]");
-            arguments << QString("-map");
-            arguments << QString("0:v");
-            arguments << QString("-map");
-            arguments << QString("[out]");
-        } else {
-            arguments << QString("amerge");
-        }
     }
 
     // Audio settings need to be in front of.
@@ -385,6 +365,30 @@ void RecordProcess::recordVideo()
     arguments << QString("x11grab");
     arguments << QString("-i");
     arguments << QString("%1+%2,%3").arg(displayNumber).arg(m_recordRect.x()).arg(m_recordRect.y());
+    
+    //v25 arm上面参数需要放在最后
+    if (m_audioType == Utils::kSystemAudio || m_audioType == Utils::kMicAndSystemAudio) {
+        if (m_audioType == Utils::kSystemAudio) {
+            if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+                arguments << QString("-af");
+                arguments << QString("volume=20dB");
+            }
+        }
+    }
+
+    if (m_audioType == Utils::kMicAndSystemAudio) {
+        qDebug() << "x11 ffmpeg 是否录制混音？true";
+        arguments << QString("-filter_complex");
+        if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
+            arguments << QString("[1:a]volume=30dB[a1];[a1][2:a]amix=inputs=2:duration=first:dropout_transition=0[out]");
+            arguments << QString("-map");
+            arguments << QString("0:v");
+            arguments << QString("-map");
+            arguments << QString("[out]");
+        } else {
+            arguments << QString("amerge");
+        }
+    }
 
     arguments << QString("-c:v");
     arguments << QString("libx264");
