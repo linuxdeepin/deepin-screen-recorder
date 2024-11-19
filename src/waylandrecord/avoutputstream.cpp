@@ -724,8 +724,14 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
     avlibInterface::m_sws_scale(m_pVideoSwsContext, pRgbFrame->data, pRgbFrame->linesize, 0, pCodecCtx->height, pFrameYUV->data, pFrameYUV->linesize);
     //qint64 time3 = QDateTime::currentMSecsSinceEpoch();
     //qDebug() << "time3 - time2: sws_scale : " << time3-time2;
-    pFrameYUV->width  = pRgbFrame->width;//test
-    pFrameYUV->height = pRgbFrame->height;
+    if (pRgbFrame->height != pCodecCtx->height && pRgbFrame->width != pCodecCtx->width) {
+        pFrameYUV->width  = pCodecCtx->width;
+        pFrameYUV->height = pCodecCtx->height;
+        qDebug() << "the frame maybe cropped. the frame mybe not be encode. use the codectx as encode frame size";
+    } else {
+        pFrameYUV->width  = pRgbFrame->width;
+        pFrameYUV->height = pRgbFrame->height;
+    }
     pFrameYUV->format = AV_PIX_FMT_YUV420P;
     AVPacket packet;
     packet.data = nullptr;
