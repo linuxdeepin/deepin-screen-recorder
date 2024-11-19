@@ -252,8 +252,12 @@ void MainWindow::initAttributes()
         } else {
             setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
         }
-        if (this->windowHandle()) {
-            this->windowHandle()->setProperty("_d_dwayland_window-type", "override");
+        if (this->windowHandle()) {            
+            if (DSysInfo::minorVersion().toInt() >= 1070) {
+                this->windowHandle()->setProperty("_d_dwayland_window-type", "override");
+            } else {
+                this->windowHandle()->setProperty("_d_dwayland_window-type", "onScreenDisplay"); // 窗管层级在1060和1070有所区别，兼容适配bug254705-275661
+            }
             qDebug() << "设置窗口属性 _d_dwayland_window-type: " << this->windowHandle()->property("_d_dwayland_window-type");
         }
         //取消onScreenDisplay，解决wayland截长图无法滚动的问题
