@@ -25,7 +25,8 @@
 #include <QDebug>
 #include <QFile>
 #include <QDir>
-
+#define Bool int
+#include <X11/extensions/Xinerama.h>
 DWIDGET_USE_NAMESPACE
 
 static bool isWaylandProtocol()
@@ -64,6 +65,62 @@ static float getScreenFactor()
     }
     file.close();
     return factor;
+}
+
+static bool checkShouldScale() {
+    Display *display = XOpenDisplay(nullptr);
+
+    bool isShouldScale = false;
+
+    int eventBase, errorBase, screensNums;
+
+    if (display == nullptr) {
+        qDebug() << "Cannot open display.";
+        return isShouldScale;
+    }
+
+    if (!XineramaQueryExtension(display, &eventBase, &errorBase)) {
+        qDebug() << "Xinerama extension not available.";
+        XCloseDisplay(display);
+        return isShouldScale;
+    }
+
+    XineramaScreenInfo *screenXi = (XineramaScreenInfo *)XineramaQueryScreens(display, &screensNums);
+
+    if (screensNums <= 0) {
+        qDebug() << "No screens found.";
+        goto clean;
+    }
+
+    if (screensNums == 1) {
+        qDebug() << "One screen no need scale.";
+        goto clean;
+    }
+
+    if (screensNums > 2) {
+        qDebug() << "Only support 2 screens, this will not need scale.";
+        goto clean;
+    }
+
+    for (int i = 0; i < screensNums; i++) {
+        qDebug() << "XineramaScreenInfo:"
+                 << " screen_number:" << screenXi[i].screen_number
+                 << " x_org:" << screenXi[i].x_org
+                 << " y_org:" << screenXi[i].y_org
+                 << " width:" << screenXi[i].width
+                 << " height:" << screenXi[i].height;
+        if (screenXi[i].x_org == 0 && screenXi[i].y_org > 0) {
+            if (screenXi[i].width > screenXi[1-i].width && screenXi[i].height > screenXi[1-i].height) {
+                isShouldScale = true;
+                qDebug() << "Primary Screen is bellow, this will scale";
+                goto clean;
+            }
+        }
+    }
+
+clean:
+    XCloseDisplay(display);
+    return isShouldScale;
 }
 
 static bool CheckFFmpegEnv()
@@ -135,7 +192,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     float factor = getScreenFactor();
-    if (factor > 0) {
+    if (factor > 0 && checkShouldScale()) {
         qDebug() << "scaleFactor available value: " << factor;
         qputenv("QT_SCALE_FACTOR", QString::number(1.0f / factor, 'g', 2).toLatin1());
     }
