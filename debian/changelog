@@ -1,3 +1,10 @@
+deepin-screen-recorder (6.5.1) unstable; urgency=medium
+
+  * fix: adapt new quick pannel plugin interface(Bug: 266839)
+  * fix: Fixed the problem that v25 screenshot recording arm cannot record the screen(Bug: 283491)
+
+ -- renbin <renbin@uniontech.com>  Fri, 22 Nov 2024 17:01:16 +0800
+
 deepin-screen-recorder (6.5.0) unstable; urgency=medium
 
   * feat: [translation]add transifex config(Task: 361363)
