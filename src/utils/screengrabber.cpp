@@ -17,7 +17,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QStandardPaths>
-
+#include <QThread>
 ScreenGrabber::ScreenGrabber(QObject *parent)
     : QObject(parent)
 {
@@ -27,6 +27,7 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
 {
     ok = true;
     if (Utils::isWaylandMode) {
+        int count = 0;
         QRect recordRect {
             static_cast<int>(rect.x() * devicePixelRatio),
             static_cast<int>(rect.y() * devicePixelRatio),
@@ -37,15 +38,22 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
         QDBusInterface kwinInterface(QStringLiteral("org.kde.KWin"),
                                      QStringLiteral("/Screenshot"),
                                      QStringLiteral("org.kde.kwin.Screenshot"));
-
-        QDBusReply<QString> reply = kwinInterface.call(QStringLiteral("screenshotFullscreen"));
-        res = QPixmap(reply.value());
-        qDebug() << __FUNCTION__ << __LINE__ << "Get Pixmap:" << res.size();
+        QDBusReply<QString> reply;
+        while (count < 6) {
+            reply = kwinInterface.call(QStringLiteral("screenshotFullscreen"));
+            res = QPixmap(reply.value());
+            if (!res.isNull()) {
+                break;
+            }
+            count++;
+            QThread::msleep(50);
+        }
         if (!res.isNull()) {
             QFile dbusResult(reply.value());
             dbusResult.remove();
         } else {
             ok = false;
+            qDebug() << __FUNCTION__ << __LINE__ << "Get Pixmap:" << res.size() << "try failed at " << count << "times";
         }
         return res.copy(recordRect);
     }
