@@ -3,8 +3,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include <QDesktopWidget>
 #include "recordtimeplugin.h"
+#include "timewidget.h"
+#include <QWidget>
 
 RecordTimePlugin::RecordTimePlugin(QObject *parent)
     : QObject(parent)
@@ -12,6 +13,7 @@ RecordTimePlugin::RecordTimePlugin(QObject *parent)
 {
     m_timer = nullptr;
     m_checkTimer = nullptr;
+    m_timeWidget = nullptr;
 }
 
 const QString RecordTimePlugin::pluginName() const
@@ -65,17 +67,20 @@ QWidget *RecordTimePlugin::itemWidget(const QString &itemKey)
 
 void RecordTimePlugin::clear()
 {
-    m_timeWidget->clearSetting();
+    // m_timeWidget->clearSetting();  
 
     if (nullptr != m_timer) {
         m_timer->stop();
         m_timer->deleteLater();
         m_timer = nullptr;
     }
-    if (nullptr != m_timeWidget) {
-        m_timeWidget->deleteLater();
-        m_timeWidget = nullptr;
-    }
+
+    //没找到解决方法，先注释掉
+    // if (nullptr != m_timeWidget) {
+    //     m_timeWidget->deleteLater();
+    //     m_timeWidget = nullptr;
+    // }
+    
     if (nullptr != m_checkTimer) {
         m_checkTimer->stop();
         m_checkTimer->deleteLater();
@@ -83,27 +88,9 @@ void RecordTimePlugin::clear()
     }
 }
 
-void RecordTimePlugin::onStart()
-{
-    qInfo() << "start record time";
-    m_timer = new QTimer(this);
-    m_timeWidget = new TimeWidget();
-    m_checkTimer = nullptr;
-    m_timer->start(600);
-    connect(m_timer, &QTimer::timeout, this, &RecordTimePlugin::refresh);
-
-    if (m_timeWidget->enabled()) {
-        qInfo() << "load plugin";
-        m_proxyInter->itemRemoved(this, pluginName());
-        m_proxyInter->itemAdded(this, pluginName());
-        m_bshow = true;
-        m_timeWidget->start();
-    }
-}
-
 void RecordTimePlugin::onStop()
 {
-    if (m_timeWidget->enabled()) {
+    if (m_timeWidget->isEnabled()) {
         qInfo() << "unload plugin";
         m_proxyInter->itemRemoved(this, pluginName());
         m_bshow = false;
@@ -126,7 +113,7 @@ void RecordTimePlugin::onRecording()
     if (m_timeWidget == nullptr) {
         onStart();
     }
-    if (m_timeWidget->enabled() && m_bshow) {
+    if (m_timeWidget->isEnabled() && m_bshow) {
         m_nextCount++;
         if (1 == m_nextCount) {
             m_checkTimer = new QTimer();
@@ -147,7 +134,8 @@ void RecordTimePlugin::onRecording()
 
 void RecordTimePlugin::onPause()
 {
-    if (m_timeWidget->enabled() && m_bshow) {
+    // Empty implementation to match legacy behavior
+    if (m_timeWidget->isEnabled() && m_bshow) {
         m_timeWidget->stop();
     }
 }

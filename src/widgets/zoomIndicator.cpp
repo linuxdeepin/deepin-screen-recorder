@@ -7,6 +7,7 @@
 #include "../utils/baseutils.h"
 #include "../utils/tempfile.h"
 #include "../utils.h"
+//#include <QtOpenGL/QOpenGLWidget>
 
 #include <QCursor>
 #include <QTextOption>
@@ -153,7 +154,8 @@ void ZoomIndicator::showMagnifier(QPoint pos)
 void ZoomIndicator::hideMagnifier()
 {
     if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord) {
-        m_zoomIndicatorGL->makeCurrent();
+        //先注释掉，后续再处理
+        //m_zoomIndicatorGL->makeCurrent();
         m_zoomIndicatorGL->hide();
         return;
     }

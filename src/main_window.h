@@ -42,7 +42,8 @@
 #include <DConfig>
 #endif
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
+#include <QGuiApplication>
 #include <QObject>
 #include <QPainter>
 #include <QSystemTrayIcon>
@@ -63,6 +64,10 @@
 #include <KF5/KWayland/Client/registry.h>
 #endif  // DWAYLAND_SUPPORT
 #endif  // KF5_WAYLAND_FLAGE_ON
+
+
+// Add these undef statements before line 68
+
 
 #include "event_monitor.h"
 
@@ -147,7 +152,8 @@ public:
     {
         qInfo() << __FUNCTION__ << __LINE__ << "===正在释放截图录屏相关资源===";
         if (m_pVoiceVolumeWatcher) {
-            m_pVoiceVolumeWatcher->setWatch(false);
+            //voicevolumewatcher中没有setWatch方法
+            //m_pVoiceVolumeWatcher->setWatch(false);
             // 之前run函数里面有sleep,所以此处加terminate，现在采用定时器检测摄像头，就不考虑各个平台下线程退出的方式
             delete m_pVoiceVolumeWatcher;
             m_pVoiceVolumeWatcher = nullptr;

@@ -85,7 +85,7 @@ private:
 
 private:
     QTimer *m_timer;
-    QPointer<TimeWidget> m_timeWidget;
+    TimeWidget *m_timeWidget;
     QPointer<DBusService> m_dBusService;
     bool m_bshow;
 

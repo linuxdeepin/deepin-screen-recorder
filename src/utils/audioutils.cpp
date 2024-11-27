@@ -11,6 +11,7 @@
 #include <QDBusInterface>
 #include <QDBusError>
 #include <QDBusMessage>
+#include <QRegularExpression>
 
 #include <com_deepin_daemon_audio.h>
 #include <com_deepin_daemon_audio_sink.h>
@@ -238,7 +239,7 @@ QString AudioUtils::currentAudioChannelV20Impl()
         }
 
         if (!targetLine.isEmpty()) {
-            targetLine.remove(QRegExp(".* "));
+            targetLine.remove(QRegularExpression(".* "));
         }
 
         qDebug() << command << targetLine;

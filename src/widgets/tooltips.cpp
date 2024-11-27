@@ -81,7 +81,7 @@ ToolTips::ToolTips(const QString &text, QWidget *parent):
     d->textLable->setWordWrap(false);
     DFontSizeManager::instance()->bind(d->textLable, DFontSizeManager::T8);
     d->textLable->setForegroundRole(DPalette::ToolTipText);
-//    DPalette pa_name = DApplicationHelper::instance()->palette(d->textLable);
+//    DPalette pa_name = DGuiApplicationHelper::instance()->palette(d->textLable);
 //    pa_name.setBrush(DPalette::Text, pa_name.color(DPalette::ToolTipText));
 //    pa_name.setBrush(DPalette::ToolTipText, pa_name.color(DPalette::ToolTipText));
 //    d->textLable->setForegroundRole(DPalette::Text);
@@ -114,7 +114,7 @@ ToolTips::~ToolTips()
     }
 }
 
-void ToolTips::enterEvent(QEvent *e)
+void ToolTips::enterEvent(QEnterEvent *e)
 {
     Q_UNUSED(e);
     hide();
@@ -221,7 +221,7 @@ void ToolTips::paintEvent(QPaintEvent *)
 //    auto background =  d->background;
     const QPalette pal = QGuiApplication::palette();//this->palette();
     QColor background = pal.color(QPalette::ToolTipBase);
-    DPalette pa_name = DApplicationHelper::instance()->palette(d->textLable);
+    DPalette pa_name = DGuiApplicationHelper::instance()->palette(d->textLable);
     pa_name.setBrush(DPalette::Text, pa_name.color(DPalette::ToolTipText));
     pa_name.setBrush(DPalette::ToolTipText, pa_name.color(DPalette::ToolTipText));
     d->textLable->setForegroundRole(DPalette::Text);
@@ -268,7 +268,7 @@ void ToolTips::paintEvent(QPaintEvent *)
     pt.setRenderHint(QPainter::Antialiasing);
 
 //    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, [=]{
-//        DPalette pa_name = DApplicationHelper::instance()->palette(d->textLable);
+//        DPalette pa_name = DGuiApplicationHelper::instance()->palette(d->textLable);
 //        pa_name.setBrush(DPalette::Text, pa_name.color(DPalette::ToolTipText));
 //        pa_name.setBrush(DPalette::ToolTipText, pa_name.color(DPalette::ToolTipText));
 //        d->textLable->setForegroundRole(DPalette::Text);

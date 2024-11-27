@@ -25,6 +25,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QDir>
+#include <QStandardPaths>
 
 DWIDGET_USE_NAMESPACE
 
@@ -74,7 +75,6 @@ int main(int argc, char *argv[])
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
     }
-    DGuiApplicationHelper::setUseInactiveColorGroup(false);
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QDBusInterface scaleFactor("com.deepin.daemon.Display", "/com/deepin/XSettings", "com.deepin.XSettings");
@@ -137,7 +137,8 @@ int main(int argc, char *argv[])
         app->setOrganizationName("deepin");
         app->setApplicationName("deepin-screen-recorder");
         app->setApplicationVersion("1.0");
-        app->setAttribute(Qt::AA_UseHighDpiPixmaps);
+        // if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+        //     app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
         //        static const QDate buildDate = QLocale(QLocale::English).
         //                                       toDate(QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");

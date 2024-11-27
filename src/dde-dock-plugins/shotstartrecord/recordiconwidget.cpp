@@ -26,16 +26,57 @@
 
 DCORE_USE_NAMESPACE
 
-RecordIconWidget::RecordIconWidget(QWidget *parent)
-    : QWidget(parent)
+RecordIconWidget::RecordIconWidget(DWidget *parent)
+    : DWidget(parent)
+    , m_dockInter(new recordiconwidget_interface("com.deepin.dde.daemon.Dock",
+                                                "/com/deepin/dde/daemon/Dock",
+                                                QDBusConnection::sessionBus(),
+                                                this))
     , m_blgPixmap(nullptr)
-    , centralLayout(nullptr)
+    , m_iconLabel(new QLabel(this))
+    , m_position(Dock::Position::Bottom)
 {
     setMouseTracking(true);
     setMinimumSize(PLUGIN_BACKGROUND_MIN_SIZE, PLUGIN_BACKGROUND_MIN_SIZE);
 
+    auto *layout = new QHBoxLayout(this);
+    setLayout(layout);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(m_iconLabel);
+
+    // 连接 DBus 信号
+    connect(m_dockInter, SIGNAL(propertyChanged(QString,QVariant)),
+            this, SLOT(onPropertyChanged(QString,QVariant)));
+
+    m_position = m_dockInter->position();
+    
     QString iconName("status-screen-record");
     m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
+    
+    updateIcon();
+}
+
+void RecordIconWidget::updateIcon()
+{
+    if (Dock::Position::Top == m_position || Dock::Position::Bottom == m_position) {
+        m_pixmap = loadSvg("status-screen-record", QSize(PLUGIN_ICON_MAX_SIZE, PLUGIN_ICON_MAX_SIZE));
+    } else {
+        m_pixmap = loadSvg("status-screen-record", QSize(PLUGIN_ICON_MAX_SIZE, PLUGIN_ICON_MAX_SIZE));
+    }
+    m_iconLabel->setPixmap(m_pixmap);
+}
+
+void RecordIconWidget::onPositionChanged(int value)
+{
+    m_position = value;
+    updateIcon();
+}
+
+void RecordIconWidget::onPropertyChanged(const QString &property, const QVariant &value)
+{
+    if (property == "Position") {
+        onPositionChanged(value.toInt());
+    }
 }
 
 bool RecordIconWidget::enabled()

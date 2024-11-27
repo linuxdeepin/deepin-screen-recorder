@@ -8,7 +8,7 @@
 
 #include <DPushButton>
 #include <DPalette>
-
+#include <QEnterEvent>
 #include <QApplication>
 
 DWIDGET_USE_NAMESPACE
@@ -32,7 +32,7 @@ public:
     }
     ~ToolButton() {}
 protected:
-    void enterEvent(QEvent *e) override
+    void enterEvent(QEnterEvent *e)
     {
         if (this->isEnabled() && m_hasHoverState) {
             setFlat(false);

@@ -8,10 +8,9 @@
 #include "../camera/majorimageprocessingthread.h"
 
 #include <QObject>
-#include <QCamera>
-#include <QCameraViewfinder>
-#include <QCameraImageCapture>
-#include <QCameraInfo>
+#include <QMediaDevices>
+#include <QImageCapture>
+#include <QVideoWidget>
 #include <QList>
 #include <QDebug>
 #include <QImage>

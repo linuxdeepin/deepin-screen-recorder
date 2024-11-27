@@ -12,7 +12,6 @@
 
 #include <DLabel>
 #include <DBlurEffectWidget>
-#include <DImageButton>
 #include <DFloatingWidget>
 #include <DVerticalLine>
 
@@ -100,7 +99,7 @@ public slots:
 
 protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
-    void enterEvent(QEvent *e) Q_DECL_OVERRIDE;
+    void enterEvent(QEnterEvent *e) Q_DECL_OVERRIDE;
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;

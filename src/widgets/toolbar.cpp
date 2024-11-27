@@ -73,7 +73,7 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
     }
 
     QHBoxLayout *hLayout = new QHBoxLayout();
-    hLayout->setMargin(0);
+    hLayout->setContentsMargins(0, 0, 0, 0);
     hLayout->setSpacing(0);
     hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
     hLayout->addSpacing(10);
@@ -182,7 +182,7 @@ void ToolBar::paintEvent(QPaintEvent *e)
     DLabel::paintEvent(e);
 }
 
-void ToolBar::enterEvent(QEvent *e)
+void ToolBar::enterEvent(QEnterEvent *e)
 {
 //    qApp->setOverrideCursor(Qt::ArrowCursor);
     QApplication::setOverrideCursor(Qt::OpenHandCursor);

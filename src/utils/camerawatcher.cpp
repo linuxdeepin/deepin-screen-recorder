@@ -6,7 +6,8 @@
 #include "camerawatcher.h"
 
 #include <QThread>
-#include <QCameraInfo>
+#include <QMediaDevices>
+#include <QCameraDevice>
 #include <QDebug>
 
 CameraWatcher::CameraWatcher(QObject *parent)
@@ -42,13 +43,12 @@ void CameraWatcher::setCoulduseValue(bool value)
 void CameraWatcher::slotCameraWatcher()
 {
     bool couldUse = false;
-    //qDebug() << "QCameraInfo::availableCameras()" << QCameraInfo::defaultCamera().deviceName();
-    if (QCameraInfo::availableCameras().count() > 0) {
+    const QList<QCameraDevice> cameras = QMediaDevices::videoInputs();
+    if (!cameras.isEmpty()) {
         couldUse = true;
     }
 
     if (couldUse != m_coulduse) {
-        //发送log信息到UI
         m_coulduse = couldUse;
         emit sigCameraState(couldUse);
     }

@@ -7,11 +7,10 @@
 #define TOOLTIPS_H
 
 #include <DPalette>
-#include <DApplicationHelper>
+#include <DGuiApplicationHelper>
 #include <DFontSizeManager>
 
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QFrame>
 #include <QGuiApplication>
 #include <QGraphicsOpacityEffect>
@@ -43,7 +42,7 @@ public slots:
 
 protected:
     virtual void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
-    void enterEvent(QEvent *e) override;
+    void enterEvent(QEnterEvent *e) override;
     virtual void resizeEvent(QResizeEvent *ev) Q_DECL_OVERRIDE;
 
 public:

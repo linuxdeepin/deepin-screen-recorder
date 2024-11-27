@@ -49,7 +49,6 @@ extern "C" {
 #include <QClipboard>
 #include <QFileDialog>
 #include <QShortcut>
-#include <QDesktopWidget>
 #include <QScreen>
 #include <QtConcurrent>
 #include <X11/Xcursor/Xcursor.h>
@@ -192,9 +191,9 @@ void MainWindow::initMainWindow()
         m_pScreenCaptureEvent->start();
     }
 
-    m_screenCount = QApplication::desktop()->screenCount();
-    QDesktopWidget *desktopwidget = QApplication::desktop();
-    connect(desktopwidget, SIGNAL(resized(int)), this, SLOT(onScreenResolutionChanged()));
+    m_screenCount = QGuiApplication::screens().count();
+    connect(qApp, &QGuiApplication::screenAdded, this, &MainWindow::onScreenResolutionChanged);
+    connect(qApp, &QGuiApplication::screenRemoved, this, &MainWindow::onScreenResolutionChanged);
 
     QList<QScreen *> screenList = qApp->screens();
     int hTotal = 0;
@@ -231,7 +230,7 @@ void MainWindow::initMainWindow()
         }
 
         // 排序
-        qSort(m_screenInfo.begin(), m_screenInfo.end(), [=](const ScreenInfo info1, const ScreenInfo info2) {
+        std::sort(m_screenInfo.begin(), m_screenInfo.end(), [=](const ScreenInfo info1, const ScreenInfo info2) {
             if (m_isVertical) {
                 return info1.y < info2.y;
             } else {
@@ -776,6 +775,7 @@ QString MainWindow::libPath(const QString &strlib)
     Q_ASSERT(list.size() > 0);
     return list.last();
 }
+
 void MainWindow::sendSavingNotify()
 {
     if (Utils::isRootUser) {
@@ -881,7 +881,7 @@ void MainWindow::initShortcut()
     // 截图模式/录屏模式（未做穿透）/滚动模式 退出
     QShortcut *escSC = new QShortcut(QKeySequence("Escape"), this);
     // 截图模式/录屏模式（未做穿透）/滚动模式 帮助快捷面板
-    QShortcut *shortCutSC = new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Slash), this);
+    QShortcut *shortCutSC = new QShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Slash), this);
     // 截图模式/滚动模式 贴图应用内快捷键
     connect(pinScreenshotsSC, &QShortcut::activated, this, [=] {
         // 滚动截图及普通截图都可以通过快捷键触发贴图
@@ -1877,6 +1877,7 @@ void MainWindow::topWindow()
             if (window->wmClass() == "dde-dock" || window->wmClass() == "dde-shell") {
                 continue;
             }
+
             // 判断窗口是否被最小化
             if (window->windowState() == Qt::WindowState::WindowMinimized) {
                 continue;
@@ -2494,7 +2495,8 @@ void MainWindow::updateToolBarPos()
                     // 屏幕下超出
                     int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
                     // qDebug() << ">>> y: " << y;
-                    if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING)
+                    if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() -
+                        TOOLBAR_Y_SPACING)
                         y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_toolBar->height() -
                             TOOLBAR_Y_SPACING;
 
@@ -2512,7 +2514,7 @@ void MainWindow::updateToolBarPos()
             if (!tempScreen.isNull() /*|| tempScreen.isEmpty()*/) {
                 // qDebug() << "当前屏幕：" <<  tempScreen;
                 if (recordY - tempScreen.y() > m_toolBar->height() + 28) {
-                    //                    qDebug() << "工具栏位置未在任一屏幕内，需要矫正 >>> 放捕捉区域上边 toolbarPoint: " <<
+                    //                    qDebug() << "工具栏具栏位置未在任一屏幕内，需要矫正 >>> 放捕捉区域上边 toolbarPoint: " <<
                     //                    toolbarPoint;
                     toolbarPoint.setY(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING);
                 } else {
@@ -4665,7 +4667,7 @@ int MainWindow::wheelEF(QWheelEvent *wheelEvent, bool &needRepaint)
                          static_cast<int>(recordWidth * m_pixelRatio),
                          static_cast<int>(recordHeight * m_pixelRatio)};
         // 当前鼠标滚动的点
-        QPoint mouseScrollPoint(wheelEvent->x(), wheelEvent->y());
+        QPoint mouseScrollPoint(wheelEvent->position().x(), wheelEvent->position().y());;
         // 判断鼠标滚动的位置是否是在捕捉区域内部，滚动位置在捕捉区域内部
         if (recordRect.contains(mouseScrollPoint)) {
             m_scrollShotType = ScrollShotType::ManualScroll;
@@ -4694,6 +4696,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 // 重写键盘释放事件处理器
+
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
     if (Utils::isWaylandMode) {
@@ -4887,7 +4890,7 @@ void MainWindow::scrollShotMouseClickEvent(int x, int y)
                          static_cast<int>(m_toolBar->getShotOptionRect().y() * m_pixelRatio),
                          static_cast<int>(m_toolBar->getShotOptionRect().width() * m_pixelRatio),
                          static_cast<int>(m_toolBar->getShotOptionRect().height() * m_pixelRatio)};
-    // 判断当前点击的点是否在工具栏或截图保存按钮上（当工具栏或截图保存按钮在捕捉区域内部时会进入）,滚动截图不响应此时的点击事件
+    // 判断当前点击的点是否在工具栏或截图保存按钮上（当工具栏或截图保存按钮在捕捉区域内部时会进入此方法）,滚动截图不响应此时的点击事件
     if (toolBarRect.contains(mouseClickPoint) || shotOptionRect.contains(mouseClickPoint)) {
         return;
     }
@@ -5347,8 +5350,12 @@ void MainWindow::initPadShot()
 {
     recordX = 0;
     recordY = 0;
-    recordWidth = QApplication::desktop()->width();
-    recordHeight = QApplication::desktop()->height();
+    QScreen *primaryScreen = QGuiApplication::primaryScreen();
+    if (primaryScreen) {
+        QRect screenGeometry = primaryScreen->geometry();
+        recordWidth = screenGeometry.width();
+        recordHeight = screenGeometry.height();
+    }
     updateToolBarPos();
     // updateShotButtonPos();
     QPoint toolbarPoint;
@@ -5494,6 +5501,7 @@ void MainWindow::startRecord()
     if (Utils::isTabletEnvironment && m_tabletRecorderHandle) {
         m_tabletRecorderHandle->startStatusBar();
     }
+
 #ifdef KF5_WAYLAND_FLAGE_ON
 #if defined(__mips__) || defined(__sw_64__) || defined(__loongarch_64__) || defined(__aarch64__) || defined(__loongarch__)
     if (Utils::isWaylandMode) {
@@ -5603,7 +5611,7 @@ void MainWindow::shotCurrentImg()
     // 当存在编辑模式且编辑的内容有文本时，需要再截图一次
     if (m_shapesWidget && m_shapesWidget->isExistsText()) {
         int eventTime = 60;
-        QRect rect = QApplication::desktop()->screenGeometry();
+        QRect rect = QGuiApplication::primaryScreen()->geometry();
         if (rect.width() * rect.height() > 1920 * 1080) {
             if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin) {
                 eventTime = 120;

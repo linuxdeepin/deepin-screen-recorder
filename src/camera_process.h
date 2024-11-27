@@ -8,14 +8,13 @@
 
 #include <QObject>
 #include <DWidget>
+#include <QMediaCaptureSession>
+#include <QImageCapture>
 #include <QCamera>
-#include <QCameraViewfinder>
-#include <QCameraImageCapture>
-#include <QCameraInfo>
 #include <QList>
 #include <QDebug>
 #include <QImage>
-
+#include <QVideoWidget>
 
 class CameraProcess : public QObject
 {
@@ -23,18 +22,17 @@ class CameraProcess : public QObject
 public:
     explicit CameraProcess(QObject *parent = nullptr);
     ~CameraProcess();
-    //static bool checkCameraAvailability();
 
 signals:
 
 public slots:
     void ShowTheCapture();
-    //void displayImage(int, QImage image);
 
 private:
-    QCamera *camera;//摄像头
-    QCameraViewfinder *viewfinder; //摄像头取景器部件
-    QCameraImageCapture *imageCapture; //截图部件
+    QCamera *camera;
+    QVideoWidget *viewfinder;
+    QImageCapture *imageCapture;
+    QMediaCaptureSession *captureSession;
 };
 
 #endif // CAMERA_PROCESS_H

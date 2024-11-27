@@ -9,6 +9,8 @@
 #include "tooltips.h"
 #include "../utils.h"
 #include "../accessibility/acTextDefine.h"
+
+#include <QActionGroup>
 #include "../main_window.h"
 #include "imagemenu.h"
 
@@ -33,6 +35,7 @@
 #include <QToolTip>
 
 #include <unistd.h>
+#include <QMediaDevices>
 
 
 DWIDGET_USE_NAMESPACE
@@ -87,7 +90,7 @@ void SubToolWidget::initRecordLabel()
 
     //添加摄像头显示按钮
     m_cameraButton = new ToolButton();
-    m_cameraButton->setDisabled((QCameraInfo::availableCameras().count() <= 0));
+    m_cameraButton->setDisabled(QMediaDevices::videoInputs().isEmpty());
     Utils::setAccessibility(m_cameraButton, AC_SUBTOOLWIDGET_CAMERA_BUTTON);
     m_cameraButton->setIconSize(TOOL_ICON_SIZE);
     installTipHint(m_cameraButton, tr("Turn on camera (C)"));
@@ -151,7 +154,7 @@ void SubToolWidget::initRecordLabel()
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setSizeConstraint(QLayout::SetFixedSize);
-    rectLayout->setMargin(0);
+    rectLayout->setContentsMargins(0, 0, 0, 0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(10);
     for (int i = 0; i < btnList.length(); i++) {
@@ -671,7 +674,7 @@ void SubToolWidget::initShotLabel()
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setSizeConstraint(QLayout::SetFixedSize);
-    rectLayout->setMargin(0);
+    rectLayout->setContentsMargins(0, 0, 0, 0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(10);
     for (int i = 0; i < btnList.length(); i++) {
@@ -685,9 +688,9 @@ void SubToolWidget::initShotLabel()
 
 
 
-    connect(m_shotBtnGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
-    [ = ](int status) {
-        Q_UNUSED(status);
+    connect(m_shotBtnGroup, &QButtonGroup::buttonClicked,
+    [ = ](QAbstractButton *button) {
+        Q_UNUSED(button);
         if (m_pinButton->isChecked()) {
             emit changeShotToolFunc("pinScreenshots");
         }
@@ -1019,7 +1022,7 @@ void SubToolWidget::initScrollLabel()
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
     rectLayout->setSizeConstraint(QLayout::SetFixedSize);
-    rectLayout->setMargin(0);
+    rectLayout->setContentsMargins(0, 0, 0, 0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(10);
     for (int i = 0; i < btnList.length(); i++) {

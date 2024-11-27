@@ -30,7 +30,7 @@ TopTips::TopTips(DWidget *parent)
 
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
     DPalette pa = this->palette();
-    pa.setColor(DPalette::Foreground, Qt::white);
+    pa.setColor(DPalette::WindowText, Qt::white);
     this->setPalette(pa);
     this->setAlignment(Qt::AlignLeft | Qt::AlignBottom);
 

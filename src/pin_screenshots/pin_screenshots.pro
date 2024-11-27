@@ -4,7 +4,19 @@
 #
 #-------------------------------------------------
 
-QT       += dtkgui dtkwidget dbus
+# Qt 模块配置
+equals(QT_MAJOR_VERSION, 6) {
+    QT += core gui widgets dbus
+    
+    # Qt6 specific configurations
+    PKGCONFIG += dtk6widget dtk6core
+} else {
+    QT += core gui widgets dbus
+    
+    # Qt5 specific configurations
+    PKGCONFIG += dtkwidget dtkcore
+}
+
 TARGET = deepin-pin-screenshots
 TEMPLATE = app
 INCLUDEPATH += .
@@ -12,6 +24,9 @@ INCLUDEPATH += .
 #下面的定义会让你的编译器在你使用任何被标记为deprecated的Qt特性时发出警告(确切的警告取决于你的编译器)。
 #请查阅已弃用API的文档，以了解如何将代码从它那里移植出去。
 DEFINES += QT_DEPRECATED_WARNINGS
+
+# 编译器配置
+CONFIG += c++17 link_pkgconfig
 
 SOURCES += \
     service/dbuspinscreenshotsadaptor.cpp \
@@ -43,6 +58,12 @@ HEADERS += \
 
 QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations
+
+equals(QT_MAJOR_VERSION, 6) {
+    # Qt6 特定的编译选项
+    QMAKE_CXXFLAGS += -DQT_DISABLE_DEPRECATED_BEFORE=0x060000
+}
+
 ##安装路径
 isEmpty(PREFIX){
     PREFIX = /usr
@@ -54,14 +75,13 @@ isEmpty(DSRDIR):DSRDIR=$$PREFIX/share/deepin-pin-screenshots
 #Dbus文件
 dbus_service.path=$$PREFIX/share/dbus-1/services
 dbus_service.files=./com.deepin.PinScreenShots.service
+
 include(accessibility/accessible.pri)
+
 #安装
 INSTALLS += target dbus_service
 
-#RESOURCES += \
-#    ../../assets/icons/pin_icons.qrc\
-#    ../../assets/image/pin_screenshots.qrc
-
 RESOURCES += \
     ./icons/icons.qrc
+
 

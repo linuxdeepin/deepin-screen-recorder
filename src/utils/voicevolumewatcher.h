@@ -7,30 +7,34 @@
 #define VOICEVOLUMEWATCHER_H
 
 #include <QTimer>
-
-#include <com_deepin_daemon_audio.h>
-#include <com_deepin_daemon_audio_source.h>
-#include <com_deepin_daemon_audio_sink.h>
-
+#include <libdframeworkdbus-2.0/com_deepin_daemon_audio.h>
+#include <libdframeworkdbus-2.0/com_deepin_daemon_audio_source.h>
+#include "voicevolumewatcher_interface.h"
 #include "audioutils.h"
 
 // audio service monitor
-class voiceVolumeWatcher : public QObject
+class voiceVolumeWatcher : public voicevolumewatcher_interface
 {
     Q_OBJECT
 
 public:
     explicit voiceVolumeWatcher(QObject *parent = nullptr);
+    // 新的构造函数，用于传递 DBus 连接信息给基类
+    explicit voiceVolumeWatcher(const QString &service, const QString &path, 
+                              const QDBusConnection &connection, QObject *parent = nullptr);
     ~voiceVolumeWatcher();
 
     // monitor audio change
     void setWatch(const bool isWatcher);
-    // changed the original run() method to a timer for quick exit
-    Q_SLOT void slotVoiceVolumeWatcher();
     // returns whether there is a system sound card or not
     bool getystemAudioState();
 
-    Q_SIGNAL void sigRecodeState(bool couldUse);
+public Q_SLOTS:
+    // changed the original run() method to a timer for quick exit
+    void slotVoiceVolumeWatcher();
+
+Q_SIGNALS:
+    void sigRecodeState(bool couldUse);
 
 protected:
     void onCardsChanged(const QString &value);
@@ -41,15 +45,6 @@ protected:
     void initV20DeviceWatcher();
 
 private:
-    // For v23 or later
-    AudioUtils *m_audioUtils{nullptr};
-
-    // For V20 or older
-    // Audio interface com.deepin.daemon.Audio
-    QScopedPointer<com::deepin::daemon::Audio> m_audioInterface;
-    // Audio Source (Input Source)
-    QScopedPointer<com::deepin::daemon::audio::Source> m_defaultSource;
-
     struct Port
     {
         QString portId;
@@ -63,6 +58,15 @@ private:
         bool isLoopback() const;
     };
     friend QDebug &operator<<(QDebug &out, const Port &port);
+
+    // For v23 or later
+    AudioUtils *m_audioUtils{nullptr};
+
+    // For V20 or older
+    // Audio interface com.deepin.daemon.Audio
+    QScopedPointer<com::deepin::daemon::Audio> m_audioInterface;
+    // Audio Source (Input Source)
+    QScopedPointer<com::deepin::daemon::audio::Source> m_defaultSource;
 
     // All available input ports.except loopback port.
     QMap<QString, Port> m_availableInputPorts;

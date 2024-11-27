@@ -312,7 +312,7 @@ ImageBorderHelper::ImageBorderHelper(QObject *parent) : QObject(parent)
     QList<QRect> screenInfo;
     QSize screenSize;
 
-    int m_screenCount = QApplication::desktop()->screenCount();
+    int m_screenCount = screenList.size();
     for (QList<QScreen *>::const_iterator it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
         QRect rect = (*it)->geometry();
         screenInfo.append(rect);

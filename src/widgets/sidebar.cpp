@@ -207,7 +207,7 @@ void SideBar::paintEvent(QPaintEvent *e)
     DLabel::paintEvent(e);
 }
 
-void SideBar::enterEvent(QEvent *e)
+void SideBar::enterEvent(QEnterEvent *e)
 {
 //    qApp->setOverrideCursor(Qt::ArrowCursor);
     QApplication::setOverrideCursor(Qt::OpenHandCursor);

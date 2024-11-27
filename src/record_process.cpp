@@ -127,11 +127,15 @@ void RecordProcess::onStartTranscode()
 {
     qInfo() << __LINE__ << __func__ << "正在转码视频(mp4 to gif)...";
     QProcess *transcodeProcess = new QProcess(this);
-    connect(transcodeProcess, QOverload<QProcess::ProcessError>::of(&QProcess::error),
+    
+    // Qt6 syntax for error signal
+    connect(transcodeProcess, &QProcess::errorOccurred,
     [ = ](QProcess::ProcessError processError) {
         qDebug() << "processError: " << processError;
     });
-    connect(transcodeProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+
+    // Qt6 syntax for finished signal
+    connect(transcodeProcess, &QProcess::finished,
     [ = ](int exitCode, QProcess::ExitStatus exitStatus) {
         qDebug() << "exitCode: " << exitCode << "  exitStatus: " << exitStatus;
         //转换进程是否正常退出
@@ -661,7 +665,9 @@ void RecordProcess::startRecord()
 
     qDebug() << "已通知录屏插件开始录屏! currentTime: " << QTime::currentTime();
     m_recordingFlag = true;
-    QtConcurrent::run(this, &RecordProcess::emitRecording);
+    QtConcurrent::run([this]() {
+        this->emitRecording();
+    });
     if (QDBusMessage::ReplyMessage == message.type()) {
         if (!message.arguments().takeFirst().toBool())
             qDebug() << "dde dock screen-recorder-plugin did not receive start message!";
