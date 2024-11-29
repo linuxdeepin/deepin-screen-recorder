@@ -384,9 +384,9 @@ void RecordProcess::recordVideo()
         qDebug() << "x11 ffmpeg 是否录制混音？true";
         arguments << QString("-filter_complex");
         if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
-            arguments << QString("[1:a]volume=30dB[a1];[a1][2:a]amix=inputs=2:duration=first:dropout_transition=0[out]");
+            arguments << QString("[0:a]volume=30dB[a1];[a1][1:a]amix=inputs=2:duration=first:dropout_transition=0[out]");
             arguments << QString("-map");
-            arguments << QString("0:v");
+            arguments << QString("2:v");
             arguments << QString("-map");
             arguments << QString("[out]");
         } else {
