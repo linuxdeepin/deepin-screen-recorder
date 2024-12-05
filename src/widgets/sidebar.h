@@ -82,6 +82,15 @@ public:
      * @return
      */
     bool isPressed();
+
+
+    /**
+     * @brief isPressed 是否在此工具栏按下鼠标左键
+     * @return
+     */
+    void showWidget();
+    void hideWidget();
+
 signals:
     void heightChanged();
     void buttonChecked(QString shape);

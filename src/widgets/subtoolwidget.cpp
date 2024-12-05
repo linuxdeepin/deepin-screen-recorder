@@ -558,7 +558,9 @@ void SubToolWidget::initShotLabel()
     Utils::setAccessibility(m_mosaicButton, AC_SUBTOOLWIDGET_MOSAIC_BUTTON);
     m_shotBtnGroup->addButton(m_mosaicButton);
     m_mosaicButton->setFixedSize(TOOL_BUTTON_SIZE);
-    btnList.append(m_mosaicButton);
+    // TODO: 初版treeland暂时屏蔽
+    if (!(Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)))
+          btnList.append(m_mosaicButton);
 
     //添加文字按钮
     m_textButton = new ToolButton();
@@ -597,6 +599,7 @@ void SubToolWidget::initShotLabel()
 #ifdef  OCR_SCROLL_FLAGE_ON
     btnList.append(m_ocrButton);
 #endif
+
     //添加贴图按钮
     m_pinButton = new ToolButton();
     m_pinButton->setIconSize(TOOL_ICON_SIZE);
@@ -605,7 +608,9 @@ void SubToolWidget::initShotLabel()
     m_shotBtnGroup->addButton(m_pinButton);
     m_pinButton->setFixedSize(TOOL_BUTTON_SIZE);
     installTipHint(m_pinButton, tr("Pin screenshots (Alt+P）"));
-    btnList.append(m_pinButton);
+    // TODO: treeland适配，初版暂时屏蔽
+    if (!(Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)))
+         btnList.append(m_pinButton);
 
     // 撤销按钮
     m_cancelButton = new ToolButton();
@@ -625,19 +630,23 @@ void SubToolWidget::initShotLabel()
     });
 
     //切换到录屏按钮
-    m_recorderButton = new ToolButton();
-    m_recorderButton->setCheckable(false);
-    m_recorderButton->setIconSize(TOOL_ICON_SIZE);
-    m_recorderButton->setIcon(QIcon::fromTheme("recorder"));
-    Utils::setAccessibility(m_recorderButton, AC_SUBTOOLWIDGET_RECORDER_BUTTON);
-    m_recorderButton->setFixedSize(TOOL_BUTTON_SIZE);
-    installTipHint(m_recorderButton, tr("Record"));
-    btnList.append(m_recorderButton);
-    connect(m_recorderButton, &ToolButton::clicked, this, [ = ] {
-        m_pMainWindow->getToolBarPoint();
-        switchContent("record");
-        emit changeShotToolFunc("record");
-    });
+    // TODO: treeland适配，初版暂时屏蔽
+    if (!(Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)))
+    {
+        m_recorderButton = new ToolButton();
+        m_recorderButton->setCheckable(false);
+        m_recorderButton->setIconSize(TOOL_ICON_SIZE);
+        m_recorderButton->setIcon(QIcon::fromTheme("recorder"));
+        Utils::setAccessibility(m_recorderButton, AC_SUBTOOLWIDGET_RECORDER_BUTTON);
+        m_recorderButton->setFixedSize(TOOL_BUTTON_SIZE);
+        installTipHint(m_recorderButton, tr("Record"));
+        btnList.append(m_recorderButton);
+        connect(m_recorderButton, &ToolButton::clicked, this, [ = ] {
+            m_pMainWindow->getToolBarPoint();
+            switchContent("record");
+            emit changeShotToolFunc("record");
+        });
+    }
 
     //截图选项按钮
     m_shotOptionButton = new ToolButton();
@@ -663,7 +672,6 @@ void SubToolWidget::initShotLabel()
     installTipHint(m_shotOptionButton, tr("Settings (F3)"));
     m_shotBtnGroup->addButton(m_shotOptionButton);
     btnList.append(m_shotOptionButton);
-
 
     if (Utils::is3rdInterfaceStart) {
         m_shotOptionButton->hide();
@@ -725,6 +733,7 @@ void SubToolWidget::initShotLabel()
         if (m_mosaicButton->isChecked()) {
             emit changeShotToolFunc("effect");
         }
+
     });
 
     initShotOption();
@@ -861,7 +870,13 @@ void SubToolWidget::initShotOption()
     m_optionMenu->addAction(m_clipTitleAction);
     m_optionMenu->addAction(m_saveCursorAction);
     m_optionMenu->hide();
+
     m_shotOptionButton->setMenu(m_optionMenu);
+
+    connect(m_optionMenu, &DMenu::aboutToShow, this, [this]() {
+        qWarning() << "截图设置按钮被点击，菜单即将显示！";
+        emit shotOptionMenuShown();
+    });
 
     // 根据配置，初始化Action状态
     SaveAction t_saveIndex = ConfigSettings::instance()->getValue("shot", "save_op").value<SaveAction>();
@@ -1340,7 +1355,7 @@ void SubToolWidget::switchContent(QString shapeType)
 }
 void SubToolWidget::setRecordButtonDisable()
 {
-    m_recorderButton->setDisabled(true);
+   // m_recorderButton->setDisabled(true);
 }
 
 void SubToolWidget::setRecordLaunchMode(const unsigned int funType)

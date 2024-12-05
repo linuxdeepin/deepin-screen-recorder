@@ -23,6 +23,7 @@ Screenshot::Screenshot(QObject *parent)
 
 void Screenshot::startScreenshot()
 {
+    qWarning()<<"Screenshot::startScreenshot++++++++++++++++++ ";
     m_window.initAttributes();
     m_window.initResource();
     m_window.initLaunchMode(m_launchMode);

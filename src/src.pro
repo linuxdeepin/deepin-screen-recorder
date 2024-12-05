@@ -33,7 +33,7 @@ warning("qtversion: " $$QT_MAJOR_VERSION)
 
 equals(QT_MAJOR_VERSION, 6) {
     QT += core gui widgets network dbus multimedia multimediawidgets concurrent svg \
-          sql xml core5compat gui-private opengl openglwidgets
+          sql xml core5compat gui-private opengl openglwidgets waylandclient waylandclient-private
     
     # Qt6 specific configurations
     PKGCONFIG += dtk6widget dtk6core dtk6gui dframeworkdbus xcb xcb-util gstreamer-app-1.0 libusb-1.0
@@ -53,7 +53,7 @@ equals(QT_MAJOR_VERSION, 6) {
           sql xml
     
     # Qt5 specific configurations 
-    PKGCONFIG += dtkwidget dtkcore dtkgui dframeworkdbus xcb xcb-util gstreamer-app-1.0 libusb-1.0
+    PKGCONFIG += dtkwidget dtkcore dtkgui dframeworkdbus poppler-qt5 xcb xcb-util gstreamer-app-1.0 libusb-1.0
     
     QMAKE_LRELEASE = lrelease
     
@@ -111,6 +111,8 @@ isEqual(ARCH, mips64) {
 
 # Headers
 HEADERS += main_window.h \
+    capture.h \
+    qwayland-treeland-capture-unstable-v1.h \
     record_process.h \
     utils.h \
     countdown_tooltip.h \
@@ -130,6 +132,7 @@ HEADERS += main_window.h \
     utils/calculaterect.h \
     utils/saveutils.h \
     utils/shapesutils.h \
+    wayland-treeland-capture-unstable-v1-client-protocol.h \
     widgets/zoomIndicator.h \
     widgets/textedit.h \
     widgets/toptips.h \
@@ -168,7 +171,9 @@ HEADERS += main_window.h \
 
 # Sources
 SOURCES += main.cpp \
+    capture.cpp \
     main_window.cpp \
+    qwayland-treeland-capture-unstable-v1.cpp \
     record_process.cpp \
     utils.cpp \
     countdown_tooltip.cpp \
@@ -185,6 +190,7 @@ SOURCES += main.cpp \
     utils/baseutils.cpp \
     utils/voicevolumewatcher_interface.cpp \
     utils_interface.cpp \
+    wayland-treeland-capture-unstable-v1-protocol.c \
     widgets/toptips.cpp \
     widgets/shapeswidget.cpp \
     widgets/textedit.cpp \

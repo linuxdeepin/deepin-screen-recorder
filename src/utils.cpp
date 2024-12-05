@@ -627,7 +627,7 @@ QList<Utils::ScreenInfo> Utils::getScreensInfo()
     qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
     QList<ScreenInfo> screensInfo;
     /**
-     * 例如：显示器实际屏幕参数为1920*1080记为 t1，调整缩放比例为1.25记为 p,那么此时显示器显屏幕大小将变为1536*864记为 t2，
+     * 例如：显示器实际屏幕参数为1920*1080记为 t1，调整缩放比例为1.25记为 p,那么此时显示器显示���屏幕大小将变为1536*864记为 t2，
      * 那么此时在 t2的点要变成t1上的点，需要 t2*p = t1,在多屏的情况且需要考虑究竟在那个屏幕上
      */
     // 将实际屏幕信息根据缩放比列转化为理论上屏幕信息

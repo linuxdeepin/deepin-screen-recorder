@@ -151,8 +151,6 @@ QWidget *ShotStartPlugin::itemTipsWidget(const QString &itemKey)
     qCDebug(SHOT_LOG) << "Current itemWidget's itemKey: " << itemKey;
     if (itemKey != ShotShartPlugin)
         return nullptr;
-
-    // TODO: m_tipsWidget->setText(tr("Screenshot") + m_iconWidget->getSysShortcuts("screenshot"))会报错，所以做了处理，暂时规避;
     m_tipsWidget->setText(tr("Screenshot"));
     return m_tipsWidget.data();
 }

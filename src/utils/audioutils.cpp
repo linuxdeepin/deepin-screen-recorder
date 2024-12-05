@@ -343,7 +343,7 @@ QDBusInterface *AudioUtils::defaultSourceDBusInterface()
     }
 }
 
-// 音频dbus服务默认输出源的接口
+// ��频dbus服务默认输出源的接口
 QDBusInterface *AudioUtils::defaultSinkDBusInterface()
 {
     if (m_defaultSinkDBusInterface && m_defaultSinkDBusInterface->isValid()) {

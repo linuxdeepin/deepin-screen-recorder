@@ -277,3 +277,20 @@ const QPixmap RecordIconWidget::loadSvg(const QString &fileName, const QSize &si
 }
 
 RecordIconWidget::~RecordIconWidget() {}
+
+// void RecordIconWidget::someAudioRelatedMethod()
+// {
+//     // 使用 Utils 的 DBus 接口
+//     QString audioChannel = Utils::instance()->getCurrentAudioChannel();
+    
+//     // 获取默认音频输入设备
+//     QDBusObjectPath defaultSource = Utils::instance()->defaultSource();
+    
+//     // 获取音频卡信息
+//     QString cards = Utils::instance()->cards();
+    
+//     // 设置降噪
+//     Utils::instance()->setReduceNoise(true);
+    
+//     // ... 其他音频相关操作 ...
+// }

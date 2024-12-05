@@ -6,7 +6,6 @@
 #include <QPainter>
 #include <QApplication>
 #include <QScreen>
-#include <QGuiApplication>
 
 PreviewWidget::PreviewWidget(const QRect &rect, QWidget *parent) : QWidget(parent), m_previewRect(rect)
 {
@@ -14,13 +13,11 @@ PreviewWidget::PreviewWidget(const QRect &rect, QWidget *parent) : QWidget(paren
     m_recordWidth = rect.width();
     m_recordX = rect.x();
     m_recordY = rect.y();
+    QRect mainRect = QGuiApplication::primaryScreen()->geometry();;
+    m_maxHeight = mainRect.height() * 7 / 10 ; //最大预览高度
+    m_maxWidth = mainRect.width() / 4 ; //最大预览宽度
 
-    // 获取主屏幕
-    if (QScreen *primaryScreen = QGuiApplication::primaryScreen()) {
-        QRect mainRect = primaryScreen->geometry();
-        m_maxHeight = mainRect.height() * 7 / 10; // 最大预览高度
-        m_maxWidth = mainRect.width() / 4;        // 最大预览宽度
-    }
+    setStyleSheet("background-color: red;");
 }
 
 //初始化位置，大小

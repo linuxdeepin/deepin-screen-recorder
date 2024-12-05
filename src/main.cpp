@@ -40,7 +40,8 @@ static bool isWaylandProtocol()
 
     QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
     QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
-    return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
+
+    return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive) ;
 }
 
 static bool CheckFFmpegEnv()
@@ -96,7 +97,7 @@ int main(int argc, char *argv[])
 
     // wayland 协议
     Utils::isWaylandMode = isWaylandProtocol();
-    //qInfo() << "Is Wayland:" << Utils::isWaylandMode;
+    qInfo() << "Is Wayland:" << Utils::isWaylandMode;
 
     Utils::isRootUser = (getuid() == 0);
     //qInfo() << "Is Root User:" << Utils::isRootUser;
