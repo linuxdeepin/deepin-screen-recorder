@@ -46,7 +46,7 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
                 break;
             }
             count++;
-            QThread::msleep(50);
+            QThread::msleep(1000);
         }
         if (!res.isNull()) {
             QFile dbusResult(reply.value());
