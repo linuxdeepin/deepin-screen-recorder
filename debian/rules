@@ -1,13 +1,28 @@
 #!/usr/bin/make -f
 
+# 设置 Qt6 环境
 export QT_SELECT=qt6
+# 明确指定 qmake6 路径
+export QMAKE=/usr/bin/qmake6
+
 include /usr/share/dpkg/default.mk
 
-%:
-	dh $@
+# 指定使用 qmake 构建系统
+export DH_OPTIONS := --buildsystem=qmake
 
+%:
+	dh $@ --buildsystem=qmake
 
 override_dh_auto_configure:
-	qmake
-	dh_auto_configure -- VERSION=$(VERSION) LIB_INSTALL_DIR=/usr/lib/$(DEB_HOST_MULTIARCH) DEFINES+="VERSION=$(DEB_VERSION_UPSTREAM)"
+	$(QMAKE) \
+		VERSION=$(VERSION) \
+		PREFIX=/usr \
+		LIB_INSTALL_DIR=/usr/lib/$(DEB_HOST_MULTIARCH) \
+		VERSION_UPSTREAM=$(DEB_VERSION_UPSTREAM)
+
+override_dh_auto_build:
+	dh_auto_build -- \
+		VERSION=$(VERSION) \
+		PREFIX=/usr \
+		LIB_INSTALL_DIR=/usr/lib/$(DEB_HOST_MULTIARCH)
 
