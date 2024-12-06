@@ -14,6 +14,7 @@ class ScreenGrabber : public QObject
 public:
     explicit ScreenGrabber(QObject *parent = nullptr);
     QPixmap grabEntireDesktop(bool &ok, const QRect &rect, const qreal devicePixelRatio);
+    bool saveDesktop2Png(const char *filename);
 };
 
 #endif // SCREENGRABBER_H
