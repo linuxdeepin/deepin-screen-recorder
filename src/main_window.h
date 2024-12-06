@@ -10,6 +10,8 @@
 #include "widgets/scrollshottip.h"
 #include "widgets/previewwidget.h"
 #endif
+#include "capture.h"
+
 #include "record_process.h"
 #include "countdown_tooltip.h"
 #include "button_feedback.h"
@@ -42,7 +44,8 @@
 #include <DConfig>
 #endif
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
+#include <QGuiApplication>
 #include <QObject>
 #include <QPainter>
 #include <QSystemTrayIcon>
@@ -64,6 +67,10 @@
 #endif  // DWAYLAND_SUPPORT
 #endif  // KF5_WAYLAND_FLAGE_ON
 
+
+// Add these undef statements before line 68
+
+
 #include "event_monitor.h"
 
 #undef Bool
@@ -74,7 +81,12 @@ DWIDGET_USE_NAMESPACE
 #ifdef KF5_WAYLAND_FLAGE_ON
 using namespace KWayland::Client;
 #endif
-class MainWindow : public DWidget
+#include <QMainWindow>
+#include <QLabel>
+#include <QPushButton>
+#include <QMainWindow>
+
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
@@ -147,7 +159,8 @@ public:
     {
         qInfo() << __FUNCTION__ << __LINE__ << "===正在释放截图录屏相关资源===";
         if (m_pVoiceVolumeWatcher) {
-            m_pVoiceVolumeWatcher->setWatch(false);
+            //voicevolumewatcher中没有setWatch方法
+            //m_pVoiceVolumeWatcher->setWatch(false);
             // 之前run函数里面有sleep,所以此处加terminate，现在采用定时器检测摄像头，就不考虑各个平台下线程退出的方式
             delete m_pVoiceVolumeWatcher;
             m_pVoiceVolumeWatcher = nullptr;
@@ -371,6 +384,12 @@ public:
      * 确保切换功能后一级工具栏能够右对齐
      */
     void getToolBarPoint();
+
+    /**
+     * @brief treeland适配时使用的初始化属性
+     * 确保不会功能问题
+     */
+    void initTreelandtAttributes();
 signals:
     void releaseEvent();
     void saveActionTriggered();
@@ -405,6 +424,11 @@ public slots:
     void shotFullScreen(bool isFull = false);
     void onHelp();
 
+    /**
+     * @brief Updates the capture region
+     */
+    void updateCaptureRegion();
+
     Q_SCRIPTABLE void stopRecord();
     /**
      * @brief 启动录屏倒计时
@@ -435,6 +459,7 @@ public slots:
     void changeKeyBoardShowEvent(bool checked);
     void changeMouseShowEvent(bool checked);
     void changeCameraSelectEvent(bool checked);
+    void handleOptionMenuShown();
     /**
      * @brief updateMultiKeyBoardPos: 更新显示按键的位置
      * 录屏模式时，打开显示按键，用来更新显示按键的界面位置
@@ -639,6 +664,7 @@ protected:
      * 先执行过滤器再执行不同的事件处理器
      */
     bool eventFilter(QObject *object, QEvent *event) override;
+
     /**
      * @brief 事件过滤器过滤的鼠标双击事件在此方法处理
      * 返回值：0:要求事件过滤器不过虑此事件 1:保持现状 2:要求事件过滤器过滤此事件
@@ -743,7 +769,7 @@ protected:
     void resetCursor();
     void setFontSize(QPainter &painter, int textSize);
     void hideAllWidget();
-    //void adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight);
+    void adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight);
     void initShapeWidget(QString type);
     int getRecordInputType(bool selectedMic, bool selectedSystemAudio);
     /**
@@ -846,7 +872,7 @@ protected:
      * @brief wayland获取屏幕窗口信息的安装注册函数
      * @param registry
      */
-    void setupRegistry(Registry *registry);
+    //void setupRegistry(Registry *registry);
 
     /**
      * @brief wayland获取屏幕窗口信息
@@ -870,7 +896,7 @@ protected:
     /**
      * @brief getAllWindowsInfo 1070获取窗口信息的新接口
      */
-    QVector<ClientManagement::WindowState> getAllWindowStates();
+//QVector<ClientManagement::WindowState> getAllWindowStates();
 #endif
     /**
      * @brief 启动截图录屏时检测是否是锁屏状态
@@ -1105,6 +1131,9 @@ private:
      */
     bool m_isSaveScrollShot;
     ToolBar *m_toolBar = nullptr;
+    ToolBarWidget *m_toolbarWidget = nullptr;
+
+   // ToolBarWidget *m_toolBar = nullptr;
     /**
      * @brief 在二级工具栏按下鼠标左键的时，此时记录下一级菜单的位置
      */
@@ -1313,6 +1342,36 @@ private:
      * @brief 当前光标的位置
      */
     QPoint m_currentCursor;
+    
+    // ---------------------- treeland--------------------------------
+    
+    /**
+     * @brief Sets up signal/slot connections
+     */  
+    void setupConnections();
+
+    /**
+     * @brief Handles finish button click
+     */
+    void onFinishClicked();
+    
+    /**
+     * @brief Initializes screen capture
+     */
+    void initializeCapture();
+    
+    /**
+     * @brief Handles when capture is finished
+     */
+    void handleCaptureFinish();
+
+    /**
+     * @brief Finish button for completing capture
+     */
+    QPushButton *m_finishBtn = nullptr;
+
+    bool isWayland = false;
+    // Note: m_toolBar already exists as ShowButtons *m_showButtons
 };
 
 #endif //MAINWINDOW_H

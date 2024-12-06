@@ -9,10 +9,11 @@
 
 #include <QDebug>
 #include <QDBusInterface>
-#include <QDesktopWidget>
 #include <QScreen>
+#include <QGuiApplication>
 #include <QClipboard>
 #include <QFileDialog>
+#include <QStandardPaths>
 
 #define MOVENUM 1
 
@@ -139,11 +140,11 @@ void MainWindow::saveImg()
         qDebug() << "保存到桌面";
         QString savePath = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
         QString formatStr;
-        if (m_saveInfo.second == SubToolWidget::PNG) {
+        if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::PNG)) {
             formatStr = QString("png");
-        } else if (m_saveInfo.second == SubToolWidget::JPG) {
+        } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::JPG)) {
             formatStr = QString("jpg");
-        } else if (m_saveInfo.second == SubToolWidget::BMP) {
+        } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::BMP)) {
             formatStr = QString("bmp");
         }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
@@ -155,11 +156,11 @@ void MainWindow::saveImg()
             savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first();
         }
         QString formatStr;
-        if (m_saveInfo.second == SubToolWidget::PNG) {
+        if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::PNG)) {
             formatStr = QString("png");
-        } else if (m_saveInfo.second == SubToolWidget::JPG) {
+        } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::JPG)) {
             formatStr = QString("jpg");
-        } else if (m_saveInfo.second == SubToolWidget::BMP) {
+        } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::BMP)) {
             formatStr = QString("bmp");
         }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
@@ -172,15 +173,15 @@ void MainWindow::saveImg()
         if (!imgName.isEmpty()) {
             imgName += "/";
         }
-        if (m_saveInfo.second == SubToolWidget::PNG) {
+        if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::PNG)) {
             imgName += QString("%1.png").arg(m_imageName);
             saveFileName = QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
                                                         tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
-        } else if (m_saveInfo.second == SubToolWidget::JPG) {
+        } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::JPG)) {
             imgName += QString("%1.jpg").arg(m_imageName);
             saveFileName = QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
                                                         tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)"));
-        } else if (m_saveInfo.second == SubToolWidget::BMP) {
+        } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::BMP)) {
             imgName += QString("%1.bmp").arg(m_imageName);
             saveFileName = QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
                                                         tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)"));
@@ -197,11 +198,11 @@ void MainWindow::saveImg()
         QString savePath = Settings::instance()->getSavePath();
         qDebug() << "保存到历史路径" << savePath;
         QString formatStr;
-        if (m_saveInfo.second == SubToolWidget::PNG) {
+        if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::PNG)) {
             formatStr = QString("png");
-        } else if (m_saveInfo.second == SubToolWidget::JPG) {
+        } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::JPG)) {
             formatStr = QString("jpg");
-        } else if (m_saveInfo.second == SubToolWidget::BMP) {
+        } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::BMP)) {
             formatStr = QString("bmp");
         }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
@@ -301,7 +302,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         if (dir != NONE) {
             this->mouseGrabber();
         } else {
-            dragPosition = event->globalPos() - this->frameGeometry().topLeft();
+            dragPosition = (event->globalPosition() - this->frameGeometry().topLeft()).toPoint();
         }
         if (!m_toolBar->isHidden())
             m_toolBar->hide(); //隐藏工具栏
@@ -317,7 +318,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    QPoint gloPoint = event->globalPos();
+    QPoint gloPoint = event->globalPosition().toPoint();
     QRect rect = this->rect();
     QPoint tl = mapToGlobal(rect.topLeft());
     QPoint br = mapToGlobal(rect.bottomRight());
@@ -387,7 +388,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
         } else {
             this->setCursor(QCursor(Qt::ClosedHandCursor));
             //qDebug() << "=============event->globalPos()" << event->globalPos() << "dragPosition" << dragPosition;
-            QPoint globalPoint = event->globalPos() - dragPosition;
+            QPoint globalPoint = (event->globalPosition() - QPointF(dragPosition)).toPoint();
             if (PUtils::isWaylandMode && globalPoint.y() < 0) {
                 globalPoint.setY(0);
             }
@@ -418,7 +419,7 @@ void MainWindow::paintEvent(QPaintEvent *e)
     if (!m_image.isNull()) {
         QPainter pp(this);
         QRect Temp(0, 0, this->width(), this->height());
-        // 用rect获取到的图片不容易失帧
+        // 用rect取到的图片不容易失帧
         //QImage tempImage = m_image.scaled(this->width(), this->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         pp.drawImage(Temp, m_image);
     }
@@ -461,11 +462,11 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     QRect rect;
     int width = this->rect().width();
     int height = this->rect().height();
-    QPointF unionPoint(event->posF().x() / width, event->posF().y() / height);
+    QPointF unionPoint(event->position().x() / width, event->position().y() / height);
     //qDebug() << unionPoint;
-    if (event->delta() < 0 && (width < this->minimumWidth() || height < this->minimumHeight()))
+    if (event->angleDelta().y() < 0 && (width < this->minimumWidth() || height < this->minimumHeight()))
         return;
-    if (event->delta() > 0) {
+    if (event->angleDelta().y() > 0) {
         QPoint newPoint = QPointF(width + WHEELNUM, static_cast<int>((width + WHEELNUM) / proportion)).toPoint();
         rect.setWidth(newPoint.x());
         rect.setHeight(newPoint.y());
@@ -474,7 +475,7 @@ void MainWindow::wheelEvent(QWheelEvent *event)
         rect.setWidth(newPoint.x());
         rect.setHeight(newPoint.y());
     }
-    QPointF globalPos = event->globalPos(); // 鼠标在屏幕中的坐标
+    QPointF globalPos = event->globalPosition(); // 鼠标在屏幕中的坐标
     //qDebug()<<"globalPos"<<globalPos;
     QPointF newPoint(rect.width() * unionPoint.x(), rect.height() * unionPoint.y()); //扩大后，鼠标在贴图中的坐标
     QPointF topLeft(globalPos.x() - newPoint.x(), globalPos.y() - newPoint.y()); // 贴图左上角的点在屏幕中的坐标
@@ -592,7 +593,7 @@ void MainWindow::CalculateScreenSize()
     qDebug() << m_screenSize;
     if (m_screenInfo.size() > 1) {
         // 排序
-        qSort(m_screenInfo.begin(), m_screenInfo.end(), [ = ](const ScreenInfo info1, const ScreenInfo info2) {
+        std::sort(m_screenInfo.begin(), m_screenInfo.end(), [](const ScreenInfo& info1, const ScreenInfo& info2) {
             return info1.x < info2.x;
         });
     }

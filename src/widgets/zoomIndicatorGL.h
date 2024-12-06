@@ -18,13 +18,14 @@ class ZoomIndicatorGL : public QOpenGLWidget
 {
     Q_OBJECT
 public:
-    explicit ZoomIndicatorGL(DWidget *parent = 0);
+    explicit ZoomIndicatorGL(DWidget *parent = nullptr);
     ~ZoomIndicatorGL();
 
     void showMagnifier(QPoint pos);
 
 protected:
     void paintGL() override;
+    void paintEvent(QPaintEvent *event) override;
 
 private:
     QRect m_globalRect;
@@ -32,4 +33,4 @@ private:
     QBrush m_lastCenterPosBrush;
 };
 
-#endif // MAGNIFIER_H
+#endif // ZOOMINDICATORGL_H

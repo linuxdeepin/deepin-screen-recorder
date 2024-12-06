@@ -11,6 +11,10 @@
 #include <X11/keysymdef.h>
 #include <X11/keysym.h>
 #include <X11/extensions/XTest.h>
+#include "utils.h"
+#include <QDateTime>
+// #include <QDBusInterface>
+// #include <QDBusReply>
 
 EventMonitor::EventMonitor(QObject *parent) : QThread(parent)
 {
@@ -107,9 +111,8 @@ void EventMonitor::handleEvent(XRecordInterceptData *data)
                 //鼠标按压
                 emit mousePress(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             } else if (event->u.u.detail == WheelUp || event->u.u.detail == WheelDown) {
-                int time = int (QDateTime::currentDateTime().toTime_t());
+                int time = int(QDateTime::currentDateTime().toSecsSinceEpoch());
                 //鼠标滚动
-                //emit mouseScroll(static_cast<int>(event->u.enterLeave.time), event->u.u.detail, event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
                 emit mouseScroll(time, event->u.u.detail, event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             }
             break;

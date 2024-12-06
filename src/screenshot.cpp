@@ -9,7 +9,6 @@
 #include "utils.h"
 #include "utils/eventlogutils.h"
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QScreen>
 #include <QWindow>
 
@@ -24,6 +23,7 @@ Screenshot::Screenshot(QObject *parent)
 
 void Screenshot::startScreenshot()
 {
+    qWarning()<<"Screenshot::startScreenshot++++++++++++++++++ ";
     m_window.initAttributes();
     m_window.initResource();
     m_window.initLaunchMode(m_launchMode);

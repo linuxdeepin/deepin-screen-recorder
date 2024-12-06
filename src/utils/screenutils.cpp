@@ -6,7 +6,6 @@
 #include "screenutils.h"
 
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QScreen>
 
 ScreenUtils *ScreenUtils::m_screenUtils = nullptr;

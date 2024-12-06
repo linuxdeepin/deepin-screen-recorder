@@ -52,7 +52,7 @@ KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
 //    t_wordFont.setPixelSize(13);
 //    m_word->setFont(t_wordFont);
     QHBoxLayout *hLayout = new QHBoxLayout(this);
-    hLayout->setMargin(0);
+    hLayout->setContentsMargins(0, 0, 0, 0);
     hLayout->setSpacing(2);
     hLayout->addWidget(m_word, 0, Qt::AlignVCenter | Qt::AlignHCenter);
     this->setLayout(hLayout);

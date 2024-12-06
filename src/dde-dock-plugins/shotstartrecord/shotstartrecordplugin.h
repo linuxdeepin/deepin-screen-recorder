@@ -18,6 +18,8 @@
 #include <dde-dock/pluginsiteminterface.h>
 #endif
 
+#include <QScopedPointer>
+
 #if defined(DOCK_API_VERSION) && (DOCK_API_VERSION >= DOCK_API_VERSION_CHECK(2, 0, 0))
 class ShotStartRecordPlugin : public QObject, PluginsItemInterfaceV2
 #else

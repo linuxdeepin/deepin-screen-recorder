@@ -169,7 +169,8 @@ private:
     /**
      * @brief 保存信息
      */
-    QPair<QString, QString> m_saveInfo;
+    //QPair<QString, QString> m_saveInfo;
+    QPair<int, int> m_saveInfo;
     /**
      * @brief 保存贴图窗口的显示位置
      */

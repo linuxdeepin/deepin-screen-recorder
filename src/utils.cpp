@@ -21,12 +21,12 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QDBusInterface>
-#include <QtX11Extras/QX11Info>
 #include <QStandardPaths>
 #include <QProcess>
 #include <QKeyEvent>
 #include <com_deepin_daemon_audio.h>
 #include <com_deepin_daemon_audio_sink.h>
+#include <com_deepin_daemon_audio_source.h>
 
 #include <DDialog>
 #include <DSysInfo>
@@ -35,7 +35,9 @@
 
 // error qtextstream.h must be included before any header file that defines Status
 #include <X11/extensions/shape.h>
-
+#include <QtGui/private/qtx11extras_p.h>
+#include <QtGui/private/qtguiglobal_p.h>
+#include "utils_interface.h"
 DCORE_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
@@ -48,6 +50,68 @@ bool Utils::isFFmpegEnv = true;
 int Utils::themeType = 0;
 int Utils::specialRecordingScreenMode = -1;
 QString Utils::appName = "";
+
+Utils *Utils::m_utils = nullptr;
+
+Utils::Utils(QObject *parent)
+    : utils_interface("com.deepin.daemon.Audio",
+                     "/com/deepin/daemon/Audio",
+                     QDBusConnection::sessionBus(),
+                     parent)
+{
+    // 初始化代码
+}
+
+Utils::~Utils()
+{
+}
+
+Utils *Utils::instance()
+{
+    if (m_utils == nullptr) {
+        m_utils = new Utils();
+    }
+    return m_utils;
+}
+
+QString Utils::getCurrentAudioChannel()
+{
+    const QString serviceName{"com.deepin.daemon.Audio"};
+
+    QScopedPointer<com::deepin::daemon::Audio> audioInterface;
+    QScopedPointer<com::deepin::daemon::audio::Sink> defaultSink;
+
+    audioInterface.reset(
+        new com::deepin::daemon::Audio(serviceName, "/com/deepin/daemon/Audio", QDBusConnection::sessionBus(), nullptr));
+
+    defaultSink.reset(new com::deepin::daemon::audio::Sink(
+        serviceName, audioInterface->defaultSink().path(), QDBusConnection::sessionBus(), nullptr));
+    QString str_output = "";
+    if (defaultSink->isValid()) {
+        QString sinkName = defaultSink->name();
+        qDebug() << "系统声卡名称: " << sinkName;
+        QStringList options;
+        options << "-c";
+        options << QString("pacmd list-sources | grep -PB 1 %1 | head -n 1 | perl -pe 's/.* //g'").arg(sinkName);
+
+        QProcess process;
+        process.start("bash", options);
+        process.waitForFinished();
+        process.waitForReadyRead();
+        str_output = process.readAllStandardOutput();
+        qDebug() << "pacmd命令: " << options;
+        qDebug() << "通过pacmd命令获取的系统音频通道号: " << str_output;
+        if (str_output.isEmpty()) {
+            str_output = audioInterface->defaultSink().path().right(1);
+            qDebug() << "通过pacmd命令获取的系统音频通道号失败！自动分配通道号:" << str_output;
+        }
+        return str_output;
+    } else {
+        str_output = "1";
+        qDebug() << "获取系统音频通道号失败！自动分配通道号" << str_output;
+    }
+    return str_output;
+}
 
 QString Utils::getQrcPath(QString imageName)
 {
@@ -63,7 +127,7 @@ QSize Utils::getRenderSize(int fontSize, QString string)
     int width = 0;
     int height = 0;
     foreach (auto line, string.split("\n")) {
-        int lineWidth = fm.width(line);
+        int lineWidth = fm.horizontalAdvance(line);
         int lineHeight = fm.height();
 
         if (lineWidth > width) {
@@ -134,7 +198,7 @@ void Utils::setAccessibility(DPushButton *button, const QString name)
     button->setAccessibleName(name);
 }
 
-void Utils::setAccessibility(DImageButton *button, const QString name)
+void Utils::setAccessibility(DIconButton *button, const QString name)
 {
     button->setObjectName(name);
     button->setAccessibleName(name);
@@ -563,7 +627,7 @@ QList<Utils::ScreenInfo> Utils::getScreensInfo()
     qreal pixelRatio = qApp->primaryScreen()->devicePixelRatio();
     QList<ScreenInfo> screensInfo;
     /**
-     * 例如：显示器实际屏幕参数为1920*1080记为 t1，调整缩放比例为1.25记为 p,那么此时显示器显示的屏幕大小将变为1536*864记为 t2，
+     * 例如：显示器实际屏幕参数为1920*1080记为 t1，调整缩放比例为1.25记为 p,那么此时显示器显示���屏幕大小将变为1536*864记为 t2，
      * 那么此时在 t2的点要变成t1上的点，需要 t2*p = t1,在多屏的情况且需要考虑究竟在那个屏幕上
      */
     // 将实际屏幕信息根据缩放比列转化为理论上屏幕信息
@@ -583,46 +647,7 @@ QList<Utils::ScreenInfo> Utils::getScreensInfo()
     return screensInfo;
 }
 
-QString Utils::getCurrentAudioChannel()
-{
-    const QString serviceName{"com.deepin.daemon.Audio"};
-
-    QScopedPointer<com::deepin::daemon::Audio> audioInterface;
-    QScopedPointer<com::deepin::daemon::audio::Sink> defaultSink;
-
-    audioInterface.reset(
-        new com::deepin::daemon::Audio(serviceName, "/com/deepin/daemon/Audio", QDBusConnection::sessionBus(), nullptr));
-
-    defaultSink.reset(new com::deepin::daemon::audio::Sink(
-        serviceName, audioInterface->defaultSink().path(), QDBusConnection::sessionBus(), nullptr));
-    QString str_output = "";
-    if (defaultSink->isValid()) {
-        QString sinkName = defaultSink->name();
-        qDebug() << "系统声卡名称: " << sinkName;
-        QStringList options;
-        options << "-c";
-        options << QString("pacmd list-sources | grep -PB 1 %1 | head -n 1 | perl -pe 's/.* //g'").arg(sinkName);
-
-        QProcess process;
-        process.start("bash", options);
-        process.waitForFinished();
-        process.waitForReadyRead();
-        str_output = process.readAllStandardOutput();
-        qDebug() << "pacmd命令: " << options;
-        qDebug() << "通过pacmd命令获取的系统音频通道号: " << str_output;
-        if (str_output.isEmpty()) {
-            str_output = audioInterface->defaultSink().path().right(1);
-            qDebug() << "通过pacmd命令获取的系统音频通道号失败！自动分配通道号:" << str_output;
-        }
-        return str_output;
-    } else {
-        str_output = "1";
-        qDebug() << "获取系统音频通道号失败！自动分配通道号" << str_output;
-    }
-    return str_output;
-}
-
-// 通过键盘控制光标移动
+// 通过键盘控光标移动
 void Utils::cursorMove(QPoint currentCursor, QKeyEvent *keyEvent)
 {
     QPoint pos(currentCursor);

@@ -6,7 +6,7 @@
 #include "devnummonitor.h"
 
 #include <QDebug>
-#include <QCameraInfo>
+#include <QMediaDevices>
 #include <QString>
 extern "C"
 {

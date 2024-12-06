@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "zoomIndicatorGL.h"
+#include <QOpenGLWidget>
 #include "../utils/baseutils.h"
 #include "../utils/tempfile.h"
 
@@ -88,4 +89,10 @@ void ZoomIndicatorGL::showMagnifier(QPoint pos)
     this->show();
     this->move(pos);
     update();
+}
+
+void ZoomIndicatorGL::paintEvent(QPaintEvent *event) 
+{
+    // 基本实现
+    QOpenGLWidget::paintEvent(event);
 }

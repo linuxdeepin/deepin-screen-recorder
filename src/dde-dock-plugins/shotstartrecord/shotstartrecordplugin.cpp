@@ -5,7 +5,6 @@
 #include "shotstartrecordplugin.h"
 
 #include <DApplication>
-#include <QDesktopWidget>
 #include <QDBusInterface>
 
 #define RecordShartPlugin "shot-start-record-plugin"
@@ -20,7 +19,6 @@ Q_LOGGING_CATEGORY(RECORD_LOG, "shot-start-record-plugin");
 
 ShotStartRecordPlugin::ShotStartRecordPlugin(QObject *parent)
     : QObject(parent)
-    , m_iconWidget(nullptr)
     , m_quickPanelWidget(nullptr)
     , m_tipsWidget(nullptr)
 
@@ -89,8 +87,9 @@ void ShotStartRecordPlugin::init(PluginProxyInterface *proxyInter)
 
     m_proxyInter = proxyInter;
 
-    if (m_iconWidget.isNull())
-        m_iconWidget.reset(new RecordIconWidget);
+    //没找到解决方法，先注释掉
+    // if (m_iconWidget.isNull())
+    //     m_iconWidget.reset(new recordiconwidget(nullptr));
     if (m_quickPanelWidget.isNull()) {
         m_quickPanelWidget.reset(new QuickPanelWidget);
         m_quickPanelWidget->changeType(QuickPanelWidget::RECORD);
@@ -175,7 +174,9 @@ QWidget *ShotStartRecordPlugin::itemTipsWidget(const QString &itemKey)
     qCDebug(RECORD_LOG) << "Current itemWidget's itemKey: " << itemKey;
     if (itemKey != RecordShartPlugin)
         return nullptr;
-    m_tipsWidget->setText(tr("Record") + m_iconWidget->getSysShortcuts("deepin-screen-recorder"));
+    //暂时注释掉，后面修改
+    // m_tipsWidget->setText(tr("Record") + m_iconWidget.data()->getSysShortcuts("deepin-screen-recorder"));
+    m_tipsWidget->setText(tr("Record"));
     return m_tipsWidget.data();
 }
 
@@ -348,9 +349,10 @@ bool ShotStartRecordPlugin::getTrayIconVisible()
 }
 
 ShotStartRecordPlugin::~ShotStartRecordPlugin()
-{
-    if (nullptr != m_iconWidget)
-        m_iconWidget->deleteLater();
+{   
+    //暂时注释掉，后面修改
+    // if (nullptr != m_iconWidget)
+    //     m_iconWidget->deleteLater();
 
     if (nullptr != m_tipsWidget)
         m_tipsWidget->deleteLater();

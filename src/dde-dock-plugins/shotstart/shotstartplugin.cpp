@@ -5,7 +5,8 @@
 
 #include "shotstartplugin.h"
 #include <DApplication>
-#include <QDesktopWidget>
+#include <QScreen>
+#include <QGuiApplication>
 #include <QDBusInterface>
 
 #define ShotShartPlugin "shot-start-plugin"
@@ -20,7 +21,6 @@ Q_LOGGING_CATEGORY(SHOT_LOG, "shot-start-plugin");
 
 ShotStartPlugin::ShotStartPlugin(QObject *parent)
     : QObject(parent)
-    , m_iconWidget(nullptr)
     , m_quickPanelWidget(nullptr)
     , m_tipsWidget(nullptr)
 
@@ -80,8 +80,6 @@ void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
 
     m_proxyInter = proxyInter;
 
-    if (m_iconWidget.isNull())
-        m_iconWidget.reset(new IconWidget);
     if (m_quickPanelWidget.isNull()) {
         m_quickPanelWidget.reset(new QuickPanelWidget);
         // "截图"快捷面板不再响应录制中动画效果，固定为截图图标
@@ -153,7 +151,7 @@ QWidget *ShotStartPlugin::itemTipsWidget(const QString &itemKey)
     qCDebug(SHOT_LOG) << "Current itemWidget's itemKey: " << itemKey;
     if (itemKey != ShotShartPlugin)
         return nullptr;
-    m_tipsWidget->setText(tr("Screenshot") + m_iconWidget->getSysShortcuts("screenshot"));
+    m_tipsWidget->setText(tr("Screenshot"));
     return m_tipsWidget.data();
 }
 
@@ -214,10 +212,16 @@ void ShotStartPlugin::onStop()
 {
     qCDebug(SHOT_LOG) << "(onStop) Is Recording? " << m_isRecording;
     m_isRecording = false;
-    m_iconWidget->setEnabled(true);
-    m_iconWidget->update();
+    
+    if (!m_iconWidget.isNull()) {
+        m_iconWidget->setEnabled(true);
+        m_iconWidget->update();
+    }
 
-    m_quickPanelWidget->setEnabled(true);
+    if (!m_quickPanelWidget.isNull()) {
+        m_quickPanelWidget->setEnabled(true);
+    }
+    
     qCDebug(SHOT_LOG) << "Enable screenshot tray icon";
 }
 
@@ -270,12 +274,6 @@ void ShotStartPlugin::onClickQuickPanel()
 
 ShotStartPlugin::~ShotStartPlugin()
 {
-    if (nullptr != m_iconWidget)
-        m_iconWidget->deleteLater();
-
-    if (nullptr != m_tipsWidget)
-        m_tipsWidget->deleteLater();
-
-    if (nullptr != m_quickPanelWidget)
-        m_quickPanelWidget->deleteLater();
+    // QScopedPointer will automatically handle the deletion
+    // No need to call deleteLater() manually
 }

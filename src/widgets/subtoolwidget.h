@@ -89,6 +89,7 @@ signals:
     void changeShotToolFunc(const QString &func);
     void saveMethodChanged(SaveAction saveact, const QString path);
     void saveToClipBoard(bool isClip);
+    void shotOptionMenuShown();
 
 public slots:
     /**

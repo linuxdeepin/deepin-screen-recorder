@@ -32,7 +32,7 @@ public:
     }
     ~ToolButton() {}
 protected:
-    void enterEvent(QEvent *e) override
+    void enterEvent(QEnterEvent *e) override
     {
         if (this->isEnabled() && m_hasHoverState) {
             setFlat(false);

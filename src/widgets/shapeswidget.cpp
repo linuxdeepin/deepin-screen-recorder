@@ -47,7 +47,7 @@ ShapesWidget::ShapesWidget(DWidget *parent)
     //    gestures << Qt::CustomGesture;
     //    gestures << Qt::LastGestureType;
     foreach (Qt::GestureType gesture, gestures)
-        grabGesture(gesture);
+    grabGesture(gesture);
 
 
     setFocusPolicy(Qt::StrongFocus);

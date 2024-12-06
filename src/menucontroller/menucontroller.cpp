@@ -159,7 +159,7 @@ void MenuController::setUndoEnable(bool status)
     m_unDoAct->setEnabled(status);
 }
 
-void MenuController::enterEvent(QEvent *e)
+void MenuController::enterEvent(QEnterEvent *e)
 {
     Q_UNUSED(e);
     qApp->setOverrideCursor(Qt::ArrowCursor);

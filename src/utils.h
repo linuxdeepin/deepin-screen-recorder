@@ -5,9 +5,11 @@
 
 #ifndef UTILS_H
 #define UTILS_H
+
+#include "utils_interface.h"
 // #include <dwindowmanager.h>
 #include <DPushButton>
-#include <DImageButton>
+#include <DIconButton>
 
 #include <QObject>
 #include <QPainter>
@@ -19,7 +21,7 @@
 DWIDGET_USE_NAMESPACE
 DCORE_USE_NAMESPACE
 
-class Utils : public QObject
+class Utils : public utils_interface
 {
     Q_OBJECT
 
@@ -61,7 +63,7 @@ public:
     static void passInputEvent(int wid);
     static void setFontSize(QPainter &painter, int textSize);
     static void setAccessibility(DPushButton *button, const QString name);
-    static void setAccessibility(DImageButton *button, const QString name);
+    static void setAccessibility(DIconButton *button, const QString name);
     static void setAccessibility(QAction *action, const QString name);
     static bool is3rdInterfaceStart;
     static bool isTabletEnvironment;
@@ -184,6 +186,15 @@ public:
      * @param keyEvent:键盘事件
      */
     static void cursorMove(QPoint currentCursor, QKeyEvent *keyEvent);
+
+    explicit Utils(QObject *parent = nullptr);
+    ~Utils();
+
+    // 新增 DBus 相关方法
+    static Utils *instance();
+
+private:
+    static Utils *m_utils;
 };
 
 #endif  // UTILS_H

@@ -186,6 +186,14 @@ void SideBar::showAt(QPoint pos)
     move(pos.x(), pos.y());
 }
 
+void SideBar::showWidget(){
+    m_sidebarWidget->show();
+}
+
+void SideBar::hideWidget(){
+    m_sidebarWidget->hide();
+}
+
 void SideBar::initSideBar(MainWindow *pmainWindow)
 {
     m_pMainWindow = pmainWindow;
@@ -207,7 +215,7 @@ void SideBar::paintEvent(QPaintEvent *e)
     DLabel::paintEvent(e);
 }
 
-void SideBar::enterEvent(QEvent *e)
+void SideBar::enterEvent(QEnterEvent *e)
 {
 //    qApp->setOverrideCursor(Qt::ArrowCursor);
     QApplication::setOverrideCursor(Qt::OpenHandCursor);
@@ -216,11 +224,6 @@ void SideBar::enterEvent(QEvent *e)
 
 bool SideBar::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == QEvent::ApplicationPaletteChange || event->type() == QEvent::PaletteChange) {
-        qDebug() << obj;
-        qDebug() << "--------------";
-    }
-
     return DLabel::eventFilter(obj, event);
 }
 

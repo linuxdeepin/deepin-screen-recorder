@@ -14,7 +14,6 @@
 #include <QScreen>
 #include <QGuiApplication>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QStandardPaths>
 
 ScreenGrabber::ScreenGrabber(QObject *parent) : QObject(parent)
@@ -48,6 +47,6 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
     }
 
     QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
-    // 在多屏模式下, winId 不是0
-    return t_primaryScreen->grabWindow(QApplication::desktop()->winId(), rect.x(), rect.y(), rect.width(), rect.height());
+    // Qt6中不再使用QDesktop，直接传0作为窗口ID来捕获整个屏幕
+    return t_primaryScreen->grabWindow(0, rect.x(), rect.y(), rect.width(), rect.height());
 }

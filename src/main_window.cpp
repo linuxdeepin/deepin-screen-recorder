@@ -5,6 +5,12 @@
 
 // #include <dscreenwindowsutil.h>
 
+#include "capture.h"
+
+#include <private/qwaylandwindow_p.h>
+#include <private/qwaylanddisplay_p.h>
+#include <private/qwaylandintegration_p.h>
+
 #include "main_window.h"
 #include "utils.h"
 #include "record_button.h"
@@ -33,6 +39,8 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+#include <QMainWindow>
 #include <DWidget>
 #include <DWindowManagerHelper>
 #include <DForeignWindow>
@@ -49,7 +57,6 @@ extern "C" {
 #include <QClipboard>
 #include <QFileDialog>
 #include <QShortcut>
-#include <QDesktopWidget>
 #include <QScreen>
 #include <QtConcurrent>
 #include <X11/Xcursor/Xcursor.h>
@@ -138,7 +145,7 @@ static GetAllWindowStatesListPtr getAllWindowStatesList = nullptr;
 #endif
 // DWM_USE_NAMESPACE
 MainWindow::MainWindow(DWidget *parent)
-    : DWidget(parent)
+    : QMainWindow(parent)
     , m_wmHelper(DWindowManagerHelper::instance())
     , m_hasComposite(DWindowManagerHelper::instance()->hasComposite())
     , m_initScreenShot(false)
@@ -146,7 +153,75 @@ MainWindow::MainWindow(DWidget *parent)
     , m_initScroll(false)
 {
     initMainWindow();
+
+    // TODO： treeland适配
+    // 后面判断替换为 Utils::isTreelandMode
+    if (Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)) {
+        setAttribute(Qt::WA_TranslucentBackground);
+        setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowTransparentForInput); //Qt::WindowTransparentForInput
+
+        // 确保主窗口显示
+        initMainWindow();
+        // 初始化截图/录屏管理器
+        auto manager = TreelandCaptureManager::instance();
+        if (manager->isActive()) {
+            initializeCapture();
+        } else {
+            connect(manager, &TreelandCaptureManager::activeChanged,
+                    this, &MainWindow::initializeCapture);
+        }
+    }
 }
+
+// void MainWindow::initMainWindow()
+// {
+//     qInfo() << __LINE__ << __FUNCTION__ << "正在初始化截图录屏主窗口...";
+
+//     // 保留基本的屏幕和光标设置
+//     m_currentCursor = QCursor().pos();
+//     m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
+//     Utils::pixelRatio = m_pixelRatio;
+
+//     // 保留屏幕监控
+//     m_screenCount = QGuiApplication::screens().count();
+//     QList<QScreen *> screenList = qApp->screens();
+
+//     // 计算屏幕尺寸
+//     for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
+//         QRect rect = (*it)->geometry();
+//         ScreenInfo screenInfo;
+//         screenInfo.x = rect.x();
+//         screenInfo.y = rect.y();
+//         screenInfo.height = static_cast<int>(rect.height() * m_pixelRatio);
+//         screenInfo.width = static_cast<int>(rect.width() * m_pixelRatio);
+//         screenInfo.name = (*it)->name();
+//         m_screenInfo.append(screenInfo);
+//     }
+
+//     // 设置基本窗口属性
+//     if (Utils::isWaylandMode) {
+//         create();
+//         if (windowHandle()) {
+//             windowHandle()->setProperty("_d_dwayland_global_keyevent", true);
+//             windowHandle()->setProperty("_d_dwayland_window-type", "override");
+//         }
+// #if defined(KF5_WAYLAND_FLAGE_ON) && defined(DWAYLAND_SUPPORT)
+//         WaylandMouseSimulator::instance()->initWaylandScrollThread();
+// #endif
+//     }
+
+//     // 设置窗口大小
+//     m_screenSize.setWidth(m_screenInfo[0].x + m_screenInfo[0].width);
+//     m_screenSize.setHeight(m_screenInfo[0].y + m_screenInfo[0].height);
+
+//     // 更新窗口尺寸
+//     m_backgroundRect = QRect(0, 0, m_screenSize.width(), m_screenSize.height());
+//     m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
+//     move(m_backgroundRect.topLeft() * m_pixelRatio);
+//     this->setFixedSize(m_backgroundRect.size());
+
+//     qInfo() << __LINE__ << __FUNCTION__ << "截图录屏主窗口已初始化";
+// }
 
 void MainWindow::initMainWindow()
 {
@@ -192,9 +267,9 @@ void MainWindow::initMainWindow()
         m_pScreenCaptureEvent->start();
     }
 
-    m_screenCount = QApplication::desktop()->screenCount();
-    QDesktopWidget *desktopwidget = QApplication::desktop();
-    connect(desktopwidget, SIGNAL(resized(int)), this, SLOT(onScreenResolutionChanged()));
+    m_screenCount = QGuiApplication::screens().count();
+    connect(qApp, &QGuiApplication::screenAdded, this, &MainWindow::onScreenResolutionChanged);
+    connect(qApp, &QGuiApplication::screenRemoved, this, &MainWindow::onScreenResolutionChanged);
 
     QList<QScreen *> screenList = qApp->screens();
     int hTotal = 0;
@@ -231,7 +306,7 @@ void MainWindow::initMainWindow()
         }
 
         // 排序
-        qSort(m_screenInfo.begin(), m_screenInfo.end(), [=](const ScreenInfo info1, const ScreenInfo info2) {
+        std::sort(m_screenInfo.begin(), m_screenInfo.end(), [=](const ScreenInfo info1, const ScreenInfo info2) {
             if (m_isVertical) {
                 return info1.y < info2.y;
             } else {
@@ -254,131 +329,40 @@ void MainWindow::initMainWindow()
     m_isSaveScrollShot = false;
 }
 
-void MainWindow::initAttributes()
+void MainWindow::initTreelandtAttributes() //initTreelandtAttributes
 {
+    qWarning()<<" MainWindow::initAttributes       XXXXXXXXXXXXXXXXXXXX";
     qInfo() << __LINE__ << __FUNCTION__ << "正在初始化一些属性...";
-    qInfo() << "m_functionType: " << m_functionType;
     setWindowTitle(tr("Screen Capture"));
-    m_keyButtonList.clear();
-    m_isZhaoxin = Utils::checkCpuIsZhaoxin();
 
     rootWindowRect = QRect(0,
-                           0,
-                           static_cast<int>(qRound(m_screenSize.width() / m_pixelRatio)),
-                           static_cast<int>(qRound(m_screenSize.height() / m_pixelRatio)));
-    screenRect = QRect(screenRect.topLeft() / m_pixelRatio, screenRect.size());
-    qDebug() << __FUNCTION__ << __LINE__ << "screen size" << rootWindowRect;
+                         0,
+                         static_cast<int>(qRound(m_screenSize.width() / m_pixelRatio)),
+                         static_cast<int>(qRound(m_screenSize.height() / m_pixelRatio)));
 
-    // Qt::FramelessWindowHint ： 设置窗口无边框，
-    // Qt::WindowStaysOnTopHint： 通知窗口系统该窗口应位于所有其他窗口之上。请注意，在 X11 上的某些窗口管理器上，您还必须传递
-    // Qt::X11BypassWindowManagerHint 以使此标志正常工作。 Qt::X11BypassWindowManagerHint : 完全绕过窗口管理器。
-    if (Utils::isWaylandMode) {
-        // 1070焦点策略管理比1060严格，作为全屏窗口的截图录屏设置了无焦点属性后，窗管不会在设置为获取焦点
-        // 因此在1070截图录屏截图录屏需要获取焦点，不然应用内快捷键无法响应。
-        if (DSysInfo::minorVersion().toInt() >= 1070) {
-            setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-        } else {
-            setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
-        }
-        if (this->windowHandle()) {
-            this->windowHandle()->setProperty("_d_dwayland_window-type", "override");
-            qDebug() << "设置窗口属性 _d_dwayland_window-type: " << this->windowHandle()->property("_d_dwayland_window-type");
-        }
-
-        QScopedPointer<QDBusInterface> sessionManagerIntert;
-        if (Utils::isSysGreatEqualV23()) {
-            sessionManagerIntert.reset(new QDBusInterface("org.deepin.dde.SessionManager1",
-                                                          "/org/deepin/dde/SessionManager1",
-                                                          "org.deepin.dde.SessionManager1",
-                                                          QDBusConnection::sessionBus()));
-        } else {
-            // remove onScreenDisplay to solve the problem that wayland shot images cannot be scrolled
-            sessionManagerIntert.reset(new QDBusInterface("com.deepin.SessionManager",
-                                                          "/com/deepin/SessionManager",
-                                                          "com.deepin.SessionManager",
-                                                          QDBusConnection::sessionBus()));
-        }
-
-        bool isLockScreen = false;
-        if (sessionManagerIntert->isValid()) {
-            isLockScreen = sessionManagerIntert->property("Locked").toBool();
-        }
-
-        if (this->windowHandle() && isLockScreen) {
-            this->windowHandle()->setProperty("_d_dwayland_window-type", "override");
-        }
-#ifdef DTKCORE_CLASS_DConfigFile
-        // wayland下需要查询是否支持特殊录屏模式，例如hw机型
-        DConfig *dconfig = DConfig::create("org.deepin.screen-recorder", "org.deepin.screen-recorder.record");
-        if (dconfig && dconfig->isValid() && dconfig->keyList().contains("specialRecordingScreenMode")) {
-            Utils::specialRecordingScreenMode = dconfig->value("specialRecordingScreenMode").toInt();
-        }
-#endif
-        qInfo() << "current specialRecordingScreenMode value is :" << Utils::specialRecordingScreenMode;
-    } else {
-        setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
-    }
+    // 基本窗口属性
     if (m_hasComposite) {
-        qInfo() << "3d模式支持窗口透明";
         setAttribute(Qt::WA_TranslucentBackground, true);
-    } else {
-        qInfo() << "2d模式不支持窗口透明！";
     }
-    setMouseTracking(true);    // make MouseMove can response
-    installEventFilter(this);  // add event filter
+    setMouseTracking(true);
+    installEventFilter(this);
     createWinId();
 
-    m_screenHeight = m_screenSize.height();
-    m_screenWidth = m_screenSize.width();
-
-    // 获取自动识别的窗口
-    if (Utils::isWaylandMode) {
-#ifdef KF5_WAYLAND_FLAGE_ON
-        qInfo() << __FUNCTION__ << __LINE__ << "KF5_WAYLAND_FLAGE_ON is open!!";
-        QLibrary library("libdtkwmjack.so");
-        initDtkWmDisplay = reinterpret_cast<int (*)()>(library.resolve("InitDtkWmDisplay"));
-        destoryDtkWmDisplay = reinterpret_cast<void (*)()>(library.resolve("DestoryDtkWmDisplay"));
-        getAllWindowStatesList = reinterpret_cast<int (*)(WindowState **)>(library.resolve("GetAllWindowStatesList"));
-
-        if (initDtkWmDisplay && getAllWindowStatesList && destoryDtkWmDisplay) {
-            qInfo() << "wayland automatic recognition window(1070 new interface)";
-            // wayland自动识别窗口 1070新接口
-            initDtkWmDisplay();
-        }
-        // wayland自动识别窗口
-        m_connectionThread = new QThread(this);
-        m_connectionThreadObject = new ConnectionThread();
-        connect(
-            m_connectionThreadObject,
-            &ConnectionThread::connected,
-            this,
-            [this] {
-                m_eventQueue = new EventQueue(this);
-                m_eventQueue->setup(m_connectionThreadObject);
-
-                Registry *registry = new Registry(this);
-                qDebug() << "开始安装注册wayland服务...";
-                setupRegistry(registry);
-            },
-            Qt::QueuedConnection);
-        m_connectionThreadObject->moveToThread(m_connectionThread);
-        m_connectionThread->start();
-        m_connectionThreadObject->initConnection();
-#endif
-    } else {
-        // x11自动识别窗口
-        Utils::getAllWindowInfo(static_cast<quint32>(this->winId()), m_screenWidth, m_screenHeight, windowRects, windowNames);
-    }
-    // 构建截屏工具栏按钮 by zyg
-    m_toolBar = new ToolBar(this);
-    m_toolBar->hide();
+    //构建截屏工具栏和相关组件
+    m_toolBar =new ToolBar(this);
+    m_toolBar->move(100,128);
+    m_toolBar->show();
 
     m_sideBar = new SideBar(this);
+    m_sideBar->initSideBar(this);
+    m_sideBar->showWidget();
+    m_sideBar->hideWidget();
+    m_sideBar->show();
     m_sideBar->hide();
 
     m_sizeTips = new TopTips(this);
     m_sizeTips->setFullScreenRecord(m_isFullScreenRecord);
-    m_sizeTips->hide();
+    m_sizeTips->show();
 
     if (m_functionType == status::record) {
         m_zoomIndicator = new ZoomIndicator(this, true);
@@ -387,6 +371,7 @@ void MainWindow::initAttributes()
     }
     m_zoomIndicator->hideMagnifier();
 
+    // 设置窗口大小和位置
     connect(m_toolBar, &ToolBar::currentFunctionToMain, this, &MainWindow::changeFunctionButton);
     m_backgroundRect = rootWindowRect;
     m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
@@ -395,60 +380,216 @@ void MainWindow::initAttributes()
 
     initBackground();
     initShortcut();
-
-    if (m_screenCount > 1 && m_pixelRatio > 1) {
-        if (m_isVertical) {
-            int heightAfterFirst = 0;
-            for (int index = 1; index < m_screenCount; ++index) {
-                heightAfterFirst += m_screenInfo[index].height;
-            }
-            if (m_screenInfo[0].height < heightAfterFirst) {
-                // 多屏放缩情况下，小屏在上，整体需要偏移一定距离
-                this->move(0, m_screenInfo[0].height - static_cast<int>(m_screenInfo[0].height / m_pixelRatio));
-            }
-
-        } else {
-            int widthAfterFirst = 0;
-            for (int index = 1; index < m_screenCount; ++index) {
-                widthAfterFirst += m_screenInfo[index].width;
-            }
-            if (m_screenInfo[0].width < widthAfterFirst)
-                // QT bug，这里暂时做特殊处理
-                // 多屏放缩情况下，小屏在前，整体需要偏移一定距离
-                this->move(m_screenInfo[0].width - static_cast<int>(m_screenInfo[0].width / m_pixelRatio), 0);
-        }
-    }
-
-    if (Utils::isSysGreatEqualV23()) {
-        QDBusConnection::sessionBus().connect("org.deepin.dde.SessionManager1",
-                                              "/org/deepin/dde/SessionManager1",
-                                              "org.freedesktop.DBus.Properties",
-                                              "PropertiesChanged",
-                                              "sa{sv}as",
-                                              this,
-                                              SLOT(onLockScreenEvent(QDBusMessage)));
-    } else {
-        // V20 or older system edition
-        // detects if the properties of the lock screen have changed
-        QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
-                                              "/com/deepin/SessionManager",
-                                              "org.freedesktop.DBus.Properties",
-                                              "PropertiesChanged",
-                                              "sa{sv}as",
-                                              this,
-                                              SLOT(onLockScreenEvent(QDBusMessage)));
-    }
-
-    if (!isFirstMove && !Utils::isWaylandMode) {
-        qDebug() << "发送鼠标事件!";
-        QMouseEvent *mouseMove =
-            new QMouseEvent(QEvent::MouseMove, this->cursor().pos(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-        QApplication::sendEvent(this, mouseMove);
-        delete mouseMove;
-    }
-
     qInfo() << __LINE__ << __FUNCTION__ << "属性初始化已完成";
 }
+
+void MainWindow::initAttributes()
+{
+    // TODO: Treeland适配
+    if (Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)) {
+        initTreelandtAttributes();
+    } else {
+        qInfo() << __LINE__ << __FUNCTION__ << "正在初始化一些属性...";
+        qInfo() << "m_functionType: " << m_functionType;
+        setWindowTitle(tr("Screen Capture"));
+        m_keyButtonList.clear();
+        m_isZhaoxin = Utils::checkCpuIsZhaoxin();
+
+        rootWindowRect = QRect(0,
+                               0,
+                               static_cast<int>(qRound(m_screenSize.width() / m_pixelRatio)),
+                               static_cast<int>(qRound(m_screenSize.height() / m_pixelRatio)));
+        screenRect = QRect(screenRect.topLeft() / m_pixelRatio, screenRect.size());
+        qDebug() << __FUNCTION__ << __LINE__ << "screen size" << rootWindowRect;
+
+        // Qt::FramelessWindowHint ： 设置窗口无边框，
+        // Qt::WindowStaysOnTopHint： 通知窗口系统该窗口应位于所有其他窗口之上。请注意，在 X11 上的某些窗口管理器上，您还必须传递
+        // Qt::X11BypassWindowManagerHint 以使此标志正常工作。 Qt::X11BypassWindowManagerHint : 完全绕过窗口管理器。
+        if (Utils::isWaylandMode) {
+            // 1070焦点策略管理比1060严格，作为全屏窗口的截图录屏设置了无焦点属性后，窗管不会在设置为获取焦点
+            // 因此在1070截图录屏截图录屏需要获取焦点，不然应用内快捷键无法响应。
+            if (DSysInfo::minorVersion().toInt() >= 1070) {
+                setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+            } else {
+                setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
+            }
+            if (this->windowHandle()) {
+                this->windowHandle()->setProperty("_d_dwayland_window-type", "override");
+                qDebug() << "设置窗口属性 _d_dwayland_window-type: " << this->windowHandle()->property("_d_dwayland_window-type");
+            }
+
+            QScopedPointer<QDBusInterface> sessionManagerIntert;
+            if (Utils::isSysGreatEqualV23()) {
+                sessionManagerIntert.reset(new QDBusInterface("org.deepin.dde.SessionManager1",
+                                                              "/org/deepin/dde/SessionManager1",
+                                                              "org.deepin.dde.SessionManager1",
+                                                              QDBusConnection::sessionBus()));
+            } else {
+                // remove onScreenDisplay to solve the problem that wayland shot images cannot be scrolled
+                sessionManagerIntert.reset(new QDBusInterface("com.deepin.SessionManager",
+                                                              "/com/deepin/SessionManager",
+                                                              "com.deepin.SessionManager",
+                                                              QDBusConnection::sessionBus()));
+            }
+
+            bool isLockScreen = false;
+            if (sessionManagerIntert->isValid()) {
+                isLockScreen = sessionManagerIntert->property("Locked").toBool();
+            }
+
+            if (this->windowHandle() && isLockScreen) {
+                this->windowHandle()->setProperty("_d_dwayland_window-type", "override");
+            }
+    #ifdef DTKCORE_CLASS_DConfigFile
+            // wayland下需要查询是否支持特殊录屏模式，例如hw机型
+            DConfig *dconfig = DConfig::create("org.deepin.screen-recorder", "org.deepin.screen-recorder.record");
+            if (dconfig && dconfig->isValid() && dconfig->keyList().contains("specialRecordingScreenMode")) {
+                Utils::specialRecordingScreenMode = dconfig->value("specialRecordingScreenMode").toInt();
+            }
+    #endif
+            qInfo() << "current specialRecordingScreenMode value is :" << Utils::specialRecordingScreenMode;
+        } else {
+            setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
+        }
+        if (m_hasComposite) {
+            qInfo() << "3d模式支持窗口透明";
+            setAttribute(Qt::WA_TranslucentBackground, true);
+        } else {
+            qInfo() << "2d模式不支持窗口透明！";
+        }
+        setMouseTracking(true);    // make MouseMove can response
+        installEventFilter(this);  // add event filter
+        createWinId();
+
+        m_screenHeight = m_screenSize.height();
+        m_screenWidth = m_screenSize.width();
+
+        // 获取自动识别的窗口
+        if (Utils::isWaylandMode) {
+    #ifdef KF5_WAYLAND_FLAGE_ON
+            qInfo() << __FUNCTION__ << __LINE__ << "KF5_WAYLAND_FLAGE_ON is open!!";
+            QLibrary library("libdtkwmjack.so");
+            initDtkWmDisplay = reinterpret_cast<int (*)()>(library.resolve("InitDtkWmDisplay"));
+            destoryDtkWmDisplay = reinterpret_cast<void (*)()>(library.resolve("DestoryDtkWmDisplay"));
+            getAllWindowStatesList = reinterpret_cast<int (*)(WindowState **)>(library.resolve("GetAllWindowStatesList"));
+
+            if (initDtkWmDisplay && getAllWindowStatesList && destoryDtkWmDisplay) {
+                qInfo() << "wayland automatic recognition window(1070 new interface)";
+                // wayland自动识别窗口 1070新接口
+                initDtkWmDisplay();
+            }
+            // wayland自动识别窗口
+            m_connectionThread = new QThread(this);
+            m_connectionThreadObject = new ConnectionThread();
+            connect(
+                m_connectionThreadObject,
+                &ConnectionThread::connected,
+                this,
+                [this] {
+                    m_eventQueue = new EventQueue(this);
+                    m_eventQueue->setup(m_connectionThreadObject);
+
+                    Registry *registry = new Registry(this);
+                    qDebug() << "开始安装注册wayland服务...";
+                    setupRegistry(registry);
+                },
+                Qt::QueuedConnection);
+            m_connectionThreadObject->moveToThread(m_connectionThread);
+            m_connectionThread->start();
+            m_connectionThreadObject->initConnection();
+    #endif
+        } else {
+            // x11自动识别窗口
+            Utils::getAllWindowInfo(static_cast<quint32>(this->winId()), m_screenWidth, m_screenHeight, windowRects, windowNames);
+        }
+        // 构建截屏工具栏按钮 by zyg
+        m_toolBar = new ToolBar(this);
+
+        // TODO: treeland适配，不加会有显示异常，暂时方案
+        if (Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)) {
+            m_toolBar->initToolBar(this);
+            m_toolBar->showWidget();
+        }
+        m_toolBar->hide();
+
+        m_sideBar = new SideBar(this);
+        m_sideBar->hide();
+
+        m_sizeTips = new TopTips(this);
+        m_sizeTips->setFullScreenRecord(m_isFullScreenRecord);
+        m_sizeTips->hide();
+
+        if (m_functionType == status::record) {
+            m_zoomIndicator = new ZoomIndicator(this, true);
+        } else {
+            m_zoomIndicator = new ZoomIndicator(this);
+        }
+        m_zoomIndicator->hideMagnifier();
+
+        connect(m_toolBar, &ToolBar::currentFunctionToMain, this, &MainWindow::changeFunctionButton);
+        m_backgroundRect = rootWindowRect;
+        m_backgroundRect = QRect(m_backgroundRect.topLeft() / m_pixelRatio, m_backgroundRect.size());
+        move(m_backgroundRect.topLeft() * m_pixelRatio);
+        this->setFixedSize(m_backgroundRect.size());
+
+        initBackground();
+        initShortcut();
+
+        if (m_screenCount > 1 && m_pixelRatio > 1) {
+            if (m_isVertical) {
+                int heightAfterFirst = 0;
+                for (int index = 1; index < m_screenCount; ++index) {
+                    heightAfterFirst += m_screenInfo[index].height;
+                }
+                if (m_screenInfo[0].height < heightAfterFirst) {
+                    // 多屏放缩情况下，小屏在上，整体需要偏移一定距离
+                    this->move(0, m_screenInfo[0].height - static_cast<int>(m_screenInfo[0].height / m_pixelRatio));
+                }
+
+            } else {
+                int widthAfterFirst = 0;
+                for (int index = 1; index < m_screenCount; ++index) {
+                    widthAfterFirst += m_screenInfo[index].width;
+                }
+                if (m_screenInfo[0].width < widthAfterFirst)
+                    // QT bug，这里暂时做特殊处理
+                    // 多屏放缩情况下，小屏在前，整体需要偏移一定距离
+                    this->move(m_screenInfo[0].width - static_cast<int>(m_screenInfo[0].width / m_pixelRatio), 0);
+            }
+        }
+
+        if (Utils::isSysGreatEqualV23()) {
+            QDBusConnection::sessionBus().connect("org.deepin.dde.SessionManager1",
+                                                  "/org/deepin/dde/SessionManager1",
+                                                  "org.freedesktop.DBus.Properties",
+                                                  "PropertiesChanged",
+                                                  "sa{sv}as",
+                                                  this,
+                                                  SLOT(onLockScreenEvent(QDBusMessage)));
+        } else {
+            // V20 or older system edition
+            // detects if the properties of the lock screen have changed
+            QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
+                                                  "/com/deepin/SessionManager",
+                                                  "org.freedesktop.DBus.Properties",
+                                                  "PropertiesChanged",
+                                                  "sa{sv}as",
+                                                  this,
+                                                  SLOT(onLockScreenEvent(QDBusMessage)));
+        }
+
+        if (!isFirstMove && !Utils::isWaylandMode) {
+            qDebug() << "发送鼠标事件!";
+            QMouseEvent *mouseMove =
+                new QMouseEvent(QEvent::MouseMove, this->cursor().pos(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+            QApplication::sendEvent(this, mouseMove);
+            delete mouseMove;
+        }
+
+        qInfo() << __LINE__ << __FUNCTION__ << "属性初始化已完成";
+    }
+}
+
 #ifdef KF5_WAYLAND_FLAGE_ON
 void MainWindow::setupRegistry(Registry *registry)
 {
@@ -489,43 +630,43 @@ void MainWindow::setupRegistry(Registry *registry)
 }
 
 // 1070获取窗口信息的新接口
-QVector<ClientManagement::WindowState> MainWindow::getAllWindowStates()
-{
-    QVector<ClientManagement::WindowState> vWindowStates;
+// QVector<ClientManagement::WindowState> MainWindow::getAllWindowStates()
+// {
+    // QVector<ClientManagement::WindowState> vWindowStates;
 
-    if (getAllWindowStatesList) {
-        qInfo() << "wayland automatic recognition window(1070 new interface)";
-        WindowState *pStates = nullptr;
-        int nCount = getAllWindowStatesList(&pStates);
-        qDebug() << "The number of current Windows(GetAllWindowStatesList(&pStates)):" << nCount;
-        if (nCount <= 0 || pStates == nullptr) {
-            qWarning() << "The current number of Windows is 0! wayland window not found!";
-            return vWindowStates;
-        }
-        for (int i = 0; i < nCount; i++) {
-            WindowState *p = &pStates[i];
-            ClientManagement::WindowState windowState;
-            windowState.pid = p->pid;
-            windowState.windowId = p->windowId;
-            memcpy(windowState.resourceName, p->resourceName, sizeof(p->resourceName));
-            windowState.geometry.x = p->geometry.x;
-            windowState.geometry.y = p->geometry.y;
-            windowState.geometry.width = p->geometry.width;
-            windowState.geometry.height = p->geometry.height;
-            windowState.isMinimized = p->isMinimized;
-            windowState.isFullScreen = p->isFullScreen;
-            windowState.isActive = p->isActive;
+    // if (getAllWindowStatesList) {
+    //     qInfo() << "wayland automatic recognition window(1070 new interface)";
+    //     WindowState *pStates = nullptr;
+    //     int nCount = getAllWindowStatesList(&pStates);
+    //     qDebug() << "The number of current Windows(GetAllWindowStatesList(&pStates)):" << nCount;
+    //     if (nCount <= 0 || pStates == nullptr) {
+    //         qWarning() << "The current number of Windows is 0! wayland window not found!";
+    //         return vWindowStates;
+    //     }
+    //     for (int i = 0; i < nCount; i++) {
+    //         WindowState *p = &pStates[i];
+    //         ClientManagement::WindowState windowState;
+    //         windowState.pid = p->pid;
+    //         windowState.windowId = p->windowId;
+    //         memcpy(windowState.resourceName, p->resourceName, sizeof(p->resourceName));
+    //         windowState.geometry.x = p->geometry.x;
+    //         windowState.geometry.y = p->geometry.y;
+    //         windowState.geometry.width = p->geometry.width;
+    //         windowState.geometry.height = p->geometry.height;
+    //         windowState.isMinimized = p->isMinimized;
+    //         windowState.isFullScreen = p->isFullScreen;
+    //         windowState.isActive = p->isActive;
 
-            vWindowStates.push_back(windowState);
-        }
-        free(pStates);
-    } else {
-        qInfo() << "wayland Automatic Recognition window (old interface)";
-        return m_clientManagement->getWindowStates();
-    }
+    //         vWindowStates.push_back(windowState);
+    //     }
+    //     free(pStates);
+    // } else {
+    //     qInfo() << "wayland Automatic Recognition window (old interface)";
+    //     return m_clientManagement->getWindowStates();
+    // }
 
-    return vWindowStates;
-}
+    // return vWindowStates;
+// }
 
 void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> &windowStates)
 {
@@ -590,8 +731,8 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
             int y1 = y + windowRects[i].height();
             if (x < 0) {
                 windowRects[i].setX(0);
-                windowRects[i].setWidth(windowRects[i].width());
             }
+            windowRects[i].setWidth(windowRects[i].width());
             if (m_isVertical == true && x1 > screenRect.width()) {
                 windowRects[i].setWidth(screenRect.width() - x);
             }
@@ -609,6 +750,7 @@ void MainWindow::waylandwindowinfo(const QVector<ClientManagement::WindowState> 
     QApplication::sendEvent(this, mouseMove);
     delete mouseMove;
 }
+
 // 1050wayland平台上，部分性能差的机型，采用线程循环监听文件（"/home/" + userName +
 // "/.cache/deepin/deepin-screen-recorder/stopRecord.txt"）是否存在且内容是否为1
 void MainWindow::checkTempFileArm()
@@ -625,6 +767,7 @@ void MainWindow::checkTempFileArm()
     qDebug() << __func__;
     QtConcurrent::run(this, &MainWindow::whileCheckTempFileArm);
 }
+
 void MainWindow::whileCheckTempFileArm()
 {
     bool tempFlag = true;
@@ -678,6 +821,7 @@ void MainWindow::whileCheckTempFileArm()
         }
     }
 }
+
 #endif
 // 启动截图录屏时检测是否是锁屏状态
 void MainWindow::checkIsLockScreen()
@@ -755,6 +899,7 @@ void MainWindow::initDynamicLibPath()
     tmp.chSwresample = swresample.data();
     setLibNames(tmp);
 }
+
 QString MainWindow::libPath(const QString &strlib)
 {
     QDir dir;
@@ -776,6 +921,7 @@ QString MainWindow::libPath(const QString &strlib)
     Q_ASSERT(list.size() > 0);
     return list.last();
 }
+
 void MainWindow::sendSavingNotify()
 {
     if (Utils::isRootUser) {
@@ -881,7 +1027,7 @@ void MainWindow::initShortcut()
     // 截图模式/录屏模式（未做穿透）/滚动模式 退出
     QShortcut *escSC = new QShortcut(QKeySequence("Escape"), this);
     // 截图模式/录屏模式（未做穿透）/滚动模式 帮助快捷面板
-    QShortcut *shortCutSC = new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Slash), this);
+    QShortcut *shortCutSC = new QShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Slash), this);
     // 截图模式/滚动模式 贴图应用内快捷键
     connect(pinScreenshotsSC, &QShortcut::activated, this, [=] {
         // 滚动截图及普通截图都可以通过快捷键触发贴图
@@ -1468,6 +1614,7 @@ void MainWindow::getSideBarStartPressPoint()
 {
     m_sideBarStartPressPoint = m_sideBar->frameGeometry().topLeft();
 }
+
 // 根据工具栏获取滚动截图提示框的坐标
 QPoint MainWindow::getScrollShotTipPosition()
 {
@@ -1617,6 +1764,7 @@ void MainWindow::showAdjustArea()
     update();
 #endif
 }
+
 #ifdef OCR_SCROLL_FLAGE_ON
 // 滚动截图模式，抓取当前捕捉区域的图片，传递给滚动截图处理类进行图片的拼接
 void MainWindow::scrollShotGrabPixmap(PreviewWidget::PostionStatus previewPostion, int direction, int mouseTime)
@@ -1838,6 +1986,7 @@ void MainWindow::fullScreenRecord(const QString fileName)
     updateToolBarPos();
     selectAreaName = fileName;
     startCountdown();
+
 }
 void MainWindow::topWindow()
 {
@@ -1877,6 +2026,7 @@ void MainWindow::topWindow()
             if (window->wmClass() == "dde-dock" || window->wmClass() == "dde-shell") {
                 continue;
             }
+
             // 判断窗口是否被最小化
             if (window->windowState() == Qt::WindowState::WindowMinimized) {
                 continue;
@@ -2015,10 +2165,12 @@ void MainWindow::initBackground()
 
     m_backgroundPixmap = getPixmapofRect(target);
     qDebug() << __FUNCTION__ << __LINE__ << "screen rect:" << m_backgroundPixmap.rect();
+   // 暂时注释掉截图失败的检查
+    /*
     if (m_backgroundPixmap.isNull()) {
         DBusNotify shotFailedNotify;
         QString tips = QString(tr("Screenshot failed."));
-        shotFailedNotify.Notify(Utils::appName /*QCoreApplication::applicationName()*/,
+        shotFailedNotify.Notify(Utils::appName,
                                 0,
                                 "deepin-screen-recorder",
                                 QString(),
@@ -2026,11 +2178,10 @@ void MainWindow::initBackground()
                                 QStringList(),
                                 QVariantMap(),
                                 5000);
-        // if(Utils::isWaylandMode) {
         qWarning() << "截图失败(防截图) 无法获取截图背景，应用退出！";
         _exit(0);
-        //}
     }
+    */
     m_resultPixmap = m_backgroundPixmap;
     TempFile::instance()->setFullScreenPixmap(m_backgroundPixmap);
     //    });
@@ -2045,6 +2196,15 @@ QPixmap MainWindow::getPixmapofRect(const QRect &rect)
 bool MainWindow::saveImg(const QPixmap &pix, const QString &fileName, const char *format)
 {
     qInfo() << __FUNCTION__ << __LINE__ << "保存图片到目录：" << fileName;
+    qInfo() << "图片大小：" << pix.size();
+    qInfo() << "图片是否为空：" << pix.isNull();
+    qInfo() << "图片是否为空：" << format;
+
+    QFileInfo fileInfo(fileName);
+    QDir dir(fileInfo.path());
+    qInfo() << "目录是否存在：" << dir.exists();
+    qInfo() << "目录是否可写：" << QFileInfo(fileInfo.path()).isWritable();
+
     int quality = -1;
     // qt5环境，经测试quality值对png效果明显，对jpg和bmp不明显
     if (pix.width() * pix.height() > 1920 * 1080 && QString("PNG") == QString(format).toUpper()) {
@@ -2189,7 +2349,9 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
         }
     }
     qInfo() << __FUNCTION__ << __LINE__ << "已保存到剪贴板！";
+
 }
+
 bool MainWindow::checkSuffix(const QString &str)
 {
     qInfo() << __FUNCTION__ << __LINE__ << "正在检查文件名称是否合法...";
@@ -2413,7 +2575,7 @@ void MainWindow::updateToolBarPos()
         checkIsLockScreen();
         qDebug() << "工具栏已初始化";
     }
-    //    qDebug() << "m_toolBar: " << m_toolBar->isVisible();
+       qDebug() << "m_toolBar: " << m_toolBar->isVisible();
     // 有个问题需要考虑下，工具栏是否只要被拖动之后都无法回归默认位置？ //已确认不需要回归默认位置
     if (/*!isPressMouseLeftButton && */ m_isDragToolBar) {
         if (!m_toolBar->isVisible()) {
@@ -2494,7 +2656,8 @@ void MainWindow::updateToolBarPos()
                     // 屏幕下超出
                     int y = std::max(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING, 0);
                     // qDebug() << ">>> y: " << y;
-                    if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() - TOOLBAR_Y_SPACING)
+                    if (y > m_screenInfo[i].y + m_screenInfo[i].height / m_pixelRatio - m_toolBar->height() -
+                        TOOLBAR_Y_SPACING)
                         y = m_screenInfo[i].y + static_cast<int>(m_screenInfo[i].height / m_pixelRatio) - m_toolBar->height() -
                             TOOLBAR_Y_SPACING;
 
@@ -2512,7 +2675,7 @@ void MainWindow::updateToolBarPos()
             if (!tempScreen.isNull() /*|| tempScreen.isEmpty()*/) {
                 // qDebug() << "当前屏幕：" <<  tempScreen;
                 if (recordY - tempScreen.y() > m_toolBar->height() + 28) {
-                    //                    qDebug() << "工具栏位置未在任一屏幕内，需要矫正 >>> 放捕捉区域上边 toolbarPoint: " <<
+                    //                    qDebug() << "���具栏位置未在任一屏幕内，需要矫正 >>> 放捕捉区域上边 toolbarPoint: " <<
                     //                    toolbarPoint;
                     toolbarPoint.setY(recordY - m_toolBar->height() - TOOLBAR_Y_SPACING);
                 } else {
@@ -2530,7 +2693,6 @@ void MainWindow::updateToolBarPos()
             }
         }
     }
-    // qDebug() << "工具栏最新坐标 >>> toolbarPoint: " << toolbarPoint;
     // 快捷全屏录制不需要显示工具栏
     if (m_isFullScreenRecord)
         return;
@@ -2544,7 +2706,9 @@ void MainWindow::updateToolBarPos()
         }
     }
 
-    m_toolBar->showAt(toolbarPoint);
+    // TODO: treeland适配，解决问题临时方案
+    if (!(Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)))
+         m_toolBar->showAt(toolbarPoint);
 }
 
 void MainWindow::updateSideBarPos()
@@ -2946,6 +3110,38 @@ void MainWindow::changeMouseShowEvent(bool checked)
     m_mouseStatus = checked;
 }
 
+//TODO treeland 适配
+void MainWindow::handleOptionMenuShown(){
+    if (Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)) {
+        auto context = TreelandCaptureManager::instance()->context();
+        if (!context) return;
+
+        auto waylandWindow = static_cast<QtWaylandClient::QWaylandWindow *>(windowHandle()->handle());
+
+        QRect region = context->captureRegion().toRect();
+        bool regionReady = (region.width() != 0) && (region.height() != 0);
+
+        if(windowHandle())
+        {
+            Qt::WindowFlags flags = windowHandle()->flags();
+
+            if (regionReady) {
+                // 取消输入穿透
+                flags &= ~Qt::WindowTransparentForInput;
+            } else {
+                // 保持输入穿透
+                flags |= Qt::WindowTransparentForInput;
+            }
+           // flags |= Qt::WindowStaysOnTopHint;
+            // 应用新的窗口标志
+            windowHandle()->setFlags(flags);
+            qWarning() << "Window flags set to:" << flags;
+        }
+    }
+
+    // m_toolBar->setWindowFlags(Qt::WindowStaysOnTopHint);
+}
+
 void MainWindow::changeCameraSelectEvent(bool checked)
 {
     qDebug() << "是否打开摄像头界面:" << checked;
@@ -3021,6 +3217,35 @@ void MainWindow::updateMultiKeyBoardPos()
 
 void MainWindow::changeShotToolEvent(const QString &func)
 {
+    //TODO treeland 适配
+    if (Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)) {
+        auto context = TreelandCaptureManager::instance()->context();
+        if (!context) return;
+
+        auto waylandWindow = static_cast<QtWaylandClient::QWaylandWindow *>(windowHandle()->handle());
+
+        QRect region = context->captureRegion().toRect();
+        bool regionReady = (region.width() != 0) && (region.height() != 0);
+
+        if(windowHandle())
+        {
+            Qt::WindowFlags flags = windowHandle()->flags();
+
+            if (regionReady) {
+                // 取消输入穿透
+                flags &= ~Qt::WindowTransparentForInput;
+            } else {
+                // 保持输入穿透
+                flags |= Qt::WindowTransparentForInput;
+            }
+            flags |= Qt::WindowStaysOnTopHint;
+            // 应用新的窗口标志
+            windowHandle()->setFlags(flags);
+            qWarning() << "Window flags set to:" << flags;
+        }
+    }
+
+
     qDebug() << "MainWindow::changeShotToolEvent >> func: " << func;
     // 调用ocr功能时先截图后，退出截图录屏，将刚截图的图片串递到ocr识别界面；
     if (func == "ocr") {
@@ -3070,10 +3295,14 @@ void MainWindow::changeShotToolEvent(const QString &func)
             initShapeWidget(func);
             m_isShapesWidgetExist = true;
         }
-        m_sideBar->changeShotToolFunc(func);
 
-        // 禁用滚动截图按钮
-        m_toolBar->setScrollShotDisabled(true);
+        if (m_sideBar) {
+            m_sideBar->changeShotToolFunc(func);
+        } else {
+            qWarning() << "m_sideBar is null when trying to change shot tool function";
+        }
+        // 禁用滚动图按钮
+       // m_toolBar->setScrollShotDisabled(true);
     }
 }
 
@@ -3302,8 +3531,9 @@ bool MainWindow::saveAction(const QPixmap &pix)
             break;
         }
         case SaveToImage: {
-            qInfo() << __FUNCTION__ << __LINE__ << "保存到图片！";
             saveOption = QStandardPaths::PicturesLocation;
+            qInfo() << __FUNCTION__ << __LINE__ << "保存到图片！" <<saveOption;
+
             // ConfigSettings::instance()->setValue("shot", "save_dir",
             // QStandardPaths::writableLocation(QStandardPaths::PicturesLocation));
             break;
@@ -3605,8 +3835,36 @@ bool MainWindow::saveAction(const QPixmap &pix)
     return true;
 }
 
+// void MainWindow::paintEvent(QPaintEvent *event)
+// {
+//     Q_UNUSED(event);
+
+//     QPainter painter(this);
+//     painter.setRenderHint(QPainter::Antialiasing, true);
+
+//     // 2D窗管模式下，录屏背景用截图背景。
+//     if (status::shot == m_functionType || m_hasComposite == false) {
+//         painter.setRenderHint(QPainter::Antialiasing, true);
+//         QRect backgroundRect = QRect(0, 0, rootWindowRect.width(), rootWindowRect.height());
+//         m_backgroundPixmap.setDevicePixelRatio(m_pixelRatio);
+//         painter.drawPixmap(backgroundRect, m_backgroundPixmap);
+//     }
+
+//     /* 暂时注释掉其他事件处理逻辑
+//     if (recordWidth > 0 && recordHeight > 0) {
+//         // ... 其他代码 ...
+//     }
+//     */
+// }
+
 void MainWindow::paintEvent(QPaintEvent *event)
 {
+    // TODO: treeland适配
+    if (Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)) {
+        DWidget::paintEvent(event);
+        return;
+    }
+
     Q_UNUSED(event);
     // Just use for debug.
     // repaintCounter++;
@@ -3732,8 +3990,14 @@ void MainWindow::paintEvent(QPaintEvent *event)
     }
     //    qDebug() << "====== function: " << __func__ << " end ======";
 }
-bool MainWindow::eventFilter(QObject *, QEvent *event)
+
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
+    // TODO: treeland适配
+    if (Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive))
+        return DWidget::eventFilter(obj,event);
+
     bool needRepaint = false;
 
 #undef KeyPress
@@ -4297,308 +4561,7 @@ int MainWindow::mouseMoveEF(QMouseEvent *mouseEvent, bool &needRepaint)
 // 事件过滤器过滤的键盘按下事件在此方法处理
 int MainWindow::keyPressEF(QKeyEvent *keyEvent, bool &needRepaint)
 {
-    // qDebug() << "keyEvent->modifiers(): " << keyEvent->modifiers() << " , keyEvent->key(): " << keyEvent->key() <<
-    // keyEvent->text() << m_functionType; 截图模式下键盘按键操作
-    if (status::shot == m_functionType) {
-        needRepaint = false;
-        // 截图编辑界面存在时
-        if (m_isShapesWidgetExist) {
-            if (keyEvent->key() == Qt::Key_Shift) {
-                m_isShiftPressed = true;
-                m_shapesWidget->setShiftKeyPressed(m_isShiftPressed);
-            }
 
-            if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
-                if (keyEvent->key() == Qt::Key_Left) {
-                    m_shapesWidget->microAdjust("Ctrl+Shift+Left");
-                } else if (keyEvent->key() == Qt::Key_Right) {
-                    m_shapesWidget->microAdjust("Ctrl+Shift+Right");
-                } else if (keyEvent->key() == Qt::Key_Up) {
-                    m_shapesWidget->microAdjust("Ctrl+Shift+Up");
-                } else if (keyEvent->key() == Qt::Key_Down) {
-                    m_shapesWidget->microAdjust("Ctrl+Shift+Down");
-                }
-            } else if (qApp->keyboardModifiers() & Qt::ControlModifier) {
-                if (keyEvent->key() == Qt::Key_Left) {
-                    m_shapesWidget->microAdjust("Ctrl+Left");
-                } else if (keyEvent->key() == Qt::Key_Right) {
-                    m_shapesWidget->microAdjust("Ctrl+Right");
-                } else if (keyEvent->key() == Qt::Key_Up) {
-                    m_shapesWidget->microAdjust("Ctrl+Up");
-                } else if (keyEvent->key() == Qt::Key_Down) {
-                    m_shapesWidget->microAdjust("Ctrl+Down");
-                } else if (keyEvent->key() == Qt::Key_C) {
-                    //                        ConfigSettings::instance()->setValue("save", "save_op",
-                    //                        SaveAction::SaveToClipboard);
-                    // m_copyToClipboard = true;
-                    // saveScreenShot();
-                } else if (keyEvent->key() == Qt::Key_S) {
-                    //                        expressSaveScreenshot();
-                    saveScreenShot();
-                }
-            } else {
-                if (keyEvent->key() == Qt::Key_Left) {
-                    m_shapesWidget->microAdjust("Left");
-                } else if (keyEvent->key() == Qt::Key_Right) {
-                    m_shapesWidget->microAdjust("Right");
-                } else if (keyEvent->key() == Qt::Key_Up) {
-                    m_shapesWidget->microAdjust("Up");
-                } else if (keyEvent->key() == Qt::Key_Down) {
-                    m_shapesWidget->microAdjust("Down");
-                }
-            }
-
-            if (keyEvent->key() == Qt::Key_Delete || keyEvent->key() == Qt::Key_Backspace) {
-                emit deleteShapes();
-            } else {
-                qDebug() << "ShapeWidget Exist keyEvent:" << keyEvent->key();
-            }
-            return 0;
-        }
-
-        if (m_shotStatus == ShotMouseStatus::Normal) {
-            // 是否按住 shift+ctrl
-            if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
-                if (keyEvent->key() == Qt::Key_Left) {
-                    if (recordWidth > RECORD_MIN_SHOT_SIZE) {
-                        recordX = std::max(0, recordX + 1);
-                        recordWidth = std::max(std::min(recordWidth - 1, m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    }
-
-                } else if (keyEvent->key() == Qt::Key_Right) {
-                    if (recordWidth > RECORD_MIN_SHOT_SIZE) {
-                        recordWidth = std::max(std::min(recordWidth - 1, m_backgroundRect.width()), RECORD_MIN_SHOT_SIZE);
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    }
-                } else if (keyEvent->key() == Qt::Key_Up) {
-                    if (recordHeight > RECORD_MIN_SHOT_SIZE) {
-                        recordY = std::max(0, recordY + 1);
-
-                        recordHeight = std::max(std::min(recordHeight - 1, m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    }
-                } else if (keyEvent->key() == Qt::Key_Down) {
-                    if (recordHeight > RECORD_MIN_SHOT_SIZE) {
-                        recordHeight = std::max(std::min(recordHeight - 1, m_backgroundRect.height()), RECORD_MIN_SHOT_SIZE);
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    }
-                }
-            }
-            // 是否只按住 ctrl
-            else if ((qApp->keyboardModifiers() == Qt::ControlModifier)) {
-                if (keyEvent->key() == Qt::Key_S) {
-                    //                        expressSaveScreenshot();
-                    saveScreenShot();
-                }
-
-                if (keyEvent->key() == Qt::Key_C) {
-                    //                        ConfigSettings::instance()->setValue("save", "save_op",
-                    //                        SaveAction::SaveToClipboard);
-                    // m_copyToClipboard = true;
-                    //                        saveScreenshot();
-                    // saveScreenShot();
-                }
-                if (keyEvent->key() == Qt::Key_Left) {
-                    recordX = std::max(0, recordX - 1);
-                    recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
-
-                    needRepaint = true;
-                    selectAreaName = tr("select-area");
-                } else if (keyEvent->key() == Qt::Key_Right) {
-                    if (recordX + recordWidth + 1 >= m_screenWidth) {
-                        recordX = std::max(0, recordX - 1);
-                    }
-                    recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
-
-                    needRepaint = true;
-                    selectAreaName = tr("select-area");
-                } else if (keyEvent->key() == Qt::Key_Up) {
-                    recordY = std::max(0, recordY - 1);
-                    recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
-
-                    needRepaint = true;
-                    selectAreaName = tr("select-area");
-                } else if (keyEvent->key() == Qt::Key_Down) {
-                    if (recordY + recordHeight + 1 >= m_screenHeight) {
-                        recordY = std::max(0, recordY - 1);
-                    }
-                    recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
-
-                    needRepaint = true;
-                    selectAreaName = tr("select-area");
-                }
-            } else {
-                // 鼠标已经按下过但当前未按下时
-                if (!isPressMouseLeftButton && qApp->keyboardModifiers() == Qt::NoModifier) {
-                    if (keyEvent->key() == Qt::Key_Left || keyEvent->key() == Qt::Key_A) {
-                        recordX = std::max(0, recordX - 1);
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    } else if (keyEvent->key() == Qt::Key_Right || keyEvent->key() == Qt::Key_D) {
-                        recordX = std::min(m_backgroundRect.width() - recordWidth, recordX + 1);
-
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    } else if (keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_W) {
-                        recordY = std::max(0, recordY - 1);
-
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    } else if (keyEvent->key() == Qt::Key_Down || keyEvent->key() == Qt::Key_S) {
-                        recordY = std::min(m_backgroundRect.height() - recordHeight, recordY + 1);
-
-                        needRepaint = true;
-                        selectAreaName = tr("select-area");
-                    }
-                }
-            }
-
-            if (!m_needSaveScreenshot) {
-                m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
-                if (m_toolBar->isVisible()) {
-                    updateToolBarPos();
-                }
-                // if (m_recordButton->isVisible()) {
-                // updateRecordButtonPos();
-                // }
-
-                if (m_sideBar->isVisible()) {
-                    updateSideBarPos();
-                }
-
-                // if (m_shotButton->isVisible()) {
-                // updateShotButtonPos();
-                // }
-
-                if (m_cameraWidget && m_cameraWidget->isVisible()) {
-                    updateCameraWidgetPos();
-                }
-            }
-        }
-
-        if (needRepaint) {
-            update();
-        }
-        DWidget::keyPressEvent(keyEvent);
-    }
-    // 录屏模式下键盘按键操作
-    else {
-        if (recordButtonStatus == RECORD_BUTTON_NORMAL) {
-            // wayland录屏暂时需要通过eventfilter来处理，后期可能会移至onKeyboardPressWayland进行处理
-            if (Utils::isWaylandMode) {
-                //                    if (keyEvent->key() == Qt::Key_S && RECORD_BUTTON_NORMAL == recordButtonStatus) {
-                //                        m_toolBar->shapeClickedFromMain("audio");
-                //                    } else if (keyEvent->key() == Qt::Key_M && RECORD_BUTTON_NORMAL == recordButtonStatus) {
-                //                        m_toolBar->shapeClickedFromMain("mouse");
-                //                    } else if (keyEvent->key() == Qt::Key_F3 && RECORD_BUTTON_NORMAL == recordButtonStatus) {
-                //                        m_toolBar->shapeClickedFromMain("record_option");
-                //                    }
-            }
-            // 调整捕捉区域快捷键 shift+ctrl+up/down/left/right
-            if (keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) {
-                if (keyEvent->key() == Qt::Key_Left) {
-                    if (recordWidth > RECORD_MIN_SIZE) {
-                        recordX = std::max(0, recordX + 1);
-                        recordWidth = std::max(std::min(recordWidth - 1, m_backgroundRect.width()), RECORD_MIN_SIZE);
-                        needRepaint = true;
-                    }
-
-                } else if (keyEvent->key() == Qt::Key_Right) {
-                    if (recordWidth > RECORD_MIN_SIZE) {
-                        recordWidth = std::max(std::min(recordWidth - 1, m_backgroundRect.width()), RECORD_MIN_SIZE);
-                        needRepaint = true;
-                    }
-                } else if (keyEvent->key() == Qt::Key_Up) {
-                    if (recordHeight > RECORD_MIN_HEIGHT) {
-                        recordY = std::max(0, recordY + 1);
-
-                        recordHeight = std::max(std::min(recordHeight - 1, m_backgroundRect.height()), RECORD_MIN_HEIGHT);
-                        needRepaint = true;
-                    }
-                } else if (keyEvent->key() == Qt::Key_Down) {
-                    if (recordHeight > RECORD_MIN_HEIGHT) {
-                        recordHeight = std::max(std::min(recordHeight - 1, m_backgroundRect.height()), RECORD_MIN_HEIGHT);
-                        needRepaint = true;
-                    }
-                }
-            }
-            // ctrl+up/down/left/right
-            else if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
-                if (keyEvent->key() == Qt::Key_Left) {
-                    recordX = std::max(0, recordX - 1);
-                    recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
-
-                    needRepaint = true;
-                } else if (keyEvent->key() == Qt::Key_Right) {
-                    if (recordX + recordWidth + 1 >= m_screenWidth) {
-                        recordX = std::max(0, recordX - 1);
-                    }
-                    recordWidth = std::min(recordWidth + 1, rootWindowRect.width());
-
-                    needRepaint = true;
-                } else if (keyEvent->key() == Qt::Key_Up) {
-                    recordY = std::max(0, recordY - 1);
-                    recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
-
-                    needRepaint = true;
-                } else if (keyEvent->key() == Qt::Key_Down) {
-                    if (recordY + recordHeight + 1 >= m_screenHeight) {
-                        recordY = std::max(0, recordY - 1);
-                    }
-                    recordHeight = std::min(recordHeight + 1, rootWindowRect.height());
-
-                    needRepaint = true;
-                }
-            }
-            // 快捷键 up/down/left/right
-            else {
-                if (!isPressMouseLeftButton) {
-                    if (keyEvent->key() == Qt::Key_Left || keyEvent->key() == Qt::Key_A) {
-                        recordX = std::max(0, recordX - 1);
-
-                        needRepaint = true;
-                    } else if (keyEvent->key() == Qt::Key_Right || keyEvent->key() == Qt::Key_D) {
-                        recordX = std::min(rootWindowRect.width() - recordWidth, recordX + 1);
-
-                        needRepaint = true;
-                    } else if (keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_W) {
-                        recordY = std::max(0, recordY - 1);
-
-                        needRepaint = true;
-                    } else if (keyEvent->key() == Qt::Key_Down || keyEvent->key() == Qt::Key_S) {
-                        recordY = std::min(rootWindowRect.height() - recordHeight, recordY + 1);
-
-                        needRepaint = true;
-                    }
-                }
-            }
-            m_sizeTips->updateTips(QPoint(recordX, recordY), QSize(recordWidth, recordHeight));
-            if (m_toolBar->isVisible()) {
-                updateToolBarPos();
-            }
-            // if (m_recordButton->isVisible()) {
-            // updateRecordButtonPos();
-            // }
-            if (m_sideBar->isVisible()) {
-                updateSideBarPos();
-            }
-            // if (m_shotButton->isVisible()) {
-            // updateShotButtonPos();
-            // }
-            if (m_cameraWidget && m_cameraWidget->isVisible()) {
-                updateCameraWidgetPos();
-            }
-            if (recordButtonStatus == RECORD_BUTTON_NORMAL && needRepaint) {
-                // hideRecordButton();
-            }
-        }
-    }
-    return 1;
 }
 
 // 事件过滤器过滤的键盘释放事件在此方法处理
@@ -4665,7 +4628,7 @@ int MainWindow::wheelEF(QWheelEvent *wheelEvent, bool &needRepaint)
                          static_cast<int>(recordWidth * m_pixelRatio),
                          static_cast<int>(recordHeight * m_pixelRatio)};
         // 当前鼠标滚动的点
-        QPoint mouseScrollPoint(wheelEvent->x(), wheelEvent->y());
+        QPoint mouseScrollPoint(wheelEvent->position().x(), wheelEvent->position().y());;
         // 判断鼠标滚动的位置是否是在捕捉区域内部，滚动位置在捕捉区域内部
         if (recordRect.contains(mouseScrollPoint)) {
             m_scrollShotType = ScrollShotType::ManualScroll;
@@ -4694,6 +4657,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 // 重写键盘释放事件处理器
+
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
     if (Utils::isWaylandMode) {
@@ -4752,6 +4716,10 @@ void MainWindow::onMousePress(int x, int y)
 // 通过x11从底层获取鼠标释放事件
 void MainWindow::onMouseRelease(int x, int y)
 {
+    // TODO: treeland适配
+    if (Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive))
+        return;
+
     if (!m_initResource) {
         return;
     }
@@ -4763,6 +4731,10 @@ void MainWindow::onMouseRelease(int x, int y)
 // 通过x11从底层获取鼠标移动事件
 void MainWindow::onMouseMove(int x, int y)
 {
+    // TODO: treeland适配
+    if (Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive))
+        return;
+
     if (!m_initResource) {
         return;
     }
@@ -4815,6 +4787,7 @@ void MainWindow::onKeyboardPressWayland(const int key)
         }
     }
 }
+
 void MainWindow::onKeyboardReleaseWayland(const int key)
 {
     if (status::record == m_functionType) {
@@ -4887,7 +4860,7 @@ void MainWindow::scrollShotMouseClickEvent(int x, int y)
                          static_cast<int>(m_toolBar->getShotOptionRect().y() * m_pixelRatio),
                          static_cast<int>(m_toolBar->getShotOptionRect().width() * m_pixelRatio),
                          static_cast<int>(m_toolBar->getShotOptionRect().height() * m_pixelRatio)};
-    // 判断当前点击的点是否在工具栏或截图保存按钮上（当工具栏或截图保存按钮在捕捉区域内部时会进入）,滚动截图不响应此时的点击事件
+    // 判断当前点击的点是否在工具栏或截图保存按钮上（当工具栏或截图保存按钮在捕捉区域内部时会进入此方法）,滚动截图不响应此时的点击事件
     if (toolBarRect.contains(mouseClickPoint) || shotOptionRect.contains(mouseClickPoint)) {
         return;
     }
@@ -5125,7 +5098,7 @@ void MainWindow::scrollShotMouseScrollEvent(int mouseTime, int direction, int x,
  */
 void MainWindow::onScrollShotCheckScrollType(int autoScrollFlag)
 {
-    m_autoScrollFlagNext = autoScrollFlag;
+   m_autoScrollFlagNext = autoScrollFlag;
 }
 
 // 滚动截图时，锁屏处理事件
@@ -5343,12 +5316,17 @@ void MainWindow::onScrollShotMerageImgState(PixMergeThread::MergeErrorValue stat
     m_tipShowtimer->start();
 }
 #endif
+
 void MainWindow::initPadShot()
 {
     recordX = 0;
     recordY = 0;
-    recordWidth = QApplication::desktop()->width();
-    recordHeight = QApplication::desktop()->height();
+    QScreen *primaryScreen = QGuiApplication::primaryScreen();
+    if (primaryScreen) {
+        QRect screenGeometry = primaryScreen->geometry();
+        recordWidth = screenGeometry.width();
+        recordHeight = screenGeometry.height();
+    }
     updateToolBarPos();
     // updateShotButtonPos();
     QPoint toolbarPoint;
@@ -5494,6 +5472,7 @@ void MainWindow::startRecord()
     if (Utils::isTabletEnvironment && m_tabletRecorderHandle) {
         m_tabletRecorderHandle->startStatusBar();
     }
+
 #ifdef KF5_WAYLAND_FLAGE_ON
 #if defined(__mips__) || defined(__sw_64__) || defined(__loongarch_64__) || defined(__aarch64__) || defined(__loongarch__)
     if (Utils::isWaylandMode) {
@@ -5603,7 +5582,7 @@ void MainWindow::shotCurrentImg()
     // 当存在编辑模式且编辑的内容有文本时，需要再截图一次
     if (m_shapesWidget && m_shapesWidget->isExistsText()) {
         int eventTime = 60;
-        QRect rect = QApplication::desktop()->screenGeometry();
+        QRect rect = QGuiApplication::primaryScreen()->geometry();
         if (rect.width() * rect.height() > 1920 * 1080) {
             if (QSysInfo::currentCpuArchitecture().startsWith("x86") && m_isZhaoxin) {
                 eventTime = 120;
@@ -5662,6 +5641,7 @@ QPixmap MainWindow::paintImage()
         m_shapesWidget->paintImage(saveImage);
     return QPixmap::fromImage(saveImage);
 }
+
 void MainWindow::addCursorToImage()
 {
     qInfo() << __FUNCTION__ << __LINE__ << "正在往图片中添加光标...";
@@ -6076,17 +6056,19 @@ void MainWindow::hideAllWidget()
     }
 
     // Utils::clearBlur(windowManager, this->winId());
+
 }
-// void MainWindow::adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight)
-//{
-//     Q_UNUSED(layoutWidth);
-//     Q_UNUSED(layoutHeight);
-//     layout->setContentsMargins(
-//                 recordX,
-//                 recordY,
-//                 rootWindowRect.width() - recordX - recordWidth,
-//                 rootWindowRect.height() - recordY - recordHeight);
-// }
+
+void MainWindow::adjustLayout(QVBoxLayout *layout, int layoutWidth, int layoutHeight)
+{
+    Q_UNUSED(layoutWidth);
+    Q_UNUSED(layoutHeight);
+    layout->setContentsMargins(
+                recordX,
+                recordY,
+                rootWindowRect.width() - recordX - recordWidth,
+                rootWindowRect.height() - recordY - recordHeight);
+}
 
 void MainWindow::initShapeWidget(QString type)
 {
@@ -6099,8 +6081,16 @@ void MainWindow::initShapeWidget(QString type)
 
     m_shapesWidget->show();
 
-    m_shapesWidget->setFixedSize(recordWidth - 4, recordHeight - 4);
-    m_shapesWidget->move(recordX + 2, recordY + 2);
+    // TODO: treeland适配
+    if (Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)) {
+        auto context = TreelandCaptureManager::instance()->context();
+        QRect region = context->captureRegion().toRect();
+        m_shapesWidget->setGeometry(region);
+    } else {
+        m_shapesWidget->setFixedSize(recordWidth - 4, recordHeight - 4);
+        m_shapesWidget->move(recordX + 2, recordY + 2);
+    }
+
     QRect t_rect;
     t_rect.setX(recordX);
     t_rect.setY(recordY);
@@ -6113,7 +6103,7 @@ void MainWindow::initShapeWidget(QString type)
     m_sideBar->raise();
     // m_shotButton->raise();
     // m_needDrawSelectedPoint = false;
-    m_toolBar->setRecordButtonDisable();
+    //m_toolBar->setRecordButtonDisable();
     update();
 
     //    connect(m_toolBar, &ToolBar::updateColor,
@@ -6146,7 +6136,24 @@ void MainWindow::exitApp()
         qInfo() << __FUNCTION__ << __LINE__ << "截图录屏已退出";
         _Exit(0);
     }
+
+    // TODO:treeland适配
+    if (Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)) {
+        if(m_shapesWidget)
+            m_shapesWidget->hide();
+        if(m_sideBar)
+             m_sideBar->hide();
+        auto manager = TreelandCaptureManager::instance();
+        auto captureContext = manager->context();
+
+        // 添加销毁操作
+        if (captureContext) {
+            captureContext->destroy();
+        }
+        manager->destroy();
+    }
 }
+
 void MainWindow::confirm()
 {
     if (m_functionType == status::record) {
@@ -6154,9 +6161,16 @@ void MainWindow::confirm()
         startCountdown();
         return;
     }
-    // 截图,滚动截图
-    saveScreenShot();
+
+    //TODO: treeland适配
+    if (Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)) {
+        onFinishClicked();
+    } else {
+       //截图,滚动截图
+       saveScreenShot();
+    }
 }
+
 void MainWindow::reloadImage(QString effect, int radius)
 {
     shotImgWidthEffect();
@@ -6193,4 +6207,122 @@ void MainWindow::shotImgWidthEffect()
 
     m_resultPixmap = m_backgroundPixmap.copy(target);
     update();
+}
+
+// -------------------------------- treeland --------------------------------
+
+void MainWindow::setupConnections()
+{
+    connect(m_finishBtn, &QPushButton::clicked,
+            this, &MainWindow::onFinishClicked);
+}
+
+void MainWindow::initializeCapture()
+{
+    auto manager = TreelandCaptureManager::instance();
+    auto captureContext = manager->ensureContext();
+
+    if (!captureContext) {
+        qApp->exit(-1);
+        return;
+    }
+
+    auto waylandWindow = static_cast<QtWaylandClient::QWaylandWindow *>(windowHandle()->handle());
+
+    captureContext->selectSource(
+        TreelandCaptureContext::source_type_output
+            | TreelandCaptureContext::source_type_window |
+            TreelandCaptureContext::source_type_region,
+        true,
+        false,
+        waylandWindow->surface()
+        );
+
+    connect(manager->context(), &TreelandCaptureContext::captureRegionChanged,
+            this, &MainWindow::updateCaptureRegion);
+
+    connect(manager, &TreelandCaptureManager::finishSelect,
+            this, &MainWindow::handleCaptureFinish);
+}
+
+void MainWindow::handleCaptureFinish()
+{
+    auto manager = TreelandCaptureManager::instance();
+    auto captureContext = manager->context();
+
+    auto frame = captureContext->ensureFrame();
+    QImage result;
+    QEventLoop loop;
+
+    connect(frame, &TreelandCaptureFrame::ready,
+            this, [&result, &loop](QImage image) {
+                result = image;
+                loop.quit();
+            });
+
+    connect(frame, &TreelandCaptureFrame::failed,
+            this, [&loop] {
+                loop.quit();
+            });
+
+    loop.exec();
+
+    if (result.isNull()) {
+        qApp->exit(-1);
+        return;
+    }
+
+    // 保存截图
+    auto saveBasePath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+    QDir saveBaseDir(saveBasePath);
+    if (!saveBaseDir.exists()) {
+        qApp->exit(-1);
+        return;
+    }
+
+    QString picName = "portal screenshot - " +
+                      QDateTime::currentDateTime().toString() +
+                      ".png";
+
+    if (result.save(saveBaseDir.absoluteFilePath(picName), "PNG")) {
+        qDebug() << "Saved to:" << saveBaseDir.absoluteFilePath(picName);
+        m_shapesWidget->hide();
+        m_sideBar->hide();
+    } else {
+        qApp->exit(-1);
+    }
+}
+
+void MainWindow::onFinishClicked()
+{
+    TreelandCaptureManager::instance()->finishSelect();
+}
+
+void MainWindow::updateCaptureRegion()
+{
+    auto context = TreelandCaptureManager::instance()->context();
+    if (!context) return;
+    QRect region = context->captureRegion().toRect();
+
+    m_toolBar = new ToolBar(this);
+    m_toolBar->initToolBar(this);
+
+    m_toolBar->setAttribute(Qt::WA_TranslucentBackground);
+    m_toolBar->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
+
+    m_toolBar->showWidget();
+    QPoint pos(region.x(), qMin(region.bottom(), height() - 2 * m_toolBar->height()));
+    m_toolBar->showAt(pos);
+    m_toolBar->showWidget();
+
+
+    if(windowHandle()&&m_toolBar->windowHandle())
+    {
+        if(m_toolBar->windowHandle()->parent() != windowHandle())
+        {
+            m_toolBar->windowHandle()->setParent(windowHandle());
+            m_toolBar->hide();
+            m_toolBar->show();
+        }
+    }
 }
