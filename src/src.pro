@@ -33,7 +33,7 @@ warning("qtversion: " $$QT_MAJOR_VERSION)
 
 equals(QT_MAJOR_VERSION, 6) {
     QT += core gui widgets network dbus multimedia multimediawidgets concurrent svg \
-          sql xml core5compat gui-private opengl openglwidgets waylandclient waylandclient-private
+          sql xml opengl openglwidgets waylandclient waylandclient-private
     
     # Qt6 specific configurations
     PKGCONFIG += dtk6widget dtk6core dtk6gui dframeworkdbus xcb xcb-util gstreamer-app-1.0 libusb-1.0
@@ -53,7 +53,7 @@ equals(QT_MAJOR_VERSION, 6) {
           sql xml
     
     # Qt5 specific configurations 
-    PKGCONFIG += dtkwidget dtkcore dtkgui dframeworkdbus poppler-qt5 xcb xcb-util gstreamer-app-1.0 libusb-1.0
+    PKGCONFIG += dtkwidget dtkcore dtkgui dframeworkdbus xcb xcb-util gstreamer-app-1.0 libusb-1.0
     
     QMAKE_LRELEASE = lrelease
     

@@ -87,14 +87,11 @@ License: CC-BY-4.0
 Files: 3rdparty/libcam/*
 Copyright: 2007, Google Inc.
 License: GPL-2.0-or-later
-Files-Excluded: 3rdparty/libcam/libcam_encoder/matroska.h
 
 # 3rdparty/googletest
 Files: 3rdparty/googletest/*
 Copyright: 2008, Google Inc.
 License: BSD-3-Clause
-Files-Excluded: 3rdparty/googletest/googlemock/src/gmock-matchers.cc
-                3rdparty/googletest/googletest/test/production.cc
 
 # 3rdparty/stub_linux
 Files: 3rdparty/stub_linux/*
