@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.5.1.2) unstable; urgency=medium
+
+  * changelog 6.5.1.2.
+
+ -- tianshilin <tianshilin@uniontech.com>  Sat, 07 Dec 2024 10:11:01 +0800
+
 deepin-screen-recorder (6.5.0) unstable; urgency=medium
 
   * feat: [translation]add transifex config(Task: 361363)
