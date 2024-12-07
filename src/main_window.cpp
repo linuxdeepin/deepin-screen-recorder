@@ -2557,7 +2557,11 @@ void MainWindow::updateToolBarPos()
         initDynamicLibPath();
 
         // 检测是否是锁频状态下再打开截图
-        checkIsLockScreen();
+
+        // TODO: treeland禁用
+        if (!(Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive))) {
+             checkIsLockScreen();
+        }
     }
 
     // 延迟初始化相机，仅在切换到录屏界面时执行初始化
