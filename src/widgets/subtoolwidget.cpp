@@ -873,11 +873,14 @@ void SubToolWidget::initShotOption()
 
     m_shotOptionButton->setMenu(m_optionMenu);
 
+    if (Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)) {
+
     connect(m_optionMenu, &DMenu::aboutToShow, this, [this]() {
         qWarning() << "截图设置按钮被点击，菜单即将显示！";
         emit shotOptionMenuShown();
     });
 
+    }
     // 根据配置，初始化Action状态
     SaveAction t_saveIndex = ConfigSettings::instance()->getValue("shot", "save_op").value<SaveAction>();
 
