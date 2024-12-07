@@ -6286,8 +6286,12 @@ void MainWindow::handleCaptureFinish()
 
     if (result.save(saveBaseDir.absoluteFilePath(picName), "PNG")) {
         qDebug() << "Saved to:" << saveBaseDir.absoluteFilePath(picName);
-        m_shapesWidget->hide();
-        m_sideBar->hide();
+
+        if (m_shapesWidget)
+            m_shapesWidget->hide();
+        if (m_sideBar)
+            m_sideBar->hide();
+
     } else {
         qApp->exit(-1);
     }
