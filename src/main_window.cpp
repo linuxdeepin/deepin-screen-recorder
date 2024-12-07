@@ -364,13 +364,15 @@ void MainWindow::initTreelandtAttributes() //initTreelandtAttributes
     m_sizeTips->setFullScreenRecord(m_isFullScreenRecord);
     m_sizeTips->show();
 
-    if (m_functionType == status::record) {
-        m_zoomIndicator = new ZoomIndicator(this, true);
-    } else {
-        m_zoomIndicator = new ZoomIndicator(this);
+    // TODO Treeland 禁用
+    if (!(Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive))) {
+        if (m_functionType == status::record) {
+            m_zoomIndicator = new ZoomIndicator(this, true);
+        } else {
+            m_zoomIndicator = new ZoomIndicator(this);
+        }
+        m_zoomIndicator->hideMagnifier();
     }
-    m_zoomIndicator->hideMagnifier();
-
     // 设置窗口大小和位置
     connect(m_toolBar, &ToolBar::currentFunctionToMain, this, &MainWindow::changeFunctionButton);
     m_backgroundRect = rootWindowRect;
