@@ -596,6 +596,11 @@ void SubToolWidget::initShotLabel()
     m_shotBtnGroup->addButton(m_ocrButton);
     m_ocrButton->setFixedSize(TOOL_BUTTON_SIZE);
     installTipHint(m_ocrButton, tr("Extract text (Alt+O）"));
+
+    // TODO: 仅x11下开启
+    if (!(Utils::isWaylandMode || QGuiApplication::platformName().startsWith("wayland", Qt::CaseInsensitive)))
+        btnList.append(m_ocrButton);
+
 #ifdef  OCR_SCROLL_FLAGE_ON
     btnList.append(m_ocrButton);
 #endif
