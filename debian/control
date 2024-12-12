@@ -19,6 +19,8 @@ Build-Depends: debhelper,
  libqt6waylandclient6,
  libqt6opengl6,
  libqt6openglwidgets6,
+ qttools5-dev-tools,
+ qttools5-dev,
 # dde
  libdtk6gui-dev,
  libdtk6widget-dev,
