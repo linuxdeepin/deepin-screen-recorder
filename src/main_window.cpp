@@ -6157,6 +6157,8 @@ void MainWindow::exitApp()
             captureContext->destroy();
         }
         manager->destroy();
+
+        _exit(0);
     }
 }
 
@@ -6301,6 +6303,8 @@ void MainWindow::handleCaptureFinish()
     } else {
         qApp->exit(-1);
     }
+
+    _exit(0);
 }
 
 void MainWindow::onFinishClicked()
