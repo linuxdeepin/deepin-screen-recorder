@@ -1,11 +1,12 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="id" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="id">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <location filename="../src/countdown_tooltip.cpp" line="78"/>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation type="unfinished"/>
+        <translation>Klik ikon laci 
+atau tekan pemintas lagi untuk berhenti merekam</translation>
     </message>
 </context>
 <context>
@@ -41,7 +42,7 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/record_process.cpp" line="301"/>
         <source>Recording finished</source>
-        <translation type="unfinished"/>
+        <translation>Perekaman selesai</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="302"/>
