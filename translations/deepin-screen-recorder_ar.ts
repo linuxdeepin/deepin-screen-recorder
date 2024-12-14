@@ -37,7 +37,7 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/record_process.cpp" line="291"/>
         <source>View</source>
-        <translation>عرض</translation>
+        <translation>معاينة</translation>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="301"/>
