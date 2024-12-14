@@ -36,7 +36,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void leaveEvent(QEvent *event) override;
-    void showEvent(QShowEvent *) override;
 
 private slots:
     void onPropertyChanged(const QString &property, const QVariant &value);

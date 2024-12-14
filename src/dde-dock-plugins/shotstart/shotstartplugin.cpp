@@ -21,6 +21,7 @@ Q_LOGGING_CATEGORY(SHOT_LOG, "shot-start-plugin");
 
 ShotStartPlugin::ShotStartPlugin(QObject *parent)
     : QObject(parent)
+    , m_iconWidget(nullptr)
     , m_quickPanelWidget(nullptr)
     , m_tipsWidget(nullptr)
 
@@ -79,6 +80,10 @@ void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
 #endif  // UNIT_TEST
 
     m_proxyInter = proxyInter;
+
+    if (m_iconWidget.isNull()) {
+        m_iconWidget.reset(new IconWidget);
+    }
 
     if (m_quickPanelWidget.isNull()) {
         m_quickPanelWidget.reset(new QuickPanelWidget);
@@ -151,7 +156,7 @@ QWidget *ShotStartPlugin::itemTipsWidget(const QString &itemKey)
     qCDebug(SHOT_LOG) << "Current itemWidget's itemKey: " << itemKey;
     if (itemKey != ShotShartPlugin)
         return nullptr;
-    m_tipsWidget->setText(tr("Screenshot"));
+    m_tipsWidget->setText(tr("Screenshot") + m_iconWidget->getSysShortcuts("screenshot"));
     return m_tipsWidget.data();
 }
 
