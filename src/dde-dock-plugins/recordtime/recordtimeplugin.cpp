@@ -67,7 +67,7 @@ QWidget *RecordTimePlugin::itemWidget(const QString &itemKey)
 
 void RecordTimePlugin::clear()
 {
-    // m_timeWidget->clearSetting();  
+    m_timeWidget->clearSetting();  
 
     if (nullptr != m_timer) {
         m_timer->stop();
@@ -76,15 +76,33 @@ void RecordTimePlugin::clear()
     }
 
     //没找到解决方法，先注释掉
-    // if (nullptr != m_timeWidget) {
-    //     m_timeWidget->deleteLater();
-    //     m_timeWidget = nullptr;
-    // }
+    if (nullptr != m_timeWidget) {
+        m_timeWidget->deleteLater();
+        m_timeWidget = nullptr;
+    }
     
     if (nullptr != m_checkTimer) {
         m_checkTimer->stop();
         m_checkTimer->deleteLater();
         m_checkTimer = nullptr;
+    }
+}
+
+void RecordTimePlugin::onStart()
+{
+    qInfo() << "start record time";
+    m_timer = new QTimer(this);
+    m_timeWidget = new TimeWidget();
+    m_checkTimer = nullptr;
+    m_timer->start(600);
+    connect(m_timer, &QTimer::timeout, this, &RecordTimePlugin::refresh);
+
+    if (m_timeWidget->isEnabled()) {
+        qInfo() << "load plugin";
+        m_proxyInter->itemRemoved(this, pluginName());
+        m_proxyInter->itemAdded(this, pluginName());
+        m_bshow = true;
+        m_timeWidget->start();
     }
 }
 

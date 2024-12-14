@@ -88,8 +88,10 @@ void ShotStartRecordPlugin::init(PluginProxyInterface *proxyInter)
     m_proxyInter = proxyInter;
 
     //没找到解决方法，先注释掉
-    // if (m_iconWidget.isNull())
-    //     m_iconWidget.reset(new recordiconwidget(nullptr));
+    if (m_iconWidget.isNull()) {
+        m_iconWidget.reset(new RecordIconWidget);
+    }
+
     if (m_quickPanelWidget.isNull()) {
         m_quickPanelWidget.reset(new QuickPanelWidget);
         m_quickPanelWidget->changeType(QuickPanelWidget::RECORD);
@@ -175,8 +177,7 @@ QWidget *ShotStartRecordPlugin::itemTipsWidget(const QString &itemKey)
     if (itemKey != RecordShartPlugin)
         return nullptr;
     //暂时注释掉，后面修改
-    // m_tipsWidget->setText(tr("Record") + m_iconWidget.data()->getSysShortcuts("deepin-screen-recorder"));
-    m_tipsWidget->setText(tr("Record"));
+    m_tipsWidget->setText(tr("Record") + m_iconWidget->getSysShortcuts("deepin-screen-recorder"));
     return m_tipsWidget.data();
 }
 
