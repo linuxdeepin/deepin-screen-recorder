@@ -223,7 +223,12 @@ void MainWindow::initMainWindow()
     if (Utils::isWaylandMode) {
         // Wayland 下窗口接收全局键盘
         create();
-        windowHandle()->setProperty("_d_dwayland_global_keyevent", true);
+        if (this->windowHandle()){
+            m_initWaylandKeyEventProperty = true;
+            this->windowHandle()->setProperty("_d_dwayland_global_keyevent", true);
+        } else {
+            qInfo() << __LINE__ << __FUNCTION__ << "windowHandle may not init";
+        }
     }
     qInfo() << __LINE__ << __FUNCTION__ << "截图录屏主窗口已初始化";
 }
@@ -258,7 +263,11 @@ void MainWindow::initAttributes()
             } else {
                 this->windowHandle()->setProperty("_d_dwayland_window-type", "onScreenDisplay"); // 窗管层级在1060和1070有所区别，兼容适配bug254705-275661
             }
+            if (!m_initWaylandKeyEventProperty) {
+                this->windowHandle()->setProperty("_d_dwayland_global_keyevent", true);
+            }
             qDebug() << "设置窗口属性 _d_dwayland_window-type: " << this->windowHandle()->property("_d_dwayland_window-type");
+            qDebug() << "设置窗口属性 _d_dwayland_global_keyevent: " << this->windowHandle()->property("_d_dwayland_global_keyevent");
         }
         //取消onScreenDisplay，解决wayland截长图无法滚动的问题
         QDBusInterface sessionManagerIntert("com.deepin.SessionManager",

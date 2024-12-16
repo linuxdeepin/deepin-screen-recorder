@@ -1097,6 +1097,11 @@ private:
      * @brief m_toolbarLastPoint 工具栏位置改变后，上一次工具栏的位置
      */
     QPoint m_toolbarLastPoint;
+
+    /**
+     * @brief m_initWaylandKeyEventProperty 按键事件属性是否初始化成功
+     */
+    bool m_initWaylandKeyEventProperty = false;
 };
 
 #endif //MAINWINDOW_H
