@@ -44,6 +44,9 @@ RecordIconWidget::RecordIconWidget(DWidget *parent)
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(m_iconLabel);
 
+    // FIXME: temporarily disable m_iconLabel
+    m_iconLabel->setVisible(false);
+
     // 连接 DBus 信号
     connect(m_dockInter, SIGNAL(propertyChanged(QString,QVariant)),
             this, SLOT(onPropertyChanged(QString,QVariant)));
