@@ -42,6 +42,7 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
         while (count < 6) {
             reply = kwinInterface.call(QStringLiteral("screenshotFullscreen"));
             res = QPixmap(reply.value());
+            qDebug() << __FUNCTION__ << __LINE__ << "screenshotFullscreen reply:" << reply;
             if (!res.isNull()) {
                 break;
             }
