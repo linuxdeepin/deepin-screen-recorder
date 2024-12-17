@@ -43,6 +43,9 @@ IconWidget::IconWidget(DWidget *parent)
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(m_iconLabel);
 
+    // FIXME: temporarily disable m_iconLabel
+    m_iconLabel->setVisible(false);
+
     // 初始化
     m_systemVersion = DSysInfo::minorVersion().toInt();
     setMouseTracking(true);
