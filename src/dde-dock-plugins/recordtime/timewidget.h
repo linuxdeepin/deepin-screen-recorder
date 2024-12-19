@@ -10,16 +10,13 @@
 #include <QTime>
 #include <QIcon>
 #include <DWidget>
-#include <com_deepin_dde_daemon_dock.h>
 #include <DFontSizeManager>
 #include <QBoxLayout>
 #include <QLabel>
 
-#include <com_deepin_dde_daemon_dock.h>
+#include "timewidget_interface.h"
 
 DWIDGET_USE_NAMESPACE
-
-using DBusDock = com::deepin::dde::daemon::Dock;
 
 class TimeWidget : public DWidget
 {
@@ -77,12 +74,14 @@ private slots:
      */
     void onPositionChanged(int value);
 
+    void onPropertyChanged(const QString &property, const QVariant &value);
+
 private:
     void updateIcon();
 
 private:
     QTimer *m_timer;
-    DBusDock *m_dockInter;
+    timewidget_interface *m_dockInter;
     QIcon *m_lightIcon;
     QIcon *m_shadeIcon;
     QIcon *m_currentIcon;

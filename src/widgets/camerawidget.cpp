@@ -227,14 +227,8 @@ void CameraWidget::paintEvent(QPaintEvent *e)
     p.setBrush(Qt::black);
 
     p.setRenderHint(QPainter::Antialiasing, true);
-    p.setRenderHint(QPainter::HighQualityAntialiasing, true);
-//    p.fillRect(this->rect(), Qt::transparent);
-//    p.setBrush(Qt::transparent);
-//    p.drawRoundedRect(bmp.rect(), 30, 45, Qt::RelativeSize);
     p.drawRoundedRect(12, 12, width() - 25, height() - 25, 8, 8);
     setMask(bmp);
-
-
 
 //    DWidget::paintEvent(e);
 }

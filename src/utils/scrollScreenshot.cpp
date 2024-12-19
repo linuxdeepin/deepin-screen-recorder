@@ -113,7 +113,11 @@ void ScrollScreenshot::addPixmap(const QPixmap &piximg, int wheelDirection)
 
 void ScrollScreenshot::addLastPixmap(const QPixmap &piximg)
 {
+#if (QT_MAJOR_VERSION == 5)
     setTimeAndCalculateTimeDiff(static_cast<int>(QDateTime::currentDateTime().toTime_t()));
+#elif (QT_MAJOR_VERSION == 6)
+    setTimeAndCalculateTimeDiff(static_cast<int>(QDateTime::currentDateTime().toSecsSinceEpoch()));
+#endif
     m_PixMerageThread->setIsLastImg(true);  //添加最后一张图片标记
     if (nullptr != m_PixMerageThread)
         m_PixMerageThread->addShotImg(piximg, m_lastDirection);

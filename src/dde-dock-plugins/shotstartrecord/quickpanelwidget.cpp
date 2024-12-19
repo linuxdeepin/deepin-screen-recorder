@@ -39,7 +39,7 @@ void QuickPanelWidget::initUI()
     DFontSizeManager::instance()->bind(m_description, DFontSizeManager::T10);
 
     auto layout = new QVBoxLayout;
-    layout->setMargin(8);
+    setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
     layout->addStretch(1);
     layout->addWidget(m_icon, 0, Qt::AlignCenter);

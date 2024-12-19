@@ -5,9 +5,11 @@
 
 #ifndef UTILS_H
 #define UTILS_H
+
+#include "utils_interface.h"
 // #include <dwindowmanager.h>
 #include <DPushButton>
-#include <DImageButton>
+#include <DIconButton>
 
 #include <QObject>
 #include <QPainter>
@@ -16,10 +18,15 @@
 #include <QList>
 #include <QScreen>
 
+// TODO: Qt6中找不到DImageButton这个头文件，后续会找dtk对齐继续处理
+#if (QT_MAJOR_VERSION == 5)
+#include <DImageButton>
+#endif
+
 DWIDGET_USE_NAMESPACE
 DCORE_USE_NAMESPACE
 
-class Utils : public QObject
+class Utils : public utils_interface
 {
     Q_OBJECT
 
@@ -61,7 +68,11 @@ public:
     static void passInputEvent(int wid);
     static void setFontSize(QPainter &painter, int textSize);
     static void setAccessibility(DPushButton *button, const QString name);
+#if (QT_MAJOR_VERSION == 5)
     static void setAccessibility(DImageButton *button, const QString name);
+#elif (QT_MAJOR_VERSION == 6)
+    static void setAccessibility(DIconButton *button, const QString name);
+#endif
     static void setAccessibility(QAction *action, const QString name);
     static bool is3rdInterfaceStart;
     static bool isTabletEnvironment;
@@ -184,6 +195,15 @@ public:
      * @param keyEvent:键盘事件
      */
     static void cursorMove(QPoint currentCursor, QKeyEvent *keyEvent);
+
+    explicit Utils(QObject *parent = nullptr);
+    ~Utils();
+
+    // 新增 DBus 相关方法
+    static Utils *instance();
+
+private:
+    static Utils *m_utils;
 };
 
 #endif  // UTILS_H

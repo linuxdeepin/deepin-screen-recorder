@@ -26,20 +26,43 @@
 #include <iostream>
 DCORE_USE_NAMESPACE
 
-IconWidget::IconWidget(QWidget *parent)
-    : QWidget(parent)
+IconWidget::IconWidget(DWidget *parent)
+    : DWidget(parent)
+    , m_dockInter(new iconwidget_interface("com.deepin.dde.daemon.Dock",
+                                          "/com/deepin/dde/daemon/Dock",
+                                          QDBusConnection::sessionBus(),
+                                          this))
     , m_blgPixmap(nullptr)
     , centralLayout(nullptr)
+    , m_iconLabel(new QLabel(this))
 {
+    setContentsMargins(0, 0, 0, 0);
+    
+    // 创建布局
+    auto *layout = new QHBoxLayout(this);
+    setLayout(layout);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(m_iconLabel);
+
+    // FIXME: temporarily disable m_iconLabel
+    m_iconLabel->setVisible(false);
+
+    // 初始化
     m_systemVersion = DSysInfo::minorVersion().toInt();
     setMouseTracking(true);
     setMinimumSize(PLUGIN_BACKGROUND_MIN_SIZE, PLUGIN_BACKGROUND_MIN_SIZE);
 
-    QString iconName("screen-capture");
-    if(m_systemVersion >= 1070 || DSysInfo::deepinType() == DSysInfo::DeepinDesktop){
-        iconName = "screenshot";
-    }
+    // 设置图标
+    QString iconName = m_systemVersion >= 1070 ? "screenshot" : "screen-capture";
     m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
+    
+    // 连接信号
+    connect(m_dockInter, SIGNAL(propertyChanged(QString,QVariant)),
+            this, SLOT(onPropertyChanged(QString,QVariant)));
+            
+    // 获取初始位置
+    m_position = m_dockInter->position();
+    updateIcon();
 }
 
 bool IconWidget::enabled()
@@ -252,4 +275,31 @@ const QPixmap IconWidget::loadSvg(const QString &fileName, const QSize &size) co
     return pixmap;
 }
 
-IconWidget::~IconWidget() {}
+void IconWidget::onPropertyChanged(const QString &property, const QVariant &value)
+{
+    if (property == "Position") {
+        onPositionChanged(value.toInt());
+    }
+}
+
+void IconWidget::onPositionChanged(int value)
+{
+    m_position = value;
+    updateIcon();
+}
+
+void IconWidget::updateIcon()
+{
+    QSize iconSize(PLUGIN_ICON_MAX_SIZE, PLUGIN_ICON_MAX_SIZE);
+    QPixmap pixmap = loadSvg(m_systemVersion >= 1070 ? "screenshot" : "screen-capture", iconSize);
+    m_iconLabel->setPixmap(pixmap);
+}
+
+IconWidget::~IconWidget()
+{
+    if (m_dockInter) {
+        m_dockInter->deleteLater();
+        m_dockInter = nullptr;
+    }
+    // ... 其他清理代码 ...
+}

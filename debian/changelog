@@ -37,7 +37,7 @@ deepin-screen-recorder (6.0.8) unstable; urgency=medium
 
 deepin-screen-recorder (6.0.7) unstable; urgency=medium
 
-  * fix: the recorder icon(Bug: 266991) 
+  * fix: the recorder icon(Bug: 266991)
   * feat: remove the inner margin of dock plugin tooltips (Issues: 9997)
   * fix: the screen-capture icon in the taskbar (Bug: 267113)
   * fix: the recorder taskbar incorrect background-color (Bug: 267669)

@@ -36,7 +36,12 @@ protected:
      * @brief 进入事件
      * @param e
      */
+    // qt6 接口有变动
+#if (QT_MAJOR_VERSION == 5)
     void enterEvent(QEvent *e);
+#elif (QT_MAJOR_VERSION == 6)
+    void enterEvent(QEnterEvent *e);;
+#endif
 private:
     DMenu *m_menu;
     /**

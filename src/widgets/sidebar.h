@@ -12,7 +12,6 @@
 
 #include <DLabel>
 #include <DBlurEffectWidget>
-#include <DImageButton>
 #include <DFloatingWidget>
 #include <DVerticalLine>
 
@@ -83,6 +82,15 @@ public:
      * @return
      */
     bool isPressed();
+
+
+    /**
+     * @brief isPressed 是否在此工具栏按下鼠标左键
+     * @return
+     */
+    void showWidget();
+    void hideWidget();
+
 signals:
     void heightChanged();
     void buttonChecked(QString shape);
@@ -100,7 +108,11 @@ public slots:
 
 protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+#if (QT_MAJOR_VERSION == 5)
     void enterEvent(QEvent *e) Q_DECL_OVERRIDE;
+#elif (QT_MAJOR_VERSION == 6)
+    void enterEvent(QEnterEvent *e) Q_DECL_OVERRIDE;
+#endif
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;

@@ -101,7 +101,7 @@ void SubToolBar::initRectLabel()
     btnList[lineWidthIndex]->setChecked(true);
 
     QHBoxLayout *rectLayout = new QHBoxLayout();
-    rectLayout->setMargin(0);
+    rectLayout->setContentsMargins(0, 0, 0, 0);
     rectLayout->setSpacing(0);
     rectLayout->addSpacing(1);
     for (int i = 0; i < btnList.length(); i++) {
@@ -187,7 +187,7 @@ void SubToolBar::initArrowLabel()
     arrowBtnList[arrowWidthIndex]->setChecked(true);
     arrowBtnList[sLineWidthIndex + 3]->setChecked(true);
     QHBoxLayout *arrowLayout = new QHBoxLayout();
-    arrowLayout->setMargin(0);
+    arrowLayout->setContentsMargins(0, 0, 0, 0);
     arrowLayout->setSpacing(BUTTON_SPACING);
     arrowLayout->addSpacing(1);
     for (int j = 0; j < arrowBtnList.length(); j++) {
@@ -288,7 +288,7 @@ void SubToolBar::initLineLabel()
     btnList[lineWidthIndex]->setChecked(true);
 
     QHBoxLayout *lineLayout = new QHBoxLayout();
-    lineLayout->setMargin(0);
+    lineLayout->setContentsMargins(0, 0, 0, 0);
     lineLayout->setSpacing(0);
     lineLayout->addSpacing(1);
     for (int k = 0; k < btnList.length(); k++) {
@@ -329,7 +329,7 @@ void SubToolBar::initTextLabel()
     int defaultFontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();
 
     QHBoxLayout *textLayout = new QHBoxLayout();
-    textLayout->setMargin(0);
+    textLayout->setContentsMargins(0, 0, 0, 0);
     textLayout->setSpacing(0);
     textLayout->addSpacing(1);
     for (int k = 0; k < textButtonList.length(); k++) {
@@ -360,7 +360,7 @@ void SubToolBar::initColorLabel()
     }
 
     QHBoxLayout *colorLayout = new QHBoxLayout();
-    colorLayout->setMargin(0);
+    colorLayout->setContentsMargins(0, 0, 0, 0);
     colorLayout->setSpacing(0);
     colorLayout->addSpacing(3);
     for (int i = 0; i < colorBtnList.length(); i++) {
@@ -440,7 +440,7 @@ void SubToolBar::initSaveLabel()
 
     m_saveLabel = new DLabel(this);
     QHBoxLayout *saveLayout = new QHBoxLayout();
-    saveLayout->setMargin(0);
+    saveLayout->setContentsMargins(0, 0, 0, 0);
     saveLayout->setSpacing(0);
     saveLayout->addSpacing(1);
 

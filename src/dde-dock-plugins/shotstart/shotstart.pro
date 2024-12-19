@@ -1,15 +1,24 @@
-QT              += widgets dbus
+equals(QT_MAJOR_VERSION, 6) {
+    QT              += widgets dbus
+    PKGCONFIG += dtk6widget dtk6core
+} else {
+    QT              += widgets dbus
+    QT              += dtkgui
+    QT              += dtkwidget
+    
+    # Qt5 specific configurations
+    PKGCONFIG       += dframeworkdbus
+}
+
 TEMPLATE        = lib
-CONFIG          += c++11 plugin link_pkgconfig
-QT              += dtkgui
-QT              += dtkwidget
-PKGCONFIG += dframeworkdbus
+CONFIG          += c++17 plugin link_pkgconfig
 
 TARGET          = $$qtLibraryTarget(shot-start-plugin)
 DISTFILES       += shotstart.json \
     res/screen-recording.svg
 
 HEADERS += \
+    iconwidget_interface.h \
     shotstartplugin.h \
     iconwidget.h \
     tipswidget.h \
@@ -17,6 +26,7 @@ HEADERS += \
     commoniconbutton.h
 
 SOURCES += \
+    iconwidget_interface.cpp \
     shotstartplugin.cpp \
     iconwidget.cpp \
     tipswidget.cpp \

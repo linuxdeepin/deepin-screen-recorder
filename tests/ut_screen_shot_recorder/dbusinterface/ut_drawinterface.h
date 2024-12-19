@@ -7,7 +7,8 @@
 #include <QScreen>
 #include <QPixmap>
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
+#include <QGuiApplication>
 #include <gtest/gtest.h>
 #include "../dbusinterface/drawinterface.h"
 
@@ -43,11 +44,14 @@ TEST_F(DrawInterfaceTest, openFiles)
     sleep(1);
 
 }
+
 TEST_F(DrawInterfaceTest, openImages)
 {
     QList<QImage> list;
     QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
-    QPixmap pix = t_primaryScreen->grabWindow(QApplication::desktop()->winId());
+    // 使用 0 作为窗口ID来抓取整个屏幕
+    QPixmap pix = t_primaryScreen->grabWindow(0);
     list.append(pix.toImage());
     m_draw->openImages(list);
 }
+

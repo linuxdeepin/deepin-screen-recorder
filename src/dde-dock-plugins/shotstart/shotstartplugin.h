@@ -10,6 +10,7 @@
 #include "quickpanelwidget.h"
 #include "tipswidget.h"
 #include <QtDBus/QtDBus>
+#include <QScopedPointer>
 
 #include <dde-dock/constants.h>
 #if defined(DOCK_API_VERSION) && (DOCK_API_VERSION >= DOCK_API_VERSION_CHECK(2, 0, 0))

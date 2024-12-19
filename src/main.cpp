@@ -25,6 +25,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QDir>
+#include <QStandardPaths>
 
 DWIDGET_USE_NAMESPACE
 
@@ -39,7 +40,7 @@ static bool isWaylandProtocol()
 
     QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
     QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
-    return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive);
+    return XDG_SESSION_TYPE == QLatin1String("wayland") ||  WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive) ;
 }
 
 static bool CheckFFmpegEnv()
@@ -74,7 +75,11 @@ int main(int argc, char *argv[])
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
     }
-    DGuiApplicationHelper::setUseInactiveColorGroup(false);
+
+    // qt6中缺少这个接口
+#if (QT_MAJOR_VERSION == 5)
+    DGuiApplicationHelper::setUseInactiveColorGroup(false);t->u.keyButtonPointer.rootY);
+#endif
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QDBusInterface scaleFactor("com.deepin.daemon.Display", "/com/deepin/XSettings", "com.deepin.XSettings");
@@ -96,7 +101,7 @@ int main(int argc, char *argv[])
 
     // wayland 协议
     Utils::isWaylandMode = isWaylandProtocol();
-    //qInfo() << "Is Wayland:" << Utils::isWaylandMode;
+    qInfo() << "Is Wayland:" << Utils::isWaylandMode;
 
     Utils::isRootUser = (getuid() == 0);
     //qInfo() << "Is Root User:" << Utils::isRootUser;
@@ -137,8 +142,10 @@ int main(int argc, char *argv[])
         app->setOrganizationName("deepin");
         app->setApplicationName("deepin-screen-recorder");
         app->setApplicationVersion("1.0");
-        app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
+#if (QT_MAJOR_VERSION == 5)
+    app->setAttribute(Qt::AA_UseHighDpiPixmaps);
+#endif
         //        static const QDate buildDate = QLocale(QLocale::English).
         //                                       toDate(QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
         //        QString t_date = buildDate.toString("MMdd");

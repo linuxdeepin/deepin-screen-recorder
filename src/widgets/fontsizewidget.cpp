@@ -47,7 +47,7 @@ void FontSizeWidget::initWidget()
     m_reduceSizeBtn->setFixedSize(BUTTON_SIZE);
 
     QHBoxLayout *layout = new QHBoxLayout;
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
     layout->addSpacing(4);
     layout->addWidget(m_fontSizeEdit);

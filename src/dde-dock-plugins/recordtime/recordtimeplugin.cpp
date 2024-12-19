@@ -3,8 +3,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include <QDesktopWidget>
 #include "recordtimeplugin.h"
+#include "timewidget.h"
+#include <QWidget>
 
 RecordTimePlugin::RecordTimePlugin(QObject *parent)
     : QObject(parent)
@@ -12,6 +13,7 @@ RecordTimePlugin::RecordTimePlugin(QObject *parent)
 {
     m_timer = nullptr;
     m_checkTimer = nullptr;
+    m_timeWidget = nullptr;
 }
 
 const QString RecordTimePlugin::pluginName() const
@@ -65,17 +67,19 @@ QWidget *RecordTimePlugin::itemWidget(const QString &itemKey)
 
 void RecordTimePlugin::clear()
 {
-    m_timeWidget->clearSetting();
+    m_timeWidget->clearSetting();  
 
     if (nullptr != m_timer) {
         m_timer->stop();
         m_timer->deleteLater();
         m_timer = nullptr;
     }
+
     if (nullptr != m_timeWidget) {
         m_timeWidget->deleteLater();
         m_timeWidget = nullptr;
     }
+    
     if (nullptr != m_checkTimer) {
         m_checkTimer->stop();
         m_checkTimer->deleteLater();
@@ -147,6 +151,7 @@ void RecordTimePlugin::onRecording()
 
 void RecordTimePlugin::onPause()
 {
+    // Empty implementation to match legacy behavior
     if (m_timeWidget->enabled() && m_bshow) {
         m_timeWidget->stop();
     }
