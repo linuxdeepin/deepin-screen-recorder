@@ -9,7 +9,6 @@
 #include "utils.h"
 #include "utils/eventlogutils.h"
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QScreen>
 #include <QWindow>
 

@@ -44,11 +44,20 @@ void MenuController::showMenu(QPoint pos)
     m_menu->popup(pos);
 }
 
+
+#if (QT_MAJOR_VERSION == 5)
 void MenuController::enterEvent(QEvent *e)
 {
     Q_UNUSED(e);
     qApp->setOverrideCursor(Qt::ArrowCursor);
 }
+#elif (QT_MAJOR_VERSION == 6)
+void MenuController::enterEvent(QEnterEvent *e)
+{
+    Q_UNUSED(e);
+    qApp->setOverrideCursor(Qt::ArrowCursor);
+}
+#endif
 
 MenuController::~MenuController()
 {

@@ -17,19 +17,33 @@ isEmpty(TRANSLATIONS) {
 }
 CONFIG += update_translations release_translations
 
-CONFIG(update_translations) {
-    isEmpty(lupdate):lupdate=lupdate
-    system($$lupdate -no-obsolete -locations none $$_PRO_FILE_)
-}
-CONFIG(release_translations) {
-    isEmpty(lrelease):lrelease=lrelease
-    system($$lrelease $$_PRO_FILE_)
-}
+QT6_LUPDATE = /usr/lib/qt6/bin/lupdate
+QT6_LRELEASE = /usr/lib/qt6/bin/lrelease
+DEFAULT_LUPDATE = lupdate
+DEFAULT_LRELEASE = lrelease
 
+equals(QT_MAJOR_VERSION, 6) {
+    CONFIG(update_translations) {
+        isEmpty(lupdate):lupdate=$$QT6_LUPDATE
+        system($$lupdate -no-obsolete -locations none $$_PRO_FILE_)
+    }
+    CONFIG(release_translations) {
+        isEmpty(lrelease):lrelease=$$QT6_LRELEASE
+        system($$lrelease $$_PRO_FILE_)
+    }
+} else {
+    CONFIG(update_translations) {
+        isEmpty(lupdate):lupdate=$$DEFAULT_LUPDATE
+        system($$lupdate -no-obsolete -locations none $$_PRO_FILE_)
+    }
+    CONFIG(release_translations) {
+        isEmpty(lrelease):lrelease=$$DEFAULT_LRELEASE
+        system($$lrelease $$_PRO_FILE_)
+    }
+}
 
 TRANSLATIONS_COMPILED = $$TRANSLATIONS
 TRANSLATIONS_COMPILED ~= s/\.ts/.qm/g
 translations.files = $$TRANSLATIONS_COMPILED
-
 
 INSTALLS += translations

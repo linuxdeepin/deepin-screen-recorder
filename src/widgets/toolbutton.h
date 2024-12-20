@@ -40,7 +40,7 @@ public:
     }
     ~ToolButton() {}
 protected:
-    void enterEvent(QEvent *e) override
+    void enterEvent(QEnterEvent *e) override
     {
         m_lastCursorShape = qApp->overrideCursor();
         qApp->setOverrideCursor(Qt::ArrowCursor);
@@ -59,7 +59,15 @@ protected:
         if (m_hasHoverState) {
             setFlat(true);
         }
-        qApp->setOverrideCursor(m_lastCursorShape->shape());
+        // if (m_lastCursorShape) {
+        //     qWarning() << "m_lastCursorShape is !" <<m_lastCursorShape;
+        //     qWarning() << "m_lastCursorShape is !!!" <<m_lastCursorShape->shape();
+        //     qApp->setOverrideCursor(m_lastCursorShape->shape());
+        // } else {
+        //     qApp->setOverrideCursor(Qt::ArrowCursor);
+
+        //     qWarning() << "m_lastCursorShape is null!" <<m_lastCursorShape;
+        // }
         DPushButton::leaveEvent(e);
 
         if (m_isMousePress) {
@@ -72,6 +80,7 @@ protected:
             emit isInUndoBtn(false);
         }
     }
+
     void mousePressEvent(QMouseEvent *e) override
     {
         if (m_isOptionButton) {

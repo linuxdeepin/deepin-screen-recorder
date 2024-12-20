@@ -4,9 +4,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "zoomIndicatorGL.h"
+#include <QOpenGLWidget>
 #include "../utils/baseutils.h"
 #include "../utils/tempfile.h"
 
+#include <QOpenGLWidget>
 #include <QCursor>
 #include <QTextOption>
 #include <QDebug>

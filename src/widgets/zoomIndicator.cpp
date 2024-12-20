@@ -8,6 +8,12 @@
 #include "../utils/tempfile.h"
 #include "../utils.h"
 
+#if (QT_MAJOR_VERSION == 5)
+#include <QtOpenGL/QOpenGLWidget>
+#elif (QT_MAJOR_VERSION == 6)
+#include <QOpenGLWidget>
+#endif
+
 #include <QCursor>
 #include <QTextOption>
 #include <QDebug>

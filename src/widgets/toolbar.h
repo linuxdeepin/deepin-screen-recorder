@@ -11,10 +11,9 @@
 
 #include <DLabel>
 #include <DBlurEffectWidget>
-#include <DImageButton>
 #include <DFloatingWidget>
 #include <DIconButton>
-
+#include <QMainWindow>
 #include <QPainter>
 #include <QEvent>
 #include <QDebug>
@@ -75,6 +74,12 @@ private:
      * @brief 截图录屏工具栏子工具栏
      */
     SubToolWidget *m_subTool;
+
+    /**
+     * @brief 截图录屏工具栏截图选项按钮
+     */
+    ToolButton *m_shotOptionButton;  // 添加成员变量
+
     /**
      * @brief 截图录屏工具栏关闭按钮
      */
@@ -93,6 +98,13 @@ public:
     ~ToolBar() Q_DECL_OVERRIDE;
     //public接口非slots
     void initToolBar(MainWindow *pmainWindow);
+
+
+    /**
+     * @brief show toolBarWidget and hide toolBarWidget
+     */
+    void showWidget();
+    void hideWidget();
 
     /**
      * @brief 设置禁止滚动截图
@@ -150,7 +162,11 @@ public slots:
     void setCameraDeviceEnable(bool status);
 protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+#if (QT_MAJOR_VERSION == 5)
     void enterEvent(QEvent *e) Q_DECL_OVERRIDE;
+#elif (QT_MAJOR_VERSION == 6)
+    void enterEvent(QEnterEvent *e) Q_DECL_OVERRIDE;
+#endif
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;

@@ -55,14 +55,15 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
     m_scrollShotHelp = new DCommandLinkButton(tr("Get help."), this);
     m_scrollShotHelp->hide();
     QFontMetrics helpFontMetrics(m_scrollShotHelp->font());
-    m_scrollShotHelp->resize(helpFontMetrics.width(m_scrollShotHelp->text()), m_scrollShotHelp->height());
+   // m_scrollShotHelp->resize(helpFontMetrics.width(m_scrollShotHelp->text()), m_scrollShotHelp->height());
+    m_scrollShotHelp->resize(helpFontMetrics.horizontalAdvance(m_scrollShotHelp->text()), m_scrollShotHelp->height());
     connect(m_scrollShotHelp, &DCommandLinkButton::clicked, this, &ScrollShotTip::openScrollShotHelp);
 
     //调整捕捉区域文字按钮
     m_scrollShotAdjust = new DCommandLinkButton(tr("adjust the capture area"), this) ;
     m_scrollShotAdjust->hide();
     QFontMetrics adjustFontMetrics(m_scrollShotAdjust->font());
-    m_scrollShotAdjust->resize(helpFontMetrics.width(m_scrollShotAdjust->text()), m_scrollShotAdjust->height());
+    m_scrollShotAdjust->resize(helpFontMetrics.horizontalAdvance(m_scrollShotAdjust->text()), m_scrollShotAdjust->height());
     connect(m_scrollShotAdjust, &DCommandLinkButton::clicked, this, &ScrollShotTip::adjustCaptureArea);
 
     QHBoxLayout *pHBoxLayout = new QHBoxLayout();
@@ -225,7 +226,7 @@ void ScrollShotTip::showStartScrollShotTip()
     int width = 0;
     m_tipTextLable->setText(m_tipText);
     QFontMetrics fontMetrics(m_tipTextLable->font());
-    m_tipTextLable->resize(fontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
+    m_tipTextLable->resize(fontMetrics.horizontalAdvance(m_tipTextLable->text()), m_tipTextLable->height());
     m_warmingIconButton->hide();
     m_scrollShotHelp->hide();
     m_scrollShotAdjust->hide();
@@ -243,10 +244,10 @@ void ScrollShotTip::showErrorScrollShotTip()
     int width = 0;
     m_tipTextLable->setText(m_tipText);
     QFontMetrics labFontMetrics(m_tipTextLable->font());
-    m_tipTextLable->resize(labFontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
+    m_tipTextLable->resize(labFontMetrics.horizontalAdvance(m_tipTextLable->text()), m_tipTextLable->height());
     m_warmingIconButton->show();
     QFontMetrics helpFontMetrics(m_scrollShotHelp->font());
-    m_scrollShotHelp->resize(helpFontMetrics.width(m_scrollShotHelp->text()), m_scrollShotHelp->height());
+    m_scrollShotHelp->resize(helpFontMetrics.horizontalAdvance(m_scrollShotHelp->text()), m_scrollShotHelp->height());
     m_scrollShotHelp->show();
     m_scrollShotAdjust->hide();
     width = m_warmingIconButton->width() + 10 + m_tipTextLable->width() + 30 + m_scrollShotHelp->width();
@@ -266,7 +267,7 @@ void ScrollShotTip::showEndScrollShotTip()
     int width = 0;
     m_tipTextLable->setText(m_tipText);
     QFontMetrics fontMetrics(m_tipTextLable->font());
-    m_tipTextLable->resize(fontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
+    m_tipTextLable->resize(fontMetrics.horizontalAdvance(m_tipTextLable->text()), m_tipTextLable->height());
     m_scrollShotHelp->hide();
     m_scrollShotAdjust->hide();
     m_warmingIconButton->show();
@@ -284,7 +285,7 @@ void ScrollShotTip::showMaxScrollShotTip()
     int width = 0;
     m_tipTextLable->setText(m_tipText);
     QFontMetrics fontMetrics(m_tipTextLable->font());
-    m_tipTextLable->resize(fontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
+    m_tipTextLable->resize(fontMetrics.horizontalAdvance(m_tipTextLable->text()), m_tipTextLable->height());
     m_scrollShotHelp->hide();
     m_scrollShotAdjust->hide();
     m_warmingIconButton->show();
@@ -302,7 +303,7 @@ void ScrollShotTip::showQuickScrollShotTip()
     int width = 0;
     m_tipTextLable->setText(m_tipText);
     QFontMetrics fontMetrics(m_tipTextLable->font());
-    m_tipTextLable->resize(fontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
+    m_tipTextLable->resize(fontMetrics.horizontalAdvance(m_tipTextLable->text()), m_tipTextLable->height());
     m_scrollShotHelp->hide();
     m_scrollShotAdjust->hide();
     m_warmingIconButton->show();
@@ -318,10 +319,10 @@ void ScrollShotTip::showInvalidAreaShotTip()
     int width = 0;
     m_tipTextLable->setText(m_tipText);
     QFontMetrics labFontMetrics(m_tipTextLable->font());
-    m_tipTextLable->resize(labFontMetrics.width(m_tipTextLable->text()), m_tipTextLable->height());
+    m_tipTextLable->resize(labFontMetrics.horizontalAdvance(m_tipTextLable->text()), m_tipTextLable->height());
     m_warmingIconButton->show();
     QFontMetrics adjustFontMetrics(m_scrollShotAdjust->font());
-    m_scrollShotAdjust->resize(adjustFontMetrics.width(m_scrollShotAdjust->text()), m_scrollShotAdjust->height());
+    m_scrollShotAdjust->resize(adjustFontMetrics.horizontalAdvance(m_scrollShotAdjust->text()), m_scrollShotAdjust->height());
     m_scrollShotAdjust->show();
     m_scrollShotHelp->hide();
     width = m_warmingIconButton->width() + 10 + m_tipTextLable->width() + 30 + m_scrollShotAdjust->width();

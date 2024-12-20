@@ -63,18 +63,29 @@ TimeWidget::TimeWidget(DWidget *parent):
 
     m_textLabel->setFont(RECORDER_TIME_FONT);
     m_textLabel->setText("00:00:00");
-    QPalette textPalette = m_textLabel->palette();
-    if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
-        textPalette.setColor(QPalette::WindowText, Qt::black);
-    }else{
-        textPalette.setColor(QPalette::WindowText, Qt::white);
-    }
-    m_textLabel->setPalette(textPalette);
+
+    auto updatePalette = [this](){
+        QPalette textPalette = m_textLabel->palette();
+        if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
+            textPalette.setColor(QPalette::WindowText, Qt::black);
+        }else{
+            textPalette.setColor(QPalette::WindowText, Qt::white);
+        }
+        m_textLabel->setPalette(textPalette);
+    };
+    updatePalette();
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, updatePalette);
+
     m_textLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     m_timer = new QTimer(this);
-    m_dockInter = new DBusDock("com.deepin.dde.daemon.Dock", "/com/deepin/dde/daemon/Dock", QDBusConnection::sessionBus(), this);
-    connect(m_dockInter, &DBusDock::PositionChanged, this, &TimeWidget::onPositionChanged);
+    m_dockInter = new timewidget_interface("com.deepin.dde.daemon.Dock",
+                                         "/com/deepin/dde/daemon/Dock",
+                                         QDBusConnection::sessionBus(),
+                                         this);
+    connect(m_dockInter, SIGNAL(propertyChanged(QString,QVariant)),
+            this, SLOT(onPropertyChanged(QString,QVariant)));
+
     m_position = m_dockInter->position();
     m_lightIcon = new QIcon(":/res/1070/light.svg");
     m_shadeIcon = new QIcon(":/res/1070/shade.svg");
@@ -370,4 +381,11 @@ void TimeWidget::showEvent(QShowEvent *e)
     // 强制重新刷新 sizePolicy 和 size
     onPositionChanged(m_position);
     DWidget::showEvent(e);
+}
+
+void TimeWidget::onPropertyChanged(const QString &property, const QVariant &value)
+{
+    if (property == "Position") {
+        onPositionChanged(value.toInt());
+    }
 }

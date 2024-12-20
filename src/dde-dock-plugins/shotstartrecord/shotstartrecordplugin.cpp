@@ -5,7 +5,6 @@
 #include "shotstartrecordplugin.h"
 
 #include <DApplication>
-#include <QDesktopWidget>
 #include <QDBusInterface>
 
 #define RecordShartPlugin "shot-start-record-plugin"
@@ -89,8 +88,10 @@ void ShotStartRecordPlugin::init(PluginProxyInterface *proxyInter)
 
     m_proxyInter = proxyInter;
 
+
     if (m_iconWidget.isNull())
         m_iconWidget.reset(new RecordIconWidget);
+
     if (m_quickPanelWidget.isNull()) {
         m_quickPanelWidget.reset(new QuickPanelWidget);
         m_quickPanelWidget->changeType(QuickPanelWidget::RECORD);
@@ -348,7 +349,7 @@ bool ShotStartRecordPlugin::getTrayIconVisible()
 }
 
 ShotStartRecordPlugin::~ShotStartRecordPlugin()
-{
+{   
     if (nullptr != m_iconWidget)
         m_iconWidget->deleteLater();
 

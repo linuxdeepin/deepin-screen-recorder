@@ -11,7 +11,6 @@
 #include <DWidget>
 #include <QPainter>
 #include <QPaintEvent>
-#include <QOpenGLWidget>
 
 DWIDGET_USE_NAMESPACE
 

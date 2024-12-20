@@ -20,7 +20,7 @@
 #include <QDBusInterface>
 
 #include <QScreen>
-#include <QDesktopWidget>
+#include <QGuiApplication>
 
 DWIDGET_USE_NAMESPACE
 
@@ -51,7 +51,12 @@ int main(int argc, char *argv[])
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
     }
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::UnknownType);
+#else
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
+#endif
+
 #if(DTK_VERSION < DTK_VERSION_CHECK(5,4,0,0))
     DApplication::loadDXcbPlugin();
     QScopedPointer<DApplication> app(new DApplication(argc, argv));
@@ -62,8 +67,9 @@ int main(int argc, char *argv[])
     app->setApplicationName("deepin-screen-recorder");
     app->setProductName(QObject::tr("Pin Screenshots"));
     app->setApplicationVersion("1.0");
+#if (QT_MAJOR_VERSION == 5)
     app->setAttribute(Qt::AA_UseHighDpiPixmaps);
-
+#endif
     QString logFilePath = Dtk::Core::DLogManager::getlogFilePath();
     QStringList list = logFilePath.split("/");
     if (!list.isEmpty()) {
