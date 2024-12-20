@@ -13,7 +13,11 @@ const int PixMergeThread::TEMPLATE_HEIGHT = 50;
 
 PixMergeThread::PixMergeThread(QObject *parent) : QThread(parent)
 {
+#if (QT_MAJOR_VERSION == 5)
     m_lastTime = int(QDateTime::currentDateTime().toTime_t());
+#elif (QT_MAJOR_VERSION == 6)
+    m_lastTime = int(QDateTime::currentDateTime().toSecsSinceEpoch());m_lastTime = int(QDateTime::currentDateTime().toSecsSinceEpoch());
+#endif
 }
 
 PixMergeThread::~PixMergeThread()

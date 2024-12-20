@@ -2,27 +2,26 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#ifndef TIMEWIDGET_H
-#define TIMEWIDGET_H
+#ifndef ICONWIDGET_H
+#define ICONWIDGET_H
 
 #include <QWidget>
 #include <QSettings>
-#include <QTime>
 #include <QIcon>
 #include <DWidget>
-#include <com_deepin_dde_daemon_dock.h>
 #include <DFontSizeManager>
 #include <QBoxLayout>
 #include <QLabel>
 
-DWIDGET_USE_NAMESPACE
-using DBusDock = com::deepin::dde::daemon::Dock;
+#include "iconwidget_interface.h"
 
-class IconWidget : public QWidget
+DWIDGET_USE_NAMESPACE
+
+class IconWidget : public DWidget
 {
     Q_OBJECT
 public:
-    explicit IconWidget(QWidget *parent = nullptr);
+    explicit IconWidget(DWidget *parent = nullptr);
     ~IconWidget() override;
     bool enabled();
 
@@ -38,20 +37,28 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void leaveEvent(QEvent *event) override;
 
+private slots:
+    void onPropertyChanged(const QString &property, const QVariant &value);
+    void onPositionChanged(int value);
+
 private:
     const QPixmap loadSvg(const QString &fileName, const QSize &size) const;
-
+    void updateIcon();
 
 private:
+    iconwidget_interface *m_dockInter;  // DBus 接口
     bool m_hover = false;       // 鼠标是否悬浮
     bool m_pressed = false;     // 鼠标是否按下
     QIcon m_icon;
     QPixmap *m_blgPixmap;
     QBoxLayout *centralLayout;
-    /**
-     * @brief m_systemVersion 获取系统镜像版本
-     */
+
+    QLabel *m_iconLabel;        // 新增图标标签
+    int m_position;             // 新增位置属性
+/**
+* @brief m_systemVersion 获取系统镜像版本
+*/
     int m_systemVersion;
 };
 
-#endif // TIMEWIDGET_H
+#endif // ICONWIDGET_H

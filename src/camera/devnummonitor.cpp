@@ -6,7 +6,13 @@
 #include "devnummonitor.h"
 
 #include <QDebug>
+
+#if (QT_MAJOR_VERSION == 5)
 #include <QCameraInfo>
+#elif (QT_MAJOR_VERSION == 6)
+#include <QMediaDevices>
+#endif
+
 #include <QString>
 extern "C"
 {

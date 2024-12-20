@@ -29,7 +29,7 @@ public slots:
     void setUndoEnable(bool status);
 
 protected:
-    void enterEvent(QEvent *e);
+    void enterEvent(QEnterEvent *e);
 private:
     DMenu *m_menu;
     QAction *m_unDoAct;

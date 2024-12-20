@@ -30,7 +30,7 @@ void MainToolWidget::initMainToolWidget()
     connect(m_saveButton, SIGNAL(clicked()), this, SIGNAL(signalSaveButtonClicked()));
 
     QHBoxLayout *hLayout = new QHBoxLayout(this);
-    hLayout->setMargin(0);
+    hLayout->setContentsMargins(0, 0, 0, 0);
     hLayout->addWidget(m_closeButton, 0, Qt::AlignCenter);
     hLayout->addWidget(m_saveButton, 0, Qt::AlignCenter);
     this->setLayout(hLayout);

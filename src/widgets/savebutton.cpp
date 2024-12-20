@@ -24,7 +24,7 @@ SaveButton::SaveButton(DWidget *parent)
     m_listBtn->setFixedSize(LIST_BTN);
 
     QHBoxLayout *saveLayout = new QHBoxLayout();
-    saveLayout->setMargin(0);
+    saveLayout->setContentsMargins(0, 0, 0, 0);
     saveLayout->setSpacing(0);
     saveLayout->addWidget(m_saveBtn);
     saveLayout->addWidget(m_listBtn);

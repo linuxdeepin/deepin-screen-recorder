@@ -9,9 +9,15 @@
 
 #include <QObject>
 #include <QCamera>
+#if (QT_MAJOR_VERSION == 5)
 #include <QCameraViewfinder>
 #include <QCameraImageCapture>
 #include <QCameraInfo>
+#elif (QT_MAJOR_VERSION == 6)
+#include <QMediaDevices>
+#include <QImageCapture>
+#include <QVideoWidget>
+#endif
 #include <QList>
 #include <QDebug>
 #include <QImage>

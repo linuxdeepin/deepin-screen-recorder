@@ -5,7 +5,7 @@
 
 #include <DWidget>
 #include <QPainter>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QApplication>
 #include <QStyle>
 #include <QEvent>

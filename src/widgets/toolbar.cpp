@@ -73,7 +73,7 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
     }
 
     QHBoxLayout *hLayout = new QHBoxLayout();
-    hLayout->setMargin(0);
+    hLayout->setContentsMargins(0, 0, 0, 0);
     hLayout->setSpacing(0);
     hLayout->addWidget(m_subTool, 0, Qt::AlignCenter);
     hLayout->addSpacing(10);
@@ -83,9 +83,13 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
     setLayout(hLayout);
 
     connect(m_confirmButton, &ToolButton::clicked, pMainwindow, &MainWindow::confirm);
-    connect(m_closeButton, &ToolButton::clicked, pMainwindow, &MainWindow::exitApp);
+    connect(m_closeButton, &ToolButton::clicked, pMainwindow, &MainWindow::exitApp);    
     connect(m_subTool, &SubToolWidget::keyBoardButtonClicked, pMainwindow, &MainWindow::changeKeyBoardShowEvent);
     connect(m_subTool, &SubToolWidget::mouseBoardButtonClicked, pMainwindow, &MainWindow::changeMouseShowEvent);
+
+    // TODO:treeland适配
+    connect(m_subTool, &SubToolWidget::shotOptionMenuShown, pMainwindow, &MainWindow::handleOptionMenuShown);
+
     QMetaObject::Connection connectHandle =  connect(m_subTool, SIGNAL(cameraActionChecked(bool)), pMainwindow, SLOT(changeCameraSelectEvent(bool)));
     if (!connectHandle) {
         qDebug() <<__FUNCTION__ << __LINE__ <<  "Connect failed!";
@@ -127,7 +131,7 @@ void ToolBarWidget::setRecordLaunchFromMain(const unsigned int funType)
 
 void ToolBarWidget::setRecordButtonDisable()
 {
-    m_subTool->setRecordButtonDisable();
+   // m_subTool->setRecordButtonDisable();
 }
 
 void ToolBarWidget::setVideoInitFromMain()
@@ -174,6 +178,8 @@ ToolBarWidget::~ToolBarWidget() {}
 ToolBar::ToolBar(DWidget *parent)
     : DLabel(parent)
 {
+    //setAttribute(Qt::WA_TranslucentBackground);
+    //setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
     m_toolbarWidget = nullptr;
 }
 
@@ -182,20 +188,24 @@ void ToolBar::paintEvent(QPaintEvent *e)
     DLabel::paintEvent(e);
 }
 
+#if (QT_MAJOR_VERSION == 5)
 void ToolBar::enterEvent(QEvent *e)
 {
-//    qApp->setOverrideCursor(Qt::ArrowCursor);
+    //    qApp->setOverrideCursor(Qt::ArrowCursor);
     QApplication::setOverrideCursor(Qt::OpenHandCursor);
     DLabel::enterEvent(e);
 }
+#elif (QT_MAJOR_VERSION == 6)
+void ToolBar::enterEvent(QEnterEvent *e)
+{
+    //    qApp->setOverrideCursor(Qt::ArrowCursor);
+    QApplication::setOverrideCursor(Qt::OpenHandCursor);
+    DLabel::enterEvent(e);
+}
+#endif
 
 bool ToolBar::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == QEvent::ApplicationPaletteChange || event->type() == QEvent::PaletteChange) {
-        qDebug() << obj;
-        qDebug() << "--------------";
-    }
-
     return DLabel::eventFilter(obj, event);
 }
 
@@ -280,6 +290,8 @@ void ToolBar::showAt(QPoint pos)
 
     move(pos.x(), pos.y());
 }
+
+
 void ToolBar::currentFunctionMode(QString shapeType)
 {
     DPalette pa;
@@ -291,8 +303,8 @@ void ToolBar::initToolBar(MainWindow *pmainWindow)
 {
     m_pMainWindow = pmainWindow;
     setFixedHeight(TOOLBAR_HEIGHT);
-    m_toolbarWidget = new ToolBarWidget(pmainWindow, this);
 
+    m_toolbarWidget = new ToolBarWidget(pmainWindow, this);
     QHBoxLayout *vLayout = new QHBoxLayout();
     vLayout->setSizeConstraint(QLayout::SetFixedSize);
     vLayout->setContentsMargins(0, 0, 0, 0);
@@ -303,6 +315,16 @@ void ToolBar::initToolBar(MainWindow *pmainWindow)
     update();
 
     connect(m_toolbarWidget, &ToolBarWidget::changeFunctionSignal, this, &ToolBar::currentFunctionMode);
+}
+
+void ToolBar::showWidget(){
+    if(m_toolbarWidget)
+        m_toolbarWidget->show();
+}
+
+void ToolBar::hideWidget(){
+    if(m_toolbarWidget)
+        m_toolbarWidget->hide();
 }
 
 void ToolBar::setRecordButtonDisable()

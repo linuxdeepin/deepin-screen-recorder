@@ -13,7 +13,6 @@
 #include <DGuiApplicationHelper>
 #include <DLabel>
 #include <DStackedWidget>
-#include <DImageButton>
 #include <DIconButton>
 #include <DPushButton>
 #include <DMenu>

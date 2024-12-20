@@ -108,7 +108,7 @@ void MajToolBar::initWidgets()
     });
 
     m_baseLayout = new QHBoxLayout();
-    m_baseLayout->setMargin(0);
+    m_baseLayout->setContentsMargins(0, 0, 0, 0);
     m_baseLayout->setSpacing(0);
     m_baseLayout->addSpacing(1);
     m_baseLayout->addWidget(saveTips);

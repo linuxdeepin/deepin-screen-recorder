@@ -3,14 +3,21 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "voicevolumewatcher.h"
-
+#include <com_deepin_daemon_audio.h>
+#include <com_deepin_daemon_audio_source.h>
 #include "utils.h"
 
 static const QString kV20AudioService = "com.deepin.daemon.Audio";
 static const QString kV20AudioPath = "/com/deepin/daemon/Audio";
 
 voiceVolumeWatcher::voiceVolumeWatcher(QObject *parent)
-    : QObject(parent)
+    : voiceVolumeWatcher(kV20AudioService, kV20AudioPath, QDBusConnection::sessionBus(), parent)
+{
+}
+
+voiceVolumeWatcher::voiceVolumeWatcher(const QString &service, const QString &path, 
+                                     const QDBusConnection &connection, QObject *parent)
+    : voicevolumewatcher_interface(service, path, connection, parent)
     , m_coulduse(false)
     , m_isExistSystemAudio(false)
 {
@@ -68,7 +75,8 @@ void voiceVolumeWatcher::slotVoiceVolumeWatcher()
     double currentMicrophoneVolume = 0.0;
     if (m_version2) {
         if (nullptr != m_audioUtils) {
-            if (isMicrophoneAvail(m_audioUtils->defaultSourceActivePort().name)) {
+            AudioPort activePort = m_audioUtils->defaultSourceActivePort();
+            if (isMicrophoneAvail(activePort.name)) {
                 currentMicrophoneVolume = m_audioUtils->defaultSourceVolume();
             }
         }

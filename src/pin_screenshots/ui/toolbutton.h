@@ -32,6 +32,7 @@ public:
     }
     ~ToolButton() {}
 protected:
+#if (QT_MAJOR_VERSION == 5)
     void enterEvent(QEvent *e) override
     {
         if (this->isEnabled() && m_hasHoverState) {
@@ -39,6 +40,15 @@ protected:
         }
         DPushButton::enterEvent(e);
     }
+#elif (QT_MAJOR_VERSION == 6)
+    void enterEvent(QEnterEvent *e) override
+    {
+        if (this->isEnabled() && m_hasHoverState) {
+            setFlat(false);
+        }
+        DPushButton::enterEvent(e);
+    }
+#endif
 
     void leaveEvent(QEvent *e) override
     {

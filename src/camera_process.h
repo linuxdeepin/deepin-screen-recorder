@@ -8,14 +8,24 @@
 
 #include <QObject>
 #include <DWidget>
-#include <QCamera>
+
+
+//Qt6
+#if (QT_MAJOR_VERSION == 5)
 #include <QCameraViewfinder>
 #include <QCameraImageCapture>
 #include <QCameraInfo>
+#elif (QT_MAJOR_VERSION == 6)
+#include <QMediaCaptureSession>
+#include <QImageCapture>
+#include <QVideoWidget>
+#endif
+
+#include <QCamera>
 #include <QList>
 #include <QDebug>
 #include <QImage>
-
+#include <QVideoWidget>
 
 class CameraProcess : public QObject
 {
@@ -32,9 +42,16 @@ public slots:
     //void displayImage(int, QImage image);
 
 private:
-    QCamera *camera;//摄像头
-    QCameraViewfinder *viewfinder; //摄像头取景器部件
-    QCameraImageCapture *imageCapture; //截图部件
+#if (QT_MAJOR_VERSION == 5)
+    QCamera *camera; // 摄像头
+    QCameraViewfinder *viewfinder; // 摄像头取景器部件
+    QCameraImageCapture *imageCapture; // 截图部件
+#elif (QT_MAJOR_VERSION == 6)
+    QCamera *camera;
+    QVideoWidget *viewfinder; // 摄像头取景器部件
+    QImageCapture *imageCapture; // 截图部件
+    QMediaCaptureSession *captureSession;
+#endif
 };
 
 #endif // CAMERA_PROCESS_H

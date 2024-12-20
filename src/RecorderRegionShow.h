@@ -10,7 +10,7 @@
 #include "widgets/keybuttonwidget.h"
 
 #include <QPainter>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QPaintEvent>
 
 /**

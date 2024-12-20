@@ -11,7 +11,8 @@
 #include <QObject>
 #include <QProcess>
 
-#include <types/audioport.h>
+//暂时使用这个头文件，后续修改
+#include </usr/include/libdframeworkdbus-2.0/types/audioport.h>
 
 /**
  * @brief AudioService 音频服务名 org.deepin.dde.Audio1

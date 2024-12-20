@@ -11,6 +11,7 @@
 #include <QDBusInterface>
 #include <QDBusError>
 #include <QDBusMessage>
+#include <QRegularExpression>
 
 #include <com_deepin_daemon_audio.h>
 #include <com_deepin_daemon_audio_sink.h>
@@ -238,7 +239,7 @@ QString AudioUtils::currentAudioChannelV20Impl()
         }
 
         if (!targetLine.isEmpty()) {
-            targetLine.remove(QRegExp(".* "));
+            targetLine.remove(QRegularExpression(".* "));
         }
 
         qDebug() << command << targetLine;
@@ -342,7 +343,7 @@ QDBusInterface *AudioUtils::defaultSourceDBusInterface()
     }
 }
 
-// 音频dbus服务默认输出源的接口
+// ��频dbus服务默认输出源的接口
 QDBusInterface *AudioUtils::defaultSinkDBusInterface()
 {
     if (m_defaultSinkDBusInterface && m_defaultSinkDBusInterface->isValid()) {

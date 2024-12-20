@@ -83,7 +83,7 @@ void ShotToolWidget::initEffectLabel()
     t_blurArea->setMaskColor(QColor(255, 255, 255, 0));
 
     QHBoxLayout *t_blurAreaLayout = new QHBoxLayout(this);
-    t_blurAreaLayout->setMargin(0);
+    t_blurAreaLayout->setContentsMargins(0, 0, 0, 0);
 
     //分割线
     DVerticalLine *t_seperator = new DVerticalLine(this);
@@ -255,7 +255,7 @@ void ShotToolWidget::initEffectLabel()
     });
 
     QHBoxLayout *rectLayout = new QHBoxLayout(this);
-    rectLayout->setMargin(0);
+    rectLayout->setContentsMargins(3, 3, 3, 3);
 
     rectLayout->addWidget(t_blurArea);
     m_effectSubTool->setLayout(rectLayout);
@@ -309,7 +309,7 @@ void ShotToolWidget::initTextLabel()
     });
 
     QHBoxLayout *rectLayout = new QHBoxLayout(this);
-    rectLayout->setMargin(3);
+    rectLayout->setContentsMargins(0, 0, 0, 0);
 
     rectLayout->addWidget(t_blurArea);
 
