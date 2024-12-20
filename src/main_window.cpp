@@ -6280,8 +6280,25 @@ void MainWindow::handleCaptureFinish()
         return;
     }
 
-    // 保存截图
+    // TODO:保存截图,临时处理，后面会修改截图保存逻辑与x11同步
     auto saveBasePath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+
+    m_saveIndex = ConfigSettings::instance()->getValue("shot", "save_op").value<SaveAction>();
+    switch (m_saveIndex) {
+        case SaveToDesktop: {
+            qInfo() << __FUNCTION__ << __LINE__ << "保存到桌面！";
+            saveBasePath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+            break;
+        }
+        case SaveToImage: {
+            saveBasePath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+            qInfo() << __FUNCTION__ << __LINE__ << "保存到图片！" ;
+            break;
+        }
+    default:
+        break;
+    }
+
     QDir saveBaseDir(saveBasePath);
     if (!saveBaseDir.exists()) {
         qApp->exit(-1);
@@ -6293,8 +6310,6 @@ void MainWindow::handleCaptureFinish()
                       ".png";
 
     if (result.save(saveBaseDir.absoluteFilePath(picName), "PNG")) {
-        qDebug() << "Saved to:" << saveBaseDir.absoluteFilePath(picName);
-
         if (m_shapesWidget)
             m_shapesWidget->hide();
         if (m_sideBar)
