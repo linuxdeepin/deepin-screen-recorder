@@ -1,3 +1,12 @@
+deepin-screen-recorder (6.5.3) unstable; urgency=medium
+
+  * fix: Optimize GIF conversion filter parameters(Bug: 291463)(Influence: save-gif)
+  * fix: tray icon incorrect(Bug: 295421)
+  * fix: update record time color while theme change
+  * fix: Unable to select desktop save
+
+ -- renbin <renbin@uniontech.com>  Fri, 20 Dec 2024 14:53:11 +0800
+
 deepin-screen-recorder (6.5.2) unstable; urgency=medium
 
   * fix: translation error (#582)
