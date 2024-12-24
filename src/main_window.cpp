@@ -3230,12 +3230,13 @@ void MainWindow::changeShotToolEvent(const QString &func)
         if (m_isDirectStartOcr) {
             delayTime = 100;
         }
-      //  QTimer::singleShot(delayTime, this, [=] { saveScreenShot(); });
 
         // TODO: 在treeland里暂时是走handleCapture去执行保存图片，后续会和原逻辑统一
-        if (Utils::isTreelandMode)
+        if (Utils::isTreelandMode) {
             QTimer::singleShot(delayTime, this, [=] { onFinishClicked(); });
-
+        } else {
+            QTimer::singleShot(delayTime, this, [=] { saveScreenShot(); });
+        }
     } else if (func == "pinScreenshots") {
         m_functionType = status::pinscreenshots;
         m_pinInterface = new PinScreenShotsInterface(
@@ -6633,6 +6634,16 @@ void MainWindow::handleCaptureFinish()
             m_shapesWidget->hide();
         if (m_sideBar)
             m_sideBar->hide();
+
+        // check if trigger ocr.
+        if (m_ocrInterface) {
+            if (m_saveIndex == SaveToClipboard) {
+                // TODO: use temporary path
+                m_ocrInterface->openImageAndName(result, saveBasePath);
+            } else {
+                m_ocrInterface->openImageAndName(result, saveBasePath);
+            }
+        }
 
     } else {
         qApp->exit(-1);
