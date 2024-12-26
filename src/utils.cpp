@@ -42,7 +42,7 @@
 #include "utils_interface.h"
 
 // TODO: qtx11extras-opensource-src没进行qt6适配，后续会补充上
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
 #include <QtX11Extras/QX11Info>
 #endif
 
@@ -208,14 +208,13 @@ void Utils::setAccessibility(DPushButton *button, const QString name)
     button->setAccessibleName(name);
 }
 
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
 void Utils::setAccessibility(DImageButton *button, const QString name)
 {
     button->setObjectName(name);
     button->setAccessibleName(name);
 }
-
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
 void Utils::setAccessibility(DIconButton *button, const QString name)
 {
     button->setObjectName(name);

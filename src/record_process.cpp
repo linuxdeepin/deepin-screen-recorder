@@ -128,12 +128,12 @@ void RecordProcess::onStartTranscode()
     qInfo() << __LINE__ << __func__ << "正在转码视频(mp4 to gif)...";
     QProcess *transcodeProcess = new QProcess(this);
     
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
     connect(transcodeProcess, QOverload<QProcess::ProcessError>::of(&QProcess::error),
             [ = ](QProcess::ProcessError processError) {
                 qDebug() << "processError: " << processError;
             });
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
     // Qt6 syntax for error signal
     connect(transcodeProcess, &QProcess::errorOccurred,
             [ = ](QProcess::ProcessError processError) {
@@ -141,7 +141,7 @@ void RecordProcess::onStartTranscode()
             });
 #endif
 
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
     // Qt6 syntax for finished signal
     connect(transcodeProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             [ = ](int exitCode, QProcess::ExitStatus exitStatus) {
@@ -153,7 +153,7 @@ void RecordProcess::onStartTranscode()
                     qDebug() << "m_pTranscodeProcess is CrashExit:!";
                 }
             });
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
     // Qt6 syntax for finished signal
     connect(transcodeProcess, &QProcess::finished,
             [ = ](int exitCode, QProcess::ExitStatus exitStatus) {

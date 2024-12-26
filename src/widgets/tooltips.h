@@ -42,9 +42,9 @@ public slots:
 
 protected:
     virtual void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
     void enterEvent(QEvent *e) override;
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
     void enterEvent(QEnterEvent *e) override;
 #endif
     virtual void resizeEvent(QResizeEvent *ev) Q_DECL_OVERRIDE;

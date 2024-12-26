@@ -11,11 +11,11 @@
 
 
 //Qt6
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
 #include <QCameraViewfinder>
 #include <QCameraImageCapture>
 #include <QCameraInfo>
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
 #include <QMediaCaptureSession>
 #include <QImageCapture>
 #include <QVideoWidget>
@@ -42,11 +42,11 @@ public slots:
     //void displayImage(int, QImage image);
 
 private:
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
     QCamera *camera; // 摄像头
     QCameraViewfinder *viewfinder; // 摄像头取景器部件
     QCameraImageCapture *imageCapture; // 截图部件
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
     QCamera *camera;
     QVideoWidget *viewfinder; // 摄像头取景器部件
     QImageCapture *imageCapture; // 截图部件

@@ -108,9 +108,9 @@ public slots:
 
 protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
     void enterEvent(QEvent *e) Q_DECL_OVERRIDE;
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
     void enterEvent(QEnterEvent *e) Q_DECL_OVERRIDE;
 #endif
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;

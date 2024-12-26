@@ -215,14 +215,14 @@ void SideBar::paintEvent(QPaintEvent *e)
     DLabel::paintEvent(e);
 }
 
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
 void SideBar::enterEvent(QEvent *e)
 {
     //    qApp->setOverrideCursor(Qt::ArrowCursor);
     QApplication::setOverrideCursor(Qt::OpenHandCursor);
     DLabel::enterEvent(e);
 }
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
 void SideBar::enterEvent(QEnterEvent *e)
 {
     //    qApp->setOverrideCursor(Qt::ArrowCursor);

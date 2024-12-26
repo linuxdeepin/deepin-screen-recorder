@@ -76,10 +76,10 @@ int main(int argc, char *argv[])
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
     }
 
-    // qt6中缺少这个接口
-#if (QT_MAJOR_VERSION == 5)
-    DGuiApplicationHelper::setUseInactiveColorGroup(false);t->u.keyButtonPointer.rootY);
+#if (QT_VERSION_MAJOR == 5)
+    DGuiApplicationHelper::setUseInactiveColorGroup(false);
 #endif
+
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QDBusInterface scaleFactor("com.deepin.daemon.Display", "/com/deepin/XSettings", "com.deepin.XSettings");
@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
         app->setApplicationName("deepin-screen-recorder");
         app->setApplicationVersion("1.0");
 
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
     app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 #endif
         //        static const QDate buildDate = QLocale(QLocale::English).

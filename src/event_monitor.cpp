@@ -109,12 +109,12 @@ void EventMonitor::handleEvent(XRecordInterceptData *data)
                 //鼠标按压
                 emit mousePress(event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
             } else if (event->u.u.detail == WheelUp || event->u.u.detail == WheelDown) {
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
                 //qt6中的写法只有较新版本的qt5才适用，5.11.3不支持
                 int time = int (QDateTime::currentDateTime().toTime_t());
                 //鼠标滚动
                 emit mouseScroll(static_cast<int>(event->u.enterLeave.time), event->u.u.detail, event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
                 int time = int(QDateTime::currentDateTime().toSecsSinceEpoch());
                 //鼠标滚动
                 emit mouseScroll(time, event->u.u.detail, event->u.keyButtonPointer.rootX, event->u.keyButtonPointer.rootY);

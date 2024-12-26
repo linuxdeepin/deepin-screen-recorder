@@ -19,7 +19,7 @@
 #include <QScreen>
 
 // TODO: Qt6中找不到DImageButton这个头文件，后续会找dtk对齐继续处理
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
 #include <DImageButton>
 #endif
 
@@ -68,9 +68,9 @@ public:
     static void passInputEvent(int wid);
     static void setFontSize(QPainter &painter, int textSize);
     static void setAccessibility(DPushButton *button, const QString name);
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
     static void setAccessibility(DImageButton *button, const QString name);
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
     static void setAccessibility(DIconButton *button, const QString name);
 #endif
     static void setAccessibility(QAction *action, const QString name);
