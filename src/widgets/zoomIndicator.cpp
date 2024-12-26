@@ -8,9 +8,9 @@
 #include "../utils/tempfile.h"
 #include "../utils.h"
 
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
 #include <QtOpenGL/QOpenGLWidget>
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
 #include <QOpenGLWidget>
 #endif
 

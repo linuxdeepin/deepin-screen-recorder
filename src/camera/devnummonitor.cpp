@@ -7,9 +7,9 @@
 
 #include <QDebug>
 
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
 #include <QCameraInfo>
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
 #include <QMediaDevices>
 #endif
 

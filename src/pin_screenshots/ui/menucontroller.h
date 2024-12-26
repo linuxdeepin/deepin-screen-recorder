@@ -37,9 +37,9 @@ protected:
      * @param e
      */
     // qt6 接口有变动
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
     void enterEvent(QEvent *e);
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
     void enterEvent(QEnterEvent *e);;
 #endif
 private:

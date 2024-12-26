@@ -58,9 +58,9 @@ extern "C" {
 #include <QFileDialog>
 #include <QShortcut>
 
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
 #include <QDesktopWidget>
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
 #include <QScreen>
 #endif
 
@@ -983,9 +983,10 @@ void MainWindow::initShortcut()
     // 截图模式/录屏模式（未做穿透）/滚动模式 退出
     QShortcut *escSC = new QShortcut(QKeySequence("Escape"), this);
     // 截图模式/录屏模式（未做穿透）/滚动模式 帮助快捷面板
-    QShortcut *shortCutSC = new QShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Slash), this);
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
     QShortcut *shortCutSC = new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Slash), this);
+#elif (QT_VERSION_MAJOR == 6)
+    QShortcut *shortCutSC = new QShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Slash), this);
 #endif
     // 截图模式/滚动模式 贴图应用内快捷键
     connect(pinScreenshotsSC, &QShortcut::activated, this, [=] {
@@ -2348,12 +2349,10 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     if (!recordRect.contains(mouseMovePoint))
         return;
     if (m_scrollShot) {
-        int time = 0;
-        float len = 0.0f;
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
         int time = int(QDateTime::currentDateTime().toTime_t());
         float len = (event->delta() > 15.0) ? -15.0 : 15.0;             // 获取滚轮方向
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
         int time = int(QDateTime::currentDateTime().toSecsSinceEpoch());
         float len = (event->angleDelta().y() > 15) ? -15.0 : 15.0; // 获取滚轮方向
 #endif
@@ -5860,10 +5859,9 @@ void MainWindow::shotCurrentImg()
     // 当存在编辑模式且编辑的内容有文本时，需要再截图一次
     if (m_shapesWidget && m_shapesWidget->isExistsText()) {
         int eventTime = 60;
-        QRect rect = QRect();
-#if (QT_MAJOR_VERSION == 5)
+#if (QT_VERSION_MAJOR == 5)
         QRect rect = QApplication::desktop()->screenGeometry();
-#elif (QT_MAJOR_VERSION == 6)
+#elif (QT_VERSION_MAJOR == 6)
         QRect rect = QGuiApplication::primaryScreen()->geometry();
 #endif
         if (rect.width() * rect.height() > 1920 * 1080) {

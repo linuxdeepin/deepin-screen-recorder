@@ -22,7 +22,7 @@ QT6_LRELEASE = /usr/lib/qt6/bin/lrelease
 DEFAULT_LUPDATE = lupdate
 DEFAULT_LRELEASE = lrelease
 
-equals(QT_MAJOR_VERSION, 6) {
+equals(QT_VERSION_MAJOR, 6) {
     CONFIG(update_translations) {
         isEmpty(lupdate):lupdate=$$QT6_LUPDATE
         system($$lupdate -no-obsolete -locations none $$_PRO_FILE_)
