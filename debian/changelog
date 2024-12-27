@@ -1,3 +1,11 @@
+deepin-screen-recorder (6.5.4) unstable; urgency=medium
+
+  * fix: ocr disappears in treeland(Bug: 283631)
+  * fix: Unified modification of predefined macros
+  * fix: Translation file not found
+
+ -- renbin <renbin@uniontech.com>  Fri, 27 Dec 2024 11:33:08 +0800
+
 deepin-screen-recorder (6.5.3) UNRELEASED; urgency=medium
 
   * feat: Merge branch 'develop/qt6.8' into develop/snipe
