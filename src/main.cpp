@@ -82,9 +82,10 @@ int main(int argc, char *argv[])
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    QDBusInterface scaleFactor("com.deepin.daemon.Display", "/com/deepin/XSettings", "com.deepin.XSettings");
+    // Support V23 or later.
+    QDBusInterface scaleFactor("org.deepin.dde.Display1", "/org/deepin/dde/XSettings1", "org.deepin.dde.XSettings1");
     if (scaleFactor.isValid()) {
-        qDebug()<< "com.deepin.XSettings is available";
+        qDebug()<< "org.deepin.dde.XSettings1 is available";
         QDBusReply<double> replay = scaleFactor.call(QStringLiteral("GetScaleFactor"));
         double factor = replay.value();
         if (factor > 0) {
@@ -92,7 +93,7 @@ int main(int argc, char *argv[])
             qputenv("QT_SCALE_FACTOR", QString::number(1 / factor, 'g', 2).toLatin1());
         }
     } else {
-        qDebug()<< "com.deepin.XSettings is not available";
+        qDebug()<< "org.deepin.dde.XSettings1 is not available";
     }
 
     // 平板模式
