@@ -73,9 +73,7 @@ private slots:
      * @param value
      */
     void onPositionChanged(int value);
-
-    void onPropertyChanged(const QString &property, const QVariant &value);
-
+    
 private:
     void updateIcon();
 

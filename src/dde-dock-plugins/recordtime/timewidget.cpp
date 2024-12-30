@@ -79,13 +79,13 @@ TimeWidget::TimeWidget(DWidget *parent):
     m_textLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     m_timer = new QTimer(this);
-    m_dockInter = new timewidget_interface("com.deepin.dde.daemon.Dock",
-                                         "/com/deepin/dde/daemon/Dock",
+    m_dockInter = new timewidget_interface("org.deepin.dde.daemon.Dock1",
+                                         "/org/deepin/dde/daemon/Dock1",
                                          QDBusConnection::sessionBus(),
                                          this);
-    connect(m_dockInter, SIGNAL(propertyChanged(QString,QVariant)),
-            this, SLOT(onPropertyChanged(QString,QVariant)));
-
+    connect(m_dockInter, SIGNAL(PositionChanged(int)),
+            this, SLOT(onPositionChanged(int)));
+    
     m_position = m_dockInter->position();
     m_lightIcon = new QIcon(":/res/1070/light.svg");
     m_shadeIcon = new QIcon(":/res/1070/shade.svg");
@@ -381,11 +381,4 @@ void TimeWidget::showEvent(QShowEvent *e)
     // 强制重新刷新 sizePolicy 和 size
     onPositionChanged(m_position);
     DWidget::showEvent(e);
-}
-
-void TimeWidget::onPropertyChanged(const QString &property, const QVariant &value)
-{
-    if (property == "Position") {
-        onPositionChanged(value.toInt());
-    }
 }
