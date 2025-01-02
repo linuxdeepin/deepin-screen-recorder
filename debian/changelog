@@ -1,3 +1,10 @@
+deepin-screen-recorder (6.5.5) unstable; urgency=medium
+
+  * fix: update DBus interface for dock position changes(Bug: 297785)
+  * fix: adjust toolbar position to avoid content overlap(Bug: 296639)
+
+ -- renbin <renbin@uniontech.com>  Thu, 02 Jan 2025 20:07:09 +0800
+
 deepin-screen-recorder (6.5.4) unstable; urgency=medium
 
   * fix: ocr disappears in treeland(Bug: 283631)
