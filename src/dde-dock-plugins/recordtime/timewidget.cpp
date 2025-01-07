@@ -355,13 +355,6 @@ bool TimeWidget::createCacheFile()
 void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
 {
     qDebug() << "Mouse release start!";
-    if(e->button() == Qt::LeftButton && m_pressed && m_hover){
-        m_pressed = false;
-        m_hover = false;
-        update();
-        QWidget::mouseReleaseEvent(e);
-        return;
-    }
     int width = 0;
     if(m_systemVersion >= 1070){
         width = rect().width();
