@@ -830,7 +830,7 @@ void SubToolWidget::initShotOption()
     t_saveGroup->addAction(saveToPictureAction);
     t_saveGroup->addAction(saveToSpecialPath);
     t_saveGroup->addAction(m_changeSaveToSpecialPath);
-  //  t_saveGroup->addAction(saveToClipAction);
+    t_saveGroup->addAction(saveToClipAction);
 
     formatTitleAction->setDisabled(true);
     pngAction->setCheckable(true);

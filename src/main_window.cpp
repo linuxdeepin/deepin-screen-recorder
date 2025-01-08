@@ -2544,7 +2544,7 @@ void MainWindow::updateToolBarPos()
         checkIsLockScreen();
         qDebug() << "工具栏已初始化";
     }
-       qDebug() << "m_toolBar: " << m_toolBar->isVisible();
+
     // 有个问题需要考虑下，工具栏是否只要被拖动之后都无法回归默认位置？ //已确认不需要回归默认位置
     if (/*!isPressMouseLeftButton && */ m_isDragToolBar) {
         if (!m_toolBar->isVisible()) {
