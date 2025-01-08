@@ -83,17 +83,18 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     // Support V23 or later.
-    QDBusInterface scaleFactor("org.deepin.dde.Display1", "/org/deepin/dde/XSettings1", "org.deepin.dde.XSettings1");
-    if (scaleFactor.isValid()) {
-        qDebug()<< "org.deepin.dde.XSettings1 is available";
-        QDBusReply<double> replay = scaleFactor.call(QStringLiteral("GetScaleFactor"));
-        double factor = replay.value();
-        if (factor > 0) {
+    // FIXME: Reconstruct the toolbar position calculation based on scaleFactor, 
+    // or fix the issue of the dbus-send call
+    QProcess proc;
+    proc.start("dbus-send", {"--print-reply=literal", "--dest=org.deepin.dde.Display1", "/org/deepin/dde/XSettings1",  "org.deepin.dde.XSettings1.GetScaleFactor"});
+    proc.waitForFinished();
+    QByteArray data = proc.readAllStandardOutput().simplified();
+    if (!data.isEmpty()) {
+        double factor = data.split(' ').last().toDouble();
+        if (factor > 1) {
             qDebug() << "scaleFactor available value: " << factor;
             qputenv("QT_SCALE_FACTOR", QString::number(1 / factor, 'g', 2).toLatin1());
         }
-    } else {
-        qDebug()<< "org.deepin.dde.XSettings1 is not available";
     }
 
     // 平板模式
@@ -103,9 +104,6 @@ int main(int argc, char *argv[])
     // wayland 协议
     Utils::isWaylandMode = isWaylandProtocol();
     qInfo() << "Is Wayland:" << Utils::isWaylandMode;
-
-    if ( Utils::isTreelandMode)
-        Utils::isTreelandMode = true;
 
     Utils::isRootUser = (getuid() == 0);
     //qInfo() << "Is Root User:" << Utils::isRootUser;
