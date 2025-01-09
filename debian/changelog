@@ -1,3 +1,10 @@
+deepin-screen-recorder (6.5.6) unstable; urgency=medium
+
+  * fix: Fix save path settings in screenshot toolbar(Bug: 298655)
+  * fix: Use QProcess as workaround for scale factor(Bug: 281713)
+
+ -- renbin <renbin@uniontech.com>  Thu, 09 Jan 2025 14:03:32 +0800
+
 deepin-screen-recorder (6.5.5) unstable; urgency=medium
 
   * fix: update DBus interface for dock position changes(Bug: 297785)
