@@ -270,12 +270,8 @@ void RecordIconWidget::leaveEvent(QEvent *event)
 
 const QPixmap RecordIconWidget::loadSvg(const QString &fileName, const QSize &size) const
 {
-    const auto ratio = devicePixelRatioF();
-
-    auto pixmapSize = QCoreApplication::testAttribute(Qt::AA_UseHighDpiPixmaps) ? size : (size * ratio);
-    // 缩放模式 设置为非使能状态时，调整转出的位图风格模式
-    // pixmapSize = size* ratio;
-    QPixmap pixmap = QIcon::fromTheme(fileName, m_icon).pixmap(pixmapSize, isEnabled() ? QIcon::Normal : QIcon::Disabled);
+    // High-DPI pixmap always support on Qt6
+    QPixmap pixmap = QIcon::fromTheme(fileName, m_icon).pixmap(size, isEnabled() ? QIcon::Normal : QIcon::Disabled);
 
     return pixmap;
 }
