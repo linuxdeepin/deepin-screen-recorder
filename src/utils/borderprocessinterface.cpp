@@ -50,18 +50,18 @@ void ExternalBorderProcess::initBorderInfo(const int borderConfig)
 
     switch (borderConfig) {
         case BorderStyle_1: {
-            m_svgCenterSize = QSizeF(143, 82);
-            m_svgCenterPoint = QPointF(9, 10);
+            m_svgCenterSize = QSizeF(142, 82);
+            m_svgCenterPoint = QPointF(9, 9);
             break;
         }
         case BorderStyle_2: {
-            m_svgCenterSize = QSizeF(144, 84);
-            m_svgCenterPoint = QPointF(8, 8);
+            m_svgCenterSize = QSizeF(140, 80);
+            m_svgCenterPoint = QPointF(10, 12);
             break;
         }
         case BorderStyle_3: {
-            m_svgCenterSize = QSizeF(145, 85);
-            m_svgCenterPoint = QPointF(6, 6);
+            m_svgCenterSize = QSizeF(142, 82);
+            m_svgCenterPoint = QPointF(9, 9);
             break;
         }
         case BorderStyle_4: {
@@ -70,18 +70,18 @@ void ExternalBorderProcess::initBorderInfo(const int borderConfig)
             break;
         }
         case BorderStyle_5: {
-            m_svgCenterSize = QSizeF(157, 97);
-            m_svgCenterPoint = QPointF(1.5, 1.5);
+            m_svgCenterSize = QSizeF(154, 94);
+            m_svgCenterPoint = QPointF(3, 3);
             break;
         }
         case BorderStyle_6: {
-            m_svgCenterSize = QSizeF(156, 96);
-            m_svgCenterPoint = QPointF(2, 2);
+            m_svgCenterSize = QSizeF(152, 92);
+            m_svgCenterPoint = QPointF(4, 4);
             break;
         }
         case BorderStyle_7: {
-            m_svgCenterSize = QSizeF(147, 87);
-            m_svgCenterPoint = QPointF(6.5, 6.5);
+            m_svgCenterSize = QSizeF(146, 86);
+            m_svgCenterPoint = QPointF(7, 7);
             break;
         }
         case BorderStyle_8: {
