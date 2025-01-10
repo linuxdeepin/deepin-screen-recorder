@@ -6,5 +6,6 @@
         <file>res/screenshot-dark.svg</file>
         <file>res/screenshot.svg</file>
         <file>res/screen-recording.svg</file>
+        <file>res/dcc-shot-start-plugin.dci</file>
     </qresource>
 </RCC>

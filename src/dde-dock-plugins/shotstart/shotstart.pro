@@ -39,6 +39,8 @@ isEmpty(PREFIX) {
 target.path = $$PREFIX/lib/dde-dock/plugins/
 file.files += $$PWD/com.deepin.dde.dock.module.shot-start-plugin.gschema.xml
 file.path += $$PREFIX/share/glib-2.0/schemas/
+shoticon.files += $$PWD/res/dcc-shot-start-plugin.dci
+shoticon.path += /usr/share/dde-dock/icons/dcc-setting/
 
-INSTALLS += target file
+INSTALLS += target file shoticon
 RESOURCES += res.qrc
