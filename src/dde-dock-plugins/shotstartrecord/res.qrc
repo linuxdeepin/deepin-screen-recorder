@@ -9,5 +9,6 @@
         <file>res/status-screen-record.svg</file>
         <file>res/status-screen-record-dark.svg</file>
         <file>res/shot-start-record-plugin.svg</file>
+        <file>res/dcc-shot-start-record-plugin.dci</file>
     </qresource>
 </RCC>
