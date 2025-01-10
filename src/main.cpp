@@ -220,7 +220,6 @@ int main(int argc, char *argv[])
         qInfo() << "KF5_WAYLAND_FLAGE_ON is close!!";
 #endif
         qInfo() << "Is Table:" << Utils::isTabletEnvironment;
-        qInfo() << "Is Wayland:" << Utils::isWaylandMode << "Is Treeland:" << Utils::isTreelandMode;
         qInfo() << "Is Root User:" << Utils::isRootUser;
         qInfo() << "Is Exists FFmpeg Lib:" << Utils::isFFmpegEnv;
         if (cmdParser.isSet(useGStreamer)) {
