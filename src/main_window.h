@@ -654,6 +654,12 @@ public slots:
      * @brief 任意屏幕分辨率被改变
      */
     void onScreenResolutionChanged();
+
+     /**
+     * @brief 源选择失败检测
+     */
+    void onSourceFailed(uint32_t reason);
+
 protected:
     /**
      * @brief eventFilter

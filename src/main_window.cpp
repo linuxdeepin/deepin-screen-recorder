@@ -6565,7 +6565,19 @@ void MainWindow::initializeCapture()
 
     connect(manager, &TreelandCaptureManager::finishSelect,
             this, &MainWindow::handleCaptureFinish);
+
+    // 连接 source_failed 信号到槽函数
+    connect(captureContext, &TreelandCaptureContext::sourceFailed,
+           this, &MainWindow::onSourceFailed);
 }
+
+void MainWindow::onSourceFailed(uint32_t reason)
+{
+    // 检查 reason 是否为除 selector_busy 以外的值
+    if (reason != TREELAND_CAPTURE_CONTEXT_V1_SOURCE_FAILURE_SELECTOR_BUSY) {
+        _exit(0);
+    }
+ }
 
 void MainWindow::handleCaptureFinish()
 {
