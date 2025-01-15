@@ -481,10 +481,11 @@ void WaylandIntegration::WaylandIntegrationPrivate::onDeviceChanged(quint32 name
             m_screenId2Point.insert(devT->uuid(), devT->geometry());
             m_screenCount = m_screenId2Point.size();
 
-            // 更新屏幕大小
-            m_screenSize.setWidth(0);
-            m_screenSize.setHeight(0);
             for (auto p = m_screenId2Point.begin(); p != m_screenId2Point.end(); ++p) {
+                if (devT->enabled() == KWayland::Client::OutputDevice::Enablement::Disabled){
+                    qDebug()<< devT->uuid() << "is disable";
+                    continue;
+                }
                 if (p.value().x() + p.value().width() > m_screenSize.width()) {
                     m_screenSize.setWidth(p.value().x() + p.value().width());
                 }
@@ -1059,6 +1060,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                 {
                     qDebug() << "Current number of screens: " << m_screenCount;
                     for (auto p = m_screenId2Point.begin(); p != m_screenId2Point.end(); ++p) {
+                        qDebug() << p.value() << m_screenSize;
                         if(p.value().width() == m_screenSize.width() &&
                                 p.value().height() == m_screenSize.height() ){
                             m_isScreenExtension = false;
@@ -1069,6 +1071,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                 }
 
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
+                qDebug()<< "m_screenCount: "<< m_screenCount << "m_isScreenExtension: " << m_isScreenExtension << screenGeometry << "m_currentScreenBufs[0]->" <<  (m_currentScreenBufs[0] ? "true":"false") << "m_currentScreenBufs[1]->" << (m_currentScreenBufs[1] ? "true":"false");;
                 if (m_screenCount == 1 || !m_isScreenExtension)
                 {
                     if(m_currentScreenBufs[0] == nullptr)
@@ -1084,7 +1087,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                     frameCount++;
                     if(m_currentScreenBufs[0] != nullptr && !m_isAppendRemoteBuffer){
                         m_isAppendRemoteBuffer = true;
-                        qInfo() << "How many frames of data are waiting? " << frameCount ;
+
+                        qInfo() << "Single-How many frames of data are waiting? " << frameCount ;
                         frameCount = 0;
                         QtConcurrent::run(this, &WaylandIntegrationPrivate::appendRemoteBuffer);
                     }
@@ -1117,7 +1121,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                     if((m_currentScreenBufs[0] != nullptr && m_currentScreenBufs[1] != nullptr) &&
                             !m_isAppendRemoteBuffer){
                         m_isAppendRemoteBuffer = true;
-                        qInfo() << "How many frames of data are waiting? " << frameCount ;
+                        qInfo() << "Double-How many frames of data are waiting? " << frameCount ;
                         frameCount = 0;
                         QtConcurrent::run(this, &WaylandIntegrationPrivate::appendRemoteBuffer);
                     }
