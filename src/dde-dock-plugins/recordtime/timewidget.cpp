@@ -54,6 +54,7 @@ TimeWidget::TimeWidget(DWidget *parent):
 
     auto *layout = new QHBoxLayout(this);
     setLayout(layout);
+    layout->setContentsMargins(0, 0, 0, 0);
     layout->setSizeConstraint(QLayout::SetFixedSize);
 
     m_iconLabel = new QLabel(this);
