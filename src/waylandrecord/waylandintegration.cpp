@@ -478,6 +478,11 @@ void WaylandIntegration::WaylandIntegrationPrivate::onDeviceChanged(quint32 name
         connect(devT, &KWayland::Client::OutputDevice::changed, this, [ = ]() {
             qDebug() << devT->uuid() << devT->geometry();
             // 保存屏幕id和对应位置大小
+            if (devT->enabled() == KWayland::Client::OutputDevice::Enablement::Disabled) {
+                qDebug() << "screen :" << devT->uuid() << "is disable";
+                return;
+            }
+
             m_screenId2Point.insert(devT->uuid(), devT->geometry());
             m_screenCount = m_screenId2Point.size();
 
