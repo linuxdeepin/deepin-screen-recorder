@@ -46,7 +46,15 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
         return res.copy(recordRect);
     }
 
-    QScreen *t_primaryScreen = QGuiApplication::primaryScreen();
     // Qt6中不再使用QDesktop，直接传0作为窗口ID来捕获整个屏幕
-    return t_primaryScreen->grabWindow(0, rect.x(), rect.y(), rect.width(), rect.height());
+    QScreen *screen = QGuiApplication::screenAt(QPoint(0, 0));
+    if (!screen) {
+        screen = QGuiApplication::primaryScreen();
+    }
+
+    if (screen) {
+        return screen->grabWindow(0, rect.x(), rect.y(), rect.width(), rect.height());
+    }
+
+    return {};
 }
