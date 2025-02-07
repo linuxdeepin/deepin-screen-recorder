@@ -1,8 +1,9 @@
-deepin-screen-recorder (6.5.8) UNRELEASED; urgency=medium
+deepin-screen-recorder (6.5.8) unstable; urgency=medium
 
-  * fix: esc exit exception under treeland
+  [ Tian ShiLin ]
+  * fix: esc exit exception under treeland 
 
- -- Tian ShiLin <tianshilin@uniontech.com>  Tue, 14 Jan 2025 10:49:14 +0800
+ -- Liu zheng <liuzheng@uniontech.com>  Fri, 07 Feb 2025 14:44:36 +0800
 
 deepin-screen-recorder (6.5.7) unstable; urgency=medium
 
