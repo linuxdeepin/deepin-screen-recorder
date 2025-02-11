@@ -230,6 +230,7 @@ QString AudioUtils::currentAudioChannel()
 
         if (!targetLine.isEmpty()) {
             targetLine.remove(QRegExp(".* "));
+            targetLine = targetLine.trimmed();
         }
 
         qDebug() << command << targetLine;
