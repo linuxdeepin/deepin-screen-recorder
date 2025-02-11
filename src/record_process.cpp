@@ -209,7 +209,9 @@ void RecordProcess::recordVideo()
     AudioUtils audioUtils;
     QString t_currentAudioChannel = audioUtils.currentAudioChannel();
 
-    t_currentAudioChannel = t_currentAudioChannel.left(t_currentAudioChannel.size() - 1);
+    if (t_currentAudioChannel.size() > 1){
+        t_currentAudioChannel = t_currentAudioChannel.left(t_currentAudioChannel.size() - 1);
+    }
     qDebug() << "current audio channel:" << t_currentAudioChannel;
 
     // FFmpeg need pass arugment split two part: -option value,
