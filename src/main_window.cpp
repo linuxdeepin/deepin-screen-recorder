@@ -4867,6 +4867,10 @@ void MainWindow::onMouseRelease(int x, int y)
 //通过x11从底层获取鼠标移动事件
 void MainWindow::onMouseMove(int x, int y)
 {
+    if (!m_isShapesWidgetExist && isFirstMove && status::shot == m_functionType && m_toolBar->isHidden() && !isFirstReleaseButton) {
+        QMouseEvent mouseMove(QEvent::MouseMove, QPoint(x, y), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        QApplication::sendEvent(QWidget::focusWidget(), static_cast<QEvent*>(&mouseMove));
+    }
     if (!m_initResource) {
         return;
     }
