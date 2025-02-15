@@ -242,10 +242,6 @@ void RecordProcess::recordVideo()
             m_audioType = Utils::kMic;
             qWarning() << "选择录制的音频发生改变，录制混音 变更为 只录制麦克风！";
         }
-    }else {
-        if (t_currentAudioChannel.size() > 1) {
-            t_currentAudioChannel = t_currentAudioChannel.left(t_currentAudioChannel.size() - 1);
-        }
     }
     qDebug() << "current system audio channel:" << t_currentAudioChannel;
     QStringList arguments;

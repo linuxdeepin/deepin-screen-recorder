@@ -139,6 +139,10 @@ QString AudioUtils::currentAudioChannel()
                     qWarning() << "自动分配通道号失败！默认音频输出源服务地址为空！" << m_defaultSinkPath;
                 }
             }
+        } else {
+            if (str_output != "-1" && str_output.size() > 1) {
+                str_output = str_output.left(str_output.size() - 1);
+            }
         }
         return str_output;
     } else {
