@@ -6229,6 +6229,14 @@ void MainWindow::stopRecord()
         }
         recordButtonStatus = RECORD_BUTTON_SAVEING;
         recordProcess.stopRecord();
+    } else {
+        qWarning() << "We might received stop request from annother process!";
+
+        QApplication::quit();
+        if (Utils::isWaylandMode) {
+            qInfo() << "wayland record exit! (_Exit(0))";
+            _Exit(0);
+        }
     }
 }
 
