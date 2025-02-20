@@ -3218,8 +3218,6 @@ void MainWindow::changeShotToolEvent(const QString &func)
     qDebug() << "MainWindow::changeShotToolEvent >> func: " << func;
     // 调用ocr功能时先截图后，退出截图录屏，将刚截图的图片串递到ocr识别界面；
     if (func == "ocr") {
-        m_functionType = status::ocr;
-        // qDebug() << "m_saveFileName: " << m_saveFileName;
         QJsonObject obj{{"tid", EventLogUtils::StartOcr}, {"version", QCoreApplication::applicationVersion()}};
         EventLogUtils::get().writeLogs(obj);
         // 调起OCR识别界面， 传入截图路径
@@ -3232,9 +3230,15 @@ void MainWindow::changeShotToolEvent(const QString &func)
 
         // TODO: 在treeland里暂时是走handleCapture去执行保存图片，后续会和原逻辑统一
         if (Utils::isTreelandMode) {
-            QTimer::singleShot(delayTime, this, [=] { onFinishClicked(); });
+            QTimer::singleShot(delayTime, this, [=] {
+                onFinishClicked();
+                m_functionType = status::ocr;
+            });
         } else {
-            QTimer::singleShot(delayTime, this, [=] { saveScreenShot(); });
+            QTimer::singleShot(delayTime, this, [=] {
+                saveScreenShot();
+                m_functionType = status::ocr;
+            });
         }
     } else if (func == "pinScreenshots") {
         m_functionType = status::pinscreenshots;
