@@ -1098,7 +1098,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                         QtConcurrent::run(this, &WaylandIntegrationPrivate::appendRemoteBuffer);
                     }
                 }else if(m_screenCount == 2 && m_isScreenExtension){
-                    if(screenGeometry.x() == 0 && screenGeometry.y() == 0)
+                    if(screenGeometry.x() == 0 /* && screenGeometry.y() == 0*/) // when two screen not aligned recorder may not record
                     {
                         if(m_currentScreenBufs[0] == nullptr)
                         {
