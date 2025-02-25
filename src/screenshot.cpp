@@ -153,6 +153,11 @@ void Screenshot::stopRecord()
     m_window.stopRecord();
 }
 
+void Screenshot::stopApp()
+{
+    m_window.stopApp();
+}
+
 QString Screenshot::getRecorderNormalIcon()
 {
     return RecorderTablet::getRecorderNormalIcon();

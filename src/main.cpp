@@ -295,7 +295,8 @@ int main(int argc, char *argv[])
                                     QDBusConnection::sessionBus());
 
         QList<QVariant> arg;
-        notification.callWithArgumentList(QDBus::AutoDetect, "stopRecord", arg);
+        // Use stopApp() instead of stopRecord(), actually stop previous process.
+        notification.callWithArgumentList(QDBus::AutoDetect, "stopApp", arg);
     }
 
     return 0;

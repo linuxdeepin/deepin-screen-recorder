@@ -37,6 +37,7 @@ public slots:
     void fullScreenRecord(QString fileName = "");
 
     Q_SCRIPTABLE void stopRecord();
+    Q_SCRIPTABLE void stopApp();
     Q_SCRIPTABLE QString getRecorderNormalIcon();
 signals:
     Q_SCRIPTABLE void RecorderState(const bool isStart); // true begin recorder; false stop recorder;
