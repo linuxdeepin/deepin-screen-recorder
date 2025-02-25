@@ -94,4 +94,19 @@ private:
     bool m_bPreviousIsVisable = false; // 记录前置状态是否为禁止使能状态
 };
 
+// from dde-shell dockiteminfo.h
+struct DockItemInfo
+{
+    QString name;
+    QString displayName;
+    QString itemKey;
+    QString settingKey;
+    QString dccIcon;
+    bool visible;
+};
+Q_DECLARE_METATYPE(DockItemInfo)
+
+typedef QList<DockItemInfo> DockItemInfos;
+Q_DECLARE_METATYPE(DockItemInfos)
+
 #endif // RECORDTIME_H

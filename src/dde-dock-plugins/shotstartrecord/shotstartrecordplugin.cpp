@@ -27,6 +27,9 @@ ShotStartRecordPlugin::ShotStartRecordPlugin(QObject *parent)
     m_isRecording = false;
     m_checkTimer = nullptr;
     m_bDockQuickPanel = false;
+
+    qRegisterMetaType<DockItemInfo>("DockItemInfo");
+    qRegisterMetaType<DockItemInfos>("DockItemInfos");
 }
 
 /**
@@ -330,9 +333,15 @@ void ShotStartRecordPlugin::onClickQuickPanel()
  */
 void ShotStartRecordPlugin::setTrayIconVisible(bool visible)
 {
+    // If the OS version is later than V23 or V25, the new version of the API is used
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QDBusInterface interface("org.deepin.dde.Dock1", "/org/deepin/dde/Dock1", "org.deepin.dde.Dock1", QDBusConnection::sessionBus());
+    interface.call("setItemOnDock", "Dock_Quick_Plugins", pluginName(), visible);
+#else
     // 使用DBus接口仅隐藏任务栏图标，快捷面板图标仍显示，参数是插件的 displayName（历史原因）
     QDBusInterface interface("com.deepin.dde.Dock", "/com/deepin/dde/Dock", "com.deepin.dde.Dock", QDBusConnection::sessionBus());
     interface.call("setPluginVisible", pluginDisplayName(), visible);
+#endif
 }
 
 /**
@@ -340,12 +349,34 @@ void ShotStartRecordPlugin::setTrayIconVisible(bool visible)
  */
 bool ShotStartRecordPlugin::getTrayIconVisible()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QDBusInterface interface("org.deepin.dde.Dock1", "/org/deepin/dde/Dock1", "org.deepin.dde.Dock1", QDBusConnection::sessionBus());
+    QDBusReply<QList<DockItemInfo> > msg = interface.call("plugins");
+
+    if (!msg.isValid()) {
+        qWarning() << "get tray item info failed: " << msg.error().message();
+        return false;
+    }
+
+    auto itemList = msg.value();
+    auto currentPluginItr = std::find_if(itemList.begin(), itemList.end(), [=](const DockItemInfo &item){
+        return item.itemKey == pluginName();
+    });
+
+    if (currentPluginItr == itemList.end()) {
+        qWarning() << "can not find current plugin info";
+        return false;
+    }
+    return currentPluginItr->visible;
+
+#else
     QDBusInterface interface("com.deepin.dde.Dock", "/com/deepin/dde/Dock", "com.deepin.dde.Dock", QDBusConnection::sessionBus());
     auto msg = interface.call("getPluginVisible", pluginDisplayName());
     if (QDBusMessage::ReplyMessage == msg.type()) {
         return msg.arguments().takeFirst().toBool();
     }
     return false;
+#endif
 }
 
 ShotStartRecordPlugin::~ShotStartRecordPlugin()
