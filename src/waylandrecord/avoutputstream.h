@@ -98,6 +98,17 @@ public:
      * @param boardVendorType
      */
     void setBoardVendor(int boardVendorType);
+
+    /**
+     * @brief convertARGB2YUV420 手动转ARGB数据为YUV420格式数据
+     * @param w             图像宽度
+     * @param h             图像高度
+     * @param in_data       输入ARGB数据
+     * @param in_stride     输入ARGB一行宽度=图像宽度*4
+     * @param out_data      输出YUV格式的数组指针
+     * @param out_stride    输出YUV一行宽度=图像宽度*4
+     */
+    void convertARGB2YUV420(unsigned int w, unsigned int h, const uint8_t *in_data, int in_stride, uint8_t *out_data[], const int out_stride[3]);
 protected:
     void freeSwrContext(struct SwrContext *swrContext);
 public:
@@ -255,6 +266,10 @@ private:
     int m_channels_card;
     int m_channels_card_layout;
     int m_audio_bitrate_card;
+    /**
+     * @brief 使用ffmpeg的scale函数作为格式转换
+     */
+    bool m_useScaleConvert;
 };
 
 #endif //AVOUTPUTSTREAM_H

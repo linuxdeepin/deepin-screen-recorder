@@ -73,8 +73,8 @@ void WaylandIntegration::stopStreaming()
 {
     qInfo() << __FUNCTION__ << __LINE__ << "正在停止wayland录屏流程...";
     globalWaylandIntegration->stopStreaming();
-    globalWaylandIntegration->stopVideoRecord();
     globalWaylandIntegration->m_appendFrameToListFlag = false;
+    globalWaylandIntegration->stopVideoRecord();
     qInfo() << __FUNCTION__ << __LINE__ << "已停止wayland录屏流程";
 }
 
@@ -198,14 +198,12 @@ WaylandIntegration::WaylandIntegrationPrivate::WaylandIntegrationPrivate()
 WaylandIntegration::WaylandIntegrationPrivate::~WaylandIntegrationPrivate()
 {
     QMutexLocker locker(&m_mutex);
-    for (int i = 0; i < m_freeList.size(); i++) {
-        if (m_freeList[i]) {
-            delete m_freeList[i];
-        }
+    while (!m_freeList.isEmpty()) {
+        delete m_freeList.takeFirst();
     }
     m_freeList.clear();
-    for (int i = 0; i < m_waylandList.size(); i++) {
-        delete m_waylandList[i]._frame;
+    while (!m_waylandList.isEmpty()) {
+        delete m_freeList.takeFirst();
     }
     m_waylandList.clear();
     if (nullptr != m_ffmFrame) {
@@ -857,7 +855,6 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
             {
                 QMutexLocker locker(&m_bGetScreenImageMutex);
                 if (m_boardVendorType) {
-
                     tempImage = QImage(m_curNewImageData._frame,
                                        m_curNewImageData._width,
                                        m_curNewImageData._height,
@@ -1198,7 +1195,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                     rbuf->release();
 #endif
                 }
-                qDebug() << "buffer已处理" << "fd:" << rbuf->fd();
+                qDebug() << "buffer已处理" << "fd:" << rbuf->fd() << "frameCount: " << frameCount;
             });
             //qDebug() << "buffer已接收";
         });
@@ -1261,9 +1258,13 @@ void WaylandIntegration::WaylandIntegrationPrivate::initEgl()
 }
 void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(unsigned char *frame, int width, int height, int stride, int64_t time)
 {
-    if (!bGetFrame() || nullptr == frame || width <= 0 || height <= 0) {
+    static int f_count = 0;
+    bool res = false;
+    if (res = !bGetFrame() || nullptr == frame || width <= 0 || height <= 0) {
+        qDebug() << "drop ...." << res << frame << width  << height;
         return;
     }
+    qDebug() << "append frame index:" << ++f_count;
     int size = height * stride;
     unsigned char *ch = nullptr;
     if (m_bInit) {
@@ -1385,6 +1386,7 @@ bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &frame
     } else {
         int size = m_height * m_stride;
         //取队首，先进先出
+//        qint64 time1 = QDateTime::currentMSecsSinceEpoch();
         waylandFrame wFrame = m_waylandList.first();
         frame._width = wFrame._width;
         frame._height = wFrame._height;
@@ -1394,14 +1396,23 @@ bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &frame
         frame._frame = m_ffmFrame;
         frame._index = frameIndex++;
         //拷贝到 m_ffmFrame 视频帧缓存
+//        qint64 time2 = QDateTime::currentMSecsSinceEpoch();
+//        frame._frame = std::move(wFrame._frame);
         memcpy(frame._frame, wFrame._frame, static_cast<size_t>(size));
         m_waylandList.first()._frame = nullptr;
         //删队首视频帧 waylandFrame，未删空闲内存 waylandFrame::_frame，只删索引，不删内存空间
+//        qint64 time3 = QDateTime::currentMSecsSinceEpoch();
         m_waylandList.removeFirst();
+//        qint64 time4 = QDateTime::currentMSecsSinceEpoch();
         //回收空闲内存，重复使用
         m_freeList.append(wFrame._frame);
         //qDebug() << "获取视频帧";
-        //qDebug() << "获取视频帧 m_waylandList.size(): " << m_waylandList.size() << " , m_freeList.size(): " << m_freeList.size();
+//        qint64 time5 = QDateTime::currentMSecsSinceEpoch();
+//        qDebug() << "value get time : " << time2-time1;
+//        qDebug() << "memcpy : " << time3-time2;
+//        qDebug() << "removeFirst : " << time4-time3;
+//        qDebug() << "append : " << time5-time4;
+//        qDebug() << "获取视频帧 m_waylandList.size(): " << m_waylandList.size() << " , m_freeList.size(): " << m_freeList.size();
         return true;
     }
 }
