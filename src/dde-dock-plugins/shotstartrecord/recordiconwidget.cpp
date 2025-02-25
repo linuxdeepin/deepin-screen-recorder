@@ -175,6 +175,7 @@ QString RecordIconWidget::getDefaultValue(const QString &type)
 void RecordIconWidget::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
     QPixmap pixmap;
     QString iconName = "status-screen-record";
@@ -227,11 +228,7 @@ void RecordIconWidget::paintEvent(QPaintEvent *e)
     painter.setOpacity(1);
 
     m_icon = QIcon::fromTheme(iconName, QIcon(QString(":/res/%1.svg").arg(iconName)));
-    pixmap = loadSvg(iconName, QSize(iconSize, iconSize));
-
-    const QRectF &rf = QRectF(rect());
-    const QRectF &rfp = QRectF(pixmap.rect());
-    painter.drawPixmap(rf.center() - rfp.center() / pixmap.devicePixelRatioF(), pixmap);
+    m_icon.paint(&painter, rect());
 
     QWidget::paintEvent(e);
 }
