@@ -6233,6 +6233,13 @@ void MainWindow::stopRecord()
         }
         recordButtonStatus = RECORD_BUTTON_SAVEING;
         recordProcess.stopRecord();
+    }
+}
+
+void MainWindow::stopApp()
+{
+    if (recordButtonStatus == RECORD_BUTTON_RECORDING) {
+        stopRecord();
     } else {
         qWarning() << "We might received stop request from annother process!";
 

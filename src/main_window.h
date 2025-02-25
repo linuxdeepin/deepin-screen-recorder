@@ -430,6 +430,8 @@ public slots:
     void updateCaptureRegion();
 
     Q_SCRIPTABLE void stopRecord();
+    Q_SCRIPTABLE void stopApp();
+
     /**
      * @brief 启动录屏倒计时
      */
