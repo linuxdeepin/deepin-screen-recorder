@@ -265,9 +265,9 @@ private:
     bool m_bInit;
     QMutex m_mutex;
     //wayland缓冲区
-    QList<waylandFrame> m_waylandList;
+    QLinkedList<waylandFrame> m_waylandList;
     //空闲内存
-    QList<unsigned char *> m_freeList;
+    QLinkedList<unsigned char *> m_freeList;
 
     QPair<qint64, QImage> m_curNewImage;
     FrameData m_curNewImageData;

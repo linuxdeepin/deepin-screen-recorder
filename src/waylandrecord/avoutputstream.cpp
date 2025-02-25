@@ -93,6 +93,13 @@ CAVOutputStream::CAVOutputStream(WaylandIntegration::WaylandIntegrationPrivate *
     m_channels_card_layout = 0;
     avlibInterface::m_avcodec_register_all();
     avlibInterface::m_av_register_all();
+    m_useScaleConvert = false;
+
+    if (m_useScaleConvert) {
+        qDebug() << "will use ffmpeg scale to convert argb to yuv";
+    } else {
+        qDebug() << "will use self quick convert argb to yuv";
+    }
 }
 
 CAVOutputStream::~CAVOutputStream(void)
@@ -494,8 +501,8 @@ bool CAVOutputStream::open(QString path)
 
             // Set H264 preset and tune
             avlibInterface::m_av_dict_set(&param, "preset", "ultrafast", 0);
-            //                av_dict_set(&param, "tune", "zerolatency", 0);
-
+            avlibInterface::m_av_dict_set(&param, "tune", "zerolatency", 0);
+            avlibInterface::m_av_dict_set(&param, "crf", "30", 0);            // 质量较低，文件较大但编码更快
         }
 
         if (avlibInterface::m_avcodec_open2(pCodecCtx, pCodec, &param) < 0) {
@@ -516,6 +523,7 @@ bool CAVOutputStream::open(QString path)
         pFrameYUV = avlibInterface::m_av_frame_alloc();
         m_out_buffer = static_cast<uint8_t *>(avlibInterface::m_av_malloc(static_cast<size_t>(avlibInterface::m_avpicture_get_size(AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height))));
         avlibInterface::m_avpicture_fill((AVPicture *)pFrameYUV, m_out_buffer, AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height);
+
 
     }
     if (m_sysAudioCodecID && m_micAudioCodecID) {
@@ -685,53 +693,78 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
     if (nullptr == frame._frame || frame._width <= 0 || frame._height <= 0) {
         return -1;
     }
-    //qint64 time1 = QDateTime::currentMSecsSinceEpoch();
-    AVFrame *pRgbFrame = avlibInterface::m_av_frame_alloc();
-    pRgbFrame->width = frame._width;
-    pRgbFrame->height = frame._height;
-    pRgbFrame->format = AV_PIX_FMT_RGB32;
-    if (0 == avlibInterface::m_av_frame_get_buffer(pRgbFrame, 32)) {
-        pRgbFrame->width  = frame._width;
+//    qint64 time1 = QDateTime::currentMSecsSinceEpoch();
+    if (m_useScaleConvert) {
+        AVFrame *pRgbFrame = avlibInterface::m_av_frame_alloc();
+        pRgbFrame->width = frame._width;
         pRgbFrame->height = frame._height;
-        //pRgbFrame->format = AV_PIX_FMT_RGB32;
-        pRgbFrame->crop_left   = static_cast<size_t>(m_left);
-        pRgbFrame->crop_top    = static_cast<size_t>(m_top);
-        pRgbFrame->crop_right  = static_cast<size_t>(m_right);
-        pRgbFrame->crop_bottom = static_cast<size_t>(m_bottom);
-        pRgbFrame->linesize[0] = frame._stride;
-        pRgbFrame->data[0]     = frame._frame;
-    }
-    if (nullptr == m_pVideoSwsContext) {
-        AVPixelFormat fmt = AV_PIX_FMT_RGBA;
-        if (m_boardVendorType) {
-            fmt = AV_PIX_FMT_RGB32;
+        pRgbFrame->format = AV_PIX_FMT_RGB32;
+        if (0 == avlibInterface::m_av_frame_get_buffer(pRgbFrame, 32)) {
+            pRgbFrame->width  = frame._width;
+            pRgbFrame->height = frame._height;
+            //pRgbFrame->format = AV_PIX_FMT_RGB32;
+            pRgbFrame->crop_left   = static_cast<size_t>(m_left);
+            pRgbFrame->crop_top    = static_cast<size_t>(m_top);
+            pRgbFrame->crop_right  = static_cast<size_t>(m_right);
+            pRgbFrame->crop_bottom = static_cast<size_t>(m_bottom);
+            pRgbFrame->linesize[0] = frame._stride;
+            pRgbFrame->data[0]     = frame._frame;
         }
-        m_pVideoSwsContext = avlibInterface::m_sws_getContext(m_width, m_height,
-                                                              fmt,
-                                                              pCodecCtx->width,
-                                                              pCodecCtx->height,
-                                                              AV_PIX_FMT_YUV420P,
-                                                              SWS_BICUBIC,
-                                                              nullptr,
-                                                              nullptr,
-                                                              nullptr);
-    }
-    if (avlibInterface::m_av_frame_apply_cropping(pRgbFrame, AV_FRAME_CROP_UNALIGNED) < 0) {
-        AVERROR(ERANGE);
-        return 2;
-    }
-    //qint64 time2 = QDateTime::currentMSecsSinceEpoch();
-    avlibInterface::m_sws_scale(m_pVideoSwsContext, pRgbFrame->data, pRgbFrame->linesize, 0, pCodecCtx->height, pFrameYUV->data, pFrameYUV->linesize);
-    //qint64 time3 = QDateTime::currentMSecsSinceEpoch();
-    //qDebug() << "time3 - time2: sws_scale : " << time3-time2;
-    if (pRgbFrame->height != pCodecCtx->height && pRgbFrame->width != pCodecCtx->width) {
+        //qDebug() << "pRgbFrame -w h" << pRgbFrame->width << pRgbFrame->height << "corp :" << pRgbFrame->crop_left << pRgbFrame->crop_top << pRgbFrame->crop_right << pRgbFrame->crop_bottom;
+        if (nullptr == m_pVideoSwsContext) {
+            AVPixelFormat fmt = AV_PIX_FMT_RGBA;
+            if (m_boardVendorType) {
+                fmt = AV_PIX_FMT_RGB32;
+            }
+            m_pVideoSwsContext = avlibInterface::m_sws_getContext(m_width, m_height,
+                                                                  fmt,
+                                                                  pCodecCtx->width,
+                                                                  pCodecCtx->height,
+                                                                  AV_PIX_FMT_YUV420P,
+                                                                  SWS_BICUBIC,
+                                                                  nullptr,
+                                                                  nullptr,
+                                                                  nullptr);
+        }
+        if (avlibInterface::m_av_frame_apply_cropping(pRgbFrame, AV_FRAME_CROP_UNALIGNED) < 0) {
+            AVERROR(ERANGE);
+            return 2;
+        }
+        //qDebug() << "pRgbFrame after cropping -w h" << pRgbFrame->width << pRgbFrame->height ;
+        //qDebug() << "stride-src: " << pRgbFrame->linesize[0] << pRgbFrame->width*4 << pRgbFrame->linesize[2] <<
+        //            "stride-dst: " << pFrameYUV->linesize[0] << pFrameYUV->linesize[1] << pFrameYUV->linesize[2];
+        //qDebug() << "pYUVFrame -w h" << pFrameYUV->width << pFrameYUV->height ;
+        qint64 time2 = QDateTime::currentMSecsSinceEpoch();
+        avlibInterface::m_sws_scale(m_pVideoSwsContext, pRgbFrame->data, pRgbFrame->linesize, 0, pCodecCtx->height, pFrameYUV->data, pFrameYUV->linesize);
+
+
+        qint64 time3 = QDateTime::currentMSecsSinceEpoch();
+        qDebug() << "time3 - time2: sws_scale : " << time3-time2;
+        if (pRgbFrame->height != pCodecCtx->height && pRgbFrame->width != pCodecCtx->width) {
+            pFrameYUV->width  = pCodecCtx->width;
+            pFrameYUV->height = pCodecCtx->height;
+            qDebug() << "the frame maybe cropped. the frame mybe not be encode. use the codectx as encode frame size";
+        } else {
+            pFrameYUV->width  = pRgbFrame->width;
+            pFrameYUV->height = pRgbFrame->height;
+        }
+        avlibInterface::m_av_frame_free(&pRgbFrame);
+    } else {
         pFrameYUV->width  = pCodecCtx->width;
         pFrameYUV->height = pCodecCtx->height;
-        qDebug() << "the frame maybe cropped. the frame mybe not be encode. use the codectx as encode frame size";
-    } else {
-        pFrameYUV->width  = pRgbFrame->width;
-        pFrameYUV->height = pRgbFrame->height;
+
+        qint64 time2 = QDateTime::currentMSecsSinceEpoch();
+
+        convertARGB2YUV420(pCodecCtx->width,
+                           pCodecCtx->height,
+                           frame._frame + (m_top * frame._stride + m_left * 4),
+                           frame._stride,
+                           pFrameYUV->data,
+                           pFrameYUV->linesize);
+//        qint64 time3 = QDateTime::currentMSecsSinceEpoch();
+//        qDebug() << "time3 - time2: qucik convert : " << time3-time2;
     }
+
     pFrameYUV->format = AV_PIX_FMT_YUV420P;
     AVPacket packet;
     packet.data = nullptr;
@@ -758,10 +791,9 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
             return ret;
         }
     }
-    //qint64 time4 = QDateTime::currentMSecsSinceEpoch();
-    //qDebug() << "time4 - time1: writeVideoFrame : " << time4-time1;
+    qint64 time4 = QDateTime::currentMSecsSinceEpoch();
+//    qDebug() << "time4 - time1: writeVideoFrame : " << time4-time1;
     avlibInterface::m_av_free_packet(&packet);
-    avlibInterface::m_av_frame_free(&pRgbFrame);
     fflush(stdout);
     return 0;
 }
@@ -1643,6 +1675,52 @@ void CAVOutputStream::setBoardVendor(int boardVendorType)
     m_boardVendorType = boardVendorType;
 }
 
+void CAVOutputStream::convertARGB2YUV420(unsigned int w, unsigned int h, const uint8_t * in_data, int in_stride, uint8_t *out_data[], const int out_stride[])
+{
+    Q_ASSERT(w % 2 == 0 && h % 2 == 0);
+    const int offset_y = 128 + (16 << 8), offset_uv = (128 + (128 << 8)) << 2;
+    for(unsigned int j = 0; j < h / 2; ++j) {
+        const uint32_t *rgb1 = (const uint32_t*) (in_data/* + (m_top * in_stride + m_left * 4)*/ + in_stride * (int) j * 2);
+        const uint32_t *rgb2 = (const uint32_t*) (in_data/* + (m_top * in_stride + m_left * 4)*/ + in_stride * ((int) j * 2 + 1));
+        uint8_t *yuv_y1 = out_data[0] + out_stride[0] * (int) j * 2;
+        uint8_t *yuv_y2 = out_data[0] + out_stride[0] * ((int) j * 2 + 1);
+        uint8_t *yuv_u = out_data[1] + out_stride[1] * (int) j;
+        uint8_t *yuv_v = out_data[2] + out_stride[2] * (int) j;
+        for(unsigned int i = 0; i < w / 2; ++i) {
+            uint32_t c1 = rgb1[0], c2 = rgb1[1], c3 = rgb2[0], c4 = rgb2[1];
+            rgb1 += 2; rgb2 += 2;
+            int b1 = (int) ((c1 >>  0) & 0xff), b2 = (int) ((c2 >>  0) & 0xff), b3 = (int) ((c3 >>  0) & 0xff), b4 = (int) ((c4 >>  0) & 0xff);
+            int g1 = (int) ((c1 >>  8) & 0xff), g2 = (int) ((c2 >>  8) & 0xff), g3 = (int) ((c3 >>  8) & 0xff), g4 = (int) ((c4 >>  8) & 0xff);
+            int r1 = (int) ((c1 >> 16) & 0xff), r2 = (int) ((c2 >> 16) & 0xff), r3 = (int) ((c3 >> 16) & 0xff), r4 = (int) ((c4 >> 16) & 0xff);
+
+/*            // ==== BT.709 ====
+            yuv_y1[0] = (47 * r1 + 157 * g1 + 16 * b1 + offset_y) >> 8;
+            yuv_y1[1] = (47 * r2 + 157 * g2 + 16 * b2 + offset_y) >> 8;
+            yuv_y2[0] = (47 * r3 + 157 * g3 + 16 * b3 + offset_y) >> 8;
+            yuv_y2[1] = (47 * r4 + 157 * g4 + 16 * b4 + offset_y) >> 8;
+            yuv_y1 += 2; yuv_y2 += 2;
+            int sr = r1 + r2 + r3 + r4;
+            int sg = g1 + g2 + g3 + g4;
+            int sb = b1 + b2 + b3 + b4;
+            *(yuv_u++) = (-26 * sr +  -86 * sg + 112 * sb + offset_uv) >> 10;
+            *(yuv_v++) = (112 * sr + -102 * sg + -10 * sb + offset_uv) >> 10;
+*/
+
+            // ==== BT.601 ====
+            yuv_y1[0] = (66 * r1 + 129 * g1 + 25 * b1 + offset_y) >> 8;
+            yuv_y1[1] = (66 * r2 + 129 * g2 + 25 * b2 + offset_y) >> 8;
+            yuv_y2[0] = (66 * r3 + 129 * g3 + 25 * b3 + offset_y) >> 8;
+            yuv_y2[1] = (66 * r4 + 129 * g4 + 25 * b4 + offset_y) >> 8;
+            yuv_y1 += 2; yuv_y2 += 2;
+            int sr = r1 + r2 + r3 + r4;
+            int sg = g1 + g2 + g3 + g4;
+            int sb = b1 + b2 + b3 + b4;
+            *(yuv_u++) = (-38 * sr +  -74 * sg + 112 * sb + offset_uv) >> 10;
+            *(yuv_v++) = (112 * sr + -94 * sg + -18 * sb + offset_uv) >> 10;
+        }
+    }
+}
+
 //释放swrContext
 void CAVOutputStream::freeSwrContext(SwrContext *swrContext)
 {
@@ -1652,4 +1730,3 @@ void CAVOutputStream::freeSwrContext(SwrContext *swrContext)
 //        swrContext = nullptr;
 //    }
 }
-
