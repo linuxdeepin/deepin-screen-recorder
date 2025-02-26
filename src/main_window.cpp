@@ -4832,17 +4832,17 @@ void MainWindow::onActivateWindow()
 //通过x11从底层获取鼠标拖动事件
 void MainWindow::onMouseDrag(int x, int y)
 {
-#ifdef __x86_64__
-    if (!Utils::isWaylandMode) {
-        // fix the bug-302745, on x64 platform, shapeswidget may not get the Qt mouse event
-        if (m_shapesWidget && m_isShapesWidgetExist && status::shot == m_functionType){
-            QMouseEvent mouseMove(QEvent::MouseMove,
-                                  m_shapesWidget->mapFromGlobal(QPoint(int(x/m_pixelRatio), int(y/m_pixelRatio))),
-                                  Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-            QApplication::sendEvent(focusWidget(), static_cast<QEvent*>(&mouseMove));
-        }
+// #ifdef __x86_64__
+//     if (!Utils::isWaylandMode) {
+    // fix the bug-302745, on x64 platform, shapeswidget may not get the Qt mouse event
+    if (m_shapesWidget && m_isShapesWidgetExist && status::shot == m_functionType){
+        QMouseEvent mouseMove(QEvent::MouseMove,
+                              m_shapesWidget->mapFromGlobal(QPoint(int(x/m_pixelRatio), int(y/m_pixelRatio))),
+                              Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        QApplication::sendEvent(focusWidget(), static_cast<QEvent*>(&mouseMove));
     }
-#endif
+//     }
+// #endif
     if (!m_initResource) {
         return;
     }
@@ -4867,17 +4867,17 @@ void MainWindow::onMousePress(int x, int y)
 //通过x11从底层获取鼠标释放事件
 void MainWindow::onMouseRelease(int x, int y)
 {
-#ifdef __x86_64__
-    if (!Utils::isWaylandMode) {
-        // fix the bug-302745, on x64 platform, shapeswidget may not get the Qt mouse event
-        if (m_shapesWidget && m_isShapesWidgetExist && status::shot == m_functionType){
-            QMouseEvent mouseMove(QEvent::MouseButtonRelease,
-                                  QPoint(int(x/m_pixelRatio), int(y/m_pixelRatio)),
-                                  Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-            QApplication::sendEvent(focusWidget(), static_cast<QEvent*>(&mouseMove));
-        }
+// #ifdef __x86_64__
+//     if (!Utils::isWaylandMode) {
+    // fix the bug-302745, on x64 platform, shapeswidget may not get the Qt mouse event
+    if (m_shapesWidget && m_isShapesWidgetExist && status::shot == m_functionType){
+        QMouseEvent mouseMove(QEvent::MouseButtonRelease,
+                              QPoint(int(x/m_pixelRatio), int(y/m_pixelRatio)),
+                              Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        QApplication::sendEvent(focusWidget(), static_cast<QEvent*>(&mouseMove));
     }
-#endif
+//     }
+// #endif
     if (!m_initResource) {
         return;
     }
