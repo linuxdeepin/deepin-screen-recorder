@@ -11,7 +11,7 @@ include /usr/share/dpkg/default.mk
 export DH_OPTIONS := --buildsystem=qmake
 
 %:
-	dh $@ --buildsystem=qmake
+	dh $@ --parallel --buildsystem=qmake
 
 override_dh_auto_configure:
 	$(QMAKE) \
