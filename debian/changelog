@@ -1,3 +1,14 @@
+deepin-screen-recorder (6.5.10) unstable; urgency=medium
+
+  * fix: not hidden record tray icon when recoding(Bug: 298541)
+  * fix: tray icon is blurred when the scale factor exceeds 1(Bug: 298677)
+  * fix: can not save pin screenshots settings(Bug: 298631)
+  * fix: can not start record via tray icon
+  * chore: support parallel build
+  * fix: pin-screenshots missing rounded corner and focus(Bug: 305423)
+
+ -- renbin <renbin@uniontech.com>  Thu, 27 Feb 2025 19:17:50 +0800
+
 deepin-screen-recorder (6.5.9) unstable; urgency=medium
 
   * chore: New version 6.5.9.
