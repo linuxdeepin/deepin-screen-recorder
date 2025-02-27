@@ -9,7 +9,11 @@
 
 #include <QActionGroup>
 #include <QMouseEvent>
+
 #include <DFontSizeManager>
+#include <DSysInfo>
+
+DCORE_USE_NAMESPACE
 
 #define THEMETYPE 1 // 主题颜色为浅色
 
@@ -17,11 +21,15 @@ const QSize MIN_TOOLBAR_WIDGET_SIZE = QSize(210, 56);
 
 ToolBarWidget::ToolBarWidget(DWidget *parent): DBlurEffectWidget(parent)
 {
+    const bool sysIsV23 = DSysInfo::majorVersion().toInt() == 23;
+
     if (PUtils::isWaylandMode) {
         setWindowFlags(Qt::Sheet | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus);
-    } else {
+    } else if (sysIsV23) {
         //v23上ToolTip会导致工具栏的圆角失效
         setWindowFlags(Qt::FramelessWindowHint /*| Qt::WindowStaysOnTopHint*/ | Qt::ToolTip);
+    } else {
+        setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::Tool);
     }
 
     this->setRadius(30);
