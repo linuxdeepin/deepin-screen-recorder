@@ -60,10 +60,12 @@ void MainWindow::initMainWindow()
     connect(m_menuController, &MenuController::closeAction, this, &MainWindow::onExit);
 
     // 工具栏设置
-    m_toolBar = new ToolBarWidget(); //初始化
+    m_toolBar = new ToolBarWidget(this); //初始化
     connect(m_toolBar, SIGNAL(sendOcrButtonClicked()), this, SLOT(onOpenOCR()));
     connect(m_toolBar, SIGNAL(sendSaveButtonClicked()), this, SLOT(onSave()));
     connect(m_toolBar, SIGNAL(sendCloseButtonClicked()), this, SLOT(onExit()));
+
+    m_toolBar->setFocusPolicy(Qt::StrongFocus);
 
     QWidget::installEventFilter(this);
 }
@@ -693,6 +695,7 @@ void MainWindow::updateToolBarPosition()
         x = m_screenSize.width() - m_toolBar->width();
     }
     m_toolBar->showAt(QPoint(x, y), m_isfirstTime);
+    m_toolBar->activateWindow();
     m_isfirstTime = false;
 }
 
