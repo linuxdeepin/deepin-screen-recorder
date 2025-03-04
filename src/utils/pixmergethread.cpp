@@ -253,6 +253,10 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
     if (maxVal >= thresholdv && maxLoc.y > 0) { //只有度量值大于阈值才认为是匹配
         result = cv::Mat::zeros(cvSize(image.cols, image.rows + m_curImg.rows - maxLoc.y - TEMPLATE_HEIGHT), image.type());
         temp1 = m_curImg(cv::Rect(0, maxLoc.y + TEMPLATE_HEIGHT, m_curImg.cols, m_curImg.rows - maxLoc.y - TEMPLATE_HEIGHT));
+        if (temp1.empty()) {
+            return false;
+        }
+
         image.copyTo(cv::Mat(result, cv::Rect(0, 0, image.cols, image.rows)));
         temp1.copyTo(cv::Mat(result, cv::Rect(0, image.rows, temp1.cols, temp1.rows)));
         if (result.rows == m_curImg.rows) {// 拼接前后图片高度不变
@@ -355,6 +359,10 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
     if (maxVal >= thresholdv && maxLoc.y > 0) { //只有度量值大于阈值才认为是匹配
         result = cv::Mat::zeros(cvSize(m_curImg.cols, maxLoc.y + image.rows), m_curImg.type());
         temp1 = m_curImg(cv::Rect(0, 0, m_curImg.cols, maxLoc.y));
+        if (temp1.empty()) {
+            return false;
+        }
+
         /*将图1的非模板部分和图2拷贝到result*/
         temp1.copyTo(cv::Mat(result, cv::Rect(0, 0, m_curImg.cols, maxLoc.y)));
         image.copyTo(cv::Mat(result, cv::Rect(0, maxLoc.y, image.cols, image.rows)));
