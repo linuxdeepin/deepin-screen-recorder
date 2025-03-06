@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.5.11) unstable; urgency=medium
+
+  * fix: crash on scroll image(Bug: 306355)
+
+ -- renbin <renbin@uniontech.com>  Thu, 06 Mar 2025 20:22:56 +0800
+
 deepin-screen-recorder (6.5.10) unstable; urgency=medium
 
   * fix: not hidden record tray icon when recoding(Bug: 298541)
