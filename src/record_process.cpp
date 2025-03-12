@@ -209,8 +209,9 @@ void RecordProcess::recordVideo()
     AudioUtils audioUtils;
     QString t_currentAudioChannel = audioUtils.currentAudioChannel();
 
-    if (t_currentAudioChannel.size() > 1){
-        t_currentAudioChannel = t_currentAudioChannel.left(t_currentAudioChannel.size() - 1);
+    bool cvtOk = false;
+    if (!(t_currentAudioChannel.toInt(&cvtOk) >=0 && cvtOk)){
+        recordAudioInputType = 0;
     }
     qDebug() << "current audio channel:" << t_currentAudioChannel;
 
