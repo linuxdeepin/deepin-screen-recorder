@@ -13,9 +13,12 @@
 #include <QDBusMessage>
 #include <QRegularExpression>
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <com_deepin_daemon_audio.h>
 #include <com_deepin_daemon_audio_sink.h>
 #include <com_deepin_daemon_audio_source.h>
+#endif
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -25,6 +28,11 @@
 AudioUtils::AudioUtils(QObject *parent)
 {
     Q_UNUSED(parent);
+
+#if QT_VERISON >= QT_VERSION_CHECK(6, 0, 0)
+    registerAudioPortMetaType();
+#endif
+
     if (Utils::isSysGreatEqualV23()) {
         initAudioDBusInterface();
     }
@@ -103,7 +111,9 @@ void AudioUtils::initConnections()
 QString AudioUtils::currentAudioChannel()
 {
     if (!Utils::isSysGreatEqualV23()) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         return currentAudioChannelV20Impl();
+#endif
     }
 
     QString str_output = "-1";
@@ -156,7 +166,9 @@ QString AudioUtils::currentAudioChannel()
 QString AudioUtils::getDefaultDeviceName(DefaultAudioType mode)
 {
     if (!Utils::isSysGreatEqualV23()) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         return getDefaultDeviceNameV20Impl(mode);
+#endif
     }
 
     QString device = "";
@@ -209,6 +221,7 @@ QString AudioUtils::getDefaultDeviceName(DefaultAudioType mode)
     return device;
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 QString AudioUtils::currentAudioChannelV20Impl()
 {
     const QString serviceName{"com.deepin.daemon.Audio"};
@@ -324,6 +337,7 @@ QString AudioUtils::getDefaultDeviceNameV20Impl(DefaultAudioType mode)
     }
     return device;
 }
+#endif
 
 // 音频dbus服务的接口
 QDBusInterface *AudioUtils::audioDBusInterface()

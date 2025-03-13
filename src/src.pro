@@ -85,7 +85,7 @@ equals(QT_MAJOR_VERSION, 6) {
           sql xml opengl openglwidgets waylandclient waylandclient-private
     
     # Qt6 specific configurations
-    PKGCONFIG += dtk6widget dtk6core dtk6gui dframeworkdbus xcb xcb-util gstreamer-app-1.0 libusb-1.0
+    PKGCONFIG += dtk6widget dtk6core dtk6gui xcb xcb-util gstreamer-app-1.0 libusb-1.0
     
     QMAKE_LRELEASE = /usr/lib/qt6/bin/lrelease
     
@@ -93,8 +93,7 @@ equals(QT_MAJOR_VERSION, 6) {
     #LIBS += -L$$PREFIX/lib/$$QMAKE_HOST.arch-linux-gnu/ -lKF6GlobalAccel -lKF6I18n
     #INCLUDEPATH += $$PREFIX/include/KF6/KGlobalAccel
     #INCLUDEPATH += $$PREFIX/include/KF6/KI18n
-    
-    INCLUDEPATH += /usr/include/libdframeworkdbus-2.0
+
     INCLUDEPATH += /usr/include/x86_64-linux-gnu/qt6/QtWidgets
     
 } else {
@@ -171,6 +170,7 @@ HEADERS += main_window.h \
     show_buttons.h \
     keydefine.h   \
     menucontroller/menucontroller.h \
+    utils/proxyaudioport.h \
     utils/voicevolumewatcher_interface.h \
     utils_interface.h \
     voicevolumewatcherext.h \
@@ -231,6 +231,7 @@ SOURCES += main.cpp \
     button_feedback.cpp \
     show_buttons.cpp  \
     menucontroller/menucontroller.cpp \
+    utils/proxyaudioport.cpp \
     utils/shapesutils.cpp \
     utils/tempfile.cpp \
     utils/calculaterect.cpp \

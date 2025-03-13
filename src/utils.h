@@ -189,7 +189,9 @@ public:
      */
     static QString getCpuModelName();
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     static QString getCurrentAudioChannel();
+#endif
 
     /**
      * @brief 通过键盘移动光标
