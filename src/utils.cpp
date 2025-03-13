@@ -26,9 +26,12 @@
 #include <QStandardPaths>
 #include <QProcess>
 #include <QKeyEvent>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <com_deepin_daemon_audio.h>
 #include <com_deepin_daemon_audio_sink.h>
 #include <com_deepin_daemon_audio_source.h>
+#endif
 
 #include <DDialog>
 #include <DSysInfo>
@@ -84,6 +87,7 @@ Utils *Utils::instance()
     return m_utils;
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 QString Utils::getCurrentAudioChannel()
 {
     const QString serviceName{"com.deepin.daemon.Audio"};
@@ -122,6 +126,7 @@ QString Utils::getCurrentAudioChannel()
     }
     return str_output;
 }
+#endif
 
 QString Utils::getQrcPath(QString imageName)
 {

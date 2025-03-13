@@ -7,8 +7,11 @@
 #define VOICEVOLUMEWATCHER_H
 
 #include <QTimer>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <libdframeworkdbus-2.0/com_deepin_daemon_audio.h>
 #include <libdframeworkdbus-2.0/com_deepin_daemon_audio_source.h>
+#endif
+
 #include "voicevolumewatcher_interface.h"
 #include "audioutils.h"
 
@@ -62,11 +65,13 @@ private:
     // For v23 or later
     AudioUtils *m_audioUtils{nullptr};
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     // For V20 or older
     // Audio interface com.deepin.daemon.Audio
     QScopedPointer<com::deepin::daemon::Audio> m_audioInterface;
     // Audio Source (Input Source)
     QScopedPointer<com::deepin::daemon::audio::Source> m_defaultSource;
+#endif
 
     // All available input ports.except loopback port.
     QMap<QString, Port> m_availableInputPorts;

@@ -11,8 +11,7 @@
 #include <QObject>
 #include <QProcess>
 
-//暂时使用这个头文件，后续修改
-#include </usr/include/libdframeworkdbus-2.0/types/audioport.h>
+#include "proxyaudioport.h"
 
 /**
  * @brief AudioService 音频服务名 org.deepin.dde.Audio1
@@ -149,7 +148,8 @@ protected:
      * @brief initConnections 初始化音频dbus服务属性改变链接
      */
     void initConnections();
-
+    
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     /**
      * @brief currentAudioChannel 获取当前系统音频通道
      * @return
@@ -162,6 +162,7 @@ protected:
      * @return 设备名称
      */
     QString getDefaultDeviceNameV20Impl(DefaultAudioType mode);
+#endif
 
 private:
     /**

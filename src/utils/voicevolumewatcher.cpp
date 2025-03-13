@@ -3,8 +3,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "voicevolumewatcher.h"
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <com_deepin_daemon_audio.h>
 #include <com_deepin_daemon_audio_source.h>
+#endif
+
 #include "utils.h"
 
 static const QString kV20AudioService = "com.deepin.daemon.Audio";
@@ -81,6 +85,7 @@ void voiceVolumeWatcher::slotVoiceVolumeWatcher()
             }
         }
     } else {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         // link: https://pms.uniontech.com/zentao/bug-view-52019.html
         if (!m_defaultSource.isNull()) {
             AudioPort activePort = m_defaultSource->activePort();
@@ -88,6 +93,7 @@ void voiceVolumeWatcher::slotVoiceVolumeWatcher()
                 currentMicrophoneVolume = m_defaultSource->volume();
             }
         }
+#endif
     }
 
     static const double DBL_EPSILON = 0.000001;
@@ -171,6 +177,7 @@ bool voiceVolumeWatcher::isMicrophoneAvail(const QString &activePort) const
  */
 void voiceVolumeWatcher::initV20DeviceWatcher()
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     m_audioInterface.reset(new com::deepin::daemon::Audio(kV20AudioService, kV20AudioPath, QDBusConnection::sessionBus(), this));
     m_defaultSource.reset(new com::deepin::daemon::audio::Source(
         kV20AudioService, m_audioInterface->defaultSource().path(), QDBusConnection::sessionBus(), this));
@@ -191,6 +198,9 @@ void voiceVolumeWatcher::initV20DeviceWatcher()
 
     // init current card info
     onCardsChanged(m_audioInterface->cards());
+#else
+    qCritical() << "Trigger v20 interface initialization but not use Qt5.";
+#endif
 }
 
 /**
