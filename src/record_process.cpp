@@ -126,8 +126,32 @@ void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filena
 void RecordProcess::onStartTranscode()
 {
     qInfo() << __LINE__ << __func__ << "正在转码视频(mp4 to gif)...";
+
+    qDebug() << "try to convert palette first";
+    QString captureTempDir = saveTempDir;
+    QString captureSavePath = savePath;
+
+    QThreadPool::globalInstance()->start([ = ](){
+        QString cachePalette = captureTempDir + QDir::separator() + "deepin_screen_recorder_palette.png";
+        QProcess paletteProcess;
+        paletteProcess.start("ffmpeg", {"-i", captureSavePath, "-vf", "select=not(mod(n\\,30)),palettegen=stats_mode=diff", cachePalette, "-y"});
+        qDebug() << paletteProcess.program() << paletteProcess.arguments().join(' ');
+
+        if (!paletteProcess.waitForFinished(10 * 60 * 1000)) {
+            qWarning() << "convert palette failed! " << paletteProcess.errorString();
+            cachePalette.clear();
+        }
+
+        QMetaObject::invokeMethod(this, [ = ](){
+            onTranscodePaletteFinished(cachePalette);
+        }, Qt::QueuedConnection);
+    });
+}
+
+void RecordProcess::onTranscodePaletteFinished(const QString &palettePng)
+{
     QProcess *transcodeProcess = new QProcess(this);
-    
+
 #if (QT_VERSION_MAJOR == 5)
     connect(transcodeProcess, QOverload<QProcess::ProcessError>::of(&QProcess::error),
             [ = ](QProcess::ProcessError processError) {
@@ -150,7 +174,7 @@ void RecordProcess::onStartTranscode()
                 if (exitStatus == QProcess::ExitStatus::NormalExit) {
                     onTranscodeFinish();
                 } else {
-                    qDebug() << "m_pTranscodeProcess is CrashExit:!";
+                    qDebug() << "transcodeProcess is CrashExit:!";
                 }
             });
 #elif (QT_VERSION_MAJOR == 6)
@@ -162,24 +186,30 @@ void RecordProcess::onStartTranscode()
                 if (exitStatus == QProcess::ExitStatus::NormalExit) {
                     onTranscodeFinish();
                 } else {
-                    qDebug() << "m_pTranscodeProcess is CrashExit:!";
+                    qDebug() << "transcodeProcess is CrashExit:!";
                 }
             });
 #endif
 
-    //connect(m_pTranscodeProcess, SIGNAL(finished(int)), this, SLOT(onTranscodeFinish()));
-    //connect(m_pTranscodeProcess, SIGNAL(finished(int)), m_pTranscodeProcess, SLOT(deleteLater()));
     QString path = savePath;
     QStringList arg;
     arg << "-i";
     arg << savePath;
+
+    if (!palettePng.isEmpty()) {
+        arg << "-i";
+        arg << palettePng;
+        arg << "-filter_complex";
+        arg << "paletteuse=dither=none:diff_mode=rectangle";
+    }
+
     arg << "-r";
     arg << "12";
-    arg << "-filter_complex";
-    arg << "[0:v] split [a][b];[a] palettegen=stats_mode=diff [p];[b][p] paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle";
     arg << path.replace("mp4", "gif");
     transcodeProcess->start("ffmpeg", arg);
-    //部分hw arm架构的机型需要这样设置
+    qDebug() << transcodeProcess->program() << transcodeProcess->arguments().join(' ');
+
+//部分hw arm架构的机型需要这样设置
 #if defined (__aarch64__)
     if (Utils::isWaylandMode) {
         qDebug() << "watting transcode gif end!";

@@ -126,6 +126,9 @@ private slots:
      */
     void onStartTranscode();
 
+    // convert mp4 to gif with palette
+    void onTranscodePaletteFinished(const QString &palettePng);
+
     /**
      * @brief onTranscodeFinish:转码完成
      */
