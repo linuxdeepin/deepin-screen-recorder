@@ -30,7 +30,8 @@ void RecordTimePlugin::init(PluginProxyInterface *proxyInter)
 {
     m_proxyInter = proxyInter;
     m_dBusService = new DBusService(this);
-    connect(m_dBusService, SIGNAL(start()), this, SLOT(onStart()));
+    // Reset record time (save in file) when restart recording.
+    connect(m_dBusService, &DBusService::start, this, [this](){ onStart(true); });
     connect(m_dBusService, SIGNAL(stop()), this, SLOT(onStop()));
     connect(m_dBusService, SIGNAL(recording()), this, SLOT(onRecording()));
     connect(m_dBusService, SIGNAL(pause()), this, SLOT(onPause()));
@@ -87,11 +88,14 @@ void RecordTimePlugin::clear()
     }
 }
 
-void RecordTimePlugin::onStart()
+void RecordTimePlugin::onStart(bool resetTime)
 {
     qInfo() << "start record time";
     m_timer = new QTimer(this);
     m_timeWidget = new TimeWidget();
+    if (resetTime) {
+        m_timeWidget->clearSetting();
+    }
     m_checkTimer = nullptr;
     m_timer->start(600);
     connect(m_timer, &QTimer::timeout, this, &RecordTimePlugin::refresh);
