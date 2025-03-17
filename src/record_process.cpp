@@ -200,7 +200,7 @@ void RecordProcess::onTranscodePaletteFinished(const QString &palettePng)
         arg << "-i";
         arg << palettePng;
         arg << "-filter_complex";
-        arg << "paletteuse=dither=none:diff_mode=rectangle";
+        arg << "fps=12,paletteuse=dither=none:diff_mode=rectangle";
     }
 
     arg << "-r";
