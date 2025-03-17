@@ -61,7 +61,7 @@ public slots:
     /**
      * @brief onStart:启动计时服务
      */
-    void onStart();
+    void onStart(bool resetTime = false);
 
     /**
      * @brief onStop:停止计时服务
