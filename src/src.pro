@@ -172,6 +172,7 @@ HEADERS += main_window.h \
     menucontroller/menucontroller.h \
     utils/proxyaudioport.h \
     utils/voicevolumewatcher_interface.h \
+    utils/x_multi_screen_info.h \
     utils_interface.h \
     voicevolumewatcherext.h \
     utils/baseutils.h \
@@ -239,6 +240,7 @@ SOURCES += main.cpp \
     utils/configsettings.cpp \
     utils/baseutils.cpp \
     utils/voicevolumewatcher_interface.cpp \
+    utils/x_multi_screen_info.cpp \
     utils_interface.cpp \
     wayland-treeland-capture-unstable-v1-protocol.c \
     widgets/toptips.cpp \
@@ -316,7 +318,7 @@ RESOURCES = ../assets/image/deepin-screen-recorder.qrc \
     ../resources.qrc
 
 # Libraries
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -ldl -limagevisualresult
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -ldl -limagevisualresult -lXinerama
 
 contains(DEFINES, OCR_SCROLL_FLAGE_ON) {
     LIBS += -lopencv_small

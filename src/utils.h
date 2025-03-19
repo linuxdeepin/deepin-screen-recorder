@@ -79,6 +79,9 @@ public:
     static bool isWaylandMode;
     static bool isTreelandMode;
 
+    // temporary flag, remove it if fix scale factor bugs.
+    static bool forceResetScale;
+
     static QString appName;
     /**
      * @brief 本机是否存在ffmpeg相关库 true:存在 false:不存在

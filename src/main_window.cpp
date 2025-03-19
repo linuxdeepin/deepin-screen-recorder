@@ -188,7 +188,13 @@ void MainWindow::initMainWindow()
         m_cursorBound = 5;
     }
     setDragCursor();
-    m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
+    // FIXME(205567 / 307017): temporarily fix, we manually reset scale factor to 1
+    if (Utils::forceResetScale) {
+        m_pixelRatio = 1.0;
+    } else {
+        m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
+    }
+
     Utils::pixelRatio = m_pixelRatio;
     // 监控录屏过程中， 特效窗口的变化。
     connect(m_wmHelper, &DWindowManagerHelper::hasCompositeChanged, this, &MainWindow::compositeChanged);
