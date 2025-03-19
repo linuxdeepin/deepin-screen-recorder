@@ -57,6 +57,8 @@ bool Utils::isTabletEnvironment = false;
 bool Utils::isWaylandMode = false;
 bool Utils::isTreelandMode = false;
 
+bool Utils::forceResetScale = false;
+
 bool Utils::isRootUser = false;
 qreal Utils::pixelRatio = 0.0;
 bool Utils::isFFmpegEnv = true;

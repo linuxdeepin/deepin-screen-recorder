@@ -9,6 +9,7 @@
 #include "dbusservice/dbusscreenshotservice.h"
 #include "accessibility/acObjectList.h"
 #include "utils/eventlogutils.h"
+#include "utils/x_multi_screen_info.h"
 
 #include <DWidget>
 #include <DLog>
@@ -69,20 +70,8 @@ static bool CheckFFmpegEnv()
     return flag;
 }
 
-int main(int argc, char *argv[])
+void resetScaleFactor()
 {
-    // wayland调试输出
-    // qputenv("WAYLAND_DEBUG", "1");
-    if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
-        setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
-    }
-
-#if (QT_VERSION_MAJOR == 5)
-    DGuiApplicationHelper::setUseInactiveColorGroup(false);
-#endif
-
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
     // Support V23 or later.
     // FIXME: Reconstruct the toolbar position calculation based on scaleFactor,
     // or fix the issue of the dbus-send call
@@ -101,6 +90,21 @@ int main(int argc, char *argv[])
             qputenv("QT_SCALE_FACTOR", QString::number(1 / factor, 'g', 2).toLatin1());
         }
     }
+}
+
+int main(int argc, char *argv[])
+{
+    // wayland调试输出
+    // qputenv("WAYLAND_DEBUG", "1");
+    if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
+        setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
+    }
+
+#if (QT_VERSION_MAJOR == 5)
+    DGuiApplicationHelper::setUseInactiveColorGroup(false);
+#endif
+
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     // 平板模式
     // Utils::isTabletEnvironment = DGuiApplicationHelper::isTabletEnvironment();
@@ -114,6 +118,12 @@ int main(int argc, char *argv[])
         format.setAlphaBufferSize(8);
         format.setRenderableType(QSurfaceFormat::OpenGLES);
         format.setDefaultFormat(format);
+    } else {
+        // check if need reset scale in multi-screen.
+        Utils::forceResetScale = XMultiScreenInfo::screenNeedResetScale();
+        if (Utils::forceResetScale) {
+            resetScaleFactor();
+        }
     }
 
     Utils::isFFmpegEnv = CheckFFmpegEnv();
