@@ -719,7 +719,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation>新录音</translation>
+        <translation>新录屏</translation>
     </message>
 </context>
 </TS>
