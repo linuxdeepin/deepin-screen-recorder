@@ -114,7 +114,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>截圖錄屏</translation>
     </message>
 </context>
 <context>
@@ -143,22 +143,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>截圖</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>錄屏</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>截圖</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>錄屏</translation>
     </message>
 </context>
 <context>
@@ -411,7 +411,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>錄屏</translation>
     </message>
 </context>
 <context>
@@ -720,7 +720,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation>新錄音</translation>
+        <translation>新錄屏</translation>
     </message>
 </context>
 </TS>
