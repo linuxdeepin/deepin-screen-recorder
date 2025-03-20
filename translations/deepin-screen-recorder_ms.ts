@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ms">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ms">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -23,6 +21,17 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>Recording</source>
         <translation>Rakaman</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>Rakam</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Tangkap Layar</translation>
     </message>
 </context>
 <context>
@@ -97,7 +106,7 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Buka Folder</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
@@ -105,7 +114,7 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Tangkap Layar</translation>
+        <translation>Tangkap Layar</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Rakam</translation>
+        <translation>Rakam</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Tangkap Layar</translation>
+        <translation>Tangkap Layar</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Rakaman</translation>
+        <translation>Merakam</translation>
     </message>
 </context>
 <context>
@@ -172,7 +181,7 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Buka Folder</translation>
     </message>
 </context>
 <context>
@@ -372,11 +381,11 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Mula tangkap tatal</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"></translation>
+        <translation>Mula OCR</translation>
     </message>
     <message>
         <source>Arrow</source>
@@ -402,7 +411,7 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Rakam</translation>
+        <translation>Rakam</translation>
     </message>
 </context>
 <context>
@@ -410,29 +419,41 @@ atau klik pintasan sekali lagi untuk hentikan rakaman</translation>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>Segi Empat
+Tekan dan tahan kekunci Shift untuk membentuk sebuah petak</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>Elips
+Tekan dan tahan kekunci Shift untuk membentuk sebuah bulatan</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"></translation>
+        <translation>Berus
+Tekan dan tahan kekunci Shift untuk membentuk satu garisan lurus</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Laras kekuatan kabur (Tatal untuk melarasnya)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Laras saiz berus (Tatal untuk melarasnya)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Laras saiz teks (Tatal untuk melarasnya)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Klik atau seret untuk
+pilih kawasan rakaman</translation>
     </message>
 </context>
 <context>
@@ -579,67 +600,71 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Turn on camera (C)</source>
-        <translation type="unfinished"></translation>
+        <translation>Hidupkan kamera (C)</translation>
     </message>
     <message>
         <source>Border Effects</source>
-        <translation type="unfinished"></translation>
+        <translation>Kesan Sempadan</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation>Tiada</translation>
     </message>
     <message>
         <source>Turn off camera (C)</source>
-        <translation type="unfinished"></translation>
+        <translation>Matikan kamera (C)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"></translation>
+        <translation>Sembunyi Ketukan Kekunci (K)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation type="unfinished"></translation>
+        <translation>Tunjuk Ketukan Kekunci (K)</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"></translation>
+        <translation>webm</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"></translation>
+        <translation>Video</translation>
     </message>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>Segiempat (R)
+Tekan dan tahan kekunci Shift untuk melukis sebuah segiempat</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>Elips (O)
+Tekan dan tahan kekunci Shift untuk melukis sebuah bulatan</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"></translation>
+        <translation>Garisan (L)
+Tekan dan tahan kekunci Shift untuk melukis garisan menegak atau mengufuk</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"></translation>
+        <translation>Anak panah (X)
+Tekan dan tahan kekunci Shift untuk melukis anak panah menegak atau mengufuk</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"></translation>
+        <translation>Bayang</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"></translation>
+        <translation>Sempadan</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Peranti</translation>
     </message>
     <message>
         <source>Sound</source>
@@ -647,19 +672,19 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio sistem</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation>Tunjuk klik</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Tetapkan laluan ketika simpan</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Ubah laluan ketika simpan</translation>
     </message>
 </context>
 <context>
@@ -689,6 +714,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>Keluar</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Rakaman baharu</translation>
     </message>
 </context>
 </TS>

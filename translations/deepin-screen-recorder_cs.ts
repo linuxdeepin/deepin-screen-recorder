@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="cs">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="cs">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -23,6 +21,17 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <message>
         <source>Recording</source>
         <translation>Nahrávání</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>Pořídit záznam</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Pořídit snímek obrazovky</translation>
     </message>
 </context>
 <context>
@@ -105,7 +114,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Snímek obrazovky</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Pořídit záznam</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Snímek obrazovky</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Nahrávání</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -402,7 +411,7 @@ v oznamovací oblasti panelu nebo stiskněte klávesovou zkratku</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Pořídit záznam</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -436,6 +445,15 @@ Stiskněte a podržte klávesu Shift pro kreslení přímky</translation>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
         <translation>Nastavení velikosti textu (posunutím ji nastavíte)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Klepněte nebo táhněte
+pro vybrání oblasti k nahrávání</translation>
     </message>
 </context>
 <context>
@@ -654,19 +672,19 @@ Stiskněte a podržte klávesu Shift pro kreslení svislé nebo vodorovné šipk
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Zvuk systému</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit kliknutí</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavit popis umístění pro ukládání</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Změnit popis umístění pro ukládání</translation>
     </message>
 </context>
 <context>
@@ -696,6 +714,13 @@ Stiskněte a podržte klávesu Shift pro kreslení svislé nebo vodorovné šipk
     <message>
         <source>Exit</source>
         <translation>Ukončit</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Nová nahrávka</translation>
     </message>
 </context>
 </TS>

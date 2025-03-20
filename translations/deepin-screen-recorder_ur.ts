@@ -23,6 +23,17 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
@@ -100,6 +111,10 @@ or press the shortcut again to stop recording</source>
         <source>Pin Screenshots</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -120,6 +135,28 @@ or press the shortcut again to stop recording</source>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Recording</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -365,11 +402,14 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
+        <source>Screenshot</source>
         <translation type="unfinished"/>
     </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
     <message>
-        <source>Screenshot</source>
+        <source>Record</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -400,6 +440,14 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -621,6 +669,14 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <source>Show click</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -648,6 +704,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Exit</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
         <translation type="unfinished"/>
     </message>
 </context>

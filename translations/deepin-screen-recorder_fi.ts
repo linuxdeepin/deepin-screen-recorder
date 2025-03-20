@@ -1,12 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="fi">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="fi">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Napsauta valikon kuvaketta 
+        <translation>Paina valikon kuvaketta 
 tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
@@ -18,7 +16,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Ruudunkaappaus</translation>
+        <translation>Kaappaus</translation>
     </message>
     <message>
         <source>Recording</source>
@@ -26,10 +24,21 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
 </context>
 <context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>Tallenna</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Kaappaus</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>Ruudunkaappaus</translation>
+        <translation>Kaappaus</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -85,7 +94,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Ruudunkaappaus</translation>
+        <translation>Kaappaus</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
@@ -105,7 +114,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>deepin-näytön-tallennin</translation>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Ruudunkaappaus</translation>
+        <translation>Kaappaus</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Tallenna</translation>
+        <translation>Tallenna</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Ruudunkaappaus</translation>
+        <translation>Kaappaus</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Tallennus</translation>
+        <translation>Tallentaa</translation>
     </message>
 </context>
 <context>
@@ -179,7 +188,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>Ruudunkaappaus alkaa %1 sekunnissa</translation>
+        <translation>Kaappaus alkaa %1</translation>
     </message>
 </context>
 <context>
@@ -368,7 +377,7 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation>Kiinnitä kuvakaappaukset</translation>
+        <translation>Kiinnitä kaappaukset</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
@@ -395,14 +404,14 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <name>ShotStartPlugin</name>
     <message>
         <source>Screenshot</source>
-        <translation>Ruudunkaappaus</translation>
+        <translation>Kaappaus</translation>
     </message>
 </context>
 <context>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Tallenna</translation>
+        <translation>Tallenna</translation>
     </message>
 </context>
 <context>
@@ -410,29 +419,41 @@ tai lopeta tallennus painamalla pikakuvaketta uudelleen</translation>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>Suorakulmio
+Piirrä neliö pitämällä Shift-painettuna</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellipsi
+Piirrä ympyrä pitämällä Shift-painettuna</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"></translation>
+        <translation>Sivellin
+Vedä suora viiva pitämällä Shift-painettuna</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Muuta läpikuultavuutta (vieritä säätääksesi)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Muuta siveltimen kokoa (vieritä säätääksesi)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Muuta tekstin kokoa (vieritä säätääksesi)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Napsauta tai vedä
+valitse tallennettava alue</translation>
     </message>
 </context>
 <context>
@@ -563,7 +584,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Ruudunkaappaus</translation>
+        <translation>Kaappaus</translation>
     </message>
     <message>
         <source>Pin screenshots (Alt+P）</source>
@@ -612,34 +633,38 @@ Press and hold Shift to draw a straight line</source>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>Suorakulmio (R)
+Piirrä neliö pitämällä Shift-painettuna</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellipsi (O).
+Piirrä ympyrä pitämällä Shift-painettuna</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"></translation>
+        <translation>Viiva (L)
+Vedä suora pysty- tai vaakaviiva pitämällä Shift-painettuna</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"></translation>
+        <translation>Nuoli (X)
+Vedä suora pysty- tai vaakanuoli pitämällä Shift-painettuna</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"></translation>
+        <translation>Varjo</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"></translation>
+        <translation>Reunus</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Laite</translation>
     </message>
     <message>
         <source>Sound</source>
@@ -647,19 +672,19 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Järjestelmän ääni</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation>Näytä painallus</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Aseta tallennuspolku</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Muuta polkua tallentaessa</translation>
     </message>
 </context>
 <context>
@@ -689,6 +714,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>Poistu</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Uusi äänitys</translation>
     </message>
 </context>
 </TS>

@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="es">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="es">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -23,6 +21,17 @@ o haga clic en el icono de la bandeja</translation>
     <message>
         <source>Recording</source>
         <translation>Grabaciones</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>Grabación</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
     </message>
 </context>
 <context>
@@ -105,7 +114,7 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>Grabador de pantalla</translation>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ o haga clic en el icono de la bandeja</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Captura de pantalla</translation>
+        <translation>Captura de pantalla</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Grabación</translation>
+        <translation>Grabar</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Captura de pantalla</translation>
+        <translation>Captura de pantalla</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Grabaciones</translation>
+        <translation>Grabaciones</translation>
     </message>
 </context>
 <context>
@@ -402,7 +411,7 @@ o haga clic en el icono de la bandeja</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Grabación</translation>
+        <translation>Grabar</translation>
     </message>
 </context>
 <context>
@@ -410,29 +419,41 @@ o haga clic en el icono de la bandeja</translation>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>Rectángulo
+Mantenga presionada la tecla Mayús para dibujar un cuadrado</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellipse
+Mantenga presionada la tecla Mayús para dibujar un círculo</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"></translation>
+        <translation>Pincel
+Mantenga presionada la tecla Mayús para dibujar una línea recta</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajusta la intensidad del desenfoque (Desplácese para ajustarlo)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajusta el tamaño del pincel (Desplácese para ajustarlo)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajusta el tamaño del texto (Desplázate para ajustarlo)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Haz clic o arrástrala
+para seleccionar el área a grabar.</translation>
     </message>
 </context>
 <context>
@@ -591,15 +612,15 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Turn off camera (C)</source>
-        <translation type="unfinished"></translation>
+        <translation>Encender cámara (C)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ocultar pulsación de tecla (K)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar pulsación de tecla (K)</translation>
     </message>
     <message>
         <source>webm</source>
@@ -612,34 +633,38 @@ Press and hold Shift to draw a straight line</source>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>Rectángulo (R)
+Mantenga presionada la tecla Mayús para dibujar un cuadrado</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellipse (O)
+Mantenga presionada la tecla Mayús para dibujar un círculo</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"></translation>
+        <translation>Línea (L)
+Mantenga presionada la tecla Mayús para dibujar una línea vertical u horizontal</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"></translation>
+        <translation>Flecha (X)
+Mantenga presionada la tecla Mayús para dibujar una flecha vertical u horizontal</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"></translation>
+        <translation>Sombra</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"></translation>
+        <translation>Borde</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Dispositivo</translation>
     </message>
     <message>
         <source>Sound</source>
@@ -647,19 +672,19 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio del sistema</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar clic</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Establecer ruta de guardado</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambiar ruta de guardado</translation>
     </message>
 </context>
 <context>
@@ -689,6 +714,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>Salir</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Nueva grabación</translation>
     </message>
 </context>
 </TS>

@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ca">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ca">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -23,6 +21,17 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <message>
         <source>Recording</source>
         <translation>Gavació</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>Grava</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Captura de pantalla</translation>
     </message>
 </context>
 <context>
@@ -105,7 +114,7 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>deepin-screen-recorder</translation>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Captura de pantalla</translation>
+        <translation>Captura de pantalla</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Grava</translation>
+        <translation>Grava</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Captura de pantalla</translation>
+        <translation>Captura de pantalla</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Gavació</translation>
+        <translation>Gavació</translation>
     </message>
 </context>
 <context>
@@ -402,7 +411,7 @@ o premeu la drecera de nou per aturar la gravació.</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Grava</translation>
+        <translation>Grava</translation>
     </message>
 </context>
 <context>
@@ -436,6 +445,15 @@ Manteniu premuda la tecla Maj per dibuixar una línia recta.</translation>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
         <translation>Ajusta la mida del text (desplaçament per ajustar-lo)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Cliqueu o arrossegueu
+per seleccionar l&apos;àrea a gravar</translation>
     </message>
 </context>
 <context>
@@ -654,19 +672,19 @@ Manteniu premuda la tecla Maj per dibuixar una fletxa vertical o horitzontal.</t
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Àudio del sistema</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra els clics</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Estableix un camí per desar</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Canvia el camí per desar</translation>
     </message>
 </context>
 <context>
@@ -696,6 +714,13 @@ Manteniu premuda la tecla Maj per dibuixar una fletxa vertical o horitzontal.</t
     <message>
         <source>Exit</source>
         <translation>Surt</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Gravació nova</translation>
     </message>
 </context>
 </TS>

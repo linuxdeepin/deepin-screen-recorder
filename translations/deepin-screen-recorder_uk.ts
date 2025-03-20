@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="uk">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="uk">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -23,6 +21,17 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recording</source>
         <translation>Записування</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>Записати</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Знімок</translation>
     </message>
 </context>
 <context>
@@ -105,7 +114,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>deepin-screen-recorder</translation>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Знімок</translation>
+        <translation>Знімок</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Записати</translation>
+        <translation>Запис</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Знімок</translation>
+        <translation>Знімок</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Записування</translation>
+        <translation>Записування</translation>
     </message>
 </context>
 <context>
@@ -402,7 +411,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Записати</translation>
+        <translation>Запис</translation>
     </message>
 </context>
 <context>
@@ -436,6 +445,15 @@ Press and hold Shift to draw a straight line</source>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
         <translation>Скоригувати розмір символів (крутіть коліщатко для зміни)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Натисніть або перетяніть,
+щоб вибрати область для запису</translation>
     </message>
 </context>
 <context>
@@ -654,19 +672,19 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Загальносистемний звук</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation>Показати клацання</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Встановити шлях для збереження</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Змінити шлях для збереження</translation>
     </message>
 </context>
 <context>
@@ -696,6 +714,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>Вийти</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Новий запис</translation>
     </message>
 </context>
 </TS>
