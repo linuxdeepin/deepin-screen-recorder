@@ -1,12 +1,11 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="bg">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="bg" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <location filename="../src/countdown_tooltip.cpp" line="78"/>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Щракнете на системната икона
-или краткият път отново за спиране на записа</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -42,7 +41,7 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/record_process.cpp" line="301"/>
         <source>Recording finished</source>
-        <translation>Записа приключи</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="302"/>
