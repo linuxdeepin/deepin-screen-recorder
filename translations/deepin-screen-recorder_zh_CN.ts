@@ -199,7 +199,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>无法继续截图，</translation>
+        <translation>无法继续截图。</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
