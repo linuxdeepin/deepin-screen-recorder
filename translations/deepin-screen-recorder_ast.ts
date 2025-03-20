@@ -1,12 +1,11 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ast">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="ast" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
         <location filename="../src/countdown_tooltip.cpp" line="78"/>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Calca nel iconu de la bandexa o volvi
-primir nel atayu pa dexar de grabar</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -14,7 +13,7 @@ primir nel atayu pa dexar de grabar</translation>
     <message>
         <location filename="../src/main_window.cpp" line="76"/>
         <source>Deepin screen recorder</source>
-        <translation>Deepin Screen Recorder</translation>
+        <translation>Deepin screen recorder</translation>
     </message>
     <message>
         <location filename="../src/main_window.cpp" line="136"/>
@@ -42,7 +41,7 @@ primir nel atayu pa dexar de grabar</translation>
     <message>
         <location filename="../src/record_process.cpp" line="301"/>
         <source>Recording finished</source>
-        <translation>Finó la grabación</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="302"/>
@@ -56,8 +55,8 @@ primir nel atayu pa dexar de grabar</translation>
         <location filename="../src/start_tooltip.cpp" line="48"/>
         <source>Click or drag to
 select the area to record</source>
-        <translation>Calca o arrastra pa
-esbillar l&apos;área a grabar</translation>
+        <translation>Primi o arrastra
+pa esbillar l&apos;área a grabar</translation>
     </message>
 </context>
 </TS>
