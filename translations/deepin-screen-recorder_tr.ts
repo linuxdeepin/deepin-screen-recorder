@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="tr">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="tr">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -23,6 +21,17 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Recording</source>
         <translation>Kaydediyor</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>Kayıt</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ekran Görüntüsü</translation>
     </message>
 </context>
 <context>
@@ -105,7 +114,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>deepin-ekran-kaydedici</translation>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Ekran Görüntüsü</translation>
+        <translation>Ekran Görüntüsü</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Kayıt</translation>
+        <translation>Kayıt</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Ekran Görüntüsü</translation>
+        <translation>Ekran Görüntüsü</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Kaydediyor</translation>
+        <translation>Kaydediyor</translation>
     </message>
 </context>
 <context>
@@ -402,7 +411,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Kayıt</translation>
+        <translation>Kayıt</translation>
     </message>
 </context>
 <context>
@@ -410,29 +419,41 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>Dikdörtgen
+Kare çizmek için Shift tuşunu basılı tutun</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>Elips
+Bir daire çizmek için Shift tuşunu basılı tutun</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"></translation>
+        <translation>Fırça
+Düz bir çizgi çizmek için Shift tuşunu basılı tutun</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bulanıklaştırma gücünü ayarlayın (Ayarlamak için kaydırın)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Fırça boyutunu ayarlayın (Ayarlamak için kaydırın)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Metin boyutunu ayarlayın (Ayarlamak için kaydırın)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Kaydedilecek alanı
+seçmek için tıklayın ya da sürükleyin</translation>
     </message>
 </context>
 <context>
@@ -612,34 +633,38 @@ Press and hold Shift to draw a straight line</source>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>Dikdörtgen (R)
+Kare çizmek için Shift tuşunu basılı tutun</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>Elips (O)
+Bir daire çizmek için Shift tuşunu basılı tutun</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"></translation>
+        <translation>Çizgi (L)
+Dikey veya yatay çizgi çizmek için Shift tuşunu basılı tutun</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"></translation>
+        <translation>Ok (X)
+Dikey veya yatay ok çizmek için Shift tuşunu basılı tutun</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"></translation>
+        <translation>Gölge</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"></translation>
+        <translation>Sınır</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Aygıt</translation>
     </message>
     <message>
         <source>Sound</source>
@@ -647,19 +672,19 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Sistem sesi</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation>Tıklamayı göster</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Kaydet sırasında bir yol ayarla</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Kaydet sırasında yolu değiştir</translation>
     </message>
 </context>
 <context>
@@ -689,6 +714,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>Çıkış</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Yeni kayıt</translation>
     </message>
 </context>
 </TS>

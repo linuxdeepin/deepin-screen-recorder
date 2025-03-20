@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ug">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ug">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -21,7 +19,18 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"></translation>
+        <translation>ئېكراننى سىنغا ئېلىش</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>سىنغا ئېلىش</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>رەسىم تۇتۇش</translation>
     </message>
 </context>
 <context>
@@ -64,7 +73,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>رەسىم %1 گە ساقلاندى</translation>
+        <translation> %1 گە ساقلاندى</translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -96,15 +105,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>ھۆججەت قىسقۇچنى ئېچىش</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished">چاپلاق</translation>
+        <translation>چاپلاق</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -133,22 +142,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">رەسىم تۇتۇش</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">سىنغا ئېلىش</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">رەسىم تۇتۇش</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -171,7 +180,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>ھۆججەت قىسقۇچنى ئېچىش</translation>
     </message>
 </context>
 <context>
@@ -371,23 +380,23 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation>سىيرىلما سۈرەت تۇتۇشنى قوزغىتىش</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"></translation>
+        <translation>سۈرەتتىكى خەتنى تونۇتۇشنى قوزغىتىش</translation>
     </message>
     <message>
         <source>Arrow</source>
-        <translation type="unfinished"></translation>
+        <translation>ئوقيا</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>ئۈن ئېلىش</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished">مائۇسنى سىنغا ئېلىش</translation>
+        <translation>مائۇسنى سىنغا ئېلىش</translation>
     </message>
 </context>
 <context>
@@ -401,7 +410,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">سىنغا ئېلىش</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -409,29 +418,40 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>تىك تۆت بۇلۇڭ
+Shift نى بېسىپ تۇرسىڭىز كۋادرات سىزغىلى بولىدۇ</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>ئېللىپىس
+Shift نى بېسىپ تۇرسىڭىز چەمبەر سىزغىلى بولىدۇ</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"></translation>
+        <translation>قەلەم
+Shift نى بېسىپ تۇرسىڭىز تۈز سىزىق سىزغىلى بولىدۇ</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>سۇسلاشتۇرۇش سىجىللىقىنى تەڭشەش (مائۇسنى دومىتىلىپ)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>قەلەمنىڭ چوڭلۇقىنى تەڭشەش (مائۇسنى دومىتىلىپ)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>خەت چوڭلۇقىنى تەڭشەش (مائۇسنى دومىتىلىپ)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>چېكىپ ياكى سۈرۈش ئارقىلىق سىنغا ئېلىش رايونىنى تاللاڭ</translation>
     </message>
 </context>
 <context>
@@ -522,7 +542,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation>مائوس كۆرۈنسۇن</translation>
+        <translation>سىن بەلگە كۆرۈنسۇن</translation>
     </message>
     <message>
         <source>Extract Text</source>
@@ -530,7 +550,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Show keystroke (K)</source>
-        <translation type="unfinished"></translation>
+        <translation>كۇنۇپكا كۆرۈنسۇن (K)</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -538,27 +558,27 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Settings (F3)</source>
-        <translation type="unfinished"></translation>
+        <translation>تەڭشەك (F3)</translation>
     </message>
     <message>
         <source>Blur (B)</source>
-        <translation type="unfinished"></translation>
+        <translation>سۇسلاشتۇرۇش (B)</translation>
     </message>
     <message>
         <source>Text (T)</source>
-        <translation type="unfinished"></translation>
+        <translation>تېكىست (T)</translation>
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"></translation>
+        <translation>دومىلىما سۈرەت تۇتۇش (Alt+I）</translation>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
-        <translation type="unfinished"></translation>
+        <translation>تېكىستنى تونۇتۇش (Alt+O）</translation>
     </message>
     <message>
         <source>Undo (Ctrl+Z)</source>
-        <translation type="unfinished"></translation>
+        <translation>بىكار قىلىش (Ctrl+Z)</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -566,7 +586,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Pin screenshots (Alt+P）</source>
-        <translation type="unfinished"></translation>
+        <translation>رەسىم چاپلاش (Alt+P）</translation>
     </message>
     <message>
         <source>Record</source>
@@ -574,102 +594,106 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Pencil (P)</source>
-        <translation type="unfinished"></translation>
+        <translation>قەلەم (P)</translation>
     </message>
     <message>
         <source>Turn on camera (C)</source>
-        <translation type="unfinished"></translation>
+        <translation>كامېرانى ئېچىش (C)</translation>
     </message>
     <message>
         <source>Border Effects</source>
-        <translation type="unfinished"></translation>
+        <translation>رامكا ئۈنۈمى</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation>رامكىسىز</translation>
     </message>
     <message>
         <source>Turn off camera (C)</source>
-        <translation type="unfinished"></translation>
+        <translation>كامېرانى تاقاش (C)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"></translation>
+        <translation>كۇنۇپكا يوشۇرۇنسۇن (K)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation type="unfinished"></translation>
+        <translation>كۇنۇپكا كۆرۈنسۇن (K)</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"></translation>
+        <translation>webm</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"></translation>
+        <translation>ۋىدېئو</translation>
     </message>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>تىك تۆت بۇلۇڭ  (R)
+Shift نى بېسىپ تۇرسىڭىز كۋادرات سىزغىلى بولىدۇ</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>ئېللىپىس (O)
+Shift نى بېسىپ تۇرسىڭىز چەمبەر سىزغىلى بولىدۇ</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"></translation>
+        <translation>تۈز سىزىق (L)
+Shift نى بېسىپ تۇرسىڭىز تىك ۋە توغرىسىغا تۈز سىزىق سىزغىلى بولىدۇ</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"></translation>
+        <translation>كۆرسەتكۈچ  (X)
+Shift نى بېسىپ تۇرسىڭىز تىك ۋە توغرىسىغا تۈز كۆرسەتكۈچ سىزغىلى بولىدۇ</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>ئۈن ئېلىش</translation>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>ئورۇننى ساقلىغاندا يېڭىلاش</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>ئورۇننى ساقلىغاندا تەڭشەش</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation type="unfinished"></translation>
+        <translation>تاقاش (Esc)</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation type="unfinished"></translation>
+        <translation>جەزملەش (Enter)</translation>
     </message>
 </context>
 <context>
@@ -688,6 +712,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>چېكىنىش</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 </TS>

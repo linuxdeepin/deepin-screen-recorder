@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="de">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="de">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -23,6 +21,17 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <message>
         <source>Recording</source>
         <translation>Wird aufgenommen</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>Aufnehmen</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Bildschirmaufnahme</translation>
     </message>
 </context>
 <context>
@@ -105,7 +114,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Bildschirmaufnahme</translation>
+        <translation>Bildschirmaufnahme</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Aufnehmen</translation>
+        <translation>Aufnehmen</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Bildschirmaufnahme</translation>
+        <translation>Bildschirmaufnahme</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Wird aufgenommen</translation>
+        <translation>Wird aufgenommen</translation>
     </message>
 </context>
 <context>
@@ -168,7 +177,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     </message>
     <message>
         <source>Record</source>
-        <translation>Aufnehmen</translation>
+        <translation>Aufnahme</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -402,7 +411,7 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Aufnehmen</translation>
+        <translation>Aufnehmen</translation>
     </message>
 </context>
 <context>
@@ -410,29 +419,40 @@ oder drücken Sie die Tastenkombination erneut, um die Aufnahme zu stoppen</tran
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>Rechteck
+Umschalttaste gedrückt halten, um ein Rechteck zu zeichnen</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellipse
+Umschalttaste gedrückt halten, um eine Ellipse zu zeichnen</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"></translation>
+        <translation>Pinsel
+Umschalttaste gedrückt halten, um eine gerade Linie zu zeichnen</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Verpixel-Größe einstellen (durch Scrollen)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Pinselgröße einstellen (durch Scrollen)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Textgröße einstellen (durch Scrollen)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Klicken oder ziehen, um den Bildschirmbereich auszuwählen, der aufgenommen wird.</translation>
     </message>
 </context>
 <context>
@@ -571,7 +591,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Record</source>
-        <translation>Aufnehmen</translation>
+        <translation>Aufnahme</translation>
     </message>
     <message>
         <source>Pencil (P)</source>
@@ -612,34 +632,38 @@ Press and hold Shift to draw a straight line</source>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>Rechteck (R)
+Umschalttaste gedrückt halten, um ein Rechteck zu zeichnen</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellipse (O)
+Umschalttaste gedrückt halten, um einen Kreis zu zeichnen</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"></translation>
+        <translation>Linie (L)
+Umschalttaste gedrückt halten, um eine vertikale oder horizontale Linie zu zeichnen</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"></translation>
+        <translation>Pfeil (X)
+Umschalttaste gedrückt halten, um einen vertikalen oder horizontalen Pfeil zu zeichnen</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"></translation>
+        <translation>Schatten</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"></translation>
+        <translation>Rand</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Gerät</translation>
     </message>
     <message>
         <source>Sound</source>
@@ -647,19 +671,19 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation>System-Audio</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation>Klick anzeigen</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Beim Speichern einen Pfad festlegen</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Beim Speichern den Pfad ändern</translation>
     </message>
 </context>
 <context>
@@ -689,6 +713,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>Beenden</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Neue Aufnahme</translation>
     </message>
 </context>
 </TS>

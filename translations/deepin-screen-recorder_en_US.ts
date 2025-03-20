@@ -26,6 +26,17 @@ or press the shortcut again to stop recording</translation>
     </message>
 </context>
 <context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished">Record</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished">Screenshot</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
@@ -439,6 +450,14 @@ Press and hold Shift to draw a straight line</translation>
     </message>
 </context>
 <context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SubToolWidget</name>
     <message>
         <source>Microphone</source>
@@ -696,6 +715,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</translation>
     <message>
         <source>Exit</source>
         <translation>Exit</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

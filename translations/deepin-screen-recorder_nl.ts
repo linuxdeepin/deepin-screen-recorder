@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="nl">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="nl">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -23,6 +21,17 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <message>
         <source>Recording</source>
         <translation>Opname</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>Opnemen</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Schermfoto</translation>
     </message>
 </context>
 <context>
@@ -105,7 +114,7 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>deepin-screen-recorder</translation>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Schermfoto</translation>
+        <translation>Schermfoto</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Opnemen</translation>
+        <translation>Opnemen</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Schermfoto</translation>
+        <translation>Schermfoto</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Opname</translation>
+        <translation>Opname</translation>
     </message>
 </context>
 <context>
@@ -402,7 +411,7 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Opnemen</translation>
+        <translation>Opnemen</translation>
     </message>
 </context>
 <context>
@@ -436,6 +445,15 @@ Houd Shift ingedrukt om een rechte lijn te trekken</translation>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
         <translation>Tekstgrootte aanpassen (met scrolwiel)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Klik of sleep om
+het opnamegebied te kiezen</translation>
     </message>
 </context>
 <context>
@@ -654,19 +672,19 @@ Houd Shift ingedrukt om een verticale of horizontale pijl te tekenen</translatio
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Systeemgeluid</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation>Muisklikken tonen</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Locatie kiezen na klikken op opslaan</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Locatie wijzigen na klikken op opslaan</translation>
     </message>
 </context>
 <context>
@@ -696,6 +714,13 @@ Houd Shift ingedrukt om een verticale of horizontale pijl te tekenen</translatio
     <message>
         <source>Exit</source>
         <translation>Afsluiten</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Opname maken</translation>
     </message>
 </context>
 </TS>

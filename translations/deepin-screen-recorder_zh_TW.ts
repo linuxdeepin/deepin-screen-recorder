@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_TW">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="zh_TW">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -23,6 +21,17 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recording</source>
         <translation>錄屏</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>錄屏</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>截圖</translation>
     </message>
 </context>
 <context>
@@ -105,7 +114,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>截圖錄屏</translation>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">截圖</translation>
+        <translation>截圖</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">錄屏</translation>
+        <translation>錄屏</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">截圖</translation>
+        <translation>截圖</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">錄屏</translation>
+        <translation>錄屏</translation>
     </message>
 </context>
 <context>
@@ -402,7 +411,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">錄屏</translation>
+        <translation>錄屏</translation>
     </message>
 </context>
 <context>
@@ -436,6 +445,14 @@ Press and hold Shift to draw a straight line</source>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
         <translation>調整文字大小（滑鼠滾輪）</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>拖曳要錄影的範圍</translation>
     </message>
 </context>
 <context>
@@ -662,11 +679,11 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>儲存時設定位置</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>儲存時更新位置</translation>
     </message>
 </context>
 <context>
@@ -696,6 +713,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>退出</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>新錄屏</translation>
     </message>
 </context>
 </TS>

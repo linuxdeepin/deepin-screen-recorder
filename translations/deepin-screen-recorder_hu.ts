@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="hu">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="hu">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -23,6 +21,17 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <message>
         <source>Recording</source>
         <translation>Rögzítés</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>Felvétel</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Képernyőkép</translation>
     </message>
 </context>
 <context>
@@ -81,7 +90,7 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>Mivel az ablakok effektezése le van tiltva a folyamat során, a felvételt le kell állítani</translation>
+        <translation>Mivel az ablak effekt le van tiltva, a felvételt le kell állítani</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -105,7 +114,7 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>Deepin® Képernyőrögzítő</translation>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Képernyőkép</translation>
+        <translation>Képernyőkép</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Felvétel</translation>
+        <translation>Felvétel</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Képernyőkép</translation>
+        <translation>Képernyőkép</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Rögzítés</translation>
+        <translation>Felvétel</translation>
     </message>
 </context>
 <context>
@@ -402,7 +411,7 @@ vagy nyomja le a gyorsbillentyűt ismét a felvétel megállításához</transla
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Felvétel</translation>
+        <translation>Felvétel</translation>
     </message>
 </context>
 <context>
@@ -436,6 +445,15 @@ Egyenes vonal rajzolásához tartsa lenyomva a Shift billentyűt</translation>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
         <translation>Állítsa be a szöveg méretét (görgessen a beállításához)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Terület felvételéhez
+használjuk az egeret</translation>
     </message>
 </context>
 <context>
@@ -654,19 +672,19 @@ Függőleges vagy vízszintes nyíl rajzolásához tartsa lenyomva a Shift bille
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Rendszer hangok</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation>Kattintás megjelenítése</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Állítson be egy elérési utat a mentéshez</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Mentéskor módosítsa az elérési utat</translation>
     </message>
 </context>
 <context>
@@ -696,6 +714,13 @@ Függőleges vagy vízszintes nyíl rajzolásához tartsa lenyomva a Shift bille
     <message>
         <source>Exit</source>
         <translation>Kilépés</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Új felvétel</translation>
     </message>
 </context>
 </TS>

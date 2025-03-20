@@ -24,6 +24,17 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
     </message>
 </context>
 <context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>Yazmaq</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ekran şəkli</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
@@ -101,6 +112,10 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
         <source>Pin Screenshots</source>
         <translation>Ekran şəkllərini sancaqlayın</translation>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -122,6 +137,28 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
     <message>
         <source>Pin Screenshots</source>
         <translation>Ekran şəkllərini sancaqlayın</translation>
+    </message>
+</context>
+<context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ekran şəkli</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>Yazmaq</translation>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation>Ekran şəkli</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation>Qeyd aparılır</translation>
     </message>
 </context>
 <context>
@@ -366,12 +403,15 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
-        <translation>Ekran şəkli çəkmək</translation>
-    </message>
-    <message>
         <source>Screenshot</source>
         <translation>Ekran şəkli</translation>
+    </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
+    <message>
+        <source>Record</source>
+        <translation>Yazmaq</translation>
     </message>
 </context>
 <context>
@@ -405,6 +445,15 @@ Düz xətt çəkmək üçün Shift düyməsini basıb saxlayın</translation>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
         <translation>Yazı ölçüsünü təyin edin (Bunu üçün sürüşdürün)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Toxunub sürüşdürməklə
+yazılacaq sahəni seçin</translation>
     </message>
 </context>
 <context>
@@ -607,15 +656,15 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"/>
+        <translation>Kölgə</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"/>
+        <translation>Şərçivə</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"/>
+        <translation>Cihaz</translation>
     </message>
     <message>
         <source>Sound</source>
@@ -623,11 +672,19 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"/>
+        <translation>Sistem səsi</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"/>
+        <translation>Klikləmə görünsün</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>Saxlamaq üçün bir yol təyin edin</translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>Saxlamaq üçün yolu dəyişin</translation>
     </message>
 </context>
 <context>
@@ -657,6 +714,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>Çıxış</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Yeni ekran qeydi</translation>
     </message>
 </context>
 </TS>

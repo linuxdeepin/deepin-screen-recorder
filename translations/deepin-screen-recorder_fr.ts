@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="fr">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="fr">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -23,6 +21,17 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source>Recording</source>
         <translation>Enregistrement</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>Enregistrer</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Capture d&apos;écran</translation>
     </message>
 </context>
 <context>
@@ -97,7 +106,7 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir un dossier</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
@@ -105,7 +114,7 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Capture d&apos;écran</translation>
+        <translation>Capture d&apos;écran</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Enregistrer</translation>
+        <translation>Enregistrer</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Capture d&apos;écran</translation>
+        <translation>Capture d&apos;écran</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Enregistrement</translation>
+        <translation>Enregistrement</translation>
     </message>
 </context>
 <context>
@@ -172,7 +181,7 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir un dossier</translation>
     </message>
 </context>
 <context>
@@ -372,11 +381,11 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Démarrer en continue</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"></translation>
+        <translation>Démarrer l&apos;OCR</translation>
     </message>
     <message>
         <source>Arrow</source>
@@ -402,7 +411,7 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Enregistrer</translation>
+        <translation>Enregistrer</translation>
     </message>
 </context>
 <context>
@@ -410,29 +419,41 @@ ou appuyer à nouveau sur le raccourci pour arrêter l&apos;enregistrement</tran
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>Rectangle
+Maintenir la touche Maj enfoncée pour dessiner un carré</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellipse
+Maintenir la touche Maj enfoncée pour dessiner un cercle</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"></translation>
+        <translation>Brosse
+Maintenir la touche Maj enfoncée pour dessiner une ligne</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajuster l&apos;intensité du flou (utilisez la molette pour l&apos;ajuster)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajuster la taille de la brosse (utilisez la molette pour l&apos;ajuster)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajuster la texte du texte (utilisez la molette pour l&apos;ajuster)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Cliquer ou maintenir le bouton de la souris
+afin de sélectionner la zone à enregistrer</translation>
     </message>
 </context>
 <context>
@@ -603,43 +624,47 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"></translation>
+        <translation>webm</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"></translation>
+        <translation>Vidéos</translation>
     </message>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>Rectangle (R)
+Maintenir la touche Maj enfoncée pour dessiner un carré</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellipse (O)
+Maintenir la touche Maj enfoncée pour dessiner un cercle</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"></translation>
+        <translation>Ligne (L)
+Maintenir la touche Maj enfoncée pour tracer une ligne verticale ou horizontale</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"></translation>
+        <translation>Flèche (X)
+Maintenir la touche Maj enfoncée pour dessiner une flèche verticale ou horizontale</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"></translation>
+        <translation>Ombre</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"></translation>
+        <translation>Bordure</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Appareil</translation>
     </message>
     <message>
         <source>Sound</source>
@@ -647,19 +672,19 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Système audio</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher les clics</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Définir un chemin d&apos;enregistrement</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Changer le chemin d&apos;enregistrement</translation>
     </message>
 </context>
 <context>
@@ -689,6 +714,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>Quitter</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Nouveau enregistrement</translation>
     </message>
 </context>
 </TS>

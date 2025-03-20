@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="zh_CN">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -23,6 +21,17 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Recording</source>
         <translation>录屏</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>录屏</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>截图</translation>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">截图</translation>
+        <translation>截图</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">录屏</translation>
+        <translation>录屏</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">截图</translation>
+        <translation>截图</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">录屏</translation>
+        <translation>录屏</translation>
     </message>
 </context>
 <context>
@@ -190,7 +199,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>无法继续截图，</translation>
+        <translation>无法继续截图。</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
@@ -402,7 +411,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">录屏</translation>
+        <translation>录屏</translation>
     </message>
 </context>
 <context>
@@ -436,6 +445,14 @@ Press and hold Shift to draw a straight line</source>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
         <translation>调整文字大小（鼠标滚轮）</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -696,6 +713,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>退出</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>新录屏</translation>
     </message>
 </context>
 </TS>

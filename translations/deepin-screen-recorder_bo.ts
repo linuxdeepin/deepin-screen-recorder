@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="bo">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="bo">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -22,7 +20,18 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"></translation>
+        <translation>བརྙན་ཕབ།</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>བརྙན་ཕབ།</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>བརྙན་བཤུས།</translation>
     </message>
 </context>
 <context>
@@ -97,15 +106,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>ཡིག་ཁུག་ཁ་ཕྱེ།</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished">སྦྱར་རིས།</translation>
+        <translation>སྦྱར་རིས།</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">བརྙན་བཤུས།</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">བརྙན་ཕབ།</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">བརྙན་བཤུས།</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -172,7 +181,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>ཡིག་ཁུག་ཁ་ཕྱེ།</translation>
     </message>
 </context>
 <context>
@@ -372,23 +381,23 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation>འགུལ་ནས་བཪྙན་ལེན་འགོ་སློང་།</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"></translation>
+        <translation>པར་རིས་དབྱེ་འབྱེད་མགྱོགས་མྱུར་འགོ་སློང་།</translation>
     </message>
     <message>
         <source>Arrow</source>
-        <translation type="unfinished"></translation>
+        <translation>མདའ་རྟགས།</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>སྒྲ་འབེབས།</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished">ཕབ་བཟོའི་ཙི་གུ།</translation>
+        <translation>ཕབ་བཟོའི་ཙི་གུ།</translation>
     </message>
 </context>
 <context>
@@ -402,7 +411,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">བརྙན་ཕབ།</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -410,29 +419,40 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>གྲུ་བཞི་ནར་མོ།
+Shiftམནན་ནས་གྲུ་བཞི་ཁ་གང་འབྲི་ཐུབ།</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>འཇོང་དབྱིབས་
+Shiftམནན་ནས་སྒོར་དབྱིབས་འབྲི་ཐུབ། </translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"></translation>
+        <translation>ཕག་ཏོ་
+Shiftམནན་ནས་དྲང་ཐིག་འབྲི་ཐུབ།</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>རབ་རིབ་ཡོད་ཚད་སྙོམ་སྒྲིག་（ཙི་གུའི་འགྲིལ་འཁོར།）</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>ཕག་ཏོ་ཆེ་ཆུང་སྙོམ་སྒྲིག་（ཙི་གུའི་འགྲིལ་འཁོར།）</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"></translation>
+        <translation>ཡི་གེ་ཆེ་ཆུང་སྙོམ་སྒྲིག་（ཙི་གུའི་འགྲིལ་འཁོར།）</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -531,7 +551,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Show keystroke (K)</source>
-        <translation type="unfinished"></translation>
+        <translation>མཐེབ་གཅུས་Kམངོན་པ།</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -539,27 +559,27 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Settings (F3)</source>
-        <translation type="unfinished"></translation>
+        <translation>སྒྲིག་བཀོད་(F3)</translation>
     </message>
     <message>
         <source>Blur (B)</source>
-        <translation type="unfinished"></translation>
+        <translation>རབ་རིབ། (B)</translation>
     </message>
     <message>
         <source>Text (T)</source>
-        <translation type="unfinished"></translation>
+        <translation>ཡི་གེ། (T)</translation>
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"></translation>
+        <translation>འགྲིལ་ནས་པར་ལེན་ (Alt+I）</translation>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
-        <translation type="unfinished"></translation>
+        <translation>ཡི་གེ་ངོས་འཛིན་ Alt+O</translation>
     </message>
     <message>
         <source>Undo (Ctrl+Z)</source>
-        <translation type="unfinished"></translation>
+        <translation>ཕྱིར་འཐེན་ Ctrl+Z</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -567,7 +587,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Pin screenshots (Alt+P）</source>
-        <translation type="unfinished"></translation>
+        <translation>སྦྱར་རིས་ (Alt+P）</translation>
     </message>
     <message>
         <source>Record</source>
@@ -575,102 +595,106 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Pencil (P)</source>
-        <translation type="unfinished"></translation>
+        <translation>པིར་སྨྱུག་ (P)</translation>
     </message>
     <message>
         <source>Turn on camera (C)</source>
-        <translation type="unfinished"></translation>
+        <translation>བཪྙན་མིག་ཁ་ཕྱེ།(C)</translation>
     </message>
     <message>
         <source>Border Effects</source>
-        <translation type="unfinished"></translation>
+        <translation>མཐའ་སྒྲོམ་ཕན་ནུས།</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation>མཐའ་སྒྲོམ་མེད་པ།</translation>
     </message>
     <message>
         <source>Turn off camera (C)</source>
-        <translation type="unfinished"></translation>
+        <translation>བཪྙན་མིག་ཁ་རྒྱོབ་ (C)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"></translation>
+        <translation>མཐེབ་གཅུས་ཡིབ་པ་ (K)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation type="unfinished"></translation>
+        <translation>མཐེབ་གཅུས་མངོན་པ་ (K)</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"></translation>
+        <translation>webm</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"></translation>
+        <translation>བཪྙན་ཟློས།</translation>
     </message>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"></translation>
+        <translation>གྲུ་བཞི་ནར་མོ། (R)
+Shiftམནན་ནས་གྲུ་བཞི་ཁ་གང་འབྲི་ཐུབ།</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"></translation>
+        <translation>འཇོང་དབྱིབས་ (O)
+Shiftམནན་ནས་སྒོར་དབྱིབས་འབྲི་ཐུབ། </translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"></translation>
+        <translation>ཕག་ཏོ་ (L)
+Shiftམནན་ནས་དྲང་ཐིག་འབྲི་ཐུབ།</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"></translation>
+        <translation>མདའ་རྩེ་ (X)
+Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམས་ཀྱི་དྲང་ཐིག་འབྲི་ཐུབ།</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"></translation>
+        <translation>བརྙན་སྟོན།</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"></translation>
+        <translation>ཕྱིའི་མཐའ་སྒྲོམ།</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"></translation>
+        <translation>བཟོ་ལྟ།</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>སྒྲ་འབེབས།</translation>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation>མ་ལག་སྒྲ་ཟློས།</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation>གནོན་པ་གསལ་བ།</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>ཉར་སྐབས་གནས་ས་སྒྲིག་འགོད་བྱེད་པ། </translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>ཉར་སྐབས་གནས་ས་གསར་སྒྱུར་བྱེད་པ།</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation type="unfinished"></translation>
+        <translation>ཁ་རྒྱག་(Esc)</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation type="unfinished"></translation>
+        <translation>གཏན་འཁེལ་ (Enter)</translation>
     </message>
 </context>
 <context>
@@ -689,6 +713,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <message>
         <source>Exit</source>
         <translation>ཕྱིར་འཐེན།</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 </TS>

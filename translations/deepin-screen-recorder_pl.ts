@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="pl">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="pl">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -26,6 +24,17 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
 </context>
 <context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>Nagrywanie</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Zrzut ekranu</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
@@ -33,7 +42,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>Zapisywanie nie powiodło się. Proszę zapisać plik w swoim katalogu domowym.</translation>
+        <translation>Zapisywanie nie powiodło się. Zapisz w swoim katalogu domowym.</translation>
     </message>
     <message>
         <source>View</source>
@@ -89,7 +98,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>Niepowodzenie zrzutu ekranu</translation>
+        <translation>Zrzut ekranu nie powiódł się.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -97,7 +106,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation>Otwórz katalog</translation>
+        <translation>Otwórz folder</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
@@ -105,7 +114,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>deepin-screen-recorder</translation>
     </message>
 </context>
 <context>
@@ -120,7 +129,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Wyjście</translation>
+        <translation>Wyjdź</translation>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Zrzut ekranu</translation>
+        <translation>Zrzut ekranu</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Nagrywanie</translation>
+        <translation>Nagrywanie</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Zrzut ekranu</translation>
+        <translation>Zrzut ekranu</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Nagrywanie</translation>
+        <translation>Nagrywanie</translation>
     </message>
 </context>
 <context>
@@ -172,7 +181,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation>Otwórz katalog</translation>
+        <translation>Otwórz folder</translation>
     </message>
 </context>
 <context>
@@ -190,11 +199,11 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>Niepowodzenie ciągłego zrzutu ekranu</translation>
+        <translation>Nie udało się utworzyć pionowego zrzutu ekranu</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation>Dotarto do samego końca obszaru przewijania</translation>
+        <translation>Dotarto do końca obszaru przewijania</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
@@ -206,7 +215,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>Przewijaj kółkiem myszki lub klikaj, aby zrobić pionowy zrzut ekranu</translation>
+        <translation>Przewijaj kółkiem myszy lub klikaj, aby zrobić pionowy zrzut ekranu</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
@@ -214,14 +223,14 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>Obszar nieprawidłowy, kliknij aby </translation>
+        <translation>Nieprawidłowy obszar, kliknij aby </translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>Wprowadź tutaj tekst</translation>
+        <translation>Wprowadź tekst tutaj</translation>
     </message>
 </context>
 <context>
@@ -232,7 +241,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation>Wyjście/Zapisz</translation>
+        <translation>Wyjdź/Zapisz</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
@@ -260,7 +269,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Wyjście</translation>
+        <translation>Wyjdź</translation>
     </message>
     <message>
         <source>Save</source>
@@ -388,7 +397,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation>Myszka</translation>
+        <translation>Mysz</translation>
     </message>
 </context>
 <context>
@@ -402,7 +411,7 @@ lub naciśnij ponownie skrót, aby zatrzymać nagrywanie</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished">Nagrywanie</translation>
+        <translation>Nagrywanie</translation>
     </message>
 </context>
 <context>
@@ -436,6 +445,15 @@ Przytrzymaj Shift, aby rysować prostą linię</translation>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
         <translation>Dostosuj rozmiar tekstu (Przewijaj, aby dostosować)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Kliknij lub przeciągnij do zaznaczonego
+obszaru, aby zacząć nagrywać</translation>
     </message>
 </context>
 <context>
@@ -498,7 +516,7 @@ Przytrzymaj Shift, aby rysować prostą linię</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation>Katalog</translation>
+        <translation>Folder</translation>
     </message>
     <message>
         <source>Format</source>
@@ -526,7 +544,7 @@ Przytrzymaj Shift, aby rysować prostą linię</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation>Pokaż wskaźnik</translation>
+        <translation>Pokaż kursor</translation>
     </message>
     <message>
         <source>Extract Text</source>
@@ -534,7 +552,7 @@ Przytrzymaj Shift, aby rysować prostą linię</translation>
     </message>
     <message>
         <source>Show keystroke (K)</source>
-        <translation>Pokazuj naciśnięcie klawisza (K)</translation>
+        <translation>Pokaż naciśnięcie klawisza (K)</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -598,11 +616,11 @@ Przytrzymaj Shift, aby rysować prostą linię</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation>Ukrywaj naciśnięcie klawisza (K)</translation>
+        <translation>Ukryj naciśnięcie klawisza (K)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation>Pokazuj naciśnięcie klawisza (K)</translation>
+        <translation>Pokaż naciśnięcie klawisza (K)</translation>
     </message>
     <message>
         <source>webm</source>
@@ -654,19 +672,19 @@ Przytrzymaj Shift, aby rysować pionową lub poziomą strzałkę</translation>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio systemowe</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokaż kliknięcie</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustaw ścieżkę zapisu</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Zmień ścieżkę zapisu</translation>
     </message>
 </context>
 <context>
@@ -695,7 +713,14 @@ Przytrzymaj Shift, aby rysować pionową lub poziomą strzałkę</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Wyjście</translation>
+        <translation>Wyjdź</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Nowe nagranie</translation>
     </message>
 </context>
 </TS>

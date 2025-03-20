@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="sq">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sq">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -23,6 +21,17 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     <message>
         <source>Recording</source>
         <translation>Regjistrim</translation>
+    </message>
+</context>
+<context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation>Regjistroje</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>Foto ekrani</translation>
     </message>
 </context>
 <context>
@@ -81,7 +90,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>Ngaqë efekti i dritares është çaktivizuar gjatë procesit, regjistrimi duhet të ndalet.</translation>
+        <translation>Ngaqë efekti dritare është i çaktivizuar gjatë procesit, regjistrimi duhet të ndalet.</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -93,7 +102,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Open Folder</source>
@@ -105,7 +114,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -134,22 +143,22 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Foto ekrani</translation>
+        <translation>Foto ekrani</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation>Regjistroje</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished">Foto ekrani</translation>
+        <translation>Foto ekrani</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished">Regjistrim</translation>
+        <translation>Regjistrim</translation>
     </message>
 </context>
 <context>
@@ -206,11 +215,11 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Që të bëhet një foto ekrani, rrotulloni rrotëzën e miut tuaj, ose klikoni</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Ngadalësoni shpejtësi rrotullimi</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
@@ -364,7 +373,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Pin screenshots</source>
@@ -372,7 +381,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Start OCR</source>
@@ -402,7 +411,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation>Regjistroje</translation>
     </message>
 </context>
 <context>
@@ -427,15 +436,24 @@ Shtypni dhe mbani të shtypur tastin Shift që të vizatohet një vijë e drejt�
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>Rregulloni fortësi turbullimi (Për ta rregulluar, rrëshqitni)</translation>
+        <translation>Rregulloni fortësi turbullimi (Për ta rregulluar, rrëshqiteni)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation>Rregulloni madhësi peneli (Për ta rregulluar, rrëshqitni)</translation>
+        <translation>Rregulloni madhësi peneli (Për ta rregulluar, rrëshqiteni)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>Rregulloni madhësi teksti (Për ta rregulluar, rrëshqitni)</translation>
+        <translation>Rregulloni madhësi teksti (Për ta rregulluar, rrëshqiteni)</translation>
+    </message>
+</context>
+<context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation>Që të përzgjidhet zona për
+regjistrim, klikoni, ose tërhiqeni</translation>
     </message>
 </context>
 <context>
@@ -554,7 +572,7 @@ Shtypni dhe mbani të shtypur tastin Shift që të vizatohet një vijë e drejt�
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
@@ -616,37 +634,37 @@ Shtypni dhe mbani të shtypur tastin Shift që të vizatohet një vijë e drejt�
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
         <translation>Drejtkëndësh (R)
-Shtypni dhe mbani të shtypur tastin Shift që të vizatoni një katror</translation>
+Shtypni dhe mbani të shtypur tastin Shift që të vizatohet një katror</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
         <translation>Elips (O)
-Shtypni dhe mbani të shtypur tastin Shift që të vizatoni një rreth</translation>
+Shtypni dhe mbani të shtypur tastin Shift që të vizatohet një rreth</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>Vijë (L)
-Shtypni dhe mbani të shtypur tastin Shift që të vizatoni një vijë vertikale ose horizontale</translation>
+Shtypni dhe mbani të shtypur tastin Shift që të vizatohet një vijë vertikale ose horizontale</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Shigjetë (X)
-Shtypni dhe mbani të shtypur tastin Shift, që të vizatoni një shigjetë vertikale ose horizontale</translation>
+Shtypni dhe mbani të shtypur tastin Shift, që të vizatohet një shigjetë vertikale ose horizontale</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"></translation>
+        <translation>Hije</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"></translation>
+        <translation>Anë</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Pajisje</translation>
     </message>
     <message>
         <source>Sound</source>
@@ -654,19 +672,19 @@ Shtypni dhe mbani të shtypur tastin Shift, që të vizatoni një shigjetë vert
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio sistemi</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"></translation>
+        <translation>Shfaq klikim</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Caktoni shteg gjatë ruajtjes</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"></translation>
+        <translation>Ndryshoni shtegun gjatë ruajtjes</translation>
     </message>
 </context>
 <context>
@@ -696,6 +714,13 @@ Shtypni dhe mbani të shtypur tastin Shift, që të vizatoni një shigjetë vert
     <message>
         <source>Exit</source>
         <translation>Dil</translation>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
+        <translation>Regjistrim i ri</translation>
     </message>
 </context>
 </TS>

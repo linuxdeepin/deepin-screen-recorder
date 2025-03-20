@@ -23,6 +23,17 @@ or press the shortcut again to stop recording</source>
     </message>
 </context>
 <context>
+    <name>MainToolWidget</name>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
@@ -30,27 +41,27 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation type="unfinished"/>
+        <translation>Lagring feilet. Vennligst lagre filen i hjemmappen din.</translation>
     </message>
     <message>
         <source>View</source>
-        <translation type="unfinished"/>
+        <translation>Vis</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation type="unfinished"/>
+        <translation>Skjermbilde tatt</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
-        <translation type="unfinished"/>
+        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
     </message>
     <message>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
-        <translation type="unfinished"/>
+        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
     </message>
     <message>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
-        <translation type="unfinished"/>
+        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
     </message>
     <message>
         <source>select-area</source>
@@ -58,11 +69,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"/>
+        <translation>Lagre</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation type="unfinished"/>
+        <translation>Lagret til %1</translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -82,7 +93,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Skjermbilde</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
@@ -100,6 +111,10 @@ or press the shortcut again to stop recording</source>
         <source>Pin Screenshots</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>MenuController</name>
@@ -109,17 +124,39 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"/>
+        <translation>Lagre</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation type="unfinished"/>
+        <translation>Avslutt</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>QuickPanelWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>RecordIconWidget</name>
+    <message>
+        <source>Screenshot</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Recording</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -365,11 +402,14 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <source>Screen Capture</source>
+        <source>Screenshot</source>
         <translation type="unfinished"/>
     </message>
+</context>
+<context>
+    <name>ShotStartRecordPlugin</name>
     <message>
-        <source>Screenshot</source>
+        <source>Record</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -404,6 +444,14 @@ Press and hold Shift to draw a straight line</source>
     </message>
 </context>
 <context>
+    <name>StartTooltip</name>
+    <message>
+        <source>Click or drag to
+select the area to record</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>SubToolWidget</name>
     <message>
         <source>Microphone</source>
@@ -411,7 +459,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished"/>
+        <translation>Alternativer</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -451,35 +499,35 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Save to</source>
-        <translation type="unfinished"/>
+        <translation>Lagre til</translation>
     </message>
     <message>
         <source>Desktop</source>
-        <translation type="unfinished"/>
+        <translation>Skrivebord</translation>
     </message>
     <message>
         <source>Pictures</source>
-        <translation type="unfinished"/>
+        <translation>Bilder</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation type="unfinished"/>
+        <translation>Mappe</translation>
     </message>
     <message>
         <source>Format</source>
-        <translation type="unfinished"/>
+        <translation>Format</translation>
     </message>
     <message>
         <source>PNG</source>
-        <translation type="unfinished"/>
+        <translation>PNG</translation>
     </message>
     <message>
         <source>JPG</source>
-        <translation type="unfinished"/>
+        <translation>JPG</translation>
     </message>
     <message>
         <source>BMP</source>
-        <translation type="unfinished"/>
+        <translation>BMP</translation>
     </message>
     <message>
         <source>MKV</source>
@@ -487,7 +535,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Utklippstavle</translation>
     </message>
     <message>
         <source>Show pointer</source>
@@ -495,7 +543,7 @@ Press and hold Shift to draw a straight line</source>
     </message>
     <message>
         <source>Extract Text</source>
-        <translation type="unfinished"/>
+        <translation>Hent ut tekst</translation>
     </message>
     <message>
         <source>Show keystroke (K)</source>
@@ -621,6 +669,14 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
         <source>Show click</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
@@ -648,6 +704,13 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Exit</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>VoiceRecordProcess</name>
+    <message>
+        <source>New recording</source>
         <translation type="unfinished"/>
     </message>
 </context>

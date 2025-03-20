@@ -3,13 +3,13 @@ host = https://www.transifex.com
 minimum_perc = 80
 mode = developer
 
-[o:linuxdeepin:p:deepin-screen-recorder:r:deepin-screen-recorder]
+[o:linuxdeepin:p:deepin-screen-recorder:r:351ce20b8e483a8209c69036d53aacd4]
 file_filter = translations/deepin-screen-recorder_<lang>.ts
 source_file = translations/deepin-screen-recorder_en_US.ts
 source_lang = en
 type = QT
 
-[o:linuxdeepin:p:deepin-screen-recorder:r:desktop]
+[o:linuxdeepin:p:deepin-screen-recorder:r:071c7f41cf0a6292853207308b8a6646]
 file_filter = translations/desktop/desktop_<lang>.ts
 source_file = translations/desktop/desktop.ts
 source_lang = en
