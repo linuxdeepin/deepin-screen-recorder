@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="am_ET">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="am_ET" version="2.1">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -41,7 +41,7 @@ or press the shortcut again to stop recording</source>
     <message>
         <location filename="../src/record_process.cpp" line="301"/>
         <source>Recording finished</source>
-        <translation>መቅረጽ ጨርሷል</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/record_process.cpp" line="302"/>
