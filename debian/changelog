@@ -1,3 +1,14 @@
+deepin-screen-recorder (6.5.12) unstable; urgency=medium
+
+  * fix: disable v20 interface on Qt6.
+  * fix: oom when convert large video to gif(Bug: 308389)
+  * fix: not reset time after reboot(Bug: 308411)
+  * fix: improve the speed of convrting to GIF(Bug: 295949)
+  * fix: use system theme instead of app cached theme(Bug: 300679)
+  * fix: paint full screen rectangle error.(Bug: 307017)
+
+ -- renbin <renbin@uniontech.com>  Thu, 20 Mar 2025 20:17:52 +0800
+
 deepin-screen-recorder (6.5.11) unstable; urgency=medium
 
   * fix: crash on scroll image(Bug: 306355)
