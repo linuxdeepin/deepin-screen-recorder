@@ -177,7 +177,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>録画</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -249,7 +249,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"/>
+        <translation>設定</translation>
     </message>
     <message>
         <source>Quick start</source>
