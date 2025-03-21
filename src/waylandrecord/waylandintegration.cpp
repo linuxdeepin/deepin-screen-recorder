@@ -1045,10 +1045,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 
     connect(m_registry, &KWayland::Client::Registry::remoteAccessManagerAnnounced, this,
     [this](quint32 name, quint32 version) {
-        Q_UNUSED(name);
-        Q_UNUSED(version);
-        qDebug() << "正在创建wayland远程管理...";
-        m_remoteAccessManager = m_registry->createRemoteAccessManager(m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).name, m_registry->interface(KWayland::Client::Registry::Interface::RemoteAccessManager).version);
+        qDebug() << "正在创建wayland远程管理..." << name << version;
+        m_remoteAccessManager = m_registry->createRemoteAccessManager(name, version);
         qDebug() << "wayland远程管理已创建";
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
         connect(m_remoteAccessManager, &KWayland::Client::RemoteAccessManager::bufferReady, this, [this](const void *output, KWayland::Client::RemoteBuffer * rbuf) {
