@@ -36,7 +36,7 @@ void QuickPanelWidget::initUI()
     layout->setSpacing(0);
     layout->addStretch(1);
     layout->addWidget(m_icon, 0, Qt::AlignCenter);
-    layout->addSpacing(8);
+    layout->addSpacing(10);
     layout->addWidget(m_description, 0, Qt::AlignCenter);
     layout->addStretch(1);
     setLayout(layout);
