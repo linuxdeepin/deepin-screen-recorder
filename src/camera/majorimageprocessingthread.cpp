@@ -6,6 +6,10 @@
 #include "majorimageprocessingthread.h"
 #include "../utils.h"
 
+extern "C" {
+#include <libimagevisualresult/visualresult.h>
+}
+
 #include <QFile>
 #include <QDate>
 #include <QDir>
