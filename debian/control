@@ -24,6 +24,7 @@ Build-Depends: debhelper,
  libdtk6widget-dev,
  libdframeworkdbus-dev,
  dde-tray-loader-dev | dde-dock-dev,
+ libimageeditor-dev,
  libffmpegthumbnailer-dev,
  deepin-desktop-base,
 # opencv
