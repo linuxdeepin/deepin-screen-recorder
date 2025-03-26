@@ -22,6 +22,7 @@
 #include "mp4.h"
 #include <libavutil/mathematics.h>
 #include "load_libs.h"
+#include "camview.h"
 
 static int64_t video_pts = 0;
 static int64_t audio_pts = 0;
