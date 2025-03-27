@@ -28,9 +28,9 @@
 #include <QKeyEvent>
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <com_deepin_daemon_audio.h>
-#include <com_deepin_daemon_audio_sink.h>
-#include <com_deepin_daemon_audio_source.h>
+#include "../dbus/com_deepin_daemon_audio.h"
+#include "../dbus/com_deepin_daemon_audio_sink.h"
+#include "../dbus/com_deepin_daemon_audio_source.h"
 #endif
 
 #include <DDialog>

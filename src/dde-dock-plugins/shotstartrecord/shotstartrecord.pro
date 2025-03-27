@@ -5,9 +5,6 @@ equals(QT_MAJOR_VERSION, 6) {
     QT              += widgets dbus
     QT              += dtkgui
     QT              += dtkwidget
-    
-    # Qt5 specific configurations
-    PKGCONFIG       += dframeworkdbus
 }
 
 TEMPLATE        = lib

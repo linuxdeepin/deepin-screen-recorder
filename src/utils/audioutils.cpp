@@ -14,9 +14,9 @@
 #include <QRegularExpression>
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <com_deepin_daemon_audio.h>
-#include <com_deepin_daemon_audio_sink.h>
-#include <com_deepin_daemon_audio_source.h>
+#include "../dbus/com_deepin_daemon_audio.h"
+#include "../dbus/com_deepin_daemon_audio_sink.h"
+#include "../dbus/com_deepin_daemon_audio_source.h"
 #endif
 
 #include <stdlib.h>
@@ -226,13 +226,13 @@ QString AudioUtils::currentAudioChannelV20Impl()
 {
     const QString serviceName{"com.deepin.daemon.Audio"};
 
-    QScopedPointer<com::deepin::daemon::Audio> audioInterface;
-    QScopedPointer<com::deepin::daemon::audio::Sink> defaultSink;
+    QScopedPointer<com::deepin::daemon::Audio::Audio> audioInterface;
+    QScopedPointer<com::deepin::daemon::AudioSink::Sink> defaultSink;
 
     audioInterface.reset(
-        new com::deepin::daemon::Audio(serviceName, "/com/deepin/daemon/Audio", QDBusConnection::sessionBus(), this));
+        new com::deepin::daemon::Audio::Audio(serviceName, "/com/deepin/daemon/Audio", QDBusConnection::sessionBus(), this));
 
-    defaultSink.reset(new com::deepin::daemon::audio::Sink(
+    defaultSink.reset(new com::deepin::daemon::AudioSink::Sink(
         serviceName, audioInterface->defaultSink().path(), QDBusConnection::sessionBus(), this));
     if (defaultSink->isValid()) {
         QString sinkName = defaultSink->name();
@@ -279,8 +279,8 @@ QString AudioUtils::getDefaultDeviceNameV20Impl(DefaultAudioType mode)
     }
     if (mode == DefaultAudioType::Sink) {
         // 1.首先取出默认系统声卡
-        QScopedPointer<com::deepin::daemon::audio::Sink> defaultSink;
-        defaultSink.reset(new com::deepin::daemon::audio::Sink(
+        QScopedPointer<com::deepin::daemon::AudioSink::Sink> defaultSink;
+        defaultSink.reset(new com::deepin::daemon::AudioSink::Sink(
             serviceName, audioInterface->defaultSink().path(), QDBusConnection::sessionBus(), this));
         if (defaultSink->isValid()) {
             qInfo() << "default sink name is : " << defaultSink->name();
@@ -296,10 +296,10 @@ QString AudioUtils::getDefaultDeviceNameV20Impl(DefaultAudioType mode)
         }
         // 2.如果默认系统声卡不是物理声卡和蓝牙声卡，需找出真实的物理声卡
         if (!device.startsWith("alsa", Qt::CaseInsensitive) && !device.startsWith("blue", Qt::CaseInsensitive)) {
-            QList<QScopedPointer<com::deepin::daemon::audio::Sink>> sinks;
-            QScopedPointer<com::deepin::daemon::audio::Sink> realSink;
+            QList<QScopedPointer<com::deepin::daemon::AudioSink::Sink>> sinks;
+            QScopedPointer<com::deepin::daemon::AudioSink::Sink> realSink;
             for (int i = 0; i < audioInterface->sinks().size(); i++) {
-                realSink.reset(new com::deepin::daemon::audio::Sink(
+                realSink.reset(new com::deepin::daemon::AudioSink::Sink(
                     serviceName, audioInterface->sinks()[i].path(), QDBusConnection::sessionBus(), this));
                 if (realSink->isValid()) {
                     qInfo() << "realSink name is : " << realSink->name();
@@ -317,8 +317,8 @@ QString AudioUtils::getDefaultDeviceNameV20Impl(DefaultAudioType mode)
             }
         }
     } else if (mode == DefaultAudioType::Source) {
-        QScopedPointer<com::deepin::daemon::audio::Source> defaultSource;
-        defaultSource.reset(new com::deepin::daemon::audio::Source(
+        QScopedPointer<com::deepin::daemon::AudioSource::Source> defaultSource;
+        defaultSource.reset(new com::deepin::daemon::AudioSource::Source(
             serviceName, audioInterface->defaultSource().path(), QDBusConnection::sessionBus(), this));
         if (defaultSource->isValid()) {
             qInfo() << "default source name is : " << defaultSource->name();

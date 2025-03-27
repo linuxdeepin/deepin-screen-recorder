@@ -163,7 +163,7 @@ add_executable(${PROJECT_NAME}
 qt5_use_modules(${PROJECT_NAME} ${QtModule})
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(3rd_lib REQUIRED
-    dtkwidget dtkgui dframeworkdbus xcb xcb-util
+    dtkwidget dtkgui xcb xcb-util
     )
 target_include_directories(${PROJECT_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} )
 target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES} ${LINK_DIR} )

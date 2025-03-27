@@ -1,31 +1,29 @@
-#ifndef PROXYAUDIOPORT_H
-#define PROXYAUDIOPORT_H
+// SPDX-FileCopyrightText: 2016 - 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+#ifndef AUDIOPORT_H
+#define AUDIOPORT_H
 
 #include <QDBusMetaType>
 #include <QString>
 #include <QDBusArgument>
 #include <QDebug>
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include "../dbus//audioport.h"
-#else
-
 class AudioPort
 {
 public:
     QString name;
     QString description;
-    uchar availability;  // 0 for Unknown, 1 for Not Available, 2 for Available.
+    uchar availability; // 0 for Unknown, 1 for Not Available, 2 for Available.
 
-    friend QDebug operator<<(QDebug argument, const AudioPort &port)
-    {
+    friend QDebug operator<<(QDebug argument, const AudioPort &port) {
         argument << port.description;
 
         return argument;
     }
 
-    friend QDBusArgument &operator<<(QDBusArgument &argument, const AudioPort &port)
-    {
+    friend QDBusArgument &operator<<(QDBusArgument &argument, const AudioPort &port) {
         argument.beginStructure();
         argument << port.name << port.description << port.availability;
         argument.endStructure();
@@ -33,8 +31,7 @@ public:
         return argument;
     }
 
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, AudioPort &port)
-    {
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, AudioPort &port) {
         argument.beginStructure();
         argument >> port.name >> port.description >> port.availability;
         argument.endStructure();
@@ -42,13 +39,11 @@ public:
         return argument;
     }
 
-    bool operator==(const AudioPort what) const
-    {
+    bool operator==(const AudioPort what) const {
         return what.name == name && what.description == description && what.availability == availability;
     }
 
-    bool operator!=(const AudioPort what) const
-    {
+    bool operator!=(const AudioPort what) const {
         return what.name != name || what.description != description || what.availability != availability;
     }
 };
@@ -57,6 +52,4 @@ Q_DECLARE_METATYPE(AudioPort)
 
 void registerAudioPortMetaType();
 
-#endif
-
-#endif  // PROXYAUDIOPORT_H
+#endif // AUDIOPORT_H
