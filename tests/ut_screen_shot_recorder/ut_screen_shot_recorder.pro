@@ -26,7 +26,7 @@ LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -lgtest -lopencv_small -lKF5Wayla
 
 CONFIG += link_pkgconfig
 CONFIG += c++11
-PKGCONFIG += dtkgui dtkwidget xcb xcb-util dframeworkdbus
+PKGCONFIG += dtkgui dtkwidget xcb xcb-util
 
 
 RESOURCES = ../../assets/image/deepin-screen-recorder.qrc \

@@ -101,14 +101,13 @@ equals(QT_MAJOR_VERSION, 6) {
           sql xml
     
     # Qt5 specific configurations 
-    PKGCONFIG += dtkwidget dtkcore dtkgui dframeworkdbus xcb xcb-util gstreamer-app-1.0 libusb-1.0
+    PKGCONFIG += dtkwidget dtkcore dtkgui xcb xcb-util gstreamer-app-1.0 libusb-1.0
     
     QMAKE_LRELEASE = lrelease
     
     LIBS += -L$$PREFIX/lib/$$QMAKE_HOST.arch-linux-gnu/ -lKF5GlobalAccel -lKF5I18n
     INCLUDEPATH += $$PREFIX/include/KF5/KGlobalAccel
     INCLUDEPATH += $$PREFIX/include/KF5/KI18n
-    INCLUDEPATH += /usr/include/libdframeworkdbus-2.0
     
     # Comment out or remove Wayland support for Qt5
     # contains(DEFINES, KF5_WAYLAND_FLAGE_ON) {
@@ -219,6 +218,17 @@ HEADERS += main_window.h \
     utils/eventlogutils.h \
     widgets/slider.h
 
+# Qt 版本特定的头文件
+lessThan(QT_MAJOR_VERSION, 6) {
+    # 仅在 Qt5 下包含的头文件
+    HEADERS += \
+        dbus/audioport.h \
+        dbus/audioportlist.h \
+        dbus/com_deepin_daemon_audio_source.h \
+        dbus/com_deepin_daemon_audio.h \
+        dbus/com_deepin_daemon_audio_sink.h
+}
+
 # Sources
 SOURCES += main.cpp \
     capture.cpp \
@@ -277,6 +287,17 @@ SOURCES += main.cpp \
     camera/LPF_V4L2.c \
     utils/eventlogutils.cpp
 
+# Qt 版本特定的源文件
+lessThan(QT_MAJOR_VERSION, 6) {
+    # 仅在 Qt5 下包含的源文件
+    SOURCES += \
+        dbus/audioport.cpp \
+        dbus/audioportlist.cpp \
+        dbus/com_deepin_daemon_audio_source.cpp \
+        dbus/com_deepin_daemon_audio.cpp \
+        dbus/com_deepin_daemon_audio_sink.cpp
+}
+
 # OCR and Scroll screenshot support
 contains(DEFINES, OCR_SCROLL_FLAGE_ON) {
     HEADERS += widgets/scrollshottip.h \
@@ -314,8 +335,8 @@ contains(DEFINES, OCR_SCROLL_FLAGE_ON) {
 
 # Resources
 RESOURCES = ../assets/image/deepin-screen-recorder.qrc \
-    ../assets/icons/icons.qrc \
-    ../resources.qrc
+    ../assets/icons/icons.qrc
+    # ../resources.qrc
 
 # Libraries
 LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -ldl -lXinerama

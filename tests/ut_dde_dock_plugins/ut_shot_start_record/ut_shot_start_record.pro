@@ -1,6 +1,6 @@
 QT              += core widgets dbus testlib
 CONFIG          += c++11 plugin link_pkgconfig
-PKGCONFIG += dframeworkdbus dtkgui dtkwidget
+PKGCONFIG += dtkgui dtkwidget
 DEFINES += UNIT_TEST
 
 include(../../../3rdparty/stub_linux/stub.pri)

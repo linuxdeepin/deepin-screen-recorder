@@ -5,8 +5,8 @@
 #include "voicevolumewatcher.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <com_deepin_daemon_audio.h>
-#include <com_deepin_daemon_audio_source.h>
+#include "com_deepin_daemon_audio.h"
+#include "../dbus/com_deepin_daemon_audio_source.h"
 #endif
 
 #include "utils.h"
@@ -178,8 +178,8 @@ bool voiceVolumeWatcher::isMicrophoneAvail(const QString &activePort) const
 void voiceVolumeWatcher::initV20DeviceWatcher()
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    m_audioInterface.reset(new com::deepin::daemon::Audio(kV20AudioService, kV20AudioPath, QDBusConnection::sessionBus(), this));
-    m_defaultSource.reset(new com::deepin::daemon::audio::Source(
+    m_audioInterface.reset(new com::deepin::daemon::Audio::Audio(kV20AudioService, kV20AudioPath, QDBusConnection::sessionBus(), this));
+    m_defaultSource.reset(new com::deepin::daemon::AudioSource::Source(
         kV20AudioService, m_audioInterface->defaultSource().path(), QDBusConnection::sessionBus(), this));
 
     connect(
@@ -188,7 +188,7 @@ void voiceVolumeWatcher::initV20DeviceWatcher()
                     << "\nactive port:" << m_defaultSource->activePort().name << "\ndevice name:" << m_defaultSource->name();
 
             m_defaultSource.reset(
-                new com::deepin::daemon::audio::Source(kV20AudioService, value.path(), QDBusConnection::sessionBus(), this));
+                new com::deepin::daemon::AudioSource::Source(kV20AudioService, value.path(), QDBusConnection::sessionBus(), this));
 
             qInfo() << "\nTo:"
                     << "\nactive port:" << m_defaultSource->activePort().name << "\ndevice name:" << m_defaultSource->name();

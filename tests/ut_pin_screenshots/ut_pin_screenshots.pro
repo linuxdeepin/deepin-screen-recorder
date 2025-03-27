@@ -6,7 +6,7 @@
 
 QT              += core widgets dbus
 CONFIG          += c++11 plugin link_pkgconfig
-PKGCONFIG += dframeworkdbus dtkgui dtkwidget
+PKGCONFIG += dtkgui dtkwidget
 include(../../3rdparty/stub_linux/stub.pri)
 
 TARGET = ut_pin_screenshots

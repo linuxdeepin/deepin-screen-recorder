@@ -22,7 +22,6 @@ Build-Depends: debhelper,
 # dde
  libdtk6gui-dev,
  libdtk6widget-dev,
- libdframeworkdbus-dev,
  dde-tray-loader-dev | dde-dock-dev,
  libffmpegthumbnailer-dev,
  deepin-desktop-base,
