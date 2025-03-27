@@ -1,3 +1,12 @@
+deepin-screen-recorder (6.5.13) unstable; urgency=medium
+
+  * fix: adjust spacing in quick panel layout(Bug: 271223)
+  * fix: remove unnecessary depends
+  * fix: blur effect error(Bug: 309211)
+  * refactor: remove dframeworkdbus dependency
+
+ -- renbin <renbin@uniontech.com>  Thu, 27 Mar 2025 15:24:37 +0800
+
 deepin-screen-recorder (6.5.12) unstable; urgency=medium
 
   * fix: disable v20 interface on Qt6.
