@@ -318,7 +318,7 @@ RESOURCES = ../assets/image/deepin-screen-recorder.qrc \
     ../resources.qrc
 
 # Libraries
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -ldl -limagevisualresult -lXinerama
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -ldl -lXinerama
 
 contains(DEFINES, OCR_SCROLL_FLAGE_ON) {
     LIBS += -lopencv_small
