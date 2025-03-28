@@ -179,8 +179,11 @@ public:
         qInfo() << __FUNCTION__ << __LINE__ << "正在释放截图录屏全局事件监听线程...";
         if (m_pScreenCaptureEvent) {
             m_pScreenCaptureEvent->releaseRes();
-            //m_pScreenCaptureEvent->terminate();
-            m_pScreenCaptureEvent->wait();
+            m_pScreenCaptureEvent->wait(30 * 1000);
+            if (m_pScreenCaptureEvent->isRunning()) {
+                qCritical() << "Detect X release hangs.";
+                m_pScreenCaptureEvent->terminate();
+            }
             delete m_pScreenCaptureEvent;
             m_pScreenCaptureEvent = nullptr;
         }
