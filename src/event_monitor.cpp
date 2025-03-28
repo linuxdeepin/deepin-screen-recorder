@@ -32,17 +32,8 @@ void EventMonitor::releaseRes()
     if (m_display_datalink && m_display) {
         qInfo() << __FUNCTION__ << __LINE__ << "执行 XRecordDisableContext ...";
         XRecordDisableContext(m_display, m_context);
-        qInfo() << __FUNCTION__ << __LINE__ << "执行 XRecordFreeContext ...";
-        XRecordFreeContext(m_display, m_context);
-        qInfo() << __FUNCTION__ << __LINE__ << "执行 XSync ...";
-        XSync(m_display, True);
-        XSync(m_display_datalink, True);
-        qInfo() << __FUNCTION__ << __LINE__ << "执行 XCloseDisplay m_display_datalink...";
-        XCloseDisplay(m_display_datalink);
-        qInfo() << __FUNCTION__ << __LINE__ << "执行 XCloseDisplay m_display...";
-        XCloseDisplay(m_display);
-        m_display_datalink = nullptr;
-        m_display = nullptr;
+
+        XFlush(m_display);
     }
 }
 
@@ -87,6 +78,19 @@ void EventMonitor::run()
         fprintf(stderr, "XRecordEnableContext() failed\n");
         return;
     }
+    qInfo() << "XRecordEnableContext() finished.";
+
+    qInfo() << __FUNCTION__ << __LINE__ << "执行 XRecordFreeContext ...";
+    XRecordFreeContext(m_display, m_context);
+    qInfo() << __FUNCTION__ << __LINE__ << "执行 XSync ...";
+    XSync(m_display, true);
+    XSync(m_display_datalink, true);
+    qInfo() << __FUNCTION__ << __LINE__ << "执行 XCloseDisplay m_display_datalink...";
+    XCloseDisplay(m_display_datalink);
+    qInfo() << __FUNCTION__ << __LINE__ << "执行 XCloseDisplay m_display...";
+    XCloseDisplay(m_display);
+    m_display_datalink = nullptr;
+    m_display = nullptr;
 }
 
 void EventMonitor::callback(XPointer ptr, XRecordInterceptData *data)
