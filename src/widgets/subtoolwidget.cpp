@@ -273,11 +273,12 @@ void SubToolWidget::initRecordOption()
     t_saveGroup->addAction(saveToVideoAction);
 
     m_recordOptionMenu->addAction(formatTitleAction);
-#if !(defined (__mips__) || defined (__sw_64__) || defined (__loongarch_64__))
+
+    // BUG-308909 BUG-308909 Restore gif on loong64 sw64 mips
     if (Utils::isFFmpegEnv) {
         m_recordOptionMenu->addAction(gifAction);
     }
-#endif
+
     m_recordOptionMenu->addAction(mp4Action);
     if (Utils::isFFmpegEnv) {
         m_recordOptionMenu->addAction(mkvAction);
