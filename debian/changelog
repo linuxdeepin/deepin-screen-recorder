@@ -1,3 +1,10 @@
+deepin-screen-recorder (6.5.14) unstable; urgency=medium
+
+  * fix: restructure event monitor cleanup(Bug: 306357)
+  * fix: enable gif on loong64/sw64/mips(Bug: 308909)
+
+ -- renbin <renbin@uniontech.com>  Wed, 02 Apr 2025 15:51:22 +0800
+
 deepin-screen-recorder (6.5.13) unstable; urgency=medium
 
   * fix: adjust spacing in quick panel layout(Bug: 271223)
