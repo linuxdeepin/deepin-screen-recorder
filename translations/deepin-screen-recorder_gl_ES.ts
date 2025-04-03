@@ -114,7 +114,7 @@ ou prema de novo o atallo para deixar de gravar</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>grabadora de pantalla de deepin</translation>
     </message>
 </context>
 <context>
