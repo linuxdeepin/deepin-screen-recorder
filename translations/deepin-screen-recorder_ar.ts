@@ -102,7 +102,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>لتقطيرة�新建回复</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -110,11 +110,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>م划分屏幕截图</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
 </context>
 <context>
@@ -136,7 +136,7 @@ or press the shortcut again to stop recording</source>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>م划分屏幕截图</translation>
     </message>
 </context>
 <context>
@@ -223,7 +223,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>منطقة غير صالحة، انقر لل</translation>
     </message>
 </context>
 <context>
@@ -345,7 +345,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"/>
+        <translation>طريقة الضغط</translation>
     </message>
     <message>
         <source>Webcam</source>
@@ -373,15 +373,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>لتقطيرة屏幕</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>م划分屏幕截图</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>بدء التقطيرة屏幕</translation>
     </message>
     <message>
         <source>Start OCR</source>
@@ -419,17 +419,20 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation> Diedge
+держите Shift, чтобы нарисовать квадрат</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>圆形
+держите Shift, чтобы нарисовать круг</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"/>
+        <translation>画刷
+держите Shift, чтобы нарисовать прямую</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
@@ -549,7 +552,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Show keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Показать метод ввода (K)️</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -569,7 +572,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"/>
+        <translation>Показать метод скролла (Alt+I)️</translation>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
@@ -585,7 +588,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Pin screenshots (Alt+P）</source>
-        <translation type="unfinished"/>
+        <translation>Поставить скриншоты (Alt+P)️</translation>
     </message>
     <message>
         <source>Record</source>
@@ -613,11 +616,11 @@ select the area to record</source>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Спрятать метод ввода (K)️</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Показать метод ввода (K)️</translation>
     </message>
     <message>
         <source>webm</source>
@@ -630,22 +633,26 @@ select the area to record</source>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>Diedge (R)
+держите Shift, чтобы нарисовать квадрат</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>Circle (O)
+держите Shift, чтобы нарисовать круг</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"/>
+        <translation>Line (L)
+держите Shift, чтобы нарисовать вертикальную или горизонтальную линию</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"/>
+        <translation>Arrow (X)
+держите Shift, чтобы нарисовать вертикальную или горизонтальную стрелку</translation>
     </message>
     <message>
         <source>Shadow</source>
@@ -695,7 +702,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"/>
+        <translation>Ajuste área de gravação dentro de %1*%2 para obter um efeito de vídeo melhor</translation>
     </message>
 </context>
 <context>
