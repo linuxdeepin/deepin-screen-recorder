@@ -102,7 +102,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Scrollshot</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -114,7 +114,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
 </context>
 <context>
@@ -373,7 +373,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Scrollshot</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
@@ -381,7 +381,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Përfshini scrollshot</translation>
     </message>
     <message>
         <source>Start OCR</source>
@@ -572,7 +572,7 @@ regjistrim, klikoni, ose tërhiqeni</translation>
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"/>
+        <translation>Scrollshot (Alt+I)</translation>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
