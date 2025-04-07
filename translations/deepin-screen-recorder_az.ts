@@ -114,7 +114,7 @@ və ya qısayolu yenidən basaraaq yazıkmanı dayandırın</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-skrin-növbətçi</translation>
     </message>
 </context>
 <context>
