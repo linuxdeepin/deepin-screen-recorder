@@ -2375,8 +2375,8 @@ void MainWindow::updateToolBarPos()
             //工具栏是否在屏幕内
             toolIsInScreen = toolbarPoint.x() * m_pixelRatio >= m_screenInfo[i].x &&
                              toolbarPoint.x() * m_pixelRatio  < (m_screenInfo[i].x + m_screenInfo[i].width) &&
-                             (toolbarPoint.y() - m_screenInfo[i].height) * m_pixelRatio + m_screenInfo[i].height >= m_screenInfo[i].y &&
-                             (toolbarPoint.y() - m_screenInfo[i].height) * m_pixelRatio + m_screenInfo[i].height < (m_screenInfo[i].y + m_screenInfo[i].height);
+                             (toolbarPoint.y() - m_screenInfo[i].height) / m_pixelRatio + m_screenInfo[i].height >= m_screenInfo[i].y &&
+                             (toolbarPoint.y() - m_screenInfo[i].height) / m_pixelRatio + m_screenInfo[i].height < (m_screenInfo[i].y + m_screenInfo[i].height);
             bool recordIsInScreen =  recordX * m_pixelRatio >= m_screenInfo[i].x &&
                                      recordX * m_pixelRatio < (m_screenInfo[i].x + m_screenInfo[i].width) &&
                                      recordY * m_pixelRatio >= m_screenInfo[i].y - 1 &&
