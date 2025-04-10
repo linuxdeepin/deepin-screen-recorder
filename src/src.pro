@@ -263,7 +263,7 @@ QT += dbus
 QT += multimedia
 QT += multimediawidgets
 QT += concurrent
-LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -ldl -limagevisualresult -lXinerama
+LIBS += -lX11 -lXext -lXtst -lXfixes -lXcursor -ldl -limagevisualresult -lXinerama -lxcb -lxcb-randr
 
 contains(DEFINES , OCR_SCROLL_FLAGE_ON) {
     LIBS += -lopencv_small
