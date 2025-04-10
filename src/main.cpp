@@ -29,6 +29,9 @@
 #include <X11/extensions/Xinerama.h>
 DWIDGET_USE_NAMESPACE
 
+#include <xcb/xcb.h>
+#include <xcb/randr.h>
+
 static bool isWaylandProtocol()
 {
     QProcessEnvironment e = QProcessEnvironment::systemEnvironment();
@@ -180,6 +183,199 @@ static bool CheckFFmpegEnv()
     return flag;
 }
 
+static bool checkSpecificScreenLayout()
+{
+    // Connect to X server using XCB
+    xcb_connection_t *connection = xcb_connect(nullptr, nullptr);
+    if (!connection || xcb_connection_has_error(connection)) {
+        // Handle connection failure
+        if (connection) {
+            xcb_disconnect(connection);
+        }
+        return false;
+    }
+    
+    // Get X server setup information
+    const xcb_setup_t *setup = xcb_get_setup(connection);
+    if (!setup) {
+        xcb_disconnect(connection);
+        return false;
+    }
+    
+    xcb_screen_t *screen = xcb_setup_roots_iterator(setup).data;
+    if (!screen) {
+        xcb_disconnect(connection);
+        return false;
+    }
+    
+    // Check if RANDR extension is available (version 1.3 or higher)
+    xcb_randr_query_version_cookie_t version_cookie = 
+        xcb_randr_query_version(connection, 1, 3);
+    xcb_generic_error_t *error = nullptr;
+    xcb_randr_query_version_reply_t *version_reply = 
+        xcb_randr_query_version_reply(connection, version_cookie, &error);
+    
+    // Check for errors
+    if (error) {
+        free(error);
+        error = nullptr;
+    }
+    
+    if (!version_reply) {
+        xcb_disconnect(connection);
+        return false;
+    }
+    
+    free(version_reply);
+    version_reply = nullptr;
+    
+    // Get screen resources (outputs, CRTCs, modes)
+    xcb_randr_get_screen_resources_cookie_t resources_cookie = 
+        xcb_randr_get_screen_resources(connection, screen->root);
+    
+    error = nullptr; // Reset error pointer
+    xcb_randr_get_screen_resources_reply_t *resources_reply = 
+        xcb_randr_get_screen_resources_reply(connection, resources_cookie, &error);
+    
+    if (error) {
+        free(error);
+        error = nullptr;
+    }
+    
+    if (!resources_reply) {
+        xcb_disconnect(connection);
+        return false;
+    }
+    
+    // Get output ports (monitors)
+    xcb_randr_output_t *outputs = xcb_randr_get_screen_resources_outputs(resources_reply);
+    int num_outputs = xcb_randr_get_screen_resources_outputs_length(resources_reply);
+    
+    if (num_outputs < 2 || !outputs) {
+        free(resources_reply);
+        xcb_disconnect(connection);
+        return false;
+    }
+    
+    // Structure to store position and dimensions of active screens
+    struct ScreenInfo {
+        int x, y;        // Top-left corner coordinates
+        int width, height; // Dimensions
+    };
+    
+    // Pre-allocate memory to avoid multiple reallocations
+    std::vector<ScreenInfo> screens;
+    screens.reserve(num_outputs);
+    
+    // Collect information about all active screens
+    for (int i = 0; i < num_outputs; i++) {
+        xcb_randr_get_output_info_cookie_t output_cookie = 
+            xcb_randr_get_output_info(connection, outputs[i], XCB_CURRENT_TIME);
+        
+        error = nullptr; // Reset error pointer
+        xcb_randr_get_output_info_reply_t *output_reply = 
+            xcb_randr_get_output_info_reply(connection, output_cookie, &error);
+            
+        // Handle errors or invalid replies    
+        if (error) {
+            free(error);
+            error = nullptr;
+        }
+        
+        if (!output_reply) {
+            continue;
+        }
+        
+        // Only process connected outputs with an assigned CRTC
+        if (output_reply->connection != XCB_RANDR_CONNECTION_CONNECTED ||
+            output_reply->crtc == XCB_NONE) {
+            free(output_reply);
+            continue;
+        }
+        
+        // Get CRTC information (contains position and dimensions)
+        xcb_randr_get_crtc_info_cookie_t crtc_cookie = 
+            xcb_randr_get_crtc_info(connection, output_reply->crtc, XCB_CURRENT_TIME);
+        
+        error = nullptr; // Reset error pointer
+        xcb_randr_get_crtc_info_reply_t *crtc_reply = 
+            xcb_randr_get_crtc_info_reply(connection, crtc_cookie, &error);
+            
+        // Handle errors or invalid replies
+        if (error) {
+            free(error);
+            error = nullptr;
+        }
+        
+        if (!crtc_reply) {
+            free(output_reply);
+            continue;
+        }
+        
+        // Store valid screen information
+        ScreenInfo info;
+        info.x = crtc_reply->x;
+        info.y = crtc_reply->y;
+        info.width = crtc_reply->width;
+        info.height = crtc_reply->height;
+        
+        screens.push_back(info);
+        
+        // Free resources
+        free(crtc_reply);
+        free(output_reply);
+    }
+    
+    // Release resources no longer needed
+    free(resources_reply);
+    resources_reply = nullptr;
+    
+    // Exit if fewer than 2 active screens detected
+    if (screens.size() < 2) {
+        xcb_disconnect(connection);
+        return false;
+    }
+        
+    // 1. Find the leftmost screen
+    int leftIndex = 0;
+    for (size_t i = 1; i < screens.size(); ++i) {
+        if (screens[i].x < screens[leftIndex].x) {
+            leftIndex = i;
+        }
+    }
+    
+    // 2. Find the closest screen to the right of the leftmost screen
+    int rightIndex = -1;
+    int minDistance = INT_MAX;
+    
+    for (size_t i = 0; i < screens.size(); ++i) {
+        if (i != (size_t)leftIndex && screens[i].x > screens[leftIndex].x) {
+            int distance = screens[i].x - (screens[leftIndex].x + screens[leftIndex].width);
+            if (distance < minDistance) {
+                minDistance = distance;
+                rightIndex = i;
+            }
+        }
+    }
+    
+    // Exit if no right screen found
+    if (rightIndex == -1) {
+        xcb_disconnect(connection);
+        return false;
+    }
+    
+    // Check for specific layout condition: screens at different vertical and horizontal positions
+    bool result = false;
+    bool screenPositionsDifferent = (screens[leftIndex].y != screens[rightIndex].y) && 
+                                   (screens[leftIndex].x != screens[rightIndex].x);
+    
+    result = screenPositionsDifferent;
+
+    xcb_disconnect(connection);
+    
+    return result;
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -189,12 +385,13 @@ int main(int argc, char *argv[])
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
     }
     DGuiApplicationHelper::setUseInactiveColorGroup(false);
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    float factor = getScreenFactor();
-    if (factor > 0 && checkShouldScale()) {
-        qDebug() << "scaleFactor available value: " << factor;
-        qputenv("QT_SCALE_FACTOR", QString::number(1.0f / factor, 'g', 2).toLatin1());
+    //TODO 临时方案，后续Qt处理后会移除
+    if (checkSpecificScreenLayout()) {
+        qWarning() << "检测到特定屏幕布局，禁用缩放";
+        QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
+    } else {
+        QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     }
 
     // 平板模式
