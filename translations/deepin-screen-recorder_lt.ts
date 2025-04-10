@@ -212,33 +212,33 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>keškininkinkite pasikartojamąją srityrą</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>kelinkite miškinės valdytuvę arba spustelėkite, kad įsigalintumėte į ekrano nutraukimąsias vaizdines ivertinimus</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>skurkinkite ekrano nutraukimąsio greičio</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>Neteisinga sritys, spustelėkite, kad</translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation type="unfinished"/>
+        <translation>įveskite tekstą čia</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Pradėti/Kaip vaizdą</translation>
     </message>
     <message>
         <source>Exit/Save</source>
@@ -246,7 +246,7 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation type="unfinished"/>
+        <translation>Formos keitimas</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -254,19 +254,19 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Quick start</source>
-        <translation type="unfinished"/>
+        <translation>Greitas pradžiavimas</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Langas kaip vaizdas</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Palaikyti vaizdą</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Visas ekras kaip vaizdas</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -306,35 +306,35 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation type="unfinished"/>
+        <translation>Padidinkite aukštį į viršų</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation type="unfinished"/>
+        <translation>Padidinkite aukštį į apačią</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation type="unfinished"/>
+        <translation>Padidinkite plotį į kairę</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation type="unfinished"/>
+        <translation>Padidinkite plotį į dešinę</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation type="unfinished"/>
+        <translation>Sumaiškite aukštį į viršų</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation type="unfinished"/>
+        <translation>Sumaiškite aukštį į apačią</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation type="unfinished"/>
+        <translation>Sumaiškite plotį į kairę</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation type="unfinished"/>
+        <translation>Sumaiškite plotį į dešinę</translation>
     </message>
     <message>
         <source>Help</source>
@@ -342,15 +342,15 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>Rodyti įspūdžius</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"/>
+        <translation>Klavišų spausdinimas</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"/>
+        <translation>Tinklo kamera</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -362,35 +362,35 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Pradėti/Kaip rinkinį</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"/>
+        <translation>Įrankiai</translation>
     </message>
     <message>
         <source>Extract text</source>
-        <translation type="unfinished"/>
+        <translation>Išskirti tekstą</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Rolės nuoroda</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Nuoroda nuotraukoms</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Pradėti rolių nuorodą</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>Pradėti OCR</translation>
     </message>
     <message>
         <source>Arrow</source>
-        <translation type="unfinished"/>
+        <translation>Žingsnis</translation>
     </message>
     <message>
         <source>Sound</source>
@@ -398,21 +398,21 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Klaviatūra</translation>
     </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Nuotrauka</translation>
     </message>
 </context>
 <context>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Žiūrėti</translation>
     </message>
 </context>
 <context>
@@ -420,29 +420,32 @@ arba dar kartą paspauskite trumpinį</translation>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>Lankstukas
+Spauskite ir helkite Shift norėdami naryti kvadratą</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>Sukurolija
+Spauskite ir helkite Shift norėdami naryti kirkštuką</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"/>
+        <translation>Rypė
+Spauskite ir helkite Shift norėdami naryti tiesioginę liniją</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Nustatykite kabliavimo stiprumą (perkelkite, norėdami nustatyti)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Nustatykite rypės dydį (perkelkite, norėdami nustatyti)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Nustatykite teksto dydį (perkelkite, norėdami nustatyti)</translation>
     </message>
 </context>
 <context>
@@ -511,15 +514,15 @@ norėdami pasirinkti
     </message>
     <message>
         <source>Pictures</source>
-        <translation type="unfinished"/>
+        <translation>Nuotraukos</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation type="unfinished"/>
+        <translation>Ablakas</translation>
     </message>
     <message>
         <source>Format</source>
-        <translation type="unfinished"/>
+        <translation>Formatas</translation>
     </message>
     <message>
         <source>PNG</source>
@@ -547,11 +550,12 @@ norėdami pasirinkti
     </message>
     <message>
         <source>Extract Text</source>
-        <translation type="unfinished"/>
+        <translation>Ištraukti tekstą</translation>
     </message>
     <message>
         <source>Show keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Rodyti klaviatūros klavišą (K)
+</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -563,7 +567,8 @@ norėdami pasirinkti
     </message>
     <message>
         <source>Blur (B)</source>
-        <translation type="unfinished"/>
+        <translation>Kabliavimas (B)
+</translation>
     </message>
     <message>
         <source>Text (T)</source>
@@ -571,23 +576,24 @@ norėdami pasirinkti
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"/>
+        <translation>Scrollshot (Alt+I)</translation>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
-        <translation type="unfinished"/>
+        <translation>Ištraukti tekstą (Alt+O)</translation>
     </message>
     <message>
         <source>Undo (Ctrl+Z)</source>
-        <translation type="unfinished"/>
+        <translation>Atšaukti (Ctrl+Z)
+</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Nuotrauka</translation>
     </message>
     <message>
         <source>Pin screenshots (Alt+P）</source>
-        <translation type="unfinished"/>
+        <translation>Nuoroda nuotraukoms (Alt+P)</translation>
     </message>
     <message>
         <source>Record</source>
