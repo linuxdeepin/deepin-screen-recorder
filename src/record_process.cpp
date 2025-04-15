@@ -824,6 +824,10 @@ void RecordProcess::exitRecord(QString newSavePath)
         notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
         qInfo() << __LINE__ << __func__ << "已弹出通知消息";
     }
+
+    //保存到剪切板
+    save2Clipboard(newSavePath);
+
     if (m_recordType == Utils::kGIF) {
         QFile::remove(savePath);
     }
@@ -844,8 +848,6 @@ void RecordProcess::exitRecord(QString newSavePath)
         qInfo() << __LINE__ << __func__ << "录屏计时图标已退出";
     }
 
-    //保存到剪切板
-    save2Clipboard(newSavePath);
     qInfo() << __LINE__ << __func__ <<"录屏已退出";
     QApplication::quit();
     if (Utils::isWaylandMode) {
