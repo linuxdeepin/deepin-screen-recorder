@@ -4,33 +4,33 @@
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation>Kliku sur la tray - ikono aŭ premas la rapidan ŝaltilon denove por ĉesigi registrado</translation>
+        <translation>Kliku la trajta simbolo aŭ premas la mallongigon denove por ĉesigi enskribon</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation>Ne rotaci viajn ekranojn dum registrado</translation>
+        <translation>Ne turnu vian ekranon dum enskribo</translation>
     </message>
 </context>
 <context>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Ekranfoto</translation>
+        <translation>Ekranfotogramo</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>Registrado</translation>
+        <translation>Enskribado</translation>
     </message>
 </context>
 <context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation>Registri</translation>
+        <translation>Enskribi</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Ekranfoto</translation>
+        <translation>Ekranfotogramo</translation>
     </message>
 </context>
 <context>
@@ -45,11 +45,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>View</source>
-        <translation>Vidi</translation>
+        <translation>Vidado</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>Ekranfoto finita</translation>
+        <translation>Ekranfotogramo finita</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -65,7 +65,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>select-area</source>
-        <translation>elekti - areon</translation>
+        <translation>elekti-areon</translation>
     </message>
     <message>
         <source>Save</source>
@@ -73,7 +73,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>Konservita al %1</translation>
+        <translation>Konservita en %1</translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -81,39 +81,39 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>Klipbord</translation>
+        <translation>Plakbordeto</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation>Konservas la ekranregistradan dosieron, bonvolu atendi...</translation>
+        <translation>Konservado de la ekraninskriba dosiero, bonvolu atendi...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>Kaj ĉar la fenestra efiko estas malŝalita dum la procezo, la registrado devas esti ĉesigita</translation>
+        <translation>&gt;- Ĉar la fenestra efiko estas malŝalita dum la procezo, la enskribo devas esti ĉesigita</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Ekranfoto</translation>
+        <translation>Ekranfotogramo</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>Ekranfoto malsukcesis.</translation>
+        <translation>Ekranfotogramo malsukcesis.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>Vortaro</translation>
+        <translation>Rullfotogramo</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation>Malfermi Dosierujon</translation>
+        <translation>Malfermi dosierujon</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation>Fiksi Ekranfotojn</translation>
+        <translation>Fiksi Ekranfotogramojn</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-kapturo de ekrano</translation>
+        <translation>deepin-skranbildrekordero</translation>
     </message>
 </context>
 <context>
@@ -135,29 +135,29 @@ or press the shortcut again to stop recording</source>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation>Fiksi Skrenŝotojn</translation>
+        <translation>Fiksi Skranbildojn</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Skrenŝoto</translation>
+        <translation>Skranbildo</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Kapturi</translation>
+        <translation>Rekordi</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Skrenŝoto</translation>
+        <translation>Skranbildo</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>Kaptado</translation>
+        <translation>Rekordado</translation>
     </message>
 </context>
 <context>
@@ -168,7 +168,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>Kaptado finiĝis</translation>
+        <translation>Rekordado finiĝis</translation>
     </message>
     <message>
         <source>Saved to %1</source>
@@ -176,7 +176,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Record</source>
-        <translation>Kapturi</translation>
+        <translation>Rekordi</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -187,38 +187,38 @@ or press the shortcut again to stop recording</source>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>Skrenŝotado komenciĝos en %1 sekundoj</translation>
+        <translation>Skranbildkaptado komenciĝos en %1 sekundoj</translation>
     </message>
 </context>
 <context>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation>Akiru helpon.</translation>
+        <translation>Akiri helpon.</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>Malsukcesis kapi daŭran skrenŝoton.</translation>
+        <translation>Malsukcesis prenii kontinuan skranbildon.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation>Alvenis ĝis la fundo de la ruliĝa areo</translation>
+        <translation>Atingis la fundon de la ruliĝa areo</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation>Alvenis ĝis la maksimuman longon</translation>
+        <translation>Atingis la maksimuman longon</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>ajustu la kapturan areon</translation>
+        <translation>ajustu la kaptan areon</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>Rulu vian musklaton aŭ klaku por kapi ruliĝan skrenŝoton</translation>
+        <translation>Ruli vian musradion aŭ klaku por prenii ruliĝantan skranbildon</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation>Malrapidigu la ruliĝan rapidecon</translation>
+        <translation>Malrapidi la ruliĝan rapidecon</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
@@ -236,7 +236,7 @@ or press the shortcut again to stop recording</source>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>Komenci/Skrenŝoto</translation>
+        <translation>Komenci/Skranbildo</translation>
     </message>
     <message>
         <source>Exit/Save</source>
@@ -252,7 +252,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Quick start</source>
-        <translation>Rapida komenciĝo</translation>
+        <translation>Rapida komenco</translation>
     </message>
     <message>
         <source>Window screenshot</source>
@@ -260,11 +260,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>Retardita ekranbildo</translation>
+        <translation>Ekranbildo kun prokrasto</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>Plena ekranbildo</translation>
+        <translation>Tuta ekranbildo</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -300,39 +300,39 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Undo</source>
-        <translation>Malkondi</translation>
+        <translation>Malfermi</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation>Alpliigi altecon supre</translation>
+        <translation>Plialti supre</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation>Alpliigi altecon malsupre</translation>
+        <translation>Plialti malsupre</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>Alpliigi larĝecon maldekstre</translation>
+        <translation>Plilarĝi maldekstre</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>Alpliigi larĝecon dekstre</translation>
+        <translation>Plilarĝi dekstre</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation>Malpliigi altecon supre</translation>
+        <translation>Malpliigi supre</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation>Malpliigi altecon malsupre</translation>
+        <translation>Malpliigi malsupre</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>Malpliigi larĝecon maldekstre</translation>
+        <translation>Malpliigi maldekstre</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>Malpliigi larĝecon dekstre</translation>
+        <translation>Malpliigi dekstre</translation>
     </message>
     <message>
         <source>Help</source>
@@ -340,7 +340,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Montri rapidkostojn</translation>
+        <translation>Montru mallongigojn</translation>
     </message>
     <message>
         <source>Keystroke</source>
@@ -352,7 +352,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start recording</source>
-        <translation>Komenci registri</translation>
+        <translation>Komenci registron</translation>
     </message>
     <message>
         <source>Options</source>
@@ -360,11 +360,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation>Komenci/Registri</translation>
+        <translation>Komenci/Registrado</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation>Instrumentoj</translation>
+        <translation>Iloj</translation>
     </message>
     <message>
         <source>Extract text</source>
@@ -372,15 +372,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>Rullscenaĵo</translation>
+        <translation>Deslizbildo</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation>Fiksi scenbildojn</translation>
+        <translation>Fiksi bildŝotojn</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation>Komenci rullscenaĵo</translation>
+        <translation>Komenci deslizbildon</translation>
     </message>
     <message>
         <source>Start OCR</source>
@@ -396,14 +396,14 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Mouse</source>
-        <translation>Mauso</translation>
+        <translation>Muzilo</translation>
     </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
     <message>
         <source>Screenshot</source>
-        <translation>Scenbildo</translation>
+        <translation>Bildŝoto</translation>
     </message>
 </context>
 <context>
@@ -419,31 +419,31 @@ or press the shortcut again to stop recording</source>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
         <translation>Rektangulo
-Premu kaj tenu Shift por desegni kvarlateron</translation>
+Premu kaj tenu Alt por desegni kvarlateron</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
         <translation>Elipso
-Premu kaj tenu Shift por desegni rondon</translation>
+Premu kaj tenu Alt por desegni rondon</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation>Pincelo
-Premu kaj tenu Shift por desegni rektan linion</translation>
+        <translation>Pincejo
+Premu kaj tenu Alt por desegni rektan linion</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation>Regulu mallumforton (Ruli por reguli ĝin)</translation>
+        <translation>Ajustu mallumigan forton (Deslizi por ajusti ĝin)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation>Regulu pincelgrandon (Ruli por reguli ĝin)</translation>
+        <translation>Ajustu pincejonan grandon (Deslizi por ajusti ĝin)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation>Regulu teksta grandon (Ruli por reguli ĝin)</translation>
+        <translation>Ajustu teksta grandon (Deslizi por ajusti ĝin)</translation>
     </message>
 </context>
 <context>
@@ -451,8 +451,8 @@ Premu kaj tenu Shift por desegni rektan linion</translation>
     <message>
         <source>Click or drag to
 select the area to record</source>
-        <translation>Kliku aŭ dragu por
- elekti la areon por registri</translation>
+        <translation>Premu aŭ dragu por
+selekti la areon por registri</translation>
     </message>
 </context>
 <context>
@@ -463,7 +463,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Options</source>
-        <translation>Opciioj</translation>
+        <translation>Opcioj</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -479,27 +479,27 @@ select the area to record</source>
     </message>
     <message>
         <source>FPS:</source>
-        <translation>Frekvenco de bildoj pro sekundo:</translation>
+        <translation>Fps:</translation>
     </message>
     <message>
         <source>5 fps</source>
-        <translation>5 bildoj/s</translation>
+        <translation>5 pulsoj/s</translation>
     </message>
     <message>
         <source>10 fps</source>
-        <translation>10 bildoj/s</translation>
+        <translation>10 pulsoj/s</translation>
     </message>
     <message>
         <source>20 fps</source>
-        <translation>20 bildoj/s</translation>
+        <translation>20 pulsoj/s</translation>
     </message>
     <message>
         <source>24 fps</source>
-        <translation>24 bildoj/s</translation>
+        <translation>24 pulsoj/s</translation>
     </message>
     <message>
         <source>30 fps</source>
-        <translation>30 bildoj/s</translation>
+        <translation>30 pulsoj/s</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -507,7 +507,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Desktop</source>
-        <translation>Dekstaro</translation>
+        <translation>Dekstrablato</translation>
     </message>
     <message>
         <source>Pictures</source>
@@ -539,7 +539,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation>Alŝutilo</translation>
+        <translation>Klipbordeto</translation>
     </message>
     <message>
         <source>Show pointer</source>
@@ -551,7 +551,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Show keystroke (K)</source>
-        <translation>Montri tastadon (K)</translation>
+        <translation>Montri tastpremon (K)</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -563,7 +563,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Blur (B)</source>
-        <translation>Fuzi (B)</translation>
+        <translation>Fondu (B)</translation>
     </message>
     <message>
         <source>Text (T)</source>
@@ -571,7 +571,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation>Ekskriptiĝo (Alt+I)</translation>
+        <translation>Skrenŝoto (Alt+I)</translation>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
@@ -579,31 +579,31 @@ select the area to record</source>
     </message>
     <message>
         <source>Undo (Ctrl+Z)</source>
-        <translation>Malfari (Ctrl+Z)</translation>
+        <translation>Anulo (Ctrl+Z)</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>Ekskriptiĝo</translation>
+        <translation>Skrenŝoto</translation>
     </message>
     <message>
         <source>Pin screenshots (Alt+P）</source>
-        <translation>Fiksi ekskriptiĝojn (Alt+P)</translation>
+        <translation>Fiksi skrenŝotojn (Alt+P)</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Enregistri</translation>
+        <translation>Registri</translation>
     </message>
     <message>
         <source>Pencil (P)</source>
-        <translation>Crayono (P)</translation>
+        <translation>Crayon (P)</translation>
     </message>
     <message>
         <source>Turn on camera (C)</source>
-        <translation>Malkontroli kameron (C)</translation>
+        <translation>Malspeciigi kameron (C)</translation>
     </message>
     <message>
         <source>Border Effects</source>
-        <translation>Randaj Efikoj</translation>
+        <translation>Randaj Efektoj</translation>
     </message>
     <message>
         <source>None</source>
@@ -611,15 +611,15 @@ select the area to record</source>
     </message>
     <message>
         <source>Turn off camera (C)</source>
-        <translation>Kontroli kameron (C)</translation>
+        <translation>Speciigi kameron (C)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation>Kalkuli skribpagon (K)</translation>
+        <translation>Kalkuli klavpremojn (K)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation>Montri skribpagon (K)</translation>
+        <translation>Montri klavpremojn (K)</translation>
     </message>
     <message>
         <source>webm</source>
@@ -633,25 +633,25 @@ select the area to record</source>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
         <translation>Rektangulo (R)
-Premu kaj tenu Shift por desegni kvarlateron</translation>
+Premu kaj tenu Alt por desegni kvarlateron</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
         <translation>Elipso (O)
-Premu kaj tenu Shift por desegni rondon</translation>
+Premu kaj tenu Alt por desegni rondon</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>Linio (L)
-Premu kaj tenu Shift por desegni vertikalan aŭ horizontalan linion</translation>
+        <translation>Lino (L)
+Premu kaj tenu Alt por desegni vertikalan aŭ horizontalan linion</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>Fleko (X)
-Premu kaj tenu Shift por desegni vertikalan aŭ horizontalan flekon</translation>
+Premu kaj tenu Alt por desegni vertikalan aŭ horizontalan flekon</translation>
     </message>
     <message>
         <source>Shadow</source>
@@ -659,15 +659,15 @@ Premu kaj tenu Shift por desegni vertikalan aŭ horizontalan flekon</translation
     </message>
     <message>
         <source>Border</source>
-        <translation>Rando</translation>
+        <translation>Randoj</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation>Aparato</translation>
+        <translation>Dispozitivo</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation>Sonoro</translation>
+        <translation>Sonido</translation>
     </message>
     <message>
         <source>System audio</source>
@@ -679,18 +679,18 @@ Premu kaj tenu Shift por desegni vertikalan aŭ horizontalan flekon</translation
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation>Agordi vojon ĉe konservado</translation>
+        <translation>Agordu vojon ĉe konservado</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation>Ŝanĝi la vojon ĉe konservado</translation>
+        <translation>Ŝanĝu la vojon ĉe konservado</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation>Fermi (Esc)</translation>
+        <translation>Fermu (Esc)</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
@@ -701,25 +701,25 @@ Premu kaj tenu Shift por desegni vertikalan aŭ horizontalan flekon</translation
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation>Agordu la enskriban areon ene de %1*%2 por akiri pli bonan videan efikon</translation>
+        <translation>Ajustu la registra zonon ene de %1*%2 por akiri pli bonan videan efikon</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation>Nuntempe ekrano - enskribo ne estas subtenata</translation>
+        <translation>Nuntempe ekranregistrado ne estas subtenata</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation>Foriri</translation>
+        <translation>Foriru</translation>
     </message>
 </context>
 <context>
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation>Nova enskribo</translation>
+        <translation>Nova registrado</translation>
     </message>
 </context>
 </TS>
