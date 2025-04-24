@@ -117,14 +117,14 @@ aŭ presu la aturadigonnovitan klaviron por aturi la registrebladon</translation
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-rilokilo-registre</translation>
+        <translation>deepin-rilokilo-registaro</translation>
     </message>
 </context>
 <context>
     <name>MenuController</name>
     <message>
         <source>Undo</source>
-        <translation>Rekompreni</translation>
+        <translation>Ĉuuti</translation>
     </message>
     <message>
         <source>Save</source>
@@ -132,21 +132,21 @@ aŭ presu la aturadigonnovitan klaviron por aturi la registrebladon</translation
     </message>
     <message>
         <source>Exit</source>
-        <translation>Eliri</translation>
+        <translation>Liti</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation>Fixi ilustradojn</translation>
+        <translation>Fixi bildumojn</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Ilustrado</translation>
+        <translation>Bildumiko</translation>
     </message>
     <message>
         <source>Record</source>
@@ -157,7 +157,7 @@ aŭ presu la aturadigonnovitan klaviron por aturi la registrebladon</translation
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>Ilustrado</translation>
+        <translation>Bildumiko</translation>
     </message>
     <message>
         <source>Recording</source>
@@ -172,7 +172,7 @@ aŭ presu la aturadigonnovitan klaviron por aturi la registrebladon</translation
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>Registriĝo finiĝis</translation>
+        <translation>Registri finiĝis</translation>
     </message>
     <message>
         <source>Saved to %1</source>
@@ -184,63 +184,63 @@ aŭ presu la aturadigonnovitan klaviron por aturi la registrebladon</translation
     </message>
     <message>
         <source>Open Folder</source>
-        <translation>Malfermi dosierujon</translation>
+        <translation>Opendi mapon</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>Ilustrado komenciĝos post %1 sekundoj</translation>
+        <translation>Bildumiko komenciĝos post %1 sekundoj</translation>
     </message>
 </context>
 <context>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation>Kompreneble helpi.</translation>
+        <translation>Konsultu helpon.</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>Faliis aldoni ilustradon.</translation>
+        <translation>Faliis aldoni bildumon</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation>Eble atingis la finon de la rovo</translation>
+        <translation>Atingis finon de la rullanta zono</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation>Eble atingis la maksimuman longon</translation>
+        <translation>Atingis la maksimuman longon</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>adapti la areon de la ilustrado</translation>
+        <translation>Ajusti la bildumzonon</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>Rotu voktronradion aŭ kliki por aldoni ilustradon kun rovo</translation>
+        <translation>Ruli la rulilo de via manilabilo aŭ kliki por aldoni rulinan bildumon</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation>Malrapide aldoni ilustradon</translation>
+        <translation>Malrapidi la rulinan viton</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>Nevalida areo, kliki por</translation>
+        <translation>Nevalida zono, kliki por </translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>Enmetu tekston ĉi tie</translation>
+        <translation>Enigu tekston ĉi tie</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>Komenci/Ilustrado</translation>
+        <translation>Komenci/Bildumiko</translation>
     </message>
     <message>
         <source>Exit/Save</source>
