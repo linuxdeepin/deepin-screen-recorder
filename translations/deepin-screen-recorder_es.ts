@@ -98,7 +98,7 @@ o haga clic en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>Captura de pantalla fallida</translation>
+        <translation>La captura de pantalla falló.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
