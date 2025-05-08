@@ -10,7 +10,7 @@
 #include <DGuiApplicationHelper>
 
 DGUI_USE_NAMESPACE
-
+constexpr int ICON_SIZE = 24;
 CommonIconButton::CommonIconButton(QWidget *parent)
     : QWidget(parent)
     , m_refreshTimer(nullptr)
@@ -22,7 +22,7 @@ CommonIconButton::CommonIconButton(QWidget *parent)
     , m_activeState(false)
 {
     setAccessibleName("IconButton");
-    setFixedSize(24, 24);
+    setFixedSize(ICON_SIZE, ICON_SIZE);
     if (parent)
         setForegroundRole(parent->foregroundRole());
 
@@ -171,7 +171,7 @@ void CommonIconButton::paintEvent(QPaintEvent *e)
     if (m_hover && !m_hoverIcon.isNull()) {
         m_hoverIcon.paint(&painter, rect(), Qt::AlignCenter, showMode);
     } else if (!m_icon.isNull()) {
-        m_icon.paint(&painter, rect(), Qt::AlignCenter, showMode);
+        painter.drawPixmap(rect(), m_icon.pixmap(ICON_SIZE));
     }
 }
 
