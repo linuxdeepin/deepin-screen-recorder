@@ -15,7 +15,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsDropShadowEffect>
 #include <QApplication>
-
+#include "../utils/log.h"
 
 HoverFilter::HoverFilter(QObject *parent) : QObject(parent)
 {
@@ -28,13 +28,10 @@ bool HoverFilter::eventFilter(QObject *obj, QEvent *event)
     case QEvent::Enter: {
         auto w = qobject_cast<QWidget *>(obj);
         w->setCursor(QCursor(Qt::PointingHandCursor));
-//        qDebug() << "set cursor" << w << w->cursor();
-//        QApplication::setOverrideCursor(Qt::PointingHandCursor);
         return QObject::eventFilter(obj, event);
     }
     case QEvent::Leave: {
         auto w = qobject_cast<QWidget *>(obj);
-//        qDebug() << "unset cursor" << w;
         w->unsetCursor();
         QApplication::restoreOverrideCursor();
         return QObject::eventFilter(obj, event);
@@ -65,6 +62,7 @@ bool HoverFilter::eventFilter(QObject *obj, QEvent *event)
 void HintFilterPrivate::showHint(QWidget *hint)
 {
     if (!parentWidget) {
+        qCDebug(dsrApp) << "Cannot show hint: no parent widget";
         return;
     }
     auto w = parentWidget;
@@ -73,6 +71,7 @@ void HintFilterPrivate::showHint(QWidget *hint)
     }
     hintWidget = hint;
     if (!hintWidget) {
+        qCDebug(dsrApp) << "Cannot show hint: invalid hint widget";
         return;
     }
 

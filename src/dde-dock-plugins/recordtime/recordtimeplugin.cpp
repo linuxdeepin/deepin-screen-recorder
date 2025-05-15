@@ -5,6 +5,7 @@
 
 #include "recordtimeplugin.h"
 #include "timewidget.h"
+#include "../../utils/log.h"
 #include <QWidget>
 
 RecordTimePlugin::RecordTimePlugin(QObject *parent)
@@ -28,6 +29,7 @@ const QString RecordTimePlugin::pluginDisplayName() const
 
 void RecordTimePlugin::init(PluginProxyInterface *proxyInter)
 {
+    qCInfo(dsrApp) << "Initializing plugin with proxy interface";
     m_proxyInter = proxyInter;
     m_dBusService = new DBusService(this);
     // Reset record time (save in file) when restart recording.
@@ -52,10 +54,13 @@ bool RecordTimePlugin::pluginIsDisable()
 void RecordTimePlugin::pluginStateSwitched()
 {
     const bool disabledNew = !pluginIsDisable();
+    qCInfo(dsrApp) << "Plugin state switched, new disabled state:" << disabledNew;
     m_proxyInter->saveValue(this, "disabled", disabledNew);
     if (disabledNew) {
+        qCDebug(dsrApp) << "Removing plugin item";
         m_proxyInter->itemRemoved(this, pluginName());
     } else {
+        qCDebug(dsrApp) << "Adding plugin item";
         m_proxyInter->itemAdded(this, pluginName());
     }
 }
@@ -68,20 +73,24 @@ QWidget *RecordTimePlugin::itemWidget(const QString &itemKey)
 
 void RecordTimePlugin::clear()
 {
+    qCInfo(dsrApp) << "Clearing plugin resources";
     m_timeWidget->clearSetting();  
 
     if (nullptr != m_timer) {
+        qCDebug(dsrApp) << "Stopping and deleting timer";
         m_timer->stop();
         m_timer->deleteLater();
         m_timer = nullptr;
     }
 
     if (nullptr != m_timeWidget) {
+        qCDebug(dsrApp) << "Deleting time widget";
         m_timeWidget->deleteLater();
         m_timeWidget = nullptr;
     }
     
     if (nullptr != m_checkTimer) {
+        qCDebug(dsrApp) << "Stopping and deleting check timer";
         m_checkTimer->stop();
         m_checkTimer->deleteLater();
         m_checkTimer = nullptr;
@@ -90,10 +99,11 @@ void RecordTimePlugin::clear()
 
 void RecordTimePlugin::onStart(bool resetTime)
 {
-    qInfo() << "start record time";
+    qCInfo(dsrApp) << "Starting record time plugin, reset time:" << resetTime;
     m_timer = new QTimer(this);
     m_timeWidget = new TimeWidget();
     if (resetTime) {
+        qCDebug(dsrApp) << "Clearing time widget settings";
         m_timeWidget->clearSetting();
     }
     m_checkTimer = nullptr;
@@ -116,6 +126,7 @@ void RecordTimePlugin::onStop()
         m_proxyInter->itemRemoved(this, pluginName());
         m_bshow = false;
         if (nullptr != m_checkTimer) {
+            qCDebug(dsrApp) << "Stopping check timer";
             m_checkTimer->stop();
             m_checkTimer->deleteLater();
             m_checkTimer = nullptr;
@@ -130,21 +141,26 @@ void RecordTimePlugin::onStop()
 // 当托盘插件开始闪烁计数时才会执行
 void RecordTimePlugin::onRecording()
 {
+    qCDebug(dsrApp) << "Recording status update received";
     // 录屏过程中，killall dde-dock，恢复时重新初始化
     if (m_timeWidget == nullptr) {
+        qCInfo(dsrApp) << "Time widget is null, reinitializing";
         onStart();
     }
     if (m_timeWidget->enabled() && m_bshow) {
         m_nextCount++;
         if (1 == m_nextCount) {
+            qCDebug(dsrApp) << "Starting check timer for recording status";
             m_checkTimer = new QTimer();
             connect(m_checkTimer, &QTimer::timeout, this, [=] {
                 // 说明录屏还在进行中
                 if (m_count < m_nextCount) {
+                    qCDebug(dsrApp) << "Recording in progress, updating count";
                     m_count = m_nextCount;
                 }
                 // 说明录屏已经停止了
                 else {
+                    qCDebug(dsrApp) << "Recording stopped, calling onStop";
                     onStop();
                 }
             });
@@ -157,6 +173,7 @@ void RecordTimePlugin::onPause()
 {
     // Empty implementation to match legacy behavior
     if (m_timeWidget->enabled() && m_bshow) {
+        qCInfo(dsrApp) << "Pausing record time widget";
         m_timeWidget->stop();
     }
 }

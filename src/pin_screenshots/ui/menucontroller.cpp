@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "menucontroller.h"
+#include "../../utils/log.h"
 
 #include <QApplication>
 #include <QStyleFactory>
@@ -23,18 +24,22 @@ void MenuController::initMenuController()
     m_menu->setFocusPolicy(Qt::StrongFocus);
     m_saveAct = new QAction(tr("Save"), this);
     connect(m_saveAct, &QAction::triggered, [ = ] {
+        qCDebug(dsrApp) << "Save action triggered";
         emit saveAction();
     });
 
     m_closeAct = new QAction(tr("Exit"), this);
     connect(m_closeAct, &QAction::triggered, [ = ] {
+        qCDebug(dsrApp) << "Exit action triggered";
         emit closeAction();
     });
     m_menu->addAction(m_saveAct);
     m_menu->addSeparator();
     m_menu->addAction(m_closeAct);
+    qCDebug(dsrApp) << "Menu actions initialized";
 
     connect(m_menu, &DMenu::aboutToHide, this, [ = ] {
+        qCDebug(dsrApp) << "Menu about to hide";
         emit menuNoFocus();
     });
 }

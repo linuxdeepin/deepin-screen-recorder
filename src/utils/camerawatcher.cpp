@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "camerawatcher.h"
+#include "log.h"
 
 #include <QThread>
 #include <QMediaDevices>
@@ -50,6 +51,7 @@ void CameraWatcher::slotCameraWatcher()
 
     if (couldUse != m_coulduse) {
         m_coulduse = couldUse;
+        qCInfo(dsrApp) << "Camera state changed, available:" << couldUse;
         emit sigCameraState(couldUse);
     }
 }

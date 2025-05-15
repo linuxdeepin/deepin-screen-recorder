@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "baseutils.h"
+#include "log.h"
 
 #include <QPixmap>
 #include <QProcess>
@@ -30,6 +31,7 @@ QCursor BaseUtils::setCursorShape(QString cursorName, int colorIndex)
     }
 
     if (BaseUtils::m_shapesCursor.find(cursorNameString) != BaseUtils::m_shapesCursor.end()) {
+        qCDebug(dsrApp) << "Using cached cursor for:" << cursorNameString;
         return BaseUtils::m_shapesCursor.value(cursorNameString);
     }
 
@@ -39,8 +41,10 @@ QCursor BaseUtils::setCursorShape(QString cursorName, int colorIndex)
 
     QCursor customShape = QCursor();
     qreal ration = qApp->devicePixelRatio();
+    qCDebug(dsrApp) << "Device pixel ratio:" << ration;
 
     if (cursorName == "start") {
+        qCDebug(dsrApp) << "Creating start cursor";
         QPixmap startPix;
         if (ration <= 1) {
             startPix = QIcon(":/mouse_style/shape/start_mouse.svg").pixmap(START_SIZE);
@@ -51,6 +55,7 @@ QCursor BaseUtils::setCursorShape(QString cursorName, int colorIndex)
         }
 
     } else if (cursorName == "rotate") {
+        qCDebug(dsrApp) << "Creating rotate cursor";
         QPixmap rotateCursor  = QIcon(":/mouse_style/shape/rotate_mouse.svg").pixmap(ARROW_SIZE);
         rotateCursor.setDevicePixelRatio(ration);
 
@@ -88,6 +93,7 @@ QCursor BaseUtils::setCursorShape(QString cursorName, int colorIndex)
     }
 
     BaseUtils::m_shapesCursor.insert(cursorNameString, customShape);
+    qCDebug(dsrApp) << "Created and cached new cursor for:" << cursorNameString;
     return customShape;
 }
 
@@ -135,19 +141,22 @@ int BaseUtils::colorIndex(QColor color)
 
 bool BaseUtils::isValidFormat(QString suffix)
 {
+    qCDebug(dsrApp) << "Checking if format is valid:" << suffix;
     QStringList validFormat;
     validFormat << "bmp" << "jpg" << "jpeg" << "png" << "pbm" << "pgm" << "xbm" << "xpm";
-    if (validFormat.contains(suffix)) {
-        return true;
-    } else {
-        return false;
+    bool isValid = validFormat.contains(suffix);
+    if (!isValid) {
+        qCWarning(dsrApp) << "Invalid format detected:" << suffix;
     }
+    return isValid;
 }
 
 bool BaseUtils::isCommandExist(QString command)
 {
+    qCDebug(dsrApp) << "Checking if command exists:" << command;
     QProcess *proc = new QProcess;
     if (!proc) {
+        qCWarning(dsrApp) << "Failed to create QProcess for command check:" << command;
         return false;
     }
     QString cm = QString("which %1\n").arg(command);
@@ -155,5 +164,11 @@ bool BaseUtils::isCommandExist(QString command)
     proc->waitForFinished(1000);
     int ret = proc->exitCode() == 0;
     delete proc;
+    
+    if (!ret) {
+        qCWarning(dsrApp) << "Command not found:" << command;
+    } else {
+        qCDebug(dsrApp) << "Command exists:" << command;
+    }
     return ret;
 }

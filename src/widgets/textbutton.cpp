@@ -6,6 +6,7 @@
 #include "textbutton.h"
 #include "../utils/baseutils.h"
 #include "../utils/configsettings.h"
+#include "../utils/log.h"
 
 TextButton::TextButton(int num, DWidget *parent)
     : DPushButton(parent)
@@ -20,6 +21,7 @@ TextButton::TextButton(int num, DWidget *parent)
     connect(this, &TextButton::clicked, this, [ = ] {
         if (this->isChecked())
         {
+            qCDebug(dsrApp) << "Text font size changed to:" << m_fontsize;
             ConfigSettings::instance()->setValue("text", "fontsize", m_fontsize);
         }
     });

@@ -8,6 +8,7 @@
 #include <QScreen>
 #include <QGuiApplication>
 #include <QDBusInterface>
+#include "../../utils/log.h"
 
 #define ShotShartPlugin "shot-start-plugin"
 #define ShotShartApp "deepin-screen-recorder"  // 使用截图录屏的翻译
@@ -26,6 +27,7 @@ ShotStartPlugin::ShotStartPlugin(QObject *parent)
     , m_tipsWidget(nullptr)
 
 {
+    qCDebug(dsrApp) << "Initializing ShotStartPlugin";
     m_isRecording = false;
     m_checkTimer = nullptr;
     m_bDockQuickPanel = false;
@@ -43,6 +45,7 @@ const QString ShotStartPlugin::pluginDisplayName() const
 
 void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
 {
+    qCInfo(dsrApp) << "Initializing shot start plugin";
 #ifndef UNIT_TEST
 
 #ifdef DOCK_API_VERSION
@@ -81,19 +84,24 @@ void ShotStartPlugin::init(PluginProxyInterface *proxyInter)
 
     m_proxyInter = proxyInter;
 
-    if (m_iconWidget.isNull())
+    if (m_iconWidget.isNull()) {
+        qCDebug(dsrApp) << "Creating new icon widget";
         m_iconWidget.reset(new IconWidget);
+    }
 
     if (m_quickPanelWidget.isNull()) {
+        qCDebug(dsrApp) << "Creating new quick panel widget";
         m_quickPanelWidget.reset(new QuickPanelWidget);
         // "截图"快捷面板不再响应录制中动画效果，固定为截图图标
         m_quickPanelWidget->changeType(QuickPanelWidget::SHOT);
     }
-    if (m_tipsWidget.isNull())
+    if (m_tipsWidget.isNull()) {
+        qCDebug(dsrApp) << "Creating new tips widget";
         m_tipsWidget.reset(new TipsWidget);
+    }
 
     if (m_bDockQuickPanel || !pluginIsDisable()) {
-        qCInfo(SHOT_LOG) << "the current plugin has been added to the dock";
+        qCInfo(dsrApp) << "Adding plugin to dock";
         m_proxyInter->itemAdded(this, pluginName());
     }
 
@@ -120,10 +128,13 @@ bool ShotStartPlugin::pluginIsDisable()
 void ShotStartPlugin::pluginStateSwitched()
 {
     const bool disabledNew = !pluginIsDisable();
+    qCInfo(dsrApp) << "Plugin state switched, new disabled state:" << disabledNew;
     m_proxyInter->saveValue(this, "disabled", disabledNew);
     if (disabledNew) {
+        qCDebug(dsrApp) << "Removing plugin from dock";
         m_proxyInter->itemRemoved(this, pluginName());
     } else {
+        qCDebug(dsrApp) << "Adding plugin to dock";
         m_proxyInter->itemAdded(this, pluginName());
     }
 }
@@ -181,11 +192,13 @@ const QString ShotStartPlugin::itemCommand(const QString &itemKey)
             qCDebug(SHOT_LOG) << "Get DBus Interface";
             return "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot "
                    "com.deepin.Screenshot.StartScreenshot";
+        } else {
+            qCDebug(dsrApp) << "Recording in progress, ignoring screenshot command";
         }
     } else {
         qCWarning(SHOT_LOG) << "(itemCommand) Input unknow widget!";
     }
-    return QString();
+    return QString("");
 }
 
 const QString ShotStartPlugin::itemContextMenu(const QString &)
@@ -235,11 +248,13 @@ void ShotStartPlugin::onRecording()
     m_nextCount++;
     if (1 == m_nextCount) {
         if (!m_checkTimer) {
+            qCDebug(dsrApp) << "Creating new check timer";
             m_checkTimer = new QTimer(this);
         }
         connect(m_checkTimer, &QTimer::timeout, this, [=] {
             // 说明录屏还在进行中
             if (m_count < m_nextCount) {
+                qCDebug(dsrApp) << "Recording in progress, updating count";
                 m_count = m_nextCount;
             }
             // 说明录屏已经停止了
@@ -249,10 +264,12 @@ void ShotStartPlugin::onRecording()
                 m_checkTimer->stop();
             }
         });
+        qCDebug(dsrApp) << "Starting check timer with interval:" << DETECT_SERV_INTERVAL;
         m_checkTimer->start(DETECT_SERV_INTERVAL);
     }
 
     if (m_checkTimer && !m_checkTimer->isActive()) {
+        qCDebug(dsrApp) << "Restarting inactive check timer";
         m_checkTimer->start(DETECT_SERV_INTERVAL);
     }
 }
@@ -287,3 +304,4 @@ ShotStartPlugin::~ShotStartPlugin()
      if (nullptr != m_quickPanelWidget)
         m_quickPanelWidget->deleteLater();
 }
+

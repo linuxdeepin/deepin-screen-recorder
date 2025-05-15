@@ -4,6 +4,7 @@
 
 #include "recordiconwidget.h"
 #include "dde-dock/constants.h"
+#include "../../utils/log.h"
 
 #include <DGuiApplicationHelper>
 #include <DStyle>
@@ -114,12 +115,15 @@ const QString RecordIconWidget::itemContextMenu()
 
 void RecordIconWidget::invokedMenuItem(const QString &menuId)
 {
+    qCInfo(dsrApp) << "Menu item invoked:" << menuId;
     if (menuId == "shot") {
+        qCDebug(dsrApp) << "Starting screenshot via DBus";
         QDBusInterface shotDBusInterface(
             "com.deepin.Screenshot", "/com/deepin/Screenshot", "com.deepin.Screenshot", QDBusConnection::sessionBus());
 
         shotDBusInterface.asyncCall("StartScreenshot");
     } else if (menuId == "recorder") {
+        qCDebug(dsrApp) << "Stopping recording via DBus";
         QDBusInterface shotDBusInterface("com.deepin.ScreenRecorder",
                                          "/com/deepin/ScreenRecorder",
                                          "com.deepin.ScreenRecorder",
@@ -131,8 +135,10 @@ void RecordIconWidget::invokedMenuItem(const QString &menuId)
 
 QString RecordIconWidget::getSysShortcuts(const QString &type)
 {
+    qCDebug(dsrApp) << "Getting system shortcuts for type:" << type;
     QDBusInterface shortcuts("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding", "com.deepin.daemon.Keybinding");
     if (!shortcuts.isValid()) {
+        qCWarning(dsrApp) << "Failed to create shortcuts DBus interface, using default values";
         return getDefaultValue(type);
     }
 
@@ -153,14 +159,17 @@ QString RecordIconWidget::getSysShortcuts(const QString &type)
             AccelsString.replace('>', '+');
             AccelsString.replace("Control", "Ctrl");
             AccelsString = "(" + AccelsString + ")";
+            qCDebug(dsrApp) << "Found shortcut for" << type << ":" << AccelsString;
             return AccelsString;
         }
     }
+    qCDebug(dsrApp) << "No shortcut found for" << type << ", using default value";
     return getDefaultValue(type);
 }
 
 QString RecordIconWidget::getDefaultValue(const QString &type)
 {
+    qCDebug(dsrApp) << "Getting default shortcut value for type:" << type;
     QString retShortcut;
     if (type == "screenshot") {
         retShortcut = "Ctrl+Alt+A";
@@ -169,6 +178,7 @@ QString RecordIconWidget::getDefaultValue(const QString &type)
     } else {
         qDebug() << __FUNCTION__ << __LINE__ << "Shortcut Error !!!!!!!!!" << type;
     }
+    qCDebug(dsrApp) << "Default shortcut value:" << retShortcut;
     return retShortcut;
 }
 

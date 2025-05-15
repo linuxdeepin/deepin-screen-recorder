@@ -1,5 +1,5 @@
 // Copyright (C) 2019 ~ 2019 Deepin Technology Co., Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,6 +7,7 @@
 #include "service/pinscreenshotsinterface.h"
 #include "service/dbuspinscreenshotsadaptor.h"
 #include "putils.h"
+#include "../utils/log.h"
 
 #include <DWidget>
 #include <DLog>
@@ -48,6 +49,7 @@ int main(int argc, char *argv[])
     }
     PUtils::isWaylandMode = isWaylandProtocol();
     if (PUtils::isWaylandMode) {
+        qCDebug(dsrApp) << "Setting Wayland shell integration";
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
     }
 
@@ -76,6 +78,7 @@ int main(int argc, char *argv[])
         list[list.count() - 1] = "deepin-pin-screen.log";
         logFilePath = list.join("/");
         Dtk::Core::DLogManager::setlogFilePath(logFilePath);
+        qCInfo(dsrApp) << "Log file path set to:" << logFilePath;
     }
 
     Dtk::Core::DLogManager::registerConsoleAppender();
@@ -106,6 +109,7 @@ int main(int argc, char *argv[])
         dbus.registerObject("/com/deepin/PinScreenShots", &instance);
         // 初始化适配器
         new DbusPinScreenShotsAdaptor(&instance);
+        qCInfo(dsrApp) << "DBus service registered successfully";
 
         if (cmdParser.isSet(dbusOption)) {
             // 第一次调用以 --dbus参数启动
