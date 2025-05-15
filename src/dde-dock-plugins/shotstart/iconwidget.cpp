@@ -5,6 +5,7 @@
 
 #include "iconwidget.h"
 #include "dde-dock/constants.h"
+#include "../../utils/log.h"
 
 #include <DGuiApplicationHelper>
 #include <DStyle>
@@ -96,12 +97,15 @@ const QString IconWidget::itemContextMenu()
 
 void IconWidget::invokedMenuItem(const QString &menuId)
 {
+    qCInfo(dsrApp) << "Menu item invoked:" << menuId;
     if (menuId == "shot") {
+        qCDebug(dsrApp) << "Starting screenshot via DBus";
         QDBusInterface shotDBusInterface(
             "com.deepin.Screenshot", "/com/deepin/Screenshot", "com.deepin.Screenshot", QDBusConnection::sessionBus());
 
         shotDBusInterface.asyncCall("StartScreenshot");
     } else if (menuId == "recorder") {
+        qCDebug(dsrApp) << "Stopping recording via DBus";
         QDBusInterface shotDBusInterface("com.deepin.ScreenRecorder",
                                          "/com/deepin/ScreenRecorder",
                                          "com.deepin.ScreenRecorder",
@@ -113,17 +117,21 @@ void IconWidget::invokedMenuItem(const QString &menuId)
 
 QString IconWidget::getSysShortcuts(const QString type)
 {
+    qCDebug(dsrApp) << "Getting system shortcuts for type:" << type;
     QScopedPointer<QDBusInterface> shortcuts;
     if (DSysInfo::minorVersion().toInt() >= 23) {
+        qCDebug(dsrApp) << "Using new DBus interface for shortcuts";
         shortcuts.reset(
             new QDBusInterface("org.deepin.dde.Keybinding1", "/org/deepin/dde/Keybinding1", "org.deepin.dde.Keybinding1"));
     } else {
+        qCDebug(dsrApp) << "Using legacy DBus interface for shortcuts";
         // V20 or older system edition.
         shortcuts.reset(
             new QDBusInterface("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding", "com.deepin.daemon.Keybinding"));
     }
 
     if (!shortcuts->isValid()) {
+        qCWarning(dsrApp) << "Failed to create shortcuts DBus interface, using default values";
         return getDefaultValue(type);
     }
 
@@ -144,9 +152,11 @@ QString IconWidget::getSysShortcuts(const QString type)
             AccelsString.replace('>', '+');
             AccelsString.replace("Control", "Ctrl");
             AccelsString = "(" + AccelsString + ")";
+            qCDebug(dsrApp) << "Found shortcut for" << type << ":" << AccelsString;
             return AccelsString;
         }
     }
+    qCDebug(dsrApp) << "No shortcut found for" << type << ", using default value";
     return getDefaultValue(type);
 }
 
@@ -160,9 +170,9 @@ QString IconWidget::getDefaultValue(const QString type)
     } else {
         qDebug() << __FUNCTION__ << __LINE__ << "Shortcut Error !!!!!!!!!" << type;
     }
+    qCDebug(dsrApp) << "Using default shortcut for" << type << ":" << retShortcut;
     return retShortcut;
 }
-
 
 void IconWidget::paintEvent(QPaintEvent *e)
 {

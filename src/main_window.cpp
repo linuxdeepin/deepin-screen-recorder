@@ -21,6 +21,7 @@
 #include "utils/configsettings.h"
 #include "utils/shortcut.h"
 #include "utils/screengrabber.h"
+#include "utils/log.h"
 #include "camera_process.h"
 #include "widgets/tooltips.h"
 #include "dbusinterface/drawinterface.h"
@@ -158,10 +159,12 @@ MainWindow::MainWindow(DWidget *parent)
     , m_initScreenRecorder(false)
     , m_initScroll(false)
 {
+    qCDebug(dsrApp) << "Creating MainWindow";
     initMainWindow();
 
     // TODO： treeland适配,后面判断会替换为 Utils::isTreelandMode
     if (Utils::isTreelandMode) {
+        qCDebug(dsrApp) << "Running in Treeland mode";
         setAttribute(Qt::WA_TranslucentBackground);
         setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowTransparentForInput); //Qt::WindowTransparentForInput
 
@@ -170,8 +173,10 @@ MainWindow::MainWindow(DWidget *parent)
         // 初始化截图/录屏管理器
         auto manager = TreelandCaptureManager::instance();
         if (manager->isActive()) {
+            qCDebug(dsrApp) << "Treeland capture manager is active, initializing capture";
             initializeCapture();
         } else {
+            qCDebug(dsrApp) << "Treeland capture manager not active, waiting for activation";
             connect(manager, &TreelandCaptureManager::activeChanged,
                     this, &MainWindow::initializeCapture);
         }
@@ -184,15 +189,20 @@ void MainWindow::initMainWindow()
     m_currentCursor = QCursor().pos();
     if (Utils::isTabletEnvironment) {
         m_cursorBound = 20;
+        qCDebug(dsrApp) << "Using tablet cursor bound:" << m_cursorBound;
     } else {
         m_cursorBound = 5;
+        qCDebug(dsrApp) << "Using desktop cursor bound:" << m_cursorBound;
     }
+    
     setDragCursor();
     // FIXME(205567 / 307017): temporarily fix, we manually reset scale factor to 1
     if (Utils::forceResetScale) {
         m_pixelRatio = 1.0;
+        qCDebug(dsrApp) << "Force resetting scale factor to 1.0";
     } else {
         m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
+        qCDebug(dsrApp) << "Using system pixel ratio:" << m_pixelRatio;
     }
 
     Utils::pixelRatio = m_pixelRatio;
@@ -215,6 +225,7 @@ void MainWindow::initMainWindow()
             Qt::QueuedConnection);
 
     if (!Utils::isWaylandMode) {
+        qCDebug(dsrApp) << "Setting up X11 keyboard event monitoring";
         connect(m_pScreenCaptureEvent,
                 SIGNAL(keyboardPress(unsigned char)),
                 this,
@@ -229,11 +240,15 @@ void MainWindow::initMainWindow()
     }
 
     m_screenCount = QGuiApplication::screens().count();
+    qCDebug(dsrApp) << "Number of screens detected:" << m_screenCount;
+    
     connect(qApp, &QGuiApplication::screenAdded, this, &MainWindow::onScreenResolutionChanged);
     connect(qApp, &QGuiApplication::screenRemoved, this, &MainWindow::onScreenResolutionChanged);
 
     QList<QScreen *> screenList = qApp->screens();
     int hTotal = 0;
+    qCDebug(dsrApp) << "Initializing screen information";
+    
     for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
         QRect rect = (*it)->geometry();
         qDebug() << "屏幕:" << (*it)->name() << "大小:" << rect;

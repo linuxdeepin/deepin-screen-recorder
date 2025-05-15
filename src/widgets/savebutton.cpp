@@ -5,6 +5,7 @@
 
 #include "savebutton.h"
 #include "../utils/baseutils.h"
+#include "../utils/log.h"
 #include <QHBoxLayout>
 
 const QSize TOOL_SAVE_BTN = QSize(32, 22);
@@ -35,6 +36,7 @@ SaveButton::SaveButton(DWidget *parent)
             &SaveButton::saveAction);
     connect(m_listBtn, &ToolButton::clicked, this, [ = ]() {
         bool isChecked = m_listBtn->isChecked();
+        qCDebug(dsrApp) << "List button clicked, checked status:" << isChecked;
         emit  expandSaveOption(isChecked);
     });
 }

@@ -7,6 +7,7 @@
 #include "../utils/configsettings.h"
 #include "../utils/baseutils.h"
 #include "../utils.h"
+#include "../utils/log.h"
 #include <DPalette>
 
 #include <QDebug>
@@ -58,6 +59,7 @@ TextEdit::TextEdit(int index, DWidget *parent)
 
     //这里有两个信号容易搞混，contentsChanged这个是更改之后才会发信号，contentsChange这个信号更改之前发信号
     connect(this->document(), &QTextDocument::contentsChanged, this,  [ = ] {
+        qCDebug(dsrApp) << "Text content changed, updating size";
         updateContentSize(this->toPlainText());
     });
     m_currentCursor = QCursor().pos();
@@ -92,6 +94,7 @@ QColor TextEdit::getColor()
 */
 void TextEdit::setFontSize(int fontsize)
 {
+    qCDebug(dsrApp) << "Setting font size to:" << fontsize;
     QFont font;
     font.setPixelSize(fontsize);
     this->document()->setDefaultFont(font);
@@ -111,6 +114,7 @@ void TextEdit::inputMethodEvent(QInputMethodEvent *e)
 
 void TextEdit::updateContentSize(QString content)
 {
+    qCDebug(dsrApp) << "Updating content size for text length:" << content.length();
 //    qDebug() << "=============" << m_count << "===============";
 //    qDebug() << "content: " << content << "content.size(): " << content.size();
 //    qDebug() << "blockCount() : " << blockCount() ;

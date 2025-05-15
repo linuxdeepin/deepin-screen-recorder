@@ -7,8 +7,8 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QTimer>
-
 #include <DGuiApplicationHelper>
+#include "../../utils/log.h"
 
 DGUI_USE_NAMESPACE
 constexpr int BASE_ICON_SIZE = 24;
@@ -41,12 +41,15 @@ void CommonIconButton::setStateIconMapping(QMap<State, QPair<QString, QString>> 
 
 void CommonIconButton::setState(State state)
 {
+    qCDebug(dsrApp) << "Setting button state to:" << state;
     m_state = state;
     if (m_fileMapping.contains(state)) {
         auto pair = m_fileMapping.value(state);
+        qCDebug(dsrApp) << "Found icon mapping for state, setting icon";
         setIcon(pair.first, pair.second);
     }
     if (!m_icon.isNull()) {
+        qCDebug(dsrApp) << "Setting icon with theme colors";
         setIcon(m_icon, m_lightThemeColor, m_darkThemeColor);
     }
 }
@@ -81,6 +84,7 @@ void CommonIconButton::setActiveState(bool state)
 void CommonIconButton::setIcon(const QString &icon, const QString &fallback, const QString &suffix)
 {
     if (!m_fileMapping.contains(Default)) {
+        qCDebug(dsrApp) << "Adding default icon mapping";
         m_fileMapping.insert(Default, QPair<QString, QString>(icon, fallback));
     }
 

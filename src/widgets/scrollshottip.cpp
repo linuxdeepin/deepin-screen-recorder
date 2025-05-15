@@ -8,6 +8,7 @@
 #include "constant.h"
 #include "utils/configsettings.h"
 #include "utils/tempfile.h"
+#include "utils/log.h"
 
 #include <DWidget>
 #include <DHiDPIHelper>

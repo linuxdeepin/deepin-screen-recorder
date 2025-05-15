@@ -6,6 +6,7 @@
 #include "subtoolwidget.h"
 #include "accessibility/acTextDefine.h"
 #include "settings.h"
+#include "../../utils/log.h"
 
 #include <QActionGroup>
 #include <QFileInfo>
@@ -38,6 +39,7 @@ void SubToolWidget::initShotLable()
     m_ocrButton->setIcon(QIcon::fromTheme("ocr-normal"));
     m_ocrButton->setToolTip(tr("Extract Text"));
     connect(m_ocrButton, SIGNAL(clicked()), this, SIGNAL(signalOcrButtonClicked()));
+    qCDebug(dsrApp) << "OCR button initialized";
 
     // 选项按钮
     m_pinOptionButton = new ToolButton(this);
@@ -63,6 +65,8 @@ void SubToolWidget::initShotLable()
     m_pinOptionButton->setText(tr("Options"));
     m_pinOptionButton->setMinimumSize(QSize(60, 36));
     m_pinOptionButton->setToolTip(tr("Options"));
+    qCDebug(dsrApp) << "Options button initialized";
+
     m_saveGroup = new QActionGroup(this);
     QActionGroup *t_formatGroup = new QActionGroup(this);
     m_saveGroup->setExclusive(true);
@@ -72,6 +76,7 @@ void SubToolWidget::initShotLable()
     m_optionMenu = new DMenu(this);
     DFontSizeManager::instance()->bind(m_optionMenu, DFontSizeManager::T6);
     connect(m_optionMenu, &DMenu::aboutToShow, this, &SubToolWidget::updateOptionChecked);
+    qCDebug(dsrApp) << "Options menu created";
 
     QAction *saveTitleAction = new QAction(m_optionMenu);
     QAction *saveToClipAction = new QAction(m_optionMenu);
@@ -85,6 +90,8 @@ void SubToolWidget::initShotLable()
     m_saveToSpecialPathMenu->menuAction()->setCheckable(true);
     DFontSizeManager::instance()->bind(m_saveToSpecialPathMenu, DFontSizeManager::T8);
     QString specialPath = Settings::instance()->getSavePath();
+    qCDebug(dsrApp) << "Special save path menu created";
+
     //设置或更新指定路径的菜单按键
     m_changeSaveToSpecialPath = new QAction(m_saveToSpecialPathMenu);
     m_changeSaveToSpecialPath->setCheckable(true);
@@ -129,6 +136,7 @@ void SubToolWidget::initShotLable()
     m_SavePathActions.insert(CLIPBOARD, saveToClipAction);
     m_SavePathActions.insert(DESKTOP, saveToDesktopAction);
     m_SavePathActions.insert(PICTURES, saveToPictureAction);
+    qCDebug(dsrApp) << "Save path actions initialized";
 
     formatTitleAction->setDisabled(true);
     formatTitleAction->setText(tr("Format"));
@@ -146,6 +154,7 @@ void SubToolWidget::initShotLable()
     m_SaveFormatActions.insert(PNG, pngAction);
     m_SaveFormatActions.insert(JPG, jpgAction);
     m_SaveFormatActions.insert(BMP, bmpAction);
+    qCDebug(dsrApp) << "Save format actions initialized";
 
     //保存方式
     m_optionMenu->addAction(saveTitleAction);
@@ -161,6 +170,7 @@ void SubToolWidget::initShotLable()
     m_optionMenu->addAction(jpgAction);
     m_optionMenu->addAction(bmpAction);
     m_pinOptionButton->setMenu(m_optionMenu);
+    qCDebug(dsrApp) << "Option menu structure completed";
 
     //updateOptionChecked();
 
@@ -252,11 +262,13 @@ void SubToolWidget::updateOptionChecked()
     qDebug() << "saveInfo: " << saveInfo;
     if (saveInfo.second != PNG && saveInfo.second != JPG && saveInfo.second != BMP) { //不存在保存格式的情况
         saveInfo.second = PNG; // 默认保存格式
+        qCDebug(dsrApp) << "Invalid save format, defaulting to PNG";
     }
     //没有配置文件时，给定一个默认值
     if (saveInfo.first == 0 && saveInfo.second == 0) {
         m_SaveInfo.first = CLIPBOARD; // 默认保存路径
         m_SaveInfo.second = PNG; // 默认保存格式
+        qCDebug(dsrApp) << "No configuration found, using defaults: Clipboard and PNG";
     } else {
         m_SaveInfo = saveInfo;
     }
@@ -268,12 +280,16 @@ void SubToolWidget::updateOptionChecked()
         //判断是否存在历史路径
         if (specialPath.isEmpty() || !QFileInfo::exists(specialPath)) {
             m_SaveInfo.first = FOLDER_CHANGE;
+            qCDebug(dsrApp) << "Special path not found, switching to folder change mode";
         } else {
             m_SaveInfo.first = FOLDER;
+            qCDebug(dsrApp) << "Using special path:" << specialPath;
             //配置文件中存在历史路径时(打开多个贴图，对其中某个贴图保存到指定路径)，但是当前的工具栏菜单中不存在对应的历史路径action
             if (!m_SavePathActions.contains(m_SaveInfo.first)) {
+                qCDebug(dsrApp) << "Creating new special path action";
                 initChangeSaveToSpecialAction(specialPath);
             } else {
+                qCDebug(dsrApp) << "Updating existing special path action";
                 //根据字体大小计算字符串宽度，确定路径省略的长度
                 QFontMetrics tempFont(m_changeSaveToSpecialPath->font());
                 auto changeSaveToSpecialPathFontWidth = tempFont.boundingRect(m_changeSaveToSpecialPath->text()).width();
@@ -285,6 +301,7 @@ void SubToolWidget::updateOptionChecked()
         }
         if (Settings::instance()->getIsChangeSavePath()) {
             m_SaveInfo.first = FOLDER_CHANGE;
+            qCDebug(dsrApp) << "Change save path flag is set, switching to folder change mode";
         }
     } else {
         m_saveToSpecialPathMenu->menuAction()->setChecked(false);
@@ -292,6 +309,7 @@ void SubToolWidget::updateOptionChecked()
 
     m_SavePathActions.value(m_SaveInfo.first)->setChecked(true);
     m_SaveFormatActions.value(m_SaveInfo.second)->setChecked(true);
+    qCDebug(dsrApp) << "Menu options update completed";
 }
 
 bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)

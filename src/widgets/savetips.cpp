@@ -5,6 +5,7 @@
 
 #include "savetips.h"
 #include "../utils/baseutils.h"
+#include "../utils/log.h"
 #include <QDebug>
 
 SaveTips::SaveTips(DWidget *parent)
@@ -25,6 +26,7 @@ SaveTips::SaveTips(DWidget *parent)
         setFixedWidth(value.toInt());
     });
     connect(m_stopAni, &QPropertyAnimation::finished, this, [ = ] {
+        qCDebug(dsrApp) << "Stop animation finished, clearing text";
         this->clear();
         m_text = "";
     });
@@ -32,6 +34,7 @@ SaveTips::SaveTips(DWidget *parent)
 
 void SaveTips::setSaveText(QString text)
 {
+    qCDebug(dsrApp) << "Setting save tip text:" << text;
     m_text = text;
     setTipWidth(stringWidth(this->font(), m_text) + 10);
 //   setText(text);
@@ -44,6 +47,7 @@ int SaveTips::tipWidth() const
 
 void SaveTips::setTipWidth(int tipsWidth)
 {
+    qCDebug(dsrApp) << "Setting tip width to:" << tipsWidth;
     m_tipsWidth = tipsWidth;
 }
 

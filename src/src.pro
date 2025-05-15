@@ -162,6 +162,7 @@ HEADERS += main_window.h \
     qwayland-treeland-capture-unstable-v1.h \
     record_process.h \
     utils.h \
+    utils/log.h \
     countdown_tooltip.h \
     constant.h \
     event_monitor.h \
@@ -236,6 +237,7 @@ SOURCES += main.cpp \
     qwayland-treeland-capture-unstable-v1.cpp \
     record_process.cpp \
     utils.cpp \
+    utils/log.cpp \
     countdown_tooltip.cpp \
     constant.cpp \
     event_monitor.cpp \

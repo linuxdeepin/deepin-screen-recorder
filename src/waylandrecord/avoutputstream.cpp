@@ -24,6 +24,7 @@ DTS是AVPacket里的一个成员，表示这个压缩包应该什么时候被解
 #include <QThread>
 
 #include "utils.h"
+#include "../utils/log.h"
 
 CAVOutputStream::CAVOutputStream(WaylandIntegration::WaylandIntegrationPrivate *context):
     m_context(context),
@@ -143,8 +144,10 @@ void CAVOutputStream::SetAudioCardCodecProp(AVCodecID codec_id, int samplerate, 
     m_channels_card_layout = layout;
     m_audio_bitrate_card = bitrate;
 }
+
 int CAVOutputStream::init_filters()
 {
+    qCInfo(dsrApp) << "Initializing audio filters";
     static const char *filter_descr = "[in0][in1]amix=inputs=2[out]";//"[in0][in1]amix=inputs=2[out]";amerge//"aresample=8000,aformat=sample_fmts=s16:channel_layouts=mono";
     char args1[512];
     char args2[512];
@@ -155,6 +158,12 @@ int CAVOutputStream::init_filters()
     const AVFilter *abuffersrc1  = avlibInterface::m_avfilter_get_by_name("abuffer");
     const AVFilter *abuffersrc2  = avlibInterface::m_avfilter_get_by_name("abuffer");
     const AVFilter *abuffersink = avlibInterface::m_avfilter_get_by_name("abuffersink");
+    
+    if (!abuffersrc1 || !abuffersrc2 || !abuffersink) {
+        qCCritical(dsrApp) << "Failed to get audio filters";
+        return 1;
+    }
+    
     AVFilterInOut *outputs1 = avlibInterface::m_avfilter_inout_alloc();
     AVFilterInOut *outputs2 = avlibInterface::m_avfilter_inout_alloc();
     AVFilterInOut *inputs  = avlibInterface::m_avfilter_inout_alloc();
@@ -179,6 +188,8 @@ int CAVOutputStream::init_filters()
     dec_ctx1 = m_pMicCodecContext;
     if (!dec_ctx1->channel_layout)
         dec_ctx1->channel_layout = static_cast<uint64_t>(avlibInterface::m_av_get_default_channel_layout(dec_ctx1->channels));
+
+    qCDebug(dsrApp) << "Configuring first audio buffer source";
     snprintf(args1,
              sizeof(args1),
              formatStr.c_str(),
@@ -191,14 +202,14 @@ int CAVOutputStream::init_filters()
                                                          args1, nullptr, filter_graph);
 
     if (ret < 0) {
-
-        //av_log(nullptr, AV_LOG_ERROR, "Cannot create audio buffer source\n");
+        qCCritical(dsrApp) << "Cannot create first audio buffer source";
         avlibInterface::m_avfilter_inout_free(&inputs);
-
         avlibInterface::m_avfilter_inout_free(&outputs1);
         avlibInterface::m_avfilter_inout_free(&outputs2);
         return 1;
     }
+
+    qCDebug(dsrApp) << "Configuring second audio buffer source";
     /* buffer audio source: the decoded frames from the decoder will be inserted here. */
     dec_ctx2 = m_pSysCodecContext;
     snprintf(args2, sizeof(args2),
@@ -208,82 +219,57 @@ int CAVOutputStream::init_filters()
     ret = avlibInterface::m_avfilter_graph_create_filter(&buffersrc_ctx2, abuffersrc2, "in1",
                                                          args2, nullptr, filter_graph);
     if (ret < 0) {
-        //av_log(nullptr, AV_LOG_ERROR, "Cannot create audio buffer source\n");
-
+        qCCritical(dsrApp) << "Cannot create second audio buffer source";
         avlibInterface::m_avfilter_inout_free(&inputs);
-
         avlibInterface::m_avfilter_inout_free(&outputs1);
         avlibInterface::m_avfilter_inout_free(&outputs2);
         return 1;
     }
 
+    qCDebug(dsrApp) << "Creating audio buffer sink";
     /* buffer audio sink: to terminate the filter chain. */
-
     ret = avlibInterface::m_avfilter_graph_create_filter(&buffersink_ctx, abuffersink, "out",
-
                                                          nullptr, nullptr, filter_graph);
 
     if (ret < 0) {
-
-        //av_log(nullptr, AV_LOG_ERROR, "Cannot create audio buffer sink\n");
-
+        qCCritical(dsrApp) << "Cannot create audio buffer sink";
         avlibInterface::m_avfilter_inout_free(&inputs);
-
         avlibInterface::m_avfilter_inout_free(&outputs1);
         avlibInterface::m_avfilter_inout_free(&outputs2);
         return 1;
-
     }
 
-    //ret = av_opt_set_int_list(buffersink_ctx, "sample_fmts", out_sample_fmts, -1, AV_OPT_SEARCH_CHILDREN);
     ret = avlibInterface::m_av_opt_set_bin(buffersink_ctx, "sample_fmts", (const uint8_t *)(out_sample_fmts),
                                            avlibInterface::m_av_int_list_length_for_size(sizeof(*(out_sample_fmts)), out_sample_fmts, -1) * sizeof(*(out_sample_fmts)), AV_OPT_SEARCH_CHILDREN);
 
-
     if (ret < 0) {
-
-        //av_log(nullptr, AV_LOG_ERROR, "Cannot set output sample format\n");
-
+        qCCritical(dsrApp) << "Cannot set output sample format";
         avlibInterface::m_avfilter_inout_free(&inputs);
-
         avlibInterface::m_avfilter_inout_free(&outputs1);
         avlibInterface::m_avfilter_inout_free(&outputs2);
         return 1;
-
     }
 
-
-    //ret = av_opt_set_int_list(buffersink_ctx, "channel_layouts", out_channel_layouts, -1, AV_OPT_SEARCH_CHILDREN);
     ret = avlibInterface::m_av_opt_set_bin(buffersink_ctx, "channel_layouts", (const uint8_t *)(out_channel_layouts),
                                            avlibInterface::m_av_int_list_length_for_size(sizeof(*(out_channel_layouts)), out_channel_layouts, -1) * sizeof(*(out_channel_layouts)), AV_OPT_SEARCH_CHILDREN);
 
-
     if (ret < 0) {
-
-        //av_log(nullptr, AV_LOG_ERROR, "Cannot set output channel layout\n");
-
+        qCCritical(dsrApp) << "Cannot set output channel layout";
         avlibInterface::m_avfilter_inout_free(&inputs);
-
         avlibInterface::m_avfilter_inout_free(&outputs1);
         avlibInterface::m_avfilter_inout_free(&outputs2);
         return 1;
-
     }
 
-    //ret = av_opt_set_int_list(buffersink_ctx, "sample_rates", out_sample_rates, -1,AV_OPT_SEARCH_CHILDREN);
     ret = avlibInterface::m_av_opt_set_bin(buffersink_ctx, "sample_rates", (const uint8_t *)(out_sample_rates),
                                            avlibInterface::m_av_int_list_length_for_size(sizeof(*(out_sample_rates)), out_sample_rates, -1) * sizeof(*(out_sample_rates)), AV_OPT_SEARCH_CHILDREN);
 
     if (ret < 0) {
-
-        //av_log(nullptr, AV_LOG_ERROR, "Cannot set output sample rate\n");
-
+        qCCritical(dsrApp) << "Cannot set output sample rate";
         avlibInterface::m_avfilter_inout_free(&inputs);
-
         avlibInterface::m_avfilter_inout_free(&outputs1);
         avlibInterface::m_avfilter_inout_free(&outputs2);
         return 1;
-
     }
 
     /*
@@ -341,6 +327,7 @@ int CAVOutputStream::init_filters()
 
 
 
+    qCDebug(dsrApp) << "Parsing filter graph";
     if ((ret = avlibInterface::m_avfilter_graph_parse_ptr(filter_graph, filter_descr,
 
                                                           &inputs, filter_outputs, nullptr)) < 0)//filter_outputs
@@ -357,16 +344,10 @@ int CAVOutputStream::init_filters()
 
     }
 
-
-
-    if ((ret = avlibInterface::m_avfilter_graph_config(filter_graph, nullptr)) < 0)
-
-    {
-
-        //av_log(nullptr, AV_LOG_ERROR, "config graph fail, ret: %d\n", ret);
-
+    qCDebug(dsrApp) << "Configuring filter graph";
+    if ((ret = avlibInterface::m_avfilter_graph_config(filter_graph, nullptr)) < 0) {
+        qCCritical(dsrApp) << "Failed to configure filter graph, ret:" << ret;
         avlibInterface::m_avfilter_inout_free(&inputs);
-
         avlibInterface::m_avfilter_inout_free(&outputs1);
         avlibInterface::m_avfilter_inout_free(&outputs2);
         return 1;
@@ -389,11 +370,12 @@ int CAVOutputStream::init_filters()
     avlibInterface::m_avfilter_inout_free(&inputs);
     avlibInterface::m_avfilter_inout_free(filter_outputs);
 
+    qCInfo(dsrApp) << "Audio filters initialization completed successfully";
     return ret;
-
 }
 int CAVOutputStream::init_context_amix(int channel, uint64_t channel_layout, int sample_rate, int64_t bit_rate)
 {
+    qCInfo(dsrApp) << "Initializing audio mix context";
     Q_UNUSED(channel)
     Q_UNUSED(channel_layout)
     Q_UNUSED(sample_rate)
@@ -420,34 +402,39 @@ int CAVOutputStream::init_context_amix(int channel, uint64_t channel_layout, int
     pCodecCtx_amix->time_base.den = pCodecCtx_amix->sample_rate;
 
     if (m_sysAudioCodecID == AV_CODEC_ID_AAC) {
-        /** Allow the use of the experimental AAC encoder */
+        qCDebug(dsrApp) << "Setting AAC experimental compliance";
         pCodecCtx_amix->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
     }
 
-    /* Some formats want stream headers to be separate. */
-    if (m_videoFormatContext->oformat->flags & AVFMT_GLOBALHEADER)
+    if (m_videoFormatContext->oformat->flags & AVFMT_GLOBALHEADER) {
+        qCDebug(dsrApp) << "Setting global header flag";
         pCodecCtx_amix->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+    }
 
     if (avlibInterface::m_avcodec_open2(pCodecCtx_amix, pCodec_amix, nullptr) < 0) {
-        printf("Failed to open ouput audio encoder! (编码器打开失败！)\n");
+        qCCritical(dsrApp) << "Failed to open output audio encoder";
         return false;
     }
+
     audio_amix_st = avlibInterface::m_avformat_new_stream(m_videoFormatContext, pCodec_amix);
-    //Add a new stream to output,should be called by the user before avformat_write_header() for muxing
     if (audio_amix_st) {
-        //                audio_amix_st->index = 1;
         if (audio_amix_st == nullptr) {
+            qCCritical(dsrApp) << "Failed to create audio mix stream";
             return false;
         }
         audio_amix_st->time_base.num = 1;
-        audio_amix_st->time_base.den = pCodecCtx_amix->sample_rate;//48000
+        audio_amix_st->time_base.den = pCodecCtx_amix->sample_rate;
         audio_amix_st->codec = pCodecCtx_amix;
+        qCDebug(dsrApp) << "Audio mix stream created with sample rate:" << pCodecCtx_amix->sample_rate;
     }
+
+    qCInfo(dsrApp) << "Audio mix context initialized successfully";
     return true;
 }
 //创建编码器和混合器
 bool CAVOutputStream::open(QString path)
 {
+    qCInfo(dsrApp) << "Opening output stream for path:" << path;
     QByteArray pathArry = path.toLocal8Bit();
     m_path = new char[strlen(pathArry.data()) + 1];
     strcpy(m_path, pathArry.data());
@@ -480,69 +467,64 @@ bool CAVOutputStream::open(QString path)
         //pCodecCtx->flags |= CODEC_FLAG_QSCALE; //VBR（可变率控制）
         //added end
         pCodecCtx->gop_size = m_gopsize;
-        /* Some formats want stream headers to be separate. */
-        if (m_videoFormatContext->oformat->flags & AVFMT_GLOBALHEADER)
-            pCodecCtx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
+        if (m_videoFormatContext->oformat->flags & AVFMT_GLOBALHEADER) {
+            qCDebug(dsrApp) << "Setting global header flag for video codec";
+            pCodecCtx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+        }
 
         AVDictionary *param = nullptr;
 
-        //set H264 codec param
         if (m_videoCodecID  == AV_CODEC_ID_H264) {
+            qCDebug(dsrApp) << "Configuring H264 codec parameters";
             pCodecCtx->qmin = 10;
-            //low
             pCodecCtx->qmax = 51;
             pCodecCtx->max_b_frames = 0;
 
-            // Set H264 preset and tune
             avlibInterface::m_av_dict_set(&param, "preset", "ultrafast", 0);
-            //                av_dict_set(&param, "tune", "zerolatency", 0);
-
         }
 
         if (avlibInterface::m_avcodec_open2(pCodecCtx, pCodec, &param) < 0) {
-            printf("Failed to open output video encoder! (编码器打开失败！)\n");
+            qCCritical(dsrApp) << "Failed to open output video encoder";
             return false;
         }
 
-        //Add a new stream to output,should be called by the user before avformat_write_header() for muxing
         m_videoStream = avlibInterface::m_avformat_new_stream(m_videoFormatContext, pCodec);
         if (m_videoStream == nullptr) {
+            qCCritical(dsrApp) << "Failed to create video stream";
             return false;
         }
         m_videoStream->time_base.num = 1;
         m_videoStream->time_base.den = m_framerate;
         m_videoStream->codec = pCodecCtx;
-        //Initialize the buffer to store YUV frames to be encoded.
-        //
+
         pFrameYUV = avlibInterface::m_av_frame_alloc();
         m_out_buffer = static_cast<uint8_t *>(avlibInterface::m_av_malloc(static_cast<size_t>(avlibInterface::m_avpicture_get_size(AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height))));
         avlibInterface::m_avpicture_fill((AVPicture *)pFrameYUV, m_out_buffer, AV_PIX_FMT_YUV420P, pCodecCtx->width, pCodecCtx->height);
-
+        qCDebug(dsrApp) << "Video stream initialized with size:" << pCodecCtx->width << "x" << pCodecCtx->height;
     }
     if (m_sysAudioCodecID && m_micAudioCodecID) {
+        qCDebug(dsrApp) << "Initializing audio mixing";
         m_bMix = true;
         bool initSccess = init_context_amix(m_channels, 0, 0, m_audio_bitrate);
         if (!initSccess) {
-            printf("Can not init_context_amix\n");
+            qCCritical(dsrApp) << "Failed to initialize audio mixing context";
             return 1;
         }
     }
-    ///音频
+
     if (m_micAudioCodecID != 0) {
-        printf("FLQQ,mic audio encoder initialize\n\n");
-        //output audio encoder initialize
+        qCDebug(dsrApp) << "Initializing microphone audio encoder";
         pCodec_a = avlibInterface::m_avcodec_find_encoder(m_micAudioCodecID);
         if (!pCodec_a) {
-            printf("Can not find output audio encoder! (没有找到合适的编码器！)\n");
+            qCCritical(dsrApp) << "Cannot find microphone audio encoder";
             return false;
         }
         m_pMicCodecContext = avlibInterface::m_avcodec_alloc_context3(pCodec_a);
         m_pMicCodecContext->channels = m_channels;
-        //        pCodecCtx_a->channel_layout = av_get_default_channel_layout(m_channels);
         m_pMicCodecContext->channel_layout = static_cast<uint64_t>(m_channels_layout);
-        //      pCodecCtx_a->channels = av_get_channel_layout_nb_channels(pAudioStream->codec->channel_layout);
         if (m_pMicCodecContext->channel_layout == 0) {
+            qCDebug(dsrApp) << "Using default stereo channel layout for microphone";
             m_pMicCodecContext->channel_layout = AV_CH_LAYOUT_STEREO;
             m_pMicCodecContext->channels = avlibInterface::m_av_get_channel_layout_nb_channels(m_pMicCodecContext->channel_layout);
         }
@@ -554,27 +536,30 @@ bool CAVOutputStream::open(QString path)
         m_pMicCodecContext->time_base.den = m_pMicCodecContext->sample_rate;
 
         if (m_micAudioCodecID == AV_CODEC_ID_AAC) {
-            /** Allow the use of the experimental AAC encoder */
+            qCDebug(dsrApp) << "Setting AAC experimental compliance for microphone";
             m_pMicCodecContext->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
         }
 
-        /* Some formats want stream headers to be separate. */
-        if (m_videoFormatContext->oformat->flags & AVFMT_GLOBALHEADER)
+        if (m_videoFormatContext->oformat->flags & AVFMT_GLOBALHEADER) {
+            qCDebug(dsrApp) << "Setting global header flag for microphone audio";
             m_pMicCodecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+        }
 
         if (avlibInterface::m_avcodec_open2(m_pMicCodecContext, pCodec_a, nullptr) < 0) {
-            printf("Failed to open ouput audio encoder! (编码器打开失败！)\n");
+            qCCritical(dsrApp) << "Failed to open microphone audio encoder";
             return false;
         }
 
-        //Add a new stream to output,should be called by the user before avformat_write_header() for muxing
         if (!m_bMix) {
             m_micAudioStream = avlibInterface::m_avformat_new_stream(m_videoFormatContext, pCodec_a);
-            if (nullptr == m_micAudioStream)
+            if (nullptr == m_micAudioStream) {
+                qCCritical(dsrApp) << "Failed to create microphone audio stream";
                 return false;
+            }
             m_micAudioStream->time_base.num = 1;
-            m_micAudioStream->time_base.den = m_pMicCodecContext->sample_rate;//48000
+            m_micAudioStream->time_base.den = m_pMicCodecContext->sample_rate;
             m_micAudioStream->codec = m_pMicCodecContext;
+            qCDebug(dsrApp) << "Microphone audio stream created with sample rate:" << m_pMicCodecContext->sample_rate;
         }
 
 
@@ -619,28 +604,30 @@ bool CAVOutputStream::open(QString path)
         m_pSysCodecContext->time_base.den = m_pSysCodecContext->sample_rate;
 
         if (m_sysAudioCodecID == AV_CODEC_ID_AAC) {
-            /** Allow the use of the experimental AAC encoder */
+            qCDebug(dsrApp) << "Setting AAC experimental compliance for system audio";
             m_pSysCodecContext->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
         }
 
-        /* Some formats want stream headers to be separate. */
-        if (m_videoFormatContext->oformat->flags & AVFMT_GLOBALHEADER)
+        if (m_videoFormatContext->oformat->flags & AVFMT_GLOBALHEADER) {
+            qCDebug(dsrApp) << "Setting global header flag for system audio";
             m_pSysCodecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+        }
 
         if (avlibInterface::m_avcodec_open2(m_pSysCodecContext, pCodec_aCard, nullptr) < 0) {
             printf("Failed to open ouput audio encoder! (编码器打开失败！)\n");
             return false;
         }
 
-        //Add a new stream to output,should be called by the user before avformat_write_header() for muxing
         if (!m_bMix) {
             m_sysAudioStream = avlibInterface::m_avformat_new_stream(m_videoFormatContext, pCodec_aCard);
             if (m_sysAudioStream == nullptr) {
+                qCCritical(dsrApp) << "Failed to create system audio stream";
                 return false;
             }
             m_sysAudioStream->time_base.num = 1;
-            m_sysAudioStream->time_base.den = m_pSysCodecContext->sample_rate;//48000
+            m_sysAudioStream->time_base.den = m_pSysCodecContext->sample_rate;
             m_sysAudioStream->codec = m_pSysCodecContext;
+            qCDebug(dsrApp) << "System audio stream created with sample rate:" << m_pSysCodecContext->sample_rate;
         }
         m_convertedSysSamples = nullptr;
         if (!(m_convertedSysSamples = static_cast<uint8_t **>(calloc(static_cast<size_t>(m_pSysCodecContext->channels), sizeof(**m_convertedSysSamples))))) {
@@ -649,8 +636,11 @@ bool CAVOutputStream::open(QString path)
         }
         //m_convertedSysSamples[0] = nullptr;
     }
+
     if (m_bMix) {
+        qCDebug(dsrApp) << "Initializing audio filters for mixing";
         if (init_filters() != 0) {
+            qCCritical(dsrApp) << "Failed to initialize audio filters";
             return false;
         }
     }
@@ -679,14 +669,21 @@ bool CAVOutputStream::open(QString path)
     //m_isOverWrite = false;
     setIsWriteFrame(true);
     fflush(stdout);
+
+    qCInfo(dsrApp) << "Output stream opened successfully";
     return true;
 }
 
 int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPrivate::waylandFrame &frame)
 {
+    qCDebug(dsrApp) << "Starting to write video frame";
+    
     if (nullptr == frame._frame || frame._width <= 0 || frame._height <= 0) {
+        qCWarning(dsrApp) << "Invalid video frame parameters - Width:" << frame._width << "Height:" << frame._height;
         return -1;
     }
+
+    qCDebug(dsrApp) << "Allocating RGB frame buffer";
     AVFrame *pRgbFrame = avlibInterface::m_av_frame_alloc();
     pRgbFrame->width = frame._width;
     pRgbFrame->height = frame._height;
@@ -703,6 +700,7 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
         pRgbFrame->data[0]     = frame._frame;
     }
     if (nullptr == m_pVideoSwsContext) {
+        qCDebug(dsrApp) << "Initializing video scaling context";
         AVPixelFormat fmt = AV_PIX_FMT_RGBA;
         if (m_boardVendorType) {
             fmt = AV_PIX_FMT_RGB32;
@@ -718,9 +716,12 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
                                                               nullptr);
     }
     if (avlibInterface::m_av_frame_apply_cropping(pRgbFrame, AV_FRAME_CROP_UNALIGNED) < 0) {
+        qCCritical(dsrApp) << "Failed to apply frame cropping";
         AVERROR(ERANGE);
         return 2;
     }
+    
+    qCDebug(dsrApp) << "Converting frame from RGB to YUV";
     avlibInterface::m_sws_scale(m_pVideoSwsContext, pRgbFrame->data, pRgbFrame->linesize, 0, pCodecCtx->height, pFrameYUV->data, pFrameYUV->linesize);
     pFrameYUV->width  = pRgbFrame->width;//test
     pFrameYUV->height = pRgbFrame->height;
@@ -730,6 +731,8 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
     packet.size = 0;
     avlibInterface::m_av_init_packet(&packet);
     int enc_got_frame = 0;
+    
+    qCDebug(dsrApp) << "Encoding video frame";
     avlibInterface::m_avcodec_encode_video2(pCodecCtx, &packet, pFrameYUV, &enc_got_frame);
     pFrameYUV->pts++;
     if (1 == enc_got_frame) {
@@ -738,12 +741,14 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
         m_videoFrameCount++;
         if (m_videoFrameCount == 1) {
             m_fristVideoFramePts = frame._time;
+            qCInfo(dsrApp) << "First video frame timestamp set:" << m_fristVideoFramePts;
         }
         packet.pts = static_cast<int64_t>(m_videoStream->time_base.den) * (frame._time - m_fristVideoFramePts) / AV_TIME_BASE;
         //qDebug() << "video packet.pts: " << packet.pts;
         packet.dts =  packet.pts;
         int ret = writeFrame(m_videoFormatContext, &packet);
         if (ret < 0) {
+            qCCritical(dsrApp) << "Failed to write video frame, error code:" << ret;
             //char tmpErrString[128] = {0};
             //printf("Could not write video frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
             avlibInterface::m_av_packet_unref(&packet);
@@ -753,6 +758,7 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
     avlibInterface::m_av_free_packet(&packet);
     avlibInterface::m_av_frame_free(&pRgbFrame);
     fflush(stdout);
+    qCDebug(dsrApp) << "Video frame successfully written";
     return 0;
 }
 
@@ -762,12 +768,17 @@ int CAVOutputStream::writeVideoFrame(WaylandIntegration::WaylandIntegrationPriva
 //
 int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, int64_t lTimeStamp)
 {
-    if (nullptr == m_micAudioStream)
+    qCDebug(dsrApp) << "Starting to write microphone audio frame";
+    
+    if (nullptr == m_micAudioStream) {
+        qCWarning(dsrApp) << "Microphone audio stream is not initialized";
         return -1;
+    }
 
     const int frameSize = m_pMicCodecContext->frame_size;
     int ret;
     if (nullptr == m_pMicAudioSwrContext) {
+        qCDebug(dsrApp) << "Initializing microphone audio resampler";
         // Initialize the resampler to be able to convert audio sample formats
         m_pMicAudioSwrContext = avlibInterface::m_swr_alloc_set_opts(nullptr,
                                                                      avlibInterface::m_av_get_default_channel_layout(m_pMicCodecContext->channels),
@@ -786,6 +797,7 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
         assert(m_pMicCodecContext->sample_rate == stream->codec->sample_rate);
         avlibInterface::m_swr_init(m_pMicAudioSwrContext);
         if (nullptr == m_micAudioFifo) {
+            qCDebug(dsrApp) << "Allocating microphone audio FIFO buffer";
             m_micAudioFifo = audioFifoAlloc(m_pMicCodecContext->sample_fmt, m_pMicCodecContext->channels, 20 * inputFrame->nb_samples);
         }
         is_fifo_scardinit++;
@@ -848,9 +860,11 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
     * encode it and write it to the output file.
     */
     while (audioFifoSize(m_micAudioFifo) >= frameSize) {
+        qCDebug(dsrApp) << "Processing audio frame from FIFO buffer";
         /** Temporary storage of the output samples of the frame written to the file. */
         AVFrame *outputFrame = avlibInterface::m_av_frame_alloc();
         if (!outputFrame) {
+            qCCritical(dsrApp) << "Could not allocate output frame";
             return AVERROR(ENOMEM);
         }
         /**
@@ -877,7 +891,7 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
         * sure that the audio frame can hold as many samples as specified.
         */
         if ((ret = avlibInterface::m_av_frame_get_buffer(outputFrame, 0)) < 0) {
-            printf("Could not allocate output frame samples\n");
+            qCCritical(dsrApp) << "Could not allocate output frame samples";
             avlibInterface::m_av_frame_free(&outputFrame);
             return ret;
         }
@@ -927,6 +941,7 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
             m_singleCount++;
             //write -> outputPacket
             if ((ret = writeFrame(m_videoFormatContext, &outputPacket)) < 0) {
+                qCCritical(dsrApp) << "Could not write audio frame";
                 //char tmpErrString[128] = {0};
                 //printf("Could not write audio frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
                 avlibInterface::m_av_packet_unref(&outputPacket);
@@ -938,14 +953,18 @@ int CAVOutputStream::writeMicAudioFrame(AVStream *stream, AVFrame *inputFrame, i
         m_nLastAudioPresentationTime += timeinc;
         avlibInterface::m_av_frame_free(&outputFrame);
     }// -- while end
+    qCDebug(dsrApp) << "Microphone audio frame successfully written";
     return 0;
 }
 
 int CAVOutputStream::writeMicToMixAudioFrame(AVStream *stream, AVFrame *inputFrame, int64_t lTimeStamp)
 {
+    qCDebug(dsrApp) << "Starting to write microphone audio frame for mixing";
+    
     Q_UNUSED(lTimeStamp)
     int ret;
     if (nullptr == m_pMicAudioSwrContext) {
+        qCDebug(dsrApp) << "Initializing microphone audio resampler for mixing";
         // Initialize the resampler to be able to convert audio sample formats
         m_pMicAudioSwrContext = avlibInterface::m_swr_alloc_set_opts(nullptr,
                                                                      avlibInterface::m_av_get_default_channel_layout(m_pMicCodecContext->channels),
@@ -959,6 +978,7 @@ int CAVOutputStream::writeMicToMixAudioFrame(AVStream *stream, AVFrame *inputFra
         assert(m_pMicCodecContext->sample_rate == stream->codec->sample_rate);
         avlibInterface::m_swr_init(m_pMicAudioSwrContext);
         if (nullptr == m_micAudioFifo) {
+            qCDebug(dsrApp) << "Allocating microphone audio FIFO buffer for mixing";
             m_micAudioFifo = audioFifoAlloc(m_pMicCodecContext->sample_fmt, m_pMicCodecContext->channels, 20 * inputFrame->nb_samples);
         }
         is_fifo_scardinit++;
@@ -1011,6 +1031,7 @@ int CAVOutputStream::writeMicToMixAudioFrame(AVStream *stream, AVFrame *inputFra
 }
 int CAVOutputStream::write_filter_audio_frame(AVStream *&outst, AVCodecContext *&codecCtx_audio, AVFrame *&output_frame)
 {
+    qCDebug(dsrApp) << "Starting to write filtered audio frame";
     int ret = 0;
     /** Encode one frame worth of audio samples. */
     /** Packet used for temporary storage. */
@@ -1054,6 +1075,7 @@ int CAVOutputStream::write_filter_audio_frame(AVStream *&outst, AVCodecContext *
 
 
         if ((ret = writeFrame(m_videoFormatContext, &output_packet)) < 0) {
+            qCCritical(dsrApp) << "Could not write audio frame";
             //char tmpErrString[128] = {0};
             //printf("Could not write audio frame, error: %s\n", av_make_error_string(tmpErrString, AV_ERROR_MAX_STRING_SIZE, ret));
             avlibInterface::m_av_packet_unref(&output_packet);
@@ -1068,6 +1090,7 @@ int CAVOutputStream::write_filter_audio_frame(AVStream *&outst, AVCodecContext *
 
     avlibInterface::m_av_frame_unref(output_frame);
     //     av_frame_free(&output_frame);
+    qCDebug(dsrApp) << "Filtered audio frame successfully written";
     return ret;
 }
 
@@ -1089,8 +1112,11 @@ bool CAVOutputStream::isNotAudioFifoEmty()
 
 void CAVOutputStream::writeMixAudio()
 {
-    if (is_fifo_scardinit < 2 || nullptr == m_sysAudioFifo || nullptr == m_micAudioFifo)
+    qCDebug(dsrApp) << "Starting to write mixed audio";
+    if (is_fifo_scardinit < 2 || nullptr == m_sysAudioFifo || nullptr == m_micAudioFifo) {
+        qCDebug(dsrApp) << "Audio FIFOs not initialized, skipping mix";
         return;
+    }
     AVFrame *pFrame_sys = avlibInterface::m_av_frame_alloc();
     AVFrame *pFrame_mic = avlibInterface::m_av_frame_alloc();
     int sysFifosize = audioFifoSize(m_sysAudioFifo);
@@ -1123,6 +1149,7 @@ void CAVOutputStream::writeMixAudio()
         if (m_start_mix_time == -1) {
             //printf("First Audio timestamp: %ld \n", av_gettime());
             m_start_mix_time = avlibInterface::m_av_gettime();
+            qCDebug(dsrApp) << "First audio mix timestamp set";
         }
         int64_t lTimeStamp = avlibInterface::m_av_gettime() - m_start_mix_time;
         int64_t timeshift = (int64_t)nFifoSamples * AV_TIME_BASE / (int64_t)(audio_amix_st->codec->sample_rate);
@@ -1135,11 +1162,13 @@ void CAVOutputStream::writeMixAudio()
         m_nLastAudioMixPresentationTime += timeinc;
         ret = avlibInterface::m_av_buffersrc_add_frame_flags(buffersrc_ctx1, pFrame_mic, 0);
         if (ret < 0) {
+            qCCritical(dsrApp) << "Failed to add microphone frame to buffer source";
             printf("Mixer: failed to call av_buffersrc_add_frame (speaker)\n");
             return;
         }
         ret = avlibInterface::m_av_buffersrc_add_frame_flags(buffersrc_ctx2, pFrame_sys, 0);
         if (ret < 0) {
+            qCCritical(dsrApp) << "Failed to add system frame to buffer source";
             printf("Mixer: failed to call av_buffersrc_add_frame (microphone)\n");
             return;
         }
@@ -1153,6 +1182,7 @@ void CAVOutputStream::writeMixAudio()
                 //printf("%d %d \n", AVERROR(EAGAIN), AVERROR_EOF);
             }
             if (ret < 0) {
+                qCCritical(dsrApp) << "Failed to get frame from buffer sink, ret:" << ret;
                 printf("Mixer: failed to call av_buffersink_get_frame_flags ret : %d \n", ret);
                 break;
             }
@@ -1165,6 +1195,7 @@ void CAVOutputStream::writeMixAudio()
                 int got_packet_ptr;
                 ret = avlibInterface::m_avcodec_encode_audio2(pCodecCtx_amix, &packet_out, pFrame_out, &got_packet_ptr);
                 if (ret < 0) {
+                    qCCritical(dsrApp) << "Failed to encode mixed audio frame";
                     printf("Mixer: failed to call avcodec_decode_audio4\n");
                     break;
                 }
@@ -1190,6 +1221,7 @@ void CAVOutputStream::writeMixAudio()
                     m_mixCount++;
                     ret = writeFrame(m_videoFormatContext, &packet_out);
                     if (ret < 0) {
+                        qCCritical(dsrApp) << "Failed to write mixed audio frame";
                         printf("Mixer: failed to call av_interleaved_write_frame\n");
                     }
                     printf("-------Mixer: write frame to file got_packet_ptr =%d\n", got_packet_ptr);
@@ -1202,12 +1234,14 @@ void CAVOutputStream::writeMixAudio()
         tmpFifoFailed++;
         usleep(20 * 1000);
         if (tmpFifoFailed > 300) {
+            qCWarning(dsrApp) << "FIFO buffer full for too long, skipping frame";
             usleep(30 * 1000);
             return;
         }
     }
     avlibInterface::m_av_frame_free(&pFrame_sys);
     avlibInterface::m_av_frame_free(&pFrame_mic);
+    qCDebug(dsrApp) << "Mixed audio processing completed";
 }
 
 int  CAVOutputStream::writeSysAudioFrame(AVStream *stream, AVFrame *inputFrame, int64_t lTimeStamp)
@@ -1479,6 +1513,7 @@ int CAVOutputStream::writeSysToMixAudioFrame(AVStream *stream, AVFrame *inputFra
 
 void  CAVOutputStream::close()
 {
+    qCInfo(dsrApp) << "Closing output stream";
     QThread::msleep(500);
     if (nullptr != m_videoFormatContext
             || nullptr != m_videoStream
@@ -1492,10 +1527,12 @@ void  CAVOutputStream::close()
     }
 
     if (m_videoStream) {
+        qCDebug(dsrApp) << "Closing video stream";
         avlibInterface::m_avcodec_close(m_videoStream->codec);
         m_videoStream = nullptr;
     }
     if (m_micAudioStream) {
+        qCDebug(dsrApp) << "Closing microphone audio stream";
         avlibInterface::m_avcodec_close(m_micAudioStream->codec);
         m_micAudioStream = nullptr;
     }
@@ -1505,6 +1542,7 @@ void  CAVOutputStream::close()
     //        audio_scard_st = nullptr;
     //    }
     if (audio_amix_st) {
+        qCDebug(dsrApp) << "Closing audio mix stream";
         avlibInterface::m_avcodec_close(audio_amix_st->codec);
         audio_amix_st = nullptr;
     }
@@ -1535,9 +1573,12 @@ void  CAVOutputStream::close()
         avlibInterface::m_av_frame_free(&mSpeaker_frame);
         avlibInterface::m_avfilter_graph_free(&filter_graph);
     }
+    qCInfo(dsrApp) << "Output stream closed successfully";
 }
+
 void CAVOutputStream::setIsOverWrite(bool isCOntinue)
 {
+    qCDebug(dsrApp) << "Setting overwrite flag to:" << isCOntinue;
     m_isOverWrite = isCOntinue;
 }
 
@@ -1545,6 +1586,7 @@ int CAVOutputStream::audioRead(AVAudioFifo *af, void **data, int nb_samples)
 {
     QMutexLocker locker(&m_audioReadWriteMutex);
     //qDebug() << "+++++++++++++++++++++++ 读音频帧 +++++++++++++++++++++++";
+    qCDebug(dsrApp) << "Reading" << nb_samples << "samples from audio FIFO";
     return avlibInterface::m_av_audio_fifo_read(af, data, nb_samples);
 }
 
@@ -1552,6 +1594,7 @@ int CAVOutputStream::audioWrite(AVAudioFifo *af, void **data, int nb_samples)
 {
     QMutexLocker locker(&m_audioReadWriteMutex);
     //qDebug() << "----------------------- 写音频帧";
+    qCDebug(dsrApp) << "Writing" << nb_samples << "samples to audio FIFO";
     return avlibInterface::m_av_audio_fifo_write(af, data, nb_samples);
 }
 
@@ -1559,6 +1602,7 @@ int CAVOutputStream::writeFrame(AVFormatContext *s, AVPacket *pkt)
 {
     QMutexLocker locker(&m_writeFrameMutex);
     //qDebug() << "+++++++++++++++++++++++ 写视频帧";
+    qCDebug(dsrApp) << "Writing frame to output stream";
     return avlibInterface::m_av_interleaved_write_frame(s, pkt);
 }
 
@@ -1566,6 +1610,7 @@ int CAVOutputStream::writeTrailer(AVFormatContext *s)
 {
     //qDebug() << "+++++++++++++++++++++++ 写视频尾";
     QMutexLocker locker(&m_writeFrameMutex);
+    qCDebug(dsrApp) << "Writing stream trailer";
     return avlibInterface::m_av_write_trailer(s);
 }
 
@@ -1597,6 +1642,7 @@ int CAVOutputStream::audioFifoRealloc(AVAudioFifo *af, int nb_samples)
 {
     //qDebug() << "+++++++++++++++++++++++ 3";
     QMutexLocker locker(&m_audioReadWriteMutex);
+    qCDebug(dsrApp) << "Reallocating audio FIFO to" << nb_samples << "samples";
     return avlibInterface::m_av_audio_fifo_realloc(af, nb_samples);
 }
 
@@ -1604,6 +1650,7 @@ AVAudioFifo *CAVOutputStream::audioFifoAlloc(AVSampleFormat sample_fmt, int chan
 {
     //qDebug() << "+++++++++++++++++++++++ 4";
     QMutexLocker locker(&m_audioReadWriteMutex);
+    qCDebug(dsrApp) << "Allocating audio FIFO with" << channels << "channels and" << nb_samples << "samples";
     return avlibInterface::m_av_audio_fifo_alloc(sample_fmt, channels, nb_samples);
 }
 
@@ -1611,6 +1658,7 @@ void CAVOutputStream::audioFifoFree(AVAudioFifo *af)
 {
     //qDebug() << "+++++++++++++++++++++++ 5";
     QMutexLocker locker(&m_audioReadWriteMutex);
+    qCDebug(dsrApp) << "Freeing audio FIFO";
     avlibInterface::m_av_audio_fifo_free(af);
 }
 
@@ -1626,21 +1674,23 @@ bool CAVOutputStream::isWriteFrame()
 void CAVOutputStream::setIsWriteFrame(bool isWriteFrame)
 {
     QMutexLocker locker(&m_isWriteFrameMutex);
+    qCDebug(dsrApp) << "Setting write frame flag to:" << isWriteFrame;
     m_isWriteFrame = isWriteFrame;
 }
 
 void CAVOutputStream::setBoardVendor(int boardVendorType)
 {
+    qCDebug(dsrApp) << "Setting board vendor type to:" << boardVendorType;
     m_boardVendorType = boardVendorType;
 }
 
 //释放swrContext
 void CAVOutputStream::freeSwrContext(SwrContext *swrContext)
 {
-    Q_UNUSED(swrContext);
-//    if (swrContext != nullptr) {
-//        avlibInterface::m_swr_free(&swrContext);
-//        swrContext = nullptr;
-//    }
+    if (swrContext != nullptr) {
+        qCDebug(dsrApp) << "Freeing SwrContext";
+        avlibInterface::m_swr_free(&swrContext);
+        swrContext = nullptr;
+    }
 }
 

@@ -8,6 +8,7 @@
 #include <qdebug.h>
 #include <qimage.h>
 #include "recordadmin.h"
+#include "../utils/log.h"
 
 WriteFrameThread::WriteFrameThread(WaylandIntegration::WaylandIntegrationPrivate* context, QObject *parent) :
     QThread(parent),
@@ -19,17 +20,22 @@ WriteFrameThread::WriteFrameThread(WaylandIntegration::WaylandIntegrationPrivate
 //int test = 0;
 void WriteFrameThread::run()
 {
-    if(nullptr == m_context)
+    qCDebug(dsrApp) << "WriteFrameThread started";
+    if(nullptr == m_context) {
+        qCWarning(dsrApp) << "WriteFrameThread context is null, thread exiting";
         return;
+    }
 
     m_context->m_recordAdmin->m_cacheMutex.lock();
     WaylandIntegration::WaylandIntegrationPrivate::waylandFrame frame;
+    qCDebug(dsrApp) << "Starting frame writing loop";
     while (m_context->isWriteVideo()) {
         if (m_context->getFrame(frame)) {
             m_context->m_recordAdmin->m_pOutputStream->writeVideoFrame(frame);
         }
     }
     m_context->m_recordAdmin->m_cacheMutex.unlock();
+    qCDebug(dsrApp) << "WriteFrameThread finished";
 }
 
 bool WriteFrameThread::bWriteFrame()
