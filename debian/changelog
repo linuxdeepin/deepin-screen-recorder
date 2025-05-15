@@ -1,3 +1,10 @@
+deepin-screen-recorder (6.5.18) unstable; urgency=medium
+
+  * Fix high dpi display issue.
+  * Update version to 6.5.18.
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 15 May 2025 13:02:51 +0800
+
 deepin-screen-recorder (6.5.17) unstable; urgency=medium
 
   * Update version to 6.5.17
