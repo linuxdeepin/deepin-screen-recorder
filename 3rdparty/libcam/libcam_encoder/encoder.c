@@ -745,12 +745,24 @@ static encoder_audio_context_t *encoder_audio_init(encoder_context_t *encoder_ct
 	audio_codec_data->codec_context->flags |= audio_defaults->flags;
 
 	audio_codec_data->codec_context->sample_rate = encoder_ctx->audio_samprate;
+#if LIBAVFORMAT_VERSION_MAJOR < 61
 	audio_codec_data->codec_context->channels = encoder_ctx->audio_channels;
+#else
+	av_channel_layout_default(&audio_codec_data->codec_context->ch_layout,
+	encoder_ctx->audio_channels);
+#endif
 
+#if LIBAVFORMAT_VERSION_MAJOR < 61
 	if(encoder_ctx->audio_channels < 2)
 		audio_codec_data->codec_context->channel_layout = AV_CH_LAYOUT_MONO;
 	else
 		audio_codec_data->codec_context->channel_layout = AV_CH_LAYOUT_STEREO;
+#else
+	if(encoder_ctx->audio_channels < 2)
+		av_channel_layout_default(&audio_codec_data->codec_context->ch_layout, 1);
+	else
+		av_channel_layout_default(&audio_codec_data->codec_context->ch_layout, 2);
+#endif
 
 	audio_codec_data->codec_context->cutoff = 0; /*automatic*/
 
@@ -905,7 +917,11 @@ static encoder_audio_context_t *encoder_audio_init(encoder_context_t *encoder_ct
 	audio_codec_data->frame->nb_samples = frame_size;
 	audio_codec_data->frame->format = audio_defaults->sample_format;
 
+#if LIBAVFORMAT_VERSION_MAJOR < 61
 	audio_codec_data->frame->channel_layout = audio_codec_data->codec_context->channel_layout;
+#else
+	av_channel_layout_copy(&audio_codec_data->frame->ch_layout, &audio_codec_data->codec_context->ch_layout);
+#endif
 
 	/*set codec data in encoder context*/
 	enc_audio_ctx->codec_data = (void *) audio_codec_data;
@@ -1763,7 +1779,11 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
 
         int buffer_size = getAvutil()->m_av_samples_get_buffer_size(
 			NULL,
+#if LIBAVFORMAT_VERSION_MAJOR < 61
 			audio_codec_data->codec_context->channels,
+#else
+			audio_codec_data->codec_context->ch_layout.nb_channels,
+#endif
 			audio_codec_data->frame->nb_samples,
 			audio_codec_data->codec_context->sample_fmt,
 			align);
@@ -1772,7 +1792,11 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
 		{
 			fprintf(stderr, "ENCODER: (encoder_encode_audio) av_samples_get_buffer_size error (%d): chan(%d) nb_samp(%d) samp_fmt(%d)\n",
 				buffer_size,
+#if LIBAVFORMAT_VERSION_MAJOR < 61
 				audio_codec_data->codec_context->channels,
+#else
+				audio_codec_data->codec_context->ch_layout.nb_channels,
+#endif
 				audio_codec_data->frame->nb_samples,
 				audio_codec_data->codec_context->sample_fmt);
 
@@ -1783,7 +1807,11 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
 		/*set the data pointers in frame*/
         ret = getLoadLibsInstance()->m_avcodec_fill_audio_frame(
 			audio_codec_data->frame,
+#if LIBAVFORMAT_VERSION_MAJOR < 61
 			audio_codec_data->codec_context->channels,
+#else
+			audio_codec_data->codec_context->ch_layout.nb_channels,
+#endif
 			audio_codec_data->codec_context->sample_fmt,
 			(const uint8_t *) audio_data,
 			buffer_size,
@@ -1793,7 +1821,11 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
 		{
 			fprintf(stderr, "ENCODER: (encoder_encode_audio) avcodec_fill_audio_frame error (%d): chan(%d) nb_samp(%d) samp_fmt(%d) buff(%d bytes)\n",
 				ret,
+#if LIBAVFORMAT_VERSION_MAJOR < 61
 				audio_codec_data->codec_context->channels,
+#else
+				audio_codec_data->codec_context->ch_layout.nb_channels,
+#endif
 				audio_codec_data->frame->nb_samples,
 				audio_codec_data->codec_context->sample_fmt,
 				buffer_size);
