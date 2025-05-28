@@ -641,9 +641,9 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
         actions << "_open" << tr("View");
         if (!QStandardPaths::findExecutable("dde-file-manager").isEmpty()) {
             qDebug() << QFileInfo(savePath).path();
-            hints["x-deepin-action-_open"] = QString("dde-file-manager,--show-item,%1").arg(savePath);
+            hints["x-deepin-action-_open"] = QStringList{"dde-file-manager", "--show-item", savePath};
         } else {
-            hints["x-deepin-action-_open"] = QString("xdg-open,%1").arg(savePath);
+            hints["x-deepin-action-_open"] = QStringList{"xdg-open", savePath};
         }
         body = QString(tr("Saved to %1")).arg(savePath);
     }
