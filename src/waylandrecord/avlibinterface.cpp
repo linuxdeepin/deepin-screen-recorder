@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QLibraryInfo>
 #include <QDir>
+#include "../utils/log.h"
 
 avlibInterface::p_av_gettime avlibInterface::m_av_gettime = nullptr; // libavutil
 avlibInterface::p_av_frame_alloc avlibInterface::m_av_frame_alloc = nullptr;
@@ -108,18 +109,21 @@ QString avlibInterface::libPath(const QString &sLib)
     QDir dir;
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
-    qDebug() <<  " where is libs? that is " << dir ;
+    qCDebug(dsrApp) << "Searching for library in path:" << dir;
     QStringList list = dir.entryList(QStringList() << (sLib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
     if (list.isEmpty()) {
+        qCWarning(dsrApp) << "No libraries found matching pattern:" << (sLib + "*");
         qWarning() << dir <<  "has not any lib with " << (sLib + "*") << ",so the list is empty!";
     }
     if (list.contains(sLib)) {
+        qCDebug(dsrApp) << "Found exact library match:" << sLib;
         return sLib;
     } else {
         list.sort();
     }
 
     //Q_ASSERT(list.size() > 0);
+    qCDebug(dsrApp) << "Using latest library version:" << list.last();
     return list.last();
 }
 
@@ -127,6 +131,8 @@ void avlibInterface::initFunctions()
 {
     if (m_isInitFunction)
         return;
+
+    qCInfo(dsrApp) << "Initializing FFmpeg library functions";
 
     m_libavformat.setFileName(libPath("libavformat.so"));
     m_libavfilter.setFileName(libPath("libavfilter.so"));
@@ -227,11 +233,13 @@ void avlibInterface::initFunctions()
     m_swr_free = reinterpret_cast<p_swr_free>(m_libswresample.resolve("swr_free")); //新增，解决内存泄露
 
     m_isInitFunction = true;
+    qCInfo(dsrApp) << "FFmpeg library functions initialized successfully";
 }
 
 void avlibInterface::unloadFunctions()
 {
     if (m_isInitFunction) {
+        qCInfo(dsrApp) << "Unloading FFmpeg libraries";
         m_libavutil.unload();
         m_libavcodec.unload();
         m_libavformat.unload();
@@ -239,5 +247,6 @@ void avlibInterface::unloadFunctions()
         m_libswscale.unload();
         m_libswresample.unload();
         m_libavdevice.unload();
+        qCInfo(dsrApp) << "FFmpeg libraries unloaded successfully";
     }
 }

@@ -6,6 +6,7 @@
 #include "keybuttonwidget.h"
 #include "../utils.h"
 #include "../utils/configsettings.h"
+#include "../utils/log.h"
 #include <DWindowManagerHelper>
 
 DWIDGET_USE_NAMESPACE
@@ -57,6 +58,7 @@ KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
     hLayout->addWidget(m_word, 0, Qt::AlignVCenter | Qt::AlignHCenter);
     this->setLayout(hLayout);
     if (!Utils::isWaylandMode) {
+        qCDebug(dsrApp) << "Setting up X11 input event passthrough";
         Utils::passInputEvent(static_cast<int>(this->winId()));
     }
 }

@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "audioutils.h"
+#include "log.h"
 
 #include <QDBusObjectPath>
 #include <QDBusConnection>
@@ -41,7 +42,7 @@ AudioUtils::AudioUtils(QObject *parent)
 // 初始化音频dbus服务的接口
 void AudioUtils::initAudioDBusInterface()
 {
-    // 初始化音频服务Dus接口
+    qCDebug(dsrApp) << "Initializing audio DBus interface";
     m_audioDBusInterface = new QDBusInterface(AudioService, AudioPath, AudioInterface, QDBusConnection::sessionBus());
     // 检查是否存在音频服务
     if (m_audioDBusInterface->isValid()) {
@@ -61,6 +62,7 @@ void AudioUtils::initAudioDBusInterface()
 // 初始化音频dbus服务默认输入源的接口
 void AudioUtils::initDefaultSourceDBusInterface()
 {
+    qCDebug(dsrApp) << "Initializing default source DBus interface";
     if (m_defaultSourceDBusInterface) {
         delete m_defaultSourceDBusInterface;
         m_defaultSourceDBusInterface = nullptr;
@@ -79,6 +81,7 @@ void AudioUtils::initDefaultSourceDBusInterface()
 // 初始化音频dbus服务默认输出源的接口
 void AudioUtils::initDefaultSinkDBusInterface()
 {
+    qCDebug(dsrApp) << "Initializing default sink DBus interface";
     if (m_defaultSinkDBusInterface) {
         delete m_defaultSinkDBusInterface;
         m_defaultSinkDBusInterface = nullptr;
@@ -87,16 +90,17 @@ void AudioUtils::initDefaultSinkDBusInterface()
     m_defaultSinkDBusInterface =
         new QDBusInterface(AudioService, m_defaultSinkPath, SinkInterface, QDBusConnection::sessionBus());
     if (m_defaultSinkDBusInterface->isValid()) {
-        qInfo() << "默认音频输出源初始化成功！音频服务： " << AudioService << " 默认输出源地址" << m_defaultSinkPath
-                << " 默认输出源接口：" << SinkInterface;
+        qCInfo(dsrApp) << "Default audio sink initialized - Service:" << AudioService << "Path:" << m_defaultSinkPath
+                << " Interface:" << SinkInterface;
     } else {
-        qWarning() << "默认音频输出源初始化失败！默认输出源地址 (" << m_defaultSinkPath << ") 不存在";
+        qCWarning(dsrApp) << "Failed to initialize default audio sink at path:" << m_defaultSinkPath;
     }
 }
 
 // 初始化音频dbus服务属性改变链接
 void AudioUtils::initConnections()
 {
+    qCDebug(dsrApp) << "Setting up audio DBus connections";
     // 监听音频服务的属性改变
     QDBusConnection::sessionBus().connect(AudioService,
                                           AudioPath,
@@ -105,11 +109,13 @@ void AudioUtils::initConnections()
                                           "sa{sv}as",
                                           this,
                                           SLOT(onDBusAudioPropertyChanged(QDBusMessage)));
+    qCDebug(dsrApp) << "Audio DBus connections established";
 }
 
 // 获取当前系统音频通道
 QString AudioUtils::currentAudioChannel()
 {
+    qCDebug(dsrApp) << "Getting current audio channel";
     if (!Utils::isSysGreatEqualV23()) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         return currentAudioChannelV20Impl();
@@ -128,8 +134,9 @@ QString AudioUtils::currentAudioChannel()
         process.waitForFinished();
         process.waitForReadyRead();
         str_output = process.readAllStandardOutput();
-        qDebug() << "pacmd命令: " << options;
-        qDebug() << "通过pacmd命令获取的系统音频通道号: " << str_output;
+        qCDebug(dsrApp) << "Audio channel from pacmd command:" << str_output;
+        qCDebug(dsrApp) << "pacmd command: " << options;
+        qCDebug(dsrApp) << "通过pacmd命令获取的系统音频通道号: " << str_output;
         if (str_output.isEmpty()) {
             QStringList options1;
             options1 << "-c";
@@ -138,15 +145,16 @@ QString AudioUtils::currentAudioChannel()
             process.waitForFinished();
             process.waitForReadyRead();
             str_output = process.readAllStandardOutput().trimmed();
-            qDebug() << "pactl命令: " << options;
-            qDebug() << "通过pactl命令获取的系统音频通道号: " << str_output;
+            qCDebug(dsrApp) << "Audio channel from pactl command:" << str_output;
+            qCDebug(dsrApp) << "pactl command: " << options;
+            qCDebug(dsrApp) << "通过pactl命令获取的系统音频通道号: " << str_output;
             if (str_output.isEmpty()) {
                 if (!m_defaultSinkPath.isEmpty()) {
                     str_output = m_defaultSinkPath.right(1);
-                    qInfo() << "通过pacmd命令获取的系统音频通道号失败！自动分配通道号:" << str_output;
+                    qCInfo(dsrApp) << "Using auto-assigned channel number:" << str_output;
                 } else {
                     str_output = "-1";
-                    qWarning() << "自动分配通道号失败！默认音频输出源服务地址为空！" << m_defaultSinkPath;
+                    qCWarning(dsrApp) << "Failed to auto-assign channel number, default sink path is empty";
                 }
             }
         } else {
@@ -157,7 +165,7 @@ QString AudioUtils::currentAudioChannel()
         return str_output;
     } else {
         str_output = "-1";
-        qWarning() << __FUNCTION__ << __LINE__ << "获取系统音频通道号失败！m_defaultSinkDBusInterface is nullptr or invalid ";
+        qCWarning(dsrApp) << __FUNCTION__ << __LINE__ << "获取系统音频通道号失败！m_defaultSinkDBusInterface is nullptr or invalid ";
     }
     return str_output;
 }
@@ -165,6 +173,7 @@ QString AudioUtils::currentAudioChannel()
 // 获取默认输出或输入设备名称
 QString AudioUtils::getDefaultDeviceName(DefaultAudioType mode)
 {
+    qCDebug(dsrApp) << "Getting default device name for mode:" << mode;
     if (!Utils::isSysGreatEqualV23()) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         return getDefaultDeviceNameV20Impl(mode);
@@ -175,24 +184,25 @@ QString AudioUtils::getDefaultDeviceName(DefaultAudioType mode)
     if (mode == DefaultAudioType::Sink) {
         // 1.首先取出默认系统声卡
         if (m_defaultSinkDBusInterface && m_defaultSinkDBusInterface->isValid()) {
-            QString device = m_defaultSinkDBusInterface->property("Name").toString();
-            qInfo() << "default sink name is : " << device;
+            device = m_defaultSinkDBusInterface->property("Name").toString();
+            qCDebug(dsrApp) << "Default sink name:" << device;
             if (!device.isEmpty() && !device.endsWith(".monitor")) {
                 device += ".monitor";
             }
         } else {
-            qWarning() << "DBus Interface(com.deepin.daemon.Auido.Sink) is invalid!";
+            qCWarning(dsrApp) << "DBus Interface for audio sink is invalid";
         }
         // 2.如果默认系统声卡不是物理声卡和蓝牙声卡，需找出真实的物理声卡
         if (!device.startsWith("alsa", Qt::CaseInsensitive) && !device.startsWith("blue", Qt::CaseInsensitive)) {
             if (m_audioDBusInterface && m_audioDBusInterface->isValid()) {
                 QList<QDBusObjectPath> sinks = m_audioDBusInterface->property("Sinks").value<QList<QDBusObjectPath>>();
+                qCDebug(dsrApp) << "Searching for physical sound card in" << sinks.size() << "sinks";
                 for (int i = 0; i < sinks.size(); i++) {
                     QDBusInterface *realSink =
                         new QDBusInterface(AudioService, sinks[i].path(), SinkInterface, QDBusConnection::sessionBus());
                     if (realSink->isValid()) {
                         device = realSink->property("Name").toString();
-                        qInfo() << "realSink name is : " << device;
+                        qCDebug(dsrApp) << "Found sink device:" << device;
                         if (device.startsWith("alsa", Qt::CaseInsensitive)) {
                             device += ".monitor";
                             break;
@@ -202,21 +212,21 @@ QString AudioUtils::getDefaultDeviceName(DefaultAudioType mode)
                     }
                 }
             } else {
-                qDebug() << __FUNCTION__ << __LINE__ << "m_audioDBusInterface is nullptr or invalid";
+                qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "m_audioDBusInterface is nullptr or invalid";
             }
         }
     } else if (mode == DefaultAudioType::Source) {
         if (m_defaultSourceDBusInterface && m_defaultSourceDBusInterface->isValid()) {
             device = m_defaultSourceDBusInterface->property("Name").toString();
-            qInfo() << "default source name is : " << device;
+            qCDebug(dsrApp) << "Default source name is : " << device;
             if (device.endsWith(".monitor")) {
                 device.clear();
             }
         } else {
-            qWarning() << "DBus Interface(com.deepin.daemon.Auido.Source) is invalid!";
+            qCWarning(dsrApp) << "DBus Interface(com.deepin.daemon.Auido.Source) is invalid!";
         }
     } else {
-        qCritical() << "The passed parameter is incorrect! Please pass in 1 or 2!";
+        qCDebug(dsrApp) << "The passed parameter is incorrect! Please pass in 1 or 2!";
     }
     return device;
 }
@@ -259,7 +269,7 @@ QString AudioUtils::currentAudioChannelV20Impl()
             targetLine.remove(QRegularExpression(".* "));
         }
 
-        qDebug() << command << targetLine;
+        qCDebug(dsrApp) << command << targetLine;
         return targetLine;
     }
     return "";
@@ -274,7 +284,7 @@ QString AudioUtils::getDefaultDeviceNameV20Impl(DefaultAudioType mode)
     audioInterface.reset(
         new com::deepin::daemon::Audio(serviceName, "/com/deepin/daemon/Audio", QDBusConnection::sessionBus(), this));
     if (!audioInterface->isValid()) {
-        qWarning() << "DBus Interface(com.deepin.daemon.Auido) is invalid!";
+        qCWarning(dsrApp) << "DBus Interface(com.deepin.daemon.Auido) is invalid!";
         return device;
     }
     if (mode == DefaultAudioType::Sink) {
@@ -283,16 +293,16 @@ QString AudioUtils::getDefaultDeviceNameV20Impl(DefaultAudioType mode)
         defaultSink.reset(new com::deepin::daemon::AudioSink::Sink(
             serviceName, audioInterface->defaultSink().path(), QDBusConnection::sessionBus(), this));
         if (defaultSink->isValid()) {
-            qInfo() << "default sink name is : " << defaultSink->name();
-            qInfo() << "default sink activePort name : " << defaultSink->activePort().name;
-            qInfo() << "             activePort description : " << defaultSink->activePort().description;
-            qInfo() << "             activePort availability : " << defaultSink->activePort().availability;
+            qCInfo(dsrApp) << "Default sink name is : " << defaultSink->name();
+            qCInfo(dsrApp) << "Default sink activePort name : " << defaultSink->activePort().name;
+            qCInfo(dsrApp) << "             activePort description : " << defaultSink->activePort().description;
+            qCInfo(dsrApp) << "             activePort availability : " << defaultSink->activePort().availability;
             device = defaultSink->name();
             if (!device.isEmpty() && !device.endsWith(".monitor")) {
                 device += ".monitor";
             }
         } else {
-            qWarning() << "DBus Interface(com.deepin.daemon.Auido.Sink) is invalid!";
+            qCWarning(dsrApp) << "DBus Interface(com.deepin.daemon.Auido.Sink) is invalid!";
         }
         // 2.如果默认系统声卡不是物理声卡和蓝牙声卡，需找出真实的物理声卡
         if (!device.startsWith("alsa", Qt::CaseInsensitive) && !device.startsWith("blue", Qt::CaseInsensitive)) {
@@ -302,10 +312,10 @@ QString AudioUtils::getDefaultDeviceNameV20Impl(DefaultAudioType mode)
                 realSink.reset(new com::deepin::daemon::AudioSink::Sink(
                     serviceName, audioInterface->sinks()[i].path(), QDBusConnection::sessionBus(), this));
                 if (realSink->isValid()) {
-                    qInfo() << "realSink name is : " << realSink->name();
-                    qInfo() << "realSink activePort name : " << realSink->activePort().name;
-                    qInfo() << "             activePort description : " << realSink->activePort().description;
-                    qInfo() << "             activePort availability : " << realSink->activePort().availability;
+                    qCInfo(dsrApp) << "RealSink name is : " << realSink->name();
+                    qCInfo(dsrApp) << "RealSink activePort name : " << realSink->activePort().name;
+                    qCInfo(dsrApp) << "             activePort description : " << realSink->activePort().description;
+                    qCInfo(dsrApp) << "             activePort availability : " << realSink->activePort().availability;
                     device = realSink->name();
                     if (device.startsWith("alsa", Qt::CaseInsensitive)) {
                         device += ".monitor";
@@ -321,19 +331,19 @@ QString AudioUtils::getDefaultDeviceNameV20Impl(DefaultAudioType mode)
         defaultSource.reset(new com::deepin::daemon::AudioSource::Source(
             serviceName, audioInterface->defaultSource().path(), QDBusConnection::sessionBus(), this));
         if (defaultSource->isValid()) {
-            qInfo() << "default source name is : " << defaultSource->name();
-            qInfo() << "default source activePort name : " << defaultSource->activePort().name;
-            qInfo() << "               activePort description : " << defaultSource->activePort().description;
-            qInfo() << "               activePort availability : " << defaultSource->activePort().availability;
+            qCInfo(dsrApp) << "Default source name is : " << defaultSource->name();
+            qCInfo(dsrApp) << "Default source activePort name : " << defaultSource->activePort().name;
+            qCInfo(dsrApp) << "               activePort description : " << defaultSource->activePort().description;
+            qCInfo(dsrApp) << "               activePort availability : " << defaultSource->activePort().availability;
             device = defaultSource->name();
             if (device.endsWith(".monitor")) {
                 device.clear();
             }
         } else {
-            qWarning() << "DBus Interface(com.deepin.daemon.Auido.Source) is invalid!";
+            qCWarning(dsrApp) << "DBus Interface(com.deepin.daemon.Auido.Source) is invalid!";
         }
     } else {
-        qCritical() << "The passed parameter is incorrect! Please pass in 1 or 2!";
+        qCDebug(dsrApp) << "The passed parameter is incorrect! Please pass in 1 or 2!";
     }
     return device;
 }
@@ -345,7 +355,7 @@ QDBusInterface *AudioUtils::audioDBusInterface()
     if (m_audioDBusInterface && m_audioDBusInterface->isValid()) {
         return m_audioDBusInterface;
     } else {
-        qDebug() << __FUNCTION__ << __LINE__ << "m_audioDBusInterface is nullptr or invalid";
+        qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "m_audioDBusInterface is nullptr or invalid";
         return nullptr;
     }
 }
@@ -356,18 +366,18 @@ QDBusInterface *AudioUtils::defaultSourceDBusInterface()
     if (m_defaultSourceDBusInterface && m_defaultSourceDBusInterface->isValid()) {
         return m_defaultSourceDBusInterface;
     } else {
-        qDebug() << __FUNCTION__ << __LINE__ << "m_defaultSourceDBusInterface is nullptr or invalid";
+        qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "m_defaultSourceDBusInterface is nullptr or invalid";
         return nullptr;
     }
 }
 
-// ��频dbus服务默认输出源的接口
+// 音频dbus服务默认输出源的接口
 QDBusInterface *AudioUtils::defaultSinkDBusInterface()
 {
     if (m_defaultSinkDBusInterface && m_defaultSinkDBusInterface->isValid()) {
         return m_defaultSinkDBusInterface;
     } else {
-        qDebug() << __FUNCTION__ << __LINE__ << "m_defaultSinkDBusInterface is nullptr or invalid";
+        qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "m_defaultSinkDBusInterface is nullptr or invalid";
         return nullptr;
     }
 }
@@ -385,7 +395,7 @@ AudioPort AudioUtils::defaultSourceActivePort()
         reply.value().variant().value<QDBusArgument>() >> port;
         // qInfo() << "ActivePort:" << port;
     } else {
-        qWarning() << "默认输入源地址 (" << m_defaultSourcePath << ") 不存在";
+        qCDebug(dsrApp) << "默认输入源地址 (" << m_defaultSourcePath << ") 不存在";
     }
     delete inter;
     inter = nullptr;
@@ -398,7 +408,7 @@ double AudioUtils::defaultSourceVolume()
     if (m_defaultSourceDBusInterface && m_defaultSourceDBusInterface->isValid()) {
         return m_defaultSourceDBusInterface->property("Volume").value<double>();
     } else {
-        qDebug() << __FUNCTION__ << __LINE__ << "m_defaultSourceDBusInterface is nullptr or invalid";
+        qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "m_defaultSourceDBusInterface is nullptr or invalid";
         return 0.0;
     }
 }
@@ -409,7 +419,7 @@ QString AudioUtils::cards()
     if (m_audioDBusInterface && m_audioDBusInterface->isValid()) {
         return m_audioDBusInterface->property("Cards").toString();
     } else {
-        qDebug() << __FUNCTION__ << __LINE__ << "m_audioDBusInterface is nullptr or invalid";
+        qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "m_audioDBusInterface is nullptr or invalid";
         return "";
     }
 }
@@ -421,7 +431,7 @@ void AudioUtils::onDBusAudioPropertyChanged(QDBusMessage msg)
     // qDebug() << "arguments" << arguments;
     // 参数固定长度
     if (3 != arguments.count()) {
-        qWarning() << "参数长度不为3！ 参数: " << arguments;
+        qCWarning(dsrApp) << "参数长度不为3！ 参数: " << arguments;
         return;
     }
     QString interfaceName = msg.arguments().at(0).toString();
@@ -434,7 +444,7 @@ void AudioUtils::onDBusAudioPropertyChanged(QDBusMessage msg)
                 // 默认输入源地址改变
                 const QDBusObjectPath &defaultSourcePath = qvariant_cast<QDBusObjectPath>(changedProps[prop]);
                 if (m_defaultSourcePath != defaultSourcePath.path()) {
-                    qInfo() << "默认输入源地址改变:" << m_defaultSourcePath << " To " << defaultSourcePath.path();
+                    qCInfo(dsrApp) << "默认输入源地址改变:" << m_defaultSourcePath << " To " << defaultSourcePath.path();
                     m_defaultSourcePath = defaultSourcePath.path();
                     // 发射默认输入源信号
                     emit defaultSourceChanaged();
@@ -445,7 +455,7 @@ void AudioUtils::onDBusAudioPropertyChanged(QDBusMessage msg)
                 // 声卡信息改变
                 const QString &Cards = qvariant_cast<QString>(changedProps[prop]);
                 if (m_audioCards != Cards) {
-                    qInfo() << "声卡信息改变:" << m_audioCards << " To " << Cards;
+                    qCInfo(dsrApp) << "声卡信息改变:" << m_audioCards << " To " << Cards;
                     m_audioCards = Cards;
                     emit cardsChanged(m_audioCards);
                 }

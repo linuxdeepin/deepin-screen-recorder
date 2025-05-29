@@ -30,6 +30,7 @@ set ( deepin-screen-recorder_HDRS
     utils/shapesutils.h
     utils/dbusutils.h
     utils/desktopinfo.h
+    utils/log.h
     RecorderRegionShow.h
     main_window.h
     record_process.h
@@ -88,6 +89,9 @@ set ( deepin-screen-recorder_HDRS
     )
 
 set ( deepin-screen-recorder_SRCS
+    utils/log.cpp
+    utils/calculaterect.cpp
+    utils/shapesutils.cpp
     main.cpp
     main_window.cpp
     record_process.cpp
@@ -104,9 +108,7 @@ set ( deepin-screen-recorder_SRCS
     show_buttons.cpp
     utils/audioutils.cpp
     menucontroller/menucontroller.cpp
-    utils/shapesutils.cpp
     utils/tempfile.cpp
-    utils/calculaterect.cpp
     utils/shortcut.cpp
     utils/configsettings.cpp
     utils/baseutils.cpp

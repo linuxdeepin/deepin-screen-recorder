@@ -5,6 +5,7 @@
 
 #include "toptips.h"
 #include "../utils/baseutils.h"
+#include "../utils/log.h"
 
 #include <DPalette>
 #include <QImage>
@@ -47,15 +48,20 @@ void TopTips::setContent(const QSize &size)
         int h = static_cast<int>(sqrt(1920.0 * 1080 * size.height() / size.width()));
         int w = static_cast<int>(sqrt(1920.0 * 1080 * size.width() / size.height()));
         QString recorderTips = tr(" Adjust the recording area within %1*%2 to get better video effect");
+        qCDebug(dsrApp) << "Setting content with recording area adjustment tip:" << w << "x" << h;
         setText(text + recorderTips.arg(w).arg(h));
     } else {
+        qCDebug(dsrApp) << "Setting content size:" << size;
         setText(text);
     }
 }
 
 void TopTips::updateTips(QPoint pos, const QSize &size)
 {
-    if(m_isFullScreenRecord) return;
+    if(m_isFullScreenRecord) {
+        qCDebug(dsrApp) << "Skip updating tips in full screen record mode";
+        return;
+    }
     if (!this->isVisible())
         this->show();
 
@@ -71,6 +77,7 @@ void TopTips::updateTips(QPoint pos, const QSize &size)
         startPoint.setY(pos.y() + 3);
     }
 
+    qCDebug(dsrApp) << "Updating tips position to:" << startPoint;
     this->move(startPoint);
 }
 

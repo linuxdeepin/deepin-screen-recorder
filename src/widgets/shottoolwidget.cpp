@@ -7,6 +7,7 @@
 #include "tooltips.h"
 #include "../utils/configsettings.h"
 #include "../utils.h"
+#include "../utils/log.h"
 #include "../accessibility/acTextDefine.h"
 #include "../main_window.h"
 #include "slider.h"
@@ -230,11 +231,15 @@ void ShotToolWidget::initEffectLabel()
             value = 0;
         }
 
+        qCDebug(dsrApp) << "Shape type changed to:" << value;
+
         if (penBut->isChecked()) {
+            qCDebug(dsrApp) << "Pen tool selected, showing width controls";
             t_lineWidthSize->show();
             penWidth->show();
             t_seperator1->show();
         } else {
+            qCDebug(dsrApp) << "Shape tool selected, hiding width controls";
             t_lineWidthSize->hide();
             penWidth->hide();
             t_seperator1->hide();
@@ -245,11 +250,13 @@ void ShotToolWidget::initEffectLabel()
 
     connect(t_radiusSize, &DSlider::valueChanged, this, [ = ] {
         int t_value = t_radiusSize->value();
+        qCDebug(dsrApp) << "Effect radius changed to:" << t_value;
         ConfigSettings::instance()->setValue("effect", "radius", t_value);
     });
 
     connect(t_lineWidthSize, &DSlider::valueChanged, this, [ = ] {
         int t_value = t_lineWidthSize->value();
+        qCDebug(dsrApp) << "Line width changed to:" << t_value;
         penWidth->setText(QString("%1").arg((t_value + 1) * 2));
         ConfigSettings::instance()->setValue("effect", "line_width", t_value);
     });
@@ -356,6 +363,7 @@ void ShotToolWidget::initThicknessLabel()
 
 void ShotToolWidget::switchContent(QString shapeType)
 {
+    qCDebug(dsrApp) << "Switching tool content to shape type:" << shapeType;
     m_shapeName = shapeType;
     if (!shapeType.isEmpty()) {
         //矩形、圆形、直线、箭头、画笔会加载粗细调整面板

@@ -6,6 +6,7 @@
 
 #include <DApplication>
 #include <QDBusInterface>
+#include "../../utils/log.h"
 
 #define RecordShartPlugin "shot-start-record-plugin"
 #define RecordShartApp "deepin-screen-recorder"  // 使用截图录屏的翻译
@@ -54,6 +55,7 @@ const QString ShotStartRecordPlugin::pluginDisplayName() const
  */
 void ShotStartRecordPlugin::init(PluginProxyInterface *proxyInter)
 {
+    qCInfo(RECORD_LOG) << "Initializing plugin with proxy interface";
 #ifndef UNIT_TEST
 #ifdef DOCK_API_VERSION
 #if (DOCK_API_VERSION >= DOCK_API_VERSION_CHECK(2, 0, 0))
@@ -137,10 +139,13 @@ bool ShotStartRecordPlugin::pluginIsDisable()
 void ShotStartRecordPlugin::pluginStateSwitched()
 {
     const bool disabledNew = !pluginIsDisable();
+    qCInfo(RECORD_LOG) << "Plugin state switched, new disabled state:" << disabledNew;
     m_proxyInter->saveValue(this, "disabled", disabledNew);
     if (disabledNew) {
+        qCDebug(RECORD_LOG) << "Removing plugin from dock";
         m_proxyInter->itemRemoved(this, pluginName());
     } else {
+        qCDebug(RECORD_LOG) << "Adding plugin to dock";
         m_proxyInter->itemAdded(this, pluginName());
     }
 }
@@ -197,6 +202,7 @@ int ShotStartRecordPlugin::itemSortKey(const QString &itemKey)
  */
 void ShotStartRecordPlugin::setSortKey(const QString &itemKey, const int order)
 {
+    qCDebug(RECORD_LOG) << "Setting sort key for item:" << itemKey << "to order:" << order;
     const QString key = QString("pos_%1_%2").arg(itemKey).arg(Dock::Efficient);
     m_proxyInter->saveValue(this, key, order);
 }
@@ -222,6 +228,7 @@ const QString ShotStartRecordPlugin::itemCommand(const QString &itemKey)
  */
 const QString ShotStartRecordPlugin::itemContextMenu(const QString &)
 {
+    qCDebug(RECORD_LOG) << "Context menu requested but not provided";
     // 不再提供右键菜单
     return QString();
 }
@@ -231,6 +238,7 @@ const QString ShotStartRecordPlugin::itemContextMenu(const QString &)
  */
 void ShotStartRecordPlugin::invokedMenuItem(const QString &, const QString &, const bool)
 {
+    qCDebug(RECORD_LOG) << "Menu item invoked but not handled";
     // 不再提供右键菜单
     return;
 }
@@ -242,8 +250,10 @@ void ShotStartRecordPlugin::invokedMenuItem(const QString &, const QString &, co
  */
 bool ShotStartRecordPlugin::onStart()
 {
+    qCInfo(RECORD_LOG) << "Starting screen recording";
     m_bPreviousIsVisable = getTrayIconVisible();
     if (m_bPreviousIsVisable) {
+        qCDebug(RECORD_LOG) << "Hiding tray icon";
         // 仅隐藏任务栏图标
         setTrayIconVisible(false);
     }
@@ -261,7 +271,9 @@ bool ShotStartRecordPlugin::onStart()
  */
 void ShotStartRecordPlugin::onStop()
 {
+    qCInfo(RECORD_LOG) << "Stopping screen recording";
     if (m_bPreviousIsVisable) {
+        qCDebug(RECORD_LOG) << "Restoring tray icon visibility";
         // 恢复显示任务栏图标
         setTrayIconVisible(true);
     }
@@ -282,11 +294,13 @@ void ShotStartRecordPlugin::onRecording()
     m_nextCount++;
     if (1 == m_nextCount) {
         if (!m_checkTimer) {
+            qCDebug(RECORD_LOG) << "Creating check timer";
             m_checkTimer = new QTimer(this);
         }
         connect(m_checkTimer, &QTimer::timeout, this, [=] {
             // 说明录屏还在进行中
             if (m_count < m_nextCount) {
+                qCDebug(RECORD_LOG) << "Recording in progress, updating count";
                 m_count = m_nextCount;
             }
             // 说明录屏已经停止了
@@ -296,10 +310,12 @@ void ShotStartRecordPlugin::onRecording()
                 m_checkTimer->stop();
             }
         });
+        qCDebug(RECORD_LOG) << "Starting check timer with interval:" << DETECT_SERV_INTERVAL;
         m_checkTimer->start(DETECT_SERV_INTERVAL);
     }
 
     if (m_checkTimer && !m_checkTimer->isActive()) {
+        qCDebug(RECORD_LOG) << "Restarting inactive check timer";
         m_checkTimer->start(DETECT_SERV_INTERVAL);
     }
 }
@@ -333,11 +349,14 @@ void ShotStartRecordPlugin::onClickQuickPanel()
  */
 void ShotStartRecordPlugin::setTrayIconVisible(bool visible)
 {
+    qCDebug(RECORD_LOG) << "Setting tray icon visibility to:" << visible;
     // If the OS version is later than V23 or V25, the new version of the API is used
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    qCDebug(RECORD_LOG) << "Using Qt6 DBus interface";
     QDBusInterface interface("org.deepin.dde.Dock1", "/org/deepin/dde/Dock1", "org.deepin.dde.Dock1", QDBusConnection::sessionBus());
     interface.call("setItemOnDock", "Dock_Quick_Plugins", pluginName(), visible);
 #else
+    qCDebug(RECORD_LOG) << "Using legacy DBus interface";
     // 使用DBus接口仅隐藏任务栏图标，快捷面板图标仍显示，参数是插件的 displayName（历史原因）
     QDBusInterface interface("com.deepin.dde.Dock", "/com/deepin/dde/Dock", "com.deepin.dde.Dock", QDBusConnection::sessionBus());
     interface.call("setPluginVisible", pluginDisplayName(), visible);
@@ -349,7 +368,9 @@ void ShotStartRecordPlugin::setTrayIconVisible(bool visible)
  */
 bool ShotStartRecordPlugin::getTrayIconVisible()
 {
+    qCDebug(RECORD_LOG) << "Checking tray icon visibility";
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    qCDebug(RECORD_LOG) << "Using Qt6 DBus interface";
     QDBusInterface interface("org.deepin.dde.Dock1", "/org/deepin/dde/Dock1", "org.deepin.dde.Dock1", QDBusConnection::sessionBus());
     QDBusReply<QList<DockItemInfo> > msg = interface.call("plugins");
 
@@ -367,26 +388,36 @@ bool ShotStartRecordPlugin::getTrayIconVisible()
         qWarning() << "can not find current plugin info";
         return false;
     }
+    qCDebug(RECORD_LOG) << "Found tray icon, visibility:" << currentPluginItr->visible;
     return currentPluginItr->visible;
 
 #else
+    qCDebug(RECORD_LOG) << "Using legacy DBus interface";
     QDBusInterface interface("com.deepin.dde.Dock", "/com/deepin/dde/Dock", "com.deepin.dde.Dock", QDBusConnection::sessionBus());
     auto msg = interface.call("getPluginVisible", pluginDisplayName());
     if (QDBusMessage::ReplyMessage == msg.type()) {
         return msg.arguments().takeFirst().toBool();
     }
+    qCWarning(RECORD_LOG) << "Failed to get plugin visibility";
     return false;
 #endif
 }
 
 ShotStartRecordPlugin::~ShotStartRecordPlugin()
 {   
-    if (nullptr != m_iconWidget)
+    qCDebug(RECORD_LOG) << "Destroying ShotStartRecordPlugin";
+    if (nullptr != m_iconWidget) {
+        qCDebug(RECORD_LOG) << "Cleaning up icon widget";
         m_iconWidget->deleteLater();
+    }
 
-    if (nullptr != m_tipsWidget)
+    if (nullptr != m_tipsWidget) {
+        qCDebug(RECORD_LOG) << "Cleaning up tips widget";
         m_tipsWidget->deleteLater();
+    }
 
-    if (nullptr != m_quickPanelWidget)
+    if (nullptr != m_quickPanelWidget) {
+        qCDebug(RECORD_LOG) << "Cleaning up quick panel widget";
         m_quickPanelWidget->deleteLater();
+    }
 }

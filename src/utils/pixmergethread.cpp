@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "pixmergethread.h"
+#include "log.h"
 
 #include <QMutexLocker>
 #include <QDateTime>
@@ -18,6 +19,7 @@ PixMergeThread::PixMergeThread(QObject *parent) : QThread(parent)
 #elif (QT_VERSION_MAJOR == 6)
     m_lastTime = int(QDateTime::currentDateTime().toSecsSinceEpoch());m_lastTime = int(QDateTime::currentDateTime().toSecsSinceEpoch());
 #endif
+    qCInfo(dsrApp) << "PixMergeThread initialized";
 }
 
 PixMergeThread::~PixMergeThread()
@@ -45,10 +47,12 @@ void PixMergeThread::ScrollUpAddImg(const QPixmap &picture)
         pair.first = picture.copy(0, 0, picture.width(), m_bottomHeight);
         pair.second = ScrollUp;
         m_pixImgs.enqueue(pair);
+        qCDebug(dsrApp) << "Added cropped image to queue, height:" << m_bottomHeight;
     } else {
         pair.first = picture;
         pair.second = ScrollUp;
         m_pixImgs.enqueue(pair);
+        qCDebug(dsrApp) << "Added full image to queue";
     }
 }
 
@@ -67,17 +71,21 @@ void PixMergeThread::ScrollDwonAddImg(const QPixmap &picture)
         pair.first = picture.copy(0, m_headHeight, picture.width(), picture.height() - m_headHeight);
         pair.second = ScrollDown;
         m_pixImgs.enqueue(pair);
+        qCDebug(dsrApp) << "Added cropped image to queue, head height:" << m_headHeight;
     } else {
         pair.first = picture;
         pair.second = ScrollDown;
         m_pixImgs.enqueue(pair);
+        qCDebug(dsrApp) << "Added full image to queue";
     }
 }
 
 void PixMergeThread::addShotImg(const QPixmap &picture, PictureDirection direction)
 {
-    if (m_loopTask == false)
+    if (m_loopTask == false) {
+        qCDebug(dsrApp) << "Task stopped, image not added";
         return;
+    }
 
     // 计数调试
     ++m_ImageCount;
@@ -86,6 +94,7 @@ void PixMergeThread::addShotImg(const QPixmap &picture, PictureDirection directi
 
     if (m_curImg.empty()) {
         m_curImg = qPixmapToCvMat(picture);
+        qCDebug(dsrApp) << "First image initialized";
         return;
     }
     //将图片去除顶部或者底部的固定区域，放入图片队列
@@ -94,7 +103,6 @@ void PixMergeThread::addShotImg(const QPixmap &picture, PictureDirection directi
     } else {
         ScrollUpAddImg(picture);
     }
-
 }
 
 QImage PixMergeThread::getMerageResult() const
@@ -105,6 +113,7 @@ QImage PixMergeThread::getMerageResult() const
 void PixMergeThread::run()
 {
     m_loopTask = true;
+    qCInfo(dsrApp) << "PixMergeThread started running";
     while (m_loopTask) {
         while (!m_pixImgs.isEmpty()) {
             QPair<QPixmap, PictureDirection> pair;
@@ -117,8 +126,8 @@ void PixMergeThread::run()
                 // 更新预览图
                 emit updatePreviewImg(QImage(m_curImg.data, m_curImg.cols, m_curImg.rows,
                                              static_cast<int>(m_curImg.step), QImage::Format_ARGB32));
+                qCDebug(dsrApp) << "Preview image updated";
             }
-
         }
         QThread::currentThread()->msleep(300);
     }
@@ -169,6 +178,11 @@ cv::Mat PixMergeThread::qPixmapToCvMat(const QPixmap &inPixmap)
 
 bool PixMergeThread::mergeImageWork(const cv::Mat &image, int imageStatus)
 {
+    if (image.empty()) {
+        qCWarning(dsrApp) << "Input image is empty for merge operation";
+        return false;
+    }
+
     bool isSucess = false;
     switch (imageStatus) {
     case ScrollDown:
@@ -178,6 +192,7 @@ bool PixMergeThread::mergeImageWork(const cv::Mat &image, int imageStatus)
         isSucess = splicePictureUp(image);
         return isSucess;
     default:
+        qCWarning(dsrApp) << "Invalid image status for merge operation:" << imageStatus;
         return isSucess;
     }
 }
@@ -202,6 +217,7 @@ int PixMergeThread::getBottomFixedHigh(cv::Mat &img1, cv::Mat &img2)
     for (int i = img1.rows - 1; i > 0; i--) {
         for (int j = 0; j < img1.cols; ++j) {
             if (img1.at<cv::Vec3b>(i, j) != img2.at<cv::Vec3b>(rowsCount, j)) {
+                qCDebug(dsrApp) << "Found bottom fixed height:" << rowsCount;
                 return rowsCount;
             }
         }
@@ -216,17 +232,19 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
     // 保存后的最后一张图片不做长度检查
     if (!m_isLastPixmap && m_curImg.rows > LONG_IMG_MAX_HEIGHT) {
         // 拼接超过了最大限度
+        qCWarning(dsrApp) << "Image height exceeds maximum limit:" << LONG_IMG_MAX_HEIGHT;
         emit merageError(MaxHeight);
         return false;
     }
 
     if (image.rows <= TEMPLATE_HEIGHT) {
+        qCWarning(dsrApp) << "Image height is too small for splicing, minimum required:" << TEMPLATE_HEIGHT;
         emit merageError(Failed);
         return false;
     }
 
     ++m_MeragerCount;
-    qDebug() << "********m_MeragerCount******: " << m_MeragerCount;
+    qCDebug(dsrApp) << "Merge count increased to:" << m_MeragerCount;
     m_upCount++;
     /*转灰度图像*/
     cv::Mat image1_gray, image2_gray;
@@ -254,6 +272,7 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
         result = cv::Mat::zeros(cvSize(image.cols, image.rows + m_curImg.rows - maxLoc.y - TEMPLATE_HEIGHT), image.type());
         temp1 = m_curImg(cv::Rect(0, maxLoc.y + TEMPLATE_HEIGHT, m_curImg.cols, m_curImg.rows - maxLoc.y - TEMPLATE_HEIGHT));
         if (temp1.empty()) {
+            qCWarning(dsrApp) << "Failed to extract template region for upward splicing";
             return false;
         }
 
@@ -282,6 +301,7 @@ bool PixMergeThread::splicePictureUp(const cv::Mat &image)
             }
             return false;
         } else if (result.rows < m_curImg.rows) {
+            qCWarning(dsrApp) << "Result image height is smaller than current image";
             return false;
         }
         qDebug() << "拼接成功了";
@@ -322,10 +342,12 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
     // 保存后的最后一张图片不做长度检查
     if (!m_isLastPixmap && m_curImg.rows > LONG_IMG_MAX_HEIGHT) {
         // 拼接超过了最大限度
+        qCWarning(dsrApp) << "Image height exceeds maximum limit:" << LONG_IMG_MAX_HEIGHT;
         emit merageError(MaxHeight);
         return false;
     }
     if (image.rows <= TEMPLATE_HEIGHT) {
+        qCWarning(dsrApp) << "Image height is too small for splicing, minimum required:" << TEMPLATE_HEIGHT;
         emit merageError(Failed);
         return false;
     }
@@ -360,6 +382,7 @@ bool PixMergeThread::splicePictureDown(const cv::Mat &image)
         result = cv::Mat::zeros(cvSize(m_curImg.cols, maxLoc.y + image.rows), m_curImg.type());
         temp1 = m_curImg(cv::Rect(0, 0, m_curImg.cols, maxLoc.y));
         if (temp1.empty()) {
+            qCWarning(dsrApp) << "Failed to extract template region for downward splicing";
             return false;
         }
 

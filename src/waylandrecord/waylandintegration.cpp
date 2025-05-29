@@ -6,6 +6,7 @@
 #include "waylandintegration.h"
 #include "waylandintegration_p.h"
 #include "utils.h"
+#include "../utils/log.h"
 #include <QDBusArgument>
 #include <QDBusMetaType>
 
@@ -60,16 +61,19 @@ static WaylandIntegration::WaylandIntegrationPrivate *globalWaylandIntegration =
 
 void WaylandIntegration::init(QStringList list)
 {
+    qCInfo(dsrApp) << "正在初始化wayland集成";
     globalWaylandIntegration->initWayland(list);
 }
 
 void WaylandIntegration::init(QStringList list, GstRecordX *gstRecord)
 {
+    qCInfo(dsrApp) << "正在初始化wayland集成和GstRecordX";
     globalWaylandIntegration->initWayland(list, gstRecord);
 }
 
 bool WaylandIntegration::isEGLInitialized()
 {
+    qCDebug(dsrApp) << "Checking if EGL is initialized";
     return globalWaylandIntegration->isEGLInitialized();
 }
 
@@ -86,12 +90,14 @@ bool WaylandIntegration::WaylandIntegrationPrivate::stopVideoRecord()
 {
     if (Utils::isFFmpegEnv) {
         if (m_recordAdmin) {
+            qCDebug(dsrApp) << "Stopping FFmpeg video recording";
             return m_recordAdmin->stopStream();
         } else {
-            qWarning() << "m_recordAdmin is not init!";
+            qCWarning(dsrApp) << "m_recordAdmin is not init!";
             return false;
         }
     } else {
+        qCDebug(dsrApp) << "Stopping GStreamer video recording";
         setBGetFrame(false);
         isGstWriteVideoFrame = false;
         return true;
@@ -111,11 +117,13 @@ WaylandIntegration::WaylandIntegration *WaylandIntegration::waylandIntegration()
 // Thank you kscreen
 void WaylandIntegration::WaylandOutput::setOutputType(const QString &type)
 {
+    qCDebug(dsrApp) << "Setting output type:" << type;
     const auto embedded = {QLatin1String("LVDS"), QLatin1String("IDP"), QLatin1String("EDP"), QLatin1String("LCD")};
 
     for (const QLatin1String &pre : embedded) {
         if (type.toUpper().startsWith(pre)) {
             m_outputType = OutputType::Laptop;
+            qCDebug(dsrApp) << "Output type set to Laptop";
             return;
         }
     }
@@ -124,10 +132,13 @@ void WaylandIntegration::WaylandOutput::setOutputType(const QString &type)
         type.contains(QLatin1String("Panel")) || type.contains(QLatin1String("DisplayPort")) ||
         type.startsWith(QLatin1String("DP")) || type.contains(QLatin1String("unknown"))) {
         m_outputType = OutputType::Monitor;
+        qCDebug(dsrApp) << "Output type set to Monitor";
     } else if (type.contains(QLatin1String("TV"))) {
         m_outputType = OutputType::Television;
+        qCDebug(dsrApp) << "Output type set to Television";
     } else {
         m_outputType = OutputType::Monitor;
+        qCDebug(dsrApp) << "Output type defaulting to Monitor";
     }
 }
 
@@ -273,20 +284,24 @@ QMap<quint32, WaylandIntegration::WaylandOutput> WaylandIntegration::WaylandInte
 
 void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list)
 {
+    qCInfo(dsrApp) << "Initializing Wayland with parameters";
     m_streamingEnabled = true;
     //通过wayland底层接口获取图片的方式不相同，需要获取电脑的厂商，hw的需要特殊处理
     // m_boardVendorType = getBoardVendorType();
     m_boardVendorType = getProductType();
-    qDebug() << "m_boardVendorType: " << m_boardVendorType;
+    qCDebug(dsrApp) << "m_boardVendorType: " << m_boardVendorType;
     //由于性能问题部分非hw的arm机器编码效率低，适当调大视频帧的缓存空间（防止调整的过大导致保存时间延长），且在下面添加视频到缓冲区时进行了降低帧率的处理。
     if (QSysInfo::currentCpuArchitecture().startsWith("ARM", Qt::CaseInsensitive) && !m_boardVendorType) {
         m_bufferSize = 200;
+        qCDebug(dsrApp) << "Adjusted buffer size for ARM architecture:" << m_bufferSize;
     }
     m_fps = list[5].toInt();
+    qCDebug(dsrApp) << "Setting FPS to:" << m_fps;
     m_recordAdmin = new RecordAdmin(list, this);
     m_recordAdmin->setBoardVendor(m_boardVendorType);
     //初始化wayland服务链接
     initConnectWayland();
+    qCDebug(dsrApp) << "Wayland initialization completed";
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list, GstRecordX *gstRecord)
@@ -294,16 +309,18 @@ void WaylandIntegration::WaylandIntegrationPrivate::initWayland(QStringList list
     //通过wayland底层接口获取图片的方式不相同，需要获取电脑的厂商，hw的需要特殊处理
     // m_boardVendorType = getBoardVendorType();
     m_boardVendorType = getProductType();
-    qDebug() << "m_boardVendorType: " << m_boardVendorType;
+    qCDebug(dsrApp) << "m_boardVendorType: " << m_boardVendorType;
     //由于性能问题部分非hw的arm机器编码效率低，适当调大视频帧的缓存空间（防止调整的过大导致保存时间延长），且在下面添加视频到缓冲区时进行了降低帧率的处理。
     if (QSysInfo::currentCpuArchitecture().startsWith("ARM", Qt::CaseInsensitive) && !m_boardVendorType) {
         m_bufferSize = 200;
+        qCDebug(dsrApp) << "Adjusted buffer size for ARM architecture:" << m_bufferSize;
     }
     m_fps = list[5].toInt();
     m_gstRecordX = gstRecord;
     m_gstRecordX->setBoardVendorType(m_boardVendorType);
     //初始化wayland服务链接
     initConnectWayland();
+    qCDebug(dsrApp) << "Wayland initialization with GstRecordX completed";
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::initConnectWayland()
@@ -319,6 +336,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::initConnectWayland()
             &WaylandIntegrationPrivate::setupRegistry,
             Qt::QueuedConnection);
     connect(m_connection, &KWayland::Client::ConnectionThread::connectionDied, this, [this] {
+        qCWarning(dsrApp) << "Wayland connection died";
         if (m_queue) {
             delete m_queue;
             m_queue = nullptr;
@@ -328,6 +346,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::initConnectWayland()
         if (m_thread) {
             m_thread->quit();
             if (!m_thread->wait(3000)) {
+                qCWarning(dsrApp) << "Thread wait timeout, forcing termination";
                 m_thread->terminate();
                 m_thread->wait();
             }
@@ -336,6 +355,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::initConnectWayland()
         }
     });
     connect(m_connection, &KWayland::Client::ConnectionThread::failed, this, [this] {
+        qCCritical(dsrApp) << "Wayland connection failed";
         m_thread->quit();
         m_thread->wait();
     });
@@ -346,63 +366,75 @@ void WaylandIntegration::WaylandIntegrationPrivate::initConnectWayland()
 
 int WaylandIntegration::WaylandIntegrationPrivate::getBoardVendorType()
 {
+    qCDebug(dsrApp) << "Getting board vendor type";
     QFile file("/sys/class/dmi/id/board_vendor");
     bool flag = file.open(QIODevice::ReadOnly | QIODevice::Text);
     if (!flag) {
+        qCWarning(dsrApp) << "Failed to open board vendor file";
         return 0;
     }
     QByteArray t = file.readAll();
     QString result = QString(t);
     if (result.isEmpty()) {
+        qCWarning(dsrApp) << "Board vendor file is empty";
         return 0;
     }
     file.close();
-    qDebug() << "/sys/class/dmi/id/board_vendor: " << result;
-    qDebug() << "cpu: " << Utils::getCpuModelName();
+    qCDebug(dsrApp) << "/sys/class/dmi/id/board_vendor: " << result;
+    qCDebug(dsrApp) << "cpu: " << Utils::getCpuModelName();
     if (result.contains("HUAWEI")) {
         if (!Utils::getCpuModelName().contains("Kunpeng", Qt::CaseSensitivity::CaseInsensitive)) {
+            qCDebug(dsrApp) << "Detected HUAWEI non-Kunpeng board";
             return 1;
         }
     }
+    qCDebug(dsrApp) << "Using default board vendor type";
     return 0;
 }
+
 //根据命令行 dmidecode -s system-product-name|awk '{print SNF}' 返回的结果判断是否是华为电脑
 int WaylandIntegration::WaylandIntegrationPrivate::getProductType()
 {
+    qCDebug(dsrApp) << "Getting product type";
     if (Utils::specialRecordingScreenMode != -1) {
-        qInfo() << "Special screen recording mode is supported!";
+        qCInfo(dsrApp) << "Special screen recording mode is supported!";
         return Utils::specialRecordingScreenMode;
     }
-    qInfo() << "Special screen recording mode is not supported!";
+    qCInfo(dsrApp) << "Special screen recording mode is not supported!";
     QProcess process;
     process.start("dmidecode", QStringList() << "-s" << "system-product-name");
     process.waitForFinished();
     process.waitForReadyRead();
     QByteArray tempArray = process.readAllStandardOutput();
     QString str_output = QString(QLatin1String(tempArray.data()));
-    qInfo() << "system-product-name: " << str_output;
+    qCInfo(dsrApp) << "system-product-name: " << str_output;
 
     process.start("dmidecode");
     process.waitForFinished();
     process.waitForReadyRead();
     QString str_output1 = QString(QLatin1String(process.readAllStandardOutput().data()));
-    qInfo() << "dmidecode: " << str_output1;
+    qCDebug(dsrApp) << "Full dmidecode output:" << str_output1;
 
     if (str_output.contains("KLVV", Qt::CaseInsensitive) || str_output.contains("KLVU", Qt::CaseInsensitive) ||
         str_output.contains("PGUV", Qt::CaseInsensitive) || str_output.contains("PGUW", Qt::CaseInsensitive) ||
         str_output1.contains("PWC30", Qt::CaseInsensitive) || str_output.contains("L540", Qt::CaseInsensitive) ||
-        str_output.contains("W585", Qt::CaseInsensitive) || str_output.contains("PGUX", Qt::CaseInsensitive) || isPangu())
+        str_output.contains("W585", Qt::CaseInsensitive) || str_output.contains("PGUX", Qt::CaseInsensitive) || isPangu()) {
+        qCDebug(dsrApp) << "Detected supported product type";
         return 1;
+    }
+    qCDebug(dsrApp) << "Using default product type";
     return 0;
 }
+
 bool WaylandIntegration::WaylandIntegrationPrivate::isPangu()
 {
+    qCDebug(dsrApp) << "Checking if system is Pangu";
     QString validFrequency = "CurrentSpeed";
     QDBusInterface systemInfoInterface("com.deepin.daemon.SystemInfo",
                                        "/com/deepin/daemon/SystemInfo",
                                        "org.freedesktop.DBus.Properties",
                                        QDBusConnection::sessionBus());
-    qDebug() << "systemInfoInterface.isValid: " << systemInfoInterface.isValid();
+    qCDebug(dsrApp) << "SystemInfo DBus interface valid:" << systemInfoInterface.isValid();
     QDBusMessage replyCpu = systemInfoInterface.call("Get", "com.deepin.daemon.SystemInfo", "CPUHardware");
     QList<QVariant> outArgsCPU = replyCpu.arguments();
     if (outArgsCPU.count()) {
@@ -410,13 +442,17 @@ bool WaylandIntegration::WaylandIntegrationPrivate::isPangu()
         qInfo() << __FUNCTION__ << __LINE__ << "Current CPUHardware: " << CPUHardware;
 
         if (CPUHardware.contains("PANGU")) {
+            qCDebug(dsrApp) << "Pangu CPU detected";
             return true;
         }
     }
+    qCDebug(dsrApp) << "Not a Pangu system";
     return false;
 }
+
 void WaylandIntegration::WaylandIntegrationPrivate::addOutput(quint32 name, quint32 version)
 {
+    qCDebug(dsrApp) << "Adding output with name:" << name << "version:" << version;
     KWayland::Client::Output *output = new KWayland::Client::Output(this);
     output->setup(m_registry->bindOutput(name, version));
 
@@ -507,15 +543,17 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBuffer(const KWayland
     if (m_bInitRecordAdmin) {
         m_bInitRecordAdmin = false;
         if (Utils::isFFmpegEnv) {
+            qCDebug(dsrApp) << "Using FFmpeg environment";
             m_recordAdmin->init(static_cast<int>(m_screenSize.width()), static_cast<int>(m_screenSize.height()));
             frameStartTime = avlibInterface::m_av_gettime();
         } else {
+            qCDebug(dsrApp) << "Using GStreamer environment";
             frameStartTime = QDateTime::currentMSecsSinceEpoch();
             isGstWriteVideoFrame = true;
             if (m_gstRecordX) {
                 m_gstRecordX->waylandGstStartRecord();
             } else {
-                qWarning() << "m_gstRecordX is nullptr!";
+                qCWarning(dsrApp) << "m_gstRecordX is nullptr!";
             }
             QtConcurrent::run(this, &WaylandIntegrationPrivate::gstWriteVideoFrame);
         }
@@ -562,12 +600,16 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
     quint32 width = rbuf->width();
     quint32 height = rbuf->height();
     quint32 stride = rbuf->stride();
+
     if (m_bInitRecordAdmin) {
+        qCDebug(dsrApp) << "Initializing record admin";
         m_bInitRecordAdmin = false;
         if (Utils::isFFmpegEnv) {
+            qCDebug(dsrApp) << "Using FFmpeg environment";
             m_recordAdmin->init(static_cast<int>(m_screenSize.width()), static_cast<int>(m_screenSize.height()));
             frameStartTime = avlibInterface::m_av_gettime();
         } else {
+            qCDebug(dsrApp) << "Using GStreamer environment";
             frameStartTime = QDateTime::currentMSecsSinceEpoch();
             isGstWriteVideoFrame = true;
             if (m_gstRecordX) {
@@ -587,7 +629,9 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
     // QString pngName = "/home/uos/Desktop/test/"+QDateTime::currentDateTime().toString(QLatin1String("hh:mm:ss.zzz ") +
     // QString("%1_").arg(rect.x())); QImage(mapData, width, height, QImage::Format_RGB32).copy().save(pngName + ".png");
     if (m_screenCount == 1 || !m_isScreenExtension) {
+        qCDebug(dsrApp) << "Processing single screen hardware buffer";
         if (!m_isExistFirstScreenData) {
+            qCDebug(dsrApp) << "Allocating first screen data buffer";
             m_firstScreenData = new unsigned char[stride * height];
             m_isExistFirstScreenData = true;
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
@@ -618,6 +662,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
         //避免重复开辟内存空间,采用固定数组减小数据访问复杂度。两个屏幕的数据大小可能不同，所以需要区分开
         if (screenId == 0) {
             if (!m_isExistFirstScreenData) {
+                qCDebug(dsrApp) << "Allocating first screen data buffer";
                 m_firstScreenData = new unsigned char[stride * height];
                 m_isExistFirstScreenData = true;
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
@@ -645,6 +690,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
             m_ScreenDateBufFrames[0]._flag = true;
         } else {
             if (!m_isExistSecondScreenData) {
+                qCDebug(dsrApp) << "Allocating second screen data buffer";
                 m_secondScreenData = new unsigned char[stride * height];
                 m_isExistSecondScreenData = true;
 #ifdef KWAYLAND_REMOTE_BUFFER_RELEASE_FLAGE_ON
@@ -673,6 +719,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
         }
 
         if (m_ScreenDateBufFrames[0]._flag && m_ScreenDateBufFrames[1]._flag) {
+            qCDebug(dsrApp) << "Both screen buffers ready, merging frames";
             QMutexLocker locker(&m_bGetScreenImageMutex);
             for (int i = 0; i < 2; i++) {
                 m_curNewImageScreenFrames[i]._frame = m_ScreenDateBufFrames[i]._frame;
@@ -713,7 +760,9 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferHw(const KWayla
 //拷贝数据，当远程buffer没有数据传过来时，调用此接口，将上一次的屏幕数据做为当前的屏幕数据
 void WaylandIntegration::WaylandIntegrationPrivate::copyScreenData(int screenId)
 {
+    qCDebug(dsrApp) << "Copying screen data for screen" << screenId;
     if (m_screenCount == 1 || !m_isScreenExtension) {
+        qCDebug(dsrApp) << "Copying single screen data";
         m_curNewImageData._frame = m_lastScreenDatas[0]._frame;
         m_curNewImageData._width = m_lastScreenDatas[0]._width;
         m_curNewImageData._height = m_lastScreenDatas[0]._height;
@@ -721,6 +770,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::copyScreenData(int screenId)
         m_curNewImageData._rect = m_lastScreenDatas[0]._rect;
         m_curNewImageData._flag = true;
     } else if (m_screenCount == 2 && m_isScreenExtension) {
+        qCDebug(dsrApp) << "Copying multi-screen data for screen" << screenId;
         if (screenId == 0) {
             m_ScreenDateBufFrames[0]._frame = m_lastScreenDatas[0]._frame;
             m_ScreenDateBufFrames[0]._width = m_lastScreenDatas[0]._width;
@@ -738,6 +788,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::copyScreenData(int screenId)
         }
         if (m_ScreenDateBufFrames[0]._flag && m_ScreenDateBufFrames[1]._flag && m_lastScreenDatas[0]._frame != nullptr &&
             m_lastScreenDatas[1]._frame != nullptr) {
+            qCDebug(dsrApp) << "Both screen buffers ready, merging frames";
             QMutexLocker locker(&m_bGetScreenImageMutex);
             for (int i = 0; i < 2; i++) {
                 m_curNewImageScreenFrames[i]._frame = m_ScreenDateBufFrames[i]._frame;
@@ -750,7 +801,9 @@ void WaylandIntegration::WaylandIntegrationPrivate::copyScreenData(int screenId)
             }
         }
     }
+    qCDebug(dsrApp) << "Screen data copy completed";
 }
+
 //根据wayland客户端bufferReady给过来的像素格式，转成QImage的格式
 QImage::Format WaylandIntegration::WaylandIntegrationPrivate::getImageFormat(quint32 format)
 {
@@ -804,11 +857,14 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
     quint32 height = rbuf->height();
     quint32 stride = rbuf->stride();
     if (m_bInitRecordAdmin) {
+        qCDebug(dsrApp) << "Initializing record admin";
         m_bInitRecordAdmin = false;
         if (Utils::isFFmpegEnv) {
+            qCDebug(dsrApp) << "Using FFmpeg environment";
             m_recordAdmin->init(static_cast<int>(m_screenSize.width()), static_cast<int>(m_screenSize.height()));
             frameStartTime = avlibInterface::m_av_gettime();
         } else {
+            qCDebug(dsrApp) << "Using GStreamer environment";
             frameStartTime = QDateTime::currentMSecsSinceEpoch();
             isGstWriteVideoFrame = true;
             if (m_gstRecordX) {
@@ -821,6 +877,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
         m_appendFrameToListFlag = true;
         QtConcurrent::run(this, &WaylandIntegrationPrivate::appendFrameToList);
     }
+
     QImage img(m_screenSize, QImage::Format_RGBA8888);
     if (m_screenCount == 1 || !m_isScreenExtension) {
         m_curNewImage.first = 0;  // avlibInterface::m_av_gettime() - frameStartTime;
@@ -829,8 +886,10 @@ void WaylandIntegration::WaylandIntegrationPrivate::processBufferX86(const KWayl
             m_curNewImage.second = getImage(dma_fd, width, height, stride, rbuf->format());
         }
     } else {
+        qCDebug(dsrApp) << "Processing multi-screen x86 buffer";
         m_ScreenDateBuf.append(QPair<QRect, QImage>(rect, getImage(dma_fd, width, height, stride, rbuf->format())));
         if (m_ScreenDateBuf.size() == m_screenCount) {
+            qCDebug(dsrApp) << "All screen buffers collected, merging images";
             QMutexLocker locker(&m_bGetScreenImageMutex);
             m_curNewImageScreen.clear();
             for (auto itr = m_ScreenDateBuf.begin(); itr != m_ScreenDateBuf.end(); ++itr) {
@@ -857,7 +916,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
                     tempImage = QImage(
                         m_curNewImageData._frame, m_curNewImageData._width, m_curNewImageData._height, m_curNewImageData._format);
                 } else {
-                    tempImage = m_curNewImage.second.copy();
+                tempImage = m_curNewImage.second.copy();
                 }
             }
             if (!tempImage.isNull()) {
@@ -915,8 +974,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
                 } else {
                     if (m_curNewImageScreen.size() != m_screenCount)
                         continue;
-                    for (auto itr = m_curNewImageScreen.begin(); itr != m_curNewImageScreen.end(); ++itr) {
-                        tempImageVec.append(*itr);
+                for (auto itr = m_curNewImageScreen.begin(); itr != m_curNewImageScreen.end(); ++itr) {
+                    tempImageVec.append(*itr);
                     }
                 }
             }
@@ -951,9 +1010,11 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendFrameToList()
 //通过线程循环向gstreamer管道写入视频帧数据
 void WaylandIntegration::WaylandIntegrationPrivate::gstWriteVideoFrame()
 {
+    qCInfo(dsrApp) << "Starting GStreamer video frame write thread";
     waylandFrame frame;
     while (isWriteVideo()) {
         if (getFrame(frame)) {
+            qCDebug(dsrApp) << "Writing frame to GStreamer pipeline";
             if (m_gstRecordX) {
                 m_gstRecordX->waylandWriteVideoFrame(frame._frame, frame._width, frame._height);
             } else {
@@ -965,10 +1026,12 @@ void WaylandIntegration::WaylandIntegrationPrivate::gstWriteVideoFrame()
     }
     //等待wayland视频环形队列中的视频帧，全部写入管道
     if (m_gstRecordX) {
+        qCInfo(dsrApp) << "Stopping GStreamer recording";
         m_gstRecordX->waylandGstStopRecord();
     } else {
         qWarning() << "m_gstRecordX is nullptr!";
     }
+    qCInfo(dsrApp) << "GStreamer video frame write thread stopped";
 }
 
 QImage WaylandIntegration::WaylandIntegrationPrivate::getImage(
@@ -1025,7 +1088,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
     qDebug() << "初始化wayland服务链接已完成";
     qDebug() << "正在安装注册wayland服务...";
     if (!m_boardVendorType) {
-        initEgl();
+    initEgl();
     }
     m_queue = new KWayland::Client::EventQueue(this);
     m_queue->setup(m_connection);
@@ -1063,7 +1126,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                         (KWayland::Client::Output::get(reinterpret_cast<wl_output *>(const_cast<void *>(output))))->geometry();
                     // qDebug() << "screenGeometry: " << screenGeometry;
                     // qDebug() << "rbuf->isValid(): " << rbuf->isValid();
-                    connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf, screenGeometry] {
+            connect(rbuf, &KWayland::Client::RemoteBuffer::parametersObtained, this, [this, rbuf, screenGeometry] {
                         qDebug() << "正在处理buffer..."
                                  << "fd:" << rbuf->fd() << "frameCount: " << frameCount;
                         if (frameCount == 0) {
@@ -1096,6 +1159,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                                 QtConcurrent::run(this, &WaylandIntegrationPrivate::appendRemoteBuffer);
                             }
                         } else if (m_screenCount == 2 && m_isScreenExtension) {
+                            qCDebug(dsrApp) << "Processing multi-screen buffer";
                             if (screenGeometry.x() == 0 && screenGeometry.y() == 0) {
                                 if (m_currentScreenBufs[0] == nullptr) {
                                     m_isReleaseCurrentBuffer = false;
@@ -1141,8 +1205,8 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
                             processBufferHw(rbuf, screenGeometry, screenId);
                         } else {
                             //other
-                            processBufferX86(rbuf, screenGeometry);
-                        }
+                    processBufferX86(rbuf, screenGeometry);
+                }
                     }
                 }
                 else if(m_screenCount == 2 && m_isScreenExtension){
@@ -1205,6 +1269,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::setupRegistry()
 }
 void WaylandIntegration::WaylandIntegrationPrivate::initEgl()
 {
+    qCInfo(dsrApp) << "Initializing EGL";
     static const EGLint context_attribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
 
     EGLint config_attribs[] = {EGL_SURFACE_TYPE,
@@ -1228,30 +1293,45 @@ void WaylandIntegration::WaylandIntegrationPrivate::initEgl()
     assert(m_eglstruct.dpy);
 
     ret = eglInitialize(m_eglstruct.dpy, &major, &minor);
-    assert(ret == EGL_TRUE);
+    if (ret != EGL_TRUE) {
+        qCCritical(dsrApp) << "Failed to initialize EGL";
+        return;
+    }
+    qCDebug(dsrApp) << "EGL initialized with version" << major << "." << minor;
 
     // ret = eglBindAPI(EGL_OPENGL_ES_API);
     ret = eglBindAPI(EGL_OPENGL_API);
-
-    assert(ret == EGL_TRUE);
+    if (ret != EGL_TRUE) {
+        qCCritical(dsrApp) << "Failed to bind OpenGL API";
+        return;
+    }
 
     ret = eglChooseConfig(m_eglstruct.dpy, config_attribs, &m_eglstruct.conf, 1, &n);
-    assert(ret && n == 1);
+    if (!ret || n != 1) {
+        qCCritical(dsrApp) << "Failed to choose EGL config";
+        return;
+    }
 
     m_eglstruct.ctx = eglCreateContext(m_eglstruct.dpy, m_eglstruct.conf, EGL_NO_CONTEXT, context_attribs);
-    assert(m_eglstruct.ctx);
+    if (!m_eglstruct.ctx) {
+        qCCritical(dsrApp) << "Failed to create EGL context";
+        return;
+    }
 
     printf("egl init success!\n");
 }
 void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(
     unsigned char *frame, int width, int height, int stride, int64_t time)
 {
+    qCDebug(dsrApp) << "Appending buffer with dimensions:" << width << "x" << height;
     if (!bGetFrame() || nullptr == frame || width <= 0 || height <= 0) {
+        qCWarning(dsrApp) << "Invalid buffer parameters, skipping append";
         return;
     }
     int size = height * stride;
     unsigned char *ch = nullptr;
     if (m_bInit) {
+        qCDebug(dsrApp) << "Initializing buffer with size:" << size;
         m_bInit = false;
         m_width = width;
         m_height = height;
@@ -1265,8 +1345,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(
     }
     QMutexLocker locker(&m_mutex);
     if (m_waylandList.size() >= m_bufferSize) {
-        //先进先出
-        //取队首
+        qCDebug(dsrApp) << "Buffer full, recycling first frame";
         waylandFrame wFrame = m_waylandList.first();
         memset(wFrame._frame, 0, static_cast<size_t>(size));
         //拷贝当前帧
@@ -1284,6 +1363,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(
         // qDebug() << "环形缓冲区已满，删队首，存队尾";
     } else if (0 <= m_waylandList.size() && m_waylandList.size() < m_bufferSize) {
         if (m_freeList.size() > 0) {
+            qCDebug(dsrApp) << "Adding new frame to buffer";
             waylandFrame wFrame;
             wFrame._time = time;
             wFrame._width = width;
@@ -1301,10 +1381,12 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendBuffer(
             m_freeList.removeFirst();
         }
     }
+    qCDebug(dsrApp) << "Buffer append completed, current size:" << m_waylandList.size();
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::initScreenFrameBuffer()
 {
+    qCDebug(dsrApp) << "Initializing screen frame buffers";
     m_ScreenDateBufFrames[0]._frame = nullptr;
     m_ScreenDateBufFrames[0]._width = 0;
     m_ScreenDateBufFrames[0]._height = 0;
@@ -1329,6 +1411,7 @@ void WaylandIntegration::WaylandIntegrationPrivate::initScreenFrameBuffer()
     m_curNewImageScreenFrames[1]._format = QImage::Format_RGBA8888;
     m_curNewImageScreenFrames[1]._rect = QRect(0, 0, 0, 0);
     m_curNewImageScreenFrames[1]._flag = false;
+    qCDebug(dsrApp) << "Screen frame buffers initialized";
 }
 
 void WaylandIntegration::WaylandIntegrationPrivate::appendRemoteBuffer()
@@ -1337,16 +1420,22 @@ void WaylandIntegration::WaylandIntegrationPrivate::appendRemoteBuffer()
     while (m_isAppendRemoteBuffer) {
         // qDebug() << "Appending remote buffer...";
         if (m_currentScreenBufs[0] != nullptr) {
+            qCDebug(dsrApp) << "Processing first screen buffer";
             m_mutex.lock();
             processBufferHw(m_currentScreenBufs[0], m_currentScreenRects[0], 0);
         } else {
+            qCDebug(dsrApp) << "Copying screen data for first screen";
             copyScreenData(0);
         }
+        
         if (m_screenCount == 2 && m_isScreenExtension) {
+            qCDebug(dsrApp) << "Processing multi-screen setup";
             if (m_currentScreenBufs[1] != nullptr) {
+                qCDebug(dsrApp) << "Processing second screen buffer";
                 m_mutex.lock();
                 processBufferHw(m_currentScreenBufs[1], m_currentScreenRects[1], 1);
             } else {
+                qCDebug(dsrApp) << "Copying screen data for second screen";
                 copyScreenData(1);
             }
         }
@@ -1358,8 +1447,10 @@ int WaylandIntegration::WaylandIntegrationPrivate::frameIndex = 0;
 
 bool WaylandIntegration::WaylandIntegrationPrivate::getFrame(waylandFrame &frame)
 {
+    qCDebug(dsrApp) << "Attempting to get frame from buffer";
     QMutexLocker locker(&m_mutex);
     if (m_waylandList.size() <= 0 || nullptr == m_ffmFrame) {
+        qCDebug(dsrApp) << "No frames available in buffer or frame buffer not initialized";
         frame._width = 0;
         frame._height = 0;
         frame._frame = nullptr;

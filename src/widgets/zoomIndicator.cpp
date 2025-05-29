@@ -7,6 +7,7 @@
 #include "../utils/baseutils.h"
 #include "../utils/tempfile.h"
 #include "../utils.h"
+#include "../utils/log.h"
 
 #if (QT_VERSION_MAJOR == 5)
 #include <QtOpenGL/QOpenGLWidget>
@@ -31,6 +32,7 @@ const int BOTTOM_RECT_HEIGHT = 14;
 ZoomIndicator::ZoomIndicator(DWidget *parent,bool isRecord)
     : DLabel(parent)
 {
+    qCDebug(dsrApp) << "Initializing ZoomIndicator, isRecord:" << isRecord;
 
     QDBusInterface wmInterface("com.deepin.wm",
                                "/com/deepin/wm",
@@ -52,6 +54,7 @@ ZoomIndicator::ZoomIndicator(DWidget *parent,bool isRecord)
     m_isRecord = isRecord;
 
     if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord) {
+        qCDebug(dsrApp) << "Creating ZoomIndicatorGL for Wayland mode";
         m_zoomIndicatorGL = new ZoomIndicatorGL(parent);
         this->hide();
         return;
@@ -159,10 +162,12 @@ void ZoomIndicator::showMagnifier(QPoint pos)
 void ZoomIndicator::hideMagnifier()
 {
     if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord) {
+        qCDebug(dsrApp) << "Hiding magnifier in Wayland mode";
         m_zoomIndicatorGL->makeCurrent();
         m_zoomIndicatorGL->hide();
         return;
     }
+    qCDebug(dsrApp) << "Hiding magnifier";
     this->hide();
 }
 

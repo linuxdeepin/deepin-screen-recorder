@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "colorbutton.h"
+#include "../utils/log.h"
 
 #include <QPainter>
 #include <QDebug>
@@ -16,6 +17,7 @@ ColorButton::ColorButton(QColor bgColor, DWidget *parent)
     setFixedSize(BUTTON_SIZE);
     setCheckable(true);
     m_bgColor = bgColor;
+    qCDebug(dsrApp) << "ColorButton created with color:" << m_bgColor;
 
     connect(this, &ColorButton::clicked, this, &ColorButton::setColorBtnChecked);
 }
@@ -24,7 +26,7 @@ void ColorButton::setColorBtnChecked()
 {
     update();
     if (this->isChecked()) {
-        qDebug() << "updatePaintColor:" << m_bgColor;
+        qCDebug(dsrApp) << "updatePaintColor:" << m_bgColor;
         emit updatePaintColor(m_bgColor);
     }
 }

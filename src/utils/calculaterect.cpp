@@ -5,6 +5,7 @@
 
 #include "calculaterect.h"
 #include "../utils.h"
+#include "log.h"
 
 #include <cmath>
 
@@ -70,11 +71,14 @@ bool pointOnLine(QPointF point1, QPointF point2, QPointF point3)
             QPointF t_ab = point2 - point1;
 
             qreal k = QPointF::dotProduct(t_ab, t_ac) / QPointF::dotProduct(t_ab, t_ab);
+            if (qIsNaN(k)) {
+                qCWarning(dsrApp) << "Invalid dot product calculation in point-line check";
+                return false;
+            }
 
             QPointF t_dc = t_ac - k * t_ab;
             int t_len = static_cast<int>(sqrt(QPointF::dotProduct(t_dc, t_dc)));
             //qDebug() << "t_distance" << t_len;
-
 
             if (t_len >= 0 && t_len < 5) {
                 return true;
@@ -92,7 +96,12 @@ bool pointOnLine(QPointF point1, QPointF point2, QPointF point3)
 /* get the distance between two points*/
 qreal getDistance(QPointF point1, QPointF point2)
 {
-    return std::sqrt(std::pow(point1.x() - point2.x(), 2) + std::pow(point1.y() - point2.y(), 2));
+    qreal distance = std::sqrt(std::pow(point1.x() - point2.x(), 2) + std::pow(point1.y() - point2.y(), 2));
+    if (qIsNaN(distance)) {
+        qCWarning(dsrApp) << "Invalid distance calculation between points";
+        return 0.0;
+    }
+    return distance;
 }
 
 /* get the point who splid a distance on a line */
@@ -101,8 +110,13 @@ QPointF pointSplid(QPointF point1, QPointF point2, qreal padding)
     if (static_cast<int>(point1.x()) == static_cast<int>(point2.x())) {
         return QPointF(0, padding);
     } else {
-        qreal tmpX = padding * std::cos(std::atan2(std::abs(point1.y() - point2.y()), std::abs(point1.x() - point2.x())));
-        qreal tmpY = padding * std::sin(std::atan2(std::abs(point1.y() - point2.y()), std::abs(point1.x() - point2.x())));
+        qreal angle = std::atan2(std::abs(point1.y() - point2.y()), std::abs(point1.x() - point2.x()));
+        if (qIsNaN(angle)) {
+            qCWarning(dsrApp) << "Invalid angle calculation in point split";
+            return QPointF(0, padding);
+        }
+        qreal tmpX = padding * std::cos(angle);
+        qreal tmpY = padding * std::sin(angle);
         return QPointF(tmpX, tmpY);
     }
 }
@@ -115,7 +129,14 @@ QPointF getRotatePoint(QPointF point1, QPointF point2, QPointF point3, QPointF p
     QPointF rotatePoint = QPointF(0, 0);
 
     QPointF leftSplidPoint = pointSplid(point1, point2, ROTATEPOINT_PADDING);
+    if (leftSplidPoint.isNull()) {
+        qCWarning(dsrApp) << "Failed to calculate left split point for rotation";
+    }
+
     QPointF rightSplidPoint = pointSplid(point3, point4, ROTATEPOINT_PADDING);
+    if (rightSplidPoint.isNull()) {
+        qCWarning(dsrApp) << "Failed to calculate right split point for rotation";
+    }
 
     /* first position*/
     if (point2.x() - point4.x() <= 0 && point2.y() - point4.y() >= 0) {
@@ -159,6 +180,7 @@ FourPoints fourPointsOfLine(QList<QPointF> points)
     const int _MIN_PADDING = 10;
     resultFPoint = initFourPoints(resultFPoint);
     if (points.length() < 2) {
+        qCWarning(dsrApp) << "Insufficient points for line calculation";
         return initFourPoints(resultFPoint);
     }
 
@@ -175,11 +197,13 @@ FourPoints fourPointsOfLine(QList<QPointF> points)
     resultFPoint[3] = QPointF(maxPointF.x() + _MIN_PADDING, maxPointF.y() + _MIN_PADDING);
     return resultFPoint;
 }
+
 FourPoints getAnotherFPoints(FourPoints mainPoints)
 {
     FourPoints  otherFPoints;
     otherFPoints = initFourPoints(otherFPoints);
     if (mainPoints.length() != 4) {
+        qCWarning(dsrApp) << "Invalid main points length for calculation";
         return otherFPoints;
     }
 
@@ -193,6 +217,7 @@ FourPoints getAnotherFPoints(FourPoints mainPoints)
                              static_cast<int>((mainPoints[1].y() + mainPoints[3].y()) / 2));
     return otherFPoints;
 }
+
 /*
  *  this function is get the angle of the mouse'moving*/
 /* the angle in point3 */
@@ -200,6 +225,7 @@ FourPoints getAnotherFPoints(FourPoints mainPoints)
 qreal calculateAngle(QPointF point1, QPointF point2, QPointF point3)
 {
     if (point1 == point2) {
+        qCDebug(dsrApp) << "Calculate angle skipped - points are identical";
         return 0;
     }
 
@@ -208,6 +234,10 @@ qreal calculateAngle(QPointF point1, QPointF point2, QPointF point3)
     qreal c = std::pow(point1.x() - point2.x(), 2) + std::pow(point1.y() - point2.y(), 2);
 
     qreal angle = std::cos((a + b - c) / (2 * std::sqrt(a) * std::sqrt(b)));
+    if (qIsNaN(angle)) {
+        qCWarning(dsrApp) << "Invalid angle calculation result";
+        return 0;
+    }
     if (point1.x() <= point3.x() && point1.y() < point3.y()) {
         if (point2.x() < point1.x() || point2.y() > point1.y()) {
             angle = - angle;
@@ -249,6 +279,10 @@ qreal pointToLineDistance(QPointF point1, QPointF point2, QPointF point3)
         return std::abs(point3.x() - point1.x());
     } else {
         qreal k = (point1.y() - point2.y()) / (point1.x() - point2.x());
+        if (qIsInf(k)) {
+            qCWarning(dsrApp) << "Invalid slope calculation in point-to-line distance";
+            return 0.0;
+        }
         qreal b = point1.y() - point1.x() * k;
         return std::abs(point3.x() * k + b - point3.y()) / std::sqrt(std::pow(k, 2) + 1);
     }

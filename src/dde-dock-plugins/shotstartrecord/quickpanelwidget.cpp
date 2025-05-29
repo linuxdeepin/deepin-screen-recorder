@@ -7,8 +7,8 @@
 #include <DFontSizeManager>
 #include <DGuiApplicationHelper>
 #include <DToolTip>
-
 #include <QVBoxLayout>
+#include "../../utils/log.h"
 
 DGUI_USE_NAMESPACE
 
@@ -74,15 +74,18 @@ void QuickPanelWidget::setDescription(const QString &description)
  */
 void QuickPanelWidget::changeType(FuctionType type)
 {
+    qCDebug(dsrApp) << "Changing function type to:" << type;
     setDescription(m_showTimeStr);
     m_type = type;
     if (type == RECORD) {
         QString shotIcon = DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType ?
                                "status-screen-record-dark" :
                                "status-screen-record";
+        qCDebug(dsrApp) << "Setting record icon:" << shotIcon;
         setIcon(QIcon::fromTheme(shotIcon, QIcon(QString(":/res/%1.svg").arg(shotIcon))));
     } else if (type == RECORDING) {
         QString recordIcon("screen-recording");
+        qCDebug(dsrApp) << "Setting recording icon:" << recordIcon;
         setIcon(QIcon::fromTheme(recordIcon, QIcon(QString(":/res/%1.svg").arg(recordIcon))));
     } else {
         qWarning() << "Type Unkonw! Please select RECORD or RECORDING";
@@ -94,6 +97,7 @@ void QuickPanelWidget::changeType(FuctionType type)
  */
 void QuickPanelWidget::start()
 {
+    qCInfo(dsrApp) << "Starting timer";
     m_showTimeStr = QString("00:00:00");
     connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
     m_baseTime = QTime::currentTime();
@@ -105,8 +109,10 @@ void QuickPanelWidget::start()
  */
 void QuickPanelWidget::stop()
 {
+    qCInfo(dsrApp) << "Stopping timer";
     disconnect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
     if (m_timer->isActive()) {
+        qCDebug(dsrApp) << "Timer was active, stopping it";
         m_timer->stop();
     }
     m_showTimeStr = tr("Record");
@@ -117,6 +123,7 @@ void QuickPanelWidget::stop()
  */
 void QuickPanelWidget::pause()
 {
+    qCInfo(dsrApp) << "Pausing timer";
     m_timer->stop();
     setDescription(m_showTimeStr);
 }

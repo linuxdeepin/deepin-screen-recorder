@@ -7,6 +7,7 @@
 #include "../utils/configsettings.h"
 #include "../utils/saveutils.h"
 #include "../utils.h"
+#include "../utils/log.h"
 
 #include <QApplication>
 #include <QStyleFactory>
@@ -71,21 +72,27 @@ MenuController::MenuController(QObject *parent)
 //    QAction *unDoAct = new QAction(unDoIcon, tr("Undo"), this);
     m_unDoAct = new QAction(tr("Undo"), this);
     Utils::setAccessibility(m_unDoAct, "menuUndo");
+    qCDebug(dsrApp) << "Created Undo action";
     connect(m_unDoAct, &QAction::triggered, [ = ] {
+        qCDebug(dsrApp) << "Undo action triggered";
         emit unDoAction();
     });
 
     //QAction *saveAct = new QAction(tr("Save"), this);
     m_saveAct = new QAction(tr("Save"), this);
     Utils::setAccessibility(m_saveAct, "menuSave");
+    qCDebug(dsrApp) << "Created Save action";
     connect(m_saveAct, &QAction::triggered, [ = ] {
+        qCDebug(dsrApp) << "Save action triggered";
         emit saveAction();
     });
 
     //QAction *closeAct = new QAction(tr("Exit"), this);
     m_closeAct = new QAction(tr("Exit"), this);
     Utils::setAccessibility(m_closeAct, "menuExit");
+    qCDebug(dsrApp) << "Created Exit action";
     connect(m_closeAct, &QAction::triggered, [ = ] {
+        qCDebug(dsrApp) << "Exit action triggered";
         emit closeAction();
     });
 
@@ -100,6 +107,7 @@ MenuController::MenuController(QObject *parent)
     m_menu->addAction(m_closeAct);
 
     m_unDoAct->setEnabled(false);
+    qCDebug(dsrApp) << "Menu actions initialized";
 
 //    QIcon saveIcon;
 //    saveIcon.addFile(":/image/menu_icons/save-menu-norml.svg", MENU_ICON_SIZE, QIcon::Normal);
@@ -145,6 +153,7 @@ MenuController::MenuController(QObject *parent)
 //    });
 
     connect(m_menu, &DMenu::aboutToHide, this, [ = ] {
+        qCDebug(dsrApp) << "Menu about to hide";
         emit menuNoFocus();
     });
 }

@@ -6,8 +6,10 @@
 #include "../utils/calculaterect.h"
 #include "../utils/configsettings.h"
 #include "../utils/tempfile.h"
+#include "../utils/shapesutils.h"
 #include "shapeswidget.h"
 #include "../utils.h"
+#include "../utils/log.h"
 
 #include <QApplication>
 #include <QPainter>
@@ -87,20 +89,22 @@ ShapesWidget::~ShapesWidget()
 void ShapesWidget::updateSelectedShape(const QString &group,
                                        const QString &key, int index)
 {
-//        qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
-//                 << ", group: " << group
-//                 << ", key: " << key
-//                 << ", index: " << index
-//                 << ", m_selectedIndex" << m_selectedIndex;
-    if (m_isSelectedText) { //修复在截图区域，选中的文本框，字体会自动变颜色
+    qCDebug(dsrApp) << "Updating selected shape - group:" << group << "key:" << key << "index:" << index;
+    
+    if (m_isSelectedText) {
+        qCDebug(dsrApp) << "Skipping update for selected text";
         m_isSelectedText = false;
         return;
     }
+    
     if (group == m_currentShape.type && key == "color_index") {
         m_penColor = BaseUtils::colorIndexOf(index);
+        qCDebug(dsrApp) << "Updated pen color to:" << m_penColor;
     }
 
     if (m_selectedIndex != -1 && m_selectedOrder != -1 && m_selectedOrder < m_shapes.length()) {
+        qCDebug(dsrApp) << "Updating shape properties for selected shape at order:" << m_selectedOrder;
+        
         if ((m_selectedShape.type == "arrow" || m_selectedShape.type == "line") && key != "color_index") {
             m_selectedShape.lineWidth = LINEWIDTH(index);
         } else if (m_selectedShape.type == group && key == "line_width") {
@@ -135,6 +139,7 @@ void ShapesWidget::updateSelectedShape(const QString &group,
 
         if (m_selectedOrder < m_shapes.length()) {
             m_shapes[m_selectedOrder] = m_selectedShape;
+            qCDebug(dsrApp) << "Shape updated at order:" << m_selectedOrder;
         }
         update();
     }
@@ -158,6 +163,8 @@ void ShapesWidget::setCurrentShape(QString shapeType)
 
 void ShapesWidget::clearSelected()
 {
+    qCDebug(dsrApp) << "Clearing selected shape";
+    
     for (int j = 0; j < m_selectedShape.mainPoints.length(); j++) {
         m_selectedShape.mainPoints[j] = QPointF(0, 0);
         m_hoveredShape.mainPoints[j] = QPointF(0, 0);
@@ -172,6 +179,8 @@ void ShapesWidget::clearSelected()
 
 void ShapesWidget::setAllTextEditReadOnly()
 {
+    qCDebug(dsrApp) << "Setting all text edits to read-only";
+    
     QMap<int, TextEdit *>::iterator i = m_editMap.begin();
     while (i != m_editMap.end()) {
         i.value()->setReadOnly(true);
@@ -190,6 +199,8 @@ void ShapesWidget::setAllTextEditReadOnly()
 
 void ShapesWidget::setNoChangedTextEditRemove()
 {
+    qCDebug(dsrApp) << "Removing unchanged text edits";
+    
     if (m_shapes.length() == 0) {
         return;
     }
@@ -198,6 +209,7 @@ void ShapesWidget::setNoChangedTextEditRemove()
             int t_tempIndex = m_shapes[i].index;
             if (m_editMap.value(t_tempIndex)->document()->toPlainText() == QString(tr("Input text here"))
                     || m_editMap.value(t_tempIndex)->document()->toPlainText().isEmpty()) {
+                qCDebug(dsrApp) << "Removing empty text edit at index:" << t_tempIndex;
                 m_shapes.removeAt(i);
                 m_editMap.value(t_tempIndex)->clear();
                 m_editMap.remove(t_tempIndex);
@@ -209,6 +221,7 @@ void ShapesWidget::setNoChangedTextEditRemove()
 
     }
     if (m_shapes.length() == 0) {
+        qCDebug(dsrApp) << "No shapes remaining, disabling undo";
         emit setShapesUndo(false);
     }
 
@@ -227,6 +240,7 @@ void ShapesWidget::saveActionTriggered()
 //点击某个形状
 bool ShapesWidget::clickedOnShapes(QPointF pos)
 {
+    qCDebug(dsrApp) << "Checking for shape click at position:" << pos;
     bool onShapes = false;
     m_selectedOrder = -1;
     //    qDebug() << ">>>>> function: " << __func__ << ", line: " << __LINE__
@@ -237,12 +251,14 @@ bool ShapesWidget::clickedOnShapes(QPointF pos)
         bool currentOnShape = false;
         if (m_shapes[i].type == "rectangle") {
             if (clickedOnRect(m_shapes[i].mainPoints, pos, false)) {
+                qCDebug(dsrApp) << "Clicked on rectangle at index:" << i;
                 currentOnShape = true;
                 emit shapeClicked("rect");
             }
         }
         if (m_shapes[i].type == "oval") {
             if (clickedOnEllipse(m_shapes[i].mainPoints, pos, false)) {
+                qCDebug(dsrApp) << "Clicked on oval at index:" << i;
                 currentOnShape = true;
                 emit shapeClicked("circ");
             }

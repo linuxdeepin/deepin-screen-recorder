@@ -40,7 +40,8 @@ SOURCES += \
     ui/subtoolwidget.cpp \
     putils.cpp \
     settings.cpp \
-    ui/mainToolWidget.cpp
+    ui/mainToolWidget.cpp \
+    ../utils/log.cpp
 
 HEADERS += \
     service/dbuspinscreenshotsadaptor.h \
@@ -54,7 +55,8 @@ HEADERS += \
     putils.h \
     settings.h \
     ui/toolbutton.h \
-    ui/mainToolWidget.h 
+    ui/mainToolWidget.h \
+    ../utils/log.h
 
 QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations
@@ -83,5 +85,7 @@ INSTALLS += target dbus_service
 
 RESOURCES += \
     ./icons/icons.qrc
+
+INCLUDEPATH += ../utils
 
 

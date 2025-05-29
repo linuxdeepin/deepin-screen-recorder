@@ -6,6 +6,7 @@
 #include "borderprocessinterface.h"
 #include "utils.h"
 #include "configsettings.h"
+#include "log.h"
 
 #include <DFontSizeManager>
 #include <dstyle.h>
@@ -42,6 +43,7 @@ ExternalBorderProcess::~ExternalBorderProcess() {}
 
 void ExternalBorderProcess::initBorderInfo(const int borderConfig)
 {
+    qCDebug(dsrApp) << "Initializing border info with config:" << borderConfig;
     m_borderType = borderConfig;
 
     QString svg = QString("imageBorder/border/externalBorder%1.svg").arg((borderConfig & 0xFF));
@@ -52,6 +54,7 @@ void ExternalBorderProcess::initBorderInfo(const int borderConfig)
         case BorderStyle_1: {
             m_svgCenterSize = QSizeF(142, 82);
             m_svgCenterPoint = QPointF(9, 9);
+            qCDebug(dsrApp) << "Border style 1 - Center size:" << m_svgCenterSize << "Center point:" << m_svgCenterPoint;
             break;
         }
         case BorderStyle_2: {
@@ -113,11 +116,13 @@ QPixmap ExternalBorderProcess::getPixmapAddBorder(const QPixmap &pix)
     painter.drawPixmap(0, 0, m_svgImage);
     // 添加绘制日期
     if (m_borderType == BorderStyle_5) {
+        qCDebug(dsrApp) << "Drawing date text for border style 5";
         drawDateText(painter);
     }
     painter.end();
 
     if (m_borderType == BorderStyle_2) {
+        qCDebug(dsrApp) << "Applying extra crop for border style 2";
         return cropShotImageEx(image);
     }
 
@@ -180,6 +185,7 @@ QPixmap ExternalBorderProcess::getBorderImage(const QSizeF shotImageSize)
     painter.end();
 
     if (m_isHorizontalCrop) {
+        qCDebug(dsrApp) << "Applying horizontal crop";
         double wDiff = m_svgCenterSizeByshot.width() - shotImageSize.width();
         m_svgImage =
             QPixmap(static_cast<int>(m_svgImageSizeByshot.width() - wDiff), static_cast<int>(m_svgImageSizeByshot.height()));
@@ -193,6 +199,7 @@ QPixmap ExternalBorderProcess::getBorderImage(const QSizeF shotImageSize)
         rp.end();
         return m_svgImage;
     } else {
+        qCDebug(dsrApp) << "Applying vertical crop";
         double hDiff = m_svgCenterSizeByshot.height() - shotImageSize.height();
         m_svgImage =
             QPixmap(static_cast<int>(m_svgImageSizeByshot.width()), static_cast<int>(m_svgImageSizeByshot.height() - hDiff));
@@ -210,6 +217,7 @@ QPixmap ExternalBorderProcess::getBorderImage(const QSizeF shotImageSize)
 
 void ExternalBorderProcess::drawDateText(QPainter &painter) const
 {
+    qCDebug(dsrApp) << "Drawing date text with ratio:" << m_ratioCenter;
     QFont posFont(DFontSizeManager::instance()->t8());
     // 字体大小与缩放比正相关
     posFont.setPixelSize(static_cast<int>(5 * m_ratioCenter));
@@ -238,8 +246,11 @@ QPixmap ExternalBorderProcess::cropShotImage(QPixmap shotImage) const
     qDebug() << m_svgImage.size() << shotImage.size();
     uchar colorReset = 255;  // jpg，bmp格式不支持透明，边框用白色赋值
     int imageFormat = ConfigSettings::instance()->getValue("shot", "format").toInt();
-    if (imageFormat == 0) {  // png 格式支持透明，边框像素值用 0 赋值。
+    if (imageFormat == 0) {
         colorReset = 0;
+        qCDebug(dsrApp) << "Using transparent background for PNG format";
+    } else {
+        qCDebug(dsrApp) << "Using white background for JPG/BMP format";
     }
 
     QImage svg = m_svgImage.toImage();

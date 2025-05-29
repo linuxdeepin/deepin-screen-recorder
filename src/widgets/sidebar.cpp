@@ -6,6 +6,7 @@
 #include "sidebar.h"
 #include "../utils/configsettings.h"
 #include "../utils.h"
+#include "../utils/log.h"
 #include "../accessibility/acTextDefine.h"
 #include "../main_window.h"
 
@@ -94,8 +95,10 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
 {
     qDebug() << __FUNCTION__ << __LINE__ << func;
     if (func == "effect") {
+        qCDebug(dsrApp) << "Effect mode: hiding separator";
         m_seperator->hide();
     } else {
+        qCDebug(dsrApp) << "Non-effect mode: showing separator";
         m_seperator->show();
     }
 
@@ -117,6 +120,7 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
 
 int SideBarWidget::getSideBarWidth(const QString &func)
 {
+    qCDebug(dsrApp) << "Getting sidebar width for function:" << func;
     int width = TOOLBAR_WIDGET_SIZE1.width();
     if (func == "rectangle" ||
             func == "oval" ||
@@ -130,6 +134,8 @@ int SideBarWidget::getSideBarWidth(const QString &func)
     } else if (func == "effect") {
         width = TOOLBAR_WIDGET_SIZE3.width();
     }
+    
+    qCDebug(dsrApp) << "Sidebar width determined:" << width;
     return width;
 }
 

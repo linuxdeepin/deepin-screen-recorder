@@ -10,6 +10,7 @@
 
 #include "../utils/baseutils.h"
 #include "../utils/configsettings.h"
+#include "../utils/log.h"
 
 const qreal COLOR_RADIUS = 4;
 const QSize BTN_SIZE = QSize(32, 26);
@@ -20,11 +21,13 @@ BigColorButton::BigColorButton(DWidget *parent)
       m_isHover(false),
       m_isChecked(false)
 {
+    qCDebug(dsrApp) << "Initializing BigColorButton";
     setFixedSize(BTN_SIZE);
     setCheckable(true);
     int colIndex = ConfigSettings::instance()->value(
                        "common", "color_index").toInt();
     m_color = colorIndexOf(colIndex);
+    qCDebug(dsrApp) << "Initial color index:" << colIndex;
 
     connect(this, &DPushButton::clicked, this,
             &BigColorButton::setCheckedStatus);
@@ -35,13 +38,14 @@ BigColorButton::BigColorButton(DWidget *parent)
 void BigColorButton::updateConfigColor(const QString &shape, const QString &key, int index)
 {
     if (shape == "common" && key == "color_index") {
+        qCDebug(dsrApp) << "Updating color from config - shape:" << shape << "key:" << key << "index:" << index;
         setColor(colorIndexOf(index));
     }
 }
 
 BigColorButton::~BigColorButton()
 {
-
+    qCDebug(dsrApp) << "Destroying BigColorButton";
 }
 
 void BigColorButton::paintEvent(QPaintEvent *)
@@ -83,6 +87,7 @@ void BigColorButton::paintEvent(QPaintEvent *)
 
 void BigColorButton::setColor(QColor color)
 {
+    qCDebug(dsrApp) << "Setting color to:" << color;
     m_color = color;
     update();
 }
@@ -98,10 +103,10 @@ void BigColorButton::setColorIndex()
 void BigColorButton::setCheckedStatus(bool checked)
 {
     if (checked) {
+        qCDebug(dsrApp) << "Setting checked status to:" << checked;
         m_isChecked = true;
         update();
     }
-
 }
 
 void BigColorButton::enterEvent(QEvent *)

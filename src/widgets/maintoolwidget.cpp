@@ -9,6 +9,7 @@
 #include "../utils.h"
 #include "../accessibility/acTextDefine.h"
 #include "../main_window.h"
+#include "../utils/log.h"
 
 #include <DSlider>
 #include <DLineEdit>
@@ -66,6 +67,7 @@ void MainToolWidget::initMainLabel()
 
     m_recordBtn = new ToolButton();
     if (Utils::isTabletEnvironment || Utils::is3rdInterfaceStart) {
+        qCDebug(dsrApp) << "Hiding record button in tablet environment or 3rd interface mode";
         m_recordBtn->hide();
     }
     DFontSizeManager::instance()->bind(m_recordBtn, DFontSizeManager::T8);
@@ -80,6 +82,7 @@ void MainToolWidget::initMainLabel()
 
     m_shotBtn = new ToolButton();
     if (Utils::isTabletEnvironment) {
+        qCDebug(dsrApp) << "Hiding screenshot button in tablet environment";
         m_shotBtn->hide();
     }
     DFontSizeManager::instance()->bind(m_shotBtn, DFontSizeManager::T8);
@@ -113,6 +116,7 @@ void MainToolWidget::initMainLabel()
             m_recordBtn->setIconSize(QSize(20, 20));
             m_isChecked = true;
             m_recordBtn->update();
+            qCDebug(dsrApp) << "Record button checked";
             emit buttonChecked(m_isChecked, "record");
         }else{
             m_recordBtn->setIconSize(QSize(20, 20));
@@ -122,6 +126,7 @@ void MainToolWidget::initMainLabel()
             m_shotBtn->setIconSize(QSize(20, 20));
             m_isChecked = true;
             m_shotBtn->update();
+            qCDebug(dsrApp) << "Screenshot button checked";
             emit buttonChecked(m_isChecked, "shot");
         }else{
             m_shotBtn->setIconSize(QSize(20, 20));
@@ -157,6 +162,7 @@ void MainToolWidget::setRecordButtonOut()
 void MainToolWidget::setRecordLauchMode(const unsigned int funType)
 {
     if (funType == MainWindow::record) {
+        qCDebug(dsrApp) << "Setting record launch mode";
         m_recordBtn->click();
     }
 }

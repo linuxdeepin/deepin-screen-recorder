@@ -5,13 +5,12 @@
 
 #include "settings.h"
 #include <QDebug>
+#include "../utils/log.h"
 
 Settings *Settings::m_settingsInstance = nullptr;
 Settings::Settings(QObject *parent) : QObject(parent)
 {
     m_settings = new QSettings("deepin/deepin-screen-recorder", "deepin-pin-screenshots", this);
-    // 日志隐私，配置文件路径会打印用户名，安全问题。
-    //qDebug() << "Setting file:" << m_settings->fileName();
 }
 
 
@@ -26,6 +25,7 @@ Settings *Settings::instance()
 void Settings::release()
 {
     if (m_settingsInstance != nullptr) {
+        qCDebug(dsrApp) << "Releasing Settings instance";
         delete m_settingsInstance;
         m_settingsInstance = nullptr;
     }
@@ -33,19 +33,32 @@ void Settings::release()
 
 bool Settings::setSaveOption(const QPair<int, int> &value)
 {
+    qCDebug(dsrApp) << "Setting save options - path type:" << value.first << "format:" << value.second;
     m_settings->setValue("savePath", value.first);
     m_settings->setValue("saveFormat", value.second);
     return true;
 }
 
+QPair<int, int> Settings::getSaveOption()
+{
+    QPair<int, int> pair;
+    pair.first = m_settings->value("savePath").toInt();
+    pair.second = m_settings->value("saveFormat").toInt();
+    qCDebug(dsrApp) << "Getting save options - path type:" << pair.first << "format:" << pair.second;
+    return pair;
+}
+
 void Settings::setSavePath(const QString savePathDir)
 {
+    qCDebug(dsrApp) << "Setting save path directory:" << savePathDir;
     m_settings->setValue("savePathDir", savePathDir);
 }
 
 QString Settings::getSavePath()
 {
-    return m_settings->value("savePathDir").toString();
+    QString path = m_settings->value("savePathDir").toString();
+    qCDebug(dsrApp) << "Getting save path directory:" << path;
+    return path;
 }
 
 void Settings::setIsChangeSavePath(const bool isChange)
@@ -56,12 +69,4 @@ void Settings::setIsChangeSavePath(const bool isChange)
 bool Settings::getIsChangeSavePath()
 {
     return m_settings->value("isChangeSavePath").toBool();
-}
-
-QPair<int, int> Settings::getSaveOption()
-{
-    QPair<int, int> pair;
-    pair.first = m_settings->value("savePath").toInt();
-    pair.second = m_settings->value("saveFormat").toInt();
-    return pair;
 }

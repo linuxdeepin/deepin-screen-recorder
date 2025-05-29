@@ -5,6 +5,7 @@
 
 #include "timewidget.h"
 #include "dde-dock/constants.h"
+#include "../../utils/log.h"
 
 #include <DFontSizeManager>
 #include <DGuiApplicationHelper>
@@ -66,6 +67,7 @@ TimeWidget::TimeWidget(DWidget *parent):
     m_textLabel->setText("00:00:00");
 
     auto updatePalette = [this](){
+        qCDebug(dsrApp) << "Updating palette based on theme type:" << DGuiApplicationHelper::instance()->themeType();
         QPalette textPalette = m_textLabel->palette();
         if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
             textPalette.setColor(QPalette::WindowText, Qt::black);
@@ -250,12 +252,13 @@ bool TimeWidget::createCacheFile()
     //判断文件是否存在，若存在则先删除文件
     QFile mFile(path.c_str());
     if (mFile.exists()) {
+        qCDebug(dsrApp) << "Removing existing cache file";
         remove(path.c_str());
     }
     //打开文件
     int fd = open(path.c_str(), O_RDWR | O_CREAT, 0644);
     if (fd == -1) {
-        qDebug() << "open file fail!" << strerror(errno);
+        qCCritical(dsrApp) << "Failed to open cache file:" << strerror(errno);
         return false;
     }
     //文件加锁
@@ -270,23 +273,22 @@ bool TimeWidget::createCacheFile()
     //写文件
     ret = write(fd, wBuffer, 2);
     if (ret < 0) {
-        qDebug() << "write file fail!";
+        qCCritical(dsrApp) << "Failed to write to cache file";
         return false;
     }
     flock = lockf(fd, F_ULOCK, 0);
     if (flock == -1) {
-        qDebug() << "unlock file fail!" << strerror(errno);
+        qCCritical(dsrApp) << "Failed to unlock cache file:" << strerror(errno);
         return false;
     }
     ::close(fd);
-    qDebug() << "createCacheFile end!";
+    qCInfo(dsrApp) << "Cache file created successfully";
     return true;
-
 }
 
 void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
 {
-    qDebug() << "Mouse release start!";
+    qCDebug(dsrApp) << "Mouse release event received";
     if(e->button() == Qt::LeftButton && m_pressed && m_hover){
         m_pressed = false;
         m_hover = false;
@@ -301,7 +303,7 @@ void TimeWidget::mouseReleaseEvent(QMouseEvent *e)
         if (isWaylandProtocol()) {
             flag = false;
             if(!createCacheFile()){
-                qInfo() << "Create cache file fail!";
+                qCWarning(dsrApp) << "Failed to create cache file for stopping recording";
                 flag = true;
             };
         }
@@ -341,7 +343,9 @@ void TimeWidget::leaveEvent(QEvent *e)
 
 void TimeWidget::start()
 {
+    qCInfo(dsrApp) << "Starting time widget";
     if (m_setting->value(RECORDER_TIME_STARTCONFIG).toTime() == QTime(0, 0, 0)) {
+        qCDebug(dsrApp) << "Initializing start time";
         m_setting->setValue(RECORDER_TIME_STARTCONFIG, QTime::currentTime());
         m_baseTime = QTime::currentTime();
     } else {
@@ -349,6 +353,7 @@ void TimeWidget::start()
     }
 
     if (m_setting->value(RECORDER_TIME_STARTCOUNTCONFIG).toInt() == 0) {
+        qCDebug(dsrApp) << "Initializing timer count";
         m_setting->setValue(RECORDER_TIME_STARTCOUNTCONFIG, 0);
         m_timerCount = 0;
     } else {
@@ -356,12 +361,15 @@ void TimeWidget::start()
     }
     connect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
     m_timer->start(400);
+    qCDebug(dsrApp) << "Timer started with interval 400ms";
 }
 
 void TimeWidget::stop()
 {
+    qCInfo(dsrApp) << "Stopping time widget";
     disconnect(m_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
 }
+
 //判断是否是wayland协议
 bool TimeWidget::isWaylandProtocol()
 {
@@ -369,6 +377,7 @@ bool TimeWidget::isWaylandProtocol()
 
     // check is treeland environment.
     if (e.value(QStringLiteral("DDE_CURRENT_COMPOSITOR")) == QStringLiteral("TreeLand")) {
+        qCDebug(dsrApp) << "TreeLand environment detected";
         return false;
     }
 

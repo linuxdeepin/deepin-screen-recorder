@@ -8,6 +8,7 @@
 #include "../settings.h"
 #include "tooltips.h"
 #include "../utils.h"
+#include "../utils/log.h"
 #include "../accessibility/acTextDefine.h"
 
 #include <QActionGroup>
@@ -349,6 +350,7 @@ void SubToolWidget::initRecordOption()
     }
 
     connect(gifAction, &QAction::triggered, this, [ = ](bool checked) {
+        qCDebug(dsrApp) << "GIF format selected:" << checked;
         Q_UNUSED(checked);
         t_settings->setValue("recorder", "format", 0);
         fps5Action->setEnabled(false);
@@ -359,6 +361,7 @@ void SubToolWidget::initRecordOption()
     });
 
     connect(mp4Action, &QAction::triggered, this, [ = ](bool checked) {
+        qCDebug(dsrApp) << "MP4 format selected:" << checked;
         Q_UNUSED(checked);
         t_settings->setValue("recorder", "format", 1);
         fps5Action->setEnabled(true);
@@ -369,6 +372,7 @@ void SubToolWidget::initRecordOption()
     });
 
     connect(mkvAction, &QAction::triggered, this, [ = ](bool checked) {
+        qCDebug(dsrApp) << "MKV format selected:" << checked;
         Q_UNUSED(checked);
         t_settings->setValue("recorder", "format", 2);
         fps5Action->setEnabled(true);
@@ -1341,6 +1345,7 @@ bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
 
 void SubToolWidget::switchContent(QString shapeType)
 {
+    qCDebug(dsrApp) << "Switching content to shape type:" << shapeType;
     qDebug() << __FUNCTION__ << __LINE__ << "切换截图或者录屏工具栏" << shapeType << QCursor().pos() << this->count();
     if (shapeType == "record") {
         this->addWidget(m_recordSubTool);
@@ -1454,6 +1459,7 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
 
 void SubToolWidget::setMicroPhoneEnable(bool status)
 {
+    qCDebug(dsrApp) << "Setting microphone enable status:" << status;
     qDebug() << "mic 是否可选？" << status;
     m_microphoneAction->setEnabled(status);
     m_microphoneAction->setChecked(!status);
@@ -1463,6 +1469,7 @@ void SubToolWidget::setMicroPhoneEnable(bool status)
 
 void SubToolWidget::setCameraDeviceEnable(bool status)
 {
+    qCDebug(dsrApp) << "Setting camera device enable status:" << status;
     if (status) {
         if (!m_cameraButton->isEnabled()) {
             m_cameraButton->setChecked(false);

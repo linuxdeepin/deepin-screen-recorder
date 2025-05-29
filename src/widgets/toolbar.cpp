@@ -10,6 +10,7 @@
 #include "../utils/configsettings.h"
 #include "../accessibility/acTextDefine.h"
 #include "../main_window.h"
+#include "../utils/log.h"
 
 #include <DIconButton>
 
@@ -69,6 +70,7 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
     Utils::setAccessibility(m_confirmButton, AC_TOOLBARWIDGET_CLOSE_BUTTON_TOOL);
     setFixedHeight(TOOLBAR_HEIGHT);
     if (Utils::is3rdInterfaceStart) {
+        qCDebug(dsrApp) << "Setting minimum width for 3rd interface mode";
         m_subTool->setMinimumWidth(TOOLBAR_WIDTH - 160); //减去隐藏按钮的最小宽度和
     }
 
@@ -294,6 +296,7 @@ void ToolBar::showAt(QPoint pos)
 
 void ToolBar::currentFunctionMode(QString shapeType)
 {
+    qCDebug(dsrApp) << "Setting current function mode:" << shapeType;
     DPalette pa;
     update();
     emit currentFunctionToMain(shapeType);
@@ -334,6 +337,7 @@ void ToolBar::setRecordButtonDisable()
 
 void ToolBar::setRecordLaunchMode(const unsigned int funType)
 {
+    qCDebug(dsrApp) << "Setting record launch mode:" << funType;
     m_toolbarWidget->setRecordLaunchFromMain(funType);
 }
 
@@ -355,6 +359,7 @@ void ToolBar::shapeClickedFromMain(QString shape)
 
 void ToolBar::setCameraDeviceEnable(bool status)
 {
+    qCDebug(dsrApp) << "Setting camera device enable:" << status;
     m_toolbarWidget->setCameraDeviceEnable(status);
 }
 
