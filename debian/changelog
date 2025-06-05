@@ -1,3 +1,12 @@
+deepin-screen-recorder (6.5.19) unstable; urgency=medium
+
+  * add log.
+  * Resolve screenshot background display issues in 1080p+4K dual-screen
+    setup.
+  * update version to 6.5.19
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Thu, 05 Jun 2025 15:15:45 +0800
+
 deepin-screen-recorder (6.5.18) unstable; urgency=medium
 
   * Fix high dpi display issue.
