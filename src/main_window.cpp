@@ -3453,13 +3453,16 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
         // QString fileDir  = QUrl::fromLocalFile(QFileInfo(saveFilePath).absoluteDir().absolutePath()).toString();
         // QString filePath = QUrl::fromLocalFile(saveFilePath).toString();
 
-        QString command, savepathcommand;
-
+        QStringList command, savepathcommand;
+        
         tips = QString(tr("Saved to %1")).arg(saveFilePath);
         if (!QStandardPaths::findExecutable("dde-file-manager").isEmpty()) {
-            savepathcommand = QString("dde-file-manager,--show-item,%1").arg(saveFilePath);
+            savepathcommand << "dde-file-manager";
+            savepathcommand << "--show-item";
+            savepathcommand << saveFilePath;
         }
-        command = QString("xdg-open,%1").arg(saveFilePath);
+        command << "xdg-open";
+        command << saveFilePath;
         qDebug() << "command:" << command;
 
         hints["x-deepin-action-_open"] = command;
