@@ -8,6 +8,8 @@
 #include "../../utils/log.h"
 #include <QWidget>
 
+Q_LOGGING_CATEGORY(dsrApp, "record-time-plugin");
+
 RecordTimePlugin::RecordTimePlugin(QObject *parent)
     : QObject(parent)
     , m_bshow(false)

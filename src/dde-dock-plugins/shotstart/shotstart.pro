@@ -20,8 +20,7 @@ HEADERS += \
     iconwidget.h \
     tipswidget.h \
     quickpanelwidget.h \
-    commoniconbutton.h \
-    ../../utils/log.h
+    commoniconbutton.h
 
 SOURCES += \
     iconwidget_interface.cpp \
@@ -29,10 +28,7 @@ SOURCES += \
     iconwidget.cpp \
     tipswidget.cpp \
     quickpanelwidget.cpp \
-    commoniconbutton.cpp \
-    ../../utils/log.cpp
-
-INCLUDEPATH += ../../utils
+    commoniconbutton.cpp
 
 isEmpty(PREFIX) {
     PREFIX = /usr
