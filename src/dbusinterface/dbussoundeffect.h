@@ -24,6 +24,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
 #include <QtDBus/QtDBus>
+#include "../../dbus_name.h"
 
 /*
  * Proxy class for interface com.deepin.daemon.SoundEffect
@@ -37,7 +38,7 @@ class DBusSoundEffect: public QDBusAbstractInterface
         if (3 != arguments.count())
             return;
         QString interfaceName = msg.arguments().at(0).toString();
-        if (interfaceName !="com.deepin.daemon.SoundEffect")
+        if (interfaceName != SOUND_EFFECT_INTERFACE)
             return;
         QVariantMap changedProps = qdbus_cast<QVariantMap>(arguments.at(1).value<QDBusArgument>());
         QStringList keys = changedProps.keys();
@@ -53,7 +54,7 @@ class DBusSoundEffect: public QDBusAbstractInterface
    }
 public:
     static inline const char *staticInterfaceName()
-    { return "com.deepin.daemon.SoundEffect"; }
+    { return SOUND_EFFECT_INTERFACE; }
 
 public:
     explicit DBusSoundEffect(QObject *parent = nullptr);

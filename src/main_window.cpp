@@ -40,6 +40,7 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+#include "dbus_name.h"
 
 #include <QMainWindow>
 #include <DWidget>
@@ -99,17 +100,6 @@ const int MainWindow::CAMERA_WIDGET_MAX_WIDTH = 320;
 const int MainWindow::CAMERA_WIDGET_MAX_HEIGHT = 180;
 const int MainWindow::CAMERA_WIDGET_MIN_WIDTH = 80;
 const int MainWindow::CAMERA_WIDGET_MIN_HEIGHT = 45;
-
-// notify clipboard data update
-// for v20 or older
-const static QString ClipboardService = QStringLiteral("com.deepin.daemon.Clipboard");
-const static QString ClipboardPath = QStringLiteral("/com/deepin/dde/ClipboardLoader");
-const static QString ClipboardInterface = QStringLiteral("com.deepin.dde.ClipboardLoader");
-const static QString ClipboardSignal = QStringLiteral("dataComing");
-// for v23 or later
-const static QString ClipboardService1 = QStringLiteral("org.deepin.dde.ClipboardLoader1");
-const static QString ClipboardPath1 = QStringLiteral("/org/deepin/dde/ClipboardLoader1");
-const static QString ClipboardInterface1 = QStringLiteral("org.deepin.dde.ClipboardLoader1");
 
 DWIDGET_USE_NAMESPACE
 
@@ -395,23 +385,12 @@ void MainWindow::initAttributes()
                 qDebug() << "设置窗口属性 _d_dwayland_window-type: " << this->windowHandle()->property("_d_dwayland_window-type");
             }
 
-            QScopedPointer<QDBusInterface> sessionManagerIntert;
-            if (Utils::isSysGreatEqualV23()) {
-                sessionManagerIntert.reset(new QDBusInterface("org.deepin.dde.SessionManager1",
-                                                              "/org/deepin/dde/SessionManager1",
-                                                              "org.deepin.dde.SessionManager1",
-                                                              QDBusConnection::sessionBus()));
-            } else {
-                // remove onScreenDisplay to solve the problem that wayland shot images cannot be scrolled
-                sessionManagerIntert.reset(new QDBusInterface("com.deepin.SessionManager",
-                                                              "/com/deepin/SessionManager",
-                                                              "com.deepin.SessionManager",
-                                                              QDBusConnection::sessionBus()));
-            }
+            // remove onScreenDisplay to solve the problem that wayland shot images cannot be scrolled
+            QDBusInterface sessionManagerIntert(SESSION_MANAGER_NAME, SESSION_MANAGER_PATH, SESSION_MANAGER_INTERFACE);
 
             bool isLockScreen = false;
-            if (sessionManagerIntert->isValid()) {
-                isLockScreen = sessionManagerIntert->property("Locked").toBool();
+            if (sessionManagerIntert.isValid()) {
+                isLockScreen = sessionManagerIntert.property("Locked").toBool();
             }
 
             if (this->windowHandle() && isLockScreen) {
@@ -535,25 +514,15 @@ void MainWindow::initAttributes()
             }
         }
 
-        if (Utils::isSysGreatEqualV23()) {
-            QDBusConnection::sessionBus().connect("org.deepin.dde.SessionManager1",
-                                                  "/org/deepin/dde/SessionManager1",
-                                                  "org.freedesktop.DBus.Properties",
-                                                  "PropertiesChanged",
-                                                  "sa{sv}as",
-                                                  this,
-                                                  SLOT(onLockScreenEvent(QDBusMessage)));
-        } else {
-            // V20 or older system edition
-            // detects if the properties of the lock screen have changed
-            QDBusConnection::sessionBus().connect("com.deepin.SessionManager",
-                                                  "/com/deepin/SessionManager",
-                                                  "org.freedesktop.DBus.Properties",
-                                                  "PropertiesChanged",
-                                                  "sa{sv}as",
-                                                  this,
-                                                  SLOT(onLockScreenEvent(QDBusMessage)));
-        }
+        // V20 or older system edition
+        // detects if the properties of the lock screen have changed
+        QDBusConnection::sessionBus().connect(SESSION_MANAGER_NAME,
+                                                SESSION_MANAGER_PATH,
+                                                "org.freedesktop.DBus.Properties",
+                                                "PropertiesChanged",
+                                                "sa{sv}as",
+                                                this,
+                                                SLOT(onLockScreenEvent(QDBusMessage)));
 
         if (!isFirstMove && !Utils::isWaylandMode) {
             qDebug() << "发送鼠标事件!";
@@ -803,25 +772,14 @@ void MainWindow::whileCheckTempFileArm()
 // 启动截图录屏时检测是否是锁屏状态
 void MainWindow::checkIsLockScreen()
 {
-    QScopedPointer<QDBusInterface> sessionManagerIntert;
-    if (Utils::isSysGreatEqualV23()) {
-        sessionManagerIntert.reset(new QDBusInterface("org.deepin.dde.SessionManager1",
-                                                      "/org/deepin/dde/SessionManager1",
-                                                      "org.deepin.dde.SessionManager1",
-                                                      QDBusConnection::sessionBus()));
-    } else {
-        sessionManagerIntert.reset(new QDBusInterface("com.deepin.SessionManager",
-                                                      "/com/deepin/SessionManager",
-                                                      "com.deepin.SessionManager",
-                                                      QDBusConnection::sessionBus()));
-    }
+    QDBusInterface sessionManagerIntert(SESSION_MANAGER_NAME, SESSION_MANAGER_PATH, SESSION_MANAGER_INTERFACE);
 
-    if (!sessionManagerIntert->isValid()) {
-        qWarning() << "dbus interface not valid" << sessionManagerIntert->service()
-                   << sessionManagerIntert->lastError().message();
+    if (!sessionManagerIntert.isValid()) {
+        qWarning() << "dbus interface not valid" << sessionManagerIntert.service()
+                   << sessionManagerIntert.lastError().message();
         return;
     }
-    bool isLockScreen = sessionManagerIntert->property("Locked").toBool();
+    bool isLockScreen = sessionManagerIntert.property("Locked").toBool();
 
     qInfo() << "Current Screen is LockScreen?" << isLockScreen;
     if (isLockScreen) {
@@ -832,7 +790,7 @@ void MainWindow::checkIsLockScreen()
     }
     // 电源界面判断接口
     QDBusInterface ddeLockFront(
-        "com.deepin.dde.lockFront", "/com/deepin/dde/lockFront", "com.deepin.dde.lockFront", QDBusConnection::sessionBus());
+        LOCK_FRONT_NAME, LOCK_FRONT_PATH, LOCK_FRONT_INTERFACE, QDBusConnection::sessionBus());
     if (!ddeLockFront.isValid()) {
         qWarning() << "(QDBusInterface) The 'ddeLockFront' interface does not exist";
         return;
@@ -2219,29 +2177,17 @@ void MainWindow::save2Clipboard(const QPixmap &pix)
     }
     if (Utils::is3rdInterfaceStart == false) {
         if (DSysInfo::minorVersion().toInt() >= 1070) {
-            bool isSuccess{false};
             // check if save to clipboard finished
-            if (Utils::isSysGreatEqualV23()) {
-                qInfo() << "Connecting the clipboard feedback signal..."
-                        << "\nClipboardService: " << ClipboardService1 << "\nClipboardPath: " << ClipboardPath1
-                        << "\nClipboardInterface: " << ClipboardInterface1 << "\nClipboardSignal: " << ClipboardSignal;
-                isSuccess = QDBusConnection::sessionBus().connect(ClipboardService1,
-                                                                  ClipboardPath1,
-                                                                  ClipboardInterface1,
-                                                                  ClipboardSignal,
-                                                                  this,
-                                                                  SLOT(onSaveClipboardComing(const QByteArray &)));
-            } else {
-                qInfo() << "Connecting the clipboard feedback signal..."
-                        << "\nClipboardService: " << ClipboardService << "\nClipboardPath: " << ClipboardPath
-                        << "\nClipboardInterface: " << ClipboardInterface << "\nClipboardSignal: " << ClipboardSignal;
-                isSuccess = QDBusConnection::sessionBus().connect(ClipboardService,
-                                                                  ClipboardPath,
-                                                                  ClipboardInterface,
-                                                                  ClipboardSignal,
-                                                                  this,
-                                                                  SLOT(onSaveClipboardComing(const QByteArray &)));
-            }
+            const QString ClipboardSignal = QStringLiteral("dataComing");
+            qInfo() << "Connecting the clipboard feedback signal..."
+                    << "\nClipboardService: " << CLIPBOARD_NAME << "\nClipboardPath: " << CLIPBOARD_PATH
+                    << "\nClipboardInterface: " << CLIPBOARD_INTERFACE << "\nClipboardSignal: " << ClipboardSignal;
+            bool isSuccess = QDBusConnection::sessionBus().connect(CLIPBOARD_NAME,
+                                                                CLIPBOARD_PATH,
+                                                                CLIPBOARD_INTERFACE,
+                                                                ClipboardSignal,
+                                                                this,
+                                                                SLOT(onSaveClipboardComing(const QByteArray &)));
 
             if (isSuccess) {
                 qInfo() << "The clipper feedback signal connection is successfully established!";
@@ -3433,7 +3379,7 @@ void MainWindow::sendNotify(SaveAction saveAction, QString saveFilePath, const b
     }
 
     QDBusInterface remote_dde_notify_obj(
-        "com.deepin.dde.Notification", "/com/deepin/dde/Notification", "com.deepin.dde.Notification");
+        NOTIFICATION_NAME, NOTIFICATION_PATH, NOTIFICATION_INTERFACE);
 
     const bool remote_dde_notify_obj_exist = remote_dde_notify_obj.isValid();
 

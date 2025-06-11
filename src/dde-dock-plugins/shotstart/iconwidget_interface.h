@@ -19,6 +19,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
 #include <QtDBus/QtDBus>
+#include "../../dbus_name.h"
 
 // 添加 DockRect 结构体定义
 struct DockRect {
@@ -37,7 +38,7 @@ class iconwidget_interface: public QDBusAbstractInterface
     Q_OBJECT
 public:
     static inline const char *staticInterfaceName()
-    { return "com.deepin.dde.daemon.Dock"; }
+    { return DOCK_INTERFACE; }
 
 public:
     iconwidget_interface(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent = nullptr);

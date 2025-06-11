@@ -5,6 +5,7 @@
 
 #include "utils.h"
 #include "constant.h"
+#include "dbus_name.h"
 
 #ifdef DWAYLAND_SUPPORT
 #include "utils/waylandmousesimulator.h"
@@ -69,8 +70,8 @@ QString Utils::appName = "";
 Utils *Utils::m_utils = nullptr;
 
 Utils::Utils(QObject *parent)
-    : utils_interface("com.deepin.daemon.Audio",
-                     "/com/deepin/daemon/Audio",
+    : utils_interface(AUDIO_NAME,
+                     AUDIO_PATH,
                      QDBusConnection::sessionBus(),
                      parent)
 {
@@ -92,13 +93,13 @@ Utils *Utils::instance()
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 QString Utils::getCurrentAudioChannel()
 {
-    const QString serviceName{"com.deepin.daemon.Audio"};
+    const QString serviceName{AUDIO_NAME};
 
     QScopedPointer<com::deepin::daemon::Audio> audioInterface;
     QScopedPointer<com::deepin::daemon::audio::Sink> defaultSink;
 
     audioInterface.reset(
-        new com::deepin::daemon::Audio(serviceName, "/com/deepin/daemon/Audio", QDBusConnection::sessionBus(), nullptr));
+        new com::deepin::daemon::Audio(serviceName, AUDIO_PATH, QDBusConnection::sessionBus(), nullptr));
 
     defaultSink.reset(new com::deepin::daemon::audio::Sink(
         serviceName, audioInterface->defaultSink().path(), QDBusConnection::sessionBus(), nullptr));

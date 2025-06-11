@@ -37,7 +37,7 @@ class DBusControlCenter: public QDBusAbstractInterface
         if (3 != arguments.count())
             return;
         QString interfaceName = msg.arguments().at(0).toString();
-        if (interfaceName !="com.deepin.dde.ControlCenter")
+        if (interfaceName != CONTROL_CENTER_INTERFACE)
             return;
         QVariantMap changedProps = qdbus_cast<QVariantMap>(arguments.at(1).value<QDBusArgument>());
         QStringList keys = changedProps.keys();
@@ -53,7 +53,7 @@ class DBusControlCenter: public QDBusAbstractInterface
    }
 public:
     static inline const char *staticInterfaceName()
-    { return "com.deepin.dde.ControlCenter"; }
+    { return CONTROL_CENTER_INTERFACE; }
 
 public:
     explicit DBusControlCenter(QObject *parent = nullptr);

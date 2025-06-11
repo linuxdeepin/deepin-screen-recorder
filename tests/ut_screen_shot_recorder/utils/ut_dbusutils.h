@@ -9,6 +9,7 @@
 #include <QDBusInterface>
 #include <QDBusReply>
 #include "../../src/utils/dbusutils.h"
+#include "../../src/dbus_name.h"
 
 
 using namespace testing;
@@ -27,8 +28,8 @@ public:
 
 TEST_F(DBusUtilsTest, redDBusProperty)
 {
-    QVariant v = DBusUtils::redDBusProperty("com.deepin.daemon.Audio", "/com/deepin/daemon/Audio",
-                                            "com.deepin.daemon.Audio", "DefaultSource");
+    QVariant v = DBusUtils::redDBusProperty(AUDIO_NAME, AUDIO_PATH,
+                                            AUDIO_INTERFACE, "DefaultSource");
 
     EXPECT_TRUE(v.isValid());
     QString path = v.value<QDBusObjectPath>().path();
@@ -37,7 +38,8 @@ TEST_F(DBusUtilsTest, redDBusProperty)
 }
 TEST_F(DBusUtilsTest, redDBusMethod)
 {
-    QVariant v = DBusUtils::redDBusMethod("com.deepin.daemon.Display", "/com/deepin/daemon/Display","com.deepin.daemon.Display","CanRotate");
+    QVariant v = DBusUtils::redDBusMethod(DISPLAY_NAME, DISPLAY_PATH,
+                                            DISPLAY_INTERFACE, "CanRotate");
     EXPECT_TRUE(v.isValid());
     EXPECT_FALSE(v.toBool());
 }

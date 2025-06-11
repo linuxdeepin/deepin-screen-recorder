@@ -15,13 +15,14 @@
  */
 
 #include "dbuszone.h"
+#include "../dbus_name.h"
 
 /*
  * Implementation of interface class DBusZone
  */
 
-const QString DBUS_ZONE_NAME = "com.deepin.daemon.Zone";
-const QString DBUS_ZONE_PATH = "/com/deepin/daemon/Zone";
+const QString DBUS_ZONE_NAME = ZONE_NAME;
+const QString DBUS_ZONE_PATH = ZONE_PATH;
 
 DBusZone::DBusZone(QObject *parent)
     : QDBusAbstractInterface(DBUS_ZONE_NAME, DBUS_ZONE_PATH, staticInterfaceName(), QDBusConnection::sessionBus(), parent)

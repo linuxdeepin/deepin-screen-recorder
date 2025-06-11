@@ -28,7 +28,8 @@ SOURCES += \
     iconwidget.cpp \
     tipswidget.cpp \
     quickpanelwidget.cpp \
-    commoniconbutton.cpp
+    commoniconbutton.cpp \
+    ../../dbus_name.cpp
 
 isEmpty(PREFIX) {
     PREFIX = /usr

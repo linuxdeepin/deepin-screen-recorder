@@ -13,6 +13,7 @@
 #include <X11/extensions/XTest.h>
 #include "utils.h"
 #include <QDateTime>
+#include "dbus_name.h"
 
 EventMonitor::EventMonitor(QObject *parent) : QThread(parent)
 {
@@ -206,22 +207,22 @@ QImage EventMonitor::getCursorImageWayland()
 void EventMonitor::initWaylandEventMonitor()
 {
     QDBusConnection sessionBus = QDBusConnection::sessionBus();
-    if (!sessionBus.interface()->isServiceRegistered("com.deepin.daemon.InputDevices")) {
-        qDebug() << "DBusError" << "com.deepin.daemon.InputDevices";
+    if (!sessionBus.interface()->isServiceRegistered(INPUT_DEVICES_NAME)) {
+        qDebug() << "DBusError" << INPUT_DEVICES_NAME;
         return;
     }
 
     // 监控全局鼠标信号。
-    sessionBus.connect("com.deepin.daemon.InputDevices",
-                       "/com/deepin/api/XEventMonitor", "com.deepin.api.XEventMonitor", "ButtonPress",
+    sessionBus.connect(INPUT_DEVICES_NAME,
+                       INPUT_DEVICES_PATH, INPUT_DEVICES_INTERFACE, "ButtonPress",
                        this, SLOT(ButtonPressEvent(int, int, int, QString)));
 
-    sessionBus.connect("com.deepin.daemon.InputDevices",
-                       "/com/deepin/api/XEventMonitor", "com.deepin.api.XEventMonitor", "ButtonRelease",
+    sessionBus.connect(INPUT_DEVICES_NAME,
+                       INPUT_DEVICES_PATH, INPUT_DEVICES_INTERFACE, "ButtonRelease",
                        this, SLOT(ButtonReleaseEvent(int, int, int, QString)));
 
-    sessionBus.connect("com.deepin.daemon.InputDevices",
-                       "/com/deepin/api/XEventMonitor", "com.deepin.api.XEventMonitor", "CursorMove",
+    sessionBus.connect(INPUT_DEVICES_NAME,
+                       INPUT_DEVICES_PATH, INPUT_DEVICES_INTERFACE, "CursorMove",
                        this, SLOT(CursorMoveEvent(int, int, QString)));
 }
 

@@ -21,7 +21,7 @@
 
 #include <DBusExtendedAbstractInterface>
 #include <QtDBus/QtDBus>
-
+#include "../dbus_name.h"
 
 /*
  * Proxy class for interface com.deepin.daemon.Audio
@@ -33,7 +33,7 @@ class __Audio : public DBusExtendedAbstractInterface
 
 public:
     static inline const char *staticInterfaceName()
-    { return "com.deepin.daemon.Audio"; }
+    { return AUDIO_INTERFACE; }
 
 public:
     explicit __Audio(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent = 0);

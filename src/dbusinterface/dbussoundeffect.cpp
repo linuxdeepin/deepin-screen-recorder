@@ -15,13 +15,14 @@
  */
 
 #include "dbussoundeffect.h"
+#include "../../dbus_name.h"
 
 /*
  * Implementation of interface class DBusSoundEffect
  */
 
-const QString SOUNDEFFECT_DBUS_NAME = "com.deepin.daemon.SoundEffect";
-const QString SOUNDEFFECT_DBUS_PATH = "/com/deepin/daemon/SoundEffect";
+const QString SOUNDEFFECT_DBUS_NAME = SOUND_EFFECT_NAME;
+const QString SOUNDEFFECT_DBUS_PATH = SOUND_EFFECT_PATH;
 
 DBusSoundEffect::DBusSoundEffect(QObject *parent)
     : QDBusAbstractInterface(SOUNDEFFECT_DBUS_NAME,  SOUNDEFFECT_DBUS_PATH,

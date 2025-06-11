@@ -5,3 +5,7 @@ moc_*.cpp
 build/
 *.qm
 *.pro.user*
+
+# AI
+.cursor
+.specstory
