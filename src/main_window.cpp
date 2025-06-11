@@ -1898,7 +1898,7 @@ void MainWindow::savePath(const QString &path)
 void MainWindow::startScreenshotFor3rd(const QString &path)
 {
     m_shotSavePath = path;
-    if (path == "" || (!QDir(path).exists())) {
+    if (path == "" || (!QFileInfo(path).dir().exists())) {
         // 传入的文件目录不存在，保存在系统pictures路径下
         qDebug() << path << "not exist! change path to QStandardPaths::PicturesLocation";
         m_shotSavePath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
