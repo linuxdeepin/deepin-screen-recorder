@@ -430,12 +430,12 @@ bool WaylandIntegration::WaylandIntegrationPrivate::isPangu()
 {
     qCDebug(dsrApp) << "Checking if system is Pangu";
     QString validFrequency = "CurrentSpeed";
-    QDBusInterface systemInfoInterface("com.deepin.daemon.SystemInfo",
-                                       "/com/deepin/daemon/SystemInfo",
+    QDBusInterface systemInfoInterface(SYSTEM_INFO_NAME,
+                                       SYSTEM_INFO_PATH,
                                        "org.freedesktop.DBus.Properties",
                                        QDBusConnection::sessionBus());
     qCDebug(dsrApp) << "SystemInfo DBus interface valid:" << systemInfoInterface.isValid();
-    QDBusMessage replyCpu = systemInfoInterface.call("Get", "com.deepin.daemon.SystemInfo", "CPUHardware");
+    QDBusMessage replyCpu = systemInfoInterface.call("Get", SYSTEM_INFO_INTERFACE, "CPUHardware");
     QList<QVariant> outArgsCPU = replyCpu.arguments();
     if (outArgsCPU.count()) {
         QString CPUHardware = outArgsCPU.at(0).value<QDBusVariant>().variant().toString();

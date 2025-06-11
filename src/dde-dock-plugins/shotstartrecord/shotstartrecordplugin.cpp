@@ -7,6 +7,7 @@
 #include <DApplication>
 #include <QDBusInterface>
 #include "../../utils/log.h"
+#include "../../dbus_name.h"
 
 #define RecordShartPlugin "shot-start-record-plugin"
 #define RecordShartApp "deepin-screen-recorder"  // 使用截图录屏的翻译
@@ -351,14 +352,13 @@ void ShotStartRecordPlugin::setTrayIconVisible(bool visible)
 {
     qCDebug(dsrApp) << "Setting tray icon visibility to:" << visible;
     // If the OS version is later than V23 or V25, the new version of the API is used
+    QDBusInterface interface(DOCK_NAME, DOCK_PATH, DOCK_INTERFACE);
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     qCDebug(dsrApp) << "Using Qt6 DBus interface";
-    QDBusInterface interface("org.deepin.dde.Dock1", "/org/deepin/dde/Dock1", "org.deepin.dde.Dock1", QDBusConnection::sessionBus());
     interface.call("setItemOnDock", "Dock_Quick_Plugins", pluginName(), visible);
 #else
     qCDebug(dsrApp) << "Using legacy DBus interface";
     // 使用DBus接口仅隐藏任务栏图标，快捷面板图标仍显示，参数是插件的 displayName（历史原因）
-    QDBusInterface interface("com.deepin.dde.Dock", "/com/deepin/dde/Dock", "com.deepin.dde.Dock", QDBusConnection::sessionBus());
     interface.call("setPluginVisible", pluginDisplayName(), visible);
 #endif
 }
@@ -369,9 +369,9 @@ void ShotStartRecordPlugin::setTrayIconVisible(bool visible)
 bool ShotStartRecordPlugin::getTrayIconVisible()
 {
     qCDebug(dsrApp) << "Checking tray icon visibility";
+    QDBusInterface interface(DOCK_NAME, DOCK_PATH, DOCK_INTERFACE);
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     qCDebug(dsrApp) << "Using Qt6 DBus interface";
-    QDBusInterface interface("org.deepin.dde.Dock1", "/org/deepin/dde/Dock1", "org.deepin.dde.Dock1", QDBusConnection::sessionBus());
     QDBusReply<QList<DockItemInfo> > msg = interface.call("plugins");
 
     if (!msg.isValid()) {
@@ -393,7 +393,6 @@ bool ShotStartRecordPlugin::getTrayIconVisible()
 
 #else
     qCDebug(dsrApp) << "Using legacy DBus interface";
-    QDBusInterface interface("com.deepin.dde.Dock", "/com/deepin/dde/Dock", "com.deepin.dde.Dock", QDBusConnection::sessionBus());
     auto msg = interface.call("getPluginVisible", pluginDisplayName());
     if (QDBusMessage::ReplyMessage == msg.type()) {
         return msg.arguments().takeFirst().toBool();

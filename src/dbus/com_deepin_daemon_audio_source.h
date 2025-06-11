@@ -21,6 +21,8 @@
 #include <QtDBus/QtDBus>
 #include "audioport.h"
 #include "audioportlist.h"
+#include "../dbus_name.h"
+
 /*
  * Proxy class for interface com.deepin.daemon.Audio.Source
  */
@@ -29,7 +31,7 @@ class ComDeepinDaemonAudioSourceInterface: public QDBusAbstractInterface
     Q_OBJECT
 public:
     static inline const char *staticInterfaceName()
-    { return "com.deepin.daemon.Audio.Source"; }
+    { return AUDIO_SOURCE_INTERFACE; }
 
 public:
     ComDeepinDaemonAudioSourceInterface(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent = nullptr);

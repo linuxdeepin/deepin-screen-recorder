@@ -287,7 +287,8 @@ SOURCES += main.cpp \
     camera/devnummonitor.cpp \
     camera/majorimageprocessingthread.cpp \
     camera/LPF_V4L2.c \
-    utils/eventlogutils.cpp
+    utils/eventlogutils.cpp \
+    dbus_name.cpp
 
 # Qt 版本特定的源文件
 lessThan(QT_MAJOR_VERSION, 6) {

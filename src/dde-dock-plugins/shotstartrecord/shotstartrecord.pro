@@ -28,7 +28,8 @@ SOURCES += \
     quickpanelwidget.cpp \
     commoniconbutton.cpp \
     shotstartrecordplugin.cpp \
-    recordiconwidget.cpp
+    recordiconwidget.cpp \
+    ../../dbus_name.cpp
 
 target.path = /usr/lib/dde-dock/plugins/
 file.files += $$PWD/com.deepin.dde.dock.module.shot-start-record-plugin.gschema.xml

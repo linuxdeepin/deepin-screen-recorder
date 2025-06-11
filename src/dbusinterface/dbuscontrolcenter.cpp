@@ -15,13 +15,14 @@
  */
 
 #include "dbuscontrolcenter.h"
+#include "../../dbus_name.h"
 
 /*
  * Implementation of interface class DBusControlCenter
  */
 
-const QString CONTROLCENTER_DBUS_NAME = "com.deepin.dde.ControlCenter";
-const QString CONTROLCENTER_DBUS_PATH = "/com/deepin/dde/ControlCenter";
+const QString CONTROLCENTER_DBUS_NAME = CONTROL_CENTER_NAME;
+const QString CONTROLCENTER_DBUS_PATH = CONTROL_CENTER_PATH;
 
 DBusControlCenter::DBusControlCenter(QObject *parent)
     : QDBusAbstractInterface(CONTROLCENTER_DBUS_NAME,  CONTROLCENTER_DBUS_PATH,

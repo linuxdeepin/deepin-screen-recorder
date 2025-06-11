@@ -20,7 +20,7 @@
 #include <QtCore/QVariant>
 #include <QtDBus/QtDBus>
 #include "../dbus/audioportlist.h"
-
+#include "../dbus_name.h"
 /*
  * Proxy class for interface com.deepin.daemon.Audio.Sink
  */
@@ -29,7 +29,7 @@ class ComDeepinDaemonAudioSinkInterface: public QDBusAbstractInterface
     Q_OBJECT
 public:
     static inline const char *staticInterfaceName()
-    { return "com.deepin.daemon.Audio.Sink"; }
+    { return AUDIO_SINK_INTERFACE; }
 
 public:
     ComDeepinDaemonAudioSinkInterface(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent = nullptr);

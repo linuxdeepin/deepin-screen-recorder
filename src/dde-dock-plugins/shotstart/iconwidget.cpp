@@ -6,6 +6,7 @@
 #include "iconwidget.h"
 #include "dde-dock/constants.h"
 #include "../../utils/log.h"
+#include "../../dbus_name.h"
 
 #include <DGuiApplicationHelper>
 #include <DStyle>
@@ -29,8 +30,8 @@ DCORE_USE_NAMESPACE
 
 IconWidget::IconWidget(DWidget *parent)
     : DWidget(parent)
-    , m_dockInter(new iconwidget_interface("com.deepin.dde.daemon.Dock",
-                                          "/com/deepin/dde/daemon/Dock",
+    , m_dockInter(new iconwidget_interface(DOCK_INTERFACE,
+                                          DOCK_PATH,
                                           QDBusConnection::sessionBus(),
                                           this))
     , m_blgPixmap(nullptr)
@@ -118,24 +119,14 @@ void IconWidget::invokedMenuItem(const QString &menuId)
 QString IconWidget::getSysShortcuts(const QString type)
 {
     qCDebug(dsrApp) << "Getting system shortcuts for type:" << type;
-    QScopedPointer<QDBusInterface> shortcuts;
-    if (DSysInfo::minorVersion().toInt() >= 23) {
-        qCDebug(dsrApp) << "Using new DBus interface for shortcuts";
-        shortcuts.reset(
-            new QDBusInterface("org.deepin.dde.Keybinding1", "/org/deepin/dde/Keybinding1", "org.deepin.dde.Keybinding1"));
-    } else {
-        qCDebug(dsrApp) << "Using legacy DBus interface for shortcuts";
-        // V20 or older system edition.
-        shortcuts.reset(
-            new QDBusInterface("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding", "com.deepin.daemon.Keybinding"));
-    }
+    QDBusInterface shortcuts(KEYBINDING_NAME, KEYBINDING_PATH, KEYBINDING_INTERFACE);
 
-    if (!shortcuts->isValid()) {
+    if (!shortcuts.isValid()) {
         qCWarning(dsrApp) << "Failed to create shortcuts DBus interface, using default values";
         return getDefaultValue(type);
     }
 
-    QDBusReply<QString> shortLists = shortcuts->call(QStringLiteral("ListAllShortcuts"));
+    QDBusReply<QString> shortLists = shortcuts.call(QStringLiteral("ListAllShortcuts"));
     QJsonDocument doc = QJsonDocument::fromJson(shortLists.value().toUtf8());
     QJsonArray shorts = doc.array();
     QMap<QString, QString> shortcutsMap;

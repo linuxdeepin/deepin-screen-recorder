@@ -20,7 +20,7 @@
 #include <QtCore/QVariant>
 #include <QtDBus/QtDBus>
 #include "audioutils.h"
-
+#include "../dbus_name.h"
 /*
  * Proxy class for interface com.deepin.daemon.Audio
  */
@@ -29,7 +29,7 @@ class voicevolumewatcher_interface: public QDBusAbstractInterface
     Q_OBJECT
 public:
     static inline const char *staticInterfaceName()
-    { return "com.deepin.daemon.Audio"; }
+    { return AUDIO_INTERFACE; }
 
 public:
     voicevolumewatcher_interface(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent = nullptr);

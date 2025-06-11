@@ -5,7 +5,7 @@
 #include "recordiconwidget.h"
 #include "dde-dock/constants.h"
 #include "../../utils/log.h"
-
+#include "../../dbus_name.h"
 #include <DGuiApplicationHelper>
 #include <DStyle>
 #include <DSysInfo>
@@ -29,8 +29,8 @@ DCORE_USE_NAMESPACE
 
 RecordIconWidget::RecordIconWidget(DWidget *parent)
     : DWidget(parent)
-    , m_dockInter(new recordiconwidget_interface("com.deepin.dde.daemon.Dock",
-                                                "/com/deepin/dde/daemon/Dock",
+    , m_dockInter(new recordiconwidget_interface(DOCK_INTERFACE,
+                                                DOCK_PATH,
                                                 QDBusConnection::sessionBus(),
                                                 this))
     , m_blgPixmap(nullptr)
@@ -136,7 +136,7 @@ void RecordIconWidget::invokedMenuItem(const QString &menuId)
 QString RecordIconWidget::getSysShortcuts(const QString &type)
 {
     qCDebug(dsrApp) << "Getting system shortcuts for type:" << type;
-    QDBusInterface shortcuts("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding", "com.deepin.daemon.Keybinding");
+    QDBusInterface shortcuts(KEYBINDING_NAME, KEYBINDING_PATH, KEYBINDING_INTERFACE);
     if (!shortcuts.isValid()) {
         qCWarning(dsrApp) << "Failed to create shortcuts DBus interface, using default values";
         return getDefaultValue(type);

@@ -92,20 +92,13 @@ QString Shortcut::toStr()
 }
 QString Shortcut::getSysShortcuts(const QString type)
 {
-    QScopedPointer<QDBusInterface> shortcuts;
-    if (Utils::isSysGreatEqualV23()) {
-        shortcuts.reset(
-            new QDBusInterface("org.deepin.dde.Keybinding1", "/org/deepin/dde/Keybinding1", "org.deepin.dde.Keybinding1"));
-    } else {
-        shortcuts.reset(
-            new QDBusInterface("com.deepin.daemon.Keybinding", "/com/deepin/daemon/Keybinding", "com.deepin.daemon.Keybinding"));
-    }
+    QDBusInterface shortcuts(KEYBINDING_NAME, KEYBINDING_PATH, KEYBINDING_INTERFACE);
 
-    if (!shortcuts->isValid()) {
+    if (!shortcuts.isValid()) {
         return getDefaultValue(type);
     }
 
-    QDBusReply<QString> shortLists = shortcuts->call(QStringLiteral("ListAllShortcuts"));
+    QDBusReply<QString> shortLists = shortcuts.call(QStringLiteral("ListAllShortcuts"));
     QJsonDocument doc = QJsonDocument::fromJson(shortLists.value().toUtf8());
     QJsonArray shorts = doc.array();
     QMap<QString, QString> shortcutsMap;
