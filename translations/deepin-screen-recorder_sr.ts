@@ -20,7 +20,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Запис</translation>
     </message>
 </context>
 <context>
@@ -106,15 +106,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Отвори фолдер</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Фиксије снимке</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
 </context>
 <context>
@@ -136,29 +136,29 @@ or press the shortcut again to stop recording</source>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Фиксије снимке</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Снимак</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Запис</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Снимак</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Запис</translation>
     </message>
 </context>
 <context>
@@ -181,7 +181,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Отвори фолдер</translation>
     </message>
 </context>
 <context>
@@ -377,15 +377,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Фиксије снимке</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Почни скролшот</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>Почни OCR</translation>
     </message>
     <message>
         <source>Arrow</source>
@@ -411,7 +411,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Запис</translation>
     </message>
 </context>
 <context>
@@ -419,29 +419,32 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>Правоугаоник
+Притисни и задржи Shift да би цртао квадрат</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>Еллипса
+Притисни и задржи Shift да би цртао круг</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"/>
+        <translation>Браш
+Притисни и задржи Shift да би цртао праву линију</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Прилагоди степен размазивања (Скроловај да би прилагодио)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Прилагоди величину браша (Скроловај да би прилагодио)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Прилагоди величину текста (Скроловај да би прилагодио)</translation>
     </message>
 </context>
 <context>
@@ -549,7 +552,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Show keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Прикажи притисак тастатура (K)</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -557,27 +560,27 @@ select the area to record</source>
     </message>
     <message>
         <source>Settings (F3)</source>
-        <translation type="unfinished"/>
+        <translation>Поставке (F3)</translation>
     </message>
     <message>
         <source>Blur (B)</source>
-        <translation type="unfinished"/>
+        <translation>Размаз (B)</translation>
     </message>
     <message>
         <source>Text (T)</source>
-        <translation type="unfinished"/>
+        <translation>Текст (T)</translation>
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"/>
+        <translation>Скролшот (Alt+I)</translation>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
-        <translation type="unfinished"/>
+        <translation>Извади текст (Alt+O)</translation>
     </message>
     <message>
         <source>Undo (Ctrl+Z)</source>
-        <translation type="unfinished"/>
+        <translation>Поништи (Ctrl+Z)</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -585,7 +588,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Pin screenshots (Alt+P）</source>
-        <translation type="unfinished"/>
+        <translation>Фиксије снимке (Alt+P)</translation>
     </message>
     <message>
         <source>Record</source>
@@ -593,71 +596,75 @@ select the area to record</source>
     </message>
     <message>
         <source>Pencil (P)</source>
-        <translation type="unfinished"/>
+        <translation>Молив (P)</translation>
     </message>
     <message>
         <source>Turn on camera (C)</source>
-        <translation type="unfinished"/>
+        <translation>Укључи камеру (C)</translation>
     </message>
     <message>
         <source>Border Effects</source>
-        <translation type="unfinished"/>
+        <translation>Efekti ruba</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"/>
+        <translation>Ništa</translation>
     </message>
     <message>
         <source>Turn off camera (C)</source>
-        <translation type="unfinished"/>
+        <translation>Isključi kameru (C)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Sakrij tastaturu (K)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Pokaži tastaturu (K)</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>Видео</translation>
     </message>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>Pravougaonik (R)
+Pritisni i drži Shift da nacrtas kvadrat</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>Elipsa (O)
+Pritisni i drži Shift da nacrtas krug</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"/>
+        <translation>Linija (L)
+Pritisni i drži Shift da nacrtas vertikalnu ili horizontalnu liniju</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"/>
+        <translation>Smer (X)
+Pritisni i drži Shift da nacrtas vertikalnu ili horizontalnu strelicu</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"/>
+        <translation>Svetlost</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"/>
+        <translation>Ruba</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"/>
+        <translation>Uređaj</translation>
     </message>
     <message>
         <source>Sound</source>
@@ -665,30 +672,30 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"/>
+        <translation>Sistemski audio</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"/>
+        <translation>Pokaži klik</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"/>
+        <translation>Postavi putanju pri sačuvanju</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"/>
+        <translation>Promeni putanju pri sačuvanju</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation type="unfinished"/>
+        <translation>Zatvori (Esc)</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation type="unfinished"/>
+        <translation>OK (Enter)</translation>
     </message>
 </context>
 <context>
