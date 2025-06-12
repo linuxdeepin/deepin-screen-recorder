@@ -113,7 +113,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>دېپىن شىرېن رېكۆردر</translation>
     </message>
 </context>
 <context>
@@ -142,22 +142,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>پۈشىتە</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>رېكۆردن</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>پۈشىتە</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>رېكۆردن چۈشىنىشى</translation>
     </message>
 </context>
 <context>
@@ -410,7 +410,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>رېكۆردن</translation>
     </message>
 </context>
 <context>
@@ -654,15 +654,15 @@ Shift نى بېسىپ تۇرسىڭىز تىك ۋە توغرىسىغا تۈز ك�
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"/>
+        <translation>يېڭىلەمە</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"/>
+        <translation>چەقىرىش</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"/>
+        <translation>تەسىرلىشى</translation>
     </message>
     <message>
         <source>Sound</source>
@@ -670,11 +670,11 @@ Shift نى بېسىپ تۇرسىڭىز تىك ۋە توغرىسىغا تۈز ك�
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"/>
+        <translation>سىستېم ئاۋىو</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"/>
+        <translation>كىچىكلىشىنى كۆرسىتى</translation>
     </message>
     <message>
         <source>Set a path on save</source>
@@ -718,7 +718,7 @@ Shift نى بېسىپ تۇرسىڭىز تىك ۋە توغرىسىغا تۈز ك�
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation type="unfinished"/>
+        <translation>يېڭى رېكۆردن</translation>
     </message>
 </context>
 </TS>
