@@ -2,14 +2,12 @@
 <context>
     <name>CountdownTooltip</name>
     <message>
-        <location filename="../src/countdown_tooltip.cpp" line="44"/>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
         <translation>སྡེར་མའི་མཚོན་རྟགས་ལ་གནོན་རྒྱུ།
 ཡང་ན་བརྙན་ཕབ་ཀྱི་མྱུར་མཐེབ་མནན་ནས་བརྙན་ཕབ་མཚམས་འཇོག་བྱ་རྒྱུ།</translation>
     </message>
     <message>
-        <location filename="../src/countdown_tooltip.cpp" line="46"/>
         <source>Do not rotate your screen during recording</source>
         <translation>བརྙན་ལེན་བཞིན་ཡོད་པས་སྐོར་བ་མ་རྒྱག</translation>
     </message>
@@ -17,12 +15,10 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>IconWidget</name>
     <message>
-        <location filename="../src/dde-dock-plugins/shotstart/iconwidget.cpp" line="56"/>
         <source>Screenshot</source>
         <translation>བརྙན་བཤུས།</translation>
     </message>
     <message>
-        <location filename="../src/dde-dock-plugins/shotstart/iconwidget.cpp" line="63"/>
         <source>Recording</source>
         <translation>བརྙན་ཕབ།</translation>
     </message>
@@ -30,12 +26,10 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>MainToolWidget</name>
     <message>
-        <location filename="../src/widgets/maintoolwidget.cpp" line="73"/>
         <source>Record</source>
         <translation>བརྙན་ཕབ།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/maintoolwidget.cpp" line="86"/>
         <source>Screenshot</source>
         <translation>བརྙན་བཤུས།</translation>
     </message>
@@ -43,157 +37,97 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/main.cpp" line="177"/>
-        <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/main_window.cpp" line="198"/>
-        <location filename="../src/main_window.cpp" line="624"/>
-        <location filename="../src/main_window.cpp" line="651"/>
-        <location filename="../src/main_window.cpp" line="4904"/>
         <source>Screen Capture</source>
         <translation>བརྙན་བཤུས་བརྙན་ཕབ།</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="616"/>
-        <location filename="../src/main_window.cpp" line="643"/>
-        <source>Ignore</source>
-        <translation>སྣང་མེད།</translation>
-    </message>
-    <message>
-        <location filename="../src/main_window.cpp" line="625"/>
-        <source>Saving the screen recording file, please wait...</source>
-        <translation>བརྙན་ཕབ་ཡིག་ཆ་ཉར་བཞིན་ཡོད་པས། སྒུག་རོགས་གནང་།</translation>
-    </message>
-    <message>
-        <location filename="../src/main_window.cpp" line="652"/>
-        <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>ཕབ་བཟོ་བྱེད་པའི་བརྒྱུད་རིམ་ནང་སྒེའུ་ཁུང་གི་ཁྱད་ནུས་སྒོ་བརྒྱབ་པས། བརྙན་ལེན་མཚམས་བཞག་པ།</translation>
-    </message>
-    <message>
-        <location filename="../src/main_window.cpp" line="1832"/>
-        <source>Screenshot failed.</source>
-        <translation>པར་དྲས་མ་ཐུབ།</translation>
-    </message>
-    <message>
-        <location filename="../src/main_window.cpp" line="2686"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="615"/>
         <source>Save failed. Please save it in your home directory.</source>
         <translation>ཉར་མི་ཐུབ་པས། མིག་སྔའི་སྤྱོད་མཁན་གྱི་དཀར་ཆག་འོག་ཏུ་ཉར་རོགས།</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="2706"/>
-        <location filename="../src/main_window.cpp" line="3051"/>
-        <location filename="../src/main_window.cpp" line="3053"/>
-        <location filename="../src/main_window.cpp" line="3056"/>
-        <source>Clipboard</source>
-        <translation>དྲས་སྦྱར་པང་།</translation>
-    </message>
-    <message>
-        <location filename="../src/main_window.cpp" line="2707"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="631"/>
         <source>View</source>
         <translation>ལྟ་བ།</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="2708"/>
-        <source>Open Folder</source>
-        <translation>ཡིག་ཁུག་ཁ་ཕྱེ།</translation>
-    </message>
-    <message>
-        <location filename="../src/main_window.cpp" line="2714"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="638"/>
-        <source>Saved to %1</source>
-        <translation>པར་%1དུ་ཉར་ཟིན།</translation>
-    </message>
-    <message>
-        <location filename="../src/main_window.cpp" line="2732"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="646"/>
         <source>Screenshot finished</source>
         <translation>བརྙན་བཤུས་ཚར་བ།</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="2753"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="89"/>
-        <source>Screenshot</source>
-        <translation>བརྙན་བཤུས།</translation>
-    </message>
-    <message>
-        <location filename="../src/main_window.cpp" line="2755"/>
-        <source>Scrollshot</source>
-        <translation>འགུལ་ནས་ཡོལ་པར་བླངས།</translation>
-    </message>
-    <message>
-        <location filename="../src/main_window.cpp" line="2815"/>
-        <location filename="../src/main_window.cpp" line="2821"/>
-        <location filename="../src/main_window.cpp" line="2827"/>
-        <location filename="../src/main_window.cpp" line="2833"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="178"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="182"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="186"/>
-        <source>Save</source>
-        <translation>ཉར་བ།</translation>
-    </message>
-    <message>
-        <location filename="../src/main_window.cpp" line="2816"/>
-        <location filename="../src/main_window.cpp" line="2834"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="179"/>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
         <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="2822"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="183"/>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
         <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="2828"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="187"/>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
         <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="3528"/>
-        <location filename="../src/main_window.cpp" line="3799"/>
-        <location filename="../src/main_window.cpp" line="3807"/>
-        <location filename="../src/main_window.cpp" line="3816"/>
-        <location filename="../src/main_window.cpp" line="3823"/>
-        <location filename="../src/main_window.cpp" line="3845"/>
-        <location filename="../src/main_window.cpp" line="3853"/>
-        <location filename="../src/main_window.cpp" line="3859"/>
-        <location filename="../src/main_window.cpp" line="3867"/>
-        <location filename="../src/main_window.cpp" line="3875"/>
-        <location filename="../src/main_window.cpp" line="3881"/>
-        <location filename="../src/main_window.cpp" line="3886"/>
-        <location filename="../src/main_window.cpp" line="3892"/>
         <source>select-area</source>
         <translation>ཁུལ་ཁོངས་འདེམས་པ།</translation>
     </message>
     <message>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="620"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="643"/>
+        <source>Save</source>
+        <translation>ཉར་བ།</translation>
+    </message>
+    <message>
+        <source>Saved to %1</source>
+        <translation>པར་%1དུ་ཉར་ཟིན།</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>སྣང་མེད།</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>དྲས་སྦྱར་པང་།</translation>
+    </message>
+    <message>
+        <source>Saving the screen recording file, please wait...</source>
+        <translation>བརྙན་ཕབ་ཡིག་ཆ་ཉར་བཞིན་ཡོད་པས། སྒུག་རོགས་གནང་།</translation>
+    </message>
+    <message>
+        <source>As the window effect is disabled during the process, the recording has to be stopped</source>
+        <translation>ཕབ་བཟོ་བྱེད་པའི་བརྒྱུད་རིམ་ནང་སྒེའུ་ཁུང་གི་ཁྱད་ནུས་སྒོ་བརྒྱབ་པས། བརྙན་ལེན་མཚམས་བཞག་པ།</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>བརྙན་བཤུས།</translation>
+    </message>
+    <message>
+        <source>Screenshot failed.</source>
+        <translation>པར་དྲས་མ་ཐུབ།</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
+        <translation>འགུལ་ནས་ཡོལ་པར་བླངས།</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>ཡིག་ཁུག་ཁ་ཕྱེ།</translation>
+    </message>
+    <message>
         <source>Pin Screenshots</source>
         <translation>སྦྱར་རིས།</translation>
+    </message>
+    <message>
+        <source>deepin-screen-recorder</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>MenuController</name>
     <message>
-        <location filename="../src/menucontroller/menucontroller.cpp" line="72"/>
         <source>Undo</source>
         <translation>མི་བྱེད།</translation>
     </message>
     <message>
-        <location filename="../src/menucontroller/menucontroller.cpp" line="79"/>
-        <location filename="../src/pin_screenshots/ui/menucontroller.cpp" line="24"/>
         <source>Save</source>
         <translation>ཉར་བ།</translation>
     </message>
     <message>
-        <location filename="../src/menucontroller/menucontroller.cpp" line="86"/>
-        <location filename="../src/pin_screenshots/ui/menucontroller.cpp" line="29"/>
         <source>Exit</source>
         <translation>ཕྱིར་འཐེན།</translation>
     </message>
@@ -201,32 +135,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/main.cpp" line="118"/>
-        <source>Hello World Test</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/main.cpp" line="119"/>
-        <source>Testing 12345</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/main.cpp" line="120"/>
-        <source>Sample Text 15</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/main.cpp" line="121"/>
-        <source>Debug Message 1</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/main.cpp" line="122"/>
-        <source>Final Test Text</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/pin_screenshots/main.cpp" line="57"/>
         <source>Pin Screenshots</source>
         <translation>སྦྱར་རིས།</translation>
     </message>
@@ -234,14 +142,10 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>QuickPanelWidget</name>
     <message>
-        <location filename="../src/dde-dock-plugins/shotstart/quickpanelwidget.cpp" line="15"/>
-        <location filename="../src/dde-dock-plugins/shotstart/quickpanelwidget.cpp" line="91"/>
         <source>Screenshot</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/dde-dock-plugins/shotstartrecord/quickpanelwidget.cpp" line="22"/>
-        <location filename="../src/dde-dock-plugins/shotstartrecord/quickpanelwidget.cpp" line="112"/>
         <source>Record</source>
         <translation type="unfinished"/>
     </message>
@@ -249,12 +153,10 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>RecordIconWidget</name>
     <message>
-        <location filename="../src/dde-dock-plugins/shotstartrecord/recordiconwidget.cpp" line="52"/>
         <source>Screenshot</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/dde-dock-plugins/shotstartrecord/recordiconwidget.cpp" line="58"/>
         <source>Recording</source>
         <translation type="unfinished"/>
     </message>
@@ -262,36 +164,29 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>RecordProcess</name>
     <message>
-        <location filename="../src/record_process.cpp" line="431"/>
-        <location filename="../src/record_process.cpp" line="552"/>
-        <source>Record</source>
-        <translation>བརྙན་ཕབ།</translation>
-    </message>
-    <message>
-        <location filename="../src/record_process.cpp" line="721"/>
         <source>View</source>
         <translation>ལྟ་བ།</translation>
     </message>
     <message>
-        <location filename="../src/record_process.cpp" line="722"/>
-        <source>Open Folder</source>
-        <translation>ཡིག་ཁུག་ཁ་ཕྱེ།</translation>
-    </message>
-    <message>
-        <location filename="../src/record_process.cpp" line="735"/>
         <source>Recording finished</source>
         <translation>ཕབ་འཇུག་བྱས་ཟིན།</translation>
     </message>
     <message>
-        <location filename="../src/record_process.cpp" line="736"/>
         <source>Saved to %1</source>
         <translation>པར་%1དུ་ཉར་ཟིན།</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>བརྙན་ཕབ།</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>ཡིག་ཁུག་ཁ་ཕྱེ།</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
-        <location filename="../src/screenshot.cpp" line="45"/>
         <source>Screen Capture will start in %1 seconds</source>
         <translation>བརྙན་བཤུས་བརྙན་ཕབ་སྐར་ཆ་%1རྗེས་སུ་འགོ་སློང་སྲིད།</translation>
     </message>
@@ -299,42 +194,34 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ScrollShotTip</name>
     <message>
-        <location filename="../src/widgets/scrollshottip.cpp" line="55"/>
         <source>Get help.</source>
         <translation>རོགས་རམ་འཚོལ་བ།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/scrollshottip.cpp" line="62"/>
-        <source>adjust the capture area</source>
-        <translation>འཛིན་བཟུང་ཁུལ་སྙོམས་སྒྲིག་བྱེད།</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/scrollshottip.cpp" line="224"/>
-        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>ཙི་གུའི་འགྲིལ་འཁོར་སྒྲིལ་བའམ་འཛིན་བཟུང་ཁུལ་ལ་གཅིག་རྡེབ་བྱེད།</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/scrollshottip.cpp" line="242"/>
         <source>Failed to take a continuous screenshot.</source>
         <translation>མུ་མཐུད་ཡོལ་པར་རྒྱག་ཐབས་མེད།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/scrollshottip.cpp" line="265"/>
         <source>Reached the bottom of the scroll area</source>
         <translation>འགུལ་ཁུལ་གྱི་མཇུག་ངོས་ལ་སླེབས།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/scrollshottip.cpp" line="283"/>
         <source>Reached the maximum length</source>
         <translation>རིང་ཐུང་རིང་ཤོས་སླེབས་ཟིན།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/scrollshottip.cpp" line="301"/>
+        <source>adjust the capture area</source>
+        <translation>འཛིན་བཟུང་ཁུལ་སྙོམས་སྒྲིག་བྱེད།</translation>
+    </message>
+    <message>
+        <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
+        <translation>ཙི་གུའི་འགྲིལ་འཁོར་སྒྲིལ་བའམ་འཛིན་བཟུང་ཁུལ་ལ་གཅིག་རྡེབ་བྱེད།</translation>
+    </message>
+    <message>
         <source>Slow down the scrolling speed</source>
         <translation>འགྲིལ་འཁོར་སྒྲིལ་ཚད་དལ་རུ་གཏོང་དང་།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/scrollshottip.cpp" line="317"/>
         <source>Invalid area, click to </source>
         <translation>ནུས་མེད་ཁུལ། __གནོན་རོགས།</translation>
     </message>
@@ -342,9 +229,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShapesWidget</name>
     <message>
-        <location filename="../src/widgets/shapeswidget.cpp" line="201"/>
-        <location filename="../src/widgets/shapeswidget.cpp" line="1146"/>
-        <location filename="../src/widgets/shapeswidget.cpp" line="1260"/>
         <source>Input text here</source>
         <translation>འདིར་ཡིག་ཆ་སྣོན་རོགས་གནང་།</translation>
     </message>
@@ -352,217 +236,173 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>Shortcut</name>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="19"/>
         <source>Start/Screenshot</source>
         <translation>འགོ་སློང་།/བརྙན་བཤུས།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="20"/>
         <source>Exit/Save</source>
         <translation>ཕྱིར་འཐེན།/ཉར་བ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="21"/>
-        <source>Tools</source>
-        <translation>ཡོ་བྱད།</translation>
-    </message>
-    <message>
-        <location filename="../src/utils/shortcut.cpp" line="22"/>
-        <source>Start/Recording</source>
-        <translation>བརྙན་འབེབས་དང་འགོ་སློང་།</translation>
-    </message>
-    <message>
-        <location filename="../src/utils/shortcut.cpp" line="23"/>
         <source>Size Adjustment</source>
         <translation>ཁུལ་ཁོངས་སྙོམས་སྒྲིག</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="24"/>
         <source>Settings</source>
         <translation>སྒྲིག་བཀོད།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="26"/>
         <source>Quick start</source>
         <translation>བརྙན་བཤུས་མགྱོགས་མྱུར་འགོ་སློང་བ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="27"/>
         <source>Window screenshot</source>
         <translation>འོད་རྟགས་ཡོད་པའི་སྒེའུ་ཁུང་བརྙན་བཤུས་བྱེད་པ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="28"/>
         <source>Delay screenshot</source>
         <translation>སྐར་ཆ་5འགྱངས་ནས་བརྙན་བཤུས་བྱེད་པ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="29"/>
         <source>Full screenshot</source>
         <translation>བརྙན་ཡོལ་ཡོངས་བཤུ་ལེན་བྱེད་པ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="30"/>
-        <source>Start scrollshot</source>
-        <translation>འགུལ་ནས་བཪྙན་ལེན་འགོ་སློང་།</translation>
-    </message>
-    <message>
-        <location filename="../src/utils/shortcut.cpp" line="31"/>
-        <source>Start OCR</source>
-        <translation>པར་རིས་དབྱེ་འབྱེད་མགྱོགས་མྱུར་འགོ་སློང་།</translation>
-    </message>
-    <message>
-        <location filename="../src/utils/shortcut.cpp" line="33"/>
         <source>Exit</source>
         <translation>ཕྱིར་འཐེན།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="34"/>
         <source>Save</source>
         <translation>ཉར་བ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="36"/>
-        <source>Scrollshot</source>
-        <translation>འགུལ་ནས་ཡོལ་པར་བླངས།</translation>
-    </message>
-    <message>
-        <location filename="../src/utils/shortcut.cpp" line="38"/>
-        <source>Pin screenshots</source>
-        <translation>སྦྱར་རིས།</translation>
-    </message>
-    <message>
-        <location filename="../src/utils/shortcut.cpp" line="39"/>
         <source>Rectangle</source>
         <translation>གྲུ་བཞི་ནར་མོ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="40"/>
         <source>Ellipse</source>
         <translation>འཇོང་དབྱིབས།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="41"/>
         <source>Line</source>
         <translation>དྲང་ཕིག</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="42"/>
-        <source>Arrow</source>
-        <translation>མདའ་རྟགས།</translation>
-    </message>
-    <message>
-        <location filename="../src/utils/shortcut.cpp" line="43"/>
         <source>Pencil</source>
         <translation>པིར་སྨྱུག</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="44"/>
         <source>Text</source>
         <translation>ཡི་གེ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="46"/>
-        <source>Extract text</source>
-        <translation>ཡི་གེ་ངོས་འཛིན།</translation>
-    </message>
-    <message>
-        <location filename="../src/utils/shortcut.cpp" line="48"/>
         <source>Delete</source>
         <translation>བདམས་པའི་རི་མོ་སུབ་པ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="49"/>
         <source>Undo</source>
         <translation>མི་བྱེད།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="50"/>
-        <location filename="../src/utils/shortcut.cpp" line="57"/>
-        <source>Options</source>
-        <translation>གདམ་ག</translation>
-    </message>
-    <message>
-        <location filename="../src/utils/shortcut.cpp" line="52"/>
-        <source>Start recording</source>
-        <translation>བརྙན་འབེབས་གང་མགྱོགས་འགོ་སློང་།</translation>
-    </message>
-    <message>
-        <location filename="../src/utils/shortcut.cpp" line="53"/>
-        <source>Sound</source>
-        <translation>སྒྲ་འབེབས།</translation>
-    </message>
-    <message>
-        <location filename="../src/utils/shortcut.cpp" line="54"/>
-        <source>Keystroke</source>
-        <translation>མཐེབ་གནོན།</translation>
-    </message>
-    <message>
-        <location filename="../src/utils/shortcut.cpp" line="55"/>
-        <source>Webcam</source>
-        <translation>བརྙན་མིག </translation>
-    </message>
-    <message>
-        <location filename="../src/utils/shortcut.cpp" line="56"/>
-        <source>Mouse</source>
-        <translation>ཕབ་བཟོའི་ཙི་གུ།</translation>
-    </message>
-    <message>
-        <location filename="../src/utils/shortcut.cpp" line="60"/>
         <source>Increase height up</source>
         <translation>ཡར་འདེམས་ཁུལ་གྱི་མཐོ་ཚད་ཆེ་རུ་གཏོང་བ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="61"/>
         <source>Increase height down</source>
         <translation>མར་འདེམས་ཁུལ་གྱི་མཐོ་ཚད་ཆེ་རུ་གཏོང་བ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="62"/>
         <source>Increase width left</source>
         <translation>གཡོན་ཏུ་འདེམས་ཁུལ་གྱི་ཞེང་ཚད་ཆེ་རུ་གཏོང་བ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="63"/>
         <source>Increase width right</source>
         <translation>གཡས་སུ་འདེམས་ཁུལ་གྱི་ཞེང་ཚད་ཆེ་རུ་གཏོང་བ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="64"/>
         <source>Decrease height up</source>
         <translation>ཡར་འདེམས་ཁུལ་གྱི་མཐོ་ཚད་ནུང་རུ་གཏོང་བ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="65"/>
         <source>Decrease height down</source>
         <translation>མར་འདེམས་ཁུལ་གྱི་མཐོ་ཚད་ཆུང་རུ་གཏོང་བ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="66"/>
         <source>Decrease width left</source>
         <translation>གཡོན་ཏུ་འདེམས་ཁུལ་གྱི་ཞེང་ཚད་ཆུང་རུ་གཏོང་བ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="67"/>
         <source>Decrease width right</source>
         <translation>གཡས་སུ་འདེམས་ཁུལ་གྱི་ཞེང་ཚད་ཆུང་རུ་གཏོང་བ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="69"/>
         <source>Help</source>
         <translation>རོགས་པ།</translation>
     </message>
     <message>
-        <location filename="../src/utils/shortcut.cpp" line="70"/>
         <source>Display shortcuts</source>
         <translation>མྱུར་མཐེབ་གསལ་བ།</translation>
+    </message>
+    <message>
+        <source>Keystroke</source>
+        <translation>མཐེབ་གནོན།</translation>
+    </message>
+    <message>
+        <source>Webcam</source>
+        <translation>བརྙན་མིག </translation>
+    </message>
+    <message>
+        <source>Start recording</source>
+        <translation>བརྙན་འབེབས་གང་མགྱོགས་འགོ་སློང་།</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>གདམ་ག</translation>
+    </message>
+    <message>
+        <source>Start/Recording</source>
+        <translation>བརྙན་འབེབས་དང་འགོ་སློང་།</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>ཡོ་བྱད།</translation>
+    </message>
+    <message>
+        <source>Extract text</source>
+        <translation>ཡི་གེ་ངོས་འཛིན།</translation>
+    </message>
+    <message>
+        <source>Scrollshot</source>
+        <translation>འགུལ་ནས་ཡོལ་པར་བླངས།</translation>
+    </message>
+    <message>
+        <source>Pin screenshots</source>
+        <translation>སྦྱར་རིས།</translation>
+    </message>
+    <message>
+        <source>Start scrollshot</source>
+        <translation>འགུལ་ནས་བཪྙན་ལེན་འགོ་སློང་།</translation>
+    </message>
+    <message>
+        <source>Start OCR</source>
+        <translation>པར་རིས་དབྱེ་འབྱེད་མགྱོགས་མྱུར་འགོ་སློང་།</translation>
+    </message>
+    <message>
+        <source>Arrow</source>
+        <translation>མདའ་རྟགས།</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>སྒྲ་འབེབས།</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>ཕབ་བཟོའི་ཙི་གུ།</translation>
     </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <location filename="../src/dde-dock-plugins/shotstart/shotstartplugin.cpp" line="37"/>
-        <location filename="../src/dde-dock-plugins/shotstart/shotstartplugin.cpp" line="126"/>
         <source>Screenshot</source>
         <translation>བརྙན་བཤུས།</translation>
     </message>
@@ -570,8 +410,6 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotStartRecordPlugin</name>
     <message>
-        <location filename="../src/dde-dock-plugins/shotstartrecord/shotstartrecordplugin.cpp" line="43"/>
-        <location filename="../src/dde-dock-plugins/shotstartrecord/shotstartrecordplugin.cpp" line="149"/>
         <source>Record</source>
         <translation type="unfinished"/>
     </message>
@@ -579,38 +417,32 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotToolWidget</name>
     <message>
-        <location filename="../src/widgets/shottoolwidget.cpp" line="118"/>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
         <translation>གྲུ་བཞི་ནར་མོ།
 Shiftམནན་ནས་གྲུ་བཞི་ཁ་གང་འབྲི་ཐུབ།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/shottoolwidget.cpp" line="124"/>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
         <translation>འཇོང་དབྱིབས་
 Shiftམནན་ནས་སྒོར་དབྱིབས་འབྲི་ཐུབ། </translation>
     </message>
     <message>
-        <location filename="../src/widgets/shottoolwidget.cpp" line="130"/>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
         <translation>ཕག་ཏོ་
 Shiftམནན་ནས་དྲང་ཐིག་འབྲི་ཐུབ།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/shottoolwidget.cpp" line="141"/>
         <source>Adjust blur strength (Scroll to adjust it)</source>
         <translation>རབ་རིབ་ཡོད་ཚད་སྙོམ་སྒྲིག་（ཙི་གུའི་འགྲིལ་འཁོར།）</translation>
     </message>
     <message>
-        <location filename="../src/widgets/shottoolwidget.cpp" line="156"/>
         <source>Adjust brush size (Scroll to adjust it)</source>
         <translation>ཕག་ཏོ་ཆེ་ཆུང་སྙོམ་སྒྲིག་（ཙི་གུའི་འགྲིལ་འཁོར།）</translation>
     </message>
     <message>
-        <location filename="../src/widgets/shottoolwidget.cpp" line="292"/>
         <source>Adjust text size (Scroll to adjust it)</source>
         <translation>ཡི་གེ་ཆེ་ཆུང་སྙོམ་སྒྲིག་（ཙི་གུའི་འགྲིལ་འཁོར།）</translation>
     </message>
@@ -618,7 +450,6 @@ Shiftམནན་ནས་དྲང་ཐིག་འབྲི་ཐུབ།</t
 <context>
     <name>StartTooltip</name>
     <message>
-        <location filename="../src/start_tooltip.cpp" line="30"/>
         <source>Click or drag to
 select the area to record</source>
         <translation type="unfinished"/>
@@ -627,336 +458,241 @@ select the area to record</source>
 <context>
     <name>SubToolWidget</name>
     <message>
-        <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="40"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="989"/>
-        <source>Extract Text</source>
-        <translation>ཡི་གེ་ངོས་འཛིན།</translation>
-    </message>
-    <message>
-        <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="64"/>
-        <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="66"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="207"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="787"/>
-        <source>Options</source>
-        <translation>གདམ་ག</translation>
-    </message>
-    <message>
-        <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="84"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="748"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="751"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1049"/>
-        <source>Folder</source>
-        <translation>དམིགས་བཙུགས་ས་གནས།</translation>
-    </message>
-    <message>
-        <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="97"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="763"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1061"/>
-        <source>Set a path on save</source>
-        <translation>ཉར་སྐབས་གནས་ས་སྒྲིག་འགོད་བྱེད་པ། </translation>
-    </message>
-    <message>
-        <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="110"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="263"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="744"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1042"/>
-        <source>Save to</source>
-        <translation>དུ་ཉར་བ།</translation>
-    </message>
-    <message>
-        <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="112"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="264"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="746"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1044"/>
-        <source>Desktop</source>
-        <translation>ཅོག་ངོས།</translation>
-    </message>
-    <message>
-        <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="115"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="747"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1045"/>
-        <source>Pictures</source>
-        <translation>པར་རིས།</translation>
-    </message>
-    <message>
-        <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="121"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="745"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1043"/>
-        <source>Clipboard</source>
-        <translation>དྲས་སྦྱར་པང་།</translation>
-    </message>
-    <message>
-        <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="135"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="781"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1079"/>
-        <source>Format</source>
-        <translation>རྣམ་བཞག་ </translation>
-    </message>
-    <message>
-        <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="136"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="782"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1080"/>
-        <source>PNG</source>
-        <translation>PNG</translation>
-    </message>
-    <message>
-        <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="138"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="783"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1081"/>
-        <source>JPG</source>
-        <translation>JPG</translation>
-    </message>
-    <message>
-        <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="140"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="784"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1082"/>
-        <source>BMP</source>
-        <translation>BMP</translation>
-    </message>
-    <message>
-        <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="219"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="766"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1064"/>
-        <source>Change the path on save</source>
-        <translation>ཉར་སྐབས་གནས་ས་གསར་སྒྱུར་བྱེད་པ།</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="71"/>
-        <source>Show keystroke (K)</source>
-        <translation>མཐེབ་གཅུས་Kམངོན་པ།</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="79"/>
-        <source>Hide Keystroke (K)</source>
-        <translation>མཐེབ་གཅུས་ཡིབ་པ་ (K)</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="82"/>
-        <source>Show Keystroke (K)</source>
-        <translation>མཐེབ་གཅུས་མངོན་པ་ (K)</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="92"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="103"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1429"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1440"/>
-        <source>Turn on camera (C)</source>
-        <translation>བཪྙན་མིག་ཁ་ཕྱེ།(C)</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="100"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1438"/>
-        <source>Turn off camera (C)</source>
-        <translation>བཪྙན་མིག་ཁ་རྒྱོབ་ (C)</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="115"/>
-        <source>Screenshot</source>
-        <translation>བརྙན་བཤུས།</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="146"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="656"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1014"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1016"/>
-        <source>Settings</source>
-        <translation>སྒྲིག་བཀོད།</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="148"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="659"/>
-        <source>Settings (F3)</source>
-        <translation>སྒྲིག་བཀོད་(F3)</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="187"/>
-        <source>Format:</source>
-        <translation>རྣམ་བཞག</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="188"/>
-        <source>GIF</source>
-        <translation>GIF</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="189"/>
-        <source>MP4</source>
-        <translation>MP4</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="190"/>
-        <source>MKV</source>
-        <translation>MKV</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="192"/>
-        <source>webm</source>
-        <translation>webm</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="195"/>
-        <source>FPS:</source>
-        <translation>ལྡེབ་གྲངས།</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="196"/>
-        <source>5 fps</source>
-        <translation>5 fps</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="197"/>
-        <source>10 fps</source>
-        <translation>10 fps</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="198"/>
-        <source>20 fps</source>
-        <translation>20 fps</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="199"/>
-        <source>24 fps</source>
-        <translation>24 fps</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="200"/>
-        <source>30 fps</source>
-        <translation>30 fps</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="202"/>
-        <source>Sound</source>
-        <translation>སྒྲ་འབེབས།</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="204"/>
         <source>Microphone</source>
         <translation>སྐད་དུང་།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="205"/>
-        <source>System audio</source>
-        <translation>མ་ལག་སྒྲ་ཟློས།</translation>
+        <source>Options</source>
+        <translation>གདམ་ག</translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="209"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="788"/>
+        <source>Format:</source>
+        <translation>རྣམ་བཞག</translation>
+    </message>
+    <message>
+        <source>GIF</source>
+        <translation>GIF</translation>
+    </message>
+    <message>
+        <source>MP4</source>
+        <translation>MP4</translation>
+    </message>
+    <message>
+        <source>FPS:</source>
+        <translation>ལྡེབ་གྲངས།</translation>
+    </message>
+    <message>
+        <source>5 fps</source>
+        <translation>5 fps</translation>
+    </message>
+    <message>
+        <source>10 fps</source>
+        <translation>10 fps</translation>
+    </message>
+    <message>
+        <source>20 fps</source>
+        <translation>20 fps</translation>
+    </message>
+    <message>
+        <source>24 fps</source>
+        <translation>24 fps</translation>
+    </message>
+    <message>
+        <source>30 fps</source>
+        <translation>30 fps</translation>
+    </message>
+    <message>
+        <source>Save to</source>
+        <translation>དུ་ཉར་བ།</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>ཅོག་ངོས།</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>པར་རིས།</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>དམིགས་བཙུགས་ས་གནས།</translation>
+    </message>
+    <message>
+        <source>Format</source>
+        <translation>རྣམ་བཞག་ </translation>
+    </message>
+    <message>
+        <source>PNG</source>
+        <translation>PNG</translation>
+    </message>
+    <message>
+        <source>JPG</source>
+        <translation>JPG</translation>
+    </message>
+    <message>
+        <source>BMP</source>
+        <translation>BMP</translation>
+    </message>
+    <message>
+        <source>MKV</source>
+        <translation>MKV</translation>
+    </message>
+    <message>
+        <source>Clipboard</source>
+        <translation>དྲས་སྦྱར་པང་།</translation>
+    </message>
+    <message>
         <source>Show pointer</source>
         <translation>འོད་རྟགས་གསལ་བ།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="210"/>
-        <source>Show click</source>
-        <translation>གནོན་པ་གསལ་བ།</translation>
+        <source>Extract Text</source>
+        <translation>ཡི་གེ་ངོས་འཛིན།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="266"/>
+        <source>Show keystroke (K)</source>
+        <translation>མཐེབ་གཅུས་Kམངོན་པ།</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>སྒྲིག་བཀོད།</translation>
+    </message>
+    <message>
+        <source>Settings (F3)</source>
+        <translation>སྒྲིག་བཀོད་(F3)</translation>
+    </message>
+    <message>
+        <source>Blur (B)</source>
+        <translation>རབ་རིབ། (B)</translation>
+    </message>
+    <message>
+        <source>Text (T)</source>
+        <translation>ཡི་གེ། (T)</translation>
+    </message>
+    <message>
+        <source>Scrollshot (Alt+I）</source>
+        <translation>འགྲིལ་ནས་པར་ལེན་ (Alt+I）</translation>
+    </message>
+    <message>
+        <source>Extract text (Alt+O）</source>
+        <translation>ཡི་གེ་ངོས་འཛིན་ Alt+O</translation>
+    </message>
+    <message>
+        <source>Undo (Ctrl+Z)</source>
+        <translation>ཕྱིར་འཐེན་ Ctrl+Z</translation>
+    </message>
+    <message>
+        <source>Screenshot</source>
+        <translation>བརྙན་བཤུས།</translation>
+    </message>
+    <message>
+        <source>Pin screenshots (Alt+P）</source>
+        <translation>སྦྱར་རིས་ (Alt+P）</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>བརྙན་ཕབ།</translation>
+    </message>
+    <message>
+        <source>Pencil (P)</source>
+        <translation>པིར་སྨྱུག་ (P)</translation>
+    </message>
+    <message>
+        <source>Turn on camera (C)</source>
+        <translation>བཪྙན་མིག་ཁ་ཕྱེ།(C)</translation>
+    </message>
+    <message>
+        <source>Border Effects</source>
+        <translation>མཐའ་སྒྲོམ་ཕན་ནུས།</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>མཐའ་སྒྲོམ་མེད་པ།</translation>
+    </message>
+    <message>
+        <source>Turn off camera (C)</source>
+        <translation>བཪྙན་མིག་ཁ་རྒྱོབ་ (C)</translation>
+    </message>
+    <message>
+        <source>Hide Keystroke (K)</source>
+        <translation>མཐེབ་གཅུས་ཡིབ་པ་ (K)</translation>
+    </message>
+    <message>
+        <source>Show Keystroke (K)</source>
+        <translation>མཐེབ་གཅུས་མངོན་པ་ (K)</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
+    </message>
+    <message>
         <source>Videos</source>
         <translation>བཪྙན་ཟློས།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="506"/>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
         <translation>གྲུ་བཞི་ནར་མོ། (R)
 Shiftམནན་ནས་གྲུ་བཞི་ཁ་གང་འབྲི་ཐུབ།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="513"/>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
         <translation>འཇོང་དབྱིབས་ (O)
 Shiftམནན་ནས་སྒོར་དབྱིབས་འབྲི་ཐུབ། </translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="522"/>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation>ཕག་ཏོ་ (L)
 Shiftམནན་ནས་དྲང་ཐིག་འབྲི་ཐུབ།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="532"/>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation>མདའ་རྩེ་ (X)
 Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམས་ཀྱི་དྲང་ཐིག་འབྲི་ཐུབ།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="542"/>
-        <source>Pencil (P)</source>
-        <translation>པིར་སྨྱུག་ (P)</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="552"/>
-        <source>Blur (B)</source>
-        <translation>རབ་རིབ། (B)</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="563"/>
-        <source>Text (T)</source>
-        <translation>ཡི་གེ། (T)</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="576"/>
-        <source>Scrollshot (Alt+I）</source>
-        <translation>འགྲིལ་ནས་པར་ལེན་ (Alt+I）</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="592"/>
-        <source>Extract text (Alt+O）</source>
-        <translation>ཡི་གེ་ངོས་འཛིན་ Alt+O</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="603"/>
-        <source>Pin screenshots (Alt+P）</source>
-        <translation>སྦྱར་རིས་ (Alt+P）</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="614"/>
-        <source>Undo (Ctrl+Z)</source>
-        <translation>ཕྱིར་འཐེན་ Ctrl+Z</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="630"/>
-        <source>Record</source>
-        <translation>བརྙན་ཕབ།</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="791"/>
-        <source>Border Effects</source>
-        <translation>མཐའ་སྒྲོམ་ཕན་ནུས།</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="792"/>
-        <source>None</source>
-        <translation>མཐའ་སྒྲོམ་མེད་པ།</translation>
-    </message>
-    <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="793"/>
         <source>Shadow</source>
         <translation>བརྙན་སྟོན།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="794"/>
         <source>Border</source>
         <translation>ཕྱིའི་མཐའ་སྒྲོམ།</translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="795"/>
         <source>Device</source>
         <translation>བཟོ་ལྟ།</translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation>སྒྲ་འབེབས།</translation>
+    </message>
+    <message>
+        <source>System audio</source>
+        <translation>མ་ལག་སྒྲ་ཟློས།</translation>
+    </message>
+    <message>
+        <source>Show click</source>
+        <translation>གནོན་པ་གསལ་བ།</translation>
+    </message>
+    <message>
+        <source>Set a path on save</source>
+        <translation>ཉར་སྐབས་གནས་ས་སྒྲིག་འགོད་བྱེད་པ། </translation>
+    </message>
+    <message>
+        <source>Change the path on save</source>
+        <translation>ཉར་སྐབས་གནས་ས་གསར་སྒྱུར་བྱེད་པ།</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
-        <location filename="../src/widgets/toolbar.cpp" line="66"/>
         <source>Close (Esc)</source>
         <translation>ཁ་རྒྱག་(Esc)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/toolbar.cpp" line="67"/>
         <source>OK (Enter)</source>
         <translation>གཏན་འཁེལ་ (Enter)</translation>
     </message>
@@ -964,7 +700,6 @@ Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམ
 <context>
     <name>TopTips</name>
     <message>
-        <location filename="../src/widgets/toptips.cpp" line="49"/>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
         <translation>ཕབ་བཟོ་ཁུལ་ཁོངས་ཀྱི་ཁྱབ་ཁོངས་%1*%2ནང་ཚུན་ལེགས་སྒྲིག་བྱས་ན། བརྙན་འཕྲིན་གྱི་གྲུབ་འབྲས་དེ་བས་ཡག </translation>
     </message>
@@ -972,12 +707,10 @@ Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམ
 <context>
     <name>Utils</name>
     <message>
-        <location filename="../src/utils.cpp" line="446"/>
         <source>Screen recording is not supported at present</source>
         <translation>བརྙན་ཕབ་བྱེད་ནུས་གནས་སྐབས་སྤྱོད་མི་ཆོག</translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="448"/>
         <source>Exit</source>
         <translation>ཕྱིར་འཐེན།</translation>
     </message>
@@ -985,7 +718,6 @@ Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམ
 <context>
     <name>VoiceRecordProcess</name>
     <message>
-        <location filename="../src/voice_record_process.cpp" line="85"/>
         <source>New recording</source>
         <translation type="unfinished"/>
     </message>
