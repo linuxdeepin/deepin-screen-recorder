@@ -147,7 +147,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>रिकॉर्ड</translation>
     </message>
 </context>
 <context>
