@@ -605,15 +605,15 @@ norėdami pasirinkti
     </message>
     <message>
         <source>Turn on camera (C)</source>
-        <translation type="unfinished"/>
+        <translation>Įjunkite kamerą (C)</translation>
     </message>
     <message>
         <source>Border Effects</source>
-        <translation type="unfinished"/>
+        <translation>Rėmų efektai</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"/>
+        <translation>Nėra</translation>
     </message>
     <message>
         <source>Turn off camera (C)</source>
