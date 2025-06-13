@@ -1,3 +1,12 @@
+deepin-screen-recorder (6.5.20) unstable; urgency=medium
+
+  * fix: improve file manager command handling
+  * fix: Fix the plugins can not be loaded issue
+  * feat: Adapt to V23 dde dbus interface
+  * Update version to 6.5.20
+
+ -- wangrong <wangrong@uniontech.com>  Fri, 13 Jun 2025 10:04:47 +0800
+
 deepin-screen-recorder (6.5.19) unstable; urgency=medium
 
   * add log.
