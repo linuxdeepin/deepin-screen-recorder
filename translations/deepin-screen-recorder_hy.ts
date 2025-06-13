@@ -278,7 +278,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation type="unfinished"/>
+        <translation>Քառակուսի</translation>
     </message>
     <message>
         <source>Ellipse</source>
