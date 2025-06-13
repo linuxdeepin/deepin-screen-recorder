@@ -9,3 +9,4 @@ build/
 # AI
 .cursor
 .specstory
+.cursorindexingignore
