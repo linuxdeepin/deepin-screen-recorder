@@ -143,141 +143,141 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>स्क्रीनशॉट</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>રેકોર્ડ</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>સ્ક્રીનશૉટ</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>રેકોર્ડિંગ</translation>
     </message>
 </context>
 <context>
     <name>RecordProcess</name>
     <message>
         <source>View</source>
-        <translation type="unfinished"/>
+        <translation>દૃશ્ય</translation>
     </message>
     <message>
         <source>Recording finished</source>
-        <translation type="unfinished"/>
+        <translation>રેકોર્ડિંગ પૂર્ણ થઈ</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation type="unfinished"/>
+        <translation>સેવ કરવામાં આવ્યો %1</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>રેકોર્ડ</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>ફોલ્ડર ખોલો</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation type="unfinished"/>
+        <translation>સ્ક્રીન કેપ્ચર %1 સેકન્ડમાં શરૂ થશે</translation>
     </message>
 </context>
 <context>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>મદદ મેળવો.</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>એક સાથે સ્ક્રીનશૉટ લેવામાં અસર્જનશીલ છે.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>સ્ક્રોલ એરિયાની નીચે પહોંચ્યો</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation type="unfinished"/>
+        <translation>મહત્તમ લંબાઈ પહોંચી ગઈ</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>કેપ્ચર એરિયાને સુધારો</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>સ્ક્રોલ કરવા માટે તમારો માઉસ વીલ સ્ક્રોલ કરો અથવા ક્લિક કરો</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>સ્ક્રોલિંગ સ્પીડ ઓછી કરો</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>અસાધ્ય એરિયા, ક્લિક કરો </translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation type="unfinished"/>
+        <translation>અહીં ટેક્સ્ટ નીણે</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>શરૂ/સ્ક્રીનશૉટ</translation>
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation type="unfinished"/>
+        <translation>નિકાસ/સેવ</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation type="unfinished"/>
+        <translation>સાઇઝ સુધારો</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"/>
+        <translation>સેટિંગ્સ</translation>
     </message>
     <message>
         <source>Quick start</source>
-        <translation type="unfinished"/>
+        <translation>ઝડપી શરૂ કરો</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation type="unfinished"/>
+        <translation>વિંડો સ્ક્રીનશૉટ</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation type="unfinished"/>
+        <translation>ઓછી સ્ક્રીનશૉટ</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation type="unfinished"/>
+        <translation>સંપૂર્ણ સ્ક્રીનશૉટ</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation type="unfinished"/>
+        <translation>નિકાસ</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"/>
+        <translation>સેવ</translation>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation type="unfinished"/>
+        <translation>ચોરસ</translation>
     </message>
     <message>
         <source>Ellipse</source>
