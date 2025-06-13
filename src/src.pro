@@ -146,6 +146,7 @@ include(../3rdparty/libcam/libcam.pri)
 
 # Compiler flags
 CONFIG += c++17 link_pkgconfig
+QMAKE_CFLAGS += -g -Wall -fPIE
 QMAKE_CXXFLAGS += -g -Wall -fPIE -Wno-error=deprecated-declarations -Wno-deprecated-declarations
 QMAKE_LFLAGS += -g -Wall -Wl,--as-needed -pie -z noexecstack -fstack-protector-all -z now
 
