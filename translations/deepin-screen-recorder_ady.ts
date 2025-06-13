@@ -4,138 +4,138 @@
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation type="unfinished"/>
+        <translation> Tray icon -ن یا کوتاشن را دوباره فشار دهید تا ضبط متوقف شود</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation> ضبط را انجام دهید، از تغییر جهت صفحه خودداری کنید</translation>
     </message>
 </context>
 <context>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Screenshot</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Record</translation>
     </message>
 </context>
 <context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Record</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Screenshot</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation type="unfinished"/>
+        <translation>Screen Capture</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation type="unfinished"/>
+        <translation>ذخیره شدن شکست. لطفاً آن را در دایرکتوری خود ذخیره کنید.</translation>
     </message>
     <message>
         <source>View</source>
-        <translation type="unfinished"/>
+        <translation>View</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation type="unfinished"/>
+        <translation>Screenshot completed</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
-        <translation type="unfinished"/>
+        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
     </message>
     <message>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
-        <translation type="unfinished"/>
+        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
     </message>
     <message>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
-        <translation type="unfinished"/>
+        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation type="unfinished"/>
+        <translation>select-area</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"/>
+        <translation>Save</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation type="unfinished"/>
+        <translation>ذخیره شد %1</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"/>
+        <translation>Ignore</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Clipboard</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation type="unfinished"/>
+        <translation>ذخیره سازی فایل ضبط صفحه، لطفاً صبر کنید...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"/>
+        <translation> به عنوان یک اثر پنجره در طول فرآیند غیرفعال است، ضبط باید متوقف شود</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Screenshot</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation type="unfinished"/>
+        <translation>Screenshot failed.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Scrollshot</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Open Folder</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Pin Screenshots</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
 </context>
 <context>
     <name>MenuController</name>
     <message>
         <source>Undo</source>
-        <translation type="unfinished"/>
+        <translation>Undo</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"/>
+        <translation>Save</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation type="unfinished"/>
+        <translation>Exit</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Pin Screenshots</translation>
     </message>
 </context>
 <context>
