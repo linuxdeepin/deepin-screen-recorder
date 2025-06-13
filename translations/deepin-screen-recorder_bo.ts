@@ -114,7 +114,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
 </context>
 <context>
@@ -143,22 +143,22 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>གཞིར་འོག</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>གསར་འོག</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>གཞིར་འོག</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>གསར་འོག་བཟོ་སྐབས</translation>
     </message>
 </context>
 <context>
@@ -411,7 +411,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>གསར་འོག</translation>
     </message>
 </context>
 <context>
@@ -452,7 +452,7 @@ Shiftམནན་ནས་དྲང་ཐིག་འབྲི་ཐུབ།</t
     <message>
         <source>Click or drag to
 select the area to record</source>
-        <translation type="unfinished"/>
+        <translation>གསར་འོག</translation>
     </message>
 </context>
 <context>
@@ -719,7 +719,7 @@ Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམ
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation type="unfinished"/>
+        <translation>གསར་འོག་གི་གསར་གྱི</translation>
     </message>
 </context>
 </TS>
