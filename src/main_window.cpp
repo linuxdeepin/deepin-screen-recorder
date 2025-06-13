@@ -2542,7 +2542,7 @@ void MainWindow::wheelEvent(QWheelEvent *event)
                      static_cast<int>(recordWidth * m_pixelRatio),
                      static_cast<int>(recordHeight * m_pixelRatio)};
     // 当前鼠标的点
-    QPoint mouseMovePoint(x, y);
+    QPoint mouseMovePoint(x * m_pixelRatio, y * m_pixelRatio);
     // 判断当鼠标位置是否在捕捉区域内部,不在捕捉区域内则暂停自动滚动
     if (!recordRect.contains(mouseMovePoint))
         return;
@@ -5584,7 +5584,7 @@ int MainWindow::wheelEF(QWheelEvent *wheelEvent, bool &needRepaint)
                          static_cast<int>(recordWidth * m_pixelRatio),
                          static_cast<int>(recordHeight * m_pixelRatio)};
         // 当前鼠标滚动的点
-        QPoint mouseScrollPoint(wheelEvent->position().x(), wheelEvent->position().y());;
+        QPoint mouseScrollPoint(wheelEvent->position().x() * m_pixelRatio, wheelEvent->position().y() * m_pixelRatio);;
         // 判断鼠标滚动的位置是否是在捕捉区域内部，滚动位置在捕捉区域内部
         if (recordRect.contains(mouseScrollPoint)) {
             m_scrollShotType = ScrollShotType::ManualScroll;
@@ -5896,8 +5896,7 @@ void MainWindow::scrollShotMouseMoveEvent(int x, int y)
                      static_cast<int>(recordWidth * m_pixelRatio),
                      static_cast<int>(recordHeight * m_pixelRatio)};
     // 当前鼠标的点
-    QPoint mouseMovePoint(x, y);
-    // 判断当鼠标位置是否在捕捉区域内部,不在捕捉区域内则暂停自动滚动，并取消穿透，此时取消穿透对捕捉区域外的操作不构成影响
+    QPoint mouseMovePoint(x * m_pixelRatio, y * m_pixelRatio);
     if (!recordRect.contains(mouseMovePoint)) {
         if (1 == m_scrollShotStatus || 2 == m_scrollShotStatus || 3 == m_scrollShotStatus) {
             m_scrollShotStatus = 4;
@@ -5993,11 +5992,10 @@ void MainWindow::scrollShotMouseScrollEvent(int mouseTime, int direction, int x,
                      static_cast<int>(recordWidth * m_pixelRatio),
                      static_cast<int>(recordHeight * m_pixelRatio)};
     // 当前鼠标滚动的点
-    QPoint mouseScrollPoint(x, y);
+    QPoint mouseScrollPoint(x * m_pixelRatio, y * m_pixelRatio);
     // 判断鼠标滚动的位置是否是在捕捉区域内部，不在捕捉区域内部不进行处理
     if (!recordRect.contains(mouseScrollPoint))
         return;
-
     if (!Utils::isWaylandMode) {
         // 对比监听自动滚动事件是否正在进行触发, wayland模式下不做此判断
         if (m_autoScrollFlagNext > m_autoScrollFlagLast) {
