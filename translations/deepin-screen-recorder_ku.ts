@@ -4,138 +4,139 @@
     <message>
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
-        <translation type="unfinished"/>
+        <translation>ئەتەت ئىكۆن ئىتىپ كىرەك
+ یا چۈشكە ئىتىپ كىرەك بولۇپ، چەكلەنىشنى تەپەكچىلىنىشقا ئىتىپ كىرەك</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>چەقلەنىش ئەمەلەتىدا سېنىنى چەقلەنىشنى تەپەكچىلىنىشقا ئىتىپ كىرەك</translation>
     </message>
 </context>
 <context>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>ئەتەت ئىكۆن</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>چەقلەنىش</translation>
     </message>
 </context>
 <context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>چەقلەنىش</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>ئەتەت ئىكۆن</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation type="unfinished"/>
+        <translation>ئەتەت ئىكۆن</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation type="unfinished"/>
+        <translation>ئەتەت ئىكۆننى بىكار چۈشتۈرگەن. ئەتەت ئىكۆننىڭ ئۆزىنىڭ ئۆي كىتابخاناسىغا ساقلىنىشنى ئېگىزى</translation>
     </message>
     <message>
         <source>View</source>
-        <translation type="unfinished"/>
+        <translation>كۆرۈش</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation type="unfinished"/>
+        <translation>ئەتەت ئىكۆن تەپەكچىلىنىشقا ئىتىپ كىرەك</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
-        <translation type="unfinished"/>
+        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
     </message>
     <message>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
-        <translation type="unfinished"/>
+        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
     </message>
     <message>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
-        <translation type="unfinished"/>
+        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation type="unfinished"/>
+        <translation>ئەتەت ئىكۆن</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"/>
+        <translation>ساقلىنىش</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation type="unfinished"/>
+        <translation>ساقلىنىپ چىققان %1</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"/>
+        <translation>ئەھەمچىلىك بيرمە</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>كىپبىورد</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation type="unfinished"/>
+        <translation>ئەتەت ئىكۆننىڭ چەقلەنىش فايلى ساقلىنىۋاتىدۇ، ئەھەمچىلىك بيرمە</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"/>
+        <translation>چەقلەنىش ۋاقىتىدا پەنلەر ئىنتېرەكسىسى ئەھەمچىلىك بيرمە، چەقلەنىشنى تەپەكچىلىنىشقا ئىتىپ كىرەك</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>ئەتەت ئىكۆن</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation type="unfinished"/>
+        <translation>ئەتەت ئىكۆن بىكار چۈشتۈرۈلدى</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>ئەتەت ئىكۆن</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>كىتابخانا ئېچىنىش</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>ئەتەت ئىكۆننى چەكلەنىشقا ئىتىپ كىرەك</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
 </context>
 <context>
     <name>MenuController</name>
     <message>
         <source>Undo</source>
-        <translation type="unfinished"/>
+        <translation>بىكار چۈشتۈرۈش</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"/>
+        <translation>ساقلىنىش</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation type="unfinished"/>
+        <translation>چыقىش</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>ئەتەت ئىكۆننى چەكلەنىشقا ئىتىپ كىرەك</translation>
     </message>
 </context>
 <context>
