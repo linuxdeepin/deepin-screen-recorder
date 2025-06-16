@@ -114,7 +114,7 @@ klikoni ikonën e panelit, ose rishtypni shkurtoren</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>deepin-screen-recorder</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
