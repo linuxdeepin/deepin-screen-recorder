@@ -1,3 +1,10 @@
+deepin-screen-recorder (6.5.23) unstable; urgency=medium
+
+  * fix: Fix screen recording button not disappear when recording
+  * Update version to 6.5.23
+
+ -- wangrong <wangrong@uniontech.com>  Tue, 17 Jun 2025 19:27:29 +0800
+
 deepin-screen-recorder (6.5.22) unstable; urgency=medium
 
   * chore: Enhance compiler flags for improved debugging and security
