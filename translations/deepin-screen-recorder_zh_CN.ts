@@ -5,44 +5,44 @@
         <source>Click the tray icon 
 or press the shortcut again to stop recording</source>
         <translation>点击托盘图标
-或再次按下录屏快捷键停止录制</translation>
+或再次按下快捷键以停止录制</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation>屏幕录制中请勿旋转屏幕</translation>
+        <translation>录制过程中请勿旋转屏幕</translation>
     </message>
 </context>
 <context>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>截图</translation>
+        <translation>截屏</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>录屏</translation>
+        <translation>录制</translation>
     </message>
 </context>
 <context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation>录屏</translation>
+        <translation>录制</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>截图</translation>
+        <translation>截屏</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation>截图录屏</translation>
+        <translation>屏幕捕获</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation>保存失败。请保存在当前用户目录下。</translation>
+        <translation>保存失败。请将其保存在您的主目录中。</translation>
     </message>
     <message>
         <source>View</source>
@@ -50,19 +50,22 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation>截图完成</translation>
+        <translation>截屏完成</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
-        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
+        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)
+</translation>
     </message>
     <message>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
-        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
+        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)
+</translation>
     </message>
     <message>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
-        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
+        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)
+</translation>
     </message>
     <message>
         <source>select-area</source>
@@ -74,7 +77,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>图片已保存到%1</translation>
+        <translation>保存到 %1</translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -86,23 +89,23 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation>正在保存录屏文件，请稍候...</translation>
+        <translation>正在保存屏幕录制文件，请稍候...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation>因在录制过程中关闭了窗口特效，录屏已结束</translation>
+        <translation>由于在录制过程中禁用了窗口效果，因此必须停止录制</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation>截图</translation>
+        <translation>截屏</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation>截图失败。</translation>
+        <translation>截屏失败。</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation>滚动截图</translation>
+        <translation>滚动截屏</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -110,11 +113,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation>贴图</translation>
+        <translation>固定截屏</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation>截图录屏</translation>
+        <translation>Deepin 屏幕录制器</translation>
     </message>
 </context>
 <context>
@@ -136,29 +139,29 @@ or press the shortcut again to stop recording</source>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation>贴图</translation>
+        <translation>固定截屏</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>截图</translation>
+        <translation>截屏</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>录屏</translation>
+        <translation>录制</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation>截图</translation>
+        <translation>截屏</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>录屏</translation>
+        <translation>录制中</translation>
     </message>
 </context>
 <context>
@@ -169,15 +172,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Recording finished</source>
-        <translation>录制完毕</translation>
+        <translation>录制完成</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation>文件已保存到%1</translation>
+        <translation>已保存到 %1</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>录屏</translation>
+        <translation>录制</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -188,56 +191,56 @@ or press the shortcut again to stop recording</source>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation>截图录屏将在%1秒后启动</translation>
+        <translation>截屏将在 %1 秒后开始</translation>
     </message>
 </context>
 <context>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation>查看帮助</translation>
+        <translation>获取帮助。</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation>无法继续截图。</translation>
+        <translation>连续截屏失败。</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation>已到滚动区域底部</translation>
+        <translation>滚动区域底部</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation>已到最大长度</translation>
+        <translation>达到最大长度</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation>调整捕捉区域</translation>
+        <translation>调整截取区域</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation>滚动鼠标滚轮或单击捕捉区域</translation>
+        <translation>滚动鼠标滚轮或点击以截取滚动截屏</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation>请放慢滚动速度</translation>
+        <translation>减慢滚动速度</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation>无效区域，点击</translation>
+        <translation>无效区域，请点击以</translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation>在此处添加文本</translation>
+        <translation>在此输入文本</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation>启动/截图 </translation>
+        <translation>开始/截屏</translation>
     </message>
     <message>
         <source>Exit/Save</source>
@@ -245,7 +248,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation>调整区域</translation>
+        <translation>大小调整</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -253,19 +256,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Quick start</source>
-        <translation>快速启动截图</translation>
+        <translation>快速开始</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation>光标所在窗口截图</translation>
+        <translation>窗口截图</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation>延时截图</translation>
+        <translation>延迟截图</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation>截取全屏</translation>
+        <translation>全屏截图</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -289,15 +292,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>画笔</translation>
+        <translation>铅笔</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation>文字</translation>
+        <translation>文本</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>删除选中图形</translation>
+        <translation>删除</translation>
     </message>
     <message>
         <source>Undo</source>
@@ -305,35 +308,35 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation>向上扩大选区高度</translation>
+        <translation>向上增加高度</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation>向下扩大选区高度</translation>
+        <translation>向下增加高度</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation>向左扩大选区宽度</translation>
+        <translation>向左增加宽度</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation>向右扩大选区宽度</translation>
+        <translation>向右增加宽度</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation>向上缩小选区高度</translation>
+        <translation>向上减少高度</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation>向下缩小选区高度</translation>
+        <translation>向下减少高度</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation>向左缩小选区宽度</translation>
+        <translation>向左减少宽度</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation>向右缩小选区宽度</translation>
+        <translation>向右减少宽度</translation>
     </message>
     <message>
         <source>Help</source>
@@ -467,7 +470,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Format:</source>
-        <translation>格式：</translation>
+        <translation>格式:</translation>
     </message>
     <message>
         <source>GIF</source>
@@ -479,7 +482,7 @@ select the area to record</source>
     </message>
     <message>
         <source>FPS:</source>
-        <translation>帧数：</translation>
+        <translation>帧率:</translation>
     </message>
     <message>
         <source>5 fps</source>
@@ -515,7 +518,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Folder</source>
-        <translation>指定位置</translation>
+        <translation>文件夹</translation>
     </message>
     <message>
         <source>Format</source>
@@ -543,15 +546,15 @@ select the area to record</source>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation>显示鼠标光标</translation>
+        <translation>显示指针</translation>
     </message>
     <message>
         <source>Extract Text</source>
-        <translation>识别文字</translation>
+        <translation>提取文本</translation>
     </message>
     <message>
         <source>Show keystroke (K)</source>
-        <translation>显示按键 K</translation>
+        <translation>显示按键 (K), </translation>
     </message>
     <message>
         <source>Settings</source>
@@ -559,27 +562,27 @@ select the area to record</source>
     </message>
     <message>
         <source>Settings (F3)</source>
-        <translation>设置 F3</translation>
+        <translation>设置 (F3),</translation>
     </message>
     <message>
         <source>Blur (B)</source>
-        <translation>模糊 B</translation>
+        <translation>模糊 (B)</translation>
     </message>
     <message>
         <source>Text (T)</source>
-        <translation>文字 T</translation>
+        <translation>文本 (T)</translation>
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation>滚动截图 Alt+I</translation>
+        <translation>滚动截图 (Alt+I)</translation>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
-        <translation>识别文字 Alt+O</translation>
+        <translation>提取文本 (Alt+O)</translation>
     </message>
     <message>
         <source>Undo (Ctrl+Z)</source>
-        <translation>撤销 Ctrl+Z</translation>
+        <translation>撤销 (Ctrl+Z)</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -587,19 +590,19 @@ select the area to record</source>
     </message>
     <message>
         <source>Pin screenshots (Alt+P）</source>
-        <translation>贴图 Alt+P</translation>
+        <translation>固定截图 (Alt+P)</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>录屏</translation>
+        <translation>录制</translation>
     </message>
     <message>
         <source>Pencil (P)</source>
-        <translation>画笔 P</translation>
+        <translation>铅笔 (P)</translation>
     </message>
     <message>
         <source>Turn on camera (C)</source>
-        <translation>开启摄像头 C</translation>
+        <translation>开启摄像头 (C)</translation>
     </message>
     <message>
         <source>Border Effects</source>
@@ -607,19 +610,19 @@ select the area to record</source>
     </message>
     <message>
         <source>None</source>
-        <translation>无边框</translation>
+        <translation>无</translation>
     </message>
     <message>
         <source>Turn off camera (C)</source>
-        <translation>关闭摄像头 C</translation>
+        <translation>关闭摄像头 (C)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation>隐藏按键 K</translation>
+        <translation>隐藏按键 (K)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation>显示按键 K</translation>
+        <translation>显示按键 (K)</translation>
     </message>
     <message>
         <source>webm</source>
@@ -632,38 +635,38 @@ select the area to record</source>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation>矩形（R）
-按住Shift可画正方形</translation>
+        <translation>矩形 (R)
+按住 Shift 键绘制正方形</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation>椭圆（O）
-按住Shift可画圆形</translation>
+        <translation>椭圆 (O)
+按住 Shift 键绘制圆</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation>直线（L）
-按住Shift可画垂直线和水平线</translation>
+        <translation>直线 (L)
+按住 Shift 键绘制垂直或水平线</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation>箭头（X）
-按住Shift可画垂直和水平箭头</translation>
+        <translation>箭头 (X)
+按住 Shift 键绘制垂直或水平箭头</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation>投影</translation>
+        <translation>阴影</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation>外边框</translation>
+        <translation>边框</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation>样机</translation>
+        <translation>设备</translation>
     </message>
     <message>
         <source>Sound</source>
@@ -675,40 +678,40 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Show click</source>
-        <translation>显示鼠标点击</translation>
+        <translation>显示点击</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation>保存时设置位置</translation>
+        <translation>保存时设置路径</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation>保存时更新位置</translation>
+        <translation>保存时更改路径</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation>关闭 Esc</translation>
+        <translation>关闭 (Esc</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation>确认 Enter</translation>
+        <translation>确定 (Enter</translation>
     </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation> 调整录制区域范围在%1*%2以内，视频效果更佳</translation>
+        <translation>调整录制区域大小为 %1*%2 以获得更好的视频效果</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation>录屏功能暂不可用</translation>
+        <translation>当前不支持屏幕录制</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -719,7 +722,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation>新录屏</translation>
+        <translation>新的录制</translation>
     </message>
 </context>
 </TS>

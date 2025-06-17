@@ -10,40 +10,40 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>Nepakreipkite ekrano per įrašymą</translation>
     </message>
 </context>
 <context>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Ekraninis nuotrauka</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Įrašymas</translation>
     </message>
 </context>
 <context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Įrašyti</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Ekraninė nuotrauka baigta</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation type="unfinished"/>
+        <translation>Išsaugojama ekraninio įrašymo failas, prašom laukti...</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation type="unfinished"/>
+        <translation>Kai per procesą išjungta langų efekto funkcija, įrašymas turi būti sustabdytas</translation>
     </message>
     <message>
         <source>View</source>
@@ -51,7 +51,7 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation type="unfinished"/>
+        <translation>Ekraninė nuotrauka nepavyko.</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
@@ -87,11 +87,11 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation type="unfinished"/>
+        <translation>Scrollshot</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"/>
+        <translation>Fiksuoti ekranines nuotraukas</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -99,11 +99,11 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Fiksuoti ekranines nuotraukas</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -111,11 +111,11 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Ekraninis nuotrauka</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>Įrašyti</translation>
     </message>
 </context>
 <context>
@@ -137,29 +137,29 @@ arba dar kartą paspauskite trumpinį</translation>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Ekraninis nuotrauka</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Įrašymas</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Įrašyti</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Ekraninis įrašymas prasidės %1 sekundės</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Gauti pagalbą.</translation>
     </message>
 </context>
 <context>
@@ -178,7 +178,7 @@ arba dar kartą paspauskite trumpinį</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Nepavyko gauti nuoseklios ekraninės nuotraukos.</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -189,26 +189,26 @@ arba dar kartą paspauskite trumpinį</translation>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation type="unfinished"/>
+        <translation>Patekote į scroll srities apačią</translation>
     </message>
 </context>
 <context>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>Pasiekėte maksimalų ilgį</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>Įrašyti</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>Pieštis (P)</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation type="unfinished"/>
+        <translation>Įjungti kamerą (C)</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
@@ -597,35 +597,35 @@ norėdami pasirinkti
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Rėmeliai</translation>
     </message>
     <message>
         <source>Pencil (P)</source>
-        <translation type="unfinished"/>
+        <translation>Nėra</translation>
     </message>
     <message>
         <source>Turn on camera (C)</source>
-        <translation type="unfinished"/>
+        <translation>Įjunkite kamerą (C)</translation>
     </message>
     <message>
         <source>Border Effects</source>
-        <translation type="unfinished"/>
+        <translation>Rėmų efektai</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"/>
+        <translation>Nėra</translation>
     </message>
     <message>
         <source>Turn off camera (C)</source>
-        <translation type="unfinished"/>
+        <translation>Išjungti kamerą (C)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Slėpti mygtukų spaudimą (K)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Rodyti mygtukų spaudimą (K)</translation>
     </message>
     <message>
         <source>webm</source>
@@ -638,34 +638,38 @@ norėdami pasirinkti
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>Stačiakampis (R)
+Spustelėkite ir laikykite Shift mygtuką, kad nubrėžtumėte kvadratą</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>Elipsė (O)
+Spustelėkite ir laikykite Shift mygtuką, kad nubrėžtumėte apskritimą</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"/>
+        <translation>Linija (L)
+Spustelėkite ir laikykite Shift mygtuką, kad nubrėžtumėte vertikalią ar horizontalią liniją</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"/>
+        <translation>Spalvotas rodyklė (X)
+Spustelėkite ir laikykite Shift mygtuką, kad nubrėžtumėte vertikalią ar horizontalią rodyklę</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"/>
+        <translation>Šešėlis</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"/>
+        <translation>Rėmas</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"/>
+        <translation>Įrenginys</translation>
     </message>
     <message>
         <source>Sound</source>
@@ -673,44 +677,44 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"/>
+        <translation>Sistemos audio</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"/>
+        <translation>Rodyti spustelėjimą</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"/>
+        <translation>Nustatyti kelią išsaugant</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"/>
+        <translation>Keisti kelią išsaugant</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation type="unfinished"/>
+        <translation>Uždaryti (Esc)</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation type="unfinished"/>
+        <translation>Gerai (Enter)</translation>
     </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"/>
+        <translation>Pareikškite įrašymo zoną %1*%2, kad gautumėte geriau vaizdo efektą</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"/>
+        <translation>Ekraninis įrašymas šiuo metu nėra palaikomas</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -721,7 +725,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation type="unfinished"/>
+        <translation>Naujas įrašas</translation>
     </message>
 </context>
 </TS>
