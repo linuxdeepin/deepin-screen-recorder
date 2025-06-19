@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 56.2 (81672) - https://sketch.com -->
-    <title>rectangle-normal</title>
-    <desc>Created with Sketch.</desc>
-    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="按钮规范" transform="translate(-362.000000, -101.000000)" fill="#000000">
-            <g id="截图工具栏" transform="translate(137.000000, 89.000000)">
-                <g id="主工具栏" transform="translate(222.000000, 10.000000)">
-                    <g id="Group">
-                        <g id="rectangle-normal" transform="translate(3.000000, 2.000000)">
-                            <rect id="矩形" x="11" y="11" width="14" height="14"></rect>
-                        </g>
-                    </g>
-                </g>
+    <title>矩形</title>
+    <g id="截图录屏" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画框" transform="translate(-83, -82)" fill="#000000">
+            <g id="矩形" transform="translate(83, 82)">
+                <rect id="占位" fill-opacity="0" x="0" y="0" width="36" height="36" rx="8"></rect>
+                <path d="M25,10 C25.5522847,10 26,10.4477153 26,11 L26,25 C26,25.5522847 25.5522847,26 25,26 L11,26 C10.4477153,26 10,25.5522847 10,25 L10,11 C10,10.4477153 10.4477153,10 11,10 L25,10 Z M24,12 L12,12 L12,24 L24,24 L24,12 Z" id="形状结合" fill-rule="nonzero"></path>
             </g>
         </g>
     </g>
