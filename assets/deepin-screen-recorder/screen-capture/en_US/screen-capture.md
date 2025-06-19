@@ -1,402 +1,392 @@
-# Screen Capture|deepin-screen-recorder|
+# Screenshot & Screen Recording | deepin-screen-recorder|
 
 ## Overview
 
-Screen Capture is a tool which integrates the screen capture and recorder functions into one. You are free to select windows or areas automatically or manually during screen capturing or recording. 
+Screenshot & Screen Recording is an integrated tool that combines screenshot and screen recording capabilities, supporting functions such as image editing, pin screenshots, scrolling screenshots, text recognition, and screen recording.
 
-![partarea](fig/partarea.jpg)
+![part_area](fig/partarea.png)
 
-## Guide
+## Getting Started
 
-You can run, close, and create a desktop shortcut for Screen Capture in the following operations.
+Learn how to launch, close, and create shortcuts for Screenshot & Screen Recording.
 
-### Run Screen Capture
+### Launching Screenshot & Screen Recording
 
-1. Click the Launcher icon ![deepin_launcher](../common/deepin_launcher.svg) in the Dock to enter the launcher interface.
+1. Click the Launcher icon ![deepin_launcher](../common/deepin_launcher.svg) on the taskbar to enter the Launcher interface.
+2. Scroll the mouse wheel or search to find the Screenshot & Screen Recording icon ![deepin_screenshot](../common/deepin_screenshot.svg), then click to launch.
+3. Right-click ![deepin_screenshot](../common/deepin_screenshot.svg) to:
+   - Click **Send to Desktop** to create a desktop shortcut.
+   - Click **Send to Taskbar** to pin the application to the taskbar.
+   - Click **Start on Boot** to add the application to startup items, so it runs automatically when the computer starts.
 
-2. Locate Screen Capture ![deepin_screenshot](../common/deepin_screenshot.svg) by scrolling the mouse wheel or searching "screen capture" in the Launcher interface and click it to run. 
+>![tipss](../common/tips.svg) Tip: In the system tray area of the taskbar, click the icon ![icon](../common/capture.svg) ![icon](../common/status-screen-recording-dark.svg) to also launch the Screenshot & Screen Recording application.
 
-3. Right-click ![deepin_screenshot](../common/deepin_screenshot.svg) and you can:
+### Closing Screenshot & Screen Recording
 
-    - Click **Send to desktop** to create a desktop shortcut.
-    - Click **Send to dock** to fix it in the Dock.
-    - Click **Add to startup** to add it to startup and it will automatically run when the system starts up.
-    
-    > ![tips](../common/tips.svg) Tips: You can also run Screen Capture by clicking the ![1](../common/capture.svg) icon in the system plug-in area in the Dock or right-clicking it to select **Screenshot** or **Record**.
-
-### Close Screen Capture
-
-- Screen Capture will exit automatically after screen capturing or screen recording completes.
-- On the Screen Capture interface, click ![close](../common/close.svg) to exit Screen Capture.
-- On the Screen Capture interface, right-click and select **Save** or **Exit**.
+- Screenshot & Screen Recording automatically exits after completing a screenshot or screen recording.
+- In the Screenshot & Screen Recording interface, click <img src="../common/close.svg" alt="close" style="zoom:67%;" /> to close the application.
+- In screenshot mode, right-click and select **Save** or **Exit**.
 
 ### Shortcuts
 
-In the Screenshot mode on the Screen Capture interface, press **Ctrl + Shift + ?** to view shortcuts. Proficiency in shortcuts will greatly improve your efficiency.
+Use the shortcut **Ctrl + Shift + ?** to open the shortcut preview interface. Mastering shortcuts will greatly improve your operational efficiency.
 
-![1|hotkey](fig/hotkey.jpg)
+![1|Shortcuts](fig/hotkey.png)
 
-## Select and Adjust Screen Capture Area
+## Selecting and Adjusting Area
 
-### Select Screen Capture Area
+### Selecting Screenshot/Recording Area
 
-There are three kinds of common screen capture areas, namely the full screen, program window, and customized area. When a screen capture area is captured, the selected area will be bordered with dashed white line and looks brighter than the other area.
+Screenshot & Screen Recording supports full screen, application window, and custom area selection. When selecting an area, it will be highlighted with a white dashed border.
 
-> ![notes](../common/notes.svg) Notes: When the computer is connected to multiple monitors, you can also use Screen Capture to capture areas on different monitors.
+> ![notes](../common/notes.svg) Note: When using multiple monitors, you can capture areas from different screens.
 
-#### Select Full Screen
+#### Full Screen
+Automatically recognizes the entire screen of the current display.
 
-Full screen selection is used to identify the entire screen of the current monitor.
+![1|Full Screen Screenshot](fig/fullscreen.png)
 
-![1|fullscreen](fig/fullscreen.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-You can select the full screen in the following ways:
+You can select full screen through the following steps:
 
-1. Press **Ctrl + Alt + A** or **Ctrl + Alt + R** on the keyboard to enter the screen capture mode.
-2. Move the pointer to the desktop and the full screen will be selected automatically. The screen capture dimension will be displayed in the upper left corner. 
-3. Click the desktop and a toolbar will pop up.
+1. Use the shortcut **Ctrl + Alt + A** to enter screenshot mode or **Ctrl + Alt + R** to enter screen recording mode.
+2. Move the mouse pointer to the desktop. Screenshot & Screen Recording will automatically select the entire screen and display the dimensions in the top-left corner.
+3. Left-click the desktop to pop up the toolbar.
 
-You can also take a full screen screenshot directly in the following ways:
+You can also directly capture the full screen through:
+- If pinned to taskbar: Right-click the icon ![deepin_screenshot](../common/deepin_screenshot.svg) on the taskbar and select **Full Screen Screenshot**.
+- Press the ![print](../common/Print.svg) key on the keyboard.
 
-- If Screen Capture has been fixed in the Dock, right-click ![deepin_screenshot](../common/deepin_screenshot.svg) in the Dock to select **Full creenshot**. 
-- Press ![print](../common/Print.svg) on the keyboard to take a full screen screenshot.
+#### Window Selection
+Automatically recognizes open application windows.
 
-#### Select Program Window
+![1|Window Screenshot](fig/window.png)
 
-Program window selection is used to identify the current application window automatically.
-
-![1|window](fig/window.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-1. Press **Ctrl + Alt + A**  or  **Ctrl + Alt + R** on the keyboard to enter the screen capture mode.
-2. Move the pointer to the application window and the window will be selected automatically. The screen capture dimension will be displayed in the upper left corner. 
-3. Click the window and a toolbar will pop up.
+1. Use the shortcut **Ctrl + Alt + A** to enter screenshot mode or **Ctrl + Alt + R** to enter screen recording mode.
+2. Move the mouse pointer over an open application window. Screenshot & Screen Recording will automatically select the window and display the dimensions in the top-left corner.
+3. Left-click the window to pop up the toolbar.
 
-#### Select Customized Area
+#### Custom Area
+Freely select any area.
 
-Customized area selection is used to select the screen capture area freely by dragging the mouse.
+![1|Area Screenshot](fig/partarea.png)
 
-![1|partarea](fig/partarea.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-1. Press **Ctrl + Alt + A** or **Ctrl + Alt + R** on the keyboard to enter the screen capture mode.
-2. Hold down and drag the left mouse button to select the screen capture area. The screen capture dimension will be displayed in the upper left corner. 
-3. Release the left mouse button to complete area selection, and a toolbar will pop up.
+1. Use the shortcut **Ctrl + Alt + A** to enter screenshot mode or **Ctrl + Alt + R** to enter screen recording mode.
+2. Hold down the left mouse button and drag to select the area. The dimensions will be displayed in real-time in the top-left corner.
+3. Release the left mouse button to complete area selection and pop up the toolbar.
 
-### Adjust the Screen Capture Area
+### Adjusting Screenshot/Recording Area
 
-You can fine-tune the screen capture area. For example, you can enlarge or reduce the screenshot area, and move the screenshot position, among other functions. 
+You can fine-tune the selected area, such as resizing or moving the selection.
 
-#### Enlarge/Reduce the Screen Capture Area
+#### Enlarge/Reduce Area
 
-- Place the pointer over the white boarder of the screenshot area and the pointer will be changed to ![mouse_arrow](../common/Mouse_Arrow.svg). Hold down the left mouse button and drag the mouse to enlarge or reduce the screenshot area. 
+- Place the mouse pointer on the white border of the area until it becomes ![双箭头](../common/Mouse_Arrow.svg), then hold down the left mouse button and drag to resize.
+- Press **Ctrl** + ![向上](../common/Up.svg) or ![向下](../common/Down.svg) to expand vertically, or **Ctrl** + ![向左](../common/Left.svg) or ![向右](../common/Right.svg) to expand horizontally.
 
-- Press **Ctrl** + ![up](../common/Up.svg) , ![down](../common/Down.svg) , ![left](../common/Left.svg) or ![right](../common/Right.svg) and drag the mouse to enlarge or reduce the screenshot area vertically or horizontally.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-#### Move the Screen Capture Area Position
+#### Move Area Position
 
-Place the pointer over the screen capture area and it will be changed to ![finger](fig/fingers2.png). You can:
+When the mouse pointer becomes ![手指](../common/hand.svg) over the area, you can:
+- Hold down the left mouse button and drag to move the area.
+- Press ![向上](../common/Up.svg) or ![向下](../common/Down.svg) to move vertically, or ![向左](../common/Left.svg) or ![向右](../common/Right.svg) to move horizontally.
 
-- Hold down the left mouse button and drag the mouse to move the position of the screenshot area.
-- Press ![up](../common/Up.svg) , ![down](../common/Down.svg) , ![left](../common/Left.svg) or ![right](../common/Right.svg) on the keyboard to move the screenshot area vertically or horizontally.
+## Screenshot
 
-## Take Screenshots
+In screenshot mode, click buttons on the toolbar to draw shapes, edit graphics, add text annotations, recognize text in images, etc.
 
-Under the screenshot mode, click the corresponding icons on the toolbar and you can perform operations such as drawing and editing graphics, adding text annotations, etc. in the screenshot  area.
-
-![0|caputure_bar](fig/capture_bar.jpg)
+![0|Screenshot Toolbar](fig/capturebar.png)
 
 <table class="block1">
-    <caption>Icon Description</caption>
+    <caption>Toolbar Description</caption>
     <tbody>
         <tr>
-            <td><img src="../common/pin.svg" alt="Pin Screenshot" class="inline" /></td>
-            <td>Pin Screenshot</td>
-            <td><img src="../common/scrollshot.svg" alt="Scrollshot" class="inline" /></td>
-            <td>Scrollshot</td>
-            <td><img src="../common/ocr.svg" alt="Extract Text" class="inline" /></td>
-            <td>Extract Text</td>
-            </tr>
-        <tr>            
-            <td><img src="../common/rectangle_normal.svg" alt="Rectangle" class="inline" /></td>
-            <td>Rectangle</td>
-            <td><img src="../common/oval_normal.svg" alt="Elipse" class="inline" /></td>
-            <td>Elipse</td>               
-            <td><img src="../common/line_normal.svg" alt="Arrow" class="inline" /></td>
-            <td>Line</td>
-            </tr>
+            <td><img src="../common/rectangle_normal.svg" alt="Rectangle Tool" class="inline" /></td>
+            <td>Rectangle Tool</td>
+            <td><img src="../common/oval_normal.svg" alt="Oval Tool" class="inline" /></td>
+            <td>Oval Tool</td>
+             <td><img src="../common/line_mouse.svg" alt="Line Tool" class="inline" /></td>
+            <td>Line Tool</td>
+        </tr>
         <tr>
-            <td><img src="../common/Combined_Shape.svg" alt="Pencil" class="inline" /></td>
-            <td>Pencil</td>
-            <td><img src="../common/text_normal.svg" alt="text" class="inline" /></td>
-            <td>Text</td>
-            <td><img src="../common/close.svg" alt="exit" class="inline" /></td>
-            <td>Exit</td>
+             <td><img src="../common/Arrow_normal.svg" alt="Arrow Tool" class="inline" /></td>
+            <td>Arrow Tool</td>
+            <td><img src="../common/Combined_Shape.svg" alt="Brush Tool" class="inline" /></td>
+            <td>Brush Tool</td>
+            <td><img src="../common/Mosaic_normal.svg" alt="Blur Tool" class="inline" /></td>
+            <td>Blur Tool</td>
+        </tr>
+        <tr>
+            <td><img src="../common/text_normal.svg" alt="Text Tool" class="inline" /></td>
+            <td>Text Tool</td>
+            <td><img src="../common/scrollshot.svg" alt="Scrolling Screenshot" class="inline" /></td>
+            <td>Scrolling Screenshot</td>
+             <td><img src="../common/ocr.svg" alt="Text Recognition" class="inline" /></td>
+            <td>Text Recognition</td>
+        </tr>
+        <tr>
+             <td><img src="../common/pin.svg" alt="Pin" class="inline" /></td>
+            <td>Pin Screenshot</td>
+            <td><img src="../common/close.svg" alt="Close" class="inline" /></td>
+            <td>Exit Screenshot</td>
         </tr>
     </tbody>
 </table>
 
+> ![notes](../common/notes.svg) Note: If you have selected settings like line thickness or font size in the toolbar and properties panel, Screenshot & Screen Recording will save these settings. When launched again, it will use these settings by default. You can also reselect them.
 
+### Drawing Shapes
 
+You can draw simple shapes using the buttons on the screenshot toolbar. While holding the **Shift** key, drag to create perfect squares, circles, or horizontal/vertical lines.
 
-> ![notes](../common/notes.svg) Notes: Your settings in the toolbar and attribute column, such as the line weight and font size, are remembered and applied by default and will be resumed the next time when you launch Screen Capture. You are able to reset it as well. 
+#### Rectangle Tool
 
-### Draw
+![1|Rectangle Tool](fig/partarea.png)
 
-You can draw some simple graphics in the screenshots. Click the icon on the toolbar, hold down the **Shift** key and drag the mouse to draw a square, circle and line or line with arrows horizontally and vertically.&nbsp;&nbsp;&nbsp;
-
-#### Rectangle
-
-![1|rectool](fig/rectool.jpg)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-1. Click ![rectangle](../common/rectangle_normal.svg) on the toolbar which appears beside the screenshot area.
-2. In the toolbar extension panel, select the weight and color of outline for the rectangle shape. 
-3. Place the pointer on the screenshot area, and the pointer will be changed to ![rect_mouse](../common/rect_mouse.svg).
-4. Hold down the left mouse button, and drag the mouse to complete drawing.
-5. Click ![vague](../common/vague_normal.svg) or ![mosaic](../common/Mosaic_normal.svg) in the toolbar extension panel to mosaic the private information in the screenshot (if any).
+1. In the screenshot toolbar, click ![rectangle](../common/rectangle_normal.svg).
+2. In the expanded panel, select the thickness and color of the rectangle border. Multiple colors are available.
+3. Place the mouse pointer over the screenshot area; it will become ![rect_mouse](../common/rect_mouse.svg).
+4. Hold down the left mouse button and drag to draw the shape.
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-![2|blurtool](fig/blurtool.jpg)
+#### Oval Tool
 
-![2|mosaictool](fig/mosaictool.jpg)
+![1|Oval Tool](fig/ellipsetool.png)
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-#### Ellipse
+1. In the screenshot toolbar, click ![oval](../common/oval_normal.svg).
+2. In the expanded panel, select the thickness and color of the oval border. Multiple colors are available.
+3. Place the mouse pointer over the screenshot area; it will become ![ellipse_mouse](../common/ellipse_mouse.svg).
+4. Hold down the left mouse button and drag to draw the shape.
 
-![1|ellipse](fig/ellipse.jpg)
+#### Line and Arrow Tools
+
+![1|Line Tool](fig/line.png)
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-1. Click ![oval](../common/oval_normal.svg) on the toolbar which appears beside the screenshot area.
-2. In the toolbar extension panel, select the weight and color of outline for the ellipse shape. 
-3. Place the pointer on the screenshot area, and the pointer will be changed to ![ellipse](../common/ellipse_mouse.svg).
-4. Hold down the left mouse button, and drag the mouse to complete drawing.
-5. Click ![vague](../common/vague_normal.svg) or ![mosaic](../common/Mosaic_normal.svg)in the toolbar extension panel to mosaic the private information in the screenshot (if any).
+1. In the screenshot toolbar, click ![line](../common/line_normal.svg) or ![arrow](../common/Arrow_normal.svg).
+2. In the expanded panel, select the thickness and color of the line. Multiple colors are available.
+3. Place the mouse pointer over the screenshot area; it will become ![line_mouse](../common/line_mouse.svg) or ![arrow_mouse](../common/arrow_mouse.svg).
+4. Hold down the left mouse button and drag to draw the shape.
 
-#### Straight Line and Arrow
+#### Brush Tool
 
-![1|line](fig/line.jpg)
+![1|pencil](fig/pencil.png)
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-1. Click ![line_normal](../common/line_normal.svg) on the toolbar which appears beside the screenshot area.
-2. In the toolbar extension panel, select the weight and color of line. 
-3. Click ![line](../common/line_normal.svg) or ![Arrow](../common/Arrow_normal.svg) to toggle between straight line and arrow.
-4. Place the pointer on the screenshot area, and the pointer will be changed to ![line_mouse](../common/line_mouse.svg) or ![arrow_mouse](../common/arrow_mouse.svg).
-5. Hold down the left mouse button, and drag the mouse to complete drawing.
+1. In the screenshot toolbar, click ![brush](../common/Combined_Shape.svg).
+2. In the expanded panel, select the thickness and color of the brush. Multiple colors are available.
+3. Place the mouse pointer over the screenshot area; it will become ![brush_red](../common/brush_red.svg).
+4. Hold down the left mouse button and drag to draw.
 
-#### Pencil
+#### Blur Tool
 
-![1|pencil](fig/pencil.jpg)
+![1|pencil](fig/Mosaic.png)
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-1. Click ![combineshape](../common/Combined_Shape.svg) on the toolbar which appears beside the screenshot area.
-2. In the toolbar extension panel, select the weight and color of pencil. 
-3. Place the pointer on the screenshot area, and the pointer will be changed to ![brush_red](../common/brush_red.svg).
-4. Hold down the left mouse button, and drag the mouse to complete drawing.
+1. In the screenshot toolbar, click ![blur](../common/Mosaic_normal.svg).
+2. In the expanded panel, select the blur style: ![blur](../common/Mosaic_normal.svg) (Mosaic) or ![blur](../common/vague_normal.svg) (Gaussian Blur).
+3. Select the drawing method: ![blur](../common/rectangle_normal.svg) (Rectangle selection), ![blur](../common/oval_normal.svg) (Oval selection), ![blur](../common/brush.svg) (Freehand painting).
+4. Drag the slider at the far right of the panel to adjust the blur intensity.
 
-### Modify Graphics
+### Modifying Shapes
 
-You can modify and move the drawn graphics in the screenshot.
+If you've drawn shapes in the screenshot, you can modify and move them.
 
-![1|changetool](fig/changetool.jpg)
+![1|Modify Shape](fig/changetool.png)
+
+#### Move Shape
+
+1. Place the mouse pointer on the shape's edge until it becomes ![fingers](fig/fingers.png).
+2. Hold down the left mouse button and drag the shape to any position.
+
+#### Edit Shape
+
+1. Place the mouse pointer on the shape's edge until it becomes ![fingers](fig/fingers.png).
+2. Click the left mouse button to enter edit mode, where you can:
+   - Press the **Delete** key to delete the shape.
+   - Place the mouse pointer on the edit box until it becomes ![双箭头](../common/Mouse_Arrow.svg), then drag to resize.
+   - Place the mouse pointer on the ![rotate](../common/icon_rotate.svg) handle until it becomes ![rotate](../common/rotate_mouse.svg), then drag to rotate.
+3. Click outside the edit box to exit edit mode.
+
+### Adding Text Annotations
+
+Add text explanations to screenshots for better understanding.
+
+![0|Text Box](fig/text.png)
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-#### Move Graphics
+1. In the screenshot toolbar, click ![text](../common/text_normal.svg).
+2. In the expanded panel, select font size and color. Four colors are available.
+3. Place the mouse pointer over the screenshot; it will become ![text_mouse](../common/text_mouse.svg).
+4. Click where you want to add an annotation; a text box will appear.
+5. Enter text in the text box.
 
-1. Place the pointer over the graphics outline, and the mouse will be changed to ![finger](fig/fingers.png).
-2. Hold down the left mouse button, and drag the graphics to any place in the screenshot area.
-3. Press ![up](../common/Up.svg) , ![down](../common/Down.svg) , ![left](../common/Left.svg) or ![Right](../common/Right.svg) on the keyboard to move the graphics vertically or horizontally.
+### Modifying Text Annotations
 
-#### Edit Graphics
+If you've added text annotations, you can modify and move them.
 
-1. Place the pointer over the outline of graphics and the mouse will be changed to ![finger](fig/fingers.png).
-2. Left-click to enter the editing mode, and you can:
-   - Press the **Delete** key on the keyboard to delete the graphics.
-   - Place the pointer over the edit box, and the mouse will be changed to![mouse_arrow](../common/Mouse_Arrow.svg). Enlarge or reduce the graphic area by dragging the pointer.
-   - Press **Ctrl** + ![Up](../common/Up.svg) , ![down](../common/Down.svg) , ![left](../common/Left.svg) or ![right](../common/Right.svg) to extend the graphics area vertically or horizontally.
-   - Place the pointer over ![rotate](../common/icon_rotate.svg) in the edit box, and the pointer will be changed to ![rotate](../common/rotate_mouse.svg). Rotate the graphics by dragging the pointer.
-3. Left-click outside the edit box to exit the editing mode.
+#### Move Text Annotation
 
-### Add Text Annotations
+1. Place the mouse pointer on the text until it becomes ![fingers](fig/fingers.png).
+2. Hold down the left mouse button and drag the text to any position.
 
-Add text annotations to the screenshot in order to help others better understand.
+#### Edit Text Annotation
 
-![0|text](fig/text.jpg)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-1. Click ![text_normal](../common/text_normal.svg) on the toolbar which appears beside the screenshot area.
-2. In the toolbar extension panel, select the font color and font size via the scroll bar. 
-3. Place the pointer over the screenshot, and the mouse will be changed to ![text_mouse](../common/text_mouse.svg).
-4. Click where you want to add an annotation, and a text box will appear.
-5. Enter texts in the text box.
-
-### Modify Text Annotations
-
-You can modify and move the text annotations after they're entered.
-
-#### Move Text Annotations
-
-1. Place the pointer over the text, and the pointer will be changed to ![fingers](fig/fingers.png).
-2. Hold down the left mouse button, and drag to move the text anywhere in the screenshot area.
-
-#### Edit Text Annotations
-
-1. Place the pointer over the text, and the pointer will be changed to ![fingers](fig/fingers.png).
-2. Double-click to enter the text editing mode, and you can:
-   - Press **Delete** on the keyboard to delete text annotations.
+1. Place the mouse pointer on the text until it becomes ![fingers](fig/fingers.png).
+2. Double-click to enter edit mode, where you can:
+   - Press the **Delete** key to delete the annotation.
    - Modify the text in the text box.
-3. Click outside the text box to exit editing mode.
+3. Click outside the text box to exit edit mode.
 
 ### Pin Screenshots|pinscreenshots
 
-With this feature, you are able to pin multiple screenshots on the system desktop for later comparison, integration, etc. conveniently.
+Pin screenshots as floating windows on the desktop for quick reference and comparison.
 
-Select the screenshot area and click the  ![icon](../common/pin.svg) icon on the toolbar to pin the screenshot on your desktop. You can perform the following operations:
+After selecting an area, click the pin button ![icon](../common/pin.svg) to create a pinned screenshot. You can:
+- Move the image by dragging with the mouse.
+- Scroll the mouse wheel up/down over the image to scale proportionally.
+- Click the button ![icon](../common/done.svg) to save the image.
 
-- Move the screenshot by clicking and dragging it or pressing the ![icon](../common/Up.svg), ![icon](../common/Down.svg), ![icon](../common/Left.svg) or ![icon](../common/Right.svg) key on the keyboard.
-- Scale up or down the screenshot by placing the mouse pointer on the screenshot and scrolling up or down the mouse wheel.    
-- Click the ![icon](../common/screenshot_button.svg) icon on the toolbar to save it.
+![0|option](fig/pin_pic.png)
 
+### Scrolling Screenshot|scrollshot
 
+Capture content beyond the visible screen for creating long images.
 
-![0|option](fig/pin_pic.jpg)
+Prerequisite: Enable **Control Center > Personalization > Window Effects**.
 
-### Take Screen Scrollshots|scrollshot
+1. After selecting an area, click the scrolling screenshot button ![icon](../common/scrollshot.svg).
+2. Keep the mouse cursor in the scrolling area. You can use:
+   - **Auto-scroll**: Click the left mouse button in the screenshot area to start automatic scrolling. The captured images will be stitched into a complete long image. Click again or move the cursor out to pause; click again to continue.
+   - **Manual scroll**: Place the mouse cursor in the screenshot area and scroll the mouse wheel up/down. Stop scrolling to pause; scroll again to continue.
+3. Click the screenshot button ![icon](../common/done.svg) to save the long image.
 
-You are able to take long screen scrollshots both in and out of the screen with the **Scrollshot** feature.
+Notes:
+- Avoid selecting areas beyond the scrollable range (e.g., entire windows or full screen).
+- The area height should be at least 50px.
+- Avoid multiple scrollable areas within the selection.
+- Minimize repetitive content (blank areas, same colors, long identical text).
+- Avoid animated images, videos, watermarks, or solid backgrounds.
+- Maintain vertical scrolling; avoid dragging scrollbars.
+- Avoid switching windows during capture.
+- Maintain moderate scrolling speed.
 
-Please enable the **Window Effect** feature in **Control Center > Personalization > General** before taking screen scrollshots.
+### Text Recognition
 
-1. Select the screenshot area and click the ![scrollshot](../common/scrollshot.svg) icon on the toolbar.
-2. Place the cursor in the scrollshot area and you can start taking your scrollshots automatically, manually or alternatively.
+Extract text from non-copyable content in screenshots.
 
-   - Automatic scrolling: Click in the screenshot area and the cursor will scroll upwards automatically. The captured screenshots will be spliced into a complete long picture.  During the automatic scrolling process, click in the screenshot area or move the cursor out of the screenshot area to suspend the screenshot. Click in the screenshot area once again to resume.
-   - Manual scrolling: Place the cursor in the screenshot area and scroll the mouse wheel upwards or downwards to take screenshot manually. Stop scrolling the mouse wheel to suspend the screenshot. Scroll it again to resume. 
-3.   Click the  ![icon](../common/screenshot_button.svg) icon on the toolbar to save the screenshot.
-
-**Attention**: Please pay attention to the the following conditions in the process of taking screen scrollshots:
-
-- Make sure the screenshot area is not out of the scrolling area and try to avoid selecting the whole window, fullscreen, etc. 
-- Make sure the screenshot area is not too small. The height suggested is no less than 50px. 
-- Try to avoid multiple scrolling areas contained in the scrolling area.
-- Try to avoid a great number of repetitive contents, such as blank areas, same colors or same sections of texts contained in the scrolling area.
-- Try to avoid animations, video, watermarks, etc. or contents with non-solid background contained in the screenshot area.
-- Try to avoid a horizontal offset in the scrolling process, such as sliding the scrollbar.
-- Make sure the rolling speed is not too fast.
-- Try to avoid switching windows during the scrolling process.
-
-![scrollshot](fig/scrollshot.jpg)
-
-### Extract Texts
-
-You are able to recognize the texts in the screenshot area with the **Extract Text** feature.
-
-1. Select the screenshot area and click the ![ocr](../common/ocr.svg) icon on the toolbar to enter the text extraction area.
-2. You are able to edit the recognized texts by clicking the text area in the right column. Click the ![copy](../common/copy.svg) icon on the lower right corner to copy the texts recognized to the clipboard and click the ![copy](../common/download.svg) icon to save the texts recognized in TXT .
+1. After selecting an area, click the text recognition button ![ocr](../common/ocr.svg). A text recognition window will pop up.
+2. You can edit, copy, or save the recognized text as TXT.
 
 ![ocr](fig/ocr.png)
 
-### Delay Screenshots
+### Delayed Screenshot
 
-You are able to capture the screenshot in a specific state or at specific time with the delay screenshot feature.
+Capture screen content at specific times or states.
 
-- Right-click the Screen Capture icon fixed in the Dock and select **Delay Screenshot**.
-- Press  **Ctrl** + ![icon](../common/Print.svg) to start delay screenshot.
-- Execute  “deepin-screen-recorder -d n”  in Terminal, among which n represents the delayed time in seconds.
+- Shortcut: **Ctrl** + ![icon](../common/Print.svg)
+- Terminal command: "deepin-screen-recorder -d n" (n = delay time in seconds)
 
-### Save Screenshots
+### Saving Screenshots
 
-Save the screenshot for future use.
+Save captured images for future use.
 
-When the screenshot is saved successfully, you can see a prompt message in the upper area of the desktop. Click **View** to open the folder where the screenshot is located.
+After successful save, a notification appears at the top of the desktop. Click **View** to open the folder containing screenshots.
 
-You can save the screenshot in the following ways after launching Screen Capture, and selecting the screenshot area:
+After selecting an area, save using:
+- Double-click the left mouse button.
+- Click the screenshot button ![icon](../common/done.svg).
+- Shortcut: **Ctrl + S**.
+- Right-click and select **Save**.
 
-- Double-click to save the screen capture.
-- Click ![notes](../common/screenshot_button.svg) on the toolbar.
-- Press **Ctrl + S** on the keyboard to save the screenshot.
-- Right-click the screenshot, and select **Save** to save it.
+> ![notes](../common/notes.svg) Note: By default, screenshots are saved in **Pictures > Screenshots**.
 
-   > ![notes](../common/notes.svg) Notes: The screenshot is saved to **Pictures > Screenshots** by default.
-
-Click **Options** on the toolbar of the Screen Capture interface, and expand the drop-down list:
+In the screenshot toolbar, click the options dropdown:
 
 ![0|option](fig/option.png)
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-- Select **Clipboard** to save the screenshot to the clipboard.
-- Click **Desktop** and the screenshot will be saved to the desktop.
-- Click **Pictures**, and the screenshot will be saved to the pictures folder.
-- Click **Folder**. Select the destination folder of the screenshot, and the screenshot will be saved to your specific folder directory. 
-- Select **Show pointer**, and the pointer will be displayed in the screenshot area. Its position and pattern will also be saved in the picture.
-- Select **PNG/JPG/BMP** to set the screenshot format.
+- **Clipboard**: Save to clipboard
+- **Desktop**: Save to desktop
+- **Pictures**: Save to Pictures folder
+- **Custom Location**: Save to user-specified folder
+- **Show Cursor**: Include cursor position and style in screenshots
+- **PNG/JPG/BMP**: Set image format
 
-## Record Screen
+## Screen Recording
 
-Under the recording mode, click the icons on the toolbar and you can perform recording with audio, video, keystroke, mouse clicks, etc. 
-> ![notes](../common/notes.svg) Notes: The actual functions supported may differ according to the decoding method adopted.  Please refer to the interface.
+In screen recording mode, you can record audio, camera input, key presses, mouse clicks, etc.
 
-![0|recorder_bar](fig/recorder_bar.png)
+> ![notes](../common/notes.svg) Note: Supported features vary depending on decoding technology. Refer to the application interface for details.
+
+![0|Toolbar](fig/recorder_bar.png)
 
 <table class="block1">
-    <caption>Icon Description</caption>
+    <caption>Toolbar Description</caption>
     <tbody>
         <tr>
-            <td><img src="../common/microphone_normal.svg" alt="microphone_normal" class="inline" /></td>
-            <td>Microphone</td>
-            <td><img src="../common/audio_frequency_normal.svg" alt="audio_frequency_normal" class="inline" /></td>
-            <td>System Audio</td>
-            <td><img src="../common/key_normal.svg" alt="key_normal" class="inline" /></td>
-            <td>Show Keystroke</td>
-            <td><img src="../common/webcam_normal.svg" alt="webcam_normal" class="inline" /></td>
-            <td>Webcam On</td>
+            <td><img src="../common/key_normal.svg" alt/></td>
+            <td>Show Keys</td>
+            <td><img src="../common/webcam_normal.svg" alt/></td>
+            <td>Enable Camera</td>
+            <td><img src="../common/switch.svg" alt/></td>
+            <td>Switch to Screenshot</td>
         </tr>
           <tr>
-            <td><img src="../common/cursor.svg" alt="Show Pointer" class="inline" /></td>
-            <td>Show Pointer</td>
-            <td><img src="../common/touch.svg" alt="Show Click" class="inline" /></td>
-            <td>Show Click</td>
-            <td><img src="../common/close.svg" alt="close" class="inline" /></td>
-            <td>Exit</td>
-            <td></td>
-            <td></td>
+            <td><img src="../common/close.svg" alt/></td>
+            <td>Exit Recording</td>
+              <td><img src="../common/done.svg" alt/></td>
+            <td>Start Recording</td>
         </tr>
     </tbody>
 </table>
 
+### Recording Settings
 
+In the recording toolbar, you can:
 
-### Set Recording Settings
+- **Show Keys**: Click ![icon](../common/key_normal.svg) to display keyboard presses (max 5 simultaneous keys).
+- **Enable Camera**: Click ![icon](../common/webcam_normal.svg) to record both screen and camera. Drag to reposition the camera window.
+   
+   > ![attention](../common/attention.svg) Note: Ensure connected devices support audio recording or camera functionality.
+- **Options**: In the dropdown menu, select **GIF**, **MP4**, or **MKV** format, and configure frame rate, audio recording, cursor display, etc.
+   
+   > ![notes](../common/notes.svg) Note: MIPS architecture does not support GIF format.
 
-On the toolbar of Screen Capture, you can set sound, keystroke, camera, etc. to get ready for video recording.
+### Recording Screen
 
-- Sound: Include microphone and built-in audio. You can select one of them or both.
-- Keystroke: Click ![icon](../common/key_normal.svg)and the operation keystroke will be displayed during screen recording. Up to five recent operation keystrokes can be displayed at the same time. Click the icon again to enable **Hide Keystroke** and cancel keystroke display.
-- Camera: Click![icon](../common/webcam_normal.svg) to start camera. Both the camera picture and window picture are recorded during screen recording. Drag the camera window outline to adjust the window size and position. Click the icon again to disable the camera. 
+Capture screen activities:
 
-   >![attention](../common/attention.svg) Attention: First, check whether the device connected supports sound recording and camera functions. Otherwise you cannot perform relevant operations.
+1. Use shortcut **Ctrl + Alt + R** to start recording.
+2. Select recording area.
+3. Configure settings in the recording toolbar.
+4. Click the record button ![icon](../common/done.svg). After a 3-second countdown, recording starts (tray icon blinks).
+5. Stop recording using:
+   - Shortcut: **Ctrl + Alt + R**
+   - Clicking the taskbar icon
+   - Clicking the tray icon
 
-- Mouse:  Include **Show Pointer**, **Show Click** or both.
-- Options: Select the **GIF**, **MP4** or **MKV** format and FPS in the Options dropdown list.
+Recordings are automatically saved to the desktop.
 
-   > ![notes](../common/notes.svg) Notes: GIF is not supported on the MIPS architecture devices.
+> ![notes](../common/notes.svg) Note:
+> - When taskbar is at top/bottom, recording duration is displayed in the tray.
+> - In multi-monitor setups, only the active screen is recorded.
 
-### Record a Screen
+## View Help Manual
 
-You can capture the screen activities in the following ways:
-
-1. Launch screen recorder by **Ctrl + Alt + R**.
-2. Select the recording area and make relevant settings as needed.
-3. Click  ![icon](../common/recorder_button.svg) and recording will be started in 3 seconds with a flickering **Record** icon in the system tray.
-4.  Press the **Ctrl + Alt + R** shortcuts on the keyboard, click the **Screen Capture** icon in the Dock or click the **Record** icon in the system tray to complete recording. 
-
-The recorded video will be saved to the desktop automatically.
-
-> ![notes](../common/notes.svg) Notes: 
-> - Recording time will be displayed together with the **Record** icon when the Dock is at top or bottom of the desktop.
-> - During video recording, if multiple monitors are connected, whether the multi-monitor display is set in copy mode or extended mode, only the current operation screen is recorded.
-
-## View Help
-
-Press ![F1](../common/F1.svg) on the keyboard to view the help manual after launching Screen Capture.
-
+Press **F1** while using the application to open the help manual.
