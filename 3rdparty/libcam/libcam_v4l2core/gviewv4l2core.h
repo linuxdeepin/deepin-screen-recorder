@@ -629,7 +629,7 @@ int v4l2core_get_device_index(const char *videodevice);
  *
  * returns: true(1) if device list was updated, false(0) otherwise
  */
-int v4l2core_check_device_list_events();
+int v4l2core_check_device_list_events(v4l2_dev_t *vd);
 
 /*
  * check for control events

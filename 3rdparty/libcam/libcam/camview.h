@@ -397,7 +397,7 @@ audio_context_t *get_audio_context(void);
  *
  * returns: error code
  */
-int start_encoder_thread();
+int start_encoder_thread(void *);
 
 /*
  * stop the encoder thread
