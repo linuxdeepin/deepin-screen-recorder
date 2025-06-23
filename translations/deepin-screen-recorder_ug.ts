@@ -109,7 +109,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>دەپىن شىرەن ھەجىم قىلىش</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -117,7 +117,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>شىرەن ھەجىم قىلىش تەپەكلى و ئىككەن ھەجىم قىلىشنى ھەجىم قىلىش</translation>
     </message>
 </context>
 <context>
@@ -674,15 +674,15 @@ Shift نى بېسىپ تۇرسىڭىز تىك ۋە توغرىسىغا تۈز ك�
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"/>
+        <translation>ئەنچە</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"/>
+        <translation>چەكىكى</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"/>
+        <translation>سىزىم</translation>
     </message>
     <message>
         <source>Extract Text</source>
@@ -722,7 +722,7 @@ Shift نى بېسىپ تۇرسىڭىز تىك ۋە توغرىسىغا تۈز ك�
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation type="unfinished"/>
+        <translation>يېڭى ھەجىم قىلىش</translation>
     </message>
 </context>
 </TS>

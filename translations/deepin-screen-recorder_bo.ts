@@ -110,7 +110,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -118,7 +118,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>སྤྱིར་ཟླ་བཞིན་གྱི་རླབས་བྱེད་པ་དང་པོ་སྐྱེད་ཞིང་གི་བེད་སྐྱེད་བྱེད་པ་ཡིན།</translation>
     </message>
 </context>
 <context>
@@ -162,7 +162,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"></translation>
+        <translation>གྱི་རླབས་བྱེད་པ་ཡིན།</translation>
     </message>
 </context>
 <context>
@@ -456,7 +456,7 @@ Shiftམནན་ནས་དྲང་ཐིག་འབྲི་ཐུབ།</t
     <message>
         <source>Click or drag to
 select the area to record</source>
-        <translation type="unfinished"/>
+        <translation>གྲླབས་བྱེད་པ་དང་པོ་སྐྱེད་ཞིང་གི་རླབས་བྱེད་པ་རེད་འདུག</translation>
     </message>
 </context>
 <context>
@@ -723,7 +723,7 @@ Shiftམནན་ནས་ཐད་དཔྱང་དང་ཆུ་སྙོམ
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation type="unfinished"/>
+        <translation>གསར་གྱི་རླབས་བྱེད་པ་ཡིན།</translation>
     </message>
 </context>
 </TS>

@@ -9,7 +9,7 @@ ili pritisnite ponovno prečac za prekid snimanja</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>Nemožete okrenuti zaslon tijekom snimanja</translation>
     </message>
 </context>
 <context>
@@ -20,7 +20,7 @@ ili pritisnite ponovno prečac za prekid snimanja</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Snimanje</translation>
     </message>
 </context>
 <context>
@@ -38,7 +38,7 @@ ili pritisnite ponovno prečac za prekid snimanja</translation>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation type="unfinished"/>
+        <translation>Snimanje zaslona</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
@@ -82,15 +82,15 @@ ili pritisnite ponovno prečac za prekid snimanja</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Oglasnik</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation type="unfinished"/>
+        <translation>Spremanje datoteke snimanja zaslona, molimo pričekajte...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"/>
+        <translation>Kako je učinak prozora onemogućen tijekom procesa, snimanje mora biti zaustavljeno</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -98,34 +98,34 @@ ili pritisnite ponovno prečac za prekid snimanja</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation type="unfinished"/>
+        <translation>Snimanje zaslona nije uspješno.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Scrollshot</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Fiksirajte snimke</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Otvori mapa</translation>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Snimanje zaslona završeno i kopirano u oglasnik</translation>
     </message>
 </context>
 <context>
     <name>MenuController</name>
     <message>
         <source>Undo</source>
-        <translation type="unfinished"/>
+        <translation>Povuči</translation>
     </message>
     <message>
         <source>Save</source>
@@ -140,29 +140,29 @@ ili pritisnite ponovno prečac za prekid snimanja</translation>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Fiksirajte snimke</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Snimanje zaslona</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Snimi</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Snimanje zaslona</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Snimanje</translation>
     </message>
 </context>
 <context>
@@ -185,49 +185,49 @@ ili pritisnite ponovno prečac za prekid snimanja</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Otvori mapa</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation type="unfinished"/>
+        <translation>Snimanje zaslona će početi za %1 sekundi</translation>
     </message>
 </context>
 <context>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>Pronađite pomoć.</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>Nije moguće uzeti kontinuirano snimanje zaslona.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>Dolazite do dna područja za scroll</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation type="unfinished"/>
+        <translation>Dostigli ste maksimalnu duljinu</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>prilagodite područje snimanja</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Scrollajte točku miša ili kliknite za uzimanje scroll snimke</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>Spustite brzinu scrollanja</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>Nevažeće područje, kliknite za </translation>
     </message>
 </context>
 <context>
@@ -281,7 +281,7 @@ ili pritisnite ponovno prečac za prekid snimanja</translation>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation type="unfinished"/>
+        <translation>Pravokutnik</translation>
     </message>
     <message>
         <source>Ellipse</source>
@@ -305,7 +305,7 @@ ili pritisnite ponovno prečac za prekid snimanja</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation type="unfinished"/>
+        <translation>Povuči</translation>
     </message>
     <message>
         <source>Increase height up</source>
@@ -353,11 +353,11 @@ ili pritisnite ponovno prečac za prekid snimanja</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"/>
+        <translation>Клање</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"/>
+        <translation>Камера</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -377,15 +377,15 @@ ili pritisnite ponovno prečac za prekid snimanja</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"/>
+        <translation>Alati</translation>
     </message>
     <message>
         <source>Extract text</source>
-        <translation type="unfinished"/>
+        <translation>Izvuci tekst</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Scrollshot</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
@@ -393,11 +393,11 @@ ili pritisnite ponovno prečac za prekid snimanja</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>Počni OCR</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Počni scrollshot</translation>
     </message>
     <message>
         <source>Arrow</source>
@@ -415,7 +415,7 @@ ili pritisnite ponovno prečac za prekid snimanja</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Zapis</translation>
     </message>
 </context>
 <context>
@@ -423,29 +423,32 @@ ili pritisnite ponovno prečac za prekid snimanja</translation>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>Pravokutnik
+Pritisnite i držite Shift za crtanje kvadrata</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>Elipsa
+Pritisnite i držite Shift za crtanje kruga</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"/>
+        <translation>Pena
+Pritisnite i držite Shift za crtanje prave linije</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Prilagodite jačinu zagađenja (Povucite za prilagodbu)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Prilagodite veličinu pene (Povucite za prilagodbu)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Prilagodite veličinu teksta (Povucite za prilagodbu)</translation>
     </message>
 </context>
 <context>
@@ -461,23 +464,23 @@ odabir područja snimanja</translation>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Pokaži klasifikaciju (K)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Sakrij klasifikaciju (K)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Pokaži klasifikaciju (K)</translation>
     </message>
     <message>
         <source>Turn on camera (C)</source>
-        <translation type="unfinished"/>
+        <translation>Uključi kameru (C)</translation>
     </message>
     <message>
         <source>Turn off camera (C)</source>
-        <translation type="unfinished"/>
+        <translation>Isključi kameru (C)</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -489,7 +492,7 @@ odabir područja snimanja</translation>
     </message>
     <message>
         <source>Settings (F3)</source>
-        <translation type="unfinished"/>
+        <translation>Postavke (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -509,7 +512,7 @@ odabir područja snimanja</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -545,7 +548,7 @@ odabir područja snimanja</translation>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"/>
+        <translation>Sistemski zvuk</translation>
     </message>
     <message>
         <source>Options</source>
@@ -553,11 +556,11 @@ odabir područja snimanja</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"/>
+        <translation>Pokaži pokazivač</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"/>
+        <translation>Pokaži klik</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -569,55 +572,59 @@ odabir područja snimanja</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>Video</translation>
     </message>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>Pravokutnik (R)
+Pritisnite i držite Shift za crtanje kvadrata</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>Elipsa (O)
+Pritisnite i držite Shift za crtanje kruga</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"/>
+        <translation>Linija (L)
+Pritisnite i držite Shift za crtanje vertikalne ili horizontalne linije</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"/>
+        <translation>Spuštanje (X)
+Pritisnite i držite Shift za crtanje vertikalne ili horizontalne seme</translation>
     </message>
     <message>
         <source>Pencil (P)</source>
-        <translation type="unfinished"/>
+        <translation>Olovka (P)</translation>
     </message>
     <message>
         <source>Blur (B)</source>
-        <translation type="unfinished"/>
+        <translation>Pamutnica (B)</translation>
     </message>
     <message>
         <source>Text (T)</source>
-        <translation type="unfinished"/>
+        <translation>Tekst (T)</translation>
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"/>
+        <translation>Scrollshot (Alt+I)</translation>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
-        <translation type="unfinished"/>
+        <translation>Izvlači tekst (Alt+O)</translation>
     </message>
     <message>
         <source>Pin screenshots (Alt+P）</source>
-        <translation type="unfinished"/>
+        <translation>Zaključaj snimke (Alt+P)</translation>
     </message>
     <message>
         <source>Undo (Ctrl+Z)</source>
-        <translation type="unfinished"/>
+        <translation>Povuči (Ctrl+Z)</translation>
     </message>
     <message>
         <source>Record</source>
@@ -625,7 +632,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Oštećenje</translation>
     </message>
     <message>
         <source>Pictures</source>
@@ -637,11 +644,11 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"/>
+        <translation>Postavi put na spremanje</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"/>
+        <translation>Promijeni put na spremanje</translation>
     </message>
     <message>
         <source>Format</source>
@@ -661,52 +668,52 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Border Effects</source>
-        <translation type="unfinished"/>
+        <translation>Efekti ruba</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"/>
+        <translation>Nijedan</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"/>
+        <translation>Sjenka</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"/>
+        <translation>Rub</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"/>
+        <translation>Uređaj</translation>
     </message>
     <message>
         <source>Extract Text</source>
-        <translation type="unfinished"/>
+        <translation>Izvlači tekst</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation type="unfinished"/>
+        <translation>Zatvori (Esc)</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation type="unfinished"/>
+        <translation>OK (Enter)</translation>
     </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"/>
+        <translation> Prilagodi područje snimanja unutar %1*%2 za bolji vide efekt</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"/>
+        <translation>Snimanje zaslona nije trenutno podržano</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -717,7 +724,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation type="unfinished"/>
+        <translation>Nova snimanja</translation>
     </message>
 </context>
 </TS>

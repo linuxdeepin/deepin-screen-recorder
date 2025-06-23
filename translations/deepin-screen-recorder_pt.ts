@@ -110,7 +110,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -118,7 +118,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Captura concluída e copiada para a área de transferência</translation>
     </message>
 </context>
 <context>
@@ -147,22 +147,22 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Captura</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Gravar</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Captura</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Gravando</translation>
     </message>
 </context>
 <context>
@@ -415,7 +415,7 @@ ou pressione novamente o atalho para parar de gravar</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Gravar</translation>
     </message>
 </context>
 <context>
@@ -644,11 +644,11 @@ Pressionar e manter Shift para desenhar uma seta vertical ou horizontal</transla
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"/>
+        <translation>Definir um caminho para salvar</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"/>
+        <translation>Alterar o caminho para salvar</translation>
     </message>
     <message>
         <source>Format</source>

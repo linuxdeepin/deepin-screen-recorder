@@ -110,7 +110,7 @@ ou prema de novo o atallo para deixar de gravar</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -118,7 +118,7 @@ ou prema de novo o atallo para deixar de gravar</translation>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Captura finalizada e copiar ao portapapeles</translation>
     </message>
 </context>
 <context>
