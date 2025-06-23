@@ -110,7 +110,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -118,7 +118,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Ekran görüntüsü tamamlandı ve panoya kopyalandı</translation>
     </message>
 </context>
 <context>
@@ -147,22 +147,22 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Ekran görüntüsü</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Kaydet</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Ekran görüntüsü</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Kayıt</translation>
     </message>
 </context>
 <context>
@@ -415,7 +415,7 @@ tepsi simgesine tıklayın ya da kısayola yeniden basın</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Kaydet</translation>
     </message>
 </context>
 <context>

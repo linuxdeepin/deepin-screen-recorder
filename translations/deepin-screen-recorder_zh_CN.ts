@@ -456,7 +456,7 @@ Press and hold Shift to draw a straight line</source>
     <message>
         <source>Click or drag to
 select the area to record</source>
-        <translation type="unfinished"/>
+        <translation>点击或拖动以选择要录制的区域</translation>
     </message>
 </context>
 <context>

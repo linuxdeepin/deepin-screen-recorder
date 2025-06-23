@@ -102,15 +102,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>التصوير التمرير</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>إرفاق صور الشاشة</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -118,7 +118,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>تم إتمام الصورة وتم نسخها إلى الحافظة</translation>
     </message>
 </context>
 <context>
@@ -140,7 +140,7 @@ or press the shortcut again to stop recording</source>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>إرفاق صور الشاشة</translation>
     </message>
 </context>
 <context>
@@ -227,7 +227,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>المنطقة غير صالحة، انقر لـ</translation>
     </message>
 </context>
 <context>
@@ -353,7 +353,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"/>
+        <translation>مفتاح التصوير</translation>
     </message>
     <message>
         <source>Webcam</source>
@@ -385,11 +385,11 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>التصوير التمرير</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>إرفاق صور الشاشة</translation>
     </message>
     <message>
         <source>Start OCR</source>
@@ -397,7 +397,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>بدء التصوير التمرير</translation>
     </message>
     <message>
         <source>Arrow</source>
@@ -423,17 +423,20 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>مستطيل
+اضغط واسمح للصيغة لرسم مربع</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>овал
+اضغط واسمح للصيغة لرسم دائرة</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"/>
+        <translation>فرشاة
+اضغط واسمح للصيغة لرسم خط مستقيم</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
@@ -461,15 +464,15 @@ select the area to record</source>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>عرض مفتاح التصوير (K)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>إخفاء مفتاح التصوير (K)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>عرض مفتاح التصوير (K)</translation>
     </message>
     <message>
         <source>Turn on camera (C)</source>
@@ -574,22 +577,26 @@ select the area to record</source>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>مستطيل (R)
+اضغط واسمح للصيغة لرسم مربع</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>овал (O)
+اضغط واسمح للصيغة لرسم دائرة</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"/>
+        <translation>خط (L)
+اضغط واسمح للصيغة لرسم خط عمودي أو أفقي</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"/>
+        <translation>سهم (X)
+اضغط واسمح للصيغة لرسم سهم عمودي أو أفقي</translation>
     </message>
     <message>
         <source>Pencil (P)</source>
@@ -605,7 +612,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"/>
+        <translation>التصوير التمرير (Alt+I)</translation>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
@@ -613,7 +620,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Pin screenshots (Alt+P）</source>
-        <translation type="unfinished"/>
+        <translation>إرفاق صور الشاشة (Alt+P)</translation>
     </message>
     <message>
         <source>Undo (Ctrl+Z)</source>
@@ -699,7 +706,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"/>
+        <translation>قم بتعديل منطقة التصوير داخل %1*%2 للحصول على تأثير فيديو أفضل</translation>
     </message>
 </context>
 <context>

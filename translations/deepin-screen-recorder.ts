@@ -18,12 +18,12 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>IconWidget</name>
     <message>
-        <location filename="../src/dde-dock-plugins/shotstart/iconwidget.cpp" line="56"/>
+        <location filename="../src/dde-dock-plugins/shotstart/iconwidget.cpp" line="79"/>
         <source>Screenshot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dde-dock-plugins/shotstart/iconwidget.cpp" line="62"/>
+        <location filename="../src/dde-dock-plugins/shotstart/iconwidget.cpp" line="85"/>
         <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
@@ -44,144 +44,140 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/main_window.cpp" line="255"/>
-        <location filename="../src/main_window.cpp" line="794"/>
-        <location filename="../src/main_window.cpp" line="821"/>
-        <location filename="../src/main_window.cpp" line="3230"/>
-        <location filename="../src/main_window.cpp" line="5431"/>
+        <location filename="../src/main_window.cpp" line="290"/>
+        <location filename="../src/main_window.cpp" line="350"/>
+        <location filename="../src/main_window.cpp" line="900"/>
+        <location filename="../src/main_window.cpp" line="927"/>
+        <location filename="../src/main_window.cpp" line="3460"/>
+        <location filename="../src/main_window.cpp" line="5723"/>
         <source>Screen Capture</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="786"/>
-        <location filename="../src/main_window.cpp" line="813"/>
+        <location filename="../src/main_window.cpp" line="892"/>
+        <location filename="../src/main_window.cpp" line="919"/>
         <source>Ignore</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="795"/>
+        <location filename="../src/main_window.cpp" line="901"/>
         <source>Saving the screen recording file, please wait...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="822"/>
+        <location filename="../src/main_window.cpp" line="928"/>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="2016"/>
-        <source>Screenshot failed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/main_window.cpp" line="3172"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="622"/>
+        <location filename="../src/main_window.cpp" line="3395"/>
+        <location filename="../src/pin_screenshots/mainwindow.cpp" line="623"/>
         <source>Save failed. Please save it in your home directory.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="3195"/>
-        <location filename="../src/main_window.cpp" line="3220"/>
-        <location filename="../src/main_window.cpp" line="3544"/>
-        <location filename="../src/main_window.cpp" line="3546"/>
-        <location filename="../src/main_window.cpp" line="3549"/>
+        <location filename="../src/main_window.cpp" line="3425"/>
+        <location filename="../src/main_window.cpp" line="3450"/>
+        <location filename="../src/main_window.cpp" line="3794"/>
+        <location filename="../src/main_window.cpp" line="3796"/>
+        <location filename="../src/main_window.cpp" line="3799"/>
         <source>Clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="3196"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="638"/>
+        <location filename="../src/main_window.cpp" line="3426"/>
+        <location filename="../src/pin_screenshots/mainwindow.cpp" line="639"/>
         <source>View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="3197"/>
+        <location filename="../src/main_window.cpp" line="3427"/>
         <source>Open Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="3203"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="645"/>
+        <location filename="../src/main_window.cpp" line="3433"/>
+        <location filename="../src/pin_screenshots/mainwindow.cpp" line="646"/>
         <source>Saved to %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="3221"/>
+        <location filename="../src/main_window.cpp" line="3451"/>
         <source>Screenshot finished and copy to clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="3223"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="653"/>
+        <location filename="../src/main_window.cpp" line="3453"/>
+        <location filename="../src/pin_screenshots/mainwindow.cpp" line="654"/>
         <source>Screenshot finished</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="3253"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="90"/>
+        <location filename="../src/main_window.cpp" line="3483"/>
+        <location filename="../src/pin_screenshots/mainwindow.cpp" line="91"/>
         <source>Screenshot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="3255"/>
+        <location filename="../src/main_window.cpp" line="3485"/>
         <source>Scrollshot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="3313"/>
-        <location filename="../src/main_window.cpp" line="3318"/>
-        <location filename="../src/main_window.cpp" line="3323"/>
-        <location filename="../src/main_window.cpp" line="3328"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="177"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="181"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="185"/>
+        <location filename="../src/main_window.cpp" line="3550"/>
+        <location filename="../src/main_window.cpp" line="3558"/>
+        <location filename="../src/main_window.cpp" line="3566"/>
+        <location filename="../src/main_window.cpp" line="3574"/>
+        <location filename="../src/pin_screenshots/mainwindow.cpp" line="178"/>
+        <location filename="../src/pin_screenshots/mainwindow.cpp" line="182"/>
+        <location filename="../src/pin_screenshots/mainwindow.cpp" line="186"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="3314"/>
-        <location filename="../src/main_window.cpp" line="3329"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="178"/>
+        <location filename="../src/main_window.cpp" line="3550"/>
+        <location filename="../src/main_window.cpp" line="3574"/>
+        <location filename="../src/pin_screenshots/mainwindow.cpp" line="179"/>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="3319"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="182"/>
+        <location filename="../src/main_window.cpp" line="3558"/>
+        <location filename="../src/pin_screenshots/mainwindow.cpp" line="183"/>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="3324"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="186"/>
+        <location filename="../src/main_window.cpp" line="3566"/>
+        <location filename="../src/pin_screenshots/mainwindow.cpp" line="187"/>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main_window.cpp" line="4031"/>
-        <location filename="../src/main_window.cpp" line="4322"/>
-        <location filename="../src/main_window.cpp" line="4329"/>
-        <location filename="../src/main_window.cpp" line="4337"/>
-        <location filename="../src/main_window.cpp" line="4343"/>
-        <location filename="../src/main_window.cpp" line="4366"/>
-        <location filename="../src/main_window.cpp" line="4374"/>
-        <location filename="../src/main_window.cpp" line="4380"/>
-        <location filename="../src/main_window.cpp" line="4388"/>
-        <location filename="../src/main_window.cpp" line="4396"/>
-        <location filename="../src/main_window.cpp" line="4401"/>
-        <location filename="../src/main_window.cpp" line="4406"/>
-        <location filename="../src/main_window.cpp" line="4411"/>
+        <location filename="../src/main_window.cpp" line="4315"/>
+        <location filename="../src/main_window.cpp" line="4606"/>
+        <location filename="../src/main_window.cpp" line="4613"/>
+        <location filename="../src/main_window.cpp" line="4621"/>
+        <location filename="../src/main_window.cpp" line="4627"/>
+        <location filename="../src/main_window.cpp" line="4650"/>
+        <location filename="../src/main_window.cpp" line="4658"/>
+        <location filename="../src/main_window.cpp" line="4664"/>
+        <location filename="../src/main_window.cpp" line="4672"/>
+        <location filename="../src/main_window.cpp" line="4680"/>
+        <location filename="../src/main_window.cpp" line="4685"/>
+        <location filename="../src/main_window.cpp" line="4690"/>
+        <location filename="../src/main_window.cpp" line="4695"/>
         <source>select-area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="627"/>
-        <location filename="../src/pin_screenshots/mainwindow.cpp" line="650"/>
+        <location filename="../src/pin_screenshots/mainwindow.cpp" line="628"/>
+        <location filename="../src/pin_screenshots/mainwindow.cpp" line="651"/>
         <source>Pin Screenshots</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="186"/>
+        <location filename="../src/main.cpp" line="201"/>
         <source>deepin-screen-recorder</source>
         <translation type="unfinished"></translation>
     </message>
@@ -209,7 +205,7 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/pin_screenshots/main.cpp" line="63"/>
+        <location filename="../src/pin_screenshots/main.cpp" line="68"/>
         <source>Pin Screenshots</source>
         <translation type="unfinished"></translation>
     </message>
@@ -218,7 +214,7 @@ or press the shortcut again to stop recording</source>
     <name>QuickPanelWidget</name>
     <message>
         <location filename="../src/dde-dock-plugins/shotstart/quickpanelwidget.cpp" line="15"/>
-        <location filename="../src/dde-dock-plugins/shotstart/quickpanelwidget.cpp" line="91"/>
+        <location filename="../src/dde-dock-plugins/shotstart/quickpanelwidget.cpp" line="90"/>
         <source>Screenshot</source>
         <translation type="unfinished"></translation>
     </message>
@@ -232,12 +228,12 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>RecordIconWidget</name>
     <message>
-        <location filename="../src/dde-dock-plugins/shotstartrecord/recordiconwidget.cpp" line="52"/>
+        <location filename="../src/dde-dock-plugins/shotstartrecord/recordiconwidget.cpp" line="97"/>
         <source>Screenshot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dde-dock-plugins/shotstartrecord/recordiconwidget.cpp" line="58"/>
+        <location filename="../src/dde-dock-plugins/shotstartrecord/recordiconwidget.cpp" line="103"/>
         <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
@@ -245,30 +241,30 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>RecordProcess</name>
     <message>
-        <location filename="../src/record_process.cpp" line="443"/>
-        <location filename="../src/record_process.cpp" line="448"/>
-        <location filename="../src/record_process.cpp" line="571"/>
-        <location filename="../src/record_process.cpp" line="576"/>
+        <location filename="../src/record_process.cpp" line="461"/>
+        <location filename="../src/record_process.cpp" line="466"/>
+        <location filename="../src/record_process.cpp" line="589"/>
+        <location filename="../src/record_process.cpp" line="594"/>
         <source>Record</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/record_process.cpp" line="759"/>
+        <location filename="../src/record_process.cpp" line="779"/>
         <source>View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/record_process.cpp" line="760"/>
+        <location filename="../src/record_process.cpp" line="780"/>
         <source>Open Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/record_process.cpp" line="773"/>
+        <location filename="../src/record_process.cpp" line="793"/>
         <source>Recording finished</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/record_process.cpp" line="774"/>
+        <location filename="../src/record_process.cpp" line="794"/>
         <source>Saved to %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -276,7 +272,7 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>Screenshot</name>
     <message>
-        <location filename="../src/screenshot.cpp" line="45"/>
+        <location filename="../src/screenshot.cpp" line="48"/>
         <source>Screen Capture will start in %1 seconds</source>
         <translation type="unfinished"></translation>
     </message>
@@ -289,37 +285,37 @@ or press the shortcut again to stop recording</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/scrollshottip.cpp" line="62"/>
+        <location filename="../src/widgets/scrollshottip.cpp" line="63"/>
         <source>adjust the capture area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/scrollshottip.cpp" line="224"/>
+        <location filename="../src/widgets/scrollshottip.cpp" line="225"/>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/scrollshottip.cpp" line="242"/>
+        <location filename="../src/widgets/scrollshottip.cpp" line="243"/>
         <source>Failed to take a continuous screenshot.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/scrollshottip.cpp" line="265"/>
+        <location filename="../src/widgets/scrollshottip.cpp" line="266"/>
         <source>Reached the bottom of the scroll area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/scrollshottip.cpp" line="283"/>
+        <location filename="../src/widgets/scrollshottip.cpp" line="284"/>
         <source>Reached the maximum length</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/scrollshottip.cpp" line="301"/>
+        <location filename="../src/widgets/scrollshottip.cpp" line="302"/>
         <source>Slow down the scrolling speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/scrollshottip.cpp" line="317"/>
+        <location filename="../src/widgets/scrollshottip.cpp" line="318"/>
         <source>Invalid area, click to </source>
         <translation type="unfinished"></translation>
     </message>
@@ -546,8 +542,8 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotStartPlugin</name>
     <message>
-        <location filename="../src/dde-dock-plugins/shotstart/shotstartplugin.cpp" line="40"/>
-        <location filename="../src/dde-dock-plugins/shotstart/shotstartplugin.cpp" line="129"/>
+        <location filename="../src/dde-dock-plugins/shotstart/shotstartplugin.cpp" line="41"/>
+        <location filename="../src/dde-dock-plugins/shotstart/shotstartplugin.cpp" line="158"/>
         <source>Screenshot</source>
         <translation type="unfinished"></translation>
     </message>
@@ -555,8 +551,8 @@ or press the shortcut again to stop recording</source>
 <context>
     <name>ShotStartRecordPlugin</name>
     <message>
-        <location filename="../src/dde-dock-plugins/shotstartrecord/shotstartrecordplugin.cpp" line="46"/>
-        <location filename="../src/dde-dock-plugins/shotstartrecord/shotstartrecordplugin.cpp" line="152"/>
+        <location filename="../src/dde-dock-plugins/shotstartrecord/shotstartrecordplugin.cpp" line="45"/>
+        <location filename="../src/dde-dock-plugins/shotstartrecord/shotstartrecordplugin.cpp" line="179"/>
         <source>Record</source>
         <translation type="unfinished"></translation>
     </message>
@@ -610,318 +606,318 @@ select the area to record</source>
     <name>SubToolWidget</name>
     <message>
         <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="39"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="989"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1015"/>
         <source>Extract Text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="63"/>
         <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="65"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="208"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="788"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="211"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="805"/>
         <source>Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="83"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="749"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="752"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1049"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="766"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="769"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1075"/>
         <source>Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="96"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="764"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1061"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="781"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1087"/>
         <source>Set a path on save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="109"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="264"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="745"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1042"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="267"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="762"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1068"/>
         <source>Save to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="111"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="265"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="747"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1044"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="268"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="764"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1070"/>
         <source>Desktop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="114"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="748"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1045"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="765"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1071"/>
         <source>Pictures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="120"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="746"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1043"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="763"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1069"/>
         <source>Clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="134"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="782"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1079"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="799"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1105"/>
         <source>Format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="135"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="783"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1080"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="800"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1106"/>
         <source>PNG</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="137"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="784"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1081"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="801"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1107"/>
         <source>JPG</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="139"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="785"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1082"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="802"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1108"/>
         <source>BMP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/pin_screenshots/ui/subtoolwidget.cpp" line="218"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="767"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1064"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="784"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1090"/>
         <source>Change the path on save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="205"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="208"/>
         <source>Microphone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="188"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="191"/>
         <source>Format:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="189"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="192"/>
         <source>GIF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="190"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="193"/>
         <source>MP4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="193"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="196"/>
         <source>webm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="191"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="194"/>
         <source>MKV</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="267"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="270"/>
         <source>Videos</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="196"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="199"/>
         <source>FPS:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="72"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="75"/>
         <source>Show keystroke (K)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="80"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="83"/>
         <source>Hide Keystroke (K)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="83"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="86"/>
         <source>Show Keystroke (K)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="93"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="104"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1445"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1456"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="96"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="107"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1471"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1482"/>
         <source>Turn on camera (C)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="101"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1454"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="104"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1480"/>
         <source>Turn off camera (C)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="116"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="119"/>
         <source>Screenshot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="147"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="657"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1014"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="1016"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="150"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="674"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1040"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="1042"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="149"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="660"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="152"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="677"/>
         <source>Settings (F3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="197"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="200"/>
         <source>5 fps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="198"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="201"/>
         <source>10 fps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="199"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="202"/>
         <source>20 fps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="200"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="203"/>
         <source>24 fps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="201"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="204"/>
         <source>30 fps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="203"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="206"/>
         <source>Sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="206"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="209"/>
         <source>System audio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="211"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="214"/>
         <source>Show click</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="507"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="510"/>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="514"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="517"/>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="523"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="526"/>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="533"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="536"/>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="543"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="546"/>
         <source>Pencil (P)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="553"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="556"/>
         <source>Blur (B)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="564"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="569"/>
         <source>Text (T)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="577"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="582"/>
         <source>Scrollshot (Alt+I）</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="593"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="600"/>
         <source>Extract text (Alt+O）</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="604"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="615"/>
         <source>Pin screenshots (Alt+P）</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="615"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="628"/>
         <source>Undo (Ctrl+Z)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="631"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="647"/>
         <source>Record</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="792"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="809"/>
         <source>Border Effects</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="793"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="810"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="794"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="811"/>
         <source>Shadow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="795"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="812"/>
         <source>Border</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="796"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="813"/>
         <source>Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="210"/>
-        <location filename="../src/widgets/subtoolwidget.cpp" line="789"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="213"/>
+        <location filename="../src/widgets/subtoolwidget.cpp" line="806"/>
         <source>Show pointer</source>
         <translation type="unfinished"></translation>
     </message>
@@ -950,12 +946,12 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
 <context>
     <name>Utils</name>
     <message>
-        <location filename="../src/utils.cpp" line="507"/>
+        <location filename="../src/utils.cpp" line="595"/>
         <source>Screen recording is not supported at present</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils.cpp" line="509"/>
+        <location filename="../src/utils.cpp" line="597"/>
         <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>

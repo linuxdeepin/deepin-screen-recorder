@@ -9,7 +9,7 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>لا تدور شاشتك أثناء تسجيل الفيديو</translation>
     </message>
 </context>
 <context>
@@ -20,7 +20,7 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>التسجيل</translation>
     </message>
 </context>
 <context>
@@ -78,19 +78,19 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"/>
+        <translation>تجاهل</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>اللصق</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation type="unfinished"/>
+        <translation>جارٍ حفظ ملف تسجيل الشاشة، يُرجى الانتظار...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"/>
+        <translation>بما أن تأثير النافذة مُعطّل أثناء العملية، يجب أن تتوقف التسجيل</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -98,27 +98,27 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation type="unfinished"/>
+        <translation>فشل التقاط الشاشة.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>التدوير</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>الانقاص</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>فتح المجلد</translation>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>تم إكمال التقاط الشاشة ولصقه</translation>
     </message>
 </context>
 <context>
@@ -140,29 +140,29 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>الانقاص</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>التقاط شاشة</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>تسجيل</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>التقاط شاشة</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>التسجيل</translation>
     </message>
 </context>
 <context>
@@ -185,7 +185,7 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>فتح المجلد</translation>
     </message>
 </context>
 <context>
@@ -199,35 +199,35 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>احصل على مساعدة.</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>فشل في التقاط شاشة متصلة.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>أصبحت في قاع منطقة التمرير</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation type="unfinished"/>
+        <translation>تم الوصول إلى الطول الأقصى</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>تعديل منطقة التقاط</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>تمرّر عجلة الفارة أو انقر لالتقاط شاشة تمريرية</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>تباطؤ سرعة التمرير</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>منطقة غير صالحة، انقر لـ</translation>
     </message>
 </context>
 <context>
@@ -349,15 +349,15 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"/>
+        <translation>الصوت</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"/>
+        <translation>الزر</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"/>
+        <translation>الكاميرا</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -369,35 +369,35 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>البدء/التسجيل</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>الماوس</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"/>
+        <translation>أدوات</translation>
     </message>
     <message>
         <source>Extract text</source>
-        <translation type="unfinished"/>
+        <translation>استخراج النص</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>الشاشة المتدلية</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>إرفاق لقطات الشاشة</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>بدء تحويل النص</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>بدء الشاشة المتدلية</translation>
     </message>
     <message>
         <source>Arrow</source>
@@ -415,7 +415,7 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>تسجيل</translation>
     </message>
 </context>
 <context>
@@ -423,29 +423,32 @@ pe bouezit adarre war ar verradenn evit paouez an enrolladenn</translation>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>مستطيل
+اضغط واحتفظ بـ Shift لرسم مربع</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>مستطيل بيضاوي
+اضغط واحتفظ بـ Shift لرسم دائرة</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"/>
+        <translation>فرشاة
+اضغط واحتفظ بـ Shift لرسم خط مستقيم</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>تعديل قوة التمويه (استخدم العجلة لتعديلها)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>تعديل حجم الفرشاة (استخدم العجلة لتعديلها)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>تعديل حجم النص (استخدم العجلة لتعديلها)</translation>
     </message>
 </context>
 <context>
@@ -453,30 +456,31 @@ Press and hold Shift to draw a straight line</source>
     <message>
         <source>Click or drag to
 select the area to record</source>
-        <translation type="unfinished"/>
+        <translation>اضغط أو اسحب ل
+تحديد المنطقة التي سيتم تسجيلها</translation>
     </message>
 </context>
 <context>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>عرض سجل المفاتيح (K)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>إخفاء سجل المفاتيح (K)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>عرض سجل المفاتيح (K)</translation>
     </message>
     <message>
         <source>Turn on camera (C)</source>
-        <translation type="unfinished"/>
+        <translation>تشغيل الكاميرا (C)</translation>
     </message>
     <message>
         <source>Turn off camera (C)</source>
-        <translation type="unfinished"/>
+        <translation>إيقاف تشغيل الكاميرا (C)</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -488,7 +492,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Settings (F3)</source>
-        <translation type="unfinished"/>
+        <translation>الإعدادات (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -504,11 +508,11 @@ select the area to record</source>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"/>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -536,7 +540,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"/>
+        <translation>الصوت</translation>
     </message>
     <message>
         <source>Microphone</source>
@@ -544,7 +548,7 @@ select the area to record</source>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"/>
+        <translation>صوت النظام</translation>
     </message>
     <message>
         <source>Options</source>
@@ -552,11 +556,11 @@ select the area to record</source>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"/>
+        <translation>عرض المؤشر</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"/>
+        <translation>عرض النقر</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -568,55 +572,59 @@ select the area to record</source>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>الفيديوهات</translation>
     </message>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>مستطيل (R)
+اضغط واحتفظ بـ Shift لرسم مربع</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>مستطيل بيضاوي (O)
+اضغط واحتفظ بـ Shift لرسم دائرة</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"/>
+        <translation>الخط (L)
+اضغط واحمل Shift لرسم خط أفقي أو رأسي</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"/>
+        <translation>السهم (X)
+اضغط واحمل Shift لرسم سهم أفقي أو رأسي</translation>
     </message>
     <message>
         <source>Pencil (P)</source>
-        <translation type="unfinished"/>
+        <translation>قلم (P)</translation>
     </message>
     <message>
         <source>Blur (B)</source>
-        <translation type="unfinished"/>
+        <translation>التشويه (B)</translation>
     </message>
     <message>
         <source>Text (T)</source>
-        <translation type="unfinished"/>
+        <translation>النص (T)</translation>
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"/>
+        <translation>اللقطة التمريرية (Alt+I)</translation>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
-        <translation type="unfinished"/>
+        <translation>استخراج النص (Alt+O)</translation>
     </message>
     <message>
         <source>Pin screenshots (Alt+P）</source>
-        <translation type="unfinished"/>
+        <translation>اللقطات الثابتة (Alt+P)</translation>
     </message>
     <message>
         <source>Undo (Ctrl+Z)</source>
-        <translation type="unfinished"/>
+        <translation>الاستعادة (Ctrl+Z)</translation>
     </message>
     <message>
         <source>Record</source>
@@ -624,7 +632,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>اللصق</translation>
     </message>
     <message>
         <source>Pictures</source>
@@ -636,11 +644,11 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"/>
+        <translation>تحديد مسار عند الحفظ</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"/>
+        <translation>تغيير المسار عند الحفظ</translation>
     </message>
     <message>
         <source>Format</source>
@@ -660,52 +668,52 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Border Effects</source>
-        <translation type="unfinished"/>
+        <translation>تأثيرات الحدود</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"/>
+        <translation>لا شيء</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"/>
+        <translation>الظل</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"/>
+        <translation>الحدود</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"/>
+        <translation>الجهاز</translation>
     </message>
     <message>
         <source>Extract Text</source>
-        <translation type="unfinished"/>
+        <translation>استخراج النص</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation type="unfinished"/>
+        <translation>إغلاق (Esc)</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation type="unfinished"/>
+        <translation>موافق (Enter)</translation>
     </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"/>
+        <translation>تعديل منطقة التسجيل داخل %1*%2 للحصول على تأثير فيديو أفضل</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"/>
+        <translation>التسجيل الشاشة غير مدعوم في الوقت الحالي</translation>
     </message>
     <message>
         <source>Exit</source>

@@ -9,160 +9,162 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Do not rotate your screen during recording</source>
-        <translation type="unfinished"/>
+        <translation>Не въртете екрана по време на записа</translation>
     </message>
 </context>
 <context>
     <name>IconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Скриншот</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Запис</translation>
     </message>
 </context>
 <context>
     <name>MainToolWidget</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Запис</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Скриншот</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Screen Capture</source>
-        <translation type="unfinished"/>
+        <translation>Скриншот</translation>
     </message>
     <message>
         <source>Save failed. Please save it in your home directory.</source>
-        <translation type="unfinished"/>
+        <translation>Записът не се извърши. Моля, запазете го в домашната си директория.</translation>
     </message>
     <message>
         <source>View</source>
-        <translation type="unfinished"/>
+        <translation>Преглед</translation>
     </message>
     <message>
         <source>Screenshot finished</source>
-        <translation type="unfinished"/>
+        <translation>Скриншотът е приключен</translation>
     </message>
     <message>
         <source>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</source>
-        <translation type="unfinished"/>
+        <translation>PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)</translation>
     </message>
     <message>
         <source>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</source>
-        <translation type="unfinished"/>
+        <translation>JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)</translation>
     </message>
     <message>
         <source>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</source>
-        <translation type="unfinished"/>
+        <translation>BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)</translation>
     </message>
     <message>
         <source>select-area</source>
-        <translation type="unfinished"/>
+        <translation>избери област</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"/>
+        <translation>Запази</translation>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation type="unfinished"/>
+        <translation>Запазено в %1</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"/>
+        <translation>Игнорирай</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Кlipборд</translation>
     </message>
     <message>
         <source>Saving the screen recording file, please wait...</source>
-        <translation type="unfinished"/>
+        <translation>Записване на файла с видеозаписа, моля изчакайте...</translation>
     </message>
     <message>
         <source>As the window effect is disabled during the process, the recording has to be stopped</source>
-        <translation type="unfinished"/>
+        <translation>&gt;-
+ Тъй като ефектът на прозореца е изключен по време на процеса, записа трябва
+ да се прекъсне</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Скриншот</translation>
     </message>
     <message>
         <source>Screenshot failed.</source>
-        <translation type="unfinished"/>
+        <translation>Скриншотът не се извърши.</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Scrollshot</translation>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Пин Скриншоти</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Отвори папка</translation>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Скриншотът е приключен и копиран в кlipборда</translation>
     </message>
 </context>
 <context>
     <name>MenuController</name>
     <message>
         <source>Undo</source>
-        <translation type="unfinished"/>
+        <translation>Отмени</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"/>
+        <translation>Запази</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation type="unfinished"/>
+        <translation>Изход</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Пин Скриншоти</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Скриншот</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Запис</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Скриншот</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Запис</translation>
     </message>
 </context>
 <context>
@@ -177,187 +179,187 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Saved to %1</source>
-        <translation type="unfinished"/>
+        <translation>Запазено в %1</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Запис</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Отвори папка</translation>
     </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
         <source>Screen Capture will start in %1 seconds</source>
-        <translation type="unfinished"/>
+        <translation>Скриншотът ще започне след %1 секунди</translation>
     </message>
 </context>
 <context>
     <name>ScrollShotTip</name>
     <message>
         <source>Get help.</source>
-        <translation type="unfinished"/>
+        <translation>Получи помощ.</translation>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>Неуспешно вземане на непрекъснат скриншот.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
-        <translation type="unfinished"/>
+        <translation>Достигнато дъното на пролистванията</translation>
     </message>
     <message>
         <source>Reached the maximum length</source>
-        <translation type="unfinished"/>
+        <translation>Достигнато максималната дължина</translation>
     </message>
     <message>
         <source>adjust the capture area</source>
-        <translation type="unfinished"/>
+        <translation>Разстройте зоната за отбелязване</translation>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Пролиствайте колелото на мишката или кликнете, за да направите пролистващ скриншот</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
-        <translation type="unfinished"/>
+        <translation>Забавете скоростта на пролистванията</translation>
     </message>
     <message>
         <source>Invalid area, click to </source>
-        <translation type="unfinished"/>
+        <translation>Невалидна зона, кликнете, за да </translation>
     </message>
 </context>
 <context>
     <name>ShapesWidget</name>
     <message>
         <source>Input text here</source>
-        <translation type="unfinished"/>
+        <translation>Въведете текст тук</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Start/Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Стартиране/Скриншот</translation>
     </message>
     <message>
         <source>Exit/Save</source>
-        <translation type="unfinished"/>
+        <translation>Изход/Запазване</translation>
     </message>
     <message>
         <source>Size Adjustment</source>
-        <translation type="unfinished"/>
+        <translation>Размер на промяна</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"/>
+        <translation>Настройки</translation>
     </message>
     <message>
         <source>Quick start</source>
-        <translation type="unfinished"/>
+        <translation>Бързо стартиране</translation>
     </message>
     <message>
         <source>Window screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Скриншот на прозорец</translation>
     </message>
     <message>
         <source>Delay screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Задължителен скриншот</translation>
     </message>
     <message>
         <source>Full screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Пълен скриншот</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation type="unfinished"/>
+        <translation>Изход</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"/>
+        <translation>Запази</translation>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation type="unfinished"/>
+        <translation>Правоъгълник</translation>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation type="unfinished"/>
+        <translation>Елипса</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation type="unfinished"/>
+        <translation>Линия</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation type="unfinished"/>
+        <translation>Карандаш</translation>
     </message>
     <message>
         <source>Text</source>
-        <translation type="unfinished"/>
+        <translation>Текст</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"/>
+        <translation>Премахни</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation type="unfinished"/>
+        <translation>Отказ</translation>
     </message>
     <message>
         <source>Increase height up</source>
-        <translation type="unfinished"/>
+        <translation>Повиши височина нагоре</translation>
     </message>
     <message>
         <source>Increase height down</source>
-        <translation type="unfinished"/>
+        <translation>Повиши височина надолу</translation>
     </message>
     <message>
         <source>Increase width left</source>
-        <translation type="unfinished"/>
+        <translation>Повиши широчина наляво</translation>
     </message>
     <message>
         <source>Increase width right</source>
-        <translation type="unfinished"/>
+        <translation>Повиши широчина вдясно</translation>
     </message>
     <message>
         <source>Decrease height up</source>
-        <translation type="unfinished"/>
+        <translation>Скрижи височина нагоре</translation>
     </message>
     <message>
         <source>Decrease height down</source>
-        <translation type="unfinished"/>
+        <translation>Скрижи височина надолу</translation>
     </message>
     <message>
         <source>Decrease width left</source>
-        <translation type="unfinished"/>
+        <translation>Скрижи широчина наляво</translation>
     </message>
     <message>
         <source>Decrease width right</source>
-        <translation type="unfinished"/>
+        <translation>Скрижи широчина вдясно</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"/>
+        <translation>Помощ</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>Покажи кратки комбинации</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"/>
+        <translation>Звук</translation>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"/>
+        <translation>Комбинация на клавиши</translation>
     </message>
     <message>
         <source>Webcam</source>
-        <translation type="unfinished"/>
+        <translation>Камера</translation>
     </message>
     <message>
         <source>Start recording</source>
@@ -365,57 +367,57 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished"/>
+        <translation>Опции</translation>
     </message>
     <message>
         <source>Start/Recording</source>
-        <translation type="unfinished"/>
+        <translation>Стартиране/Запис</translation>
     </message>
     <message>
         <source>Mouse</source>
-        <translation type="unfinished"/>
+        <translation>Мишка</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"/>
+        <translation>Инструменти</translation>
     </message>
     <message>
         <source>Extract text</source>
-        <translation type="unfinished"/>
+        <translation>Извличане на текст</translation>
     </message>
     <message>
         <source>Scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Скролшот</translation>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Прикрепи скриншоти</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>Стартиране на OCR</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Стартиране на скролшот</translation>
     </message>
     <message>
         <source>Arrow</source>
-        <translation type="unfinished"/>
+        <translation>Стрелка</translation>
     </message>
 </context>
 <context>
     <name>ShotStartPlugin</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Скриншот</translation>
     </message>
 </context>
 <context>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Запис</translation>
     </message>
 </context>
 <context>
@@ -423,29 +425,30 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>Правоъгълник
+Пресомкни Shift, за да нарисуваш квадрат</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>Елипса</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"/>
+        <translation>Натиснете и задръжте Shift, за да нарисувате кръг</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Кистка</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Натиснете и задръжте Shift, за да нарисувате права линия</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Променете сила на размазване (проклъцете, за да го промените)</translation>
     </message>
 </context>
 <context>
@@ -461,263 +464,267 @@ select the area to record</source>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Променете големина на кистка (проклъцете, за да го промените)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Променете големина на текст (проклъцете, за да го промените)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Покажи клавиш (K)</translation>
     </message>
     <message>
         <source>Turn on camera (C)</source>
-        <translation type="unfinished"/>
+        <translation>Скрий клавиш (K)</translation>
     </message>
     <message>
         <source>Turn off camera (C)</source>
-        <translation type="unfinished"/>
+        <translation>Покажи клавиш (K)</translation>
     </message>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Включете камера (C)</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"/>
+        <translation>Изключете камера (C)</translation>
     </message>
     <message>
         <source>Settings (F3)</source>
-        <translation type="unfinished"/>
+        <translation>Скриншот</translation>
     </message>
     <message>
         <source>Format:</source>
-        <translation type="unfinished"/>
+        <translation>Настройки</translation>
     </message>
     <message>
         <source>GIF</source>
-        <translation type="unfinished"/>
+        <translation>Настройки (F3)</translation>
     </message>
     <message>
         <source>MP4</source>
-        <translation type="unfinished"/>
+        <translation>Формат:</translation>
     </message>
     <message>
         <source>MKV</source>
-        <translation type="unfinished"/>
+        <translation>GIF</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>MP4</translation>
     </message>
     <message>
         <source>FPS:</source>
-        <translation type="unfinished"/>
+        <translation>MKV</translation>
     </message>
     <message>
         <source>5 fps</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>10 fps</source>
-        <translation type="unfinished"/>
+        <translation>FPS:</translation>
     </message>
     <message>
         <source>20 fps</source>
-        <translation type="unfinished"/>
+        <translation>5 fps</translation>
     </message>
     <message>
         <source>24 fps</source>
-        <translation type="unfinished"/>
+        <translation>10 fps</translation>
     </message>
     <message>
         <source>30 fps</source>
-        <translation type="unfinished"/>
+        <translation>20 fps</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"/>
+        <translation>24 fps</translation>
     </message>
     <message>
         <source>Microphone</source>
-        <translation type="unfinished"/>
+        <translation>30 fps</translation>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"/>
+        <translation>Звук</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished"/>
+        <translation>Микрофон</translation>
     </message>
     <message>
         <source>Show pointer</source>
-        <translation type="unfinished"/>
+        <translation>Системен звук</translation>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"/>
+        <translation>Опции</translation>
     </message>
     <message>
         <source>Save to</source>
-        <translation type="unfinished"/>
+        <translation>Запази в</translation>
     </message>
     <message>
         <source>Desktop</source>
-        <translation type="unfinished"/>
+        <translation>Бърз</translation>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>Видео</translation>
     </message>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>Прът (R)
+Натиснете и задържете Shift, за да нарисувате квадрат</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>Елипса (O)
+Натиснете и задържете Shift, за да нарисувате кръг</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"/>
+        <translation>Линия (L)
+Натиснете и задържете Shift, за да нарисувате вертикална или хоризонтална линия</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"/>
+        <translation>Стрелка (X)
+Натиснете и задържете Shift, за да нарисувате вертикална или хоризонтална стрелка</translation>
     </message>
     <message>
         <source>Pencil (P)</source>
-        <translation type="unfinished"/>
+        <translation>Молив (P)</translation>
     </message>
     <message>
         <source>Blur (B)</source>
-        <translation type="unfinished"/>
+        <translation>Размъкване (B)</translation>
     </message>
     <message>
         <source>Text (T)</source>
-        <translation type="unfinished"/>
+        <translation>Текст (T)</translation>
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"/>
+        <translation>Scrollshot (Alt+I)</translation>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
-        <translation type="unfinished"/>
+        <translation>Извличане на текст (Alt+O)</translation>
     </message>
     <message>
         <source>Pin screenshots (Alt+P）</source>
-        <translation type="unfinished"/>
+        <translation>Прикрепи скриншоти (Alt+P)</translation>
     </message>
     <message>
         <source>Undo (Ctrl+Z)</source>
-        <translation type="unfinished"/>
+        <translation>Отмени (Ctrl+Z)</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Запис</translation>
     </message>
     <message>
         <source>Clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Кlipboard</translation>
     </message>
     <message>
         <source>Pictures</source>
-        <translation type="unfinished"/>
+        <translation>Снимки</translation>
     </message>
     <message>
         <source>Folder</source>
-        <translation type="unfinished"/>
+        <translation>Папка</translation>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"/>
+        <translation>Задайте път при запазване</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"/>
+        <translation>Променете пътя при запазване</translation>
     </message>
     <message>
         <source>Format</source>
-        <translation type="unfinished"/>
+        <translation>Формат</translation>
     </message>
     <message>
         <source>PNG</source>
-        <translation type="unfinished"/>
+        <translation>PNG</translation>
     </message>
     <message>
         <source>JPG</source>
-        <translation type="unfinished"/>
+        <translation>JPG</translation>
     </message>
     <message>
         <source>BMP</source>
-        <translation type="unfinished"/>
+        <translation>BMP</translation>
     </message>
     <message>
         <source>Border Effects</source>
-        <translation type="unfinished"/>
+        <translation>Ефекти на рамка</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"/>
+        <translation>Няма</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"/>
+        <translation>Сянка</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"/>
+        <translation>Рамка</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"/>
+        <translation>Устройство</translation>
     </message>
     <message>
         <source>Extract Text</source>
-        <translation type="unfinished"/>
+        <translation>Извличане на текст</translation>
     </message>
 </context>
 <context>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation type="unfinished"/>
+        <translation>Затвори (Esc)</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation type="unfinished"/>
+        <translation>ОК (Enter)</translation>
     </message>
 </context>
 <context>
     <name>TopTips</name>
     <message>
         <source> Adjust the recording area within %1*%2 to get better video effect</source>
-        <translation type="unfinished"/>
+        <translation>Разгледайте зоната за запис вътре в %1*%2, за да получите по-добър видеовизуален ефект</translation>
     </message>
 </context>
 <context>
     <name>Utils</name>
     <message>
         <source>Screen recording is not supported at present</source>
-        <translation type="unfinished"/>
+        <translation>Снимането на екрана не е поддържано в момента</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation type="unfinished"/>
+        <translation>Изход</translation>
     </message>
 </context>
 <context>
     <name>VoiceRecordProcess</name>
     <message>
         <source>New recording</source>
-        <translation type="unfinished"/>
+        <translation>Нов запис</translation>
     </message>
 </context>
 </TS>

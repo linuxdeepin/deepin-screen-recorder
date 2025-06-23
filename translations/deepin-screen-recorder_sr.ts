@@ -20,7 +20,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Запис</translation>
     </message>
 </context>
 <context>
@@ -106,19 +106,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Фиксирајте снимке</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Отвори фолдер</translation>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Снимка завршена и копирана у клипборд</translation>
     </message>
 </context>
 <context>
@@ -140,29 +140,29 @@ or press the shortcut again to stop recording</source>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Фиксирајте снимке</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Снимак</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Запис</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Снимак</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Запис</translation>
     </message>
 </context>
 <context>
@@ -185,7 +185,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Отвори фолдер</translation>
     </message>
 </context>
 <context>
@@ -389,15 +389,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Фиксирајте снимке</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>Почни OCR</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Почни скролшот</translation>
     </message>
     <message>
         <source>Arrow</source>
@@ -415,7 +415,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Запис</translation>
     </message>
 </context>
 <context>
@@ -423,29 +423,32 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>Правоугаоник
+Притисните и задржите Shift да бисте цртали квадрат</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>Елипса
+Притисните и задржите Shift да бисте цртали круг</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"/>
+        <translation>Пензет
+Притисните и задржите Shift да бисте цртали праву линију</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Прилагодите степен размажености (Scroll да бисте прилагодили)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Прилагодите величину пена (Scroll да бисте прилагодили)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Прилагодите величину текста (Scroll да бисте прилагодили)</translation>
     </message>
 </context>
 <context>
@@ -461,23 +464,23 @@ select the area to record</source>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Прикажи притисак тастер (K)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Сакријте притисак тастер (K)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Прикажи притисак тастер (K)</translation>
     </message>
     <message>
         <source>Turn on camera (C)</source>
-        <translation type="unfinished"/>
+        <translation>Укључи камеру (C)</translation>
     </message>
     <message>
         <source>Turn off camera (C)</source>
-        <translation type="unfinished"/>
+        <translation>Искључи камеру (C)</translation>
     </message>
     <message>
         <source>Screenshot</source>
@@ -489,7 +492,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Settings (F3)</source>
-        <translation type="unfinished"/>
+        <translation>Поставке (F3)</translation>
     </message>
     <message>
         <source>Format:</source>
@@ -509,7 +512,7 @@ select the area to record</source>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -545,7 +548,7 @@ select the area to record</source>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"/>
+        <translation>Системски аудио</translation>
     </message>
     <message>
         <source>Options</source>
@@ -557,7 +560,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"/>
+        <translation>Прикажи клик</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -569,55 +572,59 @@ select the area to record</source>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>Видео</translation>
     </message>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>Прavоугаоник (R)
+Притисните и задржите Shift да бисте цртали квадрат</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>Елипса (O)
+Притисните и задржите Shift да бисте цртали кружић</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"/>
+        <translation>Линија (L)
+Притисните и задржите Shift да бисте цртали вертикалну или хоризонталну линију</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"/>
+        <translation>Стрелка (X)
+Притисните и задржите Shift да бисте цртали вертикалну или хоризонталну стрелку</translation>
     </message>
     <message>
         <source>Pencil (P)</source>
-        <translation type="unfinished"/>
+        <translation>Оловка (P)</translation>
     </message>
     <message>
         <source>Blur (B)</source>
-        <translation type="unfinished"/>
+        <translation>Мање (B)</translation>
     </message>
     <message>
         <source>Text (T)</source>
-        <translation type="unfinished"/>
+        <translation>Текст (T)</translation>
     </message>
     <message>
         <source>Scrollshot (Alt+I）</source>
-        <translation type="unfinished"/>
+        <translation>Потчиња (Alt+I)</translation>
     </message>
     <message>
         <source>Extract text (Alt+O）</source>
-        <translation type="unfinished"/>
+        <translation>Извади текст (Alt+O)</translation>
     </message>
     <message>
         <source>Pin screenshots (Alt+P）</source>
-        <translation type="unfinished"/>
+        <translation>Фиксирај потчиње (Alt+P)</translation>
     </message>
     <message>
         <source>Undo (Ctrl+Z)</source>
-        <translation type="unfinished"/>
+        <translation>Поврати (Ctrl+Z)</translation>
     </message>
     <message>
         <source>Record</source>
@@ -637,11 +644,11 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"/>
+        <translation>Постави путању приликом сачувања</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"/>
+        <translation>Промени путању приликом сачувања</translation>
     </message>
     <message>
         <source>Format</source>
@@ -661,23 +668,23 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Border Effects</source>
-        <translation type="unfinished"/>
+        <translation>Ефекти обода</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"/>
+        <translation>Ништа</translation>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"/>
+        <translation>Сенка</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"/>
+        <translation>Обод</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"/>
+        <translation>Уређај</translation>
     </message>
     <message>
         <source>Extract Text</source>
@@ -688,11 +695,11 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     <name>ToolBarWidget</name>
     <message>
         <source>Close (Esc)</source>
-        <translation type="unfinished"/>
+        <translation>Затвори (Esc)</translation>
     </message>
     <message>
         <source>OK (Enter)</source>
-        <translation type="unfinished"/>
+        <translation>Да (Enter)</translation>
     </message>
 </context>
 <context>

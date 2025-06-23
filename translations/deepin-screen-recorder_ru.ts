@@ -106,19 +106,19 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Закрепить скриншоты</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Открыть папку</translation>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Скриншот завершен и скопирован в буфер обмена</translation>
     </message>
 </context>
 <context>
@@ -140,29 +140,29 @@ or press the shortcut again to stop recording</source>
     <name>QObject</name>
     <message>
         <source>Pin Screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Закрепить скриншоты</translation>
     </message>
 </context>
 <context>
     <name>QuickPanelWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Скриншот</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Запись</translation>
     </message>
 </context>
 <context>
     <name>RecordIconWidget</name>
     <message>
         <source>Screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Скриншот</translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation type="unfinished"/>
+        <translation>Запись</translation>
     </message>
 </context>
 <context>
@@ -185,7 +185,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Open Folder</source>
-        <translation type="unfinished"/>
+        <translation>Открыть папку</translation>
     </message>
 </context>
 <context>
@@ -203,7 +203,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Failed to take a continuous screenshot.</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось сделать непрерывный скриншот.</translation>
     </message>
     <message>
         <source>Reached the bottom of the scroll area</source>
@@ -219,7 +219,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Scroll your mouse wheel or click to take a scrolling screenshot</source>
-        <translation type="unfinished"/>
+        <translation>Прокрутите колесо мыши или щелкните, чтобы сделать прокручиваемый скриншот</translation>
     </message>
     <message>
         <source>Slow down the scrolling speed</source>
@@ -353,7 +353,7 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Keystroke</source>
-        <translation type="unfinished"/>
+        <translation>Клавиатурный ввод</translation>
     </message>
     <message>
         <source>Webcam</source>
@@ -389,15 +389,15 @@ or press the shortcut again to stop recording</source>
     </message>
     <message>
         <source>Pin screenshots</source>
-        <translation type="unfinished"/>
+        <translation>Закрепить скриншоты</translation>
     </message>
     <message>
         <source>Start OCR</source>
-        <translation type="unfinished"/>
+        <translation>Запустить OCR</translation>
     </message>
     <message>
         <source>Start scrollshot</source>
-        <translation type="unfinished"/>
+        <translation>Запустить прокручиваемый скриншот</translation>
     </message>
     <message>
         <source>Arrow</source>
@@ -415,7 +415,7 @@ or press the shortcut again to stop recording</source>
     <name>ShotStartRecordPlugin</name>
     <message>
         <source>Record</source>
-        <translation type="unfinished"/>
+        <translation>Запись</translation>
     </message>
 </context>
 <context>
@@ -423,29 +423,32 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Rectangle
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>Прямоугольник
+Удерживайте Shift, чтобы нарисовать квадрат</translation>
     </message>
     <message>
         <source>Ellipse
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>Эллипс
+Удерживайте Shift, чтобы нарисовать окружность</translation>
     </message>
     <message>
         <source>Brush
 Press and hold Shift to draw a straight line</source>
-        <translation type="unfinished"/>
+        <translation>Кисть
+Удерживайте Shift, чтобы нарисовать прямую линию</translation>
     </message>
     <message>
         <source>Adjust blur strength (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Настройте силу размытия (прокрутите, чтобы скорректировать)</translation>
     </message>
     <message>
         <source>Adjust brush size (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Настройте размер кисти (прокрутите, чтобы скорректировать)</translation>
     </message>
     <message>
         <source>Adjust text size (Scroll to adjust it)</source>
-        <translation type="unfinished"/>
+        <translation>Настройте размер текста (прокрутите, чтобы скорректировать)</translation>
     </message>
 </context>
 <context>
@@ -461,15 +464,15 @@ select the area to record</source>
     <name>SubToolWidget</name>
     <message>
         <source>Show keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Показать клавиатурный ввод (K)</translation>
     </message>
     <message>
         <source>Hide Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Скрыть клавиатурный ввод (K)</translation>
     </message>
     <message>
         <source>Show Keystroke (K)</source>
-        <translation type="unfinished"/>
+        <translation>Показать клавиатурный ввод (K)</translation>
     </message>
     <message>
         <source>Turn on camera (C)</source>
@@ -509,7 +512,7 @@ select the area to record</source>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>webm</translation>
     </message>
     <message>
         <source>FPS:</source>
@@ -545,7 +548,7 @@ select the area to record</source>
     </message>
     <message>
         <source>System audio</source>
-        <translation type="unfinished"/>
+        <translation>Звук системы</translation>
     </message>
     <message>
         <source>Options</source>
@@ -557,7 +560,7 @@ select the area to record</source>
     </message>
     <message>
         <source>Show click</source>
-        <translation type="unfinished"/>
+        <translation>Показать щелчок</translation>
     </message>
     <message>
         <source>Save to</source>
@@ -569,27 +572,31 @@ select the area to record</source>
     </message>
     <message>
         <source>Videos</source>
-        <translation type="unfinished"/>
+        <translation>Видео</translation>
     </message>
     <message>
         <source>Rectangle (R)
 Press and hold Shift to draw a square</source>
-        <translation type="unfinished"/>
+        <translation>Прямоугольник (R)
+Нажмите и удерживайте Shift, чтобы нарисовать квадрат</translation>
     </message>
     <message>
         <source>Ellipse (O)
 Press and hold Shift to draw a circle</source>
-        <translation type="unfinished"/>
+        <translation>Эллипс (O)
+Нажмите и удерживайте Shift, чтобы нарисовать окружность</translation>
     </message>
     <message>
         <source>Line (L)
 Press and hold Shift to draw a vertical or horizontal line</source>
-        <translation type="unfinished"/>
+        <translation>Линия (L)
+Нажмите и удерживайте Shift, чтобы нарисовать вертикальную или горизонтальную линию</translation>
     </message>
     <message>
         <source>Arrow (X)
 Press and hold Shift to draw a vertical or horizontal arrow</source>
-        <translation type="unfinished"/>
+        <translation>Стрелка (X)
+Нажмите и удерживайте Shift, чтобы нарисовать вертикальную или горизонтальную стрелку</translation>
     </message>
     <message>
         <source>Pencil (P)</source>
@@ -613,7 +620,7 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Pin screenshots (Alt+P）</source>
-        <translation type="unfinished"/>
+        <translation>Закрепить скриншоты (Alt+P)</translation>
     </message>
     <message>
         <source>Undo (Ctrl+Z)</source>
@@ -637,11 +644,11 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Set a path on save</source>
-        <translation type="unfinished"/>
+        <translation>Установить путь при сохранении</translation>
     </message>
     <message>
         <source>Change the path on save</source>
-        <translation type="unfinished"/>
+        <translation>Изменить путь при сохранении</translation>
     </message>
     <message>
         <source>Format</source>
@@ -669,15 +676,15 @@ Press and hold Shift to draw a vertical or horizontal arrow</source>
     </message>
     <message>
         <source>Shadow</source>
-        <translation type="unfinished"/>
+        <translation>Тень</translation>
     </message>
     <message>
         <source>Border</source>
-        <translation type="unfinished"/>
+        <translation>Граница</translation>
     </message>
     <message>
         <source>Device</source>
-        <translation type="unfinished"/>
+        <translation>Устройство</translation>
     </message>
     <message>
         <source>Extract Text</source>

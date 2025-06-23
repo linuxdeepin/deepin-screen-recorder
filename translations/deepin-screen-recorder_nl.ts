@@ -110,7 +110,7 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>deepin-screen-recorder</source>
-        <translation type="unfinished"/>
+        <translation>deepin-screen-recorder</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -118,7 +118,7 @@ of druk nogmaals op de sneltoets om te stoppen</translation>
     </message>
     <message>
         <source>Screenshot finished and copy to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Schermopname voltooid en gekopieerd naar het klembord</translation>
     </message>
 </context>
 <context>
