@@ -1,4 +1,4 @@
-# Screenshot & Screen Recording | deepin-screen-recorder|
+# Screenshot & Screen Recording|deepin-screen-recorder|
 
 ## Overview
 
