@@ -1,4 +1,4 @@
-# 截圖錄影 | deepin-screen-recorder|
+# 截圖錄影|deepin-screen-recorder|
 
 ## 概述
 
