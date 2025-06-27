@@ -27,6 +27,7 @@ TextEdit::TextEdit(int index, DWidget *parent)
     : DPlainTextEdit(parent),
       m_textColor(Qt::red)
 {
+    qCDebug(dsrApp) << "TextEdit constructor called with index:" << index;
     m_index = index;
     setLineWrapMode(DPlainTextEdit::NoWrap); //不自动换行
     setContextMenuPolicy(Qt::NoContextMenu);//不需要菜单
@@ -51,7 +52,7 @@ TextEdit::TextEdit(int index, DWidget *parent)
     QSizeF originSize = QSizeF(m_fontMetric.boundingRect("d").width()  + TEXT_MARGIN,  m_fontMetric.boundingRect("d").height());
     //记录当前光标的高度
     m_cursorHeight = cursorRect().height();
-    qDebug() << "m_cursorHeight: "  << m_cursorHeight;
+    qCDebug(dsrApp) << "Cursor height: "  << m_cursorHeight;
 
     this->resize(static_cast<int>(originSize.width()), static_cast<int>(originSize.height()));
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -67,12 +68,13 @@ TextEdit::TextEdit(int index, DWidget *parent)
 
 int TextEdit::getIndex()
 {
+    qCDebug(dsrApp) << "TextEdit::getIndex called, returning index:" << m_index;
     return m_index;
 }
 
 void TextEdit::setColor(QColor c)
 {
-    qDebug() << "set color";
+    qCDebug(dsrApp) << "TextEdit::setColor called with color:" << c;
     m_textColor = c;
 //    setStyleSheet(QString("TextEdit {background-color:  transparent;"
 //                          " color: %1; border: none;}").arg(m_textColor.name()));
@@ -94,7 +96,7 @@ QColor TextEdit::getColor()
 */
 void TextEdit::setFontSize(int fontsize)
 {
-    qCDebug(dsrApp) << "Setting font size to:" << fontsize;
+    qCDebug(dsrApp) << "TextEdit::setFontSize called with font size:" << fontsize;
     QFont font;
     font.setPixelSize(fontsize);
     this->document()->setDefaultFont(font);
@@ -106,15 +108,17 @@ void TextEdit::setFontSize(int fontsize)
 
 void TextEdit::inputMethodEvent(QInputMethodEvent *e)
 {
+    qCDebug(dsrApp) << "TextEdit::inputMethodEvent called.";
     DPlainTextEdit::inputMethodEvent(e);
 
     QString virtualStr = this->toPlainText() + e->preeditString();
+    qCDebug(dsrApp) << "Input method event, virtual string length:" << virtualStr.length();
     updateContentSize(virtualStr);
 }
 
 void TextEdit::updateContentSize(QString content)
 {
-    qCDebug(dsrApp) << "Updating content size for text length:" << content.length();
+    qCDebug(dsrApp) << "TextEdit::updateContentSize called for text length:" << content.length();
 //    qDebug() << "=============" << m_count << "===============";
 //    qDebug() << "content: " << content << "content.size(): " << content.size();
 //    qDebug() << "blockCount() : " << blockCount() ;
@@ -147,12 +151,15 @@ void TextEdit::updateContentSize(QString content)
 
 void TextEdit::setEditing(bool edit)
 {
+    qCDebug(dsrApp) << "TextEdit::setEditing called with edit:" << edit;
     m_editing = edit;
 }
 
 void TextEdit::setSelecting(bool select)
 {
+    qCDebug(dsrApp) << "TextEdit::setSelecting called with select:" << select;
     if (select) {
+        qCDebug(dsrApp) << "Text edit selected, emitting textEditSelected signal for index:" << getIndex();
         emit textEditSelected(getIndex());
     }
 
@@ -161,36 +168,42 @@ void TextEdit::setSelecting(bool select)
 
 void TextEdit::updateCursor()
 {
+    qCDebug(dsrApp) << "TextEdit::updateCursor called.";
 //    setTextColor(Qt::green);
 }
 
 void TextEdit::setCursorVisible(bool visible)
 {
+    qCDebug(dsrApp) << "TextEdit::setCursorVisible called with visible:" << visible;
     if (visible) {
+        qCDebug(dsrApp) << "Setting cursor width to 1.";
         setCursorWidth(1);
     } else {
+        qCDebug(dsrApp) << "Setting cursor width to 0.";
         setCursorWidth(0);
     }
 }
 void TextEdit::mousePressEvent(QMouseEvent *e)
 {
-    qDebug() << "TextEdit mousePressEvent" << e->pos();
+    qCDebug(dsrApp) << "TextEdit::mousePressEvent called at pos:" << e->pos();
 //    if (!this->isReadOnly()) {
 //        DPlainTextEdit::mousePressEvent(e);
 //        return;
 //    }
     m_currentCursor = QCursor().pos();
     if (m_editing == true) {
+        qCDebug(dsrApp) << "TextEdit is in editing mode, passing event to DPlainTextEdit::mousePressEvent.";
         DPlainTextEdit::mousePressEvent(e);
         return;
     }
 
     if (e->button() == Qt::LeftButton) {
+        qCDebug(dsrApp) << "Left mouse button pressed.";
         m_isPressed = true;
         m_pressPoint = QPointF(mapToGlobal(e->pos()));
 
         if (this->isReadOnly()) {
-            qDebug() << "text select:" << getIndex();
+            qCDebug(dsrApp) << "Text edit is read-only, emitting textEditSelected signal for index:" << getIndex();
             emit textEditSelected(getIndex());
         }
     }
@@ -211,6 +224,7 @@ void TextEdit::mouseMoveEvent(QMouseEvent *e)
 //        return;
 //    }
     if (m_editing == true) {
+        qCDebug(dsrApp) << "TextEdit is in editing mode, passing event to DPlainTextEdit::mouseMoveEvent.";
         DPlainTextEdit::mouseMoveEvent(e);
         return;
     }
@@ -219,6 +233,7 @@ void TextEdit::mouseMoveEvent(QMouseEvent *e)
     QPointF movePos = QPointF(posOrigin.x(), posOrigin.y());
 
     if (m_isPressed && movePos != m_pressPoint) {
+        qCDebug(dsrApp) << "Mouse is pressed and moved, moving TextEdit widget.";
         this->move(static_cast<int>(this->x() + movePos.x() - m_pressPoint.x()),
                    static_cast<int>(this->y() + movePos.y() - m_pressPoint.y()));
 
@@ -233,12 +248,15 @@ void TextEdit::mouseMoveEvent(QMouseEvent *e)
 
 void TextEdit::mouseReleaseEvent(QMouseEvent *e)
 {
+    qCDebug(dsrApp) << "TextEdit::mouseReleaseEvent called at pos:" << e->pos();
     if (m_editing == true) {
+        qCDebug(dsrApp) << "TextEdit is in editing mode, passing event to DPlainTextEdit::mouseReleaseEvent.";
         DPlainTextEdit::mouseReleaseEvent(e);
         return;
     }
     m_isPressed = false;
     if (this->isReadOnly()) {
+        qCDebug(dsrApp) << "Text edit is read-only, setting mouse tracking to false.";
         setMouseTracking(false);
         DPlainTextEdit::mouseReleaseEvent(e);
         return;
@@ -249,6 +267,7 @@ void TextEdit::mouseReleaseEvent(QMouseEvent *e)
 
 void TextEdit::mouseDoubleClickEvent(QMouseEvent *e)
 {
+    qCDebug(dsrApp) << "TextEdit::mouseDoubleClickEvent called at pos:" << e->pos();
     this->setReadOnly(false);
     this->setCursorVisible(true);
 //    emit backToEditing();
@@ -259,18 +278,21 @@ void TextEdit::mouseDoubleClickEvent(QMouseEvent *e)
 
 void TextEdit::keyPressEvent(QKeyEvent *e)
 {
+    qCDebug(dsrApp) << "TextEdit::keyPressEvent called with key:" << e->key();
     DPlainTextEdit::keyPressEvent(e);
     if (m_isPressed) {
-        qDebug() << "通过键盘移动光标";
+        qCDebug(dsrApp) << "Key pressed while mouse is pressed, moving cursor.";
         Utils::cursorMove(m_currentCursor, e);
     }
     if (e->key() == Qt::Key_Escape && !this->isReadOnly()) {
+        qCDebug(dsrApp) << "Escape key pressed, setting TextEdit to read-only.";
         this->setReadOnly(true);
     }
 }
 
 void TextEdit::focusInEvent(QFocusEvent *e)
 {
+    qCDebug(dsrApp) << "TextEdit::focusInEvent called.";
     setAttribute(Qt::WA_InputMethodEnabled);
     DPlainTextEdit::focusInEvent(e);
 }
@@ -284,4 +306,6 @@ void TextEdit::focusInEvent(QFocusEvent *e)
 //    DPlainTextEdit::focusOutEvent(e);
 //}
 
-TextEdit::~TextEdit() {}
+TextEdit::~TextEdit() {
+    qCDebug(dsrApp) << "TextEdit destructor called.";
+}

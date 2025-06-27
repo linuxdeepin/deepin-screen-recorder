@@ -50,6 +50,7 @@ const QSize MIN_TOOL_BUTTON_SIZE = QSize(42, 40);
 
 SubToolWidget::SubToolWidget(MainWindow *pmainwindow, DWidget *parent) : DStackedWidget(parent)
 {
+    qCDebug(dsrApp) << "SubToolWidget constructor called.";
     m_pMainWindow = pmainwindow;
     initWidget();
     connect(m_pMainWindow, SIGNAL(microPhoneEnable(bool)), this, SLOT(setMicroPhoneEnable(bool)));
@@ -57,15 +58,17 @@ SubToolWidget::SubToolWidget(MainWindow *pmainwindow, DWidget *parent) : DStacke
 
 void SubToolWidget::initWidget()
 {
+    qCDebug(dsrApp) << "SubToolWidget::initWidget called.";
     hintFilter = new HintFilter(this);
     initRecordLabel();
     initShotLabel();
     setCurrentWidget(m_shotSubTool);
+    qCDebug(dsrApp) << "Current widget set to shot subtool.";
 }
 
 void SubToolWidget::initRecordLabel()
 {
-    qDebug() << "正在初始化录屏工具栏UI...";
+    qCDebug(dsrApp) << "SubToolWidget::initRecordLabel called (initializing record toolbar UI).";
     m_recordSubTool = new DLabel(this);
     QList<ToolButton *> btnList;
 
@@ -79,12 +82,15 @@ void SubToolWidget::initRecordLabel()
     btnList.append(m_keyBoardButton);
     //发送键盘按键按钮状态信号
     connect(m_keyBoardButton, &DPushButton::clicked, this, [ = ] {
+        qCDebug(dsrApp) << "Keyboard button clicked, checked:" << m_keyBoardButton->isChecked();
         if (m_keyBoardButton->isChecked())
         {
             installTipHint(m_keyBoardButton, tr("Hide Keystroke (K)"));
+            qCDebug(dsrApp) << "Keyboard button checked, changing hint to 'Hide Keystroke'.";
         } else
         {
             installTipHint(m_keyBoardButton, tr("Show Keystroke (K)"));
+            qCDebug(dsrApp) << "Keyboard button unchecked, changing hint to 'Show Keystroke'.";
         }
         emit keyBoardButtonClicked(m_keyBoardButton->isChecked());
     });
@@ -99,17 +105,19 @@ void SubToolWidget::initRecordLabel()
     m_cameraButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(m_cameraButton);
     connect(m_cameraButton, &DPushButton::clicked, this, [ = ] {
-        qDebug() << "点击摄像头开启/关闭按钮！";
+        qCDebug(dsrApp) << "点击摄像头开启/关闭按钮！";
         if (m_cameraButton->isChecked())
         {
             installTipHint(m_cameraButton, tr("Turn off camera (C)"));
+            qCDebug(dsrApp) << "Camera button checked, changing hint to 'Turn off camera'.";
         } else
         {
             installTipHint(m_cameraButton, tr("Turn on camera (C)"));
+            qCDebug(dsrApp) << "Camera button unchecked, changing hint to 'Turn on camera'.";
         }
-        qDebug() << "正在发射摄像头点击信号...";
+        qCDebug(dsrApp) << "正在发射摄像头点击信号...";
         emit cameraActionChecked(m_cameraButton->isChecked());
-        qDebug() << "已发射摄像头点击信号";
+        qCDebug(dsrApp) << "已发射摄像头点击信号";
     });
 
 
@@ -122,6 +130,7 @@ void SubToolWidget::initRecordLabel()
     m_shotButton->setFixedSize(TOOL_BUTTON_SIZE);
     btnList.append(m_shotButton);
     connect(m_shotButton, &DPushButton::clicked, this, [ = ] {
+        qCDebug(dsrApp) << "Screenshot button clicked.";
         m_pMainWindow->getToolBarPoint();
         qInfo() << "shotbutton is clicked";
         switchContent("shot");
@@ -134,10 +143,12 @@ void SubToolWidget::initRecordLabel()
     m_optionButton->setOptionButtonFlag(true);
     DPalette pa = m_optionButton->palette();
     if (Utils::themeType == 1) {
+        qCDebug(dsrApp) << "Setting option button palette for light theme.";
         pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
         pa.setColor(DPalette::Dark, QColor(192, 192, 192, 255));
         pa.setColor(DPalette::Light, QColor(192, 192, 192, 255));
     } else {
+        qCDebug(dsrApp) << "Setting option button palette for dark theme.";
         pa.setColor(DPalette::ButtonText, QColor(228, 228, 228, 255));
         pa.setColor(DPalette::Dark, QColor(64, 64, 64, 255));
         pa.setColor(DPalette::Light, QColor(64, 64, 64, 255));
@@ -161,6 +172,7 @@ void SubToolWidget::initRecordLabel()
     for (int i = 0; i < btnList.length(); i++) {
         rectLayout->addWidget(btnList[i]);
         if (btnList[i] == m_shotButton) {
+            qCDebug(dsrApp) << "Adding spacing after shot button.";
             rectLayout->addSpacing(10);
         }
     }
@@ -169,11 +181,11 @@ void SubToolWidget::initRecordLabel()
 
     initRecordOption();
 
-    qDebug() << "录屏工具栏UI已初始化";
+    qCDebug(dsrApp) << "Record toolbar UI initialized.";
 }
 void SubToolWidget::initRecordOption()
 {
-    qDebug() << "正在初始化录屏工具栏选项UI...";
+    qCDebug(dsrApp) << "SubToolWidget::initRecordOption called (initializing record toolbar options UI).";
     QActionGroup *t_formatGroup = new QActionGroup(this);
     QActionGroup *t_fpsGroup = new QActionGroup(this);
     QActionGroup *t_audioGroup = new QActionGroup(this);
@@ -194,6 +206,7 @@ void SubToolWidget::initRecordOption()
     QAction *mp4Action = new QAction(tr("MP4"), m_recordOptionMenu);
     QAction *mkvAction = new QAction(tr("MKV"), m_recordOptionMenu);
     if (!Utils::isFFmpegEnv) {
+        qCDebug(dsrApp) << "FFmpeg environment not found, changing MP4 action text to webm.";
         mp4Action->setText(tr("webm"));
     }
     // 帧数
@@ -317,6 +330,7 @@ void SubToolWidget::initRecordOption()
     int frame_rate = t_settings->getValue("recorder", "frame_rate").toInt();
     //在GStreamer环境下，录屏格式只有webm，因此录屏格式webm一定会被选中
     if (!Utils::isFFmpegEnv) {
+        qCDebug(dsrApp) << "Not ffmpeg env, set format to webm";
         if (save_format != 1) {
             save_format = 1;
         }
@@ -457,7 +471,7 @@ void SubToolWidget::initRecordOption()
         emit mouseBoardButtonClicked(showClick->isChecked());
     });
     int cursor = t_settings->getValue("recorder", "cursor").toInt();
-    qDebug() << "默认是否录制鼠标？(0 不录制鼠标，及不录制鼠标点击,1 录制鼠标,2 录制鼠标点击,3 录制鼠标，及录制鼠标点击)" << cursor;
+    qCDebug(dsrApp) << "默认是否录制鼠标？(0 不录制鼠标，及不录制鼠标点击,1 录制鼠标,2 录制鼠标点击,3 录制鼠标，及录制鼠标点击)" << cursor;
     if (cursor == 3) {
         showClick->setChecked(true);
         showPointer->setChecked(true);
@@ -473,7 +487,7 @@ void SubToolWidget::initRecordOption()
     }
 
     int save_opt = t_settings->getValue("recorder", "save_op").toInt();
-    qDebug() << "录屏默认保存到" << (save_opt ? "视频" : "桌面");
+    qCDebug(dsrApp) << "录屏默认保存到" << (save_opt ? "视频" : "桌面");
     if (save_opt == 0) {
         saveToVideoAction->setChecked(true);
         saveToVideoAction->trigger();
@@ -493,12 +507,12 @@ void SubToolWidget::initRecordOption()
             t_settings->setValue("recorder", "save_dir", QStandardPaths::writableLocation(QStandardPaths::MoviesLocation));
         }
     });
-    qDebug() << "录屏工具栏选项UI已初始化";
+    qCDebug(dsrApp) << "录屏工具栏选项UI已初始化";
 }
 
 void SubToolWidget::initShotLabel()
 {
-    qDebug() << "正在初始化截图工具栏UI...";
+    qCDebug(dsrApp) << "SubToolWidget::initShotLabel called (initializing screenshot toolbar UI).";
     m_shotSubTool = new DLabel(this);
     m_shotBtnGroup = new QButtonGroup(this);
     m_shotBtnGroup->setExclusive(true);
@@ -591,7 +605,7 @@ void SubToolWidget::initShotLabel()
     btnList.append(m_scrollShotButton);
 #endif
     connect(m_scrollShotButton, &DPushButton::clicked, this, [ = ] {
-        qDebug() << "滚动截图的按钮按下！";
+        qCDebug(dsrApp) << "滚动截图的按钮按下！";
         switchContent("scroll");
         emit changeShotToolFunc("scroll");
     });
@@ -747,12 +761,12 @@ void SubToolWidget::initShotLabel()
     });
 
     initShotOption();
-    qDebug() << "截图工具栏UI已初始化";
+    qCDebug(dsrApp) << "截图工具栏UI已初始化";
 }
 
 void SubToolWidget::initShotOption()
 {
-    qDebug() << "正在初始化截图工具栏选项UI...";
+    qCDebug(dsrApp) << "正在初始化截图工具栏选项UI...";
     QActionGroup *t_saveGroup = new QActionGroup(this);
     QActionGroup *t_formatGroup = new QActionGroup(this);
     t_saveGroup->setExclusive(true);
@@ -782,10 +796,10 @@ void SubToolWidget::initShotOption()
     //历史保存路径
     m_saveToSpecialPathAction = new QAction(m_saveToSpecialPathMenu);
     if (specialPath.isEmpty() || !QFileInfo::exists(specialPath)) {
-        qDebug() << "不存在指定路径";
+        qCDebug(dsrApp) << "不存在指定路径";
         m_changeSaveToSpecialPath->setText(tr("Set a path on save"));
     } else {
-        qDebug() << "存在指定路径: " /*<< specialPath*/;
+        qCDebug(dsrApp) << "存在指定路径: " /*<< specialPath*/;
         m_changeSaveToSpecialPath->setText(tr("Change the path on save"));
         //根据字体大小计算字符串宽度，确定路径省略的长度
         QFontMetrics tempFont(m_changeSaveToSpecialPath->font());
@@ -934,13 +948,13 @@ void SubToolWidget::initShotOption()
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToClipboard);
             m_saveToSpecialPathMenu->menuAction()->setChecked(false);
         } else if (t_act == m_changeSaveToSpecialPath) {
-            qDebug() << ">>>>>>>>>>> 设置或更改保存的指定位置";
+            qCDebug(dsrApp) << ">>>>>>>>>>> 设置或更改保存的指定位置";
             //此流程应是之前保存到指定目录的流程
             m_saveToSpecialPathMenu->menuAction()->setChecked(true);
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
             ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
         } else {
-            qDebug() << ">>>>>>>>>>> 保存指定位置";
+            qCDebug(dsrApp) << ">>>>>>>>>>> 保存指定位置";
             //此流程不是之前的流程，不会再打开文管
             m_saveToSpecialPathMenu->menuAction()->setChecked(true);
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
@@ -997,19 +1011,19 @@ void SubToolWidget::initShotOption()
     });
 
     connect(noBorderAction, &QAction::triggered, [ = ] {
-        qDebug() << __FUNCTION__ << __LINE__ << noBorderAction->isChecked();
+        qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << noBorderAction->isChecked();
         if (noBorderAction->isChecked())
         {
             ConfigSettings::instance()->setValue("shot", "border_index", 0);
             ImageBorderHelper::instance()->setActionState(ImageBorderHelper::BorderType::Nothing,  false);
         }
     });
-    qDebug() << "截图工具栏选项UI已初始化";
+    qCDebug(dsrApp) << "截图工具栏选项UI已初始化";
 }
 
 void SubToolWidget::initScrollLabel()
 {
-    qDebug() << "正在初始化滚动截图工具栏UI...";
+    qCDebug(dsrApp) << "正在初始化滚动截图工具栏UI...";
     m_scrollSubTool = new DLabel(this);
     QList<ToolButton *> btnList;
 
@@ -1088,10 +1102,10 @@ void SubToolWidget::initScrollLabel()
     //历史保存路径
     m_scrollSaveToSpecialPathAction = new QAction(m_scrollSaveToSpecialPathMenu);
     if (specialPath.isEmpty() || !QFileInfo::exists(specialPath)) {
-        qDebug() << "不存在指定路径";
+        qCDebug(dsrApp) << "不存在指定路径";
         m_scrollChangeSaveToSpecialPath->setText(tr("Set a path on save"));
     } else {
-        qDebug() << "存在指定路径: " /*<< specialPath*/;
+        qCDebug(dsrApp) << "存在指定路径: " /*<< specialPath*/;
         m_scrollChangeSaveToSpecialPath->setText(tr("Change the path on save"));
         //根据字体大小计算字符串宽度，确定路径省略的长度
         QFontMetrics tempFont(m_scrollChangeSaveToSpecialPath->font());
@@ -1193,13 +1207,13 @@ void SubToolWidget::initScrollLabel()
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToClipboard);
             m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(false);
         } else if (t_act == m_scrollChangeSaveToSpecialPath) {
-            qDebug() << ">>>>>>>>>>> 设置或更改保存的指定位置";
+            qCDebug(dsrApp) << ">>>>>>>>>>> 设置或更改保存的指定位置";
             //此流程应是之前保存到指定目录的流程
             m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(true);
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
             ConfigSettings::instance()->setValue("shot", "save_dir_change", true);
         } else {
-            qDebug() << ">>>>>>>>>>> 保存指定位置";
+            qCDebug(dsrApp) << ">>>>>>>>>>> 保存指定位置";
             //此流程不是之前的流程，不会再打开文管
             m_scrollSaveToSpecialPathMenu->menuAction()->setChecked(true);
             ConfigSettings::instance()->setValue("shot", "save_op", SaveAction::SaveToSpecificDir);
@@ -1230,11 +1244,12 @@ void SubToolWidget::initScrollLabel()
             ConfigSettings::instance()->setValue("shot", "format", 2);
         }
     });
-    qDebug() << "滚动截图工具栏UI已初始化";
+    qCDebug(dsrApp) << "滚动截图工具栏UI已初始化";
 }
 
 void SubToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 {
+    qCDebug(dsrApp) << "SubToolWidget::installTipHint called for widget:" << w << "with hint:" << hintstr;
     // TODO: parent must be mainframe
     auto hintWidget = new ToolTips("", m_pMainWindow);
     hintWidget->hide();
@@ -1251,6 +1266,7 @@ void SubToolWidget::installHint(QWidget *w, QWidget *hint)
 
 void SubToolWidget::setScrollShotDisabled(const bool state)
 {
+    qCDebug(dsrApp) << "SubToolWidget::setScrollShotDisabled called with state:" << state;
     m_scrollShotButton->setDisabled(state);
 }
 
@@ -1274,11 +1290,11 @@ void SubToolWidget::setButEnableOnLockScreen(const bool &state)
 int SubToolWidget::getFuncSubToolX(QString &shape)
 {
     int x = 0;
-//    qDebug() << __FUNCTION__ << "m_rectButton->x() : " << m_rectButton->x();
-//    qDebug() << __FUNCTION__ << "m_circleButton->x() : " << m_circleButton->x();
-//    qDebug() << __FUNCTION__ << "m_lineButton->x() : " << m_lineButton->x();
-//    qDebug() << __FUNCTION__ << "m_arrowButton->x() : " << m_arrowButton->x();
-//    qDebug() << __FUNCTION__ << "m_penButton->x() : " << m_penButton->x();
+//    qCDebug(dsrApp) << __FUNCTION__ << "m_rectButton->x() : " << m_rectButton->x();
+//    qCDebug(dsrApp) << __FUNCTION__ << "m_circleButton->x() : " << m_circleButton->x();
+//    qCDebug(dsrApp) << __FUNCTION__ << "m_lineButton->x() : " << m_lineButton->x();
+//    qCDebug(dsrApp) << __FUNCTION__ << "m_arrowButton->x() : " << m_arrowButton->x();
+//    qCDebug(dsrApp) << __FUNCTION__ << "m_penButton->x() : " << m_penButton->x();
     if (!shape.isEmpty()) {
         if (shape == "rectangle") {
             x = m_rectButton->x();
@@ -1296,7 +1312,7 @@ int SubToolWidget::getFuncSubToolX(QString &shape)
             x = -1;
         }
     }
-//    qDebug() << __FUNCTION__ << "x : " << x;
+//    qCDebug(dsrApp) << __FUNCTION__ << "x : " << x;
     return x;
 }
 
@@ -1346,7 +1362,7 @@ bool SubToolWidget::eventFilter(QObject *watched, QEvent *event)
 void SubToolWidget::switchContent(QString shapeType)
 {
     qCDebug(dsrApp) << "Switching content to shape type:" << shapeType;
-    qDebug() << __FUNCTION__ << __LINE__ << "切换截图或者录屏工具栏" << shapeType << QCursor().pos() << this->count();
+    qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "切换截图或者录屏工具栏" << shapeType << QCursor().pos() << this->count();
     if (shapeType == "record") {
         this->addWidget(m_recordSubTool);
         this->removeWidget(m_shotSubTool);
@@ -1365,7 +1381,7 @@ void SubToolWidget::switchContent(QString shapeType)
         setCurrentWidget(m_scrollSubTool);
         m_currentType = shapeType;
     }
-    qDebug() << __FUNCTION__ << __LINE__ << "已切换工具栏" << shapeType << this->count();
+    qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "已切换工具栏" << shapeType << this->count();
 }
 void SubToolWidget::setRecordButtonDisable()
 {
@@ -1374,7 +1390,7 @@ void SubToolWidget::setRecordButtonDisable()
 
 void SubToolWidget::setRecordLaunchMode(const unsigned int funType)
 {
-    qDebug() << __FUNCTION__ << __LINE__ << funType;
+    qCDebug(dsrApp) << "SubToolWidget::setRecordLaunchMode called with funType:" << funType;
     if (funType == MainWindow::record) {
         //setCurrentWidget(m_recordSubTool);
         switchContent("record");
@@ -1398,7 +1414,7 @@ void SubToolWidget::setVideoButtonInitFromSub()
 
 void SubToolWidget::shapeClickedFromWidget(QString shape)
 {
-    qDebug() << "SubToolWidget::shapeClickedFromWidget " << shape;
+    qCDebug(dsrApp) << "SubToolWidget::shapeClickedFromWidget called with shape:" << shape;
 
     if (!shape.isEmpty()) {
         if (shape == "pinScreenshots") {
@@ -1452,7 +1468,7 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
         } else if (shape == "effect") {
             m_mosaicButton->click();
         } else  {
-            qDebug() << __FUNCTION__ << __LINE__ << "ERROR" << shape;
+            qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "ERROR" << shape;
         }
     }
 }
@@ -1460,7 +1476,7 @@ void SubToolWidget::shapeClickedFromWidget(QString shape)
 void SubToolWidget::setMicroPhoneEnable(bool status)
 {
     qCDebug(dsrApp) << "Setting microphone enable status:" << status;
-    qDebug() << "mic 是否可选？" << status;
+    qCDebug(dsrApp) << "mic 是否可选？" << status;
     m_microphoneAction->setEnabled(status);
     m_microphoneAction->setChecked(!status);
     //trigger()函数会改变当前的checked状态
@@ -1469,8 +1485,9 @@ void SubToolWidget::setMicroPhoneEnable(bool status)
 
 void SubToolWidget::setCameraDeviceEnable(bool status)
 {
-    qCDebug(dsrApp) << "Setting camera device enable status:" << status;
+    qCDebug(dsrApp) << "SubToolWidget::setCameraDeviceEnable called with status:" << status;
     if (status) {
+        qCDebug(dsrApp) << "status is true";
         if (!m_cameraButton->isEnabled()) {
             m_cameraButton->setChecked(false);
             m_cameraButton->setEnabled(true);
@@ -1482,6 +1499,7 @@ void SubToolWidget::setCameraDeviceEnable(bool status)
     }
 
     else {
+        qCDebug(dsrApp) << "status is false";
         if (m_cameraButton->isEnabled()) {
             m_cameraButton->setChecked(false);
             if (m_cameraButton->isChecked()) {
@@ -1496,14 +1514,18 @@ void SubToolWidget::setCameraDeviceEnable(bool status)
 }
 
 QRect SubToolWidget::getShotOptionRect(){
-    if(!m_shotOptionButton->menu()->isVisible())
+    qCDebug(dsrApp) << "SubToolWidget::getShotOptionRect called.";
+    if(!m_shotOptionButton->menu()->isVisible()) {
+        qCDebug(dsrApp) << "Shot option menu is not visible.";
         return QRect();
+    }
     QRect shotOptionRect {
         static_cast<int>(m_shotOptionButton->menu()->x()),
         static_cast<int>(m_shotOptionButton->menu()->y()),
         static_cast<int>(m_shotOptionButton->menu()->width()),
         static_cast<int>(m_shotOptionButton->menu()->height())
     };
+    qCDebug(dsrApp) << "Shot option rect:" << shotOptionRect;
     return shotOptionRect;
 }
 
@@ -1515,19 +1537,24 @@ void SubToolWidget::setIsZhaoxinPlatform(bool isZhaoxin)
 */
 SubToolWidget::~SubToolWidget()
 {
+    qCDebug(dsrApp) << "SubToolWidget destructor called.";
     if (nullptr != hintFilter) {
+        qCDebug(dsrApp) << "Destroying hint filter.";
         delete hintFilter;
         hintFilter = nullptr;
     }
     if (nullptr != m_recordOptionMenu) {
+        qCDebug(dsrApp) << "Destroying record option menu.";
         delete m_recordOptionMenu;
         m_recordOptionMenu = nullptr;
     }
     if (nullptr != m_shotBtnGroup) {
+        qCDebug(dsrApp) << "Destroying shot button group.";
         delete m_shotBtnGroup;
         m_shotBtnGroup = nullptr;
     }
     if (nullptr != m_saveToSpecialPathMenu) {
+        qCDebug(dsrApp) << "Destroying save to special path menu.";
         delete m_saveToSpecialPathMenu;
         m_saveToSpecialPathMenu = nullptr;
     }

@@ -19,24 +19,28 @@
 
 HoverFilter::HoverFilter(QObject *parent) : QObject(parent)
 {
-
+    qCDebug(dsrApp) << "HoverFilter constructor entered";
 }
 
 bool HoverFilter::eventFilter(QObject *obj, QEvent *event)
 {
+    qCDebug(dsrApp) << "HoverFilter::eventFilter called for object:" << obj->objectName() << ", event type:" << event->type();
     switch (event->type()) {
     case QEvent::Enter: {
+        qCDebug(dsrApp) << "HoverFilter: QEvent::Enter received";
         auto w = qobject_cast<QWidget *>(obj);
         w->setCursor(QCursor(Qt::PointingHandCursor));
         return QObject::eventFilter(obj, event);
     }
     case QEvent::Leave: {
+        qCDebug(dsrApp) << "HoverFilter: QEvent::Leave received";
         auto w = qobject_cast<QWidget *>(obj);
         w->unsetCursor();
         QApplication::restoreOverrideCursor();
         return QObject::eventFilter(obj, event);
     }
     default:
+        qCDebug(dsrApp) << "HoverFilter: Other event type:" << event->type();
         return QObject::eventFilter(obj, event);
     }
 }
@@ -61,22 +65,25 @@ bool HoverFilter::eventFilter(QObject *obj, QEvent *event)
 
 void HintFilterPrivate::showHint(QWidget *hint)
 {
+    qCDebug(dsrApp) << "HintFilterPrivate::showHint called";
     if (!parentWidget) {
-        qCDebug(dsrApp) << "Cannot show hint: no parent widget";
+        qCWarning(dsrApp) << "Cannot show hint: no parent widget";
         return;
     }
     auto w = parentWidget;
     if (hintWidget && hintWidget != hint) {
+        qCDebug(dsrApp) << "Hiding previous hint widget";
         hintWidget->hide();
     }
     hintWidget = hint;
     if (!hintWidget) {
-        qCDebug(dsrApp) << "Cannot show hint: invalid hint widget";
+        qCWarning(dsrApp) << "Cannot show hint: invalid hint widget";
         return;
     }
 
 
     DUtil::TimerSingleShot(10, [w, this]() {
+        qCDebug(dsrApp) << "HintFilterPrivate: Delay show timer triggered";
         auto centerPos = w->mapToGlobal(w->rect().center());
 
         hintWidget->show();
@@ -86,6 +93,7 @@ void HintFilterPrivate::showHint(QWidget *hint)
         centerPos.setX(centerPos.x()  - sz.width() / 2 + 2);
         centerPos.setY(centerPos.y() - 32 - sz.height());
         if (centerPos.y() - 32 - sz.height() <= 0) {
+            qCDebug(dsrApp) << "Adjusting hint position due to screen boundary";
             centerPos.setY(centerPos.y() + w->height() + 22 + sz.height());
         }
         centerPos = hintWidget->mapFromGlobal(centerPos);
@@ -97,11 +105,14 @@ void HintFilterPrivate::showHint(QWidget *hint)
 
 HintFilter::HintFilter(QObject *parent)  : QObject(parent), d_ptr(new HintFilterPrivate(this))
 {
+    qCDebug(dsrApp) << "HintFilter constructor entered";
     Q_D(HintFilter);
     d->delayShowTimer = new QTimer(this);
     d->delayShowTimer->setInterval(1000);
     connect(d->delayShowTimer, &QTimer::timeout, this, [ = ]() {
+        qCDebug(dsrApp) << "HintFilter: Delay show timeout triggered";
         if (d->parentWidget) {
+            qCDebug(dsrApp) << "HintFilter: Parent widget exists, showing hint";
             auto hint = d->parentWidget->property("HintWidget").value<QWidget *>();
             d->showHint(hint);
         }
@@ -111,7 +122,7 @@ HintFilter::HintFilter(QObject *parent)  : QObject(parent), d_ptr(new HintFilter
 
 HintFilter::~HintFilter()
 {
-
+    qCDebug(dsrApp) << "HintFilter destructor entered";
 }
 /*
 void HintFilter::hideAll()

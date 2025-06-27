@@ -6,6 +6,7 @@
 #include "colortoolwidget.h"
 #include "../utils/configsettings.h"
 #include "../utils.h"
+#include "../utils/log.h"
 #include "../accessibility/acTextDefine.h"
 
 #include <DSlider>
@@ -28,17 +29,19 @@ const QSize TOOL_ICON_SIZE = QSize(14, 14);
 
 ColorToolWidget::ColorToolWidget(DWidget *parent) : DLabel(parent)
 {
+    qCDebug(dsrApp) << "ColorToolWidget constructor entered";
     initWidget();
     m_function = "rectangle";
 }
 
 ColorToolWidget::~ColorToolWidget()
 {
-
+    qCDebug(dsrApp) << "ColorToolWidget destructor entered";
 }
 
 void ColorToolWidget::initWidget()
 {
+    qCDebug(dsrApp) << "Initializing ColorToolWidget UI";
     setFixedSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
     setMouseTracking(true);
     setAcceptDrops(true);
@@ -58,9 +61,9 @@ void ColorToolWidget::initColorLabel()
     m_baseLayout = new QGridLayout();
     //获取颜色枚举对象
     m_buttonColors = QMetaEnum::fromType<BaseUtils::ButtonColors>();
-    qDebug() << "Utils::pixelRatio: " << Utils::pixelRatio;
+    qCDebug(dsrApp) << "Utils::pixelRatio: " << Utils::pixelRatio;
     for (int i = 0; i < m_buttonColors.keyCount(); i++) {
-        //qDebug() << "==========colorButton" << i << "===========";
+        qCDebug(dsrApp) << "Processing color button for index:" << i << ", key:" << m_buttonColors.key(i);
 
         //颜色按钮
         ToolButton *colorButton = new ToolButton();
@@ -80,20 +83,24 @@ void ColorToolWidget::initColorLabel()
         QIcon icon(iconPath);
         icon.actualSize(TOOL_ICON_SIZE);
         if(Utils::pixelRatio != 1){
+            qCDebug(dsrApp) << "Applying stylesheet for scaled icon at index:" << i;
             //缩放情况下需要通过此方式进行图标加载，否则出现图标被遮挡的情况
             colorButton->setStyleSheet(QString("QPushButton{image:url(%1);"
                                                "image-position:center;"
                                                "padding-left:2.2px;padding-top:2.2px;padding-right:2.2px;padding-bottom:2.2px;}").arg(iconPath));
         }else{
+            qCDebug(dsrApp) << "Applying icon directly for unscaled icon at index:" << i;
             colorButton->setIcon(icon);
             colorButton->setIconSize(TOOL_ICON_SIZE-QSize(2,2));
         }
         m_colorButtonGroup->addButton(colorButton);
         m_colorButtonGroup->setId(colorButton, m_buttonColors.value(i));
         if (i < m_buttonColors.keyCount() / 2) {
+            qCDebug(dsrApp) << "Adding button to first row at column:" << i;
             //第一排
             m_baseLayout->addWidget(colorButton,0,i);
         } else {
+            qCDebug(dsrApp) << "Adding button to second row at column:" << i - m_buttonColors.keyCount() / 2;
             //第二排
             m_baseLayout->addWidget(colorButton,1,i-m_buttonColors.keyCount() / 2);
         }
@@ -109,9 +116,11 @@ void ColorToolWidget::initColorLabel()
     //响应点击颜色按钮事件
     connect(m_colorButtonGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
     [ = ](QAbstractButton * button) {
+        qCDebug(dsrApp) << "Color button clicked signal received";
         //获取当前点击的按钮
         ToolButton *tempColorBtn = static_cast<ToolButton *>(button) ;
         if (tempColorBtn->isChecked()) {
+            qCDebug(dsrApp) << "Button is checked, emitting colorChecked for:" << tempColorBtn->property("name").toString();
             m_isChecked = true;
             tempColorBtn->update();
             //发射当前点击按钮的名称
@@ -124,15 +133,19 @@ void ColorToolWidget::initColorLabel()
 
 void ColorToolWidget::setFunction(const QString &func)
 {
+    qCDebug(dsrApp) << "setFunction called with func:" << func;
     if (func == "effect") {
+        qCDebug(dsrApp) << "Function is effect, hiding widget";
         this->hide();
         return;
     } else {
+        qCDebug(dsrApp) << "Function is not effect, showing widget";
         this->show();
     }
     m_function = func;
     int t_color = 0;
     t_color = ConfigSettings::instance()->getValue(m_function, "color_index").toInt();
+    qCDebug(dsrApp) << "Setting function to:" << m_function << ", retrieved color index:" << t_color;
 
     m_colorButtonGroup->button(t_color)->click();
 

@@ -6,6 +6,7 @@
 #include "configsettings.h"
 #include "saveutils.h"
 #include "../utils.h"
+#include "../utils/log.h"
 
 #include <QDir>
 #include <QFileInfo>
@@ -16,10 +17,11 @@
 ConfigSettings::ConfigSettings(QObject *parent)
     : QObject(parent)
 {
+    qCDebug(dsrApp) << "ConfigSettings constructor called.";
     m_settings = new QSettings("deepin/deepin-screen-recorder", "deepin-screen-recorder");
     setValue("effect", "is_blur", false);
     setValue("effect", "is_mosaic", false);
-    qDebug() << "config file path: " << m_settings->fileName();
+    qCDebug(dsrApp) << "Config file path: " << m_settings->fileName();
 }
 
 ConfigSettings *ConfigSettings::m_configSettings = nullptr;
@@ -45,23 +47,26 @@ const QMap<QString, QMap<QString, QVariant>> ConfigSettings::m_defaultConfig = {
 
 ConfigSettings *ConfigSettings::instance()
 {
+    qCDebug(dsrApp) << "Getting ConfigSettings instance.";
     if (!m_configSettings) {
+        qCDebug(dsrApp) << "Creating new ConfigSettings instance.";
         m_configSettings = new ConfigSettings();
     }
 
+    qCDebug(dsrApp) << "Returning ConfigSettings instance.";
     return m_configSettings;
 }
 
 void ConfigSettings::setValue(const QString &group, const QString &key, const QVariant &val)
 {
+    qCDebug(dsrApp) << "Setting value for group: " << group << ", key: " << key << ", value: " << val;
     if (!m_defaultConfig.contains(group) || !m_defaultConfig[group].contains(key)) {
-        qDebug() << __FUNCTION__ << __LINE__ <<
-                      "default config file is not contains group(" << group <<
-                      ") or group is not contains key(" << key << ")";
+        qCDebug(dsrApp) << "Default config does not contain group or key. Group: " << group << ", Key: " << key;
         return;
     }
 
     if (val.type() == QVariant::Int) {
+        qCDebug(dsrApp) << "Value type is Int. Emitting shapeConfigChanged.";
         emit shapeConfigChanged(group, key, val.toInt());
     }
 
@@ -72,48 +77,57 @@ void ConfigSettings::setValue(const QString &group, const QString &key, const QV
     m_settings->sync();
 
     if (val.type() == QVariant::Int) {
-        qDebug() << "config changed";
+        qCDebug(dsrApp) << "Config changed. Emitting shapeConfigChanged again.";
         emit shapeConfigChanged(group, key, val.toInt());
     }
+    qCDebug(dsrApp) << "Value set successfully.";
 }
 
 QVariant ConfigSettings::getValue(const QString &group, const QString &key)
 {
+    qCDebug(dsrApp) << "Getting value for group: " << group << ", key: " << key;
     QMutexLocker locker(&m_mutex);
     QVariant value;
     m_settings->beginGroup(group);
 
     if (m_settings->contains(key)) {
+        qCDebug(dsrApp) << "Settings contains key. Getting value from settings.";
         value = m_settings->value(key);
     } else {
+        qCDebug(dsrApp) << "Settings does not contain key. Getting default value.";
         value = getDefaultValue(group, key);
     }
     m_settings->endGroup();
+    qCDebug(dsrApp) << "Returning value: " << value;
     return value;
 }
 
 QVariant ConfigSettings::getDefaultValue(const QString &group, const QString &key)
 {
+    qCDebug(dsrApp) << "Getting default value for group: " << group << ", key: " << key;
     QVariant value;
     if (m_defaultConfig.contains(group) && m_defaultConfig[group].contains(key)) {
+        qCDebug(dsrApp) << "Default config contains group and key. Setting value.";
         value.setValue(m_defaultConfig[group][key]);
     } else {
-        qWarning() << __FUNCTION__ << __LINE__ <<
-                      "ERROR! config file is not contains group(" << group <<
-                      ") or group is not contains key(" << key << ")";
+        qCDebug(dsrApp) << "ERROR! Default config does not contain group or key. Group: " << group << ", Key: " << key;
     }
+    qCDebug(dsrApp) << "Returning default value: " << value;
     return  value;
 }
 
 QStringList ConfigSettings::keys(const QString &group)
 {
+    qCDebug(dsrApp) << "Getting keys for group: " << group;
     QStringList v;
     m_settings->beginGroup(group);
     v = m_settings->childKeys();
     m_settings->endGroup();
+    qCDebug(dsrApp) << "Returning keys: " << v;
     return v;
 }
 
 ConfigSettings::~ConfigSettings()
 {
+    qCDebug(dsrApp) << "ConfigSettings destructor called.";
 }

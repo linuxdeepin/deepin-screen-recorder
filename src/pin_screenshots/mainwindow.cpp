@@ -6,6 +6,7 @@
 #include "mainwindow.h"
 #include "putils.h"
 #include "settings.h"
+#include "../utils/log.h"
 
 #include <QDebug>
 #include <QDBusInterface>
@@ -25,17 +26,24 @@ const int TOOLBAR_Y_SPACING = 12;
 MainWindow::MainWindow(QWidget *parent)
     : DWidget(parent)
 {
+    qCDebug(dsrApp) << "MainWindow constructor called.";
     //初始化主窗口
     initMainWindow();
+    qCDebug(dsrApp) << "initMainWindow finished.";
     //计算屏幕大小
     CalculateScreenSize();
+    qCDebug(dsrApp) << "CalculateScreenSize finished.";
     this->setMinimumSize(WHEELNUM, WHEELNUM);
+    qCDebug(dsrApp) << "Set minimum size of window.";
     initShortcut(); // 初始化快捷键
+    qCDebug(dsrApp) << "initShortcut finished.";
 }
 
 MainWindow::~MainWindow()
 {
+    qCDebug(dsrApp) << "MainWindow destructor called.";
     if (m_toolBar != nullptr) {
+        qCDebug(dsrApp) << "Deleting m_toolBar.";
         delete m_toolBar;
         m_toolBar = nullptr;
     }
@@ -43,17 +51,21 @@ MainWindow::~MainWindow()
 
 void MainWindow::initMainWindow()
 {
+    qCDebug(dsrApp) << "Initializing main window components.";
     m_ocrInterface = nullptr;
     m_toolBar = nullptr;
     //去菜单栏，置顶窗口
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::BypassWindowManagerHint);
+    qCDebug(dsrApp) << "Set window flags.";
 
     //设置可以进行鼠标操作
     setMouseTracking(true);
+    qCDebug(dsrApp) << "Mouse tracking enabled.";
     isLeftPressDown = false;
     dir = UP;
     //获取屏幕的缩放比例
     m_pixelRatio = qApp->primaryScreen()->devicePixelRatio();
+    qCDebug(dsrApp) << "Pixel ratio:" << m_pixelRatio;
 
     m_menuController = new MenuController();
     connect(m_menuController, &MenuController::saveAction, this, &MainWindow::onSave);
@@ -66,41 +78,49 @@ void MainWindow::initMainWindow()
     connect(m_toolBar, SIGNAL(sendCloseButtonClicked()), this, SLOT(onExit()));
 
     m_toolBar->setFocusPolicy(Qt::StrongFocus);
+    qCDebug(dsrApp) << "ToolBar focus policy set.";
 
     QWidget::installEventFilter(this);
+    qCDebug(dsrApp) << "Event filter installed.";
 }
 
 bool MainWindow::openFile(const QString &filePaths)
 {
-    qDebug() << "func: " << __func__ ;
+    qCDebug(dsrApp) << "Opening file:" << filePaths;
     QImage image(filePaths);
     openImageAndName(image, "", QPoint(0, 0));
+    qCDebug(dsrApp) << "openImageAndName called after opening file.";
     return true;
 }
 
 bool MainWindow::openImage(const QImage &image)
 {
-    qDebug() << "func: " << __func__ ;
+    qCDebug(dsrApp) << "Opening image (QImage).";
     openImageAndName(image, "", QPoint(0, 0));
+    qCDebug(dsrApp) << "openImageAndName called after opening QImage.";
     return true;
 }
 
 bool MainWindow::openImageAndName(const QImage &image, const QString &name, const QPoint &point)
 {
-    qDebug() << "func: " << __func__ << name;
+    qCDebug(dsrApp) << "Opening image with name and point. Name:" << name << ", Point:" << point;
     m_image = image;
     m_lastImagePath = name;
     m_imageName = QString(tr("Screenshot") + "_%1").arg(QDateTime::currentDateTime().
                                                         toString("yyyyMMddHHmmss"));
     int width = static_cast<int>(m_image.width() / m_pixelRatio);
     int height = static_cast<int>(m_image.height() / m_pixelRatio);
+    qCDebug(dsrApp) << "Image dimensions (scaled):" << width << "x" << height;
     //将窗口的大小重置为图片的大小
     resize(width, height);
+    qCDebug(dsrApp) << "Window resized to image dimensions.";
     //将坐标点转换为m_pixelRatio屏幕缩放比下的点
     m_showPosition = QPoint(static_cast<int>(point.x() * m_pixelRatio), static_cast<int>(point.y() * m_pixelRatio));
+    qCDebug(dsrApp) << "Calculated show position:" << m_showPosition;
     QRect currnetScreenRect;
     //查找当前截图贴图区域所在的屏幕(m_screenInfo中存储已缩放的数据）
     for (int i = 0; i < m_screenInfo.size(); ++i) {
+        qCDebug(dsrApp) << "Checking screen info for screen:" << m_screenInfo[i].name;
         currnetScreenRect = {
             static_cast<int>(m_screenInfo[i].x),
             static_cast<int>(m_screenInfo[i].y),
@@ -108,108 +128,138 @@ bool MainWindow::openImageAndName(const QImage &image, const QString &name, cons
             static_cast<int>(m_screenInfo[i].height * m_pixelRatio)
         };
         if (currnetScreenRect.contains(m_showPosition)) {
+            qCDebug(dsrApp) << "Current screen rect contains show position.";
             int x = static_cast<int>((m_showPosition.x() - currnetScreenRect.x()) / m_pixelRatio + currnetScreenRect.x());
             m_showPosition.setX(x);
             int y = static_cast<int>((m_showPosition.y() - currnetScreenRect.y()) / m_pixelRatio + currnetScreenRect.y());
             m_showPosition.setY(y);
+            qCDebug(dsrApp) << "Adjusted show position based on screen:" << m_showPosition;
             break;
         }
     }
     //移动到指定位置
     move(m_showPosition);
+    qCDebug(dsrApp) << "Window moved to show position.";
     update();
     proportion = static_cast<double>(this->width())  / this->height();
+    qCDebug(dsrApp) << "Calculated proportion:" << proportion;
     m_isfirstTime = true; //解决119157Bug采用的标识
     updateToolBarPosition();// 更新位置
+    qCDebug(dsrApp) << "Tool bar position updated.";
     return true;
 }
 // 开启OCR
 void MainWindow::onOpenOCR()
 {
+    qCDebug(dsrApp) << "onOpenOCR called.";
     saveImg();
+    qCDebug(dsrApp) << "Image saved before OCR.";
     // 测试
-    if (m_ocrInterface == nullptr)
+    if (m_ocrInterface == nullptr) {
         m_ocrInterface = new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
+        qCDebug(dsrApp) << "OCR interface created.";
+    }
     m_ocrInterface->openImageAndName(m_image, m_imageName);
+    qCDebug(dsrApp) << "Opened image with OCR interface.";
 }
 
 // 贴图保存
 void MainWindow::saveImg()
 {
+    qCDebug(dsrApp) << "saveImg called.";
     m_saveInfo = m_toolBar->getSaveInfo(); // 获取保存信息
+    qCDebug(dsrApp) << "Save info retrieved. Type:" << m_saveInfo.first << ", Format:" << m_saveInfo.second;
 
     if (m_saveInfo.first == SubToolWidget::DESKTOP) {
-        qDebug() << "保存到桌面";
+        qCDebug(dsrApp) << "保存到桌面";
         QString savePath = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
         QString formatStr;
         if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::PNG)) {
             formatStr = QString("png");
+            qCDebug(dsrApp) << "Save format set to PNG.";
         } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::JPG)) {
             formatStr = QString("jpg");
+            qCDebug(dsrApp) << "Save format set to JPG.";
         } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::BMP)) {
             formatStr = QString("bmp");
+            qCDebug(dsrApp) << "Save format set to BMP.";
         }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
+        qCDebug(dsrApp) << "Image will be saved to:" << m_lastImagePath;
     } else if (m_saveInfo.first == SubToolWidget::PICTURES) {
-        qDebug() << "保存到图片";
+        qCDebug(dsrApp) << "保存到图片";
         QString savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first() + QDir::separator() + "Screenshots";
         if ((!QDir(savePath).exists() && QDir().mkdir(savePath) == false) ||  // 文件不存在，且创建失败
                 (QDir(savePath).exists() && !QFileInfo(savePath).isWritable())) {  // 文件存在，且不能写
+            qCDebug(dsrApp) << "Screenshots directory does not exist or is not writable, using default Pictures location.";
             savePath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first();
         }
         QString formatStr;
         if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::PNG)) {
             formatStr = QString("png");
+            qCDebug(dsrApp) << "Save format set to PNG.";
         } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::JPG)) {
             formatStr = QString("jpg");
+            qCDebug(dsrApp) << "Save format set to JPG.";
         } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::BMP)) {
             formatStr = QString("bmp");
+            qCDebug(dsrApp) << "Save format set to BMP.";
         }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
+        qCDebug(dsrApp) << "Image will be saved to:" << m_lastImagePath;
     } else if (m_saveInfo.first == SubToolWidget::FOLDER_CHANGE) {
         m_toolBar->hide();
         this->hide();
-        qDebug() << "保存到指定位置";
+        qCDebug(dsrApp) << "保存到指定位置";
         QString saveFileName;
         QString imgName = Settings::instance()->getSavePath();
         if (!imgName.isEmpty()) {
+            qCDebug(dsrApp) << "Custom save path is not empty.";
             imgName += "/";
         }
         if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::PNG)) {
             imgName += QString("%1.png").arg(m_imageName);
             saveFileName = QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
                                                         tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"));
+            qCDebug(dsrApp) << "PNG save dialog opened.";
         } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::JPG)) {
             imgName += QString("%1.jpg").arg(m_imageName);
             saveFileName = QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
                                                         tr("JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)"));
+            qCDebug(dsrApp) << "JPG save dialog opened.";
         } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::BMP)) {
             imgName += QString("%1.bmp").arg(m_imageName);
             saveFileName = QFileDialog::getSaveFileName(this, tr("Save"),  imgName,
                                                         tr("BMP (*.bmp);;JPEG (*.jpg *.jpeg);;PNG (*.png)"));
+            qCDebug(dsrApp) << "BMP save dialog opened.";
         }
         if (saveFileName.isEmpty()) {
+            qCDebug(dsrApp) << "User cancelled save dialog.";
             qWarning() << "指定路径为空！";
             onExit();
             return;
         }
-        qDebug() << "saveFileName" << saveFileName;
+        qCDebug(dsrApp) << "saveFileName" << saveFileName;
         m_lastImagePath = saveFileName;
         Settings::instance()->setSavePath(QFileInfo(saveFileName).path());
+        qCDebug(dsrApp) << "Save path updated in settings.";
     } else if (m_saveInfo.first == SubToolWidget::FOLDER) {
         QString savePath = Settings::instance()->getSavePath();
-        qDebug() << "保存到历史路径" << savePath;
+        qCDebug(dsrApp) << "保存到历史路径" << savePath;
         QString formatStr;
         if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::PNG)) {
             formatStr = QString("png");
+            qCDebug(dsrApp) << "Save format set to PNG.";
         } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::JPG)) {
             formatStr = QString("jpg");
+            qCDebug(dsrApp) << "Save format set to JPG.";
         } else if (m_saveInfo.second == static_cast<SubToolWidget::SAVEFORMAT>(SubToolWidget::BMP)) {
             formatStr = QString("bmp");
+            qCDebug(dsrApp) << "Save format set to BMP.";
         }
         m_lastImagePath = QString("%1/%2.%3").arg(savePath).arg(m_imageName).arg(formatStr);
     } else if (m_saveInfo.first == SubToolWidget::CLIPBOARD) {
-        qDebug() << "保存到剪切板";
+        qCDebug(dsrApp) << "保存到剪切板";
         m_lastImagePath = "";
     }
     //每次保存时重设isChangeSavePath
@@ -243,13 +293,14 @@ void MainWindow::saveImg()
 // 获取贴图窗口的显示位置
 QPoint MainWindow::getShowPosition()
 {
+    qCDebug(dsrApp) << "获取贴图窗口的显示位置";
     return m_showPosition;
 }
 
 // 保存
 void MainWindow::onSave()
 {
-    qDebug() << "func: " << __func__ ;
+    qCDebug(dsrApp) << "onSave called, calling saveImg.";
     saveImg();
 }
 // 退出
@@ -257,7 +308,7 @@ void MainWindow::onExit()
 {
     //每次关闭贴图时重设isChangeSavePath
     Settings::instance()->setIsChangeSavePath(false);
-    qDebug() << "func: " << __func__ ;
+    qCDebug(dsrApp) << "Exiting application.";
     m_toolBar->close();
     this->close();
 }
@@ -297,7 +348,7 @@ void MainWindow::region(const QPoint &cursorGlobalPoint)
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    //qDebug() << this << __FUNCTION__ << __LINE__ ;
+    //qCDebug(dsrApp) << this << __FUNCTION__ << __LINE__ ;
     switch (event->button()) {
     case Qt::LeftButton:
         isLeftPressDown = true;
@@ -308,7 +359,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         }
         if (!m_toolBar->isHidden())
             m_toolBar->hide(); //隐藏工具栏
-        //qDebug() << this << __FUNCTION__ << __LINE__ ;
+        //qCDebug(dsrApp) << this << __FUNCTION__ << __LINE__ ;
         break;
     case Qt::RightButton:
         handleMouseRightBtn(event);
@@ -389,7 +440,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
             this->setGeometry(rMove);
         } else {
             this->setCursor(QCursor(Qt::ClosedHandCursor));
-            //qDebug() << "=============event->globalPos()" << event->globalPos() << "dragPosition" << dragPosition;
+            //qCDebug(dsrApp) << "=============event->globalPos()" << event->globalPos() << "dragPosition" << dragPosition;
             QPoint globalPoint = (event->globalPosition() - QPointF(dragPosition)).toPoint();
             if (PUtils::isWaylandMode && globalPoint.y() < 0) {
                 globalPoint.setY(0);
@@ -403,7 +454,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
-//    qDebug() << this << __FUNCTION__ << __LINE__ ;
+//    qCDebug(dsrApp) << this << __FUNCTION__ << __LINE__ ;
     if (event->button() == Qt::LeftButton) {
         isLeftPressDown = false;
         if (dir != NONE) {
@@ -465,7 +516,7 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     int width = this->rect().width();
     int height = this->rect().height();
     QPointF unionPoint(event->position().x() / width, event->position().y() / height);
-    //qDebug() << unionPoint;
+    //qCDebug(dsrApp) << unionPoint;
     if (event->angleDelta().y() < 0 && (width < this->minimumWidth() || height < this->minimumHeight()))
         return;
     if (event->angleDelta().y() > 0) {
@@ -478,7 +529,7 @@ void MainWindow::wheelEvent(QWheelEvent *event)
         rect.setHeight(newPoint.y());
     }
     QPointF globalPos = event->globalPosition(); // 鼠标在屏幕中的坐标
-    //qDebug()<<"globalPos"<<globalPos;
+    //qCDebug(dsrApp)<<"globalPos"<<globalPos;
     QPointF newPoint(rect.width() * unionPoint.x(), rect.height() * unionPoint.y()); //扩大后，鼠标在贴图中的坐标
     QPointF topLeft(globalPos.x() - newPoint.x(), globalPos.y() - newPoint.y()); // 贴图左上角的点在屏幕中的坐标
     rect = QRect(topLeft.toPoint(), rect.size());
@@ -492,7 +543,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
     if (watched == this) {
         //QEvent::WindowActivate:窗口被激活;QEvent::WindowDeactivate:窗口已停用
         if (QEvent::WindowActivate == event->type()) {
-            //qDebug() <<this<< m_toolBar << __FUNCTION__ << __LINE__ << event->type();
+            //qCDebug(dsrApp) <<this<< m_toolBar << __FUNCTION__ << __LINE__ << event->type();
             //规避wayland下打开贴图1，并在贴图1上重新生成贴图2时，贴图2激活状态不对(工具栏已经设置显示，但实际上未显示。)。
             if (PUtils::isWaylandMode && !isLeftPressDown) {
                 this->m_toolBar->hide();
@@ -502,14 +553,14 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
             if (PUtils::isWaylandMode && isLeftPressDown) {
                 this->m_toolBar->hide();
             }
-            //qDebug() <<this<< m_toolBar << __FUNCTION__ << __LINE__ << event->type();
+            //qCDebug(dsrApp) <<this<< m_toolBar << __FUNCTION__ << __LINE__ << event->type();
             return false;
         } else if (QEvent::WindowDeactivate == event->type()) {
-            //qDebug() << this << m_toolBar <<__FUNCTION__ << __LINE__ << event->type();
+            //qCDebug(dsrApp) << this << m_toolBar <<__FUNCTION__ << __LINE__ << event->type();
             if (m_toolBar->isActiveWindow())
                 return false;
             m_toolBar->hide();
-            //qDebug() << this << m_toolBar <<__FUNCTION__ << __LINE__ << event->type();
+            //qCDebug(dsrApp) << this << m_toolBar <<__FUNCTION__ << __LINE__ << event->type();
             return false;
         }
     }
@@ -522,21 +573,21 @@ void MainWindow::initShortcut()
     // Esc —— 退出
     QShortcut *Keyesc = new QShortcut(QKeySequence("Escape"), this);
     connect(Keyesc, &QShortcut::activated, this, [ = ] {
-        qDebug() << "shortcut : Keyesc (key: esc)";
+        qCDebug(dsrApp) << "shortcut : Keyesc (key: esc)";
         onExit();
     });
 
     // Ctrl+S —— 保存
     QShortcut *Keysave = new QShortcut(QKeySequence("Ctrl+S"), this);
     connect(Keysave, &QShortcut::activated, this, [ = ] {
-        qDebug() << "shortcut : Keysave (key: ctrl+s)";
+        qCDebug(dsrApp) << "shortcut : Keysave (key: ctrl+s)";
         onSave();
     });
 
     // Alt+O —— 文字识别
     QShortcut *Keyocr = new QShortcut(QKeySequence("Alt+O"), this);
     connect(Keyocr, &QShortcut::activated, this, [ = ] {
-        qDebug() << "shortcut : Keyocr (key: alt+o)";
+        qCDebug(dsrApp) << "shortcut : Keyocr (key: alt+o)";
         onOpenOCR();
     });
 
@@ -544,7 +595,7 @@ void MainWindow::initShortcut()
     // F1 —— 显示帮助 测试
     QShortcut *Keyhelp = new QShortcut(QKeySequence("F1"), this);
     connect(Keyhelp, &QShortcut::activated, this, [ = ] {
-        qDebug() << "shortcut : Keyhelp (key: F1)";
+        qCDebug(dsrApp) << "shortcut : Keyhelp (key: F1)";
         QDBusInterface interFace("com.deepin.Manual.Open",
                                  "/com/deepin/Manual/Open",
                                  "com.deepin.Manual.Open",
@@ -558,7 +609,7 @@ void MainWindow::initShortcut()
 
     QShortcut *KeyF3 = new QShortcut(QKeySequence("F3"), this);
     connect(KeyF3, &QShortcut::activated, this, [ = ] {
-        qDebug() << "shortcut : Keyocr (key: F3)";
+        qCDebug(dsrApp) << "shortcut : Keyocr (key: F3)";
         m_toolBar->onOptionButtonClicked();
     });
 }
@@ -570,7 +621,7 @@ void MainWindow::CalculateScreenSize()
     QList<QScreen *> screenList = qApp->screens();
     for (auto it = screenList.constBegin(); it != screenList.constEnd(); ++it) {
         QRect rect = (*it)->geometry();
-        qDebug() << (*it)->name() << rect;
+        qCDebug(dsrApp) << (*it)->name() << rect;
         ScreenInfo screenInfo;
         screenInfo.x = rect.x();
         screenInfo.y = rect.y();
@@ -592,7 +643,7 @@ void MainWindow::CalculateScreenSize()
             m_screenSize.setWidth(m_screenInfo[i].width + m_screenInfo[i].x);
     }
 
-    qDebug() << m_screenSize;
+    qCDebug(dsrApp) << m_screenSize;
     if (m_screenInfo.size() > 1) {
         // 排序
         std::sort(m_screenInfo.begin(), m_screenInfo.end(), [](const ScreenInfo& info1, const ScreenInfo& info2) {
@@ -604,11 +655,11 @@ void MainWindow::CalculateScreenSize()
 //处理鼠标右键
 void MainWindow::handleMouseRightBtn(QMouseEvent *mouseEvent)
 {
-    qDebug() << "func: " << __func__ ;
+    qCDebug(dsrApp) << "func: " << __func__ ;
     if (m_menuController != nullptr) {
         m_menuController->showMenu(QPoint(mapToGlobal(mouseEvent->pos())));
     } else {
-        qDebug() << "the m_menuController is nullptr!!!";
+        qCDebug(dsrApp) << "the m_menuController is nullptr!!!";
     }
 }
 
@@ -621,7 +672,7 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
                                 QDBusConnection::sessionBus());
 
     if (!bSaveState) {
-        qDebug() << __FUNCTION__;
+        qCDebug(dsrApp) << __FUNCTION__;
         QString tips = QString(tr("Save failed. Please save it in your home directory."));
         Settings::instance()->setSavePath("");
         QList<QVariant> arg;
@@ -640,7 +691,7 @@ void MainWindow::sendNotify(QString savePath, bool bSaveState)
     if (!savePath.isEmpty()) {
         actions << "_open" << tr("View");
         if (!QStandardPaths::findExecutable("dde-file-manager").isEmpty()) {
-            qDebug() << QFileInfo(savePath).path();
+            qCDebug(dsrApp) << QFileInfo(savePath).path();
             hints["x-deepin-action-_open"] = QStringList{"dde-file-manager", "--show-item", savePath};
         } else {
             hints["x-deepin-action-_open"] = QStringList{"xdg-open", savePath};
@@ -668,7 +719,7 @@ void MainWindow::updateToolBarPosition()
     //获取贴图界面右下角的点
     QPoint brPoint = mapToGlobal(this->rect().bottomRight());
     int x = 0, y = 0;
-//    qDebug() << "updateToolBarPosition brPoint is" << brPoint;
+//    qCDebug(dsrApp) << "updateToolBarPosition brPoint is" << brPoint;
     //判断工具栏放贴图界面下方时是否会超出屏幕下方
     if ((brPoint.y() + TOOLBAR_Y_SPACING + m_toolBar->height()) >= m_screenSize.height()) {
         //此时工具栏放贴图界面下方会超出屏幕，只能放贴图界面上方
@@ -687,7 +738,7 @@ void MainWindow::updateToolBarPosition()
         //此时工具栏放贴图界面下方不会超出屏幕可以放界面下方
         x = brPoint.x() - m_toolBar->width();
         y = brPoint.y() + TOOLBAR_Y_SPACING;
-        //qDebug() << "m_toolBar->width()" << m_toolBar->toolBarWidth();
+        //qCDebug(dsrApp) << "m_toolBar->width()" << m_toolBar->toolBarWidth();
     }
     if (x < 0) {
         x = 0;

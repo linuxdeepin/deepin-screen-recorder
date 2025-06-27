@@ -24,10 +24,14 @@ ColorButton::ColorButton(QColor bgColor, DWidget *parent)
 
 void ColorButton::setColorBtnChecked()
 {
+    qCDebug(dsrApp) << "setColorBtnChecked called";
     update();
     if (this->isChecked()) {
-        qCDebug(dsrApp) << "updatePaintColor:" << m_bgColor;
+        qCDebug(dsrApp) << "Color button is checked, emitting updatePaintColor:" << m_bgColor;
         emit updatePaintColor(m_bgColor);
     }
 }
-ColorButton::~ColorButton() {}
+ColorButton::~ColorButton()
+{
+    qCDebug(dsrApp) << "ColorButton destructor called";
+}

@@ -10,6 +10,7 @@
  */
 
 #include "iconwidget_interface.h"
+#include "../../utils/log.h"
 
 /*
  * Implementation of interface class iconwidget_interface
@@ -18,9 +19,11 @@
 iconwidget_interface::iconwidget_interface(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent)
     : QDBusAbstractInterface(service, path, staticInterfaceName(), connection, parent)
 {
+    qCDebug(dsrApp) << "iconwidget_interface constructor called for service:" << service << "path:" << path;
 }
 
 iconwidget_interface::~iconwidget_interface()
 {
+    qCDebug(dsrApp) << "iconwidget_interface destructor called.";
 }
 

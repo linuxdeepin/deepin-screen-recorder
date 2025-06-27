@@ -43,24 +43,28 @@ __Audio::__Audio(const QString &service, const QString &path, const QDBusConnect
     : DBusExtendedAbstractInterface(service, path, staticInterfaceName(), connection, parent)
     , d_ptr(new __AudioPrivate)
 {
+    qCDebug(dsrApp) << "__Audio constructor called for service:" << service << "path:" << path;
     connect(this, &__Audio::propertyChanged, this, &__Audio::onPropertyChanged);
 
 }
 
 __Audio::~__Audio()
 {
+    qCDebug(dsrApp) << "__Audio destructor called.";
     qDeleteAll(d_ptr->m_processingCalls.values());
     delete d_ptr;
 }
 
 void __Audio::onPropertyChanged(const QString &propName, const QVariant &value)
 {
+    qCDebug(dsrApp) << "Property changed:" << propName << "Value:" << value;
     if (propName == QStringLiteral("BluetoothAudioMode"))
     {
         const QString &BluetoothAudioMode = qvariant_cast<QString>(value);
         if (d_ptr->BluetoothAudioMode != BluetoothAudioMode)
         {
             d_ptr->BluetoothAudioMode = BluetoothAudioMode;
+            qCDebug(dsrApp) << "BluetoothAudioMode changed to:" << d_ptr->BluetoothAudioMode;
             Q_EMIT BluetoothAudioModeChanged(d_ptr->BluetoothAudioMode);
         }
         return;
@@ -72,6 +76,7 @@ void __Audio::onPropertyChanged(const QString &propName, const QVariant &value)
         if (d_ptr->BluetoothAudioModeOpts != BluetoothAudioModeOpts)
         {
             d_ptr->BluetoothAudioModeOpts = BluetoothAudioModeOpts;
+            qCDebug(dsrApp) << "BluetoothAudioModeOpts changed to:" << d_ptr->BluetoothAudioModeOpts;
             Q_EMIT BluetoothAudioModeOptsChanged(d_ptr->BluetoothAudioModeOpts);
         }
         return;
@@ -83,6 +88,7 @@ void __Audio::onPropertyChanged(const QString &propName, const QVariant &value)
         if (d_ptr->Cards != Cards)
         {
             d_ptr->Cards = Cards;
+            qCDebug(dsrApp) << "Cards changed to:" << d_ptr->Cards;
             Q_EMIT CardsChanged(d_ptr->Cards);
         }
         return;
@@ -94,6 +100,7 @@ void __Audio::onPropertyChanged(const QString &propName, const QVariant &value)
         if (d_ptr->CardsWithoutUnavailable != CardsWithoutUnavailable)
         {
             d_ptr->CardsWithoutUnavailable = CardsWithoutUnavailable;
+            qCDebug(dsrApp) << "CardsWithoutUnavailable changed to:" << d_ptr->CardsWithoutUnavailable;
             Q_EMIT CardsWithoutUnavailableChanged(d_ptr->CardsWithoutUnavailable);
         }
         return;
@@ -105,6 +112,7 @@ void __Audio::onPropertyChanged(const QString &propName, const QVariant &value)
         if (d_ptr->DefaultSink != DefaultSink)
         {
             d_ptr->DefaultSink = DefaultSink;
+            qCDebug(dsrApp) << "DefaultSink changed to:" << d_ptr->DefaultSink.path();
             Q_EMIT DefaultSinkChanged(d_ptr->DefaultSink);
         }
         return;
@@ -116,6 +124,7 @@ void __Audio::onPropertyChanged(const QString &propName, const QVariant &value)
         if (d_ptr->DefaultSource != DefaultSource)
         {
             d_ptr->DefaultSource = DefaultSource;
+            qCDebug(dsrApp) << "DefaultSource changed to:" << d_ptr->DefaultSource.path();
             Q_EMIT DefaultSourceChanged(d_ptr->DefaultSource);
         }
         return;
@@ -127,6 +136,7 @@ void __Audio::onPropertyChanged(const QString &propName, const QVariant &value)
         if (d_ptr->IncreaseVolume != IncreaseVolume)
         {
             d_ptr->IncreaseVolume = IncreaseVolume;
+            qCDebug(dsrApp) << "IncreaseVolume changed to:" << d_ptr->IncreaseVolume;
             Q_EMIT IncreaseVolumeChanged(d_ptr->IncreaseVolume);
         }
         return;
@@ -138,6 +148,7 @@ void __Audio::onPropertyChanged(const QString &propName, const QVariant &value)
         if (d_ptr->MaxUIVolume != MaxUIVolume)
         {
             d_ptr->MaxUIVolume = MaxUIVolume;
+            qCDebug(dsrApp) << "MaxUIVolume changed to:" << d_ptr->MaxUIVolume;
             Q_EMIT MaxUIVolumeChanged(d_ptr->MaxUIVolume);
         }
         return;
@@ -149,6 +160,7 @@ void __Audio::onPropertyChanged(const QString &propName, const QVariant &value)
         if (d_ptr->ReduceNoise != ReduceNoise)
         {
             d_ptr->ReduceNoise = ReduceNoise;
+            qCDebug(dsrApp) << "ReduceNoise changed to:" << d_ptr->ReduceNoise;
             Q_EMIT ReduceNoiseChanged(d_ptr->ReduceNoise);
         }
         return;
@@ -160,6 +172,7 @@ void __Audio::onPropertyChanged(const QString &propName, const QVariant &value)
         if (d_ptr->SinkInputs != SinkInputs)
         {
             d_ptr->SinkInputs = SinkInputs;
+            qCDebug(dsrApp) << "SinkInputs changed to:" << d_ptr->SinkInputs.size() << "items.";
             Q_EMIT SinkInputsChanged(d_ptr->SinkInputs);
         }
         return;
@@ -171,6 +184,7 @@ void __Audio::onPropertyChanged(const QString &propName, const QVariant &value)
         if (d_ptr->Sinks != Sinks)
         {
             d_ptr->Sinks = Sinks;
+            qCDebug(dsrApp) << "Sinks changed to:" << d_ptr->Sinks.size() << "items.";
             Q_EMIT SinksChanged(d_ptr->Sinks);
         }
         return;
@@ -182,69 +196,79 @@ void __Audio::onPropertyChanged(const QString &propName, const QVariant &value)
         if (d_ptr->Sources != Sources)
         {
             d_ptr->Sources = Sources;
+            qCDebug(dsrApp) << "Sources changed to:" << d_ptr->Sources.size() << "items.";
             Q_EMIT SourcesChanged(d_ptr->Sources);
         }
         return;
     }
 
-    qWarning() << "property not handle: " << propName;
+    qCDebug(dsrApp) << "Property not handled:" << propName;
     return;
 }
 
 QString __Audio::bluetoothAudioMode()
 {
+    qCDebug(dsrApp) << "Getting bluetoothAudioMode.";
     return qvariant_cast<QString>(internalPropGet("BluetoothAudioMode", &d_ptr->BluetoothAudioMode));
 }
 
 QStringList __Audio::bluetoothAudioModeOpts()
 {
+    qCDebug(dsrApp) << "Getting bluetoothAudioModeOpts.";
     return qvariant_cast<QStringList>(internalPropGet("BluetoothAudioModeOpts", &d_ptr->BluetoothAudioModeOpts));
 }
 
 QString __Audio::cards()
 {
+    qCDebug(dsrApp) << "Getting cards.";
     return qvariant_cast<QString>(internalPropGet("Cards", &d_ptr->Cards));
 }
 
 QString __Audio::cardsWithoutUnavailable()
 {
+    qCDebug(dsrApp) << "Getting cardsWithoutUnavailable.";
     return qvariant_cast<QString>(internalPropGet("CardsWithoutUnavailable", &d_ptr->CardsWithoutUnavailable));
 }
 
 QDBusObjectPath __Audio::defaultSink()
 {
+    qCDebug(dsrApp) << "Getting defaultSink.";
     return qvariant_cast<QDBusObjectPath>(internalPropGet("DefaultSink", &d_ptr->DefaultSink));
 }
 
 QDBusObjectPath __Audio::defaultSource()
 {
+    qCDebug(dsrApp) << "Getting defaultSource.";
     return qvariant_cast<QDBusObjectPath>(internalPropGet("DefaultSource", &d_ptr->DefaultSource));
 }
 
 bool __Audio::increaseVolume()
 {
+    qCDebug(dsrApp) << "Getting increaseVolume.";
     return qvariant_cast<bool>(internalPropGet("IncreaseVolume", &d_ptr->IncreaseVolume));
 }
 
 void __Audio::setIncreaseVolume(bool value)
 {
-
+    qCDebug(dsrApp) << "Setting increaseVolume to:" << value;
    internalPropSet("IncreaseVolume", QVariant::fromValue(value), &d_ptr->IncreaseVolume);
 }
 
 double __Audio::maxUIVolume()
 {
+    qCDebug(dsrApp) << "Getting maxUIVolume.";
     return qvariant_cast<double>(internalPropGet("MaxUIVolume", &d_ptr->MaxUIVolume));
 }
 
 bool __Audio::reduceNoise()
 {
+    qCDebug(dsrApp) << "Getting reduceNoise.";
     return qvariant_cast<bool>(internalPropGet("ReduceNoise", &d_ptr->ReduceNoise));
 }
 
 void __Audio::setReduceNoise(bool value)
 {
-
+    qCDebug(dsrApp) << "Setting reduceNoise to:" << value;
    internalPropSet("ReduceNoise", QVariant::fromValue(value), &d_ptr->ReduceNoise);
 }
 

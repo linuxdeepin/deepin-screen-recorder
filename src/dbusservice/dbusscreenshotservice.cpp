@@ -23,6 +23,7 @@ DBusScreenshotService::DBusScreenshotService(Screenshot *parent)
     : QDBusAbstractAdaptor(parent)
     , m_singleInstance(false)
 {
+    qCDebug(dsrApp) << "DBusScreenshotService constructor called.";
     // constructor
     Q_UNUSED(parent);
     setAutoRelaySignals(true);
@@ -30,16 +31,19 @@ DBusScreenshotService::DBusScreenshotService(Screenshot *parent)
 
 DBusScreenshotService::~DBusScreenshotService()
 {
+    qCDebug(dsrApp) << "DBusScreenshotService destructor called.";
     // destructor
 }
 
 void DBusScreenshotService::setSingleInstance(bool instance)
 {
+    qCDebug(dsrApp) << "setSingleInstance called with instance:" << instance;
     m_singleInstance = instance;
 }
 
 void DBusScreenshotService::StartScreenshot()
 {
+    qCDebug(dsrApp) << "StartScreenshot method called.";
     qCInfo(dsrApp) << "Starting screenshot via DBus service";
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
@@ -48,7 +52,7 @@ void DBusScreenshotService::StartScreenshot()
         {"startup_mode", "B6"}
     };
     EventLogUtils::get().writeLogs(obj);
-    qDebug() << "DBus screenshot service! start screenshot";
+    qCDebug(dsrApp) << "DBus screenshot service! start screenshot";
     if (!m_singleInstance) {
         qCDebug(dsrApp) << "Starting new screenshot instance";
         parent()->startScreenshot();
@@ -56,12 +60,13 @@ void DBusScreenshotService::StartScreenshot()
         qCDebug(dsrApp) << "Screenshot instance already running";
     }
     m_singleInstance = true;
+    qCDebug(dsrApp) << "StartScreenshot method finished.";
 }
 
 void DBusScreenshotService::DelayScreenshot(qlonglong in0)
 {
     qCInfo(dsrApp) << "Starting delayed screenshot with delay:" << in0;
-    qDebug() << "DBus screenshot service! delay screenshot";
+    qCDebug(dsrApp) << "DBus screenshot service! delay screenshot";
     // handle method call com.deepin.Screenshot.DelayScreenshot
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
@@ -77,12 +82,14 @@ void DBusScreenshotService::DelayScreenshot(qlonglong in0)
         qCDebug(dsrApp) << "Screenshot instance already running";
     }
     m_singleInstance = true;
+    qCDebug(dsrApp) << "DelayScreenshot method finished.";
 }
 
 void DBusScreenshotService::NoNotifyScreenshot()
 {
+    qCDebug(dsrApp) << "NoNotifyScreenshot method called.";
     qCInfo(dsrApp) << "Starting no-notify screenshot";
-    qDebug() << "DBus screenshot service! nonofiy screenshot";
+    qCDebug(dsrApp) << "DBus screenshot service! nonofiy screenshot";
     // handle method call com.deepin.Screenshot.NoNotify
     if (!m_singleInstance) {
         qCDebug(dsrApp) << "Starting new no-notify screenshot instance";
@@ -91,12 +98,14 @@ void DBusScreenshotService::NoNotifyScreenshot()
         qCDebug(dsrApp) << "Screenshot instance already running";
     }
     m_singleInstance = true;
+    qCDebug(dsrApp) << "NoNotifyScreenshot method finished.";
 }
 
 void DBusScreenshotService::OcrScreenshot()
 {
+    qCDebug(dsrApp) << "OcrScreenshot method called.";
     qCInfo(dsrApp) << "Starting OCR screenshot";
-    qDebug() << "DBus screenshot service! OcrScreenshot";
+    qCDebug(dsrApp) << "DBus screenshot service! OcrScreenshot";
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
         {"version", QCoreApplication::applicationVersion()},
@@ -111,12 +120,13 @@ void DBusScreenshotService::OcrScreenshot()
         qCDebug(dsrApp) << "Screenshot instance already running";
     }
     m_singleInstance = true;
+    qCDebug(dsrApp) << "OcrScreenshot method finished.";
 }
 
 void DBusScreenshotService::ScrollScreenshot()
 {
     qCInfo(dsrApp) << "Starting scroll screenshot";
-    qDebug() << "DBus screenshot service! ScrollScreenshot";
+    qCDebug(dsrApp) << "DBus screenshot service! ScrollScreenshot";
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
         {"version", QCoreApplication::applicationVersion()},
@@ -131,12 +141,13 @@ void DBusScreenshotService::ScrollScreenshot()
         qCDebug(dsrApp) << "Screenshot instance already running";
     }
     m_singleInstance = true;
+    qCDebug(dsrApp) << "ScrollScreenshot method finished.";
 }
 
 void DBusScreenshotService::TopWindowScreenshot()
 {
     qCInfo(dsrApp) << "Starting top window screenshot";
-    qDebug() << "DBus screenshot service! topWindow screenshot";
+    qCDebug(dsrApp) << "DBus screenshot service! topWindow screenshot";
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
         {"version", QCoreApplication::applicationVersion()},
@@ -144,14 +155,17 @@ void DBusScreenshotService::TopWindowScreenshot()
         {"startup_mode", "B3"}
     };
     EventLogUtils::get().writeLogs(obj);
-    if (!m_singleInstance)
+    if (!m_singleInstance) {
+        qCDebug(dsrApp) << "Starting new top window screenshot instance";
         parent()->topWindowScreenshot();
+    }
     m_singleInstance = true;
+    qCDebug(dsrApp) << "TopWindowScreenshot method finished.";
 }
 
 void DBusScreenshotService::FullscreenScreenshot()
 {
-    qDebug() << "DBus screenshot service! Fullscreen screenshot";
+    qCDebug(dsrApp) << "FullscreenScreenshot method called.";
     // handle method call com.deepin.Screenshot.Fullscreenshot
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
@@ -160,15 +174,18 @@ void DBusScreenshotService::FullscreenScreenshot()
         {"startup_mode", "B1"}
     };
     EventLogUtils::get().writeLogs(obj);
-    if (!m_singleInstance)
+    if (!m_singleInstance) {
+        qCDebug(dsrApp) << "Starting new fullscreen screenshot instance";
         parent()->fullscreenScreenshot();
+    }
     m_singleInstance = true;
+    qCDebug(dsrApp) << "FullscreenScreenshot method finished.";
 }
 
 void DBusScreenshotService::SavePathScreenshot(const QString &in0)
 {
     qCInfo(dsrApp) << "Starting save path screenshot with path:" << in0;
-    qDebug() << "DBus screenshot service! SavePath screenshot";
+    qCDebug(dsrApp) << "DBus screenshot service! SavePath screenshot";
     // handle method call com.deepin.Screenshot.SavePath
     if (!m_singleInstance) {
         qCDebug(dsrApp) << "Starting new save path screenshot instance";
@@ -177,20 +194,27 @@ void DBusScreenshotService::SavePathScreenshot(const QString &in0)
         qCDebug(dsrApp) << "Screenshot instance already running";
     }
     m_singleInstance = true;
+    qCDebug(dsrApp) << "SavePathScreenshot method finished.";
 }
 
 void DBusScreenshotService::StartScreenshotFor3rd(const QString &in0)
 {
-    qDebug() << "DBus screenshot service! startScreenshotFor3rd";
-    if (!m_singleInstance)
+    qCDebug(dsrApp) << "DBus screenshot service! startScreenshotFor3rd";
+    if (!m_singleInstance) {
+        qCDebug(dsrApp) << "Starting new 3rd party screenshot instance";
         parent()->startScreenshotFor3rd(in0);
+    }
     m_singleInstance = true;
+    qCDebug(dsrApp) << "StartScreenshotFor3rd method finished.";
 }
 
 void DBusScreenshotService::FullScreenRecord(const QString &in0)
 {
-
-    if (!m_singleInstance)
+    qCDebug(dsrApp) << "FullScreenRecord method called with parameter:" << in0;
+    if (!m_singleInstance) {
+        qCDebug(dsrApp) << "Starting new full screen record instance";
         parent()->fullScreenRecord(in0);
+    }
     m_singleInstance = true;
+    qCDebug(dsrApp) << "FullScreenRecord method finished.";
 }

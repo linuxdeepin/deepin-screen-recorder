@@ -35,12 +35,15 @@ namespace {
 
 MainToolWidget::MainToolWidget(DWidget *parent) : DStackedWidget(parent)
 {
+    qCDebug(dsrApp) << "MainToolWidget constructor entered";
     initWidget();
 }
 
 MainToolWidget::~MainToolWidget()
 {
+    qCDebug(dsrApp) << "MainToolWidget destructor entered";
     if(nullptr != hintFilter){
+        qCDebug(dsrApp) << "Deleting hintFilter";
         delete hintFilter;
         hintFilter = nullptr;
     }
@@ -48,7 +51,9 @@ MainToolWidget::~MainToolWidget()
 
 void MainToolWidget::initWidget()
 {
+    qCDebug(dsrApp) << "Initializing MainToolWidget UI";
     if(nullptr == hintFilter){
+        qCDebug(dsrApp) << "Creating new HintFilter instance";
         hintFilter = new HintFilter(this);
     }
     initMainLabel();
@@ -57,6 +62,7 @@ void MainToolWidget::initWidget()
 
 void MainToolWidget::initMainLabel()
 {
+    qCDebug(dsrApp) << "Initializing main label UI components";
     m_mainTool = new DLabel(this);
     QList<ToolButton *> toolBtnList;
     QButtonGroup *buttonGroup = new QButtonGroup(this);
@@ -100,6 +106,7 @@ void MainToolWidget::initMainLabel()
     m_baseLayout->addSpacing(5);
 
     for (int k = 0; k < toolBtnList.length(); k++) {
+        qCDebug(dsrApp) << "Adding tool button to layout:" << toolBtnList[k]->text();
         m_baseLayout->addWidget(toolBtnList[k]);
         m_baseLayout->addSpacing(BUTTON_SPACING);
 
@@ -111,14 +118,16 @@ void MainToolWidget::initMainLabel()
     connect(buttonGroup, QOverload<int>::of(&QButtonGroup::buttonClicked),
             [ = ](int status) {
         Q_UNUSED(status);
+        qCDebug(dsrApp) << "Button group clicked signal received, status:" << status;
         //DPalette pa;
         if (m_recordBtn->isChecked()) {
             m_recordBtn->setIconSize(QSize(20, 20));
             m_isChecked = true;
             m_recordBtn->update();
-            qCDebug(dsrApp) << "Record button checked";
+            qCDebug(dsrApp) << "Record button is checked.";
             emit buttonChecked(m_isChecked, "record");
         }else{
+            qCDebug(dsrApp) << "Record button is unchecked.";
             m_recordBtn->setIconSize(QSize(20, 20));
         }
 
@@ -126,18 +135,21 @@ void MainToolWidget::initMainLabel()
             m_shotBtn->setIconSize(QSize(20, 20));
             m_isChecked = true;
             m_shotBtn->update();
-            qCDebug(dsrApp) << "Screenshot button checked";
+            qCDebug(dsrApp) << "Screenshot button is checked.";
             emit buttonChecked(m_isChecked, "shot");
         }else{
+            qCDebug(dsrApp) << "Screenshot button is unchecked.";
             m_shotBtn->setIconSize(QSize(20, 20));
         }
     });
     m_shotBtn->click();
+    qCDebug(dsrApp) << "Simulating screenshot button click for initial state.";
 
 }
 
 void MainToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 {
+    qCDebug(dsrApp) << "installTipHint called for widget:" << w->objectName() << ", hint string:" << hintstr;
     // TODO: parent must be mainframe
     auto hintWidget = new ToolTips("", this->parentWidget()->parentWidget()->parentWidget());
     hintWidget->hide();
@@ -148,19 +160,23 @@ void MainToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 
 void MainToolWidget::installHint(QWidget *w, QWidget *hint)
 {
+    qCDebug(dsrApp) << "installHint called for widget:" << w->objectName() << ", hint widget:" << (hint ? hint->objectName() : "nullptr");
     w->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hint));
     if(nullptr != hintFilter){
+        qCDebug(dsrApp) << "Installing event filter for widget:" << w->objectName();
         w->installEventFilter(hintFilter);
     }
 }
 
 void MainToolWidget::setRecordButtonOut()
 {
+    qCDebug(dsrApp) << "setRecordButtonOut called, disabling record button.";
     m_recordBtn->setDisabled(true);
 }
 
 void MainToolWidget::setRecordLauchMode(const unsigned int funType)
 {
+    qCDebug(dsrApp) << "setRecordLauchMode called with function type:" << funType;
     if (funType == MainWindow::record) {
         qCDebug(dsrApp) << "Setting record launch mode";
         m_recordBtn->click();

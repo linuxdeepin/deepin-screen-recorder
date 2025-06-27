@@ -35,6 +35,7 @@ const int TOOLBAR_WIDTH = 425;
 ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
     : DFloatingWidget(parent)
 {
+    qCDebug(dsrApp) << "ToolBarWidget constructor called.";
     setBlurBackgroundEnabled(true);
     blurBackground()->setRadius(30);
     blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
@@ -94,60 +95,70 @@ ToolBarWidget::ToolBarWidget(MainWindow *pMainwindow, DWidget *parent)
 
     QMetaObject::Connection connectHandle =  connect(m_subTool, SIGNAL(cameraActionChecked(bool)), pMainwindow, SLOT(changeCameraSelectEvent(bool)));
     if (!connectHandle) {
-        qDebug() <<__FUNCTION__ << __LINE__ <<  "Connect failed!";
+        qCDebug(dsrApp) << "Connect cameraActionChecked signal failed!";
     }
     connect(m_subTool, SIGNAL(changeShotToolFunc(const QString &)), pMainwindow, SLOT(changeShotToolEvent(const QString &)));
 }
 
 void ToolBarWidget::setScrollShotDisabled(const bool state)
 {
+    qCDebug(dsrApp) << "ToolBarWidget::setScrollShotDisabled called with state:" << state;
     m_subTool->setScrollShotDisabled(state);
 }
 
 void ToolBarWidget::setPinScreenshotsEnable(const bool &state)
 {
+    qCDebug(dsrApp) << "ToolBarWidget::setPinScreenshotsEnable called with state:" << state;
     m_subTool->setPinScreenshotsEnable(state);
 
 }
 
 void ToolBarWidget::setOcrScreenshotsEnable(const bool &state)
 {
+    qCDebug(dsrApp) << "ToolBarWidget::setOcrScreenshotsEnable called with state:" << state;
     m_subTool->setOcrScreenshotEnable(state);
 }
 
 void ToolBarWidget::setButEnableOnLockScreen(const bool &state)
 {
+    qCDebug(dsrApp) << "ToolBarWidget::setButEnableOnLockScreen called with state:" << state;
     m_subTool->setButEnableOnLockScreen(state);
 }
 
 int ToolBarWidget::getFuncSubToolX(QString &func)
 {
+    qCDebug(dsrApp) << "ToolBarWidget::getFuncSubToolX called for function:" << func;
     return m_subTool->getFuncSubToolX(func);
 }
 
 void ToolBarWidget::setRecordLaunchFromMain(const unsigned int funType)
 {
+    qCDebug(dsrApp) << "ToolBarWidget::setRecordLaunchFromMain called with function type:" << funType;
     m_subTool->setRecordLaunchMode(funType);
 
 }
 
 void ToolBarWidget::setRecordButtonDisable()
 {
+    qCDebug(dsrApp) << "ToolBarWidget::setRecordButtonDisable called.";
    // m_subTool->setRecordButtonDisable();
 }
 
 void ToolBarWidget::setVideoInitFromMain()
 {
+    qCDebug(dsrApp) << "ToolBarWidget::setVideoInitFromMain called.";
     m_subTool->setVideoButtonInitFromSub();
 }
 
 void ToolBarWidget::shapeClickedFromBar(QString shape)
 {
+    qCDebug(dsrApp) << "ToolBarWidget::shapeClickedFromBar called with shape:" << shape;
     m_subTool->shapeClickedFromWidget(shape);
 }
 
 void ToolBarWidget::setCameraDeviceEnable(bool status)
 {
+    qCDebug(dsrApp) << "ToolBarWidget::setCameraDeviceEnable called with status:" << status;
     m_subTool->setCameraDeviceEnable(status);
 }
 /*
@@ -171,10 +182,13 @@ void ToolBarWidget::setExpand(bool expand, QString shapeType)
 */
 
 QRect ToolBarWidget::getShotOptionRect(){
+    qCDebug(dsrApp) << "ToolBarWidget::getShotOptionRect called.";
    return m_subTool->getShotOptionRect();
 }
 
-ToolBarWidget::~ToolBarWidget() {}
+ToolBarWidget::~ToolBarWidget() {
+    qCDebug(dsrApp) << "ToolBarWidget destructor called.";
+}
 
 
 ToolBar::ToolBar(DWidget *parent)

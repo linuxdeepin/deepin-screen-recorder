@@ -21,6 +21,7 @@ DGUI_USE_NAMESPACE
 TopTips::TopTips(DWidget *parent)
     : QLabel(parent)
 {
+    qCDebug(dsrApp) << "TopTips constructor called.";
     setFixedSize(90, 30);
     setAttribute(Qt::WA_TransparentForMouseEvents, true);
 //    this->setStyleSheet(" TopTips { background-color: transparent;"
@@ -40,6 +41,7 @@ TopTips::TopTips(DWidget *parent)
 
 void TopTips::setContent(const QSize &size)
 {
+    qCDebug(dsrApp) << "TopTips::setContent called with size:" << size;
     QString text = QString("%1X%2").arg(size.width()).arg(size.height());
     if(m_showRecorderTips && size.width() * size.height() > 1920 * 1080 && size.width() != m_width && size.height() != m_height) {
         // 1920 / 1080 = w / h
@@ -58,6 +60,7 @@ void TopTips::setContent(const QSize &size)
 
 void TopTips::updateTips(QPoint pos, const QSize &size)
 {
+    qCDebug(dsrApp) << "TopTips::updateTips called with position:" << pos << "and size:" << size;
     if(m_isFullScreenRecord) {
         qCDebug(dsrApp) << "Skip updating tips in full screen record mode";
         return;
@@ -72,8 +75,10 @@ void TopTips::updateTips(QPoint pos, const QSize &size)
     startPoint.setX(pos.x());
 
     if (pos.y() > this->height()) {
+        qCDebug(dsrApp) << "Adjusting tip Y position: above current position.";
         startPoint.setY(pos.y() - this->height() - 3);
     } else {
+        qCDebug(dsrApp) << "Adjusting tip Y position: below current position.";
         startPoint.setY(pos.y() + 3);
     }
 
@@ -90,16 +95,21 @@ void TopTips::mousePressEvent(QMouseEvent *ev)
 }
 */
 
-TopTips::~TopTips() {}
+TopTips::~TopTips() {
+    qCDebug(dsrApp) << "TopTips destructor called.";
+}
 
 void TopTips::setRecorderTipsInfo(const bool showState)
 {
+    qCDebug(dsrApp) << "TopTips::setRecorderTipsInfo called with showState:" << showState;
     if(QSysInfo::currentCpuArchitecture().startsWith(QString("mips"))){
+        qCDebug(dsrApp) << "CPU architecture is MIPS, setting m_showRecorderTips to:" << showState;
         m_showRecorderTips = showState;
     }
 }
 
 void TopTips::setFullScreenRecord(const bool flag)
 {
+    qCDebug(dsrApp) << "TopTips::setFullScreenRecord called with flag:" << flag;
     m_isFullScreenRecord = flag;
 }

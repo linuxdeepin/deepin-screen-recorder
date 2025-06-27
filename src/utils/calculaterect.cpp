@@ -26,6 +26,7 @@ const qreal SLOPE = 0.5522848;
  */
 bool pointClickIn(QPointF point2, QPointF point1, int padding)
 {
+    qCDebug(dsrApp) << "Checking if point:" << point1 << "clicks in point:" << point2;
     //参数padding不再使用，pointClickIn函数有多处调用，以最小修改量为原则不改变原函数参数个数
     Q_UNUSED(padding);
     int pointPadding = 0;
@@ -33,14 +34,18 @@ bool pointClickIn(QPointF point2, QPointF point1, int padding)
     if (Utils::isTabletEnvironment) {
         //平板需求暂定20，根据测试反馈可调
         pointPadding = 20;
+        qCDebug(dsrApp) << "Tablet environment detected, pointPadding:" << pointPadding;
     } else {
         pointPadding = 4;
+        qCDebug(dsrApp) << "Non-tablet environment, pointPadding:" << pointPadding;
     }
 
     if (point2.x() >= point1.x() - pointPadding && point2.x() <= point1.x() + pointPadding &&
             point2.y() >= point1.y() - pointPadding && point2.y() <= point1.y() + pointPadding) {
+        qCDebug(dsrApp) << "Point clicked in.";
         return true;
     } else {
+        qCDebug(dsrApp) << "Point not clicked in.";
         return false;
     }
 }
@@ -55,12 +60,16 @@ bool pointClickIn(QPointF point2, QPointF point1, int padding)
  */
 bool pointOnLine(QPointF point1, QPointF point2, QPointF point3)
 {
+    qCDebug(dsrApp) << "Checking if point:" << point3 << "is on line between:" << point1 << "and" << point2;
     if (static_cast<int>(point1.x()) == static_cast<int>(point2.x())) {
+        qCDebug(dsrApp) << "Line is vertical.";
         if (point3.x() >= point1.x() - padding && point3.x() <= point1.x() + padding &&
                 point3.y() >= std::min(point1.y(), point2.y()) - padding && point3.y() <= std::max(point1.y(), point2.y()) + padding) {
+            qCDebug(dsrApp) << "Point is on vertical line segment.";
             return true;
         }
     } else {
+        qCDebug(dsrApp) << "Line is not vertical, using dot product for check.";
 //        qreal k =  (point2.y() - point1.y()) / (point2.x() - point1.x());
 //        qreal b = point1.y() - point1.x() * k;
 
@@ -79,8 +88,10 @@ bool pointOnLine(QPointF point1, QPointF point2, QPointF point3)
             QPointF t_dc = t_ac - k * t_ab;
             int t_len = static_cast<int>(sqrt(QPointF::dotProduct(t_dc, t_dc)));
             //qDebug() << "t_distance" << t_len;
+            qCDebug(dsrApp) << "Distance from point to line:" << t_len;
 
             if (t_len >= 0 && t_len < 5) {
+                qCDebug(dsrApp) << "Point is on line segment (dot product check).";
                 return true;
             }
         }
@@ -90,24 +101,29 @@ bool pointOnLine(QPointF point1, QPointF point2, QPointF point3)
 //            return true;
 //        }
     }
+    qCDebug(dsrApp) << "Point is not on line.";
     return false;
 }
 
 /* get the distance between two points*/
 qreal getDistance(QPointF point1, QPointF point2)
 {
+    qCDebug(dsrApp) << "Calculating distance between point1:" << point1 << "and point2:" << point2;
     qreal distance = std::sqrt(std::pow(point1.x() - point2.x(), 2) + std::pow(point1.y() - point2.y(), 2));
     if (qIsNaN(distance)) {
         qCWarning(dsrApp) << "Invalid distance calculation between points";
         return 0.0;
     }
+    qCDebug(dsrApp) << "Calculated distance:" << distance;
     return distance;
 }
 
 /* get the point who splid a distance on a line */
 QPointF pointSplid(QPointF point1, QPointF point2, qreal padding)
 {
+    qCDebug(dsrApp) << "Splitting point on line. Point1:" << point1 << ", Point2:" << point2 << ", Padding:" << padding;
     if (static_cast<int>(point1.x()) == static_cast<int>(point2.x())) {
+        qCDebug(dsrApp) << "Line is vertical, returning (0, padding).";
         return QPointF(0, padding);
     } else {
         qreal angle = std::atan2(std::abs(point1.y() - point2.y()), std::abs(point1.x() - point2.x()));
@@ -117,6 +133,7 @@ QPointF pointSplid(QPointF point1, QPointF point2, qreal padding)
         }
         qreal tmpX = padding * std::cos(angle);
         qreal tmpY = padding * std::sin(angle);
+        qCDebug(dsrApp) << "Calculated split point:" << QPointF(tmpX, tmpY);
         return QPointF(tmpX, tmpY);
     }
 }
@@ -124,6 +141,7 @@ QPointF pointSplid(QPointF point1, QPointF point2, qreal padding)
 /* get the rotate point by four points in a rectangle*/
 QPointF getRotatePoint(QPointF point1, QPointF point2, QPointF point3, QPointF point4)
 {
+    qCDebug(dsrApp) << "Getting rotate point for rectangle defined by:" << point1 << point2 << point3 << point4;
     QPointF leftPoint = QPointF(0, 0);
     QPointF rightPoint = QPointF(0, 0);
     QPointF rotatePoint = QPointF(0, 0);
@@ -140,47 +158,57 @@ QPointF getRotatePoint(QPointF point1, QPointF point2, QPointF point3, QPointF p
 
     /* first position*/
     if (point2.x() - point4.x() <= 0 && point2.y() - point4.y() >= 0) {
+        qCDebug(dsrApp) << "First position: point2.x() - point4.x() <= 0 && point2.y() - point4.y() >= 0";
         leftPoint = QPointF(point1.x() - leftSplidPoint.x(), point1.y() - leftSplidPoint.y());
         rightPoint = QPointF(point3.x() - rightSplidPoint.x(), point3.y() - rightSplidPoint.y());
         rotatePoint = QPointF((leftPoint.x() + rightPoint.x()) / 2, (leftPoint.y() + rightPoint.y()) / 2);
+        qCDebug(dsrApp) << "Calculated rotate point:" << rotatePoint;
         return rotatePoint;
     }
 
     /* second position*/
     if (point2.x() - point4.x() > 0 && point2.y() - point4.y() > 0) {
+        qCDebug(dsrApp) << "Second position: point2.x() - point4.x() > 0 && point2.y() - point4.y() > 0";
         leftPoint = QPointF(point1.x() - leftSplidPoint.x(), point1.y() + leftSplidPoint.y());
         rightPoint = QPointF(point3.x() - rightSplidPoint.x(), point3.y() + rightSplidPoint.y());
         rotatePoint = QPointF((leftPoint.x() + rightPoint.x()) / 2, (leftPoint.y() + rightPoint.y()) / 2);
+        qCDebug(dsrApp) << "Calculated rotate point:" << rotatePoint;
         return rotatePoint;
     }
 
     /* third position*/
     if (point2.x() - point4.x() < 0 && point2.y() - point4.y() < 0) {
+        qCDebug(dsrApp) << "Third position: point2.x() - point4.x() < 0 && point2.y() - point4.y() < 0";
         leftPoint = QPointF(point1.x() + leftSplidPoint.x(), point1.y() - leftSplidPoint.y());
         rightPoint = QPointF(point3.x() + rightSplidPoint.x(), point3.y() - rightSplidPoint.y());
         rotatePoint = QPointF((leftPoint.x() + rightPoint.x()) / 2, (leftPoint.y() + rightPoint.y()) / 2);
+        qCDebug(dsrApp) << "Calculated rotate point:" << rotatePoint;
         return rotatePoint;
     }
 
     /* fourth position*/
     if (point2.x() - point4.x() > 0 && point2.y() - point4.y() < 0) {
+        qCDebug(dsrApp) << "Fourth position: point2.x() - point4.x() > 0 && point2.y() - point4.y() < 0";
         leftPoint = QPointF(point1.x() + leftSplidPoint.x(), point1.y() + leftSplidPoint.y());
         rightPoint = QPointF(point3.x() + rightSplidPoint.x(), point3.y() + rightSplidPoint.y());
         rotatePoint = QPointF((leftPoint.x() + rightPoint.x()) / 2, (leftPoint.y() + rightPoint.y()) / 2);
+        qCDebug(dsrApp) << "Calculated rotate point:" << rotatePoint;
         return rotatePoint;
     }
 
+    qCDebug(dsrApp) << "No specific position matched, returning default rotate point:" << rotatePoint;
     return rotatePoint;
 }
 
 /* get the four points from a line */
 FourPoints fourPointsOfLine(QList<QPointF> points)
 {
+    qCDebug(dsrApp) << "Calculating four points of line from points list. Count:" << points.length();
     FourPoints resultFPoint;
     const int _MIN_PADDING = 10;
     resultFPoint = initFourPoints(resultFPoint);
     if (points.length() < 2) {
-        qCWarning(dsrApp) << "Insufficient points for line calculation";
+        qCWarning(dsrApp) << "Insufficient points for line calculation, returning initialized points.";
         return initFourPoints(resultFPoint);
     }
 
@@ -190,20 +218,23 @@ FourPoints fourPointsOfLine(QList<QPointF> points)
         minPointF = QPointF(std::min(minPointF.x(), point.x()), std::min(minPointF.y(), point.y()));
         maxPointF = QPointF(std::max(maxPointF.x(), point.x()), std::max(maxPointF.y(), point.y()));
     }
+    qCDebug(dsrApp) << "Min point:" << minPointF << ", Max point:" << maxPointF;
 
     resultFPoint[0] = QPointF(minPointF.x() - _MIN_PADDING, minPointF.y() - _MIN_PADDING);
     resultFPoint[1] = QPointF(minPointF.x() - _MIN_PADDING, maxPointF.y() + _MIN_PADDING);
     resultFPoint[2] = QPointF(maxPointF.x() + _MIN_PADDING, minPointF.y() - _MIN_PADDING);
     resultFPoint[3] = QPointF(maxPointF.x() + _MIN_PADDING, maxPointF.y() + _MIN_PADDING);
+    qCDebug(dsrApp) << "Calculated four points:" << resultFPoint[0] << resultFPoint[1] << resultFPoint[2] << resultFPoint[3];
     return resultFPoint;
 }
 
 FourPoints getAnotherFPoints(FourPoints mainPoints)
 {
+    qCDebug(dsrApp) << "Calculating another four points from main points. Length:" << mainPoints.length();
     FourPoints  otherFPoints;
     otherFPoints = initFourPoints(otherFPoints);
     if (mainPoints.length() != 4) {
-        qCWarning(dsrApp) << "Invalid main points length for calculation";
+        qCWarning(dsrApp) << "Invalid main points length for calculation, returning initialized points.";
         return otherFPoints;
     }
 
@@ -215,6 +246,7 @@ FourPoints getAnotherFPoints(FourPoints mainPoints)
                              static_cast<int>((mainPoints[2].y() + mainPoints[3].y()) / 2));
     otherFPoints[3] = QPoint(static_cast<int>((mainPoints[1].x() + mainPoints[3].x()) / 2),
                              static_cast<int>((mainPoints[1].y() + mainPoints[3].y()) / 2));
+    qCDebug(dsrApp) << "Calculated another four points:" << otherFPoints[0] << otherFPoints[1] << otherFPoints[2] << otherFPoints[3];
     return otherFPoints;
 }
 
@@ -224,6 +256,7 @@ FourPoints getAnotherFPoints(FourPoints mainPoints)
 
 qreal calculateAngle(QPointF point1, QPointF point2, QPointF point3)
 {
+    qCDebug(dsrApp) << "Calculating angle. Point1:" << point1 << ", Point2:" << point2 << ", Point3:" << point3;
     if (point1 == point2) {
         qCDebug(dsrApp) << "Calculate angle skipped - points are identical";
         return 0;
@@ -235,27 +268,35 @@ qreal calculateAngle(QPointF point1, QPointF point2, QPointF point3)
 
     qreal angle = std::cos((a + b - c) / (2 * std::sqrt(a) * std::sqrt(b)));
     if (qIsNaN(angle)) {
-        qCWarning(dsrApp) << "Invalid angle calculation result";
+        qCWarning(dsrApp) << "Invalid angle calculation result, returning 0.";
         return 0;
     }
     if (point1.x() <= point3.x() && point1.y() < point3.y()) {
+        qCDebug(dsrApp) << "Adjusting angle based on quadrant 1 condition.";
         if (point2.x() < point1.x() || point2.y() > point1.y()) {
             angle = - angle;
+            qCDebug(dsrApp) << "Angle negated:" << angle;
         }
     }
     if (point1.x() < point3.x() && point1.y() >= point3.y()) {
+        qCDebug(dsrApp) << "Adjusting angle based on quadrant 2 condition.";
         if (point2.x() > point1.x() || point2.y() > point1.y()) {
             angle = - angle;
+            qCDebug(dsrApp) << "Angle negated:" << angle;
         }
     }
     if (point1.x() >= point3.x() && point1.y() > point3.y()) {
+        qCDebug(dsrApp) << "Adjusting angle based on quadrant 3 condition.";
         if (point2.x() > point1.x() || point2.y() < point1.y()) {
             angle = - angle;
+            qCDebug(dsrApp) << "Angle negated:" << angle;
         }
     }
     if (point1.x() > point3.x() && point1.y() <= point3.y()) {
+        qCDebug(dsrApp) << "Adjusting angle based on quadrant 4 condition.";
         if (point2.x() < point1.x() || point2.y() < point1.y()) {
             angle = - angle;
+            qCDebug(dsrApp) << "Angle negated:" << angle;
         }
     }
     return angle;
@@ -264,18 +305,22 @@ qreal calculateAngle(QPointF point1, QPointF point2, QPointF point3)
 /* point2 is the rotatePoint, point1 is the centerPoint, point3 is point2 who rotate */
 QPointF pointRotate(QPointF point1, QPointF point2, qreal angle)
 {
+    qCDebug(dsrApp) << "Rotating point. Center point:" << point1 << ", Point to rotate:" << point2 << ", Angle:" << angle;
     QPointF middlePoint = QPointF(point2.x() - point1.x(), point2.y() - point1.y());
     QPointF tmpPoint = QPointF(middlePoint.x() * std::cos(angle) - middlePoint.y() * std::sin(angle),
                                middlePoint.x() * std::sin(angle) + middlePoint.y() * std::cos(angle));
     QPointF point3 = QPointF(tmpPoint.x() + point1.x(), tmpPoint.y() + point1.y());
 
+    qCDebug(dsrApp) << "Rotated point:" << point3;
     return point3;
 }
 
 /* the distance from a point(point3) to a line(point1, point2) */
 qreal pointToLineDistance(QPointF point1, QPointF point2, QPointF point3)
 {
+    qCDebug(dsrApp) << "Calculating distance from point:" << point3 << "to line between:" << point1 << "and" << point2;
     if (static_cast<int>(point1.x()) == static_cast<int>(point2.x())) {
+        qCDebug(dsrApp) << "Line is vertical, returning absolute x difference.";
         return std::abs(point3.x() - point1.x());
     } else {
         qreal k = (point1.y() - point2.y()) / (point1.x() - point2.x());
@@ -284,25 +329,34 @@ qreal pointToLineDistance(QPointF point1, QPointF point2, QPointF point3)
             return 0.0;
         }
         qreal b = point1.y() - point1.x() * k;
-        return std::abs(point3.x() * k + b - point3.y()) / std::sqrt(std::pow(k, 2) + 1);
+        qreal distance = std::abs(point3.x() * k + b - point3.y()) / std::sqrt(std::pow(k, 2) + 1);
+        qCDebug(dsrApp) << "Calculated distance:" << distance;
+        return distance;
     }
 }
 
 /* judge the direction of point3 of line(point1, point2) */
 int pointLineDir(QPointF point1, QPointF point2, QPointF point3)
 {
+    qCDebug(dsrApp) << "Judging direction of point:" << point3 << "relative to line between:" << point1 << "and" << point2;
     if (static_cast<int>(point1.x()) == static_cast<int>(point2.x())) {
+        qCDebug(dsrApp) << "Line is vertical.";
         if (point3.x() <= point1.x()) {
+            qCDebug(dsrApp) << "Point is to the left or on the vertical line.";
             return -1;
         } else {
+            qCDebug(dsrApp) << "Point is to the right of the vertical line.";
             return 1;
         }
     } else {
+        qCDebug(dsrApp) << "Line is not vertical.";
         qreal k = (point1.y() - point2.y()) / (point1.x() - point2.x());
         qreal b = point1.y() - point1.x() * k;
         if (point3.y() <= point3.x() * k + b) {
+            qCDebug(dsrApp) << "Point is below or on the line.";
             return -1;
         } else {
+            qCDebug(dsrApp) << "Point is above the line.";
             return 1;
         }
     }
@@ -311,24 +365,30 @@ int pointLineDir(QPointF point1, QPointF point2, QPointF point3)
 /* calculate the control point of the beizer */
 QPointF getControlPoint(QPointF point1, QPointF point2, bool direction)
 {
+    qCDebug(dsrApp) << "Calculating control point. Point1:" << point1 << ", Point2:" << point2 << ", Direction:" << direction;
     qreal k1 = SLOPE;
     qreal k2 = 1 - SLOPE;
     qreal k3;
 
     if (direction) {
         k3 = k2 / k1;
+        qCDebug(dsrApp) << "Direction is true, k3 = k2 / k1:" << k3;
     } else {
         k3 = k1 / k2;
+        qCDebug(dsrApp) << "Direction is false, k3 = k1 / k2:" << k3;
     }
     QPointF resultPoint = QPoint(static_cast<int>((point1.x() + k3 * point2.x()) / (1 + k3)),
                                  static_cast<int>((point1.y() + k3 * point2.y()) / (1 + k3)));
+    qCDebug(dsrApp) << "Calculated control point:" << resultPoint;
     return resultPoint;
 }
 
 /* get eight control points */
 QList<QPointF> getEightControlPoint(FourPoints rectFPoints)
 {
+    qCDebug(dsrApp) << "Getting eight control points for rectangle points.";
     FourPoints anotherFPoints = getAnotherFPoints(rectFPoints);
+    qCDebug(dsrApp) << "Another four points:" << anotherFPoints[0] << anotherFPoints[1] << anotherFPoints[2] << anotherFPoints[3];
 
     QList<QPointF> resultPointList;
     resultPointList.append(getControlPoint(rectFPoints[0], anotherFPoints[0], true));
@@ -340,6 +400,7 @@ QList<QPointF> getEightControlPoint(FourPoints rectFPoints)
     resultPointList.append(getControlPoint(anotherFPoints[2], rectFPoints[3], false));
     resultPointList.append(getControlPoint(rectFPoints[3], anotherFPoints[3], true));
 
+    qCDebug(dsrApp) << "Generated eight control points. Count:" << resultPointList.size();
     return resultPointList;
 }
 
@@ -347,6 +408,7 @@ QList<QPointF> getEightControlPoint(FourPoints rectFPoints)
 /* 0 <= pos.x() <= 1*/
 bool pointOnBezier(QPointF point1, QPointF point2, QPointF point3, QPointF point4, QPointF pos)
 {
+    qCDebug(dsrApp) << "Checking if point:" << pos << "is on Bezier curve defined by:" << point1 << point2 << point3 << point4;
     const int _MIN_PADDING = 10;
     for (qreal t = 0; t <= 1; t = t + 0.1) {
         qreal bx = point1.x() * (1 - t) * std::pow(1 - t, 2) + 3 * point2.x() * t * std::pow(1 - t, 2)
@@ -355,15 +417,18 @@ bool pointOnBezier(QPointF point1, QPointF point2, QPointF point3, QPointF point
                    + 3 * point3.y() * std::pow(t, 2) * (1 - t) + point4.y() * t * std::pow(t, 2);
         if (pos.x() >= bx - _MIN_PADDING && pos.x() <= bx + _MIN_PADDING &&
                 pos.y() >= by - _MIN_PADDING && pos.y() <= by + _MIN_PADDING) {
+            qCDebug(dsrApp) << "Point is on Bezier curve at t:" << t;
             return true;
         }
     }
+    qCDebug(dsrApp) << "Point is not on Bezier curve.";
     return false;
 }
 
 /* judge whether the clickOnPoint is on the ellipse */
 bool pointOnEllipse(FourPoints rectFPoints, QPointF pos)
 {
+    qCDebug(dsrApp) << "Checking if point:" << pos << "is on ellipse defined by rect points.";
     FourPoints anotherFPoints = getAnotherFPoints(rectFPoints);
     QList<QPointF> controlPointList;
     controlPointList.append(getControlPoint(rectFPoints[0], anotherFPoints[0], true));
@@ -380,8 +445,10 @@ bool pointOnEllipse(FourPoints rectFPoints, QPointF pos)
                                                                controlPointList[5], anotherFPoints[2], pos) || pointOnBezier(anotherFPoints[2],
                                                                        controlPointList[6], controlPointList[7], anotherFPoints[3], pos) || pointOnBezier(
                 anotherFPoints[3], controlPointList[3], controlPointList[2], anotherFPoints[0], pos)) {
+        qCDebug(dsrApp) << "Point is on ellipse.";
         return true;
     } else {
+        qCDebug(dsrApp) << "Point is not on ellipse.";
         return false;
     }
 }
@@ -389,17 +456,22 @@ bool pointOnEllipse(FourPoints rectFPoints, QPointF pos)
 /* get the three points of arrow A/B/D */
 QList<QPointF> pointOfArrow(QPointF startPoint, QPointF endPoint, qreal arrowLength)
 {
+    qCDebug(dsrApp) << "Calculating points of arrow. Start:" << startPoint << ", End:" << endPoint << ", Length:" << arrowLength;
     qreal xMultiplier, yMultiplier;
     if (static_cast<int>(startPoint.x()) == static_cast<int>(endPoint.x())) {
         xMultiplier = 1;
+        qCDebug(dsrApp) << "Start and end points have same X, xMultiplier = 1.";
     } else {
         xMultiplier = (startPoint.x() - endPoint.x()) / std::abs(startPoint.x() - endPoint.x());
+        qCDebug(dsrApp) << "xMultiplier:" << xMultiplier;
     }
 
     if (static_cast<int>(startPoint.y()) == static_cast<int>(endPoint.y())) {
         yMultiplier = 1;
+        qCDebug(dsrApp) << "Start and end points have same Y, yMultiplier = 1.";
     } else {
         yMultiplier = (startPoint.y() - endPoint.y()) / std::abs(startPoint.y() - endPoint.y());
+        qCDebug(dsrApp) << "yMultiplier:" << yMultiplier;
     }
 
     QPointF add = pointSplid(startPoint, endPoint, arrowLength);
@@ -414,14 +486,17 @@ QList<QPointF> pointOfArrow(QPointF startPoint, QPointF endPoint, qreal arrowLen
     arrowPoints.append(pointB);
     arrowPoints.append(pointD);
     arrowPoints.append(pointE);
+    qCDebug(dsrApp) << "Generated arrow points:" << pointB << pointD << pointE;
     return arrowPoints;
 }
 
 /* judge whether the pos is on the points of arbitrary- curved*/
 bool pointOnArLine(QList<QPointF> points, QPointF pos)
 {
+    qCDebug(dsrApp) << "Checking if point:" << pos << "is on arbitrary line. Points count:" << points.size();
     for (int i = 0; i < points.length(); i++) {
         if (pointClickIn(points[i], pos)) {
+            qCDebug(dsrApp) << "Point is on arbitrary line at index:" << i;
             return true;
         } else {
             continue;
@@ -1614,7 +1689,7 @@ FourPoints point2Resize4(QPointF point1, QPointF point2, QPointF point3,
                     point4 = QPointF(point4.x() - add.x(), point4.y() - add.y());
                 }
                 point2 = QPointF(point1.x() + point4.x() - point3.x(),
-                                 point1.y() + point4.y() - point3.y());
+                                point1.y() + point4.y() - point3.y());
                 newResizeFPoints[0] = point1;
                 newResizeFPoints[1] = point2;
                 newResizeFPoints[2] = point3;
@@ -3063,6 +3138,7 @@ FourPoints point6Resize1(QPointF point1, QPointF point2, QPointF point3,
 FourPoints point6Resize2(QPointF point1, QPointF point2, QPointF point3,
                          QPointF point4, QPointF pos, bool isShift)
 {
+    qCDebug(dsrApp) << "Resizing point6 in second position. Point1:" << point1 << ", Point2:" << point2 << ", Point3:" << point3 << ", Point4:" << point4 << ", Pos:" << pos << ", isShift:" << isShift;
     FourPoints newResizeFPoints;
     newResizeFPoints = initFourPoints(newResizeFPoints);
     newResizeFPoints[0] = point1;
@@ -3071,7 +3147,6 @@ FourPoints point6Resize2(QPointF point1, QPointF point2, QPointF point3,
     newResizeFPoints[3] = point4;
 
     QPointF point8 = QPointF((point2.x() + point4.x()) / 2, (point2.y() + point4.y()) / 2);
-
     if (std::atan2((point2.y() - point1.y()), (point2.x() - point1.x())) <= -TANT_EDGEVALUE &&
             (pos.y() - MIN_PADDING < point8.y()  || pointLineDir(point3, point4, pos) == -1 ||
              pointLineDir(point2, point4, pos) == -1)) {

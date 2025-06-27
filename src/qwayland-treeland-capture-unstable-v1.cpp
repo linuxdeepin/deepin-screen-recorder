@@ -7,6 +7,7 @@
 
 #include "qwayland-treeland-capture-unstable-v1.h"
 #include <QDebug>
+#include "utils/log.h"
 
 QT_BEGIN_NAMESPACE
 QT_WARNING_PUSH
@@ -18,44 +19,52 @@ namespace QtWayland {
 static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name, const struct ::wl_interface *interface, uint32_t version)
 {
     const uint32_t bindOpCode = 0;
+    qCDebug(dsrApp) << "wlRegistryBind called for interface:" << interface->name << ", version:" << version;
     return (void *) wl_proxy_marshal_constructor_versioned((struct wl_proxy *) registry,
     bindOpCode, interface, version, name, interface->name, version, nullptr);
 }
 
     treeland_capture_session_v1::treeland_capture_session_v1(struct ::wl_registry *registry, uint32_t id, int version)
     {
+        qCDebug(dsrApp) << "treeland_capture_session_v1 constructor (registry, id, version) called. ID:" << id << ", Version:" << version;
         init(registry, id, version);
     }
 
     treeland_capture_session_v1::treeland_capture_session_v1(struct ::treeland_capture_session_v1 *obj)
         : m_treeland_capture_session_v1(obj)
     {
+        qCDebug(dsrApp) << "treeland_capture_session_v1 constructor (obj) called.";
         init_listener();
     }
 
     treeland_capture_session_v1::treeland_capture_session_v1()
         : m_treeland_capture_session_v1(nullptr)
     {
+        qCDebug(dsrApp) << "treeland_capture_session_v1 default constructor called.";
     }
 
     treeland_capture_session_v1::~treeland_capture_session_v1()
     {
+        qCDebug(dsrApp) << "treeland_capture_session_v1 destructor called.";
     }
 
     void treeland_capture_session_v1::init(struct ::wl_registry *registry, uint32_t id, int version)
     {
+        qCDebug(dsrApp) << "treeland_capture_session_v1 init (registry, id, version) called. ID:" << id << ", Version:" << version;
         m_treeland_capture_session_v1 = static_cast<struct ::treeland_capture_session_v1 *>(wlRegistryBind(registry, id, &treeland_capture_session_v1_interface, version));
         init_listener();
     }
 
     void treeland_capture_session_v1::init(struct ::treeland_capture_session_v1 *obj)
     {
+        qCDebug(dsrApp) << "treeland_capture_session_v1 init (obj) called.";
         m_treeland_capture_session_v1 = obj;
         init_listener();
     }
 
     treeland_capture_session_v1 *treeland_capture_session_v1::fromObject(struct ::treeland_capture_session_v1 *object)
     {
+        qCDebug(dsrApp) << "treeland_capture_session_v1 fromObject called.";
         if (wl_proxy_get_listener((struct ::wl_proxy *)object) != (void *)&m_treeland_capture_session_v1_listener)
             return nullptr;
         return static_cast<treeland_capture_session_v1 *>(treeland_capture_session_v1_get_user_data(object));
@@ -63,21 +72,27 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
 
     bool treeland_capture_session_v1::isInitialized() const
     {
-        return m_treeland_capture_session_v1 != nullptr;
+        bool initialized = m_treeland_capture_session_v1 != nullptr;
+        qCDebug(dsrApp) << "treeland_capture_session_v1 isInitialized:" << initialized;
+        return initialized;
     }
 
     uint32_t treeland_capture_session_v1::version() const
     {
-        return wl_proxy_get_version(reinterpret_cast<wl_proxy*>(m_treeland_capture_session_v1));
+        uint32_t ver = wl_proxy_get_version(reinterpret_cast<wl_proxy*>(m_treeland_capture_session_v1));
+        qCDebug(dsrApp) << "treeland_capture_session_v1 version:" << ver;
+        return ver;
     }
 
     const struct wl_interface *treeland_capture_session_v1::interface()
     {
+        qCDebug(dsrApp) << "treeland_capture_session_v1 interface requested.";
         return &::treeland_capture_session_v1_interface;
     }
 
     void treeland_capture_session_v1::destroy()
     {
+        qCDebug(dsrApp) << "treeland_capture_session_v1 destroy called.";
         ::treeland_capture_session_v1_destroy(
             m_treeland_capture_session_v1);
         m_treeland_capture_session_v1 = nullptr;
@@ -85,12 +100,14 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
 
     void treeland_capture_session_v1::start()
     {
+        qCDebug(dsrApp) << "treeland_capture_session_v1 start called.";
         ::treeland_capture_session_v1_start(
             m_treeland_capture_session_v1);
     }
 
-    void treeland_capture_session_v1::treeland_capture_session_v1_frame(int32_t , int32_t , uint32_t , uint32_t , uint32_t , uint32_t , uint32_t , uint32_t , uint32_t , uint32_t )
+    void treeland_capture_session_v1::treeland_capture_session_v1_frame(int32_t offset_x, int32_t offset_y, uint32_t width, uint32_t height, uint32_t buffer_flags, uint32_t flags, uint32_t format, uint32_t mod_high, uint32_t mod_low, uint32_t num_objects)
     {
+        qCDebug(dsrApp) << "treeland_capture_session_v1_frame signal received. Offset:" << offset_x << "," << offset_y << ", Size:" << width << "x" << height;
     }
 
     void treeland_capture_session_v1::handle_frame(
@@ -108,6 +125,7 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
         uint32_t num_objects)
     {
         Q_UNUSED(object);
+        qCDebug(dsrApp) << "handle_frame callback called.";
         static_cast<treeland_capture_session_v1 *>(data)->treeland_capture_session_v1_frame(
             offset_x,
             offset_y,
@@ -121,8 +139,9 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
             num_objects);
     }
 
-    void treeland_capture_session_v1::treeland_capture_session_v1_object(uint32_t , int32_t , uint32_t , uint32_t , uint32_t , uint32_t )
+    void treeland_capture_session_v1::treeland_capture_session_v1_object(uint32_t index, int32_t fd, uint32_t size, uint32_t offset, uint32_t stride, uint32_t plane_index)
     {
+        qCDebug(dsrApp) << "treeland_capture_session_v1_object signal received. Index:" << index << ", FD:" << fd << ", Size:" << size;
     }
 
     void treeland_capture_session_v1::handle_object(
@@ -136,6 +155,7 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
         uint32_t plane_index)
     {
         Q_UNUSED(object);
+        qCDebug(dsrApp) << "handle_object callback called.";
         static_cast<treeland_capture_session_v1 *>(data)->treeland_capture_session_v1_object(
             index,
             fd,
@@ -145,8 +165,9 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
             plane_index);
     }
 
-    void treeland_capture_session_v1::treeland_capture_session_v1_ready(uint32_t , uint32_t , uint32_t )
+    void treeland_capture_session_v1::treeland_capture_session_v1_ready(uint32_t tv_sec_hi, uint32_t tv_sec_lo, uint32_t tv_nsec)
     {
+        qCDebug(dsrApp) << "treeland_capture_session_v1_ready signal received. Timestamp:" << tv_sec_hi << tv_sec_lo << "," << tv_nsec;
     }
 
     void treeland_capture_session_v1::handle_ready(
@@ -157,14 +178,16 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
         uint32_t tv_nsec)
     {
         Q_UNUSED(object);
+        qCDebug(dsrApp) << "handle_ready callback called.";
         static_cast<treeland_capture_session_v1 *>(data)->treeland_capture_session_v1_ready(
             tv_sec_hi,
             tv_sec_lo,
             tv_nsec);
     }
 
-    void treeland_capture_session_v1::treeland_capture_session_v1_cancel(uint32_t )
+    void treeland_capture_session_v1::treeland_capture_session_v1_cancel(uint32_t reason)
     {
+        qCDebug(dsrApp) << "treeland_capture_session_v1_cancel signal received. Reason:" << reason;
     }
 
     void treeland_capture_session_v1::handle_cancel(
@@ -173,6 +196,7 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
         uint32_t reason)
     {
         Q_UNUSED(object);
+        qCDebug(dsrApp) << "handle_cancel callback called.";
         static_cast<treeland_capture_session_v1 *>(data)->treeland_capture_session_v1_cancel(
             reason);
     }
@@ -186,43 +210,51 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
 
     void treeland_capture_session_v1::init_listener()
     {
+        qCDebug(dsrApp) << "treeland_capture_session_v1 init_listener called.";
         treeland_capture_session_v1_add_listener(m_treeland_capture_session_v1, &m_treeland_capture_session_v1_listener, this);
     }
 
     treeland_capture_frame_v1::treeland_capture_frame_v1(struct ::wl_registry *registry, uint32_t id, int version)
     {
+        qCDebug(dsrApp) << "treeland_capture_frame_v1 constructor (registry, id, version) called. ID:" << id << ", Version:" << version;
         init(registry, id, version);
     }
 
     treeland_capture_frame_v1::treeland_capture_frame_v1(struct ::treeland_capture_frame_v1 *obj)
         : m_treeland_capture_frame_v1(obj)
     {
+        qCDebug(dsrApp) << "treeland_capture_frame_v1 constructor (obj) called.";
         init_listener();
     }
 
     treeland_capture_frame_v1::treeland_capture_frame_v1()
         : m_treeland_capture_frame_v1(nullptr)
     {
+        qCDebug(dsrApp) << "treeland_capture_frame_v1 default constructor called.";
     }
 
     treeland_capture_frame_v1::~treeland_capture_frame_v1()
     {
+        qCDebug(dsrApp) << "treeland_capture_frame_v1 destructor called.";
     }
 
     void treeland_capture_frame_v1::init(struct ::wl_registry *registry, uint32_t id, int version)
     {
+        qCDebug(dsrApp) << "treeland_capture_frame_v1 init (registry, id, version) called. ID:" << id << ", Version:" << version;
         m_treeland_capture_frame_v1 = static_cast<struct ::treeland_capture_frame_v1 *>(wlRegistryBind(registry, id, &treeland_capture_frame_v1_interface, version));
         init_listener();
     }
 
     void treeland_capture_frame_v1::init(struct ::treeland_capture_frame_v1 *obj)
     {
+        qCDebug(dsrApp) << "treeland_capture_frame_v1 init (obj) called.";
         m_treeland_capture_frame_v1 = obj;
         init_listener();
     }
 
     treeland_capture_frame_v1 *treeland_capture_frame_v1::fromObject(struct ::treeland_capture_frame_v1 *object)
     {
+        qCDebug(dsrApp) << "treeland_capture_frame_v1 fromObject called.";
         if (wl_proxy_get_listener((struct ::wl_proxy *)object) != (void *)&m_treeland_capture_frame_v1_listener)
             return nullptr;
         return static_cast<treeland_capture_frame_v1 *>(treeland_capture_frame_v1_get_user_data(object));
@@ -230,21 +262,27 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
 
     bool treeland_capture_frame_v1::isInitialized() const
     {
-        return m_treeland_capture_frame_v1 != nullptr;
+        bool initialized = m_treeland_capture_frame_v1 != nullptr;
+        qCDebug(dsrApp) << "treeland_capture_frame_v1 isInitialized:" << initialized;
+        return initialized;
     }
 
     uint32_t treeland_capture_frame_v1::version() const
     {
-        return wl_proxy_get_version(reinterpret_cast<wl_proxy*>(m_treeland_capture_frame_v1));
+        uint32_t ver = wl_proxy_get_version(reinterpret_cast<wl_proxy*>(m_treeland_capture_frame_v1));
+        qCDebug(dsrApp) << "treeland_capture_frame_v1 version:" << ver;
+        return ver;
     }
 
     const struct wl_interface *treeland_capture_frame_v1::interface()
     {
+        qCDebug(dsrApp) << "treeland_capture_frame_v1 interface requested.";
         return &::treeland_capture_frame_v1_interface;
     }
 
     void treeland_capture_frame_v1::destroy()
     {
+        qCDebug(dsrApp) << "treeland_capture_frame_v1 destroy called.";
         ::treeland_capture_frame_v1_destroy(
             m_treeland_capture_frame_v1);
         m_treeland_capture_frame_v1 = nullptr;
@@ -252,6 +290,7 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
 
     void treeland_capture_frame_v1::copy(struct ::wl_buffer *buffer)
     {
+        qCDebug(dsrApp) << "treeland_capture_frame_v1 copy called. Buffer:" << buffer;
         ::treeland_capture_frame_v1_copy(
             m_treeland_capture_frame_v1,
             buffer);
@@ -259,6 +298,7 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
 
     void treeland_capture_frame_v1::treeland_capture_frame_v1_buffer(uint32_t , uint32_t , uint32_t , uint32_t )
     {
+        qCDebug(dsrApp) << "treeland_capture_frame_v1_buffer";
     }
 
     void treeland_capture_frame_v1::handle_buffer(
@@ -269,6 +309,7 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
         uint32_t height,
         uint32_t stride)
     {
+        qCDebug(dsrApp) << "handle_buffer callback called. Format:" << format << ", Size:" << width << "x" << height << ", Stride:" << stride;
         Q_UNUSED(object);
         static_cast<treeland_capture_frame_v1 *>(data)->treeland_capture_frame_v1_buffer(
             format,
@@ -305,6 +346,7 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
 
     void treeland_capture_frame_v1::treeland_capture_frame_v1_ready()
     {
+        qCDebug(dsrApp) << "treeland_capture_frame_v1_ready signal received.";
     }
 
     void treeland_capture_frame_v1::handle_ready(
@@ -312,11 +354,13 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
         struct ::treeland_capture_frame_v1 *object)
     {
         Q_UNUSED(object);
+        qCDebug(dsrApp) << "handle_ready callback called.";
         static_cast<treeland_capture_frame_v1 *>(data)->treeland_capture_frame_v1_ready();
     }
 
     void treeland_capture_frame_v1::treeland_capture_frame_v1_failed()
     {
+        qCDebug(dsrApp) << "treeland_capture_frame_v1_failed signal received.";
     }
 
     void treeland_capture_frame_v1::handle_failed(
@@ -324,6 +368,7 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
         struct ::treeland_capture_frame_v1 *object)
     {
         Q_UNUSED(object);
+        qCDebug(dsrApp) << "handle_failed callback called.";
         static_cast<treeland_capture_frame_v1 *>(data)->treeland_capture_frame_v1_failed();
     }
 
@@ -337,43 +382,51 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
 
     void treeland_capture_frame_v1::init_listener()
     {
+        qCDebug(dsrApp) << "treeland_capture_frame_v1 init_listener called.";
         treeland_capture_frame_v1_add_listener(m_treeland_capture_frame_v1, &m_treeland_capture_frame_v1_listener, this);
     }
 
     treeland_capture_context_v1::treeland_capture_context_v1(struct ::wl_registry *registry, uint32_t id, int version)
     {
+        qCDebug(dsrApp) << "treeland_capture_context_v1 constructor (registry, id, version) called. ID:" << id << ", Version:" << version;
         init(registry, id, version);
     }
 
     treeland_capture_context_v1::treeland_capture_context_v1(struct ::treeland_capture_context_v1 *obj)
         : m_treeland_capture_context_v1(obj)
     {
+        qCDebug(dsrApp) << "treeland_capture_context_v1 constructor (obj) called.";
         init_listener();
     }
 
     treeland_capture_context_v1::treeland_capture_context_v1()
         : m_treeland_capture_context_v1(nullptr)
     {
+        qCDebug(dsrApp) << "treeland_capture_context_v1 default constructor called.";
     }
 
     treeland_capture_context_v1::~treeland_capture_context_v1()
     {
+        qCDebug(dsrApp) << "treeland_capture_context_v1 destructor called.";
     }
 
     void treeland_capture_context_v1::init(struct ::wl_registry *registry, uint32_t id, int version)
     {
+        qCDebug(dsrApp) << "treeland_capture_context_v1 init (registry, id, version) called. ID:" << id << ", Version:" << version;
         m_treeland_capture_context_v1 = static_cast<struct ::treeland_capture_context_v1 *>(wlRegistryBind(registry, id, &treeland_capture_context_v1_interface, version));
         init_listener();
     }
 
     void treeland_capture_context_v1::init(struct ::treeland_capture_context_v1 *obj)
     {
+        qCDebug(dsrApp) << "treeland_capture_context_v1 init (obj) called.";
         m_treeland_capture_context_v1 = obj;
         init_listener();
     }
 
     treeland_capture_context_v1 *treeland_capture_context_v1::fromObject(struct ::treeland_capture_context_v1 *object)
     {
+        qCDebug(dsrApp) << "treeland_capture_context_v1 fromObject called.";
         if (wl_proxy_get_listener((struct ::wl_proxy *)object) != (void *)&m_treeland_capture_context_v1_listener)
             return nullptr;
         return static_cast<treeland_capture_context_v1 *>(treeland_capture_context_v1_get_user_data(object));
@@ -381,21 +434,27 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
 
     bool treeland_capture_context_v1::isInitialized() const
     {
-        return m_treeland_capture_context_v1 != nullptr;
+        bool initialized = m_treeland_capture_context_v1 != nullptr;
+        qCDebug(dsrApp) << "treeland_capture_context_v1 isInitialized:" << initialized;
+        return initialized;
     }
 
     uint32_t treeland_capture_context_v1::version() const
     {
-        return wl_proxy_get_version(reinterpret_cast<wl_proxy*>(m_treeland_capture_context_v1));
+        uint32_t ver = wl_proxy_get_version(reinterpret_cast<wl_proxy*>(m_treeland_capture_context_v1));
+        qCDebug(dsrApp) << "treeland_capture_context_v1 version:" << ver;
+        return ver;
     }
 
     const struct wl_interface *treeland_capture_context_v1::interface()
     {
+        qCDebug(dsrApp) << "treeland_capture_context_v1 interface requested.";
         return &::treeland_capture_context_v1_interface;
     }
 
     void treeland_capture_context_v1::destroy()
     {
+        qCDebug(dsrApp) << "treeland_capture_context_v1 destroy called.";
         ::treeland_capture_context_v1_destroy(
             m_treeland_capture_context_v1);
         m_treeland_capture_context_v1 = nullptr;
@@ -403,6 +462,7 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
 
     void treeland_capture_context_v1::select_source(uint32_t source_hint, uint32_t freeze, uint32_t with_cursor, struct ::wl_surface *mask)
     {
+        qCDebug(dsrApp) << "treeland_capture_context_v1 select_source called. Hint:" << source_hint << ", Freeze:" << freeze << ", With cursor:" << with_cursor;
         ::treeland_capture_context_v1_select_source(
             m_treeland_capture_context_v1,
             source_hint,
@@ -413,18 +473,21 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
 
     struct ::treeland_capture_frame_v1 *treeland_capture_context_v1::capture()
     {
+        qCDebug(dsrApp) << "treeland_capture_context_v1 capture called.";
         return ::treeland_capture_context_v1_capture(
             m_treeland_capture_context_v1);
     }
 
     struct ::treeland_capture_session_v1 *treeland_capture_context_v1::create_session()
     {
+        qCDebug(dsrApp) << "treeland_capture_context_v1 create_session called.";
         return ::treeland_capture_context_v1_create_session(
             m_treeland_capture_context_v1);
     }
 
     void treeland_capture_context_v1::treeland_capture_context_v1_source_ready(int32_t , int32_t , uint32_t , uint32_t , uint32_t )
     {
+        qCDebug(dsrApp) << "treeland_capture_context_v1_source_ready";
     }
 
     void treeland_capture_context_v1::
@@ -437,6 +500,7 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
         uint32_t region_height,
         uint32_t source_type)
     {
+        qCDebug(dsrApp) << "handle_source_ready callback called.";
         Q_UNUSED(object);
         static_cast<treeland_capture_context_v1 *>(data)->treeland_capture_context_v1_source_ready(
             region_x,
@@ -448,6 +512,7 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
 
     void treeland_capture_context_v1::treeland_capture_context_v1_source_failed(uint32_t )
     {
+        qCDebug(dsrApp) << "treeland_capture_context_v1_source_failed signal received.";
     }
 
     void treeland_capture_context_v1::handle_source_failed(
@@ -456,6 +521,7 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
         uint32_t reason)
     {
         Q_UNUSED(object);
+        qCDebug(dsrApp) << "handle_source_failed callback called.";
         static_cast<treeland_capture_context_v1 *>(data)->treeland_capture_context_v1_source_failed(
             reason);
     }
@@ -467,60 +533,73 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
 
     void treeland_capture_context_v1::init_listener()
     {
+        qCDebug(dsrApp) << "treeland_capture_context_v1 init_listener called.";
         treeland_capture_context_v1_add_listener(m_treeland_capture_context_v1, &m_treeland_capture_context_v1_listener, this);
     }
 
     treeland_capture_manager_v1::treeland_capture_manager_v1(struct ::wl_registry *registry, uint32_t id, int version)
     {
+        qCDebug(dsrApp) << "treeland_capture_manager_v1 constructor (registry, id, version) called. ID:" << id << ", Version:" << version;
         init(registry, id, version);
     }
 
     treeland_capture_manager_v1::treeland_capture_manager_v1(struct ::treeland_capture_manager_v1 *obj)
         : m_treeland_capture_manager_v1(obj)
     {
+        qCDebug(dsrApp) << "treeland_capture_manager_v1 constructor (obj) called.";
     }
 
     treeland_capture_manager_v1::treeland_capture_manager_v1()
         : m_treeland_capture_manager_v1(nullptr)
     {
+        qCDebug(dsrApp) << "treeland_capture_manager_v1 default constructor called.";
     }
 
     treeland_capture_manager_v1::~treeland_capture_manager_v1()
     {
+        qCDebug(dsrApp) << "treeland_capture_manager_v1 destructor called.";
     }
 
     void treeland_capture_manager_v1::init(struct ::wl_registry *registry, uint32_t id, int version)
     {
+        qCDebug(dsrApp) << "treeland_capture_manager_v1 init (registry, id, version) called. ID:" << id << ", Version:" << version;
         m_treeland_capture_manager_v1 = static_cast<struct ::treeland_capture_manager_v1 *>(wlRegistryBind(registry, id, &treeland_capture_manager_v1_interface, version));
     }
 
     void treeland_capture_manager_v1::init(struct ::treeland_capture_manager_v1 *obj)
     {
+        qCDebug(dsrApp) << "treeland_capture_manager_v1 init (obj) called.";
         m_treeland_capture_manager_v1 = obj;
     }
 
     treeland_capture_manager_v1 *treeland_capture_manager_v1::fromObject(struct ::treeland_capture_manager_v1 *object)
     {
+        qCDebug(dsrApp) << "treeland_capture_manager_v1 fromObject called.";
         return static_cast<treeland_capture_manager_v1 *>(treeland_capture_manager_v1_get_user_data(object));
     }
 
     bool treeland_capture_manager_v1::isInitialized() const
     {
+        qCDebug(dsrApp) << "treeland_capture_manager_v1 isInitialized:" << (m_treeland_capture_manager_v1 != nullptr);
         return m_treeland_capture_manager_v1 != nullptr;
     }
 
     uint32_t treeland_capture_manager_v1::version() const
     {
-        return wl_proxy_get_version(reinterpret_cast<wl_proxy*>(m_treeland_capture_manager_v1));
+        uint32_t ver = wl_proxy_get_version(reinterpret_cast<wl_proxy*>(m_treeland_capture_manager_v1));
+        qCDebug(dsrApp) << "treeland_capture_manager_v1 version:" << ver;
+        return ver;
     }
 
     const struct wl_interface *treeland_capture_manager_v1::interface()
     {
+        qCDebug(dsrApp) << "treeland_capture_manager_v1 interface requested.";
         return &::treeland_capture_manager_v1_interface;
     }
 
     void treeland_capture_manager_v1::destroy()
     {
+        qCDebug(dsrApp) << "treeland_capture_manager_v1 destroy called.";
         ::treeland_capture_manager_v1_destroy(
             m_treeland_capture_manager_v1);
         m_treeland_capture_manager_v1 = nullptr;
@@ -528,6 +607,7 @@ static inline void *wlRegistryBind(struct ::wl_registry *registry, uint32_t name
 
     struct ::treeland_capture_context_v1 *treeland_capture_manager_v1::get_context()
     {
+        qCDebug(dsrApp) << "treeland_capture_manager_v1 get_context called.";
         return ::treeland_capture_manager_v1_get_context(
             m_treeland_capture_manager_v1);
     }

@@ -11,6 +11,7 @@
 TextButton::TextButton(int num, DWidget *parent)
     : DPushButton(parent)
 {
+    qCDebug(dsrApp) << "TextButton constructor called with font size:" << num;
     setObjectName("TextButton");
     m_fontsize = num;
     setText(QString("%1").arg(m_fontsize));
@@ -19,6 +20,7 @@ TextButton::TextButton(int num, DWidget *parent)
     setCheckable(true);
 
     connect(this, &TextButton::clicked, this, [ = ] {
+        qCDebug(dsrApp) << "TextButton clicked, checked:" << this->isChecked();
         if (this->isChecked())
         {
             qCDebug(dsrApp) << "Text font size changed to:" << m_fontsize;
@@ -27,4 +29,6 @@ TextButton::TextButton(int num, DWidget *parent)
     });
 }
 
-TextButton::~TextButton() {}
+TextButton::~TextButton() {
+    qCDebug(dsrApp) << "TextButton destructor called.";
+}

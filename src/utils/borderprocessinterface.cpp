@@ -29,6 +29,7 @@ BorderProcessInterface::~BorderProcessInterface() {}
 
 void BorderProcessInterface::calculateBorderImageInfo(const QSize shotImageSize)
 {
+    qCDebug(dsrApp) << "Calculating border image info for size:" << shotImageSize;
     m_svgImageSizeByshot = QSizeF(shotImageSize.width(), shotImageSize.height());
     m_svgCenterPoint = QPointF(0, 0);
     return;
@@ -43,7 +44,7 @@ ExternalBorderProcess::~ExternalBorderProcess() {}
 
 void ExternalBorderProcess::initBorderInfo(const int borderConfig)
 {
-    qCDebug(dsrApp) << "Initializing border info with config:" << borderConfig;
+    qCDebug(dsrApp) << "Initializing external border info with config:" << borderConfig;
     m_borderType = borderConfig;
 
     QString svg = QString("imageBorder/border/externalBorder%1.svg").arg((borderConfig & 0xFF));
@@ -54,42 +55,53 @@ void ExternalBorderProcess::initBorderInfo(const int borderConfig)
         case BorderStyle_1: {
             m_svgCenterSize = QSizeF(142, 82);
             m_svgCenterPoint = QPointF(9, 9);
-            qCDebug(dsrApp) << "Border style 1 - Center size:" << m_svgCenterSize << "Center point:" << m_svgCenterPoint;
+            qCDebug(dsrApp) << "BorderStyle_1: Center size:" << m_svgCenterSize << "Center point:" << m_svgCenterPoint;
             break;
         }
         case BorderStyle_2: {
             m_svgCenterSize = QSizeF(140, 80);
             m_svgCenterPoint = QPointF(10, 12);
+            qCDebug(dsrApp) << "BorderStyle_2: Center size:" << m_svgCenterSize << "Center point:" << m_svgCenterPoint;
             break;
         }
         case BorderStyle_3: {
             m_svgCenterSize = QSizeF(142, 82);
             m_svgCenterPoint = QPointF(9, 9);
+            qCDebug(dsrApp) << "BorderStyle_3: Center size:" << m_svgCenterSize << "Center point:" << m_svgCenterPoint;
             break;
         }
         case BorderStyle_4: {
             m_svgCenterSize = m_svgImageSize;
             m_svgCenterPoint = QPointF(0, 0);
+            qCDebug(dsrApp) << "BorderStyle_4: Center size:" << m_svgCenterSize << "Center point:" << m_svgCenterPoint;
             break;
         }
         case BorderStyle_5: {
             m_svgCenterSize = QSizeF(154, 94);
             m_svgCenterPoint = QPointF(3, 3);
+            qCDebug(dsrApp) << "BorderStyle_5: Center size:" << m_svgCenterSize << "Center point:" << m_svgCenterPoint;
             break;
         }
         case BorderStyle_6: {
             m_svgCenterSize = QSizeF(152, 92);
             m_svgCenterPoint = QPointF(4, 4);
+            qCDebug(dsrApp) << "BorderStyle_6: Center size:" << m_svgCenterSize << "Center point:" << m_svgCenterPoint;
             break;
         }
         case BorderStyle_7: {
             m_svgCenterSize = QSizeF(146, 86);
             m_svgCenterPoint = QPointF(7, 7);
+            qCDebug(dsrApp) << "BorderStyle_7: Center size:" << m_svgCenterSize << "Center point:" << m_svgCenterPoint;
             break;
         }
         case BorderStyle_8: {
             m_svgCenterSize = m_svgImageSize;
             m_svgCenterPoint = QPointF(0, 0);
+            qCDebug(dsrApp) << "BorderStyle_8: Center size:" << m_svgCenterSize << "Center point:" << m_svgCenterPoint;
+            break;
+        }
+        default: {
+            qCDebug(dsrApp) << "Unknown border style:" << borderConfig;
             break;
         }
     }
@@ -97,10 +109,12 @@ void ExternalBorderProcess::initBorderInfo(const int borderConfig)
 
 QPixmap ExternalBorderProcess::getPixmapAddBorder(const QPixmap &pix)
 {
+    qCDebug(dsrApp) << "Getting pixmap with added border. Input pixmap size:" << pix.size();
     QPixmap shotImage = pix;
     calculateBorderImageInfo(pix.size());
     getBorderImage(pix.size());
     if (m_borderType == BorderStyle_8 || m_borderType == BorderStyle_4) {
+        qCDebug(dsrApp) << "Border type is BorderStyle_8 or BorderStyle_4, cropping shot image.";
         shotImage = cropShotImage(pix);
     }
     QPixmap image(m_svgImage.width(), m_svgImage.height());
@@ -116,13 +130,13 @@ QPixmap ExternalBorderProcess::getPixmapAddBorder(const QPixmap &pix)
     painter.drawPixmap(0, 0, m_svgImage);
     // 添加绘制日期
     if (m_borderType == BorderStyle_5) {
-        qCDebug(dsrApp) << "Drawing date text for border style 5";
+        qCDebug(dsrApp) << "BorderStyle_5: Drawing date text.";
         drawDateText(painter);
     }
     painter.end();
 
     if (m_borderType == BorderStyle_2) {
-        qCDebug(dsrApp) << "Applying extra crop for border style 2";
+        qCDebug(dsrApp) << "BorderStyle_2: Applying extra crop.";
         return cropShotImageEx(image);
     }
 
@@ -131,7 +145,7 @@ QPixmap ExternalBorderProcess::getPixmapAddBorder(const QPixmap &pix)
 
 void ExternalBorderProcess::calculateBorderImageInfo(const QSize shotImageSize)
 {
-    qDebug() << __FUNCTION__ << __LINE__ << shotImageSize << m_svgImageSize << m_svgCenterSize << m_svgCenterPoint;
+    qCDebug(dsrApp) << "ExternalBorderProcess: Calculating border image info. Shot image size:" << shotImageSize << "SVG image size:" << m_svgImageSize << "SVG center size:" << m_svgCenterSize << "SVG center point:" << m_svgCenterPoint;
     // 截图原始宽高
     double shotImageW = shotImageSize.width();
     double shotImageH = shotImageSize.height();
@@ -140,19 +154,21 @@ void ExternalBorderProcess::calculateBorderImageInfo(const QSize shotImageSize)
     // 截图，透明区域 的宽高比
     double shotImageRatioWH = shotImageW / shotImageH;
     double centerRatioWH = m_svgCenterSize.width() / m_svgCenterSize.height();
-    qDebug() << __FUNCTION__ << __LINE__ << shotImageRatioWH << centerRatioWH;
+    qCDebug(dsrApp) << "Shot image ratio:" << shotImageRatioWH << "Center ratio:" << centerRatioWH;
 
     double centerW = shotImageW;
     double centerH = shotImageH;
     if (shotImageRatioWH > centerRatioWH) {
+        qCDebug(dsrApp) << "Shot image is wider, adjusting center height.";
         centerH = centerW / centerRatioWH;
         m_isHorizontalCrop = false;
     } else {
+        qCDebug(dsrApp) << "Shot image is taller or same aspect ratio, adjusting center width.";
         centerW = centerH * centerRatioWH;
         m_isHorizontalCrop = true;
     }
 
-    qDebug() << __FUNCTION__ << __LINE__ << centerW << centerH;
+    qCDebug(dsrApp) << "Calculated center dimensions:" << centerW << "x" << centerH;
     // outImageSizeW / m_svgImageSize.width() = centerW / m_svgCenterSize.width();
 
     // 计算边框的缩放系数，理论上下面两个值相等才正确
@@ -160,7 +176,7 @@ void ExternalBorderProcess::calculateBorderImageInfo(const QSize shotImageSize)
     double ratioCenterh = centerH / m_svgCenterSize.height();
 
     // 计算边框资源放大后尺寸（边框资源尺寸，与透明区域不一致）
-    qDebug() << __FUNCTION__ << __LINE__ << ratioCenterw << ratioCenterh;
+    qCDebug(dsrApp) << "Calculated scaling ratios:" << ratioCenterw << "x" << ratioCenterh;
     double outImageSizeW = m_svgImageSize.width() * ratioCenterw;
     double outImageSizeH = m_svgImageSize.height() * ratioCenterh;
 
@@ -174,7 +190,7 @@ void ExternalBorderProcess::calculateBorderImageInfo(const QSize shotImageSize)
 
 QPixmap ExternalBorderProcess::getBorderImage(const QSizeF shotImageSize)
 {
-    qDebug() << __FUNCTION__ << shotImageSize;
+    qCDebug(dsrApp) << "Getting border image. Shot image size:" << shotImageSize;
     QPixmap rimage(static_cast<int>(m_svgImageSizeByshot.width()), static_cast<int>(m_svgImageSizeByshot.height()));
     rimage.fill(Qt::transparent);
     QPainter painter(&rimage);
@@ -185,7 +201,7 @@ QPixmap ExternalBorderProcess::getBorderImage(const QSizeF shotImageSize)
     painter.end();
 
     if (m_isHorizontalCrop) {
-        qCDebug(dsrApp) << "Applying horizontal crop";
+        qCDebug(dsrApp) << "Horizontal crop applied for border image.";
         double wDiff = m_svgCenterSizeByshot.width() - shotImageSize.width();
         m_svgImage =
             QPixmap(static_cast<int>(m_svgImageSizeByshot.width() - wDiff), static_cast<int>(m_svgImageSizeByshot.height()));
@@ -199,7 +215,7 @@ QPixmap ExternalBorderProcess::getBorderImage(const QSizeF shotImageSize)
         rp.end();
         return m_svgImage;
     } else {
-        qCDebug(dsrApp) << "Applying vertical crop";
+        qCDebug(dsrApp) << "Vertical crop applied for border image.";
         double hDiff = m_svgCenterSizeByshot.height() - shotImageSize.height();
         m_svgImage =
             QPixmap(static_cast<int>(m_svgImageSizeByshot.width()), static_cast<int>(m_svgImageSizeByshot.height() - hDiff));
@@ -243,7 +259,7 @@ void ExternalBorderProcess::drawDateText(QPainter &painter) const
 // 根据边框像素，裁剪截图
 QPixmap ExternalBorderProcess::cropShotImage(QPixmap shotImage) const
 {
-    qDebug() << m_svgImage.size() << shotImage.size();
+    qCDebug(dsrApp) << "Cropping shot image based on border pixels. SVG image size:" << m_svgImage.size() << "Shot image size:" << shotImage.size();
     uchar colorReset = 255;  // jpg，bmp格式不支持透明，边框用白色赋值
     int imageFormat = ConfigSettings::instance()->getValue("shot", "format").toInt();
     if (imageFormat == 0) {
@@ -287,8 +303,10 @@ QPixmap ExternalBorderProcess::cropShotImage(QPixmap shotImage) const
 
 QPixmap ExternalBorderProcess::cropShotImageEx(QPixmap shotImage) const
 {
+    qCDebug(dsrApp) << "Cropping shot image (Ex). Input pixmap size:" << shotImage.size();
     int imageFormat = ConfigSettings::instance()->getValue("shot", "format").toInt();
     if (imageFormat == 0) {  // png 格式支持透明，边框像素值用 0 赋值。
+        qCDebug(dsrApp) << "Image format is PNG, returning original shot image.";
         return shotImage;
     }
 
@@ -304,6 +322,7 @@ QPixmap ExternalBorderProcess::cropShotImageEx(QPixmap shotImage) const
             uint8_t b = shotData[index + 3];
             shotData[index + 0] = shotData[index + 1] = shotData[index + 2] = shotData[index + 3] = colorReset;
             if ((a | r | g | b) != 0) {
+                qCDebug(dsrApp) << "Breaking inner loop (left side) at row:" << i << ", col:" << j;
                 break;
             }
         }
@@ -316,6 +335,7 @@ QPixmap ExternalBorderProcess::cropShotImageEx(QPixmap shotImage) const
             uint8_t b = shotData[index + 3];
             shotData[index + 0] = shotData[index + 1] = shotData[index + 2] = shotData[index + 3] = colorReset;
             if ((a | r | g | b) != 0) {
+                qCDebug(dsrApp) << "Breaking inner loop (right side) at row:" << i << ", col:" << j;
                 break;
             }
         }
@@ -333,27 +353,32 @@ PrototypeBorderProcess::~PrototypeBorderProcess() {}
 
 void PrototypeBorderProcess::initBorderInfo(const int borderConfig)
 {
+    qCDebug(dsrApp) << "Initializing prototype border info with config:" << borderConfig;
     m_borderType = borderConfig;
     // pc notebook ipad cellphone
     if (borderConfig == BorderEffects_2) {
+        qCDebug(dsrApp) << "BorderEffects_2: Initializing for Notebook.";
         QString svg = "imageBorder/border/notebook.svg";
         m_svgRenderer.load(Utils::getQrcPath(svg));
         m_svgImageSize = m_svgRenderer.defaultSize();
         m_svgCenterSize = QSizeF(111.997884, 71.5);
         m_svgCenterPoint = QPointF(23.7521159, 9.25);
     } else if (borderConfig == BorderEffects_4) {
+        qCDebug(dsrApp) << "BorderEffects_4: Initializing for Cellphone.";
         QString svg = "imageBorder/border/cellphone.svg";
         m_svgRenderer.load(Utils::getQrcPath(svg));
         m_svgImageSize = m_svgRenderer.defaultSize();
         m_svgCenterSize = QSizeF(47.33, 93.16);
         m_svgCenterPoint = QPointF(1.15, 1.58);
     } else if (borderConfig == BorderEffects_1) {
+        qCDebug(dsrApp) << "BorderEffects_1: Initializing for PC.";
         QString svg = "imageBorder/border/pc.svg";
         m_svgRenderer.load(Utils::getQrcPath(svg));
         m_svgImageSize = m_svgRenderer.defaultSize();
         m_svgCenterSize = QSizeF(127, 70.82);
         m_svgCenterPoint = QPointF(16.5, 7.68);
     } else if (borderConfig == BorderEffects_3) {
+        qCDebug(dsrApp) << "BorderEffects_3: Initializing for iPad.";
         QString svg = "imageBorder/border/ipad.svg";
         m_svgRenderer.load(Utils::getQrcPath(svg));
         m_svgImageSize = m_svgRenderer.defaultSize();
@@ -364,6 +389,7 @@ void PrototypeBorderProcess::initBorderInfo(const int borderConfig)
 
 QPixmap PrototypeBorderProcess::getPixmapAddBorder(const QPixmap &pix)
 {
+    qCDebug(dsrApp) << "Getting pixmap with added prototype border. Input pixmap size:" << pix.size();
     calculateBorderImageInfo(pix.size());
     // 整图
     QPixmap image(static_cast<int>(m_svgImageSizeByshot.width()), static_cast<int>(m_svgImageSizeByshot.height()));
@@ -374,8 +400,10 @@ QPixmap PrototypeBorderProcess::getPixmapAddBorder(const QPixmap &pix)
 
     QPainter painter;
     painter.begin(&image);
+    qCDebug(dsrApp) << "Drawing black background.";
     // 绘制黑色背景背景
     painter.drawPixmap(static_cast<int>(m_centerPoint.x()), static_cast<int>(m_centerPoint.y()), bImage);
+    qCDebug(dsrApp) << "Drawing screenshot.";
     // 绘制截图
     painter.drawPixmap(static_cast<int>(m_svgCenterPointByshot.x()),
                        static_cast<int>(m_svgCenterPointByshot.y()),
@@ -384,6 +412,7 @@ QPixmap PrototypeBorderProcess::getPixmapAddBorder(const QPixmap &pix)
                        pix);
     // 绘制svg边框
     // m_svgRenderer.render(&painter, QRectF(QPointF(0, 0), m_svgImageSizeByshot));
+    qCDebug(dsrApp) << "Cropping shot image for prototype border.";
     cropShotImage();  // 根据保存图片格式，jpg，bmp不支持透明度，将边框透明区域填充成白色。
     painter.drawPixmap(0, 0, m_svgImage);
     painter.end();
@@ -393,15 +422,14 @@ QPixmap PrototypeBorderProcess::getPixmapAddBorder(const QPixmap &pix)
 
 void PrototypeBorderProcess::calculateBorderImageInfo(const QSize shotImageSize)
 {
-    //
-    qDebug() << __FUNCTION__ << __LINE__ << shotImageSize << m_svgImageSize << m_svgCenterSize << m_svgCenterPoint;
+    qCDebug(dsrApp) << "PrototypeBorderProcess: Calculating border image info. Shot image size:" << shotImageSize << "SVG image size:" << m_svgImageSize << "SVG center size:" << m_svgCenterSize << "SVG center point:" << m_svgCenterPoint;
     double shotImageW = shotImageSize.width();
     double shotImageH = shotImageSize.height();
     // shotImageW / shotImageH = m_svgCenterSize.width() / m_svgCenterSize.height();
 
     double shotImageRatioWH = shotImageW / shotImageH;
     double centerRatioWH = m_svgCenterSize.width() / m_svgCenterSize.height();
-    qDebug() << __FUNCTION__ << __LINE__ << shotImageRatioWH << centerRatioWH;
+    qCDebug(dsrApp) << "Shot image ratio:" << shotImageRatioWH << "Center ratio:" << centerRatioWH;
 
     double centerW = shotImageW;
     double centerH = shotImageH;
@@ -409,19 +437,21 @@ void PrototypeBorderProcess::calculateBorderImageInfo(const QSize shotImageSize)
     double offsetX = 0;
     double offsetY = 0;
     if (shotImageRatioWH > centerRatioWH) {
+        qCDebug(dsrApp) << "Shot image is wider, adjusting center height and offsetY.";
         centerH = centerW / centerRatioWH;
         offsetY = (centerH - shotImageH) / 2;
     } else {
+        qCDebug(dsrApp) << "Shot image is taller or same aspect ratio, adjusting center width and offsetX.";
         centerW = centerH * centerRatioWH;
         offsetX = (centerW - shotImageW) / 2;
     }
 
-    qDebug() << __FUNCTION__ << __LINE__ << centerW << centerH;
+    qCDebug(dsrApp) << "Calculated center dimensions:" << centerW << "x" << centerH << "OffsetX:" << offsetX << "OffsetY:" << offsetY;
     // outImageSizeW / m_svgImageSize.width() = centerW / m_svgCenterSize.width();
     double ratioCenterw = centerW / m_svgCenterSize.width();
     double ratioCenterh = centerH / m_svgCenterSize.height();
 
-    qDebug() << __FUNCTION__ << __LINE__ << ratioCenterw << ratioCenterh;
+    qCDebug(dsrApp) << "Calculated scaling ratios:" << ratioCenterw << "x" << ratioCenterh;
     double outImageSizeW = m_svgImageSize.width() * ratioCenterw;
     double outImageSizeH = m_svgImageSize.height() * ratioCenterh;
 
@@ -438,6 +468,7 @@ void PrototypeBorderProcess::calculateBorderImageInfo(const QSize shotImageSize)
 
 void PrototypeBorderProcess::cropShotImage()
 {
+    qCDebug(dsrApp) << "Cropping shot image for prototype border process.";
     QPixmap rimage(static_cast<int>(m_svgImageSizeByshot.width()), static_cast<int>(m_svgImageSizeByshot.height()));
     rimage.fill(Qt::transparent);
     QPainter painter(&rimage);
@@ -450,6 +481,7 @@ void PrototypeBorderProcess::cropShotImage()
     m_svgImage = rimage;
     int imageFormat = ConfigSettings::instance()->getValue("shot", "format").toInt();
     if (imageFormat == 0) {  // png 格式支持透明，边框像素值用 0 赋值。
+        qCDebug(dsrApp) << "Image format is PNG, returning without further processing for prototype border.";
         return;
     }
 
@@ -464,6 +496,7 @@ void PrototypeBorderProcess::cropShotImage()
             uint8_t g = svgData[index + 2];
             uint8_t b = svgData[index + 3];
             if ((a | r | g | b) != 0) {
+                qCDebug(dsrApp) << "Breaking inner loop (left side) in PrototypeBorderProcess::cropShotImage at row:" << i << ", col:" << j;
                 break;
             }
             svgData[index + 0] = svgData[index + 1] = svgData[index + 2] = svgData[index + 3] = colorReset;
@@ -476,6 +509,7 @@ void PrototypeBorderProcess::cropShotImage()
             uint8_t g = svgData[index + 2];
             uint8_t b = svgData[index + 3];
             if ((a | r | g | b) != 0) {
+                qCDebug(dsrApp) << "Breaking inner loop (right side) in PrototypeBorderProcess::cropShotImage at row:" << i << ", col:" << j;
                 break;
             }
             svgData[index + 0] = svgData[index + 1] = svgData[index + 2] = svgData[index + 3] = colorReset;
@@ -484,10 +518,12 @@ void PrototypeBorderProcess::cropShotImage()
 
     // 样机边框1，纵向处理
     if (m_borderType != BorderEffects_1) {
+        qCDebug(dsrApp) << "Border type is not BorderEffects_1, finishing cropShotImage.";
         m_svgImage = QPixmap::fromImage(svg);
         return;
     }
 
+    qCDebug(dsrApp) << "Applying vertical processing for BorderEffects_1.";
     for (int i = 0; i < m_svgImage.width(); ++i) {
         for (int j = m_svgImage.height() - 1; j >= 0; --j) {
             uint32_t index = static_cast<uint32_t>(j * m_svgImage.width() * 4 + i * 4);
@@ -496,6 +532,7 @@ void PrototypeBorderProcess::cropShotImage()
             uint8_t g = svgData[index + 2];
             uint8_t b = svgData[index + 3];
             if (((a | r | g | b) != 0) && (a != colorReset && r != colorReset && g != colorReset && b != colorReset)) {
+                qCDebug(dsrApp) << "Breaking inner loop (vertical processing) in PrototypeBorderProcess::cropShotImage at row:" << j << ", col:" << i;
                 break;
             }
             svgData[index + 0] = svgData[index + 1] = svgData[index + 2] = svgData[index + 3] = colorReset;
@@ -515,12 +552,14 @@ ShadowBorderProcess::~ShadowBorderProcess() {}
 
 void ShadowBorderProcess::initBorderInfo(const int borderConfig)
 {
+    qCDebug(dsrApp) << "Initializing shadow border info with config:" << borderConfig;
     Q_UNUSED(borderConfig);
     return;
 }
 
 QPixmap ShadowBorderProcess::getPixmapAddBorder(const QPixmap &pix)
 {
+    qCDebug(dsrApp) << "Getting pixmap with added shadow border. Input pixmap size:" << pix.size();
     // 调整阴影策略，阴影：内边框 border: 1px solid rgba(0, 0, 0, 0.20);
     //            压在图像边缘 box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.50);
 
@@ -538,14 +577,18 @@ QPixmap ShadowBorderProcess::getPixmapAddBorder(const QPixmap &pix)
 
     // 调整绘制区域
     if (xOffset < radius && yOffset < radius) {
+        qCDebug(dsrApp) << "Adjusting draw area: xOffset and yOffset are less than radius.";
         imageRect.moveTo(radius - xOffset, radius - yOffset);
     } else {
+        qCDebug(dsrApp) << "Adjusting draw area: xOffset or yOffset is greater than or equal to radius.";
         if (xOffset > radius) {
+            qCDebug(dsrApp) << "Adjusting draw area: xOffset > radius.";
             imageRect.setX(0);
             generateRect.setWidth(generateRect.width() + xOffset - radius);
         }
 
         if (yOffset > radius) {
+            qCDebug(dsrApp) << "Adjusting draw area: yOffset > radius.";
             imageRect.setY(0);
             generateRect.setHeight(generateRect.height() + yOffset - radius);
         }
@@ -559,13 +602,16 @@ QPixmap ShadowBorderProcess::getPixmapAddBorder(const QPixmap &pix)
     painter.begin(&newPixmap);
 
     painter.save();
+    qCDebug(dsrApp) << "Drawing shadow.";
     // 绘制投影 DTK提供的接口调整了绘制的透明度，不便直接使用,参考 QPixmapDropShadowFilter 实现
     drawShadow(&painter, generateRect, shadowColor, radius);
     painter.restore();
 
+    qCDebug(dsrApp) << "Drawing image.";
     // 绘制图片
     painter.drawPixmap(imageRect, pix);
 
+    qCDebug(dsrApp) << "Drawing border.";
     // 绘制边框 设置 0, 不同缩放率下均绘制1px
     painter.setPen(QPen(borderColor));
     painter.drawRect(imageRect.adjusted(0, 0, -1, -1));
@@ -579,8 +625,10 @@ QPixmap ShadowBorderProcess::getPixmapAddBorder(const QPixmap &pix)
  */
 void ShadowBorderProcess::drawShadow(QPainter *p, const QRect &rect, const QColor &color, int radius)
 {
+    qCDebug(dsrApp) << "Drawing shadow with rect:" << rect << ", color:" << color << ", radius:" << radius;
     // 绘制区域必须大于像素模糊半径
     if (rect.width() < radius * 2 || rect.height() < radius * 2) {
+        qCDebug(dsrApp) << "Draw area is too small for shadow, returning.";
         return;
     }
 
@@ -597,6 +645,7 @@ void ShadowBorderProcess::drawShadow(QPainter *p, const QRect &rect, const QColo
 
     // 在区域中绘制模糊背景
     p->save();
+    qCDebug(dsrApp) << "Applying blur image for shadow.";
     qt_blurImage(p, tmp, radius, false, true);
     p->restore();
 }

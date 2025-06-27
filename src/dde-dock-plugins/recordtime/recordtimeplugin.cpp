@@ -14,6 +14,7 @@ RecordTimePlugin::RecordTimePlugin(QObject *parent)
     : QObject(parent)
     , m_bshow(false)
 {
+    qCDebug(dsrApp) << "RecordTimePlugin constructor called.";
     m_timer = nullptr;
     m_checkTimer = nullptr;
     m_timeWidget = nullptr;
@@ -21,11 +22,13 @@ RecordTimePlugin::RecordTimePlugin(QObject *parent)
 
 const QString RecordTimePlugin::pluginName() const
 {
+    qCDebug(dsrApp) << "pluginName method called.";
     return QString("deepin-screen-recorder-plugin");
 }
 
 const QString RecordTimePlugin::pluginDisplayName() const
 {
+    qCDebug(dsrApp) << "pluginDisplayName method called.";
     return QString("deepin-screen-recorder");
 }
 
@@ -46,15 +49,18 @@ void RecordTimePlugin::init(PluginProxyInterface *proxyInter)
     } else {
         qWarning() << "dbus service registration failed!";
     }
+    qCDebug(dsrApp) << "init method finished.";
 }
 
 bool RecordTimePlugin::pluginIsDisable()
 {
+    qCDebug(dsrApp) << "pluginIsDisable method called.";
     return m_proxyInter->getValue(this, "disabled", false).toBool();
 }
 
 void RecordTimePlugin::pluginStateSwitched()
 {
+    qCDebug(dsrApp) << "pluginStateSwitched method called.";
     const bool disabledNew = !pluginIsDisable();
     qCInfo(dsrApp) << "Plugin state switched, new disabled state:" << disabledNew;
     m_proxyInter->saveValue(this, "disabled", disabledNew);
@@ -65,24 +71,29 @@ void RecordTimePlugin::pluginStateSwitched()
         qCDebug(dsrApp) << "Adding plugin item";
         m_proxyInter->itemAdded(this, pluginName());
     }
+    qCDebug(dsrApp) << "pluginStateSwitched method finished.";
 }
 
 QWidget *RecordTimePlugin::itemWidget(const QString &itemKey)
 {
+    qCDebug(dsrApp) << "itemWidget method called with itemKey:" << itemKey;
     Q_UNUSED(itemKey);
     return m_timeWidget;
 }
 
 void RecordTimePlugin::clear()
 {
+    qCDebug(dsrApp) << "clear method called.";
     qCInfo(dsrApp) << "Clearing plugin resources";
-    m_timeWidget->clearSetting();  
+    m_timeWidget->clearSetting();
 
     if (nullptr != m_timer) {
         qCDebug(dsrApp) << "Stopping and deleting timer";
         m_timer->stop();
         m_timer->deleteLater();
         m_timer = nullptr;
+    } else {
+        qCDebug(dsrApp) << "Timer is already null, no action needed.";
     }
 
     if (nullptr != m_timeWidget) {
@@ -90,13 +101,14 @@ void RecordTimePlugin::clear()
         m_timeWidget->deleteLater();
         m_timeWidget = nullptr;
     }
-    
+
     if (nullptr != m_checkTimer) {
         qCDebug(dsrApp) << "Stopping and deleting check timer";
         m_checkTimer->stop();
         m_checkTimer->deleteLater();
         m_checkTimer = nullptr;
     }
+    qCDebug(dsrApp) << "clear method finished.";
 }
 
 void RecordTimePlugin::onStart(bool resetTime)
@@ -114,17 +126,21 @@ void RecordTimePlugin::onStart(bool resetTime)
 
     if (m_timeWidget->enabled()) {
         qInfo() << "load plugin";
+        qCDebug(dsrApp) << "Time widget enabled, loading plugin.";
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
         m_bshow = true;
         m_timeWidget->start();
     }
+    qCDebug(dsrApp) << "onStart method finished.";
 }
 
 void RecordTimePlugin::onStop()
 {
+    qCDebug(dsrApp) << "onStop method called.";
     if (m_timeWidget->enabled()) {
         qInfo() << "unload plugin";
+        qCDebug(dsrApp) << "Time widget enabled, unloading plugin.";
         m_proxyInter->itemRemoved(this, pluginName());
         m_bshow = false;
         if (nullptr != m_checkTimer) {
@@ -138,6 +154,7 @@ void RecordTimePlugin::onStop()
         clear();
     }
     qInfo() << "stop record time";
+    qCDebug(dsrApp) << "onStop method finished.";
 }
 
 // 当托盘插件开始闪烁计数时才会执行
@@ -149,7 +166,9 @@ void RecordTimePlugin::onRecording()
         qCInfo(dsrApp) << "Time widget is null, reinitializing";
         onStart();
     }
+
     if (m_timeWidget->enabled() && m_bshow) {
+        qCDebug(dsrApp) << "Time widget enabled and visible.";
         m_nextCount++;
         if (1 == m_nextCount) {
             qCDebug(dsrApp) << "Starting check timer for recording status";
@@ -169,25 +188,33 @@ void RecordTimePlugin::onRecording()
             m_checkTimer->start(2000);
         }
     }
+    qCDebug(dsrApp) << "onRecording method finished.";
 }
 
 void RecordTimePlugin::onPause()
 {
+    qCDebug(dsrApp) << "onPause method called.";
     // Empty implementation to match legacy behavior
     if (m_timeWidget->enabled() && m_bshow) {
         qCInfo(dsrApp) << "Pausing record time widget";
         m_timeWidget->stop();
     }
+    qCDebug(dsrApp) << "onPause method finished.";
 }
 
 void RecordTimePlugin::refresh()
 {
+    qCDebug(dsrApp) << "refresh method called.";
     QSize size = m_timeWidget->sizeHint();
     if (size.width() > m_timeWidget->width() && 1 != position() && 3 != position() && m_bshow) {
         qInfo() << "refresh plugin";
         m_proxyInter->itemRemoved(this, pluginName());
         m_proxyInter->itemAdded(this, pluginName());
     }
+    qCDebug(dsrApp) << "refresh method finished.";
 }
 
-RecordTimePlugin::~RecordTimePlugin() {}
+RecordTimePlugin::~RecordTimePlugin()
+{
+    qCDebug(dsrApp) << "RecordTimePlugin destructor called.";
+}

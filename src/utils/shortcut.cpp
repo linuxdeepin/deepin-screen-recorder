@@ -10,12 +10,14 @@
 #include <QDebug>
 
 #include "utils.h"
+#include "utils/log.h"
 
 DCORE_USE_NAMESPACE
 
 Shortcut::Shortcut(QObject *parent)
     : QObject(parent)
 {
+    qCDebug(dsrApp) << "Initializing Shortcut object.";
     ShortcutGroup screenshotGroup;
     ShortcutGroup exitGroup;
     ShortcutGroup toolsGroup;
@@ -67,6 +69,7 @@ Shortcut::Shortcut(QObject *parent)
     setGroup.groupItems << ShortcutItem(tr("Help"), "F1") << ShortcutItem(tr("Display shortcuts"), "Ctrl+Shift+?");
 
     m_shortcutGroups << screenshotGroup << recordGroup << toolsGroup << exitGroup << sizeGroup << setGroup;
+    qCDebug(dsrApp) << "Shortcut groups populated.";
 
     // convert to json object
     QJsonArray jsonGroups;
@@ -84,17 +87,21 @@ Shortcut::Shortcut(QObject *parent)
         jsonGroups.append(jsonGroup);
     }
     m_shortcutObj.insert("shortcut", jsonGroups);
+    qCDebug(dsrApp) << "Shortcut object converted to JSON.";
 }
 QString Shortcut::toStr()
 {
+    qCDebug(dsrApp) << "Converting shortcut object to string.";
     QJsonDocument doc(m_shortcutObj);
     return doc.toJson().data();
 }
 QString Shortcut::getSysShortcuts(const QString type)
 {
+    qCDebug(dsrApp) << "Getting system shortcuts for type:" << type;
     QDBusInterface shortcuts(KEYBINDING_NAME, KEYBINDING_PATH, KEYBINDING_INTERFACE);
 
     if (!shortcuts.isValid()) {
+        qCWarning(dsrApp) << "DBus interface for shortcuts is not valid, returning default value.";
         return getDefaultValue(type);
     }
 
@@ -115,27 +122,35 @@ QString Shortcut::getSysShortcuts(const QString type)
             AccelsString.replace('>', '+');
             AccelsString.replace("Control", "Ctrl");
             AccelsString.replace("Print", "PrintScreen");
+            qCDebug(dsrApp) << "Found shortcut for type " << type << ":" << AccelsString;
             return AccelsString;
         }
     }
+    qCDebug(dsrApp) << "Shortcut not found for type " << type << ", returning default value.";
     return getDefaultValue(type);
 }
 
 QString Shortcut::getDefaultValue(const QString type)
 {
+    qCDebug(dsrApp) << "Getting default shortcut value for type:" << type;
     QString retShortcut;
     if (type == "screenshot") {
         retShortcut = "Ctrl+Alt+A";
+        qCDebug(dsrApp) << "Default shortcut for screenshot:" << retShortcut;
     } else if (type == "deepin-screen-recorder") {
         retShortcut = "Ctrl+Alt+R";
+        qCDebug(dsrApp) << "Default shortcut for deepin-screen-recorder:" << retShortcut;
     } else if (type == "screenshot-window") {
         retShortcut = "Alt+PrintScreen";
+        qCDebug(dsrApp) << "Default shortcut for screenshot-window:" << retShortcut;
     } else if (type == "screenshot-delayed") {
         retShortcut = "Ctrl+PrintScreen";
+        qCDebug(dsrApp) << "Default shortcut for screenshot-delayed:" << retShortcut;
     } else if (type == "screenshot-fullscreen") {
         retShortcut = "PrintScreen";
+        qCDebug(dsrApp) << "Default shortcut for screenshot-fullscreen:" << retShortcut;
     } else {
-        qDebug() << __FUNCTION__ << __LINE__ << "Shortcut Error !!!!!!!!!" << type;
+        qCWarning(dsrApp) << "Unknown shortcut type:" << type << ", returning empty string.";
     }
     return retShortcut;
 }

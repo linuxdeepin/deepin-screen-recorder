@@ -18,15 +18,19 @@
 
 SubToolWidget::SubToolWidget(DWidget *parent): DStackedWidget(parent)
 {
+    qCDebug(dsrApp) << "SubToolWidget constructor called.";
     initShotLable();
+    qCDebug(dsrApp) << "initShotLable finished.";
     setCurrentWidget(m_shotSubTool);
+    qCDebug(dsrApp) << "Current widget set to m_shotSubTool.";
 }
 
 // 初始化贴图工具栏按钮
 void SubToolWidget::initShotLable()
 {
-    qInfo() << __LINE__ << __FUNCTION__ << "正在初始化贴图工具栏...";
+    qCDebug(dsrApp) << "Initializing pin screenshot toolbar buttons.";
     m_shotSubTool = new DLabel(this);
+    qCDebug(dsrApp) << "m_shotSubTool DLabel created.";
     // ocr按钮
     m_ocrButton = new ToolButton(this);
 //    m_ocrButton->setCheckable(false);
@@ -43,16 +47,19 @@ void SubToolWidget::initShotLable()
 
     // 选项按钮
     m_pinOptionButton = new ToolButton(this);
+    qCDebug(dsrApp) << "Options button created.";
     m_pinOptionButton->setCheckable(false);
     m_pinOptionButton->setFlat(false);
     m_pinOptionButton->setHoverState(false);
     DPalette pa = m_pinOptionButton->palette();
     DGuiApplicationHelper::ColorType t_type = DGuiApplicationHelper::instance()->themeType();
     if (t_type == DGuiApplicationHelper::ColorType::LightType) {
+        qCDebug(dsrApp) << "Theme type is LightType, setting palette colors.";
         pa.setColor(DPalette::ButtonText, QColor(28, 28, 28, 255));
         pa.setColor(DPalette::Dark, QColor(192, 192, 192, 255));
         pa.setColor(DPalette::Light, QColor(192, 192, 192, 255));
     } else {
+        qCDebug(dsrApp) << "Theme type is DarkType, setting palette colors.";
         pa.setColor(DPalette::ButtonText, QColor(228, 228, 228, 255));
         pa.setColor(DPalette::Dark, QColor(64, 64, 64, 255));
         pa.setColor(DPalette::Light, QColor(64, 64, 64, 255));
@@ -68,12 +75,16 @@ void SubToolWidget::initShotLable()
     qCDebug(dsrApp) << "Options button initialized";
 
     m_saveGroup = new QActionGroup(this);
+    qCDebug(dsrApp) << "Save action group created.";
     QActionGroup *t_formatGroup = new QActionGroup(this);
+    qCDebug(dsrApp) << "Format action group created.";
     m_saveGroup->setExclusive(true);
     t_formatGroup->setExclusive(true);
+    qCDebug(dsrApp) << "Action groups set to exclusive.";
 
     // 选项菜单
     m_optionMenu = new DMenu(this);
+    qCDebug(dsrApp) << "Options menu created.";
     DFontSizeManager::instance()->bind(m_optionMenu, DFontSizeManager::T6);
     connect(m_optionMenu, &DMenu::aboutToShow, this, &SubToolWidget::updateOptionChecked);
     qCDebug(dsrApp) << "Options menu created";
@@ -96,42 +107,50 @@ void SubToolWidget::initShotLable()
     m_changeSaveToSpecialPath = new QAction(m_saveToSpecialPathMenu);
     m_changeSaveToSpecialPath->setCheckable(true);
     m_saveToSpecialPathMenu->addAction(m_changeSaveToSpecialPath);
+    qCDebug(dsrApp) << "Change save to special path action created and added.";
     //历史保存路径
     m_saveToSpecialPathAction = new QAction(m_saveToSpecialPathMenu);
     if (specialPath.isEmpty() || !QFileInfo::exists(specialPath)) {
-        qDebug() << "不存在指定路径";
+        qCDebug(dsrApp) << "Specified path does not exist or is empty.";
         m_changeSaveToSpecialPath->setText(tr("Set a path on save"));
     } else {
-        qDebug() << "存在指定路径: " /*<< specialPath*/;
+        qCDebug(dsrApp) << "Specified path exists.";
         initChangeSaveToSpecialAction(specialPath);
     }
     m_SavePathActions.insert(FOLDER_CHANGE, m_changeSaveToSpecialPath);
+    qCDebug(dsrApp) << "Save to special path action initialized.";
 
     QAction *formatTitleAction = new QAction(m_optionMenu);
     QAction *pngAction = new QAction(m_optionMenu);
     QAction *jpgAction = new QAction(m_optionMenu);
     QAction *bmpAction = new QAction(m_optionMenu);
+    qCDebug(dsrApp) << "Format actions created.";
 
     saveTitleAction->setDisabled(true);
     saveTitleAction->setText(tr("Save to"));
+    qCDebug(dsrApp) << "Save title action disabled.";
 
     saveToDesktopAction->setText(tr("Desktop"));
     saveToDesktopAction->setCheckable(true);
+    qCDebug(dsrApp) << "Save to desktop action configured.";
 
     saveToPictureAction->setText(tr("Pictures"));
     saveToPictureAction->setCheckable(true);
+    qCDebug(dsrApp) << "Save to picture action configured.";
 
     //saveToSpecialPath->setText(tr("Folder"));
     //saveToSpecialPath->setCheckable(true);
 
     saveToClipAction->setText(tr("Clipboard"));
     saveToClipAction->setCheckable(true);
+    qCDebug(dsrApp) << "Save to clipboard action configured.";
 
     m_saveGroup->addAction(saveToClipAction);
     m_saveGroup->addAction(saveToDesktopAction);
     m_saveGroup->addAction(saveToPictureAction);
     //m_saveGroup->addAction(saveToSpecialPath);
     m_saveGroup->addAction(m_changeSaveToSpecialPath);
+    qCDebug(dsrApp) << "Save actions added to save group.";
 
     m_SavePathActions.insert(CLIPBOARD, saveToClipAction);
     m_SavePathActions.insert(DESKTOP, saveToDesktopAction);
@@ -150,6 +169,7 @@ void SubToolWidget::initShotLable()
     t_formatGroup->addAction(pngAction);
     t_formatGroup->addAction(jpgAction);
     t_formatGroup->addAction(bmpAction);
+    qCDebug(dsrApp) << "Format actions added to format group.";
 
     m_SaveFormatActions.insert(PNG, pngAction);
     m_SaveFormatActions.insert(JPG, jpgAction);
@@ -178,34 +198,38 @@ void SubToolWidget::initShotLable()
         Settings::instance()->setIsChangeSavePath(false);
         m_saveToSpecialPathMenu->menuAction()->setChecked(false);
         if (t_act == saveToDesktopAction) {
-            qDebug() << "save to desktop";
+            qCDebug(dsrApp) << "Selected: Save to Desktop.";
             m_SaveInfo.first = DESKTOP;
         } else if (t_act == saveToPictureAction) {
-            qDebug() << "save to picture";
+            qCDebug(dsrApp) << "Selected: Save to Pictures.";
             m_SaveInfo.first = PICTURES;
         } else if (t_act == saveToClipAction) {
-            qDebug() << "save to clip";
+            qCDebug(dsrApp) << "Selected: Copy to Clipboard.";
             m_SaveInfo.first = CLIPBOARD;
         } else if (t_act == m_changeSaveToSpecialPath) {
-            qDebug() << "设置或更改保存的指定位置";
+            qCDebug(dsrApp) << "Selected: Set or change specified save location.";
             m_SaveInfo.first = FOLDER_CHANGE;
             m_saveToSpecialPathMenu->menuAction()->setChecked(true);
             Settings::instance()->setIsChangeSavePath(true);
         } else {
-            qDebug() << "保存指定位置";
+            qCDebug(dsrApp) << "Selected: Save to specified location (FOLDER).";
             m_SaveInfo.first = FOLDER;
             m_saveToSpecialPathMenu->menuAction()->setChecked(true);
         }
         Settings::instance()->setSaveOption(m_SaveInfo);
+        qCDebug(dsrApp) << "Save option set in settings.";
     });
 
     connect(t_formatGroup, QOverload<QAction *>::of(&QActionGroup::triggered),
     [ = ](QAction * t_act) {
         if (t_act == pngAction) {
+            qCDebug(dsrApp) << "Selected format: PNG.";
             m_SaveInfo.second = PNG;
         } else if (t_act == jpgAction) {
+            qCDebug(dsrApp) << "Selected format: JPG.";
             m_SaveInfo.second = JPG;
         } else if (t_act == bmpAction) {
+            qCDebug(dsrApp) << "Selected format: BMP.";
             m_SaveInfo.second = BMP;
         }
         Settings::instance()->setSaveOption(m_SaveInfo);
@@ -304,6 +328,7 @@ void SubToolWidget::updateOptionChecked()
             qCDebug(dsrApp) << "Change save path flag is set, switching to folder change mode";
         }
     } else {
+        qCDebug(dsrApp) << "Save option is not FOLDER_CHANGE, unchecking special path menu action.";
         m_saveToSpecialPathMenu->menuAction()->setChecked(false);
     }
 

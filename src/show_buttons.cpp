@@ -5,7 +5,7 @@
 
 #include "show_buttons.h"
 #include "keydefine.h"
-#include <QDebug>
+#include "utils/log.h"
 
 
 const ShowButtons::KeyDescription ShowButtons::keyDescriptions[] = {
@@ -137,89 +137,122 @@ const ShowButtons::KeyDescription ShowButtons::keyDescriptions[] = {
 
 ShowButtons::ShowButtons(DWidget *parent) : DWidget(parent)
 {
+    qCDebug(dsrApp) << "ShowButtons constructor called.";
 }
 
 void ShowButtons::showContentButtons(const int key)
 {
+    qCDebug(dsrApp) << "showContentButtons() called for Wayland event key:" << key << ".";
     QString t_keyCode = "";
     t_keyCode = getKeyCodeFromEventWayland(key);
+    qCDebug(dsrApp) << "Key code from Wayland event:" << t_keyCode << ".";
 
     if (t_keyCode != "") {
         if (m_keyCodeVec.contains(t_keyCode)) {
+            qCDebug(dsrApp) << "Key code" << t_keyCode << "already exists in vector, skipping.";
             return;
         } else {
             m_keyCodeVec.append(t_keyCode);
-            qDebug() << t_keyCode << " key press";
+            qCDebug(dsrApp) << t_keyCode << " key press.";
             emit keyShowSignal(t_keyCode);
+            qCDebug(dsrApp) << "Key show signal emitted for:" << t_keyCode << ".";
         }
+    } else {
+        qCDebug(dsrApp) << "No valid key code found for Wayland event key:" << key << ".";
     }
-
 }
 
 void ShowButtons::releaseContentButtons(const int key)
 {
+    qCDebug(dsrApp) << "releaseContentButtons() called for Wayland event key:" << key << ".";
     QString t_keyCode = "";
     t_keyCode = getKeyCodeFromEventWayland(key);
+    qCDebug(dsrApp) << "Key code from Wayland event:" << t_keyCode << ".";
 
     if (t_keyCode != "") {
         if (m_keyCodeVec.contains(t_keyCode)) {
             m_keyCodeVec.removeOne(t_keyCode);
+            qCDebug(dsrApp) << "Key code" << t_keyCode << "removed from vector.";
             return;
+        } else {
+            qCDebug(dsrApp) << "Key code" << t_keyCode << "not found in vector during release.";
         }
+    } else {
+        qCDebug(dsrApp) << "No valid key code found for Wayland event key:" << key << ".";
     }
 }
 
 void ShowButtons::showContentButtons(unsigned char keyCode)
 {
+    qCDebug(dsrApp) << "showContentButtons() called for X11 event key code:" << static_cast<int>(keyCode) << ".";
     QString t_keyCode = "";
     t_keyCode = getKeyCodeFromEvent(keyCode);
+    qCDebug(dsrApp) << "Key code from X11 event:" << t_keyCode << ".";
 
     if (t_keyCode != "") {
         if (m_keyCodeVec.contains(t_keyCode)) {
+            qCDebug(dsrApp) << "Key code" << t_keyCode << "already exists in vector, skipping.";
             return;
         }
 
         else {
             m_keyCodeVec.append(t_keyCode);
-            qDebug() << t_keyCode << " key press";
+            qCDebug(dsrApp) << t_keyCode << " key press.";
             emit keyShowSignal(t_keyCode);
+            qCDebug(dsrApp) << "Key show signal emitted for:" << t_keyCode << ".";
         }
+    } else {
+        qCDebug(dsrApp) << "No valid key code found for X11 event key code:" << static_cast<int>(keyCode) << ".";
     }
 }
 
 void ShowButtons::releaseContentButtons(unsigned char keyCode)
 {
+    qCDebug(dsrApp) << "releaseContentButtons() called for X11 event key code:" << static_cast<int>(keyCode) << ".";
     QString t_keyCode = "";
     t_keyCode = getKeyCodeFromEvent(keyCode);
+    qCDebug(dsrApp) << "Key code from X11 event:" << t_keyCode << ".";
 
     if (t_keyCode != "") {
         if (m_keyCodeVec.contains(t_keyCode)) {
             m_keyCodeVec.removeOne(t_keyCode);
+            qCDebug(dsrApp) << "Key code" << t_keyCode << "removed from vector.";
             return;
         }
+        else {
+            qCDebug(dsrApp) << "Key code" << t_keyCode << "not found in vector during release.";
+        }
+    } else {
+        qCDebug(dsrApp) << "No valid key code found for X11 event key code:" << static_cast<int>(keyCode) << ".";
     }
 }
 
 QString ShowButtons::getKeyCodeFromEvent(unsigned char keyCode)
 {
+    qCDebug(dsrApp) << "getKeyCodeFromEvent() called for X11 key code:" << static_cast<int>(keyCode) << ".";
     QString t_keyCode = "";
     for (unsigned long var = 0; var < sizeof(ShowButtons::keyDescriptions) / sizeof(ShowButtons::keyDescriptions[0]); ++var) {
         if(ShowButtons::keyDescriptions[var].x11Key == keyCode) {
             t_keyCode = ShowButtons::keyDescriptions[var].text;
+            qCDebug(dsrApp) << "Found key code:" << t_keyCode << "for X11 key code:" << static_cast<int>(keyCode) << ".";
             break;
         }
     }
+    qCDebug(dsrApp) << "Returning key code:" << t_keyCode << ".";
     return t_keyCode;
 }
 
 QString ShowButtons::getKeyCodeFromEventWayland(const int keyCode)
 {
+    qCDebug(dsrApp) << "getKeyCodeFromEventWayland() called for Wayland key code:" << keyCode << ".";
     QString t_keyCode = "";
     for (unsigned long var = 0; var < sizeof(ShowButtons::keyDescriptions) / sizeof(ShowButtons::keyDescriptions[0]); ++var) {
         if(ShowButtons::keyDescriptions[var].x11Key == keyCode) {
             t_keyCode = ShowButtons::keyDescriptions[var].text;
+            qCDebug(dsrApp) << "Found key code:" << t_keyCode << "for Wayland key code:" << keyCode << ".";
             break;
         }
     }
+    qCDebug(dsrApp) << "Returning key code:" << t_keyCode << ".";
     return t_keyCode;
 }

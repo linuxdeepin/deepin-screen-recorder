@@ -5,6 +5,7 @@
 
 #include "majorimageprocessingthread.h"
 #include "../utils.h"
+#include "../utils/log.h"
 
 #include <QFile>
 #include <QDate>
@@ -13,53 +14,61 @@
 #include <QTimer>
 MajorImageProcessingThread::MajorImageProcessingThread()
 {
+    qCDebug(dsrApp) << "Entry: MajorImageProcessingThread::MajorImageProcessingThread";
     init();
+    qCDebug(dsrApp) << "Exit: MajorImageProcessingThread::MajorImageProcessingThread";
 }
 
 void MajorImageProcessingThread::stop()
 {
+    qCDebug(dsrApp) << "Entry: MajorImageProcessingThread::stop";
     //只有线程还是运行状态时才会退出
     if (m_stopped) {
-        qDebug() << "正在停止传递摄像头画面...";
+        qCDebug(dsrApp) << "正在停止传递摄像头画面...";
         m_stopped = 0;
         QEventLoop loop;
         connect(this, SIGNAL(isEnd()), &loop, SLOT(quit()));
         loop.exec();
-        qDebug() << "已停止采集摄像头画面";
+        qCDebug(dsrApp) << "已停止采集摄像头画面";
     }
+    qCDebug(dsrApp) << "Exit: MajorImageProcessingThread::stop";
 }
 
 void MajorImageProcessingThread::init()
 {
+    qCDebug(dsrApp) << "Entry: MajorImageProcessingThread::init";
     m_stopped = 0;
     m_frame = nullptr;
     m_videoDevice = nullptr;
+    qCDebug(dsrApp) << "Exit: MajorImageProcessingThread::init";
 }
 
 void MajorImageProcessingThread::setCameraDevice(v4l2_dev_t *camDevice)
 {
+    qCDebug(dsrApp) << "Entry: MajorImageProcessingThread::setCameraDevice - Camera device:" << camDevice;
     m_videoDevice = camDevice;
+    qCDebug(dsrApp) << "Exit: MajorImageProcessingThread::setCameraDevice";
 }
 
 void MajorImageProcessingThread::run()
 {
-    qDebug() << "正在启动采集摄像头画面线程...";
+    qCDebug(dsrApp) << "正在启动采集摄像头画面线程...";
     m_stopped = 1;
     v4l2_dev_t *vd =  get_v4l2_device_handler();
     if (vd == nullptr) {
         qWarning() << "启动采集摄像头画面线程失败！摄像头设备不存在！";
         return;
     }
-    qDebug() << "已启动采集摄像头画面线程，开始采集画面";
+    qCDebug(dsrApp) << "已启动采集摄像头画面线程，开始采集画面";
     v4l2core_start_stream(vd);
     while (m_stopped) {
-//        qDebug() << __FUNCTION__ << __LINE__ << "正在采集摄像头(" << vd->videodevice << ")画面 >>> 1";
+//        qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "正在采集摄像头(" << vd->videodevice << ")画面 >>> 1";
         if (vd) {
             m_frame = v4l2core_get_decoded_frame(vd);
         } else {
             continue;
         }
-//        qDebug() << __FUNCTION__ << __LINE__ << "正在采集摄像头(" << vd->videodevice << ")画面 >>> 2";
+//        qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "正在采集摄像头(" << vd->videodevice << ")画面 >>> 2";
         if (m_frame == nullptr) {
             continue;
         }
@@ -113,19 +122,19 @@ void MajorImageProcessingThread::run()
             rgbPtr = nullptr;
         }
 
-//        qDebug() << __FUNCTION__ << __LINE__ << "正在释放当前画面帧 >>> 3";
         if (vd != nullptr)
             v4l2core_release_frame(vd, m_frame);
-//        qDebug() << __FUNCTION__ << __LINE__ << "已释放释放当前画面帧 >>> 3";
+//        qCDebug(dsrApp) << __FUNCTION__ << __LINE__ << "已释放释放当前画面帧 >>> 3";
     }
     v4l2core_stop_stream(vd);
     close_v4l2_device_handler();
-    qDebug() << "已停止摄像头画面采集线程";
+    qCDebug(dsrApp) << "已停止摄像头画面采集线程";
     emit isEnd();
+    qCDebug(dsrApp) << "Exit: MajorImageProcessingThread::run";
 }
 
 MajorImageProcessingThread::~MajorImageProcessingThread()
 {
     stop();
-    qDebug() << __FUNCTION__;
+    qCDebug(dsrApp) << "Exit: MajorImageProcessingThread::~MajorImageProcessingThread";
 }

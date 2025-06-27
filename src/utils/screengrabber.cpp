@@ -6,6 +6,7 @@
 #include "screengrabber.h"
 
 #include "../utils.h"
+#include "../utils/log.h"
 
 #include <QDBusInterface>
 #include <QDBusReply>
@@ -17,6 +18,7 @@
 
 ScreenGrabber::ScreenGrabber(QObject *parent) : QObject(parent)
 {
+    qCDebug(dsrApp) << "ScreenGrabber initialized.";
 }
 
 /**
@@ -32,10 +34,13 @@ ScreenGrabber::ScreenGrabber(QObject *parent) : QObject(parent)
  */
 QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qreal devicePixelRatio)
 {
+    qCDebug(dsrApp) << "Grabbing entire desktop for rect:" << rect << ", devicePixelRatio:" << devicePixelRatio;
     ok = true;
     if (Utils::isWaylandMode) {
+        qCDebug(dsrApp) << "Wayland mode detected, using Wayland screenshot.";
         return grabWaylandScreenshot(ok, rect, devicePixelRatio);
     }
+    qCDebug(dsrApp) << "X11 mode detected, using X11 screenshot.";
     return grabX11Screenshot(ok, rect);
 }
 
@@ -51,6 +56,7 @@ QPixmap ScreenGrabber::grabEntireDesktop(bool &ok, const QRect &rect, const qrea
  */
 QPixmap ScreenGrabber::grabWaylandScreenshot(bool &ok, const QRect &rect, const qreal devicePixelRatio)
 {
+    qCDebug(dsrApp) << "Grabbing Wayland screenshot for rect:" << rect;
     const QRect recordRect(
         static_cast<int>(rect.x() * devicePixelRatio),
         static_cast<int>(rect.y() * devicePixelRatio),
@@ -68,10 +74,12 @@ QPixmap ScreenGrabber::grabWaylandScreenshot(bool &ok, const QRect &rect, const 
     QPixmap fullScreenshot(reply.value());
     
     if (!fullScreenshot.isNull()) {
+        qCDebug(dsrApp) << "Full screenshot successful, removing temp file and copying region.";
         QFile::remove(reply.value());
         return fullScreenshot.copy(recordRect);
     }
     
+    qCWarning(dsrApp) << "Full screenshot failed, returning empty pixmap.";
     ok = false;
     return {};
 }
@@ -91,16 +99,20 @@ QPixmap ScreenGrabber::grabWaylandScreenshot(bool &ok, const QRect &rect, const 
  */
 QPixmap ScreenGrabber::grabX11Screenshot(bool &ok, const QRect &rect)
 {
+    qCDebug(dsrApp) << "Grabbing X11 screenshot for rect:" << rect;
     const QList<QScreen*> intersectingScreens = findIntersectingScreens(rect);
     
     if (intersectingScreens.isEmpty()) {
+        qCDebug(dsrApp) << "No intersecting screens found, falling back to primary screen.";
         return grabPrimaryScreenFallback(ok, rect);
     }
     
     if (intersectingScreens.size() == 1) {
+        qCDebug(dsrApp) << "One intersecting screen found, grabbing single screen.";
         return grabSingleScreen(ok, rect, intersectingScreens.first());
     }
     
+    qCDebug(dsrApp) << "Multiple intersecting screens found, grabbing multiple screens.";
     return grabMultipleScreens(ok, rect, intersectingScreens);
 }
 
@@ -115,15 +127,18 @@ QPixmap ScreenGrabber::grabX11Screenshot(bool &ok, const QRect &rect)
  */
 QList<QScreen*> ScreenGrabber::findIntersectingScreens(const QRect &rect)
 {
+    qCDebug(dsrApp) << "Finding intersecting screens for rect:" << rect;
     QList<QScreen*> result;
     const QList<QScreen*> allScreens = QGuiApplication::screens();
     
     for (QScreen *screen : allScreens) {
         if (screen && screen->geometry().intersects(rect)) {
+            qCDebug(dsrApp) << "Screen intersects:" << screen->name();
             result.append(screen);
         }
     }
     
+    qCDebug(dsrApp) << "Found" << result.size() << "intersecting screens.";
     return result;
 }
 
@@ -140,12 +155,15 @@ QList<QScreen*> ScreenGrabber::findIntersectingScreens(const QRect &rect)
  */
 QPixmap ScreenGrabber::grabPrimaryScreenFallback(bool &ok, const QRect &rect)
 {
+    qCDebug(dsrApp) << "Performing primary screen fallback grab for rect:" << rect;
     QScreen *primaryScreen = QGuiApplication::primaryScreen();
     if (!primaryScreen) {
+        qCWarning(dsrApp) << "Primary screen not found, fallback failed.";
         ok = false;
         return {};
     }
     
+    qCDebug(dsrApp) << "Grabbing window from primary screen.";
     return primaryScreen->grabWindow(0, rect.x(), rect.y(), rect.width(), rect.height());
 }
 
@@ -161,6 +179,7 @@ QPixmap ScreenGrabber::grabPrimaryScreenFallback(bool &ok, const QRect &rect)
  */
 QPixmap ScreenGrabber::grabSingleScreen(bool &ok, const QRect &rect, QScreen *screen)
 {
+    qCDebug(dsrApp) << "Grabbing single screen:" << screen->name() << " for rect:" << rect;
     Q_UNUSED(ok)
     
     const QRect screenGeometry = screen->geometry();
@@ -193,6 +212,7 @@ QPixmap ScreenGrabber::grabSingleScreen(bool &ok, const QRect &rect, QScreen *sc
  */
 QPixmap ScreenGrabber::grabMultipleScreens(bool &ok, const QRect &rect, const QList<QScreen*> &screens)
 {
+    qCDebug(dsrApp) << "Grabbing multiple screens for rect:" << rect << ", total screens:" << screens.size();
     Q_UNUSED(ok)
     
     QPixmap result(rect.size());
@@ -203,11 +223,13 @@ QPixmap ScreenGrabber::grabMultipleScreens(bool &ok, const QRect &rect, const QL
     for (QScreen *screen : screens) {
         const QRect intersection = rect.intersected(screen->geometry());
         if (intersection.isEmpty()) {
+            qCDebug(dsrApp) << "Intersection empty for screen:" << screen->name();
             continue;
         }
         
         const QPixmap screenFragment = grabScreenFragment(screen, intersection);
         if (!screenFragment.isNull()) {
+            qCDebug(dsrApp) << "Drawing fragment from screen:" << screen->name() << " at position: (" << (intersection.x() - rect.x()) << "," << (intersection.y() - rect.y()) << ").";
             const QPoint destPos(
                 intersection.x() - rect.x(),
                 intersection.y() - rect.y()
@@ -216,6 +238,7 @@ QPixmap ScreenGrabber::grabMultipleScreens(bool &ok, const QRect &rect, const QL
         }
     }
     
+    qCDebug(dsrApp) << "Finished composing multiple screen shot.";
     return result;
 }
 
@@ -230,6 +253,7 @@ QPixmap ScreenGrabber::grabMultipleScreens(bool &ok, const QRect &rect, const QL
  */
 QPixmap ScreenGrabber::grabScreenFragment(QScreen *screen, const QRect &intersection)
 {
+    qCDebug(dsrApp) << "Grabbing fragment from screen:" << screen->name() << " for intersection:" << intersection;
     const QRect screenGeometry = screen->geometry();
     const QRect relativeRect(
         intersection.x() - screenGeometry.x(),

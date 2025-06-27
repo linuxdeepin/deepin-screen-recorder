@@ -4,13 +4,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "camera_process.h"
+#include "utils/log.h"
 
 CameraProcess::CameraProcess(QObject *parent) : QObject(parent)
 {
+    qCDebug(dsrApp) << "Entering CameraProcess constructor.";
     camera = new QCamera; //摄像头
+    qCDebug(dsrApp) << "QCamera instance created.";
     viewfinder = new QCameraViewfinder();
+    qCDebug(dsrApp) << "QCameraViewfinder instance created.";
     imageCapture = new QCameraImageCapture(camera); //截图部件
+    qCDebug(dsrApp) << "QCameraImageCapture instance created.";
     camera->setViewfinder(viewfinder);
+    qCDebug(dsrApp) << "Viewfinder set for camera.";
 
 //    QObject::connect(ui->pushButton,SIGNAL(clicked()),this,SLOT(ShowTheCapture()));
 //    QObject::connect(ui->SaveButton,SIGNAL(clicked()),this,SLOT(SavePicture()));
@@ -20,15 +26,17 @@ CameraProcess::CameraProcess(QObject *parent) : QObject(parent)
 //    camera->setViewfinder(viewfinder);
 //    camera->start(); //启动摄像头
 
+    qCDebug(dsrApp) << "Exiting CameraProcess constructor.";
 }
 
 CameraProcess::~CameraProcess()
 {
-
+    qCDebug(dsrApp) << "Entering CameraProcess destructor.";
 }
 
 void CameraProcess::ShowTheCapture()
 {
+    qCDebug(dsrApp) << "Entering CameraProcess::ShowTheCapture.";
     //展示摄像头采集画面
     imageCapture->capture();
 }

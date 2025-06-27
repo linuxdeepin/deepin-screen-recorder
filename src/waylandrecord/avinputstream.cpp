@@ -17,6 +17,7 @@
 CAVInputStream::CAVInputStream(WaylandIntegration::WaylandIntegrationPrivate *context):
     m_context(context)
 {
+    qCDebug(dsrApp) << "CAVInputStream initialized.";
     m_bMix = false;
     setbWriteAmix(true);
     m_hMicAudioThread = 0;
@@ -45,6 +46,7 @@ CAVInputStream::CAVInputStream(WaylandIntegration::WaylandIntegrationPrivate *co
 
 CAVInputStream::~CAVInputStream(void)
 {
+    qCDebug(dsrApp) << "CAVInputStream destructor called.";
     printf("Desctruction Input!\n");
     setbWriteAmix(false);
     setbRunThread(false);
@@ -53,11 +55,13 @@ CAVInputStream::~CAVInputStream(void)
 void CAVInputStream::setMicAudioRecord(bool bRecord)
 {
     m_bMicAudio = bRecord;
+    qCDebug(dsrApp) << "Microphone audio record set to:" << bRecord;
 }
 
 void CAVInputStream::setSysAudioRecord(bool bRecord)
 {
     m_bSysAudio = bRecord;
+    qCDebug(dsrApp) << "System audio record set to:" << bRecord;
 }
 
 bool CAVInputStream::openInputStream()
@@ -84,6 +88,7 @@ bool CAVInputStream::openInputStream()
         qCInfo(dsrApp) << "Both system and microphone audio streams opened successfully, enabling audio mixing";
         m_bMix = true;
     }
+    qCDebug(dsrApp) << "Input streams opened successfully.";
     return true;
 }
 
@@ -95,41 +100,44 @@ bool CAVInputStream::openMicStream()
     m_pAudioInputFormat = avlibInterface::m_av_find_input_format("pulse"); //alsa
     assert(m_pAudioInputFormat != nullptr);
     if (m_pAudioInputFormat == nullptr) {
-        qWarning() << "did not find this audio input devices\n";
+        qCWarning(dsrApp) << "Failed to find audio input format (pulse).";
     }
     if (m_bMicAudio) {
         if (m_micDeviceName.isEmpty()) {
-            qWarning() << "Error: The mic audio device name is empty!";
+            qCWarning(dsrApp) << "Microphone device name is empty.";
             return false;
         }
         //Set own audio device's name
         if (avlibInterface::m_avformat_open_input(&m_pMicAudioFormatContext, m_micDeviceName.toLatin1(), m_pAudioInputFormat, &device_param) != 0) {
-            qWarning() << "Couldn't open input audio stream.（无法打开输入流）\n";
+            qCWarning(dsrApp) << "Failed to open input audio stream for mic:" << m_micDeviceName;
             return false;
         }
         qInfo() << "mic device's name is:" << m_micDeviceName;
+        qCDebug(dsrApp) << "Microphone device opened:" << m_micDeviceName;
         //input audio initialize
         if (avlibInterface::m_avformat_find_stream_info(m_pMicAudioFormatContext, nullptr) < 0) {
-            qWarning() << "Couldn't find audio stream information.（无法获取流信息）\n";
+            qCWarning(dsrApp) << "Failed to find stream information for mic audio context.";
             return false;
         }
         m_micAudioindex = -1;
         for (int i = 0; i < static_cast<int>(m_pMicAudioFormatContext->nb_streams); i++) {
             if (m_pMicAudioFormatContext->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO) {
                 m_micAudioindex = i;
+                qCDebug(dsrApp) << "Found microphone audio stream at index:" << i;
                 break;
             }
         }
         if (m_micAudioindex == -1) {
-            qWarning() << "Couldn't find a audio stream.（没有找到音频流）\n";
+            qCWarning(dsrApp) << "No audio stream found for microphone.";
             return false;
         }
         if (avlibInterface::m_avcodec_open2(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec, avlibInterface::m_avcodec_find_decoder(m_pMicAudioFormatContext->streams[m_micAudioindex]->codec->codec_id), nullptr) < 0) {
-            qWarning() << "Could not open audio codec.（无法打开解码器）\n";
+            qCWarning(dsrApp) << "Failed to open audio codec for microphone.";
             return false;
         }
         /* print Video device information*/
         avlibInterface::m_av_dump_format(m_pMicAudioFormatContext, 0, "default", 0);
+        qCDebug(dsrApp) << "Microphone stream opened successfully.";
         return true;
     } else {
         qCDebug(dsrApp) << "Microphone recording not requested, skipping";
@@ -149,12 +157,12 @@ bool CAVInputStream::openSysStream()
     }
     if (m_bSysAudio) {
         if (avlibInterface::m_avformat_open_input(&m_pSysAudioFormatContext, m_sysDeviceName.toLatin1(), m_pAudioCardInputFormat, &device_param) != 0) {
-            qWarning() << "Couldn't open input audio stream.（无法打开输入流）\n";
+            qCWarning(dsrApp) << "Failed to open input audio stream for system audio:" << m_sysDeviceName;
             return false;
         }
-        qInfo() << "sys device's name is:" << m_sysDeviceName;
+        qCDebug(dsrApp) << "System audio device opened:" << m_sysDeviceName;
         if (avlibInterface::m_avformat_find_stream_info(m_pSysAudioFormatContext, nullptr) < 0) {
-            qWarning() << "Couldn't find audio stream information.（无法获取流信息）";
+            qCWarning(dsrApp) << "Failed to find stream information for system audio context.";
             return false;
         }
         fflush(stdout);
@@ -162,16 +170,17 @@ bool CAVInputStream::openSysStream()
         for (int i = 0; i < static_cast<int>(m_pSysAudioFormatContext->nb_streams); i++) {
             if (m_pSysAudioFormatContext->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO) {
                 m_sysAudioindex = i;
+                qCDebug(dsrApp) << "Found system audio stream at index:" << i;
                 break;
             }
         }
         if (m_sysAudioindex == -1) {
-            qWarning() << "Couldn't find a audio stream.（没有找到音频流）\n";
+            qCWarning(dsrApp) << "No audio stream found for system audio.";
             return false;
         }
         ///Caution, m_pAudFmtCtx->streams[m_audioindex]->codec->codec_id =14, AV_CODEC_ID_RAWVIDEO
         if (avlibInterface::m_avcodec_open2(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec, avlibInterface::m_avcodec_find_decoder(m_pSysAudioFormatContext->streams[m_sysAudioindex]->codec->codec_id), nullptr) < 0) {
-            qWarning() << "Could not open audio codec.（无法打开解码器）\n";
+            qCWarning(dsrApp) << "Failed to open audio codec for system audio.";
             return false;
         }
         /* print Video device information*/
@@ -188,11 +197,13 @@ bool CAVInputStream::audioCapture()
 {
     qCInfo(dsrApp) << "Starting audio capture";
     m_start_time = avlibInterface::m_av_gettime();
+    qCDebug(dsrApp) << "Audio capture start time set:" << m_start_time;
     if (m_bMix) {
         qCDebug(dsrApp) << "Creating audio mixing threads";
         pthread_create(&m_hMicAudioThread, nullptr, captureMicToMixAudioThreadFunc, static_cast<void *>(this));
         pthread_create(&m_hSysAudioThread, nullptr, captureSysToMixAudioThreadFunc, static_cast<void *>(this));
         pthread_create(&m_hMixThread, nullptr, writeMixThreadFunc, static_cast<void *>(this));
+        qCDebug(dsrApp) << "Audio mixing threads created.";
     } else {
         if (m_bMicAudio) {
             qCDebug(dsrApp) << "Creating microphone audio capture thread";
@@ -309,6 +320,7 @@ void CAVInputStream::setbWriteAmix(bool bWriteMix)
 {
     QMutexLocker locker(&m_bWriteMixMutex);
     m_bWriteMix = bWriteMix;
+    qCDebug(dsrApp) << "Set write amix flag to:" << bWriteMix;
 }
 
 bool CAVInputStream::bRunThread()
@@ -321,6 +333,7 @@ void CAVInputStream::setbRunThread(bool bRunThread)
 {
     QMutexLocker locker(&m_bRunThreadMutex);
     m_bRunThread = bRunThread;
+    qCDebug(dsrApp) << "Set run thread flag to:" << bRunThread;
 }
 
 void  CAVInputStream::onsFinisheStream()

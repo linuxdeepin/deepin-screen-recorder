@@ -10,6 +10,7 @@
  */
 
 #include "utils_interface.h"
+#include "utils/log.h"
 
 /*
  * Implementation of interface class utils_interface
@@ -18,9 +19,11 @@
 utils_interface::utils_interface(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent)
     : QDBusAbstractInterface(service, path, staticInterfaceName(), connection, parent)
 {
+    qCDebug(dsrApp) << "utils_interface initialized for service:" << service << ", path:" << path;
 }
 
 utils_interface::~utils_interface()
 {
+    qCDebug(dsrApp) << "utils_interface destructor called.";
 }
 

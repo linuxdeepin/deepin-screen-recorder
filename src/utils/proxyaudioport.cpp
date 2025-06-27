@@ -1,4 +1,5 @@
 #include "proxyaudioport.h"
+#include "utils/log.h"
 
 #include <QDBusMetaType>
 
@@ -6,6 +7,7 @@
 
 void registerAudioPortMetaType()
 {
+    qCDebug(dsrApp) << "Registering AudioPort metatype.";
     qRegisterMetaType<AudioPort>("AudioPort");
     qDBusRegisterMetaType<AudioPort>();
 }

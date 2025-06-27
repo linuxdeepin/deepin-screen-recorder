@@ -10,6 +10,7 @@
  */
 
 #include "recordiconwidget_interface.h"
+#include "../../utils/log.h"
 
 // 添加序列化实现
 QDBusArgument &operator<<(QDBusArgument &argument, const DockRect &rect)
@@ -35,10 +36,13 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, DockRect &rect)
 recordiconwidget_interface::recordiconwidget_interface(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent)
     : QDBusAbstractInterface(service, path, staticInterfaceName(), connection, parent)
 {
+    qCDebug(dsrApp) << "recordiconwidget_interface constructor called for service:" << service << ", path:" << path;
     qDBusRegisterMetaType<DockRect>();
+    qCDebug(dsrApp) << "DockRect meta type registered.";
 }
 
 recordiconwidget_interface::~recordiconwidget_interface()
 {
+    qCDebug(dsrApp) << "recordiconwidget_interface destructor called.";
 }
 

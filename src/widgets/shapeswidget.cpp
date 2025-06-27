@@ -478,6 +478,7 @@ bool ShapesWidget::clickedOnRect(FourPoints rectPoints, QPointF pos, bool isBlur
 //圆形是否被点击
 bool ShapesWidget::clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isBlurMosaic)
 {
+    qCDebug(dsrApp) << "clickedOnEllipse called with pos:" << pos << ", isBlurMosaic:" << isBlurMosaic;
     m_isSelected = false;
     m_isResize = false;
     m_isRotated = false;
@@ -485,6 +486,7 @@ bool ShapesWidget::clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isB
     m_pressedPoint = pos;
     FourPoints otherFPoints = getAnotherFPoints(mainPoints);
     if (pointClickIn(mainPoints[0], pos)) {
+        qCDebug(dsrApp) << "Clicked on mainPoints[0] (TopLeft).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = First;
@@ -492,6 +494,7 @@ bool ShapesWidget::clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isB
         m_pressedPoint = pos;
         return true;
     } else if (pointClickIn(mainPoints[1], pos)) {
+        qCDebug(dsrApp) << "Clicked on mainPoints[1] (BottomLeft).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = Second;
@@ -499,6 +502,7 @@ bool ShapesWidget::clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isB
         m_pressedPoint = pos;
         return true;
     } else if (pointClickIn(mainPoints[2], pos)) {
+        qCDebug(dsrApp) << "Clicked on mainPoints[2] (TopRight).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = Third;
@@ -506,6 +510,7 @@ bool ShapesWidget::clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isB
         m_pressedPoint = pos;
         return true;
     } else if (pointClickIn(mainPoints[3], pos)) {
+        qCDebug(dsrApp) << "Clicked on mainPoints[3] (BottomRight).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = Fourth;
@@ -513,6 +518,7 @@ bool ShapesWidget::clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isB
         m_pressedPoint = pos;
         return true;
     }  else if (pointClickIn(otherFPoints[0], pos)) {
+        qCDebug(dsrApp) << "Clicked on otherFPoints[0] (Left).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = Fifth;
@@ -520,6 +526,7 @@ bool ShapesWidget::clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isB
         m_pressedPoint = pos;
         return true;
     } else if (pointClickIn(otherFPoints[1], pos)) {
+        qCDebug(dsrApp) << "Clicked on otherFPoints[1] (Top).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = Sixth;
@@ -527,6 +534,7 @@ bool ShapesWidget::clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isB
         m_pressedPoint = pos;
         return true;
     } else if (pointClickIn(otherFPoints[2], pos)) {
+        qCDebug(dsrApp) << "Clicked on otherFPoints[2] (Right).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = Seventh;
@@ -534,6 +542,7 @@ bool ShapesWidget::clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isB
         m_pressedPoint = pos;
         return true;
     } else if (pointClickIn(otherFPoints[3], pos)) {
+        qCDebug(dsrApp) << "Clicked on otherFPoints[3] (Bottom).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = Eighth;
@@ -541,6 +550,7 @@ bool ShapesWidget::clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isB
         m_pressedPoint = pos;
         return true;
     } else if (rotateOnPoint(mainPoints, pos)) {
+        qCDebug(dsrApp) << "Clicked on rotate point.";
         m_isSelected = true;
         m_isRotated = true;
         m_isResize = false;
@@ -548,6 +558,7 @@ bool ShapesWidget::clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isB
         m_pressedPoint = pos;
         return true;
     }  else if (pointOnEllipse(mainPoints, pos)) {
+        qCDebug(dsrApp) << "Clicked on ellipse boundary.";
         m_isSelected = true;
         m_isResize = false;
 
@@ -555,12 +566,14 @@ bool ShapesWidget::clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isB
         m_pressedPoint = pos;
         return true;
     } else if (isBlurMosaic && pointInRect(mainPoints, pos)) {
+        qCDebug(dsrApp) << "Clicked inside blur/mosaic ellipse area.";
         m_isSelected = true;
         m_isResize = false;
         m_resizeDirection = Moving;
         m_pressedPoint = pos;
         return true;
     } else {
+        qCDebug(dsrApp) << "No click detected on ellipse.";
         m_isSelected = false;
         m_isResize = false;
         m_isRotated = false;
@@ -572,8 +585,11 @@ bool ShapesWidget::clickedOnEllipse(FourPoints mainPoints, QPointF pos, bool isB
 //箭头是否被点击
 bool ShapesWidget::clickedOnArrow(QList<QPointF> points, QPointF pos)
 {
-    if (points.length() != 2)
+    qCDebug(dsrApp) << "clickedOnArrow called with pos:" << pos;
+    if (points.length() != 2) {
+        qCDebug(dsrApp) << "Arrow points length is not 2, returning false.";
         return false;
+    }
 
     m_isSelected = false;
     m_isResize = false;
@@ -582,6 +598,7 @@ bool ShapesWidget::clickedOnArrow(QList<QPointF> points, QPointF pos)
 
 
     if (pointClickIn(points[0], pos)) {
+        qCDebug(dsrApp) << "Clicked on arrow point 0 (start point).";
         m_isSelected = true;
         m_isRotated = true;
         m_isArrowRotated = false;
@@ -589,6 +606,7 @@ bool ShapesWidget::clickedOnArrow(QList<QPointF> points, QPointF pos)
         m_pressedPoint = pos;
         return true;
     } else if (pointClickIn(points[1], pos)) {
+        qCDebug(dsrApp) << "Clicked on arrow point 1 (end point).";
         m_isSelected = true;
         m_isRotated = true;
         m_isArrowRotated = false;
@@ -596,12 +614,14 @@ bool ShapesWidget::clickedOnArrow(QList<QPointF> points, QPointF pos)
         m_pressedPoint = pos;
         return true;
     } else if (pointOnLine(points[0], points[1], pos)) {
+        qCDebug(dsrApp) << "Clicked on arrow line.";
         m_isSelected = true;
         m_isRotated = false;
         m_resizeDirection = Moving;
         m_pressedPoint = pos;
         return true;
     } else {
+        qCDebug(dsrApp) << "No click detected on arrow.";
         m_isSelected = false;
         m_isRotated = false;
         m_isResize = false;
@@ -618,6 +638,7 @@ bool ShapesWidget::clickedOnLine(FourPoints mainPoints,
                                  QList<QPointF> points,
                                  QPointF pos)
 {
+    qCDebug(dsrApp) << "clickedOnLine called with pos:" << pos;
     m_isSelected = false;
     m_isResize = false;
     m_isRotated = false;
@@ -625,6 +646,7 @@ bool ShapesWidget::clickedOnLine(FourPoints mainPoints,
     m_pressedPoint = QPoint(0, 0);
     FourPoints otherFPoints = getAnotherFPoints(mainPoints);
     if (pointClickIn(mainPoints[0], pos)) {
+        qCDebug(dsrApp) << "Clicked on mainPoints[0] (TopLeft).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = First;
@@ -632,6 +654,7 @@ bool ShapesWidget::clickedOnLine(FourPoints mainPoints,
         m_pressedPoint = pos;
         return true;
     } else if (pointClickIn(mainPoints[1], pos)) {
+        qCDebug(dsrApp) << "Clicked on mainPoints[1] (BottomLeft).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = Second;
@@ -639,6 +662,7 @@ bool ShapesWidget::clickedOnLine(FourPoints mainPoints,
         m_pressedPoint = pos;
         return true;
     } else if (pointClickIn(mainPoints[2], pos)) {
+        qCDebug(dsrApp) << "Clicked on mainPoints[2] (TopRight).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = Third;
@@ -646,6 +670,7 @@ bool ShapesWidget::clickedOnLine(FourPoints mainPoints,
         m_pressedPoint = pos;
         return true;
     } else if (pointClickIn(mainPoints[3], pos)) {
+        qCDebug(dsrApp) << "Clicked on mainPoints[3] (BottomRight).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = Fourth;
@@ -653,6 +678,7 @@ bool ShapesWidget::clickedOnLine(FourPoints mainPoints,
         m_pressedPoint = pos;
         return true;
     }  else if (pointClickIn(otherFPoints[0], pos)) {
+        qCDebug(dsrApp) << "Clicked on otherFPoints[0] (Left).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = Fifth;
@@ -660,6 +686,7 @@ bool ShapesWidget::clickedOnLine(FourPoints mainPoints,
         m_pressedPoint = pos;
         return true;
     } else if (pointClickIn(otherFPoints[1], pos)) {
+        qCDebug(dsrApp) << "Clicked on otherFPoints[1] (Top).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = Sixth;
@@ -667,6 +694,7 @@ bool ShapesWidget::clickedOnLine(FourPoints mainPoints,
         m_pressedPoint = pos;
         return true;
     } else if (pointClickIn(otherFPoints[2], pos)) {
+        qCDebug(dsrApp) << "Clicked on otherFPoints[2] (Right).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = Seventh;
@@ -674,6 +702,7 @@ bool ShapesWidget::clickedOnLine(FourPoints mainPoints,
         m_pressedPoint = pos;
         return true;
     } else if (pointClickIn(otherFPoints[3], pos)) {
+        qCDebug(dsrApp) << "Clicked on otherFPoints[3] (Bottom).";
         m_isSelected = true;
         m_isResize = true;
         m_clickedKey = Eighth;
@@ -681,6 +710,7 @@ bool ShapesWidget::clickedOnLine(FourPoints mainPoints,
         m_pressedPoint = pos;
         return true;
     } else if (rotateOnPoint(mainPoints, pos)) {
+        qCDebug(dsrApp) << "Clicked on rotate point.";
         m_isSelected = true;
         m_isRotated = true;
         m_isResize = false;
@@ -688,6 +718,7 @@ bool ShapesWidget::clickedOnLine(FourPoints mainPoints,
         m_pressedPoint = pos;
         return true;
     }  else if (pointOnArLine(points, pos)) {
+        qCDebug(dsrApp) << "Clicked on arrow line.";
         m_isSelected = true;
         m_isResize = false;
 
@@ -695,6 +726,7 @@ bool ShapesWidget::clickedOnLine(FourPoints mainPoints,
         m_pressedPoint = pos;
         return true;
     } else {
+        qCDebug(dsrApp) << "No click detected on line.";
         m_isSelected = false;
         m_isResize = false;
         m_isRotated = false;
@@ -706,13 +738,16 @@ bool ShapesWidget::clickedOnLine(FourPoints mainPoints,
 //文本框是否被点击
 bool ShapesWidget::clickedOnText(FourPoints mainPoints, QPointF pos)
 {
+    qCDebug(dsrApp) << "clickedOnText called with pos:" << pos;
     if (pointInRect(mainPoints, pos)) {
+        qCDebug(dsrApp) << "Click detected inside text rectangle.";
         m_isSelected = true;
         m_isResize = false;
         m_resizeDirection = Moving;
 
         return true;
     } else {
+        qCDebug(dsrApp) << "Click not detected inside text rectangle.";
         m_isSelected = false;
         m_isResize = false;
 
@@ -722,41 +757,53 @@ bool ShapesWidget::clickedOnText(FourPoints mainPoints, QPointF pos)
 
 bool ShapesWidget::hoverOnRect(FourPoints rectPoints, QPointF pos, bool isTextBorder)
 {
+    qCDebug(dsrApp) << "hoverOnRect called with pos:" << pos << ", isTextBorder:" << isTextBorder;
     FourPoints tmpFPoints = getAnotherFPoints(rectPoints);
     if (pointClickIn(rectPoints[0], pos)) {
+        qCDebug(dsrApp) << "Hovered on TopLeft resize point.";
         m_resizeDirection = TopLeft;
         return true;
     } else if (pointClickIn(rectPoints[1], pos)) {
+        qCDebug(dsrApp) << "Hovered on BottomLeft resize point.";
         m_resizeDirection = BottomLeft;
         return true;
     } else if (pointClickIn(rectPoints[2], pos)) {
+        qCDebug(dsrApp) << "Hovered on TopRight resize point.";
         m_resizeDirection = TopRight;
         return true;
     } else if (pointClickIn(rectPoints[3], pos)) {
+        qCDebug(dsrApp) << "Hovered on BottomRight resize point.";
         m_resizeDirection = BottomRight;
         return true;
     } else if (rotateOnPoint(rectPoints, pos) && m_selectedIndex != -1
                && m_selectedIndex == m_hoveredIndex && !isTextBorder) {
+        qCDebug(dsrApp) << "Hovered on rotate point.";
         m_resizeDirection = Rotate;
         return true;
     }  else if (pointClickIn(tmpFPoints[0], pos)) {
+        qCDebug(dsrApp) << "Hovered on Left resize point.";
         m_resizeDirection = Left;
         return true;
     } else if (pointClickIn(tmpFPoints[1], pos)) {
+        qCDebug(dsrApp) << "Hovered on Top resize point.";
         m_resizeDirection = Top;
         return true;
     }  else if (pointClickIn(tmpFPoints[2], pos)) {
+        qCDebug(dsrApp) << "Hovered on Right resize point.";
         m_resizeDirection = Right;
         return true;
     } else if (pointClickIn(tmpFPoints[3], pos)) {
+        qCDebug(dsrApp) << "Hovered on Bottom resize point.";
         m_resizeDirection = Bottom;
         return true;
     } else if (pointOnLine(rectPoints[0],  rectPoints[1], pos) || pointOnLine(rectPoints[1],
                                                                               rectPoints[3], pos) || pointOnLine(rectPoints[3], rectPoints[2], pos) ||
                pointOnLine(rectPoints[2], rectPoints[0], pos)) {
+        qCDebug(dsrApp) << "Hovered on rectangle border.";
         m_resizeDirection = Moving;
         return true;
     } else {
+        qCDebug(dsrApp) << "No hover detected on rectangle.";
         m_resizeDirection = Outting;
     }
     return false;
@@ -764,37 +811,48 @@ bool ShapesWidget::hoverOnRect(FourPoints rectPoints, QPointF pos, bool isTextBo
 
 bool ShapesWidget::hoverOnEllipse(FourPoints mainPoints, QPointF pos)
 {
+    qCDebug(dsrApp) << "hoverOnEllipse called with pos:" << pos;
     FourPoints tmpFPoints = getAnotherFPoints(mainPoints);
 
     if (pointClickIn(mainPoints[0], pos)) {
+        qCDebug(dsrApp) << "Hovered on TopLeft resize point.";
         m_resizeDirection = TopLeft;
         return true;
     } else if (pointClickIn(mainPoints[1], pos)) {
+        qCDebug(dsrApp) << "Hovered on BottomLeft resize point.";
         m_resizeDirection = BottomLeft;
         return true;
     } else if (pointClickIn(mainPoints[2], pos)) {
+        qCDebug(dsrApp) << "Hovered on TopRight resize point.";
         m_resizeDirection = TopRight;
         return true;
     } else if (pointClickIn(mainPoints[3], pos)) {
+        qCDebug(dsrApp) << "Hovered on BottomRight resize point.";
         m_resizeDirection = BottomRight;
         return true;
     } else if (rotateOnPoint(mainPoints, pos) && m_selectedIndex != -1
                && m_selectedIndex == m_hoveredIndex) {
+        qCDebug(dsrApp) << "Hovered on rotate point.";
         m_resizeDirection = Rotate;
         return true;
     }  else if (pointClickIn(tmpFPoints[0], pos)) {
+        qCDebug(dsrApp) << "Hovered on Left resize point.";
         m_resizeDirection = Left;
         return true;
     } else if (pointClickIn(tmpFPoints[1], pos)) {
+        qCDebug(dsrApp) << "Hovered on Top resize point.";
         m_resizeDirection = Top;
         return true;
     }  else if (pointClickIn(tmpFPoints[2], pos)) {
+        qCDebug(dsrApp) << "Hovered on Right resize point.";
         m_resizeDirection = Right;
         return true;
     } else if (pointClickIn(tmpFPoints[3], pos)) {
+        qCDebug(dsrApp) << "Hovered on Bottom resize point.";
         m_resizeDirection = Bottom;
         return true;
     }  else if (pointOnEllipse(mainPoints, pos)) {
+        qCDebug(dsrApp) << "Hovered on ellipse boundary.";
         m_isSelected = true;
         m_isResize = false;
 
@@ -802,6 +860,7 @@ bool ShapesWidget::hoverOnEllipse(FourPoints mainPoints, QPointF pos)
         m_pressedPoint = pos;
         return true;
     } else {
+        qCDebug(dsrApp) << "No hover detected on ellipse.";
         m_resizeDirection = Outting;
     }
     return false;
@@ -809,8 +868,11 @@ bool ShapesWidget::hoverOnEllipse(FourPoints mainPoints, QPointF pos)
 
 bool ShapesWidget::hoverOnArrow(QList<QPointF> points, QPointF pos)
 {
-    if (points.length() != 2)
+    qCDebug(dsrApp) << "hoverOnArrow called with pos:" << pos;
+    if (points.length() != 2) {
+        qCDebug(dsrApp) << "Arrow points length is not 2, returning false.";
         return false;
+    }
     bool result = false;
 //    QPointF t_rotatepos;
 
@@ -833,16 +895,19 @@ bool ShapesWidget::hoverOnArrow(QList<QPointF> points, QPointF pos)
     if (pointOnLine(points[0], points[1], pos) &&
             ((firstPointPadX > pointPadding || firstPointPadY > pointPadding)  &&
              (secondPointPadX > pointPadding  || secondPointPadY > pointPadding))) {
+        qCDebug(dsrApp) << "Hovered on arrow line, not near endpoints.";
         m_resizeDirection = Moving;
         m_clickedKey = Unknow;
         result = true;
     } else if (m_selectedIndex != -1 && m_selectedIndex == m_hoveredIndex
                && pointClickIn(points[0], pos) && firstPointPadX <= pointPadding && firstPointPadY <= pointPadding) {
+        qCDebug(dsrApp) << "Hovered on first arrow endpoint.";
         m_clickedKey = First;
         m_resizeDirection = Rotate;
         result = true;
     } else if (m_selectedIndex != -1 && m_selectedIndex == m_hoveredIndex
                && pointClickIn(points[1], pos) && secondPointPadX <= pointPadding && secondPointPadY <= pointPadding) {
+        qCDebug(dsrApp) << "Hovered on second arrow endpoint.";
         m_clickedKey =   Second;
         m_resizeDirection = Rotate;
         result = true;
@@ -853,6 +918,7 @@ bool ShapesWidget::hoverOnArrow(QList<QPointF> points, QPointF pos)
         return true;*/
 //    }
     else {
+        qCDebug(dsrApp) << "No hover detected on arrow.";
         m_resizeDirection = Outting;
         result = false;
     }
@@ -862,37 +928,48 @@ bool ShapesWidget::hoverOnArrow(QList<QPointF> points, QPointF pos)
 bool ShapesWidget::hoverOnLine(FourPoints mainPoints, QList<QPointF> points,
                                QPointF pos)
 {
+    qCDebug(dsrApp) << "hoverOnLine called with pos:" << pos;
     FourPoints tmpFPoints = getAnotherFPoints(mainPoints);
 
     if (pointClickIn(mainPoints[0], pos)) {
+        qCDebug(dsrApp) << "Hovered on TopLeft resize point.";
         m_resizeDirection = TopLeft;
         return true;
     } else if (pointClickIn(mainPoints[1], pos)) {
+        qCDebug(dsrApp) << "Hovered on BottomLeft resize point.";
         m_resizeDirection = BottomLeft;
         return true;
     } else if (pointClickIn(mainPoints[2], pos)) {
+        qCDebug(dsrApp) << "Hovered on TopRight resize point.";
         m_resizeDirection = TopRight;
         return true;
     } else if (pointClickIn(mainPoints[3], pos)) {
+        qCDebug(dsrApp) << "Hovered on BottomRight resize point.";
         m_resizeDirection = BottomRight;
         return true;
     } else if (rotateOnPoint(mainPoints, pos) && m_selectedIndex != -1
                && m_selectedIndex == m_hoveredIndex) {
+        qCDebug(dsrApp) << "Hovered on rotate point.";
         m_resizeDirection = Rotate;
         return true;
     }  else if (pointClickIn(tmpFPoints[0], pos)) {
+        qCDebug(dsrApp) << "Hovered on Left resize point.";
         m_resizeDirection = Left;
         return true;
     } else if (pointClickIn(tmpFPoints[1], pos)) {
+        qCDebug(dsrApp) << "Hovered on Top resize point.";
         m_resizeDirection = Top;
         return true;
     }  else if (pointClickIn(tmpFPoints[2], pos)) {
+        qCDebug(dsrApp) << "Hovered on Right resize point.";
         m_resizeDirection = Right;
         return true;
     } else if (pointClickIn(tmpFPoints[3], pos)) {
+        qCDebug(dsrApp) << "Hovered on Bottom resize point.";
         m_resizeDirection = Bottom;
         return true;
     }  else if (pointOnArLine(points, pos)) {
+        qCDebug(dsrApp) << "Hovered on line segment.";
         m_isSelected = true;
         m_isResize = false;
 
@@ -900,6 +977,7 @@ bool ShapesWidget::hoverOnLine(FourPoints mainPoints, QList<QPointF> points,
         m_pressedPoint = pos;
         return true;
     } else {
+        qCDebug(dsrApp) << "No hover detected on line.";
         m_resizeDirection = Outting;
     }
     return false;
@@ -907,6 +985,7 @@ bool ShapesWidget::hoverOnLine(FourPoints mainPoints, QList<QPointF> points,
 
 bool ShapesWidget::hoverOnText(int textIndex, FourPoints mainPoints, QPointF pos)
 {
+    qCDebug(dsrApp) << "hoverOnText called with textIndex:" << textIndex << "pos:" << pos;
     //qDebug() << "hoverOnText:" <<  mainPoints << pos;
     if (hoverOnRect(mainPoints, pos, true) ||
             (pos.x() >= mainPoints[0].x() - 5
@@ -1026,25 +1105,35 @@ void ShapesWidget::handleDrag(QPointF oldPoint, QPointF newPoint)
 ////////////////////TODO: perfect handleRotate..
 void ShapesWidget::handleRotate(QPointF pos)
 {
+    qCDebug(dsrApp) << "handleRotate called with pos:" << pos;
     //qDebug() << "handleRotate:" << m_selectedIndex << m_shapes.length();
 
     if (m_selectedIndex == -1 || m_selectedShape.type == "text") {
+        qCDebug(dsrApp) << "Rotation skipped: No shape selected or selected shape is text.";
         return;
     }
 
     if (m_selectedShape.type == "arrow" || m_selectedShape.type == "line") {
+        qCDebug(dsrApp) << "Rotating arrow or line type shape.";
         if (m_isArrowRotated == false) {
+            qCDebug(dsrApp) << "Arrow not rotated, handling point adjustment.";
             if (m_shapes[m_selectedOrder].isShiftPressed) {
+                qCDebug(dsrApp) << "Shift key pressed, adjusting arrow/line to snap to axis.";
                 if (static_cast<int>(m_shapes[m_selectedOrder].points[0].x()) == static_cast<int>(m_shapes[m_selectedOrder].points[1].x())) {
+                    qCDebug(dsrApp) << "Arrow/line is vertical.";
                     if (m_clickedKey == First) {
+                        qCDebug(dsrApp) << "Adjusting first point (vertical).";
                         m_shapes[m_selectedOrder].points[0] = QPointF(m_shapes[m_selectedOrder].points[1].x(),
                                                                       pos.y());
                     } else if (m_clickedKey == Second) {
+                        qCDebug(dsrApp) << "Adjusting second point (vertical).";
                         m_shapes[m_selectedOrder].points[1] = QPointF(m_shapes[m_selectedOrder].points[0].x(),
                                                                       pos.y());
                     }
                 } else {
+                    qCDebug(dsrApp) << "Arrow/line is horizontal.";
                     if (m_clickedKey == First) {
+                        qCDebug(dsrApp) << "Adjusting first point (horizontal).";
                         m_shapes[m_selectedOrder].points[0] = QPointF(pos.x(), m_shapes[m_selectedOrder].points[1].y());
                     } else if (m_clickedKey == Second) {
                         m_shapes[m_selectedOrder].points[1] = QPointF(pos.x(), m_shapes[m_selectedOrder].points[0].y());
@@ -1162,31 +1251,40 @@ void ShapesWidget::handleResize(QPointF pos, int key)
 
 bool ShapesWidget::event(QEvent *event)
 {
+    qCDebug(dsrApp) << "ShapesWidget::event called. Event type:" << event->type();
     if (QEvent::Gesture == event->type()) {
+        qCDebug(dsrApp) << "Gesture event detected.";
         if (QGesture *tap = static_cast<QGestureEvent *>(event)->gesture(Qt::TapGesture)) {
+            qCDebug(dsrApp) << "TapGesture detected.";
             tapTriggered(static_cast<QTapGesture *>(tap));
         }
         if (QGesture *pinch = static_cast<QGestureEvent *>(event)->gesture(Qt::PinchGesture)) {
+            qCDebug(dsrApp) << "PinchGesture detected.";
             pinchTriggered(static_cast<QPinchGesture *>(pinch));
         }
         update();
     }
+    qCDebug(dsrApp) << "Calling base QWidget::event.";
     return QWidget::event(event);
 }
 
 //重写鼠标按压事件
 void ShapesWidget::mousePressEvent(QMouseEvent *e)
 {
+    qCDebug(dsrApp) << "mousePressEvent called. Mouse position:" << e->pos() << "Button:" << e->button() << "Source:" << e->source();
     m_lastAngle = 0;
     m_currentCursor = QCursor().pos();
     //选中图形后，重新按下真实鼠标左键
     if (Qt::MouseEventSource::MouseEventSynthesizedByQt != e->source()
             && m_selectedIndex != -1) {
+        qCDebug(dsrApp) << "Real mouse event detected and a shape is selected.";
         // 判空
         if (nullptr != m_editMap.value(m_lastEditMapKey)) {
+            qCDebug(dsrApp) << "Text edit exists at lastEditMapKey.";
             // 点击鼠标左键时，去掉未更改的textEdit文本框
             if (m_editMap.value(m_lastEditMapKey)->toPlainText() == QString(tr("Input text here")) ||
                     m_editMap.value(m_lastEditMapKey)->toPlainText().isEmpty()) {
+                qCDebug(dsrApp) << "Text edit is empty or default. Clearing selection and setting read-only.";
                 clearSelected();
                 setAllTextEditReadOnly();
                 m_editing = false;
@@ -1424,6 +1522,7 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
             m_editMap.value(m_shapes[m_selectedOrder].index)->setReadOnly(true);
             m_editMap.value(m_shapes[m_selectedOrder].index)->setCursorVisible(false);
             m_editMap.value(m_shapes[m_selectedOrder].index)->setFocusPolicy(Qt::NoFocus);
+            qCDebug(dsrApp) << "Editing and editMap contains selected shape index. Setting text edit read-only.";
         }
         update();
     }
@@ -1433,16 +1532,19 @@ void ShapesWidget::mousePressEvent(QMouseEvent *e)
 
 void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)
 {
+    qCDebug(dsrApp) << "mouseReleaseEvent called. Mouse position:" << e->pos();
     m_isPressed = false;
     m_isMoving = false;
 
     if (Qt::MouseEventSource::MouseEventSynthesizedByQt == e->source()
             && -1 != m_selectedIndex
             && "text" != m_currentType) {
+        qCDebug(dsrApp) << "Synthesized mouse event, selected shape exists, and not text type. Returning.";
         return;
     }
 
     if (!m_isRotated && m_selectedIndex == -1 && "text" != m_currentType) {
+        qCDebug(dsrApp) << "Not rotated, no shape selected, and not text type. Clearing selection.";
         clearSelected();
         setAllTextEditReadOnly();
         m_editing = false;
@@ -1450,41 +1552,53 @@ void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)
         m_selectedOrder = -1;
         m_selectedShape.type = "";
         update();
-        DFrame::mousePressEvent(e);
+        DFrame::mouseReleaseEvent(e);
     }
 
     //qDebug() << m_isRecording << m_isSelected << m_pos2;
     if (m_isRecording && !m_isSelected && m_pos2 != QPointF(0, 0)) {
+        qCDebug(dsrApp) << "Recording active, no shape selected, and pos2 is not (0,0). Finalizing shape.";
         if (m_currentType == "arrow" || m_currentType == "line") {
+            qCDebug(dsrApp) << "Finalizing arrow or line.";
             if (m_currentShape.points.length() == 2) {
+                qCDebug(dsrApp) << "Arrow/line has 2 points.";
                 if (m_isShiftPressed) {
+                    qCDebug(dsrApp) << "Shift pressed, snapping arrow/line to axis.";
                     if (std::atan2(std::abs(m_pos2.y() - m_pos1.y()), std::abs(m_pos2.x() - m_pos1.x()))
                             * 180 / M_PI < 45) {
                         m_pos2 = QPointF(m_pos2.x(), m_pos1.y());
+                        qCDebug(dsrApp) << "Snapped to horizontal.";
                     } else {
                         m_pos2 = QPointF(m_pos1.x(), m_pos2.y());
+                        qCDebug(dsrApp) << "Snapped to vertical.";
                     }
                 }
 
                 m_currentShape.points[1] = m_pos2;
                 m_currentShape.mainPoints = getMainPoints(m_currentShape.points[0], m_currentShape.points[1]);
+                qCDebug(dsrApp) << "Set second point and main points for arrow/line.";
 
                 m_shapes.append(m_currentShape);
             }
         } else if (m_currentType == "pen") {
+            qCDebug(dsrApp) << "Finalizing pen shape.";
             FourPoints lineFPoints = fourPointsOfLine(m_currentShape.points);
             m_currentShape.mainPoints = lineFPoints;
             m_shapes.append(m_currentShape);
+            qCDebug(dsrApp) << "Appended current pen shape to shapes list.";
         } else if (m_currentType != "text") {
+            qCDebug(dsrApp) << "Finalizing non-text shape (rectangle/oval/effect).";
             FourPoints rectFPoints = getMainPoints(m_pos1, m_pos2, m_isShiftPressed);
             m_currentShape.mainPoints = rectFPoints;
             m_shapes.append(m_currentShape);
+            qCDebug(dsrApp) << "Appended current shape to shapes list.";
         }
 
         //qDebug() << "ShapesWidget num:" << m_shapes.length();
         clearSelected();
         //选中当前绘制的图形
         if (m_currentShape.type != "effect" || m_currentShape.isOval != 2) {
+            qCDebug(dsrApp) << "Selecting newly drawn shape.";
             m_selectedIndex = m_currentIndex;
             m_selectedShape = m_currentShape;
             m_selectedOrder = m_shapes.length() - 1;
@@ -1494,6 +1608,7 @@ void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)
 
     m_isRecording = false;
     if (m_currentShape.type != "text") {
+        qCDebug(dsrApp) << "Clearing main points of current shape (if not text).";
         for (int i = 0; i < m_currentShape.mainPoints.length(); i++) {
             m_currentShape.mainPoints[i] = QPointF(0, 0);
         }
@@ -1505,47 +1620,61 @@ void ShapesWidget::mouseReleaseEvent(QMouseEvent *e)
 
     update();
     DFrame::mouseReleaseEvent(e);
+    qCDebug(dsrApp) << "mouseReleaseEvent finished.";
 }
 
 void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
 {
+    qCDebug(dsrApp) << "mouseMoveEvent called. Mouse position:" << e->pos();
     m_isMoving = true;
     m_movingPoint = e->pos();
     m_currentCursor = QCursor().pos();
 
     if (m_isRecording && m_isPressed) {
+        qCDebug(dsrApp) << "Recording is active and mouse is pressed.";
         m_pos2 = e->pos();
         updateCursorShape();
 
         if (m_currentShape.type == "arrow" || m_currentShape.type == "line") {
+            qCDebug(dsrApp) << "Moving arrow or line shape.";
             if (m_currentShape.points.length() <= 1) {
+                qCDebug(dsrApp) << "Adding second point to arrow/line.";
                 if (m_isShiftPressed) {
+                    qCDebug(dsrApp) << "Shift pressed, snapping arrow/line to axis.";
                     if (std::atan2(std::abs(m_pos2.y() - m_pos1.y()),
                                    std::abs(m_pos2.x() - m_pos1.x())) * 180 / M_PI < 45) {
                         m_currentShape.points.append(QPointF(m_pos2.x(), m_pos1.y()));
+                        qCDebug(dsrApp) << "Snapped to horizontal.";
                     } else {
                         m_currentShape.points.append(QPointF(m_pos1.x(), m_pos2.y()));
+                        qCDebug(dsrApp) << "Snapped to vertical.";
                     }
                 } else {
                     m_currentShape.points.append(m_pos2);
+                    qCDebug(dsrApp) << "Appended pos2 to arrow/line points.";
                 }
             } else {
+                qCDebug(dsrApp) << "Updating second point of arrow/line.";
                 if (m_isShiftPressed) {
+                    qCDebug(dsrApp) << "Shift pressed, snapping arrow/line to axis.";
                     if (std::atan2(std::abs(m_pos2.y() - m_pos1.y()),
                                    std::abs(m_pos2.x() - m_pos1.x())) * 180 / M_PI < 45) {
                         m_currentShape.points[1] = QPointF(m_pos2.x(), m_pos1.y());
+                        qCDebug(dsrApp) << "Snapped to horizontal.";
                     } else {
                         m_currentShape.points[1] = QPointF(m_pos1.x(), m_pos2.y());
+                        qCDebug(dsrApp) << "Snapped to vertical.";
                     }
                 } else {
                     m_currentShape.points[1] = m_pos2;
+                    qCDebug(dsrApp) << "Appended pos2 to arrow/line points.";
                 }
             }
         }
         if (m_currentShape.type == "pen") {
             if (getDistance(m_currentShape.points[m_currentShape.points.length() - 1], m_pos2) > 3) {
                 m_currentShape.points.append(m_pos2);
-
+                qCDebug(dsrApp) << "Pen type: distance > 3, appending pos2.";
             }
         }
         // 模糊笔
@@ -1558,8 +1687,10 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
                     m_currentShape.points.append(interpolationPoints[i]);
                 }
                 m_currentShape.points.append(m_pos2);
+                qCDebug(dsrApp) << "Effect type: distance > 14, appending interpolated points and pos2.";
             } else if (distance > 7) {
                 m_currentShape.points.append(m_pos2);
+                qCDebug(dsrApp) << "Effect type: distance > 7, appending pos2.";
             }
         }
         update();
@@ -1567,6 +1698,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
         if (m_isRotated && m_isPressed) {
             handleRotate(e->pos());
             update();
+            qCDebug(dsrApp) << "Not recording but pressed and rotated, calling handleRotate.";
         }
 
         if (m_isResize && m_isPressed) {
@@ -1574,6 +1706,7 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
             handleResize(QPointF(e->pos()), m_clickedKey);
             update();
             DFrame::mouseMoveEvent(e);
+            qCDebug(dsrApp) << "Not recording but pressed and resizing, calling handleResize.";
             return;
         }
 
@@ -1586,15 +1719,16 @@ void ShapesWidget::mouseMoveEvent(QMouseEvent *e)
             if (m_selectedShape.type == "text") {
                 m_editMap.value(m_selectedIndex)->move(static_cast<int>(m_selectedShape.mainPoints[0].x()),
                                                        static_cast<int>(m_selectedShape.mainPoints[0].y()));
+                qCDebug(dsrApp) << "Selected shape is text, moving text edit.";
             }
 
             m_pressedPoint = m_movingPoint;
             update();
+            qCDebug(dsrApp) << "Selected, pressed, and index not -1, calling handleDrag.";
         }
 
-
-
     } else {
+        qCDebug(dsrApp) << "Not recording or not pressed.";
         if (!m_isRecording) {
             m_isHovered = false;
             for (int i = 0; i < m_shapes.length(); i++) {
