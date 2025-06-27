@@ -27,6 +27,7 @@ DWIDGET_USE_NAMESPACE
 
 ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
 {
+    qCDebug(dsrApp) << "ScrollShotTip constructor called.";
     installEventFilter(this);
     QPixmap warmingImg ;
     //警告图片
@@ -84,26 +85,33 @@ ScrollShotTip::ScrollShotTip(DWidget *parent) : DWidget(parent)
 //根据提示的类型选取相应的提示方法
 void ScrollShotTip::showTip(TipType tipType)
 {
+    qCDebug(dsrApp) << "ScrollShotTip::showTip called with type:" << static_cast<int>(tipType);
     m_tipType = tipType;
     m_scrollShotHelp->hide();
     m_scrollShotAdjust->hide();
     switch (m_tipType) {
     case TipType::StartScrollShotTip:
+        qCDebug(dsrApp) << "TipType: StartScrollShotTip";
         showStartScrollShotTip();
         break;
     case TipType::ErrorScrollShotTip:
+        qCDebug(dsrApp) << "TipType: ErrorScrollShotTip";
         showErrorScrollShotTip();
         break;
     case TipType::EndScrollShotTip:
+        qCDebug(dsrApp) << "TipType: EndScrollShotTip";
         showEndScrollShotTip();
         break;
     case TipType::QuickScrollShotTip:
+        qCDebug(dsrApp) << "TipType: QuickScrollShotTip";
         showQuickScrollShotTip();
         break;
     case TipType::MaxLengthScrollShotTip:
+        qCDebug(dsrApp) << "TipType: MaxLengthScrollShotTip";
         showMaxScrollShotTip();
         break;
     case TipType::InvalidAreaShotTip:
+        qCDebug(dsrApp) << "TipType: InvalidAreaShotTip";
         showInvalidAreaShotTip();
         break;
     }
@@ -156,6 +164,7 @@ void ScrollShotTip::paintEvent(QPaintEvent *)
 //获取提示框的模糊背景图
 QPixmap ScrollShotTip::getTooltipBackground()
 {
+    qCDebug(dsrApp) << "ScrollShotTip::getTooltipBackground called.";
     const int radius = 10;
     int imgWidth = 0;
     int imgHeight = 0;
@@ -170,11 +179,14 @@ QPixmap ScrollShotTip::getTooltipBackground()
     //qDebug() << "tmpImg.width1(),tmpImg.height1()" << tmpImg.width() << "," << tmpImg.height();
 
     if (!tmpImg.isNull()) {
+        qCDebug(dsrApp) << "Background pixmap is not null, scaling it.";
         imgWidth = tmpImg.width();
         imgHeight = tmpImg.height();
         tmpImg = tmpImg.scaled(imgWidth / radius, imgHeight / radius, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         tmpImg = tmpImg.scaled(imgWidth, imgHeight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         //qDebug() << "tmpImg.width(),tmpImg.height()" << tmpImg.width() << "," << tmpImg.height();
+    } else {
+        qCDebug(dsrApp) << "Background pixmap is null.";
     }
     return  tmpImg;
 }
@@ -182,6 +194,7 @@ QPixmap ScrollShotTip::getTooltipBackground()
 //画矩形
 void ScrollShotTip::paintRect(QPainter &painter, QPixmap &blurPixmap, int radius)
 {
+    qCDebug(dsrApp) << "ScrollShotTip::paintRect called. Radius:" << radius;
     QPainterPath rectPath;
     painter.setPen(Qt::transparent);
     rectPath.addRoundedRect(QRectF(rect()), radius, radius);
@@ -195,6 +208,7 @@ void ScrollShotTip::paintRect(QPainter &painter, QPixmap &blurPixmap, int radius
 //画提示背景
 void ScrollShotTip::drawTooltipBackground(QPainter &painter, QRect rect, QString textColor, qreal opacity, int radius)
 {
+    qCDebug(dsrApp) << "ScrollShotTip::drawTooltipBackground called. TextColor:" << textColor << "Opacity:" << opacity << "Radius:" << radius;
     painter.setOpacity(opacity);
     QPainterPath path;
     path.addRoundedRect(QRectF(rect), radius, radius);
@@ -209,11 +223,13 @@ void ScrollShotTip::drawTooltipBackground(QPainter &painter, QRect rect, QString
 
 TipType ScrollShotTip::getTipType()
 {
+    qCDebug(dsrApp) << "ScrollShotTip::getTipType called. Returning:" << static_cast<int>(m_tipType);
     return m_tipType;
 }
 
 void ScrollShotTip::setBackgroundPixmap(QPixmap &backgroundPixmap)
 {
+    qCDebug(dsrApp) << "ScrollShotTip::setBackgroundPixmap called.";
     m_backgroundPixmap = backgroundPixmap;
 
 }
@@ -222,6 +238,7 @@ void ScrollShotTip::setBackgroundPixmap(QPixmap &backgroundPixmap)
 //开始滚动截图前的提示
 void ScrollShotTip::showStartScrollShotTip()
 {
+    qCDebug(dsrApp) << "ScrollShotTip::showStartScrollShotTip called.";
     //m_tipText = "滚动鼠标滚轮或单击滚动区域";
     m_tipText = tr("Scroll your mouse wheel or click to take a scrolling screenshot");
     int width = 0;
@@ -240,6 +257,7 @@ void ScrollShotTip::showStartScrollShotTip()
 //滚动截图出现错误的提示
 void ScrollShotTip::showErrorScrollShotTip()
 {
+    qCDebug(dsrApp) << "ScrollShotTip::showErrorScrollShotTip called.";
     //m_tipText = tr("无法继续截图，查看帮助");
     m_tipText = tr("Failed to take a continuous screenshot.");
     int width = 0;
@@ -263,6 +281,7 @@ void ScrollShotTip::showErrorScrollShotTip()
 //滚动截图到底部出现的提示
 void ScrollShotTip::showEndScrollShotTip()
 {
+    qCDebug(dsrApp) << "ScrollShotTip::showEndScrollShotTip called.";
     //m_tipText = tr("已到滚动区域底部");
     m_tipText = tr("Reached the bottom of the scroll area");
     int width = 0;
@@ -281,6 +300,7 @@ void ScrollShotTip::showEndScrollShotTip()
 //图像拼接长度限制
 void ScrollShotTip::showMaxScrollShotTip()
 {
+    qCDebug(dsrApp) << "ScrollShotTip::showMaxScrollShotTip called.";
     //m_tipText = tr("已到最大长度");
     m_tipText = tr("Reached the maximum length");
     int width = 0;
@@ -298,7 +318,7 @@ void ScrollShotTip::showMaxScrollShotTip()
 //滚动速度过快
 void ScrollShotTip::showQuickScrollShotTip()
 {
-
+    qCDebug(dsrApp) << "ScrollShotTip::showQuickScrollShotTip called.";
     //m_tipText = tr("请放慢滚动速度");
     m_tipText = tr("Slow down the scrolling speed");
     int width = 0;
@@ -315,6 +335,7 @@ void ScrollShotTip::showQuickScrollShotTip()
 
 void ScrollShotTip::showInvalidAreaShotTip()
 {
+    qCDebug(dsrApp) << "ScrollShotTip::showInvalidAreaShotTip called.";
     //m_tipText = tr("无效区域，点击调整捕捉区域");
     m_tipText = tr("Invalid area, click to ");
     int width = 0;
@@ -337,11 +358,14 @@ void ScrollShotTip::showInvalidAreaShotTip()
 
 ScrollShotTip::~ScrollShotTip()
 {
+    qCDebug(dsrApp) << "ScrollShotTip destructor called.";
     if (m_scrollShotHelp) {
+        qCDebug(dsrApp) << "Deleting m_scrollShotHelp.";
         delete  m_scrollShotHelp;
         m_scrollShotHelp = nullptr;
     }
     if (m_scrollShotAdjust) {
+        qCDebug(dsrApp) << "Deleting m_scrollShotAdjust.";
         delete  m_scrollShotAdjust;
         m_scrollShotAdjust = nullptr;
     }

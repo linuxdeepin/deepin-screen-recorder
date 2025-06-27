@@ -11,6 +11,7 @@
 SaveTips::SaveTips(DWidget *parent)
     : DLabel(parent)
 {
+    qCDebug(dsrApp) << "SaveTips constructor called.";
 //    setStyleSheet(getFileContent(":/resources/qss/savetips.qss"));
     setTipWidth(0);
     setFixedWidth(0);
@@ -20,10 +21,12 @@ SaveTips::SaveTips(DWidget *parent)
     connect(m_startAni, &QPropertyAnimation::valueChanged, [ = ](QVariant value) {
         emit tipWidthChanged(std::max(value.toInt(), this->width()));
         setFixedWidth(value.toInt());
+        qCDebug(dsrApp) << "Start animation value changed:" << value.toInt();
     });
     connect(m_stopAni, &QPropertyAnimation::valueChanged, [ = ](QVariant value) {
         emit tipWidthChanged(std::max(value.toInt(), this->width()));
         setFixedWidth(value.toInt());
+        qCDebug(dsrApp) << "Stop animation value changed:" << value.toInt();
     });
     connect(m_stopAni, &QPropertyAnimation::finished, this, [ = ] {
         qCDebug(dsrApp) << "Stop animation finished, clearing text";
@@ -42,6 +45,7 @@ void SaveTips::setSaveText(QString text)
 
 int SaveTips::tipWidth() const
 {
+    qCDebug(dsrApp) << "Getting current tip width.";
     return  this->width();
 }
 
@@ -53,10 +57,12 @@ void SaveTips::setTipWidth(int tipsWidth)
 
 SaveTips::~SaveTips()
 {
+    qCDebug(dsrApp) << "SaveTips destructor called.";
 }
 
 void SaveTips::startAnimation()
 {
+    qCDebug(dsrApp) << "Starting animation for SaveTips.";
     m_stopAni->stop();
     m_startAni->stop();
     m_startAni->setDuration(220);
@@ -69,6 +75,7 @@ void SaveTips::startAnimation()
 
 void SaveTips::endAnimation()
 {
+    qCDebug(dsrApp) << "Ending animation for SaveTips.";
     m_stopAni->setDuration(220);
     m_stopAni->setStartValue(m_tipsWidth);
     m_stopAni->setEndValue(0);

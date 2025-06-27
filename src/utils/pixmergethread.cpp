@@ -17,24 +17,26 @@ PixMergeThread::PixMergeThread(QObject *parent) : QThread(parent)
 #if (QT_VERSION_MAJOR == 5)
     m_lastTime = int(QDateTime::currentDateTime().toTime_t());
 #elif (QT_VERSION_MAJOR == 6)
-    m_lastTime = int(QDateTime::currentDateTime().toSecsSinceEpoch());m_lastTime = int(QDateTime::currentDateTime().toSecsSinceEpoch());
+    m_lastTime = int(QDateTime::currentDateTime().toSecsSinceEpoch());
 #endif
-    qCInfo(dsrApp) << "PixMergeThread initialized";
+    qCDebug(dsrApp) << "PixMergeThread initialized";
 }
 
 PixMergeThread::~PixMergeThread()
 {
-
+    qCDebug(dsrApp) << "PixMergeThread destructor called.";
 }
 
 void PixMergeThread::stopTask()
 {
     m_loopTask = false;
+    qCDebug(dsrApp) << "Stopping task loop.";
 }
 
 //滚动向上时添加
 void PixMergeThread::ScrollUpAddImg(const QPixmap &picture)
 {
+    qCDebug(dsrApp) << "Adding image for scroll up.";
     if (m_bottomHeight == -1) {
         cv::Mat tempData = qPixmapToCvMat(picture);
         m_bottomHeight = getBottomFixedHigh(m_curImg, tempData);
@@ -59,10 +61,11 @@ void PixMergeThread::ScrollUpAddImg(const QPixmap &picture)
 //滚动向下时添加
 void PixMergeThread::ScrollDwonAddImg(const QPixmap &picture)
 {
+    qCDebug(dsrApp) << "Adding image for scroll down.";
     if (m_headHeight == -1) {
         cv::Mat tempData = qPixmapToCvMat(picture);
         m_headHeight = getTopFixedHigh(m_curImg, tempData);
-        qDebug() << "计算出顶部固定高度:" << m_headHeight;
+        qCDebug(dsrApp) << "Calculated top fixed height:" << m_headHeight;
     }
     QPair<QPixmap, PictureDirection> pair;
     QMutexLocker locker(&m_Mutex);
@@ -76,12 +79,13 @@ void PixMergeThread::ScrollDwonAddImg(const QPixmap &picture)
         pair.first = picture;
         pair.second = ScrollDown;
         m_pixImgs.enqueue(pair);
-        qCDebug(dsrApp) << "Added full image to queue";
+        qCDebug(dsrApp) << "Added full image to queue for ScrollDown.";
     }
 }
 
 void PixMergeThread::addShotImg(const QPixmap &picture, PictureDirection direction)
 {
+    qCDebug(dsrApp) << "Adding shot image with direction:" << direction;
     if (m_loopTask == false) {
         qCDebug(dsrApp) << "Task stopped, image not added";
         return;
@@ -94,19 +98,22 @@ void PixMergeThread::addShotImg(const QPixmap &picture, PictureDirection directi
 
     if (m_curImg.empty()) {
         m_curImg = qPixmapToCvMat(picture);
-        qCDebug(dsrApp) << "First image initialized";
+        qCDebug(dsrApp) << "First image initialized.";
         return;
     }
     //将图片去除顶部或者底部的固定区域，放入图片队列
     if (direction == ScrollDown) {
+        qCDebug(dsrApp) << "Calling ScrollDwonAddImg.";
         ScrollDwonAddImg(picture);
     } else {
+        qCDebug(dsrApp) << "Calling ScrollUpAddImg.";
         ScrollUpAddImg(picture);
     }
 }
 
 QImage PixMergeThread::getMerageResult() const
 {
+    qCDebug(dsrApp) << "Getting merged image result.";
     return  QImage(m_curImg.data, m_curImg.cols, m_curImg.rows, static_cast<int>(m_curImg.step), QImage::Format_ARGB32).copy();
 }
 
@@ -131,29 +138,33 @@ void PixMergeThread::run()
         }
         QThread::currentThread()->msleep(300);
     }
+    qCDebug(dsrApp) << "Thread run loop finished.";
 }
 //设置是否为手动模式
 void PixMergeThread::setScrollModel(bool isManualScrollMode)
 {
     m_isManualScrollModel = isManualScrollMode;
+    qCDebug(dsrApp) << "Setting scroll mode to manual:" << isManualScrollMode;
     //m_lastTime = QDateTime::currentDateTime().toTime_t();
 }
 
 void PixMergeThread::clearCurImg()
 {
     m_curImg.release();
+    qCDebug(dsrApp) << "Cleared current image.";
 }
 
 //计算时间差
 void PixMergeThread::calculateTimeDiff(int time)
 {
     m_curTimeDiff = (time - m_lastTime) * 100;
-    qDebug() << "time:" << time << "m_lastTime" << m_lastTime << "m_curTimeDiff" << m_curTimeDiff;
+    qCDebug(dsrApp) << "Calculated time difference: " << m_curTimeDiff << " from time: " << time << " last time: " << m_lastTime;
     m_lastTime = time;
 }
 
 bool PixMergeThread::isOneWay()
 {
+    qCDebug(dsrApp) << "Checking if scroll is one way.";
     if (m_upCount > 0 && m_downCount > 0)
         return false;
     return true;
@@ -163,10 +174,12 @@ bool PixMergeThread::isOneWay()
 void PixMergeThread::setIsLastImg(bool isLastImg)
 {
     m_isLastPixmap = isLastImg;
+    qCDebug(dsrApp) << "Setting isLastImg flag to:" << isLastImg;
 }
 
 cv::Mat PixMergeThread::qPixmapToCvMat(const QPixmap &inPixmap)
 {
+    qCDebug(dsrApp) << "Converting QPixmap to cv::Mat.";
     //qDebug() << inPixmap.toImage().format();
     //if(QImage::Format_RGB32 == inPixmap.toImage().format()) {
     QImage   swapped = inPixmap.toImage();
@@ -178,6 +191,7 @@ cv::Mat PixMergeThread::qPixmapToCvMat(const QPixmap &inPixmap)
 
 bool PixMergeThread::mergeImageWork(const cv::Mat &image, int imageStatus)
 {
+    qCDebug(dsrApp) << "Merging image with status:" << imageStatus;
     if (image.empty()) {
         qCWarning(dsrApp) << "Input image is empty for merge operation";
         return false;
@@ -186,9 +200,11 @@ bool PixMergeThread::mergeImageWork(const cv::Mat &image, int imageStatus)
     bool isSucess = false;
     switch (imageStatus) {
     case ScrollDown:
+        qCDebug(dsrApp) << "Merging image for ScrollDown.";
         isSucess = splicePictureDown(image);
         return isSucess;
     case ScrollUp:
+        qCDebug(dsrApp) << "Merging image for ScrollUp.";
         isSucess = splicePictureUp(image);
         return isSucess;
     default:
@@ -199,19 +215,23 @@ bool PixMergeThread::mergeImageWork(const cv::Mat &image, int imageStatus)
 
 int PixMergeThread::getTopFixedHigh(cv::Mat &img1, cv::Mat &img2)
 {
+    qCDebug(dsrApp) << "Calculating top fixed height.";
     // 计算变化部分
     for (int i = 0; i < img1.rows; ++i) {
         for (int j = 0; j < img1.cols; ++j) {
             if (img1.at<cv::Vec3b>(i, j) != img2.at<cv::Vec3b>(i, j)) {
+                qCDebug(dsrApp) << "Found top fixed height:" << i;
                 return i;
             }
         }
     }
+    qCDebug(dsrApp) << "No top fixed height found, returning 0.";
     return 0;
 }
 //裁剪底部固定区域
 int PixMergeThread::getBottomFixedHigh(cv::Mat &img1, cv::Mat &img2)
 {
+    qCDebug(dsrApp) << "Calculating bottom fixed height.";
     int rowsCount = img2.rows - 1;
     // 计算变化部分
     for (int i = img1.rows - 1; i > 0; i--) {
@@ -223,12 +243,14 @@ int PixMergeThread::getBottomFixedHigh(cv::Mat &img1, cv::Mat &img2)
         }
         --rowsCount;
     }
+    qCDebug(dsrApp) << "No bottom fixed height found, returning 0.";
     return 0;
 }
 
 //向上拼接图片
 bool PixMergeThread::splicePictureUp(const cv::Mat &image)
 {
+    qCDebug(dsrApp) << "Splicing picture upwards.";
     // 保存后的最后一张图片不做长度检查
     if (!m_isLastPixmap && m_curImg.rows > LONG_IMG_MAX_HEIGHT) {
         // 拼接超过了最大限度

@@ -5,6 +5,7 @@
 
 #include "button_feedback.h"
 #include "utils.h"
+#include "utils/log.h"
 
 #include <DHiDPIHelper>
 #include <DWindowManagerHelper>
@@ -24,10 +25,13 @@ DGUI_USE_NAMESPACE
 
 ButtonFeedback::ButtonFeedback(DWidget *parent) : DWidget(parent)
 {
+    qCDebug(dsrApp) << "Entering ButtonFeedback constructor.";
     installEventFilter(this);  // add event filter
+    qCDebug(dsrApp) << "Event filter installed.";
     setAttribute(Qt::WA_ShowWithoutActivating);
     setWindowFlags(Qt::WindowDoesNotAcceptFocus | Qt::BypassWindowManagerHint | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
+    qCDebug(dsrApp) << "Window attributes and flags set.";
 
     for (int i = 0; i < 10; ++i) {
         QString svgName = QString("recorder/button_feedback_%1.svg").arg(i);
@@ -46,40 +50,55 @@ ButtonFeedback::ButtonFeedback(DWidget *parent) : DWidget(parent)
     buttonFeedback9Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("button_feedback_9.svg"));
     */
     setFixedSize(buttonFeedbackImg[0].width(), buttonFeedbackImg[0].height());
+    qCDebug(dsrApp) << "Fixed size set based on first image:" << buttonFeedbackImg[0].width() << "x" << buttonFeedbackImg[0].height();
 
     frameIndex = 0;
+    qCDebug(dsrApp) << "Frame index initialized to 0.";
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    qCDebug(dsrApp) << "Timer created and connected to update slot.";
 
     //Utils::passInputEvent(static_cast<int>(this->winId()));
     m_painter =  new QPainter();
+    qCDebug(dsrApp) << "QPainter instance created.";
+    qCDebug(dsrApp) << "Exiting ButtonFeedback constructor.";
 }
 
 ButtonFeedback::~ButtonFeedback()
 {
+    qCDebug(dsrApp) << "Entering ButtonFeedback destructor.";
     delete m_painter;
     if (nullptr != timer) {
+        qCDebug(dsrApp) << "Deleting timer.";
         delete  timer;
         timer = nullptr;
     }
+    qCDebug(dsrApp) << "Exiting ButtonFeedback destructor.";
 }
 
 void ButtonFeedback::update()
 {
+    qCDebug(dsrApp) << "Entering ButtonFeedback::update.";
     repaint();
+    qCDebug(dsrApp) << "Repaint requested.";
 
     frameIndex += 1;
+    qCDebug(dsrApp) << "Frame index incremented to:" << frameIndex;
 
     if (frameIndex > 9) {
+        qCDebug(dsrApp) << "Frame index exceeded 9. Resetting to 0 and hiding.";
         frameIndex = 0;
 
         if (timer->isActive()) {
+            qCDebug(dsrApp) << "Timer is active, stopping it.";
             timer->stop();
         }
 
         hide();
+        qCDebug(dsrApp) << "Widget hidden.";
     }
+    qCDebug(dsrApp) << "Exiting ButtonFeedback::update. Current frame index:" << frameIndex;
 }
 
 void ButtonFeedback::paintEvent(QPaintEvent *event)
@@ -124,7 +143,9 @@ void ButtonFeedback::paintEvent(QPaintEvent *event)
 
 void ButtonFeedback::showPressFeedback(int x, int y)
 {
+    qCDebug(dsrApp) << "Entering ButtonFeedback::showPressFeedback with X:" << x << ", Y:" << y;
     frameIndex = 1;
+    qCDebug(dsrApp) << "Frame index set to 1.";
 
     show();
     repaint();
@@ -133,12 +154,17 @@ void ButtonFeedback::showPressFeedback(int x, int y)
     int dx = static_cast<int>(dpos.x() - rect().width() / devicePixelRatio / 2);
     int dy = static_cast<int>(dpos.y() - rect().height() / devicePixelRatio / 2);
     move(dx, dy);
+    qCDebug(dsrApp) << "Widget moved to position:" << dx << "," << dy;
     timer->start(FRAME_RATE);
+    qCDebug(dsrApp) << "Timer started with FRAME_RATE:" << FRAME_RATE;
+    qCDebug(dsrApp) << "Exiting ButtonFeedback::showPressFeedback.";
 }
 
 void ButtonFeedback::showDragFeedback(int x, int y)
 {
+    qCDebug(dsrApp) << "Entering ButtonFeedback::showDragFeedback with X:" << x << ", Y:" << y;
     frameIndex = 2;
+    qCDebug(dsrApp) << "Frame index set to 2.";
 
     show();
     repaint();
@@ -147,14 +173,19 @@ void ButtonFeedback::showDragFeedback(int x, int y)
     int dx = static_cast<int>(dpos.x() - rect().width() / devicePixelRatio / 2);
     int dy = static_cast<int>(dpos.y() - rect().height() / devicePixelRatio / 2);
     move(dx, dy);
+    qCDebug(dsrApp) << "Widget moved to position:" << dx << "," << dy;
     if (timer->isActive()) {
+        qCDebug(dsrApp) << "Timer is active, stopping it for drag feedback.";
         timer->stop();
     }
+    qCDebug(dsrApp) << "Exiting ButtonFeedback::showDragFeedback.";
 }
 
 void ButtonFeedback::showReleaseFeedback(int x, int y)
 {
+    qCDebug(dsrApp) << "Entering ButtonFeedback::showReleaseFeedback with X:" << x << ", Y:" << y;
     frameIndex = 3;
+    qCDebug(dsrApp) << "Frame index set to 3.";
 
     show();
     repaint();
@@ -163,5 +194,8 @@ void ButtonFeedback::showReleaseFeedback(int x, int y)
     int dx = static_cast<int>(dpos.x() - rect().width() / devicePixelRatio / 2);
     int dy = static_cast<int>(dpos.y() - rect().height() / devicePixelRatio / 2);
     move(dx, dy);
+    qCDebug(dsrApp) << "Widget moved to position:" << dx << "," << dy;
     timer->start(FRAME_RATE);
+    qCDebug(dsrApp) << "Timer started with FRAME_RATE:" << FRAME_RATE;
+    qCDebug(dsrApp) << "Exiting ButtonFeedback::showReleaseFeedback.";
 }

@@ -18,19 +18,25 @@ const QSize LINE_EDIT_SIZE = QSize(43, 16);
 Separator::Separator(DWidget *parent)
     : DLabel(parent)
 {
+    qCDebug(dsrApp) << "Separator constructor entered";
     setFixedSize(1, 16);
 }
 
-Separator::~Separator() {}
+Separator::~Separator()
+{
+    qCDebug(dsrApp) << "Separator destructor entered";
+}
 
 FontSizeWidget::FontSizeWidget(DWidget *parent)
     : DLabel(parent)
 {
+    qCDebug(dsrApp) << "FontSizeWidget constructor entered";
     initWidget();
 }
 
 void FontSizeWidget::initWidget()
 {
+    qCDebug(dsrApp) << "Initializing FontSizeWidget UI";
     setObjectName("FontSizeWidget");
 //    setStyleSheet(getFileContent(":/resources/qss/fontsizewidget.qss"));
     setFixedSize(86, 18);
@@ -39,6 +45,7 @@ void FontSizeWidget::initWidget()
     m_fontSizeEdit->setFixedSize(LINE_EDIT_SIZE);
 
     m_fontSize = ConfigSettings::instance()->value("text", "fontsize").toInt();
+    qCDebug(dsrApp) << "Retrieved initial font size:" << m_fontSize;
     m_fontSizeEdit->setText(QString("%1").arg(m_fontSize));
     m_addSizeBtn = new DPushButton(this);
     m_addSizeBtn->setObjectName("AddSizeBtn");
@@ -73,17 +80,21 @@ void FontSizeWidget::initWidget()
 
 void FontSizeWidget::setFontSize(int fontSize)
 {
+    qCDebug(dsrApp) << "setFontSize called with:" << fontSize;
     m_fontSize = fontSize;
 }
 
 void FontSizeWidget::adjustFontSize(bool add)
 {
+    qCDebug(dsrApp) << "adjustFontSize called with add:" << add;
     if (add) {
         m_fontSize = m_fontSize + 1;
         m_fontSize = std::min(m_fontSize, 72);
+        qCDebug(dsrApp) << "Increased font size to:" << m_fontSize;
     } else {
         m_fontSize = m_fontSize - 1;
         m_fontSize = std::max(9, m_fontSize);
+        qCDebug(dsrApp) << "Decreased font size to:" << m_fontSize;
     }
 
     qCDebug(dsrApp) << "Adjusted font size to:" << m_fontSize;
@@ -98,4 +109,5 @@ void FontSizeWidget::adjustFontSize(bool add)
 
 FontSizeWidget::~FontSizeWidget()
 {
+    qCDebug(dsrApp) << "FontSizeWidget destructor entered";
 }

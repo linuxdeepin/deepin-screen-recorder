@@ -7,6 +7,7 @@
 #include <QOpenGLWidget>
 #include "../utils/baseutils.h"
 #include "../utils/tempfile.h"
+#include "../utils/log.h"
 
 #include <QOpenGLWidget>
 #include <QCursor>
@@ -25,6 +26,7 @@ const int BOTTOM_RECT_HEIGHT = 14;
 ZoomIndicatorGL::ZoomIndicatorGL(DWidget *parent)
     : QOpenGLWidget(parent)
 {
+    qCDebug(dsrApp) << "ZoomIndicatorGL constructor called.";
     setFixedSize(BACKGROUND_SIZE);
 //    setStyleSheet(getFileContent(":/resources/qss/zoomindicator.qss"));
     setAttribute(Qt::WA_TransparentForMouseEvents);
@@ -38,11 +40,14 @@ ZoomIndicatorGL::ZoomIndicatorGL(DWidget *parent)
     m_globalRect = QRect(-4, -4, BACKGROUND_SIZE.width() + 8, BACKGROUND_SIZE.height() + 8);
 }
 
-ZoomIndicatorGL::~ZoomIndicatorGL() {}
+ZoomIndicatorGL::~ZoomIndicatorGL() {
+    qCDebug(dsrApp) << "ZoomIndicatorGL destructor called.";
+}
 
 
 void ZoomIndicatorGL::paintGL()
 {
+    qCInfo(dsrApp) << "ZoomIndicatorGL::paintGL called.";
 //    using namespace utils;
     QPoint centerPos =  this->cursor().pos();
     centerPos = QPoint(std::max(centerPos.x() - this->window()->x(), 0),
@@ -87,6 +92,7 @@ void ZoomIndicatorGL::paintGL()
 
 void ZoomIndicatorGL::showMagnifier(QPoint pos)
 {
+    qCDebug(dsrApp) << "ZoomIndicatorGL::showMagnifier called at position:" << pos;
     this->show();
     this->move(pos);
     update();

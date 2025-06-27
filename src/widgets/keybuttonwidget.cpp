@@ -23,10 +23,13 @@ const int _BUTTON_WIDTH = 65;
 
 KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
 {
+    qCDebug(dsrApp) << "KeyButtonWidget constructor entered";
     if(DWindowManagerHelper::instance()->hasComposite()){
+        qCDebug(dsrApp) << "Composite manager detected, setting blur radius to 15";
         setBlurRectXRadius(15);
         setBlurRectYRadius(15);
     }else {
+        qCDebug(dsrApp) << "No composite manager, setting blur radius to 0";
         setBlurRectXRadius(0);
         setBlurRectYRadius(0);
     }
@@ -37,8 +40,10 @@ KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
 //    setMaskColor(QColor(255, 255, 255, 140));
 
     if (Utils::themeType == 1) {
+        qCDebug(dsrApp) << "Theme type is 1, setting mask color to white (140 alpha)";
         setMaskColor(QColor(255, 255, 255, 140));
     } else {
+        qCDebug(dsrApp) << "Theme type is not 1, setting mask color to black (76 alpha)";
         setMaskColor(QColor(0, 0, 0, 76));
     }
     //设置透明效果
@@ -65,11 +70,12 @@ KeyButtonWidget::KeyButtonWidget(DWidget *parent) : DBlurEffectWidget(parent)
 
 KeyButtonWidget::~KeyButtonWidget()
 {
-
+    qCDebug(dsrApp) << "KeyButtonWidget destructor entered";
 }
 
 void KeyButtonWidget::setKeyLabelWord(const QString &keyWord)
 {
+    qCDebug(dsrApp) << "setKeyLabelWord called with:" << keyWord;
     m_keyword = keyWord;
     m_word->setText(m_keyword);
     this->repaint();

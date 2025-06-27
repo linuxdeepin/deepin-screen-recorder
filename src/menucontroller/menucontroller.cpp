@@ -20,7 +20,9 @@ MenuController::MenuController(QObject *parent)
     : QObject(parent)
     , m_ration(1)
 {
+    qCDebug(dsrApp) << "MenuController constructor called.";
     m_menu = new DMenu();
+    qCDebug(dsrApp) << "DMenu object created.";
     m_menu->setFocusPolicy(Qt::StrongFocus);
     //for test
 //    m_menu->setStyle(QStyleFactory::create("dlight"));
@@ -160,35 +162,43 @@ MenuController::MenuController(QObject *parent)
 
 void MenuController::showMenu(QPoint pos)
 {
+    qCDebug(dsrApp) << "Showing menu at position:" << pos;
     m_menu->popup(pos);
 }
 
 void MenuController::setUndoEnable(bool status)
 {
+    qCDebug(dsrApp) << "Setting Undo action enabled status to:" << status;
     m_unDoAct->setEnabled(status);
 }
 
 void MenuController::enterEvent(QEnterEvent *e)
 {
     Q_UNUSED(e);
+    qCDebug(dsrApp) << "Enter event received, setting override cursor.";
     qApp->setOverrideCursor(Qt::ArrowCursor);
 }
 
 MenuController::~MenuController()
 {
+    qCDebug(dsrApp) << "MenuController destructor called.";
     if(m_menu){
+        qCDebug(dsrApp) << "Deleting DMenu object.";
         delete  m_menu;
         m_menu = nullptr;
     }
     if(m_unDoAct){
+        qCDebug(dsrApp) << "Deleting Undo action.";
         delete  m_unDoAct;
         m_unDoAct = nullptr;
     }
     if(m_saveAct){
+        qCDebug(dsrApp) << "Deleting Save action.";
         delete  m_saveAct;
         m_saveAct = nullptr;
     }
     if(m_closeAct){
+        qCDebug(dsrApp) << "Deleting Exit action.";
         delete  m_closeAct;
         m_closeAct = nullptr;
     }

@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "tooltips.h"
+#include "../utils/log.h"
 
 #include <DUtil>
 #include <DLabel>
@@ -46,6 +47,7 @@ ToolTips::ToolTips(const QString &text, QWidget *parent):
     d_ptr(new ToolTipsPrivate(this)),
     m_bodyShadow(nullptr)
 {
+    qCDebug(dsrApp) << "ToolTips constructor called with text:" << text;
 //    DThemeManager::instance()->registerWidget(this);
     Q_D(ToolTips);
 
@@ -107,6 +109,7 @@ ToolTips::ToolTips(const QString &text, QWidget *parent):
 
 ToolTips::~ToolTips()
 {
+    qCDebug(dsrApp) << "ToolTips destructor called.";
     if(nullptr != m_bodyShadow){
         //m_bodyShadow->deleteLater();
         delete m_bodyShadow;
@@ -117,12 +120,14 @@ ToolTips::~ToolTips()
 #if (QT_VERSION_MAJOR == 5)
 void ToolTips::enterEvent(QEvent *e)
 {
+    qCDebug(dsrApp) << "ToolTips::enterEvent (Qt5) called.";
     Q_UNUSED(e);
     hide();
 }
 #elif (QT_VERSION_MAJOR == 6)
 void ToolTips::enterEvent(QEnterEvent *e)
 {
+    qCDebug(dsrApp) << "ToolTips::enterEvent (Qt6) called.";
     Q_UNUSED(e);
     hide();
 }
@@ -130,12 +135,14 @@ void ToolTips::enterEvent(QEnterEvent *e)
 
 QBrush ToolTips::background() const
 {
+    qCDebug(dsrApp) << "ToolTips::background called.";
     Q_D(const ToolTips);
     return d->background;
 }
 
 void ToolTips::setText(const QString text)
 {
+    qCDebug(dsrApp) << "ToolTips::setText called with text:" << text;
     Q_D(const ToolTips);
     d->textLable->setText(text);
     m_strText = text;
@@ -144,39 +151,46 @@ void ToolTips::setText(const QString text)
 
 int ToolTips::radius() const
 {
+    qCDebug(dsrApp) << "ToolTips::radius called.";
     Q_D(const ToolTips);
     return d->radius;
 }
 
 QColor ToolTips::borderColor() const
 {
+    qCDebug(dsrApp) << "ToolTips::borderColor called.";
     Q_D(const ToolTips);
     return d->borderColor;
 }
 
 void ToolTips::setBackground(QBrush background)
 {
+    qCDebug(dsrApp) << "ToolTips::setBackground called.";
     Q_D(ToolTips);
     d->background = background;
 }
 void ToolTips::setRadius(int radius)
 {
+    qCDebug(dsrApp) << "ToolTips::setRadius called with radius:" << radius;
     Q_D(ToolTips);
     d->radius = radius;
 }
 
 void ToolTips::setBorderColor(QColor borderColor)
 {
+    qCDebug(dsrApp) << "ToolTips::setBorderColor called with color:" << borderColor;
     Q_D(ToolTips);
     d->borderColor = borderColor;
 }
 void ToolTips::setVertical()
 {
+    qCDebug(dsrApp) << "ToolTips::setVertical called.";
     m_isVertical = true;
 }
 /*
 void ToolTips::pop(QPoint center)
 {
+    qCDebug(dsrApp) << "ToolTips::pop called at center:" << center;
     Q_D(ToolTips);
     Q_UNUSED(d)
 
@@ -217,6 +231,7 @@ void ToolTips::pop(QPoint center)
 #ifdef _OLD
 void ToolTips::paintEvent(QPaintEvent *)
 {
+    qCDebug(dsrApp) << "ToolTips::paintEvent called (OLD version).";
     Q_D(ToolTips);
 //    QFrame::paintEvent(e);
 //    return;
@@ -314,6 +329,7 @@ void ToolTips::resizeEvent(QResizeEvent *ev)
 
 void ToolTips::resetSize(const int maxWidth)
 {
+    qCDebug(dsrApp) << "ToolTips::resetSize called with maxWidth:" << maxWidth;
     Q_D(ToolTips);
     QFont font = DFontSizeManager::instance()->get(DFontSizeManager::T8);
     QFontMetrics fm(font);

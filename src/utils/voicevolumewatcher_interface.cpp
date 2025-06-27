@@ -10,6 +10,7 @@
  */
 
 #include "voicevolumewatcher_interface.h"
+#include "utils/log.h"
 
 /*
  * Implementation of interface class voicevolumewatcher_interface
@@ -18,9 +19,11 @@
 voicevolumewatcher_interface::voicevolumewatcher_interface(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent)
     : QDBusAbstractInterface(service, path, staticInterfaceName(), connection, parent)
 {
+    qCDebug(dsrApp) << Q_FUNC_INFO << "voicevolumewatcher_interface initialized for service:" << service << ", path:" << path;
 }
 
 voicevolumewatcher_interface::~voicevolumewatcher_interface()
 {
+    qCDebug(dsrApp) << Q_FUNC_INFO << "voicevolumewatcher_interface destructor called.";
 }
 

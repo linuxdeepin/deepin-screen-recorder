@@ -8,6 +8,7 @@
 #include "constant.h"
 #include "utils/configsettings.h"
 #include "utils/tempfile.h"
+#include "utils/log.h"
 
 #include <DWidget>
 #include <DHiDPIHelper>
@@ -26,14 +27,16 @@ DWIDGET_USE_NAMESPACE
 CountdownTooltip::CountdownTooltip(DWidget *parent) : DWidget(parent),
     showCountdownTimer(nullptr)
 {
+    qCInfo(dsrApp) << Q_FUNC_INFO << "Entry.";
     installEventFilter(this);
 
-
     if(Utils::themeType == 1) {
+        qCInfo(dsrApp) << Q_FUNC_INFO << "Theme type is 1. Loading light theme countdown images.";
         countdown1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_1.svg"));
         countdown2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_2.svg"));
         countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_3.svg"));
     } else {
+        qCInfo(dsrApp) << Q_FUNC_INFO << "Theme type is not 1. Loading dark theme countdown images.";
         countdown1Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_1-01.svg"));
         countdown2Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_2-01.svg"));
         countdown3Img = DHiDPIHelper::loadNxPixmap(Utils::getQrcPath("recorder/countdown_3-01.svg"));
@@ -43,12 +46,14 @@ CountdownTooltip::CountdownTooltip(DWidget *parent) : DWidget(parent),
 
     text = tr("Click the tray icon \nor press the shortcut again to stop recording");
     if (Utils::isTabletEnvironment) {
-    text = tr("Do not rotate your screen during recording");
+        qCInfo(dsrApp) << Q_FUNC_INFO << "Tablet environment detected. Changing tooltip text.";
+        text = tr("Do not rotate your screen during recording");
     }
     QSize size = Utils::getRenderSize(Constant::RECTANGLE_FONT_SIZE, text);
     int width = size.width() + Constant::RECTANGLE_PADDING * 2;
     int height = size.height() + Constant::RECTANGLE_PADDING * 2 + countdown1Img.height() + NUMBER_PADDING_Y;
     setFixedSize(width, height);
+    qCInfo(dsrApp) << Q_FUNC_INFO << "Exit. Initial size:" << size << ", Width:" << width << ", Height:" << height;
 }
 
 //2021.6.24注释
@@ -126,6 +131,7 @@ void CountdownTooltip::paintEvent(QPaintEvent *)
 
 QPixmap CountdownTooltip::getTooltipBackground()
 {
+    qCInfo(dsrApp) << Q_FUNC_INFO << "Entry."; // Log function entry
     TempFile *tempFile = TempFile::instance();
     const int radius = 50;
 
@@ -138,6 +144,7 @@ QPixmap CountdownTooltip::getTooltipBackground()
 
     QPixmap tmpImg = tempFile->getFullscreenPixmap().copy(target);
     if (!tmpImg.isNull()) {
+        qCInfo(dsrApp) << Q_FUNC_INFO << "Temporary image is not null. Scaling image."; // Log branch
         int imgWidth = tmpImg.width();
         int imgHeight = tmpImg.height();
         tmpImg = tmpImg.scaled(imgWidth / radius, imgHeight / radius, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
@@ -145,12 +152,13 @@ QPixmap CountdownTooltip::getTooltipBackground()
     }
 
 #ifdef QT_DEBUG
-    qDebug() << "rect().x(),rect().y()" << rect().x() << "," << rect().y();
-    qDebug() << "rect().width(),rect().height()" << rect().width() << "," << rect().height();
-    qDebug() << "this->x(),this->y()" << this->x() << "," << this->y();
-    qDebug() << "this->width(),this->height()" << this->width() << "," << this->height();
-    qDebug() << "tmpImg.width(),tmpImg.height()" << tmpImg.width() << "," << tmpImg.height();
+    qCInfo(dsrApp) << "rect().x(),rect().y()" << rect().x() << "," << rect().y();
+    qCInfo(dsrApp) << "rect().width(),rect().height()" << rect().width() << "," << rect().height();
+    qCInfo(dsrApp) << "this->x(),this->y()" << this->x() << "," << this->y();
+    qCInfo(dsrApp) << "this->width(),this->height()" << this->width() << "," << this->height();
+    qCInfo(dsrApp) << "tmpImg.width(),tmpImg.height()" << tmpImg.width() << "," << tmpImg.height();
 #endif
+    qCInfo(dsrApp) << Q_FUNC_INFO << "Exit."; // Log function exit
     return  tmpImg;
 }
 
@@ -168,26 +176,34 @@ void CountdownTooltip::paintRect(QPainter &painter,QPixmap &blurPixmap)
 
 void CountdownTooltip::start()
 {
+    qCInfo(dsrApp) << Q_FUNC_INFO << "Entry."; // Log function entry
     showCountdownCounter = 3;
     if(nullptr == showCountdownTimer){
+        qCInfo(dsrApp) << Q_FUNC_INFO << "showCountdownTimer is nullptr, creating new QTimer."; // Log branch
         showCountdownTimer = new QTimer(this);
     }
     if(nullptr != showCountdownTimer){
+        qCInfo(dsrApp) << Q_FUNC_INFO << "Connecting timeout signal and starting timer."; // Log branch
         connect(showCountdownTimer, SIGNAL(timeout()), this, SLOT(update()));
         showCountdownTimer->start(1000);
     }
+    qCInfo(dsrApp) << Q_FUNC_INFO << "Exit."; // Log function exit
 }
 
 void CountdownTooltip::startAtOnce()
 {
+    qCInfo(dsrApp) << Q_FUNC_INFO << "Entry."; // Log function entry
     emit finished();
+    qCInfo(dsrApp) << Q_FUNC_INFO << "Exit."; // Log function exit
 }
 
 void CountdownTooltip::update()
 {
+    qCInfo(dsrApp) << Q_FUNC_INFO << "Entry."; // Log function entry
     showCountdownCounter--;
 
     if (showCountdownCounter <= 0 && nullptr != showCountdownTimer) {
+        qCInfo(dsrApp) << Q_FUNC_INFO << "showCountdownCounter <= 0, stopping timer."; // Log branch
         showCountdownTimer->stop();
 
         emit finished();

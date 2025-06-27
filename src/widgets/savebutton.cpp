@@ -15,6 +15,7 @@ const QSize LIST_BTN = QSize(11, 22);
 SaveButton::SaveButton(DWidget *parent)
     : DPushButton(parent)
 {
+    qCDebug(dsrApp) << "SaveButton constructor entered";
     setFixedSize(TOOL_SAVE_BTN);
 //    setStyleSheet(getFileContent(":/resources/qss/toolsavebutton.qss"));
     m_saveBtn = new ToolButton(this);
@@ -34,6 +35,7 @@ SaveButton::SaveButton(DWidget *parent)
 
     connect(m_saveBtn, &ToolButton::clicked, this,
             &SaveButton::saveAction);
+    qCDebug(dsrApp) << "Connected saveBtn clicked to saveAction";
     connect(m_listBtn, &ToolButton::clicked, this, [ = ]() {
         bool isChecked = m_listBtn->isChecked();
         qCDebug(dsrApp) << "List button clicked, checked status:" << isChecked;
@@ -43,4 +45,5 @@ SaveButton::SaveButton(DWidget *parent)
 
 SaveButton::~SaveButton()
 {
+    qCDebug(dsrApp) << "SaveButton destructor entered";
 }

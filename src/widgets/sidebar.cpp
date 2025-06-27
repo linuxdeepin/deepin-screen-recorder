@@ -44,18 +44,19 @@ SideBarWidget::SideBarWidget(MainWindow *pmainwindow, DWidget *parent)
     : DFloatingWidget(parent)
     , m_expanded(false)
 {
+    qCDebug(dsrApp) << "SideBarWidget constructor called.";
     m_pMainWindow = pmainwindow;
     initSideBarWidget();
 }
 
 SideBarWidget::~SideBarWidget()
 {
-
+    qCDebug(dsrApp) << "SideBarWidget destructor called.";
 }
 
 void SideBarWidget::initSideBarWidget()
 {
-
+    qCDebug(dsrApp) << "SideBarWidget::initSideBarWidget called.";
 //    this->setAttribute(Qt::WA_StyledBackground, true);
 //    this->setStyleSheet("background-color: rgb(255,0, 0)");
     setBlurBackgroundEnabled(true);
@@ -63,8 +64,10 @@ void SideBarWidget::initSideBarWidget()
     blurBackground()->setMode(DBlurEffectWidget::GaussianBlur);
     blurBackground()->setBlurEnabled(true);
     if (Utils::themeType == 1) {
+        qCDebug(dsrApp) << "Setting blur background mask color for light theme.";
         blurBackground()->setMaskColor(QColor(0xF7, 0xF7, 0xF7, 153));
     } else {
+        qCDebug(dsrApp) << "Setting blur background mask color for dark theme.";
         blurBackground()->setMaskColor(QColor(0, 0, 0, 76));
     }
     //设置侧边栏大小
@@ -93,7 +96,7 @@ void SideBarWidget::initSideBarWidget()
 }
 void SideBarWidget::changeShotToolWidget(const QString &func)
 {
-    qDebug() << __FUNCTION__ << __LINE__ << func;
+    qCDebug(dsrApp) << "SideBarWidget::changeShotToolWidget called with func:" << func;
     if (func == "effect") {
         qCDebug(dsrApp) << "Effect mode: hiding separator";
         m_seperator->hide();
@@ -108,10 +111,13 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
             func == "line" ||
             func == "arrow" ||
             func == "pen") {
+        qCDebug(dsrApp) << "Resizing sidebar for rectangle, oval, line, arrow, or pen.";
         resize(TOOLBAR_WIDGET_SIZE1);
     } else if (func == "text") {
+        qCDebug(dsrApp) << "Resizing sidebar for text.";
         resize(TOOLBAR_WIDGET_SIZE2);
     } else if (func == "effect") {
+        qCDebug(dsrApp) << "Resizing sidebar for effect.";
         resize(TOOLBAR_WIDGET_SIZE3);
     }
     m_shotTool->switchContent(func);
@@ -120,7 +126,7 @@ void SideBarWidget::changeShotToolWidget(const QString &func)
 
 int SideBarWidget::getSideBarWidth(const QString &func)
 {
-    qCDebug(dsrApp) << "Getting sidebar width for function:" << func;
+    qCDebug(dsrApp) << "SideBarWidget::getSideBarWidth called for function:" << func;
     int width = TOOLBAR_WIDGET_SIZE1.width();
     if (func == "rectangle" ||
             func == "oval" ||
@@ -148,6 +154,7 @@ void SideBarWidget::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
 
+    qCDebug(dsrApp) << "SideBarWidget::showEvent called.";
     DFloatingWidget::showEvent(event);
 }
 
@@ -156,36 +163,42 @@ void SideBarWidget::showEvent(QShowEvent *event)
 SideBar::SideBar(DWidget *parent) : DLabel(parent)
     , m_sidebarWidget(nullptr), m_expanded(false)
 {
+    qCDebug(dsrApp) << "SideBar constructor called.";
 }
 
 SideBar::~SideBar()
 {
-
+    qCDebug(dsrApp) << "SideBar destructor called.";
 }
 
 void SideBar::changeShotToolFunc(const QString &func)
 {
+    qCDebug(dsrApp) << "SideBar::changeShotToolFunc called with func:" << func;
     m_sidebarWidget->changeShotToolWidget(func);
     resize(m_sidebarWidget->size());
 }
 
 int SideBar::getSideBarWidth(const QString &func)
 {
+    qCDebug(dsrApp) << "SideBar::getSideBarWidth called with func:" << func;
     return m_sidebarWidget->getSideBarWidth(func);
 }
 
 bool SideBar::isDraged()
 {
+    qCDebug(dsrApp) << "SideBar::isDraged called.";
     return m_isDrag;
 }
 
 bool SideBar::isPressed()
 {
+    qCDebug(dsrApp) << "SideBar::isPressed called.";
     return m_isPress;
 }
 
 void SideBar::showAt(QPoint pos)
 {
+    qCDebug(dsrApp) << "SideBar::showAt called at pos:" << pos;
     if (!isVisible())
         this->show();
 
@@ -193,15 +206,18 @@ void SideBar::showAt(QPoint pos)
 }
 
 void SideBar::showWidget(){
+    qCDebug(dsrApp) << "SideBar::showWidget called.";
     m_sidebarWidget->show();
 }
 
 void SideBar::hideWidget(){
+    qCDebug(dsrApp) << "SideBar::hideWidget called.";
     m_sidebarWidget->hide();
 }
 
 void SideBar::initSideBar(MainWindow *pmainWindow)
 {
+    qCDebug(dsrApp) << "SideBar::initSideBar called.";
     m_pMainWindow = pmainWindow;
     m_sidebarWidget = new SideBarWidget(pmainWindow, this);
     resize(m_sidebarWidget->size());
@@ -218,12 +234,14 @@ void SideBar::setColorFunc(const QString &func)
 */
 void SideBar::paintEvent(QPaintEvent *e)
 {
+    qCDebug(dsrApp) << "SideBar::paintEvent called.";
     DLabel::paintEvent(e);
 }
 
 #if (QT_VERSION_MAJOR == 5)
 void SideBar::enterEvent(QEvent *e)
 {
+    qCDebug(dsrApp) << "SideBar::enterEvent (Qt5) called.";
     //    qApp->setOverrideCursor(Qt::ArrowCursor);
     QApplication::setOverrideCursor(Qt::OpenHandCursor);
     DLabel::enterEvent(e);
@@ -231,6 +249,7 @@ void SideBar::enterEvent(QEvent *e)
 #elif (QT_VERSION_MAJOR == 6)
 void SideBar::enterEvent(QEnterEvent *e)
 {
+    qCDebug(dsrApp) << "SideBar::enterEvent (Qt6) called.";
     //    qApp->setOverrideCursor(Qt::ArrowCursor);
     QApplication::setOverrideCursor(Qt::OpenHandCursor);
     DLabel::enterEvent(e);
@@ -239,12 +258,15 @@ void SideBar::enterEvent(QEnterEvent *e)
 
 bool SideBar::eventFilter(QObject *obj, QEvent *event)
 {
+    qCDebug(dsrApp) << "SideBar::eventFilter called.";
     return DLabel::eventFilter(obj, event);
 }
 
 void SideBar::mousePressEvent(QMouseEvent *event)
 {
+    qCDebug(dsrApp) << "SideBar::mousePressEvent called.";
     if (event->button() == Qt::LeftButton) {
+        qCDebug(dsrApp) << "Mouse left button pressed.";
         QApplication::setOverrideCursor(Qt::ClosedHandCursor);
         m_isPress = true;
         //获得鼠标的初始位置
@@ -257,8 +279,10 @@ void SideBar::mousePressEvent(QMouseEvent *event)
 
 void SideBar::mouseMoveEvent(QMouseEvent *event)
 {
+    qCDebug(dsrApp) << "SideBar::mouseMoveEvent called.";
     //判断是否在拖拽移动
     if (m_isPress) {
+        qCDebug(dsrApp) << "Mouse is pressed, moving sidebar.";
         m_isDrag = true;
         //获得鼠标移动的距离
         QPoint move_distance = event->globalPos() - m_mouseStartPoint;
@@ -271,8 +295,10 @@ void SideBar::mouseMoveEvent(QMouseEvent *event)
 
 void SideBar::mouseReleaseEvent(QMouseEvent *event)
 {
+    qCDebug(dsrApp) << "SideBar::mouseReleaseEvent called.";
     //放下左键即停止移动
     if (event->button() == Qt::LeftButton) {
+        qCDebug(dsrApp) << "Mouse left button released.";
         m_isPress = false;
         QApplication::setOverrideCursor(Qt::OpenHandCursor);
     }

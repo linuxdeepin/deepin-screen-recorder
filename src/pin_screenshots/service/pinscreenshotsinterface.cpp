@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "pinscreenshotsinterface.h"
+#include "../../utils/log.h"
 
 PinScreenShotsInterface::PinScreenShotsInterface(const QString &serviceName,
                                                  const QString &ObjectPath,
@@ -12,10 +13,10 @@ PinScreenShotsInterface::PinScreenShotsInterface(const QString &serviceName,
     : QDBusAbstractInterface(serviceName, ObjectPath, staticInterfaceName(), connection, parent)
 
 {
-
+    qCDebug(dsrApp) << "PinScreenShotsInterface constructor called. Service:" << serviceName << ", Path:" << ObjectPath;
 }
 
 PinScreenShotsInterface::~PinScreenShotsInterface()
 {
-
+    qCDebug(dsrApp) << "PinScreenShotsInterface destructor called.";
 }

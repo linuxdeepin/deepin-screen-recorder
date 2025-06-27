@@ -32,29 +32,29 @@ const int BOTTOM_RECT_HEIGHT = 14;
 ZoomIndicator::ZoomIndicator(DWidget *parent,bool isRecord)
     : DLabel(parent)
 {
-    qCDebug(dsrApp) << "Initializing ZoomIndicator, isRecord:" << isRecord;
+    qCDebug(dsrApp) << "ZoomIndicator constructor called, isRecord:" << isRecord;
 
     QDBusInterface wmInterface("com.deepin.wm",
                                "/com/deepin/wm",
                                "com.deepin.wm",
                                QDBusConnection::sessionBus());
     if (!wmInterface.isValid()) {
-        qWarning() << "无法获取多任务视图dbus接口！";
+        qCDebug(dsrApp) << "Failed to get multitasking view dbus interface!";
         m_isOpenWM = false;
     } else {
         QDBusReply<bool> reply = wmInterface.call("GetMultiTaskingStatus");
         if (!reply.isValid()) {
-            qWarning() << "无法调用获取多任务视图状态的dbus方法！";
+            qCDebug(dsrApp) << "Failed to call dbus method to get multitasking view status!";
             m_isOpenWM = false;
         } else {
             m_isOpenWM = reply.value();
+            qCDebug(dsrApp) << "Multitasking view status:" << (m_isOpenWM ? "open" : "closed");
         }
     }
-    qInfo() << "多任务视图是否打开: " << (m_isOpenWM ? "是" : "否");
     m_isRecord = isRecord;
 
     if (Utils::isWaylandMode && !m_isOpenWM && !m_isRecord) {
-        qCDebug(dsrApp) << "Creating ZoomIndicatorGL for Wayland mode";
+        qCDebug(dsrApp) << "Creating ZoomIndicatorGL for Wayland mode, hiding current indicator.";
         m_zoomIndicatorGL = new ZoomIndicatorGL(parent);
         this->hide();
         return;
@@ -75,13 +75,16 @@ ZoomIndicator::ZoomIndicator(DWidget *parent,bool isRecord)
 
 ZoomIndicator::~ZoomIndicator()
 {
-    if (Utils::isWaylandMode && !m_isOpenWM && m_zoomIndicatorGL&& !m_isRecord) {
+    qCDebug(dsrApp) << "ZoomIndicator destructor called.";
+    if (Utils::isWaylandMode && !m_isOpenWM && m_zoomIndicatorGL && !m_isRecord) {
+        qCDebug(dsrApp) << "Deleting ZoomIndicatorGL in Wayland mode.";
         delete  m_zoomIndicatorGL;
     }
 }
 
 void ZoomIndicator::paintEvent(QPaintEvent *)
 {
+    qCDebug(dsrApp) << "ZoomIndicator::paintEvent called.";
 //    using namespace utils;
     //通过此方式获取光标的位置实际是当前光标所在的屏幕的位置加上光标的位置，实际上已经进行了缩放，但是只缩放光标所在的屏幕
     //例如两个1920的屏幕横连，实际宽度是3840,进行1.25缩放后实际宽度是3072、但是屏幕1上的点的范围是0～1920,屏幕二上的范围是1920～3840

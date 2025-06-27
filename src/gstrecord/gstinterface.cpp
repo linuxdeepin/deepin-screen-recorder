@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "gstinterface.h"
+#include "../utils/log.h"
 
 #include <QDebug>
 #include <QLibraryInfo>
@@ -44,10 +45,11 @@ QLibrary gstInterface::m_libgobject;
 
 gstInterface::gstInterface()
 {
-
+    qCDebug(dsrApp) << "gstInterface constructor called.";
 }
 QString gstInterface::libPath(const QString &sLib)
 {
+    qCDebug(dsrApp) << "libPath method called with sLib:" << sLib;
     qInfo() << "gstreamer lib name is " << sLib;
     QDir dir;
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
@@ -55,34 +57,41 @@ QString gstInterface::libPath(const QString &sLib)
     QStringList list = dir.entryList(QStringList() << (sLib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
     if (list.isEmpty()) {
         qWarning() << "list is empty!";
+        qCDebug(dsrApp) << "Library list is empty for:" << sLib;
     }
     if (list.contains(sLib)) {
+        qCDebug(dsrApp) << "Exact library found:" << sLib;
         return sLib;
     } else {
+        qCDebug(dsrApp) << "Library list:" << list;
         list.sort();
     }
-
+    qCDebug(dsrApp) << "Returning last library in sorted list:" << list.last();
     //Q_ASSERT(list.size() > 0);
     return list.last();
 }
 void gstInterface::initFunctions()
 {
-    if (m_isInitFunction)
+    qCDebug(dsrApp) << "initFunctions method called.";
+    if (m_isInitFunction) {
+        qCDebug(dsrApp) << "Functions already initialized. Skipping.";
         return;
+    }
 
     m_libgstreamer.setFileName(libPath("libgstreamer-1.0.so"));
     m_libglib.setFileName(libPath("libglib-2.0.so"));
     m_libgobject.setFileName(libPath("libgobject-2.0.so"));
+    qCDebug(dsrApp) << "Library file names set.";
 
-    qDebug() << "libgstreamer-1.0 is load? " << m_libgstreamer.load();
-    qDebug() << "libglib-2.0 is load? " << m_libglib.load();
-    qDebug() << "libgobject-2.0 is load? " << m_libgobject.load();
+    qCDebug(dsrApp) << "libgstreamer-1.0 is load? " << m_libgstreamer.load();
+    qCDebug(dsrApp) << "libglib-2.0 is load? " << m_libglib.load();
+    qCDebug(dsrApp) << "libgobject-2.0 is load? " << m_libgobject.load();
 
     m_gst_message_parse_error = reinterpret_cast<p_gst_message_parse_error>(m_libglib.resolve("gst_message_parse_error")); // -lglib-2.0
     m_g_free = reinterpret_cast<p_g_free>(m_libglib.resolve("g_free")); // -lglib-2.0
     m_g_error_copy = reinterpret_cast<p_g_error_copy>(m_libglib.resolve("g_error_copy")); // -lglib-2.0
     m_g_main_loop_quit = reinterpret_cast<p_g_main_loop_quit>(m_libglib.resolve("g_main_loop_quit")); // -lglib-2.0
-    m_g_main_loop_run = reinterpret_cast<p_g_main_loop_run>(m_libglib.resolve("g_main_loop_run")); // -lglib-2.0
+    m_g_main_loop_run = reinterpret_cast<p_g_main_loop_run>(m_libglib.resolve("g_main_loop_run")); // -lglib-20
     m_g_main_loop_new = reinterpret_cast<p_g_main_loop_new>(m_libglib.resolve("g_main_loop_new")); // -lglib-2.0
     m_g_malloc = reinterpret_cast<p_g_malloc>(m_libglib.resolve("g_malloc")); // -lglib-2.0
 
@@ -105,18 +114,24 @@ void gstInterface::initFunctions()
     m_g_type_check_instance_cast = reinterpret_cast<p_g_type_check_instance_cast>(m_libgobject.resolve("g_type_check_instance_cast")); //-lgobject-2.0
     m_g_object_set = reinterpret_cast<p_g_object_set>(m_libgobject.resolve("g_object_set")); //-lgobject-2.0
     m_g_signal_emit_by_name = reinterpret_cast<p_g_signal_emit_by_name>(m_libgobject.resolve("g_signal_emit_by_name")); // -lgobject-2.0
+    qCDebug(dsrApp) << "All Glib, GStreamer, and GObject functions resolved.";
 
-    qDebug() << "gstreamer-1.0 function is load";
+    qCDebug(dsrApp) << "gstreamer-1.0 function is load";
 
 }
 
 void gstInterface::unloadFunctions()
 {
+    qCDebug(dsrApp) << "unloadFunctions method called.";
     if (m_isInitFunction) {
         m_libgstreamer.unload();
+        qCDebug(dsrApp) << "libgstreamer-1.0 unloaded.";
         m_libglib.unload();
+        qCDebug(dsrApp) << "libglib-2.0 unloaded.";
         m_libgobject.unload();
+        qCDebug(dsrApp) << "libgobject-2.0 unloaded.";
     }
+    qCDebug(dsrApp) << "unloadFunctions method finished.";
 }
 
 

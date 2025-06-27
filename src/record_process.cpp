@@ -9,6 +9,7 @@
 #include "utils/audioutils.h"
 #include "gstrecord/gstinterface.h"
 #include "utils/eventlogutils.h"
+#include "utils/log.h"
 #ifdef KF5_WAYLAND_FLAGE_ON
 #include "waylandrecord/avlibinterface.h"
 #endif
@@ -47,6 +48,7 @@ const QString DBUS_FUNC_ON_PAUSE = "onPause";
  */
 static QDBusMessage callTrayTimeIcon(const QString &function)
 {
+    qCDebug(dsrApp) << "Calling tray time icon function:" << function;
     QDBusInterface timeInterface("com.deepin.ScreenRecorder.time",
                                  "/com/deepin/ScreenRecorder/time",
                                  "com.deepin.ScreenRecorder.time",
@@ -59,6 +61,7 @@ static QDBusMessage callTrayTimeIcon(const QString &function)
  */
 static QDBusMessage callTrayShotIcon(const QString &function)
 {
+    qCDebug(dsrApp) << "Calling tray shot icon function:" << function;
     QDBusInterface shotInterface("com.deepin.ShotRecorder.PanelStatus",
                                  "/com/deepin/ShotRecorder/PanelStatus",
                                  "com.deepin.ShotRecorder.PanelStatus",
@@ -71,6 +74,7 @@ static QDBusMessage callTrayShotIcon(const QString &function)
  */
 static QDBusMessage callTrayRecorderIcon(const QString &function)
 {
+    qCDebug(dsrApp) << "Calling tray recorder icon function:" << function;
     QDBusInterface recorderInterface("com.deepin.ShotRecorder.Recorder.PanelStatus",
                                      "/com/deepin/ShotRecorder/Recorder/PanelStatus",
                                      "com.deepin.ShotRecorder.Recorder.PanelStatus",
@@ -80,21 +84,26 @@ static QDBusMessage callTrayRecorderIcon(const QString &function)
 
 RecordProcess::RecordProcess(QObject *parent) : QObject(parent)
 {
-    qDebug() << "录屏控制类初始化！";
+    qCDebug(dsrApp) << "Record process control class initialized.";
     m_settings = ConfigSettings::instance();
+    qCDebug(dsrApp) << "ConfigSettings instance obtained.";
 
     saveTempDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).first();
+    qCDebug(dsrApp) << "Temporary save directory:" << saveTempDir;
     displayNumber = QString(std::getenv("DISPLAY"));
+    qCDebug(dsrApp) << "Display number:" << displayNumber;
 
 
     qRegisterMetaType<QProcess::ProcessState>("ProcessState");
     m_recordingFlag = false;
     m_gstRecordX = nullptr;
     m_framerate = 0;
+    qCDebug(dsrApp) << "Recording flag, gstRecordX, and framerate initialized.";
 }
 
 RecordProcess::~RecordProcess()
 {
+    qCDebug(dsrApp) << "RecordProcess destructor called.";
     /*
     if (m_pTranscodeProcess) {
         delete m_pTranscodeProcess;
@@ -107,61 +116,68 @@ RecordProcess::~RecordProcess()
     }
     */
     if (m_gstRecordX) {
-        m_gstRecordX = nullptr;
+        qCDebug(dsrApp) << "Deleting m_gstRecordX.";
         delete m_gstRecordX;
+        m_gstRecordX = nullptr;
     }
 }
 //设置录屏的基础信息
 void RecordProcess::setRecordInfo(const QRect &recordRect, const QString &filename)
 {
+    qCDebug(dsrApp) << "Setting record information. Record Rect:" << recordRect << ", Filename:" << filename;
     m_recordRect = recordRect;
     saveAreaName = filename;
     m_recordType = m_settings->getValue("recorder", "format").toInt();
     m_audioType = m_settings->getValue("recorder", "audio").toInt();
     m_mouseType = m_settings->getValue("recorder", "cursor").toInt();
     m_framerate = m_settings->getValue("recorder", "frame_rate").toInt();
+    qCDebug(dsrApp) << "Record type, audio type, mouse type, and framerate obtained.";
 }
 
 //开始将mp4视频转码成gif
 void RecordProcess::onStartTranscode()
 {
-    qInfo() << __LINE__ << __func__ << "正在转码视频(mp4 to gif)...";
+    qCDebug(dsrApp) << "Starting video transcoding (mp4 to gif)...";
 
-    qDebug() << "try to convert palette first";
+    qCDebug(dsrApp) << "Attempting to convert palette first.";
     QString captureTempDir = saveTempDir;
     QString captureSavePath = savePath;
 
     QThreadPool::globalInstance()->start([ = ](){
         QString cachePalette = captureTempDir + QDir::separator() + "deepin_screen_recorder_palette.png";
         QProcess paletteProcess;
+        qCDebug(dsrApp) << "Starting palette generation process.";
         paletteProcess.start("ffmpeg", {"-i", captureSavePath, "-vf", "select=not(mod(n\\,30)),palettegen=stats_mode=diff", cachePalette, "-y"});
-        qDebug() << paletteProcess.program() << paletteProcess.arguments().join(' ');
+        qCDebug(dsrApp) << "Palette process command:" << paletteProcess.program() << paletteProcess.arguments().join(' ');
 
         if (!paletteProcess.waitForFinished(10 * 60 * 1000)) {
-            qWarning() << "convert palette failed! " << paletteProcess.errorString();
+            qCWarning(dsrApp) << "Convert palette failed!" << paletteProcess.errorString();
             cachePalette.clear();
         }
+        qCDebug(dsrApp) << "Palette generation finished. Cache palette path:" << cachePalette;
 
         QMetaObject::invokeMethod(this, [ = ](){
             onTranscodePaletteFinished(cachePalette);
         }, Qt::QueuedConnection);
+        qCDebug(dsrApp) << "Invoked onTranscodePaletteFinished.";
     });
 }
 
 void RecordProcess::onTranscodePaletteFinished(const QString &palettePng)
 {
+    qCDebug(dsrApp) << "Transcode palette finished callback. Palette PNG:" << palettePng;
     QProcess *transcodeProcess = new QProcess(this);
 
 #if (QT_VERSION_MAJOR == 5)
     connect(transcodeProcess, QOverload<QProcess::ProcessError>::of(&QProcess::error),
             [ = ](QProcess::ProcessError processError) {
-                qDebug() << "processError: " << processError;
+                qCDebug(dsrApp) << "Transcode process error (Qt5):" << processError;
             });
 #elif (QT_VERSION_MAJOR == 6)
     // Qt6 syntax for error signal
     connect(transcodeProcess, &QProcess::errorOccurred,
             [ = ](QProcess::ProcessError processError) {
-                qDebug() << "processError: " << processError;
+                qCDebug(dsrApp) << "Transcode process error (Qt6):" << processError;
             });
 #endif
 
@@ -169,24 +185,26 @@ void RecordProcess::onTranscodePaletteFinished(const QString &palettePng)
     // Qt6 syntax for finished signal
     connect(transcodeProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             [ = ](int exitCode, QProcess::ExitStatus exitStatus) {
-                qDebug() << "exitCode: " << exitCode << "  exitStatus: " << exitStatus;
+                qCDebug(dsrApp) << "Transcode process finished (Qt5). Exit Code:" << exitCode << ", Exit Status:" << exitStatus;
                 //转换进程是否正常退出
                 if (exitStatus == QProcess::ExitStatus::NormalExit) {
+                    qCDebug(dsrApp) << "Transcode process exited normally, calling onTranscodeFinish.";
                     onTranscodeFinish();
                 } else {
-                    qDebug() << "transcodeProcess is CrashExit:!";
+                    qCDebug(dsrApp) << "Transcode process crashed!";
                 }
             });
 #elif (QT_VERSION_MAJOR == 6)
     // Qt6 syntax for finished signal
     connect(transcodeProcess, &QProcess::finished,
             [ = ](int exitCode, QProcess::ExitStatus exitStatus) {
-                qDebug() << "exitCode: " << exitCode << "  exitStatus: " << exitStatus;
+                qCDebug(dsrApp) << "Transcode process finished (Qt6). Exit Code:" << exitCode << ", Exit Status:" << exitStatus;
                 //转换进程是否正常退出
                 if (exitStatus == QProcess::ExitStatus::NormalExit) {
+                    qCDebug(dsrApp) << "Transcode process exited normally, calling onTranscodeFinish.";
                     onTranscodeFinish();
                 } else {
-                    qDebug() << "transcodeProcess is CrashExit:!";
+                    qCDebug(dsrApp) << "Transcode process crashed!";
                 }
             });
 #endif
@@ -195,8 +213,10 @@ void RecordProcess::onTranscodePaletteFinished(const QString &palettePng)
     QStringList arg;
     arg << "-i";
     arg << savePath;
+    qCDebug(dsrApp) << "Transcoding arguments setup. Input path:" << savePath;
 
     if (!palettePng.isEmpty()) {
+        qCDebug(dsrApp) << "Palette PNG is not empty, adding as input.";
         arg << "-i";
         arg << palettePng;
         arg << "-filter_complex";
@@ -207,12 +227,12 @@ void RecordProcess::onTranscodePaletteFinished(const QString &palettePng)
     arg << "12";
     arg << path.replace("mp4", "gif");
     transcodeProcess->start("ffmpeg", arg);
-    qDebug() << transcodeProcess->program() << transcodeProcess->arguments().join(' ');
+    qCDebug(dsrApp) << transcodeProcess->program() << transcodeProcess->arguments().join(' ');
 
-//部分hw arm架构的机型需要这样设置
+    //部分hw arm架构的机型需要这样设置
 #if defined (__aarch64__)
     if (Utils::isWaylandMode) {
-        qDebug() << "watting transcode gif end!";
+        qCDebug(dsrApp) << "Waiting transcode gif end (aarch64 Wayland)...";
         transcodeProcess->waitForFinished();
     }
 #endif
@@ -221,28 +241,30 @@ void RecordProcess::onTranscodePaletteFinished(const QString &palettePng)
 //转码完成后通知栏弹出提示
 void RecordProcess::onTranscodeFinish()
 {
-    qInfo() << __LINE__ << __func__ << "已完成转码";
+    qCDebug(dsrApp) << "Transcoding finished callback.";
     QString path = savePath;
     QString gifOldPath = path.replace("mp4", "gif");
     QString gifNewPath = QDir(saveDir).filePath(saveBaseName).replace(QString("mp4"), QString("gif"));
-    qDebug() << "" << savePath << gifOldPath << gifNewPath;
+    qCDebug(dsrApp) << "Original path:" << savePath << ", Old GIF path:" << gifOldPath << ", New GIF path:" << gifNewPath;
     QFile::rename(gifOldPath, gifNewPath);
+    qCDebug(dsrApp) << "GIF file renamed.";
     exitRecord(gifNewPath);
 }
 
 //录屏结束后弹出通知
 void RecordProcess::onRecordFinish()
 {
-    qInfo() << __LINE__ << __func__ <<"正在结束录屏...";
+    qCDebug(dsrApp) << "Record finish callback: Ending screen recording...";
     //x11录屏结束
     if (!Utils::isWaylandMode) {
+        qCDebug(dsrApp) << "X11 recording mode.";
         if (QProcess::ProcessState::NotRunning != m_recorderProcess->exitCode()) {
-            qDebug() << "Error";
+            qCDebug(dsrApp) << "Recorder process exited with an error.";
             foreach (auto line, (m_recorderProcess->readAllStandardError().split('\n'))) {
-                qDebug() << line;
+                qCDebug(dsrApp) << "Recorder process error output:" << line;
             }
         } else {
-            qDebug() << "OK" << m_recorderProcess->readAllStandardOutput() << m_recorderProcess->readAllStandardError();
+            qCDebug(dsrApp) << "Recorder process exited normally. Output:" << m_recorderProcess->readAllStandardOutput() << ", Error:" << m_recorderProcess->readAllStandardError();
         }
     }
 
@@ -256,24 +278,24 @@ void RecordProcess::onRecordFinish()
 //x11录制视频
 void RecordProcess::recordVideo()
 {
-    qDebug() << "x11 FFmpeg 录屏！";
+    qCDebug(dsrApp) << "Starting X11 FFmpeg video recording.";
     initProcess();
     //取系统音频的通道号
     AudioUtils *audioUtils = new AudioUtils();
     QString t_currentAudioChannel = audioUtils->currentAudioChannel();
     //-1表示系统音频的通道号错误
     if (t_currentAudioChannel == "-1") {
-        qWarning() << "current system audio channel error!";
+        qCWarning(dsrApp) << "Current system audio channel error!";
         //系统音频通道获取错误时，要么不录制声音，要么只录制麦克风音频
         if (m_audioType == Utils::kSystemAudio) {
             m_audioType = Utils::kNoAudio;
-            qWarning() << "选择录制的音频发生改变，录制系统音 变更为 不录系统音！";
+            qCWarning(dsrApp) << "Selected audio changed: System audio changed to no audio!";
         } else if (m_audioType == Utils::kMicAndSystemAudio) {
             m_audioType = Utils::kMic;
-            qWarning() << "选择录制的音频发生改变，录制混音 变更为 只录制麦克风！";
+            qCWarning(dsrApp) << "Selected audio changed: Mix audio changed to microphone only!";
         }
     }
-    qDebug() << "current system audio channel:" << t_currentAudioChannel;
+    qCDebug(dsrApp) << "Current system audio channel:" << t_currentAudioChannel;
     QStringList arguments;
 
     QString arch = QSysInfo::currentCpuArchitecture();
@@ -367,7 +389,7 @@ void RecordProcess::recordVideo()
 #else
 
     if (m_audioType == Utils::kSystemAudio || m_audioType == Utils::kMicAndSystemAudio) {
-        qDebug() << "x11 ffmpeg 是否录制系统声音？true";
+        qCDebug(dsrApp) << "X11 FFmpeg recording system audio: true.";
         arguments << QString("-thread_queue_size");
         arguments << QString("2048");
         arguments << QString("-fragment_size");
@@ -382,7 +404,7 @@ void RecordProcess::recordVideo()
         arguments << QString("%1").arg(t_currentAudioChannel);
     }
     if (m_audioType == Utils::kMic || m_audioType == Utils::kMicAndSystemAudio) {
-        qDebug() << "x11 ffmpeg 是否录制麦克风？true";
+        qCDebug(dsrApp) << "X11 FFmpeg recording microphone: true.";
         arguments << QString("-thread_queue_size");
         arguments << QString("2048");
         arguments << QString("-fragment_size");
@@ -403,7 +425,7 @@ void RecordProcess::recordVideo()
     arguments << QString("-video_size");
     arguments << QString("%1x%2").arg(m_recordRect.width()).arg(m_recordRect.height());
     if (m_mouseType == RECORD_MOUSE_NULL || m_mouseType == RECORD_MOUSE_CHECK) {
-        qDebug() << "x11 ffmpeg 不录制光标";
+        qCDebug(dsrApp) << "X11 FFmpeg not recording cursor.";
         arguments << QString("-draw_mouse");
         arguments << QString("0");
     }
@@ -429,7 +451,7 @@ void RecordProcess::recordVideo()
     }
 
     if (m_audioType == Utils::kMicAndSystemAudio) {
-        qDebug() << "x11 ffmpeg 是否录制混音？true";
+        qCDebug(dsrApp) << "X11 FFmpeg recording mixed audio: true.";
         arguments << QString("-filter_complex");
         if ((arch.startsWith("ARM", Qt::CaseInsensitive))) {
             arguments << QString("[0:a]volume=30dB[a1];[a1][1:a]amix=inputs=2:duration=first:dropout_transition=0[out]");
@@ -464,8 +486,9 @@ void RecordProcess::recordVideo()
     arguments << QString("scale=trunc(iw/2)*2:trunc(ih/2)*2");
 #endif
     arguments << savePath;
-    qDebug() << arguments;
+    qCDebug(dsrApp) << "Final FFmpeg arguments:" << arguments;
     m_recorderProcess->start("ffmpeg", arguments);
+    qCDebug(dsrApp) << "FFmpeg recording process started.";
 }
 
 //初始化x11 FFmpeg录屏进程
@@ -496,11 +519,12 @@ void RecordProcess::initProcess()
     // Remove same cache file first.
     QFile::remove(savePath);
 }
+
 void RecordProcess::getScreenRecordSavePath()
 {
     ConfigSettings *settings = ConfigSettings::instance();
     if (settings->getValue("recorder", "save_dir").toString() == "") {
-        qWarning() << "配置文件中录屏保存路径为空,采用默认路径";
+        qCWarning(dsrApp) << "配置文件中录屏保存路径为空,采用默认路径";
         saveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first() + QDir::separator() + "Screen Recordings" + QDir::separator();
     } else {
         int t_saveIndex = settings->getValue("recorder", "save_op").toInt();
@@ -508,13 +532,13 @@ void RecordProcess::getScreenRecordSavePath()
         case 1: {
             //保存到桌面
             saveDir = settings->getValue("recorder", "save_dir").toString() + QDir::separator();
-            qInfo() << "保存到桌面: " << saveDir;
+            qCInfo(dsrApp) << "保存到桌面: " << saveDir;
             break;
         }
         default:
             //保存到视频目录中的Screen Recordings目录
             saveDir = settings->getValue("recorder", "save_dir").toString() + QDir::separator() + "Screen Recordings" + QDir::separator();
-            qInfo() << "保存到视频目录: " << saveDir;
+            qCInfo(dsrApp) << "保存到视频目录: " << saveDir;
             break;
         }
     }
@@ -522,11 +546,12 @@ void RecordProcess::getScreenRecordSavePath()
             (QDir(saveDir).exists() && !QFileInfo(saveDir).isWritable())) {   // 文件存在，且不能写
         saveDir = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first();
     }
-    qInfo() << "录屏保存目录: " << saveDir;
+    qCInfo(dsrApp) << "录屏保存目录: " << saveDir;
 }
 
 void RecordProcess::save2Clipboard(QString file)
 {
+    qCDebug(dsrApp) << "Saving file to clipboard:" << file;
     //录屏文件保存到剪切板
     QClipboard *cb = qApp->clipboard();
     // Ownership of the new data is transferred to the clipboard.
@@ -547,15 +572,17 @@ void RecordProcess::save2Clipboard(QString file)
     newMimeData->setData("x-special/gnome-copied-files", gnomeFormat);
 
     cb->setMimeData(newMimeData, QClipboard::Clipboard);
+    qCDebug(dsrApp) << "File saved to clipboard.";
 }
+
 //wayland录制视频
 void RecordProcess::waylandRecord()
 {
 #ifdef KF5_WAYLAND_FLAGE_ON
-    qInfo() << "正在加载ffmpeg依赖库...";
+    qCInfo(dsrApp) << "正在加载ffmpeg依赖库...";
     avlibInterface::initFunctions();
-    qInfo() << "ffmpeg依赖库已加载";
-    qDebug() << "wayland 录屏！";
+    qCInfo(dsrApp) << "ffmpeg依赖库已加载";
+    qCDebug(dsrApp) << "wayland 录屏！";
     // 启动wayland录屏
     initProcess();
     AudioUtils *audioUtils = new AudioUtils();
@@ -568,21 +595,22 @@ void RecordProcess::waylandRecord()
     arguments << QString("%1").arg(m_audioType);
     arguments << QString(audioUtils->getDefaultDeviceName(AudioUtils::DefaultAudioType::Source));
     arguments << QString(audioUtils->getDefaultDeviceName(AudioUtils::DefaultAudioType::Sink));
-    qDebug() << arguments;
+    qCDebug(dsrApp) << arguments;
     WaylandIntegration::init(arguments);
 #endif
     return;
 }
+
 //gstreamer录制视频
 void RecordProcess::GstStartRecord()
 {
     int argc = 1;
     //gstreamer接口初始化
-    qInfo() << "正在加载gstreamer依赖库...";
+    qCInfo(dsrApp) << "正在加载gstreamer依赖库...";
     gstInterface::initFunctions();
-    qInfo() << "gstreamer依赖库已加载";
+    qCInfo(dsrApp) << "gstreamer依赖库已加载";
     gstInterface::m_gst_init(&argc, nullptr);
-    qDebug() << "Gstreamer 录屏开始！";
+    qCDebug(dsrApp) << "Gstreamer 录屏开始！";
     GstRecordX::VideoType videoType = GstRecordX::VideoType::webm;
     GstRecordX::AudioType audioType = GstRecordX::AudioType::None;
     m_gstRecordX = new GstRecordX(this);
@@ -640,7 +668,7 @@ void RecordProcess::GstStartRecord()
         arguments << QString("%1").arg(m_framerate);
         arguments << QString("%1").arg(savePath);
         arguments << QString("%1").arg(m_audioType);
-        qDebug() << arguments;
+        qCDebug(dsrApp) << arguments;
         WaylandIntegration::init(arguments, m_gstRecordX);
 #endif
     } else {
@@ -671,7 +699,7 @@ void RecordProcess::onExitGstRecord()
     QFile::rename(savePath, newSavePath);
     //注销gstreamer相关库加载
     gstInterface::unloadFunctions();
-    qDebug() << "Gstreamer 录屏结束！";
+    qCDebug(dsrApp) << "Gstreamer 录屏结束！";
     exitRecord(newSavePath);
 }
 
@@ -702,23 +730,23 @@ void RecordProcess::startRecord()
     };
     EventLogUtils::get().writeLogs(obj);
     if (Utils::isSysHighVersion1040() == false) {
-        qInfo() << "系统版本小于1040, 不显示录制时长功能。";
+        qCInfo(dsrApp) << "系统版本小于1040, 不显示录制时长功能。";
         return;
     }
     //1040及以上的版本可通过此方式启动状态栏图标闪烁
-    qDebug() << "通知录屏插件开始录屏! currentTime: " << QTime::currentTime();
+    qCDebug(dsrApp) << "通知录屏插件开始录屏! currentTime: " << QTime::currentTime();
     QDBusMessage message = callTrayTimeIcon(DBUS_FUNC_ON_START);
     callTrayShotIcon(DBUS_FUNC_ON_START);
     callTrayRecorderIcon(DBUS_FUNC_ON_START);
 
-    qDebug() << "已通知录屏插件开始录屏! currentTime: " << QTime::currentTime();
+    qCDebug(dsrApp) << "已通知录屏插件开始录屏! currentTime: " << QTime::currentTime();
     m_recordingFlag = true;
     QtConcurrent::run([this]() {
         this->emitRecording();
     });
     if (QDBusMessage::ReplyMessage == message.type()) {
         if (!message.arguments().takeFirst().toBool())
-            qDebug() << "dde dock screen-recorder-plugin did not receive start message!";
+            qCDebug(dsrApp) << "dde dock screen-recorder-plugin did not receive start message!";
     }
 }
 void RecordProcess::emitRecording()
@@ -748,20 +776,20 @@ void RecordProcess::stopRecord()
 //    };
 //    EventLogUtils::get().writeLogs(obj);
     if (Utils::isSysHighVersion1040() == true) {
-        qInfo() << __FUNCTION__ << __LINE__ << "正在暂停录屏计时...";
-        qDebug() << "Pause the screen recording timer!";
+        qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "正在暂停录屏计时...";
+        qCDebug(dsrApp) << "Pause the screen recording timer!";
 
         //系统托盘图标停止闪烁，时间暂停，但还没有结束
         QDBusMessage message = callTrayTimeIcon(DBUS_FUNC_ON_PAUSE);
 
         if (QDBusMessage::ReplyMessage == message.type()) {
             if (!message.arguments().takeFirst().toBool())
-                qDebug() << "dde dock screen-recorder-plugin did not receive stop message!";
+                qCDebug(dsrApp) << "dde dock screen-recorder-plugin did not receive stop message!";
         }
         callTrayShotIcon(DBUS_FUNC_ON_PAUSE);
         callTrayRecorderIcon(DBUS_FUNC_ON_PAUSE);
 
-        qInfo() << __FUNCTION__ << __LINE__ << "录屏计时已暂停";
+        qCInfo(dsrApp) << __FUNCTION__ << __LINE__ << "录屏计时已暂停";
     }
     if (Utils::isFFmpegEnv) {
         //停止wayland录屏
@@ -794,7 +822,7 @@ void RecordProcess::stopRecord()
 void RecordProcess::exitRecord(QString newSavePath)
 {
     if (!Utils::isRootUser && !m_isFullScreenRecord) {
-        qInfo() << __LINE__ << __func__ << "正在弹出保存完成的通知...";
+        qCInfo(dsrApp) << __LINE__ << __func__ << "正在弹出保存完成的通知...";
         // Popup notify.
         QDBusInterface notification("org.freedesktop.Notifications",
                                     "/org/freedesktop/Notifications",
@@ -822,7 +850,7 @@ void RecordProcess::exitRecord(QString newSavePath)
             << hints                                                 // hints
             << timeout;                                              // timeout
         notification.callWithArgumentList(QDBus::AutoDetect, "Notify", arg);
-        qInfo() << __LINE__ << __func__ << "已弹出通知消息";
+        qCInfo(dsrApp) << __LINE__ << __func__ << "已弹出通知消息";
     }
     if (m_recordType == Utils::kGIF) {
         QFile::remove(savePath);
@@ -835,21 +863,21 @@ void RecordProcess::exitRecord(QString newSavePath)
 
     m_recordingFlag = false;
     if (Utils::isSysHighVersion1040() == true) {
-        qInfo() << __LINE__ << __func__ << "正在退出录屏计时图标...";
-        qDebug() << __LINE__ << ": Stop the screen recording timer!";
+        qCInfo(dsrApp) << __LINE__ << __func__ << "正在退出录屏计时图标...";
+        qCDebug(dsrApp) << __LINE__ << ": Stop the screen recording timer!";
         //系统托盘图标结束并退出
         callTrayTimeIcon(DBUS_FUNC_ON_STOP);
         callTrayShotIcon(DBUS_FUNC_ON_STOP);
         callTrayRecorderIcon(DBUS_FUNC_ON_STOP);
-        qInfo() << __LINE__ << __func__ << "录屏计时图标已退出";
+        qCInfo(dsrApp) << __LINE__ << __func__ << "录屏计时图标已退出";
     }
 
     //保存到剪切板
     save2Clipboard(newSavePath);
-    qInfo() << __LINE__ << __func__ <<"录屏已退出";
+    qCInfo(dsrApp) << __LINE__ << __func__ <<"录屏已退出";
     QApplication::quit();
     if (Utils::isWaylandMode) {
-        qInfo() << "wayland record exit! (_Exit(0))";
+        qCInfo(dsrApp) << "wayland record exit! (_Exit(0))";
         _Exit(0);
     }
 }

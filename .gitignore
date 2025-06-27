@@ -6,7 +6,7 @@ build/
 *.qm
 *.pro.user*
 
-# AI
-.cursor
-.specstory
+# AI config
+.cursor/
 .cursorindexingignore
+.specstory/

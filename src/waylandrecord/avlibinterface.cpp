@@ -101,15 +101,16 @@ bool avlibInterface::m_isInitFunction = false;
 
 avlibInterface::avlibInterface()
 {
-
+    qCDebug(dsrApp) << "avlibInterface constructor";
 }
 
 QString avlibInterface::libPath(const QString &sLib)
 {
+    qCDebug(dsrApp) << "Entering avlibInterface::libPath with sLib:" << sLib;
     QDir dir;
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
-    qCDebug(dsrApp) << "Searching for library in path:" << dir;
+    qCDebug(dsrApp) << "Searching for library in path:" << dir.path();
     QStringList list = dir.entryList(QStringList() << (sLib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
     if (list.isEmpty()) {
         qCWarning(dsrApp) << "No libraries found matching pattern:" << (sLib + "*");
@@ -119,6 +120,7 @@ QString avlibInterface::libPath(const QString &sLib)
         qCDebug(dsrApp) << "Found exact library match:" << sLib;
         return sLib;
     } else {
+        qCDebug(dsrApp) << "Exact library match not found, sorting list and using last item.";
         list.sort();
     }
 
@@ -129,8 +131,11 @@ QString avlibInterface::libPath(const QString &sLib)
 
 void avlibInterface::initFunctions()
 {
-    if (m_isInitFunction)
+    qCDebug(dsrApp) << "Entering avlibInterface::initFunctions";
+    if (m_isInitFunction) {
+        qCDebug(dsrApp) << "Functions already initialized, returning.";
         return;
+    }
 
     qCInfo(dsrApp) << "Initializing FFmpeg library functions";
 
@@ -142,13 +147,13 @@ void avlibInterface::initFunctions()
     m_libavutil.setFileName(libPath("libavutil.so"));
     m_libavcodec.setFileName(libPath("libavcodec.so"));
 
-    qDebug() << m_libavutil.load();
-    qDebug() << m_libavcodec.load();
-    qDebug() << m_libavformat.load();
-    qDebug() << m_libavfilter.load();
-    qDebug() << m_libswscale.load();
-    qDebug() << m_libswresample.load();
-    qDebug() << m_libavdevice.load();
+    qCDebug(dsrApp) << "Loading libavutil.so:" << m_libavutil.load();
+    qCDebug(dsrApp) << "Loading libavcodec.so:" << m_libavcodec.load();
+    qCDebug(dsrApp) << "Loading libavformat.so:" << m_libavformat.load();
+    qCDebug(dsrApp) << "Loading libavfilter.so:" << m_libavfilter.load();
+    qCDebug(dsrApp) << "Loading libswscale.so:" << m_libswscale.load();
+    qCDebug(dsrApp) << "Loading libswresample.so:" << m_libswresample.load();
+    qCDebug(dsrApp) << "Loading libavdevice.so:" << m_libavdevice.load();
 
     m_av_gettime = reinterpret_cast<p_av_gettime>(m_libavutil.resolve("av_gettime")); // libavutil
     m_av_frame_alloc = reinterpret_cast<p_av_frame_alloc>(m_libavutil.resolve("av_frame_alloc"));
@@ -238,6 +243,7 @@ void avlibInterface::initFunctions()
 
 void avlibInterface::unloadFunctions()
 {
+    qCDebug(dsrApp) << "Entering avlibInterface::unloadFunctions";
     if (m_isInitFunction) {
         qCInfo(dsrApp) << "Unloading FFmpeg libraries";
         m_libavutil.unload();
@@ -249,4 +255,5 @@ void avlibInterface::unloadFunctions()
         m_libavdevice.unload();
         qCInfo(dsrApp) << "FFmpeg libraries unloaded successfully";
     }
+    qCDebug(dsrApp) << "Exiting avlibInterface::unloadFunctions";
 }

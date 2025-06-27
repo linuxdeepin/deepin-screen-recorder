@@ -4,11 +4,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "shapesutils.h"
+#include "utils/log.h"
 
 #include <QDebug>
 
 Toolshape::Toolshape()
 {
+    qCDebug(dsrApp) << "Toolshape object initialized.";
     mainPoints.append(QPointF(0, 0));
     mainPoints.append(QPointF(0, 0));
     mainPoints.append(QPointF(0, 0));

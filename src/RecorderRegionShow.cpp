@@ -5,6 +5,7 @@
 
 #include "RecorderRegionShow.h"
 #include "utils.h"
+#include "utils/log.h"
 
 #include <DWindowManagerHelper>
 
@@ -18,6 +19,7 @@ RecorderRegionShow::RecorderRegionShow():
     m_painter(nullptr),
     m_cameraWidget(nullptr)
 {
+    qCDebug(dsrApp) << "RecorderRegionShow constructor.";
     /*
     setAttribute (Qt::WA_AlwaysShowToolTips);
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::ToolTip);
@@ -29,27 +31,35 @@ RecorderRegionShow::RecorderRegionShow():
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     m_painter =  new QPainter();
+    qCDebug(dsrApp) << "RecorderRegionShow constructor end.";
 }
 RecorderRegionShow::~RecorderRegionShow()
 {
+    qCDebug(dsrApp) << "RecorderRegionShow destructor.";
     if (nullptr != m_painter) {
+        qCDebug(dsrApp) << "Deleting m_painter.";
         delete m_painter;
         m_painter = nullptr;
     }
     if (m_cameraWidget) {
+        qCDebug(dsrApp) << "m_cameraWidget exists.";
         if (m_cameraWidget->getCameraStatus()) {
+            qCDebug(dsrApp) << "Camera is running, stopping camera.";
             m_cameraWidget->cameraStop();
         }
         delete m_cameraWidget;
         m_cameraWidget = nullptr;
     }
     for (int i = 0; i < m_keyButtonList.count(); ++i) {
+        qCDebug(dsrApp) << "Deleting KeyButtonWidget at index:" << i;
         delete m_keyButtonList[i];
     }
+    qCDebug(dsrApp) << "RecorderRegionShow destructor end.";
 }
 
 void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, const QSize size)
 {
+    qCDebug(dsrApp) << "Entry. Position:" << position << ", Size:" << size;
     m_cameraWidget = new CameraWidget();
 
     QRect r = this->geometry();
@@ -59,18 +69,22 @@ void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, c
     m_cameraWidget->setRecordRect(r.x(), r.y(), r.width(), r.height());
     switch (position) {
     case CameraWidget::Position::rightBottom: {
+        qCDebug(dsrApp) << "Position: rightBottom.";
         m_cameraWidget->showAt(QPoint(r.x() + r.width() - m_cameraWidget->width(), r.y() + r.height() - m_cameraWidget->height() + CAMERA_Y_OFFSET));
         break;
     }
     case CameraWidget::Position::rightTop: {
+        qCDebug(dsrApp) << "Position: rightTop.";
         m_cameraWidget->showAt(QPoint(r.x() + r.width() - m_cameraWidget->width(), r.y() + CAMERA_Y_OFFSET));
         break;
     }
     case CameraWidget::Position::leftBottom: {
+        qCDebug(dsrApp) << "Position: leftBottom.";
         m_cameraWidget->showAt(QPoint(r.x(), r.y() + r.height() - m_cameraWidget->height() + CAMERA_Y_OFFSET));
         break;
     }
     case CameraWidget::Position::leftTop: {
+        qCDebug(dsrApp) << "Position: leftTop.";
         m_cameraWidget->showAt(QPoint(r.x(), r.y() + CAMERA_Y_OFFSET));
         break;
     }
@@ -79,49 +93,63 @@ void RecorderRegionShow::initCameraInfo(const CameraWidget::Position position, c
     m_cameraWidget->cameraStart();
     m_cameraWidget->setCameraWidgetImmovable(true); //固定窗口
     Utils::passInputEvent(static_cast<int>(m_cameraWidget->winId()));
+    qCDebug(dsrApp) << "Exit.";
 }
 
 void RecorderRegionShow::showKeyBoardButtons(const QString &key)
 {
+    qCDebug(dsrApp) << "Entry. Key:" << key;
     KeyButtonWidget *t_keyWidget = new KeyButtonWidget(this);
     t_keyWidget->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::ToolTip);
     t_keyWidget->setKeyLabelWord(key);
     m_keyButtonList.append(t_keyWidget);
 
     if (m_keyButtonList.count() > 5) {
+        qCDebug(dsrApp) << "Key button list count is greater than 5. Removing the first element.";
         delete m_keyButtonList.first();
         m_keyButtonList.pop_front();
     }
     //更新多按钮的位置
     updateMultiKeyBoardPos();
     repaint();
+    qCDebug(dsrApp) << "Exit.";
 }
 
 void RecorderRegionShow::updateKeyBoardButtonStyle()
 {
+    qCDebug(dsrApp) << "updateKeyBoardButtonStyle.";
     int count = m_keyButtonList.count();
     for (int j = 0; j < count; ++j) {
+        qCDebug(dsrApp) << "Processing key button at index:" << j;
         if (DWindowManagerHelper::instance()->hasComposite()) {
+            qCDebug(dsrApp) << "DWM has composite, setting blur radius to 15.";
             m_keyButtonList.at(j)->setBlurRectXRadius(15);
             m_keyButtonList.at(j)->setBlurRectYRadius(15);
         } else {
+            qCDebug(dsrApp) << "DWM does not have composite, setting blur radius to 0.";
             m_keyButtonList.at(j)->setBlurRectXRadius(0);
             m_keyButtonList.at(j)->setBlurRectYRadius(0);
         }
     }
+    qCDebug(dsrApp) << "updateKeyBoardButtonStyle end.";
 }
 
 // 设置Camera窗口显示
 void RecorderRegionShow::setCameraShow(const bool isVisible)
 {
+    qCDebug(dsrApp) << "Entry. isVisible:" << isVisible;
     if (m_cameraWidget) {
+        qCDebug(dsrApp) << "Setting camera widget visibility to:" << isVisible;
         m_cameraWidget->setVisible(isVisible);
     }
+    qCDebug(dsrApp) << "setCameraShow end.";
 }
 
 void RecorderRegionShow::setDevcieName(const QString &devcieName)
 {
+    qCDebug(dsrApp) << "Entry. Device name:" << devcieName;
     m_deviceName = devcieName;
+    qCDebug(dsrApp) << "setDevcieName end.";
 }
 
 void RecorderRegionShow::paintEvent(QPaintEvent *event)
@@ -153,6 +181,7 @@ void RecorderRegionShow::paintEvent(QPaintEvent *event)
 }
 void RecorderRegionShow::updateMultiKeyBoardPos()
 {
+    qCDebug(dsrApp) << "updateMultiKeyBoardPos.";
     QPoint t_keyPoint[5];
     static float posfix[5][5] = {{-0.5f, 0}, {-(0.5f + 1 / 1.5f), (1 / 1.5f - 0.5f), 0}, {-1.8f, -0.5f, 0.8f, 0}, {-2.5f, -(0.5f + 1 / 1.5f), (1 / 1.5f - 0.5f), 1.5, 0}, {-3.1f, -1.8f, -0.5, 0.8f, 2.1f}};
     QRect r = this->geometry();
@@ -163,7 +192,9 @@ void RecorderRegionShow::updateMultiKeyBoardPos()
 
 
     int count = m_keyButtonList.count();
+    qCDebug(dsrApp) << "Number of key buttons:" << count; // Log count
     for (int j = 0; j < count; ++j) {
+        qCDebug(dsrApp) << "Processing key button at index:" << j; // Log loop iteration
         m_keyButtonList.at(j)->hide();
         t_keyPoint[j] = QPoint(static_cast<int>(recordX + recordWidth / 2 + m_keyButtonList.at(j)->width() * posfix[count - 1][j]), std::max(recordY + recordHeight - INDICATOR_WIDTH, 0));
         m_keyButtonList.at(j)->move(t_keyPoint[j].x(), t_keyPoint[j].y());
@@ -291,4 +322,5 @@ void RecorderRegionShow::updateMultiKeyBoardPos()
         }
     }
     */
+    qCDebug(dsrApp) << "updateMultiKeyBoardPos end.";
 }

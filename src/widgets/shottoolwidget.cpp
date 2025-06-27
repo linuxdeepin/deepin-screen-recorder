@@ -40,13 +40,13 @@ ShotToolWidget::ShotToolWidget(MainWindow *pmainwindow, DWidget *parent) :
     m_thicknessBtnGroup(nullptr),
     m_pMainWindow(pmainwindow)
 {
+    qCDebug(dsrApp) << "ShotToolWidget constructor called.";
     initWidget();
 }
 
-
-
 void ShotToolWidget::initWidget()
 {
+    qCDebug(dsrApp) << "ShotToolWidget::initWidget called.";
 //    this->setAttribute(Qt::WA_StyledBackground, true);
 //    this->setStyleSheet("background-color: rgb(0,255, 0)");
 //    setMinimumSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
@@ -60,6 +60,7 @@ void ShotToolWidget::initWidget()
 
 void ShotToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 {
+    qCDebug(dsrApp) << "Installing tip hint for widget:" << w << "with hint:" << hintstr;
     // TODO: parent must be mainframe
     auto hintWidget = new ToolTips("", m_pMainWindow);
     hintWidget->hide();
@@ -73,6 +74,7 @@ void ShotToolWidget::installTipHint(QWidget *w, const QString &hintstr)
 //初始化模糊功能工具栏
 void ShotToolWidget::initEffectLabel()
 {
+    qCDebug(dsrApp) << "ShotToolWidget::initEffectLabel called.";
     m_effectSubTool = new DLabel(this);
     DBlurEffectWidget *t_blurArea = new DBlurEffectWidget(this);
     t_blurArea->setBlurRectXRadius(7);
@@ -187,10 +189,12 @@ void ShotToolWidget::initEffectLabel()
 
     bool isBlur = ConfigSettings::instance()->getValue("effect", "isBlur").toBool();
     if (isBlur) {
+        qCDebug(dsrApp) << "Blur effect is enabled.";
         blurBut->setChecked(true);
         t_radiusSize->setLeftIcon(QIcon::fromTheme(QString("effect_pen1")));
         t_radiusSize->setRightIcon(QIcon::fromTheme(QString("effect_pen2")));
     } else {
+        qCDebug(dsrApp) << "Mosaic effect is enabled.";
         mosaicBut->setChecked(true);
         t_radiusSize->setLeftIcon(QIcon::fromTheme(QString("mosaic1")));
         t_radiusSize->setRightIcon(QIcon::fromTheme(QString("mosaic2")));
@@ -199,10 +203,13 @@ void ShotToolWidget::initEffectLabel()
     int isOvalBut = ConfigSettings::instance()->getValue("effect", "isOval").toInt();
 
     if (isOvalBut == 0) {
+        qCDebug(dsrApp) << "Oval tool is selected.";
         ovalBut->setChecked(true);
     } else if (isOvalBut == 1) {
+        qCDebug(dsrApp) << "Rectangle tool is selected.";
         rectBut->setChecked(true);
     } else {
+        qCDebug(dsrApp) << "Pen tool is selected, showing width controls.";
         penBut->setChecked(true);
         t_lineWidthSize->show();
         penWidth->show();
@@ -211,11 +218,14 @@ void ShotToolWidget::initEffectLabel()
 
     connect(effectTypeBtnGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
     [ = ] {
+        qCDebug(dsrApp) << "Effect type button clicked.";
         ConfigSettings::instance()->setValue("effect", "isBlur", blurBut->isChecked());
         if (blurBut->isChecked()) {
+            qCDebug(dsrApp) << "Blur button checked, setting blur icons.";
             t_radiusSize->setLeftIcon(QIcon::fromTheme(QString("effect_pen1")));
             t_radiusSize->setRightIcon(QIcon::fromTheme(QString("effect_pen2")));
         } else {
+            qCDebug(dsrApp) << "Mosaic button checked, setting mosaic icons.";
             t_radiusSize->setLeftIcon(QIcon::fromTheme(QString("mosaic1")));
             t_radiusSize->setRightIcon(QIcon::fromTheme(QString("mosaic2")));
         }
@@ -224,6 +234,7 @@ void ShotToolWidget::initEffectLabel()
 
     connect(shapBtnGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
     [ = ] {
+        qCDebug(dsrApp) << "Shape type button clicked.";
         int value = 2;
         if (rectBut->isChecked()) {
             value = 1;
@@ -273,7 +284,7 @@ void ShotToolWidget::initEffectLabel()
 //初始化文字工具工具栏
 void ShotToolWidget::initTextLabel()
 {
-    qDebug() << ">>>>>>>> func: " << __FUNCTION__;
+    qCDebug(dsrApp) << "ShotToolWidget::initTextLabel called.";
     m_textSubTool = new DLabel(this);
 
     DBlurEffectWidget *t_blurArea = new DBlurEffectWidget(this);
@@ -325,6 +336,7 @@ void ShotToolWidget::initTextLabel()
 
 void ShotToolWidget::initThicknessLabel()
 {
+    qCDebug(dsrApp) << "ShotToolWidget::initThicknessLabel called.";
     m_thicknessLabel = new DLabel(this);
     //粗细按钮组
     m_thicknessBtnGroup = new QButtonGroup(this);
@@ -363,7 +375,7 @@ void ShotToolWidget::initThicknessLabel()
 
 void ShotToolWidget::switchContent(QString shapeType)
 {
-    qCDebug(dsrApp) << "Switching tool content to shape type:" << shapeType;
+    qCDebug(dsrApp) << "ShotToolWidget::switchContent called with shapeType:" << shapeType;
     m_shapeName = shapeType;
     if (!shapeType.isEmpty()) {
         //矩形、圆形、直线、箭头、画笔会加载粗细调整面板
@@ -405,6 +417,7 @@ void ShotToolWidget::switchContent(QString shapeType)
 
 void ShotToolWidget::colorChecked(QString colorType)
 {
+    qCDebug(dsrApp) << "ShotToolWidget::colorChecked called with colorType:" << colorType;
     Q_UNUSED(colorType);
     //if(m_currentType == "rectangle"){
 //    if (m_blurRectButton && m_blurRectButton->isChecked())
@@ -420,6 +433,7 @@ void ShotToolWidget::colorChecked(QString colorType)
 }
 ShotToolWidget::~ShotToolWidget()
 {
+    qCDebug(dsrApp) << "ShotToolWidget::~ShotToolWidget called.";
     if (nullptr != hintFilter) {
         delete hintFilter;
         hintFilter = nullptr;

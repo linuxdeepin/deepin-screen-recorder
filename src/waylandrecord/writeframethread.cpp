@@ -14,6 +14,7 @@ WriteFrameThread::WriteFrameThread(WaylandIntegration::WaylandIntegrationPrivate
     QThread(parent),
     m_bWriteFrame(false)
 {
+    qCDebug(dsrApp) << "WriteFrameThread constructor called";
     m_context = context;
 }
 
@@ -31,7 +32,10 @@ void WriteFrameThread::run()
     qCDebug(dsrApp) << "Starting frame writing loop";
     while (m_context->isWriteVideo()) {
         if (m_context->getFrame(frame)) {
+            qCDebug(dsrApp) << "Received frame, writing video frame";
             m_context->m_recordAdmin->m_pOutputStream->writeVideoFrame(frame);
+        } else {
+            qCDebug(dsrApp) << "No frame available, continuing loop";
         }
     }
     m_context->m_recordAdmin->m_cacheMutex.unlock();
@@ -41,6 +45,7 @@ void WriteFrameThread::run()
 bool WriteFrameThread::bWriteFrame()
 {
     QMutexLocker locker(&m_writeFrameMutex);
+    qCDebug(dsrApp) << "bWriteFrame called, returning" << m_bWriteFrame;
     return m_bWriteFrame;
 }
 
@@ -48,4 +53,5 @@ void WriteFrameThread::setBWriteFrame(bool bWriteFrame)
 {
     QMutexLocker locker(&m_writeFrameMutex);
     m_bWriteFrame = bWriteFrame;
+    qCDebug(dsrApp) << "setBWriteFrame called with" << bWriteFrame;
 }

@@ -28,15 +28,19 @@
 
 AudioUtils::AudioUtils(QObject *parent)
 {
+    qCDebug(dsrApp) << "AudioUtils constructor";
     Q_UNUSED(parent);
 
 #if QT_VERISON >= QT_VERSION_CHECK(6, 0, 0)
+    qCDebug(dsrApp) << "Qt version >= 6.0.0, registerAudioPortMetaType()";
     registerAudioPortMetaType();
 #endif
 
     if (Utils::isSysGreatEqualV23()) {
+        qCDebug(dsrApp) << "Utils::isSysGreatEqualV23()";
         initAudioDBusInterface();
     }
+    qCDebug(dsrApp) << "AudioUtils constructor end";
 }
 
 // 初始化音频dbus服务的接口
