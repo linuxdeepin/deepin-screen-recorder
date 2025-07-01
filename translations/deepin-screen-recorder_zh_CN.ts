@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="zh_CN">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="zh_CN">
 <context>
     <name>CountdownTooltip</name>
     <message>
@@ -95,10 +97,6 @@ or press the shortcut again to stop recording</source>
     <message>
         <source>Screenshot</source>
         <translation>截图</translation>
-    </message>
-    <message>
-        <source>Screenshot failed.</source>
-        <translation>截图失败。</translation>
     </message>
     <message>
         <source>Scrollshot</source>
@@ -456,7 +454,8 @@ Press and hold Shift to draw a straight line</source>
     <message>
         <source>Click or drag to
 select the area to record</source>
-        <translation>点击或拖动以选择要录制的区域</translation>
+        <translation>单击或拖动以
+选择要录制的区域</translation>
     </message>
 </context>
 <context>

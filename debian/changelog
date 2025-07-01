@@ -1,3 +1,9 @@
+deepin-screen-recorder (6.5.27) unstable; urgency=medium
+
+  * chore: update translation
+
+ -- xiepengfei <xiepengfei@uniontech.com>  Tue, 01 Jul 2025 19:23:43 +0800
+
 deepin-screen-recorder (6.5.26) unstable; urgency=medium
 
   * fix: Adjust formatting in screen capture documentation
