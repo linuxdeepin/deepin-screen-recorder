@@ -146,9 +146,12 @@ include(../3rdparty/libcam/libcam.pri)
 
 # Compiler flags
 CONFIG += c++17 link_pkgconfig
-QMAKE_CFLAGS += -g -Wall -fPIE
-QMAKE_CXXFLAGS += -g -Wall -fPIE -Wno-error=deprecated-declarations -Wno-deprecated-declarations
-QMAKE_LFLAGS += -g -Wall -Wl,--as-needed -pie -z noexecstack -fstack-protector-all -z now
+QMAKE_CFLAGS += -g -Wall -fPIE -fstack-protector-strong -O2
+QMAKE_CXXFLAGS += -g -Wall -fPIE -Wno-error=deprecated-declarations -Wno-deprecated-declarations -fstack-protector-strong -O2
+QMAKE_LFLAGS += -g -Wall -Wl,--as-needed -pie -z noexecstack -z now
+
+# 添加 FORTIFY_SOURCE 保护
+DEFINES += _FORTIFY_SOURCE=2
 
 # Architecture specific settings
 ARCH = $$QMAKE_HOST.arch
