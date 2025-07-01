@@ -28,6 +28,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # 编译器配置
 CONFIG += c++17 link_pkgconfig
 
+# 编译器标志 - 添加栈保护
+QMAKE_CFLAGS += -g -Wall -fPIE -fstack-protector-strong -O2
+QMAKE_CXXFLAGS += -g -Wall -fPIE -Wno-error=deprecated-declarations -Wno-deprecated-declarations -fstack-protector-strong -O2
+QMAKE_LFLAGS += -g -Wall -Wl,--as-needed -pie -z noexecstack -z now
+
+# 添加 FORTIFY_SOURCE 保护
+DEFINES += _FORTIFY_SOURCE=2
+
 SOURCES += \
     service/dbuspinscreenshotsadaptor.cpp \
     service/pinscreenshotsinterface.cpp \
@@ -57,9 +65,6 @@ HEADERS += \
     ui/toolbutton.h \
     ui/mainToolWidget.h \
     ../utils/log.h
-
-QMAKE_CXXFLAGS += -g
-QMAKE_CXXFLAGS += -Wno-error=deprecated-declarations -Wno-deprecated-declarations
 
 equals(QT_MAJOR_VERSION, 6) {
     # Qt6 特定的编译选项
